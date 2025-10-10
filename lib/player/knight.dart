@@ -10,11 +10,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
-  double attack = 25;
-  double stamina = 100;
-  async.Timer? _timerStamina;
-  bool containKey = false;
-  bool showObserveEnemy = false;
+  double attackDamage = 25;
+  double currentStamina = 100;
+  async.Timer? _staminaRegenerationTimer;
+  bool hasKey = false;
+  bool isObservingEnemy = false;
 
   Knight(Vector2 position)
       : super(
@@ -51,21 +51,21 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
   @override
   void onJoystickAction(JoystickActionEvent event) {
     if (event.id == 0 && event.event == ActionEvent.DOWN) {
-      actionAttack();
+      executeBasicAttack();
     }
 
     if (event.id == LogicalKeyboardKey.space &&
         event.event == ActionEvent.DOWN) {
-      actionAttack();
+      executeBasicAttack();
     }
 
     if (event.id == LogicalKeyboardKey.keyZ &&
         event.event == ActionEvent.DOWN) {
-      actionAttackRange();
+      executeRangedAttack();
     }
 
     if (event.id == 1 && event.event == ActionEvent.DOWN) {
-      actionAttackRange();
+      executeRangedAttack();
     }
     super.onJoystickAction(event);
   }
@@ -86,22 +86,22 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
     super.onDie();
   }
 
-  void actionAttack() {
-    if (stamina < 15) {
+  void executeBasicAttack() {
+    if (currentStamina < 15) {
       return;
     }
 
     Sounds.attackPlayerMelee();
     decrementStamina(15);
     simpleAttackMelee(
-      damage: attack,
+      damage: attackDamage,
       animationRight: PlayerSpriteSheet.attackEffectRight(),
       size: Vector2.all(tileSize),
     );
   }
 
-  void actionAttackRange() {
-    if (stamina < 10) {
+  void executeRangedAttack() {
+    if (currentStamina < 10) {
       return;
     }
 
@@ -132,43 +132,43 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
   @override
   void update(double dt) {
     if (isDead) return;
-    _verifyStamina();
+    _regenerateStamina();
     seeEnemy(
       radiusVision: tileSize * 6,
       notObserved: () {
-        showObserveEnemy = false;
+        isObservingEnemy = false;
       },
       observed: (enemies) {
-        if (showObserveEnemy) return;
-        showObserveEnemy = true;
-        _showEmote();
+        if (isObservingEnemy) return;
+        isObservingEnemy = true;
+        _displayEmoteAbovePlayer();
       },
     );
     super.update(dt);
   }
 
-  void _verifyStamina() {
-    if (_timerStamina == null) {
-      _timerStamina = async.Timer(
+  void _regenerateStamina() {
+    if (_staminaRegenerationTimer == null) {
+      _staminaRegenerationTimer = async.Timer(
         Duration(milliseconds: 150),
         () {
-          _timerStamina = null;
+          _staminaRegenerationTimer = null;
         },
       );
     } else {
       return;
     }
 
-    stamina += 2;
-    if (stamina > 100) {
-      stamina = 100;
+    currentStamina += 2;
+    if (currentStamina > 100) {
+      currentStamina = 100;
     }
   }
 
-  void decrementStamina(int i) {
-    stamina -= i;
-    if (stamina < 0) {
-      stamina = 0;
+  void decrementStamina(int amount) {
+    currentStamina -= amount;
+    if (currentStamina < 0) {
+      currentStamina = 0;
     }
   }
 
@@ -186,11 +186,12 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
     super.onReceiveDamage(attacker, damage, id);
   }
 
-  void _showEmote({String emote = 'emote/emote_exclamacao.png'}) {
+  void _displayEmoteAbovePlayer(
+      {String emotePath = 'emote/emote_exclamacao.png'}) {
     gameRef.add(
       AnimatedFollowerGameObject(
         animation: SpriteAnimation.load(
-          emote,
+          emotePath,
           SpriteAnimationData.sequenced(
             amount: 8,
             stepTime: 0.1,

@@ -1,14 +1,14 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/interface/bar_life_component.dart';
+import 'package:darkness_dungeon/interface/health_stamina_bar.dart';
 import 'package:darkness_dungeon/player/knight.dart';
 
-class KnightInterface extends GameInterface {
+class PlayerHUD extends GameInterface {
   late Sprite keySprite;
 
   @override
   Future<void> onLoad() async {
     keySprite = await Sprite.load('items/key_silver.png');
-    add(MyBarLifeComponent());
+    add(HealthStaminaBar());
     return super.onLoad();
   }
 
@@ -21,7 +21,7 @@ class KnightInterface extends GameInterface {
   }
 
   void _drawKey(Canvas c) {
-    if (gameRef.player != null && (gameRef.player as Knight).containKey) {
+    if (gameRef.player != null && (gameRef.player as Knight).hasKey) {
       keySprite.renderRect(c, Rect.fromLTWH(150, 20, 35, 30));
     }
   }

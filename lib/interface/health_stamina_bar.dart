@@ -2,7 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/player/knight.dart';
 import 'package:flutter/material.dart';
 
-class MyBarLifeComponent extends InterfaceComponent {
+class HealthStaminaBar extends InterfaceComponent {
   double padding = 20;
   double widthBar = 90;
   double strokeWidth = 12;
@@ -12,7 +12,7 @@ class MyBarLifeComponent extends InterfaceComponent {
   double maxStamina = 100;
   double stamina = 0;
 
-  MyBarLifeComponent()
+  HealthStaminaBar()
       : super(
           id: 1,
           position: Vector2(20, 20),
@@ -26,7 +26,7 @@ class MyBarLifeComponent extends InterfaceComponent {
       life = this.gameRef.player!.life;
       maxLife = this.gameRef.player!.maxLife;
       if (this.gameRef.player is Knight) {
-        stamina = (this.gameRef.player as Knight).stamina;
+        stamina = (this.gameRef.player as Knight).currentStamina;
       }
     }
     super.update(t);
@@ -52,13 +52,13 @@ class MyBarLifeComponent extends InterfaceComponent {
           ..strokeWidth = strokeWidth
           ..style = PaintingStyle.fill);
 
-    double currentBarLife = (life * widthBar) / maxLife;
+    double currentLifeBar = (life * widthBar) / maxLife;
 
     canvas.drawLine(
         Offset(xBar, yBar),
-        Offset(xBar + currentBarLife, yBar),
+        Offset(xBar + currentLifeBar, yBar),
         Paint()
-          ..color = _getColorLife(currentBarLife)
+          ..color = _getLifeBarColor(currentLifeBar)
           ..strokeWidth = strokeWidth
           ..style = PaintingStyle.fill);
   }
@@ -78,11 +78,11 @@ class MyBarLifeComponent extends InterfaceComponent {
           ..style = PaintingStyle.fill);
   }
 
-  Color _getColorLife(double currentBarLife) {
-    if (currentBarLife > widthBar - (widthBar / 3)) {
+  Color _getLifeBarColor(double currentLifeBar) {
+    if (currentLifeBar > widthBar - (widthBar / 3)) {
       return Colors.green;
     }
-    if (currentBarLife > (widthBar / 3)) {
+    if (currentLifeBar > (widthBar / 3)) {
       return Colors.yellow;
     } else {
       return Colors.red;

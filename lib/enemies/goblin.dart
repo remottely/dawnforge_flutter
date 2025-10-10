@@ -37,7 +37,7 @@ class Goblin extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
 
     seeAndMoveToPlayer(
       closePlayer: (player) {
-        execAttack();
+        executeAttack();
       },
       radiusVision: tileSize * 4,
     );
@@ -57,7 +57,7 @@ class Goblin extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
     super.onDie();
   }
 
-  void execAttack() {
+  void executeAttack() {
     simpleAttackMelee(
       size: Vector2.all(tileSize * 0.62),
       damage: attack,

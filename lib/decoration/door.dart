@@ -6,8 +6,8 @@ import 'package:darkness_dungeon/util/player_sprite_sheet.dart';
 import 'package:flutter/cupertino.dart';
 
 class Door extends GameDecoration {
-  bool open = false;
-  bool showDialog = false;
+  bool isOpen = false;
+  bool isShowingDialog = false;
 
   Door(Vector2 position, Vector2 size)
       : super.withSprite(
@@ -29,11 +29,11 @@ class Door extends GameDecoration {
   void onCollisionStart(
       Set<Vector2> intersectionPoints, PositionComponent other) {
     if (other is Knight) {
-      if (!open) {
-        Knight p = other;
-        if (p.containKey == true) {
-          open = true;
-          p.containKey = false;
+      if (!isOpen) {
+        Knight player = other;
+        if (player.hasKey == true) {
+          isOpen = true;
+          player.hasKey = false;
 
           playSpriteAnimationOnce(
             GameSpriteSheet.openTheDoor(),
@@ -43,9 +43,9 @@ class Door extends GameDecoration {
             },
           );
         } else {
-          if (!showDialog) {
-            showDialog = true;
-            _showIntroduction();
+          if (!isShowingDialog) {
+            isShowingDialog = true;
+            _showKeyRequiredDialog();
           }
         }
       }
@@ -53,7 +53,7 @@ class Door extends GameDecoration {
     super.onCollisionStart(intersectionPoints, other);
   }
 
-  void _showIntroduction() {
+  void _showKeyRequiredDialog() {
     TalkDialog.show(
       gameRef.context,
       [
@@ -64,7 +64,7 @@ class Door extends GameDecoration {
         )
       ],
       onClose: () {
-        showDialog = false;
+        isShowingDialog = false;
       },
     );
   }

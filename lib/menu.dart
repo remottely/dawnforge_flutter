@@ -2,12 +2,12 @@ import 'dart:async' as async;
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/game.dart';
-import 'package:darkness_dungeon/util/custom_sprite_animation_widget.dart';
+import 'package:darkness_dungeon/util/animated_sprite_widget.dart';
 import 'package:darkness_dungeon/util/enemy_sprite_sheet.dart';
 import 'package:darkness_dungeon/util/localization/strings_location.dart';
 import 'package:darkness_dungeon/util/player_sprite_sheet.dart';
 import 'package:darkness_dungeon/util/sounds.dart';
-import 'package:darkness_dungeon/widgets/custom_radio.dart';
+import 'package:darkness_dungeon/widgets/atoms/app_radio_button.dart';
 import 'package:flame_splash_screen/flame_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -69,7 +69,7 @@ class _MenuState extends State<Menu> {
                 SizedBox(
                   height: 100,
                   width: 100,
-                  child: CustomSpriteAnimationWidget(
+                  child: AnimatedSpriteWidget(
                     animation: sprites[currentPosition],
                   ),
                 ),
@@ -105,7 +105,7 @@ class _MenuState extends State<Menu> {
               const SizedBox(
                 height: 20,
               ),
-              DefectorRadio<bool>(
+              AppRadioButton<bool>(
                 value: false,
                 label: 'Keyboard',
                 group: Game.useJoystick,
@@ -118,7 +118,7 @@ class _MenuState extends State<Menu> {
               const SizedBox(
                 height: 10,
               ),
-              DefectorRadio<bool>(
+              AppRadioButton<bool>(
                 value: true,
                 group: Game.useJoystick,
                 label: 'Joystick',
@@ -162,10 +162,10 @@ class _MenuState extends State<Menu> {
                     ),
                     InkWell(
                       onTap: () {
-                        _launchURL('https://github.com/RafaelBarbosatec');
+                        _launchURL('https://github.com/kevinkobori');
                       },
                       child: const Text(
-                        'rafaelbarbosatec',
+                        'kevinkobori',
                         style: TextStyle(
                           decoration: TextDecoration.underline,
                           color: Colors.blue,
@@ -192,11 +192,11 @@ class _MenuState extends State<Menu> {
                     InkWell(
                       onTap: () {
                         _launchURL(
-                          'https://github.com/RafaelBarbosatec/bonfire',
+                          'https://github.com/remottely/darkness_dungeon',
                         );
                       },
                       child: const Text(
-                        'Bonfire',
+                        'Darkness Dungeon',
                         style: TextStyle(
                           decoration: TextDecoration.underline,
                           color: Colors.blue,

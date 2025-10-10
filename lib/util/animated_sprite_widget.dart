@@ -1,10 +1,10 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
 
-class CustomSpriteAnimationWidget extends StatelessWidget {
+class AnimatedSpriteWidget extends StatelessWidget {
   final Future<SpriteAnimation> animation;
 
-  const CustomSpriteAnimationWidget({Key? key, required this.animation})
+  const AnimatedSpriteWidget({Key? key, required this.animation})
       : super(key: key);
   @override
   Widget build(BuildContext context) {

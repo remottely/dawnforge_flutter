@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class DefectorRadio<T> extends StatelessWidget {
+class AppRadioButton<T> extends StatelessWidget {
   final T value;
   final T? group;
   final String? label;
   final ValueChanged<T>? onChange;
 
-  const DefectorRadio(
+  const AppRadioButton(
       {Key? key, required this.value, this.group, this.label, this.onChange})
       : super(key: key);
 

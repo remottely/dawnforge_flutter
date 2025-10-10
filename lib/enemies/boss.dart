@@ -4,7 +4,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/enemies/imp.dart';
 import 'package:darkness_dungeon/enemies/mini_boss.dart';
 import 'package:darkness_dungeon/main.dart';
-import 'package:darkness_dungeon/util/custom_sprite_animation_widget.dart';
+import 'package:darkness_dungeon/util/animated_sprite_widget.dart';
 import 'package:darkness_dungeon/util/enemy_sprite_sheet.dart';
 import 'package:darkness_dungeon/util/functions.dart';
 import 'package:darkness_dungeon/util/game_sprite_sheet.dart';
@@ -16,17 +16,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
-  final Vector2 initPosition;
-  double attack = 40;
+  final Vector2 initialPosition;
+  double attackDamage = 40;
 
-  bool addChild = false;
-  bool firstSeePlayer = false;
-  List<Enemy> childrenEnemy = [];
+  bool _hasSeenPlayerFirst = false;
+  List<Enemy> spawnedEnemies = [];
 
-  Boss(this.initPosition)
+  Boss(this.initialPosition)
       : super(
           animation: EnemySpriteSheet.bossAnimations(),
-          position: initPosition,
+          position: initialPosition,
           size: Vector2(tileSize * 1.5, tileSize * 1.7),
           speed: tileSize * 1.5,
           life: 200,
@@ -51,10 +50,10 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
 
   @override
   void update(double dt) {
-    if (!firstSeePlayer) {
+    if (!_hasSeenPlayerFirst) {
       this.seePlayer(
         observed: (p) {
-          firstSeePlayer = true;
+          _hasSeenPlayerFirst = true;
           gameRef.camera.moveToTargetAnimated(
             target: this,
             zoom: 2,
@@ -65,21 +64,21 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
       );
     }
 
-    if (life < 150 && childrenEnemy.length == 0) {
-      addChildInMap(dt);
+    if (life < 150 && spawnedEnemies.length == 0) {
+      spawnMinion(dt);
     }
 
-    if (life < 100 && childrenEnemy.length == 1) {
-      addChildInMap(dt);
+    if (life < 100 && spawnedEnemies.length == 1) {
+      spawnMinion(dt);
     }
 
-    if (life < 50 && childrenEnemy.length == 2) {
-      addChildInMap(dt);
+    if (life < 50 && spawnedEnemies.length == 2) {
+      spawnMinion(dt);
     }
 
     this.seeAndMoveToPlayer(
       closePlayer: (player) {
-        execAttack();
+        executeAttack();
       },
       radiusVision: tileSize * 4,
     );
@@ -97,15 +96,15 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
         loop: false,
       ),
     );
-    childrenEnemy.forEach((e) {
+    spawnedEnemies.forEach((e) {
       if (!e.isDead) e.onDie();
     });
     removeFromParent();
     super.onDie();
   }
 
-  void addChildInMap(double dt) {
-    if (checkInterval('addChild', 2000, dt)) {
+  void spawnMinion(double dt) {
+    if (checkInterval('spawnMinion', 2000, dt)) {
       Vector2 positionExplosion = Vector2.zero();
 
       switch (this.directionThePlayerIsIn()) {
@@ -129,7 +128,7 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
         default:
       }
 
-      Enemy e = childrenEnemy.length == 2
+      Enemy e = spawnedEnemies.length == 2
           ? MiniBoss(
               Vector2(
                 positionExplosion.x,
@@ -152,15 +151,15 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
         ),
       );
 
-      childrenEnemy.add(e);
+      spawnedEnemies.add(e);
       gameRef.add(e);
     }
   }
 
-  void execAttack() {
+  void executeAttack() {
     this.simpleAttackMelee(
       size: Vector2.all(tileSize * 0.62),
-      damage: attack,
+      damage: attackDamage,
       interval: 1500,
       animationRight: EnemySpriteSheet.enemyAttackEffectRight(),
       execute: () {
@@ -185,7 +184,7 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
   void drawBarSummonEnemy(Canvas canvas) {
     double yPosition = 0;
     double widthBar = (width - 10) / 3;
-    if (childrenEnemy.length < 1)
+    if (spawnedEnemies.length < 1)
       canvas.drawLine(
           Offset(0, yPosition),
           Offset(widthBar, yPosition),
@@ -195,7 +194,7 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
             ..style = PaintingStyle.fill);
 
     double lastX = widthBar + 5;
-    if (childrenEnemy.length < 2)
+    if (spawnedEnemies.length < 2)
       canvas.drawLine(
           Offset(lastX, yPosition),
           Offset(lastX + widthBar, yPosition),
@@ -205,7 +204,7 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
             ..style = PaintingStyle.fill);
 
     lastX = lastX + widthBar + 5;
-    if (childrenEnemy.length < 3)
+    if (spawnedEnemies.length < 3)
       canvas.drawLine(
           Offset(lastX, yPosition),
           Offset(lastX + widthBar, yPosition),
@@ -222,28 +221,28 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
       [
         Say(
           text: [TextSpan(text: getString('talk_kid_1'))],
-          person: CustomSpriteAnimationWidget(
+          person: AnimatedSpriteWidget(
             animation: NpcSpriteSheet.kidIdleLeft(),
           ),
           personSayDirection: PersonSayDirection.RIGHT,
         ),
         Say(
           text: [TextSpan(text: getString('talk_boss_1'))],
-          person: CustomSpriteAnimationWidget(
+          person: AnimatedSpriteWidget(
             animation: EnemySpriteSheet.bossIdleRight(),
           ),
           personSayDirection: PersonSayDirection.LEFT,
         ),
         Say(
           text: [TextSpan(text: getString('talk_player_3'))],
-          person: CustomSpriteAnimationWidget(
+          person: AnimatedSpriteWidget(
             animation: PlayerSpriteSheet.idleRight(),
           ),
           personSayDirection: PersonSayDirection.LEFT,
         ),
         Say(
           text: [TextSpan(text: getString('talk_boss_2'))],
-          person: CustomSpriteAnimationWidget(
+          person: AnimatedSpriteWidget(
             animation: EnemySpriteSheet.bossIdleRight(),
           ),
           personSayDirection: PersonSayDirection.RIGHT,
@@ -251,7 +250,7 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
       ],
       onFinish: () {
         Sounds.interaction();
-        addInitChild();
+        spawnInitialMinions();
         Future.delayed(Duration(milliseconds: 500), () {
           gameRef.camera.moveToPlayerAnimated(zoom: 1);
           Sounds.playBackgroundBoosSound();
@@ -266,12 +265,12 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
     );
   }
 
-  void addInitChild() {
-    addImp(width * -2, 0);
-    addImp(width * -2, width);
+  void spawnInitialMinions() {
+    spawnImp(width * -2, 0);
+    spawnImp(width * -2, width);
   }
 
-  void addImp(double x, double y) {
+  void spawnImp(double x, double y) {
     final p = position.translated(x, y);
     gameRef.add(
       AnimatedGameObject(

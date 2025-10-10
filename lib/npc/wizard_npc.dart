@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/main.dart';
-import 'package:darkness_dungeon/util/custom_sprite_animation_widget.dart';
+import 'package:darkness_dungeon/util/animated_sprite_widget.dart';
 import 'package:darkness_dungeon/util/localization/strings_location.dart';
 import 'package:darkness_dungeon/util/npc_sprite_sheet.dart';
 import 'package:darkness_dungeon/util/player_sprite_sheet.dart';
@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class WizardNPC extends SimpleNpc {
-  bool _showConversation = false;
+  bool _isShowingConversation = false;
   WizardNPC(
     Vector2 position,
   ) : super(
@@ -31,10 +31,10 @@ class WizardNPC extends SimpleNpc {
       this.seeComponent(
         gameRef.player!,
         observed: (player) {
-          if (!_showConversation) {
+          if (!_isShowingConversation) {
             gameRef.player!.idle();
-            _showConversation = true;
-            _showEmote(emote: 'emote/emote_interregacao.png');
+            _isShowingConversation = true;
+            _displayEmoteAboveNPC(emotePath: 'emote/emote_interregacao.png');
             _showIntroduction();
           }
         },
@@ -43,11 +43,12 @@ class WizardNPC extends SimpleNpc {
     }
   }
 
-  void _showEmote({String emote = 'emote/emote_exclamacao.png'}) {
+  void _displayEmoteAboveNPC(
+      {String emotePath = 'emote/emote_exclamacao.png'}) {
     gameRef.add(
       AnimatedFollowerGameObject(
         animation: SpriteAnimation.load(
-          emote,
+          emotePath,
           SpriteAnimationData.sequenced(
             amount: 8,
             stepTime: 0.1,
@@ -71,35 +72,35 @@ class WizardNPC extends SimpleNpc {
           text: [
             TextSpan(text: getString('talk_wizard_1')),
           ],
-          person: CustomSpriteAnimationWidget(
+          person: AnimatedSpriteWidget(
             animation: NpcSpriteSheet.wizardIdleLeft(),
           ),
           personSayDirection: PersonSayDirection.RIGHT,
         ),
         Say(
           text: [TextSpan(text: getString('talk_player_1'))],
-          person: CustomSpriteAnimationWidget(
+          person: AnimatedSpriteWidget(
             animation: PlayerSpriteSheet.idleRight(),
           ),
           personSayDirection: PersonSayDirection.LEFT,
         ),
         Say(
           text: [TextSpan(text: getString('talk_wizard_2'))],
-          person: CustomSpriteAnimationWidget(
+          person: AnimatedSpriteWidget(
             animation: NpcSpriteSheet.wizardIdleLeft(),
           ),
           personSayDirection: PersonSayDirection.RIGHT,
         ),
         Say(
           text: [TextSpan(text: getString('talk_player_2'))],
-          person: CustomSpriteAnimationWidget(
+          person: AnimatedSpriteWidget(
             animation: PlayerSpriteSheet.idleRight(),
           ),
           personSayDirection: PersonSayDirection.LEFT,
         ),
         Say(
           text: [TextSpan(text: getString('talk_wizard_3'))],
-          person: CustomSpriteAnimationWidget(
+          person: AnimatedSpriteWidget(
             animation: NpcSpriteSheet.wizardIdleLeft(),
           ),
           personSayDirection: PersonSayDirection.RIGHT,

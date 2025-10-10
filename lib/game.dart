@@ -1,20 +1,20 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/decoration/door.dart';
 import 'package:darkness_dungeon/decoration/key.dart';
-import 'package:darkness_dungeon/decoration/potion_life.dart';
+import 'package:darkness_dungeon/decoration/life_potion.dart';
 import 'package:darkness_dungeon/decoration/spikes.dart';
 import 'package:darkness_dungeon/decoration/torch.dart';
 import 'package:darkness_dungeon/enemies/boss.dart';
 import 'package:darkness_dungeon/enemies/goblin.dart';
 import 'package:darkness_dungeon/enemies/imp.dart';
 import 'package:darkness_dungeon/enemies/mini_boss.dart';
-import 'package:darkness_dungeon/interface/knight_interface.dart';
+import 'package:darkness_dungeon/interface/player_hud.dart';
 import 'package:darkness_dungeon/main.dart';
 import 'package:darkness_dungeon/npc/kid.dart';
 import 'package:darkness_dungeon/npc/wizard_npc.dart';
 import 'package:darkness_dungeon/player/knight.dart';
 import 'package:darkness_dungeon/util/sounds.dart';
-import 'package:darkness_dungeon/widgets/game_controller.dart';
+import 'package:darkness_dungeon/widgets/game_state_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -92,7 +92,7 @@ class GameState extends State<Game> {
           objectsBuilder: {
             'door': (p) => Door(p.position, p.size),
             'torch': (p) => Torch(p.position),
-            'potion': (p) => PotionLife(p.position, 30),
+            'potion': (p) => LifePotion(p.position, 30),
             'wizard': (p) => WizardNPC(p.position),
             'spikes': (p) => Spikes(p.position),
             'key': (p) => DoorKey(p.position),
@@ -101,11 +101,11 @@ class GameState extends State<Game> {
             'goblin': (p) => Goblin(p.position),
             'imp': (p) => Imp(p.position),
             'mini_boss': (p) => MiniBoss(p.position),
-            'torch_empty': (p) => Torch(p.position, empty: true),
+            'torch_empty': (p) => Torch(p.position, isExtinguished: true),
           },
         ),
-        components: [GameController()],
-        interface: KnightInterface(),
+        components: [GameStateManager()],
+        interface: PlayerHUD(),
         lightingColorGame: Colors.black.withOpacity(0.6),
         backgroundColor: Colors.grey[900],
         cameraConfig: CameraConfig(

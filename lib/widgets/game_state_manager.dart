@@ -3,7 +3,7 @@ import 'package:darkness_dungeon/game.dart';
 import 'package:darkness_dungeon/util/dialogs.dart';
 import 'package:flutter/material.dart';
 
-class GameController extends GameComponent {
+class GameStateManager extends GameComponent {
   bool showGameOver = false;
   @override
   void update(double dt) {
@@ -11,14 +11,14 @@ class GameController extends GameComponent {
       if (gameRef.player != null && gameRef.player?.isDead == true) {
         if (!showGameOver) {
           showGameOver = true;
-          _showDialogGameOver();
+          _displayGameOverDialog();
         }
       }
     }
     super.update(dt);
   }
 
-  void _showDialogGameOver() {
+  void _displayGameOverDialog() {
     showGameOver = true;
     Dialogs.showGameOver(
       context,

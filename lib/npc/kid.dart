@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/enemies/boss.dart';
-import 'package:darkness_dungeon/util/custom_sprite_animation_widget.dart';
+import 'package:darkness_dungeon/util/animated_sprite_widget.dart';
 import 'package:darkness_dungeon/util/dialogs.dart';
 import 'package:darkness_dungeon/util/functions.dart';
 import 'package:darkness_dungeon/util/localization/strings_location.dart';
@@ -46,14 +46,14 @@ class Kid extends GameDecoration {
       [
         Say(
           text: [TextSpan(text: getString('talk_kid_2'))],
-          person: CustomSpriteAnimationWidget(
+          person: AnimatedSpriteWidget(
             animation: NpcSpriteSheet.kidIdleLeft(),
           ),
           personSayDirection: PersonSayDirection.RIGHT,
         ),
         Say(
           text: [TextSpan(text: getString('talk_player_4'))],
-          person: CustomSpriteAnimationWidget(
+          person: AnimatedSpriteWidget(
             animation: PlayerSpriteSheet.idleRight(),
           ),
           personSayDirection: PersonSayDirection.LEFT,

@@ -4,8 +4,9 @@ import 'package:darkness_dungeon/util/game_sprite_sheet.dart';
 import 'package:flutter/material.dart';
 
 class Torch extends GameDecoration {
-  bool empty = false;
-  Torch(Vector2 position, {this.empty = false})
+  bool isExtinguished = false;
+
+  Torch(Vector2 position, {this.isExtinguished = false})
       : super.withAnimation(
           animation: GameSpriteSheet.torch(),
           position: position,
@@ -23,7 +24,7 @@ class Torch extends GameDecoration {
 
   @override
   void render(Canvas canvas) {
-    if (!empty) {
+    if (!isExtinguished) {
       super.render(canvas);
     }
   }

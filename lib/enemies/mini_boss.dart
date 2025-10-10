@@ -40,7 +40,7 @@ class MiniBoss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
         _seePlayerClose = true;
         this.seeAndMoveToPlayer(
           closePlayer: (player) {
-            execAttack();
+            executeAttack();
           },
           radiusVision: tileSize * 3,
         );
@@ -50,7 +50,7 @@ class MiniBoss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
     if (!_seePlayerClose) {
       this.seeAndMoveToAttackRange(
         positioned: (p) {
-          execAttackRange();
+          executeRangedAttack();
         },
         radiusVision: tileSize * 5,
       );
@@ -71,7 +71,7 @@ class MiniBoss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
     super.onDie();
   }
 
-  void execAttackRange() {
+  void executeRangedAttack() {
     this.simpleAttackRange(
       animation: GameSpriteSheet.fireBallAttackRight(),
       animationDestroy: GameSpriteSheet.fireBallExplosion(),
@@ -96,7 +96,7 @@ class MiniBoss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
     );
   }
 
-  void execAttack() {
+  void executeAttack() {
     this.simpleAttackMelee(
       size: Vector2.all(tileSize * 0.62),
       damage: attack / 3,

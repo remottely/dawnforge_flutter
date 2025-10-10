@@ -42,12 +42,12 @@ class Imp extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
     seeAndMoveToPlayer(
       radiusVision: tileSize * 5,
       closePlayer: (player) {
-        execAttack();
+        executeAttack();
       },
     );
   }
 
-  void execAttack() {
+  void executeAttack() {
     simpleAttackMelee(
       size: Vector2.all(tileSize * 0.62),
       damage: attack,
