@@ -12,14 +12,14 @@ import 'package:flame_splash_screen/flame_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class Menu extends StatefulWidget {
-  const Menu({Key? key}) : super(key: key);
+class MenuScreen extends StatefulWidget {
+  const MenuScreen({Key? key}) : super(key: key);
 
   @override
-  State<Menu> createState() => _MenuState();
+  State<MenuScreen> createState() => _MenuScreenState();
 }
 
-class _MenuState extends State<Menu> {
+class _MenuScreenState extends State<MenuScreen> {
   bool showSplash = true;
   int currentPosition = 0;
   late async.Timer _timer;

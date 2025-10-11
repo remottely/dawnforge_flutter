@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/interface/health_stamina_bar.dart';
+import 'package:darkness_dungeon/hud/player_vital_stats_hud.dart';
 import 'package:darkness_dungeon/player/knight.dart';
 
 class PlayerHUD extends GameInterface {
@@ -8,7 +8,7 @@ class PlayerHUD extends GameInterface {
   @override
   Future<void> onLoad() async {
     keySprite = await Sprite.load('items/key_silver.png');
-    add(HealthStaminaBar());
+    add(PlayerVitalStatsHUD());
     return super.onLoad();
   }
 

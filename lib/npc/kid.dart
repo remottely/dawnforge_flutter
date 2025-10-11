@@ -1,12 +1,12 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/enemies/boss.dart';
 import 'package:darkness_dungeon/util/animated_sprite_widget.dart';
-import 'package:darkness_dungeon/util/dialogs.dart';
 import 'package:darkness_dungeon/util/functions.dart';
 import 'package:darkness_dungeon/util/localization/strings_location.dart';
 import 'package:darkness_dungeon/util/npc_sprite_sheet.dart';
 import 'package:darkness_dungeon/util/player_sprite_sheet.dart';
 import 'package:darkness_dungeon/util/sounds.dart';
+import 'package:darkness_dungeon/util/ui_state_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -62,7 +62,7 @@ class Kid extends GameDecoration {
       onFinish: () {
         Sounds.interaction();
         gameRef.camera.moveToPlayerAnimated(onComplete: () {
-          Dialogs.showCongratulations(gameRef.context);
+          UIStateManager.displayVictoryDialog(gameRef.context);
         });
       },
       onChangeTalk: (index) {

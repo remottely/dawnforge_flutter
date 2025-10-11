@@ -2,7 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/player/knight.dart';
 import 'package:flutter/material.dart';
 
-class HealthStaminaBar extends InterfaceComponent {
+class PlayerVitalStatsHUD extends InterfaceComponent {
   double padding = 20;
   double widthBar = 90;
   double strokeWidth = 12;
@@ -12,7 +12,7 @@ class HealthStaminaBar extends InterfaceComponent {
   double maxStamina = 100;
   double stamina = 0;
 
-  HealthStaminaBar()
+  PlayerVitalStatsHUD()
       : super(
           id: 1,
           position: Vector2(20, 20),

@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/menu.dart';
+import 'package:darkness_dungeon/menu_screen.dart';
 import 'package:darkness_dungeon/util/localization/my_localizations_delegate.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,7 +23,7 @@ void main() async {
       theme: ThemeData(
         fontFamily: 'Normal',
       ),
-      home: Menu(),
+      home: MenuScreen(),
       supportedLocales: MyLocalizationsDelegate.supportedLocales(),
       localizationsDelegates: [
         myLocation,
