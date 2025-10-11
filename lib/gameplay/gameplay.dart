@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/constants/game_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/game_state_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/sound_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/gameplay_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/decoration/door.dart';
 import 'package:darkness_dungeon/gameplay/decoration/key.dart';
 import 'package:darkness_dungeon/gameplay/decoration/life_potion.dart';
@@ -80,12 +80,12 @@ class _GameplayState extends State<Gameplay> {
 
   /// Initializes background music and sound effects
   void _initializeGameAudio() {
-    SoundManager.playBackgroundMusic();
+    GameplayAudioManager.playBackgroundMusic();
   }
 
   /// Cleans up audio resources when game ends
   void _cleanupGameAudio() {
-    SoundManager.stopBackgroundMusic();
+    GameplayAudioManager.stopBackgroundMusic();
   }
 
   /// Pre-initializes all game components for better performance
@@ -106,7 +106,7 @@ class _GameplayState extends State<Gameplay> {
       speed: _kCameraSpeed,
       zoom: getZoomFromMaxVisibleTile(
         context,
-        GameConstants.kCurrentTileSize,
+        GameplayConstants.kCurrentTileSize,
         _kMaxVisibleTiles,
       ),
     );
@@ -120,7 +120,7 @@ class _GameplayState extends State<Gameplay> {
         playerControllers: [_playerController],
         player: _player,
         map: _worldMap,
-        components: [GameStateManager()],
+        components: [GameplayStateManager()],
         interface: _gameHUD,
         lightingColorGame: _lightingColor,
         backgroundColor: _backgroundColor,
@@ -191,8 +191,8 @@ class _GameplayState extends State<Gameplay> {
   Knight _createPlayer() {
     return Knight(
       Vector2(
-        _kPlayerSpawnX * GameConstants.kCurrentTileSize,
-        _kPlayerSpawnY * GameConstants.kCurrentTileSize,
+        _kPlayerSpawnX * GameplayConstants.kCurrentTileSize,
+        _kPlayerSpawnY * GameplayConstants.kCurrentTileSize,
       ),
     );
   }
@@ -202,8 +202,8 @@ class _GameplayState extends State<Gameplay> {
     return WorldMapByTiled(
       WorldMapReader.fromAsset('tiled/map.json'),
       forceTileSize: Vector2(
-        GameConstants.kCurrentTileSize,
-        GameConstants.kCurrentTileSize,
+        GameplayConstants.kCurrentTileSize,
+        GameplayConstants.kCurrentTileSize,
       ),
       objectsBuilder: _createObjectsMap(),
     );

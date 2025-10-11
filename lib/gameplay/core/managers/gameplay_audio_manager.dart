@@ -2,9 +2,9 @@ import 'package:flame_audio/flame_audio.dart';
 
 import '../constants/audio_constants.dart';
 
-/// [SoundManager] responsible for managing game audio and sound effects
+/// [GameplayAudioManager] responsible for managing game audio and sound effects
 /// Following Flutter naming conventions for audio manager systems
-class SoundManager {
+class GameplayAudioManager {
   /// Initializes the audio system and preloads audio files
   /// Following Flutter pattern of async initialization methods
   static Future<void> initialize() async {

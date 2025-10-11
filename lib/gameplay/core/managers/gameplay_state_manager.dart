@@ -1,12 +1,12 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/ui_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/gameplay.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// Game State Manager responsible for handling game state changes and UI transitions
 /// Following Flutter naming conventions for game management systems
-class GameStateManager extends GameComponent {
+class GameplayStateManager extends GameComponent {
   // Flutter-style constants for game state management
   static const String _kGameOverCheckInterval = 'gameOver';
   static const int _kGameOverCheckRate = 100;
@@ -83,7 +83,7 @@ class GameStateManager extends GameComponent {
   /// Following Flutter naming convention for private UI methods
   void _displayGameOverDialog() {
     _isGameOverDisplayed = true;
-    UIStateManager.displayGameOverDialog(context, _onRetryGamePressed);
+    GameplayUIStateManager.displayGameOverDialog(context, _onRetryGamePressed);
   }
 
   /// Handles the retry game button press
@@ -121,7 +121,7 @@ class GameStateManager extends GameComponent {
     // In a real Flutter project, this would integrate with analytics
     // For now, we'll use debug print following Flutter conventions
     if (kDebugMode) {
-      print('[GameStateManager] Event: $eventName at ${DateTime.now()}');
+      print('[GameplayStateManager] Event: $eventName at ${DateTime.now()}');
     }
   }
 }

@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/constants/game_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/sound_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/tile_helper.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/effects_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/enemy_sprite_sheet.dart';
@@ -14,8 +14,8 @@ class Goblin extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
     : super(
         animation: EnemySpriteSheet.goblinAnimations(),
         position: initPosition,
-        size: Vector2.all(GameConstants.kCurrentTileSize * 0.8),
-        speed: GameConstants.kCurrentTileSize * 1.5,
+        size: Vector2.all(GameplayConstants.kCurrentTileSize * 0.8),
+        speed: GameplayConstants.kCurrentTileSize * 1.5,
         life: 120,
       );
 
@@ -44,7 +44,7 @@ class Goblin extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
       closePlayer: (player) {
         executeAttack();
       },
-      radiusVision: GameConstants.kCurrentTileSize * 4,
+      radiusVision: GameplayConstants.kCurrentTileSize * 4,
     );
   }
 
@@ -64,12 +64,12 @@ class Goblin extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
 
   void executeAttack() {
     simpleAttackMelee(
-      size: Vector2.all(GameConstants.kCurrentTileSize * 0.62),
+      size: Vector2.all(GameplayConstants.kCurrentTileSize * 0.62),
       damage: attack,
       interval: 800,
       animationRight: EnemySpriteSheet.enemyAttackEffectRight(),
       execute: () {
-        SoundManager.playAttackEnemyMelee();
+        GameplayAudioManager.playAttackEnemyMelee();
       },
     );
   }

@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/constants/game_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/strings_location.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/sound_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/npc_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/player_sprite_sheet.dart';
 import 'package:darkness_dungeon/presentation/widgets/atoms/animated_sprite_widget.dart';
@@ -18,8 +18,8 @@ class WizardNPC extends SimpleNpc {
         ),
         position: position,
         size: Vector2(
-          GameConstants.kCurrentTileSize * 0.8,
-          GameConstants.kCurrentTileSize,
+          GameplayConstants.kCurrentTileSize * 0.8,
+          GameplayConstants.kCurrentTileSize,
         ),
       );
 
@@ -37,7 +37,7 @@ class WizardNPC extends SimpleNpc {
             _showIntroduction();
           }
         },
-        radiusVision: (2 * GameConstants.kCurrentTileSize),
+        radiusVision: (2 * GameplayConstants.kCurrentTileSize),
       );
     }
   }
@@ -58,13 +58,13 @@ class WizardNPC extends SimpleNpc {
         loop: false,
         target: this,
         offset: Vector2(18, -6),
-        size: Vector2.all(GameConstants.kCurrentTileSize / 2),
+        size: Vector2.all(GameplayConstants.kCurrentTileSize / 2),
       ),
     );
   }
 
   void _showIntroduction() {
-    SoundManager.playInteraction();
+    GameplayAudioManager.playInteraction();
     TalkDialog.show(
       gameRef.context,
       [
@@ -105,10 +105,10 @@ class WizardNPC extends SimpleNpc {
         ),
       ],
       onChangeTalk: (index) {
-        SoundManager.playInteraction();
+        GameplayAudioManager.playInteraction();
       },
       onFinish: () {
-        SoundManager.playInteraction();
+        GameplayAudioManager.playInteraction();
       },
       logicalKeyboardKeysToNext: [LogicalKeyboardKey.space],
     );

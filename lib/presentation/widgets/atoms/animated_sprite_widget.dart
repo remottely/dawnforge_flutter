@@ -5,13 +5,9 @@ class AnimatedSpriteWidget extends StatelessWidget {
   final Future<SpriteAnimation> animation;
 
   const AnimatedSpriteWidget({Key? key, required this.animation})
-      : super(key: key);
+    : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 100,
-      height: 100,
-      child: animation.asWidget(),
-    );
+    return SizedBox(width: 100, height: 100, child: animation.asWidget());
   }
 }

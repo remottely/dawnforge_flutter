@@ -13,12 +13,12 @@ class PlayerVitalStatsHUD extends InterfaceComponent {
   double stamina = 0;
 
   PlayerVitalStatsHUD()
-      : super(
-          id: 1,
-          position: Vector2(20, 20),
-          spriteUnselected: Sprite.load('health_ui.png'),
-          size: Vector2(120, 40),
-        );
+    : super(
+        id: 1,
+        position: Vector2(20, 20),
+        spriteUnselected: Sprite.load('health_ui.png'),
+        size: Vector2(120, 40),
+      );
 
   @override
   void update(double t) {
@@ -45,22 +45,24 @@ class PlayerVitalStatsHUD extends InterfaceComponent {
     double xBar = 29;
     double yBar = 10;
     canvas.drawLine(
-        Offset(xBar, yBar),
-        Offset(xBar + widthBar, yBar),
-        Paint()
-          ..color = Colors.blueGrey[800]!
-          ..strokeWidth = strokeWidth
-          ..style = PaintingStyle.fill);
+      Offset(xBar, yBar),
+      Offset(xBar + widthBar, yBar),
+      Paint()
+        ..color = Colors.blueGrey[800]!
+        ..strokeWidth = strokeWidth
+        ..style = PaintingStyle.fill,
+    );
 
     double currentLifeBar = (life * widthBar) / maxLife;
 
     canvas.drawLine(
-        Offset(xBar, yBar),
-        Offset(xBar + currentLifeBar, yBar),
-        Paint()
-          ..color = _getLifeBarColor(currentLifeBar)
-          ..strokeWidth = strokeWidth
-          ..style = PaintingStyle.fill);
+      Offset(xBar, yBar),
+      Offset(xBar + currentLifeBar, yBar),
+      Paint()
+        ..color = _getLifeBarColor(currentLifeBar)
+        ..strokeWidth = strokeWidth
+        ..style = PaintingStyle.fill,
+    );
   }
 
   void _drawStamina(Canvas canvas) {
@@ -70,12 +72,13 @@ class PlayerVitalStatsHUD extends InterfaceComponent {
     double currentBarStamina = (stamina * widthBar) / maxStamina;
 
     canvas.drawLine(
-        Offset(xBar, yBar),
-        Offset(xBar + currentBarStamina, yBar),
-        Paint()
-          ..color = Colors.yellow
-          ..strokeWidth = strokeWidth
-          ..style = PaintingStyle.fill);
+      Offset(xBar, yBar),
+      Offset(xBar + currentBarStamina, yBar),
+      Paint()
+        ..color = Colors.yellow
+        ..strokeWidth = strokeWidth
+        ..style = PaintingStyle.fill,
+    );
   }
 
   Color _getLifeBarColor(double currentLifeBar) {

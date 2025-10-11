@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/constants/game_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
 
 class Barrel extends GameDecoration {
   Barrel(Vector2 position)
@@ -7,8 +7,8 @@ class Barrel extends GameDecoration {
         sprite: Sprite.load('items/barrel.png'),
         position: position,
         size: Vector2(
-          GameConstants.kCurrentTileSize,
-          GameConstants.kCurrentTileSize,
+          GameplayConstants.kCurrentTileSize,
+          GameplayConstants.kCurrentTileSize,
         ),
       );
 
@@ -17,10 +17,10 @@ class Barrel extends GameDecoration {
     add(
       RectangleHitbox(
         size: Vector2(
-          GameConstants.kCurrentTileSize * 0.6,
-          GameConstants.kCurrentTileSize * 0.6,
+          GameplayConstants.kCurrentTileSize * 0.6,
+          GameplayConstants.kCurrentTileSize * 0.6,
         ),
-        position: Vector2(GameConstants.kCurrentTileSize * 0.2, 0),
+        position: Vector2(GameplayConstants.kCurrentTileSize * 0.2, 0),
       ),
     );
     return super.onLoad();

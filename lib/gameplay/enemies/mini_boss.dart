@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/constants/game_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/sound_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/tile_helper.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/effects_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/enemy_sprite_sheet.dart';
@@ -16,10 +16,10 @@ class MiniBoss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
         animation: EnemySpriteSheet.miniBossAnimations(),
         position: initPosition,
         size: Vector2(
-          GameConstants.kCurrentTileSize * 0.68,
-          GameConstants.kCurrentTileSize * 0.93,
+          GameplayConstants.kCurrentTileSize * 0.68,
+          GameplayConstants.kCurrentTileSize * 0.93,
         ),
-        speed: GameConstants.kCurrentTileSize * 1.5,
+        speed: GameplayConstants.kCurrentTileSize * 1.5,
         life: 150,
       );
 
@@ -51,17 +51,17 @@ class MiniBoss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
           closePlayer: (player) {
             executeAttack();
           },
-          radiusVision: GameConstants.kCurrentTileSize * 3,
+          radiusVision: GameplayConstants.kCurrentTileSize * 3,
         );
       },
-      radiusVision: GameConstants.kCurrentTileSize * 3,
+      radiusVision: GameplayConstants.kCurrentTileSize * 3,
     );
     if (!_seePlayerClose) {
       this.seeAndMoveToAttackRange(
         positioned: (p) {
           executeRangedAttack();
         },
-        radiusVision: GameConstants.kCurrentTileSize * 5,
+        radiusVision: GameplayConstants.kCurrentTileSize * 5,
       );
     }
   }
@@ -84,25 +84,25 @@ class MiniBoss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
     this.simpleAttackRange(
       animation: EffectsSpriteSheet.fireBallAttackRight(),
       animationDestroy: EffectsSpriteSheet.fireBallExplosion(),
-      size: Vector2.all(GameConstants.kCurrentTileSize * 0.65),
+      size: Vector2.all(GameplayConstants.kCurrentTileSize * 0.65),
       damage: attack,
       speed: speed * 2.5,
       execute: () {
-        SoundManager.playAttackRange();
+        GameplayAudioManager.playAttackRange();
       },
       onDestroy: () {
-        SoundManager.playExplosion();
+        GameplayAudioManager.playExplosion();
       },
       collision: RectangleHitbox(
         size: Vector2(
-          GameConstants.kCurrentTileSize / 3,
-          GameConstants.kCurrentTileSize / 3,
+          GameplayConstants.kCurrentTileSize / 3,
+          GameplayConstants.kCurrentTileSize / 3,
         ),
         position: Vector2(10, 5),
       ),
       lightingConfig: LightingConfig(
-        radius: GameConstants.kCurrentTileSize * 0.9,
-        blurBorder: GameConstants.kCurrentTileSize / 2,
+        radius: GameplayConstants.kCurrentTileSize * 0.9,
+        blurBorder: GameplayConstants.kCurrentTileSize / 2,
         color: Colors.deepOrangeAccent.withOpacity(0.4),
       ),
     );
@@ -110,12 +110,12 @@ class MiniBoss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
 
   void executeAttack() {
     this.simpleAttackMelee(
-      size: Vector2.all(GameConstants.kCurrentTileSize * 0.62),
+      size: Vector2.all(GameplayConstants.kCurrentTileSize * 0.62),
       damage: attack / 3,
       interval: 300,
       animationRight: EnemySpriteSheet.enemyAttackEffectRight(),
       execute: () {
-        SoundManager.playAttackEnemyMelee();
+        GameplayAudioManager.playAttackEnemyMelee();
       },
     );
   }

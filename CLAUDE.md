@@ -9,7 +9,7 @@ Este documento define os padrões de codificação e nomenclatura que devem ser 
 - **Classes**: PascalCase seguindo padrão Flutter
 - **Arquivos**: snake_case seguindo convenção Dart/Flutter
 - **Sufixo "Manager"**: Para classes que gerenciam estados ou sistemas
-  - Exemplo: `GameStateManager`, `UIStateManager`
+  - Exemplo: `GameplayStateManager`, `GameplayUIStateManager`
 
 ### Métodos e Variáveis
 
@@ -22,10 +22,10 @@ Este documento define os padrões de codificação e nomenclatura que devem ser 
 
 ### Estrutura de Classes Manager
 
-#### GameStateManager
+#### GameplayStateManager
 
 ```dart
-class GameStateManager extends GameComponent {
+class GameplayStateManager extends GameComponent {
   // Flutter-style constants for configuration
   static const String _kCheckInterval = 'interval';
   static const int _kCheckRate = 100;
@@ -50,10 +50,10 @@ class GameStateManager extends GameComponent {
 }
 ```
 
-#### UIStateManager
+#### GameplayUIStateManager
 
 ```dart
-class UIStateManager {
+class GameplayUIStateManager {
   // Flutter-style constants for UI configuration
   static const double _kImageHeight = 100.0;
   static const Color _kBackgroundColor = Colors.transparent;

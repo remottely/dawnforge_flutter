@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/constants/game_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/strings_location.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/sound_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/tile_helper.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/effects_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/enemy_sprite_sheet.dart';
@@ -27,10 +27,10 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
         animation: EnemySpriteSheet.bossAnimations(),
         position: initialPosition,
         size: Vector2(
-          GameConstants.kCurrentTileSize * 1.5,
-          GameConstants.kCurrentTileSize * 1.7,
+          GameplayConstants.kCurrentTileSize * 1.5,
+          GameplayConstants.kCurrentTileSize * 1.7,
         ),
-        speed: GameConstants.kCurrentTileSize * 1.5,
+        speed: GameplayConstants.kCurrentTileSize * 1.5,
         life: 200,
       );
 
@@ -69,7 +69,7 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
             onComplete: _showConversation,
           );
         },
-        radiusVision: GameConstants.kCurrentTileSize * 6,
+        radiusVision: GameplayConstants.kCurrentTileSize * 6,
       );
     }
 
@@ -89,7 +89,7 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
       closePlayer: (player) {
         executeAttack();
       },
-      radiusVision: GameConstants.kCurrentTileSize * 4,
+      radiusVision: GameplayConstants.kCurrentTileSize * 4,
     );
 
     super.update(dt);
@@ -157,12 +157,12 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
 
   void executeAttack() {
     this.simpleAttackMelee(
-      size: Vector2.all(GameConstants.kCurrentTileSize * 0.62),
+      size: Vector2.all(GameplayConstants.kCurrentTileSize * 0.62),
       damage: attackDamage,
       interval: 1500,
       animationRight: EnemySpriteSheet.enemyAttackEffectRight(),
       execute: () {
-        SoundManager.playAttackEnemyMelee();
+        GameplayAudioManager.playAttackEnemyMelee();
       },
     );
   }
@@ -217,7 +217,7 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
   }
 
   void _showConversation() {
-    SoundManager.playInteraction();
+    GameplayAudioManager.playInteraction();
     TalkDialog.show(
       gameRef.context,
       [
@@ -249,15 +249,15 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
         ),
       ],
       onFinish: () {
-        SoundManager.playInteraction();
+        GameplayAudioManager.playInteraction();
         spawnInitialMinions();
         Future.delayed(Duration(milliseconds: 500), () {
           gameRef.camera.moveToPlayerAnimated(zoom: 1);
-          SoundManager.playBossBackgroundMusic();
+          GameplayAudioManager.playBossBackgroundMusic();
         });
       },
       onChangeTalk: (index) {
-        SoundManager.playInteraction();
+        GameplayAudioManager.playInteraction();
       },
       logicalKeyboardKeysToNext: [LogicalKeyboardKey.space],
     );
@@ -274,7 +274,7 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
       AnimatedGameObject(
         animation: EffectsSpriteSheet.smokeExplosion(),
         position: p,
-        size: Vector2.all(GameConstants.kCurrentTileSize),
+        size: Vector2.all(GameplayConstants.kCurrentTileSize),
         loop: false,
       ),
     );

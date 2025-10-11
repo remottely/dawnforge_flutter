@@ -6,9 +6,13 @@ class AppRadioButton<T> extends StatelessWidget {
   final String? label;
   final ValueChanged<T>? onChange;
 
-  const AppRadioButton(
-      {Key? key, required this.value, this.group, this.label, this.onChange})
-      : super(key: key);
+  const AppRadioButton({
+    Key? key,
+    required this.value,
+    this.group,
+    this.label,
+    this.onChange,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +35,9 @@ class AppRadioButton<T> extends StatelessWidget {
             ),
           ),
           if (label != null) ...[
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              label!,
-              style: TextStyle(color: Colors.white),
-            ),
-          ]
+            SizedBox(width: 10),
+            Text(label!, style: TextStyle(color: Colors.white)),
+          ],
         ],
       ),
     );

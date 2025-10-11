@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/constants/game_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/player/knight.dart';
 
 class DoorKey extends GameDecoration with Sensor {
@@ -8,8 +8,8 @@ class DoorKey extends GameDecoration with Sensor {
         sprite: Sprite.load('items/key_silver.png'),
         position: position,
         size: Vector2(
-          GameConstants.kCurrentTileSize,
-          GameConstants.kCurrentTileSize,
+          GameplayConstants.kCurrentTileSize,
+          GameplayConstants.kCurrentTileSize,
         ),
       );
 
