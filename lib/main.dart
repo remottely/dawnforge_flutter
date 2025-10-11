@@ -1,12 +1,12 @@
-import 'package:darkness_dungeon/menu_screen.dart';
-import 'package:darkness_dungeon/util/localization/my_localizations_delegate.dart';
+import 'package:darkness_dungeon/gameplay/utils/localization/my_localizations_delegate.dart';
+import 'package:darkness_dungeon/presentation/screens/menu/menu_screen.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'util/sounds.dart';
+import 'gameplay/utils/sounds.dart';
 
 double tileSize = 32;
 void main() async {
@@ -20,9 +20,7 @@ void main() async {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        fontFamily: 'Normal',
-      ),
+      theme: ThemeData(fontFamily: 'Normal'),
       home: MenuScreen(),
       supportedLocales: MyLocalizationsDelegate.supportedLocales(),
       localizationsDelegates: [
