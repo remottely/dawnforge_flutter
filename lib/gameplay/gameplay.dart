@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/game_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/game_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/decoration/door.dart';
 import 'package:darkness_dungeon/gameplay/decoration/key.dart';
 import 'package:darkness_dungeon/gameplay/decoration/life_potion.dart';
@@ -13,7 +13,7 @@ import 'package:darkness_dungeon/gameplay/hud/player_hud.dart';
 import 'package:darkness_dungeon/gameplay/npc/kid.dart';
 import 'package:darkness_dungeon/gameplay/npc/wizard_npc.dart';
 import 'package:darkness_dungeon/gameplay/player/knight.dart';
-import 'package:darkness_dungeon/gameplay/utils/audio/sound_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/sound_manager.dart';
 import 'package:darkness_dungeon/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

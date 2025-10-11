@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 
-import '../constants/sprite_constants.dart';
+import '../../constants/sprite_constants.dart';
 
 /// [PlayerSpriteSheet] responsible for providing player character sprite animations
 /// Following Flutter naming conventions for player sprite systems

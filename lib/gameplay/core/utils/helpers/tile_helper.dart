@@ -1,5 +1,5 @@
-import '../../../main.dart';
-import '../constants/game_constants.dart';
+import '../../../../main.dart';
+import '../../constants/game_constants.dart';
 
 /// [TileHelper] responsible for tile size calculations and conversions
 /// Following Flutter naming conventions for game utility systems

@@ -1,11 +1,11 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/strings_location.dart';
-import 'package:darkness_dungeon/gameplay/core/ui_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/ui_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/enemies/boss.dart';
-import 'package:darkness_dungeon/gameplay/utils/audio/sound_manager.dart';
-import 'package:darkness_dungeon/gameplay/utils/helpers/tile_helper.dart';
-import 'package:darkness_dungeon/gameplay/utils/sprites/npc_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/utils/sprites/player_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/sound_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/helpers/tile_helper.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/sprites/npc_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/sprites/player_sprite_sheet.dart';
 import 'package:darkness_dungeon/presentation/widgets/atoms/animated_sprite_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

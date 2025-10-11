@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'gameplay/utils/audio/sound_manager.dart';
+import 'gameplay/core/managers/sound_manager.dart';
 
 double tileSize = 32;
 

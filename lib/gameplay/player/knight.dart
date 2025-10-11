@@ -1,10 +1,10 @@
 import 'dart:async' as async;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/utils/audio/sound_manager.dart';
-import 'package:darkness_dungeon/gameplay/utils/helpers/tile_helper.dart';
-import 'package:darkness_dungeon/gameplay/utils/sprites/effects_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/utils/sprites/player_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/sound_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/helpers/tile_helper.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/sprites/effects_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/sprites/player_sprite_sheet.dart';
 import 'package:darkness_dungeon/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

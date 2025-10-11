@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 
-import '../constants/sprite_constants.dart';
+import '../../constants/sprite_constants.dart';
 
 /// [EnvironmentSpriteSheet] responsible for providing sprite animations for environment elements
 /// Following Flutter naming conventions for environment sprite systems

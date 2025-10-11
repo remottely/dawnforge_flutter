@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/utils/sprites/environment_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/sprites/environment_sprite_sheet.dart';
 import 'package:darkness_dungeon/main.dart';
 import 'package:flutter/material.dart';
 

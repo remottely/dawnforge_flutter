@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/ui_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/ui_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/gameplay.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
