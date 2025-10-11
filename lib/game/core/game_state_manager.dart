@@ -18,6 +18,7 @@ class GameStateManager extends GameComponent {
   // Private state variables following Flutter naming conventions
   bool _isGameOverDisplayed = false;
   bool _isProcessingGameOver = false;
+
   @override
   void update(double dt) {
     _processGameStateChecks(dt);

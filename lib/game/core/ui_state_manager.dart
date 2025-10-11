@@ -25,23 +25,22 @@ class UIStateManager {
 
   /// Displays the Game Over screen with retry option
   static void displayGameOverDialog(
-      BuildContext context, VoidCallback onRetryPressed) {
+    BuildContext context,
+    Function(BuildContext) onRetryPressed,
+  ) {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) {
+      builder: (dialogContext) {
         return _createStyledDialog(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Image.asset(
-                _kGameOverAssetPath,
-                height: _kGameOverImageHeight,
-              ),
+              Image.asset(_kGameOverAssetPath, height: _kGameOverImageHeight),
               const SizedBox(height: _kDefaultSpacing),
               _createStyledButton(
                 text: getString('play_again_cap'),
-                onPressed: onRetryPressed,
+                onPressed: () => onRetryPressed(dialogContext),
                 fontSize: _kNormalFontSize,
               ),
             ],
@@ -67,8 +66,9 @@ class UIStateManager {
               ),
               const SizedBox(height: _kDefaultSpacing),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: _kHorizontalPadding),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: _kHorizontalPadding,
+                ),
                 child: _createStyledText(
                   text: getString('thanks'),
                   fontSize: _kSmallFontSize,

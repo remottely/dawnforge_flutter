@@ -6,7 +6,7 @@ import 'package:darkness_dungeon/util/localization/strings_location.dart';
 import 'package:darkness_dungeon/util/npc_sprite_sheet.dart';
 import 'package:darkness_dungeon/util/player_sprite_sheet.dart';
 import 'package:darkness_dungeon/util/sounds.dart';
-import 'package:darkness_dungeon/util/ui_state_manager.dart';
+import 'package:darkness_dungeon/game/core/ui_state_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

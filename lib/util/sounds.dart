@@ -38,7 +38,7 @@ class Sounds {
 
   static void playBackgroundSound() async {
     await FlameAudio.bgm.stop();
-    FlameAudio.bgm.play('sound_bg.mp3');
+    FlameAudio.bgm.play('ro1_death_hex.mp3');
   }
 
   static void playBackgroundBoosSound() {

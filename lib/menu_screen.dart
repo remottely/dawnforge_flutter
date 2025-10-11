@@ -1,7 +1,7 @@
 import 'dart:async' as async;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/game.dart';
+import 'package:darkness_dungeon/game/gameplay.dart';
 import 'package:darkness_dungeon/util/animated_sprite_widget.dart';
 import 'package:darkness_dungeon/util/enemy_sprite_sheet.dart';
 import 'package:darkness_dungeon/util/localization/strings_location.dart';
@@ -62,9 +62,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   fontSize: 30,
                 ),
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               if (sprites.isNotEmpty)
                 SizedBox(
                   height: 100,
@@ -73,9 +71,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     animation: sprites[currentPosition],
                   ),
                 ),
-              const SizedBox(
-                height: 30,
-              ),
+              const SizedBox(height: 30),
               SizedBox(
                 width: 150,
                 child: ElevatedButton(
@@ -97,41 +93,35 @@ class _MenuScreenState extends State<MenuScreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const Game()),
+                      MaterialPageRoute(builder: (context) => const Gameplay()),
                     );
                   },
                 ),
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               AppRadioButton<bool>(
                 value: false,
                 label: 'Keyboard',
-                group: Game.useJoystick,
+                group: Gameplay.useJoystickControls,
                 onChange: (value) {
                   setState(() {
-                    Game.useJoystick = value;
+                    Gameplay.useJoystickControls = value;
                   });
                 },
               ),
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 10),
               AppRadioButton<bool>(
                 value: true,
-                group: Game.useJoystick,
+                group: Gameplay.useJoystickControls,
                 label: 'Joystick',
                 onChange: (value) {
                   setState(() {
-                    Game.useJoystick = value;
+                    Gameplay.useJoystickControls = value;
                   });
                 },
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              if (!Game.useJoystick)
+              const SizedBox(height: 20),
+              if (!Gameplay.useJoystickControls)
                 SizedBox(
                   height: 80,
                   width: 200,
