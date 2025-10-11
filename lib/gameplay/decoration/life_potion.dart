@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/main.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/game_constants.dart';
 import 'package:darkness_dungeon/gameplay/player/knight.dart';
 
 class LifePotion extends GameDecoration with Sensor<Knight> {
@@ -9,11 +9,14 @@ class LifePotion extends GameDecoration with Sensor<Knight> {
   bool _hasBeenConsumed = false;
 
   LifePotion(this.initialPosition, this.healAmount)
-      : super.withSprite(
-          sprite: Sprite.load('items/potion_red.png'),
-          position: initialPosition,
-          size: Vector2(tileSize, tileSize),
-        );
+    : super.withSprite(
+        sprite: Sprite.load('items/potion_red.png'),
+        position: initialPosition,
+        size: Vector2(
+          GameConstants.kCurrentTileSize,
+          GameConstants.kCurrentTileSize,
+        ),
+      );
 
   @override
   void onContact(Knight player) {

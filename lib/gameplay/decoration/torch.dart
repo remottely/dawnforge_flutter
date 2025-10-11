@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/game_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/environment_sprite_sheet.dart';
-import 'package:darkness_dungeon/main.dart';
 import 'package:flutter/material.dart';
 
 class Torch extends GameDecoration {
@@ -10,7 +10,7 @@ class Torch extends GameDecoration {
     : super.withAnimation(
         animation: EnvironmentSpriteSheet.torch(),
         position: position,
-        size: Vector2.all(tileSize),
+        size: Vector2.all(GameConstants.kCurrentTileSize),
       ) {
     setupLighting(
       LightingConfig(

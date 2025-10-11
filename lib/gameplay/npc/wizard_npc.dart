@@ -1,9 +1,9 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/game_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/sound_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/npc_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/player_sprite_sheet.dart';
-import 'package:darkness_dungeon/main.dart';
 import 'package:darkness_dungeon/presentation/widgets/atoms/animated_sprite_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,7 +17,10 @@ class WizardNPC extends SimpleNpc {
           runRight: NpcSpriteSheet.wizardIdleLeft(),
         ),
         position: position,
-        size: Vector2(tileSize * 0.8, tileSize),
+        size: Vector2(
+          GameConstants.kCurrentTileSize * 0.8,
+          GameConstants.kCurrentTileSize,
+        ),
       );
 
   @override
@@ -34,7 +37,7 @@ class WizardNPC extends SimpleNpc {
             _showIntroduction();
           }
         },
-        radiusVision: (2 * tileSize),
+        radiusVision: (2 * GameConstants.kCurrentTileSize),
       );
     }
   }
@@ -55,7 +58,7 @@ class WizardNPC extends SimpleNpc {
         loop: false,
         target: this,
         offset: Vector2(18, -6),
-        size: Vector2.all(tileSize / 2),
+        size: Vector2.all(GameConstants.kCurrentTileSize / 2),
       ),
     );
   }

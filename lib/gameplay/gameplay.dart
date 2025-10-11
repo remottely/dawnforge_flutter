@@ -1,5 +1,7 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/game_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/game_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/sound_manager.dart';
 import 'package:darkness_dungeon/gameplay/decoration/door.dart';
 import 'package:darkness_dungeon/gameplay/decoration/key.dart';
 import 'package:darkness_dungeon/gameplay/decoration/life_potion.dart';
@@ -13,8 +15,6 @@ import 'package:darkness_dungeon/gameplay/hud/player_hud.dart';
 import 'package:darkness_dungeon/gameplay/npc/kid.dart';
 import 'package:darkness_dungeon/gameplay/npc/wizard_npc.dart';
 import 'package:darkness_dungeon/gameplay/player/knight.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/sound_manager.dart';
-import 'package:darkness_dungeon/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -104,7 +104,11 @@ class _GameplayState extends State<Gameplay> {
     super.didChangeDependencies();
     _cameraConfig = CameraConfig(
       speed: _kCameraSpeed,
-      zoom: getZoomFromMaxVisibleTile(context, tileSize, _kMaxVisibleTiles),
+      zoom: getZoomFromMaxVisibleTile(
+        context,
+        GameConstants.kCurrentTileSize,
+        _kMaxVisibleTiles,
+      ),
     );
   }
 
@@ -186,7 +190,10 @@ class _GameplayState extends State<Gameplay> {
   /// Creates the player character at spawn position
   Knight _createPlayer() {
     return Knight(
-      Vector2(_kPlayerSpawnX * tileSize, _kPlayerSpawnY * tileSize),
+      Vector2(
+        _kPlayerSpawnX * GameConstants.kCurrentTileSize,
+        _kPlayerSpawnY * GameConstants.kCurrentTileSize,
+      ),
     );
   }
 
@@ -194,7 +201,10 @@ class _GameplayState extends State<Gameplay> {
   WorldMapByTiled _createWorldMap() {
     return WorldMapByTiled(
       WorldMapReader.fromAsset('tiled/map.json'),
-      forceTileSize: Vector2(tileSize, tileSize),
+      forceTileSize: Vector2(
+        GameConstants.kCurrentTileSize,
+        GameConstants.kCurrentTileSize,
+      ),
       objectsBuilder: _createObjectsMap(),
     );
   }

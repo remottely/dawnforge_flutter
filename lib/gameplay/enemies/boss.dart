@@ -1,16 +1,16 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/game_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/strings_location.dart';
-import 'package:darkness_dungeon/gameplay/enemies/imp.dart';
-import 'package:darkness_dungeon/gameplay/enemies/mini_boss.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/sound_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/tile_helper.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/effects_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/enemy_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/npc_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/player_sprite_sheet.dart';
-import 'package:darkness_dungeon/main.dart';
+import 'package:darkness_dungeon/gameplay/enemies/imp.dart';
+import 'package:darkness_dungeon/gameplay/enemies/mini_boss.dart';
 import 'package:darkness_dungeon/presentation/widgets/atoms/animated_sprite_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,8 +26,11 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
     : super(
         animation: EnemySpriteSheet.bossAnimations(),
         position: initialPosition,
-        size: Vector2(tileSize * 1.5, tileSize * 1.7),
-        speed: tileSize * 1.5,
+        size: Vector2(
+          GameConstants.kCurrentTileSize * 1.5,
+          GameConstants.kCurrentTileSize * 1.7,
+        ),
+        speed: GameConstants.kCurrentTileSize * 1.5,
         life: 200,
       );
 
@@ -66,7 +69,7 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
             onComplete: _showConversation,
           );
         },
-        radiusVision: tileSize * 6,
+        radiusVision: GameConstants.kCurrentTileSize * 6,
       );
     }
 
@@ -86,7 +89,7 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
       closePlayer: (player) {
         executeAttack();
       },
-      radiusVision: tileSize * 4,
+      radiusVision: GameConstants.kCurrentTileSize * 4,
     );
 
     super.update(dt);
@@ -154,7 +157,7 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
 
   void executeAttack() {
     this.simpleAttackMelee(
-      size: Vector2.all(tileSize * 0.62),
+      size: Vector2.all(GameConstants.kCurrentTileSize * 0.62),
       damage: attackDamage,
       interval: 1500,
       animationRight: EnemySpriteSheet.enemyAttackEffectRight(),
@@ -271,7 +274,7 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
       AnimatedGameObject(
         animation: EffectsSpriteSheet.smokeExplosion(),
         position: p,
-        size: Vector2.all(tileSize),
+        size: Vector2.all(GameConstants.kCurrentTileSize),
         loop: false,
       ),
     );

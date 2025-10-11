@@ -10,8 +10,8 @@ class EffectsSpriteSheet {
   static Future<SpriteAnimation> explosion() => SpriteAnimation.load(
     'explosion.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.explosionFrames,
-      stepTime: SpriteConstants.defaultStepTime,
+      amount: SpriteConstants.kExplosionFrames,
+      stepTime: SpriteConstants.kDefaultStepTime,
       textureSize: SpriteConstants.explosionTextureSize,
     ),
   );
@@ -21,8 +21,8 @@ class EffectsSpriteSheet {
   static Future<SpriteAnimation> smokeExplosion() => SpriteAnimation.load(
     'smoke_explosin.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.smokeExplosionFrames,
-      stepTime: SpriteConstants.defaultStepTime,
+      amount: SpriteConstants.kSmokeExplosionFrames,
+      stepTime: SpriteConstants.kDefaultStepTime,
       textureSize: SpriteConstants.effectTextureSize,
     ),
   );
@@ -32,8 +32,8 @@ class EffectsSpriteSheet {
   static Future<SpriteAnimation> fireBallAttackRight() => SpriteAnimation.load(
     'player/fireball_right.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.fireballFrames,
-      stepTime: SpriteConstants.defaultStepTime,
+      amount: SpriteConstants.kFireballFrames,
+      stepTime: SpriteConstants.kDefaultStepTime,
       textureSize: SpriteConstants.fireballTextureSize,
     ),
   );
@@ -43,8 +43,8 @@ class EffectsSpriteSheet {
   static Future<SpriteAnimation> fireBallAttackLeft() => SpriteAnimation.load(
     'player/fireball_left.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.fireballFrames,
-      stepTime: SpriteConstants.defaultStepTime,
+      amount: SpriteConstants.kFireballFrames,
+      stepTime: SpriteConstants.kDefaultStepTime,
       textureSize: SpriteConstants.fireballTextureSize,
     ),
   );
@@ -54,8 +54,8 @@ class EffectsSpriteSheet {
   static Future<SpriteAnimation> fireBallAttackTop() => SpriteAnimation.load(
     'player/fireball_top.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.fireballFrames,
-      stepTime: SpriteConstants.defaultStepTime,
+      amount: SpriteConstants.kFireballFrames,
+      stepTime: SpriteConstants.kDefaultStepTime,
       textureSize: SpriteConstants.fireballTextureSize,
     ),
   );
@@ -65,8 +65,8 @@ class EffectsSpriteSheet {
   static Future<SpriteAnimation> fireBallAttackBottom() => SpriteAnimation.load(
     'player/fireball_bottom.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.fireballFrames,
-      stepTime: SpriteConstants.defaultStepTime,
+      amount: SpriteConstants.kFireballFrames,
+      stepTime: SpriteConstants.kDefaultStepTime,
       textureSize: SpriteConstants.fireballTextureSize,
     ),
   );
@@ -76,8 +76,8 @@ class EffectsSpriteSheet {
   static Future<SpriteAnimation> fireBallExplosion() => SpriteAnimation.load(
     'player/explosion_fire.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.fireballExplosionFrames,
-      stepTime: SpriteConstants.defaultStepTime,
+      amount: SpriteConstants.kFireballExplosionFrames,
+      stepTime: SpriteConstants.kDefaultStepTime,
       textureSize: SpriteConstants.explosionTextureSize,
     ),
   );

@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/player/knight.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/game_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/environment_sprite_sheet.dart';
-import 'package:darkness_dungeon/main.dart';
+import 'package:darkness_dungeon/gameplay/player/knight.dart';
 
 class Spikes extends GameDecoration with Sensor<Knight> {
   final double damageAmount;
@@ -11,7 +11,10 @@ class Spikes extends GameDecoration with Sensor<Knight> {
     : super.withAnimation(
         animation: EnvironmentSpriteSheet.spikes(),
         position: position,
-        size: Vector2(tileSize, tileSize),
+        size: Vector2(
+          GameConstants.kCurrentTileSize,
+          GameConstants.kCurrentTileSize,
+        ),
       );
 
   @override

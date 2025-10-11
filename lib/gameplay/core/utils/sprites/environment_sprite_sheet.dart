@@ -10,8 +10,8 @@ class EnvironmentSpriteSheet {
   static Future<SpriteAnimation> openTheDoor() => SpriteAnimation.load(
     'items/door_open.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.doorFrames,
-      stepTime: SpriteConstants.defaultStepTime,
+      amount: SpriteConstants.kDoorFrames,
+      stepTime: SpriteConstants.kDefaultStepTime,
       textureSize: SpriteConstants.doorTextureSize,
     ),
   );
@@ -21,8 +21,8 @@ class EnvironmentSpriteSheet {
   static Future<SpriteAnimation> spikes() => SpriteAnimation.load(
     'items/spikes.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.spikesFrames,
-      stepTime: SpriteConstants.defaultStepTime,
+      amount: SpriteConstants.kSpikesFrames,
+      stepTime: SpriteConstants.kDefaultStepTime,
       textureSize: SpriteConstants.itemTextureSize,
     ),
   );
@@ -32,8 +32,8 @@ class EnvironmentSpriteSheet {
   static Future<SpriteAnimation> torch() => SpriteAnimation.load(
     'items/torch_spritesheet.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.torchFrames,
-      stepTime: SpriteConstants.defaultStepTime,
+      amount: SpriteConstants.kTorchFrames,
+      stepTime: SpriteConstants.kDefaultStepTime,
       textureSize: SpriteConstants.itemTextureSize,
     ),
   );

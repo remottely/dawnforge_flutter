@@ -1,9 +1,9 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/game_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/sound_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/tile_helper.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/effects_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/enemy_sprite_sheet.dart';
-import 'package:darkness_dungeon/main.dart';
 import 'package:flutter/material.dart';
 
 class Imp extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
@@ -14,8 +14,8 @@ class Imp extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
     : super(
         animation: EnemySpriteSheet.impAnimations(),
         position: initPosition,
-        size: Vector2.all(tileSize * 0.8),
-        speed: tileSize * 2,
+        size: Vector2.all(GameConstants.kCurrentTileSize * 0.8),
+        speed: GameConstants.kCurrentTileSize * 2,
         life: 80,
       );
 
@@ -40,7 +40,7 @@ class Imp extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
   void update(double dt) {
     super.update(dt);
     seeAndMoveToPlayer(
-      radiusVision: tileSize * 5,
+      radiusVision: GameConstants.kCurrentTileSize * 5,
       closePlayer: (player) {
         executeAttack();
       },
@@ -49,7 +49,7 @@ class Imp extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
 
   void executeAttack() {
     simpleAttackMelee(
-      size: Vector2.all(tileSize * 0.62),
+      size: Vector2.all(GameConstants.kCurrentTileSize * 0.62),
       damage: attack,
       interval: 300,
       animationRight: EnemySpriteSheet.enemyAttackEffectRight(),
