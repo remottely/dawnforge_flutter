@@ -1,12 +1,12 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/localization/strings_location.dart';
+import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/tile_helper.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/npc_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/player_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/enemies/boss.dart';
-import 'package:darkness_dungeon/presentation/widgets/atoms/animated_sprite_widget.dart';
+import 'package:darkness_dungeon/presentation/design_system/components/atoms/app_animated_sprite_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -48,12 +48,14 @@ class Kid extends GameDecoration {
       [
         Say(
           text: [TextSpan(text: getString('talk_kid_2'))],
-          person: AnimatedSpriteWidget(animation: NpcSpriteSheet.kidIdleLeft()),
+          person: AppAnimatedSpriteWidget(
+            animation: NpcSpriteSheet.kidIdleLeft(),
+          ),
           personSayDirection: PersonSayDirection.RIGHT,
         ),
         Say(
           text: [TextSpan(text: getString('talk_player_4'))],
-          person: AnimatedSpriteWidget(
+          person: AppAnimatedSpriteWidget(
             animation: PlayerSpriteSheet.idleRight(),
           ),
           personSayDirection: PersonSayDirection.LEFT,
@@ -63,7 +65,7 @@ class Kid extends GameDecoration {
         GameplayAudioManager.playInteraction();
         gameRef.camera.moveToPlayerAnimated(
           onComplete: () {
-            GameplayUIStateManager.displayVictoryDialog(gameRef.context);
+            GameplayUIManager.displayVictoryDialog(gameRef.context);
           },
         );
       },

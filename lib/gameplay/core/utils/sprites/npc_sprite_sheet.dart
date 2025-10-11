@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 
-import '../../constants/sprite_constants.dart';
+import '../../constants/gameplay_sprite_constants.dart';
 
 /// [NpcSpriteSheet] responsible for providing NPC character sprite animations
 /// Following Flutter naming conventions for NPC sprite systems
@@ -10,9 +10,9 @@ class NpcSpriteSheet {
   static Future<SpriteAnimation> kidIdleLeft() => SpriteAnimation.load(
     'npc/kid_idle_left.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.kIdleFrames,
-      stepTime: SpriteConstants.kDefaultStepTime,
-      textureSize: SpriteConstants.npcKidTextureSize,
+      amount: GameplaySpriteConstants.kIdleFrames,
+      stepTime: GameplaySpriteConstants.kDefaultStepTime,
+      textureSize: GameplaySpriteConstants.npcKidTextureSize,
     ),
   );
 
@@ -21,9 +21,9 @@ class NpcSpriteSheet {
   static Future<SpriteAnimation> wizardIdleLeft() => SpriteAnimation.load(
     'npc/wizard_idle_left.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.kIdleFrames,
-      stepTime: SpriteConstants.kDefaultStepTime,
-      textureSize: SpriteConstants.npcWizardTextureSize,
+      amount: GameplaySpriteConstants.kIdleFrames,
+      stepTime: GameplaySpriteConstants.kDefaultStepTime,
+      textureSize: GameplaySpriteConstants.npcWizardTextureSize,
     ),
   );
 }

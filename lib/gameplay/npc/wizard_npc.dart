@@ -1,10 +1,10 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/localization/strings_location.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/gameplay_tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/npc_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/player_sprite_sheet.dart';
-import 'package:darkness_dungeon/presentation/widgets/atoms/animated_sprite_widget.dart';
+import 'package:darkness_dungeon/presentation/design_system/components/atoms/app_animated_sprite_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -18,8 +18,8 @@ class WizardNPC extends SimpleNpc {
         ),
         position: position,
         size: Vector2(
-          GameplayConstants.kCurrentTileSize * 0.8,
-          GameplayConstants.kCurrentTileSize,
+          GameplayTileConstants.kCurrentTileSize * 0.8,
+          GameplayTileConstants.kCurrentTileSize,
         ),
       );
 
@@ -37,7 +37,7 @@ class WizardNPC extends SimpleNpc {
             _showIntroduction();
           }
         },
-        radiusVision: (2 * GameplayConstants.kCurrentTileSize),
+        radiusVision: (2 * GameplayTileConstants.kCurrentTileSize),
       );
     }
   }
@@ -58,7 +58,7 @@ class WizardNPC extends SimpleNpc {
         loop: false,
         target: this,
         offset: Vector2(18, -6),
-        size: Vector2.all(GameplayConstants.kCurrentTileSize / 2),
+        size: Vector2.all(GameplayTileConstants.kCurrentTileSize / 2),
       ),
     );
   }
@@ -70,35 +70,35 @@ class WizardNPC extends SimpleNpc {
       [
         Say(
           text: [TextSpan(text: getString('talk_wizard_1'))],
-          person: AnimatedSpriteWidget(
+          person: AppAnimatedSpriteWidget(
             animation: NpcSpriteSheet.wizardIdleLeft(),
           ),
           personSayDirection: PersonSayDirection.RIGHT,
         ),
         Say(
           text: [TextSpan(text: getString('talk_player_1'))],
-          person: AnimatedSpriteWidget(
+          person: AppAnimatedSpriteWidget(
             animation: PlayerSpriteSheet.idleRight(),
           ),
           personSayDirection: PersonSayDirection.LEFT,
         ),
         Say(
           text: [TextSpan(text: getString('talk_wizard_2'))],
-          person: AnimatedSpriteWidget(
+          person: AppAnimatedSpriteWidget(
             animation: NpcSpriteSheet.wizardIdleLeft(),
           ),
           personSayDirection: PersonSayDirection.RIGHT,
         ),
         Say(
           text: [TextSpan(text: getString('talk_player_2'))],
-          person: AnimatedSpriteWidget(
+          person: AppAnimatedSpriteWidget(
             animation: PlayerSpriteSheet.idleRight(),
           ),
           personSayDirection: PersonSayDirection.LEFT,
         ),
         Say(
           text: [TextSpan(text: getString('talk_wizard_3'))],
-          person: AnimatedSpriteWidget(
+          person: AppAnimatedSpriteWidget(
             animation: NpcSpriteSheet.wizardIdleLeft(),
           ),
           personSayDirection: PersonSayDirection.RIGHT,

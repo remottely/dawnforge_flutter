@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 
-import '../../constants/sprite_constants.dart';
+import '../../constants/gameplay_sprite_constants.dart';
 
 /// [PlayerSpriteSheet] responsible for providing player character sprite animations
 /// Following Flutter naming conventions for player sprite systems
@@ -10,9 +10,9 @@ class PlayerSpriteSheet {
   static Future<SpriteAnimation> idleRight() => SpriteAnimation.load(
     'player/knight_idle.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.kIdleFrames,
-      stepTime: SpriteConstants.kDefaultStepTime,
-      textureSize: SpriteConstants.playerTextureSize,
+      amount: GameplaySpriteConstants.kIdleFrames,
+      stepTime: GameplaySpriteConstants.kDefaultStepTime,
+      textureSize: GameplaySpriteConstants.playerTextureSize,
     ),
   );
 
@@ -21,9 +21,9 @@ class PlayerSpriteSheet {
   static Future<SpriteAnimation> attackEffectBottom() => SpriteAnimation.load(
     'player/atack_effect_bottom.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.kAttackFrames,
-      stepTime: SpriteConstants.kDefaultStepTime,
-      textureSize: SpriteConstants.effectTextureSize,
+      amount: GameplaySpriteConstants.kAttackFrames,
+      stepTime: GameplaySpriteConstants.kDefaultStepTime,
+      textureSize: GameplaySpriteConstants.effectTextureSize,
     ),
   );
 
@@ -32,9 +32,9 @@ class PlayerSpriteSheet {
   static Future<SpriteAnimation> attackEffectLeft() => SpriteAnimation.load(
     'player/atack_effect_left.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.kAttackFrames,
-      stepTime: SpriteConstants.kDefaultStepTime,
-      textureSize: SpriteConstants.effectTextureSize,
+      amount: GameplaySpriteConstants.kAttackFrames,
+      stepTime: GameplaySpriteConstants.kDefaultStepTime,
+      textureSize: GameplaySpriteConstants.effectTextureSize,
     ),
   );
 
@@ -43,9 +43,9 @@ class PlayerSpriteSheet {
   static Future<SpriteAnimation> attackEffectRight() => SpriteAnimation.load(
     'player/atack_effect_right.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.kAttackFrames,
-      stepTime: SpriteConstants.kDefaultStepTime,
-      textureSize: SpriteConstants.effectTextureSize,
+      amount: GameplaySpriteConstants.kAttackFrames,
+      stepTime: GameplaySpriteConstants.kDefaultStepTime,
+      textureSize: GameplaySpriteConstants.effectTextureSize,
     ),
   );
 
@@ -54,9 +54,9 @@ class PlayerSpriteSheet {
   static Future<SpriteAnimation> attackEffectTop() => SpriteAnimation.load(
     'player/atack_effect_top.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.kAttackFrames,
-      stepTime: SpriteConstants.kDefaultStepTime,
-      textureSize: SpriteConstants.effectTextureSize,
+      amount: GameplaySpriteConstants.kAttackFrames,
+      stepTime: GameplaySpriteConstants.kDefaultStepTime,
+      textureSize: GameplaySpriteConstants.effectTextureSize,
     ),
   );
 
@@ -67,26 +67,26 @@ class PlayerSpriteSheet {
         idleLeft: SpriteAnimation.load(
           'player/knight_idle_left.png',
           SpriteAnimationData.sequenced(
-            amount: SpriteConstants.kPlayerIdleFrames,
-            stepTime: SpriteConstants.kDefaultStepTime,
-            textureSize: SpriteConstants.playerTextureSize,
+            amount: GameplaySpriteConstants.kPlayerIdleFrames,
+            stepTime: GameplaySpriteConstants.kDefaultStepTime,
+            textureSize: GameplaySpriteConstants.playerTextureSize,
           ),
         ),
         idleRight: idleRight(),
         runLeft: SpriteAnimation.load(
           'player/knight_run_left.png',
           SpriteAnimationData.sequenced(
-            amount: SpriteConstants.kPlayerRunFrames,
-            stepTime: SpriteConstants.kDefaultStepTime,
-            textureSize: SpriteConstants.playerTextureSize,
+            amount: GameplaySpriteConstants.kRunFrames,
+            stepTime: GameplaySpriteConstants.kDefaultStepTime,
+            textureSize: GameplaySpriteConstants.playerTextureSize,
           ),
         ),
         runRight: SpriteAnimation.load(
           'player/knight_run.png',
           SpriteAnimationData.sequenced(
-            amount: SpriteConstants.kPlayerRunFrames,
-            stepTime: SpriteConstants.kDefaultStepTime,
-            textureSize: SpriteConstants.playerTextureSize,
+            amount: GameplaySpriteConstants.kRunFrames,
+            stepTime: GameplaySpriteConstants.kDefaultStepTime,
+            textureSize: GameplaySpriteConstants.playerTextureSize,
           ),
         ),
       );

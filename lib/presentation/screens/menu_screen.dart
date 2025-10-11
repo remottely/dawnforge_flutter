@@ -1,13 +1,13 @@
 import 'dart:async' as async;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/localization/strings_location.dart';
+import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/enemy_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/player_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/gameplay.dart';
-import 'package:darkness_dungeon/presentation/widgets/atoms/animated_sprite_widget.dart';
-import 'package:darkness_dungeon/presentation/widgets/atoms/app_radio_button.dart';
+import 'package:darkness_dungeon/presentation/design_system/components/atoms/app_animated_sprite_widget.dart';
+import 'package:darkness_dungeon/presentation/design_system/components/atoms/app_radio_button.dart';
 import 'package:flame_splash_screen/flame_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -80,7 +80,7 @@ class _MenuScreenState extends State<MenuScreen> {
                 SizedBox(
                   height: 100,
                   width: 100,
-                  child: AnimatedSpriteWidget(
+                  child: AppAnimatedSpriteWidget(
                     animation:
                         _characterSpriteAnimations[_currentCharacterSpriteIndex],
                   ),
@@ -101,7 +101,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     style: const TextStyle(
                       color: Colors.white,
                       fontFamily: 'Normal',
-                      fontSize: 17,
+                      fontSize: 16,
                     ),
                   ),
                   onPressed: () {

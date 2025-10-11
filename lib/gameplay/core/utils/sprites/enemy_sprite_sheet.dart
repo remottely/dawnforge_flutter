@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/constants/sprite_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/gameplay_sprite_constants.dart';
 
 /// [EnemySpriteSheet] responsible for providing enemy character sprite animations
 /// Following Flutter naming conventions for enemy sprite systems
@@ -10,9 +10,9 @@ class EnemySpriteSheet {
       SpriteAnimation.load(
         'enemy/atack_effect_bottom.png',
         SpriteAnimationData.sequenced(
-          amount: SpriteConstants.kAttackFrames,
-          stepTime: SpriteConstants.kDefaultStepTime,
-          textureSize: SpriteConstants.effectTextureSize,
+          amount: GameplaySpriteConstants.kAttackFrames,
+          stepTime: GameplaySpriteConstants.kDefaultStepTime,
+          textureSize: GameplaySpriteConstants.effectTextureSize,
         ),
       );
 
@@ -22,9 +22,9 @@ class EnemySpriteSheet {
       SpriteAnimation.load(
         'enemy/atack_effect_left.png',
         SpriteAnimationData.sequenced(
-          amount: SpriteConstants.kAttackFrames,
-          stepTime: SpriteConstants.kDefaultStepTime,
-          textureSize: SpriteConstants.effectTextureSize,
+          amount: GameplaySpriteConstants.kAttackFrames,
+          stepTime: GameplaySpriteConstants.kDefaultStepTime,
+          textureSize: GameplaySpriteConstants.effectTextureSize,
         ),
       );
 
@@ -34,9 +34,9 @@ class EnemySpriteSheet {
       SpriteAnimation.load(
         'enemy/atack_effect_right.png',
         SpriteAnimationData.sequenced(
-          amount: SpriteConstants.kAttackFrames,
-          stepTime: SpriteConstants.kDefaultStepTime,
-          textureSize: SpriteConstants.effectTextureSize,
+          amount: GameplaySpriteConstants.kAttackFrames,
+          stepTime: GameplaySpriteConstants.kDefaultStepTime,
+          textureSize: GameplaySpriteConstants.effectTextureSize,
         ),
       );
 
@@ -45,9 +45,9 @@ class EnemySpriteSheet {
   static Future<SpriteAnimation> enemyAttackEffectTop() => SpriteAnimation.load(
     'enemy/atack_effect_top.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.kAttackFrames,
-      stepTime: SpriteConstants.kDefaultStepTime,
-      textureSize: SpriteConstants.effectTextureSize,
+      amount: GameplaySpriteConstants.kAttackFrames,
+      stepTime: GameplaySpriteConstants.kDefaultStepTime,
+      textureSize: GameplaySpriteConstants.effectTextureSize,
     ),
   );
 
@@ -56,9 +56,9 @@ class EnemySpriteSheet {
   static Future<SpriteAnimation> bossIdleRight() => SpriteAnimation.load(
     'enemy/boss/boss_idle.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.kIdleFrames,
-      stepTime: SpriteConstants.kDefaultStepTime,
-      textureSize: SpriteConstants.bossTextureSize,
+      amount: GameplaySpriteConstants.kIdleFrames,
+      stepTime: GameplaySpriteConstants.kDefaultStepTime,
+      textureSize: GameplaySpriteConstants.bossTextureSize,
     ),
   );
 
@@ -66,26 +66,26 @@ class EnemySpriteSheet {
     idleLeft: SpriteAnimation.load(
       'enemy/boss/boss_idle_left.png',
       SpriteAnimationData.sequenced(
-        amount: SpriteConstants.kIdleFrames,
-        stepTime: SpriteConstants.kDefaultStepTime,
-        textureSize: SpriteConstants.bossTextureSize,
+        amount: GameplaySpriteConstants.kIdleFrames,
+        stepTime: GameplaySpriteConstants.kDefaultStepTime,
+        textureSize: GameplaySpriteConstants.bossTextureSize,
       ),
     ),
     idleRight: bossIdleRight(),
     runLeft: SpriteAnimation.load(
       'enemy/boss/boss_run_left.png',
       SpriteAnimationData.sequenced(
-        amount: SpriteConstants.kIdleFrames,
-        stepTime: SpriteConstants.kDefaultStepTime,
-        textureSize: SpriteConstants.bossTextureSize,
+        amount: GameplaySpriteConstants.kIdleFrames,
+        stepTime: GameplaySpriteConstants.kDefaultStepTime,
+        textureSize: GameplaySpriteConstants.bossTextureSize,
       ),
     ),
     runRight: SpriteAnimation.load(
       'enemy/boss/boss_run_right.png',
       SpriteAnimationData.sequenced(
-        amount: SpriteConstants.kIdleFrames,
-        stepTime: SpriteConstants.kDefaultStepTime,
-        textureSize: SpriteConstants.bossTextureSize,
+        amount: GameplaySpriteConstants.kIdleFrames,
+        stepTime: GameplaySpriteConstants.kDefaultStepTime,
+        textureSize: GameplaySpriteConstants.bossTextureSize,
       ),
     ),
   );
@@ -93,9 +93,9 @@ class EnemySpriteSheet {
   static Future<SpriteAnimation> goblinIdleRight() => SpriteAnimation.load(
     'enemy/goblin/goblin_idle.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.kGoblinIdleFrames,
-      stepTime: SpriteConstants.kDefaultStepTime,
-      textureSize: SpriteConstants.enemyTextureSize,
+      amount: GameplaySpriteConstants.kGoblinIdleFrames,
+      stepTime: GameplaySpriteConstants.kDefaultStepTime,
+      textureSize: GameplaySpriteConstants.enemyTextureSize,
     ),
   );
 
@@ -104,33 +104,33 @@ class EnemySpriteSheet {
         idleLeft: SpriteAnimation.load(
           'enemy/goblin/goblin_idle_left.png',
           SpriteAnimationData.sequenced(
-            amount: SpriteConstants.kGoblinIdleFrames,
-            stepTime: SpriteConstants.kDefaultStepTime,
-            textureSize: SpriteConstants.enemyTextureSize,
+            amount: GameplaySpriteConstants.kGoblinIdleFrames,
+            stepTime: GameplaySpriteConstants.kDefaultStepTime,
+            textureSize: GameplaySpriteConstants.enemyTextureSize,
           ),
         ),
         idleRight: SpriteAnimation.load(
           'enemy/goblin/goblin_idle.png',
           SpriteAnimationData.sequenced(
-            amount: SpriteConstants.kGoblinIdleFrames,
-            stepTime: SpriteConstants.kDefaultStepTime,
-            textureSize: SpriteConstants.enemyTextureSize,
+            amount: GameplaySpriteConstants.kGoblinIdleFrames,
+            stepTime: GameplaySpriteConstants.kDefaultStepTime,
+            textureSize: GameplaySpriteConstants.enemyTextureSize,
           ),
         ),
         runLeft: SpriteAnimation.load(
           'enemy/goblin/goblin_run_left.png',
           SpriteAnimationData.sequenced(
-            amount: SpriteConstants.kGoblinRunFrames,
-            stepTime: SpriteConstants.kDefaultStepTime,
-            textureSize: SpriteConstants.enemyTextureSize,
+            amount: GameplaySpriteConstants.kRunFrames,
+            stepTime: GameplaySpriteConstants.kDefaultStepTime,
+            textureSize: GameplaySpriteConstants.enemyTextureSize,
           ),
         ),
         runRight: SpriteAnimation.load(
           'enemy/goblin/goblin_run_right.png',
           SpriteAnimationData.sequenced(
-            amount: SpriteConstants.kGoblinRunFrames,
-            stepTime: SpriteConstants.kDefaultStepTime,
-            textureSize: SpriteConstants.enemyTextureSize,
+            amount: GameplaySpriteConstants.kRunFrames,
+            stepTime: GameplaySpriteConstants.kDefaultStepTime,
+            textureSize: GameplaySpriteConstants.enemyTextureSize,
           ),
         ),
       );
@@ -138,9 +138,9 @@ class EnemySpriteSheet {
   static Future<SpriteAnimation> impIdleRight() => SpriteAnimation.load(
     'enemy/imp/imp_idle.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.kIdleFrames,
-      stepTime: SpriteConstants.kDefaultStepTime,
-      textureSize: SpriteConstants.enemyTextureSize,
+      amount: GameplaySpriteConstants.kIdleFrames,
+      stepTime: GameplaySpriteConstants.kDefaultStepTime,
+      textureSize: GameplaySpriteConstants.enemyTextureSize,
     ),
   );
 
@@ -148,33 +148,33 @@ class EnemySpriteSheet {
     idleLeft: SpriteAnimation.load(
       'enemy/imp/imp_idle_left.png',
       SpriteAnimationData.sequenced(
-        amount: SpriteConstants.kIdleFrames,
-        stepTime: SpriteConstants.kDefaultStepTime,
-        textureSize: SpriteConstants.enemyTextureSize,
+        amount: GameplaySpriteConstants.kIdleFrames,
+        stepTime: GameplaySpriteConstants.kDefaultStepTime,
+        textureSize: GameplaySpriteConstants.enemyTextureSize,
       ),
     ),
     idleRight: SpriteAnimation.load(
       'enemy/imp/imp_idle.png',
       SpriteAnimationData.sequenced(
-        amount: SpriteConstants.kIdleFrames,
-        stepTime: SpriteConstants.kDefaultStepTime,
-        textureSize: SpriteConstants.enemyTextureSize,
+        amount: GameplaySpriteConstants.kIdleFrames,
+        stepTime: GameplaySpriteConstants.kDefaultStepTime,
+        textureSize: GameplaySpriteConstants.enemyTextureSize,
       ),
     ),
     runLeft: SpriteAnimation.load(
       'enemy/imp/imp_run_left.png',
       SpriteAnimationData.sequenced(
-        amount: SpriteConstants.kIdleFrames,
-        stepTime: SpriteConstants.kDefaultStepTime,
-        textureSize: SpriteConstants.enemyTextureSize,
+        amount: GameplaySpriteConstants.kIdleFrames,
+        stepTime: GameplaySpriteConstants.kDefaultStepTime,
+        textureSize: GameplaySpriteConstants.enemyTextureSize,
       ),
     ),
     runRight: SpriteAnimation.load(
       'enemy/imp/imp_run_right.png',
       SpriteAnimationData.sequenced(
-        amount: SpriteConstants.kIdleFrames,
-        stepTime: SpriteConstants.kDefaultStepTime,
-        textureSize: SpriteConstants.enemyTextureSize,
+        amount: GameplaySpriteConstants.kIdleFrames,
+        stepTime: GameplaySpriteConstants.kDefaultStepTime,
+        textureSize: GameplaySpriteConstants.enemyTextureSize,
       ),
     ),
   );
@@ -182,9 +182,9 @@ class EnemySpriteSheet {
   static Future<SpriteAnimation> miniBossIdleRight() => SpriteAnimation.load(
     'enemy/mini_boss/mini_boss_idle.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.kIdleFrames,
-      stepTime: SpriteConstants.kDefaultStepTime,
-      textureSize: SpriteConstants.miniBossTextureSize,
+      amount: GameplaySpriteConstants.kIdleFrames,
+      stepTime: GameplaySpriteConstants.kDefaultStepTime,
+      textureSize: GameplaySpriteConstants.miniBossTextureSize,
     ),
   );
 
@@ -193,33 +193,33 @@ class EnemySpriteSheet {
         idleLeft: SpriteAnimation.load(
           'enemy/mini_boss/mini_boss_idle_left.png',
           SpriteAnimationData.sequenced(
-            amount: SpriteConstants.kIdleFrames,
-            stepTime: SpriteConstants.kDefaultStepTime,
-            textureSize: SpriteConstants.miniBossTextureSize,
+            amount: GameplaySpriteConstants.kIdleFrames,
+            stepTime: GameplaySpriteConstants.kDefaultStepTime,
+            textureSize: GameplaySpriteConstants.miniBossTextureSize,
           ),
         ),
         idleRight: SpriteAnimation.load(
           'enemy/mini_boss/mini_boss_idle.png',
           SpriteAnimationData.sequenced(
-            amount: SpriteConstants.kIdleFrames,
-            stepTime: SpriteConstants.kDefaultStepTime,
-            textureSize: SpriteConstants.miniBossTextureSize,
+            amount: GameplaySpriteConstants.kIdleFrames,
+            stepTime: GameplaySpriteConstants.kDefaultStepTime,
+            textureSize: GameplaySpriteConstants.miniBossTextureSize,
           ),
         ),
         runLeft: SpriteAnimation.load(
           'enemy/mini_boss/mini_boss_run_left.png',
           SpriteAnimationData.sequenced(
-            amount: SpriteConstants.kIdleFrames,
-            stepTime: SpriteConstants.kDefaultStepTime,
-            textureSize: SpriteConstants.miniBossTextureSize,
+            amount: GameplaySpriteConstants.kIdleFrames,
+            stepTime: GameplaySpriteConstants.kDefaultStepTime,
+            textureSize: GameplaySpriteConstants.miniBossTextureSize,
           ),
         ),
         runRight: SpriteAnimation.load(
           'enemy/mini_boss/mini_boss_run_right.png',
           SpriteAnimationData.sequenced(
-            amount: SpriteConstants.kIdleFrames,
-            stepTime: SpriteConstants.kDefaultStepTime,
-            textureSize: SpriteConstants.miniBossTextureSize,
+            amount: GameplaySpriteConstants.kIdleFrames,
+            stepTime: GameplaySpriteConstants.kDefaultStepTime,
+            textureSize: GameplaySpriteConstants.miniBossTextureSize,
           ),
         ),
       );

@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 
-import '../../constants/sprite_constants.dart';
+import '../../constants/gameplay_sprite_constants.dart';
 
 /// [EnvironmentSpriteSheet] responsible for providing sprite animations for environment elements
 /// Following Flutter naming conventions for environment sprite systems
@@ -10,9 +10,9 @@ class EnvironmentSpriteSheet {
   static Future<SpriteAnimation> openTheDoor() => SpriteAnimation.load(
     'items/door_open.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.kDoorFrames,
-      stepTime: SpriteConstants.kDefaultStepTime,
-      textureSize: SpriteConstants.doorTextureSize,
+      amount: GameplaySpriteConstants.kDoorFrames,
+      stepTime: GameplaySpriteConstants.kDefaultStepTime,
+      textureSize: GameplaySpriteConstants.doorTextureSize,
     ),
   );
 
@@ -21,9 +21,9 @@ class EnvironmentSpriteSheet {
   static Future<SpriteAnimation> spikes() => SpriteAnimation.load(
     'items/spikes.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.kSpikesFrames,
-      stepTime: SpriteConstants.kDefaultStepTime,
-      textureSize: SpriteConstants.itemTextureSize,
+      amount: GameplaySpriteConstants.kSpikesFrames,
+      stepTime: GameplaySpriteConstants.kDefaultStepTime,
+      textureSize: GameplaySpriteConstants.itemTextureSize,
     ),
   );
 
@@ -32,9 +32,9 @@ class EnvironmentSpriteSheet {
   static Future<SpriteAnimation> torch() => SpriteAnimation.load(
     'items/torch_spritesheet.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.kTorchFrames,
-      stepTime: SpriteConstants.kDefaultStepTime,
-      textureSize: SpriteConstants.itemTextureSize,
+      amount: GameplaySpriteConstants.kTorchFrames,
+      stepTime: GameplaySpriteConstants.kDefaultStepTime,
+      textureSize: GameplaySpriteConstants.itemTextureSize,
     ),
   );
 }

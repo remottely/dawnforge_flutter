@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
 import 'package:darkness_dungeon/gameplay/gameplay.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -83,7 +83,7 @@ class GameplayStateManager extends GameComponent {
   /// Following Flutter naming convention for private UI methods
   void _displayGameOverDialog() {
     _isGameOverDisplayed = true;
-    GameplayUIStateManager.displayGameOverDialog(context, _onRetryGamePressed);
+    GameplayUIManager.displayGameOverDialog(context, _onRetryGamePressed);
   }
 
   /// Handles the retry game button press

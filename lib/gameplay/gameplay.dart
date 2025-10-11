@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/gameplay_tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/decoration/door.dart';
@@ -106,7 +106,7 @@ class _GameplayState extends State<Gameplay> {
       speed: _kCameraSpeed,
       zoom: getZoomFromMaxVisibleTile(
         context,
-        GameplayConstants.kCurrentTileSize,
+        GameplayTileConstants.kCurrentTileSize,
         _kMaxVisibleTiles,
       ),
     );
@@ -191,8 +191,8 @@ class _GameplayState extends State<Gameplay> {
   Knight _createPlayer() {
     return Knight(
       Vector2(
-        _kPlayerSpawnX * GameplayConstants.kCurrentTileSize,
-        _kPlayerSpawnY * GameplayConstants.kCurrentTileSize,
+        _kPlayerSpawnX * GameplayTileConstants.kCurrentTileSize,
+        _kPlayerSpawnY * GameplayTileConstants.kCurrentTileSize,
       ),
     );
   }
@@ -202,8 +202,8 @@ class _GameplayState extends State<Gameplay> {
     return WorldMapByTiled(
       WorldMapReader.fromAsset('tiled/map.json'),
       forceTileSize: Vector2(
-        GameplayConstants.kCurrentTileSize,
-        GameplayConstants.kCurrentTileSize,
+        GameplayTileConstants.kCurrentTileSize,
+        GameplayTileConstants.kCurrentTileSize,
       ),
       objectsBuilder: _createObjectsMap(),
     );

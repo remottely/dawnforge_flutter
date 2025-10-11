@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/gameplay/core/localization/my_localizations_delegate.dart';
+import 'package:darkness_dungeon/gameplay/core/localization/gameplay_localizations_delegate.dart';
 import 'package:darkness_dungeon/presentation/screens/menu_screen.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,18 +10,22 @@ import 'gameplay/core/managers/gameplay_audio_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   if (!kIsWeb) {
     await Flame.device.setLandscape();
     await Flame.device.fullScreen();
   }
+
   await GameplayAudioManager.initialize();
-  MyLocalizationsDelegate myLocation = const MyLocalizationsDelegate();
+  GameplayLocalizationsDelegate myLocation =
+      const GameplayLocalizationsDelegate();
+
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Normal'),
       home: MenuScreen(),
-      supportedLocales: MyLocalizationsDelegate.supportedLocales(),
+      supportedLocales: GameplayLocalizationsDelegate.supportedLocales(),
       localizationsDelegates: [
         myLocation,
         DefaultCupertinoLocalizations.delegate,

@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 
-import '../../constants/sprite_constants.dart';
+import '../../constants/gameplay_sprite_constants.dart';
 
 /// [EffectsSpriteSheet] responsible for providing sprite animations for visual effects
 /// Following Flutter naming conventions for effects sprite systems
@@ -10,9 +10,9 @@ class EffectsSpriteSheet {
   static Future<SpriteAnimation> explosion() => SpriteAnimation.load(
     'explosion.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.kExplosionFrames,
-      stepTime: SpriteConstants.kDefaultStepTime,
-      textureSize: SpriteConstants.explosionTextureSize,
+      amount: GameplaySpriteConstants.kExplosionFrames,
+      stepTime: GameplaySpriteConstants.kDefaultStepTime,
+      textureSize: GameplaySpriteConstants.explosionTextureSize,
     ),
   );
 
@@ -21,9 +21,9 @@ class EffectsSpriteSheet {
   static Future<SpriteAnimation> smokeExplosion() => SpriteAnimation.load(
     'smoke_explosin.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.kSmokeExplosionFrames,
-      stepTime: SpriteConstants.kDefaultStepTime,
-      textureSize: SpriteConstants.effectTextureSize,
+      amount: GameplaySpriteConstants.kSmokeExplosionFrames,
+      stepTime: GameplaySpriteConstants.kDefaultStepTime,
+      textureSize: GameplaySpriteConstants.effectTextureSize,
     ),
   );
 
@@ -32,9 +32,9 @@ class EffectsSpriteSheet {
   static Future<SpriteAnimation> fireBallAttackRight() => SpriteAnimation.load(
     'player/fireball_right.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.kFireballFrames,
-      stepTime: SpriteConstants.kDefaultStepTime,
-      textureSize: SpriteConstants.fireballTextureSize,
+      amount: GameplaySpriteConstants.kFireballFrames,
+      stepTime: GameplaySpriteConstants.kDefaultStepTime,
+      textureSize: GameplaySpriteConstants.fireballTextureSize,
     ),
   );
 
@@ -43,9 +43,9 @@ class EffectsSpriteSheet {
   static Future<SpriteAnimation> fireBallAttackLeft() => SpriteAnimation.load(
     'player/fireball_left.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.kFireballFrames,
-      stepTime: SpriteConstants.kDefaultStepTime,
-      textureSize: SpriteConstants.fireballTextureSize,
+      amount: GameplaySpriteConstants.kFireballFrames,
+      stepTime: GameplaySpriteConstants.kDefaultStepTime,
+      textureSize: GameplaySpriteConstants.fireballTextureSize,
     ),
   );
 
@@ -54,9 +54,9 @@ class EffectsSpriteSheet {
   static Future<SpriteAnimation> fireBallAttackTop() => SpriteAnimation.load(
     'player/fireball_top.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.kFireballFrames,
-      stepTime: SpriteConstants.kDefaultStepTime,
-      textureSize: SpriteConstants.fireballTextureSize,
+      amount: GameplaySpriteConstants.kFireballFrames,
+      stepTime: GameplaySpriteConstants.kDefaultStepTime,
+      textureSize: GameplaySpriteConstants.fireballTextureSize,
     ),
   );
 
@@ -65,9 +65,9 @@ class EffectsSpriteSheet {
   static Future<SpriteAnimation> fireBallAttackBottom() => SpriteAnimation.load(
     'player/fireball_bottom.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.kFireballFrames,
-      stepTime: SpriteConstants.kDefaultStepTime,
-      textureSize: SpriteConstants.fireballTextureSize,
+      amount: GameplaySpriteConstants.kFireballFrames,
+      stepTime: GameplaySpriteConstants.kDefaultStepTime,
+      textureSize: GameplaySpriteConstants.fireballTextureSize,
     ),
   );
 
@@ -76,9 +76,9 @@ class EffectsSpriteSheet {
   static Future<SpriteAnimation> fireBallExplosion() => SpriteAnimation.load(
     'player/explosion_fire.png',
     SpriteAnimationData.sequenced(
-      amount: SpriteConstants.kFireballExplosionFrames,
-      stepTime: SpriteConstants.kDefaultStepTime,
-      textureSize: SpriteConstants.explosionTextureSize,
+      amount: GameplaySpriteConstants.kFireballExplosionFrames,
+      stepTime: GameplaySpriteConstants.kDefaultStepTime,
+      textureSize: GameplaySpriteConstants.explosionTextureSize,
     ),
   );
 }

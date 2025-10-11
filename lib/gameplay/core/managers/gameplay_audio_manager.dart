@@ -1,6 +1,6 @@
 import 'package:flame_audio/flame_audio.dart';
 
-import '../constants/audio_constants.dart';
+import '../constants/gameplay_audio_constants.dart';
 
 /// [GameplayAudioManager] responsible for managing game audio and sound effects
 /// Following Flutter naming conventions for audio manager systems
@@ -9,15 +9,17 @@ class GameplayAudioManager {
   /// Following Flutter pattern of async initialization methods
   static Future<void> initialize() async {
     FlameAudio.bgm.initialize();
-    await FlameAudio.audioCache.loadAll(AudioConstants.kAudioFilesToPreload);
+    await FlameAudio.audioCache.loadAll(
+      GameplayAudioConstants.kAudioFilesToPreload,
+    );
   }
 
   /// Plays player melee attack sound effect
   /// Following Flutter pattern of descriptive method names
   static void playAttackPlayerMelee() {
     FlameAudio.play(
-      AudioConstants.kAttackPlayerAsset,
-      volume: AudioConstants.kAttackVolume,
+      GameplayAudioConstants.kAttackPlayerAsset,
+      volume: GameplayAudioConstants.kAttackVolume,
     );
   }
 
@@ -25,8 +27,8 @@ class GameplayAudioManager {
   /// Following Flutter pattern of descriptive method names
   static void playAttackRange() {
     FlameAudio.play(
-      AudioConstants.kAttackFireBallAsset,
-      volume: AudioConstants.kRangeVolume,
+      GameplayAudioConstants.kAttackFireBallAsset,
+      volume: GameplayAudioConstants.kRangeVolume,
     );
   }
 
@@ -34,8 +36,8 @@ class GameplayAudioManager {
   /// Following Flutter pattern of descriptive method names
   static void playAttackEnemyMelee() {
     FlameAudio.play(
-      AudioConstants.kAttackEnemyAsset,
-      volume: AudioConstants.kAttackVolume,
+      GameplayAudioConstants.kAttackEnemyAsset,
+      volume: GameplayAudioConstants.kAttackVolume,
     );
   }
 
@@ -43,8 +45,8 @@ class GameplayAudioManager {
   /// Following Flutter pattern of descriptive method names
   static void playExplosion() {
     FlameAudio.play(
-      AudioConstants.kExplosionAsset,
-      volume: AudioConstants.kExplosionVolume,
+      GameplayAudioConstants.kExplosionAsset,
+      volume: GameplayAudioConstants.kExplosionVolume,
     );
   }
 
@@ -52,8 +54,8 @@ class GameplayAudioManager {
   /// Following Flutter pattern of descriptive method names
   static void playInteraction() {
     FlameAudio.play(
-      AudioConstants.kInteractionAsset,
-      volume: AudioConstants.kInteractionVolume,
+      GameplayAudioConstants.kInteractionAsset,
+      volume: GameplayAudioConstants.kInteractionVolume,
     );
   }
 
@@ -67,13 +69,13 @@ class GameplayAudioManager {
   /// Following Flutter pattern of async methods for audio operations
   static Future<void> playBackgroundMusic() async {
     await stopBackgroundMusic();
-    FlameAudio.bgm.play(AudioConstants.kBackgroundMusicAsset);
+    FlameAudio.bgm.play(GameplayAudioConstants.kBackgroundMusicAsset);
   }
 
   /// Plays boss battle background music
   /// Following Flutter pattern of descriptive method names
   static void playBossBackgroundMusic() {
-    FlameAudio.bgm.play(AudioConstants.kBossBackgroundAsset);
+    FlameAudio.bgm.play(GameplayAudioConstants.kBossBackgroundAsset);
   }
 
   /// Pauses the currently playing background music

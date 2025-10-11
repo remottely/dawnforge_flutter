@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/localization/strings_location.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/gameplay_tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/tile_helper.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/effects_sprite_sheet.dart';
@@ -11,7 +11,7 @@ import 'package:darkness_dungeon/gameplay/core/utils/sprites/npc_sprite_sheet.da
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/player_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/enemies/imp.dart';
 import 'package:darkness_dungeon/gameplay/enemies/mini_boss.dart';
-import 'package:darkness_dungeon/presentation/widgets/atoms/animated_sprite_widget.dart';
+import 'package:darkness_dungeon/presentation/design_system/components/atoms/app_animated_sprite_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -27,10 +27,10 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
         animation: EnemySpriteSheet.bossAnimations(),
         position: initialPosition,
         size: Vector2(
-          GameplayConstants.kCurrentTileSize * 1.5,
-          GameplayConstants.kCurrentTileSize * 1.7,
+          GameplayTileConstants.kCurrentTileSize * 1.5,
+          GameplayTileConstants.kCurrentTileSize * 1.7,
         ),
-        speed: GameplayConstants.kCurrentTileSize * 1.5,
+        speed: GameplayTileConstants.kCurrentTileSize * 1.5,
         life: 200,
       );
 
@@ -69,7 +69,7 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
             onComplete: _showConversation,
           );
         },
-        radiusVision: GameplayConstants.kCurrentTileSize * 6,
+        radiusVision: GameplayTileConstants.kCurrentTileSize * 6,
       );
     }
 
@@ -89,7 +89,7 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
       closePlayer: (player) {
         executeAttack();
       },
-      radiusVision: GameplayConstants.kCurrentTileSize * 4,
+      radiusVision: GameplayTileConstants.kCurrentTileSize * 4,
     );
 
     super.update(dt);
@@ -157,7 +157,7 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
 
   void executeAttack() {
     this.simpleAttackMelee(
-      size: Vector2.all(GameplayConstants.kCurrentTileSize * 0.62),
+      size: Vector2.all(GameplayTileConstants.kCurrentTileSize * 0.62),
       damage: attackDamage,
       interval: 1500,
       animationRight: EnemySpriteSheet.enemyAttackEffectRight(),
@@ -223,26 +223,28 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
       [
         Say(
           text: [TextSpan(text: getString('talk_kid_1'))],
-          person: AnimatedSpriteWidget(animation: NpcSpriteSheet.kidIdleLeft()),
+          person: AppAnimatedSpriteWidget(
+            animation: NpcSpriteSheet.kidIdleLeft(),
+          ),
           personSayDirection: PersonSayDirection.RIGHT,
         ),
         Say(
           text: [TextSpan(text: getString('talk_boss_1'))],
-          person: AnimatedSpriteWidget(
+          person: AppAnimatedSpriteWidget(
             animation: EnemySpriteSheet.bossIdleRight(),
           ),
           personSayDirection: PersonSayDirection.LEFT,
         ),
         Say(
           text: [TextSpan(text: getString('talk_player_3'))],
-          person: AnimatedSpriteWidget(
+          person: AppAnimatedSpriteWidget(
             animation: PlayerSpriteSheet.idleRight(),
           ),
           personSayDirection: PersonSayDirection.LEFT,
         ),
         Say(
           text: [TextSpan(text: getString('talk_boss_2'))],
-          person: AnimatedSpriteWidget(
+          person: AppAnimatedSpriteWidget(
             animation: EnemySpriteSheet.bossIdleRight(),
           ),
           personSayDirection: PersonSayDirection.RIGHT,
@@ -274,7 +276,7 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
       AnimatedGameObject(
         animation: EffectsSpriteSheet.smokeExplosion(),
         position: p,
-        size: Vector2.all(GameplayConstants.kCurrentTileSize),
+        size: Vector2.all(GameplayTileConstants.kCurrentTileSize),
         loop: false,
       ),
     );

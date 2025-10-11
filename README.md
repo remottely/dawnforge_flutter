@@ -4,7 +4,6 @@
 [![Flutter](https://img.shields.io/badge/Made%20with-Flutter-blue.svg)](https://flutter.dev/)
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 
-
 # Darkness Dungeon
 
 Game developed for the purpose of testing the use of the Bonfire package!
@@ -19,10 +18,8 @@ Game developed for the purpose of testing the use of the Bonfire package!
 
 [Donwload PlayStore](https://play.google.com/store/apps/details?id=com.rafaelbarbosatec.darkness_dungeon)
 
-
-
-
 ## Used packages:
+
 bonfire - [![pub package](https://img.shields.io/pub/v/bonfire.svg)](https://pub.dev/packages/bonfire)
 
 flame_audio - [![pub package](https://img.shields.io/pub/v/flame_audio.svg)](https://pub.dev/packages/flame_audio)
