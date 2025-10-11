@@ -1,6 +1,10 @@
 import 'package:bonfire/bonfire.dart';
 
+/// [EnemySpriteSheet] responsible for providing enemy character sprite animations
+/// Following Flutter naming conventions for enemy sprite systems
 class EnemySpriteSheet {
+  /// Creates enemy attack effect animation facing down
+  /// Following Flutter pattern of directional effect methods
   static Future<SpriteAnimation> enemyAttackEffectBottom() =>
       SpriteAnimation.load(
         'enemy/atack_effect_bottom.png',
@@ -11,6 +15,8 @@ class EnemySpriteSheet {
         ),
       );
 
+  /// Creates enemy attack effect animation facing left
+  /// Following Flutter pattern of directional effect methods
   static Future<SpriteAnimation> enemyAttackEffectLeft() =>
       SpriteAnimation.load(
         'enemy/atack_effect_left.png',
@@ -21,6 +27,8 @@ class EnemySpriteSheet {
         ),
       );
 
+  /// Creates enemy attack effect animation facing right
+  /// Following Flutter pattern of directional effect methods
   static Future<SpriteAnimation> enemyAttackEffectRight() =>
       SpriteAnimation.load(
         'enemy/atack_effect_right.png',
@@ -31,6 +39,8 @@ class EnemySpriteSheet {
         ),
       );
 
+  /// Creates enemy attack effect animation facing up
+  /// Following Flutter pattern of directional effect methods
   static Future<SpriteAnimation> enemyAttackEffectTop() => SpriteAnimation.load(
     'enemy/atack_effect_top.png',
     SpriteAnimationData.sequenced(
@@ -40,6 +50,8 @@ class EnemySpriteSheet {
     ),
   );
 
+  /// Creates boss idle right animation
+  /// Following Flutter pattern of descriptive factory methods
   static Future<SpriteAnimation> bossIdleRight() => SpriteAnimation.load(
     'enemy/boss/boss_idle.png',
     SpriteAnimationData.sequenced(

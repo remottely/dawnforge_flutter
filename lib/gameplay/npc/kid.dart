@@ -1,25 +1,27 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/enemies/boss.dart';
-import 'package:darkness_dungeon/presentation/widgets/atoms/animated_sprite_widget.dart';
-import 'package:darkness_dungeon/gameplay/utils/functions.dart';
-import 'package:darkness_dungeon/gameplay/utils/localization/strings_location.dart';
-import 'package:darkness_dungeon/gameplay/utils/npc_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/utils/player_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/utils/sounds.dart';
+import 'package:darkness_dungeon/gameplay/core/localization/strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/ui_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/enemies/boss.dart';
+import 'package:darkness_dungeon/gameplay/utils/audio/sound_manager.dart';
+import 'package:darkness_dungeon/gameplay/utils/helpers/tile_helper.dart';
+import 'package:darkness_dungeon/gameplay/utils/sprites/npc_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/utils/sprites/player_sprite_sheet.dart';
+import 'package:darkness_dungeon/presentation/widgets/atoms/animated_sprite_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class Kid extends GameDecoration {
   bool conversationWithHero = false;
 
-  Kid(
-    Vector2 position,
-  ) : super.withAnimation(
-          animation: NpcSpriteSheet.kidIdleLeft(),
-          position: position,
-          size: Vector2(valueByTileSize(8), valueByTileSize(11)),
-        );
+  Kid(Vector2 position)
+    : super.withAnimation(
+        animation: NpcSpriteSheet.kidIdleLeft(),
+        position: position,
+        size: Vector2(
+          TileHelper.valueByTileSize(8),
+          TileHelper.valueByTileSize(11),
+        ),
+      );
 
   @override
   void update(double dt) {
@@ -40,15 +42,13 @@ class Kid extends GameDecoration {
   }
 
   void _startConversation() {
-    Sounds.interaction();
+    SoundManager.playInteraction();
     TalkDialog.show(
       gameRef.context,
       [
         Say(
           text: [TextSpan(text: getString('talk_kid_2'))],
-          person: AnimatedSpriteWidget(
-            animation: NpcSpriteSheet.kidIdleLeft(),
-          ),
+          person: AnimatedSpriteWidget(animation: NpcSpriteSheet.kidIdleLeft()),
           personSayDirection: PersonSayDirection.RIGHT,
         ),
         Say(
@@ -60,17 +60,17 @@ class Kid extends GameDecoration {
         ),
       ],
       onFinish: () {
-        Sounds.interaction();
-        gameRef.camera.moveToPlayerAnimated(onComplete: () {
-          UIStateManager.displayVictoryDialog(gameRef.context);
-        });
+        SoundManager.playInteraction();
+        gameRef.camera.moveToPlayerAnimated(
+          onComplete: () {
+            UIStateManager.displayVictoryDialog(gameRef.context);
+          },
+        );
       },
       onChangeTalk: (index) {
-        Sounds.interaction();
+        SoundManager.playInteraction();
       },
-      logicalKeyboardKeysToNext: [
-        LogicalKeyboardKey.space,
-      ],
+      logicalKeyboardKeysToNext: [LogicalKeyboardKey.space],
     );
   }
 }

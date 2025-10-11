@@ -1,11 +1,11 @@
 import 'dart:async' as async;
 
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/utils/audio/sound_manager.dart';
+import 'package:darkness_dungeon/gameplay/utils/helpers/tile_helper.dart';
+import 'package:darkness_dungeon/gameplay/utils/sprites/effects_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/utils/sprites/player_sprite_sheet.dart';
 import 'package:darkness_dungeon/main.dart';
-import 'package:darkness_dungeon/gameplay/utils/functions.dart';
-import 'package:darkness_dungeon/gameplay/utils/game_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/utils/player_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/utils/sounds.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -17,13 +17,13 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
   bool isObservingEnemy = false;
 
   Knight(Vector2 position)
-      : super(
-          animation: PlayerSpriteSheet.playerAnimations(),
-          size: Vector2.all(tileSize),
-          position: position,
-          life: 200,
-          speed: tileSize * 2.5,
-        ) {
+    : super(
+        animation: PlayerSpriteSheet.playerAnimations(),
+        size: Vector2.all(tileSize),
+        position: position,
+        life: 200,
+        speed: tileSize * 2.5,
+      ) {
     setupLighting(
       LightingConfig(
         radius: width * 1.5,
@@ -38,10 +38,13 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
   Future<void> onLoad() {
     add(
       RectangleHitbox(
-        size: Vector2(valueByTileSize(8), valueByTileSize(8)),
+        size: Vector2(
+          TileHelper.valueByTileSize(8),
+          TileHelper.valueByTileSize(8),
+        ),
         position: Vector2(
-          valueByTileSize(4),
-          valueByTileSize(8),
+          TileHelper.valueByTileSize(4),
+          TileHelper.valueByTileSize(8),
         ),
       ),
     );
@@ -76,10 +79,7 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
     gameRef.add(
       GameDecoration.withSprite(
         sprite: Sprite.load('player/crypt.png'),
-        position: Vector2(
-          position.x,
-          position.y,
-        ),
+        position: Vector2(position.x, position.y),
         size: Vector2.all(30),
       ),
     );
@@ -91,7 +91,7 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
       return;
     }
 
-    Sounds.attackPlayerMelee();
+    SoundManager.playAttackPlayerMelee();
     decrementStamina(15);
     simpleAttackMelee(
       damage: attackDamage,
@@ -105,17 +105,17 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
       return;
     }
 
-    Sounds.attackRange();
+    SoundManager.playAttackRange();
 
     decrementStamina(10);
     simpleAttackRange(
-      animationRight: GameSpriteSheet.fireBallAttackRight(),
-      animationDestroy: GameSpriteSheet.fireBallExplosion(),
+      animationRight: EffectsSpriteSheet.fireBallAttackRight(),
+      animationDestroy: EffectsSpriteSheet.fireBallExplosion(),
       size: Vector2(tileSize * 0.65, tileSize * 0.65),
       damage: 10,
       speed: speed * 2.5,
       onDestroy: () {
-        Sounds.explosion();
+        SoundManager.playExplosion();
       },
       collision: RectangleHitbox(
         size: Vector2(tileSize / 3, tileSize / 3),
@@ -149,12 +149,9 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
 
   void _regenerateStamina() {
     if (_staminaRegenerationTimer == null) {
-      _staminaRegenerationTimer = async.Timer(
-        Duration(milliseconds: 150),
-        () {
-          _staminaRegenerationTimer = null;
-        },
-      );
+      _staminaRegenerationTimer = async.Timer(Duration(milliseconds: 150), () {
+        _staminaRegenerationTimer = null;
+      });
     } else {
       return;
     }
@@ -178,7 +175,7 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
     showDamage(
       damage,
       config: TextStyle(
-        fontSize: valueByTileSize(5),
+        fontSize: TileHelper.valueByTileSize(5),
         color: Colors.orange,
         fontFamily: 'Normal',
       ),
@@ -186,8 +183,9 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
     super.onReceiveDamage(attacker, damage, id);
   }
 
-  void _displayEmoteAbovePlayer(
-      {String emotePath = 'emote/emote_exclamacao.png'}) {
+  void _displayEmoteAbovePlayer({
+    String emotePath = 'emote/emote_exclamacao.png',
+  }) {
     gameRef.add(
       AnimatedFollowerGameObject(
         animation: SpriteAnimation.load(

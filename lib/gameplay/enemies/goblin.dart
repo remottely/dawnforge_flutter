@@ -1,9 +1,9 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/utils/audio/sound_manager.dart';
+import 'package:darkness_dungeon/gameplay/utils/helpers/tile_helper.dart';
+import 'package:darkness_dungeon/gameplay/utils/sprites/effects_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/utils/sprites/enemy_sprite_sheet.dart';
 import 'package:darkness_dungeon/main.dart';
-import 'package:darkness_dungeon/gameplay/utils/enemy_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/utils/functions.dart';
-import 'package:darkness_dungeon/gameplay/utils/game_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/utils/sounds.dart';
 import 'package:flutter/material.dart';
 
 class Goblin extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
@@ -11,23 +11,28 @@ class Goblin extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
   double attack = 25;
 
   Goblin(this.initPosition)
-      : super(
-          animation: EnemySpriteSheet.goblinAnimations(),
-          position: initPosition,
-          size: Vector2.all(tileSize * 0.8),
-          speed: tileSize * 1.5,
-          life: 120,
-        );
+    : super(
+        animation: EnemySpriteSheet.goblinAnimations(),
+        position: initPosition,
+        size: Vector2.all(tileSize * 0.8),
+        speed: tileSize * 1.5,
+        life: 120,
+      );
 
   @override
   Future<void> onLoad() {
-    add(RectangleHitbox(
-      size: Vector2(
-        valueByTileSize(7),
-        valueByTileSize(7),
+    add(
+      RectangleHitbox(
+        size: Vector2(
+          TileHelper.valueByTileSize(7),
+          TileHelper.valueByTileSize(7),
+        ),
+        position: Vector2(
+          TileHelper.valueByTileSize(3),
+          TileHelper.valueByTileSize(4),
+        ),
       ),
-      position: Vector2(valueByTileSize(3), valueByTileSize(4)),
-    ));
+    );
     return super.onLoad();
   }
 
@@ -47,7 +52,7 @@ class Goblin extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
   void onDie() {
     gameRef.add(
       AnimatedGameObject(
-        animation: GameSpriteSheet.smokeExplosion(),
+        animation: EffectsSpriteSheet.smokeExplosion(),
         position: position,
         size: Vector2(32, 32),
         loop: false,
@@ -64,7 +69,7 @@ class Goblin extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
       interval: 800,
       animationRight: EnemySpriteSheet.enemyAttackEffectRight(),
       execute: () {
-        Sounds.attackEnemyMelee();
+        SoundManager.playAttackEnemyMelee();
       },
     );
   }
@@ -74,7 +79,7 @@ class Goblin extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
     showDamage(
       damage,
       config: TextStyle(
-        fontSize: valueByTileSize(5),
+        fontSize: TileHelper.valueByTileSize(5),
         color: Colors.white,
         fontFamily: 'Normal',
       ),

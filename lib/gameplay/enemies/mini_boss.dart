@@ -1,9 +1,9 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/utils/audio/sound_manager.dart';
+import 'package:darkness_dungeon/gameplay/utils/helpers/tile_helper.dart';
+import 'package:darkness_dungeon/gameplay/utils/sprites/effects_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/utils/sprites/enemy_sprite_sheet.dart';
 import 'package:darkness_dungeon/main.dart';
-import 'package:darkness_dungeon/gameplay/utils/enemy_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/utils/functions.dart';
-import 'package:darkness_dungeon/gameplay/utils/game_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/utils/sounds.dart';
 import 'package:flutter/material.dart';
 
 class MiniBoss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
@@ -12,20 +12,26 @@ class MiniBoss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
   bool _seePlayerClose = false;
 
   MiniBoss(this.initPosition)
-      : super(
-          animation: EnemySpriteSheet.miniBossAnimations(),
-          position: initPosition,
-          size: Vector2(tileSize * 0.68, tileSize * 0.93),
-          speed: tileSize * 1.5,
-          life: 150,
-        );
+    : super(
+        animation: EnemySpriteSheet.miniBossAnimations(),
+        position: initPosition,
+        size: Vector2(tileSize * 0.68, tileSize * 0.93),
+        speed: tileSize * 1.5,
+        life: 150,
+      );
 
   @override
   Future<void> onLoad() {
     add(
       RectangleHitbox(
-        size: Vector2(valueByTileSize(6), valueByTileSize(7)),
-        position: Vector2(valueByTileSize(2.5), valueByTileSize(8)),
+        size: Vector2(
+          TileHelper.valueByTileSize(6),
+          TileHelper.valueByTileSize(7),
+        ),
+        position: Vector2(
+          TileHelper.valueByTileSize(2.5),
+          TileHelper.valueByTileSize(8),
+        ),
       ),
     );
     return super.onLoad();
@@ -61,7 +67,7 @@ class MiniBoss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
   void onDie() {
     gameRef.add(
       AnimatedGameObject(
-        animation: GameSpriteSheet.smokeExplosion(),
+        animation: EffectsSpriteSheet.smokeExplosion(),
         position: this.position,
         size: Vector2(32, 32),
         loop: false,
@@ -73,16 +79,16 @@ class MiniBoss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
 
   void executeRangedAttack() {
     this.simpleAttackRange(
-      animation: GameSpriteSheet.fireBallAttackRight(),
-      animationDestroy: GameSpriteSheet.fireBallExplosion(),
+      animation: EffectsSpriteSheet.fireBallAttackRight(),
+      animationDestroy: EffectsSpriteSheet.fireBallExplosion(),
       size: Vector2.all(tileSize * 0.65),
       damage: attack,
       speed: speed * 2.5,
       execute: () {
-        Sounds.attackRange();
+        SoundManager.playAttackRange();
       },
       onDestroy: () {
-        Sounds.explosion();
+        SoundManager.playExplosion();
       },
       collision: RectangleHitbox(
         size: Vector2(tileSize / 3, tileSize / 3),
@@ -103,7 +109,7 @@ class MiniBoss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
       interval: 300,
       animationRight: EnemySpriteSheet.enemyAttackEffectRight(),
       execute: () {
-        Sounds.attackEnemyMelee();
+        SoundManager.playAttackEnemyMelee();
       },
     );
   }
@@ -113,7 +119,7 @@ class MiniBoss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
     this.showDamage(
       damage,
       config: TextStyle(
-        fontSize: valueByTileSize(5),
+        fontSize: TileHelper.valueByTileSize(5),
         color: Colors.white,
         fontFamily: 'Normal',
       ),

@@ -1,21 +1,22 @@
-import 'package:darkness_dungeon/gameplay/utils/localization/my_localizations_delegate.dart';
-import 'package:darkness_dungeon/presentation/screens/menu/menu_screen.dart';
+import 'package:darkness_dungeon/gameplay/core/localization/my_localizations_delegate.dart';
+import 'package:darkness_dungeon/presentation/screens/menu_screen.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'gameplay/utils/sounds.dart';
+import 'gameplay/utils/audio/sound_manager.dart';
 
 double tileSize = 32;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (!kIsWeb) {
     await Flame.device.setLandscape();
     await Flame.device.fullScreen();
   }
-  await Sounds.initialize();
+  await SoundManager.initialize();
   MyLocalizationsDelegate myLocation = const MyLocalizationsDelegate();
   runApp(
     MaterialApp(

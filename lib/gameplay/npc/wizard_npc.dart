@@ -1,28 +1,24 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/localization/strings_location.dart';
+import 'package:darkness_dungeon/gameplay/utils/audio/sound_manager.dart';
+import 'package:darkness_dungeon/gameplay/utils/sprites/npc_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/utils/sprites/player_sprite_sheet.dart';
 import 'package:darkness_dungeon/main.dart';
 import 'package:darkness_dungeon/presentation/widgets/atoms/animated_sprite_widget.dart';
-import 'package:darkness_dungeon/gameplay/utils/localization/strings_location.dart';
-import 'package:darkness_dungeon/gameplay/utils/npc_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/utils/player_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/utils/sounds.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class WizardNPC extends SimpleNpc {
   bool _isShowingConversation = false;
-  WizardNPC(
-    Vector2 position,
-  ) : super(
-          animation: SimpleDirectionAnimation(
-            idleRight: NpcSpriteSheet.wizardIdleLeft(),
-            runRight: NpcSpriteSheet.wizardIdleLeft(),
-          ),
-          position: position,
-          size: Vector2(
-            tileSize * 0.8,
-            tileSize,
-          ),
-        );
+  WizardNPC(Vector2 position)
+    : super(
+        animation: SimpleDirectionAnimation(
+          idleRight: NpcSpriteSheet.wizardIdleLeft(),
+          runRight: NpcSpriteSheet.wizardIdleLeft(),
+        ),
+        position: position,
+        size: Vector2(tileSize * 0.8, tileSize),
+      );
 
   @override
   void update(double dt) {
@@ -43,8 +39,9 @@ class WizardNPC extends SimpleNpc {
     }
   }
 
-  void _displayEmoteAboveNPC(
-      {String emotePath = 'emote/emote_exclamacao.png'}) {
+  void _displayEmoteAboveNPC({
+    String emotePath = 'emote/emote_exclamacao.png',
+  }) {
     gameRef.add(
       AnimatedFollowerGameObject(
         animation: SpriteAnimation.load(
@@ -64,14 +61,12 @@ class WizardNPC extends SimpleNpc {
   }
 
   void _showIntroduction() {
-    Sounds.interaction();
+    SoundManager.playInteraction();
     TalkDialog.show(
       gameRef.context,
       [
         Say(
-          text: [
-            TextSpan(text: getString('talk_wizard_1')),
-          ],
+          text: [TextSpan(text: getString('talk_wizard_1'))],
           person: AnimatedSpriteWidget(
             animation: NpcSpriteSheet.wizardIdleLeft(),
           ),
@@ -107,14 +102,12 @@ class WizardNPC extends SimpleNpc {
         ),
       ],
       onChangeTalk: (index) {
-        Sounds.interaction();
+        SoundManager.playInteraction();
       },
       onFinish: () {
-        Sounds.interaction();
+        SoundManager.playInteraction();
       },
-      logicalKeyboardKeysToNext: [
-        LogicalKeyboardKey.space,
-      ],
+      logicalKeyboardKeysToNext: [LogicalKeyboardKey.space],
     );
   }
 }

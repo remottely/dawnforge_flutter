@@ -1,11 +1,11 @@
 import 'dart:async' as async;
 
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/localization/strings_location.dart';
 import 'package:darkness_dungeon/gameplay/gameplay.dart';
-import 'package:darkness_dungeon/gameplay/utils/enemy_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/utils/localization/strings_location.dart';
-import 'package:darkness_dungeon/gameplay/utils/player_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/utils/sounds.dart';
+import 'package:darkness_dungeon/gameplay/utils/audio/sound_manager.dart';
+import 'package:darkness_dungeon/gameplay/utils/sprites/enemy_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/utils/sprites/player_sprite_sheet.dart';
 import 'package:darkness_dungeon/presentation/widgets/atoms/animated_sprite_widget.dart';
 import 'package:darkness_dungeon/presentation/widgets/atoms/app_radio_button.dart';
 import 'package:flame_splash_screen/flame_splash_screen.dart';
@@ -46,7 +46,7 @@ class _MenuScreenState extends State<MenuScreen> {
 
   /// Cleanup method to properly dispose resources
   void _cleanupResources() {
-    Sounds.stopBackgroundSound();
+    SoundManager.stopBackgroundMusic();
     _characterAnimationTimer.cancel();
   }
 

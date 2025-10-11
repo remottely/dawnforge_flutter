@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:darkness_dungeon/gameplay/utils/localization/my_localizations.dart';
+import 'package:darkness_dungeon/gameplay/core/localization/my_localizations.dart';
 import 'package:flutter/material.dart';
 
 class MyLocalizationsDelegate extends LocalizationsDelegate<MyLocalizations> {

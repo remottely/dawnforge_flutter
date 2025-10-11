@@ -1,4 +1,5 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/game_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/decoration/door.dart';
 import 'package:darkness_dungeon/gameplay/decoration/key.dart';
 import 'package:darkness_dungeon/gameplay/decoration/life_potion.dart';
@@ -8,13 +9,12 @@ import 'package:darkness_dungeon/gameplay/enemies/boss.dart';
 import 'package:darkness_dungeon/gameplay/enemies/goblin.dart';
 import 'package:darkness_dungeon/gameplay/enemies/imp.dart';
 import 'package:darkness_dungeon/gameplay/enemies/mini_boss.dart';
-import 'package:darkness_dungeon/gameplay/core/game_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/hud/player_hud.dart';
-import 'package:darkness_dungeon/main.dart';
 import 'package:darkness_dungeon/gameplay/npc/kid.dart';
 import 'package:darkness_dungeon/gameplay/npc/wizard_npc.dart';
 import 'package:darkness_dungeon/gameplay/player/knight.dart';
-import 'package:darkness_dungeon/gameplay/utils/sounds.dart';
+import 'package:darkness_dungeon/gameplay/utils/audio/sound_manager.dart';
+import 'package:darkness_dungeon/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -80,12 +80,12 @@ class _GameplayState extends State<Gameplay> {
 
   /// Initializes background music and sound effects
   void _initializeGameAudio() {
-    Sounds.playBackgroundSound();
+    SoundManager.playBackgroundMusic();
   }
 
   /// Cleans up audio resources when game ends
   void _cleanupGameAudio() {
-    Sounds.stopBackgroundSound();
+    SoundManager.stopBackgroundMusic();
   }
 
   /// Pre-initializes all game components for better performance

@@ -1,5 +1,5 @@
-import 'package:darkness_dungeon/gameplay/utils/localization/strings_location.dart';
-import 'package:darkness_dungeon/presentation/screens/menu/menu_screen.dart';
+import 'package:darkness_dungeon/gameplay/core/localization/strings_location.dart';
+import 'package:darkness_dungeon/presentation/screens/menu_screen.dart';
 import 'package:flutter/material.dart';
 
 /// UI State Manager for game dialogs and modal windows

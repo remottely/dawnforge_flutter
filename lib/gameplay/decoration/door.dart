@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/localization/strings_location.dart';
 import 'package:darkness_dungeon/gameplay/player/knight.dart';
-import 'package:darkness_dungeon/gameplay/utils/game_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/utils/localization/strings_location.dart';
-import 'package:darkness_dungeon/gameplay/utils/player_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/utils/sprites/environment_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/utils/sprites/player_sprite_sheet.dart';
 import 'package:flutter/cupertino.dart';
 
 class Door extends GameDecoration {
@@ -10,24 +10,28 @@ class Door extends GameDecoration {
   bool isShowingDialog = false;
 
   Door(Vector2 position, Vector2 size)
-      : super.withSprite(
-          sprite: Sprite.load('items/door_closed.png'),
-          position: position,
-          size: size,
-        );
+    : super.withSprite(
+        sprite: Sprite.load('items/door_closed.png'),
+        position: position,
+        size: size,
+      );
 
   @override
   Future<void> onLoad() {
-    add(RectangleHitbox(
-      size: Vector2(width, height / 4),
-      position: Vector2(0, height * 0.75),
-    ));
+    add(
+      RectangleHitbox(
+        size: Vector2(width, height / 4),
+        position: Vector2(0, height * 0.75),
+      ),
+    );
     return super.onLoad();
   }
 
   @override
   void onCollisionStart(
-      Set<Vector2> intersectionPoints, PositionComponent other) {
+    Set<Vector2> intersectionPoints,
+    PositionComponent other,
+  ) {
     if (other is Knight) {
       if (!isOpen) {
         Knight player = other;
@@ -36,7 +40,7 @@ class Door extends GameDecoration {
           player.hasKey = false;
 
           playSpriteAnimationOnce(
-            GameSpriteSheet.openTheDoor(),
+            EnvironmentSpriteSheet.openTheDoor(),
             onFinish: removeFromParent,
             onStart: () {
               sprite = null;
@@ -61,7 +65,7 @@ class Door extends GameDecoration {
           text: [TextSpan(text: getString('door_without_key'))],
           person: PlayerSpriteSheet.idleRight().asWidget(),
           personSayDirection: PersonSayDirection.LEFT,
-        )
+        ),
       ],
       onClose: () {
         isShowingDialog = false;
