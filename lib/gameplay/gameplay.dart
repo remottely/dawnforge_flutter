@@ -4,6 +4,7 @@ import 'package:darkness_dungeon/gameplay/core/constants/gameplay_map_constants.
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_map_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/models/map_model.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/app_logger.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/gameplay_map_sensor.dart';
@@ -101,15 +102,16 @@ class _GameplayState extends State<Gameplay> {
             GameplayConstants.kCurrentTileSize;
 
         // Read background music from Tiled properties (optional field)
-        final mapBackgroundMusic = mapItem.properties['mapBackgroundMusic']
+        final mapBackgroundMusic = mapItem
+            .properties[MapModel.kBackgroundMusicPropertyKey]
             ?.toString();
 
         // Parse color values using ColorHelper for better maintainability
         final mapLightingColor = ColorHelper.fromHex(
-          mapItem.properties['mapLightingColor']?.toString(),
+          mapItem.properties[MapModel.kLightingColorPropertyKey]?.toString(),
         );
         final mapBackgroundColor = ColorHelper.fromHex(
-          mapItem.properties['mapBackgroundColor']?.toString(),
+          mapItem.properties[MapModel.kBackgroundColorPropertyKey]?.toString(),
         );
         // Start map-specific background music if provided
         if (mapBackgroundMusic != null && mapBackgroundMusic.isNotEmpty) {

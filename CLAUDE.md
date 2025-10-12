@@ -16,7 +16,7 @@ Este documento define os padrões de codificação e nomenclatura que devem ser 
 - **Métodos públicos**: camelCase (ex: `displayGameOverDialog`)
 - **Métodos privados**: \_camelCase com underscore prefix (ex: `_processGameStateChecks`)
 - **Variáveis privadas**: \_camelCase com underscore prefix (ex: `_isGameOverDisplayed`)
-- **Constantes**: \_kConstantName seguindo padrão Google/Flutter (ex: `_kGameOverImageHeight`)
+- **Constantes**: \kConstantName seguindo padrão Google/Flutter (ex: `kGameOverImageHeight`)
 
 ## 🏗️ Padrões Arquiteturais
 
@@ -27,8 +27,8 @@ Este documento define os padrões de codificação e nomenclatura que devem ser 
 ```dart
 class GameplayStateManager extends GameComponent {
   // Flutter-style constants for configuration
-  static const String _kCheckInterval = 'interval';
-  static const int _kCheckRate = 100;
+  static const String kCheckInterval = 'interval';
+  static const int kCheckRate = 100;
 
   // Private state variables
   bool _isStateDisplayed = false;
@@ -55,8 +55,8 @@ class GameplayStateManager extends GameComponent {
 ```dart
 class GameplayUIStateManager {
   // Flutter-style constants for UI configuration
-  static const double _kImageHeight = 100.0;
-  static const Color _kBackgroundColor = Colors.transparent;
+  static const double kImageHeight = 100.0;
+  static const Color kBackgroundColor = Colors.transparent;
 
   // Public static methods for UI operations
   static void displayDialog(BuildContext context) { }
@@ -98,9 +98,9 @@ void methodName() {
 ```dart
 class ExampleManager {
   // 1. Constantes (agrupadas por tipo)
-  static const String _kConstant = 'value';
-  static const double _kSize = 10.0;
-  static const Color _kColor = Colors.white;
+  static const String kConstant = 'value';
+  static const double kSize = 10.0;
+  static const Color kColor = Colors.white;
 
   // 2. Variáveis de instância privadas
   bool _privateVariable = false;
@@ -132,7 +132,7 @@ class ExampleManager {
 /// [Description of pattern or approach]
 static Widget _createStyledComponent({
   required String parameter,
-  double optionalParam = _kDefaultValue,
+  double optionalParam = kDefaultValue,
 }) {
   // Implementation
 }
@@ -144,21 +144,21 @@ static Widget _createStyledComponent({
 
 ```dart
 // Sizes and spacing
-static const double _kImageHeight = 100.0;
-static const double _kDefaultSpacing = 10.0;
-static const double _kLargeSpacing = 30.0;
+static const double kImageHeight = 100.0;
+static const double kDefaultSpacing = 10.0;
+static const double kLargeSpacing = 30.0;
 
 // Typography
-static const double _kTitleFontSize = 30.0;
-static const double _kNormalFontSize = 20.0;
-static const String _kFontFamily = 'FontName';
+static const double kTitleFontSize = 30.0;
+static const double kNormalFontSize = 20.0;
+static const String kFontFamily = 'FontName';
 
 // Colors
-static const Color _kPrimaryColor = Colors.white;
-static const Color _kBackgroundColor = Colors.transparent;
+static const Color kPrimaryColor = Colors.white;
+static const Color kBackgroundColor = Colors.transparent;
 
 // Assets
-static const String _kAssetPath = 'assets/image.png';
+static const String kAssetPath = 'assets/image.png';
 ```
 
 ### Widgets Reutilizáveis
@@ -198,7 +198,7 @@ void _logEvent(String eventName) {
 Antes de finalizar qualquer código, verificar:
 
 - [ ] Nomenclatura segue padrões Flutter (camelCase para métodos)
-- [ ] Constantes usam prefixo `_k` e são bem nomeadas
+- [ ] Constantes usam prefixo `k` e são bem nomeadas
 - [ ] Métodos são pequenos e focados (uma responsabilidade)
 - [ ] Documentação clara para classes e métodos principais
 - [ ] Validação de estado antes de transições

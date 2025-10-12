@@ -5,6 +5,13 @@ import 'package:darkness_dungeon/gameplay/core/utils/app_logger.dart';
 /// [GameplayMapSensor] responsible for detecting player interaction with map transition areas
 /// Following Flutter naming conventions for game sensor systems
 class GameplayMapSensor extends GameDecoration with Sensor<Player> {
+  // Flutter-style constants for sensor events
+  static const String kPlayerEnteredEvent = 'Player entered sensor';
+  static const String kPlayerExitedEvent = 'Player exited sensor';
+  static const String kNavigationInitiatedEvent = 'Navigating to';
+  static const String kResetNavigationEvent =
+      'Reset navigation state for sensor';
+
   // Sensor identification and configuration
   final String id;
   final String targetMap;
@@ -32,7 +39,7 @@ class GameplayMapSensor extends GameDecoration with Sensor<Player> {
     if (!hasContact && !_hasNavigated) {
       hasContact = true;
       _contactTime = 0;
-      _logSensorEvent('Player entered sensor $id');
+      _logSensorEvent('$kPlayerEnteredEvent $id');
     }
     super.onContact(component);
   }
@@ -41,7 +48,7 @@ class GameplayMapSensor extends GameDecoration with Sensor<Player> {
   void onContactExit(Player component) {
     hasContact = false;
     _contactTime = 0;
-    _logSensorEvent('Player exited sensor $id');
+    _logSensorEvent('$kPlayerExitedEvent $id');
     super.onContactExit(component);
   }
 
@@ -63,7 +70,7 @@ class GameplayMapSensor extends GameDecoration with Sensor<Player> {
     _hasNavigated = false;
     hasContact = false;
     _contactTime = 0;
-    _logSensorEvent('Reset navigation state for sensor $id');
+    _logSensorEvent('$kResetNavigationEvent $id');
   }
 
   /// Initiates map transition with smooth timing
@@ -73,7 +80,7 @@ class GameplayMapSensor extends GameDecoration with Sensor<Player> {
     hasContact = false;
 
     AppLogger.info(
-      'MapSensor: Navigating to $targetMap, position: $playerPosition, direction: $playerDirection',
+      '${GameplayMapConstants.kMapNavigationLogPrefix}: $kNavigationInitiatedEvent $targetMap, position: $playerPosition, direction: $playerDirection',
     );
 
     // Delayed transition for smooth gameplay experience
@@ -98,7 +105,7 @@ class GameplayMapSensor extends GameDecoration with Sensor<Player> {
   /// Logs sensor events for debugging
   /// Following Flutter pattern of centralized logging
   void _logSensorEvent(String message) {
-    AppLogger.debug('MapSensor: $message');
+    AppLogger.debug('${GameplayMapConstants.kSensorLogPrefix}: $message');
   }
 }
 

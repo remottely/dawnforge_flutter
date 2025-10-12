@@ -1,6 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:bonfire/map/tiled/builder/tiled_world_builder.dart';
 import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/gameplay_map_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/models/map_model.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/gameplay_map_sensor.dart';
 import 'package:darkness_dungeon/gameplay/decoration/door.dart';
@@ -18,6 +19,20 @@ import 'package:darkness_dungeon/gameplay/npc/wizard_npc.dart';
 /// [GameplayMapManager] responsible for managing game maps and navigation systems
 /// Following Flutter naming conventions for map management systems
 class GameplayMapManager {
+  // Flutter-style constants for entity types
+  static const String kDoorEntityType = 'door';
+  static const String kKeyEntityType = 'key';
+  static const String kPotionEntityType = 'potion';
+  static const String kTorchEntityType = 'torch';
+  static const String kTorchEmptyEntityType = 'torch_empty';
+  static const String kSpikesEntityType = 'spikes';
+  static const String kWizardEntityType = 'wizard';
+  static const String kKidEntityType = 'kid';
+  static const String kBossEntityType = 'boss';
+  static const String kMiniBossEntityType = 'mini_boss';
+  static const String kGoblinEntityType = 'goblin';
+  static const String kImpEntityType = 'imp';
+
   // Private constructor to prevent instantiation
   GameplayMapManager._();
 
@@ -91,9 +106,10 @@ GameplayMapSensor _createMapSensor(
   String sensorId,
   TiledObjectProperties properties,
 ) {
-  final positionParts = properties.others['playerPosition'].toString().split(
-    ',',
-  );
+  final positionParts = properties
+      .others[GameplayMapConstants.kPlayerPositionPropertyKey]
+      .toString()
+      .split(',');
   final playerPosition = Vector2(
     double.parse(positionParts[0]),
     double.parse(positionParts[1]),
@@ -103,10 +119,12 @@ GameplayMapSensor _createMapSensor(
     id: sensorId,
     position: properties.position,
     size: properties.size,
-    targetMap: properties.others['nextMap'].toString(),
+    targetMap: properties.others[GameplayMapConstants.kNextMapPropertyKey]
+        .toString(),
     playerPosition: playerPosition,
     playerDirection: Direction.fromName(
-      properties.others['playerDirection'].toString(),
+      properties.others[GameplayMapConstants.kPlayerDirectionPropertyKey]
+          .toString(),
     ),
   );
 }
@@ -116,25 +134,26 @@ GameplayMapSensor _createMapSensor(
 void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
   final entityBuilders = <String, ObjectBuilder>{
     // Interactive decorations
-    'door': (p) => Door(p.position, p.size),
-    'key': (p) => DoorKey(p.position),
-    'potion': (p) =>
+    GameplayMapManager.kDoorEntityType: (p) => Door(p.position, p.size),
+    GameplayMapManager.kKeyEntityType: (p) => DoorKey(p.position),
+    GameplayMapManager.kPotionEntityType: (p) =>
         LifePotion(p.position, GameplayConstants.kLifePotionHealAmount),
 
     // Environmental decorations
-    'torch': (p) => Torch(p.position),
-    'torch_empty': (p) => Torch(p.position, isExtinguished: true),
-    'spikes': (p) => Spikes(p.position),
+    GameplayMapManager.kTorchEntityType: (p) => Torch(p.position),
+    GameplayMapManager.kTorchEmptyEntityType: (p) =>
+        Torch(p.position, isExtinguished: true),
+    GameplayMapManager.kSpikesEntityType: (p) => Spikes(p.position),
 
     // Non-player characters
-    'wizard': (p) => WizardNpc(p.position),
-    'kid': (p) => KidNpc(p.position),
+    GameplayMapManager.kWizardEntityType: (p) => WizardNpc(p.position),
+    GameplayMapManager.kKidEntityType: (p) => KidNpc(p.position),
 
     // Enemies
-    'boss': (p) => DungeonBossEnemy(p.position),
-    'mini_boss': (p) => MiniBossEnemy(p.position),
-    'goblin': (p) => GoblinEnemy(p.position),
-    'imp': (p) => ImpEnemy(p.position),
+    GameplayMapManager.kBossEntityType: (p) => DungeonBossEnemy(p.position),
+    GameplayMapManager.kMiniBossEntityType: (p) => MiniBossEnemy(p.position),
+    GameplayMapManager.kGoblinEntityType: (p) => GoblinEnemy(p.position),
+    GameplayMapManager.kImpEntityType: (p) => ImpEnemy(p.position),
   };
 
   builders.addEntries(entityBuilders.entries);

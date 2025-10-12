@@ -3,6 +3,34 @@ import 'package:darkness_dungeon/gameplay/core/constants/gameplay_map_constants.
 /// [MapModel] centralizes all map configuration in a reusable model
 /// Following Flutter pattern of immutable data classes for game configuration
 class MapModel {
+  // Flutter-style constants for asset paths
+  static const String kMap1Asset = 'tiled/map_1.json';
+  static const String kDungeon1Asset = 'tiled/dungeon_1.json';
+
+  // Flutter-style constants for background music
+  static const String kMap1BackgroundMusic = 'ro1_letters.mp3';
+  static const String kDungeon1BackgroundMusic = 'ro1_death_hex.mp3';
+
+  // Flutter-style constants for lighting colors
+  static const String kMap1LightingColor = '#d0ffffff';
+  static const String kDungeon1LightingColor = '#d0000000';
+
+  // Flutter-style constants for background colors
+  static const String kMap1BackgroundColor = '#ff63c74d';
+  static const String kDungeon1BackgroundColor = '#ff424242';
+
+  // Flutter-style constants for sensor configurations
+  static const List<String> kMap1SensorIds = [
+    'sensor_dungeon_1',
+    'sensor_dungeon_2',
+  ];
+  static const List<String> kDungeon1SensorIds = ['sensor_map_1'];
+
+  // Flutter-style constants for property keys
+  static const String kBackgroundMusicPropertyKey = 'backgroundMusic';
+  static const String kLightingColorPropertyKey = 'lightingColor';
+  static const String kBackgroundColorPropertyKey = 'backgroundColor';
+
   final MapId id;
   final String asset;
   final List<String> sensorIds;
@@ -25,21 +53,21 @@ class MapModel {
     // Map 1 configuration
     const MapModel(
       id: MapId.map1,
-      asset: 'tiled/map_1.json',
-      sensorIds: ['sensor_dungeon_1', 'sensor_dungeon_2'],
-      backgroundMusic: 'ro1_letters.mp3',
-      lightingColor: '#d0ffffff',
-      backgroundColor: '#ff63c74d',
+      asset: kMap1Asset,
+      sensorIds: kMap1SensorIds,
+      backgroundMusic: kMap1BackgroundMusic,
+      lightingColor: kMap1LightingColor,
+      backgroundColor: kMap1BackgroundColor,
     ),
 
     // Dungeon 1 configuration
     const MapModel(
       id: MapId.dungeon1,
-      asset: 'tiled/dungeon_1.json',
-      sensorIds: ['sensor_map_1'],
-      backgroundMusic: 'ro1_death_hex.mp3',
-      lightingColor: '#d0000000',
-      backgroundColor: '#ff424242',
+      asset: kDungeon1Asset,
+      sensorIds: kDungeon1SensorIds,
+      backgroundMusic: kDungeon1BackgroundMusic,
+      lightingColor: kDungeon1LightingColor,
+      backgroundColor: kDungeon1BackgroundColor,
     ),
   ];
 
@@ -56,8 +84,8 @@ class MapModel {
   /// Converts configuration to properties map format
   /// Following Flutter pattern of data transformation methods
   Map<String, dynamic> get properties => {
-    'mapBackgroundMusic': backgroundMusic,
-    'mapLightingColor': lightingColor,
-    'mapBackgroundColor': backgroundColor,
+    kBackgroundMusicPropertyKey: backgroundMusic,
+    kLightingColorPropertyKey: lightingColor,
+    kBackgroundColorPropertyKey: backgroundColor,
   };
 }

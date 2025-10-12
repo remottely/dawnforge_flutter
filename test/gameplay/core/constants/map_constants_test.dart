@@ -53,51 +53,101 @@ void main() {
     });
   });
 
-  group('MapConstants', () {
+  group('GameplayMapConstants', () {
     test('should have correct timing constants', () {
-      expect(GameplayMapConstants.kSensorContactTime, equals(0));
-      expect(GameplayMapConstants.kTransitionDelayMs, equals(0));
+      expect(GameplayMapConstants.kSensorContactTime, equals(0.5));
+      expect(GameplayMapConstants.kTransitionDelayMs, equals(100));
+    });
+
+    test('should have correct log prefixes', () {
+      expect(
+        GameplayMapConstants.kMapNavigationLogPrefix,
+        equals('MapNavigation'),
+      );
+      expect(GameplayMapConstants.kSensorLogPrefix, equals('MapSensor'));
+    });
+
+    test('should have correct property keys', () {
+      expect(GameplayMapConstants.kNextMapPropertyKey, equals('nextMap'));
+      expect(
+        GameplayMapConstants.kPlayerPositionPropertyKey,
+        equals('playerPosition'),
+      );
+      expect(
+        GameplayMapConstants.kPlayerDirectionPropertyKey,
+        equals('playerDirection'),
+      );
     });
   });
 
   group('MapModel', () {
+    test('should have correct constants for assets', () {
+      expect(MapModel.kMap1Asset, equals('tiled/map_1.json'));
+      expect(MapModel.kDungeon1Asset, equals('tiled/dungeon_1.json'));
+    });
+
+    test('should have correct constants for background music', () {
+      expect(MapModel.kMap1BackgroundMusic, equals('ro1_letters.mp3'));
+      expect(MapModel.kDungeon1BackgroundMusic, equals('ro1_death_hex.mp3'));
+    });
+
+    test('should have correct constants for sensor IDs', () {
+      expect(MapModel.kMap1SensorIds.length, equals(2));
+      expect(MapModel.kMap1SensorIds, contains('sensor_dungeon_1'));
+      expect(MapModel.kMap1SensorIds, contains('sensor_dungeon_2'));
+
+      expect(MapModel.kDungeon1SensorIds.length, equals(1));
+      expect(MapModel.kDungeon1SensorIds, contains('sensor_map_1'));
+    });
+
     test('should have correct asset paths', () {
       final map1Config = MapModel.byId(MapId.map1);
       final dungeon1Config = MapModel.byId(MapId.dungeon1);
 
-      expect(map1Config?.asset, equals('tiled/map_1.json'));
-      expect(dungeon1Config?.asset, equals('tiled/dungeon_1.json'));
+      expect(map1Config?.asset, equals(MapModel.kMap1Asset));
+      expect(dungeon1Config?.asset, equals(MapModel.kDungeon1Asset));
     });
 
     test('should have correct sensor configurations', () {
       final map1Config = MapModel.byId(MapId.map1);
       final dungeon1Config = MapModel.byId(MapId.dungeon1);
 
-      expect(map1Config?.sensorIds.length, equals(2));
-      expect(map1Config?.sensorIds, contains('sensor_dungeon_1'));
-      expect(map1Config?.sensorIds, contains('sensor_dungeon_2'));
-
-      expect(dungeon1Config?.sensorIds.length, equals(1));
-      expect(dungeon1Config?.sensorIds, contains('sensor_map_1'));
+      expect(map1Config?.sensorIds, equals(MapModel.kMap1SensorIds));
+      expect(dungeon1Config?.sensorIds, equals(MapModel.kDungeon1SensorIds));
     });
 
     test('should have correct background music configuration', () {
       final map1Config = MapModel.byId(MapId.map1);
       final dungeon1Config = MapModel.byId(MapId.dungeon1);
 
-      expect(map1Config?.backgroundMusic, equals('ro1_letters.mp3'));
-      expect(dungeon1Config?.backgroundMusic, equals('ro1_death_hex.mp3'));
+      expect(
+        map1Config?.backgroundMusic,
+        equals(MapModel.kMap1BackgroundMusic),
+      );
+      expect(
+        dungeon1Config?.backgroundMusic,
+        equals(MapModel.kDungeon1BackgroundMusic),
+      );
     });
 
     test('should have correct color configurations', () {
       final map1Config = MapModel.byId(MapId.map1);
       final dungeon1Config = MapModel.byId(MapId.dungeon1);
 
-      expect(map1Config?.lightingColor, equals('#d0ffffff'));
-      expect(map1Config?.backgroundColor, equals('#ff63c74d'));
+      expect(map1Config?.lightingColor, equals(MapModel.kMap1LightingColor));
+      expect(
+        map1Config?.backgroundColor,
+        equals(MapModel.kMap1BackgroundColor),
+      );
 
-      expect(dungeon1Config?.lightingColor, equals('#d0000000'));
-      expect(dungeon1Config?.backgroundColor, equals('#ff424242'));
+      expect(
+        dungeon1Config?.lightingColor,
+        equals(MapModel.kDungeon1LightingColor),
+      );
+      expect(
+        dungeon1Config?.backgroundColor,
+        equals(MapModel.kDungeon1BackgroundColor),
+      );
     });
 
     test('should return null for non-existent map ID', () {
@@ -110,13 +160,22 @@ void main() {
       expect(existingIds, contains(MapId.dungeon1));
     });
 
-    test('should convert to properties correctly', () {
+    test('should convert to properties correctly using constants', () {
       final map1Config = MapModel.byId(MapId.map1);
       final properties = map1Config?.properties;
 
-      expect(properties?['mapBackgroundMusic'], equals('ro1_letters.mp3'));
-      expect(properties?['mapLightingColor'], equals('#d0ffffff'));
-      expect(properties?['mapBackgroundColor'], equals('#ff63c74d'));
+      expect(
+        properties?[MapModel.kBackgroundMusicPropertyKey],
+        equals(MapModel.kMap1BackgroundMusic),
+      );
+      expect(
+        properties?[MapModel.kLightingColorPropertyKey],
+        equals(MapModel.kMap1LightingColor),
+      );
+      expect(
+        properties?[MapModel.kBackgroundColorPropertyKey],
+        equals(MapModel.kMap1BackgroundColor),
+      );
     });
   });
 }

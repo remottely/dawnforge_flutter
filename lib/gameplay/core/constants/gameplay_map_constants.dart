@@ -6,6 +6,15 @@ enum MapId { map1, dungeon1 }
 /// Following Flutter naming conventions for game map systems
 class GameplayMapConstants {
   // Map transition timing constants
-  static const double kSensorContactTime = 0; // 500ms delay
-  static const int kTransitionDelayMs = 0; // Smooth transition delay
+  static const double kSensorContactTime = 0.5; // 500ms delay
+  static const int kTransitionDelayMs = 100; // Smooth transition delay
+
+  // Map navigation constants
+  static const String kMapNavigationLogPrefix = 'MapNavigation';
+  static const String kSensorLogPrefix = 'MapSensor';
+
+  // Map property keys for consistency
+  static const String kNextMapPropertyKey = 'nextMap';
+  static const String kPlayerPositionPropertyKey = 'playerPosition';
+  static const String kPlayerDirectionPropertyKey = 'playerDirection';
 }
