@@ -28,7 +28,7 @@ class Kid extends GameDecoration {
     super.update(dt);
     if (!conversationWithHero && checkInterval('checkBossDead', 1000, dt)) {
       try {
-        gameRef.enemies().firstWhere((e) => e is Boss);
+        gameRef.enemies().firstWhere((e) => e is DungeonBoss);
       } catch (e) {
         conversationWithHero = true;
         gameRef.camera.moveToTargetAnimated(

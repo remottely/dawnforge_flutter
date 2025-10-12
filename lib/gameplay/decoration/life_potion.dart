@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/constants/gameplay_tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/player/knight.dart';
 
 class LifePotion extends GameDecoration with Sensor<Knight> {
@@ -13,8 +13,8 @@ class LifePotion extends GameDecoration with Sensor<Knight> {
         sprite: Sprite.load('items/potion_red.png'),
         position: initialPosition,
         size: Vector2(
-          GameplayTileConstants.kCurrentTileSize,
-          GameplayTileConstants.kCurrentTileSize,
+          GameplayConstants.kCurrentTileSize,
+          GameplayConstants.kCurrentTileSize,
         ),
       );
 

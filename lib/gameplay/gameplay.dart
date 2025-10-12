@@ -1,19 +1,12 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/constants/gameplay_tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_state_manager.dart';
-import 'package:darkness_dungeon/gameplay/decoration/door.dart';
-import 'package:darkness_dungeon/gameplay/decoration/key.dart';
-import 'package:darkness_dungeon/gameplay/decoration/life_potion.dart';
-import 'package:darkness_dungeon/gameplay/decoration/spikes.dart';
-import 'package:darkness_dungeon/gameplay/decoration/torch.dart';
-import 'package:darkness_dungeon/gameplay/enemies/boss.dart';
-import 'package:darkness_dungeon/gameplay/enemies/goblin.dart';
-import 'package:darkness_dungeon/gameplay/enemies/imp.dart';
-import 'package:darkness_dungeon/gameplay/enemies/mini_boss.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/app_logger.dart';
 import 'package:darkness_dungeon/gameplay/hud/player_hud.dart';
-import 'package:darkness_dungeon/gameplay/npc/kid.dart';
-import 'package:darkness_dungeon/gameplay/npc/wizard_npc.dart';
+import 'package:darkness_dungeon/gameplay/maps/gameplay_maps.dart';
+import 'package:darkness_dungeon/gameplay/maps/map_id_enum.dart';
 import 'package:darkness_dungeon/gameplay/player/knight.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -49,22 +42,11 @@ class _GameplayState extends State<Gameplay> {
   static const int _kMaxVisibleTiles = 18;
   static const double _kLightingOpacity = 0.6;
 
-  // Player spawn configuration
-  static const double _kPlayerSpawnX = 2.0;
-  static const double _kPlayerSpawnY = 3.0;
-
-  // Potion configuration
-  static const double _kLifePotionHealAmount = 30.0;
-
   // Pre-built game components for performance optimization
-  late final PlayerController _playerController;
-  late final Knight _player;
-  late final WorldMapByTiled _worldMap;
   late final PlayerHUD _gameHUD;
   late final Color _lightingColor;
   late final Color? _backgroundColor;
   late final CameraConfig _cameraConfig;
-
   @override
   void initState() {
     super.initState();
@@ -90,12 +72,9 @@ class _GameplayState extends State<Gameplay> {
 
   /// Pre-initializes all game components for better performance
   void _initializeGameComponents() {
-    _player = _createPlayer();
-    _worldMap = _createWorldMap();
     _gameHUD = PlayerHUD();
     _lightingColor = Colors.black.withValues(alpha: _kLightingOpacity);
     _backgroundColor = Colors.grey[900];
-    _playerController = _createPlayerController();
   }
 
   /// Initialize camera config in didChangeDependencies for context access
@@ -106,7 +85,7 @@ class _GameplayState extends State<Gameplay> {
       speed: _kCameraSpeed,
       zoom: getZoomFromMaxVisibleTile(
         context,
-        GameplayTileConstants.kCurrentTileSize,
+        GameplayConstants.kCurrentTileSize,
         _kMaxVisibleTiles,
       ),
     );
@@ -114,22 +93,60 @@ class _GameplayState extends State<Gameplay> {
 
   @override
   Widget build(BuildContext gameplayContext) {
-    return Material(
-      color: Colors.transparent,
-      child: BonfireWidget(
-        playerControllers: [_playerController],
-        player: _player,
-        map: _worldMap,
-        components: [GameplayStateManager()],
-        interface: _gameHUD,
-        lightingColorGame: _lightingColor,
-        backgroundColor: _backgroundColor,
-        cameraConfig: _cameraConfig,
-      ),
+    return MapNavigator(
+      maps: GameplayMaps.maps,
+      initialMap: MapBiomeId.map1.name,
+      builder: (context, arguments, mapItem) {
+        MapArguments? mapArguments = arguments as MapArguments?;
+        final playerPosition =
+            (mapArguments?.playerPosition ?? Vector2(4, 4)) *
+            GameplayConstants.kCurrentTileSize;
+
+        AppLogger.info(
+          'Building BonfireWidget for map: ${mapItem.id}, player position: $playerPosition',
+        );
+
+        // Create player for the current map
+        final player = _createPlayerWithState(playerPosition);
+
+        // Ensure controller is active by recreating it for each map
+        final activeController = _createFreshController();
+
+        return Material(
+          color: Colors.transparent,
+          child: BonfireWidget(
+            playerControllers: [activeController],
+            player: player,
+            map: mapItem.map,
+            components: [GameplayStateManager()],
+            interface: _gameHUD,
+            lightingColorGame: _lightingColor,
+            backgroundColor: _backgroundColor,
+            cameraConfig: _cameraConfig,
+            debugMode: AppEnvironment.isTesting,
+            showCollisionArea: AppEnvironment.showCollisionBoxes,
+          ),
+        );
+      },
     );
   }
 
+  /// Creates player for the current map
+  /// Following Flutter pattern of component factories
+  Knight _createPlayerWithState(Vector2 position) {
+    final player = Knight(position);
+    AppLogger.info('Created fresh player at position: $position');
+    return player;
+  }
+
+  /// Creates a fresh controller instance for each map navigation
+  /// Following Flutter pattern of controller management
+  PlayerController _createFreshController() {
+    return _createPlayerController();
+  }
+
   /// Creates the appropriate player controller based on configuration
+  /// Following Flutter pattern of controller factory methods
   PlayerController _createPlayerController() {
     return Gameplay.useJoystickControls
         ? _createJoystickController()
@@ -185,54 +202,6 @@ class _GameplayState extends State<Gameplay> {
         right: _kSecondaryActionMarginRight,
       ),
     );
-  }
-
-  /// Creates the player character at spawn position
-  Knight _createPlayer() {
-    return Knight(
-      Vector2(
-        _kPlayerSpawnX * GameplayTileConstants.kCurrentTileSize,
-        _kPlayerSpawnY * GameplayTileConstants.kCurrentTileSize,
-      ),
-    );
-  }
-
-  /// Creates the game world map with all entities and decorations
-  WorldMapByTiled _createWorldMap() {
-    return WorldMapByTiled(
-      WorldMapReader.fromAsset('tiled/map.json'),
-      forceTileSize: Vector2(
-        GameplayTileConstants.kCurrentTileSize,
-        GameplayTileConstants.kCurrentTileSize,
-      ),
-      objectsBuilder: _createObjectsMap(),
-    );
-  }
-
-  /// Defines the mapping of object types to their constructors
-  Map<String, GameComponent Function(TiledObjectProperties)>
-  _createObjectsMap() {
-    return {
-      // Interactive decorations
-      'door': (p) => Door(p.position, p.size),
-      'key': (p) => DoorKey(p.position),
-      'potion': (p) => LifePotion(p.position, _kLifePotionHealAmount),
-
-      // Environmental decorations
-      'torch': (p) => Torch(p.position),
-      'torch_empty': (p) => Torch(p.position, isExtinguished: true),
-      'spikes': (p) => Spikes(p.position),
-
-      // Non-player characters
-      'wizard': (p) => WizardNPC(p.position),
-      'kid': (p) => Kid(p.position),
-
-      // Enemies
-      'boss': (p) => Boss(p.position),
-      'mini_boss': (p) => MiniBoss(p.position),
-      'goblin': (p) => Goblin(p.position),
-      'imp': (p) => Imp(p.position),
-    };
   }
 }
 

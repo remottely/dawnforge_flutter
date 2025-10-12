@@ -1,7 +1,7 @@
 import 'dart:async' as async;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/constants/gameplay_tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/tile_helper.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/effects_sprite_sheet.dart';
@@ -19,10 +19,10 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
   Knight(Vector2 position)
     : super(
         animation: PlayerSpriteSheet.playerAnimations(),
-        size: Vector2.all(GameplayTileConstants.kCurrentTileSize),
+        size: Vector2.all(GameplayConstants.kCurrentTileSize),
         position: position,
         life: 200,
-        speed: GameplayTileConstants.kCurrentTileSize * 2.5,
+        speed: GameplayConstants.kCurrentTileSize * 2.5,
       ) {
     setupLighting(
       LightingConfig(
@@ -96,7 +96,7 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
     simpleAttackMelee(
       damage: attackDamage,
       animationRight: PlayerSpriteSheet.attackEffectRight(),
-      size: Vector2.all(GameplayTileConstants.kCurrentTileSize),
+      size: Vector2.all(GameplayConstants.kCurrentTileSize),
     );
   }
 
@@ -112,8 +112,8 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
       animationRight: EffectsSpriteSheet.fireBallAttackRight(),
       animationDestroy: EffectsSpriteSheet.fireBallExplosion(),
       size: Vector2(
-        GameplayTileConstants.kCurrentTileSize * 0.65,
-        GameplayTileConstants.kCurrentTileSize * 0.65,
+        GameplayConstants.kCurrentTileSize * 0.65,
+        GameplayConstants.kCurrentTileSize * 0.65,
       ),
       damage: 10,
       speed: speed * 2.5,
@@ -122,14 +122,14 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
       },
       collision: RectangleHitbox(
         size: Vector2(
-          GameplayTileConstants.kCurrentTileSize / 3,
-          GameplayTileConstants.kCurrentTileSize / 3,
+          GameplayConstants.kCurrentTileSize / 3,
+          GameplayConstants.kCurrentTileSize / 3,
         ),
         position: Vector2(10, 5),
       ),
       lightingConfig: LightingConfig(
-        radius: GameplayTileConstants.kCurrentTileSize * 0.9,
-        blurBorder: GameplayTileConstants.kCurrentTileSize / 2,
+        radius: GameplayConstants.kCurrentTileSize * 0.9,
+        blurBorder: GameplayConstants.kCurrentTileSize / 2,
         color: Colors.deepOrangeAccent.withOpacity(0.4),
       ),
     );
@@ -140,7 +140,7 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
     if (isDead) return;
     _regenerateStamina();
     seeEnemy(
-      radiusVision: GameplayTileConstants.kCurrentTileSize * 6,
+      radiusVision: GameplayConstants.kCurrentTileSize * 6,
       notObserved: () {
         isObservingEnemy = false;
       },
@@ -204,7 +204,7 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
         ),
         target: this,
         loop: false,
-        size: Vector2.all(GameplayTileConstants.kCurrentTileSize / 2),
+        size: Vector2.all(GameplayConstants.kCurrentTileSize / 2),
         offset: Vector2(18, -6),
       ),
     );

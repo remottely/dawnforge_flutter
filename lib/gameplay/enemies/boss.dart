@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/constants/gameplay_tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/tile_helper.dart';
@@ -15,22 +15,22 @@ import 'package:darkness_dungeon/presentation/design_system/components/atoms/app
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
+class DungeonBoss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
   final Vector2 initialPosition;
   double attackDamage = 40;
 
   bool _hasSeenPlayerFirst = false;
   List<Enemy> spawnedEnemies = [];
 
-  Boss(this.initialPosition)
+  DungeonBoss(this.initialPosition)
     : super(
         animation: EnemySpriteSheet.bossAnimations(),
         position: initialPosition,
         size: Vector2(
-          GameplayTileConstants.kCurrentTileSize * 1.5,
-          GameplayTileConstants.kCurrentTileSize * 1.7,
+          GameplayConstants.kCurrentTileSize * 1.5,
+          GameplayConstants.kCurrentTileSize * 1.7,
         ),
-        speed: GameplayTileConstants.kCurrentTileSize * 1.5,
+        speed: GameplayConstants.kCurrentTileSize * 1.5,
         life: 200,
       );
 
@@ -69,7 +69,7 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
             onComplete: _showConversation,
           );
         },
-        radiusVision: GameplayTileConstants.kCurrentTileSize * 6,
+        radiusVision: GameplayConstants.kCurrentTileSize * 6,
       );
     }
 
@@ -89,7 +89,7 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
       closePlayer: (player) {
         executeAttack();
       },
-      radiusVision: GameplayTileConstants.kCurrentTileSize * 4,
+      radiusVision: GameplayConstants.kCurrentTileSize * 4,
     );
 
     super.update(dt);
@@ -157,7 +157,7 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
 
   void executeAttack() {
     this.simpleAttackMelee(
-      size: Vector2.all(GameplayTileConstants.kCurrentTileSize * 0.62),
+      size: Vector2.all(GameplayConstants.kCurrentTileSize * 0.62),
       damage: attackDamage,
       interval: 1500,
       animationRight: EnemySpriteSheet.enemyAttackEffectRight(),
@@ -276,7 +276,7 @@ class Boss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
       AnimatedGameObject(
         animation: EffectsSpriteSheet.smokeExplosion(),
         position: p,
-        size: Vector2.all(GameplayTileConstants.kCurrentTileSize),
+        size: Vector2.all(GameplayConstants.kCurrentTileSize),
         loop: false,
       ),
     );
