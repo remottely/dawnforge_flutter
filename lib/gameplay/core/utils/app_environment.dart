@@ -25,16 +25,18 @@ class AppEnvironment {
       const String.fromEnvironment(_envKey, defaultValue: envDevelopment);
 
   // Environment checks
-  static bool get isDevelopment =>
-      currentEnvironment == envDevelopment || isDebugMode;
+  static bool get isDevelopment => currentEnvironment == envDevelopment;
   static bool get isTesting => currentEnvironment == envTesting;
   static bool get isStaging => currentEnvironment == envStaging;
-  static bool get isProduction =>
-      currentEnvironment == envProduction || isReleaseMode;
+  static bool get isProduction => currentEnvironment == envProduction;
+
+  // Combined environment and build mode checks (for backward compatibility)
+  static bool get isDevelopmentOrDebug => isDevelopment || isDebugMode;
+  static bool get isProductionOrRelease => isProduction || isReleaseMode;
 
   /// Debug/Development Settings
   static bool get showDebugInfo => isDevelopment;
-  static bool get enableLogging => isDevelopment || isTesting;
+  static bool get enableLogging => isDevelopment || isTesting || isStaging;
   static bool get showFPS => isDevelopment;
   static bool get enableCheatCodes => isDevelopment;
   static bool get skipIntro => isDevelopment;
@@ -47,11 +49,16 @@ class AppEnvironment {
   static bool get enableMemoryProfile => isDevelopment || isTesting;
   static double get gameSpeed => isTesting ? 1.0 : 1.0;
   static int get maxParticles => isProduction ? 50 : 100;
-  static bool get enableShadows => isProduction ? true : false;
-  static bool get enableBloom => isProduction ? true : false;
+  static bool get enableShadows => isProduction || isStaging;
+  static bool get enableBloom => isProduction || isStaging;
 
   /// Audio Settings
-  static double get masterVolume => isDevelopment ? 0.3 : 0.7;
+  static double get masterVolume {
+    if (isDevelopment) return 0.3;
+    if (isTesting) return 0.1;
+    if (isStaging) return 0.5;
+    return 0.7; // Production
+  }
   // static bool get enableAudio => isProduction ? true : isDevelopment;
   // static bool get enableBackgroundMusic => isTesting ? false : true;
   // static bool get enableSoundEffects => true;
@@ -72,8 +79,12 @@ class AppEnvironment {
     }
   }
 
-  static Duration get apiTimeout =>
-      isDevelopment ? const Duration(seconds: 30) : const Duration(seconds: 10);
+  static Duration get apiTimeout {
+    if (isDevelopment) return const Duration(seconds: 30);
+    if (isTesting) return const Duration(seconds: 60);
+    if (isStaging) return const Duration(seconds: 15);
+    return const Duration(seconds: 10); // Production
+  }
 
   /// Sprites and Graphics Settings
   static String get defaultSpriteSize => isDevelopment ? 'large' : 'tiny';
@@ -81,26 +92,44 @@ class AppEnvironment {
   static double get spriteScale => isDevelopment ? 1.2 : 1.0;
 
   /// Gameplay Settings
-  static double get playerHealthMultiplier => isDevelopment ? 2.0 : 1.0;
-  static double get enemyDamageMultiplier => isDevelopment ? 0.5 : 1.0;
-  static int get startingLives => isDevelopment ? 5 : 3;
-  static bool get enableAutoSave => isProduction;
+  static double get playerHealthMultiplier {
+    if (isDevelopment) return 2.0;
+    if (isTesting) return 1.5;
+    if (isStaging) return 1.2;
+    return 1.0; // Production
+  }
+
+  static double get enemyDamageMultiplier {
+    if (isDevelopment) return 0.5;
+    if (isTesting) return 0.7;
+    if (isStaging) return 0.9;
+    return 1.0; // Production
+  }
+
+  static int get startingLives {
+    if (isDevelopment) return 5;
+    if (isTesting) return 4;
+    if (isStaging) return 3;
+    return 3; // Production
+  }
+
+  static bool get enableAutoSave => isProduction || isStaging;
   static Duration get autoSaveInterval => const Duration(minutes: 2);
 
   /// UI Settings
   static bool get showVersionInfo => !isProduction;
   static bool get showEnvironmentBadge => !isProduction;
   static bool get enableDevMenu => isDevelopment;
-  static bool get showTooltips => isDevelopment;
+  static bool get showTooltips => isDevelopment || isStaging;
 
   /// Logging Settings
   static bool get enableVerboseLogging => isDevelopment;
-  static bool get logToFile => isProduction;
+  static bool get logToFile => isProduction || isStaging;
   static String get logLevel {
     if (isDevelopment) return 'debug';
     if (isTesting) return 'info';
     if (isStaging) return 'warning';
-    return 'error';
+    return 'error'; // Production
   }
 
   /// Utility methods
@@ -108,12 +137,26 @@ class AppEnvironment {
     if (enableLogging) {
       log('=== DARKNESS DUNGEON ENVIRONMENT INFO ===');
       log('Environment: $currentEnvironment');
-      log('Debug Mode: $isDebugMode');
-      log('Release Mode: $isReleaseMode');
-      log('Profile Mode: $isProfileMode');
+      log('isDevelopment: $isDevelopment');
+      log('isTesting: $isTesting');
+      log('isStaging: $isStaging');
+      log('isProduction: $isProduction');
+      log('---');
+      log('Build Mode - Debug: $isDebugMode');
+      log('Build Mode - Release: $isReleaseMode');
+      log('Build Mode - Profile: $isProfileMode');
+      log('---');
       log('API URL: $apiBaseUrl');
+      log('API Timeout: ${apiTimeout.inSeconds}s');
       log('Game Speed: ${gameSpeed}x');
-      log('Master Volume: ${masterVolume * 100}%');
+      log('Master Volume: ${(masterVolume * 100).toInt()}%');
+      log('Player Health Multiplier: ${playerHealthMultiplier}x');
+      log('Enemy Damage Multiplier: ${enemyDamageMultiplier}x');
+      log('Starting Lives: $startingLives');
+      log('Log Level: $logLevel');
+      log('Show Debug Info: $showDebugInfo');
+      log('Enable Cheat Codes: $enableCheatCodes');
+      log('Show Collision Boxes: $showCollisionBoxes');
       log('==========================================');
     }
   }
