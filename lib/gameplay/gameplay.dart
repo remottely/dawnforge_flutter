@@ -1,11 +1,12 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/constants/map_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/gameplay_map_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_map_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/app_logger.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/gameplay_map_sensor.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/color_helper.dart';
 import 'package:darkness_dungeon/gameplay/hud/gameplay_hud.dart';
 import 'package:darkness_dungeon/gameplay/player/knight.dart';
@@ -21,7 +22,7 @@ class Gameplay extends StatefulWidget {
   /// Configuration flag to determine input method
   /// true: Touch joystick controls (mobile-friendly)
   /// false: Keyboard controls (desktop-friendly)
-  static bool useJoystickControls = true;
+  static bool useJoystickControls = false;
 
   /// Game difficulty settings
   static const GameDifficulty difficulty = GameDifficulty.normal;
@@ -92,7 +93,7 @@ class _GameplayState extends State<Gameplay> {
   Widget build(BuildContext gameplayContext) {
     return MapNavigator(
       maps: GameplayMapManager.maps,
-      initialMap: MapBiomeId.map1.name,
+      initialMap: MapId.map1.name,
       builder: (context, arguments, mapItem) {
         MapArguments? mapArguments = arguments as MapArguments?;
         final playerPosition =

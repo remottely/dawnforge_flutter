@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:bonfire/map/tiled/builder/tiled_world_builder.dart';
 import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/constants/map_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/models/map_model.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/gameplay_map_sensor.dart';
 import 'package:darkness_dungeon/gameplay/decoration/door.dart';
 import 'package:darkness_dungeon/gameplay/decoration/key.dart';
@@ -23,41 +23,25 @@ class GameplayMapManager {
 
   /// Gets the complete map configuration for the game
   /// Following Flutter pattern of static factory methods
-  static Map<String, MapItemBuilder> get maps => {
-    MapBiomeId.map1.name: (context, args) => MapItem(
-      id: MapBiomeId.map1.name,
-      properties: _getMapProperties(MapBiomeId.map1),
-      map: _buildMap(
-        mapAsset: MapConstants.kMap1Asset,
-        sensorIds: MapConstants.kMap1SensorIds,
-      ),
-    ),
-    MapBiomeId.dungeon1.name: (context, args) => MapItem(
-      id: MapBiomeId.dungeon1.name,
-      properties: _getMapProperties(MapBiomeId.dungeon1),
-      map: _buildMap(
-        mapAsset: MapConstants.kDungeon1Asset,
-        sensorIds: MapConstants.kDungeon1SensorIds,
-      ),
-    ),
-  };
+  static Map<String, MapItemBuilder> get maps {
+    final mapBuilders = <String, MapItemBuilder>{};
 
-  /// Gets map properties from Tiled asset path
-  /// Returns properties map that matches the structure from Tiled files
-  static Map<String, dynamic> _getMapProperties(MapBiomeId mapBiome) {
-    return switch (mapBiome) {
-      MapBiomeId.map1 => {
-        'mapBackgroundMusic': 'ro1_letters.mp3',
-        'mapLightingColor': '#a0ffffff',
-        'mapBackgroundColor': '#ff63c74d',
-      },
-      MapBiomeId.dungeon1 => {
-        'mapBackgroundMusic': 'ro1_death_hex.mp3',
-        'mapLightingColor': '#80000000',
-        'mapBackgroundColor': '#ff424242',
-      },
-      _ => {},
-    };
+    // Build maps from centralized configuration
+    for (final config in MapModel.allMaps) {
+      mapBuilders[config.id.name] = (context, args) => _createMapItem(config);
+    }
+
+    return mapBuilders;
+  }
+
+  /// Creates a MapItem from configuration
+  /// Following Flutter pattern of factory methods
+  static MapItem _createMapItem(MapModel config) {
+    return MapItem(
+      id: config.id.name,
+      properties: config.properties,
+      map: _buildMap(mapAsset: config.asset, sensorIds: config.sensorIds),
+    );
   }
 }
 

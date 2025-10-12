@@ -31,7 +31,7 @@ class ColorHelper {
 
       // Parse the hex string to integer and create Color
       final hexValue = int.parse(cleanHexString, radix: 16);
-      return Color(hexValue | 0xFF000000); // Add alpha channel (fully opaque)
+      return Color(hexValue); // Add alpha channel (fully opaque)
     } catch (e) {
       // Return null if parsing fails
       return null;

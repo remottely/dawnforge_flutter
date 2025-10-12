@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/constants/map_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/gameplay_map_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/app_logger.dart';
 
 /// [GameplayMapSensor] responsible for detecting player interaction with map transition areas
@@ -50,7 +50,7 @@ class GameplayMapSensor extends GameDecoration with Sensor<Player> {
     if (hasContact && !_hasNavigated) {
       _contactTime += dt;
 
-      if (_contactTime >= MapConstants.kSensorContactTime) {
+      if (_contactTime >= GameplayMapConstants.kSensorContactTime) {
         _initiateMapTransition();
       }
     }
@@ -78,7 +78,7 @@ class GameplayMapSensor extends GameDecoration with Sensor<Player> {
 
     // Delayed transition for smooth gameplay experience
     Future.delayed(
-      Duration(milliseconds: MapConstants.kTransitionDelayMs),
+      Duration(milliseconds: GameplayMapConstants.kTransitionDelayMs),
       () => _performNavigation(),
     );
   }
@@ -100,4 +100,16 @@ class GameplayMapSensor extends GameDecoration with Sensor<Player> {
   void _logSensorEvent(String message) {
     AppLogger.debug('MapSensor: $message');
   }
+}
+
+/// [MapArguments] data class for map navigation parameters
+/// Following Flutter pattern of immutable data classes
+class MapArguments {
+  final Vector2 playerPosition;
+  final Direction playerDirection;
+
+  const MapArguments({
+    required this.playerPosition,
+    required this.playerDirection,
+  });
 }
