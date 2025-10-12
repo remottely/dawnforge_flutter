@@ -28,15 +28,9 @@ enum MapBiomeId { none, map1, dungeon1 }
 class MapArguments {
   final Vector2 playerPosition;
   final Direction playerDirection;
-  final String? backgroundMusic;
-  final Color? lightingColor;
-  final Color? backgroundColor;
 
   const MapArguments({
     required this.playerPosition,
     required this.playerDirection,
-    this.backgroundMusic,
-    this.lightingColor,
-    this.backgroundColor,
   });
 }

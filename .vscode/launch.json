@@ -10,7 +10,8 @@
       "type": "dart",
       "program": "lib/main.dart",
       "deviceId": "chrome",
-      "flutterMode": "debug"
+      "flutterMode": "debug",
+      "args": ["--dart-define=GAME_ENVIRONMENT=STAGING"]
     },
     {
       "name": "iOS (Debug)",
@@ -18,7 +19,8 @@
       "type": "dart",
       "program": "lib/main.dart",
       "deviceId": "ios",
-      "flutterMode": "debug"
+      "flutterMode": "debug",
+      "args": ["--dart-define=GAME_ENVIRONMENT=STAGING"]
     },
     {
       "name": "Android (Debug)",
@@ -26,7 +28,8 @@
       "type": "dart",
       "program": "lib/main.dart",
       "deviceId": "android",
-      "flutterMode": "debug"
+      "flutterMode": "debug",
+      "args": ["--dart-define=GAME_ENVIRONMENT=STAGING"]
     },
     {
       "name": "macOS (Debug)",
@@ -34,7 +37,8 @@
       "type": "dart",
       "program": "lib/main.dart",
       "deviceId": "macos",
-      "flutterMode": "debug"
+      "flutterMode": "debug",
+      "args": ["--dart-define=GAME_ENVIRONMENT=STAGING"]
     },
     {
       "name": "Windows (Debug)",
@@ -42,7 +46,8 @@
       "type": "dart",
       "program": "lib/main.dart",
       "deviceId": "windows",
-      "flutterMode": "debug"
+      "flutterMode": "debug",
+      "args": ["--dart-define=GAME_ENVIRONMENT=STAGING"]
     },
     {
       "name": "Linux (Debug)",
@@ -50,7 +55,8 @@
       "type": "dart",
       "program": "lib/main.dart",
       "deviceId": "linux",
-      "flutterMode": "debug"
+      "flutterMode": "debug",
+      "args": ["--dart-define=GAME_ENVIRONMENT=STAGING"]
     },
     {
       "name": "Edge (Debug)",
@@ -58,7 +64,8 @@
       "type": "dart",
       "program": "lib/main.dart",
       "deviceId": "edge",
-      "flutterMode": "debug"
+      "flutterMode": "debug",
+      "args": ["--dart-define=GAME_ENVIRONMENT=STAGING"]
     },
     {
       "name": "Flutter (Release)",

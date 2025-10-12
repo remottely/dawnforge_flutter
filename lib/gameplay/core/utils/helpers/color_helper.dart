@@ -25,9 +25,9 @@ class ColorHelper {
       final cleanHexString = hexString.replaceAll('#', '');
 
       // Validate hex string format (must be 6 characters for RGB)
-      // if (cleanHexString.length != 6) {
-      //   return null;
-      // }
+      if (cleanHexString.length != 6) {
+        return null;
+      }
 
       // Parse the hex string to integer and create Color
       final hexValue = int.parse(cleanHexString, radix: 16);

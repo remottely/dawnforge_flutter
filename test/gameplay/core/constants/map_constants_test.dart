@@ -7,23 +7,14 @@ void main() {
     test('should create MapArguments with all properties', () {
       final playerPosition = Vector2(10, 15);
       const playerDirection = Direction.down;
-      const backgroundMusic = 'dungeon_ambient.ogg';
-      const lightingColor = Color(0xFF000066);
-      const backgroundColor = Color(0xFF1A1A2E);
 
       final mapArguments = MapArguments(
         playerPosition: playerPosition,
         playerDirection: playerDirection,
-        backgroundMusic: backgroundMusic,
-        lightingColor: lightingColor,
-        backgroundColor: backgroundColor,
       );
 
       expect(mapArguments.playerPosition, equals(playerPosition));
       expect(mapArguments.playerDirection, equals(playerDirection));
-      expect(mapArguments.backgroundMusic, equals(backgroundMusic));
-      expect(mapArguments.lightingColor, equals(lightingColor));
-      expect(mapArguments.backgroundColor, equals(backgroundColor));
     });
 
     test('should create MapArguments with only required properties', () {
@@ -37,9 +28,6 @@ void main() {
 
       expect(mapArguments.playerPosition, equals(playerPosition));
       expect(mapArguments.playerDirection, equals(playerDirection));
-      expect(mapArguments.backgroundMusic, isNull);
-      expect(mapArguments.lightingColor, isNull);
-      expect(mapArguments.backgroundColor, isNull);
     });
 
     test('should handle null optional properties correctly', () {
@@ -49,63 +37,10 @@ void main() {
       final mapArguments = MapArguments(
         playerPosition: playerPosition,
         playerDirection: playerDirection,
-        backgroundMusic: null,
-        lightingColor: null,
-        backgroundColor: null,
       );
 
       expect(mapArguments.playerPosition, equals(playerPosition));
       expect(mapArguments.playerDirection, equals(playerDirection));
-      expect(mapArguments.backgroundMusic, isNull);
-      expect(mapArguments.lightingColor, isNull);
-      expect(mapArguments.backgroundColor, isNull);
-    });
-
-    test('should work with realistic game colors', () {
-      // Dungeon colors
-      const dungeonLighting = Color(0xFF000033); // Dark blue
-      const dungeonBackground = Color(0xFF0A0A0A); // Almost black
-
-      // Forest colors
-      const forestLighting = Color(0xFF003300); // Dark green
-      const forestBackground = Color(0xFF1A2A1A); // Moss green
-
-      // Lava cave colors
-      const lavaLighting = Color(0xFF330000); // Dark red
-      const lavaBackground = Color(0xFF2A1A1A); // Reddish brown
-
-      final dungeonArgs = MapArguments(
-        playerPosition: Vector2(10, 10),
-        playerDirection: Direction.down,
-        lightingColor: dungeonLighting,
-        backgroundColor: dungeonBackground,
-      );
-
-      final forestArgs = MapArguments(
-        playerPosition: Vector2(15, 20),
-        playerDirection: Direction.right,
-        lightingColor: forestLighting,
-        backgroundColor: forestBackground,
-      );
-
-      final lavaArgs = MapArguments(
-        playerPosition: Vector2(5, 25),
-        playerDirection: Direction.left,
-        lightingColor: lavaLighting,
-        backgroundColor: lavaBackground,
-      );
-
-      // Verify dungeon colors
-      expect(dungeonArgs.lightingColor, equals(dungeonLighting));
-      expect(dungeonArgs.backgroundColor, equals(dungeonBackground));
-
-      // Verify forest colors
-      expect(forestArgs.lightingColor, equals(forestLighting));
-      expect(forestArgs.backgroundColor, equals(forestBackground));
-
-      // Verify lava colors
-      expect(lavaArgs.lightingColor, equals(lavaLighting));
-      expect(lavaArgs.backgroundColor, equals(lavaBackground));
     });
   });
   group('MapBiomeId', () {

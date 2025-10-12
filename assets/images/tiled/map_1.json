@@ -865,7 +865,7 @@
                         {
                          "name":"backgroundColor",
                          "type":"string",
-                         "value":"#ff2A27F5"
+                         "value":"#2A27F5"
                         }, 
                         {
                          "name":"backgroundMusic",
@@ -875,7 +875,7 @@
                         {
                          "name":"lightingColor",
                          "type":"string",
-                         "value":"#ffF2F527"
+                         "value":"#F2F527"
                         }, 
                         {
                          "name":"nextMap",
@@ -907,7 +907,7 @@
                         {
                          "name":"backgroundColor",
                          "type":"string",
-                         "value":"#ff27F5A3"
+                         "value":"#27F5A3"
                         }, 
                         {
                          "name":"backgroundMusic",
@@ -917,7 +917,7 @@
                         {
                          "name":"lightingColor",
                          "type":"string",
-                         "value":"#ffF227F5"
+                         "value":"#F227F5"
                         }, 
                         {
                          "name":"nextMap",
@@ -950,6 +950,22 @@
  "nextlayerid":14,
  "nextobjectid":81,
  "orientation":"orthogonal",
+ "properties":[
+        {
+         "name":"backgroundColor",
+         "type":"string",
+         "value":"#ff2E8B57"
+        }, 
+        {
+         "name":"backgroundMusic",
+         "type":"string",
+         "value":"ro1_death_hex.mp3"
+        }, 
+        {
+         "name":"lightingColor",
+         "type":"string",
+         "value":"#ffFFE566"
+        }],
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
  "tileheight":16,

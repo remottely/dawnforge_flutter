@@ -865,7 +865,7 @@
                         {
                          "name":"backgroundColor",
                          "type":"string",
-                         "value":"#ffF54927"
+                         "value":"#F54927"
                         }, 
                         {
                          "name":"backgroundMusic",
@@ -875,7 +875,7 @@
                         {
                          "name":"lightingColor",
                          "type":"string",
-                         "value":"#ffF52727"
+                         "value":"#F52727"
                         }, 
                         {
                          "name":"nextMap",
@@ -908,6 +908,22 @@
  "nextlayerid":14,
  "nextobjectid":81,
  "orientation":"orthogonal",
+ "properties":[
+        {
+         "name":"backgroundColor",
+         "type":"string",
+         "value":"#ff1a1a1a"
+        }, 
+        {
+         "name":"backgroundMusic",
+         "type":"string",
+         "value":"dungeon_theme.mp3"
+        }, 
+        {
+         "name":"lightingColor",
+         "type":"string",
+         "value":"#ffAA4400"
+        }],
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
  "tileheight":16,

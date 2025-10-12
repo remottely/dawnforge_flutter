@@ -3,7 +3,6 @@ import 'package:bonfire/map/tiled/builder/tiled_world_builder.dart';
 import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/constants/map_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/gameplay_map_sensor.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/helpers/color_helper.dart';
 import 'package:darkness_dungeon/gameplay/decoration/door.dart';
 import 'package:darkness_dungeon/gameplay/decoration/key.dart';
 import 'package:darkness_dungeon/gameplay/decoration/life_potion.dart';
@@ -31,6 +30,7 @@ class GameplayMapManager {
         mapAsset: MapConstants.kMap1Asset,
         sensorIds: MapConstants.kMap1SensorIds,
       ),
+      properties: _getMapProperties(MapConstants.kMap1Asset),
     ),
     MapBiomeId.dungeon1.name: (context, args) => MapItem(
       id: MapBiomeId.dungeon1.name,
@@ -38,116 +38,123 @@ class GameplayMapManager {
         mapAsset: MapConstants.kDungeon1Asset,
         sensorIds: MapConstants.kDungeon1SensorIds,
       ),
+      properties: _getMapProperties(MapConstants.kDungeon1Asset),
     ),
   };
 
-  /// Builds a tiled world map with specified configuration
-  /// Following Flutter pattern of private factory methods
-  static WorldMapByTiled _buildMap({
-    required String mapAsset,
-    required List<String> sensorIds,
-  }) {
-    return WorldMapByTiled(
-      WorldMapReader.fromAsset(mapAsset),
-      forceTileSize: Vector2.all(GameplayConstants.kCurrentTileSize),
-      objectsBuilder: _createObjectBuilder(sensorIds: sensorIds),
-    );
-  }
-
-  /// Creates object builders for map entities and decorations
-  /// Following Flutter pattern of component factory methods
-  static Map<String, ObjectBuilder> _createObjectBuilder({
-    required List<String> sensorIds,
-  }) {
-    final builders = <String, ObjectBuilder>{};
-
-    // Add sensor builders for map navigation
-    _addSensorBuilders(builders, sensorIds);
-
-    // Add game entity builders
-    _addEntityBuilders(builders);
-
-    return builders;
-  }
-
-  /// Adds sensor builders for map transition detection
-  /// Following Flutter pattern of builder pattern implementation
-  static void _addSensorBuilders(
-    Map<String, ObjectBuilder> builders,
-    List<String> sensorIds,
-  ) {
-    for (final sensorId in sensorIds) {
-      builders[sensorId] = (properties) =>
-          _createMapSensor(sensorId, properties);
+  /// Gets map properties from Tiled asset path
+  /// Returns properties map that matches the structure from Tiled files
+  static Map<String, dynamic> _getMapProperties(String mapAsset) {
+    switch (mapAsset) {
+      case MapConstants.kMap1Asset:
+        return {
+          'backgroundMusic': 'ro1_letters.mp3',
+          'lightingColor': '#ffFFE566',
+          'backgroundColor': '#ff2E8B57',
+        };
+      case MapConstants.kDungeon1Asset:
+        return {
+          'backgroundMusic': 'ro1_death_hex.mp3',
+          'lightingColor': '#ffAA4400',
+          'backgroundColor': '#ff1a1a1a',
+        };
+      default:
+        return {};
     }
   }
+}
 
-  /// Creates a map sensor from Tiled object properties
-  /// Following Flutter pattern of factory constructor methods
-  static GameplayMapSensor _createMapSensor(
-    String sensorId,
-    TiledObjectProperties properties,
-  ) {
-    final positionParts = properties.others['playerPosition'].toString().split(
-      ',',
-    );
-    final playerPosition = Vector2(
-      double.parse(positionParts[0]),
-      double.parse(positionParts[1]),
-    );
+/// Builds a tiled world map with specified configuration
+/// Following Flutter pattern of private factory methods
+WorldMapByTiled _buildMap({
+  required String mapAsset,
+  required List<String> sensorIds,
+}) {
+  return WorldMapByTiled(
+    WorldMapReader.fromAsset(mapAsset),
+    forceTileSize: Vector2.all(GameplayConstants.kCurrentTileSize),
+    objectsBuilder: _createObjectBuilder(sensorIds: sensorIds),
+  );
+}
 
-    // Read background music from Tiled properties (optional field)
-    final backgroundMusic = properties.others['backgroundMusic']?.toString();
+/// Creates object builders for map entities and decorations
+/// Following Flutter pattern of component factory methods
+Map<String, ObjectBuilder> _createObjectBuilder({
+  required List<String> sensorIds,
+}) {
+  final builders = <String, ObjectBuilder>{};
 
-    // Parse color values using ColorHelper for better maintainability
-    final lightingColor = ColorHelper.fromHexString(
-      properties.others['lightingColor']?.toString(),
-    );
-    final backgroundColor = ColorHelper.fromHexString(
-      properties.others['backgroundColor']?.toString(),
-    );
+  // Add sensor builders for map navigation
+  _addSensorBuilders(builders, sensorIds);
 
-    return GameplayMapSensor(
-      id: sensorId,
-      position: properties.position,
-      size: properties.size,
-      targetMap: properties.others['nextMap'].toString(),
-      playerPosition: playerPosition,
-      playerDirection: Direction.fromName(
-        properties.others['playerDirection'].toString(),
-      ),
-      backgroundMusic: backgroundMusic,
-      lightingColor: lightingColor,
-      backgroundColor: backgroundColor,
-    );
+  // Add game entity builders
+  _addEntityBuilders(builders);
+
+  return builders;
+}
+
+/// Adds sensor builders for map transition detection
+/// Following Flutter pattern of builder pattern implementation
+void _addSensorBuilders(
+  Map<String, ObjectBuilder> builders,
+  List<String> sensorIds,
+) {
+  for (final sensorId in sensorIds) {
+    builders[sensorId] = (properties) => _createMapSensor(sensorId, properties);
   }
+}
 
-  /// Adds entity builders for interactive game objects
-  /// Following Flutter pattern of comprehensive object mapping
-  static void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
-    final entityBuilders = <String, ObjectBuilder>{
-      // Interactive decorations
-      'door': (p) => Door(p.position, p.size),
-      'key': (p) => DoorKey(p.position),
-      'potion': (p) =>
-          LifePotion(p.position, GameplayConstants.kLifePotionHealAmount),
+/// Creates a map sensor from Tiled object properties
+/// Following Flutter pattern of factory constructor methods
+GameplayMapSensor _createMapSensor(
+  String sensorId,
+  TiledObjectProperties properties,
+) {
+  final positionParts = properties.others['playerPosition'].toString().split(
+    ',',
+  );
+  final playerPosition = Vector2(
+    double.parse(positionParts[0]),
+    double.parse(positionParts[1]),
+  );
 
-      // Environmental decorations
-      'torch': (p) => Torch(p.position),
-      'torch_empty': (p) => Torch(p.position, isExtinguished: true),
-      'spikes': (p) => Spikes(p.position),
+  return GameplayMapSensor(
+    id: sensorId,
+    position: properties.position,
+    size: properties.size,
+    targetMap: properties.others['nextMap'].toString(),
+    playerPosition: playerPosition,
+    playerDirection: Direction.fromName(
+      properties.others['playerDirection'].toString(),
+    ),
+  );
+}
 
-      // Non-player characters
-      'wizard': (p) => WizardNpc(p.position),
-      'kid': (p) => KidNpc(p.position),
+/// Adds entity builders for interactive game objects
+/// Following Flutter pattern of comprehensive object mapping
+void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
+  final entityBuilders = <String, ObjectBuilder>{
+    // Interactive decorations
+    'door': (p) => Door(p.position, p.size),
+    'key': (p) => DoorKey(p.position),
+    'potion': (p) =>
+        LifePotion(p.position, GameplayConstants.kLifePotionHealAmount),
 
-      // Enemies
-      'boss': (p) => DungeonBossEnemy(p.position),
-      'mini_boss': (p) => MiniBossEnemy(p.position),
-      'goblin': (p) => GoblinEnemy(p.position),
-      'imp': (p) => ImpEnemy(p.position),
-    };
+    // Environmental decorations
+    'torch': (p) => Torch(p.position),
+    'torch_empty': (p) => Torch(p.position, isExtinguished: true),
+    'spikes': (p) => Spikes(p.position),
 
-    builders.addEntries(entityBuilders.entries);
-  }
+    // Non-player characters
+    'wizard': (p) => WizardNpc(p.position),
+    'kid': (p) => KidNpc(p.position),
+
+    // Enemies
+    'boss': (p) => DungeonBossEnemy(p.position),
+    'mini_boss': (p) => MiniBossEnemy(p.position),
+    'goblin': (p) => GoblinEnemy(p.position),
+    'imp': (p) => ImpEnemy(p.position),
+  };
+
+  builders.addEntries(entityBuilders.entries);
 }

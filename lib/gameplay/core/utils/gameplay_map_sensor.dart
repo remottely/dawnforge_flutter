@@ -10,9 +10,6 @@ class GameplayMapSensor extends GameDecoration with Sensor<Player> {
   final String targetMap;
   final Vector2 playerPosition;
   final Direction playerDirection;
-  final String? backgroundMusic;
-  final Color? lightingColor;
-  final Color? backgroundColor;
 
   // Contact state management
   bool hasContact = false;
@@ -28,9 +25,6 @@ class GameplayMapSensor extends GameDecoration with Sensor<Player> {
     required this.targetMap,
     required this.playerPosition,
     required this.playerDirection,
-    this.backgroundMusic,
-    this.lightingColor,
-    this.backgroundColor,
   }) : super(position: position, size: size);
 
   @override
@@ -97,9 +91,6 @@ class GameplayMapSensor extends GameDecoration with Sensor<Player> {
       arguments: MapArguments(
         playerPosition: playerPosition,
         playerDirection: playerDirection,
-        backgroundMusic: backgroundMusic,
-        lightingColor: lightingColor,
-        backgroundColor: backgroundColor,
       ),
     );
   }

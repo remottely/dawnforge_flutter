@@ -6,6 +6,7 @@ import 'package:darkness_dungeon/gameplay/core/managers/gameplay_map_manager.dar
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/app_logger.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/helpers/color_helper.dart';
 import 'package:darkness_dungeon/gameplay/hud/gameplay_hud.dart';
 import 'package:darkness_dungeon/gameplay/player/knight.dart';
 import 'package:flutter/material.dart';
@@ -98,18 +99,24 @@ class _GameplayState extends State<Gameplay> {
             (mapArguments?.playerPosition ?? Vector2(4, 4)) *
             GameplayConstants.kCurrentTileSize;
 
+        // Read background music from Tiled properties (optional field)
+        final mapBackgroundMusic = mapItem.properties['backgroundMusic']
+            ?.toString();
+
+        // Parse color values using ColorHelper for better maintainability
+        final mapLightingColor = ColorHelper.fromHexString(
+          mapItem.properties['lightingColor']?.toString(),
+        );
+        final mapBackgroundColor = ColorHelper.fromHexString(
+          mapItem.properties['backgroundColor']?.toString(),
+        );
         // Start map-specific background music if provided
-        final backgroundMusic = mapArguments?.backgroundMusic;
-        if (backgroundMusic != null && backgroundMusic.isNotEmpty) {
-          GameplayAudioManager.ensureBackgroundMusicPlaying(backgroundMusic);
+        if (mapBackgroundMusic != null && mapBackgroundMusic.isNotEmpty) {
+          GameplayAudioManager.ensureBackgroundMusicPlaying(mapBackgroundMusic);
         }
 
-        // Apply map-specific colors if provided, otherwise use defaults
-        final mapLightingColor = mapArguments?.lightingColor;
-        final mapBackgroundColor = mapArguments?.backgroundColor;
-
         AppLogger.info(
-          'Building BonfireWidget for map: ${mapItem.id}, player position: $playerPosition, music: $backgroundMusic, lighting: $mapLightingColor, background: $mapBackgroundColor',
+          'Building BonfireWidget for map: ${mapItem.id}, player position: $playerPosition, music: $mapBackgroundMusic, lighting: $mapLightingColor, background: $mapBackgroundColor',
         );
 
         // Create player for the current map

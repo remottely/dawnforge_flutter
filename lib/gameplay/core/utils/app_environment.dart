@@ -15,10 +15,10 @@ class AppEnvironment {
   static const String _envKey = 'GAME_ENVIRONMENT';
 
   /// Enum for different custom environments
-  static const String envDevelopment = 'development';
-  static const String envTesting = 'testing';
-  static const String envStaging = 'staging';
-  static const String envProduction = 'production';
+  static const String envDevelopment = 'DEVELOPMENT';
+  static const String envTesting = 'TESTING';
+  static const String envStaging = 'STAGING';
+  static const String envProduction = 'PRODUCTION';
 
   // Current configuration (can be overridden via dart-define)
   static String get currentEnvironment =>
