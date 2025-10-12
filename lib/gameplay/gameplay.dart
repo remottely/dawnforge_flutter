@@ -6,7 +6,7 @@ import 'package:darkness_dungeon/gameplay/core/managers/gameplay_map_manager.dar
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/app_logger.dart';
-import 'package:darkness_dungeon/gameplay/hud/player_hud.dart';
+import 'package:darkness_dungeon/gameplay/hud/gameplay_hud.dart';
 import 'package:darkness_dungeon/gameplay/player/knight.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -43,10 +43,11 @@ class _GameplayState extends State<Gameplay> {
   static const double _kLightingOpacity = 0.6;
 
   // Pre-built game components for performance optimization
-  late final PlayerHUD _gameHUD;
+  late final GameplayHUD _gameplayHUD;
   late final Color _lightingColor;
   late final Color? _backgroundColor;
   late final CameraConfig _cameraConfig;
+
   @override
   void initState() {
     super.initState();
@@ -62,7 +63,7 @@ class _GameplayState extends State<Gameplay> {
 
   /// Initializes background music and sound effects
   void _initializeGameAudio() {
-    GameplayAudioManager.playBackgroundMusic();
+    GameplayAudioManager.ensureBackgroundMusicPlaying();
   }
 
   /// Cleans up audio resources when game ends
@@ -72,7 +73,7 @@ class _GameplayState extends State<Gameplay> {
 
   /// Pre-initializes all game components for better performance
   void _initializeGameComponents() {
-    _gameHUD = PlayerHUD();
+    _gameplayHUD = GameplayHUD();
     _lightingColor = Colors.black.withValues(alpha: _kLightingOpacity);
     _backgroundColor = Colors.grey[900];
   }
@@ -119,7 +120,7 @@ class _GameplayState extends State<Gameplay> {
             player: player,
             map: mapItem.map,
             components: [GameplayStateManager()],
-            interface: _gameHUD,
+            interface: _gameplayHUD,
             lightingColorGame: _lightingColor,
             backgroundColor: _backgroundColor,
             cameraConfig: _cameraConfig,

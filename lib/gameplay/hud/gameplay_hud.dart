@@ -2,7 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/hud/player_vital_stats_hud.dart';
 import 'package:darkness_dungeon/gameplay/player/knight.dart';
 
-class PlayerHUD extends GameInterface {
+class GameplayHUD extends GameInterface {
   late Sprite keySprite;
 
   @override
