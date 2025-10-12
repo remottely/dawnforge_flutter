@@ -11,6 +11,8 @@ class GameplayMapSensor extends GameDecoration with Sensor<Player> {
   final Vector2 playerPosition;
   final Direction playerDirection;
   final String? backgroundMusic;
+  final Color? lightingColor;
+  final Color? backgroundColor;
 
   // Contact state management
   bool hasContact = false;
@@ -19,14 +21,16 @@ class GameplayMapSensor extends GameDecoration with Sensor<Player> {
 
   /// Creates a map sensor for player navigation between maps
   /// Following Flutter pattern of descriptive constructors
-  GameplayMapSensor(
-    this.id,
-    Vector2 position,
-    Vector2 size,
-    this.targetMap,
-    this.playerPosition,
-    this.playerDirection, {
+  GameplayMapSensor({
+    required this.id,
+    required Vector2 position,
+    required Vector2 size,
+    required this.targetMap,
+    required this.playerPosition,
+    required this.playerDirection,
     this.backgroundMusic,
+    this.lightingColor,
+    this.backgroundColor,
   }) : super(position: position, size: size);
 
   @override
@@ -52,7 +56,7 @@ class GameplayMapSensor extends GameDecoration with Sensor<Player> {
     if (hasContact && !_hasNavigated) {
       _contactTime += dt;
 
-      if (_contactTime >= MapConstants.sensorContactTime) {
+      if (_contactTime >= MapConstants.kSensorContactTime) {
         _initiateMapTransition();
       }
     }
@@ -80,7 +84,7 @@ class GameplayMapSensor extends GameDecoration with Sensor<Player> {
 
     // Delayed transition for smooth gameplay experience
     Future.delayed(
-      Duration(milliseconds: MapConstants.transitionDelayMs),
+      Duration(milliseconds: MapConstants.kTransitionDelayMs),
       () => _performNavigation(),
     );
   }
@@ -91,9 +95,11 @@ class GameplayMapSensor extends GameDecoration with Sensor<Player> {
     MapNavigator.of(context).toNamed(
       targetMap,
       arguments: MapArguments(
-        playerPosition,
-        playerDirection,
+        playerPosition: playerPosition,
+        playerDirection: playerDirection,
         backgroundMusic: backgroundMusic,
+        lightingColor: lightingColor,
+        backgroundColor: backgroundColor,
       ),
     );
   }

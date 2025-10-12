@@ -863,9 +863,19 @@
                  "name":"sensor_dungeon_1",
                  "properties":[
                         {
+                         "name":"backgroundColor",
+                         "type":"string",
+                         "value":"#ff2A27F5"
+                        }, 
+                        {
                          "name":"backgroundMusic",
                          "type":"string",
                          "value":"ro1_death_hex.mp3"
+                        }, 
+                        {
+                         "name":"lightingColor",
+                         "type":"string",
+                         "value":"#ffF2F527"
                         }, 
                         {
                          "name":"nextMap",
@@ -895,9 +905,19 @@
                  "name":"sensor_dungeon_2",
                  "properties":[
                         {
+                         "name":"backgroundColor",
+                         "type":"string",
+                         "value":"#ff27F5A3"
+                        }, 
+                        {
                          "name":"backgroundMusic",
                          "type":"string",
                          "value":"ro1_death_hex.mp3"
+                        }, 
+                        {
+                         "name":"lightingColor",
+                         "type":"string",
+                         "value":"#ffF227F5"
                         }, 
                         {
                          "name":"nextMap",

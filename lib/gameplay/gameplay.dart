@@ -40,12 +40,9 @@ class _GameplayState extends State<Gameplay> {
   static const double _kSecondaryActionMarginRight = 160.0;
   static const double _kCameraSpeed = 3.0;
   static const int _kMaxVisibleTiles = 18;
-  static const double _kLightingOpacity = 0.6;
 
   // Pre-built game components for performance optimization
   late final GameplayHUD _gameplayHUD;
-  late final Color _lightingColor;
-  late final Color? _backgroundColor;
   late final CameraConfig _cameraConfig;
 
   @override
@@ -74,8 +71,6 @@ class _GameplayState extends State<Gameplay> {
   /// Pre-initializes all game components for better performance
   void _initializeGameComponents() {
     _gameplayHUD = GameplayHUD();
-    _lightingColor = Colors.black.withValues(alpha: _kLightingOpacity);
-    _backgroundColor = Colors.grey[900];
   }
 
   /// Initialize camera config in didChangeDependencies for context access
@@ -109,8 +104,12 @@ class _GameplayState extends State<Gameplay> {
           GameplayAudioManager.ensureBackgroundMusicPlaying(backgroundMusic);
         }
 
+        // Apply map-specific colors if provided, otherwise use defaults
+        final mapLightingColor = mapArguments?.lightingColor;
+        final mapBackgroundColor = mapArguments?.backgroundColor;
+
         AppLogger.info(
-          'Building BonfireWidget for map: ${mapItem.id}, player position: $playerPosition, music: $backgroundMusic',
+          'Building BonfireWidget for map: ${mapItem.id}, player position: $playerPosition, music: $backgroundMusic, lighting: $mapLightingColor, background: $mapBackgroundColor',
         );
 
         // Create player for the current map
@@ -127,8 +126,8 @@ class _GameplayState extends State<Gameplay> {
             map: mapItem.map,
             components: [GameplayStateManager()],
             interface: _gameplayHUD,
-            lightingColorGame: _lightingColor,
-            backgroundColor: _backgroundColor,
+            lightingColorGame: mapLightingColor,
+            backgroundColor: mapBackgroundColor,
             cameraConfig: _cameraConfig,
             debugMode: AppEnvironment.isTesting,
             showCollisionArea: AppEnvironment.showCollisionBoxes,

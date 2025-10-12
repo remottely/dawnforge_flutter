@@ -93,7 +93,7 @@ class GameplayAudioManager {
 
     // Use provided track or default
     final targetTrack =
-        musicTrack ?? GameplayAudioConstants.kBackgroundMusicAsset;
+        musicTrack ?? GameplayAudioConstants.kLettersBackgroundMusicAsset;
 
     // Only start music if it's not already playing the correct track
     if (!manager._isBackgroundMusicPlaying ||
@@ -115,10 +115,19 @@ class GameplayAudioManager {
   /// Internal method to start specific background music
   static Future<void> _startSpecificMusic(String musicTrack) async {
     final manager = instance;
+    print('[GameplayAudioManager] Stopping current music...');
     await FlameAudio.bgm.stop();
-    await FlameAudio.bgm.play(musicTrack);
-    manager._isBackgroundMusicPlaying = true;
-    manager._currentBackgroundTrack = musicTrack;
+    print('[GameplayAudioManager] Starting music: $musicTrack');
+    try {
+      await FlameAudio.bgm.play(musicTrack);
+      manager._isBackgroundMusicPlaying = true;
+      manager._currentBackgroundTrack = musicTrack;
+      print('[GameplayAudioManager] Music started successfully: $musicTrack');
+    } catch (e) {
+      print('[GameplayAudioManager] Error starting music: $e');
+      manager._isBackgroundMusicPlaying = false;
+      manager._currentBackgroundTrack = null;
+    }
   }
 
   /// Legacy method for backwards compatibility

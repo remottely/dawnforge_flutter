@@ -3,6 +3,7 @@ import 'package:bonfire/map/tiled/builder/tiled_world_builder.dart';
 import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/constants/map_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/gameplay_map_sensor.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/helpers/color_helper.dart';
 import 'package:darkness_dungeon/gameplay/decoration/door.dart';
 import 'package:darkness_dungeon/gameplay/decoration/key.dart';
 import 'package:darkness_dungeon/gameplay/decoration/life_potion.dart';
@@ -27,15 +28,15 @@ class GameplayMapManager {
     MapBiomeId.map1.name: (context, args) => MapItem(
       id: MapBiomeId.map1.name,
       map: _buildMap(
-        mapAsset: MapConstants.map1Asset,
-        sensorIds: MapConstants.map1SensorIds,
+        mapAsset: MapConstants.kMap1Asset,
+        sensorIds: MapConstants.kMap1SensorIds,
       ),
     ),
     MapBiomeId.dungeon1.name: (context, args) => MapItem(
       id: MapBiomeId.dungeon1.name,
       map: _buildMap(
-        mapAsset: MapConstants.dungeon1Asset,
-        sensorIds: MapConstants.dungeon1SensorIds,
+        mapAsset: MapConstants.kDungeon1Asset,
+        sensorIds: MapConstants.kDungeon1SensorIds,
       ),
     ),
   };
@@ -98,14 +99,26 @@ class GameplayMapManager {
     // Read background music from Tiled properties (optional field)
     final backgroundMusic = properties.others['backgroundMusic']?.toString();
 
+    // Parse color values using ColorHelper for better maintainability
+    final lightingColor = ColorHelper.fromHexString(
+      properties.others['lightingColor']?.toString(),
+    );
+    final backgroundColor = ColorHelper.fromHexString(
+      properties.others['backgroundColor']?.toString(),
+    );
+
     return GameplayMapSensor(
-      sensorId,
-      properties.position,
-      properties.size,
-      properties.others['nextMap'].toString(),
-      playerPosition,
-      Direction.fromName(properties.others['playerDirection'].toString()),
+      id: sensorId,
+      position: properties.position,
+      size: properties.size,
+      targetMap: properties.others['nextMap'].toString(),
+      playerPosition: playerPosition,
+      playerDirection: Direction.fromName(
+        properties.others['playerDirection'].toString(),
+      ),
       backgroundMusic: backgroundMusic,
+      lightingColor: lightingColor,
+      backgroundColor: backgroundColor,
     );
   }
 

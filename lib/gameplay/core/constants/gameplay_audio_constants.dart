@@ -13,7 +13,8 @@ class GameplayAudioConstants {
   static const String kAttackEnemyAsset = 'attack_enemy.mp3';
   static const String kExplosionAsset = 'explosion.wav';
   static const String kInteractionAsset = 'sound_interaction.wav';
-  static const String kBackgroundMusicAsset = 'ro1_death_hex.mp3';
+  static const String kDeathHexBackgroundMusicAsset = 'ro1_death_hex.mp3';
+  static const String kLettersBackgroundMusicAsset = 'ro1_letters.mp3';
   static const String kBossBackgroundAsset = 'battle_boss.mp3';
 
   // Audio file list for preloading
@@ -23,5 +24,8 @@ class GameplayAudioConstants {
     kAttackEnemyAsset,
     kExplosionAsset,
     kInteractionAsset,
+    kDeathHexBackgroundMusicAsset,
+    kLettersBackgroundMusicAsset,
+    kBossBackgroundAsset,
   ];
 }

@@ -4,31 +4,19 @@ import 'package:bonfire/bonfire.dart';
 /// Following Flutter naming conventions for game map systems
 class MapConstants {
   // Map asset paths following _k constant pattern
-  static const String _kMap1Asset = 'tiled/map_1.json';
-  static const String _kDungeon1Asset = 'tiled/dungeon_1.json';
+  static const String kMap1Asset = 'tiled/map_1.json';
+  static const String kDungeon1Asset = 'tiled/dungeon_1.json';
 
   // Map transition timing constants
-  static const double _kSensorContactTime = 0.5; // 500ms delay
-  static const int _kTransitionDelayMs = 100; // Smooth transition delay
+  static const double kSensorContactTime = 0.5; // 500ms delay
+  static const int kTransitionDelayMs = 100; // Smooth transition delay
 
   // Sensor configuration constants
-  static const List<String> _kMap1SensorIds = [
+  static const List<String> kMap1SensorIds = [
     'sensor_dungeon_1',
     'sensor_dungeon_2',
   ];
-  static const List<String> _kDungeon1SensorIds = ['sensor_map_1'];
-
-  // Getter methods for asset paths
-  static String get map1Asset => _kMap1Asset;
-  static String get dungeon1Asset => _kDungeon1Asset;
-
-  // Getter methods for timing
-  static double get sensorContactTime => _kSensorContactTime;
-  static int get transitionDelayMs => _kTransitionDelayMs;
-
-  // Getter methods for sensor configurations
-  static List<String> get map1SensorIds => _kMap1SensorIds;
-  static List<String> get dungeon1SensorIds => _kDungeon1SensorIds;
+  static const List<String> kDungeon1SensorIds = ['sensor_map_1'];
 }
 
 /// [MapBiomeId] enumeration of available map biomes
@@ -41,10 +29,14 @@ class MapArguments {
   final Vector2 playerPosition;
   final Direction playerDirection;
   final String? backgroundMusic;
+  final Color? lightingColor;
+  final Color? backgroundColor;
 
-  const MapArguments(
-    this.playerPosition,
-    this.playerDirection, {
+  const MapArguments({
+    required this.playerPosition,
+    required this.playerDirection,
     this.backgroundMusic,
+    this.lightingColor,
+    this.backgroundColor,
   });
 }
