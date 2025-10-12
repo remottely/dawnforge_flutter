@@ -2,10 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 
-class ForagerAppEnvironment {
-  static double get gameSpeed => 2.0;
-}
-
 /// Game environment configuration system
 /// Allows switching between different execution modes (debug, release, profile)
 /// to facilitate development and customize behaviors

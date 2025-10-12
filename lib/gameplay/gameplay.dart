@@ -1,12 +1,12 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/map_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/gameplay_map_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/app_logger.dart';
 import 'package:darkness_dungeon/gameplay/hud/player_hud.dart';
-import 'package:darkness_dungeon/gameplay/maps/gameplay_maps.dart';
-import 'package:darkness_dungeon/gameplay/maps/map_id_enum.dart';
 import 'package:darkness_dungeon/gameplay/player/knight.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -94,7 +94,7 @@ class _GameplayState extends State<Gameplay> {
   @override
   Widget build(BuildContext gameplayContext) {
     return MapNavigator(
-      maps: GameplayMaps.maps,
+      maps: GameplayMapManager.maps,
       initialMap: MapBiomeId.map1.name,
       builder: (context, arguments, mapItem) {
         MapArguments? mapArguments = arguments as MapArguments?;

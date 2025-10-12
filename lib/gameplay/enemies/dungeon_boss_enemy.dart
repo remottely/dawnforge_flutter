@@ -9,20 +9,21 @@ import 'package:darkness_dungeon/gameplay/core/utils/sprites/effects_sprite_shee
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/enemy_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/npc_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/player_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/enemies/imp.dart';
-import 'package:darkness_dungeon/gameplay/enemies/mini_boss.dart';
+import 'package:darkness_dungeon/gameplay/enemies/imp_enemy.dart';
+import 'package:darkness_dungeon/gameplay/enemies/mini_boss_enemy.dart';
 import 'package:darkness_dungeon/presentation/design_system/components/atoms/app_animated_sprite_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class DungeonBoss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
+class DungeonBossEnemy extends SimpleEnemy
+    with BlockMovementCollision, UseLifeBar {
   final Vector2 initialPosition;
   double attackDamage = 40;
 
   bool _hasSeenPlayerFirst = false;
   List<Enemy> spawnedEnemies = [];
 
-  DungeonBoss(this.initialPosition)
+  DungeonBossEnemy(this.initialPosition)
     : super(
         animation: EnemySpriteSheet.bossAnimations(),
         position: initialPosition,
@@ -138,8 +139,8 @@ class DungeonBoss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
       }
 
       Enemy e = spawnedEnemies.length == 2
-          ? MiniBoss(Vector2(positionExplosion.x, positionExplosion.y))
-          : Imp(Vector2(positionExplosion.x, positionExplosion.y));
+          ? MiniBossEnemy(Vector2(positionExplosion.x, positionExplosion.y))
+          : ImpEnemy(Vector2(positionExplosion.x, positionExplosion.y));
 
       gameRef.add(
         AnimatedGameObject(
@@ -280,6 +281,6 @@ class DungeonBoss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
         loop: false,
       ),
     );
-    gameRef.add(Imp(p));
+    gameRef.add(ImpEnemy(p));
   }
 }

@@ -6,12 +6,13 @@ import 'package:darkness_dungeon/gameplay/core/utils/sprites/effects_sprite_shee
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/enemy_sprite_sheet.dart';
 import 'package:flutter/material.dart';
 
-class MiniBoss extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
+class MiniBossEnemy extends SimpleEnemy
+    with BlockMovementCollision, UseLifeBar {
   final Vector2 initPosition;
   double attack = 50;
   bool _seePlayerClose = false;
 
-  MiniBoss(this.initPosition)
+  MiniBossEnemy(this.initPosition)
     : super(
         animation: EnemySpriteSheet.miniBossAnimations(),
         position: initPosition,

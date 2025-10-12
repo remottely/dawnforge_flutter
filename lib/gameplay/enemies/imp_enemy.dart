@@ -6,17 +6,17 @@ import 'package:darkness_dungeon/gameplay/core/utils/sprites/effects_sprite_shee
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/enemy_sprite_sheet.dart';
 import 'package:flutter/material.dart';
 
-class Goblin extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
+class ImpEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
   final Vector2 initPosition;
-  double attack = 25;
+  double attack = 10;
 
-  Goblin(this.initPosition)
+  ImpEnemy(this.initPosition)
     : super(
-        animation: EnemySpriteSheet.goblinAnimations(),
+        animation: EnemySpriteSheet.impAnimations(),
         position: initPosition,
         size: Vector2.all(GameplayConstants.kCurrentTileSize * 0.8),
-        speed: GameplayConstants.kCurrentTileSize * 1.5,
-        life: 120,
+        speed: GameplayConstants.kCurrentTileSize * 2,
+        life: 80,
       );
 
   @override
@@ -24,12 +24,12 @@ class Goblin extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
     add(
       RectangleHitbox(
         size: Vector2(
-          TileHelper.valueByTileSize(7),
-          TileHelper.valueByTileSize(7),
+          TileHelper.valueByTileSize(6),
+          TileHelper.valueByTileSize(6),
         ),
         position: Vector2(
           TileHelper.valueByTileSize(3),
-          TileHelper.valueByTileSize(4),
+          TileHelper.valueByTileSize(5),
         ),
       ),
     );
@@ -39,12 +39,23 @@ class Goblin extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
   @override
   void update(double dt) {
     super.update(dt);
-
     seeAndMoveToPlayer(
+      radiusVision: GameplayConstants.kCurrentTileSize * 5,
       closePlayer: (player) {
         executeAttack();
       },
-      radiusVision: GameplayConstants.kCurrentTileSize * 4,
+    );
+  }
+
+  void executeAttack() {
+    simpleAttackMelee(
+      size: Vector2.all(GameplayConstants.kCurrentTileSize * 0.62),
+      damage: attack,
+      interval: 300,
+      animationRight: EnemySpriteSheet.enemyAttackEffectRight(),
+      execute: () {
+        GameplayAudioManager.playAttackEnemyMelee();
+      },
     );
   }
 
@@ -60,18 +71,6 @@ class Goblin extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
     );
     removeFromParent();
     super.onDie();
-  }
-
-  void executeAttack() {
-    simpleAttackMelee(
-      size: Vector2.all(GameplayConstants.kCurrentTileSize * 0.62),
-      damage: attack,
-      interval: 800,
-      animationRight: EnemySpriteSheet.enemyAttackEffectRight(),
-      execute: () {
-        GameplayAudioManager.playAttackEnemyMelee();
-      },
-    );
   }
 
   @override

@@ -8,9 +8,18 @@ import 'package:darkness_dungeon/presentation/design_system/components/atoms/app
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class WizardNPC extends SimpleNpc {
+/// [WizardNpc] responsible for providing introductory conversation and tutorials
+/// Following Flutter naming conventions for NPC character systems
+class WizardNpc extends SimpleNpc {
+  // Flutter-style constants for NPC configuration
+  static const double _kVisionRadius = 2.0;
+
+  // Private state variables
   bool _isShowingConversation = false;
-  WizardNPC(Vector2 position)
+
+  /// Creates a wizard NPC that provides introductory guidance to players
+  /// Following Flutter pattern of descriptive constructors
+  WizardNpc(Vector2 position)
     : super(
         animation: SimpleDirectionAnimation(
           idleRight: NpcSpriteSheet.wizardIdleLeft(),
@@ -26,22 +35,34 @@ class WizardNPC extends SimpleNpc {
   @override
   void update(double dt) {
     super.update(dt);
+    _checkPlayerProximity();
+  }
+
+  /// Checks for player proximity to initiate conversation
+  /// Following Flutter pattern of proximity detection methods
+  void _checkPlayerProximity() {
     if (gameRef.player != null) {
       this.seeComponent(
         gameRef.player!,
-        observed: (player) {
-          if (!_isShowingConversation) {
-            gameRef.player!.idle();
-            _isShowingConversation = true;
-            _displayEmoteAboveNPC(emotePath: 'emote/emote_interregacao.png');
-            _showIntroduction();
-          }
-        },
-        radiusVision: (2 * GameplayConstants.kCurrentTileSize),
+        observed: _onPlayerDetected,
+        radiusVision: (_kVisionRadius * GameplayConstants.kCurrentTileSize),
       );
     }
   }
 
+  /// Handles player detection and initiates introduction sequence
+  /// Following Flutter pattern of event handler methods
+  void _onPlayerDetected(Component player) {
+    if (!_isShowingConversation) {
+      gameRef.player!.idle();
+      _isShowingConversation = true;
+      _displayEmoteAboveNPC(emotePath: 'emote/emote_interregacao.png');
+      _showIntroduction();
+    }
+  }
+
+  /// Displays an emotion emote above the NPC
+  /// Following Flutter pattern of visual feedback methods
   void _displayEmoteAboveNPC({
     String emotePath = 'emote/emote_exclamacao.png',
   }) {
@@ -63,54 +84,70 @@ class WizardNPC extends SimpleNpc {
     );
   }
 
+  /// Shows the introductory conversation with the player
+  /// Following Flutter pattern of dialogue management methods
   void _showIntroduction() {
     GameplayAudioManager.playInteraction();
     TalkDialog.show(
       gameRef.context,
-      [
-        Say(
-          text: [TextSpan(text: getString('talk_wizard_1'))],
-          person: AppAnimatedSpriteWidget(
-            animation: NpcSpriteSheet.wizardIdleLeft(),
-          ),
-          personSayDirection: PersonSayDirection.RIGHT,
-        ),
-        Say(
-          text: [TextSpan(text: getString('talk_player_1'))],
-          person: AppAnimatedSpriteWidget(
-            animation: PlayerSpriteSheet.idleRight(),
-          ),
-          personSayDirection: PersonSayDirection.LEFT,
-        ),
-        Say(
-          text: [TextSpan(text: getString('talk_wizard_2'))],
-          person: AppAnimatedSpriteWidget(
-            animation: NpcSpriteSheet.wizardIdleLeft(),
-          ),
-          personSayDirection: PersonSayDirection.RIGHT,
-        ),
-        Say(
-          text: [TextSpan(text: getString('talk_player_2'))],
-          person: AppAnimatedSpriteWidget(
-            animation: PlayerSpriteSheet.idleRight(),
-          ),
-          personSayDirection: PersonSayDirection.LEFT,
-        ),
-        Say(
-          text: [TextSpan(text: getString('talk_wizard_3'))],
-          person: AppAnimatedSpriteWidget(
-            animation: NpcSpriteSheet.wizardIdleLeft(),
-          ),
-          personSayDirection: PersonSayDirection.RIGHT,
-        ),
-      ],
-      onChangeTalk: (index) {
-        GameplayAudioManager.playInteraction();
-      },
-      onFinish: () {
-        GameplayAudioManager.playInteraction();
-      },
+      _createIntroductionDialogueSequence(),
+      onChangeTalk: _onDialogueChanged,
+      onFinish: _onConversationFinished,
       logicalKeyboardKeysToNext: [LogicalKeyboardKey.space],
     );
+  }
+
+  /// Creates the introduction dialogue sequence
+  /// Following Flutter pattern of data factory methods
+  List<Say> _createIntroductionDialogueSequence() {
+    return [
+      Say(
+        text: [TextSpan(text: getString('talk_wizard_1'))],
+        person: AppAnimatedSpriteWidget(
+          animation: NpcSpriteSheet.wizardIdleLeft(),
+        ),
+        personSayDirection: PersonSayDirection.RIGHT,
+      ),
+      Say(
+        text: [TextSpan(text: getString('talk_player_1'))],
+        person: AppAnimatedSpriteWidget(
+          animation: PlayerSpriteSheet.idleRight(),
+        ),
+        personSayDirection: PersonSayDirection.LEFT,
+      ),
+      Say(
+        text: [TextSpan(text: getString('talk_wizard_2'))],
+        person: AppAnimatedSpriteWidget(
+          animation: NpcSpriteSheet.wizardIdleLeft(),
+        ),
+        personSayDirection: PersonSayDirection.RIGHT,
+      ),
+      Say(
+        text: [TextSpan(text: getString('talk_player_2'))],
+        person: AppAnimatedSpriteWidget(
+          animation: PlayerSpriteSheet.idleRight(),
+        ),
+        personSayDirection: PersonSayDirection.LEFT,
+      ),
+      Say(
+        text: [TextSpan(text: getString('talk_wizard_3'))],
+        person: AppAnimatedSpriteWidget(
+          animation: NpcSpriteSheet.wizardIdleLeft(),
+        ),
+        personSayDirection: PersonSayDirection.RIGHT,
+      ),
+    ];
+  }
+
+  /// Handles dialogue change events
+  /// Following Flutter pattern of event handling methods
+  void _onDialogueChanged(int index) {
+    GameplayAudioManager.playInteraction();
+  }
+
+  /// Handles conversation completion
+  /// Following Flutter pattern of callback handling methods
+  void _onConversationFinished() {
+    GameplayAudioManager.playInteraction();
   }
 }
