@@ -86,27 +86,39 @@ class GameplayAudioManager {
 
   /// Ensures background music is playing (idempotent operation)
   /// Following Flutter pattern of safe state operations
-  static Future<void> ensureBackgroundMusicPlaying() async {
+  static Future<void> ensureBackgroundMusicPlaying([String? musicTrack]) async {
     final manager = instance;
 
     if (!manager._isMusicEnabled) return;
 
+    // Use provided track or default
+    final targetTrack =
+        musicTrack ?? GameplayAudioConstants.kBackgroundMusicAsset;
+
     // Only start music if it's not already playing the correct track
     if (!manager._isBackgroundMusicPlaying ||
-        manager._currentBackgroundTrack !=
-            GameplayAudioConstants.kBackgroundMusicAsset) {
-      await _startBackgroundMusic();
+        manager._currentBackgroundTrack != targetTrack) {
+      await _startSpecificMusic(targetTrack);
     }
   }
 
-  /// Internal method to start background music
-  static Future<void> _startBackgroundMusic() async {
+  /// Plays specific background music track
+  /// Following Flutter pattern of targeted operations
+  static Future<void> playSpecificBackgroundMusic(String musicTrack) async {
+    final manager = instance;
+
+    if (!manager._isMusicEnabled) return;
+
+    await _startSpecificMusic(musicTrack);
+  }
+
+  /// Internal method to start specific background music
+  static Future<void> _startSpecificMusic(String musicTrack) async {
     final manager = instance;
     await FlameAudio.bgm.stop();
-    await FlameAudio.bgm.play(GameplayAudioConstants.kBackgroundMusicAsset);
+    await FlameAudio.bgm.play(musicTrack);
     manager._isBackgroundMusicPlaying = true;
-    manager._currentBackgroundTrack =
-        GameplayAudioConstants.kBackgroundMusicAsset;
+    manager._currentBackgroundTrack = musicTrack;
   }
 
   /// Legacy method for backwards compatibility
@@ -118,12 +130,7 @@ class GameplayAudioManager {
   /// Plays boss battle background music
   /// Following Flutter pattern of descriptive method names
   static Future<void> playBossBackgroundMusic() async {
-    final manager = instance;
-    await FlameAudio.bgm.stop();
-    await FlameAudio.bgm.play(GameplayAudioConstants.kBossBackgroundAsset);
-    manager._isBackgroundMusicPlaying = true;
-    manager._currentBackgroundTrack =
-        GameplayAudioConstants.kBossBackgroundAsset;
+    await _startSpecificMusic(GameplayAudioConstants.kBossBackgroundAsset);
   }
 
   /// Pauses the currently playing background music

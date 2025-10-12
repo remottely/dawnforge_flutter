@@ -95,6 +95,9 @@ class GameplayMapManager {
       double.parse(positionParts[1]),
     );
 
+    // Read background music from Tiled properties (optional field)
+    final backgroundMusic = properties.others['backgroundMusic']?.toString();
+
     return GameplayMapSensor(
       sensorId,
       properties.position,
@@ -102,6 +105,7 @@ class GameplayMapManager {
       properties.others['nextMap'].toString(),
       playerPosition,
       Direction.fromName(properties.others['playerDirection'].toString()),
+      backgroundMusic: backgroundMusic,
     );
   }
 

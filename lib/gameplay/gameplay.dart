@@ -103,8 +103,14 @@ class _GameplayState extends State<Gameplay> {
             (mapArguments?.playerPosition ?? Vector2(4, 4)) *
             GameplayConstants.kCurrentTileSize;
 
+        // Start map-specific background music if provided
+        final backgroundMusic = mapArguments?.backgroundMusic;
+        if (backgroundMusic != null && backgroundMusic.isNotEmpty) {
+          GameplayAudioManager.ensureBackgroundMusicPlaying(backgroundMusic);
+        }
+
         AppLogger.info(
-          'Building BonfireWidget for map: ${mapItem.id}, player position: $playerPosition',
+          'Building BonfireWidget for map: ${mapItem.id}, player position: $playerPosition, music: $backgroundMusic',
         );
 
         // Create player for the current map

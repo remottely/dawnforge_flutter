@@ -863,6 +863,11 @@
                  "name":"sensor_map_1",
                  "properties":[
                         {
+                         "name":"backgroundMusic",
+                         "type":"string",
+                         "value":"ro1_letters.mp3"
+                        }, 
+                        {
                          "name":"nextMap",
                          "type":"string",
                          "value":"map1"

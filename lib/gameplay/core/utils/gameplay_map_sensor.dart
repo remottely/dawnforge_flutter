@@ -10,6 +10,7 @@ class GameplayMapSensor extends GameDecoration with Sensor<Player> {
   final String targetMap;
   final Vector2 playerPosition;
   final Direction playerDirection;
+  final String? backgroundMusic;
 
   // Contact state management
   bool hasContact = false;
@@ -24,8 +25,9 @@ class GameplayMapSensor extends GameDecoration with Sensor<Player> {
     Vector2 size,
     this.targetMap,
     this.playerPosition,
-    this.playerDirection,
-  ) : super(position: position, size: size);
+    this.playerDirection, {
+    this.backgroundMusic,
+  }) : super(position: position, size: size);
 
   @override
   void onContact(Player component) {
@@ -88,7 +90,11 @@ class GameplayMapSensor extends GameDecoration with Sensor<Player> {
   void _performNavigation() {
     MapNavigator.of(context).toNamed(
       targetMap,
-      arguments: MapArguments(playerPosition, playerDirection),
+      arguments: MapArguments(
+        playerPosition,
+        playerDirection,
+        backgroundMusic: backgroundMusic,
+      ),
     );
   }
 

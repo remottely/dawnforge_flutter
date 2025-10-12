@@ -40,6 +40,11 @@ enum MapBiomeId { none, map1, dungeon1 }
 class MapArguments {
   final Vector2 playerPosition;
   final Direction playerDirection;
+  final String? backgroundMusic;
 
-  const MapArguments(this.playerPosition, this.playerDirection);
+  const MapArguments(
+    this.playerPosition,
+    this.playerDirection, {
+    this.backgroundMusic,
+  });
 }
