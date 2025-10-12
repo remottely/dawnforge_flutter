@@ -26,41 +26,38 @@ class GameplayMapManager {
   static Map<String, MapItemBuilder> get maps => {
     MapBiomeId.map1.name: (context, args) => MapItem(
       id: MapBiomeId.map1.name,
+      properties: _getMapProperties(MapBiomeId.map1),
       map: _buildMap(
         mapAsset: MapConstants.kMap1Asset,
         sensorIds: MapConstants.kMap1SensorIds,
       ),
-      properties: _getMapProperties(MapConstants.kMap1Asset),
     ),
     MapBiomeId.dungeon1.name: (context, args) => MapItem(
       id: MapBiomeId.dungeon1.name,
+      properties: _getMapProperties(MapBiomeId.dungeon1),
       map: _buildMap(
         mapAsset: MapConstants.kDungeon1Asset,
         sensorIds: MapConstants.kDungeon1SensorIds,
       ),
-      properties: _getMapProperties(MapConstants.kDungeon1Asset),
     ),
   };
 
   /// Gets map properties from Tiled asset path
   /// Returns properties map that matches the structure from Tiled files
-  static Map<String, dynamic> _getMapProperties(String mapAsset) {
-    switch (mapAsset) {
-      case MapConstants.kMap1Asset:
-        return {
-          'backgroundMusic': 'ro1_letters.mp3',
-          'lightingColor': '#ffFFE566',
-          'backgroundColor': '#ff2E8B57',
-        };
-      case MapConstants.kDungeon1Asset:
-        return {
-          'backgroundMusic': 'ro1_death_hex.mp3',
-          'lightingColor': '#ffAA4400',
-          'backgroundColor': '#ff1a1a1a',
-        };
-      default:
-        return {};
-    }
+  static Map<String, dynamic> _getMapProperties(MapBiomeId mapBiome) {
+    return switch (mapBiome) {
+      MapBiomeId.map1 => {
+        'mapBackgroundMusic': 'ro1_letters.mp3',
+        'mapLightingColor': '#a0ffffff',
+        'mapBackgroundColor': '#ff63c74d',
+      },
+      MapBiomeId.dungeon1 => {
+        'mapBackgroundMusic': 'ro1_death_hex.mp3',
+        'mapLightingColor': '#80000000',
+        'mapBackgroundColor': '#ff424242',
+      },
+      _ => {},
+    };
   }
 }
 

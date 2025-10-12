@@ -12,20 +12,20 @@ class ColorHelper {
   ///
   /// Example:
   /// ```dart
-  /// final color = ColorHelper.fromHexString('#FF0000'); // Red
-  /// final color2 = ColorHelper.fromHexString('00FF00'); // Green
+  /// final color = ColorHelper.fromHex('#ffFF0000'); // Red
+  /// final color2 = ColorHelper.fromHex('ff00FF00'); // Green
   /// ```
-  static Color? fromHexString(String? hexString) {
-    if (hexString == null || hexString.isEmpty) {
+  static Color? fromHex(String? hex) {
+    if (hex == null || hex.isEmpty) {
       return null;
     }
 
     try {
       // Remove the '#' symbol if present
-      final cleanHexString = hexString.replaceAll('#', '');
+      final cleanHexString = hex.replaceAll('#', '');
 
       // Validate hex string format (must be 6 characters for RGB)
-      if (cleanHexString.length != 6) {
+      if (cleanHexString.length != 8) {
         return null;
       }
 
@@ -38,6 +38,17 @@ class ColorHelper {
     }
   }
 
+  static String toHex(Color color) =>
+      '#${color.value.toRadixString(16).padLeft(8, '0')}'.toUpperCase();
+
+  // static Color? fromHex(String? hex) {
+  //   if (hex == null || hex.isEmpty) {
+  //     return null;
+  //   }
+  //   hex = hex.replaceAll('#', '');
+  //   return Color(int.parse(hex, radix: 16));
+  // }
+
   /// Converts a hex color string to a Color object with custom alpha
   /// Supports both '#RRGGBB' and 'RRGGBB' formats
   /// Alpha value should be between 0.0 (transparent) and 1.0 (opaque)
@@ -48,7 +59,7 @@ class ColorHelper {
   /// final color = ColorHelper.fromHexStringWithAlpha('#FF0000', 0.5); // Semi-transparent red
   /// ```
   static Color? fromHexStringWithAlpha(String? hexString, double alpha) {
-    final baseColor = fromHexString(hexString);
+    final baseColor = fromHex(hexString);
     if (baseColor == null) {
       return null;
     }
@@ -58,19 +69,19 @@ class ColorHelper {
     return baseColor.withValues(alpha: clampedAlpha);
   }
 
-  /// Converts a Color object to hex string format
-  /// Returns string in '#RRGGBB' format
-  ///
-  /// Example:
-  /// ```dart
-  /// final hexString = ColorHelper.toHexString(Colors.red); // '#F44336'
-  /// ```
-  static String toHexString(Color color) {
-    final red = (color.r * 255.0).round().toRadixString(16).padLeft(2, '0');
-    final green = (color.g * 255.0).round().toRadixString(16).padLeft(2, '0');
-    final blue = (color.b * 255.0).round().toRadixString(16).padLeft(2, '0');
-    return '#$red$green$blue'.toUpperCase();
-  }
+  // /// Converts a Color object to hex string format
+  // /// Returns string in '#RRGGBB' format
+  // ///
+  // /// Example:
+  // /// ```dart
+  // /// final hexString = ColorHelper.toHexString(Colors.red); // '#F44336'
+  // /// ```
+  // static String toHexString(Color color) {
+  //   final red = (color.r * 255.0).round().toRadixString(16).padLeft(2, '0');
+  //   final green = (color.g * 255.0).round().toRadixString(16).padLeft(2, '0');
+  //   final blue = (color.b * 255.0).round().toRadixString(16).padLeft(2, '0');
+  //   return '#$red$green$blue'.toUpperCase();
+  // }
 
   /// Validates if a string is a valid hex color format
   /// Supports both '#RRGGBB' and 'RRGGBB' formats
@@ -88,7 +99,7 @@ class ColorHelper {
     final cleanHexString = hexString.replaceAll('#', '');
 
     // Check if length is exactly 6 characters
-    if (cleanHexString.length != 6) {
+    if (cleanHexString.length != 8) {
       return false;
     }
 

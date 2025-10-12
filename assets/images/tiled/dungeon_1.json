@@ -863,21 +863,6 @@
                  "name":"sensor_map_1",
                  "properties":[
                         {
-                         "name":"backgroundColor",
-                         "type":"string",
-                         "value":"#F54927"
-                        }, 
-                        {
-                         "name":"backgroundMusic",
-                         "type":"string",
-                         "value":"ro1_letters.mp3"
-                        }, 
-                        {
-                         "name":"lightingColor",
-                         "type":"string",
-                         "value":"#F52727"
-                        }, 
-                        {
                          "name":"nextMap",
                          "type":"string",
                          "value":"map1"

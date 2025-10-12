@@ -180,7 +180,7 @@
          "name":"terrain_4",
          "opacity":1,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":50,
          "x":0,
          "y":0
@@ -863,21 +863,6 @@
                  "name":"sensor_dungeon_1",
                  "properties":[
                         {
-                         "name":"backgroundColor",
-                         "type":"string",
-                         "value":"#2A27F5"
-                        }, 
-                        {
-                         "name":"backgroundMusic",
-                         "type":"string",
-                         "value":"ro1_death_hex.mp3"
-                        }, 
-                        {
-                         "name":"lightingColor",
-                         "type":"string",
-                         "value":"#F2F527"
-                        }, 
-                        {
                          "name":"nextMap",
                          "type":"string",
                          "value":"dungeon1"
@@ -904,21 +889,6 @@
                  "id":78,
                  "name":"sensor_dungeon_2",
                  "properties":[
-                        {
-                         "name":"backgroundColor",
-                         "type":"string",
-                         "value":"#27F5A3"
-                        }, 
-                        {
-                         "name":"backgroundMusic",
-                         "type":"string",
-                         "value":"ro1_death_hex.mp3"
-                        }, 
-                        {
-                         "name":"lightingColor",
-                         "type":"string",
-                         "value":"#F227F5"
-                        }, 
                         {
                          "name":"nextMap",
                          "type":"string",

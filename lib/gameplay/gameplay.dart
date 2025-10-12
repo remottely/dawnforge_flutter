@@ -100,15 +100,15 @@ class _GameplayState extends State<Gameplay> {
             GameplayConstants.kCurrentTileSize;
 
         // Read background music from Tiled properties (optional field)
-        final mapBackgroundMusic = mapItem.properties['backgroundMusic']
+        final mapBackgroundMusic = mapItem.properties['mapBackgroundMusic']
             ?.toString();
 
         // Parse color values using ColorHelper for better maintainability
-        final mapLightingColor = ColorHelper.fromHexString(
-          mapItem.properties['lightingColor']?.toString(),
+        final mapLightingColor = ColorHelper.fromHex(
+          mapItem.properties['mapLightingColor']?.toString(),
         );
-        final mapBackgroundColor = ColorHelper.fromHexString(
-          mapItem.properties['backgroundColor']?.toString(),
+        final mapBackgroundColor = ColorHelper.fromHex(
+          mapItem.properties['mapBackgroundColor']?.toString(),
         );
         // Start map-specific background music if provided
         if (mapBackgroundMusic != null && mapBackgroundMusic.isNotEmpty) {

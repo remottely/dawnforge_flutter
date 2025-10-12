@@ -4,9 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('ColorHelper', () {
-    group('fromHexString', () {
+    group('fromHex', () {
       test('should convert valid hex string with # prefix to Color', () {
-        final color = ColorHelper.fromHexString('#FF0000');
+        final color = ColorHelper.fromHex('#ffFF0000');
 
         expect(color, isNotNull);
         expect(color!.red, equals(255));
@@ -16,7 +16,7 @@ void main() {
       });
 
       test('should convert valid hex string without # prefix to Color', () {
-        final color = ColorHelper.fromHexString('00FF00');
+        final color = ColorHelper.fromHex('ff00FF00');
 
         expect(color, isNotNull);
         expect(color!.red, equals(0));
@@ -26,29 +26,29 @@ void main() {
       });
 
       test('should return null for null input', () {
-        final color = ColorHelper.fromHexString(null);
+        final color = ColorHelper.fromHex(null);
         expect(color, isNull);
       });
 
       test('should return null for empty string', () {
-        final color = ColorHelper.fromHexString('');
+        final color = ColorHelper.fromHex('');
         expect(color, isNull);
       });
 
       test('should return null for invalid hex string', () {
-        final color = ColorHelper.fromHexString('invalid');
+        final color = ColorHelper.fromHex('invalid');
         expect(color, isNull);
       });
 
       test('should return null for wrong length hex string', () {
-        final color = ColorHelper.fromHexString('#FFF');
+        final color = ColorHelper.fromHex('#ffFFF');
         expect(color, isNull);
       });
     });
 
     group('fromHexStringWithAlpha', () {
       test('should convert hex string with custom alpha', () {
-        final color = ColorHelper.fromHexStringWithAlpha('#FF0000', 0.5);
+        final color = ColorHelper.fromHexStringWithAlpha('#ffFF0000', 0.5);
 
         expect(color, isNotNull);
         expect(color!.red, equals(255));
@@ -58,43 +58,43 @@ void main() {
       });
 
       test('should clamp alpha values below 0.0', () {
-        final color = ColorHelper.fromHexStringWithAlpha('#FF0000', -0.5);
+        final color = ColorHelper.fromHexStringWithAlpha('ffFF0000', -0.5);
 
         expect(color, isNotNull);
         expect(color!.opacity, equals(0.0));
       });
 
       test('should clamp alpha values above 1.0', () {
-        final color = ColorHelper.fromHexStringWithAlpha('#FF0000', 1.5);
+        final color = ColorHelper.fromHexStringWithAlpha('#ffFF0000', 1.5);
 
         expect(color, isNotNull);
         expect(color!.opacity, equals(1.0));
       });
     });
 
-    group('toHexString', () {
+    group('toHex', () {
       test('should convert Color to hex string', () {
         const color = Color(0xFFFF0000);
-        final hexString = ColorHelper.toHexString(color);
+        final hexString = ColorHelper.toHex(color);
 
-        expect(hexString, equals('#FF0000'));
+        expect(hexString, equals('#FFFF0000'));
       });
 
       test('should convert Color with different values to hex string', () {
         const color = Color(0xFF00FF00);
-        final hexString = ColorHelper.toHexString(color);
+        final hexString = ColorHelper.toHex(color);
 
-        expect(hexString, equals('#00FF00'));
+        expect(hexString, equals('#FF00FF00'));
       });
     });
 
     group('isValidHexString', () {
       test('should return true for valid hex string with #', () {
-        expect(ColorHelper.isValidHexString('#FF0000'), isTrue);
+        expect(ColorHelper.isValidHexString('#FFFF0000'), isTrue);
       });
 
       test('should return true for valid hex string without #', () {
-        expect(ColorHelper.isValidHexString('FF0000'), isTrue);
+        expect(ColorHelper.isValidHexString('FFFF0000'), isTrue);
       });
 
       test('should return false for null', () {
@@ -106,11 +106,11 @@ void main() {
       });
 
       test('should return false for invalid characters', () {
-        expect(ColorHelper.isValidHexString('GG0000'), isFalse);
+        expect(ColorHelper.isValidHexString('ffGG0000'), isFalse);
       });
 
       test('should return false for wrong length', () {
-        expect(ColorHelper.isValidHexString('#FFF'), isFalse);
+        expect(ColorHelper.isValidHexString('#ffFFF'), isFalse);
       });
     });
 
