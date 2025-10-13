@@ -6,29 +6,44 @@ import 'package:flutter/material.dart';
 
 /// Game State Manager responsible for handling game state changes and UI transitions
 /// Following Flutter naming conventions for game management systems
+///
+/// This class handles:
+/// - Game over condition detection and state management
+/// - Dialog display coordination with GameplayUIManager
+/// - Game restart functionality and navigation
+/// - Centralized logging for game state events
 class GameplayStateManager extends GameComponent {
-  // Flutter-style constants for game state management
-  static const String _kGameOverCheckInterval = 'gameOver';
-  static const int _kGameOverCheckRate = 100;
+  // 1. Constantes (agrupadas por tipo)
+  static const String kGameOverCheckInterval = 'gameOver';
+  static const int kGameOverCheckRate = 100;
+  static const String kPlayerDeadState = 'playerDead';
+  static const String kGameRestartEvent = 'gameRestart';
 
-  // Flutter-style constants for game events
-  static const String _kPlayerDeadState = 'playerDead';
-  static const String _kGameRestartEvent = 'gameRestart';
-
-  // Private state variables following Flutter naming conventions
+  // 2. Variáveis de instância privadas
   bool _isGameOverDisplayed = false;
   bool _isProcessingGameOver = false;
 
+  // 3. Métodos públicos principais
   @override
   void update(double dt) {
     _processGameStateChecks(dt);
     super.update(dt);
   }
 
+  /// Public method to manually trigger game over (for external systems)
+  /// Following Flutter pattern of public API methods
+  void triggerGameOver() {
+    if (!_isGameOverDisplayed && !_isProcessingGameOver) {
+      _isProcessingGameOver = true;
+      _handleGameOverState();
+    }
+  }
+
+  // 4. Métodos privados auxiliares (organizados por funcionalidade)
   /// Processes all game state checks in a centralized manner
   /// Following Flutter pattern of organizing update logic
   void _processGameStateChecks(double dt) {
-    if (checkInterval(_kGameOverCheckInterval, _kGameOverCheckRate, dt)) {
+    if (checkInterval(kGameOverCheckInterval, kGameOverCheckRate, dt)) {
       _checkForGameOverCondition();
     }
   }
@@ -48,10 +63,31 @@ class GameplayStateManager extends GameComponent {
     if (!_isGameOverDisplayed) {
       _isGameOverDisplayed = true;
       _displayGameOverDialog();
-      _logGameEvent(_kPlayerDeadState);
+      _logGameEvent(kPlayerDeadState);
     }
   }
 
+  /// Displays the game over dialog and handles retry functionality
+  /// Following Flutter naming convention for private UI methods
+  void _displayGameOverDialog() {
+    _isGameOverDisplayed = true;
+    GameplayUIManager.displayGameOverDialog(context, _onRetryGamePressed);
+  }
+
+  /// Handles the retry game button press
+  /// Following Flutter event handler naming convention
+  void _onRetryGamePressed(BuildContext dialogContext) {
+    _logGameEvent(kGameRestartEvent);
+    _resetGameState();
+    // Close the dialog using the dialog's context
+    Navigator.of(dialogContext).pop();
+    // Add a small delay to ensure dialog is closed before navigating
+    Future.delayed(const Duration(milliseconds: 100), () {
+      _restartGame();
+    });
+  }
+
+  // 5. Métodos utilitários
   /// Checks if the game over condition is met
   /// Following Flutter pattern of breaking complex conditions into readable methods
   bool _shouldDisplayGameOver() {
@@ -68,35 +104,6 @@ class GameplayStateManager extends GameComponent {
   /// Following Flutter pattern of state checking
   bool _isPlayerDead() {
     return gameRef.player?.isDead == true;
-  }
-
-  /// Public method to manually trigger game over (for external systems)
-  /// Following Flutter pattern of public API methods
-  void triggerGameOver() {
-    if (!_isGameOverDisplayed && !_isProcessingGameOver) {
-      _isProcessingGameOver = true;
-      _handleGameOverState();
-    }
-  }
-
-  /// Displays the game over dialog and handles retry functionality
-  /// Following Flutter naming convention for private UI methods
-  void _displayGameOverDialog() {
-    _isGameOverDisplayed = true;
-    GameplayUIManager.displayGameOverDialog(context, _onRetryGamePressed);
-  }
-
-  /// Handles the retry game button press
-  /// Following Flutter event handler naming convention
-  void _onRetryGamePressed(BuildContext dialogContext) {
-    _logGameEvent(_kGameRestartEvent);
-    _resetGameState();
-    // Close the dialog using the dialog's context
-    Navigator.of(dialogContext).pop();
-    // Add a small delay to ensure dialog is closed before navigating
-    Future.delayed(const Duration(milliseconds: 100), () {
-      _restartGame();
-    });
   }
 
   /// Resets internal game state variables
