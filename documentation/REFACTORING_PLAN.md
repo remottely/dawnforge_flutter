@@ -171,7 +171,7 @@ Manter toda a funcionalidade de barras de vida e stamina, apenas organizando o c
 
 #### **Prompt 1.2.1 - Criação do GameplayUIConstants**
 
-````
+```
 Seguindo os padrões do CLAUDE.md, preciso criar um novo arquivo de constantes /lib/gameplay/core/constants/gameplay_ui_constants.dart para centralizar todas as constantes de UI do gameplay:
 
 1. Estrutura do arquivo:
@@ -181,7 +181,6 @@ Seguindo os padrões do CLAUDE.md, preciso criar um novo arquivo de constantes /
    - Constantes de posicionamento
 
 2. Constantes a incluir (baseado na análise atual):
-   ```dart
    // HUD Configuration
    static const double kHUDPadding = 20.0;
    static const double kBarWidth = 90.0;
@@ -207,7 +206,6 @@ Seguindo os padrões do CLAUDE.md, preciso criar um novo arquivo de constantes /
 
    // Colors
    static const Color kTransparentColor = Colors.transparent;
-````
 
 3. Documentação:
    - Comentário da classe explicando o propósito
@@ -215,13 +213,13 @@ Seguindo os padrões do CLAUDE.md, preciso criar um novo arquivo de constantes /
    - Seguir padrão Flutter de constantes estáticas
 
 Este arquivo será usado pelos HUDs e managers de UI para centralizar configurações.
-
 ```
 
 ### 1.3 Estruturação de Classes Base
 
 #### **Prompt 1.3.1 - Refatoração do GameplayStateManager**
-```
+
+````
 
 Seguindo os padrões do CLAUDE.md, preciso refatorar o arquivo /lib/gameplay/core/managers/gameplay_state_manager.dart para melhorar a organização:
 
@@ -263,7 +261,7 @@ Seguindo os padrões do CLAUDE.md, preciso refatorar o arquivo /lib/gameplay/cor
      void _restartGame() { }
      void _logGameEvent(String eventName) { }
    }
-   ```
+````
 
 3. Melhorar documentação:
 
