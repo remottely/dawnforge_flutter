@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/gameplay_ui_constants.dart';
 import 'package:flutter/material.dart';
 
 /// Creates a styled dialog widget following Flutter UI patterns
@@ -9,7 +9,7 @@ class AppStyledDialog extends StatelessWidget {
 
   const AppStyledDialog({
     super.key,
-    this.backgroundColor = GameplayUIManager.kTransparentColor,
+    this.backgroundColor = GameplayUIConstants.kTransparentColor,
     required this.children,
   });
 

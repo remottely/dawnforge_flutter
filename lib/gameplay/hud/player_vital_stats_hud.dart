@@ -1,4 +1,5 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/gameplay_ui_constants.dart';
 import 'package:darkness_dungeon/gameplay/player/knight.dart';
 import 'package:flutter/material.dart';
 
@@ -10,27 +11,6 @@ import 'package:flutter/material.dart';
 /// - Stamina bar display for player actions
 /// - Dynamic updates based on player state changes
 class PlayerVitalStatsHUD extends InterfaceComponent {
-  // Flutter-style constants for UI configuration
-  static const double kDefaultPadding = 20.0;
-  static const double kBarWidth = 90.0;
-  static const double kStrokeWidth = 12.0;
-  static const double kMaxStamina = 100.0;
-  static const double kHealthBarYPosition = 10.0;
-  static const double kStaminaBarYPosition = 27.0;
-  static const double kBarXPosition = 29.0;
-
-  // HUD positioning and sizing constants
-  static const int kComponentId = 1;
-  static const double kHUDWidth = 120.0;
-  static const double kHUDHeight = 40.0;
-
-  // Asset paths
-  static const String kHealthUIAssetPath = 'health_ui.png';
-
-  // Bar color thresholds (as fractions of total width)
-  static const double kHealthCriticalThreshold = 1.0 / 3.0;
-  static const double kHealthWarningThreshold = 2.0 / 3.0;
-
   // Private state variables
   double _maxLife = 0.0;
   double _currentLife = 0.0;
@@ -40,10 +20,16 @@ class PlayerVitalStatsHUD extends InterfaceComponent {
   /// Following Flutter pattern of component initialization
   PlayerVitalStatsHUD()
     : super(
-        id: kComponentId,
-        position: Vector2(kDefaultPadding, kDefaultPadding),
-        spriteUnselected: Sprite.load(kHealthUIAssetPath),
-        size: Vector2(kHUDWidth, kHUDHeight),
+        id: GameplayUIConstants.kComponentId,
+        position: Vector2(
+          GameplayUIConstants.kHUDPadding,
+          GameplayUIConstants.kHUDPadding,
+        ),
+        spriteUnselected: Sprite.load(GameplayUIConstants.kHealthUIAssetPath),
+        size: Vector2(
+          GameplayUIConstants.kHUDWidth,
+          GameplayUIConstants.kHUDHeight,
+        ),
       );
 
   // Lifecycle methods
@@ -89,7 +75,7 @@ class PlayerVitalStatsHUD extends InterfaceComponent {
   /// Following Flutter pattern of private rendering methods
   void _drawHealthBar(Canvas canvas) {
     // Draw background bar (empty health)
-    _drawBarBackground(canvas, kHealthBarYPosition);
+    _drawBarBackground(canvas, GameplayUIConstants.kHealthBarYPosition);
 
     // Calculate and draw current health bar
     final double healthBarWidth = _calculateHealthBarWidth();
@@ -102,11 +88,17 @@ class PlayerVitalStatsHUD extends InterfaceComponent {
     final double staminaBarWidth = _calculateStaminaBarWidth();
 
     canvas.drawLine(
-      Offset(kBarXPosition, kStaminaBarYPosition),
-      Offset(kBarXPosition + staminaBarWidth, kStaminaBarYPosition),
+      Offset(
+        GameplayUIConstants.kBarXPosition,
+        GameplayUIConstants.kStaminaBarYPosition,
+      ),
+      Offset(
+        GameplayUIConstants.kBarXPosition + staminaBarWidth,
+        GameplayUIConstants.kStaminaBarYPosition,
+      ),
       Paint()
-        ..color = Colors.yellow
-        ..strokeWidth = kStrokeWidth
+        ..color = GameplayUIConstants.kStaminaBarColor
+        ..strokeWidth = GameplayUIConstants.kStrokeWidth
         ..style = PaintingStyle.fill,
     );
   }
@@ -115,11 +107,14 @@ class PlayerVitalStatsHUD extends InterfaceComponent {
   /// Following Flutter pattern of helper rendering methods
   void _drawBarBackground(Canvas canvas, double yPosition) {
     canvas.drawLine(
-      Offset(kBarXPosition, yPosition),
-      Offset(kBarXPosition + kBarWidth, yPosition),
+      Offset(GameplayUIConstants.kBarXPosition, yPosition),
+      Offset(
+        GameplayUIConstants.kBarXPosition + GameplayUIConstants.kBarWidth,
+        yPosition,
+      ),
       Paint()
-        ..color = Colors.blueGrey[800]!
-        ..strokeWidth = kStrokeWidth
+        ..color = GameplayUIConstants.kHealthBarBackgroundColor
+        ..strokeWidth = GameplayUIConstants.kStrokeWidth
         ..style = PaintingStyle.fill,
     );
   }
@@ -128,11 +123,17 @@ class PlayerVitalStatsHUD extends InterfaceComponent {
   /// Following Flutter pattern of specialized rendering methods
   void _drawHealthBarFill(Canvas canvas, double barWidth) {
     canvas.drawLine(
-      Offset(kBarXPosition, kHealthBarYPosition),
-      Offset(kBarXPosition + barWidth, kHealthBarYPosition),
+      Offset(
+        GameplayUIConstants.kBarXPosition,
+        GameplayUIConstants.kHealthBarYPosition,
+      ),
+      Offset(
+        GameplayUIConstants.kBarXPosition + barWidth,
+        GameplayUIConstants.kHealthBarYPosition,
+      ),
       Paint()
         ..color = _getHealthBarColor(barWidth)
-        ..strokeWidth = kStrokeWidth
+        ..strokeWidth = GameplayUIConstants.kStrokeWidth
         ..style = PaintingStyle.fill,
     );
   }
@@ -143,13 +144,14 @@ class PlayerVitalStatsHUD extends InterfaceComponent {
   /// Following Flutter pattern of calculation utility methods
   double _calculateHealthBarWidth() {
     if (_maxLife <= 0) return 0.0;
-    return (_currentLife * kBarWidth) / _maxLife;
+    return (_currentLife * GameplayUIConstants.kBarWidth) / _maxLife;
   }
 
   /// Calculates the current stamina bar width based on player's stamina ratio
   /// Following Flutter pattern of calculation utility methods
   double _calculateStaminaBarWidth() {
-    return (_currentStamina * kBarWidth) / kMaxStamina;
+    return (_currentStamina * GameplayUIConstants.kBarWidth) /
+        GameplayUIConstants.kMaxStamina;
   }
 
   /// Determines the appropriate color for the health bar based on current health level
@@ -160,14 +162,16 @@ class PlayerVitalStatsHUD extends InterfaceComponent {
   /// - Yellow: Health 33% - 66%
   /// - Red: Health < 33%
   Color _getHealthBarColor(double currentHealthBarWidth) {
-    final double healthPercentage = currentHealthBarWidth / kBarWidth;
+    final double healthPercentage =
+        currentHealthBarWidth / GameplayUIConstants.kBarWidth;
 
-    if (healthPercentage > kHealthWarningThreshold) {
-      return Colors.green;
-    } else if (healthPercentage > kHealthCriticalThreshold) {
-      return Colors.yellow;
+    if (healthPercentage > GameplayUIConstants.kHealthWarningThreshold) {
+      return GameplayUIConstants.kHealthBarGoodColor;
+    } else if (healthPercentage >
+        GameplayUIConstants.kHealthCriticalThreshold) {
+      return GameplayUIConstants.kHealthBarWarningColor;
     } else {
-      return Colors.red;
+      return GameplayUIConstants.kHealthBarCriticalColor;
     }
   }
 }

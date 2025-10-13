@@ -105,15 +105,16 @@ Refatorar o código atual para melhorar organização, legibilidade e manutenibi
 
 #### **Prompt 1.1.1 - Refatoração do GameplayHUD**
 
-```
 Seguindo os padrões do CLAUDE.md, preciso refatorar o arquivo /lib/gameplay/hud/gameplay_hud.dart para:
 
 1. Aplicar convenções de nomenclatura Flutter:
+
    - Constantes com prefixo k seguindo padrão kConstantName
    - Métodos privados com underscore prefix
    - Variáveis privadas com underscore prefix
 
 2. Reorganizar estrutura da classe seguindo padrão:
+
    - Constantes (agrupadas por tipo)
    - Variáveis de instância privadas
    - Métodos públicos principais
@@ -121,6 +122,7 @@ Seguindo os padrões do CLAUDE.md, preciso refatorar o arquivo /lib/gameplay/hud
    - Métodos utilitários
 
 3. Adicionar documentação seguindo padrão Flutter:
+
    - Comentário da classe com responsabilidade
    - Comentários dos métodos principais
    - Documentação de parâmetros quando aplicável
@@ -131,26 +133,29 @@ Seguindo os padrões do CLAUDE.md, preciso refatorar o arquivo /lib/gameplay/hud
    - Posicionamento
 
 Manter toda a funcionalidade existente, apenas organizando e padronizando o código.
-```
+
+---
 
 #### **Prompt 1.1.2 - Refatoração do PlayerVitalStatsHUD**
 
-```
 Seguindo os padrões do CLAUDE.md, preciso refatorar o arquivo /lib/gameplay/hud/player_vital_stats_hud.dart para:
 
 1. Aplicar convenções de nomenclatura Flutter:
+
    - Constantes com prefixo k para todas as configurações
    - Métodos privados com underscore prefix
    - Variáveis de instância com underscore prefix quando privadas
 
 2. Reorganizar estrutura da classe:
+
    - Constantes Flutter-style no topo (kPadding, kWidthBar, etc.)
    - Variáveis de estado privadas
    - Métodos de ciclo de vida (update, render)
-   - Métodos privados de desenho (_drawLife, _drawStamina)
-   - Métodos utilitários (_getLifeBarColor)
+   - Métodos privados de desenho (\_drawLife, \_drawStamina)
+   - Métodos utilitários (\_getLifeBarColor)
 
 3. Padronizar constantes:
+
    - kDefaultPadding = 20
    - kBarWidth = 90
    - kStrokeWidth = 12
@@ -165,22 +170,25 @@ Seguindo os padrões do CLAUDE.md, preciso refatorar o arquivo /lib/gameplay/hud
    - Comentários inline para lógica complexa
 
 Manter toda a funcionalidade de barras de vida e stamina, apenas organizando o código.
-```
+
+---
 
 ### 1.2 Organização de Constantes
 
 #### **Prompt 1.2.1 - Criação do GameplayUIConstants**
 
-```
 Seguindo os padrões do CLAUDE.md, preciso criar um novo arquivo de constantes /lib/gameplay/core/constants/gameplay_ui_constants.dart para centralizar todas as constantes de UI do gameplay:
 
 1. Estrutura do arquivo:
+
    - Constantes de tamanhos e espaçamentos
    - Constantes de cores
    - Constantes de assets
    - Constantes de posicionamento
 
 2. Constantes a incluir (baseado na análise atual):
+
+   ```dart
    // HUD Configuration
    static const double kHUDPadding = 20.0;
    static const double kBarWidth = 90.0;
@@ -206,6 +214,7 @@ Seguindo os padrões do CLAUDE.md, preciso criar um novo arquivo de constantes /
 
    // Colors
    static const Color kTransparentColor = Colors.transparent;
+   ```
 
 3. Documentação:
    - Comentário da classe explicando o propósito
@@ -213,13 +222,12 @@ Seguindo os padrões do CLAUDE.md, preciso criar um novo arquivo de constantes /
    - Seguir padrão Flutter de constantes estáticas
 
 Este arquivo será usado pelos HUDs e managers de UI para centralizar configurações.
-```
+
+---
 
 ### 1.3 Estruturação de Classes Base
 
 #### **Prompt 1.3.1 - Refatoração do GameplayStateManager**
-
-````
 
 Seguindo os padrões do CLAUDE.md, preciso refatorar o arquivo /lib/gameplay/core/managers/gameplay_state_manager.dart para melhorar a organização:
 
@@ -261,7 +269,7 @@ Seguindo os padrões do CLAUDE.md, preciso refatorar o arquivo /lib/gameplay/cor
      void _restartGame() { }
      void _logGameEvent(String eventName) { }
    }
-````
+   ```
 
 3. Melhorar documentação:
 
@@ -276,10 +284,9 @@ Seguindo os padrões do CLAUDE.md, preciso refatorar o arquivo /lib/gameplay/cor
 
 Manter toda a funcionalidade existente, apenas organizando e padronizando.
 
-```
+---
 
 #### **Prompt 1.3.2 - Refatoração do GameplayUIManager**
-```
 
 Seguindo os padrões do CLAUDE.md, preciso refatorar o arquivo /lib/gameplay/core/managers/gameplay_ui_manager.dart para melhor organização:
 
@@ -320,8 +327,6 @@ Seguindo os padrões do CLAUDE.md, preciso refatorar o arquivo /lib/gameplay/cor
 
 Manter toda a funcionalidade de diálogos, apenas organizando e usando constantes centralizadas.
 
-```
-
 ---
 
 ## 📝 FASE 2: REFATORAÇÃO DE GAMEPLAY CORE
@@ -329,7 +334,6 @@ Manter toda a funcionalidade de diálogos, apenas organizando e usando constante
 ### 2.1 Refatoração de Entities
 
 #### **Prompt 2.1.1 - Refatoração do Knight Player**
-```
 
 Seguindo os padrões do CLAUDE.md, preciso refatorar o arquivo /lib/gameplay/player/knight.dart para melhor organização:
 
@@ -395,10 +399,9 @@ Seguindo os padrões do CLAUDE.md, preciso refatorar o arquivo /lib/gameplay/pla
 
 Manter toda a funcionalidade existente de movimento, ataque, stamina e interações.
 
-```
+---
 
 #### **Prompt 2.1.2 - Refatoração dos Enemies**
-```
 
 Seguindo os padrões do CLAUDE.md, preciso refatorar os arquivos de inimigos para padronização:
 
@@ -466,12 +469,11 @@ Arquivos:
 
 Manter toda a funcionalidade de IA, combate e efeitos visuais/sonoros.
 
-```
+---
 
 ### 2.2 Refatoração de NPCs
 
 #### **Prompt 2.2.1 - Refatoração dos NPCs**
-```
 
 Seguindo os padrões do CLAUDE.md, preciso refatorar os arquivos de NPCs:
 
@@ -534,12 +536,11 @@ Arquivos:
 
 Manter toda a funcionalidade de conversas, progressão de história e interações.
 
-```
+---
 
 ### 2.3 Refatoração de Decorations
 
 #### **Prompt 2.3.1 - Refatoração das Decorations**
-```
 
 Seguindo os padrões do CLAUDE.md, preciso refatorar os arquivos de decorações:
 
@@ -610,8 +611,6 @@ Arquivos:
 
 Manter toda a funcionalidade de interação, efeitos visuais e mecânicas de jogo.
 
-```
-
 ---
 
 ## 📝 FASE 3: INTERFACE E APRESENTAÇÃO
@@ -619,7 +618,6 @@ Manter toda a funcionalidade de interação, efeitos visuais e mecânicas de jog
 ### 3.1 Refatoração de Screens
 
 #### **Prompt 3.1.1 - Refatoração do MenuScreen**
-```
 
 Seguindo os padrões do CLAUDE.md, preciso refatorar o arquivo /lib/presentation/screens/menu_screen.dart para melhor organização:
 
@@ -692,10 +690,9 @@ Seguindo os padrões do CLAUDE.md, preciso refatorar o arquivo /lib/presentation
 
 Manter toda a funcionalidade de menu, splash screen, controles e navegação.
 
-```
+---
 
 #### **Prompt 3.1.2 - Refatoração do Gameplay Screen**
-```
 
 Seguindo os padrões do CLAUDE.md, preciso refatorar o arquivo /lib/gameplay/gameplay.dart para melhor organização:
 
@@ -771,12 +768,11 @@ Seguindo os padrões do CLAUDE.md, preciso refatorar o arquivo /lib/gameplay/gam
 
 Manter toda a funcionalidade de gameplay, controles, câmera e navegação de mapas.
 
-```
+---
 
 ### 3.2 Design System Melhorias
 
 #### **Prompt 3.2.1 - Refatoração dos Componentes Atoms**
-```
 
 Seguindo os padrões do CLAUDE.md, preciso refatorar os componentes do design system para padronização:
 
@@ -848,8 +844,6 @@ Arquivos:
 
 Manter toda a funcionalidade visual e interativa dos componentes.
 
-```
-
 ---
 
 ## 📝 FASE 4: DOCUMENTAÇÃO E VALIDAÇÃO
@@ -857,7 +851,6 @@ Manter toda a funcionalidade visual e interativa dos componentes.
 ### 4.1 Atualização de Documentação
 
 #### **Prompt 4.1.1 - Atualização da Documentação Geral**
-```
 
 Seguindo os padrões do CLAUDE.md, preciso criar/atualizar a documentação geral do projeto:
 
@@ -906,12 +899,11 @@ Seguindo os padrões do CLAUDE.md, preciso criar/atualizar a documentação gera
 
 Focar em clareza e consistência com os padrões estabelecidos no CLAUDE.md.
 
-```
+---
 
 ### 4.2 Validação e Testes
 
 #### **Prompt 4.2.1 - Validação dos Padrões Implementados**
-```
 
 Seguindo os padrões do CLAUDE.md, preciso validar se todas as refatorações seguem os padrões estabelecidos:
 
@@ -957,12 +949,11 @@ Seguindo os padrões do CLAUDE.md, preciso validar se todas as refatorações se
 
 Gerar relatório de validação com itens aprovados/pendentes.
 
-```
+---
 
 ### 4.3 Review Final e Melhorias
 
 #### **Prompt 4.3.1 - Review Final e Recomendações**
-```
 
 Seguindo os padrões do CLAUDE.md, preciso fazer uma análise final do código refatorado:
 
@@ -1008,13 +999,12 @@ Gerar relatório final com:
 - Recomendações para próximos passos
 - Checklist de manutenção dos padrões
 
-```
-
 ---
 
 ## 📊 Métricas de Sucesso
 
 ### Métricas Quantitativas
+
 - ✅ 100% das classes seguem convenções de nomenclatura Flutter
 - ✅ 100% das constantes usam prefixo k
 - ✅ 100% dos métodos privados usam underscore prefix
@@ -1022,6 +1012,7 @@ Gerar relatório final com:
 - ✅ Redução de valores mágicos em 80%+
 
 ### Métricas Qualitativas
+
 - ✅ Código mais legível e organizado
 - ✅ Estrutura consistente entre classes similares
 - ✅ Documentação clara e padronizada
@@ -1033,6 +1024,7 @@ Gerar relatório final com:
 ## 🎯 Checklist Final de Entrega
 
 ### Arquivos Refatorados
+
 - [ ] `/lib/gameplay/hud/gameplay_hud.dart`
 - [ ] `/lib/gameplay/hud/player_vital_stats_hud.dart`
 - [ ] `/lib/gameplay/core/constants/gameplay_ui_constants.dart` (novo)
@@ -1047,12 +1039,14 @@ Gerar relatório final com:
 - [ ] `/lib/presentation/design_system/components/atoms/*.dart` (todos)
 
 ### Documentação Atualizada
+
 - [ ] README.md atualizado
 - [ ] `/documentation/ARCHITECTURE.md` (novo)
 - [ ] Comentários de classes atualizados
 - [ ] Documentação inline melhorada
 
 ### Validação Completa
+
 - [ ] Todos os testes passando
 - [ ] App compila sem erros
 - [ ] Funcionalidades testadas manualmente
@@ -1064,6 +1058,7 @@ Gerar relatório final com:
 ## 💡 Observações Importantes
 
 ### Durante a Refatoração
+
 1. **Não alterar lógica de negócio** - apenas organizar e padronizar
 2. **Manter funcionalidades existentes** - todos os recursos devem continuar funcionando
 3. **Testar frequentemente** - validar após cada arquivo refatorado
@@ -1071,12 +1066,14 @@ Gerar relatório final com:
 5. **Seguir ordem sugerida** - as fases têm dependências entre si
 
 ### Após a Refatoração
+
 1. **Manter padrões** - usar CLAUDE.md como referência contínua
 2. **Code review** - validar novos códigos seguem os padrões
 3. **Atualizar documentação** - manter documentação alinhada com mudanças
 4. **Treinar equipe** - garantir que todos conhecem os padrões
 
 ### Benefícios Esperados
+
 1. **Legibilidade** - código mais fácil de ler e entender
 2. **Manutenibilidade** - alterações futuras mais simples
 3. **Consistência** - padrão uniforme em todo o projeto
@@ -1090,4 +1087,3 @@ Gerar relatório final com:
 **Risco:** Baixo (mantém toda funcionalidade existente)
 
 Este plano garante que o código do Darkness Dungeon siga os padrões estabelecidos no CLAUDE.md, melhorando organização e manutenibilidade sem adicionar complexidade desnecessária.
-```

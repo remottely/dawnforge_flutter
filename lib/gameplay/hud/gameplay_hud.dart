@@ -1,4 +1,5 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/gameplay_ui_constants.dart';
 import 'package:darkness_dungeon/gameplay/hud/player_vital_stats_hud.dart';
 import 'package:darkness_dungeon/gameplay/player/knight.dart';
 
@@ -10,15 +11,6 @@ import 'package:darkness_dungeon/gameplay/player/knight.dart';
 /// - Integration with player vital stats display
 /// - Main HUD rendering and lifecycle management
 class GameplayHUD extends GameInterface {
-  // Flutter-style constants for UI configuration
-  static const double kKeyIconWidth = 35.0;
-  static const double kKeyIconHeight = 30.0;
-  static const double kKeyIconX = 150.0;
-  static const double kKeyIconY = 20.0;
-
-  // Asset paths
-  static const String kKeyAssetPath = 'items/key_silver.png';
-
   // Private variables
   late Sprite _keySprite;
 
@@ -48,7 +40,7 @@ class GameplayHUD extends GameInterface {
   /// Loads all required sprite assets for the HUD
   /// Following Flutter pattern of private utility methods with underscore prefix
   Future<void> _loadAssets() async {
-    _keySprite = await Sprite.load(kKeyAssetPath);
+    _keySprite = await Sprite.load(GameplayUIConstants.kKeyAssetPath);
   }
 
   /// Initializes HUD components and adds them to the interface
@@ -63,7 +55,12 @@ class GameplayHUD extends GameInterface {
     if (_hasPlayerWithKey()) {
       _keySprite.renderRect(
         canvas,
-        Rect.fromLTWH(kKeyIconX, kKeyIconY, kKeyIconWidth, kKeyIconHeight),
+        Rect.fromLTWH(
+          GameplayUIConstants.kKeyIconX,
+          GameplayUIConstants.kKeyIconY,
+          GameplayUIConstants.kKeyIconWidth,
+          GameplayUIConstants.kKeyIconHeight,
+        ),
       );
     }
   }

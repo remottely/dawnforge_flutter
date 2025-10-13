@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/gameplay_ui_constants.dart';
 import 'package:flutter/material.dart';
 
 /// [AppStyledButton] responsible for providing styled buttons following game's visual theme
@@ -40,7 +40,7 @@ class AppStyledButton extends StatelessWidget {
     super.key,
     required this.text,
     required this.onPressed,
-    this.backgroundColor = GameplayUIManager.kTransparentColor,
+    this.backgroundColor = GameplayUIConstants.kTransparentColor,
     this.fontSize = _kNormalFontSize,
   });
 
@@ -58,7 +58,7 @@ class AppStyledButton extends StatelessWidget {
     super.key,
     required this.text,
     required this.onPressed,
-    this.backgroundColor = GameplayUIManager.kTransparentColor,
+    this.backgroundColor = GameplayUIConstants.kTransparentColor,
     this.fontSize = _kNormalFontSize,
   });
 
@@ -67,7 +67,7 @@ class AppStyledButton extends StatelessWidget {
     return ElevatedButton(
       style: ButtonStyle(
         backgroundColor: WidgetStateProperty.all(backgroundColor),
-        shape: backgroundColor != GameplayUIManager.kTransparentColor
+        shape: backgroundColor != GameplayUIConstants.kTransparentColor
             ? WidgetStateProperty.all(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(_kButtonBorderRadius),

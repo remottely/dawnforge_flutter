@@ -1,3 +1,4 @@
+import 'package:darkness_dungeon/gameplay/core/constants/gameplay_ui_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/presentation/design_system/components/atoms/app_styled_button.dart';
 import 'package:darkness_dungeon/presentation/design_system/components/atoms/app_styled_dialog.dart';
@@ -8,16 +9,6 @@ import 'package:flutter/material.dart';
 /// UI State Manager for game dialogs and modal windows
 /// Following Flutter naming conventions for UI state management systems
 class GameplayUIManager {
-  // Flutter-style constants for UI configuration
-  static const double _kGameOverImageHeight = 96.0;
-  static const double _kDefaultSpacing = 8.0;
-  static const double _kLargeSpacing = 32.0;
-  static const double _kHorizontalPadding = 96.0;
-  static const String _kGameOverAssetPath = 'assets/game_over.png';
-
-  /// Transparent background color
-  static const Color kTransparentColor = Colors.transparent;
-
   /// Displays the Game Over screen with retry option
   static void displayGameOverDialog(
     BuildContext context,
@@ -29,8 +20,11 @@ class GameplayUIManager {
       builder: (dialogContext) {
         return AppStyledDialog(
           children: [
-            Image.asset(_kGameOverAssetPath, height: _kGameOverImageHeight),
-            const SizedBox(height: _kDefaultSpacing),
+            Image.asset(
+              GameplayUIConstants.kGameOverAssetPath,
+              height: GameplayUIConstants.kGameOverImageHeight,
+            ),
+            const SizedBox(height: GameplayUIConstants.kDefaultSpacing),
             AppStyledButton(
               text: getString('play_again_cap'),
               onPressed: () => onRetryPressed(dialogContext),
@@ -50,17 +44,17 @@ class GameplayUIManager {
         return AppStyledDialog(
           children: [
             AppStyledText.large(text: getString('congratulations')),
-            const SizedBox(height: _kDefaultSpacing),
+            const SizedBox(height: GameplayUIConstants.kDefaultSpacing),
             Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: _kHorizontalPadding,
+                horizontal: GameplayUIConstants.kHorizontalPadding,
               ),
               child: AppStyledText.small(
                 text: getString('thanks'),
                 textAlign: TextAlign.center,
               ),
             ),
-            const SizedBox(height: _kLargeSpacing),
+            const SizedBox(height: GameplayUIConstants.kLargeSpacing),
             AppStyledButton.primary(
               text: "OK",
               onPressed: () => _navigateToMainMenu(context),
