@@ -12,16 +12,24 @@ import 'package:flutter/services.dart';
 
 /// [KidNpc] responsible for providing end-game victory conversation
 /// Following Flutter naming conventions for NPC character systems
+///
+/// This NPC handles:
+/// - End-game victory sequence after boss defeat
+/// - Final conversation with the player
+/// - Victory screen display and game completion
 class KidNpc extends SimpleNpc {
-  // Flutter-style constants for NPC configuration
-  static const String _kBossCheckInterval = 'checkBossDead';
-  static const int _kBossCheckRate = 1000;
+  // 1. Constantes de configuração
+  static const String kBossCheckInterval = 'checkBossDead';
+  static const int kBossCheckRate = 1000;
+  static const String kInteractionKey = 'talk_kid';
+  static const double kNpcSizeMultiplierX = 8.0;
+  static const double kNpcSizeMultiplierY = 11.0;
 
-  // Private state variables
+  // 2. Variáveis de instância privadas
   bool _conversationWithHero = false;
 
+  // 3. Construtor
   /// Creates a kid NPC that triggers victory sequence after boss defeat
-  /// Following Flutter pattern of descriptive constructors
   KidNpc(Vector2 position)
     : super(
         animation: SimpleDirectionAnimation(
@@ -30,22 +38,23 @@ class KidNpc extends SimpleNpc {
         ),
         position: position,
         size: Vector2(
-          TileHelper.valueByTileSize(8),
-          TileHelper.valueByTileSize(11),
+          TileHelper.valueByTileSize(kNpcSizeMultiplierX),
+          TileHelper.valueByTileSize(kNpcSizeMultiplierY),
         ),
       );
 
+  // 4. Métodos públicos principais
   @override
   void update(double dt) {
     super.update(dt);
     _checkForBossDefeat(dt);
   }
 
+  // 5. Métodos privados auxiliares
   /// Checks if the boss has been defeated to trigger victory sequence
-  /// Following Flutter pattern of private utility methods
   void _checkForBossDefeat(double dt) {
     if (!_conversationWithHero &&
-        checkInterval(_kBossCheckInterval, _kBossCheckRate, dt)) {
+        checkInterval(kBossCheckInterval, kBossCheckRate, dt)) {
       if (_isBossDefeated()) {
         _initiateVictorySequence();
       }
@@ -53,7 +62,6 @@ class KidNpc extends SimpleNpc {
   }
 
   /// Checks if the dungeon boss has been defeated
-  /// Following Flutter pattern of boolean query methods
   bool _isBossDefeated() {
     try {
       gameRef.enemies().firstWhere((enemy) => enemy is DungeonBossEnemy);
@@ -64,22 +72,20 @@ class KidNpc extends SimpleNpc {
   }
 
   /// Initiates the victory sequence with camera movement and conversation
-  /// Following Flutter pattern of sequence coordination methods
   void _initiateVictorySequence() {
     _conversationWithHero = true;
     gameRef.camera.moveToTargetAnimated(
       target: this,
-      onComplete: _startConversation,
+      onComplete: _initializeDialogue,
     );
   }
 
-  /// Starts the victory conversation with the player
-  /// Following Flutter pattern of conversation management methods
-  void _startConversation() {
+  /// Initializes the dialogue system and shows victory conversation
+  void _initializeDialogue() {
     GameplayAudioManager.playInteraction();
     TalkDialog.show(
       gameRef.context,
-      _createVictoryDialogueSequence(),
+      _createDialogueSequence(),
       onFinish: _onConversationFinished,
       onChangeTalk: _onDialogueChanged,
       logicalKeyboardKeysToNext: [LogicalKeyboardKey.space],
@@ -87,8 +93,7 @@ class KidNpc extends SimpleNpc {
   }
 
   /// Creates the victory dialogue sequence
-  /// Following Flutter pattern of data factory methods
-  List<Say> _createVictoryDialogueSequence() {
+  List<Say> _createDialogueSequence() {
     return [
       Say(
         text: [TextSpan(text: getString('talk_kid_2'))],
@@ -107,21 +112,19 @@ class KidNpc extends SimpleNpc {
     ];
   }
 
-  /// Handles conversation completion and victory screen display
-  /// Following Flutter pattern of callback handling methods
+  /// Handles dialogue change events with audio feedback
+  void _onDialogueChanged(int index) {
+    GameplayAudioManager.playInteraction();
+  }
+
+  /// Handles conversation completion and triggers victory screen
   void _onConversationFinished() {
     GameplayAudioManager.playInteraction();
     gameRef.camera.moveToPlayerAnimated(onComplete: _displayVictoryScreen);
   }
 
-  /// Handles dialogue change events
-  /// Following Flutter pattern of event handling methods
-  void _onDialogueChanged(int index) {
-    GameplayAudioManager.playInteraction();
-  }
-
-  /// Displays the final victory screen
-  /// Following Flutter pattern of UI display methods
+  // 6. Métodos utilitários específicos
+  /// Displays the final victory screen to complete the game
   void _displayVictoryScreen() {
     GameplayUIManager.displayVictoryDialog(gameRef.context);
   }

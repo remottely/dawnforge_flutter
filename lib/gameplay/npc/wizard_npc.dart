@@ -10,15 +10,27 @@ import 'package:flutter/services.dart';
 
 /// [WizardNpc] responsible for providing introductory conversation and tutorials
 /// Following Flutter naming conventions for NPC character systems
+///
+/// This NPC handles:
+/// - Initial player interaction and introduction dialogue
+/// - Tutorial guidance and game orientation
+/// - Visual feedback through emote animations
 class WizardNpc extends SimpleNpc {
-  // Flutter-style constants for NPC configuration
-  static const double _kVisionRadius = 2.0;
+  // 1. Constantes de configuração
+  static const double kVisionRadius = 2.0;
+  static const String kInteractionKey = 'talk_wizard';
+  static const String kEmoteQuestionPath = 'emote/emote_interregacao.png';
+  static const String kEmoteExclamationPath = 'emote/emote_exclamacao.png';
+  static const double kNpcSizeMultiplierX = 0.8;
+  static const double kNpcSizeMultiplierY = 1.0;
+  static const double kEmoteOffsetX = 18.0;
+  static const double kEmoteOffsetY = -6.0;
 
-  // Private state variables
+  // 2. Variáveis de instância privadas
   bool _isShowingConversation = false;
 
+  // 3. Construtor
   /// Creates a wizard NPC that provides introductory guidance to players
-  /// Following Flutter pattern of descriptive constructors
   WizardNpc(Vector2 position)
     : super(
         animation: SimpleDirectionAnimation(
@@ -27,79 +39,54 @@ class WizardNpc extends SimpleNpc {
         ),
         position: position,
         size: Vector2(
-          GameplayConstants.kCurrentTileSize * 0.8,
-          GameplayConstants.kCurrentTileSize,
+          GameplayConstants.kCurrentTileSize * kNpcSizeMultiplierX,
+          GameplayConstants.kCurrentTileSize * kNpcSizeMultiplierY,
         ),
       );
 
+  // 4. Métodos públicos principais
   @override
   void update(double dt) {
     super.update(dt);
     _checkPlayerProximity();
   }
 
+  // 5. Métodos privados auxiliares
   /// Checks for player proximity to initiate conversation
-  /// Following Flutter pattern of proximity detection methods
   void _checkPlayerProximity() {
     if (gameRef.player != null) {
-      this.seeComponent(
+      seeComponent(
         gameRef.player!,
         observed: _onPlayerDetected,
-        radiusVision: (_kVisionRadius * GameplayConstants.kCurrentTileSize),
+        radiusVision: (kVisionRadius * GameplayConstants.kCurrentTileSize),
       );
     }
   }
 
   /// Handles player detection and initiates introduction sequence
-  /// Following Flutter pattern of event handler methods
   void _onPlayerDetected(Component player) {
     if (!_isShowingConversation) {
       gameRef.player!.idle();
       _isShowingConversation = true;
-      _displayEmoteAboveNPC(emotePath: 'emote/emote_interregacao.png');
-      _showIntroduction();
+      _displayEmoteAboveNPC(emotePath: kEmoteQuestionPath);
+      _initializeDialogue();
     }
   }
 
-  /// Displays an emotion emote above the NPC
-  /// Following Flutter pattern of visual feedback methods
-  void _displayEmoteAboveNPC({
-    String emotePath = 'emote/emote_exclamacao.png',
-  }) {
-    gameRef.add(
-      AnimatedFollowerGameObject(
-        animation: SpriteAnimation.load(
-          emotePath,
-          SpriteAnimationData.sequenced(
-            amount: 8,
-            stepTime: 0.1,
-            textureSize: Vector2(32, 32),
-          ),
-        ),
-        loop: false,
-        target: this,
-        offset: Vector2(18, -6),
-        size: Vector2.all(GameplayConstants.kCurrentTileSize / 2),
-      ),
-    );
-  }
-
-  /// Shows the introductory conversation with the player
-  /// Following Flutter pattern of dialogue management methods
-  void _showIntroduction() {
+  /// Initializes the dialogue system and shows conversation
+  void _initializeDialogue() {
     GameplayAudioManager.playInteraction();
     TalkDialog.show(
       gameRef.context,
-      _createIntroductionDialogueSequence(),
+      _createDialogueSequence(),
       onChangeTalk: _onDialogueChanged,
       onFinish: _onConversationFinished,
       logicalKeyboardKeysToNext: [LogicalKeyboardKey.space],
     );
   }
 
-  /// Creates the introduction dialogue sequence
-  /// Following Flutter pattern of data factory methods
-  List<Say> _createIntroductionDialogueSequence() {
+  /// Creates the dialogue sequence for the wizard introduction
+  List<Say> _createDialogueSequence() {
     return [
       Say(
         text: [TextSpan(text: getString('talk_wizard_1'))],
@@ -139,15 +126,33 @@ class WizardNpc extends SimpleNpc {
     ];
   }
 
-  /// Handles dialogue change events
-  /// Following Flutter pattern of event handling methods
+  /// Handles dialogue change events with audio feedback
   void _onDialogueChanged(int index) {
     GameplayAudioManager.playInteraction();
   }
 
   /// Handles conversation completion
-  /// Following Flutter pattern of callback handling methods
   void _onConversationFinished() {
     GameplayAudioManager.playInteraction();
+  }
+
+  /// Displays an emotion emote above the NPC
+  void _displayEmoteAboveNPC({String emotePath = kEmoteExclamationPath}) {
+    gameRef.add(
+      AnimatedFollowerGameObject(
+        animation: SpriteAnimation.load(
+          emotePath,
+          SpriteAnimationData.sequenced(
+            amount: 8,
+            stepTime: 0.1,
+            textureSize: Vector2(32, 32),
+          ),
+        ),
+        loop: false,
+        target: this,
+        offset: Vector2(kEmoteOffsetX, kEmoteOffsetY),
+        size: Vector2.all(GameplayConstants.kCurrentTileSize / 2),
+      ),
+    );
   }
 }
