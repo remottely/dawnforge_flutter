@@ -4,6 +4,13 @@ import '../constants/gameplay_audio_constants.dart';
 
 /// [GameplayAudioManager] responsible for managing game audio and sound effects
 /// Following Flutter naming conventions for audio manager systems
+///
+/// This class handles:
+/// - Background music playback and transitions
+/// - Sound effect triggering and management
+/// - Audio resource preloading and caching
+/// - Music state persistence and control
+/// - Volume and playback configuration
 class GameplayAudioManager {
   // Private static instance for singleton pattern
   static GameplayAudioManager? _instance;

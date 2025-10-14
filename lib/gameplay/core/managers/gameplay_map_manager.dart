@@ -18,6 +18,13 @@ import 'package:darkness_dungeon/gameplay/npc/wizard_npc.dart';
 
 /// [GameplayMapManager] responsible for managing game maps and navigation systems
 /// Following Flutter naming conventions for map management systems
+///
+/// This class handles:
+/// - Map loading and parsing from Tiled map files
+/// - Entity factory creation based on map data
+/// - Map collection management and caching
+/// - Game object positioning and configuration
+/// - Navigation between different game areas
 class GameplayMapManager {
   // Flutter-style constants for entity types
   static const String kDoorEntityType = 'door';
@@ -102,6 +109,12 @@ void _addSensorBuilders(
 
 /// Creates a map sensor from Tiled object properties
 /// Following Flutter pattern of factory constructor methods
+///
+/// This factory method handles:
+/// - Parsing player position from string coordinates
+/// - Converting direction strings to Direction enums
+/// - Mapping Tiled properties to GameplayMapSensor objects
+/// - Validating required properties for map transitions
 GameplayMapSensor _createMapSensor(
   String sensorId,
   TiledObjectProperties properties,
@@ -131,6 +144,12 @@ GameplayMapSensor _createMapSensor(
 
 /// Adds entity builders for interactive game objects
 /// Following Flutter pattern of comprehensive object mapping
+///
+/// This method handles factory creation for:
+/// - Interactive decorations (doors, keys, potions, spikes, torches)
+/// - Enemy entities (goblins, imps, mini-boss, dungeon boss)
+/// - NPC characters (wizard, kid)
+/// - Position and size mapping from Tiled object properties
 void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
   final entityBuilders = <String, ObjectBuilder>{
     // Interactive decorations
