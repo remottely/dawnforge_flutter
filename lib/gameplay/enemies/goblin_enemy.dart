@@ -6,72 +6,64 @@ import 'package:darkness_dungeon/gameplay/core/utils/sprites/effects_sprite_shee
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/enemy_sprite_sheet.dart';
 import 'package:flutter/material.dart';
 
+/// Goblin enemy character for the Darkness Dungeon game
+/// Following Flutter naming conventions for enemy entity systems
+///
+/// This class handles:
+/// - Basic melee combat with player detection
+/// - Movement and collision detection
+/// - Death effects and visual feedback
+/// - Audio integration for attacks and damage
 class GoblinEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
-  final Vector2 initPosition;
-  double attack = 25;
+  // 1. Constantes de configuração
+  static const double kDefaultAttackDamage = 25.0;
+  static const double kDefaultLife = 120.0;
+  static const double kDefaultSpeed = GameplayConstants.kCurrentTileSize * 1.5;
+  static const double kVisionRadius = GameplayConstants.kCurrentTileSize * 4;
+  static const int kAttackInterval = 800;
+  static const double kHitboxSize = 7.0;
+  static const double kHitboxPositionX = 3.0;
+  static const double kHitboxPositionY = 4.0;
+  static const double kAttackEffectSize =
+      GameplayConstants.kCurrentTileSize * 0.62;
 
-  GoblinEnemy(this.initPosition)
+  // 2. Variáveis de instância privadas
+  final Vector2 _initialPosition;
+  double _attackDamage = kDefaultAttackDamage;
+
+  // 3. Construtor
+  GoblinEnemy(this._initialPosition)
     : super(
         animation: EnemySpriteSheet.goblinAnimations(),
-        position: initPosition,
+        position: _initialPosition,
         size: Vector2.all(GameplayConstants.kCurrentTileSize * 0.8),
-        speed: GameplayConstants.kCurrentTileSize * 1.5,
-        life: 120,
+        speed: kDefaultSpeed,
+        life: kDefaultLife,
       );
 
+  // 4. Métodos públicos principais
   @override
   Future<void> onLoad() {
-    add(
-      RectangleHitbox(
-        size: Vector2(
-          TileHelper.valueByTileSize(7),
-          TileHelper.valueByTileSize(7),
-        ),
-        position: Vector2(
-          TileHelper.valueByTileSize(3),
-          TileHelper.valueByTileSize(4),
-        ),
-      ),
-    );
+    _setupHitbox();
     return super.onLoad();
   }
 
   @override
   void update(double dt) {
     super.update(dt);
-
     seeAndMoveToPlayer(
       closePlayer: (player) {
-        executeAttack();
+        _executeAttack();
       },
-      radiusVision: GameplayConstants.kCurrentTileSize * 4,
+      radiusVision: kVisionRadius,
     );
   }
 
   @override
   void onDie() {
-    gameRef.add(
-      AnimatedGameObject(
-        animation: EffectsSpriteSheet.smokeExplosion(),
-        position: position,
-        size: Vector2(32, 32),
-        loop: false,
-      ),
-    );
+    _handleDeathEffects();
     removeFromParent();
     super.onDie();
-  }
-
-  void executeAttack() {
-    simpleAttackMelee(
-      size: Vector2.all(GameplayConstants.kCurrentTileSize * 0.62),
-      damage: attack,
-      interval: 800,
-      animationRight: EnemySpriteSheet.enemyAttackEffectRight(),
-      execute: () {
-        GameplayAudioManager.playAttackEnemyMelee();
-      },
-    );
   }
 
   @override
@@ -85,5 +77,47 @@ class GoblinEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
       ),
     );
     super.onReceiveDamage(attacker, damage, id);
+  }
+
+  // 5. Métodos privados auxiliares
+  /// Sets up the hitbox for collision detection
+  void _setupHitbox() {
+    add(
+      RectangleHitbox(
+        size: Vector2(
+          TileHelper.valueByTileSize(kHitboxSize),
+          TileHelper.valueByTileSize(kHitboxSize),
+        ),
+        position: Vector2(
+          TileHelper.valueByTileSize(kHitboxPositionX),
+          TileHelper.valueByTileSize(kHitboxPositionY),
+        ),
+      ),
+    );
+  }
+
+  /// Executes melee attack when player is in range
+  void _executeAttack() {
+    simpleAttackMelee(
+      size: Vector2.all(kAttackEffectSize),
+      damage: _attackDamage,
+      interval: kAttackInterval,
+      animationRight: EnemySpriteSheet.enemyAttackEffectRight(),
+      execute: () {
+        GameplayAudioManager.playAttackEnemyMelee();
+      },
+    );
+  }
+
+  /// Handles visual and audio effects when enemy dies
+  void _handleDeathEffects() {
+    gameRef.add(
+      AnimatedGameObject(
+        animation: EffectsSpriteSheet.smokeExplosion(),
+        position: position,
+        size: Vector2(32, 32),
+        loop: false,
+      ),
+    );
   }
 }

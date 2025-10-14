@@ -6,38 +6,57 @@ import 'package:darkness_dungeon/gameplay/core/utils/sprites/effects_sprite_shee
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/enemy_sprite_sheet.dart';
 import 'package:flutter/material.dart';
 
+/// Mini Boss enemy character for the Darkness Dungeon game
+/// Following Flutter naming conventions for enemy entity systems
+///
+/// This class handles:
+/// - Hybrid combat system (melee and ranged attacks)
+/// - Advanced AI with close and long-range behavior
+/// - Multiple attack patterns based on player distance
+/// - Enhanced visual effects and audio feedback
 class MiniBossEnemy extends SimpleEnemy
     with BlockMovementCollision, UseLifeBar {
-  final Vector2 initPosition;
-  double attack = 50;
+  // 1. Constantes de configuração
+  static const double kDefaultAttackDamage = 50.0;
+  static const double kDefaultLife = 150.0;
+  static const double kDefaultSpeed = GameplayConstants.kCurrentTileSize * 1.5;
+  static const double kCloseVisionRadius =
+      GameplayConstants.kCurrentTileSize * 3;
+  static const double kLongVisionRadius =
+      GameplayConstants.kCurrentTileSize * 5;
+  static const int kMeleeAttackInterval = 300;
+  static const double kHitboxSizeX = 6.0;
+  static const double kHitboxSizeY = 7.0;
+  static const double kHitboxPositionX = 2.5;
+  static const double kHitboxPositionY = 8.0;
+  static const double kAttackEffectSize =
+      GameplayConstants.kCurrentTileSize * 0.62;
+  static const double kRangedAttackSize =
+      GameplayConstants.kCurrentTileSize * 0.65;
+  static const double kMeleeDamageReduction = 3.0; // attack / 3
+
+  // 2. Variáveis de instância privadas
+  final Vector2 _initialPosition;
+  double _attackDamage = kDefaultAttackDamage;
   bool _seePlayerClose = false;
 
-  MiniBossEnemy(this.initPosition)
+  // 3. Construtor
+  MiniBossEnemy(this._initialPosition)
     : super(
         animation: EnemySpriteSheet.miniBossAnimations(),
-        position: initPosition,
+        position: _initialPosition,
         size: Vector2(
           GameplayConstants.kCurrentTileSize * 0.68,
           GameplayConstants.kCurrentTileSize * 0.93,
         ),
-        speed: GameplayConstants.kCurrentTileSize * 1.5,
-        life: 150,
+        speed: kDefaultSpeed,
+        life: kDefaultLife,
       );
 
+  // 4. Métodos públicos principais
   @override
   Future<void> onLoad() {
-    add(
-      RectangleHitbox(
-        size: Vector2(
-          TileHelper.valueByTileSize(6),
-          TileHelper.valueByTileSize(7),
-        ),
-        position: Vector2(
-          TileHelper.valueByTileSize(2.5),
-          TileHelper.valueByTileSize(8),
-        ),
-      ),
-    );
+    _setupHitbox();
     return super.onLoad();
   }
 
@@ -45,48 +64,72 @@ class MiniBossEnemy extends SimpleEnemy
   void update(double dt) {
     super.update(dt);
     _seePlayerClose = false;
-    this.seePlayer(
+    seePlayer(
       observed: (player) {
         _seePlayerClose = true;
-        this.seeAndMoveToPlayer(
+        seeAndMoveToPlayer(
           closePlayer: (player) {
-            executeAttack();
+            _executeMeleeAttack();
           },
-          radiusVision: GameplayConstants.kCurrentTileSize * 3,
+          radiusVision: kCloseVisionRadius,
         );
       },
-      radiusVision: GameplayConstants.kCurrentTileSize * 3,
+      radiusVision: kCloseVisionRadius,
     );
     if (!_seePlayerClose) {
-      this.seeAndMoveToAttackRange(
+      seeAndMoveToAttackRange(
         positioned: (p) {
-          executeRangedAttack();
+          _executeRangedAttack();
         },
-        radiusVision: GameplayConstants.kCurrentTileSize * 5,
+        radiusVision: kLongVisionRadius,
       );
     }
   }
 
   @override
   void onDie() {
-    gameRef.add(
-      AnimatedGameObject(
-        animation: EffectsSpriteSheet.smokeExplosion(),
-        position: this.position,
-        size: Vector2(32, 32),
-        loop: false,
-      ),
-    );
+    _handleDeathEffects();
     removeFromParent();
     super.onDie();
   }
 
-  void executeRangedAttack() {
-    this.simpleAttackRange(
+  @override
+  void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
+    showDamage(
+      damage,
+      config: TextStyle(
+        fontSize: TileHelper.valueByTileSize(5),
+        color: Colors.white,
+        fontFamily: 'Normal',
+      ),
+    );
+    super.onReceiveDamage(attacker, damage, id);
+  }
+
+  // 5. Métodos privados auxiliares
+  /// Sets up the hitbox for collision detection
+  void _setupHitbox() {
+    add(
+      RectangleHitbox(
+        size: Vector2(
+          TileHelper.valueByTileSize(kHitboxSizeX),
+          TileHelper.valueByTileSize(kHitboxSizeY),
+        ),
+        position: Vector2(
+          TileHelper.valueByTileSize(kHitboxPositionX),
+          TileHelper.valueByTileSize(kHitboxPositionY),
+        ),
+      ),
+    );
+  }
+
+  /// Executes ranged fireball attack when player is at distance
+  void _executeRangedAttack() {
+    simpleAttackRange(
       animation: EffectsSpriteSheet.fireBallAttackRight(),
       animationDestroy: EffectsSpriteSheet.fireBallExplosion(),
-      size: Vector2.all(GameplayConstants.kCurrentTileSize * 0.65),
-      damage: attack,
+      size: Vector2.all(kRangedAttackSize),
+      damage: _attackDamage,
       speed: speed * 2.5,
       execute: () {
         GameplayAudioManager.playAttackRange();
@@ -109,11 +152,12 @@ class MiniBossEnemy extends SimpleEnemy
     );
   }
 
-  void executeAttack() {
-    this.simpleAttackMelee(
-      size: Vector2.all(GameplayConstants.kCurrentTileSize * 0.62),
-      damage: attack / 3,
-      interval: 300,
+  /// Executes melee attack when player is close (reduced damage)
+  void _executeMeleeAttack() {
+    simpleAttackMelee(
+      size: Vector2.all(kAttackEffectSize),
+      damage: _attackDamage / kMeleeDamageReduction,
+      interval: kMeleeAttackInterval,
       animationRight: EnemySpriteSheet.enemyAttackEffectRight(),
       execute: () {
         GameplayAudioManager.playAttackEnemyMelee();
@@ -121,16 +165,15 @@ class MiniBossEnemy extends SimpleEnemy
     );
   }
 
-  @override
-  void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
-    this.showDamage(
-      damage,
-      config: TextStyle(
-        fontSize: TileHelper.valueByTileSize(5),
-        color: Colors.white,
-        fontFamily: 'Normal',
+  /// Handles visual and audio effects when enemy dies
+  void _handleDeathEffects() {
+    gameRef.add(
+      AnimatedGameObject(
+        animation: EffectsSpriteSheet.smokeExplosion(),
+        position: position,
+        size: Vector2(32, 32),
+        loop: false,
       ),
     );
-    super.onReceiveDamage(attacker, damage, id);
   }
 }
