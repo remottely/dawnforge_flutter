@@ -21,16 +21,36 @@ class MenuScreen extends StatefulWidget {
   State<MenuScreen> createState() => _MenuScreenState();
 }
 
-/// State management for the menu screen
+/// State management for the menu screen following CLAUDE.md patterns
 /// Handles splash screen transitions and character sprite animations
+///
+/// This screen manages:
+/// - Splash screen display and transition
+/// - Character animation carousel
+/// - Control method selection (keyboard/joystick)
+/// - Navigation to gameplay screen
 class _MenuScreenState extends State<MenuScreen> {
-  // UI State Variables
+  // 1. Constantes (agrupadas por tipo)
+  static const Duration kAnimationDuration = Duration(milliseconds: 300);
+  static const Duration kCharacterAnimationInterval = Duration(seconds: 2);
+  static const String kBonfireUrl = 'https://pub.dev/packages/bonfire';
+  static const String kKevinKoboriUrl = 'https://github.com/kevinkobori';
+  static const double kTitleFontSize = 30.0;
+  static const double kButtonFontSize = 16.0;
+  static const double kFooterFontSize = 12.0;
+  static const double kCharacterAnimationSize = 100.0;
+  static const double kButtonWidth = 150.0;
+  static const double kButtonMinHeight = 40.0;
+  static const double kKeyboardTipHeight = 80.0;
+  static const double kKeyboardTipWidth = 200.0;
+
+  // 2. Variáveis de instância privadas
   bool _isSplashScreenVisible = true;
   int _currentCharacterSpriteIndex = 0;
   late async.Timer _characterAnimationTimer;
 
-  // Character sprite animations for showcase
-  final List<Future<SpriteAnimation>> _characterSpriteAnimations = [
+  // 3. Lista de animações (constante)
+  late final List<Future<SpriteAnimation>> _characterSpriteAnimations = [
     PlayerSpriteSheet.idleRight(),
     EnemySpriteSheet.goblinIdleRight(),
     EnemySpriteSheet.impIdleRight(),
@@ -38,22 +58,18 @@ class _MenuScreenState extends State<MenuScreen> {
     EnemySpriteSheet.bossIdleRight(),
   ];
 
+  // 4. Métodos de ciclo de vida
   @override
   void dispose() {
     _cleanupResources();
     super.dispose();
   }
 
-  /// Cleanup method to properly dispose resources
-  void _cleanupResources() {
-    GameplayAudioManager.stopBackgroundMusic();
-    _characterAnimationTimer.cancel();
-  }
-
+  // 5. Métodos de build
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 300),
+      duration: kAnimationDuration,
       child: _isSplashScreenVisible ? _createSplashScreen() : _createMainMenu(),
     );
   }
@@ -72,14 +88,14 @@ class _MenuScreenState extends State<MenuScreen> {
                 style: TextStyle(
                   color: Colors.white,
                   fontFamily: 'Normal',
-                  fontSize: 30,
+                  fontSize: kTitleFontSize,
                 ),
               ),
               const SizedBox(height: 20),
               if (_characterSpriteAnimations.isNotEmpty)
                 SizedBox(
-                  height: 100,
-                  width: 100,
+                  height: kCharacterAnimationSize,
+                  width: kCharacterAnimationSize,
                   child: AppAnimatedSpriteWidget(
                     animation:
                         _characterSpriteAnimations[_currentCharacterSpriteIndex],
@@ -87,21 +103,21 @@ class _MenuScreenState extends State<MenuScreen> {
                 ),
               const SizedBox(height: 30),
               SizedBox(
-                width: 150,
+                width: kButtonWidth,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     elevation: 3,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5),
                     ),
-                    minimumSize: const Size(100, 40), //////// HERE
+                    minimumSize: const Size(100, kButtonMinHeight),
                   ),
                   child: Text(
                     getString('play_cap'),
                     style: const TextStyle(
                       color: Colors.white,
                       fontFamily: 'Normal',
-                      fontSize: 16,
+                      fontSize: kButtonFontSize,
                     ),
                   ),
                   onPressed: () {
@@ -126,8 +142,8 @@ class _MenuScreenState extends State<MenuScreen> {
               const SizedBox(height: 20),
               if (!Gameplay.useJoystickControls)
                 SizedBox(
-                  height: 80,
-                  width: 200,
+                  height: kKeyboardTipHeight,
+                  width: kKeyboardTipWidth,
                   child: Sprite.load('keyboard_tip.png').asWidget(),
                 ),
             ],
@@ -150,12 +166,12 @@ class _MenuScreenState extends State<MenuScreen> {
                       style: const TextStyle(
                         color: Colors.white,
                         fontFamily: 'Normal',
-                        fontSize: 12,
+                        fontSize: kFooterFontSize,
                       ),
                     ),
                     InkWell(
                       onTap: () {
-                        _openExternalURL('https://github.com/kevinkobori');
+                        _openExternalURL(kKevinKoboriUrl);
                       },
                       child: const Text(
                         'kevinkobori',
@@ -163,7 +179,7 @@ class _MenuScreenState extends State<MenuScreen> {
                           decoration: TextDecoration.underline,
                           color: Colors.blue,
                           fontFamily: 'Normal',
-                          fontSize: 12,
+                          fontSize: kFooterFontSize,
                         ),
                       ),
                     ),
@@ -179,12 +195,12 @@ class _MenuScreenState extends State<MenuScreen> {
                       style: const TextStyle(
                         color: Colors.white,
                         fontFamily: 'Normal',
-                        fontSize: 12,
+                        fontSize: kFooterFontSize,
                       ),
                     ),
                     InkWell(
                       onTap: () {
-                        _openExternalURL('https://pub.dev/packages/bonfire');
+                        _openExternalURL(kBonfireUrl);
                       },
                       child: const Text(
                         'Bonfire',
@@ -192,7 +208,7 @@ class _MenuScreenState extends State<MenuScreen> {
                           decoration: TextDecoration.underline,
                           color: Colors.blue,
                           fontFamily: 'Normal',
-                          fontSize: 12,
+                          fontSize: kFooterFontSize,
                         ),
                       ),
                     ),
@@ -214,8 +230,7 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-  // Event Handlers
-
+  // 6. Event Handlers (agrupados)
   /// Handles splash screen completion event
   void _onSplashScreenCompleted(BuildContext context) {
     setState(() {
@@ -231,6 +246,7 @@ class _MenuScreenState extends State<MenuScreen> {
     });
   }
 
+  // 7. Métodos de navegação
   /// Navigates to the main gameplay screen
   void _navigateToGameplayScreen() {
     Navigator.push(
@@ -239,12 +255,11 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-  // Animation Management
-
+  // 8. Métodos de gerenciamento de animação
   /// Initializes the character sprite animation timer
   void _initializeCharacterAnimation() {
     _characterAnimationTimer = async.Timer.periodic(
-      const Duration(seconds: 2),
+      kCharacterAnimationInterval,
       (timer) {
         setState(() {
           _currentCharacterSpriteIndex++;
@@ -257,7 +272,12 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-  // External URL Management
+  // 9. Métodos utilitários
+  /// Cleanup method to properly dispose resources
+  void _cleanupResources() {
+    GameplayAudioManager.stopBackgroundMusic();
+    _characterAnimationTimer.cancel();
+  }
 
   /// Opens external URLs in the default browser
   async.Future<void> _openExternalURL(String targetUrl) async {
