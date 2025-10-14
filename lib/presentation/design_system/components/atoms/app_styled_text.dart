@@ -1,8 +1,36 @@
 import 'package:flutter/material.dart';
 
 /// [AppStyledText] responsible for providing styled text following game's visual theme
-/// Following Flutter naming conventions for reusable text widgets
+///
+/// This component provides consistent text styling throughout the application,
+/// supporting multiple size variants and maintaining visual consistency.
+///
+/// Usage examples:
+/// ```dart
+/// AppStyledText(text: 'Normal text')
+/// AppStyledText.large(text: 'Heading text')
+/// AppStyledText.small(text: 'Secondary text')
+/// ```
+///
+/// Following CLAUDE.md patterns for Flutter StatelessWidget components
 class AppStyledText extends StatelessWidget {
+  // 1. Constantes de configuração
+  /// Font family used throughout the game
+  static const String kFontFamily = 'Normal';
+
+  /// Default font size for normal text
+  static const double kNormalFontSize = 20.0;
+
+  /// Large font size for headings
+  static const double kLargeFontSize = 32.0;
+
+  /// Small font size for secondary content
+  static const double kSmallFontSize = 18.0;
+
+  /// Default text color
+  static const Color kDefaultColor = Colors.white;
+
+  // 2. Propriedades da classe
   /// The text content to display
   final String text;
 
@@ -15,31 +43,24 @@ class AppStyledText extends StatelessWidget {
   /// Text alignment
   final TextAlign textAlign;
 
-  /// Font family used throughout the game
-  static const String _kFontFamily = 'Normal';
-
-  /// Default font size for normal text
-  static const double _kNormalFontSize = 20.0;
-
-  /// Default text color
-  static const Color _kWhiteColor = Colors.white;
-
+  // 3. Construtor principal
   /// Creates a styled text widget with game font
   /// Following Flutter pattern of named constructors for different text styles
   const AppStyledText({
     super.key,
     required this.text,
-    this.fontSize = _kNormalFontSize,
-    this.color = _kWhiteColor,
+    this.fontSize = kNormalFontSize,
+    this.color = kDefaultColor,
     this.textAlign = TextAlign.start,
   });
 
+  // 4. Factory constructors
   /// Creates a large styled text for headings
   const AppStyledText.large({
     super.key,
     required this.text,
-    this.fontSize = 32.0,
-    this.color = _kWhiteColor,
+    this.fontSize = kLargeFontSize,
+    this.color = kDefaultColor,
     this.textAlign = TextAlign.start,
   });
 
@@ -47,18 +68,19 @@ class AppStyledText extends StatelessWidget {
   const AppStyledText.small({
     super.key,
     required this.text,
-    this.fontSize = 18.0,
-    this.color = _kWhiteColor,
+    this.fontSize = kSmallFontSize,
+    this.color = kDefaultColor,
     this.textAlign = TextAlign.start,
   });
 
+  // 5. Método build
   @override
   Widget build(BuildContext context) {
     return Text(
       text,
       style: TextStyle(
         color: color,
-        fontFamily: _kFontFamily,
+        fontFamily: kFontFamily,
         fontSize: fontSize,
       ),
       textAlign: textAlign,

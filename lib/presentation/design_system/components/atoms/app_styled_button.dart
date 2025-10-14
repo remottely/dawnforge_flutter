@@ -2,8 +2,39 @@ import 'package:darkness_dungeon/gameplay/core/constants/gameplay_ui_constants.d
 import 'package:flutter/material.dart';
 
 /// [AppStyledButton] responsible for providing styled buttons following game's visual theme
-/// Following Flutter naming conventions for reusable button widgets
+///
+/// This component provides consistent button styling throughout the application,
+/// supporting multiple variants (primary, transparent) with proper theming.
+///
+/// Usage examples:
+/// ```dart
+/// AppStyledButton(text: 'Click me', onPressed: () {})
+/// AppStyledButton.primary(text: 'Primary Action', onPressed: () {})
+/// AppStyledButton.transparent(text: 'Secondary', onPressed: () {})
+/// ```
+///
+/// Following CLAUDE.md patterns for Flutter StatelessWidget components
 class AppStyledButton extends StatelessWidget {
+  // 1. Constantes de configuração
+  /// Font family used throughout the game
+  static const String kFontFamily = 'Normal';
+
+  /// Default font size for buttons
+  static const double kNormalFontSize = 20.0;
+
+  /// Default button font size for primary buttons
+  static const double kButtonFontSize = 16.0;
+
+  /// Default text color
+  static const Color kDefaultTextColor = Colors.white;
+
+  /// Default button background color
+  static const Color kPrimaryBackgroundColor = Color.fromARGB(255, 118, 82, 78);
+
+  /// Border radius for styled buttons
+  static const double kButtonBorderRadius = 4.0;
+
+  // 2. Propriedades da classe
   /// The button text content
   final String text;
 
@@ -16,24 +47,7 @@ class AppStyledButton extends StatelessWidget {
   /// Font size for button text
   final double fontSize;
 
-  /// Font family used throughout the game
-  static const String _kFontFamily = 'Normal';
-
-  /// Default font size for buttons
-  static const double _kNormalFontSize = 20.0;
-
-  /// Default button font size
-  static const double _kButtonFontSize = 16.0;
-
-  /// Default text color
-  static const Color _kWhiteColor = Colors.white;
-
-  /// Default button background color
-  static const Color _kButtonBackgroundColor = Color.fromARGB(255, 118, 82, 78);
-
-  /// Border radius for styled buttons
-  static const double _kButtonBorderRadius = 4.0;
-
+  // 3. Construtor principal
   /// Creates a styled button following game's visual theme
   /// Following Flutter pattern of customizable button widgets
   const AppStyledButton({
@@ -41,16 +55,17 @@ class AppStyledButton extends StatelessWidget {
     required this.text,
     required this.onPressed,
     this.backgroundColor = GameplayUIConstants.kTransparentColor,
-    this.fontSize = _kNormalFontSize,
+    this.fontSize = kNormalFontSize,
   });
 
+  // 4. Factory constructors
   /// Creates a primary styled button with default game colors
   const AppStyledButton.primary({
     super.key,
     required this.text,
     required this.onPressed,
-    this.backgroundColor = _kButtonBackgroundColor,
-    this.fontSize = _kButtonFontSize,
+    this.backgroundColor = kPrimaryBackgroundColor,
+    this.fontSize = kButtonFontSize,
   });
 
   /// Creates a transparent styled button for secondary actions
@@ -59,9 +74,10 @@ class AppStyledButton extends StatelessWidget {
     required this.text,
     required this.onPressed,
     this.backgroundColor = GameplayUIConstants.kTransparentColor,
-    this.fontSize = _kNormalFontSize,
+    this.fontSize = kNormalFontSize,
   });
 
+  // 5. Método build
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
@@ -70,7 +86,7 @@ class AppStyledButton extends StatelessWidget {
         shape: backgroundColor != GameplayUIConstants.kTransparentColor
             ? WidgetStateProperty.all(
                 RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(_kButtonBorderRadius),
+                  borderRadius: BorderRadius.circular(kButtonBorderRadius),
                 ),
               )
             : null,
@@ -79,8 +95,8 @@ class AppStyledButton extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-          color: _kWhiteColor,
-          fontFamily: _kFontFamily,
+          color: kDefaultTextColor,
+          fontFamily: kFontFamily,
           fontSize: fontSize,
         ),
       ),
