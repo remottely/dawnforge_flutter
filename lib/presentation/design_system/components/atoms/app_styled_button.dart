@@ -2,19 +2,20 @@ import 'package:darkness_dungeon/gameplay/core/constants/gameplay_ui_constants.d
 import 'package:darkness_dungeon/presentation/design_system/constants/typography_constants.dart';
 import 'package:flutter/material.dart';
 
-/// [AppStyledButton] responsible for providing styled buttons following game's visual theme
+/// UI component AppStyledButton for the Darkness Dungeon game
+/// Following Flutter naming conventions for design system components
 ///
-/// This component provides consistent button styling throughout the application,
-/// supporting multiple variants (primary, transparent) with proper theming.
+/// This class handles:
+/// - Consistent button styling throughout the application
+/// - Multiple variants (primary, transparent) with proper theming
+/// - Interactive feedback and visual consistency
 ///
-/// Usage examples:
+/// Usage patterns:
 /// ```dart
-/// AppStyledButton(text: 'Click me', onPressed: () {})
-/// AppStyledButton.primary(text: 'Primary Action', onPressed: () {})
-/// AppStyledButton.transparent(text: 'Secondary', onPressed: () {})
+/// final button = AppStyledButton(text: 'Click me', onPressed: () {});
+/// AppStyledButton.primary(text: 'Primary Action', onPressed: () {});
+/// AppStyledButton.transparent(text: 'Secondary', onPressed: () {});
 /// ```
-///
-/// Following CLAUDE.md patterns for Flutter StatelessWidget components
 class AppStyledButton extends StatelessWidget {
   // 1. Constantes de configuração
   /// Default text color

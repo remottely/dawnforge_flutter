@@ -6,7 +6,7 @@ import 'package:darkness_dungeon/gameplay/core/utils/sprites/effects_sprite_shee
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/enemy_sprite_sheet.dart';
 import 'package:flutter/material.dart';
 
-/// Goblin enemy character for the Darkness Dungeon game
+/// Enemy character Goblin for the Darkness Dungeon game
 /// Following Flutter naming conventions for enemy entity systems
 ///
 /// This class handles:
@@ -14,6 +14,12 @@ import 'package:flutter/material.dart';
 /// - Movement and collision detection
 /// - Death effects and visual feedback
 /// - Audio integration for attacks and damage
+///
+/// Usage patterns:
+/// ```dart
+/// final goblin = GoblinEnemy(position);
+/// goblin.onLoad();
+/// ```
 class GoblinEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
   // 1. Constantes de configuração
   static const double kDefaultAttackDamage = 25.0;

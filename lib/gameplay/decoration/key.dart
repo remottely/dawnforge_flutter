@@ -2,13 +2,19 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/player/knight.dart';
 
-/// [DoorKey] responsible for providing access keys to locked doors
-/// Following Flutter naming conventions for decoration systems
+/// Interactive decoration Key for the Darkness Dungeon game
+/// Following Flutter naming conventions for item interaction systems
 ///
-/// This decoration handles:
+/// This class handles:
 /// - Key collection by the player
 /// - Single-use pickup mechanism
 /// - Inventory state update for door access
+///
+/// Usage patterns:
+/// ```dart
+/// final key = DoorKey(position);
+/// key.onLoad();
+/// ```
 class DoorKey extends GameDecoration with Sensor<Knight> {
   // 1. Constantes de configuração
   static const double kDefaultSize = GameplayConstants.kCurrentTileSize;

@@ -4,21 +4,20 @@ import 'package:darkness_dungeon/presentation/design_system/components/atoms/app
 import 'package:darkness_dungeon/presentation/design_system/constants/typography_constants.dart';
 import 'package:flutter/material.dart';
 
-/// [AppStyledDialog] responsible for providing styled dialogs following game's visual theme
+/// UI component AppStyledDialog for the Darkness Dungeon game
+/// Following Flutter naming conventions for design system components
 ///
-/// This component provides consistent dialog styling throughout the application,
-/// supporting custom backgrounds and child widget composition.
+/// This class handles:
+/// - Consistent dialog styling throughout the application
+/// - Custom backgrounds and child widget composition
+/// - Factory methods for common dialog scenarios
 ///
-/// Usage examples:
+/// Usage patterns:
 /// ```dart
-/// AppStyledDialog(children: [Text('Content')])
-/// AppStyledDialog.withBackground(
-///   backgroundColor: Colors.black54,
-///   children: [Button(), Text()],
-/// )
+/// final dialog = AppStyledDialog(children: [Text('Content')]);
+/// AppStyledDialog.gameOver(onRetry: () {});
+/// AppStyledDialog.victory(onContinue: () {});
 /// ```
-///
-/// Following CLAUDE.md patterns for Flutter StatelessWidget components
 class AppStyledDialog extends StatelessWidget {
   // 1. Constantes de configuração
   /// Default background color for dialogs

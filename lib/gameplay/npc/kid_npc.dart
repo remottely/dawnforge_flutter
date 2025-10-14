@@ -10,13 +10,19 @@ import 'package:darkness_dungeon/presentation/design_system/components/atoms/app
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-/// [KidNpc] responsible for providing end-game victory conversation
-/// Following Flutter naming conventions for NPC character systems
+/// NPC character Kid for the Darkness Dungeon game
+/// Following Flutter naming conventions for NPC interaction systems
 ///
-/// This NPC handles:
+/// This class handles:
 /// - End-game victory sequence after boss defeat
 /// - Final conversation with the player
 /// - Victory screen display and game completion
+///
+/// Usage patterns:
+/// ```dart
+/// final kid = KidNpc(position);
+/// kid.onLoad();
+/// ```
 class KidNpc extends SimpleNpc {
   // 1. Constantes de configuração
   static const String kBossCheckInterval = 'checkBossDead';

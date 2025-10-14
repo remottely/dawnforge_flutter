@@ -2,13 +2,19 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/player/knight.dart';
 
-/// [LifePotion] responsible for healing the player when collected
-/// Following Flutter naming conventions for decoration systems
+/// Interactive decoration LifePotion for the Darkness Dungeon game
+/// Following Flutter naming conventions for item interaction systems
 ///
-/// This decoration handles:
+/// This class handles:
 /// - Player healing through gradual health restoration
 /// - Single-use consumption mechanism
 /// - Visual feedback through removal after use
+///
+/// Usage patterns:
+/// ```dart
+/// final potion = LifePotion(position);
+/// potion.onLoad();
+/// ```
 class LifePotion extends GameDecoration with Sensor<Knight> {
   // 1. Constantes de configuração
   static const double kDefaultSize = GameplayConstants.kCurrentTileSize;

@@ -6,7 +6,7 @@ import 'package:darkness_dungeon/gameplay/core/utils/sprites/effects_sprite_shee
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/enemy_sprite_sheet.dart';
 import 'package:flutter/material.dart';
 
-/// Imp enemy character for the Darkness Dungeon game
+/// Enemy character Imp for the Darkness Dungeon game
 /// Following Flutter naming conventions for enemy entity systems
 ///
 /// This class handles:
@@ -14,6 +14,12 @@ import 'package:flutter/material.dart';
 /// - Player detection and pursuit mechanics
 /// - Death effects and visual feedback
 /// - Audio integration for attacks and damage
+///
+/// Usage patterns:
+/// ```dart
+/// final imp = ImpEnemy(position);
+/// imp.onLoad();
+/// ```
 class ImpEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
   // 1. Constantes de configuração
   static const double kDefaultAttackDamage = 10.0;

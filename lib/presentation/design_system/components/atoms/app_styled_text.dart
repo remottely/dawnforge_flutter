@@ -1,19 +1,20 @@
 import 'package:darkness_dungeon/presentation/design_system/constants/typography_constants.dart';
 import 'package:flutter/material.dart';
 
-/// [AppStyledText] responsible for providing styled text following game's visual theme
+/// UI component AppStyledText for the Darkness Dungeon game
+/// Following Flutter naming conventions for design system components
 ///
-/// This component provides consistent text styling throughout the application,
-/// supporting multiple size variants and maintaining visual consistency.
+/// This class handles:
+/// - Consistent text styling throughout the application
+/// - Multiple size variants and visual consistency
+/// - Centralized typography management
 ///
-/// Usage examples:
+/// Usage patterns:
 /// ```dart
-/// AppStyledText(text: 'Normal text')
-/// AppStyledText.large(text: 'Heading text')
-/// AppStyledText.small(text: 'Secondary text')
+/// final text = AppStyledText(text: 'Normal text');
+/// AppStyledText.large(text: 'Heading text');
+/// AppStyledText.small(text: 'Secondary text');
 /// ```
-///
-/// Following CLAUDE.md patterns for Flutter StatelessWidget components
 class AppStyledText extends StatelessWidget {
   // 1. Constantes de configuração
   /// Default text color

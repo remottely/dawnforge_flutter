@@ -8,13 +8,19 @@ import 'package:darkness_dungeon/presentation/design_system/components/atoms/app
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-/// [WizardNpc] responsible for providing introductory conversation and tutorials
-/// Following Flutter naming conventions for NPC character systems
+/// NPC character Wizard for the Darkness Dungeon game
+/// Following Flutter naming conventions for NPC interaction systems
 ///
-/// This NPC handles:
+/// This class handles:
 /// - Initial player interaction and introduction dialogue
 /// - Tutorial guidance and game orientation
 /// - Visual feedback through emote animations
+///
+/// Usage patterns:
+/// ```dart
+/// final wizard = WizardNpc(position);
+/// wizard.onLoad();
+/// ```
 class WizardNpc extends SimpleNpc {
   // 1. Constantes de configuração
   static const double kVisionRadius = 2.0;

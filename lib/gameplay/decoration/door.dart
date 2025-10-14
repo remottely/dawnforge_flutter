@@ -5,13 +5,19 @@ import 'package:darkness_dungeon/gameplay/core/utils/sprites/player_sprite_sheet
 import 'package:darkness_dungeon/gameplay/player/knight.dart';
 import 'package:flutter/cupertino.dart';
 
-/// [Door] responsible for blocking player access until key is obtained
-/// Following Flutter naming conventions for decoration systems
+/// Interactive decoration Door for the Darkness Dungeon game
+/// Following Flutter naming conventions for barrier interaction systems
 ///
-/// This decoration handles:
+/// This class handles:
 /// - Key-based access control system
 /// - Visual and audio feedback for interactions
 /// - Door opening animation and removal
+///
+/// Usage patterns:
+/// ```dart
+/// final door = Door(position, size);
+/// door.onLoad();
+/// ```
 class Door extends GameDecoration {
   // 1. Constantes de configuração
   static const String kClosedDoorAsset = 'items/door_closed.png';

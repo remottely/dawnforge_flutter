@@ -9,7 +9,7 @@ import 'package:darkness_dungeon/gameplay/core/utils/sprites/player_sprite_sheet
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-/// Knight player character for the Darkness Dungeon game
+/// Player character Knight for the Darkness Dungeon game
 /// Following Flutter naming conventions for player entity systems
 ///
 /// This class handles:
@@ -18,6 +18,12 @@ import 'package:flutter/services.dart';
 /// - Stamina management with automatic regeneration
 /// - Enemy observation and interaction system
 /// - Visual effects and lighting configuration
+///
+/// Usage patterns:
+/// ```dart
+/// final knight = Knight(position);
+/// knight.onLoad();
+/// ```
 class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
   // 1. Constantes (agrupadas por tipo)
   static const double kDefaultAttackDamage = 25.0;
