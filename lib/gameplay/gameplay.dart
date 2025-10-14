@@ -33,21 +33,33 @@ class Gameplay extends StatefulWidget {
 }
 
 /// State management for the Darkness Dungeon gameplay
-/// Handles lifecycle events, input configuration, and game world setup
+///
+/// This class handles the complete game environment including:
+/// - Game lifecycle management (initialization, cleanup)
+/// - Player controller configuration (joystick vs keyboard)
+/// - Camera and world setup
+/// - Map navigation and transitions
+/// - Audio management and background music
+///
+/// Following CLAUDE.md patterns for Flutter StatefulWidget organization
 class _GameplayState extends State<Gameplay> {
-  // Game configuration constants
-  static const double _kJoystickSize = 100.0;
-  static const double _kActionButtonSize = 80.0;
-  static const double _kActionButtonMarginBottom = 50.0;
-  static const double _kPrimaryActionMarginRight = 50.0;
-  static const double _kSecondaryActionMarginRight = 160.0;
-  static const double _kCameraSpeed = 3.0;
-  static const int _kMaxVisibleTiles = 18;
+  // 1. Constantes de configuração do jogo (agrupadas por tipo)
+  // UI Constants
+  static const double kJoystickSize = 100.0;
+  static const double kActionButtonSize = 80.0;
+  static const double kActionButtonMarginBottom = 50.0;
+  static const double kPrimaryActionMarginRight = 50.0;
+  static const double kSecondaryActionMarginRight = 160.0;
 
-  // Pre-built game components for performance optimization
+  // Camera Constants
+  static const double kCameraSpeed = 3.0;
+  static const int kMaxVisibleTiles = 18;
+
+  // 2. Componentes de jogo pré-construídos
   late final GameplayHUD _gameplayHUD;
   late final CameraConfig _cameraConfig;
 
+  // 3. Métodos de ciclo de vida
   @override
   void initState() {
     super.initState();
@@ -61,34 +73,20 @@ class _GameplayState extends State<Gameplay> {
     super.dispose();
   }
 
-  /// Initializes background music and sound effects
-  void _initializeGameAudio() {
-    GameplayAudioManager.ensureBackgroundMusicPlaying();
-  }
-
-  /// Cleans up audio resources when game ends
-  void _cleanupGameAudio() {
-    GameplayAudioManager.stopBackgroundMusic();
-  }
-
-  /// Pre-initializes all game components for better performance
-  void _initializeGameComponents() {
-    _gameplayHUD = GameplayHUD();
-  }
-
-  /// Initialize camera config in didChangeDependencies for context access
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _cameraConfig = CameraConfig(
-      speed: _kCameraSpeed,
+      speed: kCameraSpeed,
       zoom: getZoomFromMaxVisibleTile(
         context,
         GameplayConstants.kCurrentTileSize,
-        _kMaxVisibleTiles,
+        kMaxVisibleTiles,
       ),
     );
   }
+
+  // 4. Método de build principal
 
   @override
   Widget build(BuildContext gameplayContext) {
@@ -147,6 +145,24 @@ class _GameplayState extends State<Gameplay> {
     );
   }
 
+  // 5. Métodos de inicialização (agrupados)
+  /// Initializes background music and sound effects
+  void _initializeGameAudio() {
+    GameplayAudioManager.ensureBackgroundMusicPlaying();
+  }
+
+  /// Cleans up audio resources when game ends
+  void _cleanupGameAudio() {
+    GameplayAudioManager.stopBackgroundMusic();
+  }
+
+  /// Pre-initializes all game components for better performance
+  void _initializeGameComponents() {
+    _gameplayHUD = GameplayHUD();
+  }
+
+  // 6. Métodos de factory de componentes (agrupados)
+
   /// Creates player for the current map
   /// Following Flutter pattern of component factories
   Knight _createPlayerWithState(Vector2 position) {
@@ -175,7 +191,7 @@ class _GameplayState extends State<Gameplay> {
       directional: JoystickDirectional(
         spriteBackgroundDirectional: Sprite.load('joystick_background.png'),
         spriteKnobDirectional: Sprite.load('joystick_knob.png'),
-        size: _kJoystickSize,
+        size: kJoystickSize,
         isFixed: false,
       ),
       actions: [_createPrimaryAttackAction(), _createRangedAttackAction()],
@@ -198,10 +214,10 @@ class _GameplayState extends State<Gameplay> {
       actionId: PlayerActions.meleeAttack.index,
       sprite: Sprite.load('joystick_atack.png'),
       spritePressed: Sprite.load('joystick_atack_selected.png'),
-      size: _kActionButtonSize,
+      size: kActionButtonSize,
       margin: const EdgeInsets.only(
-        bottom: _kActionButtonMarginBottom,
-        right: _kPrimaryActionMarginRight,
+        bottom: kActionButtonMarginBottom,
+        right: kPrimaryActionMarginRight,
       ),
     );
   }
@@ -212,10 +228,10 @@ class _GameplayState extends State<Gameplay> {
       actionId: PlayerActions.rangedAttack.index,
       sprite: Sprite.load('joystick_atack_range.png'),
       spritePressed: Sprite.load('joystick_atack_range_selected.png'),
-      size: _kActionButtonSize,
+      size: kActionButtonSize,
       margin: const EdgeInsets.only(
-        bottom: _kActionButtonMarginBottom,
-        right: _kSecondaryActionMarginRight,
+        bottom: kActionButtonMarginBottom,
+        right: kSecondaryActionMarginRight,
       ),
     );
   }
