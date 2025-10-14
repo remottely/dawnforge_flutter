@@ -1,3 +1,4 @@
+import 'package:darkness_dungeon/presentation/design_system/constants/typography_constants.dart';
 import 'package:flutter/material.dart';
 
 /// [AppStyledText] responsible for providing styled text following game's visual theme
@@ -15,18 +16,6 @@ import 'package:flutter/material.dart';
 /// Following CLAUDE.md patterns for Flutter StatelessWidget components
 class AppStyledText extends StatelessWidget {
   // 1. Constantes de configuração
-  /// Font family used throughout the game
-  static const String kFontFamily = 'Normal';
-
-  /// Default font size for normal text
-  static const double kNormalFontSize = 20.0;
-
-  /// Large font size for headings
-  static const double kLargeFontSize = 32.0;
-
-  /// Small font size for secondary content
-  static const double kSmallFontSize = 18.0;
-
   /// Default text color
   static const Color kDefaultColor = Colors.white;
 
@@ -49,7 +38,7 @@ class AppStyledText extends StatelessWidget {
   const AppStyledText({
     super.key,
     required this.text,
-    this.fontSize = kNormalFontSize,
+    this.fontSize = TypographyConstants.kBodyFontSize,
     this.color = kDefaultColor,
     this.textAlign = TextAlign.start,
   });
@@ -59,7 +48,7 @@ class AppStyledText extends StatelessWidget {
   const AppStyledText.large({
     super.key,
     required this.text,
-    this.fontSize = kLargeFontSize,
+    this.fontSize = TypographyConstants.kDisplayFontSize,
     this.color = kDefaultColor,
     this.textAlign = TextAlign.start,
   });
@@ -68,7 +57,7 @@ class AppStyledText extends StatelessWidget {
   const AppStyledText.small({
     super.key,
     required this.text,
-    this.fontSize = kSmallFontSize,
+    this.fontSize = TypographyConstants.kSmallFontSize,
     this.color = kDefaultColor,
     this.textAlign = TextAlign.start,
   });
@@ -80,7 +69,7 @@ class AppStyledText extends StatelessWidget {
       text,
       style: TextStyle(
         color: color,
-        fontFamily: kFontFamily,
+        fontFamily: TypographyConstants.kPrimaryFontFamily,
         fontSize: fontSize,
       ),
       textAlign: textAlign,

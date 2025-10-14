@@ -1,6 +1,7 @@
 import 'package:darkness_dungeon/gameplay/core/constants/gameplay_ui_constants.dart';
 import 'package:darkness_dungeon/presentation/design_system/components/atoms/app_styled_button.dart';
 import 'package:darkness_dungeon/presentation/design_system/components/atoms/app_styled_text.dart';
+import 'package:darkness_dungeon/presentation/design_system/constants/typography_constants.dart';
 import 'package:flutter/material.dart';
 
 /// [AppStyledDialog] responsible for providing styled dialogs following game's visual theme
@@ -67,13 +68,13 @@ class AppStyledDialog extends StatelessWidget {
             children: [
               const AppStyledText(
                 text: 'Game Over',
-                fontSize: 24.0,
+                fontSize: TypographyConstants.kHeadlineFontSize,
                 color: Colors.red,
               ),
               const SizedBox(height: 16.0),
               const AppStyledText(
                 text: 'Try again?',
-                fontSize: 18.0,
+                fontSize: TypographyConstants.kCaptionFontSize,
                 color: Colors.white,
               ),
               const SizedBox(height: 20.0),
@@ -103,13 +104,13 @@ class AppStyledDialog extends StatelessWidget {
             children: [
               const AppStyledText(
                 text: 'Victory!',
-                fontSize: 24.0,
+                fontSize: TypographyConstants.kHeadlineFontSize,
                 color: Colors.green,
               ),
               const SizedBox(height: 16.0),
               const AppStyledText(
                 text: 'Congratulations!',
-                fontSize: 18.0,
+                fontSize: TypographyConstants.kCaptionFontSize,
                 color: Colors.white,
               ),
               const SizedBox(height: 20.0),
@@ -145,13 +146,13 @@ class AppStyledDialog extends StatelessWidget {
              children: [
                const AppStyledText(
                  text: 'Confirm',
-                 fontSize: 20.0,
+                 fontSize: TypographyConstants.kBodyFontSize,
                  color: Colors.white,
                ),
                const SizedBox(height: 16.0),
                AppStyledText(
                  text: message,
-                 fontSize: 16.0,
+                 fontSize: TypographyConstants.kCaptionFontSize,
                  color: Colors.white70,
                ),
                const SizedBox(height: 20.0),

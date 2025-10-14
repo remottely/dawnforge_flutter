@@ -8,6 +8,7 @@ import 'package:darkness_dungeon/gameplay/core/utils/sprites/player_sprite_sheet
 import 'package:darkness_dungeon/gameplay/gameplay.dart';
 import 'package:darkness_dungeon/presentation/design_system/components/atoms/app_animated_sprite_widget.dart';
 import 'package:darkness_dungeon/presentation/design_system/components/atoms/app_radio_button.dart';
+import 'package:darkness_dungeon/presentation/design_system/constants/typography_constants.dart';
 import 'package:flame_splash_screen/flame_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -35,9 +36,6 @@ class _MenuScreenState extends State<MenuScreen> {
   static const Duration kCharacterAnimationInterval = Duration(seconds: 2);
   static const String kBonfireUrl = 'https://pub.dev/packages/bonfire';
   static const String kKevinKoboriUrl = 'https://github.com/kevinkobori';
-  static const double kTitleFontSize = 30.0;
-  static const double kButtonFontSize = 16.0;
-  static const double kFooterFontSize = 12.0;
   static const double kCharacterAnimationSize = 100.0;
   static const double kButtonWidth = 150.0;
   static const double kButtonMinHeight = 40.0;
@@ -187,8 +185,8 @@ class _TitleWidget extends StatelessWidget {
       'Darkness Dungeon',
       style: TextStyle(
         color: Colors.white,
-        fontFamily: 'Normal',
-        fontSize: _MenuScreenState.kTitleFontSize,
+        fontFamily: TypographyConstants.kPrimaryFontFamily,
+        fontSize: TypographyConstants.kDisplayFontSize,
       ),
     );
   }
@@ -233,8 +231,8 @@ class _PlayButtonWidget extends StatelessWidget {
           getString('play_cap'),
           style: const TextStyle(
             color: Colors.white,
-            fontFamily: 'Normal',
-            fontSize: _MenuScreenState.kButtonFontSize,
+            fontFamily: TypographyConstants.kPrimaryFontFamily,
+            fontSize: TypographyConstants.kCaptionFontSize,
           ),
         ),
       ),
@@ -311,8 +309,8 @@ class _FooterWidget extends StatelessWidget {
                     getString('powered_by'),
                     style: const TextStyle(
                       color: Colors.white,
-                      fontFamily: 'Normal',
-                      fontSize: _MenuScreenState.kFooterFontSize,
+                      fontFamily: TypographyConstants.kPrimaryFontFamily,
+                      fontSize: TypographyConstants.kTinyFontSize,
                     ),
                   ),
                   InkWell(
@@ -324,8 +322,8 @@ class _FooterWidget extends StatelessWidget {
                       style: TextStyle(
                         decoration: TextDecoration.underline,
                         color: Colors.blue,
-                        fontFamily: 'Normal',
-                        fontSize: _MenuScreenState.kFooterFontSize,
+                        fontFamily: TypographyConstants.kPrimaryFontFamily,
+                        fontSize: TypographyConstants.kTinyFontSize,
                       ),
                     ),
                   ),
@@ -340,8 +338,8 @@ class _FooterWidget extends StatelessWidget {
                     getString('built_with'),
                     style: const TextStyle(
                       color: Colors.white,
-                      fontFamily: 'Normal',
-                      fontSize: _MenuScreenState.kFooterFontSize,
+                      fontFamily: TypographyConstants.kPrimaryFontFamily,
+                      fontSize: TypographyConstants.kTinyFontSize,
                     ),
                   ),
                   InkWell(
@@ -353,8 +351,8 @@ class _FooterWidget extends StatelessWidget {
                       style: TextStyle(
                         decoration: TextDecoration.underline,
                         color: Colors.blue,
-                        fontFamily: 'Normal',
-                        fontSize: _MenuScreenState.kFooterFontSize,
+                        fontFamily: TypographyConstants.kPrimaryFontFamily,
+                        fontSize: TypographyConstants.kTinyFontSize,
                       ),
                     ),
                   ),

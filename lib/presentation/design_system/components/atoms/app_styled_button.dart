@@ -1,4 +1,5 @@
 import 'package:darkness_dungeon/gameplay/core/constants/gameplay_ui_constants.dart';
+import 'package:darkness_dungeon/presentation/design_system/constants/typography_constants.dart';
 import 'package:flutter/material.dart';
 
 /// [AppStyledButton] responsible for providing styled buttons following game's visual theme
@@ -16,15 +17,6 @@ import 'package:flutter/material.dart';
 /// Following CLAUDE.md patterns for Flutter StatelessWidget components
 class AppStyledButton extends StatelessWidget {
   // 1. Constantes de configuração
-  /// Font family used throughout the game
-  static const String kFontFamily = 'Normal';
-
-  /// Default font size for buttons
-  static const double kNormalFontSize = 20.0;
-
-  /// Default button font size for primary buttons
-  static const double kButtonFontSize = 16.0;
-
   /// Default text color
   static const Color kDefaultTextColor = Colors.white;
 
@@ -55,7 +47,7 @@ class AppStyledButton extends StatelessWidget {
     required this.text,
     required this.onPressed,
     this.backgroundColor = GameplayUIConstants.kTransparentColor,
-    this.fontSize = kNormalFontSize,
+    this.fontSize = TypographyConstants.kBodyFontSize,
   });
 
   // 4. Factory constructors
@@ -65,7 +57,7 @@ class AppStyledButton extends StatelessWidget {
     required this.text,
     required this.onPressed,
     this.backgroundColor = kPrimaryBackgroundColor,
-    this.fontSize = kButtonFontSize,
+    this.fontSize = TypographyConstants.kCaptionFontSize,
   });
 
   /// Creates a transparent styled button for secondary actions
@@ -74,7 +66,7 @@ class AppStyledButton extends StatelessWidget {
     required this.text,
     required this.onPressed,
     this.backgroundColor = GameplayUIConstants.kTransparentColor,
-    this.fontSize = kNormalFontSize,
+    this.fontSize = TypographyConstants.kBodyFontSize,
   });
 
   // 5. Método build
@@ -96,7 +88,7 @@ class AppStyledButton extends StatelessWidget {
         text,
         style: TextStyle(
           color: kDefaultTextColor,
-          fontFamily: kFontFamily,
+          fontFamily: TypographyConstants.kPrimaryFontFamily,
           fontSize: fontSize,
         ),
       ),
