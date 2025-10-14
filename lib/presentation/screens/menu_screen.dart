@@ -83,142 +83,24 @@ class _MenuScreenState extends State<MenuScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              const Text(
-                'Darkness Dungeon',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'Normal',
-                  fontSize: kTitleFontSize,
-                ),
-              ),
+              const _TitleWidget(),
               const SizedBox(height: 20),
               if (_characterSpriteAnimations.isNotEmpty)
-                SizedBox(
-                  height: kCharacterAnimationSize,
-                  width: kCharacterAnimationSize,
-                  child: AppAnimatedSpriteWidget(
-                    animation:
-                        _characterSpriteAnimations[_currentCharacterSpriteIndex],
-                  ),
+                _CharacterAnimationWidget(
+                  animation:
+                      _characterSpriteAnimations[_currentCharacterSpriteIndex],
                 ),
               const SizedBox(height: 30),
-              SizedBox(
-                width: kButtonWidth,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    minimumSize: const Size(100, kButtonMinHeight),
-                  ),
-                  child: Text(
-                    getString('play_cap'),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Normal',
-                      fontSize: kButtonFontSize,
-                    ),
-                  ),
-                  onPressed: () {
-                    _navigateToGameplayScreen();
-                  },
-                ),
-              ),
+              _PlayButtonWidget(onPressed: _navigateToGameplayScreen),
               const SizedBox(height: 20),
-              AppRadioButton<bool>(
-                value: false,
-                label: 'Keyboard',
-                group: Gameplay.useJoystickControls,
-                onChange: _onControlMethodChanged,
-              ),
-              const SizedBox(height: 10),
-              AppRadioButton<bool>(
-                value: true,
-                group: Gameplay.useJoystickControls,
-                label: 'Joystick',
-                onChange: _onControlMethodChanged,
-              ),
+              _ControlsWidget(onControlMethodChanged: _onControlMethodChanged),
               const SizedBox(height: 20),
-              if (!Gameplay.useJoystickControls)
-                SizedBox(
-                  height: kKeyboardTipHeight,
-                  width: kKeyboardTipWidth,
-                  child: Sprite.load('keyboard_tip.png').asWidget(),
-                ),
+              if (!Gameplay.useJoystickControls) const _KeyboardTipWidget(),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: SafeArea(
-        child: Container(
-          height: 20,
-          margin: const EdgeInsets.all(20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Flexible(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      getString('powered_by'),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Normal',
-                        fontSize: kFooterFontSize,
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        _openExternalURL(kKevinKoboriUrl);
-                      },
-                      child: const Text(
-                        'kevinkobori',
-                        style: TextStyle(
-                          decoration: TextDecoration.underline,
-                          color: Colors.blue,
-                          fontFamily: 'Normal',
-                          fontSize: kFooterFontSize,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Flexible(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      getString('built_with'),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Normal',
-                        fontSize: kFooterFontSize,
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        _openExternalURL(kBonfireUrl);
-                      },
-                      child: const Text(
-                        'Bonfire',
-                        style: TextStyle(
-                          decoration: TextDecoration.underline,
-                          color: Colors.blue,
-                          fontFamily: 'Normal',
-                          fontSize: kFooterFontSize,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      bottomNavigationBar: _FooterWidget(onOpenURL: _openExternalURL),
     );
   }
 
@@ -287,5 +169,201 @@ class _MenuScreenState extends State<MenuScreen> {
     } else {
       throw 'Could not launch $targetUrl';
     }
+  }
+}
+
+// ========================================
+// PRIVATE WIDGETS FOR PERFORMANCE OPTIMIZATION
+// ========================================
+
+/// Private widget for the main title display
+/// Uses const constructor for optimal performance
+class _TitleWidget extends StatelessWidget {
+  const _TitleWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Text(
+      'Darkness Dungeon',
+      style: TextStyle(
+        color: Colors.white,
+        fontFamily: 'Normal',
+        fontSize: _MenuScreenState.kTitleFontSize,
+      ),
+    );
+  }
+}
+
+/// Private widget for character animation display
+/// Optimized to prevent unnecessary rebuilds
+class _CharacterAnimationWidget extends StatelessWidget {
+  const _CharacterAnimationWidget({required this.animation});
+
+  final Future<SpriteAnimation> animation;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: _MenuScreenState.kCharacterAnimationSize,
+      width: _MenuScreenState.kCharacterAnimationSize,
+      child: AppAnimatedSpriteWidget(animation: animation),
+    );
+  }
+}
+
+/// Private widget for the play button
+/// Uses const constructor where possible for performance
+class _PlayButtonWidget extends StatelessWidget {
+  const _PlayButtonWidget({required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: _MenuScreenState.kButtonWidth,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          elevation: 3,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+          minimumSize: const Size(100, _MenuScreenState.kButtonMinHeight),
+        ),
+        onPressed: onPressed,
+        child: Text(
+          getString('play_cap'),
+          style: const TextStyle(
+            color: Colors.white,
+            fontFamily: 'Normal',
+            fontSize: _MenuScreenState.kButtonFontSize,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Private widget for control method selection
+/// Encapsulates radio button logic for cleaner code
+class _ControlsWidget extends StatelessWidget {
+  const _ControlsWidget({required this.onControlMethodChanged});
+
+  final void Function(bool) onControlMethodChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        AppRadioButton<bool>(
+          value: false,
+          label: 'Keyboard',
+          group: Gameplay.useJoystickControls,
+          onChange: onControlMethodChanged,
+        ),
+        const SizedBox(height: 10),
+        AppRadioButton<bool>(
+          value: true,
+          group: Gameplay.useJoystickControls,
+          label: 'Joystick',
+          onChange: onControlMethodChanged,
+        ),
+      ],
+    );
+  }
+}
+
+/// Private widget for keyboard controls tip display
+/// Const widget for maximum performance
+class _KeyboardTipWidget extends StatelessWidget {
+  const _KeyboardTipWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: _MenuScreenState.kKeyboardTipHeight,
+      width: _MenuScreenState.kKeyboardTipWidth,
+      child: Sprite.load('keyboard_tip.png').asWidget(),
+    );
+  }
+}
+
+/// Private widget for footer links and credits
+/// Optimized to prevent unnecessary rebuilds
+class _FooterWidget extends StatelessWidget {
+  const _FooterWidget({required this.onOpenURL});
+
+  final Future<void> Function(String) onOpenURL;
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Container(
+        height: 20,
+        margin: const EdgeInsets.all(20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Flexible(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    getString('powered_by'),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Normal',
+                      fontSize: _MenuScreenState.kFooterFontSize,
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      onOpenURL(_MenuScreenState.kKevinKoboriUrl);
+                    },
+                    child: const Text(
+                      'kevinkobori',
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        color: Colors.blue,
+                        fontFamily: 'Normal',
+                        fontSize: _MenuScreenState.kFooterFontSize,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Flexible(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    getString('built_with'),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Normal',
+                      fontSize: _MenuScreenState.kFooterFontSize,
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      onOpenURL(_MenuScreenState.kBonfireUrl);
+                    },
+                    child: const Text(
+                      'Bonfire',
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        color: Colors.blue,
+                        fontFamily: 'Normal',
+                        fontSize: _MenuScreenState.kFooterFontSize,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
