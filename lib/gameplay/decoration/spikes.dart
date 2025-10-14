@@ -3,38 +3,58 @@ import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/environment_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/player/knight.dart';
 
+/// [Spikes] responsible for dealing damage to players on contact
+/// Following Flutter naming conventions for decoration systems
+///
+/// This decoration handles:
+/// - Player damage through spike trap mechanism
+/// - Animation-based damage timing system
+/// - Continuous contact damage monitoring
 class Spikes extends GameDecoration with Sensor<Knight> {
-  final double damageAmount;
-  Knight? contactedPlayer;
+  // 1. Constantes de configuração
+  static const double kDefaultSize = GameplayConstants.kCurrentTileSize;
+  static const double kDefaultDamageAmount = 60.0;
+  static const int kLayerPriority = 1;
 
-  Spikes(Vector2 position, {this.damageAmount = 60})
-    : super.withAnimation(
+  // 2. Variáveis de instância privadas
+  final Vector2 _initialPosition;
+  final double _damageAmount;
+  Knight? _contactedPlayer;
+
+  // 3. Construtor
+  Spikes(this._initialPosition, {double? damageAmount})
+    : _damageAmount = damageAmount ?? kDefaultDamageAmount,
+      super.withAnimation(
         animation: EnvironmentSpriteSheet.spikes(),
-        position: position,
-        size: Vector2(
-          GameplayConstants.kCurrentTileSize,
-          GameplayConstants.kCurrentTileSize,
-        ),
+        position: _initialPosition,
+        size: Vector2.all(kDefaultSize),
       );
 
+  // 4. Métodos públicos principais
   @override
-  void onContact(Knight collision) {
-    contactedPlayer = collision;
+  void onContact(Knight player) {
+    _contactedPlayer = player;
+  }
+
+  @override
+  void onContactExit(Knight player) {
+    _contactedPlayer = null;
   }
 
   @override
   void update(double dt) {
     if (isAnimationLastFrame) {
-      contactedPlayer?.handleAttack(AttackOriginEnum.ENEMY, damageAmount, 0);
+      _triggerDamage();
     }
     super.update(dt);
   }
 
   @override
-  int get priority => LayerPriority.getComponentPriority(1);
+  int get priority => LayerPriority.getComponentPriority(kLayerPriority);
 
-  @override
-  void onContactExit(Knight component) {
-    contactedPlayer = null;
+  // 5. Métodos privados auxiliares
+  /// Triggers damage on the contacted player
+  void _triggerDamage() {
+    _contactedPlayer?.handleAttack(AttackOriginEnum.ENEMY, _damageAmount, 0);
   }
 }
