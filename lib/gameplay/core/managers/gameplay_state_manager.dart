@@ -26,7 +26,7 @@ class GameplayStateManager extends GameComponent {
   // 3. Métodos públicos principais
   @override
   void update(double dt) {
-    _processGameStateChecks(dt);
+    _processGameState(dt);
     super.update(dt);
   }
 
@@ -35,14 +35,14 @@ class GameplayStateManager extends GameComponent {
   void triggerGameOver() {
     if (!_isGameOverDisplayed && !_isProcessingGameOver) {
       _isProcessingGameOver = true;
-      _handleGameOverState();
+      _handleGameOver();
     }
   }
 
   // 4. Métodos privados auxiliares (organizados por funcionalidade)
   /// Processes all game state checks in a centralized manner
   /// Following Flutter pattern of organizing update logic
-  void _processGameStateChecks(double dt) {
+  void _processGameState(double dt) {
     if (checkInterval(kGameOverCheckInterval, kGameOverCheckRate, dt)) {
       _checkForGameOverCondition();
     }
@@ -53,13 +53,13 @@ class GameplayStateManager extends GameComponent {
   void _checkForGameOverCondition() {
     if (_shouldDisplayGameOver() && !_isProcessingGameOver) {
       _isProcessingGameOver = true;
-      _handleGameOverState();
+      _handleGameOver();
     }
   }
 
   /// Handles the game over state transition
   /// Following Flutter state management patterns
-  void _handleGameOverState() {
+  void _handleGameOver() {
     if (!_isGameOverDisplayed) {
       _isGameOverDisplayed = true;
       _displayGameOverDialog();

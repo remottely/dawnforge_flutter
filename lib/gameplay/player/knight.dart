@@ -94,7 +94,7 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
   @override
   void update(double dt) {
     if (isDead) return;
-    _handleStaminaRegeneration();
+    _handleStamina();
     _handleMovementEffects();
     super.update(dt);
   }
@@ -115,12 +115,12 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
   @override
   void onJoystickAction(JoystickActionEvent event) {
     if (event.id == 0 && event.event == ActionEvent.DOWN) {
-      executeBasicAttack();
+      executeAttack();
     }
 
     if (event.id == LogicalKeyboardKey.space &&
         event.event == ActionEvent.DOWN) {
-      executeBasicAttack();
+      executeAttack();
     }
 
     if (event.id == LogicalKeyboardKey.keyZ &&
@@ -150,7 +150,7 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
 
   // 6. Public action methods (execute*, trigger*, handle*)
   /// Executes basic melee attack if player has sufficient stamina
-  void executeBasicAttack() {
+  void executeAttack() {
     if (_currentStamina < kMeleeAttackStaminaCost) {
       return;
     }
@@ -220,7 +220,7 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
   // Processing/Updates methods
   /// Handles stamina regeneration over time
   /// Regenerates stamina at a constant rate when not at maximum
-  void _handleStaminaRegeneration() {
+  void _handleStamina() {
     if (_staminaRegenerationTimer == null) {
       _staminaRegenerationTimer = async.Timer(Duration(milliseconds: 150), () {
         _staminaRegenerationTimer = null;
