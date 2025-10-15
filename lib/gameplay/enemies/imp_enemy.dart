@@ -21,7 +21,7 @@ import 'package:flutter/material.dart';
 /// imp.onLoad();
 /// ```
 class ImpEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
-  // 1. Constantes de configuração
+  // 1. Constants (grouped by type)
   static const double kDefaultAttackDamage = 10.0;
   static const double kDefaultLife = 80.0;
   static const double kDefaultSpeed = GameplayConstants.kCurrentTileSize * 2;
@@ -33,11 +33,11 @@ class ImpEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
   static const double kAttackEffectSize =
       GameplayConstants.kCurrentTileSize * 0.62;
 
-  // 2. Variáveis de instância privadas
+  // 2. Private instance variables
   final Vector2 _initialPosition;
   double _attackDamage = kDefaultAttackDamage;
 
-  // 3. Construtor
+  // 3. Constructor
   ImpEnemy(this._initialPosition)
     : super(
         animation: EnemySpriteSheet.impAnimations(),
@@ -47,10 +47,10 @@ class ImpEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
         life: kDefaultLife,
       );
 
-  // 4. Métodos públicos principais
+  // 4. Lifecycle methods (onLoad, update, onDie)
   @override
   Future<void> onLoad() {
-    _setupHitbox();
+    _initializeHitbox();
     return super.onLoad();
   }
 
@@ -85,9 +85,11 @@ class ImpEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
     super.onReceiveDamage(attacker, damage, id);
   }
 
-  // 5. Métodos privados auxiliares
+  // 5. Private helper methods (grouped by functionality)
+
+  // Setup/Initialization methods
   /// Sets up the hitbox for collision detection
-  void _setupHitbox() {
+  void _initializeHitbox() {
     add(
       RectangleHitbox(
         size: Vector2(
@@ -102,6 +104,7 @@ class ImpEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
     );
   }
 
+  // Processing/Updates methods
   /// Executes fast melee attack when player is in range
   void _executeAttack() {
     simpleAttackMelee(
@@ -115,6 +118,7 @@ class ImpEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
     );
   }
 
+  // Cleanup/Utility methods
   /// Handles visual and audio effects when enemy dies
   void _handleDeathEffects() {
     gameRef.add(

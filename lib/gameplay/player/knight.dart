@@ -25,7 +25,7 @@ import 'package:flutter/services.dart';
 /// knight.onLoad();
 /// ```
 class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
-  // 1. Constantes (agrupadas por tipo)
+  // 1. Constants (grouped by type)
   static const double kDefaultAttackDamage = 25.0;
   static const double kMaxStamina = 100.0;
   static const double kDefaultLife = 200.0;
@@ -39,23 +39,21 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
   static const double kVisionRadius = GameplayConstants.kCurrentTileSize * 6;
   static const String kEmoteAssetPath = 'emote/emote_exclamacao.png';
 
-  // 2. Variáveis de instância privadas
+  // 2. Private instance variables
   double _attackDamage = kDefaultAttackDamage;
   double _currentStamina = kMaxStamina;
   async.Timer? _staminaRegenerationTimer;
   bool _hasKey = false;
   bool _isObservingEnemy = false;
 
-  // 3. Getters públicos
+  // 3. Public getters/setters
   double get attackDamage => _attackDamage;
   double get currentStamina => _currentStamina;
   bool get hasKey => _hasKey;
   bool get isObservingEnemy => _isObservingEnemy;
-
-  // 4. Setters públicos (para compatibilidade com sistema existente)
   set hasKey(bool value) => _hasKey = value;
 
-  // 5. Construtor
+  // 4. Constructor
   Knight(Vector2 position)
     : super(
         animation: PlayerSpriteSheet.playerAnimations(),
@@ -71,11 +69,11 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
         color: Colors.deepOrangeAccent.withOpacity(0.2),
       ),
     );
-    _setupPlayerControls();
-    _setupStaminaRegeneration();
+    _initializeControls();
+    _initializeStamina();
   }
 
-  // 6. Métodos públicos principais
+  // 5. Lifecycle methods (onLoad, update, onDie)
   @override
   Future<void> onLoad() {
     add(
@@ -91,6 +89,27 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
       ),
     );
     return super.onLoad();
+  }
+
+  @override
+  void update(double dt) {
+    if (isDead) return;
+    _handleStaminaRegeneration();
+    _handleMovementEffects();
+    super.update(dt);
+  }
+
+  @override
+  void onDie() {
+    removeFromParent();
+    gameRef.add(
+      GameDecoration.withSprite(
+        sprite: Sprite.load('player/crypt.png'),
+        position: Vector2(position.x, position.y),
+        size: Vector2.all(30),
+      ),
+    );
+    super.onDie();
   }
 
   @override
@@ -115,6 +134,21 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
     super.onJoystickAction(event);
   }
 
+  @override
+  void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
+    if (isDead) return;
+    showDamage(
+      damage,
+      config: TextStyle(
+        fontSize: TileHelper.valueByTileSize(5),
+        color: Colors.orange,
+        fontFamily: 'Normal',
+      ),
+    );
+    super.onReceiveDamage(attacker, damage, id);
+  }
+
+  // 6. Public action methods (execute*, trigger*, handle*)
   /// Executes basic melee attack if player has sufficient stamina
   void executeBasicAttack() {
     if (_currentStamina < kMeleeAttackStaminaCost) {
@@ -165,43 +199,25 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
     );
   }
 
-  @override
-  void update(double dt) {
-    if (isDead) return;
-    _handleStaminaRegeneration();
-    _handleMovementEffects();
-    super.update(dt);
+  /// Public method for external stamina decrement (backwards compatibility)
+  void decrementStamina(int amount) {
+    _decrementStamina(amount);
   }
 
-  @override
-  void onDie() {
-    removeFromParent();
-    gameRef.add(
-      GameDecoration.withSprite(
-        sprite: Sprite.load('player/crypt.png'),
-        position: Vector2(position.x, position.y),
-        size: Vector2.all(30),
-      ),
-    );
-    super.onDie();
-  }
+  // 7. Private helper methods (grouped by functionality)
 
-  // 7. Métodos privados auxiliares (organizados por funcionalidade)
+  // Setup/Initialization methods
   /// Sets up player movement controls and joystick configuration
-  void _setupPlayerControls() {
+  void _initializeControls() {
     setupMovementByJoystick(intensityEnabled: true);
   }
 
   /// Initializes stamina regeneration system
-  void _setupStaminaRegeneration() {
+  void _initializeStamina() {
     // Stamina regeneration is handled in the update loop
   }
 
-  /// Executes attack sound effect and visual feedback
-  void _executeAttack() {
-    GameplayAudioManager.playAttackPlayerMelee();
-  }
-
+  // Processing/Updates methods
   /// Handles stamina regeneration over time
   /// Regenerates stamina at a constant rate when not at maximum
   void _handleStaminaRegeneration() {
@@ -234,7 +250,12 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
     );
   }
 
-  // 8. Métodos utilitários
+  /// Executes attack sound effect and visual feedback
+  void _executeAttack() {
+    GameplayAudioManager.playAttackPlayerMelee();
+  }
+
+  // 8. Utility methods
   /// Decrements player stamina by specified amount
   /// Ensures stamina doesn't go below zero
   void _decrementStamina(int amount) {
@@ -242,25 +263,6 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
     if (_currentStamina < 0) {
       _currentStamina = 0;
     }
-  }
-
-  /// Public method for external stamina decrement (backwards compatibility)
-  void decrementStamina(int amount) {
-    _decrementStamina(amount);
-  }
-
-  @override
-  void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
-    if (isDead) return;
-    showDamage(
-      damage,
-      config: TextStyle(
-        fontSize: TileHelper.valueByTileSize(5),
-        color: Colors.orange,
-        fontFamily: 'Normal',
-      ),
-    );
-    super.onReceiveDamage(attacker, damage, id);
   }
 
   /// Displays animated emote above player character

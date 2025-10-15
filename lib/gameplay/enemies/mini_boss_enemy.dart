@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 /// - Enhanced visual effects and audio feedback
 class MiniBossEnemy extends SimpleEnemy
     with BlockMovementCollision, UseLifeBar {
-  // 1. Constantes de configuração
+  // 1. Constants (grouped by type)
   static const double kDefaultAttackDamage = 50.0;
   static const double kDefaultLife = 150.0;
   static const double kDefaultSpeed = GameplayConstants.kCurrentTileSize * 1.5;
@@ -35,12 +35,12 @@ class MiniBossEnemy extends SimpleEnemy
       GameplayConstants.kCurrentTileSize * 0.65;
   static const double kMeleeDamageReduction = 3.0; // attack / 3
 
-  // 2. Variáveis de instância privadas
+  // 2. Private instance variables
   final Vector2 _initialPosition;
   double _attackDamage = kDefaultAttackDamage;
   bool _seePlayerClose = false;
 
-  // 3. Construtor
+  // 3. Constructor
   MiniBossEnemy(this._initialPosition)
     : super(
         animation: EnemySpriteSheet.miniBossAnimations(),
@@ -53,10 +53,10 @@ class MiniBossEnemy extends SimpleEnemy
         life: kDefaultLife,
       );
 
-  // 4. Métodos públicos principais
+  // 4. Lifecycle methods (onLoad, update, onDie)
   @override
   Future<void> onLoad() {
-    _setupHitbox();
+    _initializeHitbox();
     return super.onLoad();
   }
 
@@ -106,9 +106,11 @@ class MiniBossEnemy extends SimpleEnemy
     super.onReceiveDamage(attacker, damage, id);
   }
 
-  // 5. Métodos privados auxiliares
+  // 5. Private helper methods (grouped by functionality)
+
+  // Setup/Initialization methods
   /// Sets up the hitbox for collision detection
-  void _setupHitbox() {
+  void _initializeHitbox() {
     add(
       RectangleHitbox(
         size: Vector2(
@@ -123,6 +125,7 @@ class MiniBossEnemy extends SimpleEnemy
     );
   }
 
+  // Processing/Updates methods
   /// Executes ranged fireball attack when player is at distance
   void _executeRangedAttack() {
     simpleAttackRange(
@@ -165,6 +168,7 @@ class MiniBossEnemy extends SimpleEnemy
     );
   }
 
+  // Cleanup/Utility methods
   /// Handles visual and audio effects when enemy dies
   void _handleDeathEffects() {
     gameRef.add(
