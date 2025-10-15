@@ -1,3 +1,4 @@
+import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/constants/gameplay_ui_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/presentation/design_system/components/atoms/app_styled_button.dart';
@@ -5,6 +6,7 @@ import 'package:darkness_dungeon/presentation/design_system/components/atoms/app
 import 'package:darkness_dungeon/presentation/design_system/components/atoms/app_styled_text.dart';
 import 'package:darkness_dungeon/presentation/screens/menu_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 /// UI State Manager for game dialogs and modal windows
 /// Following Flutter naming conventions for UI state management systems
@@ -75,6 +77,30 @@ class GameplayUIManager {
           ],
         );
       },
+    );
+  }
+
+  /// Displays a conversation dialog using TalkDialog
+  ///
+  /// Shows a conversation sequence with customizable callbacks.
+  /// This method centralizes TalkDialog usage to eliminate direct UI calls
+  /// from gameplay entities.
+  static void displayConversationDialog(
+    BuildContext context,
+    List<Say> dialogueSequence, {
+    Function(int)? onChangeTalk,
+    VoidCallback? onFinish,
+    VoidCallback? onClose,
+    List<LogicalKeyboardKey>? logicalKeyboardKeysToNext,
+  }) {
+    TalkDialog.show(
+      context,
+      dialogueSequence,
+      onChangeTalk: onChangeTalk,
+      onFinish: onFinish,
+      onClose: onClose,
+      logicalKeyboardKeysToNext:
+          logicalKeyboardKeysToNext ?? [LogicalKeyboardKey.space],
     );
   }
 

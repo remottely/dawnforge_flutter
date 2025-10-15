@@ -1,5 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/environment_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/player_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/player/knight.dart';
@@ -107,7 +108,7 @@ class Door extends GameDecoration {
 
   /// Shows the key required dialog
   void _showKeyRequiredDialog() {
-    TalkDialog.show(
+    GameplayUIManager.displayConversationDialog(
       gameRef.context,
       [
         Say(

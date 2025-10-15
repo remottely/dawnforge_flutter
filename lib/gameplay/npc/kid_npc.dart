@@ -89,7 +89,7 @@ class KidNpc extends SimpleNpc {
   /// Initializes the dialogue system and shows victory conversation
   void _initializeDialogue() {
     GameplayAudioManager.playInteraction();
-    TalkDialog.show(
+    GameplayUIManager.displayConversationDialog(
       gameRef.context,
       _createDialogueSequence(),
       onFinish: _onConversationFinished,

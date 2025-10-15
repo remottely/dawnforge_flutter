@@ -4,6 +4,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/tile_helper.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/effects_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/enemy_sprite_sheet.dart';
@@ -219,7 +220,7 @@ class DungeonBossEnemy extends SimpleEnemy
 
   void _showConversation() {
     GameplayAudioManager.playInteraction();
-    TalkDialog.show(
+    GameplayUIManager.displayConversationDialog(
       gameRef.context,
       [
         Say(
