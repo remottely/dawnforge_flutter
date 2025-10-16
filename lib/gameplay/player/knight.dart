@@ -9,6 +9,9 @@ import 'package:darkness_dungeon/gameplay/core/utils/sprites/player_sprite_sheet
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+// Enum para ferramentas agrícolas
+enum FarmTool { hand, hoe, wateringCan }
+
 /// Player character PlayerCharacter for the Darkness Dungeon game
 /// Following Flutter naming conventions for player entity systems
 ///
@@ -26,6 +29,38 @@ import 'package:flutter/services.dart';
 /// ```
 class PlayerCharacter extends SimplePlayer
     with Lighting, BlockMovementCollision {
+  // Sistema de ferramentas agrícolas
+  static const int kMaxEnergy = 100;
+  static const int kToolUsageEnergyCost = 2;
+
+  FarmTool currentTool = FarmTool.hand;
+  int energy = kMaxEnergy;
+  bool isUsingTool = false;
+
+  // Troca de ferramenta
+  void switchTool(FarmTool newTool) {
+    currentTool = newTool;
+    // TODO: feedback visual/sonoro
+  }
+
+  // Uso de ferramenta agrícola
+  void useTool() {
+    if (energy < kToolUsageEnergyCost) return;
+    isUsingTool = true;
+    // TODO: integração com tiles agrícolas
+    energy -= kToolUsageEnergyCost;
+    if (energy < 0) energy = 0;
+    // TODO: animação de uso de ferramenta
+    isUsingTool = false;
+  }
+
+  // Restaurar energia (ex: ao dormir)
+  void restoreEnergy() {
+    energy = kMaxEnergy;
+    // TODO: atualizar barra de energia na HUD
+  }
+
+  // TODO: integrar valor de energia com HUD
   // 1. Constants (grouped by type)
   static const double kDefaultAttackDamage = 25.0;
   static const double kMaxStamina = 100.0;

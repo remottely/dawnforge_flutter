@@ -271,28 +271,31 @@ class SaveManager {
 ```
 Preciso transformar o sistema de combate do PlayerCharacter em um sistema de farming. Seguindo o padrão de código existente:
 
-1. Refatorar PlayerCharacter para FarmPlayer:
-   - Remover executeAttack() e métodos de combate
-   - Remover sistema de stamina para combate
-   - Remover collision detection com enemies
-   - Manter movimento e animações base
+Expanda o PlayerCharacter para incluir funcionalidades de farming, mantendo todo o sistema de combate, movimento e animações existentes. Siga os prompts abaixo para adicionar as novas features:
 
-2. Implementar sistema de tools:
+1. Adicionar sistema de ferramentas agrícolas ao PlayerCharacter:
    - Enum FarmTool: hand, hoe, wateringCan
-   - Método useTool() para replace executeAttack()
+   - Propriedade currentTool
+   - Método useTool() para ações agrícolas
    - Tool switching system
    - Tool usage animations
 
-3. Converter stamina em energy:
-   - Energy depletes com tool usage (2 points per use)
+2. Adicionar sistema de energia:
+   - Propriedade energy (inicial 100)
+   - Energy depletes com uso de ferramentas (2 pontos por uso)
    - Energy visual bar (reuse stamina bar UI)
    - Energy restoration ao dormir
 
+3. Manter e integrar todo o sistema de combate e movimento:
+   - Não remover métodos de combate
+   - Não remover stamina para combate
+   - Não remover collision detection com enemies
+   - Adaptar movimento e animações para contexto agrícola, sem perder funcionalidades existentes
+
 Arquivos a modificar:
-- /lib/gameplay/player/knight.dart → farm_player.dart
-- Manter toda funcionalidade de movimento
-- Adaptar velocidade para farming context
-- Implementar tool system completo
+- /lib/gameplay/player/player_character.dart (adicionar funcionalidades agrícolas)
+- Manter toda funcionalidade de movimento e combate
+- Implementar tool system completo como adição
 
 Manter padrões de código existentes e nomenclatura consistente.
 ```
