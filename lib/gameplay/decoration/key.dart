@@ -15,7 +15,7 @@ import 'package:darkness_dungeon/gameplay/player/knight.dart';
 /// final key = DoorKey(position);
 /// key.onLoad();
 /// ```
-class DoorKey extends GameDecoration with Sensor<Knight> {
+class DoorKey extends GameDecoration with Sensor<PlayerCharacter> {
   // 1. Constantes de configuração
   static const double kDefaultSize = GameplayConstants.kCurrentTileSize;
   static const String kAssetPath = 'items/key_silver.png';
@@ -34,7 +34,7 @@ class DoorKey extends GameDecoration with Sensor<Knight> {
 
   // 4. Métodos públicos principais
   @override
-  void onContact(Knight player) {
+  void onContact(PlayerCharacter player) {
     if (!_hasBeenCollected) {
       _hasBeenCollected = true;
       _triggerEffect(player);
@@ -44,7 +44,7 @@ class DoorKey extends GameDecoration with Sensor<Knight> {
 
   // 5. Métodos privados auxiliares
   /// Triggers the key collection effect
-  void _triggerEffect(Knight player) {
+  void _triggerEffect(PlayerCharacter player) {
     player.hasKey = true;
   }
 

@@ -64,9 +64,9 @@ class PlayerVitalStatsHUD extends InterfaceComponent {
       _currentLife = gameRef.player!.life;
       _maxLife = gameRef.player!.maxLife;
 
-      // Update stamina if player is a Knight
-      if (gameRef.player is Knight) {
-        _currentStamina = (gameRef.player as Knight).currentStamina;
+      // Update stamina if player is a PlayerCharacter
+      if (gameRef.player is PlayerCharacter) {
+        _currentStamina = (gameRef.player as PlayerCharacter).currentStamina;
       }
     }
   }

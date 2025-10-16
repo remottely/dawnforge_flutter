@@ -68,6 +68,6 @@ class GameplayHUD extends GameInterface {
   /// Checks if the player exists and has a key
   /// Following Flutter pattern of state checking methods
   bool _hasPlayerWithKey() {
-    return gameRef.player != null && (gameRef.player as Knight).hasKey;
+    return gameRef.player != null && (gameRef.player as PlayerCharacter).hasKey;
   }
 }

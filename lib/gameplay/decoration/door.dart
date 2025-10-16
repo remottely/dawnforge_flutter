@@ -52,7 +52,7 @@ class Door extends GameDecoration {
     Set<Vector2> intersectionPoints,
     PositionComponent other,
   ) {
-    if (other is Knight) {
+    if (other is PlayerCharacter) {
       _handlePlayerCollision(other);
     }
     super.onCollisionStart(intersectionPoints, other);
@@ -70,7 +70,7 @@ class Door extends GameDecoration {
   }
 
   /// Handles collision with the player
-  void _handlePlayerCollision(Knight player) {
+  void _handlePlayerCollision(PlayerCharacter player) {
     if (!_isOpen) {
       if (player.hasKey == true) {
         _triggerDoorOpening(player);
@@ -81,7 +81,7 @@ class Door extends GameDecoration {
   }
 
   /// Triggers the door opening sequence
-  void _triggerDoorOpening(Knight player) {
+  void _triggerDoorOpening(PlayerCharacter player) {
     _isOpen = true;
     player.hasKey = false;
     _playOpeningAnimation();

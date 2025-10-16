@@ -15,7 +15,7 @@ import 'package:darkness_dungeon/gameplay/player/knight.dart';
 /// final potion = LifePotion(position);
 /// potion.onLoad();
 /// ```
-class LifePotion extends GameDecoration with Sensor<Knight> {
+class LifePotion extends GameDecoration with Sensor<PlayerCharacter> {
   // 1. Constantes de configuração
   static const double kDefaultSize = GameplayConstants.kCurrentTileSize;
   static const Duration kHealingDuration = Duration(seconds: 1);
@@ -38,7 +38,7 @@ class LifePotion extends GameDecoration with Sensor<Knight> {
 
   // 4. Métodos públicos principais
   @override
-  void onContact(Knight player) {
+  void onContact(PlayerCharacter player) {
     if (!_hasBeenConsumed) {
       _hasBeenConsumed = true;
       _triggerEffect(player);
@@ -48,7 +48,7 @@ class LifePotion extends GameDecoration with Sensor<Knight> {
 
   // 5. Métodos privados auxiliares
   /// Triggers the healing effect on the player
-  void _triggerEffect(Knight player) {
+  void _triggerEffect(PlayerCharacter player) {
     _healPlayerGradually(player);
   }
 

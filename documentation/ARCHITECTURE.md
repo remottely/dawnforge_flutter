@@ -45,7 +45,7 @@ The core game logic layer, built on top of the Bonfire game engine.
 
 #### Game Entities
 
-- **Player** (`/lib/gameplay/player/`): Knight character with combat and movement
+- **Player** (`/lib/gameplay/player/`): PlayerCharacter character with combat and movement
 - **Enemies** (`/lib/gameplay/enemies/`): AI-controlled opponents (Goblin, Imp, MiniBoss)
 - **NPCs** (`/lib/gameplay/npc/`): Interactive characters (Wizard, Kid)
 - **Decorations** (`/lib/gameplay/decoration/`): Interactive objects (Potions, Keys, Doors, Spikes, Torches)

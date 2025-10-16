@@ -9,7 +9,7 @@ import 'package:darkness_dungeon/gameplay/core/utils/sprites/player_sprite_sheet
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-/// Player character Knight for the Darkness Dungeon game
+/// Player character PlayerCharacter for the Darkness Dungeon game
 /// Following Flutter naming conventions for player entity systems
 ///
 /// This class handles:
@@ -21,10 +21,11 @@ import 'package:flutter/services.dart';
 ///
 /// Usage patterns:
 /// ```dart
-/// final knight = Knight(position);
+/// final knight = PlayerCharacter(position);
 /// knight.onLoad();
 /// ```
-class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
+class PlayerCharacter extends SimplePlayer
+    with Lighting, BlockMovementCollision {
   // 1. Constants (grouped by type)
   static const double kDefaultAttackDamage = 25.0;
   static const double kMaxStamina = 100.0;
@@ -54,7 +55,7 @@ class Knight extends SimplePlayer with Lighting, BlockMovementCollision {
   set hasKey(bool value) => _hasKey = value;
 
   // 4. Constructor
-  Knight(Vector2 position)
+  PlayerCharacter(Vector2 position)
     : super(
         animation: PlayerSpriteSheet.playerAnimations(),
         size: Vector2.all(GameplayConstants.kCurrentTileSize),

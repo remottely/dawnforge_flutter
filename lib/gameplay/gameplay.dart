@@ -165,8 +165,8 @@ class _GameplayState extends State<Gameplay> {
 
   /// Creates player for the current map
   /// Following Flutter pattern of component factories
-  Knight _createPlayerWithState(Vector2 position) {
-    final player = Knight(position);
+  PlayerCharacter _createPlayerWithState(Vector2 position) {
+    final player = PlayerCharacter(position);
     AppLogger.info('Created fresh player at position: $position');
     return player;
   }

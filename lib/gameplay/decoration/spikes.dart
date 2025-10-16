@@ -10,7 +10,7 @@ import 'package:darkness_dungeon/gameplay/player/knight.dart';
 /// - Player damage through spike trap mechanism
 /// - Animation-based damage timing system
 /// - Continuous contact damage monitoring
-class Spikes extends GameDecoration with Sensor<Knight> {
+class Spikes extends GameDecoration with Sensor<PlayerCharacter> {
   // 1. Constantes de configuração
   static const double kDefaultSize = GameplayConstants.kCurrentTileSize;
   static const double kDefaultDamageAmount = 60.0;
@@ -19,7 +19,7 @@ class Spikes extends GameDecoration with Sensor<Knight> {
   // 2. Variáveis de instância privadas
   final Vector2 _initialPosition;
   final double _damageAmount;
-  Knight? _contactedPlayer;
+  PlayerCharacter? _contactedPlayer;
 
   // 3. Construtor
   Spikes(this._initialPosition, {double? damageAmount})
@@ -32,12 +32,12 @@ class Spikes extends GameDecoration with Sensor<Knight> {
 
   // 4. Métodos públicos principais
   @override
-  void onContact(Knight player) {
+  void onContact(PlayerCharacter player) {
     _contactedPlayer = player;
   }
 
   @override
-  void onContactExit(Knight player) {
+  void onContactExit(PlayerCharacter player) {
     _contactedPlayer = null;
   }
 
