@@ -3,7 +3,7 @@ import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_loc
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/environment_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/player_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/player/knight.dart';
+import 'package:darkness_dungeon/gameplay/player/player_character.dart';
 import 'package:flutter/cupertino.dart';
 
 /// Interactive decoration Door for the Darkness Dungeon game

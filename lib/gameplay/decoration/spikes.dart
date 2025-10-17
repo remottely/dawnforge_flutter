@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/environment_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/player/knight.dart';
+import 'package:darkness_dungeon/gameplay/player/player_character.dart';
 
 /// [Spikes] responsible for dealing damage to players on contact
 /// Following Flutter naming conventions for decoration systems

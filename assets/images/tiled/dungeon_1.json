@@ -241,7 +241,7 @@
          "name":"mapa_0",
          "opacity":1,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":50,
          "x":0,
          "y":0
@@ -783,13 +783,13 @@
                 {
                  "height":16,
                  "id":39,
-                 "name":"wizard",
+                 "name":"barrel",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":16,
-                 "x":119.090909090909,
-                 "y":52.5454545454545
+                 "x":81.4338340632802,
+                 "y":68.0994637959968
                 }, 
                 {
                  "height":16,
@@ -883,6 +883,17 @@
                  "width":10.7043814024711,
                  "x":16.6148350069208,
                  "y":64.3940614953188
+                }, 
+                {
+                 "height":16,
+                 "id":81,
+                 "name":"wizard",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":121.343866399247,
+                 "y":52.1694568376243
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -891,7 +902,7 @@
          "y":0
         }],
  "nextlayerid":14,
- "nextobjectid":81,
+ "nextobjectid":82,
  "orientation":"orthogonal",
  "properties":[
         {

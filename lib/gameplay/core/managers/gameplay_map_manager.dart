@@ -4,6 +4,7 @@ import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart
 import 'package:darkness_dungeon/gameplay/core/constants/gameplay_map_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/models/map_model.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/gameplay_map_sensor.dart';
+import 'package:darkness_dungeon/gameplay/decoration/barrel.dart';
 import 'package:darkness_dungeon/gameplay/decoration/door.dart';
 import 'package:darkness_dungeon/gameplay/decoration/key.dart';
 import 'package:darkness_dungeon/gameplay/decoration/life_potion.dart';
@@ -27,6 +28,7 @@ import 'package:darkness_dungeon/gameplay/npc/wizard_npc.dart';
 /// - Navigation between different game areas
 class GameplayMapManager {
   // Flutter-style constants for entity types
+  static const String kBarrelEntityType = 'barrel';
   static const String kDoorEntityType = 'door';
   static const String kKeyEntityType = 'key';
   static const String kPotionEntityType = 'potion';
@@ -153,6 +155,7 @@ GameplayMapSensor _createMapSensor(
 void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
   final entityBuilders = <String, ObjectBuilder>{
     // Interactive decorations
+    GameplayMapManager.kBarrelEntityType: (p) => Barrel(p.position),
     GameplayMapManager.kDoorEntityType: (p) => Door(p.position, p.size),
     GameplayMapManager.kKeyEntityType: (p) => DoorKey(p.position),
     GameplayMapManager.kPotionEntityType: (p) =>

@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/constants/gameplay_ui_constants.dart';
-import 'package:darkness_dungeon/gameplay/player/knight.dart';
+import 'package:darkness_dungeon/gameplay/player/player_character.dart';
 import 'package:flutter/material.dart';
 
 /// [PlayerVitalStatsHUD] responsible for displaying player's health and stamina bars

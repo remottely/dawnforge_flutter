@@ -10,7 +10,7 @@ import 'package:darkness_dungeon/gameplay/core/utils/app_logger.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/gameplay_map_sensor.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/color_helper.dart';
 import 'package:darkness_dungeon/gameplay/hud/gameplay_hud.dart';
-import 'package:darkness_dungeon/gameplay/player/knight.dart';
+import 'package:darkness_dungeon/gameplay/player/player_character.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

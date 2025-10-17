@@ -17,10 +17,13 @@ class Barrel extends GameDecoration {
     add(
       RectangleHitbox(
         size: Vector2(
-          GameplayConstants.kCurrentTileSize * 0.6,
-          GameplayConstants.kCurrentTileSize * 0.6,
+          GameplayConstants.kCurrentTileSize * 0.7,
+          GameplayConstants.kCurrentTileSize * 0.3,
         ),
-        position: Vector2(GameplayConstants.kCurrentTileSize * 0.2, 0),
+        position: Vector2(
+          GameplayConstants.kCurrentTileSize * 0.1,
+          GameplayConstants.kCurrentTileSize * 0.4,
+        ),
       ),
     );
     return super.onLoad();
