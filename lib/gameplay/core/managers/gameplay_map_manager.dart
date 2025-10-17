@@ -14,6 +14,7 @@ import 'package:darkness_dungeon/gameplay/enemies/dungeon_boss_enemy.dart';
 import 'package:darkness_dungeon/gameplay/enemies/goblin_enemy.dart';
 import 'package:darkness_dungeon/gameplay/enemies/imp_enemy.dart';
 import 'package:darkness_dungeon/gameplay/enemies/mini_boss_enemy.dart';
+import 'package:darkness_dungeon/gameplay/farming/farm_tile.dart';
 import 'package:darkness_dungeon/gameplay/npc/kid_npc.dart';
 import 'package:darkness_dungeon/gameplay/npc/wizard_npc.dart';
 
@@ -41,6 +42,7 @@ class GameplayMapManager {
   static const String kMiniBossEntityType = 'mini_boss';
   static const String kGoblinEntityType = 'goblin';
   static const String kImpEntityType = 'imp';
+  static const String kFarmTileEntityType = 'farm_tile';
 
   // Private constructor to prevent instantiation
   GameplayMapManager._();
@@ -156,6 +158,7 @@ void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
   final entityBuilders = <String, ObjectBuilder>{
     // Interactive decorations
     GameplayMapManager.kBarrelEntityType: (p) => Barrel(p.position),
+
     GameplayMapManager.kDoorEntityType: (p) => Door(p.position, p.size),
     GameplayMapManager.kKeyEntityType: (p) => DoorKey(p.position),
     GameplayMapManager.kPotionEntityType: (p) =>
@@ -176,6 +179,9 @@ void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
     GameplayMapManager.kMiniBossEntityType: (p) => MiniBossEnemy(p.position),
     GameplayMapManager.kGoblinEntityType: (p) => GoblinEnemy(p.position),
     GameplayMapManager.kImpEntityType: (p) => ImpEnemy(p.position),
+
+    // Farm
+    GameplayMapManager.kFarmTileEntityType: (p) => FarmTile(p.position),
   };
 
   builders.addEntries(entityBuilders.entries);
