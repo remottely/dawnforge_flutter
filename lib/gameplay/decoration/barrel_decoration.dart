@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
+import 'package:darkness_dungeon/gameplay/decoration/decoration.dart';
 
-class Barrel extends GameDecoration {
-  Barrel(Vector2 position)
+class BarrelDecoration extends DFPushableDecoration {
+  BarrelDecoration(Vector2 position)
     : super.withSprite(
         sprite: Sprite.load('items/barrel.png'),
         position: position,

@@ -3,6 +3,7 @@ import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_loc
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/environment_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/player_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/decoration/decoration.dart';
 import 'package:darkness_dungeon/gameplay/player/player_character.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -19,7 +20,7 @@ import 'package:flutter/cupertino.dart';
 /// final door = Door(position, size);
 /// door.onLoad();
 /// ```
-class Door extends GameDecoration {
+class Door extends DFGameDecoration {
   // 1. Constantes de configuração
   static const String kClosedDoorAsset = 'items/door_closed.png';
   static const String kRequiredKeyMessage = 'door_without_key';

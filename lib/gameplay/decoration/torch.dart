@@ -1,6 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/environment_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/decoration/decoration.dart';
 import 'package:flutter/material.dart';
 
 /// [Torch] responsible for providing ambient lighting in dark areas
@@ -10,7 +11,7 @@ import 'package:flutter/material.dart';
 /// - Dynamic lighting effects with pulse variation
 /// - Extinguishable state for gameplay mechanics
 /// - Visual rendering based on lighting state
-class Torch extends GameDecoration {
+class Torch extends DFGameDecoration {
   // 1. Constantes de configuração
   static const double kDefaultSize = GameplayConstants.kCurrentTileSize;
   static const double kLightRadiusMultiplier = 2.5;

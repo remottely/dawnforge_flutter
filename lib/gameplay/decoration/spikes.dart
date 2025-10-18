@@ -1,6 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/environment_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/decoration/decoration.dart';
 import 'package:darkness_dungeon/gameplay/player/player_character.dart';
 
 /// [Spikes] responsible for dealing damage to players on contact
@@ -10,7 +11,7 @@ import 'package:darkness_dungeon/gameplay/player/player_character.dart';
 /// - Player damage through spike trap mechanism
 /// - Animation-based damage timing system
 /// - Continuous contact damage monitoring
-class Spikes extends GameDecoration with Sensor<PlayerCharacter> {
+class Spikes extends DFSensorPlayerDecoration {
   // 1. Constantes de configuração
   static const double kDefaultSize = GameplayConstants.kCurrentTileSize;
   static const double kDefaultDamageAmount = 60.0;

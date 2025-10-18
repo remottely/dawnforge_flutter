@@ -1,5 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
+import 'package:darkness_dungeon/gameplay/decoration/decoration.dart';
 import 'package:darkness_dungeon/gameplay/player/player_character.dart';
 
 /// Interactive decoration LifePotion for the Darkness Dungeon game
@@ -15,7 +16,7 @@ import 'package:darkness_dungeon/gameplay/player/player_character.dart';
 /// final potion = LifePotion(position);
 /// potion.onLoad();
 /// ```
-class LifePotion extends GameDecoration with Sensor<PlayerCharacter> {
+class LifePotion extends DFSensorPlayerDecoration {
   // 1. Constantes de configuração
   static const double kDefaultSize = GameplayConstants.kCurrentTileSize;
   static const Duration kHealingDuration = Duration(seconds: 1);

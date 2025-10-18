@@ -1,12 +1,13 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
+import 'package:darkness_dungeon/gameplay/decoration/decoration.dart';
 
 import '../player/player_character.dart';
 import 'crop_types.dart';
 
 enum TileState { grass, soil, watered, planted, grown }
 
-class FarmTile extends GameDecoration {
+class FarmTile extends DFGameDecoration {
   TileState state = TileState.grass;
   CropType? plantedCrop;
   int daysGrowing = 0;

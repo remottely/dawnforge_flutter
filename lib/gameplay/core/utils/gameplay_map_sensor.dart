@@ -1,10 +1,12 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/constants/gameplay_map_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/app_logger.dart';
+import 'package:darkness_dungeon/gameplay/decoration/decoration.dart';
+import 'package:darkness_dungeon/gameplay/player/player_character.dart';
 
 /// [GameplayMapSensor] responsible for detecting player interaction with map transition areas
 /// Following Flutter naming conventions for game sensor systems
-class GameplayMapSensor extends GameDecoration with Sensor<Player> {
+class GameplayMapSensor extends DFSensorPlayerDecoration {
   // Flutter-style constants for sensor events
   static const String kPlayerEnteredEvent = 'Player entered sensor';
   static const String kPlayerExitedEvent = 'Player exited sensor';
@@ -35,7 +37,7 @@ class GameplayMapSensor extends GameDecoration with Sensor<Player> {
   }) : super(position: position, size: size);
 
   @override
-  void onContact(Player component) {
+  void onContact(PlayerCharacter component) {
     if (!hasContact && !_hasNavigated) {
       hasContact = true;
       _contactTime = 0;
@@ -45,7 +47,7 @@ class GameplayMapSensor extends GameDecoration with Sensor<Player> {
   }
 
   @override
-  void onContactExit(Player component) {
+  void onContactExit(PlayerCharacter component) {
     hasContact = false;
     _contactTime = 0;
     _logSensorEvent('$kPlayerExitedEvent $id');

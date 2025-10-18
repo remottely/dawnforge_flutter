@@ -1,5 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
+import 'package:darkness_dungeon/gameplay/decoration/decoration.dart';
 import 'package:darkness_dungeon/gameplay/player/player_character.dart';
 
 /// Interactive decoration Key for the Darkness Dungeon game
@@ -15,7 +16,7 @@ import 'package:darkness_dungeon/gameplay/player/player_character.dart';
 /// final key = DoorKey(position);
 /// key.onLoad();
 /// ```
-class DoorKey extends GameDecoration with Sensor<PlayerCharacter> {
+class DoorKey extends DFSensorPlayerDecoration {
   // 1. Constantes de configuração
   static const double kDefaultSize = GameplayConstants.kCurrentTileSize;
   static const String kAssetPath = 'items/key_silver.png';
