@@ -117,11 +117,11 @@ class PlayerCharacter extends SimplePlayer
       RectangleHitbox(
         size: Vector2(
           TileHelper.valueByTileSize(8),
-          TileHelper.valueByTileSize(8),
+          TileHelper.valueByTileSize(6),
         ),
         position: Vector2(
           TileHelper.valueByTileSize(4),
-          TileHelper.valueByTileSize(8),
+          TileHelper.valueByTileSize(9),
         ),
       ),
     );
