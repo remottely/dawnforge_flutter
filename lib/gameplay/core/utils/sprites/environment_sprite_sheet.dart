@@ -5,7 +5,7 @@ import '../../constants/gameplay_sprite_constants.dart';
 /// [EnvironmentSpriteSheet] responsible for providing sprite animations for environment elements
 /// Following Flutter naming conventions for environment sprite systems
 class EnvironmentSpriteSheet {
-  /// Creates door opening animation
+  /// Creates doorDecoration opening animation
   /// Following Flutter pattern of descriptive factory methods
   static Future<SpriteAnimation> openTheDoor() => SpriteAnimation.load(
     'items/door_open.png',
@@ -18,10 +18,10 @@ class EnvironmentSpriteSheet {
 
   /// Creates spikes animation
   /// Following Flutter pattern of descriptive factory methods
-  static Future<SpriteAnimation> spikes() => SpriteAnimation.load(
-    'items/spikes.png',
+  static Future<SpriteAnimation> spikesDecoration() => SpriteAnimation.load(
+    'items/spikes_decoration.png',
     SpriteAnimationData.sequenced(
-      amount: GameplaySpriteConstants.kSpikesFrames,
+      amount: GameplaySpriteConstants.kSpikesDecorationFrames,
       stepTime: GameplaySpriteConstants.kDefaultStepTime,
       textureSize: GameplaySpriteConstants.itemTextureSize,
     ),
@@ -30,9 +30,9 @@ class EnvironmentSpriteSheet {
   /// Creates torch flame animation
   /// Following Flutter pattern of descriptive factory methods
   static Future<SpriteAnimation> torch() => SpriteAnimation.load(
-    'items/torch_spritesheet.png',
+    'items/torch_decoration_spritesheet.png',
     SpriteAnimationData.sequenced(
-      amount: GameplaySpriteConstants.kTorchFrames,
+      amount: GameplaySpriteConstants.kTorchDecorationFrames,
       stepTime: GameplaySpriteConstants.kDefaultStepTime,
       textureSize: GameplaySpriteConstants.itemTextureSize,
     ),

@@ -2,7 +2,7 @@
 /// Following Flutter naming conventions for game systems
 class GameplayConstants {
   // Potion configuration
-  static const double kLifePotionHealAmount = 30.0;
+  static const double kLifePotionDecorationHealAmount = 30.0;
 
   static const double kCurrentTileSize = 32.0;
 

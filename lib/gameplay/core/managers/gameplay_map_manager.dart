@@ -5,11 +5,11 @@ import 'package:darkness_dungeon/gameplay/core/constants/gameplay_map_constants.
 import 'package:darkness_dungeon/gameplay/core/models/map_model.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/gameplay_map_sensor.dart';
 import 'package:darkness_dungeon/gameplay/decoration/barrel_decoration.dart';
-import 'package:darkness_dungeon/gameplay/decoration/door.dart';
-import 'package:darkness_dungeon/gameplay/decoration/key.dart';
-import 'package:darkness_dungeon/gameplay/decoration/life_potion.dart';
-import 'package:darkness_dungeon/gameplay/decoration/spikes.dart';
-import 'package:darkness_dungeon/gameplay/decoration/torch.dart';
+import 'package:darkness_dungeon/gameplay/decoration/door_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decoration/door_key_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decoration/life_potion_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decoration/spikes_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decoration/torch_decoration.dart';
 import 'package:darkness_dungeon/gameplay/enemies/dungeon_boss_enemy.dart';
 import 'package:darkness_dungeon/gameplay/enemies/goblin_enemy.dart';
 import 'package:darkness_dungeon/gameplay/enemies/imp_enemy.dart';
@@ -29,13 +29,13 @@ import 'package:darkness_dungeon/gameplay/npc/wizard_npc.dart';
 /// - Navigation between different game areas
 class GameplayMapManager {
   // Flutter-style constants for entity types
-  static const String kBarrelEntityType = 'barrel';
-  static const String kDoorEntityType = 'door';
-  static const String kKeyEntityType = 'key';
-  static const String kPotionEntityType = 'potion';
-  static const String kTorchEntityType = 'torch';
-  static const String kTorchEmptyEntityType = 'torch_empty';
-  static const String kSpikesEntityType = 'spikes';
+  static const String kBarrelDecorationType = 'barrel_decoration';
+  static const String kDoorDecorationType = 'door_decoration';
+  static const String kDoorKeyDecorationType = 'door_key_decoration';
+  static const String kLifePotionDecorationType = 'life_potion_decoration';
+  static const String kTorchDecorationType = 'torch_decoration';
+  static const String kTorchDecorationEmptyType = 'torch_decoration_empty';
+  static const String kSpikesDecorationType = 'spikes_decoration';
   static const String kWizardEntityType = 'wizard';
   static const String kKidEntityType = 'kid';
   static const String kBossEntityType = 'boss';
@@ -150,25 +150,31 @@ GameplayMapSensor _createMapSensor(
 /// Following Flutter pattern of comprehensive object mapping
 ///
 /// This method handles factory creation for:
-/// - Interactive decorations (doors, keys, potions, spikes, torches)
+/// - Interactive decorations (doors, keys, life potions, spikes, torches)
 /// - Enemy entities (goblins, imps, mini-boss, dungeon boss)
 /// - NPC characters (wizard, kid)
 /// - Position and size mapping from Tiled object properties
 void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
   final entityBuilders = <String, ObjectBuilder>{
     // Interactive decorations
-    GameplayMapManager.kBarrelEntityType: (p) => BarrelDecoration(p.position),
+    GameplayMapManager.kBarrelDecorationType: (p) =>
+        BarrelDecoration(p.position),
 
-    GameplayMapManager.kDoorEntityType: (p) => Door(p.position, p.size),
-    GameplayMapManager.kKeyEntityType: (p) => DoorKey(p.position),
-    GameplayMapManager.kPotionEntityType: (p) =>
-        LifePotion(p.position, GameplayConstants.kLifePotionHealAmount),
+    GameplayMapManager.kDoorDecorationType: (p) =>
+        DoorDecoration(p.position, p.size),
+    GameplayMapManager.kDoorKeyDecorationType: (p) =>
+        DoorKeyDecoration(p.position),
+    GameplayMapManager.kLifePotionDecorationType: (p) => LifePotionDecoration(
+      p.position,
+      GameplayConstants.kLifePotionDecorationHealAmount,
+    ),
 
     // Environmental decorations
-    GameplayMapManager.kTorchEntityType: (p) => Torch(p.position),
-    GameplayMapManager.kTorchEmptyEntityType: (p) =>
-        Torch(p.position, isExtinguished: true),
-    GameplayMapManager.kSpikesEntityType: (p) => Spikes(p.position),
+    GameplayMapManager.kTorchDecorationType: (p) => TorchDecoration(p.position),
+    GameplayMapManager.kTorchDecorationEmptyType: (p) =>
+        TorchDecoration.empty(p.position),
+    GameplayMapManager.kSpikesDecorationType: (p) =>
+        SpikesDecoration(p.position),
 
     // Non-player characters
     GameplayMapManager.kWizardEntityType: (p) => WizardNpc(p.position),

@@ -375,28 +375,6 @@
          "objects":[
                 {
                  "height":16,
-                 "id":1,
-                 "name":"torch",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":48.1818181818182,
-                 "y":16
-                }, 
-                {
-                 "height":16,
-                 "id":3,
-                 "name":"torch",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":160,
-                 "y":32
-                }, 
-                {
-                 "height":16,
                  "id":4,
                  "name":"torch",
                  "rotation":0,
@@ -408,151 +386,30 @@
                 }, 
                 {
                  "height":16,
-                 "id":5,
-                 "name":"torch",
+                 "id":6,
+                 "name":"torch_decoration",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":16,
-                 "x":352.125,
+                 "x":496,
                  "y":160
                 }, 
                 {
                  "height":16,
-                 "id":6,
-                 "name":"torch",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":496.125,
-                 "y":160.125
-                }, 
-                {
-                 "height":16,
-                 "id":7,
-                 "name":"torch",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":96.125,
-                 "y":256
-                }, 
-                {
-                 "height":16,
-                 "id":8,
-                 "name":"torch",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":176,
-                 "y":256
-                }, 
-                {
-                 "height":16,
-                 "id":9,
-                 "name":"torch",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":288.125,
-                 "y":255.875
-                }, 
-                {
-                 "height":16,
-                 "id":10,
-                 "name":"torch",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":32,
-                 "y":416
-                }, 
-                {
-                 "height":16,
-                 "id":11,
-                 "name":"torch",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":112.181818181818,
-                 "y":416
-                }, 
-                {
-                 "height":16,
-                 "id":12,
-                 "name":"torch",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":192.181818181818,
-                 "y":416
-                }, 
-                {
-                 "height":16,
                  "id":13,
-                 "name":"torch_empty",
+                 "name":"torch_decoration_empty",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":16,
                  "x":192,
-                 "y":560.181818181818
-                }, 
-                {
-                 "height":16,
-                 "id":14,
-                 "name":"torch_empty",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":64,
                  "y":560
-                }, 
-                {
-                 "height":16,
-                 "id":15,
-                 "name":"torch_empty",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":335.931818181818,
-                 "y":404.75
-                }, 
-                {
-                 "height":16,
-                 "id":16,
-                 "name":"torch",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":160,
-                 "y":159.75
-                }, 
-                {
-                 "height":16,
-                 "id":17,
-                 "name":"torch",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":80.25,
-                 "y":159.75
                 }, 
                 {
                  "height":36.25,
                  "id":18,
-                 "name":"door",
+                 "name":"door_decoration",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -694,17 +551,6 @@
                 }, 
                 {
                  "height":16,
-                 "id":31,
-                 "name":"torch_empty",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":496,
-                 "y":280.25
-                }, 
-                {
-                 "height":16,
                  "id":32,
                  "name":"mini_boss",
                  "rotation":0,
@@ -738,19 +584,8 @@
                 }, 
                 {
                  "height":16,
-                 "id":35,
-                 "name":"key",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":484.083333333333,
-                 "y":266.25
-                }, 
-                {
-                 "height":16,
                  "id":36,
-                 "name":"spikes",
+                 "name":"spikes_decoration",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -761,7 +596,7 @@
                 {
                  "height":16,
                  "id":37,
-                 "name":"spikes",
+                 "name":"spikes_decoration",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -772,7 +607,7 @@
                 {
                  "height":16,
                  "id":38,
-                 "name":"spikes",
+                 "name":"spikes_decoration",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -783,7 +618,7 @@
                 {
                  "height":16,
                  "id":39,
-                 "name":"barrel",
+                 "name":"barrel_decoration",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -794,7 +629,7 @@
                 {
                  "height":16,
                  "id":40,
-                 "name":"potion",
+                 "name":"life_potion_decoration",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -805,7 +640,7 @@
                 {
                  "height":16,
                  "id":41,
-                 "name":"potion",
+                 "name":"life_potion_decoration",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -816,18 +651,18 @@
                 {
                  "height":16,
                  "id":42,
-                 "name":"potion",
+                 "name":"life_potion_decoration",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":16,
-                 "x":506.333333333333,
-                 "y":266
+                 "x":509.448509907205,
+                 "y":262.884823426128
                 }, 
                 {
                  "height":16,
                  "id":43,
-                 "name":"spikes",
+                 "name":"spikes_decoration",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -838,7 +673,7 @@
                 {
                  "height":16,
                  "id":44,
-                 "name":"spikes",
+                 "name":"spikes_decoration",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -849,7 +684,7 @@
                 {
                  "height":16,
                  "id":45,
-                 "name":"spikes",
+                 "name":"spikes_decoration",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -905,6 +740,171 @@
                  "width":16,
                  "x":64,
                  "y":48
+                }, 
+                {
+                 "height":16,
+                 "id":88,
+                 "name":"torch_decoration",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":352,
+                 "y":160
+                }, 
+                {
+                 "height":16,
+                 "id":89,
+                 "name":"torch_decoration",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":160,
+                 "y":32
+                }, 
+                {
+                 "height":16,
+                 "id":91,
+                 "name":"torch_decoration",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":160,
+                 "y":160
+                }, 
+                {
+                 "height":16,
+                 "id":92,
+                 "name":"torch_decoration",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":80,
+                 "y":160
+                }, 
+                {
+                 "height":16,
+                 "id":93,
+                 "name":"torch_decoration",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":176,
+                 "y":256
+                }, 
+                {
+                 "height":16,
+                 "id":94,
+                 "name":"torch_decoration",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":96,
+                 "y":256
+                }, 
+                {
+                 "height":16,
+                 "id":95,
+                 "name":"torch_decoration",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":288,
+                 "y":256
+                }, 
+                {
+                 "height":16,
+                 "id":97,
+                 "name":"torch_decoration",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":32,
+                 "y":416
+                }, 
+                {
+                 "height":16,
+                 "id":98,
+                 "name":"torch_decoration",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":192,
+                 "y":416
+                }, 
+                {
+                 "height":16,
+                 "id":99,
+                 "name":"torch_decoration_empty",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":64,
+                 "y":560
+                }, 
+                {
+                 "height":16,
+                 "id":100,
+                 "name":"torch_decoration_empty",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":112,
+                 "y":416
+                }, 
+                {
+                 "height":16,
+                 "id":101,
+                 "name":"torch_decoration_empty",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":336,
+                 "y":400
+                }, 
+                {
+                 "height":16,
+                 "id":102,
+                 "name":"torch_decoration_empty",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":496,
+                 "y":272
+                }, 
+                {
+                 "height":16,
+                 "id":103,
+                 "name":"torch_decoration_empty",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":48,
+                 "y":16
+                }, 
+                {
+                 "height":16,
+                 "id":104,
+                 "name":"door_key_decoration",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":482.273479441672,
+                 "y":261.531990147161
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -913,7 +913,7 @@
          "y":0
         }],
  "nextlayerid":14,
- "nextobjectid":88,
+ "nextobjectid":105,
  "orientation":"orthogonal",
  "properties":[
         {

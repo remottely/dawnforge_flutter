@@ -18,8 +18,8 @@ class GameplaySpriteConstants {
   static const int kSmokeExplosionFrames = 6;
   static const int kFireballFrames = 3;
   static const int kFireballExplosionFrames = 6;
-  static const int kTorchFrames = 6;
-  static const int kSpikesFrames = 10;
+  static const int kTorchDecorationFrames = 6;
+  static const int kSpikesDecorationFrames = 10;
   static const int kDoorFrames = 14;
 
   // Texture size getters that create Vector2 instances

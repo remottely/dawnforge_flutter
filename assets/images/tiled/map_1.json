@@ -375,162 +375,8 @@
          "objects":[
                 {
                  "height":16,
-                 "id":1,
-                 "name":"torch",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":96,
-                 "y":64
-                }, 
-                {
-                 "height":16,
-                 "id":3,
-                 "name":"torch",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":192,
-                 "y":64
-                }, 
-                {
-                 "height":16,
-                 "id":4,
-                 "name":"torch",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":256.0625,
-                 "y":160.0625
-                }, 
-                {
-                 "height":16,
-                 "id":5,
-                 "name":"torch",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":352.125,
-                 "y":160
-                }, 
-                {
-                 "height":16,
-                 "id":6,
-                 "name":"torch",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":400,
-                 "y":64
-                }, 
-                {
-                 "height":16,
-                 "id":7,
-                 "name":"torch",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":128,
-                 "y":224
-                }, 
-                {
-                 "height":16,
-                 "id":8,
-                 "name":"torch",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":160,
-                 "y":224
-                }, 
-                {
-                 "height":16,
-                 "id":9,
-                 "name":"torch",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":288.125,
-                 "y":255.875
-                }, 
-                {
-                 "height":16,
-                 "id":10,
-                 "name":"torch",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":112,
-                 "y":368
-                }, 
-                {
-                 "height":16,
-                 "id":11,
-                 "name":"torch",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":176,
-                 "y":368
-                }, 
-                {
-                 "height":16,
-                 "id":12,
-                 "name":"torch",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":272,
-                 "y":368
-                }, 
-                {
-                 "height":16,
-                 "id":13,
-                 "name":"torch_empty",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":224,
-                 "y":368
-                }, 
-                {
-                 "height":16,
-                 "id":14,
-                 "name":"torch_empty",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":320,
-                 "y":368
-                }, 
-                {
-                 "height":16,
-                 "id":15,
-                 "name":"torch_empty",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":576,
-                 "y":368
-                }, 
-                {
-                 "height":16,
                  "id":16,
-                 "name":"torch",
+                 "name":"torch_decoration",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -539,26 +385,15 @@
                  "y":64
                 }, 
                 {
-                 "height":16,
-                 "id":17,
-                 "name":"torch",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":80,
-                 "y":160
-                }, 
-                {
                  "height":36.25,
                  "id":18,
-                 "name":"door",
+                 "name":"door_decoration",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":31.5,
-                 "x":64,
-                 "y":219.25
+                 "x":57.3698727015559,
+                 "y":222.786067892504
                 }, 
                 {
                  "height":16,
@@ -694,17 +529,6 @@
                 }, 
                 {
                  "height":16,
-                 "id":31,
-                 "name":"torch_empty",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":464,
-                 "y":272
-                }, 
-                {
-                 "height":16,
                  "id":32,
                  "name":"mini_boss",
                  "rotation":0,
@@ -739,7 +563,7 @@
                 {
                  "height":16,
                  "id":35,
-                 "name":"key",
+                 "name":"door_key_decoration",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -749,36 +573,14 @@
                 }, 
                 {
                  "height":16,
-                 "id":36,
-                 "name":"spikes",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":480,
-                 "y":240.125
-                }, 
-                {
-                 "height":16,
-                 "id":37,
-                 "name":"spikes",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":496,
-                 "y":240.125
-                }, 
-                {
-                 "height":16,
                  "id":38,
-                 "name":"spikes",
+                 "name":"spikes_decoration",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":16,
-                 "x":512,
-                 "y":240.125
+                 "x":481.94342291372,
+                 "y":290.955975954738
                 }, 
                 {
                  "height":16,
@@ -794,18 +596,18 @@
                 {
                  "height":16,
                  "id":40,
-                 "name":"potion",
+                 "name":"life_potion_decoration",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":16,
-                 "x":489.771464984698,
-                 "y":323.155971718254
+                 "x":521.154067530667,
+                 "y":316.967852906373
                 }, 
                 {
                  "height":16,
                  "id":41,
-                 "name":"potion",
+                 "name":"life_potion_decoration",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -816,7 +618,7 @@
                 {
                  "height":16,
                  "id":42,
-                 "name":"potion",
+                 "name":"life_potion_decoration",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -827,7 +629,7 @@
                 {
                  "height":16,
                  "id":43,
-                 "name":"spikes",
+                 "name":"spikes_decoration",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -838,7 +640,7 @@
                 {
                  "height":16,
                  "id":44,
-                 "name":"spikes",
+                 "name":"spikes_decoration",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -849,7 +651,7 @@
                 {
                  "height":16,
                  "id":45,
-                 "name":"spikes",
+                 "name":"spikes_decoration",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -954,8 +756,7 @@
                  "width":16,
                  "x":128,
                  "y":128
-                },
-            
+                }, 
                 {
                  "height":16,
                  "id":87,
@@ -1003,13 +804,24 @@
                 {
                  "height":16,
                  "id":91,
-                 "name":"barrel",
+                 "name":"barrel_decoration",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":16,
                  "x":0,
                  "y":80
+                }, 
+                {
+                 "height":16,
+                 "id":92,
+                 "name":"torch_decoration_empty",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":96,
+                 "y":64
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1018,7 +830,7 @@
          "y":0
         }],
  "nextlayerid":14,
- "nextobjectid":92,
+ "nextobjectid":93,
  "orientation":"orthogonal",
  "properties":[
         {

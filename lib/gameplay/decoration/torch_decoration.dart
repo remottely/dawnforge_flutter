@@ -4,14 +4,14 @@ import 'package:darkness_dungeon/gameplay/core/utils/sprites/environment_sprite_
 import 'package:darkness_dungeon/gameplay/decoration/decoration.dart';
 import 'package:flutter/material.dart';
 
-/// [Torch] responsible for providing ambient lighting in dark areas
+/// [TorchDecoration] responsible for providing ambient lighting in dark areas
 /// Following Flutter naming conventions for decoration systems
 ///
 /// This decoration handles:
 /// - Dynamic lighting effects with pulse variation
 /// - Extinguishable state for gameplay mechanics
 /// - Visual rendering based on lighting state
-class Torch extends DFGameDecoration {
+class TorchDecoration extends DFGameDecoration {
   // 1. Constantes de configuração
   static const double kDefaultSize = GameplayConstants.kCurrentTileSize;
   static const double kLightRadiusMultiplier = 2.5;
@@ -24,8 +24,18 @@ class Torch extends DFGameDecoration {
   bool _isExtinguished = false;
 
   // 3. Construtor
-  Torch(this._initialPosition, {bool isExtinguished = false})
-    : _isExtinguished = isExtinguished,
+  TorchDecoration(this._initialPosition)
+    : _isExtinguished = false,
+      super.withAnimation(
+        animation: EnvironmentSpriteSheet.torch(),
+        position: _initialPosition,
+        size: Vector2.all(kDefaultSize),
+      ) {
+    _setupLighting();
+  }
+
+  TorchDecoration.empty(this._initialPosition)
+    : _isExtinguished = true,
       super.withAnimation(
         animation: EnvironmentSpriteSheet.torch(),
         position: _initialPosition,

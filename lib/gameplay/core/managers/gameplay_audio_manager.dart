@@ -1,3 +1,4 @@
+import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/foundation.dart';
 
@@ -175,7 +176,7 @@ class GameplayAudioManager {
     await FlameAudio.bgm.stop();
     print('[GameplayAudioManager] Starting music: $musicTrack');
     try {
-      await FlameAudio.bgm.play(musicTrack);
+      if (!AppEnvironment.isTesting) await FlameAudio.bgm.play(musicTrack);
       manager._isBackgroundMusicPlaying = true;
       manager._currentBackgroundTrack = musicTrack;
       print('[GameplayAudioManager] Music started successfully: $musicTrack');

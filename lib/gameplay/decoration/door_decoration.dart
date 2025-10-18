@@ -7,20 +7,20 @@ import 'package:darkness_dungeon/gameplay/decoration/decoration.dart';
 import 'package:darkness_dungeon/gameplay/player/player_character.dart';
 import 'package:flutter/cupertino.dart';
 
-/// Interactive decoration Door for the Darkness Dungeon game
+/// Interactive decoration DoorDecoration for the Darkness Dungeon game
 /// Following Flutter naming conventions for barrier interaction systems
 ///
 /// This class handles:
 /// - Key-based access control system
 /// - Visual and audio feedback for interactions
-/// - Door opening animation and removal
+/// - DoorDecoration opening animation and removal
 ///
 /// Usage patterns:
 /// ```dart
-/// final door = Door(position, size);
-/// door.onLoad();
+/// final doorDecoration = DoorDecoration(position, size);
+/// doorDecoration.onLoad();
 /// ```
-class Door extends DFGameDecoration {
+class DoorDecoration extends DFGameDecoration {
   // 1. Constantes de configuração
   static const String kClosedDoorAsset = 'items/door_closed.png';
   static const String kRequiredKeyMessage = 'door_without_key';
@@ -34,7 +34,7 @@ class Door extends DFGameDecoration {
   bool _isShowingDialog = false;
 
   // 3. Construtor
-  Door(this._initialPosition, this._size)
+  DoorDecoration(this._initialPosition, this._size)
     : super.withSprite(
         sprite: Sprite.load(kClosedDoorAsset),
         position: _initialPosition,
@@ -81,14 +81,14 @@ class Door extends DFGameDecoration {
     }
   }
 
-  /// Triggers the door opening sequence
+  /// Triggers the doorDecoration opening sequence
   void _triggerDoorOpening(PlayerCharacter player) {
     _isOpen = true;
     player.hasKey = false;
     _playOpeningAnimation();
   }
 
-  /// Plays the door opening animation
+  /// Plays the doorDecoration opening animation
   void _playOpeningAnimation() {
     playSpriteAnimationOnce(
       EnvironmentSpriteSheet.openTheDoor(),
@@ -124,7 +124,7 @@ class Door extends DFGameDecoration {
     );
   }
 
-  /// Cleans up the door after opening
+  /// Cleans up the doorDecoration after opening
   void _cleanup() {
     removeFromParent();
   }

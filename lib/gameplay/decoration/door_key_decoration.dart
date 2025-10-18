@@ -9,14 +9,14 @@ import 'package:darkness_dungeon/gameplay/player/player_character.dart';
 /// This class handles:
 /// - Key collection by the player
 /// - Single-use pickup mechanism
-/// - Inventory state update for door access
+/// - Inventory state update for doorDecoration access
 ///
 /// Usage patterns:
 /// ```dart
-/// final key = DoorKey(position);
+/// final key = DoorKeyDecoration(position);
 /// key.onLoad();
 /// ```
-class DoorKey extends DFSensorPlayerDecoration {
+class DoorKeyDecoration extends DFSensorPlayerDecoration {
   // 1. Constantes de configuração
   static const double kDefaultSize = GameplayConstants.kCurrentTileSize;
   static const String kAssetPath = 'items/key_silver.png';
@@ -26,7 +26,7 @@ class DoorKey extends DFSensorPlayerDecoration {
   bool _hasBeenCollected = false;
 
   // 3. Construtor
-  DoorKey(this._initialPosition)
+  DoorKeyDecoration(this._initialPosition)
     : super.withSprite(
         sprite: Sprite.load(kAssetPath),
         position: _initialPosition,

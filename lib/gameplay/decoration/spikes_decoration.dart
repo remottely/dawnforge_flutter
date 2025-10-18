@@ -4,14 +4,14 @@ import 'package:darkness_dungeon/gameplay/core/utils/sprites/environment_sprite_
 import 'package:darkness_dungeon/gameplay/decoration/decoration.dart';
 import 'package:darkness_dungeon/gameplay/player/player_character.dart';
 
-/// [Spikes] responsible for dealing damage to players on contact
+/// [SpikesDecoration] responsible for dealing damage to players on contact
 /// Following Flutter naming conventions for decoration systems
 ///
 /// This decoration handles:
 /// - Player damage through spike trap mechanism
 /// - Animation-based damage timing system
 /// - Continuous contact damage monitoring
-class Spikes extends DFSensorPlayerDecoration {
+class SpikesDecoration extends DFSensorPlayerDecoration {
   // 1. Constantes de configuração
   static const double kDefaultSize = GameplayConstants.kCurrentTileSize;
   static const double kDefaultDamageAmount = 60.0;
@@ -23,10 +23,10 @@ class Spikes extends DFSensorPlayerDecoration {
   PlayerCharacter? _contactedPlayer;
 
   // 3. Construtor
-  Spikes(this._initialPosition, {double? damageAmount})
+  SpikesDecoration(this._initialPosition, {double? damageAmount})
     : _damageAmount = damageAmount ?? kDefaultDamageAmount,
       super.withAnimation(
-        animation: EnvironmentSpriteSheet.spikes(),
+        animation: EnvironmentSpriteSheet.spikesDecoration(),
         position: _initialPosition,
         size: Vector2.all(kDefaultSize),
       );

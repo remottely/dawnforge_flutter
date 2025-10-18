@@ -3,7 +3,7 @@ import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart
 import 'package:darkness_dungeon/gameplay/decoration/decoration.dart';
 import 'package:darkness_dungeon/gameplay/player/player_character.dart';
 
-/// Interactive decoration LifePotion for the Darkness Dungeon game
+/// Interactive decoration LifePotionDecoration for the Darkness Dungeon game
 /// Following Flutter naming conventions for item interaction systems
 ///
 /// This class handles:
@@ -13,10 +13,10 @@ import 'package:darkness_dungeon/gameplay/player/player_character.dart';
 ///
 /// Usage patterns:
 /// ```dart
-/// final potion = LifePotion(position);
+/// final potion = LifePotionDecoration(position);
 /// potion.onLoad();
 /// ```
-class LifePotion extends DFSensorPlayerDecoration {
+class LifePotionDecoration extends DFSensorPlayerDecoration {
   // 1. Constantes de configuração
   static const double kDefaultSize = GameplayConstants.kCurrentTileSize;
   static const Duration kHealingDuration = Duration(seconds: 1);
@@ -29,7 +29,7 @@ class LifePotion extends DFSensorPlayerDecoration {
   bool _hasBeenConsumed = false;
 
   // 3. Construtor
-  LifePotion(this._initialPosition, [double? healAmount])
+  LifePotionDecoration(this._initialPosition, [double? healAmount])
     : _healAmount = healAmount ?? kDefaultHealAmount,
       super.withSprite(
         sprite: Sprite.load(kAssetPath),
