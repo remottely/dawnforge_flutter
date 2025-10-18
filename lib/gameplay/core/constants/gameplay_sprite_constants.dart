@@ -3,6 +3,10 @@ import 'package:bonfire/bonfire.dart';
 /// [GameplaySpriteConstants] responsible for centralizing sprite animation configuration
 /// Following Flutter naming conventions for game sprite systems
 class GameplaySpriteConstants {
+  /// Asset path for key icon sprite
+  static const String kDoorKeyDecorationAssetPath =
+      'decorations/door_key_decoration_1.png';
+
   // Animation timing constants for commonly used configurations
   static const double kDefaultStepTime = 0.1;
   static const double kFastStepTime = 0.05;
@@ -18,9 +22,6 @@ class GameplaySpriteConstants {
   static const int kSmokeExplosionFrames = 6;
   static const int kFireballFrames = 3;
   static const int kFireballExplosionFrames = 6;
-  static const int kTorchDecorationFrames = 6;
-  static const int kSpikeTrapDecorationFrames = 10;
-  static const int kDoorFrames = 14;
 
   // Texture size getters that create Vector2 instances
   static Vector2 get playerTextureSize => Vector2(16, 16);
@@ -32,6 +33,4 @@ class GameplaySpriteConstants {
   static Vector2 get effectTextureSize => Vector2(16, 16);
   static Vector2 get fireballTextureSize => Vector2(23, 23);
   static Vector2 get explosionTextureSize => Vector2(32, 32);
-  static Vector2 get itemTextureSize => Vector2(16, 16);
-  static Vector2 get doorTextureSize => Vector2(32, 32);
 }

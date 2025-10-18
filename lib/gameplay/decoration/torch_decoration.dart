@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/sprites/environment_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/sprites/environment/environment_sprite_animation.dart';
 import 'package:darkness_dungeon/gameplay/decoration/decoration.dart';
 import 'package:flutter/material.dart';
 
@@ -27,7 +27,7 @@ class TorchDecoration extends DFGameDecoration {
   TorchDecoration(this._initialPosition)
     : _isExtinguished = false,
       super.withAnimation(
-        animation: EnvironmentSpriteSheet.torchDecoration(),
+        animation: EnvironmentSpriteAnimation.torchDecoration6(),
         position: _initialPosition,
         size: Vector2.all(kDefaultSize),
       ) {
@@ -37,7 +37,7 @@ class TorchDecoration extends DFGameDecoration {
   TorchDecoration.empty(this._initialPosition)
     : _isExtinguished = true,
       super.withAnimation(
-        animation: EnvironmentSpriteSheet.torchDecoration(),
+        animation: EnvironmentSpriteAnimation.torchDecoration6(),
         position: _initialPosition,
         size: Vector2.all(kDefaultSize),
       ) {

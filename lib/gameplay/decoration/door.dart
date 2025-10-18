@@ -17,13 +17,12 @@ import 'package:flutter/cupertino.dart';
 ///
 /// Usage patterns:
 /// ```dart
-/// final doorDecoration = DoorDecoration(position, size);
-/// doorDecoration.onLoad();
+/// final door = DoorDecoration(position, size);
+/// door.onLoad();
 /// ```
 class DoorDecoration extends DFGameDecoration {
   // 1. Constantes de configuração
-  static const String kClosedDoorAsset =
-      'decorations/door_decoration_locked_1.png';
+  static const String kClosedDoorAsset = 'items/door_closed.png';
   static const String kRequiredKeyMessage = 'door_without_key';
   static const double kHitboxHeightRatio = 0.25;
   static const double kHitboxPositionRatio = 0.75;
@@ -82,14 +81,14 @@ class DoorDecoration extends DFGameDecoration {
     }
   }
 
-  /// Triggers the doorDecoration opening sequence
+  /// Triggers the door opening sequence
   void _triggerDoorOpening(PlayerCharacter player) {
     _isOpen = true;
     player.hasKey = false;
     _playOpeningAnimation();
   }
 
-  /// Plays the doorDecoration opening animation
+  /// Plays the door opening animation
   void _playOpeningAnimation() {
     playSpriteAnimationOnce(
       EnvironmentSpriteAnimation.doorDecorationOpening14(),
@@ -125,7 +124,7 @@ class DoorDecoration extends DFGameDecoration {
     );
   }
 
-  /// Cleans up the doorDecoration after opening
+  /// Cleans up the door after opening
   void _cleanup() {
     removeFromParent();
   }

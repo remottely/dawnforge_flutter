@@ -6,7 +6,6 @@ import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.d
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/tile_helper.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/creature/effects_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/sprites/creature/player_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/decoration/decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -117,11 +116,11 @@ class PlayerCharacter extends SimplePlayer
       RectangleHitbox(
         size: Vector2(
           TileHelper.valueByTileSize(8),
-          TileHelper.valueByTileSize(6),
+          TileHelper.valueByTileSize(8),
         ),
         position: Vector2(
           TileHelper.valueByTileSize(4),
-          TileHelper.valueByTileSize(9),
+          TileHelper.valueByTileSize(8),
         ),
       ),
     );
@@ -140,7 +139,7 @@ class PlayerCharacter extends SimplePlayer
   void onDie() {
     removeFromParent();
     gameRef.add(
-      DFGameDecoration.withSprite(
+      GameDecoration.withSprite(
         sprite: Sprite.load('player/crypt.png'),
         position: Vector2(position.x, position.y),
         size: Vector2.all(30),

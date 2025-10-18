@@ -21,8 +21,6 @@ class DFGameDecoration extends GameDecoration {
   }) : super.withAnimation();
 }
 
-/// TODO: DFDamageableDecoration
-
 abstract class DFPushableDecoration extends DFGameDecoration
     with Movement, BlockMovementCollision, HandleForces, Pushable {
   DFPushableDecoration.withSprite({
@@ -55,3 +53,5 @@ abstract class DFSensorPlayerDecoration extends DFGameDecoration
     required super.size,
   }) : super.withAnimation();
 }
+
+/// TODO: DFDamageableDecoration

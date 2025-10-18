@@ -1,5 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/gameplay_sprite_constants.dart';
 import 'package:darkness_dungeon/gameplay/decoration/decoration.dart';
 import 'package:darkness_dungeon/gameplay/player/player_character.dart';
 
@@ -19,7 +20,6 @@ import 'package:darkness_dungeon/gameplay/player/player_character.dart';
 class DoorKeyDecoration extends DFSensorPlayerDecoration {
   // 1. Constantes de configuração
   static const double kDefaultSize = GameplayConstants.kCurrentTileSize;
-  static const String kAssetPath = 'decorations/door_key_decoration.png';
 
   // 2. Variáveis de instância privadas
   final Vector2 _initialPosition;
@@ -28,7 +28,9 @@ class DoorKeyDecoration extends DFSensorPlayerDecoration {
   // 3. Construtor
   DoorKeyDecoration(this._initialPosition)
     : super.withSprite(
-        sprite: Sprite.load(kAssetPath),
+        sprite: Sprite.load(
+          GameplaySpriteConstants.kDoorKeyDecorationAssetPath,
+        ),
         position: _initialPosition,
         size: Vector2.all(kDefaultSize),
       );

@@ -2,8 +2,8 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/tile_helper.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/sprites/effects_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/sprites/enemy_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/sprites/creature/effects_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/sprites/creature/enemy_sprite_sheet.dart';
 import 'package:flutter/material.dart';
 
 /// Mini Boss enemy character for the Darkness Dungeon game

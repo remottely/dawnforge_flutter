@@ -1,4 +1,5 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/constants/gameplay_sprite_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/constants/gameplay_ui_constants.dart';
 import 'package:darkness_dungeon/gameplay/hud/player_vital_stats_hud.dart';
 import 'package:darkness_dungeon/gameplay/player/player_character.dart';
@@ -40,7 +41,9 @@ class GameplayHUD extends GameInterface {
   /// Loads all required sprite assets for the HUD
   /// Following Flutter pattern of private utility methods with underscore prefix
   Future<void> _loadAssets() async {
-    _keySprite = await Sprite.load(GameplayUIConstants.kKeyAssetPath);
+    _keySprite = await Sprite.load(
+      GameplaySpriteConstants.kDoorKeyDecorationAssetPath,
+    );
   }
 
   /// Initializes HUD components and adds them to the interface

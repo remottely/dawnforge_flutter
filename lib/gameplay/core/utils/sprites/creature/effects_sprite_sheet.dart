@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 
-import '../../constants/gameplay_sprite_constants.dart';
+import '../../../constants/gameplay_sprite_constants.dart';
 
 /// [EffectsSpriteSheet] responsible for providing sprite animations for visual effects
 /// Following Flutter naming conventions for effects sprite systems

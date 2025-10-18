@@ -210,7 +210,7 @@ Seguindo os padrões do CLAUDE.md, preciso criar um novo arquivo de constantes /
    // Asset Paths
    static const String kGameOverAssetPath = 'assets/game_over.png';
    static const String kHealthUIAssetPath = 'health_ui.png';
-   static const String kKeyAssetPath = 'decorations/door_key_decoration.png';
+   static const String kDoorKeyDecorationAssetPath = 'decorations/door_key_decoration_1.png';
 
    // Colors
    static const Color kTransparentColor = Colors.transparent;

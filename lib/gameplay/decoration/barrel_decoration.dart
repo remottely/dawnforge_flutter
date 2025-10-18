@@ -7,7 +7,7 @@ import 'package:darkness_dungeon/gameplay/decoration/decoration.dart';
 class BarrelDecoration extends DFPushableDecoration {
   BarrelDecoration(Vector2 position)
     : super.withSprite(
-        sprite: Sprite.load('decorations/barrel_decoration.png'),
+        sprite: Sprite.load('decorations/barrel_decoration_1.png'),
         position: position,
         size: Vector2(
           GameplayConstants.kCurrentTileSize,

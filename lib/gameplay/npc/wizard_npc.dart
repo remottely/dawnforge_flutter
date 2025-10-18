@@ -3,8 +3,8 @@ import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/sprites/npc_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/sprites/player_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/sprites/creature/npc_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/sprites/creature/player_sprite_sheet.dart';
 import 'package:darkness_dungeon/presentation/design_system/components/atoms/app_animated_sprite_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

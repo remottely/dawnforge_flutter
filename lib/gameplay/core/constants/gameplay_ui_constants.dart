@@ -97,9 +97,6 @@ class GameplayUIConstants {
   /// Asset path for health UI background sprite
   static const String kHealthUIAssetPath = 'health_ui.png';
 
-  /// Asset path for key icon sprite
-  static const String kKeyAssetPath = 'decorations/door_key_decoration.png';
-
   // =============================================================================
   // UI COLORS
   // =============================================================================

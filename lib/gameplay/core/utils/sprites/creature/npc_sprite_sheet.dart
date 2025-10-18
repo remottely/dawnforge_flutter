@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 
-import '../../constants/gameplay_sprite_constants.dart';
+import '../../../constants/gameplay_sprite_constants.dart';
 
 /// [NpcSpriteSheet] responsible for providing NPC character sprite animations
 /// Following Flutter naming conventions for NPC sprite systems
