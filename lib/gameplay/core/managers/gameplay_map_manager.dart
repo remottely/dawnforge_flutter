@@ -8,7 +8,7 @@ import 'package:darkness_dungeon/gameplay/decoration/barrel_decoration.dart';
 import 'package:darkness_dungeon/gameplay/decoration/door_decoration.dart';
 import 'package:darkness_dungeon/gameplay/decoration/door_key_decoration.dart';
 import 'package:darkness_dungeon/gameplay/decoration/life_potion_decoration.dart';
-import 'package:darkness_dungeon/gameplay/decoration/spikes_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decoration/spike_trap_decoration.dart';
 import 'package:darkness_dungeon/gameplay/decoration/torch_decoration.dart';
 import 'package:darkness_dungeon/gameplay/enemies/dungeon_boss_enemy.dart';
 import 'package:darkness_dungeon/gameplay/enemies/goblin_enemy.dart';
@@ -35,7 +35,7 @@ class GameplayMapManager {
   static const String kLifePotionDecorationType = 'life_potion_decoration';
   static const String kTorchDecorationType = 'torch_decoration';
   static const String kTorchDecorationEmptyType = 'torch_decoration_empty';
-  static const String kSpikesDecorationType = 'spikes_decoration';
+  static const String kSpikeTrapDecorationType = 'spike_trap_decoration';
   static const String kWizardEntityType = 'wizard';
   static const String kKidEntityType = 'kid';
   static const String kBossEntityType = 'boss';
@@ -150,7 +150,7 @@ GameplayMapSensor _createMapSensor(
 /// Following Flutter pattern of comprehensive object mapping
 ///
 /// This method handles factory creation for:
-/// - Interactive decorations (doors, keys, life potions, spikes, torches)
+/// - Interactive decorations (doors, keys, life potions, spike traps, torches)
 /// - Enemy entities (goblins, imps, mini-boss, dungeon boss)
 /// - NPC characters (wizard, kid)
 /// - Position and size mapping from Tiled object properties
@@ -173,8 +173,8 @@ void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
     GameplayMapManager.kTorchDecorationType: (p) => TorchDecoration(p.position),
     GameplayMapManager.kTorchDecorationEmptyType: (p) =>
         TorchDecoration.empty(p.position),
-    GameplayMapManager.kSpikesDecorationType: (p) =>
-        SpikesDecoration(p.position),
+    GameplayMapManager.kSpikeTrapDecorationType: (p) =>
+        SpikeTrapDecoration(p.position),
 
     // Non-player characters
     GameplayMapManager.kWizardEntityType: (p) => WizardNpc(p.position),

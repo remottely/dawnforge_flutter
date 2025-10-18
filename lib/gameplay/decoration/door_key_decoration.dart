@@ -19,7 +19,7 @@ import 'package:darkness_dungeon/gameplay/player/player_character.dart';
 class DoorKeyDecoration extends DFSensorPlayerDecoration {
   // 1. Constantes de configuração
   static const double kDefaultSize = GameplayConstants.kCurrentTileSize;
-  static const String kAssetPath = 'items/key_silver.png';
+  static const String kAssetPath = 'decorations/door_key_decoration.png';
 
   // 2. Variáveis de instância privadas
   final Vector2 _initialPosition;

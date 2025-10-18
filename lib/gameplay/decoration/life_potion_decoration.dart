@@ -20,7 +20,7 @@ class LifePotionDecoration extends DFSensorPlayerDecoration {
   // 1. Constantes de configuração
   static const double kDefaultSize = GameplayConstants.kCurrentTileSize;
   static const Duration kHealingDuration = Duration(seconds: 1);
-  static const String kAssetPath = 'items/potion_red.png';
+  static const String kAssetPath = 'decorations/life_potion_decoration.png';
   static const double kDefaultHealAmount = 50.0;
 
   // 2. Variáveis de instância privadas

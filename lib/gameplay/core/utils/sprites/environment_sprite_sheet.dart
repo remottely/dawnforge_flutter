@@ -8,7 +8,7 @@ class EnvironmentSpriteSheet {
   /// Creates doorDecoration opening animation
   /// Following Flutter pattern of descriptive factory methods
   static Future<SpriteAnimation> openTheDoor() => SpriteAnimation.load(
-    'items/door_open.png',
+    'decorations/door_decoration_opening.png',
     SpriteAnimationData.sequenced(
       amount: GameplaySpriteConstants.kDoorFrames,
       stepTime: GameplaySpriteConstants.kDefaultStepTime,
@@ -16,12 +16,12 @@ class EnvironmentSpriteSheet {
     ),
   );
 
-  /// Creates spikes animation
+  /// Creates spike traps animation
   /// Following Flutter pattern of descriptive factory methods
-  static Future<SpriteAnimation> spikesDecoration() => SpriteAnimation.load(
-    'items/spikes_decoration.png',
+  static Future<SpriteAnimation> spikeTrapDecoration() => SpriteAnimation.load(
+    'decorations/spike_trap_decoration.png',
     SpriteAnimationData.sequenced(
-      amount: GameplaySpriteConstants.kSpikesDecorationFrames,
+      amount: GameplaySpriteConstants.kSpikeTrapDecorationFrames,
       stepTime: GameplaySpriteConstants.kDefaultStepTime,
       textureSize: GameplaySpriteConstants.itemTextureSize,
     ),
@@ -29,8 +29,8 @@ class EnvironmentSpriteSheet {
 
   /// Creates torch flame animation
   /// Following Flutter pattern of descriptive factory methods
-  static Future<SpriteAnimation> torch() => SpriteAnimation.load(
-    'items/torch_decoration_spritesheet.png',
+  static Future<SpriteAnimation> torchDecoration() => SpriteAnimation.load(
+    'decorations/torch_decoration.png',
     SpriteAnimationData.sequenced(
       amount: GameplaySpriteConstants.kTorchDecorationFrames,
       stepTime: GameplaySpriteConstants.kDefaultStepTime,

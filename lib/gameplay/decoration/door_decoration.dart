@@ -22,7 +22,8 @@ import 'package:flutter/cupertino.dart';
 /// ```
 class DoorDecoration extends DFGameDecoration {
   // 1. Constantes de configuração
-  static const String kClosedDoorAsset = 'items/door_closed.png';
+  static const String kClosedDoorAsset =
+      'decorations/door_decoration_locked.png';
   static const String kRequiredKeyMessage = 'door_without_key';
   static const double kHitboxHeightRatio = 0.25;
   static const double kHitboxPositionRatio = 0.75;

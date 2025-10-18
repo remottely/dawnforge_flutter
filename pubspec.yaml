@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.8.3+1
+version: 1.8.4+1
 
 environment:
   sdk: ^3.9.2
@@ -44,7 +44,8 @@ flutter:
     - assets/images/enemy/mini_boss/
     - assets/images/enemy/boss/
     - assets/images/player/
-    - assets/images/items/
+    # - assets/images/items/
+    - assets/images/decorations/
     - assets/images/tiled/
     - assets/audio/
     - assets/l10n/

@@ -210,7 +210,7 @@ Seguindo os padrões do CLAUDE.md, preciso criar um novo arquivo de constantes /
    // Asset Paths
    static const String kGameOverAssetPath = 'assets/game_over.png';
    static const String kHealthUIAssetPath = 'health_ui.png';
-   static const String kKeyAssetPath = 'items/key_silver.png';
+   static const String kKeyAssetPath = 'decorations/door_key_decoration.png';
 
    // Colors
    static const Color kTransparentColor = Colors.transparent;
@@ -549,7 +549,7 @@ Arquivos:
 - /lib/gameplay/decoration/life_potion.dart
 - /lib/gameplay/decoration/key.dart
 - /lib/gameplay/decoration/door.dart
-- /lib/gameplay/decoration/spikes.dart
+- /lib/gameplay/decoration/spike_trap.dart
 - /lib/gameplay/decoration/torch.dart
 
 1. Padronizar estrutura de classes de decoração:
