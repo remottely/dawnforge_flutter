@@ -1,20 +1,20 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
 
-/// [AppAnimatedSpriteWidget] responsible for displaying animated sprites following game's visual theme
+/// [DFAnimatedSpriteWidget] responsible for displaying animated sprites following game's visual theme
 ///
 /// This component provides consistent sprite animation display throughout the application,
 /// supporting custom sizes and proper integration with the Bonfire game engine.
 ///
 /// Usage examples:
 /// ```dart
-/// AppAnimatedSpriteWidget(animation: spriteAnimationFuture)
-/// AppAnimatedSpriteWidget.large(animation: spriteAnimationFuture)
-/// AppAnimatedSpriteWidget.small(animation: spriteAnimationFuture)
+/// DFAnimatedSpriteWidget(animation: spriteAnimationFuture)
+/// DFAnimatedSpriteWidget.large(animation: spriteAnimationFuture)
+/// DFAnimatedSpriteWidget.small(animation: spriteAnimationFuture)
 /// ```
 ///
 /// Following CLAUDE.md patterns for Flutter StatelessWidget components
-class AppAnimatedSpriteWidget extends StatelessWidget {
+class DFAnimatedSpriteWidget extends StatelessWidget {
   // 1. Constantes de configuração
   /// Default size for sprite animations
   static const double kDefaultSize = 100.0;
@@ -37,7 +37,7 @@ class AppAnimatedSpriteWidget extends StatelessWidget {
 
   // 3. Construtor principal
   /// Creates an animated sprite widget with default size
-  const AppAnimatedSpriteWidget({
+  const DFAnimatedSpriteWidget({
     super.key,
     required this.animation,
     this.width = kDefaultSize,
@@ -46,7 +46,7 @@ class AppAnimatedSpriteWidget extends StatelessWidget {
 
   // 4. Factory constructors
   /// Creates a large animated sprite widget
-  const AppAnimatedSpriteWidget.large({
+  const DFAnimatedSpriteWidget.large({
     super.key,
     required this.animation,
     this.width = kLargeSize,
@@ -54,7 +54,7 @@ class AppAnimatedSpriteWidget extends StatelessWidget {
   });
 
   /// Creates a small animated sprite widget
-  const AppAnimatedSpriteWidget.small({
+  const DFAnimatedSpriteWidget.small({
     super.key,
     required this.animation,
     this.width = kSmallSize,

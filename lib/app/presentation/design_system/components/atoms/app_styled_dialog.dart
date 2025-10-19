@@ -1,7 +1,7 @@
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_ui_constants.dart';
-import 'package:darkness_dungeon/presentation/design_system/components/atoms/app_styled_button.dart';
-import 'package:darkness_dungeon/presentation/design_system/components/atoms/app_styled_text.dart';
-import 'package:darkness_dungeon/presentation/design_system/constants/typography_constants.dart';
+import 'package:darkness_dungeon/app/presentation/design_system/components/atoms/app_styled_button.dart';
+import 'package:darkness_dungeon/app/presentation/design_system/components/atoms/app_styled_text.dart';
+import 'package:darkness_dungeon/app/presentation/design_system/constants/typography_constants.dart';
 import 'package:flutter/material.dart';
 
 /// UI component AppStyledDialog for the Darkness Dungeon game

@@ -1,11 +1,12 @@
 import 'dart:async' as async;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/helpers/tile_helper.dart';
+import 'package:darkness_dungeon/gameplay/characters/character_emote.dart';
 import 'package:darkness_dungeon/gameplay/characters/sprites/effects_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/characters/sprites/player_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/helpers/tile_helper.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -74,7 +75,6 @@ class KnightCharacter extends SimplePlayer
   static const int kRangedAttackStaminaCost = 10;
   static const int kStaminaIncrement = 2;
   static const double kVisionRadius = GameplayConstants.kCurrentTileSize * 6;
-  static const String kEmoteAssetPath = 'emote/emote_exclamacao.png';
 
   // 2. Private instance variables
   double _attackDamage = kDefaultAttackDamage;
@@ -230,7 +230,7 @@ class KnightCharacter extends SimplePlayer
       ),
       lightingConfig: LightingConfig(
         radius: GameplayConstants.kCurrentTileSize * 0.9,
-        blurBorder: GameplayConstants.kCurrentTileSize / 2,
+        blurBorder: GameplayConstants.kDefaultTileSize,
         color: Colors.deepOrangeAccent.withOpacity(0.4),
       ),
     );
@@ -282,7 +282,11 @@ class KnightCharacter extends SimplePlayer
       observed: (enemies) {
         if (_isObservingEnemy) return;
         _isObservingEnemy = true;
-        _displayEmoteAbovePlayer();
+        CharacterEmote.displayEmoteAboveCharacter(
+          gameRef: gameRef,
+          target: this,
+          assetPath: CharacterEmote.kExclamationEmoteAssetPath,
+        );
       },
     );
   }
@@ -300,26 +304,5 @@ class KnightCharacter extends SimplePlayer
     if (_currentStamina < 0) {
       _currentStamina = 0;
     }
-  }
-
-  /// Displays animated emote above player character
-  /// Used for visual feedback when observing enemies
-  void _displayEmoteAbovePlayer({String emotePath = kEmoteAssetPath}) {
-    gameRef.add(
-      AnimatedFollowerGameObject(
-        animation: SpriteAnimation.load(
-          emotePath,
-          SpriteAnimationData.sequenced(
-            amount: 8,
-            stepTime: 0.1,
-            textureSize: Vector2(32, 32),
-          ),
-        ),
-        target: this,
-        loop: false,
-        size: Vector2.all(GameplayConstants.kCurrentTileSize / 2),
-        offset: Vector2(18, -6),
-      ),
-    );
   }
 }

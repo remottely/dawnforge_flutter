@@ -74,7 +74,7 @@ design_system/
         ├── app_styled_button.dart    # Button components
         ├── app_styled_dialog.dart    # Dialog components
         ├── app_radio_button.dart     # Radio button components
-        └── app_animated_sprite_widget.dart # Animated sprites
+        └── df_animated_sprite_widget.dart # Animated sprites
 ```
 
 ## ⚙️ Core Systems

@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight_character.dart';
+import 'package:darkness_dungeon/gameplay/core/hud/player_vital_stats_hud.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_sprite_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_ui_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/hud/player_vital_stats_hud.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight_character.dart';
 
 /// [GameplayHUD] responsible for managing the main gameplay user interface
 /// Following Flutter naming conventions for HUD interface systems

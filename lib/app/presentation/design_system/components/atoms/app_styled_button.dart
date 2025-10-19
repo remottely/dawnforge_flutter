@@ -1,5 +1,5 @@
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_ui_constants.dart';
-import 'package:darkness_dungeon/presentation/design_system/constants/typography_constants.dart';
+import 'package:darkness_dungeon/app/presentation/design_system/constants/typography_constants.dart';
 import 'package:flutter/material.dart';
 
 /// UI component AppStyledButton for the Darkness Dungeon game

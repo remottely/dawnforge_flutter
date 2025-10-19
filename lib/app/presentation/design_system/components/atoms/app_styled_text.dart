@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/presentation/design_system/constants/typography_constants.dart';
+import 'package:darkness_dungeon/app/presentation/design_system/constants/typography_constants.dart';
 import 'package:flutter/material.dart';
 
 /// UI component AppStyledText for the Darkness Dungeon game

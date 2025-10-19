@@ -1,4 +1,5 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 
 /// [GameplaySpriteConstants] responsible for centralizing sprite animation configuration
 /// Following Flutter naming conventions for game sprite systems
@@ -24,13 +25,15 @@ class GameplaySpriteConstants {
   static const int kFireballExplosionFrames = 6;
 
   // Texture size getters that create Vector2 instances
-  static Vector2 get playerTextureSize => Vector2(16, 16);
-  static Vector2 get enemyTextureSize => Vector2(16, 16);
+  static Vector2 get playerTextureSize => GameplayConstants.kDefaultVectorSize;
+  static Vector2 get enemyTextureSize => GameplayConstants.kDefaultVectorSize;
   static Vector2 get bossTextureSize => Vector2(32, 36);
   static Vector2 get miniBossTextureSize => Vector2(16, 24);
   static Vector2 get npcKidTextureSize => Vector2(16, 22);
   static Vector2 get npcWizardTextureSize => Vector2(16, 22);
-  static Vector2 get effectTextureSize => Vector2(16, 16);
+  static Vector2 get effectTextureSize => GameplayConstants.kDefaultVectorSize;
   static Vector2 get fireballTextureSize => Vector2(23, 23);
-  static Vector2 get explosionTextureSize => Vector2(32, 32);
+  static Vector2 get explosionTextureSize =>
+      GameplayConstants.kCurrentVectorSize;
+  static Vector2 get barrelDecorationTextureSize => Vector2(23, 23);
 }

@@ -782,7 +782,7 @@ Arquivos:
 - /lib/presentation/design_system/components/atoms/app_styled_button.dart
 - /lib/presentation/design_system/components/atoms/app_styled_dialog.dart
 - /lib/presentation/design_system/components/atoms/app_radio_button.dart
-- /lib/presentation/design_system/components/atoms/app_animated_sprite_widget.dart
+- /lib/presentation/design_system/components/atoms/df_animated_sprite_widget.dart
 
 1. Padronizar estrutura dos componentes:
 

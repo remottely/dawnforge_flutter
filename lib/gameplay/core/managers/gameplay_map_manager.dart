@@ -1,22 +1,22 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:bonfire/map/tiled/builder/tiled_world_builder.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_map_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/data/gameplay_map_data.dart';
-import 'package:darkness_dungeon/gameplay/environment/decorations/barrel_decoration.dart';
-import 'package:darkness_dungeon/gameplay/environment/decorations/door_decoration.dart';
-import 'package:darkness_dungeon/gameplay/environment/decorations/door_key_decoration.dart';
-import 'package:darkness_dungeon/gameplay/environment/sensors/map_sensor.dart';
-import 'package:darkness_dungeon/gameplay/environment/decorations/life_potion_decoration.dart';
-import 'package:darkness_dungeon/gameplay/environment/decorations/spike_trap_decoration.dart';
-import 'package:darkness_dungeon/gameplay/environment/decorations/torch_decoration.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss_enemy.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/goblin_enemy.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp_enemy.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/mini_boss_enemy.dart';
-import 'package:darkness_dungeon/gameplay/terrain/farmables/farm_tile.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid_npc.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard_npc.dart';
+import 'package:darkness_dungeon/gameplay/core/data/gameplay_map_data.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_map_constants.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/barrel_decoration.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/door_decoration.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/door_key_decoration.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/life_potion_decoration.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/spike_trap_decoration.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/torch_decoration.dart';
+import 'package:darkness_dungeon/gameplay/environment/sensors/map_sensor.dart';
+import 'package:darkness_dungeon/gameplay/terrain/farmables/farm_tile.dart';
 
 /// [GameplayMapManager] responsible for managing game maps and navigation systems
 /// Following Flutter naming conventions for map management systems
@@ -155,10 +155,10 @@ void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
   final entityBuilders = <String, ObjectBuilder>{
     // Interactive decorations
     GameplayMapManager.kBarrelDecorationType: (p) =>
-        BarrelDecoration(p.position),
+        BarrelDecoration(position: p.position),
 
     GameplayMapManager.kDoorDecorationType: (p) =>
-        DoorDecoration(p.position, p.size),
+        DoorDecoration(position: p.position, size: p.size),
     GameplayMapManager.kDoorKeyDecorationType: (p) =>
         DoorKeyDecoration(p.position),
     GameplayMapManager.kLifePotionDecorationType: (p) => LifePotionDecoration(
@@ -167,11 +167,12 @@ void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
     ),
 
     // Environmental decorations
-    GameplayMapManager.kTorchDecorationType: (p) => TorchDecoration(p.position),
+    GameplayMapManager.kTorchDecorationType: (p) =>
+        TorchDecoration(position: p.position),
     GameplayMapManager.kTorchDecorationEmptyType: (p) =>
-        TorchDecoration.empty(p.position),
+        TorchDecoration.empty(position: p.position),
     GameplayMapManager.kSpikeTrapDecorationType: (p) =>
-        SpikeTrapDecoration(p.position),
+        SpikeTrapDecoration(position: p.position),
 
     // Non-player characters
     GameplayMapManager.kWizardEntityType: (p) => WizardNpc(p.position),

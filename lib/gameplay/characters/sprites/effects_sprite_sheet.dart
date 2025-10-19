@@ -1,6 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-
-import '../../core/utils/constants/gameplay_sprite_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_sprite_constants.dart';
 
 /// [EffectsSpriteSheet] responsible for providing sprite animations for visual effects
 /// Following Flutter naming conventions for effects sprite systems

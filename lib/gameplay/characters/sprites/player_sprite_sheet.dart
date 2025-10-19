@@ -1,6 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-
-import '../../core/utils/constants/gameplay_sprite_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_sprite_constants.dart';
 
 /// [PlayerSpriteSheet] responsible for providing player character sprite animations
 /// Following Flutter naming conventions for player sprite systems

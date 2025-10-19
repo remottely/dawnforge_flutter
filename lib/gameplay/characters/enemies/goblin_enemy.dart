@@ -1,9 +1,9 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/helpers/tile_helper.dart';
 import 'package:darkness_dungeon/gameplay/characters/sprites/effects_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/characters/sprites/enemy_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/helpers/tile_helper.dart';
 import 'package:flutter/material.dart';
 
 /// Enemy character Goblin for the Darkness Dungeon game
@@ -125,7 +125,7 @@ class GoblinEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
       AnimatedGameObject(
         animation: EffectsSpriteSheet.smokeExplosion(),
         position: position,
-        size: Vector2(32, 32),
+        size: GameplayConstants.kCurrentVectorSize,
         loop: false,
       ),
     );

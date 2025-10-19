@@ -195,7 +195,7 @@
                  "draworder":"topdown",
                  "id":17,
                  "locked":true,
-                 "name":"Farmable",
+                 "name":"Farmables",
                  "objects":[
                         {
                          "height":16,
@@ -669,7 +669,7 @@
                  "y":0
                 }],
          "locked":true,
-         "name":"Creature",
+         "name":"Creatures",
          "opacity":1,
          "type":"group",
          "visible":true,
