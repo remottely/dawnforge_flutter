@@ -18,20 +18,20 @@ class MiniBossEnemy extends SimpleEnemy
   // 1. Constants (grouped by type)
   static const double kDefaultAttackDamage = 50.0;
   static const double kDefaultLife = 150.0;
-  static const double kDefaultSpeed = GameplayConstants.kCurrentTileSize * 1.5;
+  static const double kDefaultSpeed = GameplayConstants.kCharacterSpeedSlow;
   static const double kCloseVisionRadius =
-      GameplayConstants.kCurrentTileSize * 3;
+      GameplayConstants.kVisionRadiusMedium;
   static const double kLongVisionRadius =
-      GameplayConstants.kCurrentTileSize * 5;
+      GameplayConstants.kVisionRadiusExtraLarge;
   static const int kMeleeAttackInterval = 300;
   static const double kHitboxSizeX = 6.0;
   static const double kHitboxSizeY = 7.0;
   static const double kHitboxPositionX = 2.5;
   static const double kHitboxPositionY = 8.0;
   static const double kAttackEffectSize =
-      GameplayConstants.kCurrentTileSize * 0.62;
+      GameplayConstants.kTileSizeDefault * 0.62;
   static const double kRangedAttackSize =
-      GameplayConstants.kCurrentTileSize * 0.65;
+      GameplayConstants.kTileSizeDefault * 0.65;
   static const double kMeleeDamageReduction = 3.0; // attack / 3
 
   // 2. Private instance variables
@@ -45,8 +45,8 @@ class MiniBossEnemy extends SimpleEnemy
         animation: EnemySpriteSheet.miniBossAnimations(),
         position: _initialPosition,
         size: Vector2(
-          GameplayConstants.kCurrentTileSize * 0.68,
-          GameplayConstants.kCurrentTileSize * 0.93,
+          GameplayConstants.kTileSizeDefault * 0.68,
+          GameplayConstants.kTileSizeDefault * 0.93,
         ),
         speed: kDefaultSpeed,
         life: kDefaultLife,
@@ -131,15 +131,15 @@ class MiniBossEnemy extends SimpleEnemy
       },
       collision: RectangleHitbox(
         size: Vector2(
-          GameplayConstants.kCurrentTileSize / 3,
-          GameplayConstants.kCurrentTileSize / 3,
+          GameplayConstants.kTileSizeDefault / 3,
+          GameplayConstants.kTileSizeDefault / 3,
         ),
         position: Vector2(10, 5),
       ),
       lightingConfig: LightingConfig(
-        radius: GameplayConstants.kCurrentTileSize * 0.9,
-        blurBorder: GameplayConstants.kDefaultTileSize,
-        color: Colors.deepOrangeAccent.withOpacity(0.4),
+        radius: GameplayConstants.kTileSizeDefault * 0.9,
+        blurBorder: GameplayConstants.kTileSizeDefault,
+        color: Colors.deepOrangeAccent.withValues(alpha: 0.4),
       ),
     );
   }
@@ -164,7 +164,7 @@ class MiniBossEnemy extends SimpleEnemy
       AnimatedGameObject(
         animation: EffectsSpriteSheet.smokeExplosion(),
         position: position,
-        size: GameplayConstants.kCurrentVectorSize,
+        size: GameplayConstants.kTileVector2Default,
         loop: false,
       ),
     );

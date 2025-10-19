@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Offline macOS (Debug)",
+      "name": "Offline macOS (Testing)",
       "type": "dart",
       "request": "launch",
       "program": "lib/main.dart",
@@ -18,6 +18,21 @@
         "FLUTTER_TOOL_ANALYTICS_DISABLED": "true"
       },
       "args": ["--no-pub", "--dart-define=GAME_ENVIRONMENT=TESTING"]
+    },
+    {
+      "name": "Offline macOS (Staging)",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "macos",
+      "env": {
+        "PUB_HOSTED_URL": "",
+        "PUB_CACHE_URL": "",
+        "FLUTTER_STORAGE_BASE_URL": "",
+        "FLUTTER_TOOL_ANALYTICS_DISABLED": "true"
+      },
+      "args": ["--no-pub", "--dart-define=GAME_ENVIRONMENT=STAGING"]
     }
     // {
     //   "name": "Chrome (Debug)",

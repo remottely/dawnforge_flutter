@@ -366,7 +366,7 @@ import 'package:darkness_dungeon/presentation/design_system/components/atoms/df_
 
 // Load sprite animation
 Future<SpriteAnimation> knightAnimation = SpriteAnimation.load(
-  'player/knight_idle.png',
+  'gameplay/characters/player/knight_idle.png',
   SpriteAnimationData.sequenced(
     amount: 4,
     stepTime: 0.2,

@@ -6,7 +6,7 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constant
 class GameplaySpriteConstants {
   /// Asset path for key icon sprite
   static const String kDoorKeyDecorationAssetPath =
-      'decorations/door_key_decoration_1.png';
+      'gameplay/environment/decorations/door_key_decoration_1.png';
 
   // Animation timing constants for commonly used configurations
   static const double kDefaultStepTime = 0.1;
@@ -25,15 +25,15 @@ class GameplaySpriteConstants {
   static const int kFireballExplosionFrames = 6;
 
   // Texture size getters that create Vector2 instances
-  static Vector2 get playerTextureSize => GameplayConstants.kDefaultVector2;
-  static Vector2 get enemyTextureSize => GameplayConstants.kDefaultVector2;
+  static Vector2 get playerTextureSize => GameplayConstants.kTileVector2Default;
+  static Vector2 get enemyTextureSize => GameplayConstants.kTileVector2Default;
   static Vector2 get bossTextureSize => Vector2(32, 36);
   static Vector2 get miniBossTextureSize => Vector2(16, 24);
   static Vector2 get npcKidTextureSize => Vector2(16, 22);
   static Vector2 get npcWizardTextureSize => Vector2(16, 22);
-  static Vector2 get effectTextureSize => GameplayConstants.kDefaultVector2;
+  static Vector2 get effectTextureSize => GameplayConstants.kTileVector2Default;
   static Vector2 get fireballTextureSize => Vector2(23, 23);
   static Vector2 get explosionTextureSize =>
-      GameplayConstants.kCurrentVectorSize;
+      GameplayConstants.kTileVector2Default;
   static Vector2 get barrelDecorationTextureSize => Vector2(23, 23);
 }

@@ -28,10 +28,10 @@ class DungeonBossEnemy extends SimpleEnemy
         animation: EnemySpriteSheet.bossAnimations(),
         position: initialPosition,
         size: Vector2(
-          GameplayConstants.kCurrentTileSize * 1.5,
-          GameplayConstants.kCurrentTileSize * 1.7,
+          GameplayConstants.kTileSizeLarge, // 24 > 32
+          GameplayConstants.kTileSizeDefault * 1.7, // 27.2 > 36
         ),
-        speed: GameplayConstants.kCurrentTileSize * 1.5,
+        speed: GameplayConstants.kCharacterSpeedSlow,
         life: 200,
       );
 
@@ -59,7 +59,7 @@ class DungeonBossEnemy extends SimpleEnemy
             onComplete: _showConversation,
           );
         },
-        radiusVision: GameplayConstants.kCurrentTileSize * 6,
+        radiusVision: GameplayConstants.kVisionRadiusUltraLarge,
       );
     }
 
@@ -79,7 +79,7 @@ class DungeonBossEnemy extends SimpleEnemy
       closePlayer: (player) {
         executeAttack();
       },
-      radiusVision: GameplayConstants.kCurrentTileSize * 4,
+      radiusVision: GameplayConstants.kVisionRadiusLarge,
     );
 
     super.update(dt);
@@ -91,7 +91,7 @@ class DungeonBossEnemy extends SimpleEnemy
       AnimatedGameObject(
         animation: EffectsSpriteSheet.explosion(),
         position: this.position,
-        size: GameplayConstants.kCurrentVectorSize,
+        size: GameplayConstants.kTileVector2Default,
         loop: false,
       ),
     );
@@ -135,7 +135,7 @@ class DungeonBossEnemy extends SimpleEnemy
         AnimatedGameObject(
           animation: EffectsSpriteSheet.smokeExplosion(),
           position: positionExplosion,
-          size: GameplayConstants.kCurrentVectorSize,
+          size: GameplayConstants.kTileVector2Default,
           loop: false,
         ),
       );
@@ -147,7 +147,7 @@ class DungeonBossEnemy extends SimpleEnemy
 
   void executeAttack() {
     this.simpleAttackMelee(
-      size: Vector2.all(GameplayConstants.kCurrentTileSize * 0.62),
+      size: Vector2.all(GameplayConstants.kTileSizeDefault * 0.62),
       damage: attackDamage,
       interval: 1500,
       animationRight: EnemySpriteSheet.enemyAttackEffectRight(),
@@ -262,7 +262,7 @@ class DungeonBossEnemy extends SimpleEnemy
       AnimatedGameObject(
         animation: EffectsSpriteSheet.smokeExplosion(),
         position: p,
-        size: Vector2.all(GameplayConstants.kCurrentTileSize),
+        size: GameplayConstants.kTileVector2Default,
         loop: false,
       ),
     );

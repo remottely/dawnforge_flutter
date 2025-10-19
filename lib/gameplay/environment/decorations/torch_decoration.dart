@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 abstract class _TorchData {}
 
 class TorchDecoration extends DFGameDecoration {
-  static const double kDefaultSize = GameplayConstants.kCurrentTileSize;
   static const double kLightRadiusMultiplier = 2.5;
   static const double kBlurBorderMultiplier = 1.0;
   static const double kPulseVariation = 0.1;
@@ -19,7 +18,7 @@ class TorchDecoration extends DFGameDecoration {
     : _isExtinguished = false,
       super.withAnimation(
         animation: DecorationSpriteAnimations.torchDecoration6(),
-        size: Vector2.all(kDefaultSize),
+        size: GameplayConstants.kTileVector2Default,
       ) {
     _setupLighting();
   }
@@ -28,7 +27,7 @@ class TorchDecoration extends DFGameDecoration {
     : _isExtinguished = true,
       super.withAnimation(
         animation: DecorationSpriteAnimations.torchDecoration6(),
-        size: Vector2.all(kDefaultSize),
+        size: GameplayConstants.kTileVector2Default,
       ) {
     _setupLighting();
   }
@@ -46,7 +45,7 @@ class TorchDecoration extends DFGameDecoration {
         radius: width * kLightRadiusMultiplier,
         blurBorder: width * kBlurBorderMultiplier,
         pulseVariation: kPulseVariation,
-        color: Colors.deepOrangeAccent.withOpacity(kLightOpacity),
+        color: Colors.deepOrangeAccent.withValues(alpha: kLightOpacity),
       ),
     );
   }

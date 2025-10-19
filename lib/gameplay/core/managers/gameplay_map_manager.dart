@@ -16,7 +16,7 @@ import 'package:darkness_dungeon/gameplay/environment/decorations/life_potion_de
 import 'package:darkness_dungeon/gameplay/environment/decorations/spike_trap_decoration.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/torch_decoration.dart';
 import 'package:darkness_dungeon/gameplay/environment/sensors/map_sensor.dart';
-import 'package:darkness_dungeon/gameplay/terrain/farmables/farm_tile.dart';
+import 'package:darkness_dungeon/gameplay/terrain/farmable/farm_tile.dart';
 
 /// [GameplayMapManager] responsible for managing game maps and navigation systems
 /// Following Flutter naming conventions for map management systems
@@ -79,7 +79,7 @@ WorldMapByTiled _buildMap({
 }) {
   return WorldMapByTiled(
     WorldMapReader.fromAsset(mapAsset),
-    forceTileSize: Vector2.all(GameplayConstants.kCurrentTileSize),
+    forceTileSize: GameplayConstants.kTileVector2Default,
     objectsBuilder: _createObjectBuilder(sensorIds: sensorIds),
   );
 }
@@ -161,10 +161,8 @@ void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
         DoorDecoration(position: p.position, size: p.size),
     GameplayMapManager.kDoorKeyDecorationType: (p) =>
         DoorKeyDecoration(p.position),
-    GameplayMapManager.kLifePotionDecorationType: (p) => LifePotionDecoration(
-      p.position,
-      GameplayConstants.kLifePotionDecorationHealAmount,
-    ),
+    GameplayMapManager.kLifePotionDecorationType: (p) =>
+        LifePotionDecoration(p.position, LifePotionDecoration.kHealAmount),
 
     // Environmental decorations
     GameplayMapManager.kTorchDecorationType: (p) =>

@@ -1,15 +1,15 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_map_constants.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight_character.dart';
 import 'package:darkness_dungeon/gameplay/core/data/gameplay_map_data.dart';
 import 'package:darkness_dungeon/gameplay/core/hud/gameplay_hud.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_map_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_map_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/app_logger.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/color_helper.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight_character.dart';
 import 'package:darkness_dungeon/gameplay/environment/sensors/map_sensor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -52,7 +52,6 @@ class _GameplayState extends State<Gameplay> {
   static const double kSecondaryActionMarginRight = 160.0;
 
   // Camera Constants
-  static const double kCameraSpeed = 3.0;
   static const int kMaxVisibleTiles = 18;
 
   // 2. Componentes de jogo pré-construídos
@@ -77,10 +76,10 @@ class _GameplayState extends State<Gameplay> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _cameraConfig = CameraConfig(
-      speed: kCameraSpeed,
+      speed: GameplayConstants.kCameraSpeed,
       zoom: getZoomFromMaxVisibleTile(
         context,
-        GameplayConstants.kCurrentTileSize,
+        GameplayConstants.kTileSizeDefault,
         kMaxVisibleTiles,
       ),
     );
@@ -97,7 +96,7 @@ class _GameplayState extends State<Gameplay> {
         MapArguments? mapArguments = arguments as MapArguments?;
         final playerPosition =
             (mapArguments?.playerPosition ?? Vector2(4, 4)) *
-            GameplayConstants.kCurrentTileSize;
+            GameplayConstants.kTileSizeDefault;
 
         // Read background music from Tiled properties (optional field)
         final mapBackgroundMusic = mapItem

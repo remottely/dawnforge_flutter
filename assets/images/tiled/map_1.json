@@ -195,7 +195,7 @@
                  "draworder":"topdown",
                  "id":17,
                  "locked":true,
-                 "name":"Farmables",
+                 "name":"Farmable",
                  "objects":[
                         {
                          "height":16,
@@ -291,7 +291,6 @@
                  "x":0,
                  "y":0
                 }],
-         "locked":true,
          "name":"Terrain",
          "opacity":1,
          "type":"group",
@@ -512,7 +511,6 @@
                  "x":0,
                  "y":0
                 }],
-         "locked":true,
          "name":"Environment",
          "opacity":1,
          "type":"group",
@@ -668,7 +666,6 @@
                  "x":0,
                  "y":0
                 }],
-         "locked":true,
          "name":"Creatures",
          "opacity":1,
          "type":"group",

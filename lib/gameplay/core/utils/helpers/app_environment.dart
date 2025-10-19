@@ -47,7 +47,7 @@ class AppEnvironment {
   /// Performance Settings
   static bool get enablePerformanceOverlay => isDevelopment;
   static bool get enableMemoryProfile => isDevelopment || isTesting;
-  static double get gameSpeed => isTesting ? 1.0 : 1.0;
+  static double get gameSpeed => isTesting ? 4.0 : 1.0;
   static int get maxParticles => isProduction ? 50 : 100;
   static bool get enableShadows => isProduction || isStaging;
   static bool get enableBloom => isProduction || isStaging;

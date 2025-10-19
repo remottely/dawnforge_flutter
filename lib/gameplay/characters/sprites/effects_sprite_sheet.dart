@@ -29,7 +29,7 @@ class EffectsSpriteSheet {
   /// Creates fireball attack animation facing right
   /// Following Flutter pattern of directional animation methods
   static Future<SpriteAnimation> fireBallAttackRight() => SpriteAnimation.load(
-    'player/fireball_right.png',
+    'gameplay/characters/player/fireball_right.png',
     SpriteAnimationData.sequenced(
       amount: GameplaySpriteConstants.kFireballFrames,
       stepTime: GameplaySpriteConstants.kDefaultStepTime,
@@ -40,7 +40,7 @@ class EffectsSpriteSheet {
   /// Creates fireball attack animation facing left
   /// Following Flutter pattern of directional animation methods
   static Future<SpriteAnimation> fireBallAttackLeft() => SpriteAnimation.load(
-    'player/fireball_left.png',
+    'gameplay/characters/player/fireball_left.png',
     SpriteAnimationData.sequenced(
       amount: GameplaySpriteConstants.kFireballFrames,
       stepTime: GameplaySpriteConstants.kDefaultStepTime,
@@ -51,7 +51,7 @@ class EffectsSpriteSheet {
   /// Creates fireball attack animation facing up
   /// Following Flutter pattern of directional animation methods
   static Future<SpriteAnimation> fireBallAttackTop() => SpriteAnimation.load(
-    'player/fireball_top.png',
+    'gameplay/characters/player/fireball_top.png',
     SpriteAnimationData.sequenced(
       amount: GameplaySpriteConstants.kFireballFrames,
       stepTime: GameplaySpriteConstants.kDefaultStepTime,
@@ -62,7 +62,7 @@ class EffectsSpriteSheet {
   /// Creates fireball attack animation facing down
   /// Following Flutter pattern of directional animation methods
   static Future<SpriteAnimation> fireBallAttackBottom() => SpriteAnimation.load(
-    'player/fireball_bottom.png',
+    'gameplay/characters/player/fireball_bottom.png',
     SpriteAnimationData.sequenced(
       amount: GameplaySpriteConstants.kFireballFrames,
       stepTime: GameplaySpriteConstants.kDefaultStepTime,
@@ -73,7 +73,7 @@ class EffectsSpriteSheet {
   /// Creates fireball explosion animation
   /// Following Flutter pattern of descriptive factory methods
   static Future<SpriteAnimation> fireBallExplosion() => SpriteAnimation.load(
-    'player/explosion_fire.png',
+    'gameplay/characters/player/explosion_fire.png',
     SpriteAnimationData.sequenced(
       amount: GameplaySpriteConstants.kFireballExplosionFrames,
       stepTime: GameplaySpriteConstants.kDefaultStepTime,

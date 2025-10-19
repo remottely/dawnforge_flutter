@@ -2,10 +2,12 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_sprite_constants.dart';
 
-class CharacterEmote {
+class CharacterEmoteController {
   static const String kExclamationEmoteAssetPath =
-      'emotes/exclamation_emote_8.png';
-  static const String kQuestionEmoteAssetPath = 'emotes/question_emote_8.png';
+      'gameplay/characters/emotes/exclamation_emote_8.png';
+  static const String kQuestionEmoteAssetPath =
+      'gameplay/characters/emotes/question_emote_8.png';
+  static Vector2 get kEmoteOffset => Vector2(0, -3);
 
   static displayEmoteAboveCharacter({
     required BonfireGameInterface gameRef,
@@ -19,13 +21,13 @@ class CharacterEmote {
           SpriteAnimationData.sequenced(
             amount: 8,
             stepTime: GameplaySpriteConstants.kDefaultStepTime,
-            textureSize: GameplayConstants.kLargeVector2,
+            textureSize: GameplayConstants.kTileVector2ExtraLarge,
           ),
         ),
         target: target,
         loop: false,
-        size: GameplayConstants.kSmallVector2,
-        offset: GameplayConstants.kEmoteOffset,
+        size: GameplayConstants.kTileVector2Small,
+        offset: kEmoteOffset,
       ),
     );
   }

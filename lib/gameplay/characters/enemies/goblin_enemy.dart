@@ -23,14 +23,13 @@ class GoblinEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
   // 1. Constants (grouped by type)
   static const double kDefaultAttackDamage = 25.0;
   static const double kDefaultLife = 120.0;
-  static const double kDefaultSpeed = GameplayConstants.kCurrentTileSize * 1.5;
-  static const double kVisionRadius = GameplayConstants.kCurrentTileSize * 4;
+  static const double kDefaultSpeed = GameplayConstants.kCharacterSpeedSlow;
   static const int kAttackInterval = 800;
   static const double kHitboxSize = 7.0;
   static const double kHitboxPositionX = 3.0;
   static const double kHitboxPositionY = 4.0;
   static const double kAttackEffectSize =
-      GameplayConstants.kCurrentTileSize * 0.62;
+      GameplayConstants.kTileSizeDefault * 0.62;
 
   // 2. Private instance variables
   final Vector2 _initialPosition;
@@ -41,7 +40,7 @@ class GoblinEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
     : super(
         animation: EnemySpriteSheet.goblinAnimations(),
         position: _initialPosition,
-        size: Vector2.all(GameplayConstants.kCurrentTileSize * 0.8),
+        size: Vector2.all(GameplayConstants.kTileSizeDefault * 0.8),
         speed: kDefaultSpeed,
         life: kDefaultLife,
       );
@@ -60,7 +59,7 @@ class GoblinEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
       closePlayer: (player) {
         _executeAttack();
       },
-      radiusVision: kVisionRadius,
+      radiusVision: GameplayConstants.kVisionRadiusLarge,
     );
   }
 
@@ -114,7 +113,7 @@ class GoblinEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
       AnimatedGameObject(
         animation: EffectsSpriteSheet.smokeExplosion(),
         position: position,
-        size: GameplayConstants.kCurrentVectorSize,
+        size: GameplayConstants.kTileVector2Default,
         loop: false,
       ),
     );

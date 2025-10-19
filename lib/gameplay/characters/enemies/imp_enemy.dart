@@ -23,14 +23,13 @@ class ImpEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
   // 1. Constants (grouped by type)
   static const double kDefaultAttackDamage = 10.0;
   static const double kDefaultLife = 80.0;
-  static const double kDefaultSpeed = GameplayConstants.kCurrentTileSize * 2;
-  static const double kVisionRadius = GameplayConstants.kCurrentTileSize * 5;
+  static const double kDefaultSpeed = GameplayConstants.kCharacterSpeedMedium;
   static const int kAttackInterval = 300;
   static const double kHitboxSize = 6.0;
   static const double kHitboxPositionX = 3.0;
   static const double kHitboxPositionY = 5.0;
   static const double kAttackEffectSize =
-      GameplayConstants.kCurrentTileSize * 0.62;
+      GameplayConstants.kTileSizeDefault * 0.62;
 
   // 2. Private instance variables
   final Vector2 _initialPosition;
@@ -41,7 +40,7 @@ class ImpEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
     : super(
         animation: EnemySpriteSheet.impAnimations(),
         position: _initialPosition,
-        size: Vector2.all(GameplayConstants.kCurrentTileSize * 0.8),
+        size: Vector2.all(GameplayConstants.kTileSizeDefault * 0.8),
         speed: kDefaultSpeed,
         life: kDefaultLife,
       );
@@ -57,7 +56,7 @@ class ImpEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
   void update(double dt) {
     super.update(dt);
     seeAndMoveToPlayer(
-      radiusVision: kVisionRadius,
+      radiusVision: GameplayConstants.kVisionRadiusExtraLarge,
       closePlayer: (player) {
         _executeAttack();
       },
@@ -114,7 +113,7 @@ class ImpEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
       AnimatedGameObject(
         animation: EffectsSpriteSheet.smokeExplosion(),
         position: position,
-        size: GameplayConstants.kCurrentVectorSize,
+        size: GameplayConstants.kTileVector2Default,
         loop: false,
       ),
     );

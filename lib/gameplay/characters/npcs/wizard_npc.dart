@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/core/components/df_animated_sprite_widget.dart';
-import 'package:darkness_dungeon/gameplay/characters/character_emote.dart';
+import 'package:darkness_dungeon/gameplay/characters/controllers/character_emote_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/sprites/npc_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/characters/sprites/player_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
@@ -25,7 +25,6 @@ import 'package:flutter/services.dart';
 /// ```
 class WizardNpc extends SimpleNpc {
   // 1. Constantes de configuração
-  static const double kVisionRadius = 2.0;
   static const String kInteractionKey = 'talk_wizard';
   static const double kNpcSizeMultiplierX = 0.8;
   static const double kNpcSizeMultiplierY = 1.0;
@@ -43,8 +42,8 @@ class WizardNpc extends SimpleNpc {
         ),
         position: position,
         size: Vector2(
-          GameplayConstants.kCurrentTileSize * kNpcSizeMultiplierX,
-          GameplayConstants.kCurrentTileSize * kNpcSizeMultiplierY,
+          GameplayConstants.kTileSizeDefault * kNpcSizeMultiplierX,
+          GameplayConstants.kTileSizeDefault * kNpcSizeMultiplierY,
         ),
       );
 
@@ -62,7 +61,7 @@ class WizardNpc extends SimpleNpc {
       seeComponent(
         gameRef.player!,
         observed: _onPlayerDetected,
-        radiusVision: (kVisionRadius * GameplayConstants.kCurrentTileSize),
+        radiusVision: GameplayConstants.kVisionRadiusSmall,
       );
     }
   }
@@ -72,10 +71,10 @@ class WizardNpc extends SimpleNpc {
     if (!_isShowingConversation) {
       gameRef.player!.idle();
       _isShowingConversation = true;
-      CharacterEmote.displayEmoteAboveCharacter(
+      CharacterEmoteController.displayEmoteAboveCharacter(
         gameRef: gameRef,
         target: this,
-        assetPath: CharacterEmote.kQuestionEmoteAssetPath,
+        assetPath: CharacterEmoteController.kQuestionEmoteAssetPath,
       );
       _initializeDialogue();
     }

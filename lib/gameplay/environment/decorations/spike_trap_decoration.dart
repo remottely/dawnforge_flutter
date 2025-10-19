@@ -7,15 +7,17 @@ import 'package:darkness_dungeon/gameplay/environment/sprites/decoration_sprite_
 /// DONE
 class SpikeTrapDecoration extends DFSensorPlayerDecoration {
   final double _damageAmount;
+  static const double kSpikeTrapDecorationDamageAmount =
+      GameplayConstants.kPropertyAmountMedium;
+  static const int kSpikeTrapDecorationPriority = GameplayConstants.kPriority1;
 
   SpikeTrapDecoration({
     required super.position,
-    double damageAmount =
-        GameplayConstants.kDefaultSpikeTrapDecorationDamageAmount,
+    double damageAmount = kSpikeTrapDecorationDamageAmount,
   }) : _damageAmount = damageAmount,
        super.withAnimation(
          animation: DecorationSpriteAnimations.spikeTrapDecoration10(),
-         size: GameplayConstants.kCurrentVectorSize,
+         size: GameplayConstants.kTileVector2Default,
        );
 
   KnightCharacter? _contactedPlayer;
@@ -39,9 +41,8 @@ class SpikeTrapDecoration extends DFSensorPlayerDecoration {
   }
 
   @override
-  int get priority => LayerPriority.getComponentPriority(
-    GameplayConstants.kLayerSpikeTrapDecorationPriority,
-  );
+  int get priority =>
+      LayerPriority.getComponentPriority(kSpikeTrapDecorationPriority);
 
   void _triggerDamage() {
     _contactedPlayer?.handleAttack(AttackOriginEnum.ENEMY, _damageAmount, 0);

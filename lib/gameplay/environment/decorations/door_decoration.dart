@@ -9,7 +9,7 @@ import 'package:flutter/cupertino.dart';
 
 class DoorDecoration extends DFGameDecoration {
   static const String kClosedDoorAsset =
-      'decorations/door_decoration_locked_1.png';
+      'gameplay/environment/decorations/door_decoration_locked_1.png';
   static const String kRequiredKeyMessage = 'door_without_key';
   static const double kHitboxHeightRatio = 0.25;
   static const double kHitboxPositionRatio = 0.75;

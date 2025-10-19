@@ -228,7 +228,7 @@ static const Duration kAnimationDuration = Duration(milliseconds: 300);
 // Game Constants
 static const double kPlayerSpeed = 80.0;
 static const int kMaxEnemies = 10;
-static const String kPlayerAssetPath = 'player/knight.png';
+static const String kPlayerAssetPath = 'gameplay/characters/player/knight.png';
 ```
 
 ### Constant Organization

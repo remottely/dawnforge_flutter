@@ -7,7 +7,7 @@ class NpcSpriteSheet {
   /// Creates kid idle left animation
   /// Following Flutter pattern of descriptive factory methods
   static Future<SpriteAnimation> kidIdleLeft() => SpriteAnimation.load(
-    'npc/kid_idle_left.png',
+    'gameplay/characters/npcs/kid_idle_left.png',
     SpriteAnimationData.sequenced(
       amount: GameplaySpriteConstants.kIdleFrames,
       stepTime: GameplaySpriteConstants.kDefaultStepTime,
@@ -18,7 +18,7 @@ class NpcSpriteSheet {
   /// Creates wizard idle left animation
   /// Following Flutter pattern of descriptive factory methods
   static Future<SpriteAnimation> wizardIdleLeft() => SpriteAnimation.load(
-    'npc/wizard_idle_left.png',
+    'gameplay/characters/npcs/wizard_idle_left.png',
     SpriteAnimationData.sequenced(
       amount: GameplaySpriteConstants.kIdleFrames,
       stepTime: GameplaySpriteConstants.kDefaultStepTime,

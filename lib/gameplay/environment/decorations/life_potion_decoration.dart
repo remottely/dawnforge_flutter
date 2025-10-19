@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight_character.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
 
 /// Interactive decoration LifePotionDecoration for the Darkness Dungeon game
@@ -18,10 +18,11 @@ import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dar
 /// ```
 class LifePotionDecoration extends DFSensorPlayerDecoration {
   // 1. Constantes de configuração
-  static const double kDefaultSize = GameplayConstants.kCurrentTileSize;
   static const Duration kHealingDuration = Duration(seconds: 1);
-  static const String kAssetPath = 'decorations/life_potion_decoration_1.png';
+  static const String kAssetPath =
+      'gameplay/environment/decorations/life_potion_decoration_1.png';
   static const double kDefaultHealAmount = 50.0;
+  static const double kHealAmount = GameplayConstants.kPropertyAmountSmall;
 
   // 2. Variáveis de instância privadas
   final Vector2 _initialPosition;
@@ -34,7 +35,7 @@ class LifePotionDecoration extends DFSensorPlayerDecoration {
       super.withSprite(
         sprite: Sprite.load(kAssetPath),
         position: _initialPosition,
-        size: Vector2.all(kDefaultSize),
+        size: GameplayConstants.kTileVector2Default,
       );
 
   // 4. Métodos públicos principais

@@ -7,7 +7,7 @@ class PlayerSpriteSheet {
   /// Creates player idle right animation
   /// Following Flutter pattern of descriptive factory methods
   static Future<SpriteAnimation> idleRight() => SpriteAnimation.load(
-    'player/knight_idle.png',
+    'gameplay/characters/player/knight_idle.png',
     SpriteAnimationData.sequenced(
       amount: GameplaySpriteConstants.kIdleFrames,
       stepTime: GameplaySpriteConstants.kDefaultStepTime,
@@ -18,7 +18,7 @@ class PlayerSpriteSheet {
   /// Creates player attack effect animation facing down
   /// Following Flutter pattern of directional effect methods
   static Future<SpriteAnimation> attackEffectBottom() => SpriteAnimation.load(
-    'player/atack_effect_bottom.png',
+    'gameplay/characters/player/atack_effect_bottom.png',
     SpriteAnimationData.sequenced(
       amount: GameplaySpriteConstants.kAttackFrames,
       stepTime: GameplaySpriteConstants.kDefaultStepTime,
@@ -29,7 +29,7 @@ class PlayerSpriteSheet {
   /// Creates player attack effect animation facing left
   /// Following Flutter pattern of directional effect methods
   static Future<SpriteAnimation> attackEffectLeft() => SpriteAnimation.load(
-    'player/atack_effect_left.png',
+    'gameplay/characters/player/atack_effect_left.png',
     SpriteAnimationData.sequenced(
       amount: GameplaySpriteConstants.kAttackFrames,
       stepTime: GameplaySpriteConstants.kDefaultStepTime,
@@ -40,7 +40,7 @@ class PlayerSpriteSheet {
   /// Creates player attack effect animation facing right
   /// Following Flutter pattern of directional effect methods
   static Future<SpriteAnimation> attackEffectRight() => SpriteAnimation.load(
-    'player/atack_effect_right.png',
+    'gameplay/characters/player/atack_effect_right.png',
     SpriteAnimationData.sequenced(
       amount: GameplaySpriteConstants.kAttackFrames,
       stepTime: GameplaySpriteConstants.kDefaultStepTime,
@@ -51,7 +51,7 @@ class PlayerSpriteSheet {
   /// Creates player attack effect animation facing up
   /// Following Flutter pattern of directional effect methods
   static Future<SpriteAnimation> attackEffectTop() => SpriteAnimation.load(
-    'player/atack_effect_top.png',
+    'gameplay/characters/player/atack_effect_top.png',
     SpriteAnimationData.sequenced(
       amount: GameplaySpriteConstants.kAttackFrames,
       stepTime: GameplaySpriteConstants.kDefaultStepTime,
@@ -64,7 +64,7 @@ class PlayerSpriteSheet {
   static SimpleDirectionAnimation playerAnimations() =>
       SimpleDirectionAnimation(
         idleLeft: SpriteAnimation.load(
-          'player/knight_idle_left.png',
+          'gameplay/characters/player/knight_idle_left.png',
           SpriteAnimationData.sequenced(
             amount: GameplaySpriteConstants.kPlayerIdleFrames,
             stepTime: GameplaySpriteConstants.kDefaultStepTime,
@@ -73,7 +73,7 @@ class PlayerSpriteSheet {
         ),
         idleRight: idleRight(),
         runLeft: SpriteAnimation.load(
-          'player/knight_run_left.png',
+          'gameplay/characters/player/knight_run_left.png',
           SpriteAnimationData.sequenced(
             amount: GameplaySpriteConstants.kRunFrames,
             stepTime: GameplaySpriteConstants.kDefaultStepTime,
@@ -81,7 +81,7 @@ class PlayerSpriteSheet {
           ),
         ),
         runRight: SpriteAnimation.load(
-          'player/knight_run.png',
+          'gameplay/characters/player/knight_run.png',
           SpriteAnimationData.sequenced(
             amount: GameplaySpriteConstants.kRunFrames,
             stepTime: GameplaySpriteConstants.kDefaultStepTime,

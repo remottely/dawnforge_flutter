@@ -1,24 +1,36 @@
 import 'package:bonfire/bonfire.dart';
 
 class GameplayConstants {
-  static const double kCurrentTileSize = 16; // TODO: NOW - 32 > 16
-  static Vector2 get kCurrentVectorSize => Vector2.all(kDefaultTileSize);
+  /// TILE SIZES
+  static const double kTileSizeSmall = 8;
+  static const double kTileSizeDefault = 16;
+  static const double kTileSizeLarge = 24;
+  static const double kTileSizeExtraLarge = 32;
 
-  static const double kLifePotionDecorationHealAmount = 30.0;
+  static Vector2 get kTileVector2Small => Vector2.all(kTileSizeSmall);
+  static Vector2 get kTileVector2Default => Vector2.all(kTileSizeDefault);
+  static Vector2 get kTileVector2Large => Vector2.all(kTileSizeLarge);
+  static Vector2 get kTileVector2ExtraLarge => Vector2.all(kTileSizeExtraLarge);
 
-  static const double kDefaultSpikeTrapDecorationDamageAmount = 60.0;
-  static const int kLayerSpikeTrapDecorationPriority = 1;
+  /// SPEEDS
+  static const double kCameraSpeed = 3.0;
 
-  /// NEW
-  static const double kSmallTileSize = 8;
-  static Vector2 get kSmallVector2 => Vector2.all(kSmallTileSize);
+  static const double kCharacterSpeedSlow = 24;
+  static const double kCharacterSpeedMedium = 32;
+  static const double kCharacterSpeedFast = 40;
 
-  static const double kDefaultTileSize = 16;
-  static Vector2 get kDefaultVector2 => Vector2.all(kDefaultTileSize);
+  /// AMOUNTS
+  static const double kPropertyAmountSmall = 30;
+  static const double kPropertyAmountMedium = 60;
+  static const double kPropertyAmountLarge = 120;
 
-  static const double kLargeTileSize = 32;
-  static Vector2 get kLargeVector2 => Vector2.all(kLargeTileSize);
+  /// RADIUS VISION
+  static const double kVisionRadiusSmall = 32;
+  static const double kVisionRadiusMedium = 48;
+  static const double kVisionRadiusLarge = 64;
+  static const double kVisionRadiusExtraLarge = 80;
+  static const double kVisionRadiusUltraLarge = 96;
 
-  /// EMOTES
-  static Vector2 get kEmoteOffset => Vector2(0, -3);
+  /// PRIORITIES
+  static const int kPriority1 = 1;
 }

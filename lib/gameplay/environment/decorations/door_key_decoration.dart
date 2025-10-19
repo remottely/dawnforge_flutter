@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight_character.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_sprite_constants.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight_character.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
 
 /// Interactive decoration Key for the Darkness Dungeon game
@@ -19,7 +19,6 @@ import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dar
 /// ```
 class DoorKeyDecoration extends DFSensorPlayerDecoration {
   // 1. Constantes de configuração
-  static const double kDefaultSize = GameplayConstants.kCurrentTileSize;
 
   // 2. Variáveis de instância privadas
   final Vector2 _initialPosition;
@@ -32,7 +31,7 @@ class DoorKeyDecoration extends DFSensorPlayerDecoration {
           GameplaySpriteConstants.kDoorKeyDecorationAssetPath,
         ),
         position: _initialPosition,
-        size: Vector2.all(kDefaultSize),
+        size: GameplayConstants.kTileVector2Default,
       );
 
   // 4. Métodos públicos principais

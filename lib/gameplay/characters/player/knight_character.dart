@@ -1,7 +1,7 @@
 import 'dart:async' as async;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/character_emote.dart';
+import 'package:darkness_dungeon/gameplay/characters/controllers/character_emote_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/sprites/effects_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/characters/sprites/player_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
@@ -73,7 +73,7 @@ class KnightCharacter extends SimplePlayer
   static const int kMeleeAttackStaminaCost = 15;
   static const int kRangedAttackStaminaCost = 10;
   static const int kStaminaIncrement = 2;
-  static const double kVisionRadius = GameplayConstants.kCurrentTileSize * 6;
+  static const double kVisionRadius = GameplayConstants.kVisionRadiusUltraLarge;
 
   // 2. Private instance variables
   double _attackDamage = kDefaultAttackDamage;
@@ -93,16 +93,16 @@ class KnightCharacter extends SimplePlayer
   KnightCharacter(Vector2 position)
     : super(
         animation: PlayerSpriteSheet.playerAnimations(),
-        size: Vector2.all(GameplayConstants.kCurrentTileSize),
+        size: GameplayConstants.kTileVector2Default,
         position: position,
         life: 200,
-        speed: GameplayConstants.kCurrentTileSize * 2.5,
+        speed: GameplayConstants.kTileSizeDefault * 2.5,
       ) {
     setupLighting(
       LightingConfig(
         radius: width * 1.5,
         blurBorder: width,
-        color: Colors.deepOrangeAccent.withOpacity(0.2),
+        color: Colors.deepOrangeAccent.withValues(alpha: 0.2),
       ),
     );
     _initializeControls();
@@ -129,9 +129,9 @@ class KnightCharacter extends SimplePlayer
     removeFromParent();
     gameRef.add(
       DFGameDecoration.withSprite(
-        sprite: Sprite.load('player/crypt.png'),
+        sprite: Sprite.load('gameplay/characters/player/crypt.png'),
         position: Vector2(position.x, position.y),
-        size: Vector2.all(30),
+        size: Vector2.all(30), // TODO: NOW
       ),
     );
     super.onDie();
@@ -185,7 +185,7 @@ class KnightCharacter extends SimplePlayer
     simpleAttackMelee(
       damage: _attackDamage,
       animationRight: PlayerSpriteSheet.attackEffectRight(),
-      size: Vector2.all(GameplayConstants.kCurrentTileSize),
+      size: GameplayConstants.kTileVector2Default,
     );
   }
 
@@ -201,8 +201,8 @@ class KnightCharacter extends SimplePlayer
       animationRight: EffectsSpriteSheet.fireBallAttackRight(),
       animationDestroy: EffectsSpriteSheet.fireBallExplosion(),
       size: Vector2(
-        GameplayConstants.kCurrentTileSize * 0.65,
-        GameplayConstants.kCurrentTileSize * 0.65,
+        GameplayConstants.kTileSizeDefault * 0.65,
+        GameplayConstants.kTileSizeDefault * 0.65,
       ),
       damage: 10,
       speed: speed * 2.5,
@@ -211,15 +211,15 @@ class KnightCharacter extends SimplePlayer
       },
       collision: RectangleHitbox(
         size: Vector2(
-          GameplayConstants.kCurrentTileSize / 3,
-          GameplayConstants.kCurrentTileSize / 3,
+          GameplayConstants.kTileSizeDefault / 3,
+          GameplayConstants.kTileSizeDefault / 3,
         ),
         position: Vector2(10, 5),
       ),
       lightingConfig: LightingConfig(
-        radius: GameplayConstants.kCurrentTileSize * 0.9,
-        blurBorder: GameplayConstants.kDefaultTileSize,
-        color: Colors.deepOrangeAccent.withOpacity(0.4),
+        radius: GameplayConstants.kTileSizeDefault * 0.9,
+        blurBorder: GameplayConstants.kTileSizeDefault,
+        color: Colors.deepOrangeAccent.withValues(alpha: 0.4),
       ),
     );
   }
@@ -270,10 +270,10 @@ class KnightCharacter extends SimplePlayer
       observed: (enemies) {
         if (_isObservingEnemy) return;
         _isObservingEnemy = true;
-        CharacterEmote.displayEmoteAboveCharacter(
+        CharacterEmoteController.displayEmoteAboveCharacter(
           gameRef: gameRef,
           target: this,
-          assetPath: CharacterEmote.kExclamationEmoteAssetPath,
+          assetPath: CharacterEmoteController.kExclamationEmoteAssetPath,
         );
       },
     );

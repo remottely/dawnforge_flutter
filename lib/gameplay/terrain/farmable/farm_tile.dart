@@ -13,16 +13,13 @@ class FarmTile extends DFGameDecoration {
   int daysGrowing = 0;
   bool isWatered = false;
 
-  String currentSprite = 'farm/tile_grass.png';
+  String currentSprite = 'gameplay/terrain/farmable/tile_grass.png';
 
   FarmTile(Vector2 position)
     : super.withSprite(
-        sprite: Sprite.load('farm/tile_watered.png'),
+        sprite: Sprite.load('gameplay/terrain/farmable/tile_watered.png'),
         position: position,
-        size: Vector2(
-          GameplayConstants.kCurrentTileSize,
-          GameplayConstants.kCurrentTileSize,
-        ),
+        size: GameplayConstants.kTileVector2Default,
       );
 
   @override
@@ -33,7 +30,7 @@ class FarmTile extends DFGameDecoration {
       case FarmTool.hoe:
         if (state == TileState.grass) {
           state = TileState.soil;
-          currentSprite = 'farm/tile_soil.png';
+          currentSprite = 'gameplay/terrain/farmable/tile_soil.png';
           _updateSprite();
         }
         break;
@@ -41,7 +38,7 @@ class FarmTile extends DFGameDecoration {
         if (state == TileState.soil) {
           state = TileState.watered;
           isWatered = true;
-          currentSprite = 'farm/tile_watered.png';
+          currentSprite = 'gameplay/terrain/farmable/tile_watered.png';
           _updateSprite();
         }
         break;
@@ -52,7 +49,7 @@ class FarmTile extends DFGameDecoration {
           plantedCrop = null;
           daysGrowing = 0;
           isWatered = false;
-          currentSprite = 'farm/tile_soil.png';
+          currentSprite = 'gameplay/terrain/farmable/tile_soil.png';
           _updateSprite();
         }
         break;
@@ -70,7 +67,7 @@ class FarmTile extends DFGameDecoration {
       state = TileState.planted;
       plantedCrop = crop;
       daysGrowing = 0;
-      currentSprite = 'farm/tile_planted.png';
+      currentSprite = 'gameplay/terrain/farmable/tile_planted.png';
       _updateSprite();
       return true;
     }
@@ -82,7 +79,7 @@ class FarmTile extends DFGameDecoration {
       daysGrowing++;
       if (daysGrowing >= cropDatabase[plantedCrop]!.daysToGrow) {
         state = TileState.grown;
-        currentSprite = 'farm/parsnip_stage4.png';
+        currentSprite = 'gameplay/terrain/farmable/parsnip_stage4.png';
         _updateSprite();
       }
       isWatered = false;
@@ -94,7 +91,7 @@ class FarmTile extends DFGameDecoration {
     plantedCrop = null;
     daysGrowing = 0;
     isWatered = false;
-    currentSprite = 'farm/tile_grass.png';
+    currentSprite = 'gameplay/terrain/farmable/tile_grass.png';
     _updateSprite();
   }
 }
