@@ -54,7 +54,7 @@
 #### ✅ **Classes em PascalCase**
 
 - **Resultado:** 100% conformidade
-- **Verificação:** `AppStyledButton`, `GameplayMapManager`, `PlayerCharacter`
+- **Verificação:** `AppStyledButton`, `GameplayMapManager`, `KnightCharacter`
 
 #### ✅ **Arquivos em snake_case**
 

@@ -1,8 +1,8 @@
-import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/helpers/app_environment.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/foundation.dart';
 
-import '../constants/gameplay_audio_constants.dart';
+import '../utils/constants/gameplay_audio_constants.dart';
 
 /// [GameplayAudioManager] responsible for managing game audio and sound effects
 /// Following Flutter naming conventions for audio manager systems

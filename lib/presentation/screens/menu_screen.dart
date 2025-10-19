@@ -1,10 +1,10 @@
 import 'dart:async' as async;
 
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/characters/sprites/enemy_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/characters/sprites/player_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/sprites/creature/enemy_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/sprites/creature/player_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/gameplay.dart';
 import 'package:darkness_dungeon/presentation/design_system/components/atoms/app_animated_sprite_widget.dart';
 import 'package:darkness_dungeon/presentation/design_system/components/atoms/app_radio_button.dart';
@@ -22,25 +22,10 @@ class MenuScreen extends StatefulWidget {
   State<MenuScreen> createState() => _MenuScreenState();
 }
 
-/// State management for the menu screen following CLAUDE.md patterns
-/// Handles splash screen transitions and character sprite animations
-///
-/// This screen manages:
-/// - Splash screen display and transition
-/// - Character animation carousel
-/// - Control method selection (keyboard/joystick)
-/// - Navigation to gameplay screen
-class _MenuScreenState extends State<MenuScreen> {
+abstract class MenuScreenViewModel extends State<MenuScreen> {
   // 1. Constantes (agrupadas por tipo)
-  static const Duration kAnimationDuration = Duration(milliseconds: 300);
-  static const Duration kCharacterAnimationInterval = Duration(seconds: 2);
-  static const String kBonfireUrl = 'https://pub.dev/packages/bonfire';
-  static const String kKevinKoboriUrl = 'https://github.com/kevinkobori';
-  static const double kCharacterAnimationSize = 100.0;
-  static const double kButtonWidth = 150.0;
-  static const double kButtonMinHeight = 40.0;
-  static const double kKeyboardTipHeight = 80.0;
-  static const double kKeyboardTipWidth = 200.0;
+  final Duration kAnimationDuration = Duration(milliseconds: 300);
+  final Duration kCharacterAnimationInterval = Duration(seconds: 2);
 
   // 2. Variáveis de instância privadas
   bool _isSplashScreenVisible = true;
@@ -61,53 +46,6 @@ class _MenuScreenState extends State<MenuScreen> {
   void dispose() {
     _cleanupResources();
     super.dispose();
-  }
-
-  // 5. Métodos de build
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedSwitcher(
-      duration: kAnimationDuration,
-      child: _isSplashScreenVisible ? _createSplashScreen() : _createMainMenu(),
-    );
-  }
-
-  /// Creates the main menu interface
-  Widget _createMainMenu() {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              const _TitleWidget(),
-              const SizedBox(height: 20),
-              if (_characterSpriteAnimations.isNotEmpty)
-                _CharacterAnimationWidget(
-                  animation:
-                      _characterSpriteAnimations[_currentCharacterSpriteIndex],
-                ),
-              const SizedBox(height: 30),
-              _PlayButtonWidget(onPressed: _navigateToGameplayScreen),
-              const SizedBox(height: 20),
-              _ControlsWidget(onControlMethodChanged: _onControlMethodChanged),
-              const SizedBox(height: 20),
-              if (!Gameplay.useJoystickControls) const _KeyboardTipWidget(),
-            ],
-          ),
-        ),
-      ),
-      bottomNavigationBar: _FooterWidget(onOpenURL: _openExternalURL),
-    );
-  }
-
-  /// Creates the splash screen interface
-  Widget _createSplashScreen() {
-    return FlameSplashScreen(
-      theme: FlameSplashTheme.dark,
-      onFinish: _onSplashScreenCompleted,
-    );
   }
 
   // 6. Event Handlers (agrupados)
@@ -170,6 +108,63 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 }
 
+/// State management for the menu screen following CLAUDE.md patterns
+/// Handles splash screen transitions and character sprite animations
+///
+/// This screen manages:
+/// - Splash screen display and transition
+/// - Character animation carousel
+/// - Control method selection (keyboard/joystick)
+/// - Navigation to gameplay screen
+class _MenuScreenState extends MenuScreenViewModel {
+  // 5. Métodos de build
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedSwitcher(
+      duration: kAnimationDuration,
+      child: _isSplashScreenVisible ? _createSplashScreen() : _createMainMenu(),
+    );
+  }
+
+  /// Creates the main menu interface
+  Widget _createMainMenu() {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const _TitleWidget(),
+              const SizedBox(height: 20),
+              if (_characterSpriteAnimations.isNotEmpty)
+                _CharacterAnimationWidget(
+                  animation:
+                      _characterSpriteAnimations[_currentCharacterSpriteIndex],
+                ),
+              const SizedBox(height: 30),
+              _PlayButtonWidget(onPressed: _navigateToGameplayScreen),
+              const SizedBox(height: 20),
+              _ControlsWidget(onControlMethodChanged: _onControlMethodChanged),
+              const SizedBox(height: 20),
+              if (!Gameplay.useJoystickControls) const _KeyboardTipWidget(),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: _FooterWidget(onOpenURL: _openExternalURL),
+    );
+  }
+
+  /// Creates the splash screen interface
+  Widget _createSplashScreen() {
+    return FlameSplashScreen(
+      theme: FlameSplashTheme.dark,
+      onFinish: _onSplashScreenCompleted,
+    );
+  }
+}
+
 // ========================================
 // PRIVATE WIDGETS FOR PERFORMANCE OPTIMIZATION
 // ========================================
@@ -195,15 +190,17 @@ class _TitleWidget extends StatelessWidget {
 /// Private widget for character animation display
 /// Optimized to prevent unnecessary rebuilds
 class _CharacterAnimationWidget extends StatelessWidget {
-  const _CharacterAnimationWidget({required this.animation});
-
   final Future<SpriteAnimation> animation;
+
+  const _CharacterAnimationWidget({required this.animation});
 
   @override
   Widget build(BuildContext context) {
+    final double kCharacterAnimationSize = 100.0;
+
     return SizedBox(
-      height: _MenuScreenState.kCharacterAnimationSize,
-      width: _MenuScreenState.kCharacterAnimationSize,
+      height: kCharacterAnimationSize,
+      width: kCharacterAnimationSize,
       child: AppAnimatedSpriteWidget(animation: animation),
     );
   }
@@ -212,30 +209,46 @@ class _CharacterAnimationWidget extends StatelessWidget {
 /// Private widget for the play button
 /// Uses const constructor where possible for performance
 class _PlayButtonWidget extends StatelessWidget {
+  final VoidCallback onPressed;
+
   const _PlayButtonWidget({required this.onPressed});
 
-  final VoidCallback onPressed;
+  // final BuildContext context;
+
+  // late final ThemeData _theme = Theme.of(context);
+  // late final ColorScheme _colors = _theme.colorScheme;
+  // late final TextTheme _textTheme = _theme.textTheme;
+
+  static const double kButtonWidth = 150.0;
+  static const double kButtonMinHeight = 40.0;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: _MenuScreenState.kButtonWidth,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          elevation: 3,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-          minimumSize: const Size(100, _MenuScreenState.kButtonMinHeight),
-        ),
-        onPressed: onPressed,
-        child: Text(
-          getString('play_cap'),
-          style: const TextStyle(
-            color: Colors.white,
-            fontFamily: TypographyConstants.kPrimaryFontFamily,
-            fontSize: TypographyConstants.kCaptionFontSize,
+    return Column(
+      children: [
+        AppBar(),
+        SizedBox(
+          width: kButtonWidth,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+              minimumSize: Size(100, kButtonMinHeight),
+            ),
+            onPressed: onPressed,
+            child: Text(
+              getString('play_cap'),
+              style: const TextStyle(
+                color: Colors.white,
+                fontFamily: TypographyConstants.kPrimaryFontFamily,
+                fontSize: TypographyConstants.kCaptionFontSize,
+              ),
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 }
@@ -243,9 +256,9 @@ class _PlayButtonWidget extends StatelessWidget {
 /// Private widget for control method selection
 /// Encapsulates radio button logic for cleaner code
 class _ControlsWidget extends StatelessWidget {
-  const _ControlsWidget({required this.onControlMethodChanged});
-
   final void Function(bool) onControlMethodChanged;
+
+  const _ControlsWidget({required this.onControlMethodChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -275,11 +288,14 @@ class _ControlsWidget extends StatelessWidget {
 class _KeyboardTipWidget extends StatelessWidget {
   const _KeyboardTipWidget();
 
+  static const double kKeyboardTipHeight = 80.0;
+  static const double kKeyboardTipWidth = 200.0;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: _MenuScreenState.kKeyboardTipHeight,
-      width: _MenuScreenState.kKeyboardTipWidth,
+      height: kKeyboardTipHeight,
+      width: kKeyboardTipWidth,
       child: Sprite.load('keyboard_tip.png').asWidget(),
     );
   }
@@ -288,9 +304,12 @@ class _KeyboardTipWidget extends StatelessWidget {
 /// Private widget for footer links and credits
 /// Optimized to prevent unnecessary rebuilds
 class _FooterWidget extends StatelessWidget {
+  final Future<void> Function(String) onOpenURL;
+
   const _FooterWidget({required this.onOpenURL});
 
-  final Future<void> Function(String) onOpenURL;
+  static const String kKevinKoboriUrl = 'https://github.com/kevinkobori';
+  static const String kBonfireUrl = 'https://pub.dev/packages/bonfire';
 
   @override
   Widget build(BuildContext context) {
@@ -315,7 +334,7 @@ class _FooterWidget extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
-                      onOpenURL(_MenuScreenState.kKevinKoboriUrl);
+                      onOpenURL(kKevinKoboriUrl);
                     },
                     child: const Text(
                       'kevinkobori',
@@ -344,7 +363,7 @@ class _FooterWidget extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
-                      onOpenURL(_MenuScreenState.kBonfireUrl);
+                      onOpenURL(kBonfireUrl);
                     },
                     child: const Text(
                       'Bonfire',

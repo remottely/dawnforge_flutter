@@ -355,7 +355,7 @@ class EntityName extends BaseClass {
 
 **Gameplay Entities:**
 
-- PlayerCharacter: "Player character PlayerCharacter for the Darkness Dungeon game / player entity systems"
+- KnightCharacter: "Player character KnightCharacter for the Darkness Dungeon game / player entity systems"
 - GoblinEnemy: "Enemy character Goblin for the Darkness Dungeon game / enemy entity systems"
 - ImpEnemy: "Enemy character Imp for the Darkness Dungeon game / enemy entity systems"
 - WizardNpc: "NPC character Wizard for the Darkness Dungeon game / NPC interaction systems"
@@ -422,7 +422,7 @@ class StandardEntity {
 
 **Classes prioritárias:**
 
-- PlayerCharacter (/lib/gameplay/player/knight.dart)
+- KnightCharacter (/lib/gameplay/player/knight.dart)
 - GoblinEnemy (/lib/gameplay/enemies/goblin_enemy.dart)
 - ImpEnemy (/lib/gameplay/enemies/imp_enemy.dart)
 - MiniBossEnemy (/lib/gameplay/enemies/mini_boss_enemy.dart)
@@ -455,7 +455,7 @@ Seguindo padrões de nomenclatura, preciso padronizar nomes de métodos similare
 
 **Ações de Ataque (Padronizar para executeAttack):**
 
-- PlayerCharacter: executeBasicAttack() → executeAttack()
+- KnightCharacter: executeBasicAttack() → executeAttack()
 - GoblinEnemy: \_executeAttack() → \_executeAttack() (OK, já padrão)
 - ImpEnemy: verificar se usa padrão consistente
 - MiniBossEnemy: verificar se usa padrão consistente
@@ -502,7 +502,7 @@ Seguindo princípios de separação de responsabilidades, preciso eliminar chama
 
 1. **Problemas identificados:**
 
-**PlayerCharacter class - UI calls diretas:**
+**KnightCharacter class - UI calls diretas:**
 
 ```dart
 // ❌ REMOVER: UI direta em classe de gameplay
@@ -523,7 +523,7 @@ GameplayUIManager.showAttackEffect();
 
 ```dart
 // ❌ ANTES: UI direta
-class PlayerCharacter {
+class KnightCharacter {
   void someMethod() {
     showDialog(...);           // Chamada UI direta
     ScaffoldMessenger.of(context).showSnackBar(...);  // UI direta
@@ -531,7 +531,7 @@ class PlayerCharacter {
 }
 
 // ✅ DEPOIS: Via managers
-class PlayerCharacter {
+class KnightCharacter {
   void someMethod() {
     GameplayUIManager.showEffect();      // Via manager
     GameplayUIManager.showMessage();     // Via manager
@@ -597,7 +597,7 @@ flutter analyze
 
 **Ordem de Métodos:**
 
-- [x] PlayerCharacter segue ordem padrão
+- [x] KnightCharacter segue ordem padrão
 - [x] Enemies seguem ordem padrão
 - [x] NPCs seguem ordem padrão
 - [x] Managers seguem ordem padrão
@@ -666,7 +666,7 @@ flutter analyze
 
 ### Método Ordering
 
-- [x] Ordem padrão aplicada em PlayerCharacter
+- [x] Ordem padrão aplicada em KnightCharacter
 - [x] Ordem padrão aplicada em todos Enemies
 - [x] Ordem padrão aplicada em todos NPCs
 - [x] Ordem padrão aplicada em Decorations

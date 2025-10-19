@@ -13,7 +13,7 @@
 
 ### 🔄 Aproveitamento da Base Existente
 
-Todas as funcionalidades atuais do Darkness Dungeon (combate, PlayerCharacter, inimigos, mapas, etc.) serão mantidas integralmente. As novas funcionalidades de farming, social, economia e progressão serão adicionadas como extensões/modos ao jogo existente, sem remover ou alterar o funcionamento do sistema de combate ou qualquer funcionalidade já implementada. O objetivo é transformar o jogo em um Stardew Valley MVP, mas preservando o core dungeon/castle gameplay e combat system.
+Todas as funcionalidades atuais do Darkness Dungeon (combate, KnightCharacter, inimigos, mapas, etc.) serão mantidas integralmente. As novas funcionalidades de farming, social, economia e progressão serão adicionadas como extensões/modos ao jogo existente, sem remover ou alterar o funcionamento do sistema de combate ou qualquer funcionalidade já implementada. O objetivo é transformar o jogo em um Stardew Valley MVP, mas preservando o core dungeon/castle gameplay e combat system.
 **Assets e Sistemas Reutilizáveis:**
 
 **Transformações Necessárias:**
@@ -154,7 +154,7 @@ Todas as funcionalidades atuais do Darkness Dungeon (combate, PlayerCharacter, i
 ```
 lib/
 ├── gameplay/
-│   ├── player/           # PlayerCharacter → FarmPlayer
+│   ├── characters/           # KnightCharacter
 │   ├── farming/          # New: crops, soil, tools
 │   ├── world/            # NPCs, buildings, areas
 │   ├── economy/          # New: shop, inventory, money

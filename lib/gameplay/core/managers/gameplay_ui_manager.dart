@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/constants/gameplay_ui_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_ui_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/presentation/design_system/components/atoms/app_styled_button.dart';
 import 'package:darkness_dungeon/presentation/design_system/components/atoms/app_styled_dialog.dart';

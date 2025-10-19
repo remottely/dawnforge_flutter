@@ -5,11 +5,11 @@
 
 ## 🎯 Objetivo da Etapa
 
-Adicionar o sistema de farming funcional ao Darkness Dungeon, mantendo integralmente o sistema de combate/PlayerCharacter e todas as funcionalidades atuais. O objetivo é estabelecer as fundações para todas as mecânicas agrícolas futuras, sem remover ou substituir o core dungeon/castle gameplay.
+Adicionar o sistema de farming funcional ao Darkness Dungeon, mantendo integralmente o sistema de combate/KnightCharacter e todas as funcionalidades atuais. O objetivo é estabelecer as fundações para todas as mecânicas agrícolas futuras, sem remover ou substituir o core dungeon/castle gameplay.
 
 ## 📋 1.1 Transformação do Core Player
 
-### 🔄 Expansão do PlayerCharacter para Atividades Agrícolas
+### 🔄 Expansão do KnightCharacter para Atividades Agrícolas
 
 #### Arquivos a Modificar/Adicionar:
 
@@ -22,14 +22,14 @@ Adicionar o sistema de farming funcional ao Darkness Dungeon, mantendo integralm
 **1.1.3 Implementação do Sistema de Tools**
 
 ```dart
-// Sistema de ferramentas agrícolas integrado ao PlayerCharacter
+// Sistema de ferramentas agrícolas integrado ao KnightCharacter
 enum FarmTool {
   hand,        // Default - para pickup items
   hoe,         // Para preparar soil
   wateringCan, // Para regar plantas
 }
 
-// Adicionar propriedades e métodos agrícolas à PlayerCharacter
+// Adicionar propriedades e métodos agrícolas à KnightCharacter
 FarmTool currentTool = FarmTool.hand;
 int energy = 100; // Adicionar sistema de energia
 
@@ -266,14 +266,14 @@ class SaveManager {
 
 ## � **PROMPTS PRONTOS PARA IMPLEMENTAÇÃO**
 
-### 🎯 **Prompt 1.1 - Transformação PlayerCharacter → FarmPlayer**
+### 🎯 **Prompt 1.1 - Transformação KnightCharacter → FarmPlayer**
 
 ```
-Preciso transformar o sistema de combate do PlayerCharacter em um sistema de farming. Seguindo o padrão de código existente:
+Preciso transformar o sistema de combate do KnightCharacter em um sistema de farming. Seguindo o padrão de código existente:
 
-Expanda o PlayerCharacter para incluir funcionalidades de farming, mantendo todo o sistema de combate, movimento e animações existentes. Siga os prompts abaixo para adicionar as novas features:
+Expanda o KnightCharacter para incluir funcionalidades de farming, mantendo todo o sistema de combate, movimento e animações existentes. Siga os prompts abaixo para adicionar as novas features:
 
-1. Adicionar sistema de ferramentas agrícolas ao PlayerCharacter:
+1. Adicionar sistema de ferramentas agrícolas ao KnightCharacter:
    - Enum FarmTool: hand, hoe, wateringCan
    - Propriedade currentTool
    - Método useTool() para ações agrícolas
@@ -293,7 +293,7 @@ Expanda o PlayerCharacter para incluir funcionalidades de farming, mantendo todo
    - Adaptar movimento e animações para contexto agrícola, sem perder funcionalidades existentes
 
 Arquivos a modificar:
-- /lib/gameplay/player/player_character.dart (adicionar funcionalidades agrícolas)
+- /lib/gameplay/characters/knight_character.dart (adicionar funcionalidades agrícolas)
 - Manter toda funcionalidade de movimento e combate
 - Implementar tool system completo como adição
 
@@ -416,7 +416,7 @@ Implementar error handling e user feedback apropriados.
 
 ### 📅 **Week 1: Player System**
 
-1. Refactor PlayerCharacter → FarmPlayer
+1. Refactor KnightCharacter → FarmPlayer
 2. Remove combat system
 3. Implement tool system
 4. Adapt movement e animations

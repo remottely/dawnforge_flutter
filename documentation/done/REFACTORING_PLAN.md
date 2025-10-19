@@ -333,14 +333,14 @@ Manter toda a funcionalidade de diálogos, apenas organizando e usando constante
 
 ### 2.1 Refatoração de Entities
 
-#### **Prompt 2.1.1 - Refatoração do PlayerCharacter Player**
+#### **Prompt 2.1.1 - Refatoração do KnightCharacter Player**
 
 Seguindo os padrões do CLAUDE.md, preciso refatorar o arquivo /lib/gameplay/player/knight.dart para melhor organização:
 
 1. Reorganizar estrutura da classe seguindo padrão:
 
    ```dart
-   class PlayerCharacter extends SimplePlayer with Lighting, BlockMovementCollision {
+   class KnightCharacter extends SimplePlayer with Lighting, BlockMovementCollision {
      // 1. Constantes (agrupadas por tipo)
      static const double kDefaultAttackDamage = 25.0;
      static const double kMaxStamina = 100.0;
@@ -734,7 +734,7 @@ Seguindo os padrões do CLAUDE.md, preciso refatorar o arquivo /lib/gameplay/gam
      void _initializeGameComponents() { }
 
      // 6. Métodos de factory de componentes (agrupados)
-     PlayerCharacter _createPlayerWithState(Vector2 position) { }
+     KnightCharacter _createPlayerWithState(Vector2 position) { }
      PlayerController _createFreshController() { }
      PlayerController _createPlayerController() { }
      PlayerController _createJoystickController() { }
@@ -873,7 +873,7 @@ Seguindo os padrões do CLAUDE.md, preciso criar/atualizar a documentação gera
    - GameplayUIManager
    - GameplayMapManager
    - GameplayAudioManager
-   - PlayerCharacter (player)
+   - KnightCharacter (player)
    - Gameplay (main screen)
 
 4. Criar documentação inline seguindo padrão:

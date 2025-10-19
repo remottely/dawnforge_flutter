@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/helpers/app_environment.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

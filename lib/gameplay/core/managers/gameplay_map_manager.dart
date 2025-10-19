@@ -1,22 +1,22 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:bonfire/map/tiled/builder/tiled_world_builder.dart';
-import 'package:darkness_dungeon/gameplay/core/constants/gameplay_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/constants/gameplay_map_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/models/map_model.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/gameplay_map_sensor.dart';
-import 'package:darkness_dungeon/gameplay/decoration/barrel_decoration.dart';
-import 'package:darkness_dungeon/gameplay/decoration/door_decoration.dart';
-import 'package:darkness_dungeon/gameplay/decoration/door_key_decoration.dart';
-import 'package:darkness_dungeon/gameplay/decoration/life_potion_decoration.dart';
-import 'package:darkness_dungeon/gameplay/decoration/spike_trap_decoration.dart';
-import 'package:darkness_dungeon/gameplay/decoration/torch_decoration.dart';
-import 'package:darkness_dungeon/gameplay/enemies/dungeon_boss_enemy.dart';
-import 'package:darkness_dungeon/gameplay/enemies/goblin_enemy.dart';
-import 'package:darkness_dungeon/gameplay/enemies/imp_enemy.dart';
-import 'package:darkness_dungeon/gameplay/enemies/mini_boss_enemy.dart';
-import 'package:darkness_dungeon/gameplay/farming/farm_tile.dart';
-import 'package:darkness_dungeon/gameplay/npc/kid_npc.dart';
-import 'package:darkness_dungeon/gameplay/npc/wizard_npc.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_map_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/data/gameplay_map_data.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/barrel_decoration.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/door_decoration.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/door_key_decoration.dart';
+import 'package:darkness_dungeon/gameplay/environment/sensors/map_sensor.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/life_potion_decoration.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/spike_trap_decoration.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/torch_decoration.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss_enemy.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/goblin_enemy.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/imp_enemy.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/mini_boss_enemy.dart';
+import 'package:darkness_dungeon/gameplay/terrain/farmables/farm_tile.dart';
+import 'package:darkness_dungeon/gameplay/characters/npcs/kid_npc.dart';
+import 'package:darkness_dungeon/gameplay/characters/npcs/wizard_npc.dart';
 
 /// [GameplayMapManager] responsible for managing game maps and navigation systems
 /// Following Flutter naming conventions for map management systems
@@ -53,7 +53,7 @@ class GameplayMapManager {
     final mapBuilders = <String, MapItemBuilder>{};
 
     // Build maps from centralized configuration
-    for (final config in MapModel.allMaps) {
+    for (final config in GameplayMapData.allMaps) {
       mapBuilders[config.id.name] = (context, args) => _createMapItem(config);
     }
 
@@ -62,7 +62,7 @@ class GameplayMapManager {
 
   /// Creates a MapItem from configuration
   /// Following Flutter pattern of factory methods
-  static MapItem _createMapItem(MapModel config) {
+  static MapItem _createMapItem(GameplayMapData config) {
     return MapItem(
       id: config.id.name,
       properties: config.properties,
@@ -119,10 +119,7 @@ void _addSensorBuilders(
 /// - Converting direction strings to Direction enums
 /// - Mapping Tiled properties to GameplayMapSensor objects
 /// - Validating required properties for map transitions
-GameplayMapSensor _createMapSensor(
-  String sensorId,
-  TiledObjectProperties properties,
-) {
+MapSensor _createMapSensor(String sensorId, TiledObjectProperties properties) {
   final positionParts = properties
       .others[GameplayMapConstants.kPlayerPositionPropertyKey]
       .toString()
@@ -132,7 +129,7 @@ GameplayMapSensor _createMapSensor(
     double.parse(positionParts[1]),
   );
 
-  return GameplayMapSensor(
+  return MapSensor(
     id: sensorId,
     position: properties.position,
     size: properties.size,
