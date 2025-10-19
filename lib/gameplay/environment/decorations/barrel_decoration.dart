@@ -2,35 +2,32 @@ import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/helpers/tile_helper.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
 
 /// DONE
-class BarrelDecoration extends DFPushableDecoration {
-  static Future<Sprite> _barrelDecoration1() =>
-      Sprite.load('decorations/barrel_decoration_1.png');
+abstract class _BarrelData {
+  /// DATA
+  static const String _spritePath = 'decorations/barrel_decoration_1.png';
+  static Vector2 get _spriteSize => GameplayConstants.kDefaultVector2;
+  static Vector2 get _hitBoxPosition => Vector2(2, 6);
+  static Vector2 get _hitBoxSize => Vector2(12, 4);
 
+  /// LOAD
+  static Future<Sprite> _loadSprite() => Sprite.load(_spritePath);
+  static FutureOr<void> _loadHitBox(GameComponent target) =>
+      target.add(RectangleHitbox(position: _hitBoxPosition, size: _hitBoxSize));
+}
+
+class BarrelDecoration extends DFPushableDecoration {
   BarrelDecoration({required super.position})
     : super.withSprite(
-        sprite: _barrelDecoration1(),
-        size: GameplayConstants.kCurrentVectorSize,
+        sprite: _BarrelData._loadSprite(),
+        size: _BarrelData._spriteSize,
       );
 
   @override
   Future<void> onLoad() {
-    add(
-      RectangleHitbox(
-        size: Vector2(
-          TileHelper.valueByTileSize(12),
-          TileHelper.valueByTileSize(4),
-        ),
-        position: Vector2(
-          TileHelper.valueByTileSize(2),
-          TileHelper.valueByTileSize(6),
-        ),
-      ),
-    );
-
+    _BarrelData._loadHitBox(this);
     return super.onLoad();
   }
 }

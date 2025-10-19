@@ -6,7 +6,6 @@ import 'package:darkness_dungeon/gameplay/characters/sprites/effects_sprite_shee
 import 'package:darkness_dungeon/gameplay/characters/sprites/player_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/helpers/tile_helper.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -113,18 +112,7 @@ class KnightCharacter extends SimplePlayer
   // 5. Lifecycle methods (onLoad, update, onDie)
   @override
   Future<void> onLoad() {
-    add(
-      RectangleHitbox(
-        size: Vector2(
-          TileHelper.valueByTileSize(8),
-          TileHelper.valueByTileSize(6),
-        ),
-        position: Vector2(
-          TileHelper.valueByTileSize(4),
-          TileHelper.valueByTileSize(9),
-        ),
-      ),
-    );
+    add(RectangleHitbox(size: Vector2(8, 6), position: Vector2(4, 9)));
     return super.onLoad();
   }
 
@@ -177,7 +165,7 @@ class KnightCharacter extends SimplePlayer
     showDamage(
       damage,
       config: TextStyle(
-        fontSize: TileHelper.valueByTileSize(5),
+        fontSize: 5,
         color: Colors.orange,
         fontFamily: 'Normal',
       ),

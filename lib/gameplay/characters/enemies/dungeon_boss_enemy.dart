@@ -12,7 +12,6 @@ import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_loc
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/helpers/tile_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -38,18 +37,7 @@ class DungeonBossEnemy extends SimpleEnemy
 
   @override
   Future<void> onLoad() {
-    add(
-      RectangleHitbox(
-        size: Vector2(
-          TileHelper.valueByTileSize(14),
-          TileHelper.valueByTileSize(16),
-        ),
-        position: Vector2(
-          TileHelper.valueByTileSize(5),
-          TileHelper.valueByTileSize(11),
-        ),
-      ),
-    );
+    add(RectangleHitbox(size: Vector2(14, 16), position: Vector2(5, 11)));
     return super.onLoad();
   }
 
@@ -173,11 +161,7 @@ class DungeonBossEnemy extends SimpleEnemy
   void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
     this.showDamage(
       damage,
-      config: TextStyle(
-        fontSize: TileHelper.valueByTileSize(5),
-        color: Colors.white,
-        fontFamily: 'Normal',
-      ),
+      config: TextStyle(fontSize: 5, color: Colors.white, fontFamily: 'Normal'),
     );
     super.onReceiveDamage(attacker, damage, id);
   }

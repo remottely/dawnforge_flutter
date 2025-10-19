@@ -3,7 +3,6 @@ import 'package:darkness_dungeon/gameplay/characters/sprites/effects_sprite_shee
 import 'package:darkness_dungeon/gameplay/characters/sprites/enemy_sprite_sheet.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/helpers/tile_helper.dart';
 import 'package:flutter/material.dart';
 
 /// Mini Boss enemy character for the Darkness Dungeon game
@@ -97,11 +96,7 @@ class MiniBossEnemy extends SimpleEnemy
   void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
     showDamage(
       damage,
-      config: TextStyle(
-        fontSize: TileHelper.valueByTileSize(5),
-        color: Colors.white,
-        fontFamily: 'Normal',
-      ),
+      config: TextStyle(fontSize: 5, color: Colors.white, fontFamily: 'Normal'),
     );
     super.onReceiveDamage(attacker, damage, id);
   }
@@ -113,14 +108,8 @@ class MiniBossEnemy extends SimpleEnemy
   void _initializeHitbox() {
     add(
       RectangleHitbox(
-        size: Vector2(
-          TileHelper.valueByTileSize(kHitboxSizeX),
-          TileHelper.valueByTileSize(kHitboxSizeY),
-        ),
-        position: Vector2(
-          TileHelper.valueByTileSize(kHitboxPositionX),
-          TileHelper.valueByTileSize(kHitboxPositionY),
-        ),
+        size: Vector2(kHitboxSizeX, kHitboxSizeY),
+        position: Vector2(kHitboxPositionX, kHitboxPositionY),
       ),
     );
   }

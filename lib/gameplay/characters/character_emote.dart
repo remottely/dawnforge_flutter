@@ -19,12 +19,12 @@ class CharacterEmote {
           SpriteAnimationData.sequenced(
             amount: 8,
             stepTime: GameplaySpriteConstants.kDefaultStepTime,
-            textureSize: GameplayConstants.kLargeVectorSize,
+            textureSize: GameplayConstants.kLargeVector2,
           ),
         ),
         target: target,
         loop: false,
-        size: GameplayConstants.kSmallVectorSize,
+        size: GameplayConstants.kSmallVector2,
         offset: GameplayConstants.kEmoteOffset,
       ),
     );

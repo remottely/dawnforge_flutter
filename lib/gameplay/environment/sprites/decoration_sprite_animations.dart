@@ -19,7 +19,7 @@ class DecorationSpriteAnimations {
         SpriteAnimationData.sequenced(
           amount: 10,
           stepTime: GameplaySpriteConstants.kDefaultStepTime,
-          textureSize: GameplayConstants.kDefaultVectorSize,
+          textureSize: GameplayConstants.kDefaultVector2,
         ),
       );
 
@@ -28,7 +28,7 @@ class DecorationSpriteAnimations {
     SpriteAnimationData.sequenced(
       amount: 6,
       stepTime: GameplaySpriteConstants.kDefaultStepTime,
-      textureSize: GameplayConstants.kDefaultVectorSize,
+      textureSize: GameplayConstants.kDefaultVector2,
     ),
   );
 }

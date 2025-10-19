@@ -4,6 +4,8 @@ import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dar
 import 'package:darkness_dungeon/gameplay/environment/sprites/decoration_sprite_animations.dart';
 import 'package:flutter/material.dart';
 
+abstract class _TorchData {}
+
 class TorchDecoration extends DFGameDecoration {
   static const double kDefaultSize = GameplayConstants.kCurrentTileSize;
   static const double kLightRadiusMultiplier = 2.5;

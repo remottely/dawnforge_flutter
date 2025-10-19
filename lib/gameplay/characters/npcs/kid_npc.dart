@@ -6,7 +6,6 @@ import 'package:darkness_dungeon/gameplay/characters/sprites/player_sprite_sheet
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/helpers/tile_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -43,10 +42,7 @@ class KidNpc extends SimpleNpc {
           runRight: NpcSpriteSheet.kidIdleLeft(),
         ),
         position: position,
-        size: Vector2(
-          TileHelper.valueByTileSize(kNpcSizeMultiplierX),
-          TileHelper.valueByTileSize(kNpcSizeMultiplierY),
-        ),
+        size: Vector2(kNpcSizeMultiplierX, kNpcSizeMultiplierY),
       );
 
   // 4. Métodos públicos principais
