@@ -2,131 +2,91 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_sprite_constants.dart';
 
 class EnemySpriteAnimations {
-  static Future<SpriteAnimation> enemyAttackEffectRight() =>
+  /// ATTACK EFFECTS
+  static Future<SpriteAnimation> enemyMeleeAttackEffect1Right3() =>
       SpriteAnimation.load(
-        'gameplay/characters/enemies/attack_effect_right_3.png',
+        'gameplay/characters/enemies/enemy_melee_attack_effect_1_right_3.png',
         GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
           amount: GameplaySpriteConstants.kAttackFrames,
           textureSize: GameplaySpriteConstants.effectTextureSize,
         ),
       );
 
-  static Future<SpriteAnimation>
-  dungeonBossIdleRight4() => SpriteAnimation.load(
-    'gameplay/characters/enemies/dungeon_boss/dungeon_boss_idle_right_4.png',
-    GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
-      amount: GameplaySpriteConstants.kIdleFrames,
-      textureSize: GameplaySpriteConstants.bossTextureSize,
-    ),
-  );
+  /// GOBLIN
+  static Future<SpriteAnimation> goblinEnemyIdleRight6() =>
+      SpriteAnimation.load(
+        'gameplay/characters/enemies/goblin/goblin_enemy_idle_right_6.png',
+        GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
+          amount: GameplaySpriteConstants.kGoblinIdleFrames,
+          textureSize: GameplaySpriteConstants.enemyTextureSize,
+        ),
+      );
 
-  static SimpleDirectionAnimation
-  dungeonBossAnimation() => SimpleDirectionAnimation(
-    idleLeft: SpriteAnimation.load(
-      'gameplay/characters/enemies/dungeon_boss/dungeon_boss_idle_left_4.png',
-      GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
-        amount: GameplaySpriteConstants.kIdleFrames,
-        textureSize: GameplaySpriteConstants.bossTextureSize,
-      ),
-    ),
-    idleRight: dungeonBossIdleRight4(),
-    runLeft: SpriteAnimation.load(
-      'gameplay/characters/enemies/dungeon_boss/dungeon_boss_run_left_4.png',
-      GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
-        amount: GameplaySpriteConstants.kIdleFrames,
-        textureSize: GameplaySpriteConstants.bossTextureSize,
-      ),
-    ),
-    runRight: SpriteAnimation.load(
-      'gameplay/characters/enemies/dungeon_boss/dungeon_boss_run_right_4.png',
-      GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
-        amount: GameplaySpriteConstants.kIdleFrames,
-        textureSize: GameplaySpriteConstants.bossTextureSize,
-      ),
-    ),
-  );
+  static SimpleDirectionAnimation goblinEnemyAnimation() =>
+      SimpleDirectionAnimation(
+        idleLeft: SpriteAnimation.load(
+          'gameplay/characters/enemies/goblin/goblin_enemy_idle_left_6.png',
+          GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
+            amount: GameplaySpriteConstants.kGoblinIdleFrames,
+            textureSize: GameplaySpriteConstants.enemyTextureSize,
+          ),
+        ),
+        idleRight: goblinEnemyIdleRight6(),
+        runLeft: SpriteAnimation.load(
+          'gameplay/characters/enemies/goblin/goblin_enemy_run_left_6.png',
+          GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
+            amount: GameplaySpriteConstants.kRunFrames,
+            textureSize: GameplaySpriteConstants.enemyTextureSize,
+          ),
+        ),
+        runRight: SpriteAnimation.load(
+          'gameplay/characters/enemies/goblin/goblin_enemy_run_right_6.png',
+          GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
+            amount: GameplaySpriteConstants.kRunFrames,
+            textureSize: GameplaySpriteConstants.enemyTextureSize,
+          ),
+        ),
+      );
 
-  static Future<SpriteAnimation> goblinIdleRight() => SpriteAnimation.load(
-    'gameplay/characters/enemies/goblin/goblin_idle.png',
-    GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
-      amount: GameplaySpriteConstants.kGoblinIdleFrames,
-      textureSize: GameplaySpriteConstants.enemyTextureSize,
-    ),
-  );
-
-  static SimpleDirectionAnimation goblinAnimation() => SimpleDirectionAnimation(
-    idleLeft: SpriteAnimation.load(
-      'gameplay/characters/enemies/goblin/goblin_idle_left.png',
-      GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
-        amount: GameplaySpriteConstants.kGoblinIdleFrames,
-        textureSize: GameplaySpriteConstants.enemyTextureSize,
-      ),
-    ),
-    idleRight: SpriteAnimation.load(
-      'gameplay/characters/enemies/goblin/goblin_idle.png',
-      GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
-        amount: GameplaySpriteConstants.kGoblinIdleFrames,
-        textureSize: GameplaySpriteConstants.enemyTextureSize,
-      ),
-    ),
-    runLeft: SpriteAnimation.load(
-      'gameplay/characters/enemies/goblin/goblin_run_left.png',
-      GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
-        amount: GameplaySpriteConstants.kRunFrames,
-        textureSize: GameplaySpriteConstants.enemyTextureSize,
-      ),
-    ),
-    runRight: SpriteAnimation.load(
-      'gameplay/characters/enemies/goblin/goblin_run_right.png',
-      GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
-        amount: GameplaySpriteConstants.kRunFrames,
-        textureSize: GameplaySpriteConstants.enemyTextureSize,
-      ),
-    ),
-  );
-
-  static Future<SpriteAnimation> impIdleRight() => SpriteAnimation.load(
-    'gameplay/characters/enemies/imp/imp_idle.png',
+  /// IMP
+  static Future<SpriteAnimation> impEnemyIdleRight4() => SpriteAnimation.load(
+    'gameplay/characters/enemies/imp/imp_enemy_idle_right_4.png',
     GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
       amount: GameplaySpriteConstants.kIdleFrames,
       textureSize: GameplaySpriteConstants.enemyTextureSize,
     ),
   );
 
-  static SimpleDirectionAnimation impAnimation() => SimpleDirectionAnimation(
-    idleLeft: SpriteAnimation.load(
-      'gameplay/characters/enemies/imp/imp_idle_left.png',
-      GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
-        amount: GameplaySpriteConstants.kIdleFrames,
-        textureSize: GameplaySpriteConstants.enemyTextureSize,
-      ),
-    ),
-    idleRight: SpriteAnimation.load(
-      'gameplay/characters/enemies/imp/imp_idle.png',
-      GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
-        amount: GameplaySpriteConstants.kIdleFrames,
-        textureSize: GameplaySpriteConstants.enemyTextureSize,
-      ),
-    ),
-    runLeft: SpriteAnimation.load(
-      'gameplay/characters/enemies/imp/imp_run_left.png',
-      GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
-        amount: GameplaySpriteConstants.kIdleFrames,
-        textureSize: GameplaySpriteConstants.enemyTextureSize,
-      ),
-    ),
-    runRight: SpriteAnimation.load(
-      'gameplay/characters/enemies/imp/imp_run_right.png',
-      GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
-        amount: GameplaySpriteConstants.kIdleFrames,
-        textureSize: GameplaySpriteConstants.enemyTextureSize,
-      ),
-    ),
-  );
+  static SimpleDirectionAnimation impEnemyAnimation() =>
+      SimpleDirectionAnimation(
+        idleLeft: SpriteAnimation.load(
+          'gameplay/characters/enemies/imp/imp_enemy_idle_left_4.png',
+          GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
+            amount: GameplaySpriteConstants.kIdleFrames,
+            textureSize: GameplaySpriteConstants.enemyTextureSize,
+          ),
+        ),
+        idleRight: impEnemyIdleRight4(),
+        runLeft: SpriteAnimation.load(
+          'gameplay/characters/enemies/imp/imp_enemy_run_left_4.png',
+          GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
+            amount: GameplaySpriteConstants.kIdleFrames,
+            textureSize: GameplaySpriteConstants.enemyTextureSize,
+          ),
+        ),
+        runRight: SpriteAnimation.load(
+          'gameplay/characters/enemies/imp/imp_enemy_run_right_4.png',
+          GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
+            amount: GameplaySpriteConstants.kIdleFrames,
+            textureSize: GameplaySpriteConstants.enemyTextureSize,
+          ),
+        ),
+      );
 
+  /// DUNGEON MINI BOSS
   static Future<SpriteAnimation>
-  dungeonMiniBossIdleRight() => SpriteAnimation.load(
-    'gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_idle_right_4.png',
+  dungeonMiniBossEnemyIdleRight4() => SpriteAnimation.load(
+    'gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_idle_right_4.png',
     GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
       amount: GameplaySpriteConstants.kIdleFrames,
       textureSize: GameplaySpriteConstants.miniBossTextureSize,
@@ -134,24 +94,24 @@ class EnemySpriteAnimations {
   );
 
   static SimpleDirectionAnimation
-  miniBossAnimation() => SimpleDirectionAnimation(
+  dungeonMiniBossEnemyAnimation() => SimpleDirectionAnimation(
     idleLeft: SpriteAnimation.load(
-      'gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_idle_left_4.png',
+      'gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_idle_left_4.png',
       GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
         amount: GameplaySpriteConstants.kIdleFrames,
         textureSize: GameplaySpriteConstants.miniBossTextureSize,
       ),
     ),
-    idleRight: dungeonMiniBossIdleRight(),
+    idleRight: dungeonMiniBossEnemyIdleRight4(),
     runLeft: SpriteAnimation.load(
-      'gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_run_left_4.png',
+      'gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_run_left_4.png',
       GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
         amount: GameplaySpriteConstants.kIdleFrames,
         textureSize: GameplaySpriteConstants.miniBossTextureSize,
       ),
     ),
     runRight: SpriteAnimation.load(
-      'gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_run_right_4.png',
+      'gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_run_right_4.png',
       GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
         amount: GameplaySpriteConstants.kIdleFrames,
         textureSize: GameplaySpriteConstants.miniBossTextureSize,
@@ -159,32 +119,39 @@ class EnemySpriteAnimations {
     ),
   );
 
-  // static Future<SpriteAnimation> enemyAttackEffectBottom() =>
-  //     SpriteAnimation.load(
-  //       'gameplay/characters/enemies/attack_effect_bottom_3.png',
-  //       GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
-  //         amount: GameplaySpriteConstants.kAttackFrames,
-  //
-  //         textureSize: GameplaySpriteConstants.effectTextureSize,
-  //       ),
-  //     );
-  //
-  // static Future<SpriteAnimation> enemyAttackEffectLeft() =>
-  //     SpriteAnimation.load(
-  //       'gameplay/characters/enemies/attack_effect_left_3.png',
-  //       GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
-  //         amount: GameplaySpriteConstants.kAttackFrames,
-  //
-  //         textureSize: GameplaySpriteConstants.effectTextureSize,
-  //       ),
-  //     );
+  /// DUNGEON BOSS
+  static Future<SpriteAnimation>
+  dungeonBossEnemyIdleRight4() => SpriteAnimation.load(
+    'gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_idle_right_4.png',
+    GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
+      amount: GameplaySpriteConstants.kIdleFrames,
+      textureSize: GameplaySpriteConstants.bossTextureSize,
+    ),
+  );
 
-  // static Future<SpriteAnimation> enemyAttackEffectTop() => SpriteAnimation.load(
-  //   'gameplay/characters/enemies/attack_effect_top_3.png',
-  //   GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
-  //     amount: GameplaySpriteConstants.kAttackFrames,
-  //
-  //     textureSize: GameplaySpriteConstants.effectTextureSize,
-  //   ),
-  // );
+  static SimpleDirectionAnimation
+  dungeonBossEnemyAnimation() => SimpleDirectionAnimation(
+    idleLeft: SpriteAnimation.load(
+      'gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_idle_left_4.png',
+      GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
+        amount: GameplaySpriteConstants.kIdleFrames,
+        textureSize: GameplaySpriteConstants.bossTextureSize,
+      ),
+    ),
+    idleRight: dungeonBossEnemyIdleRight4(),
+    runLeft: SpriteAnimation.load(
+      'gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_run_left_4.png',
+      GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
+        amount: GameplaySpriteConstants.kIdleFrames,
+        textureSize: GameplaySpriteConstants.bossTextureSize,
+      ),
+    ),
+    runRight: SpriteAnimation.load(
+      'gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_run_right_4.png',
+      GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
+        amount: GameplaySpriteConstants.kIdleFrames,
+        textureSize: GameplaySpriteConstants.bossTextureSize,
+      ),
+    ),
+  );
 }

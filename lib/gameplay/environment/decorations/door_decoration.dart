@@ -85,7 +85,7 @@ class DoorDecoration extends DFGameDecoration {
       [
         Say(
           text: [TextSpan(text: getString(kRequiredKeyMessage))],
-          person: PlayerSpriteAnimations.knightIdleRight6().asWidget(),
+          person: PlayerSpriteAnimations.knightPlayerIdleRight6().asWidget(),
           personSayDirection: PersonSayDirection.LEFT,
         ),
       ],

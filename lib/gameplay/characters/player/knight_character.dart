@@ -10,24 +10,8 @@ import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dar
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-// Enum para ferramentas agrícolas
 enum FarmTool { hand, hoe, wateringCan }
 
-/// Player character KnightCharacter for the Darkness Dungeon game
-/// Following Flutter naming conventions for player entity systems
-///
-/// This class handles:
-/// - Player movement and collision detection
-/// - Attack system with melee and ranged attacks
-/// - Stamina management with automatic regeneration
-/// - Enemy observation and interaction system
-/// - Visual effects and lighting configuration
-///
-/// Usage patterns:
-/// ```dart
-/// final knight = KnightCharacter(position);
-/// knight.onLoad();
-/// ```
 class KnightCharacter extends SimplePlayer
     with Lighting, BlockMovementCollision {
   // Sistema de ferramentas agrícolas
@@ -79,24 +63,21 @@ class KnightCharacter extends SimplePlayer
   static const int kStaminaIncrement = 2;
   static const double kVisionRadius = GameplayConstants.kVisionRadiusUltraLarge;
 
-  // 2. Private instance variables
   double _attackDamage = kDefaultAttackDamage;
   double _currentStamina = kMaxStamina;
   async.Timer? _staminaRegenerationTimer;
   bool _hasKey = false;
   bool _isObservingEnemy = false;
 
-  // 3. Public getters/setters
   double get attackDamage => _attackDamage;
   double get currentStamina => _currentStamina;
   bool get hasKey => _hasKey;
   bool get isObservingEnemy => _isObservingEnemy;
   set hasKey(bool value) => _hasKey = value;
 
-  // 4. Constructor
   KnightCharacter(Vector2 position)
     : super(
-        animation: PlayerSpriteAnimations.knightAnimation(),
+        animation: PlayerSpriteAnimations.knightPlayerAnimation(),
         size: GameplayConstants.kTileVector2Default,
         position: position,
         life: 200,
@@ -110,10 +91,8 @@ class KnightCharacter extends SimplePlayer
       ),
     );
     _initializeControls();
-    _initializeStamina();
   }
 
-  // 5. Lifecycle methods (onLoad, update, onDie)
   @override
   Future<void> onLoad() {
     add(RectangleHitbox(size: Vector2(8, 6), position: Vector2(4, 9)));
@@ -133,7 +112,7 @@ class KnightCharacter extends SimplePlayer
     removeFromParent();
     gameRef.add(
       DFGameDecoration.withSprite(
-        sprite: Sprite.load('gameplay/characters/player/crypt_1.png'),
+        sprite: Sprite.load('gameplay/characters/player/player_crypt_1.png'),
         position: Vector2(position.x, position.y),
         size: Vector2.all(30), // TODO: NOW
       ),
@@ -177,23 +156,20 @@ class KnightCharacter extends SimplePlayer
     super.onReceiveDamage(attacker, damage, id);
   }
 
-  // 6. Public action methods (execute*, trigger*, handle*)
-  /// Executes basic melee attack if player has sufficient stamina
   void executeAttack() {
     if (_currentStamina < kMeleeAttackStaminaCost) {
       return;
     }
 
-    _executeAttack();
+    GameplayAudioManager.playAttackPlayerMelee();
     _decrementStamina(kMeleeAttackStaminaCost);
     simpleAttackMelee(
       damage: _attackDamage,
-      animationRight: PlayerSpriteAnimations.attackEffectRight3(),
+      animationRight: PlayerSpriteAnimations.playerMeleeAttackEffectRight3(),
       size: GameplayConstants.kTileVector2Default,
     );
   }
 
-  /// Executes ranged fireball attack if player has sufficient stamina
   void _executeRangedAttack(double damage) {
     if (_currentStamina < kRangedAttackStaminaCost) {
       return;
@@ -227,27 +203,14 @@ class KnightCharacter extends SimplePlayer
     );
   }
 
-  /// Public method for external stamina decrement (backwards compatibility)
   void decrementStamina(int amount) {
     _decrementStamina(amount);
   }
 
-  // 7. Private helper methods (grouped by functionality)
-
-  // Setup/Initialization methods
-  /// Sets up player movement controls and joystick configuration
   void _initializeControls() {
     setupMovementByJoystick(intensityEnabled: true);
   }
 
-  /// Initializes stamina regeneration system
-  void _initializeStamina() {
-    // Stamina regeneration is handled in the update loop
-  }
-
-  // Processing/Updates methods
-  /// Handles stamina regeneration over time
-  /// Regenerates stamina at a constant rate when not at maximum
   void _handleStamina() {
     if (_staminaRegenerationTimer == null) {
       _staminaRegenerationTimer = async.Timer(Duration(milliseconds: 150), () {
@@ -263,7 +226,6 @@ class KnightCharacter extends SimplePlayer
     }
   }
 
-  /// Handles movement-related effects like enemy observation
   void _handleMovementEffects() {
     seeEnemy(
       radiusVision: kVisionRadius,
@@ -282,14 +244,6 @@ class KnightCharacter extends SimplePlayer
     );
   }
 
-  /// Executes attack sound effect and visual feedback
-  void _executeAttack() {
-    GameplayAudioManager.playAttackPlayerMelee();
-  }
-
-  // 8. Utility methods
-  /// Decrements player stamina by specified amount
-  /// Ensures stamina doesn't go below zero
   void _decrementStamina(int amount) {
     _currentStamina -= amount;
     if (_currentStamina < 0) {

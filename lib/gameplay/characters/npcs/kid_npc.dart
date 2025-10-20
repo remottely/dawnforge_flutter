@@ -89,7 +89,7 @@ class KidNpc extends SimpleNpc {
       Say(
         text: [TextSpan(text: getString('talk_player_4'))],
         person: DFAnimatedSpriteWidget(
-          animation: PlayerSpriteAnimations.knightIdleRight6(),
+          animation: PlayerSpriteAnimations.knightPlayerIdleRight6(),
         ),
         personSayDirection: PersonSayDirection.LEFT,
       ),

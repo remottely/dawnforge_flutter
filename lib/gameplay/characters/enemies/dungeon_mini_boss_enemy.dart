@@ -31,7 +31,7 @@ class DungeonMiniBossEnemy extends SimpleEnemy
 
   DungeonMiniBossEnemy(this._initialPosition)
     : super(
-        animation: EnemySpriteAnimations.miniBossAnimation(),
+        animation: EnemySpriteAnimations.dungeonMiniBossEnemyAnimation(),
         position: _initialPosition,
         size: Vector2(
           GameplayConstants.kTileSizeDefault * 0.68,
@@ -133,7 +133,7 @@ class DungeonMiniBossEnemy extends SimpleEnemy
       size: Vector2.all(kAttackEffectSize),
       damage: _attackDamage / kMeleeDamageReduction,
       interval: kMeleeAttackInterval,
-      animationRight: EnemySpriteAnimations.enemyAttackEffectRight(),
+      animationRight: EnemySpriteAnimations.enemyMeleeAttackEffect1Right3(),
       execute: () {
         GameplayAudioManager.playAttackEnemyMelee();
       },

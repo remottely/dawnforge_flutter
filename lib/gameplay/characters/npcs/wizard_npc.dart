@@ -105,7 +105,7 @@ class WizardNpc extends SimpleNpc {
       Say(
         text: [TextSpan(text: getString('talk_player_1'))],
         person: DFAnimatedSpriteWidget(
-          animation: PlayerSpriteAnimations.knightIdleRight6(),
+          animation: PlayerSpriteAnimations.knightPlayerIdleRight6(),
         ),
         personSayDirection: PersonSayDirection.LEFT,
       ),
@@ -119,7 +119,7 @@ class WizardNpc extends SimpleNpc {
       Say(
         text: [TextSpan(text: getString('talk_player_2'))],
         person: DFAnimatedSpriteWidget(
-          animation: PlayerSpriteAnimations.knightIdleRight6(),
+          animation: PlayerSpriteAnimations.knightPlayerIdleRight6(),
         ),
         personSayDirection: PersonSayDirection.LEFT,
       ),

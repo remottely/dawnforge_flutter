@@ -38,7 +38,7 @@ class ImpEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
   // 3. Constructor
   ImpEnemy(this._initialPosition)
     : super(
-        animation: EnemySpriteAnimations.impAnimation(),
+        animation: EnemySpriteAnimations.impEnemyAnimation(),
         position: _initialPosition,
         size: Vector2.all(GameplayConstants.kTileSizeDefault * 0.8),
         speed: kDefaultSpeed,
@@ -99,7 +99,7 @@ class ImpEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
       size: Vector2.all(kAttackEffectSize),
       damage: _attackDamage,
       interval: kAttackInterval,
-      animationRight: EnemySpriteAnimations.enemyAttackEffectRight(),
+      animationRight: EnemySpriteAnimations.enemyMeleeAttackEffect1Right3(),
       execute: () {
         GameplayAudioManager.playAttackEnemyMelee();
       },

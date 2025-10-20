@@ -29,11 +29,11 @@ abstract class MenuScreenViewModel extends State<MenuScreen> {
   late async.Timer _characterAnimationTimer;
 
   late final List<Future<SpriteAnimation>> _characterSpriteAnimations = [
-    PlayerSpriteAnimations.knightIdleRight6(),
-    EnemySpriteAnimations.goblinIdleRight(),
-    EnemySpriteAnimations.impIdleRight(),
-    EnemySpriteAnimations.dungeonMiniBossIdleRight(),
-    EnemySpriteAnimations.dungeonBossIdleRight4(),
+    PlayerSpriteAnimations.knightPlayerIdleRight6(),
+    EnemySpriteAnimations.goblinEnemyIdleRight6(),
+    EnemySpriteAnimations.impEnemyIdleRight4(),
+    EnemySpriteAnimations.dungeonMiniBossEnemyIdleRight4(),
+    EnemySpriteAnimations.dungeonBossEnemyIdleRight4(),
   ];
 
   @override

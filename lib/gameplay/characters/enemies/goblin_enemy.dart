@@ -38,7 +38,7 @@ class GoblinEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
   // 3. Constructor
   GoblinEnemy(this._initialPosition)
     : super(
-        animation: EnemySpriteAnimations.goblinAnimation(),
+        animation: EnemySpriteAnimations.goblinEnemyAnimation(),
         position: _initialPosition,
         size: Vector2.all(GameplayConstants.kTileSizeDefault * 0.8),
         speed: kDefaultSpeed,
@@ -99,7 +99,7 @@ class GoblinEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
       size: Vector2.all(kAttackEffectSize),
       damage: _attackDamage,
       interval: kAttackInterval,
-      animationRight: EnemySpriteAnimations.enemyAttackEffectRight(),
+      animationRight: EnemySpriteAnimations.enemyMeleeAttackEffect1Right3(),
       execute: () {
         GameplayAudioManager.playAttackEnemyMelee();
       },

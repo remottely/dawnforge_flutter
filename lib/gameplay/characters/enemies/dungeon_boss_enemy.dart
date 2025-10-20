@@ -25,7 +25,7 @@ class DungeonBossEnemy extends SimpleEnemy
 
   DungeonBossEnemy(this.initialPosition)
     : super(
-        animation: EnemySpriteAnimations.dungeonBossAnimation(),
+        animation: EnemySpriteAnimations.dungeonBossEnemyAnimation(),
         position: initialPosition,
         size: Vector2(
           GameplayConstants.kTileSizeLarge, // 24 > 32
@@ -152,7 +152,7 @@ class DungeonBossEnemy extends SimpleEnemy
       size: Vector2.all(GameplayConstants.kTileSizeDefault * 0.62),
       damage: attackDamage,
       interval: 1500,
-      animationRight: EnemySpriteAnimations.enemyAttackEffectRight(),
+      animationRight: EnemySpriteAnimations.enemyMeleeAttackEffect1Right3(),
       execute: () {
         GameplayAudioManager.playAttackEnemyMelee();
       },
@@ -219,21 +219,21 @@ class DungeonBossEnemy extends SimpleEnemy
         Say(
           text: [TextSpan(text: getString('talk_boss_1'))],
           person: DFAnimatedSpriteWidget(
-            animation: EnemySpriteAnimations.dungeonBossIdleRight4(),
+            animation: EnemySpriteAnimations.dungeonBossEnemyIdleRight4(),
           ),
           personSayDirection: PersonSayDirection.LEFT,
         ),
         Say(
           text: [TextSpan(text: getString('talk_player_3'))],
           person: DFAnimatedSpriteWidget(
-            animation: PlayerSpriteAnimations.knightIdleRight6(),
+            animation: PlayerSpriteAnimations.knightPlayerIdleRight6(),
           ),
           personSayDirection: PersonSayDirection.LEFT,
         ),
         Say(
           text: [TextSpan(text: getString('talk_boss_2'))],
           person: DFAnimatedSpriteWidget(
-            animation: EnemySpriteAnimations.dungeonBossIdleRight4(),
+            animation: EnemySpriteAnimations.dungeonBossEnemyIdleRight4(),
           ),
           personSayDirection: PersonSayDirection.RIGHT,
         ),
