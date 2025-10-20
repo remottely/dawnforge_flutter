@@ -1,9 +1,9 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:bonfire/map/tiled/builder/tiled_world_builder.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss_enemy.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss_enemy.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/goblin_enemy.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp_enemy.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/mini_boss_enemy.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid_npc.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard_npc.dart';
 import 'package:darkness_dungeon/gameplay/core/data/gameplay_map_data.dart';
@@ -38,8 +38,8 @@ class GameplayMapManager {
   static const String kSpikeTrapDecorationType = 'spike_trap_decoration';
   static const String kWizardEntityType = 'wizard';
   static const String kKidEntityType = 'kid';
-  static const String kBossEntityType = 'boss';
-  static const String kMiniBossEntityType = 'mini_boss';
+  static const String kBossEntityType = 'dungeon_boss';
+  static const String kMiniBossEntityType = 'dungeon_mini_boss';
   static const String kGoblinEntityType = 'goblin';
   static const String kImpEntityType = 'imp';
   static const String kFarmTileEntityType = 'farm_tile';
@@ -143,14 +143,6 @@ MapSensor _createMapSensor(String sensorId, TiledObjectProperties properties) {
   );
 }
 
-/// Adds entity builders for interactive game objects
-/// Following Flutter pattern of comprehensive object mapping
-///
-/// This method handles factory creation for:
-/// - Interactive decorations (doors, keys, life potions, spike traps, torches)
-/// - Enemy entities (goblins, imps, mini-boss, dungeon boss)
-/// - NPC characters (wizard, kid)
-/// - Position and size mapping from Tiled object properties
 void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
   final entityBuilders = <String, ObjectBuilder>{
     // Interactive decorations
@@ -178,7 +170,8 @@ void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
 
     // Enemies
     GameplayMapManager.kBossEntityType: (p) => DungeonBossEnemy(p.position),
-    GameplayMapManager.kMiniBossEntityType: (p) => MiniBossEnemy(p.position),
+    GameplayMapManager.kMiniBossEntityType: (p) =>
+        DungeonMiniBossEnemy(p.position),
     GameplayMapManager.kGoblinEntityType: (p) => GoblinEnemy(p.position),
     GameplayMapManager.kImpEntityType: (p) => ImpEnemy(p.position),
 

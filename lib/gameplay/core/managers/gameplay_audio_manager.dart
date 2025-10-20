@@ -197,8 +197,6 @@ class GameplayAudioManager {
     }
   }
 
-  /// Plays boss battle background music
-  /// Following Flutter pattern of descriptive method names
   static Future<void> playBossBackgroundMusic() async {
     try {
       await _startSpecificMusic(GameplayAudioConstants.kBossBackgroundAsset);

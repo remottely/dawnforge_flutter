@@ -18,9 +18,8 @@ class CharacterEmoteController {
       AnimatedFollowerGameObject(
         animation: SpriteAnimation.load(
           assetPath,
-          SpriteAnimationData.sequenced(
+          GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
             amount: 8,
-            stepTime: GameplaySpriteConstants.kDefaultStepTime,
             textureSize: GameplayConstants.kTileVector2ExtraLarge,
           ),
         ),

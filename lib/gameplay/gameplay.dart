@@ -213,8 +213,8 @@ class _GameplayState extends State<Gameplay> {
   JoystickAction _createPrimaryAttackAction() {
     return JoystickAction(
       actionId: PlayerActions.meleeAttack.index,
-      sprite: Sprite.load('joystick_atack.png'),
-      spritePressed: Sprite.load('joystick_atack_selected.png'),
+      sprite: Sprite.load('joystick_attack.png'),
+      spritePressed: Sprite.load('joystick_attack_selected.png'),
       size: kActionButtonSize,
       margin: const EdgeInsets.only(
         bottom: kActionButtonMarginBottom,
@@ -227,8 +227,8 @@ class _GameplayState extends State<Gameplay> {
   JoystickAction _createRangedAttackAction() {
     return JoystickAction(
       actionId: PlayerActions.rangedAttack.index,
-      sprite: Sprite.load('joystick_atack_range.png'),
-      spritePressed: Sprite.load('joystick_atack_range_selected.png'),
+      sprite: Sprite.load('joystick_attack_range.png'),
+      spritePressed: Sprite.load('joystick_attack_range_selected.png'),
       size: kActionButtonSize,
       margin: const EdgeInsets.only(
         bottom: kActionButtonMarginBottom,

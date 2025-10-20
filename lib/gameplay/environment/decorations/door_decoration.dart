@@ -1,10 +1,10 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight_character.dart';
-import 'package:darkness_dungeon/gameplay/characters/sprites/player_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
-import 'package:darkness_dungeon/gameplay/environment/sprites/decoration_sprite_animations.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/decoration_sprite_animations.dart';
 import 'package:flutter/cupertino.dart';
 
 class DoorDecoration extends DFGameDecoration {
@@ -85,7 +85,7 @@ class DoorDecoration extends DFGameDecoration {
       [
         Say(
           text: [TextSpan(text: getString(kRequiredKeyMessage))],
-          person: PlayerSpriteSheet.idleRight().asWidget(),
+          person: PlayerSpriteAnimations.knightIdleRight6().asWidget(),
           personSayDirection: PersonSayDirection.LEFT,
         ),
       ],

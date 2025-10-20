@@ -1,21 +1,12 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/sprites/effects_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/characters/sprites/enemy_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/enemy_sprite_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_effect_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:flutter/material.dart';
 
-/// Mini Boss enemy character for the Darkness Dungeon game
-/// Following Flutter naming conventions for enemy entity systems
-///
-/// This class handles:
-/// - Hybrid combat system (melee and ranged attacks)
-/// - Advanced AI with close and long-range behavior
-/// - Multiple attack patterns based on player distance
-/// - Enhanced visual effects and audio feedback
-class MiniBossEnemy extends SimpleEnemy
+class DungeonMiniBossEnemy extends SimpleEnemy
     with BlockMovementCollision, UseLifeBar {
-  // 1. Constants (grouped by type)
   static const double kDefaultAttackDamage = 50.0;
   static const double kDefaultLife = 150.0;
   static const double kDefaultSpeed = GameplayConstants.kCharacterSpeedSlow;
@@ -32,17 +23,15 @@ class MiniBossEnemy extends SimpleEnemy
       GameplayConstants.kTileSizeDefault * 0.62;
   static const double kRangedAttackSize =
       GameplayConstants.kTileSizeDefault * 0.65;
-  static const double kMeleeDamageReduction = 3.0; // attack / 3
+  static const double kMeleeDamageReduction = 3.0;
 
-  // 2. Private instance variables
   final Vector2 _initialPosition;
   double _attackDamage = kDefaultAttackDamage;
   bool _seePlayerClose = false;
 
-  // 3. Constructor
-  MiniBossEnemy(this._initialPosition)
+  DungeonMiniBossEnemy(this._initialPosition)
     : super(
-        animation: EnemySpriteSheet.miniBossAnimations(),
+        animation: EnemySpriteAnimations.miniBossAnimation(),
         position: _initialPosition,
         size: Vector2(
           GameplayConstants.kTileSizeDefault * 0.68,
@@ -52,7 +41,6 @@ class MiniBossEnemy extends SimpleEnemy
         life: kDefaultLife,
       );
 
-  // 4. Lifecycle methods (onLoad, update, onDie)
   @override
   Future<void> onLoad() {
     _initializeHitbox();
@@ -78,7 +66,7 @@ class MiniBossEnemy extends SimpleEnemy
     if (!_seePlayerClose) {
       seeAndMoveToAttackRange(
         positioned: (p) {
-          _executeRangedAttack();
+          _executeRangedAttack(_attackDamage);
         },
         radiusVision: kLongVisionRadius,
       );
@@ -101,10 +89,6 @@ class MiniBossEnemy extends SimpleEnemy
     super.onReceiveDamage(attacker, damage, id);
   }
 
-  // 5. Private helper methods (grouped by functionality)
-
-  // Setup/Initialization methods
-  /// Sets up the hitbox for collision detection
   void _initializeHitbox() {
     add(
       RectangleHitbox(
@@ -114,18 +98,18 @@ class MiniBossEnemy extends SimpleEnemy
     );
   }
 
-  // Processing/Updates methods
-  /// Executes ranged fireball attack when player is at distance
-  void _executeRangedAttack() {
+  void _executeRangedAttack(double damage) {
+    GameplayAudioManager.playAttackRange();
     simpleAttackRange(
-      animation: EffectsSpriteSheet.fireBallAttackRight(),
-      animationDestroy: EffectsSpriteSheet.fireBallExplosion(),
+      animation: CharacterEffectSpriteAnimations.fireBallAttackRight3(),
+      animationDestroy:
+          CharacterEffectSpriteAnimations.fireBallExplosionRight6(),
       size: Vector2.all(kRangedAttackSize),
-      damage: _attackDamage,
+      damage: damage,
       speed: speed * 2.5,
-      execute: () {
-        GameplayAudioManager.playAttackRange();
-      },
+      // execute: () {
+      //   GameplayAudioManager.playAttackRange();
+      // },
       onDestroy: () {
         GameplayAudioManager.playExplosion();
       },
@@ -144,25 +128,22 @@ class MiniBossEnemy extends SimpleEnemy
     );
   }
 
-  /// Executes melee attack when player is close (reduced damage)
   void _executeMeleeAttack() {
     simpleAttackMelee(
       size: Vector2.all(kAttackEffectSize),
       damage: _attackDamage / kMeleeDamageReduction,
       interval: kMeleeAttackInterval,
-      animationRight: EnemySpriteSheet.enemyAttackEffectRight(),
+      animationRight: EnemySpriteAnimations.enemyAttackEffectRight(),
       execute: () {
         GameplayAudioManager.playAttackEnemyMelee();
       },
     );
   }
 
-  // Cleanup/Utility methods
-  /// Handles visual and audio effects when enemy dies
   void _handleDeathEffects() {
     gameRef.add(
       AnimatedGameObject(
-        animation: EffectsSpriteSheet.smokeExplosion(),
+        animation: CharacterEffectSpriteAnimations.explosionSmokeRight5(),
         position: position,
         size: GameplayConstants.kTileVector2Default,
         loop: false,

@@ -34,6 +34,15 @@ class GameplaySpriteConstants {
   static Vector2 get effectTextureSize => GameplayConstants.kTileVector2Default;
   static Vector2 get fireballTextureSize => Vector2(23, 23);
   static Vector2 get explosionTextureSize =>
-      GameplayConstants.kTileVector2Default;
+      GameplayConstants.kTileVector2ExtraLarge;
   static Vector2 get barrelDecorationTextureSize => Vector2(23, 23);
+
+  static SpriteAnimationData defaultStepTimeSpriteAnimationData({
+    required int amount,
+    required Vector2 textureSize,
+  }) => SpriteAnimationData.sequenced(
+    amount: amount,
+    stepTime: kDefaultStepTime,
+    textureSize: textureSize,
+  );
 }

@@ -152,7 +152,6 @@
                  "x":0,
                  "y":0
                 }],
-         "locked":true,
          "name":"Terrain",
          "opacity":1,
          "type":"group",
@@ -544,7 +543,6 @@
                  "x":0,
                  "y":0
                 }],
-         "locked":true,
          "name":"Environment",
          "opacity":1,
          "type":"group",
@@ -663,7 +661,7 @@
                         {
                          "height":16,
                          "id":30,
-                         "name":"mini_boss",
+                         "name":"dungeon_mini_boss",
                          "rotation":0,
                          "type":"",
                          "visible":true,
@@ -674,7 +672,7 @@
                         {
                          "height":16,
                          "id":32,
-                         "name":"mini_boss",
+                         "name":"dungeon_mini_boss",
                          "rotation":0,
                          "type":"",
                          "visible":true,
@@ -685,7 +683,7 @@
                         {
                          "height":16,
                          "id":33,
-                         "name":"boss",
+                         "name":"dungeon_boss",
                          "rotation":0,
                          "type":"",
                          "visible":true,
@@ -733,7 +731,6 @@
                  "x":0,
                  "y":0
                 }],
-         "locked":true,
          "name":"Creature",
          "opacity":1,
          "type":"group",

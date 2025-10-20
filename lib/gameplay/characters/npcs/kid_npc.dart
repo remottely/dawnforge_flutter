@@ -1,27 +1,14 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/core/components/df_animated_sprite_widget.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss_enemy.dart';
-import 'package:darkness_dungeon/gameplay/characters/sprites/npc_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/characters/sprites/player_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/characters/npcs/npc_sprite_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
+import 'package:darkness_dungeon/shared/components/df_animated_sprite_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-/// NPC character Kid for the Darkness Dungeon game
-/// Following Flutter naming conventions for NPC interaction systems
-///
-/// This class handles:
-/// - End-game victory sequence after boss defeat
-/// - Final conversation with the player
-/// - Victory screen display and game completion
-///
-/// Usage patterns:
-/// ```dart
-/// final kid = KidNpc(position);
-/// kid.onLoad();
-/// ```
 class KidNpc extends SimpleNpc {
   // 1. Constantes de configuração
   static const String kBossCheckInterval = 'checkBossDead';
@@ -33,13 +20,11 @@ class KidNpc extends SimpleNpc {
   // 2. Variáveis de instância privadas
   bool _conversationWithHero = false;
 
-  // 3. Construtor
-  /// Creates a kid NPC that triggers victory sequence after boss defeat
   KidNpc(Vector2 position)
     : super(
         animation: SimpleDirectionAnimation(
-          idleRight: NpcSpriteSheet.kidIdleLeft(),
-          runRight: NpcSpriteSheet.kidIdleLeft(),
+          idleRight: NpcSpriteAnimations.kidIdleLeft(),
+          runRight: NpcSpriteAnimations.kidIdleLeft(),
         ),
         position: position,
         size: Vector2(kNpcSizeMultiplierX, kNpcSizeMultiplierY),
@@ -52,8 +37,6 @@ class KidNpc extends SimpleNpc {
     _checkForBossDefeat(dt);
   }
 
-  // 5. Métodos privados auxiliares
-  /// Checks if the boss has been defeated to trigger victory sequence
   void _checkForBossDefeat(double dt) {
     if (!_conversationWithHero &&
         checkInterval(kBossCheckInterval, kBossCheckRate, dt)) {
@@ -63,7 +46,6 @@ class KidNpc extends SimpleNpc {
     }
   }
 
-  /// Checks if the dungeon boss has been defeated
   bool _isBossDefeated() {
     try {
       gameRef.enemies().firstWhere((enemy) => enemy is DungeonBossEnemy);
@@ -99,13 +81,15 @@ class KidNpc extends SimpleNpc {
     return [
       Say(
         text: [TextSpan(text: getString('talk_kid_2'))],
-        person: DFAnimatedSpriteWidget(animation: NpcSpriteSheet.kidIdleLeft()),
+        person: DFAnimatedSpriteWidget(
+          animation: NpcSpriteAnimations.kidIdleLeft(),
+        ),
         personSayDirection: PersonSayDirection.RIGHT,
       ),
       Say(
         text: [TextSpan(text: getString('talk_player_4'))],
         person: DFAnimatedSpriteWidget(
-          animation: PlayerSpriteSheet.idleRight(),
+          animation: PlayerSpriteAnimations.knightIdleRight6(),
         ),
         personSayDirection: PersonSayDirection.LEFT,
       ),

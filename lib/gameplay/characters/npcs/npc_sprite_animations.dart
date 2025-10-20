@@ -1,27 +1,19 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_sprite_constants.dart';
 
-/// [NpcSpriteSheet] responsible for providing NPC character sprite animations
-/// Following Flutter naming conventions for NPC sprite systems
-class NpcSpriteSheet {
-  /// Creates kid idle left animation
-  /// Following Flutter pattern of descriptive factory methods
+class NpcSpriteAnimations {
   static Future<SpriteAnimation> kidIdleLeft() => SpriteAnimation.load(
     'gameplay/characters/npcs/kid_idle_left.png',
-    SpriteAnimationData.sequenced(
+    GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
       amount: GameplaySpriteConstants.kIdleFrames,
-      stepTime: GameplaySpriteConstants.kDefaultStepTime,
       textureSize: GameplaySpriteConstants.npcKidTextureSize,
     ),
   );
 
-  /// Creates wizard idle left animation
-  /// Following Flutter pattern of descriptive factory methods
   static Future<SpriteAnimation> wizardIdleLeft() => SpriteAnimation.load(
     'gameplay/characters/npcs/wizard_idle_left.png',
-    SpriteAnimationData.sequenced(
+    GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
       amount: GameplaySpriteConstants.kIdleFrames,
-      stepTime: GameplaySpriteConstants.kDefaultStepTime,
       textureSize: GameplaySpriteConstants.npcWizardTextureSize,
     ),
   );

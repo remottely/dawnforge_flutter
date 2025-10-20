@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
-import 'package:darkness_dungeon/gameplay/environment/sprites/decoration_sprite_animations.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/decoration_sprite_animations.dart';
 import 'package:flutter/material.dart';
 
 abstract class _TorchData {}

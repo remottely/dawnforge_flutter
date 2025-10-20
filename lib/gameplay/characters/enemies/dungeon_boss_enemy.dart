@@ -1,17 +1,17 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/core/components/df_animated_sprite_widget.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss_enemy.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/enemy_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp_enemy.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/mini_boss_enemy.dart';
-import 'package:darkness_dungeon/gameplay/characters/sprites/effects_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/characters/sprites/enemy_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/characters/sprites/npc_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/characters/sprites/player_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/characters/npcs/npc_sprite_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_effect_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
+import 'package:darkness_dungeon/shared/components/df_animated_sprite_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -25,7 +25,7 @@ class DungeonBossEnemy extends SimpleEnemy
 
   DungeonBossEnemy(this.initialPosition)
     : super(
-        animation: EnemySpriteSheet.bossAnimations(),
+        animation: EnemySpriteAnimations.dungeonBossAnimation(),
         position: initialPosition,
         size: Vector2(
           GameplayConstants.kTileSizeLarge, // 24 > 32
@@ -89,7 +89,7 @@ class DungeonBossEnemy extends SimpleEnemy
   void onDie() {
     gameRef.add(
       AnimatedGameObject(
-        animation: EffectsSpriteSheet.explosion(),
+        animation: CharacterEffectSpriteAnimations.explosionRight7(),
         position: this.position,
         size: GameplayConstants.kTileVector2Default,
         loop: false,
@@ -128,12 +128,14 @@ class DungeonBossEnemy extends SimpleEnemy
       }
 
       Enemy e = spawnedEnemies.length == 2
-          ? MiniBossEnemy(Vector2(positionExplosion.x, positionExplosion.y))
+          ? DungeonMiniBossEnemy(
+              Vector2(positionExplosion.x, positionExplosion.y),
+            )
           : ImpEnemy(Vector2(positionExplosion.x, positionExplosion.y));
 
       gameRef.add(
         AnimatedGameObject(
-          animation: EffectsSpriteSheet.smokeExplosion(),
+          animation: CharacterEffectSpriteAnimations.explosionSmokeRight5(),
           position: positionExplosion,
           size: GameplayConstants.kTileVector2Default,
           loop: false,
@@ -150,7 +152,7 @@ class DungeonBossEnemy extends SimpleEnemy
       size: Vector2.all(GameplayConstants.kTileSizeDefault * 0.62),
       damage: attackDamage,
       interval: 1500,
-      animationRight: EnemySpriteSheet.enemyAttackEffectRight(),
+      animationRight: EnemySpriteAnimations.enemyAttackEffectRight(),
       execute: () {
         GameplayAudioManager.playAttackEnemyMelee();
       },
@@ -210,28 +212,28 @@ class DungeonBossEnemy extends SimpleEnemy
         Say(
           text: [TextSpan(text: getString('talk_kid_1'))],
           person: DFAnimatedSpriteWidget(
-            animation: NpcSpriteSheet.kidIdleLeft(),
+            animation: NpcSpriteAnimations.kidIdleLeft(),
           ),
           personSayDirection: PersonSayDirection.RIGHT,
         ),
         Say(
           text: [TextSpan(text: getString('talk_boss_1'))],
           person: DFAnimatedSpriteWidget(
-            animation: EnemySpriteSheet.bossIdleRight(),
+            animation: EnemySpriteAnimations.dungeonBossIdleRight4(),
           ),
           personSayDirection: PersonSayDirection.LEFT,
         ),
         Say(
           text: [TextSpan(text: getString('talk_player_3'))],
           person: DFAnimatedSpriteWidget(
-            animation: PlayerSpriteSheet.idleRight(),
+            animation: PlayerSpriteAnimations.knightIdleRight6(),
           ),
           personSayDirection: PersonSayDirection.LEFT,
         ),
         Say(
           text: [TextSpan(text: getString('talk_boss_2'))],
           person: DFAnimatedSpriteWidget(
-            animation: EnemySpriteSheet.bossIdleRight(),
+            animation: EnemySpriteAnimations.dungeonBossIdleRight4(),
           ),
           personSayDirection: PersonSayDirection.RIGHT,
         ),
@@ -260,7 +262,7 @@ class DungeonBossEnemy extends SimpleEnemy
     final p = position.translated(x, y);
     gameRef.add(
       AnimatedGameObject(
-        animation: EffectsSpriteSheet.smokeExplosion(),
+        animation: CharacterEffectSpriteAnimations.explosionSmokeRight5(),
         position: p,
         size: GameplayConstants.kTileVector2Default,
         loop: false,

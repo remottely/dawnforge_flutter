@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/sprites/effects_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/characters/sprites/enemy_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/enemy_sprite_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_effect_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +38,7 @@ class ImpEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
   // 3. Constructor
   ImpEnemy(this._initialPosition)
     : super(
-        animation: EnemySpriteSheet.impAnimations(),
+        animation: EnemySpriteAnimations.impAnimation(),
         position: _initialPosition,
         size: Vector2.all(GameplayConstants.kTileSizeDefault * 0.8),
         speed: kDefaultSpeed,
@@ -99,7 +99,7 @@ class ImpEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
       size: Vector2.all(kAttackEffectSize),
       damage: _attackDamage,
       interval: kAttackInterval,
-      animationRight: EnemySpriteSheet.enemyAttackEffectRight(),
+      animationRight: EnemySpriteAnimations.enemyAttackEffectRight(),
       execute: () {
         GameplayAudioManager.playAttackEnemyMelee();
       },
@@ -111,7 +111,7 @@ class ImpEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
   void _handleDeathEffects() {
     gameRef.add(
       AnimatedGameObject(
-        animation: EffectsSpriteSheet.smokeExplosion(),
+        animation: CharacterEffectSpriteAnimations.explosionSmokeRight5(),
         position: position,
         size: GameplayConstants.kTileVector2Default,
         loop: false,

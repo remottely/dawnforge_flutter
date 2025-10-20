@@ -1,9 +1,9 @@
 import 'dart:async' as async;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/controllers/character_emote_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/sprites/effects_sprite_sheet.dart';
-import 'package:darkness_dungeon/gameplay/characters/sprites/player_sprite_sheet.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_effect_sprite_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
@@ -38,6 +38,9 @@ class KnightCharacter extends SimplePlayer
   int energy = kMaxEnergy;
   bool isUsingTool = false;
 
+  static const double kRangedAttackSize =
+      GameplayConstants.kTileSizeDefault * 0.65;
+
   // Troca de ferramenta
   void switchTool(FarmTool newTool) {
     currentTool = newTool;
@@ -64,6 +67,7 @@ class KnightCharacter extends SimplePlayer
   // TODO: integrar valor de energia com HUD
   // 1. Constants (grouped by type)
   static const double kDefaultAttackDamage = 25.0;
+  static const double kSmallAttackDamage = 10;
   static const double kMaxStamina = 100.0;
   static const double kDefaultLife = 200.0;
   static const int kStaminaRegenerationRate = 10;
@@ -92,7 +96,7 @@ class KnightCharacter extends SimplePlayer
   // 4. Constructor
   KnightCharacter(Vector2 position)
     : super(
-        animation: PlayerSpriteSheet.playerAnimations(),
+        animation: PlayerSpriteAnimations.knightAnimation(),
         size: GameplayConstants.kTileVector2Default,
         position: position,
         life: 200,
@@ -129,7 +133,7 @@ class KnightCharacter extends SimplePlayer
     removeFromParent();
     gameRef.add(
       DFGameDecoration.withSprite(
-        sprite: Sprite.load('gameplay/characters/player/crypt.png'),
+        sprite: Sprite.load('gameplay/characters/player/crypt_1.png'),
         position: Vector2(position.x, position.y),
         size: Vector2.all(30), // TODO: NOW
       ),
@@ -150,11 +154,11 @@ class KnightCharacter extends SimplePlayer
 
     if (event.id == LogicalKeyboardKey.keyZ &&
         event.event == ActionEvent.DOWN) {
-      executeRangedAttack();
+      _executeRangedAttack(kSmallAttackDamage);
     }
 
     if (event.id == 1 && event.event == ActionEvent.DOWN) {
-      executeRangedAttack();
+      _executeRangedAttack(kSmallAttackDamage);
     }
     super.onJoystickAction(event);
   }
@@ -184,27 +188,26 @@ class KnightCharacter extends SimplePlayer
     _decrementStamina(kMeleeAttackStaminaCost);
     simpleAttackMelee(
       damage: _attackDamage,
-      animationRight: PlayerSpriteSheet.attackEffectRight(),
+      animationRight: PlayerSpriteAnimations.attackEffectRight3(),
       size: GameplayConstants.kTileVector2Default,
     );
   }
 
   /// Executes ranged fireball attack if player has sufficient stamina
-  void executeRangedAttack() {
+  void _executeRangedAttack(double damage) {
     if (_currentStamina < kRangedAttackStaminaCost) {
       return;
     }
 
-    GameplayAudioManager.playAttackRange();
     _decrementStamina(kRangedAttackStaminaCost);
+
+    GameplayAudioManager.playAttackRange();
     simpleAttackRange(
-      animationRight: EffectsSpriteSheet.fireBallAttackRight(),
-      animationDestroy: EffectsSpriteSheet.fireBallExplosion(),
-      size: Vector2(
-        GameplayConstants.kTileSizeDefault * 0.65,
-        GameplayConstants.kTileSizeDefault * 0.65,
-      ),
-      damage: 10,
+      animationRight: CharacterEffectSpriteAnimations.fireBallAttackRight3(),
+      animationDestroy:
+          CharacterEffectSpriteAnimations.fireBallExplosionRight6(),
+      size: Vector2.all(kRangedAttackSize),
+      damage: damage,
       speed: speed * 2.5,
       onDestroy: () {
         GameplayAudioManager.playExplosion();
