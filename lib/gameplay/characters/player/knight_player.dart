@@ -3,8 +3,8 @@ import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_effect_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_data.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
@@ -29,8 +29,6 @@ abstract class _KnightPlayerData {
   static const double _kSmallAttackDamage = 10.0;
   static const int _kMeleeAttackStaminaCost = 15;
   static const int _kCharacterFireballAttackStaminaCost = 10;
-  static const double _kCharacterFireballAttackSize =
-      GameplayConstants.kTileSizeDefault * 0.65;
 
   // Stamina
   static const double _kMaxStamina = 100.0;
@@ -50,7 +48,7 @@ abstract class _KnightPlayerData {
   // Morte
   static const String _cryptSpritePath =
       'gameplay/characters/player/player_crypt_1.png';
-  static Vector2 get _cryptSize => Vector2.all(30);
+  static Vector2 get _cryptSpriteSize => Vector2.all(30);
 
   // UI
   static final TextStyle _kDamageTextStyle = TextStyle(
@@ -66,25 +64,11 @@ abstract class _KnightPlayerData {
     color: Colors.deepOrangeAccent.withValues(alpha: 0.2),
   );
 
-  static LightingConfig _buildRangeAttackLightingConfig() => LightingConfig(
-    radius: GameplayConstants.kTileSizeDefault * 0.9,
-    blurBorder: GameplayConstants.kTileSizeDefault,
-    color: Colors.deepOrangeAccent.withValues(alpha: 0.4),
-  );
-
-  static RectangleHitbox _buildRangeAttackHitbox() => RectangleHitbox(
-    size: Vector2(
-      GameplayConstants.kTileSizeDefault / 3,
-      GameplayConstants.kTileSizeDefault / 3,
-    ),
-    position: Vector2(10, 5),
-  );
-
   /// LOAD (Métodos que carregam assets ou adicionam componentes)
-  static SimpleDirectionAnimation _loadAnimations() =>
+  static SimpleDirectionAnimation _loadAnimation() =>
       PlayerSpriteAnimations.knightPlayerAnimation();
 
-  static FutureOr<void> _loadHitBox(GameComponent target) =>
+  static FutureOr<void> _buildHitBox(GameComponent target) =>
       target.add(RectangleHitbox(position: _hitBoxPosition, size: _hitBoxSize));
 
   static Future<Sprite> _loadCryptSprite() => Sprite.load(_cryptSpritePath);
@@ -112,7 +96,7 @@ class KnightPlayer extends SimplePlayer with Lighting, BlockMovementCollision {
 
   KnightPlayer(Vector2 position)
     : super(
-        animation: _KnightPlayerData._loadAnimations(),
+        animation: _KnightPlayerData._loadAnimation(),
         size: _KnightPlayerData._spriteSize,
         position: position,
         life: _KnightPlayerData._kDefaultLife,
@@ -148,7 +132,7 @@ class KnightPlayer extends SimplePlayer with Lighting, BlockMovementCollision {
 
   @override
   Future<void> onLoad() {
-    _KnightPlayerData._loadHitBox(this);
+    _KnightPlayerData._buildHitBox(this);
     return super.onLoad();
   }
 
@@ -167,7 +151,7 @@ class KnightPlayer extends SimplePlayer with Lighting, BlockMovementCollision {
       DFGameDecoration.withSprite(
         sprite: _KnightPlayerData._loadCryptSprite(),
         position: Vector2(position.x, position.y),
-        size: _KnightPlayerData._cryptSize,
+        size: _KnightPlayerData._cryptSpriteSize,
       ),
     );
     super.onDie();
@@ -217,28 +201,24 @@ class KnightPlayer extends SimplePlayer with Lighting, BlockMovementCollision {
   }
 
   void _executeCharacterFireballAttack(double damage) {
-    if (_currentStamina < _KnightPlayerData._kCharacterFireballAttackStaminaCost) {
+    if (_currentStamina <
+        _KnightPlayerData._kCharacterFireballAttackStaminaCost) {
       return;
     }
 
     _decrementStamina(_KnightPlayerData._kCharacterFireballAttackStaminaCost);
 
     simpleAttackRange(
-      animationRight:
-          CharacterEffectSpriteAnimations.characterFireballAttackRight3(),
-      animationDestroy:
-          CharacterEffectSpriteAnimations.characterFireballExplosionRight6(),
-      size: Vector2.all(_KnightPlayerData._kCharacterFireballAttackSize),
+      animationRight: CharacterFireballAttackData.loadAttackAnimation(),
+      animationDestroy: CharacterFireballAttackData.loadExplosionAnimation(),
+      size: CharacterFireballAttackData.spriteSize,
       damage: damage,
-      speed: speed * 2.5,
-      onDestroy: () {
-        GameplayAudioManager.playExplosion();
-      },
-      collision: _KnightPlayerData._buildRangeAttackHitbox(),
-      lightingConfig: _KnightPlayerData._buildRangeAttackLightingConfig(),
+      speed: speed * CharacterFireballAttackData.kSpeedMultiplier,
+      onDestroy: () => CharacterFireballAttackData.playExplosionAudio(),
+      collision: CharacterFireballAttackData.buildHitbox(),
+      lightingConfig: CharacterFireballAttackData.buildLightingConfig(),
     );
-
-    GameplayAudioManager.playAttackRange();
+    CharacterFireballAttackData.playExecutionAudio();
   }
 
   void decrementStamina(int amount) {

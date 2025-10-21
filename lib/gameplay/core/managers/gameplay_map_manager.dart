@@ -152,9 +152,11 @@ void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
     GameplayMapManager.kDoorDecorationType: (p) =>
         DoorDecoration(position: p.position, size: p.size),
     GameplayMapManager.kDoorKeyDecorationType: (p) =>
-        DoorKeyDecoration(p.position),
-    GameplayMapManager.kLifePotionDecorationType: (p) =>
-        LifePotionDecoration(p.position, LifePotionDecoration.kHealAmount),
+        DoorKeyDecoration(position: p.position),
+    GameplayMapManager.kLifePotionDecorationType: (p) => LifePotionDecoration(
+      position: p.position,
+      healAmount: LifePotionData.healAmount,
+    ),
 
     // Environmental decorations
     GameplayMapManager.kTorchDecorationType: (p) =>

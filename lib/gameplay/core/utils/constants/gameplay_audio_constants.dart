@@ -9,9 +9,11 @@ class GameplayAudioConstants {
 
   // Audio asset paths
   static const String kAttackPlayerAsset = 'attack_player.mp3';
-  static const String kAttackFireBallAsset = 'attack_fire_ball.wav';
+  static const String kFireBallAttackAudioAssetPath =
+      'fireball_attack_audio.wav';
   static const String kAttackEnemyAsset = 'attack_enemy.mp3';
-  static const String kExplosionAsset = 'explosion.wav';
+  static const String kFIreballExplosionAudioAssetPath =
+      'fireball_explosion_audio.wav';
   static const String kInteractionAsset = 'sound_interaction.wav';
   static const String kDeathHexBackgroundMusicAsset = 'ro1_death_hex.mp3';
   static const String kLettersBackgroundMusicAsset = 'ro1_letters.mp3';
@@ -20,9 +22,9 @@ class GameplayAudioConstants {
   // Audio file list for preloading
   static const List<String> kAudioFilesToPreload = [
     kAttackPlayerAsset,
-    kAttackFireBallAsset,
+    kFireBallAttackAudioAssetPath,
     kAttackEnemyAsset,
-    kExplosionAsset,
+    kFIreballExplosionAudioAssetPath,
     kInteractionAsset,
     kDeathHexBackgroundMusicAsset,
     kLettersBackgroundMusicAsset,

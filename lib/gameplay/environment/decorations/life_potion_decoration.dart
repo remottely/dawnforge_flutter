@@ -1,25 +1,31 @@
+import 'dart:async';
+
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight_player.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
 
-class LifePotionDecoration extends DFSensorPlayerDecoration {
-  static const Duration kHealingDuration = Duration(seconds: 1);
-  static const String kAssetPath =
+abstract class LifePotionData {
+  static const String _spritePath =
       'gameplay/environment/decorations/life_potion_decoration_1.png';
-  static const double kDefaultHealAmount = 50.0;
-  static const double kHealAmount = GameplayConstants.kPropertyAmountSmall;
+  static Vector2 get _spriteSize => GameplayConstants.kTileVector2Default;
+  static const Duration _healingDuration = Duration(seconds: 1);
+  static const double _defaultHealAmount = 50.0;
+  static const double healAmount = GameplayConstants.kPropertyAmountSmall;
 
-  final Vector2 _initialPosition;
+  static Future<Sprite> _loadSprite() => Sprite.load(_spritePath);
+}
+
+class LifePotionDecoration extends DFSensorPlayerDecoration {
   final double _healAmount;
   bool _hasBeenConsumed = false;
 
-  LifePotionDecoration(this._initialPosition, [double? healAmount])
-    : _healAmount = healAmount ?? kDefaultHealAmount,
+  LifePotionDecoration({required Vector2 position, double? healAmount})
+    : _healAmount = healAmount ?? LifePotionData._defaultHealAmount,
       super.withSprite(
-        sprite: Sprite.load(kAssetPath),
-        position: _initialPosition,
-        size: GameplayConstants.kTileVector2Default,
+        sprite: LifePotionData._loadSprite(),
+        position: position,
+        size: LifePotionData._spriteSize,
       );
 
   @override
@@ -39,7 +45,7 @@ class LifePotionDecoration extends DFSensorPlayerDecoration {
     double healingProgress = 0;
     gameRef.add(
       ValueGeneratorComponent(
-        kHealingDuration,
+        LifePotionData._healingDuration,
         onChange: (value) {
           if (healingProgress < _healAmount) {
             double currentHealAmount = _healAmount * value - healingProgress;

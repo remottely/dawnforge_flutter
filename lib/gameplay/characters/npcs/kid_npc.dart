@@ -9,28 +9,28 @@ import 'package:darkness_dungeon/shared/components/df_animated_sprite_widget.dar
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class KidNpc extends SimpleNpc {
-  // 1. Constantes de configuração
-  static const String kBossCheckInterval = 'checkBossDead';
-  static const int kBossCheckRate = 1000;
-  static const String kInteractionKey = 'talk_kid';
-  static const double kNpcSizeMultiplierX = 8.0;
-  static const double kNpcSizeMultiplierY = 11.0;
+abstract class _KidNpcData {
+  static const String bossCheckInterval = 'checkBossDead';
+  static const int bossCheckRate = 1000;
+  static const double sizeMultiplierX = 8.0;
+  static const double sizeMultiplierY = 11.0;
+  static Vector2 get size => Vector2(sizeMultiplierX, sizeMultiplierY);
+  static SimpleDirectionAnimation get animation => SimpleDirectionAnimation(
+    idleRight: NpcSpriteAnimations.kidIdleLeft(),
+    runRight: NpcSpriteAnimations.kidIdleLeft(),
+  );
+}
 
-  // 2. Variáveis de instância privadas
+class KidNpc extends SimpleNpc {
   bool _conversationWithHero = false;
 
   KidNpc(Vector2 position)
     : super(
-        animation: SimpleDirectionAnimation(
-          idleRight: NpcSpriteAnimations.kidIdleLeft(),
-          runRight: NpcSpriteAnimations.kidIdleLeft(),
-        ),
+        animation: _KidNpcData.animation,
         position: position,
-        size: Vector2(kNpcSizeMultiplierX, kNpcSizeMultiplierY),
+        size: _KidNpcData.size,
       );
 
-  // 4. Métodos públicos principais
   @override
   void update(double dt) {
     super.update(dt);
@@ -39,7 +39,11 @@ class KidNpc extends SimpleNpc {
 
   void _checkForBossDefeat(double dt) {
     if (!_conversationWithHero &&
-        checkInterval(kBossCheckInterval, kBossCheckRate, dt)) {
+        checkInterval(
+          _KidNpcData.bossCheckInterval,
+          _KidNpcData.bossCheckRate,
+          dt,
+        )) {
       if (_isBossDefeated()) {
         _initiateVictorySequence();
       }
@@ -49,13 +53,12 @@ class KidNpc extends SimpleNpc {
   bool _isBossDefeated() {
     try {
       gameRef.enemies().firstWhere((enemy) => enemy is DungeonBossEnemy);
-      return false; // Boss still exists
+      return false;
     } catch (e) {
-      return true; // Boss not found, must be defeated
+      return true;
     }
   }
 
-  /// Initiates the victory sequence with camera movement and conversation
   void _initiateVictorySequence() {
     _conversationWithHero = true;
     gameRef.camera.moveToTargetAnimated(
@@ -64,7 +67,6 @@ class KidNpc extends SimpleNpc {
     );
   }
 
-  /// Initializes the dialogue system and shows victory conversation
   void _initializeDialogue() {
     GameplayAudioManager.playInteraction();
     GameplayUIManager.displayConversationDialog(
@@ -76,7 +78,6 @@ class KidNpc extends SimpleNpc {
     );
   }
 
-  /// Creates the victory dialogue sequence
   List<Say> _createDialogueSequence() {
     return [
       Say(
@@ -96,19 +97,15 @@ class KidNpc extends SimpleNpc {
     ];
   }
 
-  /// Handles dialogue change events with audio feedback
   void _onDialogueChanged(int index) {
     GameplayAudioManager.playInteraction();
   }
 
-  /// Handles conversation completion and triggers victory screen
   void _onConversationFinished() {
     GameplayAudioManager.playInteraction();
     gameRef.camera.moveToPlayerAnimated(onComplete: _displayVictoryScreen);
   }
 
-  // 6. Métodos utilitários específicos
-  /// Displays the final victory screen to complete the game
   void _displayVictoryScreen() {
     GameplayUIManager.displayVictoryDialog(gameRef.context);
   }

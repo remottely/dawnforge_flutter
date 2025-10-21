@@ -19,36 +19,41 @@ import 'package:flutter/material.dart';
 /// final imp = ImpEnemy(position);
 /// imp.onLoad();
 /// ```
-class ImpEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
-  // 1. Constants (grouped by type)
-  static const double kDefaultAttackDamage = 10.0;
-  static const double kDefaultLife = 80.0;
-  static const double kDefaultSpeed = GameplayConstants.kCharacterSpeedMedium;
-  static const int kAttackInterval = 300;
-  static const double kHitboxSize = 6.0;
-  static const double kHitboxPositionX = 3.0;
-  static const double kHitboxPositionY = 5.0;
-  static const double kAttackEffectSize =
+
+abstract class _ImpEnemyData {
+  static const double attackDamage = 10.0;
+  static const double life = 80.0;
+  static const double speed = GameplayConstants.kCharacterSpeedMedium;
+  static const int attackInterval = 300;
+  static const double hitboxSize = 6.0;
+  static Vector2 get hitboxPosition => Vector2(3.0, 5.0);
+  static Vector2 get size =>
+      Vector2.all(GameplayConstants.kTileSizeDefault * 0.8);
+  static double get attackEffectSize =>
       GameplayConstants.kTileSizeDefault * 0.62;
+  static void loadHitBox(GameComponent target) => target.add(
+    RectangleHitbox(
+      size: Vector2(hitboxSize, hitboxSize),
+      position: hitboxPosition,
+    ),
+  );
+}
 
-  // 2. Private instance variables
-  final Vector2 _initialPosition;
-  double _attackDamage = kDefaultAttackDamage;
+class ImpEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
+  double _attackDamage = _ImpEnemyData.attackDamage;
 
-  // 3. Constructor
-  ImpEnemy(this._initialPosition)
+  ImpEnemy(Vector2 position)
     : super(
         animation: EnemySpriteAnimations.impEnemyAnimation(),
-        position: _initialPosition,
-        size: Vector2.all(GameplayConstants.kTileSizeDefault * 0.8),
-        speed: kDefaultSpeed,
-        life: kDefaultLife,
+        position: position,
+        size: _ImpEnemyData.size,
+        speed: _ImpEnemyData.speed,
+        life: _ImpEnemyData.life,
       );
 
-  // 4. Lifecycle methods (onLoad, update, onDie)
   @override
   Future<void> onLoad() {
-    _initializeHitbox();
+    _ImpEnemyData.loadHitBox(this);
     return super.onLoad();
   }
 
@@ -79,26 +84,11 @@ class ImpEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
     super.onReceiveDamage(attacker, damage, id);
   }
 
-  // 5. Private helper methods (grouped by functionality)
-
-  // Setup/Initialization methods
-  /// Sets up the hitbox for collision detection
-  void _initializeHitbox() {
-    add(
-      RectangleHitbox(
-        size: Vector2(kHitboxSize, kHitboxSize),
-        position: Vector2(kHitboxPositionX, kHitboxPositionY),
-      ),
-    );
-  }
-
-  // Processing/Updates methods
-  /// Executes fast melee attack when player is in range
   void _executeAttack() {
     simpleAttackMelee(
-      size: Vector2.all(kAttackEffectSize),
+      size: Vector2.all(_ImpEnemyData.attackEffectSize),
       damage: _attackDamage,
-      interval: kAttackInterval,
+      interval: _ImpEnemyData.attackInterval,
       animationRight: EnemySpriteAnimations.enemyBasicAttackRight3(),
       execute: () {
         GameplayAudioManager.playAttackEnemyMelee();
@@ -106,8 +96,6 @@ class ImpEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
     );
   }
 
-  // Cleanup/Utility methods
-  /// Handles visual and audio effects when enemy dies
   void _handleDeathEffects() {
     gameRef.add(
       AnimatedGameObject(

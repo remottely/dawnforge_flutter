@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight_player.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
@@ -5,24 +7,67 @@ import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_loc
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration_sprite_animations.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
+
+// -----------------------------------------------------------------------------
+//  DATA CLASS (Seguindo o padrão de barrel_decoration.dart)
+// -----------------------------------------------------------------------------
+
+abstract class _DoorDecorationData {
+  /// DATA
+  static const String _kClosedDoorAsset =
+      'gameplay/environment/decorations/door_decoration_locked_1.png';
+  static const String _kRequiredKeyMessage = 'door_without_key';
+  static const double _kHitboxHeightRatio = 0.25;
+  static const double _kHitboxPositionRatio = 0.75;
+
+  /// LOAD
+  static Future<Sprite> _loadClosedSprite() => Sprite.load(_kClosedDoorAsset);
+
+  static Future<SpriteAnimation> _loadOpeningAnimation() =>
+      DecorationSpriteAnimations.doorDecorationOpening14();
+
+  static Widget _loadDialogPersonWidget() =>
+      PlayerSpriteAnimations.knightPlayerIdleRight6().asWidget();
+
+  static FutureOr<void> _buildHitBox(GameComponent target) {
+    target.add(
+      RectangleHitbox(
+        size: Vector2(target.width, target.height * _kHitboxHeightRatio),
+        position: Vector2(0, target.height * _kHitboxPositionRatio),
+      ),
+    );
+  }
+
+  /// CONFIG
+  static void _showKeyRequiredDialog({
+    required BuildContext context,
+    required VoidCallback onClose,
+  }) {
+    GameplayUIManager.displayConversationDialog(context, [
+      Say(
+        text: [TextSpan(text: getString(_kRequiredKeyMessage))],
+        person: _loadDialogPersonWidget(),
+        personSayDirection: PersonSayDirection.LEFT,
+      ),
+    ], onClose: onClose);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//  CLASSE PRINCIPAL (Refatorada para usar _DoorDecorationData)
+// -----------------------------------------------------------------------------
 
 class DoorDecoration extends DFGameDecoration {
-  static const String kClosedDoorAsset =
-      'gameplay/environment/decorations/door_decoration_locked_1.png';
-  static const String kRequiredKeyMessage = 'door_without_key';
-  static const double kHitboxHeightRatio = 0.25;
-  static const double kHitboxPositionRatio = 0.75;
-
-  DoorDecoration({required super.position, required super.size})
-    : super.withSprite(sprite: Sprite.load(kClosedDoorAsset));
-
   bool _isOpen = false;
   bool _isShowingDialog = false;
 
+  DoorDecoration({required super.position, required super.size})
+    : super.withSprite(sprite: _DoorDecorationData._loadClosedSprite());
+
   @override
   Future<void> onLoad() {
-    _setupHitbox();
+    _DoorDecorationData._buildHitBox(this);
     return super.onLoad();
   }
 
@@ -35,15 +80,6 @@ class DoorDecoration extends DFGameDecoration {
       _handlePlayerCollision(other);
     }
     super.onCollisionStart(intersectionPoints, other);
-  }
-
-  void _setupHitbox() {
-    add(
-      RectangleHitbox(
-        size: Vector2(width, height * kHitboxHeightRatio),
-        position: Vector2(0, height * kHitboxPositionRatio),
-      ),
-    );
   }
 
   void _handlePlayerCollision(KnightPlayer player) {
@@ -64,7 +100,7 @@ class DoorDecoration extends DFGameDecoration {
 
   void _playOpeningAnimation() {
     playSpriteAnimationOnce(
-      DecorationSpriteAnimations.doorDecorationOpening14(),
+      _DoorDecorationData._loadOpeningAnimation(),
       onFinish: _cleanup,
       onStart: () {
         sprite = null;
@@ -80,15 +116,8 @@ class DoorDecoration extends DFGameDecoration {
   }
 
   void _showKeyRequiredDialog() {
-    GameplayUIManager.displayConversationDialog(
-      gameRef.context,
-      [
-        Say(
-          text: [TextSpan(text: getString(kRequiredKeyMessage))],
-          person: PlayerSpriteAnimations.knightPlayerIdleRight6().asWidget(),
-          personSayDirection: PersonSayDirection.LEFT,
-        ),
-      ],
+    _DoorDecorationData._showKeyRequiredDialog(
+      context: gameRef.context,
       onClose: () {
         _isShowingDialog = false;
       },

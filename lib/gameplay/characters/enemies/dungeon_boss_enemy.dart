@@ -15,29 +15,43 @@ import 'package:darkness_dungeon/shared/components/df_animated_sprite_widget.dar
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+abstract class _DungeonBossEnemyData {
+  static const double attackDamage = 40.0;
+  static const double _life = 200.0;
+  static const double _speed = GameplayConstants.kCharacterSpeedSlow;
+  static Vector2 get _spriteSize => Vector2(
+    GameplayConstants.kTileSizeLarge,
+    GameplayConstants.kTileSizeDefault * 1.7,
+  );
+  static Vector2 get hitboxSize => Vector2(14, 16);
+  static Vector2 get hitboxPosition => Vector2(5, 11);
+  static double get attackEffectSize =>
+      GameplayConstants.kTileSizeDefault * 0.62;
+  static double get visionRadiusUltraLarge =>
+      GameplayConstants.kVisionRadiusUltraLarge;
+  static double get visionRadiusLarge => GameplayConstants.kVisionRadiusLarge;
+  static void loadHitBox(GameComponent target) =>
+      target.add(RectangleHitbox(size: hitboxSize, position: hitboxPosition));
+}
+
 class DungeonBossEnemy extends SimpleEnemy
     with BlockMovementCollision, UseLifeBar {
-  final Vector2 initialPosition;
-  double attackDamage = 40;
-
+  double attackDamage = _DungeonBossEnemyData.attackDamage;
   bool _hasSeenPlayerFirst = false;
   List<Enemy> spawnedEnemies = [];
 
-  DungeonBossEnemy(this.initialPosition)
+  DungeonBossEnemy(Vector2 position)
     : super(
         animation: EnemySpriteAnimations.dungeonBossEnemyAnimation(),
-        position: initialPosition,
-        size: Vector2(
-          GameplayConstants.kTileSizeLarge, // 24 > 32
-          GameplayConstants.kTileSizeDefault * 1.7, // 27.2 > 36
-        ),
-        speed: GameplayConstants.kCharacterSpeedSlow,
-        life: 200,
+        position: position,
+        size: _DungeonBossEnemyData._spriteSize,
+        speed: _DungeonBossEnemyData._speed,
+        life: _DungeonBossEnemyData._life,
       );
 
   @override
   Future<void> onLoad() {
-    add(RectangleHitbox(size: Vector2(14, 16), position: Vector2(5, 11)));
+    _DungeonBossEnemyData.loadHitBox(this);
     return super.onLoad();
   }
 
@@ -50,7 +64,7 @@ class DungeonBossEnemy extends SimpleEnemy
   @override
   void update(double dt) {
     if (!_hasSeenPlayerFirst) {
-      this.seePlayer(
+      seePlayer(
         observed: (p) {
           _hasSeenPlayerFirst = true;
           gameRef.camera.moveToTargetAnimated(
@@ -59,27 +73,25 @@ class DungeonBossEnemy extends SimpleEnemy
             onComplete: _showConversation,
           );
         },
-        radiusVision: GameplayConstants.kVisionRadiusUltraLarge,
+        radiusVision: _DungeonBossEnemyData.visionRadiusUltraLarge,
       );
     }
 
     if (life < 150 && spawnedEnemies.length == 0) {
       spawnMinion(dt);
     }
-
     if (life < 100 && spawnedEnemies.length == 1) {
       spawnMinion(dt);
     }
-
     if (life < 50 && spawnedEnemies.length == 2) {
       spawnMinion(dt);
     }
 
-    this.seeAndMoveToPlayer(
+    seeAndMoveToPlayer(
       closePlayer: (player) {
         executeAttack();
       },
-      radiusVision: GameplayConstants.kVisionRadiusLarge,
+      radiusVision: _DungeonBossEnemyData.visionRadiusLarge,
     );
 
     super.update(dt);
@@ -90,7 +102,7 @@ class DungeonBossEnemy extends SimpleEnemy
     gameRef.add(
       AnimatedGameObject(
         animation: CharacterEffectSpriteAnimations.characterExplosionRight7(),
-        position: this.position,
+        position: position,
         size: GameplayConstants.kTileVector2Default,
         loop: false,
       ),
@@ -105,19 +117,18 @@ class DungeonBossEnemy extends SimpleEnemy
   void spawnMinion(double dt) {
     if (checkInterval('spawnMinion', 2000, dt)) {
       Vector2 positionExplosion = Vector2.zero();
-
-      switch (this.directionThePlayerIsIn()) {
+      switch (directionThePlayerIsIn()) {
         case Direction.left:
-          positionExplosion = this.position.translated(width * -2, 0);
+          positionExplosion = position.translated(width * -2, 0);
           break;
         case Direction.right:
-          positionExplosion = this.position.translated(width * 2, 0);
+          positionExplosion = position.translated(width * 2, 0);
           break;
         case Direction.up:
-          positionExplosion = this.position.translated(0, height * -2);
+          positionExplosion = position.translated(0, height * -2);
           break;
         case Direction.down:
-          positionExplosion = this.position.translated(0, height * 2);
+          positionExplosion = position.translated(0, height * 2);
           break;
         case Direction.upLeft:
         case Direction.upRight:
@@ -126,13 +137,11 @@ class DungeonBossEnemy extends SimpleEnemy
           break;
         default:
       }
-
       Enemy e = spawnedEnemies.length == 2
           ? DungeonMiniBossEnemy(
               Vector2(positionExplosion.x, positionExplosion.y),
             )
           : ImpEnemy(Vector2(positionExplosion.x, positionExplosion.y));
-
       gameRef.add(
         AnimatedGameObject(
           animation:
@@ -142,15 +151,14 @@ class DungeonBossEnemy extends SimpleEnemy
           loop: false,
         ),
       );
-
       spawnedEnemies.add(e);
       gameRef.add(e);
     }
   }
 
   void executeAttack() {
-    this.simpleAttackMelee(
-      size: Vector2.all(GameplayConstants.kTileSizeDefault * 0.62),
+    simpleAttackMelee(
+      size: Vector2.all(_DungeonBossEnemyData.attackEffectSize),
       damage: attackDamage,
       interval: 1500,
       animationRight: EnemySpriteAnimations.enemyBasicAttackRight3(),
@@ -162,7 +170,7 @@ class DungeonBossEnemy extends SimpleEnemy
 
   @override
   void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
-    this.showDamage(
+    showDamage(
       damage,
       config: TextStyle(fontSize: 5, color: Colors.white, fontFamily: 'Normal'),
     );
@@ -181,7 +189,6 @@ class DungeonBossEnemy extends SimpleEnemy
           ..strokeWidth = 1
           ..style = PaintingStyle.fill,
       );
-
     double lastX = widthBar + 5;
     if (spawnedEnemies.length < 2)
       canvas.drawLine(
@@ -192,7 +199,6 @@ class DungeonBossEnemy extends SimpleEnemy
           ..strokeWidth = 1
           ..style = PaintingStyle.fill,
       );
-
     lastX = lastX + widthBar + 5;
     if (spawnedEnemies.length < 3)
       canvas.drawLine(

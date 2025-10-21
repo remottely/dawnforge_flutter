@@ -6,27 +6,31 @@ import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dar
 
 /// [MapSensor] responsible for detecting player interaction with map transition areas
 /// Following Flutter naming conventions for game sensor systems
-class MapSensor extends DFSensorPlayerDecoration {
-  // Flutter-style constants for sensor events
-  static const String kPlayerEnteredEvent = 'Player entered sensor';
-  static const String kPlayerExitedEvent = 'Player exited sensor';
-  static const String kNavigationInitiatedEvent = 'Navigating to';
-  static const String kResetNavigationEvent =
-      'Reset navigation state for sensor';
 
-  // Sensor identification and configuration
+abstract class _MapSensorData {
+  static const String playerEnteredEvent = 'Player entered sensor';
+  static const String playerExitedEvent = 'Player exited sensor';
+  static const String navigationInitiatedEvent = 'Navigating to';
+  static const String resetNavigationEvent =
+      'Reset navigation state for sensor';
+  static double get sensorContactTime =>
+      GameplayMapConstants.kSensorContactTime;
+  static int get transitionDelayMs => GameplayMapConstants.kTransitionDelayMs;
+  static String get mapNavigationLogPrefix =>
+      GameplayMapConstants.kMapNavigationLogPrefix;
+  static String get sensorLogPrefix => GameplayMapConstants.kSensorLogPrefix;
+}
+
+class MapSensor extends DFSensorPlayerDecoration {
   final String id;
   final String targetMap;
   final Vector2 playerPosition;
   final Direction playerDirection;
 
-  // Contact state management
   bool hasContact = false;
   bool _hasNavigated = false;
   double _contactTime = 0;
 
-  /// Creates a map sensor for player navigation between maps
-  /// Following Flutter pattern of descriptive constructors
   MapSensor({
     required this.id,
     required Vector2 position,
@@ -41,7 +45,7 @@ class MapSensor extends DFSensorPlayerDecoration {
     if (!hasContact && !_hasNavigated) {
       hasContact = true;
       _contactTime = 0;
-      _logSensorEvent('$kPlayerEnteredEvent $id');
+      _logSensorEvent('${_MapSensorData.playerEnteredEvent} $id');
     }
     super.onContact(component);
   }
@@ -50,7 +54,7 @@ class MapSensor extends DFSensorPlayerDecoration {
   void onContactExit(KnightPlayer component) {
     hasContact = false;
     _contactTime = 0;
-    _logSensorEvent('$kPlayerExitedEvent $id');
+    _logSensorEvent('${_MapSensorData.playerExitedEvent} $id');
     super.onContactExit(component);
   }
 
@@ -58,42 +62,32 @@ class MapSensor extends DFSensorPlayerDecoration {
   void update(double dt) {
     if (hasContact && !_hasNavigated) {
       _contactTime += dt;
-
-      if (_contactTime >= GameplayMapConstants.kSensorContactTime) {
+      if (_contactTime >= _MapSensorData.sensorContactTime) {
         _initiateMapTransition();
       }
     }
     super.update(dt);
   }
 
-  /// Resets the sensor navigation state
-  /// Following Flutter pattern of component state management
   void resetNavigationState() {
     _hasNavigated = false;
     hasContact = false;
     _contactTime = 0;
-    _logSensorEvent('$kResetNavigationEvent $id');
+    _logSensorEvent('${_MapSensorData.resetNavigationEvent} $id');
   }
 
-  /// Initiates map transition with smooth timing
-  /// Following Flutter pattern of private utility methods
   void _initiateMapTransition() {
     _hasNavigated = true;
     hasContact = false;
-
     AppLogger.info(
-      '${GameplayMapConstants.kMapNavigationLogPrefix}: $kNavigationInitiatedEvent $targetMap, position: $playerPosition, direction: $playerDirection',
+      '${_MapSensorData.mapNavigationLogPrefix}: ${_MapSensorData.navigationInitiatedEvent} $targetMap, position: $playerPosition, direction: $playerDirection',
     );
-
-    // Delayed transition for smooth gameplay experience
     Future.delayed(
-      Duration(milliseconds: GameplayMapConstants.kTransitionDelayMs),
+      Duration(milliseconds: _MapSensorData.transitionDelayMs),
       () => _performNavigation(),
     );
   }
 
-  /// Performs the actual map navigation
-  /// Following Flutter pattern of separation of concerns
   void _performNavigation() {
     MapNavigator.of(context).toNamed(
       targetMap,
@@ -104,10 +98,8 @@ class MapSensor extends DFSensorPlayerDecoration {
     );
   }
 
-  /// Logs sensor events for debugging
-  /// Following Flutter pattern of centralized logging
   void _logSensorEvent(String message) {
-    AppLogger.debug('${GameplayMapConstants.kSensorLogPrefix}: $message');
+    AppLogger.debug('${_MapSensorData.sensorLogPrefix}: $message');
   }
 }
 

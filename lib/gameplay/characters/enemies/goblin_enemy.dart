@@ -19,36 +19,37 @@ import 'package:flutter/material.dart';
 /// final goblin = GoblinEnemy(position);
 /// goblin.onLoad();
 /// ```
-class GoblinEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
-  // 1. Constants (grouped by type)
-  static const double kDefaultAttackDamage = 25.0;
-  static const double kDefaultLife = 120.0;
-  static const double kDefaultSpeed = GameplayConstants.kCharacterSpeedSlow;
-  static const int kAttackInterval = 800;
-  static const double kHitboxSize = 7.0;
-  static const double kHitboxPositionX = 3.0;
-  static const double kHitboxPositionY = 4.0;
-  static const double kAttackEffectSize =
+
+abstract class _GoblinEnemyData {
+  static const double attackDamage = 25.0;
+  static const double life = 120.0;
+  static const double speed = GameplayConstants.kCharacterSpeedSlow;
+  static const int attackInterval = 800;
+  static Vector2 get hitboxSize => Vector2.all(7.0);
+  static Vector2 get hitboxPosition => Vector2(3.0, 4.0);
+  static Vector2 get _spriteSize =>
+      Vector2.all(GameplayConstants.kTileSizeDefault * 0.8);
+  static double get attackEffectSize =>
       GameplayConstants.kTileSizeDefault * 0.62;
+  static void loadHitBox(GameComponent target) =>
+      target.add(RectangleHitbox(size: hitboxSize, position: hitboxPosition));
+}
 
-  // 2. Private instance variables
-  final Vector2 _initialPosition;
-  double _attackDamage = kDefaultAttackDamage;
+class GoblinEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
+  double _attackDamage = _GoblinEnemyData.attackDamage;
 
-  // 3. Constructor
-  GoblinEnemy(this._initialPosition)
+  GoblinEnemy(Vector2 position)
     : super(
         animation: EnemySpriteAnimations.goblinEnemyAnimation(),
-        position: _initialPosition,
-        size: Vector2.all(GameplayConstants.kTileSizeDefault * 0.8),
-        speed: kDefaultSpeed,
-        life: kDefaultLife,
+        position: position,
+        size: _GoblinEnemyData._spriteSize,
+        speed: _GoblinEnemyData.speed,
+        life: _GoblinEnemyData.life,
       );
 
-  // 4. Lifecycle methods (onLoad, update, onDie)
   @override
   Future<void> onLoad() {
-    _initializeHitbox();
+    _GoblinEnemyData.loadHitBox(this);
     return super.onLoad();
   }
 
@@ -79,26 +80,11 @@ class GoblinEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
     super.onReceiveDamage(attacker, damage, id);
   }
 
-  // 5. Private helper methods (grouped by functionality)
-
-  // Setup/Initialization methods
-  /// Sets up the hitbox for collision detection
-  void _initializeHitbox() {
-    add(
-      RectangleHitbox(
-        size: Vector2(kHitboxSize, kHitboxSize),
-        position: Vector2(kHitboxPositionX, kHitboxPositionY),
-      ),
-    );
-  }
-
-  // Processing/Updates methods
-  /// Executes melee attack when player is in range
   void _executeAttack() {
     simpleAttackMelee(
-      size: Vector2.all(kAttackEffectSize),
+      size: Vector2.all(_GoblinEnemyData.attackEffectSize),
       damage: _attackDamage,
-      interval: kAttackInterval,
+      interval: _GoblinEnemyData.attackInterval,
       animationRight: EnemySpriteAnimations.enemyBasicAttackRight3(),
       execute: () {
         GameplayAudioManager.playAttackEnemyMelee();
@@ -106,12 +92,11 @@ class GoblinEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
     );
   }
 
-  // Cleanup/Utility methods
-  /// Handles visual and audio effects when enemy dies
   void _handleDeathEffects() {
     gameRef.add(
       AnimatedGameObject(
-        animation: CharacterEffectSpriteAnimations.characterExplosionSmokeRight5(),
+        animation:
+            CharacterEffectSpriteAnimations.characterExplosionSmokeRight5(),
         position: position,
         size: GameplayConstants.kTileVector2Default,
         loop: false,

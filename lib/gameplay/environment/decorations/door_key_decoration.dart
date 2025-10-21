@@ -1,8 +1,28 @@
+import 'dart:async';
+
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight_player.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_sprite_constants.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
+
+// -----------------------------------------------------------------------------
+//  DATA CLASS (Seguindo o padrão de barrel_decoration.dart)
+// -----------------------------------------------------------------------------
+
+abstract class _DoorKeyDecorationData {
+  /// DATA
+  static const String _spritePath =
+      GameplaySpriteConstants.kDoorKeyDecorationAssetPath;
+  static Vector2 get _spriteSize => GameplayConstants.kTileVector2Default;
+
+  /// LOAD
+  static Future<Sprite> _loadSprite() => Sprite.load(_spritePath);
+}
+
+// -----------------------------------------------------------------------------
+//  CLASSE PRINCIPAL (Refatorada para usar _DoorKeyDecorationData)
+// -----------------------------------------------------------------------------
 
 /// Interactive decoration Key for the Darkness Dungeon game
 /// Following Flutter naming conventions for item interaction systems
@@ -14,27 +34,18 @@ import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dar
 ///
 /// Usage patterns:
 /// ```dart
-/// final key = DoorKeyDecoration(position);
+/// final key = DoorKeyDecoration(position: Vector2(x, y));
 /// key.onLoad();
 /// ```
 class DoorKeyDecoration extends DFSensorPlayerDecoration {
-  // 1. Constantes de configuração
-
-  // 2. Variáveis de instância privadas
-  final Vector2 _initialPosition;
   bool _hasBeenCollected = false;
 
-  // 3. Construtor
-  DoorKeyDecoration(this._initialPosition)
+  DoorKeyDecoration({required super.position})
     : super.withSprite(
-        sprite: Sprite.load(
-          GameplaySpriteConstants.kDoorKeyDecorationAssetPath,
-        ),
-        position: _initialPosition,
-        size: GameplayConstants.kTileVector2Default,
+        sprite: _DoorKeyDecorationData._loadSprite(),
+        size: _DoorKeyDecorationData._spriteSize,
       );
 
-  // 4. Métodos públicos principais
   @override
   void onContact(KnightPlayer player) {
     if (!_hasBeenCollected) {
@@ -44,7 +55,6 @@ class DoorKeyDecoration extends DFSensorPlayerDecoration {
     }
   }
 
-  // 5. Métodos privados auxiliares
   /// Triggers the key collection effect
   void _triggerEffect(KnightPlayer player) {
     player.hasKey = true;

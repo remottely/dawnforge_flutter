@@ -23,50 +23,48 @@ import 'package:flutter/services.dart';
 /// final wizard = WizardNpc(position);
 /// wizard.onLoad();
 /// ```
-class WizardNpc extends SimpleNpc {
-  // 1. Constantes de configuração
-  static const String kInteractionKey = 'talk_wizard';
-  static const double kNpcSizeMultiplierX = 0.8;
-  static const double kNpcSizeMultiplierY = 1.0;
 
-  // 2. Variáveis de instância privadas
+abstract class _WizardNpcData {
+  static const String interactionKey = 'talk_wizard';
+  static const double sizeMultiplierX = 0.8;
+  static const double sizeMultiplierY = 1.0;
+  static Vector2 get size => Vector2(
+    GameplayConstants.kTileSizeDefault * sizeMultiplierX,
+    GameplayConstants.kTileSizeDefault * sizeMultiplierY,
+  );
+  static SimpleDirectionAnimation get animation => SimpleDirectionAnimation(
+    idleRight: NpcSpriteAnimations.wizardIdleLeft(),
+    runRight: NpcSpriteAnimations.wizardIdleLeft(),
+  );
+  static double get visionRadius => GameplayConstants.kVisionRadiusSmall;
+}
+
+class WizardNpc extends SimpleNpc {
   bool _isShowingConversation = false;
 
-  // 3. Construtor
-  /// Creates a wizard NPC that provides introductory guidance to players
   WizardNpc(Vector2 position)
     : super(
-        animation: SimpleDirectionAnimation(
-          idleRight: NpcSpriteAnimations.wizardIdleLeft(),
-          runRight: NpcSpriteAnimations.wizardIdleLeft(),
-        ),
+        animation: _WizardNpcData.animation,
         position: position,
-        size: Vector2(
-          GameplayConstants.kTileSizeDefault * kNpcSizeMultiplierX,
-          GameplayConstants.kTileSizeDefault * kNpcSizeMultiplierY,
-        ),
+        size: _WizardNpcData.size,
       );
 
-  // 4. Métodos públicos principais
   @override
   void update(double dt) {
     super.update(dt);
     _checkPlayerProximity();
   }
 
-  // 5. Métodos privados auxiliares
-  /// Checks for player proximity to initiate conversation
   void _checkPlayerProximity() {
     if (gameRef.player != null) {
       seeComponent(
         gameRef.player!,
         observed: _onPlayerDetected,
-        radiusVision: GameplayConstants.kVisionRadiusSmall,
+        radiusVision: _WizardNpcData.visionRadius,
       );
     }
   }
 
-  /// Handles player detection and initiates introduction sequence
   void _onPlayerDetected(Component player) {
     if (!_isShowingConversation) {
       gameRef.player!.idle();
@@ -80,7 +78,6 @@ class WizardNpc extends SimpleNpc {
     }
   }
 
-  /// Initializes the dialogue system and shows conversation
   void _initializeDialogue() {
     GameplayAudioManager.playInteraction();
     GameplayUIManager.displayConversationDialog(
@@ -92,7 +89,6 @@ class WizardNpc extends SimpleNpc {
     );
   }
 
-  /// Creates the dialogue sequence for the wizard introduction
   List<Say> _createDialogueSequence() {
     return [
       Say(
@@ -133,12 +129,10 @@ class WizardNpc extends SimpleNpc {
     ];
   }
 
-  /// Handles dialogue change events with audio feedback
   void _onDialogueChanged(int index) {
     GameplayAudioManager.playInteraction();
   }
 
-  /// Handles conversation completion
   void _onConversationFinished() {
     GameplayAudioManager.playInteraction();
   }

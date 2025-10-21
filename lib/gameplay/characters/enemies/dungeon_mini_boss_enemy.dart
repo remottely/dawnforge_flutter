@@ -1,49 +1,49 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/enemy_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_effect_sprite_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_data.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:flutter/material.dart';
 
+abstract class _DungeonMiniBossEnemyData {
+  static const double attackDamage = 50.0;
+  static const double life = 150.0;
+  static const double _speed = GameplayConstants.kCharacterSpeedSlow;
+  static const double closeVisionRadius = GameplayConstants.kVisionRadiusMedium;
+  static const double longVisionRadius =
+      GameplayConstants.kVisionRadiusExtraLarge;
+  static const int meleeAttackInterval = 300;
+  static Vector2 get hitboxSize => Vector2(6.0, 7.0);
+  static Vector2 get hitboxPosition => Vector2(2.5, 8.0);
+  static Vector2 get _spriteSize => Vector2(
+    GameplayConstants.kTileSizeDefault * 0.68,
+    GameplayConstants.kTileSizeDefault * 0.93,
+  );
+  static double get attackEffectSize =>
+      GameplayConstants.kTileSizeDefault * 0.62;
+  static double get meleeDamageReduction => 3.0;
+  static void loadHitBox(GameComponent target) =>
+      target.add(RectangleHitbox(size: hitboxSize, position: hitboxPosition));
+}
+
 class DungeonMiniBossEnemy extends SimpleEnemy
     with BlockMovementCollision, UseLifeBar {
-  static const double kDefaultAttackDamage = 50.0;
-  static const double kDefaultLife = 150.0;
-  static const double kDefaultSpeed = GameplayConstants.kCharacterSpeedSlow;
-  static const double kCloseVisionRadius =
-      GameplayConstants.kVisionRadiusMedium;
-  static const double kLongVisionRadius =
-      GameplayConstants.kVisionRadiusExtraLarge;
-  static const int kMeleeAttackInterval = 300;
-  static const double kHitboxSizeX = 6.0;
-  static const double kHitboxSizeY = 7.0;
-  static const double kHitboxPositionX = 2.5;
-  static const double kHitboxPositionY = 8.0;
-  static const double kAttackEffectSize =
-      GameplayConstants.kTileSizeDefault * 0.62;
-  static const double kRangedAttackSize =
-      GameplayConstants.kTileSizeDefault * 0.65;
-  static const double kMeleeDamageReduction = 3.0;
-
-  final Vector2 _initialPosition;
-  double _attackDamage = kDefaultAttackDamage;
+  double _attackDamage = _DungeonMiniBossEnemyData.attackDamage;
   bool _seePlayerClose = false;
 
-  DungeonMiniBossEnemy(this._initialPosition)
+  DungeonMiniBossEnemy(Vector2 position)
     : super(
         animation: EnemySpriteAnimations.dungeonMiniBossEnemyAnimation(),
-        position: _initialPosition,
-        size: Vector2(
-          GameplayConstants.kTileSizeDefault * 0.68,
-          GameplayConstants.kTileSizeDefault * 0.93,
-        ),
-        speed: kDefaultSpeed,
-        life: kDefaultLife,
+        position: position,
+        size: _DungeonMiniBossEnemyData._spriteSize,
+        speed: _DungeonMiniBossEnemyData._speed,
+        life: _DungeonMiniBossEnemyData.life,
       );
 
   @override
   Future<void> onLoad() {
-    _initializeHitbox();
+    _DungeonMiniBossEnemyData.loadHitBox(this);
     return super.onLoad();
   }
 
@@ -58,17 +58,17 @@ class DungeonMiniBossEnemy extends SimpleEnemy
           closePlayer: (player) {
             _executeMeleeAttack();
           },
-          radiusVision: kCloseVisionRadius,
+          radiusVision: _DungeonMiniBossEnemyData.closeVisionRadius,
         );
       },
-      radiusVision: kCloseVisionRadius,
+      radiusVision: _DungeonMiniBossEnemyData.closeVisionRadius,
     );
     if (!_seePlayerClose) {
       seeAndMoveToAttackRange(
         positioned: (p) {
           _executeCharacterFireballAttack(_attackDamage);
         },
-        radiusVision: kLongVisionRadius,
+        radiusVision: _DungeonMiniBossEnemyData.longVisionRadius,
       );
     }
   }
@@ -89,51 +89,25 @@ class DungeonMiniBossEnemy extends SimpleEnemy
     super.onReceiveDamage(attacker, damage, id);
   }
 
-  void _initializeHitbox() {
-    add(
-      RectangleHitbox(
-        size: Vector2(kHitboxSizeX, kHitboxSizeY),
-        position: Vector2(kHitboxPositionX, kHitboxPositionY),
-      ),
-    );
-  }
-
   void _executeCharacterFireballAttack(double damage) {
-    // GameplayAudioManager.playAttackRange();
     simpleAttackRange(
-      animation:
-          CharacterEffectSpriteAnimations.characterFireballAttackRight3(),
-      animationDestroy:
-          CharacterEffectSpriteAnimations.characterFireballExplosionRight6(),
-      size: Vector2.all(kRangedAttackSize),
+      animation: CharacterFireballAttackData.loadAttackAnimation(),
+      animationDestroy: CharacterFireballAttackData.loadExplosionAnimation(),
+      size: CharacterFireballAttackData.spriteSize,
       damage: damage,
-      speed: speed * 2.5,
-      execute: () {
-        GameplayAudioManager.playAttackRange();
-      },
-      onDestroy: () {
-        GameplayAudioManager.playExplosion();
-      },
-      collision: RectangleHitbox(
-        size: Vector2(
-          GameplayConstants.kTileSizeDefault / 3,
-          GameplayConstants.kTileSizeDefault / 3,
-        ),
-        position: Vector2(10, 5),
-      ),
-      lightingConfig: LightingConfig(
-        radius: GameplayConstants.kTileSizeDefault * 0.9,
-        blurBorder: GameplayConstants.kTileSizeDefault,
-        color: Colors.deepOrangeAccent.withValues(alpha: 0.4),
-      ),
+      speed: speed * CharacterFireballAttackData.kSpeedMultiplier,
+      execute: () => CharacterFireballAttackData.playExecutionAudio(),
+      onDestroy: () => CharacterFireballAttackData.playExplosionAudio(),
+      collision: CharacterFireballAttackData.buildHitbox(),
+      lightingConfig: CharacterFireballAttackData.buildLightingConfig(),
     );
   }
 
   void _executeMeleeAttack() {
     simpleAttackMelee(
-      size: Vector2.all(kAttackEffectSize),
-      damage: _attackDamage / kMeleeDamageReduction,
-      interval: kMeleeAttackInterval,
+      size: Vector2.all(_DungeonMiniBossEnemyData.attackEffectSize),
+      damage: _attackDamage / _DungeonMiniBossEnemyData.meleeDamageReduction,
+      interval: _DungeonMiniBossEnemyData.meleeAttackInterval,
       animationRight: EnemySpriteAnimations.enemyBasicAttackRight3(),
       execute: () {
         GameplayAudioManager.playAttackEnemyMelee();

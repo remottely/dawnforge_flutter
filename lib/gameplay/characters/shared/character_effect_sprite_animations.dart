@@ -19,22 +19,4 @@ class CharacterEffectSpriteAnimations {
           textureSize: GameplaySpriteConstants.explosionTextureSize,
         ),
       );
-
-  static Future<SpriteAnimation> characterFireballAttackRight3() =>
-      SpriteAnimation.load(
-        'gameplay/characters/shared/character_fireball_attack_right_3.png',
-        GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
-          amount: GameplaySpriteConstants.kFireballFrames,
-          textureSize: GameplaySpriteConstants.fireballTextureSize,
-        ),
-      );
-
-  static Future<SpriteAnimation> characterFireballExplosionRight6() =>
-      SpriteAnimation.load(
-        'gameplay/characters/shared/character_fireball_explosion_right_6.png',
-        GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
-          amount: GameplaySpriteConstants.kFireballExplosionFrames,
-          textureSize: GameplaySpriteConstants.explosionTextureSize,
-        ),
-      );
 }

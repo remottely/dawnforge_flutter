@@ -68,10 +68,10 @@ class GameplayAudioManager {
 
   /// Plays range attack sound effect (fireball)
   /// Following Flutter pattern of descriptive method names
-  static void playAttackRange() {
+  static void playFireballAttack() {
     try {
       FlameAudio.play(
-        GameplayAudioConstants.kAttackFireBallAsset,
+        GameplayAudioConstants.kFireBallAttackAudioAssetPath,
         volume: GameplayAudioConstants.kRangeVolume,
       );
     } catch (e) {
@@ -97,7 +97,7 @@ class GameplayAudioManager {
   static void playExplosion() {
     try {
       FlameAudio.play(
-        GameplayAudioConstants.kExplosionAsset,
+        GameplayAudioConstants.kFIreballExplosionAudioAssetPath,
         volume: GameplayAudioConstants.kExplosionVolume,
       );
     } catch (e) {
