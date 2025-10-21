@@ -1,5 +1,7 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight_player.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight_player_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight_player_model.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/data/gameplay_map_data.dart';
 import 'package:darkness_dungeon/gameplay/core/hud/gameplay_hud.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
@@ -45,7 +47,7 @@ class Gameplay extends StatefulWidget {
 class _GameplayState extends State<Gameplay> {
   // 1. Constantes de configuração do jogo (agrupadas por tipo)
   // UI Constants
-  static const double kJoystickSize = 100.0;
+  static const double _kJoystickSpriteSize = 100.0;
   static const double kActionButtonSize = 80.0;
   static const double kActionButtonMarginBottom = 50.0;
   static const double kPrimaryActionMarginRight = 50.0;
@@ -162,14 +164,13 @@ class _GameplayState extends State<Gameplay> {
     _gameplayHUD = GameplayHUD();
   }
 
-  // 6. Métodos de factory de componentes (agrupados)
+  KnightPlayerView _createPlayerWithState(Vector2 position) {
+    final playerModel = KnightPlayerModel();
+    final playerController = KnightPlayerController(model: playerModel);
+    final playerView = KnightPlayerView(position, controller: playerController);
 
-  /// Creates player for the current map
-  /// Following Flutter pattern of component factories
-  KnightPlayer _createPlayerWithState(Vector2 position) {
-    final player = KnightPlayer(position);
-    AppLogger.info('Created fresh player at position: $position');
-    return player;
+    AppLogger.info('Created fresh playerView at position: $position');
+    return playerView;
   }
 
   /// Creates a fresh controller instance for each map navigation
@@ -192,7 +193,7 @@ class _GameplayState extends State<Gameplay> {
       directional: JoystickDirectional(
         spriteBackgroundDirectional: Sprite.load('joystick_background.png'),
         spriteKnobDirectional: Sprite.load('joystick_knob.png'),
-        size: kJoystickSize,
+        size: _kJoystickSpriteSize,
         isFixed: false,
       ),
       actions: [_createPrimaryAttackAction(), _createRangedAttackAction()],

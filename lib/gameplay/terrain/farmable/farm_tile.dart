@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight_player_model.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
 
-import '../../characters/player/knight_player.dart';
 import 'crop_types.dart';
 
 enum TileState { grass, soil, watered, planted, grown }

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight_player.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration_sprite_animations.dart';
@@ -28,7 +28,7 @@ abstract class _SpikeTrapDecorationData {
 /// DONE
 class SpikeTrapDecoration extends DFSensorPlayerDecoration {
   final double _damageAmount;
-  KnightPlayer? _contactedPlayer;
+  KnightPlayerView? _contactedPlayer;
 
   SpikeTrapDecoration({
     required super.position,
@@ -40,12 +40,12 @@ class SpikeTrapDecoration extends DFSensorPlayerDecoration {
        );
 
   @override
-  void onContact(KnightPlayer player) {
+  void onContact(KnightPlayerView player) {
     _contactedPlayer = player;
   }
 
   @override
-  void onContactExit(KnightPlayer player) {
+  void onContactExit(KnightPlayerView player) {
     _contactedPlayer = null;
   }
 

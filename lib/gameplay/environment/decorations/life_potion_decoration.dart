@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight_player.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
 
@@ -29,7 +29,7 @@ class LifePotionDecoration extends DFSensorPlayerDecoration {
       );
 
   @override
-  void onContact(KnightPlayer player) {
+  void onContact(KnightPlayerView player) {
     if (!_hasBeenConsumed) {
       _hasBeenConsumed = true;
       _triggerEffect(player);
@@ -37,7 +37,7 @@ class LifePotionDecoration extends DFSensorPlayerDecoration {
     }
   }
 
-  void _triggerEffect(KnightPlayer player) {
+  void _triggerEffect(KnightPlayerView player) {
     _healPlayerGradually(player);
   }
 

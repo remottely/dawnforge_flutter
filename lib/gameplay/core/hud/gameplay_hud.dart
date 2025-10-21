@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight_player.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/hud/player_vital_stats_hud.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_sprite_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_ui_constants.dart';
@@ -71,6 +71,7 @@ class GameplayHUD extends GameInterface {
   /// Checks if the player exists and has a key
   /// Following Flutter pattern of state checking methods
   bool _hasPlayerWithKey() {
-    return gameRef.player != null && (gameRef.player as KnightPlayer).hasKey;
+    return gameRef.player != null &&
+        (gameRef.player as KnightPlayerView).controller.model.hasKey;
   }
 }

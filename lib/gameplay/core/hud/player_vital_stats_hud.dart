@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight_player.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_ui_constants.dart';
 import 'package:flutter/material.dart';
 
@@ -64,9 +64,12 @@ class PlayerVitalStatsHUD extends InterfaceComponent {
       _currentLife = gameRef.player!.life;
       _maxLife = gameRef.player!.maxLife;
 
-      // Update stamina if player is a KnightPlayer
-      if (gameRef.player is KnightPlayer) {
-        _currentStamina = (gameRef.player as KnightPlayer).currentStamina;
+      // Update stamina if player is a KnightPlayerView
+      if (gameRef.player is KnightPlayerView) {
+        _currentStamina = (gameRef.player as KnightPlayerView)
+            .controller
+            .model
+            .currentStamina;
       }
     }
   }

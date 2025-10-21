@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight_player.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_map_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/app_logger.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
@@ -41,7 +41,7 @@ class MapSensor extends DFSensorPlayerDecoration {
   }) : super(position: position, size: size);
 
   @override
-  void onContact(KnightPlayer component) {
+  void onContact(KnightPlayerView component) {
     if (!hasContact && !_hasNavigated) {
       hasContact = true;
       _contactTime = 0;
@@ -51,7 +51,7 @@ class MapSensor extends DFSensorPlayerDecoration {
   }
 
   @override
-  void onContactExit(KnightPlayer component) {
+  void onContactExit(KnightPlayerView component) {
     hasContact = false;
     _contactTime = 0;
     _logSensorEvent('${_MapSensorData.playerExitedEvent} $id');

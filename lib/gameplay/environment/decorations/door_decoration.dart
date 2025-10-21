@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight_player.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight_player_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
@@ -76,15 +76,15 @@ class DoorDecoration extends DFGameDecoration {
     Set<Vector2> intersectionPoints,
     PositionComponent other,
   ) {
-    if (other is KnightPlayer) {
+    if (other is KnightPlayerView) {
       _handlePlayerCollision(other);
     }
     super.onCollisionStart(intersectionPoints, other);
   }
 
-  void _handlePlayerCollision(KnightPlayer player) {
+  void _handlePlayerCollision(KnightPlayerView player) {
     if (!_isOpen) {
-      if (player.hasKey == true) {
+      if (player.controller.model.hasKey == true) {
         _triggerDoorOpening(player);
       } else {
         _showKeyRequiredMessage();
@@ -92,9 +92,9 @@ class DoorDecoration extends DFGameDecoration {
     }
   }
 
-  void _triggerDoorOpening(KnightPlayer player) {
+  void _triggerDoorOpening(KnightPlayerView player) {
     _isOpen = true;
-    player.hasKey = false;
+    player.controller.model.hasKey = false;
     _playOpeningAnimation();
   }
 
