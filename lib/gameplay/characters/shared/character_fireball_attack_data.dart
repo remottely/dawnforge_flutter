@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class CharacterFireballAttackData {
   static Vector2 spriteSize = Vector2.all(
-    GameplayConstants.kTileSizeDefault * 0.65,
+    GameplayConstants.kTileSizeStandard * 0.65,
   );
   static const double kSpeedMultiplier = 2.5;
 
@@ -15,15 +15,15 @@ class CharacterFireballAttackData {
 
   static RectangleHitbox buildHitbox() => RectangleHitbox(
     size: Vector2(
-      GameplayConstants.kTileSizeDefault / 3,
-      GameplayConstants.kTileSizeDefault / 3,
+      GameplayConstants.kTileSizeStandard / 3,
+      GameplayConstants.kTileSizeStandard / 3,
     ),
     position: Vector2(10, 5),
   );
 
   static LightingConfig buildLightingConfig() => LightingConfig(
-    radius: GameplayConstants.kTileSizeDefault * 0.9,
-    blurBorder: GameplayConstants.kTileSizeDefault,
+    radius: GameplayConstants.kTileSizeStandard * 0.9,
+    blurBorder: GameplayConstants.kTileSizeStandard,
     color: Colors.deepOrangeAccent.withValues(alpha: 0.4),
   );
 

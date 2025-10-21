@@ -19,8 +19,8 @@ class KnightPlayerView extends SimplePlayer
         animation: KnightPlayerConfig.loadAnimation(),
         size: KnightPlayerConfig.spriteSize,
         position: position,
-        life: KnightPlayerConfig.kDefaultLife,
-        speed: KnightPlayerConfig.kDefaultSpeed,
+        life: KnightPlayerConfig.kStandardLife,
+        speed: KnightPlayerConfig.kStandardSpeed,
       ) {
     setupLighting(KnightPlayerConfig.buildLightingConfig(width));
     _initializeControls();

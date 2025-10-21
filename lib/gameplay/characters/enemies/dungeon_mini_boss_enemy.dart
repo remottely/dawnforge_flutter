@@ -17,11 +17,11 @@ abstract class _DungeonMiniBossEnemyData {
   static Vector2 get hitboxSize => Vector2(6.0, 7.0);
   static Vector2 get hitboxPosition => Vector2(2.5, 8.0);
   static Vector2 get _spriteSize => Vector2(
-    GameplayConstants.kTileSizeDefault * 0.68,
-    GameplayConstants.kTileSizeDefault * 0.93,
+    GameplayConstants.kTileSizeStandard * 0.68,
+    GameplayConstants.kTileSizeStandard * 0.93,
   );
   static double get attackEffectSize =>
-      GameplayConstants.kTileSizeDefault * 0.62;
+      GameplayConstants.kTileSizeStandard * 0.62;
   static double get meleeDamageReduction => 3.0;
   static void loadHitBox(GameComponent target) =>
       target.add(RectangleHitbox(size: hitboxSize, position: hitboxPosition));
@@ -121,7 +121,7 @@ class DungeonMiniBossEnemy extends SimpleEnemy
         animation:
             CharacterEffectSpriteAnimations.characterExplosionSmokeRight5(),
         position: position,
-        size: GameplayConstants.kTileVector2Default,
+        size: GameplayConstants.kTileVector2Standard,
         loop: false,
       ),
     );

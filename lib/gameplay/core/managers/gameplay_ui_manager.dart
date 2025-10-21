@@ -1,10 +1,10 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_ui_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/app/presentation/design_system/components/atoms/app_styled_button.dart';
 import 'package:darkness_dungeon/app/presentation/design_system/components/atoms/app_styled_dialog.dart';
 import 'package:darkness_dungeon/app/presentation/design_system/components/atoms/app_styled_text.dart';
 import 'package:darkness_dungeon/app/presentation/screens/menu_screen.dart';
+import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -36,7 +36,7 @@ class GameplayUIManager {
               GameplayUIConstants.kGameOverAssetPath,
               height: GameplayUIConstants.kGameOverImageHeight,
             ),
-            const SizedBox(height: GameplayUIConstants.kDefaultSpacing),
+            const SizedBox(height: GameplayUIConstants.kStandardSpacing),
             AppStyledButton(
               text: getString('play_again_cap'),
               onPressed: () => onRetryPressed(dialogContext),
@@ -59,7 +59,7 @@ class GameplayUIManager {
         return AppStyledDialog(
           children: [
             AppStyledText.large(text: getString('congratulations')),
-            const SizedBox(height: GameplayUIConstants.kDefaultSpacing),
+            const SizedBox(height: GameplayUIConstants.kStandardSpacing),
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: GameplayUIConstants.kHorizontalPadding,

@@ -81,7 +81,7 @@ class _GameplayState extends State<Gameplay> {
       speed: GameplayConstants.kCameraSpeed,
       zoom: getZoomFromMaxVisibleTile(
         context,
-        GameplayConstants.kTileSizeDefault,
+        GameplayConstants.kTileSizeStandard,
         kMaxVisibleTiles,
       ),
     );
@@ -98,7 +98,7 @@ class _GameplayState extends State<Gameplay> {
         MapArguments? mapArguments = arguments as MapArguments?;
         final playerPosition =
             (mapArguments?.playerPosition ?? Vector2(4, 4)) *
-            GameplayConstants.kTileSizeDefault;
+            GameplayConstants.kTileSizeStandard;
 
         // Read background music from Tiled properties (optional field)
         final mapBackgroundMusic = mapItem

@@ -9,7 +9,7 @@ class GameplaySpriteConstants {
       'gameplay/environment/decorations/door_key_decoration_1.png';
 
   // Animation timing constants for commonly used configurations
-  static const double kDefaultStepTime = 0.1;
+  static const double kStandardStepTime = 0.1;
   static const double kFastStepTime = 0.05;
   static const double kSlowStepTime = 0.15;
 
@@ -25,11 +25,13 @@ class GameplaySpriteConstants {
   static const int kFireballExplosionFrames = 6;
 
   // Texture size getters that create Vector2 instances
-  static Vector2 get playerTextureSize => GameplayConstants.kTileVector2Default;
-  static Vector2 get enemyTextureSize => GameplayConstants.kTileVector2Default;
+  static Vector2 get playerTextureSize =>
+      GameplayConstants.kTileVector2Standard;
+  static Vector2 get enemyTextureSize => GameplayConstants.kTileVector2Standard;
   static Vector2 get bossTextureSize => Vector2(32, 36);
   static Vector2 get miniBossTextureSize => Vector2(16, 24);
-  static Vector2 get effectTextureSize => GameplayConstants.kTileVector2Default;
+  static Vector2 get effectTextureSize =>
+      GameplayConstants.kTileVector2Standard;
   static Vector2 get fireballTextureSize => Vector2(23, 23);
   static Vector2 get explosionTextureSize =>
       GameplayConstants.kTileVector2ExtraLarge;
@@ -40,7 +42,7 @@ class GameplaySpriteConstants {
     required Vector2 textureSize,
   }) => SpriteAnimationData.sequenced(
     amount: amount,
-    stepTime: kDefaultStepTime,
+    stepTime: kStandardStepTime,
     textureSize: textureSize,
   );
 }

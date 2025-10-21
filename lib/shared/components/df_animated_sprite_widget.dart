@@ -16,8 +16,8 @@ import 'package:flutter/material.dart';
 /// Following CLAUDE.md patterns for Flutter StatelessWidget components
 class DFAnimatedSpriteWidget extends StatelessWidget {
   // 1. Constantes de configuração
-  /// Default size for sprite animations
-  static const double kDefaultSize = 100.0;
+  /// Standard size for sprite animations
+  static const double kStandardSize = 100.0;
 
   /// Large size for sprite animations
   static const double kLargeSize = 150.0;
@@ -40,8 +40,8 @@ class DFAnimatedSpriteWidget extends StatelessWidget {
   const DFAnimatedSpriteWidget({
     super.key,
     required this.animation,
-    this.width = kDefaultSize,
-    this.height = kDefaultSize,
+    this.width = kStandardSize,
+    this.height = kStandardSize,
   });
 
   // 4. Factory constructors

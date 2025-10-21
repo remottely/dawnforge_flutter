@@ -21,12 +21,12 @@ abstract class _DungeonBossEnemyData {
   static const double _speed = GameplayConstants.kCharacterSpeedSlow;
   static Vector2 get _spriteSize => Vector2(
     GameplayConstants.kTileSizeLarge,
-    GameplayConstants.kTileSizeDefault * 1.7,
+    GameplayConstants.kTileSizeStandard * 1.7,
   );
   static Vector2 get hitboxSize => Vector2(14, 16);
   static Vector2 get hitboxPosition => Vector2(5, 11);
   static double get attackEffectSize =>
-      GameplayConstants.kTileSizeDefault * 0.62;
+      GameplayConstants.kTileSizeStandard * 0.62;
   static double get visionRadiusUltraLarge =>
       GameplayConstants.kVisionRadiusUltraLarge;
   static double get visionRadiusLarge => GameplayConstants.kVisionRadiusLarge;
@@ -103,7 +103,7 @@ class DungeonBossEnemy extends SimpleEnemy
       AnimatedGameObject(
         animation: CharacterEffectSpriteAnimations.characterExplosionRight7(),
         position: position,
-        size: GameplayConstants.kTileVector2Default,
+        size: GameplayConstants.kTileVector2Standard,
         loop: false,
       ),
     );
@@ -147,7 +147,7 @@ class DungeonBossEnemy extends SimpleEnemy
           animation:
               CharacterEffectSpriteAnimations.characterExplosionSmokeRight5(),
           position: positionExplosion,
-          size: GameplayConstants.kTileVector2Default,
+          size: GameplayConstants.kTileVector2Standard,
           loop: false,
         ),
       );
@@ -272,7 +272,7 @@ class DungeonBossEnemy extends SimpleEnemy
         animation:
             CharacterEffectSpriteAnimations.characterExplosionSmokeRight5(),
         position: p,
-        size: GameplayConstants.kTileVector2Default,
+        size: GameplayConstants.kTileVector2Standard,
         loop: false,
       ),
     );

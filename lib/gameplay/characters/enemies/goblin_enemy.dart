@@ -28,9 +28,9 @@ abstract class _GoblinEnemyData {
   static Vector2 get hitboxSize => Vector2.all(7.0);
   static Vector2 get hitboxPosition => Vector2(3.0, 4.0);
   static Vector2 get _spriteSize =>
-      Vector2.all(GameplayConstants.kTileSizeDefault * 0.8);
+      Vector2.all(GameplayConstants.kTileSizeStandard * 0.8);
   static double get attackEffectSize =>
-      GameplayConstants.kTileSizeDefault * 0.62;
+      GameplayConstants.kTileSizeStandard * 0.62;
   static void loadHitBox(GameComponent target) =>
       target.add(RectangleHitbox(size: hitboxSize, position: hitboxPosition));
 }
@@ -98,7 +98,7 @@ class GoblinEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
         animation:
             CharacterEffectSpriteAnimations.characterExplosionSmokeRight5(),
         position: position,
-        size: GameplayConstants.kTileVector2Default,
+        size: GameplayConstants.kTileVector2Standard,
         loop: false,
       ),
     );

@@ -29,8 +29,8 @@ abstract class _WizardNpcData {
   static const double sizeMultiplierX = 0.8;
   static const double sizeMultiplierY = 1.0;
   static Vector2 get size => Vector2(
-    GameplayConstants.kTileSizeDefault * sizeMultiplierX,
-    GameplayConstants.kTileSizeDefault * sizeMultiplierY,
+    GameplayConstants.kTileSizeStandard * sizeMultiplierX,
+    GameplayConstants.kTileSizeStandard * sizeMultiplierY,
   );
   static SimpleDirectionAnimation get animation => SimpleDirectionAnimation(
     idleRight: NpcSpriteAnimations.wizardIdleLeft(),

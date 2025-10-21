@@ -8,7 +8,7 @@ import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dar
 abstract class LifePotionData {
   static const String _spritePath =
       'gameplay/environment/decorations/life_potion_decoration_1.png';
-  static Vector2 get _spriteSize => GameplayConstants.kTileVector2Default;
+  static Vector2 get _spriteSize => GameplayConstants.kTileVector2Standard;
   static const Duration _healingDuration = Duration(seconds: 1);
   static const double _defaultHealAmount = 50.0;
   static const double healAmount = GameplayConstants.kPropertyAmountSmall;

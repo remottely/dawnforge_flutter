@@ -18,10 +18,10 @@ import 'package:flutter/material.dart';
 /// Following CLAUDE.md patterns for Flutter StatelessWidget components
 class AppRadioButton<T> extends StatelessWidget {
   // 1. Constantes de configuração
-  /// Default border color for radio buttons
+  /// Standard border color for radio buttons
   static const Color kBorderColor = Colors.white;
 
-  /// Default text color for labels
+  /// Standard text color for labels
   static const Color kTextColor = Colors.white;
 
   /// Border width for radio button

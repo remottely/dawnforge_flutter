@@ -9,16 +9,17 @@ import 'package:flutter/material.dart';
 /// para o KnightPlayerView.
 abstract class KnightPlayerConfig {
   // Geral
-  static Vector2 get spriteSize => GameplayConstants.kTileVector2Default;
-  static const double kDefaultLife = 200.0;
-  static const double kDefaultSpeed = GameplayConstants.kTileSizeDefault * 2.5;
+  static Vector2 get spriteSize => GameplayConstants.kTileVector2Standard;
+  static const double kStandardLife = 200.0;
+  static const double kStandardSpeed =
+      GameplayConstants.kTileSizeStandard * 2.5;
 
   // Sistema Agrícola
   static const int kMaxEnergy = 100;
   static const int kToolUsageEnergyCost = 2;
 
   // Combate
-  static const double kDefaultAttackDamage = 25.0;
+  static const double kStandardAttackDamage = 25.0;
   static const double kSmallAttackDamage = 10.0;
   static const int kMeleeAttackStaminaCost = 15;
   static const int kCharacterFireballAttackStaminaCost = 10;

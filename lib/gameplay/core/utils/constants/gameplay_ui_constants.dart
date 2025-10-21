@@ -66,8 +66,8 @@ class GameplayUIConstants {
   /// Height of the game over image in dialog
   static const double kGameOverImageHeight = 96.0;
 
-  /// Default spacing between UI elements
-  static const double kDefaultSpacing = 8.0;
+  /// Standard spacing between UI elements
+  static const double kStandardSpacing = 8.0;
 
   /// Large spacing for major UI sections
   static const double kLargeSpacing = 32.0;

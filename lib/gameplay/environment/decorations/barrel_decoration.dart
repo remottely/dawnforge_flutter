@@ -8,7 +8,7 @@ abstract class _BarrelDecorationData {
   /// DATA
   static const String _spritePath =
       'gameplay/environment/decorations/barrel_decoration_1.png';
-  static Vector2 get _spriteSize => GameplayConstants.kTileVector2Default;
+  static Vector2 get _spriteSize => GameplayConstants.kTileVector2Standard;
   static Vector2 get _hitBoxPosition => Vector2(2, 6);
   static Vector2 get _hitBoxSize => Vector2(12, 4);
 

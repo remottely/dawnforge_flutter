@@ -17,8 +17,8 @@ import 'package:flutter/material.dart';
 /// ```
 class AppStyledText extends StatelessWidget {
   // 1. Constantes de configuração
-  /// Default text color
-  static const Color kDefaultColor = Colors.white;
+  /// Standard text color
+  static const Color kStandardColor = Colors.white;
 
   // 2. Propriedades da classe
   /// The text content to display
@@ -40,7 +40,7 @@ class AppStyledText extends StatelessWidget {
     super.key,
     required this.text,
     this.fontSize = TypographyConstants.kBodyFontSize,
-    this.color = kDefaultColor,
+    this.color = kStandardColor,
     this.textAlign = TextAlign.start,
   });
 
@@ -50,7 +50,7 @@ class AppStyledText extends StatelessWidget {
     super.key,
     required this.text,
     this.fontSize = TypographyConstants.kDisplayFontSize,
-    this.color = kDefaultColor,
+    this.color = kStandardColor,
     this.textAlign = TextAlign.start,
   });
 
@@ -59,7 +59,7 @@ class AppStyledText extends StatelessWidget {
     super.key,
     required this.text,
     this.fontSize = TypographyConstants.kSmallFontSize,
-    this.color = kDefaultColor,
+    this.color = kStandardColor,
     this.textAlign = TextAlign.start,
   });
 

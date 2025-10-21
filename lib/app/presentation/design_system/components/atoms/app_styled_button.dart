@@ -1,5 +1,5 @@
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_ui_constants.dart';
 import 'package:darkness_dungeon/app/presentation/design_system/constants/typography_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_ui_constants.dart';
 import 'package:flutter/material.dart';
 
 /// UI component AppStyledButton for the Darkness Dungeon game
@@ -18,10 +18,10 @@ import 'package:flutter/material.dart';
 /// ```
 class AppStyledButton extends StatelessWidget {
   // 1. Constantes de configuração
-  /// Default text color
-  static const Color kDefaultTextColor = Colors.white;
+  /// Standard text color
+  static const Color kStandardTextColor = Colors.white;
 
-  /// Default button background color
+  /// Standard button background color
   static const Color kPrimaryBackgroundColor = Color.fromARGB(255, 118, 82, 78);
 
   /// Border radius for styled buttons
@@ -88,7 +88,7 @@ class AppStyledButton extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-          color: kDefaultTextColor,
+          color: kStandardTextColor,
           fontFamily: TypographyConstants.kPrimaryFontFamily,
           fontSize: fontSize,
         ),

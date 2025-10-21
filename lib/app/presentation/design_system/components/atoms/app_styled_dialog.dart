@@ -1,7 +1,7 @@
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_ui_constants.dart';
 import 'package:darkness_dungeon/app/presentation/design_system/components/atoms/app_styled_button.dart';
 import 'package:darkness_dungeon/app/presentation/design_system/components/atoms/app_styled_text.dart';
 import 'package:darkness_dungeon/app/presentation/design_system/constants/typography_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_ui_constants.dart';
 import 'package:flutter/material.dart';
 
 /// UI component AppStyledDialog for the Darkness Dungeon game
@@ -20,8 +20,8 @@ import 'package:flutter/material.dart';
 /// ```
 class AppStyledDialog extends StatelessWidget {
   // 1. Constantes de configuração
-  /// Default background color for dialogs
-  static const Color kDefaultBackgroundColor =
+  /// Standard background color for dialogs
+  static const Color kStandardBackgroundColor =
       GameplayUIConstants.kTransparentColor;
 
   // 2. Propriedades da classe
@@ -35,7 +35,7 @@ class AppStyledDialog extends StatelessWidget {
   /// Creates a styled dialog with transparent background
   const AppStyledDialog({
     super.key,
-    this.backgroundColor = kDefaultBackgroundColor,
+    this.backgroundColor = kStandardBackgroundColor,
     required this.children,
   });
 
@@ -58,7 +58,7 @@ class AppStyledDialog extends StatelessWidget {
   /// )
   /// ```
   AppStyledDialog.gameOver({super.key, required VoidCallback onRetry})
-    : backgroundColor = kDefaultBackgroundColor,
+    : backgroundColor = kStandardBackgroundColor,
       children = [
         Padding(
           padding: const EdgeInsets.all(20.0),
@@ -94,7 +94,7 @@ class AppStyledDialog extends StatelessWidget {
   /// )
   /// ```
   AppStyledDialog.victory({super.key, required VoidCallback onContinue})
-    : backgroundColor = kDefaultBackgroundColor,
+    : backgroundColor = kStandardBackgroundColor,
       children = [
         Padding(
           padding: const EdgeInsets.all(20.0),
@@ -136,7 +136,7 @@ class AppStyledDialog extends StatelessWidget {
     required String message,
     required VoidCallback onConfirm,
     VoidCallback? onCancel,
-  }) : backgroundColor = kDefaultBackgroundColor,
+  }) : backgroundColor = kStandardBackgroundColor,
        children = [
          Padding(
            padding: const EdgeInsets.all(20.0),

@@ -79,7 +79,7 @@ WorldMapByTiled _buildMap({
 }) {
   return WorldMapByTiled(
     WorldMapReader.fromAsset(mapAsset),
-    forceTileSize: GameplayConstants.kTileVector2Default,
+    forceTileSize: GameplayConstants.kTileVector2Standard,
     objectsBuilder: _createObjectBuilder(sensorIds: sensorIds),
   );
 }

@@ -1,5 +1,5 @@
-import 'package:darkness_dungeon/gameplay/core/localization/gameplay_localizations_delegate.dart';
 import 'package:darkness_dungeon/app/presentation/screens/menu_screen.dart';
+import 'package:darkness_dungeon/gameplay/core/localization/gameplay_localizations_delegate.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';

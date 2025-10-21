@@ -23,12 +23,12 @@ class KnightPlayerModel {
     double? initialAttackDamage,
     FarmTool? initialTool,
     bool? initialHasKey,
-  })  : _stamina = initialStamina ?? KnightPlayerConfig.kMaxStamina,
-        _energy = initialEnergy ?? KnightPlayerConfig.kMaxEnergy,
-        attackDamage =
-            initialAttackDamage ?? KnightPlayerConfig.kDefaultAttackDamage,
-        currentTool = initialTool ?? FarmTool.hand,
-        hasKey = initialHasKey ?? false;
+  }) : _stamina = initialStamina ?? KnightPlayerConfig.kMaxStamina,
+       _energy = initialEnergy ?? KnightPlayerConfig.kMaxEnergy,
+       attackDamage =
+           initialAttackDamage ?? KnightPlayerConfig.kStandardAttackDamage,
+       currentTool = initialTool ?? FarmTool.hand,
+       hasKey = initialHasKey ?? false;
 
   // --- Lógica de Stamina ---
   bool canDoMeleeAttack() =>
