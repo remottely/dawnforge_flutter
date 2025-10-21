@@ -3,9 +3,9 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_sprite_c
 
 class EnemySpriteAnimations {
   /// ATTACK EFFECTS
-  static Future<SpriteAnimation> enemyMeleeAttackEffect1Right3() =>
+  static Future<SpriteAnimation> enemyBasicAttackRight3() =>
       SpriteAnimation.load(
-        'gameplay/characters/enemies/enemy_melee_attack_effect_1_right_3.png',
+        'gameplay/characters/enemies/enemy_basic_attack_right_3.png',
         GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
           amount: GameplaySpriteConstants.kAttackFrames,
           textureSize: GameplaySpriteConstants.effectTextureSize,

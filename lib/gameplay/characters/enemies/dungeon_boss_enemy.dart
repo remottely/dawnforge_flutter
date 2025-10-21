@@ -89,7 +89,7 @@ class DungeonBossEnemy extends SimpleEnemy
   void onDie() {
     gameRef.add(
       AnimatedGameObject(
-        animation: CharacterEffectSpriteAnimations.explosionRight7(),
+        animation: CharacterEffectSpriteAnimations.characterExplosionRight7(),
         position: this.position,
         size: GameplayConstants.kTileVector2Default,
         loop: false,
@@ -135,7 +135,8 @@ class DungeonBossEnemy extends SimpleEnemy
 
       gameRef.add(
         AnimatedGameObject(
-          animation: CharacterEffectSpriteAnimations.explosionSmokeRight5(),
+          animation:
+              CharacterEffectSpriteAnimations.characterExplosionSmokeRight5(),
           position: positionExplosion,
           size: GameplayConstants.kTileVector2Default,
           loop: false,
@@ -152,7 +153,7 @@ class DungeonBossEnemy extends SimpleEnemy
       size: Vector2.all(GameplayConstants.kTileSizeDefault * 0.62),
       damage: attackDamage,
       interval: 1500,
-      animationRight: EnemySpriteAnimations.enemyMeleeAttackEffect1Right3(),
+      animationRight: EnemySpriteAnimations.enemyBasicAttackRight3(),
       execute: () {
         GameplayAudioManager.playAttackEnemyMelee();
       },
@@ -262,7 +263,8 @@ class DungeonBossEnemy extends SimpleEnemy
     final p = position.translated(x, y);
     gameRef.add(
       AnimatedGameObject(
-        animation: CharacterEffectSpriteAnimations.explosionSmokeRight5(),
+        animation:
+            CharacterEffectSpriteAnimations.characterExplosionSmokeRight5(),
         position: p,
         size: GameplayConstants.kTileVector2Default,
         loop: false,

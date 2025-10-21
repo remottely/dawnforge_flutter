@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight_player.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_map_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/app_logger.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight_character.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
 
 /// [MapSensor] responsible for detecting player interaction with map transition areas
@@ -37,7 +37,7 @@ class MapSensor extends DFSensorPlayerDecoration {
   }) : super(position: position, size: size);
 
   @override
-  void onContact(KnightCharacter component) {
+  void onContact(KnightPlayer component) {
     if (!hasContact && !_hasNavigated) {
       hasContact = true;
       _contactTime = 0;
@@ -47,7 +47,7 @@ class MapSensor extends DFSensorPlayerDecoration {
   }
 
   @override
-  void onContactExit(KnightCharacter component) {
+  void onContactExit(KnightPlayer component) {
     hasContact = false;
     _contactTime = 0;
     _logSensorEvent('$kPlayerExitedEvent $id');

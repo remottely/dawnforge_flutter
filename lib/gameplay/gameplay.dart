@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight_character.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight_player.dart';
 import 'package:darkness_dungeon/gameplay/core/data/gameplay_map_data.dart';
 import 'package:darkness_dungeon/gameplay/core/hud/gameplay_hud.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
@@ -166,8 +166,8 @@ class _GameplayState extends State<Gameplay> {
 
   /// Creates player for the current map
   /// Following Flutter pattern of component factories
-  KnightCharacter _createPlayerWithState(Vector2 position) {
-    final player = KnightCharacter(position);
+  KnightPlayer _createPlayerWithState(Vector2 position) {
+    final player = KnightPlayer(position);
     AppLogger.info('Created fresh player at position: $position');
     return player;
   }

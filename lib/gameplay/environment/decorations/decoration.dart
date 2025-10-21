@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight_character.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight_player.dart';
 
 /// DONE
 class DFGameDecoration extends GameDecoration {
@@ -38,7 +38,7 @@ abstract class DFPushableDecoration extends DFGameDecoration
 }
 
 abstract class DFSensorPlayerDecoration extends DFGameDecoration
-    with Sensor<KnightCharacter> {
+    with Sensor<KnightPlayer> {
   DFSensorPlayerDecoration({required super.position, required super.size})
     : super();
 

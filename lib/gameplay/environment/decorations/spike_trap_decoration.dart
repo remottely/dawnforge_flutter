@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight_character.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight_player.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration_sprite_animations.dart';
@@ -20,15 +20,15 @@ class SpikeTrapDecoration extends DFSensorPlayerDecoration {
          size: GameplayConstants.kTileVector2Default,
        );
 
-  KnightCharacter? _contactedPlayer;
+  KnightPlayer? _contactedPlayer;
 
   @override
-  void onContact(KnightCharacter player) {
+  void onContact(KnightPlayer player) {
     _contactedPlayer = player;
   }
 
   @override
-  void onContactExit(KnightCharacter player) {
+  void onContactExit(KnightPlayer player) {
     _contactedPlayer = null;
   }
 

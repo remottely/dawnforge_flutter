@@ -66,7 +66,7 @@ class DungeonMiniBossEnemy extends SimpleEnemy
     if (!_seePlayerClose) {
       seeAndMoveToAttackRange(
         positioned: (p) {
-          _executeRangedAttack(_attackDamage);
+          _executeCharacterFireballAttack(_attackDamage);
         },
         radiusVision: kLongVisionRadius,
       );
@@ -98,18 +98,19 @@ class DungeonMiniBossEnemy extends SimpleEnemy
     );
   }
 
-  void _executeRangedAttack(double damage) {
-    GameplayAudioManager.playAttackRange();
+  void _executeCharacterFireballAttack(double damage) {
+    // GameplayAudioManager.playAttackRange();
     simpleAttackRange(
-      animation: CharacterEffectSpriteAnimations.fireBallAttackRight3(),
+      animation:
+          CharacterEffectSpriteAnimations.characterFireballAttackRight3(),
       animationDestroy:
-          CharacterEffectSpriteAnimations.fireBallExplosionRight6(),
+          CharacterEffectSpriteAnimations.characterFireballExplosionRight6(),
       size: Vector2.all(kRangedAttackSize),
       damage: damage,
       speed: speed * 2.5,
-      // execute: () {
-      //   GameplayAudioManager.playAttackRange();
-      // },
+      execute: () {
+        GameplayAudioManager.playAttackRange();
+      },
       onDestroy: () {
         GameplayAudioManager.playExplosion();
       },
@@ -133,7 +134,7 @@ class DungeonMiniBossEnemy extends SimpleEnemy
       size: Vector2.all(kAttackEffectSize),
       damage: _attackDamage / kMeleeDamageReduction,
       interval: kMeleeAttackInterval,
-      animationRight: EnemySpriteAnimations.enemyMeleeAttackEffect1Right3(),
+      animationRight: EnemySpriteAnimations.enemyBasicAttackRight3(),
       execute: () {
         GameplayAudioManager.playAttackEnemyMelee();
       },
@@ -143,7 +144,8 @@ class DungeonMiniBossEnemy extends SimpleEnemy
   void _handleDeathEffects() {
     gameRef.add(
       AnimatedGameObject(
-        animation: CharacterEffectSpriteAnimations.explosionSmokeRight5(),
+        animation:
+            CharacterEffectSpriteAnimations.characterExplosionSmokeRight5(),
         position: position,
         size: GameplayConstants.kTileVector2Default,
         loop: false,

@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight_character.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight_player.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_sprite_constants.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
@@ -36,7 +36,7 @@ class DoorKeyDecoration extends DFSensorPlayerDecoration {
 
   // 4. Métodos públicos principais
   @override
-  void onContact(KnightCharacter player) {
+  void onContact(KnightPlayer player) {
     if (!_hasBeenCollected) {
       _hasBeenCollected = true;
       _triggerEffect(player);
@@ -46,7 +46,7 @@ class DoorKeyDecoration extends DFSensorPlayerDecoration {
 
   // 5. Métodos privados auxiliares
   /// Triggers the key collection effect
-  void _triggerEffect(KnightCharacter player) {
+  void _triggerEffect(KnightPlayer player) {
     player.hasKey = true;
   }
 
