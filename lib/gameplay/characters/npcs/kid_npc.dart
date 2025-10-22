@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss_enemy.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/npc_sprite_animations.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/player_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
@@ -99,7 +99,7 @@ class KidNpc extends SimpleNpc {
           ),
         ],
         person: DFAnimatedSpriteWidget(
-          animation: PlayerAnimations.knightPlayerIdleRight6(),
+          animation: PlayerSpriteAnimations.knightPlayerIdleRight6(),
         ),
         personSayDirection: PersonSayDirection.LEFT,
       ),

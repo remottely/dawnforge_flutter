@@ -1,9 +1,9 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/enemy_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_effect_sprite_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
-import 'package:flutter/material.dart';
 
 /// Enemy character Goblin for the Darkness Dungeon game
 /// Following Flutter naming conventions for enemy entity systems
@@ -76,7 +76,10 @@ class GoblinEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
   void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
     showDamage(
       damage,
-      config: TextStyle(fontSize: 5, color: Colors.white, fontFamily: 'Normal'),
+      config: CharacterParticlesAnimations.enemyShowDamageTextStyle,
+      gravity: CharacterParticlesAnimations.kShowDamageGravity,
+      initVelocityVertical:
+          CharacterParticlesAnimations.kShowDamageInitVelocityVertical,
     );
     super.onReceiveDamage(attacker, damage, id);
   }

@@ -38,10 +38,10 @@ class KnightPlayerModel {
   }
 
   bool canDoFireballAttack() =>
-      _stamina >= KnightPlayerConfig.kCharacterFireballAttackStaminaCost;
+      _stamina >= KnightPlayerConfig.kFireballAttackStaminaCost;
 
   void executeFireballAttackStaminaCost() {
-    _decrementStamina(KnightPlayerConfig.kCharacterFireballAttackStaminaCost);
+    _decrementStamina(KnightPlayerConfig.kFireballAttackStaminaCost);
   }
 
   void regenerateStamina() {

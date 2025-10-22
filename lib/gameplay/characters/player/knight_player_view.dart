@@ -1,9 +1,10 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight_player_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/player_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_data.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
 
@@ -16,7 +17,7 @@ class KnightPlayerView extends SimplePlayer
 
   KnightPlayerView(Vector2 position, {required this.controller})
     : super(
-        animation: KnightPlayerConfig.directionalAnimation,
+        animation: KnightPlayerConfig.buildDirectionalAnimation,
         size: KnightPlayerConfig.spriteSize,
         position: position,
         life: KnightPlayerConfig.kStandardLife,
@@ -50,8 +51,13 @@ class KnightPlayerView extends SimplePlayer
   @override
   void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
     if (isDead) return;
-    // Lógica puramente visual/auditiva pode ficar na View
-    showDamage(damage, config: KnightPlayerConfig.kDamageTextStyle);
+    showDamage(
+      damage,
+      config: CharacterParticlesAnimations.playerShowDamageTextStyle,
+      gravity: CharacterParticlesAnimations.kShowDamageGravity,
+      initVelocityVertical:
+          CharacterParticlesAnimations.kShowDamageInitVelocityVertical,
+    );
     // TODO: GameplayAudioManager.playDamageSound();
     super.onReceiveDamage(attacker, damage, id);
   }
@@ -74,9 +80,10 @@ class KnightPlayerView extends SimplePlayer
 
   void playMeleeAttackAnimation(double damage) {
     GameplayAudioManager.playAttackPlayerMelee();
+    addParticle(CharacterParticlesAnimations.swordParticles(), position: size);
     simpleAttackMelee(
       damage: damage,
-      animationRight: PlayerAnimations.playerBasicAttackRight3(),
+      animationRight: PlayerSpriteAnimations.playerBasicAttackRight3(),
       size: KnightPlayerConfig.spriteSize,
     );
   }
@@ -88,7 +95,13 @@ class KnightPlayerView extends SimplePlayer
       size: CharacterFireballAttackData.spriteSize,
       damage: damage,
       speed: speed * CharacterFireballAttackData.kSpeedMultiplier,
-      onDestroy: () => CharacterFireballAttackData.playExplosionAudio(),
+      onDestroy: () {
+        addParticle(
+          CharacterParticlesAnimations.fireballParticles(),
+          position: size,
+        );
+        CharacterFireballAttackData.playExplosionAudio();
+      },
       collision: CharacterFireballAttackData.hitbox,
       lightingConfig: CharacterFireballAttackData.lightingConfig,
     );

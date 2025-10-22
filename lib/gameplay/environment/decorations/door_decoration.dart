@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight_player_view.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/player_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
@@ -28,7 +28,7 @@ abstract class _DoorDecorationData {
       DecorationSpriteAnimations.doorDecorationOpening14();
 
   static Widget _loadDialogPersonWidget() =>
-      PlayerAnimations.knightPlayerIdleRight6().asWidget();
+      PlayerSpriteAnimations.knightPlayerIdleRight6().asWidget();
 
   static FutureOr<void> _buildHitBox(GameComponent target) {
     target.add(

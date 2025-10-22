@@ -5,8 +5,9 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss_e
 import 'package:darkness_dungeon/gameplay/characters/enemies/enemy_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp_enemy.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/npc_sprite_animations.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/player_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_effect_sprite_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
@@ -177,7 +178,10 @@ class DungeonBossEnemy extends SimpleEnemy
   void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
     showDamage(
       damage,
-      config: TextStyle(fontSize: 5, color: Colors.white, fontFamily: 'Normal'),
+      config: CharacterParticlesAnimations.enemyShowDamageTextStyle,
+      gravity: CharacterParticlesAnimations.kShowDamageGravity,
+      initVelocityVertical:
+          CharacterParticlesAnimations.kShowDamageInitVelocityVertical,
     );
     super.onReceiveDamage(attacker, damage, id);
   }
@@ -250,7 +254,7 @@ class DungeonBossEnemy extends SimpleEnemy
             ),
           ],
           person: DFAnimatedSpriteWidget(
-            animation: PlayerAnimations.knightPlayerIdleRight6(),
+            animation: PlayerSpriteAnimations.knightPlayerIdleRight6(),
           ),
           personSayDirection: PersonSayDirection.LEFT,
         ),

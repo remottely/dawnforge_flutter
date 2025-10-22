@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/npc_sprite_animations.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/player_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
@@ -110,7 +110,7 @@ class WizardNpc extends SimpleNpc {
           ),
         ],
         person: DFAnimatedSpriteWidget(
-          animation: PlayerAnimations.knightPlayerIdleRight6(),
+          animation: PlayerSpriteAnimations.knightPlayerIdleRight6(),
         ),
         personSayDirection: PersonSayDirection.LEFT,
       ),
@@ -132,7 +132,7 @@ class WizardNpc extends SimpleNpc {
           ),
         ],
         person: DFAnimatedSpriteWidget(
-          animation: PlayerAnimations.knightPlayerIdleRight6(),
+          animation: PlayerSpriteAnimations.knightPlayerIdleRight6(),
         ),
         personSayDirection: PersonSayDirection.LEFT,
       ),

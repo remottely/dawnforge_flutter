@@ -95,7 +95,7 @@ class KnightPlayerController {
   void _handleStamina() {
     if (_staminaRegenerationTimer == null) {
       _staminaRegenerationTimer = async.Timer(
-        KnightPlayerConfig.kStaminaRegenerationDebounce,
+        KnightPlayerConfig.kStaminaRegenDebounce,
         () {
           _staminaRegenerationTimer = null;
         },

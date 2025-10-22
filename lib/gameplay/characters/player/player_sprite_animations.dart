@@ -15,7 +15,7 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_sprite_c
 //   }
 // }
 
-class PlayerAnimations {
+class PlayerSpriteAnimations {
   /// ATTACK EFFECTS
   static Future<SpriteAnimation> playerBasicAttackRight3() =>
       SpriteAnimation.load(
@@ -36,7 +36,7 @@ class PlayerAnimations {
         ),
       );
 
-  static SimpleDirectionAnimation get knightDirectional =>
+  static final SimpleDirectionAnimation knightPlayerDirectional =
       SimpleDirectionAnimation(
         idleLeft: SpriteAnimation.load(
           'gameplay/characters/player/knight/knight_player_idle_left_6.png',
