@@ -1,6 +1,22 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:flutter/widgets.dart';
 
 class GameplayConstants {
+  // CAMERA CONSTANTS
+  static const int kMaxVisibleTiles = 16;
+  static const int kBossDialogVisibleTiles = 32;
+
+  static double getCameraZoomFromMaxVisibleTile(
+    BuildContext context, {
+    required int maxVisibleTile,
+  }) {
+    return getZoomFromMaxVisibleTile(
+      context,
+      GameplayConstants.kTileSizeStandard,
+      maxVisibleTile,
+    );
+  }
+
   /// TILE SIZES
   static const double kTileSizeSmall = 8;
   static const double kTileSizeStandard = 16;

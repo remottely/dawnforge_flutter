@@ -5,7 +5,7 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss_e
 import 'package:darkness_dungeon/gameplay/characters/enemies/enemy_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp_enemy.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/npc_sprite_animations.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/player_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_effect_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
@@ -19,19 +19,21 @@ abstract class _DungeonBossEnemyData {
   static const double attackDamage = 40.0;
   static const double _life = 200.0;
   static const double _speed = GameplayConstants.kCharacterSpeedSlow;
-  static Vector2 get _spriteSize => Vector2(
+  static final Vector2 _spriteSize = Vector2(
     GameplayConstants.kTileSizeLarge,
     GameplayConstants.kTileSizeStandard * 1.7,
   );
-  static Vector2 get hitboxSize => Vector2(14, 16);
-  static Vector2 get hitboxPosition => Vector2(5, 11);
-  static double get attackEffectSize =>
+  static final Vector2 hitboxSize = Vector2(14, 16);
+  static final Vector2 hitboxPosition = Vector2(5, 11);
+  static final double attackEffectSize =
       GameplayConstants.kTileSizeStandard * 0.62;
   static double get visionRadiusUltraLarge =>
       GameplayConstants.kVisionRadiusUltraLarge;
   static double get visionRadiusLarge => GameplayConstants.kVisionRadiusLarge;
   static void loadHitBox(GameComponent target) =>
       target.add(RectangleHitbox(size: hitboxSize, position: hitboxPosition));
+  // static final void Function(GameComponent) loadHitBox = (target) =>
+  //     target.add(RectangleHitbox(size: hitboxSize, position: hitboxPosition));
 }
 
 class DungeonBossEnemy extends SimpleEnemy
@@ -42,7 +44,7 @@ class DungeonBossEnemy extends SimpleEnemy
 
   DungeonBossEnemy(Vector2 position)
     : super(
-        animation: EnemySpriteAnimations.dungeonBossEnemyAnimation(),
+        animation: EnemySpriteAnimations.dungeonBossEnemyDirectionAnimation,
         position: position,
         size: _DungeonBossEnemyData._spriteSize,
         speed: _DungeonBossEnemyData._speed,
@@ -69,7 +71,10 @@ class DungeonBossEnemy extends SimpleEnemy
           _hasSeenPlayerFirst = true;
           gameRef.camera.moveToTargetAnimated(
             target: this,
-            zoom: 2,
+            zoom: GameplayConstants.getCameraZoomFromMaxVisibleTile(
+              context,
+              maxVisibleTile: GameplayConstants.kBossDialogVisibleTiles,
+            ),
             onComplete: _showConversation,
           );
         },
@@ -217,28 +222,44 @@ class DungeonBossEnemy extends SimpleEnemy
       gameRef.context,
       [
         Say(
-          text: [TextSpan(text: getString('talk_kid_1'))],
+          text: [
+            TextSpan(
+              text: GameplayStringsLocation.instance.getString('talk_kid_1'),
+            ),
+          ],
           person: DFAnimatedSpriteWidget(
             animation: NpcSpriteAnimations.kidIdleLeft(),
           ),
           personSayDirection: PersonSayDirection.RIGHT,
         ),
         Say(
-          text: [TextSpan(text: getString('talk_boss_1'))],
+          text: [
+            TextSpan(
+              text: GameplayStringsLocation.instance.getString('talk_boss_1'),
+            ),
+          ],
           person: DFAnimatedSpriteWidget(
             animation: EnemySpriteAnimations.dungeonBossEnemyIdleRight4(),
           ),
           personSayDirection: PersonSayDirection.LEFT,
         ),
         Say(
-          text: [TextSpan(text: getString('talk_player_3'))],
+          text: [
+            TextSpan(
+              text: GameplayStringsLocation.instance.getString('talk_player_3'),
+            ),
+          ],
           person: DFAnimatedSpriteWidget(
-            animation: PlayerSpriteAnimations.knightPlayerIdleRight6(),
+            animation: PlayerAnimations.knightPlayerIdleRight6(),
           ),
           personSayDirection: PersonSayDirection.LEFT,
         ),
         Say(
-          text: [TextSpan(text: getString('talk_boss_2'))],
+          text: [
+            TextSpan(
+              text: GameplayStringsLocation.instance.getString('talk_boss_2'),
+            ),
+          ],
           person: DFAnimatedSpriteWidget(
             animation: EnemySpriteAnimations.dungeonBossEnemyIdleRight4(),
           ),
@@ -249,7 +270,12 @@ class DungeonBossEnemy extends SimpleEnemy
         GameplayAudioManager.playInteraction();
         spawnInitialMinions();
         Future.delayed(Duration(milliseconds: 500), () {
-          gameRef.camera.moveToPlayerAnimated(zoom: 1);
+          gameRef.camera.moveToPlayerAnimated(
+            zoom: GameplayConstants.getCameraZoomFromMaxVisibleTile(
+              context,
+              maxVisibleTile: GameplayConstants.kMaxVisibleTiles,
+            ),
+          );
           GameplayAudioManager.playBossBackgroundMusic();
         });
       },

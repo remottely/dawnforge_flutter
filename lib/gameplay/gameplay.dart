@@ -53,9 +53,6 @@ class _GameplayState extends State<Gameplay> {
   static const double kPrimaryActionMarginRight = 50.0;
   static const double kSecondaryActionMarginRight = 160.0;
 
-  // Camera Constants
-  static const int kMaxVisibleTiles = 18;
-
   // 2. Componentes de jogo pré-construídos
   late final GameplayHUD _gameplayHUD;
   late final CameraConfig _cameraConfig;
@@ -79,10 +76,9 @@ class _GameplayState extends State<Gameplay> {
     super.didChangeDependencies();
     _cameraConfig = CameraConfig(
       speed: GameplayConstants.kCameraSpeed,
-      zoom: getZoomFromMaxVisibleTile(
+      zoom: GameplayConstants.getCameraZoomFromMaxVisibleTile(
         context,
-        GameplayConstants.kTileSizeStandard,
-        kMaxVisibleTiles,
+        maxVisibleTile: GameplayConstants.kMaxVisibleTiles,
       ),
     );
   }
