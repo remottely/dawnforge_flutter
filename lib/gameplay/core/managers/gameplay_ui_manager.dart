@@ -38,7 +38,9 @@ class GameplayUIManager {
             ),
             const SizedBox(height: GameplayUIConstants.kStandardSpacing),
             AppStyledButton(
-              text: getString('play_again_cap'),
+              text: GameplayStringsLocation.instance.getString(
+                'play_again_cap',
+              ),
               onPressed: () => onRetryPressed(dialogContext),
             ),
           ],
@@ -58,14 +60,18 @@ class GameplayUIManager {
       builder: (context) {
         return AppStyledDialog(
           children: [
-            AppStyledText.large(text: getString('congratulations')),
+            AppStyledText.large(
+              text: GameplayStringsLocation.instance.getString(
+                'congratulations',
+              ),
+            ),
             const SizedBox(height: GameplayUIConstants.kStandardSpacing),
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: GameplayUIConstants.kHorizontalPadding,
               ),
               child: AppStyledText.small(
-                text: getString('thanks'),
+                text: GameplayStringsLocation.instance.getString('thanks'),
                 textAlign: TextAlign.center,
               ),
             ),

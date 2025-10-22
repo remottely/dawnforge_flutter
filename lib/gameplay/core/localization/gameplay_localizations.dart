@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 
 class GameplayLocalizations {
   GameplayLocalizations(this.locale) {
-    GameplayStringsLocation.configure(this);
+    GameplayStringsLocation.initialize(this); // TODO(Kevin): remove it now
   }
 
   final Locale locale;

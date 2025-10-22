@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss_enemy.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/npc_sprite_animations.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/player_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
@@ -14,11 +14,12 @@ abstract class _KidNpcData {
   static const int bossCheckRate = 1000;
   static const double sizeMultiplierX = 8.0;
   static const double sizeMultiplierY = 11.0;
-  static Vector2 get size => Vector2(sizeMultiplierX, sizeMultiplierY);
-  static SimpleDirectionAnimation get animation => SimpleDirectionAnimation(
-    idleRight: NpcSpriteAnimations.kidIdleLeft(),
-    runRight: NpcSpriteAnimations.kidIdleLeft(),
-  );
+  static final Vector2 size = Vector2(sizeMultiplierX, sizeMultiplierY);
+  static SimpleDirectionAnimation get _buildDirectionAnimation =>
+      SimpleDirectionAnimation(
+        idleRight: NpcSpriteAnimations.kidIdleLeft(),
+        runRight: NpcSpriteAnimations.kidIdleLeft(),
+      );
 }
 
 class KidNpc extends SimpleNpc {
@@ -26,7 +27,7 @@ class KidNpc extends SimpleNpc {
 
   KidNpc(Vector2 position)
     : super(
-        animation: _KidNpcData.animation,
+        animation: _KidNpcData._buildDirectionAnimation,
         position: position,
         size: _KidNpcData.size,
       );
@@ -81,16 +82,24 @@ class KidNpc extends SimpleNpc {
   List<Say> _createDialogueSequence() {
     return [
       Say(
-        text: [TextSpan(text: getString('talk_kid_2'))],
+        text: [
+          TextSpan(
+            text: GameplayStringsLocation.instance.getString('talk_kid_2'),
+          ),
+        ],
         person: DFAnimatedSpriteWidget(
           animation: NpcSpriteAnimations.kidIdleLeft(),
         ),
         personSayDirection: PersonSayDirection.RIGHT,
       ),
       Say(
-        text: [TextSpan(text: getString('talk_player_4'))],
+        text: [
+          TextSpan(
+            text: GameplayStringsLocation.instance.getString('talk_player_4'),
+          ),
+        ],
         person: DFAnimatedSpriteWidget(
-          animation: PlayerSpriteAnimations.knightPlayerIdleRight6(),
+          animation: PlayerAnimations.knightPlayerIdleRight6(),
         ),
         personSayDirection: PersonSayDirection.LEFT,
       ),

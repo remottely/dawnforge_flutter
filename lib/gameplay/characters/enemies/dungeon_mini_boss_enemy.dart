@@ -14,15 +14,15 @@ abstract class _DungeonMiniBossEnemyData {
   static const double longVisionRadius =
       GameplayConstants.kVisionRadiusExtraLarge;
   static const int meleeAttackInterval = 300;
-  static Vector2 get hitboxSize => Vector2(6.0, 7.0);
-  static Vector2 get hitboxPosition => Vector2(2.5, 8.0);
-  static Vector2 get _spriteSize => Vector2(
+  static final Vector2 hitboxSize = Vector2(6.0, 7.0);
+  static final Vector2 hitboxPosition = Vector2(2.5, 8.0);
+  static final Vector2 _spriteSize = Vector2(
     GameplayConstants.kTileSizeStandard * 0.68,
     GameplayConstants.kTileSizeStandard * 0.93,
   );
-  static double get attackEffectSize =>
+  static final double attackEffectSize =
       GameplayConstants.kTileSizeStandard * 0.62;
-  static double get meleeDamageReduction => 3.0;
+  static final double meleeDamageReduction = 3.0;
   static void loadHitBox(GameComponent target) =>
       target.add(RectangleHitbox(size: hitboxSize, position: hitboxPosition));
 }
@@ -34,7 +34,7 @@ class DungeonMiniBossEnemy extends SimpleEnemy
 
   DungeonMiniBossEnemy(Vector2 position)
     : super(
-        animation: EnemySpriteAnimations.dungeonMiniBossEnemyAnimation(),
+        animation: EnemySpriteAnimations.dungeonMiniBossEnemyDirectionAnimation,
         position: position,
         size: _DungeonMiniBossEnemyData._spriteSize,
         speed: _DungeonMiniBossEnemyData._speed,
@@ -98,8 +98,8 @@ class DungeonMiniBossEnemy extends SimpleEnemy
       speed: speed * CharacterFireballAttackData.kSpeedMultiplier,
       execute: () => CharacterFireballAttackData.playExecutionAudio(),
       onDestroy: () => CharacterFireballAttackData.playExplosionAudio(),
-      collision: CharacterFireballAttackData.buildHitbox(),
-      lightingConfig: CharacterFireballAttackData.buildLightingConfig(),
+      collision: CharacterFireballAttackData.hitbox,
+      lightingConfig: CharacterFireballAttackData.lightingConfig,
     );
   }
 

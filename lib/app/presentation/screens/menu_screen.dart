@@ -4,7 +4,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/app/presentation/design_system/components/atoms/app_radio_button.dart';
 import 'package:darkness_dungeon/app/presentation/design_system/constants/typography_constants.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/enemy_sprite_animations.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/player_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/gameplay.dart';
@@ -29,7 +29,7 @@ abstract class MenuScreenViewModel extends State<MenuScreen> {
   late async.Timer _characterAnimationTimer;
 
   late final List<Future<SpriteAnimation>> _characterSpriteAnimations = [
-    PlayerSpriteAnimations.knightPlayerIdleRight6(),
+    PlayerAnimations.knightPlayerIdleRight6(),
     EnemySpriteAnimations.goblinEnemyIdleRight6(),
     EnemySpriteAnimations.impEnemyIdleRight4(),
     EnemySpriteAnimations.dungeonMiniBossEnemyIdleRight4(),
@@ -201,7 +201,7 @@ class _StartButton extends StatelessWidget {
             ),
             onPressed: onPressed,
             child: Text(
-              getString('play_cap'),
+              GameplayStringsLocation.instance.getString('play_cap'),
               style: const TextStyle(
                 color: Colors.white,
                 fontFamily: TypographyConstants.kPrimaryFontFamily,
@@ -281,7 +281,7 @@ class _Footer extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Text(
-                    getString('powered_by'),
+                    GameplayStringsLocation.instance.getString('powered_by'),
                     style: const TextStyle(
                       color: Colors.white,
                       fontFamily: TypographyConstants.kPrimaryFontFamily,
@@ -310,7 +310,7 @@ class _Footer extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Text(
-                    getString('built_with'),
+                    GameplayStringsLocation.instance.getString('built_with'),
                     style: const TextStyle(
                       color: Colors.white,
                       fontFamily: TypographyConstants.kPrimaryFontFamily,

@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/npc_sprite_animations.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/player_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
@@ -25,18 +25,19 @@ import 'package:flutter/services.dart';
 /// ```
 
 abstract class _WizardNpcData {
-  static const String interactionKey = 'talk_wizard';
+  // static const String interactionKey = 'talk_wizard';
   static const double sizeMultiplierX = 0.8;
   static const double sizeMultiplierY = 1.0;
-  static Vector2 get size => Vector2(
+  static final Vector2 size = Vector2(
     GameplayConstants.kTileSizeStandard * sizeMultiplierX,
     GameplayConstants.kTileSizeStandard * sizeMultiplierY,
   );
-  static SimpleDirectionAnimation get animation => SimpleDirectionAnimation(
-    idleRight: NpcSpriteAnimations.wizardIdleLeft(),
-    runRight: NpcSpriteAnimations.wizardIdleLeft(),
-  );
-  static double get visionRadius => GameplayConstants.kVisionRadiusSmall;
+  static SimpleDirectionAnimation get _buildDirectionAnimation =>
+      SimpleDirectionAnimation(
+        idleRight: NpcSpriteAnimations.wizardIdleLeft(),
+        runRight: NpcSpriteAnimations.wizardIdleLeft(),
+      );
+  static final double visionRadius = GameplayConstants.kVisionRadiusSmall;
 }
 
 class WizardNpc extends SimpleNpc {
@@ -44,7 +45,7 @@ class WizardNpc extends SimpleNpc {
 
   WizardNpc(Vector2 position)
     : super(
-        animation: _WizardNpcData.animation,
+        animation: _WizardNpcData._buildDirectionAnimation,
         position: position,
         size: _WizardNpcData.size,
       );
@@ -92,35 +93,55 @@ class WizardNpc extends SimpleNpc {
   List<Say> _createDialogueSequence() {
     return [
       Say(
-        text: [TextSpan(text: getString('talk_wizard_1'))],
+        text: [
+          TextSpan(
+            text: GameplayStringsLocation.instance.getString('talk_wizard_1'),
+          ),
+        ],
         person: DFAnimatedSpriteWidget(
           animation: NpcSpriteAnimations.wizardIdleLeft(),
         ),
         personSayDirection: PersonSayDirection.RIGHT,
       ),
       Say(
-        text: [TextSpan(text: getString('talk_player_1'))],
+        text: [
+          TextSpan(
+            text: GameplayStringsLocation.instance.getString('talk_player_1'),
+          ),
+        ],
         person: DFAnimatedSpriteWidget(
-          animation: PlayerSpriteAnimations.knightPlayerIdleRight6(),
+          animation: PlayerAnimations.knightPlayerIdleRight6(),
         ),
         personSayDirection: PersonSayDirection.LEFT,
       ),
       Say(
-        text: [TextSpan(text: getString('talk_wizard_2'))],
+        text: [
+          TextSpan(
+            text: GameplayStringsLocation.instance.getString('talk_wizard_2'),
+          ),
+        ],
         person: DFAnimatedSpriteWidget(
           animation: NpcSpriteAnimations.wizardIdleLeft(),
         ),
         personSayDirection: PersonSayDirection.RIGHT,
       ),
       Say(
-        text: [TextSpan(text: getString('talk_player_2'))],
+        text: [
+          TextSpan(
+            text: GameplayStringsLocation.instance.getString('talk_player_2'),
+          ),
+        ],
         person: DFAnimatedSpriteWidget(
-          animation: PlayerSpriteAnimations.knightPlayerIdleRight6(),
+          animation: PlayerAnimations.knightPlayerIdleRight6(),
         ),
         personSayDirection: PersonSayDirection.LEFT,
       ),
       Say(
-        text: [TextSpan(text: getString('talk_wizard_3'))],
+        text: [
+          TextSpan(
+            text: GameplayStringsLocation.instance.getString('talk_wizard_3'),
+          ),
+        ],
         person: DFAnimatedSpriteWidget(
           animation: NpcSpriteAnimations.wizardIdleLeft(),
         ),

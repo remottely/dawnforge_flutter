@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
@@ -14,7 +12,7 @@ abstract class _DoorKeyDecorationData {
   /// DATA
   static const String _spritePath =
       GameplaySpriteConstants.kDoorKeyDecorationAssetPath;
-  static Vector2 get _spriteSize => GameplayConstants.kTileVector2Standard;
+  static final Vector2 _spriteSize = GameplayConstants.kTileVector2Standard;
 
   /// LOAD
   static Future<Sprite> _loadSprite() => Sprite.load(_spritePath);

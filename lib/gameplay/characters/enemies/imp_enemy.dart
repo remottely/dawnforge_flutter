@@ -26,10 +26,11 @@ abstract class _ImpEnemyData {
   static const double speed = GameplayConstants.kCharacterSpeedMedium;
   static const int attackInterval = 300;
   static const double hitboxSize = 6.0;
-  static Vector2 get hitboxPosition => Vector2(3.0, 5.0);
-  static Vector2 get size =>
-      Vector2.all(GameplayConstants.kTileSizeStandard * 0.8);
-  static double get attackEffectSize =>
+  static final Vector2 hitboxPosition = Vector2(3.0, 5.0);
+  static final Vector2 size = Vector2.all(
+    GameplayConstants.kTileSizeStandard * 0.8,
+  );
+  static final double attackEffectSize =
       GameplayConstants.kTileSizeStandard * 0.62;
   static void loadHitBox(GameComponent target) => target.add(
     RectangleHitbox(
@@ -44,7 +45,7 @@ class ImpEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
 
   ImpEnemy(Vector2 position)
     : super(
-        animation: EnemySpriteAnimations.impEnemyAnimation(),
+        animation: EnemySpriteAnimations.impEnemyDirectionAnimation,
         position: position,
         size: _ImpEnemyData.size,
         speed: _ImpEnemyData.speed,

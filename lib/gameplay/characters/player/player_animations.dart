@@ -1,7 +1,21 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_sprite_constants.dart';
 
-class PlayerSpriteAnimations {
+// class MyAssetsExample {
+//   static late final SpriteAnimation enemyAttackRight;
+
+//   static Future<void> load() async {
+//     enemyAttackRight = await SpriteAnimation.load(
+//       'gameplay/characters/enemies/enemy_basic_attack_right_3.png',
+//       GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
+//         amount: GameplaySpriteConstants.kAttackFrames,
+//         textureSize: GameplaySpriteConstants.effectTextureSize,
+//       ),
+//     );
+//   }
+// }
+
+class PlayerAnimations {
   /// ATTACK EFFECTS
   static Future<SpriteAnimation> playerBasicAttackRight3() =>
       SpriteAnimation.load(
@@ -22,7 +36,7 @@ class PlayerSpriteAnimations {
         ),
       );
 
-  static SimpleDirectionAnimation knightPlayerAnimation() =>
+  static SimpleDirectionAnimation get knightDirectional =>
       SimpleDirectionAnimation(
         idleLeft: SpriteAnimation.load(
           'gameplay/characters/player/knight/knight_player_idle_left_6.png',

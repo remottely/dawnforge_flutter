@@ -13,12 +13,12 @@ abstract class _MapSensorData {
   static const String navigationInitiatedEvent = 'Navigating to';
   static const String resetNavigationEvent =
       'Reset navigation state for sensor';
-  static double get sensorContactTime =>
+  static final double sensorContactTime =
       GameplayMapConstants.kSensorContactTime;
-  static int get transitionDelayMs => GameplayMapConstants.kTransitionDelayMs;
-  static String get mapNavigationLogPrefix =>
+  static final int transitionDelayMs = GameplayMapConstants.kTransitionDelayMs;
+  static final String mapNavigationLogPrefix =
       GameplayMapConstants.kMapNavigationLogPrefix;
-  static String get sensorLogPrefix => GameplayMapConstants.kSensorLogPrefix;
+  static final String sensorLogPrefix = GameplayMapConstants.kSensorLogPrefix;
 }
 
 class MapSensor extends DFSensorPlayerDecoration {

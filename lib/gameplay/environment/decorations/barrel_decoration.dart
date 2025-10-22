@@ -8,9 +8,9 @@ abstract class _BarrelDecorationData {
   /// DATA
   static const String _spritePath =
       'gameplay/environment/decorations/barrel_decoration_1.png';
-  static Vector2 get _spriteSize => GameplayConstants.kTileVector2Standard;
-  static Vector2 get _hitBoxPosition => Vector2(2, 6);
-  static Vector2 get _hitBoxSize => Vector2(12, 4);
+  static final Vector2 _spriteSize = GameplayConstants.kTileVector2Standard;
+  static final Vector2 _hitBoxPosition = Vector2(2, 6);
+  static final Vector2 _hitBoxSize = Vector2(12, 4);
 
   /// LOAD
   static Future<Sprite> _loadSprite() => Sprite.load(_spritePath);

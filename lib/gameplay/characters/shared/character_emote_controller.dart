@@ -7,9 +7,9 @@ class CharacterEmoteController {
       'gameplay/characters/emotes/exclamation_emote_8.png';
   static const String kQuestionEmoteAssetPath =
       'gameplay/characters/emotes/question_emote_8.png';
-  static Vector2 get kEmoteOffset => Vector2(0, -3);
+  static final Vector2 kEmoteOffset = Vector2(0, -3);
 
-  static displayEmoteAboveCharacter({
+  static void displayEmoteAboveCharacter({
     required BonfireGameInterface gameRef,
     required GameComponent target,
     required String assetPath,

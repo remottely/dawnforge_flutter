@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
@@ -16,7 +14,7 @@ abstract class _TorchDecorationData {
   static const double _kBlurBorderMultiplier = 1.0;
   static const double _kPulseVariation = 0.1;
   static const double _kLightOpacity = 0.2;
-  static Vector2 get _spriteSize => GameplayConstants.kTileVector2Standard;
+  static final Vector2 _spriteSize = GameplayConstants.kTileVector2Standard;
 
   /// LOAD
   static Future<SpriteAnimation> _loadAnimation() =>
@@ -24,6 +22,7 @@ abstract class _TorchDecorationData {
 
   /// CONFIG
   static LightingConfig _buildLightingConfig(double width) => LightingConfig(
+    // TODO(Kevin): put it into a shared class
     radius: width * _kLightRadiusMultiplier,
     blurBorder: width * _kBlurBorderMultiplier,
     pulseVariation: _kPulseVariation,

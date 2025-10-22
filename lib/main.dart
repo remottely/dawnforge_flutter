@@ -17,7 +17,7 @@ void main() async {
   }
 
   await GameplayAudioManager.initialize();
-  GameplayLocalizationsDelegate myLocation =
+  GameplayLocalizationsDelegate location =
       const GameplayLocalizationsDelegate();
 
   runApp(
@@ -27,12 +27,12 @@ void main() async {
       home: MenuScreen(),
       supportedLocales: GameplayLocalizationsDelegate.supportedLocales(),
       localizationsDelegates: [
-        myLocation,
+        location,
         DefaultCupertinoLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      localeResolutionCallback: myLocation.resolution,
+      localeResolutionCallback: location.resolution,
     ),
   );
 }

@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight_player_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/player_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_data.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
@@ -16,7 +16,7 @@ class KnightPlayerView extends SimplePlayer
 
   KnightPlayerView(Vector2 position, {required this.controller})
     : super(
-        animation: KnightPlayerConfig.loadAnimation(),
+        animation: KnightPlayerConfig.directionalAnimation,
         size: KnightPlayerConfig.spriteSize,
         position: position,
         life: KnightPlayerConfig.kStandardLife,
@@ -76,7 +76,7 @@ class KnightPlayerView extends SimplePlayer
     GameplayAudioManager.playAttackPlayerMelee();
     simpleAttackMelee(
       damage: damage,
-      animationRight: PlayerSpriteAnimations.playerBasicAttackRight3(),
+      animationRight: PlayerAnimations.playerBasicAttackRight3(),
       size: KnightPlayerConfig.spriteSize,
     );
   }
@@ -89,8 +89,8 @@ class KnightPlayerView extends SimplePlayer
       damage: damage,
       speed: speed * CharacterFireballAttackData.kSpeedMultiplier,
       onDestroy: () => CharacterFireballAttackData.playExplosionAudio(),
-      collision: CharacterFireballAttackData.buildHitbox(),
-      lightingConfig: CharacterFireballAttackData.buildLightingConfig(),
+      collision: CharacterFireballAttackData.hitbox,
+      lightingConfig: CharacterFireballAttackData.lightingConfig,
     );
     CharacterFireballAttackData.playExecutionAudio();
   }

@@ -22,7 +22,7 @@ class EnemySpriteAnimations {
         ),
       );
 
-  static SimpleDirectionAnimation goblinEnemyAnimation() =>
+  static SimpleDirectionAnimation get goblinEnemyDirectionAnimation =>
       SimpleDirectionAnimation(
         idleLeft: SpriteAnimation.load(
           'gameplay/characters/enemies/goblin/goblin_enemy_idle_left_6.png',
@@ -57,7 +57,7 @@ class EnemySpriteAnimations {
     ),
   );
 
-  static SimpleDirectionAnimation impEnemyAnimation() =>
+  static SimpleDirectionAnimation get impEnemyDirectionAnimation =>
       SimpleDirectionAnimation(
         idleLeft: SpriteAnimation.load(
           'gameplay/characters/enemies/imp/imp_enemy_idle_left_4.png',
@@ -94,7 +94,7 @@ class EnemySpriteAnimations {
   );
 
   static SimpleDirectionAnimation
-  dungeonMiniBossEnemyAnimation() => SimpleDirectionAnimation(
+  get dungeonMiniBossEnemyDirectionAnimation => SimpleDirectionAnimation(
     idleLeft: SpriteAnimation.load(
       'gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_idle_left_4.png',
       GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
@@ -130,7 +130,7 @@ class EnemySpriteAnimations {
   );
 
   static SimpleDirectionAnimation
-  dungeonBossEnemyAnimation() => SimpleDirectionAnimation(
+  get dungeonBossEnemyDirectionAnimation => SimpleDirectionAnimation(
     idleLeft: SpriteAnimation.load(
       'gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_idle_left_4.png',
       GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(

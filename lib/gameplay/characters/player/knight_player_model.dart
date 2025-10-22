@@ -12,7 +12,6 @@ class KnightPlayerModel {
   FarmTool currentTool;
   bool hasKey;
 
-  // Getters
   double get currentStamina => _stamina;
   int get currentEnergy => _energy;
   bool get hasStamina => _stamina > 0;

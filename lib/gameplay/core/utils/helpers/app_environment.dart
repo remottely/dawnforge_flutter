@@ -2,137 +2,147 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 
-/// Game environment configuration system
-/// Allows switching between different execution modes (debug, release, profile)
-/// to facilitate development and customize behaviors
 class AppEnvironment {
-  // Main configuration based on Flutter build mode
-  static bool get isDebugMode => kDebugMode;
-  static bool get isReleaseMode => kReleaseMode;
-  static bool get isProfileMode => kProfileMode;
+  static const bool isDebugMode = kDebugMode;
+  static const bool isReleaseMode = kReleaseMode;
+  static const bool isProfileMode = kProfileMode;
 
-  // Game-specific configurations
   static const String _envKey = 'GAME_ENVIRONMENT';
 
-  /// Enum for different custom environments
   static const String envDevelopment = 'DEVELOPMENT';
   static const String envTesting = 'TESTING';
   static const String envStaging = 'STAGING';
   static const String envProduction = 'PRODUCTION';
 
-  // Current configuration (can be overridden via dart-define)
-  static String get currentEnvironment =>
-      const String.fromEnvironment(_envKey, defaultValue: envDevelopment);
+  static final String currentEnvironment = const String.fromEnvironment(
+    _envKey,
+    defaultValue: envDevelopment,
+  );
 
-  // Environment checks
-  static bool get isDevelopment => currentEnvironment == envDevelopment;
-  static bool get isTesting => currentEnvironment == envTesting;
-  static bool get isStaging => currentEnvironment == envStaging;
-  static bool get isProduction => currentEnvironment == envProduction;
+  static final bool isDevelopment = currentEnvironment == envDevelopment;
+  static final bool isTesting = currentEnvironment == envTesting;
+  static final bool isStaging = currentEnvironment == envStaging;
+  static final bool isProduction = currentEnvironment == envProduction;
 
-  // Combined environment and build mode checks (for backward compatibility)
-  static bool get isDevelopmentOrDebug => isDevelopment || isDebugMode;
-  static bool get isProductionOrRelease => isProduction || isReleaseMode;
+  static final bool isDevelopmentOrDebug = isDevelopment || isDebugMode;
+  static final bool isProductionOrRelease = isProduction || isReleaseMode;
 
-  /// Debug/Development Settings
-  static bool get showDebugInfo => isDevelopment;
-  static bool get enableLogging => isDevelopment || isTesting || isStaging;
-  static bool get showFPS => isDevelopment;
-  static bool get enableCheatCodes => isDevelopment;
-  static bool get skipIntro => isDevelopment;
-  static bool get showCollisionBoxes => isDevelopment || isTesting;
-  static bool get enableGodMode => isDevelopment;
-  static bool get showCoordinates => isDevelopment;
-
-  /// Performance Settings
-  static bool get enablePerformanceOverlay => isDevelopment;
-  static bool get enableMemoryProfile => isDevelopment || isTesting;
-  static double get gameSpeed => 4.0; // isTesting ? 4.0 : 1.0;
-  static int get maxParticles => isProduction ? 50 : 100;
-  static bool get enableShadows => isProduction || isStaging;
-  static bool get enableBloom => isProduction || isStaging;
-
-  /// Audio Settings
-  static double get masterVolume {
-    if (isDevelopment) return 0.3;
-    if (isTesting) return 0.1;
-    if (isStaging) return 0.5;
-    return 0.7; // Production
-  }
-  // static bool get enableAudio => isProduction ? true : isDevelopment;
-  // static bool get enableBackgroundMusic => isTesting ? false : true;
-  // static bool get enableSoundEffects => true;
-
-  /// Network/API Settings
-  static String get apiBaseUrl {
+  static T byEnvironment<T>({
+    required T development,
+    T? testing,
+    T? staging,
+    required T production,
+  }) {
     switch (currentEnvironment) {
       case envDevelopment:
-        return 'https://dev-api.darknessdungeon.com';
+        return development;
       case envTesting:
-        return 'https://test-api.darknessdungeon.com';
+        return testing ?? development;
       case envStaging:
-        return 'https://staging-api.darknessdungeon.com';
+        return staging ?? production;
       case envProduction:
-        return 'https://api.darknessdungeon.com';
+        return production;
       default:
-        return 'https://dev-api.darknessdungeon.com';
+        return development;
     }
   }
 
-  static Duration get apiTimeout {
+  static final bool showDebugInfo = isDevelopment;
+  static final bool enableLogging = isDevelopment || isTesting || isStaging;
+  static final bool showFPS = isDevelopment;
+  static final bool enableCheatCodes = isDevelopment;
+  static final bool skipIntro = isDevelopment;
+  static final bool showCollisionBoxes = isDevelopment || isTesting;
+  static final bool enableGodMode = isDevelopment;
+  static final bool showCoordinates = isDevelopment;
+
+  static final bool enablePerformanceOverlay = isDevelopment;
+  static final bool enableMemoryProfile = isDevelopment || isTesting;
+  static final double gameSpeed = byEnvironment(
+    development: 1.0,
+    testing: 4.0,
+    production: 1.0,
+  );
+  static final int maxParticles = byEnvironment(
+    development: 100,
+    production: 50,
+  );
+  static final bool enableShadows = isProduction || isStaging;
+  static final bool enableBloom = isProduction || isStaging;
+
+  static final double masterVolume = byEnvironment(
+    development: 0.3,
+    testing: 0.1,
+    staging: 0.5,
+    production: 0.7,
+  );
+  static final bool enableAudio = true; // Habilitado para todos
+  static final bool enableBackgroundMusic = byEnvironment(
+    development: true,
+    testing: false,
+    production: true,
+  );
+  static final bool enableSoundEffects = true; // Habilitado para todos
+
+  static final String apiBaseUrl = byEnvironment(
+    development: 'https://dev-api.darknessdungeon.com',
+    testing: 'https://test-api.darknessdungeon.com',
+    staging: 'https://staging-api.darknessdungeon.com',
+    production: 'https://api.darknessdungeon.com',
+  );
+
+  static final Duration apiTimeout = (() {
     if (isDevelopment) return const Duration(seconds: 30);
     if (isTesting) return const Duration(seconds: 60);
     if (isStaging) return const Duration(seconds: 15);
     return const Duration(seconds: 10); // Production
-  }
+  })();
 
-  /// Sprites and Graphics Settings
-  static String get defaultSpriteSize => isDevelopment ? 'large' : 'tiny';
-  static bool get enableSpriteDebug => isDevelopment;
-  static double get spriteScale => isDevelopment ? 1.2 : 1.0;
+  static final String defaultSpriteSize = byEnvironment(
+    development: 'large',
+    production: 'tiny',
+  );
+  static final bool enableSpriteDebug = isDevelopment;
+  static final double spriteScale = byEnvironment(
+    development: 1.2,
+    production: 1.0,
+  );
 
-  /// Gameplay Settings
-  static double get playerHealthMultiplier {
-    if (isDevelopment) return 2.0;
-    if (isTesting) return 1.5;
-    if (isStaging) return 1.2;
-    return 1.0; // Production
-  }
+  static final double playerHealthMultiplier = byEnvironment(
+    development: 2.0,
+    testing: 1.5,
+    staging: 1.2,
+    production: 1.0,
+  );
+  static final double enemyDamageMultiplier = byEnvironment(
+    development: 0.5,
+    testing: 0.7,
+    staging: 0.9,
+    production: 1.0,
+  );
+  static final int startingLives = byEnvironment(
+    development: 5,
+    testing: 4,
+    staging: 3,
+    production: 3,
+  );
+  static final bool enableAutoSave = isProduction || isStaging;
+  static final Duration autoSaveInterval = const Duration(minutes: 2);
 
-  static double get enemyDamageMultiplier {
-    if (isDevelopment) return 0.5;
-    if (isTesting) return 0.7;
-    if (isStaging) return 0.9;
-    return 1.0; // Production
-  }
+  static final bool showVersionInfo = !isProduction;
+  static final bool showEnvironmentBadge = !isProduction;
+  static final bool enableDevMenu = isDevelopment;
+  static final bool showTooltips = isDevelopment || isStaging;
 
-  static int get startingLives {
-    if (isDevelopment) return 5;
-    if (isTesting) return 4;
-    if (isStaging) return 3;
-    return 3; // Production
-  }
+  static final bool enableVerboseLogging = isDevelopment;
+  static final bool logToFile = isProduction || isStaging;
+  static final String logLevel = byEnvironment(
+    development: 'debug',
+    testing: 'info',
+    staging: 'warning',
+    production: 'error',
+  );
 
-  static bool get enableAutoSave => isProduction || isStaging;
-  static Duration get autoSaveInterval => const Duration(minutes: 2);
-
-  /// UI Settings
-  static bool get showVersionInfo => !isProduction;
-  static bool get showEnvironmentBadge => !isProduction;
-  static bool get enableDevMenu => isDevelopment;
-  static bool get showTooltips => isDevelopment || isStaging;
-
-  /// Logging Settings
-  static bool get enableVerboseLogging => isDevelopment;
-  static bool get logToFile => isProduction || isStaging;
-  static String get logLevel {
-    if (isDevelopment) return 'debug';
-    if (isTesting) return 'info';
-    if (isStaging) return 'warning';
-    return 'error'; // Production
-  }
-
-  /// Utility methods
   static void printEnvironmentInfo() {
     if (enableLogging) {
       log('=== DARKNESS DUNGEON ENVIRONMENT INFO ===');
@@ -161,43 +171,19 @@ class AppEnvironment {
     }
   }
 
-  /// Execute code only in debug mode
   static void debugOnly(VoidCallback callback) {
     if (isDevelopment) {
       callback();
     }
   }
 
-  /// Execute code only in production
   static void productionOnly(VoidCallback callback) {
     if (isProduction) {
       callback();
     }
   }
 
-  /// Return value based on environment
-  static T byEnvironment<T>({
-    required T development,
-    T? testing,
-    T? staging,
-    required T production,
-  }) {
-    switch (currentEnvironment) {
-      case envDevelopment:
-        return development;
-      case envTesting:
-        return testing ?? development;
-      case envStaging:
-        return staging ?? production;
-      case envProduction:
-        return production;
-      default:
-        return development;
-    }
-  }
-
-  /// Advanced configurations for different builds
-  static Map<String, dynamic> get buildConfig => {
+  static final Map<String, dynamic> buildConfig = {
     'environment': currentEnvironment,
     'debug_mode': isDebugMode,
     'version': const String.fromEnvironment(

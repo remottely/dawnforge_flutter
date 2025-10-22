@@ -47,18 +47,34 @@ class GameplayMapManager {
   // Private constructor to prevent instantiation
   GameplayMapManager._();
 
-  /// Gets the complete map configuration for the game
-  /// Following Flutter pattern of static factory methods
-  static Map<String, MapItemBuilder> get maps {
+  // /// Gets the complete map configuration for the game
+  // /// Following Flutter pattern of static factory methods
+  // static Map<String, MapItemBuilder> get maps {
+  //   final mapBuilders = <String, MapItemBuilder>{};
+
+  //   // Build maps from centralized configuration
+  //   for (final config in GameplayMapData.allMaps) {
+  //     mapBuilders[config.id.name] = (context, args) => _createMapItem(config);
+  //   }
+
+  //   return mapBuilders;
+  // }
+
+  /// O mapa completo de configurações do jogo.
+  /// A lógica é executada apenas uma vez e o resultado é armazenado
+  /// nesta variável final para acesso eficiente.
+  static final Map<String, MapItemBuilder> maps = (() {
+    // Cria um mapa vazio para ser preenchido.
     final mapBuilders = <String, MapItemBuilder>{};
 
-    // Build maps from centralized configuration
+    // Constrói o mapa a partir da configuração centralizada.
     for (final config in GameplayMapData.allMaps) {
       mapBuilders[config.id.name] = (context, args) => _createMapItem(config);
     }
 
+    // Retorna o mapa preenchido, que será atribuído à variável 'maps'.
     return mapBuilders;
-  }
+  })();
 
   /// Creates a MapItem from configuration
   /// Following Flutter pattern of factory methods

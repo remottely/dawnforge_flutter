@@ -49,7 +49,7 @@ class GameplayMapData {
 
   /// Gets all available map configurations in a centralized way
   /// Following Flutter pattern of static factory methods
-  static List<GameplayMapData> get allMaps => [
+  static const List<GameplayMapData> allMaps = [
     // Map 1 configuration
     const GameplayMapData(
       id: MapId.map1,

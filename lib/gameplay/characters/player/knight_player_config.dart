@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/player_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 /// para o KnightPlayerView.
 abstract class KnightPlayerConfig {
   // Geral
-  static Vector2 get spriteSize => GameplayConstants.kTileVector2Standard;
+  static final Vector2 spriteSize = GameplayConstants.kTileVector2Standard;
   static const double kStandardLife = 200.0;
   static const double kStandardSpeed =
       GameplayConstants.kTileSizeStandard * 2.5;
@@ -35,13 +35,13 @@ abstract class KnightPlayerConfig {
   static const double kVisionRadius = GameplayConstants.kVisionRadiusUltraLarge;
 
   // Hitbox
-  static Vector2 get hitBoxSize => Vector2(8, 6);
-  static Vector2 get hitBoxPosition => Vector2(4, 9);
+  static final Vector2 hitBoxSize = Vector2(8, 6);
+  static final Vector2 hitBoxPosition = Vector2(4, 9);
 
   // Morte
   static const String cryptSpritePath =
       'gameplay/characters/player/player_crypt_1.png';
-  static Vector2 get cryptSpriteSize => Vector2.all(30);
+  static final Vector2 cryptSpriteSize = Vector2.all(30);
 
   // UI
   static final TextStyle kDamageTextStyle = TextStyle(
@@ -58,8 +58,8 @@ abstract class KnightPlayerConfig {
   );
 
   /// LOAD (Métodos que carregam assets ou adicionam componentes)
-  static SimpleDirectionAnimation loadAnimation() =>
-      PlayerSpriteAnimations.knightPlayerAnimation();
+  static SimpleDirectionAnimation get directionalAnimation =>
+      PlayerAnimations.knightDirectional;
 
   static FutureOr<void> buildHitBox(GameComponent target) =>
       target.add(RectangleHitbox(position: hitBoxPosition, size: hitBoxSize));

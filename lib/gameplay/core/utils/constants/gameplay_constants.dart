@@ -3,14 +3,16 @@ import 'package:bonfire/bonfire.dart';
 class GameplayConstants {
   /// TILE SIZES
   static const double kTileSizeSmall = 8;
-  static const double kTileSizeDefault = 16;
+  static const double kTileSizeStandard = 16;
   static const double kTileSizeLarge = 24;
   static const double kTileSizeExtraLarge = 32;
 
-  static Vector2 get kTileVector2Small => Vector2.all(kTileSizeSmall);
-  static Vector2 get kTileVector2Default => Vector2.all(kTileSizeDefault);
-  static Vector2 get kTileVector2Large => Vector2.all(kTileSizeLarge);
-  static Vector2 get kTileVector2ExtraLarge => Vector2.all(kTileSizeExtraLarge);
+  static final Vector2 kTileVector2Small = Vector2.all(kTileSizeSmall);
+  static final Vector2 kTileVector2Standard = Vector2.all(kTileSizeStandard);
+  static final Vector2 kTileVector2Large = Vector2.all(kTileSizeLarge);
+  static final Vector2 kTileVector2ExtraLarge = Vector2.all(
+    kTileSizeExtraLarge,
+  );
 
   /// SPEEDS
   static const double kCameraSpeed = 3.0;

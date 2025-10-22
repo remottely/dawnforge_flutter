@@ -16,8 +16,8 @@ import '../utils/constants/gameplay_audio_constants.dart';
 class GameplayAudioManager {
   // Private static instance for singleton pattern
   static GameplayAudioManager? _instance;
-  static GameplayAudioManager get instance =>
-      _instance ??= GameplayAudioManager._internal();
+  static final GameplayAudioManager instance = _instance ??=
+      GameplayAudioManager._internal();
 
   // Private constructor for singleton
   GameplayAudioManager._internal();

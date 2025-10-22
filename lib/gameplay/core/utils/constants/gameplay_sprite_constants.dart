@@ -25,24 +25,27 @@ class GameplaySpriteConstants {
   static const int kFireballExplosionFrames = 6;
 
   // Texture size getters that create Vector2 instances
-  static Vector2 get playerTextureSize =>
+  static final Vector2 playerTextureSize =
       GameplayConstants.kTileVector2Standard;
-  static Vector2 get enemyTextureSize => GameplayConstants.kTileVector2Standard;
-  static Vector2 get bossTextureSize => Vector2(32, 36);
-  static Vector2 get miniBossTextureSize => Vector2(16, 24);
-  static Vector2 get effectTextureSize =>
+  static final Vector2 enemyTextureSize =
       GameplayConstants.kTileVector2Standard;
-  static Vector2 get fireballTextureSize => Vector2(23, 23);
-  static Vector2 get explosionTextureSize =>
+  static final Vector2 bossTextureSize = Vector2(32, 36);
+  static final Vector2 miniBossTextureSize = Vector2(16, 24);
+  static final Vector2 effectTextureSize =
+      GameplayConstants.kTileVector2Standard;
+  static final Vector2 fireballTextureSize = Vector2(23, 23);
+  static final Vector2 explosionTextureSize =
       GameplayConstants.kTileVector2ExtraLarge;
-  static Vector2 get barrelDecorationTextureSize => Vector2(23, 23);
+  static final Vector2 barrelDecorationTextureSize = Vector2(23, 23);
 
   static SpriteAnimationData defaultStepTimeSpriteAnimationData({
     required int amount,
     required Vector2 textureSize,
+    // double stepTime = kStandardStepTime,
   }) => SpriteAnimationData.sequenced(
     amount: amount,
-    stepTime: kStandardStepTime,
     textureSize: textureSize,
+    // stepTime: stepTime,
+    stepTime: kStandardStepTime,
   );
 }

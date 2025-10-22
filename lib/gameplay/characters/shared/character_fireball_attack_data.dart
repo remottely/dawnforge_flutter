@@ -5,7 +5,7 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_sprite_c
 import 'package:flutter/material.dart';
 
 class CharacterFireballAttackData {
-  static Vector2 spriteSize = Vector2.all(
+  static final Vector2 spriteSize = Vector2.all(
     GameplayConstants.kTileSizeStandard * 0.65,
   );
   static const double kSpeedMultiplier = 2.5;
@@ -13,7 +13,7 @@ class CharacterFireballAttackData {
   static void playExplosionAudio() => GameplayAudioManager.playExplosion();
   static void playExecutionAudio() => GameplayAudioManager.playFireballAttack();
 
-  static RectangleHitbox buildHitbox() => RectangleHitbox(
+  static RectangleHitbox get hitbox => RectangleHitbox(
     size: Vector2(
       GameplayConstants.kTileSizeStandard / 3,
       GameplayConstants.kTileSizeStandard / 3,
@@ -21,7 +21,7 @@ class CharacterFireballAttackData {
     position: Vector2(10, 5),
   );
 
-  static LightingConfig buildLightingConfig() => LightingConfig(
+  static final LightingConfig lightingConfig = LightingConfig(
     radius: GameplayConstants.kTileSizeStandard * 0.9,
     blurBorder: GameplayConstants.kTileSizeStandard,
     color: Colors.deepOrangeAccent.withValues(alpha: 0.4),

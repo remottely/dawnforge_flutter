@@ -16,7 +16,7 @@ abstract class _FarmTileData {
       'gameplay/terrain/farmable/tile_planted.png';
   static const String spriteGrown =
       'gameplay/terrain/farmable/parsnip_stage4.png';
-  static Vector2 get _spriteSize => GameplayConstants.kTileVector2Standard;
+  static final Vector2 _spriteSize = GameplayConstants.kTileVector2Standard;
   static Future<Sprite> _loadSprite(String path) => Sprite.load(path);
 }
 
