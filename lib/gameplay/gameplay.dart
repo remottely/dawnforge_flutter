@@ -120,7 +120,7 @@ class _GameplayState extends State<Gameplay> {
         );
 
         // Create player for the current map
-        final player = _createPlayerWithState(playerPosition);
+        final player = _createKnightPlayerWithState(playerPosition);
 
         // Ensure controller is active by recreating it for each map
         final activeController = _createFreshController();
@@ -160,13 +160,14 @@ class _GameplayState extends State<Gameplay> {
     _gameplayHUD = GameplayHUD();
   }
 
-  KnightPlayerView _createPlayerWithState(Vector2 position) {
-    final playerModel = KnightPlayerModel();
-    final playerController = KnightPlayerController(model: playerModel);
-    final playerView = KnightPlayerView(position, controller: playerController);
+  KnightPlayerView _createKnightPlayerWithState(Vector2 position) {
+    final knight = KnightPlayerView(
+      position,
+      controller: KnightPlayerController(model: KnightPlayerModel()),
+    );
 
-    AppLogger.info('Created fresh playerView at position: $position');
-    return playerView;
+    AppLogger.info('Created fresh knight at position: $position');
+    return knight;
   }
 
   /// Creates a fresh controller instance for each map navigation

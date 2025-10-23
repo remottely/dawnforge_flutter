@@ -5,7 +5,9 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss_e
 import 'package:darkness_dungeon/gameplay/characters/enemies/goblin_enemy.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp_enemy.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid_npc.dart';
-import 'package:darkness_dungeon/gameplay/characters/npcs/wizard_npc.dart';
+import 'package:darkness_dungeon/gameplay/characters/npcs/wizard_npc_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/npcs/wizard_npc_model.dart';
+import 'package:darkness_dungeon/gameplay/characters/npcs/wizard_npc_view.dart';
 import 'package:darkness_dungeon/gameplay/core/data/gameplay_map_data.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_map_constants.dart';
@@ -183,7 +185,10 @@ void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
         SpikeTrapDecoration(position: p.position),
 
     // Non-player characters
-    GameplayMapManager.kWizardEntityType: (p) => WizardNpc(p.position),
+    GameplayMapManager.kWizardEntityType: (p) => WizardNpcView(
+      p.position,
+      controller: WizardNpcController(model: WizardNpcModel()),
+    ),
     GameplayMapManager.kKidEntityType: (p) => KidNpc(p.position),
 
     // Enemies
