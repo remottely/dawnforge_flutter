@@ -94,11 +94,11 @@ class GameplayAudioManager {
 
   /// Plays explosion sound effect
   /// Following Flutter pattern of descriptive method names
-  static void playExplosion() {
+  static void playFireballExplosion() {
     try {
       FlameAudio.play(
-        GameplayAudioConstants.kFIreballExplosionAudioAssetPath,
-        volume: GameplayAudioConstants.kExplosionVolume,
+        GameplayAudioConstants.kFireballExplosionAudioAssetPath,
+        volume: GameplayAudioConstants.kFireballExplosionVolume,
       );
     } catch (e) {
       _handleAudioError('playExplosion', e);

@@ -20,12 +20,12 @@ class CharacterEmoteController {
           assetPath,
           GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
             amount: 8,
-            textureSize: GameplayConstants.kTileVector2ExtraLarge,
+            textureSize: GameplayConstants.kTileSizeExtraLarge,
           ),
         ),
         target: target,
         loop: false,
-        size: GameplayConstants.kTileVector2Small,
+        size: GameplayConstants.kTileSizeSmall,
         offset: kEmoteOffset,
       ),
     );

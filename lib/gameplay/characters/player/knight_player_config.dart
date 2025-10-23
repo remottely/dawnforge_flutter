@@ -15,12 +15,12 @@ abstract class KnightPlayerConfig {
   //////////////////////////////////////////////////////////////////////////////
 
   /// Tamanho padrão do sprite do player
-  static final Vector2 spriteSize = GameplayConstants.kTileVector2Standard;
+  static final Vector2 spriteSize = GameplayConstants.kTileSizeStandard;
 
   /// Vida e velocidade padrão
   static const double kStandardLife = 200.0;
   static const double kStandardSpeed =
-      GameplayConstants.kTileSizeStandard * 2.5;
+      GameplayConstants.kTileDimensionStandard * 2.5;
 
   //////////////////////////////////////////////////////////////////////////////
   // ENERGY & STAMINA
@@ -56,8 +56,6 @@ abstract class KnightPlayerConfig {
 
   static final Vector2 hitBoxSize = Vector2(8, 6);
   static final Vector2 hitBoxPosition = Vector2(4, 9);
-
-  /// Adiciona hitbox ao componente alvo
   static FutureOr<void> buildHitBox(GameComponent target) =>
       target.add(RectangleHitbox(position: hitBoxPosition, size: hitBoxSize));
 

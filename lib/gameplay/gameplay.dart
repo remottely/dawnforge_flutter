@@ -94,7 +94,7 @@ class _GameplayState extends State<Gameplay> {
         MapArguments? mapArguments = arguments as MapArguments?;
         final playerPosition =
             (mapArguments?.playerPosition ?? Vector2(4, 4)) *
-            GameplayConstants.kTileSizeStandard;
+            GameplayConstants.kTileDimensionStandard;
 
         // Read background music from Tiled properties (optional field)
         final mapBackgroundMusic = mapItem

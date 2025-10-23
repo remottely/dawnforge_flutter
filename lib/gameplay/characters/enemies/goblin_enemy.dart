@@ -28,10 +28,10 @@ abstract class _GoblinEnemyData {
   static final Vector2 hitboxSize = Vector2.all(7.0);
   static final Vector2 hitboxPosition = Vector2(3.0, 4.0);
   static final Vector2 _spriteSize = Vector2.all(
-    GameplayConstants.kTileSizeStandard * 0.8,
+    GameplayConstants.kTileDimensionStandard * 0.8,
   );
   static final double attackEffectSize =
-      GameplayConstants.kTileSizeStandard * 0.62;
+      GameplayConstants.kTileDimensionStandard * 0.62;
   static void loadHitBox(GameComponent target) =>
       target.add(RectangleHitbox(size: hitboxSize, position: hitboxPosition));
 }
@@ -41,7 +41,7 @@ class GoblinEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
 
   GoblinEnemy(Vector2 position)
     : super(
-        animation: EnemySpriteAnimations.goblinEnemyDirectionAnimation,
+        animation: EnemySpriteAnimations.goblinEnemyDirectional,
         position: position,
         size: _GoblinEnemyData._spriteSize,
         speed: _GoblinEnemyData.speed,
@@ -102,7 +102,7 @@ class GoblinEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
         animation:
             CharacterEffectSpriteAnimations.characterExplosionSmokeRight5(),
         position: position,
-        size: GameplayConstants.kTileVector2Standard,
+        size: GameplayConstants.kTileSizeStandard,
         loop: false,
       ),
     );

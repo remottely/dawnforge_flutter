@@ -29,10 +29,10 @@ abstract class _WizardNpcData {
   static const double sizeMultiplierX = 0.8;
   static const double sizeMultiplierY = 1.0;
   static final Vector2 size = Vector2(
-    GameplayConstants.kTileSizeStandard * sizeMultiplierX,
-    GameplayConstants.kTileSizeStandard * sizeMultiplierY,
+    GameplayConstants.kTileDimensionStandard * sizeMultiplierX,
+    GameplayConstants.kTileDimensionStandard * sizeMultiplierY,
   );
-  static SimpleDirectionAnimation get _buildDirectionAnimation =>
+  static SimpleDirectionAnimation get buildDirectionalAnimation =>
       SimpleDirectionAnimation(
         idleRight: NpcSpriteAnimations.wizardIdleLeft(),
         runRight: NpcSpriteAnimations.wizardIdleLeft(),
@@ -45,7 +45,7 @@ class WizardNpc extends SimpleNpc {
 
   WizardNpc(Vector2 position)
     : super(
-        animation: _WizardNpcData._buildDirectionAnimation,
+        animation: _WizardNpcData.buildDirectionalAnimation,
         position: position,
         size: _WizardNpcData.size,
       );

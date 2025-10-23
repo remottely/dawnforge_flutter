@@ -8,7 +8,7 @@ class DecorationSpriteAnimations {
         'gameplay/environment/decorations/door_decoration_opening_14.png',
         GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
           amount: 14,
-          textureSize: GameplayConstants.kTileVector2Standard,
+          textureSize: GameplayConstants.kTileSizeStandard,
         ),
       );
 
@@ -17,7 +17,7 @@ class DecorationSpriteAnimations {
         'gameplay/environment/decorations/spike_trap_decoration_10.png',
         GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
           amount: 10,
-          textureSize: GameplayConstants.kTileVector2Standard,
+          textureSize: GameplayConstants.kTileSizeStandard,
         ),
       );
 
@@ -25,7 +25,7 @@ class DecorationSpriteAnimations {
     'gameplay/environment/decorations/torch_decoration_6.png',
     GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
       amount: 6,
-      textureSize: GameplayConstants.kTileVector2Standard,
+      textureSize: GameplayConstants.kTileSizeStandard,
     ),
   );
 }

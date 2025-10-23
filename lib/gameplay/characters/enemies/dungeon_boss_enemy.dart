@@ -21,13 +21,13 @@ abstract class _DungeonBossEnemyData {
   static const double _life = 200.0;
   static const double _speed = GameplayConstants.kCharacterSpeedSlow;
   static final Vector2 _spriteSize = Vector2(
-    GameplayConstants.kTileSizeLarge,
-    GameplayConstants.kTileSizeStandard * 1.7,
+    GameplayConstants.kTileDimensionLarge,
+    GameplayConstants.kTileDimensionStandard * 1.7,
   );
   static final Vector2 hitboxSize = Vector2(14, 16);
   static final Vector2 hitboxPosition = Vector2(5, 11);
   static final double attackEffectSize =
-      GameplayConstants.kTileSizeStandard * 0.62;
+      GameplayConstants.kTileDimensionStandard * 0.62;
   static double get visionRadiusUltraLarge =>
       GameplayConstants.kVisionRadiusUltraLarge;
   static double get visionRadiusLarge => GameplayConstants.kVisionRadiusLarge;
@@ -45,7 +45,7 @@ class DungeonBossEnemy extends SimpleEnemy
 
   DungeonBossEnemy(Vector2 position)
     : super(
-        animation: EnemySpriteAnimations.dungeonBossEnemyDirectionAnimation,
+        animation: EnemySpriteAnimations.dungeonBossEnemyDirectional,
         position: position,
         size: _DungeonBossEnemyData._spriteSize,
         speed: _DungeonBossEnemyData._speed,
@@ -109,7 +109,7 @@ class DungeonBossEnemy extends SimpleEnemy
       AnimatedGameObject(
         animation: CharacterEffectSpriteAnimations.characterExplosionRight7(),
         position: position,
-        size: GameplayConstants.kTileVector2Standard,
+        size: GameplayConstants.kTileSizeStandard,
         loop: false,
       ),
     );
@@ -153,7 +153,7 @@ class DungeonBossEnemy extends SimpleEnemy
           animation:
               CharacterEffectSpriteAnimations.characterExplosionSmokeRight5(),
           position: positionExplosion,
-          size: GameplayConstants.kTileVector2Standard,
+          size: GameplayConstants.kTileSizeStandard,
           loop: false,
         ),
       );
@@ -302,7 +302,7 @@ class DungeonBossEnemy extends SimpleEnemy
         animation:
             CharacterEffectSpriteAnimations.characterExplosionSmokeRight5(),
         position: p,
-        size: GameplayConstants.kTileVector2Standard,
+        size: GameplayConstants.kTileSizeStandard,
         loop: false,
       ),
     );

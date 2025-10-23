@@ -15,7 +15,7 @@ abstract class _KidNpcData {
   static const double sizeMultiplierX = 8.0;
   static const double sizeMultiplierY = 11.0;
   static final Vector2 size = Vector2(sizeMultiplierX, sizeMultiplierY);
-  static SimpleDirectionAnimation get _buildDirectionAnimation =>
+  static SimpleDirectionAnimation get buildDirectionalAnimation =>
       SimpleDirectionAnimation(
         idleRight: NpcSpriteAnimations.kidIdleLeft(),
         runRight: NpcSpriteAnimations.kidIdleLeft(),
@@ -27,7 +27,7 @@ class KidNpc extends SimpleNpc {
 
   KidNpc(Vector2 position)
     : super(
-        animation: _KidNpcData._buildDirectionAnimation,
+        animation: _KidNpcData.buildDirectionalAnimation,
         position: position,
         size: _KidNpcData.size,
       );

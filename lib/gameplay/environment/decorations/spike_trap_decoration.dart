@@ -12,7 +12,7 @@ abstract class _SpikeTrapDecorationData {
   /// DATA
   static const double kDamageAmount = GameplayConstants.kPropertyAmountMedium;
   static const int kPriority = GameplayConstants.kPriority1;
-  static final Vector2 _spriteSize = GameplayConstants.kTileVector2Standard;
+  static final Vector2 _spriteSize = GameplayConstants.kTileSizeStandard;
 
   /// LOAD
   static Future<SpriteAnimation> _loadAnimation() =>

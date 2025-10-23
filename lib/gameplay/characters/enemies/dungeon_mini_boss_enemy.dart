@@ -17,11 +17,11 @@ abstract class _DungeonMiniBossEnemyData {
   static final Vector2 hitboxSize = Vector2(6.0, 7.0);
   static final Vector2 hitboxPosition = Vector2(2.5, 8.0);
   static final Vector2 _spriteSize = Vector2(
-    GameplayConstants.kTileSizeStandard * 0.68,
-    GameplayConstants.kTileSizeStandard * 0.93,
+    GameplayConstants.kTileDimensionStandard * 0.68,
+    GameplayConstants.kTileDimensionStandard * 0.93,
   );
   static final double attackEffectSize =
-      GameplayConstants.kTileSizeStandard * 0.62;
+      GameplayConstants.kTileDimensionStandard * 0.62;
   static final double meleeDamageReduction = 3.0;
   static void loadHitBox(GameComponent target) =>
       target.add(RectangleHitbox(size: hitboxSize, position: hitboxPosition));
@@ -34,7 +34,7 @@ class DungeonMiniBossEnemy extends SimpleEnemy
 
   DungeonMiniBossEnemy(Vector2 position)
     : super(
-        animation: EnemySpriteAnimations.dungeonMiniBossEnemyDirectionAnimation,
+        animation: EnemySpriteAnimations.dungeonMiniBossEnemyDirectional,
         position: position,
         size: _DungeonMiniBossEnemyData._spriteSize,
         speed: _DungeonMiniBossEnemyData._speed,
@@ -99,7 +99,7 @@ class DungeonMiniBossEnemy extends SimpleEnemy
       size: CharacterFireballAttackData.spriteSize,
       damage: damage,
       speed: speed * CharacterFireballAttackData.kSpeedMultiplier,
-      execute: () => CharacterFireballAttackData.playExecutionAudio(),
+      execute: () => CharacterFireballAttackData.playAttackAudio(),
       onDestroy: () => CharacterFireballAttackData.playExplosionAudio(),
       collision: CharacterFireballAttackData.hitbox,
       lightingConfig: CharacterFireballAttackData.lightingConfig,
@@ -124,7 +124,7 @@ class DungeonMiniBossEnemy extends SimpleEnemy
         animation:
             CharacterEffectSpriteAnimations.characterExplosionSmokeRight5(),
         position: position,
-        size: GameplayConstants.kTileVector2Standard,
+        size: GameplayConstants.kTileSizeStandard,
         loop: false,
       ),
     );

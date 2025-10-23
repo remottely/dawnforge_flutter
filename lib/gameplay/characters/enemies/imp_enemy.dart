@@ -28,10 +28,10 @@ abstract class _ImpEnemyData {
   static const double hitboxSize = 6.0;
   static final Vector2 hitboxPosition = Vector2(3.0, 5.0);
   static final Vector2 size = Vector2.all(
-    GameplayConstants.kTileSizeStandard * 0.8,
+    GameplayConstants.kTileDimensionStandard * 0.8,
   );
   static final double attackEffectSize =
-      GameplayConstants.kTileSizeStandard * 0.62;
+      GameplayConstants.kTileDimensionStandard * 0.62;
   static void loadHitBox(GameComponent target) => target.add(
     RectangleHitbox(
       size: Vector2(hitboxSize, hitboxSize),
@@ -45,7 +45,7 @@ class ImpEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
 
   ImpEnemy(Vector2 position)
     : super(
-        animation: EnemySpriteAnimations.impEnemyDirectionAnimation,
+        animation: EnemySpriteAnimations.impEnemyDirectional,
         position: position,
         size: _ImpEnemyData.size,
         speed: _ImpEnemyData.speed,
@@ -106,7 +106,7 @@ class ImpEnemy extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
         animation:
             CharacterEffectSpriteAnimations.characterExplosionSmokeRight5(),
         position: position,
-        size: GameplayConstants.kTileVector2Standard,
+        size: GameplayConstants.kTileSizeStandard,
         loop: false,
       ),
     );

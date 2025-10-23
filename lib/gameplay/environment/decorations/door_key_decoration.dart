@@ -12,7 +12,7 @@ abstract class _DoorKeyDecorationData {
   /// DATA
   static const String _spritePath =
       GameplaySpriteConstants.kDoorKeyDecorationAssetPath;
-  static final Vector2 _spriteSize = GameplayConstants.kTileVector2Standard;
+  static final Vector2 _spriteSize = GameplayConstants.kTileSizeStandard;
 
   /// LOAD
   static Future<Sprite> _loadSprite() => Sprite.load(_spritePath);

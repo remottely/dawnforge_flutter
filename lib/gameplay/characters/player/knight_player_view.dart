@@ -89,23 +89,21 @@ class KnightPlayerView extends SimplePlayer
   }
 
   void playFireballAttackAnimation(double damage) {
+    addParticle(
+      CharacterParticlesAnimations.fireballParticles(),
+      position: size,
+    );
     simpleAttackRange(
       animationRight: CharacterFireballAttackData.loadAttackAnimation(),
       animationDestroy: CharacterFireballAttackData.loadExplosionAnimation(),
       size: CharacterFireballAttackData.spriteSize,
       damage: damage,
       speed: speed * CharacterFireballAttackData.kSpeedMultiplier,
-      onDestroy: () {
-        addParticle(
-          CharacterParticlesAnimations.fireballParticles(),
-          position: size,
-        );
-        CharacterFireballAttackData.playExplosionAudio();
-      },
+      onDestroy: CharacterFireballAttackData.playExplosionAudio,
       collision: CharacterFireballAttackData.hitbox,
       lightingConfig: CharacterFireballAttackData.lightingConfig,
     );
-    CharacterFireballAttackData.playExecutionAudio();
+    CharacterFireballAttackData.playAttackAudio();
   }
 
   void playToolAnimation() {

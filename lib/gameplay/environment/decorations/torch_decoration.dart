@@ -14,7 +14,7 @@ abstract class _TorchDecorationData {
   static const double _kBlurBorderMultiplier = 1.0;
   static const double _kPulseVariation = 0.1;
   static const double _kLightOpacity = 0.2;
-  static final Vector2 _spriteSize = GameplayConstants.kTileVector2Standard;
+  static final Vector2 _spriteSize = GameplayConstants.kTileSizeStandard;
 
   /// LOAD
   static Future<SpriteAnimation> _loadAnimation() =>

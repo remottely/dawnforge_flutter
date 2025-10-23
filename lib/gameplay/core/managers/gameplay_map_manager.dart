@@ -95,7 +95,7 @@ WorldMapByTiled _buildMap({
 }) {
   return WorldMapByTiled(
     WorldMapReader.fromAsset(mapAsset),
-    forceTileSize: GameplayConstants.kTileVector2Standard,
+    forceTileSize: GameplayConstants.kTileSizeStandard,
     objectsBuilder: _createObjectBuilder(sensorIds: sensorIds),
   );
 }
