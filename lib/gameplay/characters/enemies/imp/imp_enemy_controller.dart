@@ -1,0 +1,63 @@
+import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/enemy_sprite_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_effect_sprite_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
+
+class ImpEnemyController {
+  late ImpEnemyView _view;
+  double attackDamage;
+
+  ImpEnemyController({this.attackDamage = 10.0});
+
+  void attachView(dynamic view) {
+    _view = view;
+  }
+
+  void onUpdate(double dt) {
+    _view.seeAndMoveToPlayer(
+      radiusVision: GameplayConstants.kVisionRadiusExtraLarge,
+      closePlayer: (player) {
+        playAttackAnimation();
+      },
+    );
+  }
+
+  void playAttackAnimation() {
+    _view.simpleAttackMelee(
+      size: Vector2.all(ImpEnemyConfig.attackEffectSize),
+      damage: attackDamage,
+      interval: ImpEnemyConfig.attackInterval,
+      animationRight: EnemySpriteAnimations.enemyBasicAttackRight3(),
+      execute: () {
+        GameplayAudioManager.playAttackEnemyMelee();
+      },
+    );
+  }
+
+  void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
+    _view.showDamage(
+      damage,
+      config: CharacterParticlesAnimations.enemyShowDamageTextStyle,
+      gravity: CharacterParticlesAnimations.kShowDamageGravity,
+      initVelocityVertical:
+          CharacterParticlesAnimations.kShowDamageInitVelocityVertical,
+    );
+  }
+
+  void onDie() {
+    _view.gameRef.add(
+      AnimatedGameObject(
+        animation:
+            CharacterEffectSpriteAnimations.characterExplosionSmokeRight5(),
+        position: _view.position,
+        size: GameplayConstants.kTileSizeStandard,
+        loop: false,
+      ),
+    );
+    _view.removeFromParent();
+  }
+}

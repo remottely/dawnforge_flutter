@@ -3,7 +3,8 @@ import 'dart:async';
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss_enemy.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/enemy_sprite_animations.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/imp_enemy.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/npc_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_effect_sprite_animations.dart';
@@ -147,7 +148,10 @@ class DungeonBossEnemy extends SimpleEnemy
           ? DungeonMiniBossEnemy(
               Vector2(positionExplosion.x, positionExplosion.y),
             )
-          : ImpEnemy(Vector2(positionExplosion.x, positionExplosion.y));
+          : ImpEnemyView(
+              Vector2(positionExplosion.x, positionExplosion.y),
+              controller: ImpEnemyController(),
+            );
       gameRef.add(
         AnimatedGameObject(
           animation:
@@ -296,16 +300,16 @@ class DungeonBossEnemy extends SimpleEnemy
   }
 
   void spawnImp(double x, double y) {
-    final p = position.translated(x, y);
+    final pos = position.translated(x, y);
     gameRef.add(
       AnimatedGameObject(
         animation:
             CharacterEffectSpriteAnimations.characterExplosionSmokeRight5(),
-        position: p,
+        position: pos,
         size: GameplayConstants.kTileSizeStandard,
         loop: false,
       ),
     );
-    gameRef.add(ImpEnemy(p));
+    gameRef.add(ImpEnemyView(pos, controller: ImpEnemyController()));
   }
 }

@@ -3,7 +3,8 @@ import 'package:bonfire/map/tiled/builder/tiled_world_builder.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss_enemy.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss_enemy.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/goblin_enemy.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/imp_enemy.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_controller.dart';
@@ -198,7 +199,8 @@ void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
     GameplayMapManager.kMiniBossEntityType: (p) =>
         DungeonMiniBossEnemy(p.position),
     GameplayMapManager.kGoblinEntityType: (p) => GoblinEnemy(p.position),
-    GameplayMapManager.kImpEntityType: (p) => ImpEnemy(p.position),
+    GameplayMapManager.kImpEntityType: (p) =>
+        ImpEnemyView(p.position, controller: ImpEnemyController()),
 
     // Farm
     GameplayMapManager.kFarmTileEntityType: (p) => FarmTile(p.position),
