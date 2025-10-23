@@ -1,7 +1,8 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:bonfire/map/tiled/builder/tiled_world_builder.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss_enemy.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss_enemy.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_controller.dart';
@@ -197,8 +198,11 @@ void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
 
     // Enemies
     GameplayMapManager.kBossEntityType: (p) => DungeonBossEnemy(p.position),
-    GameplayMapManager.kMiniBossEntityType: (p) =>
-        DungeonMiniBossEnemy(p.position),
+    GameplayMapManager.kMiniBossEntityType: (p) => DungeonMiniBossEnemyView(
+      p.position,
+      controller: DungeonMiniBossEnemyController(),
+    ),
+
     GameplayMapManager.kGoblinEntityType: (p) =>
         GoblinEnemyView(p.position, controller: GoblinEnemyController()),
 
