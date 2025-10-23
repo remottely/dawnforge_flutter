@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/gameplay/characters/player/knight_player_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
 
 enum FarmTool { hand, hoe, wateringCan }
 

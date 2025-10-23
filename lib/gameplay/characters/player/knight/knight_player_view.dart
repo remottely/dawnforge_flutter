@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight_player_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight_player_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_data.dart';

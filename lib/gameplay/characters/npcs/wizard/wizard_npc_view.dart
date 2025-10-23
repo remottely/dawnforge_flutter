@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/npc_sprite_animations.dart';
-import 'package:darkness_dungeon/gameplay/characters/npcs/wizard_npc_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/npcs/wizard_npc_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
@@ -14,20 +14,21 @@ import 'package:flutter/services.dart';
 /// ---------------------------------------------------------------------------
 /// Responsável pela renderização e interação visual do Wizard NPC.
 class WizardNpcView extends SimpleNpc {
-  final WizardNpcController controller;
+  final WizardNpcController _controller;
 
-  WizardNpcView(Vector2 position, {required this.controller})
-    : super(
+  WizardNpcView(Vector2 position, {required WizardNpcController controller})
+    : _controller = controller,
+      super(
         animation: WizardNpcConfig.buildDirectionalAnimation,
         position: position,
         size: WizardNpcConfig.spriteSize,
       ) {
-    controller.attachView(this);
+    _controller.attachView(this);
   }
 
   @override
   void update(double dt) {
-    controller.onUpdate(dt);
+    _controller.onUpdate(dt);
     super.update(dt);
   }
 
@@ -35,7 +36,7 @@ class WizardNpcView extends SimpleNpc {
     if (gameRef.player != null) {
       seeComponent(
         gameRef.player!,
-        observed: controller.onPlayerDetected,
+        observed: _controller.onPlayerDetected,
         radiusVision: WizardNpcConfig.kVisionRadius,
       );
     }
@@ -50,8 +51,8 @@ class WizardNpcView extends SimpleNpc {
     GameplayUIManager.displayConversationDialog(
       gameRef.context,
       _createDialogueSequence(),
-      onChangeTalk: controller.onDialogueChanged,
-      onFinish: controller.onConversationFinished,
+      onChangeTalk: _controller.onDialogueChanged,
+      onFinish: _controller.onConversationFinished,
       logicalKeyboardKeysToNext: [LogicalKeyboardKey.space],
     );
   }

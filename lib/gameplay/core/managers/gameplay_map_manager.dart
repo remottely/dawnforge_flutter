@@ -4,10 +4,11 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss_enemy.
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss_enemy.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/goblin_enemy.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp_enemy.dart';
-import 'package:darkness_dungeon/gameplay/characters/npcs/kid_npc.dart';
-import 'package:darkness_dungeon/gameplay/characters/npcs/wizard_npc_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/npcs/wizard_npc_model.dart';
-import 'package:darkness_dungeon/gameplay/characters/npcs/wizard_npc_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_model.dart';
+import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_view.dart';
 import 'package:darkness_dungeon/gameplay/core/data/gameplay_map_data.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_map_constants.dart';
@@ -189,7 +190,8 @@ void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
       p.position,
       controller: WizardNpcController(model: WizardNpcModel()),
     ),
-    GameplayMapManager.kKidEntityType: (p) => KidNpc(p.position),
+    GameplayMapManager.kKidEntityType: (p) =>
+        KidNpcView(p.position, controller: KidNpcController()),
 
     // Enemies
     GameplayMapManager.kBossEntityType: (p) => DungeonBossEnemy(p.position),

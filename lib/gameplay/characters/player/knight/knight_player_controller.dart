@@ -1,16 +1,16 @@
 import 'dart:async' as async;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight_player_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight_player_model.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight_player_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
 import 'package:flutter/services.dart';
 
 /// Gerencia a lógica de entrada, timers e a comunicação
 /// entre o Model (dados) e a View (componente Bonfire).
 class KnightPlayerController {
   final KnightPlayerModel model;
-  KnightPlayerView? _view;
+  late KnightPlayerView _view;
 
   // Estado gerenciado pelo Controller
   async.Timer? _staminaRegenerationTimer;
@@ -56,14 +56,14 @@ class KnightPlayerController {
     if (!model.canDoMeleeAttack()) return;
 
     model.executeMeleeAttackStaminaCost();
-    _view?.playMeleeAttackAnimation(model.attackDamage);
+    _view.playMeleeAttackAnimation(model.attackDamage);
   }
 
   void _executeFireballAttack() {
     if (!model.canDoFireballAttack()) return;
 
     model.executeFireballAttackStaminaCost();
-    _view?.playFireballAttackAnimation(KnightPlayerConfig.kSmallAttackDamage);
+    _view.playFireballAttackAnimation(KnightPlayerConfig.kSmallAttackDamage);
   }
 
   void useTool() {
@@ -71,7 +71,7 @@ class KnightPlayerController {
 
     isUsingTool = true;
     model.useTool();
-    _view?.playToolAnimation();
+    _view.playToolAnimation();
     // TODO: A View deve chamar 'controller.isUsingTool = false'
     // quando a animação da ferramenta terminar.
     // Por enquanto, liberamos após um curto período.
@@ -109,7 +109,7 @@ class KnightPlayerController {
   }
 
   void _handleMovementEffects() {
-    _view?.seeEnemy(
+    _view.seeEnemy(
       radiusVision: KnightPlayerConfig.kVisionRadius,
       notObserved: () {
         _isObservingEnemy = false;
@@ -117,7 +117,7 @@ class KnightPlayerController {
       observed: (enemies) {
         if (_isObservingEnemy) return;
         _isObservingEnemy = true;
-        _view?.showExclamationEmote();
+        _view.showExclamationEmote();
       },
     );
   }

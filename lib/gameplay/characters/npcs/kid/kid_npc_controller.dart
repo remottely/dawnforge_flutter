@@ -1,5 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss_enemy.dart';
+import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/npc_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
@@ -9,42 +10,21 @@ import 'package:darkness_dungeon/shared/components/df_animated_sprite_widget.dar
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-abstract class _KidNpcData {
-  static const String bossCheckInterval = 'checkBossDead';
-  static const int bossCheckRate = 1000;
-  static const double sizeMultiplierX = 8.0;
-  static const double sizeMultiplierY = 11.0;
-  static final Vector2 size = Vector2(sizeMultiplierX, sizeMultiplierY);
-  static SimpleDirectionAnimation get buildDirectionalAnimation =>
-      SimpleDirectionAnimation(
-        idleRight: NpcSpriteAnimations.kidIdleLeft(),
-        runRight: NpcSpriteAnimations.kidIdleLeft(),
-      );
-}
-
-class KidNpc extends SimpleNpc {
+class KidNpcController {
   bool _conversationWithHero = false;
+  late KidNpcView _view;
 
-  KidNpc(Vector2 position)
-    : super(
-        animation: _KidNpcData.buildDirectionalAnimation,
-        position: position,
-        size: _KidNpcData.size,
-      );
+  void attachView(dynamic view) {
+    _view = view;
+  }
 
-  @override
-  void update(double dt) {
-    super.update(dt);
+  void onUpdate(double dt) {
     _checkForBossDefeat(dt);
   }
 
   void _checkForBossDefeat(double dt) {
     if (!_conversationWithHero &&
-        checkInterval(
-          _KidNpcData.bossCheckInterval,
-          _KidNpcData.bossCheckRate,
-          dt,
-        )) {
+        _view.checkInterval('checkBossDead', 1000, dt)) {
       if (_isBossDefeated()) {
         _initiateVictorySequence();
       }
@@ -53,7 +33,7 @@ class KidNpc extends SimpleNpc {
 
   bool _isBossDefeated() {
     try {
-      gameRef.enemies().firstWhere((enemy) => enemy is DungeonBossEnemy);
+      _view.gameRef.enemies().firstWhere((enemy) => enemy is DungeonBossEnemy);
       return false;
     } catch (e) {
       return true;
@@ -62,8 +42,8 @@ class KidNpc extends SimpleNpc {
 
   void _initiateVictorySequence() {
     _conversationWithHero = true;
-    gameRef.camera.moveToTargetAnimated(
-      target: this,
+    _view.gameRef.camera.moveToTargetAnimated(
+      target: _view,
       onComplete: _initializeDialogue,
     );
   }
@@ -71,7 +51,7 @@ class KidNpc extends SimpleNpc {
   void _initializeDialogue() {
     GameplayAudioManager.playInteraction();
     GameplayUIManager.displayConversationDialog(
-      gameRef.context,
+      _view.gameRef.context,
       _createDialogueSequence(),
       onFinish: _onConversationFinished,
       onChangeTalk: _onDialogueChanged,
@@ -112,10 +92,12 @@ class KidNpc extends SimpleNpc {
 
   void _onConversationFinished() {
     GameplayAudioManager.playInteraction();
-    gameRef.camera.moveToPlayerAnimated(onComplete: _displayVictoryScreen);
+    _view.gameRef.camera.moveToPlayerAnimated(
+      onComplete: _displayVictoryScreen,
+    );
   }
 
   void _displayVictoryScreen() {
-    GameplayUIManager.displayVictoryDialog(gameRef.context);
+    GameplayUIManager.displayVictoryDialog(_view.gameRef.context);
   }
 }

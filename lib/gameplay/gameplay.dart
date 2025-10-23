@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight_player_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight_player_model.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight_player_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/data/gameplay_map_data.dart';
 import 'package:darkness_dungeon/gameplay/core/hud/gameplay_hud.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
