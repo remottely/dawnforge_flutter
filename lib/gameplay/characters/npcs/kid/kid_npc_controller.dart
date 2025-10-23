@@ -14,7 +14,7 @@ class KidNpcController {
   bool _conversationWithHero = false;
   late KidNpcView _view;
 
-  void attachView(dynamic view) {
+  void attachView(KidNpcView view) {
     _view = view;
   }
 
