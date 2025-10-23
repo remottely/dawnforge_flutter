@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss_enemy.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/enemy_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_controller.dart';
@@ -17,60 +19,60 @@ import 'package:darkness_dungeon/shared/components/df_animated_sprite_widget.dar
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-abstract class _DungeonBossEnemyData {
-  static const double attackDamage = 40.0;
-  static const double _life = 200.0;
-  static const double _speed = GameplayConstants.kCharacterSpeedSlow;
-  static final Vector2 _spriteSize = Vector2(
-    GameplayConstants.kTileDimensionLarge,
-    GameplayConstants.kTileDimensionStandard * 1.7,
-  );
-  static final Vector2 hitboxSize = Vector2(14, 16);
-  static final Vector2 hitboxPosition = Vector2(5, 11);
-  static final double attackEffectSize =
-      GameplayConstants.kTileDimensionStandard * 0.62;
-  static double get visionRadiusUltraLarge =>
-      GameplayConstants.kVisionRadiusUltraLarge;
-  static double get visionRadiusLarge => GameplayConstants.kVisionRadiusLarge;
-  static void loadHitBox(GameComponent target) =>
-      target.add(RectangleHitbox(size: hitboxSize, position: hitboxPosition));
-  // static final void Function(GameComponent) loadHitBox = (target) =>
-  //     target.add(RectangleHitbox(size: hitboxSize, position: hitboxPosition));
-}
-
-class DungeonBossEnemy extends SimpleEnemy
+class DungeonBossEnemyView extends SimpleEnemy
     with BlockMovementCollision, UseLifeBar {
-  double attackDamage = _DungeonBossEnemyData.attackDamage;
-  bool _hasSeenPlayerFirst = false;
+  final DungeonBossEnemyController controller;
+  double attackDamage = DungeonBossEnemyConfig.attackDamage;
   List<Enemy> spawnedEnemies = [];
+  bool hasSeenPlayerFirst = false;
 
-  DungeonBossEnemy(Vector2 position)
+  DungeonBossEnemyView(Vector2 position, {required this.controller})
     : super(
         animation: EnemySpriteAnimations.dungeonBossEnemyDirectional,
         position: position,
-        size: _DungeonBossEnemyData._spriteSize,
-        speed: _DungeonBossEnemyData._speed,
-        life: _DungeonBossEnemyData._life,
-      );
+        size: DungeonBossEnemyConfig.spriteSize,
+        speed: DungeonBossEnemyConfig.speed,
+        life: DungeonBossEnemyConfig.life,
+      ) {
+    DungeonBossEnemyConfig.buildHitBox(this);
+  }
 
   @override
   Future<void> onLoad() {
-    _DungeonBossEnemyData.loadHitBox(this);
+    controller.attachView(this);
     return super.onLoad();
   }
 
   @override
   void render(Canvas canvas) {
-    drawBarSummonEnemy(canvas);
+    controller.onRender(canvas);
     super.render(canvas);
   }
 
   @override
   void update(double dt) {
-    if (!_hasSeenPlayerFirst) {
+    controller.onUpdate(dt);
+    super.update(dt);
+  }
+
+  @override
+  void onDie() {
+    controller.onDie();
+    removeFromParent();
+    super.onDie();
+  }
+
+  @override
+  void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
+    controller.onReceiveDamage(attacker, damage, id);
+    super.onReceiveDamage(attacker, damage, id);
+  }
+
+  void handleBossLogic(double dt) {
+    if (!hasSeenPlayerFirst) {
       seePlayer(
         observed: (p) {
-          _hasSeenPlayerFirst = true;
+          hasSeenPlayerFirst = true;
           gameRef.camera.moveToTargetAnimated(
             target: this,
             zoom: GameplayConstants.getCameraZoomFromMaxVisibleTile(
@@ -80,7 +82,7 @@ class DungeonBossEnemy extends SimpleEnemy
             onComplete: _showConversation,
           );
         },
-        radiusVision: _DungeonBossEnemyData.visionRadiusUltraLarge,
+        radiusVision: DungeonBossEnemyConfig.visionRadiusUltraLarge,
       );
     }
 
@@ -96,29 +98,22 @@ class DungeonBossEnemy extends SimpleEnemy
 
     seeAndMoveToPlayer(
       closePlayer: (player) {
-        executeAttack();
+        playMeleeAttackAnimation();
       },
-      radiusVision: _DungeonBossEnemyData.visionRadiusLarge,
+      radiusVision: DungeonBossEnemyConfig.visionRadiusLarge,
     );
-
-    super.update(dt);
   }
 
-  @override
-  void onDie() {
-    gameRef.add(
-      AnimatedGameObject(
-        animation: CharacterEffectSpriteAnimations.characterExplosionRight7(),
-        position: position,
-        size: GameplayConstants.kTileSizeStandard,
-        loop: false,
-      ),
+  void playMeleeAttackAnimation() {
+    simpleAttackMelee(
+      size: Vector2.all(DungeonBossEnemyConfig.attackEffectSize),
+      damage: attackDamage,
+      interval: 1500,
+      animationRight: EnemySpriteAnimations.enemyBasicAttackRight3(),
+      execute: () {
+        GameplayAudioManager.playAttackEnemyMelee();
+      },
     );
-    spawnedEnemies.forEach((e) {
-      if (!e.isDead) e.onDie();
-    });
-    removeFromParent();
-    super.onDie();
   }
 
   void spawnMinion(double dt) {
@@ -166,20 +161,7 @@ class DungeonBossEnemy extends SimpleEnemy
     }
   }
 
-  void executeAttack() {
-    simpleAttackMelee(
-      size: Vector2.all(_DungeonBossEnemyData.attackEffectSize),
-      damage: attackDamage,
-      interval: 1500,
-      animationRight: EnemySpriteAnimations.enemyBasicAttackRight3(),
-      execute: () {
-        GameplayAudioManager.playAttackEnemyMelee();
-      },
-    );
-  }
-
-  @override
-  void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
+  void showDamageEffect(double damage) {
     showDamage(
       damage,
       config: CharacterParticlesAnimations.enemyShowDamageTextStyle,
@@ -187,7 +169,20 @@ class DungeonBossEnemy extends SimpleEnemy
       initVelocityVertical:
           CharacterParticlesAnimations.kShowDamageInitVelocityVertical,
     );
-    super.onReceiveDamage(attacker, damage, id);
+  }
+
+  void handleDeathEffects() {
+    gameRef.add(
+      AnimatedGameObject(
+        animation: CharacterEffectSpriteAnimations.characterExplosionRight7(),
+        position: position,
+        size: GameplayConstants.kTileSizeStandard,
+        loop: false,
+      ),
+    );
+    spawnedEnemies.forEach((e) {
+      if (!e.isDead) e.onDie();
+    });
   }
 
   void drawBarSummonEnemy(Canvas canvas) {

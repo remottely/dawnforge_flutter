@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss_enemy.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/npc_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
@@ -33,7 +33,9 @@ class KidNpcController {
 
   bool _isBossDefeated() {
     try {
-      _view.gameRef.enemies().firstWhere((enemy) => enemy is DungeonBossEnemy);
+      _view.gameRef.enemies().firstWhere(
+        (enemy) => enemy is DungeonBossEnemyView,
+      );
       return false;
     } catch (e) {
       return true;
