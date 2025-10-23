@@ -8,77 +8,68 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constant
 /// KnightPlayerConfig
 /// ---------------------------------------------------------------------------
 /// Contém todos os dados estáticos, constantes e métodos utilitários para
-/// configuração do KnightPlayerView. Use este padrão para outros configs.
+/// configuração do KnightPlayerView. Não possui lógica de negócio.
 abstract class KnightPlayerConfig {
   //////////////////////////////////////////////////////////////////////////////
-  // GENERAL CONFIGURATION
+  // SPRITES & DIMENSÕES
   //////////////////////////////////////////////////////////////////////////////
-
   /// Tamanho padrão do sprite do player
   static final Vector2 spriteSize = GameplayConstants.kTileSizeStandard;
 
-  /// Vida e velocidade padrão
+  //////////////////////////////////////////////////////////////////////////////
+  // ATRIBUTOS BASE
+  //////////////////////////////////////////////////////////////////////////////
   static const double kStandardLife = 200.0;
   static const double kStandardSpeed =
       GameplayConstants.kTileDimensionStandard * 2.5;
 
   //////////////////////////////////////////////////////////////////////////////
-  // ENERGY & STAMINA
+  // ENERGIA & STAMINA
   //////////////////////////////////////////////////////////////////////////////
-
-  /// Energia máxima e custo de ferramentas
   static const int kMaxEnergy = 100;
   static const int kToolUsageEnergyCost = 2;
-
-  /// Stamina
   static const double kMaxStamina = 100.0;
   static const int kStaminaIncrement = 2;
   static const Duration kStaminaRegenDebounce = Duration(milliseconds: 150);
 
   //////////////////////////////////////////////////////////////////////////////
-  // COMBAT
+  // COMBATE
   //////////////////////////////////////////////////////////////////////////////
-
   static const double kStandardAttackDamage = 25.0;
   static const double kSmallAttackDamage = 10.0;
   static const int kMeleeAttackStaminaCost = 15;
   static const int kFireballAttackStaminaCost = 10;
 
   //////////////////////////////////////////////////////////////////////////////
-  // VISION
+  // VISÃO
   //////////////////////////////////////////////////////////////////////////////
-
   static const double kVisionRadius = GameplayConstants.kVisionRadiusUltraLarge;
 
   //////////////////////////////////////////////////////////////////////////////
   // HITBOX
   //////////////////////////////////////////////////////////////////////////////
-
   static final Vector2 hitBoxSize = Vector2(8, 6);
   static final Vector2 hitBoxPosition = Vector2(4, 9);
   static FutureOr<void> buildHitBox(GameComponent target) =>
       target.add(RectangleHitbox(position: hitBoxPosition, size: hitBoxSize));
 
   //////////////////////////////////////////////////////////////////////////////
-  // DEATH
+  // MORTE
   //////////////////////////////////////////////////////////////////////////////
-
   static const String kCryptSpritePath =
       'gameplay/characters/player/player_crypt_1.png';
-  static final Vector2 cryptSpriteSize = Vector2.all(32);
+  static final Vector2 cryptSpriteSize = Vector2.all(16);
   static Future<Sprite> loadCryptSprite() => Sprite.load(kCryptSpritePath);
 
   //////////////////////////////////////////////////////////////////////////////
-  // CONFIGURATION BUILDERS
+  // HELPERS DE CONFIGURAÇÃO
   //////////////////////////////////////////////////////////////////////////////
-
   static LightingConfig buildLightingConfig(double width) =>
       CharacterParticlesAnimations.knightLightingConfig(width);
 
   //////////////////////////////////////////////////////////////////////////////
-  // LOADERS & HELPERS
+  // ANIMAÇÕES
   //////////////////////////////////////////////////////////////////////////////
-
   static final SimpleDirectionAnimation buildDirectionalAnimation =
       PlayerSpriteAnimations.knightPlayerDirectional;
 }

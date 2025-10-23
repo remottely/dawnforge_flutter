@@ -17,12 +17,11 @@ class GoblinEnemyView extends SimpleEnemy
         size: GoblinEnemyConfig.spriteSize,
         speed: GoblinEnemyConfig.speed,
         life: GoblinEnemyConfig.life,
-      ) {
-    _controller.attachView(this);
-  }
+      );
 
   @override
   Future<void> onLoad() {
+    _controller.attachView(this);
     GoblinEnemyConfig.buildHitBox(this);
     return super.onLoad();
   }

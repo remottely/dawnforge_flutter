@@ -13,42 +13,44 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constant
 /// e capturar entradas, delegando lógica ao Controller.
 class DungeonMiniBossEnemyView extends SimpleEnemy
     with BlockMovementCollision, UseLifeBar {
-  final DungeonMiniBossEnemyController controller;
+  final DungeonMiniBossEnemyController _controller;
   bool _seePlayerClose = false;
   double _attackDamage = DungeonMiniBossEnemyConfig.attackDamage;
 
-  DungeonMiniBossEnemyView(Vector2 position, {required this.controller})
-    : super(
-        animation: EnemySpriteAnimations.dungeonMiniBossEnemyDirectional,
-        position: position,
-        size: DungeonMiniBossEnemyConfig.spriteSize,
-        speed: DungeonMiniBossEnemyConfig.speed,
-        life: DungeonMiniBossEnemyConfig.life,
-      ) {
-    DungeonMiniBossEnemyConfig.buildHitBox(this);
-  }
+  DungeonMiniBossEnemyView(
+    Vector2 position, {
+    required DungeonMiniBossEnemyController controller,
+  }) : _controller = controller,
+       super(
+         animation: EnemySpriteAnimations.dungeonMiniBossEnemyDirectional,
+         position: position,
+         size: DungeonMiniBossEnemyConfig.spriteSize,
+         speed: DungeonMiniBossEnemyConfig.speed,
+         life: DungeonMiniBossEnemyConfig.life,
+       );
 
   @override
   Future<void> onLoad() {
-    controller.attachView(this);
+    _controller.attachView(this);
+    DungeonMiniBossEnemyConfig.buildHitBox(this);
     return super.onLoad();
   }
 
   @override
   void update(double dt) {
-    controller.onUpdate(dt);
+    _controller.onUpdate(dt);
     super.update(dt);
   }
 
   @override
   void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
-    controller.onReceiveDamage(attacker, damage, id);
+    _controller.onReceiveDamage(attacker, damage, id);
     super.onReceiveDamage(attacker, damage, id);
   }
 
   @override
   void onDie() {
-    controller.onDie();
+    _controller.onDie();
     removeFromParent();
     super.onDie();
   }

@@ -14,8 +14,12 @@ class KidNpcView extends SimpleNpc {
         animation: KidNpcConfig.buildDirectionalAnimation,
         position: position,
         size: KidNpcConfig.spriteSize,
-      ) {
+      );
+
+  @override
+  Future<void> onLoad() {
     _controller.attachView(this);
+    return super.onLoad();
   }
 
   @override

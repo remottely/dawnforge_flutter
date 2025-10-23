@@ -22,8 +22,12 @@ class WizardNpcView extends SimpleNpc {
         animation: WizardNpcConfig.buildDirectionalAnimation,
         position: position,
         size: WizardNpcConfig.spriteSize,
-      ) {
+      );
+
+  @override
+  Future<void> onLoad() {
     _controller.attachView(this);
+    return super.onLoad();
   }
 
   @override

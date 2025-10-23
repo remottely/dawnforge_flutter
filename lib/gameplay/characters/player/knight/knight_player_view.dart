@@ -8,9 +8,8 @@ import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
 
-/// A View (Componente Bonfire)
-/// Responsável apenas por exibir elementos visuais, animações, sons
-/// e capturar entradas, delegando toda a lógica para o Controller.
+/// View: Responsável por exibir elementos visuais, animações, sons e capturar entradas.
+/// Não possui lógica de negócio, apenas feedback visual e interação com o Controller.
 class KnightPlayerView extends SimplePlayer
     with Lighting, BlockMovementCollision {
   final KnightPlayerController controller;
@@ -24,9 +23,12 @@ class KnightPlayerView extends SimplePlayer
         speed: KnightPlayerConfig.kStandardSpeed,
       ) {
     setupLighting(KnightPlayerConfig.buildLightingConfig(width));
-    _initializeControls();
+    _setupControls();
   }
 
+  //////////////////////////////////////////////////////////////////////////////
+  // CICLO DE VIDA
+  //////////////////////////////////////////////////////////////////////////////
   @override
   Future<void> onLoad() {
     controller.attachView(this);
@@ -51,33 +53,22 @@ class KnightPlayerView extends SimplePlayer
   @override
   void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
     if (isDead) return;
-    showDamage(
-      damage,
-      config: CharacterParticlesAnimations.playerShowDamageTextStyle,
-      gravity: CharacterParticlesAnimations.kShowDamageGravity,
-      initVelocityVertical:
-          CharacterParticlesAnimations.kShowDamageInitVelocityVertical,
-    );
-    // TODO: GameplayAudioManager.playDamageSound();
+    _showDamageEffect(damage);
+    // GameplayAudioManager.playDamageSound(); // Implementar se necessário
     super.onReceiveDamage(attacker, damage, id);
   }
 
   @override
   void onDie() {
-    // Lógica puramente visual da morte
+    _showDeathEffect();
     removeFromParent();
-    gameRef.add(
-      DFGameDecoration.withSprite(
-        sprite: KnightPlayerConfig.loadCryptSprite(),
-        position: Vector2(position.x, position.y),
-        size: KnightPlayerConfig.cryptSpriteSize,
-      ),
-    );
     super.onDie();
   }
 
-  // --- Métodos de Ação (Chamados pelo Controller) ---
-
+  //////////////////////////////////////////////////////////////////////////////
+  // ANIMAÇÕES & EFEITOS
+  //////////////////////////////////////////////////////////////////////////////
+  /// Animação de ataque melee
   void playMeleeAttackAnimation(double damage) {
     GameplayAudioManager.playAttackPlayerMelee();
     addParticle(CharacterParticlesAnimations.swordParticles(), position: size);
@@ -88,6 +79,7 @@ class KnightPlayerView extends SimplePlayer
     );
   }
 
+  /// Animação de ataque fireball
   void playFireballAttackAnimation(double damage) {
     addParticle(
       CharacterParticlesAnimations.fireballParticles(),
@@ -106,12 +98,14 @@ class KnightPlayerView extends SimplePlayer
     CharacterFireballAttackData.playAttackAudio();
   }
 
+  /// Animação de uso de ferramenta
   void playToolAnimation() {
-    // TODO: Adicionar a animação de uso da ferramenta
-    // Ex: simpleAttackMelee(..., animation: toolAnimation, damage: 0);
-    // Ao final da animação, lembre-se de definir controller.isUsingTool = false;
+    // TODO: Adicionar animação visual da ferramenta
+    // Exemplo: simpleAttackMelee(..., animation: toolAnimation, damage: 0);
+    // Ao final da animação, defina controller.isUsingTool = false;
   }
 
+  /// Exibe emote de exclamação acima do personagem
   void showExclamationEmote() {
     CharacterEmoteController.displayEmoteAboveCharacter(
       gameRef: gameRef,
@@ -120,9 +114,32 @@ class KnightPlayerView extends SimplePlayer
     );
   }
 
-  // --- Configuração ---
+  /// Exibe dano recebido
+  void _showDamageEffect(double damage) {
+    showDamage(
+      damage,
+      config: CharacterParticlesAnimations.playerShowDamageTextStyle,
+      gravity: CharacterParticlesAnimations.kShowDamageGravity,
+      initVelocityVertical:
+          CharacterParticlesAnimations.kShowDamageInitVelocityVertical,
+    );
+  }
 
-  void _initializeControls() {
+  /// Exibe efeito visual de morte
+  void _showDeathEffect() {
+    gameRef.add(
+      DFGameDecoration.withSprite(
+        sprite: KnightPlayerConfig.loadCryptSprite(),
+        position: Vector2(position.x, position.y),
+        size: KnightPlayerConfig.cryptSpriteSize,
+      ),
+    );
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+  // CONFIGURAÇÃO
+  //////////////////////////////////////////////////////////////////////////////
+  void _setupControls() {
     setupMovementByJoystick(intensityEnabled: true);
   }
 }

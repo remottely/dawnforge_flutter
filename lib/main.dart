@@ -29,8 +29,7 @@ void main() async {
       localizationsDelegates: [
         location,
         DefaultCupertinoLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
+        ...GlobalMaterialLocalizations.delegates,
       ],
       localeResolutionCallback: location.resolution,
     ),

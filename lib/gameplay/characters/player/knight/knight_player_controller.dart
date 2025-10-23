@@ -6,93 +6,95 @@ import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
 import 'package:flutter/services.dart';
 
-/// Gerencia a lógica de entrada, timers e a comunicação
-/// entre o Model (dados) e a View (componente Bonfire).
+/// Controller: Orquestra lógica e comunicação entre Model e View do Knight.
 class KnightPlayerController {
   final KnightPlayerModel model;
   late KnightPlayerView _view;
 
-  // Estado gerenciado pelo Controller
+  //////////////////////////////////////////////////////////////////////////////
+  // ESTADO INTERNO
+  //////////////////////////////////////////////////////////////////////////////
   async.Timer? _staminaRegenerationTimer;
   bool _isObservingEnemy = false;
-  bool isUsingTool = false; // Bloqueia o uso repetido de ferramentas
+  bool isUsingTool = false;
 
   KnightPlayerController({required this.model});
 
+  //////////////////////////////////////////////////////////////////////////////
+  // CICLO DE VIDA
+  //////////////////////////////////////////////////////////////////////////////
+  /// Associa a View ao Controller
   void attachView(KnightPlayerView view) {
     _view = view;
   }
 
-  /// Chamado pela View a cada tick do jogo.
+  /// Chamado pela View a cada tick do jogo
   void onUpdate(double dt) {
-    _handleStamina();
-    _handleMovementEffects();
+    _handleStaminaRegeneration();
+    _handleEnemyVision();
   }
 
-  /// Chamado pela View quando o joystick é acionado.
+  //////////////////////////////////////////////////////////////////////////////
+  // INPUT
+  //////////////////////////////////////////////////////////////////////////////
+  /// Processa ações do joystick/teclado
   void onJoystickAction(JoystickActionEvent event) {
-    if (event.id == 0 && event.event == ActionEvent.DOWN) {
-      _executeMeleeAttack();
-    }
-
-    if (event.id == LogicalKeyboardKey.space &&
+    if ((event.id == 0 || event.id == LogicalKeyboardKey.space) &&
         event.event == ActionEvent.DOWN) {
       _executeMeleeAttack();
     }
-
-    if (event.id == LogicalKeyboardKey.keyZ &&
+    if ((event.id == 1 || event.id == LogicalKeyboardKey.keyZ) &&
         event.event == ActionEvent.DOWN) {
-      _executeFireballAttack();
-    }
-
-    if (event.id == 1 && event.event == ActionEvent.DOWN) {
       _executeFireballAttack();
     }
   }
 
-  // --- Lógica de Ação ---
-
+  //////////////////////////////////////////////////////////////////////////////
+  // AÇÕES
+  //////////////////////////////////////////////////////////////////////////////
+  /// Executa ataque melee se possível
   void _executeMeleeAttack() {
     if (!model.canDoMeleeAttack()) return;
-
     model.executeMeleeAttackStaminaCost();
     _view.playMeleeAttackAnimation(model.attackDamage);
   }
 
+  /// Executa ataque fireball se possível
   void _executeFireballAttack() {
     if (!model.canDoFireballAttack()) return;
-
     model.executeFireballAttackStaminaCost();
     _view.playFireballAttackAnimation(KnightPlayerConfig.kSmallAttackDamage);
   }
 
+  /// Usa ferramenta se possível
   void useTool() {
     if (isUsingTool || !model.canUseTool()) return;
-
     isUsingTool = true;
     model.useTool();
     _view.playToolAnimation();
-    // TODO: A View deve chamar 'controller.isUsingTool = false'
-    // quando a animação da ferramenta terminar.
-    // Por enquanto, liberamos após um curto período.
+    // A View deve chamar 'controller.isUsingTool = false' ao finalizar animação
     async.Timer(Duration(milliseconds: 500), () {
       isUsingTool = false;
     });
   }
 
+  /// Troca ferramenta
   void switchTool(FarmTool newTool) {
     model.switchTool(newTool);
-    // TODO: _view?.playSwitchToolFeedback();
+    // _view.playSwitchToolFeedback(); // Implementar feedback visual se necessário
   }
 
+  /// Restaura energia ao máximo
   void restoreEnergy() {
     model.restoreEnergy();
-    // TODO: _view?.updateEnergyBar(model.currentEnergy);
+    // _view.updateEnergyBar(model.currentEnergy); // Implementar feedback visual se necessário
   }
 
-  // --- Lógica de Update ---
-
-  void _handleStamina() {
+  //////////////////////////////////////////////////////////////////////////////
+  // UPDATE DE ESTADO
+  //////////////////////////////////////////////////////////////////////////////
+  /// Regenera stamina gradualmente
+  void _handleStaminaRegeneration() {
     if (_staminaRegenerationTimer == null) {
       _staminaRegenerationTimer = async.Timer(
         KnightPlayerConfig.kStaminaRegenDebounce,
@@ -103,12 +105,12 @@ class KnightPlayerController {
     } else {
       return;
     }
-
     model.regenerateStamina();
-    // TODO: _view?.updateStaminaBar(model.currentStamina);
+    // _view.updateStaminaBar(model.currentStamina); // Implementar feedback visual se necessário
   }
 
-  void _handleMovementEffects() {
+  /// Detecta inimigos próximos e aciona emote
+  void _handleEnemyVision() {
     _view.seeEnemy(
       radiusVision: KnightPlayerConfig.kVisionRadius,
       notObserved: () {
