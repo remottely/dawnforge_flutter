@@ -4,10 +4,10 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_map_cons
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/app_logger.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
 
-/// [MapSensor] responsible for detecting player interaction with map transition areas
+/// [MapSensorView] responsible for detecting player interaction with map transition areas
 /// Following Flutter naming conventions for game sensor systems
 
-abstract class _MapSensorData {
+abstract class _MapSensorConfig {
   static const String playerEnteredEvent = 'Player entered sensor';
   static const String playerExitedEvent = 'Player exited sensor';
   static const String navigationInitiatedEvent = 'Navigating to';
@@ -21,7 +21,7 @@ abstract class _MapSensorData {
   static final String sensorLogPrefix = GameplayMapConstants.kSensorLogPrefix;
 }
 
-class MapSensor extends DFSensorPlayerDecoration {
+class MapSensorView extends DFSensorPlayerDecoration {
   final String id;
   final String targetMap;
   final Vector2 playerPosition;
@@ -31,7 +31,7 @@ class MapSensor extends DFSensorPlayerDecoration {
   bool _hasNavigated = false;
   double _contactTime = 0;
 
-  MapSensor({
+  MapSensorView({
     required this.id,
     required Vector2 position,
     required Vector2 size,
@@ -45,7 +45,7 @@ class MapSensor extends DFSensorPlayerDecoration {
     if (!hasContact && !_hasNavigated) {
       hasContact = true;
       _contactTime = 0;
-      _logSensorEvent('${_MapSensorData.playerEnteredEvent} $id');
+      _logSensorEvent('${_MapSensorConfig.playerEnteredEvent} $id');
     }
     super.onContact(component);
   }
@@ -54,7 +54,7 @@ class MapSensor extends DFSensorPlayerDecoration {
   void onContactExit(KnightPlayerView component) {
     hasContact = false;
     _contactTime = 0;
-    _logSensorEvent('${_MapSensorData.playerExitedEvent} $id');
+    _logSensorEvent('${_MapSensorConfig.playerExitedEvent} $id');
     super.onContactExit(component);
   }
 
@@ -62,7 +62,7 @@ class MapSensor extends DFSensorPlayerDecoration {
   void update(double dt) {
     if (hasContact && !_hasNavigated) {
       _contactTime += dt;
-      if (_contactTime >= _MapSensorData.sensorContactTime) {
+      if (_contactTime >= _MapSensorConfig.sensorContactTime) {
         _initiateMapTransition();
       }
     }
@@ -73,17 +73,17 @@ class MapSensor extends DFSensorPlayerDecoration {
     _hasNavigated = false;
     hasContact = false;
     _contactTime = 0;
-    _logSensorEvent('${_MapSensorData.resetNavigationEvent} $id');
+    _logSensorEvent('${_MapSensorConfig.resetNavigationEvent} $id');
   }
 
   void _initiateMapTransition() {
     _hasNavigated = true;
     hasContact = false;
     AppLogger.info(
-      '${_MapSensorData.mapNavigationLogPrefix}: ${_MapSensorData.navigationInitiatedEvent} $targetMap, position: $playerPosition, direction: $playerDirection',
+      '${_MapSensorConfig.mapNavigationLogPrefix}: ${_MapSensorConfig.navigationInitiatedEvent} $targetMap, position: $playerPosition, direction: $playerDirection',
     );
     Future.delayed(
-      Duration(milliseconds: _MapSensorData.transitionDelayMs),
+      Duration(milliseconds: _MapSensorConfig.transitionDelayMs),
       () => _performNavigation(),
     );
   }
@@ -99,7 +99,7 @@ class MapSensor extends DFSensorPlayerDecoration {
   }
 
   void _logSensorEvent(String message) {
-    AppLogger.debug('${_MapSensorData.sensorLogPrefix}: $message');
+    AppLogger.debug('${_MapSensorConfig.sensorLogPrefix}: $message');
   }
 }
 

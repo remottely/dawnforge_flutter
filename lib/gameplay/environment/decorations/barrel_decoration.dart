@@ -4,7 +4,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
 
-abstract class _BarrelDecorationData {
+abstract class _BarrelDecorationConfig {
   /// DATA
   static const String _spritePath =
       'gameplay/environment/decorations/barrel_decoration_1.png';
@@ -18,16 +18,16 @@ abstract class _BarrelDecorationData {
       target.add(RectangleHitbox(position: _hitBoxPosition, size: _hitBoxSize));
 }
 
-class BarrelDecoration extends DFPushableDecoration {
-  BarrelDecoration({required super.position})
+class BarrelDecorationView extends DFPushableDecoration {
+  BarrelDecorationView({required super.position})
     : super.withSprite(
-        sprite: _BarrelDecorationData._loadSprite(),
-        size: _BarrelDecorationData._spriteSize,
+        sprite: _BarrelDecorationConfig._loadSprite(),
+        size: _BarrelDecorationConfig._spriteSize,
       );
 
   @override
   Future<void> onLoad() {
-    _BarrelDecorationData._buildHitBox(this);
+    _BarrelDecorationConfig._buildHitBox(this);
     return super.onLoad();
   }
 }

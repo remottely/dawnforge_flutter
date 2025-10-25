@@ -87,7 +87,10 @@ void _addSensorBuilders(
   }
 }
 
-MapSensor _createMapSensor(String sensorId, TiledObjectProperties properties) {
+MapSensorView _createMapSensor(
+  String sensorId,
+  TiledObjectProperties properties,
+) {
   final positionParts = properties
       .others[GameplayMapConstants.kPlayerPositionPropertyKey]
       .toString()
@@ -97,7 +100,7 @@ MapSensor _createMapSensor(String sensorId, TiledObjectProperties properties) {
     double.parse(positionParts[1]),
   );
 
-  return MapSensor(
+  return MapSensorView(
     id: sensorId,
     position: properties.position,
     size: properties.size,
@@ -114,23 +117,24 @@ MapSensor _createMapSensor(String sensorId, TiledObjectProperties properties) {
 void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
   final entityBuilders = <String, ObjectBuilder>{
     GameplayMapManager.kBarrelDecorationType: (p) =>
-        BarrelDecoration(position: p.position),
+        BarrelDecorationView(position: p.position),
 
     GameplayMapManager.kDoorDecorationType: (p) =>
-        DoorDecoration(position: p.position, size: p.size),
+        DoorDecorationView(position: p.position, size: p.size),
     GameplayMapManager.kDoorKeyDecorationType: (p) =>
-        DoorKeyDecoration(position: p.position),
-    GameplayMapManager.kLifePotionDecorationType: (p) => LifePotionDecoration(
-      position: p.position,
-      healAmount: LifePotionData.healAmount,
-    ),
+        DoorKeyDecorationView(position: p.position),
+    GameplayMapManager.kLifePotionDecorationType: (p) =>
+        LifePotionDecorationView(
+          position: p.position,
+          healAmount: LifePotionConfig.healAmount,
+        ),
 
     GameplayMapManager.kTorchDecorationType: (p) =>
-        TorchDecoration(position: p.position),
+        TorchDecorationView(position: p.position),
     GameplayMapManager.kTorchDecorationEmptyType: (p) =>
-        TorchDecoration.empty(position: p.position),
+        TorchDecorationView.empty(position: p.position),
     GameplayMapManager.kSpikeTrapDecorationType: (p) =>
-        SpikeTrapDecoration(position: p.position),
+        SpikeTrapDecorationView(position: p.position),
 
     GameplayMapManager.kWizardEntityType: (p) => WizardNpcView(p.position),
     GameplayMapManager.kKidEntityType: (p) => KidNpcView(p.position),
@@ -143,7 +147,7 @@ void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
 
     GameplayMapManager.kImpEntityType: (p) => ImpEnemyView(p.position),
 
-    GameplayMapManager.kFarmTileEntityType: (p) => FarmTile(p.position),
+    GameplayMapManager.kFarmTileEntityType: (p) => FarmTileView(p.position),
   };
 
   builders.addEntries(entityBuilders.entries);

@@ -11,7 +11,7 @@ import 'package:darkness_dungeon/gameplay/environment/decorations/decoration_spr
 //  DATA CLASS (Seguindo o padrão de barrel_decoration.dart)
 // -----------------------------------------------------------------------------
 
-abstract class _DoorDecorationData {
+abstract class _DoorDecorationConfig {
   /// DATA
   static const String _kClosedDoorAsset =
       'gameplay/environment/decorations/door_decoration_locked_1.png';
@@ -44,16 +44,16 @@ abstract class _DoorDecorationData {
 //  CLASSE PRINCIPAL (Refatorada para usar _DoorDecorationData)
 // -----------------------------------------------------------------------------
 
-class DoorDecoration extends DFGameDecoration {
+class DoorDecorationView extends DFGameDecoration {
   bool _isOpen = false;
   bool _isShowingDialog = false;
 
-  DoorDecoration({required super.position, required super.size})
-    : super.withSprite(sprite: _DoorDecorationData._loadClosedSprite());
+  DoorDecorationView({required super.position, required super.size})
+    : super.withSprite(sprite: _DoorDecorationConfig._loadClosedSprite());
 
   @override
   Future<void> onLoad() {
-    _DoorDecorationData._buildHitBox(this);
+    _DoorDecorationConfig._buildHitBox(this);
     return super.onLoad();
   }
 
@@ -86,7 +86,7 @@ class DoorDecoration extends DFGameDecoration {
 
   void _playOpeningAnimation() {
     playSpriteAnimationOnce(
-      _DoorDecorationData._loadOpeningAnimation(),
+      _DoorDecorationConfig._loadOpeningAnimation(),
       onFinish: _cleanup,
       onStart: () {
         sprite = null;
@@ -104,7 +104,7 @@ class DoorDecoration extends DFGameDecoration {
   void _showKeyRequiredDialog() {
     GameplayUIManager.displayConversationDialog(
       gameRef.context,
-      _DoorDecorationData.createDialogueSequence(),
+      _DoorDecorationConfig.createDialogueSequence(),
       onClose: () {
         _isShowingDialog = false;
       },

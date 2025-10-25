@@ -5,7 +5,7 @@ import 'farm_tile.dart';
 class FarmGridManager {
   static const int gridWidth = 20;
   static const int gridHeight = 15;
-  late List<List<FarmTile>> farmGrid;
+  late List<List<FarmTileView>> farmGrid;
 
   FarmGridManager() {
     initializeGrid();
@@ -16,12 +16,12 @@ class FarmGridManager {
       gridHeight,
       (y) => List.generate(
         gridWidth,
-        (x) => FarmTile(Vector2(x.toDouble(), y.toDouble())),
+        (x) => FarmTileView(Vector2(x.toDouble(), y.toDouble())),
       ),
     );
   }
 
-  FarmTile? getTileAt(Vector2 position) {
+  FarmTileView? getTileAt(Vector2 position) {
     int x = position.x.floor();
     int y = position.y.floor();
     if (x >= 0 && x < gridWidth && y >= 0 && y < gridHeight) {

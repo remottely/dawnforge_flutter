@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 //  DATA CLASS (Seguindo o padrão de barrel_decoration.dart)
 // -----------------------------------------------------------------------------
 
-abstract class _TorchDecorationData {
+abstract class _TorchDecorationConfig {
   /// DATA
   static const double _kLightRadiusMultiplier = 2.5;
   static const double _kBlurBorderMultiplier = 1.0;
@@ -34,23 +34,23 @@ abstract class _TorchDecorationData {
 //  CLASSE PRINCIPAL (Refatorada para usar _TorchDecorationData)
 // -----------------------------------------------------------------------------
 
-class TorchDecoration extends DFGameDecoration {
+class TorchDecorationView extends DFGameDecoration {
   final bool _isExtinguished;
 
-  TorchDecoration({required super.position})
+  TorchDecorationView({required super.position})
     : _isExtinguished = false,
       super.withAnimation(
-        animation: _TorchDecorationData._loadAnimation(),
-        size: _TorchDecorationData._spriteSize,
+        animation: _TorchDecorationConfig._loadAnimation(),
+        size: _TorchDecorationConfig._spriteSize,
       ) {
     _setupLighting();
   }
 
-  TorchDecoration.empty({required super.position})
+  TorchDecorationView.empty({required super.position})
     : _isExtinguished = true,
       super.withAnimation(
-        animation: _TorchDecorationData._loadAnimation(),
-        size: _TorchDecorationData._spriteSize,
+        animation: _TorchDecorationConfig._loadAnimation(),
+        size: _TorchDecorationConfig._spriteSize,
       ) {
     _setupLighting();
   }
@@ -63,6 +63,6 @@ class TorchDecoration extends DFGameDecoration {
   }
 
   void _setupLighting() {
-    setupLighting(_TorchDecorationData._buildLightingConfig(width));
+    setupLighting(_TorchDecorationConfig._buildLightingConfig(width));
   }
 }

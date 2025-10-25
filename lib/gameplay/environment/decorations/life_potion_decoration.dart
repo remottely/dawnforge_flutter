@@ -3,7 +3,7 @@ import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
 
-abstract class LifePotionData {
+abstract class LifePotionConfig {
   static const String _spritePath =
       'gameplay/environment/decorations/life_potion_decoration_1.png';
   static final Vector2 _spriteSize = GameplayConstants.kTileSizeStandard;
@@ -14,16 +14,16 @@ abstract class LifePotionData {
   static Future<Sprite> _loadSprite() => Sprite.load(_spritePath);
 }
 
-class LifePotionDecoration extends DFSensorPlayerDecoration {
+class LifePotionDecorationView extends DFSensorPlayerDecoration {
   final double _healAmount;
   bool _hasBeenConsumed = false;
 
-  LifePotionDecoration({required Vector2 position, double? healAmount})
-    : _healAmount = healAmount ?? LifePotionData._defaultHealAmount,
+  LifePotionDecorationView({required Vector2 position, double? healAmount})
+    : _healAmount = healAmount ?? LifePotionConfig._defaultHealAmount,
       super.withSprite(
-        sprite: LifePotionData._loadSprite(),
+        sprite: LifePotionConfig._loadSprite(),
         position: position,
-        size: LifePotionData._spriteSize,
+        size: LifePotionConfig._spriteSize,
       );
 
   @override
@@ -43,7 +43,7 @@ class LifePotionDecoration extends DFSensorPlayerDecoration {
     double healingProgress = 0;
     gameRef.add(
       ValueGeneratorComponent(
-        LifePotionData._healingDuration,
+        LifePotionConfig._healingDuration,
         onChange: (value) {
           if (healingProgress < _healAmount) {
             double currentHealAmount = _healAmount * value - healingProgress;

@@ -8,7 +8,7 @@ import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dar
 //  DATA CLASS (Seguindo o padrão de barrel_decoration.dart)
 // -----------------------------------------------------------------------------
 
-abstract class _DoorKeyDecorationData {
+abstract class _DoorKeyDecorationConfig {
   /// DATA
   static const String _spritePath =
       GameplaySpriteConstants.kDoorKeyDecorationAssetPath;
@@ -35,13 +35,13 @@ abstract class _DoorKeyDecorationData {
 /// final key = DoorKeyDecoration(position: Vector2(x, y));
 /// key.onLoad();
 /// ```
-class DoorKeyDecoration extends DFSensorPlayerDecoration {
+class DoorKeyDecorationView extends DFSensorPlayerDecoration {
   bool _hasBeenCollected = false;
 
-  DoorKeyDecoration({required super.position})
+  DoorKeyDecorationView({required super.position})
     : super.withSprite(
-        sprite: _DoorKeyDecorationData._loadSprite(),
-        size: _DoorKeyDecorationData._spriteSize,
+        sprite: _DoorKeyDecorationConfig._loadSprite(),
+        size: _DoorKeyDecorationConfig._spriteSize,
       );
 
   @override

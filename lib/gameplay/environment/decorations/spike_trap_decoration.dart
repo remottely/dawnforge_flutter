@@ -8,7 +8,7 @@ import 'package:darkness_dungeon/gameplay/environment/decorations/decoration_spr
 //  DATA CLASS (Seguindo o padrão de barrel_decoration.dart)
 // -----------------------------------------------------------------------------
 
-abstract class _SpikeTrapDecorationData {
+abstract class _SpikeTrapDecorationConfig {
   /// DATA
   static const double kDamageAmount = GameplayConstants.kPropertyAmountMedium;
   static const int kPriority = GameplayConstants.kPriority1;
@@ -24,17 +24,17 @@ abstract class _SpikeTrapDecorationData {
 // -----------------------------------------------------------------------------
 
 /// DONE
-class SpikeTrapDecoration extends DFSensorPlayerDecoration {
+class SpikeTrapDecorationView extends DFSensorPlayerDecoration {
   final double _damageAmount;
   KnightPlayerView? _contactedPlayer;
 
-  SpikeTrapDecoration({
+  SpikeTrapDecorationView({
     required super.position,
-    double damageAmount = _SpikeTrapDecorationData.kDamageAmount,
+    double damageAmount = _SpikeTrapDecorationConfig.kDamageAmount,
   }) : _damageAmount = damageAmount,
        super.withAnimation(
-         animation: _SpikeTrapDecorationData._loadAnimation(),
-         size: _SpikeTrapDecorationData._spriteSize,
+         animation: _SpikeTrapDecorationConfig._loadAnimation(),
+         size: _SpikeTrapDecorationConfig._spriteSize,
        );
 
   @override
@@ -57,7 +57,7 @@ class SpikeTrapDecoration extends DFSensorPlayerDecoration {
 
   @override
   int get priority =>
-      LayerPriority.getComponentPriority(_SpikeTrapDecorationData.kPriority);
+      LayerPriority.getComponentPriority(_SpikeTrapDecorationConfig.kPriority);
 
   void _triggerDamage() {
     _contactedPlayer?.handleAttack(AttackOriginEnum.ENEMY, _damageAmount, 0);
