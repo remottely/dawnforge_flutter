@@ -36,7 +36,7 @@ class ImpEnemyController {
       interval: ImpEnemyConfig.attackInterval,
       animationRight: EnemySpriteAnimations.enemyBasicAttackRight3(),
       execute: () {
-        GameplayAudioManager.playAttackEnemyMelee();
+        GameplayAudioManager.instance.playAttackEnemyMelee();
       },
     );
   }

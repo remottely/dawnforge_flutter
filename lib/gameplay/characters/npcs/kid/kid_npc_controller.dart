@@ -1,10 +1,8 @@
-import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_view.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_dialog_constants.dart';
 import 'package:flutter/services.dart';
 
 /// KidNpcController
@@ -57,7 +55,7 @@ class KidNpcController {
 
   /// Initializes the dialogue sequence with the player
   void _initializeDialogue() {
-    GameplayAudioManager.playInteraction();
+    GameplayAudioManager.instance.playInteraction();
     GameplayUIManager.displayConversationDialog(
       _view.gameRef.context,
       KidNpcConfig.createDialogueSequence(),
@@ -71,12 +69,12 @@ class KidNpcController {
 
   /// Called when the dialogue changes (player advances conversation)
   void _onDialogueChanged(int index) {
-    GameplayAudioManager.playInteraction();
+    GameplayAudioManager.instance.playInteraction();
   }
 
   /// Called when the conversation finishes
   void _onConversationFinished() {
-    GameplayAudioManager.playInteraction();
+    GameplayAudioManager.instance.playInteraction();
     _view.gameRef.camera.moveToPlayerAnimated(
       onComplete: _displayVictoryScreen,
     );

@@ -10,9 +10,10 @@ class CharacterFireballAttackData {
   );
   static const double kSpeedMultiplier = 2.5;
 
-  static void playAttackAudio() => GameplayAudioManager.playFireballAttack();
+  static void playAttackAudio() =>
+      GameplayAudioManager.instance.playFireballAttack();
   static void playExplosionAudio() =>
-      GameplayAudioManager.playFireballExplosion();
+      GameplayAudioManager.instance.playFireballExplosion();
 
   static RectangleHitbox get hitbox => RectangleHitbox(
     size: Vector2(

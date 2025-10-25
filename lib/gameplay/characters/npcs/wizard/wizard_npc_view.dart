@@ -64,7 +64,7 @@ class WizardNpcView extends SimpleNpc {
   //////////////////////////////////////////////////////////////////////////////
   /// Initializes the dialogue sequence with the player
   void initializeDialogue() {
-    GameplayAudioManager.playInteraction();
+    GameplayAudioManager.instance.playInteraction();
     GameplayUIManager.displayConversationDialog(
       gameRef.context,
       WizardNpcConfig.createDialogueSequence(),

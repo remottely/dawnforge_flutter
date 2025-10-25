@@ -1,17 +1,16 @@
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_localizations.dart';
 
 class GameplayStringsLocation {
-  // Private static instance for singleton pattern
-  static GameplayStringsLocation? _instance;
-  static final GameplayStringsLocation instance = _instance ??=
-      GameplayStringsLocation._internal();
-
-  // Private constructor for singletonƒ
   GameplayStringsLocation._internal();
 
-  static late GameplayLocalizations _localizations;
+  static final GameplayStringsLocation _instance =
+      GameplayStringsLocation._internal();
 
-  static void initialize(GameplayLocalizations localization) {
+  static GameplayStringsLocation get instance => _instance;
+
+  late final GameplayLocalizations _localizations;
+
+  void initialize(GameplayLocalizations localization) {
     _localizations = localization;
   }
 

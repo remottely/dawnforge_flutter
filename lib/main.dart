@@ -16,7 +16,7 @@ void main() async {
     await Flame.device.fullScreen();
   }
 
-  await GameplayAudioManager.initialize();
+  await GameplayAudioManager.instance.initialize();
   GameplayLocalizationsDelegate location =
       const GameplayLocalizationsDelegate();
 

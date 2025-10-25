@@ -78,7 +78,7 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
   }
 
   void playMeleeAttackAnimation() {
-    GameplayAudioManager.playAttackEnemyMelee();
+    GameplayAudioManager.instance.playAttackEnemyMelee();
     addParticle(CharacterParticlesAnimations.swordParticles(), position: size);
     simpleAttackMelee(
       size: Vector2.all(DungeonMiniBossEnemyConfig.attackEffectSize),

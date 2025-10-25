@@ -39,12 +39,12 @@ class WizardNpcController {
 
   /// Called when the dialogue changes (player advances conversation)
   void onDialogueChanged(int index) {
-    GameplayAudioManager.playInteraction();
+    GameplayAudioManager.instance.playInteraction();
   }
 
   /// Called when the conversation finishes
   void onConversationFinished() {
-    GameplayAudioManager.playInteraction();
+    GameplayAudioManager.instance.playInteraction();
     _model.finishConversation();
   }
 }

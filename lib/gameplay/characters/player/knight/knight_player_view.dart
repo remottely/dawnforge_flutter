@@ -57,7 +57,7 @@ class KnightPlayerView extends SimplePlayer
   void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
     if (isDead) return;
     _showDamageEffect(damage);
-    // GameplayAudioManager.playDamageSound(); // Implementar se necessário
+    // GameplayAudioManager.instance.playDamageSound(); // Implementar se necessário
     super.onReceiveDamage(attacker, damage, id);
   }
 
@@ -73,7 +73,7 @@ class KnightPlayerView extends SimplePlayer
   //////////////////////////////////////////////////////////////////////////////
   /// Animação de ataque melee
   void playMeleeAttackAnimation(double damage) {
-    GameplayAudioManager.playAttackPlayerMelee();
+    GameplayAudioManager.instance.playAttackPlayerMelee();
     addParticle(CharacterParticlesAnimations.swordParticles(), position: size);
     simpleAttackMelee(
       damage: damage,

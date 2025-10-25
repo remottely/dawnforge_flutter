@@ -105,7 +105,7 @@ class DungeonBossEnemyView extends SimpleEnemy
       interval: 1500,
       animationRight: EnemySpriteAnimations.enemyBasicAttackRight3(),
       execute: () {
-        GameplayAudioManager.playAttackEnemyMelee();
+        GameplayAudioManager.instance.playAttackEnemyMelee();
       },
     );
   }
@@ -211,12 +211,12 @@ class DungeonBossEnemyView extends SimpleEnemy
   }
 
   void _showConversation() {
-    GameplayAudioManager.playInteraction();
+    GameplayAudioManager.instance.playInteraction();
     GameplayUIManager.displayConversationDialog(
       gameRef.context,
       DungeonBossEnemyConfig.createDialogueSequence(),
       onFinish: () {
-        GameplayAudioManager.playInteraction();
+        GameplayAudioManager.instance.playInteraction();
         spawnInitialMinions();
         Future.delayed(Duration(milliseconds: 500), () {
           gameRef.camera.moveToPlayerAnimated(
@@ -225,11 +225,11 @@ class DungeonBossEnemyView extends SimpleEnemy
               maxVisibleTile: GameplayConstants.kMaxVisibleTiles,
             ),
           );
-          GameplayAudioManager.playBossBackgroundMusic();
+          GameplayAudioManager.instance.playBossBackgroundMusic();
         });
       },
       onChangeTalk: (index) {
-        GameplayAudioManager.playInteraction();
+        GameplayAudioManager.instance.playInteraction();
       },
       logicalKeyboardKeysToNext: [LogicalKeyboardKey.space],
     );

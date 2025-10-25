@@ -78,7 +78,7 @@ abstract class MenuScreenViewModel extends State<MenuScreen> {
   }
 
   void _cleanupResources() {
-    GameplayAudioManager.stopBackgroundMusic();
+    GameplayAudioManager.instance.stopBackgroundMusic();
     _characterAnimationTimer.cancel();
   }
 

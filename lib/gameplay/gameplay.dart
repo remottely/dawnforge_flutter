@@ -1,6 +1,4 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/data/gameplay_map_data.dart';
 import 'package:darkness_dungeon/gameplay/core/hud/gameplay_hud.dart';
@@ -112,7 +110,9 @@ class _GameplayState extends State<Gameplay> {
         );
         // Start map-specific background music if provided
         if (mapBackgroundMusic != null && mapBackgroundMusic.isNotEmpty) {
-          GameplayAudioManager.ensureBackgroundMusicPlaying(mapBackgroundMusic);
+          GameplayAudioManager.instance.ensureBackgroundMusicPlaying(
+            mapBackgroundMusic,
+          );
         }
 
         AppLogger.info(
@@ -147,12 +147,12 @@ class _GameplayState extends State<Gameplay> {
   // 5. Métodos de inicialização (agrupados)
   /// Initializes background music and sound effects
   void _initializeGameAudio() {
-    GameplayAudioManager.ensureBackgroundMusicPlaying();
+    GameplayAudioManager.instance.ensureBackgroundMusicPlaying();
   }
 
   /// Cleans up audio resources when game ends
   void _cleanupGameAudio() {
-    GameplayAudioManager.stopBackgroundMusic();
+    GameplayAudioManager.instance.stopBackgroundMusic();
   }
 
   /// Pre-initializes all game components for better performance

@@ -18,17 +18,7 @@ import 'package:darkness_dungeon/gameplay/environment/decorations/torch_decorati
 import 'package:darkness_dungeon/gameplay/environment/sensors/map_sensor.dart';
 import 'package:darkness_dungeon/gameplay/terrain/farmable/farm_tile.dart';
 
-/// [GameplayMapManager] responsible for managing game maps and navigation systems
-/// Following Flutter naming conventions for map management systems
-///
-/// This class handles:
-/// - Map loading and parsing from Tiled map files
-/// - Entity factory creation based on map data
-/// - Map collection management and caching
-/// - Game object positioning and configuration
-/// - Navigation between different game areas
 class GameplayMapManager {
-  // Flutter-style constants for entity types
   static const String kBarrelDecorationType = 'barrel_decoration';
   static const String kDoorDecorationType = 'door_decoration';
   static const String kDoorKeyDecorationType = 'door_key_decoration';
@@ -44,40 +34,18 @@ class GameplayMapManager {
   static const String kImpEntityType = 'imp';
   static const String kFarmTileEntityType = 'farm_tile';
 
-  // Private constructor to prevent instantiation
   GameplayMapManager._();
 
-  // /// Gets the complete map configuration for the game
-  // /// Following Flutter pattern of static factory methods
-  // static Map<String, MapItemBuilder> get maps {
-  //   final mapBuilders = <String, MapItemBuilder>{};
-
-  //   // Build maps from centralized configuration
-  //   for (final config in GameplayMapData.allMaps) {
-  //     mapBuilders[config.id.name] = (context, args) => _createMapItem(config);
-  //   }
-
-  //   return mapBuilders;
-  // }
-
-  /// O mapa completo de configurações do jogo.
-  /// A lógica é executada apenas uma vez e o resultado é armazenado
-  /// nesta variável final para acesso eficiente.
   static final Map<String, MapItemBuilder> maps = (() {
-    // Cria um mapa vazio para ser preenchido.
     final mapBuilders = <String, MapItemBuilder>{};
 
-    // Constrói o mapa a partir da configuração centralizada.
     for (final config in GameplayMapData.allMaps) {
       mapBuilders[config.id.name] = (context, args) => _createMapItem(config);
     }
 
-    // Retorna o mapa preenchido, que será atribuído à variável 'maps'.
     return mapBuilders;
   })();
 
-  /// Creates a MapItem from configuration
-  /// Following Flutter pattern of factory methods
   static MapItem _createMapItem(GameplayMapData config) {
     return MapItem(
       id: config.id.name,
@@ -87,8 +55,6 @@ class GameplayMapManager {
   }
 }
 
-/// Builds a tiled world map with specified configuration
-/// Following Flutter pattern of private factory methods
 WorldMapByTiled _buildMap({
   required String mapAsset,
   required List<String> sensorIds,
@@ -100,24 +66,18 @@ WorldMapByTiled _buildMap({
   );
 }
 
-/// Creates object builders for map entities and decorations
-/// Following Flutter pattern of component factory methods
 Map<String, ObjectBuilder> _createObjectBuilder({
   required List<String> sensorIds,
 }) {
   final builders = <String, ObjectBuilder>{};
 
-  // Add sensor builders for map navigation
   _addSensorBuilders(builders, sensorIds);
 
-  // Add game entity builders
   _addEntityBuilders(builders);
 
   return builders;
 }
 
-/// Adds sensor builders for map transition detection
-/// Following Flutter pattern of builder pattern implementation
 void _addSensorBuilders(
   Map<String, ObjectBuilder> builders,
   List<String> sensorIds,
@@ -127,14 +87,6 @@ void _addSensorBuilders(
   }
 }
 
-/// Creates a map sensor from Tiled object properties
-/// Following Flutter pattern of factory constructor methods
-///
-/// This factory method handles:
-/// - Parsing player position from string coordinates
-/// - Converting direction strings to Direction enums
-/// - Mapping Tiled properties to GameplayMapSensor objects
-/// - Validating required properties for map transitions
 MapSensor _createMapSensor(String sensorId, TiledObjectProperties properties) {
   final positionParts = properties
       .others[GameplayMapConstants.kPlayerPositionPropertyKey]
@@ -161,7 +113,6 @@ MapSensor _createMapSensor(String sensorId, TiledObjectProperties properties) {
 
 void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
   final entityBuilders = <String, ObjectBuilder>{
-    // Interactive decorations
     GameplayMapManager.kBarrelDecorationType: (p) =>
         BarrelDecoration(position: p.position),
 
@@ -174,7 +125,6 @@ void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
       healAmount: LifePotionData.healAmount,
     ),
 
-    // Environmental decorations
     GameplayMapManager.kTorchDecorationType: (p) =>
         TorchDecoration(position: p.position),
     GameplayMapManager.kTorchDecorationEmptyType: (p) =>
@@ -182,11 +132,9 @@ void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
     GameplayMapManager.kSpikeTrapDecorationType: (p) =>
         SpikeTrapDecoration(position: p.position),
 
-    // Non-player characters
     GameplayMapManager.kWizardEntityType: (p) => WizardNpcView(p.position),
     GameplayMapManager.kKidEntityType: (p) => KidNpcView(p.position),
 
-    // Enemies
     GameplayMapManager.kBossEntityType: (p) => DungeonBossEnemyView(p.position),
     GameplayMapManager.kMiniBossEntityType: (p) =>
         DungeonMiniBossEnemyView(p.position),
@@ -195,7 +143,6 @@ void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
 
     GameplayMapManager.kImpEntityType: (p) => ImpEnemyView(p.position),
 
-    // Farm
     GameplayMapManager.kFarmTileEntityType: (p) => FarmTile(p.position),
   };
 
