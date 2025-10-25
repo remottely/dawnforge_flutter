@@ -6,15 +6,11 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeo
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/enemy_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.dart';
-import 'package:darkness_dungeon/gameplay/characters/npcs/npc_sprite_animations.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_effect_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
-import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
-import 'package:darkness_dungeon/shared/components/df_animated_sprite_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -218,52 +214,7 @@ class DungeonBossEnemyView extends SimpleEnemy
     GameplayAudioManager.playInteraction();
     GameplayUIManager.displayConversationDialog(
       gameRef.context,
-      [
-        Say(
-          text: [
-            TextSpan(
-              text: GameplayStringsLocation.instance.getString('talk_kid_1'),
-            ),
-          ],
-          person: DFAnimatedSpriteWidget(
-            animation: NpcSpriteAnimations.kidIdleLeft(),
-          ),
-          personSayDirection: PersonSayDirection.RIGHT,
-        ),
-        Say(
-          text: [
-            TextSpan(
-              text: GameplayStringsLocation.instance.getString('talk_boss_1'),
-            ),
-          ],
-          person: DFAnimatedSpriteWidget(
-            animation: EnemySpriteAnimations.dungeonBossEnemyIdleRight4(),
-          ),
-          personSayDirection: PersonSayDirection.LEFT,
-        ),
-        Say(
-          text: [
-            TextSpan(
-              text: GameplayStringsLocation.instance.getString('talk_player_3'),
-            ),
-          ],
-          person: DFAnimatedSpriteWidget(
-            animation: PlayerSpriteAnimations.knightPlayerIdleRight6(),
-          ),
-          personSayDirection: PersonSayDirection.LEFT,
-        ),
-        Say(
-          text: [
-            TextSpan(
-              text: GameplayStringsLocation.instance.getString('talk_boss_2'),
-            ),
-          ],
-          person: DFAnimatedSpriteWidget(
-            animation: EnemySpriteAnimations.dungeonBossEnemyIdleRight4(),
-          ),
-          personSayDirection: PersonSayDirection.RIGHT,
-        ),
-      ],
+      DungeonBossEnemyConfig.createDialogueSequence(),
       onFinish: () {
         GameplayAudioManager.playInteraction();
         spawnInitialMinions();

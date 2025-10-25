@@ -1,5 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_dialog_constants.dart';
 
 abstract class DungeonBossEnemyConfig {
   static const double attackDamage = 40.0;
@@ -18,4 +19,14 @@ abstract class DungeonBossEnemyConfig {
   static double get visionRadiusLarge => GameplayConstants.kVisionRadiusLarge;
   static void buildHitBox(GameComponent target) =>
       target.add(RectangleHitbox(size: hitboxSize, position: hitboxPosition));
+
+  /// Creates the sequence of Say objects for the conversation
+  static List<Say> createDialogueSequence() {
+    return [
+      GameplayDialogConstants.kidRightDialog('talk_kid_1'),
+      GameplayDialogConstants.bossLeftDialog('talk_boss_1'),
+      GameplayDialogConstants.playerLeftDialog('talk_player_3'),
+      GameplayDialogConstants.bossRightDialog('talk_boss_2'),
+    ];
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/npc_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_dialog_constants.dart';
 
 /// WizardNpcConfig
 /// ---------------------------------------------------------------------------
@@ -31,4 +32,15 @@ abstract class WizardNpcConfig {
         idleRight: NpcSpriteAnimations.wizardIdleLeft(),
         runRight: NpcSpriteAnimations.wizardIdleLeft(),
       );
+
+  /// Creates the sequence of Say objects for the conversation
+  static List<Say> createDialogueSequence() {
+    return [
+      GameplayDialogConstants.wizardRightDialog('talk_wizard_1'),
+      GameplayDialogConstants.playerLeftDialog('talk_player_1'),
+      GameplayDialogConstants.wizardRightDialog('talk_wizard_2'),
+      GameplayDialogConstants.playerLeftDialog('talk_player_2'),
+      GameplayDialogConstants.wizardRightDialog('talk_wizard_3'),
+    ];
+  }
 }

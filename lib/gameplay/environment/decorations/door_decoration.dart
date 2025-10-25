@@ -2,12 +2,10 @@ import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
-import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_dialog_constants.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration_sprite_animations.dart';
-import 'package:flutter/widgets.dart';
 
 // -----------------------------------------------------------------------------
 //  DATA CLASS (Seguindo o padrão de barrel_decoration.dart)
@@ -27,9 +25,6 @@ abstract class _DoorDecorationData {
   static Future<SpriteAnimation> _loadOpeningAnimation() =>
       DecorationSpriteAnimations.doorDecorationOpening14();
 
-  static Widget _loadDialogPersonWidget() =>
-      PlayerSpriteAnimations.knightPlayerIdleRight6().asWidget();
-
   static FutureOr<void> _buildHitBox(GameComponent target) {
     target.add(
       RectangleHitbox(
@@ -39,24 +34,9 @@ abstract class _DoorDecorationData {
     );
   }
 
-  /// CONFIG
-  static void _showKeyRequiredDialog({
-    required BuildContext context,
-    required VoidCallback onClose,
-  }) {
-    GameplayUIManager.displayConversationDialog(context, [
-      Say(
-        text: [
-          TextSpan(
-            text: GameplayStringsLocation.instance.getString(
-              _kRequiredKeyMessage,
-            ),
-          ),
-        ],
-        person: _loadDialogPersonWidget(),
-        personSayDirection: PersonSayDirection.LEFT,
-      ),
-    ], onClose: onClose);
+  /// Creates the sequence of Say objects for the conversation
+  static List<Say> createDialogueSequence() {
+    return [GameplayDialogConstants.playerLeftDialog(_kRequiredKeyMessage)];
   }
 }
 
@@ -122,8 +102,9 @@ class DoorDecoration extends DFGameDecoration {
   }
 
   void _showKeyRequiredDialog() {
-    _DoorDecorationData._showKeyRequiredDialog(
-      context: gameRef.context,
+    GameplayUIManager.displayConversationDialog(
+      gameRef.context,
+      _DoorDecorationData.createDialogueSequence(),
       onClose: () {
         _isShowingDialog = false;
       },

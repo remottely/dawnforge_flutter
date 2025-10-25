@@ -121,6 +121,15 @@ class EnemySpriteAnimations {
 
   /// DUNGEON BOSS
   static Future<SpriteAnimation>
+  dungeonBossEnemyIdleLeft4() => SpriteAnimation.load(
+    'gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_idle_left_4.png',
+    GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
+      amount: GameplaySpriteConstants.kIdleFrames,
+      textureSize: GameplaySpriteConstants.bossTextureSize,
+    ),
+  );
+
+  static Future<SpriteAnimation>
   dungeonBossEnemyIdleRight4() => SpriteAnimation.load(
     'gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_idle_right_4.png',
     GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
@@ -131,13 +140,7 @@ class EnemySpriteAnimations {
 
   static SimpleDirectionAnimation
   get dungeonBossEnemyDirectional => SimpleDirectionAnimation(
-    idleLeft: SpriteAnimation.load(
-      'gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_idle_left_4.png',
-      GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
-        amount: GameplaySpriteConstants.kIdleFrames,
-        textureSize: GameplaySpriteConstants.bossTextureSize,
-      ),
-    ),
+    idleLeft: dungeonBossEnemyIdleLeft4(),
     idleRight: dungeonBossEnemyIdleRight4(),
     runLeft: SpriteAnimation.load(
       'gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_run_left_4.png',
