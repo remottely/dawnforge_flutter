@@ -13,21 +13,19 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constant
 /// e capturar entradas, delegando lógica ao Controller.
 class DungeonMiniBossEnemyView extends SimpleEnemy
     with BlockMovementCollision, UseLifeBar {
-  final DungeonMiniBossEnemyController _controller;
+  final DungeonMiniBossEnemyController _controller =
+      DungeonMiniBossEnemyController();
   bool _seePlayerClose = false;
   double _attackDamage = DungeonMiniBossEnemyConfig.attackDamage;
 
-  DungeonMiniBossEnemyView(
-    Vector2 position, {
-    required DungeonMiniBossEnemyController controller,
-  }) : _controller = controller,
-       super(
-         animation: EnemySpriteAnimations.dungeonMiniBossEnemyDirectional,
-         position: position,
-         size: DungeonMiniBossEnemyConfig.spriteSize,
-         speed: DungeonMiniBossEnemyConfig.speed,
-         life: DungeonMiniBossEnemyConfig.life,
-       );
+  DungeonMiniBossEnemyView(Vector2 position)
+    : super(
+        animation: EnemySpriteAnimations.dungeonMiniBossEnemyDirectional,
+        position: position,
+        size: DungeonMiniBossEnemyConfig.spriteSize,
+        speed: DungeonMiniBossEnemyConfig.speed,
+        life: DungeonMiniBossEnemyConfig.life,
+      );
 
   @override
   Future<void> onLoad() {

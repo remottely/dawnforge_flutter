@@ -1,17 +1,10 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:bonfire/map/tiled/builder/tiled_world_builder.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_view.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_view.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_view.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.dart';
-import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_view.dart';
-import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_view.dart';
 import 'package:darkness_dungeon/gameplay/core/data/gameplay_map_data.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
@@ -190,28 +183,17 @@ void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
         SpikeTrapDecoration(position: p.position),
 
     // Non-player characters
-    GameplayMapManager.kWizardEntityType: (p) => WizardNpcView(
-      p.position,
-      controller: WizardNpcController(model: WizardNpcModel()),
-    ),
-    GameplayMapManager.kKidEntityType: (p) =>
-        KidNpcView(p.position, controller: KidNpcController()),
-        
+    GameplayMapManager.kWizardEntityType: (p) => WizardNpcView(p.position),
+    GameplayMapManager.kKidEntityType: (p) => KidNpcView(p.position),
+
     // Enemies
-    GameplayMapManager.kBossEntityType: (p) => DungeonBossEnemyView(
-      p.position,
-      controller: DungeonBossEnemyController(),
-    ),
-    GameplayMapManager.kMiniBossEntityType: (p) => DungeonMiniBossEnemyView(
-      p.position,
-      controller: DungeonMiniBossEnemyController(),
-    ),
+    GameplayMapManager.kBossEntityType: (p) => DungeonBossEnemyView(p.position),
+    GameplayMapManager.kMiniBossEntityType: (p) =>
+        DungeonMiniBossEnemyView(p.position),
 
-    GameplayMapManager.kGoblinEntityType: (p) =>
-        GoblinEnemyView(p.position, controller: GoblinEnemyController()),
+    GameplayMapManager.kGoblinEntityType: (p) => GoblinEnemyView(p.position),
 
-    GameplayMapManager.kImpEntityType: (p) =>
-        ImpEnemyView(p.position, controller: ImpEnemyController()),
+    GameplayMapManager.kImpEntityType: (p) => ImpEnemyView(p.position),
 
     // Farm
     GameplayMapManager.kFarmTileEntityType: (p) => FarmTile(p.position),

@@ -1,6 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_data.dart';
@@ -12,9 +13,11 @@ import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dar
 /// Não possui lógica de negócio, apenas feedback visual e interação com o Controller.
 class KnightPlayerView extends SimplePlayer
     with Lighting, BlockMovementCollision {
-  final KnightPlayerController controller;
+  final KnightPlayerController controller = KnightPlayerController(
+    model: KnightPlayerModel(),
+  );
 
-  KnightPlayerView(Vector2 position, {required this.controller})
+  KnightPlayerView(Vector2 position)
     : super(
         animation: KnightPlayerConfig.buildDirectionalAnimation,
         size: KnightPlayerConfig.spriteSize,

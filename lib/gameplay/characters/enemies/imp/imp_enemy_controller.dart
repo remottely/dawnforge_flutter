@@ -7,15 +7,18 @@ import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 
+/// ImpEnemyController
+/// ---------------------------------------------------------------------------
+/// Orchestrates logic, AI, and communication between Model (data) and View (Bonfire component) for the Imp enemy.
 class ImpEnemyController {
   late ImpEnemyView _view;
 
-  ImpEnemyController();
-
+  /// Attach the View to the Controller
   void attachView(ImpEnemyView view) {
     _view = view;
   }
 
+  /// Called every game tick by the View
   void onUpdate(double dt) {
     _view.seeAndMoveToPlayer(
       radiusVision: GameplayConstants.kVisionRadiusExtraLarge,
@@ -25,6 +28,7 @@ class ImpEnemyController {
     );
   }
 
+  /// Triggers the attack animation and logic
   void playAttackAnimation() {
     _view.simpleAttackMelee(
       size: Vector2.all(ImpEnemyConfig.attackEffectSize),
@@ -37,6 +41,7 @@ class ImpEnemyController {
     );
   }
 
+  /// Handles logic when the Imp receives damage
   void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
     _view.showDamage(
       damage,
@@ -47,6 +52,7 @@ class ImpEnemyController {
     );
   }
 
+  /// Handles logic when the Imp dies
   void onDie() {
     _view.gameRef.add(
       AnimatedGameObject(

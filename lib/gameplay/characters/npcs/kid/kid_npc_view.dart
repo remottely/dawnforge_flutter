@@ -2,26 +2,28 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_controller.dart';
 
-/// A View (Componente Bonfire)
-/// Responsável apenas por exibir elementos visuais, animações, sons
-/// e capturar entradas, delegando toda a lógica para o Controller.
+/// KidNpcView
+/// ---------------------------------------------------------------------------
+/// Visual and interaction layer for Kid NPC. Handles rendering, collision, and delegates logic to the controller.
 class KidNpcView extends SimpleNpc {
-  final KidNpcController _controller;
+  /// Controller orchestrates logic and communication
+  final KidNpcController _controller = KidNpcController();
 
-  KidNpcView(Vector2 position, {required KidNpcController controller})
-    : _controller = controller,
-      super(
+  KidNpcView(Vector2 position)
+    : super(
         animation: KidNpcConfig.buildDirectionalAnimation,
         position: position,
         size: KidNpcConfig.spriteSize,
       );
 
+  /// Called when the component is added to the game
   @override
-  Future<void> onLoad() {
+  Future<void> onLoad() async {
+    await super.onLoad();
     _controller.attachView(this);
-    return super.onLoad();
   }
 
+  /// Called every game tick
   @override
   void update(double dt) {
     _controller.onUpdate(dt);

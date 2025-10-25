@@ -4,14 +4,13 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constant
 
 /// WizardNpcConfig
 /// ---------------------------------------------------------------------------
-/// Contém todos os dados estáticos, constantes e métodos utilitários para
-/// configuração do WizardNpcView. Use este padrão para outros configs.
+/// Holds all static data, constants, and utility methods for WizardNpcView configuration.
+/// No business logic here. Use this pattern for other configs.
 abstract class WizardNpcConfig {
   //////////////////////////////////////////////////////////////////////////////
-  // GENERAL CONFIGURATION
+  // SPRITE & DIMENSIONS
   //////////////////////////////////////////////////////////////////////////////
-
-  /// Tamanho padrão do sprite do NPC
+  /// Default sprite size for the wizard NPC
   static final Vector2 spriteSize = Vector2(
     GameplayConstants.kTileDimensionStandard * 0.8,
     GameplayConstants.kTileDimensionStandard * 1.0,
@@ -20,13 +19,13 @@ abstract class WizardNpcConfig {
   //////////////////////////////////////////////////////////////////////////////
   // VISION
   //////////////////////////////////////////////////////////////////////////////
-
+  /// Vision radius for proximity detection
   static const double kVisionRadius = GameplayConstants.kVisionRadiusSmall;
 
   //////////////////////////////////////////////////////////////////////////////
   // ANIMATION
   //////////////////////////////////////////////////////////////////////////////
-
+  /// Directional animation for wizard NPC
   static final SimpleDirectionAnimation buildDirectionalAnimation =
       SimpleDirectionAnimation(
         idleRight: NpcSpriteAnimations.wizardIdleLeft(),

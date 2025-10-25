@@ -2,6 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/npc_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
@@ -12,18 +13,23 @@ import 'package:flutter/services.dart';
 
 /// WizardNpcView
 /// ---------------------------------------------------------------------------
-/// Responsável pela renderização e interação visual do Wizard NPC.
+/// Responsible for rendering and visual interaction of the Wizard NPC.
+/// No business logic, only visual feedback and interaction with the Controller.
 class WizardNpcView extends SimpleNpc {
-  final WizardNpcController _controller;
+  final WizardNpcController _controller = WizardNpcController(
+    model: WizardNpcModel(),
+  );
 
-  WizardNpcView(Vector2 position, {required WizardNpcController controller})
-    : _controller = controller,
-      super(
+  WizardNpcView(Vector2 position)
+    : super(
         animation: WizardNpcConfig.buildDirectionalAnimation,
         position: position,
         size: WizardNpcConfig.spriteSize,
       );
 
+  //////////////////////////////////////////////////////////////////////////////
+  // LIFECYCLE
+  //////////////////////////////////////////////////////////////////////////////
   @override
   Future<void> onLoad() {
     _controller.attachView(this);
@@ -36,6 +42,10 @@ class WizardNpcView extends SimpleNpc {
     super.update(dt);
   }
 
+  //////////////////////////////////////////////////////////////////////////////
+  // PLAYER PROXIMITY DETECTION
+  //////////////////////////////////////////////////////////////////////////////
+  /// Checks if the player is near the wizard and triggers controller logic
   void checkPlayerProximity() {
     if (gameRef.player != null) {
       seeComponent(
@@ -46,10 +56,18 @@ class WizardNpcView extends SimpleNpc {
     }
   }
 
+  //////////////////////////////////////////////////////////////////////////////
+  // PLAYER FEEDBACK
+  //////////////////////////////////////////////////////////////////////////////
+  /// Sets the player to idle state (visual only)
   void idlePlayer() {
     gameRef.player?.idle();
   }
 
+  //////////////////////////////////////////////////////////////////////////////
+  // DIALOGUE & CONVERSATION
+  //////////////////////////////////////////////////////////////////////////////
+  /// Initializes the dialogue sequence with the player
   void initializeDialogue() {
     GameplayAudioManager.playInteraction();
     GameplayUIManager.displayConversationDialog(
@@ -61,6 +79,7 @@ class WizardNpcView extends SimpleNpc {
     );
   }
 
+  /// Creates the sequence of Say objects for the conversation
   List<Say> _createDialogueSequence() {
     return [
       Say(

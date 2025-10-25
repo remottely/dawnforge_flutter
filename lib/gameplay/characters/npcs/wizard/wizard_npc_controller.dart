@@ -6,24 +6,26 @@ import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.d
 
 /// WizardNpcController
 /// ---------------------------------------------------------------------------
-/// Gerencia a lógica de interação, timers e a comunicação
-/// entre o Model (dados) e a View (componente Bonfire).
+/// Orchestrates logic, timers, and communication between Model (data) and View (Bonfire component).
 class WizardNpcController {
   final WizardNpcModel _model;
   late WizardNpcView _view;
 
   WizardNpcController({required WizardNpcModel model}) : _model = model;
 
+  /// Attach the View to the Controller
   void attachView(WizardNpcView view) {
     _view = view;
   }
 
+  /// Called every game tick by the View
   void onUpdate(double dt) {
     _view.checkPlayerProximity();
   }
 
+  /// Called when the player is detected near the wizard
   void onPlayerDetected(Component player) {
-    if (!_model.isShowingConversation) {
+    if (!_model.isInteracted) {
       _view.idlePlayer();
       _model.startConversation();
       CharacterEmoteController.displayEmoteAboveCharacter(
@@ -35,10 +37,12 @@ class WizardNpcController {
     }
   }
 
+  /// Called when the dialogue changes (player advances conversation)
   void onDialogueChanged(int index) {
     GameplayAudioManager.playInteraction();
   }
 
+  /// Called when the conversation finishes
   void onConversationFinished() {
     GameplayAudioManager.playInteraction();
     _model.finishConversation();

@@ -3,10 +3,8 @@ import 'dart:async';
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/enemy_sprite_animations.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/npc_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
@@ -22,22 +20,19 @@ import 'package:flutter/services.dart';
 
 class DungeonBossEnemyView extends SimpleEnemy
     with BlockMovementCollision, UseLifeBar {
-  final DungeonBossEnemyController _controller;
+  final DungeonBossEnemyController _controller = DungeonBossEnemyController();
   double attackDamage = DungeonBossEnemyConfig.attackDamage;
   List<Enemy> spawnedEnemies = [];
   bool hasSeenPlayerFirst = false;
 
-  DungeonBossEnemyView(
-    Vector2 position, {
-    required DungeonBossEnemyController controller,
-  }) : _controller = controller,
-       super(
-         animation: EnemySpriteAnimations.dungeonBossEnemyDirectional,
-         position: position,
-         size: DungeonBossEnemyConfig.spriteSize,
-         speed: DungeonBossEnemyConfig.speed,
-         life: DungeonBossEnemyConfig.life,
-       );
+  DungeonBossEnemyView(Vector2 position)
+    : super(
+        animation: EnemySpriteAnimations.dungeonBossEnemyDirectional,
+        position: position,
+        size: DungeonBossEnemyConfig.spriteSize,
+        speed: DungeonBossEnemyConfig.speed,
+        life: DungeonBossEnemyConfig.life,
+      );
 
   @override
   Future<void> onLoad() {
@@ -145,12 +140,8 @@ class DungeonBossEnemyView extends SimpleEnemy
       Enemy e = spawnedEnemies.length == 2
           ? DungeonMiniBossEnemyView(
               Vector2(positionExplosion.x, positionExplosion.y),
-              controller: DungeonMiniBossEnemyController(),
             )
-          : ImpEnemyView(
-              Vector2(positionExplosion.x, positionExplosion.y),
-              controller: ImpEnemyController(),
-            );
+          : ImpEnemyView(Vector2(positionExplosion.x, positionExplosion.y));
       gameRef.add(
         AnimatedGameObject(
           animation:
@@ -309,6 +300,6 @@ class DungeonBossEnemyView extends SimpleEnemy
         loop: false,
       ),
     );
-    gameRef.add(ImpEnemyView(pos, controller: ImpEnemyController()));
+    gameRef.add(ImpEnemyView(pos));
   }
 }

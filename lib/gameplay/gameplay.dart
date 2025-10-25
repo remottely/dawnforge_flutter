@@ -161,10 +161,7 @@ class _GameplayState extends State<Gameplay> {
   }
 
   KnightPlayerView _createKnightPlayerWithState(Vector2 position) {
-    final knight = KnightPlayerView(
-      position,
-      controller: KnightPlayerController(model: KnightPlayerModel()),
-    );
+    final knight = KnightPlayerView(position);
 
     AppLogger.info('Created fresh knight at position: $position');
     return knight;
