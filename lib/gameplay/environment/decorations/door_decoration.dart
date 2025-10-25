@@ -7,19 +7,13 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_dialog_c
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration_sprite_animations.dart';
 
-// -----------------------------------------------------------------------------
-//  DATA CLASS (Seguindo o padrão de barrel_decoration.dart)
-// -----------------------------------------------------------------------------
-
 abstract class _DoorDecorationConfig {
-  /// DATA
   static const String _kClosedDoorAsset =
       'gameplay/environment/decorations/door_decoration_locked_1.png';
   static const String _kRequiredKeyMessage = 'door_without_key';
   static const double _kHitboxHeightRatio = 0.25;
   static const double _kHitboxPositionRatio = 0.75;
 
-  /// LOAD
   static Future<Sprite> _loadClosedSprite() => Sprite.load(_kClosedDoorAsset);
 
   static Future<SpriteAnimation> _loadOpeningAnimation() =>
@@ -34,15 +28,10 @@ abstract class _DoorDecorationConfig {
     );
   }
 
-  /// Creates the sequence of Say objects for the conversation
   static List<Say> createDialogueSequence() {
     return [GameplayDialogConstants.playerLeftDialog(_kRequiredKeyMessage)];
   }
 }
-
-// -----------------------------------------------------------------------------
-//  CLASSE PRINCIPAL (Refatorada para usar _DoorDecorationData)
-// -----------------------------------------------------------------------------
 
 class DoorDecorationView extends DFGameDecoration {
   bool _isOpen = false;

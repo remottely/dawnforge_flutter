@@ -2,7 +2,6 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_sprite_constants.dart';
 
 class EnemySpriteAnimations {
-  /// ATTACK EFFECTS
   static Future<SpriteAnimation> enemyBasicAttackRight3() =>
       SpriteAnimation.load(
         'gameplay/characters/enemies/enemy_basic_attack_right_3.png',
@@ -12,7 +11,6 @@ class EnemySpriteAnimations {
         ),
       );
 
-  /// GOBLIN
   static Future<SpriteAnimation> goblinEnemyIdleRight6() =>
       SpriteAnimation.load(
         'gameplay/characters/enemies/goblin/goblin_enemy_idle_right_6.png',
@@ -48,7 +46,6 @@ class EnemySpriteAnimations {
         ),
       );
 
-  /// IMP
   static Future<SpriteAnimation> impEnemyIdleRight4() => SpriteAnimation.load(
     'gameplay/characters/enemies/imp/imp_enemy_idle_right_4.png',
     GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
@@ -83,7 +80,6 @@ class EnemySpriteAnimations {
         ),
       );
 
-  /// DUNGEON MINI BOSS
   static Future<SpriteAnimation>
   dungeonMiniBossEnemyIdleRight4() => SpriteAnimation.load(
     'gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_idle_right_4.png',
@@ -119,7 +115,6 @@ class EnemySpriteAnimations {
     ),
   );
 
-  /// DUNGEON BOSS
   static Future<SpriteAnimation>
   dungeonBossEnemyIdleLeft4() => SpriteAnimation.load(
     'gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_idle_left_4.png',

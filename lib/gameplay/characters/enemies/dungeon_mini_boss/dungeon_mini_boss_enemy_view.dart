@@ -8,9 +8,6 @@ import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 
-/// View (Componente Bonfire)
-/// Responsável por exibir elementos visuais, animações, sons
-/// e capturar entradas, delegando lógica ao Controller.
 class DungeonMiniBossEnemyView extends SimpleEnemy
     with BlockMovementCollision, UseLifeBar {
   final DungeonMiniBossEnemyController _controller =

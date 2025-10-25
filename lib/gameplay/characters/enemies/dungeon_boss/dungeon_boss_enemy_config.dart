@@ -20,7 +20,6 @@ abstract class DungeonBossEnemyConfig {
   static void buildHitBox(GameComponent target) =>
       target.add(RectangleHitbox(size: hitboxSize, position: hitboxPosition));
 
-  /// Creates the sequence of Say objects for the conversation
   static List<Say> createDialogueSequence() {
     return [
       GameplayDialogConstants.kidRightDialog('talk_kid_1'),

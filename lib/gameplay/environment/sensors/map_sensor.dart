@@ -4,9 +4,6 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_map_cons
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/app_logger.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
 
-/// [MapSensorView] responsible for detecting player interaction with map transition areas
-/// Following Flutter naming conventions for game sensor systems
-
 abstract class _MapSensorConfig {
   static const String playerEnteredEvent = 'Player entered sensor';
   static const String playerExitedEvent = 'Player exited sensor';
@@ -103,8 +100,6 @@ class MapSensorView extends DFSensorPlayerDecoration {
   }
 }
 
-/// [MapArguments] data class for map navigation parameters
-/// Following Flutter pattern of immutable data classes
 class MapArguments {
   final Vector2 playerPosition;
   final Direction playerDirection;

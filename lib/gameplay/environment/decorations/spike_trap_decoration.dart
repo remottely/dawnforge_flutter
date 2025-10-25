@@ -4,26 +4,15 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constant
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration_sprite_animations.dart';
 
-// -----------------------------------------------------------------------------
-//  DATA CLASS (Seguindo o padrão de barrel_decoration.dart)
-// -----------------------------------------------------------------------------
-
 abstract class _SpikeTrapDecorationConfig {
-  /// DATA
   static const double kDamageAmount = GameplayConstants.kPropertyAmountMedium;
   static const int kPriority = GameplayConstants.kPriority1;
   static final Vector2 _spriteSize = GameplayConstants.kTileSizeStandard;
 
-  /// LOAD
   static Future<SpriteAnimation> _loadAnimation() =>
       DecorationSpriteAnimations.spikeTrapDecoration10();
 }
 
-// -----------------------------------------------------------------------------
-//  CLASSE PRINCIPAL (Refatorada para usar _SpikeTrapDecorationData)
-// -----------------------------------------------------------------------------
-
-/// DONE
 class SpikeTrapDecorationView extends DFSensorPlayerDecoration {
   final double _damageAmount;
   KnightPlayerView? _contactedPlayer;

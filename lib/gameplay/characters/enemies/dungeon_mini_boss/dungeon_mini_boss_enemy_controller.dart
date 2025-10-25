@@ -1,6 +1,5 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_view.dart';
-// import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_config.dart';
 
 class DungeonMiniBossEnemyController {
   late DungeonMiniBossEnemyView _view;
@@ -10,7 +9,6 @@ class DungeonMiniBossEnemyController {
   }
 
   void onUpdate(double dt) {
-    // Lógica de movimentação e ataque
     _view.seePlayerAndAct();
   }
 
@@ -22,7 +20,5 @@ class DungeonMiniBossEnemyController {
     _view.handleDeathEffects();
   }
 
-  void onJoystickAction(JoystickActionEvent event) {
-    // Inimigos normalmente não usam joystick, mas pode ser estendido
-  }
+  void onJoystickAction(JoystickActionEvent event) {}
 }

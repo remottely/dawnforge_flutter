@@ -9,8 +9,6 @@ import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
 
-/// View: Responsável por exibir elementos visuais, animações, sons e capturar entradas.
-/// Não possui lógica de negócio, apenas feedback visual e interação com o Controller.
 class KnightPlayerView extends SimplePlayer
     with Lighting, BlockMovementCollision {
   final KnightPlayerController controller = KnightPlayerController(
@@ -29,9 +27,6 @@ class KnightPlayerView extends SimplePlayer
     _setupControls();
   }
 
-  //////////////////////////////////////////////////////////////////////////////
-  // CICLO DE VIDA
-  //////////////////////////////////////////////////////////////////////////////
   @override
   Future<void> onLoad() {
     controller.attachView(this);
@@ -57,7 +52,7 @@ class KnightPlayerView extends SimplePlayer
   void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
     if (isDead) return;
     _showDamageEffect(damage);
-    // GameplayAudioManager.instance.playDamageSound(); // Implementar se necessário
+
     super.onReceiveDamage(attacker, damage, id);
   }
 
@@ -68,10 +63,6 @@ class KnightPlayerView extends SimplePlayer
     super.onDie();
   }
 
-  //////////////////////////////////////////////////////////////////////////////
-  // ANIMAÇÕES & EFEITOS
-  //////////////////////////////////////////////////////////////////////////////
-  /// Animação de ataque melee
   void playMeleeAttackAnimation(double damage) {
     GameplayAudioManager.instance.playAttackPlayerMelee();
     addParticle(CharacterParticlesAnimations.swordParticles(), position: size);
@@ -82,7 +73,6 @@ class KnightPlayerView extends SimplePlayer
     );
   }
 
-  /// Animação de ataque fireball
   void playFireballAttackAnimation(double damage) {
     addParticle(
       CharacterParticlesAnimations.fireballParticles(),
@@ -101,14 +91,8 @@ class KnightPlayerView extends SimplePlayer
     CharacterFireballAttackData.playAttackAudio();
   }
 
-  /// Animação de uso de ferramenta
-  void playToolAnimation() {
-    // TODO: Adicionar animação visual da ferramenta
-    // Exemplo: simpleAttackMelee(..., animation: toolAnimation, damage: 0);
-    // Ao final da animação, defina controller.isUsingTool = false;
-  }
+  void playToolAnimation() {}
 
-  /// Exibe emote de exclamação acima do personagem
   void showExclamationEmote() {
     CharacterEmoteController.displayEmoteAboveCharacter(
       gameRef: gameRef,
@@ -117,7 +101,6 @@ class KnightPlayerView extends SimplePlayer
     );
   }
 
-  /// Exibe dano recebido
   void _showDamageEffect(double damage) {
     showDamage(
       damage,
@@ -128,7 +111,6 @@ class KnightPlayerView extends SimplePlayer
     );
   }
 
-  /// Exibe efeito visual de morte
   void _showDeathEffect() {
     gameRef.add(
       DFGameDecoration.withSprite(
@@ -139,9 +121,6 @@ class KnightPlayerView extends SimplePlayer
     );
   }
 
-  //////////////////////////////////////////////////////////////////////////////
-  // CONFIGURAÇÃO
-  //////////////////////////////////////////////////////////////////////////////
   void _setupControls() {
     setupMovementByJoystick(intensityEnabled: true);
   }

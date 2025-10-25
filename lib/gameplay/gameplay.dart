@@ -14,48 +14,27 @@ import 'package:darkness_dungeon/gameplay/environment/sensors/map_sensor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-/// Darkness Dungeon gameplay screen - Main game arena where the adventure unfolds
-/// This widget manages the complete game environment including player controls,
-/// world map, entities, and user interface components.
 class Gameplay extends StatefulWidget {
   const Gameplay({super.key});
 
-  /// Configuration flag to determine input method
-  /// true: Touch joystick controls (mobile-friendly)
-  /// false: Keyboard controls (desktop-friendly)
   static bool useJoystickControls = false;
 
-  /// Game difficulty settings
   static const GameDifficulty difficulty = GameDifficulty.normal;
 
   @override
   State<Gameplay> createState() => _GameplayState();
 }
 
-/// State management for the Darkness Dungeon gameplay
-///
-/// This class handles the complete game environment including:
-/// - Game lifecycle management (initialization, cleanup)
-/// - Player controller configuration (joystick vs keyboard)
-/// - Camera and world setup
-/// - Map navigation and transitions
-/// - Audio management and background music
-///
-/// Following CLAUDE.md patterns for Flutter StatefulWidget organization
 class _GameplayState extends State<Gameplay> {
-  // 1. Constantes de configuração do jogo (agrupadas por tipo)
-  // UI Constants
   static const double _kJoystickSpriteSize = 100.0;
   static const double kActionButtonSize = 80.0;
   static const double kActionButtonMarginBottom = 50.0;
   static const double kPrimaryActionMarginRight = 50.0;
   static const double kSecondaryActionMarginRight = 160.0;
 
-  // 2. Componentes de jogo pré-construídos
   late final GameplayHUD _gameplayHUD;
   late final CameraConfig _cameraConfig;
 
-  // 3. Métodos de ciclo de vida
   @override
   void initState() {
     super.initState();
@@ -81,8 +60,6 @@ class _GameplayState extends State<Gameplay> {
     );
   }
 
-  // 4. Método de build principal
-
   @override
   Widget build(BuildContext gameplayContext) {
     return MapNavigator(
@@ -94,12 +71,10 @@ class _GameplayState extends State<Gameplay> {
             (mapArguments?.playerPosition ?? Vector2(4, 4)) *
             GameplayConstants.kTileDimensionStandard;
 
-        // Read background music from Tiled properties (optional field)
         final mapBackgroundMusic = mapItem
             .properties[GameplayMapData.kBackgroundMusicPropertyKey]
             ?.toString();
 
-        // Parse color values using ColorHelper for better maintainability
         final mapLightingColor = ColorHelper.fromHex(
           mapItem.properties[GameplayMapData.kLightingColorPropertyKey]
               ?.toString(),
@@ -108,7 +83,7 @@ class _GameplayState extends State<Gameplay> {
           mapItem.properties[GameplayMapData.kBackgroundColorPropertyKey]
               ?.toString(),
         );
-        // Start map-specific background music if provided
+
         if (mapBackgroundMusic != null && mapBackgroundMusic.isNotEmpty) {
           GameplayAudioManager.instance.ensureBackgroundMusicPlaying(
             mapBackgroundMusic,
@@ -119,10 +94,8 @@ class _GameplayState extends State<Gameplay> {
           'Building BonfireWidget for map: ${mapItem.id}, player position: $playerPosition, music: $mapBackgroundMusic, lighting: $mapLightingColor, background: $mapBackgroundColor',
         );
 
-        // Create player for the current map
         final player = _createKnightPlayerWithState(playerPosition);
 
-        // Ensure controller is active by recreating it for each map
         final activeController = _createFreshController();
 
         return Material(
@@ -144,18 +117,14 @@ class _GameplayState extends State<Gameplay> {
     );
   }
 
-  // 5. Métodos de inicialização (agrupados)
-  /// Initializes background music and sound effects
   void _initializeGameAudio() {
     GameplayAudioManager.instance.ensureBackgroundMusicPlaying();
   }
 
-  /// Cleans up audio resources when game ends
   void _cleanupGameAudio() {
     GameplayAudioManager.instance.stopBackgroundMusic();
   }
 
-  /// Pre-initializes all game components for better performance
   void _initializeGameComponents() {
     _gameplayHUD = GameplayHUD();
   }
@@ -167,21 +136,16 @@ class _GameplayState extends State<Gameplay> {
     return knight;
   }
 
-  /// Creates a fresh controller instance for each map navigation
-  /// Following Flutter pattern of controller management
   PlayerController _createFreshController() {
     return _createPlayerController();
   }
 
-  /// Creates the appropriate player controller based on configuration
-  /// Following Flutter pattern of controller factory methods
   PlayerController _createPlayerController() {
     return Gameplay.useJoystickControls
         ? _createJoystickController()
         : _createKeyboardController();
   }
 
-  /// Creates touch-based joystick controller for mobile devices
   PlayerController _createJoystickController() {
     return Joystick(
       directional: JoystickDirectional(
@@ -194,7 +158,6 @@ class _GameplayState extends State<Gameplay> {
     );
   }
 
-  /// Creates keyboard controller for desktop devices
   PlayerController _createKeyboardController() {
     return Keyboard(
       config: KeyboardConfig(
@@ -204,7 +167,6 @@ class _GameplayState extends State<Gameplay> {
     );
   }
 
-  /// Creates primary melee attack action button
   JoystickAction _createPrimaryAttackAction() {
     return JoystickAction(
       actionId: PlayerActions.meleeAttack.index,
@@ -218,7 +180,6 @@ class _GameplayState extends State<Gameplay> {
     );
   }
 
-  /// Creates secondary ranged attack action button
   JoystickAction _createRangedAttackAction() {
     return JoystickAction(
       actionId: PlayerActions.rangedAttack.index,
@@ -233,8 +194,6 @@ class _GameplayState extends State<Gameplay> {
   }
 }
 
-/// Enumeration of available player actions
 enum PlayerActions { meleeAttack, rangedAttack }
 
-/// Game difficulty levels
 enum GameDifficulty { easy, normal, hard, nightmare }

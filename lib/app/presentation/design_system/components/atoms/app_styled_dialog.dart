@@ -4,59 +4,26 @@ import 'package:darkness_dungeon/app/presentation/design_system/constants/typogr
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_ui_constants.dart';
 import 'package:flutter/material.dart';
 
-/// UI component AppStyledDialog for the Darkness Dungeon game
-/// Following Flutter naming conventions for design system components
-///
-/// This class handles:
-/// - Consistent dialog styling throughout the application
-/// - Custom backgrounds and child widget composition
-/// - Factory methods for common dialog scenarios
-///
-/// Usage patterns:
-/// ```dart
-/// final dialog = AppStyledDialog(children: [Text('Content')]);
-/// AppStyledDialog.gameOver(onRetry: () {});
-/// AppStyledDialog.victory(onContinue: () {});
-/// ```
 class AppStyledDialog extends StatelessWidget {
-  // 1. Constantes de configuração
-  /// Standard background color for dialogs
   static const Color kStandardBackgroundColor =
       GameplayUIConstants.kTransparentColor;
 
-  // 2. Propriedades da classe
-  /// Background color of the dialog
   final Color backgroundColor;
 
-  /// List of child widgets to display in the dialog
   final List<Widget> children;
 
-  // 3. Construtor principal
-  /// Creates a styled dialog with transparent background
   const AppStyledDialog({
     super.key,
     this.backgroundColor = kStandardBackgroundColor,
     required this.children,
   });
 
-  // 4. Factory constructors
-  /// Creates a styled dialog with custom background color
   const AppStyledDialog.withBackground({
     super.key,
     required this.backgroundColor,
     required this.children,
   });
 
-  /// Factory constructor for game over dialog
-  ///
-  /// Provides a standardized game over dialog with retry functionality.
-  ///
-  /// Usage:
-  /// ```dart
-  /// AppStyledDialog.gameOver(
-  ///   onRetry: () => Navigator.pop(context),
-  /// )
-  /// ```
   AppStyledDialog.gameOver({super.key, required VoidCallback onRetry})
     : backgroundColor = kStandardBackgroundColor,
       children = [
@@ -83,16 +50,6 @@ class AppStyledDialog extends StatelessWidget {
         ),
       ];
 
-  /// Factory constructor for victory dialog
-  ///
-  /// Provides a standardized victory dialog with continue functionality.
-  ///
-  /// Usage:
-  /// ```dart
-  /// AppStyledDialog.victory(
-  ///   onContinue: () => Navigator.pop(context),
-  /// )
-  /// ```
   AppStyledDialog.victory({super.key, required VoidCallback onContinue})
     : backgroundColor = kStandardBackgroundColor,
       children = [
@@ -119,18 +76,6 @@ class AppStyledDialog extends StatelessWidget {
         ),
       ];
 
-  /// Factory constructor for confirmation dialog
-  ///
-  /// Provides a standardized confirmation dialog with customizable message.
-  ///
-  /// Usage:
-  /// ```dart
-  /// AppStyledDialog.confirmation(
-  ///   message: 'Are you sure you want to quit?',
-  ///   onConfirm: () => Navigator.pop(context, true),
-  ///   onCancel: () => Navigator.pop(context, false),
-  /// )
-  /// ```
   AppStyledDialog.confirmation({
     super.key,
     required String message,
@@ -172,7 +117,7 @@ class AppStyledDialog extends StatelessWidget {
              ],
            ),
          ),
-       ]; // 5. Método build
+       ];
   @override
   Widget build(BuildContext context) {
     return Material(

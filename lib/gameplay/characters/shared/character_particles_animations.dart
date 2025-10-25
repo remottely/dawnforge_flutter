@@ -2,7 +2,6 @@ import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
 
 class CharacterParticlesAnimations {
-  // SHOW DAMAGE
   static const double kShowDamageGravity = 0.1;
   static const double kShowDamageInitVelocityVertical = -4;
 
@@ -21,14 +20,12 @@ class CharacterParticlesAnimations {
     fontFamily: _kShowDamageFontFamily,
   );
 
-  // LIGHTING CONFIG
   static LightingConfig knightLightingConfig(double width) => LightingConfig(
     radius: width * 1.5,
     blurBorder: width,
     color: Colors.deepOrangeAccent.withValues(alpha: 0.2),
   );
 
-  // ATTACK PARTICLES
   static const double _kAttackParticlesRadius = 0.3;
 
   static Particle swordParticles() => Particle.generate(

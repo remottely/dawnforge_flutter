@@ -65,7 +65,6 @@ class FarmTileView extends DFGameDecoration {
         }
         break;
     }
-    // TODO: Trigger visual feedback/animation
   }
 
   Future<void> _updateSprite() async {

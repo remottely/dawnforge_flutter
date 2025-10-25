@@ -1,7 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
 
-/// DONE
 class DFGameDecoration extends GameDecoration {
   DFGameDecoration({required super.position, required super.size}) : super();
 
@@ -54,5 +53,3 @@ abstract class DFSensorPlayerDecoration extends DFGameDecoration
     required super.size,
   }) : super.withAnimation();
 }
-
-/// TODO: DFDamageableDecoration

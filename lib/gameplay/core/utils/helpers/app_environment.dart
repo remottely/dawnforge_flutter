@@ -76,13 +76,13 @@ class AppEnvironment {
     staging: 0.5,
     production: 0.7,
   );
-  static final bool enableAudio = true; // Habilitado para todos
+  static final bool enableAudio = true;
   static final bool enableBackgroundMusic = byEnvironment(
     development: true,
     testing: false,
     production: true,
   );
-  static final bool enableSoundEffects = true; // Habilitado para todos
+  static final bool enableSoundEffects = true;
 
   static final String apiBaseUrl = byEnvironment(
     development: 'https://dev-api.darknessdungeon.com',
@@ -95,7 +95,7 @@ class AppEnvironment {
     if (isDevelopment) return const Duration(seconds: 30);
     if (isTesting) return const Duration(seconds: 60);
     if (isStaging) return const Duration(seconds: 15);
-    return const Duration(seconds: 10); // Production
+    return const Duration(seconds: 10);
   })();
 
   static final String defaultSpriteSize = byEnvironment(

@@ -6,10 +6,6 @@ import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.d
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
 import 'package:flutter/services.dart';
 
-/// WizardNpcView
-/// ---------------------------------------------------------------------------
-/// Responsible for rendering and visual interaction of the Wizard NPC.
-/// No business logic, only visual feedback and interaction with the Controller.
 class WizardNpcView extends SimpleNpc {
   final WizardNpcController _controller = WizardNpcController(
     model: WizardNpcModel(),
@@ -22,9 +18,6 @@ class WizardNpcView extends SimpleNpc {
         size: WizardNpcConfig.spriteSize,
       );
 
-  //////////////////////////////////////////////////////////////////////////////
-  // LIFECYCLE
-  //////////////////////////////////////////////////////////////////////////////
   @override
   Future<void> onLoad() {
     _controller.attachView(this);
@@ -37,10 +30,6 @@ class WizardNpcView extends SimpleNpc {
     super.update(dt);
   }
 
-  //////////////////////////////////////////////////////////////////////////////
-  // PLAYER PROXIMITY DETECTION
-  //////////////////////////////////////////////////////////////////////////////
-  /// Checks if the player is near the wizard and triggers controller logic
   void checkPlayerProximity() {
     if (gameRef.player != null) {
       seeComponent(
@@ -51,18 +40,10 @@ class WizardNpcView extends SimpleNpc {
     }
   }
 
-  //////////////////////////////////////////////////////////////////////////////
-  // PLAYER FEEDBACK
-  //////////////////////////////////////////////////////////////////////////////
-  /// Sets the player to idle state (visual only)
   void idlePlayer() {
     gameRef.player?.idle();
   }
 
-  //////////////////////////////////////////////////////////////////////////////
-  // DIALOGUE & CONVERSATION
-  //////////////////////////////////////////////////////////////////////////////
-  /// Initializes the dialogue sequence with the player
   void initializeDialogue() {
     GameplayAudioManager.instance.playInteraction();
     GameplayUIManager.displayConversationDialog(
