@@ -1,6 +1,6 @@
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_map_constants.dart';
 
-class GameplayMapData {
+class GameplayMapConfig {
   static const String kMap1Asset = 'tiled/map_1.json';
   static const String kDungeon1Asset = 'tiled/dungeon_1.json';
 
@@ -30,7 +30,7 @@ class GameplayMapData {
   final String lightingColor;
   final String backgroundColor;
 
-  const GameplayMapData({
+  const GameplayMapConfig({
     required this.id,
     required this.asset,
     required this.sensorIds,
@@ -39,8 +39,8 @@ class GameplayMapData {
     required this.backgroundColor,
   });
 
-  static const List<GameplayMapData> allMaps = [
-    const GameplayMapData(
+  static const List<GameplayMapConfig> allMaps = [
+    const GameplayMapConfig(
       id: MapId.map1,
       asset: kMap1Asset,
       sensorIds: kMap1SensorIds,
@@ -49,7 +49,7 @@ class GameplayMapData {
       backgroundColor: kMap1BackgroundColor,
     ),
 
-    const GameplayMapData(
+    const GameplayMapConfig(
       id: MapId.dungeon1,
       asset: kDungeon1Asset,
       sensorIds: kDungeon1SensorIds,
@@ -59,7 +59,7 @@ class GameplayMapData {
     ),
   ];
 
-  static GameplayMapData? byId(MapId id) {
+  static GameplayMapConfig? byId(MapId id) {
     try {
       return allMaps.firstWhere((config) => config.id == id);
     } catch (e) {

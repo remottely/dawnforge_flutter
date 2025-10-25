@@ -4,7 +4,7 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constant
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_sprite_constants.dart';
 import 'package:flutter/material.dart';
 
-class CharacterFireballAttackData {
+class CharacterFireballAttackConfig {
   static final Vector2 spriteSize = Vector2.all(
     GameplayConstants.kTileDimensionStandard * 0.65,
   );

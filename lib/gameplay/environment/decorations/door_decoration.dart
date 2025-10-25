@@ -29,7 +29,7 @@ abstract class _DoorDecorationConfig {
   }
 
   static List<Say> createDialogueSequence() {
-    return [GameplayDialogConstants.playerLeftDialog(_kRequiredKeyMessage)];
+    return [GameplayDialogConstants.knightLeftDialog(_kRequiredKeyMessage)];
   }
 }
 

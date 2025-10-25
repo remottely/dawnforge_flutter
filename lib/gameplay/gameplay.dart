@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
-import 'package:darkness_dungeon/gameplay/core/data/gameplay_map_data.dart';
+import 'package:darkness_dungeon/gameplay/core/data/gameplay_map_config.dart';
 import 'package:darkness_dungeon/gameplay/core/hud/gameplay_hud.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_map_manager.dart';
@@ -72,15 +72,15 @@ class _GameplayState extends State<Gameplay> {
             GameplayConstants.kTileDimensionStandard;
 
         final mapBackgroundMusic = mapItem
-            .properties[GameplayMapData.kBackgroundMusicPropertyKey]
+            .properties[GameplayMapConfig.kBackgroundMusicPropertyKey]
             ?.toString();
 
         final mapLightingColor = ColorHelper.fromHex(
-          mapItem.properties[GameplayMapData.kLightingColorPropertyKey]
+          mapItem.properties[GameplayMapConfig.kLightingColorPropertyKey]
               ?.toString(),
         );
         final mapBackgroundColor = ColorHelper.fromHex(
-          mapItem.properties[GameplayMapData.kBackgroundColorPropertyKey]
+          mapItem.properties[GameplayMapConfig.kBackgroundColorPropertyKey]
               ?.toString(),
         );
 

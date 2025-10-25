@@ -3,12 +3,11 @@ import 'dart:async' as async;
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/app/presentation/design_system/components/atoms/app_radio_button.dart';
 import 'package:darkness_dungeon/app/presentation/design_system/constants/typography_constants.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/enemy_sprite_animations.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/gameplay.dart';
 import 'package:darkness_dungeon/shared/components/df_animated_sprite_widget.dart';
+import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 import 'package:flame_splash_screen/flame_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -29,11 +28,11 @@ abstract class MenuScreenViewModel extends State<MenuScreen> {
   late async.Timer _characterAnimationTimer;
 
   late final List<Future<SpriteAnimation>> _characterSpriteAnimations = [
-    PlayerSpriteAnimations.knightPlayerIdleRight6(),
-    EnemySpriteAnimations.goblinEnemyIdleRight6(),
-    EnemySpriteAnimations.impEnemyIdleRight4(),
-    EnemySpriteAnimations.dungeonMiniBossEnemyIdleRight4(),
-    EnemySpriteAnimations.dungeonBossEnemyIdleRight4(),
+    UISpriteAnimations.knightPlayerIdleRight6(),
+    UISpriteAnimations.goblinEnemyIdleRight6(),
+    UISpriteAnimations.impEnemyIdleRight4(),
+    UISpriteAnimations.dungeonMiniBossEnemyIdleRight4(),
+    UISpriteAnimations.dungeonBossEnemyIdleRight4(),
   ];
 
   @override

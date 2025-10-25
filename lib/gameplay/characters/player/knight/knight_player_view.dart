@@ -2,9 +2,9 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_basic_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_data.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
@@ -68,7 +68,7 @@ class KnightPlayerView extends SimplePlayer
     addParticle(CharacterParticlesAnimations.swordParticles(), position: size);
     simpleAttackMelee(
       damage: damage,
-      animationRight: PlayerSpriteAnimations.playerBasicAttackRight3(),
+      animationRight: CharacterBasicAttackConfig.playerBasicAttackRight3(),
       size: KnightPlayerConfig.spriteSize,
     );
   }
@@ -79,16 +79,16 @@ class KnightPlayerView extends SimplePlayer
       position: size,
     );
     simpleAttackRange(
-      animationRight: CharacterFireballAttackData.loadAttackAnimation(),
-      animationDestroy: CharacterFireballAttackData.loadExplosionAnimation(),
-      size: CharacterFireballAttackData.spriteSize,
+      animationRight: CharacterFireballAttackConfig.loadAttackAnimation(),
+      animationDestroy: CharacterFireballAttackConfig.loadExplosionAnimation(),
+      size: CharacterFireballAttackConfig.spriteSize,
       damage: damage,
-      speed: speed * CharacterFireballAttackData.kSpeedMultiplier,
-      onDestroy: CharacterFireballAttackData.playExplosionAudio,
-      collision: CharacterFireballAttackData.hitbox,
-      lightingConfig: CharacterFireballAttackData.lightingConfig,
+      speed: speed * CharacterFireballAttackConfig.kSpeedMultiplier,
+      onDestroy: CharacterFireballAttackConfig.playExplosionAudio,
+      collision: CharacterFireballAttackConfig.hitbox,
+      lightingConfig: CharacterFireballAttackConfig.lightingConfig,
     );
-    CharacterFireballAttackData.playAttackAudio();
+    CharacterFireballAttackConfig.playAttackAudio();
   }
 
   void playToolAnimation() {}

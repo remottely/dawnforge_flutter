@@ -1,15 +1,13 @@
 import 'package:darkness_dungeon/darkness_dungeon.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/enemy_sprite_animations.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
 
 class GameplayDialogConstants {
-  static Say playerLeftDialog(String phraseKey) {
+  static Say knightLeftDialog(String phraseKey) {
     return Say(
       text: [
         TextSpan(text: GameplayStringsLocation.instance.getString(phraseKey)),
       ],
       person: DFAnimatedSpriteWidget(
-        animation: PlayerSpriteAnimations.knightPlayerIdleRight6(),
+        animation: UISpriteAnimations.knightPlayerIdleRight6(),
       ),
       personSayDirection: PersonSayDirection.LEFT,
     );
@@ -21,7 +19,7 @@ class GameplayDialogConstants {
         TextSpan(text: GameplayStringsLocation.instance.getString(phraseKey)),
       ],
       person: DFAnimatedSpriteWidget(
-        animation: NpcSpriteAnimations.wizardIdleLeft(),
+        animation: UISpriteAnimations.wizardIdleLeft(),
       ),
       personSayDirection: PersonSayDirection.RIGHT,
     );
@@ -33,7 +31,7 @@ class GameplayDialogConstants {
         TextSpan(text: GameplayStringsLocation.instance.getString(phraseKey)),
       ],
       person: DFAnimatedSpriteWidget(
-        animation: NpcSpriteAnimations.kidIdleLeft(),
+        animation: UISpriteAnimations.kidIdleLeft(),
       ),
       personSayDirection: PersonSayDirection.RIGHT,
     );
@@ -45,7 +43,7 @@ class GameplayDialogConstants {
         TextSpan(text: GameplayStringsLocation.instance.getString(phraseKey)),
       ],
       person: DFAnimatedSpriteWidget(
-        animation: EnemySpriteAnimations.dungeonBossEnemyIdleRight4(),
+        animation: UISpriteAnimations.dungeonBossEnemyIdleRight4(),
       ),
       personSayDirection: PersonSayDirection.LEFT,
     );
@@ -59,7 +57,7 @@ class GameplayDialogConstants {
         ),
       ],
       person: DFAnimatedSpriteWidget(
-        animation: EnemySpriteAnimations.dungeonBossEnemyIdleLeft4(),
+        animation: UISpriteAnimations.dungeonBossEnemyIdleLeft4(),
       ),
       personSayDirection: PersonSayDirection.RIGHT,
     );

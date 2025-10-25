@@ -1,9 +1,10 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/player_sprite_animations.dart';
+import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_sprite_constants.dart';
 
 abstract class KnightPlayerConfig {
   static final Vector2 spriteSize = GameplayConstants.kTileSizeStandard;
@@ -39,5 +40,28 @@ abstract class KnightPlayerConfig {
       CharacterParticlesAnimations.knightLightingConfig(width);
 
   static final SimpleDirectionAnimation buildDirectionalAnimation =
-      PlayerSpriteAnimations.knightPlayerDirectional;
+      SimpleDirectionAnimation(
+        idleLeft: SpriteAnimation.load(
+          'gameplay/characters/player/knight/knight_player_idle_left_6.png',
+          GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
+            amount: GameplaySpriteConstants.kPlayerIdleFrames,
+            textureSize: GameplaySpriteConstants.playerTextureSize,
+          ),
+        ),
+        idleRight: UISpriteAnimations.knightPlayerIdleRight6(),
+        runLeft: SpriteAnimation.load(
+          'gameplay/characters/player/knight/knight_player_run_left_6.png',
+          GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
+            amount: GameplaySpriteConstants.kRunFrames,
+            textureSize: GameplaySpriteConstants.playerTextureSize,
+          ),
+        ),
+        runRight: SpriteAnimation.load(
+          'gameplay/characters/player/knight/knight_player_run_right_6.png',
+          GameplaySpriteConstants.defaultStepTimeSpriteAnimationData(
+            amount: GameplaySpriteConstants.kRunFrames,
+            textureSize: GameplaySpriteConstants.playerTextureSize,
+          ),
+        ),
+      );
 }

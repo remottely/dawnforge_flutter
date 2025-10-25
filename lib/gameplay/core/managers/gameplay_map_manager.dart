@@ -6,7 +6,7 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_view.dart';
-import 'package:darkness_dungeon/gameplay/core/data/gameplay_map_data.dart';
+import 'package:darkness_dungeon/gameplay/core/data/gameplay_map_config.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_map_constants.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/barrel_decoration.dart';
@@ -39,14 +39,14 @@ class GameplayMapManager {
   static final Map<String, MapItemBuilder> maps = (() {
     final mapBuilders = <String, MapItemBuilder>{};
 
-    for (final config in GameplayMapData.allMaps) {
+    for (final config in GameplayMapConfig.allMaps) {
       mapBuilders[config.id.name] = (context, args) => _createMapItem(config);
     }
 
     return mapBuilders;
   })();
 
-  static MapItem _createMapItem(GameplayMapData config) {
+  static MapItem _createMapItem(GameplayMapConfig config) {
     return MapItem(
       id: config.id.name,
       properties: config.properties,

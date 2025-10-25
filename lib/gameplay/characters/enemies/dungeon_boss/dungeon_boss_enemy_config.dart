@@ -24,7 +24,7 @@ abstract class DungeonBossEnemyConfig {
     return [
       GameplayDialogConstants.kidRightDialog('talk_kid_1'),
       GameplayDialogConstants.bossLeftDialog('talk_boss_1'),
-      GameplayDialogConstants.playerLeftDialog('talk_player_3'),
+      GameplayDialogConstants.knightLeftDialog('talk_player_3'),
       GameplayDialogConstants.bossRightDialog('talk_boss_2'),
     ];
   }

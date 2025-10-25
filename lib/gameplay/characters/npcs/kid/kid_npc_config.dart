@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/npcs/npc_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_dialog_constants.dart';
+import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 
 abstract class KidNpcConfig {
   static const double sizeMultiplierX = 8.0;
@@ -9,14 +9,14 @@ abstract class KidNpcConfig {
 
   static SimpleDirectionAnimation get buildDirectionalAnimation =>
       SimpleDirectionAnimation(
-        idleRight: NpcSpriteAnimations.kidIdleLeft(),
-        runRight: NpcSpriteAnimations.kidIdleLeft(),
+        idleRight: UISpriteAnimations.kidIdleLeft(),
+        runRight: UISpriteAnimations.kidIdleLeft(),
       );
 
   static List<Say> createDialogueSequence() {
     return [
       GameplayDialogConstants.kidRightDialog('talk_kid_2'),
-      GameplayDialogConstants.playerLeftDialog('talk_player_4'),
+      GameplayDialogConstants.knightLeftDialog('talk_player_4'),
     ];
   }
 }

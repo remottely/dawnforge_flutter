@@ -3,7 +3,7 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/d
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/enemy_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_effect_sprite_animations.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_data.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
@@ -91,15 +91,15 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
       position: size,
     );
     simpleAttackRange(
-      animation: CharacterFireballAttackData.loadAttackAnimation(),
-      animationDestroy: CharacterFireballAttackData.loadExplosionAnimation(),
-      size: CharacterFireballAttackData.spriteSize,
+      animation: CharacterFireballAttackConfig.loadAttackAnimation(),
+      animationDestroy: CharacterFireballAttackConfig.loadExplosionAnimation(),
+      size: CharacterFireballAttackConfig.spriteSize,
       damage: _attackDamage,
-      speed: speed * CharacterFireballAttackData.kSpeedMultiplier,
-      execute: CharacterFireballAttackData.playAttackAudio,
-      onDestroy: CharacterFireballAttackData.playExplosionAudio,
-      collision: CharacterFireballAttackData.hitbox,
-      lightingConfig: CharacterFireballAttackData.lightingConfig,
+      speed: speed * CharacterFireballAttackConfig.kSpeedMultiplier,
+      execute: CharacterFireballAttackConfig.playAttackAudio,
+      onDestroy: CharacterFireballAttackConfig.playExplosionAudio,
+      collision: CharacterFireballAttackConfig.hitbox,
+      lightingConfig: CharacterFireballAttackConfig.lightingConfig,
     );
   }
 
