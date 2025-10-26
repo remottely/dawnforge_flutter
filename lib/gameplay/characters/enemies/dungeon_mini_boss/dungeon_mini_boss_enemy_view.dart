@@ -1,7 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/enemy_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_basic_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_effect_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
@@ -18,9 +17,9 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
 
   DungeonMiniBossEnemyView(Vector2 position)
     : super(
-        animation: EnemySpriteAnimations.dungeonMiniBossEnemyDirectional,
+        animation: DungeonMiniBossEnemyConfig.buildDirectionalAnimation,
         position: position,
-        size: DungeonMiniBossEnemyConfig.spriteSize,
+        size: DungeonMiniBossEnemyConfig.componentSize,
         speed: DungeonMiniBossEnemyConfig.speed,
         life: DungeonMiniBossEnemyConfig.life,
       );
@@ -82,7 +81,7 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
       size: Vector2.all(DungeonMiniBossEnemyConfig.attackEffectSize),
       damage: _attackDamage / DungeonMiniBossEnemyConfig.meleeDamageReduction,
       interval: DungeonMiniBossEnemyConfig.meleeAttackInterval,
-      animationRight: CharacterBasicAttackConfig.loadEnemyAttackAnimation(),
+      animationRight: CharacterBasicAttackConfig.loadEnemyExecutionAnimation(),
     );
   }
 
@@ -92,13 +91,13 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
       position: size,
     );
     simpleAttackRange(
-      animation: CharacterFireballAttackConfig.loadAttackAnimation(),
-      animationDestroy: CharacterFireballAttackConfig.loadExplosionAnimation(),
-      size: CharacterFireballAttackConfig.spriteSize,
+      animation: CharacterFireballAttackConfig.loadExecutionAnimation(),
+      animationDestroy: CharacterFireballAttackConfig.loadDestroyAnimation(),
+      size: CharacterFireballAttackConfig.componentSize,
       damage: _attackDamage,
       speed: speed * CharacterFireballAttackConfig.kSpeedMultiplier,
-      execute: CharacterFireballAttackConfig.playAttackAudio,
-      onDestroy: CharacterFireballAttackConfig.playExplosionAudio,
+      execute: CharacterFireballAttackConfig.playExecutionAudio,
+      onDestroy: CharacterFireballAttackConfig.playDestroyAudio,
       collision: CharacterFireballAttackConfig.hitbox,
       lightingConfig: CharacterFireballAttackConfig.lightingConfig,
     );

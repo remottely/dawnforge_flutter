@@ -9,7 +9,7 @@ class ImpEnemyView extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
     : super(
         animation: ImpEnemyConfig.buildDirectionalAnimation,
         position: position,
-        size: ImpEnemyConfig.spriteSize,
+        size: ImpEnemyConfig.componentSize,
         speed: ImpEnemyConfig.speed,
         life: ImpEnemyConfig.life,
       );

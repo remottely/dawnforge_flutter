@@ -1,6 +1,4 @@
 class TypographyConstants {
-  TypographyConstants._();
-
   static const double kDisplayFontSize = 30.0;
 
   static const double kHeadlineFontSize = 24.0;

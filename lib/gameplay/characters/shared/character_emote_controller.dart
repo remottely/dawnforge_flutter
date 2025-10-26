@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_animation_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 
 class CharacterEmoteController {
   static const String kExclamationEmoteAssetPath =
@@ -20,7 +20,7 @@ class CharacterEmoteController {
       AnimatedFollowerGameObject(
         animation: SpriteAnimation.load(
           assetPath,
-          GameplayAnimationConstants.defaultStepTimeSpriteAnimationData(
+          GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
             amount: 8,
             textureSize: GameplayConstants.kTileSizeExtraLarge,
           ),

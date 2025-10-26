@@ -7,13 +7,15 @@ import 'package:darkness_dungeon/shared/dd_game_decoration.dart';
 abstract class _SpikeTrapInteractableConfig {
   static const double kDamageAmount = GameplayConstants.kPropertyAmountMedium;
   static const int kPriority = GameplayConstants.kPriority1;
-  static final Vector2 _spriteSize = GameplayConstants.kTileSizeStandard;
+
+  static final Vector2 _textureSize = GameplayConstants.kTileSizeStandard;
+  static final Vector2 _componentSize = _textureSize;
 
   static Future<SpriteAnimation> _loadAnimation() => SpriteAnimation.load(
     'gameplay/environment/interactables/spike_trap_interactable_10.png',
-    GameplayAnimationConstants.defaultStepTimeSpriteAnimationData(
+    GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
       amount: 10,
-      textureSize: GameplayConstants.kTileSizeStandard,
+      textureSize: _textureSize,
     ),
   );
 }
@@ -28,7 +30,7 @@ class SpikeTrapInteractableView extends DDSensorPlayerDecoration {
   }) : _damageAmount = damageAmount,
        super.withAnimation(
          animation: _SpikeTrapInteractableConfig._loadAnimation(),
-         size: _SpikeTrapInteractableConfig._spriteSize,
+         size: _SpikeTrapInteractableConfig._componentSize,
        );
 
   @override

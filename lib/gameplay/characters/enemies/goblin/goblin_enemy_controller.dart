@@ -28,7 +28,7 @@ class GoblinEnemyController {
       size: Vector2.all(GoblinEnemyConfig.attackEffectSize),
       damage: GoblinEnemyConfig.attackDamage,
       interval: GoblinEnemyConfig.attackInterval,
-      animationRight: CharacterBasicAttackConfig.loadEnemyAttackAnimation(),
+      animationRight: CharacterBasicAttackConfig.loadEnemyExecutionAnimation(),
       execute: () {
         GameplayAudioManager.instance.playAttackEnemyMelee();
       },

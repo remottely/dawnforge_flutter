@@ -10,10 +10,10 @@ import 'package:darkness_dungeon/gameplay/core/config/gameplay_map_config.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_map_constants.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/barrel_decoration.dart';
-import 'package:darkness_dungeon/gameplay/environment/interactables/life_potion_interactable.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/torch_decoration.dart';
 import 'package:darkness_dungeon/gameplay/environment/interactables/door_interactable.dart';
 import 'package:darkness_dungeon/gameplay/environment/interactables/door_key_interactable.dart';
+import 'package:darkness_dungeon/gameplay/environment/interactables/life_potion_interactable.dart';
 import 'package:darkness_dungeon/gameplay/environment/interactables/spike_trap_interactable.dart';
 import 'package:darkness_dungeon/gameplay/environment/sensors/map_transition_sensor.dart';
 import 'package:darkness_dungeon/gameplay/terrain/farmable/farm_tile.dart';
@@ -35,8 +35,6 @@ class GameplayMapManager {
   static const String kGoblinEntityType = 'goblin';
   static const String kImpEntityType = 'imp';
   static const String kFarmTileEntityType = 'farm_tile';
-
-  GameplayMapManager._();
 
   static final Map<String, MapItemBuilder> maps = (() {
     final mapBuilders = <String, MapItemBuilder>{};

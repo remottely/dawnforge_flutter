@@ -98,7 +98,7 @@ class AppEnvironment {
     return const Duration(seconds: 10);
   })();
 
-  static final String defaultSpriteSize = byEnvironment(
+  static final String standardSpriteSize = byEnvironment(
     development: 'large',
     production: 'tiny',
   );

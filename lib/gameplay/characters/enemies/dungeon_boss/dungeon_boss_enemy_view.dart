@@ -4,7 +4,6 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_view.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/enemy_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_basic_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_effect_sprite_animations.dart';
@@ -24,9 +23,9 @@ class DungeonBossEnemyView extends SimpleEnemy
 
   DungeonBossEnemyView(Vector2 position)
     : super(
-        animation: EnemySpriteAnimations.dungeonBossEnemyDirectional,
+        animation: DungeonBossEnemyConfig.buildDirectionalAnimation,
         position: position,
-        size: DungeonBossEnemyConfig.spriteSize,
+        size: DungeonBossEnemyConfig.componentSize,
         speed: DungeonBossEnemyConfig.speed,
         life: DungeonBossEnemyConfig.life,
       );
@@ -104,7 +103,7 @@ class DungeonBossEnemyView extends SimpleEnemy
       size: Vector2.all(DungeonBossEnemyConfig.attackEffectSize),
       damage: attackDamage,
       interval: 1500,
-      animationRight: CharacterBasicAttackConfig.loadEnemyAttackAnimation(),
+      animationRight: CharacterBasicAttackConfig.loadEnemyExecutionAnimation(),
       execute: () {
         GameplayAudioManager.instance.playAttackEnemyMelee();
       },

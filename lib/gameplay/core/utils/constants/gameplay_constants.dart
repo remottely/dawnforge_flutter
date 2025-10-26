@@ -11,7 +11,7 @@ class GameplayConstants {
   }) {
     return getZoomFromMaxVisibleTile(
       context,
-      GameplayConstants.kTileDimensionStandard,
+      kTileDimensionStandard,
       maxVisibleTile,
     );
   }

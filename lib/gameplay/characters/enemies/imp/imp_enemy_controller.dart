@@ -28,7 +28,7 @@ class ImpEnemyController {
       size: Vector2.all(ImpEnemyConfig.attackEffectSize),
       damage: ImpEnemyConfig.attackDamage,
       interval: ImpEnemyConfig.attackInterval,
-      animationRight: CharacterBasicAttackConfig.loadEnemyAttackAnimation(),
+      animationRight: CharacterBasicAttackConfig.loadEnemyExecutionAnimation(),
       execute: () {
         GameplayAudioManager.instance.playAttackEnemyMelee();
       },

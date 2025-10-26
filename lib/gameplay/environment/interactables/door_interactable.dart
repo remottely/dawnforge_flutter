@@ -20,7 +20,7 @@ abstract class _DoorInteractableConfig {
   static Future<SpriteAnimation> _loadOpeningAnimation() =>
       SpriteAnimation.load(
         'gameplay/environment/interactables/door_interactable_opening_14.png',
-        GameplayAnimationConstants.defaultStepTimeSpriteAnimationData(
+        GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
           amount: 14,
           textureSize: GameplayConstants.kTileSizeExtraLarge,
         ),

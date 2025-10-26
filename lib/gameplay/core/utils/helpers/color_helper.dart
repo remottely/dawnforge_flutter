@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 class ColorHelper {
-  ColorHelper._();
-
   static Color? fromHex(String? hex) {
     if (hex == null || hex.isEmpty) {
       return null;

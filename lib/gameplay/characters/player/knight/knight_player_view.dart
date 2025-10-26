@@ -18,7 +18,7 @@ class KnightPlayerView extends SimplePlayer
   KnightPlayerView(Vector2 position)
     : super(
         animation: KnightPlayerConfig.buildDirectionalAnimation,
-        size: KnightPlayerConfig.spriteSize,
+        size: KnightPlayerConfig.componentSize,
         position: position,
         life: KnightPlayerConfig.kStandardLife,
         speed: KnightPlayerConfig.kStandardSpeed,
@@ -68,8 +68,8 @@ class KnightPlayerView extends SimplePlayer
     addParticle(CharacterParticlesAnimations.swordParticles(), position: size);
     simpleAttackMelee(
       damage: damage,
-      animationRight: CharacterBasicAttackConfig.loadPlayerAttackAnimation(),
-      size: KnightPlayerConfig.spriteSize,
+      animationRight: CharacterBasicAttackConfig.loadPlayerExecutionAnimation(),
+      size: KnightPlayerConfig.componentSize,
     );
   }
 
@@ -79,16 +79,16 @@ class KnightPlayerView extends SimplePlayer
       position: size,
     );
     simpleAttackRange(
-      animationRight: CharacterFireballAttackConfig.loadAttackAnimation(),
-      animationDestroy: CharacterFireballAttackConfig.loadExplosionAnimation(),
-      size: CharacterFireballAttackConfig.spriteSize,
+      animationRight: CharacterFireballAttackConfig.loadExecutionAnimation(),
+      animationDestroy: CharacterFireballAttackConfig.loadDestroyAnimation(),
+      size: CharacterFireballAttackConfig.componentSize,
       damage: damage,
       speed: speed * CharacterFireballAttackConfig.kSpeedMultiplier,
-      onDestroy: CharacterFireballAttackConfig.playExplosionAudio,
+      onDestroy: CharacterFireballAttackConfig.playDestroyAudio,
       collision: CharacterFireballAttackConfig.hitbox,
       lightingConfig: CharacterFireballAttackConfig.lightingConfig,
     );
-    CharacterFireballAttackConfig.playAttackAudio();
+    CharacterFireballAttackConfig.playExecutionAudio();
   }
 
   void playToolAnimation() {}
@@ -116,7 +116,7 @@ class KnightPlayerView extends SimplePlayer
       DDGameDecoration.withSprite(
         sprite: KnightPlayerConfig.loadCryptSprite(),
         position: Vector2(position.x, position.y),
-        size: KnightPlayerConfig.cryptSpriteSize,
+        size: KnightPlayerConfig.cryptComponentSize,
       ),
     );
   }

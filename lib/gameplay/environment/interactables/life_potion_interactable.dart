@@ -8,7 +8,7 @@ abstract class LifePotionConfig {
       'gameplay/environment/interactables/life_potion_interactable_1.png';
   static final Vector2 _spriteSize = GameplayConstants.kTileSizeStandard;
   static const Duration _healingDuration = Duration(seconds: 1);
-  static const double _defaultHealAmount = 50.0;
+  static const double _standardHealAmount = 50.0;
   static const double healAmount = GameplayConstants.kPropertyAmountSmall;
 
   static Future<Sprite> _loadSprite() => Sprite.load(_spritePath);
@@ -19,7 +19,7 @@ class LifePotionDecorationView extends DDSensorPlayerDecoration {
   bool _hasBeenConsumed = false;
 
   LifePotionDecorationView({required Vector2 position, double? healAmount})
-    : _healAmount = healAmount ?? LifePotionConfig._defaultHealAmount,
+    : _healAmount = healAmount ?? LifePotionConfig._standardHealAmount,
       super.withSprite(
         sprite: LifePotionConfig._loadSprite(),
         position: position,

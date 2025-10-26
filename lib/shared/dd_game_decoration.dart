@@ -32,7 +32,7 @@ abstract class DDPushableDecoration extends DDGameDecoration
     super.lightingConfig,
     super.renderAboveComponents,
   }) : super.withSprite() {
-    addForce(ResistanceForce2D(id: 'attr', value: Vector2.all(10)));
+    addForce(ResistanceForce2D(id: 'attr', value: Vector2.all(100)));
   }
 }
 

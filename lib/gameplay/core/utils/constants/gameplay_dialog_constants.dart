@@ -18,7 +18,9 @@ class GameplayDialogConstants {
       text: [
         TextSpan(text: GameplayStringsLocation.instance.getString(phraseKey)),
       ],
-      person: DDAnimationWidget(animation: UISpriteAnimations.wizardIdleLeft()),
+      person: DDAnimationWidget(
+        animation: UISpriteAnimations.wizardNpcIdleLeft4(),
+      ),
       personSayDirection: PersonSayDirection.RIGHT,
     );
   }
@@ -28,7 +30,9 @@ class GameplayDialogConstants {
       text: [
         TextSpan(text: GameplayStringsLocation.instance.getString(phraseKey)),
       ],
-      person: DDAnimationWidget(animation: UISpriteAnimations.kidIdleLeft()),
+      person: DDAnimationWidget(
+        animation: UISpriteAnimations.kidNpcIdleLeft4(),
+      ),
       personSayDirection: PersonSayDirection.RIGHT,
     );
   }

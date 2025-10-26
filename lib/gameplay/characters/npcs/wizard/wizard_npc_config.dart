@@ -11,10 +11,12 @@ abstract class WizardNpcConfig {
 
   static const double kVisionRadius = GameplayConstants.kVisionRadiusSmall;
 
+  static final Vector2 npcWizardTextureSize = Vector2(16, 22);
+
   static final SimpleDirectionAnimation buildDirectionalAnimation =
       SimpleDirectionAnimation(
-        idleRight: UISpriteAnimations.wizardIdleLeft(),
-        runRight: UISpriteAnimations.wizardIdleLeft(),
+        idleRight: UISpriteAnimations.wizardNpcIdleLeft4(),
+        runRight: UISpriteAnimations.wizardNpcIdleLeft4(),
       );
 
   static List<Say> createDialogueSequence() => [

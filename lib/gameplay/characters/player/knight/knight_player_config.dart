@@ -2,13 +2,11 @@ import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_animation_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 
 abstract class KnightPlayerConfig {
-  static final Vector2 spriteSize = GameplayConstants.kTileSizeStandard;
-
   static const double kStandardLife = 200.0;
 
   static const double kStandardSpeed =
@@ -43,36 +41,37 @@ abstract class KnightPlayerConfig {
 
   static const String kCryptSpritePath =
       'gameplay/characters/player/player_crypt_1.png';
-
-  static final Vector2 cryptSpriteSize = Vector2.all(16);
-
+  static final Vector2 cryptComponentSize = GameplayConstants.kTileSizeStandard;
   static Future<Sprite> loadCryptSprite() => Sprite.load(kCryptSpritePath);
 
   static LightingConfig buildLightingConfig(double width) =>
       CharacterParticlesAnimations.knightLightingConfig(width);
 
+  static final Vector2 textureSize = GameplayConstants.kTileSizeStandard;
+  static final Vector2 componentSize = textureSize;
+
   static final SimpleDirectionAnimation buildDirectionalAnimation =
       SimpleDirectionAnimation(
         idleLeft: SpriteAnimation.load(
           'gameplay/characters/player/knight/knight_player_idle_left_6.png',
-          GameplayAnimationConstants.defaultStepTimeSpriteAnimationData(
-            amount: GameplayAnimationConstants.kPlayerIdleFrames,
-            textureSize: GameplayAnimationConstants.playerTextureSize,
+          GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
+            amount: 6,
+            textureSize: textureSize,
           ),
         ),
         idleRight: UISpriteAnimations.knightPlayerIdleRight6(),
         runLeft: SpriteAnimation.load(
           'gameplay/characters/player/knight/knight_player_run_left_6.png',
-          GameplayAnimationConstants.defaultStepTimeSpriteAnimationData(
-            amount: GameplayAnimationConstants.kRunFrames,
-            textureSize: GameplayAnimationConstants.playerTextureSize,
+          GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
+            amount: 6,
+            textureSize: textureSize,
           ),
         ),
         runRight: SpriteAnimation.load(
           'gameplay/characters/player/knight/knight_player_run_right_6.png',
-          GameplayAnimationConstants.defaultStepTimeSpriteAnimationData(
-            amount: GameplayAnimationConstants.kRunFrames,
-            textureSize: GameplayAnimationConstants.playerTextureSize,
+          GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
+            amount: 6,
+            textureSize: textureSize,
           ),
         ),
       );

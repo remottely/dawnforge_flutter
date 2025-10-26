@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 class GameplayUIConstants {
-  GameplayUIConstants._();
-
   static const double kHUDPadding = 20.0;
 
   static const double kBarWidth = 90.0;

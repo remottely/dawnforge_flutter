@@ -3,14 +3,13 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_dialog_c
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 
 abstract class KidNpcConfig {
-  static const double sizeMultiplierX = 8.0;
-  static const double sizeMultiplierY = 11.0;
-  static final Vector2 spriteSize = Vector2(sizeMultiplierX, sizeMultiplierY);
+  static final Vector2 textureSize = Vector2(16, 22);
+  static final Vector2 componentSize = Vector2(8, 11);
 
   static SimpleDirectionAnimation get buildDirectionalAnimation =>
       SimpleDirectionAnimation(
-        idleRight: UISpriteAnimations.kidIdleLeft(),
-        runRight: UISpriteAnimations.kidIdleLeft(),
+        idleRight: UISpriteAnimations.kidNpcIdleLeft4(),
+        runRight: UISpriteAnimations.kidNpcIdleLeft4(),
       );
 
   static List<Say> createDialogueSequence() {

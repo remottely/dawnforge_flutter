@@ -10,7 +10,7 @@ class GoblinEnemyView extends SimpleEnemy
     : super(
         animation: GoblinEnemyConfig.buildDirectionalAnimation,
         position: position,
-        size: GoblinEnemyConfig.spriteSize,
+        size: GoblinEnemyConfig.componentSize,
         speed: GoblinEnemyConfig.speed,
         life: GoblinEnemyConfig.life,
       );

@@ -1,20 +1,16 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_animation_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:flutter/material.dart';
 
 class CharacterFireballAttackConfig {
-  static final Vector2 spriteSize = Vector2.all(
-    GameplayConstants.kTileDimensionStandard * 0.65,
-  );
-
   static const double kSpeedMultiplier = 2.5;
 
-  static void playAttackAudio() =>
+  static void playExecutionAudio() =>
       GameplayAudioManager.instance.playFireballAttack();
 
-  static void playExplosionAudio() =>
+  static void playDestroyAudio() =>
       GameplayAudioManager.instance.playFireballExplosion();
 
   static RectangleHitbox get hitbox => RectangleHitbox(
@@ -31,20 +27,24 @@ class CharacterFireballAttackConfig {
     color: Colors.deepOrangeAccent.withValues(alpha: 0.4),
   );
 
-  static Future<SpriteAnimation> loadAttackAnimation() => SpriteAnimation.load(
-    'gameplay/characters/shared/character_fireball_attack_right_3.png',
-    GameplayAnimationConstants.defaultStepTimeSpriteAnimationData(
-      amount: GameplayAnimationConstants.kFireballFrames,
-      textureSize: GameplayAnimationConstants.fireballTextureSize,
-    ),
+  static final Vector2 componentSize = Vector2.all(
+    GameplayConstants.kTileDimensionStandard * 0.65,
   );
 
-  static Future<SpriteAnimation> loadExplosionAnimation() =>
+  static Future<SpriteAnimation> loadExecutionAnimation() =>
       SpriteAnimation.load(
-        'gameplay/characters/shared/character_fireball_explosion_right_6.png',
-        GameplayAnimationConstants.defaultStepTimeSpriteAnimationData(
-          amount: GameplayAnimationConstants.kFireballExplosionFrames,
-          textureSize: GameplayAnimationConstants.explosionTextureSize,
+        'gameplay/characters/shared/character_fireball_attack_right_3.png',
+        GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
+          amount: 3,
+          textureSize: Vector2(23, 23),
         ),
       );
+
+  static Future<SpriteAnimation> loadDestroyAnimation() => SpriteAnimation.load(
+    'gameplay/characters/shared/character_fireball_explosion_right_6.png',
+    GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
+      amount: 6,
+      textureSize: GameplayConstants.kTileSizeExtraLarge,
+    ),
+  );
 }

@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_animation_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/shared/dd_game_decoration.dart';
 import 'package:flutter/material.dart';
 
@@ -9,13 +9,15 @@ abstract class _TorchDecorationConfig {
   static const double _kBlurBorderMultiplier = 1.0;
   static const double _kPulseVariation = 0.1;
   static const double _kLightOpacity = 0.2;
-  static final Vector2 _spriteSize = GameplayConstants.kTileSizeStandard;
+
+  static final Vector2 _textureSize = GameplayConstants.kTileSizeStandard;
+  static final Vector2 _componentSize = _textureSize;
 
   static Future<SpriteAnimation> _loadAnimation() => SpriteAnimation.load(
     'gameplay/environment/decorations/torch_decoration_6.png',
-    GameplayAnimationConstants.defaultStepTimeSpriteAnimationData(
+    GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
       amount: 6,
-      textureSize: GameplayConstants.kTileSizeStandard,
+      textureSize: _textureSize,
     ),
   );
 
@@ -34,7 +36,7 @@ class TorchDecorationView extends DDGameDecoration {
     : _isExtinguished = false,
       super.withAnimation(
         animation: _TorchDecorationConfig._loadAnimation(),
-        size: _TorchDecorationConfig._spriteSize,
+        size: _TorchDecorationConfig._componentSize,
       ) {
     _setupLighting();
   }
@@ -43,7 +45,7 @@ class TorchDecorationView extends DDGameDecoration {
     : _isExtinguished = true,
       super.withAnimation(
         animation: _TorchDecorationConfig._loadAnimation(),
-        size: _TorchDecorationConfig._spriteSize,
+        size: _TorchDecorationConfig._componentSize,
       ) {
     _setupLighting();
   }
