@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
-import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
+import 'package:darkness_dungeon/shared/dd_game_decoration.dart';
 
 abstract class LifePotionConfig {
   static const String _spritePath =
@@ -14,7 +14,7 @@ abstract class LifePotionConfig {
   static Future<Sprite> _loadSprite() => Sprite.load(_spritePath);
 }
 
-class LifePotionDecorationView extends DFSensorPlayerDecoration {
+class LifePotionDecorationView extends DDSensorPlayerDecoration {
   final double _healAmount;
   bool _hasBeenConsumed = false;
 

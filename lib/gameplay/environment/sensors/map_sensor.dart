@@ -2,7 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_map_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/app_logger.dart';
-import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
+import 'package:darkness_dungeon/shared/dd_game_decoration.dart';
 
 abstract class _MapSensorConfig {
   static const String playerEnteredEvent = 'Player entered sensor';
@@ -18,7 +18,7 @@ abstract class _MapSensorConfig {
   static final String sensorLogPrefix = GameplayMapConstants.kSensorLogPrefix;
 }
 
-class MapSensorView extends DFSensorPlayerDecoration {
+class MapSensorView extends DDSensorPlayerDecoration {
   final String id;
   final String targetMap;
   final Vector2 playerPosition;

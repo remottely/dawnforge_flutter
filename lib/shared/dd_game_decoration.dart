@@ -1,10 +1,10 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
 
-class DFGameDecoration extends GameDecoration {
-  DFGameDecoration({required super.position, required super.size}) : super();
+class DDGameDecoration extends GameDecoration {
+  DDGameDecoration({required super.position, required super.size}) : super();
 
-  DFGameDecoration.withSprite({
+  DDGameDecoration.withSprite({
     required super.sprite,
     required super.position,
     required super.size,
@@ -14,16 +14,16 @@ class DFGameDecoration extends GameDecoration {
     super.renderAboveComponents,
   }) : super.withSprite();
 
-  DFGameDecoration.withAnimation({
+  DDGameDecoration.withAnimation({
     required super.animation,
     required super.position,
     required super.size,
   }) : super.withAnimation();
 }
 
-abstract class DFPushableDecoration extends DFGameDecoration
+abstract class DDPushableDecoration extends DDGameDecoration
     with Movement, BlockMovementCollision, HandleForces, Pushable {
-  DFPushableDecoration.withSprite({
+  DDPushableDecoration.withSprite({
     required super.sprite,
     required super.position,
     required super.size,
@@ -36,18 +36,18 @@ abstract class DFPushableDecoration extends DFGameDecoration
   }
 }
 
-abstract class DFSensorPlayerDecoration extends DFGameDecoration
+abstract class DDSensorPlayerDecoration extends DDGameDecoration
     with Sensor<KnightPlayerView> {
-  DFSensorPlayerDecoration({required super.position, required super.size})
+  DDSensorPlayerDecoration({required super.position, required super.size})
     : super();
 
-  DFSensorPlayerDecoration.withSprite({
+  DDSensorPlayerDecoration.withSprite({
     required super.sprite,
     required super.position,
     required super.size,
   }) : super.withSprite();
 
-  DFSensorPlayerDecoration.withAnimation({
+  DDSensorPlayerDecoration.withAnimation({
     required super.animation,
     required super.position,
     required super.size,

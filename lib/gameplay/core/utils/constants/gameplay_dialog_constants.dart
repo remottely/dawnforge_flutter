@@ -6,7 +6,7 @@ class GameplayDialogConstants {
       text: [
         TextSpan(text: GameplayStringsLocation.instance.getString(phraseKey)),
       ],
-      person: DFAnimatedSpriteWidget(
+      person: DDAnimationWidget(
         animation: UISpriteAnimations.knightPlayerIdleRight6(),
       ),
       personSayDirection: PersonSayDirection.LEFT,
@@ -18,9 +18,7 @@ class GameplayDialogConstants {
       text: [
         TextSpan(text: GameplayStringsLocation.instance.getString(phraseKey)),
       ],
-      person: DFAnimatedSpriteWidget(
-        animation: UISpriteAnimations.wizardIdleLeft(),
-      ),
+      person: DDAnimationWidget(animation: UISpriteAnimations.wizardIdleLeft()),
       personSayDirection: PersonSayDirection.RIGHT,
     );
   }
@@ -30,9 +28,7 @@ class GameplayDialogConstants {
       text: [
         TextSpan(text: GameplayStringsLocation.instance.getString(phraseKey)),
       ],
-      person: DFAnimatedSpriteWidget(
-        animation: UISpriteAnimations.kidIdleLeft(),
-      ),
+      person: DDAnimationWidget(animation: UISpriteAnimations.kidIdleLeft()),
       personSayDirection: PersonSayDirection.RIGHT,
     );
   }
@@ -42,7 +38,7 @@ class GameplayDialogConstants {
       text: [
         TextSpan(text: GameplayStringsLocation.instance.getString(phraseKey)),
       ],
-      person: DFAnimatedSpriteWidget(
+      person: DDAnimationWidget(
         animation: UISpriteAnimations.dungeonBossEnemyIdleRight4(),
       ),
       personSayDirection: PersonSayDirection.LEFT,
@@ -56,7 +52,7 @@ class GameplayDialogConstants {
           text: GameplayStringsLocation.instance.getString('talk_boss_2'),
         ),
       ],
-      person: DFAnimatedSpriteWidget(
+      person: DDAnimationWidget(
         animation: UISpriteAnimations.dungeonBossEnemyIdleLeft4(),
       ),
       personSayDirection: PersonSayDirection.RIGHT,

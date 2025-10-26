@@ -1,19 +1,24 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
-import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
-import 'package:darkness_dungeon/gameplay/environment/decorations/decoration_sprite_animations.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_animation_constants.dart';
+import 'package:darkness_dungeon/shared/dd_game_decoration.dart';
 
 abstract class _SpikeTrapDecorationConfig {
   static const double kDamageAmount = GameplayConstants.kPropertyAmountMedium;
   static const int kPriority = GameplayConstants.kPriority1;
   static final Vector2 _spriteSize = GameplayConstants.kTileSizeStandard;
 
-  static Future<SpriteAnimation> _loadAnimation() =>
-      DecorationSpriteAnimations.spikeTrapDecoration10();
+  static Future<SpriteAnimation> _loadAnimation() => SpriteAnimation.load(
+    'gameplay/environment/decorations/spike_trap_decoration_10.png',
+    GameplayAnimationConstants.defaultStepTimeSpriteAnimationData(
+      amount: 10,
+      textureSize: GameplayConstants.kTileSizeStandard,
+    ),
+  );
 }
 
-class SpikeTrapDecorationView extends DFSensorPlayerDecoration {
+class SpikeTrapDecorationView extends DDSensorPlayerDecoration {
   final double _damageAmount;
   KnightPlayerView? _contactedPlayer;
 

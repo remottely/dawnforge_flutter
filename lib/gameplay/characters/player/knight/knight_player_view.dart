@@ -7,7 +7,7 @@ import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_cont
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
+import 'package:darkness_dungeon/shared/dd_game_decoration.dart';
 
 class KnightPlayerView extends SimplePlayer
     with Lighting, BlockMovementCollision {
@@ -68,7 +68,7 @@ class KnightPlayerView extends SimplePlayer
     addParticle(CharacterParticlesAnimations.swordParticles(), position: size);
     simpleAttackMelee(
       damage: damage,
-      animationRight: CharacterBasicAttackConfig.playerBasicAttackRight3(),
+      animationRight: CharacterBasicAttackConfig.loadPlayerAttackAnimation(),
       size: KnightPlayerConfig.spriteSize,
     );
   }
@@ -113,7 +113,7 @@ class KnightPlayerView extends SimplePlayer
 
   void _showDeathEffect() {
     gameRef.add(
-      DFGameDecoration.withSprite(
+      DDGameDecoration.withSprite(
         sprite: KnightPlayerConfig.loadCryptSprite(),
         position: Vector2(position.x, position.y),
         size: KnightPlayerConfig.cryptSpriteSize,

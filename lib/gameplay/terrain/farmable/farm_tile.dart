@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
-import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
+import 'package:darkness_dungeon/shared/dd_game_decoration.dart';
 
 import 'crop_types.dart';
 
@@ -20,7 +20,7 @@ abstract class _FarmTileConfig {
   static Future<Sprite> _loadSprite(String path) => Sprite.load(path);
 }
 
-class FarmTileView extends DFGameDecoration {
+class FarmTileView extends DDGameDecoration {
   TileState state = TileState.grass;
   CropType? plantedCrop;
   int daysGrowing = 0;

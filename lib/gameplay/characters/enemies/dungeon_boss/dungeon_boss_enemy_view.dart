@@ -6,6 +6,7 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeo
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/enemy_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_basic_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_effect_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
@@ -103,7 +104,7 @@ class DungeonBossEnemyView extends SimpleEnemy
       size: Vector2.all(DungeonBossEnemyConfig.attackEffectSize),
       damage: attackDamage,
       interval: 1500,
-      animationRight: EnemySpriteAnimations.enemyBasicAttackRight3(),
+      animationRight: CharacterBasicAttackConfig.loadEnemyAttackAnimation(),
       execute: () {
         GameplayAudioManager.instance.playAttackEnemyMelee();
       },

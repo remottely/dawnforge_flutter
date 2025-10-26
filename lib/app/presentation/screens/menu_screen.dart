@@ -6,7 +6,8 @@ import 'package:darkness_dungeon/app/presentation/design_system/constants/typogr
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/gameplay.dart';
-import 'package:darkness_dungeon/shared/components/df_animated_sprite_widget.dart';
+import 'package:darkness_dungeon/shared/components/dd_animation_widget.dart';
+import 'package:darkness_dungeon/shared/components/dd_sprite_widget.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 import 'package:flame_splash_screen/flame_splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -165,7 +166,7 @@ class _CharacterAnimation extends StatelessWidget {
     return SizedBox(
       height: kCharacterAnimationSize,
       width: kCharacterAnimationSize,
-      child: DFAnimatedSpriteWidget(animation: animation),
+      child: DDAnimationWidget(animation: animation),
     );
   }
 }
@@ -250,10 +251,10 @@ class _KeyboardTip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return DDSpriteWidget(
       height: kKeyboardTipHeight,
       width: kKeyboardTipWidth,
-      child: Sprite.load('keyboard_tip.png').asWidget(),
+      sprite: Sprite.load('keyboard_tip.png'),
     );
   }
 }

@@ -3,9 +3,10 @@ import 'dart:async';
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_dialog_constants.dart';
-import 'package:darkness_dungeon/gameplay/environment/decorations/decoration.dart';
-import 'package:darkness_dungeon/gameplay/environment/decorations/decoration_sprite_animations.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_animation_constants.dart';
+import 'package:darkness_dungeon/shared/dd_game_decoration.dart';
 
 abstract class _DoorDecorationConfig {
   static const String _kClosedDoorAsset =
@@ -17,7 +18,13 @@ abstract class _DoorDecorationConfig {
   static Future<Sprite> _loadClosedSprite() => Sprite.load(_kClosedDoorAsset);
 
   static Future<SpriteAnimation> _loadOpeningAnimation() =>
-      DecorationSpriteAnimations.doorDecorationOpening14();
+      SpriteAnimation.load(
+        'gameplay/environment/decorations/door_decoration_opening_14.png',
+        GameplayAnimationConstants.defaultStepTimeSpriteAnimationData(
+          amount: 14,
+          textureSize: GameplayConstants.kTileSizeStandard,
+        ),
+      );
 
   static FutureOr<void> _buildHitBox(GameComponent target) {
     target.add(
@@ -33,7 +40,7 @@ abstract class _DoorDecorationConfig {
   }
 }
 
-class DoorDecorationView extends DFGameDecoration {
+class DoorDecorationView extends DDGameDecoration {
   bool _isOpen = false;
   bool _isShowingDialog = false;
 
