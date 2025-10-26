@@ -10,7 +10,7 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_map_cons
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/app_logger.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/color_helper.dart';
-import 'package:darkness_dungeon/gameplay/environment/sensors/map_sensor.dart';
+import 'package:darkness_dungeon/gameplay/environment/sensors/map_transition_sensor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

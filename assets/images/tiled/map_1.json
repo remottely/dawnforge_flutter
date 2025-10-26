@@ -58,7 +58,6 @@
                     115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115, 115],
                  "height":50,
                  "id":4,
-                 "locked":true,
                  "name":"TerrainGround",
                  "opacity":1,
                  "type":"tilelayer",
@@ -120,7 +119,6 @@
                     116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116, 116],
                  "height":50,
                  "id":5,
-                 "locked":true,
                  "name":"TerrainDetails",
                  "opacity":1,
                  "type":"tilelayer",
@@ -182,7 +180,6 @@
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                  "height":50,
                  "id":8,
-                 "locked":true,
                  "name":"TerrainObjects",
                  "opacity":1,
                  "type":"tilelayer",
@@ -194,7 +191,6 @@
                 {
                  "draworder":"topdown",
                  "id":17,
-                 "locked":true,
                  "name":"Farmable",
                  "objects":[
                         {
@@ -207,83 +203,6 @@
                          "width":16,
                          "x":96,
                          "y":112
-                        }, 
-                        {
-                         "height":16,
-                         "id":122,
-                         "name":"farm_tile",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":112,
-                         "y":112
-                        }, 
-                        {
-                         "height":16,
-                         "id":123,
-                         "name":"farm_tile",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":128,
-                         "y":112
-                        }, 
-                        {
-                         "height":16,
-                         "id":124,
-                         "name":"farm_tile",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":128,
-                         "y":128
-                        }, 
-                        {
-                         "height":16,
-                         "id":125,
-                         "name":"farm_tile",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":96,
-                         "y":128
-                        }, 
-                        {
-                         "height":16,
-                         "id":126,
-                         "name":"farm_tile",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":144,
-                         "y":112
-                        }, 
-                        {
-                         "height":16,
-                         "id":127,
-                         "name":"farm_tile",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":112,
-                         "y":128
-                        }, 
-                        {
-                         "height":16,
-                         "id":128,
-                         "name":"farm_tile",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":144,
-                         "y":128
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -352,47 +271,14 @@
                         }, 
                         {
                          "height":16,
-                         "id":199,
-                         "name":"life_potion_decoration",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":494.85750069356,
-                         "y":327.924755755168
-                        }, 
-                        {
-                         "height":16,
-                         "id":200,
-                         "name":"life_potion_decoration",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":464,
-                         "y":448
-                        }, 
-                        {
-                         "height":16,
                          "id":201,
-                         "name":"life_potion_decoration",
+                         "name":"life_potion_interactable",
                          "rotation":0,
                          "type":"",
                          "visible":true,
                          "width":16,
-                         "x":369.226935846544,
-                         "y":308.617690535097
-                        }, 
-                        {
-                         "height":16,
-                         "id":202,
-                         "name":"spike_trap_interactable",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":368,
-                         "y":368
+                         "x":40.0849240122245,
+                         "y":158.575425108216
                         }, 
                         {
                          "height":16,
@@ -425,7 +311,6 @@
                 {
                  "draworder":"topdown",
                  "id":21,
-                 "locked":true,
                  "name":"Sensors",
                  "objects":[
                         {
@@ -511,8 +396,8 @@
                          "type":"",
                          "visible":true,
                          "width":16,
-                         "x":202.358236037489,
-                         "y":145.037044242205
+                         "x":205.52814305355,
+                         "y":157.716672306448
                         }, 
                         {
                          "height":16,
@@ -538,47 +423,14 @@
                  "objects":[
                         {
                          "height":16,
-                         "id":19,
-                         "name":"goblin",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":440.580355836955,
-                         "y":108.150518535021
-                        }, 
-                        {
-                         "height":16,
-                         "id":22,
-                         "name":"imp",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":400.006471762901,
-                         "y":196.265342278937
-                        }, 
-                        {
-                         "height":16,
                          "id":24,
                          "name":"imp",
                          "rotation":0,
                          "type":"",
                          "visible":true,
                          "width":16,
-                         "x":514.165867082288,
-                         "y":102.927635584346
-                        }, 
-                        {
-                         "height":16,
-                         "id":25,
-                         "name":"goblin",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":308.485707398784,
-                         "y":232.253239882786
+                         "x":171.287591511705,
+                         "y":84.9648291600011
                         }, 
                         {
                          "height":16,
@@ -588,19 +440,8 @@
                          "type":"",
                          "visible":true,
                          "width":16,
-                         "x":49.6018781286714,
-                         "y":299.029270375197
-                        }, 
-                        {
-                         "height":16,
-                         "id":29,
-                         "name":"imp",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":211.305790363482,
-                         "y":260.541208791209
+                         "x":54.3567386527627,
+                         "y":293.746092015096
                         }, 
                         {
                          "height":16,
@@ -610,19 +451,8 @@
                          "type":"",
                          "visible":true,
                          "width":16,
-                         "x":313.48300017998,
-                         "y":138.18667590283
-                        }, 
-                        {
-                         "height":16,
-                         "id":32,
-                         "name":"dungeon_mini_boss",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":63.7435282370991,
-                         "y":391.432883617856
+                         "x":343.068798996548,
+                         "y":127.092001346617
                         }, 
                         {
                          "height":16,
@@ -632,8 +462,8 @@
                          "type":"",
                          "visible":true,
                          "width":16,
-                         "x":168.842119825609,
-                         "y":146.624419132146
+                         "x":174.12529818571,
+                         "y":157.190775852349
                         }],
                  "opacity":1,
                  "type":"objectgroup",

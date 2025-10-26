@@ -10,17 +10,17 @@ import 'package:darkness_dungeon/gameplay/core/config/gameplay_map_config.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_map_constants.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/barrel_decoration.dart';
-import 'package:darkness_dungeon/gameplay/environment/decorations/life_potion_decoration.dart';
+import 'package:darkness_dungeon/gameplay/environment/interactables/life_potion_interactable.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/torch_decoration.dart';
 import 'package:darkness_dungeon/gameplay/environment/interactables/door_interactable.dart';
 import 'package:darkness_dungeon/gameplay/environment/interactables/door_key_interactable.dart';
 import 'package:darkness_dungeon/gameplay/environment/interactables/spike_trap_interactable.dart';
-import 'package:darkness_dungeon/gameplay/environment/sensors/map_sensor.dart';
+import 'package:darkness_dungeon/gameplay/environment/sensors/map_transition_sensor.dart';
 import 'package:darkness_dungeon/gameplay/terrain/farmable/farm_tile.dart';
 
 class GameplayMapManager {
   static const String kBarrelDecorationType = 'barrel_decoration';
-  static const String kLifePotionDecorationType = 'life_potion_decoration';
+  static const String kLifePotionDecorationType = 'life_potion_interactable';
   static const String kTorchDecorationType = 'torch_decoration';
   static const String kTorchDecorationEmptyType = 'torch_decoration_empty';
   static const String kSpikeTrapInteractableType = 'spike_trap_interactable';
