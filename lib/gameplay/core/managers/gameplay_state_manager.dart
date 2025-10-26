@@ -5,10 +5,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class GameplayStateManager extends GameComponent {
-  static const String kGameOverCheckInterval = 'gameOver';
-  static const int kGameOverCheckRate = 100;
-  static const String kPlayerDeadState = 'playerDead';
-  static const String kGameRestartEvent = 'gameRestart';
+  static const _kGameOverCheckInterval = 'gameOver';
+  static const _kGameOverCheckRate = 100;
+  static const _kPlayerDeadState = 'playerDead';
+  static const _kGameRestartEvent = 'gameRestart';
 
   bool _isGameOverDisplayed = false;
   bool _isProcessingGameOver = false;
@@ -27,7 +27,7 @@ class GameplayStateManager extends GameComponent {
   }
 
   void _processGameState(double dt) {
-    if (checkInterval(kGameOverCheckInterval, kGameOverCheckRate, dt)) {
+    if (checkInterval(_kGameOverCheckInterval, _kGameOverCheckRate, dt)) {
       _checkForGameOverCondition();
     }
   }
@@ -43,7 +43,7 @@ class GameplayStateManager extends GameComponent {
     if (!_isGameOverDisplayed) {
       _isGameOverDisplayed = true;
       _displayGameOverDialog();
-      _logGameEvent(kPlayerDeadState);
+      _logGameEvent(_kPlayerDeadState);
     }
   }
 
@@ -53,7 +53,7 @@ class GameplayStateManager extends GameComponent {
   }
 
   void _onRetryGamePressed(BuildContext dialogContext) {
-    _logGameEvent(kGameRestartEvent);
+    _logGameEvent(_kGameRestartEvent);
     _resetGameState();
 
     Navigator.of(dialogContext).pop();

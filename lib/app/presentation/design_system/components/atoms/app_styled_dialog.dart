@@ -5,16 +5,15 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_ui_const
 import 'package:flutter/material.dart';
 
 class AppStyledDialog extends StatelessWidget {
-  static const Color kStandardBackgroundColor =
+  static const _kStandardBackgroundColor =
       GameplayUIConstants.kTransparentColor;
 
   final Color backgroundColor;
-
   final List<Widget> children;
 
   const AppStyledDialog({
     super.key,
-    this.backgroundColor = kStandardBackgroundColor,
+    this.backgroundColor = _kStandardBackgroundColor,
     required this.children,
   });
 
@@ -25,7 +24,7 @@ class AppStyledDialog extends StatelessWidget {
   });
 
   AppStyledDialog.gameOver({super.key, required VoidCallback onRetry})
-    : backgroundColor = kStandardBackgroundColor,
+    : backgroundColor = _kStandardBackgroundColor,
       children = [
         Padding(
           padding: const EdgeInsets.all(20.0),
@@ -51,7 +50,7 @@ class AppStyledDialog extends StatelessWidget {
       ];
 
   AppStyledDialog.victory({super.key, required VoidCallback onContinue})
-    : backgroundColor = kStandardBackgroundColor,
+    : backgroundColor = _kStandardBackgroundColor,
       children = [
         Padding(
           padding: const EdgeInsets.all(20.0),
@@ -81,7 +80,7 @@ class AppStyledDialog extends StatelessWidget {
     required String message,
     required VoidCallback onConfirm,
     VoidCallback? onCancel,
-  }) : backgroundColor = kStandardBackgroundColor,
+  }) : backgroundColor = _kStandardBackgroundColor,
        children = [
          Padding(
            padding: const EdgeInsets.all(20.0),

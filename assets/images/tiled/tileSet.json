@@ -347,7 +347,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -448,18 +447,19 @@
          "objectgroup":
             {
              "draworder":"index",
+             "id":2,
              "name":"",
              "objects":[
                     {
-                     "height":13.9970025566429,
-                     "id":1,
+                     "height":3.98168441631939,
+                     "id":2,
                      "name":"",
                      "rotation":0,
                      "type":"",
                      "visible":true,
-                     "width":11.0066120074054,
-                     "x":1.97478621176056,
-                     "y":0
+                     "width":11,
+                     "x":2,
+                     "y":6.00915779184031
                     }],
              "opacity":1,
              "type":"objectgroup",

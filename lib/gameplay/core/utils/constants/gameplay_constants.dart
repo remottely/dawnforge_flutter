@@ -2,8 +2,8 @@ import 'package:bonfire/bonfire.dart';
 import 'package:flutter/widgets.dart';
 
 class GameplayConstants {
-  static const int kMaxVisibleTiles = 16;
-  static const int kBossDialogVisibleTiles = 32;
+  static const kMaxVisibleTiles = 16;
+  static const kBossDialogVisibleTiles = 32;
 
   static double getCameraZoomFromMaxVisibleTile(
     BuildContext context, {
@@ -16,33 +16,31 @@ class GameplayConstants {
     );
   }
 
-  static const double kTileDimensionSmall = 8;
-  static const double kTileDimensionStandard = 16;
-  static const double kTileDimensionLarge = 24;
-  static const double kTileDimensionExtraLarge = 32;
+  static const _kTileDimensionSmall = 8.0;
+  static const kTileDimensionStandard = 16.0;
+  static const _kTileDimensionLarge = 24.0;
+  static const _kTileDimensionExtraLarge = 32.0;
 
-  static final Vector2 kTileSizeSmall = Vector2.all(kTileDimensionSmall);
-  static final Vector2 kTileSizeStandard = Vector2.all(kTileDimensionStandard);
-  static final Vector2 kTileSizeLarge = Vector2.all(kTileDimensionLarge);
-  static final Vector2 kTileSizeExtraLarge = Vector2.all(
-    kTileDimensionExtraLarge,
-  );
+  static final kTileSizeSmall = Vector2.all(_kTileDimensionSmall);
+  static final kTileSizeStandard = Vector2.all(kTileDimensionStandard);
+  static final kTileSizeLarge = Vector2.all(_kTileDimensionLarge);
+  static final kTileSizeExtraLarge = Vector2.all(_kTileDimensionExtraLarge);
 
-  static const double kCameraSpeed = 3.0;
+  static const kCameraSpeed = 3.0;
 
-  static const double kCharacterSpeedSlow = 24;
-  static const double kCharacterSpeedMedium = 32;
-  static const double kCharacterSpeedFast = 40;
+  static const kCharacterSpeedSlow = 24.0;
+  static const kCharacterSpeedMedium = 32.0;
+  static const kCharacterSpeedFast = 40.0;
 
-  static const double kPropertyAmountSmall = 30;
-  static const double kPropertyAmountMedium = 60;
-  static const double kPropertyAmountLarge = 120;
+  static const kPropertyAmountSmall = 30.0;
+  static const kPropertyAmountMedium = 60.0;
+  static const kPropertyAmountLarge = 120.0;
 
-  static const double kVisionRadiusSmall = 32;
-  static const double kVisionRadiusMedium = 48;
-  static const double kVisionRadiusLarge = 64;
-  static const double kVisionRadiusExtraLarge = 80;
-  static const double kVisionRadiusUltraLarge = 96;
+  static const kVisionRadiusSmall = 32.0;
+  static const kVisionRadiusMedium = 48.0;
+  static const kVisionRadiusLarge = 64.0;
+  static const kVisionRadiusExtraLarge = 80.0;
+  static const kVisionRadiusUltraLarge = 96.0;
 
-  static const int kPriority1 = 1;
+  static const kPriority1 = 1;
 }

@@ -25,9 +25,9 @@ class GoblinEnemyController {
 
   void playAttackAnimation() {
     _view.simpleAttackMelee(
-      size: Vector2.all(GoblinEnemyConfig.attackEffectSize),
-      damage: GoblinEnemyConfig.attackDamage,
-      interval: GoblinEnemyConfig.attackInterval,
+      size: Vector2.all(GoblinEnemyConfig.kAttackEffectSize),
+      damage: GoblinEnemyConfig.kAttackDamage,
+      interval: GoblinEnemyConfig.kAttackInterval,
       animationRight: CharacterBasicAttackConfig.loadEnemyExecutionAnimation(),
       execute: () {
         GameplayAudioManager.instance.playAttackEnemyMelee();
@@ -38,7 +38,7 @@ class GoblinEnemyController {
   void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
     _view.showDamage(
       damage,
-      config: CharacterParticlesAnimations.enemyShowDamageTextStyle,
+      config: CharacterParticlesAnimations.kEnemyShowDamageTextStyle,
       gravity: CharacterParticlesAnimations.kShowDamageGravity,
       initVelocityVertical:
           CharacterParticlesAnimations.kShowDamageInitVelocityVertical,

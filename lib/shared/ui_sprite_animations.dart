@@ -49,7 +49,7 @@ class UISpriteAnimations {
     'gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_idle_right_4.png',
     GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
       amount: 4,
-      textureSize: DungeonBossEnemyConfig.textureSize,
+      textureSize: DungeonBossEnemyConfig.fTextureSize,
     ),
   );
 
@@ -58,7 +58,7 @@ class UISpriteAnimations {
     'gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_idle_left_4.png',
     GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
       amount: 4,
-      textureSize: DungeonBossEnemyConfig.textureSize,
+      textureSize: DungeonBossEnemyConfig.fTextureSize,
     ),
   );
 

@@ -17,7 +17,7 @@ import 'package:flutter/services.dart';
 class DungeonBossEnemyView extends SimpleEnemy
     with BlockMovementCollision, UseLifeBar {
   final DungeonBossEnemyController _controller = DungeonBossEnemyController();
-  double attackDamage = DungeonBossEnemyConfig.attackDamage;
+  double attackDamage = DungeonBossEnemyConfig.kAttackDamage;
   List<Enemy> spawnedEnemies = [];
   bool hasSeenPlayerFirst = false;
 
@@ -25,15 +25,15 @@ class DungeonBossEnemyView extends SimpleEnemy
     : super(
         animation: DungeonBossEnemyConfig.buildDirectionalAnimation,
         position: position,
-        size: DungeonBossEnemyConfig.componentSize,
-        speed: DungeonBossEnemyConfig.speed,
-        life: DungeonBossEnemyConfig.life,
+        size: DungeonBossEnemyConfig.fComponentSize,
+        speed: DungeonBossEnemyConfig.kSpeed,
+        life: DungeonBossEnemyConfig.kLife,
       );
 
   @override
   Future<void> onLoad() {
     _controller.attachView(this);
-    DungeonBossEnemyConfig.buildHitBox(this);
+    add(DungeonBossEnemyConfig.fHitbox);
     return super.onLoad();
   }
 
@@ -76,7 +76,7 @@ class DungeonBossEnemyView extends SimpleEnemy
             onComplete: _showConversation,
           );
         },
-        radiusVision: DungeonBossEnemyConfig.visionRadiusUltraLarge,
+        radiusVision: DungeonBossEnemyConfig.kVisionRadiusUltraLarge,
       );
     }
 
@@ -94,13 +94,13 @@ class DungeonBossEnemyView extends SimpleEnemy
       closePlayer: (player) {
         playMeleeAttackAnimation();
       },
-      radiusVision: DungeonBossEnemyConfig.visionRadiusLarge,
+      radiusVision: DungeonBossEnemyConfig.kVisionRadiusLarge,
     );
   }
 
   void playMeleeAttackAnimation() {
     simpleAttackMelee(
-      size: Vector2.all(DungeonBossEnemyConfig.attackEffectSize),
+      size: Vector2.all(DungeonBossEnemyConfig.kAttackEffectSize),
       damage: attackDamage,
       interval: 1500,
       animationRight: CharacterBasicAttackConfig.loadEnemyExecutionAnimation(),
@@ -155,7 +155,7 @@ class DungeonBossEnemyView extends SimpleEnemy
   void showDamageEffect(double damage) {
     showDamage(
       damage,
-      config: CharacterParticlesAnimations.enemyShowDamageTextStyle,
+      config: CharacterParticlesAnimations.kEnemyShowDamageTextStyle,
       gravity: CharacterParticlesAnimations.kShowDamageGravity,
       initVelocityVertical:
           CharacterParticlesAnimations.kShowDamageInitVelocityVertical,

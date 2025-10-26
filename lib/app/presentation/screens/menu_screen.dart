@@ -51,7 +51,7 @@ abstract class MenuScreenViewModel extends State<MenuScreen> {
 
   void _onControlMethodChanged(bool selectedValue) {
     setState(() {
-      Gameplay.useJoystickControls = selectedValue;
+      Gameplay.kIsJoystickControls = selectedValue;
     });
   }
 
@@ -121,7 +121,7 @@ class _MenuScreenState extends MenuScreenViewModel {
               const SizedBox(height: 20),
               _Controls(onControlMethodChanged: _onControlMethodChanged),
               const SizedBox(height: 20),
-              if (!Gameplay.useJoystickControls) const _KeyboardTip(),
+              if (!Gameplay.kIsJoystickControls) const _KeyboardTip(),
             ],
           ),
         ),
@@ -182,22 +182,22 @@ class _StartButton extends StatelessWidget {
   // late final ColorScheme _colors = _theme.colorScheme;
   // late final TextTheme _textTheme = _theme.textTheme;
 
-  static const double kButtonWidth = 150.0;
-  static const double kButtonMinHeight = 40.0;
+  static const _kButtonWidth = 150.0;
+  static const _kButtonMinHeight = 40.0;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         SizedBox(
-          width: kButtonWidth,
+          width: _kButtonWidth,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               elevation: 3,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5),
               ),
-              minimumSize: Size(100, kButtonMinHeight),
+              minimumSize: Size(100, _kButtonMinHeight),
             ),
             onPressed: onPressed,
             child: Text(
@@ -228,13 +228,13 @@ class _Controls extends StatelessWidget {
         AppRadioButton<bool>(
           value: false,
           label: 'Keyboard',
-          group: Gameplay.useJoystickControls,
+          group: Gameplay.kIsJoystickControls,
           onChange: onControlMethodChanged,
         ),
         const SizedBox(height: 10),
         AppRadioButton<bool>(
           value: true,
-          group: Gameplay.useJoystickControls,
+          group: Gameplay.kIsJoystickControls,
           label: 'Joystick',
           onChange: onControlMethodChanged,
         ),
@@ -246,14 +246,14 @@ class _Controls extends StatelessWidget {
 class _KeyboardTip extends StatelessWidget {
   const _KeyboardTip();
 
-  static const double kKeyboardTipHeight = 80.0;
-  static const double kKeyboardTipWidth = 200.0;
+  static const _kKeyboardTipHeight = 80.0;
+  static const _kKeyboardTipWidth = 200.0;
 
   @override
   Widget build(BuildContext context) {
     return DDSpriteWidget(
-      height: kKeyboardTipHeight,
-      width: kKeyboardTipWidth,
+      height: _kKeyboardTipHeight,
+      width: _kKeyboardTipWidth,
       sprite: Sprite.load('keyboard_tip.png'),
     );
   }
@@ -264,8 +264,8 @@ class _Footer extends StatelessWidget {
 
   const _Footer({required this.onOpenURL});
 
-  static const String kKevinKoboriUrl = 'https://github.com/kevinkobori';
-  static const String kBonfireUrl = 'https://pub.dev/packages/bonfire';
+  static const _kKevinKoboriUrl = 'https://github.com/kevinkobori';
+  static const _kBonfireUrl = 'https://pub.dev/packages/bonfire';
 
   @override
   Widget build(BuildContext context) {
@@ -290,7 +290,7 @@ class _Footer extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
-                      onOpenURL(kKevinKoboriUrl);
+                      onOpenURL(_kKevinKoboriUrl);
                     },
                     child: const Text(
                       'kevinkobori',
@@ -319,7 +319,7 @@ class _Footer extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
-                      onOpenURL(kBonfireUrl);
+                      onOpenURL(_kBonfireUrl);
                     },
                     child: const Text(
                       'Bonfire',

@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import '../utils/constants/gameplay_audio_constants.dart';
 
 class GameplayAudioManager {
-  static final GameplayAudioManager instance = GameplayAudioManager();
+  static final instance = GameplayAudioManager();
 
   bool _isMusicEnabled = true;
   bool _isBackgroundMusicPlaying = false;
@@ -129,7 +129,8 @@ class GameplayAudioManager {
     await FlameAudio.bgm.stop();
     print('[GameplayAudioManager] Starting music: $musicTrack');
     try {
-      if (!AppEnvironment.isTesting) await FlameAudio.bgm.play(musicTrack);
+      if (AppEnvironment.kPlayBackgroundMusic)
+        await FlameAudio.bgm.play(musicTrack);
       _isBackgroundMusicPlaying = true;
       _currentBackgroundTrack = musicTrack;
       print('[GameplayAudioManager] Music started successfully: $musicTrack');

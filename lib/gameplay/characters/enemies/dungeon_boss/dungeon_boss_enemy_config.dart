@@ -5,26 +5,18 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_dialog_c
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 
 abstract class DungeonBossEnemyConfig {
-  static const double attackDamage = 40.0;
-
-  static const double life = 200.0;
-
-  static const double speed = GameplayConstants.kCharacterSpeedSlow;
-
-  static final Vector2 hitboxSize = Vector2(14, 16);
-
-  static final Vector2 hitboxPosition = Vector2(5, 11);
-
-  static final double attackEffectSize =
-      GameplayConstants.kTileDimensionStandard * 0.62;
-
-  static double get visionRadiusUltraLarge =>
+  static const kAttackDamage = 40.0;
+  static const kLife = 200.0;
+  static const kSpeed = GameplayConstants.kCharacterSpeedSlow;
+  static const kAttackEffectSize = 10.0;
+  static const kVisionRadiusLarge = GameplayConstants.kVisionRadiusLarge;
+  static const kVisionRadiusUltraLarge =
       GameplayConstants.kVisionRadiusUltraLarge;
 
-  static double get visionRadiusLarge => GameplayConstants.kVisionRadiusLarge;
-
-  static void buildHitBox(GameComponent target) =>
-      target.add(RectangleHitbox(size: hitboxSize, position: hitboxPosition));
+  static final fHitbox = RectangleHitbox(
+    position: Vector2(5, 11),
+    size: Vector2(14, 16),
+  );
 
   static List<Say> createDialogueSequence() {
     return [
@@ -35,8 +27,8 @@ abstract class DungeonBossEnemyConfig {
     ];
   }
 
-  static final Vector2 textureSize = Vector2(32, 36);
-  static final Vector2 componentSize = textureSize;
+  static final fTextureSize = Vector2(32, 36);
+  static final fComponentSize = fTextureSize;
 
   static SimpleDirectionAnimation
   get buildDirectionalAnimation => SimpleDirectionAnimation(
@@ -46,14 +38,14 @@ abstract class DungeonBossEnemyConfig {
       'gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_run_left_4.png',
       GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
         amount: 4,
-        textureSize: textureSize,
+        textureSize: fTextureSize,
       ),
     ),
     runRight: SpriteAnimation.load(
       'gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_run_right_4.png',
       GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
         amount: 4,
-        textureSize: textureSize,
+        textureSize: fTextureSize,
       ),
     ),
   );

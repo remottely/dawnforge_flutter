@@ -1,21 +1,18 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_map_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/helpers/app_logger.dart';
 import 'package:darkness_dungeon/shared/dd_game_decoration.dart';
 
 abstract class _MapSensorConfig {
-  static const String playerEnteredEvent = 'Player entered sensor';
-  static const String playerExitedEvent = 'Player exited sensor';
-  static const String navigationInitiatedEvent = 'Navigating to';
-  static const String resetNavigationEvent =
-      'Reset navigation state for sensor';
-  static final double sensorContactTime =
-      GameplayMapConstants.kSensorContactTime;
-  static final int transitionDelayMs = GameplayMapConstants.kTransitionDelayMs;
-  static final String mapNavigationLogPrefix =
+  static const _kPlayerEnteredEvent = 'Player entered sensor';
+  static const _kPlayerExitedEvent = 'Player exited sensor';
+  static const _kNavigationInitiatedEvent = 'Navigating to';
+  static const _kResetNavigationEvent = 'Reset navigation state for sensor';
+  static const _kSensorContactTime = GameplayMapConstants.kSensorContactTime;
+  static const _kTransitionDelayMs = GameplayMapConstants.kTransitionDelayMs;
+  static const _kMapNavigationLogPrefix =
       GameplayMapConstants.kMapNavigationLogPrefix;
-  static final String sensorLogPrefix = GameplayMapConstants.kSensorLogPrefix;
+  static const _kSensorLogPrefix = GameplayMapConstants.kSensorLogPrefix;
 }
 
 class MapTransitionSensorView extends DDSensorPlayerDecoration {
@@ -42,7 +39,6 @@ class MapTransitionSensorView extends DDSensorPlayerDecoration {
     if (!hasContact && !_hasNavigated) {
       hasContact = true;
       _contactTime = 0;
-      _logSensorEvent('${_MapSensorConfig.playerEnteredEvent} $id');
     }
     super.onContact(component);
   }
@@ -51,7 +47,6 @@ class MapTransitionSensorView extends DDSensorPlayerDecoration {
   void onContactExit(KnightPlayerView component) {
     hasContact = false;
     _contactTime = 0;
-    _logSensorEvent('${_MapSensorConfig.playerExitedEvent} $id');
     super.onContactExit(component);
   }
 
@@ -59,7 +54,7 @@ class MapTransitionSensorView extends DDSensorPlayerDecoration {
   void update(double dt) {
     if (hasContact && !_hasNavigated) {
       _contactTime += dt;
-      if (_contactTime >= _MapSensorConfig.sensorContactTime) {
+      if (_contactTime >= _MapSensorConfig._kSensorContactTime) {
         _initiateMapTransition();
       }
     }
@@ -70,17 +65,13 @@ class MapTransitionSensorView extends DDSensorPlayerDecoration {
     _hasNavigated = false;
     hasContact = false;
     _contactTime = 0;
-    _logSensorEvent('${_MapSensorConfig.resetNavigationEvent} $id');
   }
 
   void _initiateMapTransition() {
     _hasNavigated = true;
     hasContact = false;
-    AppLogger.info(
-      '${_MapSensorConfig.mapNavigationLogPrefix}: ${_MapSensorConfig.navigationInitiatedEvent} $targetMap, position: $playerPosition, direction: $playerDirection',
-    );
     Future.delayed(
-      Duration(milliseconds: _MapSensorConfig.transitionDelayMs),
+      Duration(milliseconds: _MapSensorConfig._kTransitionDelayMs),
       () => _performNavigation(),
     );
   }
@@ -93,10 +84,6 @@ class MapTransitionSensorView extends DDSensorPlayerDecoration {
         playerDirection: playerDirection,
       ),
     );
-  }
-
-  void _logSensorEvent(String message) {
-    AppLogger.debug('${_MapSensorConfig.sensorLogPrefix}: $message');
   }
 }
 

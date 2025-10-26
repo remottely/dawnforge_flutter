@@ -13,21 +13,21 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
   final DungeonMiniBossEnemyController _controller =
       DungeonMiniBossEnemyController();
   bool _seePlayerClose = false;
-  double _attackDamage = DungeonMiniBossEnemyConfig.attackDamage;
+  double _attackDamage = DungeonMiniBossEnemyConfig.kAttackDamage;
 
   DungeonMiniBossEnemyView(Vector2 position)
     : super(
         animation: DungeonMiniBossEnemyConfig.buildDirectionalAnimation,
         position: position,
         size: DungeonMiniBossEnemyConfig.componentSize,
-        speed: DungeonMiniBossEnemyConfig.speed,
-        life: DungeonMiniBossEnemyConfig.life,
+        speed: DungeonMiniBossEnemyConfig.kSpeed,
+        life: DungeonMiniBossEnemyConfig.kLife,
       );
 
   @override
   Future<void> onLoad() {
     _controller.attachView(this);
-    DungeonMiniBossEnemyConfig.buildHitBox(this);
+    add(DungeonMiniBossEnemyConfig.fHitbox);
     return super.onLoad();
   }
 
@@ -59,17 +59,17 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
           closePlayer: (player) {
             playMeleeAttackAnimation();
           },
-          radiusVision: DungeonMiniBossEnemyConfig.closeVisionRadius,
+          radiusVision: DungeonMiniBossEnemyConfig.kCloseVisionRadius,
         );
       },
-      radiusVision: DungeonMiniBossEnemyConfig.closeVisionRadius,
+      radiusVision: DungeonMiniBossEnemyConfig.kCloseVisionRadius,
     );
     if (!_seePlayerClose) {
       seeAndMoveToAttackRange(
         positioned: (p) {
           playFireballAttackAnimation();
         },
-        radiusVision: DungeonMiniBossEnemyConfig.longVisionRadius,
+        radiusVision: DungeonMiniBossEnemyConfig.kLongVisionRadius,
       );
     }
   }
@@ -78,9 +78,9 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
     GameplayAudioManager.instance.playAttackEnemyMelee();
     addParticle(CharacterParticlesAnimations.swordParticles(), position: size);
     simpleAttackMelee(
-      size: Vector2.all(DungeonMiniBossEnemyConfig.attackEffectSize),
-      damage: _attackDamage / DungeonMiniBossEnemyConfig.meleeDamageReduction,
-      interval: DungeonMiniBossEnemyConfig.meleeAttackInterval,
+      size: Vector2.all(DungeonMiniBossEnemyConfig.kAttackEffectSize),
+      damage: _attackDamage / DungeonMiniBossEnemyConfig.kMeleeDamageReduction,
+      interval: DungeonMiniBossEnemyConfig.kMeleeAttackInterval,
       animationRight: CharacterBasicAttackConfig.loadEnemyExecutionAnimation(),
     );
   }
@@ -98,7 +98,7 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
       speed: speed * CharacterFireballAttackConfig.kSpeedMultiplier,
       execute: CharacterFireballAttackConfig.playExecutionAudio,
       onDestroy: CharacterFireballAttackConfig.playDestroyAudio,
-      collision: CharacterFireballAttackConfig.hitbox,
+      collision: CharacterFireballAttackConfig.buildHitbox(),
       lightingConfig: CharacterFireballAttackConfig.lightingConfig,
     );
   }
@@ -106,7 +106,7 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
   void showDamageEffect(double damage) {
     showDamage(
       damage,
-      config: CharacterParticlesAnimations.enemyShowDamageTextStyle,
+      config: CharacterParticlesAnimations.kEnemyShowDamageTextStyle,
       gravity: CharacterParticlesAnimations.kShowDamageGravity,
       initVelocityVertical:
           CharacterParticlesAnimations.kShowDamageInitVelocityVertical,

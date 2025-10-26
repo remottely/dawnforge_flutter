@@ -15,7 +15,7 @@ class WizardNpcView extends SimpleNpc {
     : super(
         animation: WizardNpcConfig.buildDirectionalAnimation,
         position: position,
-        size: WizardNpcConfig.spriteSize,
+        size: WizardNpcConfig.componentSize,
       );
 
   @override

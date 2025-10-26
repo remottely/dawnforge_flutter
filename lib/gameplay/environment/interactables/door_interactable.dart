@@ -9,13 +9,13 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_dialog_c
 import 'package:darkness_dungeon/shared/dd_game_decoration.dart';
 
 abstract class _DoorInteractableConfig {
-  static const String _kClosedDoorAsset =
+  static const _kClosedDoorAssetPath =
       'gameplay/environment/interactables/door_interactable_locked_1.png';
-  static const String _kRequiredKeyMessage = 'door_without_key';
-  static const double _kHitboxHeightRatio = 0.25;
-  static const double _kHitboxPositionRatio = 0.75;
+  static const _kRequiredKeyMessage = 'door_without_key';
+  static const _kHitboxHeightRatio = 0.25;
+  static const _kHitboxPositionRatio = 0.75;
 
-  static Future<Sprite> _loadClosedSprite() => Sprite.load(_kClosedDoorAsset);
+  static Future<Sprite> _loadClosedSprite() => Sprite.load(_kClosedDoorAssetPath);
 
   static Future<SpriteAnimation> _loadOpeningAnimation() =>
       SpriteAnimation.load(
@@ -26,14 +26,10 @@ abstract class _DoorInteractableConfig {
         ),
       );
 
-  static FutureOr<void> _buildHitBox(GameComponent target) {
-    target.add(
-      RectangleHitbox(
-        size: Vector2(target.width, target.height * _kHitboxHeightRatio),
-        position: Vector2(0, target.height * _kHitboxPositionRatio),
-      ),
-    );
-  }
+  static _buildHitbox(GameComponent target) => RectangleHitbox(
+    position: Vector2(0, target.height * _kHitboxPositionRatio),
+    size: Vector2(target.width, target.height * _kHitboxHeightRatio),
+  );
 
   static List<Say> createDialogueSequence() {
     return [GameplayDialogConstants.knightLeftDialog(_kRequiredKeyMessage)];
@@ -49,7 +45,7 @@ class DoorInteractableView extends DDGameDecoration {
 
   @override
   Future<void> onLoad() {
-    _DoorInteractableConfig._buildHitBox(this);
+    add(_DoorInteractableConfig._buildHitbox(this));
     return super.onLoad();
   }
 

@@ -7,40 +7,27 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constant
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 
 abstract class KnightPlayerConfig {
-  static const double kStandardLife = 200.0;
+  static const kStandardLife = 200.0;
+  static const kStandardSpeed = GameplayConstants.kTileDimensionStandard * 2.5;
+  static const kMaxEnergy = 100;
+  static const kToolUsageEnergyCost = 2;
+  static const kMaxStamina = 100.0;
+  static const kStaminaIncrement = 2;
+  static const kStaminaRegenDebounce = Duration(milliseconds: 150);
+  static const kStandardAttackDamage = 25.0;
+  static const kSmallAttackDamage = 10.0;
+  static const kMeleeAttackStaminaCost = 15;
+  static const kFireballAttackStaminaCost = 10;
+  static const kVisionRadius = GameplayConstants.kVisionRadiusUltraLarge;
 
-  static const double kStandardSpeed =
-      GameplayConstants.kTileDimensionStandard * 2.5;
+  static final fHitbox = RectangleHitbox(
+    position: Vector2(4, 9),
+    size: Vector2(8, 6),
+  );
 
-  static const int kMaxEnergy = 100;
-
-  static const int kToolUsageEnergyCost = 2;
-
-  static const double kMaxStamina = 100.0;
-
-  static const int kStaminaIncrement = 2;
-
-  static const Duration kStaminaRegenDebounce = Duration(milliseconds: 150);
-
-  static const double kStandardAttackDamage = 25.0;
-
-  static const double kSmallAttackDamage = 10.0;
-
-  static const int kMeleeAttackStaminaCost = 15;
-
-  static const int kFireballAttackStaminaCost = 10;
-
-  static const double kVisionRadius = GameplayConstants.kVisionRadiusUltraLarge;
-
-  static final Vector2 hitBoxSize = Vector2(8, 6);
-
-  static final Vector2 hitBoxPosition = Vector2(4, 9);
-
-  static FutureOr<void> buildHitBox(GameComponent target) =>
-      target.add(RectangleHitbox(position: hitBoxPosition, size: hitBoxSize));
-
-  static const String kCryptSpritePath =
+  static const kCryptSpritePath =
       'gameplay/characters/player/player_crypt_1.png';
+
   static final Vector2 cryptComponentSize = GameplayConstants.kTileSizeStandard;
   static Future<Sprite> loadCryptSprite() => Sprite.load(kCryptSpritePath);
 

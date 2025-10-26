@@ -23,7 +23,7 @@ class GameplayHUD extends GameInterface {
   }
 
   Future<void> _loadAssets() async {
-    _keySprite = await Sprite.load(DoorKeyInteractableConfig.spritePath);
+    _keySprite = await Sprite.load(DoorKeyInteractableConfig.kSpriteAsset);
   }
 
   void _initializeComponents() {

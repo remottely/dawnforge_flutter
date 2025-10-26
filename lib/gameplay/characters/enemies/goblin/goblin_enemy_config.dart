@@ -4,26 +4,20 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constant
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 
 abstract class GoblinEnemyConfig {
-  static const double attackDamage = 25.0;
-
-  static const double life = 120.0;
-
-  static const double speed = GameplayConstants.kCharacterSpeedSlow;
-
-  static const int attackInterval = 800;
-
-  static final Vector2 hitboxSize = Vector2.all(7.0);
-
-  static final Vector2 hitboxPosition = Vector2(3.0, 4.0);
-
-  static final double attackEffectSize =
+  static const kAttackDamage = 25.0;
+  static const kLife = 120.0;
+  static const kSpeed = GameplayConstants.kCharacterSpeedSlow;
+  static const kAttackInterval = 800;
+  static const kAttackEffectSize =
       GameplayConstants.kTileDimensionStandard * 0.62;
 
-  static void buildHitBox(GameComponent target) =>
-      target.add(RectangleHitbox(size: hitboxSize, position: hitboxPosition));
+  static final fHitbox = RectangleHitbox(
+    position: Vector2(3, 4),
+    size: Vector2.all(7),
+  );
 
-  static final Vector2 textureSize = GameplayConstants.kTileSizeStandard;
-  static final Vector2 componentSize = Vector2.all(
+  static final textureSize = GameplayConstants.kTileSizeStandard;
+  static final componentSize = Vector2.all(
     GameplayConstants.kTileDimensionStandard * 0.8,
   );
 

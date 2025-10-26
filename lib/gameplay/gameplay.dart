@@ -8,7 +8,6 @@ import 'package:darkness_dungeon/gameplay/core/managers/gameplay_state_manager.d
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_map_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/app_environment.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/helpers/app_logger.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/color_helper.dart';
 import 'package:darkness_dungeon/gameplay/environment/sensors/map_transition_sensor.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +16,8 @@ import 'package:flutter/services.dart';
 class Gameplay extends StatefulWidget {
   const Gameplay({super.key});
 
-  static bool useJoystickControls = false;
-
-  static const GameDifficulty difficulty = GameDifficulty.normal;
+  static bool kIsJoystickControls =
+      false; // TODO(Kevin): now, change this logic
 
   @override
   State<Gameplay> createState() => _GameplayState();
@@ -27,10 +25,10 @@ class Gameplay extends StatefulWidget {
 
 class _GameplayState extends State<Gameplay> {
   static const double _kJoystickSpriteSize = 100.0;
-  static const double kActionButtonSize = 80.0;
-  static const double kActionButtonMarginBottom = 50.0;
-  static const double kPrimaryActionMarginRight = 50.0;
-  static const double kSecondaryActionMarginRight = 160.0;
+  static const double _kActionButtonSize = 80.0;
+  static const double _kActionButtonMarginBottom = 50.0;
+  static const double _kPrimaryActionMarginRight = 50.0;
+  static const double _kSecondaryActionMarginRight = 160.0;
 
   late final GameplayHUD _gameplayHUD;
   late final CameraConfig _cameraConfig;
@@ -63,7 +61,7 @@ class _GameplayState extends State<Gameplay> {
   @override
   Widget build(BuildContext gameplayContext) {
     return MapNavigator(
-      maps: GameplayMapManager.maps,
+      maps: GameplayMapManager.fMaps,
       initialMap: MapId.map1.name,
       builder: (context, arguments, mapItem) {
         MapArguments? mapArguments = arguments as MapArguments?;
@@ -90,10 +88,6 @@ class _GameplayState extends State<Gameplay> {
           );
         }
 
-        AppLogger.info(
-          'Building BonfireWidget for map: ${mapItem.id}, player position: $playerPosition, music: $mapBackgroundMusic, lighting: $mapLightingColor, background: $mapBackgroundColor',
-        );
-
         final player = _createKnightPlayerWithState(playerPosition);
 
         final activeController = _createFreshController();
@@ -109,8 +103,8 @@ class _GameplayState extends State<Gameplay> {
             lightingColorGame: mapLightingColor,
             backgroundColor: mapBackgroundColor,
             cameraConfig: _cameraConfig,
-            debugMode: AppEnvironment.isTesting,
-            showCollisionArea: AppEnvironment.showCollisionBoxes,
+            debugMode: AppEnvironment.kIsDebugMode,
+            showCollisionArea: AppEnvironment.kShowCollisionBoxes,
           ),
         );
       },
@@ -129,19 +123,15 @@ class _GameplayState extends State<Gameplay> {
     _gameplayHUD = GameplayHUD();
   }
 
-  KnightPlayerView _createKnightPlayerWithState(Vector2 position) {
-    final knight = KnightPlayerView(position);
-
-    AppLogger.info('Created fresh knight at position: $position');
-    return knight;
-  }
+  KnightPlayerView _createKnightPlayerWithState(Vector2 position) =>
+      KnightPlayerView(position);
 
   PlayerController _createFreshController() {
     return _createPlayerController();
   }
 
   PlayerController _createPlayerController() {
-    return Gameplay.useJoystickControls
+    return Gameplay.kIsJoystickControls
         ? _createJoystickController()
         : _createKeyboardController();
   }
@@ -172,10 +162,10 @@ class _GameplayState extends State<Gameplay> {
       actionId: PlayerActions.meleeAttack.index,
       sprite: Sprite.load('joystick_attack.png'),
       spritePressed: Sprite.load('joystick_attack_selected.png'),
-      size: kActionButtonSize,
+      size: _kActionButtonSize,
       margin: const EdgeInsets.only(
-        bottom: kActionButtonMarginBottom,
-        right: kPrimaryActionMarginRight,
+        bottom: _kActionButtonMarginBottom,
+        right: _kPrimaryActionMarginRight,
       ),
     );
   }
@@ -185,10 +175,10 @@ class _GameplayState extends State<Gameplay> {
       actionId: PlayerActions.rangedAttack.index,
       sprite: Sprite.load('joystick_attack_range.png'),
       spritePressed: Sprite.load('joystick_attack_range_selected.png'),
-      size: kActionButtonSize,
+      size: _kActionButtonSize,
       margin: const EdgeInsets.only(
-        bottom: kActionButtonMarginBottom,
-        right: kSecondaryActionMarginRight,
+        bottom: _kActionButtonMarginBottom,
+        right: _kSecondaryActionMarginRight,
       ),
     );
   }

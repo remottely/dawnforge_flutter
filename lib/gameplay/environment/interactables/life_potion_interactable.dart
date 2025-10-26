@@ -4,14 +4,14 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constant
 import 'package:darkness_dungeon/shared/dd_game_decoration.dart';
 
 abstract class LifePotionConfig {
-  static const String _spritePath =
+  static const _kSpritePath =
       'gameplay/environment/interactables/life_potion_interactable_1.png';
-  static final Vector2 _spriteSize = GameplayConstants.kTileSizeStandard;
-  static const Duration _healingDuration = Duration(seconds: 1);
-  static const double _standardHealAmount = 50.0;
-  static const double healAmount = GameplayConstants.kPropertyAmountSmall;
+  static final Vector2 _componentSize = GameplayConstants.kTileSizeStandard;
+  static const _kHealingDuration = Duration(seconds: 1);
+  static const _kStandardHealAmount = 50.0;
+  static const kHealAmount = GameplayConstants.kPropertyAmountSmall;
 
-  static Future<Sprite> _loadSprite() => Sprite.load(_spritePath);
+  static Future<Sprite> _loadSprite() => Sprite.load(_kSpritePath);
 }
 
 class LifePotionDecorationView extends DDSensorPlayerDecoration {
@@ -19,11 +19,11 @@ class LifePotionDecorationView extends DDSensorPlayerDecoration {
   bool _hasBeenConsumed = false;
 
   LifePotionDecorationView({required Vector2 position, double? healAmount})
-    : _healAmount = healAmount ?? LifePotionConfig._standardHealAmount,
+    : _healAmount = healAmount ?? LifePotionConfig._kStandardHealAmount,
       super.withSprite(
         sprite: LifePotionConfig._loadSprite(),
         position: position,
-        size: LifePotionConfig._spriteSize,
+        size: LifePotionConfig._componentSize,
       );
 
   @override
@@ -43,7 +43,7 @@ class LifePotionDecorationView extends DDSensorPlayerDecoration {
     double healingProgress = 0;
     gameRef.add(
       ValueGeneratorComponent(
-        LifePotionConfig._healingDuration,
+        LifePotionConfig._kHealingDuration,
         onChange: (value) {
           if (healingProgress < _healAmount) {
             double currentHealAmount = _healAmount * value - healingProgress;

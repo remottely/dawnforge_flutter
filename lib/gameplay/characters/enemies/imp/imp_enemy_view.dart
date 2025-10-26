@@ -10,15 +10,15 @@ class ImpEnemyView extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
         animation: ImpEnemyConfig.buildDirectionalAnimation,
         position: position,
         size: ImpEnemyConfig.componentSize,
-        speed: ImpEnemyConfig.speed,
-        life: ImpEnemyConfig.life,
+        speed: ImpEnemyConfig.kSpeed,
+        life: ImpEnemyConfig.kLife,
       );
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
     _controller.attachView(this);
-    ImpEnemyConfig.buildHitBox(this);
+    add(ImpEnemyConfig.fHitbox);
   }
 
   @override

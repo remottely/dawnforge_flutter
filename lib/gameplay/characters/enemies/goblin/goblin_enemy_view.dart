@@ -11,15 +11,15 @@ class GoblinEnemyView extends SimpleEnemy
         animation: GoblinEnemyConfig.buildDirectionalAnimation,
         position: position,
         size: GoblinEnemyConfig.componentSize,
-        speed: GoblinEnemyConfig.speed,
-        life: GoblinEnemyConfig.life,
+        speed: GoblinEnemyConfig.kSpeed,
+        life: GoblinEnemyConfig.kLife,
       );
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
     _controller.attachView(this);
-    GoblinEnemyConfig.buildHitBox(this);
+    add(GoblinEnemyConfig.fHitbox);
   }
 
   @override

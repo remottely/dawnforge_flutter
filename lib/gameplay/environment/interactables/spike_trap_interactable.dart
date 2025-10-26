@@ -5,11 +5,11 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constant
 import 'package:darkness_dungeon/shared/dd_game_decoration.dart';
 
 abstract class _SpikeTrapInteractableConfig {
-  static const double kDamageAmount = GameplayConstants.kPropertyAmountMedium;
-  static const int kPriority = GameplayConstants.kPriority1;
+  static const _kDamageAmount = GameplayConstants.kPropertyAmountMedium;
+  static const _kPriority = GameplayConstants.kPriority1;
 
-  static final Vector2 _textureSize = GameplayConstants.kTileSizeStandard;
-  static final Vector2 _componentSize = _textureSize;
+  static final _textureSize = GameplayConstants.kTileSizeStandard;
+  static final _componentSize = _textureSize;
 
   static Future<SpriteAnimation> _loadAnimation() => SpriteAnimation.load(
     'gameplay/environment/interactables/spike_trap_interactable_10.png',
@@ -26,7 +26,7 @@ class SpikeTrapInteractableView extends DDSensorPlayerDecoration {
 
   SpikeTrapInteractableView({
     required super.position,
-    double damageAmount = _SpikeTrapInteractableConfig.kDamageAmount,
+    double damageAmount = _SpikeTrapInteractableConfig._kDamageAmount,
   }) : _damageAmount = damageAmount,
        super.withAnimation(
          animation: _SpikeTrapInteractableConfig._loadAnimation(),
@@ -53,7 +53,7 @@ class SpikeTrapInteractableView extends DDSensorPlayerDecoration {
 
   @override
   int get priority => LayerPriority.getComponentPriority(
-    _SpikeTrapInteractableConfig.kPriority,
+    _SpikeTrapInteractableConfig._kPriority,
   );
 
   void _triggerDamage() {

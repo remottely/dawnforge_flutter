@@ -19,27 +19,27 @@ import 'package:darkness_dungeon/gameplay/environment/sensors/map_transition_sen
 import 'package:darkness_dungeon/gameplay/terrain/farmable/farm_tile.dart';
 
 class GameplayMapManager {
-  static const String kBarrelDecorationType = 'barrel_decoration';
-  static const String kLifePotionDecorationType = 'life_potion_interactable';
-  static const String kTorchDecorationType = 'torch_decoration';
-  static const String kTorchDecorationEmptyType = 'torch_decoration_empty';
-  static const String kSpikeTrapInteractableType = 'spike_trap_interactable';
+  static const kBarrelDecorationType = 'barrel_decoration';
+  static const kLifePotionDecorationType = 'life_potion_interactable';
+  static const kTorchDecorationType = 'torch_decoration';
+  static const kTorchDecorationEmptyType = 'torch_decoration_empty';
+  static const kSpikeTrapInteractableType = 'spike_trap_interactable';
 
-  static const String kDoorInteractableType = 'door_interactable';
-  static const String kDoorKeyInteractableType = 'door_key_interactable';
+  static const kDoorInteractableType = 'door_interactable';
+  static const kDoorKeyInteractableType = 'door_key_interactable';
 
-  static const String kWizardEntityType = 'wizard';
-  static const String kKidEntityType = 'kid';
-  static const String kBossEntityType = 'dungeon_boss';
-  static const String kMiniBossEntityType = 'dungeon_mini_boss';
-  static const String kGoblinEntityType = 'goblin';
-  static const String kImpEntityType = 'imp';
-  static const String kFarmTileEntityType = 'farm_tile';
+  static const kWizardEntityType = 'wizard';
+  static const kKidEntityType = 'kid';
+  static const kBossEntityType = 'dungeon_boss';
+  static const kMiniBossEntityType = 'dungeon_mini_boss';
+  static const kGoblinEntityType = 'goblin';
+  static const kImpEntityType = 'imp';
+  static const kFarmTileEntityType = 'farm_tile';
 
-  static final Map<String, MapItemBuilder> maps = (() {
+  static final Map<String, MapItemBuilder> fMaps = (() {
     final mapBuilders = <String, MapItemBuilder>{};
 
-    for (final config in GameplayMapConfig.allMaps) {
+    for (final config in GameplayMapConfig.kAllMaps) {
       mapBuilders[config.id.name] = (context, args) => _createMapItem(config);
     }
 
@@ -126,7 +126,7 @@ void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
     GameplayMapManager.kLifePotionDecorationType: (p) =>
         LifePotionDecorationView(
           position: p.position,
-          healAmount: LifePotionConfig.healAmount,
+          healAmount: LifePotionConfig.kHealAmount,
         ),
 
     GameplayMapManager.kTorchDecorationType: (p) =>

@@ -5,10 +5,10 @@ import 'package:darkness_dungeon/shared/dd_game_decoration.dart';
 import 'package:flutter/material.dart';
 
 abstract class _TorchDecorationConfig {
-  static const double _kLightRadiusMultiplier = 2.5;
-  static const double _kBlurBorderMultiplier = 1.0;
-  static const double _kPulseVariation = 0.1;
-  static const double _kLightOpacity = 0.2;
+  static const _kLightRadiusMultiplier = 2.5;
+  static const _kBlurBorderMultiplier = 1.0;
+  static const _kPulseVariation = 0.1;
+  static const _kLightOpacity = 0.2;
 
   static final Vector2 _textureSize = GameplayConstants.kTileSizeStandard;
   static final Vector2 _componentSize = _textureSize;

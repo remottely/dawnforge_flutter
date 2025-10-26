@@ -25,9 +25,9 @@ class ImpEnemyController {
 
   void playAttackAnimation() {
     _view.simpleAttackMelee(
-      size: Vector2.all(ImpEnemyConfig.attackEffectSize),
-      damage: ImpEnemyConfig.attackDamage,
-      interval: ImpEnemyConfig.attackInterval,
+      size: Vector2.all(ImpEnemyConfig.kAttackEffectSize),
+      damage: ImpEnemyConfig.kAttackDamage,
+      interval: ImpEnemyConfig.kAttackInterval,
       animationRight: CharacterBasicAttackConfig.loadEnemyExecutionAnimation(),
       execute: () {
         GameplayAudioManager.instance.playAttackEnemyMelee();
@@ -38,7 +38,7 @@ class ImpEnemyController {
   void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
     _view.showDamage(
       damage,
-      config: CharacterParticlesAnimations.enemyShowDamageTextStyle,
+      config: CharacterParticlesAnimations.kEnemyShowDamageTextStyle,
       gravity: CharacterParticlesAnimations.kShowDamageGravity,
       initVelocityVertical:
           CharacterParticlesAnimations.kShowDamageInitVelocityVertical,

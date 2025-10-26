@@ -1,24 +1,16 @@
 import 'package:flutter/material.dart';
 
 class AppRadioButton<T> extends StatelessWidget {
-  static const Color kBorderColor = Colors.white;
-
-  static const Color kTextColor = Colors.white;
-
-  static const double kBorderWidth = 2.0;
-
-  static const double kIndicatorSize = 8.0;
-
-  static const double kIndicatorMargin = 2.0;
-
-  static const double kLabelSpacing = 10.0;
+  static const _kBorderColor = Colors.white;
+  static const _kTextColor = Colors.white;
+  static const _kBorderWidth = 2.0;
+  static const _kIndicatorSize = 8.0;
+  static const _kIndicatorMargin = 2.0;
+  static const _kLabelSpacing = 10.0;
 
   final T value;
-
   final T? group;
-
   final String? label;
-
   final ValueChanged<T>? onChange;
 
   const AppRadioButton({
@@ -40,7 +32,7 @@ class AppRadioButton<T> extends StatelessWidget {
         children: [
           _buildRadioIndicator(),
           if (label != null) ...[
-            const SizedBox(width: kLabelSpacing),
+            const SizedBox(width: _kLabelSpacing),
             _buildLabel(),
           ],
         ],
@@ -51,18 +43,18 @@ class AppRadioButton<T> extends StatelessWidget {
   Widget _buildRadioIndicator() {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: kBorderColor, width: kBorderWidth),
+        border: Border.all(color: _kBorderColor, width: _kBorderWidth),
       ),
       child: Container(
-        width: kIndicatorSize,
-        height: kIndicatorSize,
-        margin: const EdgeInsets.all(kIndicatorMargin),
-        color: value == group ? kBorderColor : Colors.transparent,
+        width: _kIndicatorSize,
+        height: _kIndicatorSize,
+        margin: const EdgeInsets.all(_kIndicatorMargin),
+        color: value == group ? _kBorderColor : Colors.transparent,
       ),
     );
   }
 
   Widget _buildLabel() {
-    return Text(label!, style: const TextStyle(color: kTextColor));
+    return Text(label!, style: const TextStyle(color: _kTextColor));
   }
 }

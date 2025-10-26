@@ -2,7 +2,7 @@ import 'package:darkness_dungeon/app/presentation/design_system/constants/typogr
 import 'package:flutter/material.dart';
 
 class AppStyledText extends StatelessWidget {
-  static const Color kStandardColor = Colors.white;
+  static const _kStandardColor = Colors.white;
 
   final String text;
 
@@ -16,7 +16,7 @@ class AppStyledText extends StatelessWidget {
     super.key,
     required this.text,
     this.fontSize = TypographyConstants.kBodyFontSize,
-    this.color = kStandardColor,
+    this.color = _kStandardColor,
     this.textAlign = TextAlign.start,
   });
 
@@ -24,7 +24,7 @@ class AppStyledText extends StatelessWidget {
     super.key,
     required this.text,
     this.fontSize = TypographyConstants.kDisplayFontSize,
-    this.color = kStandardColor,
+    this.color = _kStandardColor,
     this.textAlign = TextAlign.start,
   });
 
@@ -32,7 +32,7 @@ class AppStyledText extends StatelessWidget {
     super.key,
     required this.text,
     this.fontSize = TypographyConstants.kSmallFontSize,
-    this.color = kStandardColor,
+    this.color = _kStandardColor,
     this.textAlign = TextAlign.start,
   });
 

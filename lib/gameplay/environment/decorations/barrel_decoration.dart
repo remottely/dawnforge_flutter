@@ -5,27 +5,28 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constant
 import 'package:darkness_dungeon/shared/dd_game_decoration.dart';
 
 abstract class _BarrelDecorationConfig {
-  static const String _spritePath =
+  static const _kTexturePath =
       'gameplay/environment/decorations/barrel_decoration_1.png';
-  static final Vector2 _spriteSize = GameplayConstants.kTileSizeStandard;
-  static final Vector2 _hitBoxPosition = Vector2(2, 6);
-  static final Vector2 _hitBoxSize = Vector2(12, 4);
+  static final Vector2 _componentSize = GameplayConstants.kTileSizeStandard;
 
-  static Future<Sprite> _loadSprite() => Sprite.load(_spritePath);
-  static FutureOr<void> _buildHitBox(GameComponent target) =>
-      target.add(RectangleHitbox(position: _hitBoxPosition, size: _hitBoxSize));
+  static Future<Sprite> _loadSprite() => Sprite.load(_kTexturePath);
+  static final fHitbox = RectangleHitbox(
+    position: Vector2(2, 6),
+    size: Vector2(11, 4),
+  );
 }
 
 class BarrelDecorationView extends DDPushableDecoration {
   BarrelDecorationView({required super.position})
     : super.withSprite(
         sprite: _BarrelDecorationConfig._loadSprite(),
-        size: _BarrelDecorationConfig._spriteSize,
+        size: _BarrelDecorationConfig._componentSize,
       );
 
   @override
   Future<void> onLoad() {
-    _BarrelDecorationConfig._buildHitBox(this);
+    add(_BarrelDecorationConfig.fHitbox);
+
     return super.onLoad();
   }
 }

@@ -3,8 +3,8 @@ import 'package:bonfire/bonfire.dart';
 import 'farm_tile.dart';
 
 class FarmGridManager {
-  static const int gridWidth = 20;
-  static const int gridHeight = 15;
+  static const _kGridWidth = 20;
+  static const _kGridHeight = 15;
   late List<List<FarmTileView>> farmGrid;
 
   FarmGridManager() {
@@ -13,9 +13,9 @@ class FarmGridManager {
 
   void initializeGrid() {
     farmGrid = List.generate(
-      gridHeight,
+      _kGridHeight,
       (y) => List.generate(
-        gridWidth,
+        _kGridWidth,
         (x) => FarmTileView(Vector2(x.toDouble(), y.toDouble())),
       ),
     );
@@ -24,7 +24,7 @@ class FarmGridManager {
   FarmTileView? getTileAt(Vector2 position) {
     int x = position.x.floor();
     int y = position.y.floor();
-    if (x >= 0 && x < gridWidth && y >= 0 && y < gridHeight) {
+    if (x >= 0 && x < _kGridWidth && y >= 0 && y < _kGridHeight) {
       return farmGrid[y][x];
     }
     return null;

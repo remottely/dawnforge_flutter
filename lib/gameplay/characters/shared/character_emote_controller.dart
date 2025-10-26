@@ -3,13 +3,13 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_animatio
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 
 class CharacterEmoteController {
-  static const String kExclamationEmoteAssetPath =
+  static const kExclamationEmoteAssetPath =
       'gameplay/characters/emotes/exclamation_emote_8.png';
 
-  static const String kQuestionEmoteAssetPath =
+  static const kQuestionEmoteAssetPath =
       'gameplay/characters/emotes/question_emote_8.png';
 
-  static final Vector2 kEmoteOffset = Vector2(0, -3);
+  static final Vector2 _kEmoteOffset = Vector2(0, -3);
 
   static void displayEmoteAboveCharacter({
     required BonfireGameInterface gameRef,
@@ -28,7 +28,7 @@ class CharacterEmoteController {
         target: target,
         loop: false,
         size: GameplayConstants.kTileSizeSmall,
-        offset: kEmoteOffset,
+        offset: _kEmoteOffset,
       ),
     );
   }

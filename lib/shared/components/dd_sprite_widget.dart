@@ -2,9 +2,9 @@ import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
 
 class DDSpriteWidget extends StatelessWidget {
-  static const double kSmallSize = 50.0;
-  static const double kStandardSize = 100.0;
-  static const double kLargeSize = 150.0;
+  static const _kSmallSize = 50.0;
+  static const _kStandardSize = 100.0;
+  static const _kLargeSize = 150.0;
 
   final double width;
   final double height;
@@ -13,22 +13,22 @@ class DDSpriteWidget extends StatelessWidget {
   const DDSpriteWidget({
     super.key,
     required this.sprite,
-    this.width = kStandardSize,
-    this.height = kStandardSize,
+    this.width = _kStandardSize,
+    this.height = _kStandardSize,
   });
 
   const DDSpriteWidget.large({
     super.key,
     required this.sprite,
-    this.width = kLargeSize,
-    this.height = kLargeSize,
+    this.width = _kLargeSize,
+    this.height = _kLargeSize,
   });
 
   const DDSpriteWidget.small({
     super.key,
     required this.sprite,
-    this.width = kSmallSize,
-    this.height = kSmallSize,
+    this.width = _kSmallSize,
+    this.height = _kSmallSize,
   });
 
   @override

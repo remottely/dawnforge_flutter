@@ -30,7 +30,7 @@ class KnightPlayerView extends SimplePlayer
   @override
   Future<void> onLoad() {
     controller.attachView(this);
-    KnightPlayerConfig.buildHitBox(this);
+    add(KnightPlayerConfig.fHitbox);
     return super.onLoad();
   }
 
@@ -85,7 +85,7 @@ class KnightPlayerView extends SimplePlayer
       damage: damage,
       speed: speed * CharacterFireballAttackConfig.kSpeedMultiplier,
       onDestroy: CharacterFireballAttackConfig.playDestroyAudio,
-      collision: CharacterFireballAttackConfig.hitbox,
+      collision: CharacterFireballAttackConfig.buildHitbox(),
       lightingConfig: CharacterFireballAttackConfig.lightingConfig,
     );
     CharacterFireballAttackConfig.playExecutionAudio();
@@ -104,7 +104,7 @@ class KnightPlayerView extends SimplePlayer
   void _showDamageEffect(double damage) {
     showDamage(
       damage,
-      config: CharacterParticlesAnimations.playerShowDamageTextStyle,
+      config: CharacterParticlesAnimations.kPlayerShowDamageTextStyle,
       gravity: CharacterParticlesAnimations.kShowDamageGravity,
       initVelocityVertical:
           CharacterParticlesAnimations.kShowDamageInitVelocityVertical,

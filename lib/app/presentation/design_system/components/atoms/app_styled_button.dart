@@ -3,18 +3,13 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_ui_const
 import 'package:flutter/material.dart';
 
 class AppStyledButton extends StatelessWidget {
-  static const Color kStandardTextColor = Colors.white;
-
-  static const Color kPrimaryBackgroundColor = Color.fromARGB(255, 118, 82, 78);
-
-  static const double kButtonBorderRadius = 4.0;
+  static const _kStandardTextColor = Colors.white;
+  static const _kPrimaryBackgroundColor = Color.fromARGB(255, 118, 82, 78);
+  static const _kButtonBorderRadius = 4.0;
 
   final String text;
-
   final VoidCallback onPressed;
-
   final Color backgroundColor;
-
   final double fontSize;
 
   const AppStyledButton({
@@ -29,7 +24,7 @@ class AppStyledButton extends StatelessWidget {
     super.key,
     required this.text,
     required this.onPressed,
-    this.backgroundColor = kPrimaryBackgroundColor,
+    this.backgroundColor = _kPrimaryBackgroundColor,
     this.fontSize = TypographyConstants.kCaptionFontSize,
   });
 
@@ -49,7 +44,7 @@ class AppStyledButton extends StatelessWidget {
         shape: backgroundColor != GameplayUIConstants.kTransparentColor
             ? WidgetStateProperty.all(
                 RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(kButtonBorderRadius),
+                  borderRadius: BorderRadius.circular(_kButtonBorderRadius),
                 ),
               )
             : null,
@@ -58,7 +53,7 @@ class AppStyledButton extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-          color: kStandardTextColor,
+          color: _kStandardTextColor,
           fontFamily: TypographyConstants.kPrimaryFontFamily,
           fontSize: fontSize,
         ),

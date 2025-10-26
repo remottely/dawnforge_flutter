@@ -8,15 +8,15 @@ import 'crop_types.dart';
 enum TileState { grass, soil, watered, planted, grown }
 
 abstract class _FarmTileConfig {
-  static const String grassSprite = 'gameplay/terrain/farmable/tile_grass.png';
-  static const String spriteSoil = 'gameplay/terrain/farmable/tile_soil.png';
-  static const String spriteWatered =
+  static const _kGrassSpriteAsset = 'gameplay/terrain/farmable/tile_grass.png';
+  static const _kSoilSpriteAsset = 'gameplay/terrain/farmable/tile_soil.png';
+  static const _kWateredSpriteAsset =
       'gameplay/terrain/farmable/tile_watered.png';
-  static const String spritePlanted =
+  static const _kPlantedSpriteAsset =
       'gameplay/terrain/farmable/tile_planted.png';
-  static const String spriteGrown =
+  static const _kGrownSpriteAsset =
       'gameplay/terrain/farmable/parsnip_stage4.png';
-  static final Vector2 _spriteSize = GameplayConstants.kTileSizeStandard;
+  static final _componentSize = GameplayConstants.kTileSizeStandard;
   static Future<Sprite> _loadSprite(String path) => Sprite.load(path);
 }
 
@@ -25,24 +25,24 @@ class FarmTileView extends DDGameDecoration {
   CropType? plantedCrop;
   int daysGrowing = 0;
   bool isWatered = false;
-  String currentSprite = _FarmTileConfig.grassSprite;
+  String currentSprite = _FarmTileConfig._kGrassSpriteAsset;
 
   FarmTileView(Vector2 position)
     : super.withSprite(
-        sprite: _FarmTileConfig._loadSprite(_FarmTileConfig.grassSprite),
+        sprite: _FarmTileConfig._loadSprite(_FarmTileConfig._kGrassSpriteAsset),
         position: position,
-        size: _FarmTileConfig._spriteSize,
+        size: _FarmTileConfig._componentSize,
       );
 
   @override
-  int get priority => 100;
+  int get priority => 20;
 
   void interact(FarmTool tool) {
     switch (tool) {
       case FarmTool.hoe:
         if (state == TileState.grass) {
           state = TileState.soil;
-          currentSprite = _FarmTileConfig.spriteSoil;
+          currentSprite = _FarmTileConfig._kSoilSpriteAsset;
           _updateSprite();
         }
         break;
@@ -50,7 +50,7 @@ class FarmTileView extends DDGameDecoration {
         if (state == TileState.soil) {
           state = TileState.watered;
           isWatered = true;
-          currentSprite = _FarmTileConfig.spriteWatered;
+          currentSprite = _FarmTileConfig._kWateredSpriteAsset;
           _updateSprite();
         }
         break;
@@ -60,7 +60,7 @@ class FarmTileView extends DDGameDecoration {
           plantedCrop = null;
           daysGrowing = 0;
           isWatered = false;
-          currentSprite = _FarmTileConfig.spriteSoil;
+          currentSprite = _FarmTileConfig._kSoilSpriteAsset;
           _updateSprite();
         }
         break;
@@ -76,7 +76,7 @@ class FarmTileView extends DDGameDecoration {
       state = TileState.planted;
       plantedCrop = crop;
       daysGrowing = 0;
-      currentSprite = _FarmTileConfig.spritePlanted;
+      currentSprite = _FarmTileConfig._kPlantedSpriteAsset;
       _updateSprite();
       return true;
     }
@@ -88,7 +88,7 @@ class FarmTileView extends DDGameDecoration {
       daysGrowing++;
       if (daysGrowing >= cropDatabase[plantedCrop]!.daysToGrow) {
         state = TileState.grown;
-        currentSprite = _FarmTileConfig.spriteGrown;
+        currentSprite = _FarmTileConfig._kGrownSpriteAsset;
         _updateSprite();
       }
       isWatered = false;
@@ -100,7 +100,7 @@ class FarmTileView extends DDGameDecoration {
     plantedCrop = null;
     daysGrowing = 0;
     isWatered = false;
-    currentSprite = _FarmTileConfig.grassSprite;
+    currentSprite = _FarmTileConfig._kGrassSpriteAsset;
     _updateSprite();
   }
 }

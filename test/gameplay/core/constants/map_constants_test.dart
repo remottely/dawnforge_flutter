@@ -161,7 +161,7 @@ void main() {
 
     test('should return null for non-existent map ID', () {
       // Como o enum não tem mais valores, vamos testar indiretamente
-      final allMaps = GameplayMapConfig.allMaps;
+      final allMaps = GameplayMapConfig.kAllMaps;
       expect(allMaps.length, equals(2));
 
       final existingIds = allMaps.map((m) => m.id).toList();
