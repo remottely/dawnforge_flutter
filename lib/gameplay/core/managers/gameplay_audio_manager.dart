@@ -45,7 +45,7 @@ class GameplayAudioManager {
   void playFireballAttack() {
     try {
       FlameAudio.play(
-        GameplayAudioConstants.kFireBallAttackAudioAssetPath,
+        GameplayAudioConstants.kFireBallAttackAudioAsset,
         volume: GameplayAudioConstants.kRangeVolume,
       );
     } catch (e) {
@@ -67,7 +67,7 @@ class GameplayAudioManager {
   void playFireballExplosion() {
     try {
       FlameAudio.play(
-        GameplayAudioConstants.kFireballExplosionAudioAssetPath,
+        GameplayAudioConstants.kFireballExplosionAudioAsset,
         volume: GameplayAudioConstants.kFireballExplosionVolume,
       );
     } catch (e) {

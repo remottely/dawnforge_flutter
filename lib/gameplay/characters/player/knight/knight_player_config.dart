@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_animation_constants.dart';
@@ -25,41 +23,38 @@ abstract class KnightPlayerConfig {
     size: Vector2(8, 6),
   );
 
-  static const kCryptSpritePath =
-      'gameplay/characters/player/player_crypt_1.png';
+  static final fTextureSize = GameplayConstants.fTileSizeStandard;
+  static final fComponentSize = fTextureSize;
 
-  static final Vector2 cryptComponentSize = GameplayConstants.kTileSizeStandard;
-  static Future<Sprite> loadCryptSprite() => Sprite.load(kCryptSpritePath);
+  static final fDirectionalAnimation = SimpleDirectionAnimation(
+    idleLeft: SpriteAnimation.load(
+      'gameplay/characters/player/knight/knight_player_idle_left_6.png',
+      GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
+        amount: 6,
+        textureSize: fTextureSize,
+      ),
+    ),
+    idleRight: UISpriteAnimations.knightPlayerIdleRight6(),
+    runLeft: SpriteAnimation.load(
+      'gameplay/characters/player/knight/knight_player_run_left_6.png',
+      GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
+        amount: 6,
+        textureSize: fTextureSize,
+      ),
+    ),
+    runRight: SpriteAnimation.load(
+      'gameplay/characters/player/knight/knight_player_run_right_6.png',
+      GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
+        amount: 6,
+        textureSize: fTextureSize,
+      ),
+    ),
+  );
+
+  static final fCryptComponentSize = GameplayConstants.fTileSizeStandard;
+  static Future<Sprite> loadCryptSprite() =>
+      Sprite.load('gameplay/characters/player/player_crypt_1.png');
 
   static LightingConfig buildLightingConfig(double width) =>
       CharacterParticlesAnimations.knightLightingConfig(width);
-
-  static final Vector2 textureSize = GameplayConstants.kTileSizeStandard;
-  static final Vector2 componentSize = textureSize;
-
-  static final SimpleDirectionAnimation buildDirectionalAnimation =
-      SimpleDirectionAnimation(
-        idleLeft: SpriteAnimation.load(
-          'gameplay/characters/player/knight/knight_player_idle_left_6.png',
-          GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
-            amount: 6,
-            textureSize: textureSize,
-          ),
-        ),
-        idleRight: UISpriteAnimations.knightPlayerIdleRight6(),
-        runLeft: SpriteAnimation.load(
-          'gameplay/characters/player/knight/knight_player_run_left_6.png',
-          GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
-            amount: 6,
-            textureSize: textureSize,
-          ),
-        ),
-        runRight: SpriteAnimation.load(
-          'gameplay/characters/player/knight/knight_player_run_right_6.png',
-          GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
-            amount: 6,
-            textureSize: textureSize,
-          ),
-        ),
-      );
 }

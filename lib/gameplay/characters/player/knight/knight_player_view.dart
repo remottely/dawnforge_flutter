@@ -17,8 +17,8 @@ class KnightPlayerView extends SimplePlayer
 
   KnightPlayerView(Vector2 position)
     : super(
-        animation: KnightPlayerConfig.buildDirectionalAnimation,
-        size: KnightPlayerConfig.componentSize,
+        animation: KnightPlayerConfig.fDirectionalAnimation,
+        size: KnightPlayerConfig.fComponentSize,
         position: position,
         life: KnightPlayerConfig.kStandardLife,
         speed: KnightPlayerConfig.kStandardSpeed,
@@ -69,7 +69,7 @@ class KnightPlayerView extends SimplePlayer
     simpleAttackMelee(
       damage: damage,
       animationRight: CharacterBasicAttackConfig.loadPlayerExecutionAnimation(),
-      size: KnightPlayerConfig.componentSize,
+      size: KnightPlayerConfig.fComponentSize,
     );
   }
 
@@ -81,12 +81,12 @@ class KnightPlayerView extends SimplePlayer
     simpleAttackRange(
       animationRight: CharacterFireballAttackConfig.loadExecutionAnimation(),
       animationDestroy: CharacterFireballAttackConfig.loadDestroyAnimation(),
-      size: CharacterFireballAttackConfig.componentSize,
+      size: CharacterFireballAttackConfig.fComponentSize,
       damage: damage,
       speed: speed * CharacterFireballAttackConfig.kSpeedMultiplier,
       onDestroy: CharacterFireballAttackConfig.playDestroyAudio,
       collision: CharacterFireballAttackConfig.buildHitbox(),
-      lightingConfig: CharacterFireballAttackConfig.lightingConfig,
+      lightingConfig: CharacterFireballAttackConfig.fLightingConfig,
     );
     CharacterFireballAttackConfig.playExecutionAudio();
   }
@@ -94,10 +94,11 @@ class KnightPlayerView extends SimplePlayer
   void playToolAnimation() {}
 
   void showExclamationEmote() {
-    CharacterEmoteController.displayEmoteAboveCharacter(
-      gameRef: gameRef,
-      target: this,
-      assetPath: CharacterEmoteController.kExclamationEmoteAssetPath,
+    add(
+      CharacterEmoteController.displayEmoteAboveCharacter(
+        asset: CharacterEmoteController.kExclamationEmoteAsset,
+        target: this,
+      ),
     );
   }
 
@@ -116,7 +117,7 @@ class KnightPlayerView extends SimplePlayer
       DDGameDecoration.withSprite(
         sprite: KnightPlayerConfig.loadCryptSprite(),
         position: Vector2(position.x, position.y),
-        size: KnightPlayerConfig.cryptComponentSize,
+        size: KnightPlayerConfig.fCryptComponentSize,
       ),
     );
   }

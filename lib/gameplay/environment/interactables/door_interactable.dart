@@ -9,20 +9,20 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_dialog_c
 import 'package:darkness_dungeon/shared/dd_game_decoration.dart';
 
 abstract class _DoorInteractableConfig {
-  static const _kClosedDoorAssetPath =
+  static const _kClosedDoorAsset =
       'gameplay/environment/interactables/door_interactable_locked_1.png';
   static const _kRequiredKeyMessage = 'door_without_key';
   static const _kHitboxHeightRatio = 0.25;
   static const _kHitboxPositionRatio = 0.75;
 
-  static Future<Sprite> _loadClosedSprite() => Sprite.load(_kClosedDoorAssetPath);
+  static Future<Sprite> _loadClosedSprite() => Sprite.load(_kClosedDoorAsset);
 
   static Future<SpriteAnimation> _loadOpeningAnimation() =>
       SpriteAnimation.load(
         'gameplay/environment/interactables/door_interactable_opening_14.png',
         GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
           amount: 14,
-          textureSize: GameplayConstants.kTileSizeExtraLarge,
+          textureSize: GameplayConstants.fTileSizeExtraLarge,
         ),
       );
 

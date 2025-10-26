@@ -16,34 +16,33 @@ abstract class GoblinEnemyConfig {
     size: Vector2.all(7),
   );
 
-  static final textureSize = GameplayConstants.kTileSizeStandard;
-  static final componentSize = Vector2.all(
+  static final fTextureSize = GameplayConstants.fTileSizeStandard;
+  static final fComponentSize = Vector2.all(
     GameplayConstants.kTileDimensionStandard * 0.8,
   );
 
-  static SimpleDirectionAnimation get buildDirectionalAnimation =>
-      SimpleDirectionAnimation(
-        idleLeft: SpriteAnimation.load(
-          'gameplay/characters/enemies/goblin/goblin_enemy_idle_left_6.png',
-          GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
-            amount: 6,
-            textureSize: textureSize,
-          ),
-        ),
-        idleRight: UISpriteAnimations.goblinEnemyIdleRight6(),
-        runLeft: SpriteAnimation.load(
-          'gameplay/characters/enemies/goblin/goblin_enemy_run_left_6.png',
-          GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
-            amount: 6,
-            textureSize: textureSize,
-          ),
-        ),
-        runRight: SpriteAnimation.load(
-          'gameplay/characters/enemies/goblin/goblin_enemy_run_right_6.png',
-          GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
-            amount: 6,
-            textureSize: textureSize,
-          ),
-        ),
-      );
+  static final fDirectionalAnimation = SimpleDirectionAnimation(
+    idleLeft: SpriteAnimation.load(
+      'gameplay/characters/enemies/goblin/goblin_enemy_idle_left_6.png',
+      GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
+        amount: 6,
+        textureSize: fTextureSize,
+      ),
+    ),
+    idleRight: UISpriteAnimations.goblinEnemyIdleRight6(),
+    runLeft: SpriteAnimation.load(
+      'gameplay/characters/enemies/goblin/goblin_enemy_run_left_6.png',
+      GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
+        amount: 6,
+        textureSize: fTextureSize,
+      ),
+    ),
+    runRight: SpriteAnimation.load(
+      'gameplay/characters/enemies/goblin/goblin_enemy_run_right_6.png',
+      GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
+        amount: 6,
+        textureSize: fTextureSize,
+      ),
+    ),
+  );
 }

@@ -13,9 +13,9 @@ class WizardNpcView extends SimpleNpc {
 
   WizardNpcView(Vector2 position)
     : super(
-        animation: WizardNpcConfig.buildDirectionalAnimation,
+        animation: WizardNpcConfig.fDirectionalAnimation,
         position: position,
-        size: WizardNpcConfig.componentSize,
+        size: WizardNpcConfig.fComponentSize,
       );
 
   @override

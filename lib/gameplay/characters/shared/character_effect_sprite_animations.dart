@@ -8,7 +8,7 @@ class CharacterEffectSpriteAnimations {
         'gameplay/characters/shared/character_explosion_smoke_right_5.png',
         GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
           amount: 5,
-          textureSize: GameplayConstants.kTileSizeStandard,
+          textureSize: GameplayConstants.fTileSizeStandard,
         ),
       );
 
@@ -17,7 +17,7 @@ class CharacterEffectSpriteAnimations {
         'gameplay/characters/shared/character_explosion_right_7.png',
         GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
           amount: 7,
-          textureSize: GameplayConstants.kTileSizeExtraLarge,
+          textureSize: GameplayConstants.fTileSizeExtraLarge,
         ),
       );
 }

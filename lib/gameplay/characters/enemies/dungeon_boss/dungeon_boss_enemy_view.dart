@@ -23,7 +23,7 @@ class DungeonBossEnemyView extends SimpleEnemy
 
   DungeonBossEnemyView(Vector2 position)
     : super(
-        animation: DungeonBossEnemyConfig.buildDirectionalAnimation,
+        animation: DungeonBossEnemyConfig.fdirectionalAnimation,
         position: position,
         size: DungeonBossEnemyConfig.fComponentSize,
         speed: DungeonBossEnemyConfig.kSpeed,
@@ -143,7 +143,7 @@ class DungeonBossEnemyView extends SimpleEnemy
           animation:
               CharacterEffectSpriteAnimations.characterExplosionSmokeRight5(),
           position: positionExplosion,
-          size: GameplayConstants.kTileSizeStandard,
+          size: GameplayConstants.fTileSizeStandard,
           loop: false,
         ),
       );
@@ -167,7 +167,7 @@ class DungeonBossEnemyView extends SimpleEnemy
       AnimatedGameObject(
         animation: CharacterEffectSpriteAnimations.characterExplosionRight7(),
         position: position,
-        size: GameplayConstants.kTileSizeStandard,
+        size: GameplayConstants.fTileSizeStandard,
         loop: false,
       ),
     );
@@ -247,7 +247,7 @@ class DungeonBossEnemyView extends SimpleEnemy
         animation:
             CharacterEffectSpriteAnimations.characterExplosionSmokeRight5(),
         position: pos,
-        size: GameplayConstants.kTileSizeStandard,
+        size: GameplayConstants.fTileSizeStandard,
         loop: false,
       ),
     );

@@ -10,14 +10,14 @@ abstract class _TorchDecorationConfig {
   static const _kPulseVariation = 0.1;
   static const _kLightOpacity = 0.2;
 
-  static final Vector2 _textureSize = GameplayConstants.kTileSizeStandard;
-  static final Vector2 _componentSize = _textureSize;
+  static final _fTextureSize = GameplayConstants.fTileSizeStandard;
+  static final _fComponentSize = _fTextureSize;
 
   static Future<SpriteAnimation> _loadAnimation() => SpriteAnimation.load(
     'gameplay/environment/decorations/torch_decoration_6.png',
     GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
       amount: 6,
-      textureSize: _textureSize,
+      textureSize: _fTextureSize,
     ),
   );
 
@@ -36,7 +36,7 @@ class TorchDecorationView extends DDGameDecoration {
     : _isExtinguished = false,
       super.withAnimation(
         animation: _TorchDecorationConfig._loadAnimation(),
-        size: _TorchDecorationConfig._componentSize,
+        size: _TorchDecorationConfig._fComponentSize,
       ) {
     _setupLighting();
   }
@@ -45,7 +45,7 @@ class TorchDecorationView extends DDGameDecoration {
     : _isExtinguished = true,
       super.withAnimation(
         animation: _TorchDecorationConfig._loadAnimation(),
-        size: _TorchDecorationConfig._componentSize,
+        size: _TorchDecorationConfig._fComponentSize,
       ) {
     _setupLighting();
   }

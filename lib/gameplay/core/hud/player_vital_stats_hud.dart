@@ -15,7 +15,7 @@ class PlayerVitalStatsHUD extends InterfaceComponent {
           GameplayUIConstants.kHUDPadding,
           GameplayUIConstants.kHUDPadding,
         ),
-        spriteUnselected: Sprite.load(GameplayUIConstants.kHealthUIAssetPath),
+        spriteUnselected: Sprite.load(GameplayUIConstants.kHealthUIAsset),
         size: Vector2(
           GameplayUIConstants.kHUDWidth,
           GameplayUIConstants.kHUDHeight,

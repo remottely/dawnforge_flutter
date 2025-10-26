@@ -36,7 +36,7 @@ class GameplayMapManager {
   static const kImpEntityType = 'imp';
   static const kFarmTileEntityType = 'farm_tile';
 
-  static final Map<String, MapItemBuilder> fMaps = (() {
+  static final fMaps = (() {
     final mapBuilders = <String, MapItemBuilder>{};
 
     for (final config in GameplayMapConfig.kAllMaps) {
@@ -61,7 +61,7 @@ WorldMapByTiled _buildMap({
 }) {
   return WorldMapByTiled(
     WorldMapReader.fromAsset(mapAsset),
-    forceTileSize: GameplayConstants.kTileSizeStandard,
+    forceTileSize: GameplayConstants.fTileSizeStandard,
     objectsBuilder: _createObjectBuilder(sensorIds: sensorIds),
   );
 }

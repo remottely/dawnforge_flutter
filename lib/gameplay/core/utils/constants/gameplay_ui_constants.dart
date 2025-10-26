@@ -41,9 +41,9 @@ class GameplayUIConstants {
 
   static const kHealthWarningThreshold = 2.0 / 3.0;
 
-  static const kGameOverAssetPath = 'assets/game_over.png';
+  static const kGameOverAsset = 'assets/game_over.png';
 
-  static const kHealthUIAssetPath = 'health_ui.png';
+  static const kHealthUIAsset = 'health_ui.png';
 
   static const kTransparentColor = Colors.transparent;
 

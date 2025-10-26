@@ -20,7 +20,7 @@ class GameplayUIManager {
         return AppStyledDialog(
           children: [
             Image.asset(
-              GameplayUIConstants.kGameOverAssetPath,
+              GameplayUIConstants.kGameOverAsset,
               height: GameplayUIConstants.kGameOverImageHeight,
             ),
             const SizedBox(height: GameplayUIConstants.kStandardSpacing),

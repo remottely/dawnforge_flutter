@@ -51,7 +51,7 @@ class GoblinEnemyController {
         animation:
             CharacterEffectSpriteAnimations.characterExplosionSmokeRight5(),
         position: _view.position,
-        size: GameplayConstants.kTileSizeStandard,
+        size: GameplayConstants.fTileSizeStandard,
         loop: false,
       ),
     );

@@ -4,16 +4,15 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_dialog_c
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 
 abstract class WizardNpcConfig {
-  static final componentSize = Vector2(
+  static const kVisionRadius = GameplayConstants.kVisionRadiusSmall;
+
+  static final fTextureSize = Vector2(16, 22);
+  static final fComponentSize = Vector2(
     GameplayConstants.kTileDimensionStandard * 0.8,
     GameplayConstants.kTileDimensionStandard * 1.0,
   );
 
-  static const kVisionRadius = GameplayConstants.kVisionRadiusSmall;
-
-  static final npcWizardTextureSize = Vector2(16, 22);
-
-  static final buildDirectionalAnimation = SimpleDirectionAnimation(
+  static final fDirectionalAnimation = SimpleDirectionAnimation(
     idleRight: UISpriteAnimations.wizardNpcIdleLeft4(),
     runRight: UISpriteAnimations.wizardNpcIdleLeft4(),
   );

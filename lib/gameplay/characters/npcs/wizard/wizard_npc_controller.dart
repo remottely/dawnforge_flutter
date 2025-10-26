@@ -22,10 +22,11 @@ class WizardNpcController {
     if (!_model.isInteracted) {
       _view.idlePlayer();
       _model.startConversation();
-      CharacterEmoteController.displayEmoteAboveCharacter(
-        gameRef: _view.gameRef,
-        target: _view,
-        assetPath: CharacterEmoteController.kQuestionEmoteAssetPath,
+      _view.add(
+        CharacterEmoteController.displayEmoteAboveCharacter(
+          asset: CharacterEmoteController.kQuestionEmoteAsset,
+          target: _view,
+        ),
       );
       _view.initializeDialogue();
     }

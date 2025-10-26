@@ -18,20 +18,10 @@ abstract class DungeonBossEnemyConfig {
     size: Vector2(14, 16),
   );
 
-  static List<Say> createDialogueSequence() {
-    return [
-      GameplayDialogConstants.kidRightDialog('talk_kid_1'),
-      GameplayDialogConstants.bossLeftDialog('talk_boss_1'),
-      GameplayDialogConstants.knightLeftDialog('talk_player_3'),
-      GameplayDialogConstants.bossRightDialog('talk_boss_2'),
-    ];
-  }
-
   static final fTextureSize = Vector2(32, 36);
   static final fComponentSize = fTextureSize;
 
-  static SimpleDirectionAnimation
-  get buildDirectionalAnimation => SimpleDirectionAnimation(
+  static final fdirectionalAnimation = SimpleDirectionAnimation(
     idleLeft: UISpriteAnimations.dungeonBossEnemyIdleLeft4(),
     idleRight: UISpriteAnimations.dungeonBossEnemyIdleRight4(),
     runLeft: SpriteAnimation.load(
@@ -49,4 +39,13 @@ abstract class DungeonBossEnemyConfig {
       ),
     ),
   );
+
+  static List<Say> createDialogueSequence() {
+    return [
+      GameplayDialogConstants.kidRightDialog('talk_kid_1'),
+      GameplayDialogConstants.bossLeftDialog('talk_boss_1'),
+      GameplayDialogConstants.knightLeftDialog('talk_player_3'),
+      GameplayDialogConstants.bossRightDialog('talk_boss_2'),
+    ];
+  }
 }

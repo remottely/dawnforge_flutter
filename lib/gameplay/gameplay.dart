@@ -24,7 +24,7 @@ class Gameplay extends StatefulWidget {
 }
 
 class _GameplayState extends State<Gameplay> {
-  static const double _kJoystickSpriteSize = 100.0;
+  static const double _kJoystickComponentSize = 100.0;
   static const double _kActionButtonSize = 80.0;
   static const double _kActionButtonMarginBottom = 50.0;
   static const double _kPrimaryActionMarginRight = 50.0;
@@ -141,7 +141,7 @@ class _GameplayState extends State<Gameplay> {
       directional: JoystickDirectional(
         spriteBackgroundDirectional: Sprite.load('joystick_background.png'),
         spriteKnobDirectional: Sprite.load('joystick_knob.png'),
-        size: _kJoystickSpriteSize,
+        size: _kJoystickComponentSize,
         isFixed: false,
       ),
       actions: [_createPrimaryAttackAction(), _createRangedAttackAction()],

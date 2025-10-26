@@ -9,7 +9,7 @@ class KidNpcView extends SimpleNpc {
     : super(
         animation: KidNpcConfig.buildDirectionalAnimation,
         position: position,
-        size: KidNpcConfig.componentSize,
+        size: KidNpcConfig.fComponentSize,
       );
 
   @override

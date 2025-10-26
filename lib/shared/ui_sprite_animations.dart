@@ -14,7 +14,7 @@ class UISpriteAnimations {
         'gameplay/characters/player/knight/knight_player_idle_right_6.png',
         GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
           amount: 6,
-          textureSize: KnightPlayerConfig.textureSize,
+          textureSize: KnightPlayerConfig.fTextureSize,
         ),
       );
 
@@ -23,7 +23,7 @@ class UISpriteAnimations {
         'gameplay/characters/enemies/goblin/goblin_enemy_idle_right_6.png',
         GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
           amount: 6,
-          textureSize: GoblinEnemyConfig.textureSize,
+          textureSize: GoblinEnemyConfig.fTextureSize,
         ),
       );
 
@@ -31,7 +31,7 @@ class UISpriteAnimations {
     'gameplay/characters/enemies/imp/imp_enemy_idle_right_4.png',
     GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
       amount: 4,
-      textureSize: ImpEnemyConfig.textureSize,
+      textureSize: ImpEnemyConfig.fTextureSize,
     ),
   );
 
@@ -40,7 +40,7 @@ class UISpriteAnimations {
     'gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_idle_right_4.png',
     GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
       amount: 4,
-      textureSize: DungeonMiniBossEnemyConfig.textureSize,
+      textureSize: DungeonMiniBossEnemyConfig.fTextureSize,
     ),
   );
 
@@ -66,7 +66,7 @@ class UISpriteAnimations {
     'gameplay/characters/npcs/kid_npc_idle_left_4.png',
     GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
       amount: 4,
-      textureSize: KidNpcConfig.textureSize,
+      textureSize: KidNpcConfig.fTextureSize,
     ),
   );
 
@@ -74,7 +74,7 @@ class UISpriteAnimations {
     'gameplay/characters/npcs/wizard_npc_idle_left_4.png',
     GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
       amount: 4,
-      textureSize: WizardNpcConfig.npcWizardTextureSize,
+      textureSize: WizardNpcConfig.fTextureSize,
     ),
   );
 }

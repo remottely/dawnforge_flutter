@@ -8,14 +8,14 @@ abstract class _SpikeTrapInteractableConfig {
   static const _kDamageAmount = GameplayConstants.kPropertyAmountMedium;
   static const _kPriority = GameplayConstants.kPriority1;
 
-  static final _textureSize = GameplayConstants.kTileSizeStandard;
-  static final _componentSize = _textureSize;
+  static final _fTextureSize = GameplayConstants.fTileSizeStandard;
+  static final _fComponentSize = _fTextureSize;
 
   static Future<SpriteAnimation> _loadAnimation() => SpriteAnimation.load(
     'gameplay/environment/interactables/spike_trap_interactable_10.png',
     GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
       amount: 10,
-      textureSize: _textureSize,
+      textureSize: _fTextureSize,
     ),
   );
 }
@@ -30,7 +30,7 @@ class SpikeTrapInteractableView extends DDSensorPlayerDecoration {
   }) : _damageAmount = damageAmount,
        super.withAnimation(
          animation: _SpikeTrapInteractableConfig._loadAnimation(),
-         size: _SpikeTrapInteractableConfig._componentSize,
+         size: _SpikeTrapInteractableConfig._fComponentSize,
        );
 
   @override

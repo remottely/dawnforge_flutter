@@ -3,8 +3,8 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_dialog_c
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 
 abstract class KidNpcConfig {
-  static final Vector2 textureSize = Vector2(16, 22);
-  static final Vector2 componentSize = Vector2(8, 11);
+  static final fTextureSize = Vector2(16, 22);
+  static final fComponentSize = Vector2(8, 11);
 
   static SimpleDirectionAnimation get buildDirectionalAnimation =>
       SimpleDirectionAnimation(

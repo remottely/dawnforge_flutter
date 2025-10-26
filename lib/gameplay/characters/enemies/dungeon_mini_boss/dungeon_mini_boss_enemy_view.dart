@@ -17,9 +17,9 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
 
   DungeonMiniBossEnemyView(Vector2 position)
     : super(
-        animation: DungeonMiniBossEnemyConfig.buildDirectionalAnimation,
+        animation: DungeonMiniBossEnemyConfig.fDirectionalAnimation,
         position: position,
-        size: DungeonMiniBossEnemyConfig.componentSize,
+        size: DungeonMiniBossEnemyConfig.fComponentSize,
         speed: DungeonMiniBossEnemyConfig.kSpeed,
         life: DungeonMiniBossEnemyConfig.kLife,
       );
@@ -93,13 +93,13 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
     simpleAttackRange(
       animation: CharacterFireballAttackConfig.loadExecutionAnimation(),
       animationDestroy: CharacterFireballAttackConfig.loadDestroyAnimation(),
-      size: CharacterFireballAttackConfig.componentSize,
+      size: CharacterFireballAttackConfig.fComponentSize,
       damage: _attackDamage,
       speed: speed * CharacterFireballAttackConfig.kSpeedMultiplier,
       execute: CharacterFireballAttackConfig.playExecutionAudio,
       onDestroy: CharacterFireballAttackConfig.playDestroyAudio,
       collision: CharacterFireballAttackConfig.buildHitbox(),
-      lightingConfig: CharacterFireballAttackConfig.lightingConfig,
+      lightingConfig: CharacterFireballAttackConfig.fLightingConfig,
     );
   }
 
@@ -119,7 +119,7 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
         animation:
             CharacterEffectSpriteAnimations.characterExplosionSmokeRight5(),
         position: position,
-        size: GameplayConstants.kTileSizeStandard,
+        size: GameplayConstants.fTileSizeStandard,
         loop: false,
       ),
     );

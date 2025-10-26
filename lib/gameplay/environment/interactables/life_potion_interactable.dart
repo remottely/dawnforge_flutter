@@ -4,14 +4,14 @@ import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constant
 import 'package:darkness_dungeon/shared/dd_game_decoration.dart';
 
 abstract class LifePotionConfig {
-  static const _kSpritePath =
-      'gameplay/environment/interactables/life_potion_interactable_1.png';
-  static final Vector2 _componentSize = GameplayConstants.kTileSizeStandard;
   static const _kHealingDuration = Duration(seconds: 1);
   static const _kStandardHealAmount = 50.0;
   static const kHealAmount = GameplayConstants.kPropertyAmountSmall;
 
-  static Future<Sprite> _loadSprite() => Sprite.load(_kSpritePath);
+  static final _fComponentSize = GameplayConstants.fTileSizeStandard;
+  static Future<Sprite> _loadSprite() => Sprite.load(
+    'gameplay/environment/interactables/life_potion_interactable_1.png',
+  );
 }
 
 class LifePotionDecorationView extends DDSensorPlayerDecoration {
@@ -23,7 +23,7 @@ class LifePotionDecorationView extends DDSensorPlayerDecoration {
       super.withSprite(
         sprite: LifePotionConfig._loadSprite(),
         position: position,
-        size: LifePotionConfig._componentSize,
+        size: LifePotionConfig._fComponentSize,
       );
 
   @override

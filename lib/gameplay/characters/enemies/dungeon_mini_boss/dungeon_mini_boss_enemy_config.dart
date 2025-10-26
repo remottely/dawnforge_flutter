@@ -19,19 +19,18 @@ abstract class DungeonMiniBossEnemyConfig {
     size: Vector2(6, 7),
   );
 
-  static final textureSize = Vector2(16, 24);
-  static final componentSize = Vector2(
+  static final fTextureSize = Vector2(16, 24);
+  static final fComponentSize = Vector2(
     GameplayConstants.kTileDimensionStandard * 0.68,
     GameplayConstants.kTileDimensionStandard * 0.93,
   );
 
-  static SimpleDirectionAnimation
-  get buildDirectionalAnimation => SimpleDirectionAnimation(
+  static final fDirectionalAnimation = SimpleDirectionAnimation(
     idleLeft: SpriteAnimation.load(
       'gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_idle_left_4.png',
       GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
         amount: 4,
-        textureSize: textureSize,
+        textureSize: fTextureSize,
       ),
     ),
     idleRight: UISpriteAnimations.dungeonMiniBossEnemyIdleRight4(),
@@ -39,14 +38,14 @@ abstract class DungeonMiniBossEnemyConfig {
       'gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_run_left_4.png',
       GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
         amount: 4,
-        textureSize: textureSize,
+        textureSize: fTextureSize,
       ),
     ),
     runRight: SpriteAnimation.load(
       'gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_run_right_4.png',
       GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
         amount: 4,
-        textureSize: textureSize,
+        textureSize: fTextureSize,
       ),
     ),
   );

@@ -16,34 +16,33 @@ abstract class ImpEnemyConfig {
     size: Vector2.all(6),
   );
 
-  static final Vector2 textureSize = GameplayConstants.kTileSizeStandard;
-  static final Vector2 componentSize = Vector2.all(
+  static final fTextureSize = GameplayConstants.fTileSizeStandard;
+  static final fComponentSize = Vector2.all(
     GameplayConstants.kTileDimensionStandard * 0.8,
   );
 
-  static SimpleDirectionAnimation get buildDirectionalAnimation =>
-      SimpleDirectionAnimation(
-        idleLeft: SpriteAnimation.load(
-          'gameplay/characters/enemies/imp/imp_enemy_idle_left_4.png',
-          GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
-            amount: 4,
-            textureSize: textureSize,
-          ),
-        ),
-        idleRight: UISpriteAnimations.impEnemyIdleRight4(),
-        runLeft: SpriteAnimation.load(
-          'gameplay/characters/enemies/imp/imp_enemy_run_left_4.png',
-          GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
-            amount: 4,
-            textureSize: textureSize,
-          ),
-        ),
-        runRight: SpriteAnimation.load(
-          'gameplay/characters/enemies/imp/imp_enemy_run_right_4.png',
-          GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
-            amount: 4,
-            textureSize: textureSize,
-          ),
-        ),
-      );
+  static final fDirectionalAnimation = SimpleDirectionAnimation(
+    idleLeft: SpriteAnimation.load(
+      'gameplay/characters/enemies/imp/imp_enemy_idle_left_4.png',
+      GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
+        amount: 4,
+        textureSize: fTextureSize,
+      ),
+    ),
+    idleRight: UISpriteAnimations.impEnemyIdleRight4(),
+    runLeft: SpriteAnimation.load(
+      'gameplay/characters/enemies/imp/imp_enemy_run_left_4.png',
+      GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
+        amount: 4,
+        textureSize: fTextureSize,
+      ),
+    ),
+    runRight: SpriteAnimation.load(
+      'gameplay/characters/enemies/imp/imp_enemy_run_right_4.png',
+      GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
+        amount: 4,
+        textureSize: fTextureSize,
+      ),
+    ),
+  );
 }

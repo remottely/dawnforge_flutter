@@ -21,13 +21,13 @@ class CharacterFireballAttackConfig {
     ),
   );
 
-  static final lightingConfig = LightingConfig(
+  static final fLightingConfig = LightingConfig(
     radius: GameplayConstants.kTileDimensionStandard * 0.9,
     blurBorder: GameplayConstants.kTileDimensionStandard,
     color: Colors.deepOrangeAccent.withValues(alpha: 0.4),
   );
 
-  static final componentSize = Vector2.all(
+  static final fComponentSize = Vector2.all(
     GameplayConstants.kTileDimensionStandard * 0.65,
   );
 
@@ -44,7 +44,7 @@ class CharacterFireballAttackConfig {
     'gameplay/characters/shared/character_fireball_explosion_right_6.png',
     GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
       amount: 6,
-      textureSize: GameplayConstants.kTileSizeExtraLarge,
+      textureSize: GameplayConstants.fTileSizeExtraLarge,
     ),
   );
 }

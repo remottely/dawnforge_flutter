@@ -21,10 +21,10 @@ class GameplayConstants {
   static const _kTileDimensionLarge = 24.0;
   static const _kTileDimensionExtraLarge = 32.0;
 
-  static final kTileSizeSmall = Vector2.all(_kTileDimensionSmall);
-  static final kTileSizeStandard = Vector2.all(kTileDimensionStandard);
-  static final kTileSizeLarge = Vector2.all(_kTileDimensionLarge);
-  static final kTileSizeExtraLarge = Vector2.all(_kTileDimensionExtraLarge);
+  static final fTileSizeSmall = Vector2.all(_kTileDimensionSmall);
+  static final fTileSizeStandard = Vector2.all(kTileDimensionStandard);
+  static final fTileSizeLarge = Vector2.all(_kTileDimensionLarge);
+  static final fTileSizeExtraLarge = Vector2.all(_kTileDimensionExtraLarge);
 
   static const kCameraSpeed = 3.0;
 

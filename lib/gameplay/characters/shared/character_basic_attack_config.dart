@@ -8,7 +8,7 @@ class CharacterBasicAttackConfig {
         'gameplay/characters/player/player_basic_attack_right_3.png',
         GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
           amount: 3,
-          textureSize: GameplayConstants.kTileSizeStandard,
+          textureSize: GameplayConstants.fTileSizeStandard,
         ),
       );
 
@@ -17,7 +17,7 @@ class CharacterBasicAttackConfig {
         'gameplay/characters/enemies/enemy_basic_attack_right_3.png',
         GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
           amount: 3,
-          textureSize: GameplayConstants.kTileSizeStandard,
+          textureSize: GameplayConstants.fTileSizeStandard,
         ),
       );
 }
