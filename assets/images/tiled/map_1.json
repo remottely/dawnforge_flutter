@@ -304,7 +304,6 @@
                 {
                  "draworder":"topdown",
                  "id":20,
-                 "locked":true,
                  "name":"Decorations",
                  "objects":[
                         {
@@ -321,7 +320,7 @@
                         {
                          "height":36.25,
                          "id":194,
-                         "name":"door_decoration",
+                         "name":"door_interactable",
                          "rotation":0,
                          "type":"",
                          "visible":true,
@@ -332,13 +331,13 @@
                         {
                          "height":16,
                          "id":196,
-                         "name":"door_key_decoration",
+                         "name":"door_key_interactable",
                          "rotation":0,
                          "type":"",
                          "visible":true,
                          "width":16,
-                         "x":513.460920379839,
-                         "y":288
+                         "x":70.2022559673284,
+                         "y":191.317836010144
                         }, 
                         {
                          "height":16,

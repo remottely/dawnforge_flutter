@@ -18,7 +18,7 @@ abstract class _MapSensorConfig {
   static final String sensorLogPrefix = GameplayMapConstants.kSensorLogPrefix;
 }
 
-class MapSensorView extends DDSensorPlayerDecoration {
+class MapTransitionSensorView extends DDSensorPlayerDecoration {
   final String id;
   final String targetMap;
   final Vector2 playerPosition;
@@ -28,7 +28,7 @@ class MapSensorView extends DDSensorPlayerDecoration {
   bool _hasNavigated = false;
   double _contactTime = 0;
 
-  MapSensorView({
+  MapTransitionSensorView({
     required this.id,
     required Vector2 position,
     required Vector2 size,

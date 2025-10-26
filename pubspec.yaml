@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.8.32+1
+version: 1.8.33+1
 
 environment:
   sdk: ^3.9.2
@@ -47,6 +47,7 @@ flutter:
     - assets/images/gameplay/characters/player/knight/
     - assets/images/gameplay/characters/shared/
     - assets/images/gameplay/environment/decorations/
+    - assets/images/gameplay/environment/interactables/
     - assets/images/gameplay/terrain/farmable/
     - assets/images/tiled/
     - assets/audio/

@@ -3,14 +3,14 @@ import 'dart:async';
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_animation_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_dialog_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_animation_constants.dart';
 import 'package:darkness_dungeon/shared/dd_game_decoration.dart';
 
-abstract class _DoorDecorationConfig {
+abstract class _DoorInteractableConfig {
   static const String _kClosedDoorAsset =
-      'gameplay/environment/decorations/door_decoration_locked_1.png';
+      'gameplay/environment/interactables/door_interactable_locked_1.png';
   static const String _kRequiredKeyMessage = 'door_without_key';
   static const double _kHitboxHeightRatio = 0.25;
   static const double _kHitboxPositionRatio = 0.75;
@@ -19,10 +19,10 @@ abstract class _DoorDecorationConfig {
 
   static Future<SpriteAnimation> _loadOpeningAnimation() =>
       SpriteAnimation.load(
-        'gameplay/environment/decorations/door_decoration_opening_14.png',
+        'gameplay/environment/interactables/door_interactable_opening_14.png',
         GameplayAnimationConstants.defaultStepTimeSpriteAnimationData(
           amount: 14,
-          textureSize: GameplayConstants.kTileSizeStandard,
+          textureSize: GameplayConstants.kTileSizeExtraLarge,
         ),
       );
 
@@ -40,16 +40,16 @@ abstract class _DoorDecorationConfig {
   }
 }
 
-class DoorDecorationView extends DDGameDecoration {
+class DoorInteractableView extends DDGameDecoration {
   bool _isOpen = false;
   bool _isShowingDialog = false;
 
-  DoorDecorationView({required super.position, required super.size})
-    : super.withSprite(sprite: _DoorDecorationConfig._loadClosedSprite());
+  DoorInteractableView({required super.position, required super.size})
+    : super.withSprite(sprite: _DoorInteractableConfig._loadClosedSprite());
 
   @override
   Future<void> onLoad() {
-    _DoorDecorationConfig._buildHitBox(this);
+    _DoorInteractableConfig._buildHitBox(this);
     return super.onLoad();
   }
 
@@ -82,7 +82,7 @@ class DoorDecorationView extends DDGameDecoration {
 
   void _playOpeningAnimation() {
     playSpriteAnimationOnce(
-      _DoorDecorationConfig._loadOpeningAnimation(),
+      _DoorInteractableConfig._loadOpeningAnimation(),
       onFinish: _cleanup,
       onStart: () {
         sprite = null;
@@ -100,7 +100,7 @@ class DoorDecorationView extends DDGameDecoration {
   void _showKeyRequiredDialog() {
     GameplayUIManager.displayConversationDialog(
       gameRef.context,
-      _DoorDecorationConfig.createDialogueSequence(),
+      _DoorInteractableConfig.createDialogueSequence(),
       onClose: () {
         _isShowingDialog = false;
       },

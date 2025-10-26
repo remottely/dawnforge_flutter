@@ -1,12 +1,7 @@
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_localizations.dart';
 
 class GameplayStringsLocation {
-  GameplayStringsLocation._internal();
-
-  static final GameplayStringsLocation _instance =
-      GameplayStringsLocation._internal();
-
-  static GameplayStringsLocation get instance => _instance;
+  static final GameplayStringsLocation instance = GameplayStringsLocation();
 
   late final GameplayLocalizations _localizations;
 

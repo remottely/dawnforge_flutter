@@ -2,12 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 
 class GameplayAnimationConstants {
-  static const String kDoorKeyDecorationAssetPath =
-      'gameplay/environment/decorations/door_key_decoration_1.png';
-
-  static const double kStandardStepTime = 0.1;
-  static const double kFastStepTime = 0.05;
-  static const double kSlowStepTime = 0.15;
+  static const double _kStandardStepTime = 0.1;
 
   static const int kIdleFrames = 4;
   static const int kRunFrames = 6;
@@ -35,6 +30,6 @@ class GameplayAnimationConstants {
   }) => SpriteAnimationData.sequenced(
     amount: amount,
     textureSize: textureSize,
-    stepTime: kStandardStepTime,
+    stepTime: _kStandardStepTime,
   );
 }

@@ -6,26 +6,28 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_view.dart';
-import 'package:darkness_dungeon/gameplay/core/data/gameplay_map_config.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_map_config.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_map_constants.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/barrel_decoration.dart';
-import 'package:darkness_dungeon/gameplay/environment/decorations/door_decoration.dart';
-import 'package:darkness_dungeon/gameplay/environment/decorations/door_key_decoration.dart';
+import 'package:darkness_dungeon/gameplay/environment/interactables/door_key_interactable.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/life_potion_decoration.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/spike_trap_decoration.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/torch_decoration.dart';
+import 'package:darkness_dungeon/gameplay/environment/interactables/door_interactable.dart';
 import 'package:darkness_dungeon/gameplay/environment/sensors/map_sensor.dart';
 import 'package:darkness_dungeon/gameplay/terrain/farmable/farm_tile.dart';
 
 class GameplayMapManager {
   static const String kBarrelDecorationType = 'barrel_decoration';
-  static const String kDoorDecorationType = 'door_decoration';
-  static const String kDoorKeyDecorationType = 'door_key_decoration';
   static const String kLifePotionDecorationType = 'life_potion_decoration';
   static const String kTorchDecorationType = 'torch_decoration';
   static const String kTorchDecorationEmptyType = 'torch_decoration_empty';
   static const String kSpikeTrapDecorationType = 'spike_trap_decoration';
+
+  static const String kDoorInteractableType = 'door_interactable';
+  static const String kDoorKeyInteractableType = 'door_key_interactable';
+
   static const String kWizardEntityType = 'wizard';
   static const String kKidEntityType = 'kid';
   static const String kBossEntityType = 'dungeon_boss';
@@ -87,7 +89,7 @@ void _addSensorBuilders(
   }
 }
 
-MapSensorView _createMapSensor(
+MapTransitionSensorView _createMapSensor(
   String sensorId,
   TiledObjectProperties properties,
 ) {
@@ -100,7 +102,7 @@ MapSensorView _createMapSensor(
     double.parse(positionParts[1]),
   );
 
-  return MapSensorView(
+  return MapTransitionSensorView(
     id: sensorId,
     position: properties.position,
     size: properties.size,
@@ -119,10 +121,10 @@ void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
     GameplayMapManager.kBarrelDecorationType: (p) =>
         BarrelDecorationView(position: p.position),
 
-    GameplayMapManager.kDoorDecorationType: (p) =>
-        DoorDecorationView(position: p.position, size: p.size),
-    GameplayMapManager.kDoorKeyDecorationType: (p) =>
-        DoorKeyDecorationView(position: p.position),
+    GameplayMapManager.kDoorInteractableType: (p) =>
+        DoorInteractableView(position: p.position, size: p.size),
+    GameplayMapManager.kDoorKeyInteractableType: (p) =>
+        DoorKeyInteractableView(position: p.position),
     GameplayMapManager.kLifePotionDecorationType: (p) =>
         LifePotionDecorationView(
           position: p.position,

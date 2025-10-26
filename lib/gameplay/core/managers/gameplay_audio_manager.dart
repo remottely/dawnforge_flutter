@@ -5,12 +5,7 @@ import 'package:flutter/foundation.dart';
 import '../utils/constants/gameplay_audio_constants.dart';
 
 class GameplayAudioManager {
-  GameplayAudioManager._internal();
-
-  static final GameplayAudioManager _instance =
-      GameplayAudioManager._internal();
-
-  static GameplayAudioManager get instance => _instance;
+  static final GameplayAudioManager instance = GameplayAudioManager();
 
   bool _isMusicEnabled = true;
   bool _isBackgroundMusicPlaying = false;
