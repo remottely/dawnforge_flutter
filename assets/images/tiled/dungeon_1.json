@@ -264,7 +264,7 @@
                         {
                          "height":16,
                          "id":265,
-                         "name":"spike_trap_decoration",
+                         "name":"spike_trap_interactable",
                          "rotation":0,
                          "type":"",
                          "visible":true,
@@ -275,7 +275,7 @@
                         {
                          "height":16,
                          "id":266,
-                         "name":"spike_trap_decoration",
+                         "name":"spike_trap_interactable",
                          "rotation":0,
                          "type":"",
                          "visible":true,
@@ -286,7 +286,7 @@
                         {
                          "height":16,
                          "id":267,
-                         "name":"spike_trap_decoration",
+                         "name":"spike_trap_interactable",
                          "rotation":0,
                          "type":"",
                          "visible":true,
@@ -341,7 +341,7 @@
                         {
                          "height":16,
                          "id":272,
-                         "name":"spike_trap_decoration",
+                         "name":"spike_trap_interactable",
                          "rotation":0,
                          "type":"",
                          "visible":true,
@@ -352,7 +352,7 @@
                         {
                          "height":16,
                          "id":273,
-                         "name":"spike_trap_decoration",
+                         "name":"spike_trap_interactable",
                          "rotation":0,
                          "type":"",
                          "visible":true,
@@ -363,7 +363,7 @@
                         {
                          "height":16,
                          "id":274,
-                         "name":"spike_trap_decoration",
+                         "name":"spike_trap_interactable",
                          "rotation":0,
                          "type":"",
                          "visible":true,
@@ -491,17 +491,6 @@
                          "width":16,
                          "x":112,
                          "y":416
-                        }, 
-                        {
-                         "height":16,
-                         "id":289,
-                         "name":"torch_decoration_empty",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":336,
-                         "y":400
                         }, 
                         {
                          "height":16,

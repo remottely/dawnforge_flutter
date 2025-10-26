@@ -342,13 +342,13 @@
                         {
                          "height":16,
                          "id":197,
-                         "name":"spike_trap_decoration",
+                         "name":"spike_trap_interactable",
                          "rotation":0,
                          "type":"",
                          "visible":true,
                          "width":16,
-                         "x":432,
-                         "y":272
+                         "x":39.9881656804734,
+                         "y":83.3905325443787
                         }, 
                         {
                          "height":16,
@@ -386,35 +386,13 @@
                         {
                          "height":16,
                          "id":202,
-                         "name":"spike_trap_decoration",
+                         "name":"spike_trap_interactable",
                          "rotation":0,
                          "type":"",
                          "visible":true,
                          "width":16,
                          "x":368,
                          "y":368
-                        }, 
-                        {
-                         "height":16,
-                         "id":203,
-                         "name":"spike_trap_decoration",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":344.884465377634,
-                         "y":443.900618848121
-                        }, 
-                        {
-                         "height":16,
-                         "id":204,
-                         "name":"spike_trap_decoration",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":311.690018184331,
-                         "y":420.036345868942
                         }, 
                         {
                          "height":16,
