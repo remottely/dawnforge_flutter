@@ -1,26 +1,15 @@
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_localizations.dart';
 
 class GameplayStringsLocation {
-  static final GameplayStringsLocation _singleton =
-      new GameplayStringsLocation._internal();
+  static final GameplayStringsLocation instance = GameplayStringsLocation();
 
-  static late GameplayLocalizations _myLocalizations;
+  late final GameplayLocalizations _localizations;
 
-  static void configure(GameplayLocalizations location) {
-    _myLocalizations = location;
+  void initialize(GameplayLocalizations localization) {
+    _localizations = localization;
   }
-
-  factory GameplayStringsLocation() {
-    return _singleton;
-  }
-
-  GameplayStringsLocation._internal();
 
   String getString(String key) {
-    return _myLocalizations.trans(key);
+    return _localizations.trans(key);
   }
-}
-
-String getString(String key) {
-  return GameplayStringsLocation().getString(key);
 }

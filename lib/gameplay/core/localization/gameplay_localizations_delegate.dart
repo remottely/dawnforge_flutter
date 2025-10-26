@@ -5,16 +5,23 @@ import 'package:flutter/material.dart';
 
 class GameplayLocalizationsDelegate
     extends LocalizationsDelegate<GameplayLocalizations> {
+  static const kSupportedLocales = [Locale('en'), Locale('pt')];
+
   const GameplayLocalizationsDelegate();
 
   @override
-  bool isSupported(Locale locale) => ['en', 'pt'].contains(locale.languageCode);
+  bool isSupported(Locale locale) {
+    return kSupportedLocales
+        .map((l) => l.languageCode)
+        .contains(locale.languageCode);
+  }
 
   @override
   Future<GameplayLocalizations> load(Locale locale) async {
     GameplayLocalizations localizations = new GameplayLocalizations(locale);
+
     await localizations.load();
-    print("Load ${locale.languageCode}");
+
     return localizations;
   }
 

@@ -45,10 +45,10 @@ The core game logic layer, built on top of the Bonfire game engine.
 
 #### Game Entities
 
-- **Player** (`/lib/gameplay/player/`): Knight character with combat and movement
+- **Player** (`/lib/gameplay/player/`): KnightCharacter character with combat and movement
 - **Enemies** (`/lib/gameplay/enemies/`): AI-controlled opponents (Goblin, Imp, MiniBoss)
 - **NPCs** (`/lib/gameplay/npc/`): Interactive characters (Wizard, Kid)
-- **Decorations** (`/lib/gameplay/decoration/`): Interactive objects (Potions, Keys, Doors, Spikes, Torches)
+- **Decorations** (`/lib/gameplay/decoration/`): Interactive objects (Potions, Keys, Doors, Spike Traps, Torches)
 
 #### HUD Components (`/lib/gameplay/hud/`)
 
@@ -74,7 +74,7 @@ design_system/
         ├── app_styled_button.dart    # Button components
         ├── app_styled_dialog.dart    # Dialog components
         ├── app_radio_button.dart     # Radio button components
-        └── app_animated_sprite_widget.dart # Animated sprites
+        └── df_animated_sprite_widget.dart # Animated sprites
 ```
 
 ## ⚙️ Core Systems
@@ -228,7 +228,7 @@ static const Duration kAnimationDuration = Duration(milliseconds: 300);
 // Game Constants
 static const double kPlayerSpeed = 80.0;
 static const int kMaxEnemies = 10;
-static const String kPlayerAssetPath = 'player/knight.png';
+static const String kPlayerAssetPath = 'gameplay/characters/player/knight.png';
 ```
 
 ### Constant Organization

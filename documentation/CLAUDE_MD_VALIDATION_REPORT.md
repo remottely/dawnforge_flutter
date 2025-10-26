@@ -54,7 +54,7 @@
 #### ✅ **Classes em PascalCase**
 
 - **Resultado:** 100% conformidade
-- **Verificação:** `AppStyledButton`, `GameplayMapManager`, `Knight`
+- **Verificação:** `AppStyledButton`, `GameplayMapManager`, `KnightCharacter`
 
 #### ✅ **Arquivos em snake_case**
 
@@ -179,7 +179,7 @@ AppStyledText.large({...})
 2. **AppStyledButton** - 2 factory variants
 3. **AppStyledDialog** - Background customization
 4. **AppRadioButton** - Interactive components
-5. **AppAnimatedSpriteWidget** - Animation support
+5. **DFAnimatedSpriteWidget** - Animation support
 
 #### ✅ **Factory Methods Padronizados**
 

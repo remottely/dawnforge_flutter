@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class GameplayLocalizations {
+  final Locale locale;
+
   GameplayLocalizations(this.locale) {
-    GameplayStringsLocation.configure(this);
+    GameplayStringsLocation.instance.initialize(this);
   }
 
-  final Locale locale;
+  late final Map<String, String> _sentences;
 
   static GameplayLocalizations? of(BuildContext context) {
     return Localizations.of<GameplayLocalizations>(
@@ -19,23 +21,20 @@ class GameplayLocalizations {
     );
   }
 
-  Map<String, String> _sentences = {};
-
   Future<bool> load() async {
     String data = await rootBundle.loadString(
-      'assets/l10n/${this.locale.languageCode}.json',
+      'assets/l10n/${locale.languageCode}.json',
     );
-    Map<String, dynamic> _result = json.decode(data);
+    final Map<String, dynamic> result = json.decode(data);
 
-    this._sentences = new Map();
-    _result.forEach((String key, dynamic value) {
-      this._sentences[key] = value.toString();
+    _sentences = result.map((String key, dynamic value) {
+      return MapEntry(key, value.toString());
     });
 
     return true;
   }
 
   String trans(String key) {
-    return this._sentences[key] ?? '';
+    return _sentences[key] ?? '';
   }
 }

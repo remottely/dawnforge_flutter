@@ -8,7 +8,7 @@ This document provides comprehensive usage examples for all design system compon
 - [AppStyledButton](#appstyledbutton)
 - [AppStyledDialog](#appstyleddialog)
 - [AppRadioButton](#appradiobutton)
-- [AppAnimatedSpriteWidget](#appanimatedspritewidget)
+- [DFAnimatedSpriteWidget](#appanimatedspritewidget)
 
 ## 📝 AppStyledText
 
@@ -355,44 +355,45 @@ AppRadioButton.kIndicatorMargin = 2.0
 AppRadioButton.kLabelSpacing = 10.0
 ```
 
-## 🎮 AppAnimatedSpriteWidget
+## 🎮 DFAnimatedSpriteWidget
 
 Display animated sprites with size variants for game integration.
 
 ### Basic Usage
 
 ```dart
-import 'package:darkness_dungeon/presentation/design_system/components/atoms/app_animated_sprite_widget.dart';
+import 'package:darkness_dungeon/presentation/design_system/components/atoms/df_animated_sprite_widget.dart';
 
 // Load sprite animation
 Future<SpriteAnimation> knightAnimation = SpriteAnimation.load(
-  'player/knight_idle.png',
+  'gameplay/characters/player/knight_idle.png',
   SpriteAnimationData.sequenced(
     amount: 4,
     stepTime: 0.2,
-    textureSize: Vector2(16, 16),
+    textureSize:
+    GameplayConstants.kDefaultVectorSize,
   ),
 );
 
 // Display with default size
-AppAnimatedSpriteWidget(animation: knightAnimation)
+DFAnimatedSpriteWidget(animation: knightAnimation)
 ```
 
 ### Factory Constructors
 
 ```dart
 // Large sprite for detailed display
-AppAnimatedSpriteWidget.large(
+DFAnimatedSpriteWidget.large(
   animation: knightAnimation,
 )
 
 // Small sprite for UI elements
-AppAnimatedSpriteWidget.small(
+DFAnimatedSpriteWidget.small(
   animation: knightAnimation,
 )
 
 // Custom size
-AppAnimatedSpriteWidget(
+DFAnimatedSpriteWidget(
   animation: knightAnimation,
   width: 80,
   height: 80,
@@ -428,7 +429,7 @@ class _CharacterCarouselState extends State<CharacterCarousel> {
           SizedBox(height: 20),
 
           // Animated character display
-          AppAnimatedSpriteWidget.large(
+          DFAnimatedSpriteWidget.large(
             animation: characterAnimations[currentIndex],
           ),
 
@@ -472,7 +473,7 @@ class MenuBackground extends StatelessWidget {
         Positioned(
           top: 50,
           right: 30,
-          child: AppAnimatedSpriteWidget.small(
+          child: DFAnimatedSpriteWidget.small(
             animation: EffectsSpriteSheet.smokeExplosion(),
           ),
         ),
@@ -480,7 +481,7 @@ class MenuBackground extends StatelessWidget {
         Positioned(
           bottom: 100,
           left: 50,
-          child: AppAnimatedSpriteWidget(
+          child: DFAnimatedSpriteWidget(
             animation: PlayerSpriteSheet.knightRunRight(),
             width: 64,
             height: 64,
@@ -507,13 +508,13 @@ class StatusIndicatorWidget extends StatelessWidget {
       children: [
         AppStyledText.small(text: 'Magic: '),
         if (isActive)
-          AppAnimatedSpriteWidget.small(
+          DFAnimatedSpriteWidget.small(
             animation: EffectsSpriteSheet.magicSparkle(),
           )
         else
           Container(
-            width: AppAnimatedSpriteWidget.kSmallSize,
-            height: AppAnimatedSpriteWidget.kSmallSize,
+            width: DFAnimatedSpriteWidget.kSmallSize,
+            height: DFAnimatedSpriteWidget.kSmallSize,
             color: Colors.grey.shade600,
           ),
       ],
@@ -525,9 +526,9 @@ class StatusIndicatorWidget extends StatelessWidget {
 ### Constants Available
 
 ```dart
-AppAnimatedSpriteWidget.kDefaultSize = 100.0
-AppAnimatedSpriteWidget.kLargeSize = 150.0
-AppAnimatedSpriteWidget.kSmallSize = 50.0
+DFAnimatedSpriteWidget.kDefaultSize = 100.0
+DFAnimatedSpriteWidget.kLargeSize = 150.0
+DFAnimatedSpriteWidget.kSmallSize = 50.0
 ```
 
 ---
@@ -585,7 +586,7 @@ class SpriteCache {
 }
 
 // Use in widgets
-AppAnimatedSpriteWidget(
+DFAnimatedSpriteWidget(
   animation: SpriteCache.getAnimation('knight_idle', PlayerSpriteSheet.knightIdleRight()),
 )
 ```

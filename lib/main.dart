@@ -1,5 +1,5 @@
+import 'package:darkness_dungeon/app/presentation/screens/menu_screen.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_localizations_delegate.dart';
-import 'package:darkness_dungeon/presentation/screens/menu_screen.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -16,8 +16,8 @@ void main() async {
     await Flame.device.fullScreen();
   }
 
-  await GameplayAudioManager.initialize();
-  GameplayLocalizationsDelegate myLocation =
+  await GameplayAudioManager.instance.initialize();
+  GameplayLocalizationsDelegate location =
       const GameplayLocalizationsDelegate();
 
   runApp(
@@ -27,12 +27,11 @@ void main() async {
       home: MenuScreen(),
       supportedLocales: GameplayLocalizationsDelegate.supportedLocales(),
       localizationsDelegates: [
-        myLocation,
+        location,
         DefaultCupertinoLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
+        ...GlobalMaterialLocalizations.delegates,
       ],
-      localeResolutionCallback: myLocation.resolution,
+      localeResolutionCallback: location.resolution,
     ),
   );
 }
