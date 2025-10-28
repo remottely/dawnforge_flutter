@@ -7,7 +7,7 @@ class KidNpcView extends SimpleNpc {
 
   KidNpcView(Vector2 position)
     : super(
-        animation: KidNpcConfig.buildDirectionalAnimation,
+        animation: KidNpcConfig.fDirectionalAnimation,
         position: position,
         size: KidNpcConfig.fComponentSize,
       );

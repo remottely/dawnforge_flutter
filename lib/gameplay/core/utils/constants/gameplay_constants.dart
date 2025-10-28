@@ -16,15 +16,15 @@ class GameplayConstants {
     );
   }
 
-  static const _kTileDimensionSmall = 8.0;
+  static const kTileDimensionSmall = 8.0;
   static const kTileDimensionStandard = 16.0;
-  static const _kTileDimensionLarge = 24.0;
-  static const _kTileDimensionExtraLarge = 32.0;
+  static const kTileDimensionLarge = 24.0;
+  static const kTileDimensionExtraLarge = 32.0;
 
-  static final fTileSizeSmall = Vector2.all(_kTileDimensionSmall);
+  static final fTileSizeSmall = Vector2.all(kTileDimensionSmall);
   static final fTileSizeStandard = Vector2.all(kTileDimensionStandard);
-  static final fTileSizeLarge = Vector2.all(_kTileDimensionLarge);
-  static final fTileSizeExtraLarge = Vector2.all(_kTileDimensionExtraLarge);
+  static final fTileSizeLarge = Vector2.all(kTileDimensionLarge);
+  static final fTileSizeExtraLarge = Vector2.all(kTileDimensionExtraLarge);
 
   static const kCameraSpeed = 3.0;
 
@@ -41,6 +41,4 @@ class GameplayConstants {
   static const kVisionRadiusLarge = 64.0;
   static const kVisionRadiusExtraLarge = 80.0;
   static const kVisionRadiusUltraLarge = 96.0;
-
-  static const kPriority1 = 1;
 }

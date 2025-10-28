@@ -10,10 +10,8 @@ abstract class _BarrelDecorationConfig {
   static Future<Sprite> _loadSprite() =>
       Sprite.load('gameplay/environment/decorations/barrel_decoration_1.png');
 
-  static final fHitbox = RectangleHitbox(
-    position: Vector2(2, 6),
-    size: Vector2(11, 4),
-  );
+  static RectangleHitbox buildHitbox() =>
+      RectangleHitbox(position: Vector2(2, 6), size: Vector2(11, 4));
 }
 
 class BarrelDecorationView extends DDPushableDecoration {
@@ -25,7 +23,7 @@ class BarrelDecorationView extends DDPushableDecoration {
 
   @override
   Future<void> onLoad() {
-    add(_BarrelDecorationConfig.fHitbox);
+    add(_BarrelDecorationConfig.buildHitbox());
 
     return super.onLoad();
   }

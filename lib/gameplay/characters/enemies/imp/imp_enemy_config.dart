@@ -11,11 +11,6 @@ abstract class ImpEnemyConfig {
   static const kAttackEffectSize =
       GameplayConstants.kTileDimensionStandard * 0.62;
 
-  static final fHitbox = RectangleHitbox(
-    position: Vector2(3, 5),
-    size: Vector2.all(6),
-  );
-
   static final fTextureSize = GameplayConstants.fTileSizeStandard;
   static final fComponentSize = Vector2.all(
     GameplayConstants.kTileDimensionStandard * 0.8,
@@ -45,4 +40,7 @@ abstract class ImpEnemyConfig {
       ),
     ),
   );
+
+  static RectangleHitbox buildHitbox() =>
+      RectangleHitbox(position: Vector2(3, 5), size: Vector2.all(6));
 }

@@ -14,11 +14,6 @@ abstract class DungeonMiniBossEnemyConfig {
       GameplayConstants.kTileDimensionStandard * 0.62;
   static const kMeleeDamageReduction = 3.0;
 
-  static final fHitbox = RectangleHitbox(
-    position: Vector2(2.5, 8),
-    size: Vector2(6, 7),
-  );
-
   static final fTextureSize = Vector2(16, 24);
   static final fComponentSize = Vector2(
     GameplayConstants.kTileDimensionStandard * 0.68,
@@ -49,4 +44,7 @@ abstract class DungeonMiniBossEnemyConfig {
       ),
     ),
   );
+
+  static RectangleHitbox buildHitbox() =>
+      RectangleHitbox(position: Vector2(2.5, 8), size: Vector2(6, 7));
 }

@@ -6,11 +6,10 @@ abstract class KidNpcConfig {
   static final fTextureSize = Vector2(16, 22);
   static final fComponentSize = Vector2(8, 11);
 
-  static SimpleDirectionAnimation get buildDirectionalAnimation =>
-      SimpleDirectionAnimation(
-        idleRight: UISpriteAnimations.kidNpcIdleLeft4(),
-        runRight: UISpriteAnimations.kidNpcIdleLeft4(),
-      );
+  static final fDirectionalAnimation = SimpleDirectionAnimation(
+    idleRight: UISpriteAnimations.kidNpcIdleLeft4(),
+    runRight: UISpriteAnimations.kidNpcIdleLeft4(),
+  );
 
   static List<Say> createDialogueSequence() {
     return [

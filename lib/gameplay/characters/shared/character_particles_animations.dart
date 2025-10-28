@@ -20,10 +20,8 @@ class CharacterParticlesAnimations {
     fontFamily: _kShowDamageFontFamily,
   );
 
-  static LightingConfig knightLightingConfig(double width) => LightingConfig(
-    radius: width * 1.5,
-    blurBorder: width,
-    color: Colors.deepOrangeAccent.withValues(alpha: 0.2),
+  static final fLightingConfigColor = Colors.deepOrangeAccent.withValues(
+    alpha: 0.2,
   );
 
   static const _kAttackParticlesRadius = 0.3;

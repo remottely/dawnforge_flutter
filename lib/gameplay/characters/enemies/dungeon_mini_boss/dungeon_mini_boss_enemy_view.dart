@@ -27,7 +27,7 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
   @override
   Future<void> onLoad() {
     _controller.attachView(this);
-    add(DungeonMiniBossEnemyConfig.fHitbox);
+    add(DungeonMiniBossEnemyConfig.buildHitbox());
     return super.onLoad();
   }
 
@@ -76,7 +76,6 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
 
   void playMeleeAttackAnimation() {
     GameplayAudioManager.instance.playAttackEnemyMelee();
-    addParticle(CharacterParticlesAnimations.swordParticles(), position: size);
     simpleAttackMelee(
       size: Vector2.all(DungeonMiniBossEnemyConfig.kAttackEffectSize),
       damage: _attackDamage / DungeonMiniBossEnemyConfig.kMeleeDamageReduction,
@@ -86,10 +85,6 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
   }
 
   void playFireballAttackAnimation() {
-    addParticle(
-      CharacterParticlesAnimations.fireballParticles(),
-      position: size,
-    );
     simpleAttackRange(
       animation: CharacterFireballAttackConfig.loadExecutionAnimation(),
       animationDestroy: CharacterFireballAttackConfig.loadDestroyAnimation(),

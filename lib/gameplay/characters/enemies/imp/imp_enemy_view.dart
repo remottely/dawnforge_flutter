@@ -18,7 +18,7 @@ class ImpEnemyView extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
   Future<void> onLoad() async {
     await super.onLoad();
     _controller.attachView(this);
-    add(ImpEnemyConfig.fHitbox);
+    add(ImpEnemyConfig.buildHitbox());
   }
 
   @override

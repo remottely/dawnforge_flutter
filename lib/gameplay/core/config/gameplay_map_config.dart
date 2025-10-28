@@ -1,72 +1,73 @@
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_map_constants.dart';
+import 'package:bonfire/map/tiled/builder/tiled_world_builder.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_view.dart';
+import 'package:darkness_dungeon/gameplay/core/data/gameplay_map_data.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/barrel_decoration.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/torch_decoration.dart';
+import 'package:darkness_dungeon/gameplay/environment/interactables/door_interactable.dart';
+import 'package:darkness_dungeon/gameplay/environment/interactables/door_key_interactable.dart';
+import 'package:darkness_dungeon/gameplay/environment/interactables/life_potion_interactable.dart';
+import 'package:darkness_dungeon/gameplay/environment/interactables/spike_trap_interactable.dart';
+import 'package:darkness_dungeon/gameplay/terrain/farmable/farm_tile.dart';
 
 class GameplayMapConfig {
-  static const kMap1Asset = 'tiled/map_1.json';
-  static const kDungeon1Asset = 'tiled/dungeon_1.json';
-
-  static const kMap1BackgroundMusic = 'ro1_letters.mp3';
-  static const kDungeon1BackgroundMusic = 'ro1_death_hex.mp3';
-
-  static const kMap1LightingColor = '#d0ffffff';
-  static const kDungeon1LightingColor = '#d0000000';
-
-  static const kMap1BackgroundColor = '#ff63c74d';
-  static const kDungeon1BackgroundColor = '#ff424242';
-
-  static const kMap1SensorIds = ['sensor_dungeon_1', 'sensor_dungeon_2'];
-  static const kDungeon1SensorIds = ['sensor_map_1'];
+  ///
+  static const kNextMapPropertyKey = 'nextMap';
+  static const kPlayerPositionPropertyKey = 'playerPosition';
+  static const kPlayerDirectionPropertyKey = 'playerDirection';
 
   static const kBackgroundMusicPropertyKey = 'backgroundMusic';
   static const kLightingColorPropertyKey = 'lightingColor';
   static const kBackgroundColorPropertyKey = 'backgroundColor';
 
-  final MapId id;
-  final String asset;
-  final List<String> sensorIds;
-  final String backgroundMusic;
-  final String lightingColor;
-  final String backgroundColor;
+  ///
+  static Map<String, ObjectBuilder> get entityBuilders =>
+      <String, ObjectBuilder>{
+        'barrel_decoration': (p) => BarrelDecorationView(position: p.position),
+        'door_interactable': (p) =>
+            DoorInteractableView(position: p.position, size: p.size),
+        'door_key_interactable': (p) =>
+            DoorKeyInteractableView(position: p.position),
+        'life_potion_interactable': (p) => LifePotionDecorationView(
+          position: p.position,
+          healAmount: LifePotionConfig.kHealAmount,
+        ),
+        'torch_decoration': (p) => TorchDecorationView(position: p.position),
+        'torch_decoration_empty': (p) =>
+            TorchDecorationView.empty(position: p.position),
+        'spike_trap_interactable': (p) =>
+            SpikeTrapInteractableView(position: p.position),
+        'wizard': (p) => WizardNpcView(p.position),
+        'kid': (p) => KidNpcView(p.position),
+        'dungeon_boss': (p) => DungeonBossEnemyView(p.position),
+        'dungeon_mini_boss': (p) => DungeonMiniBossEnemyView(p.position),
+        'goblin': (p) => GoblinEnemyView(p.position),
+        'imp': (p) => ImpEnemyView(p.position),
+        'farm_tile': (p) => FarmTileView(p.position),
+      };
 
-  const GameplayMapConfig({
-    required this.id,
-    required this.asset,
-    required this.sensorIds,
-    required this.backgroundMusic,
-    required this.lightingColor,
-    required this.backgroundColor,
-  });
-
+  ///
   static const kAllMaps = [
-    const GameplayMapConfig(
+    const GameplayMapData(
       id: MapId.map1,
-      asset: kMap1Asset,
-      sensorIds: kMap1SensorIds,
-      backgroundMusic: kMap1BackgroundMusic,
-      lightingColor: kMap1LightingColor,
-      backgroundColor: kMap1BackgroundColor,
+      asset: 'tiled/map_1.json',
+      sensorIds: ['sensor_dungeon_1', 'sensor_dungeon_2'],
+      backgroundMusic: 'ro1_letters.mp3',
+      lightingColor: '#d0ffffff',
+      backgroundColor: '#ff63c74d',
     ),
 
-    const GameplayMapConfig(
+    const GameplayMapData(
       id: MapId.dungeon1,
-      asset: kDungeon1Asset,
-      sensorIds: kDungeon1SensorIds,
-      backgroundMusic: kDungeon1BackgroundMusic,
-      lightingColor: kDungeon1LightingColor,
-      backgroundColor: kDungeon1BackgroundColor,
+      asset: 'tiled/dungeon_1.json',
+      sensorIds: ['sensor_map_1'],
+      backgroundMusic: 'ro1_death_hex.mp3',
+      lightingColor: '#d0000000',
+      backgroundColor: '#ff424242',
     ),
   ];
-
-  static GameplayMapConfig? byId(MapId id) {
-    try {
-      return kAllMaps.firstWhere((config) => config.id == id);
-    } catch (e) {
-      return null;
-    }
-  }
-
-  Map<String, dynamic> get properties => {
-    kBackgroundMusicPropertyKey: backgroundMusic,
-    kLightingColorPropertyKey: lightingColor,
-    kBackgroundColorPropertyKey: backgroundColor,
-  };
 }

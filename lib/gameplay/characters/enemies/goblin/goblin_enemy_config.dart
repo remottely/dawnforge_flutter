@@ -11,11 +11,6 @@ abstract class GoblinEnemyConfig {
   static const kAttackEffectSize =
       GameplayConstants.kTileDimensionStandard * 0.62;
 
-  static final fHitbox = RectangleHitbox(
-    position: Vector2(3, 4),
-    size: Vector2.all(7),
-  );
-
   static final fTextureSize = GameplayConstants.fTileSizeStandard;
   static final fComponentSize = Vector2.all(
     GameplayConstants.kTileDimensionStandard * 0.8,
@@ -45,4 +40,7 @@ abstract class GoblinEnemyConfig {
       ),
     ),
   );
+
+  static RectangleHitbox buildHitbox() =>
+      RectangleHitbox(position: Vector2(3, 4), size: Vector2.all(7));
 }

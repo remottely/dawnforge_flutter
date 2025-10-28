@@ -13,11 +13,6 @@ abstract class DungeonBossEnemyConfig {
   static const kVisionRadiusUltraLarge =
       GameplayConstants.kVisionRadiusUltraLarge;
 
-  static final fHitbox = RectangleHitbox(
-    position: Vector2(5, 11),
-    size: Vector2(14, 16),
-  );
-
   static final fTextureSize = Vector2(32, 36);
   static final fComponentSize = fTextureSize;
 
@@ -39,6 +34,9 @@ abstract class DungeonBossEnemyConfig {
       ),
     ),
   );
+
+  static RectangleHitbox buildHitbox() =>
+      RectangleHitbox(position: Vector2(5, 11), size: Vector2(14, 16));
 
   static List<Say> createDialogueSequence() {
     return [

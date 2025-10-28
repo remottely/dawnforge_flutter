@@ -51,10 +51,13 @@ abstract class KnightPlayerConfig {
     ),
   );
 
+  static final fLightingConfig = LightingConfig(
+    radius: GameplayConstants.kTileDimensionStandard,
+    blurBorder: GameplayConstants.kTileDimensionStandard,
+    color: CharacterParticlesAnimations.fLightingConfigColor,
+  );
+
   static final fCryptComponentSize = GameplayConstants.fTileSizeStandard;
   static Future<Sprite> loadCryptSprite() =>
       Sprite.load('gameplay/characters/player/player_crypt_1.png');
-
-  static LightingConfig buildLightingConfig(double width) =>
-      CharacterParticlesAnimations.knightLightingConfig(width);
 }

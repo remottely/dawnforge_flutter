@@ -23,7 +23,7 @@ class KnightPlayerView extends SimplePlayer
         life: KnightPlayerConfig.kStandardLife,
         speed: KnightPlayerConfig.kStandardSpeed,
       ) {
-    setupLighting(KnightPlayerConfig.buildLightingConfig(width));
+    setupLighting(KnightPlayerConfig.fLightingConfig);
     _setupControls();
   }
 

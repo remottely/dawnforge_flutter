@@ -19,7 +19,7 @@ class GoblinEnemyView extends SimpleEnemy
   Future<void> onLoad() async {
     await super.onLoad();
     _controller.attachView(this);
-    add(GoblinEnemyConfig.fHitbox);
+    add(GoblinEnemyConfig.buildHitbox());
   }
 
   @override

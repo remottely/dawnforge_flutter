@@ -182,8 +182,8 @@ class _StartButton extends StatelessWidget {
   // late final ColorScheme _colors = _theme.colorScheme;
   // late final TextTheme _textTheme = _theme.textTheme;
 
-  static const _kButtonWidth = 150.0;
-  static const _kButtonMinHeight = 40.0;
+  static const _kButtonWidth = 150.0; // TODO(Kevin):
+  static const _kButtonMinHeight = 40.0; // TODO(Kevin):
 
   @override
   Widget build(BuildContext context) {

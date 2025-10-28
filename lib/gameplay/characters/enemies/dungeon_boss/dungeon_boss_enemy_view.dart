@@ -33,7 +33,7 @@ class DungeonBossEnemyView extends SimpleEnemy
   @override
   Future<void> onLoad() {
     _controller.attachView(this);
-    add(DungeonBossEnemyConfig.fHitbox);
+    add(DungeonBossEnemyConfig.buildHitbox());
     return super.onLoad();
   }
 

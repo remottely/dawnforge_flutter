@@ -1,35 +1,21 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_animation_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
-import 'package:flutter/material.dart';
 
 class CharacterFireballAttackConfig {
   static const kSpeedMultiplier = 2.5;
 
-  static void playExecutionAudio() =>
-      GameplayAudioManager.instance.playFireballAttack();
-
-  static void playDestroyAudio() =>
-      GameplayAudioManager.instance.playFireballExplosion();
-
-  static buildHitbox() => RectangleHitbox(
-    position: Vector2(10, 5),
-    size: Vector2(
-      GameplayConstants.kTileDimensionStandard / 3,
-      GameplayConstants.kTileDimensionStandard / 3,
-    ),
-  );
-
   static final fLightingConfig = LightingConfig(
-    radius: GameplayConstants.kTileDimensionStandard * 0.9,
-    blurBorder: GameplayConstants.kTileDimensionStandard,
-    color: Colors.deepOrangeAccent.withValues(alpha: 0.4),
+    radius: GameplayConstants.kTileDimensionSmall,
+    blurBorder: GameplayConstants.kTileDimensionSmall,
+    color: CharacterParticlesAnimations.fLightingConfigColor,
   );
 
-  static final fComponentSize = Vector2.all(
-    GameplayConstants.kTileDimensionStandard * 0.65,
-  );
+  static final fComponentSize = GameplayConstants.fTileSizeSmall;
+
+  static RectangleHitbox buildHitbox() => RectangleHitbox(size: fComponentSize);
 
   static Future<SpriteAnimation> loadExecutionAnimation() =>
       SpriteAnimation.load(
@@ -47,4 +33,10 @@ class CharacterFireballAttackConfig {
       textureSize: GameplayConstants.fTileSizeExtraLarge,
     ),
   );
+
+  static void playExecutionAudio() =>
+      GameplayAudioManager.instance.playFireballAttack();
+
+  static void playDestroyAudio() =>
+      GameplayAudioManager.instance.playFireballExplosion();
 }
