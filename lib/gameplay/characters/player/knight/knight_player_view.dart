@@ -44,7 +44,7 @@ class KnightPlayerView extends SimplePlayer
   @override
   void onJoystickAction(JoystickActionEvent event) {
     if (isDead) return;
-    controller.onJoystickAction(event);
+    controller.onInputAction(event);
     super.onJoystickAction(event);
   }
 

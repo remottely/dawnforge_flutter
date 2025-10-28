@@ -2,9 +2,9 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_model.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_input_actions_config.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
-import 'package:flutter/services.dart';
 
 class WizardNpcView extends SimpleNpc {
   final WizardNpcController _controller = WizardNpcController(
@@ -51,7 +51,7 @@ class WizardNpcView extends SimpleNpc {
       WizardNpcConfig.createDialogueSequence(),
       onChangeTalk: _controller.onDialogueChanged,
       onFinish: _controller.onConversationFinished,
-      logicalKeyboardKeysToNext: [LogicalKeyboardKey.space],
+      logicalKeyboardKeysToNext: [GameplayInputActionsConfig.keyboardMeleeAttack],
     );
   }
 }

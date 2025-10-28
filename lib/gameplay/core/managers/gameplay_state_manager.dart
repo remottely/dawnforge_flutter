@@ -1,14 +1,11 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
 import 'package:darkness_dungeon/gameplay/gameplay.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class GameplayStateManager extends GameComponent {
   static const _kGameOverCheckInterval = 'gameOver';
   static const _kGameOverCheckRate = 100;
-  static const _kPlayerDeadState = 'playerDead';
-  static const _kGameRestartEvent = 'gameRestart';
 
   bool _isGameOverDisplayed = false;
   bool _isProcessingGameOver = false;
@@ -43,7 +40,6 @@ class GameplayStateManager extends GameComponent {
     if (!_isGameOverDisplayed) {
       _isGameOverDisplayed = true;
       _displayGameOverDialog();
-      _logGameEvent(_kPlayerDeadState);
     }
   }
 
@@ -53,7 +49,6 @@ class GameplayStateManager extends GameComponent {
   }
 
   void _onRetryGamePressed(BuildContext dialogContext) {
-    _logGameEvent(_kGameRestartEvent);
     _resetGameState();
 
     Navigator.of(dialogContext).pop();
@@ -85,11 +80,5 @@ class GameplayStateManager extends GameComponent {
       MaterialPageRoute(builder: (context) => const Gameplay()),
       (Route<dynamic> route) => false,
     );
-  }
-
-  void _logGameEvent(String eventName) {
-    if (kDebugMode) {
-      print('[GameplayStateManager] Event: $eventName at ${DateTime.now()}');
-    }
   }
 }

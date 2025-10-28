@@ -71,11 +71,11 @@ class GameplayMapManager {
     );
   }
 
-  static MapItem _createMapItem(GameplayMapData config) {
+  static MapItem _createMapItem(GameplayMapData data) {
     return MapItem(
-      id: config.id.name,
-      properties: config.properties,
-      map: _buildMap(mapAsset: config.asset, sensorIds: config.sensorIds),
+      id: data.id.name,
+      properties: data.properties,
+      map: _buildMap(mapAsset: data.asset, sensorIds: data.sensorIds),
     );
   }
 

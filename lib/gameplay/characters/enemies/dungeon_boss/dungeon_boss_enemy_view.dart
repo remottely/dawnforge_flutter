@@ -8,11 +8,11 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.
 import 'package:darkness_dungeon/gameplay/characters/shared/character_basic_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_effect_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_input_actions_config.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class DungeonBossEnemyView extends SimpleEnemy
     with BlockMovementCollision, UseLifeBar {
@@ -231,7 +231,9 @@ class DungeonBossEnemyView extends SimpleEnemy
       onChangeTalk: (index) {
         GameplayAudioManager.instance.playInteraction();
       },
-      logicalKeyboardKeysToNext: [LogicalKeyboardKey.space],
+      logicalKeyboardKeysToNext: [
+        GameplayInputActionsConfig.keyboardMeleeAttack,
+      ],
     );
   }
 

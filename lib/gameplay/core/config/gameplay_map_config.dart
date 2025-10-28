@@ -15,7 +15,7 @@ import 'package:darkness_dungeon/gameplay/environment/interactables/spike_trap_i
 import 'package:darkness_dungeon/gameplay/terrain/farmable/farm_tile.dart';
 
 class GameplayMapConfig {
-  ///
+  /// Map keys
   static const kNextMapPropertyKey = 'nextMap';
   static const kPlayerPositionPropertyKey = 'playerPosition';
   static const kPlayerDirectionPropertyKey = 'playerDirection';
@@ -27,7 +27,23 @@ class GameplayMapConfig {
   ///
   static Map<String, ObjectBuilder> get entityBuilders =>
       <String, ObjectBuilder>{
+        /// Enemies
+        'dungeon_boss_enemy': (p) => DungeonBossEnemyView(p.position),
+        'dungeon_mini_boss_enemy': (p) => DungeonMiniBossEnemyView(p.position),
+        'goblin_enemy': (p) => GoblinEnemyView(p.position),
+        'imp_enemy': (p) => ImpEnemyView(p.position),
+
+        /// NPCs
+        'kid_npc': (p) => KidNpcView(p.position),
+        'wizard_npc': (p) => WizardNpcView(p.position),
+
+        /// Decorations
         'barrel_decoration': (p) => BarrelDecorationView(position: p.position),
+        'torch_decoration': (p) => TorchDecorationView(position: p.position),
+        'torch_decoration_empty': (p) =>
+            TorchDecorationView.empty(position: p.position),
+
+        /// Interactables
         'door_interactable': (p) =>
             DoorInteractableView(position: p.position, size: p.size),
         'door_key_interactable': (p) =>
@@ -36,31 +52,26 @@ class GameplayMapConfig {
           position: p.position,
           healAmount: LifePotionConfig.kHealAmount,
         ),
-        'torch_decoration': (p) => TorchDecorationView(position: p.position),
-        'torch_decoration_empty': (p) =>
-            TorchDecorationView.empty(position: p.position),
         'spike_trap_interactable': (p) =>
             SpikeTrapInteractableView(position: p.position),
-        'wizard': (p) => WizardNpcView(p.position),
-        'kid': (p) => KidNpcView(p.position),
-        'dungeon_boss': (p) => DungeonBossEnemyView(p.position),
-        'dungeon_mini_boss': (p) => DungeonMiniBossEnemyView(p.position),
-        'goblin': (p) => GoblinEnemyView(p.position),
-        'imp': (p) => ImpEnemyView(p.position),
+
+        /// Farmable
         'farm_tile': (p) => FarmTileView(p.position),
       };
 
   ///
   static const kAllMaps = [
+    /// map_1
     const GameplayMapData(
       id: MapId.map1,
       asset: 'tiled/map_1.json',
-      sensorIds: ['sensor_dungeon_1', 'sensor_dungeon_2'],
+      sensorIds: ['sensor_dungeon_1'],
       backgroundMusic: 'ro1_letters.mp3',
       lightingColor: '#d0ffffff',
       backgroundColor: '#ff63c74d',
     ),
 
+    /// dungeon_1
     const GameplayMapData(
       id: MapId.dungeon1,
       asset: 'tiled/dungeon_1.json',

@@ -19,6 +19,4 @@ class DungeonMiniBossEnemyController {
   void onDie() {
     _view.handleDeathEffects();
   }
-
-  void onJoystickAction(JoystickActionEvent event) {}
 }

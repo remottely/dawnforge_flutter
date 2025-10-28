@@ -4,7 +4,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
-import 'package:flutter/services.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_input_actions_config.dart';
 
 class KnightPlayerController {
   final KnightPlayerModel model;
@@ -25,12 +25,14 @@ class KnightPlayerController {
     _handleEnemyVision();
   }
 
-  void onJoystickAction(JoystickActionEvent event) {
-    if ((event.id == 0 || event.id == LogicalKeyboardKey.space) &&
+  void onInputAction(JoystickActionEvent event) {
+    if ((event.id == GameplayInputActionsConfig.joystickMeleeAttack ||
+            event.id == GameplayInputActionsConfig.keyboardMeleeAttack) &&
         event.event == ActionEvent.DOWN) {
       _executeMeleeAttack();
     }
-    if ((event.id == 1 || event.id == LogicalKeyboardKey.keyZ) &&
+    if ((event.id == GameplayInputActionsConfig.joystickFireballAttack ||
+            event.id == GameplayInputActionsConfig.keyboardFireballAttack) &&
         event.event == ActionEvent.DOWN) {
       _executeFireballAttack();
     }

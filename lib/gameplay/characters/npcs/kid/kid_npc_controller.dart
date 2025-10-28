@@ -1,9 +1,9 @@
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_view.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_input_actions_config.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
-import 'package:flutter/services.dart';
 
 class KidNpcController {
   bool _conversationWithHero = false;
@@ -52,7 +52,7 @@ class KidNpcController {
       KidNpcConfig.createDialogueSequence(),
       onFinish: _onConversationFinished,
       onChangeTalk: _onDialogueChanged,
-      logicalKeyboardKeysToNext: [LogicalKeyboardKey.space],
+      logicalKeyboardKeysToNext: [GameplayInputActionsConfig.keyboardMeleeAttack],
     );
   }
 

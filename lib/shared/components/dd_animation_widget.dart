@@ -2,12 +2,9 @@ import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
 
 class DDAnimationWidget extends StatelessWidget {
-  static const double _kSmallSize =
-      50.0; // TODO(Kevin): unify with DDSpriteWidget
-  static const double _kStandardSize =
-      100.0; // TODO(Kevin): unify with DDSpriteWidget
-  static const double _kLargeSize =
-      150.0; // TODO(Kevin): unify with DDSpriteWidget
+  static const _kSmallSize = 50.0; // TODO(Kevin): unify with DDSpriteWidget
+  static const _kStandardSize = 100.0; // TODO(Kevin): unify with DDSpriteWidget
+  static const _kLargeSize = 150.0; // TODO(Kevin): unify with DDSpriteWidget
 
   final double width;
   final double height;

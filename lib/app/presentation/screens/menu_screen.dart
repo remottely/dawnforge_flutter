@@ -3,6 +3,7 @@ import 'dart:async' as async;
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/app/presentation/design_system/components/atoms/app_radio_button.dart';
 import 'package:darkness_dungeon/app/presentation/design_system/constants/typography_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_input_actions_config.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/gameplay.dart';
@@ -51,7 +52,7 @@ abstract class MenuScreenViewModel extends State<MenuScreen> {
 
   void _onControlMethodChanged(bool selectedValue) {
     setState(() {
-      Gameplay.kIsJoystickControls = selectedValue;
+      GameplayInputActionsConfig.isJoystickInputSelected = selectedValue;
     });
   }
 
@@ -121,7 +122,8 @@ class _MenuScreenState extends MenuScreenViewModel {
               const SizedBox(height: 20),
               _Controls(onControlMethodChanged: _onControlMethodChanged),
               const SizedBox(height: 20),
-              if (!Gameplay.kIsJoystickControls) const _KeyboardTip(),
+              if (!GameplayInputActionsConfig.isJoystickInputSelected)
+                const _KeyboardTip(),
             ],
           ),
         ),
@@ -228,13 +230,13 @@ class _Controls extends StatelessWidget {
         AppRadioButton<bool>(
           value: false,
           label: 'Keyboard',
-          group: Gameplay.kIsJoystickControls,
+          group: GameplayInputActionsConfig.isJoystickInputSelected,
           onChange: onControlMethodChanged,
         ),
         const SizedBox(height: 10),
         AppRadioButton<bool>(
           value: true,
-          group: Gameplay.kIsJoystickControls,
+          group: GameplayInputActionsConfig.isJoystickInputSelected,
           label: 'Joystick',
           onChange: onControlMethodChanged,
         ),
