@@ -21,7 +21,7 @@ class ColorHelper {
   }
 
   static String toHex(Color color) =>
-      '#${color.value.toRadixString(16).padLeft(8, '0')}'.toUpperCase();
+      '#${color.toARGB32().toRadixString(16).padLeft(8, '0')}'.toUpperCase();
 
   static Color? fromHexStringWithAlpha(String? hexString, double alpha) {
     final baseColor = fromHex(hexString);

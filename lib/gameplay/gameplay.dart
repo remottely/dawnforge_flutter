@@ -1,14 +1,14 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_camera_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_input_actions_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_map_config.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/gameplay/core/data/gameplay_map_data.dart';
 import 'package:darkness_dungeon/gameplay/core/hud/gameplay_hud.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_map_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_state_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_camera_config.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/color_helper.dart';
 import 'package:darkness_dungeon/gameplay/environment/sensors/map_transition_sensor.dart';
@@ -100,7 +100,7 @@ class _GameplayState extends GameplayViewmodel {
 
         final knightPlayer = _buildKnightPlayer(playerPosition);
 
-        final playerInput = GameplayInputActionsConfig.buildPlayerInput();
+        final playerInput = GameplayInputActionsConfig.createPlayerInput();
 
         return Material(
           color: Colors.transparent,
