@@ -18,11 +18,11 @@ abstract class WizardNpcConfig {
     runRight: UISpriteAnimations.wizardNpcIdleLeft4(),
   );
 
-  static List<Say> createDialogueSequence() => [
-    GameplayDialogueConfig.wizardRightDialog('talk_wizard_1'),
-    GameplayDialogueConfig.knightLeftDialog('talk_player_1'),
-    GameplayDialogueConfig.wizardRightDialog('talk_wizard_2'),
-    GameplayDialogueConfig.knightLeftDialog('talk_player_2'),
-    GameplayDialogueConfig.wizardRightDialog('talk_wizard_3'),
+  static List<Say> createConversationSequence() => [
+    GameplayConversationConfig.wizardRightDialog('talk_wizard_1'),
+    GameplayConversationConfig.knightLeftDialog('talk_player_1'),
+    GameplayConversationConfig.wizardRightDialog('talk_wizard_2'),
+    GameplayConversationConfig.knightLeftDialog('talk_player_2'),
+    GameplayConversationConfig.wizardRightDialog('talk_wizard_3'),
   ];
 }

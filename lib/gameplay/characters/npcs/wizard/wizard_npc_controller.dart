@@ -28,11 +28,11 @@ class WizardNpcController {
           target: _view,
         ),
       );
-      _view.initializeDialogue();
+      _view.showConversation();
     }
   }
 
-  void onDialogueChanged(int index) {
+  void onConversationChanged(int index) {
     GameplayAudioManager.instance.playInteraction();
   }
 

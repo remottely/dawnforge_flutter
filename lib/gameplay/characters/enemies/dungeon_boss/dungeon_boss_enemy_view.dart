@@ -72,7 +72,7 @@ class DungeonBossEnemyView extends SimpleEnemy
             target: this,
             zoom: GameplayCameraConfig.getCameraZoomFromMaxVisibleTile(
               context,
-              maxVisibleTile: GameplayTileConfig.kBossDialogueVisibleTiles,
+              maxVisibleTile: GameplayTileConfig.kBossConversationVisibleTiles,
             ),
             onComplete: _showConversation,
           );
@@ -213,9 +213,9 @@ class DungeonBossEnemyView extends SimpleEnemy
 
   void _showConversation() {
     GameplayAudioManager.instance.playInteraction();
-    GameplayUIManager.displayConversationDialog(
+    GameplayUIManager.showConversation(
       gameRef.context,
-      DungeonBossEnemyConfig.createDialogueSequence(),
+      DungeonBossEnemyConfig.createConversationSequence(),
       onFinish: () {
         GameplayAudioManager.instance.playInteraction();
         spawnInitialMinions();

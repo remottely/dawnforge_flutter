@@ -31,8 +31,8 @@ abstract class _DoorInteractableConfig {
     size: Vector2(target.width, target.height * _kHitboxHeightRatio),
   );
 
-  static List<Say> createDialogueSequence() {
-    return [GameplayDialogueConfig.knightLeftDialog(_kRequiredKeyMessage)];
+  static List<Say> createConversationSequence() {
+    return [GameplayConversationConfig.knightLeftDialog(_kRequiredKeyMessage)];
   }
 }
 
@@ -89,14 +89,14 @@ class DoorInteractableView extends DDGameDecoration {
   void _showKeyRequiredMessage() {
     if (!_isShowingDialog) {
       _isShowingDialog = true;
-      _showKeyRequiredDialog();
+      _showConversation();
     }
   }
 
-  void _showKeyRequiredDialog() {
-    GameplayUIManager.displayConversationDialog(
+  void _showConversation() {
+    GameplayUIManager.showConversation(
       gameRef.context,
-      _DoorInteractableConfig.createDialogueSequence(),
+      _DoorInteractableConfig.createConversationSequence(),
       onClose: () {
         _isShowingDialog = false;
       },

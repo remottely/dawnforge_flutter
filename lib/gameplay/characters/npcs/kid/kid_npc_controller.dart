@@ -41,24 +41,24 @@ class KidNpcController {
     _conversationWithHero = true;
     _view.gameRef.camera.moveToTargetAnimated(
       target: _view,
-      onComplete: _initializeDialogue,
+      onComplete: _showConversation,
     );
   }
 
-  void _initializeDialogue() {
+  void _showConversation() {
     GameplayAudioManager.instance.playInteraction();
-    GameplayUIManager.displayConversationDialog(
+    GameplayUIManager.showConversation(
       _view.gameRef.context,
-      KidNpcConfig.createDialogueSequence(),
+      KidNpcConfig.createConversationSequence(),
       onFinish: _onConversationFinished,
-      onChangeTalk: _onDialogueChanged,
+      onChangeTalk: _onConversationChanged,
       logicalKeyboardKeysToNext: [
         GameplayInputActionsConfig.kKeyboardMeleeAttack,
       ],
     );
   }
 
-  void _onDialogueChanged(int index) {
+  void _onConversationChanged(int index) {
     GameplayAudioManager.instance.playInteraction();
   }
 

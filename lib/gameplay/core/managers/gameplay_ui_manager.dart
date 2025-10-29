@@ -70,9 +70,9 @@ class GameplayUIManager {
     );
   }
 
-  static void displayConversationDialog(
+  static void showConversation(
     BuildContext context,
-    List<Say> dialogueSequence, {
+    List<Say> conversationSequence, {
     Function(int)? onChangeTalk,
     VoidCallback? onFinish,
     VoidCallback? onClose,
@@ -80,7 +80,7 @@ class GameplayUIManager {
   }) {
     TalkDialog.show(
       context,
-      dialogueSequence,
+      conversationSequence,
       onChangeTalk: onChangeTalk,
       onFinish: onFinish,
       onClose: onClose,

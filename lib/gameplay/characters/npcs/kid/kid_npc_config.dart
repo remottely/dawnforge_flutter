@@ -11,10 +11,10 @@ abstract class KidNpcConfig {
     runRight: UISpriteAnimations.kidNpcIdleLeft4(),
   );
 
-  static List<Say> createDialogueSequence() {
+  static List<Say> createConversationSequence() {
     return [
-      GameplayDialogueConfig.kidRightDialog('talk_kid_2'),
-      GameplayDialogueConfig.knightLeftDialog('talk_player_4'),
+      GameplayConversationConfig.kidRightDialog('talk_kid_2'),
+      GameplayConversationConfig.knightLeftDialog('talk_player_4'),
     ];
   }
 }

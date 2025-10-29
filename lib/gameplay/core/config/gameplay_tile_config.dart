@@ -4,7 +4,7 @@ import 'package:bonfire/bonfire.dart';
 
 class GameplayTileConfig {
   static const kMaxVisibleTiles = 16;
-  static const kBossDialogueVisibleTiles = 32;
+  static const kBossConversationVisibleTiles = 32;
 
   static const kTileDimensionSmall = 8.0;
   static const kTileDimensionStandard = 16.0;

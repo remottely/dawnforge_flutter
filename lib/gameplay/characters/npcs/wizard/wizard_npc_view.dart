@@ -44,12 +44,12 @@ class WizardNpcView extends SimpleNpc {
     gameRef.player?.idle();
   }
 
-  void initializeDialogue() {
+  void showConversation() {
     GameplayAudioManager.instance.playInteraction();
-    GameplayUIManager.displayConversationDialog(
+    GameplayUIManager.showConversation(
       gameRef.context,
-      WizardNpcConfig.createDialogueSequence(),
-      onChangeTalk: _controller.onDialogueChanged,
+      WizardNpcConfig.createConversationSequence(),
+      onChangeTalk: _controller.onConversationChanged,
       onFinish: _controller.onConversationFinished,
       logicalKeyboardKeysToNext: [
         GameplayInputActionsConfig.kKeyboardMeleeAttack,

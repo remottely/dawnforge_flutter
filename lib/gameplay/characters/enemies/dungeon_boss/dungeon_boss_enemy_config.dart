@@ -38,12 +38,12 @@ abstract class DungeonBossEnemyConfig {
   static RectangleHitbox createHitbox() =>
       RectangleHitbox(position: Vector2(5, 11), size: Vector2(14, 16));
 
-  static List<Say> createDialogueSequence() {
+  static List<Say> createConversationSequence() {
     return [
-      GameplayDialogueConfig.kidRightDialog('talk_kid_1'),
-      GameplayDialogueConfig.bossLeftDialog('talk_boss_1'),
-      GameplayDialogueConfig.knightLeftDialog('talk_player_3'),
-      GameplayDialogueConfig.bossRightDialog('talk_boss_2'),
+      GameplayConversationConfig.kidRightDialog('talk_kid_1'),
+      GameplayConversationConfig.bossLeftDialog('talk_boss_1'),
+      GameplayConversationConfig.knightLeftDialog('talk_player_3'),
+      GameplayConversationConfig.bossRightDialog('talk_boss_2'),
     ];
   }
 }
