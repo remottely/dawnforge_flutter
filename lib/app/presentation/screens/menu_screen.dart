@@ -25,8 +25,8 @@ abstract class MenuScreenViewModel extends State<MenuScreen> {
   final Duration kAnimationDuration = Duration(milliseconds: 300);
   final Duration kCharacterAnimationInterval = Duration(seconds: 2);
 
-  bool _isSplashScreenVisible = true;
-  int _currentCharacterSpriteIndex = 0;
+  var _isSplashScreenVisible = true;
+  var _currentCharacterSpriteIndex = 0;
   late async.Timer _characterAnimationTimer;
 
   late final List<Future<SpriteAnimation>> _characterSpriteAnimations = [
@@ -83,7 +83,7 @@ abstract class MenuScreenViewModel extends State<MenuScreen> {
     _characterAnimationTimer.cancel();
   }
 
-  async.Future<void> _openExternalURL(String targetUrl) async {
+  Future<void> _openExternalURL(String targetUrl) async {
     final parsedUri = Uri.parse(targetUrl);
     if (await canLaunchUrl(parsedUri)) {
       await launchUrl(parsedUri);

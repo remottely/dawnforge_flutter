@@ -20,7 +20,7 @@ class Gameplay extends StatefulWidget {
   State<Gameplay> createState() => _GameplayState();
 }
 
-class _GameplayState extends State<Gameplay> {
+abstract class GameplayViewmodel extends State<Gameplay> {
   late final GameplayHUD _gameplayHUD;
   late final CameraConfig _cameraConfig;
 
@@ -49,6 +49,23 @@ class _GameplayState extends State<Gameplay> {
     );
   }
 
+  void _initializeGameAudio() {
+    GameplayAudioManager.instance.ensureBackgroundMusicPlaying();
+  }
+
+  void _cleanupGameAudio() {
+    GameplayAudioManager.instance.stopBackgroundMusic();
+  }
+
+  void _initializeGameComponents() {
+    _gameplayHUD = GameplayHUD();
+  }
+
+  KnightPlayerView _buildKnightPlayer(Vector2 position) =>
+      KnightPlayerView(position);
+}
+
+class _GameplayState extends GameplayViewmodel {
   @override
   Widget build(BuildContext gameplayContext) {
     return MapNavigator(
@@ -80,9 +97,9 @@ class _GameplayState extends State<Gameplay> {
           );
         }
 
-        final knightPlayer = _createKnightPlayerWithState(playerPosition);
+        final knightPlayer = _buildKnightPlayer(playerPosition);
 
-        final playerInput = GameplayInputActionsConfig.createPlayerInput();
+        final playerInput = GameplayInputActionsConfig.buildPlayerInput();
 
         return Material(
           color: Colors.transparent,
@@ -102,21 +119,4 @@ class _GameplayState extends State<Gameplay> {
       },
     );
   }
-
-  void _initializeGameAudio() {
-    GameplayAudioManager.instance.ensureBackgroundMusicPlaying();
-  }
-
-  void _cleanupGameAudio() {
-    GameplayAudioManager.instance.stopBackgroundMusic();
-  }
-
-  void _initializeGameComponents() {
-    _gameplayHUD = GameplayHUD();
-  }
-
-  KnightPlayerView _createKnightPlayerWithState(Vector2 position) =>
-      KnightPlayerView(position);
 }
-
-// enum GameDifficulty { easy, normal, hard, nightmare }

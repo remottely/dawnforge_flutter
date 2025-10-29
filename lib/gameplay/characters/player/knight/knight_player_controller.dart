@@ -26,13 +26,13 @@ class KnightPlayerController {
   }
 
   void onInputAction(JoystickActionEvent event) {
-    if ((event.id == GameplayInputActionsConfig.joystickMeleeAttack ||
-            event.id == GameplayInputActionsConfig.keyboardMeleeAttack) &&
+    if ((event.id == GameplayInputActionsConfig.kJoystickMeleeAttackId ||
+            event.id == GameplayInputActionsConfig.kKeyboardMeleeAttack) &&
         event.event == ActionEvent.DOWN) {
       _executeMeleeAttack();
     }
-    if ((event.id == GameplayInputActionsConfig.joystickFireballAttack ||
-            event.id == GameplayInputActionsConfig.keyboardFireballAttack) &&
+    if ((event.id == GameplayInputActionsConfig.kJoystickFireballAttackId ||
+            event.id == GameplayInputActionsConfig.kKeyboardFireballAttack) &&
         event.event == ActionEvent.DOWN) {
       _executeFireballAttack();
     }

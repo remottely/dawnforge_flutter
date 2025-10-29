@@ -51,7 +51,9 @@ class WizardNpcView extends SimpleNpc {
       WizardNpcConfig.createDialogueSequence(),
       onChangeTalk: _controller.onDialogueChanged,
       onFinish: _controller.onConversationFinished,
-      logicalKeyboardKeysToNext: [GameplayInputActionsConfig.keyboardMeleeAttack],
+      logicalKeyboardKeysToNext: [
+        GameplayInputActionsConfig.kKeyboardMeleeAttack,
+      ],
     );
   }
 }

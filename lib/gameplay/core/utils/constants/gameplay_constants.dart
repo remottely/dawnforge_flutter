@@ -1,6 +1,8 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/widgets.dart';
 
+// enum GameDifficulty { easy, normal, hard, nightmare }
+
 class GameplayConstants {
   static const kMaxVisibleTiles = 16;
   static const kBossDialogVisibleTiles = 32;

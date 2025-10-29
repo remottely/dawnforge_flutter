@@ -52,7 +52,9 @@ class KidNpcController {
       KidNpcConfig.createDialogueSequence(),
       onFinish: _onConversationFinished,
       onChangeTalk: _onDialogueChanged,
-      logicalKeyboardKeysToNext: [GameplayInputActionsConfig.keyboardMeleeAttack],
+      logicalKeyboardKeysToNext: [
+        GameplayInputActionsConfig.kKeyboardMeleeAttack,
+      ],
     );
   }
 

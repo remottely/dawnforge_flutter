@@ -86,7 +86,7 @@ class GameplayUIManager {
       onClose: onClose,
       logicalKeyboardKeysToNext:
           logicalKeyboardKeysToNext ??
-          [GameplayInputActionsConfig.keyboardMeleeAttack],
+          [GameplayInputActionsConfig.kKeyboardMeleeAttack],
     );
   }
 

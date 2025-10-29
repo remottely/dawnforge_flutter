@@ -232,7 +232,7 @@ class DungeonBossEnemyView extends SimpleEnemy
         GameplayAudioManager.instance.playInteraction();
       },
       logicalKeyboardKeysToNext: [
-        GameplayInputActionsConfig.keyboardMeleeAttack,
+        GameplayInputActionsConfig.kKeyboardMeleeAttack,
       ],
     );
   }
