@@ -1,4 +1,4 @@
-class GameplayAudioConstants {
+class GameplayAudioConfig {
   static const kAttackVolume = 0.4;
   static const kRangeVolume = 0.3;
   static const kInteractionVolume = 0.4;

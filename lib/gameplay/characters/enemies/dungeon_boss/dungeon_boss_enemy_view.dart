@@ -11,7 +11,8 @@ import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_input_actions_config.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_camera_config.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:flutter/material.dart';
 
 class DungeonBossEnemyView extends SimpleEnemy
@@ -69,9 +70,9 @@ class DungeonBossEnemyView extends SimpleEnemy
           hasSeenPlayerFirst = true;
           gameRef.camera.moveToTargetAnimated(
             target: this,
-            zoom: GameplayConstants.getCameraZoomFromMaxVisibleTile(
+            zoom: GameplayCameraConfig.getCameraZoomFromMaxVisibleTile(
               context,
-              maxVisibleTile: GameplayConstants.kBossDialogVisibleTiles,
+              maxVisibleTile: GameplayTileConfig.kBossDialogVisibleTiles,
             ),
             onComplete: _showConversation,
           );
@@ -143,7 +144,7 @@ class DungeonBossEnemyView extends SimpleEnemy
           animation:
               CharacterEffectSpriteAnimations.characterExplosionSmokeRight5(),
           position: positionExplosion,
-          size: GameplayConstants.fTileSizeStandard,
+          size: GameplayTileConfig.fTileSizeStandard,
           loop: false,
         ),
       );
@@ -167,7 +168,7 @@ class DungeonBossEnemyView extends SimpleEnemy
       AnimatedGameObject(
         animation: CharacterEffectSpriteAnimations.characterExplosionRight7(),
         position: position,
-        size: GameplayConstants.fTileSizeStandard,
+        size: GameplayTileConfig.fTileSizeStandard,
         loop: false,
       ),
     );
@@ -220,9 +221,9 @@ class DungeonBossEnemyView extends SimpleEnemy
         spawnInitialMinions();
         Future.delayed(Duration(milliseconds: 500), () {
           gameRef.camera.moveToPlayerAnimated(
-            zoom: GameplayConstants.getCameraZoomFromMaxVisibleTile(
+            zoom: GameplayCameraConfig.getCameraZoomFromMaxVisibleTile(
               context,
-              maxVisibleTile: GameplayConstants.kMaxVisibleTiles,
+              maxVisibleTile: GameplayTileConfig.kMaxVisibleTiles,
             ),
           );
           GameplayAudioManager.instance.playBossBackgroundMusic();
@@ -249,7 +250,7 @@ class DungeonBossEnemyView extends SimpleEnemy
         animation:
             CharacterEffectSpriteAnimations.characterExplosionSmokeRight5(),
         position: pos,
-        size: GameplayConstants.fTileSizeStandard,
+        size: GameplayTileConfig.fTileSizeStandard,
         loop: false,
       ),
     );

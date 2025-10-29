@@ -1,12 +1,13 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_animation_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_animation_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/gameplay_character_config.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 
 abstract class KnightPlayerConfig {
   static const kStandardLife = 200.0;
-  static const kStandardSpeed = GameplayConstants.kTileDimensionStandard * 2.5;
+  static const kStandardSpeed = GameplayTileConfig.kTileDimensionStandard * 2.5;
   static const kMaxEnergy = 100;
   static const kToolUsageEnergyCost = 2;
   static const kMaxStamina = 100.0;
@@ -16,20 +17,20 @@ abstract class KnightPlayerConfig {
   static const kSmallAttackDamage = 10.0;
   static const kMeleeAttackStaminaCost = 15;
   static const kFireballAttackStaminaCost = 10;
-  static const kVisionRadius = GameplayConstants.kVisionRadiusUltraLarge;
+  static const kVisionRadius = GameplayCharacterConfig.kVisionRadiusUltraLarge;
 
   static final fHitbox = RectangleHitbox(
     position: Vector2(4, 9),
     size: Vector2(8, 6),
   );
 
-  static final fTextureSize = GameplayConstants.fTileSizeStandard;
+  static final fTextureSize = GameplayTileConfig.fTileSizeStandard;
   static final fComponentSize = fTextureSize;
 
   static final fDirectionalAnimation = SimpleDirectionAnimation(
     idleLeft: SpriteAnimation.load(
       'gameplay/characters/player/knight/knight_player_idle_left_6.png',
-      GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
+      GameplayAnimationConfig.standardStepTimeSpriteAnimationConfig(
         amount: 6,
         textureSize: fTextureSize,
       ),
@@ -37,14 +38,14 @@ abstract class KnightPlayerConfig {
     idleRight: UISpriteAnimations.knightPlayerIdleRight6(),
     runLeft: SpriteAnimation.load(
       'gameplay/characters/player/knight/knight_player_run_left_6.png',
-      GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
+      GameplayAnimationConfig.standardStepTimeSpriteAnimationConfig(
         amount: 6,
         textureSize: fTextureSize,
       ),
     ),
     runRight: SpriteAnimation.load(
       'gameplay/characters/player/knight/knight_player_run_right_6.png',
-      GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
+      GameplayAnimationConfig.standardStepTimeSpriteAnimationConfig(
         amount: 6,
         textureSize: fTextureSize,
       ),
@@ -52,12 +53,12 @@ abstract class KnightPlayerConfig {
   );
 
   static final fLightingConfig = LightingConfig(
-    radius: GameplayConstants.kTileDimensionStandard,
-    blurBorder: GameplayConstants.kTileDimensionStandard,
+    radius: GameplayTileConfig.kTileDimensionStandard,
+    blurBorder: GameplayTileConfig.kTileDimensionStandard,
     color: CharacterParticlesAnimations.fLightingConfigColor,
   );
 
-  static final fCryptComponentSize = GameplayConstants.fTileSizeStandard;
+  static final fCryptComponentSize = GameplayTileConfig.fTileSizeStandard;
   static Future<Sprite> loadCryptSprite() =>
       Sprite.load('gameplay/characters/player/player_crypt_1.png');
 }

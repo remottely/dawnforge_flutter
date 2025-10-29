@@ -1,15 +1,16 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_dialog_constants.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/gameplay_character_config.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_dialog_config.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 
 abstract class WizardNpcConfig {
-  static const kVisionRadius = GameplayConstants.kVisionRadiusSmall;
+  static const kVisionRadius = GameplayCharacterConfig.kVisionRadiusSmall;
 
   static final fTextureSize = Vector2(16, 22);
   static final fComponentSize = Vector2(
-    GameplayConstants.kTileDimensionStandard * 0.8,
-    GameplayConstants.kTileDimensionStandard * 1.0,
+    GameplayTileConfig.kTileDimensionStandard * 0.8,
+    GameplayTileConfig.kTileDimensionStandard * 1.0,
   );
 
   static final fDirectionalAnimation = SimpleDirectionAnimation(
@@ -18,10 +19,10 @@ abstract class WizardNpcConfig {
   );
 
   static List<Say> createDialogueSequence() => [
-    GameplayDialogConstants.wizardRightDialog('talk_wizard_1'),
-    GameplayDialogConstants.knightLeftDialog('talk_player_1'),
-    GameplayDialogConstants.wizardRightDialog('talk_wizard_2'),
-    GameplayDialogConstants.knightLeftDialog('talk_player_2'),
-    GameplayDialogConstants.wizardRightDialog('talk_wizard_3'),
+    GameplayDialogConfig.wizardRightDialog('talk_wizard_1'),
+    GameplayDialogConfig.knightLeftDialog('talk_player_1'),
+    GameplayDialogConfig.wizardRightDialog('talk_wizard_2'),
+    GameplayDialogConfig.knightLeftDialog('talk_player_2'),
+    GameplayDialogConfig.wizardRightDialog('talk_wizard_3'),
   ];
 }

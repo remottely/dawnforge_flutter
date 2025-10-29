@@ -5,7 +5,8 @@ import 'package:darkness_dungeon/gameplay/characters/shared/character_basic_atta
 import 'package:darkness_dungeon/gameplay/characters/shared/character_effect_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/gameplay_character_config.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 
 class GoblinEnemyController {
   late GoblinEnemyView _view;
@@ -19,7 +20,7 @@ class GoblinEnemyController {
       closePlayer: (player) {
         playAttackAnimation();
       },
-      radiusVision: GameplayConstants.kVisionRadiusLarge,
+      radiusVision: GameplayCharacterConfig.kVisionRadiusLarge,
     );
   }
 
@@ -51,7 +52,7 @@ class GoblinEnemyController {
         animation:
             CharacterEffectSpriteAnimations.characterExplosionSmokeRight5(),
         position: _view.position,
-        size: GameplayConstants.fTileSizeStandard,
+        size: GameplayTileConfig.fTileSizeStandard,
         loop: false,
       ),
     );

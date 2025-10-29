@@ -6,7 +6,7 @@ import 'package:darkness_dungeon/gameplay/characters/shared/character_effect_spr
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 
 class DungeonMiniBossEnemyView extends SimpleEnemy
     with BlockMovementCollision, UseLifeBar {
@@ -114,7 +114,7 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
         animation:
             CharacterEffectSpriteAnimations.characterExplosionSmokeRight5(),
         position: position,
-        size: GameplayConstants.fTileSizeStandard,
+        size: GameplayTileConfig.fTileSizeStandard,
         loop: false,
       ),
     );

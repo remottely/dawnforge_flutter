@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_animation_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_dialog_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_animation_config.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_dialog_config.dart';
 import 'package:darkness_dungeon/shared/dd_game_decoration.dart';
 
 abstract class _DoorInteractableConfig {
@@ -20,9 +20,9 @@ abstract class _DoorInteractableConfig {
   static Future<SpriteAnimation> _loadOpeningAnimation() =>
       SpriteAnimation.load(
         'gameplay/environment/interactables/door_interactable_opening_14.png',
-        GameplayAnimationConstants.standardStepTimeSpriteAnimationConfig(
+        GameplayAnimationConfig.standardStepTimeSpriteAnimationConfig(
           amount: 14,
-          textureSize: GameplayConstants.fTileSizeExtraLarge,
+          textureSize: GameplayTileConfig.fTileSizeExtraLarge,
         ),
       );
 
@@ -32,7 +32,7 @@ abstract class _DoorInteractableConfig {
   );
 
   static List<Say> createDialogueSequence() {
-    return [GameplayDialogConstants.knightLeftDialog(_kRequiredKeyMessage)];
+    return [GameplayDialogConfig.knightLeftDialog(_kRequiredKeyMessage)];
   }
 }
 

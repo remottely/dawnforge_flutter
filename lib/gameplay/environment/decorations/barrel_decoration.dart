@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/shared/dd_game_decoration.dart';
 
 abstract class _BarrelDecorationConfig {
-  static final _fComponentSize = GameplayConstants.fTileSizeStandard;
+  static final _fComponentSize = GameplayTileConfig.fTileSizeStandard;
 
   static Future<Sprite> _loadSprite() =>
       Sprite.load('gameplay/environment/decorations/barrel_decoration_1.png');

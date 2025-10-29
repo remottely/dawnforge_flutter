@@ -1,5 +1,5 @@
 import 'package:darkness_dungeon/app/presentation/design_system/constants/typography_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_ui_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_ui_config.dart';
 import 'package:flutter/material.dart';
 
 class AppStyledButton extends StatelessWidget {
@@ -16,7 +16,7 @@ class AppStyledButton extends StatelessWidget {
     super.key,
     required this.text,
     required this.onPressed,
-    this.backgroundColor = GameplayUIConstants.kTransparentColor,
+    this.backgroundColor = GameplayUIConfig.kTransparentColor,
     this.fontSize = TypographyConstants.kBodyFontSize,
   });
 
@@ -32,7 +32,7 @@ class AppStyledButton extends StatelessWidget {
     super.key,
     required this.text,
     required this.onPressed,
-    this.backgroundColor = GameplayUIConstants.kTransparentColor,
+    this.backgroundColor = GameplayUIConfig.kTransparentColor,
     this.fontSize = TypographyConstants.kBodyFontSize,
   });
 
@@ -41,7 +41,7 @@ class AppStyledButton extends StatelessWidget {
     return ElevatedButton(
       style: ButtonStyle(
         backgroundColor: WidgetStateProperty.all(backgroundColor),
-        shape: backgroundColor != GameplayUIConstants.kTransparentColor
+        shape: backgroundColor != GameplayUIConfig.kTransparentColor
             ? WidgetStateProperty.all(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(_kButtonBorderRadius),

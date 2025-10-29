@@ -2,7 +2,7 @@ import 'package:darkness_dungeon/gameplay/core/utils/helpers/app_environment.dar
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/foundation.dart';
 
-import '../utils/constants/gameplay_audio_constants.dart';
+import '../config/gameplay_audio_config.dart';
 
 class GameplayAudioManager {
   static final instance = GameplayAudioManager();
@@ -24,7 +24,7 @@ class GameplayAudioManager {
     try {
       FlameAudio.bgm.initialize();
       await FlameAudio.audioCache.loadAll(
-        GameplayAudioConstants.kAudioFilesToPreload,
+        GameplayAudioConfig.kAudioFilesToPreload,
       );
     } catch (e) {
       _handleAudioError('initialize', e);
@@ -34,8 +34,8 @@ class GameplayAudioManager {
   void playAttackPlayerMelee() {
     try {
       FlameAudio.play(
-        GameplayAudioConstants.kAttackPlayerAsset,
-        volume: GameplayAudioConstants.kAttackVolume,
+        GameplayAudioConfig.kAttackPlayerAsset,
+        volume: GameplayAudioConfig.kAttackVolume,
       );
     } catch (e) {
       _handleAudioError('playAttackPlayerMelee', e);
@@ -45,8 +45,8 @@ class GameplayAudioManager {
   void playFireballAttack() {
     try {
       FlameAudio.play(
-        GameplayAudioConstants.kFireBallAttackAudioAsset,
-        volume: GameplayAudioConstants.kRangeVolume,
+        GameplayAudioConfig.kFireBallAttackAudioAsset,
+        volume: GameplayAudioConfig.kRangeVolume,
       );
     } catch (e) {
       _handleAudioError('playAttackRange', e);
@@ -56,8 +56,8 @@ class GameplayAudioManager {
   void playAttackEnemyMelee() {
     try {
       FlameAudio.play(
-        GameplayAudioConstants.kAttackEnemyAsset,
-        volume: GameplayAudioConstants.kAttackVolume,
+        GameplayAudioConfig.kAttackEnemyAsset,
+        volume: GameplayAudioConfig.kAttackVolume,
       );
     } catch (e) {
       _handleAudioError('playAttackEnemyMelee', e);
@@ -67,8 +67,8 @@ class GameplayAudioManager {
   void playFireballExplosion() {
     try {
       FlameAudio.play(
-        GameplayAudioConstants.kFireballExplosionAudioAsset,
-        volume: GameplayAudioConstants.kFireballExplosionVolume,
+        GameplayAudioConfig.kFireballExplosionAudioAsset,
+        volume: GameplayAudioConfig.kFireballExplosionVolume,
       );
     } catch (e) {
       _handleAudioError('playExplosion', e);
@@ -78,8 +78,8 @@ class GameplayAudioManager {
   void playInteraction() {
     try {
       FlameAudio.play(
-        GameplayAudioConstants.kInteractionAsset,
-        volume: GameplayAudioConstants.kInteractionVolume,
+        GameplayAudioConfig.kInteractionAsset,
+        volume: GameplayAudioConfig.kInteractionVolume,
       );
     } catch (e) {
       _handleAudioError('playInteraction', e);
@@ -104,7 +104,7 @@ class GameplayAudioManager {
       if (!_isMusicEnabled) return;
 
       final targetTrack =
-          musicTrack ?? GameplayAudioConstants.kLettersBackgroundMusicAsset;
+          musicTrack ?? GameplayAudioConfig.kLettersBackgroundMusicAsset;
 
       if (!_isBackgroundMusicPlaying ||
           _currentBackgroundTrack != targetTrack) {
@@ -151,7 +151,7 @@ class GameplayAudioManager {
 
   Future<void> playBossBackgroundMusic() async {
     try {
-      await _startSpecificMusic(GameplayAudioConstants.kBossBackgroundAsset);
+      await _startSpecificMusic(GameplayAudioConfig.kBossBackgroundAsset);
     } catch (e) {
       _handleAudioError('playBossBackgroundMusic', e);
     }

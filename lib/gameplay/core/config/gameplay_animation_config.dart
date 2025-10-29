@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 
-class GameplayAnimationConstants {
+class GameplayAnimationConfig {
   static const _kStandardStepTime = 0.1;
 
   static SpriteAnimationData standardStepTimeSpriteAnimationConfig({

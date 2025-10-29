@@ -7,7 +7,8 @@ import 'package:darkness_dungeon/gameplay/core/hud/gameplay_hud.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_map_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_state_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_camera_config.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/color_helper.dart';
 import 'package:darkness_dungeon/gameplay/environment/sensors/map_transition_sensor.dart';
@@ -41,10 +42,10 @@ abstract class GameplayViewmodel extends State<Gameplay> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _cameraConfig = CameraConfig(
-      speed: GameplayConstants.kCameraSpeed,
-      zoom: GameplayConstants.getCameraZoomFromMaxVisibleTile(
+      speed: GameplayCameraConfig.kCameraSpeed,
+      zoom: GameplayCameraConfig.getCameraZoomFromMaxVisibleTile(
         context,
-        maxVisibleTile: GameplayConstants.kMaxVisibleTiles,
+        maxVisibleTile: GameplayTileConfig.kMaxVisibleTiles,
       ),
     );
   }
@@ -75,7 +76,7 @@ class _GameplayState extends GameplayViewmodel {
         MapArguments? mapArguments = arguments as MapArguments?;
         final playerPosition =
             (mapArguments?.playerPosition ?? Vector2(4, 4)) *
-            GameplayConstants.kTileDimensionStandard;
+            GameplayTileConfig.kTileDimensionStandard;
 
         final mapLightingColor = ColorHelper.fromHex(
           mapItem.properties[GameplayMapConfig.kLightingColorPropertyKey]

@@ -5,7 +5,7 @@ import 'package:darkness_dungeon/app/presentation/design_system/components/atoms
 import 'package:darkness_dungeon/app/presentation/screens/menu_screen.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_input_actions_config.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_ui_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_ui_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -21,10 +21,10 @@ class GameplayUIManager {
         return AppStyledDialog(
           children: [
             Image.asset(
-              GameplayUIConstants.kGameOverAsset,
-              height: GameplayUIConstants.kGameOverImageHeight,
+              GameplayUIConfig.kGameOverAsset,
+              height: GameplayUIConfig.kGameOverImageHeight,
             ),
-            const SizedBox(height: GameplayUIConstants.kStandardSpacing),
+            const SizedBox(height: GameplayUIConfig.kStandardSpacing),
             AppStyledButton(
               text: GameplayStringsLocation.instance.getString(
                 'play_again_cap',
@@ -49,17 +49,17 @@ class GameplayUIManager {
                 'congratulations',
               ),
             ),
-            const SizedBox(height: GameplayUIConstants.kStandardSpacing),
+            const SizedBox(height: GameplayUIConfig.kStandardSpacing),
             Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: GameplayUIConstants.kHorizontalPadding,
+                horizontal: GameplayUIConfig.kHorizontalPadding,
               ),
               child: AppStyledText.small(
                 text: GameplayStringsLocation.instance.getString('thanks'),
                 textAlign: TextAlign.center,
               ),
             ),
-            const SizedBox(height: GameplayUIConstants.kLargeSpacing),
+            const SizedBox(height: GameplayUIConfig.kLargeSpacing),
             AppStyledButton.primary(
               text: "OK",
               onPressed: () => _navigateToMainMenu(context),

@@ -1,12 +1,11 @@
 import 'package:darkness_dungeon/app/presentation/design_system/components/atoms/app_styled_button.dart';
 import 'package:darkness_dungeon/app/presentation/design_system/components/atoms/app_styled_text.dart';
 import 'package:darkness_dungeon/app/presentation/design_system/constants/typography_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_ui_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_ui_config.dart';
 import 'package:flutter/material.dart';
 
 class AppStyledDialog extends StatelessWidget {
-  static const _kStandardBackgroundColor =
-      GameplayUIConstants.kTransparentColor;
+  static const _kStandardBackgroundColor = GameplayUIConfig.kTransparentColor;
 
   final Color backgroundColor;
   final List<Widget> children;
