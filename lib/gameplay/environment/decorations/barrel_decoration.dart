@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
-import 'package:darkness_dungeon/shared/dd_game_decoration.dart';
+import 'package:darkness_dungeon/shared/i_dd_game_decoration.dart';
 
 abstract class _BarrelDecorationConfig {
   static final _fComponentSize = GameplayTileConfig.fTileSizeStandard;
@@ -10,7 +10,7 @@ abstract class _BarrelDecorationConfig {
   static Future<Sprite> _loadSprite() =>
       Sprite.load('gameplay/environment/decorations/barrel_decoration_1.png');
 
-  static RectangleHitbox buildHitbox() =>
+  static RectangleHitbox createHitbox() =>
       RectangleHitbox(position: Vector2(2, 6), size: Vector2(11, 4));
 }
 
@@ -23,7 +23,7 @@ class BarrelDecorationView extends DDPushableDecoration {
 
   @override
   Future<void> onLoad() {
-    add(_BarrelDecorationConfig.buildHitbox());
+    add(_BarrelDecorationConfig.createHitbox());
 
     return super.onLoad();
   }

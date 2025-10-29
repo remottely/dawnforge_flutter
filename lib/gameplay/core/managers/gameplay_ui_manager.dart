@@ -4,8 +4,8 @@ import 'package:darkness_dungeon/app/presentation/design_system/components/atoms
 import 'package:darkness_dungeon/app/presentation/design_system/components/atoms/app_styled_text.dart';
 import 'package:darkness_dungeon/app/presentation/screens/menu_screen.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_input_actions_config.dart';
-import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_ui_config.dart';
+import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

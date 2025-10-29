@@ -13,16 +13,16 @@ abstract class WizardNpcConfig {
     GameplayTileConfig.kTileDimensionStandard * 1.0,
   );
 
-  static final fDirectionalAnimation = SimpleDirectionAnimation(
+  static final fDirectionalSpriteAnimation = SimpleDirectionAnimation(
     idleRight: UISpriteAnimations.wizardNpcIdleLeft4(),
     runRight: UISpriteAnimations.wizardNpcIdleLeft4(),
   );
 
   static List<Say> createDialogueSequence() => [
-    GameplayDialogConfig.wizardRightDialog('talk_wizard_1'),
-    GameplayDialogConfig.knightLeftDialog('talk_player_1'),
-    GameplayDialogConfig.wizardRightDialog('talk_wizard_2'),
-    GameplayDialogConfig.knightLeftDialog('talk_player_2'),
-    GameplayDialogConfig.wizardRightDialog('talk_wizard_3'),
+    GameplayDialogueConfig.wizardRightDialog('talk_wizard_1'),
+    GameplayDialogueConfig.knightLeftDialog('talk_player_1'),
+    GameplayDialogueConfig.wizardRightDialog('talk_wizard_2'),
+    GameplayDialogueConfig.knightLeftDialog('talk_player_2'),
+    GameplayDialogueConfig.wizardRightDialog('talk_wizard_3'),
   ];
 }

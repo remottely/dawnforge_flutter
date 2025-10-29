@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_animation_config.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 
 class CharacterFireballAttackConfig {
   static const kSpeedMultiplier = 2.5;
@@ -15,12 +15,13 @@ class CharacterFireballAttackConfig {
 
   static final fComponentSize = GameplayTileConfig.fTileSizeSmall;
 
-  static RectangleHitbox buildHitbox() => RectangleHitbox(size: fComponentSize);
+  static RectangleHitbox createHitbox() =>
+      RectangleHitbox(size: fComponentSize);
 
   static Future<SpriteAnimation> loadExecutionAnimation() =>
       SpriteAnimation.load(
         'gameplay/characters/shared/character_fireball_attack_right_3.png',
-        GameplayAnimationConfig.standardStepTimeSpriteAnimationConfig(
+        GameplaySpriteAnimationConfig.createStandardData(
           amount: 3,
           textureSize: Vector2(23, 23),
         ),
@@ -28,7 +29,7 @@ class CharacterFireballAttackConfig {
 
   static Future<SpriteAnimation> loadDestroyAnimation() => SpriteAnimation.load(
     'gameplay/characters/shared/character_fireball_explosion_right_6.png',
-    GameplayAnimationConfig.standardStepTimeSpriteAnimationConfig(
+    GameplaySpriteAnimationConfig.createStandardData(
       amount: 6,
       textureSize: GameplayTileConfig.fTileSizeExtraLarge,
     ),

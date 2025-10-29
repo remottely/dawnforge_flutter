@@ -6,15 +6,15 @@ abstract class KidNpcConfig {
   static final fTextureSize = Vector2(16, 22);
   static final fComponentSize = Vector2(8, 11);
 
-  static final fDirectionalAnimation = SimpleDirectionAnimation(
+  static final fDirectionalSpriteAnimation = SimpleDirectionAnimation(
     idleRight: UISpriteAnimations.kidNpcIdleLeft4(),
     runRight: UISpriteAnimations.kidNpcIdleLeft4(),
   );
 
   static List<Say> createDialogueSequence() {
     return [
-      GameplayDialogConfig.kidRightDialog('talk_kid_2'),
-      GameplayDialogConfig.knightLeftDialog('talk_player_4'),
+      GameplayDialogueConfig.kidRightDialog('talk_kid_2'),
+      GameplayDialogueConfig.knightLeftDialog('talk_player_4'),
     ];
   }
 }

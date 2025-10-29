@@ -1,9 +1,9 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
-import 'package:darkness_dungeon/gameplay/environment/interactables/shared/gameplay_interactable_config.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_animation_config.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
-import 'package:darkness_dungeon/shared/dd_game_decoration.dart';
+import 'package:darkness_dungeon/gameplay/environment/interactables/shared/gameplay_interactable_config.dart';
+import 'package:darkness_dungeon/shared/i_dd_game_decoration.dart';
 
 abstract class _SpikeTrapInteractableConfig {
   static const _kDamageAmount =
@@ -15,7 +15,7 @@ abstract class _SpikeTrapInteractableConfig {
 
   static Future<SpriteAnimation> _loadAnimation() => SpriteAnimation.load(
     'gameplay/environment/interactables/spike_trap_interactable_10.png',
-    GameplayAnimationConfig.standardStepTimeSpriteAnimationConfig(
+    GameplaySpriteAnimationConfig.createStandardData(
       amount: 10,
       textureSize: _fTextureSize,
     ),

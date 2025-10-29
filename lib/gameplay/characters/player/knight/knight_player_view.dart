@@ -7,7 +7,7 @@ import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_cont
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/shared/dd_game_decoration.dart';
+import 'package:darkness_dungeon/shared/i_dd_game_decoration.dart';
 
 class KnightPlayerView extends SimplePlayer
     with Lighting, BlockMovementCollision {
@@ -17,7 +17,7 @@ class KnightPlayerView extends SimplePlayer
 
   KnightPlayerView(Vector2 position)
     : super(
-        animation: KnightPlayerConfig.fDirectionalAnimation,
+        animation: KnightPlayerConfig.fDirectionalSpriteAnimation,
         size: KnightPlayerConfig.fComponentSize,
         position: position,
         life: KnightPlayerConfig.kStandardLife,
@@ -85,7 +85,7 @@ class KnightPlayerView extends SimplePlayer
       damage: damage,
       speed: speed * CharacterFireballAttackConfig.kSpeedMultiplier,
       onDestroy: CharacterFireballAttackConfig.playDestroyAudio,
-      collision: CharacterFireballAttackConfig.buildHitbox(),
+      collision: CharacterFireballAttackConfig.createHitbox(),
       lightingConfig: CharacterFireballAttackConfig.fLightingConfig,
     );
     CharacterFireballAttackConfig.playExecutionAudio();

@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
-import 'package:darkness_dungeon/shared/dd_game_decoration.dart';
+import 'package:darkness_dungeon/shared/i_dd_game_decoration.dart';
 
 import 'crop_types.dart';
 

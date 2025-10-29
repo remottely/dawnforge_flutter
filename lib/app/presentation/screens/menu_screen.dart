@@ -1,13 +1,14 @@
 import 'dart:async' as async;
 
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/app/design_system/dd_design_system_config.dart';
 import 'package:darkness_dungeon/app/presentation/design_system/components/atoms/app_radio_button.dart';
 import 'package:darkness_dungeon/app/presentation/design_system/constants/typography_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_input_actions_config.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/gameplay.dart';
-import 'package:darkness_dungeon/shared/components/dd_animation_widget.dart';
+import 'package:darkness_dungeon/shared/components/dd_sprite_animation_widget.dart';
 import 'package:darkness_dungeon/shared/components/dd_sprite_widget.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 import 'package:flame_splash_screen/flame_splash_screen.dart';
@@ -109,19 +110,17 @@ class _MenuScreenState extends MenuScreenViewModel {
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            spacing: DDDesignSystemConfig.kSpacingLarge,
             children: <Widget>[
               const _Title(),
-              const SizedBox(height: 20),
-              if (_characterSpriteAnimations.isNotEmpty)
+              if (_characterSpriteAnimations.isNotEmpty) ...[
                 _CharacterAnimation(
                   animation:
                       _characterSpriteAnimations[_currentCharacterSpriteIndex],
                 ),
-              const SizedBox(height: 30),
+              ],
               _StartButton(onPressed: _navigateToGameplayScreen),
-              const SizedBox(height: 20),
               _Controls(onControlMethodChanged: _onControlMethodChanged),
-              const SizedBox(height: 20),
               if (!GameplayInputActionsConfig.isJoystickInputSelected)
                 const _KeyboardTip(),
             ],
@@ -163,13 +162,7 @@ class _CharacterAnimation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double kCharacterAnimationSize = 100.0;
-
-    return SizedBox(
-      height: kCharacterAnimationSize,
-      width: kCharacterAnimationSize,
-      child: DDAnimationWidget(animation: animation),
-    );
+    return DDSpriteAnimationWidget(animation: animation);
   }
 }
 
@@ -184,31 +177,25 @@ class _StartButton extends StatelessWidget {
   // late final ColorScheme _colors = _theme.colorScheme;
   // late final TextTheme _textTheme = _theme.textTheme;
 
-  static const _kButtonWidth = 150.0; // TODO(Kevin):
-  static const _kButtonMinHeight = 40.0; // TODO(Kevin):
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
-          width: _kButtonWidth,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5),
-              ),
-              minimumSize: Size(100, _kButtonMinHeight),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            elevation: 3,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
             ),
-            onPressed: onPressed,
-            child: Text(
-              GameplayStringsLocation.instance.getString('play_cap'),
-              style: const TextStyle(
-                color: Colors.white,
-                fontFamily: TypographyConstants.kPrimaryFontFamily,
-                fontSize: TypographyConstants.kCaptionFontSize,
-              ),
+            minimumSize: Size(100, 40),
+          ),
+          onPressed: onPressed,
+          child: Text(
+            GameplayStringsLocation.instance.getString('play_cap'),
+            style: const TextStyle(
+              color: Colors.white,
+              fontFamily: TypographyConstants.kPrimaryFontFamily,
+              fontSize: TypographyConstants.kCaptionFontSize,
             ),
           ),
         ),
@@ -226,6 +213,7 @@ class _Controls extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
+      spacing: DDDesignSystemConfig.kSpacingSmall,
       children: [
         AppRadioButton<bool>(
           value: false,
@@ -233,7 +221,6 @@ class _Controls extends StatelessWidget {
           group: GameplayInputActionsConfig.isJoystickInputSelected,
           onChange: onControlMethodChanged,
         ),
-        const SizedBox(height: 10),
         AppRadioButton<bool>(
           value: true,
           group: GameplayInputActionsConfig.isJoystickInputSelected,
@@ -248,16 +235,9 @@ class _Controls extends StatelessWidget {
 class _KeyboardTip extends StatelessWidget {
   const _KeyboardTip();
 
-  static const _kKeyboardTipHeight = 80.0;
-  static const _kKeyboardTipWidth = 200.0;
-
   @override
   Widget build(BuildContext context) {
-    return DDSpriteWidget(
-      height: _kKeyboardTipHeight,
-      width: _kKeyboardTipWidth,
-      sprite: Sprite.load('keyboard_tip.png'),
-    );
+    return DDSpriteWidget.extraLarge(sprite: Sprite.load('keyboard_tip.png'));
   }
 }
 

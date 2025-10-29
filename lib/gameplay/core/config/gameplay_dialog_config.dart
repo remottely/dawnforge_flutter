@@ -1,12 +1,12 @@
 import 'package:darkness_dungeon/darkness_dungeon.dart';
 
-class GameplayDialogConfig {
+class GameplayDialogueConfig {
   static Say knightLeftDialog(String phraseKey) {
     return Say(
       text: [
         TextSpan(text: GameplayStringsLocation.instance.getString(phraseKey)),
       ],
-      person: DDAnimationWidget(
+      person: DDSpriteAnimationWidget(
         animation: UISpriteAnimations.knightPlayerIdleRight6(),
       ),
       personSayDirection: PersonSayDirection.LEFT,
@@ -18,7 +18,7 @@ class GameplayDialogConfig {
       text: [
         TextSpan(text: GameplayStringsLocation.instance.getString(phraseKey)),
       ],
-      person: DDAnimationWidget(
+      person: DDSpriteAnimationWidget(
         animation: UISpriteAnimations.wizardNpcIdleLeft4(),
       ),
       personSayDirection: PersonSayDirection.RIGHT,
@@ -30,7 +30,7 @@ class GameplayDialogConfig {
       text: [
         TextSpan(text: GameplayStringsLocation.instance.getString(phraseKey)),
       ],
-      person: DDAnimationWidget(
+      person: DDSpriteAnimationWidget(
         animation: UISpriteAnimations.kidNpcIdleLeft4(),
       ),
       personSayDirection: PersonSayDirection.RIGHT,
@@ -42,7 +42,7 @@ class GameplayDialogConfig {
       text: [
         TextSpan(text: GameplayStringsLocation.instance.getString(phraseKey)),
       ],
-      person: DDAnimationWidget(
+      person: DDSpriteAnimationWidget(
         animation: UISpriteAnimations.dungeonBossEnemyIdleRight4(),
       ),
       personSayDirection: PersonSayDirection.LEFT,
@@ -56,7 +56,7 @@ class GameplayDialogConfig {
           text: GameplayStringsLocation.instance.getString('talk_boss_2'),
         ),
       ],
-      person: DDAnimationWidget(
+      person: DDSpriteAnimationWidget(
         animation: UISpriteAnimations.dungeonBossEnemyIdleLeft4(),
       ),
       personSayDirection: PersonSayDirection.RIGHT,

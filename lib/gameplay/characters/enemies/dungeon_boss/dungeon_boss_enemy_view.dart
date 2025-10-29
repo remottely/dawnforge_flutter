@@ -8,11 +8,11 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.
 import 'package:darkness_dungeon/gameplay/characters/shared/character_basic_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_effect_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_camera_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_input_actions_config.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_camera_config.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:flutter/material.dart';
 
 class DungeonBossEnemyView extends SimpleEnemy
@@ -24,7 +24,7 @@ class DungeonBossEnemyView extends SimpleEnemy
 
   DungeonBossEnemyView(Vector2 position)
     : super(
-        animation: DungeonBossEnemyConfig.fdirectionalAnimation,
+        animation: DungeonBossEnemyConfig.fDirectionalSpriteAnimation,
         position: position,
         size: DungeonBossEnemyConfig.fComponentSize,
         speed: DungeonBossEnemyConfig.kSpeed,
@@ -34,7 +34,7 @@ class DungeonBossEnemyView extends SimpleEnemy
   @override
   Future<void> onLoad() {
     _controller.attachView(this);
-    add(DungeonBossEnemyConfig.buildHitbox());
+    add(DungeonBossEnemyConfig.createHitbox());
     return super.onLoad();
   }
 
@@ -72,7 +72,7 @@ class DungeonBossEnemyView extends SimpleEnemy
             target: this,
             zoom: GameplayCameraConfig.getCameraZoomFromMaxVisibleTile(
               context,
-              maxVisibleTile: GameplayTileConfig.kBossDialogVisibleTiles,
+              maxVisibleTile: GameplayTileConfig.kBossDialogueVisibleTiles,
             ),
             onComplete: _showConversation,
           );

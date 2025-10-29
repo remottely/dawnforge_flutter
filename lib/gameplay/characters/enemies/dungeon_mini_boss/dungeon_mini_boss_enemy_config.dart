@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/gameplay_character_config.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 
@@ -22,10 +22,10 @@ abstract class DungeonMiniBossEnemyConfig {
     GameplayTileConfig.kTileDimensionStandard * 0.93,
   );
 
-  static final fDirectionalAnimation = SimpleDirectionAnimation(
+  static final fDirectionalSpriteAnimation = SimpleDirectionAnimation(
     idleLeft: SpriteAnimation.load(
       'gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_idle_left_4.png',
-      GameplayAnimationConfig.standardStepTimeSpriteAnimationConfig(
+      GameplaySpriteAnimationConfig.createStandardData(
         amount: 4,
         textureSize: fTextureSize,
       ),
@@ -33,20 +33,20 @@ abstract class DungeonMiniBossEnemyConfig {
     idleRight: UISpriteAnimations.dungeonMiniBossEnemyIdleRight4(),
     runLeft: SpriteAnimation.load(
       'gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_run_left_4.png',
-      GameplayAnimationConfig.standardStepTimeSpriteAnimationConfig(
+      GameplaySpriteAnimationConfig.createStandardData(
         amount: 4,
         textureSize: fTextureSize,
       ),
     ),
     runRight: SpriteAnimation.load(
       'gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_run_right_4.png',
-      GameplayAnimationConfig.standardStepTimeSpriteAnimationConfig(
+      GameplaySpriteAnimationConfig.createStandardData(
         amount: 4,
         textureSize: fTextureSize,
       ),
     ),
   );
 
-  static RectangleHitbox buildHitbox() =>
+  static RectangleHitbox createHitbox() =>
       RectangleHitbox(position: Vector2(2.5, 8), size: Vector2(6, 7));
 }

@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_animation_config.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
-import 'package:darkness_dungeon/shared/dd_game_decoration.dart';
+import 'package:darkness_dungeon/shared/i_dd_game_decoration.dart';
 
 abstract class _TorchDecorationConfig {
   static final _fTextureSize = GameplayTileConfig.fTileSizeStandard;
@@ -10,7 +10,7 @@ abstract class _TorchDecorationConfig {
 
   static Future<SpriteAnimation> _loadAnimation() => SpriteAnimation.load(
     'gameplay/environment/decorations/torch_decoration_6.png',
-    GameplayAnimationConfig.standardStepTimeSpriteAnimationConfig(
+    GameplaySpriteAnimationConfig.createStandardData(
       amount: 6,
       textureSize: _fTextureSize,
     ),

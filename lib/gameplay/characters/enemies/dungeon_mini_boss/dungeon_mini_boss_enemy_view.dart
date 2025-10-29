@@ -5,8 +5,8 @@ import 'package:darkness_dungeon/gameplay/characters/shared/character_basic_atta
 import 'package:darkness_dungeon/gameplay/characters/shared/character_effect_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 
 class DungeonMiniBossEnemyView extends SimpleEnemy
     with BlockMovementCollision, UseLifeBar {
@@ -17,7 +17,7 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
 
   DungeonMiniBossEnemyView(Vector2 position)
     : super(
-        animation: DungeonMiniBossEnemyConfig.fDirectionalAnimation,
+        animation: DungeonMiniBossEnemyConfig.fDirectionalSpriteAnimation,
         position: position,
         size: DungeonMiniBossEnemyConfig.fComponentSize,
         speed: DungeonMiniBossEnemyConfig.kSpeed,
@@ -27,7 +27,7 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
   @override
   Future<void> onLoad() {
     _controller.attachView(this);
-    add(DungeonMiniBossEnemyConfig.buildHitbox());
+    add(DungeonMiniBossEnemyConfig.createHitbox());
     return super.onLoad();
   }
 
@@ -93,7 +93,7 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
       speed: speed * CharacterFireballAttackConfig.kSpeedMultiplier,
       execute: CharacterFireballAttackConfig.playExecutionAudio,
       onDestroy: CharacterFireballAttackConfig.playDestroyAudio,
-      collision: CharacterFireballAttackConfig.buildHitbox(),
+      collision: CharacterFireballAttackConfig.createHitbox(),
       lightingConfig: CharacterFireballAttackConfig.fLightingConfig,
     );
   }

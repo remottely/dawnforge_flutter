@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_animation_config.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 
 class CharacterEmoteController {
@@ -16,7 +16,7 @@ class CharacterEmoteController {
     return AnimatedFollowerGameObject(
       animation: SpriteAnimation.load(
         asset,
-        GameplayAnimationConfig.standardStepTimeSpriteAnimationConfig(
+        GameplaySpriteAnimationConfig.createStandardData(
           amount: 8,
           textureSize: GameplayTileConfig.fTileSizeExtraLarge,
         ),
