@@ -246,8 +246,8 @@ class _Footer extends StatelessWidget {
 
   const _Footer({required this.onOpenURL});
 
-  static const _kKevinKoboriUrl = 'https://github.com/kevinkobori';
-  static const _kBonfireUrl = 'https://pub.dev/packages/bonfire';
+  static const String _kKevinKoboriUrl = 'https://github.com/kevinkobori';
+  static const String _kBonfireUrl = 'https://pub.dev/packages/bonfire';
 
   @override
   Widget build(BuildContext context) {

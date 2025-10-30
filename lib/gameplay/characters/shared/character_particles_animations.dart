@@ -2,19 +2,19 @@ import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
 
 class CharacterParticlesAnimations {
-  static const kShowDamageGravity = 0.1;
-  static const kShowDamageInitVelocityVertical = -4.0;
+  static const double kShowDamageGravity = 0.1;
+  static const double kShowDamageInitVelocityVertical = -4.0;
 
-  static const _kShowDamageFontSize = 5.0;
-  static const _kShowDamageFontFamily = 'Normal';
+  static const double _kShowDamageFontSize = 5.0;
+  static const String _kShowDamageFontFamily = 'Normal';
 
-  static const kPlayerShowDamageTextStyle = TextStyle(
+  static const TextStyle kPlayerShowDamageTextStyle = TextStyle(
     fontSize: _kShowDamageFontSize,
     color: Colors.orange,
     fontFamily: _kShowDamageFontFamily,
   );
 
-  static const kEnemyShowDamageTextStyle = TextStyle(
+  static const TextStyle kEnemyShowDamageTextStyle = TextStyle(
     fontSize: _kShowDamageFontSize,
     color: Colors.white,
     fontFamily: _kShowDamageFontFamily,
@@ -24,7 +24,7 @@ class CharacterParticlesAnimations {
     alpha: 0.2,
   );
 
-  static const _kAttackParticlesRadius = 0.3;
+  static const double _kAttackParticlesRadius = 0.3;
 
   static Particle swordParticles() => Particle.generate(
     count: 10,

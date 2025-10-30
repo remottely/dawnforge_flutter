@@ -3,10 +3,9 @@ import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 
 class CharacterEmoteController {
-  static const kExclamationEmoteAsset =
+  static const String kExclamationEmoteAsset =
       'gameplay/characters/emotes/exclamation_emote_8.png';
-
-  static const kQuestionEmoteAsset =
+  static const String kQuestionEmoteAsset =
       'gameplay/characters/emotes/question_emote_8.png';
 
   static AnimatedFollowerGameObject displayEmoteAboveCharacter({

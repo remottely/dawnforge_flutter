@@ -9,11 +9,11 @@ import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart
 import 'package:darkness_dungeon/shared/i_dd_game_decoration.dart';
 
 abstract class _DoorInteractableConfig {
-  static const _kClosedDoorAsset =
+  static const String _kClosedDoorAsset =
       'gameplay/environment/interactables/door_interactable_locked_1.png';
-  static const _kRequiredKeyMessage = 'door_without_key';
-  static const _kHitboxHeightRatio = 0.25;
-  static const _kHitboxPositionRatio = 0.75;
+  static const String _kRequiredKeyMessage = 'door_without_key';
+  static const double _kHitboxHeightRatio = 0.25;
+  static const double _kHitboxPositionRatio = 0.75;
 
   static Future<Sprite> _loadClosedSprite() => Sprite.load(_kClosedDoorAsset);
 

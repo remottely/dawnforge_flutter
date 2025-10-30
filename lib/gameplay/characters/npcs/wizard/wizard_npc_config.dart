@@ -5,7 +5,8 @@ import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart'
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 
 abstract class WizardNpcConfig {
-  static const kVisionRadius = GameplayCharacterConfig.kVisionRadiusSmall;
+  static const double kVisionRadius =
+      GameplayCharacterConfig.kVisionRadiusSmall;
 
   static final fTextureSize = Vector2(16, 22);
   static final fComponentSize = Vector2(

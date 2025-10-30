@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class GameplayLocalizationsDelegate
     extends LocalizationsDelegate<GameplayLocalizations> {
-  static const kSupportedLocales = [Locale('en'), Locale('pt')];
+  static const List<Locale> kSupportedLocales = [Locale('en'), Locale('pt')];
 
   const GameplayLocalizationsDelegate();
 

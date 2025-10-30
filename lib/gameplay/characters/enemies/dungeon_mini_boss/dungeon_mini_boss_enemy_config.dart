@@ -5,16 +5,17 @@ import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart'
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 
 abstract class DungeonMiniBossEnemyConfig {
-  static const kAttackDamage = 50.0;
-  static const kLife = 150.0;
-  static const kSpeed = GameplayCharacterConfig.kCharacterSpeedSlow;
-  static const kCloseVisionRadius = GameplayCharacterConfig.kVisionRadiusMedium;
-  static const kLongVisionRadius =
+  static const double kAttackDamage = 50.0;
+  static const double kLife = 150.0;
+  static const double kSpeed = GameplayCharacterConfig.kCharacterSpeedSlow;
+  static const double kCloseVisionRadius =
+      GameplayCharacterConfig.kVisionRadiusMedium;
+  static const double kLongVisionRadius =
       GameplayCharacterConfig.kVisionRadiusExtraLarge;
-  static const kMeleeAttackInterval = 300;
-  static const kAttackEffectSize =
+  static const int kMeleeAttackInterval = 300;
+  static const double kAttackEffectSize =
       GameplayTileConfig.kTileDimensionStandard * 0.62;
-  static const kMeleeDamageReduction = 3.0;
+  static const double kMeleeDamageReduction = 3.0;
 
   static final fTextureSize = Vector2(16, 24);
   static final fComponentSize = Vector2(

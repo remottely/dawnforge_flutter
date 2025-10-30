@@ -11,8 +11,8 @@ class GameplayStateManager extends GameComponent {
   }
 
   /// >>> Start Game Over Handling
-  static const _kGameOverCheckIntervalKey = 'gameOver';
-  static const _kGameOverCheckRate = 100;
+  static const String _kGameOverCheckIntervalKey = 'gameOver';
+  static const int _kGameOverCheckRate = 100;
 
   var _vIsGameOverDisplayed = false;
   var _vIsProcessingGameOver = false;

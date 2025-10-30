@@ -5,11 +5,11 @@ import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart'
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 
 abstract class GoblinEnemyConfig {
-  static const kAttackDamage = 25.0;
-  static const kLife = 120.0;
-  static const kSpeed = GameplayCharacterConfig.kCharacterSpeedSlow;
-  static const kAttackInterval = 800;
-  static const kAttackEffectSize =
+  static const double kAttackDamage = 25.0;
+  static const double kLife = 120.0;
+  static const double kSpeed = GameplayCharacterConfig.kCharacterSpeedSlow;
+  static const int kAttackInterval = 800;
+  static const double kAttackEffectSize =
       GameplayTileConfig.kTileDimensionStandard * 0.62;
 
   static final fTextureSize = GameplayTileConfig.fTileSizeStandard;

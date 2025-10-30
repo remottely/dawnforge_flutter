@@ -5,9 +5,10 @@ import 'package:darkness_dungeon/gameplay/environment/interactables/shared/gamep
 import 'package:darkness_dungeon/shared/i_dd_game_decoration.dart';
 
 abstract class LifePotionConfig {
-  static const _kHealingDuration = Duration(seconds: 1);
-  static const _kStandardHealAmount = 50.0;
-  static const kHealAmount = GameplayInteractableConfig.kPropertyAmountSmall;
+  static const Duration _kHealingDuration = Duration(seconds: 1);
+  static const double _kStandardHealAmount = 50.0;
+  static const double kHealAmount =
+      GameplayInteractableConfig.kPropertyAmountSmall;
 
   static final _fComponentSize = GameplayTileConfig.fTileSizeStandard;
   static Future<Sprite> _loadSprite() => Sprite.load(

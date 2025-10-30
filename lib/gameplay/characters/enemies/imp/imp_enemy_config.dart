@@ -5,11 +5,11 @@ import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart'
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 
 abstract class ImpEnemyConfig {
-  static const kAttackDamage = 10.0;
-  static const kLife = 80.0;
-  static const kSpeed = GameplayCharacterConfig.kCharacterSpeedMedium;
-  static const kAttackInterval = 300;
-  static const kAttackEffectSize =
+  static const double kAttackDamage = 10.0;
+  static const double kLife = 80.0;
+  static const double kSpeed = GameplayCharacterConfig.kCharacterSpeedMedium;
+  static const int kAttackInterval = 300;
+  static const double kAttackEffectSize =
       GameplayTileConfig.kTileDimensionStandard * 0.62;
 
   static final fTextureSize = GameplayTileConfig.fTileSizeStandard;

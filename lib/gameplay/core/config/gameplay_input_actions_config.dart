@@ -12,17 +12,19 @@ class GameplayInputActionsConfig {
       isJoystickInputSelected ? _createJoystickInput() : _createKeyboardInput();
 
   /// Identifiers
-  static const kJoystickMeleeAttackId = 'meleeAttackId';
-  static const kJoystickFireballAttackId = 'fireballAttackId';
-  static const kKeyboardMeleeAttack = LogicalKeyboardKey.space;
-  static const kKeyboardFireballAttack = LogicalKeyboardKey.keyZ;
+  static const String kJoystickMeleeAttackId = 'meleeAttackId';
+  static const String kJoystickFireballAttackId = 'fireballAttackId';
+  static const LogicalKeyboardKey kKeyboardMeleeAttack =
+      LogicalKeyboardKey.space;
+  static const LogicalKeyboardKey kKeyboardFireballAttack =
+      LogicalKeyboardKey.keyZ;
 
   /// Joystick
-  static const _kJoystickComponentSize = 100.0;
-  static const _kActionButtonSize = 80.0;
-  static const _kActionButtonMarginBottom = 50.0;
-  static const _kPrimaryActionMarginRight = 50.0;
-  static const _kSecondaryActionMarginRight = 160.0;
+  static const double _kJoystickComponentSize = 100.0;
+  static const double _kActionButtonSize = 80.0;
+  static const double _kActionButtonMarginBottom = 50.0;
+  static const double _kPrimaryActionMarginRight = 50.0;
+  static const double _kSecondaryActionMarginRight = 160.0;
 
   static PlayerController _createJoystickInput() {
     return Joystick(

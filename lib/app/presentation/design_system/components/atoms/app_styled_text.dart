@@ -2,14 +2,12 @@ import 'package:darkness_dungeon/app/presentation/design_system/constants/typogr
 import 'package:flutter/material.dart';
 
 class AppStyledText extends StatelessWidget {
-  static const _kStandardColor = Colors.white;
+  static const Color _kStandardColor =
+      Colors.white; // TODO(Kevin): Move to design system config
 
   final String text;
-
   final double fontSize;
-
   final Color color;
-
   final TextAlign textAlign;
 
   const AppStyledText({

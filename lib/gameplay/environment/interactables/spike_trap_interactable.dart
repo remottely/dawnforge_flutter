@@ -6,9 +6,9 @@ import 'package:darkness_dungeon/gameplay/environment/interactables/shared/gamep
 import 'package:darkness_dungeon/shared/i_dd_game_decoration.dart';
 
 abstract class _SpikeTrapInteractableConfig {
-  static const _kDamageAmount =
+  static const double _kDamageAmount =
       GameplayInteractableConfig.kPropertyAmountMedium;
-  static const _kPriority = 1;
+  static const int _kPriority = 1;
 
   static final _fTextureSize = GameplayTileConfig.fTileSizeStandard;
   static final _fComponentSize = _fTextureSize;

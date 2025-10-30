@@ -8,13 +8,15 @@ import 'crop_types.dart';
 enum TileState { grass, soil, watered, planted, grown }
 
 abstract class _FarmTileConfig {
-  static const _kGrassSpriteAsset = 'gameplay/terrain/farmable/tile_grass.png';
-  static const _kSoilSpriteAsset = 'gameplay/terrain/farmable/tile_soil.png';
-  static const _kWateredSpriteAsset =
+  static const String _kGrassSpriteAsset =
+      'gameplay/terrain/farmable/tile_grass.png';
+  static const String _kSoilSpriteAsset =
+      'gameplay/terrain/farmable/tile_soil.png';
+  static const String _kWateredSpriteAsset =
       'gameplay/terrain/farmable/tile_watered.png';
-  static const _kPlantedSpriteAsset =
+  static const String _kPlantedSpriteAsset =
       'gameplay/terrain/farmable/tile_planted.png';
-  static const _kGrownSpriteAsset =
+  static const String _kGrownSpriteAsset =
       'gameplay/terrain/farmable/parsnip_stage4.png';
 
   static final _fComponentSize = GameplayTileConfig.fTileSizeStandard;

@@ -3,9 +3,16 @@ import 'package:darkness_dungeon/gameplay/core/config/gameplay_ui_config.dart';
 import 'package:flutter/material.dart';
 
 class AppStyledButton extends StatelessWidget {
-  static const _kStandardTextColor = Colors.white;
-  static const _kPrimaryBackgroundColor = Color.fromARGB(255, 118, 82, 78);
-  static const _kButtonBorderRadius = 4.0;
+  static const Color _kStandardTextColor =
+      Colors.white; // TODO(Kevin): Move to design system config
+  static const Color _kPrimaryBackgroundColor = Color.fromARGB(
+    255,
+    118,
+    82,
+    78,
+  ); // TODO(Kevin): Move to design system config
+  static const double _kButtonBorderRadius =
+      4.0; // TODO(Kevin): Move to design system config
 
   final String text;
   final VoidCallback onPressed;

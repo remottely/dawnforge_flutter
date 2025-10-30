@@ -5,7 +5,7 @@ import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart'
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 
 class CharacterFireballAttackConfig {
-  static const kSpeedMultiplier = 2.5;
+  static const double kSpeedMultiplier = 2.5;
 
   static final fLightingConfig = LightingConfig(
     radius: GameplayTileConfig.kTileDimensionSmall,

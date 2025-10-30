@@ -2,12 +2,11 @@ import 'package:darkness_dungeon/app/design_system/dd_design_system_config.dart'
 import 'package:flutter/material.dart';
 
 class AppRadioButton<T> extends StatelessWidget {
-  static const _kBorderColor = Colors.white;
-  static const _kTextColor = Colors.white;
-  static const _kBorderWidth = 2.0;
-  static const _kIndicatorSize = 8.0;
-  static const _kIndicatorMargin = 2.0;
-  static const _kLabelSpacing = 10.0;
+  static const Color _kBorderColor = Colors.white;
+  static const Color _kTextColor = Colors.white;
+  static const double _kBorderWidth = 2.0;
+  static const double _kIndicatorSize = 8.0;
+  static const double _kIndicatorMargin = 2.0;
 
   final T value;
   final T? group;

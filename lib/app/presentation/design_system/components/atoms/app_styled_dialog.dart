@@ -2,7 +2,8 @@ import 'package:darkness_dungeon/gameplay/core/config/gameplay_ui_config.dart';
 import 'package:flutter/material.dart';
 
 class AppStyledDialog extends StatelessWidget {
-  static const _kStandardBackgroundColor = GameplayUIConfig.kTransparentColor;
+  static const Color _kStandardBackgroundColor = GameplayUIConfig
+      .kTransparentColor; // TODO(Kevin): Move to design system config
 
   final Color backgroundColor;
   final List<Widget> children;

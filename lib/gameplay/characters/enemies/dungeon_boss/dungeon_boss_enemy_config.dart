@@ -5,12 +5,13 @@ import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 
 abstract class DungeonBossEnemyConfig {
-  static const kAttackDamage = 40.0;
-  static const kLife = 200.0;
-  static const kSpeed = GameplayCharacterConfig.kCharacterSpeedSlow;
-  static const kAttackEffectSize = 10.0;
-  static const kVisionRadiusLarge = GameplayCharacterConfig.kVisionRadiusLarge;
-  static const kVisionRadiusUltraLarge =
+  static const double kAttackDamage = 40.0;
+  static const double kLife = 200.0;
+  static const double kSpeed = GameplayCharacterConfig.kCharacterSpeedSlow;
+  static const double kAttackEffectSize = 10.0;
+  static const double kVisionRadiusLarge =
+      GameplayCharacterConfig.kVisionRadiusLarge;
+  static const double kVisionRadiusUltraLarge =
       GameplayCharacterConfig.kVisionRadiusUltraLarge;
 
   static final fTextureSize = Vector2(32, 36);

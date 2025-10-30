@@ -3,8 +3,8 @@ import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player
 import 'package:darkness_dungeon/shared/i_dd_game_decoration.dart';
 
 abstract class _MapTransitionSensorConfig {
-  static const _kSensorContactTime = 0.5;
-  static const _kTransitionDelayMs = 100;
+  static const double _kSensorContactTime = 0.5;
+  static const int _kTransitionDelayMs = 100;
 }
 
 class MapTransitionSensorView extends DDSensorPlayerDecoration {

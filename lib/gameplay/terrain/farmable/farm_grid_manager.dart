@@ -3,8 +3,8 @@ import 'package:bonfire/bonfire.dart';
 import 'farm_tile.dart';
 
 class FarmGridManager {
-  static const _kGridWidth = 20;
-  static const _kGridHeight = 15;
+  static const int _kGridWidth = 20;
+  static const int _kGridHeight = 15;
   late List<List<FarmTileView>> farmGrid;
 
   FarmGridManager() {

@@ -1,59 +1,59 @@
 import 'package:flutter/material.dart';
 
 class GameplayUIConfig {
-  static const kHUDPadding = 20.0;
+  static const double kHUDPadding = 20.0;
 
-  static const kBarWidth = 90.0;
+  static const double kBarWidth = 90.0;
 
-  static const kStrokeWidth = 12.0;
+  static const double kStrokeWidth = 12.0;
 
-  static const kHealthBarYPosition = 10.0;
+  static const double kHealthBarYPosition = 10.0;
 
-  static const kStaminaBarYPosition = 27.0;
+  static const double kStaminaBarYPosition = 27.0;
 
-  static const kBarXPosition = 29.0;
+  static const double kBarXPosition = 29.0;
 
-  static const kMaxStamina = 100.0;
+  static const double kMaxStamina = 100.0;
 
-  static const kHUDWidth = 120.0;
+  static const double kHUDWidth = 120.0;
 
-  static const kHUDHeight = 40.0;
+  static const double kHUDHeight = 40.0;
 
-  static const kComponentId = 1;
+  static const int kComponentId = 1;
 
-  static const kKeyIconWidth = 35.0;
+  static const double kKeyIconWidth = 35.0;
 
-  static const kKeyIconHeight = 30.0;
+  static const double kKeyIconHeight = 30.0;
 
-  static const kKeyIconX = 150.0;
+  static const double kKeyIconX = 150.0;
 
-  static const kKeyIconY = 20.0;
+  static const double kKeyIconY = 20.0;
 
-  static const kGameOverImageHeight = 96.0;
+  static const double kGameOverImageHeight = 96.0;
 
-  static const kStandardSpacing = 8.0;
+  static const double kStandardSpacing = 8.0;
 
-  static const kLargeSpacing = 32.0;
+  static const double kLargeSpacing = 32.0;
 
-  static const kHorizontalPadding = 96.0;
+  static const double kHorizontalPadding = 96.0;
 
-  static const kHealthCriticalThreshold = 1.0 / 3.0;
+  static const double kHealthCriticalThreshold = 1.0 / 3.0;
 
-  static const kHealthWarningThreshold = 2.0 / 3.0;
+  static const double kHealthWarningThreshold = 2.0 / 3.0;
 
-  static const kGameOverAsset = 'assets/game_over.png';
+  static const String kGameOverAsset = 'assets/game_over.png';
 
-  static const kHealthUIAsset = 'health_ui.png';
+  static const String kHealthUIAsset = 'health_ui.png';
 
-  static const kTransparentColor = Colors.transparent;
+  static const Color kTransparentColor = Colors.transparent;
 
-  static const kHealthBarBackgroundColor = Color(0xFF455A64);
+  static const Color kHealthBarBackgroundColor = Color(0xFF455A64);
 
-  static const kStaminaBarColor = Colors.yellow;
+  static const Color kStaminaBarColor = Colors.yellow;
 
-  static const kHealthBarGoodColor = Colors.green;
+  static const Color kHealthBarGoodColor = Colors.green;
 
-  static const kHealthBarWarningColor = Colors.yellow;
+  static const Color kHealthBarWarningColor = Colors.yellow;
 
-  static const kHealthBarCriticalColor = Colors.red;
+  static const Color kHealthBarCriticalColor = Colors.red;
 }

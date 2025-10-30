@@ -6,18 +6,20 @@ import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart'
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 
 abstract class KnightPlayerConfig {
-  static const kStandardLife = 200.0;
-  static const kStandardSpeed = GameplayTileConfig.kTileDimensionStandard * 2.5;
-  static const kMaxEnergy = 100;
-  static const kToolUsageEnergyCost = 2;
-  static const kMaxStamina = 100.0;
-  static const kStaminaIncrement = 2;
-  static const kStaminaRegenDebounce = Duration(milliseconds: 150);
-  static const kStandardAttackDamage = 25.0;
-  static const kSmallAttackDamage = 10.0;
-  static const kMeleeAttackStaminaCost = 15;
-  static const kFireballAttackStaminaCost = 10;
-  static const kVisionRadius = GameplayCharacterConfig.kVisionRadiusUltraLarge;
+  static const double kStandardLife = 200.0;
+  static const double kStandardSpeed =
+      GameplayTileConfig.kTileDimensionStandard * 2.5;
+  static const int kMaxEnergy = 100;
+  static const int kToolUsageEnergyCost = 2;
+  static const double kMaxStamina = 100.0;
+  static const int kStaminaIncrement = 2;
+  static const Duration kStaminaRegenDebounce = Duration(milliseconds: 150);
+  static const double kStandardAttackDamage = 25.0;
+  static const double kSmallAttackDamage = 10.0;
+  static const int kMeleeAttackStaminaCost = 15;
+  static const int kFireballAttackStaminaCost = 10;
+  static const double kVisionRadius =
+      GameplayCharacterConfig.kVisionRadiusUltraLarge;
 
   static final fHitbox = RectangleHitbox(
     position: Vector2(4, 9),

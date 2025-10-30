@@ -16,13 +16,13 @@ import 'package:darkness_dungeon/gameplay/terrain/farmable/farm_tile.dart';
 
 class GameplayMapConfig {
   /// Map keys
-  static const kNextMapPropertyKey = 'nextMap';
-  static const kPlayerPositionPropertyKey = 'playerPosition';
-  static const kPlayerDirectionPropertyKey = 'playerDirection';
+  static const String kNextMapPropertyKey = 'nextMap';
+  static const String kPlayerPositionPropertyKey = 'playerPosition';
+  static const String kPlayerDirectionPropertyKey = 'playerDirection';
 
-  static const kBackgroundMusicPropertyKey = 'backgroundMusic';
-  static const kLightingColorPropertyKey = 'lightingColor';
-  static const kBackgroundColorPropertyKey = 'backgroundColor';
+  static const String kBackgroundMusicPropertyKey = 'backgroundMusic';
+  static const String kLightingColorPropertyKey = 'lightingColor';
+  static const String kBackgroundColorPropertyKey = 'backgroundColor';
 
   ///
   static Map<String, ObjectBuilder> get entityBuilders =>
@@ -60,7 +60,7 @@ class GameplayMapConfig {
       };
 
   ///
-  static const kAllMaps = [
+  static const List<GameplayMapData> kAllMaps = [
     /// map_1
     const GameplayMapData(
       id: MapId.map1,
