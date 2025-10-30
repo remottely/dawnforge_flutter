@@ -66,7 +66,7 @@ class DungeonBossEnemyView extends SimpleEnemy
   void handleBossLogic(double dt) {
     if (!hasSeenPlayerFirst) {
       seePlayer(
-        observed: (p) {
+        observed: (player) {
           hasSeenPlayerFirst = true;
           gameRef.camera.moveToTargetAnimated(
             target: this,
@@ -74,7 +74,7 @@ class DungeonBossEnemyView extends SimpleEnemy
               context,
               maxVisibleTile: GameplayTileConfig.kBossConversationVisibleTiles,
             ),
-            onComplete: _showConversation,
+            onComplete: () => _showConversation(player),
           );
         },
         radiusVision: DungeonBossEnemyConfig.kVisionRadiusUltraLarge,
@@ -211,11 +211,12 @@ class DungeonBossEnemyView extends SimpleEnemy
       );
   }
 
-  void _showConversation() {
+  void _showConversation(Player player) {
     GameplayAudioManager.instance.playInteraction();
-    GameplayUIManager.showConversation(
+    GameplayUIManager.instance.showConversation(
       gameRef.context,
-      DungeonBossEnemyConfig.createConversationSequence(),
+      player: player,
+      conversationSequence: DungeonBossEnemyConfig.createConversationSequence(),
       onFinish: () {
         GameplayAudioManager.instance.playInteraction();
         spawnInitialMinions();

@@ -45,7 +45,10 @@ class GameplayStateManager extends GameComponent {
 
   void _displayGameOverDialog() {
     _isGameOverDisplayed = true;
-    GameplayUIManager.displayGameOverDialog(context, _onRetryGamePressed);
+    GameplayUIManager.instance.displayGameOverDialog(
+      context,
+      _onRetryGamePressed,
+    );
   }
 
   void _onRetryGamePressed(BuildContext dialogContext) {

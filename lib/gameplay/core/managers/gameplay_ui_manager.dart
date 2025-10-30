@@ -6,11 +6,16 @@ import 'package:darkness_dungeon/app/presentation/screens/menu_screen.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_input_actions_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_ui_config.dart';
 import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/gameplay_game_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class GameplayUIManager {
-  static void displayGameOverDialog(
+  var isShowingConversation = false;
+
+  static final instance = GameplayUIManager();
+
+  void displayGameOverDialog(
     BuildContext context,
     Function(BuildContext) onRetryPressed,
   ) {
@@ -37,7 +42,7 @@ class GameplayUIManager {
     );
   }
 
-  static void displayVictoryDialog(BuildContext context) {
+  void displayVictoryDialog(BuildContext context) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -70,14 +75,17 @@ class GameplayUIManager {
     );
   }
 
-  static void showConversation(
-    BuildContext context,
-    List<Say> conversationSequence, {
+  void showConversation(
+    BuildContext context, {
+    required Player player,
+    required List<Say> conversationSequence,
     Function(int)? onChangeTalk,
     VoidCallback? onFinish,
     VoidCallback? onClose,
     List<LogicalKeyboardKey>? logicalKeyboardKeysToNext,
   }) {
+    GameplayGameManager.stopPlayerMovement(player);
+
     TalkDialog.show(
       context,
       conversationSequence,

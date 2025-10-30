@@ -38,7 +38,6 @@ abstract class _DoorInteractableConfig {
 
 class DoorInteractableView extends DDGameDecoration {
   bool _isOpen = false;
-  bool _isShowingDialog = false;
 
   DoorInteractableView({required super.position, required super.size})
     : super.withSprite(sprite: _DoorInteractableConfig._loadClosedSprite());
@@ -65,7 +64,7 @@ class DoorInteractableView extends DDGameDecoration {
       if (player.controller.model.hasKey == true) {
         _triggerDoorOpening(player);
       } else {
-        _showKeyRequiredMessage();
+        _showKeyRequiredMessage(player);
       }
     }
   }
@@ -73,10 +72,10 @@ class DoorInteractableView extends DDGameDecoration {
   void _triggerDoorOpening(KnightPlayerView player) {
     _isOpen = true;
     player.controller.model.hasKey = false;
-    _playOpeningAnimation();
+    _playDoorOpeningAnimation();
   }
 
-  void _playOpeningAnimation() {
+  void _playDoorOpeningAnimation() {
     playSpriteAnimationOnce(
       _DoorInteractableConfig._loadOpeningAnimation(),
       onFinish: _cleanup,
@@ -86,19 +85,21 @@ class DoorInteractableView extends DDGameDecoration {
     );
   }
 
-  void _showKeyRequiredMessage() {
-    if (!_isShowingDialog) {
-      _isShowingDialog = true;
-      _showConversation();
+  void _showKeyRequiredMessage(Player player) {
+    if (!GameplayUIManager.instance.isShowingConversation) {
+      GameplayUIManager.instance.isShowingConversation = true;
+      _showConversation(player);
     }
   }
 
-  void _showConversation() {
-    GameplayUIManager.showConversation(
+  void _showConversation(Player player) {
+    GameplayUIManager.instance.showConversation(
       gameRef.context,
-      _DoorInteractableConfig.createConversationSequence(),
+      player: player,
+      conversationSequence:
+          _DoorInteractableConfig.createConversationSequence(),
       onClose: () {
-        _isShowingDialog = false;
+        GameplayUIManager.instance.isShowingConversation = false;
       },
     );
   }

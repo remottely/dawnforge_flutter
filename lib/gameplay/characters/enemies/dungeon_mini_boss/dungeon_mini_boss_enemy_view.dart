@@ -53,10 +53,10 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
   void seePlayerAndAct() {
     _seePlayerClose = false;
     seePlayer(
-      observed: (player) {
+      observed: (_) {
         _seePlayerClose = true;
         seeAndMoveToPlayer(
-          closePlayer: (player) {
+          closePlayer: (_) {
             playMeleeAttackAnimation();
           },
           radiusVision: DungeonMiniBossEnemyConfig.kCloseVisionRadius,

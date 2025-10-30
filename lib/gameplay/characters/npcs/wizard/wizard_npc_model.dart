@@ -1,11 +1,5 @@
 class WizardNpcModel {
-  bool isInteracted;
+  bool hasBeenFirstInteraction;
 
-  WizardNpcModel({this.isInteracted = false});
-
-  void startConversation() {
-    isInteracted = true;
-  }
-
-  void finishConversation() {}
+  WizardNpcModel({this.hasBeenFirstInteraction = false});
 }

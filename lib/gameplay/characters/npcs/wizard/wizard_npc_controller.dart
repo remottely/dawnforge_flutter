@@ -5,10 +5,10 @@ import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_cont
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 
 class WizardNpcController {
-  final WizardNpcModel _model;
+  final WizardNpcModel model;
   late WizardNpcView _view;
 
-  WizardNpcController({required WizardNpcModel model}) : _model = model;
+  WizardNpcController({required WizardNpcModel model}) : this.model = model;
 
   void attachView(WizardNpcView view) {
     _view = view;
@@ -18,17 +18,17 @@ class WizardNpcController {
     _view.checkPlayerProximity();
   }
 
-  void onPlayerDetected(Component player) {
-    if (!_model.isInteracted) {
-      _view.idlePlayer();
-      _model.startConversation();
+  void onPlayerDetected(Player player, {bool interactionRequested = false}) {
+    if (!model.hasBeenFirstInteraction ||
+        (model.hasBeenFirstInteraction && interactionRequested)) {
+      // Use a flag
       _view.add(
         CharacterEmoteController.displayEmoteAboveCharacter(
           asset: CharacterEmoteController.kQuestionEmoteAsset,
           target: _view,
         ),
       );
-      _view.showConversation();
+      _view.showConversation(player);
     }
   }
 
@@ -38,6 +38,5 @@ class WizardNpcController {
 
   void onConversationFinished() {
     GameplayAudioManager.instance.playInteraction();
-    _model.finishConversation();
   }
 }

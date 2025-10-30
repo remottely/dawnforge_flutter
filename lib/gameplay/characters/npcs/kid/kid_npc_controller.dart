@@ -1,3 +1,4 @@
+import 'package:bonfire/player/player.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_view.dart';
@@ -6,7 +7,7 @@ import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.d
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
 
 class KidNpcController {
-  bool _conversationWithHero = false;
+  bool _hasStartedConversationWithHero = false;
   late KidNpcView _view;
 
   void attachView(KidNpcView view) {
@@ -18,7 +19,7 @@ class KidNpcController {
   }
 
   void _checkForBossDefeat(double dt) {
-    if (!_conversationWithHero &&
+    if (!_hasStartedConversationWithHero &&
         _view.checkInterval('checkBossDead', 1000, dt)) {
       if (_isBossDefeated()) {
         _initiateVictorySequence();
@@ -38,18 +39,19 @@ class KidNpcController {
   }
 
   void _initiateVictorySequence() {
-    _conversationWithHero = true;
+    _hasStartedConversationWithHero = true;
     _view.gameRef.camera.moveToTargetAnimated(
       target: _view,
-      onComplete: _showConversation,
+      onComplete: () => _showConversation(_view.gameRef.player!),
     );
   }
 
-  void _showConversation() {
+  void _showConversation(Player player) {
     GameplayAudioManager.instance.playInteraction();
-    GameplayUIManager.showConversation(
+    GameplayUIManager.instance.showConversation(
       _view.gameRef.context,
-      KidNpcConfig.createConversationSequence(),
+      player: player,
+      conversationSequence: KidNpcConfig.createConversationSequence(),
       onFinish: _onConversationFinished,
       onChangeTalk: _onConversationChanged,
       logicalKeyboardKeysToNext: [
@@ -70,6 +72,6 @@ class KidNpcController {
   }
 
   void _displayVictoryScreen() {
-    GameplayUIManager.displayVictoryDialog(_view.gameRef.context);
+    GameplayUIManager.instance.displayVictoryDialog(_view.gameRef.context);
   }
 }
