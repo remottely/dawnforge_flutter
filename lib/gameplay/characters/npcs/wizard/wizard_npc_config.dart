@@ -8,16 +8,17 @@ abstract class WizardNpcConfig {
   static const double kVisionRadius =
       GameplayCharacterConfig.kVisionRadiusSmall;
 
-  static final fTextureSize = Vector2(16, 22);
-  static final fComponentSize = Vector2(
+  static final Vector2 fTextureSize = Vector2(16, 22);
+  static final Vector2 fComponentSize = Vector2(
     GameplayTileConfig.kTileDimensionStandard * 0.8,
     GameplayTileConfig.kTileDimensionStandard * 1.0,
   );
 
-  static final fDirectionalSpriteAnimation = SimpleDirectionAnimation(
-    idleRight: UISpriteAnimations.wizardNpcIdleLeft4(),
-    runRight: UISpriteAnimations.wizardNpcIdleLeft4(),
-  );
+  static final SimpleDirectionAnimation fDirectionalSpriteAnimation =
+      SimpleDirectionAnimation(
+        idleRight: UISpriteAnimations.wizardNpcIdleLeft4(),
+        runRight: UISpriteAnimations.wizardNpcIdleLeft4(),
+      );
 
   static List<Say> createConversationSequence() => [
     GameplayConversationConfig.wizardRightDialog('talk_wizard_1'),

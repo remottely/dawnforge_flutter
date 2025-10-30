@@ -7,13 +7,13 @@ import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.d
 class CharacterFireballAttackConfig {
   static const double kSpeedMultiplier = 2.5;
 
-  static final fLightingConfig = LightingConfig(
+  static final LightingConfig fLightingConfig = LightingConfig(
     radius: GameplayTileConfig.kTileDimensionSmall,
     blurBorder: GameplayTileConfig.kTileDimensionSmall,
     color: CharacterParticlesAnimations.fLightingConfigColor,
   );
 
-  static final fComponentSize = GameplayTileConfig.fTileSizeSmall;
+  static final Vector2 fComponentSize = GameplayTileConfig.fTileSizeSmall;
 
   static RectangleHitbox createHitbox() =>
       RectangleHitbox(size: fComponentSize);

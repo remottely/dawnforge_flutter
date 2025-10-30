@@ -14,10 +14,11 @@ abstract class DungeonBossEnemyConfig {
   static const double kVisionRadiusUltraLarge =
       GameplayCharacterConfig.kVisionRadiusUltraLarge;
 
-  static final fTextureSize = Vector2(32, 36);
-  static final fComponentSize = fTextureSize;
+  static final Vector2 fTextureSize = Vector2(32, 36);
+  static final Vector2 fComponentSize = fTextureSize;
 
-  static final fDirectionalSpriteAnimation = SimpleDirectionAnimation(
+  static final SimpleDirectionAnimation
+  fDirectionalSpriteAnimation = SimpleDirectionAnimation(
     idleLeft: UISpriteAnimations.dungeonBossEnemyIdleLeft4(),
     idleRight: UISpriteAnimations.dungeonBossEnemyIdleRight4(),
     runLeft: SpriteAnimation.load(

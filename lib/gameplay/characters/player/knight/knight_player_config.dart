@@ -21,46 +21,48 @@ abstract class KnightPlayerConfig {
   static const double kVisionRadius =
       GameplayCharacterConfig.kVisionRadiusUltraLarge;
 
-  static final fHitbox = RectangleHitbox(
+  static final RectangleHitbox fHitbox = RectangleHitbox(
     position: Vector2(4, 9),
     size: Vector2(8, 6),
   );
 
-  static final fTextureSize = GameplayTileConfig.fTileSizeStandard;
-  static final fComponentSize = fTextureSize;
+  static final Vector2 fTextureSize = GameplayTileConfig.fTileSizeStandard;
+  static final Vector2 fComponentSize = fTextureSize;
 
-  static final fDirectionalSpriteAnimation = SimpleDirectionAnimation(
-    idleLeft: SpriteAnimation.load(
-      'gameplay/characters/player/knight/knight_player_idle_left_6.png',
-      GameplaySpriteAnimationConfig.createStandardData(
-        amount: 6,
-        textureSize: fTextureSize,
-      ),
-    ),
-    idleRight: UISpriteAnimations.knightPlayerIdleRight6(),
-    runLeft: SpriteAnimation.load(
-      'gameplay/characters/player/knight/knight_player_run_left_6.png',
-      GameplaySpriteAnimationConfig.createStandardData(
-        amount: 6,
-        textureSize: fTextureSize,
-      ),
-    ),
-    runRight: SpriteAnimation.load(
-      'gameplay/characters/player/knight/knight_player_run_right_6.png',
-      GameplaySpriteAnimationConfig.createStandardData(
-        amount: 6,
-        textureSize: fTextureSize,
-      ),
-    ),
-  );
+  static final SimpleDirectionAnimation fDirectionalSpriteAnimation =
+      SimpleDirectionAnimation(
+        idleLeft: SpriteAnimation.load(
+          'gameplay/characters/player/knight/knight_player_idle_left_6.png',
+          GameplaySpriteAnimationConfig.createStandardData(
+            amount: 6,
+            textureSize: fTextureSize,
+          ),
+        ),
+        idleRight: UISpriteAnimations.knightPlayerIdleRight6(),
+        runLeft: SpriteAnimation.load(
+          'gameplay/characters/player/knight/knight_player_run_left_6.png',
+          GameplaySpriteAnimationConfig.createStandardData(
+            amount: 6,
+            textureSize: fTextureSize,
+          ),
+        ),
+        runRight: SpriteAnimation.load(
+          'gameplay/characters/player/knight/knight_player_run_right_6.png',
+          GameplaySpriteAnimationConfig.createStandardData(
+            amount: 6,
+            textureSize: fTextureSize,
+          ),
+        ),
+      );
 
-  static final fLightingConfig = LightingConfig(
+  static final LightingConfig fLightingConfig = LightingConfig(
     radius: GameplayTileConfig.kTileDimensionStandard,
     blurBorder: GameplayTileConfig.kTileDimensionStandard,
     color: CharacterParticlesAnimations.fLightingConfigColor,
   );
 
-  static final fCryptComponentSize = GameplayTileConfig.fTileSizeStandard;
+  static final Vector2 fCryptComponentSize =
+      GameplayTileConfig.fTileSizeStandard;
   static Future<Sprite> loadCryptSprite() =>
       Sprite.load('gameplay/characters/player/player_crypt_1.png');
 }

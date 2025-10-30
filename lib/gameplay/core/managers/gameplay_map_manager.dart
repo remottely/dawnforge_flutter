@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:bonfire/map/tiled/builder/tiled_world_builder.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_map_config.dart';
-import 'package:darkness_dungeon/gameplay/core/data/gameplay_map_data.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
+import 'package:darkness_dungeon/gameplay/core/data/gameplay_map_data.dart';
 import 'package:darkness_dungeon/gameplay/environment/sensors/map_transition_sensor.dart';
 import 'package:flutter/widgets.dart';
 
@@ -11,13 +11,13 @@ class GameplayMapManager {
     String sensorId,
     TiledObjectProperties properties,
   ) {
-    final positionParts = properties
+    final List<String> _fPositionParts = properties
         .others[GameplayMapConfig.kPlayerPositionPropertyKey]
         .toString()
         .split(',');
-    final playerPosition = Vector2(
-      double.parse(positionParts[0]),
-      double.parse(positionParts[1]),
+    final Vector2 _fPlayerPosition = Vector2(
+      double.parse(_fPositionParts[0]),
+      double.parse(_fPositionParts[1]),
     );
 
     return MapTransitionSensorView(
@@ -26,7 +26,7 @@ class GameplayMapManager {
       size: properties.size,
       targetMap: properties.others[GameplayMapConfig.kNextMapPropertyKey]
           .toString(),
-      playerPosition: playerPosition,
+      playerPosition: _fPlayerPosition,
       playerDirection: Direction.fromName(
         properties.others[GameplayMapConfig.kPlayerDirectionPropertyKey]
             .toString(),
@@ -79,15 +79,17 @@ class GameplayMapManager {
     );
   }
 
-  static final fAllMaps = (() {
-    final mapBuilders = <String, MapItemBuilder>{};
+  static final Map<String, MapItem Function(BuildContext, Object?)> fAllMaps =
+      (() {
+        final mapBuilders = <String, MapItemBuilder>{};
 
-    for (final config in GameplayMapConfig.kAllMaps) {
-      mapBuilders[config.id.name] = (context, args) => _createMapItem(config);
-    }
+        for (final config in GameplayMapConfig.kAllMaps) {
+          mapBuilders[config.id.name] = (context, args) =>
+              _createMapItem(config);
+        }
 
-    return mapBuilders;
-  })();
+        return mapBuilders;
+      })();
 
   static MapItem? byId(BuildContext context, MapId id) {
     final builder = fAllMaps[id.name];

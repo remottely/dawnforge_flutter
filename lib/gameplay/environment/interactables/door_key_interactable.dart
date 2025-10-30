@@ -4,7 +4,7 @@ import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart'
 import 'package:darkness_dungeon/shared/i_dd_game_decoration.dart';
 
 abstract class DoorKeyInteractableConfig {
-  static final _fComponentSize = GameplayTileConfig.fTileSizeStandard;
+  static final Vector2 _fComponentSize = GameplayTileConfig.fTileSizeStandard;
 
   static Future<Sprite> loadSprite() => Sprite.load(
     'gameplay/environment/interactables/door_key_interactable_1.png',

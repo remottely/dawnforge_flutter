@@ -5,8 +5,8 @@ import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart'
 import 'package:darkness_dungeon/shared/i_dd_game_decoration.dart';
 
 abstract class _TorchDecorationConfig {
-  static final _fTextureSize = GameplayTileConfig.fTileSizeStandard;
-  static final _fComponentSize = _fTextureSize;
+  static final Vector2 _fTextureSize = GameplayTileConfig.fTileSizeStandard;
+  static final Vector2 _fComponentSize = _fTextureSize;
 
   static Future<SpriteAnimation> _loadAnimation() => SpriteAnimation.load(
     'gameplay/environment/decorations/torch_decoration_6.png',
@@ -16,7 +16,7 @@ abstract class _TorchDecorationConfig {
     ),
   );
 
-  static final _fLightingConfig = LightingConfig(
+  static final LightingConfig _fLightingConfig = LightingConfig(
     radius: GameplayTileConfig.kTileDimensionExtraLarge,
     blurBorder: GameplayTileConfig.kTileDimensionStandard,
     pulseVariation: 0.1,

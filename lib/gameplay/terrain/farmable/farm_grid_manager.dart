@@ -31,8 +31,8 @@ class FarmGridManager {
   }
 
   void processDailyGrowth() {
-    for (var row in farmGrid) {
-      for (var tile in row) {
+    for (List<FarmTileView> row in farmGrid) {
+      for (FarmTileView tile in row) {
         tile.processDay();
       }
     }

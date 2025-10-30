@@ -17,13 +17,14 @@ abstract class DungeonMiniBossEnemyConfig {
       GameplayTileConfig.kTileDimensionStandard * 0.62;
   static const double kMeleeDamageReduction = 3.0;
 
-  static final fTextureSize = Vector2(16, 24);
-  static final fComponentSize = Vector2(
+  static final Vector2 fTextureSize = Vector2(16, 24);
+  static final Vector2 fComponentSize = Vector2(
     GameplayTileConfig.kTileDimensionStandard * 0.68,
     GameplayTileConfig.kTileDimensionStandard * 0.93,
   );
 
-  static final fDirectionalSpriteAnimation = SimpleDirectionAnimation(
+  static final SimpleDirectionAnimation
+  fDirectionalSpriteAnimation = SimpleDirectionAnimation(
     idleLeft: SpriteAnimation.load(
       'gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_idle_left_4.png',
       GameplaySpriteAnimationConfig.createStandardData(

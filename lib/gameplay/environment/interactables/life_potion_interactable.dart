@@ -10,7 +10,7 @@ abstract class LifePotionConfig {
   static const double kHealAmount =
       GameplayInteractableConfig.kPropertyAmountSmall;
 
-  static final _fComponentSize = GameplayTileConfig.fTileSizeStandard;
+  static final Vector2 _fComponentSize = GameplayTileConfig.fTileSizeStandard;
   static Future<Sprite> _loadSprite() => Sprite.load(
     'gameplay/environment/interactables/life_potion_interactable_1.png',
   );

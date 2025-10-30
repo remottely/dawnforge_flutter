@@ -65,11 +65,11 @@ class GameplayInputActionsConfig {
   }
 
   /// Keyboard
-  static final _fKeyboardDirectionalKeys = [
+  static final List<KeyboardDirectionalKeys> _fKeyboardDirectionalKeys = [
     KeyboardDirectionalKeys.wasd(),
     KeyboardDirectionalKeys.arrows(),
   ];
-  static final _fKeyboardAcceptedKeys = [
+  static final List<LogicalKeyboardKey> _fKeyboardAcceptedKeys = [
     kKeyboardMeleeAttack,
     kKeyboardFireballAttack,
   ];

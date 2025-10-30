@@ -10,8 +10,8 @@ abstract class _SpikeTrapInteractableConfig {
       GameplayInteractableConfig.kPropertyAmountMedium;
   static const int _kPriority = 1;
 
-  static final _fTextureSize = GameplayTileConfig.fTileSizeStandard;
-  static final _fComponentSize = _fTextureSize;
+  static final Vector2 _fTextureSize = GameplayTileConfig.fTileSizeStandard;
+  static final Vector2 _fComponentSize = _fTextureSize;
 
   static Future<SpriteAnimation> _loadAnimation() => SpriteAnimation.load(
     'gameplay/environment/interactables/spike_trap_interactable_10.png',

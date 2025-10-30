@@ -29,7 +29,7 @@ class GameplayLocalizationsDelegate
   bool shouldReload(GameplayLocalizationsDelegate old) => false;
 
   Locale resolution(Locale? locale, Iterable<Locale> supportedLocales) {
-    for (Locale supportedLocale in supportedLocales) {
+    for (final supportedLocale in supportedLocales) {
       if (locale != null) {
         if (supportedLocale.languageCode == locale.languageCode ||
             supportedLocale.countryCode == locale.countryCode) {
