@@ -30,4 +30,8 @@ fix:
   - fix collision size and position
 
 - UI dialogues:
+
   - force player to stop in every dialogue start
+
+- Audio:
+  - put music_gameplay_background.mp3 back

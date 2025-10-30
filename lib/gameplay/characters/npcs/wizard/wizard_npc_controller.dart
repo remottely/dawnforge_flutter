@@ -33,10 +33,10 @@ class WizardNpcController {
   }
 
   void onConversationChanged(int index) {
-    GameplayAudioManager.instance.playInteraction();
+    GameplayAudioManager.instance.playConversationInteraction();
   }
 
   void onConversationFinished() {
-    GameplayAudioManager.instance.playInteraction();
+    GameplayAudioManager.instance.playConversationInteraction();
   }
 }

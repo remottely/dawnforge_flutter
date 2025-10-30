@@ -212,31 +212,35 @@ class DungeonBossEnemyView extends SimpleEnemy
   }
 
   void _showConversation(Player player) {
-    GameplayAudioManager.instance.playInteraction();
+    GameplayAudioManager.instance.playConversationInteraction();
     GameplayUIManager.instance.showConversation(
       gameRef.context,
       player: player,
       conversationSequence: DungeonBossEnemyConfig.createConversationSequence(),
-      onFinish: () {
-        GameplayAudioManager.instance.playInteraction();
-        spawnInitialMinions();
-        Future.delayed(Duration(milliseconds: 500), () {
-          gameRef.camera.moveToPlayerAnimated(
-            zoom: GameplayCameraConfig.getCameraZoomFromMaxVisibleTile(
-              context,
-              maxVisibleTile: GameplayTileConfig.kMaxVisibleTiles,
-            ),
-          );
-          GameplayAudioManager.instance.playBossBackgroundMusic();
-        });
-      },
-      onChangeTalk: (index) {
-        GameplayAudioManager.instance.playInteraction();
-      },
       logicalKeyboardKeysToNext: [
         GameplayInputActionsConfig.kKeyboardMeleeAttack,
       ],
+      onChangeTalk: _onConversationChanged,
+      onFinish: _onConversationFinished,
     );
+  }
+
+  void _onConversationChanged(int index) {
+    GameplayAudioManager.instance.playConversationInteraction();
+  }
+
+  void _onConversationFinished() {
+    GameplayAudioManager.instance.playConversationInteraction();
+    spawnInitialMinions();
+    Future.delayed(Duration(milliseconds: 500), () {
+      gameRef.camera.moveToPlayerAnimated(
+        zoom: GameplayCameraConfig.getCameraZoomFromMaxVisibleTile(
+          context,
+          maxVisibleTile: GameplayTileConfig.kMaxVisibleTiles,
+        ),
+      );
+      GameplayAudioManager.instance.playBossBackgroundMusic();
+    });
   }
 
   void spawnInitialMinions() {

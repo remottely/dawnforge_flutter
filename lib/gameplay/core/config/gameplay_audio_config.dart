@@ -1,26 +1,32 @@
 class GameplayAudioConfig {
-  static const kAttackVolume = 0.4;
-  static const kRangeVolume = 0.3;
-  static const kInteractionVolume = 0.4;
-  static const kFireballExplosionVolume = 1.0;
+  static const kBasicAttackVolume = 0.4;
+  static const kCharacterFireballAttackVolume = 0.3;
+  static const kCharacterFireballExplosionVolume = 1.0;
+  static const kConversationInteractionVolume = 0.4;
 
-  static const kAttackPlayerAsset = 'attack_player.mp3';
-  static const kFireBallAttackAudioAsset = 'fireball_attack_audio.wav';
-  static const kAttackEnemyAsset = 'attack_enemy.mp3';
-  static const kFireballExplosionAudioAsset = 'fireball_explosion_audio.wav';
-  static const kInteractionAsset = 'sound_interaction.wav';
-  static const kDeathHexBackgroundMusicAsset = 'ro1_death_hex.mp3';
-  static const kLettersBackgroundMusicAsset = 'ro1_letters.mp3';
-  static const kBossBackgroundAsset = 'battle_boss.mp3';
+  static const kSfxPlayerAttackAsset = 'sfx/sfx_player_attack.mp3';
+  static const kSfxCharacterFireBallAttackAsset =
+      'sfx/sfx_character_fireball_attack.wav';
+  static const kSfxEnemyAttackAsset = 'sfx/sfx_enemy_attack.mp3';
+  static const kSfxCharacterFireballExplosionAsset =
+      'sfx/sfx_character_fireball_explosion.wav';
+  static const kSfxConversationInteractionAsset =
+      'sfx/sfx_conversation_interaction.wav';
+  static const kMusicRo1DeathHexBackgroundAsset =
+      'music/music_ro1_death_hex_background.mp3';
+  static const kMusicRo1LettersBackgroundAsset =
+      'music/music_ro1_letters_background.mp3';
+  static const kMusicBossBattleBackgroundAsset =
+      'music/music_boss_battle_background.mp3';
 
-  static const kAudioFilesToPreload = [
-    kAttackPlayerAsset,
-    kFireBallAttackAudioAsset,
-    kAttackEnemyAsset,
-    kFireballExplosionAudioAsset,
-    kInteractionAsset,
-    kDeathHexBackgroundMusicAsset,
-    kLettersBackgroundMusicAsset,
-    kBossBackgroundAsset,
+  static const kPreloadAudioFiles = [
+    kSfxPlayerAttackAsset,
+    kSfxCharacterFireBallAttackAsset,
+    kSfxEnemyAttackAsset,
+    kSfxCharacterFireballExplosionAsset,
+    kSfxConversationInteractionAsset,
+    kMusicRo1DeathHexBackgroundAsset,
+    kMusicRo1LettersBackgroundAsset,
+    kMusicBossBattleBackgroundAsset,
   ];
 }

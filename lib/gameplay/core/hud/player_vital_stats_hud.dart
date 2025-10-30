@@ -4,9 +4,9 @@ import 'package:darkness_dungeon/gameplay/core/config/gameplay_ui_config.dart';
 import 'package:flutter/material.dart';
 
 class PlayerVitalStatsHUD extends InterfaceComponent {
-  double _maxLife = 0.0;
-  double _currentLife = 0.0;
-  double _currentStamina = 0.0;
+  var _vMaxLife = 0.0;
+  var _vCurrentLife = 0.0;
+  var _vCurrentStamina = 0.0;
 
   PlayerVitalStatsHUD()
     : super(
@@ -36,11 +36,11 @@ class PlayerVitalStatsHUD extends InterfaceComponent {
 
   void _updatePlayerStats() {
     if (gameRef.player != null) {
-      _currentLife = gameRef.player!.life;
-      _maxLife = gameRef.player!.maxLife;
+      _vCurrentLife = gameRef.player!.life;
+      _vMaxLife = gameRef.player!.maxLife;
 
       if (gameRef.player is KnightPlayerView) {
-        _currentStamina = (gameRef.player as KnightPlayerView)
+        _vCurrentStamina = (gameRef.player as KnightPlayerView)
             .controller
             .model
             .currentStamina;
@@ -106,12 +106,12 @@ class PlayerVitalStatsHUD extends InterfaceComponent {
   }
 
   double _calculateHealthBarWidth() {
-    if (_maxLife <= 0) return 0.0;
-    return (_currentLife * GameplayUIConfig.kBarWidth) / _maxLife;
+    if (_vMaxLife <= 0) return 0.0;
+    return (_vCurrentLife * GameplayUIConfig.kBarWidth) / _vMaxLife;
   }
 
   double _calculateStaminaBarWidth() {
-    return (_currentStamina * GameplayUIConfig.kBarWidth) /
+    return (_vCurrentStamina * GameplayUIConfig.kBarWidth) /
         GameplayUIConfig.kMaxStamina;
   }
 

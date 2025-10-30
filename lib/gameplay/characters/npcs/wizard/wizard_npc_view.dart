@@ -70,8 +70,8 @@ class WizardNpcView extends SimpleNpc with KeyboardEventListener {
   }
 
   void showConversation(Player player) {
-    GameplayAudioManager.instance.playInteraction();
     _controller.model.hasBeenFirstInteraction = true;
+    GameplayAudioManager.instance.playConversationInteraction();
     GameplayUIManager.instance.showConversation(
       gameRef.context,
       player: player,

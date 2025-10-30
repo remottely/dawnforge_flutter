@@ -47,13 +47,13 @@ class KidNpcController {
   }
 
   void _showConversation(Player player) {
-    GameplayAudioManager.instance.playInteraction();
+    GameplayAudioManager.instance.playConversationInteraction();
     GameplayUIManager.instance.showConversation(
       _view.gameRef.context,
       player: player,
       conversationSequence: KidNpcConfig.createConversationSequence(),
-      onFinish: _onConversationFinished,
       onChangeTalk: _onConversationChanged,
+      onFinish: _onConversationFinished,
       logicalKeyboardKeysToNext: [
         GameplayInputActionsConfig.kKeyboardMeleeAttack,
       ],
@@ -61,11 +61,11 @@ class KidNpcController {
   }
 
   void _onConversationChanged(int index) {
-    GameplayAudioManager.instance.playInteraction();
+    GameplayAudioManager.instance.playConversationInteraction();
   }
 
   void _onConversationFinished() {
-    GameplayAudioManager.instance.playInteraction();
+    GameplayAudioManager.instance.playConversationInteraction();
     _view.gameRef.camera.moveToPlayerAnimated(
       onComplete: _displayVictoryScreen,
     );

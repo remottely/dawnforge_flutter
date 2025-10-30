@@ -4,54 +4,47 @@ import 'package:darkness_dungeon/gameplay/gameplay.dart';
 import 'package:flutter/material.dart';
 
 class GameplayStateManager extends GameComponent {
-  static const _kGameOverCheckInterval = 'gameOver';
-  static const _kGameOverCheckRate = 100;
-
-  bool _isGameOverDisplayed = false;
-  bool _isProcessingGameOver = false;
-
   @override
   void update(double dt) {
     _processGameState(dt);
     super.update(dt);
   }
 
-  void triggerGameOver() {
-    if (!_isGameOverDisplayed && !_isProcessingGameOver) {
-      _isProcessingGameOver = true;
-      _handleGameOver();
-    }
-  }
+  /// >>> Start Game Over Handling
+  static const _kGameOverCheckIntervalKey = 'gameOver';
+  static const _kGameOverCheckRate = 100;
+
+  var _vIsGameOverDisplayed = false;
+  var _vIsProcessingGameOver = false;
 
   void _processGameState(double dt) {
-    if (checkInterval(_kGameOverCheckInterval, _kGameOverCheckRate, dt)) {
+    if (checkInterval(_kGameOverCheckIntervalKey, _kGameOverCheckRate, dt)) {
       _checkForGameOverCondition();
     }
   }
 
   void _checkForGameOverCondition() {
-    if (_shouldDisplayGameOver() && !_isProcessingGameOver) {
-      _isProcessingGameOver = true;
+    if (_shouldDisplayGameOver() && !_vIsProcessingGameOver) {
+      _vIsProcessingGameOver = true;
       _handleGameOver();
     }
   }
 
   void _handleGameOver() {
-    if (!_isGameOverDisplayed) {
-      _isGameOverDisplayed = true;
+    if (!_vIsGameOverDisplayed) {
       _displayGameOverDialog();
     }
   }
 
   void _displayGameOverDialog() {
-    _isGameOverDisplayed = true;
+    _vIsGameOverDisplayed = true;
     GameplayUIManager.instance.displayGameOverDialog(
       context,
-      _onRetryGamePressed,
+      _onRestartGamePressed,
     );
   }
 
-  void _onRetryGamePressed(BuildContext dialogContext) {
+  void _onRestartGamePressed(BuildContext dialogContext) {
     _resetGameState();
 
     Navigator.of(dialogContext).pop();
@@ -74,8 +67,8 @@ class GameplayStateManager extends GameComponent {
   }
 
   void _resetGameState() {
-    _isGameOverDisplayed = false;
-    _isProcessingGameOver = false;
+    _vIsGameOverDisplayed = false;
+    _vIsProcessingGameOver = false;
   }
 
   void _restartGame() {
@@ -84,4 +77,6 @@ class GameplayStateManager extends GameComponent {
       (Route<dynamic> route) => false,
     );
   }
+
+  /// <<< End Game Over Handling
 }

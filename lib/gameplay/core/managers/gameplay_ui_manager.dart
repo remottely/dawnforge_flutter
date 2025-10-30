@@ -11,9 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class GameplayUIManager {
-  var isShowingConversation = false;
-
   static final instance = GameplayUIManager();
+
+  var isShowingConversation = false;
 
   void displayGameOverDialog(
     BuildContext context,
