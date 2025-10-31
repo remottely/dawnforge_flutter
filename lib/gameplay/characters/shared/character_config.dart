@@ -1,6 +1,6 @@
 // enum GameDifficulty { easy, normal, hard, nightmare }
 
-class GameplayCharacterConfig {
+class CharacterConfig {
   static const double kCharacterSpeedSlow = 24.0;
   static const double kCharacterSpeedMedium = 32.0;
   static const double kCharacterSpeedFast = 40.0;

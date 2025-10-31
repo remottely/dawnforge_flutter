@@ -2,7 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 
-class CharacterEmoteController {
+class CharacterEmoteManager {
   static const String kExclamationEmoteAsset =
       'gameplay/characters/emotes/exclamation_emote_8.png';
   static const String kQuestionEmoteAsset =

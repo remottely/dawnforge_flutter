@@ -2,8 +2,6 @@ import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-// enum PlayerActions { meleeAttack, rangedAttack }
-
 class GameplayInputActionsConfig {
   static var isJoystickInputSelected =
       false; // TODO(Kevin): now, change this logic
@@ -12,9 +10,9 @@ class GameplayInputActionsConfig {
       isJoystickInputSelected ? _createJoystickInput() : _createKeyboardInput();
 
   /// Identifiers
-  static const String kJoystickMeleeAttackId = 'meleeAttackId';
+  static const String kJoystickPrimaryAttackId = 'primaryAttackId';
   static const String kJoystickFireballAttackId = 'fireballAttackId';
-  static const LogicalKeyboardKey kKeyboardMeleeAttack =
+  static const LogicalKeyboardKey kKeyboardPrimaryAttack =
       LogicalKeyboardKey.space;
   static const LogicalKeyboardKey kKeyboardFireballAttack =
       LogicalKeyboardKey.keyZ;
@@ -40,7 +38,7 @@ class GameplayInputActionsConfig {
 
   static JoystickAction _createPrimaryAttackAction() {
     return JoystickAction(
-      actionId: kJoystickMeleeAttackId,
+      actionId: kJoystickPrimaryAttackId,
       sprite: Sprite.load('joystick_attack.png'),
       spritePressed: Sprite.load('joystick_attack_selected.png'),
       size: _kActionButtonSize,
@@ -70,7 +68,7 @@ class GameplayInputActionsConfig {
     KeyboardDirectionalKeys.arrows(),
   ];
   static final List<LogicalKeyboardKey> _fKeyboardAcceptedKeys = [
-    kKeyboardMeleeAttack,
+    kKeyboardPrimaryAttack,
     kKeyboardFireballAttack,
   ];
 

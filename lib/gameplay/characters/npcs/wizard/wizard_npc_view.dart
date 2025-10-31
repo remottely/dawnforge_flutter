@@ -60,7 +60,7 @@ class WizardNpcView extends SimpleNpc with KeyboardEventListener {
   bool onKeyboard(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     if (_playerIsNearby &&
         event is KeyDownEvent &&
-        event.logicalKey == GameplayInputActionsConfig.kKeyboardMeleeAttack) {
+        event.logicalKey == GameplayInputActionsConfig.kKeyboardPrimaryAttack) {
       _controller.onPlayerDetected(gameRef.player!, interactionRequested: true);
 
       return true;
@@ -71,7 +71,7 @@ class WizardNpcView extends SimpleNpc with KeyboardEventListener {
 
   void showConversation(Player player) {
     _controller.model.hasBeenFirstInteraction = true;
-    GameplayAudioManager.instance.playConversationInteraction();
+    GameplayAudioManager.instance.playConversationInteractionSfx();
     GameplayUIManager.instance.showConversation(
       gameRef.context,
       player: player,
@@ -79,7 +79,7 @@ class WizardNpcView extends SimpleNpc with KeyboardEventListener {
       onChangeTalk: _controller.onConversationChanged,
       onFinish: _controller.onConversationFinished,
       logicalKeyboardKeysToNext: [
-        GameplayInputActionsConfig.kKeyboardMeleeAttack,
+        GameplayInputActionsConfig.kKeyboardPrimaryAttack,
       ],
     );
   }

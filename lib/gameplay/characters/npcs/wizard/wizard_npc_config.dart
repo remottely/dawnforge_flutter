@@ -1,12 +1,11 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/gameplay_character_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_dialog_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 
 abstract class WizardNpcConfig {
-  static const double kVisionRadius =
-      GameplayCharacterConfig.kVisionRadiusSmall;
+  static const double kVisionRadius = CharacterConfig.kVisionRadiusSmall;
 
   static final Vector2 fTextureSize = Vector2(16, 22);
   static final Vector2 fComponentSize = Vector2(

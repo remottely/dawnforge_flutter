@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Offline macOS (Testing)",
+      "name": "Offline macOS (DEV)",
       "type": "dart",
       "request": "launch",
       "program": "lib/main.dart",
@@ -20,7 +20,7 @@
       "args": ["--no-pub", "--dart-define=GAME_ENVIRONMENT=DEVELOPMENT"]
     },
     {
-      "name": "Offline macOS (Staging)",
+      "name": "Offline macOS (PROD)",
       "type": "dart",
       "request": "launch",
       "program": "lib/main.dart",

@@ -26,11 +26,11 @@ class KnightPlayerModel {
   int get currentEnergy => _energy;
   bool get hasStamina => _stamina > 0;
 
-  bool canDoMeleeAttack() =>
-      _stamina >= KnightPlayerConfig.kMeleeAttackStaminaCost;
+  bool canDoPrimaryAttack() =>
+      _stamina >= KnightPlayerConfig.kPrimaryAttackStaminaCost;
 
-  void executeMeleeAttackStaminaCost() {
-    _decrementStamina(KnightPlayerConfig.kMeleeAttackStaminaCost);
+  void executePrimaryAttackStaminaCost() {
+    _decrementStamina(KnightPlayerConfig.kPrimaryAttackStaminaCost);
   }
 
   bool canDoFireballAttack() =>

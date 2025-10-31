@@ -28,7 +28,6 @@ abstract class GameplayViewmodel extends State<Gameplay> {
   @override
   void initState() {
     super.initState();
-    _initializeGameAudio();
     _initializeGameComponents();
   }
 
@@ -48,10 +47,6 @@ abstract class GameplayViewmodel extends State<Gameplay> {
         maxVisibleTile: GameplayTileConfig.kMaxVisibleTiles,
       ),
     );
-  }
-
-  void _initializeGameAudio() {
-    GameplayAudioManager.instance.ensureBackgroundMusicPlaying();
   }
 
   void _cleanupGameAudio() {
@@ -93,9 +88,7 @@ class _GameplayState extends GameplayViewmodel {
             ?.toString();
 
         if (mapBackgroundMusic != null && mapBackgroundMusic.isNotEmpty) {
-          GameplayAudioManager.instance.ensureBackgroundMusicPlaying(
-            mapBackgroundMusic,
-          );
+          GameplayAudioManager.instance.playBackgroundMusic(mapBackgroundMusic);
         }
 
         final knightPlayer = _buildKnightPlayer(playerPosition);

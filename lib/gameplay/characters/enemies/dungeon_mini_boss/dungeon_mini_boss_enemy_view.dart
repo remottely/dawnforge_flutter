@@ -13,7 +13,7 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
   final DungeonMiniBossEnemyController _controller =
       DungeonMiniBossEnemyController();
   bool _seePlayerClose = false;
-  double _attackDamage = DungeonMiniBossEnemyConfig.kAttackDamage;
+  double _primaryAttackDamage = DungeonMiniBossEnemyConfig.kPrimaryAttackDamage;
 
   DungeonMiniBossEnemyView(Vector2 position)
     : super(
@@ -57,7 +57,7 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
         _seePlayerClose = true;
         seeAndMoveToPlayer(
           closePlayer: (_) {
-            playMeleeAttackAnimation();
+            playPrimaryAttackAnimation();
           },
           radiusVision: DungeonMiniBossEnemyConfig.kCloseVisionRadius,
         );
@@ -74,13 +74,16 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
     }
   }
 
-  void playMeleeAttackAnimation() {
-    GameplayAudioManager.instance.playAttackEnemyMelee();
+  void playPrimaryAttackAnimation() {
+    GameplayAudioManager.instance.playEnemyPrimaryAttackSfx();
     simpleAttackMelee(
       size: Vector2.all(DungeonMiniBossEnemyConfig.kAttackEffectSize),
-      damage: _attackDamage / DungeonMiniBossEnemyConfig.kMeleeDamageReduction,
-      interval: DungeonMiniBossEnemyConfig.kMeleeAttackInterval,
-      animationRight: CharacterBasicAttackConfig.loadEnemyExecutionAnimation(),
+      damage:
+          _primaryAttackDamage /
+          DungeonMiniBossEnemyConfig.kPrimaryDamageReduction,
+      interval: DungeonMiniBossEnemyConfig.kPrimaryAttackInterval,
+      animationRight:
+          CharacterPrimaryAttackConfig.loadEnemyExecutionAnimation(),
     );
   }
 
@@ -89,7 +92,7 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
       animation: CharacterFireballAttackConfig.loadExecutionAnimation(),
       animationDestroy: CharacterFireballAttackConfig.loadDestroyAnimation(),
       size: CharacterFireballAttackConfig.fComponentSize,
-      damage: _attackDamage,
+      damage: _primaryAttackDamage,
       speed: speed * CharacterFireballAttackConfig.kSpeedMultiplier,
       execute: CharacterFireballAttackConfig.playExecutionAudio,
       onDestroy: CharacterFireballAttackConfig.playDestroyAudio,

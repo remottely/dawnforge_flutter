@@ -36,8 +36,8 @@ class CharacterFireballAttackConfig {
   );
 
   static void playExecutionAudio() =>
-      GameplayAudioManager.instance.playFireballAttack();
+      GameplayAudioManager.instance.playFireballAttackSfx();
 
   static void playDestroyAudio() =>
-      GameplayAudioManager.instance.playFireballExplosion();
+      GameplayAudioManager.instance.playFireballExplosionSfx();
 }

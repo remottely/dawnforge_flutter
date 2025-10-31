@@ -1,21 +1,20 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/gameplay_character_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 
 abstract class DungeonMiniBossEnemyConfig {
-  static const double kAttackDamage = 50.0;
+  static const double kPrimaryAttackDamage = 50.0;
   static const double kLife = 150.0;
-  static const double kSpeed = GameplayCharacterConfig.kCharacterSpeedSlow;
-  static const double kCloseVisionRadius =
-      GameplayCharacterConfig.kVisionRadiusMedium;
+  static const double kSpeed = CharacterConfig.kCharacterSpeedSlow;
+  static const double kCloseVisionRadius = CharacterConfig.kVisionRadiusMedium;
   static const double kLongVisionRadius =
-      GameplayCharacterConfig.kVisionRadiusExtraLarge;
-  static const int kMeleeAttackInterval = 300;
+      CharacterConfig.kVisionRadiusExtraLarge;
+  static const int kPrimaryAttackInterval = 300;
   static const double kAttackEffectSize =
       GameplayTileConfig.kTileDimensionStandard * 0.62;
-  static const double kMeleeDamageReduction = 3.0;
+  static const double kPrimaryDamageReduction = 3.0;
 
   static final Vector2 fTextureSize = Vector2(16, 24);
   static final Vector2 fComponentSize = Vector2(

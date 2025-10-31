@@ -3,7 +3,7 @@ import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_basic_attack_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_manager.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
@@ -63,12 +63,13 @@ class KnightPlayerView extends SimplePlayer
     super.onDie();
   }
 
-  void playMeleeAttackAnimation(double damage) {
-    GameplayAudioManager.instance.playAttackPlayerMelee();
+  void playPrimaryAttackAnimation(double damage) {
+    GameplayAudioManager.instance.playPlayerPrimaryAttackSfx();
     addParticle(CharacterParticlesAnimations.swordParticles(), position: size);
     simpleAttackMelee(
       damage: damage,
-      animationRight: CharacterBasicAttackConfig.loadPlayerExecutionAnimation(),
+      animationRight:
+          CharacterPrimaryAttackConfig.loadPlayerExecutionAnimation(),
       size: KnightPlayerConfig.fComponentSize,
     );
   }
@@ -95,8 +96,8 @@ class KnightPlayerView extends SimplePlayer
 
   void showExclamationEmote() {
     add(
-      CharacterEmoteController.displayEmoteAboveCharacter(
-        asset: CharacterEmoteController.kExclamationEmoteAsset,
+      CharacterEmoteManager.displayEmoteAboveCharacter(
+        asset: CharacterEmoteManager.kExclamationEmoteAsset,
         target: this,
       ),
     );

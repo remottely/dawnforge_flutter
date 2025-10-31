@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/gameplay_character_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
@@ -7,7 +7,7 @@ import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 abstract class ImpEnemyConfig {
   static const double kAttackDamage = 10.0;
   static const double kLife = 80.0;
-  static const double kSpeed = GameplayCharacterConfig.kCharacterSpeedMedium;
+  static const double kSpeed = CharacterConfig.kCharacterSpeedMedium;
   static const int kAttackInterval = 300;
   static const double kAttackEffectSize =
       GameplayTileConfig.kTileDimensionStandard * 0.62;

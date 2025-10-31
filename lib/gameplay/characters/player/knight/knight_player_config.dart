@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/gameplay_character_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
@@ -16,10 +16,9 @@ abstract class KnightPlayerConfig {
   static const Duration kStaminaRegenDebounce = Duration(milliseconds: 150);
   static const double kStandardAttackDamage = 25.0;
   static const double kSmallAttackDamage = 10.0;
-  static const int kMeleeAttackStaminaCost = 15;
+  static const int kPrimaryAttackStaminaCost = 15;
   static const int kFireballAttackStaminaCost = 10;
-  static const double kVisionRadius =
-      GameplayCharacterConfig.kVisionRadiusUltraLarge;
+  static const double kVisionRadius = CharacterConfig.kVisionRadiusUltraLarge;
 
   static final RectangleHitbox fHitbox = RectangleHitbox(
     position: Vector2(4, 9),

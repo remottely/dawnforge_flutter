@@ -18,7 +18,7 @@ class DungeonBossEnemyController {
     _view.handleDeathEffects();
   }
 
-  void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
+  void onReceiveDamage(double damage) {
     _view.showDamageEffect(damage);
   }
 

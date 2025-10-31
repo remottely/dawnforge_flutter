@@ -2,11 +2,11 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_basic_attack_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_effect_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/gameplay_character_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 
 class GoblinEnemyController {
   late GoblinEnemyView _view;
@@ -18,20 +18,21 @@ class GoblinEnemyController {
   void onUpdate(double dt) {
     _view.seeAndMoveToPlayer(
       closePlayer: (player) {
-        playAttackAnimation();
+        playPrimaryAttackAnimation();
       },
-      radiusVision: GameplayCharacterConfig.kVisionRadiusLarge,
+      radiusVision: CharacterConfig.kVisionRadiusLarge,
     );
   }
 
-  void playAttackAnimation() {
+  void playPrimaryAttackAnimation() {
     _view.simpleAttackMelee(
       size: Vector2.all(GoblinEnemyConfig.kAttackEffectSize),
       damage: GoblinEnemyConfig.kAttackDamage,
       interval: GoblinEnemyConfig.kAttackInterval,
-      animationRight: CharacterBasicAttackConfig.loadEnemyExecutionAnimation(),
+      animationRight:
+          CharacterPrimaryAttackConfig.loadEnemyExecutionAnimation(),
       execute: () {
-        GameplayAudioManager.instance.playAttackEnemyMelee();
+        GameplayAudioManager.instance.playEnemyPrimaryAttackSfx();
       },
     );
   }

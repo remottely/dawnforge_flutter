@@ -2,11 +2,11 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_basic_attack_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_effect_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/gameplay_character_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
 
 class ImpEnemyController {
   late ImpEnemyView _view;
@@ -17,21 +17,22 @@ class ImpEnemyController {
 
   void onUpdate(double dt) {
     _view.seeAndMoveToPlayer(
-      radiusVision: GameplayCharacterConfig.kVisionRadiusExtraLarge,
+      radiusVision: CharacterConfig.kVisionRadiusExtraLarge,
       closePlayer: (player) {
-        playAttackAnimation();
+        playPrimaryAttackAnimation();
       },
     );
   }
 
-  void playAttackAnimation() {
+  void playPrimaryAttackAnimation() {
     _view.simpleAttackMelee(
       size: Vector2.all(ImpEnemyConfig.kAttackEffectSize),
       damage: ImpEnemyConfig.kAttackDamage,
       interval: ImpEnemyConfig.kAttackInterval,
-      animationRight: CharacterBasicAttackConfig.loadEnemyExecutionAnimation(),
+      animationRight:
+          CharacterPrimaryAttackConfig.loadEnemyExecutionAnimation(),
       execute: () {
-        GameplayAudioManager.instance.playAttackEnemyMelee();
+        GameplayAudioManager.instance.playEnemyPrimaryAttackSfx();
       },
     );
   }

@@ -26,10 +26,10 @@ class KnightPlayerController {
   }
 
   void onInputAction(JoystickActionEvent event) {
-    if ((event.id == GameplayInputActionsConfig.kJoystickMeleeAttackId ||
-            event.id == GameplayInputActionsConfig.kKeyboardMeleeAttack) &&
+    if ((event.id == GameplayInputActionsConfig.kJoystickPrimaryAttackId ||
+            event.id == GameplayInputActionsConfig.kKeyboardPrimaryAttack) &&
         event.event == ActionEvent.DOWN) {
-      _executeMeleeAttack();
+      _executePrimaryAttack();
     }
     if ((event.id == GameplayInputActionsConfig.kJoystickFireballAttackId ||
             event.id == GameplayInputActionsConfig.kKeyboardFireballAttack) &&
@@ -38,10 +38,10 @@ class KnightPlayerController {
     }
   }
 
-  void _executeMeleeAttack() {
-    if (!model.canDoMeleeAttack()) return;
-    model.executeMeleeAttackStaminaCost();
-    _view.playMeleeAttackAnimation(model.attackDamage);
+  void _executePrimaryAttack() {
+    if (!model.canDoPrimaryAttack()) return;
+    model.executePrimaryAttackStaminaCost();
+    _view.playPrimaryAttackAnimation(model.attackDamage);
   }
 
   void _executeFireballAttack() {

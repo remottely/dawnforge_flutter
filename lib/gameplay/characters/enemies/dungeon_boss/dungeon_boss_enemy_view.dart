@@ -8,6 +8,7 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.
 import 'package:darkness_dungeon/gameplay/characters/shared/character_basic_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_effect_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_audio_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_camera_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_input_actions_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
@@ -18,7 +19,6 @@ import 'package:flutter/material.dart';
 class DungeonBossEnemyView extends SimpleEnemy
     with BlockMovementCollision, UseLifeBar {
   final DungeonBossEnemyController _controller = DungeonBossEnemyController();
-  double attackDamage = DungeonBossEnemyConfig.kAttackDamage;
   List<Enemy> spawnedEnemies = [];
   bool hasSeenPlayerFirst = false;
 
@@ -59,7 +59,7 @@ class DungeonBossEnemyView extends SimpleEnemy
 
   @override
   void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
-    _controller.onReceiveDamage(attacker, damage, id);
+    _controller.onReceiveDamage(damage);
     super.onReceiveDamage(attacker, damage, id);
   }
 
@@ -93,20 +93,21 @@ class DungeonBossEnemyView extends SimpleEnemy
 
     seeAndMoveToPlayer(
       closePlayer: (player) {
-        playMeleeAttackAnimation();
+        playPrimaryAttackAnimation();
       },
       radiusVision: DungeonBossEnemyConfig.kVisionRadiusLarge,
     );
   }
 
-  void playMeleeAttackAnimation() {
+  void playPrimaryAttackAnimation() {
     simpleAttackMelee(
-      size: Vector2.all(DungeonBossEnemyConfig.kAttackEffectSize),
-      damage: attackDamage,
+      size: Vector2.all(DungeonBossEnemyConfig.kPrimaryAttackEffectSize),
+      damage: DungeonBossEnemyConfig.kPrimaryAttackDamage,
       interval: 1500,
-      animationRight: CharacterBasicAttackConfig.loadEnemyExecutionAnimation(),
+      animationRight:
+          CharacterPrimaryAttackConfig.loadEnemyExecutionAnimation(),
       execute: () {
-        GameplayAudioManager.instance.playAttackEnemyMelee();
+        GameplayAudioManager.instance.playEnemyPrimaryAttackSfx();
       },
     );
   }
@@ -212,13 +213,13 @@ class DungeonBossEnemyView extends SimpleEnemy
   }
 
   void _showConversation(Player player) {
-    GameplayAudioManager.instance.playConversationInteraction();
+    GameplayAudioManager.instance.playConversationInteractionSfx();
     GameplayUIManager.instance.showConversation(
       gameRef.context,
       player: player,
       conversationSequence: DungeonBossEnemyConfig.createConversationSequence(),
       logicalKeyboardKeysToNext: [
-        GameplayInputActionsConfig.kKeyboardMeleeAttack,
+        GameplayInputActionsConfig.kKeyboardPrimaryAttack,
       ],
       onChangeTalk: _onConversationChanged,
       onFinish: _onConversationFinished,
@@ -226,11 +227,11 @@ class DungeonBossEnemyView extends SimpleEnemy
   }
 
   void _onConversationChanged(int index) {
-    GameplayAudioManager.instance.playConversationInteraction();
+    GameplayAudioManager.instance.playConversationInteractionSfx();
   }
 
   void _onConversationFinished() {
-    GameplayAudioManager.instance.playConversationInteraction();
+    GameplayAudioManager.instance.playConversationInteractionSfx();
     spawnInitialMinions();
     Future.delayed(Duration(milliseconds: 500), () {
       gameRef.camera.moveToPlayerAnimated(
@@ -239,7 +240,9 @@ class DungeonBossEnemyView extends SimpleEnemy
           maxVisibleTile: GameplayTileConfig.kMaxVisibleTiles,
         ),
       );
-      GameplayAudioManager.instance.playBossBackgroundMusic();
+      GameplayAudioManager.instance.playBackgroundMusic(
+        GameplayAudioConfig.kMusicBossBattleBackgroundAsset,
+      );
     });
   }
 

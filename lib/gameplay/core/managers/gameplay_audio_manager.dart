@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/app_environment.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/foundation.dart';
@@ -7,18 +9,12 @@ import '../config/gameplay_audio_config.dart';
 class GameplayAudioManager {
   static final instance = GameplayAudioManager();
 
-  bool _isMusicEnabled = true;
+  bool _isBackgroundMusicEnabled = true;
   bool _isBackgroundMusicPlaying = false;
   String? _currentBackgroundTrack;
 
-  bool get isMusicEnabled => _isMusicEnabled;
+  bool get isMusicEnabled => _isBackgroundMusicEnabled;
   bool get isBackgroundMusicPlaying => _isBackgroundMusicPlaying;
-
-  void _handleAudioError(String operation, dynamic error) {
-    if (kDebugMode) {
-      print('[GameplayAudioManager] Error in $operation: $error');
-    }
-  }
 
   Future<void> initialize() async {
     try {
@@ -31,131 +27,89 @@ class GameplayAudioManager {
     }
   }
 
-  void playAttackPlayerMelee() {
+  /// Sound Effects
+  void playPlayerPrimaryAttackSfx() {
     try {
       FlameAudio.play(
         GameplayAudioConfig.kSfxPlayerAttackAsset,
-        volume: GameplayAudioConfig.kBasicAttackVolume,
+        volume: GameplayAudioConfig.kPrimaryAttackVolume,
       );
     } catch (e) {
-      _handleAudioError('playAttackPlayerMelee', e);
+      _handleAudioError('playPlayerPrimaryAttackSfx', e);
     }
   }
 
-  void playFireballAttack() {
+  void playFireballAttackSfx() {
     try {
       FlameAudio.play(
         GameplayAudioConfig.kSfxCharacterFireBallAttackAsset,
         volume: GameplayAudioConfig.kCharacterFireballAttackVolume,
       );
     } catch (e) {
-      _handleAudioError('playAttackRange', e);
+      _handleAudioError('playFireballAttackSfx', e);
     }
   }
 
-  void playAttackEnemyMelee() {
+  void playEnemyPrimaryAttackSfx() {
     try {
       FlameAudio.play(
         GameplayAudioConfig.kSfxEnemyAttackAsset,
-        volume: GameplayAudioConfig.kBasicAttackVolume,
+        volume: GameplayAudioConfig.kPrimaryAttackVolume,
       );
     } catch (e) {
-      _handleAudioError('playAttackEnemyMelee', e);
+      _handleAudioError('playEnemyPrimaryAttackSfx', e);
     }
   }
 
-  void playFireballExplosion() {
+  void playFireballExplosionSfx() {
     try {
       FlameAudio.play(
         GameplayAudioConfig.kSfxCharacterFireballExplosionAsset,
         volume: GameplayAudioConfig.kCharacterFireballExplosionVolume,
       );
     } catch (e) {
-      _handleAudioError('playExplosion', e);
+      _handleAudioError('playFireballExplosionSfx', e);
     }
   }
 
-  void playConversationInteraction() {
+  void playConversationInteractionSfx() {
     try {
       FlameAudio.play(
         GameplayAudioConfig.kSfxConversationInteractionAsset,
         volume: GameplayAudioConfig.kConversationInteractionVolume,
       );
-    } catch (error) {
-      _handleAudioError('playConversationInteraction', error);
+    } catch (e) {
+      _handleAudioError('playConversationInteractionSfx', e);
     }
   }
 
+  /// Background Music
   Future<void> stopBackgroundMusic() async {
     try {
       await FlameAudio.bgm.stop();
-      _isBackgroundMusicPlaying = false;
-      _currentBackgroundTrack = null;
     } catch (e) {
       _handleAudioError('stopBackgroundMusic', e);
-
+    } finally {
       _isBackgroundMusicPlaying = false;
       _currentBackgroundTrack = null;
     }
   }
 
-  Future<void> ensureBackgroundMusicPlaying([String? musicTrack]) async {
+  Future<void> playBackgroundMusic(String musicTrack) async {
+    stopBackgroundMusic();
     try {
-      if (!_isMusicEnabled) return;
-
-      final targetTrack =
-          musicTrack ?? GameplayAudioConfig.kMusicRo1LettersBackgroundAsset;
-
-      if (!_isBackgroundMusicPlaying ||
-          _currentBackgroundTrack != targetTrack) {
-        await _startSpecificMusic(targetTrack);
+      if (!_isBackgroundMusicEnabled) return;
+      if (!_isBackgroundMusicPlaying || _currentBackgroundTrack != musicTrack) {
+        if (AppEnvironment.kPlayBackgroundMusic) {
+          await FlameAudio.bgm.play(musicTrack);
+          _isBackgroundMusicPlaying = true;
+          _currentBackgroundTrack = musicTrack;
+        }
       }
     } catch (e) {
-      _handleAudioError('ensureBackgroundMusicPlaying', e);
-    }
-  }
-
-  Future<void> playSpecificBackgroundMusic(String musicTrack) async {
-    try {
-      if (!_isMusicEnabled) return;
-      await _startSpecificMusic(musicTrack);
-    } catch (e) {
-      _handleAudioError('playSpecificBackgroundMusic', e);
-    }
-  }
-
-  Future<void> _startSpecificMusic(String musicTrack) async {
-    print('[GameplayAudioManager] Stopping current music...');
-    await FlameAudio.bgm.stop();
-    print('[GameplayAudioManager] Starting music: $musicTrack');
-    try {
-      if (AppEnvironment.kPlayBackgroundMusic)
-        await FlameAudio.bgm.play(musicTrack);
-      _isBackgroundMusicPlaying = true;
-      _currentBackgroundTrack = musicTrack;
-      print('[GameplayAudioManager] Music started successfully: $musicTrack');
-    } catch (e) {
-      print('[GameplayAudioManager] Error starting music: $e');
+      _handleAudioError('playBackgroundMusic', e);
       _isBackgroundMusicPlaying = false;
       _currentBackgroundTrack = null;
-    }
-  }
-
-  Future<void> playBackgroundMusic() async {
-    try {
-      await ensureBackgroundMusicPlaying();
-    } catch (e) {
-      _handleAudioError('playBackgroundMusic', e);
-    }
-  }
-
-  Future<void> playBossBackgroundMusic() async {
-    try {
-      await _startSpecificMusic(
-        GameplayAudioConfig.kMusicBossBattleBackgroundAsset,
-      );
-    } catch (e) {
-      _handleAudioError('playBossBackgroundMusic', e);
     }
   }
 
@@ -175,32 +129,37 @@ class GameplayAudioManager {
     }
   }
 
-  void enableMusic() {
+  void enableBackgroundMusic() {
     try {
-      _isMusicEnabled = true;
+      _isBackgroundMusicEnabled = true;
     } catch (e) {
-      _handleAudioError('enableMusic', e);
+      _handleAudioError('enableBackgroundMusic', e);
     }
   }
 
-  Future<void> disableMusic() async {
+  Future<void> disableBackgroundMusic() async {
     try {
-      _isMusicEnabled = false;
+      _isBackgroundMusicEnabled = false;
       await stopBackgroundMusic();
     } catch (e) {
-      _handleAudioError('disableMusic', e);
+      _handleAudioError('disableBackgroundMusic', e);
     }
   }
 
-  void dispose() {
+  void disposeBackgroundMusic() {
     try {
       FlameAudio.bgm.dispose();
-      _isBackgroundMusicPlaying = false;
-      _currentBackgroundTrack = null;
     } catch (e) {
-      _handleAudioError('dispose', e);
+      _handleAudioError('disposeBackgroundMusic', e);
+    } finally {
       _isBackgroundMusicPlaying = false;
       _currentBackgroundTrack = null;
+    }
+  }
+
+  void _handleAudioError(String operation, dynamic error) {
+    if (kDebugMode) {
+      log('[GameplayAudioManager] Error in $operation: $error');
     }
   }
 }
