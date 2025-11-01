@@ -4,7 +4,9 @@ import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 
-abstract class ImpEnemyConfig {
+final class ImpEnemyConfig {
+  ImpEnemyConfig._();
+
   static const double kAttackDamage = 10.0;
   static const double kLife = 80.0;
   static const double kSpeed = CharacterConfig.kCharacterSpeedMedium;

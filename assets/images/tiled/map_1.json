@@ -201,8 +201,8 @@
                          "type":"",
                          "visible":true,
                          "width":16,
-                         "x":96,
-                         "y":112
+                         "x":144,
+                         "y":80
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -220,94 +220,6 @@
         {
          "id":16,
          "layers":[
-                {
-                 "draworder":"topdown",
-                 "id":20,
-                 "name":"Decorations",
-                 "objects":[
-                        {
-                         "height":16,
-                         "id":193,
-                         "name":"torch_decoration",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":32,
-                         "y":64
-                        }, 
-                        {
-                         "height":36.25,
-                         "id":194,
-                         "name":"door_interactable",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":31.5,
-                         "x":57.3698727015559,
-                         "y":222.786067892504
-                        }, 
-                        {
-                         "height":16,
-                         "id":196,
-                         "name":"door_key_interactable",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":70.2022559673284,
-                         "y":191.317836010144
-                        }, 
-                        {
-                         "height":16,
-                         "id":197,
-                         "name":"spike_trap_interactable",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":39.9881656804734,
-                         "y":83.3905325443787
-                        }, 
-                        {
-                         "height":16,
-                         "id":201,
-                         "name":"life_potion_interactable",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":40.0849240122245,
-                         "y":158.575425108216
-                        }, 
-                        {
-                         "height":16,
-                         "id":207,
-                         "name":"barrel_decoration",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":64,
-                         "y":128
-                        }, 
-                        {
-                         "height":16,
-                         "id":208,
-                         "name":"torch_decoration_empty",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":160,
-                         "y":64
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
                 {
                  "draworder":"topdown",
                  "id":21,
@@ -372,6 +284,94 @@
                  "visible":true,
                  "x":0,
                  "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "id":20,
+                 "name":"Decorations",
+                 "objects":[
+                        {
+                         "height":16,
+                         "id":193,
+                         "name":"torch_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":176,
+                         "y":64
+                        }, 
+                        {
+                         "height":36.25,
+                         "id":194,
+                         "name":"door_interactable",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":31.5,
+                         "x":58.6017790766714,
+                         "y":185.007605722296
+                        }, 
+                        {
+                         "height":16,
+                         "id":196,
+                         "name":"door_key_interactable",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":48,
+                         "y":160
+                        }, 
+                        {
+                         "height":16,
+                         "id":197,
+                         "name":"spike_trap_interactable",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":39.9881656804734,
+                         "y":83.3905325443787
+                        }, 
+                        {
+                         "height":16,
+                         "id":201,
+                         "name":"life_potion_interactable",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":32,
+                         "y":96
+                        }, 
+                        {
+                         "height":16,
+                         "id":207,
+                         "name":"barrel_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":39.3618724976902,
+                         "y":134.364849604763
+                        }, 
+                        {
+                         "height":16,
+                         "id":208,
+                         "name":"torch_decoration_empty",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":32,
+                         "y":64
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
                 }],
          "name":"Environment",
          "opacity":1,
@@ -386,7 +386,6 @@
                 {
                  "draworder":"topdown",
                  "id":19,
-                 "locked":true,
                  "name":"NPCs",
                  "objects":[
                         {
@@ -397,8 +396,8 @@
                          "type":"",
                          "visible":true,
                          "width":16,
-                         "x":205.52814305355,
-                         "y":157.716672306448
+                         "x":250.492725745265,
+                         "y":86.4714202789354
                         }, 
                         {
                          "height":16,
@@ -408,8 +407,8 @@
                          "type":"",
                          "visible":true,
                          "width":16,
-                         "x":113.246231400531,
-                         "y":85.665294790931
+                         "x":109.961147733556,
+                         "y":85.8706125201169
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -430,8 +429,8 @@
                          "type":"",
                          "visible":true,
                          "width":16,
-                         "x":171.287591511705,
-                         "y":84.9648291600011
+                         "x":313.77809556673,
+                         "y":83.5276050556997
                         }, 
                         {
                          "height":16,
@@ -452,8 +451,8 @@
                          "type":"",
                          "visible":true,
                          "width":16,
-                         "x":343.068798996548,
-                         "y":127.092001346617
+                         "x":343.274116725734,
+                         "y":83.7699604883889
                         }, 
                         {
                          "height":16,
@@ -463,8 +462,8 @@
                          "type":"",
                          "visible":true,
                          "width":16,
-                         "x":174.12529818571,
-                         "y":157.190775852349
+                         "x":215.188844022893,
+                         "y":86.3561592832083
                         }],
                  "opacity":1,
                  "type":"objectgroup",

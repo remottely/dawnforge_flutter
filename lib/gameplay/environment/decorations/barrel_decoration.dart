@@ -4,7 +4,9 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/shared/i_dd_game_decoration.dart';
 
-abstract class _BarrelDecorationConfig {
+final class _BarrelDecorationConfig {
+  _BarrelDecorationConfig._();
+
   static final Vector2 _fComponentSize = GameplayTileConfig.fTileSizeStandard;
 
   static Future<Sprite> _loadSprite() =>

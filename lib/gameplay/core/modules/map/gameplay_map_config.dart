@@ -16,7 +16,9 @@ import 'package:darkness_dungeon/gameplay/terrain/farmable/farm_tile.dart';
 
 enum MapId { map1, dungeon1 }
 
-class GameplayMapConfig {
+final class GameplayMapConfig {
+  GameplayMapConfig._();
+
   /// Map keys
   static const String kNextMapPropertyKey = 'nextMap';
   static const String kPlayerPositionPropertyKey = 'playerPosition';

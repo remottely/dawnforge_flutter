@@ -2,13 +2,15 @@ import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/conversation/gameplay_conversation_factory.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/conversation/gameplay_conversation_factory.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_state_manager.dart';
 import 'package:darkness_dungeon/shared/i_dd_game_decoration.dart';
 
-abstract class _DoorInteractableConfig {
+final class _DoorInteractableConfig {
+  _DoorInteractableConfig._();
+
   static const String _kClosedDoorAsset =
       'gameplay/environment/interactables/door_interactable_locked_1.png';
   static const String _kRequiredKeyMessage = 'door_without_key';

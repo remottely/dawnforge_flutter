@@ -3,7 +3,9 @@ import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/shared/i_dd_game_decoration.dart';
 
-abstract class DoorKeyInteractableConfig {
+final class DoorKeyInteractableConfig {
+  DoorKeyInteractableConfig._();
+
   static final Vector2 _fComponentSize = GameplayTileConfig.fTileSizeStandard;
 
   static Future<Sprite> loadSprite() => Sprite.load(

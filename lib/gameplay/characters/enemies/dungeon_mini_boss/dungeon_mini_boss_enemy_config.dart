@@ -4,7 +4,9 @@ import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 
-abstract class DungeonMiniBossEnemyConfig {
+final class DungeonMiniBossEnemyConfig {
+  DungeonMiniBossEnemyConfig._();
+
   static const double kPrimaryAttackDamage = 50.0;
   static const double kLife = 150.0;
   static const double kSpeed = CharacterConfig.kCharacterSpeedSlow;

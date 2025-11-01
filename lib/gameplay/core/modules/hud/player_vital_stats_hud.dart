@@ -1,22 +1,25 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/gameplay_hud_config.dart';
 import 'package:flutter/material.dart';
 
 class PlayerVitalStatsHUD extends InterfaceComponent {
-  var _vMaxLife = 0.0;
-  var _vCurrentLife = 0.0;
-  var _vCurrentStamina = 0.0;
+  double _vMaxLife = 0.0;
+  double _vCurrentLife = 0.0;
+  double _vCurrentStamina = 0.0;
 
   PlayerVitalStatsHUD()
     : super(
-        id: GameplayUIConfig.kComponentId,
+        id: GameplayHUDConfig.kComponentId,
         position: Vector2(
-          GameplayUIConfig.kHUDPadding,
-          GameplayUIConfig.kHUDPadding,
+          GameplayHUDConfig.kHUDPadding,
+          GameplayHUDConfig.kHUDPadding,
         ),
-        spriteUnselected: Sprite.load(GameplayUIConfig.kHealthUIAsset),
-        size: Vector2(GameplayUIConfig.kHUDWidth, GameplayUIConfig.kHUDHeight),
+        spriteUnselected: Sprite.load(GameplayHUDConfig.kHealthUIAsset),
+        size: Vector2(
+          GameplayHUDConfig.kHUDWidth,
+          GameplayHUDConfig.kHUDHeight,
+        ),
       );
 
   @override
@@ -49,7 +52,7 @@ class PlayerVitalStatsHUD extends InterfaceComponent {
   }
 
   void _drawHealthBar(Canvas canvas) {
-    _drawBarBackground(canvas, GameplayUIConfig.kHealthBarYPosition);
+    _drawBarBackground(canvas, GameplayHUDConfig.kHealthBarYPosition);
 
     final double healthBarWidth = _calculateHealthBarWidth();
     _drawHealthBarFill(canvas, healthBarWidth);
@@ -60,30 +63,30 @@ class PlayerVitalStatsHUD extends InterfaceComponent {
 
     canvas.drawLine(
       Offset(
-        GameplayUIConfig.kBarXPosition,
-        GameplayUIConfig.kStaminaBarYPosition,
+        GameplayHUDConfig.kBarXPosition,
+        GameplayHUDConfig.kStaminaBarYPosition,
       ),
       Offset(
-        GameplayUIConfig.kBarXPosition + staminaBarWidth,
-        GameplayUIConfig.kStaminaBarYPosition,
+        GameplayHUDConfig.kBarXPosition + staminaBarWidth,
+        GameplayHUDConfig.kStaminaBarYPosition,
       ),
       Paint()
-        ..color = GameplayUIConfig.kStaminaBarColor
-        ..strokeWidth = GameplayUIConfig.kStrokeWidth
+        ..color = GameplayHUDConfig.kStaminaBarColor
+        ..strokeWidth = GameplayHUDConfig.kStrokeWidth
         ..style = PaintingStyle.fill,
     );
   }
 
   void _drawBarBackground(Canvas canvas, double yPosition) {
     canvas.drawLine(
-      Offset(GameplayUIConfig.kBarXPosition, yPosition),
+      Offset(GameplayHUDConfig.kBarXPosition, yPosition),
       Offset(
-        GameplayUIConfig.kBarXPosition + GameplayUIConfig.kBarWidth,
+        GameplayHUDConfig.kBarXPosition + GameplayHUDConfig.kBarWidth,
         yPosition,
       ),
       Paint()
-        ..color = GameplayUIConfig.kHealthBarBackgroundColor
-        ..strokeWidth = GameplayUIConfig.kStrokeWidth
+        ..color = GameplayHUDConfig.kHealthBarBackgroundColor
+        ..strokeWidth = GameplayHUDConfig.kStrokeWidth
         ..style = PaintingStyle.fill,
     );
   }
@@ -91,40 +94,40 @@ class PlayerVitalStatsHUD extends InterfaceComponent {
   void _drawHealthBarFill(Canvas canvas, double barWidth) {
     canvas.drawLine(
       Offset(
-        GameplayUIConfig.kBarXPosition,
-        GameplayUIConfig.kHealthBarYPosition,
+        GameplayHUDConfig.kBarXPosition,
+        GameplayHUDConfig.kHealthBarYPosition,
       ),
       Offset(
-        GameplayUIConfig.kBarXPosition + barWidth,
-        GameplayUIConfig.kHealthBarYPosition,
+        GameplayHUDConfig.kBarXPosition + barWidth,
+        GameplayHUDConfig.kHealthBarYPosition,
       ),
       Paint()
         ..color = _getHealthBarColor(barWidth)
-        ..strokeWidth = GameplayUIConfig.kStrokeWidth
+        ..strokeWidth = GameplayHUDConfig.kStrokeWidth
         ..style = PaintingStyle.fill,
     );
   }
 
   double _calculateHealthBarWidth() {
     if (_vMaxLife <= 0) return 0.0;
-    return (_vCurrentLife * GameplayUIConfig.kBarWidth) / _vMaxLife;
+    return (_vCurrentLife * GameplayHUDConfig.kBarWidth) / _vMaxLife;
   }
 
   double _calculateStaminaBarWidth() {
-    return (_vCurrentStamina * GameplayUIConfig.kBarWidth) /
-        GameplayUIConfig.kMaxStamina;
+    return (_vCurrentStamina * GameplayHUDConfig.kBarWidth) /
+        GameplayHUDConfig.kMaxStamina;
   }
 
   Color _getHealthBarColor(double currentHealthBarWidth) {
     final double healthPercentage =
-        currentHealthBarWidth / GameplayUIConfig.kBarWidth;
+        currentHealthBarWidth / GameplayHUDConfig.kBarWidth;
 
-    if (healthPercentage > GameplayUIConfig.kHealthWarningThreshold) {
-      return GameplayUIConfig.kHealthBarGoodColor;
-    } else if (healthPercentage > GameplayUIConfig.kHealthCriticalThreshold) {
-      return GameplayUIConfig.kHealthBarWarningColor;
+    if (healthPercentage > GameplayHUDConfig.kHealthWarningThreshold) {
+      return GameplayHUDConfig.kHealthBarGoodColor;
+    } else if (healthPercentage > GameplayHUDConfig.kHealthCriticalThreshold) {
+      return GameplayHUDConfig.kHealthBarWarningColor;
     } else {
-      return GameplayUIConfig.kHealthBarCriticalColor;
+      return GameplayHUDConfig.kHealthBarCriticalColor;
     }
   }
 }

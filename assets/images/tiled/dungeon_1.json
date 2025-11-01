@@ -561,6 +561,39 @@
          "layers":[
                 {
                  "draworder":"topdown",
+                 "id":23,
+                 "name":"NPCs",
+                 "objects":[
+                        {
+                         "height":16,
+                         "id":331,
+                         "name":"kid_npc",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":235.5,
+                         "y":494.75
+                        }, 
+                        {
+                         "height":16,
+                         "id":343,
+                         "name":"wizard_npc",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":121.343866399247,
+                         "y":52.1694568376243
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
                  "id":3,
                  "name":"Enemies",
                  "objects":[
@@ -695,39 +728,6 @@
                          "width":16,
                          "x":210.25,
                          "y":477.5
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "id":23,
-                 "name":"NPCs",
-                 "objects":[
-                        {
-                         "height":16,
-                         "id":331,
-                         "name":"kid_npc",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":235.5,
-                         "y":494.75
-                        }, 
-                        {
-                         "height":16,
-                         "id":343,
-                         "name":"wizard_npc",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":121.343866399247,
-                         "y":52.1694568376243
                         }],
                  "opacity":1,
                  "type":"objectgroup",

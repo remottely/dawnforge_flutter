@@ -4,7 +4,9 @@ import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/shared/i_dd_game_decoration.dart';
 
-abstract class _TorchDecorationConfig {
+final class _TorchDecorationConfig {
+  _TorchDecorationConfig._();
+
   static final Vector2 _fTextureSize = GameplayTileConfig.fTileSizeStandard;
   static final Vector2 _fComponentSize = _fTextureSize;
 

@@ -4,7 +4,9 @@ import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
 
-class CharacterFireballAttackConfig {
+final class CharacterFireballAttackConfig {
+  CharacterFireballAttackConfig._();
+
   static const double kSpeedMultiplier = 2.5;
 
   static final LightingConfig fLightingConfig = LightingConfig(

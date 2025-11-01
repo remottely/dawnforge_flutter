@@ -1,6 +1,8 @@
 import 'package:bonfire/bonfire.dart';
 
-class GameplaySpriteAnimationConfig {
+final class GameplaySpriteAnimationConfig {
+  GameplaySpriteAnimationConfig._();
+
   static const double _kStandardStepTime = 0.1;
 
   static const double kSmallSize = 50.0;

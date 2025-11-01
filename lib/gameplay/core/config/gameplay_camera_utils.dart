@@ -2,7 +2,9 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:flutter/widgets.dart';
 
-class GameplayCameraUtils {
+final class GameplayCameraUtils {
+  GameplayCameraUtils._();
+
   static const double kCameraSpeed = 3.0;
 
   static CameraConfig createCameraConfig(BuildContext context) {

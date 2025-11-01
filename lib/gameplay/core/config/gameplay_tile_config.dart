@@ -1,6 +1,8 @@
 import 'package:bonfire/bonfire.dart';
 
-class GameplayTileConfig {
+final class GameplayTileConfig {
+  GameplayTileConfig._();
+
   static const int kMaxVisibleTiles = 16;
   static const int kBossConversationVisibleTiles = 32;
 

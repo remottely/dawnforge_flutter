@@ -2,7 +2,9 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 
-class CharacterPrimaryAttackConfig {
+final class CharacterPrimaryAttackConfig {
+  CharacterPrimaryAttackConfig._();
+
   static Future<SpriteAnimation> loadPlayerExecutionAnimation() =>
       SpriteAnimation.load(
         'gameplay/characters/player/player_basic_attack_right_3.png',

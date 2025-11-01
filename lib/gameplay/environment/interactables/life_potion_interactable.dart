@@ -4,7 +4,9 @@ import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart'
 import 'package:darkness_dungeon/gameplay/environment/interactables/shared/gameplay_interactable_config.dart';
 import 'package:darkness_dungeon/shared/i_dd_game_decoration.dart';
 
-abstract class LifePotionConfig {
+final class LifePotionConfig {
+  LifePotionConfig._();
+
   static const Duration _kHealingDuration = Duration(seconds: 1);
   static const double _kStandardHealAmount = 50.0;
   static const double kHealAmount =

@@ -5,7 +5,9 @@ import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart'
 import 'package:darkness_dungeon/gameplay/environment/interactables/shared/gameplay_interactable_config.dart';
 import 'package:darkness_dungeon/shared/i_dd_game_decoration.dart';
 
-abstract class _SpikeTrapInteractableConfig {
+final class _SpikeTrapInteractableConfig {
+  _SpikeTrapInteractableConfig._();
+
   static const double _kDamageAmount =
       GameplayInteractableConfig.kStatsAmountMedium;
   static const int _kPriority = 1;

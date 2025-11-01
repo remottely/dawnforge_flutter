@@ -3,17 +3,19 @@ import 'package:darkness_dungeon/app/presentation/design_system/components/atoms
 import 'package:darkness_dungeon/app/presentation/design_system/components/atoms/app_styled_dialog.dart';
 import 'package:darkness_dungeon/app/presentation/design_system/components/atoms/app_styled_text.dart';
 import 'package:darkness_dungeon/app/presentation/screens/menu_screen.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/gameplay_game_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/player_input_actions/gameplay_player_input_actions_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/gameplay_game_state_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class GameplayUIStateManager {
-  static final instance = GameplayUIStateManager();
+final class GameplayUIStateManager {
+  GameplayUIStateManager._();
 
-  var isShowingConversation = false;
+  static final instance = GameplayUIStateManager._();
+
+  bool isShowingConversation = false;
 
   void displayGameOverDialog(
     BuildContext context,

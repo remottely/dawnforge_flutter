@@ -1,10 +1,12 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/conversation/gameplay_conversation_factory.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/conversation/gameplay_conversation_factory.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 
-abstract class DungeonBossEnemyConfig {
+final class DungeonBossEnemyConfig {
+  DungeonBossEnemyConfig._();
+
   static const double kPrimaryAttackDamage = 40.0;
   static const double kPrimaryAttackEffectSize = 10.0;
   static const double kLife = 200.0;

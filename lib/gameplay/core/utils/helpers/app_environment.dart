@@ -1,4 +1,6 @@
-class AppEnvironment {
+final class AppEnvironment {
+  AppEnvironment._();
+
   static const String _kEnvKey = 'GAME_ENVIRONMENT';
   static const String _kEnvDevelopmentValue = 'DEVELOPMENT';
   static const String _kEnvProductionValue = 'PRODUCTION';

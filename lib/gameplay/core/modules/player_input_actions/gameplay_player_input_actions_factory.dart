@@ -3,7 +3,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/player_input_actions/game
 import 'package:flutter/material.dart';
 
 class GameplayPlayerInputActionsFactory {
-  static var isJoystickInputSelected =
+  static bool isJoystickInputSelected =
       false; // TODO(Kevin): now, change this logic
 
   static PlayerController createPlayerInput() =>

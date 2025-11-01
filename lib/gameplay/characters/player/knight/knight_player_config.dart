@@ -5,7 +5,9 @@ import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 
-abstract class KnightPlayerConfig {
+final class KnightPlayerConfig {
+  KnightPlayerConfig._();
+
   static const double kStandardLife = 200.0;
   static const double kStandardSpeed =
       GameplayTileConfig.kTileDimensionStandard * 2.5;

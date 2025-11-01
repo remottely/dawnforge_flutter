@@ -7,7 +7,9 @@ import 'crop_types.dart';
 
 enum TileState { grass, soil, watered, planted, grown }
 
-abstract class _FarmTileConfig {
+final class _FarmTileConfig {
+  _FarmTileConfig._();
+
   static const String _kGrassSpriteAsset =
       'gameplay/terrain/farmable/tile_grass.png';
   static const String _kSoilSpriteAsset =

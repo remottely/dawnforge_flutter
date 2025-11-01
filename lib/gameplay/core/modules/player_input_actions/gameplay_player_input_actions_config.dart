@@ -1,7 +1,9 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/services.dart';
 
-class GameplayPlayerInputActionsConfig {
+final class GameplayPlayerInputActionsConfig {
+  GameplayPlayerInputActionsConfig._();
+
   /// Identifiers
   static const String kJoystickPrimaryAttackId = 'primaryAttackId';
   static const String kJoystickFireballAttackId = 'fireballAttackId';

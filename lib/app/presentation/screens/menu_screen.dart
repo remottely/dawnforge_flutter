@@ -5,8 +5,8 @@ import 'package:darkness_dungeon/app/design_system/dd_design_system_config.dart'
 import 'package:darkness_dungeon/app/presentation/design_system/components/atoms/app_radio_button.dart';
 import 'package:darkness_dungeon/app/presentation/design_system/constants/typography_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/player_input_actions/gameplay_player_input_actions_factory.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/player_input_actions/gameplay_player_input_actions_factory.dart';
 import 'package:darkness_dungeon/gameplay/gameplay.dart';
 import 'package:darkness_dungeon/shared/components/dd_sprite_animation_widget.dart';
 import 'package:darkness_dungeon/shared/components/dd_sprite_widget.dart';
@@ -26,8 +26,8 @@ abstract class MenuScreenViewModel extends State<MenuScreen> {
   final Duration kAnimationDuration = Duration(milliseconds: 300);
   final Duration kCharacterAnimationInterval = Duration(seconds: 2);
 
-  var _isSplashScreenVisible = true;
-  var _currentCharacterSpriteIndex = 0;
+  bool _isSplashScreenVisible = true;
+  int _currentCharacterSpriteIndex = 0;
   late async.Timer _characterAnimationTimer;
 
   late final List<Future<SpriteAnimation>> _characterSpriteAnimations = [
