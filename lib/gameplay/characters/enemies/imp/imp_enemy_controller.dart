@@ -11,9 +11,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_mana
 class ImpEnemyController {
   late ImpEnemyView _view;
 
-  void attachView(ImpEnemyView view) {
-    _view = view;
-  }
+  void attachView(ImpEnemyView view) => _view = view;
 
   void onUpdate(double dt) {
     _view.seeAndMoveToPlayer(

@@ -3,7 +3,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_loc
 final class GameplayStringsLocation {
   GameplayStringsLocation._();
 
-  static final instance = GameplayStringsLocation._();
+  static final GameplayStringsLocation instance = GameplayStringsLocation._();
 
   late final GameplayLocalizations _localizations;
 

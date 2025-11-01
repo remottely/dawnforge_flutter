@@ -52,7 +52,6 @@ class KnightPlayerView extends SimplePlayer
   void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
     if (isDead) return;
     _showDamageEffect(damage);
-
     super.onReceiveDamage(attacker, damage, id);
   }
 
@@ -103,27 +102,21 @@ class KnightPlayerView extends SimplePlayer
     );
   }
 
-  void _showDamageEffect(double damage) {
-    showDamage(
-      damage,
-      config: CharacterParticlesAnimations.kPlayerShowDamageTextStyle,
-      gravity: CharacterParticlesAnimations.kShowDamageGravity,
-      initVelocityVertical:
-          CharacterParticlesAnimations.kShowDamageInitVelocityVertical,
-    );
-  }
+  void _showDamageEffect(double damage) => showDamage(
+    damage,
+    config: CharacterParticlesAnimations.kPlayerShowDamageTextStyle,
+    gravity: CharacterParticlesAnimations.kShowDamageGravity,
+    initVelocityVertical:
+        CharacterParticlesAnimations.kShowDamageInitVelocityVertical,
+  );
 
-  void _showDeathEffect() {
-    gameRef.add(
-      DDGameDecoration.withSprite(
-        sprite: KnightPlayerConfig.loadCryptSprite(),
-        position: Vector2(position.x, position.y),
-        size: KnightPlayerConfig.fCryptComponentSize,
-      ),
-    );
-  }
+  void _showDeathEffect() => gameRef.add(
+    DDGameDecoration.withSprite(
+      sprite: KnightPlayerConfig.loadCryptSprite(),
+      position: Vector2(position.x, position.y),
+      size: KnightPlayerConfig.fCryptComponentSize,
+    ),
+  );
 
-  void _setupControls() {
-    setupMovementByJoystick(intensityEnabled: true);
-  }
+  void _setupControls() => setupMovementByJoystick(intensityEnabled: true);
 }

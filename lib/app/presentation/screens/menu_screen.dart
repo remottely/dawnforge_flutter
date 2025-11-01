@@ -6,10 +6,10 @@ import 'package:darkness_dungeon/app/presentation/design_system/components/atoms
 import 'package:darkness_dungeon/app/presentation/design_system/constants/typography_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/player_input_actions/gameplay_player_input_actions_factory.dart';
 import 'package:darkness_dungeon/gameplay/gameplay.dart';
 import 'package:darkness_dungeon/shared/components/dd_sprite_animation_widget.dart';
 import 'package:darkness_dungeon/shared/components/dd_sprite_widget.dart';
+import 'package:darkness_dungeon/shared/managers/game_settings_manager.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 import 'package:flame_splash_screen/flame_splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +53,7 @@ abstract class MenuScreenViewModel extends State<MenuScreen> {
 
   void _onControlMethodChanged(bool selectedValue) {
     setState(() {
-      GameplayPlayerInputActionsFactory.isJoystickInputSelected = selectedValue;
+      GameSettingsManager.instance.setInputSelected(selectedValue);
     });
   }
 
@@ -121,7 +121,7 @@ class _MenuScreenState extends MenuScreenViewModel {
               ],
               _StartButton(onPressed: _navigateToGameplayScreen),
               _Controls(onControlMethodChanged: _onControlMethodChanged),
-              if (!GameplayPlayerInputActionsFactory.isJoystickInputSelected)
+              if (!GameSettingsManager.instance.isJoystickInputSelected)
                 const _KeyboardTip(),
             ],
           ),
@@ -218,12 +218,12 @@ class _Controls extends StatelessWidget {
         AppRadioButton<bool>(
           value: false,
           label: 'Keyboard',
-          group: GameplayPlayerInputActionsFactory.isJoystickInputSelected,
+          group: GameSettingsManager.instance.isJoystickInputSelected,
           onChange: onControlMethodChanged,
         ),
         AppRadioButton<bool>(
           value: true,
-          group: GameplayPlayerInputActionsFactory.isJoystickInputSelected,
+          group: GameSettingsManager.instance.isJoystickInputSelected,
           label: 'Joystick',
           onChange: onControlMethodChanged,
         ),

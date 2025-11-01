@@ -2,17 +2,15 @@ import 'package:bonfire/player/player.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_view.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/player_input_actions/gameplay_player_input_actions_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_state_manager.dart';
 
 class KidNpcController {
   bool _hasStartedConversationWithHero = false;
   late KidNpcView _view;
 
-  void attachView(KidNpcView view) {
-    _view = view;
-  }
+  void attachView(KidNpcView view) => _view = view;
 
   void onUpdate(double dt) {
     _checkForBossDefeat(dt);

@@ -34,4 +34,7 @@ fix:
   - force player to stop in every dialogue start
 
 - Audio:
+
   - put music_gameplay_background.mp3 back
+
+- Create documentation that explains that config layer represents "constants, factories, builders, etc." in the same class.

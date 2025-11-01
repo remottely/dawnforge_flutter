@@ -7,10 +7,11 @@ import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_mana
 import 'package:darkness_dungeon/gameplay/core/modules/hud/gameplay_hud.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/player_input_actions/gameplay_player_input_actions_factory.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/player_input_actions/gameplay_player_input_actions_config.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/color_helper.dart';
 import 'package:darkness_dungeon/gameplay/environment/sensors/map_transition_sensor.dart';
+import 'package:darkness_dungeon/shared/managers/game_settings_manager.dart';
 import 'package:flutter/material.dart';
 
 class Gameplay extends StatefulWidget {
@@ -23,6 +24,7 @@ class Gameplay extends StatefulWidget {
 abstract class GameplayViewmodel extends State<Gameplay> {
   late final GameplayHUD _gameplayHUD;
   late final CameraConfig _cameraConfig;
+  final gameplayGameStateManager = GameplayGameStateManager();
 
   @override
   void initState() {
@@ -82,8 +84,9 @@ class _GameplayState extends GameplayViewmodel {
             GameplayTileConfig.kTileDimensionStandard;
         final knightPlayer = _buildKnightPlayer(playerPosition);
 
-        final playerInput =
-            GameplayPlayerInputActionsFactory.createPlayerInput();
+        final playerInput = GameplayPlayerInputActionsConfig.createPlayerInput(
+          GameSettingsManager.instance.isJoystickInputSelected,
+        );
 
         return Material(
           color: Colors.transparent,
@@ -91,7 +94,7 @@ class _GameplayState extends GameplayViewmodel {
             playerControllers: [playerInput],
             player: knightPlayer,
             map: mapItem.map,
-            components: [GameplayGameStateManager()],
+            components: [gameplayGameStateManager],
             interface: _gameplayHUD,
             lightingColorGame: mapLightingColor,
             backgroundColor: mapBackgroundColor,

@@ -6,7 +6,7 @@ import 'gameplay_audio_config.dart';
 final class GameplayAudioManager {
   GameplayAudioManager._();
 
-  static final instance = GameplayAudioManager._();
+  static final GameplayAudioManager instance = GameplayAudioManager._();
 
   bool _isBackgroundMusicEnabled = true;
   bool _isBackgroundMusicPlaying = false;

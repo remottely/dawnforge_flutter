@@ -3,8 +3,6 @@ import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_state_mana
 import 'package:darkness_dungeon/gameplay/gameplay.dart';
 import 'package:flutter/material.dart';
 
-// enum GameDifficulty { easy, normal, hard, nightmare }
-
 class GameplayGameStateManager extends GameComponent {
   @override
   void update(double dt) {

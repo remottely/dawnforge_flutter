@@ -1,7 +1,7 @@
 import 'package:darkness_dungeon/darkness_dungeon.dart';
 
-class GameplayConversationFactory {
-  static Say knightLeftDialog(String phraseKey) => Say(
+class GameplayConversationConfig {
+  static Say createKnightLeftDialog(String phraseKey) => Say(
     text: [
       TextSpan(text: GameplayStringsLocation.instance.getString(phraseKey)),
     ],
@@ -11,7 +11,7 @@ class GameplayConversationFactory {
     personSayDirection: PersonSayDirection.LEFT,
   );
 
-  static Say wizardRightDialog(String phraseKey) => Say(
+  static Say createWizardRightDialog(String phraseKey) => Say(
     text: [
       TextSpan(text: GameplayStringsLocation.instance.getString(phraseKey)),
     ],
@@ -21,7 +21,7 @@ class GameplayConversationFactory {
     personSayDirection: PersonSayDirection.RIGHT,
   );
 
-  static Say kidRightDialog(String phraseKey) => Say(
+  static Say createKidRightDialog(String phraseKey) => Say(
     text: [
       TextSpan(text: GameplayStringsLocation.instance.getString(phraseKey)),
     ],
@@ -31,7 +31,7 @@ class GameplayConversationFactory {
     personSayDirection: PersonSayDirection.RIGHT,
   );
 
-  static Say bossLeftDialog(String phraseKey) => Say(
+  static Say createBossLeftDialog(String phraseKey) => Say(
     text: [
       TextSpan(text: GameplayStringsLocation.instance.getString(phraseKey)),
     ],
@@ -41,7 +41,7 @@ class GameplayConversationFactory {
     personSayDirection: PersonSayDirection.LEFT,
   );
 
-  static Say bossRightDialog(String phraseKey) => Say(
+  static Say createBossRightDialog(String phraseKey) => Say(
     text: [
       TextSpan(text: GameplayStringsLocation.instance.getString('talk_boss_2')),
     ],

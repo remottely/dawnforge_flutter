@@ -16,9 +16,7 @@ class KnightPlayerController {
 
   KnightPlayerController({required this.model});
 
-  void attachView(KnightPlayerView view) {
-    _view = view;
-  }
+  void attachView(KnightPlayerView view) => _view = view;
 
   void onUpdate(double dt) {
     _handleStaminaRegeneration();

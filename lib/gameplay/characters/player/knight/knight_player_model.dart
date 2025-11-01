@@ -67,15 +67,9 @@ class KnightPlayerModel {
     _energy = KnightPlayerConfig.kMaxEnergy;
   }
 
-  void switchTool(FarmTool newTool) {
-    currentTool = newTool;
-  }
+  void switchTool(FarmTool newTool) => currentTool = newTool;
 
-  void obtainKey() {
-    hasKey = true;
-  }
+  void obtainKey() => hasKey = true;
 
-  void removeKey() {
-    hasKey = false;
-  }
+  void removeKey() => hasKey = false;
 }

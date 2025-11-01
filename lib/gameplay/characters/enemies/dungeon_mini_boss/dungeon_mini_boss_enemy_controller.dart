@@ -4,9 +4,7 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/d
 class DungeonMiniBossEnemyController {
   late DungeonMiniBossEnemyView _view;
 
-  void attachView(DungeonMiniBossEnemyView view) {
-    _view = view;
-  }
+  void attachView(DungeonMiniBossEnemyView view) => _view = view;
 
   void onUpdate(double dt) {
     _view.seePlayerAndAct();

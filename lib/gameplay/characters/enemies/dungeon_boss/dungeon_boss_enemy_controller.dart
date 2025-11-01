@@ -6,9 +6,7 @@ class DungeonBossEnemyController {
   bool hasSeenPlayerFirst = false;
   List<Enemy> spawnedEnemies = [];
 
-  void attachView(DungeonBossEnemyView view) {
-    _view = view;
-  }
+  void attachView(DungeonBossEnemyView view) => _view = view;
 
   void onUpdate(double dt) {
     _view.handleBossLogic(dt);

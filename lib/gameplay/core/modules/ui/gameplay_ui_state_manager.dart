@@ -13,7 +13,7 @@ import 'package:flutter/services.dart';
 final class GameplayUIStateManager {
   GameplayUIStateManager._();
 
-  static final instance = GameplayUIStateManager._();
+  static final GameplayUIStateManager instance = GameplayUIStateManager._();
 
   bool isShowingConversation = false;
 

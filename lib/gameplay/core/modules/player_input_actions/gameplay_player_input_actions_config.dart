@@ -1,5 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 
 final class GameplayPlayerInputActionsConfig {
   GameplayPlayerInputActionsConfig._();
@@ -28,4 +29,55 @@ final class GameplayPlayerInputActionsConfig {
     kKeyboardPrimaryAttack,
     kKeyboardFireballAttack,
   ];
+
+  /// Factories
+  static PlayerController createPlayerInput(bool isJoystickInputSelected) =>
+      isJoystickInputSelected ? _createJoystickInput() : _createKeyboardInput();
+
+  static PlayerController _createJoystickInput() {
+    return Joystick(
+      directional: JoystickDirectional(
+        spriteBackgroundDirectional: Sprite.load('joystick_background.png'),
+        spriteKnobDirectional: Sprite.load('joystick_knob.png'),
+        size: kJoystickComponentSize,
+        isFixed: false,
+      ),
+      actions: [_createPrimaryAttackAction(), _createRangedAttackAction()],
+    );
+  }
+
+  static JoystickAction _createPrimaryAttackAction() {
+    return JoystickAction(
+      actionId: kJoystickPrimaryAttackId,
+      sprite: Sprite.load('joystick_attack.png'),
+      spritePressed: Sprite.load('joystick_attack_selected.png'),
+      size: kActionButtonSize,
+      margin: const EdgeInsets.only(
+        bottom: kActionButtonMarginBottom,
+        right: kPrimaryActionMarginRight,
+      ),
+    );
+  }
+
+  static JoystickAction _createRangedAttackAction() {
+    return JoystickAction(
+      actionId: kJoystickFireballAttackId,
+      sprite: Sprite.load('joystick_attack_range.png'),
+      spritePressed: Sprite.load('joystick_attack_range_selected.png'),
+      size: kActionButtonSize,
+      margin: const EdgeInsets.only(
+        bottom: kActionButtonMarginBottom,
+        right: kSecondaryActionMarginRight,
+      ),
+    );
+  }
+
+  static PlayerController _createKeyboardInput() {
+    return Keyboard(
+      config: KeyboardConfig(
+        directionalKeys: fKeyboardDirectionalKeys,
+        acceptedKeys: fKeyboardAcceptedKeys,
+      ),
+    );
+  }
 }

@@ -10,9 +10,7 @@ class WizardNpcController {
 
   WizardNpcController({required WizardNpcModel model}) : this.model = model;
 
-  void attachView(WizardNpcView view) {
-    _view = view;
-  }
+  void attachView(WizardNpcView view) => _view = view;
 
   void onUpdate(double dt) {
     _view.checkPlayerProximity();

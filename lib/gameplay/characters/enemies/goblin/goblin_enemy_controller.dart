@@ -11,9 +11,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_mana
 class GoblinEnemyController {
   late GoblinEnemyView _view;
 
-  void attachView(GoblinEnemyView view) {
-    _view = view;
-  }
+  void attachView(GoblinEnemyView view) => _view = view;
 
   void onUpdate(double dt) {
     _view.seeAndMoveToPlayer(
