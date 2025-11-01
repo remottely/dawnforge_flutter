@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_config.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_dialog_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/conversation/gameplay_conversation_factory.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 
@@ -41,10 +41,10 @@ abstract class DungeonBossEnemyConfig {
 
   static List<Say> createConversationSequence() {
     return [
-      GameplayConversationConfig.kidRightDialog('talk_kid_1'),
-      GameplayConversationConfig.bossLeftDialog('talk_boss_1'),
-      GameplayConversationConfig.knightLeftDialog('talk_player_3'),
-      GameplayConversationConfig.bossRightDialog('talk_boss_2'),
+      GameplayConversationFactory.kidRightDialog('talk_kid_1'),
+      GameplayConversationFactory.bossLeftDialog('talk_boss_1'),
+      GameplayConversationFactory.knightLeftDialog('talk_player_3'),
+      GameplayConversationFactory.bossRightDialog('talk_boss_2'),
     ];
   }
 }

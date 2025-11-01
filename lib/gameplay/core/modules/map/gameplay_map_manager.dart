@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:bonfire/map/tiled/builder/tiled_world_builder.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_map_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
-import 'package:darkness_dungeon/gameplay/core/data/gameplay_map_data.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_data.dart';
 import 'package:darkness_dungeon/gameplay/environment/sensors/map_transition_sensor.dart';
 import 'package:flutter/widgets.dart';
 
@@ -54,13 +54,12 @@ class GameplayMapManager {
     final builders = <String, ObjectBuilder>{};
 
     _addSensorBuilders(builders, sensorIds);
-
     _addEntityBuilders(builders);
 
     return builders;
   }
 
-  static WorldMapByTiled _buildMap({
+  static WorldMapByTiled _buildMapByTiled({
     required String mapAsset,
     required List<String> sensorIds,
   }) {
@@ -75,7 +74,7 @@ class GameplayMapManager {
     return MapItem(
       id: data.id.name,
       properties: data.properties,
-      map: _buildMap(mapAsset: data.asset, sensorIds: data.sensorIds),
+      map: _buildMapByTiled(mapAsset: data.asset, sensorIds: data.sensorIds),
     );
   }
 
@@ -91,7 +90,7 @@ class GameplayMapManager {
         return mapBuilders;
       })();
 
-  static MapItem? byId(BuildContext context, MapId id) {
+  static MapItem? getMapById(BuildContext context, MapId id) {
     final builder = fAllMaps[id.name];
 
     if (builder != null) return builder(context, null);

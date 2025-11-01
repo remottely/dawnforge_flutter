@@ -8,7 +8,7 @@ abstract class LifePotionConfig {
   static const Duration _kHealingDuration = Duration(seconds: 1);
   static const double _kStandardHealAmount = 50.0;
   static const double kHealAmount =
-      GameplayInteractableConfig.kPropertyAmountSmall;
+      GameplayInteractableConfig.kStatsAmountSmall;
 
   static final Vector2 _fComponentSize = GameplayTileConfig.fTileSizeStandard;
   static Future<Sprite> _loadSprite() => Sprite.load(

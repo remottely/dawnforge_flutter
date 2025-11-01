@@ -5,7 +5,7 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_view.dart';
-import 'package:darkness_dungeon/gameplay/core/data/gameplay_map_data.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_data.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/barrel_decoration.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/torch_decoration.dart';
 import 'package:darkness_dungeon/gameplay/environment/interactables/door_interactable.dart';
@@ -13,6 +13,8 @@ import 'package:darkness_dungeon/gameplay/environment/interactables/door_key_int
 import 'package:darkness_dungeon/gameplay/environment/interactables/life_potion_interactable.dart';
 import 'package:darkness_dungeon/gameplay/environment/interactables/spike_trap_interactable.dart';
 import 'package:darkness_dungeon/gameplay/terrain/farmable/farm_tile.dart';
+
+enum MapId { map1, dungeon1 }
 
 class GameplayMapConfig {
   /// Map keys

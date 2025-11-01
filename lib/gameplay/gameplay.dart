@@ -1,14 +1,13 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_camera_config.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_input_actions_config.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_map_config.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_camera_utils.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
-import 'package:darkness_dungeon/gameplay/core/data/gameplay_map_data.dart';
-import 'package:darkness_dungeon/gameplay/core/hud/gameplay_hud.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/gameplay_map_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/gameplay_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/gameplay_game_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/gameplay_hud.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/player_input_actions/gameplay_player_input_actions_factory.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/color_helper.dart';
 import 'package:darkness_dungeon/gameplay/environment/sensors/map_transition_sensor.dart';
@@ -40,13 +39,7 @@ abstract class GameplayViewmodel extends State<Gameplay> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _cameraConfig = CameraConfig(
-      speed: GameplayCameraConfig.kCameraSpeed,
-      zoom: GameplayCameraConfig.getCameraZoomFromMaxVisibleTile(
-        context,
-        maxVisibleTile: GameplayTileConfig.kMaxVisibleTiles,
-      ),
-    );
+    _cameraConfig = GameplayCameraUtils.createCameraConfig(context);
   }
 
   void _cleanupGameAudio() {
@@ -68,32 +61,29 @@ class _GameplayState extends GameplayViewmodel {
       maps: GameplayMapManager.fAllMaps,
       initialMap: MapId.map1.name,
       builder: (context, arguments, mapItem) {
-        MapArguments? mapArguments = arguments as MapArguments?;
-        final playerPosition =
-            (mapArguments?.playerPosition ?? Vector2(4, 4)) *
-            GameplayTileConfig.kTileDimensionStandard;
-
         final mapLightingColor = ColorHelper.fromHex(
           mapItem.properties[GameplayMapConfig.kLightingColorPropertyKey]
               ?.toString(),
         );
-
         final mapBackgroundColor = ColorHelper.fromHex(
           mapItem.properties[GameplayMapConfig.kBackgroundColorPropertyKey]
               ?.toString(),
         );
-
         final mapBackgroundMusic = mapItem
             .properties[GameplayMapConfig.kBackgroundMusicPropertyKey]
             ?.toString();
-
         if (mapBackgroundMusic != null && mapBackgroundMusic.isNotEmpty) {
           GameplayAudioManager.instance.playBackgroundMusic(mapBackgroundMusic);
         }
 
+        MapArguments? mapArguments = arguments as MapArguments?;
+        final playerPosition =
+            (mapArguments?.playerPosition ?? Vector2(4, 4)) *
+            GameplayTileConfig.kTileDimensionStandard;
         final knightPlayer = _buildKnightPlayer(playerPosition);
 
-        final playerInput = GameplayInputActionsConfig.createPlayerInput();
+        final playerInput =
+            GameplayPlayerInputActionsFactory.createPlayerInput();
 
         return Material(
           color: Colors.transparent,
@@ -101,7 +91,7 @@ class _GameplayState extends GameplayViewmodel {
             playerControllers: [playerInput],
             player: knightPlayer,
             map: mapItem.map,
-            components: [GameplayStateManager()],
+            components: [GameplayGameStateManager()],
             interface: _gameplayHUD,
             lightingColorGame: mapLightingColor,
             backgroundColor: mapBackgroundColor,

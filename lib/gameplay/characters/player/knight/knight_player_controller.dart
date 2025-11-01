@@ -4,7 +4,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_input_actions_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/player_input_actions/gameplay_player_input_actions_config.dart';
 
 class KnightPlayerController {
   final KnightPlayerModel model;
@@ -26,13 +26,17 @@ class KnightPlayerController {
   }
 
   void onInputAction(JoystickActionEvent event) {
-    if ((event.id == GameplayInputActionsConfig.kJoystickPrimaryAttackId ||
-            event.id == GameplayInputActionsConfig.kKeyboardPrimaryAttack) &&
+    if ((event.id ==
+                GameplayPlayerInputActionsConfig.kJoystickPrimaryAttackId ||
+            event.id ==
+                GameplayPlayerInputActionsConfig.kKeyboardPrimaryAttack) &&
         event.event == ActionEvent.DOWN) {
       _executePrimaryAttack();
     }
-    if ((event.id == GameplayInputActionsConfig.kJoystickFireballAttackId ||
-            event.id == GameplayInputActionsConfig.kKeyboardFireballAttack) &&
+    if ((event.id ==
+                GameplayPlayerInputActionsConfig.kJoystickFireballAttackId ||
+            event.id ==
+                GameplayPlayerInputActionsConfig.kKeyboardFireballAttack) &&
         event.event == ActionEvent.DOWN) {
       _executeFireballAttack();
     }

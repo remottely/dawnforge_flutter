@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_map_config.dart';
-import 'package:darkness_dungeon/gameplay/core/data/gameplay_map_data.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_data.dart';
 import 'package:darkness_dungeon/gameplay/environment/sensors/map_transition_sensor.dart';
 import 'package:flutter_test/flutter_test.dart';
 

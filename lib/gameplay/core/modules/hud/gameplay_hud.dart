@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
-import 'package:darkness_dungeon/gameplay/core/hud/player_vital_stats_hud.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_ui_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/gameplay_hud_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/player_vital_stats_hud.dart';
 import 'package:darkness_dungeon/gameplay/environment/interactables/door_key_interactable.dart';
 
 class GameplayHUD extends GameInterface {
@@ -16,9 +16,7 @@ class GameplayHUD extends GameInterface {
 
   @override
   void render(Canvas canvas) {
-    try {
-      _drawKeyIcon(canvas);
-    } catch (e) {}
+    _drawKeyIcon(canvas);
     super.render(canvas);
   }
 
@@ -35,10 +33,10 @@ class GameplayHUD extends GameInterface {
       _keySprite.renderRect(
         canvas,
         Rect.fromLTWH(
-          GameplayUIConfig.kKeyIconX,
-          GameplayUIConfig.kKeyIconY,
-          GameplayUIConfig.kKeyIconWidth,
-          GameplayUIConfig.kKeyIconHeight,
+          GameplayHUDConfig.kKeyIconX,
+          GameplayHUDConfig.kKeyIconY,
+          GameplayHUDConfig.kKeyIconWidth,
+          GameplayHUDConfig.kKeyIconHeight,
         ),
       );
     }

@@ -8,7 +8,7 @@ abstract class _TorchDecorationConfig {
   static final Vector2 _fTextureSize = GameplayTileConfig.fTileSizeStandard;
   static final Vector2 _fComponentSize = _fTextureSize;
 
-  static Future<SpriteAnimation> _loadAnimation() => SpriteAnimation.load(
+  static Future<SpriteAnimation> _loadSpriteAnimation() => SpriteAnimation.load(
     'gameplay/environment/decorations/torch_decoration_6.png',
     GameplaySpriteAnimationConfig.createStandardData(
       amount: 6,
@@ -30,7 +30,7 @@ class TorchDecorationView extends DDGameDecoration {
   TorchDecorationView({required super.position})
     : _isExtinguished = false,
       super.withAnimation(
-        animation: _TorchDecorationConfig._loadAnimation(),
+        animation: _TorchDecorationConfig._loadSpriteAnimation(),
         size: _TorchDecorationConfig._fComponentSize,
       ) {
     _setupLighting();
@@ -39,7 +39,7 @@ class TorchDecorationView extends DDGameDecoration {
   TorchDecorationView.empty({required super.position})
     : _isExtinguished = true,
       super.withAnimation(
-        animation: _TorchDecorationConfig._loadAnimation(),
+        animation: _TorchDecorationConfig._loadSpriteAnimation(),
         size: _TorchDecorationConfig._fComponentSize,
       ) {
     _setupLighting();

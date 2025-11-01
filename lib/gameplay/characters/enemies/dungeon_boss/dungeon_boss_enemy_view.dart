@@ -8,12 +8,12 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.
 import 'package:darkness_dungeon/gameplay/characters/shared/character_basic_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_effect_sprite_animations.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_audio_config.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_camera_config.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_input_actions_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_camera_utils.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/player_input_actions/gameplay_player_input_actions_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_state_manager.dart';
 import 'package:flutter/material.dart';
 
 class DungeonBossEnemyView extends SimpleEnemy
@@ -70,7 +70,7 @@ class DungeonBossEnemyView extends SimpleEnemy
           hasSeenPlayerFirst = true;
           gameRef.camera.moveToTargetAnimated(
             target: this,
-            zoom: GameplayCameraConfig.getCameraZoomFromMaxVisibleTile(
+            zoom: GameplayCameraUtils.getCameraZoomFromMaxVisibleTile(
               context,
               maxVisibleTile: GameplayTileConfig.kBossConversationVisibleTiles,
             ),
@@ -214,12 +214,12 @@ class DungeonBossEnemyView extends SimpleEnemy
 
   void _showConversation(Player player) {
     GameplayAudioManager.instance.playConversationInteractionSfx();
-    GameplayUIManager.instance.showConversation(
+    GameplayUIStateManager.instance.showConversation(
       gameRef.context,
       player: player,
       conversationSequence: DungeonBossEnemyConfig.createConversationSequence(),
       logicalKeyboardKeysToNext: [
-        GameplayInputActionsConfig.kKeyboardPrimaryAttack,
+        GameplayPlayerInputActionsConfig.kKeyboardPrimaryAttack,
       ],
       onChangeTalk: _onConversationChanged,
       onFinish: _onConversationFinished,
@@ -235,7 +235,7 @@ class DungeonBossEnemyView extends SimpleEnemy
     spawnInitialMinions();
     Future.delayed(Duration(milliseconds: 500), () {
       gameRef.camera.moveToPlayerAnimated(
-        zoom: GameplayCameraConfig.getCameraZoomFromMaxVisibleTile(
+        zoom: GameplayCameraUtils.getCameraZoomFromMaxVisibleTile(
           context,
           maxVisibleTile: GameplayTileConfig.kMaxVisibleTiles,
         ),

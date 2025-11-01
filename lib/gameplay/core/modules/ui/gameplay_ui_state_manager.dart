@@ -3,15 +3,15 @@ import 'package:darkness_dungeon/app/presentation/design_system/components/atoms
 import 'package:darkness_dungeon/app/presentation/design_system/components/atoms/app_styled_dialog.dart';
 import 'package:darkness_dungeon/app/presentation/design_system/components/atoms/app_styled_text.dart';
 import 'package:darkness_dungeon/app/presentation/screens/menu_screen.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_input_actions_config.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_ui_config.dart';
-import 'package:darkness_dungeon/gameplay/core/localization/gameplay_strings_location.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/gameplay_game_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/player_input_actions/gameplay_player_input_actions_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
+import 'package:darkness_dungeon/gameplay/core/managers/gameplay_game_state_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class GameplayUIManager {
-  static final instance = GameplayUIManager();
+class GameplayUIStateManager {
+  static final instance = GameplayUIStateManager();
 
   var isShowingConversation = false;
 
@@ -84,7 +84,7 @@ class GameplayUIManager {
     VoidCallback? onClose,
     List<LogicalKeyboardKey>? logicalKeyboardKeysToNext,
   }) {
-    GameplayGameManager.stopPlayerMovement(player);
+    GameplayGameStateManager.stopPlayerMovement(player);
 
     TalkDialog.show(
       context,
@@ -94,7 +94,7 @@ class GameplayUIManager {
       onClose: onClose,
       logicalKeyboardKeysToNext:
           logicalKeyboardKeysToNext ??
-          [GameplayInputActionsConfig.kKeyboardPrimaryAttack],
+          [GameplayPlayerInputActionsConfig.kKeyboardPrimaryAttack],
     );
   }
 

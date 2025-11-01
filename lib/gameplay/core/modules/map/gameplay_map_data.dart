@@ -1,6 +1,4 @@
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_map_config.dart';
-
-enum MapId { map1, dungeon1 }
+import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_config.dart';
 
 class GameplayMapData {
   final MapId id;

@@ -1,5 +1,5 @@
 import 'package:darkness_dungeon/app/presentation/design_system/constants/typography_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_ui_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_config.dart';
 import 'package:flutter/material.dart';
 
 class AppStyledButton extends StatelessWidget {

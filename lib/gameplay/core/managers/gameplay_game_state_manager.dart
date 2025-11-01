@@ -1,9 +1,11 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/gameplay.dart';
 import 'package:flutter/material.dart';
 
-class GameplayStateManager extends GameComponent {
+// enum GameDifficulty { easy, normal, hard, nightmare }
+
+class GameplayGameStateManager extends GameComponent {
   @override
   void update(double dt) {
     _processGameState(dt);
@@ -38,7 +40,7 @@ class GameplayStateManager extends GameComponent {
 
   void _displayGameOverDialog() {
     _vIsGameOverDisplayed = true;
-    GameplayUIManager.instance.displayGameOverDialog(
+    GameplayUIStateManager.instance.displayGameOverDialog(
       context,
       _onRestartGamePressed,
     );
@@ -79,4 +81,11 @@ class GameplayStateManager extends GameComponent {
   }
 
   /// <<< End Game Over Handling
+
+  /// >>> Start Utility Methods
+  static void stopPlayerMovement(Player player) {
+    player.idle();
+  }
+
+  /// <<< End Utility Methods
 }

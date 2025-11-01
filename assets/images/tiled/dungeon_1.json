@@ -165,7 +165,7 @@
                  "name":"Sensors",
                  "objects":[
                         {
-                         "height":9.09831794274245,
+                         "height":8.98474241700526,
                          "id":361,
                          "name":"sensor_map_1",
                          "properties":[
@@ -187,7 +187,7 @@
                          "rotation":0.170983,
                          "type":"",
                          "visible":true,
-                         "width":10.7043814024711,
+                         "width":11.7178270192836,
                          "x":16,
                          "y":64
                         }],

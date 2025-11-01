@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_dialog_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/conversation/gameplay_conversation_factory.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_state_manager.dart';
 import 'package:darkness_dungeon/shared/i_dd_game_decoration.dart';
 
 abstract class _DoorInteractableConfig {
@@ -32,7 +32,7 @@ abstract class _DoorInteractableConfig {
   );
 
   static List<Say> createConversationSequence() {
-    return [GameplayConversationConfig.knightLeftDialog(_kRequiredKeyMessage)];
+    return [GameplayConversationFactory.knightLeftDialog(_kRequiredKeyMessage)];
   }
 }
 
@@ -86,20 +86,20 @@ class DoorInteractableView extends DDGameDecoration {
   }
 
   void _showKeyRequiredMessage(Player player) {
-    if (!GameplayUIManager.instance.isShowingConversation) {
-      GameplayUIManager.instance.isShowingConversation = true;
+    if (!GameplayUIStateManager.instance.isShowingConversation) {
+      GameplayUIStateManager.instance.isShowingConversation = true;
       _showConversation(player);
     }
   }
 
   void _showConversation(Player player) {
-    GameplayUIManager.instance.showConversation(
+    GameplayUIStateManager.instance.showConversation(
       gameRef.context,
       player: player,
       conversationSequence:
           _DoorInteractableConfig.createConversationSequence(),
       onClose: () {
-        GameplayUIManager.instance.isShowingConversation = false;
+        GameplayUIStateManager.instance.isShowingConversation = false;
       },
     );
   }

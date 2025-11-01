@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/gameplay/core/managers/gameplay_map_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

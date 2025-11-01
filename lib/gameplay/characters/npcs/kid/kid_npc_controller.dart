@@ -2,9 +2,9 @@ import 'package:bonfire/player/player.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_view.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_input_actions_config.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/player_input_actions/gameplay_player_input_actions_config.dart';
 
 class KidNpcController {
   bool _hasStartedConversationWithHero = false;
@@ -48,14 +48,14 @@ class KidNpcController {
 
   void _showConversation(Player player) {
     GameplayAudioManager.instance.playConversationInteractionSfx();
-    GameplayUIManager.instance.showConversation(
+    GameplayUIStateManager.instance.showConversation(
       _view.gameRef.context,
       player: player,
       conversationSequence: KidNpcConfig.createConversationSequence(),
       onChangeTalk: _onConversationChanged,
       onFinish: _onConversationFinished,
       logicalKeyboardKeysToNext: [
-        GameplayInputActionsConfig.kKeyboardPrimaryAttack,
+        GameplayPlayerInputActionsConfig.kKeyboardPrimaryAttack,
       ],
     );
   }
@@ -67,11 +67,9 @@ class KidNpcController {
   void _onConversationFinished() {
     GameplayAudioManager.instance.playConversationInteractionSfx();
     _view.gameRef.camera.moveToPlayerAnimated(
-      onComplete: _displayVictoryScreen,
+      onComplete: () => GameplayUIStateManager.instance.displayVictoryDialog(
+        _view.gameRef.context,
+      ),
     );
-  }
-
-  void _displayVictoryScreen() {
-    GameplayUIManager.instance.displayVictoryDialog(_view.gameRef.context);
   }
 }

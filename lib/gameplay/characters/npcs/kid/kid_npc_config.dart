@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_dialog_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/conversation/gameplay_conversation_factory.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 
 abstract class KidNpcConfig {
@@ -14,8 +14,8 @@ abstract class KidNpcConfig {
 
   static List<Say> createConversationSequence() {
     return [
-      GameplayConversationConfig.kidRightDialog('talk_kid_2'),
-      GameplayConversationConfig.knightLeftDialog('talk_player_4'),
+      GameplayConversationFactory.kidRightDialog('talk_kid_2'),
+      GameplayConversationFactory.knightLeftDialog('talk_player_4'),
     ];
   }
 }
