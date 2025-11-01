@@ -10,7 +10,7 @@ final class DDDesignSystem {
   static const double kTypographyCaptionFontSize = 16.0;
   static const double kTypographyBodyFontSize = 20.0;
   static const double kTypographyHeadlineFontSize = 24.0;
-  static const double kTypographyDisplayFontSize = 30.0;
+  static const double kTypographyDisplayFontSize = 32.0;
 
   /// Spacing constants
   // static const double kSpacingSuperSmall = 4.0;

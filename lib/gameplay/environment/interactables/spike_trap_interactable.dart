@@ -27,6 +27,7 @@ final class _SpikeTrapInteractableConfig {
 class SpikeTrapInteractableView extends DDSensorPlayerDecoration {
   final double _damageAmount;
   KnightPlayerView? _contactedPlayer;
+  bool _hasDealtDamageThisCycle = false;
 
   SpikeTrapInteractableView({
     required super.position,
@@ -50,7 +51,12 @@ class SpikeTrapInteractableView extends DDSensorPlayerDecoration {
   @override
   void update(double dt) {
     if (isAnimationLastFrame) {
-      _triggerDamage();
+      if (!_hasDealtDamageThisCycle) {
+        _triggerEffect(_contactedPlayer!);
+        _hasDealtDamageThisCycle = true;
+      }
+    } else {
+      _hasDealtDamageThisCycle = false;
     }
     super.update(dt);
   }
@@ -60,7 +66,7 @@ class SpikeTrapInteractableView extends DDSensorPlayerDecoration {
     _SpikeTrapInteractableConfig._kPriority,
   );
 
-  void _triggerDamage() {
-    _contactedPlayer?.handleAttack(AttackOriginEnum.ENEMY, _damageAmount, 0);
+  void _triggerEffect(KnightPlayerView player) {
+    player.handleAttack(AttackOriginEnum.ENEMY, _damageAmount, 0);
   }
 }
