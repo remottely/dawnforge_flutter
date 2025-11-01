@@ -17,7 +17,7 @@ final class GameplayAudioManager {
     await FlameAudio.audioCache.loadAll(GameplayAudioConfig.kPreloadAudioFiles);
   }
 
-  /// Sound Effects
+  /// SFX
   void playPlayerPrimaryAttackSfx() {
     FlameAudio.play(
       GameplayAudioConfig.kSfxPlayerAttackAsset,

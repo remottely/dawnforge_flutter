@@ -11,17 +11,16 @@ class PlayerVitalStatsHUD extends InterfaceComponent {
   PlayerVitalStatsHUD()
     : super(
         id: GameplayHUDConfig.kComponentId,
-        position: Vector2(
+        position: Vector2.all(
           GameplayHUDConfig.kHUDPadding,
-          GameplayHUDConfig.kHUDPadding,
-        ),
+        ), // TODO(Kevin): move to a config layer
         spriteUnselected: Sprite.load(
           GameplayHUDConfig.kHealthUIAsset,
         ), // TODO(Kevin): move to a config layer
         size: Vector2(
           GameplayHUDConfig.kHUDWidth,
           GameplayHUDConfig.kHUDHeight,
-        ),
+        ), // TODO(Kevin): move to a config layer
       );
 
   @override

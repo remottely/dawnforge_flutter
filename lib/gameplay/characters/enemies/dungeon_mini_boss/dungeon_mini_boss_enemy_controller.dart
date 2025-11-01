@@ -11,10 +11,10 @@ class DungeonMiniBossEnemyController {
   }
 
   void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
-    _view.showDamageEffect(damage);
+    _view.showDamageFx(damage);
   }
 
   void onDie() {
-    _view.handleDeathEffects();
+    _view.handleDeathFx();
   }
 }

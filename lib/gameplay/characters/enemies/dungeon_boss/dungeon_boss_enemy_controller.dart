@@ -13,11 +13,11 @@ class DungeonBossEnemyController {
   }
 
   void onDie() {
-    _view.handleDeathEffects();
+    _view.handleDeathFx();
   }
 
   void onReceiveDamage(double damage) {
-    _view.showDamageEffect(damage);
+    _view.showDamageFx(damage);
   }
 
   void onRender(Canvas canvas) {

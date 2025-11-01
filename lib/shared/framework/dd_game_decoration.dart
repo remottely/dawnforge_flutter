@@ -23,6 +23,9 @@ class DDGameDecoration extends GameDecoration {
 
 abstract class DDPushableDecoration extends DDGameDecoration
     with Movement, BlockMovementCollision, HandleForces, Pushable {
+  static const String _kResistanceForceId = 'attr';
+  static final Vector2 _kResistanceForceValue = Vector2.all(100);
+
   DDPushableDecoration.withSprite({
     required super.sprite,
     required super.position,
@@ -32,7 +35,9 @@ abstract class DDPushableDecoration extends DDGameDecoration
     super.lightingConfig,
     super.renderAboveComponents,
   }) : super.withSprite() {
-    addForce(ResistanceForce2D(id: 'attr', value: Vector2.all(100)));
+    addForce(
+      ResistanceForce2D(id: _kResistanceForceId, value: _kResistanceForceValue),
+    );
   }
 }
 

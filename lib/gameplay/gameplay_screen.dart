@@ -41,7 +41,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
 
         MapArguments? mapArguments = arguments as MapArguments?;
         final playerPosition =
-            (mapArguments?.playerPosition ?? Vector2(4, 4)) *
+            (mapArguments?.playerPosition ?? Vector2.all(4)) *
             GameplayTileConfig.kTileDimensionStandard;
         final knightPlayer = buildKnightPlayer(playerPosition);
 

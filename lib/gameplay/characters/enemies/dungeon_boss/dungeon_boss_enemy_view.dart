@@ -5,8 +5,8 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeo
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_effects_particles_animations_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_effects_sprite_animations_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_sprite_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_primary_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_camera_utils.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_player_input_actions_config.dart';
@@ -101,7 +101,7 @@ class DungeonBossEnemyView extends SimpleEnemy
 
   void playPrimaryAttackAnimation() {
     simpleAttackMelee(
-      size: Vector2.all(DungeonBossEnemyConfig.kPrimaryAttackEffectSize),
+      size: DungeonBossEnemyConfig.kPrimaryAttackFxSize,
       damage: DungeonBossEnemyConfig.kPrimaryAttackDamage,
       interval: 1500,
       animationRight:
@@ -143,7 +143,7 @@ class DungeonBossEnemyView extends SimpleEnemy
       gameRef.add(
         AnimatedGameObject(
           animation:
-              CharacterEffectsSpriteAnimationsConfig.createExplosionSmokeRight5(),
+              CharacterFxSpriteAnimationsConfig.createExplosionSmokeRight5(),
           position: positionExplosion,
           size: GameplayTileConfig.fTileSizeStandard,
           loop: false,
@@ -154,22 +154,20 @@ class DungeonBossEnemyView extends SimpleEnemy
     }
   }
 
-  void showDamageEffect(double damage) {
+  void showDamageFx(double damage) {
     showDamage(
       damage,
-      config:
-          CharacterEffectsParticlesAnimationsConfig.kEnemyShowDamageTextStyle,
-      gravity: CharacterEffectsParticlesAnimationsConfig.kShowDamageGravity,
-      initVelocityVertical: CharacterEffectsParticlesAnimationsConfig
-          .kShowDamageInitVelocityVertical,
+      config: CharacterFxParticlesAnimationsConfig.kEnemyShowDamageTextStyle,
+      gravity: CharacterFxParticlesAnimationsConfig.kShowDamageGravity,
+      initVelocityVertical:
+          CharacterFxParticlesAnimationsConfig.kShowDamageInitVelocityVertical,
     );
   }
 
-  void handleDeathEffects() {
+  void handleDeathFx() {
     gameRef.add(
       AnimatedGameObject(
-        animation:
-            CharacterEffectsSpriteAnimationsConfig.createExplosionRight7(),
+        animation: CharacterFxSpriteAnimationsConfig.createExplosionRight7(),
         position: position,
         size: GameplayTileConfig.fTileSizeStandard,
         loop: false,
@@ -258,7 +256,7 @@ class DungeonBossEnemyView extends SimpleEnemy
     gameRef.add(
       AnimatedGameObject(
         animation:
-            CharacterEffectsSpriteAnimationsConfig.createExplosionSmokeRight5(),
+            CharacterFxSpriteAnimationsConfig.createExplosionSmokeRight5(),
         position: pos,
         size: GameplayTileConfig.fTileSizeStandard,
         loop: false,

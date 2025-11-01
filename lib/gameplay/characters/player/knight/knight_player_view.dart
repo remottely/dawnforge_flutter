@@ -2,12 +2,11 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_effects_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_manager.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_primary_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/shared/framework/dd_game_decoration.dart';
 
 class KnightPlayerView extends SimplePlayer
     with Lighting, BlockMovementCollision {
@@ -60,13 +59,13 @@ class KnightPlayerView extends SimplePlayer
   @override
   void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
     if (isDead) return;
-    _showDamageEffect(damage);
+    _showDamageFx(damage);
     super.onReceiveDamage(attacker, damage, id);
   }
 
   @override
   void onDie() {
-    _showDeathEffect();
+    _showDeathFx();
     removeFromParent();
     super.onDie();
   }
@@ -84,41 +83,35 @@ class KnightPlayerView extends SimplePlayer
   KnightPlayerModel get model => _controller.model;
 
   /// Private helper methods
-  void _showDamageEffect(double damage) => showDamage(
+  void _showDamageFx(double damage) => showDamage(
     damage,
-    config:
-        CharacterEffectsParticlesAnimationsConfig.kPlayerShowDamageTextStyle,
-    gravity: CharacterEffectsParticlesAnimationsConfig.kShowDamageGravity,
-    initVelocityVertical: CharacterEffectsParticlesAnimationsConfig
-        .kShowDamageInitVelocityVertical,
+    config: CharacterFxParticlesAnimationsConfig.kPlayerShowDamageTextStyle,
+    gravity: CharacterFxParticlesAnimationsConfig.kShowDamageGravity,
+    initVelocityVertical:
+        CharacterFxParticlesAnimationsConfig.kShowDamageInitVelocityVertical,
   );
 
-  void _showDeathEffect() => gameRef.add(
-    DDGameDecoration.withSprite(
-      sprite: KnightPlayerConfig.loadCryptSprite(),
-      position: Vector2(position.x, position.y),
-      size: KnightPlayerConfig.fCryptComponentSize,
-    ),
-  );
+  void _showDeathFx() =>
+      gameRef.add(KnightPlayerConfig.createCryptComponent(position));
 
   /// Controller callback implementations
   void _onPlayPrimaryAttack(double damage) {
     GameplayAudioManager.instance.playPlayerPrimaryAttackSfx();
     addParticle(
-      CharacterEffectsParticlesAnimationsConfig.createPrimaryAttackParticles(),
+      CharacterFxParticlesAnimationsConfig.createPrimaryAttackParticles(),
       position: size,
     );
     simpleAttackMelee(
+      size: KnightPlayerConfig.kPrimaryAttackFxSize,
       damage: damage,
       animationRight:
           CharacterPrimaryAttackConfig.createPlayerExecutionAnimation(),
-      size: KnightPlayerConfig.fComponentSize,
     );
   }
 
   void _onPlayFireballAttack(double damage) {
     addParticle(
-      CharacterEffectsParticlesAnimationsConfig.createFireballAttackParticles(),
+      CharacterFxParticlesAnimationsConfig.createFireballAttackParticles(),
       position: size,
     );
     simpleAttackRange(

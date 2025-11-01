@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
 
-class CharacterEffectsParticlesAnimationsConfig {
+class CharacterFxParticlesAnimationsConfig {
   static const double kShowDamageGravity = 0.1;
   static const double kShowDamageInitVelocityVertical = -4.0;
 

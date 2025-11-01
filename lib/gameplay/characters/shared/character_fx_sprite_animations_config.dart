@@ -2,7 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 
-class CharacterEffectsSpriteAnimationsConfig {
+class CharacterFxSpriteAnimationsConfig {
   static Future<SpriteAnimation> createExplosionRight7() =>
       SpriteAnimation.load(
         'gameplay/characters/shared/character_explosion_right_7.png',

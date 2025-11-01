@@ -1,8 +1,9 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_effects_particles_animations_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
+import 'package:darkness_dungeon/shared/framework/dd_game_decoration.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 
 final class KnightPlayerConfig {
@@ -29,6 +30,8 @@ final class KnightPlayerConfig {
 
   static final Vector2 fTextureSize = GameplayTileConfig.fTileSizeStandard;
   static final Vector2 fComponentSize = fTextureSize;
+  static final Vector2 kPrimaryAttackFxSize =
+      GameplayTileConfig.fTileSizeStandard;
 
   static final SimpleDirectionAnimation fLoadDirectionalSpriteAnimation =
       SimpleDirectionAnimation(
@@ -59,11 +62,17 @@ final class KnightPlayerConfig {
   static final LightingConfig fLightingConfig = LightingConfig(
     radius: GameplayTileConfig.kTileDimensionStandard,
     blurBorder: GameplayTileConfig.kTileDimensionStandard,
-    color: CharacterEffectsParticlesAnimationsConfig.fLightingConfigColor,
+    color: CharacterFxParticlesAnimationsConfig.fLightingConfigColor,
   );
 
   static final Vector2 fCryptComponentSize =
       GameplayTileConfig.fTileSizeStandard;
   static Future<Sprite> loadCryptSprite() =>
       Sprite.load('gameplay/characters/player/player_crypt_1.png');
+  static DDGameDecoration createCryptComponent(Vector2 position) =>
+      DDGameDecoration.withSprite(
+        sprite: loadCryptSprite(),
+        position: Vector2(position.x, position.y),
+        size: fCryptComponentSize,
+      );
 }

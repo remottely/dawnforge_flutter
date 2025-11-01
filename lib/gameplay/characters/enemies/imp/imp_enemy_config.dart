@@ -11,13 +11,13 @@ final class ImpEnemyConfig {
   static const double kLife = 80.0;
   static const double kSpeed = CharacterConfig.kCharacterSpeedMedium;
   static const int kAttackInterval = 300;
-  static const double kAttackEffectSize =
-      GameplayTileConfig.kTileDimensionStandard * 0.62;
 
   static final Vector2 fTextureSize = GameplayTileConfig.fTileSizeStandard;
   static final Vector2 fComponentSize = Vector2.all(
     GameplayTileConfig.kTileDimensionStandard * 0.8,
   );
+  static final Vector2 kPrimaryAttackFxSize =
+      GameplayTileConfig.fTileSizeStandard * 0.62;
 
   static final SimpleDirectionAnimation fLoadDirectionalSpriteAnimation =
       SimpleDirectionAnimation(
