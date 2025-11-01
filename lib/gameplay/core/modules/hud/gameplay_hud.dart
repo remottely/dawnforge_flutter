@@ -21,7 +21,8 @@ class GameplayHUD extends GameInterface {
   }
 
   Future<void> _loadAssets() async {
-    _keySprite = await DoorKeyInteractableConfig.loadSprite();
+    _keySprite =
+        await DoorKeyInteractableConfig.loadSprite(); // TODO(Kevin): put this into shared layer, and cache this
   }
 
   void _initializeComponents() {
