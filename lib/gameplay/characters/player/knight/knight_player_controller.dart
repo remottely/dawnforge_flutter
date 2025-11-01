@@ -4,7 +4,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/player_input_actions/gameplay_player_input_actions_config.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_player_input_actions_config.dart';
 
 class KnightPlayerController {
   final KnightPlayerModel model;

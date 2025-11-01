@@ -2,24 +2,22 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 
-final class CharacterPrimaryAttackConfig {
-  CharacterPrimaryAttackConfig._();
-
-  static Future<SpriteAnimation> loadPlayerExecutionAnimation() =>
+class CharacterEffectsSpriteAnimationsConfig {
+  static Future<SpriteAnimation> characterExplosionSmokeRight5() =>
       SpriteAnimation.load(
-        'gameplay/characters/player/player_basic_attack_right_3.png',
+        'gameplay/characters/shared/character_explosion_smoke_right_5.png',
         GameplaySpriteAnimationConfig.createStandardData(
-          amount: 3,
+          amount: 5,
           textureSize: GameplayTileConfig.fTileSizeStandard,
         ),
       );
 
-  static Future<SpriteAnimation> loadEnemyExecutionAnimation() =>
+  static Future<SpriteAnimation> characterExplosionRight7() =>
       SpriteAnimation.load(
-        'gameplay/characters/enemies/enemy_basic_attack_right_3.png',
+        'gameplay/characters/shared/character_explosion_right_7.png',
         GameplaySpriteAnimationConfig.createStandardData(
-          amount: 3,
-          textureSize: GameplayTileConfig.fTileSizeStandard,
+          amount: 7,
+          textureSize: GameplayTileConfig.fTileSizeExtraLarge,
         ),
       );
 }

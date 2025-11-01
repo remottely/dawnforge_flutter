@@ -3,7 +3,7 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeo
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/player_input_actions/gameplay_player_input_actions_config.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_player_input_actions_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_state_manager.dart';
 
 class KidNpcController {

@@ -2,12 +2,12 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_basic_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_manager.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_effects_particles_animations_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_primary_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/shared/i_dd_game_decoration.dart';
+import 'package:darkness_dungeon/shared/framework/dd_game_decoration.dart';
 
 class KnightPlayerView extends SimplePlayer
     with Lighting, BlockMovementCollision {
@@ -64,7 +64,10 @@ class KnightPlayerView extends SimplePlayer
 
   void playPrimaryAttackAnimation(double damage) {
     GameplayAudioManager.instance.playPlayerPrimaryAttackSfx();
-    addParticle(CharacterParticlesAnimations.swordParticles(), position: size);
+    addParticle(
+      CharacterEffectsParticlesAnimationsConfig.createPrimaryAttackParticles(),
+      position: size,
+    );
     simpleAttackMelee(
       damage: damage,
       animationRight:
@@ -75,7 +78,7 @@ class KnightPlayerView extends SimplePlayer
 
   void playFireballAttackAnimation(double damage) {
     addParticle(
-      CharacterParticlesAnimations.fireballParticles(),
+      CharacterEffectsParticlesAnimationsConfig.createFireballAttackParticles(),
       position: size,
     );
     simpleAttackRange(
@@ -104,10 +107,11 @@ class KnightPlayerView extends SimplePlayer
 
   void _showDamageEffect(double damage) => showDamage(
     damage,
-    config: CharacterParticlesAnimations.kPlayerShowDamageTextStyle,
-    gravity: CharacterParticlesAnimations.kShowDamageGravity,
-    initVelocityVertical:
-        CharacterParticlesAnimations.kShowDamageInitVelocityVertical,
+    config:
+        CharacterEffectsParticlesAnimationsConfig.kPlayerShowDamageTextStyle,
+    gravity: CharacterEffectsParticlesAnimationsConfig.kShowDamageGravity,
+    initVelocityVertical: CharacterEffectsParticlesAnimationsConfig
+        .kShowDamageInitVelocityVertical,
   );
 
   void _showDeathEffect() => gameRef.add(

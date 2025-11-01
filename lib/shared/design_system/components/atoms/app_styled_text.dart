@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/app/presentation/design_system/constants/typography_constants.dart';
+import 'package:darkness_dungeon/shared/design_system/dd_design_system.dart';
 import 'package:flutter/material.dart';
 
 class AppStyledText extends StatelessWidget {
@@ -13,7 +13,7 @@ class AppStyledText extends StatelessWidget {
   const AppStyledText({
     super.key,
     required this.text,
-    this.fontSize = TypographyConstants.kBodyFontSize,
+    this.fontSize = DDDesignSystem.kTypographyBodyFontSize,
     this.color = _kStandardColor,
     this.textAlign = TextAlign.start,
   });
@@ -21,7 +21,7 @@ class AppStyledText extends StatelessWidget {
   const AppStyledText.large({
     super.key,
     required this.text,
-    this.fontSize = TypographyConstants.kDisplayFontSize,
+    this.fontSize = DDDesignSystem.kTypographyDisplayFontSize,
     this.color = _kStandardColor,
     this.textAlign = TextAlign.start,
   });
@@ -29,7 +29,7 @@ class AppStyledText extends StatelessWidget {
   const AppStyledText.small({
     super.key,
     required this.text,
-    this.fontSize = TypographyConstants.kSmallFontSize,
+    this.fontSize = DDDesignSystem.kTypographySmallFontSize,
     this.color = _kStandardColor,
     this.textAlign = TextAlign.start,
   });
@@ -40,7 +40,7 @@ class AppStyledText extends StatelessWidget {
       text,
       style: TextStyle(
         color: color,
-        fontFamily: TypographyConstants.kPrimaryFontFamily,
+        fontFamily: DDDesignSystem.kTypographyPrimaryFontFamily,
         fontSize: fontSize,
       ),
       textAlign: textAlign,

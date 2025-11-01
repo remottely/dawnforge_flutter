@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
 
-class CharacterParticlesAnimations {
+class CharacterEffectsParticlesAnimationsConfig {
   static const double kShowDamageGravity = 0.1;
   static const double kShowDamageInitVelocityVertical = -4.0;
 
@@ -26,7 +26,7 @@ class CharacterParticlesAnimations {
 
   static const double _kAttackParticlesRadius = 0.3;
 
-  static Particle swordParticles() => Particle.generate(
+  static Particle createPrimaryAttackParticles() => Particle.generate(
     count: 10,
     lifespan: 1,
     generator: (i) => AcceleratedParticle(
@@ -39,7 +39,7 @@ class CharacterParticlesAnimations {
     ),
   );
 
-  static Particle fireballParticles() => Particle.generate(
+  static Particle createFireballAttackParticles() => Particle.generate(
     count: 30,
     lifespan: 1,
     generator: (i) => AcceleratedParticle(

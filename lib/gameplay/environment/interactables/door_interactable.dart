@@ -6,7 +6,7 @@ import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/conversation/gameplay_conversation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_state_manager.dart';
-import 'package:darkness_dungeon/shared/i_dd_game_decoration.dart';
+import 'package:darkness_dungeon/shared/framework/dd_game_decoration.dart';
 
 final class _DoorInteractableConfig {
   _DoorInteractableConfig._();

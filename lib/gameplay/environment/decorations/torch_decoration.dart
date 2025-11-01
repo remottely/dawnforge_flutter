@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_effects_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
-import 'package:darkness_dungeon/shared/i_dd_game_decoration.dart';
+import 'package:darkness_dungeon/shared/framework/dd_game_decoration.dart';
 
 final class _TorchDecorationConfig {
   _TorchDecorationConfig._();
@@ -22,7 +22,7 @@ final class _TorchDecorationConfig {
     radius: GameplayTileConfig.kTileDimensionExtraLarge,
     blurBorder: GameplayTileConfig.kTileDimensionStandard,
     pulseVariation: 0.1,
-    color: CharacterParticlesAnimations.fLightingConfigColor,
+    color: CharacterEffectsParticlesAnimationsConfig.fLightingConfigColor,
   );
 }
 

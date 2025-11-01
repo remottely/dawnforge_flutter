@@ -1,15 +1,14 @@
 import 'dart:async' as async;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/app/design_system/dd_design_system_config.dart';
-import 'package:darkness_dungeon/app/presentation/design_system/components/atoms/app_radio_button.dart';
-import 'package:darkness_dungeon/app/presentation/design_system/constants/typography_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/gameplay.dart';
 import 'package:darkness_dungeon/shared/components/dd_sprite_animation_widget.dart';
 import 'package:darkness_dungeon/shared/components/dd_sprite_widget.dart';
-import 'package:darkness_dungeon/shared/managers/game_settings_manager.dart';
+import 'package:darkness_dungeon/shared/design_system/components/atoms/app_radio_button.dart';
+import 'package:darkness_dungeon/shared/design_system/dd_design_system.dart';
+import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
 import 'package:flame_splash_screen/flame_splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -51,9 +50,9 @@ abstract class MenuScreenViewModel extends State<MenuScreen> {
     _initializeCharacterAnimation();
   }
 
-  void _onControlMethodChanged(bool selectedValue) {
+  void _onControlMethodChanged(InputActionsType selectedInput) {
     setState(() {
-      GameSettingsManager.instance.setInputSelected(selectedValue);
+      SettingsManager.instance.setInputSelected(selectedInput);
     });
   }
 
@@ -110,7 +109,7 @@ class _MenuScreenState extends MenuScreenViewModel {
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            spacing: DDDesignSystemConfig.kSpacingLarge,
+            spacing: DDDesignSystem.kSpacingLarge,
             children: <Widget>[
               const _Title(),
               if (_characterSpriteAnimations.isNotEmpty) ...[
@@ -121,8 +120,11 @@ class _MenuScreenState extends MenuScreenViewModel {
               ],
               _StartButton(onPressed: _navigateToGameplayScreen),
               _Controls(onControlMethodChanged: _onControlMethodChanged),
-              if (!GameSettingsManager.instance.isJoystickInputSelected)
-                const _KeyboardTip(),
+              switch (SettingsManager.instance.vIsJoystickInputSelected) {
+                InputActionsType.joystick =>
+                  const SizedBox.shrink(), // TODO(Kevin): Replace with joystick tip widget
+                InputActionsType.keyboard => _KeyboardTip(),
+              },
             ],
           ),
         ),
@@ -148,8 +150,8 @@ class _Title extends StatelessWidget {
       'Darkness Dungeon',
       style: TextStyle(
         color: Colors.white,
-        fontFamily: TypographyConstants.kPrimaryFontFamily,
-        fontSize: TypographyConstants.kDisplayFontSize,
+        fontFamily: DDDesignSystem.kTypographyPrimaryFontFamily,
+        fontSize: DDDesignSystem.kTypographyDisplayFontSize,
       ),
     );
   }
@@ -194,8 +196,8 @@ class _StartButton extends StatelessWidget {
             GameplayStringsLocation.instance.getString('play_cap'),
             style: const TextStyle(
               color: Colors.white,
-              fontFamily: TypographyConstants.kPrimaryFontFamily,
-              fontSize: TypographyConstants.kCaptionFontSize,
+              fontFamily: DDDesignSystem.kTypographyPrimaryFontFamily,
+              fontSize: DDDesignSystem.kTypographyCaptionFontSize,
             ),
           ),
         ),
@@ -205,7 +207,7 @@ class _StartButton extends StatelessWidget {
 }
 
 class _Controls extends StatelessWidget {
-  final void Function(bool) onControlMethodChanged;
+  final void Function(InputActionsType) onControlMethodChanged;
 
   const _Controls({required this.onControlMethodChanged});
 
@@ -213,17 +215,17 @@ class _Controls extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      spacing: DDDesignSystemConfig.kSpacingSmall,
+      spacing: DDDesignSystem.kSpacingExtraSmall,
       children: [
-        AppRadioButton<bool>(
-          value: false,
+        AppRadioButton<InputActionsType>(
+          value: InputActionsType.keyboard,
           label: 'Keyboard',
-          group: GameSettingsManager.instance.isJoystickInputSelected,
+          group: SettingsManager.instance.vIsJoystickInputSelected,
           onChange: onControlMethodChanged,
         ),
-        AppRadioButton<bool>(
-          value: true,
-          group: GameSettingsManager.instance.isJoystickInputSelected,
+        AppRadioButton<InputActionsType>(
+          value: InputActionsType.joystick,
+          group: SettingsManager.instance.vIsJoystickInputSelected,
           label: 'Joystick',
           onChange: onControlMethodChanged,
         ),
@@ -266,8 +268,8 @@ class _Footer extends StatelessWidget {
                     GameplayStringsLocation.instance.getString('powered_by'),
                     style: const TextStyle(
                       color: Colors.white,
-                      fontFamily: TypographyConstants.kPrimaryFontFamily,
-                      fontSize: TypographyConstants.kTinyFontSize,
+                      fontFamily: DDDesignSystem.kTypographyPrimaryFontFamily,
+                      fontSize: DDDesignSystem.kTypographyTinyFontSize,
                     ),
                   ),
                   InkWell(
@@ -279,8 +281,8 @@ class _Footer extends StatelessWidget {
                       style: TextStyle(
                         decoration: TextDecoration.underline,
                         color: Colors.blue,
-                        fontFamily: TypographyConstants.kPrimaryFontFamily,
-                        fontSize: TypographyConstants.kTinyFontSize,
+                        fontFamily: DDDesignSystem.kTypographyPrimaryFontFamily,
+                        fontSize: DDDesignSystem.kTypographyTinyFontSize,
                       ),
                     ),
                   ),
@@ -295,8 +297,8 @@ class _Footer extends StatelessWidget {
                     GameplayStringsLocation.instance.getString('built_with'),
                     style: const TextStyle(
                       color: Colors.white,
-                      fontFamily: TypographyConstants.kPrimaryFontFamily,
-                      fontSize: TypographyConstants.kTinyFontSize,
+                      fontFamily: DDDesignSystem.kTypographyPrimaryFontFamily,
+                      fontSize: DDDesignSystem.kTypographyTinyFontSize,
                     ),
                   ),
                   InkWell(
@@ -308,8 +310,8 @@ class _Footer extends StatelessWidget {
                       style: TextStyle(
                         decoration: TextDecoration.underline,
                         color: Colors.blue,
-                        fontFamily: TypographyConstants.kPrimaryFontFamily,
-                        fontSize: TypographyConstants.kTinyFontSize,
+                        fontFamily: DDDesignSystem.kTypographyPrimaryFontFamily,
+                        fontSize: DDDesignSystem.kTypographyTinyFontSize,
                       ),
                     ),
                   ),

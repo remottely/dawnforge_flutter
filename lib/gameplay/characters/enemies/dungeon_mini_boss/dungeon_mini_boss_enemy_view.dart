@@ -1,10 +1,10 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_basic_attack_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_effect_sprite_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_effects_sprite_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_effects_particles_animations_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_primary_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
 
@@ -104,10 +104,11 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
   void showDamageEffect(double damage) {
     showDamage(
       damage,
-      config: CharacterParticlesAnimations.kEnemyShowDamageTextStyle,
-      gravity: CharacterParticlesAnimations.kShowDamageGravity,
-      initVelocityVertical:
-          CharacterParticlesAnimations.kShowDamageInitVelocityVertical,
+      config:
+          CharacterEffectsParticlesAnimationsConfig.kEnemyShowDamageTextStyle,
+      gravity: CharacterEffectsParticlesAnimationsConfig.kShowDamageGravity,
+      initVelocityVertical: CharacterEffectsParticlesAnimationsConfig
+          .kShowDamageInitVelocityVertical,
     );
   }
 
@@ -115,7 +116,7 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
     gameRef.add(
       AnimatedGameObject(
         animation:
-            CharacterEffectSpriteAnimations.characterExplosionSmokeRight5(),
+            CharacterEffectsSpriteAnimationsConfig.characterExplosionSmokeRight5(),
         position: position,
         size: GameplayTileConfig.fTileSizeStandard,
         loop: false,

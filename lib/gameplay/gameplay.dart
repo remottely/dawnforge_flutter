@@ -1,17 +1,17 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_camera_utils.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_player_input_actions_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_game_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/gameplay_hud.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/player_input_actions/gameplay_player_input_actions_config.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/color_helper.dart';
 import 'package:darkness_dungeon/gameplay/environment/sensors/map_transition_sensor.dart';
-import 'package:darkness_dungeon/shared/managers/game_settings_manager.dart';
+import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
 import 'package:flutter/material.dart';
 
 class Gameplay extends StatefulWidget {
@@ -85,7 +85,7 @@ class _GameplayState extends GameplayViewmodel {
         final knightPlayer = _buildKnightPlayer(playerPosition);
 
         final playerInput = GameplayPlayerInputActionsConfig.createPlayerInput(
-          GameSettingsManager.instance.isJoystickInputSelected,
+          SettingsManager.instance.vIsJoystickInputSelected,
         );
 
         return Material(

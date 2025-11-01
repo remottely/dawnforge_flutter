@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_particles_animations.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_effects_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
@@ -12,7 +12,7 @@ final class CharacterFireballAttackConfig {
   static final LightingConfig fLightingConfig = LightingConfig(
     radius: GameplayTileConfig.kTileDimensionSmall,
     blurBorder: GameplayTileConfig.kTileDimensionSmall,
-    color: CharacterParticlesAnimations.fLightingConfigColor,
+    color: CharacterEffectsParticlesAnimationsConfig.fLightingConfigColor,
   );
 
   static final Vector2 fComponentSize = GameplayTileConfig.fTileSizeSmall;

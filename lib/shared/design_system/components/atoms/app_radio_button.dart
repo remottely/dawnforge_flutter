@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/app/design_system/dd_design_system_config.dart';
+import 'package:darkness_dungeon/shared/design_system/dd_design_system.dart';
 import 'package:flutter/material.dart';
 
 class AppRadioButton<T> extends StatelessWidget {
@@ -32,7 +32,7 @@ class AppRadioButton<T> extends StatelessWidget {
         children: [
           _buildRadioIndicator(),
           if (label != null) ...[
-            const SizedBox(width: DDDesignSystemConfig.kSpacingSmall),
+            const SizedBox(width: DDDesignSystem.kSpacingExtraSmall),
             _buildLabel(),
           ],
         ],

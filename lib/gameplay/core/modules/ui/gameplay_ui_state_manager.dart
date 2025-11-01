@@ -1,11 +1,12 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/app/presentation/design_system/components/atoms/app_styled_button.dart';
-import 'package:darkness_dungeon/app/presentation/design_system/components/atoms/app_styled_dialog.dart';
-import 'package:darkness_dungeon/app/presentation/design_system/components/atoms/app_styled_text.dart';
+import 'package:darkness_dungeon/shared/design_system/dd_design_system.dart';
+import 'package:darkness_dungeon/shared/design_system/components/atoms/app_styled_dialog.dart';
+import 'package:darkness_dungeon/shared/design_system/components/atoms/app_styled_text.dart';
+import 'package:darkness_dungeon/shared/design_system/components/atoms/dd_button.dart';
 import 'package:darkness_dungeon/app/presentation/screens/menu_screen.dart';
+import 'package:darkness_dungeon/gameplay/core/config/gameplay_player_input_actions_config.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_game_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/player_input_actions/gameplay_player_input_actions_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,9 +32,9 @@ final class GameplayUIStateManager {
               GameplayUIConfig.kGameOverAsset,
               height: GameplayUIConfig.kGameOverImageHeight,
             ),
-            const SizedBox(height: GameplayUIConfig.kStandardSpacing),
-            AppStyledButton(
-              text: GameplayStringsLocation.instance.getString(
+            const SizedBox(height: DDDesignSystem.kSpacingExtraSmall),
+            DDButton.text(
+              labelText: GameplayStringsLocation.instance.getString(
                 'play_again_cap',
               ),
               onPressed: () => onRetryPressed(dialogContext),
@@ -56,19 +57,19 @@ final class GameplayUIStateManager {
                 'congratulations',
               ),
             ),
-            const SizedBox(height: GameplayUIConfig.kStandardSpacing),
+            const SizedBox(height: DDDesignSystem.kSpacingExtraSmall),
             Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: GameplayUIConfig.kHorizontalPadding,
+                horizontal: GameplayUIConfig.kHorizontalSpacing,
               ),
               child: AppStyledText.small(
                 text: GameplayStringsLocation.instance.getString('thanks'),
                 textAlign: TextAlign.center,
               ),
             ),
-            const SizedBox(height: GameplayUIConfig.kLargeSpacing),
-            AppStyledButton.primary(
-              text: "OK",
+            const SizedBox(height: DDDesignSystem.kSpacingExtraLarge),
+            DDButton.elevated(
+              labelText: "OKay",
               onPressed: () => _navigateToMainMenu(context),
             ),
           ],

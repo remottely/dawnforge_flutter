@@ -1,4 +1,5 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
@@ -6,8 +7,8 @@ final class GameplayPlayerInputActionsConfig {
   GameplayPlayerInputActionsConfig._();
 
   /// Identifiers
-  static const String kJoystickPrimaryAttackId = 'primaryAttackId';
-  static const String kJoystickFireballAttackId = 'fireballAttackId';
+  static const String kJoystickPrimaryAttackId = 'joystickPrimaryAttackId';
+  static const String kJoystickFireballAttackId = 'joystickFireballAttackId';
   static const LogicalKeyboardKey kKeyboardPrimaryAttack =
       LogicalKeyboardKey.space;
   static const LogicalKeyboardKey kKeyboardFireballAttack =
@@ -31,8 +32,14 @@ final class GameplayPlayerInputActionsConfig {
   ];
 
   /// Factories
-  static PlayerController createPlayerInput(bool isJoystickInputSelected) =>
-      isJoystickInputSelected ? _createJoystickInput() : _createKeyboardInput();
+  static PlayerController createPlayerInput(
+    InputActionsType isJoystickInputSelected,
+  ) {
+    return switch (SettingsManager.instance.vIsJoystickInputSelected) {
+      InputActionsType.keyboard => _createKeyboardInput(),
+      InputActionsType.joystick => _createJoystickInput(),
+    };
+  }
 
   static PlayerController _createJoystickInput() {
     return Joystick(
