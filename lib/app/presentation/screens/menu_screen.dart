@@ -9,7 +9,7 @@ import 'package:darkness_dungeon/shared/components/dd_sprite_widget.dart';
 import 'package:darkness_dungeon/shared/design_system/components/atoms/app_radio_button.dart';
 import 'package:darkness_dungeon/shared/design_system/dd_design_system.dart';
 import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
-import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
+import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 import 'package:flame_splash_screen/flame_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -30,11 +30,11 @@ abstract class MenuScreenViewModel extends State<MenuScreen> {
   late async.Timer _characterAnimationTimer;
 
   late final List<Future<SpriteAnimation>> _characterSpriteAnimations = [
-    UISpriteAnimations.knightPlayerIdleRight6(),
-    UISpriteAnimations.goblinEnemyIdleRight6(),
-    UISpriteAnimations.impEnemyIdleRight4(),
-    UISpriteAnimations.dungeonMiniBossEnemyIdleRight4(),
-    UISpriteAnimations.dungeonBossEnemyIdleRight4(),
+    UISpriteAnimationsConfig.loadKnightPlayerIdleRight6(),
+    UISpriteAnimationsConfig.loadGoblinEnemyIdleRight6(),
+    UISpriteAnimationsConfig.loadImpEnemyIdleRight4(),
+    UISpriteAnimationsConfig.loadDungeonMiniBossEnemyIdleRight4(),
+    UISpriteAnimationsConfig.loadDungeonBossEnemyIdleRight4(),
   ];
 
   @override
@@ -239,7 +239,10 @@ class _KeyboardTip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DDSpriteWidget.extraLarge(sprite: Sprite.load('keyboard_tip.png'));
+    final fLoadSprite = Sprite.load(
+      'keyboard_tip.png',
+    ); // TODO(Kevin): move to a config layer
+    return DDSpriteWidget.extraLarge(sprite: fLoadSprite);
   }
 }
 

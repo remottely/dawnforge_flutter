@@ -7,7 +7,7 @@ class ImpEnemyView extends SimpleEnemy with BlockMovementCollision, UseLifeBar {
 
   ImpEnemyView(Vector2 position)
     : super(
-        animation: ImpEnemyConfig.fDirectionalSpriteAnimation,
+        animation: ImpEnemyConfig.fLoadDirectionalSpriteAnimation,
         position: position,
         size: ImpEnemyConfig.fComponentSize,
         speed: ImpEnemyConfig.kSpeed,

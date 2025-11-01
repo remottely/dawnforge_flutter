@@ -11,7 +11,6 @@ import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_manager.
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/color_helper.dart';
 import 'package:darkness_dungeon/gameplay/environment/sensors/map_transition_sensor.dart';
-import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
 import 'package:flutter/material.dart';
 
 class Gameplay extends StatefulWidget {
@@ -84,9 +83,8 @@ class _GameplayState extends GameplayViewmodel {
             GameplayTileConfig.kTileDimensionStandard;
         final knightPlayer = _buildKnightPlayer(playerPosition);
 
-        final playerInput = GameplayPlayerInputActionsConfig.createPlayerInput(
-          SettingsManager.instance.vIsJoystickInputSelected,
-        );
+        final playerInput =
+            GameplayPlayerInputActionsConfig.createPlayerInput();
 
         return Material(
           color: Colors.transparent,

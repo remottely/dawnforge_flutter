@@ -20,7 +20,7 @@ final class CharacterFireballAttackConfig {
   static RectangleHitbox createHitbox() =>
       RectangleHitbox(size: fComponentSize);
 
-  static Future<SpriteAnimation> loadExecutionAnimation() =>
+  static Future<SpriteAnimation> createExecutionAnimation() =>
       SpriteAnimation.load(
         'gameplay/characters/shared/character_fireball_attack_right_3.png',
         GameplaySpriteAnimationConfig.createStandardData(
@@ -29,13 +29,14 @@ final class CharacterFireballAttackConfig {
         ),
       );
 
-  static Future<SpriteAnimation> loadDestroyAnimation() => SpriteAnimation.load(
-    'gameplay/characters/shared/character_fireball_explosion_right_6.png',
-    GameplaySpriteAnimationConfig.createStandardData(
-      amount: 6,
-      textureSize: GameplayTileConfig.fTileSizeExtraLarge,
-    ),
-  );
+  static Future<SpriteAnimation> createDestroyAnimation() =>
+      SpriteAnimation.load(
+        'gameplay/characters/shared/character_fireball_explosion_right_6.png',
+        GameplaySpriteAnimationConfig.createStandardData(
+          amount: 6,
+          textureSize: GameplayTileConfig.fTileSizeExtraLarge,
+        ),
+      );
 
   static void playExecutionAudio() =>
       GameplayAudioManager.instance.playFireballAttackSfx();

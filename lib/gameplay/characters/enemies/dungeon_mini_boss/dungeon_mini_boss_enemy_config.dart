@@ -2,7 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
-import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
+import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 
 final class DungeonMiniBossEnemyConfig {
   DungeonMiniBossEnemyConfig._();
@@ -25,7 +25,7 @@ final class DungeonMiniBossEnemyConfig {
   );
 
   static final SimpleDirectionAnimation
-  fDirectionalSpriteAnimation = SimpleDirectionAnimation(
+  fLoadDirectionalSpriteAnimation = SimpleDirectionAnimation(
     idleLeft: SpriteAnimation.load(
       'gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_idle_left_4.png',
       GameplaySpriteAnimationConfig.createStandardData(
@@ -33,7 +33,7 @@ final class DungeonMiniBossEnemyConfig {
         textureSize: fTextureSize,
       ),
     ),
-    idleRight: UISpriteAnimations.dungeonMiniBossEnemyIdleRight4(),
+    idleRight: UISpriteAnimationsConfig.loadDungeonMiniBossEnemyIdleRight4(),
     runLeft: SpriteAnimation.load(
       'gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_run_left_4.png',
       GameplaySpriteAnimationConfig.createStandardData(

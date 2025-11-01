@@ -15,7 +15,9 @@ class PlayerVitalStatsHUD extends InterfaceComponent {
           GameplayHUDConfig.kHUDPadding,
           GameplayHUDConfig.kHUDPadding,
         ),
-        spriteUnselected: Sprite.load(GameplayHUDConfig.kHealthUIAsset),
+        spriteUnselected: Sprite.load(
+          GameplayHUDConfig.kHealthUIAsset,
+        ), // TODO(Kevin): move to a config layer
         size: Vector2(
           GameplayHUDConfig.kHUDWidth,
           GameplayHUDConfig.kHUDHeight,

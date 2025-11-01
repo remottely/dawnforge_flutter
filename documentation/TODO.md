@@ -1,5 +1,7 @@
 fix:
 
+- win e die do not show in same time. how to resolve this issue? do to every enemy "enemy.idle"?
+
 - organize all project exports in one file
 
 - map_1.json:

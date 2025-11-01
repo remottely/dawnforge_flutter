@@ -2,9 +2,9 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_effects_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_manager.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_effects_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_primary_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/shared/framework/dd_game_decoration.dart';
@@ -17,7 +17,7 @@ class KnightPlayerView extends SimplePlayer
 
   KnightPlayerView(Vector2 position)
     : super(
-        animation: KnightPlayerConfig.fDirectionalSpriteAnimation,
+        animation: KnightPlayerConfig.fLoadDirectionalSpriteAnimation,
         size: KnightPlayerConfig.fComponentSize,
         position: position,
         life: KnightPlayerConfig.kStandardLife,
@@ -71,7 +71,7 @@ class KnightPlayerView extends SimplePlayer
     simpleAttackMelee(
       damage: damage,
       animationRight:
-          CharacterPrimaryAttackConfig.loadPlayerExecutionAnimation(),
+          CharacterPrimaryAttackConfig.createPlayerExecutionAnimation(),
       size: KnightPlayerConfig.fComponentSize,
     );
   }
@@ -82,8 +82,8 @@ class KnightPlayerView extends SimplePlayer
       position: size,
     );
     simpleAttackRange(
-      animationRight: CharacterFireballAttackConfig.loadExecutionAnimation(),
-      animationDestroy: CharacterFireballAttackConfig.loadDestroyAnimation(),
+      animationRight: CharacterFireballAttackConfig.createExecutionAnimation(),
+      animationDestroy: CharacterFireballAttackConfig.createDestroyAnimation(),
       size: CharacterFireballAttackConfig.fComponentSize,
       damage: damage,
       speed: speed * CharacterFireballAttackConfig.kSpeedMultiplier,

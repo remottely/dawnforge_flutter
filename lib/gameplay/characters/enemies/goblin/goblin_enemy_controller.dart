@@ -2,8 +2,8 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_effects_sprite_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_effects_particles_animations_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_effects_sprite_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_primary_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
@@ -28,7 +28,7 @@ class GoblinEnemyController {
       damage: GoblinEnemyConfig.kAttackDamage,
       interval: GoblinEnemyConfig.kAttackInterval,
       animationRight:
-          CharacterPrimaryAttackConfig.loadEnemyExecutionAnimation(),
+          CharacterPrimaryAttackConfig.createEnemyExecutionAnimation(),
       execute: () {
         GameplayAudioManager.instance.playEnemyPrimaryAttackSfx();
       },
@@ -50,7 +50,7 @@ class GoblinEnemyController {
     _view.gameRef.add(
       AnimatedGameObject(
         animation:
-            CharacterEffectsSpriteAnimationsConfig.characterExplosionSmokeRight5(),
+            CharacterEffectsSpriteAnimationsConfig.createExplosionSmokeRight5(),
         position: _view.position,
         size: GameplayTileConfig.fTileSizeStandard,
         loop: false,

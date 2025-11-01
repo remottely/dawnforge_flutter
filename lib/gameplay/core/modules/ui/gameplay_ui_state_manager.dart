@@ -1,13 +1,13 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/shared/design_system/dd_design_system.dart';
-import 'package:darkness_dungeon/shared/design_system/components/atoms/app_styled_dialog.dart';
-import 'package:darkness_dungeon/shared/design_system/components/atoms/app_styled_text.dart';
-import 'package:darkness_dungeon/shared/design_system/components/atoms/dd_button.dart';
 import 'package:darkness_dungeon/app/presentation/screens/menu_screen.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_player_input_actions_config.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_game_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_config.dart';
+import 'package:darkness_dungeon/shared/design_system/components/atoms/app_styled_dialog.dart';
+import 'package:darkness_dungeon/shared/design_system/components/atoms/app_styled_text.dart';
+import 'package:darkness_dungeon/shared/design_system/components/atoms/dd_button.dart';
+import 'package:darkness_dungeon/shared/design_system/dd_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -97,7 +97,7 @@ final class GameplayUIStateManager {
       onClose: onClose,
       logicalKeyboardKeysToNext:
           logicalKeyboardKeysToNext ??
-          [GameplayPlayerInputActionsConfig.kKeyboardPrimaryAttack],
+          [GameplayKeyboardConfig.kKeyboardPrimaryAttack],
     );
   }
 

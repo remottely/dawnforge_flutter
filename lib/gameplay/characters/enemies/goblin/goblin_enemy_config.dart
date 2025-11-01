@@ -2,7 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
-import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
+import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 
 final class GoblinEnemyConfig {
   GoblinEnemyConfig._();
@@ -19,7 +19,7 @@ final class GoblinEnemyConfig {
     GameplayTileConfig.kTileDimensionStandard * 0.8,
   );
 
-  static final SimpleDirectionAnimation fDirectionalSpriteAnimation =
+  static final SimpleDirectionAnimation fLoadDirectionalSpriteAnimation =
       SimpleDirectionAnimation(
         idleLeft: SpriteAnimation.load(
           'gameplay/characters/enemies/goblin/goblin_enemy_idle_left_6.png',
@@ -28,7 +28,7 @@ final class GoblinEnemyConfig {
             textureSize: fTextureSize,
           ),
         ),
-        idleRight: UISpriteAnimations.goblinEnemyIdleRight6(),
+        idleRight: UISpriteAnimationsConfig.loadGoblinEnemyIdleRight6(),
         runLeft: SpriteAnimation.load(
           'gameplay/characters/enemies/goblin/goblin_enemy_run_left_6.png',
           GameplaySpriteAnimationConfig.createStandardData(

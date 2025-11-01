@@ -3,7 +3,7 @@ import 'package:darkness_dungeon/gameplay/characters/shared/character_config.dar
 import 'package:darkness_dungeon/gameplay/characters/shared/character_effects_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
-import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
+import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 
 final class KnightPlayerConfig {
   KnightPlayerConfig._();
@@ -30,7 +30,7 @@ final class KnightPlayerConfig {
   static final Vector2 fTextureSize = GameplayTileConfig.fTileSizeStandard;
   static final Vector2 fComponentSize = fTextureSize;
 
-  static final SimpleDirectionAnimation fDirectionalSpriteAnimation =
+  static final SimpleDirectionAnimation fLoadDirectionalSpriteAnimation =
       SimpleDirectionAnimation(
         idleLeft: SpriteAnimation.load(
           'gameplay/characters/player/knight/knight_player_idle_left_6.png',
@@ -39,7 +39,7 @@ final class KnightPlayerConfig {
             textureSize: fTextureSize,
           ),
         ),
-        idleRight: UISpriteAnimations.knightPlayerIdleRight6(),
+        idleRight: UISpriteAnimationsConfig.loadKnightPlayerIdleRight6(),
         runLeft: SpriteAnimation.load(
           'gameplay/characters/player/knight/knight_player_run_left_6.png',
           GameplaySpriteAnimationConfig.createStandardData(

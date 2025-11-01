@@ -6,47 +6,60 @@ import 'package:flutter/widgets.dart';
 final class GameplayPlayerInputActionsConfig {
   GameplayPlayerInputActionsConfig._();
 
+  /// Factories
+  static PlayerController createPlayerInput() {
+    return switch (SettingsManager.instance.vIsJoystickInputSelected) {
+      InputActionsType.keyboard =>
+        GameplayKeyboardConfig._createKeyboardInput(),
+      InputActionsType.joystick =>
+        GameplayJoystickConfig._createJoystickInput(),
+    };
+  }
+}
+
+final class GameplayJoystickConfig {
+  GameplayJoystickConfig._();
+
+  /// Assets
+  static const String _kBaseAsset = 'joystick/';
+  static const String _kBackgroundAsset =
+      '${_kBaseAsset}joystick_background.png';
+  static const String _kKnobAsset = '${_kBaseAsset}joystick_knob.png';
+  static const String _kAttackAsset = '${_kBaseAsset}joystick_attack.png';
+  static const String _kAttackPressedAsset =
+      '${_kBaseAsset}joystick_attack_selected.png';
+  static const String _kRangeAttackAsset =
+      '${_kBaseAsset}joystick_attack_range.png';
+  static const String _kRangeAttackPressedAsset =
+      '${_kBaseAsset}joystick_attack_range_selected.png';
+
+  /// Asset Loaders
+  static Future<Sprite> _loadBackground() => Sprite.load(_kBackgroundAsset);
+  static Future<Sprite> _loadKnob() => Sprite.load(_kKnobAsset);
+  static Future<Sprite> _loadAttack() => Sprite.load(_kAttackAsset);
+  static Future<Sprite> _loadAttackPressed() =>
+      Sprite.load(_kAttackPressedAsset);
+  static Future<Sprite> _loadRangeAttack() => Sprite.load(_kRangeAttackAsset);
+  static Future<Sprite> _loadRangeAttackPressed() =>
+      Sprite.load(_kRangeAttackPressedAsset);
+
   /// Identifiers
   static const String kJoystickPrimaryAttackId = 'joystickPrimaryAttackId';
   static const String kJoystickFireballAttackId = 'joystickFireballAttackId';
-  static const LogicalKeyboardKey kKeyboardPrimaryAttack =
-      LogicalKeyboardKey.space;
-  static const LogicalKeyboardKey kKeyboardFireballAttack =
-      LogicalKeyboardKey.keyZ;
 
-  /// Joystick
-  static const double kJoystickComponentSize = 100.0;
+  /// Factories
+  static const double _kJoystickComponentSize = 100.0;
   static const double kActionButtonSize = 80.0;
   static const double kActionButtonMarginBottom = 50.0;
   static const double kPrimaryActionMarginRight = 50.0;
   static const double kSecondaryActionMarginRight = 160.0;
 
-  /// Keyboard
-  static final List<KeyboardDirectionalKeys> fKeyboardDirectionalKeys = [
-    KeyboardDirectionalKeys.wasd(),
-    KeyboardDirectionalKeys.arrows(),
-  ];
-  static final List<LogicalKeyboardKey> fKeyboardAcceptedKeys = [
-    kKeyboardPrimaryAttack,
-    kKeyboardFireballAttack,
-  ];
-
-  /// Factories
-  static PlayerController createPlayerInput(
-    InputActionsType isJoystickInputSelected,
-  ) {
-    return switch (SettingsManager.instance.vIsJoystickInputSelected) {
-      InputActionsType.keyboard => _createKeyboardInput(),
-      InputActionsType.joystick => _createJoystickInput(),
-    };
-  }
-
   static PlayerController _createJoystickInput() {
     return Joystick(
       directional: JoystickDirectional(
-        spriteBackgroundDirectional: Sprite.load('joystick_background.png'),
-        spriteKnobDirectional: Sprite.load('joystick_knob.png'),
-        size: kJoystickComponentSize,
+        spriteBackgroundDirectional: _loadBackground(),
+        spriteKnobDirectional: _loadKnob(),
+        size: _kJoystickComponentSize,
         isFixed: false,
       ),
       actions: [_createPrimaryAttackAction(), _createRangedAttackAction()],
@@ -56,8 +69,8 @@ final class GameplayPlayerInputActionsConfig {
   static JoystickAction _createPrimaryAttackAction() {
     return JoystickAction(
       actionId: kJoystickPrimaryAttackId,
-      sprite: Sprite.load('joystick_attack.png'),
-      spritePressed: Sprite.load('joystick_attack_selected.png'),
+      sprite: _loadAttack(),
+      spritePressed: _loadAttackPressed(),
       size: kActionButtonSize,
       margin: const EdgeInsets.only(
         bottom: kActionButtonMarginBottom,
@@ -69,8 +82,8 @@ final class GameplayPlayerInputActionsConfig {
   static JoystickAction _createRangedAttackAction() {
     return JoystickAction(
       actionId: kJoystickFireballAttackId,
-      sprite: Sprite.load('joystick_attack_range.png'),
-      spritePressed: Sprite.load('joystick_attack_range_selected.png'),
+      sprite: _loadRangeAttack(),
+      spritePressed: _loadRangeAttackPressed(),
       size: kActionButtonSize,
       margin: const EdgeInsets.only(
         bottom: kActionButtonMarginBottom,
@@ -78,6 +91,25 @@ final class GameplayPlayerInputActionsConfig {
       ),
     );
   }
+}
+
+final class GameplayKeyboardConfig {
+  GameplayKeyboardConfig._();
+
+  /// Keyboard
+  static const LogicalKeyboardKey kKeyboardPrimaryAttack =
+      LogicalKeyboardKey.space;
+  static const LogicalKeyboardKey kKeyboardFireballAttack =
+      LogicalKeyboardKey.keyZ;
+
+  static final List<KeyboardDirectionalKeys> fKeyboardDirectionalKeys = [
+    KeyboardDirectionalKeys.wasd(),
+    KeyboardDirectionalKeys.arrows(),
+  ];
+  static final List<LogicalKeyboardKey> fKeyboardAcceptedKeys = [
+    kKeyboardPrimaryAttack,
+    kKeyboardFireballAttack,
+  ];
 
   static PlayerController _createKeyboardInput() {
     return Keyboard(

@@ -3,8 +3,8 @@ import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_conf
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_player_input_actions_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_state_manager.dart';
 import 'package:flutter/services.dart';
 
@@ -17,7 +17,7 @@ class WizardNpcView extends SimpleNpc with KeyboardEventListener {
 
   WizardNpcView(Vector2 position)
     : super(
-        animation: WizardNpcConfig.fDirectionalSpriteAnimation,
+        animation: WizardNpcConfig.fLoadDirectionalSpriteAnimation,
         position: position,
         size: WizardNpcConfig.fComponentSize,
       );
@@ -60,8 +60,7 @@ class WizardNpcView extends SimpleNpc with KeyboardEventListener {
   bool onKeyboard(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     if (_playerIsNearby &&
         event is KeyDownEvent &&
-        event.logicalKey ==
-            GameplayPlayerInputActionsConfig.kKeyboardPrimaryAttack) {
+        event.logicalKey == GameplayKeyboardConfig.kKeyboardPrimaryAttack) {
       _controller.onPlayerDetected(gameRef.player!, interactionRequested: true);
 
       return true;
@@ -80,7 +79,7 @@ class WizardNpcView extends SimpleNpc with KeyboardEventListener {
       onChangeTalk: _controller.onConversationChanged,
       onFinish: _controller.onConversationFinished,
       logicalKeyboardKeysToNext: [
-        GameplayPlayerInputActionsConfig.kKeyboardPrimaryAttack,
+        GameplayKeyboardConfig.kKeyboardPrimaryAttack,
       ],
     );
   }

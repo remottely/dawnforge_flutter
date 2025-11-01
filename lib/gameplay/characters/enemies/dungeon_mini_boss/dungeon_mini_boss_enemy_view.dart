@@ -1,9 +1,9 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_effects_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_effects_sprite_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_effects_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_primary_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
@@ -17,7 +17,7 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
 
   DungeonMiniBossEnemyView(Vector2 position)
     : super(
-        animation: DungeonMiniBossEnemyConfig.fDirectionalSpriteAnimation,
+        animation: DungeonMiniBossEnemyConfig.fLoadDirectionalSpriteAnimation,
         position: position,
         size: DungeonMiniBossEnemyConfig.fComponentSize,
         speed: DungeonMiniBossEnemyConfig.kSpeed,
@@ -83,14 +83,14 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
           DungeonMiniBossEnemyConfig.kPrimaryDamageReduction,
       interval: DungeonMiniBossEnemyConfig.kPrimaryAttackInterval,
       animationRight:
-          CharacterPrimaryAttackConfig.loadEnemyExecutionAnimation(),
+          CharacterPrimaryAttackConfig.createEnemyExecutionAnimation(),
     );
   }
 
   void playFireballAttackAnimation() {
     simpleAttackRange(
-      animation: CharacterFireballAttackConfig.loadExecutionAnimation(),
-      animationDestroy: CharacterFireballAttackConfig.loadDestroyAnimation(),
+      animation: CharacterFireballAttackConfig.createExecutionAnimation(),
+      animationDestroy: CharacterFireballAttackConfig.createDestroyAnimation(),
       size: CharacterFireballAttackConfig.fComponentSize,
       damage: _primaryAttackDamage,
       speed: speed * CharacterFireballAttackConfig.kSpeedMultiplier,
@@ -116,7 +116,7 @@ class DungeonMiniBossEnemyView extends SimpleEnemy
     gameRef.add(
       AnimatedGameObject(
         animation:
-            CharacterEffectsSpriteAnimationsConfig.characterExplosionSmokeRight5(),
+            CharacterEffectsSpriteAnimationsConfig.createExplosionSmokeRight5(),
         position: position,
         size: GameplayTileConfig.fTileSizeStandard,
         loop: false,

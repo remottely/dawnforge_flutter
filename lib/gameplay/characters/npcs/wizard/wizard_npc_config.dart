@@ -2,7 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/conversation/gameplay_conversation_config.dart';
-import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
+import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 
 final class WizardNpcConfig {
   WizardNpcConfig._();
@@ -15,10 +15,10 @@ final class WizardNpcConfig {
     GameplayTileConfig.kTileDimensionStandard * 1.0,
   );
 
-  static final SimpleDirectionAnimation fDirectionalSpriteAnimation =
+  static final SimpleDirectionAnimation fLoadDirectionalSpriteAnimation =
       SimpleDirectionAnimation(
-        idleRight: UISpriteAnimations.wizardNpcIdleLeft4(),
-        runRight: UISpriteAnimations.wizardNpcIdleLeft4(),
+        idleRight: UISpriteAnimationsConfig.loadWizardNpcIdleLeft4(),
+        runRight: UISpriteAnimationsConfig.loadWizardNpcIdleLeft4(),
       );
 
   static List<Say> createConversationSequence() => [

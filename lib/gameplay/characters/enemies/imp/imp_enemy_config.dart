@@ -2,7 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
-import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
+import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 
 final class ImpEnemyConfig {
   ImpEnemyConfig._();
@@ -19,7 +19,7 @@ final class ImpEnemyConfig {
     GameplayTileConfig.kTileDimensionStandard * 0.8,
   );
 
-  static final SimpleDirectionAnimation fDirectionalSpriteAnimation =
+  static final SimpleDirectionAnimation fLoadDirectionalSpriteAnimation =
       SimpleDirectionAnimation(
         idleLeft: SpriteAnimation.load(
           'gameplay/characters/enemies/imp/imp_enemy_idle_left_4.png',
@@ -28,7 +28,7 @@ final class ImpEnemyConfig {
             textureSize: fTextureSize,
           ),
         ),
-        idleRight: UISpriteAnimations.impEnemyIdleRight4(),
+        idleRight: UISpriteAnimationsConfig.loadImpEnemyIdleRight4(),
         runLeft: SpriteAnimation.load(
           'gameplay/characters/enemies/imp/imp_enemy_run_left_4.png',
           GameplaySpriteAnimationConfig.createStandardData(

@@ -8,7 +8,7 @@ class GoblinEnemyView extends SimpleEnemy
 
   GoblinEnemyView(Vector2 position)
     : super(
-        animation: GoblinEnemyConfig.fDirectionalSpriteAnimation,
+        animation: GoblinEnemyConfig.fLoadDirectionalSpriteAnimation,
         position: position,
         size: GoblinEnemyConfig.fComponentSize,
         speed: GoblinEnemyConfig.kSpeed,

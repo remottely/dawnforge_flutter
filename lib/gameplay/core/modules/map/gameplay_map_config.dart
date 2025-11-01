@@ -29,7 +29,7 @@ final class GameplayMapConfig {
   static const String kBackgroundColorPropertyKey = 'backgroundColor';
 
   ///
-  static Map<String, ObjectBuilder> get entityBuilders =>
+  static Map<String, ObjectBuilder> createEntityBuilder() =>
       <String, ObjectBuilder>{
         /// Enemies
         'dungeon_boss_enemy': (p) => DungeonBossEnemyView(p.position),
