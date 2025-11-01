@@ -51,7 +51,7 @@ class SpikeTrapInteractableView extends DDSensorPlayerDecoration {
   @override
   void update(double dt) {
     if (isAnimationLastFrame) {
-      if (!_hasDealtDamageThisCycle) {
+      if (!_hasDealtDamageThisCycle && _contactedPlayer != null) {
         _triggerEffect(_contactedPlayer!);
         _hasDealtDamageThisCycle = true;
       }

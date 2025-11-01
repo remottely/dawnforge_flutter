@@ -42,3 +42,6 @@ fix:
   - put music_gameplay_background.mp3 back
 
 - Create documentation that explains that config layer represents "constants, factories, builders, etc." in the same class.
+
+- prompt:
+  - Preciso que você finalize o planejamento da logica inicial de meu farmable. Levando em conta que quero fazer o clone do stardew valley... TODO(Kevin): finalizar esse prompt
