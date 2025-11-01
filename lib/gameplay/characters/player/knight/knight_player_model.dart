@@ -2,12 +2,14 @@ import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player
 
 enum FarmTool { hand, hoe, wateringCan }
 
+/// Model: Contém apenas dados e validações simples
 class KnightPlayerModel {
   double _stamina;
   int _energy;
   double attackDamage;
   FarmTool currentTool;
   bool hasKey;
+  bool isObservingEnemy;
 
   KnightPlayerModel({
     double? initialStamina,
@@ -20,47 +22,37 @@ class KnightPlayerModel {
        attackDamage =
            initialAttackDamage ?? KnightPlayerConfig.kStandardAttackDamage,
        currentTool = initialTool ?? FarmTool.hand,
-       hasKey = initialHasKey ?? false;
+       hasKey = initialHasKey ?? false,
+       isObservingEnemy = false;
 
-  double get currentStamina => _stamina;
-  int get currentEnergy => _energy;
+  // Getters
+  double get stamina => _stamina;
+  int get energy => _energy;
+  double get maxStamina => KnightPlayerConfig.kMaxStamina;
+  int get maxEnergy => KnightPlayerConfig.kMaxEnergy;
+
+  // Validações simples
   bool get hasStamina => _stamina > 0;
-
-  bool canDoPrimaryAttack() =>
+  bool get canPrimaryAttack =>
       _stamina >= KnightPlayerConfig.kPrimaryAttackStaminaCost;
-
-  void executePrimaryAttackStaminaCost() {
-    _decrementStamina(KnightPlayerConfig.kPrimaryAttackStaminaCost);
-  }
-
-  bool canDoFireballAttack() =>
+  bool get canFireballAttack =>
       _stamina >= KnightPlayerConfig.kFireballAttackStaminaCost;
+  bool get canUseTool => _energy >= KnightPlayerConfig.kToolUsageEnergyCost;
 
-  void executeFireballAttackStaminaCost() {
-    _decrementStamina(KnightPlayerConfig.kFireballAttackStaminaCost);
+  // Mutações de estado
+  void consumeStamina(int amount) {
+    _stamina = (_stamina - amount).clamp(0, KnightPlayerConfig.kMaxStamina);
   }
 
   void regenerateStamina() {
-    _stamina += KnightPlayerConfig.kStaminaIncrement;
-    if (_stamina > KnightPlayerConfig.kMaxStamina) {
-      _stamina = KnightPlayerConfig.kMaxStamina;
-    }
+    _stamina = (_stamina + KnightPlayerConfig.kStaminaIncrement).clamp(
+      0,
+      KnightPlayerConfig.kMaxStamina,
+    );
   }
 
-  void _decrementStamina(int amount) {
-    _stamina -= amount;
-    if (_stamina < 0) {
-      _stamina = 0;
-    }
-  }
-
-  bool canUseTool() => _energy >= KnightPlayerConfig.kToolUsageEnergyCost;
-
-  void useTool() {
-    if (canUseTool()) {
-      _energy -= KnightPlayerConfig.kToolUsageEnergyCost;
-      if (_energy < 0) _energy = 0;
-    }
+  void consumeEnergy(int amount) {
+    _energy = (_energy - amount).clamp(0, KnightPlayerConfig.kMaxEnergy);
   }
 
   void restoreEnergy() {
@@ -70,6 +62,5 @@ class KnightPlayerModel {
   void switchTool(FarmTool newTool) => currentTool = newTool;
 
   void obtainKey() => hasKey = true;
-
   void removeKey() => hasKey = false;
 }

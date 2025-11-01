@@ -1,4 +1,5 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_camera_utils.dart';
 import 'package:darkness_dungeon/gameplay/core/managers/gameplay_game_state_manager.dart';
@@ -38,6 +39,8 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
     gameplayHUD = GameplayHUD();
   }
 
-  KnightPlayerView buildKnightPlayer(Vector2 position) =>
-      KnightPlayerView(position);
+  KnightPlayerView buildKnightPlayer(Vector2 position) => KnightPlayerView(
+    position,
+    model: KnightPlayerModel(),
+  ); // TODO(Kevin): implement save/load KnightPlayerModel
 }

@@ -32,7 +32,7 @@ class DoorKeyInteractableView extends DDSensorPlayerDecoration {
   }
 
   void _triggerEffect(KnightPlayerView player) {
-    player.controller.model.hasKey = true;
+    player.model.obtainKey();
   }
 
   void _cleanup() {

@@ -65,7 +65,7 @@ class DoorInteractableView extends DDGameDecoration {
 
   void _handlePlayerCollision(KnightPlayerView player) {
     if (!_isOpen) {
-      if (player.controller.model.hasKey == true) {
+      if (player.model.hasKey == true) {
         _triggerDoorOpening(player);
       } else {
         _showKeyRequiredMessage(player);
@@ -75,7 +75,7 @@ class DoorInteractableView extends DDGameDecoration {
 
   void _triggerDoorOpening(KnightPlayerView player) {
     _isOpen = true;
-    player.controller.model.hasKey = false;
+    player.model.removeKey();
     _playDoorOpeningAnimation();
   }
 

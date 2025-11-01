@@ -44,6 +44,6 @@ class GameplayHUD extends GameInterface {
 
   bool _hasPlayerWithKey() {
     return gameRef.player != null &&
-        (gameRef.player as KnightPlayerView).controller.model.hasKey;
+        (gameRef.player as KnightPlayerView).model.hasKey;
   }
 }

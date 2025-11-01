@@ -11,11 +11,9 @@ import 'package:darkness_dungeon/shared/framework/dd_game_decoration.dart';
 
 class KnightPlayerView extends SimplePlayer
     with Lighting, BlockMovementCollision {
-  final KnightPlayerController controller = KnightPlayerController(
-    model: KnightPlayerModel(),
-  );
+  late final KnightPlayerController _controller;
 
-  KnightPlayerView(Vector2 position)
+  KnightPlayerView(Vector2 position, {required KnightPlayerModel model})
     : super(
         animation: KnightPlayerConfig.fLoadDirectionalSpriteAnimation,
         size: KnightPlayerConfig.fComponentSize,
@@ -24,12 +22,23 @@ class KnightPlayerView extends SimplePlayer
         speed: KnightPlayerConfig.kStandardSpeed,
       ) {
     setupLighting(KnightPlayerConfig.fLightingConfig);
-    _setupControls();
+    setupMovementByJoystick(intensityEnabled: true);
+    _initializeController(model);
+  }
+
+  void _initializeController(KnightPlayerModel model) {
+    _controller = KnightPlayerController(
+      model: model,
+      onPrimaryAttack: _onPlayPrimaryAttack,
+      onFireballAttack: _onPlayFireballAttack,
+      onToolUse: _onPlayToolAnimation,
+      onShowExclamation: _onShowExclamationEmote,
+      onCheckEnemyVision: _onCheckEnemyVision,
+    );
   }
 
   @override
   Future<void> onLoad() {
-    controller.attachView(this);
     add(KnightPlayerConfig.fHitbox);
     return super.onLoad();
   }
@@ -37,14 +46,14 @@ class KnightPlayerView extends SimplePlayer
   @override
   void update(double dt) {
     if (isDead) return;
-    controller.onUpdate(dt);
+    _controller.update(dt);
     super.update(dt);
   }
 
   @override
   void onJoystickAction(JoystickActionEvent event) {
     if (isDead) return;
-    controller.onInputAction(event);
+    _controller.handleInputAction(event);
     super.onJoystickAction(event);
   }
 
@@ -62,49 +71,19 @@ class KnightPlayerView extends SimplePlayer
     super.onDie();
   }
 
-  void playPrimaryAttackAnimation(double damage) {
-    GameplayAudioManager.instance.playPlayerPrimaryAttackSfx();
-    addParticle(
-      CharacterEffectsParticlesAnimationsConfig.createPrimaryAttackParticles(),
-      position: size,
-    );
-    simpleAttackMelee(
-      damage: damage,
-      animationRight:
-          CharacterPrimaryAttackConfig.createPlayerExecutionAnimation(),
-      size: KnightPlayerConfig.fComponentSize,
-    );
+  @override
+  void onRemove() {
+    _controller.dispose();
+    super.onRemove();
   }
 
-  void playFireballAttackAnimation(double damage) {
-    addParticle(
-      CharacterEffectsParticlesAnimationsConfig.createFireballAttackParticles(),
-      position: size,
-    );
-    simpleAttackRange(
-      animationRight: CharacterFireballAttackConfig.createExecutionAnimation(),
-      animationDestroy: CharacterFireballAttackConfig.createDestroyAnimation(),
-      size: CharacterFireballAttackConfig.fComponentSize,
-      damage: damage,
-      speed: speed * CharacterFireballAttackConfig.kSpeedMultiplier,
-      onDestroy: CharacterFireballAttackConfig.playDestroyAudio,
-      collision: CharacterFireballAttackConfig.createHitbox(),
-      lightingConfig: CharacterFireballAttackConfig.fLightingConfig,
-    );
-    CharacterFireballAttackConfig.playExecutionAudio();
-  }
+  // Public API for external interaction
+  // void useTool() => _controller.useTool();
+  // void switchTool(FarmTool newTool) => _controller.switchTool(newTool);
+  // void restoreEnergy() => _controller.restoreEnergy();
+  KnightPlayerModel get model => _controller.model;
 
-  void playToolAnimation() {}
-
-  void showExclamationEmote() {
-    add(
-      CharacterEmoteManager.displayEmoteAboveCharacter(
-        asset: CharacterEmoteManager.kExclamationEmoteAsset,
-        target: this,
-      ),
-    );
-  }
-
+  /// Private helper methods
   void _showDamageEffect(double damage) => showDamage(
     damage,
     config:
@@ -122,5 +101,61 @@ class KnightPlayerView extends SimplePlayer
     ),
   );
 
-  void _setupControls() => setupMovementByJoystick(intensityEnabled: true);
+  /// Controller callback implementations
+  void _onPlayPrimaryAttack(double damage) {
+    GameplayAudioManager.instance.playPlayerPrimaryAttackSfx();
+    addParticle(
+      CharacterEffectsParticlesAnimationsConfig.createPrimaryAttackParticles(),
+      position: size,
+    );
+    simpleAttackMelee(
+      damage: damage,
+      animationRight:
+          CharacterPrimaryAttackConfig.createPlayerExecutionAnimation(),
+      size: KnightPlayerConfig.fComponentSize,
+    );
+  }
+
+  void _onPlayFireballAttack(double damage) {
+    addParticle(
+      CharacterEffectsParticlesAnimationsConfig.createFireballAttackParticles(),
+      position: size,
+    );
+    simpleAttackRange(
+      animationRight: CharacterFireballAttackConfig.createExecutionAnimation(),
+      animationDestroy: CharacterFireballAttackConfig.createDestroyAnimation(),
+      size: CharacterFireballAttackConfig.fComponentSize,
+      damage: damage,
+      speed: speed * CharacterFireballAttackConfig.kSpeedMultiplier,
+      onDestroy: CharacterFireballAttackConfig.playDestroyAudio,
+      collision: CharacterFireballAttackConfig.createHitbox(),
+      lightingConfig: CharacterFireballAttackConfig.fLightingConfig,
+    );
+    CharacterFireballAttackConfig.playExecutionAudio();
+  }
+
+  void _onPlayToolAnimation() {
+    // TODO: Implementar animação de ferramenta
+  }
+
+  void _onShowExclamationEmote() {
+    add(
+      CharacterEmoteManager.displayEmoteAboveCharacter(
+        asset: CharacterEmoteManager.kExclamationEmoteAsset,
+        target: this,
+      ),
+    );
+  }
+
+  void _onCheckEnemyVision({
+    required double radiusVision,
+    required void Function() notObserved,
+    required void Function(List<Enemy> enemies) observed,
+  }) {
+    seeEnemy(
+      radiusVision: radiusVision,
+      notObserved: notObserved,
+      observed: observed,
+    );
+  }
 }
