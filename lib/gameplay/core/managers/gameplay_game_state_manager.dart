@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_state_manager.dart';
-import 'package:darkness_dungeon/gameplay/gameplay.dart';
+import 'package:darkness_dungeon/gameplay/gameplay_screen.dart';
 import 'package:flutter/material.dart';
 
 class GameplayGameStateManager extends GameComponent {
@@ -73,7 +73,7 @@ class GameplayGameStateManager extends GameComponent {
 
   void _restartGame() {
     Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => const Gameplay()),
+      MaterialPageRoute(builder: (context) => const GameplayScreen()),
       (Route<dynamic> route) => false,
     );
   }

@@ -1,18 +1,14 @@
-import 'dart:async' as async;
-
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
+import 'package:darkness_dungeon/app/presentation/screens/menu_screen_config.dart';
+import 'package:darkness_dungeon/app/presentation/screens/menu_screen_viewmodel.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
-import 'package:darkness_dungeon/gameplay/gameplay.dart';
 import 'package:darkness_dungeon/shared/components/dd_sprite_animation_widget.dart';
 import 'package:darkness_dungeon/shared/components/dd_sprite_widget.dart';
 import 'package:darkness_dungeon/shared/design_system/components/atoms/app_radio_button.dart';
 import 'package:darkness_dungeon/shared/design_system/dd_design_system.dart';
 import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
-import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 import 'package:flame_splash_screen/flame_splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
@@ -21,84 +17,12 @@ class MenuScreen extends StatefulWidget {
   State<MenuScreen> createState() => _MenuScreenState();
 }
 
-abstract class MenuScreenViewModel extends State<MenuScreen> {
-  final Duration kAnimationDuration = Duration(milliseconds: 300);
-  final Duration kCharacterAnimationInterval = Duration(seconds: 2);
-
-  bool _isSplashScreenVisible = true;
-  int _currentCharacterSpriteIndex = 0;
-  late async.Timer _characterAnimationTimer;
-
-  late final List<Future<SpriteAnimation>> _characterSpriteAnimations = [
-    UISpriteAnimationsConfig.loadKnightPlayerIdleRight6(),
-    UISpriteAnimationsConfig.loadGoblinEnemyIdleRight6(),
-    UISpriteAnimationsConfig.loadImpEnemyIdleRight4(),
-    UISpriteAnimationsConfig.loadDungeonMiniBossEnemyIdleRight4(),
-    UISpriteAnimationsConfig.loadDungeonBossEnemyIdleRight4(),
-  ];
-
-  @override
-  void dispose() {
-    _cleanupResources();
-    super.dispose();
-  }
-
-  void _onSplashScreenCompleted(BuildContext context) {
-    setState(() {
-      _isSplashScreenVisible = false;
-    });
-    _initializeCharacterAnimation();
-  }
-
-  void _onControlMethodChanged(InputActionsType selectedInput) {
-    setState(() {
-      SettingsManager.instance.setInputSelected(selectedInput);
-    });
-  }
-
-  void _navigateToGameplayScreen() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const Gameplay()),
-    );
-  }
-
-  void _initializeCharacterAnimation() {
-    _characterAnimationTimer = async.Timer.periodic(
-      kCharacterAnimationInterval,
-      (timer) {
-        setState(() {
-          _currentCharacterSpriteIndex++;
-          if (_currentCharacterSpriteIndex >
-              _characterSpriteAnimations.length - 1) {
-            _currentCharacterSpriteIndex = 0;
-          }
-        });
-      },
-    );
-  }
-
-  void _cleanupResources() {
-    GameplayAudioManager.instance.stopBackgroundMusic();
-    _characterAnimationTimer.cancel();
-  }
-
-  Future<void> _openExternalURL(String targetUrl) async {
-    final parsedUri = Uri.parse(targetUrl);
-    if (await canLaunchUrl(parsedUri)) {
-      await launchUrl(parsedUri);
-    } else {
-      throw 'Could not launch $targetUrl';
-    }
-  }
-}
-
 class _MenuScreenState extends MenuScreenViewModel {
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
-      duration: kAnimationDuration,
-      child: _isSplashScreenVisible ? _createSplashScreen() : _createMainMenu(),
+      duration: MenuScreenConfig.kCharacterAnimationDuration,
+      child: isSplashScreenVisible ? _createSplashScreen() : _createMainMenu(),
     );
   }
 
@@ -112,14 +36,16 @@ class _MenuScreenState extends MenuScreenViewModel {
             spacing: DDDesignSystem.kSpacingLarge,
             children: <Widget>[
               const _Title(),
-              if (_characterSpriteAnimations.isNotEmpty) ...[
+              if (MenuScreenConfig
+                  .loadCharacterSpriteAnimations
+                  .isNotEmpty) ...[
                 _CharacterAnimation(
-                  animation:
-                      _characterSpriteAnimations[_currentCharacterSpriteIndex],
+                  animation: MenuScreenConfig
+                      .loadCharacterSpriteAnimations[currentCharacterSpriteIndex],
                 ),
               ],
-              _StartButton(onPressed: _navigateToGameplayScreen),
-              _Controls(onControlMethodChanged: _onControlMethodChanged),
+              _StartButton(onPressed: navigateToGameplayScreen),
+              _Controls(onControlMethodChanged: onControlMethodChanged),
               switch (SettingsManager.instance.vIsJoystickInputSelected) {
                 InputActionsType.joystick =>
                   const SizedBox.shrink(), // TODO(Kevin): Replace with joystick tip widget
@@ -129,14 +55,14 @@ class _MenuScreenState extends MenuScreenViewModel {
           ),
         ),
       ),
-      bottomNavigationBar: _Footer(onOpenURL: _openExternalURL),
+      bottomNavigationBar: _Footer(onOpenURL: openExternalURL),
     );
   }
 
   Widget _createSplashScreen() {
     return FlameSplashScreen(
       theme: FlameSplashTheme.dark,
-      onFinish: _onSplashScreenCompleted,
+      onFinish: onSplashScreenCompleted,
     );
   }
 }
@@ -239,10 +165,9 @@ class _KeyboardTip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fLoadSprite = Sprite.load(
-      'keyboard_tip.png',
-    ); // TODO(Kevin): move to a config layer
-    return DDSpriteWidget.extraLarge(sprite: fLoadSprite);
+    return DDSpriteWidget.extraLarge(
+      sprite: MenuScreenConfig.fLoadKeyboardSprite,
+    );
   }
 }
 
@@ -250,9 +175,6 @@ class _Footer extends StatelessWidget {
   final Future<void> Function(String) onOpenURL;
 
   const _Footer({required this.onOpenURL});
-
-  static const String _kKevinKoboriUrl = 'https://github.com/kevinkobori';
-  static const String _kBonfireUrl = 'https://pub.dev/packages/bonfire';
 
   @override
   Widget build(BuildContext context) {
@@ -277,7 +199,7 @@ class _Footer extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
-                      onOpenURL(_kKevinKoboriUrl);
+                      onOpenURL(MenuScreenConfig.kKevinKoboriUrl);
                     },
                     child: const Text(
                       'kevinkobori',
@@ -306,7 +228,7 @@ class _Footer extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
-                      onOpenURL(_kBonfireUrl);
+                      onOpenURL(MenuScreenConfig.kBonfireUrl);
                     },
                     child: const Text(
                       'Bonfire',

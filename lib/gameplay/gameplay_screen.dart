@@ -1,61 +1,23 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_camera_utils.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_player_input_actions_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/gameplay_game_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/gameplay_hud.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/helpers/color_helper.dart';
 import 'package:darkness_dungeon/gameplay/environment/sensors/map_transition_sensor.dart';
+import 'package:darkness_dungeon/gameplay/gameplay_screen_viewmodel.dart';
 import 'package:flutter/material.dart';
 
-class Gameplay extends StatefulWidget {
-  const Gameplay({super.key});
+class GameplayScreen extends StatefulWidget {
+  const GameplayScreen({super.key});
 
   @override
-  State<Gameplay> createState() => _GameplayState();
+  State<GameplayScreen> createState() => _GameplayScreenState();
 }
 
-abstract class GameplayViewmodel extends State<Gameplay> {
-  late final GameplayHUD _gameplayHUD;
-  late final CameraConfig _cameraConfig;
-  final gameplayGameStateManager = GameplayGameStateManager();
-
-  @override
-  void initState() {
-    super.initState();
-    _initializeGameComponents();
-  }
-
-  @override
-  void dispose() {
-    _cleanupGameAudio();
-    super.dispose();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _cameraConfig = GameplayCameraUtils.createCameraConfig(context);
-  }
-
-  void _cleanupGameAudio() {
-    GameplayAudioManager.instance.stopBackgroundMusic();
-  }
-
-  void _initializeGameComponents() {
-    _gameplayHUD = GameplayHUD();
-  }
-
-  KnightPlayerView _buildKnightPlayer(Vector2 position) =>
-      KnightPlayerView(position);
-}
-
-class _GameplayState extends GameplayViewmodel {
+class _GameplayScreenState extends GameplayScreenViewmodel {
   @override
   Widget build(BuildContext gameplayContext) {
     return MapNavigator(
@@ -81,7 +43,7 @@ class _GameplayState extends GameplayViewmodel {
         final playerPosition =
             (mapArguments?.playerPosition ?? Vector2(4, 4)) *
             GameplayTileConfig.kTileDimensionStandard;
-        final knightPlayer = _buildKnightPlayer(playerPosition);
+        final knightPlayer = buildKnightPlayer(playerPosition);
 
         final playerInput =
             GameplayPlayerInputActionsConfig.createPlayerInput();
@@ -93,10 +55,10 @@ class _GameplayState extends GameplayViewmodel {
             player: knightPlayer,
             map: mapItem.map,
             components: [gameplayGameStateManager],
-            interface: _gameplayHUD,
+            interface: gameplayHUD,
             lightingColorGame: mapLightingColor,
             backgroundColor: mapBackgroundColor,
-            cameraConfig: _cameraConfig,
+            cameraConfig: cameraConfig,
             debugMode: AppEnvironment.kIsDebugMode,
             showCollisionArea: AppEnvironment.kShowCollisionBoxes,
           ),
