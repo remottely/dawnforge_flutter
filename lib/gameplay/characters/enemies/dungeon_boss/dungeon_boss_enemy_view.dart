@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/dd_base_enemy.dart';
+import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_model.dart';
@@ -20,7 +20,7 @@ class DungeonBossEnemyView
     extends DDBaseEnemy<DungeonBossEnemyController, DungeonBossEnemyModel> {
   DungeonBossEnemyView(Vector2 position)
     : super(
-        animation: DungeonBossEnemyConfig.directionalSpriteAnimation,
+        animation: DungeonBossEnemyConfig.animation,
         position: position,
         size: DungeonBossEnemyConfig.componentSize,
         speed: DungeonBossEnemyConfig.kSpeed,

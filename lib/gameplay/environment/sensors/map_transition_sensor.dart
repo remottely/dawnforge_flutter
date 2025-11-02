@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
-import 'package:darkness_dungeon/shared/framework/dd_game_decoration.dart';
+import 'package:darkness_dungeon/shared/framework/decorations/dd_sensor_player_decoration.dart';
 
 class MapArguments {
   final Vector2 playerPosition;

@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/dd_base_enemy.dart';
+import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_model.dart';
@@ -9,7 +9,7 @@ class DungeonMiniBossEnemyView
         DDBaseEnemy<DungeonMiniBossEnemyController, DungeonMiniBossEnemyModel> {
   DungeonMiniBossEnemyView(Vector2 position)
     : super(
-        animation: DungeonMiniBossEnemyConfig.directionalSpriteAnimation,
+        animation: DungeonMiniBossEnemyConfig.animation,
         position: position,
         size: DungeonMiniBossEnemyConfig.componentSize,
         speed: DungeonMiniBossEnemyConfig.kSpeed,

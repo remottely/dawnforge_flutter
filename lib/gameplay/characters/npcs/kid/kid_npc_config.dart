@@ -8,11 +8,10 @@ final class KidNpcConfig {
   static final Vector2 textureSize = Vector2(16, 22);
   static final Vector2 componentSize = Vector2(8, 11);
 
-  static final SimpleDirectionAnimation directionalSpriteAnimation =
-      SimpleDirectionAnimation(
-        idleRight: UISpriteAnimationsConfig.loadKidNpcIdleLeft4(),
-        runRight: UISpriteAnimationsConfig.loadKidNpcIdleLeft4(),
-      );
+  static final SimpleDirectionAnimation animation = SimpleDirectionAnimation(
+    idleRight: UISpriteAnimationsConfig.loadKidNpcIdleLeft4(),
+    runRight: UISpriteAnimationsConfig.loadKidNpcIdleLeft4(),
+  );
 
   static List<Say> createConversationSequence() {
     return [

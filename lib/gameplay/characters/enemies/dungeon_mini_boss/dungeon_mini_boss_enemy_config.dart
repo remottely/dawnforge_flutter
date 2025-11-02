@@ -9,8 +9,9 @@ final class DungeonMiniBossEnemyConfig {
 
   static const double kCloseVisionRadius = CharacterConfig.kVisionRadiusSmall;
   static const double kLongVisionRadius = CharacterConfig.kVisionRadiusLarge;
-  static const double kPrimaryAttackDamage = 50.0;
-  static const int kPrimaryAttackInterval = 300;
+  static const double kPrimaryAttackDamage = CharacterConfig.kDamageLarge;
+  static const int kPrimaryAttackInterval =
+      CharacterConfig.kAttackIntervalSmall;
 
   static const double kLife = CharacterConfig.kLifeLarge;
   static const double kSpeed = CharacterConfig.kSpeedSlow;
@@ -23,8 +24,7 @@ final class DungeonMiniBossEnemyConfig {
     GameplayTileConfig.kTileDimensionStandard * 0.93,
   );
 
-  static final SimpleDirectionAnimation
-  directionalSpriteAnimation = SimpleDirectionAnimation(
+  static final SimpleDirectionAnimation animation = SimpleDirectionAnimation(
     idleLeft: SpriteAnimation.load(
       'gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_idle_left_4.png',
       GameplaySpriteAnimationConfig.createStandardData(

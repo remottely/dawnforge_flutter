@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/dd_base_enemy.dart';
+import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_model.dart';
@@ -8,7 +8,7 @@ class GoblinEnemyView
     extends DDBaseEnemy<GoblinEnemyController, GoblinEnemyModel> {
   GoblinEnemyView(Vector2 position)
     : super(
-        animation: GoblinEnemyConfig.directionalSpriteAnimation,
+        animation: GoblinEnemyConfig.animation,
         position: position,
         size: GoblinEnemyConfig.componentSize,
         speed: GoblinEnemyConfig.kSpeed,

@@ -3,7 +3,7 @@ import 'package:darkness_dungeon/gameplay/characters/shared/character_config.dar
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
-import 'package:darkness_dungeon/shared/framework/dd_game_decoration.dart';
+import 'package:darkness_dungeon/shared/framework/decorations/dd_game_decoration.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 
 final class KnightPlayerConfig {
@@ -35,31 +35,30 @@ final class KnightPlayerConfig {
   static final Vector2 textureSize = GameplayTileConfig.tileSizeStandard;
   static final Vector2 componentSize = textureSize;
 
-  static final SimpleDirectionAnimation directionalSpriteAnimation =
-      SimpleDirectionAnimation(
-        idleLeft: SpriteAnimation.load(
-          'gameplay/characters/player/knight/knight_player_idle_left_6.png',
-          GameplaySpriteAnimationConfig.createStandardData(
-            amount: 6,
-            textureSize: textureSize,
-          ),
-        ),
-        idleRight: UISpriteAnimationsConfig.loadKnightPlayerIdleRight6(),
-        runLeft: SpriteAnimation.load(
-          'gameplay/characters/player/knight/knight_player_run_left_6.png',
-          GameplaySpriteAnimationConfig.createStandardData(
-            amount: 6,
-            textureSize: textureSize,
-          ),
-        ),
-        runRight: SpriteAnimation.load(
-          'gameplay/characters/player/knight/knight_player_run_right_6.png',
-          GameplaySpriteAnimationConfig.createStandardData(
-            amount: 6,
-            textureSize: textureSize,
-          ),
-        ),
-      );
+  static final SimpleDirectionAnimation animation = SimpleDirectionAnimation(
+    idleLeft: SpriteAnimation.load(
+      'gameplay/characters/player/knight/knight_player_idle_left_6.png',
+      GameplaySpriteAnimationConfig.createStandardData(
+        amount: 6,
+        textureSize: textureSize,
+      ),
+    ),
+    idleRight: UISpriteAnimationsConfig.loadKnightPlayerIdleRight6(),
+    runLeft: SpriteAnimation.load(
+      'gameplay/characters/player/knight/knight_player_run_left_6.png',
+      GameplaySpriteAnimationConfig.createStandardData(
+        amount: 6,
+        textureSize: textureSize,
+      ),
+    ),
+    runRight: SpriteAnimation.load(
+      'gameplay/characters/player/knight/knight_player_run_right_6.png',
+      GameplaySpriteAnimationConfig.createStandardData(
+        amount: 6,
+        textureSize: textureSize,
+      ),
+    ),
+  );
 
   static final LightingConfig lightingConfig = LightingConfig(
     radius: GameplayTileConfig.kTileDimensionStandard,

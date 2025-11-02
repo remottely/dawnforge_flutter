@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/gameplay/characters/enemies/dd_base_enemy_model.dart';
+import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_config.dart';
 
 class DungeonMiniBossEnemyModel extends DDBaseEnemyModel {

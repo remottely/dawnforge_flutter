@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/dd_base_enemy_model.dart';
+import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_config.dart';
 
 class DungeonBossEnemyModel extends DDBaseEnemyModel {

@@ -15,11 +15,10 @@ final class WizardNpcConfig {
     GameplayTileConfig.kTileDimensionStandard * 1.0,
   );
 
-  static final SimpleDirectionAnimation directionalSpriteAnimation =
-      SimpleDirectionAnimation(
-        idleRight: UISpriteAnimationsConfig.loadWizardNpcIdleLeft4(),
-        runRight: UISpriteAnimationsConfig.loadWizardNpcIdleLeft4(),
-      );
+  static final SimpleDirectionAnimation animation = SimpleDirectionAnimation(
+    idleRight: UISpriteAnimationsConfig.loadWizardNpcIdleLeft4(),
+    runRight: UISpriteAnimationsConfig.loadWizardNpcIdleLeft4(),
+  );
 
   static List<Say> createConversationSequence() => [
     GameplayConversationConfig.createWizardRightDialog('talk_wizard_1'),

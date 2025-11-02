@@ -9,8 +9,8 @@ final class DungeonBossEnemyConfig {
 
   static const double kCloseVisionRadius =
       CharacterConfig.kVisionRadiusExtraLarge;
-  static const double kPrimaryAttackDamage = 40.0;
-  static const int kPrimaryAttackInterval = 1500;
+  static const double kPrimaryAttackDamage = CharacterConfig.kDamageExtraLarge;
+  static const int kPrimaryAttackInterval = CharacterConfig.kAttackIntervalExtraLarge;
 
   static const double kLife = CharacterConfig.kLifeExtraLarge;
   static const double kSpeed = CharacterConfig.kSpeedSlow;
@@ -18,8 +18,7 @@ final class DungeonBossEnemyConfig {
   static final Vector2 textureSize = Vector2(32, 36);
   static final Vector2 componentSize = textureSize;
 
-  static final SimpleDirectionAnimation
-  directionalSpriteAnimation = SimpleDirectionAnimation(
+  static final SimpleDirectionAnimation animation = SimpleDirectionAnimation(
     idleLeft: UISpriteAnimationsConfig.loadDungeonBossEnemyIdleLeft4(),
     idleRight: UISpriteAnimationsConfig.loadDungeonBossEnemyIdleRight4(),
     runLeft: SpriteAnimation.load(

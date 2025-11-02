@@ -14,7 +14,7 @@ class KnightPlayerView extends SimplePlayer
 
   KnightPlayerView(Vector2 position, {required KnightPlayerModel model})
     : super(
-        animation: KnightPlayerConfig.directionalSpriteAnimation,
+        animation: KnightPlayerConfig.animation,
         size: KnightPlayerConfig.componentSize,
         position: position,
         life: KnightPlayerConfig.kLife,
