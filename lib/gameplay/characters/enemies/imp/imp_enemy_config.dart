@@ -7,10 +7,12 @@ import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 final class ImpEnemyConfig {
   ImpEnemyConfig._();
 
-  static const double kAttackDamage = 10.0;
-  static const double kLife = 80.0;
-  static const double kSpeed = CharacterConfig.kCharacterSpeedMedium;
-  static const int kAttackInterval = 300;
+  static const double kCloseVisionRadius = CharacterConfig.kVisionRadiusLarge;
+  static const double kPrimaryAttackDamage = 10.0;
+  static const int kPrimaryAttackInterval = 300;
+
+  static const double kLife = CharacterConfig.kLifeSmall;
+  static const double kSpeed = CharacterConfig.kSpeedMedium;
 
   static final Vector2 fTextureSize = GameplayTileConfig.fTileSizeStandard;
   static final Vector2 fComponentSize = Vector2.all(

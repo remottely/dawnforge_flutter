@@ -13,9 +13,9 @@ class DungeonBossEnemyModel extends DDBaseEnemyModel {
 
   DungeonBossEnemyModel()
     : super(
-        attackDamage: DungeonBossEnemyConfig.kPrimaryAttackDamage,
-        visionRadius: DungeonBossEnemyConfig.kVisionRadiusUltraLarge,
-        attackInterval: 1500,
+        closeVisionRadius: DungeonBossEnemyConfig.kCloseVisionRadius,
+        primaryAttackDamage: DungeonBossEnemyConfig.kPrimaryAttackDamage,
+        primaryAttackInterval: DungeonBossEnemyConfig.kPrimaryAttackInterval,
       );
 
   bool shouldSpawnMinions(double currentLife) {

@@ -4,9 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 /// Implementação concreta para testes
 class TestEnemyModel extends DDBaseEnemyModel {
   TestEnemyModel({
-    required super.attackDamage,
-    required super.visionRadius,
-    required super.attackInterval,
+    required super.primaryAttackDamage,
+    required super.closeVisionRadius,
+    required super.primaryAttackInterval,
   });
 }
 
@@ -16,63 +16,46 @@ void main() {
 
     setUp(() {
       model = TestEnemyModel(
-        attackDamage: 25.0,
-        visionRadius: 100.0,
-        attackInterval: 500,
+        primaryAttackDamage: 25.0,
+        closeVisionRadius: 100.0,
+        primaryAttackInterval: 500,
       );
     });
 
     group('Initialization', () {
       test('should initialize with correct values', () {
-        expect(model.attackDamage, equals(25.0));
-        expect(model.visionRadius, equals(100.0));
-        expect(model.attackInterval, equals(500));
-      });
-    });
-
-    group('Property Mutations', () {
-      test('should allow attackDamage to be modified', () {
-        model.attackDamage = 50.0;
-        expect(model.attackDamage, equals(50.0));
-      });
-
-      test('should allow visionRadius to be modified', () {
-        model.visionRadius = 200.0;
-        expect(model.visionRadius, equals(200.0));
-      });
-
-      test('should allow attackInterval to be modified', () {
-        model.attackInterval = 1000;
-        expect(model.attackInterval, equals(1000));
+        expect(model.primaryAttackDamage, equals(25.0));
+        expect(model.closeVisionRadius, equals(100.0));
+        expect(model.primaryAttackInterval, equals(500));
       });
     });
 
     group('Edge Cases', () {
       test('should handle zero attack damage', () {
         final zeroModel = TestEnemyModel(
-          attackDamage: 0.0,
-          visionRadius: 100.0,
-          attackInterval: 500,
+          primaryAttackDamage: 0.0,
+          closeVisionRadius: 100.0,
+          primaryAttackInterval: 500,
         );
-        expect(zeroModel.attackDamage, equals(0.0));
+        expect(zeroModel.primaryAttackDamage, equals(0.0));
       });
 
       test('should handle very large vision radius', () {
         final largeVisionModel = TestEnemyModel(
-          attackDamage: 25.0,
-          visionRadius: 10000.0,
-          attackInterval: 500,
+          primaryAttackDamage: 25.0,
+          closeVisionRadius: 10000.0,
+          primaryAttackInterval: 500,
         );
-        expect(largeVisionModel.visionRadius, equals(10000.0));
+        expect(largeVisionModel.closeVisionRadius, equals(10000.0));
       });
 
       test('should handle very short attack interval', () {
         final fastAttackModel = TestEnemyModel(
-          attackDamage: 25.0,
-          visionRadius: 100.0,
-          attackInterval: 1,
+          primaryAttackDamage: 25.0,
+          closeVisionRadius: 100.0,
+          primaryAttackInterval: 1,
         );
-        expect(fastAttackModel.attackInterval, equals(1));
+        expect(fastAttackModel.primaryAttackInterval, equals(1));
       });
     });
   });

@@ -4,20 +4,18 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/d
 /// Model: Contém dados e validações do MiniBoss.
 /// Este inimigo tem ataques corpo-a-corpo e à distância.
 class DungeonMiniBossEnemyModel extends DDBaseEnemyModel {
-  final double closeVisionRadius;
   final double longVisionRadius;
-  final int primaryDamageReduction;
 
   DungeonMiniBossEnemyModel()
-    : closeVisionRadius = DungeonMiniBossEnemyConfig.kCloseVisionRadius,
-      longVisionRadius = DungeonMiniBossEnemyConfig.kLongVisionRadius,
-      primaryDamageReduction =
-          DungeonMiniBossEnemyConfig.kPrimaryDamageReduction,
+    : longVisionRadius = DungeonMiniBossEnemyConfig.kLongVisionRadius,
       super(
-        attackDamage: DungeonMiniBossEnemyConfig.kPrimaryAttackDamage,
-        visionRadius: DungeonMiniBossEnemyConfig.kLongVisionRadius,
-        attackInterval: DungeonMiniBossEnemyConfig.kPrimaryAttackInterval,
+        closeVisionRadius: DungeonMiniBossEnemyConfig.kCloseVisionRadius,
+        primaryAttackDamage: DungeonMiniBossEnemyConfig.kPrimaryAttackDamage,
+        primaryAttackInterval:
+            DungeonMiniBossEnemyConfig.kPrimaryAttackInterval,
       );
 
-  double get rangedAttackDamage => attackDamage / primaryDamageReduction;
+  double get fireballAttackDamage =>
+      primaryAttackDamage /
+      DungeonMiniBossEnemyConfig.kFireballAttackDamageReduction;
 }

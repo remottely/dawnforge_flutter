@@ -7,13 +7,13 @@ import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 final class DungeonBossEnemyConfig {
   DungeonBossEnemyConfig._();
 
+  static const double kCloseVisionRadius =
+      CharacterConfig.kVisionRadiusExtraLarge;
   static const double kPrimaryAttackDamage = 40.0;
+  static const int kPrimaryAttackInterval = 1500;
 
-  static const double kLife = 200.0;
-  static const double kSpeed = CharacterConfig.kCharacterSpeedSlow;
-  static const double kVisionRadiusLarge = CharacterConfig.kVisionRadiusLarge;
-  static const double kVisionRadiusUltraLarge =
-      CharacterConfig.kVisionRadiusUltraLarge;
+  static const double kLife = CharacterConfig.kLifeExtraLarge;
+  static const double kSpeed = CharacterConfig.kSpeedSlow;
 
   static final Vector2 fTextureSize = Vector2(32, 36);
   static final Vector2 fComponentSize = fTextureSize;

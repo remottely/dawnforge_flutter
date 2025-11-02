@@ -63,10 +63,10 @@ class DungeonBossEnemyView
   /// Controller callback implementations
 
   void _onSeePlayer({
-    required double radiusVision,
+    required double closeVisionRadius,
     required void Function(Player) observed,
   }) {
-    seePlayer(radiusVision: radiusVision, observed: observed);
+    seePlayer(radiusVision: closeVisionRadius, observed: observed);
   }
 
   void _onFirstPlayerSight(Player player) {

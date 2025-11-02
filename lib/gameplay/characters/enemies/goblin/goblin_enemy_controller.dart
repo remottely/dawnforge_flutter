@@ -12,7 +12,7 @@ class GoblinEnemyController extends DDBaseEnemyController<GoblinEnemyModel> {
   @override
   void update(double dt) {
     onSeeAndMoveToMeleeAttack!(
-      radiusVision: model.visionRadius,
+      closeVisionRadius: model.closeVisionRadius,
       closePlayer: (_) {},
     );
   }

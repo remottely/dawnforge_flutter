@@ -6,12 +6,12 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/dd_base_enemy_model
 abstract class DDBaseEnemyController<M extends DDBaseEnemyModel> {
   final M model;
   final void Function({
-    required double radiusVision,
+    required double closeVisionRadius,
     required void Function(Player) closePlayer,
   })?
   onSeeAndMoveToMeleeAttack;
   final void Function({
-    required double radiusVision,
+    required double longVisionRadius,
     required void Function(Player) positioned,
   })?
   onSeeAndMoveToRangeAttack;

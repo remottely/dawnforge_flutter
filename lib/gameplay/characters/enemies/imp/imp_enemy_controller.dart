@@ -12,7 +12,7 @@ class ImpEnemyController extends DDBaseEnemyController<ImpEnemyModel> {
   @override
   void update(double dt) {
     onSeeAndMoveToMeleeAttack!(
-      radiusVision: model.visionRadius,
+      closeVisionRadius: model.closeVisionRadius,
       closePlayer: (_) {},
     );
   }

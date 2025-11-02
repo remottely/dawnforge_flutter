@@ -17,8 +17,8 @@ class KnightPlayerView extends SimplePlayer
         animation: KnightPlayerConfig.fLoadDirectionalSpriteAnimation,
         size: KnightPlayerConfig.fComponentSize,
         position: position,
-        life: KnightPlayerConfig.kStandardLife,
-        speed: KnightPlayerConfig.kStandardSpeed,
+        life: KnightPlayerConfig.kLife,
+        speed: KnightPlayerConfig.kSpeed,
       ) {
     setupLighting(KnightPlayerConfig.fLightingConfig);
     setupMovementByJoystick(intensityEnabled: true);
@@ -142,12 +142,12 @@ class KnightPlayerView extends SimplePlayer
   }
 
   void _onCheckEnemyVision({
-    required double radiusVision,
+    required double visionRadius,
     required void Function() notObserved,
     required void Function(List<Enemy> enemies) observed,
   }) {
     seeEnemy(
-      radiusVision: radiusVision,
+      radiusVision: visionRadius,
       notObserved: notObserved,
       observed: observed,
     );

@@ -1,13 +1,13 @@
 /// Model base abstrato para todos os inimigos.
 /// Contém apenas dados e validações simples.
 abstract class DDBaseEnemyModel {
-  double attackDamage;
-  double visionRadius;
-  int attackInterval;
+  final double closeVisionRadius;
+  final double primaryAttackDamage;
+  final int primaryAttackInterval;
 
-  DDBaseEnemyModel({
-    required this.attackDamage,
-    required this.visionRadius,
-    required this.attackInterval,
+  const DDBaseEnemyModel({
+    required this.closeVisionRadius,
+    required this.primaryAttackDamage,
+    required this.primaryAttackInterval,
   });
 }

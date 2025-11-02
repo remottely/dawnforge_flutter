@@ -10,7 +10,7 @@ class DungeonBossEnemyController
   final void Function(double dt) onSpawnMinion;
   final void Function(Canvas canvas) onRenderBars;
   final void Function({
-    required double radiusVision,
+    required double closeVisionRadius,
     required void Function(Player) observed,
   })
   onSeePlayer;
@@ -29,7 +29,7 @@ class DungeonBossEnemyController
     // Primeiro contato com o player (trigger da conversa)
     if (!model.hasSeenPlayerFirst) {
       onSeePlayer(
-        radiusVision: model.visionRadius,
+        closeVisionRadius: model.closeVisionRadius,
         observed: (player) {
           model.hasSeenPlayerFirst = true;
           onFirstPlayerSight(player);
@@ -43,7 +43,7 @@ class DungeonBossEnemyController
 
     // Comportamento de combate padrão
     onSeeAndMoveToMeleeAttack!(
-      radiusVision: model.visionRadius,
+      closeVisionRadius: model.closeVisionRadius,
       closePlayer: (_) {},
     );
   }

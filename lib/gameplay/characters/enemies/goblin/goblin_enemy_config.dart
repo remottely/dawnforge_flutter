@@ -7,10 +7,12 @@ import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 final class GoblinEnemyConfig {
   GoblinEnemyConfig._();
 
-  static const double kAttackDamage = 25.0;
-  static const double kLife = 120.0;
-  static const double kSpeed = CharacterConfig.kCharacterSpeedSlow;
-  static const int kAttackInterval = 800;
+  static const double kCloseVisionRadius = CharacterConfig.kVisionRadiusMedium;
+  static const double kPrimaryAttackDamage = 25.0;
+  static const int kPrimaryAttackInterval = 800;
+
+  static const double kLife = CharacterConfig.kLifeMedium;
+  static const double kSpeed = CharacterConfig.kSpeedSlow;
 
   static final Vector2 fTextureSize = GameplayTileConfig.fTileSizeStandard;
   static final Vector2 fComponentSize = Vector2.all(

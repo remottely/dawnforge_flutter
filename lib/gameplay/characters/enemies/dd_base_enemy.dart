@@ -114,17 +114,17 @@ abstract class DDBaseEnemy<
   /// onSeeAndMoveToMeleeAttack: seeAndMoveToAttackMelee,
   /// ```
   void seeAndMoveToPrimaryAttack({
-    required double radiusVision,
+    required double closeVisionRadius,
     required void Function(Player) closePlayer,
   }) {
     seeAndMoveToPlayer(
-      radiusVision: radiusVision,
+      radiusVision: closeVisionRadius,
       closePlayer: (player) {
         closePlayer.call(player);
         simpleAttackMelee(
           size: CharacterPrimaryAttackConfig.kEnemyPrimaryAttackFxSize,
-          damage: controller.model.attackDamage,
-          interval: controller.model.attackInterval,
+          damage: controller.model.primaryAttackDamage,
+          interval: controller.model.primaryAttackInterval,
           animationRight:
               CharacterPrimaryAttackConfig.createEnemyExecutionAnimation(),
           execute: CharacterPrimaryAttackConfig.playEnemyExecutionSfx,
@@ -141,18 +141,18 @@ abstract class DDBaseEnemy<
   /// onSeeAndMoveToAttackRange: seeAndMoveToAttackFireball,
   /// ```
   void seeAndMoveToFireballAttack({
-    required double radiusVision,
+    required double longVisionRadius,
     required void Function(Player) positioned,
   }) {
     seeAndMoveToAttackRange(
-      radiusVision: radiusVision,
+      radiusVision: longVisionRadius,
       positioned: (player) {
         simpleAttackRange(
           animation: CharacterFireballAttackConfig.createExecutionAnimation(),
           animationDestroy:
               CharacterFireballAttackConfig.createDestroyAnimation(),
           size: CharacterFireballAttackConfig.fComponentSize,
-          damage: controller.model.attackDamage,
+          damage: controller.model.primaryAttackDamage,
           speed: speed * CharacterFireballAttackConfig.kSpeedMultiplier,
           execute: CharacterFireballAttackConfig.playExecutionAudio,
           onDestroy: CharacterFireballAttackConfig.playDestroyAudio,

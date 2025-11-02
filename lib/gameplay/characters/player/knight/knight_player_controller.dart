@@ -12,7 +12,7 @@ class KnightPlayerController {
   final void Function() onToolUse;
   final void Function() onShowExclamation;
   final void Function({
-    required double radiusVision,
+    required double visionRadius,
     required void Function() notObserved,
     required void Function(List<Enemy> enemies) observed,
   })
@@ -63,7 +63,7 @@ class KnightPlayerController {
   void executeFireballAttack() {
     if (!model.canFireballAttack) return;
     model.consumeStamina(KnightPlayerConfig.kFireballAttackStaminaCost);
-    onFireballAttack(KnightPlayerConfig.kSmallAttackDamage);
+    onFireballAttack(KnightPlayerConfig.kFireballAttackDamage);
   }
 
   void useTool() {
@@ -89,7 +89,7 @@ class KnightPlayerController {
 
   void _handleEnemyVision() {
     onCheckEnemyVision(
-      radiusVision: KnightPlayerConfig.kVisionRadius,
+      visionRadius: KnightPlayerConfig.kVisionRadius,
       notObserved: () => model.isObservingEnemy = false,
       observed: (enemies) {
         if (model.isObservingEnemy) return;
