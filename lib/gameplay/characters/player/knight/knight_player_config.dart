@@ -17,10 +17,11 @@ final class KnightPlayerConfig {
   static const double kMaxStamina = 100.0;
   static const int kMaxEnergy = 100;
 
-  static const int kToolUsageEnergyCost = 2;
+  static const int kToolActionEnergyCost = 2;
   static const int kStaminaIncrement = 2;
   static const Duration kStaminaRegenDebounce = Duration(milliseconds: 150);
-  static const double kStandardAttackDamage = 25.0;
+
+  static const double kPrimaryAttackDamage = 25.0;
   static const int kPrimaryAttackStaminaCost = 15;
 
   static const double kFireballAttackDamage = 10.0;

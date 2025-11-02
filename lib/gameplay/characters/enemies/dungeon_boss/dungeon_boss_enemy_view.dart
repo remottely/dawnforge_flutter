@@ -53,14 +53,11 @@ class DungeonBossEnemyView
 
   @override
   void onDie() {
-    // Mata todos os minions spawnados
     for (var enemy in controller.model.spawnedEnemies) {
       if (!enemy.isDead) enemy.onDie();
     }
     super.onDie();
   }
-
-  /// Controller callback implementations
 
   void _onSeePlayer({
     required double closeVisionRadius,

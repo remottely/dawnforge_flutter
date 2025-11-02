@@ -2,8 +2,6 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dd_base_enemy_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_model.dart';
 
-/// Controller: Lógica de negócio complexa do Boss
-/// Gerencia spawn de minions, conversação e ataques
 class DungeonBossEnemyController
     extends DDBaseEnemyController<DungeonBossEnemyModel> {
   final void Function(Player player) onFirstPlayerSight;
@@ -26,7 +24,6 @@ class DungeonBossEnemyController
 
   @override
   void update(double dt) {
-    // Primeiro contato com o player (trigger da conversa)
     if (!model.hasSeenPlayerFirst) {
       onSeePlayer(
         closeVisionRadius: model.closeVisionRadius,
@@ -38,10 +35,8 @@ class DungeonBossEnemyController
       return;
     }
 
-    // Lógica de spawn baseada em vida (implementada na view)
     onSpawnMinion(dt);
 
-    // Comportamento de combate padrão
     onSeeAndMoveToMeleeAttack!(
       closeVisionRadius: model.closeVisionRadius,
       closePlayer: (_) {},

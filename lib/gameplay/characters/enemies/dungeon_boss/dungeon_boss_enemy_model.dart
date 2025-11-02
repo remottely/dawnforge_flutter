@@ -2,8 +2,6 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dd_base_enemy_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_config.dart';
 
-/// Model: Contém dados e validações do Boss.
-/// Este inimigo tem sistema de spawn de minions baseado em vida.
 class DungeonBossEnemyModel extends DDBaseEnemyModel {
   List<Enemy> spawnedEnemies = [];
   bool hasSeenPlayerFirst = false;

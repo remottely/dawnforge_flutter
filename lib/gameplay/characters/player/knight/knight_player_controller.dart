@@ -3,8 +3,6 @@ import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_player_input_actions_config.dart';
 
-/// Controller: Lógica de negócio e orquestração
-/// Não conhece detalhes de implementação da View
 class KnightPlayerController {
   final KnightPlayerModel model;
   final void Function(double damage) onPrimaryAttack;
@@ -55,21 +53,21 @@ class KnightPlayerController {
 
   // Actions
   void executePrimaryAttack() {
-    if (!model.canPrimaryAttack) return;
+    if (!model.canExecutePrimaryAttack) return;
     model.consumeStamina(KnightPlayerConfig.kPrimaryAttackStaminaCost);
-    onPrimaryAttack(model.attackDamage);
+    onPrimaryAttack(KnightPlayerConfig.kPrimaryAttackDamage);
   }
 
   void executeFireballAttack() {
-    if (!model.canFireballAttack) return;
+    if (!model.canExecuteFireballAttack) return;
     model.consumeStamina(KnightPlayerConfig.kFireballAttackStaminaCost);
     onFireballAttack(KnightPlayerConfig.kFireballAttackDamage);
   }
 
   void useTool() {
-    if (_isToolInUse || !model.canUseTool) return;
+    if (_isToolInUse || !model.canExecuteToolAction) return;
     _isToolInUse = true;
-    model.consumeEnergy(KnightPlayerConfig.kToolUsageEnergyCost);
+    model.consumeEnergy(KnightPlayerConfig.kToolActionEnergyCost);
     onToolUse();
     Future.delayed(Duration(milliseconds: 500), () => _isToolInUse = false);
   }

@@ -2,11 +2,9 @@ import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player
 
 enum FarmTool { hand, hoe, wateringCan }
 
-/// Model: Contém apenas dados e validações simples
 class KnightPlayerModel {
   double _stamina;
   int _energy;
-  double attackDamage;
   FarmTool currentTool;
   bool hasKey;
   bool isObservingEnemy;
@@ -14,13 +12,10 @@ class KnightPlayerModel {
   KnightPlayerModel({
     double? initialStamina,
     int? initialEnergy,
-    double? initialAttackDamage,
     FarmTool? initialTool,
     bool? initialHasKey,
   }) : _stamina = initialStamina ?? KnightPlayerConfig.kMaxStamina,
        _energy = initialEnergy ?? KnightPlayerConfig.kMaxEnergy,
-       attackDamage =
-           initialAttackDamage ?? KnightPlayerConfig.kStandardAttackDamage,
        currentTool = initialTool ?? FarmTool.hand,
        hasKey = initialHasKey ?? false,
        isObservingEnemy = false;
@@ -28,18 +23,20 @@ class KnightPlayerModel {
   // Getters
   double get stamina => _stamina;
   int get energy => _energy;
-  double get maxStamina => KnightPlayerConfig.kMaxStamina;
-  int get maxEnergy => KnightPlayerConfig.kMaxEnergy;
 
-  // Validações simples
+  // Validations
   bool get hasStamina => _stamina > 0;
-  bool get canPrimaryAttack =>
-      _stamina >= KnightPlayerConfig.kPrimaryAttackStaminaCost;
-  bool get canFireballAttack =>
-      _stamina >= KnightPlayerConfig.kFireballAttackStaminaCost;
-  bool get canUseTool => _energy >= KnightPlayerConfig.kToolUsageEnergyCost;
 
-  // Mutações de estado
+  bool get canExecutePrimaryAttack =>
+      _stamina >= KnightPlayerConfig.kPrimaryAttackStaminaCost;
+
+  bool get canExecuteFireballAttack =>
+      _stamina >= KnightPlayerConfig.kFireballAttackStaminaCost;
+
+  bool get canExecuteToolAction =>
+      _energy >= KnightPlayerConfig.kToolActionEnergyCost;
+
+  // State mutations
   void consumeStamina(int amount) {
     _stamina = (_stamina - amount).clamp(0, KnightPlayerConfig.kMaxStamina);
   }

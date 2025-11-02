@@ -1,8 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dd_base_enemy_model.dart';
 
-/// Controller base abstrato para todos os inimigos.
-/// Não conhece detalhes de implementação da View.
 abstract class DDBaseEnemyController<M extends DDBaseEnemyModel> {
   final M model;
   final void Function({

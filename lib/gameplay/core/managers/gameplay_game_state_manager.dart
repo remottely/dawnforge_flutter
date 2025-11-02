@@ -10,7 +10,7 @@ class GameplayGameStateManager extends GameComponent {
     super.update(dt);
   }
 
-  /// >>> Start Game Over Handling
+  /// Game Over Handling
   static const String _kGameOverCheckIntervalKey = 'gameOver';
   static const int _kGameOverCheckRate = 100;
 
@@ -78,12 +78,8 @@ class GameplayGameStateManager extends GameComponent {
     );
   }
 
-  /// <<< End Game Over Handling
-
-  /// >>> Start Utility Methods
+  /// Utility Methods
   static void stopPlayerMovement(Player player) {
     player.idle();
   }
-
-  /// <<< End Utility Methods
 }
