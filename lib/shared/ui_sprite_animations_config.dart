@@ -14,7 +14,7 @@ class UISpriteAnimationsConfig {
         'gameplay/characters/player/knight/knight_player_idle_right_6.png',
         GameplaySpriteAnimationConfig.createStandardData(
           amount: 6,
-          textureSize: KnightPlayerConfig.fTextureSize,
+          textureSize: KnightPlayerConfig.textureSize,
         ),
       );
 
@@ -23,7 +23,7 @@ class UISpriteAnimationsConfig {
         'gameplay/characters/enemies/goblin/goblin_enemy_idle_right_6.png',
         GameplaySpriteAnimationConfig.createStandardData(
           amount: 6,
-          textureSize: GoblinEnemyConfig.fTextureSize,
+          textureSize: GoblinEnemyConfig.textureSize,
         ),
       );
 
@@ -32,7 +32,7 @@ class UISpriteAnimationsConfig {
         'gameplay/characters/enemies/imp/imp_enemy_idle_right_4.png',
         GameplaySpriteAnimationConfig.createStandardData(
           amount: 4,
-          textureSize: ImpEnemyConfig.fTextureSize,
+          textureSize: ImpEnemyConfig.textureSize,
         ),
       );
 
@@ -41,7 +41,7 @@ class UISpriteAnimationsConfig {
     'gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_idle_right_4.png',
     GameplaySpriteAnimationConfig.createStandardData(
       amount: 4,
-      textureSize: DungeonMiniBossEnemyConfig.fTextureSize,
+      textureSize: DungeonMiniBossEnemyConfig.textureSize,
     ),
   );
 
@@ -50,7 +50,7 @@ class UISpriteAnimationsConfig {
     'gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_idle_right_4.png',
     GameplaySpriteAnimationConfig.createStandardData(
       amount: 4,
-      textureSize: DungeonBossEnemyConfig.fTextureSize,
+      textureSize: DungeonBossEnemyConfig.textureSize,
     ),
   );
 
@@ -59,7 +59,7 @@ class UISpriteAnimationsConfig {
     'gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_idle_left_4.png',
     GameplaySpriteAnimationConfig.createStandardData(
       amount: 4,
-      textureSize: DungeonBossEnemyConfig.fTextureSize,
+      textureSize: DungeonBossEnemyConfig.textureSize,
     ),
   );
 
@@ -67,7 +67,7 @@ class UISpriteAnimationsConfig {
     'gameplay/characters/npcs/kid_npc_idle_left_4.png',
     GameplaySpriteAnimationConfig.createStandardData(
       amount: 4,
-      textureSize: KidNpcConfig.fTextureSize,
+      textureSize: KidNpcConfig.textureSize,
     ),
   );
 
@@ -76,7 +76,7 @@ class UISpriteAnimationsConfig {
         'gameplay/characters/npcs/wizard_npc_idle_left_4.png',
         GameplaySpriteAnimationConfig.createStandardData(
           amount: 4,
-          textureSize: WizardNpcConfig.fTextureSize,
+          textureSize: WizardNpcConfig.textureSize,
         ),
       );
 }

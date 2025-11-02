@@ -3,12 +3,6 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/dd_base_enemy_model
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_config.dart';
 
 class DungeonBossEnemyModel extends DDBaseEnemyModel {
-  List<Enemy> spawnedEnemies = [];
-  bool hasSeenPlayerFirst = false;
-  bool hasSpawnedFirstWave = false;
-  bool hasSpawnedSecondWave = false;
-  bool hasSpawnedThirdWave = false;
-
   DungeonBossEnemyModel()
     : super(
         closeVisionRadius: DungeonBossEnemyConfig.kCloseVisionRadius,
@@ -16,21 +10,34 @@ class DungeonBossEnemyModel extends DDBaseEnemyModel {
         primaryAttackInterval: DungeonBossEnemyConfig.kPrimaryAttackInterval,
       );
 
+  List<Enemy> spawnedEnemies = [];
+
+  bool _isFirstPlayerSighted = false;
+  bool get isFirstPlayerSighted => _isFirstPlayerSighted;
+  void registerFirstPlayerSighting() {
+    if (_isFirstPlayerSighted) return;
+    _isFirstPlayerSighted = true;
+  }
+
+  bool _hasSpawnedFirstWave = false;
+  bool _hasSpawnedSecondWave = false;
+  bool _hasSpawnedThirdWave = false;
+
   bool shouldSpawnMinions(double currentLife) {
-    if (currentLife < 150 && spawnedEnemies.isEmpty && !hasSpawnedFirstWave) {
-      hasSpawnedFirstWave = true;
+    if (currentLife < 150 && spawnedEnemies.isEmpty && !_hasSpawnedFirstWave) {
+      _hasSpawnedFirstWave = true;
       return true;
     }
     if (currentLife < 100 &&
         spawnedEnemies.length == 1 &&
-        !hasSpawnedSecondWave) {
-      hasSpawnedSecondWave = true;
+        !_hasSpawnedSecondWave) {
+      _hasSpawnedSecondWave = true;
       return true;
     }
     if (currentLife < 50 &&
         spawnedEnemies.length == 2 &&
-        !hasSpawnedThirdWave) {
-      hasSpawnedThirdWave = true;
+        !_hasSpawnedThirdWave) {
+      _hasSpawnedThirdWave = true;
       return true;
     }
     return false;

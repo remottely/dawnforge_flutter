@@ -8,27 +8,27 @@ final class CharacterPrimaryAttackConfig {
 
   /// Player
   static final Vector2 kPlayerPrimaryAttackFxSize =
-      GameplayTileConfig.fTileSizeSmall;
+      GameplayTileConfig.tileSizeSmall;
 
   static Future<SpriteAnimation> createPlayerExecutionAnimation() =>
       SpriteAnimation.load(
         'gameplay/characters/player/player_primary_attack_right_3.png',
         GameplaySpriteAnimationConfig.createStandardData(
           amount: 3,
-          textureSize: GameplayTileConfig.fTileSizeStandard,
+          textureSize: GameplayTileConfig.tileSizeStandard,
         ),
       );
 
   /// Enemy
   static final Vector2 kEnemyPrimaryAttackFxSize =
-      GameplayTileConfig.fTileSizeSmall;
+      GameplayTileConfig.tileSizeSmall;
 
   static Future<SpriteAnimation> createEnemyExecutionAnimation() =>
       SpriteAnimation.load(
         'gameplay/characters/enemies/enemy_primary_attack_right_3.png',
         GameplaySpriteAnimationConfig.createStandardData(
           amount: 3,
-          textureSize: GameplayTileConfig.fTileSizeStandard,
+          textureSize: GameplayTileConfig.tileSizeStandard,
         ),
       );
 

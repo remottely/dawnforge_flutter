@@ -20,9 +20,9 @@ class DungeonBossEnemyView
     extends DDBaseEnemy<DungeonBossEnemyController, DungeonBossEnemyModel> {
   DungeonBossEnemyView(Vector2 position)
     : super(
-        animation: DungeonBossEnemyConfig.fLoadDirectionalSpriteAnimation,
+        animation: DungeonBossEnemyConfig.directionalSpriteAnimation,
         position: position,
-        size: DungeonBossEnemyConfig.fComponentSize,
+        size: DungeonBossEnemyConfig.componentSize,
         speed: DungeonBossEnemyConfig.kSpeed,
         life: DungeonBossEnemyConfig.kLife,
       );
@@ -35,7 +35,7 @@ class DungeonBossEnemyView
     return DungeonBossEnemyController(
       model: model,
       onSeeAndMoveToMeleeAttack: seeAndMoveToPrimaryAttack,
-      onFirstPlayerSight: _onFirstPlayerSight,
+      onFirstPlayerSight: _onPlayerSighted,
       onSpawnMinion: _onSpawnMinion,
       onRenderBars: _onRenderBars,
       onSeePlayer: _onSeePlayer,
@@ -59,14 +59,8 @@ class DungeonBossEnemyView
     super.onDie();
   }
 
-  void _onSeePlayer({
-    required double closeVisionRadius,
-    required void Function(Player) observed,
-  }) {
-    seePlayer(radiusVision: closeVisionRadius, observed: observed);
-  }
-
-  void _onFirstPlayerSight(Player player) {
+  /// Callbacks
+  void _onPlayerSighted(Player player) {
     gameRef.camera.moveToTargetAnimated(
       target: this,
       zoom: GameplayCameraUtils.getCameraZoomFromMaxVisibleTile(
@@ -83,47 +77,6 @@ class DungeonBossEnemyView
         _spawnMinionAtDirection();
       }
     }
-  }
-
-  void _spawnMinionAtDirection() {
-    Vector2 positionExplosion = Vector2.zero();
-    switch (directionThePlayerIsIn()) {
-      case Direction.left:
-        positionExplosion = position.translated(width * -2, 0);
-        break;
-      case Direction.right:
-        positionExplosion = position.translated(width * 2, 0);
-        break;
-      case Direction.up:
-        positionExplosion = position.translated(0, height * -2);
-        break;
-      case Direction.down:
-        positionExplosion = position.translated(0, height * 2);
-        break;
-      case Direction.upLeft:
-      case Direction.upRight:
-      case Direction.downLeft:
-      case Direction.downRight:
-        break;
-      default:
-    }
-
-    final Enemy enemy = controller.model.spawnedEnemies.length == 2
-        ? DungeonMiniBossEnemyView(positionExplosion)
-        : ImpEnemyView(positionExplosion);
-
-    gameRef.add(
-      AnimatedGameObject(
-        animation:
-            CharacterFxSpriteAnimationsConfig.createExplosionSmokeRight5(),
-        position: positionExplosion,
-        size: GameplayTileConfig.fTileSizeStandard,
-        loop: false,
-      ),
-    );
-
-    controller.model.addSpawnedEnemy(enemy);
-    gameRef.add(enemy);
   }
 
   void _onRenderBars(Canvas canvas) {
@@ -164,6 +117,55 @@ class DungeonBossEnemyView
           ..style = PaintingStyle.fill,
       );
     }
+  }
+
+  void _onSeePlayer({
+    required double closeVisionRadius,
+    required void Function(Player) observed,
+  }) {
+    seePlayer(radiusVision: closeVisionRadius, observed: observed);
+  }
+
+  /// Helpers
+  void _spawnMinionAtDirection() {
+    Vector2 positionExplosion = Vector2.zero();
+    switch (directionThePlayerIsIn()) {
+      case Direction.left:
+        positionExplosion = position.translated(width * -2, 0);
+        break;
+      case Direction.right:
+        positionExplosion = position.translated(width * 2, 0);
+        break;
+      case Direction.up:
+        positionExplosion = position.translated(0, height * -2);
+        break;
+      case Direction.down:
+        positionExplosion = position.translated(0, height * 2);
+        break;
+      case Direction.upLeft:
+      case Direction.upRight:
+      case Direction.downLeft:
+      case Direction.downRight:
+        break;
+      default:
+    }
+
+    final Enemy enemy = controller.model.spawnedEnemies.length == 2
+        ? DungeonMiniBossEnemyView(positionExplosion)
+        : ImpEnemyView(positionExplosion);
+
+    gameRef.add(
+      AnimatedGameObject(
+        animation:
+            CharacterFxSpriteAnimationsConfig.createExplosionSmokeRight5(),
+        position: positionExplosion,
+        size: GameplayTileConfig.tileSizeStandard,
+        loop: false,
+      ),
+    );
+
+    controller.model.addSpawnedEnemy(enemy);
+    gameRef.add(enemy);
   }
 
   void _showConversation(Player player) {
@@ -210,7 +212,7 @@ class DungeonBossEnemyView
         animation:
             CharacterFxSpriteAnimationsConfig.createExplosionSmokeRight5(),
         position: pos,
-        size: GameplayTileConfig.fTileSizeStandard,
+        size: GameplayTileConfig.tileSizeStandard,
         loop: false,
       ),
     );

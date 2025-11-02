@@ -21,7 +21,7 @@ final class _FarmTileConfig {
   static const String _kGrownSpriteAsset =
       'gameplay/terrain/farmable/parsnip_stage4.png';
 
-  static final Vector2 _fComponentSize = GameplayTileConfig.fTileSizeStandard;
+  static final Vector2 _componentSize = GameplayTileConfig.tileSizeStandard;
   static Future<Sprite> _loadSprite(String path) => Sprite.load(path);
 }
 
@@ -36,7 +36,7 @@ class FarmTileView extends DDGameDecoration {
     : super.withSprite(
         sprite: _FarmTileConfig._loadSprite(_FarmTileConfig._kGrassSpriteAsset),
         position: position,
-        size: _FarmTileConfig._fComponentSize,
+        size: _FarmTileConfig._componentSize,
       );
 
   @override

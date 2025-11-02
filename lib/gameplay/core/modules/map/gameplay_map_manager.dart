@@ -11,13 +11,13 @@ class GameplayMapManager {
     String sensorId,
     TiledObjectProperties properties,
   ) {
-    final List<String> _fPositionParts = properties
+    final List<String> _positionParts = properties
         .others[GameplayMapConfig.kPlayerPositionPropertyKey]
         .toString()
         .split(',');
-    final Vector2 _fPlayerPosition = Vector2(
-      double.parse(_fPositionParts[0]),
-      double.parse(_fPositionParts[1]),
+    final Vector2 _playerPosition = Vector2(
+      double.parse(_positionParts[0]),
+      double.parse(_positionParts[1]),
     );
 
     return MapTransitionSensorView(
@@ -26,7 +26,7 @@ class GameplayMapManager {
       size: properties.size,
       targetMap: properties.others[GameplayMapConfig.kNextMapPropertyKey]
           .toString(),
-      playerPosition: _fPlayerPosition,
+      playerPosition: _playerPosition,
       playerDirection: Direction.fromName(
         properties.others[GameplayMapConfig.kPlayerDirectionPropertyKey]
             .toString(),
@@ -65,7 +65,7 @@ class GameplayMapManager {
   }) {
     return WorldMapByTiled(
       WorldMapReader.fromAsset(mapAsset),
-      forceTileSize: GameplayTileConfig.fTileSizeStandard,
+      forceTileSize: GameplayTileConfig.tileSizeStandard,
       objectsBuilder: _createObjectBuilder(sensorIds: sensorIds),
     );
   }
@@ -78,7 +78,7 @@ class GameplayMapManager {
     );
   }
 
-  static final Map<String, MapItem Function(BuildContext, Object?)> fAllMaps =
+  static final Map<String, MapItem Function(BuildContext, Object?)> allMaps =
       (() {
         final mapBuilders = <String, MapItemBuilder>{};
 
@@ -90,7 +90,7 @@ class GameplayMapManager {
       })();
 
   static MapItem? getMapById(BuildContext context, String id) {
-    final builder = fAllMaps[id];
+    final builder = allMaps[id];
 
     if (builder != null) return builder(context, null);
 

@@ -6,7 +6,7 @@ import 'package:darkness_dungeon/shared/framework/dd_game_decoration.dart';
 final class DoorKeyInteractableConfig {
   DoorKeyInteractableConfig._();
 
-  static final Vector2 _fComponentSize = GameplayTileConfig.fTileSizeStandard;
+  static final Vector2 _componentSize = GameplayTileConfig.tileSizeStandard;
 
   static Future<Sprite> loadSprite() => Sprite.load(
     'gameplay/environment/interactables/door_key_interactable_1.png',
@@ -19,7 +19,7 @@ class DoorKeyInteractableView extends DDSensorPlayerDecoration {
   DoorKeyInteractableView({required super.position})
     : super.withSprite(
         sprite: DoorKeyInteractableConfig.loadSprite(),
-        size: DoorKeyInteractableConfig._fComponentSize,
+        size: DoorKeyInteractableConfig._componentSize,
       );
 
   @override

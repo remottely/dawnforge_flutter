@@ -36,12 +36,10 @@ class _MenuScreenState extends MenuScreenViewModel {
             spacing: DDDesignSystem.kSpacingLarge,
             children: <Widget>[
               const _Title(),
-              if (MenuScreenConfig
-                  .loadCharacterSpriteAnimations
-                  .isNotEmpty) ...[
+              if (MenuScreenConfig.characterSpriteAnimations.isNotEmpty) ...[
                 _CharacterAnimation(
                   animation: MenuScreenConfig
-                      .loadCharacterSpriteAnimations[currentCharacterSpriteIndex],
+                      .characterSpriteAnimations[currentCharacterSpriteIndex],
                 ),
               ],
               _StartButton(onPressed: navigateToGameplayScreen),
@@ -165,9 +163,7 @@ class _KeyboardTip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DDSpriteWidget.extraLarge(
-      sprite: MenuScreenConfig.fLoadKeyboardSprite,
-    );
+    return DDSpriteWidget.extraLarge(sprite: MenuScreenConfig.keyboardSprite);
   }
 }
 

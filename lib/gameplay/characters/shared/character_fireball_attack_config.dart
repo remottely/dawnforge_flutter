@@ -9,16 +9,15 @@ final class CharacterFireballAttackConfig {
 
   static const double kSpeedMultiplier = 2.5;
 
-  static final LightingConfig fLightingConfig = LightingConfig(
+  static final LightingConfig lightingConfig = LightingConfig(
     radius: GameplayTileConfig.kTileDimensionSmall,
     blurBorder: GameplayTileConfig.kTileDimensionSmall,
-    color: CharacterFxParticlesAnimationsConfig.fLightingConfigColor,
+    color: CharacterFxParticlesAnimationsConfig.lightingConfigColor,
   );
 
-  static final Vector2 fComponentSize = GameplayTileConfig.fTileSizeSmall;
+  static final Vector2 componentSize = GameplayTileConfig.tileSizeSmall;
 
-  static RectangleHitbox createHitbox() =>
-      RectangleHitbox(size: fComponentSize);
+  static RectangleHitbox createHitbox() => RectangleHitbox(size: componentSize);
 
   static Future<SpriteAnimation> createExecutionAnimation() =>
       SpriteAnimation.load(
@@ -34,7 +33,7 @@ final class CharacterFireballAttackConfig {
         'gameplay/characters/shared/character_fireball_explosion_right_6.png',
         GameplaySpriteAnimationConfig.createStandardData(
           amount: 6,
-          textureSize: GameplayTileConfig.fTileSizeExtraLarge,
+          textureSize: GameplayTileConfig.tileSizeExtraLarge,
         ),
       );
 

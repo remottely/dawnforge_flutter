@@ -7,9 +7,9 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_model
 class ImpEnemyView extends DDBaseEnemy<ImpEnemyController, ImpEnemyModel> {
   ImpEnemyView(Vector2 position)
     : super(
-        animation: ImpEnemyConfig.fLoadDirectionalSpriteAnimation,
+        animation: ImpEnemyConfig.directionalSpriteAnimation,
         position: position,
-        size: ImpEnemyConfig.fComponentSize,
+        size: ImpEnemyConfig.componentSize,
         speed: ImpEnemyConfig.kSpeed,
         life: ImpEnemyConfig.kLife,
       );

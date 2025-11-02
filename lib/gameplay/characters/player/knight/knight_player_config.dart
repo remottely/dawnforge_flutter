@@ -27,23 +27,21 @@ final class KnightPlayerConfig {
   static const double kFireballAttackDamage = 10.0;
   static const int kFireballAttackStaminaCost = 10;
 
-  static final RectangleHitbox fHitbox = RectangleHitbox(
+  static final RectangleHitbox hitbox = RectangleHitbox(
     position: Vector2(4, 9),
     size: Vector2(8, 6),
   );
 
-  static final Vector2 fTextureSize = GameplayTileConfig.fTileSizeStandard;
-  static final Vector2 fComponentSize = fTextureSize;
-  static final Vector2 kPrimaryAttackFxSize =
-      GameplayTileConfig.fTileSizeStandard;
+  static final Vector2 textureSize = GameplayTileConfig.tileSizeStandard;
+  static final Vector2 componentSize = textureSize;
 
-  static final SimpleDirectionAnimation fLoadDirectionalSpriteAnimation =
+  static final SimpleDirectionAnimation directionalSpriteAnimation =
       SimpleDirectionAnimation(
         idleLeft: SpriteAnimation.load(
           'gameplay/characters/player/knight/knight_player_idle_left_6.png',
           GameplaySpriteAnimationConfig.createStandardData(
             amount: 6,
-            textureSize: fTextureSize,
+            textureSize: textureSize,
           ),
         ),
         idleRight: UISpriteAnimationsConfig.loadKnightPlayerIdleRight6(),
@@ -51,32 +49,31 @@ final class KnightPlayerConfig {
           'gameplay/characters/player/knight/knight_player_run_left_6.png',
           GameplaySpriteAnimationConfig.createStandardData(
             amount: 6,
-            textureSize: fTextureSize,
+            textureSize: textureSize,
           ),
         ),
         runRight: SpriteAnimation.load(
           'gameplay/characters/player/knight/knight_player_run_right_6.png',
           GameplaySpriteAnimationConfig.createStandardData(
             amount: 6,
-            textureSize: fTextureSize,
+            textureSize: textureSize,
           ),
         ),
       );
 
-  static final LightingConfig fLightingConfig = LightingConfig(
+  static final LightingConfig lightingConfig = LightingConfig(
     radius: GameplayTileConfig.kTileDimensionStandard,
     blurBorder: GameplayTileConfig.kTileDimensionStandard,
-    color: CharacterFxParticlesAnimationsConfig.fLightingConfigColor,
+    color: CharacterFxParticlesAnimationsConfig.lightingConfigColor,
   );
 
-  static final Vector2 fCryptComponentSize =
-      GameplayTileConfig.fTileSizeStandard;
+  static final Vector2 cryptComponentSize = GameplayTileConfig.tileSizeStandard;
   static Future<Sprite> loadCryptSprite() =>
       Sprite.load('gameplay/characters/player/player_crypt_1.png');
   static DDGameDecoration createCryptComponent(Vector2 position) =>
       DDGameDecoration.withSprite(
         sprite: loadCryptSprite(),
         position: Vector2(position.x, position.y),
-        size: fCryptComponentSize,
+        size: cryptComponentSize,
       );
 }

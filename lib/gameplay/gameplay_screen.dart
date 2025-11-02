@@ -21,7 +21,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
   @override
   Widget build(BuildContext gameplayContext) {
     return MapNavigator(
-      maps: GameplayMapManager.fAllMaps,
+      maps: GameplayMapManager.allMaps,
       initialMap: GameplayMapConfig.kForest1Id,
       builder: (context, arguments, mapItem) {
         final mapLightingColor = ColorHelper.fromHex(

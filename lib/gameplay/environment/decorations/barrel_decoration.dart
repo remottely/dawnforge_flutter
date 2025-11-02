@@ -7,7 +7,7 @@ import 'package:darkness_dungeon/shared/framework/dd_game_decoration.dart';
 final class _BarrelDecorationConfig {
   _BarrelDecorationConfig._();
 
-  static final Vector2 _fComponentSize = GameplayTileConfig.fTileSizeStandard;
+  static final Vector2 _componentSize = GameplayTileConfig.tileSizeStandard;
 
   static Future<Sprite> _loadSprite() =>
       Sprite.load('gameplay/environment/decorations/barrel_decoration_1.png');
@@ -20,7 +20,7 @@ class BarrelDecorationView extends DDPushableDecoration {
   BarrelDecorationView({required super.position})
     : super.withSprite(
         sprite: _BarrelDecorationConfig._loadSprite(),
-        size: _BarrelDecorationConfig._fComponentSize,
+        size: _BarrelDecorationConfig._componentSize,
       );
 
   @override

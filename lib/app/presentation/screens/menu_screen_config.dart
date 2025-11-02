@@ -8,7 +8,7 @@ class MenuScreenConfig {
     milliseconds: 300,
   );
   static const Duration kCharacterAnimationInterval = Duration(seconds: 2);
-  static final List<Future<SpriteAnimation>> loadCharacterSpriteAnimations = [
+  static final List<Future<SpriteAnimation>> characterSpriteAnimations = [
     UISpriteAnimationsConfig.loadKnightPlayerIdleRight6(),
     UISpriteAnimationsConfig.loadGoblinEnemyIdleRight6(),
     UISpriteAnimationsConfig.loadImpEnemyIdleRight4(),
@@ -16,7 +16,7 @@ class MenuScreenConfig {
     UISpriteAnimationsConfig.loadDungeonBossEnemyIdleRight4(),
   ];
 
-  static final fLoadKeyboardSprite = Sprite.load(
+  static final Future<Sprite> keyboardSprite = Sprite.load(
     'ui/controls/keyboard_tip.png',
   );
 

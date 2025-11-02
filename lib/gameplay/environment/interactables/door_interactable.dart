@@ -24,7 +24,7 @@ final class _DoorInteractableConfig {
         'gameplay/environment/interactables/door_interactable_opening_14.png',
         GameplaySpriteAnimationConfig.createStandardData(
           amount: 14,
-          textureSize: GameplayTileConfig.fTileSizeExtraLarge,
+          textureSize: GameplayTileConfig.tileSizeExtraLarge,
         ),
       );
 

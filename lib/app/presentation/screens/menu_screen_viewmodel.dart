@@ -26,7 +26,7 @@ abstract class MenuScreenViewModel extends State<MenuScreen> {
         setState(() {
           currentCharacterSpriteIndex++;
           if (currentCharacterSpriteIndex >
-              MenuScreenConfig.loadCharacterSpriteAnimations.length - 1) {
+              MenuScreenConfig.characterSpriteAnimations.length - 1) {
             currentCharacterSpriteIndex = 0;
           }
         });

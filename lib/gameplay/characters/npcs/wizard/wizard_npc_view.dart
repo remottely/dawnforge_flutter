@@ -17,9 +17,9 @@ class WizardNpcView extends SimpleNpc with KeyboardEventListener {
 
   WizardNpcView(Vector2 position)
     : super(
-        animation: WizardNpcConfig.fLoadDirectionalSpriteAnimation,
+        animation: WizardNpcConfig.directionalSpriteAnimation,
         position: position,
-        size: WizardNpcConfig.fComponentSize,
+        size: WizardNpcConfig.componentSize,
       );
 
   @override

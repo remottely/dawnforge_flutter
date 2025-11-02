@@ -17,19 +17,19 @@ final class DungeonMiniBossEnemyConfig {
 
   static const int kFireballAttackDamageReduction = 3;
 
-  static final Vector2 fTextureSize = Vector2(16, 24);
-  static final Vector2 fComponentSize = Vector2(
+  static final Vector2 textureSize = Vector2(16, 24);
+  static final Vector2 componentSize = Vector2(
     GameplayTileConfig.kTileDimensionStandard * 0.68,
     GameplayTileConfig.kTileDimensionStandard * 0.93,
   );
 
   static final SimpleDirectionAnimation
-  fLoadDirectionalSpriteAnimation = SimpleDirectionAnimation(
+  directionalSpriteAnimation = SimpleDirectionAnimation(
     idleLeft: SpriteAnimation.load(
       'gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_idle_left_4.png',
       GameplaySpriteAnimationConfig.createStandardData(
         amount: 4,
-        textureSize: fTextureSize,
+        textureSize: textureSize,
       ),
     ),
     idleRight: UISpriteAnimationsConfig.loadDungeonMiniBossEnemyIdleRight4(),
@@ -37,14 +37,14 @@ final class DungeonMiniBossEnemyConfig {
       'gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_run_left_4.png',
       GameplaySpriteAnimationConfig.createStandardData(
         amount: 4,
-        textureSize: fTextureSize,
+        textureSize: textureSize,
       ),
     ),
     runRight: SpriteAnimation.load(
       'gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_run_right_4.png',
       GameplaySpriteAnimationConfig.createStandardData(
         amount: 4,
-        textureSize: fTextureSize,
+        textureSize: textureSize,
       ),
     ),
   );

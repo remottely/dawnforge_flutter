@@ -12,7 +12,7 @@ final class LifePotionConfig {
   static const double kHealAmount =
       GameplayInteractableConfig.kStatsAmountLarge;
 
-  static final Vector2 _fComponentSize = GameplayTileConfig.fTileSizeStandard;
+  static final Vector2 _componentSize = GameplayTileConfig.tileSizeStandard;
   static Future<Sprite> _loadSprite() => Sprite.load(
     'gameplay/environment/interactables/life_potion_interactable_1.png',
   );
@@ -27,7 +27,7 @@ class LifePotionDecorationView extends DDSensorPlayerDecoration {
       super.withSprite(
         sprite: LifePotionConfig._loadSprite(),
         position: position,
-        size: LifePotionConfig._fComponentSize,
+        size: LifePotionConfig._componentSize,
       );
 
   @override

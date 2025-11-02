@@ -7,22 +7,22 @@ import 'package:darkness_dungeon/shared/framework/dd_game_decoration.dart';
 final class _TorchDecorationConfig {
   _TorchDecorationConfig._();
 
-  static final Vector2 _fTextureSize = GameplayTileConfig.fTileSizeStandard;
-  static final Vector2 _fComponentSize = _fTextureSize;
+  static final Vector2 _textureSize = GameplayTileConfig.tileSizeStandard;
+  static final Vector2 _componentSize = _textureSize;
 
   static Future<SpriteAnimation> _loadSpriteAnimation() => SpriteAnimation.load(
     'gameplay/environment/decorations/torch_decoration_6.png',
     GameplaySpriteAnimationConfig.createStandardData(
       amount: 6,
-      textureSize: _fTextureSize,
+      textureSize: _textureSize,
     ),
   );
 
-  static final LightingConfig _fLightingConfig = LightingConfig(
+  static final LightingConfig _lightingConfig = LightingConfig(
     radius: GameplayTileConfig.kTileDimensionExtraLarge,
     blurBorder: GameplayTileConfig.kTileDimensionStandard,
     pulseVariation: 0.1,
-    color: CharacterFxParticlesAnimationsConfig.fLightingConfigColor,
+    color: CharacterFxParticlesAnimationsConfig.lightingConfigColor,
   );
 }
 
@@ -33,7 +33,7 @@ class TorchDecorationView extends DDGameDecoration {
     : _isExtinguished = false,
       super.withAnimation(
         animation: _TorchDecorationConfig._loadSpriteAnimation(),
-        size: _TorchDecorationConfig._fComponentSize,
+        size: _TorchDecorationConfig._componentSize,
       ) {
     _setupLighting();
   }
@@ -42,7 +42,7 @@ class TorchDecorationView extends DDGameDecoration {
     : _isExtinguished = true,
       super.withAnimation(
         animation: _TorchDecorationConfig._loadSpriteAnimation(),
-        size: _TorchDecorationConfig._fComponentSize,
+        size: _TorchDecorationConfig._componentSize,
       ) {
     _setupLighting();
   }
@@ -55,6 +55,6 @@ class TorchDecorationView extends DDGameDecoration {
   }
 
   void _setupLighting() {
-    setupLighting(_TorchDecorationConfig._fLightingConfig);
+    setupLighting(_TorchDecorationConfig._lightingConfig);
   }
 }

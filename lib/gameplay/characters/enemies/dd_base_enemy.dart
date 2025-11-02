@@ -121,13 +121,13 @@ abstract class DDBaseEnemy<
           animation: CharacterFireballAttackConfig.createExecutionAnimation(),
           animationDestroy:
               CharacterFireballAttackConfig.createDestroyAnimation(),
-          size: CharacterFireballAttackConfig.fComponentSize,
+          size: CharacterFireballAttackConfig.componentSize,
           damage: controller.model.primaryAttackDamage,
           speed: speed * CharacterFireballAttackConfig.kSpeedMultiplier,
           execute: CharacterFireballAttackConfig.playExecutionAudio,
           onDestroy: CharacterFireballAttackConfig.playDestroyAudio,
           collision: CharacterFireballAttackConfig.createHitbox(),
-          lightingConfig: CharacterFireballAttackConfig.fLightingConfig,
+          lightingConfig: CharacterFireballAttackConfig.lightingConfig,
         );
       },
     );

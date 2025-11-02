@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('GameplayMapManager Configuration', () {
     test('should have valid map configurations in maps getter', () {
-      final maps = GameplayMapManager.fAllMaps;
+      final maps = GameplayMapManager.allMaps;
 
       expect(maps, isNotEmpty);
       expect(maps.containsKey('map1'), isTrue);
@@ -13,7 +13,7 @@ void main() {
 
     test('should provide map properties from Tiled files', () {
       // Test that the maps function is accessible (integration test would be needed for full properties test)
-      final maps = GameplayMapManager.fAllMaps;
+      final maps = GameplayMapManager.allMaps;
       expect(maps, isNotEmpty);
       expect(maps.keys, contains('map1'));
       expect(maps.keys, contains('dungeon1'));

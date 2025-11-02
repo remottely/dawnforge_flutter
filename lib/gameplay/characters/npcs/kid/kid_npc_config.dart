@@ -5,10 +5,10 @@ import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 final class KidNpcConfig {
   KidNpcConfig._();
 
-  static final Vector2 fTextureSize = Vector2(16, 22);
-  static final Vector2 fComponentSize = Vector2(8, 11);
+  static final Vector2 textureSize = Vector2(16, 22);
+  static final Vector2 componentSize = Vector2(8, 11);
 
-  static final SimpleDirectionAnimation fLoadDirectionalSpriteAnimation =
+  static final SimpleDirectionAnimation directionalSpriteAnimation =
       SimpleDirectionAnimation(
         idleRight: UISpriteAnimationsConfig.loadKidNpcIdleLeft4(),
         runRight: UISpriteAnimationsConfig.loadKidNpcIdleLeft4(),

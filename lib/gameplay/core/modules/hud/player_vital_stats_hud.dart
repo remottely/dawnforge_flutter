@@ -11,8 +11,8 @@ class PlayerVitalStatsHUD extends InterfaceComponent {
   PlayerVitalStatsHUD()
     : super(
         id: PlayerVitalStatsHUDConfig.kComponentId,
-        size: PlayerVitalStatsHUDConfig.fGetSize,
-        position: PlayerVitalStatsHUDConfig.fGetPosition,
+        size: PlayerVitalStatsHUDConfig.componentSize,
+        position: PlayerVitalStatsHUDConfig.componentPosition,
         spriteUnselected: PlayerVitalStatsHUDConfig.loadHealthUISprite(),
       );
 
@@ -109,13 +109,12 @@ class PlayerVitalStatsHUD extends InterfaceComponent {
   }
 
   Color _getHealthBarColor(double currentHealthBarWidth) {
-    final double _fHealthPercentage =
+    final double _healthPercentage =
         currentHealthBarWidth / PlayerVitalStatsHUDConfig.kBarWidth;
 
-    if (_fHealthPercentage >
-        PlayerVitalStatsHUDConfig.kHealthWarningThreshold) {
+    if (_healthPercentage > PlayerVitalStatsHUDConfig.kHealthWarningThreshold) {
       return PlayerVitalStatsHUDConfig.kHealthBarGoodColor;
-    } else if (_fHealthPercentage >
+    } else if (_healthPercentage >
         PlayerVitalStatsHUDConfig.kHealthCriticalThreshold) {
       return PlayerVitalStatsHUDConfig.kHealthBarWarningColor;
     } else {

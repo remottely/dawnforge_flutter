@@ -9,13 +9,13 @@ final class WizardNpcConfig {
 
   static const double kVisionRadius = CharacterConfig.kVisionRadiusExtraSmall;
 
-  static final Vector2 fTextureSize = Vector2(16, 22);
-  static final Vector2 fComponentSize = Vector2(
+  static final Vector2 textureSize = Vector2(16, 22);
+  static final Vector2 componentSize = Vector2(
     GameplayTileConfig.kTileDimensionStandard * 0.8,
     GameplayTileConfig.kTileDimensionStandard * 1.0,
   );
 
-  static final SimpleDirectionAnimation fLoadDirectionalSpriteAnimation =
+  static final SimpleDirectionAnimation directionalSpriteAnimation =
       SimpleDirectionAnimation(
         idleRight: UISpriteAnimationsConfig.loadWizardNpcIdleLeft4(),
         runRight: UISpriteAnimationsConfig.loadWizardNpcIdleLeft4(),

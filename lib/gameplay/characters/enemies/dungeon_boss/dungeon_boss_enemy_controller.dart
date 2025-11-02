@@ -24,11 +24,11 @@ class DungeonBossEnemyController
 
   @override
   void update(double dt) {
-    if (!model.hasSeenPlayerFirst) {
+    if (!model.isFirstPlayerSighted) {
       onSeePlayer(
         closeVisionRadius: model.closeVisionRadius,
         observed: (player) {
-          model.hasSeenPlayerFirst = true;
+          model.registerFirstPlayerSighting();
           onFirstPlayerSight(player);
         },
       );

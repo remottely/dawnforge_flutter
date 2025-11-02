@@ -14,18 +14,18 @@ final class GoblinEnemyConfig {
   static const double kLife = CharacterConfig.kLifeMedium;
   static const double kSpeed = CharacterConfig.kSpeedSlow;
 
-  static final Vector2 fTextureSize = GameplayTileConfig.fTileSizeStandard;
-  static final Vector2 fComponentSize = Vector2.all(
+  static final Vector2 textureSize = GameplayTileConfig.tileSizeStandard;
+  static final Vector2 componentSize = Vector2.all(
     GameplayTileConfig.kTileDimensionStandard * 0.8,
   );
 
-  static final SimpleDirectionAnimation fLoadDirectionalSpriteAnimation =
+  static final SimpleDirectionAnimation directionalSpriteAnimation =
       SimpleDirectionAnimation(
         idleLeft: SpriteAnimation.load(
           'gameplay/characters/enemies/goblin/goblin_enemy_idle_left_6.png',
           GameplaySpriteAnimationConfig.createStandardData(
             amount: 6,
-            textureSize: fTextureSize,
+            textureSize: textureSize,
           ),
         ),
         idleRight: UISpriteAnimationsConfig.loadGoblinEnemyIdleRight6(),
@@ -33,14 +33,14 @@ final class GoblinEnemyConfig {
           'gameplay/characters/enemies/goblin/goblin_enemy_run_left_6.png',
           GameplaySpriteAnimationConfig.createStandardData(
             amount: 6,
-            textureSize: fTextureSize,
+            textureSize: textureSize,
           ),
         ),
         runRight: SpriteAnimation.load(
           'gameplay/characters/enemies/goblin/goblin_enemy_run_right_6.png',
           GameplaySpriteAnimationConfig.createStandardData(
             amount: 6,
-            textureSize: fTextureSize,
+            textureSize: textureSize,
           ),
         ),
       );

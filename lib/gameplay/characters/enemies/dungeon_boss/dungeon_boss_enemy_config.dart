@@ -15,25 +15,25 @@ final class DungeonBossEnemyConfig {
   static const double kLife = CharacterConfig.kLifeExtraLarge;
   static const double kSpeed = CharacterConfig.kSpeedSlow;
 
-  static final Vector2 fTextureSize = Vector2(32, 36);
-  static final Vector2 fComponentSize = fTextureSize;
+  static final Vector2 textureSize = Vector2(32, 36);
+  static final Vector2 componentSize = textureSize;
 
   static final SimpleDirectionAnimation
-  fLoadDirectionalSpriteAnimation = SimpleDirectionAnimation(
+  directionalSpriteAnimation = SimpleDirectionAnimation(
     idleLeft: UISpriteAnimationsConfig.loadDungeonBossEnemyIdleLeft4(),
     idleRight: UISpriteAnimationsConfig.loadDungeonBossEnemyIdleRight4(),
     runLeft: SpriteAnimation.load(
       'gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_run_left_4.png',
       GameplaySpriteAnimationConfig.createStandardData(
         amount: 4,
-        textureSize: fTextureSize,
+        textureSize: textureSize,
       ),
     ),
     runRight: SpriteAnimation.load(
       'gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_run_right_4.png',
       GameplaySpriteAnimationConfig.createStandardData(
         amount: 4,
-        textureSize: fTextureSize,
+        textureSize: textureSize,
       ),
     ),
   );

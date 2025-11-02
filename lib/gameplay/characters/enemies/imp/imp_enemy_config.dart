@@ -14,18 +14,18 @@ final class ImpEnemyConfig {
   static const double kLife = CharacterConfig.kLifeSmall;
   static const double kSpeed = CharacterConfig.kSpeedMedium;
 
-  static final Vector2 fTextureSize = GameplayTileConfig.fTileSizeStandard;
-  static final Vector2 fComponentSize = Vector2.all(
+  static final Vector2 textureSize = GameplayTileConfig.tileSizeStandard;
+  static final Vector2 componentSize = Vector2.all(
     GameplayTileConfig.kTileDimensionStandard * 0.8,
   );
 
-  static final SimpleDirectionAnimation fLoadDirectionalSpriteAnimation =
+  static final SimpleDirectionAnimation directionalSpriteAnimation =
       SimpleDirectionAnimation(
         idleLeft: SpriteAnimation.load(
           'gameplay/characters/enemies/imp/imp_enemy_idle_left_4.png',
           GameplaySpriteAnimationConfig.createStandardData(
             amount: 4,
-            textureSize: fTextureSize,
+            textureSize: textureSize,
           ),
         ),
         idleRight: UISpriteAnimationsConfig.loadImpEnemyIdleRight4(),
@@ -33,14 +33,14 @@ final class ImpEnemyConfig {
           'gameplay/characters/enemies/imp/imp_enemy_run_left_4.png',
           GameplaySpriteAnimationConfig.createStandardData(
             amount: 4,
-            textureSize: fTextureSize,
+            textureSize: textureSize,
           ),
         ),
         runRight: SpriteAnimation.load(
           'gameplay/characters/enemies/imp/imp_enemy_run_right_4.png',
           GameplaySpriteAnimationConfig.createStandardData(
             amount: 4,
-            textureSize: fTextureSize,
+            textureSize: textureSize,
           ),
         ),
       );

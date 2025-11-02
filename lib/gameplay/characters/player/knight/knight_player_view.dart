@@ -14,13 +14,13 @@ class KnightPlayerView extends SimplePlayer
 
   KnightPlayerView(Vector2 position, {required KnightPlayerModel model})
     : super(
-        animation: KnightPlayerConfig.fLoadDirectionalSpriteAnimation,
-        size: KnightPlayerConfig.fComponentSize,
+        animation: KnightPlayerConfig.directionalSpriteAnimation,
+        size: KnightPlayerConfig.componentSize,
         position: position,
         life: KnightPlayerConfig.kLife,
         speed: KnightPlayerConfig.kSpeed,
       ) {
-    setupLighting(KnightPlayerConfig.fLightingConfig);
+    setupLighting(KnightPlayerConfig.lightingConfig);
     setupMovementByJoystick(intensityEnabled: true);
     _initializeController(model);
   }
@@ -38,7 +38,7 @@ class KnightPlayerView extends SimplePlayer
 
   @override
   Future<void> onLoad() {
-    add(KnightPlayerConfig.fHitbox);
+    add(KnightPlayerConfig.hitbox);
     return super.onLoad();
   }
 
@@ -117,12 +117,12 @@ class KnightPlayerView extends SimplePlayer
     simpleAttackRange(
       animationRight: CharacterFireballAttackConfig.createExecutionAnimation(),
       animationDestroy: CharacterFireballAttackConfig.createDestroyAnimation(),
-      size: CharacterFireballAttackConfig.fComponentSize,
+      size: CharacterFireballAttackConfig.componentSize,
       damage: damage,
       speed: speed * CharacterFireballAttackConfig.kSpeedMultiplier,
       onDestroy: CharacterFireballAttackConfig.playDestroyAudio,
       collision: CharacterFireballAttackConfig.createHitbox(),
-      lightingConfig: CharacterFireballAttackConfig.fLightingConfig,
+      lightingConfig: CharacterFireballAttackConfig.lightingConfig,
     );
     CharacterFireballAttackConfig.playExecutionAudio();
   }

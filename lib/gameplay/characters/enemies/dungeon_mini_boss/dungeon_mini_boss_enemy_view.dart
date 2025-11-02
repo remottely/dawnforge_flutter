@@ -9,9 +9,9 @@ class DungeonMiniBossEnemyView
         DDBaseEnemy<DungeonMiniBossEnemyController, DungeonMiniBossEnemyModel> {
   DungeonMiniBossEnemyView(Vector2 position)
     : super(
-        animation: DungeonMiniBossEnemyConfig.fLoadDirectionalSpriteAnimation,
+        animation: DungeonMiniBossEnemyConfig.directionalSpriteAnimation,
         position: position,
-        size: DungeonMiniBossEnemyConfig.fComponentSize,
+        size: DungeonMiniBossEnemyConfig.componentSize,
         speed: DungeonMiniBossEnemyConfig.kSpeed,
         life: DungeonMiniBossEnemyConfig.kLife,
       );

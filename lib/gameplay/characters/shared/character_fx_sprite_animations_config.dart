@@ -8,7 +8,7 @@ class CharacterFxSpriteAnimationsConfig {
         'gameplay/characters/shared/character_explosion_right_7.png',
         GameplaySpriteAnimationConfig.createStandardData(
           amount: 7,
-          textureSize: GameplayTileConfig.fTileSizeExtraLarge,
+          textureSize: GameplayTileConfig.tileSizeExtraLarge,
         ),
       );
 
@@ -17,7 +17,7 @@ class CharacterFxSpriteAnimationsConfig {
         'gameplay/characters/shared/character_explosion_smoke_right_5.png',
         GameplaySpriteAnimationConfig.createStandardData(
           amount: 5,
-          textureSize: GameplayTileConfig.fTileSizeStandard,
+          textureSize: GameplayTileConfig.tileSizeStandard,
         ),
       );
 }

@@ -11,10 +11,10 @@ final class GameplayTileConfig {
   static const double kTileDimensionLarge = 24.0;
   static const double kTileDimensionExtraLarge = 32.0;
 
-  static final Vector2 fTileSizeSmall = Vector2.all(kTileDimensionSmall);
-  static final Vector2 fTileSizeStandard = Vector2.all(kTileDimensionStandard);
-  static final Vector2 fTileSizeLarge = Vector2.all(kTileDimensionLarge);
-  static final Vector2 fTileSizeExtraLarge = Vector2.all(
+  static final Vector2 tileSizeSmall = Vector2.all(kTileDimensionSmall);
+  static final Vector2 tileSizeStandard = Vector2.all(kTileDimensionStandard);
+  static final Vector2 tileSizeLarge = Vector2.all(kTileDimensionLarge);
+  static final Vector2 tileSizeExtraLarge = Vector2.all(
     kTileDimensionExtraLarge,
   );
 }

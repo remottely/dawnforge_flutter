@@ -18,12 +18,12 @@ class CharacterEmoteManager {
         asset,
         GameplaySpriteAnimationConfig.createStandardData(
           amount: amount,
-          textureSize: GameplayTileConfig.fTileSizeExtraLarge,
+          textureSize: GameplayTileConfig.tileSizeExtraLarge,
         ),
       ),
       target: target,
       loop: false,
-      size: GameplayTileConfig.fTileSizeSmall,
+      size: GameplayTileConfig.tileSizeSmall,
       offset: Vector2(0, -3),
     );
   }

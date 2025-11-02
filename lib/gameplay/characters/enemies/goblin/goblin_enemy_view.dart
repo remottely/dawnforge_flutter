@@ -8,9 +8,9 @@ class GoblinEnemyView
     extends DDBaseEnemy<GoblinEnemyController, GoblinEnemyModel> {
   GoblinEnemyView(Vector2 position)
     : super(
-        animation: GoblinEnemyConfig.fLoadDirectionalSpriteAnimation,
+        animation: GoblinEnemyConfig.directionalSpriteAnimation,
         position: position,
-        size: GoblinEnemyConfig.fComponentSize,
+        size: GoblinEnemyConfig.componentSize,
         speed: GoblinEnemyConfig.kSpeed,
         life: GoblinEnemyConfig.kLife,
       );

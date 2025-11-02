@@ -20,7 +20,7 @@ class CharacterFxParticlesAnimationsConfig {
     fontFamily: _kShowDamageFontFamily,
   );
 
-  static final Color fLightingConfigColor = Colors.deepOrangeAccent.withValues(
+  static final Color lightingConfigColor = Colors.deepOrangeAccent.withValues(
     alpha: 0.2,
   );
 

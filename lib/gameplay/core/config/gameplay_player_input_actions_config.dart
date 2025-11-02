@@ -101,11 +101,11 @@ final class GameplayKeyboardConfig {
   static const LogicalKeyboardKey kFireballAttackKey = LogicalKeyboardKey.keyZ;
   static const LogicalKeyboardKey kInteractionKey = LogicalKeyboardKey.keyC;
 
-  static final List<KeyboardDirectionalKeys> fKeyboardDirectionalKeys = [
+  static final List<KeyboardDirectionalKeys> keyboardDirectionalKeys = [
     KeyboardDirectionalKeys.wasd(),
     KeyboardDirectionalKeys.arrows(),
   ];
-  static final List<LogicalKeyboardKey> fKeyboardAcceptedKeys = [
+  static final List<LogicalKeyboardKey> keyboardAcceptedKeys = [
     kPrimaryAttackKey,
     kFireballAttackKey,
   ];
@@ -113,8 +113,8 @@ final class GameplayKeyboardConfig {
   static PlayerController _createKeyboardInput() {
     return Keyboard(
       config: KeyboardConfig(
-        directionalKeys: fKeyboardDirectionalKeys,
-        acceptedKeys: fKeyboardAcceptedKeys,
+        directionalKeys: keyboardDirectionalKeys,
+        acceptedKeys: keyboardAcceptedKeys,
       ),
     );
   }
