@@ -1,19 +1,13 @@
 import 'package:darkness_dungeon/shared/design_system/dd_design_system.dart';
 import 'package:flutter/material.dart';
 
-class AppRadioButton<T> extends StatelessWidget {
-  static const Color _kBorderColor = Colors.white;
-  static const Color _kTextColor = Colors.white;
-  static const double _kBorderWidth = 2.0;
-  static const double _kIndicatorSize = 8.0;
-  static const double _kIndicatorMargin = 2.0;
-
+class DDRadioButton<T> extends StatelessWidget {
   final T value;
   final T? group;
   final String? label;
   final ValueChanged<T>? onChange;
 
-  const AppRadioButton({
+  const DDRadioButton({
     super.key,
     required this.value,
     this.group,
@@ -30,7 +24,7 @@ class AppRadioButton<T> extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildRadioIndicator(),
+          _buildIndicator(),
           if (label != null) ...[
             const SizedBox(width: DDDesignSystem.kSpacingExtraSmall),
             _buildLabel(),
@@ -40,21 +34,29 @@ class AppRadioButton<T> extends StatelessWidget {
     );
   }
 
-  Widget _buildRadioIndicator() {
+  Widget _buildIndicator() {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: _kBorderColor, width: _kBorderWidth),
+        border: Border.all(
+          color: DDDesignSystem.kBorderColor,
+          width: DDDesignSystem.kButtonBorderRadius,
+        ),
       ),
       child: Container(
-        width: _kIndicatorSize,
-        height: _kIndicatorSize,
-        margin: const EdgeInsets.all(_kIndicatorMargin),
-        color: value == group ? _kBorderColor : Colors.transparent,
+        width: DDDesignSystem.kRadioButtonDimension,
+        height: DDDesignSystem.kRadioButtonDimension,
+        margin: const EdgeInsets.all(DDDesignSystem.kSpacingSuperSmall),
+        color: value == group
+            ? DDDesignSystem.kBorderColor
+            : Colors.transparent,
       ),
     );
   }
 
   Widget _buildLabel() {
-    return Text(label!, style: const TextStyle(color: _kTextColor));
+    return Text(
+      label!,
+      style: const TextStyle(color: DDDesignSystem.kTextColor),
+    );
   }
 }

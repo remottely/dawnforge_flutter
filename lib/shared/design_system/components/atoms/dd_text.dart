@@ -1,38 +1,25 @@
 import 'package:darkness_dungeon/shared/design_system/dd_design_system.dart';
 import 'package:flutter/material.dart';
 
-class AppStyledText extends StatelessWidget {
-  static const Color _kStandardColor =
-      Colors.white; // TODO(Kevin): Move to design system config
-
+class DDText extends StatelessWidget {
   final String text;
   final double fontSize;
   final Color color;
   final TextAlign textAlign;
 
-  const AppStyledText({
+  const DDText.small({
     super.key,
     required this.text,
-    this.fontSize = DDDesignSystem.kTypographyBodyFontSize,
-    this.color = _kStandardColor,
+    this.color = DDDesignSystem.kTextColor,
     this.textAlign = TextAlign.start,
-  });
+  }) : fontSize = DDDesignSystem.kTypographySmallFontSize;
 
-  const AppStyledText.large({
+  const DDText.large({
     super.key,
     required this.text,
-    this.fontSize = DDDesignSystem.kTypographyDisplayFontSize,
-    this.color = _kStandardColor,
+    this.color = DDDesignSystem.kTextColor,
     this.textAlign = TextAlign.start,
-  });
-
-  const AppStyledText.small({
-    super.key,
-    required this.text,
-    this.fontSize = DDDesignSystem.kTypographySmallFontSize,
-    this.color = _kStandardColor,
-    this.textAlign = TextAlign.start,
-  });
+  }) : fontSize = DDDesignSystem.kTypographyDisplayFontSize;
 
   @override
   Widget build(BuildContext context) {

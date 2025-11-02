@@ -1,12 +1,12 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_player_input_actions_config.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/helpers/app_environment.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/helpers/color_helper.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/color_helper.dart';
 import 'package:darkness_dungeon/gameplay/environment/sensors/map_transition_sensor.dart';
+import 'package:darkness_dungeon/gameplay/gameplay_screen_config.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen_viewmodel.dart';
 import 'package:flutter/material.dart';
 
@@ -45,8 +45,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
             GameplayTileConfig.kTileDimensionStandard;
         final knightPlayer = buildKnightPlayer(playerPosition);
 
-        final playerInput =
-            GameplayPlayerInputActionsConfig.createPlayerInput();
+        final playerInput = GameplayScreenConfig.createPlayerInput();
 
         return Material(
           color: Colors.transparent,

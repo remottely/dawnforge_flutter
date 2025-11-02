@@ -6,7 +6,7 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_confi
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
 
 class UISpriteAnimationsConfig {
   static Future<SpriteAnimation> loadKnightPlayerIdleRight6() =>

@@ -11,7 +11,7 @@ class DDButton extends StatelessWidget {
     required this.labelText,
     required this.onPressed,
     super.key,
-  }) : backgroundColor = DDDesignSystem.kStandardDialogBackgroundColor,
+  }) : backgroundColor = DDDesignSystem.kDialogBackgroundColor,
        fontSize = DDDesignSystem.kTypographyBodyFontSize;
 
   const DDButton.elevated({
@@ -26,7 +26,7 @@ class DDButton extends StatelessWidget {
     return ElevatedButton(
       style: ButtonStyle(
         backgroundColor: WidgetStateProperty.all(backgroundColor),
-        shape: backgroundColor != DDDesignSystem.kStandardDialogBackgroundColor
+        shape: backgroundColor != DDDesignSystem.kDialogBackgroundColor
             ? WidgetStateProperty.all(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(
@@ -40,7 +40,7 @@ class DDButton extends StatelessWidget {
       child: Text(
         labelText,
         style: TextStyle(
-          color: DDDesignSystem.kStandardTextColor,
+          color: DDDesignSystem.kTextColor,
           fontFamily: DDDesignSystem.kTypographyPrimaryFontFamily,
           fontSize: fontSize,
         ),

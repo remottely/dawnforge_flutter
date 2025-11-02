@@ -1,11 +1,11 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_camera_utils.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/gameplay_game_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_game_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/gameplay_hud.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen.dart';
+import 'package:darkness_dungeon/gameplay/gameplay_screen_config.dart';
 import 'package:flutter/material.dart';
 
 abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
@@ -28,7 +28,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    cameraConfig = GameplayCameraUtils.createCameraConfig(context);
+    cameraConfig = GameplayScreenConfig.createCameraConfig(context);
   }
 
   void _cleanupGameAudio() {

@@ -4,7 +4,7 @@ import 'package:darkness_dungeon/app/presentation/screens/menu_screen_viewmodel.
 import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/shared/components/dd_sprite_animation_widget.dart';
 import 'package:darkness_dungeon/shared/components/dd_sprite_widget.dart';
-import 'package:darkness_dungeon/shared/design_system/components/atoms/app_radio_button.dart';
+import 'package:darkness_dungeon/shared/design_system/components/atoms/dd_radio_button.dart';
 import 'package:darkness_dungeon/shared/design_system/dd_design_system.dart';
 import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
 import 'package:flame_splash_screen/flame_splash_screen.dart';
@@ -141,13 +141,13 @@ class _Controls extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       spacing: DDDesignSystem.kSpacingExtraSmall,
       children: [
-        AppRadioButton<InputActionsType>(
+        DDRadioButton<InputActionsType>(
           value: InputActionsType.keyboard,
           label: 'Keyboard',
           group: SettingsManager.instance.vIsJoystickInputSelected,
           onChange: onControlMethodChanged,
         ),
-        AppRadioButton<InputActionsType>(
+        DDRadioButton<InputActionsType>(
           value: InputActionsType.joystick,
           group: SettingsManager.instance.vIsJoystickInputSelected,
           label: 'Joystick',

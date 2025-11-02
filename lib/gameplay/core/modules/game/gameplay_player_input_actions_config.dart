@@ -1,21 +1,8 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-final class GameplayPlayerInputActionsConfig {
-  GameplayPlayerInputActionsConfig._();
 
-  /// Factories
-  static PlayerController createPlayerInput() {
-    return switch (SettingsManager.instance.vIsJoystickInputSelected) {
-      InputActionsType.keyboard =>
-        GameplayKeyboardConfig._createKeyboardInput(),
-      InputActionsType.joystick =>
-        GameplayJoystickConfig._createJoystickInput(),
-    };
-  }
-}
 
 final class GameplayJoystickConfig {
   GameplayJoystickConfig._();
@@ -54,7 +41,7 @@ final class GameplayJoystickConfig {
   static const double kPrimaryActionMarginRight = 50.0;
   static const double kSecondaryActionMarginRight = 160.0;
 
-  static PlayerController _createJoystickInput() {
+  static PlayerController createJoystickInput() {
     return Joystick(
       directional: JoystickDirectional(
         spriteBackgroundDirectional: _loadBackground(),
@@ -110,7 +97,7 @@ final class GameplayKeyboardConfig {
     kFireballAttackKey,
   ];
 
-  static PlayerController _createKeyboardInput() {
+  static PlayerController createKeyboardInput() {
     return Keyboard(
       config: KeyboardConfig(
         directionalKeys: keyboardDirectionalKeys,

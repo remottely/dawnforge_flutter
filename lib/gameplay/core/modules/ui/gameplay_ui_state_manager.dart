@@ -1,12 +1,12 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/app/presentation/screens/menu_screen.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_player_input_actions_config.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/gameplay_game_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_game_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_player_input_actions_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_config.dart';
-import 'package:darkness_dungeon/shared/design_system/components/atoms/app_styled_dialog.dart';
-import 'package:darkness_dungeon/shared/design_system/components/atoms/app_styled_text.dart';
 import 'package:darkness_dungeon/shared/design_system/components/atoms/dd_button.dart';
+import 'package:darkness_dungeon/shared/design_system/components/atoms/dd_dialog.dart';
+import 'package:darkness_dungeon/shared/design_system/components/atoms/dd_text.dart';
 import 'package:darkness_dungeon/shared/design_system/dd_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,7 +26,7 @@ final class GameplayUIStateManager {
       context: context,
       barrierDismissible: false,
       builder: (dialogContext) {
-        return AppStyledDialog(
+        return DDDialog(
           children: [
             Image.asset(
               GameplayUIConfig.kGameOverAsset,
@@ -50,9 +50,9 @@ final class GameplayUIStateManager {
       context: context,
       barrierDismissible: false,
       builder: (context) {
-        return AppStyledDialog(
+        return DDDialog(
           children: [
-            AppStyledText.large(
+            DDText.large(
               text: GameplayStringsLocation.instance.getString(
                 'congratulations',
               ),
@@ -62,14 +62,14 @@ final class GameplayUIStateManager {
               padding: const EdgeInsets.symmetric(
                 horizontal: GameplayUIConfig.kHorizontalSpacing,
               ),
-              child: AppStyledText.small(
+              child: DDText.small(
                 text: GameplayStringsLocation.instance.getString('thanks'),
                 textAlign: TextAlign.center,
               ),
             ),
             const SizedBox(height: DDDesignSystem.kSpacingExtraLarge),
             DDButton.elevated(
-              labelText: "OKay",
+              labelText: "OK",
               onPressed: () => _navigateToMainMenu(context),
             ),
           ],
