@@ -60,7 +60,7 @@ class WizardNpcView extends SimpleNpc with KeyboardEventListener {
   bool onKeyboard(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     if (_playerIsNearby &&
         event is KeyDownEvent &&
-        event.logicalKey == GameplayKeyboardConfig.kKeyboardPrimaryAttack) {
+        event.logicalKey == GameplayKeyboardConfig.kInteractionKey) {
       _controller.onPlayerDetected(gameRef.player!, interactionRequested: true);
 
       return true;
@@ -78,9 +78,7 @@ class WizardNpcView extends SimpleNpc with KeyboardEventListener {
       conversationSequence: WizardNpcConfig.createConversationSequence(),
       onChangeTalk: _controller.onConversationChanged,
       onFinish: _controller.onConversationFinished,
-      logicalKeyboardKeysToNext: [
-        GameplayKeyboardConfig.kKeyboardPrimaryAttack,
-      ],
+      logicalKeyboardKeysToNext: [GameplayKeyboardConfig.kPrimaryAttackKey],
     );
   }
 }

@@ -218,9 +218,7 @@ class DungeonBossEnemyView extends SimpleEnemy
       gameRef.context,
       player: player,
       conversationSequence: DungeonBossEnemyConfig.createConversationSequence(),
-      logicalKeyboardKeysToNext: [
-        GameplayKeyboardConfig.kKeyboardPrimaryAttack,
-      ],
+      logicalKeyboardKeysToNext: [GameplayKeyboardConfig.kPrimaryAttackKey],
       onChangeTalk: _onConversationChanged,
       onFinish: _onConversationFinished,
     );

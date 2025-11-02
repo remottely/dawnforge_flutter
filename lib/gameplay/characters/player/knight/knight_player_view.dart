@@ -135,6 +135,7 @@ class KnightPlayerView extends SimplePlayer
     add(
       CharacterEmoteManager.displayEmoteAboveCharacter(
         asset: CharacterEmoteManager.kExclamationEmoteAsset,
+        amount: 8,
         target: this,
       ),
     );

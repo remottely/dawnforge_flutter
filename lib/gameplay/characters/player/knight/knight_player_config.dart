@@ -10,7 +10,7 @@ final class KnightPlayerConfig {
   KnightPlayerConfig._();
 
   static const double kStandardLife = 200.0;
-  static const double kStandardSpeed =
+  static double kStandardSpeed =
       GameplayTileConfig.kTileDimensionStandard * 2.5;
   static const int kMaxEnergy = 100;
   static const int kToolUsageEnergyCost = 2;

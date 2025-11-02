@@ -19,10 +19,10 @@ class WizardNpcController {
   void onPlayerDetected(Player player, {bool interactionRequested = false}) {
     if (!model.hasBeenFirstInteraction ||
         (model.hasBeenFirstInteraction && interactionRequested)) {
-      // Use a flag
       _view.add(
         CharacterEmoteManager.displayEmoteAboveCharacter(
           asset: CharacterEmoteManager.kQuestionEmoteAsset,
+          amount: 8,
           target: _view,
         ),
       );

@@ -10,13 +10,14 @@ class CharacterEmoteManager {
 
   static AnimatedFollowerGameObject displayEmoteAboveCharacter({
     required String asset,
+    required int amount,
     required GameComponent target,
   }) {
     return AnimatedFollowerGameObject(
       animation: SpriteAnimation.load(
         asset,
         GameplaySpriteAnimationConfig.createStandardData(
-          amount: 8,
+          amount: amount,
           textureSize: GameplayTileConfig.fTileSizeExtraLarge,
         ),
       ),

@@ -45,10 +45,10 @@ class KnightPlayerController {
     if (event.event != ActionEvent.DOWN) return;
 
     if (event.id == GameplayJoystickConfig.kJoystickPrimaryAttackId ||
-        event.id == GameplayKeyboardConfig.kKeyboardPrimaryAttack) {
+        event.id == GameplayKeyboardConfig.kPrimaryAttackKey) {
       executePrimaryAttack();
     } else if (event.id == GameplayJoystickConfig.kJoystickFireballAttackId ||
-        event.id == GameplayKeyboardConfig.kKeyboardFireballAttack) {
+        event.id == GameplayKeyboardConfig.kFireballAttackKey) {
       executeFireballAttack();
     }
   }

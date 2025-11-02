@@ -97,7 +97,7 @@ final class GameplayUIStateManager {
       onClose: onClose,
       logicalKeyboardKeysToNext:
           logicalKeyboardKeysToNext ??
-          [GameplayKeyboardConfig.kKeyboardPrimaryAttack],
+          [GameplayKeyboardConfig.kPrimaryAttackKey],
     );
   }
 
