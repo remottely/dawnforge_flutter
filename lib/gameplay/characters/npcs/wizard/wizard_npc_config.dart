@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/conversation/gameplay_conversation_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 
 final class WizardNpcConfig {
@@ -11,8 +11,8 @@ final class WizardNpcConfig {
 
   static final Vector2 textureSize = Vector2(16, 22);
   static final Vector2 componentSize = Vector2(
-    GameplayTileConfig.kTileDimensionStandard * 0.8,
-    GameplayTileConfig.kTileDimensionStandard * 1.0,
+    GameplayTileConfig.kTileDimensionStandard,
+    22,
   );
 
   static final SimpleDirectionAnimation animation = SimpleDirectionAnimation(

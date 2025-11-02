@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/conversation/gameplay_conversation_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 
 final class DungeonBossEnemyConfig {
@@ -10,7 +10,8 @@ final class DungeonBossEnemyConfig {
   static const double kCloseVisionRadius =
       CharacterConfig.kVisionRadiusExtraLarge;
   static const double kPrimaryAttackDamage = CharacterConfig.kDamageExtraLarge;
-  static const int kPrimaryAttackInterval = CharacterConfig.kAttackIntervalExtraLarge;
+  static const int kPrimaryAttackInterval =
+      CharacterConfig.kAttackIntervalExtraLarge;
 
   static const double kLife = CharacterConfig.kLifeExtraLarge;
   static const double kSpeed = CharacterConfig.kSpeedSlow;
@@ -37,8 +38,15 @@ final class DungeonBossEnemyConfig {
     ),
   );
 
-  static RectangleHitbox createHitbox() =>
-      RectangleHitbox(position: Vector2(5, 11), size: Vector2(14, 16));
+  static const double hitboxStartPositionX = 6.0;
+  static const double hitboxStartPositionY = 6.0;
+  static RectangleHitbox createHitbox() => RectangleHitbox(
+    position: Vector2(hitboxStartPositionX, hitboxStartPositionY),
+    size: Vector2(
+      textureSize.x - (2 * hitboxStartPositionX),
+      textureSize.y - hitboxStartPositionY,
+    ),
+  );
 
   static List<Say> createConversationSequence() {
     return [

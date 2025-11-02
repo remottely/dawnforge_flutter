@@ -1,5 +1,7 @@
 fix:
 
+- fix: execute player.idle even in victory and game over dialogs
+
 - emote bug, displaying outside gameplayscreen area
 
 - win e die do not show in same time. how to resolve this issue? do to every enemy "enemy.idle"?

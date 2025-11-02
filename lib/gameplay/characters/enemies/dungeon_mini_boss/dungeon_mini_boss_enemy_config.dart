@@ -18,10 +18,13 @@ final class DungeonMiniBossEnemyConfig {
 
   static const int kFireballAttackDamageReduction = 3;
 
-  static final Vector2 textureSize = Vector2(16, 24);
+  static final Vector2 textureSize = Vector2(
+    GameplayTileConfig.kTileDimensionStandard,
+    GameplayTileConfig.kTileDimensionLarge,
+  );
   static final Vector2 componentSize = Vector2(
-    GameplayTileConfig.kTileDimensionStandard * 0.68,
-    GameplayTileConfig.kTileDimensionStandard * 0.93,
+    GameplayTileConfig.kTileDimensionStandard,
+    GameplayTileConfig.kTileDimensionLarge,
   );
 
   static final SimpleDirectionAnimation animation = SimpleDirectionAnimation(
@@ -49,6 +52,13 @@ final class DungeonMiniBossEnemyConfig {
     ),
   );
 
-  static RectangleHitbox createHitbox() =>
-      RectangleHitbox(position: Vector2(2.5, 8), size: Vector2(6, 7));
+  static const double hitboxStartPositionX = 2.0;
+  static const double hitboxStartPositionY = 4.0;
+  static RectangleHitbox createHitbox() => RectangleHitbox(
+    position: Vector2(hitboxStartPositionX, hitboxStartPositionY),
+    size: Vector2(
+      textureSize.x - (2 * hitboxStartPositionX),
+      textureSize.y - hitboxStartPositionY,
+    ),
+  );
 }

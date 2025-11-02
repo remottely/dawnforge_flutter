@@ -16,9 +16,7 @@ final class ImpEnemyConfig {
   static const double kSpeed = CharacterConfig.kSpeedMedium;
 
   static final Vector2 textureSize = GameplayTileConfig.tileSizeStandard;
-  static final Vector2 componentSize = Vector2.all(
-    GameplayTileConfig.kTileDimensionStandard * 0.8,
-  );
+  static final Vector2 componentSize = GameplayTileConfig.tileSizeStandard;
 
   static final SimpleDirectionAnimation animation = SimpleDirectionAnimation(
     idleLeft: SpriteAnimation.load(
@@ -45,6 +43,13 @@ final class ImpEnemyConfig {
     ),
   );
 
-  static RectangleHitbox createHitbox() =>
-      RectangleHitbox(position: Vector2(3, 5), size: Vector2.all(6));
+  static const double hitboxStartPositionX = 4.0;
+  static const double hitboxStartPositionY = 6.0;
+  static RectangleHitbox createHitbox() => RectangleHitbox(
+    position: Vector2(hitboxStartPositionX, hitboxStartPositionY),
+    size: Vector2(
+      textureSize.x - (2 * hitboxStartPositionX),
+      textureSize.y - hitboxStartPositionY,
+    ),
+  );
 }

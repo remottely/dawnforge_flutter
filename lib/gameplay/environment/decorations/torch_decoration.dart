@@ -43,9 +43,7 @@ class TorchDecorationView extends DDGameDecoration {
       super.withAnimation(
         animation: _TorchDecorationConfig._loadSpriteAnimation(),
         size: _TorchDecorationConfig._componentSize,
-      ) {
-    _setupLighting();
-  }
+      );
 
   @override
   void render(Canvas canvas) {
