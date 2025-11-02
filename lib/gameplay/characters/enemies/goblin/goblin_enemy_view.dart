@@ -1,11 +1,13 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/dd_base_enemy.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_model.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_primary_attack_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
 
-class GoblinEnemyView extends SimpleEnemy
-    with BlockMovementCollision, UseLifeBar {
-  final GoblinEnemyController _controller = GoblinEnemyController();
-
+class GoblinEnemyView
+    extends DDBaseEnemy<GoblinEnemyController, GoblinEnemyModel> {
   GoblinEnemyView(Vector2 position)
     : super(
         animation: GoblinEnemyConfig.fLoadDirectionalSpriteAnimation,
@@ -16,27 +18,38 @@ class GoblinEnemyView extends SimpleEnemy
       );
 
   @override
-  Future<void> onLoad() async {
-    await super.onLoad();
-    _controller.attachView(this);
-    add(GoblinEnemyConfig.createHitbox());
+  GoblinEnemyModel createModel() => GoblinEnemyModel();
+
+  @override
+  GoblinEnemyController createController(GoblinEnemyModel model) {
+    return GoblinEnemyController(
+      model: model,
+      onSeeAndMoveToPlayer: _onSeeAndMoveToPlayer,
+    );
   }
 
   @override
-  void update(double dt) {
-    super.update(dt);
-    _controller.onUpdate(dt);
-  }
+  RectangleHitbox createHitbox() => GoblinEnemyConfig.createHitbox();
 
-  @override
-  void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
-    _controller.onReceiveDamage(attacker, damage, id);
-    super.onReceiveDamage(attacker, damage, id);
-  }
-
-  @override
-  void onDie() {
-    _controller.onDie();
-    super.onDie();
+  /// Controller callback implementations
+  void _onSeeAndMoveToPlayer({
+    required double radiusVision,
+    required void Function(Player) closePlayer,
+  }) {
+    seeAndMoveToPlayer(
+      radiusVision: radiusVision,
+      closePlayer: (player) {
+        simpleAttackMelee(
+          size: GoblinEnemyConfig.kPrimaryAttackFxSize,
+          damage: controller.model.attackDamage,
+          interval: controller.model.attackInterval,
+          animationRight:
+              CharacterPrimaryAttackConfig.createEnemyExecutionAnimation(),
+          execute: () {
+            GameplayAudioManager.instance.playEnemyPrimaryAttackSfx();
+          },
+        );
+      },
+    );
   }
 }

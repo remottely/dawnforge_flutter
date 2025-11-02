@@ -1,26 +1,54 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/dd_base_enemy_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_model.dart';
 
-class DungeonBossEnemyController {
-  late DungeonBossEnemyView _view;
-  bool hasSeenPlayerFirst = false;
-  List<Enemy> spawnedEnemies = [];
+/// Controller: Lógica de negócio complexa do Boss
+/// Gerencia spawn de minions, conversação e ataques
+class DungeonBossEnemyController
+    extends DDBaseEnemyController<DungeonBossEnemyModel> {
+  final void Function(Player player) onFirstPlayerSight;
+  final void Function(double dt) onSpawnMinion;
+  final void Function(Canvas canvas) onRenderBars;
+  final void Function({
+    required double radiusVision,
+    required void Function(Player) observed,
+  })
+  onSeePlayer;
 
-  void attachView(DungeonBossEnemyView view) => _view = view;
+  DungeonBossEnemyController({
+    required super.model,
+    required super.onSeeAndMoveToPlayer,
+    required this.onFirstPlayerSight,
+    required this.onSpawnMinion,
+    required this.onRenderBars,
+    required this.onSeePlayer,
+  });
 
-  void onUpdate(double dt) {
-    _view.handleBossLogic(dt);
+  @override
+  void update(double dt) {
+    // Primeiro contato com o player (trigger da conversa)
+    if (!model.hasSeenPlayerFirst) {
+      onSeePlayer(
+        radiusVision: model.visionRadius,
+        observed: (player) {
+          model.hasSeenPlayerFirst = true;
+          onFirstPlayerSight(player);
+        },
+      );
+      return;
+    }
+
+    // Lógica de spawn baseada em vida (implementada na view)
+    onSpawnMinion(dt);
+
+    // Comportamento de combate padrão
+    onSeeAndMoveToPlayer!(
+      radiusVision: model.visionRadius,
+      closePlayer: (_) {},
+    );
   }
 
-  void onDie() {
-    _view.handleDeathFx();
-  }
-
-  void onReceiveDamage(double damage) {
-    _view.showDamageFx(damage);
-  }
-
-  void onRender(Canvas canvas) {
-    _view.drawBarSummonEnemy(canvas);
+  void render(Canvas canvas) {
+    onRenderBars(canvas);
   }
 }
