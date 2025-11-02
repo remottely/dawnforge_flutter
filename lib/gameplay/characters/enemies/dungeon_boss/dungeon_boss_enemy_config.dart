@@ -1,7 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_sprite_animation_config.dart';
-import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/conversation/gameplay_conversation_config.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 
@@ -18,7 +17,6 @@ final class DungeonBossEnemyConfig {
 
   static final Vector2 fTextureSize = Vector2(32, 36);
   static final Vector2 fComponentSize = fTextureSize;
-  static final Vector2 kPrimaryAttackFxSize = GameplayTileConfig.fTileSizeSmall;
 
   static final SimpleDirectionAnimation
   fLoadDirectionalSpriteAnimation = SimpleDirectionAnimation(

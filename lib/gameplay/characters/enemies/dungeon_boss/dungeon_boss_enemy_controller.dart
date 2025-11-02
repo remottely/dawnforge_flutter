@@ -17,7 +17,7 @@ class DungeonBossEnemyController
 
   DungeonBossEnemyController({
     required super.model,
-    required super.onSeeAndMoveToPlayer,
+    required super.onSeeAndMoveToMeleeAttack,
     required this.onFirstPlayerSight,
     required this.onSpawnMinion,
     required this.onRenderBars,
@@ -42,7 +42,7 @@ class DungeonBossEnemyController
     onSpawnMinion(dt);
 
     // Comportamento de combate padrão
-    onSeeAndMoveToPlayer!(
+    onSeeAndMoveToMeleeAttack!(
       radiusVision: model.visionRadius,
       closePlayer: (_) {},
     );

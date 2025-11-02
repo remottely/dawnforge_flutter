@@ -16,8 +16,6 @@ final class GoblinEnemyConfig {
   static final Vector2 fComponentSize = Vector2.all(
     GameplayTileConfig.kTileDimensionStandard * 0.8,
   );
-  static final Vector2 kPrimaryAttackFxSize =
-      GameplayTileConfig.fTileSizeStandard * 0.62;
 
   static final SimpleDirectionAnimation fLoadDirectionalSpriteAnimation =
       SimpleDirectionAnimation(

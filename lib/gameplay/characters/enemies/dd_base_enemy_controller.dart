@@ -3,30 +3,26 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/dd_base_enemy_model
 
 /// Controller base abstrato para todos os inimigos.
 /// Não conhece detalhes de implementação da View.
-abstract class DDBaseEnemyController<T extends DDBaseEnemyModel> {
-  final T model;
+abstract class DDBaseEnemyController<M extends DDBaseEnemyModel> {
+  final M model;
   final void Function({
     required double radiusVision,
     required void Function(Player) closePlayer,
   })?
-  onSeeAndMoveToPlayer;
+  onSeeAndMoveToMeleeAttack;
   final void Function({
     required double radiusVision,
     required void Function(Player) positioned,
   })?
-  onSeeAndMoveToAttackRange;
+  onSeeAndMoveToRangeAttack;
 
   DDBaseEnemyController({
     required this.model,
-    this.onSeeAndMoveToPlayer,
-    this.onSeeAndMoveToAttackRange,
+    this.onSeeAndMoveToMeleeAttack,
+    this.onSeeAndMoveToRangeAttack,
   });
 
-  // Lifecycle - deve ser implementado pelas subclasses
   void update(double dt);
 
-  // Método dispose comum
-  void dispose() {
-    // Cleanup if needed
-  }
+  void dispose() {}
 }

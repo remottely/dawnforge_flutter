@@ -6,14 +6,14 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_model
 class ImpEnemyController extends DDBaseEnemyController<ImpEnemyModel> {
   ImpEnemyController({
     required super.model,
-    required super.onSeeAndMoveToPlayer,
+    required super.onSeeAndMoveToMeleeAttack,
   });
 
   @override
   void update(double dt) {
-    onSeeAndMoveToPlayer!(
+    onSeeAndMoveToMeleeAttack!(
       radiusVision: model.visionRadius,
-      closePlayer: (player) {},
+      closePlayer: (_) {},
     );
   }
 }

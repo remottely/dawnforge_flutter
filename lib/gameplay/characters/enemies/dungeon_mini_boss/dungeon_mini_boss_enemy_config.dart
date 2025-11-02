@@ -15,15 +15,13 @@ final class DungeonMiniBossEnemyConfig {
       CharacterConfig.kVisionRadiusExtraLarge;
   static const int kPrimaryAttackInterval = 300;
 
-  static const double kPrimaryDamageReduction = 3.0;
+  static const int kPrimaryDamageReduction = 3;
 
   static final Vector2 fTextureSize = Vector2(16, 24);
   static final Vector2 fComponentSize = Vector2(
     GameplayTileConfig.kTileDimensionStandard * 0.68,
     GameplayTileConfig.kTileDimensionStandard * 0.93,
   );
-  static final Vector2 kPrimaryAttackFxSize =
-      GameplayTileConfig.fTileSizeStandard * 0.62;
 
   static final SimpleDirectionAnimation
   fLoadDirectionalSpriteAnimation = SimpleDirectionAnimation(

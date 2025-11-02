@@ -1,8 +1,10 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dd_base_enemy_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dd_base_enemy_model.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_sprite_animations_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_primary_attack_config.dart';
 
 /// Classe base abstrata para todos os inimigos do jogo.
 ///
@@ -101,6 +103,63 @@ abstract class DDBaseEnemy<
         size: size,
         loop: false,
       ),
+    );
+  }
+
+  /// Callback padrão para seeAndMoveToPlayer que executa ataque corpo-a-corpo.
+  /// Centraliza a lógica repetida em todos os inimigos.
+  ///
+  /// Uso:
+  /// ```dart
+  /// onSeeAndMoveToMeleeAttack: seeAndMoveToAttackMelee,
+  /// ```
+  void seeAndMoveToPrimaryAttack({
+    required double radiusVision,
+    required void Function(Player) closePlayer,
+  }) {
+    seeAndMoveToPlayer(
+      radiusVision: radiusVision,
+      closePlayer: (player) {
+        closePlayer.call(player);
+        simpleAttackMelee(
+          size: CharacterPrimaryAttackConfig.kEnemyPrimaryAttackFxSize,
+          damage: controller.model.attackDamage,
+          interval: controller.model.attackInterval,
+          animationRight:
+              CharacterPrimaryAttackConfig.createEnemyExecutionAnimation(),
+          execute: CharacterPrimaryAttackConfig.playEnemyExecutionSfx,
+        );
+      },
+    );
+  }
+
+  /// Callback padrão para seeAndMoveToAttackRange que executa ataque à distância.
+  /// Centraliza a lógica de ataque ranged (fireball) comum aos inimigos.
+  ///
+  /// Uso:
+  /// ```dart
+  /// onSeeAndMoveToAttackRange: seeAndMoveToAttackFireball,
+  /// ```
+  void seeAndMoveToFireballAttack({
+    required double radiusVision,
+    required void Function(Player) positioned,
+  }) {
+    seeAndMoveToAttackRange(
+      radiusVision: radiusVision,
+      positioned: (player) {
+        simpleAttackRange(
+          animation: CharacterFireballAttackConfig.createExecutionAnimation(),
+          animationDestroy:
+              CharacterFireballAttackConfig.createDestroyAnimation(),
+          size: CharacterFireballAttackConfig.fComponentSize,
+          damage: controller.model.attackDamage,
+          speed: speed * CharacterFireballAttackConfig.kSpeedMultiplier,
+          execute: CharacterFireballAttackConfig.playExecutionAudio,
+          onDestroy: CharacterFireballAttackConfig.playDestroyAudio,
+          collision: CharacterFireballAttackConfig.createHitbox(),
+          lightingConfig: CharacterFireballAttackConfig.fLightingConfig,
+        );
+      },
     );
   }
 }

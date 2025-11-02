@@ -9,8 +9,8 @@ class DungeonMiniBossEnemyController
 
   DungeonMiniBossEnemyController({
     required super.model,
-    required super.onSeeAndMoveToPlayer,
-    required super.onSeeAndMoveToAttackRange,
+    required super.onSeeAndMoveToMeleeAttack,
+    required super.onSeeAndMoveToRangeAttack,
   });
 
   @override
@@ -18,7 +18,7 @@ class DungeonMiniBossEnemyController
     _seePlayerClose = false;
 
     // Primeiro tenta ataque corpo-a-corpo
-    onSeeAndMoveToPlayer!(
+    onSeeAndMoveToMeleeAttack!(
       radiusVision: model.closeVisionRadius,
       closePlayer: (_) {
         _seePlayerClose = true;
@@ -27,7 +27,7 @@ class DungeonMiniBossEnemyController
 
     // Se não está perto, tenta ataque à distância
     if (!_seePlayerClose) {
-      onSeeAndMoveToAttackRange!(
+      onSeeAndMoveToRangeAttack!(
         radiusVision: model.longVisionRadius,
         positioned: (_) {},
       );

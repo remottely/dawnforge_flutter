@@ -6,14 +6,14 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy
 class GoblinEnemyController extends DDBaseEnemyController<GoblinEnemyModel> {
   GoblinEnemyController({
     required super.model,
-    required super.onSeeAndMoveToPlayer,
+    required super.onSeeAndMoveToMeleeAttack,
   });
 
   @override
   void update(double dt) {
-    onSeeAndMoveToPlayer!(
+    onSeeAndMoveToMeleeAttack!(
       radiusVision: model.visionRadius,
-      closePlayer: (player) {},
+      closePlayer: (_) {},
     );
   }
 }

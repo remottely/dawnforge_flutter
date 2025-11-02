@@ -8,7 +8,6 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeo
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_sprite_animations_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_primary_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_camera_utils.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_player_input_actions_config.dart';
 import 'package:darkness_dungeon/gameplay/core/config/gameplay_tile_config.dart';
@@ -35,7 +34,7 @@ class DungeonBossEnemyView
   DungeonBossEnemyController createController(DungeonBossEnemyModel model) {
     return DungeonBossEnemyController(
       model: model,
-      onSeeAndMoveToPlayer: _onSeeAndMoveToPlayer,
+      onSeeAndMoveToMeleeAttack: seeAndMoveToPrimaryAttack,
       onFirstPlayerSight: _onFirstPlayerSight,
       onSpawnMinion: _onSpawnMinion,
       onRenderBars: _onRenderBars,
@@ -62,26 +61,6 @@ class DungeonBossEnemyView
   }
 
   /// Controller callback implementations
-  void _onSeeAndMoveToPlayer({
-    required double radiusVision,
-    required void Function(Player) closePlayer,
-  }) {
-    seeAndMoveToPlayer(
-      radiusVision: radiusVision,
-      closePlayer: (player) {
-        simpleAttackMelee(
-          size: DungeonBossEnemyConfig.kPrimaryAttackFxSize,
-          damage: controller.model.attackDamage,
-          interval: controller.model.attackInterval,
-          animationRight:
-              CharacterPrimaryAttackConfig.createEnemyExecutionAnimation(),
-          execute: () {
-            GameplayAudioManager.instance.playEnemyPrimaryAttackSfx();
-          },
-        );
-      },
-    );
-  }
 
   void _onSeePlayer({
     required double radiusVision,

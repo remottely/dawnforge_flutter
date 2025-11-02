@@ -102,7 +102,7 @@ class KnightPlayerView extends SimplePlayer
       position: size,
     );
     simpleAttackMelee(
-      size: KnightPlayerConfig.kPrimaryAttackFxSize,
+      size: CharacterPrimaryAttackConfig.kPlayerPrimaryAttackFxSize,
       damage: damage,
       animationRight:
           CharacterPrimaryAttackConfig.createPlayerExecutionAnimation(),

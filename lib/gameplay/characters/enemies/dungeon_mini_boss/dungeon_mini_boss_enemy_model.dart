@@ -6,7 +6,7 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/d
 class DungeonMiniBossEnemyModel extends DDBaseEnemyModel {
   final double closeVisionRadius;
   final double longVisionRadius;
-  final double primaryDamageReduction;
+  final int primaryDamageReduction;
 
   DungeonMiniBossEnemyModel()
     : closeVisionRadius = DungeonMiniBossEnemyConfig.kCloseVisionRadius,
@@ -19,6 +19,5 @@ class DungeonMiniBossEnemyModel extends DDBaseEnemyModel {
         attackInterval: DungeonMiniBossEnemyConfig.kPrimaryAttackInterval,
       );
 
-  double get meleeAttackDamage => attackDamage / primaryDamageReduction;
-  double get rangedAttackDamage => attackDamage;
+  double get rangedAttackDamage => attackDamage / primaryDamageReduction;
 }
