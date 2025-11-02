@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
@@ -42,7 +42,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
         MapArguments? mapArguments = arguments as MapArguments?;
         final playerPosition =
             (mapArguments?.playerPosition ?? Vector2.all(4)) *
-            GameplayTileConfig.kTileDimensionStandard;
+            GameplayTileConstants.kTileDimensionStandard;
         final knightPlayer = buildKnightPlayer(playerPosition);
 
         final playerInput = GameplayScreenConfig.createPlayerInput();

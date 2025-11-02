@@ -1,12 +1,12 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_sensor_player_decoration.dart';
 
 final class DoorKeyInteractableConfig {
   DoorKeyInteractableConfig._();
 
-  static final Vector2 _componentSize = GameplayTileConfig.tileSizeStandard;
+  static final Vector2 _componentSize = GameplayTileConstants.tileSizeStandard;
 
   static Future<Sprite> loadSprite() => Sprite.load(
     'gameplay/environment/interactables/door_key_interactable_1.png',

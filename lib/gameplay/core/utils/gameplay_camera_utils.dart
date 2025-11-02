@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
 import 'package:flutter/widgets.dart';
 
 final class GameplayCameraUtils {
@@ -11,7 +11,7 @@ final class GameplayCameraUtils {
   }) {
     return getZoomFromMaxVisibleTile(
       context,
-      GameplayTileConfig.kTileDimensionStandard,
+      GameplayTileConstants.kTileDimensionStandard,
       maxVisibleTile,
     );
   }

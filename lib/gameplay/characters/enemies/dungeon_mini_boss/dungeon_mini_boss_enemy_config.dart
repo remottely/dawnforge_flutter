@@ -1,30 +1,32 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 
 final class DungeonMiniBossEnemyConfig {
   DungeonMiniBossEnemyConfig._();
 
-  static const double kCloseVisionRadius = CharacterConfig.kVisionRadiusSmall;
-  static const double kLongVisionRadius = CharacterConfig.kVisionRadiusLarge;
-  static const double kPrimaryAttackDamage = CharacterConfig.kDamageLarge;
+  static const double kCloseVisionRadius =
+      CharacterConstants.kVisionRadiusSmall;
+  static const double kLongVisionRadius = CharacterConstants.kVisionRadiusLarge;
+  static const double kPrimaryAttackDamage = CharacterConstants.kDamageLarge;
   static const int kPrimaryAttackInterval =
-      CharacterConfig.kAttackIntervalSmall;
+      CharacterConstants.kAttackIntervalSmall;
 
-  static const double kLife = CharacterConfig.kLifeLarge;
-  static const double kSpeed = CharacterConfig.kSpeedSlow;
+  static const double kLife = CharacterConstants.kLifeLarge;
+  static const double kSpeed = CharacterConstants.kSpeedSlow;
 
   static const int kFireballAttackDamageReduction = 3;
 
   static final Vector2 textureSize = Vector2(
-    GameplayTileConfig.kTileDimensionStandard,
-    GameplayTileConfig.kTileDimensionLarge,
+    GameplayTileConstants.kTileDimensionStandard,
+    GameplayTileConstants.kTileDimensionLarge,
   );
   static final Vector2 componentSize = Vector2(
-    GameplayTileConfig.kTileDimensionStandard,
-    GameplayTileConfig.kTileDimensionLarge,
+    GameplayTileConstants.kTileDimensionStandard,
+    GameplayTileConstants.kTileDimensionLarge,
   );
 
   static final SimpleDirectionAnimation animation = SimpleDirectionAnimation(
@@ -52,13 +54,9 @@ final class DungeonMiniBossEnemyConfig {
     ),
   );
 
-  static const double hitboxStartPositionX = 2.0;
-  static const double hitboxStartPositionY = 4.0;
-  static RectangleHitbox createHitbox() => RectangleHitbox(
-    position: Vector2(hitboxStartPositionX, hitboxStartPositionY),
-    size: Vector2(
-      textureSize.x - (2 * hitboxStartPositionX),
-      textureSize.y - hitboxStartPositionY,
-    ),
+  static RectangleHitbox createHitbox() => HitboxUtils.createBottomHitbox(
+    textureSize: textureSize,
+    hitboxStartPositionX: 2.0,
+    hitboxStartPositionY: 4.0,
   );
 }

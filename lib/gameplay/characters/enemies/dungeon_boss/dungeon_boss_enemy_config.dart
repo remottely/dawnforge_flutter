@@ -1,20 +1,22 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/conversation/gameplay_conversation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 
 final class DungeonBossEnemyConfig {
   DungeonBossEnemyConfig._();
 
   static const double kCloseVisionRadius =
-      CharacterConfig.kVisionRadiusExtraLarge;
-  static const double kPrimaryAttackDamage = CharacterConfig.kDamageExtraLarge;
+      CharacterConstants.kVisionRadiusExtraLarge;
+  static const double kPrimaryAttackDamage =
+      CharacterConstants.kDamageExtraLarge;
   static const int kPrimaryAttackInterval =
-      CharacterConfig.kAttackIntervalExtraLarge;
+      CharacterConstants.kAttackIntervalExtraLarge;
 
-  static const double kLife = CharacterConfig.kLifeExtraLarge;
-  static const double kSpeed = CharacterConfig.kSpeedSlow;
+  static const double kLife = CharacterConstants.kLifeExtraLarge;
+  static const double kSpeed = CharacterConstants.kSpeedSlow;
 
   static final Vector2 textureSize = Vector2(32, 36);
   static final Vector2 componentSize = textureSize;
@@ -38,14 +40,10 @@ final class DungeonBossEnemyConfig {
     ),
   );
 
-  static const double hitboxStartPositionX = 6.0;
-  static const double hitboxStartPositionY = 6.0;
-  static RectangleHitbox createHitbox() => RectangleHitbox(
-    position: Vector2(hitboxStartPositionX, hitboxStartPositionY),
-    size: Vector2(
-      textureSize.x - (2 * hitboxStartPositionX),
-      textureSize.y - hitboxStartPositionY,
-    ),
+  static RectangleHitbox createHitbox() => HitboxUtils.createBottomHitbox(
+    textureSize: textureSize,
+    hitboxStartPositionX: 6.0,
+    hitboxStartPositionY: 6.0,
   );
 
   static List<Say> createConversationSequence() {

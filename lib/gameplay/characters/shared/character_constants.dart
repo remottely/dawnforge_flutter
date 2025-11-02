@@ -1,7 +1,5 @@
-// enum GameDifficulty { easy, normal, hard, nightmare }
-
-final class CharacterConfig {
-  CharacterConfig._();
+final class CharacterConstants {
+  CharacterConstants._();
 
   /// Components
   static const double kLifeSmall = 80.0;

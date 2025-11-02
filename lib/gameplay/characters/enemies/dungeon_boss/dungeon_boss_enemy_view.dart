@@ -1,19 +1,19 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_sprite_animations_config.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/gameplay_camera_utils.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_player_input_actions_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_player_input_actions_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/gameplay_camera_utils.dart';
+import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy.dart';
 import 'package:flutter/material.dart';
 
 class DungeonBossEnemyView
@@ -65,7 +65,7 @@ class DungeonBossEnemyView
       target: this,
       zoom: GameplayCameraUtils.getCameraZoomFromMaxVisibleTile(
         context,
-        maxVisibleTile: GameplayTileConfig.kBossConversationVisibleTiles,
+        maxVisibleTile: GameplayTileConstants.kBossConversationVisibleTiles,
       ),
       onComplete: () => _showConversation(player),
     );
@@ -159,7 +159,7 @@ class DungeonBossEnemyView
         animation:
             CharacterFxSpriteAnimationsConfig.createExplosionSmokeRight5(),
         position: positionExplosion,
-        size: GameplayTileConfig.tileSizeStandard,
+        size: GameplayTileConstants.tileSizeStandard,
         loop: false,
       ),
     );
@@ -191,7 +191,7 @@ class DungeonBossEnemyView
       gameRef.camera.moveToPlayerAnimated(
         zoom: GameplayCameraUtils.getCameraZoomFromMaxVisibleTile(
           context,
-          maxVisibleTile: GameplayTileConfig.kMaxVisibleTiles,
+          maxVisibleTile: GameplayTileConstants.kMaxVisibleTiles,
         ),
       );
       GameplayAudioManager.instance.playBackgroundMusic(
@@ -212,7 +212,7 @@ class DungeonBossEnemyView
         animation:
             CharacterFxSpriteAnimationsConfig.createExplosionSmokeRight5(),
         position: pos,
-        size: GameplayTileConfig.tileSizeStandard,
+        size: GameplayTileConstants.tileSizeStandard,
         loop: false,
       ),
     );
