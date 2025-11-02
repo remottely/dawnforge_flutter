@@ -1,7 +1,7 @@
 import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_config.dart';
 
 class GameplayMapData {
-  final MapId id;
+  final String id;
   final String asset;
   final List<String> sensorIds;
   final String backgroundMusic;

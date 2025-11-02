@@ -167,12 +167,12 @@
                         {
                          "height":8.98474241700526,
                          "id":361,
-                         "name":"sensor_map_1",
+                         "name":"sensor_forest_1",
                          "properties":[
                                 {
                                  "name":"nextMap",
                                  "type":"string",
-                                 "value":"map1"
+                                 "value":"forest_1"
                                 }, 
                                 {
                                  "name":"playerDirection",

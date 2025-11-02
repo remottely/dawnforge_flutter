@@ -1,6 +1,5 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_data.dart';
 import 'package:darkness_dungeon/gameplay/environment/sensors/map_transition_sensor.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -43,13 +42,6 @@ void main() {
 
       expect(mapArguments.playerPosition, equals(playerPosition));
       expect(mapArguments.playerDirection, equals(playerDirection));
-    });
-  });
-  group('MapId', () {
-    test('should have correct enum values', () {
-      expect(MapId.values.length, equals(2));
-      expect(MapId.map1.name, equals('map1'));
-      expect(MapId.dungeon1.name, equals('dungeon1'));
     });
   });
 

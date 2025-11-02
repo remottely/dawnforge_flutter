@@ -260,7 +260,7 @@
                                 {
                                  "name":"nextMap",
                                  "type":"string",
-                                 "value":"dungeon1"
+                                 "value":"dungeon_1"
                                 }, 
                                 {
                                  "name":"playerDirection",
@@ -278,6 +278,33 @@
                          "width":15.865,
                          "x":79.9375,
                          "y":47.6875
+                        }, 
+                        {
+                         "height":13.7016,
+                         "id":247,
+                         "name":"sensor_dungeon_1",
+                         "properties":[
+                                {
+                                 "name":"nextMap",
+                                 "type":"string",
+                                 "value":"dungeon1"
+                                }, 
+                                {
+                                 "name":"playerDirection",
+                                 "type":"string",
+                                 "value":"right"
+                                }, 
+                                {
+                                 "name":"playerPosition",
+                                 "type":"string",
+                                 "value":"3,3"
+                                }],
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":15.865,
+                         "x":672.088585925145,
+                         "y":591.791793568793
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -479,7 +506,7 @@
          "y":0
         }],
  "nextlayerid":23,
- "nextobjectid":247,
+ "nextobjectid":248,
  "orientation":"orthogonal",
  "properties":[
         {

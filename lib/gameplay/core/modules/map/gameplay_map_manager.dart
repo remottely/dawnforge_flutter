@@ -72,7 +72,7 @@ class GameplayMapManager {
 
   static MapItem _createMapItem(GameplayMapData data) {
     return MapItem(
-      id: data.id.name,
+      id: data.id,
       properties: data.properties,
       map: _buildMapByTiled(mapAsset: data.asset, sensorIds: data.sensorIds),
     );
@@ -83,15 +83,14 @@ class GameplayMapManager {
         final mapBuilders = <String, MapItemBuilder>{};
 
         for (final config in GameplayMapConfig.kAllMaps) {
-          mapBuilders[config.id.name] = (context, args) =>
-              _createMapItem(config);
+          mapBuilders[config.id] = (context, args) => _createMapItem(config);
         }
 
         return mapBuilders;
       })();
 
-  static MapItem? getMapById(BuildContext context, MapId id) {
-    final builder = fAllMaps[id.name];
+  static MapItem? getMapById(BuildContext context, String id) {
+    final builder = fAllMaps[id];
 
     if (builder != null) return builder(context, null);
 

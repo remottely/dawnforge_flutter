@@ -15,9 +15,9 @@ final class GameplayAudioConfig {
   static const String kSfxConversationInteractionAsset =
       'sfx/sfx_conversation_interaction.wav';
   static const String kMusicRo1DeathHexBackgroundAsset =
-      'music/music_ro1_death_hex_background.mp3';
+      'music/music_gameplay_background.mp3';
   static const String kMusicRo1LettersBackgroundAsset =
-      'music/music_ro1_letters_background.mp3';
+      'music/music_gameplay_background.mp3';
   static const String kMusicBossBattleBackgroundAsset =
       'music/music_boss_battle_background.mp3';
 
