@@ -462,13 +462,13 @@
                         {
                          "height":16,
                          "id":26,
-                         "name":"goblin_enemy",
+                         "name":"chest",
                          "rotation":0,
                          "type":"",
                          "visible":true,
                          "width":16,
-                         "x":39.1329669223942,
-                         "y":125.198934378672
+                         "x":63.1470058990267,
+                         "y":65.1638369370908
                         }, 
                         {
                          "height":16,
@@ -491,6 +491,17 @@
                          "width":16,
                          "x":51.2056671674616,
                          "y":186.615303681866
+                        }, 
+                        {
+                         "height":16,
+                         "id":248,
+                         "name":"goblin_enemy",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":38.4117484067609,
+                         "y":121.0754594994
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -506,7 +517,7 @@
          "y":0
         }],
  "nextlayerid":23,
- "nextobjectid":248,
+ "nextobjectid":249,
  "orientation":"orthogonal",
  "properties":[
         {

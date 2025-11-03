@@ -6,18 +6,19 @@ import 'package:darkness_dungeon/gameplay/core/modules/conversation/gameplay_con
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_state_manager.dart';
-import 'package:darkness_dungeon/shared/framework/decorations/dd_game_decoration.dart';
+import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 
 final class _DoorInteractableConfig {
   _DoorInteractableConfig._();
 
-  static const String _kClosedDoorAsset =
-      'gameplay/environment/interactables/door_interactable_locked_1.png';
-  static const String _kRequiredKeyMessage = 'door_without_key';
+  static const String _kRequiredKeyMessage =
+      'door_without_key'; // TODO(Kevin): enhance this nomenclature
   static const double _kHitboxHeightRatio = 0.25;
   static const double _kHitboxPositionRatio = 0.75;
 
-  static Future<Sprite> _loadClosedSprite() => Sprite.load(_kClosedDoorAsset);
+  static Future<Sprite> _loadClosedSprite() => Sprite.load(
+    'gameplay/environment/interactables/door_interactable_locked_1.png',
+  );
 
   static Future<SpriteAnimation> _loadOpeningAnimation() =>
       SpriteAnimation.load(
@@ -40,7 +41,7 @@ final class _DoorInteractableConfig {
   }
 }
 
-class DoorInteractableView extends DDGameDecoration {
+class DoorInteractableView extends DDDecoration {
   bool _isOpen = false;
 
   DoorInteractableView({required super.position, required super.size})

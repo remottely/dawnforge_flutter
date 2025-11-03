@@ -48,6 +48,6 @@ final class GoblinEnemyConfig {
   static RectangleHitbox createHitbox() => HitboxUtils.createBottomHitbox(
     textureSize: textureSize,
     hitboxStartPositionX: 4.0,
-    hitboxStartPositionY: 4.0,
+    hitboxStartPositionY: 6.0,
   );
 }

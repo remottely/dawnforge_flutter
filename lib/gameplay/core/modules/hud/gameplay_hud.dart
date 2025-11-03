@@ -22,7 +22,7 @@ class GameplayHUD extends GameInterface {
 
   Future<void> _loadAssets() async {
     _keySprite =
-        await DoorKeyInteractableConfig.loadSprite(); // TODO(Kevin): put this into shared layer, and cache this
+        await DoorKeyInteractableConfig.loadSprite(); // TODO(Kevin): put this into shared layer, and cache this?
   }
 
   void _initializeComponents() {
@@ -34,8 +34,8 @@ class GameplayHUD extends GameInterface {
       _keySprite.renderRect(
         canvas,
         Rect.fromLTWH(
-          GameplayHUDConfig.kKeyIconX,
-          GameplayHUDConfig.kKeyIconY,
+          GameplayHUDConfig.kKeyIconStartPositionX,
+          GameplayHUDConfig.kKeyIconStartPositionY,
           GameplayHUDConfig.kKeyIconWidth,
           GameplayHUDConfig.kKeyIconHeight,
         ),

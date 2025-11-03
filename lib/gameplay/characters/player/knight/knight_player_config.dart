@@ -3,7 +3,8 @@ import 'package:darkness_dungeon/gameplay/characters/shared/character_constants.
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
-import 'package:darkness_dungeon/shared/framework/decorations/dd_game_decoration.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
+import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 
 final class KnightPlayerConfig {
@@ -28,9 +29,10 @@ final class KnightPlayerConfig {
   static const double kFireballAttackDamage = 10.0;
   static const int kFireballAttackStaminaCost = 10;
 
-  static final RectangleHitbox hitbox = RectangleHitbox(
-    position: Vector2(4, 9),
-    size: Vector2(8, 6),
+  static final RectangleHitbox hitbox = HitboxUtils.createBottomHitbox(
+    textureSize: textureSize,
+    hitboxStartPositionX: 4.0,
+    hitboxStartPositionY: 8.0,
   );
 
   static final Vector2 textureSize = GameplayTileConstants.tileSizeStandard;
@@ -71,8 +73,8 @@ final class KnightPlayerConfig {
       GameplayTileConstants.tileSizeStandard;
   static Future<Sprite> loadCryptSprite() =>
       Sprite.load('gameplay/characters/player/player_crypt_1.png');
-  static DDGameDecoration createCryptComponent(Vector2 position) =>
-      DDGameDecoration.withSprite(
+  static DDDecoration createCryptComponent(Vector2 position) =>
+      DDDecoration.withSprite(
         sprite: loadCryptSprite(),
         position: Vector2(position.x, position.y),
         size: cryptComponentSize,

@@ -3,7 +3,7 @@ import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/environment/interactables/shared/gameplay_interactable_config.dart';
-import 'package:darkness_dungeon/shared/framework/decorations/dd_sensor_player_decoration.dart';
+import 'package:darkness_dungeon/shared/framework/decorations/dd_contact_decoration.dart';
 
 final class _SpikeTrapInteractableConfig {
   _SpikeTrapInteractableConfig._();
@@ -24,7 +24,7 @@ final class _SpikeTrapInteractableConfig {
   );
 }
 
-class SpikeTrapInteractableView extends DDSensorPlayerDecoration {
+class SpikeTrapInteractableView extends DDContactDecoration {
   final double _damageAmount;
   KnightPlayerView? _contactedPlayer;
   bool _hasDealtDamageThisCycle = false;

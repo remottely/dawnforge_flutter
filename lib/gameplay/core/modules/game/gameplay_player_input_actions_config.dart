@@ -2,8 +2,6 @@ import 'package:bonfire/bonfire.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-
-
 final class GameplayJoystickConfig {
   GameplayJoystickConfig._();
 
@@ -86,7 +84,7 @@ final class GameplayKeyboardConfig {
   /// Keyboard
   static const LogicalKeyboardKey kPrimaryAttackKey = LogicalKeyboardKey.space;
   static const LogicalKeyboardKey kFireballAttackKey = LogicalKeyboardKey.keyZ;
-  static const LogicalKeyboardKey kInteractionKey = LogicalKeyboardKey.keyC;
+  static const LogicalKeyboardKey kInteractionKey = LogicalKeyboardKey.keyX;
 
   static final List<KeyboardDirectionalKeys> keyboardDirectionalKeys = [
     KeyboardDirectionalKeys.wasd(),

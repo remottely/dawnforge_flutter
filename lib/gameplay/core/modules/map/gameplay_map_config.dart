@@ -9,6 +9,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_conf
 import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_data.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/barrel_decoration.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/torch_decoration.dart';
+import 'package:darkness_dungeon/gameplay/environment/interactables/chest/chest_interactable_view.dart';
 import 'package:darkness_dungeon/gameplay/environment/interactables/door_interactable.dart';
 import 'package:darkness_dungeon/gameplay/environment/interactables/door_key_interactable.dart';
 import 'package:darkness_dungeon/gameplay/environment/interactables/life_potion_interactable.dart';
@@ -64,6 +65,7 @@ final class GameplayMapConfig {
         ),
         'spike_trap_interactable': (p) =>
             SpikeTrapInteractableView(position: p.position),
+        'chest': (p) => ChestInteractableView(p.position),
 
         /// Farmable
         'farm_tile': (p) => FarmTileView(p.position),

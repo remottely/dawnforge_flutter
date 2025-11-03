@@ -1,5 +1,7 @@
 fix:
 
+- fix: add "X" to display keyboard configuration.
+
 - fix: execute player.idle even in victory and game over dialogs
 
 - emote bug, displaying outside gameplayscreen area

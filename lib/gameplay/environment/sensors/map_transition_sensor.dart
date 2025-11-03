@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
-import 'package:darkness_dungeon/shared/framework/decorations/dd_sensor_player_decoration.dart';
+import 'package:darkness_dungeon/shared/framework/decorations/dd_contact_decoration.dart';
 
 class MapArguments {
   final Vector2 playerPosition;
@@ -19,7 +19,7 @@ final class _MapTransitionSensorConfig {
   static const int _kTransitionDelayMs = 100;
 }
 
-class MapTransitionSensorView extends DDSensorPlayerDecoration {
+class MapTransitionSensorView extends DDContactDecoration {
   final String id;
   final String targetMap;
   final Vector2 playerPosition;

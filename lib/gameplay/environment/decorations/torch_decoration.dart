@@ -2,7 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
-import 'package:darkness_dungeon/shared/framework/decorations/dd_game_decoration.dart';
+import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 
 final class _TorchDecorationConfig {
   _TorchDecorationConfig._();
@@ -21,12 +21,11 @@ final class _TorchDecorationConfig {
   static final LightingConfig _lightingConfig = LightingConfig(
     radius: GameplayTileConstants.kTileDimensionExtraLarge,
     blurBorder: GameplayTileConstants.kTileDimensionStandard,
-    pulseVariation: 0.1,
     color: CharacterFxParticlesAnimationsConfig.lightingConfigColor,
   );
 }
 
-class TorchDecorationView extends DDGameDecoration {
+class TorchDecorationView extends DDDecoration {
   final bool _isExtinguished;
 
   TorchDecorationView({required super.position})
@@ -35,7 +34,7 @@ class TorchDecorationView extends DDGameDecoration {
         animation: _TorchDecorationConfig._loadSpriteAnimation(),
         size: _TorchDecorationConfig._componentSize,
       ) {
-    _setupLighting();
+    setupLighting(_TorchDecorationConfig._lightingConfig);
   }
 
   TorchDecorationView.empty({required super.position})
@@ -50,9 +49,5 @@ class TorchDecorationView extends DDGameDecoration {
     if (!_isExtinguished) {
       super.render(canvas);
     }
-  }
-
-  void _setupLighting() {
-    setupLighting(_TorchDecorationConfig._lightingConfig);
   }
 }

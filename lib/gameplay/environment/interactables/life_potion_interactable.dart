@@ -2,7 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/environment/interactables/shared/gameplay_interactable_config.dart';
-import 'package:darkness_dungeon/shared/framework/decorations/dd_sensor_player_decoration.dart';
+import 'package:darkness_dungeon/shared/framework/decorations/dd_contact_decoration.dart';
 
 final class LifePotionConfig {
   LifePotionConfig._();
@@ -18,7 +18,7 @@ final class LifePotionConfig {
   );
 }
 
-class LifePotionDecorationView extends DDSensorPlayerDecoration {
+class LifePotionDecorationView extends DDContactDecoration {
   final double _healAmount;
   bool _hasBeenConsumed = false;
 
