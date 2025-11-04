@@ -8,9 +8,8 @@ final class DoorKeyDecorationConfig {
 
   static final Vector2 _componentSize = GameplayTileConstants.tileSizeStandard;
 
-  static Future<Sprite> loadSprite() => Sprite.load(
-    'gameplay/environment/interactables/door_key_interactable_1.png',
-  );
+  static Future<Sprite> loadSprite() =>
+      Sprite.load('gameplay/decorations/door_key_interactable_1.png');
 }
 
 class DoorKeyDecorationView extends DDContactDecoration {

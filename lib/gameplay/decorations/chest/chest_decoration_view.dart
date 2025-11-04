@@ -8,8 +8,6 @@ import 'package:darkness_dungeon/gameplay/decorations/life_potion_decoration.dar
 import 'package:darkness_dungeon/shared/framework/decorations/dd_interactable_decoration.dart';
 import 'package:flutter/services.dart';
 
-/// View: Renderização e integração com o Bonfire
-/// Delega lógica para o Controller via callbacks
 class ChestDecorationView extends DDInteractableDecoration {
   late final ChestDecorationController _controller;
   late final TextPaint _textConfig;
@@ -24,12 +22,13 @@ class ChestDecorationView extends DDInteractableDecoration {
     _initializeController(model ?? ChestDecorationModel());
   }
 
+  // Public API for external interaction
+  ChestDecorationModel get model => _controller.model;
+
   void _initializeController(ChestDecorationModel model) {
     _controller = ChestDecorationController(
       model: model,
       onShowEmote: _showEmote,
-      onShowInteractionPrompt: () {}, // Será renderizado no render()
-      onHideInteractionPrompt: () {}, // Será renderizado no render()
       onOpenChest: _handleChestOpened,
       onCheckPlayerVision: _checkPlayerVision,
     );
@@ -76,9 +75,6 @@ class ChestDecorationView extends DDInteractableDecoration {
     _controller.dispose();
     super.onRemove();
   }
-
-  // Public API for external interaction
-  ChestDecorationModel get model => _controller.model;
 
   /// Private helper methods - Controller callbacks implementation
   void _showEmote() {

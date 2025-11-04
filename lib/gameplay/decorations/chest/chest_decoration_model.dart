@@ -1,5 +1,3 @@
-/// Model: Dados e estado do Chest
-/// Contém apenas dados, sem lógica de negócio ou referências externas
 class ChestDecorationModel {
   bool _observedPlayer;
   bool _isOpened;

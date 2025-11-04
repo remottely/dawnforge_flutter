@@ -1,5 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
 
 final class ChestDecorationConfig {
@@ -48,21 +49,24 @@ final class ChestDecorationConfig {
   ) => Vector2(componentWidth / -1.5, -componentHeight);
 
   // Animations
+  static final Vector2 textureSize = GameplayTileConstants.tileSizeStandard;
+
   static Future<SpriteAnimation> get chestAnimation => SpriteAnimation.load(
-    'gameplay/environment/interactables/chest_spritesheet.png',
-    SpriteAnimationData.sequenced(
+    'gameplay/decorations/chest_spritesheet.png',
+    GameplaySpriteAnimationConfig.createStandardData(
       amount: 8,
-      stepTime: 0.1,
-      textureSize: Vector2(16, 16),
+      textureSize: textureSize,
     ),
   );
 
+  static final Vector2 emoteTextureSize =
+      GameplayTileConstants.tileSizeExtraLarge;
+
   static Future<SpriteAnimation> get emoteAnimation => SpriteAnimation.load(
     CharacterEmoteManager.kExclamationEmoteAsset,
-    SpriteAnimationData.sequenced(
+    GameplaySpriteAnimationConfig.createStandardData(
       amount: 8,
-      stepTime: 0.1,
-      textureSize: Vector2(32, 32),
+      textureSize: emoteTextureSize,
     ),
   );
 }

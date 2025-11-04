@@ -12,7 +12,7 @@ final class _BarrelDecorationConfig {
   static final Vector2 _componentSize = _textureSize;
 
   static Future<Sprite> _loadSprite() =>
-      Sprite.load('gameplay/environment/decorations/barrel_decoration_1.png');
+      Sprite.load('gameplay/decorations/barrel_decoration_1.png');
 
   static RectangleHitbox createHitbox() => HitboxUtils.createCenterHitbox(
     textureSize: _textureSize,

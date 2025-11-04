@@ -12,9 +12,8 @@ final class LifePotionConfig {
   static const double kHealAmount = DecorationConstants.kStatsAmountLarge;
 
   static final Vector2 _componentSize = GameplayTileConstants.tileSizeStandard;
-  static Future<Sprite> _loadSprite() => Sprite.load(
-    'gameplay/environment/interactables/life_potion_interactable_1.png',
-  );
+  static Future<Sprite> _loadSprite() =>
+      Sprite.load('gameplay/decorations/life_potion_interactable_1.png');
 }
 
 class LifePotionDecorationView extends DDContactDecoration {

@@ -11,7 +11,7 @@ final class _TorchDecorationConfig {
   static final Vector2 _componentSize = _textureSize;
 
   static Future<SpriteAnimation> _loadSpriteAnimation() => SpriteAnimation.load(
-    'gameplay/environment/decorations/torch_decoration_6.png',
+    'gameplay/decorations/torch_decoration_6.png',
     GameplaySpriteAnimationConfig.createStandardData(
       amount: 6,
       textureSize: _textureSize,

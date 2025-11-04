@@ -16,13 +16,12 @@ final class _DoorDecorationConfig {
   static const double _kHitboxHeightRatio = 0.25;
   static const double _kHitboxPositionRatio = 0.75;
 
-  static Future<Sprite> _loadClosedSprite() => Sprite.load(
-    'gameplay/environment/interactables/door_interactable_locked_1.png',
-  );
+  static Future<Sprite> _loadClosedSprite() =>
+      Sprite.load('gameplay/decorations/door_interactable_locked_1.png');
 
   static Future<SpriteAnimation> _loadOpeningAnimation() =>
       SpriteAnimation.load(
-        'gameplay/environment/interactables/door_interactable_opening_14.png',
+        'gameplay/decorations/door_interactable_opening_14.png',
         GameplaySpriteAnimationConfig.createStandardData(
           amount: 14,
           textureSize: GameplayTileConstants.tileSizeExtraLarge,

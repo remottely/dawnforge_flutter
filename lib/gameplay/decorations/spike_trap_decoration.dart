@@ -15,7 +15,7 @@ final class _SpikeTrapDecorationConfig {
   static final Vector2 _componentSize = _textureSize;
 
   static Future<SpriteAnimation> _loadSpriteAnimation() => SpriteAnimation.load(
-    'gameplay/environment/interactables/spike_trap_interactable_10.png',
+    'gameplay/decorations/spike_trap_interactable_10.png',
     GameplaySpriteAnimationConfig.createStandardData(
       amount: 10,
       textureSize: _textureSize,

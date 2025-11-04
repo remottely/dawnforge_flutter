@@ -10,16 +10,14 @@ enum TileState { grass, soil, watered, planted, grown }
 final class _FarmTileConfig {
   _FarmTileConfig._();
 
-  static const String _kGrassSpriteAsset =
-      'gameplay/terrain/farmable/tile_grass.png';
-  static const String _kSoilSpriteAsset =
-      'gameplay/terrain/farmable/tile_soil.png';
+  static const String _kGrassSpriteAsset = 'gameplay/farmable/tile_grass.png';
+  static const String _kSoilSpriteAsset = 'gameplay/farmable/tile_soil.png';
   static const String _kWateredSpriteAsset =
-      'gameplay/terrain/farmable/tile_watered.png';
+      'gameplay/farmable/tile_watered.png';
   static const String _kPlantedSpriteAsset =
-      'gameplay/terrain/farmable/tile_planted.png';
+      'gameplay/farmable/tile_planted.png';
   static const String _kGrownSpriteAsset =
-      'gameplay/terrain/farmable/parsnip_stage4.png';
+      'gameplay/farmable/parsnip_stage4.png';
 
   static final Vector2 _componentSize = GameplayTileConstants.tileSizeStandard;
   static Future<Sprite> _loadSprite(String path) => Sprite.load(path);
