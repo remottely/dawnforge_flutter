@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/mini_boss/mini_boss_enemy_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
@@ -37,11 +37,11 @@ class UISpriteAnimationsConfig {
       );
 
   static Future<SpriteAnimation>
-  loadDungeonMiniBossEnemyIdleRight4() => SpriteAnimation.load(
-    'gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_idle_right_4.png',
+  loadMiniBossEnemyIdleRight4() => SpriteAnimation.load(
+    'gameplay/characters/enemies/mini_boss/mini_boss_enemy_idle_right_4.png',
     GameplaySpriteAnimationConfig.createStandardData(
       amount: 4,
-      textureSize: DungeonMiniBossEnemyConfig.textureSize,
+      textureSize: MiniBossEnemyConfig.textureSize,
     ),
   );
 

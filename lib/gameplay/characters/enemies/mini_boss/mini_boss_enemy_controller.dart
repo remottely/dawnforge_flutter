@@ -1,11 +1,11 @@
+import 'package:darkness_dungeon/gameplay/characters/enemies/mini_boss/mini_boss_enemy_model.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_model.dart';
 
-class DungeonMiniBossEnemyController
-    extends DDBaseEnemyController<DungeonMiniBossEnemyModel> {
+class MiniBossEnemyController
+    extends DDBaseEnemyController<MiniBossEnemyModel> {
   bool _seePlayerClose = false;
 
-  DungeonMiniBossEnemyController({
+  MiniBossEnemyController({
     required super.model,
     required super.onSeeAndMoveToMeleeAttack,
     required super.onSeeAndMoveToRangeAttack,

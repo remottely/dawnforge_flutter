@@ -1,8 +1,8 @@
 import 'package:bonfire/map/tiled/builder/tiled_world_builder.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_view.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/mini_boss/mini_boss_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_config.dart';
@@ -40,7 +40,7 @@ final class GameplayMapConfig {
       <String, ObjectBuilder>{
         /// Enemies
         'boss_enemy': (p) => BossEnemyView(p.position),
-        'dungeon_mini_boss_enemy': (p) => DungeonMiniBossEnemyView(p.position),
+        'mini_boss_enemy': (p) => MiniBossEnemyView(p.position),
         'goblin_enemy': (p) => GoblinEnemyView(p.position),
         'imp_enemy': (p) => ImpEnemyView(p.position),
 

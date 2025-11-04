@@ -4,8 +4,8 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_model.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/mini_boss/mini_boss_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_sprite_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
@@ -150,7 +150,7 @@ class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
     }
 
     final Enemy enemy = controller.model.spawnedEnemies.length == 2
-        ? DungeonMiniBossEnemyView(positionExplosion)
+        ? MiniBossEnemyView(positionExplosion)
         : ImpEnemyView(positionExplosion);
 
     gameRef.add(

@@ -473,7 +473,7 @@
                         {
                          "height":16,
                          "id":30,
-                         "name":"dungeon_mini_boss_enemy",
+                         "name":"mini_boss_enemy",
                          "rotation":0,
                          "type":"",
                          "visible":true,

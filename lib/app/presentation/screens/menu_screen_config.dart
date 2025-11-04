@@ -12,7 +12,7 @@ class MenuScreenConfig {
     UISpriteAnimationsConfig.loadKnightPlayerIdleRight6(),
     UISpriteAnimationsConfig.loadGoblinEnemyIdleRight6(),
     UISpriteAnimationsConfig.loadImpEnemyIdleRight4(),
-    UISpriteAnimationsConfig.loadDungeonMiniBossEnemyIdleRight4(),
+    UISpriteAnimationsConfig.loadMiniBossEnemyIdleRight4(),
     UISpriteAnimationsConfig.loadBossEnemyIdleRight4(),
   ];
 
