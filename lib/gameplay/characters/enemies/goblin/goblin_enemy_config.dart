@@ -18,7 +18,7 @@ final class GoblinEnemyConfig {
   static const double kSpeed = CharacterConstants.kSpeedSlow;
 
   static final Vector2 textureSize = GameplayTileConstants.tileSizeStandard;
-  static final Vector2 componentSize = GameplayTileConstants.tileSizeStandard;
+  static final Vector2 componentSize = textureSize;
 
   static final SimpleDirectionAnimation animation = SimpleDirectionAnimation(
     idleLeft: SpriteAnimation.load(
@@ -46,7 +46,7 @@ final class GoblinEnemyConfig {
   );
 
   static RectangleHitbox createHitbox() => HitboxUtils.createBottomHitbox(
-    textureSize: textureSize,
+    componentSize: componentSize,
     hitboxStartPositionX: 4.0,
     hitboxStartPositionY: 6.0,
   );

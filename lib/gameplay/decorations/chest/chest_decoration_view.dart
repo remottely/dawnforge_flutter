@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_sprite_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_player_input_actions_config.dart';
@@ -89,30 +91,27 @@ class ChestDecorationView extends DDInteractableDecoration {
   }
 
   void _handleChestOpened() {
-    _spawnPotions();
+    _spawnLifePotions();
     removeFromParent();
   }
 
-  void _spawnPotions() {
-    final potion1Position = position + ChestDecorationConfig.kPotion1Offset;
-    final potion2Position = position + ChestDecorationConfig.kPotion2Offset;
+  void _spawnLifePotions() {
+    _spawnLifePotion();
+    _spawnLifePotion();
+  }
 
+  void _spawnLifePotion() {
+    final random = Random();
+    final offset = Vector2(random.nextInt(5) + 1, random.nextInt(5) + 1);
+    final potionPosition = position - offset;
+
+    _addSmokeExplosion(potionPosition);
     gameRef.add(
       LifePotionDecorationView(
-        position: potion1Position,
+        position: potionPosition,
         healAmount: ChestDecorationConfig.kHealAmountPerPotion,
       ),
     );
-
-    gameRef.add(
-      LifePotionDecorationView(
-        position: potion2Position,
-        healAmount: ChestDecorationConfig.kHealAmountPerPotion,
-      ),
-    );
-
-    _addSmokeExplosion(potion1Position);
-    _addSmokeExplosion(potion2Position);
   }
 
   void _addSmokeExplosion(Vector2 position) {

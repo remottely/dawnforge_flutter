@@ -1,6 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/gameplay/decorations/shared/decoration_constants.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_contact_decoration.dart';
 
@@ -11,9 +12,17 @@ final class LifePotionConfig {
   static const double _kStandardHealAmount = 50.0;
   static const double kHealAmount = DecorationConstants.kStatsAmountLarge;
 
-  static final Vector2 _componentSize = GameplayTileConstants.tileSizeStandard;
+  static final Vector2 _textureSize = GameplayTileConstants.tileSizeStandard;
+  static final Vector2 _componentSize = _textureSize;
+
   static Future<Sprite> _loadSprite() =>
-      Sprite.load('gameplay/decorations/life_potion_interactable_1.png');
+      Sprite.load('gameplay/decorations/life_potion_decoration_1.png');
+
+  static _createHitbox() => HitboxUtils.createCenterHitbox(
+    componentSize: _componentSize,
+    hitboxStartPositionX: 3.0,
+    hitboxStartPositionY: 3.0,
+  );
 }
 
 class LifePotionDecorationView extends DDContactDecoration {
@@ -27,6 +36,12 @@ class LifePotionDecorationView extends DDContactDecoration {
         position: position,
         size: LifePotionConfig._componentSize,
       );
+
+  @override
+  Future<void> onLoad() {
+    add(LifePotionConfig._createHitbox());
+    return super.onLoad();
+  }
 
   @override
   void onContact(KnightPlayerView player) {

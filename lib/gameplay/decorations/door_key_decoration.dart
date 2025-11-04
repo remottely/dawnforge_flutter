@@ -6,10 +6,11 @@ import 'package:darkness_dungeon/shared/framework/decorations/dd_contact_decorat
 final class DoorKeyDecorationConfig {
   DoorKeyDecorationConfig._();
 
-  static final Vector2 _componentSize = GameplayTileConstants.tileSizeStandard;
+  static final Vector2 _textureSize = GameplayTileConstants.tileSizeStandard;
+  static final Vector2 _componentSize = _textureSize;
 
   static Future<Sprite> loadSprite() =>
-      Sprite.load('gameplay/decorations/door_key_interactable_1.png');
+      Sprite.load('gameplay/decorations/door_key_decoration_1.png');
 }
 
 class DoorKeyDecorationView extends DDContactDecoration {

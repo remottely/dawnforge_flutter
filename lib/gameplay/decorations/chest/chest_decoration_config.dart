@@ -15,20 +15,8 @@ final class ChestDecorationConfig {
   static const double kHealAmountPerPotion = 30.0;
 
   // Component size
-  static final Vector2 componentSize = Vector2.all(
-    GameplayTileConstants.kTileDimensionStandard * 0.6,
-  );
-
-  // Potion spawn positions (relative to chest position)
-  static final Vector2 kPotion1Offset = Vector2(
-    componentSize.x * 2,
-    componentSize.y * -1.5,
-  );
-
-  static final Vector2 kPotion2Offset = Vector2(
-    componentSize.x * 2,
-    componentSize.y * 2,
-  );
+  static final Vector2 _textureSize = GameplayTileConstants.tileSizeStandard;
+  static final Vector2 componentSize = _textureSize / 1.5;
 
   // Smoke explosion size
   static final Vector2 smokeExplosionSize = Vector2.all(
@@ -49,13 +37,12 @@ final class ChestDecorationConfig {
   ) => Vector2(componentWidth / -1.5, -componentHeight);
 
   // Animations
-  static final Vector2 textureSize = GameplayTileConstants.tileSizeStandard;
 
   static Future<SpriteAnimation> get chestAnimation => SpriteAnimation.load(
-    'gameplay/decorations/chest_spritesheet.png',
+    'gameplay/decorations/chest_decoration_8.png',
     GameplaySpriteAnimationConfig.createStandardData(
       amount: 8,
-      textureSize: textureSize,
+      textureSize: _textureSize,
     ),
   );
 

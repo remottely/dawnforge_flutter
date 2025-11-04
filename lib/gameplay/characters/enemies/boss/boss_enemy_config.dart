@@ -41,7 +41,7 @@ final class BossEnemyConfig {
   );
 
   static RectangleHitbox createHitbox() => HitboxUtils.createBottomHitbox(
-    textureSize: textureSize,
+    componentSize: componentSize,
     hitboxStartPositionX: 6.0,
     hitboxStartPositionY: 6.0,
   );

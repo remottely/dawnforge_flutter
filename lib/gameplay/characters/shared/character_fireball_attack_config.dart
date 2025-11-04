@@ -16,7 +16,8 @@ final class CharacterFireballAttackConfig {
     color: CharacterFxParticlesAnimationsConfig.lightingConfigColor,
   );
 
-  static final Vector2 componentSize = GameplayTileConstants.tileSizeSmall;
+  static final Vector2 _textureSize = Vector2(23, 23);
+  static final Vector2 componentSize = _textureSize / 3;
 
   static RectangleHitbox createHitbox() =>
       HitboxUtils.createExpandHitbox(componentSize);
@@ -26,7 +27,7 @@ final class CharacterFireballAttackConfig {
         'gameplay/characters/shared/character_fireball_attack_right_3.png',
         GameplaySpriteAnimationConfig.createStandardData(
           amount: 3,
-          textureSize: Vector2(23, 23),
+          textureSize: _textureSize,
         ),
       );
 

@@ -30,7 +30,7 @@ final class KnightPlayerConfig {
   static const int kFireballAttackStaminaCost = 10;
 
   static final RectangleHitbox hitbox = HitboxUtils.createBottomHitbox(
-    textureSize: textureSize,
+    componentSize: componentSize,
     hitboxStartPositionX: 4.0,
     hitboxStartPositionY: 8.0,
   );

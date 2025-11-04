@@ -24,10 +24,7 @@ final class MiniBossEnemyConfig {
     GameplayTileConstants.kTileDimensionStandard,
     GameplayTileConstants.kTileDimensionLarge,
   );
-  static final Vector2 componentSize = Vector2(
-    GameplayTileConstants.kTileDimensionStandard,
-    GameplayTileConstants.kTileDimensionLarge,
-  );
+  static final Vector2 componentSize = textureSize;
 
   static final SimpleDirectionAnimation animation = SimpleDirectionAnimation(
     idleLeft: SpriteAnimation.load(
@@ -55,7 +52,7 @@ final class MiniBossEnemyConfig {
   );
 
   static RectangleHitbox createHitbox() => HitboxUtils.createBottomHitbox(
-    textureSize: textureSize,
+    componentSize: componentSize,
     hitboxStartPositionX: 2.0,
     hitboxStartPositionY: 4.0,
   );

@@ -6,6 +6,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/conversation/gameplay_con
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 
 final class _DoorDecorationConfig {
@@ -13,24 +14,26 @@ final class _DoorDecorationConfig {
 
   static const String _kRequiredKeyMessage =
       'door_without_key'; // TODO(Kevin): enhance this nomenclature
-  static const double _kHitboxHeightRatio = 0.25;
-  static const double _kHitboxPositionRatio = 0.75;
+
+  // static final Vector2 _textureSize = GameplayTileConstants.tileSizeExtraLarge;
+  // static final Vector2 _componentSize = _textureSize;
 
   static Future<Sprite> _loadClosedSprite() =>
-      Sprite.load('gameplay/decorations/door_interactable_locked_1.png');
+      Sprite.load('gameplay/decorations/door_decoration_locked_1.png');
 
   static Future<SpriteAnimation> _loadOpeningAnimation() =>
       SpriteAnimation.load(
-        'gameplay/decorations/door_interactable_opening_14.png',
+        'gameplay/decorations/door_decoration_opening_14.png',
         GameplaySpriteAnimationConfig.createStandardData(
           amount: 14,
           textureSize: GameplayTileConstants.tileSizeExtraLarge,
         ),
       );
 
-  static _buildHitbox(GameComponent target) => RectangleHitbox(
-    position: Vector2(0, target.height * _kHitboxPositionRatio),
-    size: Vector2(target.width, target.height * _kHitboxHeightRatio),
+  static _createHitbox(GameComponent target) => HitboxUtils.createBottomHitbox(
+    componentSize: target.size,
+    hitboxStartPositionX: 0.0,
+    hitboxStartPositionY: target.height * 0.75,
   );
 
   static List<Say> createConversationSequence() {
@@ -48,7 +51,7 @@ class DoorDecorationView extends DDDecoration {
 
   @override
   Future<void> onLoad() {
-    add(_DoorDecorationConfig._buildHitbox(this));
+    add(_DoorDecorationConfig._createHitbox(this));
     return super.onLoad();
   }
 

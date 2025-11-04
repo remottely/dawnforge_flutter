@@ -19,7 +19,10 @@ final class _FarmTileConfig {
   static const String _kGrownSpriteAsset =
       'gameplay/farmable/parsnip_stage4.png';
 
-  static final Vector2 _componentSize = GameplayTileConstants.tileSizeStandard;
+  static final Vector2 _cropTextureSize =
+      GameplayTileConstants.tileSizeStandard;
+  static final Vector2 _componentSize = _cropTextureSize;
+
   static Future<Sprite> _loadSprite(String path) => Sprite.load(path);
 }
 

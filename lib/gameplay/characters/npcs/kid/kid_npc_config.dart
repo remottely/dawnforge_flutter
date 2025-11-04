@@ -5,8 +5,14 @@ import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 final class KidNpcConfig {
   KidNpcConfig._();
 
-  static final Vector2 textureSize = Vector2(16, 22);
-  static final Vector2 componentSize = Vector2(8, 11);
+  static final Vector2 textureSize = Vector2(
+    16,
+    22,
+  ); // TODO(Kevin): change this size
+  static final Vector2 componentSize = Vector2(
+    8,
+    11,
+  ); // TODO(Kevin): change this size
 
   static final SimpleDirectionAnimation animation = SimpleDirectionAnimation(
     idleRight: UISpriteAnimationsConfig.loadKidNpcIdleLeft4(),

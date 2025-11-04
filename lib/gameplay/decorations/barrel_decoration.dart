@@ -15,7 +15,7 @@ final class _BarrelDecorationConfig {
       Sprite.load('gameplay/decorations/barrel_decoration_1.png');
 
   static RectangleHitbox createHitbox() => HitboxUtils.createCenterHitbox(
-    textureSize: _textureSize,
+    componentSize: _componentSize,
     hitboxStartPositionX: 2.0,
     hitboxStartPositionY: 6.0,
   );
