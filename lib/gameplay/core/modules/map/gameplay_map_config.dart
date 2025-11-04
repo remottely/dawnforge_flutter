@@ -9,11 +9,11 @@ import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_conf
 import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_data.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/barrel_decoration.dart';
 import 'package:darkness_dungeon/gameplay/environment/decorations/torch_decoration.dart';
-import 'package:darkness_dungeon/gameplay/environment/interactables/chest/chest_interactable_view.dart';
-import 'package:darkness_dungeon/gameplay/environment/interactables/door_interactable.dart';
-import 'package:darkness_dungeon/gameplay/environment/interactables/door_key_interactable.dart';
-import 'package:darkness_dungeon/gameplay/environment/interactables/life_potion_interactable.dart';
-import 'package:darkness_dungeon/gameplay/environment/interactables/spike_trap_interactable.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/chest/chest_decoration_view.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/door_decoration.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/door_key_decoration.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/life_potion_decoration.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/spike_trap_decoration.dart';
 import 'package:darkness_dungeon/gameplay/terrain/farmable/farm_tile.dart';
 
 final class GameplayMapConfig {
@@ -56,16 +56,16 @@ final class GameplayMapConfig {
 
         /// Interactables
         'door_interactable': (p) =>
-            DoorInteractableView(position: p.position, size: p.size),
+            DoorDecorationView(position: p.position, size: p.size),
         'door_key_interactable': (p) =>
-            DoorKeyInteractableView(position: p.position),
+            DoorKeyDecorationView(position: p.position),
         'life_potion_interactable': (p) => LifePotionDecorationView(
           position: p.position,
           healAmount: LifePotionConfig.kHealAmount,
         ),
         'spike_trap_interactable': (p) =>
-            SpikeTrapInteractableView(position: p.position),
-        'chest': (p) => ChestInteractableView(p.position),
+            SpikeTrapDecorationView(position: p.position),
+        'chest': (p) => ChestDecorationView(p.position),
 
         /// Farmable
         'farm_tile': (p) => FarmTileView(p.position),

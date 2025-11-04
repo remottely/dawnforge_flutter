@@ -2,14 +2,13 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
-import 'package:darkness_dungeon/gameplay/environment/interactables/shared/gameplay_interactable_config.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/shared/decoration_constants.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_contact_decoration.dart';
 
-final class _SpikeTrapInteractableConfig {
-  _SpikeTrapInteractableConfig._();
+final class _SpikeTrapDecorationConfig {
+  _SpikeTrapDecorationConfig._();
 
-  static const double _kDamageAmount =
-      GameplayInteractableConfig.kStatsAmountMedium;
+  static const double _kDamageAmount = DecorationConstants.kStatsAmountMedium;
   static const int _kPriority = 1;
 
   static final Vector2 _textureSize = GameplayTileConstants.tileSizeStandard;
@@ -24,18 +23,18 @@ final class _SpikeTrapInteractableConfig {
   );
 }
 
-class SpikeTrapInteractableView extends DDContactDecoration {
+class SpikeTrapDecorationView extends DDContactDecoration {
   final double _damageAmount;
   KnightPlayerView? _contactedPlayer;
   bool _hasDealtDamageThisCycle = false;
 
-  SpikeTrapInteractableView({
+  SpikeTrapDecorationView({
     required super.position,
-    double damageAmount = _SpikeTrapInteractableConfig._kDamageAmount,
+    double damageAmount = _SpikeTrapDecorationConfig._kDamageAmount,
   }) : _damageAmount = damageAmount,
        super.withAnimation(
-         animation: _SpikeTrapInteractableConfig._loadSpriteAnimation(),
-         size: _SpikeTrapInteractableConfig._componentSize,
+         animation: _SpikeTrapDecorationConfig._loadSpriteAnimation(),
+         size: _SpikeTrapDecorationConfig._componentSize,
        );
 
   @override
@@ -62,9 +61,8 @@ class SpikeTrapInteractableView extends DDContactDecoration {
   }
 
   @override
-  int get priority => LayerPriority.getComponentPriority(
-    _SpikeTrapInteractableConfig._kPriority,
-  );
+  int get priority =>
+      LayerPriority.getComponentPriority(_SpikeTrapDecorationConfig._kPriority);
 
   void _triggerEffect(KnightPlayerView player) {
     player.handleAttack(AttackOriginEnum.ENEMY, _damageAmount, 0);

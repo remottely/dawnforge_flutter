@@ -1,31 +1,31 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_sprite_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_player_input_actions_config.dart';
-import 'package:darkness_dungeon/gameplay/environment/interactables/chest/chest_interactable_config.dart';
-import 'package:darkness_dungeon/gameplay/environment/interactables/chest/chest_interactable_controller.dart';
-import 'package:darkness_dungeon/gameplay/environment/interactables/chest/chest_interactable_model.dart';
-import 'package:darkness_dungeon/gameplay/environment/interactables/life_potion_interactable.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/chest/chest_decoration_config.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/chest/chest_decoration_controller.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/chest/chest_decoration_model.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/life_potion_decoration.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_interactable_decoration.dart';
 import 'package:flutter/services.dart';
 
 /// View: Renderização e integração com o Bonfire
 /// Delega lógica para o Controller via callbacks
-class ChestInteractableView extends DDInteractableDecoration {
-  late final ChestInteractableController _controller;
+class ChestDecorationView extends DDInteractableDecoration {
+  late final ChestDecorationController _controller;
   late final TextPaint _textConfig;
 
-  ChestInteractableView(Vector2 position, {ChestInteractableModel? model})
+  ChestDecorationView(Vector2 position, {ChestDecorationModel? model})
     : super.withAnimation(
-        animation: ChestInteractableConfig.chestAnimation,
-        size: ChestInteractableConfig.componentSize,
+        animation: ChestDecorationConfig.chestAnimation,
+        size: ChestDecorationConfig.componentSize,
         position: position,
       ) {
-    _textConfig = ChestInteractableConfig.createTextConfig(width);
-    _initializeController(model ?? ChestInteractableModel());
+    _textConfig = ChestDecorationConfig.createTextConfig(width);
+    _initializeController(model ?? ChestDecorationModel());
   }
 
-  void _initializeController(ChestInteractableModel model) {
-    _controller = ChestInteractableController(
+  void _initializeController(ChestDecorationModel model) {
+    _controller = ChestDecorationController(
       model: model,
       onShowEmote: _showEmote,
       onShowInteractionPrompt: () {}, // Será renderizado no render()
@@ -38,8 +38,8 @@ class ChestInteractableView extends DDInteractableDecoration {
   @override
   void update(double dt) {
     if (checkInterval(
-      ChestInteractableConfig.kVisionCheckIntervalId,
-      ChestInteractableConfig.kVisionCheckInterval,
+      ChestDecorationConfig.kVisionCheckIntervalId,
+      ChestDecorationConfig.kVisionCheckInterval,
       dt,
     )) {
       _controller.update(dt, gameRef.player);
@@ -51,13 +51,10 @@ class ChestInteractableView extends DDInteractableDecoration {
   void render(Canvas canvas) {
     super.render(canvas);
     if (_controller.model.observedPlayer && !_controller.model.isOpened) {
-      final textPosition = ChestInteractableConfig.getTextPosition(
-        width,
-        height,
-      );
+      final textPosition = ChestDecorationConfig.getTextPosition(width, height);
       _textConfig.render(
         canvas,
-        ChestInteractableConfig.kInteractionPromptText,
+        ChestDecorationConfig.kInteractionPromptText,
         textPosition,
       );
     }
@@ -81,13 +78,13 @@ class ChestInteractableView extends DDInteractableDecoration {
   }
 
   // Public API for external interaction
-  ChestInteractableModel get model => _controller.model;
+  ChestDecorationModel get model => _controller.model;
 
   /// Private helper methods - Controller callbacks implementation
   void _showEmote() {
     add(
       AnimatedGameObject(
-        animation: ChestInteractableConfig.emoteAnimation,
+        animation: ChestDecorationConfig.emoteAnimation,
         size: size,
         position: size / -2,
         loop: false,
@@ -101,20 +98,20 @@ class ChestInteractableView extends DDInteractableDecoration {
   }
 
   void _spawnPotions() {
-    final potion1Position = position + ChestInteractableConfig.kPotion1Offset;
-    final potion2Position = position + ChestInteractableConfig.kPotion2Offset;
+    final potion1Position = position + ChestDecorationConfig.kPotion1Offset;
+    final potion2Position = position + ChestDecorationConfig.kPotion2Offset;
 
     gameRef.add(
       LifePotionDecorationView(
         position: potion1Position,
-        healAmount: ChestInteractableConfig.kHealAmountPerPotion,
+        healAmount: ChestDecorationConfig.kHealAmountPerPotion,
       ),
     );
 
     gameRef.add(
       LifePotionDecorationView(
         position: potion2Position,
-        healAmount: ChestInteractableConfig.kHealAmountPerPotion,
+        healAmount: ChestDecorationConfig.kHealAmountPerPotion,
       ),
     );
 
@@ -128,7 +125,7 @@ class ChestInteractableView extends DDInteractableDecoration {
         animation:
             CharacterFxSpriteAnimationsConfig.createExplosionSmokeRight5(),
         position: position,
-        size: ChestInteractableConfig.smokeExplosionSize,
+        size: ChestDecorationConfig.smokeExplosionSize,
         loop: false,
       ),
     );

@@ -3,8 +3,8 @@ import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_contact_decoration.dart';
 
-final class DoorKeyInteractableConfig {
-  DoorKeyInteractableConfig._();
+final class DoorKeyDecorationConfig {
+  DoorKeyDecorationConfig._();
 
   static final Vector2 _componentSize = GameplayTileConstants.tileSizeStandard;
 
@@ -13,13 +13,13 @@ final class DoorKeyInteractableConfig {
   );
 }
 
-class DoorKeyInteractableView extends DDContactDecoration {
+class DoorKeyDecorationView extends DDContactDecoration {
   bool _hasBeenCollected = false;
 
-  DoorKeyInteractableView({required super.position})
+  DoorKeyDecorationView({required super.position})
     : super.withSprite(
-        sprite: DoorKeyInteractableConfig.loadSprite(),
-        size: DoorKeyInteractableConfig._componentSize,
+        sprite: DoorKeyDecorationConfig.loadSprite(),
+        size: DoorKeyDecorationConfig._componentSize,
       );
 
   @override

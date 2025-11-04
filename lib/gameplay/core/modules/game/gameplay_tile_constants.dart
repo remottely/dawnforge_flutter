@@ -7,7 +7,7 @@ final class GameplayTileConstants {
   static const int kBossConversationVisibleTiles = 32;
 
   static const double kTileDimensionSmall = 8.0;
-  static double kTileDimensionStandard = 16.0;
+  static const double kTileDimensionStandard = 16.0;
   static const double kTileDimensionLarge = 24.0;
   static const double kTileDimensionExtraLarge = 32.0;
 

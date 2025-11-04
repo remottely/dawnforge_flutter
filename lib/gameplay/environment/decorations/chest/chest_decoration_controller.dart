@@ -1,12 +1,12 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/environment/interactables/chest/chest_interactable_config.dart';
-import 'package:darkness_dungeon/gameplay/environment/interactables/chest/chest_interactable_model.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/chest/chest_decoration_config.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/chest/chest_decoration_model.dart';
 import 'package:flutter/services.dart';
 
 /// Controller: Lógica de negócio do Chest
 /// Não conhece detalhes de implementação da View
-class ChestInteractableController {
-  final ChestInteractableModel model;
+class ChestDecorationController {
+  final ChestDecorationModel model;
 
   // Callbacks para comunicação com View
   final void Function() onShowEmote;
@@ -21,7 +21,7 @@ class ChestInteractableController {
   })
   onCheckPlayerVision;
 
-  ChestInteractableController({
+  ChestDecorationController({
     required this.model,
     required this.onShowEmote,
     required this.onShowInteractionPrompt,
@@ -64,7 +64,7 @@ class ChestInteractableController {
   void _handlePlayerVision(GameComponent player) {
     onCheckPlayerVision(
       player: player,
-      radiusVision: ChestInteractableConfig.kVisionRadius,
+      radiusVision: ChestDecorationConfig.kVisionRadius,
       observed: (observedPlayer) {
         if (!model.observedPlayer) {
           model.setObservedPlayer(true);

@@ -2,14 +2,12 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
 
-/// Config: Constantes, animações e configurações do Chest
-/// Não contém lógica de negócio
-final class ChestInteractableConfig {
-  ChestInteractableConfig._();
+final class ChestDecorationConfig {
+  ChestDecorationConfig._();
 
   // Constants
   static const double kVisionRadius =
-      16.0; // GameplayTileConstants.kTileDimensionStandard
+      GameplayTileConstants.kTileDimensionStandard;
   static const int kVisionCheckInterval = 500;
   static const String kVisionCheckIntervalId = 'SeePlayer';
   static const String kInteractionPromptText = 'Touch me!!';

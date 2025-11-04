@@ -2,7 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/gameplay_hud_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/player_vital_stats_hud.dart';
-import 'package:darkness_dungeon/gameplay/environment/interactables/door_key_interactable.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/door_key_decoration.dart';
 
 class GameplayHUD extends GameInterface {
   late Sprite _keySprite;
@@ -22,7 +22,7 @@ class GameplayHUD extends GameInterface {
 
   Future<void> _loadAssets() async {
     _keySprite =
-        await DoorKeyInteractableConfig.loadSprite(); // TODO(Kevin): put this into shared layer, and cache this?
+        await DoorKeyDecorationConfig.loadSprite(); // TODO(Kevin): put this into shared layer, and cache this?
   }
 
   void _initializeComponents() {

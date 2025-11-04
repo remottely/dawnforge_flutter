@@ -1,10 +1,10 @@
 /// Model: Dados e estado do Chest
 /// Contém apenas dados, sem lógica de negócio ou referências externas
-class ChestInteractableModel {
+class ChestDecorationModel {
   bool _observedPlayer;
   bool _isOpened;
 
-  ChestInteractableModel({bool? initialObservedPlayer, bool? initialIsOpened})
+  ChestDecorationModel({bool? initialObservedPlayer, bool? initialIsOpened})
     : _observedPlayer = initialObservedPlayer ?? false,
       _isOpened = initialIsOpened ?? false;
 

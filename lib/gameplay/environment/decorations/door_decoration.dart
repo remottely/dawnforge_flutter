@@ -8,8 +8,8 @@ import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_consta
 import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_state_manager.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 
-final class _DoorInteractableConfig {
-  _DoorInteractableConfig._();
+final class _DoorDecorationConfig {
+  _DoorDecorationConfig._();
 
   static const String _kRequiredKeyMessage =
       'door_without_key'; // TODO(Kevin): enhance this nomenclature
@@ -41,15 +41,15 @@ final class _DoorInteractableConfig {
   }
 }
 
-class DoorInteractableView extends DDDecoration {
+class DoorDecorationView extends DDDecoration {
   bool _isOpen = false;
 
-  DoorInteractableView({required super.position, required super.size})
-    : super.withSprite(sprite: _DoorInteractableConfig._loadClosedSprite());
+  DoorDecorationView({required super.position, required super.size})
+    : super.withSprite(sprite: _DoorDecorationConfig._loadClosedSprite());
 
   @override
   Future<void> onLoad() {
-    add(_DoorInteractableConfig._buildHitbox(this));
+    add(_DoorDecorationConfig._buildHitbox(this));
     return super.onLoad();
   }
 
@@ -82,7 +82,7 @@ class DoorInteractableView extends DDDecoration {
 
   void _playDoorOpeningAnimation() {
     playSpriteAnimationOnce(
-      _DoorInteractableConfig._loadOpeningAnimation(),
+      _DoorDecorationConfig._loadOpeningAnimation(),
       onFinish: _cleanup,
       onStart: () {
         sprite = null;
@@ -101,8 +101,7 @@ class DoorInteractableView extends DDDecoration {
     GameplayUIStateManager.instance.showConversation(
       gameRef.context,
       player: player,
-      conversationSequence:
-          _DoorInteractableConfig.createConversationSequence(),
+      conversationSequence: _DoorDecorationConfig.createConversationSequence(),
       onClose: () {
         GameplayUIStateManager.instance.isShowingConversation = false;
       },

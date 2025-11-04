@@ -3,7 +3,7 @@ import 'package:bonfire/map/tiled/builder/tiled_world_builder.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_data.dart';
-import 'package:darkness_dungeon/gameplay/environment/sensors/map_transition_sensor.dart';
+import 'package:darkness_dungeon/gameplay/environment/decorations/map_transition_sensor.dart';
 import 'package:flutter/widgets.dart';
 
 class GameplayMapManager {

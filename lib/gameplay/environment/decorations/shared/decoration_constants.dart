@@ -1,5 +1,5 @@
-final class GameplayInteractableConfig {
-  GameplayInteractableConfig._();
+final class DecorationConstants {
+  DecorationConstants._();
 
   static const double kStatsAmountSmall = 30.0;
   static const double kStatsAmountMedium = 60.0;
