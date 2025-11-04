@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/environment/decorations/chest/chest_decoration_config.dart';
-import 'package:darkness_dungeon/gameplay/environment/decorations/chest/chest_decoration_model.dart';
+import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_config.dart';
+import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_model.dart';
 import 'package:flutter/services.dart';
 
 /// Controller: Lógica de negócio do Chest

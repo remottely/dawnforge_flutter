@@ -2,7 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/gameplay_hud_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/player_vital_stats_hud.dart';
-import 'package:darkness_dungeon/gameplay/environment/decorations/door_key_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/door_key_decoration.dart';
 
 class GameplayHUD extends GameInterface {
   late Sprite _keySprite;

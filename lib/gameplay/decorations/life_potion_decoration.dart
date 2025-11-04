@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
-import 'package:darkness_dungeon/gameplay/environment/decorations/shared/decoration_constants.dart';
+import 'package:darkness_dungeon/gameplay/decorations/shared/decoration_constants.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_contact_decoration.dart';
 
 final class LifePotionConfig {

@@ -7,14 +7,14 @@ import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_view.dart'
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_data.dart';
-import 'package:darkness_dungeon/gameplay/environment/decorations/barrel_decoration.dart';
-import 'package:darkness_dungeon/gameplay/environment/decorations/torch_decoration.dart';
-import 'package:darkness_dungeon/gameplay/environment/decorations/chest/chest_decoration_view.dart';
-import 'package:darkness_dungeon/gameplay/environment/decorations/door_decoration.dart';
-import 'package:darkness_dungeon/gameplay/environment/decorations/door_key_decoration.dart';
-import 'package:darkness_dungeon/gameplay/environment/decorations/life_potion_decoration.dart';
-import 'package:darkness_dungeon/gameplay/environment/decorations/spike_trap_decoration.dart';
-import 'package:darkness_dungeon/gameplay/terrain/farmable/farm_tile.dart';
+import 'package:darkness_dungeon/gameplay/decorations/barrel_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/torch_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_view.dart';
+import 'package:darkness_dungeon/gameplay/decorations/door_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/door_key_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/life_potion_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/spike_trap_decoration.dart';
+import 'package:darkness_dungeon/gameplay/farmable/farm_tile.dart';
 
 final class GameplayMapConfig {
   GameplayMapConfig._();
