@@ -1,9 +1,8 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_model.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_model.dart';
 
-class DungeonBossEnemyController
-    extends DDBaseEnemyController<DungeonBossEnemyModel> {
+class BossEnemyController extends DDBaseEnemyController<BossEnemyModel> {
   final void Function(Player player) onFirstPlayerSight;
   final void Function(double dt) onSpawnMinion;
   final void Function(Canvas canvas) onRenderBars;
@@ -13,7 +12,7 @@ class DungeonBossEnemyController
   })
   onSeePlayer;
 
-  DungeonBossEnemyController({
+  BossEnemyController({
     required super.model,
     required super.onSeeAndMoveToMeleeAttack,
     required this.onFirstPlayerSight,

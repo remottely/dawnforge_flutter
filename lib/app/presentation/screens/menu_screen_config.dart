@@ -13,7 +13,7 @@ class MenuScreenConfig {
     UISpriteAnimationsConfig.loadGoblinEnemyIdleRight6(),
     UISpriteAnimationsConfig.loadImpEnemyIdleRight4(),
     UISpriteAnimationsConfig.loadDungeonMiniBossEnemyIdleRight4(),
-    UISpriteAnimationsConfig.loadDungeonBossEnemyIdleRight4(),
+    UISpriteAnimationsConfig.loadBossEnemyIdleRight4(),
   ];
 
   static final Future<Sprite> keyboardSprite = Sprite.load(

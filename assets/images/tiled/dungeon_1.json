@@ -721,7 +721,7 @@
                         {
                          "height":16,
                          "id":33,
-                         "name":"dungeon_boss_enemy",
+                         "name":"boss_enemy",
                          "rotation":0,
                          "type":"",
                          "visible":true,

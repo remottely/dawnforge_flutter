@@ -1,5 +1,5 @@
 import 'package:bonfire/map/tiled/builder/tiled_world_builder.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.dart';
@@ -8,12 +8,12 @@ import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_view
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_data.dart';
 import 'package:darkness_dungeon/gameplay/decorations/barrel_decoration.dart';
-import 'package:darkness_dungeon/gameplay/decorations/torch_decoration.dart';
 import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_view.dart';
 import 'package:darkness_dungeon/gameplay/decorations/door_decoration.dart';
 import 'package:darkness_dungeon/gameplay/decorations/door_key_decoration.dart';
 import 'package:darkness_dungeon/gameplay/decorations/life_potion_decoration.dart';
 import 'package:darkness_dungeon/gameplay/decorations/spike_trap_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/torch_decoration.dart';
 import 'package:darkness_dungeon/gameplay/farmable/farm_tile.dart';
 
 final class GameplayMapConfig {
@@ -39,7 +39,7 @@ final class GameplayMapConfig {
   static Map<String, ObjectBuilder> createEntityBuilder() =>
       <String, ObjectBuilder>{
         /// Enemies
-        'dungeon_boss_enemy': (p) => DungeonBossEnemyView(p.position),
+        'boss_enemy': (p) => BossEnemyView(p.position),
         'dungeon_mini_boss_enemy': (p) => DungeonMiniBossEnemyView(p.position),
         'goblin_enemy': (p) => GoblinEnemyView(p.position),
         'imp_enemy': (p) => ImpEnemyView(p.position),

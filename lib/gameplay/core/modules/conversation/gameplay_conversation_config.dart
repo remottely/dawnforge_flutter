@@ -36,7 +36,7 @@ class GameplayConversationConfig {
       TextSpan(text: GameplayStringsLocation.instance.getString(phraseKey)),
     ],
     person: DDSpriteAnimationWidget(
-      animation: UISpriteAnimationsConfig.loadDungeonBossEnemyIdleRight4(),
+      animation: UISpriteAnimationsConfig.loadBossEnemyIdleRight4(),
     ),
     personSayDirection: PersonSayDirection.LEFT,
   );
@@ -46,7 +46,7 @@ class GameplayConversationConfig {
       TextSpan(text: GameplayStringsLocation.instance.getString('talk_boss_2')),
     ],
     person: DDSpriteAnimationWidget(
-      animation: UISpriteAnimationsConfig.loadDungeonBossEnemyIdleLeft4(),
+      animation: UISpriteAnimationsConfig.loadBossEnemyIdleLeft4(),
     ),
     personSayDirection: PersonSayDirection.RIGHT,
   );

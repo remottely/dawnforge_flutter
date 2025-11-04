@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_config.dart';
@@ -45,23 +45,23 @@ class UISpriteAnimationsConfig {
     ),
   );
 
-  static Future<SpriteAnimation>
-  loadDungeonBossEnemyIdleRight4() => SpriteAnimation.load(
-    'gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_idle_right_4.png',
-    GameplaySpriteAnimationConfig.createStandardData(
-      amount: 4,
-      textureSize: DungeonBossEnemyConfig.textureSize,
-    ),
-  );
+  static Future<SpriteAnimation> loadBossEnemyIdleRight4() =>
+      SpriteAnimation.load(
+        'gameplay/characters/enemies/boss/boss_enemy_idle_right_4.png',
+        GameplaySpriteAnimationConfig.createStandardData(
+          amount: 4,
+          textureSize: BossEnemyConfig.textureSize,
+        ),
+      );
 
-  static Future<SpriteAnimation>
-  loadDungeonBossEnemyIdleLeft4() => SpriteAnimation.load(
-    'gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_idle_left_4.png',
-    GameplaySpriteAnimationConfig.createStandardData(
-      amount: 4,
-      textureSize: DungeonBossEnemyConfig.textureSize,
-    ),
-  );
+  static Future<SpriteAnimation> loadBossEnemyIdleLeft4() =>
+      SpriteAnimation.load(
+        'gameplay/characters/enemies/boss/boss_enemy_idle_left_4.png',
+        GameplaySpriteAnimationConfig.createStandardData(
+          amount: 4,
+          textureSize: BossEnemyConfig.textureSize,
+        ),
+      );
 
   static Future<SpriteAnimation> loadKidNpcIdleLeft4() => SpriteAnimation.load(
     'gameplay/characters/npcs/kid_npc_idle_left_4.png',

@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_model.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_mini_boss/dungeon_mini_boss_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_sprite_animations_config.dart';
@@ -16,23 +16,22 @@ import 'package:darkness_dungeon/gameplay/core/utils/gameplay_camera_utils.dart'
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy.dart';
 import 'package:flutter/material.dart';
 
-class DungeonBossEnemyView
-    extends DDBaseEnemy<DungeonBossEnemyController, DungeonBossEnemyModel> {
-  DungeonBossEnemyView(Vector2 position)
+class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
+  BossEnemyView(Vector2 position)
     : super(
-        animation: DungeonBossEnemyConfig.animation,
+        animation: BossEnemyConfig.animation,
         position: position,
-        size: DungeonBossEnemyConfig.componentSize,
-        speed: DungeonBossEnemyConfig.kSpeed,
-        life: DungeonBossEnemyConfig.kLife,
+        size: BossEnemyConfig.componentSize,
+        speed: BossEnemyConfig.kSpeed,
+        life: BossEnemyConfig.kLife,
       );
 
   @override
-  DungeonBossEnemyModel createModel() => DungeonBossEnemyModel();
+  BossEnemyModel createModel() => BossEnemyModel();
 
   @override
-  DungeonBossEnemyController createController(DungeonBossEnemyModel model) {
-    return DungeonBossEnemyController(
+  BossEnemyController createController(BossEnemyModel model) {
+    return BossEnemyController(
       model: model,
       onSeeAndMoveToMeleeAttack: seeAndMoveToPrimaryAttack,
       onFirstPlayerSight: _onPlayerSighted,
@@ -43,7 +42,7 @@ class DungeonBossEnemyView
   }
 
   @override
-  RectangleHitbox createHitbox() => DungeonBossEnemyConfig.createHitbox();
+  RectangleHitbox createHitbox() => BossEnemyConfig.createHitbox();
 
   @override
   void render(Canvas canvas) {
@@ -173,7 +172,7 @@ class DungeonBossEnemyView
     GameplayUIStateManager.instance.showConversation(
       gameRef.context,
       player: player,
-      conversationSequence: DungeonBossEnemyConfig.createConversationSequence(),
+      conversationSequence: BossEnemyConfig.createConversationSequence(),
       logicalKeyboardKeysToNext: [GameplayKeyboardConfig.kPrimaryAttackKey],
       onChangeTalk: _onConversationChanged,
       onFinish: _onConversationFinished,

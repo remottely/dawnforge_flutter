@@ -1,13 +1,13 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_config.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy_model.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_config.dart';
 
-class DungeonBossEnemyModel extends DDBaseEnemyModel {
-  DungeonBossEnemyModel()
+class BossEnemyModel extends DDBaseEnemyModel {
+  BossEnemyModel()
     : super(
-        closeVisionRadius: DungeonBossEnemyConfig.kCloseVisionRadius,
-        primaryAttackDamage: DungeonBossEnemyConfig.kPrimaryAttackDamage,
-        primaryAttackInterval: DungeonBossEnemyConfig.kPrimaryAttackInterval,
+        closeVisionRadius: BossEnemyConfig.kCloseVisionRadius,
+        primaryAttackDamage: BossEnemyConfig.kPrimaryAttackDamage,
+        primaryAttackInterval: BossEnemyConfig.kPrimaryAttackInterval,
       );
 
   List<Enemy> spawnedEnemies = [];

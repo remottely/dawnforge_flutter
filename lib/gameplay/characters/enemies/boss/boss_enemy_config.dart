@@ -5,8 +5,8 @@ import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_anim
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 
-final class DungeonBossEnemyConfig {
-  DungeonBossEnemyConfig._();
+final class BossEnemyConfig {
+  BossEnemyConfig._();
 
   static const double kCloseVisionRadius =
       CharacterConstants.kVisionRadiusExtraLarge;
@@ -22,17 +22,17 @@ final class DungeonBossEnemyConfig {
   static final Vector2 componentSize = textureSize;
 
   static final SimpleDirectionAnimation animation = SimpleDirectionAnimation(
-    idleLeft: UISpriteAnimationsConfig.loadDungeonBossEnemyIdleLeft4(),
-    idleRight: UISpriteAnimationsConfig.loadDungeonBossEnemyIdleRight4(),
+    idleLeft: UISpriteAnimationsConfig.loadBossEnemyIdleLeft4(),
+    idleRight: UISpriteAnimationsConfig.loadBossEnemyIdleRight4(),
     runLeft: SpriteAnimation.load(
-      'gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_run_left_4.png',
+      'gameplay/characters/enemies/boss/boss_enemy_run_left_4.png',
       GameplaySpriteAnimationConfig.createStandardData(
         amount: 4,
         textureSize: textureSize,
       ),
     ),
     runRight: SpriteAnimation.load(
-      'gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_run_right_4.png',
+      'gameplay/characters/enemies/boss/boss_enemy_run_right_4.png',
       GameplaySpriteAnimationConfig.createStandardData(
         amount: 4,
         textureSize: textureSize,

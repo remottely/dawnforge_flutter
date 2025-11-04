@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.13.3+1
+version: 1.13.4+1
 
 environment:
   sdk: ^3.9.2
@@ -41,7 +41,7 @@ flutter:
     - assets/images/gameplay/characters/enemies/goblin/
     - assets/images/gameplay/characters/enemies/imp/
     - assets/images/gameplay/characters/enemies/dungeon_mini_boss/
-    - assets/images/gameplay/characters/enemies/dungeon_boss/
+    - assets/images/gameplay/characters/enemies/boss/
     - assets/images/gameplay/characters/npcs/
     - assets/images/gameplay/characters/player/
     - assets/images/gameplay/characters/player/knight/
