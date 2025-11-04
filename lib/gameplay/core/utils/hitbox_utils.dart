@@ -1,6 +1,8 @@
 import 'package:bonfire/bonfire.dart';
 
-class HitboxUtils {
+final class HitboxUtils {
+  HitboxUtils._();
+
   static RectangleHitbox createExpandHitbox(Vector2 componentSize) =>
       RectangleHitbox(size: componentSize);
 

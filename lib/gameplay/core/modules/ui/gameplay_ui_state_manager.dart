@@ -1,12 +1,12 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/app/presentation/screens/menu_screen.dart';
+import 'package:darkness_dungeon/app/screens/menu_screen.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_game_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_player_input_actions_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_config.dart';
-import 'package:darkness_dungeon/shared/design_system/components/atoms/dd_button.dart';
-import 'package:darkness_dungeon/shared/design_system/components/atoms/dd_dialog.dart';
-import 'package:darkness_dungeon/shared/design_system/components/atoms/dd_text.dart';
+import 'package:darkness_dungeon/shared/design_system/widgets/atoms/dd_button.dart';
+import 'package:darkness_dungeon/shared/design_system/widgets/atoms/dd_dialog.dart';
+import 'package:darkness_dungeon/shared/design_system/widgets/atoms/dd_text.dart';
 import 'package:darkness_dungeon/shared/design_system/dd_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

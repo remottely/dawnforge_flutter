@@ -1,6 +1,6 @@
 fix:
 
-- fix: add "X" to display keyboard configuration.
+- fix: add "X" to display keyboard configuration. And change all keyboard display layout.
 
 - fix: execute player.idle even in victory and game over dialogs
 
