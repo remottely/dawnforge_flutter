@@ -93,7 +93,7 @@ final class GameplayMapConfig {
     const GameplayMapData(
       id: kDungeon1Id,
       asset: 'tiled/$kDungeon1Id.json',
-      sensorIds: ['sensor_$kTemple1Id'],
+      sensorIds: ['sensor_$kForest1Id', 'sensor_$kTemple1Id'],
       backgroundMusic: GameplayAudioConfig.kMusicRo1DeathHexBackgroundAsset,
       lightingColor: _kDarknessLightingColor,
       backgroundColor: _kDungeonBackgroundColor,

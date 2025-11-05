@@ -1,9 +1,9 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_lightning_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_lightning_config.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 
@@ -79,4 +79,7 @@ final class KnightPlayerConfig {
         position: Vector2(position.x, position.y),
         size: cryptComponentSize,
       );
+
+  static const String defaultPickaxeSpritePath =
+      'gameplay/characters/weapons/SolarPoweredHammer.png';
 }
