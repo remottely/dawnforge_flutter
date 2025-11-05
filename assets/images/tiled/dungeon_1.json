@@ -190,6 +190,33 @@
                          "width":11.7178270192836,
                          "x":16,
                          "y":64
+                        }, 
+                        {
+                         "height":13.7016,
+                         "id":380,
+                         "name":"sensor_temple_1",
+                         "properties":[
+                                {
+                                 "name":"nextMap",
+                                 "type":"string",
+                                 "value":"temple_1"
+                                }, 
+                                {
+                                 "name":"playerDirection",
+                                 "type":"string",
+                                 "value":"right"
+                                }, 
+                                {
+                                 "name":"playerPosition",
+                                 "type":"string",
+                                 "value":"3,3"
+                                }],
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":15.865,
+                         "x":79.0735172385754,
+                         "y":34.2127875752155
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -743,7 +770,7 @@
          "y":0
         }],
  "nextlayerid":26,
- "nextobjectid":378,
+ "nextobjectid":381,
  "orientation":"orthogonal",
  "properties":[
         {

@@ -31,9 +31,11 @@ final class GameplayMapConfig {
   /// Private
   static const String _kCloudyLightingColor = '#d0ffffff';
   static const String _kDarknessLightingColor = '#d0000000';
+  static const String _kNoneLightingColor = '#00ffffff';
 
   static const String _kForestBackgroundColor = '#ff63c74d';
   static const String _kDungeonBackgroundColor = '#ff424242';
+  static const String _kTempleBackgroundColor = '#ff424242';
 
   ///
   static Map<String, ObjectBuilder> createEntityBuilder() =>
@@ -74,6 +76,7 @@ final class GameplayMapConfig {
   /// Maps
   static const String kForest1Id = 'forest_1';
   static const String kDungeon1Id = 'dungeon_1';
+  static const String kTemple1Id = 'temple_1';
 
   static const List<GameplayMapData> kAllMaps = [
     /// forest_1
@@ -90,10 +93,21 @@ final class GameplayMapConfig {
     const GameplayMapData(
       id: kDungeon1Id,
       asset: 'tiled/$kDungeon1Id.json',
-      sensorIds: ['sensor_$kForest1Id'],
+      sensorIds: ['sensor_$kTemple1Id'],
       backgroundMusic: GameplayAudioConfig.kMusicRo1DeathHexBackgroundAsset,
       lightingColor: _kDarknessLightingColor,
       backgroundColor: _kDungeonBackgroundColor,
+    ),
+
+    /// temple_1
+    const GameplayMapData(
+      id: kTemple1Id,
+      asset: 'tiled/$kTemple1Id.json',
+      sensorIds: ['sensor_$kForest1Id'],
+      backgroundMusic: GameplayAudioConfig
+          .kMusicRo1DeathHexBackgroundAsset, // TODO(Kevin): Change music
+      lightingColor: _kNoneLightingColor, // TODO(Kevin): Change color
+      backgroundColor: _kTempleBackgroundColor, // TODO(Kevin): Change color
     ),
   ];
 }

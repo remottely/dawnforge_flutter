@@ -46,14 +46,14 @@ final class ChestDecorationConfig {
     ),
   );
 
-  static final Vector2 emoteTextureSize =
+  static final Vector2 _emoteTextureSize =
       GameplayTileConstants.tileSizeExtraLarge;
 
   static Future<SpriteAnimation> get emoteAnimation => SpriteAnimation.load(
     CharacterEmoteManager.kExclamationEmoteAsset,
     GameplaySpriteAnimationConfig.createStandardData(
       amount: 8,
-      textureSize: emoteTextureSize,
+      textureSize: _emoteTextureSize,
     ),
   );
 }
