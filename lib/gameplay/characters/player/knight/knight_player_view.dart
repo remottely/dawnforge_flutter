@@ -7,6 +7,7 @@ import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_a
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_primary_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/camera/gameplay_camera_effects_config.dart';
 
 class KnightPlayerView extends SimplePlayer
     with Lighting, BlockMovementCollision {
@@ -96,6 +97,7 @@ class KnightPlayerView extends SimplePlayer
 
   /// Controller callback implementations
   void _onPlayPrimaryAttack(double damage) {
+    GameplayCameraEffectsConfig.primaryAttackShake(gameRef);
     GameplayAudioManager.instance.playPlayerPrimaryAttackSfx();
     addParticle(
       CharacterFxParticlesAnimationsConfig.createPrimaryAttackParticles(),
@@ -110,6 +112,7 @@ class KnightPlayerView extends SimplePlayer
   }
 
   void _onPlayFireballAttack(double damage) {
+    // rangeAttackLightShake();
     addParticle(
       CharacterFxParticlesAnimationsConfig.createFireballAttackParticles(),
       position: size,
@@ -120,7 +123,10 @@ class KnightPlayerView extends SimplePlayer
       size: CharacterFireballAttackConfig.componentSize,
       damage: damage,
       speed: speed * CharacterFireballAttackConfig.kSpeedMultiplier,
-      onDestroy: CharacterFireballAttackConfig.playDestroyAudio,
+      onDestroy: () {
+        CharacterFireballAttackConfig.playDestroyAudio();
+        GameplayCameraEffectsConfig.fireballExplosionShake(gameRef);
+      },
       collision: CharacterFireballAttackConfig.createHitbox(),
       lightingConfig: CharacterFireballAttackConfig.lightingConfig,
     );
