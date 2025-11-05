@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.8.35+1
+version: 1.14.0+1
 
 environment:
   sdk: ^3.9.2
@@ -40,17 +40,21 @@ flutter:
     - assets/images/gameplay/characters/enemies/
     - assets/images/gameplay/characters/enemies/goblin/
     - assets/images/gameplay/characters/enemies/imp/
-    - assets/images/gameplay/characters/enemies/dungeon_mini_boss/
-    - assets/images/gameplay/characters/enemies/dungeon_boss/
+    - assets/images/gameplay/characters/enemies/mini_boss/
+    - assets/images/gameplay/characters/enemies/boss/
     - assets/images/gameplay/characters/npcs/
     - assets/images/gameplay/characters/player/
     - assets/images/gameplay/characters/player/knight/
     - assets/images/gameplay/characters/shared/
-    - assets/images/gameplay/environment/decorations/
-    - assets/images/gameplay/environment/interactables/
-    - assets/images/gameplay/terrain/farmable/
+    - assets/images/gameplay/decorations/
+    - assets/images/gameplay/farmable/
+    - assets/images/ui/controls/
     - assets/images/tiled/
-    - assets/audio/
+    - assets/images/tiled/tilesets/
+    - assets/audio/music/
+    - assets/audio/sfx/
+    - assets/audio/ui/
+    - assets/audio/voice/
     - assets/l10n/
 
   fonts:

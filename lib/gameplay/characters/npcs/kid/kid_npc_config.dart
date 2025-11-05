@@ -1,22 +1,28 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/constants/gameplay_dialog_constants.dart';
-import 'package:darkness_dungeon/shared/ui_sprite_animations.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/conversation/gameplay_conversation_config.dart';
+import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 
-abstract class KidNpcConfig {
-  static const double sizeMultiplierX = 8.0;
-  static const double sizeMultiplierY = 11.0;
-  static final Vector2 spriteSize = Vector2(sizeMultiplierX, sizeMultiplierY);
+final class KidNpcConfig {
+  KidNpcConfig._();
 
-  static SimpleDirectionAnimation get buildDirectionalAnimation =>
-      SimpleDirectionAnimation(
-        idleRight: UISpriteAnimations.kidIdleLeft(),
-        runRight: UISpriteAnimations.kidIdleLeft(),
-      );
+  static final Vector2 textureSize = Vector2(
+    16,
+    22,
+  ); // TODO(Kevin): change this size
+  static final Vector2 componentSize = Vector2(
+    8,
+    11,
+  ); // TODO(Kevin): change this size
 
-  static List<Say> createDialogueSequence() {
+  static final SimpleDirectionAnimation animation = SimpleDirectionAnimation(
+    idleRight: UISpriteAnimationsConfig.loadKidNpcIdleLeft4(),
+    runRight: UISpriteAnimationsConfig.loadKidNpcIdleLeft4(),
+  );
+
+  static List<Say> createConversationSequence() {
     return [
-      GameplayDialogConstants.kidRightDialog('talk_kid_2'),
-      GameplayDialogConstants.knightLeftDialog('talk_player_4'),
+      GameplayConversationConfig.createKidRightDialog('talk_kid_2'),
+      GameplayConversationConfig.createKnightLeftDialog('talk_player_4'),
     ];
   }
 }

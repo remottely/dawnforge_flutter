@@ -1,0 +1,23 @@
+import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
+
+class CharacterFxSpriteAnimationsConfig {
+  static Future<SpriteAnimation> createExplosionRight7() =>
+      SpriteAnimation.load(
+        'gameplay/characters/shared/character_explosion_right_7.png',
+        GameplaySpriteAnimationConfig.createStandardData(
+          amount: 7,
+          textureSize: GameplayTileConstants.tileSizeExtraLarge,
+        ),
+      );
+
+  static Future<SpriteAnimation> createExplosionSmokeRight5() =>
+      SpriteAnimation.load(
+        'gameplay/characters/shared/character_explosion_smoke_right_5.png',
+        GameplaySpriteAnimationConfig.createStandardData(
+          amount: 5,
+          textureSize: GameplayTileConstants.tileSizeStandard,
+        ),
+      );
+}

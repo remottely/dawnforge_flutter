@@ -1,0 +1,25 @@
+import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
+
+class MenuScreenConfig {
+  MenuScreenConfig._();
+
+  static const Duration kCharacterAnimationDuration = Duration(
+    milliseconds: 300,
+  );
+  static const Duration kCharacterAnimationInterval = Duration(seconds: 2);
+  static final List<Future<SpriteAnimation>> characterSpriteAnimations = [
+    UISpriteAnimationsConfig.loadKnightPlayerIdleRight6(),
+    UISpriteAnimationsConfig.loadGoblinEnemyIdleRight6(),
+    UISpriteAnimationsConfig.loadImpEnemyIdleRight4(),
+    UISpriteAnimationsConfig.loadMiniBossEnemyIdleRight4(),
+    UISpriteAnimationsConfig.loadBossEnemyIdleRight4(),
+  ];
+
+  static final Future<Sprite> keyboardSprite = Sprite.load(
+    'ui/controls/keyboard_tip.png',
+  );
+
+  static const String kKevinKoboriUrl = 'https://github.com/kevinkobori';
+  static const String kBonfireUrl = 'https://pub.dev/packages/bonfire';
+}

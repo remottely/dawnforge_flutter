@@ -1,24 +1,23 @@
-import 'package:darkness_dungeon/gameplay/characters/enemies/dungeon_boss/dungeon_boss_enemy_view.dart';
+import 'package:bonfire/player/player.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_view.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/managers/gameplay_ui_manager.dart';
-import 'package:flutter/services.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_player_input_actions_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_state_manager.dart';
 
 class KidNpcController {
-  bool _conversationWithHero = false;
+  bool _hasStartedConversationWithHero = false;
   late KidNpcView _view;
 
-  void attachView(KidNpcView view) {
-    _view = view;
-  }
+  void attachView(KidNpcView view) => _view = view;
 
   void onUpdate(double dt) {
     _checkForBossDefeat(dt);
   }
 
   void _checkForBossDefeat(double dt) {
-    if (!_conversationWithHero &&
+    if (!_hasStartedConversationWithHero &&
         _view.checkInterval('checkBossDead', 1000, dt)) {
       if (_isBossDefeated()) {
         _initiateVictorySequence();
@@ -28,9 +27,7 @@ class KidNpcController {
 
   bool _isBossDefeated() {
     try {
-      _view.gameRef.enemies().firstWhere(
-        (enemy) => enemy is DungeonBossEnemyView,
-      );
+      _view.gameRef.enemies().firstWhere((enemy) => enemy is BossEnemyView);
       return false;
     } catch (e) {
       return true;
@@ -38,36 +35,35 @@ class KidNpcController {
   }
 
   void _initiateVictorySequence() {
-    _conversationWithHero = true;
+    _hasStartedConversationWithHero = true;
     _view.gameRef.camera.moveToTargetAnimated(
       target: _view,
-      onComplete: _initializeDialogue,
+      onComplete: () => _showConversation(_view.gameRef.player!),
     );
   }
 
-  void _initializeDialogue() {
-    GameplayAudioManager.instance.playInteraction();
-    GameplayUIManager.displayConversationDialog(
+  void _showConversation(Player player) {
+    GameplayAudioManager.instance.playConversationInteractionSfx();
+    GameplayUIStateManager.instance.showConversation(
       _view.gameRef.context,
-      KidNpcConfig.createDialogueSequence(),
+      player: player,
+      conversationSequence: KidNpcConfig.createConversationSequence(),
+      onChangeTalk: _onConversationChanged,
       onFinish: _onConversationFinished,
-      onChangeTalk: _onDialogueChanged,
-      logicalKeyboardKeysToNext: [LogicalKeyboardKey.space],
+      logicalKeyboardKeysToNext: [GameplayKeyboardConfig.kPrimaryAttackKey],
     );
   }
 
-  void _onDialogueChanged(int index) {
-    GameplayAudioManager.instance.playInteraction();
+  void _onConversationChanged(int index) {
+    GameplayAudioManager.instance.playConversationInteractionSfx();
   }
 
   void _onConversationFinished() {
-    GameplayAudioManager.instance.playInteraction();
+    GameplayAudioManager.instance.playConversationInteractionSfx();
     _view.gameRef.camera.moveToPlayerAnimated(
-      onComplete: _displayVictoryScreen,
+      onComplete: () => GameplayUIStateManager.instance.displayVictoryDialog(
+        _view.gameRef.context,
+      ),
     );
-  }
-
-  void _displayVictoryScreen() {
-    GameplayUIManager.displayVictoryDialog(_view.gameRef.context);
   }
 }
