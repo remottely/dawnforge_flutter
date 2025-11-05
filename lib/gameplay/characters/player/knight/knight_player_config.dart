@@ -1,9 +1,9 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_constants.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_lightning_config.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 
@@ -66,7 +66,7 @@ final class KnightPlayerConfig {
   static final LightingConfig lightingConfig = LightingConfig(
     radius: GameplayTileConstants.kTileDimensionStandard,
     blurBorder: GameplayTileConstants.kTileDimensionStandard,
-    color: CharacterFxParticlesAnimationsConfig.lightingConfigColor,
+    color: GameplayLightingConfig.playerLighting,
   );
 
   static final Vector2 cryptComponentSize =

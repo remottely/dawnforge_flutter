@@ -112,7 +112,6 @@ class KnightPlayerView extends SimplePlayer
   }
 
   void _onPlayFireballAttack(double damage) {
-    // rangeAttackLightShake();
     addParticle(
       CharacterFxParticlesAnimationsConfig.createFireballAttackParticles(),
       position: size,

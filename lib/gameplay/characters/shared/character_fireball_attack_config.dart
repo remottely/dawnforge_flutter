@@ -1,9 +1,9 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_lightning_config.dart';
 
 final class CharacterFireballAttackConfig {
   CharacterFireballAttackConfig._();
@@ -13,7 +13,7 @@ final class CharacterFireballAttackConfig {
   static final LightingConfig lightingConfig = LightingConfig(
     radius: GameplayTileConstants.kTileDimensionSmall,
     blurBorder: GameplayTileConstants.kTileDimensionSmall,
-    color: CharacterFxParticlesAnimationsConfig.lightingConfigColor,
+    color: GameplayLightingConfig.fireballAttackLighting,
   );
 
   static final Vector2 _textureSize = Vector2(23, 23);
