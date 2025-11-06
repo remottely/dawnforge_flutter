@@ -75,7 +75,7 @@ class SynchronizedAttackController {
     _onAnimationDurationChanged?.call(durations.animation);
     _onAnimationSync?.call(info);
     _onAttackExecuted?.call(info);
-    Future.delayed(Duration(milliseconds: 300), () {
+    Future.delayed(info.animationDuration, () {
       _onAttackDestroyed?.call(info);
     });
 

@@ -2,7 +2,10 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/modules/pickaxe/knight_pickaxe_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/modules/hands/knight_hand_item_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/modules/hands/knight_hand_item_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/modules/hands/knight_hand_slot.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/modules/hands/presets/knight_pickaxe_hand_preset.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_manager.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
@@ -27,7 +30,10 @@ class KnightPlayerView extends SimplePlayer
 
   final KnightPlayerModel _model;
   late final KnightPlayerController _controller;
-  late final KnightPickaxeController _pickaxeController;
+  final Map<KnightHandSlot, KnightHandItemController> _handControllers = {};
+  KnightHandItemController get _primaryWeaponHand =>
+      _handControllers[_primaryWeaponSlot]!;
+  KnightHandSlot _primaryWeaponSlot = KnightHandSlot.right;
   late final SynchronizedAttackController _attackController;
 
   @override
@@ -36,12 +42,7 @@ class KnightPlayerView extends SimplePlayer
     _initializeVisualConfiguration();
     _initializeController();
     add(KnightPlayerConfig.hitbox);
-    _pickaxeController = KnightPickaxeController(knight: this);
-    final pickaxeView = await _pickaxeController.createView(
-      spritePath: KnightPlayerConfig.defaultPickaxeSpritePath,
-    );
-    gameRef.add(pickaxeView);
-    _pickaxeController.update(0);
+    await _initializeHandLoadout();
     _initializeSynchronizedAttackSystem();
   }
 
@@ -49,8 +50,10 @@ class KnightPlayerView extends SimplePlayer
   void update(double dt) {
     if (isDead) return;
     _controller.update(dt);
-    _pickaxeController.updateDirectionFromVelocity(velocity);
-    _pickaxeController.update(dt);
+    for (final handController in _handControllers.values) {
+      handController.updateDirectionFromVelocity(velocity);
+      handController.update(dt);
+    }
     super.update(dt);
   }
 
@@ -78,7 +81,10 @@ class KnightPlayerView extends SimplePlayer
   @override
   void onRemove() {
     _attackController.dispose();
-    _pickaxeController.dispose();
+    for (final handController in _handControllers.values) {
+      handController.dispose();
+    }
+    _handControllers.clear();
     _controller.dispose();
     super.onRemove();
   }
@@ -96,10 +102,10 @@ class KnightPlayerView extends SimplePlayer
   void _initializeSynchronizedAttackSystem() {
     _attackController =
         SynchronizedAttackController(
-            config: const SynchronizedAttackConfig(
+            config: SynchronizedAttackConfig(
               baseAttackSpeedMs: 800,
               speedBonusPerLevel: 0.05,
-              attackTypeMultipliers: {
+              attackTypeMultipliers: const {
                 AttackType.melee: 1.0,
                 AttackType.ranged: 0.8,
                 AttackType.special: 1.5,
@@ -108,24 +114,28 @@ class KnightPlayerView extends SimplePlayer
             ),
           )
           ..setOnAnimationDurationChangedCallback(
-            _pickaxeController.updateAnimationDuration,
+            _primaryWeaponHand.updateAnimationDuration,
           )
           ..setOnAnimationSyncCallback((info) {
-            _pickaxeController.startAttack(
+            _primaryWeaponHand.startAttack(
               customDuration: info.animationDuration,
             );
           })
           ..setOnAttackExecutedCallback((info) {
-            _onAttackExecutedCallback(info.type, info.animationDuration);
+            _flashHandForAttack(
+              _primaryWeaponSlot,
+              info.type,
+              info.animationDuration,
+            );
           })
-          ..setOnAttackDestroyedCallback((info) {
-            _onAttackDestroyedCallback(info.type, info.animationDuration);
+          ..setOnAttackDestroyedCallback((_) {
+            _primaryWeaponHand.stopAttack();
           })
           ..setOnAttackBlockedCallback((_, __) {
-            // _pickaxeController.flashColor(
-            //   const Color(0xFFFF4444),
-            //   duration: const Duration(milliseconds: 150),
-            // );
+            _primaryWeaponHand.flashColor(
+              const Color(0xFFFF4444),
+              duration: const Duration(milliseconds: 150),
+            );
           });
   }
 
@@ -145,6 +155,45 @@ class KnightPlayerView extends SimplePlayer
     );
   }
 
+  Future<void> _initializeHandLoadout() async {
+    final pickaxeConfig = KnightPickaxeHandPreset.create();
+
+    await equipHandItem(
+      slot: KnightHandSlot.right,
+      config: pickaxeConfig,
+      setAsPrimaryWeapon: true,
+    );
+
+    await equipHandItem(slot: KnightHandSlot.left, config: pickaxeConfig);
+  }
+
+  Future<KnightHandItemController> equipHandItem({
+    required KnightHandSlot slot,
+    required KnightHandItemConfig config,
+    bool setAsPrimaryWeapon = false,
+  }) async {
+    _handControllers.remove(slot)?.dispose();
+
+    final controller = KnightHandItemController(
+      owner: this,
+      slot: slot,
+      config: config,
+    );
+    final view = await controller.createView();
+    gameRef.add(view);
+    _handControllers[slot] = controller;
+    controller.update(0);
+
+    if (setAsPrimaryWeapon) {
+      _primaryWeaponSlot = slot;
+    }
+
+    return controller;
+  }
+
+  KnightHandItemController? handControllerFor(KnightHandSlot slot) =>
+      _handControllers[slot];
+
   /// Private helper methods
   void _showDamageFx(double damage) => showDamage(
     damage,
@@ -157,33 +206,28 @@ class KnightPlayerView extends SimplePlayer
   void _showDeathFx() =>
       gameRef.add(KnightPlayerConfig.createCryptComponent(position));
 
-  void _onAttackExecutedCallback(AttackType type, Duration animationDuration) {
-    _pickaxeController.updateSprite(
-      KnightPlayerConfig.jellySquishStaffSpritePath,
+  void _flashHandForAttack(
+    KnightHandSlot slot,
+    AttackType type,
+    Duration animationDuration,
+  ) {
+    final controller = _handControllers[slot];
+    if (controller == null) return;
+
+    final effectColor = switch (type) {
+      AttackType.melee => const Color(0xFFFF8800),
+      AttackType.ranged => const Color(0xFF4488FF),
+      AttackType.special => const Color(0xFF8844FF),
+      AttackType.combo => const Color(0xFFFFFF44),
+    };
+
+    controller.flashColor(
+      effectColor,
+      duration: Duration(
+        milliseconds: (animationDuration.inMilliseconds * 0.3).round(),
+      ),
     );
   }
-
-  void _onAttackDestroyedCallback(AttackType type, Duration animationDuration) {
-    _pickaxeController.updateSprite(
-      KnightPlayerConfig.jellySquishHammerSpritePath,
-    );
-  }
-
-  // void _flashPickaxeForAttack(AttackType type, Duration animationDuration) {
-  // final effectColor = switch (type) {
-  //   AttackType.melee => const Color(0xFFFF8800),
-  //   AttackType.ranged => const Color(0xFF4488FF),
-  //   AttackType.special => const Color(0xFF8844FF),
-  //   AttackType.combo => const Color(0xFFFFFF44),
-  // };
-
-  // _pickaxeController.flashColor(
-  //   effectColor,
-  //   duration: Duration(
-  //     milliseconds: (animationDuration.inMilliseconds * 0.3).round(),
-  //   ),
-  // );
-  // }
 
   /// Controller callback implementations
   void _onPlayPrimaryAttack(double damage) {
