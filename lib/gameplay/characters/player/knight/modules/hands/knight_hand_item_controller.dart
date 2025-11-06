@@ -48,7 +48,7 @@ class KnightHandItemController {
       sprite: sprite,
       position: _initialPosition,
       size: _config.size,
-      priorityResolver: () => _owner.priority + _config.priorityOffset,
+      priorityResolver: _calculatePriority,
     );
     handView.scale.x = _model.facingRight
         ? _model.facingRightScaleX
@@ -192,6 +192,21 @@ class KnightHandItemController {
     _view?.removeFromParent();
     _view = null;
     _model.resetAnimationState();
+  }
+
+  int _calculatePriority() {
+    // Mão direita: renderiza na frente quando facingRight = true, atrás quando false
+    // Mão esquerda: renderiza na frente quando facingRight = false, atrás quando true
+    final isRightHand = _slot == KnightHandSlot.right;
+    final shouldRenderInFront = isRightHand
+        ? _model.facingRight
+        : !_model.facingRight;
+
+    if (shouldRenderInFront) {
+      return _owner.priority + _config.priorityOffset;
+    } else {
+      return _owner.priority - _config.priorityOffset;
+    }
   }
 
   static KnightHandItemModel _createModel(

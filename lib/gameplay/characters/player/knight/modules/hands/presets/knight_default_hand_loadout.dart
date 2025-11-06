@@ -16,15 +16,15 @@ KnightHandLoadoutConfig createDefaultKnightHandLoadout() {
     id: 'arched_sword',
     spritePath: KnightPlayerConfig.archedSwordSpritePath,
     attachmentOffset: Vector2(8, 14),
-    directionalOffset: Vector2(2, 0),
-    mirroredDirectionalOffset: Vector2(2, 0),
+    directionalOffset: Vector2(-2, 0),
+    mirroredDirectionalOffset: Vector2(-2, 0),
   );
   final leftHandConfig = KnightPickaxeHandPreset.create(
     id: 'staff',
     spritePath: KnightPlayerConfig.staffSpritePath,
     attachmentOffset: Vector2(8, 14),
-    directionalOffset: Vector2(-2, 0),
-    mirroredDirectionalOffset: Vector2(-2, 0),
+    directionalOffset: Vector2(2, 0),
+    mirroredDirectionalOffset: Vector2(2, 0),
   );
 
   const baseSyncConfig = SynchronizedAttackConfig(
