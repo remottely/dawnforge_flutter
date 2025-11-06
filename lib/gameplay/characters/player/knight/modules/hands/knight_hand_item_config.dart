@@ -58,7 +58,7 @@ class KnightHandItemConfig {
     this.windUpFraction = 0.1,
     this.strikeFraction = 0.2,
     this.recoveryFraction = 0.7,
-    this.priority = 1000,
+    this.priorityOffset = 1,
   }) : assert(
          slotConfigurations.isNotEmpty,
          'Provide at least one slot configuration.',
@@ -81,7 +81,7 @@ class KnightHandItemConfig {
   final double windUpFraction;
   final double strikeFraction;
   final double recoveryFraction;
-  final int priority;
+  final int priorityOffset;
 
   KnightHandSlotConfig configurationFor(KnightHandSlot slot) {
     if (slotConfigurations.containsKey(slot)) {

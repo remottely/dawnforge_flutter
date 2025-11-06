@@ -5,16 +5,16 @@ class KnightHandItemView extends GameDecoration {
     required Sprite sprite,
     required Vector2 position,
     required Vector2 size,
-    required int priorityValue,
-  }) : _priorityValue = priorityValue,
+    required int Function() priorityResolver,
+  }) : _priorityResolver = priorityResolver,
        super.withSprite(sprite: sprite, position: position, size: size) {
     anchor = Anchor.bottomCenter;
   }
 
-  final int _priorityValue;
+  final int Function() _priorityResolver;
 
   @override
-  int get priority => LayerPriority.getComponentPriority(_priorityValue);
+  int get priority => _priorityResolver();
 
   Future<void> updateSprite(String spritePath) async {
     sprite = await Sprite.load(spritePath);

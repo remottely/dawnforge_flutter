@@ -48,7 +48,7 @@ class KnightHandItemController {
       sprite: sprite,
       position: _initialPosition,
       size: _config.size,
-      priorityValue: _config.priority,
+      priorityResolver: () => _owner.priority + _config.priorityOffset,
     );
     handView.scale.x = _model.facingRight
         ? _model.facingRightScaleX
