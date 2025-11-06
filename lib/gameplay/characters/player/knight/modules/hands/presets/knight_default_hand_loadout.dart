@@ -13,18 +13,18 @@ import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attac
 
 KnightHandLoadoutConfig createDefaultKnightHandLoadout() {
   final rightHandConfig = KnightPickaxeHandPreset.create(
-    id: 'arched_sword',
-    spritePath: KnightPlayerConfig.archedSwordSpritePath,
+    id: 'sword',
+    spritePath: KnightPlayerConfig.swordSpritePath,
     attachmentOffset: Vector2(8, 14),
-    directionalOffset: Vector2(-2, 0),
-    mirroredDirectionalOffset: Vector2(-2, 0),
+    directionalOffset: Vector2(-6, 0), // left
+    mirroredDirectionalOffset: Vector2(2, 0), // right
   );
   final leftHandConfig = KnightPickaxeHandPreset.create(
     id: 'staff',
     spritePath: KnightPlayerConfig.staffSpritePath,
     attachmentOffset: Vector2(8, 14),
-    directionalOffset: Vector2(2, 0),
-    mirroredDirectionalOffset: Vector2(2, 0),
+    directionalOffset: Vector2(6, 0), // right
+    mirroredDirectionalOffset: Vector2(-2, 0), // left
   );
 
   const baseSyncConfig = SynchronizedAttackConfig(

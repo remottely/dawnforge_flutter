@@ -84,6 +84,9 @@ final class KnightPlayerConfig {
       'gameplay/characters/weapons/SolarPoweredHammer.png';
 
   static const String staffSpritePath = 'JellySquish Weapons Pack/staff.png';
+
   static const String archedSwordSpritePath =
       'JellySquish Weapons Pack/arched_sword.png';
+
+  static const String swordSpritePath = 'JellySquish Weapons Pack/sword.png';
 }

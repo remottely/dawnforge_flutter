@@ -8,8 +8,8 @@ class KnightHandSlotConfig {
     required this.attachmentOffset,
     required this.facingRightOffset,
     required this.facingLeftOffset,
-    this.facingRightScaleX = -1.0,
-    this.facingLeftScaleX = 1.0,
+    this.facingRightScaleX = 1.0,
+    this.facingLeftScaleX = -1.0,
   });
 
   final Vector2 attachmentOffset;

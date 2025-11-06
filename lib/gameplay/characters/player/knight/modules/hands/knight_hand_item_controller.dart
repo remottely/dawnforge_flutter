@@ -166,20 +166,20 @@ class KnightHandItemController {
     }
   }
 
-  void flashColor(
-    Color color, {
-    Duration duration = const Duration(milliseconds: 200),
-  }) {
-    final currentView = _view;
-    if (currentView == null || currentView.isRemoved) return;
+  // void flashColor(
+  //   Color color, {
+  //   Duration duration = const Duration(milliseconds: 200),
+  // }) {
+  //   final currentView = _view;
+  //   if (currentView == null || currentView.isRemoved) return;
 
-    currentView.add(
-      ColorEffect(
-        color.withOpacity(0.7),
-        EffectController(duration: duration.inMilliseconds / 1000.0),
-      ),
-    );
-  }
+  //   currentView.add(
+  //     ColorEffect(
+  //       color.withOpacity(0.7),
+  //       EffectController(duration: duration.inMilliseconds / 1000.0),
+  //     ),
+  //   );
+  // }
 
   Map<String, dynamic> get debugInfo => {
     'slot': _slot.debugLabel,

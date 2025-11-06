@@ -10,7 +10,6 @@ import 'package:darkness_dungeon/gameplay/characters/player/knight/modules/hands
 import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_manager.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 
 class KnightPlayerView extends SimplePlayer
     with Lighting, BlockMovementCollision {
@@ -158,16 +157,16 @@ class KnightPlayerView extends SimplePlayer
         handController.startAttack(customDuration: info.animationDuration);
       })
       ..setOnAttackExecutedCallback((info) {
-        _flashHandForAttack(slot, info.type, info.animationDuration);
+        // _flashHandForAttack(slot, info.type, info.animationDuration);
       })
       ..setOnAttackDestroyedCallback((_) {
         handController.stopAttack();
       })
       ..setOnAttackBlockedCallback((_, __) {
-        handController.flashColor(
-          const Color(0xFFFF4444),
-          duration: const Duration(milliseconds: 150),
-        );
+        // handController.flashColor(
+        //   const Color(0xFFFF4444),
+        //   duration: const Duration(milliseconds: 150),
+        // );
       });
   }
 
@@ -232,28 +231,28 @@ class KnightPlayerView extends SimplePlayer
   void _showDeathFx() =>
       gameRef.add(KnightPlayerConfig.createCryptComponent(position));
 
-  void _flashHandForAttack(
-    KnightHandSlot slot,
-    AttackType type,
-    Duration animationDuration,
-  ) {
-    final controller = _handControllers[slot];
-    if (controller == null) return;
+  // void _flashHandForAttack(
+  //   KnightHandSlot slot,
+  //   AttackType type,
+  //   Duration animationDuration,
+  // ) {
+  //   final controller = _handControllers[slot];
+  //   if (controller == null) return;
 
-    final effectColor = switch (type) {
-      AttackType.melee => const Color(0xFFFF8800),
-      AttackType.ranged => const Color(0xFF4488FF),
-      AttackType.special => const Color(0xFF8844FF),
-      AttackType.combo => const Color(0xFFFFFF44),
-    };
+  //   final effectColor = switch (type) {
+  //     AttackType.melee => const Color(0xFFFF8800),
+  //     AttackType.ranged => const Color(0xFF4488FF),
+  //     AttackType.special => const Color(0xFF8844FF),
+  //     AttackType.combo => const Color(0xFFFFFF44),
+  //   };
 
-    controller.flashColor(
-      effectColor,
-      duration: Duration(
-        milliseconds: (animationDuration.inMilliseconds * 0.3).round(),
-      ),
-    );
-  }
+  //   controller.flashColor(
+  //     effectColor,
+  //     duration: Duration(
+  //       milliseconds: (animationDuration.inMilliseconds * 0.3).round(),
+  //     ),
+  //   );
+  // }
 
   /// Controller callback implementations
   void _onPlayPrimaryAttack(double damage) =>
