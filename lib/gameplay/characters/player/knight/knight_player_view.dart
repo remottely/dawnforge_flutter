@@ -2,11 +2,11 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/modules/hands/knight_hand_item_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/modules/hands/knight_hand_item_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/modules/hands/knight_hand_loadout.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/modules/hands/knight_hand_slot.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/modules/hands/presets/knight_default_hand_loadout.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_item_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_item_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_loadout.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_slot.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/presets/knight_default_hand_loadout.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_manager.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
@@ -156,18 +156,11 @@ class KnightPlayerView extends SimplePlayer
       ..setOnAnimationSyncCallback((info) {
         handController.startAttack(customDuration: info.animationDuration);
       })
-      ..setOnAttackExecutedCallback((info) {
-        // _flashHandForAttack(slot, info.type, info.animationDuration);
-      })
+      ..setOnAttackExecutedCallback((_) {})
       ..setOnAttackDestroyedCallback((_) {
         handController.stopAttack();
       })
-      ..setOnAttackBlockedCallback((_, __) {
-        // handController.flashColor(
-        //   const Color(0xFFFF4444),
-        //   duration: const Duration(milliseconds: 150),
-        // );
-      });
+      ..setOnAttackBlockedCallback((_, __) {});
   }
 
   Future<KnightHandItemController> equipHandItem({
@@ -232,29 +225,6 @@ class KnightPlayerView extends SimplePlayer
 
   void _showDeathFx() =>
       gameRef.add(KnightPlayerConfig.createCryptComponent(position));
-
-  // void _flashHandForAttack(
-  //   KnightHandSlot slot,
-  //   AttackType type,
-  //   Duration animationDuration,
-  // ) {
-  //   final controller = _handControllers[slot];
-  //   if (controller == null) return;
-
-  //   final effectColor = switch (type) {
-  //     AttackType.melee => const Color(0xFFFF8800),
-  //     AttackType.ranged => const Color(0xFF4488FF),
-  //     AttackType.special => const Color(0xFF8844FF),
-  //     AttackType.combo => const Color(0xFFFFFF44),
-  //   };
-
-  //   controller.flashColor(
-  //     effectColor,
-  //     duration: Duration(
-  //       milliseconds: (animationDuration.inMilliseconds * 0.3).round(),
-  //     ),
-  //   );
-  // }
 
   /// Controller callback implementations
   bool _onPlayPrimaryAttack(double damage) =>

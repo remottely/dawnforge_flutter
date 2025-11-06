@@ -1,10 +1,10 @@
 import 'dart:math' as math;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/modules/hands/knight_hand_item_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/modules/hands/knight_hand_item_model.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/modules/hands/knight_hand_item_view.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/modules/hands/knight_hand_slot.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_item_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_item_model.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_item_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_slot.dart';
 
 class KnightHandItemController {
   KnightHandItemController({
