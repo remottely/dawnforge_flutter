@@ -117,11 +117,16 @@ class KnightHandItemController {
           : _model.facingLeftScaleX;
       _updatePosition(currentView);
 
-      // Remove e readiciona a view para forçar recálculo da ordem de renderização
+      // Força recálculo da ordem de renderização removendo e readicionando
+      // Usamos microtask para evitar condições de corrida durante o frame atual
       final parent = currentView.parent;
-      if (parent != null) {
-        currentView.removeFromParent();
-        parent.add(currentView);
+      if (parent != null && parent.isMounted) {
+        Future.microtask(() {
+          if (!currentView.isRemoved && parent.isMounted) {
+            currentView.removeFromParent();
+            parent.add(currentView);
+          }
+        });
       }
     }
   }
