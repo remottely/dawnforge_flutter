@@ -193,9 +193,9 @@ class KnightPlayerView extends SimplePlayer
   KnightHandItemController? handControllerFor(KnightHandSlot slot) =>
       _handControllers[slot];
 
-  void _executeAttackForTrigger(KnightAttackTrigger trigger, double damage) {
+  bool _executeAttackForTrigger(KnightAttackTrigger trigger, double damage) {
     final slot = _triggerToSlot[trigger];
-    if (slot == null) return;
+    if (slot == null) return false;
 
     final attackBinding = _handAttackBindings[slot];
     final attackController = _handAttackControllers[slot];
@@ -203,10 +203,10 @@ class KnightPlayerView extends SimplePlayer
     if (attackBinding == null ||
         attackController == null ||
         handController == null) {
-      return;
+      return false;
     }
 
-    attackController.execute(
+    final info = attackController.execute(
       attackBinding.attackType,
       () => attackBinding.execute(
         KnightAttackExecutionContext(
@@ -217,6 +217,8 @@ class KnightPlayerView extends SimplePlayer
         damage,
       ),
     );
+
+    return info != null;
   }
 
   /// Private helper methods
@@ -255,10 +257,10 @@ class KnightPlayerView extends SimplePlayer
   // }
 
   /// Controller callback implementations
-  void _onPlayPrimaryAttack(double damage) =>
+  bool _onPlayPrimaryAttack(double damage) =>
       _executeAttackForTrigger(KnightAttackTrigger.primary, damage);
 
-  void _onPlayFireballAttack(double damage) =>
+  bool _onPlayFireballAttack(double damage) =>
       _executeAttackForTrigger(KnightAttackTrigger.fireball, damage);
 
   void _onPlayToolAnimation() {

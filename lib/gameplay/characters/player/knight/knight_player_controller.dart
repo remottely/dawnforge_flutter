@@ -5,8 +5,8 @@ import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_player_inpu
 
 class KnightPlayerController {
   final KnightPlayerModel model;
-  final void Function(double damage) onPrimaryAttack;
-  final void Function(double damage) onFireballAttack;
+  final bool Function(double damage) onPrimaryAttack;
+  final bool Function(double damage) onFireballAttack;
   final void Function() onToolUse;
   final void Function() onShowExclamation;
   final void Function({
@@ -54,14 +54,16 @@ class KnightPlayerController {
   // Actions
   void executePrimaryAttack() {
     if (!model.canExecutePrimaryAttack) return;
+    final executed = onPrimaryAttack(KnightPlayerConfig.kPrimaryAttackDamage);
+    if (!executed) return;
     model.consumeStamina(KnightPlayerConfig.kPrimaryAttackStaminaCost);
-    onPrimaryAttack(KnightPlayerConfig.kPrimaryAttackDamage);
   }
 
   void executeFireballAttack() {
     if (!model.canExecuteFireballAttack) return;
+    final executed = onFireballAttack(KnightPlayerConfig.kFireballAttackDamage);
+    if (!executed) return;
     model.consumeStamina(KnightPlayerConfig.kFireballAttackStaminaCost);
-    onFireballAttack(KnightPlayerConfig.kFireballAttackDamage);
   }
 
   void useTool() {
