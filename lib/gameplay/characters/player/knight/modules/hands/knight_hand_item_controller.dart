@@ -116,6 +116,13 @@ class KnightHandItemController {
           ? _model.facingRightScaleX
           : _model.facingLeftScaleX;
       _updatePosition(currentView);
+
+      // Remove e readiciona a view para forçar recálculo da ordem de renderização
+      final parent = currentView.parent;
+      if (parent != null) {
+        currentView.removeFromParent();
+        parent.add(currentView);
+      }
     }
   }
 
