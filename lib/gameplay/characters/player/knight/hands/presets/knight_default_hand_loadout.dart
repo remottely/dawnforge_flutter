@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_loadout.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_slot.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/presets/knight_pickaxe_hand_preset.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_primary_attack_config.dart';
@@ -27,7 +27,19 @@ KnightHandLoadoutConfig createDefaultKnightHandLoadout() {
     mirroredDirectionalOffset: Vector2(-2, 0), // left
   );
 
-  const baseSyncConfig = SynchronizedAttackConfig(
+  // Cada mão tem sua própria config de sincronização para permitir ataques independentes
+  const rightHandSyncConfig = SynchronizedAttackConfig(
+    baseAttackSpeedMs: 800,
+    speedBonusPerLevel: 0.05,
+    attackTypeMultipliers: {
+      AttackType.melee: 1.0,
+      AttackType.ranged: 0.8,
+      AttackType.special: 1.5,
+      AttackType.combo: 0.6,
+    },
+  );
+
+  const leftHandSyncConfig = SynchronizedAttackConfig(
     baseAttackSpeedMs: 800,
     speedBonusPerLevel: 0.05,
     attackTypeMultipliers: {
@@ -46,7 +58,7 @@ KnightHandLoadoutConfig createDefaultKnightHandLoadout() {
         attack: KnightHandAttackConfig(
           trigger: KnightAttackTrigger.primary,
           attackType: AttackType.melee,
-          syncConfig: baseSyncConfig,
+          syncConfig: rightHandSyncConfig,
           execute: (context, damage) {
             GameplayCameraEffectsConfig.primaryAttackShake(
               context.player.gameRef,
@@ -71,7 +83,7 @@ KnightHandLoadoutConfig createDefaultKnightHandLoadout() {
         attack: KnightHandAttackConfig(
           trigger: KnightAttackTrigger.fireball,
           attackType: AttackType.ranged,
-          syncConfig: baseSyncConfig,
+          syncConfig: leftHandSyncConfig,
           execute: (context, damage) {
             context.player.addParticle(
               CharacterFxParticlesAnimationsConfig.createFireballAttackParticles(),
