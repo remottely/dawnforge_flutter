@@ -1,15 +1,14 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_item_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_loadout.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_manager.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_slot.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/presets/knight_default_hand_loadout.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_item_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_item_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_loadout.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_slot.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/presets/knight_default_hand_loadout.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_manager.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
 
 class KnightPlayerView extends SimplePlayer
     with Lighting, BlockMovementCollision {
@@ -30,11 +29,7 @@ class KnightPlayerView extends SimplePlayer
   final KnightPlayerModel _model;
   final KnightHandLoadoutConfig _handLoadout;
   late final KnightPlayerController _controller;
-  final Map<KnightHandSlot, KnightHandItemController> _handControllers = {};
-  final Map<KnightHandSlot, SynchronizedAttackController>
-  _handAttackControllers = {};
-  final Map<KnightHandSlot, KnightHandAttackConfig> _handAttackBindings = {};
-  final Map<KnightAttackTrigger, KnightHandSlot> _triggerToSlot = {};
+  late final KnightHandManager _handManager = KnightHandManager(owner: this);
 
   @override
   Future<void> onLoad() async {
@@ -42,17 +37,14 @@ class KnightPlayerView extends SimplePlayer
     _initializeVisualConfiguration();
     _initializeController();
     add(KnightPlayerConfig.hitbox);
-    await _initializeHandLoadout();
+    await _handManager.applyLoadout(_handLoadout);
   }
 
   @override
   void update(double dt) {
     if (isDead) return;
     _controller.update(dt);
-    for (final handController in _handControllers.values) {
-      handController.updateDirectionFromVelocity(velocity);
-      handController.update(dt);
-    }
+    _handManager.update(dt, velocity);
     super.update(dt);
   }
 
@@ -79,16 +71,7 @@ class KnightPlayerView extends SimplePlayer
 
   @override
   void onRemove() {
-    for (final attackController in _handAttackControllers.values) {
-      attackController.dispose();
-    }
-    _handAttackControllers.clear();
-    _handAttackBindings.clear();
-    _triggerToSlot.clear();
-    for (final handController in _handControllers.values) {
-      handController.dispose();
-    }
-    _handControllers.clear();
+    _handManager.dispose();
     _controller.dispose();
     super.onRemove();
   }
@@ -115,103 +98,11 @@ class KnightPlayerView extends SimplePlayer
     );
   }
 
-  Future<void> _initializeHandLoadout() async {
-    for (final entry in _handLoadout.entries) {
-      await _applyHandLoadoutEntry(entry);
-    }
-  }
-
-  Future<void> _applyHandLoadoutEntry(KnightHandLoadoutEntry entry) async {
-    final handController = await equipHandItem(
-      slot: entry.slot,
-      config: entry.itemConfig,
-    );
-
-    final attackBinding = entry.attack;
-    if (attackBinding != null) {
-      _handAttackControllers.remove(entry.slot)?.dispose();
-      _handAttackBindings[entry.slot] = attackBinding;
-      _triggerToSlot[attackBinding.trigger] = entry.slot;
-      _handAttackControllers[entry.slot] = _createAttackController(
-        slot: entry.slot,
-        handController: handController,
-        attackBinding: attackBinding,
-      );
-    } else {
-      _handAttackBindings.remove(entry.slot);
-      _handAttackControllers.remove(entry.slot)?.dispose();
-      _triggerToSlot.removeWhere((_, slot) => slot == entry.slot);
-    }
-  }
-
-  SynchronizedAttackController _createAttackController({
-    required KnightHandSlot slot,
-    required KnightHandItemController handController,
-    required KnightHandAttackConfig attackBinding,
-  }) {
-    return SynchronizedAttackController(config: attackBinding.syncConfig)
-      ..setOnAnimationDurationChangedCallback(
-        handController.updateAnimationDuration,
-      )
-      ..setOnAnimationSyncCallback((info) {
-        handController.startAttack(customDuration: info.animationDuration);
-      })
-      ..setOnAttackExecutedCallback((_) {})
-      ..setOnAttackDestroyedCallback((_) {
-        handController.stopAttack();
-      })
-      ..setOnAttackBlockedCallback((_, __) {});
-  }
-
-  Future<KnightHandItemController> equipHandItem({
-    required KnightHandSlot slot,
-    required KnightHandItemConfig config,
-  }) async {
-    _handAttackControllers.remove(slot)?.dispose();
-    _handControllers.remove(slot)?.dispose();
-
-    final controller = KnightHandItemController(
-      owner: this,
-      slot: slot,
-      config: config,
-    );
-    final view = await controller.createView();
-    gameRef.add(view);
-    _handControllers[slot] = controller;
-    controller.update(0);
-
-    return controller;
-  }
-
   KnightHandItemController? handControllerFor(KnightHandSlot slot) =>
-      _handControllers[slot];
+      _handManager.handControllerFor(slot);
 
   bool _executeAttackForTrigger(KnightAttackTrigger trigger, double damage) {
-    final slot = _triggerToSlot[trigger];
-    if (slot == null) return false;
-
-    final attackBinding = _handAttackBindings[slot];
-    final attackController = _handAttackControllers[slot];
-    final handController = _handControllers[slot];
-    if (attackBinding == null ||
-        attackController == null ||
-        handController == null) {
-      return false;
-    }
-
-    final info = attackController.execute(
-      attackBinding.attackType,
-      () => attackBinding.execute(
-        KnightAttackExecutionContext(
-          player: this,
-          slot: slot,
-          handController: handController,
-        ),
-        damage,
-      ),
-    );
-
-    return info != null;
+    return _handManager.executeAttack(trigger, damage);
   }
 
   /// Private helper methods
