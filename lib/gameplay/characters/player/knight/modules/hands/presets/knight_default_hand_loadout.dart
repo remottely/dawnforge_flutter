@@ -1,4 +1,5 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/modules/hands/knight_hand_loadout.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/modules/hands/knight_hand_slot.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/modules/hands/presets/knight_pickaxe_hand_preset.dart';
@@ -11,8 +12,20 @@ import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attac
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 
 KnightHandLoadoutConfig createDefaultKnightHandLoadout() {
-  final rightHandConfig = KnightPickaxeHandPreset.create();
-  final leftHandConfig = KnightPickaxeHandPreset.create();
+  final rightHandConfig = KnightPickaxeHandPreset.create(
+    id: 'arched_sword',
+    spritePath: KnightPlayerConfig.archedSwordSpritePath,
+    attachmentOffset: Vector2(8, 14),
+    directionalOffset: Vector2(2, 0),
+    mirroredDirectionalOffset: Vector2(2, 0),
+  );
+  final leftHandConfig = KnightPickaxeHandPreset.create(
+    id: 'staff',
+    spritePath: KnightPlayerConfig.staffSpritePath,
+    attachmentOffset: Vector2(8, 14),
+    directionalOffset: Vector2(-2, 0),
+    mirroredDirectionalOffset: Vector2(-2, 0),
+  );
 
   const baseSyncConfig = SynchronizedAttackConfig(
     baseAttackSpeedMs: 800,

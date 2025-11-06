@@ -1,5 +1,4 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/modules/hands/knight_hand_item_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/modules/hands/knight_hand_slot.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
@@ -7,11 +6,13 @@ import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_consta
 class KnightPickaxeHandPreset {
   KnightPickaxeHandPreset._();
 
-  static KnightHandItemConfig create() {
-    final Vector2 attachmentOffset = Vector2(8, 14);
-    final Vector2 directionalOffset = Vector2(2, 0);
-    final Vector2 mirroredDirectionalOffset = Vector2(-2, 0);
-
+  static KnightHandItemConfig create({
+    required String id,
+    required String spritePath,
+    required Vector2 attachmentOffset,
+    required Vector2 directionalOffset,
+    required Vector2 mirroredDirectionalOffset,
+  }) {
     KnightHandSlotConfig buildConfigForSlot(KnightHandSlot slot) {
       final isRightHand = slot == KnightHandSlot.right;
       return KnightHandSlotConfig(
@@ -26,8 +27,8 @@ class KnightPickaxeHandPreset {
     }
 
     return KnightHandItemConfig(
-      id: 'pickaxe',
-      spritePath: KnightPlayerConfig.defaultPickaxeSpritePath,
+      id: id,
+      spritePath: spritePath,
       size: GameplayTileConstants.tileSizeStandard / 2,
       slotConfigurations: {
         for (final slot in KnightHandSlot.values)
