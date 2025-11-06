@@ -11,7 +11,7 @@ final class ChestDecorationConfig {
       GameplayTileConstants.kTileDimensionStandard;
   static const int kVisionCheckInterval = 500;
   static const String kVisionCheckIntervalId = 'SeePlayer';
-  static const String kInteractionPromptText = 'Touch me!!';
+  static const String kInteractionPromptText = 'Open me!!';
   static const double kHealAmountPerPotion = 30.0;
 
   // Component size

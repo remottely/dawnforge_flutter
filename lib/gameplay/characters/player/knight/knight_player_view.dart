@@ -2,22 +2,19 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/modules/pickaxe/knight_pickaxe_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_manager.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_primary_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/camera/gameplay_camera_effects_config.dart';
-import 'package:darkness_dungeon/new/pickaxe_controller_mixin.dart';
-import 'package:darkness_dungeon/new/synchronized_attack_system.dart';
-import 'package:flutter/widgets.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 
 class KnightPlayerView extends SimplePlayer
-    with
-        Lighting,
-        BlockMovementCollision,
-        PickaxeControllerMixin,
-        SynchronizedAttackSystem {
+    with Lighting, BlockMovementCollision {
   KnightPlayerView(Vector2 position, {required KnightPlayerModel model})
     : _model = model,
       super(
@@ -30,6 +27,8 @@ class KnightPlayerView extends SimplePlayer
 
   final KnightPlayerModel _model;
   late final KnightPlayerController _controller;
+  late final KnightPickaxeController _pickaxeController;
+  late final SynchronizedAttackController _attackController;
 
   @override
   Future<void> onLoad() async {
@@ -37,22 +36,21 @@ class KnightPlayerView extends SimplePlayer
     _initializeVisualConfiguration();
     _initializeController();
     add(KnightPlayerConfig.hitbox);
-  }
-
-  @override
-  void onMount() {
-    super.onMount();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await _initializeSynchronizedAttackSystem();
-      updatePickaxeDirection();
-    });
+    _pickaxeController = KnightPickaxeController(knight: this);
+    final pickaxeView = await _pickaxeController.createView(
+      spritePath: KnightPlayerConfig.defaultPickaxeSpritePath,
+    );
+    gameRef.add(pickaxeView);
+    _pickaxeController.update(0);
+    _initializeSynchronizedAttackSystem();
   }
 
   @override
   void update(double dt) {
     if (isDead) return;
     _controller.update(dt);
-    updatePickaxeDirection();
+    _pickaxeController.updateDirectionFromVelocity(velocity);
+    _pickaxeController.update(dt);
     super.update(dt);
   }
 
@@ -79,7 +77,8 @@ class KnightPlayerView extends SimplePlayer
 
   @override
   void onRemove() {
-    disposeSynchronizedAttackSystem();
+    _attackController.dispose();
+    _pickaxeController.dispose();
     _controller.dispose();
     super.onRemove();
   }
@@ -92,25 +91,42 @@ class KnightPlayerView extends SimplePlayer
 
   /// **Synchronized Attack System Initialization**
   ///
-  /// Configures the advanced attack timing system with:
-  /// - Configurable base attack speed (800ms = 1.25 attacks/sec)
-  /// - Progressive speed bonuses per level (5% faster each level)
-  /// - Attack type multipliers for gameplay variety
-  /// - Visual feedback and debug logging support
-  Future<void> _initializeSynchronizedAttackSystem() async {
-    await initializeIntegratedAttackSystem(
-      baseAttackSpeedMs: 800,
-      pickaxeSpritePath: KnightPlayerConfig.defaultPickaxeSpritePath,
-      speedBonusPerLevel: 0.05,
-      enableVisualFeedback: true,
-      enableDebugLogging: true,
-      attackTypeMultipliers: {
-        AttackType.melee: 1.0, // Normal speed - balanced
-        AttackType.ranged: 0.8, // 20% faster - responsive
-        AttackType.special: 1.5, // 50% slower - powerful
-        AttackType.combo: 0.6, // 40% faster - fluid
-      },
-    );
+  /// Configures the attack timing controller with Knight-specific defaults
+  /// and wires feedback hooks to the pickaxe view.
+  void _initializeSynchronizedAttackSystem() {
+    _attackController =
+        SynchronizedAttackController(
+            config: const SynchronizedAttackConfig(
+              baseAttackSpeedMs: 800,
+              speedBonusPerLevel: 0.05,
+              attackTypeMultipliers: {
+                AttackType.melee: 1.0,
+                AttackType.ranged: 0.8,
+                AttackType.special: 1.5,
+                AttackType.combo: 0.6,
+              },
+            ),
+          )
+          ..setOnAnimationDurationChangedCallback(
+            _pickaxeController.updateAnimationDuration,
+          )
+          ..setOnAnimationSyncCallback((info) {
+            _pickaxeController.startAttack(
+              customDuration: info.animationDuration,
+            );
+          })
+          ..setOnAttackExecutedCallback((info) {
+            _onAttackExecutedCallback(info.type, info.animationDuration);
+          })
+          ..setOnAttackDestroyedCallback((info) {
+            _onAttackDestroyedCallback(info.type, info.animationDuration);
+          })
+          ..setOnAttackBlockedCallback((_, __) {
+            // _pickaxeController.flashColor(
+            //   const Color(0xFFFF4444),
+            //   duration: const Duration(milliseconds: 150),
+            // );
+          });
   }
 
   void _initializeVisualConfiguration() {
@@ -141,9 +157,37 @@ class KnightPlayerView extends SimplePlayer
   void _showDeathFx() =>
       gameRef.add(KnightPlayerConfig.createCryptComponent(position));
 
+  void _onAttackExecutedCallback(AttackType type, Duration animationDuration) {
+    _pickaxeController.updateSprite(
+      KnightPlayerConfig.jellySquishStaffSpritePath,
+    );
+  }
+
+  void _onAttackDestroyedCallback(AttackType type, Duration animationDuration) {
+    _pickaxeController.updateSprite(
+      KnightPlayerConfig.jellySquishHammerSpritePath,
+    );
+  }
+
+  // void _flashPickaxeForAttack(AttackType type, Duration animationDuration) {
+  // final effectColor = switch (type) {
+  //   AttackType.melee => const Color(0xFFFF8800),
+  //   AttackType.ranged => const Color(0xFF4488FF),
+  //   AttackType.special => const Color(0xFF8844FF),
+  //   AttackType.combo => const Color(0xFFFFFF44),
+  // };
+
+  // _pickaxeController.flashColor(
+  //   effectColor,
+  //   duration: Duration(
+  //     milliseconds: (animationDuration.inMilliseconds * 0.3).round(),
+  //   ),
+  // );
+  // }
+
   /// Controller callback implementations
   void _onPlayPrimaryAttack(double damage) {
-    executeSynchronizedAttack(AttackType.melee, () {
+    _attackController.execute(AttackType.melee, () {
       GameplayCameraEffectsConfig.primaryAttackShake(gameRef);
       GameplayAudioManager.instance.playPlayerPrimaryAttackSfx();
       addParticle(
@@ -160,24 +204,28 @@ class KnightPlayerView extends SimplePlayer
   }
 
   void _onPlayFireballAttack(double damage) {
-    addParticle(
-      CharacterFxParticlesAnimationsConfig.createFireballAttackParticles(),
-      position: size,
-    );
-    simpleAttackRange(
-      animationRight: CharacterFireballAttackConfig.createExecutionAnimation(),
-      animationDestroy: CharacterFireballAttackConfig.createDestroyAnimation(),
-      size: CharacterFireballAttackConfig.componentSize,
-      damage: damage,
-      speed: speed * CharacterFireballAttackConfig.kSpeedMultiplier,
-      onDestroy: () {
-        CharacterFireballAttackConfig.playDestroyAudio();
-        GameplayCameraEffectsConfig.fireballExplosionShake(gameRef);
-      },
-      collision: CharacterFireballAttackConfig.createHitbox(),
-      lightingConfig: CharacterFireballAttackConfig.lightingConfig,
-    );
-    CharacterFireballAttackConfig.playExecutionAudio();
+    _attackController.execute(AttackType.ranged, () {
+      addParticle(
+        CharacterFxParticlesAnimationsConfig.createFireballAttackParticles(),
+        position: size,
+      );
+      simpleAttackRange(
+        animationRight:
+            CharacterFireballAttackConfig.createExecutionAnimation(),
+        animationDestroy:
+            CharacterFireballAttackConfig.createDestroyAnimation(),
+        size: CharacterFireballAttackConfig.componentSize,
+        damage: damage,
+        speed: speed * CharacterFireballAttackConfig.kSpeedMultiplier,
+        onDestroy: () {
+          CharacterFireballAttackConfig.playDestroyAudio();
+          GameplayCameraEffectsConfig.fireballExplosionShake(gameRef);
+        },
+        collision: CharacterFireballAttackConfig.createHitbox(),
+        lightingConfig: CharacterFireballAttackConfig.lightingConfig,
+      );
+      CharacterFireballAttackConfig.playExecutionAudio();
+    });
   }
 
   void _onPlayToolAnimation() {

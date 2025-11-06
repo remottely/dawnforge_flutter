@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.16.0+1
+version: 1.16.1+1
 
 environment:
   sdk: ^3.9.2
@@ -36,6 +36,7 @@ flutter:
     - assets/
     - assets/images/
     # - assets/images/items/
+    - assets/images/JellySquish Weapons Pack/
     - assets/images/gameplay/characters/emotes/
     - assets/images/gameplay/characters/enemies/
     - assets/images/gameplay/characters/enemies/goblin/

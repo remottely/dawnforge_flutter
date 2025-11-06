@@ -82,4 +82,11 @@ final class KnightPlayerConfig {
 
   static const String defaultPickaxeSpritePath =
       'gameplay/characters/weapons/SolarPoweredHammer.png';
+  static const String capacitorPickaxeSpritePath =
+      'gameplay/characters/weapons/Capacitor.png';
+
+  static const String jellySquishStaffSpritePath =
+      'JellySquish Weapons Pack/staff.png';
+  static const String jellySquishHammerSpritePath =
+      'JellySquish Weapons Pack/arched_sword.png';
 }
