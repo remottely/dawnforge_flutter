@@ -10,11 +10,14 @@ import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_mana
 import 'package:darkness_dungeon/gameplay/core/modules/camera/gameplay_camera_effects_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
 
 KnightHandLoadoutConfig createDefaultKnightHandLoadout() {
   final rightHandConfig = KnightPickaxeHandPreset.create(
     id: 'sword',
     spritePath: KnightPlayerConfig.swordSpritePath,
+    // spriteSize: GameplayTileConstants.tileSizeStandard,
+    spriteSize: Vector2(16, 21),
     attachmentOffset: Vector2(8, 14),
     directionalOffset: Vector2(-6, 0), // left
     mirroredDirectionalOffset: Vector2(2, 0), // right
@@ -22,12 +25,12 @@ KnightHandLoadoutConfig createDefaultKnightHandLoadout() {
   final leftHandConfig = KnightPickaxeHandPreset.create(
     id: 'staff',
     spritePath: KnightPlayerConfig.staffSpritePath,
+    spriteSize: GameplayTileConstants.tileSizeStandard,
     attachmentOffset: Vector2(8, 14),
     directionalOffset: Vector2(6, 0), // right
     mirroredDirectionalOffset: Vector2(-2, 0), // left
   );
 
-  // Cada mão tem sua própria config de sincronização para permitir ataques independentes
   const rightHandSyncConfig = SynchronizedAttackConfig(
     baseAttackSpeedMs: 800,
     speedBonusPerLevel: 0.05,

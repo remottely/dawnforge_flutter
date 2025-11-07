@@ -1,7 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_item_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_slot.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
 
 class KnightPickaxeHandPreset {
   KnightPickaxeHandPreset._();
@@ -9,6 +8,7 @@ class KnightPickaxeHandPreset {
   static KnightHandItemConfig create({
     required String id,
     required String spritePath,
+    required Vector2 spriteSize,
     required Vector2 attachmentOffset,
     required Vector2 directionalOffset,
     required Vector2 mirroredDirectionalOffset,
@@ -29,7 +29,7 @@ class KnightPickaxeHandPreset {
     return KnightHandItemConfig(
       id: id,
       spritePath: spritePath,
-      size: GameplayTileConstants.tileSizeStandard / 2,
+      size: spriteSize / 2,
       slotConfigurations: {
         for (final slot in KnightHandSlot.values)
           slot: buildConfigForSlot(slot),

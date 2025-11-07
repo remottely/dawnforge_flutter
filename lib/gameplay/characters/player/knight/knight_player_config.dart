@@ -88,5 +88,7 @@ final class KnightPlayerConfig {
   static const String archedSwordSpritePath =
       'JellySquish Weapons Pack/arched_sword.png';
 
-  static const String swordSpritePath = 'JellySquish Weapons Pack/sword.png';
+  // static const String swordSpritePath = 'JellySquish Weapons Pack/sword.png';
+  static const String swordSpritePath =
+      'SPUM/Resources/Addons/Legacy/0_Unit/0_Sprite/6_Weapons/0_Sword/Sword_5.png';
 }

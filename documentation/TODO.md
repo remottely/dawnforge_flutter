@@ -1,3 +1,7 @@
+IMPORTANT BEFORE LAUNCH:
+
+- Change background musics
+
 fix:
 
 - fix: attacks particles animations
