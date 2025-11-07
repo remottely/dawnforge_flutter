@@ -88,7 +88,17 @@ final class KnightPlayerConfig {
   static const String archedSwordSpritePath =
       'JellySquish Weapons Pack/arched_sword.png';
 
-  // static const String swordSpritePath = 'JellySquish Weapons Pack/sword.png';
-  static const String swordSpritePath =
-      'SPUM/Resources/Addons/Legacy/0_Unit/0_Sprite/6_Weapons/0_Sword/Sword_5.png';
+  static const String swordSpritePath = 'JellySquish Weapons Pack/sword.png';
+
+  static const String steelShield1SpritePath =
+      'SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/7_Shield/WoodShield4.png';
+  // 'SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/7_Shield/SteelShield1.png';
+
+  static const String sword3SpritePath =
+      'SPUM/Resources/Addons/Legacy/0_Unit/0_Sprite/6_Weapons/0_Sword/Sword_3.png';
+
+  static const String axeNormal1SpritePath =
+      'SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/2_Axe/AxeNormal1.png';
+  static const String newWeapon07SpritePath =
+      'SPUM/Resources/Addons/Ver300/0_Unit/0_Sprite/8_Weapons/8_Mace/New_Weapon_07.png';
 }

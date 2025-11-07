@@ -13,22 +13,49 @@ import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attac
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
 
 KnightHandLoadoutConfig createDefaultKnightHandLoadout() {
+  // final rightHandConfig = KnightPickaxeHandPreset.create(
+  //   id: 'sword',
+  //   spritePath: KnightPlayerConfig.swordSpritePath,
+  //   spriteSize: GameplayTileConstants.tileSizeStandard / 2,
+  //   attachmentOffset: Vector2(8, 14),
+  //   directionalOffset: Vector2(-6, 0), // left
+  //   mirroredDirectionalOffset: Vector2(2, 0), // right
+  // );
+
+  // final leftHandConfig = KnightPickaxeHandPreset.create(
+  //   id: 'staff',
+  //   spritePath: KnightPlayerConfig.staffSpritePath,
+  //   spriteSize: GameplayTileConstants.tileSizeStandard / 2,
+  //   attachmentOffset: Vector2(8, 14),
+  //   directionalOffset: Vector2(6, 0), // right
+  //   mirroredDirectionalOffset: Vector2(-2, 0), // left
+  // );
+
+  // final rightHandConfig = KnightPickaxeHandPreset.create(
+  //   id: 'sword_3',
+  //   spritePath: KnightPlayerConfig.newWeapon07SpritePath,
+  //   spriteSize: GameplayTileConstants.tileSizeStandard,
+  //   attachmentOffset: Vector2(8, 16),
+  //   directionalOffset: Vector2(-5, 0), // left
+  //   mirroredDirectionalOffset: Vector2(-1, 0), // right
+  // );
+
   final rightHandConfig = KnightPickaxeHandPreset.create(
-    id: 'sword',
-    spritePath: KnightPlayerConfig.swordSpritePath,
-    // spriteSize: GameplayTileConstants.tileSizeStandard,
-    spriteSize: Vector2(16, 21),
-    attachmentOffset: Vector2(8, 14),
-    directionalOffset: Vector2(-6, 0), // left
-    mirroredDirectionalOffset: Vector2(2, 0), // right
+    id: 'sword_3',
+    spritePath: KnightPlayerConfig.sword3SpritePath,
+    spriteSize: Vector2(7, 22) * 0.4,
+    attachmentOffset: Vector2(8, 13),
+    directionalOffset: Vector2(-5, 0), // left
+    mirroredDirectionalOffset: Vector2(-1, 0), // right
   );
+
   final leftHandConfig = KnightPickaxeHandPreset.create(
-    id: 'staff',
-    spritePath: KnightPlayerConfig.staffSpritePath,
-    spriteSize: GameplayTileConstants.tileSizeStandard,
-    attachmentOffset: Vector2(8, 14),
-    directionalOffset: Vector2(6, 0), // right
-    mirroredDirectionalOffset: Vector2(-2, 0), // left
+    id: 'new_shield_04',
+    spritePath: KnightPlayerConfig.steelShield1SpritePath,
+    spriteSize: GameplayTileConstants.tileSizeStandard * 0.4,
+    attachmentOffset: Vector2(6, 13),
+    directionalOffset: Vector2(5, 1), // right
+    mirroredDirectionalOffset: Vector2(4, 1), // left
   );
 
   const rightHandSyncConfig = SynchronizedAttackConfig(

@@ -7,7 +7,12 @@ class KnightHandItemView extends GameDecoration {
     required Vector2 size,
     required int Function() priorityResolver,
   }) : _priorityResolver = priorityResolver,
-       super.withSprite(sprite: sprite, position: position, size: size) {
+       super.withSprite(
+         sprite: sprite,
+         position: position,
+         size: size,
+         //  angle: (45 * pi) / 180,
+       ) {
     anchor = Anchor.bottomCenter;
   }
 

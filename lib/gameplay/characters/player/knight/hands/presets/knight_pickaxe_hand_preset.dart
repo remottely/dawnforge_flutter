@@ -29,7 +29,7 @@ class KnightPickaxeHandPreset {
     return KnightHandItemConfig(
       id: id,
       spritePath: spritePath,
-      size: spriteSize / 2,
+      size: spriteSize,
       slotConfigurations: {
         for (final slot in KnightHandSlot.values)
           slot: buildConfigForSlot(slot),
