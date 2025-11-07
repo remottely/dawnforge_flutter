@@ -1,0 +1,98 @@
+{
+    "activeFile": "/Users/kevinkobori/Documents/flutter/kevinkobori/darkness_dungeon/assets/images/tiled/map.json",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "/Users/kevinkobori/Documents/flutter/kevinkobori/darkness_dungeon/assets/images/tiled/SunnysideWorldTileset.json": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1.77
+        },
+        "/Users/kevinkobori/Documents/flutter/kevinkobori/darkness_dungeon/assets/images/tiled/SunnysideWorldTileset_CLEAN.json": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "/Users/kevinkobori/Documents/flutter/kevinkobori/darkness_dungeon/assets/images/tiled/SunnysideWorldTileset_optimized.json": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "/Users/kevinkobori/Documents/flutter/kevinkobori/darkness_dungeon/assets/images/tiled/map.json": {
+            "scale": 2.01,
+            "selectedLayer": 5,
+            "viewCenter": {
+                "x": 248.75621890547268,
+                "y": 259.70149253731347
+            }
+        },
+        "/Users/kevinkobori/Documents/flutter/kevinkobori/darkness_dungeon/assets/images/tiled/map.json#SunnysideWorldTileset": {
+            "scaleInEditor": 1
+        },
+        "/Users/kevinkobori/Documents/flutter/kevinkobori/darkness_dungeon/assets/images/tiled/map2.json": {
+            "scale": 4.44,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 99.09909909909908,
+                "y": 90.99099099099098
+            }
+        },
+        "/Users/kevinkobori/Documents/flutter/kevinkobori/darkness_dungeon/assets/images/tiled/tileSet.json": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "/Users/kevinkobori/Documents/flutter/remottely/project/external/apps/one_pixel/assets/tiles/Level-01.tmx": {
+            "expandedObjectLayers": [
+                3
+            ],
+            "scale": 1.987578125,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 320.2389843166542,
+                "y": 183.89214260445738
+            }
+        },
+        "/Users/kevinkobori/Documents/flutter/remottely/project/external/apps/one_pixel/assets/tiles/Pixel Adventure.tsx": {
+            "scaleInDock": 1
+        },
+        "Level-001.json": {
+            "scale": 0.1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 2735,
+                "y": 5585
+            }
+        },
+        "Level-001.tmx": {
+            "scale": 0.09,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 3461.111111111111,
+                "y": 4105.555555555555
+            }
+        },
+        "SunnysideWorldTileset.json": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "SunnysideWorldTileset.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
+    },
+    "openFiles": [
+        "/Users/kevinkobori/Documents/flutter/kevinkobori/darkness_dungeon/assets/images/tiled/map.json"
+    ],
+    "project": "SunnysideWorld.tiled-project",
+    "recentFiles": [
+        "/Users/kevinkobori/Documents/flutter/kevinkobori/darkness_dungeon/assets/images/tiled/tileSet.json",
+        "/Users/kevinkobori/Documents/flutter/kevinkobori/darkness_dungeon/assets/images/tiled/map2.json",
+        "/Users/kevinkobori/Documents/flutter/kevinkobori/darkness_dungeon/assets/images/tiled/SunnysideWorldTileset.json",
+        "/Users/kevinkobori/Documents/flutter/kevinkobori/darkness_dungeon/assets/images/tiled/map.json",
+        "/Users/kevinkobori/Documents/flutter/kevinkobori/darkness_dungeon/assets/images/tiled/SunnysideWorldTileset_CLEAN.json",
+        "/Users/kevinkobori/Documents/flutter/kevinkobori/darkness_dungeon/assets/images/tiled/SunnysideWorldTileset_optimized.json",
+        "/Users/kevinkobori/Documents/flutter/remottely/project/external/apps/one_pixel/assets/tiles/Level-01.tmx",
+        "Level-001.json",
+        "SunnysideWorldTileset.tsx",
+        "Level-001.tmx",
+        "SunnysideWorldTileset.json"
+    ]
+}

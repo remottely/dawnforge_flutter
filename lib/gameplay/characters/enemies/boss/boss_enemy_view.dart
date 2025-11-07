@@ -12,7 +12,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_mana
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_player_input_actions_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_state_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/gameplay_camera_utils.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/camera/gameplay_camera_utils.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy.dart';
 import 'package:flutter/material.dart';
 

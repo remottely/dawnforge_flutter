@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_constants.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_lightning_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
@@ -66,7 +66,7 @@ final class KnightPlayerConfig {
   static final LightingConfig lightingConfig = LightingConfig(
     radius: GameplayTileConstants.kTileDimensionStandard,
     blurBorder: GameplayTileConstants.kTileDimensionStandard,
-    color: CharacterFxParticlesAnimationsConfig.lightingConfigColor,
+    color: GameplayLightingConfig.playerLighting,
   );
 
   static final Vector2 cryptComponentSize =
@@ -79,4 +79,26 @@ final class KnightPlayerConfig {
         position: Vector2(position.x, position.y),
         size: cryptComponentSize,
       );
+
+  static const String defaultPickaxeSpritePath =
+      'gameplay/characters/weapons/SolarPoweredHammer.png';
+
+  static const String staffSpritePath = 'JellySquish Weapons Pack/staff.png';
+
+  static const String archedSwordSpritePath =
+      'JellySquish Weapons Pack/arched_sword.png';
+
+  static const String swordSpritePath = 'JellySquish Weapons Pack/sword.png';
+
+  static const String steelShield1SpritePath =
+      'SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/7_Shield/WoodShield4.png';
+  // 'SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/7_Shield/SteelShield1.png';
+
+  static const String sword3SpritePath =
+      'SPUM/Resources/Addons/Legacy/0_Unit/0_Sprite/6_Weapons/0_Sword/Sword_3.png';
+
+  static const String axeNormal1SpritePath =
+      'SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/2_Axe/AxeNormal1.png';
+  static const String newWeapon07SpritePath =
+      'SPUM/Resources/Addons/Ver300/0_Unit/0_Sprite/8_Weapons/8_Mace/New_Weapon_07.png';
 }

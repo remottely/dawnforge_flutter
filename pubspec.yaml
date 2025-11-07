@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.14.0+1
+version: 1.20.0+1
 
 environment:
   sdk: ^3.9.2
@@ -36,6 +36,7 @@ flutter:
     - assets/
     - assets/images/
     # - assets/images/items/
+    - assets/images/JellySquish Weapons Pack/
     - assets/images/gameplay/characters/emotes/
     - assets/images/gameplay/characters/enemies/
     - assets/images/gameplay/characters/enemies/goblin/
@@ -46,6 +47,7 @@ flutter:
     - assets/images/gameplay/characters/player/
     - assets/images/gameplay/characters/player/knight/
     - assets/images/gameplay/characters/shared/
+    - assets/images/gameplay/characters/weapons/
     - assets/images/gameplay/decorations/
     - assets/images/gameplay/farmable/
     - assets/images/ui/controls/
@@ -56,6 +58,12 @@ flutter:
     - assets/audio/ui/
     - assets/audio/voice/
     - assets/l10n/
+    - assets/images/SPUM/Resources/Addons/Legacy/0_Unit/0_Sprite/6_Weapons/0_Sword/
+    - assets/images/SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/7_Shield/
+    - assets/images/SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/2_Axe/
+    # - assets/images/SPUM/Resources/Addons/Ver300/0_Unit/0_Sprite/8_Weapons/7_Shield/
+    - assets/images/SPUM/Resources/Addons/Ver300/0_Unit/0_Sprite/8_Weapons/8_Mace/
+    - assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/
 
   fonts:
     - family: Normal

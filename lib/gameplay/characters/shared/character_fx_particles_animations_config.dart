@@ -20,10 +20,6 @@ class CharacterFxParticlesAnimationsConfig {
     fontFamily: _kShowDamageFontFamily,
   );
 
-  static final Color lightingConfigColor = Colors.deepOrangeAccent.withValues(
-    alpha: 0.2,
-  );
-
   static const double _kAttackParticlesRadius = 0.3;
 
   static Particle createPrimaryAttackParticles() => Particle.generate(

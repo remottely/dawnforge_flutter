@@ -6,7 +6,7 @@ class GameplayConversationConfig {
       TextSpan(text: GameplayStringsLocation.instance.getString(phraseKey)),
     ],
     person: DDSpriteAnimationWidget(
-      animation: UISpriteAnimationsConfig.loadKnightPlayerIdleRight6(),
+      animation: UISpriteAnimationsConfig.loadSunnyPlayerIdleRight6(),
     ),
     personSayDirection: PersonSayDirection.LEFT,
   );

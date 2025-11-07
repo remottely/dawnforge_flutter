@@ -1,4 +1,10 @@
+IMPORTANT BEFORE LAUNCH:
+
+- Change background musics
+
 fix:
+
+- fix: attacks particles animations
 
 - fix: add "X" to display keyboard configuration. And change all keyboard display layout.
 

@@ -8,7 +8,7 @@ final class CharacterPrimaryAttackConfig {
 
   /// Player
   static final Vector2 kPlayerPrimaryAttackFxSize =
-      GameplayTileConstants.tileSizeSmall;
+      GameplayTileConstants.tileSizeStandard;
 
   static Future<SpriteAnimation> createPlayerExecutionAnimation() =>
       SpriteAnimation.load(
