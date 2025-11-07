@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/decorations/shared/decoration_constants.dart';
@@ -25,7 +25,7 @@ final class _SpikeTrapDecorationConfig {
 
 class SpikeTrapDecorationView extends DDContactDecoration {
   final double _damageAmount;
-  KnightPlayerView? _contactedPlayer;
+  SunnyPlayerView? _contactedPlayer;
   bool _hasDealtDamageThisCycle = false;
 
   SpikeTrapDecorationView({
@@ -38,12 +38,12 @@ class SpikeTrapDecorationView extends DDContactDecoration {
        );
 
   @override
-  void onContact(KnightPlayerView player) {
+  void onContact(SunnyPlayerView player) {
     _contactedPlayer = player;
   }
 
   @override
-  void onContactExit(KnightPlayerView player) {
+  void onContactExit(SunnyPlayerView player) {
     _contactedPlayer = null;
   }
 
@@ -64,7 +64,7 @@ class SpikeTrapDecorationView extends DDContactDecoration {
   int get priority =>
       LayerPriority.getComponentPriority(_SpikeTrapDecorationConfig._kPriority);
 
-  void _triggerEffect(KnightPlayerView player) {
+  void _triggerEffect(SunnyPlayerView player) {
     player.handleAttack(AttackOriginEnum.ENEMY, _damageAmount, 0);
   }
 }

@@ -2,7 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_loadout.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_slot.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/presets/knight_pickaxe_hand_preset.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_primary_attack_config.dart';
@@ -42,7 +42,7 @@ KnightHandLoadoutConfig createDefaultKnightHandLoadout() {
 
   final rightHandConfig = KnightPickaxeHandPreset.create(
     id: 'sword_3',
-    spritePath: KnightPlayerConfig.sword3SpritePath,
+    spritePath: SunnyPlayerConfig.sword3SpritePath,
     spriteSize: Vector2(7, 22) * 0.4,
     attachmentOffset: Vector2(8, 13),
     directionalOffset: Vector2(-5, 0), // left
@@ -51,7 +51,7 @@ KnightHandLoadoutConfig createDefaultKnightHandLoadout() {
 
   final leftHandConfig = KnightPickaxeHandPreset.create(
     id: 'new_shield_04',
-    spritePath: KnightPlayerConfig.steelShield1SpritePath,
+    spritePath: SunnyPlayerConfig.steelShield1SpritePath,
     spriteSize: GameplayTileConstants.tileSizeStandard * 0.4,
     attachmentOffset: Vector2(6, 13),
     directionalOffset: Vector2(5, 1), // right

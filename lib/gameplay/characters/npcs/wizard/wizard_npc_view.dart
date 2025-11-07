@@ -2,7 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_model.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_player_input_actions_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_state_manager.dart';
@@ -35,7 +35,7 @@ class WizardNpcView extends SimpleNpc with KeyboardEventListener {
   }
 
   void checkPlayerProximity() {
-    if (gameRef.player is KnightPlayerView) {
+    if (gameRef.player is SunnyPlayerView) {
       seeComponent(
         gameRef.player!,
         observed: (_) {

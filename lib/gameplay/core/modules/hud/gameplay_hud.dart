@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/gameplay_hud_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/player_vital_stats_hud.dart';
 import 'package:darkness_dungeon/gameplay/decorations/door_key_decoration.dart';
@@ -45,6 +45,6 @@ class GameplayHUD extends GameInterface {
 
   bool _hasPlayerWithKey() {
     return gameRef.player != null &&
-        (gameRef.player as KnightPlayerView).model.hasKey;
+        (gameRef.player as SunnyPlayerView).model.hasKey;
   }
 }

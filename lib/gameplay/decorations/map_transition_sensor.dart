@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_contact_decoration.dart';
 
 class MapArguments {
@@ -39,7 +39,7 @@ class MapTransitionSensorView extends DDContactDecoration {
   double _contactTime = 0;
 
   @override
-  void onContact(KnightPlayerView component) {
+  void onContact(SunnyPlayerView component) {
     if (!_hasContact && !_hasNavigated) {
       _hasContact = true;
       _contactTime = 0;
@@ -48,7 +48,7 @@ class MapTransitionSensorView extends DDContactDecoration {
   }
 
   @override
-  void onContactExit(KnightPlayerView component) {
+  void onContactExit(SunnyPlayerView component) {
     _hasContact = false;
     _contactTime = 0;
     super.onContactExit(component);

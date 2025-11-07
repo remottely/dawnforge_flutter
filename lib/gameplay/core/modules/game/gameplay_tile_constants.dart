@@ -17,4 +17,5 @@ final class GameplayTileConstants {
   static final Vector2 tileSizeExtraLarge = Vector2.all(
     kTileDimensionExtraLarge,
   );
+  static final Vector2 tileSizeSunnyWorld = Vector2(96, 64);
 }
