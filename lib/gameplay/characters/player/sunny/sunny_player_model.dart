@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_profile.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
 
 enum FarmTool { hand, hoe, wateringCan }
 

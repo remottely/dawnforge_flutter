@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_profile.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_manager.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
@@ -35,6 +37,7 @@ class SunnyPlayerView extends SimplePlayer
   @override
   Future<void> onLoad() async {
     await super.onLoad();
+
     _initializeVisualConfiguration();
     _initializeController();
     add(SunnyPlayerConfig.hitbox);
@@ -92,6 +95,52 @@ class SunnyPlayerView extends SimplePlayer
     }
   }
 
+  /// Executa a animação de ataque utilizando o mecanismo padrão do Bonfire
+  Future<void> _playAttackAnimation(
+    Future<SpriteAnimation> animationFuture, {
+    required int damageStartFrame,
+    required int damageEndFrame,
+    required void Function() onDamageFrames,
+  }) async {
+    final attackAnimationOriginal = await animationFuture;
+
+    // Calcula em que momento executar o dano (início do frame de dano)
+    double damageStartTime = 0;
+    for (
+      int i = 0;
+      i < damageStartFrame && i < attackAnimationOriginal.frames.length;
+      i++
+    ) {
+      damageStartTime += attackAnimationOriginal.frames[i].stepTime;
+    }
+
+    // Agenda a execução do dano
+    Future.delayed(
+      Duration(milliseconds: (damageStartTime * 1000).toInt()),
+      () {
+        if (!isDead && !isRemoved) {
+          onDamageFrames();
+        }
+      },
+    );
+
+    // Clona os frames para evitar compartilhar estado
+    final clonedFrames = attackAnimationOriginal.frames
+        .map((frame) => SpriteAnimationFrame(frame.sprite, frame.stepTime))
+        .toList();
+    final attackAnimation = SpriteAnimation(clonedFrames, loop: false);
+
+    if (animation != null) {
+      unawaited(
+        animation!.playOnce(
+          attackAnimation,
+          runToTheEnd: true,
+          useCompFlip: true,
+        ),
+      );
+    }
+  }
+
   void _initializeSynchronizedAttackSystem() {
     _primaryAttackController = SynchronizedAttackController(
       spec: SynchronizedAttackSpecConfig.standard,
@@ -139,17 +188,25 @@ class SunnyPlayerView extends SimplePlayer
         position: size,
       );
 
-      final Vector2 centerOffset = OffsetHelper.getCenterOffset(
-        Vector2(6, 0),
-        lastDirection,
-      );
+      // Executa a animação de ataque do player
+      _playAttackAnimation(
+        SunnyPlayerConfig.rightAttackAnimation,
+        damageStartFrame: 6,
+        damageEndFrame: 9,
+        onDamageFrames: () {
+          final Vector2 centerOffset = OffsetHelper.getCenterOffset(
+            Vector2(6, 0),
+            lastDirection,
+          );
 
-      simpleAttackMelee(
-        damage: damage,
-        animationRight:
-            CharacterPrimaryAttackConfig.createPlayerExecutionAnimation(),
-        size: CharacterPrimaryAttackConfig.kPlayerPrimaryAttackFxSize,
-        centerOffset: centerOffset,
+          simpleAttackMelee(
+            damage: damage,
+            animationRight:
+                CharacterPrimaryAttackConfig.createPlayerExecutionAnimation(),
+            size: CharacterPrimaryAttackConfig.kPlayerPrimaryAttackFxSize,
+            centerOffset: centerOffset,
+          );
+        },
       );
     });
 
