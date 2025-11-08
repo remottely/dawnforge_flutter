@@ -34,6 +34,9 @@ class SunnyPlayerView extends SimplePlayer
   late final SunnyPlayerController _controller;
   late final SynchronizedAttackController _primaryAttackController;
   late final SynchronizedAttackController _fireballAttackController;
+  int _movementLockCount = 0;
+
+  bool get _isMovementLocked => _movementLockCount > 0;
 
   @override
   Future<void> onLoad() async {
@@ -96,6 +99,15 @@ class SunnyPlayerView extends SimplePlayer
     }
   }
 
+  @override
+  void onJoystickChangeDirectional(JoystickDirectionalEvent event) {
+    if (_isMovementLocked) {
+      stopMove(forceIdle: true);
+      return;
+    }
+    super.onJoystickChangeDirectional(event);
+  }
+
   void _initializeSynchronizedAttackSystem() {
     _primaryAttackController = SynchronizedAttackController(
       spec: SynchronizedAttackSpecConfig.standard,
@@ -138,10 +150,12 @@ class SunnyPlayerView extends SimplePlayer
     final executed = _primaryAttackController.execute(AttackType.melee, () {
       CharacterActionSpriteAnimationHelper.playActionAnimation(
         SunnyPlayerConfig.rightAttackAnimation,
-        player: this,
         currentAnimation: animation,
+        movementComponent: this,
         executionStartFrame: 4,
         // executionEndFrame: 8,
+        onActionStart: _lockMovementForAction,
+        onActionEnd: _unlockMovementForAction,
         onExecutionFrames: () {
           final Vector2 centerOffset = OffsetHelper.getCenterOffset(
             Vector2(6, 0),
@@ -247,5 +261,19 @@ class SunnyPlayerView extends SimplePlayer
       notObserved: notObserved,
       observed: observed,
     );
+  }
+
+  void _lockMovementForAction() {
+    _movementLockCount += 1;
+  }
+
+  void _unlockMovementForAction() {
+    if (_movementLockCount == 0) {
+      return;
+    }
+    _movementLockCount -= 1;
+    if (_movementLockCount == 0) {
+      stopMove(forceIdle: true);
+    }
   }
 }
