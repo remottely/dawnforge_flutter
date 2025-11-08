@@ -21,7 +21,7 @@ class SunnyPlayerView extends SimplePlayer
   SunnyPlayerView(Vector2 position, {required SunnyPlayerModel model})
     : _model = model,
       super(
-        animation: SunnyPlayerConfig.animation,
+        animation: SunnyPlayerConfig.createWalkAnimation(),
         size: SunnyPlayerConfig.componentSize,
         position: position,
         life: SunnyPlayerConfig.kLife,
@@ -160,21 +160,26 @@ class SunnyPlayerView extends SimplePlayer
     _isRunning = shouldRun;
     if (shouldRun) {
       speed = SunnyPlayerConfig.kSpeed * SunnyPlayerConfig.kRunSpeedMultiplier;
-
-      CharacterActionSpriteAnimationHelper.playLoop(
-        SunnyPlayerConfig.rightRunAnimation,
-        currentAnimation: animation,
-      );
+      _switchToRunAnimation();
     } else {
       speed = SunnyPlayerConfig.kSpeed;
+      _switchToWalkAnimation();
     }
+  }
+
+  void _switchToRunAnimation() {
+    replaceAnimation(SunnyPlayerConfig.createRunAnimation(), doIdle: isIdle);
+  }
+
+  void _switchToWalkAnimation() {
+    replaceAnimation(SunnyPlayerConfig.createWalkAnimation(), doIdle: isIdle);
   }
 
   /// Controller callback implementations
   bool _onPlayPrimaryAttack(double damage) {
     final executed = _primaryAttackController.execute(AttackType.melee, () {
       CharacterActionSpriteAnimationHelper.playExecutionOnceWithIdle(
-        SunnyPlayerConfig.rightAttackAnimation,
+        SunnyPlayerConfig.loadRightAttackAnimation(),
         currentAnimation: animation,
         movementComponent: this,
         executionStartFrame: 4,

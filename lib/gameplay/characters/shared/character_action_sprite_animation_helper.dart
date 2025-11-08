@@ -25,24 +25,39 @@ final class CharacterActionSpriteAnimationHelper {
     }
   }
 
-  static const _kLoopKey = '_actionLoop';
-
   static Future<void> playLoop(
     Future<SpriteAnimation> animationFuture, {
     required SimpleDirectionAnimation? currentAnimation,
+    String key = '_actionLoop',
+    bool flipX = false,
+    bool flipY = false,
   }) async {
     if (currentAnimation == null) {
       return;
     }
 
-    final attackAnimationOriginal = await animationFuture;
-    final clonedFrames = attackAnimationOriginal.frames
-        .map((frame) => SpriteAnimationFrame(frame.sprite, frame.stepTime))
-        .toList();
-    final loopAnimation = SpriteAnimation(clonedFrames, loop: true);
+    if (!currentAnimation.containOther(key)) {
+      final attackAnimationOriginal = await animationFuture;
+      final clonedFrames = attackAnimationOriginal.frames
+          .map((frame) => SpriteAnimationFrame(frame.sprite, frame.stepTime))
+          .toList();
+      final loopAnimation = SpriteAnimation(clonedFrames, loop: true);
+      await currentAnimation.addOtherAnimation(key, loopAnimation);
+    }
 
-    await currentAnimation.addOtherAnimation(_kLoopKey, loopAnimation);
-    currentAnimation.playOther(_kLoopKey);
+    currentAnimation.playOther(key, flipX: flipX, flipY: flipY);
+  }
+
+  static void stopLoop({
+    required SimpleDirectionAnimation? currentAnimation,
+    required SimpleAnimationEnum fallbackAnimation,
+    String key = '_actionLoop',
+  }) {
+    if (currentAnimation == null) {
+      return;
+    }
+
+    currentAnimation.play(fallbackAnimation);
   }
 
   static Future<void> playExecutionOnceWithIdle(

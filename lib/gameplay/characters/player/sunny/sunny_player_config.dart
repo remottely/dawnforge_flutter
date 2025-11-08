@@ -15,7 +15,7 @@ final class SunnyPlayerConfig {
 
   static const double kLife = CharacterConstants.kLifeExtraLarge;
   static double kSpeed = CharacterConstants.kSpeedFast;
-  static const double kRunSpeedMultiplier = 1.6;
+  static const double kRunSpeedMultiplier = 1.4;
 
   static const double kMaxStamina = 100.0;
   static const int kMaxEnergy = 100;
@@ -40,7 +40,7 @@ final class SunnyPlayerConfig {
   );
 
   static Future<SpriteAnimation>
-  get _rightWalkAnimation => SpriteAnimation.load(
+  _loadRightWalkAnimation() => SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_walking_strip8.png',
     SpriteAnimationConfig.createStandardData(
       amount: 8,
@@ -48,7 +48,8 @@ final class SunnyPlayerConfig {
     ),
   );
 
-  static Future<SpriteAnimation> get rightRunAnimation => SpriteAnimation.load(
+  static Future<SpriteAnimation>
+  _loadRightRunAnimation() => SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_run_strip8.png',
     SpriteAnimationConfig.createStandardData(
       amount: 8,
@@ -57,7 +58,7 @@ final class SunnyPlayerConfig {
   );
 
   static Future<SpriteAnimation>
-  get rightAttackAnimation => SpriteAnimation.load(
+  loadRightAttackAnimation() => SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_sword_strip10.png',
     SpriteAnimationConfig.createStandardData(
       amount: 10,
@@ -65,12 +66,21 @@ final class SunnyPlayerConfig {
     ),
   );
 
-  static SimpleDirectionAnimation get animation => SimpleDirectionAnimation(
-    idleLeft: UISpriteAnimationsConfig.loadSunnyPlayerIdleRight6(),
-    idleRight: UISpriteAnimationsConfig.loadSunnyPlayerIdleRight6(),
-    runLeft: _rightWalkAnimation,
-    runRight: _rightWalkAnimation,
-  );
+  static SimpleDirectionAnimation createWalkAnimation() =>
+      SimpleDirectionAnimation(
+        idleLeft: UISpriteAnimationsConfig.loadSunnyPlayerIdleRight6(),
+        idleRight: UISpriteAnimationsConfig.loadSunnyPlayerIdleRight6(),
+        runLeft: _loadRightWalkAnimation(),
+        runRight: _loadRightWalkAnimation(),
+      );
+
+  static SimpleDirectionAnimation createRunAnimation() =>
+      SimpleDirectionAnimation(
+        idleLeft: UISpriteAnimationsConfig.loadSunnyPlayerIdleRight6(),
+        idleRight: UISpriteAnimationsConfig.loadSunnyPlayerIdleRight6(),
+        runLeft: _loadRightRunAnimation(),
+        runRight: _loadRightRunAnimation(),
+      );
 
   static final LightingConfig lightingConfig = LightingConfig(
     radius: TileConstants.kTileDimensionStandard,
