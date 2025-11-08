@@ -24,7 +24,7 @@ class UISpriteAnimationsConfig {
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_idle_strip9.png',
     GameplaySpriteAnimationConfig.createStandardData(
       amount: 9,
-      textureSize: SunnyPlayerProfile.textureSize,
+      textureSize: SunnyPlayerConfig.textureSize,
     ),
   );
 

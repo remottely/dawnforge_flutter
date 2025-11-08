@@ -1,26 +1,18 @@
 import 'dart:async' as async;
 import 'dart:math' as math;
 
-import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_data.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_model.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec.dart';
 
 class SynchronizedAttackController {
   SynchronizedAttackController({required SynchronizedAttackSpec spec})
     : _spec = spec,
       _model = SynchronizedAttackModel(
         baseAttackSpeedMs: spec.baseAttackSpeedMs,
-        attackTypeMultipliers:
-            spec.attackTypeMultipliers ?? _defaultAttackMultipliers,
+        attackTypeMultipliers: spec.attackTypeMultipliers,
         speedBonusPerLevel: spec.speedBonusPerLevel,
       );
-
-  static const Map<AttackType, double> _defaultAttackMultipliers = {
-    AttackType.melee: 1.0,
-    AttackType.ranged: 0.8,
-    AttackType.special: 1.5,
-    AttackType.combo: 0.6,
-  };
 
   final SynchronizedAttackSpec _spec;
   final SynchronizedAttackModel _model;

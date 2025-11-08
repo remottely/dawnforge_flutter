@@ -2,12 +2,12 @@ import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attac
 
 class SynchronizedAttackSpec {
   final int baseAttackSpeedMs;
-  final Map<AttackType, double>? attackTypeMultipliers;
+  final Map<AttackType, double> attackTypeMultipliers;
   final double speedBonusPerLevel;
 
   const SynchronizedAttackSpec({
     required this.baseAttackSpeedMs,
-    this.attackTypeMultipliers,
+    required this.attackTypeMultipliers,
     this.speedBonusPerLevel = 0.05,
   });
 
@@ -15,12 +15,10 @@ class SynchronizedAttackSpec {
     return {
       'baseAttackSpeedMs': baseAttackSpeedMs,
       'speedBonusPerLevel': speedBonusPerLevel,
-      'attackTypeMultipliers': attackTypeMultipliers == null
-          ? null
-          : {
-              for (final entry in attackTypeMultipliers!.entries)
-                entry.key.name: entry.value,
-            },
+      'attackTypeMultipliers': {
+        for (final entry in attackTypeMultipliers.entries)
+          entry.key.name: entry.value,
+      },
     };
   }
 }

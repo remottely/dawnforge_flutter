@@ -14,8 +14,8 @@ class SunnyPlayerModel {
     int? initialEnergy,
     FarmTool? initialTool,
     bool? initialHasKey,
-  }) : _stamina = initialStamina ?? SunnyPlayerProfile.kMaxStamina,
-       _energy = initialEnergy ?? SunnyPlayerProfile.kMaxEnergy,
+  }) : _stamina = initialStamina ?? SunnyPlayerConfig.kMaxStamina,
+       _energy = initialEnergy ?? SunnyPlayerConfig.kMaxEnergy,
        currentTool = initialTool ?? FarmTool.hand,
        hasKey = initialHasKey ?? false,
        isObservingEnemy = false;
@@ -28,32 +28,32 @@ class SunnyPlayerModel {
   bool get hasStamina => _stamina > 0;
 
   bool get canExecutePrimaryAttack =>
-      _stamina >= SunnyPlayerProfile.kPrimaryAttackStaminaCost;
+      _stamina >= SunnyPlayerConfig.kPrimaryAttackStaminaCost;
 
   bool get canExecuteFireballAttack =>
-      _stamina >= SunnyPlayerProfile.kFireballAttackStaminaCost;
+      _stamina >= SunnyPlayerConfig.kFireballAttackStaminaCost;
 
   bool get canExecuteToolAction =>
-      _energy >= SunnyPlayerProfile.kToolActionEnergyCost;
+      _energy >= SunnyPlayerConfig.kToolActionEnergyCost;
 
   // State mutations
   void consumeStamina(int amount) {
-    _stamina = (_stamina - amount).clamp(0, SunnyPlayerProfile.kMaxStamina);
+    _stamina = (_stamina - amount).clamp(0, SunnyPlayerConfig.kMaxStamina);
   }
 
   void regenerateStamina() {
-    _stamina = (_stamina + SunnyPlayerProfile.kStaminaIncrement).clamp(
+    _stamina = (_stamina + SunnyPlayerConfig.kStaminaIncrement).clamp(
       0,
-      SunnyPlayerProfile.kMaxStamina,
+      SunnyPlayerConfig.kMaxStamina,
     );
   }
 
   void consumeEnergy(int amount) {
-    _energy = (_energy - amount).clamp(0, SunnyPlayerProfile.kMaxEnergy);
+    _energy = (_energy - amount).clamp(0, SunnyPlayerConfig.kMaxEnergy);
   }
 
   void restoreEnergy() {
-    _energy = SunnyPlayerProfile.kMaxEnergy;
+    _energy = SunnyPlayerConfig.kMaxEnergy;
   }
 
   void switchTool(FarmTool newTool) => currentTool = newTool;

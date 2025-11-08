@@ -9,34 +9,34 @@ import 'package:darkness_dungeon/gameplay/characters/shared/character_primary_at
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/camera/gameplay_camera_effects_utils.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_data.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_config.dart';
 
 class SunnyPlayerView extends SimplePlayer
     with Lighting, BlockMovementCollision {
   SunnyPlayerView(Vector2 position, {required SunnyPlayerModel model})
     : _model = model,
       super(
-        animation: SunnyPlayerProfile.animation,
-        size: SunnyPlayerProfile.componentSize,
+        animation: SunnyPlayerConfig.animation,
+        size: SunnyPlayerConfig.componentSize,
         position: position,
-        life: SunnyPlayerProfile.kLife,
-        speed: SunnyPlayerProfile.kSpeed,
+        life: SunnyPlayerConfig.kLife,
+        speed: SunnyPlayerConfig.kSpeed,
       ) {
     anchor = Anchor.center;
   }
 
   final SunnyPlayerModel _model;
   late final SunnyPlayerController _controller;
-  late final SynchronizedAttackController _attackController1;
-  late final SynchronizedAttackController _attackController2;
+  late final SynchronizedAttackController _primaryAttackController;
+  late final SynchronizedAttackController _fireballAttackController;
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
     _initializeVisualConfiguration();
     _initializeController();
-    add(SunnyPlayerProfile.hitbox);
+    add(SunnyPlayerConfig.hitbox);
     _initializeSynchronizedAttackSystem();
   }
 
@@ -71,8 +71,8 @@ class SunnyPlayerView extends SimplePlayer
 
   @override
   void onRemove() {
-    _attackController1.dispose();
-    _attackController2.dispose();
+    _primaryAttackController.dispose();
+    _fireballAttackController.dispose();
     _controller.dispose();
     super.onRemove();
   }
@@ -84,8 +84,6 @@ class SunnyPlayerView extends SimplePlayer
   SunnyPlayerModel get model => _controller.model;
 
   void _updateSpriteDirection() {
-    // Quando o personagem se move para a esquerda (velocidade negativa em X),
-    // flipamos horizontalmente o sprite
     if (velocity.x < 0 && !isFlippedHorizontally) {
       flipHorizontallyAroundCenter();
     } else if (velocity.x > 0 && isFlippedHorizontally) {
@@ -93,36 +91,17 @@ class SunnyPlayerView extends SimplePlayer
     }
   }
 
-  /// **Synchronized Attack System Initialization**
   void _initializeSynchronizedAttackSystem() {
-    _attackController1 = SynchronizedAttackController(
-      spec: const SynchronizedAttackSpec(
-        baseAttackSpeedMs: 800,
-        speedBonusPerLevel: 0.05,
-        attackTypeMultipliers: {
-          AttackType.melee: 1.0,
-          AttackType.ranged: 0.8,
-          AttackType.special: 1.5,
-          AttackType.combo: 0.6,
-        },
-      ),
+    _primaryAttackController = SynchronizedAttackController(
+      spec: SynchronizedAttackSpecConfig.standard,
     );
-    _attackController2 = SynchronizedAttackController(
-      spec: const SynchronizedAttackSpec(
-        baseAttackSpeedMs: 800,
-        speedBonusPerLevel: 0.05,
-        attackTypeMultipliers: {
-          AttackType.melee: 1.0,
-          AttackType.ranged: 0.8,
-          AttackType.special: 1.5,
-          AttackType.combo: 0.6,
-        },
-      ),
+    _fireballAttackController = SynchronizedAttackController(
+      spec: SynchronizedAttackSpecConfig.standard,
     );
   }
 
   void _initializeVisualConfiguration() {
-    setupLighting(SunnyPlayerProfile.lightingConfig);
+    setupLighting(SunnyPlayerConfig.lightingConfig);
     setupMovementByJoystick(intensityEnabled: true);
   }
 
@@ -147,11 +126,11 @@ class SunnyPlayerView extends SimplePlayer
   );
 
   void _showDeathFx() =>
-      gameRef.add(SunnyPlayerProfile.createCryptComponent(position));
+      gameRef.add(SunnyPlayerConfig.createCryptComponent(position));
 
   /// Controller callback implementations
   bool _onPlayPrimaryAttack(double damage) {
-    final executed = _attackController1.execute(AttackType.melee, () {
+    final executed = _primaryAttackController.execute(AttackType.melee, () {
       GameplayCameraEffectsUtils.primaryAttackShake(gameRef);
       GameplayAudioManager.instance.playPlayerPrimaryAttackSfx();
       addParticle(
@@ -173,7 +152,7 @@ class SunnyPlayerView extends SimplePlayer
   }
 
   bool _onPlayFireballAttack(double damage) {
-    final executed = _attackController2.execute(AttackType.ranged, () {
+    final executed = _fireballAttackController.execute(AttackType.ranged, () {
       addParticle(
         CharacterFxParticlesAnimationsConfig.createFireballAttackParticles(),
         position: size,

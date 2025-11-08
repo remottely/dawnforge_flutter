@@ -7,8 +7,8 @@ import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 
-final class SunnyPlayerProfile {
-  SunnyPlayerProfile._();
+final class SunnyPlayerConfig {
+  SunnyPlayerConfig._();
 
   static const double kVisionRadius =
       CharacterConstants.kVisionRadiusExtraLarge;

@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_profile.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_profile.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_player_input_actions_config.dart';
 
 class SunnyPlayerController {
@@ -54,22 +54,22 @@ class SunnyPlayerController {
   // Actions
   void executePrimaryAttack() {
     if (!model.canExecutePrimaryAttack) return;
-    final executed = onPrimaryAttack(SunnyPlayerProfile.kPrimaryAttackDamage);
+    final executed = onPrimaryAttack(SunnyPlayerConfig.kPrimaryAttackDamage);
     if (!executed) return;
-    model.consumeStamina(SunnyPlayerProfile.kPrimaryAttackStaminaCost);
+    model.consumeStamina(SunnyPlayerConfig.kPrimaryAttackStaminaCost);
   }
 
   void executeFireballAttack() {
     if (!model.canExecuteFireballAttack) return;
-    final executed = onFireballAttack(SunnyPlayerProfile.kFireballAttackDamage);
+    final executed = onFireballAttack(SunnyPlayerConfig.kFireballAttackDamage);
     if (!executed) return;
-    model.consumeStamina(SunnyPlayerProfile.kFireballAttackStaminaCost);
+    model.consumeStamina(SunnyPlayerConfig.kFireballAttackStaminaCost);
   }
 
   void useTool() {
     if (_isToolInUse || !model.canExecuteToolAction) return;
     _isToolInUse = true;
-    model.consumeEnergy(SunnyPlayerProfile.kToolActionEnergyCost);
+    model.consumeEnergy(SunnyPlayerConfig.kToolActionEnergyCost);
     onToolUse();
     Future.delayed(Duration(milliseconds: 500), () => _isToolInUse = false);
   }
@@ -81,7 +81,7 @@ class SunnyPlayerController {
   void _handleStaminaRegeneration() {
     if (_hasStaminaRegenScheduled) return;
     _hasStaminaRegenScheduled = true;
-    Future.delayed(SunnyPlayerProfile.kStaminaRegenDebounce, () {
+    Future.delayed(SunnyPlayerConfig.kStaminaRegenDebounce, () {
       _hasStaminaRegenScheduled = false;
       model.regenerateStamina();
     });
@@ -89,7 +89,7 @@ class SunnyPlayerController {
 
   void _handleEnemyVision() {
     onCheckEnemyVision(
-      visionRadius: SunnyPlayerProfile.kVisionRadius,
+      visionRadius: SunnyPlayerConfig.kVisionRadius,
       notObserved: () => model.isObservingEnemy = false,
       observed: (enemies) {
         if (model.isObservingEnemy) return;

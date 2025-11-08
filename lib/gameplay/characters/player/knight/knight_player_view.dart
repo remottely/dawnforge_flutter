@@ -3,7 +3,7 @@ import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_loadout.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_manager.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_slot.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/presets/knight_default_hand_loadout.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/presets/knight_hand_loadout_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
@@ -17,7 +17,9 @@ class KnightPlayerView extends SimplePlayer
     required KnightPlayerModel model,
     KnightHandLoadoutSetup? handLoadout,
   }) : _model = model,
-       _handLoadout = handLoadout ?? createDefaultKnightHandLoadout(),
+       _handLoadout =
+           handLoadout ??
+           KnightHandLoadoutConfig.createDefaultKnightHandLoadout(),
        super(
          animation: KnightPlayerConfig.animation,
          size: KnightPlayerConfig.componentSize,
