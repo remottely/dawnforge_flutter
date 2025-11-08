@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/conversation/gameplay_conversation_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/conversation/conversation_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 
@@ -26,14 +26,14 @@ final class BossEnemyConfig {
     idleRight: UISpriteAnimationsConfig.loadBossEnemyIdleRight4(),
     runLeft: SpriteAnimation.load(
       'gameplay/characters/enemies/boss/boss_enemy_run_left_4.png',
-      GameplaySpriteAnimationConfig.createStandardData(
+      SpriteAnimationConfig.createStandardData(
         amount: 4,
         textureSize: textureSize,
       ),
     ),
     runRight: SpriteAnimation.load(
       'gameplay/characters/enemies/boss/boss_enemy_run_right_4.png',
-      GameplaySpriteAnimationConfig.createStandardData(
+      SpriteAnimationConfig.createStandardData(
         amount: 4,
         textureSize: textureSize,
       ),
@@ -48,10 +48,10 @@ final class BossEnemyConfig {
 
   static List<Say> createConversationSequence() {
     return [
-      GameplayConversationConfig.createKidRightDialog('talk_kid_1'),
-      GameplayConversationConfig.createBossLeftDialog('talk_boss_1'),
-      GameplayConversationConfig.createKnightLeftDialog('talk_player_3'),
-      GameplayConversationConfig.createBossRightDialog('talk_boss_2'),
+      ConversationConfig.createKidRightDialog('talk_kid_1'),
+      ConversationConfig.createBossLeftDialog('talk_boss_1'),
+      ConversationConfig.createKnightLeftDialog('talk_player_3'),
+      ConversationConfig.createBossRightDialog('talk_boss_2'),
     ];
   }
 }

@@ -1,7 +1,8 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_player_input_actions_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/input_actions/joysctick_setup.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 
 class SunnyPlayerController {
   final SunnyPlayerModel model;
@@ -42,11 +43,11 @@ class SunnyPlayerController {
   void handleInputAction(JoystickActionEvent event) {
     if (event.event != ActionEvent.DOWN) return;
 
-    if (event.id == GameplayJoystickConfig.kJoystickPrimaryAttackId ||
-        event.id == GameplayKeyboardConfig.kPrimaryAttackKey) {
+    if (event.id == JoystickSetup.kJoystickPrimaryAttackId ||
+        event.id == KeyboardSetup.kPrimaryAttackKey) {
       executePrimaryAttack();
-    } else if (event.id == GameplayJoystickConfig.kJoystickFireballAttackId ||
-        event.id == GameplayKeyboardConfig.kFireballAttackKey) {
+    } else if (event.id == JoystickSetup.kJoystickFireballAttackId ||
+        event.id == KeyboardSetup.kFireballAttackKey) {
       executeFireballAttack();
     }
   }

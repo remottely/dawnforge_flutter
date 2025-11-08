@@ -1,18 +1,18 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:bonfire/map/tiled/builder/tiled_world_builder.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_data.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/map/map_data.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/map/map_config.dart';
 import 'package:darkness_dungeon/gameplay/decorations/map_transition_sensor.dart';
 import 'package:flutter/widgets.dart';
 
-class GameplayMapManager {
+class MapManager {
   static MapTransitionSensorView _createMapSensor(
     String sensorId,
     TiledObjectProperties properties,
   ) {
     final List<String> _positionParts = properties
-        .others[GameplayMapConfig.kPlayerPositionPropertyKey]
+        .others[MapConfig.kPlayerPositionPropertyKey]
         .toString()
         .split(',');
     final Vector2 _playerPosition = Vector2(
@@ -24,12 +24,10 @@ class GameplayMapManager {
       id: sensorId,
       position: properties.position,
       size: properties.size,
-      targetMap: properties.others[GameplayMapConfig.kNextMapPropertyKey]
-          .toString(),
+      targetMap: properties.others[MapConfig.kNextMapPropertyKey].toString(),
       playerPosition: _playerPosition,
       playerDirection: Direction.fromName(
-        properties.others[GameplayMapConfig.kPlayerDirectionPropertyKey]
-            .toString(),
+        properties.others[MapConfig.kPlayerDirectionPropertyKey].toString(),
       ),
     );
   }
@@ -45,7 +43,7 @@ class GameplayMapManager {
   }
 
   static void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
-    builders.addEntries(GameplayMapConfig.createEntityBuilder().entries);
+    builders.addEntries(MapConfig.createEntityBuilder().entries);
   }
 
   static Map<String, ObjectBuilder> _createObjectBuilder({
@@ -65,12 +63,12 @@ class GameplayMapManager {
   }) {
     return WorldMapByTiled(
       WorldMapReader.fromAsset(mapAsset),
-      forceTileSize: GameplayTileConstants.tileSizeStandard,
+      forceTileSize: TileConstants.tileSizeStandard,
       objectsBuilder: _createObjectBuilder(sensorIds: sensorIds),
     );
   }
 
-  static MapItem _createMapItem(GameplayMapData data) {
+  static MapItem _createMapItem(MapData data) {
     return MapItem(
       id: data.id,
       properties: data.properties,
@@ -82,7 +80,7 @@ class GameplayMapManager {
       (() {
         final mapBuilders = <String, MapItemBuilder>{};
 
-        for (final config in GameplayMapConfig.kAllMaps) {
+        for (final config in MapConfig.kAllMaps) {
           mapBuilders[config.id] = (context, args) => _createMapItem(config);
         }
 

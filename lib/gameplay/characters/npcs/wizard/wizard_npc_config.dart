@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/conversation/gameplay_conversation_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/conversation/conversation_config.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 
 final class WizardNpcConfig {
@@ -21,10 +21,10 @@ final class WizardNpcConfig {
   );
 
   static List<Say> createConversationSequence() => [
-    GameplayConversationConfig.createWizardRightDialog('talk_wizard_1'),
-    GameplayConversationConfig.createKnightLeftDialog('talk_player_1'),
-    GameplayConversationConfig.createWizardRightDialog('talk_wizard_2'),
-    GameplayConversationConfig.createKnightLeftDialog('talk_player_2'),
-    GameplayConversationConfig.createWizardRightDialog('talk_wizard_3'),
+    ConversationConfig.createWizardRightDialog('talk_wizard_1'),
+    ConversationConfig.createKnightLeftDialog('talk_player_1'),
+    ConversationConfig.createWizardRightDialog('talk_wizard_2'),
+    ConversationConfig.createKnightLeftDialog('talk_player_2'),
+    ConversationConfig.createWizardRightDialog('talk_wizard_3'),
   ];
 }

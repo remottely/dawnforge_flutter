@@ -1,6 +1,6 @@
 import 'package:darkness_dungeon/darkness_dungeon.dart';
 
-class GameplayConversationConfig {
+class ConversationConfig {
   static Say createKnightLeftDialog(String phraseKey) => Say(
     text: [
       TextSpan(text: GameplayStringsLocation.instance.getString(phraseKey)),

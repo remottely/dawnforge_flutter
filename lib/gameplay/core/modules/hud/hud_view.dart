@@ -1,10 +1,10 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_view.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/gameplay_hud_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/hud_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/player_vital_stats_hud.dart';
 import 'package:darkness_dungeon/gameplay/decorations/door_key_decoration.dart';
 
-class GameplayHUD extends GameInterface {
+class HUDView extends GameInterface {
   late Sprite _keySprite;
 
   @override
@@ -34,10 +34,10 @@ class GameplayHUD extends GameInterface {
       _keySprite.renderRect(
         canvas,
         Rect.fromLTWH(
-          GameplayHUDConfig.kKeyIconStartPositionX,
-          GameplayHUDConfig.kKeyIconStartPositionY,
-          GameplayHUDConfig.kKeyIconWidth,
-          GameplayHUDConfig.kKeyIconHeight,
+          HUDConfig.kKeyIconStartPositionX,
+          HUDConfig.kKeyIconStartPositionY,
+          HUDConfig.kKeyIconWidth,
+          HUDConfig.kKeyIconHeight,
         ),
       );
     }

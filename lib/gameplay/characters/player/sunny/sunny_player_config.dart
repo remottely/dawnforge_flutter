@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_lightning_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/lightning_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
@@ -29,7 +29,7 @@ final class SunnyPlayerConfig {
   static const double kFireballAttackDamage = 10.0;
   static const int kFireballAttackStaminaCost = 10;
 
-  static final Vector2 textureSize = GameplayTileConstants.tileSizeSunnyWorld;
+  static final Vector2 textureSize = TileConstants.tileSizeSunnyWorld;
   static final Vector2 componentSize = textureSize;
 
   static final RectangleHitbox hitbox = HitboxUtils.createCenterHitbox(
@@ -41,7 +41,7 @@ final class SunnyPlayerConfig {
   static Future<SpriteAnimation>
   get _rightWalkAnimation => SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_walking_strip8.png',
-    GameplaySpriteAnimationConfig.createStandardData(
+    SpriteAnimationConfig.createStandardData(
       amount: 8,
       textureSize: textureSize,
     ),
@@ -58,7 +58,7 @@ final class SunnyPlayerConfig {
   static Future<SpriteAnimation>
   get rightAttackAnimation => SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_sword_strip10.png',
-    GameplaySpriteAnimationConfig.createStandardData(
+    SpriteAnimationConfig.createStandardData(
       amount: 10,
       textureSize: textureSize,
     ),
@@ -72,13 +72,12 @@ final class SunnyPlayerConfig {
   );
 
   static final LightingConfig lightingConfig = LightingConfig(
-    radius: GameplayTileConstants.kTileDimensionStandard,
-    blurBorder: GameplayTileConstants.kTileDimensionStandard,
-    color: GameplayLightingConfig.playerLighting,
+    radius: TileConstants.kTileDimensionStandard,
+    blurBorder: TileConstants.kTileDimensionStandard,
+    color: LightingConstants.playerLighting,
   );
 
-  static final Vector2 cryptComponentSize =
-      GameplayTileConstants.tileSizeStandard;
+  static final Vector2 cryptComponentSize = TileConstants.tileSizeStandard;
   static Future<Sprite> loadCryptSprite() =>
       Sprite.load('gameplay/characters/player/player_crypt_1.png');
   static DDDecoration createCryptComponent(Vector2 position) =>

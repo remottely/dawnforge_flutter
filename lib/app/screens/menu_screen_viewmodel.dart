@@ -2,7 +2,7 @@ import 'dart:async' as async;
 
 import 'package:darkness_dungeon/app/screens/menu_screen.dart';
 import 'package:darkness_dungeon/app/screens/menu_screen_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen.dart';
 import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +35,7 @@ abstract class MenuScreenViewModel extends State<MenuScreen> {
   }
 
   void _cleanupResources() {
-    GameplayAudioManager.instance.stopBackgroundMusic();
+    AudioManager.instance.stopBackgroundMusic();
     _characterAnimationTimer.cancel();
   }
 

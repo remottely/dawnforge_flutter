@@ -1,5 +1,5 @@
-final class GameplayHUDConfig {
-  GameplayHUDConfig._();
+final class HUDConfig {
+  HUDConfig._();
 
   // Key icon configuration
   static const double kKeyIconStartPositionX = 150.0;

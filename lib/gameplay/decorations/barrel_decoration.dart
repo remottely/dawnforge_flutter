@@ -1,14 +1,14 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_pushable_decoration.dart';
 
 final class _BarrelDecorationConfig {
   _BarrelDecorationConfig._();
 
-  static final Vector2 _textureSize = GameplayTileConstants.tileSizeStandard;
+  static final Vector2 _textureSize = TileConstants.tileSizeStandard;
   static final Vector2 _componentSize = _textureSize;
 
   static Future<Sprite> _loadSprite() =>

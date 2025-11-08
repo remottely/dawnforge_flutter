@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 
@@ -21,15 +21,15 @@ final class MiniBossEnemyConfig {
   static const int kFireballAttackDamageReduction = 3;
 
   static final Vector2 textureSize = Vector2(
-    GameplayTileConstants.kTileDimensionStandard,
-    GameplayTileConstants.kTileDimensionLarge,
+    TileConstants.kTileDimensionStandard,
+    TileConstants.kTileDimensionLarge,
   );
   static final Vector2 componentSize = textureSize;
 
   static final SimpleDirectionAnimation animation = SimpleDirectionAnimation(
     idleLeft: SpriteAnimation.load(
       'gameplay/characters/enemies/mini_boss/mini_boss_enemy_idle_left_4.png',
-      GameplaySpriteAnimationConfig.createStandardData(
+      SpriteAnimationConfig.createStandardData(
         amount: 4,
         textureSize: textureSize,
       ),
@@ -37,14 +37,14 @@ final class MiniBossEnemyConfig {
     idleRight: UISpriteAnimationsConfig.loadMiniBossEnemyIdleRight4(),
     runLeft: SpriteAnimation.load(
       'gameplay/characters/enemies/mini_boss/mini_boss_enemy_run_left_4.png',
-      GameplaySpriteAnimationConfig.createStandardData(
+      SpriteAnimationConfig.createStandardData(
         amount: 4,
         textureSize: textureSize,
       ),
     ),
     runRight: SpriteAnimation.load(
       'gameplay/characters/enemies/mini_boss/mini_boss_enemy_run_right_4.png',
-      GameplaySpriteAnimationConfig.createStandardData(
+      SpriteAnimationConfig.createStandardData(
         amount: 4,
         textureSize: textureSize,
       ),

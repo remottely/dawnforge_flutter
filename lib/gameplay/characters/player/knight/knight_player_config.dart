@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_lightning_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/lightning_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
@@ -35,13 +35,13 @@ final class KnightPlayerConfig {
     hitboxStartPositionY: 8.0,
   );
 
-  static final Vector2 textureSize = GameplayTileConstants.tileSizeStandard;
+  static final Vector2 textureSize = TileConstants.tileSizeStandard;
   static final Vector2 componentSize = textureSize;
 
   static final SimpleDirectionAnimation animation = SimpleDirectionAnimation(
     idleLeft: SpriteAnimation.load(
       'gameplay/characters/player/knight/knight_player_idle_left_6.png',
-      GameplaySpriteAnimationConfig.createStandardData(
+      SpriteAnimationConfig.createStandardData(
         amount: 6,
         textureSize: textureSize,
       ),
@@ -49,14 +49,14 @@ final class KnightPlayerConfig {
     idleRight: UISpriteAnimationsConfig.loadKnightPlayerIdleRight6(),
     runLeft: SpriteAnimation.load(
       'gameplay/characters/player/knight/knight_player_run_left_6.png',
-      GameplaySpriteAnimationConfig.createStandardData(
+      SpriteAnimationConfig.createStandardData(
         amount: 6,
         textureSize: textureSize,
       ),
     ),
     runRight: SpriteAnimation.load(
       'gameplay/characters/player/knight/knight_player_run_right_6.png',
-      GameplaySpriteAnimationConfig.createStandardData(
+      SpriteAnimationConfig.createStandardData(
         amount: 6,
         textureSize: textureSize,
       ),
@@ -64,13 +64,12 @@ final class KnightPlayerConfig {
   );
 
   static final LightingConfig lightingConfig = LightingConfig(
-    radius: GameplayTileConstants.kTileDimensionStandard,
-    blurBorder: GameplayTileConstants.kTileDimensionStandard,
-    color: GameplayLightingConfig.playerLighting,
+    radius: TileConstants.kTileDimensionStandard,
+    blurBorder: TileConstants.kTileDimensionStandard,
+    color: LightingConstants.playerLighting,
   );
 
-  static final Vector2 cryptComponentSize =
-      GameplayTileConstants.tileSizeStandard;
+  static final Vector2 cryptComponentSize = TileConstants.tileSizeStandard;
   static Future<Sprite> loadCryptSprite() =>
       Sprite.load('gameplay/characters/player/player_crypt_1.png');
   static DDDecoration createCryptComponent(Vector2 position) =>

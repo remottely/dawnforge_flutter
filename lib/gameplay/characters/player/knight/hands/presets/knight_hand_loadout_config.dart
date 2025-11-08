@@ -6,11 +6,11 @@ import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_c
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_primary_attack_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/camera/gameplay_camera_effects_utils.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_fx.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 
 final class KnightHandLoadoutConfig {
   KnightHandLoadoutConfig._();
@@ -47,7 +47,7 @@ final class KnightHandLoadoutConfig {
     final _leftHandData = KnightPickaxeHandPreset.create(
       id: 'new_shield_04',
       spritePath: SunnyPlayerConfig.steelShield1SpritePath,
-      spriteSize: GameplayTileConstants.tileSizeStandard * 0.4,
+      spriteSize: TileConstants.tileSizeStandard * 0.4,
       attachmentOffset: Vector2(6, 13),
       directionalOffset: Vector2(5, 1), // right
       mirroredDirectionalOffset: Vector2(4, 1), // left
@@ -77,9 +77,7 @@ final class KnightHandLoadoutConfig {
             speed: CharacterFireballAttackConfig.kSpeed,
             onDestroy: () {
               CharacterFireballAttackConfig.playDestroyAudio();
-              GameplayCameraEffectsUtils.fireballExplosionShake(
-                context.player.gameRef,
-              );
+              CameraFx.fireballExplosionShake(context.player.gameRef);
             },
             collision: CharacterFireballAttackConfig.createHitbox(),
             lightingConfig: CharacterFireballAttackConfig.lightingConfig,
@@ -109,8 +107,8 @@ final class KnightHandLoadoutConfig {
         attackType: AttackType.melee,
         syncSpec: _rightHandSyncSpec,
         execute: (context, damage) {
-          GameplayCameraEffectsUtils.primaryAttackShake(context.player.gameRef);
-          GameplayAudioManager.instance.playPlayerPrimaryAttackSfx();
+          CameraFx.primaryAttackShake(context.player.gameRef);
+          AudioManager.instance.playPlayerPrimaryAttackSfx();
           context.player.addParticle(
             CharacterFxParticlesAnimationsConfig.createPrimaryAttackParticles(),
             position: context.player.size,

@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'gameplay/core/modules/audio/gameplay_audio_manager.dart';
+import 'gameplay/core/modules/audio/audio_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,7 +16,7 @@ void main() async {
     await Flame.device.fullScreen();
   }
 
-  await GameplayAudioManager.instance.initialize();
+  await AudioManager.instance.initialize();
   GameplayLocalizationsDelegate location =
       const GameplayLocalizationsDelegate();
 

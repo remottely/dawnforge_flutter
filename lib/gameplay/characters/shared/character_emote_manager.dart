@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
 
 class CharacterEmoteManager {
   static const String kExclamationEmoteAsset =
@@ -16,14 +16,14 @@ class CharacterEmoteManager {
     return AnimatedFollowerGameObject(
       animation: SpriteAnimation.load(
         asset,
-        GameplaySpriteAnimationConfig.createStandardData(
+        SpriteAnimationConfig.createStandardData(
           amount: amount,
-          textureSize: GameplayTileConstants.tileSizeExtraLarge,
+          textureSize: TileConstants.tileSizeExtraLarge,
         ),
       ),
       target: target,
       loop: false,
-      size: GameplayTileConstants.tileSizeSmall,
+      size: TileConstants.tileSizeSmall,
       offset: Vector2(0, -3),
     );
   }

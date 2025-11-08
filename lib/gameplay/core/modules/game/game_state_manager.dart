@@ -1,9 +1,9 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen.dart';
 import 'package:flutter/material.dart';
 
-class GameplayGameStateManager extends GameComponent {
+class GameStateManager extends GameComponent {
   @override
   void update(double dt) {
     _processGameState(dt);
@@ -38,7 +38,7 @@ class GameplayGameStateManager extends GameComponent {
 
   void _displayGameOverDialog() {
     _vIsGameOverDisplayed = true;
-    GameplayUIStateManager.instance.displayGameOverDialog(
+    UIStateManager.instance.displayGameOverDialog(
       context,
       _onRestartGamePressed,
     );

@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 
-final class GameplayCameraEffectsUtils {
-  GameplayCameraEffectsUtils._();
+final class CameraFx {
+  CameraFx._();
   static void lightShake(BonfireGameInterface gameRef) {
     final currentPos = gameRef.camera.viewfinder.position.clone();
 

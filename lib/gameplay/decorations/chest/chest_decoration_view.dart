@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_sprite_animations_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_player_input_actions_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_config.dart';
 import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_controller.dart';
 import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_model.dart';
@@ -65,7 +65,7 @@ class ChestDecorationView extends DDInteractableDecoration {
   bool onKeyboard(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     if (_controller.model.canBeOpened &&
         event is KeyDownEvent &&
-        event.logicalKey == GameplayKeyboardConfig.kInteractionKey) {
+        event.logicalKey == KeyboardSetup.kInteractionKey) {
       _controller.openChest();
       return true;
     }

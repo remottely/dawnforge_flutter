@@ -5,8 +5,8 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.
 import 'package:darkness_dungeon/gameplay/characters/enemies/mini_boss/mini_boss_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_view.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_data.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/map/map_data.dart';
 import 'package:darkness_dungeon/gameplay/decorations/barrel_decoration.dart';
 import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_view.dart';
 import 'package:darkness_dungeon/gameplay/decorations/door_decoration.dart';
@@ -16,8 +16,8 @@ import 'package:darkness_dungeon/gameplay/decorations/spike_trap_decoration.dart
 import 'package:darkness_dungeon/gameplay/decorations/torch_decoration.dart';
 import 'package:darkness_dungeon/gameplay/farmable/farm_tile.dart';
 
-final class GameplayMapConfig {
-  GameplayMapConfig._();
+final class MapConfig {
+  MapConfig._();
 
   /// Public
   static const String kNextMapPropertyKey = 'nextMap';
@@ -78,33 +78,33 @@ final class GameplayMapConfig {
   static const String kDungeon1Id = 'dungeon_1';
   static const String kTemple1Id = 'temple_1';
 
-  static const List<GameplayMapData> kAllMaps = [
+  static const List<MapData> kAllMaps = [
     /// forest_1
-    const GameplayMapData(
+    const MapData(
       id: kForest1Id,
       asset: 'tiled/$kForest1Id.json',
       sensorIds: ['sensor_$kDungeon1Id'],
-      backgroundMusic: GameplayAudioConfig.kMusicRo1LettersBackgroundAsset,
+      backgroundMusic: AudioConfig.kMusicRo1LettersBackgroundAsset,
       lightingColor: _kCloudyLightingColor,
       backgroundColor: _kForestBackgroundColor,
     ),
 
     /// dungeon_1
-    const GameplayMapData(
+    const MapData(
       id: kDungeon1Id,
       asset: 'tiled/$kDungeon1Id.json',
       sensorIds: ['sensor_$kForest1Id', 'sensor_$kTemple1Id'],
-      backgroundMusic: GameplayAudioConfig.kMusicRo1DeathHexBackgroundAsset,
+      backgroundMusic: AudioConfig.kMusicRo1DeathHexBackgroundAsset,
       lightingColor: _kDarknessLightingColor,
       backgroundColor: _kDungeonBackgroundColor,
     ),
 
     /// temple_1
-    const GameplayMapData(
+    const MapData(
       id: kTemple1Id,
       asset: 'tiled/$kTemple1Id.json',
       sensorIds: ['sensor_$kForest1Id'],
-      backgroundMusic: GameplayAudioConfig
+      backgroundMusic: AudioConfig
           .kMusicRo1DeathHexBackgroundAsset, // TODO(Kevin): Change music
       lightingColor: _kNoneLightingColor, // TODO(Kevin): Change color
       backgroundColor: _kTempleBackgroundColor, // TODO(Kevin): Change color

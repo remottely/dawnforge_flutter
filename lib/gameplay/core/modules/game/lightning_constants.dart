@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-final class GameplayLightingConfig {
-  GameplayLightingConfig._();
+final class LightingConstants {
+  LightingConstants._();
 
   static final Color _orangeLighting = Colors.deepOrangeAccent.withValues(
     alpha: 0.2,

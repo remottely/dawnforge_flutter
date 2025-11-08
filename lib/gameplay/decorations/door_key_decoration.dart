@@ -1,12 +1,12 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_view.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_contact_decoration.dart';
 
 final class DoorKeyDecorationConfig {
   DoorKeyDecorationConfig._();
 
-  static final Vector2 _textureSize = GameplayTileConstants.tileSizeStandard;
+  static final Vector2 _textureSize = TileConstants.tileSizeStandard;
   static final Vector2 _componentSize = _textureSize;
 
   static Future<Sprite> loadSprite() =>

@@ -1,5 +1,5 @@
-final class GameplayAudioConfig {
-  GameplayAudioConfig._();
+final class AudioConfig {
+  AudioConfig._();
 
   static const double kPrimaryAttackVolume = 0.4;
   static const double kCharacterFireballAttackVolume = 0.3;

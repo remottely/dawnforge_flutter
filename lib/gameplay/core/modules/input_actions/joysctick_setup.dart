@@ -1,9 +1,8 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-final class GameplayJoystickConfig {
-  GameplayJoystickConfig._();
+final class JoystickSetup {
+  JoystickSetup._();
 
   /// Assets
   static const String _kBaseAsset = 'joystick/';
@@ -73,33 +72,6 @@ final class GameplayJoystickConfig {
       margin: const EdgeInsets.only(
         bottom: kActionButtonMarginBottom,
         right: kSecondaryActionMarginRight,
-      ),
-    );
-  }
-}
-
-final class GameplayKeyboardConfig {
-  GameplayKeyboardConfig._();
-
-  /// Keyboard
-  static const LogicalKeyboardKey kPrimaryAttackKey = LogicalKeyboardKey.space;
-  static const LogicalKeyboardKey kFireballAttackKey = LogicalKeyboardKey.keyZ;
-  static const LogicalKeyboardKey kInteractionKey = LogicalKeyboardKey.keyX;
-
-  static final List<KeyboardDirectionalKeys> keyboardDirectionalKeys = [
-    KeyboardDirectionalKeys.wasd(),
-    KeyboardDirectionalKeys.arrows(),
-  ];
-  static final List<LogicalKeyboardKey> keyboardAcceptedKeys = [
-    kPrimaryAttackKey,
-    kFireballAttackKey,
-  ];
-
-  static PlayerController createKeyboardInput() {
-    return Keyboard(
-      config: KeyboardConfig(
-        directionalKeys: keyboardDirectionalKeys,
-        acceptedKeys: keyboardAcceptedKeys,
       ),
     );
   }

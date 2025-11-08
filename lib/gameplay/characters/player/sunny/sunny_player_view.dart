@@ -9,8 +9,8 @@ import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_mana
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_primary_attack_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/camera/gameplay_camera_effects_utils.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_fx.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_config.dart';
@@ -175,8 +175,8 @@ class SunnyPlayerView extends SimplePlayer
             centerOffset: centerOffset,
           );
 
-          GameplayCameraEffectsUtils.primaryAttackShake(gameRef);
-          GameplayAudioManager.instance.playPlayerPrimaryAttackSfx();
+          CameraFx.primaryAttackShake(gameRef);
+          AudioManager.instance.playPlayerPrimaryAttackSfx();
           addParticle(
             CharacterFxParticlesAnimationsConfig.createPrimaryAttackParticles(),
             position: size,
@@ -216,7 +216,7 @@ class SunnyPlayerView extends SimplePlayer
             CharacterFireballAttackConfig.createDestroyAnimation(),
         onDestroy: () {
           CharacterFireballAttackConfig.playDestroyAudio();
-          GameplayCameraEffectsUtils.fireballExplosionShake(gameRef);
+          CameraFx.fireballExplosionShake(gameRef);
         },
         centerOffset: centerOffset,
         attackFrom: AttackOriginEnum.PLAYER_OR_ALLY,

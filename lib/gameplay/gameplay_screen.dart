@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/map/map_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/map/map_config.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/color_helper.dart';
 import 'package:darkness_dungeon/gameplay/decorations/map_transition_sensor.dart';
@@ -21,28 +21,26 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
   @override
   Widget build(BuildContext gameplayContext) {
     return MapNavigator(
-      maps: GameplayMapManager.allMaps,
-      initialMap: GameplayMapConfig.kTemple1Id,
+      maps: MapManager.allMaps,
+      initialMap: MapConfig.kTemple1Id,
       builder: (context, arguments, mapItem) {
         final mapLightingColor = ColorHelper.fromHex(
-          mapItem.properties[GameplayMapConfig.kLightingColorPropertyKey]
-              ?.toString(),
+          mapItem.properties[MapConfig.kLightingColorPropertyKey]?.toString(),
         );
         final mapBackgroundColor = ColorHelper.fromHex(
-          mapItem.properties[GameplayMapConfig.kBackgroundColorPropertyKey]
-              ?.toString(),
+          mapItem.properties[MapConfig.kBackgroundColorPropertyKey]?.toString(),
         );
         final mapBackgroundMusic = mapItem
-            .properties[GameplayMapConfig.kBackgroundMusicPropertyKey]
+            .properties[MapConfig.kBackgroundMusicPropertyKey]
             ?.toString();
         if (mapBackgroundMusic != null && mapBackgroundMusic.isNotEmpty) {
-          GameplayAudioManager.instance.playBackgroundMusic(mapBackgroundMusic);
+          AudioManager.instance.playBackgroundMusic(mapBackgroundMusic);
         }
 
         MapArguments? mapArguments = arguments as MapArguments?;
         final playerPosition =
             (mapArguments?.playerPosition ?? Vector2.all(4)) *
-            GameplayTileConstants.kTileDimensionStandard;
+            TileConstants.kTileDimensionStandard;
         final knightPlayer = buildKnightPlayer(playerPosition);
 
         final playerInput = GameplayScreenConfig.createPlayerInput();

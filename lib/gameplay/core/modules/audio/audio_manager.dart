@@ -1,12 +1,12 @@
 import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
 import 'package:flame_audio/flame_audio.dart';
 
-import 'gameplay_audio_config.dart';
+import 'audio_config.dart';
 
-final class GameplayAudioManager {
-  GameplayAudioManager._();
+final class AudioManager {
+  AudioManager._();
 
-  static final GameplayAudioManager instance = GameplayAudioManager._();
+  static final AudioManager instance = AudioManager._();
 
   bool _isBackgroundMusicEnabled = true;
   bool _isBackgroundMusicPlaying = false;
@@ -14,42 +14,42 @@ final class GameplayAudioManager {
 
   Future<void> initialize() async {
     FlameAudio.bgm.initialize();
-    await FlameAudio.audioCache.loadAll(GameplayAudioConfig.kPreloadAudioFiles);
+    await FlameAudio.audioCache.loadAll(AudioConfig.kPreloadAudioFiles);
   }
 
   /// SFX
   void playPlayerPrimaryAttackSfx() {
     FlameAudio.play(
-      GameplayAudioConfig.kSfxPlayerAttackAsset,
-      volume: GameplayAudioConfig.kPrimaryAttackVolume,
+      AudioConfig.kSfxPlayerAttackAsset,
+      volume: AudioConfig.kPrimaryAttackVolume,
     );
   }
 
   void playFireballAttackSfx() {
     FlameAudio.play(
-      GameplayAudioConfig.kSfxCharacterFireBallAttackAsset,
-      volume: GameplayAudioConfig.kCharacterFireballAttackVolume,
+      AudioConfig.kSfxCharacterFireBallAttackAsset,
+      volume: AudioConfig.kCharacterFireballAttackVolume,
     );
   }
 
   void playEnemyPrimaryAttackSfx() {
     FlameAudio.play(
-      GameplayAudioConfig.kSfxEnemyAttackAsset,
-      volume: GameplayAudioConfig.kPrimaryAttackVolume,
+      AudioConfig.kSfxEnemyAttackAsset,
+      volume: AudioConfig.kPrimaryAttackVolume,
     );
   }
 
   void playFireballExplosionSfx() {
     FlameAudio.play(
-      GameplayAudioConfig.kSfxCharacterFireballExplosionAsset,
-      volume: GameplayAudioConfig.kCharacterFireballExplosionVolume,
+      AudioConfig.kSfxCharacterFireballExplosionAsset,
+      volume: AudioConfig.kCharacterFireballExplosionVolume,
     );
   }
 
   void playConversationInteractionSfx() {
     FlameAudio.play(
-      GameplayAudioConfig.kSfxConversationInteractionAsset,
-      volume: GameplayAudioConfig.kConversationInteractionVolume,
+      AudioConfig.kSfxConversationInteractionAsset,
+      volume: AudioConfig.kConversationInteractionVolume,
     );
   }
 

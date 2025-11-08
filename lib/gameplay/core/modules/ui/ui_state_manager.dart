@@ -1,20 +1,20 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/app/screens/menu_screen.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_game_state_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_player_input_actions_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/game_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_config.dart';
+import 'package:darkness_dungeon/shared/design_system/dd_design_system.dart';
 import 'package:darkness_dungeon/shared/design_system/widgets/atoms/dd_button.dart';
 import 'package:darkness_dungeon/shared/design_system/widgets/atoms/dd_dialog.dart';
 import 'package:darkness_dungeon/shared/design_system/widgets/atoms/dd_text.dart';
-import 'package:darkness_dungeon/shared/design_system/dd_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-final class GameplayUIStateManager {
-  GameplayUIStateManager._();
+final class UIStateManager {
+  UIStateManager._();
 
-  static final GameplayUIStateManager instance = GameplayUIStateManager._();
+  static final UIStateManager instance = UIStateManager._();
 
   bool isShowingConversation = false;
 
@@ -29,8 +29,8 @@ final class GameplayUIStateManager {
         return DDDialog(
           children: [
             Image.asset(
-              GameplayUIConfig.kGameOverAsset,
-              height: GameplayUIConfig.kGameOverImageHeight,
+              UIStateConfig.kGameOverAsset,
+              height: UIStateConfig.kGameOverImageHeight,
             ),
             const SizedBox(height: DDDesignSystem.kSpacingExtraSmall),
             DDButton.text(
@@ -60,7 +60,7 @@ final class GameplayUIStateManager {
             const SizedBox(height: DDDesignSystem.kSpacingExtraSmall),
             Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: GameplayUIConfig.kHorizontalSpacing,
+                horizontal: UIStateConfig.kHorizontalSpacing,
               ),
               child: DDText.small(
                 text: GameplayStringsLocation.instance.getString('thanks'),
@@ -87,7 +87,7 @@ final class GameplayUIStateManager {
     VoidCallback? onClose,
     List<LogicalKeyboardKey>? logicalKeyboardKeysToNext,
   }) {
-    GameplayGameStateManager.stopPlayerMovement(player);
+    GameStateManager.stopPlayerMovement(player);
 
     TalkDialog.show(
       context,
@@ -96,8 +96,7 @@ final class GameplayUIStateManager {
       onFinish: onFinish,
       onClose: onClose,
       logicalKeyboardKeysToNext:
-          logicalKeyboardKeysToNext ??
-          [GameplayKeyboardConfig.kPrimaryAttackKey],
+          logicalKeyboardKeysToNext ?? [KeyboardSetup.kPrimaryAttackKey],
     );
   }
 

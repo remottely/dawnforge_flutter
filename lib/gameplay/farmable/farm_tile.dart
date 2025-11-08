@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 
 import 'crop_types.dart';
@@ -19,8 +19,7 @@ final class _FarmTileConfig {
   static const String _kGrownSpriteAsset =
       'gameplay/farmable/parsnip_stage4.png';
 
-  static final Vector2 _cropTextureSize =
-      GameplayTileConstants.tileSizeStandard;
+  static final Vector2 _cropTextureSize = TileConstants.tileSizeStandard;
   static final Vector2 _componentSize = _cropTextureSize;
 
   static Future<Sprite> _loadSprite(String path) => Sprite.load(path);

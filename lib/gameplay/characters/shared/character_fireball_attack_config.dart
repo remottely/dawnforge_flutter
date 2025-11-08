@@ -1,9 +1,9 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_lightning_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/lightning_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 
 final class CharacterFireballAttackConfig {
@@ -12,9 +12,9 @@ final class CharacterFireballAttackConfig {
   static const double kSpeed = CharacterConstants.kSpeedFast * 2.5;
 
   static final LightingConfig lightingConfig = LightingConfig(
-    radius: GameplayTileConstants.kTileDimensionSmall,
-    blurBorder: GameplayTileConstants.kTileDimensionSmall,
-    color: GameplayLightingConfig.fireballAttackLighting,
+    radius: TileConstants.kTileDimensionSmall,
+    blurBorder: TileConstants.kTileDimensionSmall,
+    color: LightingConstants.fireballAttackLighting,
   );
 
   static final Vector2 _textureSize = Vector2(23, 23);
@@ -26,7 +26,7 @@ final class CharacterFireballAttackConfig {
   static Future<SpriteAnimation> createExecutionAnimation() =>
       SpriteAnimation.load(
         'gameplay/characters/shared/character_fireball_attack_right_3.png',
-        GameplaySpriteAnimationConfig.createStandardData(
+        SpriteAnimationConfig.createStandardData(
           amount: 3,
           textureSize: _textureSize,
         ),
@@ -35,15 +35,15 @@ final class CharacterFireballAttackConfig {
   static Future<SpriteAnimation> createDestroyAnimation() =>
       SpriteAnimation.load(
         'gameplay/characters/shared/character_fireball_explosion_right_6.png',
-        GameplaySpriteAnimationConfig.createStandardData(
+        SpriteAnimationConfig.createStandardData(
           amount: 6,
-          textureSize: GameplayTileConstants.tileSizeExtraLarge,
+          textureSize: TileConstants.tileSizeExtraLarge,
         ),
       );
 
   static void playExecutionAudio() =>
-      GameplayAudioManager.instance.playFireballAttackSfx();
+      AudioManager.instance.playFireballAttackSfx();
 
   static void playDestroyAudio() =>
-      GameplayAudioManager.instance.playFireballExplosionSfx();
+      AudioManager.instance.playFireballExplosionSfx();
 }

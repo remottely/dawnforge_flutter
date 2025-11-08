@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_view.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/conversation/gameplay_conversation_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/conversation/conversation_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 
@@ -24,9 +24,9 @@ final class _DoorDecorationConfig {
   static Future<SpriteAnimation> _loadOpeningAnimation() =>
       SpriteAnimation.load(
         'gameplay/decorations/door_decoration_opening_14.png',
-        GameplaySpriteAnimationConfig.createStandardData(
+        SpriteAnimationConfig.createStandardData(
           amount: 14,
-          textureSize: GameplayTileConstants.tileSizeExtraLarge,
+          textureSize: TileConstants.tileSizeExtraLarge,
         ),
       );
 
@@ -37,9 +37,7 @@ final class _DoorDecorationConfig {
   );
 
   static List<Say> createConversationSequence() {
-    return [
-      GameplayConversationConfig.createKnightLeftDialog(_kRequiredKeyMessage),
-    ];
+    return [ConversationConfig.createKnightLeftDialog(_kRequiredKeyMessage)];
   }
 }
 
@@ -93,19 +91,19 @@ class DoorDecorationView extends DDDecoration {
   }
 
   void _showKeyRequiredMessage(Player player) {
-    if (!GameplayUIStateManager.instance.isShowingConversation) {
-      GameplayUIStateManager.instance.isShowingConversation = true;
+    if (!UIStateManager.instance.isShowingConversation) {
+      UIStateManager.instance.isShowingConversation = true;
       _showConversation(player);
     }
   }
 
   void _showConversation(Player player) {
-    GameplayUIStateManager.instance.showConversation(
+    UIStateManager.instance.showConversation(
       gameRef.context,
       player: player,
       conversationSequence: _DoorDecorationConfig.createConversationSequence(),
       onClose: () {
-        GameplayUIStateManager.instance.isShowingConversation = false;
+        UIStateManager.instance.isShowingConversation = false;
       },
     );
   }

@@ -7,12 +7,12 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_mod
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/mini_boss/mini_boss_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_sprite_animations_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_player_input_actions_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_state_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/camera/gameplay_camera_utils.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_calculations.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_manager.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy.dart';
 import 'package:flutter/material.dart';
 
@@ -62,9 +62,9 @@ class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
   void _onPlayerSighted(Player player) {
     gameRef.camera.moveToTargetAnimated(
       target: this,
-      zoom: GameplayCameraUtils.getCameraZoomFromMaxVisibleTile(
+      zoom: CameraCalculations.getCameraZoomFromMaxVisibleTile(
         context,
-        maxVisibleTile: GameplayTileConstants.kBossConversationVisibleTiles,
+        maxVisibleTile: TileConstants.kBossConversationVisibleTiles,
       ),
       onComplete: () => _showConversation(player),
     );
@@ -158,7 +158,7 @@ class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
         animation:
             CharacterFxSpriteAnimationsConfig.createExplosionSmokeRight5(),
         position: positionExplosion,
-        size: GameplayTileConstants.tileSizeStandard,
+        size: TileConstants.tileSizeStandard,
         loop: false,
       ),
     );
@@ -168,33 +168,33 @@ class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
   }
 
   void _showConversation(Player player) {
-    GameplayAudioManager.instance.playConversationInteractionSfx();
-    GameplayUIStateManager.instance.showConversation(
+    AudioManager.instance.playConversationInteractionSfx();
+    UIStateManager.instance.showConversation(
       gameRef.context,
       player: player,
       conversationSequence: BossEnemyConfig.createConversationSequence(),
-      logicalKeyboardKeysToNext: [GameplayKeyboardConfig.kPrimaryAttackKey],
+      logicalKeyboardKeysToNext: [KeyboardSetup.kPrimaryAttackKey],
       onChangeTalk: _onConversationChanged,
       onFinish: _onConversationFinished,
     );
   }
 
   void _onConversationChanged(int index) {
-    GameplayAudioManager.instance.playConversationInteractionSfx();
+    AudioManager.instance.playConversationInteractionSfx();
   }
 
   void _onConversationFinished() {
-    GameplayAudioManager.instance.playConversationInteractionSfx();
+    AudioManager.instance.playConversationInteractionSfx();
     _spawnInitialMinions();
     Future.delayed(const Duration(milliseconds: 500), () {
       gameRef.camera.moveToPlayerAnimated(
-        zoom: GameplayCameraUtils.getCameraZoomFromMaxVisibleTile(
+        zoom: CameraCalculations.getCameraZoomFromMaxVisibleTile(
           context,
-          maxVisibleTile: GameplayTileConstants.kMaxVisibleTiles,
+          maxVisibleTile: TileConstants.kMaxVisibleTiles,
         ),
       );
-      GameplayAudioManager.instance.playBackgroundMusic(
-        GameplayAudioConfig.kMusicBossBattleBackgroundAsset,
+      AudioManager.instance.playBackgroundMusic(
+        AudioConfig.kMusicBossBattleBackgroundAsset,
       );
     });
   }
@@ -211,7 +211,7 @@ class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
         animation:
             CharacterFxSpriteAnimationsConfig.createExplosionSmokeRight5(),
         position: pos,
-        size: GameplayTileConstants.tileSizeStandard,
+        size: TileConstants.tileSizeStandard,
         loop: false,
       ),
     );

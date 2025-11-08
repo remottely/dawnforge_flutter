@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 
-final class GameplayTileConstants {
-  GameplayTileConstants._();
+final class TileConstants {
+  TileConstants._();
 
   static const int kMaxVisibleTiles = 16;
   static const int kBossConversationVisibleTiles = 32;

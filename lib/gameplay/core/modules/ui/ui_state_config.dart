@@ -1,5 +1,5 @@
-final class GameplayUIConfig {
-  GameplayUIConfig._();
+final class UIStateConfig {
+  UIStateConfig._();
 
   /// Game over dialog
   static const String kGameOverAsset = 'assets/game_over.png';

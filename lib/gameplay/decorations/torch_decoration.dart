@@ -1,27 +1,27 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_lightning_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/lightning_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 
 final class _TorchDecorationConfig {
   _TorchDecorationConfig._();
 
-  static final Vector2 _textureSize = GameplayTileConstants.tileSizeStandard;
+  static final Vector2 _textureSize = TileConstants.tileSizeStandard;
   static final Vector2 _componentSize = _textureSize;
 
   static Future<SpriteAnimation> _loadSpriteAnimation() => SpriteAnimation.load(
     'gameplay/decorations/torch_decoration_6.png',
-    GameplaySpriteAnimationConfig.createStandardData(
+    SpriteAnimationConfig.createStandardData(
       amount: 6,
       textureSize: _textureSize,
     ),
   );
 
   static final LightingConfig _lightingConfig = LightingConfig(
-    radius: GameplayTileConstants.kTileDimensionExtraLarge,
-    blurBorder: GameplayTileConstants.kTileDimensionStandard,
-    color: GameplayLightingConfig.torchLighting,
+    radius: TileConstants.kTileDimensionExtraLarge,
+    blurBorder: TileConstants.kTileDimensionStandard,
+    color: LightingConstants.torchLighting,
   );
 }
 
