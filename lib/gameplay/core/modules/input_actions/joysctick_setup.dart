@@ -28,8 +28,9 @@ final class JoystickSetup {
       Sprite.load(_kRangeAttackPressedAsset);
 
   /// Identifiers
-  static const String kJoystickPrimaryAttackId = 'joystickPrimaryAttackId';
-  static const String kJoystickFireballAttackId = 'joystickFireballAttackId';
+  static const String kPrimaryAttackId = 'primaryAttackId';
+  static const String kFireballAttackId = 'fireballAttackId';
+  static const String kRunId = 'runId';
 
   /// Factories
   static const double _kJoystickComponentSize = 100.0;
@@ -52,7 +53,7 @@ final class JoystickSetup {
 
   static JoystickAction _createPrimaryAttackAction() {
     return JoystickAction(
-      actionId: kJoystickPrimaryAttackId,
+      actionId: kPrimaryAttackId,
       sprite: _loadAttack(),
       spritePressed: _loadAttackPressed(),
       size: kActionButtonSize,
@@ -65,7 +66,7 @@ final class JoystickSetup {
 
   static JoystickAction _createRangedAttackAction() {
     return JoystickAction(
-      actionId: kJoystickFireballAttackId,
+      actionId: kFireballAttackId,
       sprite: _loadRangeAttack(),
       spritePressed: _loadRangeAttackPressed(),
       size: kActionButtonSize,

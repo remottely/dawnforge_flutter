@@ -43,10 +43,10 @@ class KnightPlayerController {
   void handleInputAction(JoystickActionEvent event) {
     if (event.event != ActionEvent.DOWN) return;
 
-    if (event.id == JoystickSetup.kJoystickPrimaryAttackId ||
+    if (event.id == JoystickSetup.kPrimaryAttackId ||
         event.id == KeyboardSetup.kPrimaryAttackKey) {
       executePrimaryAttack();
-    } else if (event.id == JoystickSetup.kJoystickFireballAttackId ||
+    } else if (event.id == JoystickSetup.kFireballAttackId ||
         event.id == KeyboardSetup.kFireballAttackKey) {
       executeFireballAttack();
     }
@@ -55,14 +55,18 @@ class KnightPlayerController {
   // Actions
   void executePrimaryAttack() {
     if (!model.canExecutePrimaryAttack) return;
-    final executed = onPrimaryAttack(KnightPlayerConfig.kPrimaryAttackDamage);
+    final executed = onPrimaryAttack.call(
+      KnightPlayerConfig.kPrimaryAttackDamage,
+    );
     if (!executed) return;
     model.consumeStamina(KnightPlayerConfig.kPrimaryAttackStaminaCost);
   }
 
   void executeFireballAttack() {
     if (!model.canExecuteFireballAttack) return;
-    final executed = onFireballAttack(KnightPlayerConfig.kFireballAttackDamage);
+    final executed = onFireballAttack.call(
+      KnightPlayerConfig.kFireballAttackDamage,
+    );
     if (!executed) return;
     model.consumeStamina(KnightPlayerConfig.kFireballAttackStaminaCost);
   }

@@ -36,6 +36,7 @@ class SunnyPlayerView extends SimplePlayer
   late final SynchronizedAttackController _fireballAttackController;
   int _movementLockCount = 0;
   JoystickDirectionalEvent? _lastJoystickDirectionalEvent;
+  bool _isRunning = false;
 
   bool get _isMovementLocked => _movementLockCount > 0;
 
@@ -131,6 +132,7 @@ class SunnyPlayerView extends SimplePlayer
   void _initializeController() {
     _controller = SunnyPlayerController(
       model: _model,
+      onRunChange: _onRunChange,
       onPrimaryAttack: _onPlayPrimaryAttack,
       onFireballAttack: _onPlayFireballAttack,
       onToolUse: _onPlayToolAnimation,
@@ -151,10 +153,27 @@ class SunnyPlayerView extends SimplePlayer
   void _showDeathFx() =>
       gameRef.add(SunnyPlayerConfig.createCryptComponent(position));
 
+  void _onRunChange(bool shouldRun) {
+    if (_isRunning == shouldRun) {
+      return;
+    }
+    _isRunning = shouldRun;
+    if (shouldRun) {
+      speed = SunnyPlayerConfig.kSpeed * SunnyPlayerConfig.kRunSpeedMultiplier;
+
+      CharacterActionSpriteAnimationHelper.playLoop(
+        SunnyPlayerConfig.rightRunAnimation,
+        currentAnimation: animation,
+      );
+    } else {
+      speed = SunnyPlayerConfig.kSpeed;
+    }
+  }
+
   /// Controller callback implementations
   bool _onPlayPrimaryAttack(double damage) {
     final executed = _primaryAttackController.execute(AttackType.melee, () {
-      CharacterActionSpriteAnimationHelper.playActionAnimation(
+      CharacterActionSpriteAnimationHelper.playExecutionOnceWithIdle(
         SunnyPlayerConfig.rightAttackAnimation,
         currentAnimation: animation,
         movementComponent: this,
@@ -229,19 +248,6 @@ class SunnyPlayerView extends SimplePlayer
     }
     return true;
   }
-
-  // Vector2 getOffset(Vector2 rightOffset) {
-  //   switch (lastDirection) {
-  //     case Direction.left:
-  //     case Direction.right:
-  //     case Direction.up:
-  //     case Direction.down:
-  //     case Direction.upLeft:
-  //     case Direction.upRight:
-  //     case Direction.downLeft:
-  //     case Direction.downRight:
-  //   }
-  // }
 
   void _onPlayToolAnimation() {
     // TODO: Implementar animação de ferramenta

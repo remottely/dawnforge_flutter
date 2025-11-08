@@ -8,6 +8,7 @@ final class KeyboardSetup {
   static const LogicalKeyboardKey kPrimaryAttackKey = LogicalKeyboardKey.space;
   static const LogicalKeyboardKey kFireballAttackKey = LogicalKeyboardKey.keyZ;
   static const LogicalKeyboardKey kInteractionKey = LogicalKeyboardKey.keyX;
+  static const LogicalKeyboardKey kRunKey = LogicalKeyboardKey.shiftLeft;
 
   static final List<KeyboardDirectionalKeys> keyboardDirectionalKeys = [
     KeyboardDirectionalKeys.wasd(),
@@ -16,6 +17,8 @@ final class KeyboardSetup {
   static final List<LogicalKeyboardKey> keyboardAcceptedKeys = [
     kPrimaryAttackKey,
     kFireballAttackKey,
+    kInteractionKey,
+    kRunKey,
   ];
 
   static PlayerController createKeyboardInput() {

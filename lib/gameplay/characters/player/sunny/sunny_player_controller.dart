@@ -6,6 +6,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_se
 
 class SunnyPlayerController {
   final SunnyPlayerModel model;
+  final void Function(bool isRunning) onRunChange;
   final bool Function(double damage) onPrimaryAttack;
   final bool Function(double damage) onFireballAttack;
   final void Function() onToolUse;
@@ -22,6 +23,7 @@ class SunnyPlayerController {
 
   SunnyPlayerController({
     required this.model,
+    required this.onRunChange,
     required this.onPrimaryAttack,
     required this.onFireballAttack,
     required this.onToolUse,
@@ -41,12 +43,21 @@ class SunnyPlayerController {
 
   // Input handling
   void handleInputAction(JoystickActionEvent event) {
+    if (event.id == JoystickSetup.kRunId || event.id == KeyboardSetup.kRunKey) {
+      if (event.event == ActionEvent.DOWN) {
+        onRunChange(true);
+      } else if (event.event == ActionEvent.UP) {
+        onRunChange(false);
+      }
+      return;
+    }
+
     if (event.event != ActionEvent.DOWN) return;
 
-    if (event.id == JoystickSetup.kJoystickPrimaryAttackId ||
+    if (event.id == JoystickSetup.kPrimaryAttackId ||
         event.id == KeyboardSetup.kPrimaryAttackKey) {
       executePrimaryAttack();
-    } else if (event.id == JoystickSetup.kJoystickFireballAttackId ||
+    } else if (event.id == JoystickSetup.kFireballAttackId ||
         event.id == KeyboardSetup.kFireballAttackKey) {
       executeFireballAttack();
     }
@@ -55,14 +66,18 @@ class SunnyPlayerController {
   // Actions
   void executePrimaryAttack() {
     if (!model.canExecutePrimaryAttack) return;
-    final executed = onPrimaryAttack(SunnyPlayerConfig.kPrimaryAttackDamage);
+    final executed = onPrimaryAttack.call(
+      SunnyPlayerConfig.kPrimaryAttackDamage,
+    );
     if (!executed) return;
     model.consumeStamina(SunnyPlayerConfig.kPrimaryAttackStaminaCost);
   }
 
   void executeFireballAttack() {
     if (!model.canExecuteFireballAttack) return;
-    final executed = onFireballAttack(SunnyPlayerConfig.kFireballAttackDamage);
+    final executed = onFireballAttack.call(
+      SunnyPlayerConfig.kFireballAttackDamage,
+    );
     if (!executed) return;
     model.consumeStamina(SunnyPlayerConfig.kFireballAttackStaminaCost);
   }

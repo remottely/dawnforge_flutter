@@ -32,7 +32,7 @@ class DoorKeyDecorationView extends DDContactDecoration {
   }
 
   void _triggerEffect(SunnyPlayerView player) {
-    // TODO(Kevin): add some FX here
+    // TODO(Kevin): add some VFX and SFX here
     player.model.obtainKey();
   }
 
