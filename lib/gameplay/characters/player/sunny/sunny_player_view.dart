@@ -35,6 +35,7 @@ class SunnyPlayerView extends SimplePlayer
   late final SynchronizedAttackController _primaryAttackController;
   late final SynchronizedAttackController _fireballAttackController;
   int _movementLockCount = 0;
+  JoystickDirectionalEvent? _lastJoystickDirectionalEvent;
 
   bool get _isMovementLocked => _movementLockCount > 0;
 
@@ -101,6 +102,11 @@ class SunnyPlayerView extends SimplePlayer
 
   @override
   void onJoystickChangeDirectional(JoystickDirectionalEvent event) {
+    _lastJoystickDirectionalEvent = JoystickDirectionalEvent(
+      directional: event.directional,
+      intensity: event.intensity,
+      radAngle: event.radAngle,
+    );
     if (_isMovementLocked) {
       stopMove(forceIdle: true);
       return;
@@ -264,6 +270,9 @@ class SunnyPlayerView extends SimplePlayer
   }
 
   void _lockMovementForAction() {
+    if (_movementLockCount == 0) {
+      stopMove(forceIdle: true);
+    }
     _movementLockCount += 1;
   }
 
@@ -274,6 +283,20 @@ class SunnyPlayerView extends SimplePlayer
     _movementLockCount -= 1;
     if (_movementLockCount == 0) {
       stopMove(forceIdle: true);
+      final JoystickDirectionalEvent? event = _lastJoystickDirectionalEvent;
+      if (event != null && event.directional != JoystickMoveDirectional.IDLE) {
+        _forwardDirectionalEvent(event);
+      }
     }
+  }
+
+  void _forwardDirectionalEvent(JoystickDirectionalEvent event) {
+    final forwardedEvent = JoystickDirectionalEvent(
+      directional: event.directional,
+      intensity: event.intensity,
+      radAngle: event.radAngle,
+    );
+    _lastJoystickDirectionalEvent = forwardedEvent;
+    super.onJoystickChangeDirectional(forwardedEvent);
   }
 }
