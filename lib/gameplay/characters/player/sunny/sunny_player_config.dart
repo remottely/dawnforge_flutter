@@ -38,13 +38,22 @@ final class SunnyPlayerConfig {
     hitboxStartPositionY: 28.0,
   );
 
-  static Future<SpriteAnimation> get rightRunAnimation => SpriteAnimation.load(
-    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_run_strip8.png',
+  static Future<SpriteAnimation>
+  get _rightWalkAnimation => SpriteAnimation.load(
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_walking_strip8.png',
     GameplaySpriteAnimationConfig.createStandardData(
       amount: 8,
       textureSize: textureSize,
     ),
   );
+
+  // static Future<SpriteAnimation> get _rightRunAnimation => SpriteAnimation.load(
+  //   'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_run_strip8.png',
+  //   GameplaySpriteAnimationConfig.createStandardData(
+  //     amount: 8,
+  //     textureSize: textureSize,
+  //   ),
+  // );
 
   static Future<SpriteAnimation>
   get rightAttackAnimation => SpriteAnimation.load(
@@ -58,8 +67,8 @@ final class SunnyPlayerConfig {
   static SimpleDirectionAnimation get animation => SimpleDirectionAnimation(
     idleLeft: UISpriteAnimationsConfig.loadSunnyPlayerIdleRight6(),
     idleRight: UISpriteAnimationsConfig.loadSunnyPlayerIdleRight6(),
-    runLeft: rightRunAnimation,
-    runRight: rightRunAnimation,
+    runLeft: _rightWalkAnimation,
+    runRight: _rightWalkAnimation,
   );
 
   static final LightingConfig lightingConfig = LightingConfig(
