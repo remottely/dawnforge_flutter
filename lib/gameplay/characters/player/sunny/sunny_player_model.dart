@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_profile.dart';
 
 enum FarmTool { hand, hoe, wateringCan }
 
@@ -14,8 +14,8 @@ class SunnyPlayerModel {
     int? initialEnergy,
     FarmTool? initialTool,
     bool? initialHasKey,
-  }) : _stamina = initialStamina ?? SunnyPlayerConfig.kMaxStamina,
-       _energy = initialEnergy ?? SunnyPlayerConfig.kMaxEnergy,
+  }) : _stamina = initialStamina ?? SunnyPlayerProfile.kMaxStamina,
+       _energy = initialEnergy ?? SunnyPlayerProfile.kMaxEnergy,
        currentTool = initialTool ?? FarmTool.hand,
        hasKey = initialHasKey ?? false,
        isObservingEnemy = false;
@@ -28,32 +28,32 @@ class SunnyPlayerModel {
   bool get hasStamina => _stamina > 0;
 
   bool get canExecutePrimaryAttack =>
-      _stamina >= SunnyPlayerConfig.kPrimaryAttackStaminaCost;
+      _stamina >= SunnyPlayerProfile.kPrimaryAttackStaminaCost;
 
   bool get canExecuteFireballAttack =>
-      _stamina >= SunnyPlayerConfig.kFireballAttackStaminaCost;
+      _stamina >= SunnyPlayerProfile.kFireballAttackStaminaCost;
 
   bool get canExecuteToolAction =>
-      _energy >= SunnyPlayerConfig.kToolActionEnergyCost;
+      _energy >= SunnyPlayerProfile.kToolActionEnergyCost;
 
   // State mutations
   void consumeStamina(int amount) {
-    _stamina = (_stamina - amount).clamp(0, SunnyPlayerConfig.kMaxStamina);
+    _stamina = (_stamina - amount).clamp(0, SunnyPlayerProfile.kMaxStamina);
   }
 
   void regenerateStamina() {
-    _stamina = (_stamina + SunnyPlayerConfig.kStaminaIncrement).clamp(
+    _stamina = (_stamina + SunnyPlayerProfile.kStaminaIncrement).clamp(
       0,
-      SunnyPlayerConfig.kMaxStamina,
+      SunnyPlayerProfile.kMaxStamina,
     );
   }
 
   void consumeEnergy(int amount) {
-    _energy = (_energy - amount).clamp(0, SunnyPlayerConfig.kMaxEnergy);
+    _energy = (_energy - amount).clamp(0, SunnyPlayerProfile.kMaxEnergy);
   }
 
   void restoreEnergy() {
-    _energy = SunnyPlayerConfig.kMaxEnergy;
+    _energy = SunnyPlayerProfile.kMaxEnergy;
   }
 
   void switchTool(FarmTool newTool) => currentTool = newTool;

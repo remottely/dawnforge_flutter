@@ -1,15 +1,15 @@
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 
-class SynchronizedAttackData {
-  const SynchronizedAttackData({
+class SynchronizedAttackSpec {
+  final int baseAttackSpeedMs;
+  final Map<AttackType, double>? attackTypeMultipliers;
+  final double speedBonusPerLevel;
+
+  const SynchronizedAttackSpec({
     required this.baseAttackSpeedMs,
     this.attackTypeMultipliers,
     this.speedBonusPerLevel = 0.05,
   });
-
-  final int baseAttackSpeedMs;
-  final Map<AttackType, double>? attackTypeMultipliers;
-  final double speedBonusPerLevel;
 
   Map<String, dynamic> toMap() {
     return {

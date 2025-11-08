@@ -15,7 +15,7 @@ class KnightPlayerView extends SimplePlayer
   KnightPlayerView(
     Vector2 position, {
     required KnightPlayerModel model,
-    KnightHandLoadoutConfig? handLoadout,
+    KnightHandLoadoutSetup? handLoadout,
   }) : _model = model,
        _handLoadout = handLoadout ?? createDefaultKnightHandLoadout(),
        super(
@@ -27,7 +27,7 @@ class KnightPlayerView extends SimplePlayer
        );
 
   final KnightPlayerModel _model;
-  final KnightHandLoadoutConfig _handLoadout;
+  final KnightHandLoadoutSetup _handLoadout;
   late final KnightPlayerController _controller;
   late final KnightHandManager _handManager = KnightHandManager(owner: this);
 

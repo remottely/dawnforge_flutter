@@ -6,7 +6,7 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/mini_boss/mini_boss
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_profile.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
 
 class UISpriteAnimationsConfig {
@@ -24,7 +24,7 @@ class UISpriteAnimationsConfig {
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_idle_strip9.png',
     GameplaySpriteAnimationConfig.createStandardData(
       amount: 9,
-      textureSize: SunnyPlayerConfig.textureSize,
+      textureSize: SunnyPlayerProfile.textureSize,
     ),
   );
 

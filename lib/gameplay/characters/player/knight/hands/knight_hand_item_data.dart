@@ -3,8 +3,14 @@ import 'dart:math' as math;
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_slot.dart';
 
-class KnightHandSlotConfig {
-  const KnightHandSlotConfig({
+class KnightHandSlotSpec {
+  final Vector2 attachmentOffset;
+  final Vector2 facingRightOffset;
+  final Vector2 facingLeftOffset;
+  final double facingRightScaleX;
+  final double facingLeftScaleX;
+
+  const KnightHandSlotSpec({
     required this.attachmentOffset,
     required this.facingRightOffset,
     required this.facingLeftOffset,
@@ -12,20 +18,14 @@ class KnightHandSlotConfig {
     this.facingLeftScaleX = -1.0,
   });
 
-  final Vector2 attachmentOffset;
-  final Vector2 facingRightOffset;
-  final Vector2 facingLeftOffset;
-  final double facingRightScaleX;
-  final double facingLeftScaleX;
-
-  KnightHandSlotConfig copyWith({
+  KnightHandSlotSpec copyWith({
     Vector2? attachmentOffset,
     Vector2? facingRightOffset,
     Vector2? facingLeftOffset,
     double? facingRightScaleX,
     double? facingLeftScaleX,
   }) {
-    return KnightHandSlotConfig(
+    return KnightHandSlotSpec(
       attachmentOffset: attachmentOffset ?? this.attachmentOffset,
       facingRightOffset: facingRightOffset ?? this.facingRightOffset,
       facingLeftOffset: facingLeftOffset ?? this.facingLeftOffset,
@@ -46,12 +46,12 @@ class KnightHandSlotConfig {
   }
 }
 
-class KnightHandItemConfig {
-  KnightHandItemConfig({
+class KnightHandItemData {
+  KnightHandItemData({
     required this.id,
     required this.spritePath,
     required this.size,
-    required this.slotConfigurations,
+    required this.slotSpecs,
     this.defaultAttackDuration = const Duration(milliseconds: 500),
     this.baseAngle = 0.0,
     this.maxRotationAngle = math.pi / 3,
@@ -59,10 +59,7 @@ class KnightHandItemConfig {
     this.strikeFraction = 0.2,
     this.recoveryFraction = 0.7,
     this.priorityOffset = 1,
-  }) : assert(
-         slotConfigurations.isNotEmpty,
-         'Provide at least one slot configuration.',
-       ),
+  }) : assert(slotSpecs.isNotEmpty, 'Provide at least one slot specification.'),
        assert(
          (() {
            final total = windUpFraction + strikeFraction + recoveryFraction;
@@ -74,7 +71,7 @@ class KnightHandItemConfig {
   final String id;
   final String spritePath;
   final Vector2 size;
-  final Map<KnightHandSlot, KnightHandSlotConfig> slotConfigurations;
+  final Map<KnightHandSlot, KnightHandSlotSpec> slotSpecs;
   final Duration defaultAttackDuration;
   final double baseAngle;
   final double maxRotationAngle;
@@ -83,15 +80,15 @@ class KnightHandItemConfig {
   final double recoveryFraction;
   final int priorityOffset;
 
-  KnightHandSlotConfig configurationFor(KnightHandSlot slot) {
-    if (slotConfigurations.containsKey(slot)) {
-      return slotConfigurations[slot]!;
+  KnightHandSlotSpec getSpec(KnightHandSlot slot) {
+    if (slotSpecs.containsKey(slot)) {
+      return slotSpecs[slot]!;
     }
 
-    if (slotConfigurations.containsKey(KnightHandSlot.right)) {
-      return slotConfigurations[KnightHandSlot.right]!;
+    if (slotSpecs.containsKey(KnightHandSlot.right)) {
+      return slotSpecs[KnightHandSlot.right]!;
     }
 
-    return slotConfigurations.values.first;
+    return slotSpecs.values.first;
   }
 }

@@ -11,7 +11,7 @@ class KnightHandManager {
   final Map<KnightHandSlot, _KnightHandRuntime> _hands = {};
   final Map<KnightAttackTrigger, KnightHandSlot> _triggerToSlot = {};
 
-  Future<void> applyLoadout(KnightHandLoadoutConfig loadout) async {
+  Future<void> applyLoadout(KnightHandLoadoutSetup loadout) async {
     for (final entry in loadout.entries) {
       await applyEntry(entry);
     }
@@ -29,7 +29,7 @@ class KnightHandManager {
     final itemController = KnightHandItemController(
       owner: _owner,
       slot: entry.slot,
-      config: entry.itemConfig,
+      data: entry.itemData,
     );
 
     final view = await itemController.createView();
@@ -104,9 +104,9 @@ class KnightHandManager {
 
   SynchronizedAttackController _createAttackController(
     KnightHandItemController itemController,
-    KnightHandAttackConfig attackBinding,
+    KnightHandAttackSpec attackBinding,
   ) {
-    return SynchronizedAttackController(config: attackBinding.syncConfig)
+    return SynchronizedAttackController(spec: attackBinding.syncSpec)
       ..setOnAnimationDurationChangedCallback(
         itemController.updateAnimationDuration,
       )
@@ -120,15 +120,15 @@ class KnightHandManager {
 }
 
 class _KnightHandRuntime {
+  final KnightHandItemController itemController;
+  final KnightHandAttackSpec? attackBinding;
+  final SynchronizedAttackController? attackController;
+
   const _KnightHandRuntime({
     required this.itemController,
     this.attackBinding,
     this.attackController,
   });
-
-  final KnightHandItemController itemController;
-  final KnightHandAttackConfig? attackBinding;
-  final SynchronizedAttackController? attackController;
 
   void dispose() {
     attackController?.dispose();

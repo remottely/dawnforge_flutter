@@ -1,6 +1,26 @@
 import 'package:bonfire/bonfire.dart';
 
 class KnightHandItemModel {
+  bool isAttacking = false;
+  bool facingRight = true;
+  double elapsedSeconds = 0;
+  double currentRotationAngle = 0;
+
+  Duration attackDuration;
+
+  Vector2 attachmentOffset;
+  Vector2 facingRightOffset;
+  Vector2 facingLeftOffset;
+
+  double baseAngle;
+  double maxRotationAngle;
+  double windUpFraction;
+  double strikeFraction;
+  double recoveryFraction;
+
+  double facingRightScaleX;
+  double facingLeftScaleX;
+
   KnightHandItemModel({
     required Duration attackDuration,
     required Vector2 attachmentOffset,
@@ -24,26 +44,6 @@ class KnightHandItemModel {
        recoveryFraction = recoveryFraction,
        facingRightScaleX = facingRightScaleX,
        facingLeftScaleX = facingLeftScaleX;
-
-  bool isAttacking = false;
-  bool facingRight = true;
-  double elapsedSeconds = 0;
-  double currentRotationAngle = 0;
-
-  Duration attackDuration;
-
-  Vector2 attachmentOffset;
-  Vector2 facingRightOffset;
-  Vector2 facingLeftOffset;
-
-  double baseAngle;
-  double maxRotationAngle;
-  double windUpFraction;
-  double strikeFraction;
-  double recoveryFraction;
-
-  double facingRightScaleX;
-  double facingLeftScaleX;
 
   double get attackDurationSeconds => attackDuration.inMilliseconds / 1000.0;
 

@@ -15,21 +15,21 @@
 //   SunnyPlayerView(
 //     Vector2 position, {
 //     required SunnyPlayerModel model,
-//     KnightHandLoadoutConfig? handLoadout,
+//     KnightLoadoutSetup? handLoadout,
 //   }) : _model = model,
 //        _handLoadout = handLoadout ?? createDefaultKnightHandLoadout(),
 //        super(
-//          animation: SunnyPlayerConfig.animation,
-//          size: SunnyPlayerConfig.componentSize,
+//          animation: SunnyPlayerProfile.animation,
+//          size: SunnyPlayerProfile.componentSize,
 //          position: position,
-//          life: SunnyPlayerConfig.kLife,
-//          speed: SunnyPlayerConfig.kSpeed,
+//          life: SunnyPlayerProfile.kLife,
+//          speed: SunnyPlayerProfile.kSpeed,
 //        ) {
 //     anchor = Anchor.center;
 //   }
 
 //   final SunnyPlayerModel _model;
-//   final KnightHandLoadoutConfig _handLoadout;
+//   final KnightLoadoutSetup _handLoadout;
 //   late final SunnyPlayerController _controller;
 //   late final KnightHandManager _handManager = KnightHandManager(owner: this);
 
@@ -38,7 +38,7 @@
 //     await super.onLoad();
 //     _initializeVisualConfiguration();
 //     _initializeController();
-//     add(SunnyPlayerConfig.hitbox);
+//     add(SunnyPlayerProfile.hitbox);
 //     await _handManager.applyLoadout(_handLoadout);
 //   }
 
@@ -94,7 +94,7 @@
 //   SunnyPlayerModel get model => _controller.model;
 
 //   void _initializeVisualConfiguration() {
-//     setupLighting(SunnyPlayerConfig.lightingConfig);
+//     setupLighting(SunnyPlayerProfile.lightingConfig);
 //     setupMovementByJoystick(intensityEnabled: true);
 //   }
 
@@ -126,7 +126,7 @@
 //   );
 
 //   void _showDeathFx() =>
-//       gameRef.add(SunnyPlayerConfig.createCryptComponent(position));
+//       gameRef.add(SunnyPlayerProfile.createCryptComponent(position));
 
 //   /// Controller callback implementations
 //   bool _onPlayPrimaryAttack(double damage) =>

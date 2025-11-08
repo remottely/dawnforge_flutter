@@ -2,63 +2,63 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_loadout.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_slot.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/presets/knight_pickaxe_hand_preset.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_profile.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_primary_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/camera/gameplay_camera_effects_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/camera/gameplay_camera_effects_utils.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_data.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
 
-KnightHandLoadoutConfig createDefaultKnightHandLoadout() {
-  // final rightHandConfig = KnightPickaxeHandPreset.create(
+KnightHandLoadoutSetup createDefaultKnightHandLoadout() {
+  // final rightHandData = KnightPickaxeHandPreset.create(
   //   id: 'sword',
-  //   spritePath: KnightPlayerConfig.swordSpritePath,
+  //   spritePath: KnightPlayerProfile.swordSpritePath,
   //   spriteSize: GameplayTileConstants.tileSizeStandard / 2,
   //   attachmentOffset: Vector2(8, 14),
   //   directionalOffset: Vector2(-6, 0), // left
   //   mirroredDirectionalOffset: Vector2(2, 0), // right
   // );
 
-  // final leftHandConfig = KnightPickaxeHandPreset.create(
+  // final leftHandData = KnightPickaxeHandPreset.create(
   //   id: 'staff',
-  //   spritePath: KnightPlayerConfig.staffSpritePath,
+  //   spritePath: KnightPlayerProfile.staffSpritePath,
   //   spriteSize: GameplayTileConstants.tileSizeStandard / 2,
   //   attachmentOffset: Vector2(8, 14),
   //   directionalOffset: Vector2(6, 0), // right
   //   mirroredDirectionalOffset: Vector2(-2, 0), // left
   // );
 
-  // final rightHandConfig = KnightPickaxeHandPreset.create(
+  // final rightHandData = KnightPickaxeHandPreset.create(
   //   id: 'sword_3',
-  //   spritePath: KnightPlayerConfig.newWeapon07SpritePath,
+  //   spritePath: KnightPlayerProfile.newWeapon07SpritePath,
   //   spriteSize: GameplayTileConstants.tileSizeStandard,
   //   attachmentOffset: Vector2(8, 16),
   //   directionalOffset: Vector2(-5, 0), // left
   //   mirroredDirectionalOffset: Vector2(-1, 0), // right
   // );
 
-  final rightHandConfig = KnightPickaxeHandPreset.create(
+  final rightHandData = KnightPickaxeHandPreset.create(
     id: 'sword_3',
-    spritePath: SunnyPlayerConfig.sword3SpritePath,
+    spritePath: SunnyPlayerProfile.sword3SpritePath,
     spriteSize: Vector2(7, 22) * 0.4,
     attachmentOffset: Vector2(8, 13),
     directionalOffset: Vector2(-5, 0), // left
     mirroredDirectionalOffset: Vector2(-1, 0), // right
   );
 
-  final leftHandConfig = KnightPickaxeHandPreset.create(
+  final leftHandData = KnightPickaxeHandPreset.create(
     id: 'new_shield_04',
-    spritePath: SunnyPlayerConfig.steelShield1SpritePath,
+    spritePath: SunnyPlayerProfile.steelShield1SpritePath,
     spriteSize: GameplayTileConstants.tileSizeStandard * 0.4,
     attachmentOffset: Vector2(6, 13),
     directionalOffset: Vector2(5, 1), // right
     mirroredDirectionalOffset: Vector2(4, 1), // left
   );
 
-  const rightHandSyncConfig = SynchronizedAttackData(
+  const rightHandSyncSpec = SynchronizedAttackSpec(
     baseAttackSpeedMs: 800,
     speedBonusPerLevel: 0.05,
     attackTypeMultipliers: {
@@ -69,7 +69,7 @@ KnightHandLoadoutConfig createDefaultKnightHandLoadout() {
     },
   );
 
-  const leftHandSyncConfig = SynchronizedAttackData(
+  const leftHandSyncSpec = SynchronizedAttackSpec(
     baseAttackSpeedMs: 800,
     speedBonusPerLevel: 0.05,
     attackTypeMultipliers: {
@@ -80,17 +80,17 @@ KnightHandLoadoutConfig createDefaultKnightHandLoadout() {
     },
   );
 
-  return KnightHandLoadoutConfig(
+  return KnightHandLoadoutSetup(
     entries: [
       KnightHandLoadoutEntry(
         slot: KnightHandSlot.right,
-        itemConfig: rightHandConfig,
-        attack: KnightHandAttackConfig(
+        itemData: rightHandData,
+        attack: KnightHandAttackSpec(
           trigger: KnightAttackTrigger.primary,
           attackType: AttackType.melee,
-          syncConfig: rightHandSyncConfig,
+          syncSpec: rightHandSyncSpec,
           execute: (context, damage) {
-            GameplayCameraEffectsConfig.primaryAttackShake(
+            GameplayCameraEffectsUtils.primaryAttackShake(
               context.player.gameRef,
             );
             GameplayAudioManager.instance.playPlayerPrimaryAttackSfx();
@@ -109,11 +109,11 @@ KnightHandLoadoutConfig createDefaultKnightHandLoadout() {
       ),
       KnightHandLoadoutEntry(
         slot: KnightHandSlot.left,
-        itemConfig: leftHandConfig,
-        attack: KnightHandAttackConfig(
+        itemData: leftHandData,
+        attack: KnightHandAttackSpec(
           trigger: KnightAttackTrigger.fireball,
           attackType: AttackType.ranged,
-          syncConfig: leftHandSyncConfig,
+          syncSpec: leftHandSyncSpec,
           execute: (context, damage) {
             context.player.addParticle(
               CharacterFxParticlesAnimationsConfig.createFireballAttackParticles(),
@@ -131,7 +131,7 @@ KnightHandLoadoutConfig createDefaultKnightHandLoadout() {
                   CharacterFireballAttackConfig.kSpeedMultiplier,
               onDestroy: () {
                 CharacterFireballAttackConfig.playDestroyAudio();
-                GameplayCameraEffectsConfig.fireballExplosionShake(
+                GameplayCameraEffectsUtils.fireballExplosionShake(
                   context.player.gameRef,
                 );
               },

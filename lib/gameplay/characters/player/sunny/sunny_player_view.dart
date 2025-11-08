@@ -1,15 +1,15 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_profile.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_manager.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_primary_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/camera/gameplay_camera_effects_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/camera/gameplay_camera_effects_utils.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_data.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 
 class SunnyPlayerView extends SimplePlayer
@@ -17,11 +17,11 @@ class SunnyPlayerView extends SimplePlayer
   SunnyPlayerView(Vector2 position, {required SunnyPlayerModel model})
     : _model = model,
       super(
-        animation: SunnyPlayerConfig.animation,
-        size: SunnyPlayerConfig.componentSize,
+        animation: SunnyPlayerProfile.animation,
+        size: SunnyPlayerProfile.componentSize,
         position: position,
-        life: SunnyPlayerConfig.kLife,
-        speed: SunnyPlayerConfig.kSpeed,
+        life: SunnyPlayerProfile.kLife,
+        speed: SunnyPlayerProfile.kSpeed,
       ) {
     anchor = Anchor.center;
   }
@@ -36,7 +36,7 @@ class SunnyPlayerView extends SimplePlayer
     await super.onLoad();
     _initializeVisualConfiguration();
     _initializeController();
-    add(SunnyPlayerConfig.hitbox);
+    add(SunnyPlayerProfile.hitbox);
     _initializeSynchronizedAttackSystem();
   }
 
@@ -96,7 +96,7 @@ class SunnyPlayerView extends SimplePlayer
   /// **Synchronized Attack System Initialization**
   void _initializeSynchronizedAttackSystem() {
     _attackController1 = SynchronizedAttackController(
-      config: const SynchronizedAttackData(
+      spec: const SynchronizedAttackSpec(
         baseAttackSpeedMs: 800,
         speedBonusPerLevel: 0.05,
         attackTypeMultipliers: {
@@ -108,7 +108,7 @@ class SunnyPlayerView extends SimplePlayer
       ),
     );
     _attackController2 = SynchronizedAttackController(
-      config: const SynchronizedAttackData(
+      spec: const SynchronizedAttackSpec(
         baseAttackSpeedMs: 800,
         speedBonusPerLevel: 0.05,
         attackTypeMultipliers: {
@@ -122,7 +122,7 @@ class SunnyPlayerView extends SimplePlayer
   }
 
   void _initializeVisualConfiguration() {
-    setupLighting(SunnyPlayerConfig.lightingConfig);
+    setupLighting(SunnyPlayerProfile.lightingConfig);
     setupMovementByJoystick(intensityEnabled: true);
   }
 
@@ -147,12 +147,12 @@ class SunnyPlayerView extends SimplePlayer
   );
 
   void _showDeathFx() =>
-      gameRef.add(SunnyPlayerConfig.createCryptComponent(position));
+      gameRef.add(SunnyPlayerProfile.createCryptComponent(position));
 
   /// Controller callback implementations
   bool _onPlayPrimaryAttack(double damage) {
     final executed = _attackController1.execute(AttackType.melee, () {
-      GameplayCameraEffectsConfig.primaryAttackShake(gameRef);
+      GameplayCameraEffectsUtils.primaryAttackShake(gameRef);
       GameplayAudioManager.instance.playPlayerPrimaryAttackSfx();
       addParticle(
         CharacterFxParticlesAnimationsConfig.createPrimaryAttackParticles(),
@@ -188,7 +188,7 @@ class SunnyPlayerView extends SimplePlayer
         speed: speed * CharacterFireballAttackConfig.kSpeedMultiplier,
         onDestroy: () {
           CharacterFireballAttackConfig.playDestroyAudio();
-          GameplayCameraEffectsConfig.fireballExplosionShake(gameRef);
+          GameplayCameraEffectsUtils.fireballExplosionShake(gameRef);
         },
         collision: CharacterFireballAttackConfig.createHitbox(),
         lightingConfig: CharacterFireballAttackConfig.lightingConfig,

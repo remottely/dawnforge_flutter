@@ -1,24 +1,25 @@
 import 'dart:math' as math;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_item_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_item_data.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_item_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_item_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_slot.dart';
 
 class KnightHandItemController {
+  final GameComponent _owner;
+  final KnightHandSlot _slot;
+  final KnightHandItemData _data;
+  final KnightHandItemModel _model;
+
   KnightHandItemController({
     required GameComponent owner,
     required KnightHandSlot slot,
-    required KnightHandItemConfig config,
+    required KnightHandItemData data,
   }) : _owner = owner,
-       _config = config,
+       _data = data,
        _slot = slot,
-       _model = _createModel(config, slot);
-  final GameComponent _owner;
-  final KnightHandSlot _slot;
-  final KnightHandItemConfig _config;
-  final KnightHandItemModel _model;
+       _model = _createModel(data, slot);
 
   KnightHandItemView? _view;
 
@@ -26,7 +27,7 @@ class KnightHandItemController {
 
   KnightHandSlot get slot => _slot;
 
-  KnightHandItemConfig get config => _config;
+  KnightHandItemData get data => _data;
 
   KnightHandItemView? get view => _view;
 
@@ -43,11 +44,11 @@ class KnightHandItemController {
       return _view!;
     }
 
-    final sprite = await Sprite.load(_config.spritePath);
+    final sprite = await Sprite.load(_data.spritePath);
     final handView = KnightHandItemView(
       sprite: sprite,
       position: _initialPosition,
-      size: _config.size,
+      size: _data.size,
       priorityResolver: _calculatePriority,
     );
     handView.scale.x = _model.facingRight
@@ -198,29 +199,29 @@ class KnightHandItemController {
         : !_model.facingRight;
 
     if (shouldRenderInFront) {
-      return _owner.priority + _config.priorityOffset;
+      return _owner.priority + _data.priorityOffset;
     } else {
-      return _owner.priority - _config.priorityOffset;
+      return _owner.priority - _data.priorityOffset;
     }
   }
 
   static KnightHandItemModel _createModel(
-    KnightHandItemConfig config,
+    KnightHandItemData data,
     KnightHandSlot slot,
   ) {
-    final slotConfig = config.configurationFor(slot);
+    final slotSpec = data.getSpec(slot);
     return KnightHandItemModel(
-      attackDuration: config.defaultAttackDuration,
-      attachmentOffset: slotConfig.attachmentOffset,
-      facingRightOffset: slotConfig.facingRightOffset,
-      facingLeftOffset: slotConfig.facingLeftOffset,
-      baseAngle: config.baseAngle,
-      maxRotationAngle: config.maxRotationAngle,
-      windUpFraction: config.windUpFraction,
-      strikeFraction: config.strikeFraction,
-      recoveryFraction: config.recoveryFraction,
-      facingRightScaleX: slotConfig.facingRightScaleX,
-      facingLeftScaleX: slotConfig.facingLeftScaleX,
+      attackDuration: data.defaultAttackDuration,
+      attachmentOffset: slotSpec.attachmentOffset,
+      facingRightOffset: slotSpec.facingRightOffset,
+      facingLeftOffset: slotSpec.facingLeftOffset,
+      baseAngle: data.baseAngle,
+      maxRotationAngle: data.maxRotationAngle,
+      windUpFraction: data.windUpFraction,
+      strikeFraction: data.strikeFraction,
+      recoveryFraction: data.recoveryFraction,
+      facingRightScaleX: slotSpec.facingRightScaleX,
+      facingLeftScaleX: slotSpec.facingLeftScaleX,
     );
   }
 

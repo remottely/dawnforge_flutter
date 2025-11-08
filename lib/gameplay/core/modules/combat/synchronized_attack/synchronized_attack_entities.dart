@@ -1,6 +1,13 @@
 enum AttackType { melee, ranged, special, combo }
 
 class AttackExecutionInfo {
+  final AttackType type;
+  final DateTime executionTime;
+  final Duration cooldownDuration;
+  final Duration animationDuration;
+  final int playerLevel;
+  final Map<String, AttackSpeedModifier> activeModifiers;
+
   AttackExecutionInfo({
     required this.type,
     required this.executionTime,
@@ -9,13 +16,6 @@ class AttackExecutionInfo {
     required this.playerLevel,
     required this.activeModifiers,
   });
-
-  final AttackType type;
-  final DateTime executionTime;
-  final Duration cooldownDuration;
-  final Duration animationDuration;
-  final int playerLevel;
-  final Map<String, AttackSpeedModifier> activeModifiers;
 
   Map<String, dynamic> toMap() {
     return {
@@ -40,6 +40,12 @@ class AttackDurations {
 }
 
 class AttackSpeedModifier {
+  final String name;
+  final double speedMultiplier;
+  final String description;
+  final DateTime appliedAt;
+  final Duration? duration;
+
   AttackSpeedModifier({
     required this.name,
     required this.speedMultiplier,
@@ -47,12 +53,6 @@ class AttackSpeedModifier {
     required this.appliedAt,
     this.duration,
   });
-
-  final String name;
-  final double speedMultiplier;
-  final String description;
-  final DateTime appliedAt;
-  final Duration? duration;
 
   bool get isExpired {
     if (duration == null) return false;
