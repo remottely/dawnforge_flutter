@@ -1,14 +1,15 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_lightning_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_lightning_config.dart';
 
 final class CharacterFireballAttackConfig {
   CharacterFireballAttackConfig._();
 
-  static const double kSpeedMultiplier = 2.5;
+  static const double kSpeed = CharacterConstants.kSpeedFast * 2.5;
 
   static final LightingConfig lightingConfig = LightingConfig(
     radius: GameplayTileConstants.kTileDimensionSmall,

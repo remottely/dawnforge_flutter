@@ -1,10 +1,10 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy_controller.dart';
-import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_sprite_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_primary_attack_config.dart';
+import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy_controller.dart';
+import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy_model.dart';
 
 abstract class DDBaseEnemy<
   C extends DDBaseEnemyController,
@@ -123,7 +123,7 @@ abstract class DDBaseEnemy<
               CharacterFireballAttackConfig.createDestroyAnimation(),
           size: CharacterFireballAttackConfig.componentSize,
           damage: controller.model.primaryAttackDamage,
-          speed: speed * CharacterFireballAttackConfig.kSpeedMultiplier,
+          speed: CharacterFireballAttackConfig.kSpeed,
           execute: CharacterFireballAttackConfig.playExecutionAudio,
           onDestroy: CharacterFireballAttackConfig.playDestroyAudio,
           collision: CharacterFireballAttackConfig.createHitbox(),

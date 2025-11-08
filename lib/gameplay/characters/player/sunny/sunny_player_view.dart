@@ -11,6 +11,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/camera/gameplay_camera_ef
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_config.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/offset_helper.dart';
 
 class SunnyPlayerView extends SimplePlayer
     with Lighting, BlockMovementCollision {
@@ -137,11 +138,18 @@ class SunnyPlayerView extends SimplePlayer
         CharacterFxParticlesAnimationsConfig.createPrimaryAttackParticles(),
         position: size,
       );
+
+      final Vector2 centerOffset = OffsetHelper.getCenterOffset(
+        Vector2(6, 0),
+        lastDirection,
+      );
+
       simpleAttackMelee(
-        size: CharacterPrimaryAttackConfig.kPlayerPrimaryAttackFxSize,
         damage: damage,
         animationRight:
             CharacterPrimaryAttackConfig.createPlayerExecutionAnimation(),
+        size: CharacterPrimaryAttackConfig.kPlayerPrimaryAttackFxSize,
+        centerOffset: centerOffset,
       );
     });
 
@@ -157,20 +165,29 @@ class SunnyPlayerView extends SimplePlayer
         CharacterFxParticlesAnimationsConfig.createFireballAttackParticles(),
         position: size,
       );
-      simpleAttackRange(
+
+      final Vector2 centerOffset = OffsetHelper.getCenterOffset(
+        Vector2(-16, 0),
+        lastDirection,
+      );
+
+      simpleAttackRangeByDirection(
+        direction: lastDirection,
+        damage: damage,
+        speed: CharacterFireballAttackConfig.kSpeed,
         animationRight:
             CharacterFireballAttackConfig.createExecutionAnimation(),
+        size: CharacterFireballAttackConfig.componentSize,
+        // collision: CharacterFireballAttackConfig.createHitbox(),
+        lightingConfig: CharacterFireballAttackConfig.lightingConfig,
         animationDestroy:
             CharacterFireballAttackConfig.createDestroyAnimation(),
-        size: CharacterFireballAttackConfig.componentSize,
-        damage: damage,
-        speed: speed * CharacterFireballAttackConfig.kSpeedMultiplier,
         onDestroy: () {
           CharacterFireballAttackConfig.playDestroyAudio();
           GameplayCameraEffectsUtils.fireballExplosionShake(gameRef);
         },
-        collision: CharacterFireballAttackConfig.createHitbox(),
-        lightingConfig: CharacterFireballAttackConfig.lightingConfig,
+        centerOffset: centerOffset,
+        attackFrom: AttackOriginEnum.PLAYER_OR_ALLY,
       );
       CharacterFireballAttackConfig.playExecutionAudio();
     });
@@ -180,6 +197,19 @@ class SunnyPlayerView extends SimplePlayer
     }
     return true;
   }
+
+  // Vector2 getOffset(Vector2 rightOffset) {
+  //   switch (lastDirection) {
+  //     case Direction.left:
+  //     case Direction.right:
+  //     case Direction.up:
+  //     case Direction.down:
+  //     case Direction.upLeft:
+  //     case Direction.upRight:
+  //     case Direction.downLeft:
+  //     case Direction.downRight:
+  //   }
+  // }
 
   void _onPlayToolAnimation() {
     // TODO: Implementar animação de ferramenta

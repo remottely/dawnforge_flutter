@@ -74,9 +74,7 @@ final class KnightHandLoadoutConfig {
                 CharacterFireballAttackConfig.createDestroyAnimation(),
             size: CharacterFireballAttackConfig.componentSize,
             damage: damage,
-            speed:
-                context.player.speed *
-                CharacterFireballAttackConfig.kSpeedMultiplier,
+            speed: CharacterFireballAttackConfig.kSpeed,
             onDestroy: () {
               CharacterFireballAttackConfig.playDestroyAudio();
               GameplayCameraEffectsUtils.fireballExplosionShake(
