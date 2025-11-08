@@ -11,6 +11,7 @@ final class CharacterActionSpriteAnimationHelper {
     required int executionStartFrame,
     // required int executionEndFrame,
     required void Function() onExecutionFrames,
+    required Player player,
   }) async {
     final attackAnimationOriginal = await animationFuture;
 
@@ -38,12 +39,11 @@ final class CharacterActionSpriteAnimationHelper {
     // final attackAnimation = SpriteAnimation(clonedFrames, loop: false);
 
     if (currentAnimation != null) {
-      unawaited(
-        currentAnimation.playOnce(
-          attackAnimationOriginal,
-          runToTheEnd: true,
-          useCompFlip: true,
-        ),
+      player.idle();
+      await currentAnimation.playOnce(
+        attackAnimationOriginal,
+        runToTheEnd: true,
+        useCompFlip: true,
       );
     }
   }

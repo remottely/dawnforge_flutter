@@ -138,6 +138,7 @@ class SunnyPlayerView extends SimplePlayer
     final executed = _primaryAttackController.execute(AttackType.melee, () {
       CharacterActionSpriteAnimationHelper.playActionAnimation(
         SunnyPlayerConfig.rightAttackAnimation,
+        player: this,
         currentAnimation: animation,
         executionStartFrame: 4,
         // executionEndFrame: 8,
