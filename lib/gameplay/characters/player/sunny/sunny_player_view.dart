@@ -28,7 +28,8 @@ class SunnyPlayerView extends SimplePlayer
 
   final SunnyPlayerModel _model;
   late final SunnyPlayerController _controller;
-  late final SynchronizedAttackController _attackController;
+  late final SynchronizedAttackController _attackController1;
+  late final SynchronizedAttackController _attackController2;
 
   @override
   Future<void> onLoad() async {
@@ -70,7 +71,8 @@ class SunnyPlayerView extends SimplePlayer
 
   @override
   void onRemove() {
-    _attackController.dispose();
+    _attackController1.dispose();
+    _attackController2.dispose();
     _controller.dispose();
     super.onRemove();
   }
@@ -92,32 +94,31 @@ class SunnyPlayerView extends SimplePlayer
   }
 
   /// **Synchronized Attack System Initialization**
-  ///
-  /// Configures the attack timing controller with Knight-specific defaults
-  /// and wires feedback hooks to the pickaxe view.
   void _initializeSynchronizedAttackSystem() {
-    _attackController =
-        SynchronizedAttackController(
-            config: const SynchronizedAttackConfig(
-              baseAttackSpeedMs: 800,
-              speedBonusPerLevel: 0.05,
-              attackTypeMultipliers: {
-                AttackType.melee: 1.0,
-                AttackType.ranged: 0.8,
-                AttackType.special: 1.5,
-                AttackType.combo: 0.6,
-              },
-            ),
-          )
-          ..setOnAnimationDurationChangedCallback((_) {})
-          ..setOnAnimationSyncCallback((_) {})
-          ..setOnAttackExecutedCallback((info) {
-            _onAttackExecutedCallback(info.type, info.animationDuration);
-          })
-          ..setOnAttackDestroyedCallback((info) {
-            _onAttackDestroyedCallback(info.type, info.animationDuration);
-          })
-          ..setOnAttackBlockedCallback((_, __) {});
+    _attackController1 = SynchronizedAttackController(
+      config: const SynchronizedAttackData(
+        baseAttackSpeedMs: 800,
+        speedBonusPerLevel: 0.05,
+        attackTypeMultipliers: {
+          AttackType.melee: 1.0,
+          AttackType.ranged: 0.8,
+          AttackType.special: 1.5,
+          AttackType.combo: 0.6,
+        },
+      ),
+    );
+    _attackController2 = SynchronizedAttackController(
+      config: const SynchronizedAttackData(
+        baseAttackSpeedMs: 800,
+        speedBonusPerLevel: 0.05,
+        attackTypeMultipliers: {
+          AttackType.melee: 1.0,
+          AttackType.ranged: 0.8,
+          AttackType.special: 1.5,
+          AttackType.combo: 0.6,
+        },
+      ),
+    );
   }
 
   void _initializeVisualConfiguration() {
@@ -148,16 +149,9 @@ class SunnyPlayerView extends SimplePlayer
   void _showDeathFx() =>
       gameRef.add(SunnyPlayerConfig.createCryptComponent(position));
 
-  void _onAttackExecutedCallback(AttackType type, Duration animationDuration) {}
-
-  void _onAttackDestroyedCallback(
-    AttackType type,
-    Duration animationDuration,
-  ) {}
-
   /// Controller callback implementations
   bool _onPlayPrimaryAttack(double damage) {
-    final executed = _attackController.execute(AttackType.melee, () {
+    final executed = _attackController1.execute(AttackType.melee, () {
       GameplayCameraEffectsConfig.primaryAttackShake(gameRef);
       GameplayAudioManager.instance.playPlayerPrimaryAttackSfx();
       addParticle(
@@ -179,7 +173,7 @@ class SunnyPlayerView extends SimplePlayer
   }
 
   bool _onPlayFireballAttack(double damage) {
-    final executed = _attackController.execute(AttackType.ranged, () {
+    final executed = _attackController2.execute(AttackType.ranged, () {
       addParticle(
         CharacterFxParticlesAnimationsConfig.createFireballAttackParticles(),
         position: size,

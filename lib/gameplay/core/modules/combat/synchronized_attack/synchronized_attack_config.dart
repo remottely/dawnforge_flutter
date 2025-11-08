@@ -1,7 +1,7 @@
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 
-class SynchronizedAttackConfig {
-  const SynchronizedAttackConfig({
+class SynchronizedAttackData {
+  const SynchronizedAttackData({
     required this.baseAttackSpeedMs,
     this.attackTypeMultipliers,
     this.speedBonusPerLevel = 0.05,

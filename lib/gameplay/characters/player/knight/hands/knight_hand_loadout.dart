@@ -37,7 +37,7 @@ class KnightHandAttackConfig {
 
   final KnightAttackTrigger trigger;
   final AttackType attackType;
-  final SynchronizedAttackConfig syncConfig;
+  final SynchronizedAttackData syncConfig;
   final KnightAttackExecutor execute;
 }
 

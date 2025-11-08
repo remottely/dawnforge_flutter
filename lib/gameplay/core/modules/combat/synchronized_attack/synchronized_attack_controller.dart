@@ -6,7 +6,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attac
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_model.dart';
 
 class SynchronizedAttackController {
-  SynchronizedAttackController({required SynchronizedAttackConfig config})
+  SynchronizedAttackController({required SynchronizedAttackData config})
     : _config = config,
       _model = SynchronizedAttackModel(
         baseAttackSpeedMs: config.baseAttackSpeedMs,
@@ -22,7 +22,7 @@ class SynchronizedAttackController {
     AttackType.combo: 0.6,
   };
 
-  final SynchronizedAttackConfig _config;
+  final SynchronizedAttackData _config;
   final SynchronizedAttackModel _model;
 
   async.Timer? _cooldownTimer;

@@ -58,7 +58,7 @@ KnightHandLoadoutConfig createDefaultKnightHandLoadout() {
     mirroredDirectionalOffset: Vector2(4, 1), // left
   );
 
-  const rightHandSyncConfig = SynchronizedAttackConfig(
+  const rightHandSyncConfig = SynchronizedAttackData(
     baseAttackSpeedMs: 800,
     speedBonusPerLevel: 0.05,
     attackTypeMultipliers: {
@@ -69,7 +69,7 @@ KnightHandLoadoutConfig createDefaultKnightHandLoadout() {
     },
   );
 
-  const leftHandSyncConfig = SynchronizedAttackConfig(
+  const leftHandSyncConfig = SynchronizedAttackData(
     baseAttackSpeedMs: 800,
     speedBonusPerLevel: 0.05,
     attackTypeMultipliers: {
