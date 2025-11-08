@@ -103,15 +103,20 @@ class SunnyPlayerView extends SimplePlayer
 
   @override
   void onJoystickChangeDirectional(JoystickDirectionalEvent event) {
+    print(
+      '📍 onJoystickChangeDirectional: ${event.directional}, locked=$_isMovementLocked',
+    );
     _lastJoystickDirectionalEvent = JoystickDirectionalEvent(
       directional: event.directional,
       intensity: event.intensity,
       radAngle: event.radAngle,
     );
     if (_isMovementLocked) {
+      print('📍 Movement is LOCKED, calling stopMove');
       stopMove(forceIdle: true);
       return;
     }
+    print('📍 Movement is FREE, forwarding to super');
     super.onJoystickChangeDirectional(event);
   }
 
@@ -168,10 +173,22 @@ class SunnyPlayerView extends SimplePlayer
   }
 
   void _switchToRunAnimation() {
+    // Não substitui animação durante ataque para não quebrar callbacks
+    if (_isMovementLocked) {
+      print('⚠️ Skipping animation switch - movement locked');
+      return;
+    }
+    print('🏃 Switching to RUN animation');
     replaceAnimation(SunnyPlayerConfig.createRunAnimation(), doIdle: isIdle);
   }
 
   void _switchToWalkAnimation() {
+    // Não substitui animação durante ataque para não quebrar callbacks
+    if (_isMovementLocked) {
+      print('⚠️ Skipping animation switch - movement locked');
+      return;
+    }
+    print('🚶 Switching to WALK animation');
     replaceAnimation(SunnyPlayerConfig.createWalkAnimation(), doIdle: isIdle);
   }
 
@@ -281,10 +298,15 @@ class SunnyPlayerView extends SimplePlayer
   }
 
   void _lockMovementForAction() {
+    print(
+      '🔒 _lockMovementForAction: count before=$_movementLockCount, animation=${animation?.runtimeType}',
+    );
     if (_movementLockCount == 0) {
       stopMove(forceIdle: true);
+      print('🔒 Called stopMove');
     }
     _movementLockCount += 1;
+    print('🔒 _lockMovementForAction: count after=$_movementLockCount');
   }
 
   void _unlockMovementForAction() {
@@ -292,11 +314,48 @@ class SunnyPlayerView extends SimplePlayer
       return;
     }
     _movementLockCount -= 1;
+    print('🔓 _unlockMovementForAction: count=$_movementLockCount');
     if (_movementLockCount == 0) {
+      // Usa o estado real do botão de corrida do controller
+      final shouldBeRunning = _controller.isRunButtonPressed;
+      print(
+        '🔓 shouldBeRunning=$shouldBeRunning, _isRunning=$_isRunning, isIdle=$isIdle',
+      );
+      print('🔓 lastDirection=$lastDirection, velocity=$velocity');
+      print(
+        '🔓 _lastJoystickDirectionalEvent=${_lastJoystickDirectionalEvent?.directional}',
+      );
+
+      if (shouldBeRunning != _isRunning) {
+        _isRunning = shouldBeRunning;
+        if (shouldBeRunning) {
+          speed =
+              SunnyPlayerConfig.kSpeed * SunnyPlayerConfig.kRunSpeedMultiplier;
+          print('🔓 Restored RUN speed=$speed');
+        } else {
+          speed = SunnyPlayerConfig.kSpeed;
+          print('🔓 Restored WALK speed=$speed');
+        }
+      }
+
+      // Restaura a animação correta baseada no estado real de corrida
+      if (_isRunning) {
+        print('🔓 Switching to RUN animation');
+        _switchToRunAnimation();
+      } else {
+        print('🔓 Switching to WALK animation');
+        _switchToWalkAnimation();
+      }
+
       stopMove(forceIdle: true);
+      print('🔓 Called stopMove');
+
       final JoystickDirectionalEvent? event = _lastJoystickDirectionalEvent;
       if (event != null && event.directional != JoystickMoveDirectional.IDLE) {
+        print('🔓 Forwarding directional event: ${event.directional}');
         _forwardDirectionalEvent(event);
+      } else {
+        print('🔓 No directional event to forward (event null or IDLE)');
       }
     }
   }

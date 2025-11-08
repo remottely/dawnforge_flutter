@@ -20,6 +20,7 @@ class SunnyPlayerController {
 
   bool _hasStaminaRegenScheduled = false;
   bool _isToolInUse = false;
+  bool _isRunButtonPressed = false;
 
   SunnyPlayerController({
     required this.model,
@@ -45,8 +46,10 @@ class SunnyPlayerController {
   void handleInputAction(JoystickActionEvent event) {
     if (event.id == JoystickSetup.kRunId || event.id == KeyboardSetup.kRunKey) {
       if (event.event == ActionEvent.DOWN) {
+        _isRunButtonPressed = true;
         onRunChange(true);
       } else if (event.event == ActionEvent.UP) {
+        _isRunButtonPressed = false;
         onRunChange(false);
       }
       return;
@@ -62,6 +65,9 @@ class SunnyPlayerController {
       executeFireballAttack();
     }
   }
+
+  // Getter para verificar se deveria estar correndo
+  bool get isRunButtonPressed => _isRunButtonPressed;
 
   // Actions
   void executePrimaryAttack() {
