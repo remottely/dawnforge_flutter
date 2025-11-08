@@ -1,37 +1,34 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_item_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_loadout.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_manager.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_slot.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/presets/knight_default_hand_loadout.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_manager.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_primary_attack_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/camera/gameplay_camera_effects_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 
 class SunnyPlayerView extends SimplePlayer
     with Lighting, BlockMovementCollision {
-  SunnyPlayerView(
-    Vector2 position, {
-    required SunnyPlayerModel model,
-    KnightHandLoadoutConfig? handLoadout,
-  }) : _model = model,
-       _handLoadout = handLoadout ?? createDefaultKnightHandLoadout(),
-       super(
-         animation: SunnyPlayerConfig.animation,
-         size: SunnyPlayerConfig.componentSize,
-         position: position,
-         life: SunnyPlayerConfig.kLife,
-         speed: SunnyPlayerConfig.kSpeed,
-       ) {
+  SunnyPlayerView(Vector2 position, {required SunnyPlayerModel model})
+    : _model = model,
+      super(
+        animation: SunnyPlayerConfig.animation,
+        size: SunnyPlayerConfig.componentSize,
+        position: position,
+        life: SunnyPlayerConfig.kLife,
+        speed: SunnyPlayerConfig.kSpeed,
+      ) {
     anchor = Anchor.center;
   }
 
   final SunnyPlayerModel _model;
-  final KnightHandLoadoutConfig _handLoadout;
   late final SunnyPlayerController _controller;
-  late final KnightHandManager _handManager = KnightHandManager(owner: this);
+  late final SynchronizedAttackController _attackController;
 
   @override
   Future<void> onLoad() async {
@@ -39,26 +36,15 @@ class SunnyPlayerView extends SimplePlayer
     _initializeVisualConfiguration();
     _initializeController();
     add(SunnyPlayerConfig.hitbox);
-    await _handManager.applyLoadout(_handLoadout);
+    _initializeSynchronizedAttackSystem();
   }
 
   @override
   void update(double dt) {
     if (isDead) return;
     _controller.update(dt);
-    _handManager.update(dt, velocity);
     _updateSpriteDirection();
     super.update(dt);
-  }
-
-  void _updateSpriteDirection() {
-    // Quando o personagem se move para a esquerda (velocidade negativa em X),
-    // flipamos horizontalmente o sprite
-    if (velocity.x < 0 && !isFlippedHorizontally) {
-      flipHorizontallyAroundCenter();
-    } else if (velocity.x > 0 && isFlippedHorizontally) {
-      flipHorizontallyAroundCenter();
-    }
   }
 
   @override
@@ -84,7 +70,7 @@ class SunnyPlayerView extends SimplePlayer
 
   @override
   void onRemove() {
-    _handManager.dispose();
+    _attackController.dispose();
     _controller.dispose();
     super.onRemove();
   }
@@ -94,6 +80,45 @@ class SunnyPlayerView extends SimplePlayer
   // void switchTool(FarmTool newTool) => _controller.switchTool(newTool);
   // void restoreEnergy() => _controller.restoreEnergy();
   SunnyPlayerModel get model => _controller.model;
+
+  void _updateSpriteDirection() {
+    // Quando o personagem se move para a esquerda (velocidade negativa em X),
+    // flipamos horizontalmente o sprite
+    if (velocity.x < 0 && !isFlippedHorizontally) {
+      flipHorizontallyAroundCenter();
+    } else if (velocity.x > 0 && isFlippedHorizontally) {
+      flipHorizontallyAroundCenter();
+    }
+  }
+
+  /// **Synchronized Attack System Initialization**
+  ///
+  /// Configures the attack timing controller with Knight-specific defaults
+  /// and wires feedback hooks to the pickaxe view.
+  void _initializeSynchronizedAttackSystem() {
+    _attackController =
+        SynchronizedAttackController(
+            config: const SynchronizedAttackConfig(
+              baseAttackSpeedMs: 800,
+              speedBonusPerLevel: 0.05,
+              attackTypeMultipliers: {
+                AttackType.melee: 1.0,
+                AttackType.ranged: 0.8,
+                AttackType.special: 1.5,
+                AttackType.combo: 0.6,
+              },
+            ),
+          )
+          ..setOnAnimationDurationChangedCallback((_) {})
+          ..setOnAnimationSyncCallback((_) {})
+          ..setOnAttackExecutedCallback((info) {
+            _onAttackExecutedCallback(info.type, info.animationDuration);
+          })
+          ..setOnAttackDestroyedCallback((info) {
+            _onAttackDestroyedCallback(info.type, info.animationDuration);
+          })
+          ..setOnAttackBlockedCallback((_, __) {});
+  }
 
   void _initializeVisualConfiguration() {
     setupLighting(SunnyPlayerConfig.lightingConfig);
@@ -111,13 +136,6 @@ class SunnyPlayerView extends SimplePlayer
     );
   }
 
-  KnightHandItemController? handControllerFor(KnightHandSlot slot) =>
-      _handManager.handControllerFor(slot);
-
-  bool _executeAttackForTrigger(KnightAttackTrigger trigger, double damage) {
-    return _handManager.executeAttack(trigger, damage);
-  }
-
   /// Private helper methods
   void _showDamageFx(double damage) => showDamage(
     damage,
@@ -130,12 +148,65 @@ class SunnyPlayerView extends SimplePlayer
   void _showDeathFx() =>
       gameRef.add(SunnyPlayerConfig.createCryptComponent(position));
 
-  /// Controller callback implementations
-  bool _onPlayPrimaryAttack(double damage) =>
-      _executeAttackForTrigger(KnightAttackTrigger.primary, damage);
+  void _onAttackExecutedCallback(AttackType type, Duration animationDuration) {}
 
-  bool _onPlayFireballAttack(double damage) =>
-      _executeAttackForTrigger(KnightAttackTrigger.fireball, damage);
+  void _onAttackDestroyedCallback(
+    AttackType type,
+    Duration animationDuration,
+  ) {}
+
+  /// Controller callback implementations
+  bool _onPlayPrimaryAttack(double damage) {
+    final executed = _attackController.execute(AttackType.melee, () {
+      GameplayCameraEffectsConfig.primaryAttackShake(gameRef);
+      GameplayAudioManager.instance.playPlayerPrimaryAttackSfx();
+      addParticle(
+        CharacterFxParticlesAnimationsConfig.createPrimaryAttackParticles(),
+        position: size,
+      );
+      simpleAttackMelee(
+        size: CharacterPrimaryAttackConfig.kPlayerPrimaryAttackFxSize,
+        damage: damage,
+        animationRight:
+            CharacterPrimaryAttackConfig.createPlayerExecutionAnimation(),
+      );
+    });
+
+    if (executed == null) {
+      return false;
+    }
+    return true;
+  }
+
+  bool _onPlayFireballAttack(double damage) {
+    final executed = _attackController.execute(AttackType.ranged, () {
+      addParticle(
+        CharacterFxParticlesAnimationsConfig.createFireballAttackParticles(),
+        position: size,
+      );
+      simpleAttackRange(
+        animationRight:
+            CharacterFireballAttackConfig.createExecutionAnimation(),
+        animationDestroy:
+            CharacterFireballAttackConfig.createDestroyAnimation(),
+        size: CharacterFireballAttackConfig.componentSize,
+        damage: damage,
+        speed: speed * CharacterFireballAttackConfig.kSpeedMultiplier,
+        onDestroy: () {
+          CharacterFireballAttackConfig.playDestroyAudio();
+          GameplayCameraEffectsConfig.fireballExplosionShake(gameRef);
+        },
+        collision: CharacterFireballAttackConfig.createHitbox(),
+        lightingConfig: CharacterFireballAttackConfig.lightingConfig,
+      );
+      CharacterFireballAttackConfig.playExecutionAudio();
+    });
+
+    if (executed == null) {
+      return false;
+    }
+    return true;
+  }
 
   void _onPlayToolAnimation() {
     // TODO: Implementar animação de ferramenta
