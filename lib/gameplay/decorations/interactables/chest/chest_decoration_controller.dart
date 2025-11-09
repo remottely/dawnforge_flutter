@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_config.dart';
-import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_model.dart';
+import 'package:darkness_dungeon/gameplay/decorations/interactables/chest/chest_decoration_config.dart';
+import 'package:darkness_dungeon/gameplay/decorations/interactables/chest/chest_decoration_model.dart';
 
 class ChestDecorationController {
   final ChestDecorationModel model;

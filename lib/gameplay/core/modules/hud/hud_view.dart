@@ -2,7 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/hud_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/player_vital_stats_hud.dart';
-import 'package:darkness_dungeon/gameplay/decorations/door_key_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/interactables/door_key_decoration.dart';
 
 class HUDView extends GameInterface {
   late Sprite _keySprite;

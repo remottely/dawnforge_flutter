@@ -58,7 +58,7 @@
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                  "height":50,
                  "id":1,
-                 "name":"TerrainDetails",
+                 "name":"Details",
                  "opacity":1,
                  "type":"tilelayer",
                  "visible":true,
@@ -119,7 +119,7 @@
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                  "height":50,
                  "id":2,
-                 "name":"TerrainObjects",
+                 "name":"Props",
                  "opacity":1,
                  "type":"tilelayer",
                  "visible":true,
@@ -161,73 +161,8 @@
          "layers":[
                 {
                  "draworder":"topdown",
-                 "id":24,
-                 "name":"Sensors",
-                 "objects":[
-                        {
-                         "height":8.98474241700526,
-                         "id":361,
-                         "name":"sensor_forest_1",
-                         "properties":[
-                                {
-                                 "name":"nextMap",
-                                 "type":"string",
-                                 "value":"forest_1"
-                                }, 
-                                {
-                                 "name":"playerDirection",
-                                 "type":"string",
-                                 "value":"right"
-                                }, 
-                                {
-                                 "name":"playerPosition",
-                                 "type":"string",
-                                 "value":"3,4"
-                                }],
-                         "rotation":0.170983,
-                         "type":"",
-                         "visible":true,
-                         "width":11.7178270192836,
-                         "x":16,
-                         "y":64
-                        }, 
-                        {
-                         "height":13.7016,
-                         "id":380,
-                         "name":"sensor_temple_1",
-                         "properties":[
-                                {
-                                 "name":"nextMap",
-                                 "type":"string",
-                                 "value":"temple_1"
-                                }, 
-                                {
-                                 "name":"playerDirection",
-                                 "type":"string",
-                                 "value":"right"
-                                }, 
-                                {
-                                 "name":"playerPosition",
-                                 "type":"string",
-                                 "value":"3,3"
-                                }],
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":15.865,
-                         "x":79.0735172385754,
-                         "y":34.2127875752155
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
                  "id":21,
-                 "name":"Decorations",
+                 "name":"Interactables",
                  "objects":[
                         {
                          "height":16,
@@ -575,6 +510,71 @@
                  "visible":true,
                  "x":0,
                  "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "id":24,
+                 "name":"Sensors",
+                 "objects":[
+                        {
+                         "height":8.98474241700526,
+                         "id":361,
+                         "name":"sensor_forest_1",
+                         "properties":[
+                                {
+                                 "name":"nextMap",
+                                 "type":"string",
+                                 "value":"forest_1"
+                                }, 
+                                {
+                                 "name":"playerDirection",
+                                 "type":"string",
+                                 "value":"right"
+                                }, 
+                                {
+                                 "name":"playerPosition",
+                                 "type":"string",
+                                 "value":"3,4"
+                                }],
+                         "rotation":0.170983,
+                         "type":"",
+                         "visible":true,
+                         "width":11.7178270192836,
+                         "x":16,
+                         "y":64
+                        }, 
+                        {
+                         "height":13.7016,
+                         "id":380,
+                         "name":"sensor_temple_1",
+                         "properties":[
+                                {
+                                 "name":"nextMap",
+                                 "type":"string",
+                                 "value":"temple_1"
+                                }, 
+                                {
+                                 "name":"playerDirection",
+                                 "type":"string",
+                                 "value":"right"
+                                }, 
+                                {
+                                 "name":"playerPosition",
+                                 "type":"string",
+                                 "value":"3,3"
+                                }],
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":15.865,
+                         "x":79.0735172385754,
+                         "y":34.2127875752155
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
                 }],
          "name":"Environment",
          "opacity":1,
@@ -769,7 +769,7 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":26,
+ "nextlayerid":28,
  "nextobjectid":381,
  "orientation":"orthogonal",
  "properties":[
