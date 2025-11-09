@@ -54,7 +54,7 @@ class SunnyPlayerView extends SimplePlayer
   void update(double dt) {
     if (isDead) return;
     _controller.update(dt);
-    _updateSpriteDirection();
+    // _updateSpriteDirection(); // TODO(Kevin): remove this and create left player asset.png animations
     super.update(dt);
   }
 
@@ -93,13 +93,13 @@ class SunnyPlayerView extends SimplePlayer
   // void restoreEnergy() => _controller.restoreEnergy();
   SunnyPlayerModel get model => _controller.model;
 
-  void _updateSpriteDirection() {
-    if (velocity.x < 0 && !isFlippedHorizontally) {
-      flipHorizontallyAroundCenter();
-    } else if (velocity.x > 0 && isFlippedHorizontally) {
-      flipHorizontallyAroundCenter();
-    }
-  }
+  // void _updateSpriteDirection() { // TODO(Kevin): remove this and create left player asset.png animations
+  //   if (velocity.x < 0 && !isFlippedHorizontally) {
+  //     flipHorizontallyAroundCenter();
+  //   } else if (velocity.x > 0 && isFlippedHorizontally) {
+  //     flipHorizontallyAroundCenter();
+  //   }
+  // }
 
   @override
   void onJoystickChangeDirectional(JoystickDirectionalEvent event) {
