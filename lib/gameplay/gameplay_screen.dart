@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/map/map_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/map_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/map/map_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/color_helper.dart';
 import 'package:darkness_dungeon/gameplay/decorations/map_transition_sensor.dart';
@@ -22,7 +22,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
   Widget build(BuildContext gameplayContext) {
     return MapNavigator(
       maps: MapManager.allMaps,
-      initialMap: MapConfig.kTemple1Id,
+      initialMap: MapConfig.kForest1Id,
       builder: (context, arguments, mapItem) {
         final mapLightingColor = ColorHelper.fromHex(
           mapItem.properties[MapConfig.kLightingColorPropertyKey]?.toString(),
