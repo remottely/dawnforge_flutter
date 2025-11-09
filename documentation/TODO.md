@@ -1,8 +1,16 @@
-IMPORTANT BEFORE LAUNCH:
+## IMPORTANT BEFORE LAUNCH:
 
 - Change background musics
 
-fix:
+---
+
+## Enhance:
+
+- add torch ON/OFF interaction
+
+---
+
+## Fix:
 
 - fix: attacks particles animations
 
@@ -60,3 +68,5 @@ fix:
   - Preciso que você finalize o planejamento da logica inicial de meu farmable. Levando em conta que quero fazer o clone do stardew valley... TODO(Kevin): finalizar esse prompt
 
 - Preciso que você percorra todo o meu código fazendo melhorias onde necessário para deixar tudo bem implementado e padronizado. use como referência o módulo de "lib/gameplay/characters/player/knight", utilizando o MVC e camada de config.
+
+---

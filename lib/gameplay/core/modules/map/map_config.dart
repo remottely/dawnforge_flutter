@@ -74,11 +74,22 @@ final class MapConfig {
       };
 
   /// Maps
+  static const String kLake1Id = 'lake_1';
   static const String kForest1Id = 'forest_1';
   static const String kDungeon1Id = 'dungeon_1';
   static const String kTemple1Id = 'temple_1';
 
   static const List<MapData> kAllMaps = [
+    /// lake_1
+    const MapData(
+      id: kLake1Id,
+      asset: 'tiled/$kLake1Id.json',
+      sensorIds: [],
+      backgroundMusic: AudioConfig.kMusicRo1LettersBackgroundAsset,
+      lightingColor: _kNoneLightingColor,
+      backgroundColor: _kForestBackgroundColor,
+    ),
+
     /// forest_1
     const MapData(
       id: kForest1Id,
