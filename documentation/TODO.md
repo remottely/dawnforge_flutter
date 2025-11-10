@@ -1,72 +1,72 @@
-## IMPORTANT BEFORE LAUNCH:
+# IMPORTANT BEFORE LAUNCH:
 
-- Change background musics
-
----
-
-## Enhance:
-
-- add torch ON/OFF interaction
+- [PRIORITY] Change background musics
 
 ---
 
-## Fix:
+# Enhance:
 
-- fix: attacks particles animations
+- [PRIORITY] add torch ON/OFF interaction
 
-- fix: add "X" to display keyboard configuration. And change all keyboard display layout.
+---
 
-- fix: execute player.idle even in victory and game over dialogs
+# Fix:
 
-- emote bug, displaying outside gameplayscreen area
+- [PRIORITY] attacks particles animations
 
-- win e die do not show in same time. how to resolve this issue? do to every enemy "enemy.idle"?
+- [PRIORITY] add "X" to display keyboard configuration. And change all keyboard display layout.
 
-- organize all project exports in one file
+- [PRIORITY] emote bug, displaying outside gameplayscreen area
+
+- [PRIORITY] win and die do not show in same time. how to resolve this issue? do to every enemy "enemy.idle"?
+
+- [PRIORITY] organize all project exports in one file
 
 - forest_1.json:
 
-  - colission behavior
+  - [PRIORITY] colission behavior
 
 - farmable tile:
 
-  - priority
-  - render not showing
+  - [DONE] priority
+  - [DONE] render not showing
 
 - enemies:
 
-  - run in direction of the player when receive player ranged attack
-
-- Dungeon Boss:
-
-  - boss die explosion not in the same size as boss sprite
-
-- Dungeon Mini Boss:
-
-  - fix collision size
+  - [PRIORITY] run in direction of the player when receive player ranged attack
 
 - characters:
 
-  - create a helper hitbox size calculation based on spriteSize/textureSize/componentSize
+  - [DONE] boss die explosion not in the same size as boss sprite
+  - [DONE] mini boss collision size
+  - [DONE] create a helper hitbox size calculation based on spriteSize/textureSize/componentSize
 
 - fireball attack:
 
-  - fix collision size and position
+  - [DONE] collision size and position
 
 - UI dialogues:
 
-  - force player to stop in every dialogue start
+  - [DONE] force player to stop in every conversation
+  - [PRIORITY] force "game pause" in every UI display
+  - [PRIORITY] execute player.idle even in victory and game over dialogs
 
 - Audio:
 
-  - put music_gameplay_background.mp3 back
+  - [DONE] put music_gameplay_background.mp3 back
 
-- Create documentation that explains that config layer represents "constants, factories, builders, etc." in the same class.
+---
 
-- prompt:
+# Documentation:
+
+- [PRIORITY] Create documentation that explains that config layer represents "constants, factories, builders, etc." in the same class.
+
+---
+
+- AI Prompts:
 
   - Preciso que você finalize o planejamento da logica inicial de meu farmable. Levando em conta que quero fazer o clone do stardew valley... TODO(Kevin): finalizar esse prompt
 
-- Preciso que você percorra todo o meu código fazendo melhorias onde necessário para deixar tudo bem implementado e padronizado. use como referência o módulo de "lib/gameplay/characters/player/knight", utilizando o MVC e camada de config.
+  - Preciso que você percorra todo o meu código fazendo melhorias onde necessário para deixar tudo bem implementado e padronizado. use como referência o módulo de "lib/gameplay/characters/player/knight", utilizando o MVC e camada de config.
 
 ---

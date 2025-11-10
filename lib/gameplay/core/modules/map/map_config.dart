@@ -35,6 +35,7 @@ final class MapConfig {
 
   static const String _kForestBackgroundColor = '#ff63c74d';
   static const String _kDungeonBackgroundColor = '#ff424242';
+  static const String _kLakeBackgroundColor = '#ff000000';
   static const String _kTempleBackgroundColor = '#ff424242';
 
   ///
@@ -86,8 +87,8 @@ final class MapConfig {
       asset: 'tiled/$kLake1Id.json',
       sensorIds: [],
       backgroundMusic: AudioConfig.kMusicRo1LettersBackgroundAsset,
-      lightingColor: _kNoneLightingColor,
-      backgroundColor: _kForestBackgroundColor,
+      lightingColor: _kDarknessLightingColor,
+      backgroundColor: _kLakeBackgroundColor,
     ),
 
     /// forest_1

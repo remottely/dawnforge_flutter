@@ -88,35 +88,29 @@ class SunnyPlayerView extends SimplePlayer
   }
 
   // Public API for external interaction
-  // void useTool() => _controller.useTool();
-  // void switchTool(FarmTool newTool) => _controller.switchTool(newTool);
-  // void restoreEnergy() => _controller.restoreEnergy();
   SunnyPlayerModel get model => _controller.model;
-
-  // void _updateSpriteDirection() { // TODO(Kevin): remove this and create left player asset.png animations
-  //   if (velocity.x < 0 && !isFlippedHorizontally) {
-  //     flipHorizontallyAroundCenter();
-  //   } else if (velocity.x > 0 && isFlippedHorizontally) {
-  //     flipHorizontallyAroundCenter();
-  //   }
-  // }
 
   @override
   void onJoystickChangeDirectional(JoystickDirectionalEvent event) {
     print(
-      '📍 onJoystickChangeDirectional: ${event.directional}, locked=$_isMovementLocked',
+      '🎮 onJoystickChangeDirectional: directional=${event.directional}, locked=$_isMovementLocked',
     );
+
+    // Sempre armazena o último evento de movimento, mesmo durante lock
     _lastJoystickDirectionalEvent = JoystickDirectionalEvent(
       directional: event.directional,
       intensity: event.intensity,
       radAngle: event.radAngle,
     );
+
     if (_isMovementLocked) {
-      print('📍 Movement is LOCKED, calling stopMove');
-      stopMove(forceIdle: true);
+      // Durante o lock, não processa movimento mas mantém o evento salvo
+      print('🔒 Movement locked, event saved but not processed');
       return;
     }
-    print('📍 Movement is FREE, forwarding to super');
+
+    // Movimento livre - processa normalmente
+    print('✅ Processing movement normally');
     super.onJoystickChangeDirectional(event);
   }
 
@@ -175,20 +169,16 @@ class SunnyPlayerView extends SimplePlayer
   void _switchToRunAnimation() {
     // Não substitui animação durante ataque para não quebrar callbacks
     if (_isMovementLocked) {
-      print('⚠️ Skipping animation switch - movement locked');
       return;
     }
-    print('🏃 Switching to RUN animation');
     replaceAnimation(SunnyPlayerConfig.createRunAnimation(), doIdle: isIdle);
   }
 
   void _switchToWalkAnimation() {
     // Não substitui animação durante ataque para não quebrar callbacks
     if (_isMovementLocked) {
-      print('⚠️ Skipping animation switch - movement locked');
       return;
     }
-    print('🚶 Switching to WALK animation');
     replaceAnimation(SunnyPlayerConfig.createWalkAnimation(), doIdle: isIdle);
   }
 
@@ -298,47 +288,71 @@ class SunnyPlayerView extends SimplePlayer
   }
 
   void _lockMovementForAction() {
-    print(
-      '🔒 _lockMovementForAction: count before=$_movementLockCount, animation=${animation?.runtimeType}',
-    );
+    print('🔒 LOCK called: count before=$_movementLockCount');
     if (_movementLockCount == 0) {
+      // Para o movimento ao travar
+      print('🔒 Calling stopMove');
       stopMove(forceIdle: true);
-      print('🔒 Called stopMove');
     }
     _movementLockCount += 1;
-    print('🔒 _lockMovementForAction: count after=$_movementLockCount');
+    print('🔒 LOCK after: count=$_movementLockCount');
+  }
+
+  Direction? _joystickDirectionalToDirection(
+    JoystickMoveDirectional directional,
+  ) {
+    switch (directional) {
+      case JoystickMoveDirectional.MOVE_UP:
+        return Direction.up;
+      case JoystickMoveDirectional.MOVE_DOWN:
+        return Direction.down;
+      case JoystickMoveDirectional.MOVE_LEFT:
+        return Direction.left;
+      case JoystickMoveDirectional.MOVE_RIGHT:
+        return Direction.right;
+      case JoystickMoveDirectional.MOVE_UP_LEFT:
+        return Direction.upLeft;
+      case JoystickMoveDirectional.MOVE_UP_RIGHT:
+        return Direction.upRight;
+      case JoystickMoveDirectional.MOVE_DOWN_LEFT:
+        return Direction.downLeft;
+      case JoystickMoveDirectional.MOVE_DOWN_RIGHT:
+        return Direction.downRight;
+      case JoystickMoveDirectional.IDLE:
+        return null;
+    }
   }
 
   void _unlockMovementForAction() {
+    print('🔓 UNLOCK called: count before=$_movementLockCount');
     if (_movementLockCount == 0) {
+      print('⚠️ UNLOCK: count already 0, returning');
       return;
     }
     _movementLockCount -= 1;
-    print('🔓 _unlockMovementForAction: count=$_movementLockCount');
+    print('🔓 UNLOCK after decrement: count=$_movementLockCount');
+
     if (_movementLockCount == 0) {
-      // Usa o estado real do botão de corrida do controller
+      print('🔓 UNLOCK: Restoring movement state');
+
+      // Restaura a velocidade baseada no estado do botão de corrida
       final shouldBeRunning = _controller.isRunButtonPressed;
-      print(
-        '🔓 shouldBeRunning=$shouldBeRunning, _isRunning=$_isRunning, isIdle=$isIdle',
-      );
-      print('🔓 lastDirection=$lastDirection, velocity=$velocity');
-      print(
-        '🔓 _lastJoystickDirectionalEvent=${_lastJoystickDirectionalEvent?.directional}',
-      );
+      print('🔓 shouldBeRunning=$shouldBeRunning, _isRunning=$_isRunning');
 
       if (shouldBeRunning != _isRunning) {
         _isRunning = shouldBeRunning;
-        if (shouldBeRunning) {
-          speed =
-              SunnyPlayerConfig.kSpeed * SunnyPlayerConfig.kRunSpeedMultiplier;
-          print('🔓 Restored RUN speed=$speed');
-        } else {
-          speed = SunnyPlayerConfig.kSpeed;
-          print('🔓 Restored WALK speed=$speed');
-        }
       }
 
-      // Restaura a animação correta baseada no estado real de corrida
+      if (_isRunning) {
+        speed =
+            SunnyPlayerConfig.kSpeed * SunnyPlayerConfig.kRunSpeedMultiplier;
+        print('🔓 Speed set to RUN: $speed');
+      } else {
+        speed = SunnyPlayerConfig.kSpeed;
+        print('🔓 Speed set to WALK: $speed');
+      }
+
+      // Restaura a animação correta baseada no estado de corrida
       if (_isRunning) {
         print('🔓 Switching to RUN animation');
         _switchToRunAnimation();
@@ -347,26 +361,33 @@ class SunnyPlayerView extends SimplePlayer
         _switchToWalkAnimation();
       }
 
-      stopMove(forceIdle: true);
-      print('🔓 Called stopMove');
+      // IMPORTANTE: Usar Future.microtask para garantir que o movimento é restaurado
+      // DEPOIS que o idle() do CharacterActionSpriteAnimationHelper é chamado
+      Future.microtask(() {
+        print('🔓 [microtask] Checking movement restoration');
+        final event = _lastJoystickDirectionalEvent;
+        print('🔓 [microtask] Last directional event: ${event?.directional}');
 
-      final JoystickDirectionalEvent? event = _lastJoystickDirectionalEvent;
-      if (event != null && event.directional != JoystickMoveDirectional.IDLE) {
-        print('🔓 Forwarding directional event: ${event.directional}');
-        _forwardDirectionalEvent(event);
-      } else {
-        print('🔓 No directional event to forward (event null or IDLE)');
-      }
+        if (event != null &&
+            event.directional != JoystickMoveDirectional.IDLE) {
+          print(
+            '🔓 [microtask] Reapplying movement: directional=${event.directional}, intensity=${event.intensity}, angle=${event.radAngle}',
+          );
+
+          // Converte o enum e aplica o movimento
+          final direction = _joystickDirectionalToDirection(event.directional);
+          if (direction != null) {
+            moveFromDirection(direction, enabledDiagonal: true);
+            print(
+              '🔓 [microtask] Movement reapplied via moveFromDirection($direction), velocity=$velocity',
+            );
+          } else {
+            print('🔓 [microtask] Could not convert directional to Direction');
+          }
+        } else {
+          print('🔓 [microtask] No active directional input to restore');
+        }
+      });
     }
-  }
-
-  void _forwardDirectionalEvent(JoystickDirectionalEvent event) {
-    final forwardedEvent = JoystickDirectionalEvent(
-      directional: event.directional,
-      intensity: event.intensity,
-      radAngle: event.radAngle,
-    );
-    _lastJoystickDirectionalEvent = forwardedEvent;
-    super.onJoystickChangeDirectional(forwardedEvent);
   }
 }
