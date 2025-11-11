@@ -7,7 +7,7 @@ import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/presets
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/conversation/emote_manager.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 
 class KnightPlayerView extends SimplePlayer
@@ -132,8 +132,8 @@ class KnightPlayerView extends SimplePlayer
 
   void _onShowExclamationEmote() {
     add(
-      CharacterEmoteManager.displayEmoteAboveCharacter(
-        asset: CharacterEmoteManager.kExclamationEmoteAsset,
+      EmoteManager.displayEmoteAboveCharacter(
+        asset: EmoteManager.kExclamationEmoteAsset,
         amount: 8,
         target: this,
       ),

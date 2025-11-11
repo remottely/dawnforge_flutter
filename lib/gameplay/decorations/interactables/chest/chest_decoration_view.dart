@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_sprite_animations_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/conversation/emote_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/chest/chest_decoration_config.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/chest/chest_decoration_controller.dart';
@@ -16,7 +17,7 @@ class ChestDecorationView extends DDInteractableDecoration {
 
   ChestDecorationView(Vector2 position, {ChestDecorationModel? model})
     : super.withAnimation(
-        animation: ChestDecorationConfig.chestAnimation,
+        animation: ChestDecorationConfig.loadChestAnimation(),
         size: ChestDecorationConfig.componentSize,
         position: position,
       ) {
@@ -82,7 +83,7 @@ class ChestDecorationView extends DDInteractableDecoration {
   void _showEmote() {
     add(
       AnimatedGameObject(
-        animation: ChestDecorationConfig.emoteAnimation,
+        animation: EmoteManager.loadDecorationEmoteAnimation(),
         size: size,
         position: size / -2,
         loop: false,

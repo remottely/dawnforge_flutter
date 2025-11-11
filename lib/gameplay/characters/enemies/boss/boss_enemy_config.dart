@@ -9,7 +9,7 @@ final class BossEnemyConfig {
   BossEnemyConfig._();
 
   static const double kCloseVisionRadius =
-      CharacterConstants.kVisionRadiusExtraLarge;
+      CharacterConstants.kVisionRadiusSuperLarge;
   static const double kPrimaryAttackDamage =
       CharacterConstants.kDamageExtraLarge;
   static const int kPrimaryAttackInterval =

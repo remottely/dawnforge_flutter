@@ -11,7 +11,7 @@ final class KnightPlayerConfig {
   KnightPlayerConfig._();
 
   static const double kVisionRadius =
-      CharacterConstants.kVisionRadiusExtraLarge;
+      CharacterConstants.kVisionRadiusSuperLarge;
 
   static const double kLife = CharacterConstants.kLifeExtraLarge;
   static double kSpeed = CharacterConstants.kSpeedFast;

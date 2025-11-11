@@ -5,7 +5,7 @@ import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_c
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_action_sprite_animation_helper.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/conversation/emote_manager.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_primary_attack_config.dart';
@@ -259,8 +259,8 @@ class SunnyPlayerView extends SimplePlayer
 
   void _onShowExclamationEmote() {
     add(
-      CharacterEmoteManager.displayEmoteAboveCharacter(
-        asset: CharacterEmoteManager.kExclamationEmoteAsset,
+      EmoteManager.displayEmoteAboveCharacter(
+        asset: EmoteManager.kExclamationEmoteAsset,
         amount: 8,
         target: this,
       ),
@@ -293,6 +293,24 @@ class SunnyPlayerView extends SimplePlayer
     _movementLockCount -= 1;
     if (_movementLockCount == 0) {
       stopMove(forceIdle: true);
+
+      // // Verifica o estado atual do botão de corrida e ajusta a animação
+      // // ANTES de reenviar o evento direcional
+      // final bool shouldRun = _controller.isRunButtonPressed;
+      // if (shouldRun != _isRunning) {
+      //   _isRunning = shouldRun;
+      //   speed = shouldRun
+      //       ? SunnyPlayerConfig.kSpeed * SunnyPlayerConfig.kRunSpeedMultiplier
+      //       : SunnyPlayerConfig.kSpeed;
+      // }
+
+      // Agora que o movimento está desbloqueado, aplica a animação correta
+      // if (_isRunning) {
+      //   replaceAnimation(SunnyPlayerConfig.createRunAnimation(), doIdle: true);
+      // } else {
+      //   replaceAnimation(SunnyPlayerConfig.createWalkAnimation(), doIdle: true);
+      // }
+
       final JoystickDirectionalEvent? event = _lastJoystickDirectionalEvent;
       if (event != null && event.directional != JoystickMoveDirectional.IDLE) {
         _forwardDirectionalEvent(event);

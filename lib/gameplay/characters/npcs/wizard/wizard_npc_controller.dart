@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_view.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/conversation/emote_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
 
 class WizardNpcController {
@@ -20,8 +20,8 @@ class WizardNpcController {
     if (!model.hasBeenFirstInteraction ||
         (model.hasBeenFirstInteraction && interactionRequested)) {
       _view.add(
-        CharacterEmoteManager.displayEmoteAboveCharacter(
-          asset: CharacterEmoteManager.kQuestionEmoteAsset,
+        EmoteManager.displayEmoteAboveCharacter(
+          asset: EmoteManager.kQuestionEmoteAsset,
           amount: 8,
           target: _view,
         ),

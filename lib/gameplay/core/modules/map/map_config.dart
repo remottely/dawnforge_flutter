@@ -13,7 +13,7 @@ import 'package:darkness_dungeon/gameplay/decorations/interactables/door_decorat
 import 'package:darkness_dungeon/gameplay/decorations/interactables/door_key_decoration.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/life_potion_decoration.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/spike_trap_decoration.dart';
-import 'package:darkness_dungeon/gameplay/decorations/interactables/torch_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/interactables/torch_new/torch_decoration_view.dart';
 import 'package:darkness_dungeon/gameplay/farmable/farm_tile.dart';
 
 final class MapConfig {
@@ -52,10 +52,9 @@ final class MapConfig {
         'wizard_npc': (p) => WizardNpcView(p.position),
 
         /// Decorations
-        'barrel_decoration': (p) => BarrelDecorationView(position: p.position),
-        'torch_decoration': (p) => TorchDecorationView(position: p.position),
-        'torch_decoration_empty': (p) =>
-            TorchDecorationView.empty(position: p.position),
+        'barrel_decoration': (p) => BarrelDecorationView(p.position),
+        'torch_decoration': (p) => TorchDecorationView(p.position),
+        'torch_decoration_empty': (p) => TorchDecorationView.empty(p.position),
 
         /// Interactables
         'door_interactable': (p) =>

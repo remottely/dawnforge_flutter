@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 
@@ -9,7 +9,7 @@ final class GoblinEnemyConfig {
   GoblinEnemyConfig._();
 
   static const double kCloseVisionRadius =
-      CharacterConstants.kVisionRadiusMedium;
+      CharacterConstants.kVisionRadiusLarge;
   static const double kPrimaryAttackDamage = CharacterConstants.kDamageMedium;
   static const int kPrimaryAttackInterval =
       CharacterConstants.kAttackIntervalMedium;

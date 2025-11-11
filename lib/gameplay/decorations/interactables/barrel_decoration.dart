@@ -22,8 +22,9 @@ final class _BarrelDecorationConfig {
 }
 
 class BarrelDecorationView extends DDPushableDecoration {
-  BarrelDecorationView({required super.position})
+  BarrelDecorationView(Vector2 position)
     : super.withSprite(
+        position: position,
         sprite: _BarrelDecorationConfig._loadSprite(),
         size: _BarrelDecorationConfig._componentSize,
       );

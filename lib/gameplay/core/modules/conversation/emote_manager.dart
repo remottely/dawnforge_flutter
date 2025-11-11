@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 
-class CharacterEmoteManager {
+class EmoteManager {
   static const String kExclamationEmoteAsset =
       'gameplay/characters/emotes/exclamation_emote_8.png';
   static const String kQuestionEmoteAsset =
@@ -27,4 +27,15 @@ class CharacterEmoteManager {
       offset: Vector2(0, -3),
     );
   }
+
+  static final Vector2 _emoteTextureSize = TileConstants.tileSizeExtraLarge;
+
+  static Future<SpriteAnimation> loadDecorationEmoteAnimation() =>
+      SpriteAnimation.load(
+        EmoteManager.kExclamationEmoteAsset,
+        SpriteAnimationConfig.createStandardData(
+          amount: 8,
+          textureSize: _emoteTextureSize,
+        ),
+      );
 }

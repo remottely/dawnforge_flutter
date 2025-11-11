@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 
@@ -9,8 +9,9 @@ final class MiniBossEnemyConfig {
   MiniBossEnemyConfig._();
 
   static const double kCloseVisionRadius =
-      CharacterConstants.kVisionRadiusSmall;
-  static const double kLongVisionRadius = CharacterConstants.kVisionRadiusLarge;
+      CharacterConstants.kVisionRadiusMedium;
+  static const double kLongVisionRadius =
+      CharacterConstants.kVisionRadiusExtraLarge;
   static const double kPrimaryAttackDamage = CharacterConstants.kDamageLarge;
   static const int kPrimaryAttackInterval =
       CharacterConstants.kAttackIntervalSmall;

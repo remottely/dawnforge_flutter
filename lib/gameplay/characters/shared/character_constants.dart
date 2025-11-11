@@ -11,11 +11,13 @@ final class CharacterConstants {
   static const double kSpeedMedium = 32.0;
   static const double kSpeedFast = 40.0;
 
-  static const double kVisionRadiusExtraSmall = 32.0;
-  static const double kVisionRadiusSmall = 48.0;
-  static const double kVisionRadiusMedium = 64.0;
-  static const double kVisionRadiusLarge = 80.0;
-  static const double kVisionRadiusExtraLarge = 96.0;
+  static const double kVisionRadiusSuperSmall = 8.0;
+  static const double kVisionRadiusExtraSmall = 16.0;
+  static const double kVisionRadiusSmall = 32.0;
+  static const double kVisionRadiusMedium = 48.0;
+  static const double kVisionRadiusLarge = 64.0;
+  static const double kVisionRadiusExtraLarge = 80.0;
+  static const double kVisionRadiusSuperLarge = 96.0;
 
   /// Actions
   static const double kDamageSmall = 10.0;
