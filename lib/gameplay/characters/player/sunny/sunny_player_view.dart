@@ -5,7 +5,6 @@ import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_c
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_action_sprite_animation_helper.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/conversation/emote_manager.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_primary_attack_config.dart';
@@ -14,16 +13,16 @@ import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_fx.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/conversation/emote_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/offset_helper.dart';
 
 class SunnyPlayerView extends SimplePlayer
     with Lighting, BlockMovementCollision {
-  SunnyPlayerView(Vector2 position, {required SunnyPlayerModel model})
+  SunnyPlayerView({required super.position, required SunnyPlayerModel model})
     : _model = model,
       super(
         animation: SunnyPlayerConfig.createWalkAnimation(),
         size: SunnyPlayerConfig.componentSize,
-        position: position,
         life: SunnyPlayerConfig.kLife,
         speed: SunnyPlayerConfig.kSpeed,
       ) {

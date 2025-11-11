@@ -42,21 +42,22 @@ final class MapConfig {
   static Map<String, ObjectBuilder> createEntityBuilder() =>
       <String, ObjectBuilder>{
         /// Enemies
-        'boss_enemy': (p) => BossEnemyView(p.position),
-        'mini_boss_enemy': (p) => MiniBossEnemyView(p.position),
-        'goblin_enemy': (p) => GoblinEnemyView(p.position),
-        'imp_enemy': (p) => ImpEnemyView(p.position),
+        'boss_enemy': (p) => BossEnemyView(position: p.position),
+        'mini_boss_enemy': (p) => MiniBossEnemyView(position: p.position),
+        'goblin_enemy': (p) => GoblinEnemyView(position: p.position),
+        'imp_enemy': (p) => ImpEnemyView(position: p.position),
 
         /// NPCs
-        'kid_npc': (p) => KidNpcView(p.position),
-        'wizard_npc': (p) => WizardNpcView(p.position),
+        'kid_npc': (p) => KidNpcView(position: p.position),
+        'wizard_npc': (p) => WizardNpcView(position: p.position),
 
         /// Decorations
 
         /// Interactables
-        'barrel_decoration': (p) => BarrelDecorationView(p.position),
-        'torch_decoration': (p) => TorchDecorationView(p.position),
-        'torch_decoration_empty': (p) => TorchDecorationView.empty(p.position),
+        'barrel_decoration': (p) => BarrelDecorationView(position: p.position),
+        'torch_decoration': (p) => TorchDecorationView(position: p.position),
+        'torch_decoration_empty': (p) =>
+            TorchDecorationView.empty(position: p.position),
         'door_interactable': (p) =>
             DoorDecorationView(position: p.position, size: p.size),
         'door_key_interactable': (p) =>
@@ -67,10 +68,10 @@ final class MapConfig {
         ),
         'spike_trap_interactable': (p) =>
             SpikeTrapDecorationView(position: p.position),
-        'chest': (p) => ChestDecorationView(p.position),
+        'chest': (p) => ChestDecorationView(position: p.position),
 
         /// Farmable
-        'farm_tile': (p) => FarmTileView(p.position),
+        'farm_tile': (p) => FarmTileView(position: p.position),
       };
 
   /// Maps

@@ -16,7 +16,7 @@ class FarmGridManager {
       _kGridHeight,
       (y) => List.generate(
         _kGridWidth,
-        (x) => FarmTileView(Vector2(x.toDouble(), y.toDouble())),
+        (x) => FarmTileView(position: Vector2(x.toDouble(), y.toDouble())),
       ),
     );
   }

@@ -15,10 +15,9 @@ class WizardNpcView extends SimpleNpc with KeyboardEventListener {
     model: WizardNpcModel(),
   );
 
-  WizardNpcView(Vector2 position)
+  WizardNpcView({required super.position})
     : super(
         animation: WizardNpcConfig.animation,
-        position: position,
         size: WizardNpcConfig.componentSize,
       );
 

@@ -15,11 +15,10 @@ class ChestDecorationView extends DDInputReceiverDecoration {
   late final ChestDecorationController _controller;
   late final TextPaint _textConfig;
 
-  ChestDecorationView(Vector2 position, {ChestDecorationModel? model})
+  ChestDecorationView({required super.position, ChestDecorationModel? model})
     : super.withAnimation(
         animation: ChestDecorationConfig.loadChestAnimation(),
         size: ChestDecorationConfig.componentSize,
-        position: position,
       ) {
     _textConfig = ChestDecorationConfig.createTextConfig(width);
     _initializeController(model ?? ChestDecorationModel());

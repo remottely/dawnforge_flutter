@@ -6,10 +6,9 @@ import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy.dart';
 
 class MiniBossEnemyView
     extends DDBaseEnemy<MiniBossEnemyController, MiniBossEnemyModel> {
-  MiniBossEnemyView(Vector2 position)
+  MiniBossEnemyView({required super.position})
     : super(
         animation: MiniBossEnemyConfig.animation,
-        position: position,
         size: MiniBossEnemyConfig.componentSize,
         speed: MiniBossEnemyConfig.kSpeed,
         life: MiniBossEnemyConfig.kLife,

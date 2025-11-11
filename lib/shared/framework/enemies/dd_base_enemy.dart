@@ -15,18 +15,12 @@ abstract class DDBaseEnemy<
   late final C controller;
 
   DDBaseEnemy({
-    required Vector2 position,
-    required Vector2 size,
-    required SimpleDirectionAnimation animation,
-    required double speed,
-    required double life,
-  }) : super(
-         animation: animation,
-         position: position,
-         size: size,
-         speed: speed,
-         life: life,
-       );
+    required super.position,
+    required super.size,
+    required super.animation,
+    required super.speed,
+    required super.life,
+  }) : super();
 
   C createController(M model);
 

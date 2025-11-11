@@ -11,11 +11,10 @@ class TorchDecorationView extends DDInputReceiverDecoration {
   late final TorchDecorationController _controller;
   late final TextPaint _textConfig;
 
-  TorchDecorationView(Vector2 position, {TorchDecorationModel? model})
+  TorchDecorationView({required super.position, TorchDecorationModel? model})
     : super.withAnimation(
         animation: TorchDecorationConfig.loadSpriteAnimation(),
         size: TorchDecorationConfig.componentSize,
-        position: position,
       ) {
     setupLighting(TorchDecorationConfig.lightingConfig);
     lightingEnabled = true;
@@ -24,12 +23,13 @@ class TorchDecorationView extends DDInputReceiverDecoration {
     _controller.model.turnOn();
   }
 
-  TorchDecorationView.empty(Vector2 position, {TorchDecorationModel? model})
-    : super.withAnimation(
-        animation: TorchDecorationConfig.loadSpriteAnimation(),
-        size: TorchDecorationConfig.componentSize,
-        position: position,
-      ) {
+  TorchDecorationView.empty({
+    required super.position,
+    TorchDecorationModel? model,
+  }) : super.withAnimation(
+         animation: TorchDecorationConfig.loadSpriteAnimation(),
+         size: TorchDecorationConfig.componentSize,
+       ) {
     setupLighting(TorchDecorationConfig.lightingConfig);
     lightingEnabled = false;
     _textConfig = TorchDecorationConfig.createTextConfig(width);

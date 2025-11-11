@@ -32,10 +32,9 @@ class FarmTileView extends DDDecoration {
   bool isWatered = false;
   String currentSprite = _FarmTileConfig._kGrassSpriteAsset;
 
-  FarmTileView(Vector2 position)
+  FarmTileView({required super.position})
     : super.withSprite(
         sprite: _FarmTileConfig._loadSprite(_FarmTileConfig._kGrassSpriteAsset),
-        position: position,
         size: _FarmTileConfig._componentSize,
       );
 

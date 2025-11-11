@@ -17,10 +17,9 @@ import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy.dart';
 import 'package:flutter/material.dart';
 
 class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
-  BossEnemyView(Vector2 position)
+  BossEnemyView({required super.position})
     : super(
         animation: BossEnemyConfig.animation,
-        position: position,
         size: BossEnemyConfig.componentSize,
         speed: BossEnemyConfig.kSpeed,
         life: BossEnemyConfig.kLife,
@@ -150,8 +149,8 @@ class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
     }
 
     final Enemy enemy = controller.model.spawnedEnemies.length == 2
-        ? MiniBossEnemyView(positionExplosion)
-        : ImpEnemyView(positionExplosion);
+        ? MiniBossEnemyView(position: positionExplosion)
+        : ImpEnemyView(position: positionExplosion);
 
     gameRef.add(
       AnimatedGameObject(
@@ -215,6 +214,6 @@ class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
         loop: false,
       ),
     );
-    gameRef.add(ImpEnemyView(pos));
+    gameRef.add(ImpEnemyView(position: pos));
   }
 }

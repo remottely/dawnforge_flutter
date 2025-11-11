@@ -29,11 +29,10 @@ class LifePotionDecorationView extends DDContactDecoration {
   final double _healAmount;
   bool _hasBeenConsumed = false;
 
-  LifePotionDecorationView({required Vector2 position, double? healAmount})
+  LifePotionDecorationView({required super.position, double? healAmount})
     : _healAmount = healAmount ?? LifePotionConfig._kStandardHealAmount,
       super.withSprite(
         sprite: LifePotionConfig._loadSprite(),
-        position: position,
         size: LifePotionConfig._componentSize,
       );
 

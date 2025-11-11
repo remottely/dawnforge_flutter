@@ -40,7 +40,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   }
 
   SunnyPlayerView buildKnightPlayer(Vector2 position) => SunnyPlayerView(
-    position,
+    position: position,
     model: SunnyPlayerModel(),
   ); // TODO(Kevin): implement save/load KnightPlayerModel
 }

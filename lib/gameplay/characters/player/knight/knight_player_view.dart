@@ -7,13 +7,13 @@ import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/presets
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/conversation/emote_manager.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/conversation/emote_manager.dart';
 
 class KnightPlayerView extends SimplePlayer
     with Lighting, BlockMovementCollision {
-  KnightPlayerView(
-    Vector2 position, {
+  KnightPlayerView({
+    required super.position,
     required KnightPlayerModel model,
     KnightHandLoadoutSetup? handLoadout,
   }) : _model = model,
@@ -23,7 +23,6 @@ class KnightPlayerView extends SimplePlayer
        super(
          animation: KnightPlayerConfig.animation,
          size: KnightPlayerConfig.componentSize,
-         position: position,
          life: KnightPlayerConfig.kLife,
          speed: KnightPlayerConfig.kSpeed,
        );

@@ -13,7 +13,8 @@
 // class SunnyPlayerView extends SimplePlayer
 //     with Lighting, BlockMovementCollision {
 //   SunnyPlayerView(
-//     Vector2 position, {
+//{
+//     required super.position,
 //     required SunnyPlayerModel model,
 //     KnightLoadoutSetup? handLoadout,
 //   }) : _model = model,
@@ -21,7 +22,6 @@
 //        super(
 //          animation: SunnyPlayerProfile.animation,
 //          size: SunnyPlayerProfile.componentSize,
-//          position: position,
 //          life: SunnyPlayerProfile.kLife,
 //          speed: SunnyPlayerProfile.kSpeed,
 //        ) {
