@@ -31,7 +31,6 @@ class BarrelDecorationView extends DDPushableDecoration {
   @override
   Future<void> onLoad() {
     add(_BarrelDecorationConfig.createHitbox());
-
     return super.onLoad();
   }
 }

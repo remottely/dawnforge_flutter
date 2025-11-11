@@ -2,6 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 
 final class ChestDecorationConfig {
   ChestDecorationConfig._();
@@ -23,6 +24,21 @@ final class ChestDecorationConfig {
     TileConstants.kTileDimensionStandard * 0.5,
   );
 
+  // Animations
+  static Future<SpriteAnimation> loadChestAnimation() => SpriteAnimation.load(
+    'gameplay/decorations/chest_decoration_8.png',
+    SpriteAnimationConfig.createStandardData(
+      amount: 8,
+      textureSize: _textureSize,
+    ),
+  );
+
+  static RectangleHitbox createHitbox() => HitboxUtils.createCenterHitbox(
+    componentSize: componentSize,
+    hitboxStartPositionX: 0.0,
+    hitboxStartPositionY: 4.0,
+  );
+
   // Text configuration
   static TextPaint createTextConfig(double componentWidth) => TextPaint(
     style: TextStyle(
@@ -35,13 +51,4 @@ final class ChestDecorationConfig {
     double componentWidth,
     double componentHeight,
   ) => Vector2(componentWidth / -1.5, -componentHeight);
-
-  // Animations
-  static Future<SpriteAnimation> loadChestAnimation() => SpriteAnimation.load(
-    'gameplay/decorations/chest_decoration_8.png',
-    SpriteAnimationConfig.createStandardData(
-      amount: 8,
-      textureSize: _textureSize,
-    ),
-  );
 }

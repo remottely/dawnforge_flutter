@@ -37,6 +37,12 @@ class ChestDecorationView extends DDInputReceiverDecoration {
   }
 
   @override
+  Future<void> onLoad() {
+    add(ChestDecorationConfig.createHitbox());
+    return super.onLoad();
+  }
+
+  @override
   void update(double dt) {
     if (checkInterval(
       ChestDecorationConfig.kVisionCheckIntervalId,
