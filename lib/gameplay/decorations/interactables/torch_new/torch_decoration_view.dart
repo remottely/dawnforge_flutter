@@ -93,14 +93,7 @@ class TorchDecorationView extends DDInteractableDecoration {
 
   /// Private helper methods - Controller callbacks implementation
   void _showEmote() {
-    add(
-      AnimatedGameObject(
-        animation: EmoteManager.loadDecorationEmoteAnimation(),
-        size: size,
-        position: size / -2,
-        loop: false,
-      ),
-    );
+    add(EmoteManager.getDecorationAnimatedObject(size));
   }
 
   void _onTorchInteraction() {

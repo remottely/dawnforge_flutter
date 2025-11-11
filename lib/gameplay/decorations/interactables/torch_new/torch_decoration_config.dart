@@ -7,23 +7,6 @@ import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart'
 final class TorchDecorationConfig {
   TorchDecorationConfig._();
 
-  static final Vector2 _textureSize = TileConstants.tileSizeStandard;
-  static final Vector2 componentSize = _textureSize;
-
-  static Future<SpriteAnimation> loadSpriteAnimation() => SpriteAnimation.load(
-    'gameplay/decorations/torch_decoration_6.png',
-    SpriteAnimationConfig.createStandardData(
-      amount: 6,
-      textureSize: _textureSize,
-    ),
-  );
-
-  static final LightingConfig lightingConfig = LightingConfig(
-    radius: TileConstants.kTileDimensionExtraLarge,
-    blurBorder: TileConstants.kTileDimensionStandard,
-    color: LightingConstants.torchLighting,
-  );
-
   ///-----
 
   // Constants
@@ -48,4 +31,21 @@ final class TorchDecorationConfig {
     double componentWidth,
     double componentHeight,
   ) => Vector2(componentWidth / -1.5, -componentHeight);
+
+  static final Vector2 _textureSize = TileConstants.tileSizeStandard;
+  static final Vector2 componentSize = _textureSize;
+
+  static Future<SpriteAnimation> loadSpriteAnimation() => SpriteAnimation.load(
+    'gameplay/decorations/torch_decoration_6.png',
+    SpriteAnimationConfig.createStandardData(
+      amount: 6,
+      textureSize: _textureSize,
+    ),
+  );
+
+  static final LightingConfig lightingConfig = LightingConfig(
+    radius: TileConstants.kTileDimensionExtraLarge,
+    blurBorder: TileConstants.kTileDimensionStandard,
+    color: LightingConstants.torchLighting,
+  );
 }
