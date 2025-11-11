@@ -16,10 +16,45 @@ import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attac
 import 'package:darkness_dungeon/gameplay/core/modules/conversation/emote_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/offset_helper.dart';
 
+/// Visual representation and input handler for the Sunny player character.
+///
+/// This view component manages rendering, animations, player input, combat mechanics,
+/// and visual effects for the main player character. It follows the MVC pattern as
+/// the View layer, delegating business logic to the controller while handling all
+/// presentation concerns.
+///
+/// Features:
+/// - Dynamic lighting effects
+/// - Collision detection and movement blocking
+/// - Synchronized combat system integration
+/// - Animation state management (walk, run, attack)
+/// - Input handling (joystick and keyboard)
+/// - Visual effects (damage, death, particles)
 class SunnyPlayerView extends SimplePlayer
     with Lighting, BlockMovementCollision {
+  final SunnyPlayerModel _playerModel;
+  late final SunnyPlayerController _playerController;
+  late final SynchronizedAttackController _meleeAttackController;
+  late final SynchronizedAttackController _rangedAttackController;
+
+  /// Tracks the number of active action locks preventing movement.
+  ///
+  /// Multiple systems can lock movement simultaneously (e.g., attack animations,
+  /// cutscenes). Movement is only restored when all locks are released.
+  int _activeMovementLockCount = 0;
+
+  /// Caches the last joystick directional input for restoration after movement unlock.
+  JoystickDirectionalEvent? _bufferedDirectionalInput;
+
+  /// Indicates whether the character is currently in running state.
+  bool _isInRunningState = false;
+
+  /// Creates a Sunny player view with the specified position and data model.
+  ///
+  /// [position] The initial world position for the player character.
+  /// [model] The data model containing player state and statistics.
   SunnyPlayerView({required super.position, required SunnyPlayerModel model})
-    : _model = model,
+    : _playerModel = model,
       super(
         animation: SunnyPlayerConfig.createWalkAnimation(),
         size: SunnyPlayerConfig.componentSize,
@@ -29,110 +64,131 @@ class SunnyPlayerView extends SimplePlayer
     anchor = Anchor.center;
   }
 
-  final SunnyPlayerModel _model;
-  late final SunnyPlayerController _controller;
-  late final SynchronizedAttackController _primaryAttackController;
-  late final SynchronizedAttackController _fireballAttackController;
-  int _movementLockCount = 0;
-  JoystickDirectionalEvent? _lastJoystickDirectionalEvent;
-  bool _isRunning = false;
+  /// Provides read-only access to the player's data model.
+  SunnyPlayerModel get model => _playerController.model;
 
-  bool get _isMovementLocked => _movementLockCount > 0;
+  /// Determines if movement is currently restricted by active action locks.
+  bool get _isMovementRestricted => _activeMovementLockCount > 0;
+
+  // ============================================================================
+  // Lifecycle Methods
+  // ============================================================================
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
 
-    _initializeVisualConfiguration();
-    _initializeController();
+    _configureVisualEffects();
+    _initializePlayerController();
+    _initializeCombatSystems();
+
     add(SunnyPlayerConfig.hitbox);
-    _initializeSynchronizedAttackSystem();
   }
 
   @override
   void update(double dt) {
     if (isDead) return;
-    _controller.update(dt);
+
+    _playerController.update(dt);
     super.update(dt);
   }
 
   @override
+  void onRemove() {
+    _meleeAttackController.dispose();
+    _rangedAttackController.dispose();
+    _playerController.dispose();
+    super.onRemove();
+  }
+
+  // ============================================================================
+  // Input Handling
+  // ============================================================================
+
+  @override
   void onJoystickAction(JoystickActionEvent event) {
     if (isDead) return;
-    _controller.handleInputAction(event);
+
+    _playerController.handleInputAction(event);
     super.onJoystickAction(event);
   }
 
   @override
+  void onJoystickChangeDirectional(JoystickDirectionalEvent event) {
+    _bufferedDirectionalInput = JoystickDirectionalEvent(
+      directional: event.directional,
+      intensity: event.intensity,
+      radAngle: event.radAngle,
+    );
+
+    if (_isMovementRestricted) {
+      stopMove(forceIdle: true);
+      return;
+    }
+
+    super.onJoystickChangeDirectional(event);
+  }
+
+  // ============================================================================
+  // Combat & Damage Handling
+  // ============================================================================
+
+  @override
   void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
     if (isDead) return;
-    _showDamageFx(damage);
+
+    _displayDamageVisualEffects(damage);
     super.onReceiveDamage(attacker, damage, id);
   }
 
   @override
   void onDie() {
-    _showDeathFx();
+    _displayDeathVisualEffects();
     removeFromParent();
     super.onDie();
   }
 
-  @override
-  void onRemove() {
-    _primaryAttackController.dispose();
-    _fireballAttackController.dispose();
-    _controller.dispose();
-    super.onRemove();
-  }
+  // ============================================================================
+  // Initialization Methods
+  // ============================================================================
 
-  // Public API for external interaction
-  // void useTool() => _controller.useTool();
-  // void switchTool(FarmTool newTool) => _controller.switchTool(newTool);
-  // void restoreEnergy() => _controller.restoreEnergy();
-  SunnyPlayerModel get model => _controller.model;
-
-  @override
-  void onJoystickChangeDirectional(JoystickDirectionalEvent event) {
-    _lastJoystickDirectionalEvent = JoystickDirectionalEvent(
-      directional: event.directional,
-      intensity: event.intensity,
-      radAngle: event.radAngle,
-    );
-    if (_isMovementLocked) {
-      stopMove(forceIdle: true);
-      return;
-    }
-    super.onJoystickChangeDirectional(event);
-  }
-
-  void _initializeSynchronizedAttackSystem() {
-    _primaryAttackController = SynchronizedAttackController(
-      spec: SynchronizedAttackSpecConfig.standard,
-    );
-    _fireballAttackController = SynchronizedAttackController(
-      spec: SynchronizedAttackSpecConfig.standard,
-    );
-  }
-
-  void _initializeVisualConfiguration() {
+  /// Configures visual effects such as lighting and joystick-based movement.
+  void _configureVisualEffects() {
     setupLighting(SunnyPlayerConfig.lightingConfig);
     setupMovementByJoystick(intensityEnabled: true);
   }
 
-  void _initializeController() {
-    _controller = SunnyPlayerController(
-      model: _model,
-      onRunChange: _onRunChange,
-      onPrimaryAttack: _onPlayPrimaryAttack,
-      onFireballAttack: _onPlayFireballAttack,
-      onToolUse: _onPlayToolAnimation,
-      onShowExclamation: _onShowExclamationEmote,
-      onCheckEnemyVision: _onCheckEnemyVision,
+  /// Initializes the player controller with all required callback handlers.
+  void _initializePlayerController() {
+    _playerController = SunnyPlayerController(
+      model: _playerModel,
+      onRunChange: _handleRunStateChange,
+      onPrimaryAttack: _executeMeleeAttack,
+      onFireballAttack: _executeRangedAttack,
+      onToolUse: _executeToolAction,
+      onShowExclamation: _displayExclamationEmote,
+      onCheckEnemyVision: _evaluateEnemyVisibility,
     );
   }
 
-  /// Private helper methods
-  void _showDamageFx(double damage) => showDamage(
+  /// Initializes the synchronized attack system controllers for combat.
+  void _initializeCombatSystems() {
+    _meleeAttackController = SynchronizedAttackController(
+      spec: SynchronizedAttackSpecConfig.standard,
+    );
+    _rangedAttackController = SynchronizedAttackController(
+      spec: SynchronizedAttackSpecConfig.standard,
+    );
+  }
+
+  // ============================================================================
+  // Visual Effects
+  // ============================================================================
+
+  /// Displays damage number and particle effects when the player takes damage.
+  ///
+  /// [damage] The amount of damage received.
+  void _displayDamageVisualEffects(double damage) => showDamage(
     damage,
     config: CharacterFxParticlesAnimationsConfig.kPlayerShowDamageTextStyle,
     gravity: CharacterFxParticlesAnimationsConfig.kShowDamageGravity,
@@ -140,123 +196,200 @@ class SunnyPlayerView extends SimplePlayer
         CharacterFxParticlesAnimationsConfig.kShowDamageInitVelocityVertical,
   );
 
-  void _showDeathFx() =>
+  /// Displays death effects including crypt sprite placement.
+  void _displayDeathVisualEffects() =>
       gameRef.add(SunnyPlayerConfig.createCryptComponent(position));
 
-  void _onRunChange(bool shouldRun) {
-    if (_isRunning == shouldRun) {
+  // ============================================================================
+  // Animation Management
+  // ============================================================================
+
+  /// Handles transitions between walking and running states.
+  ///
+  /// Updates movement speed and switches animation sets accordingly.
+  /// Prevents animation switching during active action locks to preserve
+  /// animation callbacks.
+  ///
+  /// [shouldRun] Whether the character should be in running state.
+  void _handleRunStateChange(bool shouldRun) {
+    if (_isInRunningState == shouldRun) {
       return;
     }
-    _isRunning = shouldRun;
+
+    _isInRunningState = shouldRun;
+
     if (shouldRun) {
       speed = SunnyPlayerConfig.kSpeed * SunnyPlayerConfig.kRunSpeedMultiplier;
-      _switchToRunAnimation();
+      _transitionToRunAnimation();
     } else {
       speed = SunnyPlayerConfig.kSpeed;
-      _switchToWalkAnimation();
+      _transitionToWalkAnimation();
     }
   }
 
-  void _switchToRunAnimation() {
-    // Não substitui animação durante ataque para não quebrar callbacks
-    if (_isMovementLocked) {
-      return;
-    }
+  /// Transitions to the running animation set.
+  ///
+  /// Skips transition during action locks to prevent interrupting
+  /// attack animations and breaking their execution callbacks.
+  void _transitionToRunAnimation() {
+    if (_isMovementRestricted) return;
+
     replaceAnimation(SunnyPlayerConfig.createRunAnimation(), doIdle: isIdle);
   }
 
-  void _switchToWalkAnimation() {
-    // Não substitui animação durante ataque para não quebrar callbacks
-    if (_isMovementLocked) {
-      return;
-    }
+  /// Transitions to the walking animation set.
+  ///
+  /// Skips transition during action locks to prevent interrupting
+  /// attack animations and breaking their execution callbacks.
+  void _transitionToWalkAnimation() {
+    if (_isMovementRestricted) return;
+
     replaceAnimation(SunnyPlayerConfig.createWalkAnimation(), doIdle: isIdle);
   }
 
-  /// Controller callback implementations
-  bool _onPlayPrimaryAttack(double damage) {
-    final executed = _primaryAttackController.execute(AttackType.melee, () {
-      CharacterActionSpriteAnimationHelper.playExecutionOnceWithIdle(
-        SunnyPlayerConfig.loadRightAttackAnimation(),
-        currentAnimation: animation,
-        movementComponent: this,
-        executionStartFrame: 4,
-        // executionEndFrame: 8,
-        onActionStart: _lockMovementForAction,
-        onActionEnd: _unlockMovementForAction,
-        onExecutionFrames: () {
-          final Vector2 centerOffset = OffsetHelper.getCenterOffset(
-            Vector2(6, 0),
-            lastDirection,
-          );
-          simpleAttackMelee(
-            damage: damage,
-            animationRight:
-                CharacterPrimaryAttackConfig.createPlayerExecutionAnimation(),
-            size: CharacterPrimaryAttackConfig.kPlayerPrimaryAttackFxSize,
-            centerOffset: centerOffset,
-          );
+  // ============================================================================
+  // Controller Callback Implementations - Combat Actions
+  // ============================================================================
 
-          CameraFx.primaryAttackShake(gameRef);
-          AudioManager.instance.playPlayerPrimaryAttackSfx();
-          addParticle(
-            CharacterFxParticlesAnimationsConfig.createPrimaryAttackParticles(),
-            position: size,
-          );
-        },
-      );
-    });
+  /// Executes the primary melee attack with visual effects and damage application.
+  ///
+  /// This method coordinates:
+  /// - Animation playback with precise frame timing
+  /// - Movement locking during attack execution
+  /// - Damage hitbox creation and positioning
+  /// - Visual effects (particles, camera shake)
+  /// - Audio feedback
+  ///
+  /// [damage] The amount of damage to inflict on hit targets.
+  ///
+  /// Returns `true` if the attack was successfully executed, `false` if on cooldown.
+  bool _executeMeleeAttack(double damage) {
+    final AttackExecutionInfo? executionInfo = _meleeAttackController.execute(
+      AttackType.melee,
+      () {
+        CharacterActionSpriteAnimationHelper.playExecutionOnceWithIdle(
+          SunnyPlayerConfig.loadRightAttackAnimation(),
+          currentAnimation: animation,
+          movementComponent: this,
+          executionStartFrame: 4,
+          onActionStart: _lockMovementForAction,
+          onActionEnd: _unlockMovementForAction,
+          onExecutionFrames: () {
+            _applyMeleeDamageHitbox(damage);
+            _triggerMeleeAttackEffects();
+          },
+        );
+      },
+    );
 
-    if (executed == null) {
-      return false;
-    }
-    return true;
+    return executionInfo != null;
   }
 
-  bool _onPlayFireballAttack(double damage) {
-    final executed = _fireballAttackController.execute(AttackType.ranged, () {
-      addParticle(
-        CharacterFxParticlesAnimationsConfig.createFireballAttackParticles(),
-        position: size,
-      );
+  /// Applies the melee damage hitbox with proper positioning and effects.
+  ///
+  /// [damage] The damage value to apply on hit.
+  void _applyMeleeDamageHitbox(double damage) {
+    final Vector2 attackCenterOffset = OffsetHelper.getCenterOffset(
+      Vector2(6, 0),
+      lastDirection,
+    );
 
-      final Vector2 centerOffset = OffsetHelper.getCenterOffset(
-        Vector2(-16, 0),
-        lastDirection,
-      );
-
-      simpleAttackRangeByDirection(
-        direction: lastDirection,
-        damage: damage,
-        speed: CharacterFireballAttackConfig.kSpeed,
-        animationRight:
-            CharacterFireballAttackConfig.createExecutionAnimation(),
-        size: CharacterFireballAttackConfig.componentSize,
-        // collision: CharacterFireballAttackConfig.createHitbox(),
-        lightingConfig: CharacterFireballAttackConfig.lightingConfig,
-        animationDestroy:
-            CharacterFireballAttackConfig.createDestroyAnimation(),
-        onDestroy: () {
-          CharacterFireballAttackConfig.playDestroyAudio();
-          CameraFx.fireballExplosionShake(gameRef);
-        },
-        centerOffset: centerOffset,
-        attackFrom: AttackOriginEnum.PLAYER_OR_ALLY,
-      );
-      CharacterFireballAttackConfig.playExecutionAudio();
-    });
-
-    if (executed == null) {
-      return false;
-    }
-    return true;
+    simpleAttackMelee(
+      damage: damage,
+      animationRight:
+          CharacterPrimaryAttackConfig.createPlayerExecutionAnimation(),
+      size: CharacterPrimaryAttackConfig.kPlayerPrimaryAttackFxSize,
+      centerOffset: attackCenterOffset,
+    );
   }
 
-  void _onPlayToolAnimation() {
-    // TODO: Implementar animação de ferramenta
+  /// Triggers all visual and audio effects for melee attacks.
+  void _triggerMeleeAttackEffects() {
+    CameraFx.primaryAttackShake(gameRef);
+    AudioManager.instance.playPlayerPrimaryAttackSfx();
+    addParticle(
+      CharacterFxParticlesAnimationsConfig.createPrimaryAttackParticles(),
+      position: size,
+    );
   }
 
-  void _onShowExclamationEmote() {
+  /// Executes the ranged fireball attack with projectile spawning and effects.
+  ///
+  /// This method handles:
+  /// - Projectile creation and trajectory
+  /// - Lighting effects on the projectile
+  /// - Destruction animation and effects
+  /// - Audio feedback
+  /// - Camera shake on impact
+  ///
+  /// [damage] The amount of damage the fireball inflicts on hit.
+  ///
+  /// Returns `true` if the attack was successfully executed, `false` if on cooldown.
+  bool _executeRangedAttack(double damage) {
+    final AttackExecutionInfo? executionInfo = _rangedAttackController.execute(
+      AttackType.ranged,
+      () {
+        _spawnFireballProjectile(damage);
+        _triggerFireballAttackEffects();
+      },
+    );
+
+    return executionInfo != null;
+  }
+
+  /// Spawns the fireball projectile with all configured properties.
+  ///
+  /// [damage] The damage value for the projectile.
+  void _spawnFireballProjectile(double damage) {
+    final Vector2 projectileOffset = OffsetHelper.getCenterOffset(
+      Vector2(-16, 0),
+      lastDirection,
+    );
+
+    simpleAttackRangeByDirection(
+      direction: lastDirection,
+      damage: damage,
+      speed: CharacterFireballAttackConfig.kSpeed,
+      animationRight: CharacterFireballAttackConfig.createExecutionAnimation(),
+      size: CharacterFireballAttackConfig.componentSize,
+      lightingConfig: CharacterFireballAttackConfig.lightingConfig,
+      animationDestroy: CharacterFireballAttackConfig.createDestroyAnimation(),
+      onDestroy: _handleFireballDestruction,
+      centerOffset: projectileOffset,
+      attackFrom: AttackOriginEnum.PLAYER_OR_ALLY,
+    );
+  }
+
+  /// Triggers visual and audio effects for fireball attack execution.
+  void _triggerFireballAttackEffects() {
+    addParticle(
+      CharacterFxParticlesAnimationsConfig.createFireballAttackParticles(),
+      position: size,
+    );
+    CharacterFireballAttackConfig.playExecutionAudio();
+  }
+
+  /// Handles effects when a fireball projectile is destroyed.
+  void _handleFireballDestruction() {
+    CharacterFireballAttackConfig.playDestroyAudio();
+    CameraFx.fireballExplosionShake(gameRef);
+  }
+
+  // ============================================================================
+  // Controller Callback Implementations - Utility Actions
+  // ============================================================================
+
+  /// Executes the tool action animation and logic.
+  ///
+  /// TODO: Implement tool-specific animations and effects (hoe, watering can, etc.)
+  void _executeToolAction() {
+    // Future implementation: Tool-specific animations and game logic
+  }
+
+  /// Displays an exclamation emote above the character's head.
+  ///
+  /// Typically used when detecting enemies or interactive objects.
+  void _displayExclamationEmote() {
     add(
       EmoteManager.displayEmoteAboveCharacter(
         asset: EmoteManager.kExclamationEmoteAsset,
@@ -266,7 +399,15 @@ class SunnyPlayerView extends SimplePlayer
     );
   }
 
-  void _onCheckEnemyVision({
+  /// Evaluates enemy visibility within the specified radius.
+  ///
+  /// Provides an abstraction layer between the controller and the
+  /// Bonfire framework's enemy detection system.
+  ///
+  /// [visionRadius] The detection radius in world units.
+  /// [notObserved] Callback invoked when no enemies are in range.
+  /// [observed] Callback invoked when enemies are detected, providing the list.
+  void _evaluateEnemyVisibility({
     required double visionRadius,
     required void Function() notObserved,
     required void Function(List<Enemy> enemies) observed,
@@ -278,52 +419,64 @@ class SunnyPlayerView extends SimplePlayer
     );
   }
 
+  // ============================================================================
+  // Movement Lock Management
+  // ============================================================================
+
+  /// Locks player movement during action execution.
+  ///
+  /// Implements a counting mechanism allowing multiple simultaneous locks.
+  /// Movement is halted immediately and buffered input is preserved for
+  /// restoration after all locks are released.
   void _lockMovementForAction() {
-    if (_movementLockCount == 0) {
+    if (_activeMovementLockCount == 0) {
       stopMove(forceIdle: true);
     }
-    _movementLockCount += 1;
+    _activeMovementLockCount += 1;
   }
 
+  /// Unlocks player movement after action completion.
+  ///
+  /// Decrements the lock counter and restores movement only when all locks
+  /// are released. Automatically resumes buffered directional input if the
+  /// player was attempting to move during the lock period.
   void _unlockMovementForAction() {
-    if (_movementLockCount == 0) {
-      return;
-    }
-    _movementLockCount -= 1;
-    if (_movementLockCount == 0) {
-      stopMove(forceIdle: true);
+    if (_activeMovementLockCount == 0) return;
 
-      // // Verifica o estado atual do botão de corrida e ajusta a animação
-      // // ANTES de reenviar o evento direcional
-      // final bool shouldRun = _controller.isRunButtonPressed;
-      // if (shouldRun != _isRunning) {
-      //   _isRunning = shouldRun;
-      //   speed = shouldRun
-      //       ? SunnyPlayerConfig.kSpeed * SunnyPlayerConfig.kRunSpeedMultiplier
-      //       : SunnyPlayerConfig.kSpeed;
-      // }
+    _activeMovementLockCount -= 1;
 
-      // Agora que o movimento está desbloqueado, aplica a animação correta
-      // if (_isRunning) {
-      //   replaceAnimation(SunnyPlayerConfig.createRunAnimation(), doIdle: true);
-      // } else {
-      //   replaceAnimation(SunnyPlayerConfig.createWalkAnimation(), doIdle: true);
-      // }
-
-      final JoystickDirectionalEvent? event = _lastJoystickDirectionalEvent;
-      if (event != null && event.directional != JoystickMoveDirectional.IDLE) {
-        _forwardDirectionalEvent(event);
-      }
+    if (_activeMovementLockCount == 0) {
+      _restoreBufferedMovementInput();
     }
   }
 
-  void _forwardDirectionalEvent(JoystickDirectionalEvent event) {
+  /// Restores buffered directional input after movement unlock.
+  ///
+  /// If the player was holding a directional input during the lock period,
+  /// this method re-applies that input to resume movement seamlessly.
+  void _restoreBufferedMovementInput() {
+    stopMove(forceIdle: true);
+
+    final JoystickDirectionalEvent? bufferedEvent = _bufferedDirectionalInput;
+    if (bufferedEvent != null &&
+        bufferedEvent.directional != JoystickMoveDirectional.IDLE) {
+      _forwardDirectionalInputEvent(bufferedEvent);
+    }
+  }
+
+  /// Forwards a directional input event to the base player system.
+  ///
+  /// Creates a fresh event instance to avoid reference issues and updates
+  /// the buffered input for future lock/unlock cycles.
+  ///
+  /// [event] The directional event to forward.
+  void _forwardDirectionalInputEvent(JoystickDirectionalEvent event) {
     final forwardedEvent = JoystickDirectionalEvent(
       directional: event.directional,
       intensity: event.intensity,
       radAngle: event.radAngle,
     );
-    _lastJoystickDirectionalEvent = forwardedEvent;
+    _bufferedDirectionalInput = forwardedEvent;
     super.onJoystickChangeDirectional(forwardedEvent);
   }
 }
