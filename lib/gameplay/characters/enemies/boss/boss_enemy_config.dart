@@ -8,7 +8,7 @@ import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 final class BossEnemyConfig {
   BossEnemyConfig._();
 
-  static const double kCloseVisionRadius =
+  static const double kPrimaryAttackVisionRadius =
       CharacterConstants.kVisionRadiusSuperLarge;
   static const double kPrimaryAttackDamage =
       CharacterConstants.kDamageExtraLarge;

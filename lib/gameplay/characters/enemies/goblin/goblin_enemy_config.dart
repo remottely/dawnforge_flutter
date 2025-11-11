@@ -8,7 +8,7 @@ import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 final class GoblinEnemyConfig {
   GoblinEnemyConfig._();
 
-  static const double kCloseVisionRadius =
+  static const double kPrimaryAttackVisionRadius =
       CharacterConstants.kVisionRadiusLarge;
   static const double kPrimaryAttackDamage = CharacterConstants.kDamageMedium;
   static const int kPrimaryAttackInterval =

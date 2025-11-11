@@ -36,7 +36,7 @@ class BossEnemyController extends DDBaseEnemyController<BossEnemyModel> {
 
     onSpawnMinion(dt);
 
-    onSeeAndMoveToMeleeAttack!(
+    onSeeAndMoveToMeleeAttack?.call(
       closeVisionRadius: model.closeVisionRadius,
       closePlayer: (_) {},
     );

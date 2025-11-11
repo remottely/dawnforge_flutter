@@ -8,10 +8,10 @@ import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 final class MiniBossEnemyConfig {
   MiniBossEnemyConfig._();
 
-  static const double kCloseVisionRadius =
-      CharacterConstants.kVisionRadiusMedium;
+  static const double kPrimaryAttackVisionRadius =
+      CharacterConstants.kVisionRadiusLarge;
   static const double kLongVisionRadius =
-      CharacterConstants.kVisionRadiusExtraLarge;
+      CharacterConstants.kVisionRadiusSuperLarge;
   static const double kPrimaryAttackDamage = CharacterConstants.kDamageLarge;
   static const int kPrimaryAttackInterval =
       CharacterConstants.kAttackIntervalSmall;

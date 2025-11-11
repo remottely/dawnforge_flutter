@@ -1,5 +1,5 @@
-import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_model.dart';
+import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy_controller.dart';
 
 class GoblinEnemyController extends DDBaseEnemyController<GoblinEnemyModel> {
   GoblinEnemyController({
@@ -9,7 +9,7 @@ class GoblinEnemyController extends DDBaseEnemyController<GoblinEnemyModel> {
 
   @override
   void update(double dt) {
-    onSeeAndMoveToMeleeAttack!(
+    onSeeAndMoveToMeleeAttack?.call(
       closeVisionRadius: model.closeVisionRadius,
       closePlayer: (_) {},
     );

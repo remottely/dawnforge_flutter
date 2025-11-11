@@ -5,7 +5,7 @@ import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy_model.da
 class BossEnemyModel extends DDBaseEnemyModel {
   BossEnemyModel()
     : super(
-        closeVisionRadius: BossEnemyConfig.kCloseVisionRadius,
+        closeVisionRadius: BossEnemyConfig.kPrimaryAttackVisionRadius,
         primaryAttackDamage: BossEnemyConfig.kPrimaryAttackDamage,
         primaryAttackInterval: BossEnemyConfig.kPrimaryAttackInterval,
       );

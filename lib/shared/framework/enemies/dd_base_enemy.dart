@@ -1,5 +1,4 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_sprite_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_primary_attack_config.dart';
@@ -20,7 +19,7 @@ abstract class DDBaseEnemy<
     required super.animation,
     required super.speed,
     required super.life,
-  }) : super();
+  });
 
   C createController(M model);
 
@@ -99,29 +98,6 @@ abstract class DDBaseEnemy<
           animationRight:
               CharacterPrimaryAttackConfig.createEnemyExecutionAnimation(),
           execute: CharacterPrimaryAttackConfig.playEnemyExecutionSfx,
-        );
-      },
-    );
-  }
-
-  void seeAndMoveToFireballAttack({
-    required double longVisionRadius,
-    required void Function(Player) positioned,
-  }) {
-    seeAndMoveToAttackRange(
-      radiusVision: longVisionRadius,
-      positioned: (player) {
-        simpleAttackRange(
-          animation: CharacterFireballAttackConfig.createExecutionAnimation(),
-          animationDestroy:
-              CharacterFireballAttackConfig.createDestroyAnimation(),
-          size: CharacterFireballAttackConfig.componentSize,
-          damage: controller.model.primaryAttackDamage,
-          speed: CharacterFireballAttackConfig.kSpeed,
-          execute: CharacterFireballAttackConfig.playExecutionAudio,
-          onDestroy: CharacterFireballAttackConfig.playDestroyAudio,
-          collision: CharacterFireballAttackConfig.createHitbox(),
-          lightingConfig: CharacterFireballAttackConfig.lightingConfig,
         );
       },
     );

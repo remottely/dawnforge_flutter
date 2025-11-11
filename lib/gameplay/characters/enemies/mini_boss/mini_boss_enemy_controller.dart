@@ -15,7 +15,7 @@ class MiniBossEnemyController
   void update(double dt) {
     _seePlayerClose = false;
 
-    onSeeAndMoveToMeleeAttack!(
+    onSeeAndMoveToMeleeAttack?.call(
       closeVisionRadius: model.closeVisionRadius,
       closePlayer: (_) {
         _seePlayerClose = true;
@@ -23,8 +23,8 @@ class MiniBossEnemyController
     );
 
     if (!_seePlayerClose) {
-      onSeeAndMoveToRangeAttack!(
-        longVisionRadius: model.longVisionRadius,
+      onSeeAndMoveToRangeAttack?.call(
+        longVisionRadius: model.fireballAttackVisionRadius,
         positioned: (_) {},
       );
     }

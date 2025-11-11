@@ -16,8 +16,8 @@ void main() {
 
     setUp(() {
       model = TestEnemyModel(
-        primaryAttackDamage: 25.0,
         closeVisionRadius: 100.0,
+        primaryAttackDamage: 25.0,
         primaryAttackInterval: 500,
       );
     });
@@ -33,8 +33,8 @@ void main() {
     group('Edge Cases', () {
       test('should handle zero attack damage', () {
         final zeroModel = TestEnemyModel(
-          primaryAttackDamage: 0.0,
           closeVisionRadius: 100.0,
+          primaryAttackDamage: 0.0,
           primaryAttackInterval: 500,
         );
         expect(zeroModel.primaryAttackDamage, equals(0.0));
@@ -42,8 +42,8 @@ void main() {
 
       test('should handle very large vision radius', () {
         final largeVisionModel = TestEnemyModel(
-          primaryAttackDamage: 25.0,
           closeVisionRadius: 10000.0,
+          primaryAttackDamage: 25.0,
           primaryAttackInterval: 500,
         );
         expect(largeVisionModel.closeVisionRadius, equals(10000.0));
@@ -51,8 +51,8 @@ void main() {
 
       test('should handle very short attack interval', () {
         final fastAttackModel = TestEnemyModel(
-          primaryAttackDamage: 25.0,
           closeVisionRadius: 100.0,
+          primaryAttackDamage: 25.0,
           primaryAttackInterval: 1,
         );
         expect(fastAttackModel.primaryAttackInterval, equals(1));

@@ -8,7 +8,7 @@ import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 final class ImpEnemyConfig {
   ImpEnemyConfig._();
 
-  static const double kCloseVisionRadius =
+  static const double kPrimaryAttackVisionRadius =
       CharacterConstants.kVisionRadiusExtraLarge;
   static const double kPrimaryAttackDamage = CharacterConstants.kDamageSmall;
   static const int kPrimaryAttackInterval =

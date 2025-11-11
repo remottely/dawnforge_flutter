@@ -4,7 +4,7 @@ import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart
 
 abstract class DDContactDecoration extends DDDecoration
     with Sensor<SunnyPlayerView> {
-  DDContactDecoration({required super.position, required super.size}) : super();
+  DDContactDecoration({required super.position, required super.size});
 
   DDContactDecoration.withSprite({
     required super.sprite,
