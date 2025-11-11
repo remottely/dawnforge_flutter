@@ -7,8 +7,6 @@ import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart'
 final class TorchDecorationConfig {
   TorchDecorationConfig._();
 
-  ///-----
-
   // Constants
   static const double kVisionRadius =
       CharacterConstants.kVisionRadiusSuperSmall;

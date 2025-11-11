@@ -15,6 +15,6 @@ class TorchDecorationModel {
 
   // State mutations
   void setObservedPlayer(bool value) => _observedPlayer = value;
-  void markAsOpened() => _isOn = true;
-  void markAsClosed() => _isOn = false;
+  void turnOn() => _isOn = true;
+  void turnOff() => _isOn = false;
 }

@@ -1,13 +1,13 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/conversation/emote_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
-import 'package:darkness_dungeon/gameplay/decorations/interactables/torch_new/torch_decoration_config.dart';
-import 'package:darkness_dungeon/gameplay/decorations/interactables/torch_new/torch_decoration_controller.dart';
-import 'package:darkness_dungeon/gameplay/decorations/interactables/torch_new/torch_decoration_model.dart';
-import 'package:darkness_dungeon/shared/framework/decorations/dd_interactable_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/interactables/torch/torch_decoration_config.dart';
+import 'package:darkness_dungeon/gameplay/decorations/interactables/torch/torch_decoration_controller.dart';
+import 'package:darkness_dungeon/gameplay/decorations/interactables/torch/torch_decoration_model.dart';
+import 'package:darkness_dungeon/shared/framework/decorations/dd_input_receiver_decoration.dart';
 import 'package:flutter/services.dart';
 
-class TorchDecorationView extends DDInteractableDecoration {
+class TorchDecorationView extends DDInputReceiverDecoration {
   late final TorchDecorationController _controller;
   late final TextPaint _textConfig;
 
@@ -21,7 +21,7 @@ class TorchDecorationView extends DDInteractableDecoration {
     lightingEnabled = true;
     _textConfig = TorchDecorationConfig.createTextConfig(width);
     _initializeController(model ?? TorchDecorationModel());
-    _controller.model.markAsOpened();
+    _controller.model.turnOn();
   }
 
   TorchDecorationView.empty(Vector2 position, {TorchDecorationModel? model})
@@ -34,7 +34,7 @@ class TorchDecorationView extends DDInteractableDecoration {
     lightingEnabled = false;
     _textConfig = TorchDecorationConfig.createTextConfig(width);
     _initializeController(model ?? TorchDecorationModel());
-    _controller.model.markAsClosed();
+    _controller.model.turnOff();
   }
 
   // Public API for external interaction

@@ -8,10 +8,10 @@ import 'package:darkness_dungeon/gameplay/decorations/interactables/chest/chest_
 import 'package:darkness_dungeon/gameplay/decorations/interactables/chest/chest_decoration_controller.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/chest/chest_decoration_model.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/life_potion_decoration.dart';
-import 'package:darkness_dungeon/shared/framework/decorations/dd_interactable_decoration.dart';
+import 'package:darkness_dungeon/shared/framework/decorations/dd_input_receiver_decoration.dart';
 import 'package:flutter/services.dart';
 
-class ChestDecorationView extends DDInteractableDecoration {
+class ChestDecorationView extends DDInputReceiverDecoration {
   late final ChestDecorationController _controller;
   late final TextPaint _textConfig;
 
