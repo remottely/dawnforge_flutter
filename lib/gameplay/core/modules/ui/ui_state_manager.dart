@@ -6,7 +6,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_str
 import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_config.dart';
 import 'package:darkness_dungeon/shared/design_system/dd_design_system.dart';
 import 'package:darkness_dungeon/shared/design_system/widgets/atoms/dd_button.dart';
-import 'package:darkness_dungeon/shared/design_system/widgets/atoms/dd_dialog.dart';
+import 'package:darkness_dungeon/shared/design_system/widgets/atoms/dd_dialog_widget.dart';
 import 'package:darkness_dungeon/shared/design_system/widgets/atoms/dd_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,7 +26,7 @@ final class UIStateManager {
       context: context,
       barrierDismissible: false,
       builder: (dialogContext) {
-        return DDDialog(
+        return DDDialogWidget(
           children: [
             Image.asset(
               UIStateConfig.kGameOverAsset,
@@ -50,7 +50,7 @@ final class UIStateManager {
       context: context,
       barrierDismissible: false,
       builder: (context) {
-        return DDDialog(
+        return DDDialogWidget(
           children: [
             DDText.large(
               text: GameplayStringsLocation.instance.getString(
@@ -90,6 +90,7 @@ final class UIStateManager {
     GameStateManager.stopPlayerMovement(player);
 
     TalkDialog.show(
+      // TODO(Kevin): ConversationDisplay.show(...)
       context,
       conversationSequence,
       onChangeTalk: onChangeTalk,

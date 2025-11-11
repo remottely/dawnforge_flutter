@@ -1,53 +1,57 @@
+import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/darkness_dungeon.dart';
 
 class ConversationConfig {
-  static Say createKnightLeftDialog(String phraseKey) => Say(
+  static Say createKnightLeft(String phraseKey) => _createLeft(
+    phraseKey: phraseKey,
+    animation: UISpriteAnimationsConfig.loadKnightPlayerIdleRight6(),
+  );
+
+  static Say createSunnyLeft(String phraseKey) => _createLeft(
+    phraseKey: phraseKey,
+    animation: UISpriteAnimationsConfig.loadSunnyPlayerIdleRight6(),
+  );
+
+  static Say createWizardRight(String phraseKey) => _createRight(
+    phraseKey: phraseKey,
+    animation: UISpriteAnimationsConfig.loadWizardNpcIdleLeft4(),
+  );
+
+  static Say createKidRight(String phraseKey) => _createRight(
+    phraseKey: phraseKey,
+    animation: UISpriteAnimationsConfig.loadKidNpcIdleLeft4(),
+  );
+
+  static Say createBossLeft(String phraseKey) => _createLeft(
+    phraseKey: phraseKey,
+    animation: UISpriteAnimationsConfig.loadBossEnemyIdleRight4(),
+  );
+
+  static Say createBossRight(String phraseKey) => _createRight(
+    phraseKey: phraseKey,
+    animation: UISpriteAnimationsConfig.loadBossEnemyIdleLeft4(),
+  );
+
+  /// Internal Methods
+  static Say _createLeft({
+    required String phraseKey,
+    required Future<SpriteAnimation> animation,
+  }) => Say(
     text: [
       TextSpan(text: GameplayStringsLocation.instance.getString(phraseKey)),
     ],
-    person: DDSpriteAnimationWidget(
-      animation: UISpriteAnimationsConfig.loadSunnyPlayerIdleRight6(),
-    ),
+    person: DDSpriteAnimationWidget(animation: animation),
     personSayDirection: PersonSayDirection.LEFT,
   );
 
-  static Say createWizardRightDialog(String phraseKey) => Say(
+  static Say _createRight({
+    required String phraseKey,
+    required Future<SpriteAnimation> animation,
+  }) => Say(
     text: [
       TextSpan(text: GameplayStringsLocation.instance.getString(phraseKey)),
     ],
-    person: DDSpriteAnimationWidget(
-      animation: UISpriteAnimationsConfig.loadWizardNpcIdleLeft4(),
-    ),
-    personSayDirection: PersonSayDirection.RIGHT,
-  );
-
-  static Say createKidRightDialog(String phraseKey) => Say(
-    text: [
-      TextSpan(text: GameplayStringsLocation.instance.getString(phraseKey)),
-    ],
-    person: DDSpriteAnimationWidget(
-      animation: UISpriteAnimationsConfig.loadKidNpcIdleLeft4(),
-    ),
-    personSayDirection: PersonSayDirection.RIGHT,
-  );
-
-  static Say createBossLeftDialog(String phraseKey) => Say(
-    text: [
-      TextSpan(text: GameplayStringsLocation.instance.getString(phraseKey)),
-    ],
-    person: DDSpriteAnimationWidget(
-      animation: UISpriteAnimationsConfig.loadBossEnemyIdleRight4(),
-    ),
-    personSayDirection: PersonSayDirection.LEFT,
-  );
-
-  static Say createBossRightDialog(String phraseKey) => Say(
-    text: [
-      TextSpan(text: GameplayStringsLocation.instance.getString('talk_boss_2')),
-    ],
-    person: DDSpriteAnimationWidget(
-      animation: UISpriteAnimationsConfig.loadBossEnemyIdleLeft4(),
-    ),
+    person: DDSpriteAnimationWidget(animation: animation),
     personSayDirection: PersonSayDirection.RIGHT,
   );
 }

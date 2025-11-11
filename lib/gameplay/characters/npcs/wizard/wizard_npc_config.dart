@@ -20,10 +20,10 @@ final class WizardNpcConfig {
   );
 
   static List<Say> createConversationSequence() => [
-    ConversationConfig.createWizardRightDialog('talk_wizard_1'),
-    ConversationConfig.createKnightLeftDialog('talk_player_1'),
-    ConversationConfig.createWizardRightDialog('talk_wizard_2'),
-    ConversationConfig.createKnightLeftDialog('talk_player_2'),
-    ConversationConfig.createWizardRightDialog('talk_wizard_3'),
+    ConversationConfig.createWizardRight('talk_wizard_1'),
+    ConversationConfig.createKnightLeft('talk_player_1'),
+    ConversationConfig.createWizardRight('talk_wizard_2'),
+    ConversationConfig.createKnightLeft('talk_player_2'),
+    ConversationConfig.createWizardRight('talk_wizard_3'),
   ];
 }

@@ -48,10 +48,10 @@ final class BossEnemyConfig {
 
   static List<Say> createConversationSequence() {
     return [
-      ConversationConfig.createKidRightDialog('talk_kid_1'),
-      ConversationConfig.createBossLeftDialog('talk_boss_1'),
-      ConversationConfig.createKnightLeftDialog('talk_player_3'),
-      ConversationConfig.createBossRightDialog('talk_boss_2'),
+      ConversationConfig.createKidRight('talk_kid_1'),
+      ConversationConfig.createBossLeft('talk_boss_1'),
+      ConversationConfig.createKnightLeft('talk_player_3'),
+      ConversationConfig.createBossRight('talk_boss_2'),
     ];
   }
 }

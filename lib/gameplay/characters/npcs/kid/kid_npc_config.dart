@@ -21,8 +21,8 @@ final class KidNpcConfig {
 
   static List<Say> createConversationSequence() {
     return [
-      ConversationConfig.createKidRightDialog('talk_kid_2'),
-      ConversationConfig.createKnightLeftDialog('talk_player_4'),
+      ConversationConfig.createKidRight('talk_kid_2'),
+      ConversationConfig.createKnightLeft('talk_player_4'),
     ];
   }
 }

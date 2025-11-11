@@ -24,7 +24,7 @@ class MiniBossEnemyController
 
     if (!_seePlayerClose) {
       onSeeAndMoveToRangeAttack?.call(
-        longVisionRadius: model.fireballAttackVisionRadius,
+        longVisionRadius: model.longVisionRadius,
         positioned: (_) {},
       );
     }

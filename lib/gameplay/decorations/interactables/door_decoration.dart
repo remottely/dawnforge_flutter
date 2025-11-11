@@ -37,7 +37,7 @@ final class _DoorDecorationConfig {
   );
 
   static List<Say> createConversationSequence() {
-    return [ConversationConfig.createKnightLeftDialog(_kRequiredKeyMessage)];
+    return [ConversationConfig.createKnightLeft(_kRequiredKeyMessage)];
   }
 }
 

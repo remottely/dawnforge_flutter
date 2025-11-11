@@ -1,11 +1,11 @@
 import 'package:darkness_dungeon/shared/design_system/dd_design_system.dart';
 import 'package:flutter/material.dart';
 
-class DDDialog extends StatelessWidget {
+class DDDialogWidget extends StatelessWidget {
   final Color backgroundColor;
   final List<Widget> children;
 
-  const DDDialog({
+  const DDDialogWidget({
     super.key,
     this.backgroundColor = DDDesignSystem.kDialogBackgroundColor,
     required this.children,

@@ -10,7 +10,7 @@ final class MiniBossEnemyConfig {
 
   static const double kPrimaryAttackVisionRadius =
       CharacterConstants.kVisionRadiusLarge;
-  static const double kLongVisionRadius =
+  static const double kFireballAttackVisionRadius =
       CharacterConstants.kVisionRadiusSuperLarge;
   static const double kPrimaryAttackDamage = CharacterConstants.kDamageLarge;
   static const int kPrimaryAttackInterval =

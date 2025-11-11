@@ -2,10 +2,10 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/mini_boss/mini_boss
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy_model.dart';
 
 class MiniBossEnemyModel extends DDBaseEnemyModel {
-  final double fireballAttackVisionRadius;
+  final double longVisionRadius;
 
   MiniBossEnemyModel()
-    : fireballAttackVisionRadius = MiniBossEnemyConfig.kLongVisionRadius,
+    : longVisionRadius = MiniBossEnemyConfig.kFireballAttackVisionRadius,
       super(
         closeVisionRadius: MiniBossEnemyConfig.kPrimaryAttackVisionRadius,
         primaryAttackDamage: MiniBossEnemyConfig.kPrimaryAttackDamage,
