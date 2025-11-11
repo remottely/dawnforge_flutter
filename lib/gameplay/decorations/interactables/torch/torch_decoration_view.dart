@@ -7,22 +7,41 @@ import 'package:darkness_dungeon/gameplay/decorations/interactables/torch/torch_
 import 'package:darkness_dungeon/shared/framework/decorations/dd_input_receiver_decoration.dart';
 import 'package:flutter/services.dart';
 
+/// Represents a visual torch decoration component with interactive capabilities.
+///
+/// This view handles rendering, player interaction, and lighting effects for torch
+/// decorations within the game environment. It follows the MVC pattern where this
+/// class acts as the View layer.
 class TorchDecorationView extends DDInputReceiverDecoration {
-  late final TorchDecorationController _controller;
-  late final TextPaint _textConfig;
+  late final TorchDecorationController _decorationController;
+  late final TextPaint _interactionPromptTextPaint;
 
-  TorchDecorationView({required super.position, TorchDecorationModel? model})
-    : super.withAnimation(
-        animation: TorchDecorationConfig.loadSpriteAnimation(),
-        size: TorchDecorationConfig.componentSize,
-      ) {
+  /// Creates an active torch decoration with lighting enabled.
+  ///
+  /// The torch will be initialized in the "on" state with full lighting effects.
+  ///
+  /// [position] The world position where the torch will be placed.
+  /// [model] Optional model data. If not provided, a default model is created.
+  TorchDecorationView({
+    required super.position,
+    TorchDecorationModel? model,
+  }) : super.withAnimation(
+         animation: TorchDecorationConfig.loadSpriteAnimation(),
+         size: TorchDecorationConfig.componentSize,
+       ) {
     setupLighting(TorchDecorationConfig.lightingConfig);
     lightingEnabled = true;
-    _textConfig = TorchDecorationConfig.createTextConfig(width);
+    _interactionPromptTextPaint = TorchDecorationConfig.createTextConfig(width);
     _initializeController(model ?? TorchDecorationModel());
-    _controller.model.turnOn();
+    _decorationController.model.turnOn();
   }
 
+  /// Creates an inactive torch decoration with lighting disabled.
+  ///
+  /// The torch will be initialized in the "off" state without lighting effects.
+  ///
+  /// [position] The world position where the torch will be placed.
+  /// [model] Optional model data. If not provided, a default model is created.
   TorchDecorationView.empty({
     required super.position,
     TorchDecorationModel? model,
@@ -32,23 +51,35 @@ class TorchDecorationView extends DDInputReceiverDecoration {
        ) {
     setupLighting(TorchDecorationConfig.lightingConfig);
     lightingEnabled = false;
-    _textConfig = TorchDecorationConfig.createTextConfig(width);
+    _interactionPromptTextPaint = TorchDecorationConfig.createTextConfig(width);
     _initializeController(model ?? TorchDecorationModel());
-    _controller.model.turnOff();
+    _decorationController.model.turnOff();
   }
 
-  // Public API for external interaction
-  TorchDecorationModel get model => _controller.model;
+  /// Provides public read-only access to the torch's data model.
+  TorchDecorationModel get model => _decorationController.model;
 
+  /// Initializes the controller with the provided model and sets up callback handlers.
+  ///
+  /// This method wires the controller to the view's private callback implementations,
+  /// maintaining proper separation of concerns.
+  ///
+  /// [model] The data model to be managed by the controller.
   void _initializeController(TorchDecorationModel model) {
-    _controller = TorchDecorationController(
+    _decorationController = TorchDecorationController(
       model: model,
-      onShowEmote: _showEmote,
-      onTorchInteraction: _onTorchInteraction,
-      onCheckPlayerVision: _checkPlayerVision,
+      onShowEmote: _handleEmoteDisplay,
+      onTorchInteraction: _handleTorchStateChange,
+      onCheckPlayerVision: _evaluatePlayerVisibility,
     );
   }
 
+  /// Updates the torch state based on player proximity and interaction.
+  ///
+  /// Performs periodic vision checks to determine if the player is near enough
+  /// to interact with the torch.
+  ///
+  /// [dt] Delta time since the last frame update.
   @override
   void update(double dt) {
     if (checkInterval(
@@ -56,55 +87,118 @@ class TorchDecorationView extends DDInputReceiverDecoration {
       TorchDecorationConfig.kVisionCheckInterval,
       dt,
     )) {
-      _controller.update(dt, gameRef.player);
+      _decorationController.update(dt, gameRef.player);
     }
     super.update(dt);
   }
 
+  /// Renders the torch decoration and interaction prompt when applicable.
+  ///
+  /// Displays an interaction prompt text above the torch when the player
+  /// is observing it and the torch is currently off.
+  ///
+  /// [canvas] The canvas on which to render the decoration.
   @override
   void render(Canvas canvas) {
     super.render(canvas);
-    if (_controller.model.observedPlayer && !_controller.model.isOn) {
-      final textPosition = TorchDecorationConfig.getTextPosition(width, height);
-      _textConfig.render(
-        canvas,
-        TorchDecorationConfig.kInteractionPromptText,
-        textPosition,
-      );
+
+    if (_shouldDisplayInteractionPrompt()) {
+      _renderInteractionPrompt(canvas);
     }
   }
 
+  /// Handles keyboard input events for torch interaction.
+  ///
+  /// Processes the interaction key press when the player is in range
+  /// and able to interact with the torch.
+  ///
+  /// [event] The keyboard event to process.
+  /// [keysPressed] Set of currently pressed keys.
+  ///
+  /// Returns `true` if the event was handled, `false` otherwise.
   @override
   bool onKeyboard(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-    if (_controller.model.canBeInteract &&
-        event is KeyDownEvent &&
-        event.logicalKey == KeyboardSetup.kInteractionKey) {
-      _controller.openTorch();
+    if (_isValidInteractionAttempt(event)) {
+      _decorationController.openTorch();
       return true;
     }
     return false;
   }
 
+  /// Cleans up resources when the decoration is removed from the game.
   @override
   void onRemove() {
-    _controller.dispose();
+    _decorationController.dispose();
     super.onRemove();
   }
 
-  /// Private helper methods - Controller callbacks implementation
-  void _showEmote() {
+  // ============================================================================
+  // Private Helper Methods
+  // ============================================================================
+
+  /// Determines whether the interaction prompt should be displayed.
+  ///
+  /// Returns `true` when the player is observing the torch and it's turned off.
+  bool _shouldDisplayInteractionPrompt() {
+    return _decorationController.model.observedPlayer &&
+           !_decorationController.model.isOn;
+  }
+
+  /// Renders the interaction prompt text at the appropriate position.
+  ///
+  /// [canvas] The canvas on which to render the text.
+  void _renderInteractionPrompt(Canvas canvas) {
+    final textPosition = TorchDecorationConfig.getTextPosition(width, height);
+    _interactionPromptTextPaint.render(
+      canvas,
+      TorchDecorationConfig.kInteractionPromptText,
+      textPosition,
+    );
+  }
+
+  /// Validates whether a keyboard event represents a valid interaction attempt.
+  ///
+  /// Checks if the torch can be interacted with and if the correct key was pressed.
+  ///
+  /// [event] The keyboard event to validate.
+  ///
+  /// Returns `true` if this is a valid interaction attempt.
+  bool _isValidInteractionAttempt(KeyEvent event) {
+    return _decorationController.model.canBeInteract &&
+           event is KeyDownEvent &&
+           event.logicalKey == KeyboardSetup.kInteractionKey;
+  }
+
+  // ============================================================================
+  // Controller Callback Implementations
+  // ============================================================================
+
+  /// Handles the display of an emote animation above the torch.
+  ///
+  /// This callback is invoked by the controller when an emote should be shown,
+  /// typically in response to player interaction.
+  void _handleEmoteDisplay() {
     add(EmoteManager.getDecorationAnimatedObject(size));
   }
 
-  void _onTorchInteraction() {
-    if (model.isOn) {
-      lightingEnabled = true;
-    } else {
-      lightingEnabled = false;
-    }
+  /// Handles lighting state changes when the torch is toggled.
+  ///
+  /// This callback is invoked by the controller when the torch state changes,
+  /// enabling or disabling the lighting effect accordingly.
+  void _handleTorchStateChange() {
+    lightingEnabled = model.isOn;
   }
 
-  void _checkPlayerVision({
+  /// Evaluates the visibility relationship between the player and the torch.
+  ///
+  /// This callback provides an abstraction layer between the controller and
+  /// the Bonfire framework's visibility detection system.
+  ///
+  /// [player] The player component to check visibility against.
+  /// [observed] Callback invoked when the player is within vision range.
+  /// [notObserved] Callback invoked when the player is outside vision range.
+  /// [radiusVision] The vision radius for detection.
+  void _evaluatePlayerVisibility({
     required GameComponent player,
     required void Function(GameComponent) observed,
     required void Function() notObserved,
