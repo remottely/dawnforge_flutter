@@ -11,7 +11,6 @@ import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_fx.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/offset_helper.dart';
 
 final class KnightHandLoadoutConfig {
   KnightHandLoadoutConfig._();
@@ -68,27 +67,9 @@ final class KnightHandLoadoutConfig {
             CharacterFxParticlesAnimationsConfig.createFireballAttackParticles(),
             position: context.player.size,
           );
-          final Vector2 projectileOffset = OffsetHelper.getCenterOffset(
-            Vector2(-16, 0),
-            context.player.lastDirection,
-          );
-          context.player.simpleAttackRangeByDirection(
-            direction: context.player.lastDirection,
-            animationRight:
-                CharacterFireballAttackConfig.createExecutionAnimation(),
-            animationDestroy:
-                CharacterFireballAttackConfig.createDestroyAnimation(),
-            size: CharacterFireballAttackConfig.componentSize,
+          CharacterFireballAttackConfig.execute(
+            player: context.player,
             damage: damage,
-            speed: CharacterFireballAttackConfig.kSpeed,
-            onDestroy: () {
-              CharacterFireballAttackConfig.playDestroyAudio();
-              CameraFx.fireballExplosionShake(context.player.gameRef);
-            },
-            collision: CharacterFireballAttackConfig.createHitbox(),
-            lightingConfig: CharacterFireballAttackConfig.lightingConfig,
-            centerOffset: projectileOffset,
-            attackFrom: AttackOriginEnum.PLAYER_OR_ALLY,
           );
 
           CharacterFireballAttackConfig.playExecutionAudio();

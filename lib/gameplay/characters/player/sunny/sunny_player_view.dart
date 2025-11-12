@@ -220,23 +220,7 @@ class SunnyPlayerView
 
   /// Spawns the fireball projectile with all configured properties.
   void _spawnFireballProjectile(double damage) {
-    final Vector2 projectileOffset = OffsetHelper.getCenterOffset(
-      Vector2(-16, 0),
-      lastDirection,
-    );
-
-    simpleAttackRangeByDirection(
-      direction: lastDirection,
-      damage: damage,
-      speed: CharacterFireballAttackConfig.kSpeed,
-      animationRight: CharacterFireballAttackConfig.createExecutionAnimation(),
-      size: CharacterFireballAttackConfig.componentSize,
-      lightingConfig: CharacterFireballAttackConfig.lightingConfig,
-      animationDestroy: CharacterFireballAttackConfig.createDestroyAnimation(),
-      onDestroy: _handleFireballDestruction,
-      centerOffset: projectileOffset,
-      attackFrom: AttackOriginEnum.PLAYER_OR_ALLY,
-    );
+    CharacterFireballAttackConfig.execute(player: this, damage: damage);
   }
 
   /// Triggers visual and audio effects for fireball attack execution.
@@ -246,12 +230,6 @@ class SunnyPlayerView
       position: size,
     );
     CharacterFireballAttackConfig.playExecutionAudio();
-  }
-
-  /// Handles effects when a fireball projectile is destroyed.
-  void _handleFireballDestruction() {
-    CharacterFireballAttackConfig.playDestroyAudio();
-    CameraFx.fireballExplosionShake(gameRef);
   }
 
   // ============================================================================
