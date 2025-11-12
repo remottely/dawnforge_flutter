@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/hud_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/player_vital_stats_hud.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/door_key_decoration.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_base_player_view.dart';
 
 class HUDView extends GameInterface {
   late Sprite _keySprite;
@@ -45,7 +45,7 @@ class HUDView extends GameInterface {
 
   bool _hasPlayerWithKey() {
     return gameRef.player != null &&
-        (gameRef.player as SunnyPlayerView)
+        (gameRef.player as DDBasePlayerView)
             .model
             .hasKey; // TODO(Kevin): make this more generic, like DDBasePlayerView
   }

@@ -16,7 +16,7 @@ import 'package:darkness_dungeon/shared/framework/players/dd_base_player_model.d
 /// Type Parameters:
 /// - [C] The specific controller type extending DDBasePlayerController
 /// - [M] The specific model type extending DDBasePlayerModel
-abstract class DDBasePlayer<
+abstract class DDBasePlayerView<
   C extends DDBasePlayerController<M>,
   M extends DDBasePlayerModel
 >
@@ -33,7 +33,7 @@ abstract class DDBasePlayer<
   /// [size] The rendered size of the player component.
   /// [life] Maximum health points.
   /// [speed] Base movement speed in pixels per second.
-  DDBasePlayer({
+  DDBasePlayerView({
     required super.position,
     required M model,
     required super.animation,

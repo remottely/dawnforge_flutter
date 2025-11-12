@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_contact_decoration.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_base_player_view.dart';
 
 final class DoorKeyDecorationConfig {
   DoorKeyDecorationConfig._();
@@ -33,7 +33,7 @@ class DoorKeyDecorationView extends DDContactDecoration {
 
   void _triggerEffect(SimplePlayer player) {
     // TODO(Kevin): add some VFX and SFX here
-    (player as SunnyPlayerView).model
+    (player as DDBasePlayerView).model
         .obtainKey(); // TODO(Kevin): make this more generic, like DDBasePlayerView
   }
 
