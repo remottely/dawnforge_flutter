@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_base_player_model.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_model.dart';
 
 /// Abstract base controller for all player characters.
 ///

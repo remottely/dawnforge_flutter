@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/player_vital_stats_hud_config.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_base_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 import 'package:flutter/material.dart';
 
 class PlayerVitalStatsHUD extends InterfaceComponent {

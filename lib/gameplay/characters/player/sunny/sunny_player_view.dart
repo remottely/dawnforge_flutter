@@ -191,26 +191,6 @@ class SunnyPlayerView
     return executionInfo != null;
   }
 
-  // ============================================================================
-  // Attack Sequences - Private Implementation
-  // ============================================================================
-
-  /// Performs the complete melee attack sequence.
-  void _performMeleeAttackSequence(double damage) {
-    CharacterActionSpriteAnimationHelper.playExecutionOnceWithIdle(
-      SunnyPlayerConfig.loadRightAttackAnimation(),
-      currentAnimation: animation,
-      movementComponent: this,
-      executionStartFrame: 4,
-      onActionStart: _lockMovementForAction,
-      onActionEnd: _unlockMovementForAction,
-      onExecutionFrames: () {
-        _applyMeleeDamageHitbox(damage);
-        _triggerMeleeAttackEffects();
-      },
-    );
-  }
-
   /// Applies the melee damage hitbox with proper positioning.
   void _applyMeleeDamageHitbox(double damage) {
     final Vector2 attackCenterOffset = OffsetHelper.getCenterOffset(
@@ -236,12 +216,6 @@ class SunnyPlayerView
       position: size,
     );
     lockAnimationForAction();
-  }
-
-  /// Performs the complete ranged attack sequence.
-  void _performRangedAttackSequence(double damage) {
-    _spawnFireballProjectile(damage);
-    _triggerFireballAttackEffects();
   }
 
   /// Spawns the fireball projectile with all configured properties.

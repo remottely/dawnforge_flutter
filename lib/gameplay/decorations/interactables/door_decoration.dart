@@ -7,7 +7,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart'
 import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_base_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 
 final class _DoorDecorationConfig {
   _DoorDecorationConfig._();

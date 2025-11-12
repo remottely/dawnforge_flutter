@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/shared/framework/players/dd_base_player_model.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_model.dart';
 
 /// Model for players with hybrid combat capabilities (melee + ranged).
 ///

@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_base_player_controller.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_hybrid_combat_player/dd_hybrid_combat_player_model.dart';
 
 /// Controller for players with hybrid combat capabilities.
