@@ -220,7 +220,7 @@ class SunnyPlayerView
 
   /// Spawns the fireball projectile with all configured properties.
   void _spawnFireballProjectile(double damage) {
-    CharacterFireballAttackConfig.execute(player: this, damage: damage);
+    CharacterFireballAttackConfig.playerExecute(player: this, damage: damage);
   }
 
   /// Triggers visual and audio effects for fireball attack execution.

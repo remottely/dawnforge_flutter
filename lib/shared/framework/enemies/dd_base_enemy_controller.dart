@@ -10,7 +10,6 @@ abstract class DDBaseEnemyController<M extends DDBaseEnemyModel> {
   onSeeAndMoveToMeleeAttack;
   final void Function({
     required double longVisionRadius,
-    required void Function(Player) positioned,
   })?
   onSeeAndMoveToRangeAttack;
 

@@ -23,10 +23,7 @@ class MiniBossEnemyController
     );
 
     if (!_seePlayerClose) {
-      onSeeAndMoveToRangeAttack?.call(
-        longVisionRadius: model.longVisionRadius,
-        positioned: (_) {},
-      );
+      onSeeAndMoveToRangeAttack?.call(longVisionRadius: model.longVisionRadius);
     }
   }
 }

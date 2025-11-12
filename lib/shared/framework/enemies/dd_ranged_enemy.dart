@@ -17,10 +17,7 @@ abstract class DDRangedEnemy<
     required super.life,
   });
 
-  void seeAndMoveToFireballAttack({
-    required double longVisionRadius,
-    required void Function(Player) positioned,
-  }) {
+  void seeAndMoveToFireballAttack({required double longVisionRadius}) {
     seeAndMoveToAttackRange(
       radiusVision: longVisionRadius,
       positioned: (player) {

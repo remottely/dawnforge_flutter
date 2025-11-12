@@ -67,7 +67,7 @@ final class KnightHandLoadoutConfig {
             CharacterFxParticlesAnimationsConfig.createFireballAttackParticles(),
             position: context.player.size,
           );
-          CharacterFireballAttackConfig.execute(
+          CharacterFireballAttackConfig.playerExecute(
             player: context.player,
             damage: damage,
           );

@@ -49,11 +49,9 @@ final class CharacterFireballAttackConfig {
   static void playDestroyAudio() =>
       AudioManager.instance.playFireballExplosionSfx();
 
-  static void execute({
+  static void playerExecute({
     required SimplePlayer player,
     required double damage,
-    RectangleHitbox? collision,
-    void Function()? onProjectileDestroyed,
   }) {
     final Vector2 projectileOffset = OffsetHelper.getCenterOffset(
       Vector2(-16, 0),
@@ -68,13 +66,12 @@ final class CharacterFireballAttackConfig {
       animationDestroy: createDestroyAnimation(),
       size: componentSize,
       lightingConfig: lightingConfig,
-      collision: collision ?? createHitbox(),
+      collision: createHitbox(),
       centerOffset: projectileOffset,
       attackFrom: AttackOriginEnum.PLAYER_OR_ALLY,
       onDestroy: () {
         playDestroyAudio();
         CameraFx.fireballExplosionShake(player.gameRef);
-        onProjectileDestroyed?.call();
       },
     );
   }
