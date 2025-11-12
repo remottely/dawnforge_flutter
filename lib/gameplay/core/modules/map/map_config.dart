@@ -85,7 +85,7 @@ final class MapConfig {
     const MapData(
       id: kLake1Id,
       asset: 'tiled/$kLake1Id.json',
-      sensorIds: [],
+      sensorIds: ['sensor_$kDungeon1Id'],
       backgroundMusic: AudioConfig.kMusicRo1LettersBackgroundAsset,
       lightingColor: _kDarknessLightingColor,
       backgroundColor: _kLakeBackgroundColor,

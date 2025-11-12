@@ -390,8 +390,8 @@
                          "type":"",
                          "visible":true,
                          "width":16,
-                         "x":0,
-                         "y":368
+                         "x":96,
+                         "y":48
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -593,6 +593,33 @@
                          "width":14.4113707723617,
                          "x":656.583207497003,
                          "y":560.781036712509
+                        }, 
+                        {
+                         "height":15.6398,
+                         "id":249,
+                         "name":"sensor_dungeon_1",
+                         "properties":[
+                                {
+                                 "name":"nextMap",
+                                 "type":"string",
+                                 "value":"dungeon_1"
+                                }, 
+                                {
+                                 "name":"playerDirection",
+                                 "type":"string",
+                                 "value":"right"
+                                }, 
+                                {
+                                 "name":"playerPosition",
+                                 "type":"string",
+                                 "value":"3,3"
+                                }],
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":14.8959,
+                         "x":16,
+                         "y":48
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -667,8 +694,8 @@
                          "type":"",
                          "visible":true,
                          "width":16,
-                         "x":30.5120341020888,
-                         "y":59.1203236413616
+                         "x":48,
+                         "y":48
                         }, 
                         {
                          "height":16,
@@ -717,7 +744,7 @@
          "y":0
         }],
  "nextlayerid":32,
- "nextobjectid":249,
+ "nextobjectid":250,
  "orientation":"orthogonal",
  "properties":[
         {
