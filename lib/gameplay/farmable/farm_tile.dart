@@ -1,9 +1,10 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 
 import 'crop_types.dart';
+
+enum FarmTool { hoe, wateringCan, hand }
 
 enum TileState { grass, soil, watered, planted, grown }
 

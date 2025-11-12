@@ -164,8 +164,8 @@ class SunnyPlayerView extends SimplePlayer
       model: _playerModel,
       onRunChange: _handleRunStateChange,
       onPrimaryAttack: _executeMeleeAttack,
-      onFireballAttack: _executeRangedAttack,
-      onToolUse: _executeToolAction,
+      onRangedAttack: _executeRangedAttack,
+      // onToolUse: _executeToolAction,
       onShowExclamation: _displayExclamationEmote,
       onCheckEnemyVision: _evaluateEnemyVisibility,
     );

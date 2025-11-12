@@ -51,7 +51,8 @@ class KnightPlayerController {
     required double visionRadius,
     required void Function() notObserved,
     required void Function(List<Enemy> enemies) observed,
-  }) onCheckEnemyVision;
+  })
+  onCheckEnemyVision;
 
   // ============================================================================
   // Internal State
@@ -168,7 +169,7 @@ class KnightPlayerController {
   /// equipment-based execution. Consumes stamina only if the attack is
   /// successfully executed by the equipment system.
   void executeFireballAttack() {
-    if (!model.canExecuteFireballAttack) return;
+    if (!model.canExecuteRangedAttack) return;
 
     final bool wasExecuted = onFireballAttack.call(
       KnightPlayerConfig.kFireballAttackDamage,
@@ -190,27 +191,27 @@ class KnightPlayerController {
   /// the callback.
   ///
   /// Cooldown duration: 500ms
-  void useTool() {
-    if (_isToolActionInProgress || !model.canExecuteToolAction) return;
+  // void useTool() {
+  //   if (_isToolActionInProgress || !model.canExecuteToolAction) return;
 
-    _isToolActionInProgress = true;
-    model.consumeEnergy(KnightPlayerConfig.kToolActionEnergyCost);
-    onToolUse();
+  //   _isToolActionInProgress = true;
+  //   model.consumeEnergy(KnightPlayerConfig.kToolActionEnergyCost);
+  //   onToolUse();
 
-    // Reset cooldown after a brief delay
-    Future.delayed(
-      const Duration(milliseconds: 500),
-      () => _isToolActionInProgress = false,
-    );
-  }
+  //   // Reset cooldown after a brief delay
+  //   Future.delayed(
+  //     const Duration(milliseconds: 500),
+  //     () => _isToolActionInProgress = false,
+  //   );
+  // }
 
-  /// Switches the currently equipped farming tool.
-  ///
-  /// Delegates directly to the model. Tool availability validation should
-  /// occur at a higher level (e.g., inventory system) before calling this method.
-  ///
-  /// [newTool] The tool to equip.
-  void switchTool(FarmTool newTool) => model.switchTool(newTool);
+  // /// Switches the currently equipped farming tool.
+  // ///
+  // /// Delegates directly to the model. Tool availability validation should
+  // /// occur at a higher level (e.g., inventory system) before calling this method.
+  // ///
+  // /// [newTool] The tool to equip.
+  // void switchTool(FarmTool newTool) => model.switchTool(newTool);
 
   /// Restores energy to maximum value.
   ///

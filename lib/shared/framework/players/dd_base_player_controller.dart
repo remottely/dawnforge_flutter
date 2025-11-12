@@ -1,0 +1,115 @@
+import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_base_player_model.dart';
+
+/// Abstract base controller for all player characters.
+///
+/// Manages the coordination between player model state and view presentation,
+/// handling input processing, resource management, and enemy detection systems.
+/// This controller provides common functionality while allowing specialization
+/// for character-specific behaviors through abstract methods and callbacks.
+///
+/// Type Parameters:
+/// - [M] The specific model type extending DDBasePlayerModel
+abstract class DDBasePlayerController<M extends DDBasePlayerModel> {
+  /// The data model containing player state and statistics.
+  final M model;
+
+  /// Callback invoked to display an exclamation emote.
+  final void Function() onShowExclamation;
+
+  /// Callback for delegating enemy visibility checks to the view layer.
+  final void Function({
+    required double visionRadius,
+    required void Function() notObserved,
+    required void Function(List<Enemy> enemies) observed,
+  })
+  onCheckEnemyVision;
+
+  /// Indicates whether stamina regeneration is currently scheduled.
+  bool _isStaminaRegenerationPending = false;
+
+  /// Creates a base player controller with required dependencies.
+  ///
+  /// [model] The data model to control.
+  /// [onShowExclamation] Callback for emote display.
+  /// [onCheckEnemyVision] Callback for enemy detection.
+  DDBasePlayerController({
+    required this.model,
+    required this.onShowExclamation,
+    required this.onCheckEnemyVision,
+  });
+
+  // ============================================================================
+  // Abstract Methods - Must be implemented by subclasses
+  // ============================================================================
+
+  /// Debounce duration between stamina regeneration ticks.
+  Duration get staminaRegenDebounce;
+
+  /// Handles character-specific input actions.
+  ///
+  /// Subclasses should implement their specific input routing logic here.
+  void handleInputAction(JoystickActionEvent event);
+
+  // ============================================================================
+  // Lifecycle Methods
+  // ============================================================================
+
+  /// Updates the controller state each frame.
+  ///
+  /// Processes common systems like stamina regeneration and enemy detection.
+  /// Subclasses can override to add additional update logic but should call
+  /// super.update(dt) to maintain base functionality.
+  void update(double dt) {
+    processStaminaRegeneration();
+    processEnemyDetection();
+  }
+
+  /// Cleans up resources when the controller is no longer needed.
+  ///
+  /// Subclasses can override to add additional cleanup but should call
+  /// super.dispose() to ensure base cleanup occurs.
+  void dispose() {
+    _isStaminaRegenerationPending = false;
+  }
+
+  // ============================================================================
+  // Common Systems - Available to all player types
+  // ============================================================================
+
+  /// Processes periodic stamina regeneration.
+  ///
+  /// Uses a debounced approach to regenerate stamina at regular intervals
+  /// without creating multiple simultaneous timers.
+  void processStaminaRegeneration() {
+    if (_isStaminaRegenerationPending) return;
+
+    _isStaminaRegenerationPending = true;
+
+    Future.delayed(staminaRegenDebounce, () {
+      _isStaminaRegenerationPending = false;
+      model.regenerateStamina();
+    });
+  }
+
+  /// Processes enemy detection and awareness state.
+  ///
+  /// Continuously checks for enemies within vision range and updates the
+  /// model's observation state. Triggers an exclamation emote when enemies
+  /// are first detected.
+  void processEnemyDetection() {
+    onCheckEnemyVision(
+      visionRadius: model.visionRadius,
+      notObserved: () => model.isObservingEnemy = false,
+      observed: (List<Enemy> detectedEnemies) {
+        if (model.isObservingEnemy) return;
+
+        model.isObservingEnemy = true;
+        onShowExclamation();
+      },
+    );
+  }
+
+  /// Restores energy to maximum value.
+  void restoreEnergy() => model.restoreEnergy();
+}
