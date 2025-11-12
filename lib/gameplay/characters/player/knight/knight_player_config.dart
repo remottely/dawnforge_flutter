@@ -40,7 +40,8 @@ final class KnightPlayerConfig {
   ///
   /// Uses an extra-large vision radius allowing the player to spot threats
   /// and opportunities from a considerable distance, matching other player characters.
-  static const double kVisionRadius = CharacterConstants.kVisionRadiusSuperLarge;
+  static const double kVisionRadius =
+      CharacterConstants.kVisionRadiusSuperLarge;
 
   // ============================================================================
   // Character Stats & Movement
@@ -162,14 +163,14 @@ final class KnightPlayerConfig {
     ),
     idleRight: UISpriteAnimationsConfig.loadKnightPlayerIdleRight6(),
     runLeft: SpriteAnimation.load(
-      'gameplay/characters/player/knight/knight_player_run_left_6.png',
+      'gameplay/characters/player/knight/knight_player_walking_left_6.png',
       SpriteAnimationConfig.createStandardData(
         amount: 6,
         textureSize: textureSize,
       ),
     ),
     runRight: SpriteAnimation.load(
-      'gameplay/characters/player/knight/knight_player_run_right_6.png',
+      'gameplay/characters/player/knight/knight_player_walking_right_6.png',
       SpriteAnimationConfig.createStandardData(
         amount: 6,
         textureSize: textureSize,
