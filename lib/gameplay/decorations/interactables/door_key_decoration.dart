@@ -23,7 +23,7 @@ class DoorKeyDecorationView extends DDContactDecoration {
       );
 
   @override
-  void onContact(SunnyPlayerView player) {
+  void onContact(SimplePlayer player) {
     if (!_hasBeenCollected) {
       _hasBeenCollected = true;
       _triggerEffect(player);
@@ -31,9 +31,10 @@ class DoorKeyDecorationView extends DDContactDecoration {
     }
   }
 
-  void _triggerEffect(SunnyPlayerView player) {
+  void _triggerEffect(SimplePlayer player) {
     // TODO(Kevin): add some VFX and SFX here
-    player.model.obtainKey();
+    (player as SunnyPlayerView).model
+        .obtainKey(); // TODO(Kevin): make this more generic, like DDBasePlayerView
   }
 
   void _cleanup() {

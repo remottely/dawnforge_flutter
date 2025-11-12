@@ -45,6 +45,8 @@ class HUDView extends GameInterface {
 
   bool _hasPlayerWithKey() {
     return gameRef.player != null &&
-        (gameRef.player as SunnyPlayerView).model.hasKey;
+        (gameRef.player as SunnyPlayerView)
+            .model
+            .hasKey; // TODO(Kevin): make this more generic, like DDBasePlayerView
   }
 }

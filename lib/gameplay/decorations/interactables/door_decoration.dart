@@ -58,15 +58,16 @@ class DoorDecorationView extends DDDecoration {
     Set<Vector2> intersectionPoints,
     PositionComponent other,
   ) {
-    if (other is SunnyPlayerView) {
+    if (other is SimplePlayer) {
       _handlePlayerCollision(other);
     }
     super.onCollisionStart(intersectionPoints, other);
   }
 
-  void _handlePlayerCollision(SunnyPlayerView player) {
+  void _handlePlayerCollision(SimplePlayer player) {
     if (!_isOpen) {
-      if (player.model.hasKey == true) {
+      if ((player as SunnyPlayerView).model.hasKey == true) {
+        // TODO(Kevin): make this more generic, like DDBasePlayerView
         _triggerDoorOpening(player);
       } else {
         _showKeyRequiredMessage(player);
@@ -74,9 +75,10 @@ class DoorDecorationView extends DDDecoration {
     }
   }
 
-  void _triggerDoorOpening(SunnyPlayerView player) {
+  void _triggerDoorOpening(SimplePlayer player) {
     _isOpen = true;
-    player.model.removeKey();
+    (player as SunnyPlayerView).model
+        .removeKey(); // TODO(Kevin): make this more generic, like DDBasePlayerView
     _playDoorOpeningAnimation();
   }
 

@@ -39,7 +39,7 @@ class MapTransitionSensorView extends DDContactDecoration {
   double _contactTime = 0;
 
   @override
-  void onContact(SunnyPlayerView component) {
+  void onContact(SimplePlayer component) {
     if (!_hasContact && !_hasNavigated) {
       _hasContact = true;
       _contactTime = 0;
@@ -48,7 +48,7 @@ class MapTransitionSensorView extends DDContactDecoration {
   }
 
   @override
-  void onContactExit(SunnyPlayerView component) {
+  void onContactExit(SimplePlayer component) {
     _hasContact = false;
     _contactTime = 0;
     super.onContactExit(component);

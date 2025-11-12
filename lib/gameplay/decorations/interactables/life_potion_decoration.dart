@@ -1,5 +1,4 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/gameplay/decorations/shared/decoration_constants.dart';
@@ -43,7 +42,7 @@ class LifePotionDecorationView extends DDContactDecoration {
   }
 
   @override
-  void onContact(SunnyPlayerView player) {
+  void onContact(SimplePlayer player) {
     if (!_hasBeenConsumed) {
       _hasBeenConsumed = true;
       _triggerEffect(player);
@@ -51,7 +50,7 @@ class LifePotionDecorationView extends DDContactDecoration {
     }
   }
 
-  void _triggerEffect(SunnyPlayerView player) {
+  void _triggerEffect(SimplePlayer player) {
     _healPlayerGradually(player);
   }
 
