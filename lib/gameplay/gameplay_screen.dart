@@ -18,6 +18,8 @@ class GameplayScreen extends StatefulWidget {
 }
 
 class _GameplayScreenState extends GameplayScreenViewmodel {
+  String? _lastRequestedMusic;
+
   @override
   Widget build(BuildContext gameplayContext) {
     return MapNavigator(
@@ -33,8 +35,15 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
         final mapBackgroundMusic = mapItem
             .properties[MapConfig.kBackgroundMusicPropertyKey]
             ?.toString();
-        if (mapBackgroundMusic != null && mapBackgroundMusic.isNotEmpty) {
-          AudioManager.instance.playBackgroundMusic(mapBackgroundMusic);
+
+        // Toca a música apenas se for diferente da última requisitada
+        if (mapBackgroundMusic != null &&
+            mapBackgroundMusic.isNotEmpty &&
+            _lastRequestedMusic != mapBackgroundMusic) {
+          _lastRequestedMusic = mapBackgroundMusic;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            AudioManager.instance.playBackgroundMusic(mapBackgroundMusic);
+          });
         }
 
         MapArguments? mapArguments = arguments as MapArguments?;

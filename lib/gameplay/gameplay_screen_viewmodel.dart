@@ -3,7 +3,6 @@ import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_view.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/game_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/hud_view.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen.dart';
@@ -23,7 +22,8 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
 
   @override
   void dispose() {
-    _cleanupGameAudio();
+    // NÃO para a música no dispose - deixa o AudioManager gerenciar
+    // A música deve continuar entre transições de tela
     super.dispose();
   }
 
@@ -31,10 +31,6 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     cameraConfig = GameplayScreenConfig.createCameraConfig(context);
-  }
-
-  void _cleanupGameAudio() {
-    AudioManager.instance.stopBackgroundMusic();
   }
 
   void _initializeGameComponents() {
