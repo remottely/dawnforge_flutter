@@ -75,4 +75,48 @@ final class CharacterFireballAttackConfig {
       },
     );
   }
+
+  static void enemyExecute({
+    required SimpleEnemy enemy,
+    required double damage,
+    required double longVisionRadius,
+  }) {
+    final Vector2 projectileOffset = OffsetHelper.getCenterOffset(
+      Vector2(-16, 0),
+      enemy.lastDirection,
+    );
+
+    enemy.seeAndMoveToAttackRange(
+      radiusVision: longVisionRadius,
+      positioned: (_) {
+        enemy.simpleAttackRange(
+          animation: createExecutionAnimation(),
+          animationDestroy: createDestroyAnimation(),
+          size: componentSize,
+          damage: damage,
+          speed: kSpeed,
+          execute: playExecutionAudio,
+          onDestroy: playDestroyAudio,
+          collision: createHitbox(),
+          lightingConfig: lightingConfig,
+        );
+        // enemy.simpleAttackRangeByDirection(
+        //   direction: enemy.lastDirection,
+        //   damage: damage,
+        //   speed: kSpeed,
+        //   animationRight: createExecutionAnimation(),
+        //   animationDestroy: createDestroyAnimation(),
+        //   size: componentSize,
+        //   lightingConfig: lightingConfig,
+        //   collision: createHitbox(),
+        //   centerOffset: projectileOffset,
+        //   attackFrom: AttackOriginEnum.ENEMY,
+        //   onDestroy: () {
+        //     playDestroyAudio();
+        //     CameraFx.fireballExplosionShake(enemy.gameRef);
+        //   },
+        // );
+      },
+    );
+  }
 }
