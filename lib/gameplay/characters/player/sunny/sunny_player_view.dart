@@ -43,6 +43,14 @@ class SunnyPlayerView
   /// Caches the last joystick directional input for restoration.
   JoystickDirectionalEvent? _bufferedDirectionalInput;
 
+  /// Stores the current input direction for combat actions.
+  ///
+  /// This direction is updated on every directional input, even during
+  /// movement locks, ensuring attacks always use the most recent player intent.
+  /// This matches professional game engine behavior (Unity/Unreal) where
+  /// input direction is decoupled from movement state.
+  Direction _currentInputDirection = Direction.right;
+
   /// Determines if movement is currently restricted.
   bool get _isMovementRestricted => _activeMovementLockCount > 0;
 
@@ -143,12 +151,53 @@ class SunnyPlayerView
       radAngle: event.radAngle,
     );
 
+    // Update input direction for combat system
+    _updateInputDirectionFromEvent(event);
+
     if (_isMovementRestricted) {
       stopMove(forceIdle: true);
       return;
     }
 
     super.onJoystickChangeDirectional(event);
+  }
+
+  /// Updates the current input direction based on joystick input.
+  ///
+  /// This method decouples input direction from movement state, ensuring
+  /// combat actions always reflect the player's most recent directional intent.
+  /// This matches professional game engine patterns where input is processed
+  /// independently of movement constraints.
+  void _updateInputDirectionFromEvent(JoystickDirectionalEvent event) {
+    switch (event.directional) {
+      case JoystickMoveDirectional.MOVE_UP:
+        _currentInputDirection = Direction.up;
+        break;
+      case JoystickMoveDirectional.MOVE_UP_LEFT:
+        _currentInputDirection = Direction.upLeft;
+        break;
+      case JoystickMoveDirectional.MOVE_UP_RIGHT:
+        _currentInputDirection = Direction.upRight;
+        break;
+      case JoystickMoveDirectional.MOVE_RIGHT:
+        _currentInputDirection = Direction.right;
+        break;
+      case JoystickMoveDirectional.MOVE_DOWN:
+        _currentInputDirection = Direction.down;
+        break;
+      case JoystickMoveDirectional.MOVE_DOWN_RIGHT:
+        _currentInputDirection = Direction.downRight;
+        break;
+      case JoystickMoveDirectional.MOVE_DOWN_LEFT:
+        _currentInputDirection = Direction.downLeft;
+        break;
+      case JoystickMoveDirectional.MOVE_LEFT:
+        _currentInputDirection = Direction.left;
+        break;
+      case JoystickMoveDirectional.IDLE:
+        // Preserve last direction when idle (standard game behavior)
+        break;
+    }
   }
 
   // ============================================================================
@@ -195,8 +244,12 @@ class SunnyPlayerView
   void _applyMeleeDamageHitbox(double damage) {
     final Vector2 attackCenterOffset = OffsetHelper.getCenterOffset(
       Vector2(6, 0),
-      lastDirection,
+      _currentInputDirection,
     );
+
+    // Temporarily override lastDirection for Bonfire's internal calculations
+    final Direction previousDirection = lastDirection;
+    lastDirection = _currentInputDirection;
 
     simpleAttackMelee(
       damage: damage,
@@ -205,6 +258,9 @@ class SunnyPlayerView
       size: CharacterPrimaryAttackConfig.kPlayerPrimaryAttackFxSize,
       centerOffset: attackCenterOffset,
     );
+
+    // Restore original lastDirection to maintain Bonfire's state consistency
+    lastDirection = previousDirection;
   }
 
   /// Triggers all visual and audio effects for melee attacks.
