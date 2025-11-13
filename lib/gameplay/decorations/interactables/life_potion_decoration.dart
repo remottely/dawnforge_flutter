@@ -17,11 +17,11 @@ final class LifePotionConfig {
   static Future<Sprite> _loadSprite() =>
       Sprite.load('gameplay/decorations/life_potion_decoration_1.png');
 
-  static _createHitbox() => HitboxUtils.createCenterHitbox(
+  static RectangleHitbox _createHitbox() => HitboxUtils.createCenterHitbox(
     componentSize: _componentSize,
     hitboxStartPositionX: 3.0,
     hitboxStartPositionY: 3.0,
-  );
+  )..collisionType = CollisionType.passive;
 }
 
 class LifePotionDecorationView extends DDContactDecoration {

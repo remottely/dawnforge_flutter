@@ -23,7 +23,8 @@ final class CharacterFireballAttackConfig {
   static final Vector2 componentSize = _textureSize / 3;
 
   static RectangleHitbox createHitbox() =>
-      HitboxUtils.createExpandHitbox(componentSize);
+      HitboxUtils.createExpandHitbox(componentSize)
+        ..collisionType = CollisionType.passive;
 
   static Future<SpriteAnimation> createExecutionAnimation() =>
       SpriteAnimation.load(
@@ -81,11 +82,6 @@ final class CharacterFireballAttackConfig {
     required double damage,
     required double longVisionRadius,
   }) {
-    final Vector2 projectileOffset = OffsetHelper.getCenterOffset(
-      Vector2(-16, 0),
-      enemy.lastDirection,
-    );
-
     enemy.seeAndMoveToAttackRange(
       radiusVision: longVisionRadius,
       positioned: (_) {
@@ -100,6 +96,10 @@ final class CharacterFireballAttackConfig {
           collision: createHitbox(),
           lightingConfig: lightingConfig,
         );
+        // final Vector2 projectileOffset = OffsetHelper.getCenterOffset(
+        //   Vector2(-16, 0),
+        //   enemy.lastDirection,
+        // );
         // enemy.simpleAttackRangeByDirection(
         //   direction: enemy.lastDirection,
         //   damage: damage,

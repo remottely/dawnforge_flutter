@@ -30,11 +30,12 @@ final class _DoorDecorationConfig {
         ),
       );
 
-  static _createHitbox(GameComponent target) => HitboxUtils.createBottomHitbox(
-    componentSize: target.size,
-    hitboxStartPositionX: 0.0,
-    hitboxStartPositionY: target.height * 0.75,
-  );
+  static RectangleHitbox _createHitbox(GameComponent target) =>
+      HitboxUtils.createBottomHitbox(
+        componentSize: target.size,
+        hitboxStartPositionX: 0.0,
+        hitboxStartPositionY: target.height * 0.75,
+      );
 
   static List<Say> createConversationSequence() {
     return [ConversationConfig.createKnightLeft(_kRequiredKeyMessage)];
