@@ -3,6 +3,7 @@ import 'package:darkness_dungeon/gameplay/characters/shared/character_constants.
 import 'package:darkness_dungeon/gameplay/core/modules/game/lightning_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
 
 /// Configuration constants and factory methods for torch decorations.
 ///
@@ -42,7 +43,8 @@ final class TorchDecorationConfig {
   /// The text displayed as an interaction prompt when the player is in range.
   ///
   /// Shown above the torch when it's unlit and the player can interact with it.
-  static const String kInteractionPromptText = 'Open me!!';
+  static final String interactionPromptText = GameplayStringsLocation.instance
+      .getString('torch_decoration_light_up');
 
   /// Amount of health restored per healing potion interaction.
   ///

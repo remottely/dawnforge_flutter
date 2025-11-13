@@ -61,7 +61,7 @@ class ChestDecorationView extends DDInputReceiverDecoration {
       final textPosition = ChestDecorationConfig.getTextPosition(width, height);
       _textConfig.render(
         canvas,
-        ChestDecorationConfig.kInteractionPromptText,
+        ChestDecorationConfig.interactionPromptText,
         textPosition,
       );
     }

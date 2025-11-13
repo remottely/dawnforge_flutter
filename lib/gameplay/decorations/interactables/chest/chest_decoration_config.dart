@@ -2,6 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 
 final class ChestDecorationConfig {
@@ -12,7 +13,8 @@ final class ChestDecorationConfig {
       CharacterConstants.kVisionRadiusExtraSmall;
   static const int kVisionCheckInterval = 500;
   static const String kVisionCheckIntervalId = 'SeePlayer';
-  static const String kInteractionPromptText = 'Open me!!';
+  static final String interactionPromptText = GameplayStringsLocation.instance
+      .getString('chest_decoration_open');
   static const double kHealAmountPerPotion = 30.0;
 
   // Component size

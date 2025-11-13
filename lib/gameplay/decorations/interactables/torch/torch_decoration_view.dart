@@ -151,7 +151,7 @@ class TorchDecorationView extends DDInputReceiverDecoration {
     final textPosition = TorchDecorationConfig.getTextPosition(width, height);
     _interactionPromptTextPaint.render(
       canvas,
-      TorchDecorationConfig.kInteractionPromptText,
+      TorchDecorationConfig.interactionPromptText,
       textPosition,
     );
   }
