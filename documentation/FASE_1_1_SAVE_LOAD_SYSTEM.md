@@ -36,19 +36,21 @@ Precisamos de uma camada de abstração para persistência que funcione tanto em
 
 ### Prompt para o Claude
 
-```
 Crie a estrutura completa do SaveRepository seguindo o padrão Repository com factory multiplataforma:
 
 REQUISITOS TÉCNICOS:
+
 1. Interface abstrata em save_repository.dart
+
    - Métodos: save(key, data), load(key), delete(key), clear()
    - Factory constructor que retorna Web ou Native baseado em kIsWeb
 
 2. Implementação Native (save_repository_native.dart)
+
    - Usar SharedPreferences
    - Serializar Map<String, dynamic> para JSON string
    - Tratamento de erro: retornar null se chave não existe
-   - Método clear() deve remover apenas keys do jogo (prefixo 'darkness_dungeon_')
+   - Método clear() deve remover apenas keys do jogo (prefixo 'darkness*dungeon*')
 
 3. Implementação Web (save_repository_web.dart)
    - Usar dart:html window.localStorage
@@ -62,6 +64,7 @@ lib/gameplay/core/modules/save/
 └── save_repository_web.dart
 
 PADRÃO DE CÓDIGO:
+
 - Usar 'final class' para implementações (Dart 3.0)
 - Async/await para todos os métodos
 - Try/catch com logs detalhados
@@ -69,10 +72,12 @@ PADRÃO DE CÓDIGO:
 
 EXEMPLO DE USO ESPERADO:
 
+```dart
 final repo = SaveRepository();
 await repo.save('player_data', {'name': 'Hero', 'level': 5});
 final data = await repo.load('player_data');
 print(data); // {name: Hero, level: 5}
+```
 
 CHECKLIST DE VALIDAÇÃO:
 [ ] Factory retorna SaveRepositoryWeb em kIsWeb
@@ -83,12 +88,12 @@ CHECKLIST DE VALIDAÇÃO:
 [ ] clear() remove apenas keys do jogo
 
 ### Critérios de Aceitação
+
 - [ ] Código compila sem erros
 - [ ] Factory funciona em Web e Native
 - [ ] Serialização/deserialização JSON funcional
 - [ ] Tratamento de erro robusto (não crashea)
 - [ ] Documentação completa em Dartdoc
-```
 
 ---
 
@@ -99,8 +104,6 @@ CHECKLIST DE VALIDAÇÃO:
 O SaveData é o model principal que encapsula todos os dados persistentes do jogo. Ele deve ter versionamento para permitir migrações futuras quando adicionarmos novos campos.
 
 ### Prompt para o Claude
-
-````
 
 Crie o SaveData model completo com sistema de versionamento e serialização robusta:
 
@@ -156,7 +159,7 @@ EXEMPLO DE JSON ESPERADO:
     "slots": []
   }
 }
-````
+```
 
 PADRÃO DE CÓDIGO:
 
@@ -172,9 +175,8 @@ CHECKLIST DE VALIDAÇÃO:
 [ ] copyWith() permite modificações imutáveis
 [ ] toString() é legível para debug
 
-```
-
 ### Critérios de Aceitação
+
 - [ ] Serialização bidirecional funciona
 - [ ] Versionamento preparado para migrações futuras
 - [ ] Validação impede loads de saves corrompidos
@@ -186,11 +188,12 @@ CHECKLIST DE VALIDAÇÃO:
 ## 🚀 PROMPT 3: Criar SaveManager (Singleton + Orquestração)
 
 ### Contexto
+
 O SaveManager é o singleton que coordena todas as operações de save/load. Ele usa o SaveRepository internamente e expõe API simples para o resto do jogo.
 
 ### Prompt para o Claude
 
-```
+````
 
 Crie o SaveManager singleton que orquestra todo o sistema de persistência:
 
@@ -256,7 +259,7 @@ if (loadedData != null && loadedData.isValid()) {
 
 // Auto-save (não espera)
 SaveManager.instance.autoSave();
-```
+````
 
 PADRÃO DE CÓDIGO:
 
