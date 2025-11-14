@@ -40,7 +40,9 @@ abstract class DDBasePlayerView<
     required super.size,
     required super.life,
     required super.speed,
-  }) : _playerModel = model;
+  }) : _playerModel = model {
+    anchor = Anchor.center;
+  }
 
   /// Provides read-only access to the player's data model.
   M get model => _playerController.model;

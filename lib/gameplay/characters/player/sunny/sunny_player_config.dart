@@ -257,40 +257,4 @@ final class SunnyPlayerConfig {
         position: Vector2(position.x, position.y),
         size: cryptComponentSize,
       );
-
-  // ============================================================================
-  // Equipment & Weapon Asset Paths
-  // ============================================================================
-  // Note: These appear to be legacy or planned feature paths.
-  // Consider organizing into a separate EquipmentConfig class if actively used.
-
-  /// Default pickaxe tool sprite path.
-  static const String defaultPickaxeSpritePath =
-      'gameplay/characters/weapons/SolarPoweredHammer.png';
-
-  /// Magic staff weapon sprite path.
-  static const String staffSpritePath = 'JellySquish Weapons Pack/staff.png';
-
-  /// Arched sword weapon sprite path.
-  static const String archedSwordSpritePath =
-      'JellySquish Weapons Pack/arched_sword.png';
-
-  /// Standard sword weapon sprite path.
-  static const String swordSpritePath = 'JellySquish Weapons Pack/sword.png';
-
-  /// Wooden shield sprite path.
-  static const String steelShield1SpritePath =
-      'SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/7_Shield/WoodShield4.png';
-
-  /// Alternative sword sprite path (SPUM asset pack).
-  static const String sword3SpritePath =
-      'SPUM/Resources/Addons/Legacy/0_Unit/0_Sprite/6_Weapons/0_Sword/Sword_3.png';
-
-  /// Axe weapon sprite path.
-  static const String axeNormal1SpritePath =
-      'SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/2_Axe/AxeNormal1.png';
-
-  /// Mace weapon sprite path.
-  static const String newWeapon07SpritePath =
-      'SPUM/Resources/Addons/Ver300/0_Unit/0_Sprite/8_Weapons/8_Mace/New_Weapon_07.png';
 }

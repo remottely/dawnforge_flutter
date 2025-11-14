@@ -2,7 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_loadout.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_slot.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/presets/knight_pickaxe_hand_preset.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_primary_attack_config.dart';
@@ -18,7 +18,7 @@ final class KnightHandLoadoutConfig {
   static KnightHandLoadoutSetup createDefaultKnightHandLoadout() {
     // final _rightHandData = KnightPickaxeHandPreset.create(
     //   id: 'sword',
-    //   spritePath: KnightPlayerProfile.swordSpritePath,
+    //   spritePath: KnightPlayerConfig.swordSpritePath,
     //   spriteSize: GameplayTileConstants.tileSizeStandard / 2,
     //   attachmentOffset: Vector2(8, 14),
     //   directionalOffset: Vector2(-6, 0), // left
@@ -27,7 +27,7 @@ final class KnightHandLoadoutConfig {
 
     // final _leftHandData = KnightPickaxeHandPreset.create(
     //   id: 'staff',
-    //   spritePath: KnightPlayerProfile.staffSpritePath,
+    //   spritePath: KnightPlayerConfig.staffSpritePath,
     //   spriteSize: GameplayTileConstants.tileSizeStandard / 2,
     //   attachmentOffset: Vector2(8, 14),
     //   directionalOffset: Vector2(6, 0), // right
@@ -36,7 +36,7 @@ final class KnightHandLoadoutConfig {
 
     // final _rightHandData = KnightPickaxeHandPreset.create(
     //   id: 'sword_3',
-    //   spritePath: KnightPlayerProfile.newWeapon07SpritePath,
+    //   spritePath: KnightPlayerConfig.newWeapon07SpritePath,
     //   spriteSize: GameplayTileConstants.tileSizeStandard,
     //   attachmentOffset: Vector2(8, 16),
     //   directionalOffset: Vector2(-5, 0), // left
@@ -46,7 +46,7 @@ final class KnightHandLoadoutConfig {
     /// Left Hand
     final _leftHandData = KnightPickaxeHandPreset.create(
       id: 'new_shield_04',
-      spritePath: SunnyPlayerConfig.steelShield1SpritePath,
+      spritePath: KnightPlayerConfig.steelShield1SpritePath,
       spriteSize: TileConstants.tileSizeStandard * 0.4,
       attachmentOffset: Vector2(6, 13),
       directionalOffset: Vector2(5, 1), // right
@@ -80,7 +80,7 @@ final class KnightHandLoadoutConfig {
     /// Right Hand
     final _rightHandData = KnightPickaxeHandPreset.create(
       id: 'sword_3',
-      spritePath: SunnyPlayerConfig.sword3SpritePath,
+      spritePath: KnightPlayerConfig.sword3SpritePath,
       spriteSize: Vector2(7, 22) * 0.4,
       attachmentOffset: Vector2(8, 13),
       directionalOffset: Vector2(-5, 0), // left
