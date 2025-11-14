@@ -12,7 +12,7 @@
 
 # Fix:
 
-- move map player spawn location to player center component and not top left of the component
+- [DONE] move map player spawn location to player center component and not top left of the component
 
 - [NOT_PRIORITY] continuous attack with continuous press attack (space bar)
 

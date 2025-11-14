@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:bonfire/map/tiled/builder/tiled_world_builder.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/map/map_data.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/map_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/map/map_data.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/map_transition_sensor.dart';
 import 'package:flutter/widgets.dart';
 

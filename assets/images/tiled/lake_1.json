@@ -568,33 +568,6 @@
                          "y":208.071258116097
                         }, 
                         {
-                         "height":12.2479707723616,
-                         "id":247,
-                         "name":"sensor_dungeon_1",
-                         "properties":[
-                                {
-                                 "name":"nextMap",
-                                 "type":"string",
-                                 "value":"dungeon1"
-                                }, 
-                                {
-                                 "name":"playerDirection",
-                                 "type":"string",
-                                 "value":"right"
-                                }, 
-                                {
-                                 "name":"playerPosition",
-                                 "type":"string",
-                                 "value":"3,3"
-                                }],
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":14.4113707723617,
-                         "x":656.583207497003,
-                         "y":560.781036712509
-                        }, 
-                        {
                          "height":15.6398,
                          "id":249,
                          "name":"sensor_dungeon_1",
@@ -620,6 +593,60 @@
                          "width":14.8959,
                          "x":16,
                          "y":48
+                        }, 
+                        {
+                         "height":13.7016,
+                         "id":250,
+                         "name":"sensor_forest_1",
+                         "properties":[
+                                {
+                                 "name":"nextMap",
+                                 "type":"string",
+                                 "value":"forest_1"
+                                }, 
+                                {
+                                 "name":"playerDirection",
+                                 "type":"string",
+                                 "value":"right"
+                                }, 
+                                {
+                                 "name":"playerPosition",
+                                 "type":"string",
+                                 "value":"3,4"
+                                }],
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":15.865,
+                         "x":656,
+                         "y":560
+                        }, 
+                        {
+                         "height":13.7016,
+                         "id":251,
+                         "name":"sensor_forest_1",
+                         "properties":[
+                                {
+                                 "name":"nextMap",
+                                 "type":"string",
+                                 "value":"forest_1"
+                                }, 
+                                {
+                                 "name":"playerDirection",
+                                 "type":"string",
+                                 "value":"right"
+                                }, 
+                                {
+                                 "name":"playerPosition",
+                                 "type":"string",
+                                 "value":"3,4"
+                                }],
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":15.865,
+                         "x":16,
+                         "y":80
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -744,7 +771,7 @@
          "y":0
         }],
  "nextlayerid":32,
- "nextobjectid":250,
+ "nextobjectid":252,
  "orientation":"orthogonal",
  "properties":[
         {
