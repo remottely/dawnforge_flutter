@@ -228,36 +228,38 @@ final class KnightPlayerConfig {
   // system is handled through the KnightHandManager and related components.
   // Consider organizing into a separate EquipmentAssetConfig class if the list grows.
 
-  /// Default pickaxe tool sprite path.
-  static const String defaultPickaxeSpritePath =
-      'gameplay/characters/weapons/SolarPoweredHammer.png';
+  // /// Default pickaxe tool sprite path.
+  // static const String defaultPickaxeSpritePath =
+  //     'gameplay/characters/weapons/SolarPoweredHammer.png';
 
-  /// Magic staff weapon sprite path.
-  static const String staffSpritePath = 'JellySquish Weapons Pack/staff.png';
+  // /// Magic staff weapon sprite path.
+  // static const String staffSpritePath = 'JellySquish Weapons Pack/staff.png';
 
-  /// Arched sword weapon sprite path.
-  static const String archedSwordSpritePath =
-      'JellySquish Weapons Pack/arched_sword.png';
+  // /// Arched sword weapon sprite path.
+  // static const String archedSwordSpritePath =
+  //     'JellySquish Weapons Pack/arched_sword.png';
 
-  /// Standard sword weapon sprite path.
-  static const String swordSpritePath = 'JellySquish Weapons Pack/sword.png';
+  // /// Standard sword weapon sprite path.
+  // static const String swordSpritePath = 'JellySquish Weapons Pack/sword.png';
+
+  //   static const String steelShield1SpritePath =
+  // 'SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/7_Shield/SteelShield1.png';
 
   /// Wooden shield sprite path (currently active default).
   ///
   /// Alternative steel shield path commented out for future use.
-  static const String steelShield1SpritePath =
+  static const String woodShield4SpritePath =
       'SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/7_Shield/WoodShield4.png';
-  // Alternative: 'SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/7_Shield/SteelShield1.png';
 
   /// Alternative sword sprite path from SPUM legacy assets.
   static const String sword3SpritePath =
       'SPUM/Resources/Addons/Legacy/0_Unit/0_Sprite/6_Weapons/0_Sword/Sword_3.png';
 
-  /// Axe weapon sprite path.
-  static const String axeNormal1SpritePath =
-      'SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/2_Axe/AxeNormal1.png';
+  // /// Axe weapon sprite path.
+  // static const String axeNormal1SpritePath =
+  //     'SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/2_Axe/AxeNormal1.png';
 
-  /// Mace weapon sprite path.
-  static const String newWeapon07SpritePath =
-      'SPUM/Resources/Addons/Ver300/0_Unit/0_Sprite/8_Weapons/8_Mace/New_Weapon_07.png';
+  // /// Mace weapon sprite path.
+  // static const String newWeapon07SpritePath =
+  //     'SPUM/Resources/Addons/Ver300/0_Unit/0_Sprite/8_Weapons/8_Mace/New_Weapon_07.png';
 }

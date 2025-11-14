@@ -46,11 +46,11 @@ final class KnightHandLoadoutConfig {
     /// Left Hand
     final _leftHandData = KnightPickaxeHandPreset.create(
       id: 'new_shield_04',
-      spritePath: KnightPlayerConfig.steelShield1SpritePath,
+      spritePath: KnightPlayerConfig.woodShield4SpritePath,
       spriteSize: TileConstants.tileSizeStandard * 0.4,
-      attachmentOffset: Vector2(6, 13),
-      directionalOffset: Vector2(5, 1), // right
-      mirroredDirectionalOffset: Vector2(4, 1), // left
+      attachmentOffset: Vector2(0, 5),
+      directionalOffset: Vector2(3, 1), // right
+      mirroredDirectionalOffset: Vector2(2, 1), // left
     );
 
     const _leftHandSyncSpec = SynchronizedAttackSpecConfig.standard;
@@ -82,7 +82,7 @@ final class KnightHandLoadoutConfig {
       id: 'sword_3',
       spritePath: KnightPlayerConfig.sword3SpritePath,
       spriteSize: Vector2(7, 22) * 0.4,
-      attachmentOffset: Vector2(8, 13),
+      attachmentOffset: Vector2(0, 5),
       directionalOffset: Vector2(-5, 0), // left
       mirroredDirectionalOffset: Vector2(-1, 0), // right
     );
