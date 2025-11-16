@@ -232,8 +232,8 @@ final class KnightPlayerConfig {
   // static const String defaultPickaxeSpritePath =
   //     'gameplay/characters/weapons/SolarPoweredHammer.png';
 
-  // /// Magic staff weapon sprite path.
-  // static const String staffSpritePath = 'JellySquish Weapons Pack/staff.png';
+  /// Magic staff weapon sprite path.
+  static const String staffSpritePath = 'JellySquish Weapons Pack/staff.png';
 
   // /// Arched sword weapon sprite path.
   // static const String archedSwordSpritePath =

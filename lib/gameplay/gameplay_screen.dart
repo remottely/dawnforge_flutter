@@ -50,7 +50,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
         final playerPosition =
             (mapArguments?.playerPosition ?? Vector2.all(4)) *
             TileConstants.kTileDimensionStandard;
-        final sunnyPlayer = buildSunnyPlayer(playerPosition);
+        final knightPlayer = buildKnightPlayer(playerPosition);
 
         final playerInput = GameplayScreenConfig.createPlayerInput();
 
@@ -58,12 +58,9 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
           color: Colors.transparent,
           child: BonfireWidget(
             playerControllers: [playerInput],
-            player: sunnyPlayer,
+            player: knightPlayer,
             map: mapItem.map,
-            components: [
-              gameplayGameStateManager,
-              inventoryInputHandler,
-            ],
+            components: [gameplayGameStateManager, inventoryInputHandler],
             interface: gameplayHUD,
             lightingColorGame: mapLightingColor,
             backgroundColor: mapBackgroundColor,

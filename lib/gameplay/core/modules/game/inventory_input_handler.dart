@@ -1,8 +1,10 @@
 import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/hud_view.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
+import 'package:darkness_dungeon/gameplay/inventory/equipment_to_knight_adapter.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/item_factory.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
@@ -50,15 +52,27 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
         return true;
       }
 
-      // Tecla E: Equipar primeiro item de arma do inventário
+      // Tecla E: Equipar primeiro item de arma do inventário no WEAPON slot
       if (event.logicalKey == LogicalKeyboardKey.keyE) {
         _equipFirstWeapon();
         return true;
       }
 
-      // Tecla U: Desequipar arma
+      // Tecla U: Desequipar arma do WEAPON slot
       if (event.logicalKey == LogicalKeyboardKey.keyU) {
         _unequipWeapon();
+        return true;
+      }
+
+      // Tecla O: Equipar primeiro item de arma do inventário no OFFHAND slot
+      if (event.logicalKey == LogicalKeyboardKey.keyO) {
+        _equipFirstOffhand();
+        return true;
+      }
+
+      // Tecla P: Desequipar arma do OFFHAND slot
+      if (event.logicalKey == LogicalKeyboardKey.keyP) {
+        _unequipOffhand();
         return true;
       }
     }
@@ -95,12 +109,16 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
     // Adicionar alguns itens de teste ao inventário
     final sword = ItemFactory.createItem('iron_sword');
     final axe = ItemFactory.createItem('steel_axe');
+    final staff = ItemFactory.createItem('fire_staff');
+    final shield = ItemFactory.createItem('wooden_shield');
     final potion = ItemFactory.createItem('health_potion');
     final wood = ItemFactory.createItem('wood');
     final seeds = ItemFactory.createItem('tomato_seeds');
 
     if (sword != null) InventoryManager.instance.addItem(sword);
     if (axe != null) InventoryManager.instance.addItem(axe);
+    if (staff != null) InventoryManager.instance.addItem(staff);
+    if (shield != null) InventoryManager.instance.addItem(shield);
     if (potion != null) InventoryManager.instance.addItem(potion, 5);
     if (wood != null) InventoryManager.instance.addItem(wood, 50);
     if (seeds != null) InventoryManager.instance.addItem(seeds, 10);
@@ -128,6 +146,10 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
   }
 
   void _equipFirstWeapon() {
+    developer.log(
+      '[InventoryInput] Procurando arma para equipar no slot weapon...',
+    );
+
     // Percorrer todos os slots do inventário
     for (int i = 0; i < InventoryManager.instance.maxSlots; i++) {
       final slot = InventoryManager.instance.getSlotByIndex(i);
@@ -139,23 +161,98 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
           slot.item!,
         );
         if (success) {
-          developer.log('[InventoryInput] Equipado: ${slot.item!.name}');
+          developer.log(
+            '[InventoryInput] Equipado no weapon: ${slot.item!.name}',
+          );
+          _notifyEquipmentChanged();
         } else {
           developer.log(
             '[InventoryInput] Falha ao equipar: ${slot.item!.name}',
           );
         }
-        break;
+        return;
       }
     }
+
+    developer.log('[InventoryInput] Nenhuma arma encontrada no inventário');
   }
 
   void _unequipWeapon() {
     final item = EquipmentManager.instance.unequip(EquipmentSlotType.weapon);
     if (item != null) {
-      developer.log('[InventoryInput] Desequipado: ${item.name}');
+      developer.log('[InventoryInput] Desequipado do weapon: ${item.name}');
+      _notifyEquipmentChanged();
     } else {
-      developer.log('[InventoryInput] Nenhuma arma equipada');
+      developer.log('[InventoryInput] Nenhuma arma equipada no weapon');
     }
+  }
+
+  void _equipFirstOffhand() {
+    developer.log(
+      '[InventoryInput] Procurando arma para equipar no slot offhand...',
+    );
+
+    // Percorrer todos os slots do inventário
+    for (int i = 0; i < InventoryManager.instance.maxSlots; i++) {
+      final slot = InventoryManager.instance.getSlotByIndex(i);
+      if (slot != null &&
+          slot.item != null &&
+          slot.item!.type.name == 'weapon') {
+        final success = EquipmentManager.instance.equip(
+          EquipmentSlotType.offhand,
+          slot.item!,
+        );
+        if (success) {
+          developer.log(
+            '[InventoryInput] Equipado no offhand: ${slot.item!.name}',
+          );
+          _notifyEquipmentChanged();
+        } else {
+          developer.log(
+            '[InventoryInput] Falha ao equipar: ${slot.item!.name}',
+          );
+        }
+        return;
+      }
+    }
+
+    developer.log('[InventoryInput] Nenhuma arma encontrada no inventário');
+  }
+
+  void _unequipOffhand() {
+    final item = EquipmentManager.instance.unequip(EquipmentSlotType.offhand);
+    if (item != null) {
+      developer.log('[InventoryInput] Desequipado do offhand: ${item.name}');
+      _notifyEquipmentChanged();
+    } else {
+      developer.log('[InventoryInput] Nenhuma arma equipada no offhand');
+    }
+  }
+
+  /// Notifica o player que o equipamento mudou
+  /// Para recarregar o loadout visual
+  void _notifyEquipmentChanged() {
+    developer.log('[InventoryInput] Equipamento mudou! Procurando player...');
+
+    // Buscar o KnightPlayerView no jogo
+    final players = gameRef.query<KnightPlayerView>();
+    if (players.isEmpty) {
+      developer.log('[InventoryInput] KnightPlayer não encontrado');
+      return;
+    }
+
+    final player = players.first;
+    developer.log(
+      '[InventoryInput] KnightPlayer encontrado! Recarregando loadout...',
+    );
+
+    // Criar novo loadout baseado no equipamento atual
+    final newLoadout = EquipmentToKnightAdapter.instance
+        .createLoadoutFromEquipment();
+
+    // Recarregar loadout do player
+    player.reloadEquipmentLoadout(newLoadout);
+
+    developer.log('[InventoryInput] Loadout recarregado com sucesso!');
   }
 }

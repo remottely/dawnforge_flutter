@@ -1,9 +1,9 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_loadout.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/presets/knight_hand_loadout_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
+import 'package:darkness_dungeon/gameplay/inventory/equipment_to_knight_adapter.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_equippable_player/dd_equippable_player_view.dart';
 
 /// Visual representation and input handler for the Knight player character.
@@ -33,7 +33,7 @@ class KnightPlayerView
          speed: KnightPlayerConfig.kSpeed,
          equipmentLoadout:
              handLoadout ??
-             KnightHandLoadoutConfig.createDefaultKnightHandLoadout(),
+             EquipmentToKnightAdapter.instance.createLoadoutFromEquipment(),
        );
 
   // ============================================================================

@@ -87,6 +87,14 @@ abstract class DDEquippablePlayerView<
   KnightHandItemController? handControllerFor(KnightHandSlot slot) =>
       _handEquipmentManager.handControllerFor(slot);
 
+  /// Recarrega o loadout de equipamento do player
+  ///
+  /// Útil quando o equipamento muda externamente (ex: InventoryManager)
+  /// e precisa atualizar os hands visuais do player.
+  Future<void> reloadEquipmentLoadout(KnightHandLoadoutSetup newLoadout) async {
+    await _handEquipmentManager.applyLoadout(newLoadout);
+  }
+
   // ============================================================================
   // Combat Execution - Equipment System Delegation
   // ============================================================================
