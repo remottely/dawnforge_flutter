@@ -9,6 +9,7 @@
 abstract class DDBasePlayerModel {
   double _currentStamina;
   int _currentEnergy;
+  double? _currentLife;
   bool _hasKeyItem;
   bool _isObservingEnemies;
 
@@ -18,15 +19,18 @@ abstract class DDBasePlayerModel {
   /// [maxEnergy] The maximum energy capacity for this character.
   /// [initialStamina] Starting stamina value. Defaults to maximum if not provided.
   /// [initialEnergy] Starting energy value. Defaults to maximum if not provided.
+  /// [initialLife] Starting life value. If null, uses default from character config.
   /// [initialHasKey] Whether the player starts with the key item.
   DDBasePlayerModel({
     required double maxStamina,
     required int maxEnergy,
     double? initialStamina,
     int? initialEnergy,
+    double? initialLife,
     bool? initialHasKey,
   }) : _currentStamina = initialStamina ?? maxStamina,
        _currentEnergy = initialEnergy ?? maxEnergy,
+       _currentLife = initialLife,
        _hasKeyItem = initialHasKey ?? false,
        _isObservingEnemies = false;
 
@@ -55,6 +59,9 @@ abstract class DDBasePlayerModel {
 
   /// Current energy value used for utility actions.
   int get energy => _currentEnergy;
+
+  /// Current life value. Returns null if not set (uses default from config).
+  double? get life => _currentLife;
 
   /// Whether the player possesses the key item.
   bool get hasKey => _hasKeyItem;
@@ -103,6 +110,13 @@ abstract class DDBasePlayerModel {
     _currentEnergy = maxEnergy;
   }
 
+  /// Updates the current life value.
+  ///
+  /// [value] The new life value to store.
+  void updateLife(double value) {
+    _currentLife = value;
+  }
+
   // ============================================================================
   // Inventory Management
   // ============================================================================
@@ -126,6 +140,7 @@ abstract class DDBasePlayerModel {
     return {
       'currentStamina': _currentStamina,
       'currentEnergy': _currentEnergy,
+      'currentLife': _currentLife,
       'hasKeyItem': _hasKeyItem,
       'isObservingEnemies': _isObservingEnemies,
     };
@@ -141,6 +156,7 @@ abstract class DDBasePlayerModel {
     _currentStamina =
         (json['currentStamina'] as num?)?.toDouble() ?? maxStamina;
     _currentEnergy = (json['currentEnergy'] as int?) ?? maxEnergy;
+    _currentLife = (json['currentLife'] as num?)?.toDouble();
     _hasKeyItem = (json['hasKeyItem'] as bool?) ?? false;
     _isObservingEnemies = (json['isObservingEnemies'] as bool?) ?? false;
   }

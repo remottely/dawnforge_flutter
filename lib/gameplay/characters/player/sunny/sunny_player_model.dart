@@ -10,12 +10,14 @@ class SunnyPlayerModel extends DDMobilePlayerModel {
   SunnyPlayerModel({
     double? initialStamina,
     int? initialEnergy,
+    double? initialLife,
     bool? initialHasKey,
   }) : super(
          maxStamina: SunnyPlayerConfig.kMaxStamina,
          maxEnergy: SunnyPlayerConfig.kMaxEnergy,
          initialStamina: initialStamina,
          initialEnergy: initialEnergy,
+         initialLife: initialLife,
          initialHasKey: initialHasKey,
        );
 
@@ -70,6 +72,7 @@ class SunnyPlayerModel extends DDMobilePlayerModel {
     final model = SunnyPlayerModel(
       initialStamina: (json['currentStamina'] as num?)?.toDouble(),
       initialEnergy: (json['currentEnergy'] as int?),
+      initialLife: (json['currentLife'] as num?)?.toDouble(),
       initialHasKey: (json['hasKeyItem'] as bool?),
     );
     model.fromJson(json);

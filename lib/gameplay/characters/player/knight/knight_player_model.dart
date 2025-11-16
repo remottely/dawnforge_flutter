@@ -13,12 +13,14 @@ class KnightPlayerModel extends DDHybridCombatPlayerModel {
   KnightPlayerModel({
     double? initialStamina,
     int? initialEnergy,
+    double? initialLife,
     bool? initialHasKey,
   }) : super(
          maxStamina: KnightPlayerConfig.kMaxStamina,
          maxEnergy: KnightPlayerConfig.kMaxEnergy,
          initialStamina: initialStamina,
          initialEnergy: initialEnergy,
+         initialLife: initialLife,
          initialHasKey: initialHasKey,
        );
 
@@ -70,6 +72,7 @@ class KnightPlayerModel extends DDHybridCombatPlayerModel {
     final model = KnightPlayerModel(
       initialStamina: (json['currentStamina'] as num?)?.toDouble(),
       initialEnergy: (json['currentEnergy'] as int?),
+      initialLife: (json['currentLife'] as num?)?.toDouble(),
       initialHasKey: (json['hasKeyItem'] as bool?),
     );
     model.fromJson(json);

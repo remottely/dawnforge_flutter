@@ -84,12 +84,28 @@ abstract class DDBasePlayerView<
     configureVisualEffects();
     _playerController = createController(_playerModel);
     add(createHitbox());
+
+    // Restaurar vida do model depois que Bonfire inicializou
+    _restoreLifeFromModel();
+  }
+
+  /// Restaura a vida salva no model aplicando dano proporcional.
+  ///
+  /// Como o Bonfire não permite setar life diretamente, aplicamos
+  /// o dano necessário para ajustar para o valor salvo.
+  void _restoreLifeFromModel() {
+    final savedLife = _playerModel.life;
+    if (savedLife != null && savedLife < life) {
+      final damageToApply = life - savedLife;
+      handleAttack(AttackOriginEnum.WORLD, damageToApply, 'restore_from_save');
+    }
   }
 
   @override
   void update(double dt) {
     if (isDead) return;
 
+    _syncLifeToModel();
     _playerController.update(dt);
     super.update(dt);
   }
@@ -122,6 +138,7 @@ abstract class DDBasePlayerView<
 
     displayDamageVisualEffects(damage);
     super.onReceiveDamage(attacker, damage, id);
+    _syncLifeToModel();
   }
 
   @override
@@ -187,5 +204,19 @@ abstract class DDBasePlayerView<
       notObserved: notObserved,
       observed: observed,
     );
+  }
+
+  // ============================================================================
+  // Internal Synchronization
+  // ============================================================================
+
+  /// Synchronizes the Bonfire life value to the player model.
+  ///
+  /// This ensures the model always reflects the current life state,
+  /// which is crucial for persistence between map transitions.
+  void _syncLifeToModel() {
+    if (_playerModel.life != life) {
+      _playerModel.updateLife(life);
+    }
   }
 }

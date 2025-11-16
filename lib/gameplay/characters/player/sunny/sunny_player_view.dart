@@ -60,9 +60,7 @@ class SunnyPlayerView
         size: SunnyPlayerConfig.componentSize,
         life: SunnyPlayerConfig.kLife,
         speed: SunnyPlayerConfig.kSpeed,
-      );
-
-  // ============================================================================
+      ); // ============================================================================
   // Lifecycle Methods
   // ============================================================================
 

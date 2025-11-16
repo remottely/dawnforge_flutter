@@ -34,9 +34,7 @@ class KnightPlayerView
          equipmentLoadout:
              handLoadout ??
              EquipmentToKnightAdapter.instance.createLoadoutFromEquipment(),
-       );
-
-  // ============================================================================
+       ); // ============================================================================
   // Factory Methods - Configuration
   // ============================================================================
 

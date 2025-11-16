@@ -53,10 +53,6 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
             TileConstants.kTileDimensionStandard;
         final knightPlayer = buildKnightPlayer(playerPosition);
 
-        farmInteractionComponent = FarmInteractionComponent(
-          player: knightPlayer,
-        );
-
         final playerInput = GameplayScreenConfig.createPlayerInput();
 
         // Criar novo componente de farm interaction para este mapa

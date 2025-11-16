@@ -11,6 +11,7 @@ abstract class DDHybridCombatPlayerModel extends DDBasePlayerModel {
     required super.maxEnergy,
     super.initialStamina,
     super.initialEnergy,
+    super.initialLife,
     super.initialHasKey,
   });
 

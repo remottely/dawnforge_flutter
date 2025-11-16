@@ -13,6 +13,7 @@ abstract class DDMobilePlayerModel extends DDHybridCombatPlayerModel {
     required super.maxEnergy,
     super.initialStamina,
     super.initialEnergy,
+    super.initialLife,
     super.initialHasKey,
   });
 
