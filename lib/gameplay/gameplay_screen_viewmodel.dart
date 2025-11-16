@@ -4,6 +4,7 @@ import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/game_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/inventory_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/hud_view.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen_config.dart';
@@ -13,6 +14,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   late final HUDView gameplayHUD;
   late final CameraConfig cameraConfig;
   final gameplayGameStateManager = GameStateManager();
+  final inventoryInputHandler = InventoryInputHandler();
 
   @override
   void initState() {

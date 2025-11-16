@@ -60,7 +60,10 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
             playerControllers: [playerInput],
             player: sunnyPlayer,
             map: mapItem.map,
-            components: [gameplayGameStateManager],
+            components: [
+              gameplayGameStateManager,
+              inventoryInputHandler,
+            ],
             interface: gameplayHUD,
             lightingColorGame: mapLightingColor,
             backgroundColor: mapBackgroundColor,

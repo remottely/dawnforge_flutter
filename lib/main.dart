@@ -1,5 +1,6 @@
 import 'package:darkness_dungeon/app/screens/menu_screen.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_localizations_delegate.dart';
+import 'package:darkness_dungeon/gameplay/inventory/item_factory.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -16,7 +17,10 @@ void main() async {
     await Flame.device.fullScreen();
   }
 
+  // Initialize game systems
   await AudioManager.instance.initialize();
+  await ItemFactory.initialize(); // Carrega database de itens
+
   GameplayLocalizationsDelegate location =
       const GameplayLocalizationsDelegate();
 
