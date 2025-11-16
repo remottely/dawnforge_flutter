@@ -308,7 +308,7 @@ final class EquipmentToKnightAdapter {
       mirroredDirectionalOffset: config.mirroredDirectionalOffset,
     );
 
-    // Apenas staff/wand tem ataque fireball
+    // Apenas staff/wand tem ataque fireball, shield tem defesa
     KnightHandAttackSpec? attackSpec;
     if (weaponType.contains('staff') || weaponType.contains('wand')) {
       const syncSpec = SynchronizedAttackSpecConfig.standard;
@@ -335,6 +335,20 @@ final class EquipmentToKnightAdapter {
           developer.log(
             '[EquipmentAdapter] Fireball attack with ${item.name}: $finalDamage damage',
           );
+        },
+      );
+    } else if (weaponType.contains('shield')) {
+      // Shield tem spec de defesa (sem syncSpec pois não é ataque)
+      const syncSpec = SynchronizedAttackSpecConfig.standard;
+
+      attackSpec = KnightHandAttackSpec(
+        trigger: KnightAttackTrigger.shieldDefense,
+        attackType: AttackType.melee, // Tipo irrelevante para defesa
+        syncSpec: syncSpec,
+        execute: (context, damage) {
+          // A defesa é gerenciada pelo input handler
+          // Este execute não é chamado diretamente
+          developer.log('[EquipmentAdapter] Shield defense active');
         },
       );
     }

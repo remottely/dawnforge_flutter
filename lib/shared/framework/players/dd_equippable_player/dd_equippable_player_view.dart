@@ -1,3 +1,4 @@
+import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_item_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_loadout.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_manager.dart';
@@ -73,6 +74,29 @@ abstract class DDEquippablePlayerView<
   }
 
   // ============================================================================
+  // Combat & Damage Handling Override
+  // ============================================================================
+
+  @override
+  void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
+    // Bloquear dano se está defendendo com escudo
+    if (isDefending) {
+      // Mostrar feedback visual de bloqueio (sem aplicar dano)
+      showDamage(
+        0,
+        config: const TextStyle(
+          color: Color(0xFF00FFFF), // Ciano para indicar bloqueio
+          fontSize: 12,
+        ),
+      );
+      return; // Não chama super, bloqueando o dano
+    }
+
+    // Processar dano normalmente se não está defendendo
+    super.onReceiveDamage(attacker, damage, id);
+  }
+
+  // ============================================================================
   // Public Equipment API
   // ============================================================================
 
@@ -106,6 +130,19 @@ abstract class DDEquippablePlayerView<
   @override
   bool executeRangedAttack(double damage) =>
       _executeAttackForTrigger(KnightAttackTrigger.fireball, damage);
+
+  /// Inicia modo de defesa com escudo
+  bool startShieldDefense() {
+    return _handEquipmentManager.startDefense();
+  }
+
+  /// Para modo de defesa com escudo
+  void stopShieldDefense() {
+    _handEquipmentManager.stopDefense();
+  }
+
+  /// Verifica se está em modo de defesa
+  bool get isDefending => _handEquipmentManager.isDefending;
 
   /// Routes attack execution to the appropriate equipped item.
   ///

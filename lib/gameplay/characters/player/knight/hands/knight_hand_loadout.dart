@@ -4,10 +4,10 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_item_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_item_data.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_slot.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec.dart';
 
-enum KnightAttackTrigger { primary, fireball }
+enum KnightAttackTrigger { primary, fireball, shieldDefense }
 
 class KnightAttackExecutionContext {
   final SimplePlayer player;

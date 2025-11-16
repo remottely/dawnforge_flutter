@@ -4,6 +4,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_item_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_loadout.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_slot.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/shield_defense_component.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
 
 class KnightHandManager {
@@ -12,6 +13,13 @@ class KnightHandManager {
   final SimplePlayer _owner;
   final Map<KnightHandSlot, _KnightHandRuntime> _hands = {};
   final Map<KnightAttackTrigger, KnightHandSlot> _triggerToSlot = {};
+
+  // Sistema de defesa
+  ShieldDefenseComponent? _defenseComponent;
+  bool _isDefending = false;
+  String? _currentShieldSpritePath;
+
+  bool get isDefending => _isDefending;
 
   Future<void> applyLoadout(KnightHandLoadoutSetup loadout) async {
     developer.log(
@@ -138,6 +146,7 @@ class KnightHandManager {
   }
 
   void dispose() {
+    _stopDefenseInternal();
     for (final runtime in _hands.values) {
       runtime.dispose();
     }
@@ -148,6 +157,72 @@ class KnightHandManager {
   void _clearTriggerForSlot(KnightHandSlot slot) {
     _triggerToSlot.removeWhere((_, mappedSlot) => mappedSlot == slot);
   }
+
+  // ==========================================================================
+  // Sistema de Defesa com Escudo
+  // ==========================================================================
+
+  /// Inicia o modo de defesa com escudo
+  /// Retorna true se conseguiu iniciar (tem escudo equipado)
+  bool startDefense() {
+    if (_isDefending) return true; // Já está defendendo
+
+    // Verificar se tem escudo no slot de defesa
+    final defenseSlot = _triggerToSlot[KnightAttackTrigger.shieldDefense];
+    if (defenseSlot == null) {
+      developer.log('[KnightHandManager] Sem escudo equipado para defender');
+      return false;
+    }
+
+    final runtime = _hands[defenseSlot];
+    if (runtime == null) {
+      developer.log('[KnightHandManager] Runtime de defesa não encontrado');
+      return false;
+    }
+
+    // Obter sprite path do shield
+    _currentShieldSpritePath = runtime.itemController.data.spritePath;
+
+    developer.log('[KnightHandManager] Iniciando defesa com escudo');
+    _isDefending = true;
+
+    // Criar componente de defesa se não existir
+    if (_defenseComponent == null) {
+      _defenseComponent = ShieldDefenseComponent(
+        player: _owner,
+        shieldSpritePath: _currentShieldSpritePath!,
+      );
+      _owner.gameRef.add(_defenseComponent!);
+    }
+
+    _defenseComponent!.activate();
+
+    developer.log('[KnightHandManager] ✓ Defesa ativada - player imune a dano');
+
+    return true;
+  }
+
+  /// Para o modo de defesa
+  void stopDefense() {
+    if (!_isDefending) return;
+
+    developer.log('[KnightHandManager] Parando defesa');
+    _stopDefenseInternal();
+  }
+
+  void _stopDefenseInternal() {
+    _isDefending = false;
+
+    if (_defenseComponent != null) {
+      _defenseComponent!.deactivate();
+      _defenseComponent!.removeFromParent();
+      _defenseComponent = null;
+    }
+
+    _currentShieldSpritePath = null;
+  }
+
+  // ==========================================================================
 
   SynchronizedAttackController _createAttackController(
     KnightHandItemController itemController,
