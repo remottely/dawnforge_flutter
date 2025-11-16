@@ -259,7 +259,8 @@ final class KnightPlayerConfig {
   static const String axeNormal1SpritePath =
       'SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/2_Axe/AxeNormal1.png';
 
-  // /// Mace weapon sprite path.
+  /// Mace weapon sprite path.
+
   // static const String newWeapon07SpritePath =
   //     'SPUM/Resources/Addons/Ver300/0_Unit/0_Sprite/8_Weapons/8_Mace/New_Weapon_07.png';
 }

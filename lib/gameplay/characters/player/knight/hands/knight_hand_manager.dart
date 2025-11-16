@@ -17,7 +17,6 @@ class KnightHandManager {
   // Sistema de defesa
   ShieldDefenseComponent? _defenseComponent;
   bool _isDefending = false;
-  String? _currentShieldSpritePath;
 
   bool get isDefending => _isDefending;
 
@@ -180,20 +179,12 @@ class KnightHandManager {
       return false;
     }
 
-    // Obter sprite path do shield
-    // _currentShieldSpritePath = runtime.itemController.data.spritePath;
-    _currentShieldSpritePath =
-        'SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/7_Shield/SteelShield1.png';
-
     developer.log('[KnightHandManager] Iniciando defesa com escudo');
     _isDefending = true;
 
     // Criar componente de defesa se não existir
     if (_defenseComponent == null) {
-      _defenseComponent = ShieldDefenseComponent(
-        player: _owner,
-        shieldSpritePath: _currentShieldSpritePath!,
-      );
+      _defenseComponent = ShieldDefenseComponent(player: _owner);
       _owner.gameRef.add(_defenseComponent!);
     }
 
@@ -220,8 +211,6 @@ class KnightHandManager {
       _defenseComponent!.removeFromParent();
       _defenseComponent = null;
     }
-
-    _currentShieldSpritePath = null;
   }
 
   // ==========================================================================

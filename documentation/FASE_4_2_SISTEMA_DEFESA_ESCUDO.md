@@ -138,17 +138,101 @@ else if (weaponType.contains('shield')) {
 
 ## Sprite do Escudo
 
-### Requisitos
+## Sprite Animado do Escudo
 
-- **Tamanho**: 16x16 pixels
+### 📍 **Onde Configurar a Animação**
+
+A animação de defesa está configurada em **um único lugar centralizado**:
+
+**Arquivo**: `lib/gameplay/characters/player/knight/knight_player_config.dart`
+
+```dart
+/// Shield defense animation (16x16 animated sprite shown during Z hold defense).
+static Future<SpriteAnimation> createShieldDefenseAnimation() {
+  return SpriteAnimation.load(
+    'gameplay/characters/player/knight/shield_defense.png',
+    SpriteAnimationData.sequenced(
+      amount: 4, // 4 frames de animação
+      stepTime: 0.1, // 100ms por frame (10 FPS)
+      textureSize: Vector2.all(16), // 16x16 pixels por frame
+    ),
+  );
+}
+```
+
+### ✏️ **Como Criar Seu Spritesheet**
+
+**Formato do Spritesheet:**
+
+- Arquivo PNG com todos os frames em **sequência horizontal**
+- Cada frame: 16x16 pixels
+- Total de frames: configurável (padrão: 4 frames)
+- Tamanho total: `(16 * amount) x 16` pixels
+  - Exemplo 4 frames: **64x16 pixels**
+  - Exemplo 6 frames: **96x16 pixels**
+
+**Opção 1: Usar o path padrão**
+
+1. Crie seu spritesheet (ex: 4 frames = 64x16 pixels)
+2. Salve em: `assets/images/gameplay/characters/player/knight/shield_defense.png`
+3. Pronto! O sistema usará automaticamente
+
+**Opção 2: Customizar completamente**
+
+1. Crie seu spritesheet em qualquer lugar dentro de `assets/images/`
+2. Abra `knight_player_config.dart`
+3. Modifique a função `createShieldDefenseAnimation()`:
+
+```dart
+static Future<SpriteAnimation> createShieldDefenseAnimation() {
+  return SpriteAnimation.load(
+    'seu/caminho/customizado.png', // ← Seu path
+    SpriteAnimationData.sequenced(
+      amount: 6, // ← Seu número de frames
+      stepTime: 0.08, // ← Velocidade da animação
+      textureSize: Vector2.all(16),
+    ),
+  );
+}
+```
+
+### 🎨 **Parâmetros de Animação**
+
+| Parâmetro     | Descrição                     | Valor Padrão    | Customizar Para                   |
+| ------------- | ----------------------------- | --------------- | --------------------------------- |
+| `amount`      | Número total de frames        | 4               | Mais frames = animação mais suave |
+| `stepTime`    | Tempo entre frames (segundos) | 0.1             | Menor = mais rápido               |
+| `textureSize` | Tamanho de cada frame         | Vector2.all(16) | Sempre 16x16                      |
+
+**Velocidades:**
+
+- `0.05` = 20 FPS (muito rápido)
+- `0.1` = 10 FPS (padrão)
+- `0.15` = 6.6 FPS (mais lento)
+
+### 📐 **Requisitos**
+
 - **Formato**: PNG com transparência
-- **Localização sugerida**: `assets/images/gameplay/characters/player/knight/shield_defense.png`
+- **Layout**: Frames em sequência horizontal
+- **Tamanho de cada frame**: 16x16 pixels
+- **Tamanho total**: `(16 * frames) x 16` pixels
+- **Localização padrão**: `assets/images/gameplay/characters/player/knight/shield_defense.png`
 
-### Como Adicionar
+### 🖼️ **Exemplo Visual**
 
-1. Criar/obter sprite 16x16 do escudo
-2. Salvar em: `assets/images/gameplay/characters/player/knight/shield_defense.png`
-3. O sprite path é obtido automaticamente do item equipado via `runtime.itemController.data.spritePath`
+```
+Para 4 frames (64x16 pixels):
+┌────┬────┬────┬────┐
+│ 16 │ 16 │ 16 │ 16 │
+└────┴────┴────┴────┘
+Frame1 Frame2 Frame3 Frame4
+```
+
+### ⚠️ **Importante**
+
+- A **animação** de defesa é diferente do sprite estático na mão
+- Sprite na mão → `items_database.json` (estático)
+- Animação de defesa → `KnightPlayerConfig.createShieldDefenseAnimation()` (animado em loop)
 
 ### Posicionamento
 
