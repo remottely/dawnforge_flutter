@@ -12,39 +12,31 @@ import 'package:flutter/services.dart';
 class ShieldDefenseInputHandler extends GameComponent
     with KeyboardEventListener {
   bool _isDefending = false;
-  KnightPlayerView? _cachedPlayer;
 
   bool get isDefending => _isDefending;
 
-  @override
-  void update(double dt) {
-    super.update(dt);
-
-    // Cache do player
-    if (_cachedPlayer == null) {
-      final players = gameRef.query<KnightPlayerView>();
-      if (players.isNotEmpty) {
-        _cachedPlayer = players.first;
-        developer.log('[ShieldDefenseInput] Player encontrado e cacheado');
-      }
-    }
+  /// Busca o player atual a cada chamada para garantir compatibilidade com troca de mapas
+  KnightPlayerView? _getCurrentPlayer() {
+    final players = gameRef.query<KnightPlayerView>();
+    return players.isNotEmpty ? players.first : null;
   }
 
   @override
   bool onKeyboard(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-    if (_cachedPlayer == null) return false;
+    final player = _getCurrentPlayer();
+    if (player == null) return false;
 
     // Detectar Z pressionado (KeyDown)
     if (event is KeyDownEvent &&
         event.logicalKey == KeyboardSetup.kFireballAttackKey) {
       if (!_isDefending) {
-        final success = _cachedPlayer!.startShieldDefense();
+        final success = player.startShieldDefense();
         if (success) {
           _isDefending = true;
           developer.log(
             '[ShieldDefenseInput] ✓ Defesa iniciada - inputs bloqueados',
           );
-          _blockPlayerMovement();
+          _blockPlayerMovement(player);
           return true; // Consumir o evento
         }
       }
@@ -55,12 +47,11 @@ class ShieldDefenseInputHandler extends GameComponent
     if (event is KeyUpEvent &&
         event.logicalKey == KeyboardSetup.kFireballAttackKey) {
       if (_isDefending) {
-        _cachedPlayer!.stopShieldDefense();
+        player.stopShieldDefense();
         _isDefending = false;
         developer.log(
           '[ShieldDefenseInput] ✓ Defesa finalizada - inputs liberados',
         );
-        _unblockPlayerMovement();
         return true; // Consumir o evento
       }
       return false;
@@ -78,27 +69,22 @@ class ShieldDefenseInputHandler extends GameComponent
   }
 
   /// Bloqueia movimento do player durante defesa
-  void _blockPlayerMovement() {
-    if (_cachedPlayer == null) return;
-
+  void _blockPlayerMovement(KnightPlayerView player) {
     // Zerar velocidade do player
-    _cachedPlayer!.idle();
+    player.idle();
 
     // Desabilitar controles (se possível via Bonfire)
     // O bloqueio principal é via interceptação de inputs acima
   }
 
-  /// Reabilita movimento do player após defesa
-  void _unblockPlayerMovement() {
-    // O movimento é reabilitado automaticamente quando
-    // os inputs voltam a ser processados normalmente
-  }
-
   @override
   void onRemove() {
     // Garantir que defesa seja desativada ao remover componente
-    if (_isDefending && _cachedPlayer != null) {
-      _cachedPlayer!.stopShieldDefense();
+    if (_isDefending) {
+      final player = _getCurrentPlayer();
+      if (player != null) {
+        player.stopShieldDefense();
+      }
       _isDefending = false;
     }
     super.onRemove();
