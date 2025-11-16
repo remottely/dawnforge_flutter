@@ -1,0 +1,195 @@
+import 'dart:developer' as developer;
+
+import 'crop_database.dart';
+import 'models/crop.dart';
+import 'models/farm_tile.dart';
+import 'models/soil_state.dart';
+
+/// Gerenciador singleton do sistema de agricultura
+///
+/// Gerencia todos os tiles de fazenda, crescimento de crops e
+/// interações do jogador (arar, regar, plantar, colher).
+final class FarmManager {
+  FarmManager._();
+
+  static final instance = FarmManager._();
+
+  final Map<String, FarmTile> _farmTiles = {};
+
+  /// Obter tile por coordenadas
+  FarmTile? getTile(int x, int y) {
+    return _farmTiles['${x}_$y'];
+  }
+
+  /// Definir tile
+  void setTile(FarmTile tile) {
+    _farmTiles['${tile.x}_${tile.y}'] = tile;
+  }
+
+  /// Obter todos os tiles
+  List<FarmTile> getAllTiles() => _farmTiles.values.toList();
+
+  /// Limpar todos os tiles
+  void clearAll() {
+    _farmTiles.clear();
+    developer.log('[FarmManager] All tiles cleared');
+  }
+
+  /// Arar solo
+  /// Retorna true se conseguiu arar
+  bool tillSoil(int x, int y) {
+    developer.log('[FarmManager] Tilling soil at ($x, $y)');
+
+    // TODO(Kevin): Validar que player tem enxada equipada
+    // if (!_playerHasTool('hoe')) {
+    //   developer.log('[FarmManager] Player needs hoe');
+    //   return false;
+    // }
+
+    // Obter ou criar tile
+    var tile = getTile(x, y);
+    if (tile == null) {
+      tile = FarmTile(x: x, y: y);
+    }
+
+    // Validar estado
+    if (tile.soilState != SoilState.untilled) {
+      developer.log('[FarmManager] Soil already tilled');
+      return false;
+    }
+
+    // Arar
+    _farmTiles['${x}_$y'] = tile.till();
+    developer.log('[FarmManager] ✓ Soil tilled successfully');
+    return true;
+  }
+
+  /// Regar tile
+  /// Retorna true se conseguiu regar
+  bool waterTile(int x, int y) {
+    developer.log('[FarmManager] Watering tile at ($x, $y)');
+
+    // TODO(Kevin): Validar que player tem regador equipado
+    // if (!_playerHasTool('watering_can')) {
+    //   developer.log('[FarmManager] Player needs watering can');
+    //   return false;
+    // }
+
+    // Obter tile
+    final tile = getTile(x, y);
+    if (tile == null || tile.soilState == SoilState.untilled) {
+      developer.log('[FarmManager] Cannot water untilled soil');
+      return false;
+    }
+
+    // Regar
+    _farmTiles['${x}_$y'] = tile.water();
+    developer.log('[FarmManager] ✓ Tile watered successfully');
+    return true;
+  }
+
+  /// Plantar semente
+  /// Retorna true se conseguiu plantar
+  bool plantSeed(int x, int y, String cropId) {
+    developer.log('[FarmManager] Planting $cropId at ($x, $y)');
+
+    // TODO(Kevin): Validar que player tem seed no inventário
+    // if (!InventoryManager.instance.hasItem(seedItemId, 1)) {
+    //   developer.log('[FarmManager] Player does not have seed');
+    //   return false;
+    // }
+
+    // TODO(Kevin): Validar estação atual
+    // final currentSeason = WorldStateManager.instance.currentSeason;
+
+    // Obter tile
+    final tile = getTile(x, y);
+    if (tile == null || !tile.canPlant) {
+      developer.log('[FarmManager] Cannot plant on this tile');
+      return false;
+    }
+
+    // Criar crop
+    final crop = CropDatabase.createCrop(cropId);
+    if (crop == null) {
+      developer.log('[FarmManager] Invalid crop ID');
+      return false;
+    }
+
+    // Plantar
+    _farmTiles['${x}_$y'] = tile.plant(crop);
+
+    // TODO(Kevin): Remover seed do inventário
+    // InventoryManager.instance.removeItem(seedItemId, 1);
+
+    developer.log('[FarmManager] ✓ Seed planted successfully');
+    return true;
+  }
+
+  /// Colher crop
+  /// Retorna a crop colhida ou null se não pode colher
+  Crop? harvestCrop(int x, int y) {
+    developer.log('[FarmManager] Harvesting crop at ($x, $y)');
+
+    // Obter tile
+    final tile = getTile(x, y);
+    if (tile == null || !tile.canHarvest) {
+      developer.log('[FarmManager] Nothing to harvest');
+      return null;
+    }
+
+    final crop = tile.crop!;
+
+    // TODO(Kevin): Adicionar itens colhidos ao inventário
+    // final harvestItem = ItemFactory.createItem(crop.harvestItemId);
+    // if (harvestItem != null) {
+    //   for (var i = 0; i < crop.yieldAmount; i++) {
+    //     InventoryManager.instance.addItem(harvestItem);
+    //   }
+    // }
+
+    // Limpar tile
+    _farmTiles['${x}_$y'] = tile.harvest();
+
+    developer.log(
+      '[FarmManager] ✓ Harvested ${crop.yieldAmount}x ${crop.name}',
+    );
+    return crop;
+  }
+
+  /// Avançar 1 dia em todos os tiles
+  void advanceDay() {
+    developer.log('[FarmManager] Advancing all crops 1 day');
+
+    var cropsGrown = 0;
+    for (var entry in _farmTiles.entries) {
+      final oldTile = entry.value;
+      if (oldTile.crop != null) {
+        _farmTiles[entry.key] = oldTile.advanceDay();
+        cropsGrown++;
+      }
+    }
+
+    developer.log('[FarmManager] ✓ Advanced $cropsGrown crops');
+  }
+
+  /// Serialização para JSON
+  Map<String, dynamic> toJson() {
+    return {'tiles': _farmTiles.values.map((tile) => tile.toJson()).toList()};
+  }
+
+  /// Deserialização de JSON
+  void fromJson(Map<String, dynamic> json) {
+    _farmTiles.clear();
+
+    final tilesData = json['tiles'] as List<dynamic>?;
+    if (tilesData != null) {
+      for (var tileData in tilesData) {
+        final tile = FarmTile.fromJson(tileData as Map<String, dynamic>);
+        _farmTiles['${tile.x}_${tile.y}'] = tile;
+      }
+    }
+
+    developer.log('[FarmManager] Loaded ${_farmTiles.length} tiles');
+  }
+}

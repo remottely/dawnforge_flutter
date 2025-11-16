@@ -1,5 +1,6 @@
 import 'package:darkness_dungeon/app/screens/menu_screen.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_localizations_delegate.dart';
+import 'package:darkness_dungeon/gameplay/farm/crop_database.dart';
 import 'package:darkness_dungeon/gameplay/inventory/item_factory.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,6 +21,7 @@ void main() async {
   // Initialize game systems
   await AudioManager.instance.initialize();
   await ItemFactory.initialize(); // Carrega database de itens
+  await CropDatabase.initialize(); // Carrega database de crops
 
   GameplayLocalizationsDelegate location =
       const GameplayLocalizationsDelegate();
