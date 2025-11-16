@@ -20,7 +20,23 @@ class KnightHandItemController {
   }) : _owner = owner,
        _data = data,
        _slot = slot,
-       _model = _createModel(data, slot);
+       _model = _createModel(data, slot) {
+    // Detectar direção inicial do player
+    if (owner is SimplePlayer) {
+      final direction = owner.lastDirection;
+      // Se a última direção foi para a esquerda, configurar facingRight = false
+      if (direction == Direction.left ||
+          direction == Direction.upLeft ||
+          direction == Direction.downLeft) {
+        _model.facingRight = false;
+      } else if (direction == Direction.right ||
+          direction == Direction.upRight ||
+          direction == Direction.downRight) {
+        _model.facingRight = true;
+      }
+      // Mantém facingRight = true como padrão se a direção for up/down/idle
+    }
+  }
 
   KnightHandItemView? _view;
 

@@ -68,6 +68,19 @@ class KnightHandManager {
 
     final view = await itemController.createView();
     _owner.gameRef.add(view);
+
+    // Garantir que a direção inicial está correta antes do primeiro update
+    final direction = _owner.lastDirection;
+    if (direction == Direction.left ||
+        direction == Direction.upLeft ||
+        direction == Direction.downLeft) {
+      itemController.setDirection(facingRight: false);
+    } else if (direction == Direction.right ||
+        direction == Direction.upRight ||
+        direction == Direction.downRight) {
+      itemController.setDirection(facingRight: true);
+    }
+
     itemController.update(0);
 
     final attackBinding = entry.attack;
