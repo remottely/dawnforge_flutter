@@ -17,6 +17,23 @@ import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
 
+/// Configuração visual de um tipo de equipamento
+class _EquipmentVisualConfig {
+  final String Function(WeaponItem) spritePathResolver;
+  final Vector2 spriteSize;
+  final Vector2 attachmentOffset;
+  final Vector2 directionalOffset;
+  final Vector2 mirroredDirectionalOffset;
+
+  const _EquipmentVisualConfig({
+    required this.spritePathResolver,
+    required this.spriteSize,
+    required this.attachmentOffset,
+    required this.directionalOffset,
+    required this.mirroredDirectionalOffset,
+  });
+}
+
 /// Adaptador que converte equipamentos do InventoryManager
 /// para o sistema de hands do Knight Player
 ///
@@ -29,6 +46,104 @@ final class EquipmentToKnightAdapter {
   EquipmentToKnightAdapter._();
 
   static final instance = EquipmentToKnightAdapter._();
+
+  // ==========================================================================
+  // CONFIGURAÇÕES CENTRALIZADAS DE EQUIPAMENTOS
+  // ==========================================================================
+
+  /// Configurações visuais para equipamentos de Right Hand (weapon slot)
+  static final Map<String, _EquipmentVisualConfig> _weaponConfigs = {
+    'sword': _EquipmentVisualConfig(
+      spritePathResolver: (item) => KnightPlayerConfig.sword3SpritePath,
+      spriteSize: Vector2(7, 22) * 0.4,
+      attachmentOffset: Vector2(0, 5),
+      directionalOffset: Vector2(-5, 0),
+      mirroredDirectionalOffset: Vector2(-1, 0),
+    ),
+    'axe': _EquipmentVisualConfig(
+      spritePathResolver: (item) => KnightPlayerConfig.axeNormal1SpritePath,
+      spriteSize: Vector2(16, 22) * 0.4,
+      attachmentOffset: Vector2(0, 5),
+      directionalOffset: Vector2(-5, 0),
+      mirroredDirectionalOffset: Vector2(-1, 0),
+    ),
+    'mace': _EquipmentVisualConfig(
+      spritePathResolver: (item) => KnightPlayerConfig.sword3SpritePath,
+      spriteSize: TileConstants.tileSizeStandard,
+      attachmentOffset: Vector2(8, 16),
+      directionalOffset: Vector2(-5, 0),
+      mirroredDirectionalOffset: Vector2(-1, 0),
+    ),
+  };
+
+  /// Configurações visuais para equipamentos de Left Hand (offhand slot)
+  static final Map<String, _EquipmentVisualConfig> _offhandConfigs = {
+    'staff': _EquipmentVisualConfig(
+      spritePathResolver: (item) => KnightPlayerConfig.staffSpritePath,
+      spriteSize: TileConstants.tileSizeStandard / 2,
+      attachmentOffset: Vector2(0, 6),
+      directionalOffset: Vector2(5, 0),
+      mirroredDirectionalOffset: Vector2(0, 0),
+    ),
+    'wand': _EquipmentVisualConfig(
+      spritePathResolver: (item) => KnightPlayerConfig.staffSpritePath,
+      spriteSize: TileConstants.tileSizeStandard / 2,
+      attachmentOffset: Vector2(0, 6),
+      directionalOffset: Vector2(5, 0),
+      mirroredDirectionalOffset: Vector2(0, 0),
+    ),
+    'shield': _EquipmentVisualConfig(
+      spritePathResolver: (item) => KnightPlayerConfig.woodShield4SpritePath,
+      spriteSize: TileConstants.tileSizeStandard * 0.4,
+      attachmentOffset: Vector2(0, 5),
+      directionalOffset: Vector2(3, 1),
+      mirroredDirectionalOffset: Vector2(2, 1),
+    ),
+  };
+
+  /// Configuração padrão para weapon (fallback)
+  static final _defaultWeaponConfig = _EquipmentVisualConfig(
+    spritePathResolver: (item) => KnightPlayerConfig.sword3SpritePath,
+    spriteSize: Vector2(7, 22) * 0.4,
+    attachmentOffset: Vector2(0, 5),
+    directionalOffset: Vector2(-5, 0),
+    mirroredDirectionalOffset: Vector2(-1, 0),
+  );
+
+  /// Configuração padrão para offhand (fallback)
+  static final _defaultOffhandConfig = _EquipmentVisualConfig(
+    spritePathResolver: (item) => KnightPlayerConfig.woodShield4SpritePath,
+    spriteSize: TileConstants.tileSizeStandard * 0.4,
+    attachmentOffset: Vector2(0, 5),
+    directionalOffset: Vector2(3, 1),
+    mirroredDirectionalOffset: Vector2(2, 1),
+  );
+
+  /// Busca configuração visual para weapon type (Right Hand)
+  static _EquipmentVisualConfig _getWeaponConfig(String weaponType) {
+    final normalizedType = weaponType.toLowerCase();
+
+    for (final entry in _weaponConfigs.entries) {
+      if (normalizedType.contains(entry.key)) {
+        return entry.value;
+      }
+    }
+
+    return _defaultWeaponConfig;
+  }
+
+  /// Busca configuração visual para offhand type (Left Hand)
+  static _EquipmentVisualConfig _getOffhandConfig(String weaponType) {
+    final normalizedType = weaponType.toLowerCase();
+
+    for (final entry in _offhandConfigs.entries) {
+      if (normalizedType.contains(entry.key)) {
+        return entry.value;
+      }
+    }
+
+    return _defaultOffhandConfig;
+  }
 
   /// Cria loadout baseado no equipamento atual do EquipmentManager
   KnightHandLoadoutSetup createLoadoutFromEquipment() {
@@ -128,48 +243,17 @@ final class EquipmentToKnightAdapter {
   KnightHandLoadoutEntry _createWeaponEntryFromItem(WeaponItem item) {
     final weaponType = item.weaponType.toLowerCase();
 
-    // Determinar sprite e configuração baseado no weaponType
-    String spritePath;
-    Vector2 spriteSize;
-    Vector2 attachmentOffset;
-    Vector2 directionalOffset;
-    Vector2 mirroredDirectionalOffset;
-
-    if (weaponType.contains('sword')) {
-      // SWORD → Right Hand → Primary Attack (Melee)
-      spritePath = _getSwordSpritePath(item);
-      spriteSize = Vector2(7, 22) * 0.4;
-      attachmentOffset = Vector2(0, 5);
-      directionalOffset = Vector2(-5, 0);
-      mirroredDirectionalOffset = Vector2(-1, 0);
-    } else if (weaponType.contains('axe')) {
-      spritePath = _getAxeSpritePath(item);
-      spriteSize = Vector2(16, 22) * 0.4;
-      attachmentOffset = Vector2(0, 5);
-      directionalOffset = Vector2(-5, 0);
-      mirroredDirectionalOffset = Vector2(-1, 0);
-    } else if (weaponType.contains('mace')) {
-      spritePath = _getMaceSpritePath(item);
-      spriteSize = TileConstants.tileSizeStandard;
-      attachmentOffset = Vector2(8, 16);
-      directionalOffset = Vector2(-5, 0);
-      mirroredDirectionalOffset = Vector2(-1, 0);
-    } else {
-      // Default sword
-      spritePath = KnightPlayerConfig.sword3SpritePath;
-      spriteSize = Vector2(7, 22) * 0.4;
-      attachmentOffset = Vector2(0, 5);
-      directionalOffset = Vector2(-5, 0);
-      mirroredDirectionalOffset = Vector2(-1, 0);
-    }
+    // Buscar configuração centralizada
+    final config = _getWeaponConfig(weaponType);
+    final spritePath = config.spritePathResolver(item);
 
     final handData = KnightPickaxeHandPreset.create(
       id: item.id,
       spritePath: spritePath,
-      spriteSize: spriteSize,
-      attachmentOffset: attachmentOffset,
-      directionalOffset: directionalOffset,
-      mirroredDirectionalOffset: mirroredDirectionalOffset,
+      spriteSize: config.spriteSize,
+      attachmentOffset: config.attachmentOffset,
+      directionalOffset: config.directionalOffset,
+      mirroredDirectionalOffset: config.mirroredDirectionalOffset,
     );
 
     const syncSpec = SynchronizedAttackSpecConfig.standard;
@@ -211,42 +295,17 @@ final class EquipmentToKnightAdapter {
   KnightHandLoadoutEntry _createOffhandEntryFromItem(WeaponItem item) {
     final weaponType = item.weaponType.toLowerCase();
 
-    // Determinar sprite e configuração baseado no weaponType
-    String spritePath;
-    Vector2 spriteSize;
-    Vector2 attachmentOffset;
-    Vector2 directionalOffset;
-    Vector2 mirroredDirectionalOffset;
-
-    if (weaponType.contains('staff') || weaponType.contains('wand')) {
-      // STAFF/WAND → Left Hand → Fireball Attack (Ranged)
-      spritePath = _getStaffSpritePath(item);
-      spriteSize = TileConstants.tileSizeStandard / 2;
-      attachmentOffset = Vector2(0, 6);
-      directionalOffset = Vector2(5, 0);
-      mirroredDirectionalOffset = Vector2(0, 0);
-    } else if (weaponType.contains('shield')) {
-      spritePath = _getShieldSpritePath(item);
-      spriteSize = TileConstants.tileSizeStandard * 0.4;
-      attachmentOffset = Vector2(0, 5);
-      directionalOffset = Vector2(3, 1);
-      mirroredDirectionalOffset = Vector2(2, 1);
-    } else {
-      // Default shield (não tem ataque)
-      spritePath = KnightPlayerConfig.woodShield4SpritePath;
-      spriteSize = TileConstants.tileSizeStandard * 0.4;
-      attachmentOffset = Vector2(0, 5);
-      directionalOffset = Vector2(3, 1);
-      mirroredDirectionalOffset = Vector2(2, 1);
-    }
+    // Buscar configuração centralizada
+    final config = _getOffhandConfig(weaponType);
+    final spritePath = config.spritePathResolver(item);
 
     final handData = KnightPickaxeHandPreset.create(
       id: item.id,
       spritePath: spritePath,
-      spriteSize: spriteSize,
-      attachmentOffset: attachmentOffset,
-      directionalOffset: directionalOffset,
-      mirroredDirectionalOffset: mirroredDirectionalOffset,
+      spriteSize: config.spriteSize,
+      attachmentOffset: config.attachmentOffset,
+      directionalOffset: config.directionalOffset,
+      mirroredDirectionalOffset: config.mirroredDirectionalOffset,
     );
 
     // Apenas staff/wand tem ataque fireball
@@ -285,36 +344,6 @@ final class EquipmentToKnightAdapter {
       itemData: handData,
       attack: attackSpec,
     );
-  }
-
-  // ==========================================================================
-  // Sprite Path Resolvers
-  // ==========================================================================
-
-  String _getSwordSpritePath(WeaponItem item) {
-    // TODO: Mapear item.iconPath ou item.id para sprite path real
-    // Por enquanto, usar padrão
-    return KnightPlayerConfig.sword3SpritePath;
-  }
-
-  String _getAxeSpritePath(WeaponItem item) {
-    // TODO: Mapear item.iconPath ou item.id para sprite path real
-    return KnightPlayerConfig.axeNormal1SpritePath; // Placeholder
-  }
-
-  String _getMaceSpritePath(WeaponItem item) {
-    // TODO: Mapear item.iconPath ou item.id para sprite path real
-    return KnightPlayerConfig.sword3SpritePath; // Placeholder
-  }
-
-  String _getStaffSpritePath(WeaponItem item) {
-    // TODO: Mapear item.iconPath ou item.id para sprite path real
-    return KnightPlayerConfig.staffSpritePath;
-  }
-
-  String _getShieldSpritePath(WeaponItem item) {
-    // TODO: Mapear item.iconPath ou item.id para sprite path real
-    return KnightPlayerConfig.woodShield4SpritePath;
   }
 
   // ==========================================================================
