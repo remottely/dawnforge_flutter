@@ -181,7 +181,9 @@ class KnightHandManager {
     }
 
     // Obter sprite path do shield
-    _currentShieldSpritePath = runtime.itemController.data.spritePath;
+    // _currentShieldSpritePath = runtime.itemController.data.spritePath;
+    _currentShieldSpritePath =
+        'SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/7_Shield/SteelShield1.png';
 
     developer.log('[KnightHandManager] Iniciando defesa com escudo');
     _isDefending = true;
