@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_item_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_loadout.dart';
@@ -12,9 +14,41 @@ class KnightHandManager {
   final Map<KnightAttackTrigger, KnightHandSlot> _triggerToSlot = {};
 
   Future<void> applyLoadout(KnightHandLoadoutSetup loadout) async {
+    developer.log(
+      '[KnightHandManager] Applying loadout with ${loadout.entries.length} entries',
+    );
+
+    // 1. Identificar slots que devem ser removidos
+    final slotsToRemove = <KnightHandSlot>[];
+    for (final slot in _hands.keys) {
+      final hasEntry = loadout.entries.any((entry) => entry.slot == slot);
+      if (!hasEntry) {
+        slotsToRemove.add(slot);
+      }
+    }
+
+    // 2. Remover slots que não estão mais no loadout
+    for (final slot in slotsToRemove) {
+      developer.log('[KnightHandManager] Removing slot: $slot');
+      final existing = _hands.remove(slot);
+      if (existing != null) {
+        _clearTriggerForSlot(slot);
+        existing.dispose();
+        developer.log('[KnightHandManager] ✓ Slot $slot removed and disposed');
+      }
+    }
+
+    // 3. Adicionar/atualizar novos entries
     for (final entry in loadout.entries) {
+      developer.log(
+        '[KnightHandManager] Applying entry for slot: ${entry.slot}',
+      );
       await applyEntry(entry);
     }
+
+    developer.log(
+      '[KnightHandManager] Loadout applied. Active slots: ${_hands.keys.toList()}',
+    );
   }
 
   Future<KnightHandItemController> applyEntry(

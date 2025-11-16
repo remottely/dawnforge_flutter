@@ -7,6 +7,7 @@ import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_to_knight_adapter.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/item_factory.dart';
+import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
 import 'package:flutter/services.dart';
 
@@ -147,85 +148,127 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
 
   void _equipFirstWeapon() {
     developer.log(
-      '[InventoryInput] Procurando arma para equipar no slot weapon...',
+      '[InventoryInput] Procurando SWORD ou AXE para equipar no weapon (Right Hand - Space)...',
     );
 
-    // Percorrer todos os slots do inventário
+    // Percorrer todos os slots do inventário procurando SWORD ou AXE
     for (int i = 0; i < InventoryManager.instance.maxSlots; i++) {
       final slot = InventoryManager.instance.getSlotByIndex(i);
-      if (slot != null &&
-          slot.item != null &&
-          slot.item!.type.name == 'weapon') {
+      if (slot != null && slot.item != null) {
+        final item = slot.item!;
+
+        // Validar se é weapon
+        if (item.type.name != 'weapon') continue;
+
+        // Validar se é WeaponItem
+        if (item is! WeaponItem) continue;
+
+        final weaponType = item.weaponType.toLowerCase();
+
+        // Validar se é SWORD ou AXE
+        if (!weaponType.contains('sword') && !weaponType.contains('axe')) {
+          developer.log(
+            '[InventoryInput] Ignorando ${item.name} (tipo: $weaponType) - apenas sword/axe no weapon slot',
+          );
+          continue;
+        }
+
+        // Tentar equipar
         final success = EquipmentManager.instance.equip(
           EquipmentSlotType.weapon,
-          slot.item!,
+          item,
         );
+
         if (success) {
           developer.log(
-            '[InventoryInput] Equipado no weapon: ${slot.item!.name}',
+            '[InventoryInput] ✓ Equipado no weapon (Right Hand): ${item.name} (${item.weaponType})',
           );
           _notifyEquipmentChanged();
         } else {
-          developer.log(
-            '[InventoryInput] Falha ao equipar: ${slot.item!.name}',
-          );
+          developer.log('[InventoryInput] ✗ Falha ao equipar: ${item.name}');
         }
         return;
       }
     }
 
-    developer.log('[InventoryInput] Nenhuma arma encontrada no inventário');
+    developer.log(
+      '[InventoryInput] Nenhuma SWORD ou AXE encontrada no inventário',
+    );
   }
 
   void _unequipWeapon() {
     final item = EquipmentManager.instance.unequip(EquipmentSlotType.weapon);
     if (item != null) {
-      developer.log('[InventoryInput] Desequipado do weapon: ${item.name}');
+      developer.log(
+        '[InventoryInput] ✓ Desequipado do weapon (Right Hand): ${item.name}',
+      );
       _notifyEquipmentChanged();
     } else {
-      developer.log('[InventoryInput] Nenhuma arma equipada no weapon');
+      developer.log('[InventoryInput] Weapon slot já está vazio');
     }
   }
 
   void _equipFirstOffhand() {
     developer.log(
-      '[InventoryInput] Procurando arma para equipar no slot offhand...',
+      '[InventoryInput] Procurando SHIELD ou STAFF para equipar no offhand (Left Hand - Z)...',
     );
 
-    // Percorrer todos os slots do inventário
+    // Percorrer todos os slots do inventário procurando SHIELD ou STAFF
     for (int i = 0; i < InventoryManager.instance.maxSlots; i++) {
       final slot = InventoryManager.instance.getSlotByIndex(i);
-      if (slot != null &&
-          slot.item != null &&
-          slot.item!.type.name == 'weapon') {
+      if (slot != null && slot.item != null) {
+        final item = slot.item!;
+
+        // Validar se é weapon
+        if (item.type.name != 'weapon') continue;
+
+        // Validar se é WeaponItem
+        if (item is! WeaponItem) continue;
+
+        final weaponType = item.weaponType.toLowerCase();
+
+        // Validar se é SHIELD ou STAFF ou WAND
+        if (!weaponType.contains('shield') &&
+            !weaponType.contains('staff') &&
+            !weaponType.contains('wand')) {
+          developer.log(
+            '[InventoryInput] Ignorando ${item.name} (tipo: $weaponType) - apenas shield/staff/wand no offhand slot',
+          );
+          continue;
+        }
+
+        // Tentar equipar
         final success = EquipmentManager.instance.equip(
           EquipmentSlotType.offhand,
-          slot.item!,
+          item,
         );
+
         if (success) {
           developer.log(
-            '[InventoryInput] Equipado no offhand: ${slot.item!.name}',
+            '[InventoryInput] ✓ Equipado no offhand (Left Hand): ${item.name} (${item.weaponType})',
           );
           _notifyEquipmentChanged();
         } else {
-          developer.log(
-            '[InventoryInput] Falha ao equipar: ${slot.item!.name}',
-          );
+          developer.log('[InventoryInput] ✗ Falha ao equipar: ${item.name}');
         }
         return;
       }
     }
 
-    developer.log('[InventoryInput] Nenhuma arma encontrada no inventário');
+    developer.log(
+      '[InventoryInput] Nenhuma SHIELD ou STAFF encontrada no inventário',
+    );
   }
 
   void _unequipOffhand() {
     final item = EquipmentManager.instance.unequip(EquipmentSlotType.offhand);
     if (item != null) {
-      developer.log('[InventoryInput] Desequipado do offhand: ${item.name}');
+      developer.log(
+        '[InventoryInput] ✓ Desequipado do offhand (Left Hand): ${item.name}',
+      );
       _notifyEquipmentChanged();
     } else {
-      developer.log('[InventoryInput] Nenhuma arma equipada no offhand');
+      developer.log('[InventoryInput] Offhand slot já está vazio');
     }
   }
 

@@ -34,22 +34,24 @@ final class EquipmentToKnightAdapter {
   KnightHandLoadoutSetup createLoadoutFromEquipment() {
     final entries = <KnightHandLoadoutEntry>[];
 
-    // Right Hand = Weapon slot (Primary Attack)
+    // Right Hand = Weapon slot (Primary Attack - Space)
+    // Apenas SWORD e AXE permitidos
     final weaponEntry = _createWeaponHandEntry();
     if (weaponEntry != null) {
       entries.add(weaponEntry);
     }
 
-    // Left Hand = Offhand slot (Ranged Attack)
+    // Left Hand = Offhand slot (Ranged Attack - Z)
+    // Apenas SHIELD e STAFF permitidos
     final offhandEntry = _createOffhandHandEntry();
     if (offhandEntry != null) {
       entries.add(offhandEntry);
     }
 
-    // Se nenhum equipamento, usar defaults
+    // Se nenhum equipamento, retornar loadout vazio (sem defaults)
     if (entries.isEmpty) {
-      developer.log('[EquipmentAdapter] No equipment, using defaults');
-      return _createDefaultLoadout();
+      developer.log('[EquipmentAdapter] No equipment, empty hands');
+      return KnightHandLoadoutSetup(entries: []);
     }
 
     developer.log(
@@ -59,21 +61,30 @@ final class EquipmentToKnightAdapter {
   }
 
   /// Cria entry para Right Hand baseado no weapon slot
+  /// APENAS aceita SWORD e AXE
   KnightHandLoadoutEntry? _createWeaponHandEntry() {
     final weaponItem = EquipmentManager.instance.getEquippedItem(
       EquipmentSlotType.weapon,
     );
 
     if (weaponItem == null) {
-      developer.log(
-        '[EquipmentAdapter] No weapon equipped, using default sword',
-      );
-      return _createDefaultSwordEntry();
+      developer.log('[EquipmentAdapter] No weapon equipped, right hand empty');
+      return null; // Mão vazia!
     }
 
     if (weaponItem is! WeaponItem) {
       developer.log('[EquipmentAdapter] Weapon slot has non-weapon item');
-      return _createDefaultSwordEntry();
+      return null;
+    }
+
+    final weaponType = weaponItem.weaponType.toLowerCase();
+
+    // VALIDAÇÃO: Apenas sword e axe permitidos no weapon slot
+    if (!weaponType.contains('sword') && !weaponType.contains('axe')) {
+      developer.log(
+        '[EquipmentAdapter] Invalid weapon type for right hand: $weaponType (only sword/axe allowed)',
+      );
+      return null;
     }
 
     // Determinar tipo de arma e criar entry apropriado
@@ -81,21 +92,32 @@ final class EquipmentToKnightAdapter {
   }
 
   /// Cria entry para Left Hand baseado no offhand slot
+  /// APENAS aceita SHIELD e STAFF
   KnightHandLoadoutEntry? _createOffhandHandEntry() {
     final offhandItem = EquipmentManager.instance.getEquippedItem(
       EquipmentSlotType.offhand,
     );
 
     if (offhandItem == null) {
-      developer.log(
-        '[EquipmentAdapter] No offhand equipped, using default shield',
-      );
-      return _createDefaultShieldEntry();
+      developer.log('[EquipmentAdapter] No offhand equipped, left hand empty');
+      return null; // Mão vazia!
     }
 
     if (offhandItem is! WeaponItem) {
       developer.log('[EquipmentAdapter] Offhand slot has non-weapon item');
-      return _createDefaultShieldEntry();
+      return null;
+    }
+
+    final weaponType = offhandItem.weaponType.toLowerCase();
+
+    // VALIDAÇÃO: Apenas shield e staff permitidos no offhand slot
+    if (!weaponType.contains('shield') &&
+        !weaponType.contains('staff') &&
+        !weaponType.contains('wand')) {
+      developer.log(
+        '[EquipmentAdapter] Invalid weapon type for left hand: $weaponType (only shield/staff/wand allowed)',
+      );
+      return null;
     }
 
     // Determinar tipo de arma e criar entry apropriado
@@ -122,7 +144,7 @@ final class EquipmentToKnightAdapter {
       mirroredDirectionalOffset = Vector2(-1, 0);
     } else if (weaponType.contains('axe')) {
       spritePath = _getAxeSpritePath(item);
-      spriteSize = Vector2(7, 22) * 0.4;
+      spriteSize = Vector2(16, 22) * 0.4;
       attachmentOffset = Vector2(0, 5);
       directionalOffset = Vector2(-5, 0);
       mirroredDirectionalOffset = Vector2(-1, 0);
@@ -277,7 +299,7 @@ final class EquipmentToKnightAdapter {
 
   String _getAxeSpritePath(WeaponItem item) {
     // TODO: Mapear item.iconPath ou item.id para sprite path real
-    return KnightPlayerConfig.sword3SpritePath; // Placeholder
+    return KnightPlayerConfig.axeNormal1SpritePath; // Placeholder
   }
 
   String _getMaceSpritePath(WeaponItem item) {
@@ -296,67 +318,7 @@ final class EquipmentToKnightAdapter {
   }
 
   // ==========================================================================
-  // Default Entries (quando não há equipamento)
+  // REMOVIDO: Não há mais defaults!
+  // Quando não há equipamento, as mãos ficam vazias.
   // ==========================================================================
-
-  KnightHandLoadoutEntry _createDefaultSwordEntry() {
-    final handData = KnightPickaxeHandPreset.create(
-      id: 'default_sword',
-      spritePath: KnightPlayerConfig.sword3SpritePath,
-      spriteSize: Vector2(7, 22) * 0.4,
-      attachmentOffset: Vector2(0, 5),
-      directionalOffset: Vector2(-5, 0),
-      mirroredDirectionalOffset: Vector2(-1, 0),
-    );
-
-    const syncSpec = SynchronizedAttackSpecConfig.standard;
-
-    return KnightHandLoadoutEntry(
-      slot: KnightHandSlot.right,
-      itemData: handData,
-      attack: KnightHandAttackSpec(
-        trigger: KnightAttackTrigger.primary,
-        attackType: AttackType.melee,
-        syncSpec: syncSpec,
-        execute: (context, damage) {
-          CameraFx.primaryAttackShake(context.player.gameRef);
-          AudioManager.instance.playPlayerPrimaryAttackSfx();
-          context.player.addParticle(
-            CharacterFxParticlesAnimationsConfig.createPrimaryAttackParticles(),
-            position: context.player.size,
-          );
-          context.player.simpleAttackMelee(
-            size: CharacterPrimaryAttackConfig.kPlayerPrimaryAttackFxSize,
-            damage: damage,
-            animationRight:
-                CharacterPrimaryAttackConfig.createPlayerExecutionAnimation(),
-          );
-        },
-      ),
-    );
-  }
-
-  KnightHandLoadoutEntry _createDefaultShieldEntry() {
-    final handData = KnightPickaxeHandPreset.create(
-      id: 'default_shield',
-      spritePath: KnightPlayerConfig.woodShield4SpritePath,
-      spriteSize: TileConstants.tileSizeStandard * 0.4,
-      attachmentOffset: Vector2(0, 5),
-      directionalOffset: Vector2(3, 1),
-      mirroredDirectionalOffset: Vector2(2, 1),
-    );
-
-    // Shield não tem ataque - apenas visual/defesa
-    return KnightHandLoadoutEntry(
-      slot: KnightHandSlot.left,
-      itemData: handData,
-      attack: null,
-    );
-  }
-
-  KnightHandLoadoutSetup _createDefaultLoadout() {
-    return KnightHandLoadoutSetup(
-      entries: [_createDefaultSwordEntry(), _createDefaultShieldEntry()],
-    );
-  }
 }

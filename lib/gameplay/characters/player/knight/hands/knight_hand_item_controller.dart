@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'dart:math' as math;
 
 import 'package:bonfire/bonfire.dart';
@@ -187,9 +188,11 @@ class KnightHandItemController {
   };
 
   void dispose() {
+    developer.log('[HandController] Disposing hand: $_slot (${_data.id})');
     _view?.removeFromParent();
     _view = null;
     _model.resetAnimationState();
+    developer.log('[HandController] ✓ Hand disposed: $_slot');
   }
 
   int _calculatePriority() {
