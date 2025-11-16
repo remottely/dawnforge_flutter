@@ -26,10 +26,48 @@ class FarmTileComponent extends GameDecoration {
 
   @override
   Future<void> onLoad() async {
-    await _loadSoilSprite();
-    await _loadCropSprite();
+    // Carregar sprites iniciais
+    final soilSprite = await Sprite.load(_getSoilSpritePath());
+
+    // Criar componente de solo
+    _soilSprite = SpriteComponent(
+      sprite: soilSprite,
+      size: size,
+      anchor: Anchor.topLeft,
+      position: Vector2.zero(),
+      priority: 0,
+    );
+    add(_soilSprite!);
+
+    developer.log(
+      '[FarmTileComponent] 🟤 Soil sprite loaded: ${_getSoilSpritePath()}',
+    );
+
+    // Criar componente de crop (pode ser null inicialmente)
+    if (farmTile.crop != null) {
+      final cropSprite = await Sprite.load(_getCropSpritePath());
+      _cropSprite = SpriteComponent(
+        sprite: cropSprite,
+        size: size,
+        anchor: Anchor.topLeft,
+        position: Vector2.zero(),
+        priority: 1,
+      );
+
+      // Aplicar opacidade se withered
+      if (farmTile.crop!.stage == CropStage.withered) {
+        _cropSprite!.opacity = 0.5;
+      }
+
+      add(_cropSprite!);
+      developer.log(
+        '[FarmTileComponent] 🌱 Crop sprite loaded: ${farmTile.crop!.cropId} (${farmTile.crop!.stage.name})',
+      );
+    }
+
     _lastRenderedSoilState = farmTile.soilState;
     _lastRenderedCropKey = _getCropKey();
+
     return super.onLoad();
   }
 
@@ -49,57 +87,51 @@ class FarmTileComponent extends GameDecoration {
     }
   }
 
-  Future<void> _loadSoilSprite() async {
-    // Remove sprite anterior se existir
-    if (_soilSprite != null) {
-      remove(_soilSprite!);
-      _soilSprite = null;
-    }
-
+  Future<void> _updateSoilSprite() async {
     final spritePath = _getSoilSpritePath();
     final sprite = await Sprite.load(spritePath);
 
-    _soilSprite = SpriteComponent(
-      sprite: sprite,
-      size: size,
-      anchor: Anchor.topLeft,
-      position: Vector2.zero(),
-    );
-
-    add(_soilSprite!);
-    developer.log('[FarmTileComponent] ✓ Soil sprite: $spritePath');
+    _soilSprite!.sprite = sprite;
+    developer.log('[FarmTileComponent] 🟤 Soil sprite updated: $spritePath');
   }
 
-  Future<void> _loadCropSprite() async {
-    // Remove sprite anterior se existir
-    if (_cropSprite != null) {
-      remove(_cropSprite!);
-      _cropSprite = null;
-    }
-
+  Future<void> _updateCropSprite() async {
     if (farmTile.crop == null) {
+      // Remover componente de crop se não há mais crop
+      if (_cropSprite != null) {
+        remove(_cropSprite!);
+        _cropSprite = null;
+      }
       return;
     }
 
     final spritePath = _getCropSpritePath();
     final sprite = await Sprite.load(spritePath);
 
-    _cropSprite = SpriteComponent(
-      sprite: sprite,
-      size: size,
-      anchor: Anchor.topLeft,
-      position: Vector2.zero(),
-      priority: 1, // Acima do solo
-    );
+    if (_cropSprite == null) {
+      // Criar novo componente se não existe
+      _cropSprite = SpriteComponent(
+        sprite: sprite,
+        size: size,
+        anchor: Anchor.topLeft,
+        position: Vector2.zero(),
+        priority: 1,
+      );
+      add(_cropSprite!);
+    } else {
+      // Apenas trocar o sprite
+      _cropSprite!.sprite = sprite;
+    }
 
     // Adicionar opacidade se withered
     if (farmTile.crop!.stage == CropStage.withered) {
       _cropSprite!.opacity = 0.5;
+    } else {
+      _cropSprite!.opacity = 1.0;
     }
 
-    add(_cropSprite!);
     developer.log(
-      '[FarmTileComponent] ✓ Crop: ${farmTile.crop!.cropId} (${farmTile.crop!.stage.name})',
+      '[FarmTileComponent] 🌱 Crop sprite updated: ${farmTile.crop!.cropId} (${farmTile.crop!.stage.name})',
     );
   }
 
@@ -145,19 +177,13 @@ class FarmTileComponent extends GameDecoration {
 
     // Atualizar solo se mudou
     if (currentSoilState != _lastRenderedSoilState) {
-      developer.log(
-        '[FarmTileComponent] 🟤 Soil changed: $_lastRenderedSoilState -> $currentSoilState',
-      );
-      await _loadSoilSprite();
+      await _updateSoilSprite();
       _lastRenderedSoilState = currentSoilState;
     }
 
     // Atualizar crop se mudou
     if (currentCropKey != _lastRenderedCropKey) {
-      developer.log(
-        '[FarmTileComponent] 🌱 Crop changed: $_lastRenderedCropKey -> $currentCropKey',
-      );
-      await _loadCropSprite();
+      await _updateCropSprite();
       _lastRenderedCropKey = currentCropKey;
     }
   }
