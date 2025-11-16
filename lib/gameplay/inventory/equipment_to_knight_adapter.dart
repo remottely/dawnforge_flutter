@@ -16,6 +16,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart'
 import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
+import 'package:darkness_dungeon/gameplay/inventory/models/weapon_type.dart';
 
 /// Configuração visual de um tipo de equipamento
 class _EquipmentVisualConfig {
@@ -120,8 +121,8 @@ final class EquipmentToKnightAdapter {
   );
 
   /// Busca configuração visual para weapon type (Right Hand)
-  static _EquipmentVisualConfig _getWeaponConfig(String weaponType) {
-    final normalizedType = weaponType.toLowerCase();
+  static _EquipmentVisualConfig _getWeaponConfig(WeaponType weaponType) {
+    final normalizedType = weaponType.toJson();
 
     for (final entry in _weaponConfigs.entries) {
       if (normalizedType.contains(entry.key)) {
@@ -133,8 +134,8 @@ final class EquipmentToKnightAdapter {
   }
 
   /// Busca configuração visual para offhand type (Left Hand)
-  static _EquipmentVisualConfig _getOffhandConfig(String weaponType) {
-    final normalizedType = weaponType.toLowerCase();
+  static _EquipmentVisualConfig _getOffhandConfig(WeaponType weaponType) {
+    final normalizedType = weaponType.toJson();
 
     for (final entry in _offhandConfigs.entries) {
       if (normalizedType.contains(entry.key)) {
@@ -192,10 +193,10 @@ final class EquipmentToKnightAdapter {
       return null;
     }
 
-    final weaponType = weaponItem.weaponType.toLowerCase();
+    final weaponType = weaponItem.weaponType;
 
     // VALIDAÇÃO: Apenas sword e axe permitidos no weapon slot
-    if (!weaponType.contains('sword') && !weaponType.contains('axe')) {
+    if (weaponType != WeaponType.sword && weaponType != WeaponType.axe) {
       developer.log(
         '[EquipmentAdapter] Invalid weapon type for right hand: $weaponType (only sword/axe allowed)',
       );
@@ -223,12 +224,12 @@ final class EquipmentToKnightAdapter {
       return null;
     }
 
-    final weaponType = offhandItem.weaponType.toLowerCase();
+    final weaponType = offhandItem.weaponType;
 
     // VALIDAÇÃO: Apenas shield e staff permitidos no offhand slot
-    if (!weaponType.contains('shield') &&
-        !weaponType.contains('staff') &&
-        !weaponType.contains('wand')) {
+    if (weaponType != WeaponType.shield &&
+        weaponType != WeaponType.staff &&
+        weaponType != WeaponType.wand) {
       developer.log(
         '[EquipmentAdapter] Invalid weapon type for left hand: $weaponType (only shield/staff/wand allowed)',
       );
@@ -241,7 +242,7 @@ final class EquipmentToKnightAdapter {
 
   /// Cria entry de weapon baseado no WeaponItem
   KnightHandLoadoutEntry _createWeaponEntryFromItem(WeaponItem item) {
-    final weaponType = item.weaponType.toLowerCase();
+    final weaponType = item.weaponType;
 
     // Buscar configuração centralizada
     final config = _getWeaponConfig(weaponType);
@@ -293,7 +294,7 @@ final class EquipmentToKnightAdapter {
 
   /// Cria entry de offhand baseado no WeaponItem
   KnightHandLoadoutEntry _createOffhandEntryFromItem(WeaponItem item) {
-    final weaponType = item.weaponType.toLowerCase();
+    final weaponType = item.weaponType;
 
     // Buscar configuração centralizada
     final config = _getOffhandConfig(weaponType);
@@ -310,7 +311,7 @@ final class EquipmentToKnightAdapter {
 
     // Apenas staff/wand tem ataque fireball, shield tem defesa
     KnightHandAttackSpec? attackSpec;
-    if (weaponType.contains('staff') || weaponType.contains('wand')) {
+    if (weaponType == WeaponType.staff || weaponType == WeaponType.wand) {
       const syncSpec = SynchronizedAttackSpecConfig.standard;
 
       attackSpec = KnightHandAttackSpec(
@@ -337,7 +338,7 @@ final class EquipmentToKnightAdapter {
           );
         },
       );
-    } else if (weaponType.contains('shield')) {
+    } else if (weaponType == WeaponType.shield) {
       // Shield tem spec de defesa (sem syncSpec pois não é ataque)
       const syncSpec = SynchronizedAttackSpecConfig.standard;
 

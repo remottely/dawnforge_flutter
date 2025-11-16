@@ -9,6 +9,7 @@ import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/item_factory.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
+import 'package:darkness_dungeon/gameplay/inventory/models/weapon_type.dart';
 import 'package:flutter/services.dart';
 
 /// Componente que gerencia entrada de teclado para inventário
@@ -163,10 +164,11 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
         // Validar se é WeaponItem
         if (item is! WeaponItem) continue;
 
-        final weaponType = item.weaponType.toLowerCase();
+        final weaponType = item.weaponType;
 
         // Validar se é SWORD ou AXE
-        if (!weaponType.contains('sword') && !weaponType.contains('axe')) {
+        // if (!weaponType.contains('sword') && !weaponType.contains('axe')) {
+        if (weaponType != WeaponType.sword && weaponType != WeaponType.axe) {
           developer.log(
             '[InventoryInput] Ignorando ${item.name} (tipo: $weaponType) - apenas sword/axe no weapon slot',
           );
@@ -225,12 +227,15 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
         // Validar se é WeaponItem
         if (item is! WeaponItem) continue;
 
-        final weaponType = item.weaponType.toLowerCase();
+        final weaponType = item.weaponType;
 
         // Validar se é SHIELD ou STAFF ou WAND
-        if (!weaponType.contains('shield') &&
-            !weaponType.contains('staff') &&
-            !weaponType.contains('wand')) {
+        // if (!weaponType.contains('shield') &&
+        //           !weaponType.contains('staff') &&
+        //           !weaponType.contains('wand')) {
+        if (weaponType != WeaponType.shield &&
+            weaponType != WeaponType.staff &&
+            weaponType != WeaponType.wand) {
           developer.log(
             '[InventoryInput] Ignorando ${item.name} (tipo: $weaponType) - apenas shield/staff/wand no offhand slot',
           );

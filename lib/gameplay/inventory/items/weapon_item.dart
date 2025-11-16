@@ -1,6 +1,7 @@
 import '../models/item.dart';
 import '../models/item_rarity.dart';
 import '../models/item_type.dart';
+import '../models/weapon_type.dart';
 
 /// Item de arma para combate
 ///
@@ -19,8 +20,8 @@ final class WeaponItem extends Item {
   /// Multiplicador de dano crítico
   final double critMultiplier;
 
-  /// Tipo de arma (sword, axe, spear, bow, etc)
-  final String weaponType;
+  /// Tipo de arma
+  final WeaponType weaponType;
 
   /// Cria uma arma
   const WeaponItem({
@@ -58,7 +59,7 @@ final class WeaponItem extends Item {
       'attackSpeed': attackSpeed,
       'critChance': critChance,
       'critMultiplier': critMultiplier,
-      'weaponType': weaponType,
+      'weaponType': weaponType.toJson(),
     };
   }
 
@@ -75,7 +76,7 @@ final class WeaponItem extends Item {
       attackSpeed: (json['attackSpeed'] as num?)?.toDouble() ?? 1.0,
       critChance: (json['critChance'] as num?)?.toDouble() ?? 0.05,
       critMultiplier: (json['critMultiplier'] as num?)?.toDouble() ?? 1.5,
-      weaponType: json['weaponType'] as String,
+      weaponType: WeaponType.fromJson(json['weaponType'] as String),
     );
   }
 
@@ -91,7 +92,7 @@ final class WeaponItem extends Item {
     double? attackSpeed,
     double? critChance,
     double? critMultiplier,
-    String? weaponType,
+    WeaponType? weaponType,
   }) {
     return WeaponItem(
       id: id ?? this.id,
@@ -110,5 +111,5 @@ final class WeaponItem extends Item {
 
   @override
   String toString() =>
-      'WeaponItem(id: $id, name: $name, damage: $damage, dps: ${dps.toStringAsFixed(1)})';
+      'WeaponItem(id: $id, name: $name, type: ${weaponType.displayName}, damage: $damage, dps: ${dps.toStringAsFixed(1)})';
 }
