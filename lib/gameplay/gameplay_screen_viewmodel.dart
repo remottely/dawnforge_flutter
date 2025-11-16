@@ -18,7 +18,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   final gameplayGameStateManager = GameStateManager();
   final inventoryInputHandler = InventoryInputHandler();
   final shieldDefenseInputHandler = ShieldDefenseInputHandler();
-  late final FarmInteractionComponent farmInteractionComponent;
+  FarmInteractionComponent? farmInteractionComponent;
 
   @override
   void initState() {

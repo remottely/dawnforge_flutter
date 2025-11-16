@@ -59,6 +59,12 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
 
         final playerInput = GameplayScreenConfig.createPlayerInput();
 
+        // Criar novo componente de farm interaction para este mapa
+        final currentFarmInteraction = FarmInteractionComponent(
+          player: knightPlayer,
+        );
+        farmInteractionComponent = currentFarmInteraction;
+
         return Material(
           color: Colors.transparent,
           child: BonfireWidget(
@@ -69,7 +75,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
               gameplayGameStateManager,
               inventoryInputHandler,
               shieldDefenseInputHandler,
-              farmInteractionComponent,
+              currentFarmInteraction,
             ],
             interface: gameplayHUD,
             lightingColorGame: mapLightingColor,
