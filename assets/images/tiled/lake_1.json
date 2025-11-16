@@ -384,14 +384,14 @@
                  "objects":[
                         {
                          "height":16,
-                         "id":121,
+                         "id":258,
                          "name":"farm_tile",
                          "rotation":0,
                          "type":"",
                          "visible":true,
                          "width":16,
-                         "x":96,
-                         "y":48
+                         "x":48,
+                         "y":64
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -721,7 +721,7 @@
                          "type":"",
                          "visible":true,
                          "width":16,
-                         "x":48,
+                         "x":160,
                          "y":48
                         }, 
                         {
@@ -771,7 +771,7 @@
          "y":0
         }],
  "nextlayerid":32,
- "nextobjectid":252,
+ "nextobjectid":260,
  "orientation":"orthogonal",
  "properties":[
         {

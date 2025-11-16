@@ -1,111 +1,76 @@
+import 'dart:developer' as developer;
+
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
-import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
+import 'package:darkness_dungeon/gameplay/farm/components/farm_tile_component.dart';
+import 'package:darkness_dungeon/gameplay/farm/farm_manager.dart';
+import 'package:darkness_dungeon/gameplay/farm/models/farm_tile.dart' as model;
 
-import 'crop_types.dart';
+/// View de um tile de fazenda que integra com o FarmManager
+/// Este componente é criado pelo Tiled map e gerencia a visualização
+class FarmTileView extends GameDecoration {
+  final int tileX;
+  final int tileY;
+  FarmTileComponent? _visualComponent;
 
-enum FarmTool { hoe, wateringCan, hand }
+  FarmTileView({required Vector2 position})
+    : tileX = (position.x / 16).floor(),
+      tileY = (position.y / 16).floor(),
+      super(position: position, size: TileConstants.tileSizeStandard) {
+    // Inicializar tile no FarmManager se não existir
+    final existingTile = FarmManager.instance.getTile(tileX, tileY);
+    if (existingTile == null) {
+      final newTile = model.FarmTile(x: tileX, y: tileY);
+      FarmManager.instance.setTile(newTile);
+    }
+  }
 
-enum TileState { grass, soil, watered, planted, grown }
+  @override
+  Future<void> onLoad() async {
+    await super.onLoad();
 
-final class _FarmTileConfig {
-  _FarmTileConfig._();
+    developer.log('[FarmTileView] Loading tile at ($tileX, $tileY)');
 
-  static const String _kGrassSpriteAsset = 'gameplay/farmable/tile_grass.png';
-  static const String _kSoilSpriteAsset = 'gameplay/farmable/tile_soil.png';
-  static const String _kWateredSpriteAsset =
-      'gameplay/farmable/tile_watered.png';
-  static const String _kPlantedSpriteAsset =
-      'gameplay/farmable/tile_planted.png';
-  static const String _kGrownSpriteAsset =
-      'gameplay/farmable/parsnip_stage4.png';
+    // Criar componente visual como filho (posição relativa)
+    final tile = FarmManager.instance.getTile(tileX, tileY)!;
+    _visualComponent = FarmTileComponent(
+      farmTile: tile,
+      position: Vector2.zero(), // Posição relativa ao pai
+    );
 
-  static final Vector2 _cropTextureSize = TileConstants.tileSizeStandard;
-  static final Vector2 _componentSize = _cropTextureSize;
+    // Adicionar como filho (renderiza junto com este componente)
+    add(_visualComponent!);
 
-  static Future<Sprite> _loadSprite(String path) => Sprite.load(path);
-}
+    developer.log(
+      '[FarmTileView] ✓ Visual component added at ($tileX, $tileY)',
+    );
+  }
 
-class FarmTileView extends DDDecoration {
-  TileState state = TileState.grass;
-  CropType? plantedCrop;
-  int daysGrowing = 0;
-  bool isWatered = false;
-  String currentSprite = _FarmTileConfig._kGrassSpriteAsset;
+  /// Verifica se o player está sobrepondo este tile
+  bool isPlayerOnTile(Player player) {
+    return player.rectCollision.overlaps(rectCollision);
+  }
 
-  FarmTileView({required super.position})
-    : super.withSprite(
-        sprite: _FarmTileConfig._loadSprite(_FarmTileConfig._kGrassSpriteAsset),
-        size: _FarmTileConfig._componentSize,
-      );
+  @override
+  void update(double dt) {
+    super.update(dt);
+
+    // Atualizar componente visual com estado atual do tile
+    final currentTile = FarmManager.instance.getTile(tileX, tileY);
+    if (currentTile != null && _visualComponent != null) {
+      // Log apenas se o estado mudou
+      if (currentTile.soilState != _visualComponent!.farmTile.soilState ||
+          currentTile.crop?.cropId != _visualComponent!.farmTile.crop?.cropId) {
+        // developer.log(
+        //   '[FarmTileView] Tile ($tileX, $tileY) changed! Old: ${_visualComponent!.farmTile.soilState}, New: ${currentTile.soilState}',
+        // );
+      }
+      _visualComponent!.updateTile(currentTile);
+    }
+  }
+
+  // onRemove não precisa mais - o filho é removido automaticamente
 
   @override
   int get priority => 20;
-
-  void interact(FarmTool tool) {
-    switch (tool) {
-      case FarmTool.hoe:
-        if (state == TileState.grass) {
-          state = TileState.soil;
-          currentSprite = _FarmTileConfig._kSoilSpriteAsset;
-          _updateSprite();
-        }
-        break;
-      case FarmTool.wateringCan:
-        if (state == TileState.soil) {
-          state = TileState.watered;
-          isWatered = true;
-          currentSprite = _FarmTileConfig._kWateredSpriteAsset;
-          _updateSprite();
-        }
-        break;
-      case FarmTool.hand:
-        if (state == TileState.grown) {
-          state = TileState.soil;
-          plantedCrop = null;
-          daysGrowing = 0;
-          isWatered = false;
-          currentSprite = _FarmTileConfig._kSoilSpriteAsset;
-          _updateSprite();
-        }
-        break;
-    }
-  }
-
-  Future<void> _updateSprite() async {
-    sprite = await _FarmTileConfig._loadSprite(currentSprite);
-  }
-
-  bool plantSeed(CropType crop) {
-    if (state == TileState.soil && plantedCrop == null) {
-      state = TileState.planted;
-      plantedCrop = crop;
-      daysGrowing = 0;
-      currentSprite = _FarmTileConfig._kPlantedSpriteAsset;
-      _updateSprite();
-      return true;
-    }
-    return false;
-  }
-
-  void processDay() {
-    if (state == TileState.planted && isWatered && plantedCrop != null) {
-      daysGrowing++;
-      if (daysGrowing >= cropDatabase[plantedCrop]!.daysToGrow) {
-        state = TileState.grown;
-        currentSprite = _FarmTileConfig._kGrownSpriteAsset;
-        _updateSprite();
-      }
-      isWatered = false;
-    }
-  }
-
-  void reset() {
-    state = TileState.grass;
-    plantedCrop = null;
-    daysGrowing = 0;
-    isWatered = false;
-    currentSprite = _FarmTileConfig._kGrassSpriteAsset;
-    _updateSprite();
-  }
 }

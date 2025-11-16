@@ -33,7 +33,9 @@ final class FarmTile {
   bool get isOccupied => crop != null;
 
   /// Pode plantar?
-  bool get canPlant => isEmpty && soilState == SoilState.tilled;
+  bool get canPlant =>
+      isEmpty &&
+      (soilState == SoilState.tilled || soilState == SoilState.watered);
 
   /// Pode colher?
   bool get canHarvest => isOccupied && crop!.canHarvest;

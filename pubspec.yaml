@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.42.1+1
+version: 1.43.0+1
 
 environment:
   sdk: ^3.9.2
@@ -60,6 +60,7 @@ flutter:
     - assets/audio/ui/
     - assets/audio/voice/
     - assets/l10n/
+    - assets/crops/
     - assets/items/
     - assets/images/gameplay/farm/crops/carrot/
     - assets/images/gameplay/farm/soil/

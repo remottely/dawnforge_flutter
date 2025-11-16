@@ -7,6 +7,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/game/game_state_manager.d
 import 'package:darkness_dungeon/gameplay/core/modules/game/inventory_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/shield_defense_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/hud_view.dart';
+import 'package:darkness_dungeon/gameplay/farm/components/farm_interaction_component.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen_config.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   final gameplayGameStateManager = GameStateManager();
   final inventoryInputHandler = InventoryInputHandler();
   final shieldDefenseInputHandler = ShieldDefenseInputHandler();
+  late final FarmInteractionComponent farmInteractionComponent;
 
   @override
   void initState() {
@@ -41,13 +43,19 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
     gameplayHUD = HUDView();
   }
 
-  SunnyPlayerView buildSunnyPlayer(Vector2 position) => SunnyPlayerView(
-    position: position,
-    model: SunnyPlayerModel(),
-  ); // TODO(Kevin): implement save/load SunnyPlayerModel
+  SunnyPlayerView buildSunnyPlayer(Vector2 position) {
+    final player = SunnyPlayerView(
+      position: position,
+      model: SunnyPlayerModel(),
+    );
+    return player;
+  } // TODO(Kevin): implement save/load SunnyPlayerModel
 
-  KnightPlayerView buildKnightPlayer(Vector2 position) => KnightPlayerView(
-    position: position,
-    model: KnightPlayerModel(),
-  ); // TODO(Kevin): implement save/load KnightPlayerModel
+  KnightPlayerView buildKnightPlayer(Vector2 position) {
+    final player = KnightPlayerView(
+      position: position,
+      model: KnightPlayerModel(),
+    );
+    return player;
+  } // TODO(Kevin): implement save/load KnightPlayerModel
 }

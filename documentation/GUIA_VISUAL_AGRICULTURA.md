@@ -334,8 +334,8 @@ class FarmInteractionComponent extends GameComponent with KeyboardEventListener 
       return true;
     }
 
-    // W = Regar (Water)
-    if (event.logicalKey == LogicalKeyboardKey.keyW) {
+    // J = Regar (Water)
+    if (event.logicalKey == LogicalKeyboardKey.keyJ) {
       final success = FarmManager.instance.waterTile(x, y);
       if (success) {
         developer.log('[FarmInteraction] Watered tile at ($x, $y)');
@@ -344,8 +344,8 @@ class FarmInteractionComponent extends GameComponent with KeyboardEventListener 
       return true;
     }
 
-    // P = Plantar (Plant) - Exemplo com carrot
-    if (event.logicalKey == LogicalKeyboardKey.keyP) {
+    // K = Plantar (Seed) - Exemplo com carrot
+    if (event.logicalKey == LogicalKeyboardKey.keyK) {
       final success = FarmManager.instance.plantSeed(x, y, 'carrot');
       if (success) {
         developer.log('[FarmInteraction] Planted seed at ($x, $y)');
