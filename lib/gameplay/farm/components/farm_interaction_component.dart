@@ -1,8 +1,11 @@
 import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/hud_view.dart';
 import 'package:darkness_dungeon/gameplay/farm/farm_manager.dart';
 import 'package:darkness_dungeon/gameplay/farmable/farm_tile.dart';
+import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
+import 'package:darkness_dungeon/gameplay/inventory/item_factory.dart';
 import 'package:flutter/services.dart';
 
 /// Componente que gerencia interação do player com farm tiles
@@ -71,8 +74,35 @@ class FarmInteractionComponent extends GameComponent
       final crop = FarmManager.instance.harvestCrop(x, y);
       if (crop != null) {
         developer.log('[FarmInteraction] ✅ Harvested ${crop.name} at ($x, $y)');
-        _showFloatingText('Colhido ${crop.yieldAmount}x ${crop.name}!');
-        // TODO: Adicionar itens ao inventário
+
+        // Adicionar itens colhidos ao inventário
+        final harvestItem = ItemFactory.createItem(crop.harvestItemId);
+        if (harvestItem != null) {
+          final success = InventoryManager.instance.addItem(
+            harvestItem,
+            crop.yieldAmount,
+          );
+
+          if (success) {
+            developer.log(
+              '[FarmInteraction] 🎒 Added ${crop.yieldAmount}x ${harvestItem.name} to inventory',
+            );
+            _showFloatingText(
+              'Colhido ${crop.yieldAmount}x ${harvestItem.name}!',
+            );
+
+            // Forçar refresh do HUD do inventário
+            _refreshInventoryHUD();
+          } else {
+            developer.log('[FarmInteraction] ⚠️ Inventory full, items lost!');
+            _showFloatingText('Inventário cheio!');
+          }
+        } else {
+          developer.log(
+            '[FarmInteraction] ⚠️ Harvest item not found: ${crop.harvestItemId}',
+          );
+          _showFloatingText('Colhido ${crop.yieldAmount}x ${crop.name}!');
+        }
       } else {
         developer.log('[FarmInteraction] ❌ Cannot harvest at ($x, $y)');
       }
@@ -109,5 +139,24 @@ class FarmInteractionComponent extends GameComponent
     // TODO: Implementar floating text visual
     // Por enquanto só loga
     developer.log('[FarmInteraction] $text');
+  }
+
+  /// Força refresh do HUD de inventário
+  void _refreshInventoryHUD() {
+    try {
+      final hud = gameRef.interface as HUDView?;
+      if (hud != null) {
+        // Mostrar o inventário temporariamente para feedback visual
+        if (!hud.inventoryHUD.isVisible) {
+          developer.log(
+            '[FarmInteraction] 📦 Opening inventory to show new item',
+          );
+          hud.inventoryHUD.show();
+        }
+        hud.inventoryHUD.refresh();
+      }
+    } catch (e) {
+      developer.log('[FarmInteraction] Could not refresh inventory HUD: $e');
+    }
   }
 }

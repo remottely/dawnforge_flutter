@@ -35,6 +35,11 @@ class InventoryHUD extends InterfaceComponent {
   void show() => _isVisible = true;
   void hide() => _isVisible = false;
 
+  /// Força um refresh do HUD (útil após mudanças no inventário)
+  void refresh() {
+    // O render() já é chamado todo frame, mas podemos adicionar lógica futura aqui
+  }
+
   @override
   void render(Canvas canvas) {
     if (!_isVisible) return;

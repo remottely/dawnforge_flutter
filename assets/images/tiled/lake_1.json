@@ -391,6 +391,17 @@
                          "visible":true,
                          "width":16,
                          "x":48,
+                         "y":48
+                        }, 
+                        {
+                         "height":16,
+                         "id":260,
+                         "name":"farm_tile",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":48,
                          "y":64
                         }],
                  "opacity":1,
@@ -771,7 +782,7 @@
          "y":0
         }],
  "nextlayerid":32,
- "nextobjectid":260,
+ "nextobjectid":261,
  "orientation":"orthogonal",
  "properties":[
         {

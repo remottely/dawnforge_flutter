@@ -260,6 +260,19 @@
     "maxStackSize": 999,
     "materialType": "fiber"
   },
+  "carrot_item": {
+    "id": "carrot_item",
+    "name": "Carrot",
+    "description": "A fresh orange carrot. Can be eaten or sold.",
+    "type": "consumable",
+    "rarity": "common",
+    "baseValue": 15,
+    "iconPath": "assets/images/items/carrot.png",
+    "maxStackSize": 99,
+    "consumableType": "food",
+    "healAmount": 10,
+    "cooldown": 2.0
+  },
   "carrot_seeds": {
     "id": "carrot_seeds",
     "name": "Carrot Seeds",
@@ -273,6 +286,82 @@
     "growthTime": 4,
     "yield": 3,
     "season": "any"
+  },
+  "potato_item": {
+    "id": "potato_item",
+    "name": "Potato",
+    "description": "A starchy potato. Can be cooked or sold.",
+    "type": "consumable",
+    "rarity": "common",
+    "baseValue": 12,
+    "iconPath": "assets/images/items/potato.png",
+    "maxStackSize": 99,
+    "consumableType": "food",
+    "healAmount": 15,
+    "cooldown": 2.0
+  },
+  "wheat_item": {
+    "id": "wheat_item",
+    "name": "Wheat",
+    "description": "Golden wheat grain. Can be milled into flour.",
+    "type": "material",
+    "rarity": "common",
+    "baseValue": 8,
+    "iconPath": "assets/images/items/wheat.png",
+    "maxStackSize": 99,
+    "materialType": "crop"
+  },
+  "pumpkin_item": {
+    "id": "pumpkin_item",
+    "name": "Pumpkin",
+    "description": "A large orange pumpkin. Great for cooking.",
+    "type": "consumable",
+    "rarity": "uncommon",
+    "baseValue": 35,
+    "iconPath": "assets/images/items/pumpkin.png",
+    "maxStackSize": 50,
+    "consumableType": "food",
+    "healAmount": 30,
+    "cooldown": 3.0
+  },
+  "turnip_item": {
+    "id": "turnip_item",
+    "name": "Turnip",
+    "description": "A purple and white turnip. Nutritious vegetable.",
+    "type": "consumable",
+    "rarity": "common",
+    "baseValue": 10,
+    "iconPath": "assets/images/items/turnip.png",
+    "maxStackSize": 99,
+    "consumableType": "food",
+    "healAmount": 8,
+    "cooldown": 2.0
+  },
+  "tomato_item": {
+    "id": "tomato_item",
+    "name": "Tomato",
+    "description": "A juicy red tomato. Perfect for salads.",
+    "type": "consumable",
+    "rarity": "uncommon",
+    "baseValue": 20,
+    "iconPath": "assets/images/items/tomato.png",
+    "maxStackSize": 99,
+    "consumableType": "food",
+    "healAmount": 12,
+    "cooldown": 2.0
+  },
+  "corn_item": {
+    "id": "corn_item",
+    "name": "Corn",
+    "description": "Sweet corn on the cob. Can be roasted.",
+    "type": "consumable",
+    "rarity": "uncommon",
+    "baseValue": 18,
+    "iconPath": "assets/images/items/corn.png",
+    "maxStackSize": 99,
+    "consumableType": "food",
+    "healAmount": 14,
+    "cooldown": 2.0
   },
   "wheat_seeds": {
     "id": "wheat_seeds",
