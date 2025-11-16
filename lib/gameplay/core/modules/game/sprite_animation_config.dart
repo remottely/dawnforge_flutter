@@ -18,4 +18,14 @@ final class SpriteAnimationConfig {
     textureSize: textureSize,
     stepTime: _kStandardStepTime,
   );
+
+  static SpriteAnimationData createCustomData({
+    required int amount,
+    required Vector2 textureSize,
+    required double stepTime,
+  }) => SpriteAnimationData.sequenced(
+    amount: amount,
+    textureSize: textureSize,
+    stepTime: stepTime,
+  );
 }

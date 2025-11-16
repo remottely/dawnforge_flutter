@@ -27,10 +27,10 @@ class ShieldDefenseComponent extends GameComponent {
 
       // Criar animação do escudo (16x16) diretamente
       final animation = await SpriteAnimation.load(
-        'gameplay/characters/player/shield_defense_right_3.png',
+        'gameplay/characters/player/shield_defense_right_12.png',
         SpriteAnimationConfig.createStandardData(
-          amount: 3,
-          textureSize: TileConstants.tileSizeStandard,
+          amount: 12,
+          textureSize: TileConstants.tileSizeSuperLarge,
         ),
       );
 
@@ -42,9 +42,14 @@ class ShieldDefenseComponent extends GameComponent {
         anchor: Anchor.center,
       );
 
+      // Definir prioridade alta para renderizar na frente do player
+      _shieldAnimation!.priority = 1000;
+
       // Se já foi ativado antes da animação carregar, começar visível
       _shieldAnimation!.opacity = _isActive ? 1 : 0;
-      add(_shieldAnimation!);
+
+      // Adicionar diretamente ao gameRef ao invés de como filho deste componente
+      _player.gameRef.add(_shieldAnimation!);
 
       developer.log(
         '[ShieldDefenseComponent] Componente criado. Opacity: ${_shieldAnimation!.opacity}, IsActive: $_isActive',

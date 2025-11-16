@@ -10,12 +10,16 @@ final class TileConstants {
   static const double kTileDimensionStandard = 16.0;
   static const double kTileDimensionLarge = 24.0;
   static const double kTileDimensionExtraLarge = 32.0;
+  static const double kTileDimensionSuperLarge = 48.0;
 
   static final Vector2 tileSizeSmall = Vector2.all(kTileDimensionSmall);
   static final Vector2 tileSizeStandard = Vector2.all(kTileDimensionStandard);
   static final Vector2 tileSizeLarge = Vector2.all(kTileDimensionLarge);
   static final Vector2 tileSizeExtraLarge = Vector2.all(
     kTileDimensionExtraLarge,
+  );
+  static final Vector2 tileSizeSuperLarge = Vector2.all(
+    kTileDimensionSuperLarge,
   );
   static final Vector2 tileSizeSunnyWorld = Vector2(96, 64);
 }
