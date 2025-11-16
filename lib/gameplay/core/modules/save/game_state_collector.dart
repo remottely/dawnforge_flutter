@@ -4,6 +4,8 @@ import 'package:darkness_dungeon/gameplay/core/modules/player/player_progress_ma
 import 'package:darkness_dungeon/gameplay/core/modules/save/save_data_model.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/time/time_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
+import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
 
 /// Utility class for collecting and restoring game state from all managers.
 ///
@@ -32,6 +34,8 @@ final class GameStateCollector {
   /// - WorldStateManager (world, maps, day, season)
   /// - TimeManager (current time, time scale, paused state)
   /// - PlayerProgressManager (flags, achievements, stats)
+  /// - InventoryManager (inventory slots and items)
+  /// - EquipmentManager (equipped items)
   ///
   /// Returns a complete [SaveData] object ready to be saved.
   static SaveData collectCurrentGameState() {
@@ -41,6 +45,8 @@ final class GameStateCollector {
     final worldState = WorldStateManager.instance.toJson();
     final timeState = TimeManager.instance.toJson();
     final progressState = PlayerProgressManager.instance.toJson();
+    final inventoryState = InventoryManager.instance.toJson();
+    final equipmentState = EquipmentManager.instance.toJson();
 
     // Combine into worldData map
     final worldData = {
@@ -49,21 +55,29 @@ final class GameStateCollector {
       'progress': progressState,
     };
 
-    // For now, playerData and inventoryData are empty
-    // They will be populated when PlayerModel and Inventory systems are implemented
+    // Combine inventory and equipment into inventoryData
+    final inventoryData = {
+      'inventory': inventoryState,
+      'equipment': equipmentState,
+    };
+
+    // For now, playerData has minimal data for validation
+    // It will be fully populated when PlayerModel system is implemented in FASE 1.3
     final saveData = SaveData(
       version: SaveData.kCurrentVersion,
       timestamp: DateTime.now(),
-      playerData: {}, // TODO: Implement in FASE 1.3
+      playerData: {'_placeholder': true}, // Placeholder to pass validation
       worldData: worldData,
-      inventoryData: {}, // TODO: Implement in FASE 2.1
+      inventoryData: inventoryData,
     );
 
     developer.log(
       '[GameStateCollector] Game state collected: '
       'Day ${WorldStateManager.instance.currentDay}, '
       'Time ${TimeManager.instance.currentHour}:${TimeManager.instance.currentMinute}, '
-      '${PlayerProgressManager.instance.getAllFlags().length} flags',
+      '${PlayerProgressManager.instance.getAllFlags().length} flags, '
+      'Items: ${InventoryManager.instance.usedSlots}, '
+      'Equipment: ${EquipmentManager.instance.getAllEquippedItems().length}',
     );
 
     return saveData;
@@ -91,6 +105,7 @@ final class GameStateCollector {
       }
 
       final worldData = saveData.worldData;
+      final inventoryData = saveData.inventoryData;
 
       // Restore world state
       final worldState = worldData['world'] as Map<String, dynamic>?;
@@ -128,11 +143,39 @@ final class GameStateCollector {
         );
       }
 
+      // Restore inventory state
+      final inventoryState =
+          inventoryData['inventory'] as Map<String, dynamic>?;
+      if (inventoryState != null) {
+        InventoryManager.instance.fromJson(inventoryState);
+        developer.log('[GameStateCollector] Inventory state restored');
+      } else {
+        developer.log(
+          '[GameStateCollector] No inventory state data found',
+          level: 500, // FINE
+        );
+      }
+
+      // Restore equipment state
+      final equipmentState =
+          inventoryData['equipment'] as Map<String, dynamic>?;
+      if (equipmentState != null) {
+        EquipmentManager.instance.fromJson(equipmentState);
+        developer.log('[GameStateCollector] Equipment state restored');
+      } else {
+        developer.log(
+          '[GameStateCollector] No equipment state data found',
+          level: 500, // FINE
+        );
+      }
+
       developer.log(
         '[GameStateCollector] Game state restored successfully: '
         'Day ${WorldStateManager.instance.currentDay}, '
         'Time ${TimeManager.instance.currentHour}:${TimeManager.instance.currentMinute}, '
-        '${PlayerProgressManager.instance.getAllFlags().length} flags',
+        '${PlayerProgressManager.instance.getAllFlags().length} flags, '
+        'Items: ${InventoryManager.instance.usedSlots}, '
+        'Equipment: ${EquipmentManager.instance.getAllEquippedItems().length}',
       );
 
       return true;
@@ -158,6 +201,8 @@ final class GameStateCollector {
     WorldStateManager.instance.reset();
     TimeManager.instance.reset();
     PlayerProgressManager.instance.reset();
+    InventoryManager.instance.reset();
+    EquipmentManager.instance.reset();
 
     developer.log('[GameStateCollector] All managers reset complete');
   }
@@ -214,6 +259,8 @@ final class GameStateCollector {
     final world = WorldStateManager.instance;
     final time = TimeManager.instance;
     final progress = PlayerProgressManager.instance;
+    final inventory = InventoryManager.instance;
+    final equipment = EquipmentManager.instance;
 
     return '''
 Game State Summary:
@@ -227,6 +274,10 @@ Game State Summary:
 - Enemies Defeated: ${progress.enemiesDefeated}
 - Items Crafted: ${progress.itemsCrafted}
 - Distance Traveled: ${progress.distanceTraveled}
+- Inventory Slots Used: ${inventory.usedSlots}/${inventory.maxSlots}
+- Equipment Slots Used: ${equipment.getAllEquippedItems().length}/8
+- Total Damage: ${equipment.getTotalDamage()}
+- Total DPS: ${equipment.getTotalDps().toStringAsFixed(1)}
     '''
         .trim();
   }
