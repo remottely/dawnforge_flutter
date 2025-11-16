@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.34.0+1
+version: 1.35.0+1
 
 environment:
   sdk: ^3.9.2
@@ -60,6 +60,7 @@ flutter:
     - assets/audio/ui/
     - assets/audio/voice/
     - assets/l10n/
+    - assets/items/
     - assets/images/SPUM/Resources/Addons/Legacy/0_Unit/0_Sprite/6_Weapons/0_Sword/
     - assets/images/SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/7_Shield/
     - assets/images/SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/2_Axe/

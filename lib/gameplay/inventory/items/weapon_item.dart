@@ -1,0 +1,114 @@
+import '../models/item.dart';
+import '../models/item_rarity.dart';
+import '../models/item_type.dart';
+
+/// Item de arma para combate
+///
+/// Armas causam dano aos inimigos e possuem atributos como
+/// velocidade de ataque e chance de crítico.
+final class WeaponItem extends Item {
+  /// Dano base da arma
+  final int damage;
+
+  /// Velocidade de ataque (ataques por segundo)
+  final double attackSpeed;
+
+  /// Chance de acerto crítico (0.0-1.0)
+  final double critChance;
+
+  /// Multiplicador de dano crítico
+  final double critMultiplier;
+
+  /// Tipo de arma (sword, axe, spear, bow, etc)
+  final String weaponType;
+
+  /// Cria uma arma
+  const WeaponItem({
+    required super.id,
+    required super.name,
+    required super.description,
+    required super.baseValue,
+    required super.iconPath,
+    super.rarity = ItemRarity.common,
+    super.type = ItemType.weapon,
+    required this.damage,
+    this.attackSpeed = 1.0,
+    this.critChance = 0.05,
+    this.critMultiplier = 1.5,
+    required this.weaponType,
+  });
+
+  /// Calcula o DPS médio da arma (considerando críticos)
+  double get dps {
+    final avgDamage = damage * (1 + critChance * (critMultiplier - 1));
+    return avgDamage * attackSpeed;
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'type': type.toJson(),
+      'rarity': rarity.toJson(),
+      'baseValue': baseValue,
+      'iconPath': iconPath,
+      'damage': damage,
+      'attackSpeed': attackSpeed,
+      'critChance': critChance,
+      'critMultiplier': critMultiplier,
+      'weaponType': weaponType,
+    };
+  }
+
+  /// Cria arma a partir de JSON
+  factory WeaponItem.fromJson(Map<String, dynamic> json) {
+    return WeaponItem(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      description: json['description'] as String,
+      baseValue: json['baseValue'] as int,
+      iconPath: json['iconPath'] as String,
+      rarity: ItemRarity.fromJson(json['rarity'] as String),
+      damage: json['damage'] as int,
+      attackSpeed: (json['attackSpeed'] as num?)?.toDouble() ?? 1.0,
+      critChance: (json['critChance'] as num?)?.toDouble() ?? 0.05,
+      critMultiplier: (json['critMultiplier'] as num?)?.toDouble() ?? 1.5,
+      weaponType: json['weaponType'] as String,
+    );
+  }
+
+  @override
+  WeaponItem copyWith({
+    String? id,
+    String? name,
+    String? description,
+    int? baseValue,
+    String? iconPath,
+    ItemRarity? rarity,
+    int? damage,
+    double? attackSpeed,
+    double? critChance,
+    double? critMultiplier,
+    String? weaponType,
+  }) {
+    return WeaponItem(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      baseValue: baseValue ?? this.baseValue,
+      iconPath: iconPath ?? this.iconPath,
+      rarity: rarity ?? this.rarity,
+      damage: damage ?? this.damage,
+      attackSpeed: attackSpeed ?? this.attackSpeed,
+      critChance: critChance ?? this.critChance,
+      critMultiplier: critMultiplier ?? this.critMultiplier,
+      weaponType: weaponType ?? this.weaponType,
+    );
+  }
+
+  @override
+  String toString() =>
+      'WeaponItem(id: $id, name: $name, damage: $damage, dps: ${dps.toStringAsFixed(1)})';
+}
