@@ -143,6 +143,9 @@ abstract class DDBasePlayerView<
 
   @override
   void onDie() {
+    // Resetar vida no model para vida máxima (evita loop de morte)
+    // _playerModel.updateLife(maxLife);
+
     displayDeathVisualEffects();
     removeFromParent();
     super.onDie();

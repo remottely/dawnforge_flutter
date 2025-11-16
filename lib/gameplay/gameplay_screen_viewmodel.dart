@@ -29,6 +29,26 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   void initState() {
     super.initState();
     _initializeGameComponents();
+    _resetPlayerLifeOnNewGame();
+  }
+
+  void _resetPlayerLifeOnNewGame() {
+    // Resetar vida no PlayerStateManager quando iniciar novo jogo
+    // Isso garante que mesmo após morte, o próximo jogo comece com vida cheia
+    final stateManager = PlayerStateManager.instance;
+    final knightModel = stateManager.getKnightModel();
+    final sunnyModel = stateManager.getSunnyModel();
+
+    // Se a vida estiver em 0 ou muito baixa, resetar para null (usa vida padrão)
+    if (knightModel.life != null && knightModel.life! <= 0) {
+      knightModel.updateLife(200); // Vida padrão do Knight (kLifeExtraLarge)
+      developer.log('[ViewModel] Reset Knight life to full on new game');
+    }
+
+    if (sunnyModel.life != null && sunnyModel.life! <= 0) {
+      sunnyModel.updateLife(200); // Vida padrão do Sunny (kLifeExtraLarge)
+      developer.log('[ViewModel] Reset Sunny life to full on new game');
+    }
   }
 
   @override
@@ -53,7 +73,8 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
     final model = stateManager.getSunnyModel();
 
     // Salvar vida do player anterior no model antes de criar novo
-    if (_lastSunnyPlayer != null) {
+    // (apenas se não estiver morto - evita loop de morte)
+    if (_lastSunnyPlayer != null && !_lastSunnyPlayer!.isDead) {
       final currentLife = _lastSunnyPlayer!.life;
       model.updateLife(currentLife);
       developer.log(
@@ -76,7 +97,8 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
     final model = stateManager.getKnightModel();
 
     // Salvar vida do player anterior no model antes de criar novo
-    if (_lastKnightPlayer != null) {
+    // (apenas se não estiver morto - evita loop de morte)
+    if (_lastKnightPlayer != null && !_lastKnightPlayer!.isDead) {
       final currentLife = _lastKnightPlayer!.life;
       model.updateLife(currentLife);
       developer.log(
