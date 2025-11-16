@@ -32,4 +32,21 @@ abstract class DDMobilePlayerModel extends DDHybridCombatPlayerModel {
 
   /// Updates the running state.
   set isRunning(bool value) => _isInRunningState = value;
+
+  // ============================================================================
+  // Serialization
+  // ============================================================================
+
+  @override
+  Map<String, dynamic> toJson() {
+    final json = super.toJson();
+    json['isInRunningState'] = _isInRunningState;
+    return json;
+  }
+
+  @override
+  void fromJson(Map<String, dynamic> json) {
+    super.fromJson(json);
+    _isInRunningState = (json['isInRunningState'] as bool?) ?? false;
+  }
 }

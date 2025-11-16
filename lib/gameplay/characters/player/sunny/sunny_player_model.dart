@@ -51,4 +51,28 @@ class SunnyPlayerModel extends DDMobilePlayerModel {
 
   @override
   double get runSpeedMultiplier => SunnyPlayerConfig.kRunSpeedMultiplier;
+
+  // ============================================================================
+  // Serialization
+  // ============================================================================
+
+  @override
+  Map<String, dynamic> toJson() {
+    final json = super.toJson();
+    json['playerType'] = 'sunny'; // Identifier for deserialization
+    return json;
+  }
+
+  /// Creates a SunnyPlayerModel from JSON data.
+  ///
+  /// [json] The JSON map containing saved player state.
+  factory SunnyPlayerModel.fromJson(Map<String, dynamic> json) {
+    final model = SunnyPlayerModel(
+      initialStamina: (json['currentStamina'] as num?)?.toDouble(),
+      initialEnergy: (json['currentEnergy'] as int?),
+      initialHasKey: (json['hasKeyItem'] as bool?),
+    );
+    model.fromJson(json);
+    return model;
+  }
 }

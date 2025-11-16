@@ -51,4 +51,28 @@ class KnightPlayerModel extends DDHybridCombatPlayerModel {
 
   @override
   double get rangedAttackDamage => KnightPlayerConfig.kFireballAttackDamage;
+
+  // ============================================================================
+  // Serialization
+  // ============================================================================
+
+  @override
+  Map<String, dynamic> toJson() {
+    final json = super.toJson();
+    json['playerType'] = 'knight'; // Identifier for deserialization
+    return json;
+  }
+
+  /// Creates a KnightPlayerModel from JSON data.
+  ///
+  /// [json] The JSON map containing saved player state.
+  factory KnightPlayerModel.fromJson(Map<String, dynamic> json) {
+    final model = KnightPlayerModel(
+      initialStamina: (json['currentStamina'] as num?)?.toDouble(),
+      initialEnergy: (json['currentEnergy'] as int?),
+      initialHasKey: (json['hasKeyItem'] as bool?),
+    );
+    model.fromJson(json);
+    return model;
+  }
 }

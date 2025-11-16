@@ -112,4 +112,36 @@ abstract class DDBasePlayerModel {
 
   /// Removes the key item from the player's inventory.
   void removeKey() => _hasKeyItem = false;
+
+  // ============================================================================
+  // Serialization
+  // ============================================================================
+
+  /// Serializes the player model to JSON for persistence.
+  ///
+  /// Returns a map containing all persistent state that should be saved.
+  /// Subclasses should override this and call super.toJson() to include
+  /// their own additional fields.
+  Map<String, dynamic> toJson() {
+    return {
+      'currentStamina': _currentStamina,
+      'currentEnergy': _currentEnergy,
+      'hasKeyItem': _hasKeyItem,
+      'isObservingEnemies': _isObservingEnemies,
+    };
+  }
+
+  /// Deserializes player state from JSON.
+  ///
+  /// Applies saved state to this model instance. Should be called after
+  /// construction to restore saved state.
+  ///
+  /// [json] The JSON map containing saved player state.
+  void fromJson(Map<String, dynamic> json) {
+    _currentStamina =
+        (json['currentStamina'] as num?)?.toDouble() ?? maxStamina;
+    _currentEnergy = (json['currentEnergy'] as int?) ?? maxEnergy;
+    _hasKeyItem = (json['hasKeyItem'] as bool?) ?? false;
+    _isObservingEnemies = (json['isObservingEnemies'] as bool?) ?? false;
+  }
 }

@@ -39,4 +39,20 @@ abstract class DDHybridCombatPlayerModel extends DDBasePlayerModel {
 
   /// Determines if the player can execute the ranged attack.
   bool get canExecuteRangedAttack => stamina >= rangedAttackStaminaCost;
+
+  // ============================================================================
+  // Serialization
+  // ============================================================================
+
+  @override
+  Map<String, dynamic> toJson() {
+    return super.toJson();
+    // No additional fields to serialize at this level
+  }
+
+  @override
+  void fromJson(Map<String, dynamic> json) {
+    super.fromJson(json);
+    // No additional fields to deserialize at this level
+  }
 }
