@@ -1,18 +1,8 @@
 import 'dart:developer' as developer;
 
+import 'package:darkness_dungeon/gameplay/core/modules/time/time_of_day.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/world/map_state_model.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/world/season.dart';
-
-/// Enum representing different times of day
-enum TimeOfDay {
-  morning,
-  noon,
-  evening,
-  night;
-
-  String toJson() => name;
-  static TimeOfDay fromJson(String json) => values.byName(json);
-}
 
 /// Singleton manager for world state
 ///
