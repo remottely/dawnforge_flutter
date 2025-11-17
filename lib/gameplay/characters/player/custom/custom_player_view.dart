@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_loadout.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/custom_player_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/custom_player_model.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_loadout.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/custom_player_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/custom_player_model.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_to_knight_adapter.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_equippable_player/dd_equippable_player_view.dart';
 
@@ -31,7 +31,7 @@ class CustomPlayerView
     double? life,
     double? speed,
     LightingConfig? lightingConfig,
-    KnightHandLoadoutSetup? handLoadout,
+    CustomPlayerHandLoadoutSetup? handLoadout,
   }) : _customHitbox = hitbox,
        _customLightingConfig =
            lightingConfig ?? KnightPlayerConfig.lightingConfig,

@@ -8,8 +8,8 @@ import 'package:bonfire/bonfire.dart';
 ///
 /// No modo de animação, a rotação do equipamento é ignorada pois
 /// a animação já contém todos os frames do movimento do ataque.
-class KnightHandItemView extends GameDecoration {
-  KnightHandItemView({
+class CustomPlayerHandItemView extends GameDecoration {
+  CustomPlayerHandItemView({
     Sprite? initialSprite,
     required super.position,
     required super.size,

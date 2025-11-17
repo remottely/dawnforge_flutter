@@ -1,7 +1,7 @@
 import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/custom_player_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/custom_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:flutter/services.dart';
 

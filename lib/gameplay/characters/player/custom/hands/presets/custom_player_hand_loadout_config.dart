@@ -1,9 +1,9 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_loadout.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_slot.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/presets/knight_animated_weapon_preset.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/presets/knight_pickaxe_hand_preset.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/presets/knight_weapon_configs.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_loadout.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_slot.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/presets/custom_player_animated_weapon_preset.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/presets/custom_player_pickaxe_hand_preset.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/presets/custom_player_weapon_configs.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
@@ -15,14 +15,14 @@ import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attac
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/offset_helper.dart';
 
-final class KnightHandLoadoutConfig {
-  KnightHandLoadoutConfig._();
+final class CustomPlayerHandLoadoutConfig {
+  CustomPlayerHandLoadoutConfig._();
 
-  static KnightHandLoadoutSetup createDefaultKnightHandLoadout() {
+  static CustomPlayerHandLoadoutSetup createDefaultCustomPlayerHandLoadout() {
     // Usar configuração centralizada de sword
-    final config = KnightWeaponConfigs.sword;
+    final config = CustomPlayerWeaponConfigs.sword;
 
-    final swordData = KnightAnimatedWeaponPreset.create(
+    final swordData = CustomPlayerAnimatedWeaponPreset.create(
       id: 'iron_sword',
       idlePath: config.idlePath!,
       idleFrameCount: config.idleFrameCount!,
@@ -39,10 +39,10 @@ final class KnightHandLoadoutConfig {
     );
 
     // Criar entry com callback de frame
-    final rightEntry = KnightHandLoadoutEntry(
-      slot: KnightHandSlot.right,
+    final rightEntry = CustomPlayerHandLoadoutEntry(
+      slot: CustomPlayerHandSlot.right,
       itemData: swordData,
-      attack: KnightHandAttackSpec(
+      attack: CustomPlayerHandAttackSpec(
         trigger: KnightAttackTrigger.primary,
         attackType: AttackType.melee,
         syncSpec: SynchronizedAttackSpecConfig.standard,
@@ -109,7 +109,7 @@ final class KnightHandLoadoutConfig {
     // );
 
     /// Left Hand
-    final _leftHandData = KnightPickaxeHandPreset.create(
+    final _leftHandData = CustomPlayerPickaxeHandPreset.create(
       id: 'new_shield_04',
       spritePath: KnightPlayerConfig.woodShield4SpritePath,
       spriteSize: TileConstants.tileSizeStandard * 0.4,
@@ -120,10 +120,10 @@ final class KnightHandLoadoutConfig {
 
     const _leftHandSyncSpec = SynchronizedAttackSpecConfig.standard;
 
-    final _leftHandEntry = KnightHandLoadoutEntry(
-      slot: KnightHandSlot.left,
+    final _leftHandEntry = CustomPlayerHandLoadoutEntry(
+      slot: CustomPlayerHandSlot.left,
       itemData: _leftHandData,
-      attack: KnightHandAttackSpec(
+      attack: CustomPlayerHandAttackSpec(
         trigger: KnightAttackTrigger.fireball,
         attackType: AttackType.ranged,
         syncSpec: _leftHandSyncSpec,
@@ -143,7 +143,7 @@ final class KnightHandLoadoutConfig {
     );
 
     /// Right Hand
-    final _rightHandData = KnightPickaxeHandPreset.create(
+    final _rightHandData = CustomPlayerPickaxeHandPreset.create(
       id: 'sword_3',
       spritePath: KnightPlayerConfig.sword3SpritePath,
       spriteSize: Vector2(7, 22) * 0.4,
@@ -154,10 +154,10 @@ final class KnightHandLoadoutConfig {
 
     const _rightHandSyncSpec = SynchronizedAttackSpecConfig.standard;
 
-    final _rightHandEntry = KnightHandLoadoutEntry(
-      slot: KnightHandSlot.right,
+    final _rightHandEntry = CustomPlayerHandLoadoutEntry(
+      slot: CustomPlayerHandSlot.right,
       itemData: _rightHandData,
-      attack: KnightHandAttackSpec(
+      attack: CustomPlayerHandAttackSpec(
         trigger: KnightAttackTrigger.primary,
         attackType: AttackType.melee,
         syncSpec: _rightHandSyncSpec,
@@ -179,7 +179,7 @@ final class KnightHandLoadoutConfig {
     );
 
     /// Result
-    // return KnightHandLoadoutSetup(entries: [_rightHandEntry, _leftHandEntry]);
-    return KnightHandLoadoutSetup(entries: [rightEntry, _leftHandEntry]);
+    // return CustomPlayerHandLoadoutSetup(entries: [_rightHandEntry, _leftHandEntry]);
+    return CustomPlayerHandLoadoutSetup(entries: [rightEntry, _leftHandEntry]);
   }
 }

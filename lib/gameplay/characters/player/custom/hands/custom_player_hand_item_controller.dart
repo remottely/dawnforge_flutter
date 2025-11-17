@@ -2,21 +2,21 @@ import 'dart:developer' as developer;
 import 'dart:math' as math;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_item_data.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_item_model.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_item_view.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_slot.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_item_data.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_slot.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_item_model.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_item_view.dart';
 
-class KnightHandItemController {
+class CustomPlayerItemController {
   final GameComponent _owner;
-  final KnightHandSlot _slot;
-  final KnightHandItemData _data;
-  final KnightHandItemModel _model;
+  final CustomPlayerHandSlot _slot;
+  final CustomPlayerItemData _data;
+  final CustomPlayerItemModel _model;
 
-  KnightHandItemController({
+  CustomPlayerItemController({
     required GameComponent owner,
-    required KnightHandSlot slot,
-    required KnightHandItemData data,
+    required CustomPlayerHandSlot slot,
+    required CustomPlayerItemData data,
   }) : _owner = owner,
        _data = data,
        _slot = slot,
@@ -38,18 +38,18 @@ class KnightHandItemController {
     }
   }
 
-  KnightHandItemView? _view;
+  CustomPlayerHandItemView? _view;
 
   void Function(Duration duration)? _onAnimationDurationChanged;
 
   /// Callback executado no frame de ataque (apenas para modo animação)
   void Function()? _onAttackFrameExecute;
 
-  KnightHandSlot get slot => _slot;
+  CustomPlayerHandSlot get slot => _slot;
 
-  KnightHandItemData get data => _data;
+  CustomPlayerItemData get data => _data;
 
-  KnightHandItemView? get view => _view;
+  CustomPlayerHandItemView? get view => _view;
 
   bool get isReady => _view != null && !_view!.isRemoved;
 
@@ -59,7 +59,7 @@ class KnightHandItemController {
 
   Duration get currentAttackDuration => _model.attackDuration;
 
-  Future<KnightHandItemView> createView() async {
+  Future<CustomPlayerHandItemView> createView() async {
     if (_view != null) {
       return _view!;
     }
@@ -70,7 +70,7 @@ class KnightHandItemController {
       sprite = await Sprite.load(_data.spritePath!);
     }
 
-    final handView = KnightHandItemView(
+    final handView = CustomPlayerHandItemView(
       initialSprite: sprite,
       position: _initialPosition,
       size: _data.size,
@@ -282,7 +282,7 @@ class KnightHandItemController {
   }
 
   int _calculatePriority() {
-    final isRightHand = _slot == KnightHandSlot.right;
+    final isRightHand = _slot == CustomPlayerHandSlot.right;
     final shouldRenderInFront = isRightHand
         ? _model.facingRight
         : !_model.facingRight;
@@ -294,12 +294,12 @@ class KnightHandItemController {
     }
   }
 
-  static KnightHandItemModel _createModel(
-    KnightHandItemData data,
-    KnightHandSlot slot,
+  static CustomPlayerItemModel _createModel(
+    CustomPlayerItemData data,
+    CustomPlayerHandSlot slot,
   ) {
     final slotSpec = data.getSpec(slot);
-    return KnightHandItemModel(
+    return CustomPlayerItemModel(
       attackDuration: data.defaultAttackDuration,
       attachmentOffset: slotSpec.attachmentOffset,
       facingRightOffset: slotSpec.facingRightOffset,
@@ -320,12 +320,12 @@ class KnightHandItemController {
   Vector2 get _initialPosition =>
       _owner.position + _model.attachmentOffset + _directionalOffset;
 
-  void _updatePosition(KnightHandItemView currentView) {
+  void _updatePosition(CustomPlayerHandItemView currentView) {
     currentView.position =
         _owner.position + _model.attachmentOffset + _directionalOffset;
   }
 
-  void _advanceAnimation(double dt, KnightHandItemView currentView) {
+  void _advanceAnimation(double dt, CustomPlayerHandItemView currentView) {
     _model.elapsedSeconds += dt;
     final totalDurationSeconds = _model.attackDurationSeconds;
     if (totalDurationSeconds <= 0) {

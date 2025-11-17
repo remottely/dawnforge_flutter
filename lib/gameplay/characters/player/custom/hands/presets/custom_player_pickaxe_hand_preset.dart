@@ -1,11 +1,11 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_item_data.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_slot.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_item_data.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_slot.dart';
 
-class KnightPickaxeHandPreset {
-  KnightPickaxeHandPreset._();
+class CustomPlayerPickaxeHandPreset {
+  CustomPlayerPickaxeHandPreset._();
 
-  static KnightHandItemData create({
+  static CustomPlayerItemData create({
     required String id,
     required String spritePath,
     required Vector2 spriteSize,
@@ -13,9 +13,9 @@ class KnightPickaxeHandPreset {
     required Vector2 directionalOffset,
     required Vector2 mirroredDirectionalOffset,
   }) {
-    KnightHandSlotSpec buildSlotSpec(KnightHandSlot slot) {
-      final isRightHand = slot == KnightHandSlot.right;
-      return KnightHandSlotSpec(
+    CustomPlayerHandSlotSpec buildSlotSpec(CustomPlayerHandSlot slot) {
+      final isRightHand = slot == CustomPlayerHandSlot.right;
+      return CustomPlayerHandSlotSpec(
         attachmentOffset: attachmentOffset,
         facingRightOffset: isRightHand
             ? mirroredDirectionalOffset
@@ -26,12 +26,13 @@ class KnightPickaxeHandPreset {
       );
     }
 
-    return KnightHandItemData(
+    return CustomPlayerItemData(
       id: id,
       spritePath: spritePath,
       size: spriteSize,
       slotSpecs: {
-        for (final slot in KnightHandSlot.values) slot: buildSlotSpec(slot),
+        for (final slot in CustomPlayerHandSlot.values)
+          slot: buildSlotSpec(slot),
       },
     );
   }

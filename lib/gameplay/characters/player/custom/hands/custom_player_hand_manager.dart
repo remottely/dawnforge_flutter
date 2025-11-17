@@ -1,18 +1,18 @@
 import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_item_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_loadout.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_slot.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/shield_defense_component.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_item_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_loadout.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_slot.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/shield_defense_component.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
 
-class KnightHandManager {
-  KnightHandManager({required SimplePlayer owner}) : _owner = owner;
+class CustomPlayerHandManager {
+  CustomPlayerHandManager({required SimplePlayer owner}) : _owner = owner;
 
   final SimplePlayer _owner;
-  final Map<KnightHandSlot, _KnightHandRuntime> _hands = {};
-  final Map<KnightAttackTrigger, KnightHandSlot> _triggerToSlot = {};
+  final Map<CustomPlayerHandSlot, _CustomPlayerHandRuntime> _hands = {};
+  final Map<KnightAttackTrigger, CustomPlayerHandSlot> _triggerToSlot = {};
 
   // Sistema de defesa
   ShieldDefenseComponent? _defenseComponent;
@@ -20,13 +20,13 @@ class KnightHandManager {
 
   bool get isDefending => _isDefending;
 
-  Future<void> applyLoadout(KnightHandLoadoutSetup loadout) async {
+  Future<void> applyLoadout(CustomPlayerHandLoadoutSetup loadout) async {
     developer.log(
-      '[KnightHandManager] Applying loadout with ${loadout.entries.length} entries',
+      '[CustomPlayerHandManager] Applying loadout with ${loadout.entries.length} entries',
     );
 
     // 1. Identificar slots que devem ser removidos
-    final slotsToRemove = <KnightHandSlot>[];
+    final slotsToRemove = <CustomPlayerHandSlot>[];
     for (final slot in _hands.keys) {
       final hasEntry = loadout.entries.any((entry) => entry.slot == slot);
       if (!hasEntry) {
@@ -36,30 +36,32 @@ class KnightHandManager {
 
     // 2. Remover slots que não estão mais no loadout
     for (final slot in slotsToRemove) {
-      developer.log('[KnightHandManager] Removing slot: $slot');
+      developer.log('[CustomPlayerHandManager] Removing slot: $slot');
       final existing = _hands.remove(slot);
       if (existing != null) {
         _clearTriggerForSlot(slot);
         existing.dispose();
-        developer.log('[KnightHandManager] ✓ Slot $slot removed and disposed');
+        developer.log(
+          '[CustomPlayerHandManager] ✓ Slot $slot removed and disposed',
+        );
       }
     }
 
     // 3. Adicionar/atualizar novos entries
     for (final entry in loadout.entries) {
       developer.log(
-        '[KnightHandManager] Applying entry for slot: ${entry.slot}',
+        '[CustomPlayerHandManager] Applying entry for slot: ${entry.slot}',
       );
       await applyEntry(entry);
     }
 
     developer.log(
-      '[KnightHandManager] Loadout applied. Active slots: ${_hands.keys.toList()}',
+      '[CustomPlayerHandManager] Loadout applied. Active slots: ${_hands.keys.toList()}',
     );
   }
 
-  Future<KnightHandItemController> applyEntry(
-    KnightHandLoadoutEntry entry,
+  Future<CustomPlayerItemController> applyEntry(
+    CustomPlayerHandLoadoutEntry entry,
   ) async {
     final existing = _hands.remove(entry.slot);
     if (existing != null) {
@@ -67,7 +69,7 @@ class KnightHandManager {
       existing.dispose();
     }
 
-    final itemController = KnightHandItemController(
+    final itemController = CustomPlayerItemController(
       owner: _owner,
       slot: entry.slot,
       data: entry.itemData,
@@ -99,7 +101,7 @@ class KnightHandManager {
       _clearTriggerForSlot(entry.slot);
     }
 
-    _hands[entry.slot] = _KnightHandRuntime(
+    _hands[entry.slot] = _CustomPlayerHandRuntime(
       itemController: itemController,
       attackBinding: attackBinding,
       attackController: attackController,
@@ -122,7 +124,7 @@ class KnightHandManager {
     final info = runtime.attackController!.execute(
       runtime.attackBinding!.attackType,
       () => runtime.attackBinding!.execute(
-        KnightAttackExecutionContext(
+        CustomPlayerAttackExecutionContext(
           player: _owner,
           slot: slot,
           handController: runtime.itemController,
@@ -134,7 +136,7 @@ class KnightHandManager {
     return info != null;
   }
 
-  KnightHandItemController? handControllerFor(KnightHandSlot slot) =>
+  CustomPlayerItemController? handControllerFor(CustomPlayerHandSlot slot) =>
       _hands[slot]?.itemController;
 
   void update(double dt, Vector2 velocity) {
@@ -153,7 +155,7 @@ class KnightHandManager {
     _triggerToSlot.clear();
   }
 
-  void _clearTriggerForSlot(KnightHandSlot slot) {
+  void _clearTriggerForSlot(CustomPlayerHandSlot slot) {
     _triggerToSlot.removeWhere((_, mappedSlot) => mappedSlot == slot);
   }
 
@@ -169,17 +171,21 @@ class KnightHandManager {
     // Verificar se tem escudo no slot de defesa
     final defenseSlot = _triggerToSlot[KnightAttackTrigger.shieldDefense];
     if (defenseSlot == null) {
-      developer.log('[KnightHandManager] Sem escudo equipado para defender');
+      developer.log(
+        '[CustomPlayerHandManager] Sem escudo equipado para defender',
+      );
       return false;
     }
 
     final runtime = _hands[defenseSlot];
     if (runtime == null) {
-      developer.log('[KnightHandManager] Runtime de defesa não encontrado');
+      developer.log(
+        '[CustomPlayerHandManager] Runtime de defesa não encontrado',
+      );
       return false;
     }
 
-    developer.log('[KnightHandManager] Iniciando defesa com escudo');
+    developer.log('[CustomPlayerHandManager] Iniciando defesa com escudo');
     _isDefending = true;
 
     // Criar componente de defesa se não existir
@@ -190,7 +196,9 @@ class KnightHandManager {
 
     _defenseComponent!.activate();
 
-    developer.log('[KnightHandManager] ✓ Defesa ativada - player imune a dano');
+    developer.log(
+      '[CustomPlayerHandManager] ✓ Defesa ativada - player imune a dano',
+    );
 
     return true;
   }
@@ -199,7 +207,7 @@ class KnightHandManager {
   void stopDefense() {
     if (!_isDefending) return;
 
-    developer.log('[KnightHandManager] Parando defesa');
+    developer.log('[CustomPlayerHandManager] Parando defesa');
     _stopDefenseInternal();
   }
 
@@ -216,8 +224,8 @@ class KnightHandManager {
   // ==========================================================================
 
   SynchronizedAttackController _createAttackController(
-    KnightHandItemController itemController,
-    KnightHandAttackSpec attackBinding,
+    CustomPlayerItemController itemController,
+    CustomPlayerHandAttackSpec attackBinding,
   ) {
     return SynchronizedAttackController(spec: attackBinding.syncSpec)
       ..setOnAnimationDurationChangedCallback(
@@ -232,12 +240,12 @@ class KnightHandManager {
   }
 }
 
-class _KnightHandRuntime {
-  final KnightHandItemController itemController;
-  final KnightHandAttackSpec? attackBinding;
+class _CustomPlayerHandRuntime {
+  final CustomPlayerItemController itemController;
+  final CustomPlayerHandAttackSpec? attackBinding;
   final SynchronizedAttackController? attackController;
 
-  const _KnightHandRuntime({
+  const _CustomPlayerHandRuntime({
     required this.itemController,
     this.attackBinding,
     this.attackController,

@@ -1,11 +1,11 @@
 import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_loadout.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_slot.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/presets/knight_animated_weapon_preset.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/presets/knight_pickaxe_hand_preset.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/presets/knight_weapon_configs.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_loadout.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_slot.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/presets/custom_player_animated_weapon_preset.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/presets/custom_player_pickaxe_hand_preset.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/presets/custom_player_weapon_configs.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_primary_attack_config.dart';
@@ -23,7 +23,7 @@ import 'package:darkness_dungeon/gameplay/inventory/models/weapon_type.dart';
 /// para o sistema de hands do Knight Player
 ///
 /// Responsável por:
-/// - Sincronizar EquipmentManager → KnightHandLoadout
+/// - Sincronizar EquipmentManager → CustomPlayerHandLoadout
 /// - Mapear weapon → Right Hand (Primary Attack - Melee)
 /// - Mapear offhand → Left Hand (Ranged Attack - Fireball)
 /// - Detectar mudanças de equipamento e atualizar loadout
@@ -37,36 +37,40 @@ final class EquipmentToKnightAdapter {
   // ==========================================================================
 
   /// Busca configuração visual para weapon type (Right Hand)
-  static KnightWeaponVisualConfig _getWeaponConfig(WeaponType weaponType) {
+  static CustomPlayerWeaponVisualConfig _getWeaponConfig(
+    WeaponType weaponType,
+  ) {
     switch (weaponType) {
       case WeaponType.sword:
-        return KnightWeaponConfigs.sword;
+        return CustomPlayerWeaponConfigs.sword;
       case WeaponType.axe:
-        return KnightWeaponConfigs.axe;
+        return CustomPlayerWeaponConfigs.axe;
       case WeaponType.mace:
-        return KnightWeaponConfigs.mace;
+        return CustomPlayerWeaponConfigs.mace;
       default:
-        return KnightWeaponConfigs.defaultWeapon;
+        return CustomPlayerWeaponConfigs.defaultWeapon;
     }
   }
 
   /// Busca configuração visual para offhand type (Left Hand)
-  static KnightWeaponVisualConfig _getOffhandConfig(WeaponType weaponType) {
+  static CustomPlayerWeaponVisualConfig _getOffhandConfig(
+    WeaponType weaponType,
+  ) {
     switch (weaponType) {
       case WeaponType.staff:
-        return KnightOffhandConfigs.staff;
+        return CustomPlayerOffhandConfigs.staff;
       case WeaponType.wand:
-        return KnightOffhandConfigs.wand;
+        return CustomPlayerOffhandConfigs.wand;
       case WeaponType.shield:
-        return KnightOffhandConfigs.shield;
+        return CustomPlayerOffhandConfigs.shield;
       default:
-        return KnightOffhandConfigs.defaultOffhand;
+        return CustomPlayerOffhandConfigs.defaultOffhand;
     }
   }
 
   /// Cria loadout baseado no equipamento atual do EquipmentManager
-  KnightHandLoadoutSetup createLoadoutFromEquipment() {
-    final entries = <KnightHandLoadoutEntry>[];
+  CustomPlayerHandLoadoutSetup createLoadoutFromEquipment() {
+    final entries = <CustomPlayerHandLoadoutEntry>[];
 
     // Right Hand = Weapon slot (Primary Attack - Space)
     // Apenas SWORD e AXE permitidos
@@ -85,18 +89,18 @@ final class EquipmentToKnightAdapter {
     // Se nenhum equipamento, retornar loadout vazio (sem defaults)
     if (entries.isEmpty) {
       developer.log('[EquipmentAdapter] No equipment, empty hands');
-      return KnightHandLoadoutSetup(entries: []);
+      return CustomPlayerHandLoadoutSetup(entries: []);
     }
 
     developer.log(
       '[EquipmentAdapter] Created loadout with ${entries.length} items',
     );
-    return KnightHandLoadoutSetup(entries: entries);
+    return CustomPlayerHandLoadoutSetup(entries: entries);
   }
 
   /// Cria entry para Right Hand baseado no weapon slot
   /// APENAS aceita SWORD e AXE
-  KnightHandLoadoutEntry? _createWeaponHandEntry() {
+  CustomPlayerHandLoadoutEntry? _createWeaponHandEntry() {
     final weaponItem = EquipmentManager.instance.getEquippedItem(
       EquipmentSlotType.weapon,
     );
@@ -127,7 +131,7 @@ final class EquipmentToKnightAdapter {
 
   /// Cria entry para Left Hand baseado no offhand slot
   /// APENAS aceita SHIELD e STAFF
-  KnightHandLoadoutEntry? _createOffhandHandEntry() {
+  CustomPlayerHandLoadoutEntry? _createOffhandHandEntry() {
     final offhandItem = EquipmentManager.instance.getEquippedItem(
       EquipmentSlotType.offhand,
     );
@@ -159,7 +163,7 @@ final class EquipmentToKnightAdapter {
   }
 
   /// Cria entry de weapon baseado no WeaponItem
-  KnightHandLoadoutEntry _createWeaponEntryFromItem(WeaponItem item) {
+  CustomPlayerHandLoadoutEntry _createWeaponEntryFromItem(WeaponItem item) {
     final weaponType = item.weaponType;
 
     // Buscar configuração centralizada
@@ -167,7 +171,7 @@ final class EquipmentToKnightAdapter {
 
     // Criar hand data baseado no tipo (animação ou sprite)
     final handData = config.useAnimation
-        ? KnightAnimatedWeaponPreset.create(
+        ? CustomPlayerAnimatedWeaponPreset.create(
             id: item.id,
             idlePath: config.idlePath!,
             idleFrameCount: config.idleFrameCount!,
@@ -182,7 +186,7 @@ final class EquipmentToKnightAdapter {
             directionalOffset: config.directionalOffset,
             mirroredDirectionalOffset: config.mirroredDirectionalOffset,
           )
-        : KnightPickaxeHandPreset.create(
+        : CustomPlayerPickaxeHandPreset.create(
             id: item.id,
             spritePath: config.spritePath!,
             spriteSize: config.size,
@@ -193,10 +197,10 @@ final class EquipmentToKnightAdapter {
 
     const syncSpec = SynchronizedAttackSpecConfig.standard;
 
-    return KnightHandLoadoutEntry(
-      slot: KnightHandSlot.right,
+    return CustomPlayerHandLoadoutEntry(
+      slot: CustomPlayerHandSlot.right,
       itemData: handData,
-      attack: KnightHandAttackSpec(
+      attack: CustomPlayerHandAttackSpec(
         trigger: KnightAttackTrigger.primary,
         attackType: AttackType.melee,
         syncSpec: syncSpec,
@@ -221,7 +225,7 @@ final class EquipmentToKnightAdapter {
 
   /// Executa o ataque de arma (compartilhado entre sprite e animação)
   void _executeWeaponAttack(
-    KnightAttackExecutionContext context,
+    CustomPlayerAttackExecutionContext context,
     double damage,
     WeaponItem item,
   ) {
@@ -250,13 +254,13 @@ final class EquipmentToKnightAdapter {
   }
 
   /// Cria entry de offhand baseado no WeaponItem
-  KnightHandLoadoutEntry _createOffhandEntryFromItem(WeaponItem item) {
+  CustomPlayerHandLoadoutEntry _createOffhandEntryFromItem(WeaponItem item) {
     final weaponType = item.weaponType;
 
     // Buscar configuração centralizada
     final config = _getOffhandConfig(weaponType);
 
-    final handData = KnightPickaxeHandPreset.create(
+    final handData = CustomPlayerPickaxeHandPreset.create(
       id: item.id,
       spritePath: config.spritePath!,
       spriteSize: config.size,
@@ -266,11 +270,11 @@ final class EquipmentToKnightAdapter {
     );
 
     // Apenas staff/wand tem ataque fireball, shield tem defesa
-    KnightHandAttackSpec? attackSpec;
+    CustomPlayerHandAttackSpec? attackSpec;
     if (weaponType == WeaponType.staff || weaponType == WeaponType.wand) {
       const syncSpec = SynchronizedAttackSpecConfig.standard;
 
-      attackSpec = KnightHandAttackSpec(
+      attackSpec = CustomPlayerHandAttackSpec(
         trigger: KnightAttackTrigger.fireball,
         attackType: AttackType.ranged,
         syncSpec: syncSpec,
@@ -298,7 +302,7 @@ final class EquipmentToKnightAdapter {
       // Shield tem spec de defesa (sem syncSpec pois não é ataque)
       const syncSpec = SynchronizedAttackSpecConfig.standard;
 
-      attackSpec = KnightHandAttackSpec(
+      attackSpec = CustomPlayerHandAttackSpec(
         trigger: KnightAttackTrigger.shieldDefense,
         attackType: AttackType.melee, // Tipo irrelevante para defesa
         syncSpec: syncSpec,
@@ -310,8 +314,8 @@ final class EquipmentToKnightAdapter {
       );
     }
 
-    return KnightHandLoadoutEntry(
-      slot: KnightHandSlot.left,
+    return CustomPlayerHandLoadoutEntry(
+      slot: CustomPlayerHandSlot.left,
       itemData: handData,
       attack: attackSpec,
     );

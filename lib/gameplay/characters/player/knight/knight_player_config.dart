@@ -225,7 +225,7 @@ final class KnightPlayerConfig {
   // Equipment & Weapon Asset Paths
   // ============================================================================
   // Note: These paths are managed here for convenience but the actual equipment
-  // system is handled through the KnightHandManager and related components.
+  // system is handled through the CustomPlayerHandManager and related components.
   // Consider organizing into a separate EquipmentAssetConfig class if the list grows.
 
   // /// Default pickaxe tool sprite path.

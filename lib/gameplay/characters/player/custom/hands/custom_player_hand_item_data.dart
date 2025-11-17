@@ -1,17 +1,17 @@
 import 'dart:math' as math;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_animation_data.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_slot.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_slot.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_animation_data.dart';
 
-class KnightHandSlotSpec {
+class CustomPlayerHandSlotSpec {
   final Vector2 attachmentOffset;
   final Vector2 facingRightOffset;
   final Vector2 facingLeftOffset;
   final double facingRightScaleX;
   final double facingLeftScaleX;
 
-  const KnightHandSlotSpec({
+  const CustomPlayerHandSlotSpec({
     required this.attachmentOffset,
     required this.facingRightOffset,
     required this.facingLeftOffset,
@@ -19,14 +19,14 @@ class KnightHandSlotSpec {
     this.facingLeftScaleX = -1.0,
   });
 
-  KnightHandSlotSpec copyWith({
+  CustomPlayerHandSlotSpec copyWith({
     Vector2? attachmentOffset,
     Vector2? facingRightOffset,
     Vector2? facingLeftOffset,
     double? facingRightScaleX,
     double? facingLeftScaleX,
   }) {
-    return KnightHandSlotSpec(
+    return CustomPlayerHandSlotSpec(
       attachmentOffset: attachmentOffset ?? this.attachmentOffset,
       facingRightOffset: facingRightOffset ?? this.facingRightOffset,
       facingLeftOffset: facingLeftOffset ?? this.facingLeftOffset,
@@ -47,8 +47,8 @@ class KnightHandSlotSpec {
   }
 }
 
-class KnightHandItemData {
-  KnightHandItemData({
+class CustomPlayerItemData {
+  CustomPlayerItemData({
     required this.id,
     this.spritePath,
     this.animationData,
@@ -86,10 +86,10 @@ class KnightHandItemData {
 
   /// Dados da animação (novo sistema)
   /// Mutuamente exclusivo com [spritePath]
-  final KnightHandAnimationData? animationData;
+  final CustomPlayerHandAnimationData? animationData;
 
   final Vector2 size;
-  final Map<KnightHandSlot, KnightHandSlotSpec> slotSpecs;
+  final Map<CustomPlayerHandSlot, CustomPlayerHandSlotSpec> slotSpecs;
   final Duration defaultAttackDuration;
   final double baseAngle;
   final double maxRotationAngle;
@@ -101,13 +101,13 @@ class KnightHandItemData {
   /// Retorna true se este item usa animação ao invés de sprite estático
   bool get isAnimated => animationData != null;
 
-  KnightHandSlotSpec getSpec(KnightHandSlot slot) {
+  CustomPlayerHandSlotSpec getSpec(CustomPlayerHandSlot slot) {
     if (slotSpecs.containsKey(slot)) {
       return slotSpecs[slot]!;
     }
 
-    if (slotSpecs.containsKey(KnightHandSlot.right)) {
-      return slotSpecs[KnightHandSlot.right]!;
+    if (slotSpecs.containsKey(CustomPlayerHandSlot.right)) {
+      return slotSpecs[CustomPlayerHandSlot.right]!;
     }
 
     return slotSpecs.values.first;

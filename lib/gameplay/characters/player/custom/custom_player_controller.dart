@@ -1,5 +1,5 @@
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/custom_player_model.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/custom_player_model.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/joysctick_setup.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_hybrid_combat_player/dd_hybrid_combat_player_controller.dart';

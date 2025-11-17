@@ -9,7 +9,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_con
 ///
 /// Exemplo de uso:
 /// ```dart
-/// final swordAnimations = KnightHandAnimationData(
+/// final swordAnimations = CustomPlayerHandAnimationData(
 ///   idlePath: 'weapons/sword_idle_strip4.png',
 ///   idleFrameCount: 4,
 ///   attackPath: 'weapons/sword_slash_strip6.png',
@@ -18,7 +18,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_con
 ///   attackDuration: Duration(milliseconds: 400),
 /// );
 /// ```
-class KnightHandAnimationData {
+class CustomPlayerHandAnimationData {
   /// Caminho do sprite sheet da animação IDLE
   final String idlePath;
 
@@ -43,7 +43,7 @@ class KnightHandAnimationData {
   /// Tamanho de cada frame no sprite sheet
   final Vector2 textureSize;
 
-  const KnightHandAnimationData({
+  const CustomPlayerHandAnimationData({
     required this.idlePath,
     required this.idleFrameCount,
     this.idleFrameDuration = const Duration(milliseconds: 150),
@@ -90,7 +90,7 @@ class KnightHandAnimationData {
 
   @override
   String toString() {
-    return 'KnightHandAnimationData('
+    return 'CustomPlayerHandAnimationData('
         'idle: $idlePath ($idleFrameCount frames), '
         'attack: $attackPath ($attackFrameCount frames), '
         'attackFrame: $attackFrameIndex, '

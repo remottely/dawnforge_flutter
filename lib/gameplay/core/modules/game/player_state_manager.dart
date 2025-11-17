@@ -1,6 +1,6 @@
 import 'dart:developer' as developer;
 
-import 'package:darkness_dungeon/gameplay/characters/player/custom_player_model.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/custom_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
 
 /// Singleton que centraliza o estado persistente do player

@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_animation_data.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_item_data.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_slot.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_animation_data.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_item_data.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_slot.dart';
 
 /// Preset para equipamentos com animação
 ///
@@ -26,10 +26,10 @@ import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_
 ///   mirroredDirectionalOffset: Vector2(-8, 0),
 /// );
 /// ```
-class KnightAnimatedWeaponPreset {
-  KnightAnimatedWeaponPreset._();
+class CustomPlayerAnimatedWeaponPreset {
+  CustomPlayerAnimatedWeaponPreset._();
 
-  static KnightHandItemData create({
+  static CustomPlayerItemData create({
     required String id,
     required String idlePath,
     required int idleFrameCount,
@@ -45,7 +45,7 @@ class KnightAnimatedWeaponPreset {
     required Vector2 mirroredDirectionalOffset,
   }) {
     // Criar dados das animações (idle + attack)
-    final animationData = KnightHandAnimationData(
+    final animationData = CustomPlayerHandAnimationData(
       idlePath: idlePath,
       idleFrameCount: idleFrameCount,
       idleFrameDuration: idleFrameDuration,
@@ -57,9 +57,9 @@ class KnightAnimatedWeaponPreset {
     );
 
     // Criar specs para cada slot
-    KnightHandSlotSpec buildSlotSpec(KnightHandSlot slot) {
-      final isRightHand = slot == KnightHandSlot.right;
-      return KnightHandSlotSpec(
+    CustomPlayerHandSlotSpec buildSlotSpec(CustomPlayerHandSlot slot) {
+      final isRightHand = slot == CustomPlayerHandSlot.right;
+      return CustomPlayerHandSlotSpec(
         attachmentOffset: attachmentOffset,
         facingRightOffset: isRightHand
             ? mirroredDirectionalOffset
@@ -70,12 +70,13 @@ class KnightAnimatedWeaponPreset {
       );
     }
 
-    return KnightHandItemData(
+    return CustomPlayerItemData(
       id: id,
       animationData: animationData,
       size: size,
       slotSpecs: {
-        for (final slot in KnightHandSlot.values) slot: buildSlotSpec(slot),
+        for (final slot in CustomPlayerHandSlot.values)
+          slot: buildSlotSpec(slot),
       },
       // Usar a duração da animação de ataque
       defaultAttackDuration: attackDuration,

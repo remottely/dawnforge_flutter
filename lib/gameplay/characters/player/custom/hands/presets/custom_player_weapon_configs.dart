@@ -6,7 +6,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart'
 ///
 /// Este arquivo é a ÚNICA fonte de verdade para configurações visuais
 /// de equipamentos do Knight Player.
-class KnightWeaponVisualConfig {
+class CustomPlayerWeaponVisualConfig {
   final bool useAnimation;
 
   // Campos para modo SPRITE (legado)
@@ -28,7 +28,7 @@ class KnightWeaponVisualConfig {
   final Vector2 directionalOffset;
   final Vector2 mirroredDirectionalOffset;
 
-  const KnightWeaponVisualConfig({
+  const CustomPlayerWeaponVisualConfig({
     required this.useAnimation,
     this.spritePath,
     this.idlePath,
@@ -50,7 +50,7 @@ class KnightWeaponVisualConfig {
        );
 
   /// Configuração para SPRITE mode
-  const KnightWeaponVisualConfig.sprite({
+  const CustomPlayerWeaponVisualConfig.sprite({
     required this.spritePath,
     required this.textureSize,
     required this.size,
@@ -67,7 +67,7 @@ class KnightWeaponVisualConfig {
        attackDuration = null;
 
   /// Configuração para ANIMATION mode
-  const KnightWeaponVisualConfig.animation({
+  const CustomPlayerWeaponVisualConfig.animation({
     required this.idlePath,
     required this.idleFrameCount,
     this.idleFrameDuration = const Duration(milliseconds: 1000),
@@ -85,11 +85,11 @@ class KnightWeaponVisualConfig {
 }
 
 /// Configurações centralizadas de armas (Right Hand)
-final class KnightWeaponConfigs {
-  KnightWeaponConfigs._();
+final class CustomPlayerWeaponConfigs {
+  CustomPlayerWeaponConfigs._();
 
   /// Sword configuration (ANIMATION mode)
-  static final sword = KnightWeaponVisualConfig.animation(
+  static final sword = CustomPlayerWeaponVisualConfig.animation(
     idlePath:
         'SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/ATTACK/tools_attack_strip10.png',
     // 'SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/AXE/tools_axe_strip10.png',
@@ -113,7 +113,7 @@ final class KnightWeaponConfigs {
   );
 
   /// Axe configuration (SPRITE mode)
-  static final axe = KnightWeaponVisualConfig.sprite(
+  static final axe = CustomPlayerWeaponVisualConfig.sprite(
     spritePath: KnightPlayerConfig.axeNormal1SpritePath,
     textureSize: Vector2(16, 22) * 0.4,
     size: Vector2(16, 22) * 0.4,
@@ -123,7 +123,7 @@ final class KnightWeaponConfigs {
   );
 
   /// Mace configuration (SPRITE mode)
-  static final mace = KnightWeaponVisualConfig.sprite(
+  static final mace = CustomPlayerWeaponVisualConfig.sprite(
     spritePath: KnightPlayerConfig.sword3SpritePath,
     textureSize: TileConstants.tileSizeStandard,
     size: TileConstants.tileSizeStandard,
@@ -133,7 +133,7 @@ final class KnightWeaponConfigs {
   );
 
   /// Default weapon fallback (SPRITE mode)
-  static final defaultWeapon = KnightWeaponVisualConfig.sprite(
+  static final defaultWeapon = CustomPlayerWeaponVisualConfig.sprite(
     spritePath: KnightPlayerConfig.sword3SpritePath,
     textureSize: Vector2(7, 22) * 0.4,
     size: Vector2(7, 22) * 0.4,
@@ -144,11 +144,11 @@ final class KnightWeaponConfigs {
 }
 
 /// Configurações centralizadas de offhand (Left Hand)
-final class KnightOffhandConfigs {
-  KnightOffhandConfigs._();
+final class CustomPlayerOffhandConfigs {
+  CustomPlayerOffhandConfigs._();
 
   /// Staff configuration
-  static final staff = KnightWeaponVisualConfig.sprite(
+  static final staff = CustomPlayerWeaponVisualConfig.sprite(
     spritePath: KnightPlayerConfig.staffSpritePath,
     textureSize: TileConstants.tileSizeStandard / 2,
     size: TileConstants.tileSizeStandard / 2,
@@ -158,7 +158,7 @@ final class KnightOffhandConfigs {
   );
 
   /// Wand configuration
-  static final wand = KnightWeaponVisualConfig.sprite(
+  static final wand = CustomPlayerWeaponVisualConfig.sprite(
     spritePath: KnightPlayerConfig.staffSpritePath,
     textureSize: TileConstants.tileSizeStandard / 2,
     size: TileConstants.tileSizeStandard / 2,
@@ -168,7 +168,7 @@ final class KnightOffhandConfigs {
   );
 
   /// Shield configuration
-  static final shield = KnightWeaponVisualConfig.sprite(
+  static final shield = CustomPlayerWeaponVisualConfig.sprite(
     spritePath: KnightPlayerConfig.woodShield4SpritePath,
     textureSize: TileConstants.tileSizeStandard * 0.4,
     size: TileConstants.tileSizeStandard * 0.4,
@@ -178,7 +178,7 @@ final class KnightOffhandConfigs {
   );
 
   /// Default offhand fallback
-  static final defaultOffhand = KnightWeaponVisualConfig.sprite(
+  static final defaultOffhand = CustomPlayerWeaponVisualConfig.sprite(
     spritePath: KnightPlayerConfig.woodShield4SpritePath,
     textureSize: TileConstants.tileSizeStandard * 0.4,
     size: TileConstants.tileSizeStandard * 0.4,

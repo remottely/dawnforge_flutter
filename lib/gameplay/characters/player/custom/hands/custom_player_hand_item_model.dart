@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 
-class KnightHandItemModel {
+class CustomPlayerItemModel {
   bool isAttacking = false;
   bool facingRight = true;
   double elapsedSeconds = 0;
@@ -24,7 +24,7 @@ class KnightHandItemModel {
   double facingRightScaleX;
   double facingLeftScaleX;
 
-  KnightHandItemModel({
+  CustomPlayerItemModel({
     required Duration attackDuration,
     required Vector2 attachmentOffset,
     required Vector2 facingRightOffset,

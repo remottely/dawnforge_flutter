@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_item_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_loadout.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_manager.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_slot.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_manager.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_slot.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_item_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_loadout.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_hybrid_combat_player/dd_hybrid_combat_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_hybrid_combat_player/dd_hybrid_combat_player_model.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_hybrid_combat_player/dd_hybrid_combat_player_view.dart';
@@ -28,10 +28,9 @@ abstract class DDEquippablePlayerView<
   M extends DDHybridCombatPlayerModel
 >
     extends DDHybridCombatPlayerView<C, M> {
-  final KnightHandLoadoutSetup _equipmentLoadout;
-  late final KnightHandManager _handEquipmentManager = KnightHandManager(
-    owner: this,
-  );
+  final CustomPlayerHandLoadoutSetup _equipmentLoadout;
+  late final CustomPlayerHandManager _handEquipmentManager =
+      CustomPlayerHandManager(owner: this);
 
   DDEquippablePlayerView({
     required super.position,
@@ -40,7 +39,7 @@ abstract class DDEquippablePlayerView<
     required super.size,
     required super.life,
     required super.speed,
-    required KnightHandLoadoutSetup equipmentLoadout,
+    required CustomPlayerHandLoadoutSetup equipmentLoadout,
   }) : _equipmentLoadout = equipmentLoadout;
 
   // ============================================================================
@@ -108,14 +107,16 @@ abstract class DDEquippablePlayerView<
   /// [slot] The hand slot to query (left or right).
   ///
   /// Returns the controller for the equipped item, or `null` if the slot is empty.
-  KnightHandItemController? handControllerFor(KnightHandSlot slot) =>
+  CustomPlayerItemController? handControllerFor(CustomPlayerHandSlot slot) =>
       _handEquipmentManager.handControllerFor(slot);
 
   /// Recarrega o loadout de equipamento do player
   ///
   /// Útil quando o equipamento muda externamente (ex: InventoryManager)
   /// e precisa atualizar os hands visuais do player.
-  Future<void> reloadEquipmentLoadout(KnightHandLoadoutSetup newLoadout) async {
+  Future<void> reloadEquipmentLoadout(
+    CustomPlayerHandLoadoutSetup newLoadout,
+  ) async {
     await _handEquipmentManager.applyLoadout(newLoadout);
   }
 
