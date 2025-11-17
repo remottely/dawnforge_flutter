@@ -114,6 +114,49 @@ final class GameSaveController {
     return await SaveManager.instance.deleteSave();
   }
 
+  /// Limpa completamente o jogo: reseta todos os managers e deleta o save
+  ///
+  /// Esta ação:
+  /// - Reseta PlayerStateManager (vida, stamina, energy)
+  /// - Limpa InventoryManager (remove todos os items)
+  /// - Reseta FarmManager (remove todas as plantas)
+  /// - Reseta WorldStateManager (volta para dia 1)
+  /// - Deleta o arquivo de save do disco
+  Future<bool> clearGameAndSave() async {
+    try {
+      developer.log('[GameSaveController] 🗑️ Clearing game and save...');
+
+      // Resetar todos os managers
+      PlayerStateManager.instance.reset();
+      InventoryManager.instance.clear();
+      FarmManager.instance.reset();
+      WorldStateManager.instance.reset();
+
+      developer.log('[GameSaveController] ✅ All managers reset');
+
+      // Deletar arquivo de save
+      final deleted = await SaveManager.instance.deleteSave();
+
+      if (deleted) {
+        developer.log('[GameSaveController] ✅ Save file deleted');
+      } else {
+        developer.log('[GameSaveController] ⚠️ No save file to delete');
+      }
+
+      developer.log(
+        '[GameSaveController] ✅ Game and save cleared successfully!',
+      );
+      return true;
+    } catch (e, stackTrace) {
+      developer.log(
+        '[GameSaveController] Error clearing game and save',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      return false;
+    }
+  }
+
   // ==========================================================================
   // Coleta de dados (serialização)
   // ==========================================================================

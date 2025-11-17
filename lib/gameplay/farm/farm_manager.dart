@@ -35,6 +35,12 @@ final class FarmManager {
     developer.log('[FarmManager] All tiles cleared');
   }
 
+  /// Resetar farm para estado inicial (novo jogo)
+  void reset() {
+    _farmTiles.clear();
+    developer.log('[FarmManager] Farm state reset');
+  }
+
   /// Arar solo
   /// Retorna true se conseguiu arar
   bool tillSoil(int x, int y) {

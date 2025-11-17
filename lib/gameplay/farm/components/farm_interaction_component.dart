@@ -130,6 +130,13 @@ class FarmInteractionComponent extends GameComponent
       return true;
     }
 
+    // G = Limpar save completamente (reset total)
+    if (event.logicalKey == LogicalKeyboardKey.keyG) {
+      developer.log('[FarmInteraction] 🗑️ Clearing game and save...');
+      _clearGameAsync();
+      return true;
+    }
+
     return false;
   }
 
@@ -190,6 +197,26 @@ class FarmInteractionComponent extends GameComponent
         })
         .catchError((e) {
           developer.log('[FarmInteraction] Error saving game: $e');
+        });
+  }
+
+  /// Limpa o jogo e save de forma assíncrona
+  void _clearGameAsync() {
+    developer.log('[FarmInteraction] 🗑️ Clearing game and save...');
+
+    GameSaveController.instance
+        .clearGameAndSave()
+        .then((success) {
+          if (success) {
+            developer.log('[FarmInteraction] ✅ Game and save cleared!');
+            _showFloatingText('Save limpo! Reinicie o jogo.');
+          } else {
+            developer.log('[FarmInteraction] ❌ Failed to clear game');
+            _showFloatingText('Erro ao limpar save!');
+          }
+        })
+        .catchError((e) {
+          developer.log('[FarmInteraction] Error clearing game: $e');
         });
   }
 }

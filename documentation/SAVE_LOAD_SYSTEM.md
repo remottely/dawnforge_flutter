@@ -54,7 +54,29 @@ void _loadGameOrResetLife() {
 }
 ```
 
-### 3. Hot Restart
+### 3. Limpar Save Completamente (Reset Total)
+
+Quando o jogador pressiona **G** para resetar o jogo:
+
+```dart
+// farm_interaction_component.dart
+if (event.logicalKey == LogicalKeyboardKey.keyG) {
+  // Reseta todos os managers e deleta arquivo de save
+  GameSaveController.instance.clearGameAndSave();
+}
+```
+
+Esta ação:
+
+- Reseta **PlayerStateManager** (vida, stamina, energy voltam ao padrão)
+- Limpa **InventoryManager** (remove todos os items)
+- Reseta **FarmManager** (remove todas as plantas e tiles)
+- Reseta **WorldStateManager** (volta para dia 1)
+- Deleta o arquivo de save do disco
+
+⚠️ **Atenção**: Após pressionar G, é necessário reiniciar o jogo para ver o estado resetado.
+
+### 4. Hot Restart
 
 Após implementação, ao fazer **hot restart** (R no terminal):
 
@@ -199,6 +221,8 @@ Todos os managers implementam `toJson()` / `fromJson()`:
 
 ## Testando o Sistema
 
+### 1. Salvar Progresso
+
 1. **Iniciar jogo novo**:
 
    ```bash
@@ -224,6 +248,28 @@ Todos os managers implementam `toJson()` / `fromJson()`:
    - Crops devem ter crescido (se passou dias)
    - Inventário mantém items
    - Dia atual é o último salvo
+
+### 2. Limpar Save (Reset Completo)
+
+1. **Durante o jogo, pressionar G**:
+
+   - Todos os managers são resetados
+   - Arquivo de save é deletado
+   - Aparece mensagem "Save limpo! Reinicie o jogo."
+
+2. **Reiniciar o jogo**:
+
+   ```bash
+   # Parar o jogo (Ctrl+C no terminal)
+   flutter run
+   ```
+
+3. **Verificar**:
+   - Jogo inicia do zero (sem save)
+   - Player com vida cheia
+   - Inventário vazio
+   - Dia 1
+   - Fazenda sem tiles plantados
 
 ## Logs Úteis
 
