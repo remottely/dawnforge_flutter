@@ -68,7 +68,7 @@ final class SunnyPlayerConfig {
   /// Amount of stamina regenerated per regeneration tick.
   ///
   /// Balanced to allow frequent but not unlimited combat actions.
-  static const int kStaminaIncrement = 2;
+  static const int kStaminaIncrement = 1;
 
   /// Debounce duration between stamina regeneration ticks.
   ///
