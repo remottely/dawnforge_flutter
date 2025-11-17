@@ -8,7 +8,7 @@ class MiniBossEnemyView
     extends DDRangedEnemy<MiniBossEnemyController, MiniBossEnemyModel> {
   MiniBossEnemyView({required super.position})
     : super(
-        animation: MiniBossEnemyConfig.animation,
+        animation: MiniBossEnemyConfig.createWalkAnimation,
         size: MiniBossEnemyConfig.componentSize,
         speed: MiniBossEnemyConfig.kSpeed,
         life: MiniBossEnemyConfig.kLife,

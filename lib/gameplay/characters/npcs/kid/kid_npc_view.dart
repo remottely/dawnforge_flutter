@@ -7,7 +7,7 @@ class KidNpcView extends SimpleNpc {
 
   KidNpcView({required super.position})
     : super(
-        animation: KidNpcConfig.animation,
+        animation: KidNpcConfig.createWalkAnimation,
         size: KidNpcConfig.componentSize,
       );
 

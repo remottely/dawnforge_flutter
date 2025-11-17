@@ -14,10 +14,11 @@ final class WizardNpcConfig {
   ); // TODO(Kevin): change this size
   static final Vector2 componentSize = textureSize;
 
-  static final SimpleDirectionAnimation animation = SimpleDirectionAnimation(
-    idleRight: UISpriteAnimationsConfig.loadWizardNpcIdleLeft4(),
-    runRight: UISpriteAnimationsConfig.loadWizardNpcIdleLeft4(),
-  );
+  static final SimpleDirectionAnimation createWalkAnimation =
+      SimpleDirectionAnimation(
+        idleRight: UISpriteAnimationsConfig.loadWizardNpcIdleLeft4(),
+        runRight: UISpriteAnimationsConfig.loadWizardNpcIdleLeft4(),
+      );
 
   static List<Say> createConversationSequence() => [
     ConversationConfig.createWizardRight('talk_wizard_1'),

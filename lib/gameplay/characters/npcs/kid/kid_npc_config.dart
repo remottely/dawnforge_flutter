@@ -14,10 +14,11 @@ final class KidNpcConfig {
     11,
   ); // TODO(Kevin): change this size
 
-  static final SimpleDirectionAnimation animation = SimpleDirectionAnimation(
-    idleRight: UISpriteAnimationsConfig.loadKidNpcIdleLeft4(),
-    runRight: UISpriteAnimationsConfig.loadKidNpcIdleLeft4(),
-  );
+  static final SimpleDirectionAnimation createWalkAnimation =
+      SimpleDirectionAnimation(
+        idleRight: UISpriteAnimationsConfig.loadKidNpcIdleLeft4(),
+        runRight: UISpriteAnimationsConfig.loadKidNpcIdleLeft4(),
+      );
 
   static List<Say> createConversationSequence() {
     return [

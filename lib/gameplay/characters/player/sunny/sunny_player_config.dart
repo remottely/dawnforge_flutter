@@ -195,7 +195,7 @@ final class SunnyPlayerConfig {
   /// Currently uses the same animation for left and right (mirroring handled elsewhere).
   ///
   /// Returns a configured SimpleDirectionAnimation instance.
-  static SimpleDirectionAnimation createWalkAnimation() =>
+  static final SimpleDirectionAnimation createWalkAnimation =
       SimpleDirectionAnimation(
         idleLeft: UISpriteAnimationsConfig.loadSunnyPlayerIdleRight6(),
         idleRight: UISpriteAnimationsConfig.loadSunnyPlayerIdleRight6(),
@@ -209,7 +209,7 @@ final class SunnyPlayerConfig {
   /// Uses the same idle animation as walking for consistency.
   ///
   /// Returns a configured SimpleDirectionAnimation instance.
-  static SimpleDirectionAnimation createRunAnimation() =>
+  static final SimpleDirectionAnimation createRunAnimation =
       SimpleDirectionAnimation(
         idleLeft: UISpriteAnimationsConfig.loadSunnyPlayerIdleRight6(),
         idleRight: UISpriteAnimationsConfig.loadSunnyPlayerIdleRight6(),

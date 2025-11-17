@@ -141,7 +141,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
     final player = CustomPlayerView(
       position: position,
       model: model,
-      animation: SunnyPlayerConfig.createWalkAnimation(),
+      animation: SunnyPlayerConfig.createWalkAnimation,
       size: SunnyPlayerConfig.componentSize,
       hitbox: SunnyPlayerConfig.hitbox,
       life: SunnyPlayerConfig.kLife,

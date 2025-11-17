@@ -56,11 +56,12 @@ class SunnyPlayerView
 
   SunnyPlayerView({required super.position, required super.model})
     : super(
-        animation: SunnyPlayerConfig.createWalkAnimation(),
+        // animation: SunnyPlayerConfig.createWalkAnimation,
         size: SunnyPlayerConfig.componentSize,
         life: SunnyPlayerConfig.kLife,
         speed: SunnyPlayerConfig.kSpeed,
-      ); // ============================================================================
+      );
+  // ============================================================================
   // Lifecycle Methods
   // ============================================================================
 
@@ -117,11 +118,11 @@ class SunnyPlayerView
 
   @override
   SimpleDirectionAnimation createWalkAnimation() =>
-      SunnyPlayerConfig.createWalkAnimation();
+      SunnyPlayerConfig.createWalkAnimation;
 
   @override
   SimpleDirectionAnimation createRunAnimation() =>
-      SunnyPlayerConfig.createRunAnimation();
+      SunnyPlayerConfig.createRunAnimation;
 
   // ============================================================================
   // Initialization

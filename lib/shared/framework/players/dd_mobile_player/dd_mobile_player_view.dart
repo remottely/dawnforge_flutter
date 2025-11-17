@@ -34,15 +34,20 @@ abstract class DDMobilePlayerView<
   DDMobilePlayerView({
     required super.position,
     required super.model,
-    required super.animation,
     required super.size,
     required super.life,
     required double speed,
   }) : _baseSpeed = speed,
-       super(speed: speed);
+       super(speed: speed, animation: null);
 
   /// Determines if animation changes are currently restricted.
   bool get _isAnimationLocked => _activeAnimationLockCount > 0;
+
+  @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+    replaceAnimation(createWalkAnimation());
+  }
 
   // ============================================================================
   // Abstract Animation Factory Methods

@@ -8,7 +8,7 @@ class GoblinEnemyView
     extends DDBaseEnemy<GoblinEnemyController, GoblinEnemyModel> {
   GoblinEnemyView({required super.position})
     : super(
-        animation: GoblinEnemyConfig.animation,
+        animation: GoblinEnemyConfig.createWalkAnimation,
         size: GoblinEnemyConfig.componentSize,
         speed: GoblinEnemyConfig.kSpeed,
         life: GoblinEnemyConfig.kLife,

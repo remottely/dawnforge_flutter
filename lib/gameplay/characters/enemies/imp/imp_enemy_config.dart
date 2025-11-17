@@ -20,30 +20,31 @@ final class ImpEnemyConfig {
   static final Vector2 textureSize = TileConstants.tileSizeStandard;
   static final Vector2 componentSize = textureSize;
 
-  static final SimpleDirectionAnimation animation = SimpleDirectionAnimation(
-    idleLeft: SpriteAnimation.load(
-      'gameplay/characters/enemies/imp/imp_enemy_idle_left_4.png',
-      SpriteAnimationConfig.createStandardData(
-        amount: 4,
-        textureSize: textureSize,
-      ),
-    ),
-    idleRight: UISpriteAnimationsConfig.loadImpEnemyIdleRight4(),
-    runLeft: SpriteAnimation.load(
-      'gameplay/characters/enemies/imp/imp_enemy_run_left_4.png',
-      SpriteAnimationConfig.createStandardData(
-        amount: 4,
-        textureSize: textureSize,
-      ),
-    ),
-    runRight: SpriteAnimation.load(
-      'gameplay/characters/enemies/imp/imp_enemy_run_right_4.png',
-      SpriteAnimationConfig.createStandardData(
-        amount: 4,
-        textureSize: textureSize,
-      ),
-    ),
-  );
+  static final SimpleDirectionAnimation createWalkAnimation =
+      SimpleDirectionAnimation(
+        idleLeft: SpriteAnimation.load(
+          'gameplay/characters/enemies/imp/imp_enemy_idle_left_4.png',
+          SpriteAnimationConfig.createStandardData(
+            amount: 4,
+            textureSize: textureSize,
+          ),
+        ),
+        idleRight: UISpriteAnimationsConfig.loadImpEnemyIdleRight4(),
+        runLeft: SpriteAnimation.load(
+          'gameplay/characters/enemies/imp/imp_enemy_run_left_4.png',
+          SpriteAnimationConfig.createStandardData(
+            amount: 4,
+            textureSize: textureSize,
+          ),
+        ),
+        runRight: SpriteAnimation.load(
+          'gameplay/characters/enemies/imp/imp_enemy_run_right_4.png',
+          SpriteAnimationConfig.createStandardData(
+            amount: 4,
+            textureSize: textureSize,
+          ),
+        ),
+      );
 
   static RectangleHitbox createHitbox() => HitboxUtils.createBottomHitbox(
     componentSize: componentSize,

@@ -153,30 +153,31 @@ final class KnightPlayerConfig {
   /// Includes idle and running animations for both left and right directions.
   /// The Knight has distinct left/right animations unlike some characters
   /// that mirror a single animation.
-  static final SimpleDirectionAnimation animation = SimpleDirectionAnimation(
-    idleLeft: SpriteAnimation.load(
-      'gameplay/characters/player/knight/knight_player_idle_left_6.png',
-      SpriteAnimationConfig.createStandardData(
-        amount: 6,
-        textureSize: textureSize,
-      ),
-    ),
-    idleRight: UISpriteAnimationsConfig.loadKnightPlayerIdleRight6(),
-    runLeft: SpriteAnimation.load(
-      'gameplay/characters/player/knight/knight_player_walking_left_6.png',
-      SpriteAnimationConfig.createStandardData(
-        amount: 6,
-        textureSize: textureSize,
-      ),
-    ),
-    runRight: SpriteAnimation.load(
-      'gameplay/characters/player/knight/knight_player_walking_right_6.png',
-      SpriteAnimationConfig.createStandardData(
-        amount: 6,
-        textureSize: textureSize,
-      ),
-    ),
-  );
+  static final SimpleDirectionAnimation createWalkAnimation =
+      SimpleDirectionAnimation(
+        idleLeft: SpriteAnimation.load(
+          'gameplay/characters/player/knight/knight_player_idle_left_6.png',
+          SpriteAnimationConfig.createStandardData(
+            amount: 6,
+            textureSize: textureSize,
+          ),
+        ),
+        idleRight: UISpriteAnimationsConfig.loadKnightPlayerIdleRight6(),
+        runLeft: SpriteAnimation.load(
+          'gameplay/characters/player/knight/knight_player_walking_left_6.png',
+          SpriteAnimationConfig.createStandardData(
+            amount: 6,
+            textureSize: textureSize,
+          ),
+        ),
+        runRight: SpriteAnimation.load(
+          'gameplay/characters/player/knight/knight_player_walking_right_6.png',
+          SpriteAnimationConfig.createStandardData(
+            amount: 6,
+            textureSize: textureSize,
+          ),
+        ),
+      );
 
   // ============================================================================
   // Lighting Configuration
