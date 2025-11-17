@@ -4,11 +4,13 @@ import 'dart:developer' as developer;
 import 'package:flutter/services.dart' show rootBundle;
 
 import 'items/consumable_item.dart';
+import 'items/crop_item.dart';
 import 'items/material_item.dart';
 import 'items/seed_item.dart';
 import 'items/tool_item.dart';
 import 'items/weapon_item.dart';
 import 'models/item.dart';
+import 'models/item_category.dart';
 import 'models/item_type.dart';
 
 /// Factory para criação de itens a partir de um database JSON
@@ -84,10 +86,24 @@ final class ItemFactory {
           return ToolItem.fromJson(itemData);
         case ItemType.consumable:
           return ConsumableItem.fromJson(itemData);
-        case ItemType.material:
-          return MaterialItem.fromJson(itemData);
         case ItemType.seed:
           return SeedItem.fromJson(itemData);
+        case ItemType.material:
+          // Check if it's actually a crop (has category field)
+          final category = itemData['category'] as String?;
+          if (category != null) {
+            final itemCategory = ItemCategory.fromJson(category);
+            // If it's a farming category, create CropItem
+            if ([
+              ItemCategory.vegetables,
+              ItemCategory.fruits,
+              ItemCategory.flowers,
+            ].contains(itemCategory)) {
+              return CropItem.fromJson(itemData);
+            }
+          }
+          // Otherwise create regular MaterialItem
+          return MaterialItem.fromJson(itemData);
         default:
           developer.log(
             '[ItemFactory] Unsupported type: $type for item $itemId',

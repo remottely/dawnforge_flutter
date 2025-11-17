@@ -1,34 +1,87 @@
 import 'dart:developer' as developer;
 import 'dart:math';
 
+import 'constants/inventory_constants.dart';
 import 'item_factory.dart';
 import 'models/inventory_slot.dart';
 import 'models/item.dart';
 
-/// Gerenciador singleton do inventário do jogador
+/// Inventory manager following Stardew Valley patterns.
 ///
-/// Responsável por:
-/// - Adicionar/remover itens
-/// - Empilhamento automático
-/// - Movimentação de slots
-/// - Serialização do inventário
+/// **Features:**
+/// - Expandable inventory (12 → 24 → 36 slots)
+/// - Auto-stacking of stackable items
+/// - Quality-aware item management
+/// - Drag & drop support (move/swap)
+/// - Category-based sorting
+/// - Serialization for save/load
+///
+/// **Stardew Valley Rules:**
+/// - Starting inventory: 12 slots
+/// - First backpack upgrade: +12 slots (total 24)
+/// - Second backpack upgrade: +12 slots (total 36)
+/// - Most items stack to 999
+/// - Equipment and tools don't stack
 final class InventoryManager {
   InventoryManager._() {
-    // Inicializar slots vazios
-    _slots = List.generate(
-      _kMaxSlots,
-      (index) => InventorySlot(index: index),
+    _initializeSlots(_currentMaxSlots);
+    developer.log(
+      '[InventoryManager] Initialized with $_currentMaxSlots slots',
     );
-    developer.log('[InventoryManager] Initialized with $_kMaxSlots slots');
   }
 
   static final instance = InventoryManager._();
-  static const int _kMaxSlots = 30;
+
+  // Current inventory capacity (starts at 12, can upgrade to 24 then 36)
+  int _currentMaxSlots = InventoryConstants.kDefaultInventorySize;
 
   late List<InventorySlot> _slots;
 
-  /// Quantidade máxima de slots
-  int get maxSlots => _kMaxSlots;
+  // ============================================================================
+  // Inventory Capacity Management
+  // ============================================================================
+
+  /// Current maximum number of slots
+  int get maxSlots => _currentMaxSlots;
+
+  /// Can upgrade to next backpack tier?
+  bool get canUpgrade =>
+      _currentMaxSlots < InventoryConstants.kMaxInventorySize;
+
+  /// Upgrade inventory to next tier (24 or 36 slots)
+  bool upgradeInventory() {
+    if (!canUpgrade) {
+      developer.log('[InventoryManager] Already at max capacity');
+      return false;
+    }
+
+    final oldSize = _currentMaxSlots;
+
+    if (_currentMaxSlots == InventoryConstants.kDefaultInventorySize) {
+      _currentMaxSlots = InventoryConstants.kFirstUpgradeSize;
+    } else if (_currentMaxSlots == InventoryConstants.kFirstUpgradeSize) {
+      _currentMaxSlots = InventoryConstants.kSecondUpgradeSize;
+    }
+
+    // Expand slots array
+    final newSlotsNeeded = _currentMaxSlots - oldSize;
+    for (var i = 0; i < newSlotsNeeded; i++) {
+      _slots.add(InventorySlot(index: oldSize + i));
+    }
+
+    developer.log(
+      '[InventoryManager] Upgraded from $oldSize to $_currentMaxSlots slots',
+    );
+    return true;
+  }
+
+  void _initializeSlots(int count) {
+    _slots = List.generate(count, (index) => InventorySlot(index: index));
+  }
+
+  // ============================================================================
+  // Inventory Stats
+  // ============================================================================
 
   /// Quantidade de slots ocupados
   int get usedSlots => _slots.where((s) => !s.isEmpty).length;
@@ -86,8 +139,11 @@ final class InventoryManager {
     while (remainingQuantity > 0) {
       final emptySlotIndex = _slots.indexWhere((s) => s.isEmpty);
       if (emptySlotIndex == -1) {
-        developer.log('[InventoryManager] Inventory full! Cannot add remaining $remainingQuantity');
-        return quantity > remainingQuantity; // Retorna true se adicionou pelo menos algo
+        developer.log(
+          '[InventoryManager] Inventory full! Cannot add remaining $remainingQuantity',
+        );
+        return quantity >
+            remainingQuantity; // Retorna true se adicionou pelo menos algo
       }
 
       final amountForSlot = item.isStackable
@@ -101,7 +157,9 @@ final class InventoryManager {
       );
 
       remainingQuantity -= amountForSlot;
-      developer.log('[InventoryManager] Created new slot $emptySlotIndex with $amountForSlot items');
+      developer.log(
+        '[InventoryManager] Created new slot $emptySlotIndex with $amountForSlot items',
+      );
     }
 
     developer.log('[InventoryManager] Item added successfully');
@@ -123,7 +181,9 @@ final class InventoryManager {
     // Verificar se tem quantidade suficiente
     final totalQuantity = getItemQuantity(itemId);
     if (totalQuantity < quantity) {
-      developer.log('[InventoryManager] Not enough items. Has: $totalQuantity, needs: $quantity');
+      developer.log(
+        '[InventoryManager] Not enough items. Has: $totalQuantity, needs: $quantity',
+      );
       return false;
     }
 
@@ -191,7 +251,9 @@ final class InventoryManager {
         quantity: fromSlot.quantity,
       );
       _slots[fromIndex] = InventorySlot(index: fromIndex);
-      developer.log('[InventoryManager] Moved item from $fromIndex to $toIndex');
+      developer.log(
+        '[InventoryManager] Moved item from $fromIndex to $toIndex',
+      );
       return true;
     }
 
@@ -203,7 +265,9 @@ final class InventoryManager {
       if (amountToMove > 0) {
         _slots[toIndex] = toSlot.addQuantity(amountToMove);
         _slots[fromIndex] = fromSlot.removeQuantity(amountToMove);
-        developer.log('[InventoryManager] Stacked $amountToMove from $fromIndex to $toIndex');
+        developer.log(
+          '[InventoryManager] Stacked $amountToMove from $fromIndex to $toIndex',
+        );
         return true;
       }
     }
@@ -238,7 +302,7 @@ final class InventoryManager {
   /// Limpar inventário (remove todos os itens)
   void clear() {
     _slots = List.generate(
-      _kMaxSlots,
+      _currentMaxSlots,
       (index) => InventorySlot(index: index),
     );
     developer.log('[InventoryManager] Inventory cleared');
@@ -247,7 +311,9 @@ final class InventoryManager {
   /// Ordenar inventário por tipo de item
   void sortByType() {
     final occupiedSlots = _slots.where((s) => !s.isEmpty).toList();
-    occupiedSlots.sort((a, b) => a.item!.type.index.compareTo(b.item!.type.index));
+    occupiedSlots.sort(
+      (a, b) => a.item!.type.index.compareTo(b.item!.type.index),
+    );
 
     clear();
     for (var i = 0; i < occupiedSlots.length; i++) {
@@ -264,7 +330,9 @@ final class InventoryManager {
   /// Ordenar inventário por raridade
   void sortByRarity() {
     final occupiedSlots = _slots.where((s) => !s.isEmpty).toList();
-    occupiedSlots.sort((a, b) => b.item!.rarity.index.compareTo(a.item!.rarity.index));
+    occupiedSlots.sort(
+      (a, b) => b.item!.rarity.index.compareTo(a.item!.rarity.index),
+    );
 
     clear();
     for (var i = 0; i < occupiedSlots.length; i++) {
@@ -302,10 +370,7 @@ final class InventoryManager {
         .map((s) => s.toJson())
         .toList();
 
-    return {
-      'maxSlots': maxSlots,
-      'slots': slotsData,
-    };
+    return {'maxSlots': maxSlots, 'slots': slotsData};
   }
 
   /// Deserialização de JSON
@@ -326,7 +391,9 @@ final class InventoryManager {
       }
     }
 
-    developer.log('[InventoryManager] Loaded ${slotsData.length} slots from JSON');
+    developer.log(
+      '[InventoryManager] Loaded ${slotsData.length} slots from JSON',
+    );
   }
 
   /// Resetar inventário (limpar tudo)
