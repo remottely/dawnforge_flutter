@@ -8,6 +8,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/game/inventory_input_hand
 import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/shield_defense_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/hud_view.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/save/game_save_controller.dart';
 import 'package:darkness_dungeon/gameplay/farm/components/farm_interaction_component.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen_config.dart';
@@ -29,7 +30,26 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   void initState() {
     super.initState();
     _initializeGameComponents();
-    _resetPlayerLifeOnNewGame();
+    _loadGameOrResetLife();
+  }
+
+  /// Tenta carregar save existente, ou reseta vida se for novo jogo
+  void _loadGameOrResetLife() {
+    // Tentar carregar save de forma assíncrona
+    GameSaveController.instance
+        .loadGame()
+        .then((success) {
+          if (success) {
+            developer.log('[ViewModel] ✅ Game loaded from save');
+          } else {
+            developer.log('[ViewModel] No save found, starting new game');
+            _resetPlayerLifeOnNewGame();
+          }
+        })
+        .catchError((e) {
+          developer.log('[ViewModel] Error loading game: $e');
+          _resetPlayerLifeOnNewGame();
+        });
   }
 
   void _resetPlayerLifeOnNewGame() {

@@ -2,6 +2,8 @@ import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/hud_view.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/save/game_save_controller.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/farm/farm_manager.dart';
 import 'package:darkness_dungeon/gameplay/farmable/farm_tile.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
@@ -109,11 +111,22 @@ class FarmInteractionComponent extends GameComponent
       return true;
     }
 
-    // N = Debug: Avançar 1 dia
+    // N = Avançar 1 dia (salva automaticamente)
     if (event.logicalKey == LogicalKeyboardKey.keyN) {
+      // Avançar dia no mundo
+      WorldStateManager.instance.advanceDay();
+
+      // Avançar dia nos crops
       FarmManager.instance.advanceDay();
-      developer.log('[FarmInteraction] 🌙 DEBUG: Advanced 1 day manually');
-      _showFloatingText('Dia avançado!');
+
+      developer.log(
+        '[FarmInteraction] 🌙 Advanced to day ${WorldStateManager.instance.currentDay}',
+      );
+      _showFloatingText('Dia ${WorldStateManager.instance.currentDay}!');
+
+      // Salvar jogo automaticamente
+      _saveGameAsync();
+
       return true;
     }
 
@@ -158,5 +171,25 @@ class FarmInteractionComponent extends GameComponent
     } catch (e) {
       developer.log('[FarmInteraction] Could not refresh inventory HUD: $e');
     }
+  }
+
+  /// Salva o jogo de forma assíncrona (não bloqueia gameplay)
+  void _saveGameAsync() {
+    developer.log('[FarmInteraction] 💾 Saving game...');
+
+    GameSaveController.instance
+        .saveGame()
+        .then((success) {
+          if (success) {
+            developer.log('[FarmInteraction] ✅ Game saved!');
+            _showFloatingText('Jogo salvo!');
+          } else {
+            developer.log('[FarmInteraction] ❌ Failed to save game');
+            _showFloatingText('Erro ao salvar!');
+          }
+        })
+        .catchError((e) {
+          developer.log('[FarmInteraction] Error saving game: $e');
+        });
   }
 }

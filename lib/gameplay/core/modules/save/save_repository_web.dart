@@ -5,6 +5,9 @@ import 'package:web/web.dart' as web;
 
 import 'save_repository.dart';
 
+/// Factory function for platform-specific instantiation
+SaveRepository createRepository() => SaveRepositoryWeb();
+
 /// Web platform implementation of [SaveRepository] using localStorage.
 ///
 /// Uses browser's `localStorage` API for persistent storage on web platform.

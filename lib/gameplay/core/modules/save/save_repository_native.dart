@@ -5,6 +5,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'save_repository.dart';
 
+/// Factory function for platform-specific instantiation
+SaveRepository createRepository() => SaveRepositoryNative();
+
 /// Native platform implementation of [SaveRepository] using SharedPreferences.
 ///
 /// Uses [SharedPreferences] for persistent storage on desktop and mobile platforms.

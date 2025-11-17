@@ -1,7 +1,6 @@
-import 'package:flutter/foundation.dart';
-
-import 'save_repository_native.dart';
-import 'save_repository_web.dart';
+import 'save_repository_native.dart'
+    if (dart.library.html) 'save_repository_web.dart'
+    as platform;
 
 /// Abstract repository for game save data persistence.
 ///
@@ -22,10 +21,7 @@ abstract class SaveRepository {
   /// Returns [SaveRepositoryWeb] when running on web platform,
   /// otherwise returns [SaveRepositoryNative] for desktop/mobile.
   factory SaveRepository() {
-    if (kIsWeb) {
-      return SaveRepositoryWeb();
-    }
-    return SaveRepositoryNative();
+    return platform.createRepository();
   }
 
   /// Saves data to persistent storage.
