@@ -35,9 +35,7 @@ class PlayerVitalStatsHUD extends InterfaceComponent {
       _vMaxLife = gameRef.player!.maxLife;
 
       if (gameRef.player is DDBasePlayerView) {
-        _vCurrentStamina = (gameRef.player as DDBasePlayerView)
-            .model
-            .stamina; // TODO(Kevin): make this more generic, like DDBasePlayerView
+        _vCurrentStamina = (gameRef.player as DDBasePlayerView).model.stamina;
       }
     }
   }

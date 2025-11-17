@@ -28,6 +28,9 @@ abstract class DDBasePlayerController<M extends DDBasePlayerModel> {
   /// Indicates whether stamina regeneration is currently scheduled.
   bool _isStaminaRegenerationPending = false;
 
+  /// Controls whether stamina regeneration should be paused.
+  bool _isStaminaRegenerationPaused = false;
+
   /// Creates a base player controller with required dependencies.
   ///
   /// [model] The data model to control.
@@ -82,14 +85,29 @@ abstract class DDBasePlayerController<M extends DDBasePlayerModel> {
   /// Uses a debounced approach to regenerate stamina at regular intervals
   /// without creating multiple simultaneous timers.
   void processStaminaRegeneration() {
-    if (_isStaminaRegenerationPending) return;
+    if (_isStaminaRegenerationPending || _isStaminaRegenerationPaused) return;
 
     _isStaminaRegenerationPending = true;
 
     Future.delayed(staminaRegenDebounce, () {
       _isStaminaRegenerationPending = false;
-      model.regenerateStamina();
+      if (!_isStaminaRegenerationPaused) {
+        model.regenerateStamina();
+      }
     });
+  }
+
+  /// Pauses stamina regeneration temporarily.
+  ///
+  /// Used when the player is performing actions that should consume stamina
+  /// without automatic regeneration (e.g., shield defense).
+  void pauseStaminaRegeneration() {
+    _isStaminaRegenerationPaused = true;
+  }
+
+  /// Resumes stamina regeneration.
+  void resumeStaminaRegeneration() {
+    _isStaminaRegenerationPaused = false;
   }
 
   /// Processes enemy detection and awareness state.

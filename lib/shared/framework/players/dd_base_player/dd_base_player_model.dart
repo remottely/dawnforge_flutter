@@ -6,6 +6,7 @@
 ///
 /// Subclasses should extend this to add character-specific state while
 /// maintaining compatibility with the base player system.
+
 abstract class DDBasePlayerModel {
   double _currentStamina;
   int _currentEnergy;

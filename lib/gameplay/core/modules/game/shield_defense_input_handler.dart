@@ -7,11 +7,16 @@ import 'package:flutter/services.dart';
 
 /// Componente que gerencia a defesa com escudo via input de teclado
 ///
-/// Detecta quando Z está pressionado e bloqueia todos os outros inputs
-/// enquanto o player está defendendo.
+/// Detecta quando Z está pressionado e consome stamina enquanto defende.
+/// Consumo: 10 stamina por segundo.
 class ShieldDefenseInputHandler extends GameComponent
     with KeyboardEventListener {
   bool _isDefending = false;
+  double _defenseTime = 0.0;
+  double _staminaAccumulator = 0.0; // Acumula frações de stamina entre frames
+
+  /// Stamina consumida por segundo de defesa
+  static const double kStaminaPerSecond = 10.0;
 
   bool get isDefending => _isDefending;
 
@@ -19,6 +24,45 @@ class ShieldDefenseInputHandler extends GameComponent
   KnightPlayerView? _getCurrentPlayer() {
     final players = gameRef.query<KnightPlayerView>();
     return players.isNotEmpty ? players.first : null;
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+
+    if (_isDefending) {
+      final player = _getCurrentPlayer();
+      if (player == null) return;
+
+      // Acumular tempo de defesa
+      _defenseTime += dt;
+
+      // Consumir stamina a cada segundo (acumular frações entre frames)
+      _staminaAccumulator += kStaminaPerSecond * dt;
+
+      // Quando acumular >= 1 ponto de stamina, consumir
+      if (_staminaAccumulator >= 1.0) {
+        final intStaminaToConsume = _staminaAccumulator.floor();
+        if (intStaminaToConsume > 0) {
+          player.model.consumeStamina(intStaminaToConsume);
+          _staminaAccumulator -= intStaminaToConsume;
+        }
+      }
+
+      // Verificar se stamina acabou
+      if (player.model.stamina <= 0) {
+        // Sem stamina, parar defesa automaticamente
+        developer.log(
+          '[ShieldDefenseInput] ✗ Stamina esgotada, parando defesa',
+        );
+        player.stopShieldDefense();
+        _isDefending = false;
+        _defenseTime = 0.0;
+        _staminaAccumulator = 0.0;
+        // Retomar regeneração de stamina
+        player.controller.resumeStaminaRegeneration();
+      }
+    }
   }
 
   @override
@@ -30,13 +74,22 @@ class ShieldDefenseInputHandler extends GameComponent
     if (event is KeyDownEvent &&
         event.logicalKey == KeyboardSetup.kFireballAttackKey) {
       if (!_isDefending) {
+        // Verificar se tem stamina antes de ativar
+        if (player.model.stamina <= 0) {
+          developer.log('[ShieldDefenseInput] ✗ Sem stamina para defender');
+          return false;
+        }
+
         final success = player.startShieldDefense();
         if (success) {
           _isDefending = true;
+          _defenseTime = 0.0;
+          _staminaAccumulator = 0.0;
+          // Pausar regeneração de stamina durante defesa
+          player.controller.pauseStaminaRegeneration();
           developer.log(
-            '[ShieldDefenseInput] ✓ Defesa iniciada - inputs bloqueados',
+            '[ShieldDefenseInput] ✓ Defesa iniciada - regeneração pausada',
           );
-          _blockPlayerMovement(player);
           return true; // Consumir o evento
         }
       }
@@ -49,32 +102,19 @@ class ShieldDefenseInputHandler extends GameComponent
       if (_isDefending) {
         player.stopShieldDefense();
         _isDefending = false;
+        _defenseTime = 0.0;
+        _staminaAccumulator = 0.0;
+        // Retomar regeneração de stamina
+        player.controller.resumeStaminaRegeneration();
         developer.log(
-          '[ShieldDefenseInput] ✓ Defesa finalizada - inputs liberados',
+          '[ShieldDefenseInput] ✓ Defesa finalizada (tempo: ${_defenseTime.toStringAsFixed(2)}s) - regeneração retomada',
         );
         return true; // Consumir o evento
       }
       return false;
     }
 
-    // Bloquear TODOS os outros inputs enquanto está defendendo
-    if (_isDefending) {
-      developer.log(
-        '[ShieldDefenseInput] ✗ Input bloqueado durante defesa: ${event.logicalKey}',
-      );
-      return true; // Consumir e bloquear o evento
-    }
-
-    return false; // Permitir processamento normal
-  }
-
-  /// Bloqueia movimento do player durante defesa
-  void _blockPlayerMovement(KnightPlayerView player) {
-    // Zerar velocidade do player
-    player.idle();
-
-    // Desabilitar controles (se possível via Bonfire)
-    // O bloqueio principal é via interceptação de inputs acima
+    return false; // Permitir processamento normal de todos os inputs
   }
 
   @override
@@ -84,6 +124,7 @@ class ShieldDefenseInputHandler extends GameComponent
       final player = _getCurrentPlayer();
       if (player != null) {
         player.stopShieldDefense();
+        player.controller.resumeStaminaRegeneration();
       }
       _isDefending = false;
     }
