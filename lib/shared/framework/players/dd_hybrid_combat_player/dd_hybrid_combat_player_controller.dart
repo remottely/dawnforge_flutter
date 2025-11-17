@@ -42,20 +42,40 @@ abstract class DDHybridCombatPlayerController<
   void executePrimaryAttack() {
     if (!model.canExecutePrimaryAttack) return;
 
+    // Pausar regeneração durante ação
+    beginStaminaConsumingAction();
+
     final bool wasExecuted = onPrimaryAttack.call(model.primaryAttackDamage);
-    if (!wasExecuted) return;
+    if (!wasExecuted) {
+      // Ação não executada, retomar regeneração
+      endStaminaConsumingAction();
+      return;
+    }
 
     model.consumeStamina(model.primaryAttackStaminaCost);
+
+    // Retomar regeneração após ação instantânea
+    endStaminaConsumingAction();
   }
 
   /// Executes the ranged attack if resources are sufficient.
   void executeRangedAttack() {
     if (!model.canExecuteRangedAttack) return;
 
+    // Pausar regeneração durante ação
+    beginStaminaConsumingAction();
+
     final bool wasExecuted = onRangedAttack.call(model.rangedAttackDamage);
-    if (!wasExecuted) return;
+    if (!wasExecuted) {
+      // Ação não executada, retomar regeneração
+      endStaminaConsumingAction();
+      return;
+    }
 
     model.consumeStamina(model.rangedAttackStaminaCost);
+
+    // Retomar regeneração após ação instantânea
+    endStaminaConsumingAction();
   }
 
   // ============================================================================

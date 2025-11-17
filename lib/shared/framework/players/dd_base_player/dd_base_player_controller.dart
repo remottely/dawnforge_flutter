@@ -31,6 +31,9 @@ abstract class DDBasePlayerController<M extends DDBasePlayerModel> {
   /// Controls whether stamina regeneration should be paused.
   bool _isStaminaRegenerationPaused = false;
 
+  /// Number of active actions consuming stamina.
+  int _activeStaminaConsumingActions = 0;
+
   /// Creates a base player controller with required dependencies.
   ///
   /// [model] The data model to control.
@@ -108,6 +111,28 @@ abstract class DDBasePlayerController<M extends DDBasePlayerModel> {
   /// Resumes stamina regeneration.
   void resumeStaminaRegeneration() {
     _isStaminaRegenerationPaused = false;
+  }
+
+  /// Registers an action that actively consumes stamina.
+  ///
+  /// Automatically pauses stamina regeneration when first action starts.
+  /// Call [endStaminaConsumingAction] when the action completes.
+  void beginStaminaConsumingAction() {
+    _activeStaminaConsumingActions++;
+    if (_activeStaminaConsumingActions == 1) {
+      pauseStaminaRegeneration();
+    }
+  }
+
+  /// Unregisters an action that was consuming stamina.
+  ///
+  /// Automatically resumes stamina regeneration when all actions complete.
+  void endStaminaConsumingAction() {
+    _activeStaminaConsumingActions--;
+    if (_activeStaminaConsumingActions <= 0) {
+      _activeStaminaConsumingActions = 0;
+      resumeStaminaRegeneration();
+    }
   }
 
   /// Processes enemy detection and awareness state.

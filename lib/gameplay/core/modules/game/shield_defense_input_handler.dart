@@ -60,7 +60,7 @@ class ShieldDefenseInputHandler extends GameComponent
         _defenseTime = 0.0;
         _staminaAccumulator = 0.0;
         // Retomar regeneração de stamina
-        player.controller.resumeStaminaRegeneration();
+        player.controller.endStaminaConsumingAction();
       }
     }
   }
@@ -86,7 +86,7 @@ class ShieldDefenseInputHandler extends GameComponent
           _defenseTime = 0.0;
           _staminaAccumulator = 0.0;
           // Pausar regeneração de stamina durante defesa
-          player.controller.pauseStaminaRegeneration();
+          player.controller.beginStaminaConsumingAction();
           developer.log(
             '[ShieldDefenseInput] ✓ Defesa iniciada - regeneração pausada',
           );
@@ -105,7 +105,7 @@ class ShieldDefenseInputHandler extends GameComponent
         _defenseTime = 0.0;
         _staminaAccumulator = 0.0;
         // Retomar regeneração de stamina
-        player.controller.resumeStaminaRegeneration();
+        player.controller.endStaminaConsumingAction();
         developer.log(
           '[ShieldDefenseInput] ✓ Defesa finalizada (tempo: ${_defenseTime.toStringAsFixed(2)}s) - regeneração retomada',
         );
@@ -124,7 +124,7 @@ class ShieldDefenseInputHandler extends GameComponent
       final player = _getCurrentPlayer();
       if (player != null) {
         player.stopShieldDefense();
-        player.controller.resumeStaminaRegeneration();
+        player.controller.endStaminaConsumingAction();
       }
       _isDefending = false;
     }
