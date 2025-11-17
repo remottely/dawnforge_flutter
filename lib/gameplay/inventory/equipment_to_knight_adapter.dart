@@ -3,8 +3,9 @@ import 'dart:developer' as developer;
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_loadout.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_slot.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/presets/knight_animated_weapon_preset.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/presets/knight_pickaxe_hand_preset.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/presets/knight_weapon_configs.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_primary_attack_config.dart';
@@ -12,28 +13,11 @@ import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart'
 import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_fx.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/offset_helper.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/weapon_type.dart';
-
-/// Configuração visual de um tipo de equipamento
-class _EquipmentVisualConfig {
-  final String Function(WeaponItem) spritePathResolver;
-  final Vector2 spriteSize;
-  final Vector2 attachmentOffset;
-  final Vector2 directionalOffset;
-  final Vector2 mirroredDirectionalOffset;
-
-  const _EquipmentVisualConfig({
-    required this.spritePathResolver,
-    required this.spriteSize,
-    required this.attachmentOffset,
-    required this.directionalOffset,
-    required this.mirroredDirectionalOffset,
-  });
-}
 
 /// Adaptador que converte equipamentos do InventoryManager
 /// para o sistema de hands do Knight Player
@@ -52,98 +36,32 @@ final class EquipmentToKnightAdapter {
   // CONFIGURAÇÕES CENTRALIZADAS DE EQUIPAMENTOS
   // ==========================================================================
 
-  /// Configurações visuais para equipamentos de Right Hand (weapon slot)
-  static final Map<String, _EquipmentVisualConfig> _weaponConfigs = {
-    'sword': _EquipmentVisualConfig(
-      spritePathResolver: (item) => KnightPlayerConfig.sword3SpritePath,
-      spriteSize: Vector2(7, 22) * 0.4,
-      attachmentOffset: Vector2(0, 5),
-      directionalOffset: Vector2(-5, 0),
-      mirroredDirectionalOffset: Vector2(-1, 0),
-    ),
-    'axe': _EquipmentVisualConfig(
-      spritePathResolver: (item) => KnightPlayerConfig.axeNormal1SpritePath,
-      spriteSize: Vector2(16, 22) * 0.4,
-      attachmentOffset: Vector2(0, 5),
-      directionalOffset: Vector2(-5, 0),
-      mirroredDirectionalOffset: Vector2(-1, 0),
-    ),
-    'mace': _EquipmentVisualConfig(
-      spritePathResolver: (item) => KnightPlayerConfig.sword3SpritePath,
-      spriteSize: TileConstants.tileSizeStandard,
-      attachmentOffset: Vector2(8, 16),
-      directionalOffset: Vector2(-5, 0),
-      mirroredDirectionalOffset: Vector2(-1, 0),
-    ),
-  };
-
-  /// Configurações visuais para equipamentos de Left Hand (offhand slot)
-  static final Map<String, _EquipmentVisualConfig> _offhandConfigs = {
-    'staff': _EquipmentVisualConfig(
-      spritePathResolver: (item) => KnightPlayerConfig.staffSpritePath,
-      spriteSize: TileConstants.tileSizeStandard / 2,
-      attachmentOffset: Vector2(0, 6),
-      directionalOffset: Vector2(5, 0),
-      mirroredDirectionalOffset: Vector2(0, 0),
-    ),
-    'wand': _EquipmentVisualConfig(
-      spritePathResolver: (item) => KnightPlayerConfig.staffSpritePath,
-      spriteSize: TileConstants.tileSizeStandard / 2,
-      attachmentOffset: Vector2(0, 6),
-      directionalOffset: Vector2(5, 0),
-      mirroredDirectionalOffset: Vector2(0, 0),
-    ),
-    'shield': _EquipmentVisualConfig(
-      spritePathResolver: (item) => KnightPlayerConfig.woodShield4SpritePath,
-      spriteSize: TileConstants.tileSizeStandard * 0.4,
-      attachmentOffset: Vector2(0, 5),
-      directionalOffset: Vector2(3, 1),
-      mirroredDirectionalOffset: Vector2(2, 1),
-    ),
-  };
-
-  /// Configuração padrão para weapon (fallback)
-  static final _defaultWeaponConfig = _EquipmentVisualConfig(
-    spritePathResolver: (item) => KnightPlayerConfig.sword3SpritePath,
-    spriteSize: Vector2(7, 22) * 0.4,
-    attachmentOffset: Vector2(0, 5),
-    directionalOffset: Vector2(-5, 0),
-    mirroredDirectionalOffset: Vector2(-1, 0),
-  );
-
-  /// Configuração padrão para offhand (fallback)
-  static final _defaultOffhandConfig = _EquipmentVisualConfig(
-    spritePathResolver: (item) => KnightPlayerConfig.woodShield4SpritePath,
-    spriteSize: TileConstants.tileSizeStandard * 0.4,
-    attachmentOffset: Vector2(0, 5),
-    directionalOffset: Vector2(3, 1),
-    mirroredDirectionalOffset: Vector2(2, 1),
-  );
-
   /// Busca configuração visual para weapon type (Right Hand)
-  static _EquipmentVisualConfig _getWeaponConfig(WeaponType weaponType) {
-    final normalizedType = weaponType.toJson();
-
-    for (final entry in _weaponConfigs.entries) {
-      if (normalizedType.contains(entry.key)) {
-        return entry.value;
-      }
+  static KnightWeaponVisualConfig _getWeaponConfig(WeaponType weaponType) {
+    switch (weaponType) {
+      case WeaponType.sword:
+        return KnightWeaponConfigs.sword;
+      case WeaponType.axe:
+        return KnightWeaponConfigs.axe;
+      case WeaponType.mace:
+        return KnightWeaponConfigs.mace;
+      default:
+        return KnightWeaponConfigs.defaultWeapon;
     }
-
-    return _defaultWeaponConfig;
   }
 
   /// Busca configuração visual para offhand type (Left Hand)
-  static _EquipmentVisualConfig _getOffhandConfig(WeaponType weaponType) {
-    final normalizedType = weaponType.toJson();
-
-    for (final entry in _offhandConfigs.entries) {
-      if (normalizedType.contains(entry.key)) {
-        return entry.value;
-      }
+  static KnightWeaponVisualConfig _getOffhandConfig(WeaponType weaponType) {
+    switch (weaponType) {
+      case WeaponType.staff:
+        return KnightOffhandConfigs.staff;
+      case WeaponType.wand:
+        return KnightOffhandConfigs.wand;
+      case WeaponType.shield:
+        return KnightOffhandConfigs.shield;
+      default:
+        return KnightOffhandConfigs.defaultOffhand;
     }
-
-    return _defaultOffhandConfig;
   }
 
   /// Cria loadout baseado no equipamento atual do EquipmentManager
@@ -246,16 +164,32 @@ final class EquipmentToKnightAdapter {
 
     // Buscar configuração centralizada
     final config = _getWeaponConfig(weaponType);
-    final spritePath = config.spritePathResolver(item);
 
-    final handData = KnightPickaxeHandPreset.create(
-      id: item.id,
-      spritePath: spritePath,
-      spriteSize: config.spriteSize,
-      attachmentOffset: config.attachmentOffset,
-      directionalOffset: config.directionalOffset,
-      mirroredDirectionalOffset: config.mirroredDirectionalOffset,
-    );
+    // Criar hand data baseado no tipo (animação ou sprite)
+    final handData = config.useAnimation
+        ? KnightAnimatedWeaponPreset.create(
+            id: item.id,
+            idlePath: config.idlePath!,
+            idleFrameCount: config.idleFrameCount!,
+            idleFrameDuration: config.idleFrameDuration!,
+            attackPath: config.attackPath!,
+            attackFrameCount: config.attackFrameCount!,
+            attackFrameIndex: config.attackFrameIndex!,
+            attackDuration: config.attackDuration!,
+            textureSize: config.textureSize,
+            size: config.size,
+            attachmentOffset: config.attachmentOffset,
+            directionalOffset: config.directionalOffset,
+            mirroredDirectionalOffset: config.mirroredDirectionalOffset,
+          )
+        : KnightPickaxeHandPreset.create(
+            id: item.id,
+            spritePath: config.spritePath!,
+            spriteSize: config.size,
+            attachmentOffset: config.attachmentOffset,
+            directionalOffset: config.directionalOffset,
+            mirroredDirectionalOffset: config.mirroredDirectionalOffset,
+          );
 
     const syncSpec = SynchronizedAttackSpecConfig.standard;
 
@@ -271,24 +205,47 @@ final class EquipmentToKnightAdapter {
           final weaponDamage = (item.damage).toDouble();
           final finalDamage = weaponDamage > 0 ? weaponDamage : damage;
 
-          CameraFx.primaryAttackShake(context.player.gameRef);
-          AudioManager.instance.playPlayerPrimaryAttackSfx();
-          context.player.addParticle(
-            CharacterFxParticlesAnimationsConfig.createPrimaryAttackParticles(),
-            position: context.player.size,
-          );
-          context.player.simpleAttackMelee(
-            size: CharacterPrimaryAttackConfig.kPlayerPrimaryAttackFxSize,
-            damage: finalDamage,
-            animationRight:
-                CharacterPrimaryAttackConfig.createPlayerExecutionAnimation(),
-          );
-
-          developer.log(
-            '[EquipmentAdapter] Primary attack with ${item.name}: $finalDamage damage',
-          );
+          // Se for animação, configurar callback de frame
+          if (config.useAnimation) {
+            context.handController.setAttackFrameCallback(() {
+              _executeWeaponAttack(context, finalDamage, item);
+            });
+          } else {
+            // Sprite legado: executar imediatamente
+            _executeWeaponAttack(context, finalDamage, item);
+          }
         },
       ),
+    );
+  }
+
+  /// Executa o ataque de arma (compartilhado entre sprite e animação)
+  void _executeWeaponAttack(
+    KnightAttackExecutionContext context,
+    double damage,
+    WeaponItem item,
+  ) {
+    final attackOffset = OffsetHelper.getCenterOffset(
+      Vector2(6, 0),
+      context.player.lastDirection,
+    );
+
+    CameraFx.primaryAttackShake(context.player.gameRef);
+    AudioManager.instance.playPlayerPrimaryAttackSfx();
+    context.player.addParticle(
+      CharacterFxParticlesAnimationsConfig.createPrimaryAttackParticles(),
+      position: context.player.size,
+    );
+    context.player.simpleAttackMelee(
+      size: CharacterPrimaryAttackConfig.kPlayerPrimaryAttackFxSize,
+      damage: damage,
+      centerOffset: attackOffset,
+      animationRight:
+          CharacterPrimaryAttackConfig.createPlayerExecutionAnimation(),
+    );
+
+    developer.log(
+      '[EquipmentAdapter] Primary attack with ${item.name}: $damage damage',
     );
   }
 
@@ -298,12 +255,11 @@ final class EquipmentToKnightAdapter {
 
     // Buscar configuração centralizada
     final config = _getOffhandConfig(weaponType);
-    final spritePath = config.spritePathResolver(item);
 
     final handData = KnightPickaxeHandPreset.create(
       id: item.id,
-      spritePath: spritePath,
-      spriteSize: config.spriteSize,
+      spritePath: config.spritePath!,
+      spriteSize: config.size,
       attachmentOffset: config.attachmentOffset,
       directionalOffset: config.directionalOffset,
       mirroredDirectionalOffset: config.mirroredDirectionalOffset,

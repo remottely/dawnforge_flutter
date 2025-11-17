@@ -6,6 +6,9 @@ class KnightHandItemModel {
   double elapsedSeconds = 0;
   double currentRotationAngle = 0;
 
+  /// Flag que indica se o frame de ataque já foi executado
+  bool attackFrameExecuted = false;
+
   Duration attackDuration;
 
   Vector2 attachmentOffset;
@@ -51,6 +54,7 @@ class KnightHandItemModel {
     isAttacking = false;
     elapsedSeconds = 0;
     currentRotationAngle = 0;
+    attackFrameExecuted = false;
   }
 
   void updateAttackDuration(Duration newDuration) {

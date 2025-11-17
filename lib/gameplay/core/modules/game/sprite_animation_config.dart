@@ -23,9 +23,11 @@ final class SpriteAnimationConfig {
     required int amount,
     required Vector2 textureSize,
     required double stepTime,
+    bool loop = true,
   }) => SpriteAnimationData.sequenced(
     amount: amount,
     textureSize: textureSize,
     stepTime: stepTime,
+    loop: loop,
   );
 }

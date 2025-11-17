@@ -42,6 +42,9 @@ class KnightHandItemController {
 
   void Function(Duration duration)? _onAnimationDurationChanged;
 
+  /// Callback executado no frame de ataque (apenas para modo animação)
+  void Function()? _onAttackFrameExecute;
+
   KnightHandSlot get slot => _slot;
 
   KnightHandItemData get data => _data;
@@ -61,13 +64,32 @@ class KnightHandItemController {
       return _view!;
     }
 
-    final sprite = await Sprite.load(_data.spritePath);
+    // Modo de animação ou sprite
+    Sprite? sprite;
+    if (_data.spritePath != null) {
+      sprite = await Sprite.load(_data.spritePath!);
+    }
+
     final handView = KnightHandItemView(
-      sprite: sprite,
+      initialSprite: sprite,
       position: _initialPosition,
       size: _data.size,
       priorityResolver: _calculatePriority,
+      isAnimated: _data.isAnimated,
     );
+
+    // Se for modo animação, carregar AMBAS as animações (idle e attack)
+    if (_data.isAnimated && _data.animationData != null) {
+      final idleAnimation = await _data.animationData!.createIdleAnimation();
+      final attackAnimation = await _data.animationData!
+          .createAttackAnimation();
+      await handView.loadHandAnimations(
+        idleAnimation: idleAnimation,
+        attackAnimation: attackAnimation,
+        textureSize: _data.animationData!.textureSize,
+      );
+    }
+
     handView.scale.x = _model.facingRight
         ? _model.facingRightScaleX
         : _model.facingLeftScaleX;
@@ -81,6 +103,48 @@ class KnightHandItemController {
 
     _updatePosition(currentView);
 
+    // Se for modo de animação, controlar animação e executar callback no frame correto
+    if (_data.isAnimated) {
+      if (_model.isAttacking) {
+        // Iniciar animação apenas UMA VEZ quando o ataque começa
+        if (!currentView.isAnimationPlaying && !_model.attackFrameExecuted) {
+          currentView.playAnimation();
+          developer.log(
+            '[HandController] 🎬 Animação iniciada para ${_data.id}',
+          );
+        }
+
+        // Verificar se atingiu o frame de ataque
+        if (!_model.attackFrameExecuted && _data.animationData != null) {
+          final progress = currentView.animationProgress;
+          final attackFrameProgress =
+              _data.animationData!.attackFrameIndex /
+              _data.animationData!.attackFrameCount;
+
+          // Executar callback quando atingir ou passar o frame de ataque
+          if (progress >= attackFrameProgress) {
+            _model.attackFrameExecuted = true;
+            developer.log(
+              '[HandController] 💥 Frame de ataque atingido! Progress: $progress',
+            );
+            _onAttackFrameExecute?.call();
+          }
+        }
+
+        // Verificar se a animação terminou
+        if (!currentView.isAnimationPlaying && _model.attackFrameExecuted) {
+          developer.log(
+            '[HandController] ✓ Animação finalizada, parando ataque',
+          );
+          stopAttack();
+        }
+      } else if (currentView.isAnimationPlaying) {
+        currentView.stopAnimation();
+      }
+      return;
+    }
+
+    // Modo sprite legado: aplicar rotação manual
     if (!_model.isAttacking) {
       currentView.angle = _model.baseAngle;
       return;
@@ -120,6 +184,12 @@ class KnightHandItemController {
     void Function(Duration duration)? callback,
   ) {
     _onAnimationDurationChanged = callback;
+  }
+
+  /// Define o callback executado no frame de ataque
+  /// Este callback é chamado quando a animação atinge o attackFrameIndex
+  void setAttackFrameCallback(void Function()? callback) {
+    _onAttackFrameExecute = callback;
   }
 
   void setDirection({required bool facingRight}) {

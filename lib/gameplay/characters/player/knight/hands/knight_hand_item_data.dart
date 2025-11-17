@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_animation_data.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_slot.dart';
 
 class KnightHandSlotSpec {
@@ -49,7 +50,8 @@ class KnightHandSlotSpec {
 class KnightHandItemData {
   KnightHandItemData({
     required this.id,
-    required this.spritePath,
+    this.spritePath,
+    this.animationData,
     required this.size,
     required this.slotSpecs,
     this.defaultAttackDuration = const Duration(milliseconds: 500),
@@ -59,7 +61,15 @@ class KnightHandItemData {
     this.strikeFraction = 0.2,
     this.recoveryFraction = 0.7,
     this.priorityOffset = 1,
-  }) : assert(slotSpecs.isNotEmpty, 'Provide at least one slot specification.'),
+  }) : assert(
+         spritePath != null || animationData != null,
+         'Must provide either spritePath or animationData',
+       ),
+       assert(
+         spritePath == null || animationData == null,
+         'Cannot provide both spritePath and animationData',
+       ),
+       assert(slotSpecs.isNotEmpty, 'Provide at least one slot specification.'),
        assert(
          (() {
            final total = windUpFraction + strikeFraction + recoveryFraction;
@@ -69,7 +79,15 @@ class KnightHandItemData {
        );
 
   final String id;
-  final String spritePath;
+
+  /// Caminho do sprite estático (sistema legado)
+  /// Mutuamente exclusivo com [animationData]
+  final String? spritePath;
+
+  /// Dados da animação (novo sistema)
+  /// Mutuamente exclusivo com [spritePath]
+  final KnightHandAnimationData? animationData;
+
   final Vector2 size;
   final Map<KnightHandSlot, KnightHandSlotSpec> slotSpecs;
   final Duration defaultAttackDuration;
@@ -79,6 +97,9 @@ class KnightHandItemData {
   final double strikeFraction;
   final double recoveryFraction;
   final int priorityOffset;
+
+  /// Retorna true se este item usa animação ao invés de sprite estático
+  bool get isAnimated => animationData != null;
 
   KnightHandSlotSpec getSpec(KnightHandSlot slot) {
     if (slotSpecs.containsKey(slot)) {
