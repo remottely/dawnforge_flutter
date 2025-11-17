@@ -3,7 +3,7 @@ import 'dart:developer' as developer;
 
 import 'package:web/web.dart' as web;
 
-import 'save_repository.dart';
+import '../save_repository.dart';
 
 /// Factory function for platform-specific instantiation
 SaveRepository createRepository() => SaveRepositoryWeb();
@@ -175,6 +175,55 @@ final class SaveRepositoryWeb implements SaveRepository {
         level: 1000, // ERROR
       );
       return false;
+    }
+  }
+
+  @override
+  Future<bool> exists(String key) async {
+    try {
+      final prefixedKey = '$_keyPrefix$key';
+      final value = _localStorage.getItem(prefixedKey);
+      return value != null;
+    } catch (e) {
+      developer.log(
+        '[SaveRepositoryWeb] Error checking existence for key: $key',
+        name: 'SaveRepository',
+        error: e,
+        level: 900, // WARNING
+      );
+      return false;
+    }
+  }
+
+  @override
+  Future<List<String>> listKeys() async {
+    try {
+      final gameKeys = <String>[];
+      final length = _localStorage.length;
+
+      for (var i = 0; i < length; i++) {
+        final key = _localStorage.key(i);
+        if (key != null && key.startsWith(_keyPrefix)) {
+          // Remove prefix before adding to list
+          gameKeys.add(key.substring(_keyPrefix.length));
+        }
+      }
+
+      developer.log(
+        '[SaveRepositoryWeb] Found ${gameKeys.length} game save keys',
+        name: 'SaveRepository',
+      );
+
+      return gameKeys;
+    } catch (e, stackTrace) {
+      developer.log(
+        '[SaveRepositoryWeb] Error listing keys',
+        name: 'SaveRepository',
+        error: e,
+        stackTrace: stackTrace,
+        level: 1000, // ERROR
+      );
+      return [];
     }
   }
 }

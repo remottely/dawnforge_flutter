@@ -3,7 +3,7 @@ import 'dart:developer' as developer;
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'save_repository.dart';
+import '../save_repository.dart';
 
 /// Factory function for platform-specific instantiation
 SaveRepository createRepository() => SaveRepositoryNative();
@@ -166,6 +166,53 @@ final class SaveRepositoryNative implements SaveRepository {
         level: 1000, // ERROR
       );
       return false;
+    }
+  }
+
+  @override
+  Future<bool> exists(String key) async {
+    try {
+      final prefs = await _sharedPreferences;
+      final prefixedKey = '$_keyPrefix$key';
+      return prefs.containsKey(prefixedKey);
+    } catch (e) {
+      developer.log(
+        '[SaveRepositoryNative] Error checking existence for key: $key',
+        name: 'SaveRepository',
+        error: e,
+        level: 900, // WARNING
+      );
+      return false;
+    }
+  }
+
+  @override
+  Future<List<String>> listKeys() async {
+    try {
+      final prefs = await _sharedPreferences;
+      final allKeys = prefs.getKeys();
+
+      // Filter game keys and remove prefix
+      final gameKeys = allKeys
+          .where((key) => key.startsWith(_keyPrefix))
+          .map((key) => key.substring(_keyPrefix.length))
+          .toList();
+
+      developer.log(
+        '[SaveRepositoryNative] Found ${gameKeys.length} game save keys',
+        name: 'SaveRepository',
+      );
+
+      return gameKeys;
+    } catch (e, stackTrace) {
+      developer.log(
+        '[SaveRepositoryNative] Error listing keys',
+        name: 'SaveRepository',
+        error: e,
+        stackTrace: stackTrace,
+        level: 1000, // ERROR
+      );
+      return [];
     }
   }
 }

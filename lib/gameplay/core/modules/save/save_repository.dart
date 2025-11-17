@@ -1,5 +1,5 @@
-import 'save_repository_native.dart'
-    if (dart.library.html) 'save_repository_web.dart'
+import 'implementations/save_repository_native.dart'
+    if (dart.library.html) 'implementations/save_repository_web.dart'
     as platform;
 
 /// Abstract repository for game save data persistence.
@@ -77,4 +77,29 @@ abstract class SaveRepository {
   /// await repo.clear(); // Removes all game saves
   /// ```
   Future<bool> clear();
+
+  /// Checks if a specific key exists in storage.
+  ///
+  /// [key] - Unique identifier to check
+  ///
+  /// Returns `true` if key exists, `false` otherwise.
+  ///
+  /// Example:
+  /// ```dart
+  /// if (await repo.exists('main_save')) {
+  ///   // Save file exists
+  /// }
+  /// ```
+  Future<bool> exists(String key);
+
+  /// Lists all game-related save keys.
+  ///
+  /// Returns list of save keys (without prefix), empty list if none found.
+  ///
+  /// Example:
+  /// ```dart
+  /// final keys = await repo.listKeys();
+  /// print('Found ${keys.length} saves');
+  /// ```
+  Future<List<String>> listKeys();
 }
