@@ -1,7 +1,7 @@
 import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/hud_view.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_to_knight_adapter.dart';
@@ -282,16 +282,16 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
   void _notifyEquipmentChanged() {
     developer.log('[InventoryInput] Equipamento mudou! Procurando player...');
 
-    // Buscar o KnightPlayerView no jogo
-    final players = gameRef.query<KnightPlayerView>();
+    // Buscar o CustomPlayerView no jogo
+    final players = gameRef.query<CustomPlayerView>();
     if (players.isEmpty) {
-      developer.log('[InventoryInput] KnightPlayer não encontrado');
+      developer.log('[InventoryInput] CustomPlayer não encontrado');
       return;
     }
 
     final player = players.first;
     developer.log(
-      '[InventoryInput] KnightPlayer encontrado! Recarregando loadout...',
+      '[InventoryInput] CustomPlayer encontrado! Recarregando loadout...',
     );
 
     // Criar novo loadout baseado no equipamento atual

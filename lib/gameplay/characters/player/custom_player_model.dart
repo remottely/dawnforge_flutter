@@ -9,8 +9,8 @@ import 'package:darkness_dungeon/shared/framework/players/dd_hybrid_combat_playe
 ///
 /// Note: Knight does not have run mechanics, so uses the base hybrid combat
 /// model rather than the mobile player model.
-class KnightPlayerModel extends DDHybridCombatPlayerModel {
-  KnightPlayerModel({
+class CustomPlayerModel extends DDHybridCombatPlayerModel {
+  CustomPlayerModel({
     double? initialStamina,
     int? initialEnergy,
     double? initialLife,
@@ -68,8 +68,8 @@ class KnightPlayerModel extends DDHybridCombatPlayerModel {
   /// Creates a KnightPlayerModel from JSON data.
   ///
   /// [json] The JSON map containing saved player state.
-  factory KnightPlayerModel.fromJson(Map<String, dynamic> json) {
-    final model = KnightPlayerModel(
+  factory CustomPlayerModel.fromJson(Map<String, dynamic> json) {
+    final model = CustomPlayerModel(
       initialStamina: (json['currentStamina'] as num?)?.toDouble(),
       initialEnergy: (json['currentEnergy'] as int?),
       initialLife: (json['currentLife'] as num?)?.toDouble(),

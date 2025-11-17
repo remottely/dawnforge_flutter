@@ -1,5 +1,5 @@
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom_player_model.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/joysctick_setup.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_hybrid_combat_player/dd_hybrid_combat_player_controller.dart';
@@ -18,8 +18,8 @@ import 'package:darkness_dungeon/shared/framework/players/dd_hybrid_combat_playe
 /// - No run state management (Knight doesn't run)
 /// - Equipment-based combat (attacks routed through hand manager)
 /// - Standard movement speed only
-class KnightPlayerController
-    extends DDHybridCombatPlayerController<KnightPlayerModel> {
+class CustomPlayerController
+    extends DDHybridCombatPlayerController<CustomPlayerModel> {
   /// Creates a Knight player controller with required dependencies.
   ///
   /// All callbacks are wired to the view layer to maintain proper
@@ -30,7 +30,7 @@ class KnightPlayerController
   /// [onRangedAttack] Callback for ranged attack execution via equipment.
   /// [onShowExclamation] Callback for emote display.
   /// [onCheckEnemyVision] Callback for enemy detection.
-  KnightPlayerController({
+  CustomPlayerController({
     required super.model,
     required super.onPrimaryAttack,
     required super.onRangedAttack,

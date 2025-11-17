@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_loadout.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom_player_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom_player_model.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_to_knight_adapter.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_equippable_player/dd_equippable_player_view.dart';
 
@@ -20,27 +20,38 @@ import 'package:darkness_dungeon/shared/framework/players/dd_equippable_player/d
 ///
 /// Note: Unlike Sunny, Knight does not have run mechanics and uses standard
 /// movement speed only.
-class KnightPlayerView
-    extends DDEquippablePlayerView<KnightPlayerController, KnightPlayerModel> {
-  KnightPlayerView({
+class CustomPlayerView
+    extends DDEquippablePlayerView<CustomPlayerController, CustomPlayerModel> {
+  CustomPlayerView({
     required super.position,
     required super.model,
+    required super.animation,
+    required super.size,
+    required RectangleHitbox hitbox,
+    double? life,
+    double? speed,
+    LightingConfig? lightingConfig,
     KnightHandLoadoutSetup? handLoadout,
-  }) : super(
-         animation: KnightPlayerConfig.animation,
-         size: KnightPlayerConfig.componentSize,
-         life: KnightPlayerConfig.kLife,
-         speed: KnightPlayerConfig.kSpeed,
+  }) : _customHitbox = hitbox,
+       _customLightingConfig =
+           lightingConfig ?? KnightPlayerConfig.lightingConfig,
+       super(
+         life: life ?? KnightPlayerConfig.kLife,
+         speed: speed ?? KnightPlayerConfig.kSpeed,
          equipmentLoadout:
              handLoadout ??
              EquipmentToKnightAdapter.instance.createLoadoutFromEquipment(),
-       ); // ============================================================================
+       );
+
+  final RectangleHitbox _customHitbox;
+  final LightingConfig
+  _customLightingConfig; // ============================================================================
   // Factory Methods - Configuration
   // ============================================================================
 
   @override
-  KnightPlayerController createCombatController({
-    required KnightPlayerModel model,
+  CustomPlayerController createCombatController({
+    required CustomPlayerModel model,
     required bool Function(double damage) onPrimaryAttack,
     required bool Function(double damage) onRangedAttack,
     required void Function() onShowExclamation,
@@ -51,7 +62,7 @@ class KnightPlayerView
     })
     onCheckEnemyVision,
   }) {
-    return KnightPlayerController(
+    return CustomPlayerController(
       model: model,
       onPrimaryAttack: onPrimaryAttack,
       onRangedAttack: onRangedAttack,
@@ -61,10 +72,10 @@ class KnightPlayerView
   }
 
   @override
-  RectangleHitbox createHitbox() => KnightPlayerConfig.hitbox;
+  RectangleHitbox createHitbox() => _customHitbox;
 
   @override
-  LightingConfig get lightingConfig => KnightPlayerConfig.lightingConfig;
+  LightingConfig get lightingConfig => _customLightingConfig;
 
   @override
   GameDecoration createDeathMarker(Vector2 position) =>

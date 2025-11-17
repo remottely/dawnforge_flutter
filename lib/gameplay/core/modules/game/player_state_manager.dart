@@ -1,6 +1,6 @@
 import 'dart:developer' as developer;
 
-import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
 
 /// Singleton que centraliza o estado persistente do player
@@ -21,13 +21,13 @@ class PlayerStateManager {
   // Player Models (persistentes entre mapas)
   // ============================================================================
 
-  KnightPlayerModel? _knightPlayerModel;
+  CustomPlayerModel? _customPlayerModel;
   SunnyPlayerModel? _sunnyPlayerModel;
 
   /// Obter ou criar modelo do Knight
-  KnightPlayerModel getKnightModel() {
-    _knightPlayerModel ??= KnightPlayerModel();
-    return _knightPlayerModel!;
+  CustomPlayerModel getKnightModel() {
+    _customPlayerModel ??= CustomPlayerModel();
+    return _customPlayerModel!;
   }
 
   /// Obter ou criar modelo do Sunny
@@ -43,16 +43,16 @@ class PlayerStateManager {
   /// Serializar estado completo para JSON
   Map<String, dynamic> toJson() {
     return {
-      'knightModel': _knightPlayerModel?.toJson(),
+      'customModel': _customPlayerModel?.toJson(),
       'sunnyModel': _sunnyPlayerModel?.toJson(),
     };
   }
 
   /// Restaurar estado completo de JSON
   void fromJson(Map<String, dynamic> json) {
-    if (json['knightModel'] != null) {
-      _knightPlayerModel = KnightPlayerModel.fromJson(
-        json['knightModel'] as Map<String, dynamic>,
+    if (json['customModel'] != null) {
+      _customPlayerModel = CustomPlayerModel.fromJson(
+        json['customModel'] as Map<String, dynamic>,
       );
     }
 
@@ -67,7 +67,7 @@ class PlayerStateManager {
 
   /// Resetar todo o estado (novo jogo)
   void reset() {
-    _knightPlayerModel = null;
+    _customPlayerModel = null;
     _sunnyPlayerModel = null;
     developer.log('[PlayerStateManager] State reset');
   }
@@ -75,10 +75,10 @@ class PlayerStateManager {
   /// Debug: Log estado atual
   void debugPrintState() {
     developer.log('[PlayerStateManager] Current State:');
-    developer.log('  Knight Life: ${_knightPlayerModel?.life}');
+    developer.log('  Knight Life: ${_customPlayerModel?.life}');
     developer.log('  Sunny Life: ${_sunnyPlayerModel?.life}');
     developer.log(
-      '  Knight Model: ${_knightPlayerModel != null ? 'initialized' : 'null'}',
+      '  Knight Model: ${_customPlayerModel != null ? 'initialized' : 'null'}',
     );
     developer.log(
       '  Sunny Model: ${_sunnyPlayerModel != null ? 'initialized' : 'null'}',

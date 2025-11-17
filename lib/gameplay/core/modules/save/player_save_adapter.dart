@@ -1,6 +1,6 @@
 import 'dart:developer' as developer;
 
-import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_model.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/player/player_progress_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/save/game_state_collector.dart';
@@ -49,7 +49,7 @@ final class PlayerSaveAdapter {
   ///
   /// Example:
   /// ```dart
-  /// final knight = KnightPlayerModel();
+  /// final knight = CustomModelModel();
   /// final success = await PlayerSaveAdapter.saveGame(knight);
   /// ```
   static Future<bool> saveGame(DDBasePlayerModel player) async {
@@ -247,7 +247,7 @@ final class PlayerSaveAdapter {
 
       switch (playerType) {
         case 'knight':
-          return KnightPlayerModel.fromJson(playerData);
+          return CustomPlayerModel.fromJson(playerData);
         case 'sunny':
           return SunnyPlayerModel.fromJson(playerData);
         default:

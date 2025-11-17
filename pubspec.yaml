@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.49.0+1
+version: 1.50.0+1
 
 environment:
   sdk: ^3.9.2
@@ -71,6 +71,10 @@ flutter:
     - assets/images/SPUM/Resources/Addons/Ver300/0_Unit/0_Sprite/8_Weapons/8_Mace/
     - assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/
     - assets/images/SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/ATTACK/
+    - assets/images/SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/AXE/
+    - assets/images/SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/CAUGHT/
+    - assets/images/SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/DIG/
+
   fonts:
     - family: Normal
       fonts:

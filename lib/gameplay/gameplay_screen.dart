@@ -51,19 +51,19 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
         final playerPosition =
             (mapArguments?.playerPosition ?? Vector2.all(4)) *
             TileConstants.kTileDimensionStandard;
-        final knightPlayer = buildKnightPlayer(playerPosition);
+        final player = buildCustomPlayer(playerPosition);
 
         final playerInput = GameplayScreenConfig.createPlayerInput();
 
         // Criar novo farm input handler para este mapa
-        final currentFarmInputHandler = FarmInputHandler(player: knightPlayer);
+        final currentFarmInputHandler = FarmInputHandler(player: player);
         farmInteractionComponent = currentFarmInputHandler;
 
         return Material(
           color: Colors.transparent,
           child: BonfireWidget(
             playerControllers: [playerInput],
-            player: knightPlayer,
+            player: player,
             map: mapItem.map,
             components: [
               gameplayGameStateManager,

@@ -1,7 +1,8 @@
 import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom_player_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/game_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/inventory_input_handler.dart';
@@ -23,7 +24,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   FarmInputHandler? farmInteractionComponent;
 
   // Referências aos últimos players criados (para capturar vida antes de recriar)
-  KnightPlayerView? _lastKnightPlayer;
+  CustomPlayerView? _lastCustomPlayer;
   SunnyPlayerView? _lastSunnyPlayer;
 
   @override
@@ -56,12 +57,12 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
     // Resetar vida no PlayerStateManager quando iniciar novo jogo
     // Isso garante que mesmo após morte, o próximo jogo comece com vida cheia
     final stateManager = PlayerStateManager.instance;
-    final knightModel = stateManager.getKnightModel();
+    final customModel = stateManager.getKnightModel();
     final sunnyModel = stateManager.getSunnyModel();
 
     // Se a vida estiver em 0 ou muito baixa, resetar para null (usa vida padrão)
-    if (knightModel.life != null && knightModel.life! <= 0) {
-      knightModel.updateLife(200); // Vida padrão do Knight (kLifeExtraLarge)
+    if (customModel.life != null && customModel.life! <= 0) {
+      customModel.updateLife(200); // Vida padrão do Knight (kLifeExtraLarge)
       developer.log('[ViewModel] Reset Knight life to full on new game');
     }
 
@@ -112,27 +113,47 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
     return player;
   }
 
-  KnightPlayerView buildKnightPlayer(Vector2 position) {
+  CustomPlayerView buildCustomPlayer(Vector2 position) {
     final stateManager = PlayerStateManager.instance;
     final model = stateManager.getKnightModel();
 
     // Salvar vida do player anterior no model antes de criar novo
     // (apenas se não estiver morto - evita loop de morte)
-    if (_lastKnightPlayer != null && !_lastKnightPlayer!.isDead) {
-      final currentLife = _lastKnightPlayer!.life;
+    if (_lastCustomPlayer != null && !_lastCustomPlayer!.isDead) {
+      final currentLife = _lastCustomPlayer!.life;
       model.updateLife(currentLife);
       developer.log(
         '[ViewModel] Captured Knight life before rebuild: $currentLife',
       );
     }
 
-    final player = KnightPlayerView(position: position, model: model);
+    // final player = CustomPlayerView(
+    //   position: position,
+    //   model: model,
+    //   animation: KnightPlayerConfig.animation,
+    //   size: KnightPlayerConfig.componentSize,
+    //   hitbox: KnightPlayerConfig.hitbox,
+    //   life: KnightPlayerConfig.kLife,
+    //   speed: KnightPlayerConfig.kSpeed,
+    //   lightingConfig: KnightPlayerConfig.lightingConfig,
+    // );
+
+    final player = CustomPlayerView(
+      position: position,
+      model: model,
+      animation: SunnyPlayerConfig.createWalkAnimation(),
+      size: SunnyPlayerConfig.componentSize,
+      hitbox: SunnyPlayerConfig.hitbox,
+      life: SunnyPlayerConfig.kLife,
+      speed: SunnyPlayerConfig.kSpeed,
+      lightingConfig: SunnyPlayerConfig.lightingConfig,
+    );
 
     developer.log(
       '[ViewModel] Created Knight with model life: ${model.life ?? 'null'}',
     );
 
-    _lastKnightPlayer = player;
+    _lastCustomPlayer = player;
     return player;
   }
 }

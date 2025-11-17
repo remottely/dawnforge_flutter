@@ -92,10 +92,16 @@ final class KnightWeaponConfigs {
   static final sword = KnightWeaponVisualConfig.animation(
     idlePath:
         'SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/ATTACK/tools_attack_strip10.png',
+    // 'SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/AXE/tools_axe_strip10.png',
+    // 'SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/CAUGHT/tools_caught_strip10.png',
+    // 'SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/DIG/tools_dig_strip13.png',
     idleFrameCount: 1,
     idleFrameDuration: Duration(milliseconds: 1000),
     attackPath:
         'SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/ATTACK/tools_attack_strip10.png',
+    // 'SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/AXE/tools_axe_strip10.png',
+    // 'SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/CAUGHT/tools_caught_strip10.png',
+    // 'SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/DIG/tools_dig_strip13.png',
     attackFrameCount: 10,
     attackFrameIndex: 6,
     attackDuration: Duration(milliseconds: 400),

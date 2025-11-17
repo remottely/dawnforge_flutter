@@ -1,7 +1,7 @@
 import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:flutter/services.dart';
 
@@ -21,8 +21,8 @@ class ShieldDefenseInputHandler extends GameComponent
   bool get isDefending => _isDefending;
 
   /// Busca o player atual a cada chamada para garantir compatibilidade com troca de mapas
-  KnightPlayerView? _getCurrentPlayer() {
-    final players = gameRef.query<KnightPlayerView>();
+  CustomPlayerView? _getCurrentPlayer() {
+    final players = gameRef.query<CustomPlayerView>();
     return players.isNotEmpty ? players.first : null;
   }
 
