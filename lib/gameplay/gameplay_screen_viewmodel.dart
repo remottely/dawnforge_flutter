@@ -9,7 +9,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager
 import 'package:darkness_dungeon/gameplay/core/modules/game/shield_defense_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/hud_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/save/game_save_controller.dart';
-import 'package:darkness_dungeon/gameplay/farm/components/farm_interaction_component.dart';
+import 'package:darkness_dungeon/gameplay/farm/handlers/farm_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen_config.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +20,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   final gameplayGameStateManager = GameStateManager();
   final inventoryInputHandler = InventoryInputHandler();
   final shieldDefenseInputHandler = ShieldDefenseInputHandler();
-  FarmInteractionComponent? farmInteractionComponent;
+  FarmInputHandler? farmInteractionComponent;
 
   // Referências aos últimos players criados (para capturar vida antes de recriar)
   KnightPlayerView? _lastKnightPlayer;
