@@ -29,7 +29,7 @@ abstract class DDMobilePlayerView<
   bool _isInRunningState = false;
 
   /// Tracks the number of active action locks preventing animation changes.
-  int _activeAnimationLockCount = 0;
+  int _activeAnimationLockCount = 0; // TODO(Kevin): verify if needed it
 
   late final SimpleDirectionAnimation _walkAnimation;
   late final SimpleDirectionAnimation _runAnimation;

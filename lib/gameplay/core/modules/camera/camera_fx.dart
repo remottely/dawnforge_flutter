@@ -2,7 +2,7 @@ import 'package:bonfire/bonfire.dart';
 
 final class CameraFx {
   CameraFx._();
-  static void lightShake(BonfireGameInterface gameRef) {
+  static void _executeLightShake(BonfireGameInterface gameRef) {
     final currentPos = gameRef.camera.viewfinder.position.clone();
 
     gameRef.camera.viewfinder.position = currentPos + Vector2(1, 0);
@@ -20,7 +20,7 @@ final class CameraFx {
     });
   }
 
-  static void mediumShake(BonfireGameInterface gameRef) {
+  static void _executeMediumShake(BonfireGameInterface gameRef) {
     final currentPos = gameRef.camera.viewfinder.position.clone();
 
     gameRef.camera.viewfinder.position = currentPos + Vector2(1, 0);
@@ -50,8 +50,9 @@ final class CameraFx {
     });
   }
 
-  static void primaryAttackShake(BonfireGameInterface gameRef) =>
-      lightShake(gameRef);
-  static void fireballExplosionShake(BonfireGameInterface gameRef) =>
-      mediumShake(gameRef);
+  /// Public configs
+  static void executePrimaryAttackShake(BonfireGameInterface gameRef) =>
+      _executeLightShake(gameRef);
+  static void executeFireballExplosionShake(BonfireGameInterface gameRef) =>
+      _executeMediumShake(gameRef);
 }

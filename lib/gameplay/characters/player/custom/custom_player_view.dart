@@ -3,7 +3,7 @@ import 'package:darkness_dungeon/gameplay/characters/player/custom/custom_player
 import 'package:darkness_dungeon/gameplay/characters/player/custom/custom_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_loadout.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
-import 'package:darkness_dungeon/gameplay/inventory/equipment_to_knight_adapter.dart';
+import 'package:darkness_dungeon/gameplay/inventory/equipment_to_custom_player_adapter.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_equippable_player/dd_equippable_player_view.dart';
 
 /// Visual representation and input handler for the Knight player character.
@@ -40,7 +40,8 @@ class CustomPlayerView
          speed: speed ?? KnightPlayerConfig.kSpeed,
          equipmentLoadout:
              handLoadout ??
-             EquipmentToKnightAdapter.instance.createLoadoutFromEquipment(),
+             EquipmentToCustomPlayerAdapter.instance
+                 .createLoadoutFromEquipment(),
        );
 
   final RectangleHitbox _customHitbox;

@@ -5,34 +5,18 @@ import 'package:bonfire/bonfire.dart';
 final class CharacterActionSpriteAnimationHelper {
   CharacterActionSpriteAnimationHelper._();
 
-  /// Internal helper to select the correct animation based on movement direction.
-  ///
-  /// Returns left animation for left-facing directions (left, upLeft, downLeft),
-  /// and right animation for all other directions.
-  static Future<SpriteAnimation> _selectAnimationByDirection({
-    required Future<SpriteAnimation> animationRight,
-    required Future<SpriteAnimation> animationLeft,
-    required Movement? movementComponent,
-  }) {
-    final direction = movementComponent?.lastDirection ?? Direction.right;
-    final isLeftFacing =
-        direction == Direction.left ||
-        direction == Direction.upLeft ||
-        direction == Direction.downLeft;
-
-    return isLeftFacing ? animationLeft : animationRight;
-  }
-
   static Future<void> playOnce({
     required Future<SpriteAnimation> animationRight,
     required Future<SpriteAnimation> animationLeft,
     required SimpleDirectionAnimation? currentAnimation,
-    required Movement? movementComponent,
+    required Movement? target,
+    // required Direction direction,
   }) async {
     final attackAnimationOriginal = await _selectAnimationByDirection(
       animationRight: animationRight,
       animationLeft: animationLeft,
-      movementComponent: movementComponent,
+      target: target,
+      // direction: direction,
     );
 
     final clonedFrames = attackAnimationOriginal.frames
@@ -53,7 +37,8 @@ final class CharacterActionSpriteAnimationHelper {
     required Future<SpriteAnimation> animationRight,
     required Future<SpriteAnimation> animationLeft,
     required SimpleDirectionAnimation? currentAnimation,
-    required Movement? movementComponent,
+    required Movement? target,
+    // required Direction direction,
     String key = '_actionLoop',
     bool flipX = false,
     bool flipY = false,
@@ -66,7 +51,8 @@ final class CharacterActionSpriteAnimationHelper {
       final attackAnimationOriginal = await _selectAnimationByDirection(
         animationRight: animationRight,
         animationLeft: animationLeft,
-        movementComponent: movementComponent,
+        target: target,
+        // direction: direction,
       );
       final clonedFrames = attackAnimationOriginal.frames
           .map((frame) => SpriteAnimationFrame(frame.sprite, frame.stepTime))
@@ -94,23 +80,25 @@ final class CharacterActionSpriteAnimationHelper {
     required Future<SpriteAnimation> animationRight,
     required Future<SpriteAnimation> animationLeft,
     required SimpleDirectionAnimation? currentAnimation,
-    required Movement? movementComponent,
+    required Movement? target,
+    // required Direction direction,
     required int executionStartFrame,
-    required void Function() onExecutionFrames,
+    required void Function(Direction direction) onExecutionFrames,
     void Function()? onActionStart,
     void Function()? onActionEnd,
   }) async {
     final attackAnimationOriginal = await _selectAnimationByDirection(
       animationRight: animationRight,
       animationLeft: animationLeft,
-      movementComponent: movementComponent,
+      target: target,
+      // direction: direction,
     );
 
     onActionStart?.call();
-    movementComponent?.stopMove(forceIdle: true);
-    final GameComponent? gameComponent = movementComponent is GameComponent
-        ? movementComponent as GameComponent
-        : null;
+    target?.stopMove(forceIdle: true);
+    // final GameComponent? gameComponent = target is GameComponent
+    //     ? target as GameComponent
+    //     : null;
 
     double damageStartTime = 0;
     for (
@@ -124,11 +112,10 @@ final class CharacterActionSpriteAnimationHelper {
     Future.delayed(
       Duration(milliseconds: (damageStartTime * 1000).toInt()),
       () {
-        if (gameComponent?.isRemoved == true ||
-            gameComponent?.isRemoving == true) {
+        if (target?.isRemoved == true || target?.isRemoving == true) {
           return;
         }
-        onExecutionFrames();
+        onExecutionFrames(target!.lastDirection);
       },
     );
 
@@ -138,7 +125,7 @@ final class CharacterActionSpriteAnimationHelper {
     final attackAnimation = SpriteAnimation(clonedFrames, loop: false);
 
     if (currentAnimation == null) {
-      movementComponent?.idle();
+      target?.idle();
       onActionEnd?.call();
       return;
     }
@@ -149,9 +136,31 @@ final class CharacterActionSpriteAnimationHelper {
         runToTheEnd: true,
         useCompFlip: true,
       );
-      movementComponent?.idle();
+      target?.idle();
     } finally {
       onActionEnd?.call();
     }
+  }
+
+  /// Internal helper to select the correct animation based on movement direction.
+  ///
+  /// Uses `lastDirectionHorizontal` from Bonfire's Movement mixin, which preserves
+  /// the last horizontal facing direction even during purely vertical movement.
+  /// This ensures correct sprite orientation (left/right) is maintained when
+  /// moving up/down, matching Bonfire's animation system behavior.
+  ///
+  /// Returns left animation when facing left, right animation otherwise.
+  static Future<SpriteAnimation> _selectAnimationByDirection({
+    required Future<SpriteAnimation> animationRight,
+    required Future<SpriteAnimation> animationLeft,
+    required Movement? target,
+    // required Direction direction,
+  }) {
+    // Use lastDirectionHorizontal which persists across vertical movements
+    final horizontalDirection =
+        target?.lastDirectionHorizontal ?? Direction.right;
+    final isFacingRight = horizontalDirection == Direction.right;
+
+    return isFacingRight ? animationRight : animationLeft;
   }
 }

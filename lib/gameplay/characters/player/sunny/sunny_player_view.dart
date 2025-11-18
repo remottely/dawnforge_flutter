@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/player_primary_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_action_sprite_animation_helper.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_primary_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_fx.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
@@ -43,13 +43,13 @@ class SunnyPlayerView
   /// Caches the last joystick directional input for restoration.
   JoystickDirectionalEvent? _bufferedDirectionalInput;
 
-  /// Stores the current input direction for combat actions.
-  ///
-  /// This direction is updated on every directional input, even during
-  /// movement locks, ensuring attacks always use the most recent player intent.
-  /// This matches professional game engine behavior (Unity/Unreal) where
-  /// input direction is decoupled from movement state.
-  Direction _currentInputDirection = Direction.right;
+  // /// Stores the current input direction for combat actions.
+  // ///
+  // /// This direction is updated on every directional input, even during
+  // /// movement locks, ensuring attacks always use the most recent player intent.
+  // /// This matches professional game engine behavior (Unity/Unreal) where
+  // /// input direction is decoupled from movement state.
+  // Direction _currentInputDirection = Direction.right;
 
   /// Determines if movement is currently restricted.
   bool get _isMovementRestricted => _activeMovementLockCount > 0;
@@ -150,8 +150,8 @@ class SunnyPlayerView
       radAngle: event.radAngle,
     );
 
-    // Update input direction for combat system
-    _updateInputDirectionFromEvent(event);
+    // // Update input direction for combat system
+    // _updateInputDirectionFromEvent(event);
 
     if (_isMovementRestricted) {
       stopMove(forceIdle: true);
@@ -161,43 +161,43 @@ class SunnyPlayerView
     super.onJoystickChangeDirectional(event);
   }
 
-  /// Updates the current input direction based on joystick input.
-  ///
-  /// This method decouples input direction from movement state, ensuring
-  /// combat actions always reflect the player's most recent directional intent.
-  /// This matches professional game engine patterns where input is processed
-  /// independently of movement constraints.
-  void _updateInputDirectionFromEvent(JoystickDirectionalEvent event) {
-    switch (event.directional) {
-      case JoystickMoveDirectional.MOVE_UP:
-        _currentInputDirection = Direction.up;
-        break;
-      case JoystickMoveDirectional.MOVE_UP_LEFT:
-        _currentInputDirection = Direction.upLeft;
-        break;
-      case JoystickMoveDirectional.MOVE_UP_RIGHT:
-        _currentInputDirection = Direction.upRight;
-        break;
-      case JoystickMoveDirectional.MOVE_RIGHT:
-        _currentInputDirection = Direction.right;
-        break;
-      case JoystickMoveDirectional.MOVE_DOWN:
-        _currentInputDirection = Direction.down;
-        break;
-      case JoystickMoveDirectional.MOVE_DOWN_RIGHT:
-        _currentInputDirection = Direction.downRight;
-        break;
-      case JoystickMoveDirectional.MOVE_DOWN_LEFT:
-        _currentInputDirection = Direction.downLeft;
-        break;
-      case JoystickMoveDirectional.MOVE_LEFT:
-        _currentInputDirection = Direction.left;
-        break;
-      case JoystickMoveDirectional.IDLE:
-        // Preserve last direction when idle (standard game behavior)
-        break;
-    }
-  }
+  // /// Updates the current input direction based on joystick input.
+  // ///
+  // /// This method decouples input direction from movement state, ensuring
+  // /// combat actions always reflect the player's most recent directional intent.
+  // /// This matches professional game engine patterns where input is processed
+  // /// independently of movement constraints.
+  // void _updateInputDirectionFromEvent(JoystickDirectionalEvent event) {
+  //   switch (event.directional) {
+  //     case JoystickMoveDirectional.MOVE_UP:
+  //       _currentInputDirection = Direction.up;
+  //       break;
+  //     case JoystickMoveDirectional.MOVE_UP_LEFT:
+  //       _currentInputDirection = Direction.upLeft;
+  //       break;
+  //     case JoystickMoveDirectional.MOVE_UP_RIGHT:
+  //       _currentInputDirection = Direction.upRight;
+  //       break;
+  //     case JoystickMoveDirectional.MOVE_RIGHT:
+  //       _currentInputDirection = Direction.right;
+  //       break;
+  //     case JoystickMoveDirectional.MOVE_DOWN:
+  //       _currentInputDirection = Direction.down;
+  //       break;
+  //     case JoystickMoveDirectional.MOVE_DOWN_RIGHT:
+  //       _currentInputDirection = Direction.downRight;
+  //       break;
+  //     case JoystickMoveDirectional.MOVE_DOWN_LEFT:
+  //       _currentInputDirection = Direction.downLeft;
+  //       break;
+  //     case JoystickMoveDirectional.MOVE_LEFT:
+  //       _currentInputDirection = Direction.left;
+  //       break;
+  //     case JoystickMoveDirectional.IDLE:
+  //       // Preserve last direction when idle (standard game behavior)
+  //       break;
+  //   }
+  // }
 
   // ============================================================================
   // Combat Execution Implementation
@@ -212,12 +212,13 @@ class SunnyPlayerView
           animationRight: SunnyPlayerConfig.loadRightAttackAnimation(),
           animationLeft: SunnyPlayerConfig.loadLeftAttackAnimation(),
           currentAnimation: animation,
-          movementComponent: this,
+          target: this,
+          // direction: _currentInputDirection,
           executionStartFrame: 4,
           onActionStart: _lockMovementForAction,
           onActionEnd: _unlockMovementForAction,
-          onExecutionFrames: () {
-            _applyMeleeDamageHitbox(damage);
+          onExecutionFrames: (direction) {
+            _applyMeleeDamageHitbox(damage: damage, direction: direction);
             _triggerMeleeAttackEffects();
           },
         );
@@ -241,31 +242,34 @@ class SunnyPlayerView
   }
 
   /// Applies the melee damage hitbox with proper positioning.
-  void _applyMeleeDamageHitbox(double damage) {
+  void _applyMeleeDamageHitbox({
+    required double damage,
+    required Direction direction,
+  }) {
     final Vector2 attackCenterOffset = OffsetHelper.getCenterOffset(
       Vector2(6, 0),
-      _currentInputDirection,
+      lastDirection,
     );
 
-    // Temporarily override lastDirection for Bonfire's internal calculations
-    final Direction previousDirection = lastDirection;
-    lastDirection = _currentInputDirection;
+    // // Temporarily override lastDirection for Bonfire's internal calculations
+    // final Direction previousDirection = lastDirection;
+    // lastDirection = direction;
 
     simpleAttackMelee(
       damage: damage,
       animationRight:
-          CharacterPrimaryAttackConfig.createPlayerExecutionAnimation(),
-      size: CharacterPrimaryAttackConfig.kPlayerPrimaryAttackFxSize,
+          PlayerPrimaryAttackConfig.createPlayerExecutionAnimation(),
+      size: PlayerPrimaryAttackConfig.kPlayerPrimaryAttackFxSize,
       centerOffset: attackCenterOffset,
     );
 
-    // Restore original lastDirection to maintain Bonfire's state consistency
-    lastDirection = previousDirection;
+    // // Restore original lastDirection to maintain Bonfire's state consistency
+    // lastDirection = previousDirection;
   }
 
   /// Triggers all visual and audio effects for melee attacks.
   void _triggerMeleeAttackEffects() {
-    CameraFx.primaryAttackShake(gameRef);
+    CameraFx.executePrimaryAttackShake(gameRef);
     AudioManager.instance.playPlayerPrimaryAttackSfx();
     addParticle(
       CharacterFxParticlesAnimationsConfig.createPrimaryAttackParticles(),

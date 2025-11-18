@@ -5,7 +5,7 @@ import 'package:darkness_dungeon/gameplay/characters/player/custom/custom_player
 import 'package:darkness_dungeon/gameplay/core/modules/hud/hud_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/equipment_to_knight_adapter.dart';
+import 'package:darkness_dungeon/gameplay/inventory/equipment_to_custom_player_adapter.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/item_factory.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
@@ -296,7 +296,7 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
     );
 
     // Criar novo loadout baseado no equipamento atual
-    final newLoadout = EquipmentToKnightAdapter.instance
+    final newLoadout = EquipmentToCustomPlayerAdapter.instance
         .createLoadoutFromEquipment();
 
     // Recarregar loadout do player

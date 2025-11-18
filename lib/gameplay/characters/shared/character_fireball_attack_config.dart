@@ -72,7 +72,7 @@ final class CharacterFireballAttackConfig {
       attackFrom: AttackOriginEnum.PLAYER_OR_ALLY,
       onDestroy: () {
         playDestroyAudio();
-        CameraFx.fireballExplosionShake(player.gameRef);
+        CameraFx.executeFireballExplosionShake(player.gameRef);
       },
     );
   }
