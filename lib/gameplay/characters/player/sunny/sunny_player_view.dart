@@ -8,12 +8,9 @@ import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_m
 import 'package:darkness_dungeon/gameplay/characters/shared/character_action_sprite_animation_helper.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_fx.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_config.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/offset_helper.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_view.dart';
 
 /// Visual representation and input handler for the Sunny player character.
@@ -218,8 +215,10 @@ class SunnyPlayerView
           onActionStart: _lockMovementForAction,
           onActionEnd: _unlockMovementForAction,
           onExecutionFrames: (direction) {
-            _applyMeleeDamageHitbox(damage: damage, direction: direction);
-            _triggerMeleeAttackEffects();
+            _executePrimaryAttackWithEffects(
+              damage: damage,
+              direction: direction,
+            );
           },
         );
       },
@@ -241,40 +240,19 @@ class SunnyPlayerView
     return executionInfo != null;
   }
 
-  /// Applies the melee damage hitbox with proper positioning.
-  void _applyMeleeDamageHitbox({
+  /// Executes the complete primary attack with all effects.
+  void _executePrimaryAttackWithEffects({
     required double damage,
     required Direction direction,
   }) {
-    final Vector2 attackCenterOffset = OffsetHelper.getCenterOffset(
-      Vector2(6, 0),
-      lastDirection,
-    );
-
-    // // Temporarily override lastDirection for Bonfire's internal calculations
-    // final Direction previousDirection = lastDirection;
-    // lastDirection = direction;
-
-    simpleAttackMelee(
+    // Use centralized attack execution
+    PlayerPrimaryAttackConfig.execute(
+      player: this,
       damage: damage,
-      animationRight:
-          PlayerPrimaryAttackConfig.createPlayerExecutionAnimation(),
-      size: PlayerPrimaryAttackConfig.kPlayerPrimaryAttackFxSize,
-      centerOffset: attackCenterOffset,
+      direction: direction,
     );
 
-    // // Restore original lastDirection to maintain Bonfire's state consistency
-    // lastDirection = previousDirection;
-  }
-
-  /// Triggers all visual and audio effects for melee attacks.
-  void _triggerMeleeAttackEffects() {
-    CameraFx.executePrimaryAttackShake(gameRef);
-    AudioManager.instance.playPlayerPrimaryAttackSfx();
-    addParticle(
-      CharacterFxParticlesAnimationsConfig.createPrimaryAttackParticles(),
-      position: size,
-    );
+    // Lock animation after attack
     lockAnimationForAction();
   }
 

@@ -8,12 +8,9 @@ import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player
 import 'package:darkness_dungeon/gameplay/characters/player/player_primary_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_fx.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/offset_helper.dart';
 
 final class CustomPlayerHandLoadoutConfig {
   CustomPlayerHandLoadoutConfig._();
@@ -52,26 +49,10 @@ final class CustomPlayerHandLoadoutConfig {
             // Este código executa EXATAMENTE no frame 3 da animação
             print('💥 Aplicando dano: $damage');
 
-            // Aplicar hitbox de dano
-            final attackOffset = OffsetHelper.getCenterOffset(
-              Vector2(6, 0),
-              context.player.lastDirection,
-            );
-
-            context.player.simpleAttackMelee(
+            // Use centralized primary attack execution
+            PlayerPrimaryAttackConfig.execute(
+              player: context.player,
               damage: damage,
-              size: PlayerPrimaryAttackConfig.kPlayerPrimaryAttackFxSize,
-              centerOffset: attackOffset,
-              animationRight:
-                  PlayerPrimaryAttackConfig.createPlayerExecutionAnimation(),
-            );
-
-            // Efeitos visuais e sonoros
-            CameraFx.executePrimaryAttackShake(context.player.gameRef);
-            AudioManager.instance.playPlayerPrimaryAttackSfx();
-            context.player.addParticle(
-              CharacterFxParticlesAnimationsConfig.createPrimaryAttackParticles(),
-              position: context.player.size,
             );
           });
 
@@ -162,17 +143,10 @@ final class CustomPlayerHandLoadoutConfig {
         attackType: AttackType.melee,
         syncSpec: _rightHandSyncSpec,
         execute: (context, damage) {
-          CameraFx.executePrimaryAttackShake(context.player.gameRef);
-          AudioManager.instance.playPlayerPrimaryAttackSfx();
-          context.player.addParticle(
-            CharacterFxParticlesAnimationsConfig.createPrimaryAttackParticles(),
-            position: context.player.size,
-          );
-          context.player.simpleAttackMelee(
-            size: PlayerPrimaryAttackConfig.kPlayerPrimaryAttackFxSize,
+          // Use centralized primary attack execution
+          PlayerPrimaryAttackConfig.execute(
+            player: context.player,
             damage: damage,
-            animationRight:
-                PlayerPrimaryAttackConfig.createPlayerExecutionAnimation(),
           );
         },
       ),

@@ -9,11 +9,8 @@ import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/presets
 import 'package:darkness_dungeon/gameplay/characters/player/player_primary_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_fx.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_config.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/offset_helper.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
@@ -229,24 +226,8 @@ final class EquipmentToCustomPlayerAdapter {
     double damage,
     WeaponItem item,
   ) {
-    final attackOffset = OffsetHelper.getCenterOffset(
-      Vector2(6, 0),
-      context.player.lastDirection,
-    );
-
-    CameraFx.executePrimaryAttackShake(context.player.gameRef);
-    AudioManager.instance.playPlayerPrimaryAttackSfx();
-    context.player.addParticle(
-      CharacterFxParticlesAnimationsConfig.createPrimaryAttackParticles(),
-      position: context.player.size,
-    );
-    context.player.simpleAttackMelee(
-      size: PlayerPrimaryAttackConfig.kPlayerPrimaryAttackFxSize,
-      damage: damage,
-      centerOffset: attackOffset,
-      animationRight:
-          PlayerPrimaryAttackConfig.createPlayerExecutionAnimation(),
-    );
+    // Use centralized primary attack execution
+    PlayerPrimaryAttackConfig.execute(player: context.player, damage: damage);
 
     developer.log(
       '[EquipmentAdapter] Primary attack with ${item.name}: $damage damage',
