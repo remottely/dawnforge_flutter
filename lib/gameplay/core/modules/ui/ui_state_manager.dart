@@ -98,7 +98,7 @@ final class UIStateManager {
       onFinish: onFinish,
       onClose: onClose,
       logicalKeyboardKeysToNext:
-          logicalKeyboardKeysToNext ?? [KeyboardSetup.kPrimaryAttackKey],
+          logicalKeyboardKeysToNext ?? [KeyboardSetup.kPrimaryActionKey],
     );
   }
 

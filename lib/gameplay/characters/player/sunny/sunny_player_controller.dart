@@ -29,12 +29,12 @@ class SunnyPlayerController extends DDMobilePlayerController<SunnyPlayerModel> {
   @override
   bool isPrimaryAttackAction(dynamic actionId) =>
       actionId == JoystickSetup.kPrimaryAttackId ||
-      actionId == KeyboardSetup.kPrimaryAttackKey;
+      actionId == KeyboardSetup.kPrimaryActionKey;
 
   @override
   bool isRangedAttackAction(dynamic actionId) =>
       actionId == JoystickSetup.kFireballAttackId ||
-      actionId == KeyboardSetup.kFireballAttackKey;
+      actionId == KeyboardSetup.kSecondaryActionKey;
 
   @override
   bool isRunAction(dynamic actionId) =>

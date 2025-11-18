@@ -31,6 +31,9 @@ abstract class DDMobilePlayerView<
   /// Tracks the number of active action locks preventing animation changes.
   int _activeAnimationLockCount = 0;
 
+  late final SimpleDirectionAnimation _walkAnimation;
+  late final SimpleDirectionAnimation _runAnimation;
+
   DDMobilePlayerView({
     required super.position,
     required super.model,
@@ -46,7 +49,9 @@ abstract class DDMobilePlayerView<
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    replaceAnimation(createWalkAnimation());
+    _walkAnimation = createWalkAnimation();
+    _runAnimation = createRunAnimation();
+    replaceAnimation(_walkAnimation);
   }
 
   // ============================================================================
@@ -133,7 +138,7 @@ abstract class DDMobilePlayerView<
   void transitionToRunAnimation() {
     if (_isAnimationLocked) return;
 
-    replaceAnimation(createRunAnimation(), doIdle: isIdle);
+    replaceAnimation(_runAnimation, doIdle: isIdle);
   }
 
   /// Transitions to the walking animation set.
@@ -143,7 +148,7 @@ abstract class DDMobilePlayerView<
   void transitionToWalkAnimation() {
     if (_isAnimationLocked) return;
 
-    replaceAnimation(createWalkAnimation(), doIdle: isIdle);
+    replaceAnimation(_walkAnimation, doIdle: isIdle);
   }
 
   // ============================================================================

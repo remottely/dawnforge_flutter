@@ -172,7 +172,7 @@ class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
       gameRef.context,
       player: player,
       conversationSequence: BossEnemyConfig.createConversationSequence(),
-      logicalKeyboardKeysToNext: [KeyboardSetup.kPrimaryAttackKey],
+      logicalKeyboardKeysToNext: [KeyboardSetup.kPrimaryActionKey],
       onChangeTalk: _onConversationChanged,
       onFinish: _onConversationFinished,
     );

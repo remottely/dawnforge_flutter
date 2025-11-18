@@ -3,6 +3,7 @@ import 'dart:developer' as developer;
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/custom/custom_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/hud_view.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_to_knight_adapter.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
@@ -43,37 +44,37 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
   bool onKeyboard(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     if (event is KeyDownEvent) {
       // Tecla I: Toggle inventário
-      if (event.logicalKey == LogicalKeyboardKey.keyI) {
+      if (event.logicalKey == KeyboardSetup.kToggleInventoryKey) {
         _toggleInventory();
         return true;
       }
 
       // Tecla T: Adicionar itens de teste
-      if (event.logicalKey == LogicalKeyboardKey.keyT) {
+      if (event.logicalKey == KeyboardSetup.kAddTestItemsKey) {
         _addTestItems();
         return true;
       }
 
       // Tecla E: Equipar primeiro item de arma do inventário no WEAPON slot
-      if (event.logicalKey == LogicalKeyboardKey.keyE) {
+      if (event.logicalKey == KeyboardSetup.kEquipWeaponKey) {
         _equipFirstWeapon();
         return true;
       }
 
       // Tecla U: Desequipar arma do WEAPON slot
-      if (event.logicalKey == LogicalKeyboardKey.keyU) {
+      if (event.logicalKey == KeyboardSetup.kUnequipWeaponKey) {
         _unequipWeapon();
         return true;
       }
 
       // Tecla O: Equipar primeiro item de arma do inventário no OFFHAND slot
-      if (event.logicalKey == LogicalKeyboardKey.keyO) {
+      if (event.logicalKey == KeyboardSetup.kEquipOffhandKey) {
         _equipFirstOffhand();
         return true;
       }
 
       // Tecla P: Desequipar arma do OFFHAND slot
-      if (event.logicalKey == LogicalKeyboardKey.keyP) {
+      if (event.logicalKey == KeyboardSetup.kUnequipOffhandKey) {
         _unequipOffhand();
         return true;
       }

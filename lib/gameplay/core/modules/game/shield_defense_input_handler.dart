@@ -72,7 +72,7 @@ class ShieldDefenseInputHandler extends GameComponent
 
     // Detectar Z pressionado (KeyDown)
     if (event is KeyDownEvent &&
-        event.logicalKey == KeyboardSetup.kFireballAttackKey) {
+        event.logicalKey == KeyboardSetup.kSecondaryActionKey) {
       if (!_isDefending) {
         // Verificar se tem stamina antes de ativar
         if (player.model.stamina <= 0) {
@@ -98,7 +98,7 @@ class ShieldDefenseInputHandler extends GameComponent
 
     // Detectar Z solto (KeyUp)
     if (event is KeyUpEvent &&
-        event.logicalKey == KeyboardSetup.kFireballAttackKey) {
+        event.logicalKey == KeyboardSetup.kSecondaryActionKey) {
       if (_isDefending) {
         player.stopShieldDefense();
         _isDefending = false;

@@ -1,9 +1,9 @@
 import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/save/game_save_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
-import 'package:darkness_dungeon/gameplay/farm/constants/farm_input_constants.dart';
 import 'package:darkness_dungeon/gameplay/farm/constants/farm_messages.dart';
 import 'package:darkness_dungeon/gameplay/farm/farm_manager.dart';
 import 'package:darkness_dungeon/gameplay/farm/services/farm_action_service.dart';
@@ -70,13 +70,13 @@ class FarmInputHandler extends GameComponent with KeyboardEventListener {
 
   /// Routes farm actions based on the pressed key.
   bool _handleFarmAction(LogicalKeyboardKey key, int x, int y) {
-    if (key == FarmInputConstants.kTillSoilKey) {
+    if (key == KeyboardSetup.kTillSoilKey) {
       return _handleTillSoil(x, y);
-    } else if (key == FarmInputConstants.kWaterKey) {
+    } else if (key == KeyboardSetup.kWaterKey) {
       return _handleWater(x, y);
-    } else if (key == FarmInputConstants.kPlantKey) {
+    } else if (key == KeyboardSetup.kPlantKey) {
       return _handlePlant(x, y);
-    } else if (key == FarmInputConstants.kHarvestKey) {
+    } else if (key == KeyboardSetup.kHarvestKey) {
       return _handleHarvest(x, y);
     }
 
@@ -137,10 +137,10 @@ class FarmInputHandler extends GameComponent with KeyboardEventListener {
 
   /// Handles debug keyboard commands.
   bool _handleDebugKeys(LogicalKeyboardKey key) {
-    if (key == FarmInputConstants.kAdvanceDayKey) {
+    if (key == KeyboardSetup.kAdvanceDayKey) {
       _handleAdvanceDay();
       return true;
-    } else if (key == FarmInputConstants.kClearSaveKey) {
+    } else if (key == KeyboardSetup.kClearSaveKey) {
       _handleClearSave();
       return true;
     }

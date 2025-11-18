@@ -50,7 +50,7 @@ class KidNpcController {
       conversationSequence: KidNpcConfig.createConversationSequence(),
       onChangeTalk: _onConversationChanged,
       onFinish: _onConversationFinished,
-      logicalKeyboardKeysToNext: [KeyboardSetup.kPrimaryAttackKey],
+      logicalKeyboardKeysToNext: [KeyboardSetup.kPrimaryActionKey],
     );
   }
 
