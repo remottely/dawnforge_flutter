@@ -5,11 +5,35 @@ import 'package:bonfire/bonfire.dart';
 final class CharacterActionSpriteAnimationHelper {
   CharacterActionSpriteAnimationHelper._();
 
-  static Future<void> playOnce(
-    Future<SpriteAnimation> animationFuture, {
+  /// Internal helper to select the correct animation based on movement direction.
+  ///
+  /// Returns left animation for left-facing directions (left, upLeft, downLeft),
+  /// and right animation for all other directions.
+  static Future<SpriteAnimation> _selectAnimationByDirection({
+    required Future<SpriteAnimation> animationRight,
+    required Future<SpriteAnimation> animationLeft,
+    required Movement? movementComponent,
+  }) {
+    final direction = movementComponent?.lastDirection ?? Direction.right;
+    final isLeftFacing =
+        direction == Direction.left ||
+        direction == Direction.upLeft ||
+        direction == Direction.downLeft;
+
+    return isLeftFacing ? animationLeft : animationRight;
+  }
+
+  static Future<void> playOnce({
+    required Future<SpriteAnimation> animationRight,
+    required Future<SpriteAnimation> animationLeft,
     required SimpleDirectionAnimation? currentAnimation,
+    required Movement? movementComponent,
   }) async {
-    final attackAnimationOriginal = await animationFuture;
+    final attackAnimationOriginal = await _selectAnimationByDirection(
+      animationRight: animationRight,
+      animationLeft: animationLeft,
+      movementComponent: movementComponent,
+    );
 
     final clonedFrames = attackAnimationOriginal.frames
         .map((frame) => SpriteAnimationFrame(frame.sprite, frame.stepTime))
@@ -25,9 +49,11 @@ final class CharacterActionSpriteAnimationHelper {
     }
   }
 
-  static Future<void> playLoop(
-    Future<SpriteAnimation> animationFuture, {
+  static Future<void> playLoop({
+    required Future<SpriteAnimation> animationRight,
+    required Future<SpriteAnimation> animationLeft,
     required SimpleDirectionAnimation? currentAnimation,
+    required Movement? movementComponent,
     String key = '_actionLoop',
     bool flipX = false,
     bool flipY = false,
@@ -37,7 +63,11 @@ final class CharacterActionSpriteAnimationHelper {
     }
 
     if (!currentAnimation.containOther(key)) {
-      final attackAnimationOriginal = await animationFuture;
+      final attackAnimationOriginal = await _selectAnimationByDirection(
+        animationRight: animationRight,
+        animationLeft: animationLeft,
+        movementComponent: movementComponent,
+      );
       final clonedFrames = attackAnimationOriginal.frames
           .map((frame) => SpriteAnimationFrame(frame.sprite, frame.stepTime))
           .toList();
@@ -60,17 +90,21 @@ final class CharacterActionSpriteAnimationHelper {
     currentAnimation.play(fallbackAnimation);
   }
 
-  static Future<void> playExecutionOnceWithIdle(
-    Future<SpriteAnimation> animationFuture, {
+  static Future<void> playExecutionOnceWithIdle({
+    required Future<SpriteAnimation> animationRight,
+    required Future<SpriteAnimation> animationLeft,
     required SimpleDirectionAnimation? currentAnimation,
     required Movement? movementComponent,
     required int executionStartFrame,
-    // required int executionEndFrame,
     required void Function() onExecutionFrames,
     void Function()? onActionStart,
     void Function()? onActionEnd,
   }) async {
-    final attackAnimationOriginal = await animationFuture;
+    final attackAnimationOriginal = await _selectAnimationByDirection(
+      animationRight: animationRight,
+      animationLeft: animationLeft,
+      movementComponent: movementComponent,
+    );
 
     onActionStart?.call();
     movementComponent?.stopMove(forceIdle: true);

@@ -143,31 +143,12 @@ final class SunnyPlayerConfig {
   // Animation Asset Loading
   // ============================================================================
 
-  /// Loads the walking animation sprite sheet.
-  ///
-  /// 8-frame animation cycle for smooth walking motion with visual effects.
-  ///
-  /// Returns a Future that resolves to the configured SpriteAnimation.
   static Future<SpriteAnimation>
-  _loadRightWalkAnimation() => SpriteAnimation.load(
-    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_walking_strip8.png',
+  _loadSunnyPlayerIdleLeft6() => SpriteAnimation.load(
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_idle_left_strip9.png',
     SpriteAnimationConfig.createStandardData(
-      amount: 8,
-      textureSize: textureSize,
-    ),
-  );
-
-  /// Loads the running animation sprite sheet.
-  ///
-  /// 8-frame animation cycle for dynamic running motion with visual effects.
-  ///
-  /// Returns a Future that resolves to the configured SpriteAnimation.
-  static Future<SpriteAnimation>
-  _loadRightRunAnimation() => SpriteAnimation.load(
-    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_run_strip8.png',
-    SpriteAnimationConfig.createStandardData(
-      amount: 8,
-      textureSize: textureSize,
+      amount: 9,
+      textureSize: SunnyPlayerConfig.textureSize,
     ),
   );
 
@@ -185,6 +166,15 @@ final class SunnyPlayerConfig {
     ),
   );
 
+  static Future<SpriteAnimation>
+  loadLeftAttackAnimation() => SpriteAnimation.load(
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_sword_left_strip10.png',
+    SpriteAnimationConfig.createStandardData(
+      amount: 10,
+      textureSize: textureSize,
+    ),
+  );
+
   // ============================================================================
   // Animation Set Creation
   // ============================================================================
@@ -195,13 +185,25 @@ final class SunnyPlayerConfig {
   /// Currently uses the same animation for left and right (mirroring handled elsewhere).
   ///
   /// Returns a configured SimpleDirectionAnimation instance.
-  static final SimpleDirectionAnimation createWalkAnimation =
-      SimpleDirectionAnimation(
-        idleLeft: UISpriteAnimationsConfig.loadSunnyPlayerIdleRight6(),
-        idleRight: UISpriteAnimationsConfig.loadSunnyPlayerIdleRight6(),
-        runLeft: _loadRightWalkAnimation(),
-        runRight: _loadRightWalkAnimation(),
-      );
+  static final SimpleDirectionAnimation
+  createWalkAnimation = SimpleDirectionAnimation(
+    idleLeft: _loadSunnyPlayerIdleLeft6(),
+    idleRight: UISpriteAnimationsConfig.loadSunnyPlayerIdleRight6(),
+    runLeft: SpriteAnimation.load(
+      'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_walking_left_strip8.png',
+      SpriteAnimationConfig.createStandardData(
+        amount: 8,
+        textureSize: textureSize,
+      ),
+    ),
+    runRight: SpriteAnimation.load(
+      'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_walking_strip8.png',
+      SpriteAnimationConfig.createStandardData(
+        amount: 8,
+        textureSize: textureSize,
+      ),
+    ),
+  );
 
   /// Creates the directional animation set for running movement.
   ///
@@ -209,13 +211,25 @@ final class SunnyPlayerConfig {
   /// Uses the same idle animation as walking for consistency.
   ///
   /// Returns a configured SimpleDirectionAnimation instance.
-  static final SimpleDirectionAnimation createRunAnimation =
-      SimpleDirectionAnimation(
-        idleLeft: UISpriteAnimationsConfig.loadSunnyPlayerIdleRight6(),
-        idleRight: UISpriteAnimationsConfig.loadSunnyPlayerIdleRight6(),
-        runLeft: _loadRightRunAnimation(),
-        runRight: _loadRightRunAnimation(),
-      );
+  static final SimpleDirectionAnimation
+  createRunAnimation = SimpleDirectionAnimation(
+    idleLeft: _loadSunnyPlayerIdleLeft6(),
+    idleRight: UISpriteAnimationsConfig.loadSunnyPlayerIdleRight6(),
+    runLeft: SpriteAnimation.load(
+      'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_run_left_strip8.png',
+      SpriteAnimationConfig.createStandardData(
+        amount: 8,
+        textureSize: textureSize,
+      ),
+    ),
+    runRight: SpriteAnimation.load(
+      'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_run_strip8.png',
+      SpriteAnimationConfig.createStandardData(
+        amount: 8,
+        textureSize: textureSize,
+      ),
+    ),
+  );
 
   // ============================================================================
   // Lighting Configuration

@@ -209,7 +209,8 @@ class SunnyPlayerView
       AttackType.melee,
       () {
         CharacterActionSpriteAnimationHelper.playExecutionOnceWithIdle(
-          SunnyPlayerConfig.loadRightAttackAnimation(),
+          animationRight: SunnyPlayerConfig.loadRightAttackAnimation(),
+          animationLeft: SunnyPlayerConfig.loadLeftAttackAnimation(),
           currentAnimation: animation,
           movementComponent: this,
           executionStartFrame: 4,
