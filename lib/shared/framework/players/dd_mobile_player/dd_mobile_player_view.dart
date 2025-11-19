@@ -33,6 +33,10 @@ abstract class DDMobilePlayerView<
   /// When > 0, the character cannot move or switch between walk/run animations.
   int _activeActionLockCount = 0;
 
+  /// When true, an animation transition is pending and should be applied
+  /// as soon as action locks are released (checked in update()).
+  bool _pendingAnimationChange = false;
+
   late final SimpleDirectionAnimation _walkAnimation;
   late final SimpleDirectionAnimation _runAnimation;
 
@@ -52,8 +56,8 @@ abstract class DDMobilePlayerView<
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    _walkAnimation = createWalkAnimation();
-    _runAnimation = createRunAnimation();
+    _walkAnimation = getWalkAnimation();
+    _runAnimation = getRunAnimation();
     replaceAnimation(_walkAnimation);
   }
 
@@ -61,11 +65,11 @@ abstract class DDMobilePlayerView<
   // Abstract Animation Factory Methods
   // ============================================================================
 
-  /// Creates the walking animation set.
-  SimpleDirectionAnimation createWalkAnimation();
+  /// Creates the walking animation get.
+  SimpleDirectionAnimation getWalkAnimation();
 
-  /// Creates the running animation set.
-  SimpleDirectionAnimation createRunAnimation();
+  /// Creates the running animation get.
+  SimpleDirectionAnimation getRunAnimation();
 
   // ============================================================================
   // Controller Factory Override - Add Run Callback
@@ -126,11 +130,34 @@ abstract class DDMobilePlayerView<
     _isInRunningState = shouldRun;
 
     if (shouldRun) {
+      // Update speed immediately so movement (when restored) uses correct speed
       speed = _baseSpeed * model.runSpeedMultiplier;
-      transitionToRunAnimation();
+      // If currently locked, defer the animation change until update/unlock
+      if (isActionLocked) {
+        _pendingAnimationChange = true;
+      } else {
+        transitionToRunAnimation();
+      }
     } else {
       speed = _baseSpeed;
-      transitionToWalkAnimation();
+      if (isActionLocked) {
+        _pendingAnimationChange = true;
+      } else {
+        transitionToWalkAnimation();
+      }
+    }
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    if (_pendingAnimationChange && !isActionLocked) {
+      _pendingAnimationChange = false;
+      if (_isInRunningState) {
+        transitionToRunAnimation();
+      } else {
+        transitionToWalkAnimation();
+      }
     }
   }
 
@@ -162,7 +189,7 @@ abstract class DDMobilePlayerView<
   ///
   /// Should be called by attack implementations at the start of their
   /// animation sequences to prevent movement and run/walk transitions.
-  void lockActionForAttack() {
+  void lockAction() {
     _activeActionLockCount += 1;
   }
 
@@ -170,7 +197,7 @@ abstract class DDMobilePlayerView<
   ///
   /// Should be called by attack implementations at the end of their
   /// animation sequences to allow normal behavior to resume.
-  void unlockActionForAttack() {
+  void unlockAction() {
     if (_activeActionLockCount > 0) {
       _activeActionLockCount -= 1;
 

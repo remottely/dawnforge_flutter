@@ -99,11 +99,11 @@ class SunnyPlayerView
       SunnyPlayerConfig.createCryptComponent(position);
 
   @override
-  SimpleDirectionAnimation createWalkAnimation() =>
+  SimpleDirectionAnimation getWalkAnimation() =>
       SunnyPlayerConfig.createWalkAnimation;
 
   @override
-  SimpleDirectionAnimation createRunAnimation() =>
+  SimpleDirectionAnimation getRunAnimation() =>
       SunnyPlayerConfig.createRunAnimation;
 
   // ============================================================================
@@ -192,8 +192,8 @@ class SunnyPlayerView
           currentAnimation: animation,
           target: this,
           executionStartFrame: 4,
-          onActionStart: lockActionForAttack,
-          onActionEnd: unlockActionForAttack,
+          onActionStart: lockAction,
+          onActionEnd: unlockAction,
           onExecutionFrames: () {
             _executePrimaryAttackWithEffects(damage: damage);
           },
