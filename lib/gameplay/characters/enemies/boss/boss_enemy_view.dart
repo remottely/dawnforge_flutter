@@ -4,6 +4,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_model.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/mini_boss/mini_boss_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_sprite_animations_config.dart';
@@ -125,45 +126,40 @@ class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
   }
 
   /// Helpers
-  void _spawnMinionAtDirection() {
-    Vector2 positionExplosion = Vector2.zero();
-    switch (directionThePlayerIsIn()) {
-      case Direction.left:
-        positionExplosion = position.translated(width * -2, 0);
-        break;
-      case Direction.right:
-        positionExplosion = position.translated(width * 2, 0);
-        break;
-      case Direction.up:
-        positionExplosion = position.translated(0, height * -2);
-        break;
-      case Direction.down:
-        positionExplosion = position.translated(0, height * 2);
-        break;
-      case Direction.upLeft:
-      case Direction.upRight:
-      case Direction.downLeft:
-      case Direction.downRight:
-        break;
-      default:
+  void _spawnMinionAtDirection({Direction? direction, Vector2? customOffset}) {
+    Vector2 explosionPosition;
+
+    if (customOffset != null) {
+      // Use custom offset when provided (for initial spawns)
+      explosionPosition = position + customOffset;
+    } else {
+      // Calculate position based on direction (for dynamic spawns)
+      final spawnDirection = direction ?? directionThePlayerIsIn();
+      explosionPosition = _getSpawnPositionForDirection(spawnDirection);
     }
 
-    final Enemy enemy = controller.model.spawnedEnemies.length == 2
-        ? MiniBossEnemyView(position: positionExplosion)
-        : ImpEnemyView(position: positionExplosion);
+    _executeExplosionFx(explosionPosition);
 
-    gameRef.add(
-      AnimatedGameObject(
-        animation:
-            CharacterFxSpriteAnimationsConfig.createExplosionSmokeRight5(),
-        position: positionExplosion,
-        size: TileConstants.tileSizeStandard,
-        loop: false,
-      ),
-    );
+    final DDBaseEnemy enemy = controller.model.spawnedEnemies.length == 2
+        ? MiniBossEnemyView(position: explosionPosition)
+        : ImpEnemyView(position: explosionPosition);
 
-    controller.model.addSpawnedEnemy(enemy);
-    gameRef.add(enemy);
+    _addEnemy(enemy);
+  }
+
+  /// Calculates spawn position based on direction.
+  Vector2 _getSpawnPositionForDirection(Direction? direction) {
+    return switch (direction) {
+      Direction.left => position.translated(width * -2, 0),
+      Direction.right => position.translated(width * 2, 0),
+      Direction.up => position.translated(0, height * -2),
+      Direction.down => position.translated(0, height * 2),
+      Direction.upLeft ||
+      Direction.upRight ||
+      Direction.downLeft ||
+      Direction.downRight ||
+      _ => position,
+    };
   }
 
   void _showConversation(Player player) {
@@ -199,21 +195,25 @@ class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
   }
 
   void _spawnInitialMinions() {
-    _spawnImp(width * -2, 0);
-    _spawnImp(width * -2, width);
+    // Spawn two imps at predefined positions using the unified spawn method
+    _spawnMinionAtDirection(customOffset: Vector2(width * -2, 0));
+    _spawnMinionAtDirection(customOffset: Vector2(width * -2, width));
   }
 
-  void _spawnImp(double x, double y) {
-    final pos = position.translated(x, y);
+  void _addEnemy(DDBaseEnemy enemy) {
+    controller.model.addSpawnedEnemy(enemy);
+    gameRef.add(enemy);
+  }
+
+  void _executeExplosionFx(Vector2 explosionPosition) {
     gameRef.add(
       AnimatedGameObject(
         animation:
             CharacterFxSpriteAnimationsConfig.createExplosionSmokeRight5(),
-        position: pos,
-        size: TileConstants.tileSizeStandard,
+        position: explosionPosition,
+        size: ImpEnemyConfig.componentSize,
         loop: false,
       ),
     );
-    gameRef.add(ImpEnemyView(position: pos));
   }
 }

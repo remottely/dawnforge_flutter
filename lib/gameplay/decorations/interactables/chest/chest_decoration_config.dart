@@ -21,11 +21,6 @@ final class ChestDecorationConfig {
   static final Vector2 _textureSize = TileConstants.tileSizeStandard;
   static final Vector2 componentSize = _textureSize / 1.5;
 
-  // Smoke explosion size
-  static final Vector2 smokeExplosionSize = Vector2.all(
-    TileConstants.kTileDimensionStandard * 0.5,
-  );
-
   // Animations
   static Future<SpriteAnimation> loadChestAnimation() => SpriteAnimation.load(
     'gameplay/decorations/chest_decoration_8.png',
