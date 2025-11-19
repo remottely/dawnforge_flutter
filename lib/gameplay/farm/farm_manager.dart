@@ -1,5 +1,7 @@
 import 'dart:developer' as developer;
 
+import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
+
 import 'crop_database.dart';
 import 'models/crop.dart';
 import 'models/farm_tile.dart';
@@ -165,18 +167,24 @@ final class FarmManager {
 
   /// Avançar 1 dia em todos os tiles
   void advanceDay() {
-    developer.log('[FarmManager] Advancing all crops 1 day');
+    developer.log('[FarmManager] Advancing all crops for new day');
+
+    // World day has already been advanced by WorldStateManager when this
+    // method is called. The day that just ended is currentDay - 1.
+    final dayEnded = WorldStateManager.instance.currentDay - 1;
 
     var cropsGrown = 0;
     for (var entry in _farmTiles.entries) {
       final oldTile = entry.value;
       if (oldTile.crop != null) {
-        _farmTiles[entry.key] = oldTile.advanceDay();
+        _farmTiles[entry.key] = oldTile.advanceDay(dayEnded);
         cropsGrown++;
       }
     }
 
-    developer.log('[FarmManager] ✓ Advanced $cropsGrown crops');
+    developer.log(
+      '[FarmManager] ✓ Advanced $cropsGrown crops for day $dayEnded',
+    );
   }
 
   /// Serialização para JSON

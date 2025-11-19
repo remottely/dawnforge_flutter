@@ -1,3 +1,5 @@
+import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
+
 import 'crop.dart';
 import 'soil_state.dart';
 
@@ -16,14 +18,15 @@ final class FarmTile {
   final Crop? crop;
 
   /// Última vez que foi regado
-  final DateTime? lastWatered;
+  /// Último dia do mundo em que foi regado (WorldStateManager.currentDay)
+  final int? lastWateredDay;
 
   const FarmTile({
     required this.x,
     required this.y,
     this.soilState = SoilState.untilled,
     this.crop,
-    this.lastWatered,
+    this.lastWateredDay,
   });
 
   /// Tile está vazio?
@@ -42,9 +45,9 @@ final class FarmTile {
 
   /// Precisa regar?
   bool get needsWatering {
-    if (lastWatered == null) return soilState == SoilState.tilled;
-    final hoursSinceWatered = DateTime.now().difference(lastWatered!).inHours;
-    return hoursSinceWatered >= 24;
+    final currentDay = WorldStateManager.instance.currentDay;
+    if (lastWateredDay == null) return soilState == SoilState.tilled;
+    return lastWateredDay != currentDay;
   }
 
   /// Arar tile
@@ -54,7 +57,10 @@ final class FarmTile {
 
   /// Regar tile
   FarmTile water() {
-    return copyWith(soilState: SoilState.watered, lastWatered: DateTime.now());
+    return copyWith(
+      soilState: SoilState.watered,
+      lastWateredDay: WorldStateManager.instance.currentDay,
+    );
   }
 
   /// Plantar crop
@@ -71,19 +77,37 @@ final class FarmTile {
       y: y,
       soilState: SoilState.untilled, // Volta ao estado inicial
       crop: null, // Remove crop
-      lastWatered: null, // Remove informação de rega
+      lastWateredDay: null, // Remove informação de rega
     );
   }
 
   /// Avançar 1 dia
-  FarmTile advanceDay() {
+  /// [dayEnded] é o número do dia do jogo que acabou (por exemplo, se o jogo
+  /// avançou de 5 para 6, dayEnded = 5). Cresce apenas se o tile foi regado
+  /// naquele dia; a água é então consumida (lastWateredDay é limpo).
+  FarmTile advanceDay(int dayEnded) {
     if (crop == null) return this;
 
-    // Aplicar multiplicador de velocidade do solo
-    final speedMultiplier = soilState.growthSpeedMultiplier;
-    if (speedMultiplier <= 0) return this;
+    final wasWateredThatDay =
+        lastWateredDay != null && lastWateredDay == dayEnded;
 
-    return copyWith(crop: crop!.advanceDay());
+    if (!wasWateredThatDay) {
+      // Não foi regado no dia que terminou: sem crescimento
+      return this;
+    }
+
+    // Cresce 1 dia e consome a água aplicada naquele dia.
+    final advancedCrop = crop!.advanceDay();
+
+    final nextSoilState = soilState == SoilState.watered
+        ? SoilState.tilled
+        : soilState;
+
+    return copyWith(
+      crop: advancedCrop,
+      soilState: nextSoilState,
+      lastWateredDay: null,
+    );
   }
 
   /// Serialização para JSON
@@ -93,7 +117,7 @@ final class FarmTile {
       'y': y,
       'soilState': soilState.toJson(),
       'crop': crop?.toJson(),
-      'lastWatered': lastWatered?.toIso8601String(),
+      'lastWateredDay': lastWateredDay,
     };
   }
 
@@ -106,9 +130,7 @@ final class FarmTile {
       crop: json['crop'] != null
           ? Crop.fromJson(json['crop'] as Map<String, dynamic>)
           : null,
-      lastWatered: json['lastWatered'] != null
-          ? DateTime.parse(json['lastWatered'] as String)
-          : null,
+      lastWateredDay: json['lastWateredDay'] as int?,
     );
   }
 
@@ -118,14 +140,14 @@ final class FarmTile {
     int? y,
     SoilState? soilState,
     Crop? crop,
-    DateTime? lastWatered,
+    int? lastWateredDay,
   }) {
     return FarmTile(
       x: x ?? this.x,
       y: y ?? this.y,
       soilState: soilState ?? this.soilState,
       crop: crop ?? this.crop,
-      lastWatered: lastWatered ?? this.lastWatered,
+      lastWateredDay: lastWateredDay ?? this.lastWateredDay,
     );
   }
 
