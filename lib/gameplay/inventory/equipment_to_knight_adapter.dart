@@ -1,6 +1,5 @@
 import 'dart:developer' as developer;
 
-import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_loadout.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_slot.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/presets/custom_player_animated_weapon_preset.dart';
@@ -8,7 +7,6 @@ import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/presets
 import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/presets/custom_player_weapon_configs.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/player_primary_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_config.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
@@ -264,18 +262,9 @@ final class EquipmentToCustomPlayerAdapter {
           final weaponDamage = (item.damage).toDouble();
           final finalDamage = weaponDamage > 0 ? weaponDamage : damage;
 
-          context.player.addParticle(
-            CharacterFxParticlesAnimationsConfig.createFireballAttackParticles(),
-            position: context.player.size,
-          );
           CharacterFireballAttackConfig.playerExecute(
             player: context.player,
             damage: finalDamage,
-          );
-          CharacterFireballAttackConfig.playExecutionAudio();
-
-          developer.log(
-            '[EquipmentAdapter] Fireball attack with ${item.name}: $finalDamage damage',
           );
         },
       );

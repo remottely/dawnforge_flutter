@@ -38,7 +38,7 @@ class BossEnemyController extends DDBaseEnemyController<BossEnemyModel> {
 
     onSeeAndMoveToMeleeAttack?.call(
       closeVisionRadius: model.closeVisionRadius,
-      closePlayer: (_) {},
+      onCloseToPlayer: (_) {},
     );
   }
 

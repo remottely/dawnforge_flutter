@@ -10,13 +10,11 @@ final class CharacterActionSpriteAnimationHelper {
     required Future<SpriteAnimation> animationLeft,
     required SimpleDirectionAnimation? currentAnimation,
     required Movement? target,
-    // required Direction direction,
   }) async {
     final attackAnimationOriginal = await _selectAnimationByDirection(
       animationRight: animationRight,
       animationLeft: animationLeft,
       target: target,
-      // direction: direction,
     );
 
     final clonedFrames = attackAnimationOriginal.frames
@@ -38,7 +36,6 @@ final class CharacterActionSpriteAnimationHelper {
     required Future<SpriteAnimation> animationLeft,
     required SimpleDirectionAnimation? currentAnimation,
     required Movement? target,
-    // required Direction direction,
     String key = '_actionLoop',
     bool flipX = false,
     bool flipY = false,
@@ -52,7 +49,6 @@ final class CharacterActionSpriteAnimationHelper {
         animationRight: animationRight,
         animationLeft: animationLeft,
         target: target,
-        // direction: direction,
       );
       final clonedFrames = attackAnimationOriginal.frames
           .map((frame) => SpriteAnimationFrame(frame.sprite, frame.stepTime))
@@ -81,9 +77,8 @@ final class CharacterActionSpriteAnimationHelper {
     required Future<SpriteAnimation> animationLeft,
     required SimpleDirectionAnimation? currentAnimation,
     required Movement? target,
-    // required Direction direction,
     required int executionStartFrame,
-    required void Function(Direction direction) onExecutionFrames,
+    required void Function() onExecutionFrames,
     void Function()? onActionStart,
     void Function()? onActionEnd,
   }) async {
@@ -91,14 +86,10 @@ final class CharacterActionSpriteAnimationHelper {
       animationRight: animationRight,
       animationLeft: animationLeft,
       target: target,
-      // direction: direction,
     );
 
     onActionStart?.call();
     target?.stopMove(forceIdle: true);
-    // final GameComponent? gameComponent = target is GameComponent
-    //     ? target as GameComponent
-    //     : null;
 
     double damageStartTime = 0;
     for (
@@ -115,7 +106,7 @@ final class CharacterActionSpriteAnimationHelper {
         if (target?.isRemoved == true || target?.isRemoving == true) {
           return;
         }
-        onExecutionFrames(target!.lastDirection);
+        onExecutionFrames();
       },
     );
 
@@ -154,7 +145,6 @@ final class CharacterActionSpriteAnimationHelper {
     required Future<SpriteAnimation> animationRight,
     required Future<SpriteAnimation> animationLeft,
     required Movement? target,
-    // required Direction direction,
   }) {
     // Use lastDirectionHorizontal which persists across vertical movements
     final horizontalDirection =

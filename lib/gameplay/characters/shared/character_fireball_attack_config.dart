@@ -1,5 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_constants.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_fx.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/lightning_constants.dart';
@@ -11,22 +12,25 @@ import 'package:darkness_dungeon/gameplay/core/utils/offset_helper.dart';
 final class CharacterFireballAttackConfig {
   CharacterFireballAttackConfig._();
 
-  static const double kSpeed = CharacterConstants.kSpeedFast * 2.5;
+  static final Vector2 _textureSize = Vector2(
+    23,
+    23,
+  ); // TODO(Kevin): enhance image textureSize
+  static final Vector2 _componentSize = _textureSize / 3;
 
-  static final LightingConfig lightingConfig = LightingConfig(
+  static const double _kSpeed = CharacterConstants.kSpeedFast * 2.5;
+
+  static final LightingConfig _lightingConfig = LightingConfig(
     radius: TileConstants.kTileDimensionSmall,
     blurBorder: TileConstants.kTileDimensionSmall,
     color: LightingConstants.fireballAttackLighting,
   );
 
-  static final Vector2 _textureSize = Vector2(23, 23);
-  static final Vector2 componentSize = _textureSize / 3;
-
-  static RectangleHitbox createHitbox() =>
-      HitboxUtils.createExpandHitbox(componentSize)
+  static RectangleHitbox _createHitbox() =>
+      HitboxUtils.createExpandHitbox(_componentSize)
         ..collisionType = CollisionType.passive;
 
-  static Future<SpriteAnimation> createExecutionAnimation() =>
+  static Future<SpriteAnimation> _createExecutionAnimation() =>
       SpriteAnimation.load(
         'gameplay/characters/shared/character_fireball_attack_right_3.png',
         SpriteAnimationConfig.createStandardData(
@@ -35,7 +39,7 @@ final class CharacterFireballAttackConfig {
         ),
       );
 
-  static Future<SpriteAnimation> createDestroyAnimation() =>
+  static Future<SpriteAnimation> _createDestroyAnimation() =>
       SpriteAnimation.load(
         'gameplay/characters/shared/character_fireball_explosion_right_6.png',
         SpriteAnimationConfig.createStandardData(
@@ -44,11 +48,13 @@ final class CharacterFireballAttackConfig {
         ),
       );
 
-  static void playExecutionAudio() =>
+  static void _playExecutionAudio() =>
       AudioManager.instance.playFireballAttackSfx();
 
-  static void playDestroyAudio() =>
-      AudioManager.instance.playFireballExplosionSfx();
+  static void _onDestroy(BonfireGameInterface gameRef) {
+    AudioManager.instance.playFireballExplosionSfx();
+    CameraFx.executeFireballExplosionShake(gameRef);
+  }
 
   static void playerExecute({
     required SimplePlayer player,
@@ -59,21 +65,25 @@ final class CharacterFireballAttackConfig {
       player.lastDirection,
     );
 
+    player.addParticle(
+      CharacterFxParticlesAnimationsConfig.createFireballAttackParticles(),
+      position: player.size / 2,
+    );
+
+    _playExecutionAudio();
+
     player.simpleAttackRangeByDirection(
-      direction: player.lastDirection,
+      size: _componentSize,
+      speed: _kSpeed,
+      lightingConfig: _lightingConfig,
       damage: damage,
-      speed: kSpeed,
-      animationRight: createExecutionAnimation(),
-      animationDestroy: createDestroyAnimation(),
-      size: componentSize,
-      lightingConfig: lightingConfig,
-      collision: createHitbox(),
+      collision: _createHitbox(),
+      animationRight: _createExecutionAnimation(),
+      animationDestroy: _createDestroyAnimation(),
+      onDestroy: () => _onDestroy(player.gameRef),
+      direction: player.lastDirection,
       centerOffset: projectileOffset,
       attackFrom: AttackOriginEnum.PLAYER_OR_ALLY,
-      onDestroy: () {
-        playDestroyAudio();
-        CameraFx.executeFireballExplosionShake(player.gameRef);
-      },
     );
   }
 
@@ -86,36 +96,16 @@ final class CharacterFireballAttackConfig {
       radiusVision: longVisionRadius,
       positioned: (_) {
         enemy.simpleAttackRange(
-          animation: createExecutionAnimation(),
-          animationDestroy: createDestroyAnimation(),
-          size: componentSize,
+          size: _componentSize,
+          speed: _kSpeed,
+          lightingConfig: _lightingConfig,
           damage: damage,
-          speed: kSpeed,
-          execute: playExecutionAudio,
-          onDestroy: playDestroyAudio,
-          collision: createHitbox(),
-          lightingConfig: lightingConfig,
+          collision: _createHitbox(),
+          animation: _createExecutionAnimation(),
+          animationDestroy: _createDestroyAnimation(),
+          execute: _playExecutionAudio,
+          onDestroy: () => _onDestroy(enemy.gameRef),
         );
-        // final Vector2 projectileOffset = OffsetHelper.getCenterOffset(
-        //   Vector2(-16, 0),
-        //   enemy.lastDirection,
-        // );
-        // enemy.simpleAttackRangeByDirection(
-        //   direction: enemy.lastDirection,
-        //   damage: damage,
-        //   speed: kSpeed,
-        //   animationRight: createExecutionAnimation(),
-        //   animationDestroy: createDestroyAnimation(),
-        //   size: componentSize,
-        //   lightingConfig: lightingConfig,
-        //   collision: createHitbox(),
-        //   centerOffset: projectileOffset,
-        //   attackFrom: AttackOriginEnum.ENEMY,
-        //   onDestroy: () {
-        //     playDestroyAudio();
-        //     CameraFx.fireballExplosionShake(enemy.gameRef);
-        //   },
-        // );
       },
     );
   }

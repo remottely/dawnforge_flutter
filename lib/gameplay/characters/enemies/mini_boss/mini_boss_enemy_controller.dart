@@ -17,7 +17,7 @@ class MiniBossEnemyController
 
     onSeeAndMoveToMeleeAttack?.call(
       closeVisionRadius: model.closeVisionRadius,
-      closePlayer: (_) {
+      onCloseToPlayer: (_) {
         _seePlayerClose = true;
       },
     );

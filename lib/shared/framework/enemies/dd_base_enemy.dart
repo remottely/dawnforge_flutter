@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/enemy_primary_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_sprite_animations_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/enemy_primary_attack_config.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy_controller.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy_model.dart';
 
@@ -85,21 +85,14 @@ abstract class DDBaseEnemy<
 
   void seeAndMoveToPrimaryAttack({
     required double closeVisionRadius,
-    required void Function(Player) closePlayer,
+    required void Function(Player) onCloseToPlayer,
   }) {
-    seeAndMoveToPlayer(
-      radiusVision: closeVisionRadius,
-      closePlayer: (player) {
-        closePlayer.call(player);
-        simpleAttackMelee(
-          size: EnemyPrimaryAttackConfig.kEnemyPrimaryAttackFxSize,
-          damage: controller.model.primaryAttackDamage,
-          interval: controller.model.primaryAttackInterval,
-          animationRight:
-              EnemyPrimaryAttackConfig.createEnemyExecutionAnimation(),
-          execute: EnemyPrimaryAttackConfig.playEnemyExecutionSfx,
-        );
-      },
+    EnemyPrimaryAttackConfig.execute(
+      enemy: this,
+      damage: controller.model.primaryAttackDamage,
+      interval: controller.model.primaryAttackInterval,
+      closeVisionRadius: closeVisionRadius,
+      onCloseToPlayer: onCloseToPlayer,
     );
   }
 }

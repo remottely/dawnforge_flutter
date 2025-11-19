@@ -109,16 +109,11 @@ final class CustomPlayerHandLoadoutConfig {
         attackType: AttackType.ranged,
         syncSpec: _leftHandSyncSpec,
         execute: (context, damage) {
-          context.player.addParticle(
-            CharacterFxParticlesAnimationsConfig.createFireballAttackParticles(),
-            position: context.player.size,
-          );
+
           CharacterFireballAttackConfig.playerExecute(
             player: context.player,
             damage: damage,
           );
-
-          CharacterFireballAttackConfig.playExecutionAudio();
         },
       ),
     );

@@ -7,7 +7,6 @@ import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_c
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_action_sprite_animation_helper.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_config.dart';
@@ -210,15 +209,11 @@ class SunnyPlayerView
           animationLeft: SunnyPlayerConfig.loadLeftAttackAnimation(),
           currentAnimation: animation,
           target: this,
-          // direction: _currentInputDirection,
           executionStartFrame: 4,
           onActionStart: _lockMovementForAction,
           onActionEnd: _unlockMovementForAction,
-          onExecutionFrames: (direction) {
-            _executePrimaryAttackWithEffects(
-              damage: damage,
-              direction: direction,
-            );
+          onExecutionFrames: () {
+            _executePrimaryAttackWithEffects(damage: damage);
           },
         );
       },
@@ -231,26 +226,16 @@ class SunnyPlayerView
   bool executeRangedAttack(double damage) {
     final AttackExecutionInfo? executionInfo = _rangedAttackController.execute(
       AttackType.ranged,
-      () {
-        _spawnFireballProjectile(damage);
-        _triggerFireballAttackEffects();
-      },
+      () => _spawnFireballProjectile(damage),
     );
 
     return executionInfo != null;
   }
 
   /// Executes the complete primary attack with all effects.
-  void _executePrimaryAttackWithEffects({
-    required double damage,
-    required Direction direction,
-  }) {
+  void _executePrimaryAttackWithEffects({required double damage}) {
     // Use centralized attack execution
-    PlayerPrimaryAttackConfig.execute(
-      player: this,
-      damage: damage,
-      direction: direction,
-    );
+    PlayerPrimaryAttackConfig.execute(player: this, damage: damage);
 
     // Lock animation after attack
     lockAnimationForAction();
@@ -259,15 +244,6 @@ class SunnyPlayerView
   /// Spawns the fireball projectile with all configured properties.
   void _spawnFireballProjectile(double damage) {
     CharacterFireballAttackConfig.playerExecute(player: this, damage: damage);
-  }
-
-  /// Triggers visual and audio effects for fireball attack execution.
-  void _triggerFireballAttackEffects() {
-    addParticle(
-      CharacterFxParticlesAnimationsConfig.createFireballAttackParticles(),
-      position: size,
-    );
-    CharacterFireballAttackConfig.playExecutionAudio();
   }
 
   // ============================================================================
