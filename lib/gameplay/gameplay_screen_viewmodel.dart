@@ -21,7 +21,8 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   final gameplayGameStateManager = GameStateManager();
   final inventoryInputHandler = InventoryInputHandler();
   final shieldDefenseInputHandler = ShieldDefenseInputHandler();
-  FarmInputHandler? farmInteractionComponent;
+  late PlayerController playerInput;
+  late FarmInputHandler farmInputHandler;
 
   // Referências aos últimos players criados (para capturar vida antes de recriar)
   CustomPlayerView? _lastCustomPlayer;

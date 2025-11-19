@@ -53,11 +53,10 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
             TileConstants.kTileDimensionStandard;
         final player = buildSunnyPlayer(playerPosition);
 
-        final playerInput = GameplayScreenConfig.createPlayerInput();
+        playerInput = GameplayScreenConfig.createPlayerInput();
 
         // Criar novo farm input handler para este mapa
-        final currentFarmInputHandler = FarmInputHandler(player: player);
-        farmInteractionComponent = currentFarmInputHandler;
+        farmInputHandler = FarmInputHandler(player: player);
 
         return Material(
           color: Colors.transparent,
@@ -69,7 +68,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
               gameplayGameStateManager,
               inventoryInputHandler,
               shieldDefenseInputHandler,
-              currentFarmInputHandler,
+              farmInputHandler,
             ],
             interface: gameplayHUD,
             lightingColorGame: mapLightingColor,

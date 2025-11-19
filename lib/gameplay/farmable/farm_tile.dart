@@ -48,7 +48,14 @@ class FarmTileView extends GameDecoration {
 
   /// Verifica se o player está sobrepondo este tile
   bool isPlayerOnTile(Player player) {
-    return player.rectCollision.overlaps(rectCollision);
+    // Use the player's bottom-center point to determine which tile the
+    // player is 'standing on'. This avoids matching tiles that intersect
+    // other parts of the player's hitbox.
+    final bottomCenter = Offset(
+      player.rectCollision.center.dx,
+      player.rectCollision.bottom,
+    );
+    return rectCollision.contains(bottomCenter);
   }
 
   @override
