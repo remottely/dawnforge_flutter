@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/farm/crop_database.dart';
 import 'package:darkness_dungeon/gameplay/farm/farm_manager.dart';
 import 'package:darkness_dungeon/gameplay/farm/models/crop_stage.dart';
@@ -80,7 +81,7 @@ void main() {
       expect(success, isTrue);
       final tile = FarmManager.instance.getTile(0, 0);
       expect(tile!.soilState, equals(SoilState.watered));
-      expect(tile.lastWatered, isNotNull);
+      expect(tile.lastWateredDay, isNotNull);
     });
 
     test('should not water untilled soil', () {
@@ -124,6 +125,10 @@ void main() {
 
       // Avançar dias até maturar (carrot = 4 dias)
       for (var i = 0; i < 4; i++) {
+        // Water on the current day so the crop can grow when the day ends
+        final watered = FarmManager.instance.waterTile(0, 0);
+        expect(watered, isTrue);
+        WorldStateManager.instance.advanceDay();
         FarmManager.instance.advanceDay();
       }
 
@@ -157,6 +162,9 @@ void main() {
       final tileBefore = FarmManager.instance.getTile(0, 0);
       expect(tileBefore!.crop!.daysPlanted, equals(0));
 
+      // Water then advance world day so crop grows
+      expect(FarmManager.instance.waterTile(0, 0), isTrue);
+      WorldStateManager.instance.advanceDay();
       FarmManager.instance.advanceDay();
 
       final tileAfter = FarmManager.instance.getTile(0, 0);
@@ -169,6 +177,10 @@ void main() {
       FarmManager.instance.tillSoil(1, 0);
       FarmManager.instance.plantSeed(1, 0, 'potato');
 
+      // Water both tiles and advance
+      expect(FarmManager.instance.waterTile(0, 0), isTrue);
+      expect(FarmManager.instance.waterTile(1, 0), isTrue);
+      WorldStateManager.instance.advanceDay();
       FarmManager.instance.advanceDay();
 
       final tile1 = FarmManager.instance.getTile(0, 0);
@@ -183,6 +195,9 @@ void main() {
     test('should serialize and deserialize correctly', () {
       FarmManager.instance.tillSoil(0, 0);
       FarmManager.instance.plantSeed(0, 0, 'carrot');
+      // Water and advance so crop grows (new rule requires watering)
+      expect(FarmManager.instance.waterTile(0, 0), isTrue);
+      WorldStateManager.instance.advanceDay();
       FarmManager.instance.advanceDay();
 
       final json = FarmManager.instance.toJson();
