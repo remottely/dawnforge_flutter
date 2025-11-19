@@ -177,28 +177,15 @@ abstract class DDMobilePlayerView<
       // Notify subclass when fully unlocked for movement restoration
       if (_activeActionLockCount == 0) {
         onActionFullyUnlocked();
-        _syncAnimationWithRunState();
       }
-    }
-  }
-
-  /// Synchronizes the animation with the current run state after unlock.
-  ///
-  /// This ensures that if the run state changed during an action lock
-  /// (e.g., player released shift during attack), the correct animation
-  /// is restored when the lock is released.
-  void _syncAnimationWithRunState() {
-    if (_isInRunningState) {
-      replaceAnimation(_runAnimation, doIdle: isIdle);
-    } else {
-      replaceAnimation(_walkAnimation, doIdle: isIdle);
     }
   }
 
   /// Called when all action locks are released.
   ///
   /// Subclasses can override to restore buffered movement or perform
-  /// other cleanup actions.
+  /// other cleanup actions. After this callback, the animation will be
+  /// synchronized with the current run state if the character is moving.
   @protected
   void onActionFullyUnlocked() {
     // Default: no-op, subclasses can override
