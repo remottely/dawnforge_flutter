@@ -176,10 +176,27 @@ final class FarmManager {
     var cropsGrown = 0;
     for (var entry in _farmTiles.entries) {
       final oldTile = entry.value;
+      FarmTile newTile = oldTile;
+
       if (oldTile.crop != null) {
-        _farmTiles[entry.key] = oldTile.advanceDay(dayEnded);
-        cropsGrown++;
+        final beforeDays = oldTile.crop!.daysPlanted;
+        newTile = oldTile.advanceDay(dayEnded);
+        final afterDays = newTile.crop?.daysPlanted ?? beforeDays;
+        if (afterDays > beforeDays) {
+          cropsGrown++;
+        }
+      } else {
+        // No crop: if tile was watered that day, consume the water.
+        if (oldTile.soilState == SoilState.watered &&
+            oldTile.lastWateredDay == dayEnded) {
+          newTile = oldTile.copyWith(
+            soilState: SoilState.tilled,
+            lastWateredDay: null,
+          );
+        }
       }
+
+      _farmTiles[entry.key] = newTile;
     }
 
     developer.log(
