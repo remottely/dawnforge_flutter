@@ -85,7 +85,7 @@ void main() {
       final migrated = GameSaveData.fromJson(oldJson);
 
       expect(migrated.version, GameSaveData.kCurrentVersion);
-      expect(migrated.player.level, 5);
+      expect(migrated.player.level, 5); // Preserved from v1 playerData
       expect(migrated.world.currentDay, 10);
       expect(migrated.isValid(), isTrue);
     });
@@ -123,7 +123,10 @@ void main() {
 
       expect(summary, contains('TestHero'));
       expect(summary, contains('Level 1'));
-      expect(summary, contains('Day 1'));
+      expect(
+        summary,
+        contains('Day: 1 of Spring'),
+      ); // Correct format from getSummary()
       expect(summary, contains('Spring'));
     });
 

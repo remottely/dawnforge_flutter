@@ -105,28 +105,42 @@ final class GameSaveData {
         throw ArgumentError('Missing required field: timestamp');
       }
 
-      // Parse strongly-typed models
+      // Parse strongly-typed models (tolerant to Map<dynamic, dynamic> from JSON literals)
       final playerData =
-          data['player'] as Map<String, dynamic>? ??
-          data['playerData'] as Map<String, dynamic>? ??
-          {};
+          (data['player'] as Map?)?.map((k, v) => MapEntry(k.toString(), v)) ??
+          (data['playerData'] as Map?)?.map(
+            (k, v) => MapEntry(k.toString(), v),
+          ) ??
+          <String, dynamic>{};
 
       final worldData =
-          data['world'] as Map<String, dynamic>? ??
-          data['worldData'] as Map<String, dynamic>? ??
-          {};
+          (data['world'] as Map?)?.map((k, v) => MapEntry(k.toString(), v)) ??
+          (data['worldData'] as Map?)?.map(
+            (k, v) => MapEntry(k.toString(), v),
+          ) ??
+          <String, dynamic>{};
 
       final inventoryData =
-          data['inventory'] as Map<String, dynamic>? ??
-          data['inventoryData'] as Map<String, dynamic>? ??
-          {};
+          (data['inventory'] as Map?)?.map(
+            (k, v) => MapEntry(k.toString(), v),
+          ) ??
+          (data['inventoryData'] as Map?)?.map(
+            (k, v) => MapEntry(k.toString(), v),
+          ) ??
+          <String, dynamic>{};
 
       final farmData =
-          data['farm'] as Map<String, dynamic>? ??
-          (worldData['farmData'] as Map<String, dynamic>?) ??
-          {};
+          (data['farm'] as Map?)?.map((k, v) => MapEntry(k.toString(), v)) ??
+          ((worldData['farmData'] as Map?)?.map(
+            (k, v) => MapEntry(k.toString(), v),
+          )) ??
+          <String, dynamic>{};
 
-      final progressData = data['progress'] as Map<String, dynamic>? ?? {};
+      final progressData =
+          (data['progress'] as Map?)?.map(
+            (k, v) => MapEntry(k.toString(), v),
+          ) ??
+          <String, dynamic>{};
 
       return GameSaveData(
         version: version,
@@ -151,6 +165,19 @@ final class GameSaveData {
     Map<String, dynamic> json,
   ) {
     var data = Map<String, dynamic>.from(json);
+
+    // Helper to recursively convert Map<dynamic, dynamic> to Map<String, dynamic>
+    dynamic _deepConvertMap(dynamic value) {
+      if (value is Map) {
+        return value.map((k, v) => MapEntry(k.toString(), _deepConvertMap(v)));
+      } else if (value is List) {
+        return value.map((e) => _deepConvertMap(e)).toList();
+      }
+      return value;
+    }
+
+    // Deep convert to ensure all nested maps are Map<String, dynamic>
+    data = _deepConvertMap(data) as Map<String, dynamic>;
 
     // Migration from version 1 to 2 (typed models)
     if (oldVersion < 2) {

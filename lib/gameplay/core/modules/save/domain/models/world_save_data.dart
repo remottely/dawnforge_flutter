@@ -90,8 +90,8 @@ final class WorldSaveData {
               .toList() ??
           const [],
       unlockedMaps:
-          (json['unlockedMaps'] as Map<String, dynamic>?)?.map(
-            (key, value) => MapEntry(key, value as bool),
+          (json['unlockedMaps'] as Map?)?.map(
+            (key, value) => MapEntry(key.toString(), value as bool),
           ) ??
           const {'farm': true},
       timeScale: (json['timeScale'] as num?)?.toDouble() ?? 1.0,

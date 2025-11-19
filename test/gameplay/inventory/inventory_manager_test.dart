@@ -16,7 +16,10 @@ void main() {
     test('initial_state_is_empty', () {
       expect(InventoryManager.instance.isEmpty, isTrue);
       expect(InventoryManager.instance.usedSlots, equals(0));
-      expect(InventoryManager.instance.freeSlots, equals(30));
+      expect(
+        InventoryManager.instance.freeSlots,
+        equals(12),
+      ); // kDefaultInventorySize
     });
 
     test('add_item_to_empty_slot', () {
@@ -176,13 +179,19 @@ void main() {
       // O InventoryManager empilha automaticamente no slot existente!
       // Então slot 0 já tem 80 wood
       expect(InventoryManager.instance.getSlotByIndex(0)!.quantity, equals(80));
-      
+
       // Testar swap ao invés de move (já que move empilha automaticamente)
       InventoryManager.instance.swapSlots(0, 1);
-      
+
       // Após swap, slot 0 tem stone e slot 1 tem wood
-      expect(InventoryManager.instance.getSlotByIndex(0)!.item!.id, equals('stone'));
-      expect(InventoryManager.instance.getSlotByIndex(1)!.item!.id, equals('wood'));
+      expect(
+        InventoryManager.instance.getSlotByIndex(0)!.item!.id,
+        equals('stone'),
+      );
+      expect(
+        InventoryManager.instance.getSlotByIndex(1)!.item!.id,
+        equals('wood'),
+      );
     });
 
     test('swap_slots_exchanges_items', () {

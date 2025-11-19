@@ -78,18 +78,19 @@ void main() {
     });
 
     test('serialization_roundtrip_with_full_inventory', () {
-      // Encher inventário com vários itens
+      // Encher inventário com vários itens (12 slots = kDefaultInventorySize)
       final wood = ItemFactory.createItem('wood')!;
       final stone = ItemFactory.createItem('stone')!;
       final iron = ItemFactory.createItem('iron_ore')!;
 
-      for (var i = 0; i < 10; i++) {
+      // Adicionar 4 slots de cada item (4*3 = 12 slots total)
+      for (var i = 0; i < 4; i++) {
         InventoryManager.instance.addItem(wood, 999);
       }
-      for (var i = 0; i < 10; i++) {
+      for (var i = 0; i < 4; i++) {
         InventoryManager.instance.addItem(stone, 999);
       }
-      for (var i = 0; i < 10; i++) {
+      for (var i = 0; i < 4; i++) {
         InventoryManager.instance.addItem(iron, 999);
       }
 
@@ -98,14 +99,14 @@ void main() {
       InventoryManager.instance.reset();
       GameStateCollector.restoreGameState(saveData);
 
-      // Verificar totais
-      expect(InventoryManager.instance.getItemQuantity('wood'), equals(9990));
-      expect(InventoryManager.instance.getItemQuantity('stone'), equals(9990));
+      // Verificar totais (4 slots * 999 cada = 3996 por item)
+      expect(InventoryManager.instance.getItemQuantity('wood'), equals(3996));
+      expect(InventoryManager.instance.getItemQuantity('stone'), equals(3996));
       expect(
         InventoryManager.instance.getItemQuantity('iron_ore'),
-        equals(9990),
+        equals(3996),
       );
-      expect(InventoryManager.instance.usedSlots, equals(30));
+      expect(InventoryManager.instance.usedSlots, equals(12)); // Full inventory
     });
 
     test('equipment_persists_across_save_load', () {
