@@ -2,6 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_hybrid_combat_player/dd_hybrid_combat_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_model.dart';
+import 'package:flutter/foundation.dart';
 
 /// Abstract view for players with enhanced mobility (walk + run).
 ///
@@ -28,8 +29,9 @@ abstract class DDMobilePlayerView<
   /// Tracks whether the character is currently in running state.
   bool _isInRunningState = false;
 
-  /// Tracks the number of active action locks preventing animation changes.
-  int _activeAnimationLockCount = 0; // TODO(Kevin): verify if needed it
+  /// Tracks the number of active action locks preventing movement and animation changes.
+  /// When > 0, the character cannot move or switch between walk/run animations.
+  int _activeActionLockCount = 0;
 
   late final SimpleDirectionAnimation _walkAnimation;
   late final SimpleDirectionAnimation _runAnimation;
@@ -43,8 +45,9 @@ abstract class DDMobilePlayerView<
   }) : _baseSpeed = speed,
        super(speed: speed, animation: null);
 
-  /// Determines if animation changes are currently restricted.
-  bool get _isAnimationLocked => _activeAnimationLockCount > 0;
+  /// Determines if actions (movement + animation changes) are currently locked.
+  @protected
+  bool get isActionLocked => _activeActionLockCount > 0;
 
   @override
   Future<void> onLoad() async {
@@ -133,43 +136,71 @@ abstract class DDMobilePlayerView<
 
   /// Transitions to the running animation set.
   ///
-  /// Skips transition during animation locks to prevent interrupting
+  /// Skips transition during action locks to prevent interrupting
   /// attack animations and breaking their execution callbacks.
   void transitionToRunAnimation() {
-    if (_isAnimationLocked) return;
+    if (isActionLocked) return;
 
     replaceAnimation(_runAnimation, doIdle: isIdle);
   }
 
   /// Transitions to the walking animation set.
   ///
-  /// Skips transition during animation locks to prevent interrupting
+  /// Skips transition during action locks to prevent interrupting
   /// attack animations and breaking their execution callbacks.
   void transitionToWalkAnimation() {
-    if (_isAnimationLocked) return;
+    if (isActionLocked) return;
 
     replaceAnimation(_walkAnimation, doIdle: isIdle);
   }
 
   // ============================================================================
-  // Animation Lock Management - Protected API for Attack Implementations
+  // Action Lock Management - Protected API for Attack Implementations
   // ============================================================================
 
-  /// Locks animation changes during action execution.
+  /// Locks actions (movement + animation changes) during attack execution.
   ///
   /// Should be called by attack implementations at the start of their
-  /// animation sequences to prevent run/walk transitions from interrupting.
-  void lockAnimationForAction() {
-    _activeAnimationLockCount += 1;
+  /// animation sequences to prevent movement and run/walk transitions.
+  void lockActionForAttack() {
+    _activeActionLockCount += 1;
   }
 
-  /// Unlocks animation changes after action completion.
+  /// Unlocks actions (movement + animation changes) after attack completion.
   ///
   /// Should be called by attack implementations at the end of their
-  /// animation sequences to allow normal animation transitions to resume.
-  void unlockAnimationForAction() {
-    if (_activeAnimationLockCount > 0) {
-      _activeAnimationLockCount -= 1;
+  /// animation sequences to allow normal behavior to resume.
+  void unlockActionForAttack() {
+    if (_activeActionLockCount > 0) {
+      _activeActionLockCount -= 1;
+
+      // Notify subclass when fully unlocked for movement restoration
+      if (_activeActionLockCount == 0) {
+        onActionFullyUnlocked();
+        _syncAnimationWithRunState();
+      }
     }
+  }
+
+  /// Synchronizes the animation with the current run state after unlock.
+  ///
+  /// This ensures that if the run state changed during an action lock
+  /// (e.g., player released shift during attack), the correct animation
+  /// is restored when the lock is released.
+  void _syncAnimationWithRunState() {
+    if (_isInRunningState) {
+      replaceAnimation(_runAnimation, doIdle: isIdle);
+    } else {
+      replaceAnimation(_walkAnimation, doIdle: isIdle);
+    }
+  }
+
+  /// Called when all action locks are released.
+  ///
+  /// Subclasses can override to restore buffered movement or perform
+  /// other cleanup actions.
+  @protected
+  void onActionFullyUnlocked() {
+    // Default: no-op, subclasses can override
   }
 }

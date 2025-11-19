@@ -33,22 +33,8 @@ class SunnyPlayerView
   late final SynchronizedAttackController _meleeAttackController;
   late final SynchronizedAttackController _rangedAttackController;
 
-  /// Tracks the number of active movement locks.
-  int _activeMovementLockCount = 0;
-
   /// Caches the last joystick directional input for restoration.
   JoystickDirectionalEvent? _bufferedDirectionalInput;
-
-  // /// Stores the current input direction for combat actions.
-  // ///
-  // /// This direction is updated on every directional input, even during
-  // /// movement locks, ensuring attacks always use the most recent player intent.
-  // /// This matches professional game engine behavior (Unity/Unreal) where
-  // /// input direction is decoupled from movement state.
-  // Direction _currentInputDirection = Direction.right;
-
-  /// Determines if movement is currently restricted.
-  bool get _isMovementRestricted => _activeMovementLockCount > 0;
 
   SunnyPlayerView({required super.position, required super.model})
     : super(
@@ -146,11 +132,7 @@ class SunnyPlayerView
       radAngle: event.radAngle,
     );
 
-    // // Update input direction for combat system
-    // _updateInputDirectionFromEvent(event);
-
-    if (_isMovementRestricted) {
-      stopMove(forceIdle: true);
+    if (isActionLocked) {
       return;
     }
 
@@ -210,8 +192,8 @@ class SunnyPlayerView
           currentAnimation: animation,
           target: this,
           executionStartFrame: 4,
-          onActionStart: _lockMovementForAction,
-          onActionEnd: _unlockMovementForAction,
+          onActionStart: lockActionForAttack,
+          onActionEnd: unlockActionForAttack,
           onExecutionFrames: () {
             _executePrimaryAttackWithEffects(damage: damage);
           },
@@ -234,11 +216,7 @@ class SunnyPlayerView
 
   /// Executes the complete primary attack with all effects.
   void _executePrimaryAttackWithEffects({required double damage}) {
-    // Use centralized attack execution
     PlayerPrimaryAttackConfig.execute(player: this, damage: damage);
-
-    // Lock animation after attack
-    lockAnimationForAction();
   }
 
   /// Spawns the fireball projectile with all configured properties.
@@ -247,50 +225,20 @@ class SunnyPlayerView
   }
 
   // ============================================================================
-  // Movement Lock Management
+  // Movement Restoration
   // ============================================================================
 
-  /// Locks player movement during action execution.
-  void _lockMovementForAction() {
-    if (_activeMovementLockCount == 0) {
-      stopMove(forceIdle: true);
-    }
-    _activeMovementLockCount += 1;
-    lockAnimationForAction();
+  @override
+  void onActionFullyUnlocked() {
+    _restoreBufferedMovementInput();
   }
 
-  /// Unlocks player movement after action completion.
-  void _unlockMovementForAction() {
-    if (_activeMovementLockCount == 0) return;
-
-    _activeMovementLockCount -= 1;
-
-    if (_activeMovementLockCount == 0) {
-      _restoreBufferedMovementInput();
-    }
-
-    unlockAnimationForAction();
-  }
-
-  /// Restores buffered directional input after movement unlock.
+  /// Restores buffered directional input after action unlock.
   void _restoreBufferedMovementInput() {
-    stopMove(forceIdle: true);
-
     final JoystickDirectionalEvent? bufferedEvent = _bufferedDirectionalInput;
     if (bufferedEvent != null &&
         bufferedEvent.directional != JoystickMoveDirectional.IDLE) {
-      _forwardDirectionalInputEvent(bufferedEvent);
+      super.onJoystickChangeDirectional(bufferedEvent);
     }
-  }
-
-  /// Forwards a directional input event to the base player system.
-  void _forwardDirectionalInputEvent(JoystickDirectionalEvent event) {
-    final forwardedEvent = JoystickDirectionalEvent(
-      directional: event.directional,
-      intensity: event.intensity,
-      radAngle: event.radAngle,
-    );
-    _bufferedDirectionalInput = forwardedEvent;
-    super.onJoystickChangeDirectional(forwardedEvent);
   }
 }
