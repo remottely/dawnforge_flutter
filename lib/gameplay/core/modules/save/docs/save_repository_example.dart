@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'save_repository.dart';
+import '../save_repository.dart';
 
 /// Example demonstrating SaveRepository usage.
 ///

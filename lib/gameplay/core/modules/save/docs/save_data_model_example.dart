@@ -1,4 +1,4 @@
-import 'save_data_model.dart';
+import '../save_data_model.dart';
 
 /// Examples demonstrating SaveData usage.
 void main() {

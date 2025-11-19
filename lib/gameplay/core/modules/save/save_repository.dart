@@ -21,7 +21,8 @@ abstract class SaveRepository {
   /// Returns [SaveRepositoryWeb] when running on web platform,
   /// otherwise returns [SaveRepositoryNative] for desktop/mobile.
   factory SaveRepository() {
-    return platform.createRepository();
+    return platform
+        .createRepository(); // TODO(Kevin): need tests on the web / all other plataform to verify if this works
   }
 
   /// Saves data to persistent storage.

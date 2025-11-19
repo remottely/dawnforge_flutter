@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer' as developer;
+import 'dart:io' show gzip;
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -33,11 +34,31 @@ final class SaveRepositoryNative implements SaveRepository {
       final prefixedKey = '$_keyPrefix$key';
       final jsonString = jsonEncode(data);
 
-      final success = await prefs.setString(prefixedKey, jsonString);
+      // Compress if data is large (>100KB)
+      final shouldCompress = jsonString.length > 100 * 1024;
+      String dataToSave;
+
+      if (shouldCompress) {
+        final compressed = gzip.encode(utf8.encode(jsonString));
+        dataToSave = base64.encode(compressed);
+        await prefs.setBool('${prefixedKey}_compressed', true);
+        developer.log(
+          '[SaveRepositoryNative] Compressed save data: '
+          '${jsonString.length} bytes → ${dataToSave.length} bytes '
+          '(${((1 - dataToSave.length / jsonString.length) * 100).toStringAsFixed(1)}% reduction)',
+          name: 'SaveRepository',
+        );
+      } else {
+        dataToSave = jsonString;
+        await prefs.remove('${prefixedKey}_compressed');
+      }
+
+      final success = await prefs.setString(prefixedKey, dataToSave);
 
       if (success) {
         developer.log(
-          '[SaveRepositoryNative] Saved data for key: $prefixedKey',
+          '[SaveRepositoryNative] Saved data for key: $prefixedKey '
+          '(${dataToSave.length} bytes${shouldCompress ? ', compressed' : ''})',
           name: 'SaveRepository',
         );
       } else {
@@ -66,9 +87,9 @@ final class SaveRepositoryNative implements SaveRepository {
     try {
       final prefs = await _sharedPreferences;
       final prefixedKey = '$_keyPrefix$key';
-      final jsonString = prefs.getString(prefixedKey);
+      final dataString = prefs.getString(prefixedKey);
 
-      if (jsonString == null) {
+      if (dataString == null) {
         developer.log(
           '[SaveRepositoryNative] No data found for key: $prefixedKey',
           name: 'SaveRepository',
@@ -77,10 +98,37 @@ final class SaveRepositoryNative implements SaveRepository {
         return null;
       }
 
+      // Check if data is compressed
+      final isCompressed = prefs.getBool('${prefixedKey}_compressed') ?? false;
+
+      String jsonString;
+      if (isCompressed) {
+        try {
+          final compressed = base64.decode(dataString);
+          final decompressed = gzip.decode(compressed);
+          jsonString = utf8.decode(decompressed);
+          developer.log(
+            '[SaveRepositoryNative] Decompressed data: '
+            '${dataString.length} bytes → ${jsonString.length} bytes',
+            name: 'SaveRepository',
+          );
+        } catch (e) {
+          developer.log(
+            '[SaveRepositoryNative] Decompression failed, trying raw data',
+            name: 'SaveRepository',
+            level: 900,
+          );
+          jsonString = dataString;
+        }
+      } else {
+        jsonString = dataString;
+      }
+
       final data = jsonDecode(jsonString) as Map<String, dynamic>;
 
       developer.log(
-        '[SaveRepositoryNative] Loaded data for key: $prefixedKey',
+        '[SaveRepositoryNative] Loaded data for key: $prefixedKey '
+        '(${jsonString.length} bytes${isCompressed ? ', decompressed' : ''})',
         name: 'SaveRepository',
       );
 
