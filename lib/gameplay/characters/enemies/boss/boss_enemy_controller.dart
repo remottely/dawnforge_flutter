@@ -3,43 +3,42 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_mod
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy_controller.dart';
 
 class BossEnemyController extends DDBaseEnemyController<BossEnemyModel> {
-  final void Function(Player player) onFirstPlayerSight;
-  final void Function(double dt) onSpawnMinion;
-  final void Function(Canvas canvas) onRenderStatusBars;
   final void Function({
     required double closeVisionRadius,
     required void Function(Player) observed,
   })
   onDetectPlayerInCloseVisionRadius;
+  final void Function(Player player) onPlayerFirstDetection;
+  final void Function(double dt) onRequestSpawnMinion;
+  final void Function(Canvas canvas) onRenderStatusBars;
 
   BossEnemyController({
     required super.model,
     required super.onDetectPlayerAndMoveToMeleeAttack,
-    required this.onFirstPlayerSight,
-    required this.onSpawnMinion,
-    required this.onRenderStatusBars,
     required this.onDetectPlayerInCloseVisionRadius,
+    required this.onPlayerFirstDetection,
+    required this.onRequestSpawnMinion,
+    required this.onRenderStatusBars,
   });
 
   @override
   void update(double dt) {
-    if (!model.isFirstPlayerSighted) {
+    if (!model.isPlayerFirstDetection) {
       onDetectPlayerInCloseVisionRadius(
         closeVisionRadius: model.closeVisionRadius,
         observed: (player) {
           model.registerFirstPlayerSighting();
-          onFirstPlayerSight(player);
+          onPlayerFirstDetection(player);
         },
       );
       return;
+    } else {
+      onRequestSpawnMinion(dt);
+
+      onDetectPlayerAndMoveToMeleeAttack.call(
+        closeVisionRadius: model.closeVisionRadius,
+      );
     }
-
-    onSpawnMinion(dt);
-
-    onDetectPlayerAndMoveToMeleeAttack?.call(
-      closeVisionRadius: model.closeVisionRadius,
-      onCloseToPlayer: (_) {},
-    );
   }
 
   void render(Canvas canvas) {

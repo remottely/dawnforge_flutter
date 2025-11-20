@@ -85,7 +85,7 @@ abstract class DDBaseEnemy<
 
   void handleDetectPlayerAndMoveToPrimaryAttack({
     required double closeVisionRadius,
-    required void Function(Player) onCloseToPlayer,
+    void Function(Player)? onCloseToPlayer,
   }) {
     EnemyPrimaryAttackConfig.execute(
       enemy: this,

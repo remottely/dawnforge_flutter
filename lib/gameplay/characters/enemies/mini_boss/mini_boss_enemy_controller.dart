@@ -13,9 +13,10 @@ class MiniBossEnemyController
 
   @override
   void update(double dt) {
+    // TODO(Kevin): fix mini boss behavior
     _isPlayerClose = false;
 
-    onDetectPlayerAndMoveToMeleeAttack?.call(
+    onDetectPlayerAndMoveToMeleeAttack.call(
       closeVisionRadius: model.closeVisionRadius,
       onCloseToPlayer: (_) {
         _isPlayerClose = true;

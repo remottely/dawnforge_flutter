@@ -3,7 +3,6 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_vie
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_manager.dart';
 
 class KidNpcController {
@@ -48,17 +47,16 @@ class KidNpcController {
       _view.gameRef.context,
       player: player,
       conversationSequence: KidNpcConfig.createConversationSequence(),
-      onChangeTalk: _onConversationChanged,
-      onFinish: _onConversationFinished,
-      logicalKeyboardKeysToNext: [KeyboardSetup.kPrimaryActionKey],
+      onChangeConversation: _handleChangeConversation,
+      onFinishConversation: _handleFinishConversation,
     );
   }
 
-  void _onConversationChanged(int index) {
+  void _handleChangeConversation(int index) {
     AudioManager.instance.playConversationInteractionSfx();
   }
 
-  void _onConversationFinished() {
+  void _handleFinishConversation() {
     AudioManager.instance.playConversationInteractionSfx();
     _view.gameRef.camera.moveToPlayerAnimated(
       onComplete: () =>

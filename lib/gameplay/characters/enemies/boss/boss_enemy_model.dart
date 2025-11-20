@@ -12,11 +12,11 @@ class BossEnemyModel extends DDBaseEnemyModel {
 
   List<Enemy> spawnedEnemies = [];
 
-  bool _isFirstPlayerSighted = false;
-  bool get isFirstPlayerSighted => _isFirstPlayerSighted;
+  bool _isPlayerFirstDetection = false;
+  bool get isPlayerFirstDetection => _isPlayerFirstDetection;
   void registerFirstPlayerSighting() {
-    if (_isFirstPlayerSighted) return;
-    _isFirstPlayerSighted = true;
+    if (_isPlayerFirstDetection) return;
+    _isPlayerFirstDetection = true;
   }
 
   bool _hasSpawnedFirstWave = false;

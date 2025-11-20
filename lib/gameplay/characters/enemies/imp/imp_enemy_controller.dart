@@ -9,9 +9,8 @@ class ImpEnemyController extends DDBaseEnemyController<ImpEnemyModel> {
 
   @override
   void update(double dt) {
-    onDetectPlayerAndMoveToMeleeAttack?.call(
+    onDetectPlayerAndMoveToMeleeAttack.call(
       closeVisionRadius: model.closeVisionRadius,
-      onCloseToPlayer: (_) {},
     );
   }
 }

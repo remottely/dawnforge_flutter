@@ -74,9 +74,8 @@ class WizardNpcView extends SimpleNpc with KeyboardEventListener {
       gameRef.context,
       player: player,
       conversationSequence: WizardNpcConfig.createConversationSequence(),
-      onChangeTalk: _controller.onConversationChanged,
-      onFinish: _controller.onConversationFinished,
-      logicalKeyboardKeysToNext: [KeyboardSetup.kPrimaryActionKey],
+      onChangeConversation: _controller.onConversationChanged,
+      onFinishConversation: _controller.onConversationFinished,
     );
   }
 }

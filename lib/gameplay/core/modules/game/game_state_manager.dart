@@ -38,13 +38,10 @@ class GameStateManager extends GameComponent {
 
   void _displayGameOverDialog() {
     _vIsGameOverDisplayed = true;
-    UIStateManager.instance.displayGameOverDialog(
-      context,
-      _onRestartGamePressed,
-    );
+    UIStateManager.instance.displayGameOverDialog(context, _onPressRestartGame);
   }
 
-  void _onRestartGamePressed(BuildContext dialogContext) {
+  void _onPressRestartGame(BuildContext dialogContext) {
     _resetGameState();
 
     Navigator.of(dialogContext).pop();

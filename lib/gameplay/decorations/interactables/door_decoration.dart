@@ -105,7 +105,7 @@ class DoorDecorationView extends DDDecoration {
       gameRef.context,
       player: player,
       conversationSequence: _DoorDecorationConfig.createConversationSequence(),
-      onClose: () {
+      onCloseConversation: () {
         UIStateManager.instance.isShowingConversation = false;
       },
     );

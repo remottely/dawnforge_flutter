@@ -9,9 +9,8 @@ class GoblinEnemyController extends DDBaseEnemyController<GoblinEnemyModel> {
 
   @override
   void update(double dt) {
-    onDetectPlayerAndMoveToMeleeAttack?.call(
+    onDetectPlayerAndMoveToMeleeAttack.call(
       closeVisionRadius: model.closeVisionRadius,
-      onCloseToPlayer: (_) {},
     );
   }
 }

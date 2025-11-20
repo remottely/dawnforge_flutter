@@ -3,9 +3,9 @@ import 'dart:math' as math;
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_item_data.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_slot.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_item_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_item_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_slot.dart';
 
 class CustomPlayerItemController {
   final GameComponent _owner;
@@ -43,7 +43,7 @@ class CustomPlayerItemController {
   void Function(Duration duration)? _onAnimationDurationChanged;
 
   /// Callback executado no frame de ataque (apenas para modo animação)
-  void Function()? _onAttackFrameExecute;
+  void Function()? _onAttackFrameExecution;
 
   CustomPlayerHandSlot get slot => _slot;
 
@@ -127,7 +127,7 @@ class CustomPlayerItemController {
             developer.log(
               '[HandController] 💥 Frame de ataque atingido! Progress: $progress',
             );
-            _onAttackFrameExecute?.call();
+            _onAttackFrameExecution?.call();
           }
         }
 
@@ -189,7 +189,7 @@ class CustomPlayerItemController {
   /// Define o callback executado no frame de ataque
   /// Este callback é chamado quando a animação atinge o attackFrameIndex
   void setAttackFrameCallback(void Function()? callback) {
-    _onAttackFrameExecute = callback;
+    _onAttackFrameExecution = callback;
   }
 
   void setDirection({required bool facingRight}) {

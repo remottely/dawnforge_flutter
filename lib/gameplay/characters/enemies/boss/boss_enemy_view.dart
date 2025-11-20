@@ -11,7 +11,6 @@ import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_sprite_
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_calculations.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_manager.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy.dart';
 import 'package:flutter/material.dart';
@@ -34,9 +33,9 @@ class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
       model: model,
       onDetectPlayerAndMoveToMeleeAttack:
           handleDetectPlayerAndMoveToPrimaryAttack,
-      onFirstPlayerSight: _onPlayerSighted,
-      onSpawnMinion: _onSpawnMinion,
-      onRenderStatusBars: _onRenderBars,
+      onPlayerFirstDetection: _handlePlayerFirstDetection,
+      onRequestSpawnMinion: _handleRequestSpawnMinion,
+      onRenderStatusBars: _handleRenderStatusBars,
       onDetectPlayerInCloseVisionRadius: _handleDetectPlayerInCloseVisionRadius,
     );
   }
@@ -59,7 +58,7 @@ class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
   }
 
   /// Callbacks
-  void _onPlayerSighted(Player player) {
+  void _handlePlayerFirstDetection(Player player) {
     gameRef.camera.moveToTargetAnimated(
       target: this,
       zoom: CameraCalculations.getCameraZoomFromMaxVisibleTile(
@@ -70,7 +69,7 @@ class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
     );
   }
 
-  void _onSpawnMinion(double dt) {
+  void _handleRequestSpawnMinion(double dt) {
     if (controller.model.shouldSpawnMinions(life)) {
       if (checkInterval('spawnMinion', 2000, dt)) {
         _spawnMinionAtDirection();
@@ -78,7 +77,7 @@ class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
     }
   }
 
-  void _onRenderBars(Canvas canvas) {
+  void _handleRenderStatusBars(Canvas canvas) {
     const double yPosition = 0;
     final double widthBar = (width - 10) / 3;
 
@@ -168,17 +167,16 @@ class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
       gameRef.context,
       player: player,
       conversationSequence: BossEnemyConfig.createConversationSequence(),
-      logicalKeyboardKeysToNext: [KeyboardSetup.kPrimaryActionKey],
-      onChangeTalk: _onConversationChanged,
-      onFinish: _onConversationFinished,
+      onChangeConversation: _handleChangeConversation,
+      onFinishConversation: _handleFinishConversation,
     );
   }
 
-  void _onConversationChanged(int index) {
+  void _handleChangeConversation(int index) {
     AudioManager.instance.playConversationInteractionSfx();
   }
 
-  void _onConversationFinished() {
+  void _handleFinishConversation() {
     AudioManager.instance.playConversationInteractionSfx();
     _spawnInitialMinions();
     Future.delayed(const Duration(milliseconds: 500), () {

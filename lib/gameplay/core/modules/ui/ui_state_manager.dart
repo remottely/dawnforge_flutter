@@ -10,7 +10,6 @@ import 'package:darkness_dungeon/shared/design_system/widgets/atoms/dd_button.da
 import 'package:darkness_dungeon/shared/design_system/widgets/atoms/dd_dialog_widget.dart';
 import 'package:darkness_dungeon/shared/design_system/widgets/atoms/dd_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 final class UIStateManager {
   UIStateManager._();
@@ -83,10 +82,9 @@ final class UIStateManager {
     BuildContext context, {
     required Player player,
     required List<Say> conversationSequence,
-    Function(int)? onChangeTalk,
-    VoidCallback? onFinish,
-    VoidCallback? onClose,
-    List<LogicalKeyboardKey>? logicalKeyboardKeysToNext,
+    Function(int)? onChangeConversation,
+    VoidCallback? onFinishConversation,
+    VoidCallback? onCloseConversation,
   }) {
     GameStateManager.stopPlayerMovement(player);
 
@@ -94,11 +92,10 @@ final class UIStateManager {
       // TODO(Kevin): ConversationDisplay.show(...)
       context,
       conversationSequence,
-      onChangeTalk: onChangeTalk,
-      onFinish: onFinish,
-      onClose: onClose,
-      logicalKeyboardKeysToNext:
-          logicalKeyboardKeysToNext ?? [KeyboardSetup.kPrimaryActionKey],
+      onChangeTalk: onChangeConversation,
+      onFinish: onFinishConversation,
+      onClose: onCloseConversation,
+      logicalKeyboardKeysToNext: [KeyboardSetup.kPrimaryActionKey],
     );
   }
 

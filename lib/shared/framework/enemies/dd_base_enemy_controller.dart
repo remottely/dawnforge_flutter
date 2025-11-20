@@ -5,15 +5,15 @@ abstract class DDBaseEnemyController<M extends DDBaseEnemyModel> {
   final M model;
   final void Function({
     required double closeVisionRadius,
-    required void Function(Player) onCloseToPlayer,
-  })?
+    void Function(Player)? onCloseToPlayer,
+  })
   onDetectPlayerAndMoveToMeleeAttack;
   final void Function({required double longVisionRadius})?
   onDetectPlayerAndMoveToRangeAttack;
 
   DDBaseEnemyController({
     required this.model,
-    this.onDetectPlayerAndMoveToMeleeAttack,
+    required this.onDetectPlayerAndMoveToMeleeAttack,
     this.onDetectPlayerAndMoveToRangeAttack,
   });
 
