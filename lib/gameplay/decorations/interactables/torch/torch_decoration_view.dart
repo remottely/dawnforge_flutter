@@ -22,18 +22,15 @@ class TorchDecorationView extends DDInputReceiverDecoration {
   ///
   /// [position] The world position where the torch will be placed.
   /// [model] Optional model data. If not provided, a default model is created.
-  TorchDecorationView({
+  TorchDecorationView.lightingEnabled({
     required super.position,
-    TorchDecorationModel? model,
+    required TorchDecorationModel model,
   }) : super.withAnimation(
          animation: TorchDecorationConfig.loadSpriteAnimation(),
          size: TorchDecorationConfig.componentSize,
        ) {
-    setupLighting(TorchDecorationConfig.lightingConfig);
     lightingEnabled = true;
-    _interactionPromptTextPaint = TorchDecorationConfig.createTextConfig(width);
-    _initializeController(model ?? TorchDecorationModel());
-    _decorationController.model.turnOn();
+    _initializeController(model);
   }
 
   /// Creates an inactive torch decoration with lighting disabled.
@@ -42,18 +39,15 @@ class TorchDecorationView extends DDInputReceiverDecoration {
   ///
   /// [position] The world position where the torch will be placed.
   /// [model] Optional model data. If not provided, a default model is created.
-  TorchDecorationView.empty({
+  TorchDecorationView.lightingDisabled({
     required super.position,
-    TorchDecorationModel? model,
+    required TorchDecorationModel model,
   }) : super.withAnimation(
          animation: TorchDecorationConfig.loadSpriteAnimation(),
          size: TorchDecorationConfig.componentSize,
        ) {
-    setupLighting(TorchDecorationConfig.lightingConfig);
     lightingEnabled = false;
-    _interactionPromptTextPaint = TorchDecorationConfig.createTextConfig(width);
-    _initializeController(model ?? TorchDecorationModel());
-    _decorationController.model.turnOff();
+    _initializeController(model);
   }
 
   /// Provides public read-only access to the torch's data model.
@@ -72,6 +66,19 @@ class TorchDecorationView extends DDInputReceiverDecoration {
       onTorchInteraction: _handleTorchStateChange,
       onCheckPlayerVision: _evaluatePlayerVisibility,
     );
+  }
+
+  @override
+  Future<void> onLoad() {
+    setupLighting(TorchDecorationConfig.lightingConfig);
+    _interactionPromptTextPaint = TorchDecorationConfig.createTextConfig(width);
+
+    if (lightingEnabled)
+      _decorationController.model.turnOn();
+    else
+      _decorationController.model.turnOff();
+
+    return super.onLoad();
   }
 
   /// Updates the torch state based on player proximity and interaction.
@@ -141,7 +148,7 @@ class TorchDecorationView extends DDInputReceiverDecoration {
   /// Returns `true` when the player is observing the torch and it's turned off.
   bool _shouldDisplayInteractionPrompt() {
     return _decorationController.model.observedPlayer &&
-           !_decorationController.model.isOn;
+        !_decorationController.model.isOn;
   }
 
   /// Renders the interaction prompt text at the appropriate position.
@@ -165,8 +172,8 @@ class TorchDecorationView extends DDInputReceiverDecoration {
   /// Returns `true` if this is a valid interaction attempt.
   bool _isValidInteractionAttempt(KeyEvent event) {
     return _decorationController.model.canBeInteract &&
-           event is KeyDownEvent &&
-           event.logicalKey == KeyboardSetup.kInteractionKey;
+        event is KeyDownEvent &&
+        event.logicalKey == KeyboardSetup.kInteractionKey;
   }
 
   // ============================================================================

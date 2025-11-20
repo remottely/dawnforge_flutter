@@ -13,6 +13,7 @@ import 'package:darkness_dungeon/gameplay/decorations/interactables/door_decorat
 import 'package:darkness_dungeon/gameplay/decorations/interactables/door_key_decoration.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/life_potion_decoration.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/spike_trap_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/interactables/torch/torch_decoration_model.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/torch/torch_decoration_view.dart';
 import 'package:darkness_dungeon/gameplay/farmable/farm_tile.dart';
 
@@ -30,7 +31,7 @@ final class MapConfig {
 
   /// Private
   static const String _kCloudyLightingColor = '#d0ffffff';
-  static const String _kDarknessLightingColor = '#fe000000';
+  static const String _kDarknessLightingColor = '#f0000000';
   static const String _kNoneLightingColor = '#00ffffff';
 
   static const String _kForestBackgroundColor = '#ff63c74d';
@@ -55,9 +56,14 @@ final class MapConfig {
 
         /// Interactables
         'barrel_decoration': (p) => BarrelDecorationView(position: p.position),
-        'torch_decoration': (p) => TorchDecorationView(position: p.position),
-        'torch_decoration_empty': (p) =>
-            TorchDecorationView.empty(position: p.position),
+        'torch_decoration': (p) => TorchDecorationView.lightingEnabled(
+          position: p.position,
+          model: TorchDecorationModel(),
+        ),
+        'torch_decoration_empty': (p) => TorchDecorationView.lightingDisabled(
+          position: p.position,
+          model: TorchDecorationModel(),
+        ),
         'door_interactable': (p) =>
             DoorDecorationView(position: p.position, size: p.size),
         'door_key_interactable': (p) =>

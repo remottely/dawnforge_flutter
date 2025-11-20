@@ -1,6 +1,8 @@
 # IMPORTANT BEFORE LAUNCH:
 
-- [PRIORITY] verify if need the _activeAnimationLockCount logic
+- refactor all tiled decoration nomenclatures
+- save torch state
+- [PRIORITY] verify if need the \_activeAnimationLockCount logic
 - [PRIORITY] remove EquipmentToCustomPlayerAdapter from codebase??
 - [PRIORITY] Change background musics
 

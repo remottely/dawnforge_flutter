@@ -455,8 +455,8 @@
                          "type":"",
                          "visible":true,
                          "width":16,
-                         "x":116.971761195205,
-                         "y":88.2375351905773
+                         "x":112,
+                         "y":48
                         }, 
                         {
                          "height":16,
@@ -488,13 +488,13 @@
                          "type":"",
                          "visible":true,
                          "width":16,
-                         "x":86.6455738994954,
-                         "y":88.8900250981817
+                         "x":32,
+                         "y":96
                         }, 
                         {
                          "height":16,
                          "id":208,
-                         "name":"torch_decoration_empty",
+                         "name":"torch_decoration",
                          "rotation":0,
                          "type":"",
                          "visible":true,
@@ -763,19 +763,8 @@
                          "type":"",
                          "visible":true,
                          "width":16,
-                         "x":104.648673376029,
-                         "y":70.3394327538884
-                        }, 
-                        {
-                         "height":16,
-                         "id":287,
-                         "name":"torch_decoration",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":134.95516925892,
-                         "y":73.1985361390668
+                         "x":104.460724648442,
+                         "y":83.6837924125735
                         }, 
                         {
                          "height":16,
@@ -787,6 +776,149 @@
                          "width":16,
                          "x":169.264409881061,
                          "y":72.6267154620311
+                        }, 
+                        {
+                         "height":16,
+                         "id":291,
+                         "name":"torch_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":31.8451302484682,
+                         "y":40.4907717174755
+                        }, 
+                        {
+                         "height":16,
+                         "id":295,
+                         "name":"torch_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":16,
+                         "y":96
+                        }, 
+                        {
+                         "height":16,
+                         "id":297,
+                         "name":"torch_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":16,
+                         "y":144
+                        }, 
+                        {
+                         "height":16,
+                         "id":298,
+                         "name":"torch_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":16,
+                         "y":192
+                        }, 
+                        {
+                         "height":16,
+                         "id":299,
+                         "name":"torch_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":16,
+                         "y":384
+                        }, 
+                        {
+                         "height":16,
+                         "id":300,
+                         "name":"torch_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":16,
+                         "y":432
+                        }, 
+                        {
+                         "height":16,
+                         "id":301,
+                         "name":"torch_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":16,
+                         "y":480
+                        }, 
+                        {
+                         "height":16,
+                         "id":302,
+                         "name":"torch_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":16,
+                         "y":528
+                        }, 
+                        {
+                         "height":16,
+                         "id":303,
+                         "name":"torch_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":16,
+                         "y":576
+                        }, 
+                        {
+                         "height":16,
+                         "id":304,
+                         "name":"torch_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":16,
+                         "y":624
+                        }, 
+                        {
+                         "height":16,
+                         "id":305,
+                         "name":"torch_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":16,
+                         "y":672
+                        }, 
+                        {
+                         "height":16,
+                         "id":306,
+                         "name":"torch_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":16,
+                         "y":720
+                        }, 
+                        {
+                         "height":16,
+                         "id":307,
+                         "name":"torch_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":16,
+                         "y":768
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -1057,7 +1189,7 @@
          "y":0
         }],
  "nextlayerid":32,
- "nextobjectid":289,
+ "nextobjectid":308,
  "orientation":"orthogonal",
  "properties":[
         {
