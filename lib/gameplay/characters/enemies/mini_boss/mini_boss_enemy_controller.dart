@@ -8,7 +8,7 @@ class MiniBossEnemyController
   MiniBossEnemyController({
     required super.model,
     required super.onDetectPlayerAndMoveToMeleeAttack,
-    required super.onDetectPlayerAndMoveToRangeAttack,
+    required super.onDetectPlayerAndMoveToRangedAttack,
   });
 
   @override
@@ -24,7 +24,7 @@ class MiniBossEnemyController
     );
 
     if (!_isPlayerClose) {
-      onDetectPlayerAndMoveToRangeAttack?.call(
+      onDetectPlayerAndMoveToRangedAttack?.call(
         longVisionRadius: model.longVisionRadius,
       );
     }

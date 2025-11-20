@@ -23,7 +23,7 @@ class MiniBossEnemyView
       model: model,
       onDetectPlayerAndMoveToMeleeAttack:
           handleDetectPlayerAndMoveToPrimaryAttack,
-      onDetectPlayerAndMoveToRangeAttack:
+      onDetectPlayerAndMoveToRangedAttack:
           handleDetectPlayerAndMoveToFireballAttack,
     );
   }

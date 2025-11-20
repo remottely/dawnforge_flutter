@@ -625,17 +625,6 @@
                         }, 
                         {
                          "height":16,
-                         "id":272,
-                         "name":"torch_decoration_empty",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":624,
-                         "y":208
-                        }, 
-                        {
-                         "height":16,
                          "id":273,
                          "name":"torch_decoration_empty",
                          "rotation":0,
@@ -697,7 +686,7 @@
                          "type":"",
                          "visible":true,
                          "width":16,
-                         "x":292.205855443733,
+                         "x":295.142713006141,
                          "y":239.59835315645
                         }, 
                         {
@@ -713,17 +702,6 @@
                         }, 
                         {
                          "height":16,
-                         "id":282,
-                         "name":"torch_decoration",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":455.174748398902,
-                         "y":216.725526075023
-                        }, 
-                        {
-                         "height":16,
                          "id":283,
                          "name":"torch_decoration",
                          "rotation":0,
@@ -732,17 +710,6 @@
                          "width":16,
                          "x":485.481244281793,
                          "y":217.297346752059
-                        }, 
-                        {
-                         "height":16,
-                         "id":284,
-                         "name":"torch_decoration",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":519.790484903934,
-                         "y":218.44098810613
                         }, 
                         {
                          "height":16,
@@ -919,6 +886,17 @@
                          "width":16,
                          "x":16,
                          "y":768
+                        }, 
+                        {
+                         "height":16,
+                         "id":311,
+                         "name":"torch_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":624,
+                         "y":208
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -931,33 +909,6 @@
                  "id":21,
                  "name":"Sensors",
                  "objects":[
-                        {
-                         "height":13.7015937116896,
-                         "id":222,
-                         "name":"sensor_dungeon_1",
-                         "properties":[
-                                {
-                                 "name":"nextMap",
-                                 "type":"string",
-                                 "value":"dungeon1"
-                                }, 
-                                {
-                                 "name":"playerDirection",
-                                 "type":"string",
-                                 "value":"right"
-                                }, 
-                                {
-                                 "name":"playerPosition",
-                                 "type":"string",
-                                 "value":"3,3"
-                                }],
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":15.8650032451143,
-                         "x":0,
-                         "y":304
-                        }, 
                         {
                          "height":15.6397723035178,
                          "id":246,
@@ -988,12 +939,12 @@
                         {
                          "height":15.6398,
                          "id":249,
-                         "name":"sensor_dungeon_1",
+                         "name":"sensor_temple_1",
                          "properties":[
                                 {
                                  "name":"nextMap",
                                  "type":"string",
-                                 "value":"dungeon_1"
+                                 "value":"temple_1"
                                 }, 
                                 {
                                  "name":"playerDirection",
@@ -1011,33 +962,6 @@
                          "width":14.8959,
                          "x":384,
                          "y":0
-                        }, 
-                        {
-                         "height":13.7016,
-                         "id":250,
-                         "name":"sensor_forest_1",
-                         "properties":[
-                                {
-                                 "name":"nextMap",
-                                 "type":"string",
-                                 "value":"forest_1"
-                                }, 
-                                {
-                                 "name":"playerDirection",
-                                 "type":"string",
-                                 "value":"right"
-                                }, 
-                                {
-                                 "name":"playerPosition",
-                                 "type":"string",
-                                 "value":"3,4"
-                                }],
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":15.865,
-                         "x":656,
-                         "y":560
                         }, 
                         {
                          "height":13.7016,
@@ -1065,6 +989,60 @@
                          "width":15.865,
                          "x":288,
                          "y":784
+                        }, 
+                        {
+                         "height":15.6398,
+                         "id":309,
+                         "name":"sensor_temple_1",
+                         "properties":[
+                                {
+                                 "name":"nextMap",
+                                 "type":"string",
+                                 "value":"temple_1"
+                                }, 
+                                {
+                                 "name":"playerDirection",
+                                 "type":"string",
+                                 "value":"right"
+                                }, 
+                                {
+                                 "name":"playerPosition",
+                                 "type":"string",
+                                 "value":"3,3"
+                                }],
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":14.8959,
+                         "x":0,
+                         "y":304
+                        }, 
+                        {
+                         "height":15.6398,
+                         "id":310,
+                         "name":"sensor_dungeon_1",
+                         "properties":[
+                                {
+                                 "name":"nextMap",
+                                 "type":"string",
+                                 "value":"dungeon_1"
+                                }, 
+                                {
+                                 "name":"playerDirection",
+                                 "type":"string",
+                                 "value":"right"
+                                }, 
+                                {
+                                 "name":"playerPosition",
+                                 "type":"string",
+                                 "value":"3,3"
+                                }],
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":14.8959,
+                         "x":656,
+                         "y":554.126284875184
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -1189,7 +1167,7 @@
          "y":0
         }],
  "nextlayerid":32,
- "nextobjectid":308,
+ "nextobjectid":312,
  "orientation":"orthogonal",
  "properties":[
         {

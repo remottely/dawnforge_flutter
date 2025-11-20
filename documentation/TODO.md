@@ -1,5 +1,6 @@
 # IMPORTANT BEFORE LAUNCH:
 
+- fix die multiple times in the same second bug the game, handle cannot die more than once.
 - refactor all tiled decoration nomenclatures
 - save torch state
 - [PRIORITY] verify if need the \_activeAnimationLockCount logic
