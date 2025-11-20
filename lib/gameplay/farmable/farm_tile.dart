@@ -5,10 +5,11 @@ import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart'
 import 'package:darkness_dungeon/gameplay/farm/components/farm_tile_component.dart';
 import 'package:darkness_dungeon/gameplay/farm/farm_manager.dart';
 import 'package:darkness_dungeon/gameplay/farm/models/farm_tile.dart' as model;
+import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 
 /// View de um tile de fazenda que integra com o FarmManager
 /// Este componente é criado pelo Tiled map e gerencia a visualização
-class FarmTileView extends GameDecoration {
+class FarmTileView extends DDDecoration {
   final int tileX;
   final int tileY;
   FarmTileComponent? _visualComponent;

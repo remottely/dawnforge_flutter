@@ -10,6 +10,7 @@ import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_a
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_config.dart';
+import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_view.dart';
 
 /// Visual representation and input handler for the Sunny player character.
@@ -95,7 +96,7 @@ class SunnyPlayerView
   LightingConfig get lightingConfig => SunnyPlayerConfig.lightingConfig;
 
   @override
-  GameDecoration createDeathMarker(Vector2 position) =>
+  DDDecoration createDeathMarker(Vector2 position) =>
       SunnyPlayerConfig.createCryptComponent(position);
 
   @override

@@ -1,4 +1,5 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 
 /// View component para knight hand
 ///
@@ -8,7 +9,7 @@ import 'package:bonfire/bonfire.dart';
 ///
 /// No modo de animação, a rotação do equipamento é ignorada pois
 /// a animação já contém todos os frames do movimento do ataque.
-class CustomPlayerHandItemView extends GameDecoration {
+class CustomPlayerHandItemView extends DDDecoration {
   CustomPlayerHandItemView({
     Sprite? initialSprite,
     required super.position,

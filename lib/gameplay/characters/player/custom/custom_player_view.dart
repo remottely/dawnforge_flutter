@@ -4,6 +4,7 @@ import 'package:darkness_dungeon/gameplay/characters/player/custom/custom_player
 import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_loadout.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_to_custom_player_adapter.dart';
+import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_equippable_player/dd_equippable_player_view.dart';
 
 /// Visual representation and input handler for the Knight player character.
@@ -79,6 +80,6 @@ class CustomPlayerView
   LightingConfig get lightingConfig => _customLightingConfig;
 
   @override
-  GameDecoration createDeathMarker(Vector2 position) =>
+  DDDecoration createDeathMarker(Vector2 position) =>
       KnightPlayerConfig.createCryptComponent(position);
 }

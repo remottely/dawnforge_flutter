@@ -1,5 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_contact_decoration.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 
@@ -11,6 +12,12 @@ final class DoorKeyDecorationConfig {
 
   static Future<Sprite> loadSprite() =>
       Sprite.load('gameplay/decorations/door_key_decoration_1.png');
+
+  static RectangleHitbox createHitbox() => HitboxUtils.createCenterHitbox(
+    componentSize: _componentSize,
+    hitboxStartPositionX: 2.0,
+    hitboxStartPositionY: 6.0,
+  );
 }
 
 class DoorKeyDecorationView extends DDContactDecoration {
@@ -21,6 +28,12 @@ class DoorKeyDecorationView extends DDContactDecoration {
         sprite: DoorKeyDecorationConfig.loadSprite(),
         size: DoorKeyDecorationConfig._componentSize,
       );
+
+  @override
+  Future<void> onLoad() {
+    add(DoorKeyDecorationConfig.createHitbox());
+    return super.onLoad();
+  }
 
   @override
   void onContact(SimplePlayer player) {
