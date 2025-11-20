@@ -8,7 +8,6 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_confi
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/mini_boss/mini_boss_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_sprite_animations_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_calculations.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
@@ -188,9 +187,9 @@ class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
           maxVisibleTile: TileConstants.kMaxVisibleTiles,
         ),
       );
-      AudioManager.instance.playBackgroundMusic(
-        AudioConfig.kMusicBossBattleBackgroundAsset,
-      );
+      // AudioManager.instance.playBackgroundMusic(
+      //   AudioConfig.kMusicBossBattleBackgroundAsset,
+      // );
     });
   }
 

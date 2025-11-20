@@ -14,12 +14,18 @@ final class AudioConfig {
       'sfx/sfx_character_fireball_explosion.wav';
   static const String kSfxConversationInteractionAsset =
       'sfx/sfx_conversation_interaction.wav';
-  static const String kMusicRo1DeathHexBackgroundAsset =
-      'music/music_gameplay_background.mp3';
-  static const String kMusicRo1LettersBackgroundAsset =
-      'music/music_gameplay_background.mp3';
-  static const String kMusicBossBattleBackgroundAsset =
-      'music/music_boss_battle_background.mp3';
+  static const String
+  kMusicRo1DeathHexBackgroundAsset = // TODO(Kevin): change this name
+      // 'music/music_gameplay_background.mp3'; // TODO(Kevin): put it back, or change the music
+      'music/music_ro1_death_hex_background.mp3';
+  static const String
+  kMusicRo1LettersBackgroundAsset = // TODO(Kevin): change this name
+      // 'music/music_gameplay_background.mp3'; // TODO(Kevin): put it back, or change the music
+      'music/music_ro1_death_hex_background.mp3';
+  static const String
+  kMusicBossBattleBackgroundAsset = // TODO(Kevin): change this name
+      // 'music/music_boss_battle_background.mp3'; // TODO(Kevin): put it back, or change the music
+      'music/music_ro1_letters_background.mp3';
 
   static const List<String> kPreloadAudioFiles = [
     kSfxPlayerAttackAsset,

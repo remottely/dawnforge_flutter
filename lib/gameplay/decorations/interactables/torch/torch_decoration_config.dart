@@ -124,7 +124,7 @@ final class TorchDecorationConfig {
   /// Defines the visual properties of the light emitted by lit torches,
   /// including radius, blur, and color characteristics.
   static final LightingConfig lightingConfig = LightingConfig(
-    radius: TileConstants.kTileDimensionExtraLarge,
+    radius: TileConstants.kTileDimensionStandard,
     blurBorder: TileConstants.kTileDimensionStandard,
     color: LightingConstants.torchLighting,
   );

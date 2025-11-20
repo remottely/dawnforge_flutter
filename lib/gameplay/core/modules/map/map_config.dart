@@ -30,7 +30,7 @@ final class MapConfig {
 
   /// Private
   static const String _kCloudyLightingColor = '#d0ffffff';
-  static const String _kDarknessLightingColor = '#d0000000';
+  static const String _kDarknessLightingColor = '#fe000000';
   static const String _kNoneLightingColor = '#00ffffff';
 
   static const String _kForestBackgroundColor = '#ff63c74d';

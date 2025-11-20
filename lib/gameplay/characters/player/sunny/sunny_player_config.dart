@@ -240,7 +240,7 @@ final class SunnyPlayerConfig {
   /// Creates ambient lighting around the player for dungeon exploration,
   /// revealing nearby environment and entities.
   static final LightingConfig lightingConfig = LightingConfig(
-    radius: TileConstants.kTileDimensionStandard,
+    radius: TileConstants.kTileDimensionLarge,
     blurBorder: TileConstants.kTileDimensionStandard,
     color: LightingConstants.playerLighting,
   );
