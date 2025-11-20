@@ -83,7 +83,7 @@ abstract class DDBaseEnemy<
     );
   }
 
-  void seeAndMoveToPrimaryAttack({
+  void handleDetectPlayerAndMoveToPrimaryAttack({
     required double closeVisionRadius,
     required void Function(Player) onCloseToPlayer,
   }) {

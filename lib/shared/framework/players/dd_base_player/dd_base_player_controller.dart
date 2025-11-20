@@ -19,11 +19,11 @@ abstract class DDBasePlayerController<M extends DDBasePlayerModel> {
 
   /// Callback for delegating enemy visibility checks to the view layer.
   final void Function({
-    required double visionRadius,
+    required double longVisionRadius,
     required void Function() notObserved,
     required void Function(List<Enemy> enemies) observed,
   })
-  onCheckEnemyVision;
+  onDetectEnemyInLongVisionRadius;
 
   /// Indicates whether stamina regeneration is currently scheduled.
   bool _isStaminaRegenerationPending = false;
@@ -38,11 +38,11 @@ abstract class DDBasePlayerController<M extends DDBasePlayerModel> {
   ///
   /// [model] The data model to control.
   /// [onShowExclamation] Callback for emote display.
-  /// [onCheckEnemyVision] Callback for enemy detection.
+  /// [onDetectEnemyInLongVisionRadius] Callback for enemy detection.
   DDBasePlayerController({
     required this.model,
     required this.onShowExclamation,
-    required this.onCheckEnemyVision,
+    required this.onDetectEnemyInLongVisionRadius,
   });
 
   // ============================================================================
@@ -141,8 +141,8 @@ abstract class DDBasePlayerController<M extends DDBasePlayerModel> {
   /// model's observation state. Triggers an exclamation emote when enemies
   /// are first detected.
   void processEnemyDetection() {
-    onCheckEnemyVision(
-      visionRadius: model.visionRadius,
+    onDetectEnemyInLongVisionRadius(
+      longVisionRadius: model.longVisionRadius,
       notObserved: () => model.isObservingEnemy = false,
       observed: (List<Enemy> detectedEnemies) {
         if (model.isObservingEnemy) return;

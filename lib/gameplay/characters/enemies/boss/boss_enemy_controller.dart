@@ -5,26 +5,26 @@ import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy_controll
 class BossEnemyController extends DDBaseEnemyController<BossEnemyModel> {
   final void Function(Player player) onFirstPlayerSight;
   final void Function(double dt) onSpawnMinion;
-  final void Function(Canvas canvas) onRenderBars;
+  final void Function(Canvas canvas) onRenderStatusBars;
   final void Function({
     required double closeVisionRadius,
     required void Function(Player) observed,
   })
-  onSeePlayer;
+  onDetectPlayerInCloseVisionRadius;
 
   BossEnemyController({
     required super.model,
-    required super.onSeeAndMoveToMeleeAttack,
+    required super.onDetectPlayerAndMoveToMeleeAttack,
     required this.onFirstPlayerSight,
     required this.onSpawnMinion,
-    required this.onRenderBars,
-    required this.onSeePlayer,
+    required this.onRenderStatusBars,
+    required this.onDetectPlayerInCloseVisionRadius,
   });
 
   @override
   void update(double dt) {
     if (!model.isFirstPlayerSighted) {
-      onSeePlayer(
+      onDetectPlayerInCloseVisionRadius(
         closeVisionRadius: model.closeVisionRadius,
         observed: (player) {
           model.registerFirstPlayerSighting();
@@ -36,13 +36,13 @@ class BossEnemyController extends DDBaseEnemyController<BossEnemyModel> {
 
     onSpawnMinion(dt);
 
-    onSeeAndMoveToMeleeAttack?.call(
+    onDetectPlayerAndMoveToMeleeAttack?.call(
       closeVisionRadius: model.closeVisionRadius,
       onCloseToPlayer: (_) {},
     );
   }
 
   void render(Canvas canvas) {
-    onRenderBars(canvas);
+    onRenderStatusBars(canvas);
   }
 }

@@ -58,18 +58,18 @@ class CustomPlayerView
     required bool Function(double damage) onRangedAttack,
     required void Function() onShowExclamation,
     required void Function({
-      required double visionRadius,
+      required double longVisionRadius,
       required void Function() notObserved,
       required void Function(List<Enemy> enemies) observed,
     })
-    onCheckEnemyVision,
+    onDetectEnemyInLongVisionRadius,
   }) {
     return CustomPlayerController(
       model: model,
       onPrimaryAttack: onPrimaryAttack,
       onRangedAttack: onRangedAttack,
       onShowExclamation: onShowExclamation,
-      onCheckEnemyVision: onCheckEnemyVision,
+      onDetectEnemyInLongVisionRadius: onDetectEnemyInLongVisionRadius,
     );
   }
 

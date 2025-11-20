@@ -21,7 +21,7 @@ abstract class DDMobilePlayerController<M extends DDMobilePlayerModel>
     required super.onPrimaryAttack,
     required super.onRangedAttack,
     required super.onShowExclamation,
-    required super.onCheckEnemyVision,
+    required super.onDetectEnemyInLongVisionRadius,
   });
 
   /// Indicates whether the run input is currently active.

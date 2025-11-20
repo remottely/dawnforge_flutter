@@ -3,27 +3,29 @@ import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy_controll
 
 class MiniBossEnemyController
     extends DDBaseEnemyController<MiniBossEnemyModel> {
-  bool _seePlayerClose = false;
+  bool _isPlayerClose = false;
 
   MiniBossEnemyController({
     required super.model,
-    required super.onSeeAndMoveToMeleeAttack,
-    required super.onSeeAndMoveToRangeAttack,
+    required super.onDetectPlayerAndMoveToMeleeAttack,
+    required super.onDetectPlayerAndMoveToRangeAttack,
   });
 
   @override
   void update(double dt) {
-    _seePlayerClose = false;
+    _isPlayerClose = false;
 
-    onSeeAndMoveToMeleeAttack?.call(
+    onDetectPlayerAndMoveToMeleeAttack?.call(
       closeVisionRadius: model.closeVisionRadius,
       onCloseToPlayer: (_) {
-        _seePlayerClose = true;
+        _isPlayerClose = true;
       },
     );
 
-    if (!_seePlayerClose) {
-      onSeeAndMoveToRangeAttack?.call(longVisionRadius: model.longVisionRadius);
+    if (!_isPlayerClose) {
+      onDetectPlayerAndMoveToRangeAttack?.call(
+        longVisionRadius: model.longVisionRadius,
+      );
     }
   }
 }

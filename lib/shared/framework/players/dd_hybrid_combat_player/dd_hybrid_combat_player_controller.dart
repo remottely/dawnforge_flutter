@@ -21,7 +21,7 @@ abstract class DDHybridCombatPlayerController<
     required this.onPrimaryAttack,
     required this.onRangedAttack,
     required super.onShowExclamation,
-    required super.onCheckEnemyVision,
+    required super.onDetectEnemyInLongVisionRadius,
   });
 
   // ============================================================================

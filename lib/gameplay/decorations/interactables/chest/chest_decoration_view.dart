@@ -32,7 +32,7 @@ class ChestDecorationView extends DDInputReceiverDecoration {
       model: model,
       onShowEmote: _showEmote,
       onOpenChest: _handleChestOpened,
-      onCheckPlayerVision: _checkPlayerVision,
+      onDetectPlayerInCloseVisionRadius: _handleDetectPlayerInCloseVisionRadius,
     );
   }
 
@@ -125,7 +125,7 @@ class ChestDecorationView extends DDInputReceiverDecoration {
     );
   }
 
-  void _checkPlayerVision({
+  void _handleDetectPlayerInCloseVisionRadius({
     required GameComponent player,
     required void Function(GameComponent) observed,
     required void Function() notObserved,

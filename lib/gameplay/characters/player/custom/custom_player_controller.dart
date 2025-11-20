@@ -29,13 +29,13 @@ class CustomPlayerController
   /// [onPrimaryAttack] Callback for primary attack execution via equipment.
   /// [onRangedAttack] Callback for ranged attack execution via equipment.
   /// [onShowExclamation] Callback for emote display.
-  /// [onCheckEnemyVision] Callback for enemy detection.
+  /// [onDetectEnemyInLongVisionRadius] Callback for enemy detection.
   CustomPlayerController({
     required super.model,
     required super.onPrimaryAttack,
     required super.onRangedAttack,
     required super.onShowExclamation,
-    required super.onCheckEnemyVision,
+    required super.onDetectEnemyInLongVisionRadius,
   });
 
   // ============================================================================

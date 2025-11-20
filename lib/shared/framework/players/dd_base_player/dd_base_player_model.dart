@@ -49,7 +49,7 @@ abstract class DDBasePlayerModel {
   int get staminaRegenIncrement;
 
   /// Vision radius for enemy detection.
-  double get visionRadius;
+  double get longVisionRadius;
 
   // ============================================================================
   // Resource Accessors

@@ -38,7 +38,7 @@ class CustomPlayerModel extends DDHybridCombatPlayerModel {
   int get staminaRegenIncrement => KnightPlayerConfig.kStaminaIncrement;
 
   @override
-  double get visionRadius => KnightPlayerConfig.kVisionRadius;
+  double get longVisionRadius => KnightPlayerConfig.kVisionRadius;
 
   @override
   int get primaryAttackStaminaCost =>

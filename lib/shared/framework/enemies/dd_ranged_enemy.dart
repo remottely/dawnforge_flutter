@@ -16,7 +16,9 @@ abstract class DDRangedEnemy<
     required super.life,
   });
 
-  void seeAndMoveToFireballAttack({required double longVisionRadius}) {
+  void handleDetectPlayerAndMoveToFireballAttack({
+    required double longVisionRadius,
+  }) {
     CharacterFireballAttackConfig.enemyExecute(
       enemy: this,
       damage: controller.model.primaryAttackDamage,

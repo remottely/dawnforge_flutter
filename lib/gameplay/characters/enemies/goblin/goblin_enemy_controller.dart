@@ -4,12 +4,12 @@ import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy_controll
 class GoblinEnemyController extends DDBaseEnemyController<GoblinEnemyModel> {
   GoblinEnemyController({
     required super.model,
-    required super.onSeeAndMoveToMeleeAttack,
+    required super.onDetectPlayerAndMoveToMeleeAttack,
   });
 
   @override
   void update(double dt) {
-    onSeeAndMoveToMeleeAttack?.call(
+    onDetectPlayerAndMoveToMeleeAttack?.call(
       closeVisionRadius: model.closeVisionRadius,
       onCloseToPlayer: (_) {},
     );

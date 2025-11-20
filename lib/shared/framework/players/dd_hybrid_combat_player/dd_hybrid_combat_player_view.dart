@@ -74,7 +74,7 @@ abstract class DDHybridCombatPlayerView<
       onPrimaryAttack: executePrimaryAttack,
       onRangedAttack: executeRangedAttack,
       onShowExclamation: displayExclamationEmote,
-      onCheckEnemyVision: evaluateEnemyVisibility,
+      onDetectEnemyInLongVisionRadius: handleDetectEnemyInLongVisionRadius,
     );
   }
 
@@ -88,10 +88,10 @@ abstract class DDHybridCombatPlayerView<
     required bool Function(double damage) onRangedAttack,
     required void Function() onShowExclamation,
     required void Function({
-      required double visionRadius,
+      required double longVisionRadius,
       required void Function() notObserved,
       required void Function(List<Enemy> enemies) observed,
     })
-    onCheckEnemyVision,
+    onDetectEnemyInLongVisionRadius,
   });
 }

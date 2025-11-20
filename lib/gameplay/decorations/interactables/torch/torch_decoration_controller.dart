@@ -31,19 +31,19 @@ class TorchDecorationController {
     required void Function() notObserved,
     required double radiusVision,
   })
-  onCheckPlayerVision;
+  onDetectPlayerInCloseVisionRadius;
 
   /// Creates a torch decoration controller with required dependencies.
   ///
   /// [model] The data model to be controlled.
   /// [onShowEmote] Callback for emote display requests.
   /// [onTorchInteraction] Callback for torch state change notifications.
-  /// [onCheckPlayerVision] Callback for player visibility evaluation.
+  /// [onDetectPlayerInCloseVisionRadius] Callback for player visibility evaluation.
   TorchDecorationController({
     required this.model,
     required this.onShowEmote,
     required this.onTorchInteraction,
-    required this.onCheckPlayerVision,
+    required this.onDetectPlayerInCloseVisionRadius,
   });
 
   // ============================================================================
@@ -109,7 +109,7 @@ class TorchDecorationController {
   ///
   /// [player] The player component to evaluate proximity for.
   void _evaluatePlayerProximity(GameComponent player) {
-    onCheckPlayerVision(
+    onDetectPlayerInCloseVisionRadius(
       player: player,
       radiusVision: TorchDecorationConfig.kVisionRadius,
       observed: _handlePlayerEntersRange,

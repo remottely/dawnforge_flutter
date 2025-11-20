@@ -21,7 +21,8 @@ class GoblinEnemyView
   GoblinEnemyController createController(GoblinEnemyModel model) {
     return GoblinEnemyController(
       model: model,
-      onSeeAndMoveToMeleeAttack: seeAndMoveToPrimaryAttack,
+      onDetectPlayerAndMoveToMeleeAttack:
+          handleDetectPlayerAndMoveToPrimaryAttack,
     );
   }
 

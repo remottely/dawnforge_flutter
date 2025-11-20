@@ -32,11 +32,12 @@ class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
   BossEnemyController createController(BossEnemyModel model) {
     return BossEnemyController(
       model: model,
-      onSeeAndMoveToMeleeAttack: seeAndMoveToPrimaryAttack,
+      onDetectPlayerAndMoveToMeleeAttack:
+          handleDetectPlayerAndMoveToPrimaryAttack,
       onFirstPlayerSight: _onPlayerSighted,
       onSpawnMinion: _onSpawnMinion,
-      onRenderBars: _onRenderBars,
-      onSeePlayer: _onSeePlayer,
+      onRenderStatusBars: _onRenderBars,
+      onDetectPlayerInCloseVisionRadius: _handleDetectPlayerInCloseVisionRadius,
     );
   }
 
@@ -117,7 +118,7 @@ class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
     }
   }
 
-  void _onSeePlayer({
+  void _handleDetectPlayerInCloseVisionRadius({
     required double closeVisionRadius,
     required void Function(Player) observed,
   }) {

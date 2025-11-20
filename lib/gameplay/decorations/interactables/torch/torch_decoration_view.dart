@@ -64,7 +64,7 @@ class TorchDecorationView extends DDInputReceiverDecoration {
       model: model,
       onShowEmote: _handleEmoteDisplay,
       onTorchInteraction: _handleTorchStateChange,
-      onCheckPlayerVision: _evaluatePlayerVisibility,
+      onDetectPlayerInCloseVisionRadius: _handleDetectPlayerInCloseVisionRadius,
     );
   }
 
@@ -205,7 +205,7 @@ class TorchDecorationView extends DDInputReceiverDecoration {
   /// [observed] Callback invoked when the player is within vision range.
   /// [notObserved] Callback invoked when the player is outside vision range.
   /// [radiusVision] The vision radius for detection.
-  void _evaluatePlayerVisibility({
+  void _handleDetectPlayerInCloseVisionRadius({
     required GameComponent player,
     required void Function(GameComponent) observed,
     required void Function() notObserved,

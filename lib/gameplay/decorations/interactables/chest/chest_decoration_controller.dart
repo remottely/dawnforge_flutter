@@ -13,13 +13,13 @@ class ChestDecorationController {
     required void Function() notObserved,
     required double radiusVision,
   })
-  onCheckPlayerVision;
+  onDetectPlayerInCloseVisionRadius;
 
   ChestDecorationController({
     required this.model,
     required this.onShowEmote,
     required this.onOpenChest,
-    required this.onCheckPlayerVision,
+    required this.onDetectPlayerInCloseVisionRadius,
   });
 
   void update(double dt, GameComponent? player) {
@@ -38,7 +38,7 @@ class ChestDecorationController {
 
   // Private helpers
   void _handlePlayerVision(GameComponent player) {
-    onCheckPlayerVision(
+    onDetectPlayerInCloseVisionRadius(
       player: player,
       radiusVision: ChestDecorationConfig.kVisionRadius,
       observed: (observedPlayer) {

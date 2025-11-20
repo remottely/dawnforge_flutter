@@ -20,7 +20,8 @@ class ImpEnemyView extends DDBaseEnemy<ImpEnemyController, ImpEnemyModel> {
   ImpEnemyController createController(ImpEnemyModel model) {
     return ImpEnemyController(
       model: model,
-      onSeeAndMoveToMeleeAttack: seeAndMoveToPrimaryAttack,
+      onDetectPlayerAndMoveToMeleeAttack:
+          handleDetectPlayerAndMoveToPrimaryAttack,
     );
   }
 

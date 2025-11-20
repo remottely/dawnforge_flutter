@@ -16,7 +16,7 @@ class SunnyPlayerController extends DDMobilePlayerController<SunnyPlayerModel> {
     required super.onPrimaryAttack,
     required super.onRangedAttack,
     required super.onShowExclamation,
-    required super.onCheckEnemyVision,
+    required super.onDetectEnemyInLongVisionRadius,
   });
 
   // ============================================================================

@@ -198,13 +198,13 @@ abstract class DDBasePlayerView<
   }
 
   /// Evaluates enemy visibility within the specified radius.
-  void evaluateEnemyVisibility({
-    required double visionRadius,
+  void handleDetectEnemyInLongVisionRadius({
+    required double longVisionRadius,
     required void Function() notObserved,
     required void Function(List<Enemy> enemies) observed,
   }) {
     seeEnemy(
-      radiusVision: visionRadius,
+      radiusVision: longVisionRadius,
       notObserved: notObserved,
       observed: observed,
     );
