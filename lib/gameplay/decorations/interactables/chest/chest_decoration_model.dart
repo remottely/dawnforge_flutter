@@ -1,19 +1,21 @@
-class ChestDecorationModel {
-  bool _observedPlayer;
+import 'package:darkness_dungeon/shared/framework/decorations/dd_input_receiver/dd_input_receiver_decoration_model.dart';
+
+class ChestDecorationModel implements DDInputReceiverDecorationModel {
+  bool _isDetectPlayer;
   bool _isOpened;
 
-  ChestDecorationModel({bool? initialObservedPlayer, bool? initialIsOpened})
-    : _observedPlayer = initialObservedPlayer ?? false,
-      _isOpened = initialIsOpened ?? false;
+  ChestDecorationModel({required bool initialIsOpened})
+    : _isDetectPlayer = false,
+      _isOpened = initialIsOpened;
 
-  // Getters
-  bool get observedPlayer => _observedPlayer;
+  @override
+  bool get isDetectPlayer => _isDetectPlayer;
+  @override
+  void setIsDetectPlayer(bool value) => _isDetectPlayer = value;
+
+  @override
+  bool get canInteract => _isDetectPlayer && !_isOpened;
+
   bool get isOpened => _isOpened;
-
-  // Validations
-  bool get canBeOpened => _observedPlayer && !_isOpened;
-
-  // State mutations
-  void setObservedPlayer(bool value) => _observedPlayer = value;
   void markAsOpened() => _isOpened = true;
 }

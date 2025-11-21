@@ -4,7 +4,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_se
 import 'package:darkness_dungeon/gameplay/decorations/interactables/torch/torch_decoration_config.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/torch/torch_decoration_controller.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/torch/torch_decoration_model.dart';
-import 'package:darkness_dungeon/shared/framework/decorations/dd_input_receiver_decoration.dart';
+import 'package:darkness_dungeon/shared/framework/decorations/dd_input_receiver/dd_input_receiver_decoration_view.dart';
 import 'package:flutter/services.dart';
 
 /// Represents a visual torch decoration component with interactive capabilities.
@@ -12,7 +12,7 @@ import 'package:flutter/services.dart';
 /// This view handles rendering, player interaction, and lighting effects for torch
 /// decorations within the game environment. It follows the MVC pattern where this
 /// class acts as the View layer.
-class TorchDecorationView extends DDInputReceiverDecoration {
+class TorchDecorationView extends DDInputReceiverDecorationView {
   late final TorchDecorationController _decorationController;
   late final TextPaint _interactionPromptTextPaint;
 
@@ -29,7 +29,6 @@ class TorchDecorationView extends DDInputReceiverDecoration {
          animation: TorchDecorationConfig.loadSpriteAnimation(),
          size: TorchDecorationConfig.componentSize,
        ) {
-    lightingEnabled = true;
     _initializeController(model);
   }
 
@@ -46,7 +45,6 @@ class TorchDecorationView extends DDInputReceiverDecoration {
          animation: TorchDecorationConfig.loadSpriteAnimation(),
          size: TorchDecorationConfig.componentSize,
        ) {
-    lightingEnabled = false;
     _initializeController(model);
   }
 
@@ -62,21 +60,24 @@ class TorchDecorationView extends DDInputReceiverDecoration {
   void _initializeController(TorchDecorationModel model) {
     _decorationController = TorchDecorationController(
       model: model,
-      onShowEmote: _handleEmoteDisplay,
-      onTorchInteraction: _handleTorchStateChange,
+      onDisplayExclamationEmote: _handleDisplayExclamationEmote,
+      onToggleTorchState: _handleToggleTorchState,
       onDetectPlayerInCloseVisionRadius: _handleDetectPlayerInCloseVisionRadius,
     );
   }
+
+  @override
+  void onMount() {}
 
   @override
   Future<void> onLoad() {
     setupLighting(TorchDecorationConfig.lightingConfig);
     _interactionPromptTextPaint = TorchDecorationConfig.createTextConfig(width);
 
-    if (lightingEnabled)
-      _decorationController.model.turnOn();
+    if (model.isOn)
+      lightingEnabled = true;
     else
-      _decorationController.model.turnOff();
+      lightingEnabled = false;
 
     return super.onLoad();
   }
@@ -126,7 +127,7 @@ class TorchDecorationView extends DDInputReceiverDecoration {
   @override
   bool onKeyboard(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     if (_isValidInteractionAttempt(event)) {
-      _decorationController.openTorch();
+      _decorationController.toggleTorchState();
       return true;
     }
     return false;
@@ -147,7 +148,7 @@ class TorchDecorationView extends DDInputReceiverDecoration {
   ///
   /// Returns `true` when the player is observing the torch and it's turned off.
   bool _shouldDisplayInteractionPrompt() {
-    return _decorationController.model.observedPlayer &&
+    return _decorationController.model.isDetectPlayer &&
         !_decorationController.model.isOn;
   }
 
@@ -171,7 +172,7 @@ class TorchDecorationView extends DDInputReceiverDecoration {
   ///
   /// Returns `true` if this is a valid interaction attempt.
   bool _isValidInteractionAttempt(KeyEvent event) {
-    return _decorationController.model.canBeInteract &&
+    return _decorationController.model.canInteract &&
         event is KeyDownEvent &&
         event.logicalKey == KeyboardSetup.kInteractionKey;
   }
@@ -184,7 +185,7 @@ class TorchDecorationView extends DDInputReceiverDecoration {
   ///
   /// This callback is invoked by the controller when an emote should be shown,
   /// typically in response to player interaction.
-  void _handleEmoteDisplay() {
+  void _handleDisplayExclamationEmote() {
     add(EmoteManager.getDecorationAnimatedObject(size));
   }
 
@@ -192,7 +193,7 @@ class TorchDecorationView extends DDInputReceiverDecoration {
   ///
   /// This callback is invoked by the controller when the torch state changes,
   /// enabling or disabling the lighting effect accordingly.
-  void _handleTorchStateChange() {
+  void _handleToggleTorchState() {
     lightingEnabled = model.isOn;
   }
 

@@ -5,8 +5,8 @@ import 'package:darkness_dungeon/gameplay/decorations/interactables/chest/chest_
 class ChestDecorationController {
   final ChestDecorationModel model;
 
-  final void Function() onShowEmote;
   final void Function() onOpenChest;
+  final void Function() onDisplayExclamationEmote;
   final void Function({
     required GameComponent player,
     required void Function(GameComponent) observed,
@@ -17,39 +17,39 @@ class ChestDecorationController {
 
   ChestDecorationController({
     required this.model,
-    required this.onShowEmote,
     required this.onOpenChest,
+    required this.onDisplayExclamationEmote,
     required this.onDetectPlayerInCloseVisionRadius,
   });
 
   void update(double dt, GameComponent? player) {
     if (player == null || model.isOpened) return;
-    _handlePlayerVision(player);
+    _handleDetectPlayerInCloseVisionRadius(player);
   }
 
   void dispose() {}
 
   // Actions
   void openChest() {
-    if (!model.canBeOpened) return;
+    if (!model.canInteract) return;
     model.markAsOpened();
     onOpenChest();
   }
 
   // Private helpers
-  void _handlePlayerVision(GameComponent player) {
+  void _handleDetectPlayerInCloseVisionRadius(GameComponent player) {
     onDetectPlayerInCloseVisionRadius(
       player: player,
       radiusVision: ChestDecorationConfig.kVisionRadius,
-      observed: (observedPlayer) {
-        if (!model.observedPlayer) {
-          model.setObservedPlayer(true);
-          onShowEmote();
+      observed: (_) {
+        if (!model.isDetectPlayer) {
+          model.setIsDetectPlayer(true);
+          onDisplayExclamationEmote();
         }
       },
       notObserved: () {
-        if (model.observedPlayer) {
-          model.setObservedPlayer(false);
+        if (model.isDetectPlayer) {
+          model.setIsDetectPlayer(false);
         }
       },
     );

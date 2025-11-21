@@ -8,20 +8,21 @@ import 'package:darkness_dungeon/gameplay/decorations/interactables/chest/chest_
 import 'package:darkness_dungeon/gameplay/decorations/interactables/chest/chest_decoration_controller.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/chest/chest_decoration_model.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/life_potion_decoration.dart';
-import 'package:darkness_dungeon/shared/framework/decorations/dd_input_receiver_decoration.dart';
+import 'package:darkness_dungeon/shared/framework/decorations/dd_input_receiver/dd_input_receiver_decoration_view.dart';
 import 'package:flutter/services.dart';
 
-class ChestDecorationView extends DDInputReceiverDecoration {
+class ChestDecorationView extends DDInputReceiverDecorationView {
   late final ChestDecorationController _controller;
   late final TextPaint _textConfig;
 
-  ChestDecorationView({required super.position, ChestDecorationModel? model})
-    : super.withAnimation(
-        animation: ChestDecorationConfig.loadChestAnimation(),
-        size: ChestDecorationConfig.componentSize,
-      ) {
-    _textConfig = ChestDecorationConfig.createTextConfig(width);
-    _initializeController(model ?? ChestDecorationModel());
+  ChestDecorationView({
+    required super.position,
+    required ChestDecorationModel model,
+  }) : super.withAnimation(
+         animation: ChestDecorationConfig.loadChestAnimation(),
+         size: ChestDecorationConfig.componentSize,
+       ) {
+    _initializeController(model);
   }
 
   // Public API for external interaction
@@ -30,14 +31,15 @@ class ChestDecorationView extends DDInputReceiverDecoration {
   void _initializeController(ChestDecorationModel model) {
     _controller = ChestDecorationController(
       model: model,
-      onShowEmote: _showEmote,
-      onOpenChest: _handleChestOpened,
-      onDetectPlayerInCloseVisionRadius: _handleDetectPlayerInCloseVisionRadius,
+      onDisplayExclamationEmote: _handleDisplayExclamationEmote,
+      onOpenChest: _onOpenChest,
+      onDetectPlayerInCloseVisionRadius: _onDetectPlayerInCloseVisionRadius,
     );
   }
 
   @override
   Future<void> onLoad() {
+    _textConfig = ChestDecorationConfig.createTextConfig(width);
     add(ChestDecorationConfig.createHitbox());
     return super.onLoad();
   }
@@ -57,7 +59,7 @@ class ChestDecorationView extends DDInputReceiverDecoration {
   @override
   void render(Canvas canvas) {
     super.render(canvas);
-    if (_controller.model.observedPlayer && !_controller.model.isOpened) {
+    if (_controller.model.isDetectPlayer && !_controller.model.isOpened) {
       final textPosition = ChestDecorationConfig.getTextPosition(width, height);
       _textConfig.render(
         canvas,
@@ -69,7 +71,7 @@ class ChestDecorationView extends DDInputReceiverDecoration {
 
   @override
   bool onKeyboard(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-    if (_controller.model.canBeOpened &&
+    if (_controller.model.canInteract &&
         event is KeyDownEvent &&
         event.logicalKey == KeyboardSetup.kInteractionKey) {
       _controller.openChest();
@@ -85,11 +87,11 @@ class ChestDecorationView extends DDInputReceiverDecoration {
   }
 
   /// Private helper methods - Controller callbacks implementation
-  void _showEmote() {
+  void _handleDisplayExclamationEmote() {
     add(EmoteManager.getDecorationAnimatedObject(size));
   }
 
-  void _handleChestOpened() {
+  void _onOpenChest() {
     _spawnLifePotions();
     removeFromParent();
   }
@@ -125,7 +127,7 @@ class ChestDecorationView extends DDInputReceiverDecoration {
     );
   }
 
-  void _handleDetectPlayerInCloseVisionRadius({
+  void _onDetectPlayerInCloseVisionRadius({
     required GameComponent player,
     required void Function(GameComponent) observed,
     required void Function() notObserved,

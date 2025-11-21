@@ -97,7 +97,7 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
     //   }
     // }
 
-    (gameRef.interface as GameplayHUDView).inventoryHUD.toggleVisibility();
+    (gameRef.interface as GameplayHUDView).inventoryHUD.toggleIsVisible();
     // developer.log(
     //   '[InventoryInput] Inventário ${_cachedHUD!.inventoryHUD.isVisible ? "aberto" : "fechado"}',
     // );

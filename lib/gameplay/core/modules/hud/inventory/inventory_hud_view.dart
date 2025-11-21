@@ -33,7 +33,7 @@ class InventoryHUDView extends InterfaceComponent {
   bool get isVisible => _isVisible;
   void _show() => _isVisible = true;
   void _hide() => _isVisible = false;
-  void toggleVisibility() => _isVisible ? _hide() : _show();
+  void toggleIsVisible() => _isVisible ? _hide() : _show();
 
   /// Força um refresh do HUD (útil após mudanças no inventário)
   void refresh() {

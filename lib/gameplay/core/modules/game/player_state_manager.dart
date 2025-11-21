@@ -21,18 +21,20 @@ class PlayerStateManager {
   // Player Models (persistentes entre mapas)
   // ============================================================================
 
-  CustomPlayerModel? _customPlayerModel;
-  SunnyPlayerModel? _sunnyPlayerModel;
+  CustomPlayerModel? _customPlayerModel; // TODO(Kevin): remove this nullable
+  SunnyPlayerModel? _sunnyPlayerModel; // TODO(Kevin): remove this nullable
 
   /// Obter ou criar modelo do Knight
   CustomPlayerModel getKnightModel() {
-    _customPlayerModel ??= CustomPlayerModel();
+    _customPlayerModel ??=
+        CustomPlayerModel(); // TODO(Kevin): remove this nullable
     return _customPlayerModel!;
   }
 
   /// Obter ou criar modelo do Sunny
   SunnyPlayerModel getSunnyModel() {
-    _sunnyPlayerModel ??= SunnyPlayerModel();
+    _sunnyPlayerModel ??=
+        SunnyPlayerModel(); // TODO(Kevin): remove this nullable
     return _sunnyPlayerModel!;
   }
 

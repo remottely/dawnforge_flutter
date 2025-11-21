@@ -8,6 +8,7 @@ import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_view
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/map_data.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/barrel_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/interactables/chest/chest_decoration_model.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/chest/chest_decoration_view.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/door_decoration.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/door_key_decoration.dart';
@@ -58,11 +59,11 @@ final class MapConfig {
         'barrel_decoration': (p) => BarrelDecorationView(position: p.position),
         'torch_decoration': (p) => TorchDecorationView.lightingEnabled(
           position: p.position,
-          model: TorchDecorationModel(),
+          model: TorchDecorationModel(initialIsOn: true),
         ),
         'torch_decoration_empty': (p) => TorchDecorationView.lightingDisabled(
           position: p.position,
-          model: TorchDecorationModel(),
+          model: TorchDecorationModel(initialIsOn: false),
         ),
         'door_interactable': (p) =>
             DoorDecorationView(position: p.position, size: p.size),
@@ -74,7 +75,10 @@ final class MapConfig {
         ),
         'spike_trap_interactable': (p) =>
             SpikeTrapDecorationView(position: p.position),
-        'chest': (p) => ChestDecorationView(position: p.position),
+        'chest': (p) => ChestDecorationView(
+          position: p.position,
+          model: ChestDecorationModel(initialIsOpened: false),
+        ),
 
         /// Farmable
         'farm_tile': (p) => FarmTileView(position: p.position),

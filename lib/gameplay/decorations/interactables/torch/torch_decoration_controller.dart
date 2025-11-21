@@ -14,12 +14,12 @@ class TorchDecorationController {
   /// Callback invoked when an emote should be displayed above the torch.
   ///
   /// Typically triggered when the player first enters detection range.
-  final void Function() onShowEmote;
+  final void Function() onDisplayExclamationEmote;
 
   /// Callback invoked when the torch state changes (on/off toggle).
   ///
   /// Allows the view layer to respond to lighting state changes.
-  final void Function() onTorchInteraction;
+  final void Function() onToggleTorchState;
 
   /// Callback for delegating player visibility checks to the view layer.
   ///
@@ -36,13 +36,13 @@ class TorchDecorationController {
   /// Creates a torch decoration controller with required dependencies.
   ///
   /// [model] The data model to be controlled.
-  /// [onShowEmote] Callback for emote display requests.
-  /// [onTorchInteraction] Callback for torch state change notifications.
+  /// [onDisplayExclamationEmote] Callback for emote display requests.
+  /// [onToggleTorchState] Callback for torch state change notifications.
   /// [onDetectPlayerInCloseVisionRadius] Callback for player visibility evaluation.
   TorchDecorationController({
     required this.model,
-    required this.onShowEmote,
-    required this.onTorchInteraction,
+    required this.onDisplayExclamationEmote,
+    required this.onToggleTorchState,
     required this.onDetectPlayerInCloseVisionRadius,
   });
 
@@ -82,25 +82,16 @@ class TorchDecorationController {
   /// - Notifies the view layer of state changes
   ///
   /// The method is idempotent and safe to call multiple times.
-  void openTorch() {
-    if (!model.canBeInteract) return;
+  void toggleTorchState() {
+    if (!model.canInteract) return;
 
-    _toggleTorchState();
-    onTorchInteraction();
+    model.toggleIsOn();
+    onToggleTorchState();
   }
 
   // ============================================================================
   // Private Helper Methods
   // ============================================================================
-
-  /// Toggles the torch between lit and extinguished states.
-  void _toggleTorchState() {
-    if (model.isOn) {
-      model.turnOff();
-    } else {
-      model.turnOn();
-    }
-  }
 
   /// Evaluates player proximity and updates observation state accordingly.
   ///
@@ -122,11 +113,11 @@ class TorchDecorationController {
   /// Shows an emote on the first observation to provide visual feedback
   /// to the player that the torch is interactive.
   ///
-  /// [observedPlayer] The player component that entered range.
-  void _handlePlayerEntersRange(GameComponent observedPlayer) {
-    if (!model.observedPlayer) {
-      model.setObservedPlayer(true);
-      onShowEmote();
+  /// [isDetectPlayerInCloseVisionRadius] The player component that entered range.
+  void _handlePlayerEntersRange(GameComponent _) {
+    if (!model.isDetectPlayer) {
+      model.setIsDetectPlayer(true);
+      onDisplayExclamationEmote();
     }
   }
 
@@ -135,8 +126,8 @@ class TorchDecorationController {
   /// Updates the observation state to reflect that the player is no longer
   /// in proximity to interact with the torch.
   void _handlePlayerExitsRange() {
-    if (model.observedPlayer) {
-      model.setObservedPlayer(false);
+    if (model.isDetectPlayer) {
+      model.setIsDetectPlayer(false);
     }
   }
 }
