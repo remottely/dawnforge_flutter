@@ -1,5 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_controller.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_hybrid_combat_player/dd_hybrid_combat_player_model.dart';
 
 /// Controller for players with hybrid combat capabilities.
@@ -29,10 +30,16 @@ abstract class DDHybridCombatPlayerController<
   // ============================================================================
 
   /// Determines if the action ID corresponds to the primary attack action.
-  bool isPrimaryAttackAction(dynamic actionId);
+  bool isPrimaryAttackAction({
+    required DDBasePlayerView player,
+    required dynamic actionId,
+  });
 
   /// Determines if the action ID corresponds to the ranged attack action.
-  bool isRangedAttackAction(dynamic actionId);
+  bool isRangedAttackAction({
+    required DDBasePlayerView player,
+    required dynamic actionId,
+  });
 
   // ============================================================================
   // Combat Actions
@@ -87,13 +94,16 @@ abstract class DDHybridCombatPlayerController<
   // ============================================================================
 
   @override
-  void handleInputAction(JoystickActionEvent event) {
+  void handleInputAction({
+    required DDBasePlayerView player,
+    required JoystickActionEvent event,
+  }) {
     // Only respond to button press events
     if (event.event != ActionEvent.DOWN) return;
 
-    if (isPrimaryAttackAction(event.id)) {
+    if (isPrimaryAttackAction(player: player, actionId: event.id)) {
       executePrimaryAttack();
-    } else if (isRangedAttackAction(event.id)) {
+    } else if (isRangedAttackAction(player: player, actionId: event.id)) {
       executeRangedAttack();
     }
   }

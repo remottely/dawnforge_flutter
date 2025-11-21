@@ -126,7 +126,7 @@ abstract class DDBasePlayerView<
   void onJoystickAction(JoystickActionEvent event) {
     if (isDead) return;
 
-    _controller.handleInputAction(event);
+    _controller.handleInputAction(player: this, event: event);
     super.onJoystickAction(event);
   }
 

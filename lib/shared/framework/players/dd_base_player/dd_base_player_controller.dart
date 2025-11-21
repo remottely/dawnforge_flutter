@@ -1,5 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_model.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 
 /// Abstract base controller for all player characters.
 ///
@@ -55,7 +56,10 @@ abstract class DDBasePlayerController<M extends DDBasePlayerModel> {
   /// Handles character-specific input actions.
   ///
   /// Subclasses should implement their specific input routing logic here.
-  void handleInputAction(JoystickActionEvent event);
+  void handleInputAction({
+    required DDBasePlayerView player,
+    required JoystickActionEvent event,
+  });
 
   // ============================================================================
   // Lifecycle Methods

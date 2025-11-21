@@ -6,6 +6,8 @@ import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mo
 /// speed multiplier configuration. Suitable for characters like Sunny
 /// who have variable movement speeds.
 abstract class DDFarmPlayerModel extends DDMobilePlayerModel {
+  String _equipment = 'digger';
+
   DDFarmPlayerModel({
     required super.maxStamina,
     required super.maxEnergy,
@@ -15,22 +17,8 @@ abstract class DDFarmPlayerModel extends DDMobilePlayerModel {
     super.initialHasKey,
   });
 
-  // ============================================================================
-  // Abstract Mobility Configuration
-  // ============================================================================
-
-  // /// Speed multiplier applied when running.
-  // double get runSpeedMultiplier;
-
-  // ============================================================================
-  // Mobility State
-  // ============================================================================
-
-  /// Whether the character is currently in running state.
-  // bool get isRunning => _isInRunningState;
-
-  // /// Updates the running state.
-  // set isRunning(bool value) => _isInRunningState = value;
+  String get equipment => _equipment;
+  void setEquipment(String value) => _equipment = value;
 
   // ============================================================================
   // Serialization
@@ -39,13 +27,13 @@ abstract class DDFarmPlayerModel extends DDMobilePlayerModel {
   @override
   Map<String, dynamic> toJson() {
     final json = super.toJson();
-    // json['isInRunningState'] = _isInRunningState;
+    json['equipment'] = _equipment;
     return json;
   }
 
   @override
   void fromJson(Map<String, dynamic> json) {
     super.fromJson(json);
-    // _isInRunningState = (json['isInRunningState'] as bool?) ?? false;
+    _equipment = (json['equipment'] as String?) ?? 'digger';
   }
 }

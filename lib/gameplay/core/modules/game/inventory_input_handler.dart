@@ -1,22 +1,21 @@
 import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/custom/custom_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/gameplay/gameplay_hud_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/equipment_to_custom_player_adapter.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/item_factory.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
+import 'package:darkness_dungeon/gameplay/inventory/models/item_type.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/weapon_type.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 import 'package:flutter/services.dart';
 
 /// Componente que gerencia entrada de teclado para inventário
 class InventoryInputHandler extends GameComponent with KeyboardEventListener {
   bool _isInitialized = false;
-  // HUDView? _cachedHUD;
 
   @override
   void onMount() {
@@ -29,15 +28,6 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
   @override
   void update(double dt) {
     super.update(dt);
-
-    // // Cache o HUD na primeira vez que for encontrado
-    // // O gameRef.interface JÁ É o HUDView, não precisa procurar nos children
-    // if (_cachedHUD == null && gameRef.interface != null) {
-    //   _cachedHUD = gameRef.interface as HUDView?;
-    //   if (_cachedHUD != null) {
-    //     developer.log('[InventoryInput] HUD encontrado e cacheado!');
-    //   }
-    // }
   }
 
   @override
@@ -162,7 +152,7 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
         final item = slot.item!;
 
         // Validar se é weapon
-        if (item.type.name != 'weapon') continue;
+        if (item.type != ItemType.weapon) continue;
 
         // Validar se é WeaponItem
         if (item is! WeaponItem) continue;
@@ -226,25 +216,25 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
         final item = slot.item!;
 
         // Validar se é weapon
-        if (item.type.name != 'weapon') continue;
+        if (item.type != ItemType.weapon) continue;
 
         // Validar se é WeaponItem
         if (item is! WeaponItem) continue;
 
-        final weaponType = item.weaponType;
+        // final weaponType = item.weaponType;
 
-        // Validar se é SHIELD ou STAFF ou WAND
-        // if (!weaponType.contains('shield') &&
-        //           !weaponType.contains('staff') &&
-        //           !weaponType.contains('wand')) {
-        if (weaponType != WeaponType.shield &&
-            weaponType != WeaponType.staff &&
-            weaponType != WeaponType.wand) {
-          developer.log(
-            '[InventoryInput] Ignorando ${item.name} (tipo: $weaponType) - apenas shield/staff/wand no offhand slot',
-          );
-          continue;
-        }
+        // // Validar se é SHIELD ou STAFF ou WAND
+        // // if (!weaponType.contains('shield') &&
+        // //           !weaponType.contains('staff') &&
+        // //           !weaponType.contains('wand')) {
+        // if (weaponType != WeaponType.shield &&
+        //     weaponType != WeaponType.staff &&
+        //     weaponType != WeaponType.wand) {
+        //   developer.log(
+        //     '[InventoryInput] Ignorando ${item.name} (tipo: $weaponType) - apenas shield/staff/wand no offhand slot',
+        //   );
+        //   continue;
+        // }
 
         // Tentar equipar
         final success = EquipmentManager.instance.equip(
@@ -286,24 +276,24 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
   void _notifyEquipmentChanged() {
     developer.log('[InventoryInput] Equipamento mudou! Procurando player...');
 
-    // Buscar o CustomPlayerView no jogo
-    final players = gameRef.query<CustomPlayerView>();
+    // Buscar o DDBasePlayerView no jogo
+    final players = gameRef.query<DDBasePlayerView>();
     if (players.isEmpty) {
       developer.log('[InventoryInput] CustomPlayer não encontrado');
       return;
     }
 
-    final player = players.first;
-    developer.log(
-      '[InventoryInput] CustomPlayer encontrado! Recarregando loadout...',
-    );
+    // final player = players.first;
+    // developer.log(
+    //   '[InventoryInput] CustomPlayer encontrado! Recarregando loadout...',
+    // );
 
-    // Criar novo loadout baseado no equipamento atual
-    final newLoadout = EquipmentToCustomPlayerAdapter.instance
-        .createLoadoutFromEquipment(); // TODO(Kevin): NOW - aqui onde seto o comportamento de ataque, mudar a logica para mobile/farm player
+    // // Criar novo loadout baseado no equipamento atual
+    // final newLoadout = EquipmentToCustomPlayerAdapter.instance
+    //     .createLoadoutFromEquipment(); // TODO(Kevin): NOW - aqui onde seto o comportamento de ataque, mudar a logica para mobile/farm player
 
-    // Recarregar loadout do player
-    player.reloadEquipmentLoadout(newLoadout);
+    // // Recarregar loadout do player
+    // player.reloadEquipmentLoadout(newLoadout);
 
     developer.log('[InventoryInput] Loadout recarregado com sucesso!');
   }

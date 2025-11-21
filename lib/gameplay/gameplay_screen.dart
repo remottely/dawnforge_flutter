@@ -51,7 +51,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
         final playerPosition =
             (mapArguments?.playerPosition ?? Vector2.all(4)) *
             TileConstants.kTileDimensionStandard;
-        final player = buildCustomPlayer(playerPosition);
+        final player = buildSunnyPlayer(playerPosition);
 
         playerInput = GameplayScreenConfig.createPlayerInput();
 
@@ -66,6 +66,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
             map: mapItem.map,
             components: [
               gameplayGameStateManager,
+              // customPlayerInventoryInputHandler,
               inventoryInputHandler,
               shieldDefenseInputHandler,
               farmInputHandler,

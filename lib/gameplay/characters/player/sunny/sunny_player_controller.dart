@@ -2,6 +2,7 @@ import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_c
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/joysctick_setup.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_controller.dart';
 
 /// Controller for the Sunny player character.
@@ -27,16 +28,24 @@ class SunnyPlayerController extends DDFarmPlayerController<SunnyPlayerModel> {
   Duration get staminaRegenDebounce => SunnyPlayerConfig.kStaminaRegenDebounce;
 
   @override
-  bool isPrimaryAttackAction(dynamic actionId) =>
+  bool isPrimaryAttackAction({
+    required DDBasePlayerView player,
+    required dynamic actionId,
+  }) =>
       actionId == JoystickSetup.kPrimaryAttackId ||
       actionId == KeyboardSetup.kPrimaryActionKey;
 
   @override
-  bool isRangedAttackAction(dynamic actionId) =>
+  bool isRangedAttackAction({
+    required DDBasePlayerView player,
+    required dynamic actionId,
+  }) =>
       actionId == JoystickSetup.kFireballAttackId ||
       actionId == KeyboardSetup.kSecondaryActionKey;
 
   @override
-  bool isRunAction(dynamic actionId) =>
-      actionId == JoystickSetup.kRunId || actionId == KeyboardSetup.kRunKey;
+  bool isRunAction({
+    required DDBasePlayerView player,
+    required dynamic actionId,
+  }) => actionId == JoystickSetup.kRunId || actionId == KeyboardSetup.kRunKey;
 }

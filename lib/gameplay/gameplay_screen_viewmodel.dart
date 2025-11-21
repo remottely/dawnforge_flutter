@@ -4,6 +4,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/custom/custom_player_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_view.dart';
+// import 'package:darkness_dungeon/gameplay/core/modules/game/custom_player_inventory_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/game_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/inventory_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager.dart';
@@ -20,6 +21,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   final gameplayHUD = GameplayHUDView();
   late final CameraConfig cameraConfig;
   final gameplayGameStateManager = GameStateManager();
+  // final customPlayerInventoryInputHandler = CustomPlayerInventoryInputHandler();
   final inventoryInputHandler = InventoryInputHandler();
   final shieldDefenseInputHandler = ShieldDefenseInputHandler();
   late PlayerController playerInput;

@@ -1,4 +1,5 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_hybrid_combat_player/dd_hybrid_combat_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_model.dart';
 
@@ -32,22 +33,28 @@ abstract class DDMobilePlayerController<M extends DDMobilePlayerModel>
   // ============================================================================
 
   /// Determines if the action ID corresponds to the run action.
-  bool isRunAction(dynamic actionId);
+  bool isRunAction({
+    required DDBasePlayerView player,
+    required dynamic actionId,
+  });
 
   // ============================================================================
   // Input Processing
   // ============================================================================
 
   @override
-  void handleInputAction(JoystickActionEvent event) {
+  void handleInputAction({
+    required DDBasePlayerView player,
+    required JoystickActionEvent event,
+  }) {
     // Handle run toggle (requires both DOWN and UP events)
-    if (isRunAction(event.id)) {
+    if (isRunAction(player: player, actionId: event.id)) {
       _handleRunInput(event.event);
       return;
     }
 
     // Delegate other inputs to parent
-    super.handleInputAction(event);
+    super.handleInputAction(player: player, event: event);
   }
 
   /// Handles run input state changes.

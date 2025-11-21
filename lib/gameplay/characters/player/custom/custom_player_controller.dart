@@ -2,6 +2,7 @@ import 'package:darkness_dungeon/gameplay/characters/player/custom/custom_player
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/joysctick_setup.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_hybrid_combat_player/dd_hybrid_combat_player_controller.dart';
 
 /// Controller for the Knight player character.
@@ -46,12 +47,18 @@ class CustomPlayerController
   Duration get staminaRegenDebounce => KnightPlayerConfig.kStaminaRegenDebounce;
 
   @override
-  bool isPrimaryAttackAction(dynamic actionId) =>
+  bool isPrimaryAttackAction({
+    required DDBasePlayerView player,
+    required dynamic actionId,
+  }) =>
       actionId == JoystickSetup.kPrimaryAttackId ||
       actionId == KeyboardSetup.kPrimaryActionKey;
 
   @override
-  bool isRangedAttackAction(dynamic actionId) =>
+  bool isRangedAttackAction({
+    required DDBasePlayerView player,
+    required dynamic actionId,
+  }) =>
       actionId == JoystickSetup.kFireballAttackId ||
       actionId == KeyboardSetup.kSecondaryActionKey;
 
