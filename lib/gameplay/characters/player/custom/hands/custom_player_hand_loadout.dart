@@ -7,7 +7,7 @@ import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec.dart';
 
-enum KnightAttackTrigger { primary, fireball, shieldDefense }
+enum CustomPlayerAttackTrigger { primary, fireball, shieldDefense }
 
 class CustomPlayerAttackExecutionContext {
   final SimplePlayer player;
@@ -21,17 +21,17 @@ class CustomPlayerAttackExecutionContext {
   });
 }
 
-typedef KnightAttackExecutor =
+typedef CustomPlayerAttackExecutor =
     FutureOr<void> Function(
       CustomPlayerAttackExecutionContext context,
       double damage,
     );
 
 class CustomPlayerHandAttackSpec {
-  final KnightAttackTrigger trigger;
+  final CustomPlayerAttackTrigger trigger;
   final AttackType attackType;
   final SynchronizedAttackSpec syncSpec;
-  final KnightAttackExecutor execute;
+  final CustomPlayerAttackExecutor execute;
 
   const CustomPlayerHandAttackSpec({
     required this.trigger,

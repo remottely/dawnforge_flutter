@@ -12,7 +12,8 @@ class CustomPlayerHandManager {
 
   final SimplePlayer _owner;
   final Map<CustomPlayerHandSlot, _CustomPlayerHandRuntime> _hands = {};
-  final Map<KnightAttackTrigger, CustomPlayerHandSlot> _triggerToSlot = {};
+  final Map<CustomPlayerAttackTrigger, CustomPlayerHandSlot> _triggerToSlot =
+      {};
 
   // Sistema de defesa
   ShieldDefenseComponent? _defenseComponent;
@@ -110,7 +111,7 @@ class CustomPlayerHandManager {
     return itemController;
   }
 
-  bool executeAttack(KnightAttackTrigger trigger, double damage) {
+  bool executeAttack(CustomPlayerAttackTrigger trigger, double damage) {
     final slot = _triggerToSlot[trigger];
     if (slot == null) return false;
 
@@ -169,7 +170,7 @@ class CustomPlayerHandManager {
     if (_isDefending) return true; // Já está defendendo
 
     // Verificar se tem escudo no slot de defesa
-    final defenseSlot = _triggerToSlot[KnightAttackTrigger.shieldDefense];
+    final defenseSlot = _triggerToSlot[CustomPlayerAttackTrigger.shieldDefense];
     if (defenseSlot == null) {
       developer.log(
         '[CustomPlayerHandManager] Sem escudo equipado para defender',

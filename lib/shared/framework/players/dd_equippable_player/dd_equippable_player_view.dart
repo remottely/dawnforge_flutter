@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_manager.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_slot.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_item_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_loadout.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_manager.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_slot.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_hybrid_combat_player/dd_hybrid_combat_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_hybrid_combat_player/dd_hybrid_combat_player_model.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_hybrid_combat_player/dd_hybrid_combat_player_view.dart';
@@ -126,11 +126,11 @@ abstract class DDEquippablePlayerView<
 
   @override
   bool executePrimaryAttack(double damage) =>
-      _executeAttackForTrigger(KnightAttackTrigger.primary, damage);
+      _executeAttackForTrigger(CustomPlayerAttackTrigger.primary, damage);
 
   @override
   bool executeRangedAttack(double damage) =>
-      _executeAttackForTrigger(KnightAttackTrigger.fireball, damage);
+      _executeAttackForTrigger(CustomPlayerAttackTrigger.fireball, damage);
 
   /// Inicia modo de defesa com escudo
   bool startShieldDefense() {
@@ -155,7 +155,10 @@ abstract class DDEquippablePlayerView<
   /// [damage] The damage value to apply.
   ///
   /// Returns `true` if any equipped item successfully handled the attack.
-  bool _executeAttackForTrigger(KnightAttackTrigger trigger, double damage) {
+  bool _executeAttackForTrigger(
+    CustomPlayerAttackTrigger trigger,
+    double damage,
+  ) {
     return _handEquipmentManager.executeAttack(trigger, damage);
   }
 }

@@ -3,7 +3,6 @@ import 'package:darkness_dungeon/gameplay/characters/player/custom/custom_player
 import 'package:darkness_dungeon/gameplay/characters/player/custom/custom_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_loadout.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
-import 'package:darkness_dungeon/gameplay/inventory/equipment_to_custom_player_adapter.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_equippable_player/dd_equippable_player_view.dart';
 
@@ -29,25 +28,17 @@ class CustomPlayerView
     required super.animation,
     required super.size,
     required RectangleHitbox hitbox,
-    double? life,
-    double? speed,
-    LightingConfig? lightingConfig,
-    CustomPlayerHandLoadoutSetup? handLoadout,
-  }) : _customHitbox = hitbox,
-       _customLightingConfig =
-           lightingConfig ?? KnightPlayerConfig.lightingConfig,
-       super(
-         life: life ?? KnightPlayerConfig.kLife,
-         speed: speed ?? KnightPlayerConfig.kSpeed,
-         equipmentLoadout:
-             handLoadout ??
-             EquipmentToCustomPlayerAdapter.instance
-                 .createLoadoutFromEquipment(),
-       );
+    required double life,
+    required double speed,
+    required LightingConfig lightingConfig,
+    required CustomPlayerHandLoadoutSetup handLoadout,
+  }) : _hitbox = hitbox,
+       _lightingConfig = lightingConfig,
+       super(life: life, speed: speed, equipmentLoadout: handLoadout);
 
-  final RectangleHitbox _customHitbox;
+  final RectangleHitbox _hitbox;
   final LightingConfig
-  _customLightingConfig; // ============================================================================
+  _lightingConfig; // ============================================================================
   // Factory Methods - Configuration
   // ============================================================================
 
@@ -74,10 +65,10 @@ class CustomPlayerView
   }
 
   @override
-  RectangleHitbox getHitbox() => _customHitbox;
+  RectangleHitbox getHitbox() => _hitbox;
 
   @override
-  LightingConfig getLightingConfig() => _customLightingConfig;
+  LightingConfig getLightingConfig() => _lightingConfig;
 
   @override
   DDDecoration getDeathMarker(Vector2 position) =>

@@ -13,6 +13,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/save/game_save_controller
 import 'package:darkness_dungeon/gameplay/farm/handlers/farm_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen_config.dart';
+import 'package:darkness_dungeon/gameplay/inventory/equipment_to_custom_player_adapter.dart';
 import 'package:flutter/material.dart';
 
 abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
@@ -136,6 +137,8 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
     //   life: KnightPlayerConfig.kLife,
     //   speed: KnightPlayerConfig.kSpeed,
     //   lightingConfig: KnightPlayerConfig.lightingConfig,
+    // handLoadout: EquipmentToCustomPlayerAdapter.instance
+    // .createLoadoutFromEquipment(),
     // );
 
     final player = CustomPlayerView(
@@ -147,6 +150,8 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
       life: SunnyPlayerConfig.kLife,
       speed: SunnyPlayerConfig.kSpeed,
       lightingConfig: SunnyPlayerConfig.lightingConfig,
+      handLoadout: EquipmentToCustomPlayerAdapter.instance
+          .createLoadoutFromEquipment(),
     );
 
     developer.log(

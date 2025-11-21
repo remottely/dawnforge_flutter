@@ -15,7 +15,7 @@ import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/weapon_type.dart';
 
 /// Adaptador que converte equipamentos do InventoryManager
-/// para o sistema de hands do Knight Player
+/// para o sistema de hands do Custom Player
 ///
 /// Responsável por:
 /// - Sincronizar EquipmentManager → CustomPlayerHandLoadout
@@ -196,7 +196,7 @@ final class EquipmentToCustomPlayerAdapter {
       slot: CustomPlayerHandSlot.right,
       itemData: handData,
       attack: CustomPlayerHandAttackSpec(
-        trigger: KnightAttackTrigger.primary,
+        trigger: CustomPlayerAttackTrigger.primary,
         attackType: AttackType.melee,
         syncSpec: syncSpec,
         execute: (context, damage) {
@@ -254,7 +254,7 @@ final class EquipmentToCustomPlayerAdapter {
       const syncSpec = SynchronizedAttackSpecConfig.standard;
 
       attackSpec = CustomPlayerHandAttackSpec(
-        trigger: KnightAttackTrigger.fireball,
+        trigger: CustomPlayerAttackTrigger.fireball,
         attackType: AttackType.ranged,
         syncSpec: syncSpec,
         execute: (context, damage) {
@@ -273,7 +273,7 @@ final class EquipmentToCustomPlayerAdapter {
       const syncSpec = SynchronizedAttackSpecConfig.standard;
 
       attackSpec = CustomPlayerHandAttackSpec(
-        trigger: KnightAttackTrigger.shieldDefense,
+        trigger: CustomPlayerAttackTrigger.shieldDefense,
         attackType: AttackType.melee, // Tipo irrelevante para defesa
         syncSpec: syncSpec,
         execute: (context, damage) {

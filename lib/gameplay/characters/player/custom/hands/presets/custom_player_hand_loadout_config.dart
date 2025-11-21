@@ -7,7 +7,6 @@ import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/presets
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/player_primary_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
@@ -40,7 +39,7 @@ final class CustomPlayerHandLoadoutConfig {
       slot: CustomPlayerHandSlot.right,
       itemData: swordData,
       attack: CustomPlayerHandAttackSpec(
-        trigger: KnightAttackTrigger.primary,
+        trigger: CustomPlayerAttackTrigger.primary,
         attackType: AttackType.melee,
         syncSpec: SynchronizedAttackSpecConfig.standard,
         execute: (context, damage) {
@@ -105,11 +104,10 @@ final class CustomPlayerHandLoadoutConfig {
       slot: CustomPlayerHandSlot.left,
       itemData: _leftHandData,
       attack: CustomPlayerHandAttackSpec(
-        trigger: KnightAttackTrigger.fireball,
+        trigger: CustomPlayerAttackTrigger.fireball,
         attackType: AttackType.ranged,
         syncSpec: _leftHandSyncSpec,
         execute: (context, damage) {
-
           CharacterFireballAttackConfig.playerExecute(
             player: context.player,
             damage: damage,
@@ -134,7 +132,7 @@ final class CustomPlayerHandLoadoutConfig {
       slot: CustomPlayerHandSlot.right,
       itemData: _rightHandData,
       attack: CustomPlayerHandAttackSpec(
-        trigger: KnightAttackTrigger.primary,
+        trigger: CustomPlayerAttackTrigger.primary,
         attackType: AttackType.melee,
         syncSpec: _rightHandSyncSpec,
         execute: (context, damage) {
