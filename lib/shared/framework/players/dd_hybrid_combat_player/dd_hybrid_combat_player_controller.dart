@@ -11,16 +11,16 @@ abstract class DDHybridCombatPlayerController<
 >
     extends DDBasePlayerController<M> {
   /// Callback invoked to execute the primary melee attack.
-  final bool Function(double damage) onPrimaryAttack;
+  final bool Function(double damage) onExecutePrimaryAttack;
 
   /// Callback invoked to execute the ranged attack.
-  final bool Function(double damage) onRangedAttack;
+  final bool Function(double damage) onExecuteRangedAttack;
 
   DDHybridCombatPlayerController({
     required super.model,
-    required this.onPrimaryAttack,
-    required this.onRangedAttack,
-    required super.onShowExclamation,
+    required this.onExecutePrimaryAttack,
+    required this.onExecuteRangedAttack,
+    required super.onDisplayExclamationEmote,
     required super.onDetectEnemyInLongVisionRadius,
   });
 
@@ -45,7 +45,9 @@ abstract class DDHybridCombatPlayerController<
     // Pausar regeneração durante ação
     beginStaminaConsumingAction();
 
-    final bool wasExecuted = onPrimaryAttack.call(model.primaryAttackDamage);
+    final bool wasExecuted = onExecutePrimaryAttack.call(
+      model.primaryAttackDamage,
+    );
     if (!wasExecuted) {
       // Ação não executada, retomar regeneração
       endStaminaConsumingAction();
@@ -65,7 +67,9 @@ abstract class DDHybridCombatPlayerController<
     // Pausar regeneração durante ação
     beginStaminaConsumingAction();
 
-    final bool wasExecuted = onRangedAttack.call(model.rangedAttackDamage);
+    final bool wasExecuted = onExecuteRangedAttack.call(
+      model.rangedAttackDamage,
+    );
     if (!wasExecuted) {
       // Ação não executada, retomar regeneração
       endStaminaConsumingAction();

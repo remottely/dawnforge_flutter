@@ -10,17 +10,17 @@ import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mo
 abstract class DDMobilePlayerController<M extends DDMobilePlayerModel>
     extends DDHybridCombatPlayerController<M> {
   /// Callback invoked when the run state changes.
-  final void Function(bool isRunning) onRunChange;
+  final void Function(bool isRunning) onChangeRunState;
 
   /// Indicates whether the run button/key is currently pressed.
   bool _isRunInputActive = false;
 
   DDMobilePlayerController({
     required super.model,
-    required this.onRunChange,
-    required super.onPrimaryAttack,
-    required super.onRangedAttack,
-    required super.onShowExclamation,
+    required this.onChangeRunState,
+    required super.onExecutePrimaryAttack,
+    required super.onExecuteRangedAttack,
+    required super.onDisplayExclamationEmote,
     required super.onDetectEnemyInLongVisionRadius,
   });
 
@@ -55,11 +55,11 @@ abstract class DDMobilePlayerController<M extends DDMobilePlayerModel>
     if (eventType == ActionEvent.DOWN) {
       _isRunInputActive = true;
       model.isRunning = true;
-      onRunChange(true);
+      onChangeRunState.call(true);
     } else if (eventType == ActionEvent.UP) {
       _isRunInputActive = false;
       model.isRunning = false;
-      onRunChange(false);
+      onChangeRunState.call(false);
     }
   }
 }

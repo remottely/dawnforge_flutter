@@ -64,10 +64,10 @@ class SunnyPlayerView
   @override
   SunnyPlayerController createMobileController({
     required SunnyPlayerModel model,
-    required void Function(bool isRunning) onRunChange,
-    required bool Function(double damage) onPrimaryAttack,
-    required bool Function(double damage) onRangedAttack,
-    required void Function() onShowExclamation,
+    required void Function(bool isRunning) onChangeRunState,
+    required bool Function(double damage) onExecutePrimaryAttack,
+    required bool Function(double damage) onExecuteRangedAttack,
+    required void Function() onDisplayExclamationEmote,
     required void Function({
       required double longVisionRadius,
       required void Function() notObserved,
@@ -77,10 +77,10 @@ class SunnyPlayerView
   }) {
     return SunnyPlayerController(
       model: model,
-      onRunChange: onRunChange,
-      onPrimaryAttack: onPrimaryAttack,
-      onRangedAttack: onRangedAttack,
-      onShowExclamation: onShowExclamation,
+      onChangeRunState: onChangeRunState,
+      onExecutePrimaryAttack: onExecutePrimaryAttack,
+      onExecuteRangedAttack: onExecuteRangedAttack,
+      onDisplayExclamationEmote: onDisplayExclamationEmote,
       onDetectEnemyInLongVisionRadius: onDetectEnemyInLongVisionRadius,
     );
   }

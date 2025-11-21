@@ -15,7 +15,7 @@ abstract class DDBasePlayerController<M extends DDBasePlayerModel> {
   final M model;
 
   /// Callback invoked to display an exclamation emote.
-  final void Function() onShowExclamation;
+  final void Function() onDisplayExclamationEmote;
 
   /// Callback for delegating enemy visibility checks to the view layer.
   final void Function({
@@ -37,11 +37,11 @@ abstract class DDBasePlayerController<M extends DDBasePlayerModel> {
   /// Creates a base player controller with required dependencies.
   ///
   /// [model] The data model to control.
-  /// [onShowExclamation] Callback for emote display.
+  /// [onDisplayExclamationEmote] Callback for emote display.
   /// [onDetectEnemyInLongVisionRadius] Callback for enemy detection.
   DDBasePlayerController({
     required this.model,
-    required this.onShowExclamation,
+    required this.onDisplayExclamationEmote,
     required this.onDetectEnemyInLongVisionRadius,
   });
 
@@ -148,7 +148,7 @@ abstract class DDBasePlayerController<M extends DDBasePlayerModel> {
         if (model.isObservingEnemy) return;
 
         model.isObservingEnemy = true;
-        onShowExclamation();
+        onDisplayExclamationEmote();
       },
     );
   }

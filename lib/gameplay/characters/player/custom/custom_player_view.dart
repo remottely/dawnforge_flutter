@@ -54,9 +54,9 @@ class CustomPlayerView
   @override
   CustomPlayerController createCombatController({
     required CustomPlayerModel model,
-    required bool Function(double damage) onPrimaryAttack,
-    required bool Function(double damage) onRangedAttack,
-    required void Function() onShowExclamation,
+    required bool Function(double damage) onExecutePrimaryAttack,
+    required bool Function(double damage) onExecuteRangedAttack,
+    required void Function() onDisplayExclamationEmote,
     required void Function({
       required double longVisionRadius,
       required void Function() notObserved,
@@ -66,9 +66,9 @@ class CustomPlayerView
   }) {
     return CustomPlayerController(
       model: model,
-      onPrimaryAttack: onPrimaryAttack,
-      onRangedAttack: onRangedAttack,
-      onShowExclamation: onShowExclamation,
+      onExecutePrimaryAttack: onExecutePrimaryAttack,
+      onExecuteRangedAttack: onExecuteRangedAttack,
+      onDisplayExclamationEmote: onDisplayExclamationEmote,
       onDetectEnemyInLongVisionRadius: onDetectEnemyInLongVisionRadius,
     );
   }

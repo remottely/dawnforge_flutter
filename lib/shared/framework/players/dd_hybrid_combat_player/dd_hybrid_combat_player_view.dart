@@ -71,9 +71,9 @@ abstract class DDHybridCombatPlayerView<
   C createController(M model) {
     return createCombatController(
       model: model,
-      onPrimaryAttack: executePrimaryAttack,
-      onRangedAttack: executeRangedAttack,
-      onShowExclamation: displayExclamationEmote,
+      onExecutePrimaryAttack: executePrimaryAttack,
+      onExecuteRangedAttack: executeRangedAttack,
+      onDisplayExclamationEmote: handleDisplayExclamationEmote,
       onDetectEnemyInLongVisionRadius: handleDetectEnemyInLongVisionRadius,
     );
   }
@@ -84,9 +84,9 @@ abstract class DDHybridCombatPlayerView<
   /// type with the provided callbacks.
   C createCombatController({
     required M model,
-    required bool Function(double damage) onPrimaryAttack,
-    required bool Function(double damage) onRangedAttack,
-    required void Function() onShowExclamation,
+    required bool Function(double damage) onExecutePrimaryAttack,
+    required bool Function(double damage) onExecuteRangedAttack,
+    required void Function() onDisplayExclamationEmote,
     required void Function({
       required double longVisionRadius,
       required void Function() notObserved,

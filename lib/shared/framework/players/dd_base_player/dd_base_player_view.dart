@@ -188,7 +188,7 @@ abstract class DDBasePlayerView<
   // ============================================================================
 
   /// Displays an exclamation emote above the character's head.
-  void displayExclamationEmote() {
+  void handleDisplayExclamationEmote() {
     add(
       EmoteManager.displayEmoteAboveCharacter(
         asset: EmoteManager.kExclamationEmoteAsset,

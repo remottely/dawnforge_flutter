@@ -26,15 +26,15 @@ class CustomPlayerController
   /// separation between controller logic and presentation.
   ///
   /// [model] The Knight player data model.
-  /// [onPrimaryAttack] Callback for primary attack execution via equipment.
-  /// [onRangedAttack] Callback for ranged attack execution via equipment.
-  /// [onShowExclamation] Callback for emote display.
+  /// [onExecutePrimaryAttack] Callback for primary attack execution via equipment.
+  /// [onExecuteRangedAttack] Callback for ranged attack execution via equipment.
+  /// [onDisplayExclamationEmote] Callback for emote display.
   /// [onDetectEnemyInLongVisionRadius] Callback for enemy detection.
   CustomPlayerController({
     required super.model,
-    required super.onPrimaryAttack,
-    required super.onRangedAttack,
-    required super.onShowExclamation,
+    required super.onExecutePrimaryAttack,
+    required super.onExecuteRangedAttack,
+    required super.onDisplayExclamationEmote,
     required super.onDetectEnemyInLongVisionRadius,
   });
 

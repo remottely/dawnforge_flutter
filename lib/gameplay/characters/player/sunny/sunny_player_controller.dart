@@ -12,10 +12,10 @@ import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mo
 class SunnyPlayerController extends DDMobilePlayerController<SunnyPlayerModel> {
   SunnyPlayerController({
     required super.model,
-    required super.onRunChange,
-    required super.onPrimaryAttack,
-    required super.onRangedAttack,
-    required super.onShowExclamation,
+    required super.onChangeRunState,
+    required super.onExecutePrimaryAttack,
+    required super.onExecuteRangedAttack,
+    required super.onDisplayExclamationEmote,
     required super.onDetectEnemyInLongVisionRadius,
   });
 

@@ -81,9 +81,9 @@ abstract class DDMobilePlayerView<
   @override
   C createCombatController({
     required M model,
-    required bool Function(double damage) onPrimaryAttack,
-    required bool Function(double damage) onRangedAttack,
-    required void Function() onShowExclamation,
+    required bool Function(double damage) onExecutePrimaryAttack,
+    required bool Function(double damage) onExecuteRangedAttack,
+    required void Function() onDisplayExclamationEmote,
     required void Function({
       required double longVisionRadius,
       required void Function() notObserved,
@@ -93,10 +93,10 @@ abstract class DDMobilePlayerView<
   }) {
     return createMobileController(
       model: model,
-      onRunChange: handleRunStateChange,
-      onPrimaryAttack: onPrimaryAttack,
-      onRangedAttack: onRangedAttack,
-      onShowExclamation: onShowExclamation,
+      onChangeRunState: _handleChangeRunState,
+      onExecutePrimaryAttack: onExecutePrimaryAttack,
+      onExecuteRangedAttack: onExecuteRangedAttack,
+      onDisplayExclamationEmote: onDisplayExclamationEmote,
       onDetectEnemyInLongVisionRadius: onDetectEnemyInLongVisionRadius,
     );
   }
@@ -104,10 +104,10 @@ abstract class DDMobilePlayerView<
   /// Creates the mobile controller with all required callbacks.
   C createMobileController({
     required M model,
-    required void Function(bool isRunning) onRunChange,
-    required bool Function(double damage) onPrimaryAttack,
-    required bool Function(double damage) onRangedAttack,
-    required void Function() onShowExclamation,
+    required void Function(bool isRunning) onChangeRunState,
+    required bool Function(double damage) onExecutePrimaryAttack,
+    required bool Function(double damage) onExecuteRangedAttack,
+    required void Function() onDisplayExclamationEmote,
     required void Function({
       required double longVisionRadius,
       required void Function() notObserved,
@@ -144,7 +144,7 @@ abstract class DDMobilePlayerView<
   /// attack animation callbacks.
   ///
   /// [shouldRun] Whether the character should be in running state.
-  void handleRunStateChange(bool shouldRun) {
+  void _handleChangeRunState(bool shouldRun) {
     if (_isInRunningState == shouldRun) return;
 
     _isInRunningState = shouldRun;
