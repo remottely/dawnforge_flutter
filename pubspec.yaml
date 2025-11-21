@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.51.14+1
+version: 1.51.15+1
 
 environment:
   sdk: ^3.9.2
@@ -52,7 +52,7 @@ flutter:
     - assets/images/gameplay/characters/weapons/
     - assets/images/gameplay/decorations/
     - assets/images/gameplay/farmable/
-    - assets/images/ui/controls/
+    - assets/images/ui/input/
     - assets/images/hud/
     - assets/images/joystick/
     - assets/images/tiled/

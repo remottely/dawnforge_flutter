@@ -34,5 +34,6 @@ final class PlayerVitalStatsHUDConfig {
   static final Vector2 componentPosition = Vector2.all(_kHUDPadding);
 
   /// Factory methods
-  static Future<Sprite> loadHealthUISprite() => Sprite.load('health_ui.png');
+  static Future<Sprite> loadHealthUISprite() =>
+      Sprite.load('hud/health_ui.png');
 }

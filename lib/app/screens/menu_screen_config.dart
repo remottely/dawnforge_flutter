@@ -17,7 +17,7 @@ class MenuScreenConfig {
   ];
 
   static final Future<Sprite> keyboardSprite = Sprite.load(
-    'ui/controls/keyboard_tip.png',
+    'ui/input/keyboard_tip.png',
   );
 
   static const String kKevinKoboriUrl = 'https://github.com/kevinkobori';

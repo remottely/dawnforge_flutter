@@ -1,14 +1,14 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/player_vital_stats_hud_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/player_vital_stats/player_vital_stats_hud_config.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 import 'package:flutter/material.dart';
 
-class PlayerVitalStatsHUD extends InterfaceComponent {
+class PlayerVitalStatsHUDView extends InterfaceComponent {
   double _vMaxLife = 0.0;
   double _vCurrentLife = 0.0;
   double _vCurrentStamina = 0.0;
 
-  PlayerVitalStatsHUD()
+  PlayerVitalStatsHUDView()
     : super(
         id: PlayerVitalStatsHUDConfig.kComponentId,
         size: PlayerVitalStatsHUDConfig.componentSize,

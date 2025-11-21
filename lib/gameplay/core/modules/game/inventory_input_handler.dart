@@ -2,7 +2,7 @@ import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/custom/custom_player_view.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/hud_view.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/gameplay/gameplay_hud_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_to_custom_player_adapter.dart';
@@ -97,7 +97,7 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
     //   }
     // }
 
-    (gameRef.interface as HUDView).inventoryHUD.toggle();
+    (gameRef.interface as GameplayHUDView).inventoryHUD.toggleVisibility();
     // developer.log(
     //   '[InventoryInput] Inventário ${_cachedHUD!.inventoryHUD.isVisible ? "aberto" : "fechado"}',
     // );

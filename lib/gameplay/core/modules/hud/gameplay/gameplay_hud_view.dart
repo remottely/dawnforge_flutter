@@ -1,13 +1,13 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/hud_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/inventory_hud.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/player_vital_stats_hud.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/gameplay/gameplay_hud_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/inventory/inventory_hud_view.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/player_vital_stats/player_vital_stats_hud_view.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/door_key_decoration.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 
-class HUDView extends GameInterface {
+class GameplayHUDView extends GameInterface {
   late Sprite _keySprite;
-  late InventoryHUD inventoryHUD;
+  final inventoryHUD = InventoryHUDView();
 
   @override
   Future<void> onLoad() async {
@@ -28,8 +28,7 @@ class HUDView extends GameInterface {
   }
 
   void _initializeComponents() {
-    add(PlayerVitalStatsHUD());
-    inventoryHUD = InventoryHUD();
+    add(PlayerVitalStatsHUDView());
     add(inventoryHUD);
   }
 
@@ -38,10 +37,10 @@ class HUDView extends GameInterface {
       _keySprite.renderRect(
         canvas,
         Rect.fromLTWH(
-          HUDConfig.kKeyIconStartPositionX,
-          HUDConfig.kKeyIconStartPositionY,
-          HUDConfig.kKeyIconWidth,
-          HUDConfig.kKeyIconHeight,
+          GameplayHUDConfig.kKeyIconStartPositionX,
+          GameplayHUDConfig.kKeyIconStartPositionY,
+          GameplayHUDConfig.kKeyIconWidth,
+          GameplayHUDConfig.kKeyIconHeight,
         ),
       );
     }

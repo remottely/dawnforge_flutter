@@ -8,7 +8,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/game/game_state_manager.d
 import 'package:darkness_dungeon/gameplay/core/modules/game/inventory_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/shield_defense_input_handler.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/hud_view.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/gameplay/gameplay_hud_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/save/game_save_controller.dart';
 import 'package:darkness_dungeon/gameplay/farm/handlers/farm_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen.dart';
@@ -16,7 +16,7 @@ import 'package:darkness_dungeon/gameplay/gameplay_screen_config.dart';
 import 'package:flutter/material.dart';
 
 abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
-  late final HUDView gameplayHUD;
+  final gameplayHUD = GameplayHUDView();
   late final CameraConfig cameraConfig;
   final gameplayGameStateManager = GameStateManager();
   final inventoryInputHandler = InventoryInputHandler();
@@ -31,7 +31,6 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   @override
   void initState() {
     super.initState();
-    _initializeGameComponents();
     _loadGameOrResetLife();
   }
 
@@ -83,11 +82,11 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    cameraConfig = GameplayScreenConfig.createCameraConfig(context);
+    _initializeGameComponents();
   }
 
   void _initializeGameComponents() {
-    gameplayHUD = HUDView();
+    cameraConfig = GameplayScreenConfig.createCameraConfig(context);
   }
 
   SunnyPlayerView buildSunnyPlayer(Vector2 position) {

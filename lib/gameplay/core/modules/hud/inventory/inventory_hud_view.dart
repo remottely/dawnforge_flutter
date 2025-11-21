@@ -5,35 +5,35 @@ import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
 import 'package:flutter/material.dart';
 
 /// HUD que exibe o inventário do jogador
-class InventoryHUD extends InterfaceComponent {
+final class _InventoryHUDConfig {
   static const int kComponentId = 2;
   static const double kSlotSize = 40.0;
   static const double kSpacing = 4.0;
   static const double kPadding = 10.0;
   static const int kSlotsPerRow = 6;
+}
 
-  bool _isVisible = false;
-
-  InventoryHUD()
+class InventoryHUDView extends InterfaceComponent {
+  InventoryHUDView()
     : super(
-        id: kComponentId,
+        id: _InventoryHUDConfig.kComponentId,
         size: Vector2(
-          kPadding * 2 +
-              (kSlotSize * kSlotsPerRow) +
-              (kSpacing * (kSlotsPerRow - 1)),
+          _InventoryHUDConfig.kPadding * 2 +
+              (_InventoryHUDConfig.kSlotSize *
+                  _InventoryHUDConfig.kSlotsPerRow) +
+              (_InventoryHUDConfig.kSpacing *
+                  (_InventoryHUDConfig.kSlotsPerRow - 1)),
           400,
         ),
         position: Vector2(10, 100),
       );
 
+  /// Visibility control
+  bool _isVisible = false;
   bool get isVisible => _isVisible;
-
-  void toggle() {
-    _isVisible = !_isVisible;
-  }
-
-  void show() => _isVisible = true;
-  void hide() => _isVisible = false;
+  void _show() => _isVisible = true;
+  void _hide() => _isVisible = false;
+  void toggleVisibility() => _isVisible ? _hide() : _show();
 
   /// Força um refresh do HUD (útil após mudanças no inventário)
   void refresh() {
@@ -47,13 +47,13 @@ class InventoryHUD extends InterfaceComponent {
     // Background semi-transparente
     final bgRect = Rect.fromLTWH(0, 0, size.x, size.y);
     final bgPaint = Paint()
-      ..color = Colors.black.withOpacity(0.8)
+      ..color = Colors.black.withValues(alpha: 0.8)
       ..style = PaintingStyle.fill;
     canvas.drawRect(bgRect, bgPaint);
 
     // Border
     final borderPaint = Paint()
-      ..color = Colors.white.withOpacity(0.5)
+      ..color = Colors.white.withValues(alpha: 0.5)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
     canvas.drawRect(bgRect, borderPaint);
@@ -62,7 +62,7 @@ class InventoryHUD extends InterfaceComponent {
     _drawText(
       canvas,
       'INVENTÁRIO (I para fechar)',
-      Offset(kPadding, kPadding),
+      Offset(_InventoryHUDConfig.kPadding, _InventoryHUDConfig.kPadding),
       fontSize: 14,
     );
 
@@ -77,24 +77,29 @@ class InventoryHUD extends InterfaceComponent {
 
   void _drawInventorySlots(Canvas canvas) {
     final manager = InventoryManager.instance;
-    double startY = kPadding + 30;
+    double startY = _InventoryHUDConfig.kPadding + 30;
 
     _drawText(
       canvas,
       'Inventário (${manager.usedSlots}/${manager.maxSlots}):',
-      Offset(kPadding, startY),
+      Offset(_InventoryHUDConfig.kPadding, startY),
       fontSize: 12,
     );
 
     startY += 20;
 
     for (int i = 0; i < manager.maxSlots; i++) {
-      final row = i ~/ kSlotsPerRow;
-      final col = i % kSlotsPerRow;
+      final row = i ~/ _InventoryHUDConfig.kSlotsPerRow;
+      final col = i % _InventoryHUDConfig.kSlotsPerRow;
 
-      final x = kPadding + (col * (kSlotSize + kSpacing));
-      final y = startY + (row * (kSlotSize + kSpacing));
-
+      final x =
+          _InventoryHUDConfig.kPadding +
+          (col *
+              (_InventoryHUDConfig.kSlotSize + _InventoryHUDConfig.kSpacing));
+      final y =
+          startY +
+          (row *
+              (_InventoryHUDConfig.kSlotSize + _InventoryHUDConfig.kSpacing));
       final slot = manager.getSlotByIndex(i);
       _drawSlot(canvas, Offset(x, y), slot?.item?.name, slot?.quantity);
     }
@@ -102,9 +107,15 @@ class InventoryHUD extends InterfaceComponent {
 
   void _drawEquipmentSlots(Canvas canvas) {
     final manager = EquipmentManager.instance;
-    double startY = kPadding + 30 + 200; // Abaixo do inventário
+    double startY =
+        _InventoryHUDConfig.kPadding + 30 + 200; // Abaixo do inventário
 
-    _drawText(canvas, 'Equipamento:', Offset(kPadding, startY), fontSize: 12);
+    _drawText(
+      canvas,
+      'Equipamento:',
+      Offset(_InventoryHUDConfig.kPadding, startY),
+      fontSize: 12,
+    );
 
     startY += 20;
 
@@ -123,8 +134,17 @@ class InventoryHUD extends InterfaceComponent {
       final row = i ~/ 3;
 
       final x =
-          kPadding + (col * (kSlotSize + 10 + 60)); // Espaço extra para label
-      final y = startY + (row * (kSlotSize + kSpacing + 10));
+          _InventoryHUDConfig.kPadding +
+          (col *
+              (_InventoryHUDConfig.kSlotSize +
+                  10 +
+                  60)); // Espaço extra para label
+      final y =
+          startY +
+          (row *
+              (_InventoryHUDConfig.kSlotSize +
+                  _InventoryHUDConfig.kSpacing +
+                  10));
 
       final item = manager.getEquippedItem(slotType);
 
@@ -150,21 +170,21 @@ class InventoryHUD extends InterfaceComponent {
     final slotRect = Rect.fromLTWH(
       position.dx,
       position.dy,
-      kSlotSize,
-      kSlotSize,
+      _InventoryHUDConfig.kSlotSize,
+      _InventoryHUDConfig.kSlotSize,
     );
 
     // Background do slot
     final slotPaint = Paint()
       ..color = itemName != null
-          ? Colors.blue.withOpacity(0.3)
-          : Colors.grey.withOpacity(0.2)
+          ? Colors.blue.withValues(alpha: 0.3)
+          : Colors.grey.withValues(alpha: 0.2)
       ..style = PaintingStyle.fill;
     canvas.drawRect(slotRect, slotPaint);
 
     // Border do slot
     final borderPaint = Paint()
-      ..color = Colors.white.withOpacity(0.5)
+      ..color = Colors.white.withValues(alpha: 0.5)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1;
     canvas.drawRect(slotRect, borderPaint);
