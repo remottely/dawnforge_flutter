@@ -65,15 +65,15 @@ abstract class DDBasePlayerView<
   /// Creates the collision hitbox for this player.
   ///
   /// Subclasses must implement this to define their collision boundaries.
-  RectangleHitbox createHitbox();
+  RectangleHitbox getHitbox();
 
   /// Returns the lighting configuration for this player.
-  LightingConfig get lightingConfig;
+  LightingConfig getLightingConfig();
 
   /// Creates the crypt decoration displayed on player death.
   ///
   /// [position] The world position for the death marker.
-  DDDecoration createDeathMarker(Vector2 position);
+  DDDecoration getDeathMarker(Vector2 position);
 
   // ============================================================================
   // Lifecycle Methods
@@ -85,7 +85,7 @@ abstract class DDBasePlayerView<
 
     configureVisualEffects();
     _playerController = createController(_playerModel);
-    add(createHitbox());
+    add(getHitbox());
 
     // Restaurar vida do model depois que Bonfire inicializou
     _restoreLifeFromModel();
@@ -159,7 +159,7 @@ abstract class DDBasePlayerView<
 
   /// Configures visual effects such as lighting and movement controls.
   void configureVisualEffects() {
-    setupLighting(lightingConfig);
+    setupLighting(getLightingConfig());
     setupMovementByJoystick(intensityEnabled: true);
   }
 
@@ -180,7 +180,7 @@ abstract class DDBasePlayerView<
   ///
   /// Can be overridden by subclasses for custom death effects.
   void displayDeathVisualEffects() {
-    gameRef.add(createDeathMarker(position));
+    gameRef.add(getDeathMarker(position));
   }
 
   // ============================================================================

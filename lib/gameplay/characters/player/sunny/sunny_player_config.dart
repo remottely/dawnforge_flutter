@@ -186,7 +186,7 @@ final class SunnyPlayerConfig {
   ///
   /// Returns a configured SimpleDirectionAnimation instance.
   static final SimpleDirectionAnimation
-  createWalkAnimation = SimpleDirectionAnimation(
+  walkAnimation = SimpleDirectionAnimation(
     idleLeft: _loadSunnyPlayerIdleLeft6(),
     idleRight: UISpriteAnimationsConfig.loadSunnyPlayerIdleRight6(),
     runLeft: SpriteAnimation.load(
@@ -211,8 +211,7 @@ final class SunnyPlayerConfig {
   /// Uses the same idle animation as walking for consistency.
   ///
   /// Returns a configured SimpleDirectionAnimation instance.
-  static final SimpleDirectionAnimation
-  createRunAnimation = SimpleDirectionAnimation(
+  static final SimpleDirectionAnimation runAnimation = SimpleDirectionAnimation(
     idleLeft: _loadSunnyPlayerIdleLeft6(),
     idleRight: UISpriteAnimationsConfig.loadSunnyPlayerIdleRight6(),
     runLeft: SpriteAnimation.load(
@@ -265,7 +264,7 @@ final class SunnyPlayerConfig {
   /// [position] The world position for the crypt sprite.
   ///
   /// Returns a configured DDDecoration instance.
-  static DDDecoration createCryptComponent(Vector2 position) =>
+  static DDDecoration createDeathMarker(Vector2 position) =>
       DDDecoration.withSprite(
         sprite: loadCryptSprite(),
         position: Vector2(position.x, position.y),

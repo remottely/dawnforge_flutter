@@ -28,7 +28,7 @@ final class MiniBossEnemyConfig {
   static final Vector2 componentSize = textureSize;
 
   static final SimpleDirectionAnimation
-  createWalkAnimation = SimpleDirectionAnimation(
+  walkAnimation = SimpleDirectionAnimation(
     idleLeft: SpriteAnimation.load(
       'gameplay/characters/enemies/mini_boss/mini_boss_enemy_idle_left_4.png',
       SpriteAnimationConfig.createStandardData(

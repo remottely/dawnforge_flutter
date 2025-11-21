@@ -34,12 +34,8 @@ class SunnyPlayerView
   late final SynchronizedAttackController _meleeAttackController;
   late final SynchronizedAttackController _rangedAttackController;
 
-  /// Caches the last joystick directional input for restoration.
-  JoystickDirectionalEvent? _bufferedDirectionalInput;
-
   SunnyPlayerView({required super.position, required super.model})
     : super(
-        // animation: SunnyPlayerConfig.createWalkAnimation,
         size: SunnyPlayerConfig.componentSize,
         life: SunnyPlayerConfig.kLife,
         speed: SunnyPlayerConfig.kSpeed,
@@ -90,22 +86,21 @@ class SunnyPlayerView
   }
 
   @override
-  RectangleHitbox createHitbox() => SunnyPlayerConfig.hitbox;
+  RectangleHitbox getHitbox() => SunnyPlayerConfig.hitbox;
 
   @override
-  LightingConfig get lightingConfig => SunnyPlayerConfig.lightingConfig;
+  LightingConfig getLightingConfig() => SunnyPlayerConfig.lightingConfig;
 
   @override
-  DDDecoration createDeathMarker(Vector2 position) =>
-      SunnyPlayerConfig.createCryptComponent(position);
+  DDDecoration getDeathMarker(Vector2 position) =>
+      SunnyPlayerConfig.createDeathMarker(position);
 
   @override
   SimpleDirectionAnimation getWalkAnimation() =>
-      SunnyPlayerConfig.createWalkAnimation;
+      SunnyPlayerConfig.walkAnimation;
 
   @override
-  SimpleDirectionAnimation getRunAnimation() =>
-      SunnyPlayerConfig.createRunAnimation;
+  SimpleDirectionAnimation getRunAnimation() => SunnyPlayerConfig.runAnimation;
 
   // ============================================================================
   // Initialization
@@ -120,63 +115,6 @@ class SunnyPlayerView
       spec: SynchronizedAttackSpecConfig.standard,
     );
   }
-
-  // ============================================================================
-  // Input Handling Override - Movement Locking
-  // ============================================================================
-
-  @override
-  void onJoystickChangeDirectional(JoystickDirectionalEvent event) {
-    _bufferedDirectionalInput = JoystickDirectionalEvent(
-      directional: event.directional,
-      intensity: event.intensity,
-      radAngle: event.radAngle,
-    );
-
-    if (isActionLocked) {
-      return;
-    }
-
-    super.onJoystickChangeDirectional(event);
-  }
-
-  // /// Updates the current input direction based on joystick input.
-  // ///
-  // /// This method decouples input direction from movement state, ensuring
-  // /// combat actions always reflect the player's most recent directional intent.
-  // /// This matches professional game engine patterns where input is processed
-  // /// independently of movement constraints.
-  // void _updateInputDirectionFromEvent(JoystickDirectionalEvent event) {
-  //   switch (event.directional) {
-  //     case JoystickMoveDirectional.MOVE_UP:
-  //       _currentInputDirection = Direction.up;
-  //       break;
-  //     case JoystickMoveDirectional.MOVE_UP_LEFT:
-  //       _currentInputDirection = Direction.upLeft;
-  //       break;
-  //     case JoystickMoveDirectional.MOVE_UP_RIGHT:
-  //       _currentInputDirection = Direction.upRight;
-  //       break;
-  //     case JoystickMoveDirectional.MOVE_RIGHT:
-  //       _currentInputDirection = Direction.right;
-  //       break;
-  //     case JoystickMoveDirectional.MOVE_DOWN:
-  //       _currentInputDirection = Direction.down;
-  //       break;
-  //     case JoystickMoveDirectional.MOVE_DOWN_RIGHT:
-  //       _currentInputDirection = Direction.downRight;
-  //       break;
-  //     case JoystickMoveDirectional.MOVE_DOWN_LEFT:
-  //       _currentInputDirection = Direction.downLeft;
-  //       break;
-  //     case JoystickMoveDirectional.MOVE_LEFT:
-  //       _currentInputDirection = Direction.left;
-  //       break;
-  //     case JoystickMoveDirectional.IDLE:
-  //       // Preserve last direction when idle (standard game behavior)
-  //       break;
-  //   }
-  // }
 
   // ============================================================================
   // Combat Execution Implementation
@@ -196,7 +134,7 @@ class SunnyPlayerView
           onActionStart: lockAction,
           onActionEnd: unlockAction,
           onExecutionFrames: () {
-            _executePrimaryAttackWithEffects(damage: damage);
+            PlayerPrimaryAttackConfig.execute(player: this, damage: damage);
           },
         );
       },
@@ -209,37 +147,12 @@ class SunnyPlayerView
   bool executeRangedAttack(double damage) {
     final AttackExecutionInfo? executionInfo = _rangedAttackController.execute(
       AttackType.ranged,
-      () => _spawnFireballProjectile(damage),
+      () => CharacterFireballAttackConfig.playerExecute(
+        player: this,
+        damage: damage,
+      ),
     );
 
     return executionInfo != null;
-  }
-
-  /// Executes the complete primary attack with all effects.
-  void _executePrimaryAttackWithEffects({required double damage}) {
-    PlayerPrimaryAttackConfig.execute(player: this, damage: damage);
-  }
-
-  /// Spawns the fireball projectile with all configured properties.
-  void _spawnFireballProjectile(double damage) {
-    CharacterFireballAttackConfig.playerExecute(player: this, damage: damage);
-  }
-
-  // ============================================================================
-  // Movement Restoration
-  // ============================================================================
-
-  @override
-  void onActionFullyUnlocked() {
-    _restoreBufferedMovementInput();
-  }
-
-  /// Restores buffered directional input after action unlock.
-  void _restoreBufferedMovementInput() {
-    final JoystickDirectionalEvent? bufferedEvent = _bufferedDirectionalInput;
-    if (bufferedEvent != null &&
-        bufferedEvent.directional != JoystickMoveDirectional.IDLE) {
-      super.onJoystickChangeDirectional(bufferedEvent);
-    }
   }
 }

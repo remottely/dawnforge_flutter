@@ -153,7 +153,7 @@ final class KnightPlayerConfig {
   /// Includes idle and running animations for both left and right directions.
   /// The Knight has distinct left/right animations unlike some characters
   /// that mirror a single animation.
-  static final SimpleDirectionAnimation createWalkAnimation =
+  static final SimpleDirectionAnimation walkAnimation =
       SimpleDirectionAnimation(
         idleLeft: SpriteAnimation.load(
           'gameplay/characters/player/knight/knight_player_idle_left_6.png',

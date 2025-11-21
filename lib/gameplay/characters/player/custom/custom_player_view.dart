@@ -74,12 +74,12 @@ class CustomPlayerView
   }
 
   @override
-  RectangleHitbox createHitbox() => _customHitbox;
+  RectangleHitbox getHitbox() => _customHitbox;
 
   @override
-  LightingConfig get lightingConfig => _customLightingConfig;
+  LightingConfig getLightingConfig() => _customLightingConfig;
 
   @override
-  DDDecoration createDeathMarker(Vector2 position) =>
+  DDDecoration getDeathMarker(Vector2 position) =>
       KnightPlayerConfig.createCryptComponent(position);
 }

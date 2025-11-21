@@ -20,7 +20,7 @@ final class ImpEnemyConfig {
   static final Vector2 textureSize = TileConstants.tileSizeStandard;
   static final Vector2 componentSize = textureSize;
 
-  static final SimpleDirectionAnimation createWalkAnimation =
+  static final SimpleDirectionAnimation walkAnimation =
       SimpleDirectionAnimation(
         idleLeft: SpriteAnimation.load(
           'gameplay/characters/enemies/imp/imp_enemy_idle_left_4.png',

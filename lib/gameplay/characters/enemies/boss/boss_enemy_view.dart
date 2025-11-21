@@ -18,7 +18,7 @@ import 'package:flutter/material.dart';
 class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
   BossEnemyView({required super.position})
     : super(
-        animation: BossEnemyConfig.createWalkAnimation,
+        animation: BossEnemyConfig.walkAnimation,
         size: BossEnemyConfig.componentSize,
         speed: BossEnemyConfig.kSpeed,
         life: BossEnemyConfig.kLife,

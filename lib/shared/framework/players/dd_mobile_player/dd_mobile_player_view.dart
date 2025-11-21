@@ -53,6 +53,9 @@ abstract class DDMobilePlayerView<
   @protected
   bool get isActionLocked => _activeActionLockCount > 0;
 
+  /// Caches the last joystick directional input for restoration.
+  JoystickDirectionalEvent? _bufferedDirectionalInput;
+
   @override
   Future<void> onLoad() async {
     await super.onLoad();
@@ -112,6 +115,23 @@ abstract class DDMobilePlayerView<
     })
     onDetectEnemyInLongVisionRadius,
   });
+
+  // ============================================================================
+  // Input Handling Override - Movement Locking
+  // ============================================================================
+
+  @override
+  void onJoystickChangeDirectional(JoystickDirectionalEvent event) {
+    _bufferedDirectionalInput = JoystickDirectionalEvent(
+      directional: event.directional,
+      intensity: event.intensity,
+      radAngle: event.radAngle,
+    );
+
+    if (isActionLocked) return;
+
+    super.onJoystickChangeDirectional(event);
+  }
 
   // ============================================================================
   // Run State Management
@@ -215,6 +235,15 @@ abstract class DDMobilePlayerView<
   /// synchronized with the current run state if the character is moving.
   @protected
   void onActionFullyUnlocked() {
-    // Default: no-op, subclasses can override
+    _restoreBufferedMovementInput();
+  }
+
+  /// Restores buffered directional input after action unlock.
+  void _restoreBufferedMovementInput() {
+    final JoystickDirectionalEvent? bufferedEvent = _bufferedDirectionalInput;
+    if (bufferedEvent != null &&
+        bufferedEvent.directional != JoystickMoveDirectional.IDLE) {
+      super.onJoystickChangeDirectional(bufferedEvent);
+    }
   }
 }
