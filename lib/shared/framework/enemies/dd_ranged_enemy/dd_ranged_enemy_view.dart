@@ -1,14 +1,14 @@
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
-import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy.dart';
-import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy_controller.dart';
-import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy_model.dart';
+import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_controller.dart';
+import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_model.dart';
+import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_view.dart';
 
-abstract class DDRangedEnemy<
-  C extends DDBaseEnemyController,
+abstract class DDRangedEnemyView<
+  C extends DDBaseEnemyController<M>,
   M extends DDBaseEnemyModel
 >
-    extends DDBaseEnemy<C, M> {
-  DDRangedEnemy({
+    extends DDBaseEnemyView<C, M> {
+  DDRangedEnemyView({
     required super.position,
     required super.size,
     required super.animation,

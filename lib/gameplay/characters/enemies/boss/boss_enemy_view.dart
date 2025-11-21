@@ -12,10 +12,11 @@ import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart'
 import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_calculations.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_manager.dart';
-import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy.dart';
+import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_view.dart';
 import 'package:flutter/material.dart';
 
-class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
+class BossEnemyView
+    extends DDBaseEnemyView<BossEnemyController, BossEnemyModel> {
   BossEnemyView({required super.position})
     : super(
         animation: BossEnemyConfig.walkAnimation,
@@ -40,7 +41,7 @@ class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
   }
 
   @override
-  RectangleHitbox createHitbox() => BossEnemyConfig.createHitbox();
+  RectangleHitbox getHitbox() => BossEnemyConfig.createHitbox();
 
   @override
   void render(Canvas canvas) {
@@ -138,7 +139,7 @@ class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
 
     _executeExplosionFx(explosionPosition);
 
-    final DDBaseEnemy enemy = controller.model.spawnedEnemies.length == 2
+    final DDBaseEnemyView enemy = controller.model.spawnedEnemies.length == 2
         ? MiniBossEnemyView(position: explosionPosition)
         : ImpEnemyView(position: explosionPosition);
 
@@ -194,7 +195,7 @@ class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
     _spawnMinionAtDirection(customOffset: Vector2(width * -2, width));
   }
 
-  void _addEnemy(DDBaseEnemy enemy) {
+  void _addEnemy(DDBaseEnemyView enemy) {
     controller.model.addSpawnedEnemy(enemy);
     gameRef.add(enemy);
   }

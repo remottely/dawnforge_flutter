@@ -2,7 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/conversation/emote_manager.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
-import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy.dart';
+import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_view.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_model.dart';
 
@@ -24,8 +24,8 @@ abstract class DDBasePlayerView<
 >
     extends SimplePlayer
     with Lighting, BlockMovementCollision {
-  final M _playerModel;
-  late final C _playerController;
+  final M _model;
+  late final C _controller;
 
   /// Creates a base player with the specified configuration.
   ///
@@ -42,15 +42,15 @@ abstract class DDBasePlayerView<
     required super.size,
     required super.life,
     required super.speed,
-  }) : _playerModel = model {
+  }) : _model = model {
     anchor = Anchor.center;
   }
 
   /// Provides read-only access to the player's data model.
-  M get model => _playerController.model;
+  M get model => _controller.model;
 
   /// Provides access to the player controller for subclasses.
-  C get controller => _playerController;
+  C get controller => _controller;
 
   // ============================================================================
   // Abstract Factory Methods - Must be implemented by subclasses
@@ -84,7 +84,7 @@ abstract class DDBasePlayerView<
     await super.onLoad();
 
     configureVisualEffects();
-    _playerController = createController(_playerModel);
+    _controller = createController(_model);
     add(getHitbox());
 
     // Restaurar vida do model depois que Bonfire inicializou
@@ -96,7 +96,7 @@ abstract class DDBasePlayerView<
   /// Como o Bonfire não permite setar life diretamente, aplicamos
   /// o dano necessário para ajustar para o valor salvo.
   void _restoreLifeFromModel() {
-    final savedLife = _playerModel.life;
+    final savedLife = _model.life;
     if (savedLife != null && savedLife < life) {
       final damageToApply = life - savedLife;
       handleAttack(AttackOriginEnum.WORLD, damageToApply, 'restore_from_save');
@@ -108,13 +108,13 @@ abstract class DDBasePlayerView<
     if (isDead) return;
 
     _syncLifeToModel();
-    _playerController.update(dt);
+    _controller.update(dt);
     super.update(dt);
   }
 
   @override
   void onRemove() {
-    _playerController.dispose();
+    _controller.dispose();
     super.onRemove();
   }
 
@@ -126,7 +126,7 @@ abstract class DDBasePlayerView<
   void onJoystickAction(JoystickActionEvent event) {
     if (isDead) return;
 
-    _playerController.handleInputAction(event);
+    _controller.handleInputAction(event);
     super.onJoystickAction(event);
   }
 
@@ -188,7 +188,7 @@ abstract class DDBasePlayerView<
   // ============================================================================
 
   /// Displays an exclamation emote above the character's head.
-  void handleDisplayExclamationEmote() {
+  void onDisplayExclamationEmote() {
     add(
       EmoteManager.displayEmoteAboveCharacter(
         asset: EmoteManager.kExclamationEmoteAsset,
@@ -199,10 +199,10 @@ abstract class DDBasePlayerView<
   }
 
   /// Evaluates enemy visibility within the specified radius.
-  void handleDetectEnemyInLongVisionRadius({
+  void onDetectEnemyInLongVisionRadius({
     required double longVisionRadius,
     required void Function() notObserved,
-    required void Function(List<DDBaseEnemy> enemies) observed,
+    required void Function(List<DDBaseEnemyView> enemies) observed,
   }) {
     seeEnemy(
       radiusVision: longVisionRadius,
@@ -220,8 +220,8 @@ abstract class DDBasePlayerView<
   /// This ensures the model always reflects the current life state,
   /// which is crucial for persistence between map transitions.
   void _syncLifeToModel() {
-    if (_playerModel.life != life) {
-      _playerModel.updateLife(life);
+    if (_model.life != life) {
+      _model.updateLife(life);
     }
   }
 }

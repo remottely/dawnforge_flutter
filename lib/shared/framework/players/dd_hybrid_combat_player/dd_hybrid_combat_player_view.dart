@@ -73,8 +73,8 @@ abstract class DDHybridCombatPlayerView<
       model: model,
       onExecutePrimaryAttack: executePrimaryAttack,
       onExecuteRangedAttack: executeRangedAttack,
-      onDisplayExclamationEmote: handleDisplayExclamationEmote,
-      onDetectEnemyInLongVisionRadius: handleDetectEnemyInLongVisionRadius,
+      onDisplayExclamationEmote: onDisplayExclamationEmote,
+      onDetectEnemyInLongVisionRadius: onDetectEnemyInLongVisionRadius,
     );
   }
 
