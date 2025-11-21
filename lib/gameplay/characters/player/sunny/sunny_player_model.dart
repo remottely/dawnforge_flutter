@@ -1,12 +1,12 @@
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_model.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_model.dart';
 
 /// Data model for the Sunny player character.
 ///
 /// Extends the mobile player model to provide Sunny-specific configuration
 /// values while inheriting all base player functionality including combat
 /// resources, mobility state, and inventory management.
-class SunnyPlayerModel extends DDMobilePlayerModel {
+class SunnyPlayerModel extends DDFarmPlayerModel {
   SunnyPlayerModel({
     double? initialStamina,
     int? initialEnergy,
