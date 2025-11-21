@@ -3,6 +3,8 @@ enum WeaponType {
   /// Espadas - armas corpo a corpo balanceadas
   sword,
 
+  dig,
+
   /// Machados - alto dano, ataque lento
   axe,
 
@@ -46,6 +48,8 @@ enum WeaponType {
     switch (this) {
       case WeaponType.sword:
         return 'Sword';
+      case WeaponType.dig:
+        return 'Dig';
       case WeaponType.axe:
         return 'Axe';
       case WeaponType.spear:

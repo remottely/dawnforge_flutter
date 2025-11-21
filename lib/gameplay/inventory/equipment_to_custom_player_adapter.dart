@@ -37,7 +37,9 @@ final class EquipmentToCustomPlayerAdapter {
   ) {
     switch (weaponType) {
       case WeaponType.sword:
-        return CustomPlayerWeaponConfigs.sword;
+        return CustomPlayerWeaponConfigs.toolsAttackStrip10;
+      case WeaponType.dig:
+        return CustomPlayerWeaponConfigs.toolsDigStrip13;
       case WeaponType.axe:
         return CustomPlayerWeaponConfigs.axe;
       case WeaponType.mace:
@@ -110,15 +112,15 @@ final class EquipmentToCustomPlayerAdapter {
       return null;
     }
 
-    final weaponType = weaponItem.weaponType;
+    // final weaponType = weaponItem.weaponType;
 
-    // VALIDAÇÃO: Apenas sword e axe permitidos no weapon slot
-    if (weaponType != WeaponType.sword && weaponType != WeaponType.axe) {
-      developer.log(
-        '[EquipmentAdapter] Invalid weapon type for right hand: $weaponType (only sword/axe allowed)',
-      );
-      return null;
-    }
+    // // VALIDAÇÃO: Apenas sword e axe permitidos no weapon slot
+    // if (weaponType != WeaponType.sword && weaponType != WeaponType.axe) {
+    //   developer.log(
+    //     '[EquipmentAdapter] Invalid weapon type for right hand: $weaponType (only sword/axe allowed)',
+    //   );
+    //   return null;
+    // }
 
     // Determinar tipo de arma e criar entry apropriado
     return _createWeaponEntryFromItem(weaponItem);

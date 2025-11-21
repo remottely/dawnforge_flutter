@@ -110,7 +110,8 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
     developer.log('[InventoryInput] Inicializando itens de teste...');
 
     // Adicionar alguns itens de teste ao inventário
-    final sword = ItemFactory.createItem('iron_sword');
+    // final ironSword = ItemFactory.createItem('iron_sword');
+    final dig = ItemFactory.createItem('dig');
     final axe = ItemFactory.createItem('steel_axe');
     final staff = ItemFactory.createItem('fire_staff');
     final shield = ItemFactory.createItem('wooden_shield');
@@ -118,7 +119,8 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
     final wood = ItemFactory.createItem('wood');
     final seeds = ItemFactory.createItem('tomato_seeds');
 
-    if (sword != null) InventoryManager.instance.addItem(sword);
+    // if (ironSword != null) InventoryManager.instance.addItem(ironSword);
+    if (dig != null) InventoryManager.instance.addItem(dig);
     if (axe != null) InventoryManager.instance.addItem(axe);
     if (staff != null) InventoryManager.instance.addItem(staff);
     if (shield != null) InventoryManager.instance.addItem(shield);
@@ -169,7 +171,8 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
 
         // Validar se é SWORD ou AXE
         // if (!weaponType.contains('sword') && !weaponType.contains('axe')) {
-        if (weaponType != WeaponType.sword && weaponType != WeaponType.axe) {
+        // if (weaponType != WeaponType.sword && weaponType != WeaponType.axe) {
+        if (weaponType != WeaponType.dig) {
           developer.log(
             '[InventoryInput] Ignorando ${item.name} (tipo: $weaponType) - apenas sword/axe no weapon slot',
           );
@@ -297,7 +300,7 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
 
     // Criar novo loadout baseado no equipamento atual
     final newLoadout = EquipmentToCustomPlayerAdapter.instance
-        .createLoadoutFromEquipment();
+        .createLoadoutFromEquipment(); // TODO(Kevin): NOW - aqui onde seto o comportamento de ataque, mudar a logica para mobile/farm player
 
     // Recarregar loadout do player
     player.reloadEquipmentLoadout(newLoadout);
