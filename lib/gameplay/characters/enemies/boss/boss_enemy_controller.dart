@@ -24,13 +24,7 @@ class BossEnemyController extends DDBaseEnemyController<BossEnemyModel> {
   @override
   void update(double dt) {
     if (!model.isPlayerFirstDetection) {
-      onDetectPlayerInCloseVisionRadius(
-        closeVisionRadius: model.closeVisionRadius,
-        observed: (player) {
-          model.registerFirstPlayerSighting();
-          onPlayerFirstDetection(player);
-        },
-      );
+      _handleDetectPlayerInCloseVisionRadius();
       return;
     } else {
       onRequestSpawnMinion(dt);
@@ -39,6 +33,16 @@ class BossEnemyController extends DDBaseEnemyController<BossEnemyModel> {
         closeVisionRadius: model.closeVisionRadius,
       );
     }
+  }
+
+  void _handleDetectPlayerInCloseVisionRadius() {
+    onDetectPlayerInCloseVisionRadius.call(
+      closeVisionRadius: model.closeVisionRadius,
+      observed: (player) {
+        model.registerFirstPlayerSighting();
+        onPlayerFirstDetection(player);
+      },
+    );
   }
 
   void render(Canvas canvas) {

@@ -1,6 +1,6 @@
-import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/chest/chest_decoration_config.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/chest/chest_decoration_model.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 
 class ChestDecorationController {
   final ChestDecorationModel model;
@@ -8,10 +8,10 @@ class ChestDecorationController {
   final void Function() onOpenChest;
   final void Function() onDisplayExclamationEmote;
   final void Function({
-    required GameComponent player,
-    required void Function(GameComponent) observed,
+    required DDBasePlayerView player,
+    required void Function(DDBasePlayerView) observed,
     required void Function() notObserved,
-    required double radiusVision,
+    required double closeVisionRadius,
   })
   onDetectPlayerInCloseVisionRadius;
 
@@ -22,7 +22,7 @@ class ChestDecorationController {
     required this.onDetectPlayerInCloseVisionRadius,
   });
 
-  void update(double dt, GameComponent? player) {
+  void update(double dt, DDBasePlayerView? player) {
     if (player == null || model.isOpened) return;
     _handleDetectPlayerInCloseVisionRadius(player);
   }
@@ -37,10 +37,10 @@ class ChestDecorationController {
   }
 
   // Private helpers
-  void _handleDetectPlayerInCloseVisionRadius(GameComponent player) {
-    onDetectPlayerInCloseVisionRadius(
+  void _handleDetectPlayerInCloseVisionRadius(DDBasePlayerView player) {
+    onDetectPlayerInCloseVisionRadius.call(
       player: player,
-      radiusVision: ChestDecorationConfig.kVisionRadius,
+      closeVisionRadius: ChestDecorationConfig.kCloseVisionRadius,
       observed: (_) {
         if (!model.isDetectPlayer) {
           model.setIsDetectPlayer(true);

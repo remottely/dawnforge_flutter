@@ -9,6 +9,7 @@ import 'package:darkness_dungeon/gameplay/decorations/interactables/chest/chest_
 import 'package:darkness_dungeon/gameplay/decorations/interactables/chest/chest_decoration_model.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/life_potion_decoration.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_input_receiver/dd_input_receiver_decoration_view.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 import 'package:flutter/services.dart';
 
 class ChestDecorationView extends DDInputReceiverDecorationView {
@@ -31,8 +32,8 @@ class ChestDecorationView extends DDInputReceiverDecorationView {
   void _initializeController(ChestDecorationModel model) {
     _controller = ChestDecorationController(
       model: model,
-      onDisplayExclamationEmote: _handleDisplayExclamationEmote,
       onOpenChest: _onOpenChest,
+      onDisplayExclamationEmote: _onDisplayExclamationEmote,
       onDetectPlayerInCloseVisionRadius: _onDetectPlayerInCloseVisionRadius,
     );
   }
@@ -51,7 +52,7 @@ class ChestDecorationView extends DDInputReceiverDecorationView {
       ChestDecorationConfig.kVisionCheckInterval,
       dt,
     )) {
-      _controller.update(dt, gameRef.player);
+      _controller.update(dt, gameRef.player as DDBasePlayerView?);
     }
     super.update(dt);
   }
@@ -87,7 +88,7 @@ class ChestDecorationView extends DDInputReceiverDecorationView {
   }
 
   /// Private helper methods - Controller callbacks implementation
-  void _handleDisplayExclamationEmote() {
+  void _onDisplayExclamationEmote() {
     add(EmoteManager.getDecorationAnimatedObject(size));
   }
 
@@ -128,16 +129,18 @@ class ChestDecorationView extends DDInputReceiverDecorationView {
   }
 
   void _onDetectPlayerInCloseVisionRadius({
-    required GameComponent player,
-    required void Function(GameComponent) observed,
+    required DDBasePlayerView player,
+    required void Function(DDBasePlayerView) observed,
     required void Function() notObserved,
-    required double radiusVision,
+    required double closeVisionRadius,
   }) {
     seeComponent(
-      player,
-      observed: observed,
+      player as GameComponent,
+      radiusVision: closeVisionRadius,
+      observed: (GameComponent comp) {
+        observed(comp as DDBasePlayerView);
+      },
       notObserved: notObserved,
-      radiusVision: radiusVision,
     );
   }
 }

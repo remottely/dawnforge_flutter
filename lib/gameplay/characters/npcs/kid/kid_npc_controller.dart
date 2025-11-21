@@ -47,16 +47,13 @@ class KidNpcController {
       _view.gameRef.context,
       player: player,
       conversationSequence: KidNpcConfig.createConversationSequence(),
-      onChangeConversation: _handleChangeConversation,
-      onFinishConversation: _handleFinishConversation,
+      onChangeConversation: (_) =>
+          AudioManager.instance.playConversationInteractionSfx(),
+      onFinishConversation: _onFinishConversation,
     );
   }
 
-  void _handleChangeConversation(int index) {
-    AudioManager.instance.playConversationInteractionSfx();
-  }
-
-  void _handleFinishConversation() {
+  void _onFinishConversation() {
     AudioManager.instance.playConversationInteractionSfx();
     _view.gameRef.camera.moveToPlayerAnimated(
       onComplete: () =>

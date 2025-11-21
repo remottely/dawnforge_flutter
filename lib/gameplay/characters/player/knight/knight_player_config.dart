@@ -40,7 +40,7 @@ final class KnightPlayerConfig {
   ///
   /// Uses an extra-large vision radius allowing the player to spot threats
   /// and opportunities from a considerable distance, matching other player characters.
-  static const double kVisionRadius =
+  static const double kLongVisionRadius =
       CharacterConstants.kVisionRadiusSuperLarge;
 
   // ============================================================================

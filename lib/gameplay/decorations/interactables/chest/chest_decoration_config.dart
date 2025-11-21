@@ -9,7 +9,7 @@ final class ChestDecorationConfig {
   ChestDecorationConfig._();
 
   // Constants
-  static const double kVisionRadius =
+  static const double kCloseVisionRadius =
       CharacterConstants.kVisionRadiusExtraSmall;
   static const int kVisionCheckInterval = 500;
   static const String kVisionCheckIntervalId = 'SeePlayer';

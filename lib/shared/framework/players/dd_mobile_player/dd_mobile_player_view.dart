@@ -93,7 +93,7 @@ abstract class DDMobilePlayerView<
   }) {
     return createMobileController(
       model: model,
-      onChangeRunState: _handleChangeRunState,
+      onChangeRunState: _onChangeRunState,
       onExecutePrimaryAttack: onExecutePrimaryAttack,
       onExecuteRangedAttack: onExecuteRangedAttack,
       onDisplayExclamationEmote: onDisplayExclamationEmote,
@@ -144,7 +144,7 @@ abstract class DDMobilePlayerView<
   /// attack animation callbacks.
   ///
   /// [shouldRun] Whether the character should be in running state.
-  void _handleChangeRunState(bool shouldRun) {
+  void _onChangeRunState(bool shouldRun) {
     if (_isInRunningState == shouldRun) return;
 
     _isInRunningState = shouldRun;

@@ -1,6 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/torch/torch_decoration_config.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/torch/torch_decoration_model.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 
 /// Controls the behavior and interaction logic for torch decorations.
 ///
@@ -26,10 +27,10 @@ class TorchDecorationController {
   /// This abstraction allows the controller to remain independent of
   /// the specific game engine's visibility detection implementation.
   final void Function({
-    required GameComponent player,
-    required void Function(GameComponent) observed,
+    required DDBasePlayerView player,
+    required void Function(DDBasePlayerView) observed,
     required void Function() notObserved,
-    required double radiusVision,
+    required double closeVisionRadius,
   })
   onDetectPlayerInCloseVisionRadius;
 
@@ -57,9 +58,9 @@ class TorchDecorationController {
   ///
   /// [dt] Delta time since the last update.
   /// [player] The player component to check against, or `null` if unavailable.
-  void update(double dt, GameComponent? player) {
+  void update(double dt, DDBasePlayerView? player) {
     if (player == null) return;
-    _evaluatePlayerProximity(player);
+    _handleDetectPlayerInCloseVisionRadius(player);
   }
 
   /// Cleans up resources when the controller is no longer needed.
@@ -99,10 +100,10 @@ class TorchDecorationController {
   /// the observation state transitions and triggering appropriate callbacks.
   ///
   /// [player] The player component to evaluate proximity for.
-  void _evaluatePlayerProximity(GameComponent player) {
-    onDetectPlayerInCloseVisionRadius(
+  void _handleDetectPlayerInCloseVisionRadius(DDBasePlayerView player) {
+    onDetectPlayerInCloseVisionRadius.call(
       player: player,
-      radiusVision: TorchDecorationConfig.kVisionRadius,
+      closeVisionRadius: TorchDecorationConfig.kCloseVisionRadius,
       observed: _handlePlayerEntersRange,
       notObserved: _handlePlayerExitsRange,
     );

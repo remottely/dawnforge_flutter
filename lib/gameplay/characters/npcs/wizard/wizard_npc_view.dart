@@ -32,10 +32,12 @@ class WizardNpcView extends SimpleNpc with KeyboardEventListener {
     super.update(dt);
   }
 
-  void checkPlayerProximity() {
+  // TODO(Kevin): pass it through controller
+  void onDetectPlayerInCloseVisionRadius() {
     if (gameRef.player is SimplePlayer) {
       seeComponent(
         gameRef.player!,
+        radiusVision: WizardNpcConfig.kCloseVisionRadius,
         observed: (_) {
           if (!_playerIsNearby) {
             _playerIsNearby = true;
@@ -49,7 +51,6 @@ class WizardNpcView extends SimpleNpc with KeyboardEventListener {
         notObserved: () {
           _playerIsNearby = false;
         },
-        radiusVision: WizardNpcConfig.kVisionRadius,
       );
     }
   }

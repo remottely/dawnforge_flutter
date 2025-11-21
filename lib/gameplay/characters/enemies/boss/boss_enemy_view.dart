@@ -31,12 +31,11 @@ class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
   BossEnemyController createController(BossEnemyModel model) {
     return BossEnemyController(
       model: model,
-      onDetectPlayerAndMoveToMeleeAttack:
-          handleDetectPlayerAndMoveToPrimaryAttack,
-      onPlayerFirstDetection: _handlePlayerFirstDetection,
-      onRequestSpawnMinion: _handleRequestSpawnMinion,
-      onRenderStatusBars: _handleRenderStatusBars,
-      onDetectPlayerInCloseVisionRadius: _handleDetectPlayerInCloseVisionRadius,
+      onDetectPlayerAndMoveToMeleeAttack: onDetectPlayerAndMoveToPrimaryAttack,
+      onPlayerFirstDetection: _onPlayerFirstDetection,
+      onRequestSpawnMinion: _onRequestSpawnMinion,
+      onRenderStatusBars: _onRenderStatusBars,
+      onDetectPlayerInCloseVisionRadius: _onDetectPlayerInCloseVisionRadius,
     );
   }
 
@@ -58,7 +57,7 @@ class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
   }
 
   /// Callbacks
-  void _handlePlayerFirstDetection(Player player) {
+  void _onPlayerFirstDetection(Player player) {
     gameRef.camera.moveToTargetAnimated(
       target: this,
       zoom: CameraCalculations.getCameraZoomFromMaxVisibleTile(
@@ -69,7 +68,7 @@ class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
     );
   }
 
-  void _handleRequestSpawnMinion(double dt) {
+  void _onRequestSpawnMinion(double dt) {
     if (controller.model.shouldSpawnMinions(life)) {
       if (checkInterval('spawnMinion', 2000, dt)) {
         _spawnMinionAtDirection();
@@ -77,7 +76,7 @@ class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
     }
   }
 
-  void _handleRenderStatusBars(Canvas canvas) {
+  void _onRenderStatusBars(Canvas canvas) {
     const double yPosition = 0;
     final double widthBar = (width - 10) / 3;
 
@@ -117,7 +116,7 @@ class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
     }
   }
 
-  void _handleDetectPlayerInCloseVisionRadius({
+  void _onDetectPlayerInCloseVisionRadius({
     required double closeVisionRadius,
     required void Function(Player) observed,
   }) {
@@ -167,16 +166,13 @@ class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
       gameRef.context,
       player: player,
       conversationSequence: BossEnemyConfig.createConversationSequence(),
-      onChangeConversation: _handleChangeConversation,
-      onFinishConversation: _handleFinishConversation,
+      onChangeConversation: (_) =>
+          AudioManager.instance.playConversationInteractionSfx(),
+      onFinishConversation: _onFinishConversation,
     );
   }
 
-  void _handleChangeConversation(int index) {
-    AudioManager.instance.playConversationInteractionSfx();
-  }
-
-  void _handleFinishConversation() {
+  void _onFinishConversation() {
     AudioManager.instance.playConversationInteractionSfx();
     _spawnInitialMinions();
     Future.delayed(const Duration(milliseconds: 500), () {
@@ -188,7 +184,7 @@ class BossEnemyView extends DDBaseEnemy<BossEnemyController, BossEnemyModel> {
       );
       // AudioManager.instance.playBackgroundMusic(
       //   AudioConfig.kMusicBossBattleBackgroundAsset,
-      // );
+      // ); // TODO(Kevin): put it back later
     });
   }
 

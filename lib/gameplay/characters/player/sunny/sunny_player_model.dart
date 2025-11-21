@@ -35,7 +35,7 @@ class SunnyPlayerModel extends DDMobilePlayerModel {
   int get staminaRegenIncrement => SunnyPlayerConfig.kStaminaIncrement;
 
   @override
-  double get longVisionRadius => SunnyPlayerConfig.kVisionRadius;
+  double get longVisionRadius => SunnyPlayerConfig.kLongVisionRadius;
 
   @override
   int get primaryAttackStaminaCost =>

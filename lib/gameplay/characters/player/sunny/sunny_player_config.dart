@@ -33,7 +33,7 @@ final class SunnyPlayerConfig {
   ///
   /// Uses an extra-large vision radius allowing the player to spot threats
   /// and opportunities from a considerable distance.
-  static const double kVisionRadius =
+  static const double kLongVisionRadius =
       CharacterConstants.kVisionRadiusSuperLarge;
 
   // ============================================================================

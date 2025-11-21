@@ -22,7 +22,7 @@ final class TorchDecorationConfig {
   /// The radius within which the torch can detect player presence.
   ///
   /// Uses the super small vision radius for intimate interaction range.
-  static const double kVisionRadius =
+  static const double kCloseVisionRadius =
       CharacterConstants.kVisionRadiusSuperSmall;
 
   /// Interval in milliseconds between player proximity checks.

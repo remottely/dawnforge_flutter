@@ -21,10 +21,9 @@ class MiniBossEnemyView
   MiniBossEnemyController createController(MiniBossEnemyModel model) {
     return MiniBossEnemyController(
       model: model,
-      onDetectPlayerAndMoveToMeleeAttack:
-          handleDetectPlayerAndMoveToPrimaryAttack,
+      onDetectPlayerAndMoveToMeleeAttack: onDetectPlayerAndMoveToPrimaryAttack,
       onDetectPlayerAndMoveToRangedAttack:
-          handleDetectPlayerAndMoveToFireballAttack,
+          onDetectPlayerAndMoveToFireballAttack,
     );
   }
 

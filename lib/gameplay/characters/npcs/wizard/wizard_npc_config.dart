@@ -6,7 +6,8 @@ import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 final class WizardNpcConfig {
   WizardNpcConfig._();
 
-  static const double kVisionRadius = CharacterConstants.kVisionRadiusSmall;
+  static const double kCloseVisionRadius =
+      CharacterConstants.kVisionRadiusSmall;
 
   static final Vector2 textureSize = Vector2(
     16,

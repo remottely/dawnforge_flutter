@@ -5,6 +5,7 @@ import 'package:darkness_dungeon/gameplay/decorations/interactables/torch/torch_
 import 'package:darkness_dungeon/gameplay/decorations/interactables/torch/torch_decoration_controller.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/torch/torch_decoration_model.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_input_receiver/dd_input_receiver_decoration_view.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 import 'package:flutter/services.dart';
 
 /// Represents a visual torch decoration component with interactive capabilities.
@@ -13,7 +14,7 @@ import 'package:flutter/services.dart';
 /// decorations within the game environment. It follows the MVC pattern where this
 /// class acts as the View layer.
 class TorchDecorationView extends DDInputReceiverDecorationView {
-  late final TorchDecorationController _decorationController;
+  late final TorchDecorationController _controller;
   late final TextPaint _interactionPromptTextPaint;
 
   /// Creates an active torch decoration with lighting enabled.
@@ -49,7 +50,7 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
   }
 
   /// Provides public read-only access to the torch's data model.
-  TorchDecorationModel get model => _decorationController.model;
+  TorchDecorationModel get model => _controller.model;
 
   /// Initializes the controller with the provided model and sets up callback handlers.
   ///
@@ -58,11 +59,11 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
   ///
   /// [model] The data model to be managed by the controller.
   void _initializeController(TorchDecorationModel model) {
-    _decorationController = TorchDecorationController(
+    _controller = TorchDecorationController(
       model: model,
-      onDisplayExclamationEmote: _handleDisplayExclamationEmote,
-      onToggleTorchState: _handleToggleTorchState,
-      onDetectPlayerInCloseVisionRadius: _handleDetectPlayerInCloseVisionRadius,
+      onDisplayExclamationEmote: _onDisplayExclamationEmote,
+      onToggleTorchState: _onToggleTorchState,
+      onDetectPlayerInCloseVisionRadius: _onDetectPlayerInCloseVisionRadius,
     );
   }
 
@@ -95,7 +96,7 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
       TorchDecorationConfig.kVisionCheckInterval,
       dt,
     )) {
-      _decorationController.update(dt, gameRef.player);
+      _controller.update(dt, gameRef.player as DDBasePlayerView?);
     }
     super.update(dt);
   }
@@ -127,7 +128,7 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
   @override
   bool onKeyboard(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     if (_isValidInteractionAttempt(event)) {
-      _decorationController.toggleTorchState();
+      _controller.toggleTorchState();
       return true;
     }
     return false;
@@ -136,7 +137,7 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
   /// Cleans up resources when the decoration is removed from the game.
   @override
   void onRemove() {
-    _decorationController.dispose();
+    _controller.dispose();
     super.onRemove();
   }
 
@@ -148,8 +149,7 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
   ///
   /// Returns `true` when the player is observing the torch and it's turned off.
   bool _shouldDisplayInteractionPrompt() {
-    return _decorationController.model.isDetectPlayer &&
-        !_decorationController.model.isOn;
+    return _controller.model.isDetectPlayer && !_controller.model.isOn;
   }
 
   /// Renders the interaction prompt text at the appropriate position.
@@ -172,7 +172,7 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
   ///
   /// Returns `true` if this is a valid interaction attempt.
   bool _isValidInteractionAttempt(KeyEvent event) {
-    return _decorationController.model.canInteract &&
+    return _controller.model.canInteract &&
         event is KeyDownEvent &&
         event.logicalKey == KeyboardSetup.kInteractionKey;
   }
@@ -185,7 +185,7 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
   ///
   /// This callback is invoked by the controller when an emote should be shown,
   /// typically in response to player interaction.
-  void _handleDisplayExclamationEmote() {
+  void _onDisplayExclamationEmote() {
     add(EmoteManager.getDecorationAnimatedObject(size));
   }
 
@@ -193,7 +193,7 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
   ///
   /// This callback is invoked by the controller when the torch state changes,
   /// enabling or disabling the lighting effect accordingly.
-  void _handleToggleTorchState() {
+  void _onToggleTorchState() {
     lightingEnabled = model.isOn;
   }
 
@@ -206,17 +206,19 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
   /// [observed] Callback invoked when the player is within vision range.
   /// [notObserved] Callback invoked when the player is outside vision range.
   /// [radiusVision] The vision radius for detection.
-  void _handleDetectPlayerInCloseVisionRadius({
-    required GameComponent player,
-    required void Function(GameComponent) observed,
+  void _onDetectPlayerInCloseVisionRadius({
+    required DDBasePlayerView player,
+    required void Function(DDBasePlayerView) observed,
     required void Function() notObserved,
-    required double radiusVision,
+    required double closeVisionRadius,
   }) {
     seeComponent(
-      player,
-      observed: observed,
+      player as GameComponent,
+      radiusVision: closeVisionRadius,
+      observed: (GameComponent comp) {
+        observed(comp as DDBasePlayerView);
+      },
       notObserved: notObserved,
-      radiusVision: radiusVision,
     );
   }
 }
