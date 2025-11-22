@@ -1,7 +1,7 @@
 {
-  "dig": {
-    "id": "dig",
-    "name": "Dig",
+  "digger": {
+    "id": "digger",
+    "name": "Digger",
     "description": "TODO",
     "type": "weapon",
     "rarity": "common",
@@ -11,21 +11,21 @@
     "attackSpeed": 1.2,
     "critChance": 0.05,
     "critMultiplier": 1.5,
-    "weaponType": "dig"
+    "weaponType": "digger"
   },
-  "iron_sword": {
-    "id": "iron_sword",
+  "ironSword": {
+    "id": "ironSword",
     "name": "Iron Sword",
     "description": "A sturdy iron sword for basic combat",
     "type": "weapon",
     "rarity": "common",
     "baseValue": 100,
-    "iconPath": "assets/images/items/iron_sword.png",
+    "iconPath": "assets/images/items/ironSword.png",
     "damage": 15,
     "attackSpeed": 1.2,
     "critChance": 0.05,
     "critMultiplier": 1.5,
-    "weaponType": "sword"
+    "weaponType": "ironSword"
   },
   "steel_axe": {
     "id": "steel_axe",

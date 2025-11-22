@@ -6,7 +6,7 @@ import 'item_type.dart';
 /// Todos os itens devem estender esta classe e implementar
 /// os métodos [toJson] e [copyWith].
 abstract class Item {
-  /// ID único do item (ex: 'iron_sword', 'health_potion')
+  /// ID único do item (ex: 'ironSword', 'healthPotion')
   final String id;
 
   /// Nome exibido ao jogador

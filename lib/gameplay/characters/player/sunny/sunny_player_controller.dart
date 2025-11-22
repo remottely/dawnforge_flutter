@@ -2,6 +2,8 @@ import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_c
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/joysctick_setup.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
+import 'package:darkness_dungeon/gameplay/inventory/models/weapon_type.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_model.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_controller.dart';
 
@@ -32,16 +34,18 @@ class SunnyPlayerController extends DDFarmPlayerController<SunnyPlayerModel> {
     required DDBasePlayerView player,
     required dynamic actionId,
   }) =>
-      actionId == JoystickSetup.kPrimaryAttackId ||
-      actionId == KeyboardSetup.kPrimaryActionKey;
+      (actionId == JoystickSetup.kPrimaryAttackId ||
+          actionId == KeyboardSetup.kPrimaryActionKey) &&
+      player.model.equipment == WeaponType.ironSword;
 
   @override
   bool isRangedAttackAction({
     required DDBasePlayerView player,
     required dynamic actionId,
   }) =>
-      actionId == JoystickSetup.kFireballAttackId ||
-      actionId == KeyboardSetup.kSecondaryActionKey;
+      (actionId == JoystickSetup.kFireballAttackId ||
+          actionId == KeyboardSetup.kSecondaryActionKey) &&
+      player.model.equipment == WeaponType.staff;
 
   @override
   bool isRunAction({

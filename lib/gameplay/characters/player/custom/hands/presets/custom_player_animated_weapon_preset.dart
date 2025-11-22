@@ -12,7 +12,7 @@ import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_
 /// Exemplo de uso:
 /// ```dart
 /// final swordData = KnightAnimatedWeaponPreset.create(
-///   id: 'iron_sword',
+///   id: 'ironSword',
 ///   idlePath: 'weapons/sword_idle_strip4.png',
 ///   idleFrameCount: 4,
 ///   attackPath: 'weapons/sword_slash_strip6.png',

@@ -1,9 +1,9 @@
 /// Tipos de armas disponíveis no jogo
 enum WeaponType {
   /// Espadas - armas corpo a corpo balanceadas
-  sword,
+  ironSword,
 
-  dig,
+  digger,
 
   /// Machados - alto dano, ataque lento
   axe,
@@ -39,17 +39,17 @@ enum WeaponType {
   static WeaponType fromJson(String json) {
     return WeaponType.values.firstWhere(
       (type) => type.name == json,
-      orElse: () => WeaponType.sword,
+      orElse: () => WeaponType.ironSword,
     );
   }
 
   /// Nome formatado para exibição
   String get displayName {
     switch (this) {
-      case WeaponType.sword:
+      case WeaponType.ironSword:
         return 'Sword';
-      case WeaponType.dig:
-        return 'Dig';
+      case WeaponType.digger:
+        return 'Digger';
       case WeaponType.axe:
         return 'Axe';
       case WeaponType.spear:

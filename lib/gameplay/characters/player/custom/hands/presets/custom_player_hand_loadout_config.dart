@@ -19,7 +19,7 @@
 //     final config = CustomPlayerWeaponConfigs.sword;
 
 //     final swordData = CustomPlayerAnimatedWeaponPreset.create(
-//       id: 'iron_sword',
+//       id: 'ironSword',
 //       idlePath: config.idlePath!,
 //       idleFrameCount: config.idleFrameCount!,
 //       idleFrameDuration: config.idleFrameDuration!,

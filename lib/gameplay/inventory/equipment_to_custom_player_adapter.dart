@@ -36,9 +36,9 @@ final class EquipmentToCustomPlayerAdapter {
     WeaponType weaponType,
   ) {
     switch (weaponType) {
-      case WeaponType.sword:
+      case WeaponType.ironSword:
         return CustomPlayerWeaponConfigs.toolsAttackStrip10;
-      case WeaponType.dig:
+      case WeaponType.digger:
         return CustomPlayerWeaponConfigs.toolsDigStrip13;
       case WeaponType.axe:
         return CustomPlayerWeaponConfigs.axe;

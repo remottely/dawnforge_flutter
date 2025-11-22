@@ -6,8 +6,6 @@ import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mo
 /// speed multiplier configuration. Suitable for characters like Sunny
 /// who have variable movement speeds.
 abstract class DDFarmPlayerModel extends DDMobilePlayerModel {
-  String _equipment = 'digger';
-
   DDFarmPlayerModel({
     required super.maxStamina,
     required super.maxEnergy,
@@ -17,9 +15,6 @@ abstract class DDFarmPlayerModel extends DDMobilePlayerModel {
     super.initialHasKey,
   });
 
-  String get equipment => _equipment;
-  void setEquipment(String value) => _equipment = value;
-
   // ============================================================================
   // Serialization
   // ============================================================================
@@ -27,13 +22,13 @@ abstract class DDFarmPlayerModel extends DDMobilePlayerModel {
   @override
   Map<String, dynamic> toJson() {
     final json = super.toJson();
-    json['equipment'] = _equipment;
+    // json['equipment'] = _equipment;
     return json;
   }
 
   @override
   void fromJson(Map<String, dynamic> json) {
     super.fromJson(json);
-    _equipment = (json['equipment'] as String?) ?? 'digger';
+    // _equipment = (json['equipment'] as String?) ?? 'digger';
   }
 }

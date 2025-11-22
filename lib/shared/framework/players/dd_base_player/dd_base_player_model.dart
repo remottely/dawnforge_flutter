@@ -1,3 +1,5 @@
+import 'package:darkness_dungeon/gameplay/inventory/models/weapon_type.dart';
+
 /// Abstract base model for all player characters.
 ///
 /// Defines the core data structure and resource management system shared
@@ -7,12 +9,16 @@
 /// Subclasses should extend this to add character-specific state while
 /// maintaining compatibility with the base player system.
 
+/// Equipment types carried by players.
+// enum Equipment { digger, sword, axe, staff }
+
 abstract class DDBasePlayerModel {
   double _currentStamina;
   int _currentEnergy;
   double? _currentLife;
   bool _hasKeyItem;
   bool _isObservingEnemies;
+  WeaponType _equipment = WeaponType.digger;
 
   /// Creates a base player model with configurable initial state.
   ///
@@ -80,6 +86,9 @@ abstract class DDBasePlayerModel {
   /// Indicates whether the player has any stamina remaining.
   bool get hasStamina => _currentStamina > 0;
 
+  WeaponType get equipment => _equipment;
+  void setEquipment(WeaponType value) => _equipment = value;
+
   // ============================================================================
   // Resource Management
   // ============================================================================
@@ -144,6 +153,7 @@ abstract class DDBasePlayerModel {
       'currentLife': _currentLife,
       'hasKeyItem': _hasKeyItem,
       'isObservingEnemies': _isObservingEnemies,
+      'equipment': _equipment.name,
     };
   }
 
@@ -160,5 +170,8 @@ abstract class DDBasePlayerModel {
     _currentLife = (json['currentLife'] as num?)?.toDouble();
     _hasKeyItem = (json['hasKeyItem'] as bool?) ?? false;
     _isObservingEnemies = (json['isObservingEnemies'] as bool?) ?? false;
+    _equipment = WeaponType.values.byName(
+      (json['equipment'] as String?) ?? WeaponType.digger.name,
+    );
   }
 }
