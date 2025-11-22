@@ -100,23 +100,24 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
     developer.log('[InventoryInput] Inicializando itens de teste...');
 
     // Adicionar alguns itens de teste ao inventário
-    // final ironSword = ItemFactory.createItem('iron_sword');
-    final dig = ItemFactory.createItem('dig');
-    final axe = ItemFactory.createItem('steel_axe');
-    final staff = ItemFactory.createItem('fire_staff');
-    final shield = ItemFactory.createItem('wooden_shield');
-    final potion = ItemFactory.createItem('health_potion');
-    final wood = ItemFactory.createItem('wood');
-    final seeds = ItemFactory.createItem('tomato_seeds');
+    final digger = ItemFactory.createItem('digger');
+    final ironSword = ItemFactory.createItem('ironSword');
+    // final axe = ItemFactory.createItem('steel_axe');
+    // final staff = ItemFactory.createItem('fire_staff');
+    // final shield = ItemFactory.createItem('wooden_shield');
+    // final potion = ItemFactory.createItem('health_potion');
+    // final wood = ItemFactory.createItem('wood');
+    // final seeds = ItemFactory.createItem('tomato_seeds');
 
     // if (ironSword != null) InventoryManager.instance.addItem(ironSword);
-    if (dig != null) InventoryManager.instance.addItem(dig);
-    if (axe != null) InventoryManager.instance.addItem(axe);
-    if (staff != null) InventoryManager.instance.addItem(staff);
-    if (shield != null) InventoryManager.instance.addItem(shield);
-    if (potion != null) InventoryManager.instance.addItem(potion, 5);
-    if (wood != null) InventoryManager.instance.addItem(wood, 50);
-    if (seeds != null) InventoryManager.instance.addItem(seeds, 10);
+    if (digger != null) InventoryManager.instance.addItem(digger);
+    if (ironSword != null) InventoryManager.instance.addItem(ironSword);
+    // if (axe != null) InventoryManager.instance.addItem(axe);
+    // if (staff != null) InventoryManager.instance.addItem(staff);
+    // if (shield != null) InventoryManager.instance.addItem(shield);
+    // if (potion != null) InventoryManager.instance.addItem(potion, 5);
+    // if (wood != null) InventoryManager.instance.addItem(wood, 50);
+    // if (seeds != null) InventoryManager.instance.addItem(seeds, 10);
 
     developer.log(
       '[InventoryInput] Itens de teste adicionados! ${InventoryManager.instance.usedSlots} slots usados',
@@ -162,7 +163,8 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
         // Validar se é SWORD ou AXE
         // if (!weaponType.contains('sword') && !weaponType.contains('axe')) {
         // if (weaponType != WeaponType.sword && weaponType != WeaponType.axe) {
-        if (weaponType != WeaponType.dig) {
+        if (weaponType != WeaponType.ironSword &&
+            weaponType != WeaponType.digger) {
           developer.log(
             '[InventoryInput] Ignorando ${item.name} (tipo: $weaponType) - apenas sword/axe no weapon slot',
           );
@@ -179,7 +181,7 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
           developer.log(
             '[InventoryInput] ✓ Equipado no weapon (Right Hand): ${item.name} (${item.weaponType})',
           );
-          _notifyEquipmentChanged();
+          _notifyEquipmentChanged(weaponType);
         } else {
           developer.log('[InventoryInput] ✗ Falha ao equipar: ${item.name}');
         }
@@ -198,7 +200,8 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
       developer.log(
         '[InventoryInput] ✓ Desequipado do weapon (Right Hand): ${item.name}',
       );
-      _notifyEquipmentChanged();
+      final weaponType = (item as WeaponItem).weaponType;
+      _notifyEquipmentChanged(weaponType);
     } else {
       developer.log('[InventoryInput] Weapon slot já está vazio');
     }
@@ -221,7 +224,7 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
         // Validar se é WeaponItem
         if (item is! WeaponItem) continue;
 
-        // final weaponType = item.weaponType;
+        final weaponType = item.weaponType;
 
         // // Validar se é SHIELD ou STAFF ou WAND
         // // if (!weaponType.contains('shield') &&
@@ -246,7 +249,7 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
           developer.log(
             '[InventoryInput] ✓ Equipado no offhand (Left Hand): ${item.name} (${item.weaponType})',
           );
-          _notifyEquipmentChanged();
+          _notifyEquipmentChanged(weaponType);
         } else {
           developer.log('[InventoryInput] ✗ Falha ao equipar: ${item.name}');
         }
@@ -265,7 +268,9 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
       developer.log(
         '[InventoryInput] ✓ Desequipado do offhand (Left Hand): ${item.name}',
       );
-      _notifyEquipmentChanged();
+      final weaponType = (item as WeaponItem).weaponType;
+      _notifyEquipmentChanged(weaponType);
+      _notifyEquipmentChanged(weaponType);
     } else {
       developer.log('[InventoryInput] Offhand slot já está vazio');
     }
@@ -273,7 +278,7 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
 
   /// Notifica o player que o equipamento mudou
   /// Para recarregar o loadout visual
-  void _notifyEquipmentChanged() {
+  void _notifyEquipmentChanged(WeaponType weaponType) {
     developer.log('[InventoryInput] Equipamento mudou! Procurando player...');
 
     // Buscar o DDBasePlayerView no jogo
@@ -283,14 +288,15 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
       return;
     }
 
-    // final player = players.first;
-    // developer.log(
-    //   '[InventoryInput] CustomPlayer encontrado! Recarregando loadout...',
-    // );
+    final player = players.first;
+    developer.log(
+      '[InventoryInput] CustomPlayer encontrado! Recarregando loadout...',
+    );
 
+    player.model.setEquipment(weaponType);
     // // Criar novo loadout baseado no equipamento atual
     // final newLoadout = EquipmentToCustomPlayerAdapter.instance
-    //     .createLoadoutFromEquipment(); // TODO(Kevin): NOW - aqui onde seto o comportamento de ataque, mudar a logica para mobile/farm player
+    //     .createLoadoutFromEquipment();
 
     // // Recarregar loadout do player
     // player.reloadEquipmentLoadout(newLoadout);
