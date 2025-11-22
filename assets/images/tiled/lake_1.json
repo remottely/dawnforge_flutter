@@ -488,8 +488,8 @@
                          "type":"",
                          "visible":true,
                          "width":16,
-                         "x":32,
-                         "y":96
+                         "x":48,
+                         "y":112
                         }, 
                         {
                          "height":16,
@@ -897,6 +897,161 @@
                          "width":16,
                          "x":624,
                          "y":208
+                        }, 
+                        {
+                         "height":16,
+                         "id":312,
+                         "name":"barrel_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":32,
+                         "y":112
+                        }, 
+                        {
+                         "height":16,
+                         "id":313,
+                         "name":"barrel_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":48,
+                         "y":128
+                        }, 
+                        {
+                         "height":16,
+                         "id":314,
+                         "name":"barrel_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":48,
+                         "y":96
+                        }, 
+                        {
+                         "height":16,
+                         "id":315,
+                         "name":"barrel_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":32,
+                         "y":128
+                        }, 
+                        {
+                         "height":16,
+                         "id":316,
+                         "name":"barrel_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":32,
+                         "y":96
+                        }, 
+                        {
+                         "height":16,
+                         "id":317,
+                         "name":"barrel_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":48,
+                         "y":144
+                        }, 
+                        {
+                         "height":16,
+                         "id":318,
+                         "name":"barrel_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":16,
+                         "y":112
+                        }, 
+                        {
+                         "height":16,
+                         "id":319,
+                         "name":"barrel_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":16.2745850739528,
+                         "y":127.674231304806
+                        },
+                    
+                        {
+                         "height":16,
+                         "id":320,
+                         "name":"barrel_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":16,
+                         "y":96
+                        }, 
+                        {
+                         "height":16,
+                         "id":321,
+                         "name":"barrel_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":16,
+                         "y":144
+                        }, 
+                        {
+                         "height":16,
+                         "id":322,
+                         "name":"barrel_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":32,
+                         "y":144
+                        }, 
+                        {
+                         "height":16,
+                         "id":323,
+                         "name":"barrel_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":32,
+                         "y":160
+                        }, 
+                        {
+                         "height":16,
+                         "id":324,
+                         "name":"barrel_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":48,
+                         "y":160
+                        }, 
+                        {
+                         "height":16,
+                         "id":325,
+                         "name":"barrel_decoration",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":16,
+                         "y":160
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -1167,7 +1322,7 @@
          "y":0
         }],
  "nextlayerid":32,
- "nextobjectid":312,
+ "nextobjectid":326,
  "orientation":"orthogonal",
  "properties":[
         {
