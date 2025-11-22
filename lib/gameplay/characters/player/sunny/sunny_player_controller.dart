@@ -15,7 +15,7 @@ class SunnyPlayerController extends DDFarmPlayerController<SunnyPlayerModel> {
   SunnyPlayerController({
     required super.model,
     required super.onChangeRunState,
-    required super.onExecuteDigger,
+    required super.onExecuteShovel,
     required super.onExecuteWateringCan,
     required super.onExecuteSeed,
     required super.onExecutePrimaryAttack,
@@ -50,13 +50,13 @@ class SunnyPlayerController extends DDFarmPlayerController<SunnyPlayerModel> {
       player.model.equipment == WeaponType.staff;
 
   @override
-  bool isDiggerAction({
+  bool isShovelAction({
     required DDBasePlayerView player,
     required dynamic actionId,
   }) =>
       (actionId == JoystickSetup.kPrimaryActionId ||
           actionId == KeyboardSetup.kPrimaryActionKey) &&
-      player.model.equipment == WeaponType.digger;
+      player.model.equipment == WeaponType.shovel;
 
   @override
   bool isWateringCanAction({

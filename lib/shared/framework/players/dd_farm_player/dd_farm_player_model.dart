@@ -29,6 +29,6 @@ abstract class DDFarmPlayerModel extends DDMobilePlayerModel {
   @override
   void fromJson(Map<String, dynamic> json) {
     super.fromJson(json);
-    // _equipment = (json['equipment'] as String?) ?? 'digger';
+    // _equipment = (json['equipment'] as String?) ?? 'shovel';
   }
 }

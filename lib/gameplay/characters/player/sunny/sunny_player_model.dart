@@ -46,7 +46,7 @@ class SunnyPlayerModel extends DDFarmPlayerModel {
       SunnyPlayerConfig.kFireballAttackStaminaCost;
 
   @override
-  int get diggerStaminaCost => SunnyPlayerConfig.kDiggerStaminaCost;
+  int get shovelStaminaCost => SunnyPlayerConfig.kShovelStaminaCost;
 
   @override
   int get wateringCanStaminaCost => SunnyPlayerConfig.kWateringCanStaminaCost;

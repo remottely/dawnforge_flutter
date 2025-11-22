@@ -113,7 +113,7 @@ final class CustomPlayerWeaponConfigs {
   );
 
   // TODO(Kevin): remove all these CustomPlayerWeaponVisualConfig.animation configurations
-  static final toolsDigStrip13 = CustomPlayerWeaponVisualConfig.animation(
+  static final toolsShovelStrip13 = CustomPlayerWeaponVisualConfig.animation(
     idlePath:
         'SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/DIG/tools_dig_strip13.png',
     // 'SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/AXE/tools_axe_strip10.png',

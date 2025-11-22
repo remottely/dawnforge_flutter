@@ -121,7 +121,7 @@ final class KnightPlayerConfig {
   /// Lower cost than melee to encourage mixed combat strategies.
   static const int kFireballAttackStaminaCost = 10;
 
-  static const int kDiggerStaminaCost = 5;
+  static const int kShovelStaminaCost = 5;
 
   static const int kWateringCanStaminaCost = 5;
 

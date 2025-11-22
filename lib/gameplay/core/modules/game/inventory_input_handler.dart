@@ -101,7 +101,7 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
     developer.log('[InventoryInput] Inicializando itens de teste...');
 
     // Adicionar alguns itens de teste ao inventário
-    final digger = ItemFactory.createItem('digger');
+    final shovel = ItemFactory.createItem('shovel');
     final ironSword = ItemFactory.createItem('ironSword');
     final wateringCan = ItemFactory.createItem('wateringCan');
     final seeds = ItemFactory.createItem('seeds');
@@ -113,7 +113,7 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
     // final tomatoSeeds = ItemFactory.createItem('tomato_seeds');
 
     // if (ironSword != null) InventoryManager.instance.addItem(ironSword);
-    if (digger != null) InventoryManager.instance.addItem(digger);
+    if (shovel != null) InventoryManager.instance.addItem(shovel);
     if (ironSword != null) InventoryManager.instance.addItem(ironSword);
     if (wateringCan != null) InventoryManager.instance.addItem(wateringCan);
     if (seeds != null) InventoryManager.instance.addItem(seeds);
@@ -165,7 +165,7 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
       if (item is! WeaponItem) continue;
       final weaponType = item.weaponType;
       if (weaponType != WeaponType.ironSword &&
-          weaponType != WeaponType.digger &&
+          weaponType != WeaponType.shovel &&
           weaponType != WeaponType.wateringCan &&
           weaponType != WeaponType.seeds)
         continue;
@@ -183,7 +183,7 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
         if (item is! WeaponItem) continue;
         final weaponType = item.weaponType;
         if (weaponType != WeaponType.ironSword &&
-            weaponType != WeaponType.digger &&
+            weaponType != WeaponType.shovel &&
             weaponType != WeaponType.wateringCan &&
             weaponType != WeaponType.seeds)
           continue;

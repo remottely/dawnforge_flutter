@@ -9,9 +9,6 @@ import 'package:darkness_dungeon/gameplay/inventory/models/weapon_type.dart';
 /// Subclasses should extend this to add character-specific state while
 /// maintaining compatibility with the base player system.
 
-/// Equipment types carried by players.
-// enum Equipment { digger, sword, axe, staff }
-
 abstract class DDBasePlayerModel {
   double _currentStamina;
   int _currentEnergy;
@@ -89,9 +86,9 @@ abstract class DDBasePlayerModel {
   WeaponType? get equipment => _equipment;
   void setEquipment(WeaponType value) => _equipment = value;
 
-  int get diggerStaminaCost;
-  bool get canExecuteDigger =>
-      (stamina >= diggerStaminaCost) && (_equipment == WeaponType.digger);
+  int get shovelStaminaCost;
+  bool get canExecuteShovel =>
+      (stamina >= shovelStaminaCost) && (_equipment == WeaponType.shovel);
 
   int get wateringCanStaminaCost;
   bool get canExecuteWateringCan =>

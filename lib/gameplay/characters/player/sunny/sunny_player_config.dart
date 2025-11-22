@@ -117,7 +117,7 @@ final class SunnyPlayerConfig {
   /// Lower cost than melee to encourage mixed combat strategies.
   static const int kFireballAttackStaminaCost = 10;
 
-  static const int kDiggerStaminaCost = 5;
+  static const int kShovelStaminaCost = 5;
 
   static const int kWateringCanStaminaCost = 5;
 
@@ -182,7 +182,7 @@ final class SunnyPlayerConfig {
   );
 
   static Future<SpriteAnimation>
-  loadRightDiggerAnimation() => SpriteAnimation.load(
+  loadRightShovelAnimation() => SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_strip13.png',
     SpriteAnimationConfig.createStandardData(
       amount: 10,
@@ -191,7 +191,7 @@ final class SunnyPlayerConfig {
   );
 
   static Future<SpriteAnimation>
-  loadLeftDiggerAnimation() => SpriteAnimation.load(
+  loadLeftShovelAnimation() => SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_left_strip13.png',
     SpriteAnimationConfig.createStandardData(
       amount: 10,

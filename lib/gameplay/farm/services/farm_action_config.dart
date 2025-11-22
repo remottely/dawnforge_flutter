@@ -7,7 +7,7 @@ import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base
 
 final class FarmActionConfig {
   static execute({required DDBasePlayerView player}) {
-    // Compute the world position in front of the player where the digger acts
+    // Compute the world position in front of the player where the shovel acts
     final attackOffset = OffsetHelper.getCenterOffset(
       Vector2(12, 0),
       player.lastDirection,
@@ -44,7 +44,7 @@ final class FarmActionConfig {
 
     if (bestTarget != null) {
       switch (player.model.equipment) {
-        case WeaponType.digger:
+        case WeaponType.shovel:
           FarmManager.instance.tillSoil(bestTarget.tileX, bestTarget.tileY);
           return;
         case WeaponType.wateringCan:

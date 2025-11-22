@@ -1,7 +1,7 @@
 enum WeaponType {
   ironSword,
 
-  digger,
+  shovel,
 
   wateringCan,
 
@@ -38,8 +38,8 @@ enum WeaponType {
     switch (this) {
       case WeaponType.ironSword:
         return 'Sword';
-      case WeaponType.digger:
-        return 'Digger';
+      case WeaponType.shovel:
+        return 'Shovel';
       case WeaponType.wateringCan:
         return 'Watering Can';
       case WeaponType.seeds:

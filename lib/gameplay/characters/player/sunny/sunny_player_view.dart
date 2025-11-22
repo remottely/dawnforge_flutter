@@ -70,7 +70,7 @@ class SunnyPlayerView
   SunnyPlayerController createFarmController({
     required SunnyPlayerModel model,
     required void Function(bool isRunning) onChangeRunState,
-    required bool Function() onExecuteDigger,
+    required bool Function() onExecuteShovel,
     required bool Function() onExecuteWateringCan,
     required bool Function() onExecuteSeed,
     required bool Function(double damage) onExecutePrimaryAttack,
@@ -86,7 +86,7 @@ class SunnyPlayerView
     return SunnyPlayerController(
       model: model,
       onChangeRunState: onChangeRunState,
-      onExecuteDigger: onExecuteDigger,
+      onExecuteShovel: onExecuteShovel,
       onExecuteWateringCan: onExecuteWateringCan,
       onExecuteSeed: onExecuteSeed,
       onExecutePrimaryAttack: onExecutePrimaryAttack,
@@ -168,13 +168,13 @@ class SunnyPlayerView
   }
 
   @override
-  bool onExecuteDigger() {
+  bool onExecuteShovel() {
     final AttackExecutionInfo? executionInfo = _meleeAttackController.execute(
       AttackType.melee,
       () {
         CharacterActionSpriteAnimationHelper.playExecutionOnceWithIdle(
-          animationRight: SunnyPlayerConfig.loadRightDiggerAnimation(),
-          animationLeft: SunnyPlayerConfig.loadLeftDiggerAnimation(),
+          animationRight: SunnyPlayerConfig.loadRightShovelAnimation(),
+          animationLeft: SunnyPlayerConfig.loadLeftShovelAnimation(),
           currentAnimation: animation,
           target: this,
           executionStartFrame: 4,

@@ -102,7 +102,7 @@
 
 //     // Adicionar alguns itens de teste ao inventário
 //     // final ironSword = ItemFactory.createItem('ironSword');
-//     final dig = ItemFactory.createItem('digger');
+//     final shovel = ItemFactory.createItem('shovel');
 //     final axe = ItemFactory.createItem('steel_axe');
 //     final staff = ItemFactory.createItem('fire_staff');
 //     final shield = ItemFactory.createItem('wooden_shield');
@@ -111,7 +111,7 @@
 //     final seeds = ItemFactory.createItem('tomato_seeds');
 
 //     // if (ironSword != null) InventoryManager.instance.addItem(ironSword);
-//     if (dig != null) InventoryManager.instance.addItem(dig);
+//     if (shovel != null) InventoryManager.instance.addItem(shovel);
 //     if (axe != null) InventoryManager.instance.addItem(axe);
 //     if (staff != null) InventoryManager.instance.addItem(staff);
 //     if (shield != null) InventoryManager.instance.addItem(shield);
@@ -163,7 +163,7 @@
 //         // Validar se é SWORD ou AXE
 //         // if (!weaponType.contains('sword') && !weaponType.contains('axe')) {
 //         // if (weaponType != WeaponType.sword && weaponType != WeaponType.axe) {
-//         if (weaponType != WeaponType.digger) {
+//         if (weaponType != WeaponType.shovel) {
 //           developer.log(
 //             '[InventoryInput] Ignorando ${item.name} (tipo: $weaponType) - apenas sword/axe no weapon slot',
 //           );

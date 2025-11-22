@@ -224,7 +224,7 @@ class FarmTileComponent extends DDDecoration with ToolInteractable {
     GameComponent user, {
     required Vector2 position,
   }) {
-    if (tool != ToolType.digger) return;
+    if (tool != ToolType.shovel) return;
 
     final success = FarmManager.instance.tillSoil(farmTile.x, farmTile.y);
     if (success) {

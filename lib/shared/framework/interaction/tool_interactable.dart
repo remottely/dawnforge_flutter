@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 
 /// Tipos de ferramentas suportadas.
-enum ToolType { digger, hoe, axe }
+enum ToolType { shovel, hoe, axe }
 
 /// Mixin para componentes que podem reagir ao uso de ferramentas.
 mixin ToolInteractable on GameComponent {
