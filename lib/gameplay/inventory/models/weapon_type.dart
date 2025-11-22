@@ -5,7 +5,7 @@ enum WeaponType {
 
   wateringCan,
 
-  seed,
+  seeds,
 
   axe,
 
@@ -42,7 +42,7 @@ enum WeaponType {
         return 'Digger';
       case WeaponType.wateringCan:
         return 'Watering Can';
-      case WeaponType.seed:
+      case WeaponType.seeds:
         return 'Seed';
       case WeaponType.axe:
         return 'Axe';

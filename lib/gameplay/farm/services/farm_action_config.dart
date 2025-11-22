@@ -50,7 +50,7 @@ final class FarmActionConfig {
         case WeaponType.wateringCan:
           FarmManager.instance.waterTile(bestTarget.tileX, bestTarget.tileY);
           return;
-        case WeaponType.seed:
+        case WeaponType.seeds:
           FarmManager.instance.plantSeed(
             bestTarget.tileX,
             bestTarget.tileY,

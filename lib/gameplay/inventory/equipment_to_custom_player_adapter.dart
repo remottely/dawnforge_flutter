@@ -42,7 +42,7 @@ final class EquipmentToCustomPlayerAdapter {
       //   return CustomPlayerWeaponConfigs.toolsDigStrip13;
       // case WeaponType.wateringCan:
       //   return CustomPlayerWeaponConfigs.toolsWateringCanStrip13;
-      // case WeaponType.seed:
+      // case WeaponType.seeds:
       //   return CustomPlayerWeaponConfigs.toolsSeedStrip13;
       case WeaponType.axe:
         return CustomPlayerWeaponConfigs.axe;

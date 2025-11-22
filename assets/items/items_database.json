@@ -1,7 +1,7 @@
 {
-  "seed": {
-    "id": "seed",
-    "name": "Seed",
+  "seeds": {
+    "id": "seeds",
+    "name": "Seeds§",
     "description": "TODO",
     "type": "weapon",
     "rarity": "common",
@@ -11,7 +11,7 @@
     "attackSpeed": 1.2,
     "critChance": 0.05,
     "critMultiplier": 1.5,
-    "weaponType": "seed"
+    "weaponType": "seeds"
   },
   "digger": {
     "id": "digger",

@@ -74,7 +74,7 @@ class SunnyPlayerController extends DDFarmPlayerController<SunnyPlayerModel> {
   }) =>
       (actionId == JoystickSetup.kPrimaryActionId ||
           actionId == KeyboardSetup.kPrimaryActionKey) &&
-      player.model.equipment == WeaponType.seed;
+      player.model.equipment == WeaponType.seeds;
 
   @override
   bool isRunAction({
