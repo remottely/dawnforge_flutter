@@ -121,6 +121,8 @@ final class SunnyPlayerConfig {
 
   static const int kWateringCanStaminaCost = 5;
 
+  static const int kSeedStaminaCost = 5;
+
   // ============================================================================
   // Component Dimensions
   // ============================================================================
@@ -211,6 +213,24 @@ final class SunnyPlayerConfig {
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_watering_left_strip5.png',
     SpriteAnimationConfig.createStandardData(
       amount: 5,
+      textureSize: textureSize,
+    ),
+  );
+
+  static Future<SpriteAnimation>
+  loadRightSeedAnimation() => SpriteAnimation.load(
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_strip8.png',
+    SpriteAnimationConfig.createStandardData(
+      amount: 8,
+      textureSize: textureSize,
+    ),
+  );
+
+  static Future<SpriteAnimation>
+  loadLeftSeedAnimation() => SpriteAnimation.load(
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_left_strip8.png',
+    SpriteAnimationConfig.createStandardData(
+      amount: 8,
       textureSize: textureSize,
     ),
   );

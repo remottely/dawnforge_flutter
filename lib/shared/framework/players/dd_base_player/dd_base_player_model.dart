@@ -98,6 +98,10 @@ abstract class DDBasePlayerModel {
       (stamina >= wateringCanStaminaCost) &&
       (_equipment == WeaponType.wateringCan);
 
+  int get seedStaminaCost;
+  bool get canExecuteSeed =>
+      (stamina >= seedStaminaCost) && (_equipment == WeaponType.seed);
+
   // ============================================================================
   // Resource Management
   // ============================================================================

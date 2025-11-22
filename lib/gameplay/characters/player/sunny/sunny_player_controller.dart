@@ -17,6 +17,7 @@ class SunnyPlayerController extends DDFarmPlayerController<SunnyPlayerModel> {
     required super.onChangeRunState,
     required super.onExecuteDigger,
     required super.onExecuteWateringCan,
+    required super.onExecuteSeed,
     required super.onExecutePrimaryAttack,
     required super.onExecuteRangedAttack,
     required super.onDisplayExclamationEmote,
@@ -65,6 +66,15 @@ class SunnyPlayerController extends DDFarmPlayerController<SunnyPlayerModel> {
       (actionId == JoystickSetup.kPrimaryActionId ||
           actionId == KeyboardSetup.kPrimaryActionKey) &&
       player.model.equipment == WeaponType.wateringCan;
+
+  @override
+  bool isSeedAction({
+    required DDBasePlayerView player,
+    required dynamic actionId,
+  }) =>
+      (actionId == JoystickSetup.kPrimaryActionId ||
+          actionId == KeyboardSetup.kPrimaryActionKey) &&
+      player.model.equipment == WeaponType.seed;
 
   @override
   bool isRunAction({

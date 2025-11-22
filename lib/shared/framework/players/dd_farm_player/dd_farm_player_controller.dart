@@ -7,12 +7,14 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
     extends DDMobilePlayerController<M> {
   final bool Function() onExecuteDigger;
   final bool Function() onExecuteWateringCan;
+  final bool Function() onExecuteSeed;
 
   DDFarmPlayerController({
     required super.model,
     required super.onChangeRunState,
     required this.onExecuteDigger,
     required this.onExecuteWateringCan,
+    required this.onExecuteSeed,
     required super.onExecutePrimaryAttack,
     required super.onExecuteRangedAttack,
     required super.onDisplayExclamationEmote,
@@ -29,6 +31,11 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
     required dynamic actionId,
   });
 
+  bool isSeedAction({
+    required DDBasePlayerView player,
+    required dynamic actionId,
+  });
+
   @override
   void handleInputAction({
     required DDBasePlayerView player,
@@ -41,6 +48,8 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
       _handleExecuteDigger();
     } else if (isWateringCanAction(player: player, actionId: event.id)) {
       _handleExecuteWateringCan();
+    } else if (isSeedAction(player: player, actionId: event.id)) {
+      _handleExecuteSeed();
     }
 
     super.handleInputAction(player: player, event: event);
@@ -81,6 +90,26 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
     }
 
     model.consumeStamina(model.wateringCanStaminaCost);
+
+    // Retomar regeneração após ação instantânea
+    endStaminaConsumingAction();
+  }
+
+  /// Executes the primary melee attack if resources are sufficient.
+  void _handleExecuteSeed() {
+    if (!model.canExecuteSeed) return;
+
+    // Pausar regeneração durante ação
+    beginStaminaConsumingAction();
+
+    final bool wasExecuted = onExecuteSeed.call();
+    if (!wasExecuted) {
+      // Ação não executada, retomar regeneração
+      endStaminaConsumingAction();
+      return;
+    }
+
+    model.consumeStamina(model.seedStaminaCost);
 
     // Retomar regeneração após ação instantânea
     endStaminaConsumingAction();

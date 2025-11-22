@@ -75,11 +75,12 @@ class FarmInputHandler extends GameComponent with KeyboardEventListener {
     //     (gameRef.player! as DDBasePlayerView).model.canExecuteDigger) {
     //   return player.farmActionManager.handleTillSoil(x, y);
     // } else
-    if (key == KeyboardSetup.kWaterKey) {
-      return _handleWater(x, y);
-    } else if (key == KeyboardSetup.kPlantKey) {
-      return _handlePlant(x, y);
-    } else if (key == KeyboardSetup.kHarvestKey) {
+    // if (key == KeyboardSetup.kWaterKey) {
+    //   return _handleWater(x, y);
+    // } else if (key == KeyboardSetup.kPlantKey) {
+    //   return _handlePlant(x, y);
+    // } else
+    if (key == KeyboardSetup.kHarvestKey) {
       return _handleHarvest(x, y);
     }
 

@@ -50,6 +50,13 @@ final class FarmActionConfig {
         case WeaponType.wateringCan:
           FarmManager.instance.waterTile(bestTarget.tileX, bestTarget.tileY);
           return;
+        case WeaponType.seed:
+          FarmManager.instance.plantSeed(
+            bestTarget.tileX,
+            bestTarget.tileY,
+            'carrot',
+          ); // TODO(Kevin): remove 'carrot' dependency
+          return;
         default:
           // Valid target to till soil
           return;

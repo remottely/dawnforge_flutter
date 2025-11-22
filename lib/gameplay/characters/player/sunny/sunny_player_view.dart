@@ -72,6 +72,7 @@ class SunnyPlayerView
     required void Function(bool isRunning) onChangeRunState,
     required bool Function() onExecuteDigger,
     required bool Function() onExecuteWateringCan,
+    required bool Function() onExecuteSeed,
     required bool Function(double damage) onExecutePrimaryAttack,
     required bool Function(double damage) onExecuteRangedAttack,
     required void Function() onDisplayExclamationEmote,
@@ -87,6 +88,7 @@ class SunnyPlayerView
       onChangeRunState: onChangeRunState,
       onExecuteDigger: onExecuteDigger,
       onExecuteWateringCan: onExecuteWateringCan,
+      onExecuteSeed: onExecuteSeed,
       onExecutePrimaryAttack: onExecutePrimaryAttack,
       onExecuteRangedAttack: onExecuteRangedAttack,
       onDisplayExclamationEmote: onDisplayExclamationEmote,
@@ -197,6 +199,30 @@ class SunnyPlayerView
         CharacterActionSpriteAnimationHelper.playExecutionOnceWithIdle(
           animationRight: SunnyPlayerConfig.loadRightWateringCanAnimation(),
           animationLeft: SunnyPlayerConfig.loadLeftWateringCanAnimation(),
+          currentAnimation: animation,
+          target: this,
+          executionStartFrame: 4,
+          onActionStart: lockAction,
+          onActionEnd: unlockAction,
+          // TODO(chatgpt): preciso que vc
+          onExecutionFrames: () {
+            FarmActionConfig.execute(player: this);
+          },
+        );
+      },
+    );
+
+    return executionInfo != null;
+  }
+
+  @override
+  bool onExecuteSeed() {
+    final AttackExecutionInfo? executionInfo = _meleeAttackController.execute(
+      AttackType.melee,
+      () {
+        CharacterActionSpriteAnimationHelper.playExecutionOnceWithIdle(
+          animationRight: SunnyPlayerConfig.loadRightSeedAnimation(),
+          animationLeft: SunnyPlayerConfig.loadLeftSeedAnimation(),
           currentAnimation: animation,
           target: this,
           executionStartFrame: 4,

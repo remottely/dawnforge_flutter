@@ -38,10 +38,12 @@ final class EquipmentToCustomPlayerAdapter {
     switch (weaponType) {
       case WeaponType.ironSword:
         return CustomPlayerWeaponConfigs.toolsAttackStrip10;
-      case WeaponType.digger:
-        return CustomPlayerWeaponConfigs.toolsDigStrip13;
-      case WeaponType.wateringCan:
-        return CustomPlayerWeaponConfigs.toolsWateringCanStrip13;
+      // case WeaponType.digger:
+      //   return CustomPlayerWeaponConfigs.toolsDigStrip13;
+      // case WeaponType.wateringCan:
+      //   return CustomPlayerWeaponConfigs.toolsWateringCanStrip13;
+      // case WeaponType.seed:
+      //   return CustomPlayerWeaponConfigs.toolsSeedStrip13;
       case WeaponType.axe:
         return CustomPlayerWeaponConfigs.axe;
       case WeaponType.mace:

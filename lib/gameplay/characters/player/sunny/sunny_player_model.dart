@@ -52,6 +52,9 @@ class SunnyPlayerModel extends DDFarmPlayerModel {
   int get wateringCanStaminaCost => SunnyPlayerConfig.kWateringCanStaminaCost;
 
   @override
+  int get seedStaminaCost => SunnyPlayerConfig.kSeedStaminaCost;
+
+  @override
   double get primaryAttackDamage => SunnyPlayerConfig.kPrimaryAttackDamage;
 
   @override
