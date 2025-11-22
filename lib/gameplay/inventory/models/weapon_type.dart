@@ -1,41 +1,30 @@
-/// Tipos de armas disponíveis no jogo
 enum WeaponType {
-  /// Espadas - armas corpo a corpo balanceadas
   ironSword,
 
   digger,
 
-  /// Machados - alto dano, ataque lento
+  wateringCan,
+
   axe,
 
-  /// Lanças - alcance médio
   spear,
 
-  /// Adagas - rápidas, baixo dano
   dagger,
 
-  /// Martelos/Maças - alto dano, quebradores de armadura
   mace,
 
-  /// Arcos - ataque à distância
   bow,
 
-  /// Bestas - ataque à distância, mais lento que arco
   crossbow,
 
-  /// Cajados mágicos
   staff,
 
-  /// Varinhas mágicas
   wand,
 
-  /// Escudos - usados para defesa
   shield;
 
-  /// Converte enum para JSON string
   String toJson() => name;
 
-  /// Cria enum a partir de JSON string
   static WeaponType fromJson(String json) {
     return WeaponType.values.firstWhere(
       (type) => type.name == json,
@@ -43,13 +32,14 @@ enum WeaponType {
     );
   }
 
-  /// Nome formatado para exibição
   String get displayName {
     switch (this) {
       case WeaponType.ironSword:
         return 'Sword';
       case WeaponType.digger:
         return 'Digger';
+      case WeaponType.wateringCan:
+        return 'Watering Can';
       case WeaponType.axe:
         return 'Axe';
       case WeaponType.spear:

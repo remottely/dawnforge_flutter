@@ -123,6 +123,8 @@ final class KnightPlayerConfig {
 
   static const int kDiggerStaminaCost = 5;
 
+  static const int kWateringCanStaminaCost = 5;
+
   // ============================================================================
   // Component Dimensions & Collision
   // ============================================================================

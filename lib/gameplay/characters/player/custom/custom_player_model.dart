@@ -52,6 +52,9 @@ class CustomPlayerModel extends DDHybridCombatPlayerModel {
   int get diggerStaminaCost => KnightPlayerConfig.kDiggerStaminaCost;
 
   @override
+  int get wateringCanStaminaCost => KnightPlayerConfig.kWateringCanStaminaCost;
+
+  @override
   double get primaryAttackDamage => KnightPlayerConfig.kPrimaryAttackDamage;
 
   @override

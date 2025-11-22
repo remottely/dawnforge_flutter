@@ -112,7 +112,32 @@ final class CustomPlayerWeaponConfigs {
     mirroredDirectionalOffset: Vector2(0, 0),
   );
 
+  // TODO(Kevin): remove all these CustomPlayerWeaponVisualConfig.animation configurations
   static final toolsDigStrip13 = CustomPlayerWeaponVisualConfig.animation(
+    idlePath:
+        'SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/DIG/tools_dig_strip13.png',
+    // 'SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/AXE/tools_axe_strip10.png',
+    // 'SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/CAUGHT/tools_caught_strip10.png',
+    // 'SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/DIG/tools_dig_strip13.png',
+    idleFrameCount: 1,
+    idleFrameDuration: Duration(milliseconds: 1000),
+    attackPath:
+        'SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/DIG/tools_dig_strip13.png',
+    // 'SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/AXE/tools_axe_strip10.png',
+    // 'SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/CAUGHT/tools_caught_strip10.png',
+    // 'SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/DIG/tools_dig_strip13.png',
+    attackFrameCount: 13,
+    attackFrameIndex: 6,
+    attackDuration: Duration(milliseconds: 400),
+    textureSize: Vector2(96, 64),
+    size: Vector2(96, 64),
+    attachmentOffset: Vector2(0, 0),
+    directionalOffset: Vector2(0, 0),
+    mirroredDirectionalOffset: Vector2(0, 0),
+  );
+
+  // TODO(Kevin): remove all these CustomPlayerWeaponVisualConfig.animation configurations
+  static final toolsWateringCanStrip13 = CustomPlayerWeaponVisualConfig.animation(
     idlePath:
         'SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/DIG/tools_dig_strip13.png',
     // 'SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/AXE/tools_axe_strip10.png',

@@ -49,6 +49,7 @@ abstract class DDFarmPlayerView<
       model: model,
       onChangeRunState: onChangeRunState,
       onExecuteDigger: onExecuteDigger,
+      onExecuteWateringCan: onExecuteWateringCan,
       onExecutePrimaryAttack: onExecutePrimaryAttack,
       onExecuteRangedAttack: onExecuteRangedAttack,
       onDisplayExclamationEmote: onDisplayExclamationEmote,
@@ -61,6 +62,7 @@ abstract class DDFarmPlayerView<
     required M model,
     required void Function(bool isRunning) onChangeRunState,
     required bool Function() onExecuteDigger,
+    required bool Function() onExecuteWateringCan,
     required bool Function(double damage) onExecutePrimaryAttack,
     required bool Function(double damage) onExecuteRangedAttack,
     required void Function() onDisplayExclamationEmote,
@@ -87,4 +89,6 @@ abstract class DDFarmPlayerView<
   }
 
   bool onExecuteDigger();
+
+  bool onExecuteWateringCan();
 }

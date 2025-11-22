@@ -40,6 +40,8 @@ final class EquipmentToCustomPlayerAdapter {
         return CustomPlayerWeaponConfigs.toolsAttackStrip10;
       case WeaponType.digger:
         return CustomPlayerWeaponConfigs.toolsDigStrip13;
+      case WeaponType.wateringCan:
+        return CustomPlayerWeaponConfigs.toolsWateringCanStrip13;
       case WeaponType.axe:
         return CustomPlayerWeaponConfigs.axe;
       case WeaponType.mace:

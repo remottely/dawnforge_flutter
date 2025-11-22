@@ -26,6 +26,7 @@ class FarmActionManager extends GameComponent {
 
   /// Finds the farm tile currently in contact with the player.
   FarmTileView? getFarmTileInContact() {
+    // TODO(Kevin): remove this when all farm tools are reworked
     final allFarmTiles = gameRef.query<FarmTileView>();
     final player = gameRef.player!;
 

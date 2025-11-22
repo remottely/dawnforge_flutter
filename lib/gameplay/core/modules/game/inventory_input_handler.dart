@@ -16,6 +16,7 @@ import 'package:flutter/services.dart';
 /// Componente que gerencia entrada de teclado para inventário
 class InventoryInputHandler extends GameComponent with KeyboardEventListener {
   bool _isInitialized = false;
+  int _currentWeaponIndex = -1;
 
   @override
   void onMount() {
@@ -102,6 +103,7 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
     // Adicionar alguns itens de teste ao inventário
     final digger = ItemFactory.createItem('digger');
     final ironSword = ItemFactory.createItem('ironSword');
+    final wateringCan = ItemFactory.createItem('wateringCan');
     // final axe = ItemFactory.createItem('steel_axe');
     // final staff = ItemFactory.createItem('fire_staff');
     // final shield = ItemFactory.createItem('wooden_shield');
@@ -112,6 +114,7 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
     // if (ironSword != null) InventoryManager.instance.addItem(ironSword);
     if (digger != null) InventoryManager.instance.addItem(digger);
     if (ironSword != null) InventoryManager.instance.addItem(ironSword);
+    if (wateringCan != null) InventoryManager.instance.addItem(wateringCan);
     // if (axe != null) InventoryManager.instance.addItem(axe);
     // if (staff != null) InventoryManager.instance.addItem(staff);
     // if (shield != null) InventoryManager.instance.addItem(shield);
@@ -147,51 +150,69 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
     );
 
     // Percorrer todos os slots do inventário procurando SWORD ou AXE
-    for (int i = 0; i < InventoryManager.instance.maxSlots; i++) {
+    // Procurar o próximo weapon com índice maior que _currentWeaponIndex
+    final max = InventoryManager.instance.maxSlots;
+    int? foundIndex;
+
+    // primeira passagem: do próximo índice até o fim
+    for (int i = _currentWeaponIndex + 1; i < max; i++) {
       final slot = InventoryManager.instance.getSlotByIndex(i);
-      if (slot != null && slot.item != null) {
+      if (slot == null || slot.item == null) continue;
+      final item = slot.item!;
+      if (item.type != ItemType.weapon) continue;
+      if (item is! WeaponItem) continue;
+      final weaponType = item.weaponType;
+      if (weaponType != WeaponType.ironSword &&
+          weaponType != WeaponType.digger &&
+          weaponType != WeaponType.wateringCan)
+        continue;
+      foundIndex = i;
+      break;
+    }
+
+    // segunda passagem: procurar do início até o índice atual (wrap)
+    if (foundIndex == null) {
+      for (int i = 0; i <= _currentWeaponIndex && i < max; i++) {
+        final slot = InventoryManager.instance.getSlotByIndex(i);
+        if (slot == null || slot.item == null) continue;
         final item = slot.item!;
-
-        // Validar se é weapon
         if (item.type != ItemType.weapon) continue;
-
-        // Validar se é WeaponItem
         if (item is! WeaponItem) continue;
-
         final weaponType = item.weaponType;
-
-        // Validar se é SWORD ou AXE
-        // if (!weaponType.contains('sword') && !weaponType.contains('axe')) {
-        // if (weaponType != WeaponType.sword && weaponType != WeaponType.axe) {
         if (weaponType != WeaponType.ironSword &&
-            weaponType != WeaponType.digger) {
-          developer.log(
-            '[InventoryInput] Ignorando ${item.name} (tipo: $weaponType) - apenas sword/axe no weapon slot',
-          );
+            weaponType != WeaponType.digger &&
+            weaponType != WeaponType.wateringCan)
           continue;
-        }
-
-        // Tentar equipar
-        final success = EquipmentManager.instance.equip(
-          EquipmentSlotType.weapon,
-          item,
-        );
-
-        if (success) {
-          developer.log(
-            '[InventoryInput] ✓ Equipado no weapon (Right Hand): ${item.name} (${item.weaponType})',
-          );
-          _notifyEquipmentChanged(weaponType);
-        } else {
-          developer.log('[InventoryInput] ✗ Falha ao equipar: ${item.name}');
-        }
-        return;
+        foundIndex = i;
+        break;
       }
     }
 
-    developer.log(
-      '[InventoryInput] Nenhuma SWORD ou AXE encontrada no inventário',
+    if (foundIndex == null) {
+      developer.log(
+        '[InventoryInput] Nenhuma SWORD ou AXE encontrada no inventário',
+      );
+      return;
+    }
+
+    final slot = InventoryManager.instance.getSlotByIndex(foundIndex);
+    if (slot == null || slot.item == null) return;
+    final item = slot.item!;
+
+    final success = EquipmentManager.instance.equip(
+      EquipmentSlotType.weapon,
+      item,
     );
+
+    if (success) {
+      _currentWeaponIndex = foundIndex;
+      developer.log(
+        '[InventoryInput] ✓ Equipado no weapon (Right Hand): ${item.name} (${(item is WeaponItem) ? item.weaponType : 'unknown'})',
+      );
+      if (item is WeaponItem) _notifyEquipmentChanged(item.weaponType);
+    } else {
+      developer.log('[InventoryInput] ✗ Falha ao equipar: ${item.name}');
+    }
   }
 
   void _unequipWeapon() {
@@ -202,6 +223,7 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
       );
       final weaponType = (item as WeaponItem).weaponType;
       _notifyEquipmentChanged(weaponType);
+      _currentWeaponIndex = -1;
     } else {
       developer.log('[InventoryInput] Weapon slot já está vazio');
     }

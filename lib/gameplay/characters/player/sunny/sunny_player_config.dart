@@ -119,6 +119,8 @@ final class SunnyPlayerConfig {
 
   static const int kDiggerStaminaCost = 5;
 
+  static const int kWateringCanStaminaCost = 5;
+
   // ============================================================================
   // Component Dimensions
   // ============================================================================
@@ -191,6 +193,24 @@ final class SunnyPlayerConfig {
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_left_strip13.png',
     SpriteAnimationConfig.createStandardData(
       amount: 10,
+      textureSize: textureSize,
+    ),
+  );
+
+  static Future<SpriteAnimation>
+  loadRightWateringCanAnimation() => SpriteAnimation.load(
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_watering_strip5.png',
+    SpriteAnimationConfig.createStandardData(
+      amount: 5,
+      textureSize: textureSize,
+    ),
+  );
+
+  static Future<SpriteAnimation>
+  loadLeftWateringCanAnimation() => SpriteAnimation.load(
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_watering_left_strip5.png',
+    SpriteAnimationConfig.createStandardData(
+      amount: 5,
       textureSize: textureSize,
     ),
   );

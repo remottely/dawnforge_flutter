@@ -93,6 +93,11 @@ abstract class DDBasePlayerModel {
   bool get canExecuteDigger =>
       (stamina >= diggerStaminaCost) && (_equipment == WeaponType.digger);
 
+  int get wateringCanStaminaCost;
+  bool get canExecuteWateringCan =>
+      (stamina >= wateringCanStaminaCost) &&
+      (_equipment == WeaponType.wateringCan);
+
   // ============================================================================
   // Resource Management
   // ============================================================================

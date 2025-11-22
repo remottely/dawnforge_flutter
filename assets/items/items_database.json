@@ -13,6 +13,20 @@
     "critMultiplier": 1.5,
     "weaponType": "digger"
   },
+  "wateringCan": {
+    "id": "wateringCan",
+    "name": "Watering Can",
+    "description": "TODO",
+    "type": "weapon",
+    "rarity": "common",
+    "baseValue": 100,
+    "iconPath": "assets/images/SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/DIG/tools_dig_strip13.png",
+    "damage": 15,
+    "attackSpeed": 1.2,
+    "critChance": 0.05,
+    "critMultiplier": 1.5,
+    "weaponType": "wateringCan"
+  },
   "ironSword": {
     "id": "ironSword",
     "name": "Iron Sword",

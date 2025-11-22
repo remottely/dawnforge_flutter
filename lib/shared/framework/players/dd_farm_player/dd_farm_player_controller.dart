@@ -6,11 +6,13 @@ import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mo
 abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
     extends DDMobilePlayerController<M> {
   final bool Function() onExecuteDigger;
+  final bool Function() onExecuteWateringCan;
 
   DDFarmPlayerController({
     required super.model,
     required super.onChangeRunState,
     required this.onExecuteDigger,
+    required this.onExecuteWateringCan,
     required super.onExecutePrimaryAttack,
     required super.onExecuteRangedAttack,
     required super.onDisplayExclamationEmote,
@@ -18,6 +20,11 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
   });
 
   bool isDiggerAction({
+    required DDBasePlayerView player,
+    required dynamic actionId,
+  });
+
+  bool isWateringCanAction({
     required DDBasePlayerView player,
     required dynamic actionId,
   });
@@ -32,6 +39,8 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
 
     if (isDiggerAction(player: player, actionId: event.id)) {
       _handleExecuteDigger();
+    } else if (isWateringCanAction(player: player, actionId: event.id)) {
+      _handleExecuteWateringCan();
     }
 
     super.handleInputAction(player: player, event: event);
@@ -52,6 +61,26 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
     }
 
     model.consumeStamina(model.diggerStaminaCost);
+
+    // Retomar regeneração após ação instantânea
+    endStaminaConsumingAction();
+  }
+
+  /// Executes the primary melee attack if resources are sufficient.
+  void _handleExecuteWateringCan() {
+    if (!model.canExecuteWateringCan) return;
+
+    // Pausar regeneração durante ação
+    beginStaminaConsumingAction();
+
+    final bool wasExecuted = onExecuteWateringCan.call();
+    if (!wasExecuted) {
+      // Ação não executada, retomar regeneração
+      endStaminaConsumingAction();
+      return;
+    }
+
+    model.consumeStamina(model.wateringCanStaminaCost);
 
     // Retomar regeneração após ação instantânea
     endStaminaConsumingAction();
