@@ -71,10 +71,11 @@ class FarmInputHandler extends GameComponent with KeyboardEventListener {
 
   /// Routes farm actions based on the pressed key.
   bool _handleFarmAction(LogicalKeyboardKey key, int x, int y) {
-    if (key == KeyboardSetup.kTillSoilKey &&
-        (gameRef.player! as DDBasePlayerView).model.canExecuteDigger) {
-      return player.farmActionManager.handleTillSoil(x, y);
-    } else if (key == KeyboardSetup.kWaterKey) {
+    // if (key == KeyboardSetup.kTillSoilKey &&
+    //     (gameRef.player! as DDBasePlayerView).model.canExecuteDigger) {
+    //   return player.farmActionManager.handleTillSoil(x, y);
+    // } else
+    if (key == KeyboardSetup.kWaterKey) {
       return _handleWater(x, y);
     } else if (key == KeyboardSetup.kPlantKey) {
       return _handlePlant(x, y);

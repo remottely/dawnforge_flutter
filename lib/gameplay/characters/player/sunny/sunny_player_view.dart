@@ -10,7 +10,9 @@ import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_a
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_config.dart';
-import 'package:darkness_dungeon/gameplay/farm/services/farm_action_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/offset_helper.dart';
+import 'package:darkness_dungeon/gameplay/farm/farm_manager.dart';
+import 'package:darkness_dungeon/gameplay/farmable/farm_tile.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_view.dart';
 
@@ -152,27 +154,67 @@ class SunnyPlayerView
 
   @override
   bool onExecuteDigger() {
-    final AttackExecutionInfo? executionInfo = _meleeAttackController.execute(
-      AttackType.melee,
-      () {
-        CharacterActionSpriteAnimationHelper.playExecutionOnceWithIdle(
-          animationRight: SunnyPlayerConfig.loadRightDiggerAnimation(),
-          animationLeft: SunnyPlayerConfig.loadLeftDiggerAnimation(),
-          currentAnimation: animation,
-          target: this,
-          executionStartFrame: 4,
-          onActionStart: lockAction,
-          onActionEnd: unlockAction,
-          onExecutionFrames: () {
-            farmActionManager.handleTillSoil(
-              this.position.x.toInt(),
-              this.position.y.toInt(),
-            );
-            // PlayerPrimaryAttackConfig.execute(player: this, damage: damage);
-          },
-        );
-      },
-    );
+    final AttackExecutionInfo?
+    executionInfo = _meleeAttackController.execute(AttackType.melee, () {
+      CharacterActionSpriteAnimationHelper.playExecutionOnceWithIdle(
+        animationRight: SunnyPlayerConfig.loadRightDiggerAnimation(),
+        animationLeft: SunnyPlayerConfig.loadLeftDiggerAnimation(),
+        currentAnimation: animation,
+        target: this,
+        executionStartFrame: 4,
+        onActionStart: lockAction,
+        onActionEnd: unlockAction,
+        onExecutionFrames: () {
+          // Compute the world position in front of the player where the digger acts
+          final attackOffset = OffsetHelper.getCenterOffset(
+            Vector2(6, 0),
+            lastDirection,
+          );
+          final startPos =
+              rectCollision.center.toVector2() +
+              Vector2(attackOffset.x, attackOffset.y);
+
+          // Define a small detection rect around the impact point
+          final hitRect = Rect.fromCenter(
+            center: Offset(startPos.x, startPos.y),
+            width: 16,
+            height: 16,
+          );
+
+          // var interacted = false;
+          // Query for farm tile views that overlap the impact area and pick the closest one
+          FarmTileView? bestTarget;
+          double bestDistSq = double.infinity;
+
+          for (final view in gameRef.query<FarmTileView>()) {
+            final compRect = view.rectCollision;
+            if (!compRect.overlaps(hitRect)) continue;
+
+            final dx = compRect.center.dx - startPos.x;
+            final dy = compRect.center.dy - startPos.y;
+            final distSq = dx * dx + dy * dy;
+
+            if (distSq < bestDistSq) {
+              bestDistSq = distSq;
+              bestTarget = view;
+            }
+          }
+
+          if (bestTarget != null) {
+            FarmManager.instance.tillSoil(bestTarget.tileX, bestTarget.tileY);
+          }
+
+          // // Fallback: if nothing handled the tool, call farmActionManager as before
+          // if (!interacted) {
+          //   farmActionManager.handleTillSoil(
+          //     this.position.x.toInt(),
+          //     this.position.y.toInt(),
+          //   );
+          // }
+          // // PlayerPrimaryAttackConfig.execute(player: this, damage: damage);
+        },
+      );
+    });
 
     return executionInfo != null;
   }

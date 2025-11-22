@@ -4,14 +4,16 @@ import 'dart:ui';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/farm/farm_manager.dart';
 import 'package:darkness_dungeon/gameplay/farm/models/crop_stage.dart';
 import 'package:darkness_dungeon/gameplay/farm/models/farm_tile.dart';
 import 'package:darkness_dungeon/gameplay/farm/models/soil_state.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
+import 'package:darkness_dungeon/shared/framework/interaction/tool_interactable.dart';
 
 /// Componente visual de um tile de fazenda
 /// Renderiza sprites de solo e crop baseado no estado do FarmTile
-class FarmTileComponent extends DDDecoration {
+class FarmTileComponent extends DDDecoration with ToolInteractable {
   FarmTile farmTile;
 
   SpriteComponent? _soilSprite;
@@ -214,5 +216,22 @@ class FarmTileComponent extends DDDecoration {
 
   void setHighlighted(bool highlighted) {
     _isHighlighted = highlighted;
+  }
+
+  @override
+  void onToolUsed(
+    ToolType tool,
+    GameComponent user, {
+    required Vector2 position,
+  }) {
+    if (tool != ToolType.digger) return;
+
+    final success = FarmManager.instance.tillSoil(farmTile.x, farmTile.y);
+    if (success) {
+      final updated = FarmManager.instance.getTile(farmTile.x, farmTile.y);
+      if (updated != null) {
+        updateTile(updated);
+      }
+    }
   }
 }

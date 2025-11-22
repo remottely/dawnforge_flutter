@@ -39,7 +39,7 @@ final class KeyboardSetup {
   // ============================================================================
 
   /// Key to till soil (prepare land for planting).
-  static const LogicalKeyboardKey kTillSoilKey = LogicalKeyboardKey.keyH;
+  // static const LogicalKeyboardKey kTillSoilKey = LogicalKeyboardKey.keyH;
 
   /// Key to water crops.
   static const LogicalKeyboardKey kWaterKey = LogicalKeyboardKey.keyJ;
