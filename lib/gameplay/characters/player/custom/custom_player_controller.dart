@@ -52,7 +52,7 @@ class CustomPlayerController
     required DDBasePlayerView player,
     required dynamic actionId,
   }) =>
-      (actionId == JoystickSetup.kPrimaryAttackId ||
+      (actionId == JoystickSetup.kPrimaryActionId ||
           actionId == KeyboardSetup.kPrimaryActionKey) &&
       player.model.equipment == WeaponType.ironSword;
 
@@ -61,7 +61,7 @@ class CustomPlayerController
     required DDBasePlayerView player,
     required dynamic actionId,
   }) =>
-      (actionId == JoystickSetup.kFireballAttackId ||
+      (actionId == JoystickSetup.kSecondaryActionId ||
           actionId == KeyboardSetup.kSecondaryActionKey) &&
       player.model.equipment == WeaponType.staff;
 

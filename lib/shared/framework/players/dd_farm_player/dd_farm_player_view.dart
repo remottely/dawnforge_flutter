@@ -47,6 +47,7 @@ abstract class DDFarmPlayerView<
     return createFarmController(
       model: model,
       onChangeRunState: onChangeRunState,
+      onExecuteDigger: onExecuteDigger,
       onExecutePrimaryAttack: onExecutePrimaryAttack,
       onExecuteRangedAttack: onExecuteRangedAttack,
       onDisplayExclamationEmote: onDisplayExclamationEmote,
@@ -58,6 +59,7 @@ abstract class DDFarmPlayerView<
   C createFarmController({
     required M model,
     required void Function(bool isRunning) onChangeRunState,
+    required bool Function() onExecuteDigger,
     required bool Function(double damage) onExecutePrimaryAttack,
     required bool Function(double damage) onExecuteRangedAttack,
     required void Function() onDisplayExclamationEmote,
@@ -82,4 +84,6 @@ abstract class DDFarmPlayerView<
   void update(double dt) {
     super.update(dt);
   }
+
+  bool onExecuteDigger();
 }

@@ -125,11 +125,11 @@ abstract class DDEquippablePlayerView<
   // ============================================================================
 
   @override
-  bool executePrimaryAttack(double damage) =>
+  bool onExecutePrimaryAttack(double damage) =>
       _executeAttackForTrigger(CustomPlayerAttackTrigger.primary, damage);
 
   @override
-  bool executeRangedAttack(double damage) =>
+  bool onExecuteRangedAttack(double damage) =>
       _executeAttackForTrigger(CustomPlayerAttackTrigger.fireball, damage);
 
   /// Inicia modo de defesa com escudo

@@ -89,6 +89,9 @@ abstract class DDBasePlayerModel {
   WeaponType get equipment => _equipment;
   void setEquipment(WeaponType value) => _equipment = value;
 
+  int get diggerStaminaCost;
+  bool get canExecuteDigger => stamina >= diggerStaminaCost;
+
   // ============================================================================
   // Resource Management
   // ============================================================================

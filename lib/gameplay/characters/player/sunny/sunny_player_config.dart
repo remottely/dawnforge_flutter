@@ -117,6 +117,8 @@ final class SunnyPlayerConfig {
   /// Lower cost than melee to encourage mixed combat strategies.
   static const int kFireballAttackStaminaCost = 10;
 
+  static const int kDiggerStaminaCost = 5;
+
   // ============================================================================
   // Component Dimensions
   // ============================================================================
@@ -169,6 +171,24 @@ final class SunnyPlayerConfig {
   static Future<SpriteAnimation>
   loadLeftAttackAnimation() => SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_sword_left_strip10.png',
+    SpriteAnimationConfig.createStandardData(
+      amount: 10,
+      textureSize: textureSize,
+    ),
+  );
+
+  static Future<SpriteAnimation>
+  loadRightDiggerAnimation() => SpriteAnimation.load(
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_strip13.png',
+    SpriteAnimationConfig.createStandardData(
+      amount: 10,
+      textureSize: textureSize,
+    ),
+  );
+
+  static Future<SpriteAnimation>
+  loadLeftDiggerAnimation() => SpriteAnimation.load(
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_left_strip13.png',
     SpriteAnimationConfig.createStandardData(
       amount: 10,
       textureSize: textureSize,

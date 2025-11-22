@@ -46,7 +46,7 @@ abstract class DDHybridCombatPlayerController<
   // ============================================================================
 
   /// Executes the primary melee attack if resources are sufficient.
-  void executePrimaryAttack() {
+  void handleExecutePrimaryAttack() {
     if (!model.canExecutePrimaryAttack) return;
 
     // Pausar regeneração durante ação
@@ -68,7 +68,7 @@ abstract class DDHybridCombatPlayerController<
   }
 
   /// Executes the ranged attack if resources are sufficient.
-  void executeRangedAttack() {
+  void handleExecuteRangedAttack() {
     if (!model.canExecuteRangedAttack) return;
 
     // Pausar regeneração durante ação
@@ -102,9 +102,9 @@ abstract class DDHybridCombatPlayerController<
     if (event.event != ActionEvent.DOWN) return;
 
     if (isPrimaryAttackAction(player: player, actionId: event.id)) {
-      executePrimaryAttack();
+      handleExecutePrimaryAttack();
     } else if (isRangedAttackAction(player: player, actionId: event.id)) {
-      executeRangedAttack();
+      handleExecuteRangedAttack();
     }
   }
 }

@@ -65,6 +65,7 @@ class SunnyPlayerView
   SunnyPlayerController createFarmController({
     required SunnyPlayerModel model,
     required void Function(bool isRunning) onChangeRunState,
+    required bool Function() onExecuteDigger,
     required bool Function(double damage) onExecutePrimaryAttack,
     required bool Function(double damage) onExecuteRangedAttack,
     required void Function() onDisplayExclamationEmote,
@@ -78,6 +79,7 @@ class SunnyPlayerView
     return SunnyPlayerController(
       model: model,
       onChangeRunState: onChangeRunState,
+      onExecuteDigger: onExecuteDigger,
       onExecutePrimaryAttack: onExecutePrimaryAttack,
       onExecuteRangedAttack: onExecuteRangedAttack,
       onDisplayExclamationEmote: onDisplayExclamationEmote,
@@ -121,7 +123,7 @@ class SunnyPlayerView
   // ============================================================================
 
   @override
-  bool executePrimaryAttack(double damage) {
+  bool onExecutePrimaryAttack(double damage) {
     final AttackExecutionInfo? executionInfo = _meleeAttackController.execute(
       AttackType.melee,
       () {
@@ -144,7 +146,30 @@ class SunnyPlayerView
   }
 
   @override
-  bool executeRangedAttack(double damage) {
+  bool onExecuteDigger() {
+    final AttackExecutionInfo? executionInfo = _meleeAttackController.execute(
+      AttackType.melee,
+      () {
+        CharacterActionSpriteAnimationHelper.playExecutionOnceWithIdle(
+          animationRight: SunnyPlayerConfig.loadRightDiggerAnimation(),
+          animationLeft: SunnyPlayerConfig.loadLeftDiggerAnimation(),
+          currentAnimation: animation,
+          target: this,
+          executionStartFrame: 4,
+          onActionStart: lockAction,
+          onActionEnd: unlockAction,
+          onExecutionFrames: () {
+            // PlayerPrimaryAttackConfig.execute(player: this, damage: damage);
+          },
+        );
+      },
+    );
+
+    return executionInfo != null;
+  }
+
+  @override
+  bool onExecuteRangedAttack(double damage) {
     final AttackExecutionInfo? executionInfo = _rangedAttackController.execute(
       AttackType.ranged,
       () => CharacterFireballAttackConfig.playerExecute(

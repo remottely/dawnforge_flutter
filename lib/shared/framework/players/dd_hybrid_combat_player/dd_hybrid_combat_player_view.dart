@@ -47,7 +47,7 @@ abstract class DDHybridCombatPlayerView<
   ///
   /// Returns `true` if the attack was successfully executed, `false` if on cooldown
   /// or unable to execute.
-  bool executePrimaryAttack(double damage);
+  bool onExecutePrimaryAttack(double damage);
 
   /// Executes the ranged attack with projectile spawning and effects.
   ///
@@ -61,7 +61,7 @@ abstract class DDHybridCombatPlayerView<
   ///
   /// Returns `true` if the attack was successfully executed, `false` if on cooldown
   /// or unable to execute.
-  bool executeRangedAttack(double damage);
+  bool onExecuteRangedAttack(double damage);
 
   // ============================================================================
   // Controller Factory - Wired Combat Callbacks
@@ -71,8 +71,8 @@ abstract class DDHybridCombatPlayerView<
   C createController(M model) {
     return createCombatController(
       model: model,
-      onExecutePrimaryAttack: executePrimaryAttack,
-      onExecuteRangedAttack: executeRangedAttack,
+      onExecutePrimaryAttack: onExecutePrimaryAttack,
+      onExecuteRangedAttack: onExecuteRangedAttack,
       onDisplayExclamationEmote: onDisplayExclamationEmote,
       onDetectEnemyInLongVisionRadius: onDetectEnemyInLongVisionRadius,
     );

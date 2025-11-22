@@ -5,13 +5,21 @@ import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mo
 
 abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
     extends DDMobilePlayerController<M> {
+  final bool Function() onExecuteDigger;
+
   DDFarmPlayerController({
     required super.model,
     required super.onChangeRunState,
+    required this.onExecuteDigger,
     required super.onExecutePrimaryAttack,
     required super.onExecuteRangedAttack,
     required super.onDisplayExclamationEmote,
     required super.onDetectEnemyInLongVisionRadius,
+  });
+
+  bool isDiggerAction({
+    required DDBasePlayerView player,
+    required dynamic actionId,
   });
 
   @override
@@ -19,6 +27,33 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
     required DDBasePlayerView player,
     required JoystickActionEvent event,
   }) {
+    // Only respond to button press events
+    if (event.event != ActionEvent.DOWN) return;
+
+    if (isDiggerAction(player: player, actionId: event.id)) {
+      _handleExecuteDigger();
+    }
+
     super.handleInputAction(player: player, event: event);
+  }
+
+  /// Executes the primary melee attack if resources are sufficient.
+  void _handleExecuteDigger() {
+    if (!model.canExecuteDigger) return;
+
+    // Pausar regeneração durante ação
+    beginStaminaConsumingAction();
+
+    final bool wasExecuted = onExecuteDigger.call();
+    if (!wasExecuted) {
+      // Ação não executada, retomar regeneração
+      endStaminaConsumingAction();
+      return;
+    }
+
+    model.consumeStamina(model.diggerStaminaCost);
+
+    // Retomar regeneração após ação instantânea
+    endStaminaConsumingAction();
   }
 }

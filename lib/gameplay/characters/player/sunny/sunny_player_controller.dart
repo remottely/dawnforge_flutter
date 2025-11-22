@@ -3,7 +3,6 @@ import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_m
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/joysctick_setup.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/weapon_type.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_model.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_controller.dart';
 
@@ -16,6 +15,7 @@ class SunnyPlayerController extends DDFarmPlayerController<SunnyPlayerModel> {
   SunnyPlayerController({
     required super.model,
     required super.onChangeRunState,
+    required super.onExecuteDigger,
     required super.onExecutePrimaryAttack,
     required super.onExecuteRangedAttack,
     required super.onDisplayExclamationEmote,
@@ -34,7 +34,7 @@ class SunnyPlayerController extends DDFarmPlayerController<SunnyPlayerModel> {
     required DDBasePlayerView player,
     required dynamic actionId,
   }) =>
-      (actionId == JoystickSetup.kPrimaryAttackId ||
+      (actionId == JoystickSetup.kPrimaryActionId ||
           actionId == KeyboardSetup.kPrimaryActionKey) &&
       player.model.equipment == WeaponType.ironSword;
 
@@ -43,9 +43,18 @@ class SunnyPlayerController extends DDFarmPlayerController<SunnyPlayerModel> {
     required DDBasePlayerView player,
     required dynamic actionId,
   }) =>
-      (actionId == JoystickSetup.kFireballAttackId ||
+      (actionId == JoystickSetup.kSecondaryActionId ||
           actionId == KeyboardSetup.kSecondaryActionKey) &&
       player.model.equipment == WeaponType.staff;
+
+  @override
+  bool isDiggerAction({
+    required DDBasePlayerView player,
+    required dynamic actionId,
+  }) =>
+      (actionId == JoystickSetup.kPrimaryActionId ||
+          actionId == KeyboardSetup.kPrimaryActionKey) &&
+      player.model.equipment == WeaponType.digger;
 
   @override
   bool isRunAction({
