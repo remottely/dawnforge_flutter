@@ -45,6 +45,7 @@ abstract class DDMobilePlayerView<
     required super.model,
     required super.size,
     required super.life,
+    required super.farmActionManager,
     required double speed,
   }) : _baseSpeed = speed,
        super(speed: speed, animation: null);

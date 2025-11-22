@@ -8,7 +8,7 @@ import 'package:darkness_dungeon/gameplay/farm/constants/farm_messages.dart';
 import 'package:darkness_dungeon/gameplay/farm/farm_manager.dart';
 import 'package:darkness_dungeon/gameplay/farm/services/farm_action_service.dart';
 import 'package:darkness_dungeon/gameplay/farm/services/farm_feedback_service.dart';
-import 'package:darkness_dungeon/gameplay/farmable/farm_tile.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 import 'package:flutter/services.dart';
 
 /// Handles keyboard input for farm-related actions.
@@ -33,11 +33,12 @@ import 'package:flutter/services.dart';
 ///                        FarmFeedbackService
 /// ```
 class FarmInputHandler extends GameComponent with KeyboardEventListener {
-  final Player player;
-
+  final DDBasePlayerView player;
+  // final FarmActionManager player.farmActionManager;
   // Services
   final FarmActionService _actionService = FarmActionService.instance;
   final FarmFeedbackService _feedbackService = FarmFeedbackService.instance;
+  // final FarmActionManager player.farmActionManager = FarmActionManager.instance;
 
   FarmInputHandler({required this.player});
 
@@ -49,7 +50,7 @@ class FarmInputHandler extends GameComponent with KeyboardEventListener {
     if (_handleDebugKeys(event.logicalKey)) return true;
 
     // Find farm tile under player
-    final farmTile = _getFarmTileInContact();
+    final farmTile = player.farmActionManager.getFarmTileInContact();
     if (farmTile == null) {
       developer.log('[FarmInput] No farm tile in contact with player');
       return false;
@@ -70,8 +71,9 @@ class FarmInputHandler extends GameComponent with KeyboardEventListener {
 
   /// Routes farm actions based on the pressed key.
   bool _handleFarmAction(LogicalKeyboardKey key, int x, int y) {
-    if (key == KeyboardSetup.kTillSoilKey) {
-      return _handleTillSoil(x, y);
+    if (key == KeyboardSetup.kTillSoilKey &&
+        (gameRef.player! as DDBasePlayerView).model.canExecuteDigger) {
+      return player.farmActionManager.handleTillSoil(x, y);
     } else if (key == KeyboardSetup.kWaterKey) {
       return _handleWater(x, y);
     } else if (key == KeyboardSetup.kPlantKey) {
@@ -83,13 +85,13 @@ class FarmInputHandler extends GameComponent with KeyboardEventListener {
     return false;
   }
 
-  bool _handleTillSoil(int x, int y) {
-    final result = _actionService.tillSoil(x, y);
-    if (result.success) {
-      _feedbackService.showFloatingText(FarmMessages.kSoilTilled);
-    }
-    return true;
-  }
+  // bool handleTillSoil(int x, int y) {
+  //   final result = _actionService.tillSoil(x, y);
+  //   if (result.success) {
+  //     _feedbackService.showFloatingText(FarmMessages.kSoilTilled);
+  //   }
+  //   return true;
+  // }
 
   bool _handleWater(int x, int y) {
     final result = _actionService.waterTile(x, y);
@@ -205,22 +207,5 @@ class FarmInputHandler extends GameComponent with KeyboardEventListener {
         .catchError((e) {
           developer.log('[FarmInput] Error saving game: $e');
         });
-  }
-
-  // ============================================================================
-  // Tile Detection
-  // ============================================================================
-
-  /// Finds the farm tile currently in contact with the player.
-  FarmTileView? _getFarmTileInContact() {
-    final allFarmTiles = gameRef.query<FarmTileView>();
-
-    for (final farmTile in allFarmTiles) {
-      if (farmTile.isPlayerOnTile(player)) {
-        return farmTile;
-      }
-    }
-
-    return null;
   }
 }

@@ -1,6 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/conversation/emote_manager.dart';
+import 'package:darkness_dungeon/gameplay/farm/services/farm_action_manager.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_view.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_controller.dart';
@@ -26,6 +27,7 @@ abstract class DDBasePlayerView<
     with Lighting, BlockMovementCollision {
   final M _model;
   late final C _controller;
+  final FarmActionManager farmActionManager;
 
   /// Creates a base player with the specified configuration.
   ///
@@ -42,6 +44,7 @@ abstract class DDBasePlayerView<
     required super.size,
     required super.life,
     required super.speed,
+    required this.farmActionManager,
   }) : _model = model {
     anchor = Anchor.center;
   }

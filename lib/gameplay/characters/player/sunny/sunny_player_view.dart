@@ -10,6 +10,7 @@ import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_a
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_config.dart';
+import 'package:darkness_dungeon/gameplay/farm/services/farm_action_manager.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_view.dart';
 
@@ -33,13 +34,17 @@ class SunnyPlayerView
     extends DDFarmPlayerView<SunnyPlayerController, SunnyPlayerModel> {
   late final SynchronizedAttackController _meleeAttackController;
   late final SynchronizedAttackController _rangedAttackController;
+  // final FarmActionManager _farmActionManager = FarmActionManager.instance;
 
-  SunnyPlayerView({required super.position, required super.model})
-    : super(
-        size: SunnyPlayerConfig.componentSize,
-        life: SunnyPlayerConfig.kLife,
-        speed: SunnyPlayerConfig.kSpeed,
-      );
+  SunnyPlayerView({
+    required super.farmActionManager,
+    required super.position,
+    required super.model,
+  }) : super(
+         size: SunnyPlayerConfig.componentSize,
+         life: SunnyPlayerConfig.kLife,
+         speed: SunnyPlayerConfig.kSpeed,
+       );
   // ============================================================================
   // Lifecycle Methods
   // ============================================================================
@@ -159,6 +164,10 @@ class SunnyPlayerView
           onActionStart: lockAction,
           onActionEnd: unlockAction,
           onExecutionFrames: () {
+            farmActionManager.handleTillSoil(
+              this.position.x.toInt(),
+              this.position.y.toInt(),
+            );
             // PlayerPrimaryAttackConfig.execute(player: this, damage: damage);
           },
         );

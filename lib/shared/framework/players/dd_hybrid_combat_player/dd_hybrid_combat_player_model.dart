@@ -1,3 +1,4 @@
+import 'package:darkness_dungeon/gameplay/inventory/models/weapon_type.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_model.dart';
 
 /// Model for players with hybrid combat capabilities (melee + ranged).
@@ -36,10 +37,13 @@ abstract class DDHybridCombatPlayerModel extends DDBasePlayerModel {
   // ============================================================================
 
   /// Determines if the player can execute the primary melee attack.
-  bool get canExecutePrimaryAttack => stamina >= primaryAttackStaminaCost;
+  bool get canExecutePrimaryAttack =>
+      (stamina >= primaryAttackStaminaCost) &&
+      (equipment == WeaponType.ironSword);
 
   /// Determines if the player can execute the ranged attack.
-  bool get canExecuteRangedAttack => stamina >= rangedAttackStaminaCost;
+  bool get canExecuteRangedAttack =>
+      (stamina >= rangedAttackStaminaCost) && (equipment == WeaponType.staff);
 
   // ============================================================================
   // Serialization

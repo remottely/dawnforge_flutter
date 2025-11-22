@@ -12,6 +12,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/game/shield_defense_input
 import 'package:darkness_dungeon/gameplay/core/modules/hud/gameplay/gameplay_hud_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/save/game_save_controller.dart';
 import 'package:darkness_dungeon/gameplay/farm/handlers/farm_input_handler.dart';
+import 'package:darkness_dungeon/gameplay/farm/services/farm_action_manager.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen_config.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_to_custom_player_adapter.dart';
@@ -26,6 +27,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   final shieldDefenseInputHandler = ShieldDefenseInputHandler();
   late PlayerController playerInput;
   late FarmInputHandler farmInputHandler;
+  final farmActionManager = FarmActionManager();
 
   // Referências aos últimos players criados (para capturar vida antes de recriar)
   CustomPlayerView? _lastCustomPlayer;
@@ -106,7 +108,11 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
       );
     }
 
-    final player = SunnyPlayerView(position: position, model: model);
+    final player = SunnyPlayerView(
+      position: position,
+      model: model,
+      farmActionManager: farmActionManager,
+    );
 
     developer.log(
       '[ViewModel] Created Sunny with model life: ${model.life ?? 'null'}',
@@ -152,6 +158,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
       life: SunnyPlayerConfig.kLife,
       speed: SunnyPlayerConfig.kSpeed,
       lightingConfig: SunnyPlayerConfig.lightingConfig,
+      farmActionManager: farmActionManager,
       handLoadout: EquipmentToCustomPlayerAdapter.instance
           .createLoadoutFromEquipment(),
     );

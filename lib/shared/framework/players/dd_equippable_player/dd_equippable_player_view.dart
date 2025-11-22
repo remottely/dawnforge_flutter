@@ -39,6 +39,7 @@ abstract class DDEquippablePlayerView<
     required super.size,
     required super.life,
     required super.speed,
+    required super.farmActionManager,
     required CustomPlayerHandLoadoutSetup equipmentLoadout,
   }) : _equipmentLoadout = equipmentLoadout;
 
