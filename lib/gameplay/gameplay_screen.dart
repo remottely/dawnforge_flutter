@@ -70,7 +70,6 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
               inventoryInputHandler,
               shieldDefenseInputHandler,
               farmInputHandler,
-              farmActionManager,
             ],
             interface: gameplayHUD,
             lightingColorGame: mapLightingColor,

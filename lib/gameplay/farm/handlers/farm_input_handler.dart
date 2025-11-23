@@ -19,10 +19,6 @@ import 'package:flutter/services.dart';
 /// [FarmFeedbackService].
 ///
 /// **Keyboard Mappings:**
-/// - H: Till soil
-/// - J: Water crops
-/// - K: Plant seeds
-/// - R: Harvest crops
 /// - N: Advance day (debug)
 /// - G: Clear save data (debug)
 ///
@@ -34,11 +30,7 @@ import 'package:flutter/services.dart';
 /// ```
 class FarmInputHandler extends GameComponent with KeyboardEventListener {
   final DDBasePlayerView player;
-  // final FarmActionManager player.farmActionManager;
-  // Services
-  // final FarmActionService _actionService = FarmActionService.instance;
   final FarmFeedbackService _feedbackService = FarmFeedbackService.instance;
-  // final FarmActionManager player.farmActionManager = FarmActionManager.instance;
 
   FarmInputHandler({required this.player});
 
@@ -50,44 +42,7 @@ class FarmInputHandler extends GameComponent with KeyboardEventListener {
     if (_handleDebugKeys(event.logicalKey)) return true;
 
     return false;
-
-    // // Find farm tile under player
-    // final farmTile = player.farmActionManager.getFarmTileInContact();
-    // if (farmTile == null) {
-    //   developer.log('[FarmInput] No farm tile in contact with player');
-    //   return false;
-    // }
-
-    // final x = farmTile.tileX;
-    // final y = farmTile.tileY;
-
-    // developer.log('[FarmInput] Interacting with tile ($x, $y)');
-
-    // // Route to appropriate action handler
-    // return _handleFarmAction(event.logicalKey, x, y);
   }
-
-  // ============================================================================
-  // Farm Action Routing
-  // ============================================================================
-
-  // /// Routes farm actions based on the pressed key.
-  // bool _handleFarmAction(LogicalKeyboardKey key, int x, int y) {
-  //   // if (key == KeyboardSetup.kTillSoilKey &&
-  //   //     (gameRef.player! as DDBasePlayerView).model.canExecuteShovel) {
-  //   //   return player.farmActionManager.handleTillSoil(x, y);
-  //   // } else
-  //   // if (key == KeyboardSetup.kWaterKey) {
-  //   //   return _handleWater(x, y);
-  //   // } else if (key == KeyboardSetup.kPlantKey) {
-  //   //   return _handlePlant(x, y);
-  //   // } else
-  //   // if (key == KeyboardSetup.kHarvestKey) {
-  //   //   return _handleHarvest(x, y);
-  //   // }
-
-  //   return false;
-  // }
 
   // ============================================================================
   // Debug Actions

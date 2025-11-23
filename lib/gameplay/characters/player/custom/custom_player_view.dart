@@ -27,7 +27,6 @@ class CustomPlayerView
     required super.model,
     required super.animation,
     required super.size,
-    required super.farmActionManager,
     required RectangleHitbox hitbox,
     required double life,
     required double speed,

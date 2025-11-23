@@ -28,7 +28,6 @@ abstract class DDFarmPlayerView<
     required super.size,
     required super.life,
     required super.speed,
-    required super.farmActionManager,
   });
 
   @override

@@ -34,17 +34,13 @@ class SunnyPlayerView
     extends DDFarmPlayerView<SunnyPlayerController, SunnyPlayerModel> {
   late final SynchronizedAttackController _meleeAttackController;
   late final SynchronizedAttackController _rangedAttackController;
-  // final FarmActionManager _farmActionManager = FarmActionManager.instance;
 
-  SunnyPlayerView({
-    required super.farmActionManager,
-    required super.position,
-    required super.model,
-  }) : super(
-         size: SunnyPlayerConfig.componentSize,
-         life: SunnyPlayerConfig.kLife,
-         speed: SunnyPlayerConfig.kSpeed,
-       );
+  SunnyPlayerView({required super.position, required super.model})
+    : super(
+        size: SunnyPlayerConfig.componentSize,
+        life: SunnyPlayerConfig.kLife,
+        speed: SunnyPlayerConfig.kSpeed,
+      );
   // ============================================================================
   // Lifecycle Methods
   // ============================================================================
