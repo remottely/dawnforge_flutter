@@ -1,15 +1,15 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_sprite_animation_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 
 final class ImpEnemyConfig {
   ImpEnemyConfig._();
 
-  static const double kCloseVisionRadius =
-      CharacterConstants.kVisionRadiusLarge;
+  static const double kPrimaryAttackVisionRadius =
+      CharacterConstants.kVisionRadiusExtraLarge;
   static const double kPrimaryAttackDamage = CharacterConstants.kDamageSmall;
   static const int kPrimaryAttackInterval =
       CharacterConstants.kAttackIntervalSmall;
@@ -17,33 +17,34 @@ final class ImpEnemyConfig {
   static const double kLife = CharacterConstants.kLifeSmall;
   static const double kSpeed = CharacterConstants.kSpeedMedium;
 
-  static final Vector2 textureSize = GameplayTileConstants.tileSizeStandard;
+  static final Vector2 textureSize = TileConstants.tileSizeStandard;
   static final Vector2 componentSize = textureSize;
 
-  static final SimpleDirectionAnimation animation = SimpleDirectionAnimation(
-    idleLeft: SpriteAnimation.load(
-      'gameplay/characters/enemies/imp/imp_enemy_idle_left_4.png',
-      GameplaySpriteAnimationConfig.createStandardData(
-        amount: 4,
-        textureSize: textureSize,
-      ),
-    ),
-    idleRight: UISpriteAnimationsConfig.loadImpEnemyIdleRight4(),
-    runLeft: SpriteAnimation.load(
-      'gameplay/characters/enemies/imp/imp_enemy_run_left_4.png',
-      GameplaySpriteAnimationConfig.createStandardData(
-        amount: 4,
-        textureSize: textureSize,
-      ),
-    ),
-    runRight: SpriteAnimation.load(
-      'gameplay/characters/enemies/imp/imp_enemy_run_right_4.png',
-      GameplaySpriteAnimationConfig.createStandardData(
-        amount: 4,
-        textureSize: textureSize,
-      ),
-    ),
-  );
+  static final SimpleDirectionAnimation walkAnimation =
+      SimpleDirectionAnimation(
+        idleLeft: SpriteAnimation.load(
+          'gameplay/characters/enemies/imp/imp_enemy_idle_left_4.png',
+          SpriteAnimationConfig.createStandardData(
+            amount: 4,
+            textureSize: textureSize,
+          ),
+        ),
+        idleRight: UISpriteAnimationsConfig.loadImpEnemyIdleRight4(),
+        runLeft: SpriteAnimation.load(
+          'gameplay/characters/enemies/imp/imp_enemy_run_left_4.png',
+          SpriteAnimationConfig.createStandardData(
+            amount: 4,
+            textureSize: textureSize,
+          ),
+        ),
+        runRight: SpriteAnimation.load(
+          'gameplay/characters/enemies/imp/imp_enemy_run_right_4.png',
+          SpriteAnimationConfig.createStandardData(
+            amount: 4,
+            textureSize: textureSize,
+          ),
+        ),
+      );
 
   static RectangleHitbox createHitbox() => HitboxUtils.createBottomHitbox(
     componentSize: componentSize,

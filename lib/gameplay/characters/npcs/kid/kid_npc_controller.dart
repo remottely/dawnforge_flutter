@@ -2,9 +2,8 @@ import 'package:bonfire/player/player.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_view.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_player_input_actions_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/ui/gameplay_ui_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_manager.dart';
 
 class KidNpcController {
   bool _hasStartedConversationWithHero = false;
@@ -43,27 +42,22 @@ class KidNpcController {
   }
 
   void _showConversation(Player player) {
-    GameplayAudioManager.instance.playConversationInteractionSfx();
-    GameplayUIStateManager.instance.showConversation(
+    AudioManager.instance.playConversationInteractionSfx();
+    UIStateManager.instance.showConversation(
       _view.gameRef.context,
       player: player,
       conversationSequence: KidNpcConfig.createConversationSequence(),
-      onChangeTalk: _onConversationChanged,
-      onFinish: _onConversationFinished,
-      logicalKeyboardKeysToNext: [GameplayKeyboardConfig.kPrimaryAttackKey],
+      onChangeConversation: (_) =>
+          AudioManager.instance.playConversationInteractionSfx(),
+      onFinishConversation: _onFinishConversation,
     );
   }
 
-  void _onConversationChanged(int index) {
-    GameplayAudioManager.instance.playConversationInteractionSfx();
-  }
-
-  void _onConversationFinished() {
-    GameplayAudioManager.instance.playConversationInteractionSfx();
+  void _onFinishConversation() {
+    AudioManager.instance.playConversationInteractionSfx();
     _view.gameRef.camera.moveToPlayerAnimated(
-      onComplete: () => GameplayUIStateManager.instance.displayVictoryDialog(
-        _view.gameRef.context,
-      ),
+      onComplete: () =>
+          UIStateManager.instance.displayVictoryDialog(_view.gameRef.context),
     );
   }
 }

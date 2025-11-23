@@ -1,165 +1,241 @@
+import 'dart:async';
+
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_item_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_loadout.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_manager.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_hand_slot.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/presets/knight_default_hand_loadout.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/player_primary_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_emote_manager.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_action_sprite_animation_helper.dart';
+import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_config.dart';
+import 'package:darkness_dungeon/gameplay/farm/services/farm_action_config.dart';
+import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_view.dart';
 
-class SunnyPlayerView extends SimplePlayer
-    with Lighting, BlockMovementCollision {
-  SunnyPlayerView(
-    Vector2 position, {
-    required SunnyPlayerModel model,
-    KnightHandLoadoutConfig? handLoadout,
-  }) : _model = model,
-       _handLoadout = handLoadout ?? createDefaultKnightHandLoadout(),
-       super(
-         animation: SunnyPlayerConfig.animation,
+/// Visual representation and input handler for the Sunny player character.
+///
+/// This view implements the mobile player specialization, providing Sunny with
+/// hybrid combat capabilities (melee + ranged) and enhanced mobility (walk + run).
+///
+/// Combat System:
+/// - Synchronized attack controllers for cooldown management
+/// - Frame-precise animation execution
+/// - Dynamic hitbox positioning
+/// - Visual and audio feedback coordination
+///
+/// Mobility System:
+/// - Dynamic speed adjustment (walk/run)
+/// - Animation set switching
+/// - Movement locking during attacks
+/// - Buffered input restoration
+class SunnyPlayerView
+    extends DDFarmPlayerView<SunnyPlayerController, SunnyPlayerModel> {
+  late final SynchronizedAttackController _meleeAttackController;
+  late final SynchronizedAttackController _rangedAttackController;
+  // final FarmActionManager _farmActionManager = FarmActionManager.instance;
+
+  SunnyPlayerView({
+    required super.farmActionManager,
+    required super.position,
+    required super.model,
+  }) : super(
          size: SunnyPlayerConfig.componentSize,
-         position: position,
          life: SunnyPlayerConfig.kLife,
          speed: SunnyPlayerConfig.kSpeed,
-       ) {
-    anchor = Anchor.center;
-  }
-
-  final SunnyPlayerModel _model;
-  final KnightHandLoadoutConfig _handLoadout;
-  late final SunnyPlayerController _controller;
-  late final KnightHandManager _handManager = KnightHandManager(owner: this);
+       );
+  // ============================================================================
+  // Lifecycle Methods
+  // ============================================================================
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    _initializeVisualConfiguration();
-    _initializeController();
-    add(SunnyPlayerConfig.hitbox);
-    await _handManager.applyLoadout(_handLoadout);
-  }
-
-  @override
-  void update(double dt) {
-    if (isDead) return;
-    _controller.update(dt);
-    _handManager.update(dt, velocity);
-    _updateSpriteDirection();
-    super.update(dt);
-  }
-
-  void _updateSpriteDirection() {
-    // Quando o personagem se move para a esquerda (velocidade negativa em X),
-    // flipamos horizontalmente o sprite
-    if (velocity.x < 0 && !isFlippedHorizontally) {
-      flipHorizontallyAroundCenter();
-    } else if (velocity.x > 0 && isFlippedHorizontally) {
-      flipHorizontallyAroundCenter();
-    }
-  }
-
-  @override
-  void onJoystickAction(JoystickActionEvent event) {
-    if (isDead) return;
-    _controller.handleInputAction(event);
-    super.onJoystickAction(event);
-  }
-
-  @override
-  void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
-    if (isDead) return;
-    _showDamageFx(damage);
-    super.onReceiveDamage(attacker, damage, id);
-  }
-
-  @override
-  void onDie() {
-    _showDeathFx();
-    removeFromParent();
-    super.onDie();
+    _initializeCombatSystems();
   }
 
   @override
   void onRemove() {
-    _handManager.dispose();
-    _controller.dispose();
+    _meleeAttackController.dispose();
+    _rangedAttackController.dispose();
     super.onRemove();
   }
 
-  // Public API for external interaction
-  // void useTool() => _controller.useTool();
-  // void switchTool(FarmTool newTool) => _controller.switchTool(newTool);
-  // void restoreEnergy() => _controller.restoreEnergy();
-  SunnyPlayerModel get model => _controller.model;
+  // ============================================================================
+  // Factory Methods - Configuration
+  // ============================================================================
 
-  void _initializeVisualConfiguration() {
-    setupLighting(SunnyPlayerConfig.lightingConfig);
-    setupMovementByJoystick(intensityEnabled: true);
-  }
-
-  void _initializeController() {
-    _controller = SunnyPlayerController(
-      model: _model,
-      onPrimaryAttack: _onPlayPrimaryAttack,
-      onFireballAttack: _onPlayFireballAttack,
-      onToolUse: _onPlayToolAnimation,
-      onShowExclamation: _onShowExclamationEmote,
-      onCheckEnemyVision: _onCheckEnemyVision,
+  @override
+  SunnyPlayerController createFarmController({
+    required SunnyPlayerModel model,
+    required void Function(bool isRunning) onChangeRunState,
+    required bool Function() onExecuteShovel,
+    required bool Function() onExecuteWateringCan,
+    required bool Function() onExecuteSeed,
+    required bool Function(double damage) onExecutePrimaryAttack,
+    required bool Function(double damage) onExecuteRangedAttack,
+    required void Function() onDisplayExclamationEmote,
+    required void Function({
+      required double longVisionRadius,
+      required void Function() notObserved,
+      required void Function(List<Enemy> enemies) observed,
+    })
+    onDetectEnemyInLongVisionRadius,
+  }) {
+    return SunnyPlayerController(
+      model: model,
+      onChangeRunState: onChangeRunState,
+      onExecuteShovel: onExecuteShovel,
+      onExecuteWateringCan: onExecuteWateringCan,
+      onExecuteSeed: onExecuteSeed,
+      onExecutePrimaryAttack: onExecutePrimaryAttack,
+      onExecuteRangedAttack: onExecuteRangedAttack,
+      onDisplayExclamationEmote: onDisplayExclamationEmote,
+      onDetectEnemyInLongVisionRadius: onDetectEnemyInLongVisionRadius,
     );
   }
 
-  KnightHandItemController? handControllerFor(KnightHandSlot slot) =>
-      _handManager.handControllerFor(slot);
+  @override
+  RectangleHitbox getHitbox() => SunnyPlayerConfig.hitbox;
 
-  bool _executeAttackForTrigger(KnightAttackTrigger trigger, double damage) {
-    return _handManager.executeAttack(trigger, damage);
+  @override
+  LightingConfig getLightingConfig() => SunnyPlayerConfig.lightingConfig;
+
+  @override
+  DDDecoration getDeathMarker(Vector2 position) =>
+      SunnyPlayerConfig.createDeathMarker(position);
+
+  @override
+  SimpleDirectionAnimation getWalkAnimation() =>
+      SunnyPlayerConfig.walkAnimation;
+
+  @override
+  SimpleDirectionAnimation getRunAnimation() => SunnyPlayerConfig.runAnimation;
+
+  // ============================================================================
+  // Initialization
+  // ============================================================================
+
+  /// Initializes the synchronized attack system controllers for combat.
+  void _initializeCombatSystems() {
+    _meleeAttackController = SynchronizedAttackController(
+      spec: SynchronizedAttackSpecConfig.standard,
+    );
+    _rangedAttackController = SynchronizedAttackController(
+      spec: SynchronizedAttackSpecConfig.standard,
+    );
   }
 
-  /// Private helper methods
-  void _showDamageFx(double damage) => showDamage(
-    damage,
-    config: CharacterFxParticlesAnimationsConfig.kPlayerShowDamageTextStyle,
-    gravity: CharacterFxParticlesAnimationsConfig.kShowDamageGravity,
-    initVelocityVertical:
-        CharacterFxParticlesAnimationsConfig.kShowDamageInitVelocityVertical,
-  );
+  // ============================================================================
+  // Combat Execution Implementation
+  // ============================================================================
 
-  void _showDeathFx() =>
-      gameRef.add(SunnyPlayerConfig.createCryptComponent(position));
+  @override
+  bool onExecutePrimaryAttack(double damage) {
+    final AttackExecutionInfo? executionInfo = _meleeAttackController.execute(
+      AttackType.melee,
+      () {
+        CharacterActionSpriteAnimationHelper.playExecutionOnceWithIdle(
+          animationRight: SunnyPlayerConfig.loadRightAttackAnimation(),
+          animationLeft: SunnyPlayerConfig.loadLeftAttackAnimation(),
+          currentAnimation: animation,
+          target: this,
+          executionStartFrame: 4,
+          onActionStart: lockAction,
+          onActionEnd: unlockAction,
+          onExecutionFrames: () {
+            PlayerPrimaryAttackConfig.execute(player: this, damage: damage);
+          },
+        );
+      },
+    );
 
-  /// Controller callback implementations
-  bool _onPlayPrimaryAttack(double damage) =>
-      _executeAttackForTrigger(KnightAttackTrigger.primary, damage);
-
-  bool _onPlayFireballAttack(double damage) =>
-      _executeAttackForTrigger(KnightAttackTrigger.fireball, damage);
-
-  void _onPlayToolAnimation() {
-    // TODO: Implementar animação de ferramenta
+    return executionInfo != null;
   }
 
-  void _onShowExclamationEmote() {
-    add(
-      CharacterEmoteManager.displayEmoteAboveCharacter(
-        asset: CharacterEmoteManager.kExclamationEmoteAsset,
-        amount: 8,
-        target: this,
+  @override
+  bool onExecuteRangedAttack(double damage) {
+    final AttackExecutionInfo? executionInfo = _rangedAttackController.execute(
+      AttackType.ranged,
+      () => CharacterFireballAttackConfig.playerExecute(
+        player: this,
+        damage: damage,
       ),
     );
+
+    return executionInfo != null;
   }
 
-  void _onCheckEnemyVision({
-    required double visionRadius,
-    required void Function() notObserved,
-    required void Function(List<Enemy> enemies) observed,
-  }) {
-    seeEnemy(
-      radiusVision: visionRadius,
-      notObserved: notObserved,
-      observed: observed,
+  @override
+  bool onExecuteShovel() {
+    final AttackExecutionInfo? executionInfo = _meleeAttackController.execute(
+      AttackType.melee,
+      () {
+        CharacterActionSpriteAnimationHelper.playExecutionOnceWithIdle(
+          animationRight: SunnyPlayerConfig.loadRightShovelAnimation(),
+          animationLeft: SunnyPlayerConfig.loadLeftShovelAnimation(),
+          currentAnimation: animation,
+          target: this,
+          executionStartFrame: 4,
+          onActionStart: lockAction,
+          onActionEnd: unlockAction,
+          // TODO(chatgpt): preciso que vc
+          onExecutionFrames: () {
+            FarmActionConfig.execute(player: this);
+          },
+        );
+      },
     );
+
+    return executionInfo != null;
+  }
+
+  @override
+  bool onExecuteWateringCan() {
+    final AttackExecutionInfo? executionInfo = _meleeAttackController.execute(
+      AttackType.melee,
+      () {
+        CharacterActionSpriteAnimationHelper.playExecutionOnceWithIdle(
+          animationRight: SunnyPlayerConfig.loadRightWateringCanAnimation(),
+          animationLeft: SunnyPlayerConfig.loadLeftWateringCanAnimation(),
+          currentAnimation: animation,
+          target: this,
+          executionStartFrame: 4,
+          onActionStart: lockAction,
+          onActionEnd: unlockAction,
+          // TODO(chatgpt): preciso que vc
+          onExecutionFrames: () {
+            FarmActionConfig.execute(player: this);
+          },
+        );
+      },
+    );
+
+    return executionInfo != null;
+  }
+
+  @override
+  bool onExecuteSeed() {
+    final AttackExecutionInfo? executionInfo = _meleeAttackController.execute(
+      AttackType.melee,
+      () {
+        CharacterActionSpriteAnimationHelper.playExecutionOnceWithIdle(
+          animationRight: SunnyPlayerConfig.loadRightSeedAnimation(),
+          animationLeft: SunnyPlayerConfig.loadLeftSeedAnimation(),
+          currentAnimation: animation,
+          target: this,
+          executionStartFrame: 4,
+          onActionStart: lockAction,
+          onActionEnd: unlockAction,
+          // TODO(chatgpt): preciso que vc
+          onExecutionFrames: () {
+            FarmActionConfig.execute(player: this);
+          },
+        );
+      },
+    );
+
+    return executionInfo != null;
   }
 }

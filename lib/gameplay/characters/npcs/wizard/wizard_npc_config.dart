@@ -1,13 +1,13 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/shared/character_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/conversation/gameplay_conversation_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/conversation/conversation_config.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 
 final class WizardNpcConfig {
   WizardNpcConfig._();
 
-  static const double kVisionRadius =
-      CharacterConstants.kVisionRadiusExtraSmall;
+  static const double kCloseVisionRadius =
+      CharacterConstants.kVisionRadiusSmall;
 
   static final Vector2 textureSize = Vector2(
     16,
@@ -15,16 +15,17 @@ final class WizardNpcConfig {
   ); // TODO(Kevin): change this size
   static final Vector2 componentSize = textureSize;
 
-  static final SimpleDirectionAnimation animation = SimpleDirectionAnimation(
-    idleRight: UISpriteAnimationsConfig.loadWizardNpcIdleLeft4(),
-    runRight: UISpriteAnimationsConfig.loadWizardNpcIdleLeft4(),
-  );
+  static final SimpleDirectionAnimation walkAnimation =
+      SimpleDirectionAnimation(
+        idleRight: UISpriteAnimationsConfig.loadWizardNpcIdleLeft4(),
+        runRight: UISpriteAnimationsConfig.loadWizardNpcIdleLeft4(),
+      );
 
   static List<Say> createConversationSequence() => [
-    GameplayConversationConfig.createWizardRightDialog('talk_wizard_1'),
-    GameplayConversationConfig.createKnightLeftDialog('talk_player_1'),
-    GameplayConversationConfig.createWizardRightDialog('talk_wizard_2'),
-    GameplayConversationConfig.createKnightLeftDialog('talk_player_2'),
-    GameplayConversationConfig.createWizardRightDialog('talk_wizard_3'),
+    ConversationConfig.createWizardRight('talk_wizard_1'),
+    ConversationConfig.createKnightLeft('talk_player_1'),
+    ConversationConfig.createWizardRight('talk_wizard_2'),
+    ConversationConfig.createKnightLeft('talk_player_2'),
+    ConversationConfig.createWizardRight('talk_wizard_3'),
   ];
 }

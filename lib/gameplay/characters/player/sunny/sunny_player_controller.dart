@@ -1,101 +1,84 @@
-import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_player_input_actions_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/input_actions/joysctick_setup.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
+import 'package:darkness_dungeon/gameplay/inventory/models/weapon_type.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_controller.dart';
 
-class SunnyPlayerController {
-  final SunnyPlayerModel model;
-  final bool Function(double damage) onPrimaryAttack;
-  final bool Function(double damage) onFireballAttack;
-  final void Function() onToolUse;
-  final void Function() onShowExclamation;
-  final void Function({
-    required double visionRadius,
-    required void Function() notObserved,
-    required void Function(List<Enemy> enemies) observed,
-  })
-  onCheckEnemyVision;
-
-  bool _hasStaminaRegenScheduled = false;
-  bool _isToolInUse = false;
-
+/// Controller for the Sunny player character.
+///
+/// Implements mobile player controller to provide Sunny-specific input
+/// mapping and configuration while inheriting all hybrid combat and
+/// mobility management functionality.
+class SunnyPlayerController extends DDFarmPlayerController<SunnyPlayerModel> {
   SunnyPlayerController({
-    required this.model,
-    required this.onPrimaryAttack,
-    required this.onFireballAttack,
-    required this.onToolUse,
-    required this.onShowExclamation,
-    required this.onCheckEnemyVision,
+    required super.model,
+    required super.onChangeRunState,
+    required super.onExecuteShovel,
+    required super.onExecuteWateringCan,
+    required super.onExecuteSeed,
+    required super.onExecutePrimaryAttack,
+    required super.onExecuteRangedAttack,
+    required super.onDisplayExclamationEmote,
+    required super.onDetectEnemyInLongVisionRadius,
   });
 
-  // Lifecycle
-  void update(double dt) {
-    _handleStaminaRegeneration();
-    _handleEnemyVision();
-  }
+  // ============================================================================
+  // Configuration Overrides
+  // ============================================================================
 
-  void dispose() {
-    _hasStaminaRegenScheduled = false;
-  }
+  @override
+  Duration get staminaRegenDebounce => SunnyPlayerConfig.kStaminaRegenDebounce;
 
-  // Input handling
-  void handleInputAction(JoystickActionEvent event) {
-    if (event.event != ActionEvent.DOWN) return;
+  @override
+  bool isPrimaryAttackAction({
+    required DDBasePlayerView player,
+    required dynamic actionId,
+  }) =>
+      (actionId == JoystickSetup.kPrimaryActionId ||
+          actionId == KeyboardSetup.kPrimaryActionKey) &&
+      player.model.equipment == WeaponType.ironSword;
 
-    if (event.id == GameplayJoystickConfig.kJoystickPrimaryAttackId ||
-        event.id == GameplayKeyboardConfig.kPrimaryAttackKey) {
-      executePrimaryAttack();
-    } else if (event.id == GameplayJoystickConfig.kJoystickFireballAttackId ||
-        event.id == GameplayKeyboardConfig.kFireballAttackKey) {
-      executeFireballAttack();
-    }
-  }
+  @override
+  bool isRangedAttackAction({
+    required DDBasePlayerView player,
+    required dynamic actionId,
+  }) =>
+      (actionId == JoystickSetup.kSecondaryActionId ||
+          actionId == KeyboardSetup.kSecondaryActionKey) &&
+      player.model.equipment == WeaponType.staff;
 
-  // Actions
-  void executePrimaryAttack() {
-    if (!model.canExecutePrimaryAttack) return;
-    final executed = onPrimaryAttack(SunnyPlayerConfig.kPrimaryAttackDamage);
-    if (!executed) return;
-    model.consumeStamina(SunnyPlayerConfig.kPrimaryAttackStaminaCost);
-  }
+  @override
+  bool isShovelAction({
+    required DDBasePlayerView player,
+    required dynamic actionId,
+  }) =>
+      (actionId == JoystickSetup.kPrimaryActionId ||
+          actionId == KeyboardSetup.kPrimaryActionKey) &&
+      player.model.equipment == WeaponType.shovel;
 
-  void executeFireballAttack() {
-    if (!model.canExecuteFireballAttack) return;
-    final executed = onFireballAttack(SunnyPlayerConfig.kFireballAttackDamage);
-    if (!executed) return;
-    model.consumeStamina(SunnyPlayerConfig.kFireballAttackStaminaCost);
-  }
+  @override
+  bool isWateringCanAction({
+    required DDBasePlayerView player,
+    required dynamic actionId,
+  }) =>
+      (actionId == JoystickSetup.kPrimaryActionId ||
+          actionId == KeyboardSetup.kPrimaryActionKey) &&
+      player.model.equipment == WeaponType.wateringCan;
 
-  void useTool() {
-    if (_isToolInUse || !model.canExecuteToolAction) return;
-    _isToolInUse = true;
-    model.consumeEnergy(SunnyPlayerConfig.kToolActionEnergyCost);
-    onToolUse();
-    Future.delayed(Duration(milliseconds: 500), () => _isToolInUse = false);
-  }
+  @override
+  bool isSeedAction({
+    required DDBasePlayerView player,
+    required dynamic actionId,
+  }) =>
+      (actionId == JoystickSetup.kPrimaryActionId ||
+          actionId == KeyboardSetup.kPrimaryActionKey) &&
+      player.model.equipment == WeaponType.seeds;
 
-  void switchTool(FarmTool newTool) => model.switchTool(newTool);
-  void restoreEnergy() => model.restoreEnergy();
-
-  // Private helpers
-  void _handleStaminaRegeneration() {
-    if (_hasStaminaRegenScheduled) return;
-    _hasStaminaRegenScheduled = true;
-    Future.delayed(SunnyPlayerConfig.kStaminaRegenDebounce, () {
-      _hasStaminaRegenScheduled = false;
-      model.regenerateStamina();
-    });
-  }
-
-  void _handleEnemyVision() {
-    onCheckEnemyVision(
-      visionRadius: SunnyPlayerConfig.kVisionRadius,
-      notObserved: () => model.isObservingEnemy = false,
-      observed: (enemies) {
-        if (model.isObservingEnemy) return;
-        model.isObservingEnemy = true;
-        onShowExclamation();
-      },
-    );
-  }
+  @override
+  bool isRunAction({
+    required DDBasePlayerView player,
+    required dynamic actionId,
+  }) => actionId == JoystickSetup.kRunId || actionId == KeyboardSetup.kRunKey;
 }

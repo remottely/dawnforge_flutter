@@ -9,7 +9,7 @@ class MenuScreenConfig {
   );
   static const Duration kCharacterAnimationInterval = Duration(seconds: 2);
   static final List<Future<SpriteAnimation>> characterSpriteAnimations = [
-    UISpriteAnimationsConfig.loadSunnyPlayerIdleRight6(),
+    UISpriteAnimationsConfig.loadKnightPlayerIdleRight6(),
     UISpriteAnimationsConfig.loadGoblinEnemyIdleRight6(),
     UISpriteAnimationsConfig.loadImpEnemyIdleRight4(),
     UISpriteAnimationsConfig.loadMiniBossEnemyIdleRight4(),
@@ -17,7 +17,7 @@ class MenuScreenConfig {
   ];
 
   static final Future<Sprite> keyboardSprite = Sprite.load(
-    'ui/controls/keyboard_tip.png',
+    'ui/input/keyboard_tip.png',
   );
 
   static const String kKevinKoboriUrl = 'https://github.com/kevinkobori';

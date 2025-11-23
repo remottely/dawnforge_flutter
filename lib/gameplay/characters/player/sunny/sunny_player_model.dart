@@ -1,63 +1,90 @@
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_model.dart';
 
-enum FarmTool { hand, hoe, wateringCan }
-
-class SunnyPlayerModel {
-  double _stamina;
-  int _energy;
-  FarmTool currentTool;
-  bool hasKey;
-  bool isObservingEnemy;
-
+/// Data model for the Sunny player character.
+///
+/// Extends the mobile player model to provide Sunny-specific configuration
+/// values while inheriting all base player functionality including combat
+/// resources, mobility state, and inventory management.
+class SunnyPlayerModel extends DDFarmPlayerModel {
   SunnyPlayerModel({
     double? initialStamina,
     int? initialEnergy,
-    FarmTool? initialTool,
+    double? initialLife,
     bool? initialHasKey,
-  }) : _stamina = initialStamina ?? SunnyPlayerConfig.kMaxStamina,
-       _energy = initialEnergy ?? SunnyPlayerConfig.kMaxEnergy,
-       currentTool = initialTool ?? FarmTool.hand,
-       hasKey = initialHasKey ?? false,
-       isObservingEnemy = false;
+  }) : super(
+         maxStamina: SunnyPlayerConfig.kMaxStamina,
+         maxEnergy: SunnyPlayerConfig.kMaxEnergy,
+         initialStamina: initialStamina,
+         initialEnergy: initialEnergy,
+         initialLife: initialLife,
+         initialHasKey: initialHasKey,
+       );
 
-  // Getters
-  double get stamina => _stamina;
-  int get energy => _energy;
+  // ============================================================================
+  // Configuration Overrides
+  // ============================================================================
 
-  // Validations
-  bool get hasStamina => _stamina > 0;
+  @override
+  double get maxStamina => SunnyPlayerConfig.kMaxStamina;
 
-  bool get canExecutePrimaryAttack =>
-      _stamina >= SunnyPlayerConfig.kPrimaryAttackStaminaCost;
+  @override
+  int get maxEnergy => SunnyPlayerConfig.kMaxEnergy;
 
-  bool get canExecuteFireballAttack =>
-      _stamina >= SunnyPlayerConfig.kFireballAttackStaminaCost;
+  @override
+  int get staminaRegenIncrement => SunnyPlayerConfig.kStaminaIncrement;
 
-  bool get canExecuteToolAction =>
-      _energy >= SunnyPlayerConfig.kToolActionEnergyCost;
+  @override
+  double get longVisionRadius => SunnyPlayerConfig.kLongVisionRadius;
 
-  // State mutations
-  void consumeStamina(int amount) {
-    _stamina = (_stamina - amount).clamp(0, SunnyPlayerConfig.kMaxStamina);
+  @override
+  int get primaryAttackStaminaCost =>
+      SunnyPlayerConfig.kPrimaryAttackStaminaCost;
+
+  @override
+  int get rangedAttackStaminaCost =>
+      SunnyPlayerConfig.kFireballAttackStaminaCost;
+
+  @override
+  int get shovelStaminaCost => SunnyPlayerConfig.kShovelStaminaCost;
+
+  @override
+  int get wateringCanStaminaCost => SunnyPlayerConfig.kWateringCanStaminaCost;
+
+  @override
+  int get seedStaminaCost => SunnyPlayerConfig.kSeedStaminaCost;
+
+  @override
+  double get primaryAttackDamage => SunnyPlayerConfig.kPrimaryAttackDamage;
+
+  @override
+  double get rangedAttackDamage => SunnyPlayerConfig.kFireballAttackDamage;
+
+  @override
+  double get runSpeedMultiplier => SunnyPlayerConfig.kRunSpeedMultiplier;
+
+  // ============================================================================
+  // Serialization
+  // ============================================================================
+
+  @override
+  Map<String, dynamic> toJson() {
+    final json = super.toJson();
+    json['playerType'] = 'sunny'; // Identifier for deserialization
+    return json;
   }
 
-  void regenerateStamina() {
-    _stamina = (_stamina + SunnyPlayerConfig.kStaminaIncrement).clamp(
-      0,
-      SunnyPlayerConfig.kMaxStamina,
+  /// Creates a SunnyPlayerModel from JSON data.
+  ///
+  /// [json] The JSON map containing saved player state.
+  factory SunnyPlayerModel.fromJson(Map<String, dynamic> json) {
+    final model = SunnyPlayerModel(
+      initialStamina: (json['currentStamina'] as num?)?.toDouble(),
+      initialEnergy: (json['currentEnergy'] as int?),
+      initialLife: (json['currentLife'] as num?)?.toDouble(),
+      initialHasKey: (json['hasKeyItem'] as bool?),
     );
+    model.fromJson(json);
+    return model;
   }
-
-  void consumeEnergy(int amount) {
-    _energy = (_energy - amount).clamp(0, SunnyPlayerConfig.kMaxEnergy);
-  }
-
-  void restoreEnergy() {
-    _energy = SunnyPlayerConfig.kMaxEnergy;
-  }
-
-  void switchTool(FarmTool newTool) => currentTool = newTool;
-
-  void obtainKey() => hasKey = true;
-  void removeKey() => hasKey = false;
 }

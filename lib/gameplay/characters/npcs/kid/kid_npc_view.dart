@@ -5,10 +5,9 @@ import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_controller
 class KidNpcView extends SimpleNpc {
   final KidNpcController _controller = KidNpcController();
 
-  KidNpcView(Vector2 position)
+  KidNpcView({required super.position})
     : super(
-        animation: KidNpcConfig.animation,
-        position: position,
+        animation: KidNpcConfig.walkAnimation,
         size: KidNpcConfig.componentSize,
       );
 

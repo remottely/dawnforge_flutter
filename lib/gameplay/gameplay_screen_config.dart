@@ -1,7 +1,8 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_player_input_actions_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/camera/gameplay_camera_utils.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_calculations.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/input_actions/joysctick_setup.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
 import 'package:flutter/widgets.dart';
 
@@ -11,17 +12,17 @@ class GameplayScreenConfig {
   static CameraConfig createCameraConfig(BuildContext context) {
     return CameraConfig(
       speed: kCameraSpeed,
-      zoom: GameplayCameraUtils.getCameraZoomFromMaxVisibleTile(
+      zoom: CameraCalculations.getCameraZoomFromMaxVisibleTile(
         context,
-        maxVisibleTile: GameplayTileConstants.kMaxVisibleTiles,
+        maxVisibleTile: TileConstants.kMaxVisibleTiles,
       ),
     );
   }
 
   static PlayerController createPlayerInput() {
     return switch (SettingsManager.instance.vIsJoystickInputSelected) {
-      InputActionsType.keyboard => GameplayKeyboardConfig.createKeyboardInput(),
-      InputActionsType.joystick => GameplayJoystickConfig.createJoystickInput(),
+      InputActionsType.keyboard => KeyboardSetup.createKeyboardInput(),
+      InputActionsType.joystick => JoystickSetup.createJoystickInput(),
     };
   }
 }

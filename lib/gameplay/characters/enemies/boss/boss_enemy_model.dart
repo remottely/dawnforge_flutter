@@ -1,22 +1,22 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_config.dart';
-import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy_model.dart';
+import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_model.dart';
 
 class BossEnemyModel extends DDBaseEnemyModel {
   BossEnemyModel()
     : super(
-        closeVisionRadius: BossEnemyConfig.kCloseVisionRadius,
+        closeVisionRadius: BossEnemyConfig.kPrimaryAttackVisionRadius,
         primaryAttackDamage: BossEnemyConfig.kPrimaryAttackDamage,
         primaryAttackInterval: BossEnemyConfig.kPrimaryAttackInterval,
       );
 
   List<Enemy> spawnedEnemies = [];
 
-  bool _isFirstPlayerSighted = false;
-  bool get isFirstPlayerSighted => _isFirstPlayerSighted;
+  bool _isPlayerFirstDetection = false;
+  bool get isPlayerFirstDetection => _isPlayerFirstDetection;
   void registerFirstPlayerSighting() {
-    if (_isFirstPlayerSighted) return;
-    _isFirstPlayerSighted = true;
+    if (_isPlayerFirstDetection) return;
+    _isPlayerFirstDetection = true;
   }
 
   bool _hasSpawnedFirstWave = false;

@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.20.0+1
+version: 1.58.2+1
 
 environment:
   sdk: ^3.9.2
@@ -20,6 +20,8 @@ dependencies:
   flame_splash_screen: ^0.3.1
   url_launcher: ^6.3.1
   win32: ^5.10.0
+  shared_preferences: ^2.3.4
+  web: ^1.1.0
 
 dev_dependencies:
   test: any
@@ -50,7 +52,9 @@ flutter:
     - assets/images/gameplay/characters/weapons/
     - assets/images/gameplay/decorations/
     - assets/images/gameplay/farmable/
-    - assets/images/ui/controls/
+    - assets/images/ui/input/
+    - assets/images/hud/
+    - assets/images/joystick/
     - assets/images/tiled/
     - assets/images/tiled/tilesets/
     - assets/audio/music/
@@ -58,12 +62,20 @@ flutter:
     - assets/audio/ui/
     - assets/audio/voice/
     - assets/l10n/
+    - assets/crops/
+    - assets/items/
+    - assets/images/gameplay/farm/crops/carrot/
+    - assets/images/gameplay/farm/soil/
     - assets/images/SPUM/Resources/Addons/Legacy/0_Unit/0_Sprite/6_Weapons/0_Sword/
     - assets/images/SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/7_Shield/
     - assets/images/SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/2_Axe/
     # - assets/images/SPUM/Resources/Addons/Ver300/0_Unit/0_Sprite/8_Weapons/7_Shield/
     - assets/images/SPUM/Resources/Addons/Ver300/0_Unit/0_Sprite/8_Weapons/8_Mace/
     - assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/
+    - assets/images/SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/ATTACK/
+    - assets/images/SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/AXE/
+    - assets/images/SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/CAUGHT/
+    - assets/images/SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/DIG/
 
   fonts:
     - family: Normal

@@ -1,11 +1,12 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/gameplay_audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/gameplay_tile_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/map/gameplay_map_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/map/map_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/map/map_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/color_helper.dart';
-import 'package:darkness_dungeon/gameplay/decorations/map_transition_sensor.dart';
+import 'package:darkness_dungeon/gameplay/decorations/interactables/map_transition_sensor.dart';
+import 'package:darkness_dungeon/gameplay/farm/handlers/farm_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen_config.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -18,42 +19,59 @@ class GameplayScreen extends StatefulWidget {
 }
 
 class _GameplayScreenState extends GameplayScreenViewmodel {
+  String? _lastRequestedMusic;
+
   @override
   Widget build(BuildContext gameplayContext) {
     return MapNavigator(
-      maps: GameplayMapManager.allMaps,
-      initialMap: GameplayMapConfig.kForest1Id,
+      maps: MapManager.allMaps,
+      initialMap: MapConfig.kLake1Id,
       builder: (context, arguments, mapItem) {
         final mapLightingColor = ColorHelper.fromHex(
-          mapItem.properties[GameplayMapConfig.kLightingColorPropertyKey]
-              ?.toString(),
+          mapItem.properties[MapConfig.kLightingColorPropertyKey]?.toString(),
         );
         final mapBackgroundColor = ColorHelper.fromHex(
-          mapItem.properties[GameplayMapConfig.kBackgroundColorPropertyKey]
-              ?.toString(),
+          mapItem.properties[MapConfig.kBackgroundColorPropertyKey]?.toString(),
         );
         final mapBackgroundMusic = mapItem
-            .properties[GameplayMapConfig.kBackgroundMusicPropertyKey]
+            .properties[MapConfig.kBackgroundMusicPropertyKey]
             ?.toString();
-        if (mapBackgroundMusic != null && mapBackgroundMusic.isNotEmpty) {
-          GameplayAudioManager.instance.playBackgroundMusic(mapBackgroundMusic);
+
+        // Toca a música apenas se for diferente da última requisitada
+        if (mapBackgroundMusic != null &&
+            mapBackgroundMusic.isNotEmpty &&
+            _lastRequestedMusic != mapBackgroundMusic) {
+          _lastRequestedMusic = mapBackgroundMusic;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            AudioManager.instance.playBackgroundMusic(mapBackgroundMusic);
+          });
         }
 
         MapArguments? mapArguments = arguments as MapArguments?;
         final playerPosition =
             (mapArguments?.playerPosition ?? Vector2.all(4)) *
-            GameplayTileConstants.kTileDimensionStandard;
-        final knightPlayer = buildKnightPlayer(playerPosition);
+            TileConstants.kTileDimensionStandard;
+        final player = buildSunnyPlayer(playerPosition);
 
-        final playerInput = GameplayScreenConfig.createPlayerInput();
+        playerInput = GameplayScreenConfig.createPlayerInput();
+
+        // Criar novo farm input handler para este mapa
+        farmInputHandler = FarmInputHandler(player: player);
 
         return Material(
           color: Colors.transparent,
           child: BonfireWidget(
             playerControllers: [playerInput],
-            player: knightPlayer,
+            player: player,
             map: mapItem.map,
-            components: [gameplayGameStateManager],
+            components: [
+              gameplayGameStateManager,
+              // customPlayerInventoryInputHandler,
+              inventoryInputHandler,
+              shieldDefenseInputHandler,
+              farmInputHandler,
+              farmActionManager,
+            ],
             interface: gameplayHUD,
             lightingColorGame: mapLightingColor,
             backgroundColor: mapBackgroundColor,

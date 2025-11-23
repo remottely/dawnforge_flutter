@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 
 class DDDecoration extends GameDecoration {
-  DDDecoration({required super.position, required super.size}) : super();
+  DDDecoration({required super.position, required super.size});
 
   DDDecoration.withSprite({
     required super.sprite,

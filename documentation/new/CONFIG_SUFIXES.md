@@ -1,0 +1,6 @@
+KnightHandAttackConfig > KnightAttackSpec
+KnightHandLoadoutConfig > KnightLoadoutSetup
+KnightHandItemConfig > KnightItemData
+SynchronizedAttackConfig > SynchronizedAttackSpec
+KnightHandSlotConfig > KnightHandSlotSpec
+SunnyPlayerConfig > SunnyPlayerProfile

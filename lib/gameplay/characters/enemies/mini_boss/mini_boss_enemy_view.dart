@@ -2,14 +2,13 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/mini_boss/mini_boss_enemy_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/mini_boss/mini_boss_enemy_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/mini_boss/mini_boss_enemy_model.dart';
-import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy.dart';
+import 'package:darkness_dungeon/shared/framework/enemies/dd_ranged_enemy/dd_ranged_enemy_view.dart';
 
 class MiniBossEnemyView
-    extends DDBaseEnemy<MiniBossEnemyController, MiniBossEnemyModel> {
-  MiniBossEnemyView(Vector2 position)
+    extends DDRangedEnemyView<MiniBossEnemyController, MiniBossEnemyModel> {
+  MiniBossEnemyView({required super.position})
     : super(
-        animation: MiniBossEnemyConfig.animation,
-        position: position,
+        animation: MiniBossEnemyConfig.walkAnimation,
         size: MiniBossEnemyConfig.componentSize,
         speed: MiniBossEnemyConfig.kSpeed,
         life: MiniBossEnemyConfig.kLife,
@@ -22,11 +21,12 @@ class MiniBossEnemyView
   MiniBossEnemyController createController(MiniBossEnemyModel model) {
     return MiniBossEnemyController(
       model: model,
-      onSeeAndMoveToMeleeAttack: seeAndMoveToPrimaryAttack,
-      onSeeAndMoveToRangeAttack: seeAndMoveToFireballAttack,
+      onDetectPlayerAndMoveToMeleeAttack: onDetectPlayerAndMoveToPrimaryAttack,
+      onDetectPlayerAndMoveToRangedAttack:
+          onDetectPlayerAndMoveToFireballAttack,
     );
   }
 
   @override
-  RectangleHitbox createHitbox() => MiniBossEnemyConfig.createHitbox();
+  RectangleHitbox getHitbox() => MiniBossEnemyConfig.createHitbox();
 }

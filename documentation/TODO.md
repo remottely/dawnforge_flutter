@@ -1,62 +1,83 @@
-IMPORTANT BEFORE LAUNCH:
+# IMPORTANT BEFORE LAUNCH:
 
-- Change background musics
+- fix die multiple times in the same second bug the game, handle cannot die more than once.
+- refactor all tiled decoration nomenclatures
+- save torch state
+- [PRIORITY] verify if need the \_activeAnimationLockCount logic
+- [PRIORITY] remove EquipmentToCustomPlayerAdapter from codebase??
+- [PRIORITY] Change background musics
 
-fix:
+---
 
-- fix: attacks particles animations
+# Enhance:
 
-- fix: add "X" to display keyboard configuration. And change all keyboard display layout.
+- [PRIORITY] add torch ON/OFF interaction
 
-- fix: execute player.idle even in victory and game over dialogs
+---
 
-- emote bug, displaying outside gameplayscreen area
+# Fix:
 
-- win e die do not show in same time. how to resolve this issue? do to every enemy "enemy.idle"?
+- [DONE] move map player spawn location to player center component and not top left of the component
 
-- organize all project exports in one file
+- [NOT_PRIORITY] continuous attack with continuous press attack (space bar)
+
+- [PRIORITY] Player walk/run then attack, after attack steel previous attack walk/run animation
+
+- [PRIORITY] attacks particles animations
+
+- [PRIORITY] add "X" to display keyboard configuration. And change all keyboard display layout.
+
+- [PRIORITY] emote bug, displaying outside gameplayscreen area
+
+- [PRIORITY] win and die do not show in same time. how to resolve this issue? do to every enemy "enemy.idle"?
+
+- [PRIORITY] organize all project exports in one file
 
 - forest_1.json:
 
-  - colission behavior
+  - [PRIORITY] colission behavior
 
 - farmable tile:
 
-  - priority
-  - render not showing
+  - [DONE] priority
+  - [DONE] render not showing
 
 - enemies:
 
-  - run in direction of the player when receive player ranged attack
-
-- Dungeon Boss:
-
-  - boss die explosion not in the same size as boss sprite
-
-- Dungeon Mini Boss:
-
-  - fix collision size
+  - [PRIORITY] run in direction of the player when receive player ranged attack
 
 - characters:
 
-  - create a helper hitbox size calculation based on spriteSize/textureSize/componentSize
+  - [DONE] boss die explosion not in the same size as boss sprite
+  - [DONE] mini boss collision size
+  - [DONE] create a helper hitbox size calculation based on spriteSize/textureSize/componentSize
 
 - fireball attack:
 
-  - fix collision size and position
+  - [DONE] collision size and position
 
 - UI dialogues:
 
-  - force player to stop in every dialogue start
+  - [DONE] force player to stop in every conversation
+  - [PRIORITY] force "game pause" in every UI display
+  - [PRIORITY] execute player.idle even in victory and game over dialogs
 
 - Audio:
 
-  - put music_gameplay_background.mp3 back
+  - [DONE] put music_gameplay_background.mp3 back
 
-- Create documentation that explains that config layer represents "constants, factories, builders, etc." in the same class.
+---
 
-- prompt:
+# Documentation:
+
+- [PRIORITY] Create documentation that explains that config layer represents "constants, factories, builders, etc." in the same class.
+
+---
+
+- AI Prompts:
 
   - Preciso que você finalize o planejamento da logica inicial de meu farmable. Levando em conta que quero fazer o clone do stardew valley... TODO(Kevin): finalizar esse prompt
 
-- Preciso que você percorra todo o meu código fazendo melhorias onde necessário para deixar tudo bem implementado e padronizado. use como referência o módulo de "lib/gameplay/characters/player/knight", utilizando o MVC e camada de config.
+  - Preciso que você percorra todo o meu código fazendo melhorias onde necessário para deixar tudo bem implementado e padronizado. use como referência o módulo de "lib/gameplay/characters/player/knight", utilizando o MVC e camada de config.
+
+---

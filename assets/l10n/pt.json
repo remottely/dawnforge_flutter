@@ -17,5 +17,7 @@
   "play_again_cap": "JOGAR NOVAMENTE",
   "congratulations": "PARABÊNS!",
   "thanks": "Agradeço por testar o game e sentir o poder do Flame e do Bonfire na construção de games 2D.\nTalvez poderemos ter uma continuação do game!\nEspero que tenha gostado!",
-  "door_without_key": "Acho que preciso de uma chave para passar por aqui!"
+  "door_without_key": "Acho que preciso de uma chave para passar por aqui!",
+  "chest_decoration_open": "Abrir",
+  "torch_decoration_light_up": "Acender"
 }
