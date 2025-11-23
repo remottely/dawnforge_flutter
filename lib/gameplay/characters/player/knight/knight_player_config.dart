@@ -127,6 +127,8 @@ final class KnightPlayerConfig {
 
   static const int kSeedStaminaCost = 5;
 
+  static const int kHarvestBasketStaminaCost = 5;
+
   // ============================================================================
   // Component Dimensions & Collision
   // ============================================================================

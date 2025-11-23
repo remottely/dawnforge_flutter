@@ -58,6 +58,9 @@ class CustomPlayerModel extends DDHybridCombatPlayerModel {
   int get seedStaminaCost => KnightPlayerConfig.kSeedStaminaCost;
 
   @override
+  int get harvestBasketStaminaCost => KnightPlayerConfig.kHarvestBasketStaminaCost;
+
+  @override
   double get primaryAttackDamage => KnightPlayerConfig.kPrimaryAttackDamage;
 
   @override

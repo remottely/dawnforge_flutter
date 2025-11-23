@@ -123,6 +123,8 @@ final class SunnyPlayerConfig {
 
   static const int kSeedStaminaCost = 5;
 
+  static const int kHarvestBasketStaminaCost = 5;
+
   // ============================================================================
   // Component Dimensions
   // ============================================================================
@@ -229,6 +231,24 @@ final class SunnyPlayerConfig {
   static Future<SpriteAnimation>
   loadLeftSeedAnimation() => SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_left_strip8.png',
+    SpriteAnimationConfig.createStandardData(
+      amount: 8,
+      textureSize: textureSize,
+    ),
+  );
+
+  static Future<SpriteAnimation>
+  loadRightHarvestBasketAnimation() => SpriteAnimation.load(
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_swimming_strip12.png',
+    SpriteAnimationConfig.createStandardData(
+      amount: 8,
+      textureSize: textureSize,
+    ),
+  );
+
+  static Future<SpriteAnimation>
+  loadLeftHarvestBasketAnimation() => SpriteAnimation.load(
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_swimming_left_strip12.png',
     SpriteAnimationConfig.createStandardData(
       amount: 8,
       textureSize: textureSize,

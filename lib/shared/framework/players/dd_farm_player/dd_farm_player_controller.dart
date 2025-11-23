@@ -8,6 +8,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
   final bool Function() onExecuteShovel;
   final bool Function() onExecuteWateringCan;
   final bool Function() onExecuteSeed;
+  final bool Function() onExecuteHarvestBasket;
 
   DDFarmPlayerController({
     required super.model,
@@ -15,6 +16,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
     required this.onExecuteShovel,
     required this.onExecuteWateringCan,
     required this.onExecuteSeed,
+    required this.onExecuteHarvestBasket,
     required super.onExecutePrimaryAttack,
     required super.onExecuteRangedAttack,
     required super.onDisplayExclamationEmote,
@@ -36,6 +38,11 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
     required dynamic actionId,
   });
 
+  bool isHarvestBasketAction({
+    required DDBasePlayerView player,
+    required dynamic actionId,
+  });
+
   @override
   void handleInputAction({
     required DDBasePlayerView player,
@@ -50,6 +57,8 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
       _handleExecuteWateringCan();
     } else if (isSeedAction(player: player, actionId: event.id)) {
       _handleExecuteSeed();
+    } else if (isHarvestBasketAction(player: player, actionId: event.id)) {
+      _handleExecuteHarvestBasket();
     }
 
     super.handleInputAction(player: player, event: event);
@@ -110,6 +119,26 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
     }
 
     model.consumeStamina(model.seedStaminaCost);
+
+    // Retomar regeneração após ação instantânea
+    endStaminaConsumingAction();
+  }
+
+  /// Executes the primary melee attack if resources are sufficient.
+  void _handleExecuteHarvestBasket() {
+    if (!model.canExecuteHarvestBasket) return;
+
+    // Pausar regeneração durante ação
+    beginStaminaConsumingAction();
+
+    final bool wasExecuted = onExecuteHarvestBasket.call();
+    if (!wasExecuted) {
+      // Ação não executada, retomar regeneração
+      endStaminaConsumingAction();
+      return;
+    }
+
+    model.consumeStamina(model.harvestBasketStaminaCost);
 
     // Retomar regeneração após ação instantânea
     endStaminaConsumingAction();

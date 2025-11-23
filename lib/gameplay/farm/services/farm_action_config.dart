@@ -57,6 +57,9 @@ final class FarmActionConfig {
             'carrot',
           ); // TODO(Kevin): remove 'carrot' dependency
           return;
+        case WeaponType.harvestBasket:
+          FarmManager.instance.harvestCrop(bestTarget.tileX, bestTarget.tileY);
+          return;
         default:
           // Valid target to till soil
           return;

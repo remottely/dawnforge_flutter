@@ -18,6 +18,7 @@ class SunnyPlayerController extends DDFarmPlayerController<SunnyPlayerModel> {
     required super.onExecuteShovel,
     required super.onExecuteWateringCan,
     required super.onExecuteSeed,
+    required super.onExecuteHarvestBasket,
     required super.onExecutePrimaryAttack,
     required super.onExecuteRangedAttack,
     required super.onDisplayExclamationEmote,
@@ -30,6 +31,12 @@ class SunnyPlayerController extends DDFarmPlayerController<SunnyPlayerModel> {
 
   @override
   Duration get staminaRegenDebounce => SunnyPlayerConfig.kStaminaRegenDebounce;
+
+  @override
+  bool isRunAction({
+    required DDBasePlayerView player,
+    required dynamic actionId,
+  }) => actionId == JoystickSetup.kRunId || actionId == KeyboardSetup.kRunKey;
 
   @override
   bool isPrimaryAttackAction({
@@ -77,8 +84,11 @@ class SunnyPlayerController extends DDFarmPlayerController<SunnyPlayerModel> {
       player.model.equipment == WeaponType.seeds;
 
   @override
-  bool isRunAction({
+  bool isHarvestBasketAction({
     required DDBasePlayerView player,
     required dynamic actionId,
-  }) => actionId == JoystickSetup.kRunId || actionId == KeyboardSetup.kRunKey;
+  }) =>
+      (actionId == JoystickSetup.kPrimaryActionId ||
+          actionId == KeyboardSetup.kPrimaryActionKey) &&
+      player.model.equipment == WeaponType.harvestBasket;
 }

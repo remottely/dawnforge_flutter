@@ -73,6 +73,7 @@ class SunnyPlayerView
     required bool Function() onExecuteShovel,
     required bool Function() onExecuteWateringCan,
     required bool Function() onExecuteSeed,
+    required bool Function() onExecuteHarvestBasket,
     required bool Function(double damage) onExecutePrimaryAttack,
     required bool Function(double damage) onExecuteRangedAttack,
     required void Function() onDisplayExclamationEmote,
@@ -89,6 +90,7 @@ class SunnyPlayerView
       onExecuteShovel: onExecuteShovel,
       onExecuteWateringCan: onExecuteWateringCan,
       onExecuteSeed: onExecuteSeed,
+      onExecuteHarvestBasket: onExecuteHarvestBasket,
       onExecutePrimaryAttack: onExecutePrimaryAttack,
       onExecuteRangedAttack: onExecuteRangedAttack,
       onDisplayExclamationEmote: onDisplayExclamationEmote,
@@ -223,6 +225,30 @@ class SunnyPlayerView
         CharacterActionSpriteAnimationHelper.playExecutionOnceWithIdle(
           animationRight: SunnyPlayerConfig.loadRightSeedAnimation(),
           animationLeft: SunnyPlayerConfig.loadLeftSeedAnimation(),
+          currentAnimation: animation,
+          target: this,
+          executionStartFrame: 4,
+          onActionStart: lockAction,
+          onActionEnd: unlockAction,
+          // TODO(chatgpt): preciso que vc
+          onExecutionFrames: () {
+            FarmActionConfig.execute(player: this);
+          },
+        );
+      },
+    );
+
+    return executionInfo != null;
+  }
+
+  @override
+  bool onExecuteHarvestBasket() {
+    final AttackExecutionInfo? executionInfo = _meleeAttackController.execute(
+      AttackType.melee,
+      () {
+        CharacterActionSpriteAnimationHelper.playExecutionOnceWithIdle(
+          animationRight: SunnyPlayerConfig.loadRightHarvestBasketAnimation(),
+          animationLeft: SunnyPlayerConfig.loadLeftHarvestBasketAnimation(),
           currentAnimation: animation,
           target: this,
           executionStartFrame: 4,

@@ -51,6 +51,7 @@ abstract class DDFarmPlayerView<
       onExecuteShovel: onExecuteShovel,
       onExecuteWateringCan: onExecuteWateringCan,
       onExecuteSeed: onExecuteSeed,
+      onExecuteHarvestBasket: onExecuteHarvestBasket,
       onExecutePrimaryAttack: onExecutePrimaryAttack,
       onExecuteRangedAttack: onExecuteRangedAttack,
       onDisplayExclamationEmote: onDisplayExclamationEmote,
@@ -65,6 +66,7 @@ abstract class DDFarmPlayerView<
     required bool Function() onExecuteShovel,
     required bool Function() onExecuteWateringCan,
     required bool Function() onExecuteSeed,
+    required bool Function() onExecuteHarvestBasket,
     required bool Function(double damage) onExecutePrimaryAttack,
     required bool Function(double damage) onExecuteRangedAttack,
     required void Function() onDisplayExclamationEmote,
@@ -95,4 +97,6 @@ abstract class DDFarmPlayerView<
   bool onExecuteWateringCan();
 
   bool onExecuteSeed();
+
+  bool onExecuteHarvestBasket();
 }

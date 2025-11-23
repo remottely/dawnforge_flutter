@@ -81,7 +81,9 @@ final class ItemFactory {
 
       switch (type) {
         case ItemType.weapon:
-          return WeaponItem.fromJson(itemData);
+          return WeaponItem.fromJson(
+            itemData,
+          ); // TODO(kevin): remove weapons configurations from json file
         case ItemType.tool:
           return ToolItem.fromJson(itemData);
         case ItemType.consumable:

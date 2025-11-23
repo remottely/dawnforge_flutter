@@ -7,6 +7,8 @@ enum WeaponType {
 
   seeds,
 
+  harvestBasket,
+
   axe,
 
   spear,
@@ -44,6 +46,8 @@ enum WeaponType {
         return 'Watering Can';
       case WeaponType.seeds:
         return 'Seed';
+      case WeaponType.harvestBasket:
+        return 'Harvest Basket';
       case WeaponType.axe:
         return 'Axe';
       case WeaponType.spear:
