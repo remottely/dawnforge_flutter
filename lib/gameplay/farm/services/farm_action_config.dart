@@ -1,11 +1,17 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/offset_helper.dart';
-import 'package:darkness_dungeon/gameplay/farm/farm_manager.dart';
-import 'package:darkness_dungeon/gameplay/farmable/farm_tile.dart';
+import 'package:darkness_dungeon/gameplay/farm/constants/farm_messages.dart';
+import 'package:darkness_dungeon/gameplay/farm/services/farm_action_service.dart';
+import 'package:darkness_dungeon/gameplay/farm/services/farm_feedback_service.dart';
+import 'package:darkness_dungeon/gameplay/farm/tile/farm_tile_view.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/weapon_type.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 
 final class FarmActionConfig {
+  static final FarmActionService _actionService = FarmActionService.instance;
+  static final FarmFeedbackService _feedbackService =
+      FarmFeedbackService.instance;
+
   static execute({required DDBasePlayerView player}) {
     // Compute the world position in front of the player where the shovel acts
     final attackOffset = OffsetHelper.getCenterOffset(
@@ -45,25 +51,69 @@ final class FarmActionConfig {
     if (bestTarget != null) {
       switch (player.model.equipment) {
         case WeaponType.shovel:
-          FarmManager.instance.tillSoil(bestTarget.tileX, bestTarget.tileY);
+          _handleTillSoil(bestTarget.tileX, bestTarget.tileY);
           return;
         case WeaponType.wateringCan:
-          FarmManager.instance.waterTile(bestTarget.tileX, bestTarget.tileY);
+          _handleWater(bestTarget.tileX, bestTarget.tileY);
           return;
         case WeaponType.seeds:
-          FarmManager.instance.plantSeed(
-            bestTarget.tileX,
-            bestTarget.tileY,
-            'carrot',
-          ); // TODO(Kevin): remove 'carrot' dependency
+          _handlePlant(bestTarget.tileX, bestTarget.tileY);
           return;
         case WeaponType.harvestBasket:
-          FarmManager.instance.harvestCrop(bestTarget.tileX, bestTarget.tileY);
+          _handleHarvest(player.gameRef, bestTarget.tileX, bestTarget.tileY);
           return;
         default:
           // Valid target to till soil
           return;
       }
     }
+  }
+
+  static bool _handleTillSoil(int x, int y) {
+    final result = _actionService.tillSoil(x, y);
+    if (result.success) {
+      _feedbackService.showFloatingText(FarmMessages.kSoilTilled);
+    }
+    return true;
+  }
+
+  static bool _handleWater(int x, int y) {
+    final result = _actionService.waterTile(x, y);
+    if (result.success) {
+      _feedbackService.showFloatingText(FarmMessages.kCropWatered);
+    }
+    return true;
+  }
+
+  static bool _handlePlant(int x, int y) {
+    // TODO: Get crop type from inventory/UI selection
+    const cropId = 'carrot'; // TODO(Kevin): remove 'carrot' dependency
+
+    final result = _actionService.plantSeed(x, y, cropId);
+    if (result.success) {
+      _feedbackService.showFloatingText(FarmMessages.kSeedPlanted);
+    }
+    return true;
+  }
+
+  static bool _handleHarvest(BonfireGameInterface gameRef, int x, int y) {
+    final result = _actionService.harvestCrop(x, y);
+
+    if (result.success && result.crop != null) {
+      final message = result.addedToInventory
+          ? FarmMessages.cropHarvested(
+              result.crop!.yieldAmount,
+              result.crop!.name,
+            )
+          : FarmMessages.kInventoryFull;
+
+      _feedbackService.showFloatingText(message);
+
+      if (result.addedToInventory) {
+        _feedbackService.refreshInventoryHUD(gameRef);
+      }
+    }
+
+    return true;
   }
 }

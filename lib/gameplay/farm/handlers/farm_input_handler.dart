@@ -36,7 +36,7 @@ class FarmInputHandler extends GameComponent with KeyboardEventListener {
   final DDBasePlayerView player;
   // final FarmActionManager player.farmActionManager;
   // Services
-  final FarmActionService _actionService = FarmActionService.instance;
+  // final FarmActionService _actionService = FarmActionService.instance;
   final FarmFeedbackService _feedbackService = FarmFeedbackService.instance;
   // final FarmActionManager player.farmActionManager = FarmActionManager.instance;
 
@@ -49,91 +49,45 @@ class FarmInputHandler extends GameComponent with KeyboardEventListener {
     // Handle debug keys first
     if (_handleDebugKeys(event.logicalKey)) return true;
 
-    // Find farm tile under player
-    final farmTile = player.farmActionManager.getFarmTileInContact();
-    if (farmTile == null) {
-      developer.log('[FarmInput] No farm tile in contact with player');
-      return false;
-    }
+    return false;
 
-    final x = farmTile.tileX;
-    final y = farmTile.tileY;
+    // // Find farm tile under player
+    // final farmTile = player.farmActionManager.getFarmTileInContact();
+    // if (farmTile == null) {
+    //   developer.log('[FarmInput] No farm tile in contact with player');
+    //   return false;
+    // }
 
-    developer.log('[FarmInput] Interacting with tile ($x, $y)');
+    // final x = farmTile.tileX;
+    // final y = farmTile.tileY;
 
-    // Route to appropriate action handler
-    return _handleFarmAction(event.logicalKey, x, y);
+    // developer.log('[FarmInput] Interacting with tile ($x, $y)');
+
+    // // Route to appropriate action handler
+    // return _handleFarmAction(event.logicalKey, x, y);
   }
 
   // ============================================================================
   // Farm Action Routing
   // ============================================================================
 
-  /// Routes farm actions based on the pressed key.
-  bool _handleFarmAction(LogicalKeyboardKey key, int x, int y) {
-    // if (key == KeyboardSetup.kTillSoilKey &&
-    //     (gameRef.player! as DDBasePlayerView).model.canExecuteShovel) {
-    //   return player.farmActionManager.handleTillSoil(x, y);
-    // } else
-    // if (key == KeyboardSetup.kWaterKey) {
-    //   return _handleWater(x, y);
-    // } else if (key == KeyboardSetup.kPlantKey) {
-    //   return _handlePlant(x, y);
-    // } else
-    if (key == KeyboardSetup.kHarvestKey) {
-      return _handleHarvest(x, y);
-    }
+  // /// Routes farm actions based on the pressed key.
+  // bool _handleFarmAction(LogicalKeyboardKey key, int x, int y) {
+  //   // if (key == KeyboardSetup.kTillSoilKey &&
+  //   //     (gameRef.player! as DDBasePlayerView).model.canExecuteShovel) {
+  //   //   return player.farmActionManager.handleTillSoil(x, y);
+  //   // } else
+  //   // if (key == KeyboardSetup.kWaterKey) {
+  //   //   return _handleWater(x, y);
+  //   // } else if (key == KeyboardSetup.kPlantKey) {
+  //   //   return _handlePlant(x, y);
+  //   // } else
+  //   // if (key == KeyboardSetup.kHarvestKey) {
+  //   //   return _handleHarvest(x, y);
+  //   // }
 
-    return false;
-  }
-
-  // bool handleTillSoil(int x, int y) {
-  //   final result = _actionService.tillSoil(x, y);
-  //   if (result.success) {
-  //     _feedbackService.showFloatingText(FarmMessages.kSoilTilled);
-  //   }
-  //   return true;
+  //   return false;
   // }
-
-  bool _handleWater(int x, int y) {
-    final result = _actionService.waterTile(x, y);
-    if (result.success) {
-      _feedbackService.showFloatingText(FarmMessages.kCropWatered);
-    }
-    return true;
-  }
-
-  bool _handlePlant(int x, int y) {
-    // TODO: Get crop type from inventory/UI selection
-    const cropId = 'carrot';
-
-    final result = _actionService.plantSeed(x, y, cropId);
-    if (result.success) {
-      _feedbackService.showFloatingText(FarmMessages.kSeedPlanted);
-    }
-    return true;
-  }
-
-  bool _handleHarvest(int x, int y) {
-    final result = _actionService.harvestCrop(x, y);
-
-    if (result.success && result.crop != null) {
-      final message = result.addedToInventory
-          ? FarmMessages.cropHarvested(
-              result.crop!.yieldAmount,
-              result.crop!.name,
-            )
-          : FarmMessages.kInventoryFull;
-
-      _feedbackService.showFloatingText(message);
-
-      if (result.addedToInventory) {
-        _feedbackService.refreshInventoryHUD(gameRef);
-      }
-    }
-
-    return true;
-  }
 
   // ============================================================================
   // Debug Actions

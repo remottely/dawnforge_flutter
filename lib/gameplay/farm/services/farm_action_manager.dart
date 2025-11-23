@@ -1,5 +1,4 @@
 import 'package:bonfire/base/game_component.dart';
-import 'package:darkness_dungeon/gameplay/farmable/farm_tile.dart';
 
 class FarmActionManager extends GameComponent {
   // FarmActionManager._();
@@ -21,18 +20,18 @@ class FarmActionManager extends GameComponent {
   // Tile Detection
   // ============================================================================
 
-  /// Finds the farm tile currently in contact with the player.
-  FarmTileView? getFarmTileInContact() {
-    // TODO(Kevin): remove this when all farm tools are reworked
-    final allFarmTiles = gameRef.query<FarmTileView>();
-    final player = gameRef.player!;
+  // /// Finds the farm tile currently in contact with the player.
+  // FarmTileView? getFarmTileInContact() {
+  //   // TODO(Kevin): remove this when all farm tools are reworked
+  //   final allFarmTiles = gameRef.query<FarmTileView>();
+  //   final player = gameRef.player!;
 
-    for (final farmTile in allFarmTiles) {
-      if (farmTile.isPlayerOnTile(player)) {
-        return farmTile;
-      }
-    }
+  //   for (final farmTile in allFarmTiles) {
+  //     if (farmTile.isPlayerOnTile(player)) {
+  //       return farmTile;
+  //     }
+  //   }
 
-    return null;
-  }
+  //   return null;
+  // }
 }

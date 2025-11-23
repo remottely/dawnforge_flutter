@@ -169,6 +169,10 @@ class SunnyPlayerView
     return executionInfo != null;
   }
 
+  // ============================================================================
+  // Farm Execution Implementation
+  // ============================================================================
+
   @override
   bool onExecuteShovel() {
     final AttackExecutionInfo? executionInfo = _meleeAttackController.execute(

@@ -16,7 +16,7 @@ import 'package:darkness_dungeon/gameplay/decorations/interactables/life_potion_
 import 'package:darkness_dungeon/gameplay/decorations/interactables/spike_trap_decoration.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/torch/torch_decoration_model.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/torch/torch_decoration_view.dart';
-import 'package:darkness_dungeon/gameplay/farmable/farm_tile.dart';
+import 'package:darkness_dungeon/gameplay/farm/tile/farm_tile_view.dart';
 
 final class MapConfig {
   MapConfig._();
