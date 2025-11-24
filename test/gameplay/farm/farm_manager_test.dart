@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
-import 'package:darkness_dungeon/gameplay/farm/crop_database.dart';
-import 'package:darkness_dungeon/gameplay/farm/farm_manager.dart';
-import 'package:darkness_dungeon/gameplay/farm/models/crop_stage.dart';
-import 'package:darkness_dungeon/gameplay/farm/models/soil_state.dart';
+import 'package:darkness_dungeon/gameplay/farm/database/crop_database.dart';
+import 'package:darkness_dungeon/gameplay/farm/managers/farm_manager.dart';
+import 'package:darkness_dungeon/gameplay/farm/models/crop_stage_model.dart';
+import 'package:darkness_dungeon/gameplay/farm/models/soil_state_model.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -62,7 +62,7 @@ void main() {
       expect(success, isTrue);
       final tile = FarmManager.instance.getTile(0, 0);
       expect(tile, isNotNull);
-      expect(tile!.soilState, equals(SoilState.tilled));
+      expect(tile!.soilState, equals(SoilStateModel.tilled));
     });
 
     test('should not till already tilled soil', () {
@@ -80,7 +80,7 @@ void main() {
 
       expect(success, isTrue);
       final tile = FarmManager.instance.getTile(0, 0);
-      expect(tile!.soilState, equals(SoilState.watered));
+      expect(tile!.soilState, equals(SoilStateModel.watered));
       expect(tile.lastWateredDay, isNotNull);
     });
 
@@ -100,7 +100,7 @@ void main() {
       final tile = FarmManager.instance.getTile(0, 0);
       expect(tile!.crop, isNotNull);
       expect(tile.crop!.cropId, equals('carrot'));
-      expect(tile.crop!.stage, equals(CropStage.seed));
+      expect(tile.crop!.stage, equals(CropStageModel.seed));
     });
 
     test('should not plant on untilled soil', () {
@@ -136,12 +136,12 @@ void main() {
 
       expect(crop, isNotNull);
       expect(crop!.cropId, equals('carrot'));
-      expect(crop.stage, equals(CropStage.mature));
+      expect(crop.stage, equals(CropStageModel.mature));
 
       // Tile deve estar vazio após colheita
       final tile = FarmManager.instance.getTile(0, 0);
       expect(tile!.crop, isNull);
-      expect(tile.soilState, equals(SoilState.untilled));
+      expect(tile.soilState, equals(SoilStateModel.untilled));
     });
 
     test('should not harvest immature crop', () {

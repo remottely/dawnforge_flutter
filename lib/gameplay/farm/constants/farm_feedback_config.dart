@@ -2,8 +2,8 @@
 ///
 /// Centralizes all feedback messages to maintain consistency and support
 /// future internationalization.
-final class FarmMessages {
-  FarmMessages._();
+final class FarmFeedbackConfig {
+  FarmFeedbackConfig._();
 
   // ============================================================================
   // Success Messages

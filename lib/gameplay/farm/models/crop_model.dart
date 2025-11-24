@@ -1,7 +1,7 @@
-import 'crop_stage.dart';
+import 'crop_stage_model.dart';
 
 /// Representa uma crop plantada em um tile
-final class Crop {
+final class CropModel {
   /// ID da crop (carrot, potato, etc)
   final String cropId;
 
@@ -12,7 +12,7 @@ final class Crop {
   final String description;
 
   /// Estágio atual de crescimento
-  final CropStage stage;
+  final CropStageModel stage;
 
   /// Dias desde plantio
   final int daysPlanted;
@@ -32,7 +32,7 @@ final class Crop {
   /// Sprite da crop
   final String iconPath;
 
-  const Crop({
+  const CropModel({
     required this.cropId,
     required this.name,
     required this.description,
@@ -55,19 +55,19 @@ final class Crop {
   bool get canHarvest => stage.canHarvest;
 
   /// Avançar 1 dia de crescimento
-  Crop advanceDay() {
+  CropModel advanceDay() {
     final newDays = daysPlanted + 1;
 
     // Determinar novo estágio baseado no progresso
-    CropStage newStage;
+    CropStageModel newStage;
     if (newDays >= daysToMature) {
-      newStage = CropStage.mature;
+      newStage = CropStageModel.mature;
     } else if (newDays >= (daysToMature * 0.66)) {
-      newStage = CropStage.growing;
+      newStage = CropStageModel.growing;
     } else if (newDays >= (daysToMature * 0.33)) {
-      newStage = CropStage.sprout;
+      newStage = CropStageModel.sprout;
     } else {
-      newStage = CropStage.seed;
+      newStage = CropStageModel.seed;
     }
 
     return copyWith(daysPlanted: newDays, stage: newStage);
@@ -90,12 +90,12 @@ final class Crop {
   }
 
   /// Deserialização de JSON
-  factory Crop.fromJson(Map<String, dynamic> json) {
-    return Crop(
+  factory CropModel.fromJson(Map<String, dynamic> json) {
+    return CropModel(
       cropId: json['cropId'] as String,
       name: json['name'] as String,
       description: json['description'] as String,
-      stage: CropStage.fromJson(json['stage'] as String),
+      stage: CropStageModel.fromJson(json['stage'] as String),
       daysPlanted: json['daysPlanted'] as int,
       daysToMature: json['daysToMature'] as int,
       yieldAmount: json['yieldAmount'] as int,
@@ -106,11 +106,11 @@ final class Crop {
   }
 
   /// Criar cópia com modificações
-  Crop copyWith({
+  CropModel copyWith({
     String? cropId,
     String? name,
     String? description,
-    CropStage? stage,
+    CropStageModel? stage,
     int? daysPlanted,
     int? daysToMature,
     int? yieldAmount,
@@ -118,7 +118,7 @@ final class Crop {
     String? requiredSeason,
     String? iconPath,
   }) {
-    return Crop(
+    return CropModel(
       cropId: cropId ?? this.cropId,
       name: name ?? this.name,
       description: description ?? this.description,
@@ -134,5 +134,5 @@ final class Crop {
 
   @override
   String toString() =>
-      'Crop(id: $cropId, name: $name, stage: $stage, days: $daysPlanted/$daysToMature)';
+      'CropModel(id: $cropId, name: $name, stage: $stage, days: $daysPlanted/$daysToMature)';
 }

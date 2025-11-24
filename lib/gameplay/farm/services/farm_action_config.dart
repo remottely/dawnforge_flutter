@@ -1,9 +1,9 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/offset_helper.dart';
-import 'package:darkness_dungeon/gameplay/farm/constants/farm_messages.dart';
+import 'package:darkness_dungeon/gameplay/farm/components/farm_tile_view.dart';
+import 'package:darkness_dungeon/gameplay/farm/constants/farm_feedback_config.dart';
 import 'package:darkness_dungeon/gameplay/farm/services/farm_action_service.dart';
 import 'package:darkness_dungeon/gameplay/farm/services/farm_feedback_service.dart';
-import 'package:darkness_dungeon/gameplay/farm/tile/farm_tile_view.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/weapon_type.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 
@@ -72,7 +72,7 @@ final class FarmActionConfig {
   static bool _handleTillSoil(int x, int y) {
     final result = _actionService.tillSoil(x, y);
     if (result.success) {
-      _feedbackService.showFloatingText(FarmMessages.kSoilTilled);
+      _feedbackService.showFloatingText(FarmFeedbackConfig.kSoilTilled);
     }
     return true;
   }
@@ -80,7 +80,7 @@ final class FarmActionConfig {
   static bool _handleWater(int x, int y) {
     final result = _actionService.waterTile(x, y);
     if (result.success) {
-      _feedbackService.showFloatingText(FarmMessages.kCropWatered);
+      _feedbackService.showFloatingText(FarmFeedbackConfig.kCropWatered);
     }
     return true;
   }
@@ -91,7 +91,7 @@ final class FarmActionConfig {
 
     final result = _actionService.plantSeed(x, y, cropId);
     if (result.success) {
-      _feedbackService.showFloatingText(FarmMessages.kSeedPlanted);
+      _feedbackService.showFloatingText(FarmFeedbackConfig.kSeedPlanted);
     }
     return true;
   }
@@ -101,11 +101,11 @@ final class FarmActionConfig {
 
     if (result.success && result.crop != null) {
       final message = result.addedToInventory
-          ? FarmMessages.cropHarvested(
+          ? FarmFeedbackConfig.cropHarvested(
               result.crop!.yieldAmount,
               result.crop!.name,
             )
-          : FarmMessages.kInventoryFull;
+          : FarmFeedbackConfig.kInventoryFull;
 
       _feedbackService.showFloatingText(message);
 

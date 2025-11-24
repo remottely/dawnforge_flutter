@@ -4,8 +4,8 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/save/game_save_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
-import 'package:darkness_dungeon/gameplay/farm/constants/farm_messages.dart';
-import 'package:darkness_dungeon/gameplay/farm/farm_manager.dart';
+import 'package:darkness_dungeon/gameplay/farm/constants/farm_feedback_config.dart';
+import 'package:darkness_dungeon/gameplay/farm/managers/farm_manager.dart';
 import 'package:darkness_dungeon/gameplay/farm/services/farm_action_service.dart';
 import 'package:darkness_dungeon/gameplay/farm/services/farm_feedback_service.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
@@ -68,7 +68,9 @@ class FarmInputHandler extends GameComponent with KeyboardEventListener {
     final currentDay = WorldStateManager.instance.currentDay;
     developer.log('[FarmInput] Advanced to day $currentDay');
 
-    _feedbackService.showFloatingText(FarmMessages.dayAdvanced(currentDay));
+    _feedbackService.showFloatingText(
+      FarmFeedbackConfig.dayAdvanced(currentDay),
+    );
 
     // Auto-save
     _saveGameAsync();
@@ -81,8 +83,8 @@ class FarmInputHandler extends GameComponent with KeyboardEventListener {
         .clearGameAndSave()
         .then((success) {
           final message = success
-              ? FarmMessages.kSaveCleared
-              : FarmMessages.kClearSaveError;
+              ? FarmFeedbackConfig.kSaveCleared
+              : FarmFeedbackConfig.kClearSaveError;
 
           _feedbackService.showFloatingText(message);
 
@@ -104,8 +106,8 @@ class FarmInputHandler extends GameComponent with KeyboardEventListener {
         .saveGame()
         .then((success) {
           final message = success
-              ? FarmMessages.kGameSaved
-              : FarmMessages.kSaveError;
+              ? FarmFeedbackConfig.kGameSaved
+              : FarmFeedbackConfig.kSaveError;
 
           _feedbackService.showFloatingText(message);
 

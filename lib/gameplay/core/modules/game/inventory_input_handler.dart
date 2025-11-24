@@ -100,22 +100,12 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
 
     developer.log('[InventoryInput] Inicializando itens de teste...');
 
-    // Adicionar alguns itens de teste ao inventário
-    final shovel = ItemFactory.createItem(
-      'shovel',
-    ); // TODO(kevin): remove weapons configurations from json file
-    final ironSword = ItemFactory.createItem(
-      'ironSword',
-    ); // TODO(kevin): remove weapons configurations from json file
-    final wateringCan = ItemFactory.createItem(
-      'wateringCan',
-    ); // TODO(kevin): remove weapons configurations from json file
-    final seeds = ItemFactory.createItem(
-      'seeds',
-    ); // TODO(kevin): remove weapons configurations from json file
-    final harvestBasket = ItemFactory.createItem(
-      'harvestBasket',
-    ); // TODO(kevin): remove weapons configurations from json file
+    _debugInsertItem('shovel');
+    _debugInsertItem('ironSword');
+    _debugInsertItem('wateringCan');
+    _debugInsertItem('seeds');
+    _debugInsertItem('harvestBasket');
+
     // final axe = ItemFactory.createItem('steel_axe');
     // final staff = ItemFactory.createItem('fire_staff');
     // final shield = ItemFactory.createItem('wooden_shield');
@@ -123,12 +113,6 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
     // final wood = ItemFactory.createItem('wood');
     // final tomatoSeeds = ItemFactory.createItem('tomato_seeds');
 
-    // if (ironSword != null) InventoryManager.instance.addItem(ironSword);
-    if (shovel != null) InventoryManager.instance.addItem(shovel);
-    if (ironSword != null) InventoryManager.instance.addItem(ironSword);
-    if (wateringCan != null) InventoryManager.instance.addItem(wateringCan);
-    if (seeds != null) InventoryManager.instance.addItem(seeds);
-    if (harvestBasket != null) InventoryManager.instance.addItem(harvestBasket);
     // if (axe != null) InventoryManager.instance.addItem(axe);
     // if (staff != null) InventoryManager.instance.addItem(staff);
     // if (shield != null) InventoryManager.instance.addItem(shield);
@@ -139,6 +123,16 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
     developer.log(
       '[InventoryInput] Itens de teste adicionados! ${InventoryManager.instance.usedSlots} slots usados',
     );
+  }
+
+  void _debugInsertItem(String itemKey) {
+    // TODO(Kevin): remove this debug method
+    if (InventoryManager.instance.getItemQuantity(itemKey) == 0) {
+      final item = ItemFactory.createItem(itemKey);
+      if (item != null) {
+        InventoryManager.instance.addItem(item);
+      }
+    }
   }
 
   void _addTestItems() {

@@ -1,10 +1,10 @@
 import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
 
-import 'crop.dart';
-import 'soil_state.dart';
+import 'crop_model.dart';
+import 'soil_state_model.dart';
 
 /// Representa um tile individual de fazenda
-final class FarmTile {
+final class FarmTileModel {
   /// Coordenada X no mapa
   final int x;
 
@@ -12,19 +12,19 @@ final class FarmTile {
   final int y;
 
   /// Estado do solo
-  final SoilState soilState;
+  final SoilStateModel soilState;
 
   /// Crop plantada (null = vazio)
-  final Crop? crop;
+  final CropModel? crop;
 
   /// Última vez que foi regado
   /// Último dia do mundo em que foi regado (WorldStateManager.currentDay)
   final int? lastWateredDay;
 
-  const FarmTile({
+  const FarmTileModel({
     required this.x,
     required this.y,
-    this.soilState = SoilState.untilled,
+    this.soilState = SoilStateModel.untilled,
     this.crop,
     this.lastWateredDay,
   });
@@ -38,7 +38,8 @@ final class FarmTile {
   /// Pode plantar?
   bool get canPlant =>
       isEmpty &&
-      (soilState == SoilState.tilled || soilState == SoilState.watered);
+      (soilState == SoilStateModel.tilled ||
+          soilState == SoilStateModel.watered);
 
   /// Pode colher?
   bool get canHarvest => isOccupied && crop!.canHarvest;
@@ -46,36 +47,36 @@ final class FarmTile {
   /// Precisa regar?
   bool get needsWatering {
     final currentDay = WorldStateManager.instance.currentDay;
-    if (lastWateredDay == null) return soilState == SoilState.tilled;
+    if (lastWateredDay == null) return soilState == SoilStateModel.tilled;
     return lastWateredDay != currentDay;
   }
 
   /// Arar tile
-  FarmTile till() {
-    return copyWith(soilState: SoilState.tilled);
+  FarmTileModel till() {
+    return copyWith(soilState: SoilStateModel.tilled);
   }
 
   /// Regar tile
-  FarmTile water() {
+  FarmTileModel water() {
     return copyWith(
-      soilState: SoilState.watered,
+      soilState: SoilStateModel.watered,
       lastWateredDay: WorldStateManager.instance.currentDay,
     );
   }
 
   /// Plantar crop
-  FarmTile plant(Crop crop) {
+  FarmTileModel plant(CropModel crop) {
     if (!canPlant) return this;
     return copyWith(crop: crop);
   }
 
   /// Colher crop
-  FarmTile harvest() {
+  FarmTileModel harvest() {
     if (!canHarvest) return this;
-    return FarmTile(
+    return FarmTileModel(
       x: x,
       y: y,
-      soilState: SoilState.untilled, // Volta ao estado inicial
+      soilState: SoilStateModel.untilled, // Volta ao estado inicial
       crop: null, // Remove crop
       lastWateredDay: null, // Remove informação de rega
     );
@@ -85,7 +86,7 @@ final class FarmTile {
   /// [dayEnded] é o número do dia do jogo que acabou (por exemplo, se o jogo
   /// avançou de 5 para 6, dayEnded = 5). Cresce apenas se o tile foi regado
   /// naquele dia; a água é então consumida (lastWateredDay é limpo).
-  FarmTile advanceDay(int dayEnded) {
+  FarmTileModel advanceDay(int dayEnded) {
     if (crop == null) return this;
 
     final wasWateredThatDay =
@@ -99,8 +100,8 @@ final class FarmTile {
     // Cresce 1 dia e consome a água aplicada naquele dia.
     final advancedCrop = crop!.advanceDay();
 
-    final nextSoilState = soilState == SoilState.watered
-        ? SoilState.tilled
+    final nextSoilState = soilState == SoilStateModel.watered
+        ? SoilStateModel.tilled
         : soilState;
 
     return copyWith(
@@ -122,27 +123,27 @@ final class FarmTile {
   }
 
   /// Deserialização de JSON
-  factory FarmTile.fromJson(Map<String, dynamic> json) {
-    return FarmTile(
+  factory FarmTileModel.fromJson(Map<String, dynamic> json) {
+    return FarmTileModel(
       x: json['x'] as int,
       y: json['y'] as int,
-      soilState: SoilState.fromJson(json['soilState'] as String),
+      soilState: SoilStateModel.fromJson(json['soilState'] as String),
       crop: json['crop'] != null
-          ? Crop.fromJson(json['crop'] as Map<String, dynamic>)
+          ? CropModel.fromJson(json['crop'] as Map<String, dynamic>)
           : null,
       lastWateredDay: json['lastWateredDay'] as int?,
     );
   }
 
   /// Criar cópia com modificações
-  FarmTile copyWith({
+  FarmTileModel copyWith({
     int? x,
     int? y,
-    SoilState? soilState,
-    Crop? crop,
+    SoilStateModel? soilState,
+    CropModel? crop,
     int? lastWateredDay,
   }) {
-    return FarmTile(
+    return FarmTileModel(
       x: x ?? this.x,
       y: y ?? this.y,
       soilState: soilState ?? this.soilState,

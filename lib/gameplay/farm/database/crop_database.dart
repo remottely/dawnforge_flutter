@@ -3,8 +3,8 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/services.dart';
 
-import 'models/crop.dart';
-import 'models/crop_stage.dart';
+import '../models/crop_model.dart';
+import '../models/crop_stage_model.dart';
 
 /// Database de crops disponíveis no jogo
 final class CropDatabase {
@@ -36,7 +36,7 @@ final class CropDatabase {
   }
 
   /// Criar crop por ID (sempre começa como semente)
-  static Crop? createCrop(String cropId) {
+  static CropModel? createCrop(String cropId) {
     if (!_isInitialized) {
       developer.log('[CropDatabase] ERROR: Not initialized!');
       return null;
@@ -48,11 +48,11 @@ final class CropDatabase {
       return null;
     }
 
-    return Crop(
+    return CropModel(
       cropId: cropId,
       name: cropData['name'] as String,
       description: cropData['description'] as String,
-      stage: CropStage.seed, // Sempre começa como semente
+      stage: CropStageModel.seed, // Sempre começa como semente
       daysPlanted: 0,
       daysToMature: cropData['daysToMature'] as int,
       yieldAmount: cropData['yieldAmount'] as int,

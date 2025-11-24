@@ -241,7 +241,7 @@ final class SunnyPlayerConfig {
   loadRightHarvestBasketAnimation() => SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_swimming_strip12.png',
     SpriteAnimationConfig.createStandardData(
-      amount: 8,
+      amount: 12,
       textureSize: textureSize,
     ),
   );
@@ -250,7 +250,7 @@ final class SunnyPlayerConfig {
   loadLeftHarvestBasketAnimation() => SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_swimming_left_strip12.png',
     SpriteAnimationConfig.createStandardData(
-      amount: 8,
+      amount: 12,
       textureSize: textureSize,
     ),
   );

@@ -4,24 +4,24 @@ import 'dart:ui';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
-import 'package:darkness_dungeon/gameplay/farm/farm_manager.dart';
-import 'package:darkness_dungeon/gameplay/farm/models/crop_stage.dart';
-import 'package:darkness_dungeon/gameplay/farm/models/farm_tile.dart';
-import 'package:darkness_dungeon/gameplay/farm/models/soil_state.dart';
+import 'package:darkness_dungeon/gameplay/farm/managers/farm_manager.dart';
+import 'package:darkness_dungeon/gameplay/farm/models/crop_stage_model.dart';
+import 'package:darkness_dungeon/gameplay/farm/models/farm_tile_model.dart';
+import 'package:darkness_dungeon/gameplay/farm/models/soil_state_model.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 import 'package:darkness_dungeon/shared/framework/interaction/tool_interactable.dart';
 
 /// Componente visual de um tile de fazenda
 /// Renderiza sprites de solo e crop baseado no estado do FarmTile
 class FarmTileComponent extends DDDecoration with ToolInteractable {
-  FarmTile farmTile;
+  FarmTileModel farmTile;
 
   SpriteComponent? _soilSprite;
   SpriteComponent? _cropSprite;
   bool _isHighlighted = false;
 
   // Cache para evitar recarregamento desnecessário
-  SoilState? _lastRenderedSoilState;
+  SoilStateModel? _lastRenderedSoilState;
   String? _lastRenderedCropKey;
 
   FarmTileComponent({required this.farmTile, required Vector2 position})
@@ -58,7 +58,7 @@ class FarmTileComponent extends DDDecoration with ToolInteractable {
       );
 
       // Aplicar opacidade se withered
-      if (farmTile.crop!.stage == CropStage.withered) {
+      if (farmTile.crop!.stage == CropStageModel.withered) {
         _cropSprite!.opacity = 0.5;
       }
 
@@ -127,7 +127,7 @@ class FarmTileComponent extends DDDecoration with ToolInteractable {
     }
 
     // Adicionar opacidade se withered
-    if (farmTile.crop!.stage == CropStage.withered) {
+    if (farmTile.crop!.stage == CropStageModel.withered) {
       _cropSprite!.opacity = 0.5;
     } else {
       _cropSprite!.opacity = 1.0;
@@ -140,13 +140,13 @@ class FarmTileComponent extends DDDecoration with ToolInteractable {
 
   String _getSoilSpritePath() {
     switch (farmTile.soilState) {
-      case SoilState.untilled:
+      case SoilStateModel.untilled:
         return 'gameplay/farm/soil/untilled.png';
-      case SoilState.tilled:
+      case SoilStateModel.tilled:
         return 'gameplay/farm/soil/tilled.png';
-      case SoilState.watered:
+      case SoilStateModel.watered:
         return 'gameplay/farm/soil/watered.png';
-      case SoilState.fertilized:
+      case SoilStateModel.fertilized:
         return 'gameplay/farm/soil/fertilized.png';
     }
   }
@@ -160,16 +160,16 @@ class FarmTileComponent extends DDDecoration with ToolInteractable {
     return 'gameplay/farm/crops/${crop.cropId}/$stageName.png';
   }
 
-  String _getStageFileName(CropStage stage) {
+  String _getStageFileName(CropStageModel stage) {
     switch (stage) {
-      case CropStage.seed:
+      case CropStageModel.seed:
         return 'seed';
-      case CropStage.sprout:
+      case CropStageModel.sprout:
         return 'sprout';
-      case CropStage.growing:
+      case CropStageModel.growing:
         return 'growing';
-      case CropStage.mature:
-      case CropStage.withered:
+      case CropStageModel.mature:
+      case CropStageModel.withered:
         return 'mature'; // Reusar sprite mature com opacity diferente
     }
   }
@@ -206,7 +206,7 @@ class FarmTileComponent extends DDDecoration with ToolInteractable {
   }
 
   /// Atualizar tile (chamado externamente quando FarmManager muda o tile)
-  Future<void> updateTile(FarmTile newTile) async {
+  Future<void> updateTile(FarmTileModel newTile) async {
     // developer.log(
     //   '[FarmTileComponent] 🔄 Update tile (${newTile.x}, ${newTile.y}): soil=${newTile.soilState}, crop=${newTile.crop?.cropId ?? "none"}',
     // );

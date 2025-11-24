@@ -2,10 +2,10 @@ import 'dart:developer' as developer;
 
 import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
 
-import 'crop_database.dart';
-import 'models/crop.dart';
-import 'models/farm_tile.dart';
-import 'models/soil_state.dart';
+import '../database/crop_database.dart';
+import '../models/crop_model.dart';
+import '../models/farm_tile_model.dart';
+import '../models/soil_state_model.dart';
 
 /// Gerenciador singleton do sistema de agricultura
 ///
@@ -16,20 +16,20 @@ final class FarmManager {
 
   static final instance = FarmManager._();
 
-  final Map<String, FarmTile> _farmTiles = {};
+  final Map<String, FarmTileModel> _farmTiles = {};
 
   /// Obter tile por coordenadas
-  FarmTile? getTile(int x, int y) {
+  FarmTileModel? getTile(int x, int y) {
     return _farmTiles['${x}_$y'];
   }
 
   /// Definir tile
-  void setTile(FarmTile tile) {
+  void setTile(FarmTileModel tile) {
     _farmTiles['${tile.x}_${tile.y}'] = tile;
   }
 
   /// Obter todos os tiles
-  List<FarmTile> getAllTiles() => _farmTiles.values.toList();
+  List<FarmTileModel> getAllTiles() => _farmTiles.values.toList();
 
   /// Limpar todos os tiles
   void clearAll() {
@@ -57,11 +57,11 @@ final class FarmManager {
     // Obter ou criar tile
     var tile = getTile(x, y);
     if (tile == null) {
-      tile = FarmTile(x: x, y: y);
+      tile = FarmTileModel(x: x, y: y);
     }
 
     // Validar estado
-    if (tile.soilState != SoilState.untilled) {
+    if (tile.soilState != SoilStateModel.untilled) {
       developer.log('[FarmManager] Soil already tilled');
       return false;
     }
@@ -85,7 +85,7 @@ final class FarmManager {
 
     // Obter tile
     final tile = getTile(x, y);
-    if (tile == null || tile.soilState == SoilState.untilled) {
+    if (tile == null || tile.soilState == SoilStateModel.untilled) {
       developer.log('[FarmManager] Cannot water untilled soil');
       return false;
     }
@@ -136,7 +136,7 @@ final class FarmManager {
 
   /// Colher crop
   /// Retorna a crop colhida ou null se não pode colher
-  Crop? harvestCrop(int x, int y) {
+  CropModel? harvestCrop(int x, int y) {
     developer.log('[FarmManager] Harvesting crop at ($x, $y)');
 
     // Obter tile
@@ -176,7 +176,7 @@ final class FarmManager {
     var cropsGrown = 0;
     for (var entry in _farmTiles.entries) {
       final oldTile = entry.value;
-      FarmTile newTile = oldTile;
+      FarmTileModel newTile = oldTile;
 
       if (oldTile.crop != null) {
         final beforeDays = oldTile.crop!.daysPlanted;
@@ -187,10 +187,10 @@ final class FarmManager {
         }
       } else {
         // No crop: if tile was watered that day, consume the water.
-        if (oldTile.soilState == SoilState.watered &&
+        if (oldTile.soilState == SoilStateModel.watered &&
             oldTile.lastWateredDay == dayEnded) {
           newTile = oldTile.copyWith(
-            soilState: SoilState.tilled,
+            soilState: SoilStateModel.tilled,
             lastWateredDay: null,
           );
         }
@@ -216,7 +216,7 @@ final class FarmManager {
     final tilesData = json['tiles'] as List<dynamic>?;
     if (tilesData != null) {
       for (var tileData in tilesData) {
-        final tile = FarmTile.fromJson(tileData as Map<String, dynamic>);
+        final tile = FarmTileModel.fromJson(tileData as Map<String, dynamic>);
         _farmTiles['${tile.x}_${tile.y}'] = tile;
       }
     }

@@ -1,5 +1,5 @@
 /// Estágio de crescimento de uma crop
-enum CropStage {
+enum CropStageModel {
   /// Semente plantada
   seed,
 
@@ -19,11 +19,11 @@ enum CropStage {
   String toJson() => name;
 
   /// Deserialização de JSON
-  static CropStage fromJson(String json) => values.byName(json);
+  static CropStageModel fromJson(String json) => values.byName(json);
 
   /// Pode colher neste estágio?
-  bool get canHarvest => this == CropStage.mature;
+  bool get canHarvest => this == CropStageModel.mature;
 
   /// Está morto?
-  bool get isDead => this == CropStage.withered;
+  bool get isDead => this == CropStageModel.withered;
 }
