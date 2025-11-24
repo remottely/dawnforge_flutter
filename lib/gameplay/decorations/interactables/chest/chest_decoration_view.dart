@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_sprite_animations_config.dart';
+import 'package:darkness_dungeon/gameplay/combat/character_fx_sprite_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/conversation/emote_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/gameplay/decorations/interactables/chest/chest_decoration_config.dart';

@@ -1,12 +1,11 @@
 import 'dart:developer' as developer;
 
+import 'package:darkness_dungeon/gameplay/combat/player_combat_action_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_loadout.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/custom_player_hand_slot.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/presets/custom_player_animated_weapon_preset.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/presets/custom_player_pickaxe_hand_preset.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/custom/hands/presets/custom_player_weapon_configs.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/player_primary_attack_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_config.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
@@ -231,7 +230,10 @@ final class EquipmentToCustomPlayerAdapter {
     WeaponItem item,
   ) {
     // Use centralized primary attack execution
-    PlayerPrimaryAttackConfig.execute(player: context.player, damage: damage);
+    PlayerCombatActionController.executePrimaryAttack(
+      player: context.player,
+      damage: damage,
+    );
 
     developer.log(
       '[EquipmentAdapter] Primary attack with ${item.name}: $damage damage',
@@ -268,7 +270,7 @@ final class EquipmentToCustomPlayerAdapter {
           final weaponDamage = (item.damage).toDouble();
           final finalDamage = weaponDamage > 0 ? weaponDamage : damage;
 
-          CharacterFireballAttackConfig.playerExecute(
+          PlayerCombatActionController.executeFireballAttack(
             player: context.player,
             damage: finalDamage,
           );

@@ -1,16 +1,15 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/player_primary_attack_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/character_action_sprite_animation_helper.dart';
+import 'package:darkness_dungeon/gameplay/combat/player_combat_action_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_action_sprite_animation_helper.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_config.dart';
-import 'package:darkness_dungeon/gameplay/farm/services/farm_action_config.dart';
+import 'package:darkness_dungeon/gameplay/farm/services/farm_tool_action_config.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_view.dart';
 
@@ -134,7 +133,7 @@ class SunnyPlayerView
     final AttackExecutionInfo? executionInfo = _meleeAttackController.execute(
       AttackType.melee,
       () {
-        CharacterActionSpriteAnimationHelper.playExecutionOnceWithIdle(
+        CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
           animationRight: SunnyPlayerConfig.loadRightAttackAnimation(),
           animationLeft: SunnyPlayerConfig.loadLeftAttackAnimation(),
           currentAnimation: animation,
@@ -143,7 +142,10 @@ class SunnyPlayerView
           onActionStart: lockAction,
           onActionEnd: unlockAction,
           onExecutionFrames: () {
-            PlayerPrimaryAttackConfig.execute(player: this, damage: damage);
+            PlayerCombatActionController.executePrimaryAttack(
+              player: this,
+              damage: damage,
+            );
           },
         );
       },
@@ -156,7 +158,7 @@ class SunnyPlayerView
   bool onExecuteRangedAttack(double damage) {
     final AttackExecutionInfo? executionInfo = _rangedAttackController.execute(
       AttackType.ranged,
-      () => CharacterFireballAttackConfig.playerExecute(
+      () => PlayerCombatActionController.executeFireballAttack(
         player: this,
         damage: damage,
       ),
@@ -174,7 +176,7 @@ class SunnyPlayerView
     final AttackExecutionInfo? executionInfo = _meleeAttackController.execute(
       AttackType.melee,
       () {
-        CharacterActionSpriteAnimationHelper.playExecutionOnceWithIdle(
+        CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
           animationRight: SunnyPlayerConfig.loadRightShovelAnimation(),
           animationLeft: SunnyPlayerConfig.loadLeftShovelAnimation(),
           currentAnimation: animation,
@@ -184,7 +186,7 @@ class SunnyPlayerView
           onActionEnd: unlockAction,
           // TODO(chatgpt): preciso que vc
           onExecutionFrames: () {
-            FarmActionConfig.execute(player: this);
+            FarmToolActionConfig.execute(player: this);
           },
         );
       },
@@ -198,7 +200,7 @@ class SunnyPlayerView
     final AttackExecutionInfo? executionInfo = _meleeAttackController.execute(
       AttackType.melee,
       () {
-        CharacterActionSpriteAnimationHelper.playExecutionOnceWithIdle(
+        CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
           animationRight: SunnyPlayerConfig.loadRightWateringCanAnimation(),
           animationLeft: SunnyPlayerConfig.loadLeftWateringCanAnimation(),
           currentAnimation: animation,
@@ -208,7 +210,7 @@ class SunnyPlayerView
           onActionEnd: unlockAction,
           // TODO(chatgpt): preciso que vc
           onExecutionFrames: () {
-            FarmActionConfig.execute(player: this);
+            FarmToolActionConfig.execute(player: this);
           },
         );
       },
@@ -222,7 +224,7 @@ class SunnyPlayerView
     final AttackExecutionInfo? executionInfo = _meleeAttackController.execute(
       AttackType.melee,
       () {
-        CharacterActionSpriteAnimationHelper.playExecutionOnceWithIdle(
+        CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
           animationRight: SunnyPlayerConfig.loadRightSeedAnimation(),
           animationLeft: SunnyPlayerConfig.loadLeftSeedAnimation(),
           currentAnimation: animation,
@@ -232,7 +234,7 @@ class SunnyPlayerView
           onActionEnd: unlockAction,
           // TODO(chatgpt): preciso que vc
           onExecutionFrames: () {
-            FarmActionConfig.execute(player: this);
+            FarmToolActionConfig.execute(player: this);
           },
         );
       },
@@ -246,7 +248,7 @@ class SunnyPlayerView
     final AttackExecutionInfo? executionInfo = _meleeAttackController.execute(
       AttackType.melee,
       () {
-        CharacterActionSpriteAnimationHelper.playExecutionOnceWithIdle(
+        CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
           animationRight: SunnyPlayerConfig.loadRightHarvestBasketAnimation(),
           animationLeft: SunnyPlayerConfig.loadLeftHarvestBasketAnimation(),
           currentAnimation: animation,
@@ -256,7 +258,7 @@ class SunnyPlayerView
           onActionEnd: unlockAction,
           // TODO(chatgpt): preciso que vc
           onExecutionFrames: () {
-            FarmActionConfig.execute(player: this);
+            FarmToolActionConfig.execute(player: this);
           },
         );
       },

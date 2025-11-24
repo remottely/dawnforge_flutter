@@ -7,12 +7,12 @@ import 'package:darkness_dungeon/gameplay/farm/services/farm_feedback_service.da
 import 'package:darkness_dungeon/gameplay/inventory/models/weapon_type.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 
-final class FarmActionConfig {
+final class FarmToolActionConfig {
   static final FarmActionService _actionService = FarmActionService.instance;
   static final FarmFeedbackService _feedbackService =
       FarmFeedbackService.instance;
 
-  static execute({required DDBasePlayerView player}) {
+  static void execute({required DDBasePlayerView player}) {
     // Compute the world position in front of the player where the shovel acts
     final attackOffset = OffsetHelper.getCenterOffset(
       Vector2(12, 0),

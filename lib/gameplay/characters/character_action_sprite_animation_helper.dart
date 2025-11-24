@@ -72,7 +72,7 @@ final class CharacterActionSpriteAnimationHelper {
     currentAnimation.play(fallbackAnimation);
   }
 
-  static Future<void> playExecutionOnceWithIdle({
+  static Future<void> playOnceExecutionEquipment({
     required Future<SpriteAnimation> animationRight,
     required Future<SpriteAnimation> animationLeft,
     required SimpleDirectionAnimation? currentAnimation,

@@ -1,0 +1,70 @@
+import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/combat/character_fireball_attack_config.dart';
+import 'package:darkness_dungeon/gameplay/combat/character_fx_particles_animations_config.dart';
+import 'package:darkness_dungeon/gameplay/combat/player_primary_attack_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_fx.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/offset_helper.dart';
+
+final class PlayerCombatActionController {
+  PlayerCombatActionController._();
+
+  static void executePrimaryAttack({
+    required SimplePlayer player,
+    required double damage,
+  }) {
+    final attackDirection = player.lastDirection;
+
+    final attackOffset = OffsetHelper.getCenterOffset(
+      Vector2(6, 0),
+      attackDirection,
+    );
+
+    CameraFx.executePrimaryAttackShake(player.gameRef);
+
+    AudioManager.instance.playPlayerPrimaryAttackSfx();
+
+    player.addParticle(
+      CharacterFxParticlesAnimationsConfig.createPrimaryAttackParticles(),
+      position: player.size / 2,
+    );
+
+    player.simpleAttackMelee(
+      damage: damage,
+      size: PlayerPrimaryAttackConfig.componentSize,
+      centerOffset: attackOffset,
+      animationRight: PlayerPrimaryAttackConfig.loadFxAnimationRight3(),
+    );
+  }
+
+  static void executeFireballAttack({
+    required SimplePlayer player,
+    required double damage,
+  }) {
+    final Vector2 projectileOffset = OffsetHelper.getCenterOffset(
+      Vector2(-16, 0),
+      player.lastDirection,
+    );
+
+    player.addParticle(
+      CharacterFxParticlesAnimationsConfig.createFireballAttackParticles(),
+      position: player.size / 2,
+    );
+
+    CharacterFireballAttackConfig.playExecutionAudio();
+
+    player.simpleAttackRangeByDirection(
+      size: CharacterFireballAttackConfig.componentSize,
+      speed: CharacterFireballAttackConfig.kSpeed,
+      lightingConfig: CharacterFireballAttackConfig.lightingConfig,
+      damage: damage,
+      collision: CharacterFireballAttackConfig.createHitbox(),
+      animationRight: CharacterFireballAttackConfig.loadAnimationRight3(),
+      animationDestroy: CharacterFireballAttackConfig.createDestroyAnimation(),
+      onDestroy: () => CharacterFireballAttackConfig.onDestroy(player.gameRef),
+      direction: player.lastDirection,
+      centerOffset: projectileOffset,
+      attackFrom: AttackOriginEnum.PLAYER_OR_ALLY,
+    );
+  }
+}
