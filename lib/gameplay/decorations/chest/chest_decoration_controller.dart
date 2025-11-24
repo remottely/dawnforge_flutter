@@ -1,5 +1,5 @@
-import 'package:darkness_dungeon/gameplay/decorations/interactables/chest/chest_decoration_config.dart';
-import 'package:darkness_dungeon/gameplay/decorations/interactables/chest/chest_decoration_model.dart';
+import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_config.dart';
+import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_model.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 
 class ChestDecorationController {

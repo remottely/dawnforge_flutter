@@ -5,7 +5,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/map/map_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/map_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/color_helper.dart';
-import 'package:darkness_dungeon/gameplay/decorations/interactables/map_transition_sensor.dart';
+import 'package:darkness_dungeon/gameplay/decorations/map_transition_sensor.dart';
 import 'package:darkness_dungeon/gameplay/farm/handlers/farm_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen_config.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen_viewmodel.dart';

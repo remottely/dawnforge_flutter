@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/decorations/interactables/torch/torch_decoration_config.dart';
-import 'package:darkness_dungeon/gameplay/decorations/interactables/torch/torch_decoration_model.dart';
+import 'package:darkness_dungeon/gameplay/decorations/torch/torch_decoration_config.dart';
+import 'package:darkness_dungeon/gameplay/decorations/torch/torch_decoration_model.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 
 /// Controls the behavior and interaction logic for torch decorations.

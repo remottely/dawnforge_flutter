@@ -9,11 +9,11 @@ import 'package:darkness_dungeon/gameplay/farm/models/crop_stage_model.dart';
 import 'package:darkness_dungeon/gameplay/farm/models/farm_tile_model.dart';
 import 'package:darkness_dungeon/gameplay/farm/models/soil_state_model.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
-import 'package:darkness_dungeon/shared/framework/interaction/tool_interactable.dart';
+import 'package:darkness_dungeon/shared/framework/interaction/tool_interactable_mixin.dart';
 
 /// Componente visual de um tile de fazenda
 /// Renderiza sprites de solo e crop baseado no estado do FarmTile
-class FarmTileComponent extends DDDecoration with ToolInteractable {
+class FarmTileComponent extends DDDecoration with ToolInteractableMixin {
   FarmTileModel farmTile;
 
   SpriteComponent? _soilSprite;

@@ -7,15 +7,15 @@ import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_view.dart'
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/map_data.dart';
-import 'package:darkness_dungeon/gameplay/decorations/interactables/barrel_decoration.dart';
-import 'package:darkness_dungeon/gameplay/decorations/interactables/chest/chest_decoration_model.dart';
-import 'package:darkness_dungeon/gameplay/decorations/interactables/chest/chest_decoration_view.dart';
-import 'package:darkness_dungeon/gameplay/decorations/interactables/door_decoration.dart';
-import 'package:darkness_dungeon/gameplay/decorations/interactables/door_key_decoration.dart';
-import 'package:darkness_dungeon/gameplay/decorations/interactables/life_potion_decoration.dart';
-import 'package:darkness_dungeon/gameplay/decorations/interactables/spike_trap_decoration.dart';
-import 'package:darkness_dungeon/gameplay/decorations/interactables/torch/torch_decoration_model.dart';
-import 'package:darkness_dungeon/gameplay/decorations/interactables/torch/torch_decoration_view.dart';
+import 'package:darkness_dungeon/gameplay/decorations/barrel_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_model.dart';
+import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_view.dart';
+import 'package:darkness_dungeon/gameplay/decorations/door_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/door_key_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/life_potion_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/spike_trap_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/torch/torch_decoration_model.dart';
+import 'package:darkness_dungeon/gameplay/decorations/torch/torch_decoration_view.dart';
 import 'package:darkness_dungeon/gameplay/farm/components/farm_tile_view.dart';
 
 final class MapConfig {
@@ -54,8 +54,6 @@ final class MapConfig {
         'wizard_npc': (p) => WizardNpcView(position: p.position),
 
         /// Decorations
-
-        /// Interactables
         'barrel_decoration': (p) => BarrelDecorationView(position: p.position),
         'torch_decoration': (p) => TorchDecorationView.lightingEnabled(
           position: p.position,
