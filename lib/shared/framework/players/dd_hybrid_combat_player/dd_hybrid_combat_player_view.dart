@@ -1,4 +1,5 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_hybrid_combat_player/dd_hybrid_combat_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_hybrid_combat_player/dd_hybrid_combat_player_model.dart';
@@ -30,6 +31,9 @@ abstract class DDHybridCombatPlayerView<
     required super.life,
     required super.speed,
   });
+
+  late final SynchronizedAttackController meleeAttackController;
+  late final SynchronizedAttackController rangedAttackController;
 
   // ============================================================================
   // Abstract Combat Execution Methods

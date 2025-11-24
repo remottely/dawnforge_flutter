@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/character_action_sprite_animation_helper.dart';
-import 'package:darkness_dungeon/gameplay/combat/controllers/player_combat_action_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
+import 'package:darkness_dungeon/gameplay/combat/controllers/player_combat_action_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_config.dart';
@@ -31,9 +31,6 @@ import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm
 /// - Buffered input restoration
 class SunnyPlayerView
     extends DDFarmPlayerView<SunnyPlayerController, SunnyPlayerModel> {
-  late final SynchronizedAttackController _meleeAttackController;
-  late final SynchronizedAttackController _rangedAttackController;
-
   SunnyPlayerView({required super.position, required super.model})
     : super(
         size: SunnyPlayerConfig.componentSize,
@@ -52,8 +49,8 @@ class SunnyPlayerView
 
   @override
   void onRemove() {
-    _meleeAttackController.dispose();
-    _rangedAttackController.dispose();
+    meleeAttackController.dispose();
+    rangedAttackController.dispose();
     super.onRemove();
   }
 
@@ -116,10 +113,10 @@ class SunnyPlayerView
 
   /// Initializes the synchronized attack system controllers for combat.
   void _initializeCombatSystems() {
-    _meleeAttackController = SynchronizedAttackController(
+    meleeAttackController = SynchronizedAttackController(
       spec: SynchronizedAttackSpecConfig.standard,
     );
-    _rangedAttackController = SynchronizedAttackController(
+    rangedAttackController = SynchronizedAttackController(
       spec: SynchronizedAttackSpecConfig.standard,
     );
   }
@@ -130,7 +127,7 @@ class SunnyPlayerView
 
   @override
   bool onExecutePrimaryAttack(double damage) {
-    final AttackExecutionInfo? executionInfo = _meleeAttackController.execute(
+    final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
       AttackType.melee,
       () {
         CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
@@ -156,7 +153,7 @@ class SunnyPlayerView
 
   @override
   bool onExecuteRangedAttack(double damage) {
-    final AttackExecutionInfo? executionInfo = _rangedAttackController.execute(
+    final AttackExecutionInfo? executionInfo = rangedAttackController.execute(
       AttackType.ranged,
       () => PlayerCombatActionController.executeFireballAttack(
         player: this,
@@ -172,32 +169,8 @@ class SunnyPlayerView
   // ============================================================================
 
   @override
-  bool onExecuteShovel() {
-    final AttackExecutionInfo? executionInfo = _meleeAttackController.execute(
-      AttackType.melee,
-      () {
-        CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-          animationRight: SunnyPlayerConfig.loadRightShovelAnimation(),
-          animationLeft: SunnyPlayerConfig.loadLeftShovelAnimation(),
-          currentAnimation: animation,
-          target: this,
-          executionStartFrame: 4,
-          onActionStart: lockAction,
-          onActionEnd: unlockAction,
-          // TODO(chatgpt): preciso que vc
-          onExecutionFrames: () {
-            FarmToolActionConfig.execute(player: this);
-          },
-        );
-      },
-    );
-
-    return executionInfo != null;
-  }
-
-  @override
   bool onExecuteWateringCan() {
-    final AttackExecutionInfo? executionInfo = _meleeAttackController.execute(
+    final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
       AttackType.melee,
       () {
         CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
@@ -221,7 +194,7 @@ class SunnyPlayerView
 
   @override
   bool onExecuteSeed() {
-    final AttackExecutionInfo? executionInfo = _meleeAttackController.execute(
+    final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
       AttackType.melee,
       () {
         CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
@@ -245,7 +218,7 @@ class SunnyPlayerView
 
   @override
   bool onExecuteHarvestBasket() {
-    final AttackExecutionInfo? executionInfo = _meleeAttackController.execute(
+    final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
       AttackType.melee,
       () {
         CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(

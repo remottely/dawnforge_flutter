@@ -21,7 +21,7 @@ void main() async {
     'level': 5,
     'health': 100,
     'position': {'x': 150.0, 'y': 200.0},
-    'inventory': ['sword', 'potion', 'shield'],
+    'inventory': ['sword', 'potion'],
   });
 
   final playerData = await repo.load('player_data');

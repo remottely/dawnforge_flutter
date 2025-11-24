@@ -23,9 +23,7 @@ enum WeaponType {
 
   staff,
 
-  wand,
-
-  shield;
+  wand;
 
   String toJson() => name;
 
@@ -64,8 +62,6 @@ enum WeaponType {
         return 'Staff';
       case WeaponType.wand:
         return 'Wand';
-      case WeaponType.shield:
-        return 'Shield';
     }
   }
 }

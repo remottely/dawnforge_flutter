@@ -108,14 +108,12 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
 
     // final axe = ItemFactory.createItem('steel_axe');
     // final staff = ItemFactory.createItem('fire_staff');
-    // final shield = ItemFactory.createItem('wooden_shield');
     // final potion = ItemFactory.createItem('health_potion');
     // final wood = ItemFactory.createItem('wood');
     // final tomatoSeeds = ItemFactory.createItem('tomato_seeds');
 
     // if (axe != null) InventoryManager.instance.addItem(axe);
     // if (staff != null) InventoryManager.instance.addItem(staff);
-    // if (shield != null) InventoryManager.instance.addItem(shield);
     // if (potion != null) InventoryManager.instance.addItem(potion, 5);
     // if (wood != null) InventoryManager.instance.addItem(wood, 50);
     // if (tomatoSeeds != null) InventoryManager.instance.addItem(tomatoSeeds, 10);
@@ -261,14 +259,11 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
         final weaponType = item.weaponType;
 
         // // Validar se é SHIELD ou STAFF ou WAND
-        // // if (!weaponType.contains('shield') &&
         // //           !weaponType.contains('staff') &&
         // //           !weaponType.contains('wand')) {
-        // if (weaponType != WeaponType.shield &&
         //     weaponType != WeaponType.staff &&
         //     weaponType != WeaponType.wand) {
         //   developer.log(
-        //     '[InventoryInput] Ignorando ${item.name} (tipo: $weaponType) - apenas shield/staff/wand no offhand slot',
         //   );
         //   continue;
         // }

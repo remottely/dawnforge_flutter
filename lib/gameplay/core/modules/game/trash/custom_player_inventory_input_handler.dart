@@ -105,7 +105,6 @@
 //     final shovel = ItemFactory.createItem('shovel');
 //     final axe = ItemFactory.createItem('steel_axe');
 //     final staff = ItemFactory.createItem('fire_staff');
-//     final shield = ItemFactory.createItem('wooden_shield');
 //     final potion = ItemFactory.createItem('health_potion');
 //     final wood = ItemFactory.createItem('wood');
 //     final seeds = ItemFactory.createItem('tomato_seeds');
@@ -114,7 +113,6 @@
 //     if (shovel != null) InventoryManager.instance.addItem(shovel);
 //     if (axe != null) InventoryManager.instance.addItem(axe);
 //     if (staff != null) InventoryManager.instance.addItem(staff);
-//     if (shield != null) InventoryManager.instance.addItem(shield);
 //     if (potion != null) InventoryManager.instance.addItem(potion, 5);
 //     if (wood != null) InventoryManager.instance.addItem(wood, 50);
 //     if (seeds != null) InventoryManager.instance.addItem(seeds, 10);
@@ -225,14 +223,11 @@
 //         // final weaponType = item.weaponType;
 
 //         // // Validar se é SHIELD ou STAFF ou WAND
-//         // // if (!weaponType.contains('shield') &&
 //         // //           !weaponType.contains('staff') &&
 //         // //           !weaponType.contains('wand')) {
-//         // if (weaponType != WeaponType.shield &&
 //         //     weaponType != WeaponType.staff &&
 //         //     weaponType != WeaponType.wand) {
 //         //   developer.log(
-//         //     '[InventoryInput] Ignorando ${item.name} (tipo: $weaponType) - apenas shield/staff/wand no offhand slot',
 //         //   );
 //         //   continue;
 //         // }

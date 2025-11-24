@@ -254,12 +254,6 @@ final class KnightPlayerConfig {
   //   static const String steelShield1SpritePath =
   // 'SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/7_Shield/SteelShield1.png';
 
-  /// Wooden shield sprite path (currently active default).
-  ///
-  /// Alternative steel shield path commented out for future use.
-  static const String woodShield4SpritePath =
-      'SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/7_Shield/WoodShield4.png';
-
   /// Alternative sword sprite path from SPUM legacy assets.
   static const String sword3SpritePath =
       'SPUM/Resources/Addons/Legacy/0_Unit/0_Sprite/6_Weapons/0_Sword/Sword_3.png';

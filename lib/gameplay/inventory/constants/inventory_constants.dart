@@ -138,8 +138,8 @@ final class InventoryConstants {
   /// Duration of speed buff
   static const int kSpeedBuffDurationSeconds = 240; // 4 minutes
 
-  /// Duration of defense buff
-  static const int kDefenseBuffDurationSeconds = 300; // 5 minutes
+  // /// Duration of defense buff
+  // static const int kDefenseBuffDurationSeconds = 300; // 5 minutes
 
   // ============================================================================
   // Misc Constants
