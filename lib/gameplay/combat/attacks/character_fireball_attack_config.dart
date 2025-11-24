@@ -28,22 +28,22 @@ final class CharacterFireballAttackConfig {
       HitboxUtils.createExpandHitbox(componentSize)
         ..collisionType = CollisionType.passive;
 
-  static Future<SpriteAnimation> loadAnimationRight3() => SpriteAnimation.load(
-    'gameplay/characters/shared/character_fireball_attack_right_3.png',
-    SpriteAnimationConfig.createStandardData(
-      amount: 3,
-      textureSize: _textureSize,
-    ),
-  );
-
-  static Future<SpriteAnimation> createDestroyAnimation() =>
+  static Future<SpriteAnimation> loadExecutionAnimation() =>
       SpriteAnimation.load(
-        'gameplay/characters/shared/character_fireball_explosion_right_6.png',
+        'gameplay/characters/shared/character_fireball_attack_right_3.png',
         SpriteAnimationConfig.createStandardData(
-          amount: 6,
-          textureSize: TileConstants.tileSizeExtraLarge,
+          amount: 3,
+          textureSize: _textureSize,
         ),
       );
+
+  static Future<SpriteAnimation> loadDestroyAnimation() => SpriteAnimation.load(
+    'gameplay/characters/shared/character_fireball_explosion_right_6.png',
+    SpriteAnimationConfig.createStandardData(
+      amount: 6,
+      textureSize: TileConstants.tileSizeExtraLarge,
+    ),
+  );
 
   static void playExecutionAudio() =>
       AudioManager.instance.playFireballAttackSfx();

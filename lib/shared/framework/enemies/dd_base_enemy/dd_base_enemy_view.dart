@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/combat/enemy_combat_action_controller.dart';
-import 'package:darkness_dungeon/gameplay/combat/character_fx_particles_animations_config.dart';
-import 'package:darkness_dungeon/gameplay/combat/character_fx_sprite_animations_config.dart';
+import 'package:darkness_dungeon/gameplay/combat/attacks/character_fx_particles_animations_config.dart';
+import 'package:darkness_dungeon/gameplay/combat/controllers/enemy_combat_action_controller.dart';
+import 'package:darkness_dungeon/gameplay/combat/death/character_fx_sprite_animations_config.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_controller.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_model.dart';
 
@@ -76,7 +76,7 @@ abstract class DDBaseEnemyView<
   void _executeDieFx() {
     gameRef.add(
       AnimatedGameObject(
-        animation: CharacterFxSpriteAnimationsConfig.createExplosionRight7(),
+        animation: CharacterFxSpriteAnimationsConfig.loadExplosionRight7(),
         position: position,
         size: size,
         loop: false,

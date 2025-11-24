@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/combat/character_fx_sprite_animations_config.dart';
+import 'package:darkness_dungeon/gameplay/combat/death/character_fx_sprite_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/conversation/emote_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_config.dart';
@@ -119,8 +119,7 @@ class ChestDecorationView extends DDInputReceiverDecorationView {
   void _addSmokeExplosion(Vector2 potionPosition) {
     gameRef.add(
       AnimatedGameObject(
-        animation:
-            CharacterFxSpriteAnimationsConfig.createExplosionSmokeRight5(),
+        animation: CharacterFxSpriteAnimationsConfig.loadExplosionSmokeRight5(),
         position: potionPosition,
         size: size,
         loop: false,

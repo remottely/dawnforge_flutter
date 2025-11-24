@@ -80,9 +80,8 @@ class CustomPlayerItemController {
 
     // Se for modo animação, carregar AMBAS as animações (idle e attack)
     if (_data.isAnimated && _data.animationData != null) {
-      final idleAnimation = await _data.animationData!.createIdleAnimation();
-      final attackAnimation = await _data.animationData!
-          .createAttackAnimation();
+      final idleAnimation = await _data.animationData!.loadIdleAnimation();
+      final attackAnimation = await _data.animationData!.loadAttackAnimation();
       await handView.loadHandAnimations(
         idleAnimation: idleAnimation,
         attackAnimation: attackAnimation,

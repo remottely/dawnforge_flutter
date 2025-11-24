@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/gameplay/combat/enemy_combat_action_controller.dart';
+import 'package:darkness_dungeon/gameplay/combat/controllers/enemy_combat_action_controller.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_controller.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_model.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_view.dart';

@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/combat/character_fireball_attack_config.dart';
-import 'package:darkness_dungeon/gameplay/combat/enemy_primary_attack_config.dart';
+import 'package:darkness_dungeon/gameplay/combat/attacks/character_fireball_attack_config.dart';
+import 'package:darkness_dungeon/gameplay/combat/attacks/enemy_primary_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
 
 final class EnemyCombatActionController {
@@ -43,9 +43,9 @@ final class EnemyCombatActionController {
           lightingConfig: CharacterFireballAttackConfig.lightingConfig,
           damage: damage,
           collision: CharacterFireballAttackConfig.createHitbox(),
-          animation: CharacterFireballAttackConfig.loadAnimationRight3(),
+          animation: CharacterFireballAttackConfig.loadExecutionAnimation(),
           animationDestroy:
-              CharacterFireballAttackConfig.createDestroyAnimation(),
+              CharacterFireballAttackConfig.loadDestroyAnimation(),
           execute: CharacterFireballAttackConfig.playExecutionAudio,
           onDestroy: () =>
               CharacterFireballAttackConfig.onDestroy(enemy.gameRef),

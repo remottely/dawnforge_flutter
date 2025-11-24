@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/combat/character_fireball_attack_config.dart';
-import 'package:darkness_dungeon/gameplay/combat/character_fx_particles_animations_config.dart';
-import 'package:darkness_dungeon/gameplay/combat/player_primary_attack_config.dart';
+import 'package:darkness_dungeon/gameplay/combat/attacks/character_fireball_attack_config.dart';
+import 'package:darkness_dungeon/gameplay/combat/attacks/character_fx_particles_animations_config.dart';
+import 'package:darkness_dungeon/gameplay/combat/attacks/player_primary_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_fx.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/offset_helper.dart';
@@ -59,8 +59,8 @@ final class PlayerCombatActionController {
       lightingConfig: CharacterFireballAttackConfig.lightingConfig,
       damage: damage,
       collision: CharacterFireballAttackConfig.createHitbox(),
-      animationRight: CharacterFireballAttackConfig.loadAnimationRight3(),
-      animationDestroy: CharacterFireballAttackConfig.createDestroyAnimation(),
+      animationRight: CharacterFireballAttackConfig.loadExecutionAnimation(),
+      animationDestroy: CharacterFireballAttackConfig.loadDestroyAnimation(),
       onDestroy: () => CharacterFireballAttackConfig.onDestroy(player.gameRef),
       direction: player.lastDirection,
       centerOffset: projectileOffset,

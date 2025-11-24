@@ -58,27 +58,29 @@ class CustomPlayerHandAnimationData {
        );
 
   /// Cria a animação de IDLE
-  Future<SpriteAnimation> createIdleAnimation() async {
-    final data = SpriteAnimationConfig.createCustomData(
-      amount: idleFrameCount,
-      textureSize: textureSize,
-      stepTime: idleFrameDuration.inMilliseconds / 1000,
+  Future<SpriteAnimation> loadIdleAnimation() async {
+    return SpriteAnimation.load(
+      idlePath,
+      SpriteAnimationConfig.createCustomData(
+        amount: idleFrameCount,
+        textureSize: textureSize,
+        stepTime: idleFrameDuration.inMilliseconds / 1000,
+      ),
     );
-
-    return SpriteAnimation.load(idlePath, data);
   }
 
   /// Cria a animação de ATAQUE
-  Future<SpriteAnimation> createAttackAnimation() async {
-    final data = SpriteAnimationConfig.createCustomData(
-      amount: attackFrameCount,
-      textureSize: textureSize,
-      // stepTime: attackDuration.inMilliseconds / attackFrameCount / 1000,
-      stepTime: 0.1,
-      loop: false, // Ataque executa apenas UMA VEZ
+  Future<SpriteAnimation> loadAttackAnimation() async {
+    return SpriteAnimation.load(
+      attackPath,
+      SpriteAnimationConfig.createCustomData(
+        amount: attackFrameCount,
+        textureSize: textureSize,
+        // stepTime: attackDuration.inMilliseconds / attackFrameCount / 1000,
+        stepTime: 0.1,
+        loop: false, // Ataque executa apenas UMA VEZ
+      ),
     );
-
-    return SpriteAnimation.load(attackPath, data);
   }
 
   /// Calcula o tempo (em segundos) quando o frame de ataque ocorre
