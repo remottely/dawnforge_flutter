@@ -8,12 +8,11 @@ import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/item_factory.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
+import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/item_type.dart';
-import 'package:darkness_dungeon/gameplay/inventory/models/weapon_type.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 import 'package:flutter/services.dart';
 
-/// Componente que gerencia entrada de teclado para inventário
 class InventoryInputHandler extends GameComponent with KeyboardEventListener {
   bool _isInitialized = false;
   int _currentWeaponIndex = -1;
@@ -34,37 +33,31 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
   @override
   bool onKeyboard(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     if (event is KeyDownEvent) {
-      // Tecla I: Toggle inventário
       if (event.logicalKey == KeyboardSetup.kToggleInventoryKey) {
         _toggleInventory();
         return true;
       }
 
-      // Tecla T: Adicionar itens de teste
       if (event.logicalKey == KeyboardSetup.kAddTestItemsKey) {
         _addTestItems();
         return true;
       }
 
-      // Tecla E: Equipar primeiro item de arma do inventário no WEAPON slot
       if (event.logicalKey == KeyboardSetup.kEquipWeaponKey) {
         _equipFirstWeapon();
         return true;
       }
 
-      // Tecla U: Desequipar arma do WEAPON slot
       if (event.logicalKey == KeyboardSetup.kUnequipWeaponKey) {
         _unequipWeapon();
         return true;
       }
 
-      // Tecla O: Equipar primeiro item de arma do inventário no OFFHAND slot
       if (event.logicalKey == KeyboardSetup.kEquipOffhandKey) {
         _equipFirstOffhand();
         return true;
       }
 
-      // Tecla P: Desequipar arma do OFFHAND slot
       if (event.logicalKey == KeyboardSetup.kUnequipOffhandKey) {
         _unequipOffhand();
         return true;
@@ -74,24 +67,7 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
   }
 
   void _toggleInventory() {
-    // if (_cachedHUD == null) {
-    //   developer.log(
-    //     '[InventoryInput] HUD ainda não foi carregado. Tentando encontrar...',
-    //   );
-    //   // O gameRef.interface JÁ É o HUDView
-    //   _cachedHUD = gameRef.interface as HUDView?;
-
-    //   if (_cachedHUD == null) {
-    //     developer.log('[InventoryInput] HUD não encontrado!');
-    //     developer.log('[InventoryInput] Interface: ${gameRef.interface}');
-    //     return;
-    //   }
-    // }
-
     (gameRef.interface as GameplayHUDView).inventoryHUD.toggleIsVisible();
-    // developer.log(
-    //   '[InventoryInput] Inventário ${_cachedHUD!.inventoryHUD.isVisible ? "aberto" : "fechado"}',
-    // );
   }
 
   void _initializeTestItems() {
@@ -107,25 +83,12 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
     _debugInsertItem('seeds');
     _debugInsertItem('harvestBasket');
 
-    // final axe = ItemFactory.createItem('steel_axe');
-    // final staff = ItemFactory.createItem('fire_staff');
-    // final potion = ItemFactory.createItem('health_potion');
-    // final wood = ItemFactory.createItem('wood');
-    // final tomatoSeeds = ItemFactory.createItem('tomato_seeds');
-
-    // if (axe != null) InventoryManager.instance.addItem(axe);
-    // if (staff != null) InventoryManager.instance.addItem(staff);
-    // if (potion != null) InventoryManager.instance.addItem(potion, 5);
-    // if (wood != null) InventoryManager.instance.addItem(wood, 50);
-    // if (tomatoSeeds != null) InventoryManager.instance.addItem(tomatoSeeds, 10);
-
     developer.log(
       '[InventoryInput] Itens de teste adicionados! ${InventoryManager.instance.usedSlots} slots usados',
     );
   }
 
   void _debugInsertItem(String itemKey) {
-    // TODO(Kevin): remove this debug method
     if (InventoryManager.instance.getItemQuantity(itemKey) == 0) {
       final item = ItemFactory.createItem(itemKey);
       if (item != null) {
@@ -153,34 +116,30 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
 
   void _equipFirstWeapon() {
     developer.log(
-      '[InventoryInput] Procurando SWORD ou AXE para equipar no weapon (Right Hand - Space)...',
+      '[InventoryInput] Procurando SWORD ou AXE para equipar no weapon (Space)...',
     );
 
-    // Percorrer todos os slots do inventário procurando SWORD ou AXE
-    // Procurar o próximo weapon com índice maior que _currentWeaponIndex
     final max = InventoryManager.instance.maxSlots;
     int? foundIndex;
 
-    // primeira passagem: do próximo índice até o fim
     for (int i = _currentWeaponIndex + 1; i < max; i++) {
       final slot = InventoryManager.instance.getSlotByIndex(i);
       if (slot == null || slot.item == null) continue;
       final item = slot.item!;
       if (item.type != ItemType.weapon) continue;
       if (item is! WeaponItem) continue;
-      final weaponType = item.weaponType;
-      if (weaponType != WeaponType.ironSword &&
-          weaponType != WeaponType.staff &&
-          weaponType != WeaponType.shovel &&
-          weaponType != WeaponType.wateringCan &&
-          weaponType != WeaponType.seeds &&
-          weaponType != WeaponType.harvestBasket)
+      final equippedHandType = item.equippedHandType;
+      if (equippedHandType != EquippedHandType.ironSword &&
+          equippedHandType != EquippedHandType.staff &&
+          equippedHandType != EquippedHandType.shovel &&
+          equippedHandType != EquippedHandType.wateringCan &&
+          equippedHandType != EquippedHandType.seeds &&
+          equippedHandType != EquippedHandType.harvestBasket)
         continue;
       foundIndex = i;
       break;
     }
 
-    // segunda passagem: procurar do início até o índice atual (wrap)
     if (foundIndex == null) {
       for (int i = 0; i <= _currentWeaponIndex && i < max; i++) {
         final slot = InventoryManager.instance.getSlotByIndex(i);
@@ -188,13 +147,13 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
         final item = slot.item!;
         if (item.type != ItemType.weapon) continue;
         if (item is! WeaponItem) continue;
-        final weaponType = item.weaponType;
-        if (weaponType != WeaponType.ironSword &&
-            weaponType != WeaponType.staff &&
-            weaponType != WeaponType.shovel &&
-            weaponType != WeaponType.wateringCan &&
-            weaponType != WeaponType.seeds &&
-            weaponType != WeaponType.harvestBasket)
+        final equippedHandType = item.equippedHandType;
+        if (equippedHandType != EquippedHandType.ironSword &&
+            equippedHandType != EquippedHandType.staff &&
+            equippedHandType != EquippedHandType.shovel &&
+            equippedHandType != EquippedHandType.wateringCan &&
+            equippedHandType != EquippedHandType.seeds &&
+            equippedHandType != EquippedHandType.harvestBasket)
           continue;
         foundIndex = i;
         break;
@@ -220,9 +179,9 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
     if (success) {
       _currentWeaponIndex = foundIndex;
       developer.log(
-        '[InventoryInput] ✓ Equipado no weapon (Right Hand): ${item.name} (${(item is WeaponItem) ? item.weaponType : 'unknown'})',
+        '[InventoryInput] ✓ Equipado no weapon: ${item.name} (${(item is WeaponItem) ? item.equippedHandType : 'unknown'})',
       );
-      if (item is WeaponItem) _notifyEquipmentChanged(item.weaponType);
+      if (item is WeaponItem) _notifyEquipmentChanged(item.equippedHandType);
     } else {
       developer.log('[InventoryInput] ✗ Falha ao equipar: ${item.name}');
     }
@@ -231,11 +190,9 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
   void _unequipWeapon() {
     final item = EquipmentManager.instance.unequip(EquipmentSlotType.weapon);
     if (item != null) {
-      developer.log(
-        '[InventoryInput] ✓ Desequipado do weapon (Right Hand): ${item.name}',
-      );
-      final weaponType = (item as WeaponItem).weaponType;
-      _notifyEquipmentChanged(weaponType);
+      developer.log('[InventoryInput] ✓ Desequipado do weapon: ${item.name}');
+      final equippedHandType = (item as WeaponItem).equippedHandType;
+      _notifyEquipmentChanged(equippedHandType);
       _currentWeaponIndex = -1;
     } else {
       developer.log('[InventoryInput] Weapon slot já está vazio');
@@ -244,34 +201,20 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
 
   void _equipFirstOffhand() {
     developer.log(
-      '[InventoryInput] Procurando SHIELD ou STAFF para equipar no offhand (Left Hand - Z)...',
+      '[InventoryInput] Procurando SHIELD ou STAFF para equipar no offhand (Z)...',
     );
 
-    // Percorrer todos os slots do inventário procurando SHIELD ou STAFF
     for (int i = 0; i < InventoryManager.instance.maxSlots; i++) {
       final slot = InventoryManager.instance.getSlotByIndex(i);
       if (slot != null && slot.item != null) {
         final item = slot.item!;
 
-        // Validar se é weapon
         if (item.type != ItemType.weapon) continue;
 
-        // Validar se é WeaponItem
         if (item is! WeaponItem) continue;
 
-        final weaponType = item.weaponType;
+        final equippedHandType = item.equippedHandType;
 
-        // // Validar se é SHIELD ou STAFF ou WAND
-        // //           !weaponType.contains('staff') &&
-        // //           !weaponType.contains('wand')) {
-        //     weaponType != WeaponType.staff &&
-        //     weaponType != WeaponType.wand) {
-        //   developer.log(
-        //   );
-        //   continue;
-        // }
-
-        // Tentar equipar
         final success = EquipmentManager.instance.equip(
           EquipmentSlotType.offhand,
           item,
@@ -279,60 +222,33 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
 
         if (success) {
           developer.log(
-            '[InventoryInput] ✓ Equipado no offhand (Left Hand): ${item.name} (${item.weaponType})',
+            '[InventoryInput] ✓ Equipado no offhand: ${item.name} (${item.equippedHandType})',
           );
-          _notifyEquipmentChanged(weaponType);
-        } else {
-          developer.log('[InventoryInput] ✗ Falha ao equipar: ${item.name}');
+          _notifyEquipmentChanged(equippedHandType);
         }
+
         return;
       }
     }
-
-    developer.log(
-      '[InventoryInput] Nenhuma SHIELD ou STAFF encontrada no inventário',
-    );
   }
 
   void _unequipOffhand() {
     final item = EquipmentManager.instance.unequip(EquipmentSlotType.offhand);
     if (item != null) {
-      developer.log(
-        '[InventoryInput] ✓ Desequipado do offhand (Left Hand): ${item.name}',
-      );
-      final weaponType = (item as WeaponItem).weaponType;
-      _notifyEquipmentChanged(weaponType);
-      _notifyEquipmentChanged(weaponType);
-    } else {
-      developer.log('[InventoryInput] Offhand slot já está vazio');
+      final equippedHandType = (item as WeaponItem).equippedHandType;
+      _notifyEquipmentChanged(equippedHandType);
+      _notifyEquipmentChanged(equippedHandType);
     }
   }
 
-  /// Notifica o player que o equipamento mudou
-  /// Para recarregar o loadout visual
-  void _notifyEquipmentChanged(WeaponType weaponType) {
-    developer.log('[InventoryInput] Equipamento mudou! Procurando player...');
-
-    // Buscar o DDBasePlayerView no jogo
+  void _notifyEquipmentChanged(EquippedHandType equippedHandType) {
     final players = gameRef.query<DDBasePlayerView>();
     if (players.isEmpty) {
-      developer.log('[InventoryInput] CustomPlayer não encontrado');
       return;
     }
 
     final player = players.first;
-    developer.log(
-      '[InventoryInput] CustomPlayer encontrado! Recarregando loadout...',
-    );
 
-    player.model.setEquipment(weaponType);
-    // // Criar novo loadout baseado no equipamento atual
-    // final newLoadout = EquipmentToCustomPlayerAdapter.instance
-    //     .createLoadoutFromEquipment();
-
-    // // Recarregar loadout do player
-    // player.reloadEquipmentLoadout(newLoadout);
-
-    developer.log('[InventoryInput] Loadout recarregado com sucesso!');
+    player.model.setEquipment(equippedHandType);
   }
 }

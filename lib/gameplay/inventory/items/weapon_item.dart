@@ -1,7 +1,7 @@
+import '../models/equipped_hand_type.dart';
 import '../models/item.dart';
 import '../models/item_rarity.dart';
 import '../models/item_type.dart';
-import '../models/weapon_type.dart';
 
 /// Item de arma para combate
 ///
@@ -21,7 +21,7 @@ final class WeaponItem extends Item {
   final double critMultiplier;
 
   /// Tipo de arma
-  final WeaponType weaponType;
+  final EquippedHandType equippedHandType;
 
   /// Cria uma arma
   const WeaponItem({
@@ -36,7 +36,7 @@ final class WeaponItem extends Item {
     this.attackSpeed = 1.0,
     this.critChance = 0.05,
     this.critMultiplier = 1.5,
-    required this.weaponType,
+    required this.equippedHandType,
   });
 
   /// Calcula o DPS médio da arma (considerando críticos)
@@ -59,7 +59,7 @@ final class WeaponItem extends Item {
       'attackSpeed': attackSpeed,
       'critChance': critChance,
       'critMultiplier': critMultiplier,
-      'weaponType': weaponType.toJson(),
+      'equippedHandType': equippedHandType.toJson(),
     };
   }
 
@@ -76,7 +76,9 @@ final class WeaponItem extends Item {
       attackSpeed: (json['attackSpeed'] as num?)?.toDouble() ?? 1.0,
       critChance: (json['critChance'] as num?)?.toDouble() ?? 0.05,
       critMultiplier: (json['critMultiplier'] as num?)?.toDouble() ?? 1.5,
-      weaponType: WeaponType.fromJson(json['weaponType'] as String),
+      equippedHandType: EquippedHandType.fromJson(
+        json['equippedHandType'] as String,
+      ),
     );
   }
 
@@ -92,7 +94,7 @@ final class WeaponItem extends Item {
     double? attackSpeed,
     double? critChance,
     double? critMultiplier,
-    WeaponType? weaponType,
+    EquippedHandType? equippedHandType,
   }) {
     return WeaponItem(
       id: id ?? this.id,
@@ -105,11 +107,11 @@ final class WeaponItem extends Item {
       attackSpeed: attackSpeed ?? this.attackSpeed,
       critChance: critChance ?? this.critChance,
       critMultiplier: critMultiplier ?? this.critMultiplier,
-      weaponType: weaponType ?? this.weaponType,
+      equippedHandType: equippedHandType ?? this.equippedHandType,
     );
   }
 
   @override
   String toString() =>
-      'WeaponItem(id: $id, name: $name, type: ${weaponType.displayName}, damage: $damage, dps: ${dps.toStringAsFixed(1)})';
+      'WeaponItem(id: $id, name: $name, type: ${equippedHandType.displayName}, damage: $damage, dps: ${dps.toStringAsFixed(1)})';
 }

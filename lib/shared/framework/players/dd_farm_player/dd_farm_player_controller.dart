@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/joysctick_setup.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
-import 'package:darkness_dungeon/gameplay/inventory/models/weapon_type.dart';
+import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_combat_player/dd_combat_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_model.dart';
@@ -32,7 +32,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
   }) =>
       (actionId == JoystickSetup.kPrimaryActionId ||
           actionId == KeyboardSetup.kPrimaryActionKey) &&
-      player.model.equipment == WeaponType.shovel;
+      player.model.equipment == EquippedHandType.shovel;
 
   bool isWateringCanAction({
     required DDBasePlayerView player,
@@ -40,7 +40,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
   }) =>
       (actionId == JoystickSetup.kPrimaryActionId ||
           actionId == KeyboardSetup.kPrimaryActionKey) &&
-      player.model.equipment == WeaponType.wateringCan;
+      player.model.equipment == EquippedHandType.wateringCan;
 
   bool isSeedAction({
     required DDBasePlayerView player,
@@ -48,7 +48,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
   }) =>
       (actionId == JoystickSetup.kPrimaryActionId ||
           actionId == KeyboardSetup.kPrimaryActionKey) &&
-      player.model.equipment == WeaponType.seeds;
+      player.model.equipment == EquippedHandType.seeds;
 
   bool isHarvestBasketAction({
     required DDBasePlayerView player,
@@ -56,7 +56,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
   }) =>
       (actionId == JoystickSetup.kPrimaryActionId ||
           actionId == KeyboardSetup.kPrimaryActionKey) &&
-      player.model.equipment == WeaponType.harvestBasket;
+      player.model.equipment == EquippedHandType.harvestBasket;
 
   @override
   void handleInputAction({

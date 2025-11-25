@@ -319,7 +319,7 @@ final class WeaponItem extends Item {
   final double attackSpeed;   // Velocidade de ataque (ataques/segundo)
   final double critChance;    // Chance de crítico (0.0-1.0)
   final double critMultiplier;// Multiplicador de crítico
-  final String weaponType;    // sword, axe, spear, bow
+  final String equippedHandType;    // sword, axe, spear, bow
 
   const WeaponItem({
     required super.id,
@@ -333,7 +333,7 @@ final class WeaponItem extends Item {
     this.attackSpeed = 1.0,
     this.critChance = 0.05,
     this.critMultiplier = 1.5,
-    required this.weaponType,
+    required this.equippedHandType,
   });
 
   /// DPS médio (considerando críticos)
@@ -356,7 +356,7 @@ final class WeaponItem extends Item {
       'attackSpeed': attackSpeed,
       'critChance': critChance,
       'critMultiplier': critMultiplier,
-      'weaponType': weaponType,
+      'equippedHandType': equippedHandType,
     };
   }
 
@@ -372,7 +372,7 @@ final class WeaponItem extends Item {
       attackSpeed: json['attackSpeed'] ?? 1.0,
       critChance: json['critChance'] ?? 0.05,
       critMultiplier: json['critMultiplier'] ?? 1.5,
-      weaponType: json['weaponType'],
+      equippedHandType: json['equippedHandType'],
     );
   }
 
@@ -661,7 +661,7 @@ ARQUIVO 2: assets/items/items_database.json
     "attackSpeed": 1.2,
     "critChance": 0.05,
     "critMultiplier": 1.5,
-    "weaponType": "sword"
+    "equippedHandType": "sword"
   },
   "iron_pickaxe": {
     "id": "iron_pickaxe",
