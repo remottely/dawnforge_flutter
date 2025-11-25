@@ -102,6 +102,7 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
 
     _debugInsertItem('shovel');
     _debugInsertItem('ironSword');
+    _debugInsertItem('staff');
     _debugInsertItem('wateringCan');
     _debugInsertItem('seeds');
     _debugInsertItem('harvestBasket');
@@ -169,6 +170,7 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
       if (item is! WeaponItem) continue;
       final weaponType = item.weaponType;
       if (weaponType != WeaponType.ironSword &&
+          weaponType != WeaponType.staff &&
           weaponType != WeaponType.shovel &&
           weaponType != WeaponType.wateringCan &&
           weaponType != WeaponType.seeds &&
@@ -188,6 +190,7 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
         if (item is! WeaponItem) continue;
         final weaponType = item.weaponType;
         if (weaponType != WeaponType.ironSword &&
+            weaponType != WeaponType.staff &&
             weaponType != WeaponType.shovel &&
             weaponType != WeaponType.wateringCan &&
             weaponType != WeaponType.seeds &&

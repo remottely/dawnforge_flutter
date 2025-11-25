@@ -15,22 +15,12 @@ abstract class DDMobilePlayerController<M extends DDMobilePlayerModel>
   /// Callback invoked when the run state changes.
   final void Function(bool isRunning) onChangeRunState;
 
-  /// Indicates whether the run button/key is currently pressed.
-  bool _isRunInputActive = false;
-
   DDMobilePlayerController({
     required super.model,
     required super.onDisplayExclamationEmote,
     required super.onDetectEnemyInLongVisionRadius,
     required this.onChangeRunState,
   });
-
-  /// Indicates whether the run input is currently active.
-  bool get isRunButtonPressed => _isRunInputActive;
-
-  // ============================================================================
-  // Abstract Input Configuration
-  // ============================================================================
 
   /// Determines if the action ID corresponds to the run action.
   bool isRunAction({
@@ -60,11 +50,9 @@ abstract class DDMobilePlayerController<M extends DDMobilePlayerModel>
   /// Handles run input state changes.
   void _handleRunInput(ActionEvent eventType) {
     if (eventType == ActionEvent.DOWN) {
-      _isRunInputActive = true;
       model.isRunning = true;
       onChangeRunState.call(true);
     } else if (eventType == ActionEvent.UP) {
-      _isRunInputActive = false;
       model.isRunning = false;
       onChangeRunState.call(false);
     }

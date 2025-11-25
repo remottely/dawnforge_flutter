@@ -1,28 +1,16 @@
 enum WeaponType {
   ironSword,
-
   shovel,
-
   wateringCan,
-
   seeds,
-
   harvestBasket,
-
   axe,
-
   spear,
-
   dagger,
-
   mace,
-
   bow,
-
   crossbow,
-
   staff,
-
   wand;
 
   String toJson() => name;
@@ -38,6 +26,8 @@ enum WeaponType {
     switch (this) {
       case WeaponType.ironSword:
         return 'Sword';
+      case WeaponType.staff:
+        return 'Staff';
       case WeaponType.shovel:
         return 'Shovel';
       case WeaponType.wateringCan:
@@ -58,8 +48,7 @@ enum WeaponType {
         return 'Bow';
       case WeaponType.crossbow:
         return 'Crossbow';
-      case WeaponType.staff:
-        return 'Staff';
+
       case WeaponType.wand:
         return 'Wand';
     }

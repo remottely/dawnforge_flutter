@@ -45,7 +45,7 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
     required dynamic actionId,
   }) =>
       (actionId == JoystickSetup.kSecondaryActionId ||
-          actionId == KeyboardSetup.kSecondaryActionKey) &&
+          actionId == KeyboardSetup.kPrimaryActionKey) &&
       player.model.equipment == WeaponType.staff;
 
   // ============================================================================

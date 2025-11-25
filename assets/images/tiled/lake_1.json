@@ -469,6 +469,50 @@
                          "width":16,
                          "x":64,
                          "y":48
+                        }, 
+                        {
+                         "height":16,
+                         "id":332,
+                         "name":"farm_tile",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":16,
+                         "y":176.037422779808
+                        }, 
+                        {
+                         "height":16,
+                         "id":333,
+                         "name":"farm_tile",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":32,
+                         "y":176.037422779808
+                        }, 
+                        {
+                         "height":16,
+                         "id":334,
+                         "name":"farm_tile",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":80,
+                         "y":48
+                        }, 
+                        {
+                         "height":16,
+                         "id":335,
+                         "name":"farm_tile",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":16,
+                         "x":48,
+                         "y":176
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -1388,7 +1432,7 @@
          "y":0
         }],
  "nextlayerid":32,
- "nextobjectid":332,
+ "nextobjectid":336,
  "orientation":"orthogonal",
  "properties":[
         {

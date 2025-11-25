@@ -55,6 +55,20 @@
     "critMultiplier": 1.5,
     "weaponType": "wateringCan"
   },
+  "staff": {
+    "id": "staff",
+    "name": "Staff",
+    "description": "TODO",
+    "type": "weapon",
+    "rarity": "common",
+    "baseValue": 100,
+    "iconPath": "",
+    "damage": 15,
+    "attackSpeed": 1.2,
+    "critChance": 0.05,
+    "critMultiplier": 1.5,
+    "weaponType": "staff"
+  },
   "ironSword": {
     "id": "ironSword",
     "name": "Iron Sword",
@@ -62,7 +76,7 @@
     "type": "weapon",
     "rarity": "common",
     "baseValue": 100,
-    "iconPath": "assets/images/items/ironSword.png",
+    "iconPath": "",
     "damage": 15,
     "attackSpeed": 1.2,
     "critChance": 0.05,
