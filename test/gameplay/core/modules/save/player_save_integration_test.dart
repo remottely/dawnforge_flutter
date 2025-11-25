@@ -5,7 +5,6 @@
 // 3. Execute os testes em um ambiente sem problemas de compatibilidade
 
 // ignore_for_file: dead_code, unused_import
-import 'package:darkness_dungeon/gameplay/characters/player/custom/custom_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/player/player_progress_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/save/player_save_adapter.dart';
@@ -32,7 +31,7 @@ void main() {
     group('Player Save Integration Tests', () {
       test('save_and_load_knight_player_roundtrip', () async {
         // Arrange - Create a knight with specific state
-        final knight = CustomPlayerModel(
+        final knight = SunnyPlayerModel(
           initialStamina: 50.0,
           initialEnergy: 5,
           initialHasKey: true,
@@ -46,7 +45,7 @@ void main() {
 
         // Assert - Verify player was restored correctly
         expect(loadedPlayer, isNotNull);
-        expect(loadedPlayer, isA<CustomPlayerModel>());
+        expect(loadedPlayer, isA<SunnyPlayerModel>());
         expect(loadedPlayer!.stamina, equals(50.0));
         expect(loadedPlayer.energy, equals(5));
         expect(loadedPlayer.hasKey, isTrue);
@@ -94,7 +93,7 @@ void main() {
           worldManager.advanceDay();
         }
 
-        final knight = CustomPlayerModel();
+        final knight = SunnyPlayerModel();
 
         // Act
         await PlayerSaveAdapter.saveGame(knight);
@@ -121,7 +120,7 @@ void main() {
         timeManager.setTime(TimeConfig.eveningStartTime); // 18:00
         timeManager.setTimeScale(3.0);
 
-        final knight = CustomPlayerModel();
+        final knight = SunnyPlayerModel();
 
         // Act
         await PlayerSaveAdapter.saveGame(knight);
@@ -151,7 +150,7 @@ void main() {
         progressManager.totalPlayTimeSeconds = 3600;
         progressManager.enemiesDefeated = 42;
 
-        final knight = CustomPlayerModel();
+        final knight = SunnyPlayerModel();
 
         // Act
         await PlayerSaveAdapter.saveGame(knight);
@@ -189,11 +188,11 @@ void main() {
 
       test('multiple_saves_override_correctly', () async {
         // Arrange - Save first player
-        final knight1 = CustomPlayerModel(initialStamina: 100.0);
+        final knight1 = SunnyPlayerModel(initialStamina: 100.0);
         await PlayerSaveAdapter.saveGame(knight1);
 
         // Act - Save second player with different state
-        final knight2 = CustomPlayerModel(
+        final knight2 = SunnyPlayerModel(
           initialStamina: 25.0,
           initialEnergy: 3,
           initialHasKey: true,
@@ -212,7 +211,7 @@ void main() {
 
       test('player_to_save_data_conversion', () async {
         // Arrange
-        final knight = CustomPlayerModel(
+        final knight = SunnyPlayerModel(
           initialStamina: 80.0,
           initialEnergy: 7,
           initialHasKey: true,
@@ -231,10 +230,7 @@ void main() {
 
       test('save_data_to_player_conversion', () async {
         // Arrange
-        final knight = CustomPlayerModel(
-          initialStamina: 60.0,
-          initialEnergy: 4,
-        );
+        final knight = SunnyPlayerModel(initialStamina: 60.0, initialEnergy: 4);
         final saveData = PlayerSaveAdapter.playerToSaveData(knight);
 
         // Act
@@ -242,14 +238,14 @@ void main() {
 
         // Assert
         expect(convertedPlayer, isNotNull);
-        expect(convertedPlayer, isA<CustomPlayerModel>());
+        expect(convertedPlayer, isA<SunnyPlayerModel>());
         expect(convertedPlayer!.stamina, equals(60.0));
         expect(convertedPlayer.energy, equals(4));
       });
 
       test('validate_current_state_with_valid_player', () async {
         // Arrange
-        final knight = CustomPlayerModel();
+        final knight = SunnyPlayerModel();
 
         // Act
         final isValid = PlayerSaveAdapter.validateCurrentState(knight);
@@ -263,7 +259,7 @@ void main() {
         expect(await PlayerSaveAdapter.hasSavedGame(), isFalse);
 
         // Act - Save game
-        final knight = CustomPlayerModel();
+        final knight = SunnyPlayerModel();
         await PlayerSaveAdapter.saveGame(knight);
 
         // Assert - Should have save now
@@ -272,7 +268,7 @@ void main() {
 
       test('delete_saved_game_removes_save', () async {
         // Arrange - Create save
-        final knight = CustomPlayerModel();
+        final knight = SunnyPlayerModel();
         await PlayerSaveAdapter.saveGame(knight);
         expect(await PlayerSaveAdapter.hasSavedGame(), isTrue);
 
@@ -286,7 +282,7 @@ void main() {
 
       test('get_save_summary_returns_info', () async {
         // Arrange
-        final knight = CustomPlayerModel();
+        final knight = SunnyPlayerModel();
         await PlayerSaveAdapter.saveGame(knight);
 
         // Act
@@ -311,7 +307,7 @@ void main() {
 
       test('save_data_to_player_returns_null_for_unknown_type', () async {
         // Arrange - Create save data with unknown player type
-        final knight = CustomPlayerModel();
+        final knight = SunnyPlayerModel();
         final saveData = PlayerSaveAdapter.playerToSaveData(knight);
 
         // Modify to unknown type
@@ -328,7 +324,7 @@ void main() {
 
       test('complete_game_state_persistence', () async {
         // Arrange - Setup complete game state
-        final knight = CustomPlayerModel(
+        final knight = SunnyPlayerModel(
           initialStamina: 45.0,
           initialEnergy: 6,
           initialHasKey: true,

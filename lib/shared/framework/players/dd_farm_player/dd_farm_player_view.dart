@@ -3,9 +3,9 @@ import 'package:darkness_dungeon/gameplay/characters/character_action_sprite_ani
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/farm/services/farm_tool_action_config.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_defense_player/dd_defense_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_model.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_view.dart';
 
 /// Abstract view for players with enhanced mobility (walk + run).
 ///
@@ -25,7 +25,7 @@ abstract class DDFarmPlayerView<
   C extends DDFarmPlayerController<M>,
   M extends DDFarmPlayerModel
 >
-    extends DDMobilePlayerView<C, M> {
+    extends DDDefensePlayerView<C, M> {
   DDFarmPlayerView({
     required super.position,
     required super.model,

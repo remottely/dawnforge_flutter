@@ -1,10 +1,10 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_combat_player/dd_combat_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_model.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_controller.dart';
 
 abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
-    extends DDMobilePlayerController<M> {
+    extends DDCombatPlayerController<M> {
   final bool Function() onExecuteShovel;
   final bool Function() onExecuteWateringCan;
   final bool Function() onExecuteSeed;

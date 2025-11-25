@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_hybrid_combat_player/dd_hybrid_combat_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_model.dart';
 import 'package:flutter/foundation.dart';
@@ -22,7 +22,7 @@ abstract class DDMobilePlayerView<
   C extends DDMobilePlayerController<M>,
   M extends DDMobilePlayerModel
 >
-    extends DDHybridCombatPlayerView<C, M> {
+    extends DDBasePlayerView<C, M> {
   /// Base movement speed (walking speed).
   final double _baseSpeed; // TODO(Kevin): use the bonfire speed?
 

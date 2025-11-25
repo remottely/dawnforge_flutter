@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_hybrid_combat_player/dd_hybrid_combat_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_model.dart';
 
 /// Controller for players with enhanced mobility options.
@@ -9,7 +9,7 @@ import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mo
 /// coordinating run toggle input with the view layer for animation
 /// and speed changes.
 abstract class DDMobilePlayerController<M extends DDMobilePlayerModel>
-    extends DDHybridCombatPlayerController<M> {
+    extends DDBasePlayerController<M> {
   /// Callback invoked when the run state changes.
   final void Function(bool isRunning) onChangeRunState;
 
@@ -19,8 +19,6 @@ abstract class DDMobilePlayerController<M extends DDMobilePlayerModel>
   DDMobilePlayerController({
     required super.model,
     required this.onChangeRunState,
-    required super.onExecutePrimaryAttack,
-    required super.onExecuteRangedAttack,
     required super.onDisplayExclamationEmote,
     required super.onDetectEnemyInLongVisionRadius,
   });
@@ -54,7 +52,7 @@ abstract class DDMobilePlayerController<M extends DDMobilePlayerModel>
     }
 
     // Delegate other inputs to parent
-    super.handleInputAction(player: player, event: event);
+    // super.handleInputAction(player: player, event: event);
   }
 
   /// Handles run input state changes.

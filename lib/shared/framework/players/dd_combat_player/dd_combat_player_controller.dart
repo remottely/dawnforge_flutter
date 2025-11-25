@@ -1,28 +1,27 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_hybrid_combat_player/dd_hybrid_combat_player_model.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_combat_player/dd_combat_player_model.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_controller.dart';
 
 /// Controller for players with hybrid combat capabilities.
 ///
 /// Manages input routing and execution for both melee and ranged attacks,
 /// coordinating stamina consumption and attack callbacks with the view layer.
-abstract class DDHybridCombatPlayerController<
-  M extends DDHybridCombatPlayerModel
->
-    extends DDBasePlayerController<M> {
+abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
+    extends DDMobilePlayerController<M> {
   /// Callback invoked to execute the primary melee attack.
   final bool Function(double damage) onExecutePrimaryAttack;
 
   /// Callback invoked to execute the ranged attack.
   final bool Function(double damage) onExecuteRangedAttack;
 
-  DDHybridCombatPlayerController({
+  DDCombatPlayerController({
     required super.model,
     required this.onExecutePrimaryAttack,
     required this.onExecuteRangedAttack,
     required super.onDisplayExclamationEmote,
     required super.onDetectEnemyInLongVisionRadius,
+    required super.onChangeRunState,
   });
 
   // ============================================================================

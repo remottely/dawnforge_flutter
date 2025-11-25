@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_hybrid_combat_player/dd_hybrid_combat_player_controller.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_hybrid_combat_player/dd_hybrid_combat_player_model.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_combat_player/dd_combat_player_controller.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_combat_player/dd_combat_player_model.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_view.dart';
 
 /// Abstract view for players with hybrid combat capabilities (melee + ranged).
 ///
@@ -16,17 +16,16 @@ import 'package:darkness_dungeon/shared/framework/players/dd_hybrid_combat_playe
 /// attack type.
 ///
 /// Type Parameters:
-/// - [C] The specific controller type extending DDHybridCombatPlayerController
-/// - [M] The specific model type extending DDHybridCombatPlayerModel
-abstract class DDHybridCombatPlayerView<
-  C extends DDHybridCombatPlayerController<M>,
-  M extends DDHybridCombatPlayerModel
+/// - [C] The specific controller type extending DDCombatPlayerController
+/// - [M] The specific model type extending DDCombatPlayerModel
+abstract class DDCombatPlayerView<
+  C extends DDCombatPlayerController<M>,
+  M extends DDCombatPlayerModel
 >
-    extends DDBasePlayerView<C, M> {
-  DDHybridCombatPlayerView({
+    extends DDMobilePlayerView<C, M> {
+  DDCombatPlayerView({
     required super.position,
     required super.model,
-    required super.animation,
     required super.size,
     required super.life,
     required super.speed,

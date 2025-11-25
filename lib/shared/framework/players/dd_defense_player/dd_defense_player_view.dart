@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/combat/shield_defense_component.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_hybrid_combat_player/dd_hybrid_combat_player_controller.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_hybrid_combat_player/dd_hybrid_combat_player_model.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_hybrid_combat_player/dd_hybrid_combat_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_combat_player/dd_combat_player_controller.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_combat_player/dd_combat_player_model.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_combat_player/dd_combat_player_view.dart';
 
 /// Abstract view for players with dual-hand equipment system.
 ///
@@ -18,17 +18,16 @@ import 'package:darkness_dungeon/shared/framework/players/dd_hybrid_combat_playe
 /// - Customizable equipment loadouts
 ///
 /// Type Parameters:
-/// - [C] The specific controller type extending DDHybridCombatPlayerController
-/// - [M] The specific model type extending DDHybridCombatPlayerModel
+/// - [C] The specific controller type extending DDCombatPlayerController
+/// - [M] The specific model type extending DDCombatPlayerModel
 abstract class DDDefensePlayerView<
-  C extends DDHybridCombatPlayerController<M>,
-  M extends DDHybridCombatPlayerModel
+  C extends DDCombatPlayerController<M>,
+  M extends DDCombatPlayerModel
 >
-    extends DDHybridCombatPlayerView<C, M> {
+    extends DDCombatPlayerView<C, M> {
   DDDefensePlayerView({
     required super.position,
     required super.model,
-    required super.animation,
     required super.size,
     required super.life,
     required super.speed,
