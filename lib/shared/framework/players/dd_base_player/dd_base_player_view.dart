@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/combat/attacks/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/conversation/emote_manager.dart';
@@ -47,7 +49,7 @@ abstract class DDBasePlayerView<
   }
 
   /// Provides read-only access to the player's data model.
-  M get model => _controller.model;
+  M get model => _model;
 
   /// Provides access to the player controller for subclasses.
   C get controller => _controller;
@@ -60,7 +62,16 @@ abstract class DDBasePlayerView<
   ///
   /// Subclasses must implement this to instantiate their specific controller
   /// type with all required callbacks wired to the view.
-  C createController(M model);
+  C createController({
+    required M model,
+    required void Function() onDisplayExclamationEmote,
+    required void Function({
+      required double longVisionRadius,
+      required void Function() notObserved,
+      required void Function(List<Enemy> enemies) observed,
+    })
+    onDetectEnemyInLongVisionRadius,
+  });
 
   /// Creates the collision hitbox for this player.
   ///
@@ -84,7 +95,13 @@ abstract class DDBasePlayerView<
     await super.onLoad();
 
     configureVisualEffects();
-    _controller = createController(_model);
+
+    _controller = createController(
+      model: model,
+      onDisplayExclamationEmote: onDisplayExclamationEmote,
+      onDetectEnemyInLongVisionRadius: onDetectEnemyInLongVisionRadius,
+    );
+
     add(getHitbox());
 
     // Restaurar vida do model depois que Bonfire inicializou

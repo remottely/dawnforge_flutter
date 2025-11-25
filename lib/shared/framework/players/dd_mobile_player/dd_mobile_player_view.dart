@@ -1,4 +1,17 @@
+import 'dart:async';
+
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/characters/character_action_sprite_animation_helper.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
+import 'package:darkness_dungeon/gameplay/combat/controllers/player_combat_action_controller.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_config.dart';
+import 'package:darkness_dungeon/gameplay/farm/services/farm_tool_action_config.dart';
+import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_view.dart';import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_model.dart';
@@ -78,11 +91,19 @@ abstract class DDMobilePlayerView<
   // Controller Factory Override - Add Run Callback
   // ============================================================================
 
+  // @override
+  // C createController(M model) {
+  //   return createMobileController(
+  //     model: model,
+  //     onChangeRunState: _onChangeRunState,
+  //     onDisplayExclamationEmote: onDisplayExclamationEmote,
+  //     onDetectEnemyInLongVisionRadius: onDetectEnemyInLongVisionRadius,
+  //   );
+  // }
+
   @override
-  C createCombatController({
+  C createController({
     required M model,
-    required bool Function(double damage) onExecutePrimaryAttack,
-    required bool Function(double damage) onExecuteRangedAttack,
     required void Function() onDisplayExclamationEmote,
     required void Function({
       required double longVisionRadius,
@@ -93,20 +114,15 @@ abstract class DDMobilePlayerView<
   }) {
     return createMobileController(
       model: model,
-      onChangeRunState: _onChangeRunState,
-      onExecutePrimaryAttack: onExecutePrimaryAttack,
-      onExecuteRangedAttack: onExecuteRangedAttack,
       onDisplayExclamationEmote: onDisplayExclamationEmote,
       onDetectEnemyInLongVisionRadius: onDetectEnemyInLongVisionRadius,
+      onChangeRunState: _onChangeRunState,
     );
   }
 
   /// Creates the mobile controller with all required callbacks.
   C createMobileController({
     required M model,
-    required void Function(bool isRunning) onChangeRunState,
-    required bool Function(double damage) onExecutePrimaryAttack,
-    required bool Function(double damage) onExecuteRangedAttack,
     required void Function() onDisplayExclamationEmote,
     required void Function({
       required double longVisionRadius,
@@ -114,6 +130,7 @@ abstract class DDMobilePlayerView<
       required void Function(List<Enemy> enemies) observed,
     })
     onDetectEnemyInLongVisionRadius,
+    required void Function(bool isRunning) onChangeRunState,
   });
 
   // ============================================================================

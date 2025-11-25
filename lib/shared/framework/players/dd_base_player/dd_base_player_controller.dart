@@ -26,15 +26,6 @@ abstract class DDBasePlayerController<M extends DDBasePlayerModel> {
   })
   onDetectEnemyInLongVisionRadius;
 
-  /// Indicates whether stamina regeneration is currently scheduled.
-  bool _isStaminaRegenerationPending = false;
-
-  /// Controls whether stamina regeneration should be paused.
-  bool _isStaminaRegenerationPaused = false;
-
-  /// Number of active actions consuming stamina.
-  int _activeStaminaConsumingActions = 0;
-
   /// Creates a base player controller with required dependencies.
   ///
   /// [model] The data model to control.
@@ -45,6 +36,15 @@ abstract class DDBasePlayerController<M extends DDBasePlayerModel> {
     required this.onDisplayExclamationEmote,
     required this.onDetectEnemyInLongVisionRadius,
   });
+
+  /// Indicates whether stamina regeneration is currently scheduled.
+  bool _isStaminaRegenerationPending = false;
+
+  /// Controls whether stamina regeneration should be paused.
+  bool _isStaminaRegenerationPaused = false;
+
+  /// Number of active actions consuming stamina.
+  int _activeStaminaConsumingActions = 0;
 
   // ============================================================================
   // Abstract Methods - Must be implemented by subclasses
@@ -59,7 +59,7 @@ abstract class DDBasePlayerController<M extends DDBasePlayerModel> {
   void handleInputAction({
     required DDBasePlayerView player,
     required JoystickActionEvent event,
-  });
+  }) {}
 
   // ============================================================================
   // Lifecycle Methods

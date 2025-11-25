@@ -35,11 +35,8 @@ abstract class DDFarmPlayerView<
   });
 
   @override
-  C createMobileController({
+  C createCombatController({
     required M model,
-    required void Function(bool isRunning) onChangeRunState,
-    required bool Function(double damage) onExecutePrimaryAttack,
-    required bool Function(double damage) onExecuteRangedAttack,
     required void Function() onDisplayExclamationEmote,
     required void Function({
       required double longVisionRadius,
@@ -47,31 +44,27 @@ abstract class DDFarmPlayerView<
       required void Function(List<Enemy> enemies) observed,
     })
     onDetectEnemyInLongVisionRadius,
+    required void Function(bool isRunning) onChangeRunState,
+    required bool Function(double damage) onExecutePrimaryAttack,
+    required bool Function(double damage) onExecuteRangedAttack,
   }) {
     return createFarmController(
       model: model,
-      onChangeRunState: onChangeRunState,
-      onExecuteShovel: onExecuteShovel,
-      onExecuteWateringCan: onExecuteWateringCan,
-      onExecuteSeed: onExecuteSeed,
-      onExecuteHarvestBasket: onExecuteHarvestBasket,
-      onExecutePrimaryAttack: onExecutePrimaryAttack,
-      onExecuteRangedAttack: onExecuteRangedAttack,
       onDisplayExclamationEmote: onDisplayExclamationEmote,
       onDetectEnemyInLongVisionRadius: onDetectEnemyInLongVisionRadius,
+      onChangeRunState: onChangeRunState,
+      onExecutePrimaryAttack: onExecutePrimaryAttack,
+      onExecuteRangedAttack: onExecuteRangedAttack,
+      onExecuteShovel: _onExecuteShovel,
+      onExecuteWateringCan: _onExecuteWateringCan,
+      onExecuteSeed: _onExecuteSeed,
+      onExecuteHarvestBasket: _onExecuteHarvestBasket,
     );
   }
 
   /// Creates the mobile controller with all required callbacks.
   C createFarmController({
     required M model,
-    required void Function(bool isRunning) onChangeRunState,
-    required bool Function() onExecuteShovel,
-    required bool Function() onExecuteWateringCan,
-    required bool Function() onExecuteSeed,
-    required bool Function() onExecuteHarvestBasket,
-    required bool Function(double damage) onExecutePrimaryAttack,
-    required bool Function(double damage) onExecuteRangedAttack,
     required void Function() onDisplayExclamationEmote,
     required void Function({
       required double longVisionRadius,
@@ -79,6 +72,13 @@ abstract class DDFarmPlayerView<
       required void Function(List<Enemy> enemies) observed,
     })
     onDetectEnemyInLongVisionRadius,
+    required void Function(bool isRunning) onChangeRunState,
+    required bool Function(double damage) onExecutePrimaryAttack,
+    required bool Function(double damage) onExecuteRangedAttack,
+    required bool Function() onExecuteShovel,
+    required bool Function() onExecuteWateringCan,
+    required bool Function() onExecuteSeed,
+    required bool Function() onExecuteHarvestBasket,
   });
 
   // ============================================================================
@@ -95,7 +95,7 @@ abstract class DDFarmPlayerView<
     super.update(dt);
   }
 
-  bool onExecuteShovel() {
+  bool _onExecuteShovel() {
     final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
       AttackType.melee,
       () {
@@ -118,9 +118,72 @@ abstract class DDFarmPlayerView<
     return executionInfo != null;
   }
 
-  bool onExecuteWateringCan();
+  bool _onExecuteWateringCan() {
+    final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
+      AttackType.melee,
+      () {
+        CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
+          animationRight: SunnyPlayerConfig.loadRightWateringCanAnimation(),
+          animationLeft: SunnyPlayerConfig.loadLeftWateringCanAnimation(),
+          currentAnimation: animation,
+          target: this,
+          executionStartFrame: 4,
+          onActionStart: lockAction,
+          onActionEnd: unlockAction,
+          // TODO(chatgpt): preciso que vc
+          onExecutionFrames: () {
+            FarmToolActionConfig.execute(player: this);
+          },
+        );
+      },
+    );
 
-  bool onExecuteSeed();
+    return executionInfo != null;
+  }
 
-  bool onExecuteHarvestBasket();
+  bool _onExecuteSeed() {
+    final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
+      AttackType.melee,
+      () {
+        CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
+          animationRight: SunnyPlayerConfig.loadRightSeedAnimation(),
+          animationLeft: SunnyPlayerConfig.loadLeftSeedAnimation(),
+          currentAnimation: animation,
+          target: this,
+          executionStartFrame: 4,
+          onActionStart: lockAction,
+          onActionEnd: unlockAction,
+          // TODO(chatgpt): preciso que vc
+          onExecutionFrames: () {
+            FarmToolActionConfig.execute(player: this);
+          },
+        );
+      },
+    );
+
+    return executionInfo != null;
+  }
+
+  bool _onExecuteHarvestBasket() {
+    final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
+      AttackType.melee,
+      () {
+        CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
+          animationRight: SunnyPlayerConfig.loadRightHarvestBasketAnimation(),
+          animationLeft: SunnyPlayerConfig.loadLeftHarvestBasketAnimation(),
+          currentAnimation: animation,
+          target: this,
+          executionStartFrame: 4,
+          onActionStart: lockAction,
+          onActionEnd: unlockAction,
+          // TODO(chatgpt): preciso que vc
+          onExecutionFrames: () {
+            FarmToolActionConfig.execute(player: this);
+          },
+        );
+      },
+    );
+
+    return executionInfo != null;
+  }
 }

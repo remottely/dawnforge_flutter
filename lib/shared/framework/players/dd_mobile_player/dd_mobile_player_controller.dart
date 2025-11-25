@@ -1,4 +1,6 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/input_actions/joysctick_setup.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_model.dart';
@@ -18,9 +20,9 @@ abstract class DDMobilePlayerController<M extends DDMobilePlayerModel>
 
   DDMobilePlayerController({
     required super.model,
-    required this.onChangeRunState,
     required super.onDisplayExclamationEmote,
     required super.onDetectEnemyInLongVisionRadius,
+    required this.onChangeRunState,
   });
 
   /// Indicates whether the run input is currently active.
@@ -34,7 +36,7 @@ abstract class DDMobilePlayerController<M extends DDMobilePlayerModel>
   bool isRunAction({
     required DDBasePlayerView player,
     required dynamic actionId,
-  });
+  }) => actionId == JoystickSetup.kRunId || actionId == KeyboardSetup.kRunKey;
 
   // ============================================================================
   // Input Processing
@@ -48,11 +50,11 @@ abstract class DDMobilePlayerController<M extends DDMobilePlayerModel>
     // Handle run toggle (requires both DOWN and UP events)
     if (isRunAction(player: player, actionId: event.id)) {
       _handleRunInput(event.event);
-      return;
+      // return;
     }
 
     // Delegate other inputs to parent
-    // super.handleInputAction(player: player, event: event);
+    super.handleInputAction(player: player, event: event);
   }
 
   /// Handles run input state changes.

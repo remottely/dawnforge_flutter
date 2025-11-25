@@ -1,6 +1,8 @@
 import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_view.dart';
 import 'package:darkness_dungeon/gameplay/combat/shield_defense_input_handler.dart';
 // import 'package:darkness_dungeon/gameplay/core/modules/game/custom_player_inventory_input_handler.dart';
@@ -95,7 +97,10 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
       );
     }
 
-    final player = SunnyPlayerView(position: position, model: model);
+    final player = SunnyPlayerView<SunnyPlayerController, SunnyPlayerModel>(
+      position: position,
+      model: model,
+    );
 
     developer.log(
       '[ViewModel] Created Sunny with model life: ${model.life ?? 'null'}',

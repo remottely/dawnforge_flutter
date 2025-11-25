@@ -1,4 +1,7 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/input_actions/joysctick_setup.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
+import 'package:darkness_dungeon/gameplay/inventory/models/weapon_type.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_combat_player/dd_combat_player_model.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_controller.dart';
@@ -17,11 +20,11 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
 
   DDCombatPlayerController({
     required super.model,
-    required this.onExecutePrimaryAttack,
-    required this.onExecuteRangedAttack,
     required super.onDisplayExclamationEmote,
     required super.onDetectEnemyInLongVisionRadius,
     required super.onChangeRunState,
+    required this.onExecutePrimaryAttack,
+    required this.onExecuteRangedAttack,
   });
 
   // ============================================================================
@@ -32,13 +35,18 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
   bool isPrimaryAttackAction({
     required DDBasePlayerView player,
     required dynamic actionId,
-  });
+  }) =>
+      (actionId == JoystickSetup.kPrimaryActionId ||
+          actionId == KeyboardSetup.kPrimaryActionKey) &&
+      player.model.equipment == WeaponType.ironSword;
 
-  /// Determines if the action ID corresponds to the ranged attack action.
   bool isRangedAttackAction({
     required DDBasePlayerView player,
     required dynamic actionId,
-  });
+  }) =>
+      (actionId == JoystickSetup.kSecondaryActionId ||
+          actionId == KeyboardSetup.kSecondaryActionKey) &&
+      player.model.equipment == WeaponType.staff;
 
   // ============================================================================
   // Combat Actions
@@ -97,13 +105,12 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
     required DDBasePlayerView player,
     required JoystickActionEvent event,
   }) {
-    // Only respond to button press events
-    if (event.event != ActionEvent.DOWN) return;
-
     if (isPrimaryAttackAction(player: player, actionId: event.id)) {
       handleExecutePrimaryAttack();
     } else if (isRangedAttackAction(player: player, actionId: event.id)) {
       handleExecuteRangedAttack();
     }
+
+    super.handleInputAction(player: player, event: event);
   }
 }

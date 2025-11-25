@@ -1,4 +1,7 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/input_actions/joysctick_setup.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
+import 'package:darkness_dungeon/gameplay/inventory/models/weapon_type.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_combat_player/dd_combat_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_model.dart';
@@ -12,45 +15,54 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
 
   DDFarmPlayerController({
     required super.model,
+    required super.onDisplayExclamationEmote,
+    required super.onDetectEnemyInLongVisionRadius,
     required super.onChangeRunState,
+    required super.onExecutePrimaryAttack,
+    required super.onExecuteRangedAttack,
     required this.onExecuteShovel,
     required this.onExecuteWateringCan,
     required this.onExecuteSeed,
     required this.onExecuteHarvestBasket,
-    required super.onExecutePrimaryAttack,
-    required super.onExecuteRangedAttack,
-    required super.onDisplayExclamationEmote,
-    required super.onDetectEnemyInLongVisionRadius,
   });
 
   bool isShovelAction({
     required DDBasePlayerView player,
     required dynamic actionId,
-  });
+  }) =>
+      (actionId == JoystickSetup.kPrimaryActionId ||
+          actionId == KeyboardSetup.kPrimaryActionKey) &&
+      player.model.equipment == WeaponType.shovel;
 
   bool isWateringCanAction({
     required DDBasePlayerView player,
     required dynamic actionId,
-  });
+  }) =>
+      (actionId == JoystickSetup.kPrimaryActionId ||
+          actionId == KeyboardSetup.kPrimaryActionKey) &&
+      player.model.equipment == WeaponType.wateringCan;
 
   bool isSeedAction({
     required DDBasePlayerView player,
     required dynamic actionId,
-  });
+  }) =>
+      (actionId == JoystickSetup.kPrimaryActionId ||
+          actionId == KeyboardSetup.kPrimaryActionKey) &&
+      player.model.equipment == WeaponType.seeds;
 
   bool isHarvestBasketAction({
     required DDBasePlayerView player,
     required dynamic actionId,
-  });
+  }) =>
+      (actionId == JoystickSetup.kPrimaryActionId ||
+          actionId == KeyboardSetup.kPrimaryActionKey) &&
+      player.model.equipment == WeaponType.harvestBasket;
 
   @override
   void handleInputAction({
     required DDBasePlayerView player,
     required JoystickActionEvent event,
   }) {
-    // Only respond to button press events
-    if (event.event != ActionEvent.DOWN) return;
-
     if (isShovelAction(player: player, actionId: event.id)) {
       _handleExecuteShovel();
     } else if (isWateringCanAction(player: player, actionId: event.id)) {
@@ -64,83 +76,67 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
     super.handleInputAction(player: player, event: event);
   }
 
-  /// Executes the primary melee attack if resources are sufficient.
   void _handleExecuteShovel() {
     if (!model.canExecuteShovel) return;
 
-    // Pausar regeneração durante ação
     beginStaminaConsumingAction();
 
     final bool wasExecuted = onExecuteShovel.call();
     if (!wasExecuted) {
-      // Ação não executada, retomar regeneração
       endStaminaConsumingAction();
       return;
     }
 
     model.consumeStamina(model.shovelStaminaCost);
 
-    // Retomar regeneração após ação instantânea
     endStaminaConsumingAction();
   }
 
-  /// Executes the primary melee attack if resources are sufficient.
   void _handleExecuteWateringCan() {
     if (!model.canExecuteWateringCan) return;
 
-    // Pausar regeneração durante ação
     beginStaminaConsumingAction();
 
     final bool wasExecuted = onExecuteWateringCan.call();
     if (!wasExecuted) {
-      // Ação não executada, retomar regeneração
       endStaminaConsumingAction();
       return;
     }
 
     model.consumeStamina(model.wateringCanStaminaCost);
 
-    // Retomar regeneração após ação instantânea
     endStaminaConsumingAction();
   }
 
-  /// Executes the primary melee attack if resources are sufficient.
   void _handleExecuteSeed() {
     if (!model.canExecuteSeed) return;
 
-    // Pausar regeneração durante ação
     beginStaminaConsumingAction();
 
     final bool wasExecuted = onExecuteSeed.call();
     if (!wasExecuted) {
-      // Ação não executada, retomar regeneração
       endStaminaConsumingAction();
       return;
     }
 
     model.consumeStamina(model.seedStaminaCost);
 
-    // Retomar regeneração após ação instantânea
     endStaminaConsumingAction();
   }
 
-  /// Executes the primary melee attack if resources are sufficient.
   void _handleExecuteHarvestBasket() {
     if (!model.canExecuteHarvestBasket) return;
 
-    // Pausar regeneração durante ação
     beginStaminaConsumingAction();
 
     final bool wasExecuted = onExecuteHarvestBasket.call();
     if (!wasExecuted) {
-      // Ação não executada, retomar regeneração
       endStaminaConsumingAction();
       return;
     }
 
     model.consumeStamina(model.harvestBasketStaminaCost);
 
-    // Retomar regeneração após ação instantânea
     endStaminaConsumingAction();
   }
 }
