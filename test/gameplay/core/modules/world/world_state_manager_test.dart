@@ -120,7 +120,10 @@ void main() {
       // Assert - Get map state
       final retrievedState = manager.getMapState(testMapId);
       expect(retrievedState, isNotNull);
-      expect(retrievedState!.decorationsModified, equals(mapState.decorationsModified));
+      expect(
+        retrievedState!.decorationsModified,
+        equals(mapState.decorationsModified),
+      );
       expect(retrievedState.farmTiles, equals(mapState.farmTiles));
       expect(retrievedState.enemiesDefeated, equals(mapState.enemiesDefeated));
       expect(retrievedState.customData, equals(mapState.customData));
@@ -151,7 +154,7 @@ void main() {
       manager.setMapState('map_a', MapState());
       manager.setMapState('map_b', MapState());
       expect(manager.activeMapCount, equals(2));
-      
+
       manager.unloadInactiveMaps();
       expect(manager.activeMapCount, equals(0));
     });
@@ -162,10 +165,13 @@ void main() {
       manager.advanceDay();
       manager.advanceDay(); // Day 4
       manager.setCurrentMap('test_map');
-      manager.setMapState('test_map', MapState(
-        decorationsModified: ['decoration_1'],
-        farmTiles: ['tile_1', 'tile_2'],
-      ));
+      manager.setMapState(
+        'test_map',
+        MapState(
+          decorationsModified: ['decoration_1'],
+          farmTiles: ['tile_1', 'tile_2'],
+        ),
+      );
 
       // Act - Serialize
       final json = manager.toJson();
@@ -173,14 +179,14 @@ void main() {
       // Reset and deserialize
       manager.reset();
       expect(manager.currentDay, equals(1)); // Verify reset worked
-      
+
       manager.fromJson(json);
 
       // Assert - Verify state restored
       expect(manager.currentDay, equals(4));
       expect(manager.currentMapId, equals('test_map'));
       expect(manager.activeMapCount, equals(1));
-      
+
       final restoredMapState = manager.getMapState('test_map');
       expect(restoredMapState, isNotNull);
       expect(restoredMapState!.decorationsModified, equals(['decoration_1']));

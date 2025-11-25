@@ -11,7 +11,8 @@ import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attac
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_config.dart';
 import 'package:darkness_dungeon/gameplay/farm/services/farm_tool_action_config.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_view.dart';import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_view.dart';
+import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_model.dart';

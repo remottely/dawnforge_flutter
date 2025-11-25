@@ -82,6 +82,14 @@ final class MapConfig {
         'farm_tile': (p) => FarmTileView(position: p.position),
       };
 
+  /// Testing
+  static const String kFarmTestId = 'farm_test';
+  static const String kConversationTestId = 'conversation_test';
+  static const String kCombatTestId = 'combat_test';
+  static const String kBossTestId = 'boss_test';
+  // static const String kMineTestId = 'mine_test';
+  // static const String kFishingTestId = 'fishing_test';
+
   /// Maps
   static const String kLake1Id = 'lake_1';
   static const String kForest1Id = 'forest_1';
@@ -89,7 +97,44 @@ final class MapConfig {
   static const String kTemple1Id = 'temple_1';
 
   static const List<MapData> kAllMaps = [
-    /// lake_1
+    /// Testing Maps
+    const MapData(
+      id: kFarmTestId,
+      asset: 'tiled/$kFarmTestId.json',
+      sensorIds: ['sensor_$kBossTestId', 'sensor_$kConversationTestId'],
+      backgroundMusic: AudioConfig.kMusicRo1LettersBackgroundAsset,
+      lightingColor: _kNoneLightingColor,
+      backgroundColor: _kLakeBackgroundColor,
+    ),
+
+    const MapData(
+      id: kConversationTestId,
+      asset: 'tiled/$kConversationTestId.json',
+      sensorIds: ['sensor_$kFarmTestId', 'sensor_$kCombatTestId'],
+      backgroundMusic: AudioConfig.kMusicRo1LettersBackgroundAsset,
+      lightingColor: _kCloudyLightingColor,
+      backgroundColor: _kLakeBackgroundColor,
+    ),
+
+    const MapData(
+      id: kCombatTestId,
+      asset: 'tiled/$kCombatTestId.json',
+      sensorIds: ['sensor_$kConversationTestId', 'sensor_$kBossTestId'],
+      backgroundMusic: AudioConfig.kMusicRo1LettersBackgroundAsset,
+      lightingColor: _kDarknessLightingColor,
+      backgroundColor: _kLakeBackgroundColor,
+    ),
+
+    const MapData(
+      id: kBossTestId,
+      asset: 'tiled/$kBossTestId.json',
+      sensorIds: ['sensor_$kCombatTestId', 'sensor_$kFarmTestId'],
+      backgroundMusic: AudioConfig.kMusicRo1LettersBackgroundAsset,
+      lightingColor: _kDarknessLightingColor,
+      backgroundColor: _kLakeBackgroundColor,
+    ),
+
+    /// Game Maps
     const MapData(
       id: kLake1Id,
       asset: 'tiled/$kLake1Id.json',
@@ -99,7 +144,6 @@ final class MapConfig {
       backgroundColor: _kLakeBackgroundColor,
     ),
 
-    /// forest_1
     const MapData(
       id: kForest1Id,
       asset: 'tiled/$kForest1Id.json',
@@ -109,7 +153,6 @@ final class MapConfig {
       backgroundColor: _kForestBackgroundColor,
     ),
 
-    /// dungeon_1
     const MapData(
       id: kDungeon1Id,
       asset: 'tiled/$kDungeon1Id.json',
@@ -119,7 +162,6 @@ final class MapConfig {
       backgroundColor: _kDungeonBackgroundColor,
     ),
 
-    /// temple_1
     const MapData(
       id: kTemple1Id,
       asset: 'tiled/$kTemple1Id.json',
