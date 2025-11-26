@@ -16,7 +16,7 @@ final class FarmManager {
 
   static final instance = FarmManager._();
 
-  final Map<String, FarmTileModel> _farmTiles = {};
+  final Map<String, FarmTileModel> _farmTiles = {}; // TODO(Kevin): NOW_1
 
   /// Obter tile por coordenadas
   FarmTileModel? getTile(int x, int y) {

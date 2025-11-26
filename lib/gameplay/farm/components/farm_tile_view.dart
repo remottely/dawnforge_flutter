@@ -10,11 +10,13 @@ import 'package:darkness_dungeon/gameplay/farm/models/farm_tile_model.dart'
 import 'package:darkness_dungeon/gameplay/farm/models/farm_tile_model.dart';
 import 'package:darkness_dungeon/gameplay/farm/models/soil_state_model.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
+// import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 import 'package:darkness_dungeon/shared/framework/interaction/tool_interactable_mixin.dart';
 
 /// View de um tile de fazenda que integra com o FarmManager
 /// Este componente é criado pelo Tiled map e gerencia a visualização
 class FarmTileView extends DDDecoration with ToolInteractableMixin {
+  // TODO(Kevin): put DD back
   final int tileX;
   final int tileY;
 
@@ -22,7 +24,7 @@ class FarmTileView extends DDDecoration with ToolInteractableMixin {
   late FarmTileModel farmTile;
 
   SpriteComponent? _soilSprite;
-  SpriteComponent? _cropSprite;
+  DDDecoration? _cropDecoration;
   bool _isHighlighted = false;
 
   // Cache para evitar recarregamento desnecessário
@@ -50,7 +52,7 @@ class FarmTileView extends DDDecoration with ToolInteractableMixin {
     // Obter o tile do FarmManager
     farmTile = FarmManager.instance.getTile(tileX, tileY)!;
 
-    // Criar componente de solo (posição relativa ao pai)
+    // Criar componente de solo (sempre renderiza como chão - sem Y-sorting)
     final soilSprite = await Sprite.load(_getSoilSpritePath());
     _soilSprite = SpriteComponent(
       sprite: soilSprite,
@@ -65,29 +67,37 @@ class FarmTileView extends DDDecoration with ToolInteractableMixin {
       '[FarmTileView] 🟤 Soil sprite loaded: ${_getSoilSpritePath()}',
     );
 
-    // Se houver crop, carregar também
+    // Se houver crop, criar como DDDecoration com Y-sorting
     if (farmTile.crop != null) {
-      final cropSprite = await Sprite.load(_getCropSpritePath());
-      _cropSprite = SpriteComponent(
-        sprite: cropSprite,
-        size: size,
-        anchor: Anchor.topLeft,
-        position: Vector2.zero(),
-        priority: 1,
-      );
-
-      if (farmTile.crop!.stage == CropStageModel.withered) {
-        _cropSprite!.opacity = 0.5;
-      }
-
-      add(_cropSprite!);
+      await _createCropDecoration();
       developer.log(
-        '[FarmTileView] 🌱 Crop sprite loaded: ${farmTile.crop!.cropId} (${farmTile.crop!.stage.name})',
+        '[FarmTileView] 🌱 Crop decoration loaded: ${farmTile.crop!.cropId} (${farmTile.crop!.stage.name}) with Y-sorting',
       );
     }
 
     _lastRenderedSoilState = farmTile.soilState;
     _lastRenderedCropKey = _getCropKey();
+  }
+
+  /// Cria uma decoração 3D para a crop (com Y-sorting)
+  /// A crop será renderizada na frente ou atrás do player baseado na posição Y
+  Future<void> _createCropDecoration() async {
+    if (farmTile.crop == null) return;
+
+    final cropSprite = await Sprite.load(_getCropSpritePath());
+
+    _cropDecoration = DDDecoration.withSprite(
+      sprite: cropSprite,
+      position: position, // Posição global no mundo
+      size: size,
+    );
+
+    if (farmTile.crop!.stage == CropStageModel.withered) {
+      _cropDecoration!.opacity = 0.5;
+    }
+
+    // Adicionar ao gameRef (mundo do jogo) em vez de como child
+    gameRef.add(_cropDecoration!);
   }
 
   /// Verifica se o player está sobrepondo este tile
@@ -125,42 +135,28 @@ class FarmTileView extends DDDecoration with ToolInteractableMixin {
     final spritePath = _getSoilSpritePath();
     final sprite = await Sprite.load(spritePath);
     _soilSprite!.sprite = sprite;
+
     developer.log('[FarmTileView] 🟤 Soil sprite updated: $spritePath');
   }
 
-  Future<void> _updateCropSprite() async {
+  Future<void> _updateCropDecoration() async {
+    // Remover decoração antiga se existir
+    if (_cropDecoration != null) {
+      _cropDecoration!.removeFromParent();
+      _cropDecoration = null;
+    }
+
+    // Se não tem crop, apenas retorna
     if (farmTile.crop == null) {
-      if (_cropSprite != null) {
-        remove(_cropSprite!);
-        _cropSprite = null;
-      }
+      developer.log('[FarmTileView] 🌱 Crop removed (no Y-sorting)');
       return;
     }
 
-    final spritePath = _getCropSpritePath();
-    final sprite = await Sprite.load(spritePath);
-
-    if (_cropSprite == null) {
-      _cropSprite = SpriteComponent(
-        sprite: sprite,
-        size: size,
-        anchor: Anchor.topLeft,
-        position: Vector2.zero(),
-        priority: 1,
-      );
-      add(_cropSprite!);
-    } else {
-      _cropSprite!.sprite = sprite;
-    }
-
-    if (farmTile.crop!.stage == CropStageModel.withered) {
-      _cropSprite!.opacity = 0.5;
-    } else {
-      _cropSprite!.opacity = 1.0;
-    }
+    // Criar nova decoração com Y-sorting
+    await _createCropDecoration();
 
     developer.log(
-      '[FarmTileView] 🌱 Crop sprite updated: ${farmTile.crop!.cropId} (${farmTile.crop!.stage.name})',
+      '[FarmTileView] 🌱 Crop decoration updated: ${farmTile.crop!.cropId} (${farmTile.crop!.stage.name}) with Y-sorting',
     );
   }
 
@@ -194,6 +190,7 @@ class FarmTileView extends DDDecoration with ToolInteractableMixin {
         return 'growing';
       case CropStageModel.mature:
       case CropStageModel.withered:
+        // TODO(Kevin): create withered sprite
         return 'mature';
     }
   }
@@ -208,7 +205,7 @@ class FarmTileView extends DDDecoration with ToolInteractableMixin {
     }
 
     if (currentCropKey != _lastRenderedCropKey) {
-      await _updateCropSprite();
+      await _updateCropDecoration();
       _lastRenderedCropKey = currentCropKey;
     }
   }
@@ -250,6 +247,16 @@ class FarmTileView extends DDDecoration with ToolInteractableMixin {
         updateTile(updated);
       }
     }
+  }
+
+  @override
+  void onRemove() {
+    // Limpar a crop decoration quando o tile for removido
+    if (_cropDecoration != null) {
+      _cropDecoration!.removeFromParent();
+      _cropDecoration = null;
+    }
+    super.onRemove();
   }
 
   @override

@@ -43,6 +43,7 @@ final class _DoorDecorationConfig {
 }
 
 class DoorDecorationView extends DDDecoration {
+  // TODO(kevin): put DD back
   bool _isOpen = false;
 
   DoorDecorationView({required super.position, required super.size})

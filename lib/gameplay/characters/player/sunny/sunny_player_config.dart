@@ -141,10 +141,12 @@ final class SunnyPlayerConfig {
   ///
   /// Positioned to match the character's feet/base for accurate collision
   /// detection with ground elements and other entities.
-  static final RectangleHitbox hitbox = HitboxUtils.createCenterHitbox(
+  static final RectangleHitbox hitbox = HitboxUtils.createCustomHitbox(
     componentSize: componentSize,
-    hitboxStartPositionX: 44.0,
-    hitboxStartPositionY: 28.0,
+    left: 44.0,
+    top: 28.0,
+    right: 44.0,
+    bottom: 25.0,
   );
 
   // ============================================================================
