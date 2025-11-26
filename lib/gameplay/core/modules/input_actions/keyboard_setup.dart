@@ -29,12 +29,6 @@ final class KeyboardSetup {
     );
   }
 
-  static const LogicalKeyboardKey kWaterKey = LogicalKeyboardKey.keyJ;
-
-  static const LogicalKeyboardKey kPlantKey = LogicalKeyboardKey.keyK;
-
-  static const LogicalKeyboardKey kHarvestKey = LogicalKeyboardKey.keyR;
-
   static const LogicalKeyboardKey kAdvanceDayKey = LogicalKeyboardKey.keyN;
 
   static const LogicalKeyboardKey kClearSaveKey = LogicalKeyboardKey.keyG;

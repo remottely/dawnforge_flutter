@@ -234,7 +234,7 @@
          "name":"Sensors",
          "objects":[
                 {
-                 "height":10.8938246220302,
+                 "height":9.16596285097189,
                  "id":18,
                  "name":"sensor_boss_test",
                  "properties":[
@@ -251,7 +251,7 @@
                         {
                          "name":"playerPosition",
                          "type":"string",
-                         "value":"2,2"
+                         "value":"6,1"
                         }],
                  "rotation":0,
                  "type":"",
@@ -261,7 +261,7 @@
                  "y":0
                 }, 
                 {
-                 "height":10.4618591792657,
+                 "height":8.88527987126274,
                  "id":19,
                  "name":"sensor_conversation_test",
                  "properties":[
@@ -278,7 +278,7 @@
                         {
                          "name":"playerPosition",
                          "type":"string",
-                         "value":"3,3"
+                         "value":"2,1"
                         }],
                  "rotation":0,
                  "type":"",

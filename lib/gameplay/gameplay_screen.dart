@@ -49,7 +49,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
 
         MapArguments? mapArguments = arguments as MapArguments?;
         final playerPosition =
-            (mapArguments?.playerPosition ?? Vector2.all(4)) *
+            (mapArguments?.playerPosition ?? Vector2(2, 1)) *
             TileConstants.kTileDimensionStandard;
         final player = buildSunnyPlayer(playerPosition);
 

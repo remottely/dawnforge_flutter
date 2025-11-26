@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 
 abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   final gameplayHUD = GameplayHUDView();
+
   late final CameraConfig cameraConfig;
   final gameplayGameStateManager = GameStateManager();
   // final customPlayerInventoryInputHandler = CustomPlayerInventoryInputHandler();

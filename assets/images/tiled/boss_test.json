@@ -57,7 +57,7 @@
          "name":"Sensors",
          "objects":[
                 {
-                 "height":10.9788277227723,
+                 "height":8.75110495049507,
                  "id":18,
                  "name":"sensor_combat_test",
                  "properties":[
@@ -74,7 +74,7 @@
                         {
                          "name":"playerPosition",
                          "type":"string",
-                         "value":"3,3"
+                         "value":"6,1"
                         }],
                  "rotation":0,
                  "type":"",
@@ -84,7 +84,7 @@
                  "y":0
                 }, 
                 {
-                 "height":10.9788277227723,
+                 "height":8.87486732673269,
                  "id":19,
                  "name":"sensor_farm_test",
                  "properties":[
@@ -101,7 +101,7 @@
                         {
                          "name":"playerPosition",
                          "type":"string",
-                         "value":"3,3"
+                         "value":"2,1"
                         }],
                  "rotation":0,
                  "type":"",
