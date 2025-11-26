@@ -37,7 +37,7 @@
 
   - [PRIORITY] colission behavior
 
-- farmable tile:
+- farm tile:
 
   - [DONE] priority
   - [DONE] render not showing

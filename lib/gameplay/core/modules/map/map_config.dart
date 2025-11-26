@@ -78,7 +78,7 @@ final class MapConfig {
           model: ChestDecorationModel(initialIsOpened: false),
         ),
 
-        /// Farmable
+        /// Farm
         'farm_tile': (p) => FarmTileView(position: p.position),
       };
 
