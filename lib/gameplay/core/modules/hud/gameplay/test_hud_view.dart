@@ -11,9 +11,10 @@ class TestHUDView extends GameInterface {
     // {"key": "Espaço", "desc": "Interagir / Usar ferramenta"},
     // {"key": "Q/E", "desc": "Trocar item rápido"},
     // {"key": "I", "desc": "Inventário"},
+    {"key": "←↑→↓ / AWSD", "desc": "Andar"},
+    {"key": "Espaço", "desc": "Executar Ação Equipada"},
     {"key": "Z", "desc": "Defesa Especial"},
     {"key": "X", "desc": "Interação com Objeto / NPC"},
-    {"key": "Espaço", "desc": "Executar Ação Equipada"},
     {"key": "Q/E", "desc": "Trocar item rápido"},
     {"key": "I", "desc": "Abrir/Fechar Inventário"},
     {"key": "G", "desc": "Apagar save"},
@@ -34,7 +35,7 @@ class TestHUDView extends GameInterface {
     const double startX = 16;
     const double startY = 512;
     const double lineHeight = 22;
-    const double keyBoxWidth = 64;
+    const double keyBoxWidth = 96;
     const double keyBoxHeight = 20;
     const double padding = 6;
     final Paint bgPaint = Paint()..color = const Color(0xAA222222);
@@ -48,7 +49,7 @@ class TestHUDView extends GameInterface {
 
     // Fundo do painel
     final double panelHeight = _inputGuide.length * lineHeight + padding * 2;
-    final double panelWidth = 256;
+    final double panelWidth = 300;
     canvas.drawRRect(
       RRect.fromRectAndRadius(
         Rect.fromLTWH(

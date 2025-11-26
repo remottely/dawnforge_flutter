@@ -1204,12 +1204,12 @@
                         {
                          "height":15.6398,
                          "id":249,
-                         "name":"sensor_temple_1",
+                         "name":"sensor_farm_test",
                          "properties":[
                                 {
                                  "name":"nextMap",
                                  "type":"string",
-                                 "value":"temple_1"
+                                 "value":"farm_test"
                                 }, 
                                 {
                                  "name":"playerDirection",
@@ -1219,13 +1219,13 @@
                                 {
                                  "name":"playerPosition",
                                  "type":"string",
-                                 "value":"3,3"
+                                 "value":"4,7"
                                 }],
                          "rotation":0,
                          "type":"",
                          "visible":true,
-                         "width":14.8959,
-                         "x":384,
+                         "width":71.5899457424154,
+                         "x":340.304101330236,
                          "y":0
                         }, 
                         {

@@ -10,7 +10,7 @@
             332, 67, 67, 67, 67, 67, 67, 332,
             332, 67, 67, 67, 67, 67, 67, 332,
             332, 67, 67, 67, 67, 67, 67, 332,
-            396, 268, 268, 268, 268, 268, 268, 396],
+            396, 268, 268, 268, 67, 268, 268, 396],
          "height":8,
          "id":1,
          "name":"Ground",
@@ -29,7 +29,7 @@
             0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0],
+            0, 0, 0, 0, 1034, 0, 0, 0],
          "height":8,
          "id":4,
          "name":"teleports",
@@ -286,6 +286,33 @@
                  "width":15.865,
                  "x":96,
                  "y":0
+                }, 
+                {
+                 "height":14.4270466861516,
+                 "id":20,
+                 "name":"sensor_lake_1",
+                 "properties":[
+                        {
+                         "name":"nextMap",
+                         "type":"string",
+                         "value":"lake_1"
+                        }, 
+                        {
+                         "name":"playerDirection",
+                         "type":"string",
+                         "value":"right"
+                        }, 
+                        {
+                         "name":"playerPosition",
+                         "type":"string",
+                         "value":"24,2"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":15.8661026510787,
+                 "x":64,
+                 "y":113.576579308003
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -294,7 +321,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":20,
+ "nextobjectid":21,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

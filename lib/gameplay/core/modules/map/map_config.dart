@@ -101,7 +101,11 @@ final class MapConfig {
     const MapData(
       id: kFarmTestId,
       asset: 'tiled/$kFarmTestId.json',
-      sensorIds: ['sensor_$kBossTestId', 'sensor_$kConversationTestId'],
+      sensorIds: [
+        'sensor_$kBossTestId',
+        'sensor_$kConversationTestId',
+        'sensor_$kLake1Id',
+      ],
       backgroundMusic: AudioConfig.kMusicRo1LettersBackgroundAsset,
       lightingColor: _kNoneLightingColor,
       backgroundColor: _kLakeBackgroundColor,
@@ -138,7 +142,11 @@ final class MapConfig {
     const MapData(
       id: kLake1Id,
       asset: 'tiled/$kLake1Id.json',
-      sensorIds: ['sensor_$kForest1Id', 'sensor_$kDungeon1Id'],
+      sensorIds: [
+        'sensor_$kForest1Id',
+        'sensor_$kDungeon1Id',
+        'sensor_$kFarmTestId',
+      ],
       backgroundMusic: AudioConfig.kMusicRo1LettersBackgroundAsset,
       lightingColor: _kDarknessLightingColor,
       backgroundColor: _kLakeBackgroundColor,
