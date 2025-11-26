@@ -8,6 +8,7 @@ import '../models/item_type.dart';
 /// Armas causam dano aos inimigos e possuem atributos como
 /// velocidade de ataque e chance de crítico.
 final class WeaponItem extends Item {
+  // TODO(Kevin): now, change name to EquippedHandItem?
   /// Dano base da arma
   final int damage;
 
@@ -111,7 +112,7 @@ final class WeaponItem extends Item {
     );
   }
 
-  @override
-  String toString() =>
-      'WeaponItem(id: $id, name: $name, type: ${equippedHandType.displayName}, damage: $damage, dps: ${dps.toStringAsFixed(1)})';
+  // @override
+  // String toString() =>
+  //     'WeaponItem(id: $id, name: $name, type: ${equippedHandType.displayName}, damage: $damage, dps: ${dps.toStringAsFixed(1)})';
 }

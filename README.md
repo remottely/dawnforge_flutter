@@ -109,5 +109,5 @@ url_launcher - [![pub package](https://img.shields.io/pub/v/url_launcher.svg)](h
 
 [Simple Dungeon Crawler](https://o-lobster.itch.io/simple-dungeon-crawler-16x16-pixel-pack)
 
-magick spr_swimming_strip12.png -crop 96x64 +repage -flop +append spr_swimming_left_strip12.png
 cd assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE\ CHARACTER/PNG/WITH_FX
+magick spr_doing_till_strip8.png -crop 96x64 +repage -flop +append spr_doing_till_left_strip8.png

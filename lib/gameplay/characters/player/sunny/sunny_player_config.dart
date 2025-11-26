@@ -187,7 +187,7 @@ final class SunnyPlayerConfig {
 
   static Future<SpriteAnimation>
   loadRightShovelAnimation() => SpriteAnimation.load(
-    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_strip13.png',
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_strip13.png', // spr_doing_till_strip8
     SpriteAnimationConfig.createStandardData(
       amount: 10,
       textureSize: textureSize,
@@ -196,7 +196,7 @@ final class SunnyPlayerConfig {
 
   static Future<SpriteAnimation>
   loadLeftShovelAnimation() => SpriteAnimation.load(
-    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_left_strip13.png',
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_left_strip13.png', // spr_doing_till_left_strip8
     SpriteAnimationConfig.createStandardData(
       amount: 10,
       textureSize: textureSize,
@@ -223,7 +223,7 @@ final class SunnyPlayerConfig {
 
   static Future<SpriteAnimation>
   loadRightSeedAnimation() => SpriteAnimation.load(
-    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_strip8.png',
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_strip8.png',
     SpriteAnimationConfig.createStandardData(
       amount: 8,
       textureSize: textureSize,
@@ -232,7 +232,7 @@ final class SunnyPlayerConfig {
 
   static Future<SpriteAnimation>
   loadLeftSeedAnimation() => SpriteAnimation.load(
-    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_left_strip8.png',
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_left_strip8.png',
     SpriteAnimationConfig.createStandardData(
       amount: 8,
       textureSize: textureSize,
@@ -241,18 +241,18 @@ final class SunnyPlayerConfig {
 
   static Future<SpriteAnimation>
   loadRightHarvestBasketAnimation() => SpriteAnimation.load(
-    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_swimming_strip12.png',
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_strip8.png',
     SpriteAnimationConfig.createStandardData(
-      amount: 12,
+      amount: 8,
       textureSize: textureSize,
     ),
   );
 
   static Future<SpriteAnimation>
   loadLeftHarvestBasketAnimation() => SpriteAnimation.load(
-    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_swimming_left_strip12.png',
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_left_strip8.png',
     SpriteAnimationConfig.createStandardData(
-      amount: 12,
+      amount: 8,
       textureSize: textureSize,
     ),
   );
