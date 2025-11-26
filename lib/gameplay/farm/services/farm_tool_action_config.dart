@@ -87,7 +87,8 @@ final class FarmToolActionConfig {
 
   static bool _handlePlant(int x, int y) {
     // TODO: Get crop type from inventory/UI selection
-    const cropId = 'carrot'; // TODO(Kevin): remove 'carrot' dependency
+    // const cropId = 'carrot'; // TODO(Kevin): remove 'carrot' dependency
+    const cropId = 'strawberry'; // TODO(Kevin): remove 'carrot' dependency
 
     final result = _actionService.plantSeed(x, y, cropId);
     if (result.success) {

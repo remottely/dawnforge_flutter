@@ -1,6 +1,8 @@
 # IMPORTANT BEFORE LAUNCH:
 
-- fix die multiple times in the same second bug the game, handle cannot die more than once.
+- [PRIORITY] enhance: create a logic that we dont need to declare each crop asset path to pubspec.yaml like: "assets/images/gameplay/farm/crops/strawberry/"
+- [PRIORITY] farm crops need to have 3D behavior, fix it
+- [PRIORITY] fix die multiple times in the same second bug the game, handle cannot die more than once.
 - refactor all tiled decoration nomenclatures
 - save torch state
 - [PRIORITY] verify if need the \_activeAnimationLockCount logic
