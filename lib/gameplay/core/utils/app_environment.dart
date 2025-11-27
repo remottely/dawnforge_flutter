@@ -7,7 +7,7 @@ final class AppEnvironment {
 
   static const String _kEnvironment = String.fromEnvironment(
     _kEnvKey,
-    defaultValue: _kEnvDevelopmentValue,
+    defaultValue: _kEnvProductionValue,
   );
 
   static const bool _kIsDevelopment = _kEnvironment == _kEnvDevelopmentValue;
@@ -25,7 +25,7 @@ final class AppEnvironment {
       case _kEnvProductionValue:
         return production;
       default:
-        return development;
+        return production;
     }
   }
 }

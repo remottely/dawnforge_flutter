@@ -1,30 +1,8 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/darkness_dungeon.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/inputs_hud_config.dart';
 
-class TestHUDView extends GameInterface {
-  // Guia de inputs de teste
-  static const List<Map<String, String>> _inputGuide = [
-    // {"key": "ESC", "desc": "Menu/Pause"},
-    // {"key": "C", "desc": "Ação especial"},
-    // {"key": "Z", "desc": "Ataque primário"},
-    // {"key": "X", "desc": "Ataque secundário"},
-    // {"key": "Espaço", "desc": "Interagir / Usar ferramenta"},
-    // {"key": "Q/E", "desc": "Trocar item rápido"},
-    // {"key": "I", "desc": "Inventário"},
-    {"key": "←↑→↓ / AWSD", "desc": "Andar"},
-    {"key": "Espaço", "desc": "Executar Ação Equipada"},
-    {"key": "Z", "desc": "Defesa Especial"},
-    {"key": "X", "desc": "Interação com Objeto / NPC"},
-    {"key": "Q/E", "desc": "Trocar item rápido"},
-    {"key": "I", "desc": "Abrir/Fechar Inventário"},
-    {"key": "G", "desc": "Apagar save"},
-    {"key": "N", "desc": "Virar dia / Salvar jogo"},
-    {"key": "U", "desc": "Desequipa hand (DEV)"},
-    {"key": "O", "desc": "Equipa offhand (DEV)"},
-    {"key": "P", "desc": "Desquipa offhand (DEV)"},
-    {"key": "T", "desc": "Add items para teste (DEV)"},
-  ];
-
+class InputsHUDView extends GameInterface {
   @override
   void render(Canvas canvas) {
     _drawInputGuide(canvas);
@@ -48,7 +26,8 @@ class TestHUDView extends GameInterface {
     );
 
     // Fundo do painel
-    final double panelHeight = _inputGuide.length * lineHeight + padding * 2;
+    final double panelHeight =
+        InputsHUDConfig.inputGuide.length * lineHeight + padding * 2;
     final double panelWidth = 300;
     canvas.drawRRect(
       RRect.fromRectAndRadius(
@@ -63,7 +42,7 @@ class TestHUDView extends GameInterface {
       bgPaint,
     );
 
-    for (int i = 0; i < _inputGuide.length; i++) {
+    for (int i = 0; i < InputsHUDConfig.inputGuide.length; i++) {
       final y = startY + i * lineHeight;
       // Caixa da tecla
       canvas.drawRRect(
@@ -75,14 +54,20 @@ class TestHUDView extends GameInterface {
       );
       // Texto da tecla
       TextPainter(
-          text: TextSpan(text: _inputGuide[i]["key"], style: keyTextStyle),
+          text: TextSpan(
+            text: InputsHUDConfig.inputGuide[i]["key"],
+            style: keyTextStyle,
+          ),
           textDirection: TextDirection.ltr,
         )
         ..layout(minWidth: 0, maxWidth: keyBoxWidth)
         ..paint(canvas, Offset(startX + 8, y + 2));
       // Descrição
       TextPainter(
-          text: TextSpan(text: _inputGuide[i]["desc"], style: textStyle),
+          text: TextSpan(
+            text: InputsHUDConfig.inputGuide[i]["desc"],
+            style: textStyle,
+          ),
           textDirection: TextDirection.ltr,
         )
         ..layout(minWidth: 0, maxWidth: panelWidth - keyBoxWidth - 16)

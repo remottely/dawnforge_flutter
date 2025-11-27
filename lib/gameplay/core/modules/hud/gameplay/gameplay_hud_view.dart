@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/gameplay/gameplay_hud_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/gameplay/test_hud_view.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/inputs_hud_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/inventory/inventory_hud_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/player_vital_stats/player_vital_stats_hud_view.dart';
 import 'package:darkness_dungeon/gameplay/decorations/door_key_decoration.dart';
@@ -8,8 +8,9 @@ import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base
 
 class GameplayHUDView extends GameInterface {
   late Sprite _keySprite;
+  final playerVitalStatsHUD = PlayerVitalStatsHUDView();
   final inventoryHUD = InventoryHUDView();
-  final testHUD = TestHUDView();
+  final inputsHUD = InputsHUDView();
 
   @override
   Future<void> onLoad() async {
@@ -30,9 +31,9 @@ class GameplayHUDView extends GameInterface {
   }
 
   void _initializeComponents() {
-    add(PlayerVitalStatsHUDView());
+    add(playerVitalStatsHUD);
     add(inventoryHUD);
-    add(testHUD);
+    add(inputsHUD);
   }
 
   void _drawKeyIcon(Canvas canvas) {

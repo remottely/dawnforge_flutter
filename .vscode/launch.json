@@ -31,8 +31,8 @@
         "PUB_CACHE_URL": "",
         "FLUTTER_STORAGE_BASE_URL": "",
         "FLUTTER_TOOL_ANALYTICS_DISABLED": "true"
-      },
-      "args": ["--no-pub", "--dart-define=GAME_ENVIRONMENT=PRODUCTION"]
+      }
+      // "args": ["--no-pub", "--dart-define=GAME_ENVIRONMENT=PRODUCTION"]
     }
     // {
     //   "name": "Chrome (Debug)",
