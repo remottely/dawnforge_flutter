@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/darkness_dungeon.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/inputs_hud_config.dart';
+import 'package:flutter/painting.dart';
 
 class InputsHUDView extends GameInterface {
   @override

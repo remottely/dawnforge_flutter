@@ -29,7 +29,7 @@ final class SunnyPlayerConfig {
   // Detection & Vision Configuration
   // ============================================================================
 
-  /// The radius within which the player can detect enemies and interactables.
+  /// The radius within which the player can detect enemies and decorations.
   ///
   /// Uses an extra-large vision radius allowing the player to spot threats
   /// and opportunities from a considerable distance.

@@ -7,13 +7,14 @@ import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_view.dart'
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/map_data.dart';
-import 'package:darkness_dungeon/gameplay/decorations/barrel_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/barrel/barrel_decoration.dart';
 import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_model.dart';
 import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_view.dart';
-import 'package:darkness_dungeon/gameplay/decorations/door_decoration.dart';
-import 'package:darkness_dungeon/gameplay/decorations/door_key_decoration.dart';
-import 'package:darkness_dungeon/gameplay/decorations/life_potion_decoration.dart';
-import 'package:darkness_dungeon/gameplay/decorations/spike_trap_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/door/door_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/door_key/door_key_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/life_potion/life_potion_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/life_potion/life_potion_decoration_config.dart';
+import 'package:darkness_dungeon/gameplay/decorations/spike_trap/spike_trap_decoration.dart';
 import 'package:darkness_dungeon/gameplay/decorations/torch/torch_decoration_model.dart';
 import 'package:darkness_dungeon/gameplay/decorations/torch/torch_decoration_view.dart';
 import 'package:darkness_dungeon/gameplay/farm/components/farm_tile_view.dart';
@@ -63,15 +64,15 @@ final class MapConfig {
           position: p.position,
           model: TorchDecorationModel(initialIsOn: false),
         ),
-        'door_interactable': (p) =>
+        'door_decoration': (p) =>
             DoorDecorationView(position: p.position, size: p.size),
-        'door_key_interactable': (p) =>
+        'door_key_decoration': (p) =>
             DoorKeyDecorationView(position: p.position),
-        'life_potion_interactable': (p) => LifePotionDecorationView(
+        'life_potion_decoration': (p) => LifePotionDecorationView(
           position: p.position,
           healAmount: LifePotionConfig.kHealAmount,
         ),
-        'spike_trap_interactable': (p) =>
+        'spike_trap_decoration': (p) =>
             SpikeTrapDecorationView(position: p.position),
         'chest': (p) => ChestDecorationView(
           position: p.position,

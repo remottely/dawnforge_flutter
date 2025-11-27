@@ -64,8 +64,8 @@ Here are naming improvement suggestions for your lib codebase, tailored for a 2D
 5. Gameplay & Mechanics
    Use Tile, Cell, or Slot for grid-based elements:
    FarmTileComponent, InventorySlotComponent
-   Use Interactable for objects the player can interact with:
-   ChestInteractableComponent, DoorInteractableComponent
+   Use Decoration for objects the player can interact with:
+   ChestDecorationComponent, DoorDecorationComponent
 6. Events & Actions
    Use Event for event classes:
    PlayerDiedEvent, ItemCollectedEvent
@@ -81,7 +81,7 @@ Here are naming improvement suggestions for your lib codebase, tailored for a 2D
    KnightPlayerView KnightPlayerComponent
    DungeonBossEnemyConfig DungeonBossConfig
    BarrelDecorationView BarrelComponent
-   DoorKeyInteractableView DoorKeyComponent
+   DoorKeyDecorationView DoorKeyComponent
    LifePotionDecorationView LifePotionComponent
    MapSensorView MapTransitionSensorComponent
    DFPushableDecoration PushableDecorationComponent

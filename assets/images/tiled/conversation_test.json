@@ -1,367 +1,363 @@
-{ "compressionlevel":-1,
- "height":8,
- "infinite":false,
- "layers":[
+{
+  "compressionlevel": -1,
+  "height": 8,
+  "infinite": false,
+  "layers": [
+    {
+      "data": [
+        268, 67, 268, 268, 268, 268, 67, 268, 332, 67, 67, 67, 67, 67, 67, 332,
+        332, 67, 67, 67, 67, 67, 67, 332, 332, 67, 67, 67, 67, 67, 67, 332, 332,
+        67, 67, 67, 67, 67, 67, 332, 332, 67, 67, 67, 67, 67, 67, 332, 332, 67,
+        67, 67, 67, 67, 67, 332, 396, 268, 268, 268, 268, 268, 268, 396
+      ],
+      "height": 8,
+      "id": 1,
+      "name": "Ground",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 8,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "data": [
+        0, 481, 0, 0, 0, 0, 481, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+      ],
+      "height": 8,
+      "id": 4,
+      "name": "Teleports",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 8,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "data": [
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 1475, 1476, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+      ],
+      "height": 8,
+      "id": 5,
+      "name": "Trees",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 8,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "data": [
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1347, 1348, 0, 0, 0, 0, 0, 0, 1411,
+        1412, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+      ],
+      "height": 8,
+      "id": 6,
+      "name": "Above",
+      "opacity": 1,
+      "properties": [
         {
-         "data":[268, 67, 268, 268, 268, 268, 67, 268,
-            332, 67, 67, 67, 67, 67, 67, 332,
-            332, 67, 67, 67, 67, 67, 67, 332,
-            332, 67, 67, 67, 67, 67, 67, 332,
-            332, 67, 67, 67, 67, 67, 67, 332,
-            332, 67, 67, 67, 67, 67, 67, 332,
-            332, 67, 67, 67, 67, 67, 67, 332,
-            396, 268, 268, 268, 268, 268, 268, 396],
-         "height":8,
-         "id":1,
-         "name":"Ground",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":8,
-         "x":0,
-         "y":0
-        }, 
+          "name": "type",
+          "type": "string",
+          "value": "above"
+        }
+      ],
+      "type": "tilelayer",
+      "visible": true,
+      "width": 8,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 2,
+      "name": "Farmable",
+      "objects": [],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 3,
+      "name": "Sensors",
+      "objects": [
         {
-         "data":[0, 481, 0, 0, 0, 0, 481, 0,
-            0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0],
-         "height":8,
-         "id":4,
-         "name":"Teleports",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":8,
-         "x":0,
-         "y":0
-        }, 
+          "height": 8.7519579066041,
+          "id": 18,
+          "name": "sensor_farm_test",
+          "properties": [
+            {
+              "name": "nextMap",
+              "type": "string",
+              "value": "farm_test"
+            },
+            {
+              "name": "playerDirection",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "playerPosition",
+              "type": "string",
+              "value": "6,1"
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 15.865,
+          "x": 16,
+          "y": 0
+        },
         {
-         "data":[0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 1475, 1476, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0],
-         "height":8,
-         "id":5,
-         "name":"Trees",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":8,
-         "x":0,
-         "y":0
-        }, 
+          "height": 8.99944557403112,
+          "id": 19,
+          "name": "sensor_combat_test",
+          "properties": [
+            {
+              "name": "nextMap",
+              "type": "string",
+              "value": "combat_test"
+            },
+            {
+              "name": "playerDirection",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "playerPosition",
+              "type": "string",
+              "value": "2,1"
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 15.865,
+          "x": 96,
+          "y": 0
+        },
         {
-         "data":[0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 1347, 1348, 0, 0, 0,
-            0, 0, 0, 1411, 1412, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0],
-         "height":8,
-         "id":6,
-         "name":"Above",
-         "opacity":1,
-         "properties":[
-                {
-                 "name":"type",
-                 "type":"string",
-                 "value":"above"
-                }],
-         "type":"tilelayer",
-         "visible":true,
-         "width":8,
-         "x":0,
-         "y":0
-        }, 
+          "height": 16,
+          "id": 22,
+          "name": "wizard_npc",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 80,
+          "y": 70.844328451984
+        },
         {
-         "draworder":"topdown",
-         "id":2,
-         "name":"Farmable",
-         "objects":[],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
+          "height": 16,
+          "id": 23,
+          "name": "torch_decoration",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 16,
+          "y": 16
+        },
         {
-         "draworder":"topdown",
-         "id":3,
-         "name":"Sensors",
-         "objects":[
-                {
-                 "height":8.7519579066041,
-                 "id":18,
-                 "name":"sensor_farm_test",
-                 "properties":[
-                        {
-                         "name":"nextMap",
-                         "type":"string",
-                         "value":"farm_test"
-                        }, 
-                        {
-                         "name":"playerDirection",
-                         "type":"string",
-                         "value":"right"
-                        }, 
-                        {
-                         "name":"playerPosition",
-                         "type":"string",
-                         "value":"6,1"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":15.865,
-                 "x":16,
-                 "y":0
-                }, 
-                {
-                 "height":8.99944557403112,
-                 "id":19,
-                 "name":"sensor_combat_test",
-                 "properties":[
-                        {
-                         "name":"nextMap",
-                         "type":"string",
-                         "value":"combat_test"
-                        }, 
-                        {
-                         "name":"playerDirection",
-                         "type":"string",
-                         "value":"right"
-                        }, 
-                        {
-                         "name":"playerPosition",
-                         "type":"string",
-                         "value":"2,1"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":15.865,
-                 "x":96,
-                 "y":0
-                }, 
-                {
-                 "height":16,
-                 "id":22,
-                 "name":"wizard_npc",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":80,
-                 "y":70.844328451984
-                }, 
-                {
-                 "height":16,
-                 "id":23,
-                 "name":"torch_decoration",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":16,
-                 "y":16
-                }, 
-                {
-                 "height":16,
-                 "id":24,
-                 "name":"torch_decoration",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":96,
-                 "y":16
-                }, 
-                {
-                 "height":16,
-                 "id":28,
-                 "name":"barrel_decoration",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":48,
-                 "y":96
-                }, 
-                {
-                 "height":16,
-                 "id":29,
-                 "name":"barrel_decoration",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":64,
-                 "y":96
-                }, 
-                {
-                 "height":16,
-                 "id":30,
-                 "name":"barrel_decoration",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":96,
-                 "y":96
-                },
-            
-                {
-                 "height":16,
-                 "id":31,
-                 "name":"barrel_decoration",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":80,
-                 "y":96
-                }, 
-                {
-                 "height":16,
-                 "id":32,
-                 "name":"barrel_decoration",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":96,
-                 "y":80
-                }, 
-                {
-                 "height":16,
-                 "id":33,
-                 "name":"barrel_decoration",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":96,
-                 "y":64
-                }, 
-                {
-                 "height":16,
-                 "id":34,
-                 "name":"barrel_decoration",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":80,
-                 "y":64
-                }, 
-                {
-                 "height":16,
-                 "id":35,
-                 "name":"barrel_decoration",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":64,
-                 "y":64
-                }, 
-                {
-                 "height":16,
-                 "id":36,
-                 "name":"barrel_decoration",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":64,
-                 "y":80
-                }, 
-                {
-                 "height":16,
-                 "id":37,
-                 "name":"barrel_decoration",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":48,
-                 "y":64
-                }, 
-                {
-                 "height":16,
-                 "id":38,
-                 "name":"barrel_decoration",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":48,
-                 "y":80
-                },
-            
-                {
-                 "height":16,
-                 "id":39,
-                 "name":"door_key_interactable",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":32,
-                 "y":16
-                }, 
-                {
-                 "height":36.25,
-                 "id":40,
-                 "name":"door_interactable",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":31.9949011647576,
-                 "x":16,
-                 "y":48
-                }, 
-                {
-                 "height":16,
-                 "id":41,
-                 "name":"chest",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":96,
-                 "y":48
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }],
- "nextlayerid":7,
- "nextobjectid":42,
- "orientation":"orthogonal",
- "renderorder":"right-down",
- "tiledversion":"1.11.2",
- "tileheight":16,
- "tilesets":[
+          "height": 16,
+          "id": 24,
+          "name": "torch_decoration",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 96,
+          "y": 16
+        },
         {
-         "firstgid":1,
-         "source":"SunnysideWorldTileset.json"
-        }],
- "tilewidth":16,
- "type":"map",
- "version":"1.10",
- "width":8
+          "height": 16,
+          "id": 28,
+          "name": "barrel_decoration",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 48,
+          "y": 96
+        },
+        {
+          "height": 16,
+          "id": 29,
+          "name": "barrel_decoration",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 64,
+          "y": 96
+        },
+        {
+          "height": 16,
+          "id": 30,
+          "name": "barrel_decoration",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 96,
+          "y": 96
+        },
+
+        {
+          "height": 16,
+          "id": 31,
+          "name": "barrel_decoration",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 80,
+          "y": 96
+        },
+        {
+          "height": 16,
+          "id": 32,
+          "name": "barrel_decoration",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 96,
+          "y": 80
+        },
+        {
+          "height": 16,
+          "id": 33,
+          "name": "barrel_decoration",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 96,
+          "y": 64
+        },
+        {
+          "height": 16,
+          "id": 34,
+          "name": "barrel_decoration",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 80,
+          "y": 64
+        },
+        {
+          "height": 16,
+          "id": 35,
+          "name": "barrel_decoration",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 64,
+          "y": 64
+        },
+        {
+          "height": 16,
+          "id": 36,
+          "name": "barrel_decoration",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 64,
+          "y": 80
+        },
+        {
+          "height": 16,
+          "id": 37,
+          "name": "barrel_decoration",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 48,
+          "y": 64
+        },
+        {
+          "height": 16,
+          "id": 38,
+          "name": "barrel_decoration",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 48,
+          "y": 80
+        },
+
+        {
+          "height": 16,
+          "id": 39,
+          "name": "door_key_decoration",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 32,
+          "y": 16
+        },
+        {
+          "height": 36.25,
+          "id": 40,
+          "name": "door_decoration",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 31.9949011647576,
+          "x": 16,
+          "y": 48
+        },
+        {
+          "height": 16,
+          "id": 41,
+          "name": "chest",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 96,
+          "y": 48
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 7,
+  "nextobjectid": 42,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "tiledversion": "1.11.2",
+  "tileheight": 16,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "SunnysideWorldTileset.json"
+    }
+  ],
+  "tilewidth": 16,
+  "type": "map",
+  "version": "1.10",
+  "width": 8
 }

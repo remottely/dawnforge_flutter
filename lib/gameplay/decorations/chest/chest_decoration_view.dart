@@ -7,7 +7,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_se
 import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_config.dart';
 import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_controller.dart';
 import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_model.dart';
-import 'package:darkness_dungeon/gameplay/decorations/life_potion_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/life_potion/life_potion_decoration.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_input_receiver/dd_input_receiver_decoration_view.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
 import 'package:flutter/services.dart';
