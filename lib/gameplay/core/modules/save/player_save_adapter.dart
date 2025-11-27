@@ -1,7 +1,7 @@
 import 'dart:developer' as developer;
 
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/player/player_progress_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/save/player_progress_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/save/game_state_collector.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/save/save_data_model.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/save/save_manager.dart';

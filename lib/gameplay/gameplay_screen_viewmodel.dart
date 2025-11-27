@@ -4,7 +4,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_view.dart';
-import 'package:darkness_dungeon/gameplay/combat/shield_defense_input_handler.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/shield_defense_input_handler.dart';
 // import 'package:darkness_dungeon/gameplay/core/modules/game/custom_player_inventory_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/game_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/inventory_input_handler.dart';

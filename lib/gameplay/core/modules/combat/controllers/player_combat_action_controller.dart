@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/combat/attacks/character_fireball_attack_config.dart';
-import 'package:darkness_dungeon/gameplay/combat/attacks/character_fx_particles_animations_config.dart';
-import 'package:darkness_dungeon/gameplay/combat/attacks/player_primary_attack_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fireball_attack_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fx_particles_animations_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/player_primary_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_fx.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/offset_helper.dart';

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/combat/death/character_fx_sprite_animations_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/death/character_fx_sprite_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';

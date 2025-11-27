@@ -4,7 +4,7 @@ import 'package:bonfire/bonfire.dart';
 enum ToolType { shovel, hoe, axe }
 
 /// Mixin para componentes que podem reagir ao uso de ferramentas.
-mixin ToolInteractableMixin on GameComponent {
+mixin DDToolInteractableMixin on GameComponent {
   void onToolUsed(
     ToolType tool,
     GameComponent user, {

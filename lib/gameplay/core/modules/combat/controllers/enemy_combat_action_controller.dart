@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/combat/attacks/character_fireball_attack_config.dart';
-import 'package:darkness_dungeon/gameplay/combat/attacks/enemy_primary_attack_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fireball_attack_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/enemy_primary_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
 
 final class EnemyCombatActionController {

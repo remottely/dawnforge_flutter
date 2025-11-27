@@ -7,7 +7,7 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_mod
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/mini_boss/mini_boss_enemy_view.dart';
-import 'package:darkness_dungeon/gameplay/combat/death/character_fx_sprite_animations_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/death/character_fx_sprite_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_calculations.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
