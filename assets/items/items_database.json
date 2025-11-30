@@ -343,6 +343,19 @@
     "healAmount": 10,
     "cooldown": 2.0
   },
+  "strawberry_item": {
+    "id": "strawberry_item",
+    "name": "Strawberry",
+    "description": "A fresh red strawberry. Can be eaten or sold.",
+    "type": "consumable",
+    "rarity": "common",
+    "baseValue": 15,
+    "iconPath": "assets/images/items/strawberry.png",
+    "maxStackSize": 99,
+    "consumableType": "food",
+    "healAmount": 10,
+    "cooldown": 2.0
+  },
   "carrot_seeds": {
     "id": "carrot_seeds",
     "name": "Carrot Seeds",
