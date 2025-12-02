@@ -97,7 +97,8 @@ abstract class DDBasePlayerModel {
 
   int get seedStaminaCost;
   bool get canExecuteSeed =>
-      (stamina >= seedStaminaCost) && (_equipment == EquippedHandType.seeds);
+      (stamina >= seedStaminaCost) &&
+      (_equipment == EquippedHandType.strawberry);
 
   int get harvestBasketStaminaCost;
   bool get canExecuteHarvestBasket =>

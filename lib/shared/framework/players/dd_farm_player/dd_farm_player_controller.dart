@@ -48,7 +48,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
   }) =>
       (actionId == JoystickSetup.kPrimaryActionId ||
           actionId == KeyboardSetup.kPrimaryActionKey) &&
-      player.model.equipment == EquippedHandType.seeds;
+      player.model.equipment == EquippedHandType.strawberry;
 
   bool isHarvestBasketAction({
     required DDBasePlayerView player,

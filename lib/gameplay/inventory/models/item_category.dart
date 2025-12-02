@@ -21,7 +21,7 @@ enum ItemCategory {
   forage,
 
   /// Seeds found or purchased
-  seeds,
+  seeds, // TODO(Kevin): strawberry, carrot, etc.
 
   // ========== ANIMAL PRODUCTS ==========
   /// Products from animals (milk, eggs, wool)

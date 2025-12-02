@@ -2,7 +2,7 @@ enum EquippedHandType {
   ironSword,
   shovel,
   wateringCan,
-  seeds,
+  strawberry,
   harvestBasket,
   axe,
   spear,
@@ -32,8 +32,8 @@ enum EquippedHandType {
   //       return 'Shovel';
   //     case EquippedHandType.wateringCan:
   //       return 'Watering Can';
-  //     case EquippedHandType.seeds:
-  //       return 'Seed';
+  //     case EquippedHandType.strawberry:
+  //       return 'Strawberry';
   //     case EquippedHandType.harvestBasket:
   //       return 'Harvest Basket';
   //     case EquippedHandType.axe:

@@ -13,9 +13,9 @@
     "critMultiplier": 1.5,
     "equippedHandType": "harvestBasket"
   },
-  "seeds": {
-    "id": "seeds",
-    "name": "Seeds",
+  "strawberry": {
+    "id": "strawberry",
+    "name": "Strawberry",
     "description": "TODO",
     "type": "weapon",
     "rarity": "common",
@@ -25,7 +25,7 @@
     "attackSpeed": 1.2,
     "critChance": 0.05,
     "critMultiplier": 1.5,
-    "equippedHandType": "seeds"
+    "equippedHandType": "strawberry"
   },
   "shovel": {
     "id": "shovel",

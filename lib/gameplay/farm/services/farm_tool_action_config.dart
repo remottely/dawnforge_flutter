@@ -56,8 +56,12 @@ final class FarmToolActionConfig {
         case EquippedHandType.wateringCan:
           _handleWater(bestTarget.tileX, bestTarget.tileY);
           return;
-        case EquippedHandType.seeds:
-          _handlePlant(bestTarget.tileX, bestTarget.tileY);
+        case EquippedHandType.strawberry:
+          _handlePlant(
+            cropId: EquippedHandType.strawberry.name,
+            x: bestTarget.tileX,
+            y: bestTarget.tileY,
+          );
           return;
         case EquippedHandType.harvestBasket:
           _handleHarvest(player.gameRef, bestTarget.tileX, bestTarget.tileY);
@@ -85,10 +89,14 @@ final class FarmToolActionConfig {
     return true;
   }
 
-  static bool _handlePlant(int x, int y) {
+  static bool _handlePlant({
+    required String cropId,
+    required int x,
+    required int y,
+  }) {
     // TODO: Get crop type from inventory/UI selection
     // const cropId = 'carrot'; // TODO(Kevin): remove 'carrot' dependency
-    const cropId = 'strawberry'; // TODO(Kevin): remove 'carrot' dependency
+    // const cropId = 'strawberry'; // TODO(Kevin): remove 'carrot' dependency
 
     final result = _actionService.plantSeed(x, y, cropId);
     if (result.success) {

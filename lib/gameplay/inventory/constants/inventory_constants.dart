@@ -28,7 +28,7 @@ final class InventoryConstants {
   /// Stack size for equipment and tools (non-stackable)
   static const int kEquipmentStackSize = 1;
 
-  /// Stack size for seeds
+  /// Stack size for seeds // TODO(Kevin): adjust to strawberry, carrot, etc?
   static const int kSeedStackSize = 999;
 
   /// Stack size for resources (wood, stone, fiber)

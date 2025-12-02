@@ -68,7 +68,7 @@ final class FarmActionService {
   ///
   /// Returns [FarmActionResult] indicating success or failure.
   ///
-  /// TODO: Integrate with inventory to check for seeds and consume them.
+  /// TODO: Integrate with inventory to check for strawberries and consume them.
   FarmActionResult plantSeed(int x, int y, String cropId) {
     developer.log(
       '[FarmActionService] Attempting to plant $cropId at ($x, $y)',
