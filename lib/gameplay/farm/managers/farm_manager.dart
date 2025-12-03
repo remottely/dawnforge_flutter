@@ -2,10 +2,10 @@ import 'dart:developer' as developer;
 
 import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
 
-import '../database/crop_database.dart';
+import '../data/farm_tile_store.dart';
+import '../domain/farm_rule_engine.dart';
 import '../models/crop_model.dart';
 import '../models/farm_tile_model.dart';
-import '../models/soil_state_model.dart';
 
 /// Gerenciador singleton do sistema de agricultura
 ///
@@ -16,30 +16,31 @@ final class FarmManager {
 
   static final instance = FarmManager._();
 
-  final Map<String, FarmTileModel> _farmTiles = {}; // TODO(Kevin): NOW_1
+  final FarmTileStore _store = FarmTileStore();
+  final FarmRuleEngine _rules = const FarmRuleEngine();
 
   /// Obter tile por coordenadas
   FarmTileModel? getTile(int x, int y) {
-    return _farmTiles['${x}_$y'];
+    return _store.getTile(x, y);
   }
 
   /// Definir tile
   void setTile(FarmTileModel tile) {
-    _farmTiles['${tile.x}_${tile.y}'] = tile;
+    _store.saveTile(tile);
   }
 
   /// Obter todos os tiles
-  List<FarmTileModel> getAllTiles() => _farmTiles.values.toList();
+  List<FarmTileModel> getAllTiles() => _store.getAllTiles();
 
   /// Limpar todos os tiles
   void clearAll() {
-    _farmTiles.clear();
+    _store.clear();
     developer.log('[FarmManager] All tiles cleared');
   }
 
   /// Resetar farm para estado inicial (novo jogo)
   void reset() {
-    _farmTiles.clear();
+    _store.clear();
     developer.log('[FarmManager] Farm state reset');
   }
 
@@ -55,19 +56,13 @@ final class FarmManager {
     // }
 
     // Obter ou criar tile
-    var tile = getTile(x, y);
-    if (tile == null) {
-      tile = FarmTileModel(x: x, y: y);
-    }
-
-    // Validar estado
-    if (tile.soilState != SoilStateModel.untilled) {
-      developer.log('[FarmManager] Soil already tilled');
+    final tile = _rules.ensureTile(getTile(x, y), x: x, y: y);
+    final updatedTile = _rules.till(tile);
+    if (updatedTile == null) {
       return false;
     }
 
-    // Arar
-    _farmTiles['${x}_$y'] = tile.till();
+    _store.saveTile(updatedTile);
     developer.log('[FarmManager] ✓ Soil tilled successfully');
     return true;
   }
@@ -85,13 +80,17 @@ final class FarmManager {
 
     // Obter tile
     final tile = getTile(x, y);
-    if (tile == null || tile.soilState == SoilStateModel.untilled) {
-      developer.log('[FarmManager] Cannot water untilled soil');
+    if (tile == null) {
+      developer.log('[FarmManager] Cannot water missing tile');
       return false;
     }
 
-    // Regar
-    _farmTiles['${x}_$y'] = tile.water();
+    final updatedTile = _rules.water(tile);
+    if (updatedTile == null) {
+      return false;
+    }
+
+    _store.saveTile(updatedTile);
     developer.log('[FarmManager] ✓ Tile watered successfully');
     return true;
   }
@@ -118,14 +117,12 @@ final class FarmManager {
     }
 
     // Criar crop
-    final crop = CropDatabase.createCrop(cropId);
-    if (crop == null) {
-      developer.log('[FarmManager] Invalid crop ID');
+    final updatedTile = _rules.plant(tile, cropId);
+    if (updatedTile == null) {
       return false;
     }
 
-    // Plantar
-    _farmTiles['${x}_$y'] = tile.plant(crop);
+    _store.saveTile(updatedTile);
 
     // TODO(Kevin): Remover seed do inventário
     // InventoryManager.instance.removeItem(seedItemId, 1);
@@ -146,23 +143,17 @@ final class FarmManager {
       return null;
     }
 
-    final crop = tile.crop!;
+    final result = _rules.harvest(tile);
+    if (result == null) {
+      return null;
+    }
 
-    // TODO(Kevin): Adicionar itens colhidos ao inventário
-    // final harvestItem = ItemFactory.createItem(crop.harvestItemId);
-    // if (harvestItem != null) {
-    //   for (var i = 0; i < crop.yieldAmount; i++) {
-    //     InventoryManager.instance.addItem(harvestItem);
-    //   }
-    // }
-
-    // Limpar tile
-    _farmTiles['${x}_$y'] = tile.harvest();
+    _store.saveTile(result.updatedTile);
 
     developer.log(
-      '[FarmManager] ✓ Harvested ${crop.yieldAmount}x ${crop.name}',
+      '[FarmManager] ✓ Harvested ${result.harvestedCrop.yieldAmount}x ${result.harvestedCrop.name}',
     );
-    return crop;
+    return result.harvestedCrop;
   }
 
   /// Avançar 1 dia em todos os tiles
@@ -174,29 +165,17 @@ final class FarmManager {
     final dayEnded = WorldStateManager.instance.currentDay - 1;
 
     var cropsGrown = 0;
-    for (var entry in _farmTiles.entries) {
-      final oldTile = entry.value;
-      FarmTileModel newTile = oldTile;
+    final tiles = _store.getAllTiles();
+    for (final oldTile in tiles) {
+      final beforeDays = oldTile.crop?.daysPlanted;
+      final newTile = _rules.advanceDay(oldTile, dayEnded);
+      final afterDays = newTile.crop?.daysPlanted;
 
-      if (oldTile.crop != null) {
-        final beforeDays = oldTile.crop!.daysPlanted;
-        newTile = oldTile.advanceDay(dayEnded);
-        final afterDays = newTile.crop?.daysPlanted ?? beforeDays;
-        if (afterDays > beforeDays) {
-          cropsGrown++;
-        }
-      } else {
-        // No crop: if tile was watered that day, consume the water.
-        if (oldTile.soilState == SoilStateModel.watered &&
-            oldTile.lastWateredDay == dayEnded) {
-          newTile = oldTile.copyWith(
-            soilState: SoilStateModel.tilled,
-            lastWateredDay: null,
-          );
-        }
+      if (beforeDays != null && afterDays != null && afterDays > beforeDays) {
+        cropsGrown++;
       }
 
-      _farmTiles[entry.key] = newTile;
+      _store.saveTile(newTile);
     }
 
     developer.log(
@@ -205,22 +184,10 @@ final class FarmManager {
   }
 
   /// Serialização para JSON
-  Map<String, dynamic> toJson() {
-    return {'tiles': _farmTiles.values.map((tile) => tile.toJson()).toList()};
-  }
+  Map<String, dynamic> toJson() => _store.toJson();
 
   /// Deserialização de JSON
   void fromJson(Map<String, dynamic> json) {
-    _farmTiles.clear();
-
-    final tilesData = json['tiles'] as List<dynamic>?;
-    if (tilesData != null) {
-      for (var tileData in tilesData) {
-        final tile = FarmTileModel.fromJson(tileData as Map<String, dynamic>);
-        _farmTiles['${tile.x}_${tile.y}'] = tile;
-      }
-    }
-
-    developer.log('[FarmManager] Loaded ${_farmTiles.length} tiles');
+    _store.fromJson(json);
   }
 }
