@@ -20,10 +20,10 @@ class CharacterFxParticlesAnimationsConfig {
     fontFamily: _kShowDamageFontFamily,
   );
 
-  static const double _kAttackParticlesRadius = 0.3;
+  static const double _kAttackParticlesRadius = 0.6;
 
   static Particle createPrimaryAttackParticles() => Particle.generate(
-    count: 10,
+    count: 8,
     lifespan: 1,
     generator: (i) => AcceleratedParticle(
       acceleration: Vector2(0, 100),

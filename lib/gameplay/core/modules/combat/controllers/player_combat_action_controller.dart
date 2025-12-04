@@ -1,10 +1,11 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_fx.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fireball_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/player_primary_attack_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_fx.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/offset_helper.dart';
+import 'package:darkness_dungeon/shared/framework/players/mixins/dd_base_player_extension.dart';
 
 final class PlayerCombatActionController {
   PlayerCombatActionController._();
@@ -24,16 +25,15 @@ final class PlayerCombatActionController {
 
     AudioManager.instance.playPlayerPrimaryAttackSfx();
 
-    player.addParticle(
-      CharacterFxParticlesAnimationsConfig.createPrimaryAttackParticles(),
-      position: player.size / 2,
-    );
-
-    player.simpleAttackMelee(
+    player.executeMeleeAttack(
       damage: damage,
       size: PlayerPrimaryAttackConfig.componentSize,
       centerOffset: attackOffset,
       animationRight: PlayerPrimaryAttackConfig.loadFxAnimationRight3(),
+      onDamage: (_) => player.addParticle(
+        CharacterFxParticlesAnimationsConfig.createPrimaryAttackParticles(),
+        position: player.size / 2,
+      ),
     );
   }
 

@@ -13,7 +13,7 @@
 
 # Enhance:
 
-- [PRIORITY] add torch ON/OFF interaction
+- [DONE] add torch ON/OFF interaction
 
 ---
 
@@ -23,7 +23,7 @@
 
 - [NOT_PRIORITY] continuous attack with continuous press attack (space bar)
 
-- [PRIORITY] Player walk/run then attack, after attack steel previous attack walk/run animation
+- [DONE] Player walk/run then attack, after attack steel previous attack walk/run animation
 
 - [PRIORITY] attacks particles animations
 
