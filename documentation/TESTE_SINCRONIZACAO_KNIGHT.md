@@ -52,10 +52,10 @@ flutter run
 
 **Itens Iniciais no Inventário:**
 
-- 1x Iron Sword (weaponType: sword)
-- 1x Steel Axe (weaponType: axe)
-- 1x Fire Staff (weaponType: staff)
-- 1x Wooden Shield (weaponType: shield)
+- 1x Iron Sword (equippedHandType: sword)
+- 1x Steel Axe (equippedHandType: axe)
+- 1x Fire Staff (equippedHandType: staff)
+- 1x Wooden Shield (equippedHandType: shield)
 - 5x Health Potion
 - 50x Wood
 - 10x Tomato Seeds
@@ -278,12 +278,12 @@ flutter run
 
 ### Weapon Type Mapping
 
-- [ ] `weaponType: "sword"` → Primary Attack
-- [ ] `weaponType: "axe"` → Primary Attack
-- [ ] `weaponType: "mace"` → Primary Attack
-- [ ] `weaponType: "staff"` → Fireball Attack
-- [ ] `weaponType: "wand"` → Fireball Attack
-- [ ] `weaponType: "shield"` → Sem ataque
+- [ ] `equippedHandType: "sword"` → Primary Attack
+- [ ] `equippedHandType: "axe"` → Primary Attack
+- [ ] `equippedHandType: "mace"` → Primary Attack
+- [ ] `equippedHandType: "staff"` → Fireball Attack
+- [ ] `equippedHandType: "wand"` → Fireball Attack
+- [ ] `equippedHandType: "shield"` → Sem ataque
 
 ### Edge Cases
 

@@ -1,7 +1,8 @@
+import 'dart:async';
+
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_fx_particles_animations_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/conversation/emote_manager.dart';
-import 'package:darkness_dungeon/gameplay/farm/services/farm_action_manager.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_view.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_controller.dart';
@@ -27,7 +28,6 @@ abstract class DDBasePlayerView<
     with Lighting, BlockMovementCollision {
   final M _model;
   late final C _controller;
-  final FarmActionManager farmActionManager;
 
   /// Creates a base player with the specified configuration.
   ///
@@ -44,13 +44,12 @@ abstract class DDBasePlayerView<
     required super.size,
     required super.life,
     required super.speed,
-    required this.farmActionManager,
   }) : _model = model {
     anchor = Anchor.center;
   }
 
   /// Provides read-only access to the player's data model.
-  M get model => _controller.model;
+  M get model => _model;
 
   /// Provides access to the player controller for subclasses.
   C get controller => _controller;
@@ -63,7 +62,16 @@ abstract class DDBasePlayerView<
   ///
   /// Subclasses must implement this to instantiate their specific controller
   /// type with all required callbacks wired to the view.
-  C createController(M model);
+  C createController({
+    required M model,
+    required void Function() onDisplayExclamationEmote,
+    required void Function({
+      required double longVisionRadius,
+      required void Function() notObserved,
+      required void Function(List<Enemy> enemies) observed,
+    })
+    onDetectEnemyInLongVisionRadius,
+  });
 
   /// Creates the collision hitbox for this player.
   ///
@@ -87,7 +95,13 @@ abstract class DDBasePlayerView<
     await super.onLoad();
 
     configureVisualEffects();
-    _controller = createController(_model);
+
+    _controller = createController(
+      model: model,
+      onDisplayExclamationEmote: onDisplayExclamationEmote,
+      onDetectEnemyInLongVisionRadius: onDetectEnemyInLongVisionRadius,
+    );
+
     add(getHitbox());
 
     // Restaurar vida do model depois que Bonfire inicializou

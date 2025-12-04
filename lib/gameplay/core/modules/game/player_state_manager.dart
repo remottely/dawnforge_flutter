@@ -1,6 +1,5 @@
 import 'dart:developer' as developer;
 
-import 'package:darkness_dungeon/gameplay/characters/player/custom/custom_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
 
 /// Singleton que centraliza o estado persistente do player
@@ -21,15 +20,7 @@ class PlayerStateManager {
   // Player Models (persistentes entre mapas)
   // ============================================================================
 
-  CustomPlayerModel? _customPlayerModel; // TODO(Kevin): remove this nullable
   SunnyPlayerModel? _sunnyPlayerModel; // TODO(Kevin): remove this nullable
-
-  /// Obter ou criar modelo do Knight
-  CustomPlayerModel getKnightModel() {
-    _customPlayerModel ??=
-        CustomPlayerModel(); // TODO(Kevin): remove this nullable
-    return _customPlayerModel!;
-  }
 
   /// Obter ou criar modelo do Sunny
   SunnyPlayerModel getSunnyModel() {
@@ -44,20 +35,11 @@ class PlayerStateManager {
 
   /// Serializar estado completo para JSON
   Map<String, dynamic> toJson() {
-    return {
-      'customModel': _customPlayerModel?.toJson(),
-      'sunnyModel': _sunnyPlayerModel?.toJson(),
-    };
+    return {'sunnyModel': _sunnyPlayerModel?.toJson()};
   }
 
   /// Restaurar estado completo de JSON
   void fromJson(Map<String, dynamic> json) {
-    if (json['customModel'] != null) {
-      _customPlayerModel = CustomPlayerModel.fromJson(
-        json['customModel'] as Map<String, dynamic>,
-      );
-    }
-
     if (json['sunnyModel'] != null) {
       _sunnyPlayerModel = SunnyPlayerModel.fromJson(
         json['sunnyModel'] as Map<String, dynamic>,
@@ -69,7 +51,6 @@ class PlayerStateManager {
 
   /// Resetar todo o estado (novo jogo)
   void reset() {
-    _customPlayerModel = null;
     _sunnyPlayerModel = null;
     developer.log('[PlayerStateManager] State reset');
   }
@@ -77,11 +58,7 @@ class PlayerStateManager {
   /// Debug: Log estado atual
   void debugPrintState() {
     developer.log('[PlayerStateManager] Current State:');
-    developer.log('  Knight Life: ${_customPlayerModel?.life}');
     developer.log('  Sunny Life: ${_sunnyPlayerModel?.life}');
-    developer.log(
-      '  Knight Model: ${_customPlayerModel != null ? 'initialized' : 'null'}',
-    );
     developer.log(
       '  Sunny Model: ${_sunnyPlayerModel != null ? 'initialized' : 'null'}',
     );

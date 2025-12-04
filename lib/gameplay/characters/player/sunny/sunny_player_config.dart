@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/shared/character_constants.dart';
+import 'package:darkness_dungeon/gameplay/characters/character_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/lightning_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
@@ -29,7 +29,7 @@ final class SunnyPlayerConfig {
   // Detection & Vision Configuration
   // ============================================================================
 
-  /// The radius within which the player can detect enemies and interactables.
+  /// The radius within which the player can detect enemies and decorations.
   ///
   /// Uses an extra-large vision radius allowing the player to spot threats
   /// and opportunities from a considerable distance.
@@ -123,6 +123,8 @@ final class SunnyPlayerConfig {
 
   static const int kSeedStaminaCost = 5;
 
+  static const int kHarvestBasketStaminaCost = 5;
+
   // ============================================================================
   // Component Dimensions
   // ============================================================================
@@ -139,10 +141,12 @@ final class SunnyPlayerConfig {
   ///
   /// Positioned to match the character's feet/base for accurate collision
   /// detection with ground elements and other entities.
-  static final RectangleHitbox hitbox = HitboxUtils.createCenterHitbox(
+  static final RectangleHitbox hitbox = HitboxUtils.createCustomHitbox(
     componentSize: componentSize,
-    hitboxStartPositionX: 44.0,
-    hitboxStartPositionY: 28.0,
+    left: 44.0,
+    top: 28.0,
+    right: 44.0,
+    bottom: 25.0,
   );
 
   // ============================================================================
@@ -183,7 +187,7 @@ final class SunnyPlayerConfig {
 
   static Future<SpriteAnimation>
   loadRightShovelAnimation() => SpriteAnimation.load(
-    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_strip13.png',
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_strip13.png', // spr_doing_till_strip8
     SpriteAnimationConfig.createStandardData(
       amount: 10,
       textureSize: textureSize,
@@ -192,7 +196,7 @@ final class SunnyPlayerConfig {
 
   static Future<SpriteAnimation>
   loadLeftShovelAnimation() => SpriteAnimation.load(
-    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_left_strip13.png',
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_left_strip13.png', // spr_doing_till_left_strip8
     SpriteAnimationConfig.createStandardData(
       amount: 10,
       textureSize: textureSize,
@@ -219,7 +223,7 @@ final class SunnyPlayerConfig {
 
   static Future<SpriteAnimation>
   loadRightSeedAnimation() => SpriteAnimation.load(
-    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_strip8.png',
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_strip8.png',
     SpriteAnimationConfig.createStandardData(
       amount: 8,
       textureSize: textureSize,
@@ -228,6 +232,24 @@ final class SunnyPlayerConfig {
 
   static Future<SpriteAnimation>
   loadLeftSeedAnimation() => SpriteAnimation.load(
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_left_strip8.png',
+    SpriteAnimationConfig.createStandardData(
+      amount: 8,
+      textureSize: textureSize,
+    ),
+  );
+
+  static Future<SpriteAnimation>
+  loadRightHarvestBasketAnimation() => SpriteAnimation.load(
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_strip8.png',
+    SpriteAnimationConfig.createStandardData(
+      amount: 8,
+      textureSize: textureSize,
+    ),
+  );
+
+  static Future<SpriteAnimation>
+  loadLeftHarvestBasketAnimation() => SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_left_strip8.png',
     SpriteAnimationConfig.createStandardData(
       amount: 8,

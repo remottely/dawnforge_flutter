@@ -28,7 +28,7 @@ final class InventoryConstants {
   /// Stack size for equipment and tools (non-stackable)
   static const int kEquipmentStackSize = 1;
 
-  /// Stack size for seeds
+  /// Stack size for seeds // TODO(Kevin): adjust to strawberry, carrot, etc?
   static const int kSeedStackSize = 999;
 
   /// Stack size for resources (wood, stone, fiber)
@@ -138,8 +138,8 @@ final class InventoryConstants {
   /// Duration of speed buff
   static const int kSpeedBuffDurationSeconds = 240; // 4 minutes
 
-  /// Duration of defense buff
-  static const int kDefenseBuffDurationSeconds = 300; // 5 minutes
+  // /// Duration of defense buff
+  // static const int kDefenseBuffDurationSeconds = 300; // 5 minutes
 
   // ============================================================================
   // Misc Constants

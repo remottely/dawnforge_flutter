@@ -1,17 +1,31 @@
 {
-  "seeds": {
-    "id": "seeds",
-    "name": "Seeds§",
+  "harvestBasket": {
+    "id": "harvestBasket",
+    "name": "Harvest Basket",
     "description": "TODO",
     "type": "weapon",
     "rarity": "common",
     "baseValue": 100,
-    "iconPath": "assets/images/SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/DIG/tools_dig_strip13.png",
+    "iconPath": "",
     "damage": 15,
     "attackSpeed": 1.2,
     "critChance": 0.05,
     "critMultiplier": 1.5,
-    "weaponType": "seeds"
+    "equippedHandType": "harvestBasket"
+  },
+  "strawberry": {
+    "id": "strawberry",
+    "name": "Strawberry",
+    "description": "TODO",
+    "type": "weapon",
+    "rarity": "common",
+    "baseValue": 100,
+    "iconPath": "",
+    "damage": 15,
+    "attackSpeed": 1.2,
+    "critChance": 0.05,
+    "critMultiplier": 1.5,
+    "equippedHandType": "strawberry"
   },
   "shovel": {
     "id": "shovel",
@@ -20,12 +34,12 @@
     "type": "weapon",
     "rarity": "common",
     "baseValue": 100,
-    "iconPath": "assets/images/SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/DIG/tools_dig_strip13.png",
+    "iconPath": "",
     "damage": 15,
     "attackSpeed": 1.2,
     "critChance": 0.05,
     "critMultiplier": 1.5,
-    "weaponType": "shovel"
+    "equippedHandType": "shovel"
   },
   "wateringCan": {
     "id": "wateringCan",
@@ -34,12 +48,26 @@
     "type": "weapon",
     "rarity": "common",
     "baseValue": 100,
-    "iconPath": "assets/images/SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/DIG/tools_dig_strip13.png",
+    "iconPath": "",
     "damage": 15,
     "attackSpeed": 1.2,
     "critChance": 0.05,
     "critMultiplier": 1.5,
-    "weaponType": "wateringCan"
+    "equippedHandType": "wateringCan"
+  },
+  "staff": {
+    "id": "staff",
+    "name": "Staff",
+    "description": "TODO",
+    "type": "weapon",
+    "rarity": "common",
+    "baseValue": 100,
+    "iconPath": "",
+    "damage": 15,
+    "attackSpeed": 1.2,
+    "critChance": 0.05,
+    "critMultiplier": 1.5,
+    "equippedHandType": "staff"
   },
   "ironSword": {
     "id": "ironSword",
@@ -48,12 +76,12 @@
     "type": "weapon",
     "rarity": "common",
     "baseValue": 100,
-    "iconPath": "assets/images/items/ironSword.png",
+    "iconPath": "",
     "damage": 15,
     "attackSpeed": 1.2,
     "critChance": 0.05,
     "critMultiplier": 1.5,
-    "weaponType": "ironSword"
+    "equippedHandType": "ironSword"
   },
   "steel_axe": {
     "id": "steel_axe",
@@ -67,7 +95,7 @@
     "attackSpeed": 0.8,
     "critChance": 0.08,
     "critMultiplier": 1.8,
-    "weaponType": "axe"
+    "equippedHandType": "axe"
   },
   "legendary_blade": {
     "id": "legendary_blade",
@@ -81,7 +109,7 @@
     "attackSpeed": 1.5,
     "critChance": 0.25,
     "critMultiplier": 2.5,
-    "weaponType": "sword"
+    "equippedHandType": "sword"
   },
   "fire_staff": {
     "id": "fire_staff",
@@ -95,7 +123,7 @@
     "attackSpeed": 1.0,
     "critChance": 0.1,
     "critMultiplier": 2.0,
-    "weaponType": "staff"
+    "equippedHandType": "staff"
   },
   "ice_wand": {
     "id": "ice_wand",
@@ -109,7 +137,7 @@
     "attackSpeed": 1.3,
     "critChance": 0.07,
     "critMultiplier": 1.6,
-    "weaponType": "wand"
+    "equippedHandType": "wand"
   },
   "wooden_shield": {
     "id": "wooden_shield",
@@ -123,7 +151,7 @@
     "attackSpeed": 0,
     "critChance": 0,
     "critMultiplier": 1.0,
-    "weaponType": "shield"
+    "equippedHandType": "shield"
   },
   "iron_pickaxe": {
     "id": "iron_pickaxe",
@@ -310,6 +338,19 @@
     "rarity": "common",
     "baseValue": 15,
     "iconPath": "assets/images/items/carrot.png",
+    "maxStackSize": 99,
+    "consumableType": "food",
+    "healAmount": 10,
+    "cooldown": 2.0
+  },
+  "strawberry_item": {
+    "id": "strawberry_item",
+    "name": "Strawberry",
+    "description": "A fresh red strawberry. Can be eaten or sold.",
+    "type": "consumable",
+    "rarity": "common",
+    "baseValue": 15,
+    "iconPath": "assets/images/items/strawberry.png",
     "maxStackSize": 99,
     "consumableType": "food",
     "healAmount": 10,

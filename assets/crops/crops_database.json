@@ -6,7 +6,16 @@
     "yieldAmount": 3,
     "harvestItemId": "carrot_item",
     "requiredSeason": "any",
-    "iconPath": "assets/images/crops/carrot.png"
+    "iconPath": "assets/images/crops/TODO: carrot.png"
+  },
+  "strawberry": {
+    "name": "Strawberry",
+    "description": "A nutritious root vegetable",
+    "daysToMature": 4,
+    "yieldAmount": 3,
+    "harvestItemId": "strawberry_item",
+    "requiredSeason": "any",
+    "iconPath": "assets/images/crops/TODO: strawberry.png"
   },
   "potato": {
     "name": "Potato",

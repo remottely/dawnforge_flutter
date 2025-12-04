@@ -211,7 +211,7 @@ final class CropTileData {
 
   @override
   String toString() =>
-      'Crop($cropId at [$tileX,$tileY], stage: $growthStage/$maxGrowthStages)';
+      'CropTileData($cropId at [$tileX,$tileY], stage: $growthStage/$maxGrowthStages)';
 
   @override
   bool operator ==(Object other) {

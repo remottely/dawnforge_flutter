@@ -32,7 +32,7 @@ if (entries.isEmpty) {
 
 ```dart
 // Validação no adapter
-if (!weaponType.contains('sword') && !weaponType.contains('axe')) {
+if (!equippedHandType.contains('sword') && !equippedHandType.contains('axe')) {
   developer.log('Invalid weapon type for right hand: only sword/axe allowed');
   return null;
 }
@@ -44,9 +44,9 @@ if (!weaponType.contains('sword') && !weaponType.contains('axe')) {
 
 ```dart
 // Validação no adapter
-if (!weaponType.contains('shield') &&
-    !weaponType.contains('staff') &&
-    !weaponType.contains('wand')) {
+if (!equippedHandType.contains('shield') &&
+    !equippedHandType.contains('staff') &&
+    !equippedHandType.contains('wand')) {
   developer.log('Invalid weapon type for left hand: only shield/staff/wand allowed');
   return null;
 }
@@ -269,9 +269,9 @@ if (!weaponType.contains('shield') &&
 
 **Mudanças:**
 
-- ✅ `_equipFirstWeapon()` valida weaponType antes de equipar
-- ✅ `_equipFirstOffhand()` valida weaponType antes de equipar
-- ✅ Import `weapon_item.dart` para acessar `.weaponType`
+- ✅ `_equipFirstWeapon()` valida equippedHandType antes de equipar
+- ✅ `_equipFirstOffhand()` valida equippedHandType antes de equipar
+- ✅ Import `weapon_item.dart` para acessar `.equippedHandType`
 - ✅ Logs com ✓/✗ para sucesso/falha
 - ✅ Logs indicam tecla de ataque (Space/Z)
 - ✅ Mensagens mais claras sobre slots vazios

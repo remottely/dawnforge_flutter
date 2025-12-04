@@ -8,33 +8,33 @@ import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/knight_
 import 'package:darkness_dungeon/gameplay/characters/player/knight/hands/presets/knight_pickaxe_hand_preset.dart';
 
 void exemploSpriteLegado() {
-  // Continua funcionando exatamente como antes
-  final pickaxeData = KnightPickaxeHandPreset.create(
-    id: 'iron_pickaxe',
-    spritePath: 'tools/pickaxe.png',
-    spriteSize: Vector2(32, 32),
-    attachmentOffset: Vector2(0, -28),
-    directionalOffset: Vector2(20, 0),
-    mirroredDirectionalOffset: Vector2(-20, 0),
-  );
+// Continua funcionando exatamente como antes
+final pickaxeData = KnightPickaxeHandPreset.create(
+id: 'iron_pickaxe',
+spritePath: 'tools/pickaxe.png',
+spriteSize: Vector2(32, 32),
+attachmentOffset: Vector2(0, -28),
+directionalOffset: Vector2(20, 0),
+mirroredDirectionalOffset: Vector2(-20, 0),
+);
 
-  // Criar entry com ataque
-  final entry = KnightHandLoadoutEntry(
-    slot: KnightHandSlot.right,
-    itemData: pickaxeData,
-    attack: KnightHandAttackSpec(
-      trigger: KnightAttackTrigger.primary,
-      attackType: AttackType.melee,
-      syncSpec: SynchronizedAttackSpecConfig.standard,
-      execute: (context, damage) {
-        // Sistema legado: rotação via código
-        context.player.simpleAttackMelee(
-          damage: damage,
-          size: CharacterPrimaryAttackConfig.kPlayerPrimaryAttackFxSize,
-        );
-      },
-    ),
-  );
+// Criar entry com ataque
+final entry = KnightHandLoadoutEntry(
+slot: KnightHandSlot.right,
+itemData: pickaxeData,
+attack: KnightHandAttackSpec(
+trigger: KnightAttackTrigger.primary,
+attackType: AttackType.melee,
+syncSpec: SynchronizedAttackSpecConfig.standard,
+execute: (context, damage) {
+// Sistema legado: rotação via código
+context.player.simpleAttackMelee(
+damage: damage,
+size: CharacterPrimaryAttackConfig.kPlayerPrimaryAttackFxSize,
+);
+},
+),
+);
 }
 
 // ============================================================================
@@ -47,33 +47,33 @@ import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attac
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_config.dart';
 
 void exemploAnimacaoNova() {
-  // Criar sword com animação
-  final swordData = KnightAnimatedWeaponPreset.create(
-    id: 'iron_sword',
-    animationPath: 'weapons/sword_slash_strip6.png',
-    frameCount: 6,
-    attackFrameIndex: 3, // Dano aplicado no frame 3
-    animationDuration: Duration(milliseconds: 400),
-    textureSize: Vector2(64, 64),
-    size: Vector2(64, 64),
-    attachmentOffset: Vector2(0, -32),
-    directionalOffset: Vector2(20, 0),
-    mirroredDirectionalOffset: Vector2(-20, 0),
-  );
+// Criar sword com animação
+final swordData = KnightAnimatedWeaponPreset.create(
+id: 'iron_sword',
+animationPath: 'weapons/sword_slash_strip6.png',
+frameCount: 6,
+attackFrameIndex: 3, // Dano aplicado no frame 3
+animationDuration: Duration(milliseconds: 400),
+textureSize: Vector2(64, 64),
+size: Vector2(64, 64),
+attachmentOffset: Vector2(0, -32),
+directionalOffset: Vector2(20, 0),
+mirroredDirectionalOffset: Vector2(-20, 0),
+);
 
-  // Criar entry com callback de frame
-  final entry = KnightHandLoadoutEntry(
-    slot: KnightHandSlot.right,
-    itemData: swordData,
-    attack: KnightHandAttackSpec(
-      trigger: KnightAttackTrigger.primary,
-      attackType: AttackType.melee,
-      syncSpec: SynchronizedAttackSpecConfig.standard,
-      execute: (context, damage) {
-        // ✅ IMPORTANTE: Configurar callback ANTES do ataque começar
-        context.handController.setAttackFrameCallback(() {
-          // Este código executa EXATAMENTE no frame 3 da animação
-          print('💥 Aplicando dano: $damage');
+// Criar entry com callback de frame
+final entry = KnightHandLoadoutEntry(
+slot: KnightHandSlot.right,
+itemData: swordData,
+attack: KnightHandAttackSpec(
+trigger: KnightAttackTrigger.primary,
+attackType: AttackType.melee,
+syncSpec: SynchronizedAttackSpecConfig.standard,
+execute: (context, damage) {
+// ✅ IMPORTANTE: Configurar callback ANTES do ataque começar
+context.handController.setAttackFrameCallback(() {
+// Este código executa EXATAMENTE no frame 3 da animação
+print('💥 Aplicando dano: $damage');
 
           // Aplicar hitbox de dano
           final attackOffset = OffsetHelper.getCenterOffset(
@@ -101,7 +101,8 @@ void exemploAnimacaoNova() {
         // O callback acima será executado quando atingir o frame 3
       },
     ),
-  );
+
+);
 }
 
 // ============================================================================
@@ -109,43 +110,43 @@ void exemploAnimacaoNova() {
 // ============================================================================
 
 void exemploAnimacaoCustomizada() {
-  // Criar dados da animação manualmente
-  final hammerAnimation = KnightHandAnimationData(
-    spritePath: 'weapons/warhammer_slam_strip10.png',
-    frameCount: 10,
-    attackFrameIndex: 7, // Ataque pesado, dano no final
-    animationDuration: Duration(milliseconds: 800), // Ataque lento
-    textureSize: Vector2(96, 96), // Sprite grande
-    loop: false,
-  );
+// Criar dados da animação manualmente
+final hammerAnimation = KnightHandAnimationData(
+spritePath: 'weapons/warhammer_slam_strip10.png',
+frameCount: 10,
+attackFrameIndex: 7, // Ataque pesado, dano no final
+animationDuration: Duration(milliseconds: 800), // Ataque lento
+textureSize: Vector2(96, 96), // Sprite grande
+loop: false,
+);
 
-  // Criar item data com animação customizada
-  final hammerData = KnightHandItemData(
-    id: 'steel_warhammer',
-    animationData: hammerAnimation,
-    size: Vector2(96, 96),
-    slotSpecs: {
-      KnightHandSlot.right: KnightHandSlotSpec(
-        attachmentOffset: Vector2(0, -40),
-        facingRightOffset: Vector2(-24, 0),
-        facingLeftOffset: Vector2(24, 0),
-      ),
-    },
-    defaultAttackDuration: Duration(milliseconds: 800),
-  );
+// Criar item data com animação customizada
+final hammerData = KnightHandItemData(
+id: 'steel_warhammer',
+animationData: hammerAnimation,
+size: Vector2(96, 96),
+slotSpecs: {
+KnightHandSlot.right: KnightHandSlotSpec(
+attachmentOffset: Vector2(0, -40),
+facingRightOffset: Vector2(-24, 0),
+facingLeftOffset: Vector2(24, 0),
+),
+},
+defaultAttackDuration: Duration(milliseconds: 800),
+);
 
-  // Usar no loadout
-  final entry = KnightHandLoadoutEntry(
-    slot: KnightHandSlot.right,
-    itemData: hammerData,
-    attack: KnightHandAttackSpec(
-      trigger: KnightAttackTrigger.primary,
-      attackType: AttackType.melee,
-      syncSpec: SynchronizedAttackSpecConfig.standard,
-      execute: (context, damage) {
-        // Callback executará no frame 7
-        context.handController.setAttackFrameCallback(() {
-          print('💥 SLAM! Heavy damage: ${damage * 1.5}');
+// Usar no loadout
+final entry = KnightHandLoadoutEntry(
+slot: KnightHandSlot.right,
+itemData: hammerData,
+attack: KnightHandAttackSpec(
+trigger: KnightAttackTrigger.primary,
+attackType: AttackType.melee,
+syncSpec: SynchronizedAttackSpecConfig.standard,
+execute: (context, damage) {
+// Callback executará no frame 7
+context.handController.setAttackFrameCallback(() {
+print('💥 SLAM! Heavy damage: ${damage \* 1.5}');
 
           // Dano aumentado para ataque pesado
           context.player.simpleAttackMelee(
@@ -159,7 +160,8 @@ void exemploAnimacaoCustomizada() {
         });
       },
     ),
-  );
+
+);
 }
 
 // ============================================================================
@@ -167,37 +169,37 @@ void exemploAnimacaoCustomizada() {
 // ============================================================================
 
 void exemploMisturado() {
-  // Mão direita: Espada COM ANIMAÇÃO
-  final swordData = KnightAnimatedWeaponPreset.createExampleSword();
+// Mão direita: Espada COM ANIMAÇÃO
+final swordData = KnightAnimatedWeaponPreset.createExampleSword();
 
-  // Mão esquerda: Escudo SEM ANIMAÇÃO (sprite estático)
-  final shieldData = KnightPickaxeHandPreset.create(
-    id: 'wooden_shield',
-    spritePath: 'equipment/shield.png',
-    spriteSize: Vector2(32, 32),
-    attachmentOffset: Vector2(0, -28),
-    directionalOffset: Vector2(-20, 0),
-    mirroredDirectionalOffset: Vector2(20, 0),
-  );
+// Mão esquerda: Escudo SEM ANIMAÇÃO (sprite estático)
+final shieldData = KnightPickaxeHandPreset.create(
+id: 'wooden_shield',
+spritePath: 'equipment/shield.png',
+spriteSize: Vector2(32, 32),
+attachmentOffset: Vector2(0, -28),
+directionalOffset: Vector2(-20, 0),
+mirroredDirectionalOffset: Vector2(20, 0),
+);
 
-  final loadout = KnightHandLoadoutSetup(
-    entries: [
-      // Right hand: Animated sword
-      KnightHandLoadoutEntry(
-        slot: KnightHandSlot.right,
-        itemData: swordData,
-        attack: KnightHandAttackSpec(
-          trigger: KnightAttackTrigger.primary,
-          attackType: AttackType.melee,
-          syncSpec: SynchronizedAttackSpecConfig.standard,
-          execute: (context, damage) {
-            context.handController.setAttackFrameCallback(() {
-              // Executa no frame de ataque da animação
-              context.player.simpleAttackMelee(damage: damage);
-            });
-          },
-        ),
-      ),
+final loadout = KnightHandLoadoutSetup(
+entries: [
+// Right hand: Animated sword
+KnightHandLoadoutEntry(
+slot: KnightHandSlot.right,
+itemData: swordData,
+attack: KnightHandAttackSpec(
+trigger: KnightAttackTrigger.primary,
+attackType: AttackType.melee,
+syncSpec: SynchronizedAttackSpecConfig.standard,
+execute: (context, damage) {
+context.handController.setAttackFrameCallback(() {
+// Executa no frame de ataque da animação
+context.player.simpleAttackMelee(damage: damage);
+});
+},
+),
+),
 
       // Left hand: Static shield (sem ataque)
       KnightHandLoadoutEntry(
@@ -206,7 +208,8 @@ void exemploMisturado() {
         // Sem attack spec = apenas visual
       ),
     ],
-  );
+
+);
 }
 
 // ============================================================================
@@ -214,26 +217,26 @@ void exemploMisturado() {
 // ============================================================================
 
 void exemploDebug() {
-  final itemData = KnightAnimatedWeaponPreset.createExampleSword();
+final itemData = KnightAnimatedWeaponPreset.createExampleSword();
 
-  // Verificar modo
-  if (itemData.isAnimated) {
-    print('🎬 Este item usa ANIMAÇÃO');
-    print('Frames: ${itemData.animationData!.frameCount}');
-    print('Frame de ataque: ${itemData.animationData!.attackFrameIndex}');
-    print('Duração: ${itemData.animationData!.animationDuration.inMilliseconds}ms');
-    print('Tempo do ataque: ${itemData.animationData!.attackFrameTime}s');
-  } else {
-    print('🖼️ Este item usa SPRITE estático');
-    print('Path: ${itemData.spritePath}');
-  }
+// Verificar modo
+if (itemData.isAnimated) {
+print('🎬 Este item usa ANIMAÇÃO');
+print('Frames: ${itemData.animationData!.frameCount}');
+print('Frame de ataque: ${itemData.animationData!.attackFrameIndex}');
+print('Duração: ${itemData.animationData!.animationDuration.inMilliseconds}ms');
+print('Tempo do ataque: ${itemData.animationData!.attackFrameTime}s');
+} else {
+print('🖼️ Este item usa SPRITE estático');
+print('Path: ${itemData.spritePath}');
+}
 
-  // Durante o jogo, verificar progresso
-  final controller = handManager.handControllerFor(KnightHandSlot.right);
-  if (controller?.view?.isAnimated == true) {
-    final progress = controller!.view!.animationProgress;
-    print('Progresso da animação: ${(progress * 100).toStringAsFixed(1)}%');
-  }
+// Durante o jogo, verificar progresso
+final controller = handManager.handControllerFor(KnightHandSlot.right);
+if (controller?.view?.isAnimated == true) {
+final progress = controller!.view!.animationProgress;
+print('Progresso da animação: ${(progress \* 100).toStringAsFixed(1)}%');
+}
 }
 
 // ============================================================================
@@ -243,15 +246,15 @@ void exemploDebug() {
 import 'package:darkness_dungeon/gameplay/inventory/equipment_to_knight_adapter.dart';
 
 void exemploIntegracaoEquipment() {
-  // No EquipmentToKnightAdapter, detectar se WeaponItem tem animação
+// No EquipmentToKnightAdapter, detectar se WeaponItem tem animação
 
-  KnightHandLoadoutEntry _createWeaponEntry(WeaponItem item) {
-    final weaponType = item.weaponType;
+KnightHandLoadoutEntry \_createWeaponEntry(WeaponItem item) {
+final equippedHandType = item.equippedHandType;
 
     // Verificar se este tipo de arma deve usar animação
-    final shouldUseAnimation = weaponType == WeaponType.sword ||
-                               weaponType == WeaponType.axe ||
-                               weaponType == WeaponType.mace;
+    final shouldUseAnimation = equippedHandType == EquippedHandType.sword ||
+                               equippedHandType == EquippedHandType.axe ||
+                               equippedHandType == EquippedHandType.mace;
 
     KnightHandItemData handData;
 
@@ -303,14 +306,15 @@ void exemploIntegracaoEquipment() {
         },
       ),
     );
-  }
 
-  void _applyWeaponDamage(KnightAttackExecutionContext context, double damage) {
-    CameraFx.primaryAttackShake(context.player.gameRef);
-    AudioManager.instance.playPlayerPrimaryAttackSfx();
-    context.player.simpleAttackMelee(
-      damage: damage,
-      size: CharacterPrimaryAttackConfig.kPlayerPrimaryAttackFxSize,
-    );
-  }
+}
+
+void \_applyWeaponDamage(KnightAttackExecutionContext context, double damage) {
+CameraFx.primaryAttackShake(context.player.gameRef);
+AudioManager.instance.playPlayerPrimaryAttackSfx();
+context.player.simpleAttackMelee(
+damage: damage,
+size: CharacterPrimaryAttackConfig.kPlayerPrimaryAttackFxSize,
+);
+}
 }

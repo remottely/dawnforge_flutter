@@ -1,6 +1,8 @@
 # IMPORTANT BEFORE LAUNCH:
 
-- fix die multiple times in the same second bug the game, handle cannot die more than once.
+- [PRIORITY] enhance: create a logic that we dont need to declare each crop asset path to pubspec.yaml like: "assets/images/gameplay/farm/crops/strawberry/"
+- [PRIORITY] farm crops need to have 3D behavior, fix it
+- [PRIORITY] fix die multiple times in the same second bug the game, handle cannot die more than once.
 - refactor all tiled decoration nomenclatures
 - save torch state
 - [PRIORITY] verify if need the \_activeAnimationLockCount logic
@@ -11,7 +13,7 @@
 
 # Enhance:
 
-- [PRIORITY] add torch ON/OFF interaction
+- [DONE] add torch ON/OFF interaction
 
 ---
 
@@ -21,7 +23,7 @@
 
 - [NOT_PRIORITY] continuous attack with continuous press attack (space bar)
 
-- [PRIORITY] Player walk/run then attack, after attack steel previous attack walk/run animation
+- [DONE] Player walk/run then attack, after attack steel previous attack walk/run animation
 
 - [PRIORITY] attacks particles animations
 
@@ -37,7 +39,7 @@
 
   - [PRIORITY] colission behavior
 
-- farmable tile:
+- farm tile:
 
   - [DONE] priority
   - [DONE] render not showing

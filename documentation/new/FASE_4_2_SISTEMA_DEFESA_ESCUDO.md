@@ -69,7 +69,7 @@ enum KnightAttackTrigger { primary, fireball, shieldDefense }
 **Modificação no método `_createOffhandEntryFromItem()`**:
 
 ```dart
-else if (weaponType.contains('shield')) {
+else if (equippedHandType.contains('shield')) {
   attackSpec = KnightHandAttackSpec(
     trigger: KnightAttackTrigger.shieldDefense,
     attackType: AttackType.melee,

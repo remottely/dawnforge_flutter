@@ -55,6 +55,10 @@ class SunnyPlayerModel extends DDFarmPlayerModel {
   int get seedStaminaCost => SunnyPlayerConfig.kSeedStaminaCost;
 
   @override
+  int get harvestBasketStaminaCost =>
+      SunnyPlayerConfig.kHarvestBasketStaminaCost;
+
+  @override
   double get primaryAttackDamage => SunnyPlayerConfig.kPrimaryAttackDamage;
 
   @override

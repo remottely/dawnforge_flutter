@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.58.2+1
+version: 1.61.1+1
 
 environment:
   sdk: ^3.9.2
@@ -51,7 +51,7 @@ flutter:
     - assets/images/gameplay/characters/shared/
     - assets/images/gameplay/characters/weapons/
     - assets/images/gameplay/decorations/
-    - assets/images/gameplay/farmable/
+    # - assets/images/gameplay/farmable/
     - assets/images/ui/input/
     - assets/images/hud/
     - assets/images/joystick/
@@ -65,6 +65,7 @@ flutter:
     - assets/crops/
     - assets/items/
     - assets/images/gameplay/farm/crops/carrot/
+    - assets/images/gameplay/farm/crops/strawberry/
     - assets/images/gameplay/farm/soil/
     - assets/images/SPUM/Resources/Addons/Legacy/0_Unit/0_Sprite/6_Weapons/0_Sword/
     - assets/images/SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/7_Shield/
@@ -76,6 +77,7 @@ flutter:
     - assets/images/SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/AXE/
     - assets/images/SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/CAUGHT/
     - assets/images/SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/DIG/
+    - assets/images/gameplay/farm/test/
 
   fonts:
     - family: Normal

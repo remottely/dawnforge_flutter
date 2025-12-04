@@ -22,7 +22,7 @@ final equipment = EquipmentManager.instance;
 // Encontrar sword no inventário
 final sword = inventory.items
     .whereType<WeaponItem>()
-    .firstWhere((item) => item.weaponType == WeaponType.sword);
+    .firstWhere((item) => item.equippedHandType == EquippedHandType.sword);
 
 // Equipar no slot weapon (Right Hand)
 equipment.equip(sword, EquipmentSlotType.weapon);
@@ -103,7 +103,7 @@ Adicione no `items_database.json`:
     "id": "iron_sword",
     "name": "Iron Sword",
     "type": "weapon",
-    "weaponType": "sword",
+    "equippedHandType": "sword",
     "damage": 15,
     "baseValue": 100,
     "iconPath": "items/weapons/iron_sword_icon.png"

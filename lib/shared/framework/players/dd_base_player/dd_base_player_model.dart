@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/gameplay/inventory/models/weapon_type.dart';
+import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
 
 /// Abstract base model for all player characters.
 ///
@@ -15,7 +15,7 @@ abstract class DDBasePlayerModel {
   double? _currentLife;
   bool _hasKeyItem;
   bool _isObservingEnemies;
-  WeaponType? _equipment;
+  EquippedHandType? _equipment;
 
   /// Creates a base player model with configurable initial state.
   ///
@@ -83,21 +83,27 @@ abstract class DDBasePlayerModel {
   /// Indicates whether the player has any stamina remaining.
   bool get hasStamina => _currentStamina > 0;
 
-  WeaponType? get equipment => _equipment;
-  void setEquipment(WeaponType value) => _equipment = value;
+  EquippedHandType? get equipment => _equipment;
+  void setEquipment(EquippedHandType value) => _equipment = value;
 
   int get shovelStaminaCost;
   bool get canExecuteShovel =>
-      (stamina >= shovelStaminaCost) && (_equipment == WeaponType.shovel);
+      (stamina >= shovelStaminaCost) && (_equipment == EquippedHandType.shovel);
 
   int get wateringCanStaminaCost;
   bool get canExecuteWateringCan =>
       (stamina >= wateringCanStaminaCost) &&
-      (_equipment == WeaponType.wateringCan);
+      (_equipment == EquippedHandType.wateringCan);
 
   int get seedStaminaCost;
   bool get canExecuteSeed =>
-      (stamina >= seedStaminaCost) && (_equipment == WeaponType.seeds);
+      (stamina >= seedStaminaCost) &&
+      (_equipment == EquippedHandType.strawberry);
+
+  int get harvestBasketStaminaCost;
+  bool get canExecuteHarvestBasket =>
+      (stamina >= harvestBasketStaminaCost) &&
+      (_equipment == EquippedHandType.harvestBasket);
 
   // ============================================================================
   // Resource Management
@@ -182,6 +188,6 @@ abstract class DDBasePlayerModel {
     _isObservingEnemies = (json['isObservingEnemies'] as bool?) ?? false;
     _equipment = (json['equipment'] as String?) == 'null'
         ? null
-        : WeaponType.values.byName(json['equipment']);
+        : EquippedHandType.values.byName(json['equipment']);
   }
 }

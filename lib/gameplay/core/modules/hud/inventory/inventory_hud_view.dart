@@ -1,28 +1,19 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/inventory/inventory_hud_config.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
 import 'package:flutter/material.dart';
 
-/// HUD que exibe o inventário do jogador
-final class _InventoryHUDConfig {
-  static const int kComponentId = 2;
-  static const double kSlotSize = 40.0;
-  static const double kSpacing = 4.0;
-  static const double kPadding = 10.0;
-  static const int kSlotsPerRow = 6;
-}
-
 class InventoryHUDView extends InterfaceComponent {
   InventoryHUDView()
     : super(
-        id: _InventoryHUDConfig.kComponentId,
+        id: InventoryHUDConfig.kComponentId,
         size: Vector2(
-          _InventoryHUDConfig.kPadding * 2 +
-              (_InventoryHUDConfig.kSlotSize *
-                  _InventoryHUDConfig.kSlotsPerRow) +
-              (_InventoryHUDConfig.kSpacing *
-                  (_InventoryHUDConfig.kSlotsPerRow - 1)),
+          InventoryHUDConfig.kPadding * 2 +
+              (InventoryHUDConfig.kSlotSize * InventoryHUDConfig.kSlotsPerRow) +
+              (InventoryHUDConfig.kSpacing *
+                  (InventoryHUDConfig.kSlotsPerRow - 1)),
           400,
         ),
         position: Vector2(10, 100),
@@ -62,7 +53,7 @@ class InventoryHUDView extends InterfaceComponent {
     _drawText(
       canvas,
       'INVENTÁRIO (I para fechar)',
-      Offset(_InventoryHUDConfig.kPadding, _InventoryHUDConfig.kPadding),
+      Offset(InventoryHUDConfig.kPadding, InventoryHUDConfig.kPadding),
       fontSize: 14,
     );
 
@@ -77,29 +68,27 @@ class InventoryHUDView extends InterfaceComponent {
 
   void _drawInventorySlots(Canvas canvas) {
     final manager = InventoryManager.instance;
-    double startY = _InventoryHUDConfig.kPadding + 30;
+    double startY = InventoryHUDConfig.kPadding + 30;
 
     _drawText(
       canvas,
       'Inventário (${manager.usedSlots}/${manager.maxSlots}):',
-      Offset(_InventoryHUDConfig.kPadding, startY),
+      Offset(InventoryHUDConfig.kPadding, startY),
       fontSize: 12,
     );
 
     startY += 20;
 
     for (int i = 0; i < manager.maxSlots; i++) {
-      final row = i ~/ _InventoryHUDConfig.kSlotsPerRow;
-      final col = i % _InventoryHUDConfig.kSlotsPerRow;
+      final row = i ~/ InventoryHUDConfig.kSlotsPerRow;
+      final col = i % InventoryHUDConfig.kSlotsPerRow;
 
       final x =
-          _InventoryHUDConfig.kPadding +
-          (col *
-              (_InventoryHUDConfig.kSlotSize + _InventoryHUDConfig.kSpacing));
+          InventoryHUDConfig.kPadding +
+          (col * (InventoryHUDConfig.kSlotSize + InventoryHUDConfig.kSpacing));
       final y =
           startY +
-          (row *
-              (_InventoryHUDConfig.kSlotSize + _InventoryHUDConfig.kSpacing));
+          (row * (InventoryHUDConfig.kSlotSize + InventoryHUDConfig.kSpacing));
       final slot = manager.getSlotByIndex(i);
       _drawSlot(canvas, Offset(x, y), slot?.item?.name, slot?.quantity);
     }
@@ -108,16 +97,16 @@ class InventoryHUDView extends InterfaceComponent {
   void _drawEquipmentSlots(Canvas canvas) {
     final manager = EquipmentManager.instance;
     double startY =
-        _InventoryHUDConfig.kPadding + 30 + 200; // Abaixo do inventário
+        InventoryHUDConfig.kPadding + 30 + 200; // Abaixo do inventário
 
     _drawText(
       canvas,
-      'Equipamento:',
-      Offset(_InventoryHUDConfig.kPadding, startY),
+      'Equipment:',
+      Offset(InventoryHUDConfig.kPadding, startY),
       fontSize: 12,
     );
 
-    startY += 20;
+    startY += 32;
 
     final slots = [
       EquipmentSlotType.weapon,
@@ -134,16 +123,16 @@ class InventoryHUDView extends InterfaceComponent {
       final row = i ~/ 3;
 
       final x =
-          _InventoryHUDConfig.kPadding +
+          InventoryHUDConfig.kPadding +
           (col *
-              (_InventoryHUDConfig.kSlotSize +
+              (InventoryHUDConfig.kSlotSize +
                   10 +
                   60)); // Espaço extra para label
       final y =
           startY +
           (row *
-              (_InventoryHUDConfig.kSlotSize +
-                  _InventoryHUDConfig.kSpacing +
+              (InventoryHUDConfig.kSlotSize +
+                  InventoryHUDConfig.kSpacing +
                   10));
 
       final item = manager.getEquippedItem(slotType);
@@ -170,8 +159,8 @@ class InventoryHUDView extends InterfaceComponent {
     final slotRect = Rect.fromLTWH(
       position.dx,
       position.dy,
-      _InventoryHUDConfig.kSlotSize,
-      _InventoryHUDConfig.kSlotSize,
+      InventoryHUDConfig.kSlotSize,
+      InventoryHUDConfig.kSlotSize,
     );
 
     // Background do slot

@@ -4,7 +4,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager
 import 'package:darkness_dungeon/gameplay/core/modules/save/save_data_model.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/save/save_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
-import 'package:darkness_dungeon/gameplay/farm/farm_manager.dart';
+import 'package:darkness_dungeon/gameplay/farm/managers/farm_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
 
 /// Controller que coordena save/load do estado completo do jogo

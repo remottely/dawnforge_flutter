@@ -7,16 +7,17 @@ import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_view.dart'
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/map_data.dart';
-import 'package:darkness_dungeon/gameplay/decorations/interactables/barrel_decoration.dart';
-import 'package:darkness_dungeon/gameplay/decorations/interactables/chest/chest_decoration_model.dart';
-import 'package:darkness_dungeon/gameplay/decorations/interactables/chest/chest_decoration_view.dart';
-import 'package:darkness_dungeon/gameplay/decorations/interactables/door_decoration.dart';
-import 'package:darkness_dungeon/gameplay/decorations/interactables/door_key_decoration.dart';
-import 'package:darkness_dungeon/gameplay/decorations/interactables/life_potion_decoration.dart';
-import 'package:darkness_dungeon/gameplay/decorations/interactables/spike_trap_decoration.dart';
-import 'package:darkness_dungeon/gameplay/decorations/interactables/torch/torch_decoration_model.dart';
-import 'package:darkness_dungeon/gameplay/decorations/interactables/torch/torch_decoration_view.dart';
-import 'package:darkness_dungeon/gameplay/farmable/farm_tile.dart';
+import 'package:darkness_dungeon/gameplay/decorations/barrel/barrel_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_model.dart';
+import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_view.dart';
+import 'package:darkness_dungeon/gameplay/decorations/door/door_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/door_key/door_key_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/life_potion/life_potion_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/life_potion/life_potion_decoration_config.dart';
+import 'package:darkness_dungeon/gameplay/decorations/spike_trap/spike_trap_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/torch/torch_decoration_model.dart';
+import 'package:darkness_dungeon/gameplay/decorations/torch/torch_decoration_view.dart';
+import 'package:darkness_dungeon/gameplay/farm/components/farm_tile_view.dart';
 
 final class MapConfig {
   MapConfig._();
@@ -54,8 +55,6 @@ final class MapConfig {
         'wizard_npc': (p) => WizardNpcView(position: p.position),
 
         /// Decorations
-
-        /// Interactables
         'barrel_decoration': (p) => BarrelDecorationView(position: p.position),
         'torch_decoration': (p) => TorchDecorationView.lightingEnabled(
           position: p.position,
@@ -65,24 +64,32 @@ final class MapConfig {
           position: p.position,
           model: TorchDecorationModel(initialIsOn: false),
         ),
-        'door_interactable': (p) =>
+        'door_decoration': (p) =>
             DoorDecorationView(position: p.position, size: p.size),
-        'door_key_interactable': (p) =>
+        'door_key_decoration': (p) =>
             DoorKeyDecorationView(position: p.position),
-        'life_potion_interactable': (p) => LifePotionDecorationView(
+        'life_potion_decoration': (p) => LifePotionDecorationView(
           position: p.position,
           healAmount: LifePotionConfig.kHealAmount,
         ),
-        'spike_trap_interactable': (p) =>
+        'spike_trap_decoration': (p) =>
             SpikeTrapDecorationView(position: p.position),
         'chest': (p) => ChestDecorationView(
           position: p.position,
           model: ChestDecorationModel(initialIsOpened: false),
         ),
 
-        /// Farmable
+        /// Farm
         'farm_tile': (p) => FarmTileView(position: p.position),
       };
+
+  /// Testing
+  static const String kFarmTestId = 'farm_test';
+  static const String kConversationTestId = 'conversation_test';
+  static const String kCombatTestId = 'combat_test';
+  static const String kBossTestId = 'boss_test';
+  // static const String kMineTestId = 'mine_test';
+  // static const String kFishingTestId = 'fishing_test';
 
   /// Maps
   static const String kLake1Id = 'lake_1';
@@ -91,17 +98,61 @@ final class MapConfig {
   static const String kTemple1Id = 'temple_1';
 
   static const List<MapData> kAllMaps = [
-    /// lake_1
+    /// Testing Maps
     const MapData(
-      id: kLake1Id,
-      asset: 'tiled/$kLake1Id.json',
-      sensorIds: ['sensor_$kForest1Id', 'sensor_$kDungeon1Id'],
+      id: kFarmTestId,
+      asset: 'tiled/$kFarmTestId.json',
+      sensorIds: [
+        'sensor_$kBossTestId',
+        'sensor_$kConversationTestId',
+        'sensor_$kLake1Id',
+      ],
+      backgroundMusic: AudioConfig.kMusicRo1LettersBackgroundAsset,
+      lightingColor: _kNoneLightingColor,
+      backgroundColor: _kLakeBackgroundColor,
+    ),
+
+    const MapData(
+      id: kConversationTestId,
+      asset: 'tiled/$kConversationTestId.json',
+      sensorIds: ['sensor_$kFarmTestId', 'sensor_$kCombatTestId'],
+      backgroundMusic: AudioConfig.kMusicRo1LettersBackgroundAsset,
+      lightingColor: _kCloudyLightingColor,
+      backgroundColor: _kLakeBackgroundColor,
+    ),
+
+    const MapData(
+      id: kCombatTestId,
+      asset: 'tiled/$kCombatTestId.json',
+      sensorIds: ['sensor_$kConversationTestId', 'sensor_$kBossTestId'],
       backgroundMusic: AudioConfig.kMusicRo1LettersBackgroundAsset,
       lightingColor: _kDarknessLightingColor,
       backgroundColor: _kLakeBackgroundColor,
     ),
 
-    /// forest_1
+    const MapData(
+      id: kBossTestId,
+      asset: 'tiled/$kBossTestId.json',
+      sensorIds: ['sensor_$kCombatTestId', 'sensor_$kFarmTestId'],
+      backgroundMusic: AudioConfig.kMusicRo1LettersBackgroundAsset,
+      lightingColor: _kDarknessLightingColor,
+      backgroundColor: _kLakeBackgroundColor,
+    ),
+
+    /// Game Maps
+    const MapData(
+      id: kLake1Id,
+      asset: 'tiled/$kLake1Id.json',
+      sensorIds: [
+        'sensor_$kForest1Id',
+        'sensor_$kDungeon1Id',
+        'sensor_$kFarmTestId',
+      ],
+      backgroundMusic: AudioConfig.kMusicRo1LettersBackgroundAsset,
+      lightingColor: _kDarknessLightingColor,
+      backgroundColor: _kLakeBackgroundColor,
+    ),
+
     const MapData(
       id: kForest1Id,
       asset: 'tiled/$kForest1Id.json',
@@ -111,7 +162,6 @@ final class MapConfig {
       backgroundColor: _kForestBackgroundColor,
     ),
 
-    /// dungeon_1
     const MapData(
       id: kDungeon1Id,
       asset: 'tiled/$kDungeon1Id.json',
@@ -121,7 +171,6 @@ final class MapConfig {
       backgroundColor: _kDungeonBackgroundColor,
     ),
 
-    /// temple_1
     const MapData(
       id: kTemple1Id,
       asset: 'tiled/$kTemple1Id.json',

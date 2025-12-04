@@ -1,0 +1,302 @@
+{
+  "compressionlevel": -1,
+  "height": 8,
+  "infinite": false,
+  "layers": [
+    {
+      "data": [
+        268, 67, 268, 268, 268, 268, 67, 268, 332, 67, 67, 67, 67, 67, 67, 332,
+        332, 67, 67, 67, 67, 67, 67, 332, 332, 67, 67, 67, 67, 67, 67, 332, 332,
+        67, 67, 67, 67, 67, 67, 332, 332, 67, 67, 67, 67, 67, 67, 332, 332, 67,
+        67, 67, 67, 67, 67, 332, 396, 268, 268, 268, 268, 268, 268, 396
+      ],
+      "height": 8,
+      "id": 1,
+      "name": "Ground",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 8,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "data": [
+        0, 481, 0, 0, 0, 0, 481, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+      ],
+      "height": 8,
+      "id": 4,
+      "name": "Teleports",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 8,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 2,
+      "name": "Farmable",
+      "objects": [],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 3,
+      "name": "Sensors",
+      "objects": [
+        {
+          "height": 8.75110495049507,
+          "id": 18,
+          "name": "sensor_combat_test",
+          "properties": [
+            {
+              "name": "nextMap",
+              "type": "string",
+              "value": "combat_test"
+            },
+            {
+              "name": "playerDirection",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "playerPosition",
+              "type": "string",
+              "value": "6,1"
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 15.865,
+          "x": 16,
+          "y": 0
+        },
+        {
+          "height": 8.87486732673269,
+          "id": 19,
+          "name": "sensor_farm_test",
+          "properties": [
+            {
+              "name": "nextMap",
+              "type": "string",
+              "value": "farm_test"
+            },
+            {
+              "name": "playerDirection",
+              "type": "string",
+              "value": "right"
+            },
+            {
+              "name": "playerPosition",
+              "type": "string",
+              "value": "2,1"
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 15.865,
+          "x": 96,
+          "y": 0
+        },
+        {
+          "height": 16,
+          "id": 20,
+          "name": "life_potion_decoration",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 96,
+          "y": 64
+        },
+        {
+          "height": 16,
+          "id": 21,
+          "name": "life_potion_decoration",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 16,
+          "y": 64
+        },
+        {
+          "height": 16,
+          "id": 22,
+          "name": "life_potion_decoration",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 16,
+          "y": 96
+        },
+        {
+          "height": 16,
+          "id": 23,
+          "name": "life_potion_decoration",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 96,
+          "y": 96
+        },
+        {
+          "height": 16,
+          "id": 24,
+          "name": "kid_npc",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 64,
+          "y": 96
+        },
+        {
+          "height": 16,
+          "id": 25,
+          "name": "boss_enemy",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 56.2920792079208,
+          "y": 54.8069306930693
+        },
+
+        {
+          "height": 16,
+          "id": 26,
+          "name": "torch_decoration",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 79.8712871287129,
+          "y": 8.08910891089109
+        },
+        {
+          "height": 16,
+          "id": 27,
+          "name": "torch_decoration",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 32.0990099009901,
+          "y": 7.59405940594059
+        },
+        {
+          "height": 16,
+          "id": 28,
+          "name": "torch_decoration",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 8.21287128712872,
+          "y": 31.7277227722772
+        },
+        {
+          "height": 16,
+          "id": 29,
+          "name": "torch_decoration",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 8.21287128712871,
+          "y": 64.029702970297
+        },
+        {
+          "height": 16,
+          "id": 30,
+          "name": "torch_decoration",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 9.32673267326733,
+          "y": 104.623762376238
+        },
+        {
+          "height": 16,
+          "id": 31,
+          "name": "torch_decoration",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 101.034653465347,
+          "y": 32.0990099009901
+        },
+        {
+          "height": 16,
+          "id": 32,
+          "name": "torch_decoration",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 101.90099009901,
+          "y": 102.39603960396
+        },
+        {
+          "height": 16,
+          "id": 33,
+          "name": "torch_decoration",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 102.024752475248,
+          "y": 57.2227722772277
+        },
+
+        {
+          "height": 16,
+          "id": 34,
+          "name": "torch_decoration",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 16,
+          "x": 56.1089108910891,
+          "y": 57.3465346534653
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 5,
+  "nextobjectid": 35,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "tiledversion": "1.11.2",
+  "tileheight": 16,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "SunnysideWorldTileset.json"
+    }
+  ],
+  "tilewidth": 16,
+  "type": "map",
+  "version": "1.10",
+  "width": 8
+}
