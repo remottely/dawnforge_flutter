@@ -8,18 +8,6 @@ import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_model.dart';
 
-/// Abstract base view for all player characters.
-///
-/// Provides the foundational structure and common functionality for player
-/// character views following the MVC pattern. This class handles:
-/// - Lifecycle management (load, update, removal)
-/// - Visual effects (damage, death)
-/// - Input routing
-/// - Controller coordination
-///
-/// Type Parameters:
-/// - [C] The specific controller type extending DDBasePlayerController
-/// - [M] The specific model type extending DDBasePlayerModel
 abstract class DDBasePlayerView<
   C extends DDBasePlayerController<M>,
   M extends DDBasePlayerModel
@@ -27,16 +15,7 @@ abstract class DDBasePlayerView<
     extends SimplePlayer
     with Lighting, BlockMovementCollision {
   final M _model;
-  late final C _controller;
 
-  /// Creates a base player with the specified configuration.
-  ///
-  /// [position] The initial world position for the player character.
-  /// [model] The data model containing player state and statistics.
-  /// [animation] The directional animation set for the character.
-  /// [size] The rendered size of the player component.
-  /// [life] Maximum health points.
-  /// [speed] Base movement speed in pixels per second.
   DDBasePlayerView({
     required super.position,
     required M model,
@@ -48,17 +27,9 @@ abstract class DDBasePlayerView<
     anchor = Anchor.center;
   }
 
-  /// Provides access to the player controller for subclasses.
+  late final C _controller;
   C get controller => _controller;
 
-  // ============================================================================
-  // Abstract Factory Methods - Must be implemented by subclasses
-  // ============================================================================
-
-  /// Creates the controller instance for this player.
-  ///
-  /// Subclasses must implement this to instantiate their specific controller
-  /// type with all required callbacks wired to the view.
   C createController({
     required M model,
     required void Function() onDisplayExclamationEmote,
@@ -70,22 +41,11 @@ abstract class DDBasePlayerView<
     onDetectEnemyInLongVisionRadius,
   });
 
-  /// Creates the collision hitbox for this player.
-  ///
-  /// Subclasses must implement this to define their collision boundaries.
   RectangleHitbox getHitbox();
 
-  /// Returns the lighting configuration for this player.
   LightingConfig getLightingConfig();
 
-  /// Creates the crypt decoration displayed on player death.
-  ///
-  /// [position] The world position for the death marker.
   DDDecoration getDeathMarker(Vector2 position);
-
-  // ============================================================================
-  // Lifecycle Methods
-  // ============================================================================
 
   @override
   Future<void> onLoad() async {
@@ -101,14 +61,9 @@ abstract class DDBasePlayerView<
 
     add(getHitbox());
 
-    // Restaurar vida do model depois que Bonfire inicializou
     _restoreLifeFromModel();
   }
 
-  /// Restaura a vida salva no model aplicando dano proporcional.
-  ///
-  /// Como o Bonfire não permite setar life diretamente, aplicamos
-  /// o dano necessário para ajustar para o valor salvo.
   void _restoreLifeFromModel() {
     final savedLife = _model.life;
     if (savedLife != null && savedLife < life) {
@@ -132,10 +87,6 @@ abstract class DDBasePlayerView<
     super.onRemove();
   }
 
-  // ============================================================================
-  // Input Handling
-  // ============================================================================
-
   @override
   void onJoystickAction(JoystickActionEvent event) {
     if (isDead) return;
@@ -143,10 +94,6 @@ abstract class DDBasePlayerView<
     _controller.handleInputAction(player: this, event: event);
     super.onJoystickAction(event);
   }
-
-  // ============================================================================
-  // Combat & Damage Handling
-  // ============================================================================
 
   @override
   void onReceiveDamage(AttackOriginEnum attacker, double damage, dynamic id) {
@@ -159,27 +106,16 @@ abstract class DDBasePlayerView<
 
   @override
   void onDie() {
-    // Resetar vida no model para vida máxima (evita loop de morte)
-    // _playerModel.updateLife(maxLife);
-
     displayDeathVisualEffects();
     removeFromParent();
     super.onDie();
   }
 
-  // ============================================================================
-  // Visual Effects - Customizable by subclasses
-  // ============================================================================
-
-  /// Configures visual effects such as lighting and movement controls.
   void configureVisualEffects() {
     setupLighting(getLightingConfig());
     setupMovementByJoystick(intensityEnabled: true);
   }
 
-  /// Displays damage number and particle effects when the player takes damage.
-  ///
-  /// Can be overridden by subclasses for custom damage display behavior.
   void displayDamageVisualEffects(double damage) {
     showDamage(
       damage,
@@ -190,18 +126,10 @@ abstract class DDBasePlayerView<
     );
   }
 
-  /// Displays death effects including death marker placement.
-  ///
-  /// Can be overridden by subclasses for custom death effects.
   void displayDeathVisualEffects() {
     gameRef.add(getDeathMarker(position));
   }
 
-  // ============================================================================
-  // Common Utility Methods - Available to all player types
-  // ============================================================================
-
-  /// Displays an exclamation emote above the character's head.
   void onDisplayExclamationEmote() {
     add(
       EmoteManager.displayEmoteAboveCharacter(
@@ -212,7 +140,6 @@ abstract class DDBasePlayerView<
     );
   }
 
-  /// Evaluates enemy visibility within the specified radius.
   void onDetectEnemyInLongVisionRadius({
     required double longVisionRadius,
     required void Function() notObserved,
@@ -225,14 +152,6 @@ abstract class DDBasePlayerView<
     );
   }
 
-  // ============================================================================
-  // Internal Synchronization
-  // ============================================================================
-
-  /// Synchronizes the Bonfire life value to the player model.
-  ///
-  /// This ensures the model always reflects the current life state,
-  /// which is crucial for persistence between map transitions.
   void _syncLifeToModel() {
     if (_model.life != life) {
       _model.updateLife(life);

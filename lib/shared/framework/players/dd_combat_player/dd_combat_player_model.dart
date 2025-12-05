@@ -1,11 +1,6 @@
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_model.dart';
 
-/// Model for players with hybrid combat capabilities (melee + ranged).
-///
-/// Extends the base player model to add validation and cost management
-/// for both melee and ranged attack types. This is suitable for characters
-/// like Knight and Sunny who have access to multiple combat options.
 abstract class DDCombatPlayerModel extends DDMobilePlayerModel {
   DDCombatPlayerModel({
     required super.maxStamina,
@@ -16,49 +11,29 @@ abstract class DDCombatPlayerModel extends DDMobilePlayerModel {
     super.initialHasKey,
   });
 
-  // ============================================================================
-  // Abstract Combat Configuration
-  // ============================================================================
-
-  /// Stamina cost to execute the primary melee attack.
   int get primaryAttackStaminaCost;
 
-  /// Stamina cost to execute the ranged attack.
   int get rangedAttackStaminaCost;
 
-  /// Damage dealt by the primary melee attack.
   double get primaryAttackDamage;
 
-  /// Damage dealt by the ranged attack.
   double get rangedAttackDamage;
 
-  // ============================================================================
-  // Combat Validations
-  // ============================================================================
-
-  /// Determines if the player can execute the primary melee attack.
   bool get canExecutePrimaryAttack =>
       (stamina >= primaryAttackStaminaCost) &&
       (equipment == EquippedHandType.ironSword);
 
-  /// Determines if the player can execute the ranged attack.
   bool get canExecuteRangedAttack =>
       (stamina >= rangedAttackStaminaCost) &&
       (equipment == EquippedHandType.staff);
 
-  // ============================================================================
-  // Serialization
-  // ============================================================================
-
   @override
   Map<String, dynamic> toJson() {
     return super.toJson();
-    // No additional fields to serialize at this level
   }
 
   @override
   void fromJson(Map<String, dynamic> json) {
     super.fromJson(json);
-    // No additional fields to deserialize at this level
   }
 }

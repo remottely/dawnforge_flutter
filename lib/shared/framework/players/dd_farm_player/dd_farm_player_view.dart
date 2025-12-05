@@ -7,20 +7,6 @@ import 'package:darkness_dungeon/shared/framework/players/dd_defense_player/dd_d
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_model.dart';
 
-/// Abstract view for players with enhanced mobility (walk + run).
-///
-/// Extends hybrid combat player to add run state management and animation
-/// switching. This class coordinates run input with speed changes and
-/// animation transitions while maintaining all combat capabilities.
-///
-/// Features:
-/// - Dynamic speed adjustment based on run state
-/// - Animation set switching (walk ↔ run)
-/// - Movement lock awareness (prevents animation changes during attacks)
-///
-/// Type Parameters:
-/// - [C] The specific controller type extending DDFarmPlayerController
-/// - [M] The specific model type extending DDFarmPlayerModel
 abstract class DDFarmPlayerView<
   C extends DDFarmPlayerController<M>,
   M extends DDFarmPlayerModel
@@ -62,7 +48,6 @@ abstract class DDFarmPlayerView<
     );
   }
 
-  /// Creates the mobile controller with all required callbacks.
   C createFarmController({
     required M model,
     required void Function() onDisplayExclamationEmote,
@@ -80,10 +65,6 @@ abstract class DDFarmPlayerView<
     required bool Function() onExecuteSeed,
     required bool Function() onExecuteHarvestBasket,
   });
-
-  // ============================================================================
-  // Input Handling Override - Movement Locking
-  // ============================================================================
 
   @override
   void onJoystickChangeDirectional(JoystickDirectionalEvent event) {
@@ -107,7 +88,7 @@ abstract class DDFarmPlayerView<
           executionStartFrame: 4,
           onActionStart: lockAction,
           onActionEnd: unlockAction,
-          // TODO(chatgpt): preciso que vc
+
           onExecutionFrames: () {
             FarmToolActionConfig.execute(player: this);
           },
@@ -130,7 +111,7 @@ abstract class DDFarmPlayerView<
           executionStartFrame: 4,
           onActionStart: lockAction,
           onActionEnd: unlockAction,
-          // TODO(chatgpt): preciso que vc
+
           onExecutionFrames: () {
             FarmToolActionConfig.execute(player: this);
           },
@@ -153,7 +134,7 @@ abstract class DDFarmPlayerView<
           executionStartFrame: 4,
           onActionStart: lockAction,
           onActionEnd: unlockAction,
-          // TODO(chatgpt): preciso que vc
+
           onExecutionFrames: () {
             FarmToolActionConfig.execute(player: this);
           },
@@ -176,7 +157,7 @@ abstract class DDFarmPlayerView<
           executionStartFrame: 4,
           onActionStart: lockAction,
           onActionEnd: unlockAction,
-          // TODO(chatgpt): preciso que vc
+
           onExecutionFrames: () {
             FarmToolActionConfig.execute(player: this);
           },
