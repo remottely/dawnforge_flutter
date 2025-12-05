@@ -85,14 +85,13 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   }
 
   SunnyPlayerView buildSunnyPlayer(Vector2 position) {
-    final stateManager = PlayerStateManager.instance;
-    final model = stateManager.getSunnyModel();
+    final playerModel = PlayerStateManager.instance.getSunnyModel();
 
     // Salvar vida do player anterior no model antes de criar novo
     // (apenas se não estiver morto - evita loop de morte)
     if (_lastSunnyPlayer != null && !_lastSunnyPlayer!.isDead) {
       final currentLife = _lastSunnyPlayer!.life;
-      model.updateLife(currentLife);
+      playerModel.updateLife(currentLife);
       developer.log(
         '[ViewModel] Captured Sunny life before rebuild: $currentLife',
       );
@@ -100,11 +99,11 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
 
     final player = SunnyPlayerView<SunnyPlayerController, SunnyPlayerModel>(
       position: position,
-      model: model,
+      model: playerModel,
     );
 
     developer.log(
-      '[ViewModel] Created Sunny with model life: ${model.life ?? 'null'}',
+      '[ViewModel] Created Sunny with model life: ${playerModel.life ?? 'null'}',
     );
 
     _lastSunnyPlayer = player;

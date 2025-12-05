@@ -49,7 +49,7 @@ final class FarmToolActionConfig {
     }
 
     if (bestTarget != null) {
-      switch (player.model.equipment) {
+      switch (player.controller.model.equipment) {
         case EquippedHandType.shovel:
           _handleTillSoil(bestTarget.tileX, bestTarget.tileY);
           return;

@@ -157,7 +157,7 @@ abstract class DDMobilePlayerView<
 
     if (shouldRun) {
       // Update speed immediately so movement (when restored) uses correct speed
-      speed = _baseSpeed * model.runSpeedMultiplier;
+      speed = _baseSpeed * controller.model.runSpeedMultiplier;
       // If currently locked, defer the animation change until update/unlock
       if (isActionLocked) {
         _pendingAnimationChange = true;

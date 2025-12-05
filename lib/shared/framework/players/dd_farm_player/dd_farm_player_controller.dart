@@ -32,7 +32,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
   }) =>
       (actionId == JoystickSetup.kPrimaryActionId ||
           actionId == KeyboardSetup.kPrimaryActionKey) &&
-      player.model.equipment == EquippedHandType.shovel;
+      player.controller.model.equipment == EquippedHandType.shovel;
 
   bool isWateringCanAction({
     required DDBasePlayerView player,
@@ -40,7 +40,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
   }) =>
       (actionId == JoystickSetup.kPrimaryActionId ||
           actionId == KeyboardSetup.kPrimaryActionKey) &&
-      player.model.equipment == EquippedHandType.wateringCan;
+      player.controller.model.equipment == EquippedHandType.wateringCan;
 
   bool isSeedAction({
     required DDBasePlayerView player,
@@ -48,7 +48,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
   }) =>
       (actionId == JoystickSetup.kPrimaryActionId ||
           actionId == KeyboardSetup.kPrimaryActionKey) &&
-      player.model.equipment == EquippedHandType.strawberry;
+      player.controller.model.equipment == EquippedHandType.strawberry;
 
   bool isHarvestBasketAction({
     required DDBasePlayerView player,
@@ -56,7 +56,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
   }) =>
       (actionId == JoystickSetup.kPrimaryActionId ||
           actionId == KeyboardSetup.kPrimaryActionKey) &&
-      player.model.equipment == EquippedHandType.harvestBasket;
+      player.controller.model.equipment == EquippedHandType.harvestBasket;
 
   @override
   void handleInputAction({

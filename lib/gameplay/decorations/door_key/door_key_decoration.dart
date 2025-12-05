@@ -29,7 +29,7 @@ class DoorKeyDecorationView extends DDContactDecoration {
 
   void _triggerEffect(SimplePlayer player) {
     // TODO(Kevin): add some VFX and SFX here
-    (player as DDBasePlayerView).model
+    (player as DDBasePlayerView).controller.model
         .obtainKey(); // TODO(Kevin): make this more generic, like DDBasePlayerView
   }
 

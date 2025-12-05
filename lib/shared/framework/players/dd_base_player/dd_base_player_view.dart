@@ -48,9 +48,6 @@ abstract class DDBasePlayerView<
     anchor = Anchor.center;
   }
 
-  /// Provides read-only access to the player's data model.
-  M get model => _model;
-
   /// Provides access to the player controller for subclasses.
   C get controller => _controller;
 
@@ -97,7 +94,7 @@ abstract class DDBasePlayerView<
     configureVisualEffects();
 
     _controller = createController(
-      model: model,
+      model: _model,
       onDisplayExclamationEmote: onDisplayExclamationEmote,
       onDetectEnemyInLongVisionRadius: onDetectEnemyInLongVisionRadius,
     );

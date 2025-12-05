@@ -31,7 +31,7 @@ class DoorDecorationView extends DDDecoration {
 
   void _handlePlayerCollision(SimplePlayer player) {
     if (!_isOpen) {
-      if ((player as DDBasePlayerView).model.hasKey == true) {
+      if ((player as DDBasePlayerView).controller.model.hasKey == true) {
         // TODO(Kevin): make this more generic, like DDBasePlayerView
         _triggerDoorOpening(player);
       } else {
@@ -42,7 +42,7 @@ class DoorDecorationView extends DDDecoration {
 
   void _triggerDoorOpening(SimplePlayer player) {
     _isOpen = true;
-    (player as DDBasePlayerView).model
+    (player as DDBasePlayerView).controller.model
         .removeKey(); // TODO(Kevin): make this more generic, like DDBasePlayerView
     _playDoorOpeningAnimation();
   }

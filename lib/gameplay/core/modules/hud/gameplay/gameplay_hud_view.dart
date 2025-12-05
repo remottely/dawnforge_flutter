@@ -53,6 +53,7 @@ class GameplayHUDView extends GameInterface {
   bool _hasPlayerWithKey() {
     return gameRef.player != null &&
         (gameRef.player as DDBasePlayerView)
+            .controller
             .model
             .hasKey; // TODO(Kevin): make this more generic, like DDBasePlayerView
   }

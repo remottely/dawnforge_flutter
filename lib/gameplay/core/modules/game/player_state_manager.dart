@@ -55,12 +55,12 @@ class PlayerStateManager {
     developer.log('[PlayerStateManager] State reset');
   }
 
-  /// Debug: Log estado atual
-  void debugPrintState() {
-    developer.log('[PlayerStateManager] Current State:');
-    developer.log('  Sunny Life: ${_sunnyPlayerModel?.life}');
-    developer.log(
-      '  Sunny Model: ${_sunnyPlayerModel != null ? 'initialized' : 'null'}',
-    );
-  }
+  // /// Debug: Log estado atual
+  // void debugPrintState() {
+  //   developer.log('[PlayerStateManager] Current State:');
+  //   developer.log('  Sunny Life: ${_sunnyPlayerModel?.life}');
+  //   developer.log(
+  //     '  Sunny Model: ${_sunnyPlayerModel != null ? 'initialized' : 'null'}',
+  //   );
+  // }
 }

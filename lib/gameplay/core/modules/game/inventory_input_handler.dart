@@ -249,6 +249,6 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
 
     final player = players.first;
 
-    player.model.setEquipment(equippedHandType);
+    player.controller.model.setEquipment(equippedHandType);
   }
 }

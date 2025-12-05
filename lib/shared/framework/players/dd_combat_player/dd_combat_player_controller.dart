@@ -38,7 +38,7 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
   }) =>
       (actionId == JoystickSetup.kPrimaryActionId ||
           actionId == KeyboardSetup.kPrimaryActionKey) &&
-      player.model.equipment == EquippedHandType.ironSword;
+      player.controller.model.equipment == EquippedHandType.ironSword;
 
   bool isRangedAttackAction({
     required DDBasePlayerView player,
@@ -46,7 +46,7 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
   }) =>
       (actionId == JoystickSetup.kSecondaryActionId ||
           actionId == KeyboardSetup.kPrimaryActionKey) &&
-      player.model.equipment == EquippedHandType.staff;
+      player.controller.model.equipment == EquippedHandType.staff;
 
   // ============================================================================
   // Combat Actions
