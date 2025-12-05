@@ -4,38 +4,15 @@ import '../models/item_quality.dart';
 import '../models/item_rarity.dart';
 import '../models/item_type.dart';
 
-/// Item representing harvested crops from farming.
-///
-/// CropItems are different from MaterialItems because they:
-/// - Have quality levels (normal, silver, gold, iridium)
-/// - Can be eaten to restore energy
-/// - Are used in cooking recipes
-/// - Are part of the farming collection
-///
-/// Examples: Parsnip, Cauliflower, Melon, Pumpkin, Corn
 final class CropItem extends Item {
-  /// Category of this crop (vegetables, fruits, flowers)
   final ItemCategory category;
-
-  /// Quality of this crop harvest
   final ItemQuality quality;
-
-  /// Energy restored when eaten (base value, modified by quality)
   final int energyRestore;
-
-  /// Health restored when eaten (base value, modified by quality)
   final int healthRestore;
-
-  /// Season this crop grows in (spring, summer, fall, winter, any)
   final String season;
-
-  /// Whether this crop regrows after harvest (like corn, berries)
   final bool regrows;
-
-  /// Days between regrowth harvests (0 if doesn't regrow)
   final int regrowthDays;
 
-  /// Creates a crop item
   const CropItem({
     required super.id,
     required super.name,
@@ -57,22 +34,17 @@ final class CropItem extends Item {
     this.regrowthDays = 0,
   });
 
-  /// Sell value with quality multiplier applied
   @override
   int get sellValue => (baseValue * quality.priceMultiplier).round();
 
-  /// Energy restore with quality bonus
   int get effectiveEnergyRestore {
-    // Quality doesn't affect energy/health in Stardew Valley
     return energyRestore;
   }
 
-  /// Health restore with quality bonus
   int get effectiveHealthRestore {
     return healthRestore;
   }
 
-  /// Can this crop be eaten?
   bool get isEdible => category.isEdible;
 
   @override
@@ -99,7 +71,6 @@ final class CropItem extends Item {
     };
   }
 
-  /// Creates crop from JSON
   factory CropItem.fromJson(Map<String, dynamic> json) {
     return CropItem(
       id: json['id'] as String,
@@ -165,7 +136,6 @@ final class CropItem extends Item {
     );
   }
 
-  /// Create copy with different quality level
   CropItem withQuality(ItemQuality newQuality) {
     return copyWith(quality: newQuality);
   }

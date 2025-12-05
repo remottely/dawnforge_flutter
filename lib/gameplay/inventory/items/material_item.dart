@@ -2,14 +2,9 @@ import '../models/item.dart';
 import '../models/item_rarity.dart';
 import '../models/item_type.dart';
 
-/// Item de material para crafting
-///
-/// Materiais são usados para criar outros itens e construir estruturas.
 final class MaterialItem extends Item {
-  /// Tipo de material (wood, stone, ore, fiber, etc)
   final String materialType;
 
-  /// Cria um material
   const MaterialItem({
     required super.id,
     required super.name,
@@ -38,7 +33,6 @@ final class MaterialItem extends Item {
     };
   }
 
-  /// Cria material a partir de JSON
   factory MaterialItem.fromJson(Map<String, dynamic> json) {
     return MaterialItem(
       id: json['id'] as String,
