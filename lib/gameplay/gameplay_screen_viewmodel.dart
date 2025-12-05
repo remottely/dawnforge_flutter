@@ -5,7 +5,6 @@ import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_c
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/shield_defense_input_handler.dart';
-// import 'package:darkness_dungeon/gameplay/core/modules/game/custom_player_inventory_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/game_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/inventory_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager.dart';
@@ -21,13 +20,12 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
 
   late final CameraConfig cameraConfig;
   final gameplayGameStateManager = GameStateManager();
-  // final customPlayerInventoryInputHandler = CustomPlayerInventoryInputHandler();
+
   final inventoryInputHandler = InventoryInputHandler();
   final shieldDefenseInputHandler = ShieldDefenseInputHandler();
   late PlayerController playerInput;
   late FarmInputHandler farmInputHandler;
 
-  // Referências aos últimos players criados (para capturar vida antes de recriar)
   SunnyPlayerView? _lastSunnyPlayer;
 
   @override
@@ -36,9 +34,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
     _loadGameOrResetLife();
   }
 
-  /// Tenta carregar save existente, ou reseta vida se for novo jogo
   void _loadGameOrResetLife() {
-    // Tentar carregar save de forma assíncrona
     GameSaveController.instance
         .loadGame()
         .then((success) {
@@ -56,22 +52,13 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   }
 
   void _resetPlayerLifeOnNewGame() {
-    // Resetar vida no PlayerStateManager quando iniciar novo jogo
-    // Isso garante que mesmo após morte, o próximo jogo comece com vida cheia
     final stateManager = PlayerStateManager.instance;
     final sunnyModel = stateManager.getSunnyModel();
 
     if (sunnyModel.life != null && sunnyModel.life! <= 0) {
-      sunnyModel.updateLife(200); // Vida padrão do Sunny (kLifeExtraLarge)
+      sunnyModel.updateLife(200);
       developer.log('[ViewModel] Reset Sunny life to full on new game');
     }
-  }
-
-  @override
-  void dispose() {
-    // NÃO para a música no dispose - deixa o AudioManager gerenciar
-    // A música deve continuar entre transições de tela
-    super.dispose();
   }
 
   @override
@@ -87,8 +74,6 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   SunnyPlayerView buildSunnyPlayer(Vector2 position) {
     final playerModel = PlayerStateManager.instance.getSunnyModel();
 
-    // Salvar vida do player anterior no model antes de criar novo
-    // (apenas se não estiver morto - evita loop de morte)
     if (_lastSunnyPlayer != null && !_lastSunnyPlayer!.isDead) {
       final currentLife = _lastSunnyPlayer!.life;
       playerModel.updateLife(currentLife);

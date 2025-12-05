@@ -37,7 +37,6 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
             .properties[MapConfig.kBackgroundMusicPropertyKey]
             ?.toString();
 
-        // Toca a música apenas se for diferente da última requisitada
         if (mapBackgroundMusic != null &&
             mapBackgroundMusic.isNotEmpty &&
             _lastRequestedMusic != mapBackgroundMusic) {
@@ -55,7 +54,6 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
 
         playerInput = GameplayScreenConfig.createPlayerInput();
 
-        // Criar novo farm input handler para este mapa
         farmInputHandler = FarmInputHandler(player: player);
 
         return Material(
@@ -66,7 +64,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
             map: mapItem.map,
             components: [
               gameplayGameStateManager,
-              // customPlayerInventoryInputHandler,
+
               inventoryInputHandler,
               shieldDefenseInputHandler,
               farmInputHandler,
