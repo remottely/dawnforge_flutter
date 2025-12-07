@@ -1,11 +1,6 @@
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_model.dart';
 
-/// Data model for the Sunny player character.
-///
-/// Extends the mobile player model to provide Sunny-specific configuration
-/// values while inheriting all base player functionality including combat
-/// resources, mobility state, and inventory management.
 class SunnyPlayerModel extends DDFarmPlayerModel {
   SunnyPlayerModel({
     double? initialStamina,
@@ -20,10 +15,6 @@ class SunnyPlayerModel extends DDFarmPlayerModel {
          initialLife: initialLife,
          initialHasKey: initialHasKey,
        );
-
-  // ============================================================================
-  // Configuration Overrides
-  // ============================================================================
 
   @override
   double get maxStamina => SunnyPlayerConfig.kMaxStamina;
@@ -67,20 +58,13 @@ class SunnyPlayerModel extends DDFarmPlayerModel {
   @override
   double get runSpeedMultiplier => SunnyPlayerConfig.kRunSpeedMultiplier;
 
-  // ============================================================================
-  // Serialization
-  // ============================================================================
-
   @override
   Map<String, dynamic> toJson() {
     final json = super.toJson();
-    json['playerType'] = 'sunny'; // Identifier for deserialization
+    json['playerType'] = 'sunny';
     return json;
   }
 
-  /// Creates a SunnyPlayerModel from JSON data.
-  ///
-  /// [json] The JSON map containing saved player state.
   factory SunnyPlayerModel.fromJson(Map<String, dynamic> json) {
     final model = SunnyPlayerModel(
       initialStamina: (json['currentStamina'] as num?)?.toDouble(),

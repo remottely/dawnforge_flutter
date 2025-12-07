@@ -133,20 +133,11 @@ final class CharacterActionSpriteAnimationHelper {
     }
   }
 
-  /// Internal helper to select the correct animation based on movement direction.
-  ///
-  /// Uses `lastDirectionHorizontal` from Bonfire's Movement mixin, which preserves
-  /// the last horizontal facing direction even during purely vertical movement.
-  /// This ensures correct sprite orientation (left/right) is maintained when
-  /// moving up/down, matching Bonfire's animation system behavior.
-  ///
-  /// Returns left animation when facing left, right animation otherwise.
   static Future<SpriteAnimation> _selectAnimationByDirection({
     required Future<SpriteAnimation> animationRight,
     required Future<SpriteAnimation> animationLeft,
     required Movement? target,
   }) {
-    // Use lastDirectionHorizontal which persists across vertical movements
     final horizontalDirection =
         target?.lastDirectionHorizontal ?? Direction.right;
     final isFacingRight = horizontalDirection == Direction.right;
