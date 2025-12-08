@@ -1,10 +1,7 @@
 enum SoilStateModel {
   untilled,
-
   tilled,
-
   watered,
-
   fertilized;
 
   String toJson() => name;

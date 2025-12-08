@@ -13,7 +13,6 @@ final class FarmToolActionConfig {
       FarmFeedbackService.instance;
 
   static void execute({required DDBasePlayerView player}) {
-    // Compute the world position in front of the player where the shovel acts
     final attackOffset = OffsetHelper.getCenterOffset(
       Vector2(12, 0),
       player.lastDirection,
@@ -23,14 +22,12 @@ final class FarmToolActionConfig {
         player.rectCollision.center.toVector2() +
         Vector2(attackOffset.x, attackOffset.y);
 
-    // Define a small detection rect around the impact point
     final hitRect = Rect.fromCenter(
       center: Offset(startPos.x, startPos.y),
       width: 16,
       height: 16,
     );
 
-    // Query for farm tile views that overlap the impact area and pick the closest one
     FarmTileView? bestTarget;
     double bestDistSq = double.infinity;
 
@@ -67,7 +64,6 @@ final class FarmToolActionConfig {
           _handleHarvest(player.gameRef, bestTarget.tileX, bestTarget.tileY);
           return;
         default:
-          // Valid target to till soil
           return;
       }
     }

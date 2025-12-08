@@ -6,16 +6,9 @@ import '../models/crop_model.dart';
 import '../models/farm_tile_model.dart';
 import '../models/soil_state_model.dart';
 
-/// Pure rule engine responsible for transforming tiles according to
-/// high-level farm actions (till, water, plant, harvest, day advance).
-///
-/// Nothing in this class knows about UI, services or persistence. It only
-/// receives the current [FarmTileModel] and returns a new instance, making the
-/// logic easy to test and reuse.
 final class FarmRuleEngine {
   const FarmRuleEngine();
 
-  /// Ensures that we always work with a valid [FarmTileModel].
   FarmTileModel ensureTile(
     FarmTileModel? tile, {
     required int x,
