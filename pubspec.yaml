@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.61.8+1
+version: 1.61.9+1
 
 environment:
   sdk: ^3.9.2
@@ -38,7 +38,6 @@ flutter:
     - assets/
     - assets/images/
     # - assets/images/items/
-    - assets/images/JellySquish Weapons Pack/
     - assets/images/gameplay/characters/emotes/
     - assets/images/gameplay/characters/enemies/
     - assets/images/gameplay/characters/enemies/goblin/
@@ -64,14 +63,8 @@ flutter:
     - assets/l10n/
     - assets/crops/
     - assets/items/
-    - assets/images/gameplay/farm/crops/carrot/
     - assets/images/gameplay/farm/crops/strawberry/
     - assets/images/gameplay/farm/soil/
-    - assets/images/SPUM/Resources/Addons/Legacy/0_Unit/0_Sprite/6_Weapons/0_Sword/
-    - assets/images/SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/7_Shield/
-    - assets/images/SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/2_Axe/
-    # - assets/images/SPUM/Resources/Addons/Ver300/0_Unit/0_Sprite/8_Weapons/7_Shield/
-    - assets/images/SPUM/Resources/Addons/Ver300/0_Unit/0_Sprite/8_Weapons/8_Mace/
     - assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/
     - assets/images/SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/ATTACK/
     - assets/images/SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/AXE/

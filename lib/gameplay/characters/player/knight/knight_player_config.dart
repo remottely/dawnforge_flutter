@@ -96,12 +96,4 @@ final class KnightPlayerConfig {
         position: Vector2(position.x, position.y),
         size: cryptComponentSize,
       );
-
-  static const String staffSpritePath = 'JellySquish Weapons Pack/staff.png';
-
-  static const String sword3SpritePath =
-      'SPUM/Resources/Addons/Legacy/0_Unit/0_Sprite/6_Weapons/0_Sword/Sword_3.png';
-
-  static const String axeNormal1SpritePath =
-      'SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/2_Axe/AxeNormal1.png';
 }
