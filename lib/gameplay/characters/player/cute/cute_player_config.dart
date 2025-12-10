@@ -46,6 +46,7 @@ final class CutePlayerConfig {
   static const int kHarvestBasketStaminaCost = 5;
 
   static final Vector2 textureSize = TileConstants.tileSizeCute;
+  static final Vector2 textureSizeActions = TileConstants.tileSizeCuteActions;
 
   static final Vector2 componentSize = textureSize;
 
@@ -57,72 +58,111 @@ final class CutePlayerConfig {
     bottom: 25.0,
   );
 
-  static Future<SpriteAnimation>
-  _loadCutePlayerIdleLeft6() => SpriteAnimation.load(
-    'CutesideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_idle_left_strip9.png',
-    SpriteAnimationConfig.createStandardData(
-      amount: 9,
-      textureSize: CutePlayerConfig.textureSize,
-    ),
-  );
+  static Future<SpriteAnimation> _loadCutePlayerIdleLeft6() =>
+      SpriteAnimation.load(
+        'new/Player/idle/player_idle_west_6.png',
+        SpriteAnimationConfig.createStandardData(
+          amount: 6,
+          textureSize: CutePlayerConfig.textureSize,
+        ),
+      );
 
-  static Future<SpriteAnimation>
-  loadRightAttackAnimation() => SpriteAnimation.load(
-    'CutesideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_sword_strip10.png',
-    SpriteAnimationConfig.createStandardData(
-      amount: 10,
-      textureSize: textureSize,
-    ),
-  );
+  static Future<SpriteAnimation> _loadCutePlayerIdleUp6() =>
+      SpriteAnimation.load(
+        'new/Player/idle/player_idle_north_6.png',
+        SpriteAnimationConfig.createStandardData(
+          amount: 6,
+          textureSize: CutePlayerConfig.textureSize,
+        ),
+      );
 
-  static Future<SpriteAnimation>
-  loadLeftAttackAnimation() => SpriteAnimation.load(
-    'CutesideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_sword_left_strip10.png',
-    SpriteAnimationConfig.createStandardData(
-      amount: 10,
-      textureSize: textureSize,
-    ),
-  );
+  static Future<SpriteAnimation> _loadCutePlayerIdleDown6() =>
+      SpriteAnimation.load(
+        'new/Player/idle/player_idle_south_6.png',
+        SpriteAnimationConfig.createStandardData(
+          amount: 6,
+          textureSize: CutePlayerConfig.textureSize,
+        ),
+      );
 
-  static Future<SpriteAnimation>
-  loadRightShovelAnimation() => SpriteAnimation.load(
-    'CutesideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_strip13.png',
-    SpriteAnimationConfig.createStandardData(
-      amount: 10,
-      textureSize: textureSize,
-    ),
-  );
+  static Future<SpriteAnimation> loadRightAttackAnimation() =>
+      SpriteAnimation.load(
+        'new/Player/attack/player_attack_east_4.png',
+        SpriteAnimationConfig.createStandardData(
+          amount: 4,
+          textureSize: textureSize,
+        ),
+      );
 
-  static Future<SpriteAnimation>
-  loadLeftShovelAnimation() => SpriteAnimation.load(
-    'CutesideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_left_strip13.png',
-    SpriteAnimationConfig.createStandardData(
-      amount: 10,
-      textureSize: textureSize,
-    ),
-  );
+  static Future<SpriteAnimation> loadLeftAttackAnimation() =>
+      SpriteAnimation.load(
+        'new/Player/attack/player_attack_west_4.png',
+        SpriteAnimationConfig.createStandardData(
+          amount: 4,
+          textureSize: textureSize,
+        ),
+      );
 
-  static Future<SpriteAnimation>
-  loadRightWateringCanAnimation() => SpriteAnimation.load(
-    'CutesideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_watering_strip5.png',
-    SpriteAnimationConfig.createStandardData(
-      amount: 5,
-      textureSize: textureSize,
-    ),
-  );
+  static Future<SpriteAnimation> loadUpAttackAnimation() =>
+      SpriteAnimation.load(
+        // TODO(Kevin): NOW - create up and down verifications
+        'new/Player/attack/player_attack_north_4.png',
+        SpriteAnimationConfig.createStandardData(
+          amount: 4,
+          textureSize: textureSize,
+        ),
+      );
 
-  static Future<SpriteAnimation>
-  loadLeftWateringCanAnimation() => SpriteAnimation.load(
-    'CutesideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_watering_left_strip5.png',
-    SpriteAnimationConfig.createStandardData(
-      amount: 5,
-      textureSize: textureSize,
-    ),
-  );
+  static Future<SpriteAnimation> loadDownAttackAnimation() =>
+      SpriteAnimation.load(
+        // TODO(Kevin): NOW - create up and down verifications
+        'new/Player/attack/player_attack_south_4.png',
+        SpriteAnimationConfig.createStandardData(
+          amount: 4,
+          textureSize: textureSize,
+        ),
+      );
+
+  static Future<SpriteAnimation> loadRightShovelAnimation() =>
+      SpriteAnimation.load(
+        'new/Player/shovel/player_shovel_east_2.dart',
+        SpriteAnimationConfig.createStandardData(
+          amount: 2,
+          textureSize: textureSize,
+        ),
+      );
+
+  static Future<SpriteAnimation> loadLeftShovelAnimation() =>
+      SpriteAnimation.load(
+        'new/Player/shovel/player_shovel_west_2.dart',
+        SpriteAnimationConfig.createStandardData(
+          amount: 2,
+          textureSize: textureSize,
+        ),
+      );
+
+  static Future<SpriteAnimation> loadRightWateringCanAnimation() =>
+      SpriteAnimation.load(
+        'new/Player/water/player_water_east_2.dart',
+        SpriteAnimationConfig.createStandardData(
+          amount: 5,
+          textureSize: textureSize,
+        ),
+      );
+
+  static Future<SpriteAnimation> loadLeftWateringCanAnimation() =>
+      SpriteAnimation.load(
+        'new/Player/water/player_water_west_2.dart',
+        SpriteAnimationConfig.createStandardData(
+          amount: 5,
+          textureSize: textureSize,
+        ),
+      );
 
   static Future<SpriteAnimation>
   loadRightSeedAnimation() => SpriteAnimation.load(
-    'CutesideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_strip8.png',
+    // TODO(Kevin): CREATE ANIMATION
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_strip8.png',
     SpriteAnimationConfig.createStandardData(
       amount: 8,
       textureSize: textureSize,
@@ -131,7 +171,8 @@ final class CutePlayerConfig {
 
   static Future<SpriteAnimation>
   loadLeftSeedAnimation() => SpriteAnimation.load(
-    'CutesideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_left_strip8.png',
+    // TODO(Kevin): CREATE ANIMATION
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_left_strip8.png',
     SpriteAnimationConfig.createStandardData(
       amount: 8,
       textureSize: textureSize,
@@ -140,7 +181,8 @@ final class CutePlayerConfig {
 
   static Future<SpriteAnimation>
   loadRightHarvestBasketAnimation() => SpriteAnimation.load(
-    'CutesideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_strip8.png',
+    // TODO(Kevin): CREATE ANIMATION
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_strip8.png',
     SpriteAnimationConfig.createStandardData(
       amount: 8,
       textureSize: textureSize,
@@ -149,47 +191,81 @@ final class CutePlayerConfig {
 
   static Future<SpriteAnimation>
   loadLeftHarvestBasketAnimation() => SpriteAnimation.load(
-    'CutesideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_left_strip8.png',
+    // TODO(Kevin): CREATE ANIMATION
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_left_strip8.png',
     SpriteAnimationConfig.createStandardData(
       amount: 8,
       textureSize: textureSize,
     ),
   );
 
-  static final SimpleDirectionAnimation
-  walkAnimation = SimpleDirectionAnimation(
-    idleLeft: _loadCutePlayerIdleLeft6(),
-    idleRight: UISpriteAnimationsConfig.loadCutePlayerIdleRight6(),
-    runLeft: SpriteAnimation.load(
-      'CutesideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_walking_left_strip8.png',
-      SpriteAnimationConfig.createStandardData(
-        amount: 8,
-        textureSize: textureSize,
-      ),
-    ),
-    runRight: SpriteAnimation.load(
-      'CutesideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_walking_strip8.png',
-      SpriteAnimationConfig.createStandardData(
-        amount: 8,
-        textureSize: textureSize,
-      ),
-    ),
-  );
+  static final SimpleDirectionAnimation walkAnimation =
+      SimpleDirectionAnimation(
+        idleLeft: _loadCutePlayerIdleLeft6(),
+        idleRight: UISpriteAnimationsConfig.loadCutePlayerIdleRight6(),
+        idleUp: _loadCutePlayerIdleUp6(),
+        idleDown: _loadCutePlayerIdleDown6(),
+        runLeft: SpriteAnimation.load(
+          'new/Player/walk/player_walk_west_6.png',
+          SpriteAnimationConfig.createStandardData(
+            amount: 6,
+            textureSize: textureSize,
+          ),
+        ),
+        runRight: SpriteAnimation.load(
+          'new/Player/walk/player_walk_east_6.png',
+          SpriteAnimationConfig.createStandardData(
+            amount: 6,
+            textureSize: textureSize,
+          ),
+        ),
+        runUp: SpriteAnimation.load(
+          'new/Player/walk/player_walk_north_6.png',
+          SpriteAnimationConfig.createStandardData(
+            amount: 6,
+            textureSize: textureSize,
+          ),
+        ),
+        runDown: SpriteAnimation.load(
+          'new/Player/walk/player_walk_south_6.png',
+          SpriteAnimationConfig.createStandardData(
+            amount: 6,
+            textureSize: textureSize,
+          ),
+        ),
+      );
 
   static final SimpleDirectionAnimation runAnimation = SimpleDirectionAnimation(
     idleLeft: _loadCutePlayerIdleLeft6(),
     idleRight: UISpriteAnimationsConfig.loadCutePlayerIdleRight6(),
+    idleUp: _loadCutePlayerIdleUp6(),
+    idleDown: _loadCutePlayerIdleDown6(),
+    // TODO(Kevin): NOW - create run animations
     runLeft: SpriteAnimation.load(
-      'CutesideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_run_left_strip8.png',
+      'new/Player/walk/player_walk_west_6.png',
       SpriteAnimationConfig.createStandardData(
-        amount: 8,
+        amount: 6,
         textureSize: textureSize,
       ),
     ),
     runRight: SpriteAnimation.load(
-      'CutesideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_run_strip8.png',
+      'new/Player/walk/player_walk_east_6.png',
       SpriteAnimationConfig.createStandardData(
-        amount: 8,
+        amount: 6,
+        textureSize: textureSize,
+      ),
+    ),
+    runUp: SpriteAnimation.load(
+      'new/Player/walk/player_walk_north_6.png',
+      SpriteAnimationConfig.createStandardData(
+        amount: 6,
+        textureSize: textureSize,
+      ),
+    ),
+    runDown: SpriteAnimation.load(
+      'new/Player/walk/player_walk_south_6.png',
+      SpriteAnimationConfig.createStandardData(
+        amount: 6,
         textureSize: textureSize,
       ),
     ),
@@ -213,3 +289,12 @@ final class CutePlayerConfig {
         size: cryptComponentSize,
       );
 }
+
+    // -
+    // - new/Player/axe/
+    // - new/Player/death/
+    // - new/Player/idle/
+    // - new/Player/pickaxe/
+    // - new/Player/shovel/
+    // - new/Player/walk/
+    // - new/Player/water/

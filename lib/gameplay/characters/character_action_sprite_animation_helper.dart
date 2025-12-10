@@ -11,6 +11,7 @@ final class CharacterActionSpriteAnimationHelper {
     required SimpleDirectionAnimation? currentAnimation,
     required Movement? target,
   }) async {
+    // TODO(Kevin): NOW - create up and down verifications
     final attackAnimationOriginal = await _selectAnimationByDirection(
       animationRight: animationRight,
       animationLeft: animationLeft,
@@ -133,6 +134,7 @@ final class CharacterActionSpriteAnimationHelper {
     }
   }
 
+  // TODO(Kevin): NOW - create up and down verifications
   static Future<SpriteAnimation> _selectAnimationByDirection({
     required Future<SpriteAnimation> animationRight,
     required Future<SpriteAnimation> animationLeft,

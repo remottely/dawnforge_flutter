@@ -22,7 +22,7 @@ class UISpriteAnimationsConfig {
 
   static Future<SpriteAnimation> loadCutePlayerIdleRight6() =>
       SpriteAnimation.load(
-        'new/Player/Player_Actions_row_1.png',
+        'new/Player/idle/player_idle_east_6.png',
         SpriteAnimationConfig.createCustomData(
           amount: 2,
           textureSize: CutePlayerConfig.textureSize,

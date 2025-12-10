@@ -1,9 +1,9 @@
 import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_model.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/shield_defense_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/game_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/inventory_input_handler.dart';
@@ -26,7 +26,8 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   late PlayerController playerInput;
   late FarmInputHandler farmInputHandler;
 
-  SunnyPlayerView? _lastSunnyPlayer;
+  // SunnyPlayerView? _lastSunnyPlayer;
+  CutePlayerView? _lastCutePlayer;
 
   @override
   void initState() {
@@ -71,27 +72,63 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
     cameraConfig = GameplayScreenConfig.createCameraConfig(context);
   }
 
-  SunnyPlayerView buildSunnyPlayer(Vector2 position) {
-    final playerModel = PlayerStateManager.instance.getSunnyModel();
+  // SunnyPlayerView buildSunnyPlayer(Vector2 position) {
+  //   final playerModel = PlayerStateManager.instance.getSunnyModel();
 
-    if (_lastSunnyPlayer != null && !_lastSunnyPlayer!.isDead) {
-      final currentLife = _lastSunnyPlayer!.life;
-      playerModel.updateLife(currentLife);
-      developer.log(
-        '[ViewModel] Captured Sunny life before rebuild: $currentLife',
-      );
-    }
+  //   if (_lastSunnyPlayer != null && !_lastSunnyPlayer!.isDead) {
+  //     final currentLife = _lastSunnyPlayer!.life;
+  //     playerModel.updateLife(currentLife);
+  //     developer.log(
+  //       '[ViewModel] Captured Sunny life before rebuild: $currentLife',
+  //     );
+  //   }
 
-    final player = SunnyPlayerView<SunnyPlayerController, SunnyPlayerModel>(
+  //   final player = SunnyPlayerView<SunnyPlayerController, SunnyPlayerModel>(
+  //     position: position,
+  //     model: playerModel,
+  //   );
+
+  //   developer.log(
+  //     '[ViewModel] Created Sunny with model life: ${playerModel.life ?? 'null'}',
+  //   );
+
+  //   _lastSunnyPlayer = player;
+  //   return player;
+  // }
+
+  // // TODO(Kevin): PUT IT BACK NOW
+  // CutePlayerView buildCutePlayer(Vector2 position) {
+  //   final playerModel = PlayerStateManager.instance.getCuteModel();
+
+  //   if (_lastCutePlayer != null && !_lastCutePlayer!.isDead) {
+  //     final currentLife = _lastCutePlayer!.life;
+  //     playerModel.updateLife(currentLife);
+  //     developer.log(
+  //       '[ViewModel] Captured Cute life before rebuild: $currentLife',
+  //     );
+  //   }
+
+  //   final player = CutePlayerView<CutePlayerController, CutePlayerModel>(
+  //     position: position,
+  //     model: playerModel,
+  //   );
+
+  //   developer.log(
+  //     '[ViewModel] Created Cute with model life: ${playerModel.life ?? 'null'}',
+  //   );
+
+  //   _lastCutePlayer = player;
+  //   return player;
+  // }
+
+  // TODO(Kevin): REMOVE IT NOW
+  CutePlayerView buildCutePlayer(Vector2 position) {
+    final player = CutePlayerView<CutePlayerController, CutePlayerModel>(
       position: position,
-      model: playerModel,
+      model: CutePlayerModel(),
     );
 
-    developer.log(
-      '[ViewModel] Created Sunny with model life: ${playerModel.life ?? 'null'}',
-    );
-
-    _lastSunnyPlayer = player;
+    _lastCutePlayer = player;
     return player;
   }
 }

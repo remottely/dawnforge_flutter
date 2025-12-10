@@ -22,5 +22,6 @@ final class TileConstants {
     kTileDimensionSuperLarge,
   );
   static final Vector2 tileSizeSunny = Vector2(96, 64);
-  static final Vector2 tileSizeCute = Vector2(48, 48);
+  static final Vector2 tileSizeCute = Vector2(32, 32);
+  static final Vector2 tileSizeCuteActions = Vector2(48, 48);
 }

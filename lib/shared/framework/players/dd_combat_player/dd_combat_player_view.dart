@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/character_action_sprite_animation_helper.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/controllers/player_combat_action_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
@@ -84,26 +84,30 @@ abstract class DDCombatPlayerView<
   });
 
   bool _onExecutePrimaryAttack(double damage) {
-    final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
-      AttackType.melee,
-      () {
-        CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-          animationRight: SunnyPlayerConfig.loadRightAttackAnimation(),
-          animationLeft: SunnyPlayerConfig.loadLeftAttackAnimation(),
-          currentAnimation: animation,
-          target: this,
-          executionStartFrame: 4,
-          onActionStart: lockAction,
-          onActionEnd: unlockAction,
-          onExecutionFrames: () {
-            PlayerCombatActionController.executePrimaryAttack(
-              player: this,
-              damage: damage,
-            );
-          },
-        );
-      },
-    );
+    final AttackExecutionInfo?
+    executionInfo = meleeAttackController.execute(AttackType.melee, () {
+      // TODO(Kevin): NOW - create dinamic animation injected by view interface configurations
+      // TODO(Kevin): NOW - create up and down verifications
+      CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
+        // animationRight: SunnyPlayerConfig.loadRightAttackAnimation(),
+        // animationLeft: SunnyPlayerConfig.loadLeftAttackAnimation(),
+        animationRight: CutePlayerConfig.loadRightAttackAnimation(),
+        animationLeft: CutePlayerConfig.loadLeftAttackAnimation(),
+        // animationUp: CutePlayerConfig.loadUpAttackAnimation(),
+        // animationDown: CutePlayerConfig.loadDownAttackAnimation(),
+        currentAnimation: animation,
+        target: this,
+        executionStartFrame: 4,
+        onActionStart: lockAction,
+        onActionEnd: unlockAction,
+        onExecutionFrames: () {
+          PlayerCombatActionController.executePrimaryAttack(
+            player: this,
+            damage: damage,
+          );
+        },
+      );
+    });
 
     return executionInfo != null;
   }
