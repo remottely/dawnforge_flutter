@@ -111,3 +111,17 @@ url_launcher - [![pub package](https://img.shields.io/pub/v/url_launcher.svg)](h
 
 cd assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE\ CHARACTER/PNG/WITH_FX
 magick spr_doing_till_strip8.png -crop 96x64 +repage -flop +append spr_doing_till_left_strip8.png
+
+cd assets/images/new/Player
+magick Player*Actions.png -crop 96x48 +repage -scene 1 Player_Actions_row*%d.png
+
+eu possuo um arquivo chamado Player.png q contem todas as sprites do meu player. porem eu preciso transformar todos os frames em arquivos separados. o meu arquivo esta assim hoje:
+cada frame ocupa 48x48. o arquivo é 192 x 320 e esta configurado assim:
+seriam 10 rows e 6 colunas de 48x48. só que as 6 primeiras rows possuem os totais 6 frames, porem as ultimas 4 rows possuem apenas 4 frames cada. entao preciso cortar todo o arquivo em 10 novos arquivos, 6 primeiras rows em arquivos de 6 frames e as 4 ultimas em 4 frames. tudo utilizando um unico comando no temrinal utilizando magick no mac q ja possuo instalado.
+
+magick Player.png -crop 32x32 +repage frame\_%03d.png && rm frame_006.png frame_007.png frame_013.png frame_014.png frame_015.png frame_020.png frame_021.png frame_022.png frame_023.png frame_027.png frame_028.png frame_029.png frame_030.png frame_031.png frame_034.png frame_035.png frame_036.png frame_037.png frame_038.png frame_039.png
+
+magick Player.png -crop 192x32 +repage +adjoin row\_%02d.png
+
+magick row_06.png -crop 128x32+0+0 +repage row_06.png && magick row_07.png -crop 128x32+0+0 +repage row_07.png && magick row_08.png -crop 128x32+0+0 +repage row_08.png && magick row_09.png -crop 128x32+0+0 +repage row_09.png
+magick player_attack_east_4.png -crop 32x32 +repage -flop +append player_attack_west_4.png

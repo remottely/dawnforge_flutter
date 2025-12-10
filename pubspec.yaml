@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.62.0+1
+version: 1.62.1+1
 
 environment:
   sdk: ^3.9.2
@@ -71,7 +71,14 @@ flutter:
     - assets/images/SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/CAUGHT/
     - assets/images/SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/DIG/
     - assets/images/gameplay/farm/test/
-    - assets/images/new/Player/
+    - assets/images/new/Player/attack/
+    - assets/images/new/Player/axe/
+    - assets/images/new/Player/death/
+    - assets/images/new/Player/idle/
+    - assets/images/new/Player/pickaxe/
+    - assets/images/new/Player/shovel/
+    - assets/images/new/Player/walk/
+    - assets/images/new/Player/water/
 
   fonts:
     - family: Normal

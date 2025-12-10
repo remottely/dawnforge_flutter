@@ -2,7 +2,7 @@ import 'dart:async' as async;
 
 import 'package:darkness_dungeon/app/screens/menu_screen.dart';
 import 'package:darkness_dungeon/app/screens/menu_screen_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/new/game_page.dart';
+import 'package:darkness_dungeon/gameplay/gameplay_screen.dart';
 import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -54,8 +54,7 @@ abstract class MenuScreenViewModel extends State<MenuScreen> {
   void navigateToGameplayScreen() {
     Navigator.push(
       context,
-      // MaterialPageRoute(builder: (context) => const GameplayScreen()), // TODO(Kevin): NOW - PUT IT BACK NOW
-      MaterialPageRoute(builder: (context) => const GamePage()),
+      MaterialPageRoute(builder: (context) => const GameplayScreen()),
     );
   }
 

@@ -5,6 +5,7 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_confi
 import 'package:darkness_dungeon/gameplay/characters/enemies/mini_boss/mini_boss_enemy_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
@@ -16,6 +17,16 @@ class UISpriteAnimationsConfig {
         SpriteAnimationConfig.createStandardData(
           amount: 6,
           textureSize: KnightPlayerConfig.textureSize,
+        ),
+      );
+
+  static Future<SpriteAnimation> loadCutePlayerIdleRight6() =>
+      SpriteAnimation.load(
+        'new/Player/Player_Actions_row_1.png',
+        SpriteAnimationConfig.createCustomData(
+          amount: 2,
+          textureSize: CutePlayerConfig.textureSize,
+          stepTime: 0.2,
         ),
       );
 
