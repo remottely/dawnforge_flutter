@@ -3,12 +3,13 @@ import 'package:bonfire/bonfire.dart';
 final class SpriteAnimationConfig {
   SpriteAnimationConfig._();
 
-  static const double _kStandardStepTime = 0.1;
+  static const double _kStepTimeStandard = 0.1;
+  static const double kStepTimeSlow = 0.2;
 
-  static const double kSmallSize = 50.0;
-  static const double kStandardSize = 100.0;
-  static const double kLargeSize = 150.0;
-  static const double kExtraLargeSize = 200.0;
+  static const double kSizeSmall = 50.0;
+  static const double kSizeStandard = 100.0;
+  static const double kSizeLarge = 150.0;
+  static const double kSizeExtraLarge = 200.0;
 
   static SpriteAnimationData createStandardData({
     required int amount,
@@ -16,7 +17,7 @@ final class SpriteAnimationConfig {
   }) => SpriteAnimationData.sequenced(
     amount: amount,
     textureSize: textureSize,
-    stepTime: _kStandardStepTime,
+    stepTime: _kStepTimeStandard,
   );
 
   static SpriteAnimationData createCustomData({

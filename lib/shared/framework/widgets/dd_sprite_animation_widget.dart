@@ -8,20 +8,20 @@ class DDSpriteAnimationWidget extends StatelessWidget {
   final Future<SpriteAnimation> animation;
 
   const DDSpriteAnimationWidget({super.key, required this.animation})
-    : _width = SpriteAnimationConfig.kStandardSize,
-      _height = SpriteAnimationConfig.kStandardSize;
+    : _width = SpriteAnimationConfig.kSizeStandard,
+      _height = SpriteAnimationConfig.kSizeStandard;
 
   const DDSpriteAnimationWidget.small({super.key, required this.animation})
-    : _width = SpriteAnimationConfig.kSmallSize,
-      _height = SpriteAnimationConfig.kSmallSize;
+    : _width = SpriteAnimationConfig.kSizeSmall,
+      _height = SpriteAnimationConfig.kSizeSmall;
 
   const DDSpriteAnimationWidget.large({super.key, required this.animation})
-    : _width = SpriteAnimationConfig.kLargeSize,
-      _height = SpriteAnimationConfig.kLargeSize;
+    : _width = SpriteAnimationConfig.kSizeLarge,
+      _height = SpriteAnimationConfig.kSizeLarge;
 
   const DDSpriteAnimationWidget.extraLarge({super.key, required this.animation})
-    : _width = SpriteAnimationConfig.kExtraLargeSize,
-      _height = SpriteAnimationConfig.kExtraLargeSize;
+    : _width = SpriteAnimationConfig.kSizeExtraLarge,
+      _height = SpriteAnimationConfig.kSizeExtraLarge;
 
   @override
   Widget build(BuildContext context) {
