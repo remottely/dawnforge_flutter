@@ -1,5 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/character_action_sprite_animation_helper.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/farm/services/farm_tool_action_config.dart';
@@ -77,93 +78,92 @@ abstract class DDFarmPlayerView<
   }
 
   bool _onExecuteShovel() {
-    final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
-      AttackType.melee,
-      () {
-        CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-          animationRight: SunnyPlayerConfig.loadRightShovelAnimation(),
-          animationLeft: SunnyPlayerConfig.loadLeftShovelAnimation(),
-          currentAnimation: animation,
-          target: this,
-          executionStartFrame: 4,
-          onActionStart: lockAction,
-          onActionEnd: unlockAction,
-
-          onExecutionFrames: () {
-            FarmToolActionConfig.execute(player: this);
-          },
-        );
-      },
-    );
+    final AttackExecutionInfo?
+    executionInfo = meleeAttackController.execute(AttackType.melee, () {
+      // TODO(Kevin): NOW - create dinamic animation injected by view interface configurations
+      CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
+        // animationRight: SunnyPlayerConfig.loadRightShovelAnimation(),
+        // animationLeft: SunnyPlayerConfig.loadLeftShovelAnimation(),
+        animationRight: CutePlayerConfig.loadRightShovelAnimation(),
+        animationLeft: CutePlayerConfig.loadLeftShovelAnimation(),
+        animationUp: CutePlayerConfig.loadUpShovelAnimation(),
+        animationDown: CutePlayerConfig.loadDownShovelAnimation(),
+        currentAnimation: animation,
+        target: this,
+        executionStartFrame: 4,
+        onActionStart: lockAction,
+        onActionEnd: unlockAction,
+        onExecutionFrames: () {
+          FarmToolActionConfig.execute(player: this);
+        },
+      );
+    });
 
     return executionInfo != null;
   }
 
   bool _onExecuteWateringCan() {
-    final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
-      AttackType.melee,
-      () {
-        CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-          animationRight: SunnyPlayerConfig.loadRightWateringCanAnimation(),
-          animationLeft: SunnyPlayerConfig.loadLeftWateringCanAnimation(),
-          currentAnimation: animation,
-          target: this,
-          executionStartFrame: 4,
-          onActionStart: lockAction,
-          onActionEnd: unlockAction,
+    final AttackExecutionInfo?
+    executionInfo = meleeAttackController.execute(AttackType.melee, () {
+      // TODO(Kevin): NOW - create dinamic animation injected by view interface configurations
+      CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
+        animationRight: SunnyPlayerConfig.loadRightWateringCanAnimation(),
+        animationLeft: SunnyPlayerConfig.loadLeftWateringCanAnimation(),
+        currentAnimation: animation,
+        target: this,
+        executionStartFrame: 4,
+        onActionStart: lockAction,
+        onActionEnd: unlockAction,
 
-          onExecutionFrames: () {
-            FarmToolActionConfig.execute(player: this);
-          },
-        );
-      },
-    );
+        onExecutionFrames: () {
+          FarmToolActionConfig.execute(player: this);
+        },
+      );
+    });
 
     return executionInfo != null;
   }
 
   bool _onExecuteSeed() {
-    final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
-      AttackType.melee,
-      () {
-        CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-          animationRight: SunnyPlayerConfig.loadRightSeedAnimation(),
-          animationLeft: SunnyPlayerConfig.loadLeftSeedAnimation(),
-          currentAnimation: animation,
-          target: this,
-          executionStartFrame: 4,
-          onActionStart: lockAction,
-          onActionEnd: unlockAction,
+    final AttackExecutionInfo?
+    executionInfo = meleeAttackController.execute(AttackType.melee, () {
+      // TODO(Kevin): NOW - create dinamic animation injected by view interface configurations
+      CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
+        animationRight: SunnyPlayerConfig.loadRightSeedAnimation(),
+        animationLeft: SunnyPlayerConfig.loadLeftSeedAnimation(),
+        currentAnimation: animation,
+        target: this,
+        executionStartFrame: 4,
+        onActionStart: lockAction,
+        onActionEnd: unlockAction,
 
-          onExecutionFrames: () {
-            FarmToolActionConfig.execute(player: this);
-          },
-        );
-      },
-    );
+        onExecutionFrames: () {
+          FarmToolActionConfig.execute(player: this);
+        },
+      );
+    });
 
     return executionInfo != null;
   }
 
   bool _onExecuteHarvestBasket() {
-    final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
-      AttackType.melee,
-      () {
-        CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-          animationRight: SunnyPlayerConfig.loadRightHarvestBasketAnimation(),
-          animationLeft: SunnyPlayerConfig.loadLeftHarvestBasketAnimation(),
-          currentAnimation: animation,
-          target: this,
-          executionStartFrame: 4,
-          onActionStart: lockAction,
-          onActionEnd: unlockAction,
+    final AttackExecutionInfo?
+    executionInfo = meleeAttackController.execute(AttackType.melee, () {
+      // TODO(Kevin): NOW - create dinamic animation injected by view interface configurations
+      CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
+        animationRight: SunnyPlayerConfig.loadRightHarvestBasketAnimation(),
+        animationLeft: SunnyPlayerConfig.loadLeftHarvestBasketAnimation(),
+        currentAnimation: animation,
+        target: this,
+        executionStartFrame: 4,
+        onActionStart: lockAction,
+        onActionEnd: unlockAction,
 
-          onExecutionFrames: () {
-            FarmToolActionConfig.execute(player: this);
-          },
-        );
-      },
-    );
+        onExecutionFrames: () {
+          FarmToolActionConfig.execute(player: this);
+        },
+      );
+    });
 
     return executionInfo != null;
   }

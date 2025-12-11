@@ -87,17 +87,16 @@ abstract class DDCombatPlayerView<
     final AttackExecutionInfo?
     executionInfo = meleeAttackController.execute(AttackType.melee, () {
       // TODO(Kevin): NOW - create dinamic animation injected by view interface configurations
-      // TODO(Kevin): NOW - create up and down verifications
       CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
         // animationRight: SunnyPlayerConfig.loadRightAttackAnimation(),
         // animationLeft: SunnyPlayerConfig.loadLeftAttackAnimation(),
         animationRight: CutePlayerConfig.loadRightAttackAnimation(),
         animationLeft: CutePlayerConfig.loadLeftAttackAnimation(),
-        // animationUp: CutePlayerConfig.loadUpAttackAnimation(),
-        // animationDown: CutePlayerConfig.loadDownAttackAnimation(),
+        animationUp: CutePlayerConfig.loadUpAttackAnimation(),
+        animationDown: CutePlayerConfig.loadDownAttackAnimation(),
         currentAnimation: animation,
         target: this,
-        executionStartFrame: 4,
+        executionStartFrame: 1,
         onActionStart: lockAction,
         onActionEnd: unlockAction,
         onExecutionFrames: () {
