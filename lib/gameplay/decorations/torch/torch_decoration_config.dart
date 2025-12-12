@@ -107,7 +107,7 @@ final class TorchDecorationConfig {
   /// loaded from the game's decoration sprite sheet.
   ///
   /// Returns a Future that resolves to the configured SpriteAnimation.
-  static Future<SpriteAnimation> loadSpriteAnimation() => SpriteAnimation.load(
+  static Future<SpriteAnimation> loadAnimation() => SpriteAnimation.load(
     'gameplay/decorations/torch_decoration_6.png',
     SpriteAnimationConfig.createStandardData(
       amount: 6,

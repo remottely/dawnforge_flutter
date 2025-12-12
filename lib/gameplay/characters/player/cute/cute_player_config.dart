@@ -201,15 +201,15 @@ final class CutePlayerConfig {
         ),
       );
 
-  static Future<SpriteAnimation>
-  loadAnimationSeedRight() => SpriteAnimation.load(
-    // TODO(Kevin): CREATE ANIMATION
-    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_strip8.png',
-    SpriteAnimationConfig.createStandardData(
-      amount: 8,
-      textureSize: textureSize,
-    ),
-  );
+  static Future<SpriteAnimation> loadAnimationSeedRight() =>
+      SpriteAnimation.load(
+        // TODO(Kevin): CREATE ANIMATION
+        '',
+        SpriteAnimationConfig.createStandardData(
+          amount: 8,
+          textureSize: textureSize,
+        ),
+      );
 
   static Future<SpriteAnimation>
   loadAnimationSeedLeft() => SpriteAnimation.load(
@@ -220,6 +220,25 @@ final class CutePlayerConfig {
       textureSize: textureSize,
     ),
   );
+
+  static Future<SpriteAnimation> loadAnimationSeedUp() => SpriteAnimation.load(
+    // TODO(Kevin): CREATE ANIMATION
+    '',
+    SpriteAnimationConfig.createStandardData(
+      amount: 8,
+      textureSize: textureSize,
+    ),
+  );
+
+  static Future<SpriteAnimation> loadAnimationSeedDown() =>
+      SpriteAnimation.load(
+        // TODO(Kevin): CREATE ANIMATION
+        '',
+        SpriteAnimationConfig.createStandardData(
+          amount: 8,
+          textureSize: textureSize,
+        ),
+      );
 
   static Future<SpriteAnimation>
   loadAnimationHarvestBasketRight() => SpriteAnimation.load(
@@ -240,6 +259,26 @@ final class CutePlayerConfig {
       textureSize: textureSize,
     ),
   );
+
+  static Future<SpriteAnimation> loadAnimationHarvestBasketUp() =>
+      SpriteAnimation.load(
+        // TODO(Kevin): CREATE ANIMATION
+        '',
+        SpriteAnimationConfig.createStandardData(
+          amount: 8,
+          textureSize: textureSize,
+        ),
+      );
+
+  static Future<SpriteAnimation> loadAnimationHarvestBasketDown() =>
+      SpriteAnimation.load(
+        // TODO(Kevin): CREATE ANIMATION
+        '',
+        SpriteAnimationConfig.createStandardData(
+          amount: 8,
+          textureSize: textureSize,
+        ),
+      );
 
   static final SimpleDirectionAnimation animationWalkDirectional =
       SimpleDirectionAnimation(
@@ -277,42 +316,42 @@ final class CutePlayerConfig {
         ),
       );
 
-  static final SimpleDirectionAnimation animationRunDirectional =
-      SimpleDirectionAnimation(
-        idleLeft: _loadAnimationIdleLeft(),
-        idleRight: UISpriteAnimationsConfig.loadAnimationCutePlayerIdleRight(),
-        idleUp: _loadAnimationIdleUp(),
-        idleDown: _loadAnimationIdleDown(),
-        // TODO(Kevin): NOW - create run animations
-        runLeft: SpriteAnimation.load(
-          'new/Player/walk/player_walk_left_48x48_6.png',
-          SpriteAnimationConfig.createStandardData(
-            amount: 6,
-            textureSize: textureSize,
-          ),
-        ),
-        runRight: SpriteAnimation.load(
-          'new/Player/walk/player_walk_right_48x48_6.png',
-          SpriteAnimationConfig.createStandardData(
-            amount: 6,
-            textureSize: textureSize,
-          ),
-        ),
-        runUp: SpriteAnimation.load(
-          'new/Player/walk/player_walk_up_48x48_6.png',
-          SpriteAnimationConfig.createStandardData(
-            amount: 6,
-            textureSize: textureSize,
-          ),
-        ),
-        runDown: SpriteAnimation.load(
-          'new/Player/walk/player_walk_down_48x48_6.png',
-          SpriteAnimationConfig.createStandardData(
-            amount: 6,
-            textureSize: textureSize,
-          ),
-        ),
-      );
+  static final SimpleDirectionAnimation
+  animationRunDirectional = SimpleDirectionAnimation(
+    idleLeft: _loadAnimationIdleLeft(),
+    idleRight: UISpriteAnimationsConfig.loadAnimationCutePlayerIdleRight(),
+    idleUp: _loadAnimationIdleUp(),
+    idleDown: _loadAnimationIdleDown(),
+    // TODO(Kevin): NOW - create run animations
+    runLeft: SpriteAnimation.load(
+      'new/Player/walk/player_walk_left_48x48_6.png', // TODO(Kevin): change to run animation
+      SpriteAnimationConfig.createStandardData(
+        amount: 6,
+        textureSize: textureSize,
+      ),
+    ),
+    runRight: SpriteAnimation.load(
+      'new/Player/walk/player_walk_right_48x48_6.png', // TODO(Kevin): change to run animation
+      SpriteAnimationConfig.createStandardData(
+        amount: 6,
+        textureSize: textureSize,
+      ),
+    ),
+    runUp: SpriteAnimation.load(
+      'new/Player/walk/player_walk_up_48x48_6.png', // TODO(Kevin): change to run animation
+      SpriteAnimationConfig.createStandardData(
+        amount: 6,
+        textureSize: textureSize,
+      ),
+    ),
+    runDown: SpriteAnimation.load(
+      'new/Player/walk/player_walk_down_48x48_6.png', // TODO(Kevin): change to run animation
+      SpriteAnimationConfig.createStandardData(
+        amount: 6,
+        textureSize: textureSize,
+      ),
+    ),
+  );
 
   static final LightingConfig lightingConfig = LightingConfig(
     radius: TileConstants.kTileDimensionLarge,
@@ -322,13 +361,13 @@ final class CutePlayerConfig {
 
   static final Vector2 cryptComponentSize = TileConstants.tileSizeStandard;
 
-  static Future<Sprite> loadCryptSprite() => Sprite.load(
+  static Future<Sprite> loadSpriteCrypt() => Sprite.load(
     'gameplay/characters/player/player_crypt_1.png',
-  ); // TODO(Kevin): change to cute death animation playonce // - new/Player/death/
+  ); // TODO(Kevin): add cute death animation playonce // - new/Player/death/
 
   static DDDecoration createDeathMarker(Vector2 position) =>
       DDDecoration.withSprite(
-        sprite: loadCryptSprite(),
+        sprite: loadSpriteCrypt(),
         position: Vector2(position.x, position.y),
         size: cryptComponentSize,
       );

@@ -20,7 +20,7 @@ class ChestDecorationView extends DDInputReceiverDecorationView {
     required super.position,
     required ChestDecorationModel model,
   }) : super.withAnimation(
-         animation: ChestDecorationConfig.loadChestAnimation(),
+         animation: ChestDecorationConfig.loadAnimation(),
          size: ChestDecorationConfig.componentSize,
        ) {
     _initializeController(model);

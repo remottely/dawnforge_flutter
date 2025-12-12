@@ -12,7 +12,7 @@ final class SpikeTrapDecorationConfig {
   static final Vector2 _textureSize = TileConstants.tileSizeStandard;
   static final Vector2 componentSize = _textureSize;
 
-  static Future<SpriteAnimation> loadSpriteAnimation() => SpriteAnimation.load(
+  static Future<SpriteAnimation> loadAnimation() => SpriteAnimation.load(
     'gameplay/decorations/spike_trap_decoration_10.png',
     SpriteAnimationConfig.createStandardData(
       amount: 10,

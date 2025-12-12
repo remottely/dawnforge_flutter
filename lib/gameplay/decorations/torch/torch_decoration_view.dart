@@ -27,7 +27,7 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
     required super.position,
     required TorchDecorationModel model,
   }) : super.withAnimation(
-         animation: TorchDecorationConfig.loadSpriteAnimation(),
+         animation: TorchDecorationConfig.loadAnimation(),
          size: TorchDecorationConfig.componentSize,
        ) {
     _initializeController(model);
@@ -43,7 +43,7 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
     required super.position,
     required TorchDecorationModel model,
   }) : super.withAnimation(
-         animation: TorchDecorationConfig.loadSpriteAnimation(),
+         animation: TorchDecorationConfig.loadAnimation(),
          size: TorchDecorationConfig.componentSize,
        ) {
     _initializeController(model);

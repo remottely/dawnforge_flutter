@@ -26,7 +26,7 @@ class ShieldDefenseComponent extends GameComponent {
       developer.log('[ShieldDefenseComponent] Carregando animação de defesa');
 
       // Criar animação do escudo (16x16) diretamente
-      final loadShieldDefenseRight12 = await SpriteAnimation.load(
+      final loadAnimationRight = await SpriteAnimation.load(
         'gameplay/characters/player/shield_defense_right_12.png',
         SpriteAnimationConfig.createStandardData(
           amount: 12,
@@ -37,7 +37,7 @@ class ShieldDefenseComponent extends GameComponent {
       developer.log('[ShieldDefenseComponent] Animação carregada com sucesso');
 
       _shieldAnimation = SpriteAnimationComponent(
-        animation: loadShieldDefenseRight12,
+        animation: loadAnimationRight,
         size: TileConstants.tileSizeStandard,
         anchor: Anchor.center,
       );

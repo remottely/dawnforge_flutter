@@ -21,7 +21,7 @@ final class BarrelDecorationConfig {
     hitboxStartPositionY: 6.0,
   );
 
-  static Future<SpriteAnimation> loadBreakAnimation() async {
+  static Future<SpriteAnimation> loadAnimationBreak() async {
     try {
       return await SpriteAnimation.load(
         // 'gameplay/decorations/barrel_decoration_break_6.png',

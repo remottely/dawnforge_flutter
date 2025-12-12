@@ -53,10 +53,10 @@ final class EnemyCombatActionController {
           lightingConfig: CharacterFireballAttackConfig.lightingConfig,
           damage: damage,
           collision: CharacterFireballAttackConfig.createHitbox(),
-          animation: CharacterFireballAttackConfig.loadExecutionAnimation(),
+          animation: CharacterFireballAttackConfig.loadAnimationExecution(),
           animationDestroy:
-              CharacterFireballAttackConfig.loadDestroyAnimation(),
-          execute: CharacterFireballAttackConfig.playExecutionAudio,
+              CharacterFireballAttackConfig.loadAnimationDestroy(),
+          execute: CharacterFireballAttackConfig.playAudioExecution,
           onDestroy: () =>
               CharacterFireballAttackConfig.onDestroy(enemy.gameRef),
         );

@@ -51,7 +51,7 @@ final class PlayerCombatActionController {
       position: player.size / 2,
     );
 
-    CharacterFireballAttackConfig.playExecutionAudio();
+    CharacterFireballAttackConfig.playAudioExecution();
 
     player.simpleAttackRangeByDirection(
       size: CharacterFireballAttackConfig.componentSize,
@@ -59,8 +59,8 @@ final class PlayerCombatActionController {
       lightingConfig: CharacterFireballAttackConfig.lightingConfig,
       damage: damage,
       collision: CharacterFireballAttackConfig.createHitbox(),
-      animationRight: CharacterFireballAttackConfig.loadExecutionAnimation(),
-      animationDestroy: CharacterFireballAttackConfig.loadDestroyAnimation(),
+      animationRight: CharacterFireballAttackConfig.loadAnimationExecution(),
+      animationDestroy: CharacterFireballAttackConfig.loadAnimationDestroy(),
       onDestroy: () => CharacterFireballAttackConfig.onDestroy(player.gameRef),
       direction: player.lastDirection,
       centerOffset: projectileOffset,

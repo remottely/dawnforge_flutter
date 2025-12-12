@@ -30,7 +30,7 @@ class EmoteManager {
 
   static final Vector2 _emoteTextureSize = TileConstants.tileSizeExtraLarge;
 
-  static Future<SpriteAnimation> _loadDecorationEmoteAnimation() =>
+  static Future<SpriteAnimation> _loadAnimationEmoteDecoration() =>
       SpriteAnimation.load(
         EmoteManager.kExclamationEmoteAsset,
         SpriteAnimationConfig.createStandardData(
@@ -41,7 +41,7 @@ class EmoteManager {
 
   static AnimatedGameObject getDecorationAnimatedObject(Vector2 size) =>
       AnimatedGameObject(
-        animation: EmoteManager._loadDecorationEmoteAnimation(),
+        animation: EmoteManager._loadAnimationEmoteDecoration(),
         size: size,
         position: Vector2(size.x / 2, -size.y + 4),
         loop: false,

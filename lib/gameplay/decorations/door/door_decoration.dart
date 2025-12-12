@@ -10,7 +10,7 @@ class DoorDecorationView extends DDDecoration {
   bool _isOpen = false;
 
   DoorDecorationView({required super.position, required super.size})
-    : super.withSprite(sprite: DoorDecorationConfig.loadClosedSprite());
+    : super.withSprite(sprite: DoorDecorationConfig.loadSpriteClosed());
 
   @override
   Future<void> onLoad() {
@@ -44,12 +44,12 @@ class DoorDecorationView extends DDDecoration {
     _isOpen = true;
     (player as DDBasePlayerView).controller.model
         .removeKey(); // TODO(Kevin): make this more generic, like DDBasePlayerView
-    _playDoorOpeningAnimation();
+    _playAnimationDoorOpening();
   }
 
-  void _playDoorOpeningAnimation() {
+  void _playAnimationDoorOpening() {
     playSpriteAnimationOnce(
-      DoorDecorationConfig.loadOpeningAnimation(),
+      DoorDecorationConfig.loadAnimationOpening(),
       onFinish: _cleanup,
       onStart: () {
         sprite = null;

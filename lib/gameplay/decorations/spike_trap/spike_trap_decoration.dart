@@ -12,7 +12,7 @@ class SpikeTrapDecorationView extends DDContactDecoration {
     double damageAmount = SpikeTrapDecorationConfig.kDamageAmount,
   }) : _damageAmount = damageAmount,
        super.withAnimation(
-         animation: SpikeTrapDecorationConfig.loadSpriteAnimation(),
+         animation: SpikeTrapDecorationConfig.loadAnimation(),
          size: SpikeTrapDecorationConfig.componentSize,
        );
 

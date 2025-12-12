@@ -12,10 +12,10 @@ final class DoorDecorationConfig {
   static final Vector2 _textureSize = TileConstants.tileSizeExtraLarge;
   // static final Vector2 _componentSize = _textureSize;
 
-  static Future<Sprite> loadClosedSprite() =>
+  static Future<Sprite> loadSpriteClosed() =>
       Sprite.load('gameplay/decorations/door_decoration_locked_1.png');
 
-  static Future<SpriteAnimation> loadOpeningAnimation() => SpriteAnimation.load(
+  static Future<SpriteAnimation> loadAnimationOpening() => SpriteAnimation.load(
     'gameplay/decorations/door_decoration_opening_14.png',
     SpriteAnimationConfig.createStandardData(
       amount: 14,

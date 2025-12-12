@@ -28,7 +28,7 @@ final class CharacterFireballAttackConfig {
       HitboxUtils.createExpandHitbox(componentSize)
         ..collisionType = CollisionType.passive;
 
-  static Future<SpriteAnimation> loadExecutionAnimation() =>
+  static Future<SpriteAnimation> loadAnimationExecution() =>
       SpriteAnimation.load(
         'gameplay/characters/shared/character_fireball_attack_right_3.png',
         SpriteAnimationConfig.createStandardData(
@@ -37,7 +37,7 @@ final class CharacterFireballAttackConfig {
         ),
       );
 
-  static Future<SpriteAnimation> loadDestroyAnimation() => SpriteAnimation.load(
+  static Future<SpriteAnimation> loadAnimationDestroy() => SpriteAnimation.load(
     'gameplay/characters/shared/character_fireball_explosion_right_6.png',
     SpriteAnimationConfig.createStandardData(
       amount: 6,
@@ -45,7 +45,7 @@ final class CharacterFireballAttackConfig {
     ),
   );
 
-  static void playExecutionAudio() =>
+  static void playAudioExecution() =>
       AudioManager.instance.playFireballAttackSfx();
 
   static void onDestroy(BonfireGameInterface gameRef) {
