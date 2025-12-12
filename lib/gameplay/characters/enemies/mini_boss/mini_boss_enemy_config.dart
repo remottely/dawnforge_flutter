@@ -36,7 +36,7 @@ final class MiniBossEnemyConfig {
         textureSize: textureSize,
       ),
     ),
-    idleRight: UISpriteAnimationsConfig.loadMiniBossEnemyIdleRight4(),
+    idleRight: UISpriteAnimationsConfig.loadAnimationMiniBossEnemyIdleRight(),
     runLeft: SpriteAnimation.load(
       'gameplay/characters/enemies/mini_boss/mini_boss_enemy_run_left_4.png',
       SpriteAnimationConfig.createStandardData(

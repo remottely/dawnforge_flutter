@@ -58,7 +58,7 @@ final class SunnyPlayerConfig {
   );
 
   static Future<SpriteAnimation>
-  _loadSunnyPlayerIdleLeft6() => SpriteAnimation.load(
+  _loadAnimationIdleLeft() => SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_idle_left_strip9.png',
     SpriteAnimationConfig.createStandardData(
       amount: 9,
@@ -157,9 +157,9 @@ final class SunnyPlayerConfig {
   );
 
   static final SimpleDirectionAnimation
-  walkAnimation = SimpleDirectionAnimation(
-    idleLeft: _loadSunnyPlayerIdleLeft6(),
-    idleRight: UISpriteAnimationsConfig.loadSunnyPlayerIdleRight6(),
+  animationWalkDirectional = SimpleDirectionAnimation(
+    idleLeft: _loadAnimationIdleLeft(),
+    idleRight: UISpriteAnimationsConfig.loadAnimationSunnyPlayerIdleRight(),
     runLeft: SpriteAnimation.load(
       'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_walking_left_strip8.png',
       SpriteAnimationConfig.createStandardData(
@@ -176,9 +176,10 @@ final class SunnyPlayerConfig {
     ),
   );
 
-  static final SimpleDirectionAnimation runAnimation = SimpleDirectionAnimation(
-    idleLeft: _loadSunnyPlayerIdleLeft6(),
-    idleRight: UISpriteAnimationsConfig.loadSunnyPlayerIdleRight6(),
+  static final SimpleDirectionAnimation
+  animationRunDirectional = SimpleDirectionAnimation(
+    idleLeft: _loadAnimationIdleLeft(),
+    idleRight: UISpriteAnimationsConfig.loadAnimationSunnyPlayerIdleRight(),
     runLeft: SpriteAnimation.load(
       'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_run_left_strip8.png',
       SpriteAnimationConfig.createStandardData(

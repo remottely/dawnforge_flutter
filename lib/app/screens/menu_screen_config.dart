@@ -9,12 +9,12 @@ class MenuScreenConfig {
   );
   static const Duration kCharacterAnimationInterval = Duration(seconds: 2);
   static final List<Future<SpriteAnimation>> characterSpriteAnimations = [
-    // UISpriteAnimationsConfig.loadKnightPlayerIdleRight6(), // TODO(Kevin): delete this line
-    UISpriteAnimationsConfig.loadCutePlayerIdleRight6(),
-    UISpriteAnimationsConfig.loadGoblinEnemyIdleRight6(),
-    UISpriteAnimationsConfig.loadImpEnemyIdleRight4(),
-    UISpriteAnimationsConfig.loadMiniBossEnemyIdleRight4(),
-    UISpriteAnimationsConfig.loadBossEnemyIdleRight4(),
+    UISpriteAnimationsConfig.loadAnimationKnightPlayerIdleRight(), // TODO(Kevin): delete this line
+    UISpriteAnimationsConfig.loadAnimationCutePlayerIdleRight(),
+    UISpriteAnimationsConfig.loadAnimationGoblinEnemyIdleRight(),
+    UISpriteAnimationsConfig.loadAnimationImpEnemyIdleRight(),
+    UISpriteAnimationsConfig.loadAnimationMiniBossEnemyIdleRight(),
+    UISpriteAnimationsConfig.loadAnimationBossEnemyIdleRight(),
   ];
 
   static final Future<Sprite> keyboardSprite = Sprite.load(

@@ -29,7 +29,7 @@ final class GoblinEnemyConfig {
             textureSize: textureSize,
           ),
         ),
-        idleRight: UISpriteAnimationsConfig.loadGoblinEnemyIdleRight6(),
+        idleRight: UISpriteAnimationsConfig.loadAnimationGoblinEnemyIdleRight(),
         runLeft: SpriteAnimation.load(
           'gameplay/characters/enemies/goblin/goblin_enemy_run_left_6.png',
           SpriteAnimationConfig.createStandardData(

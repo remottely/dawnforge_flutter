@@ -57,7 +57,7 @@ final class CutePlayerConfig {
     bottom: 18.0,
   );
 
-  static Future<SpriteAnimation> _loadCutePlayerIdleLeft6() =>
+  static Future<SpriteAnimation> _loadAnimationIdleLeft() =>
       SpriteAnimation.load(
         'new/Player/idle/player_idle_left_48x48_6.png',
         SpriteAnimationConfig.createStandardData(
@@ -66,16 +66,15 @@ final class CutePlayerConfig {
         ),
       );
 
-  static Future<SpriteAnimation> _loadCutePlayerIdleUp6() =>
-      SpriteAnimation.load(
-        'new/Player/idle/player_idle_up_48x48_6.png',
-        SpriteAnimationConfig.createStandardData(
-          amount: 6,
-          textureSize: CutePlayerConfig.textureSize,
-        ),
-      );
+  static Future<SpriteAnimation> _loadAnimationIdleUp() => SpriteAnimation.load(
+    'new/Player/idle/player_idle_up_48x48_6.png',
+    SpriteAnimationConfig.createStandardData(
+      amount: 6,
+      textureSize: CutePlayerConfig.textureSize,
+    ),
+  );
 
-  static Future<SpriteAnimation> _loadCutePlayerIdleDown6() =>
+  static Future<SpriteAnimation> _loadAnimationIdleDown() =>
       SpriteAnimation.load(
         'new/Player/idle/player_idle_down_48x48_6.png',
         SpriteAnimationConfig.createStandardData(
@@ -246,12 +245,12 @@ final class CutePlayerConfig {
     ),
   );
 
-  static final SimpleDirectionAnimation walkAnimation =
+  static final SimpleDirectionAnimation animationWalkDirectional =
       SimpleDirectionAnimation(
-        idleLeft: _loadCutePlayerIdleLeft6(),
-        idleRight: UISpriteAnimationsConfig.loadCutePlayerIdleRight6(),
-        idleUp: _loadCutePlayerIdleUp6(),
-        idleDown: _loadCutePlayerIdleDown6(),
+        idleLeft: _loadAnimationIdleLeft(),
+        idleRight: UISpriteAnimationsConfig.loadAnimationCutePlayerIdleRight(),
+        idleUp: _loadAnimationIdleUp(),
+        idleDown: _loadAnimationIdleDown(),
         runLeft: SpriteAnimation.load(
           'new/Player/walk/player_walk_left_48x48_6.png',
           SpriteAnimationConfig.createStandardData(
@@ -282,41 +281,42 @@ final class CutePlayerConfig {
         ),
       );
 
-  static final SimpleDirectionAnimation runAnimation = SimpleDirectionAnimation(
-    idleLeft: _loadCutePlayerIdleLeft6(),
-    idleRight: UISpriteAnimationsConfig.loadCutePlayerIdleRight6(),
-    idleUp: _loadCutePlayerIdleUp6(),
-    idleDown: _loadCutePlayerIdleDown6(),
-    // TODO(Kevin): NOW - create run animations
-    runLeft: SpriteAnimation.load(
-      'new/Player/walk/player_walk_left_48x48_6.png',
-      SpriteAnimationConfig.createStandardData(
-        amount: 6,
-        textureSize: textureSize,
-      ),
-    ),
-    runRight: SpriteAnimation.load(
-      'new/Player/walk/player_walk_right_48x48_6.png',
-      SpriteAnimationConfig.createStandardData(
-        amount: 6,
-        textureSize: textureSize,
-      ),
-    ),
-    runUp: SpriteAnimation.load(
-      'new/Player/walk/player_walk_up_48x48_6.png',
-      SpriteAnimationConfig.createStandardData(
-        amount: 6,
-        textureSize: textureSize,
-      ),
-    ),
-    runDown: SpriteAnimation.load(
-      'new/Player/walk/player_walk_down_48x48_6.png',
-      SpriteAnimationConfig.createStandardData(
-        amount: 6,
-        textureSize: textureSize,
-      ),
-    ),
-  );
+  static final SimpleDirectionAnimation animationRunDirectional =
+      SimpleDirectionAnimation(
+        idleLeft: _loadAnimationIdleLeft(),
+        idleRight: UISpriteAnimationsConfig.loadAnimationCutePlayerIdleRight(),
+        idleUp: _loadAnimationIdleUp(),
+        idleDown: _loadAnimationIdleDown(),
+        // TODO(Kevin): NOW - create run animations
+        runLeft: SpriteAnimation.load(
+          'new/Player/walk/player_walk_left_48x48_6.png',
+          SpriteAnimationConfig.createStandardData(
+            amount: 6,
+            textureSize: textureSize,
+          ),
+        ),
+        runRight: SpriteAnimation.load(
+          'new/Player/walk/player_walk_right_48x48_6.png',
+          SpriteAnimationConfig.createStandardData(
+            amount: 6,
+            textureSize: textureSize,
+          ),
+        ),
+        runUp: SpriteAnimation.load(
+          'new/Player/walk/player_walk_up_48x48_6.png',
+          SpriteAnimationConfig.createStandardData(
+            amount: 6,
+            textureSize: textureSize,
+          ),
+        ),
+        runDown: SpriteAnimation.load(
+          'new/Player/walk/player_walk_down_48x48_6.png',
+          SpriteAnimationConfig.createStandardData(
+            amount: 6,
+            textureSize: textureSize,
+          ),
+        ),
+      );
 
   static final LightingConfig lightingConfig = LightingConfig(
     radius: TileConstants.kTileDimensionLarge,

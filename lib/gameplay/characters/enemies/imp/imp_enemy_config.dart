@@ -29,7 +29,7 @@ final class ImpEnemyConfig {
             textureSize: textureSize,
           ),
         ),
-        idleRight: UISpriteAnimationsConfig.loadImpEnemyIdleRight4(),
+        idleRight: UISpriteAnimationsConfig.loadAnimationImpEnemyIdleRight(),
         runLeft: SpriteAnimation.load(
           'gameplay/characters/enemies/imp/imp_enemy_run_left_4.png',
           SpriteAnimationConfig.createStandardData(

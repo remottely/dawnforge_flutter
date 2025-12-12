@@ -62,7 +62,8 @@ final class KnightPlayerConfig {
             textureSize: textureSize,
           ),
         ),
-        idleRight: UISpriteAnimationsConfig.loadKnightPlayerIdleRight6(),
+        idleRight:
+            UISpriteAnimationsConfig.loadAnimationKnightPlayerIdleRight(),
         runLeft: SpriteAnimation.load(
           'gameplay/characters/player/knight/knight_player_walking_left_6.png',
           SpriteAnimationConfig.createStandardData(

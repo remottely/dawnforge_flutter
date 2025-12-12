@@ -32,7 +32,7 @@ final class EnemyCombatActionController {
           interval: interval,
           // direction: attackDirection,
           // centerOffset: attackOffset,
-          animationRight: EnemyPrimaryAttackConfig.loadFxAnimationRight3(),
+          animationRight: EnemyPrimaryAttackConfig.loadAnimationFxRight(),
           execute: AudioManager.instance.playEnemyPrimaryAttackSfx,
         );
       },

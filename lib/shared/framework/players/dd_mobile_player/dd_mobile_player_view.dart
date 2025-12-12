@@ -39,13 +39,13 @@ abstract class DDMobilePlayerView<
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    _walkAnimation = getWalkAnimation();
-    _runAnimation = getRunAnimation();
+    _walkAnimation = getAnimationWalkDirectional();
+    _runAnimation = getAnimationRunDirectional();
     replaceAnimation(_walkAnimation);
   }
 
-  SimpleDirectionAnimation getWalkAnimation();
-  SimpleDirectionAnimation getRunAnimation();
+  SimpleDirectionAnimation getAnimationWalkDirectional();
+  SimpleDirectionAnimation getAnimationRunDirectional();
 
   @override
   C createController({

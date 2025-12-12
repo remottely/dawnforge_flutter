@@ -32,7 +32,7 @@ final class BarrelDecorationConfig {
         ),
       );
     } catch (_) {
-      return CharacterFxSpriteAnimationsConfig.loadExplosionRight7(); // TODO(Kevin): creates unique crash helper for these scenarios
+      return CharacterFxSpriteAnimationsConfig.loadAnimationExplosionRight(); // TODO(Kevin): creates unique crash helper for these scenarios
     }
   }
 }

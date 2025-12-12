@@ -11,7 +11,7 @@ import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_c
 import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
 
 class UISpriteAnimationsConfig {
-  static Future<SpriteAnimation> loadKnightPlayerIdleRight6() =>
+  static Future<SpriteAnimation> loadAnimationKnightPlayerIdleRight() =>
       SpriteAnimation.load(
         'gameplay/characters/player/knight/knight_player_idle_right_6.png',
         SpriteAnimationConfig.createStandardData(
@@ -20,7 +20,7 @@ class UISpriteAnimationsConfig {
         ),
       );
 
-  static Future<SpriteAnimation> loadCutePlayerIdleRight6() =>
+  static Future<SpriteAnimation> loadAnimationCutePlayerIdleRight() =>
       SpriteAnimation.load(
         'new/Player/idle/player_idle_right_48x48_6.png',
         SpriteAnimationConfig.createStandardData(
@@ -30,7 +30,7 @@ class UISpriteAnimationsConfig {
       );
 
   static Future<SpriteAnimation>
-  loadSunnyPlayerIdleRight6() => SpriteAnimation.load(
+  loadAnimationSunnyPlayerIdleRight() => SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_idle_strip9.png',
     SpriteAnimationConfig.createStandardData(
       amount: 9,
@@ -38,7 +38,7 @@ class UISpriteAnimationsConfig {
     ),
   );
 
-  static Future<SpriteAnimation> loadGoblinEnemyIdleRight6() =>
+  static Future<SpriteAnimation> loadAnimationGoblinEnemyIdleRight() =>
       SpriteAnimation.load(
         'gameplay/characters/enemies/goblin/goblin_enemy_idle_right_6.png',
         SpriteAnimationConfig.createStandardData(
@@ -47,7 +47,7 @@ class UISpriteAnimationsConfig {
         ),
       );
 
-  static Future<SpriteAnimation> loadImpEnemyIdleRight4() =>
+  static Future<SpriteAnimation> loadAnimationImpEnemyIdleRight() =>
       SpriteAnimation.load(
         'gameplay/characters/enemies/imp/imp_enemy_idle_right_4.png',
         SpriteAnimationConfig.createStandardData(
@@ -57,7 +57,7 @@ class UISpriteAnimationsConfig {
       );
 
   static Future<SpriteAnimation>
-  loadMiniBossEnemyIdleRight4() => SpriteAnimation.load(
+  loadAnimationMiniBossEnemyIdleRight() => SpriteAnimation.load(
     'gameplay/characters/enemies/mini_boss/mini_boss_enemy_idle_right_4.png',
     SpriteAnimationConfig.createStandardData(
       amount: 4,
@@ -65,7 +65,7 @@ class UISpriteAnimationsConfig {
     ),
   );
 
-  static Future<SpriteAnimation> loadBossEnemyIdleRight4() =>
+  static Future<SpriteAnimation> loadAnimationBossEnemyIdleRight() =>
       SpriteAnimation.load(
         'gameplay/characters/enemies/boss/boss_enemy_idle_right_4.png',
         SpriteAnimationConfig.createStandardData(
@@ -74,7 +74,7 @@ class UISpriteAnimationsConfig {
         ),
       );
 
-  static Future<SpriteAnimation> loadBossEnemyIdleLeft4() =>
+  static Future<SpriteAnimation> loadAnimationBossEnemyIdleLeft() =>
       SpriteAnimation.load(
         'gameplay/characters/enemies/boss/boss_enemy_idle_left_4.png',
         SpriteAnimationConfig.createStandardData(
@@ -83,15 +83,16 @@ class UISpriteAnimationsConfig {
         ),
       );
 
-  static Future<SpriteAnimation> loadKidNpcIdleLeft4() => SpriteAnimation.load(
-    'gameplay/characters/npcs/kid_npc_idle_left_4.png',
-    SpriteAnimationConfig.createStandardData(
-      amount: 4,
-      textureSize: KidNpcConfig.textureSize,
-    ),
-  );
+  static Future<SpriteAnimation> loadAnimationKidNpcIdleLeft() =>
+      SpriteAnimation.load(
+        'gameplay/characters/npcs/kid_npc_idle_left_4.png',
+        SpriteAnimationConfig.createStandardData(
+          amount: 4,
+          textureSize: KidNpcConfig.textureSize,
+        ),
+      );
 
-  static Future<SpriteAnimation> loadWizardNpcIdleLeft4() =>
+  static Future<SpriteAnimation> loadAnimationWizardNpcIdleLeft() =>
       SpriteAnimation.load(
         'gameplay/characters/npcs/wizard_npc_idle_left_4.png',
         SpriteAnimationConfig.createStandardData(

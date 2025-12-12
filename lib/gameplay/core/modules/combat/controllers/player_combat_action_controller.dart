@@ -29,7 +29,7 @@ final class PlayerCombatActionController {
       damage: damage,
       size: PlayerPrimaryAttackConfig.componentSize,
       centerOffset: attackOffset,
-      animationRight: PlayerPrimaryAttackConfig.loadFxAnimationRight3(),
+      animationRight: PlayerPrimaryAttackConfig.loadAnimationFxRight(),
       onDamage: (_) => player.addParticle(
         CharacterFxParticlesAnimationsConfig.createPrimaryAttackParticles(),
         position: player.size / 2,

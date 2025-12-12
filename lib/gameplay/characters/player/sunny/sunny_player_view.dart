@@ -61,11 +61,12 @@ class SunnyPlayerView<
       SunnyPlayerConfig.createDeathMarker(position);
 
   @override
-  SimpleDirectionAnimation getWalkAnimation() =>
-      SunnyPlayerConfig.walkAnimation;
+  SimpleDirectionAnimation getAnimationWalkDirectional() =>
+      SunnyPlayerConfig.animationWalkDirectional;
 
   @override
-  SimpleDirectionAnimation getRunAnimation() => SunnyPlayerConfig.runAnimation;
+  SimpleDirectionAnimation getAnimationRunDirectional() =>
+      SunnyPlayerConfig.animationRunDirectional;
 
   @override
   Future<SpriteAnimation> getAnimationAttackRight() =>

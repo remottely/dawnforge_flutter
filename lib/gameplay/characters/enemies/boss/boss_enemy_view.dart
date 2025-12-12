@@ -198,7 +198,8 @@ class BossEnemyView
   void _executeExplosionFx(Vector2 explosionPosition) {
     gameRef.add(
       AnimatedGameObject(
-        animation: CharacterFxSpriteAnimationsConfig.loadExplosionSmokeRight5(),
+        animation:
+            CharacterFxSpriteAnimationsConfig.loadAnimationExplosionSmokeRight(),
         position: explosionPosition,
         size: ImpEnemyConfig.componentSize,
         loop: false,

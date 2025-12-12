@@ -61,10 +61,12 @@ class CutePlayerView<
       CutePlayerConfig.createDeathMarker(position);
 
   @override
-  SimpleDirectionAnimation getWalkAnimation() => CutePlayerConfig.walkAnimation;
+  SimpleDirectionAnimation getAnimationWalkDirectional() =>
+      CutePlayerConfig.animationWalkDirectional;
 
   @override
-  SimpleDirectionAnimation getRunAnimation() => CutePlayerConfig.runAnimation;
+  SimpleDirectionAnimation getAnimationRunDirectional() =>
+      CutePlayerConfig.animationRunDirectional;
 
   @override
   Future<SpriteAnimation> getAnimationAttackRight() =>

@@ -23,8 +23,8 @@ final class BossEnemyConfig {
 
   static final SimpleDirectionAnimation walkAnimation =
       SimpleDirectionAnimation(
-        idleLeft: UISpriteAnimationsConfig.loadBossEnemyIdleLeft4(),
-        idleRight: UISpriteAnimationsConfig.loadBossEnemyIdleRight4(),
+        idleLeft: UISpriteAnimationsConfig.loadAnimationBossEnemyIdleLeft(),
+        idleRight: UISpriteAnimationsConfig.loadAnimationBossEnemyIdleRight(),
         runLeft: SpriteAnimation.load(
           'gameplay/characters/enemies/boss/boss_enemy_run_left_4.png',
           SpriteAnimationConfig.createStandardData(

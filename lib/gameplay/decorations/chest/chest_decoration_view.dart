@@ -119,7 +119,8 @@ class ChestDecorationView extends DDInputReceiverDecorationView {
   void _addSmokeExplosion(Vector2 potionPosition) {
     gameRef.add(
       AnimatedGameObject(
-        animation: CharacterFxSpriteAnimationsConfig.loadExplosionSmokeRight5(),
+        animation:
+            CharacterFxSpriteAnimationsConfig.loadAnimationExplosionSmokeRight(),
         position: potionPosition,
         size: size,
         loop: false,
