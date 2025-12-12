@@ -21,7 +21,7 @@ final class BossEnemyConfig {
   static final Vector2 textureSize = Vector2(32, 36);
   static final Vector2 componentSize = textureSize;
 
-  static final SimpleDirectionAnimation walkAnimation =
+  static final SimpleDirectionAnimation animationWalkDirectional =
       SimpleDirectionAnimation(
         idleLeft: UISpriteAnimationsConfig.loadAnimationBossEnemyIdleLeft(),
         idleRight: UISpriteAnimationsConfig.loadAnimationBossEnemyIdleRight(),

@@ -19,8 +19,8 @@ abstract class DDMobilePlayerView<
 
   bool _pendingAnimationChange = false;
 
-  late final SimpleDirectionAnimation _walkAnimation;
-  late final SimpleDirectionAnimation _runAnimation;
+  late final SimpleDirectionAnimation _animationWalkDirectional;
+  late final SimpleDirectionAnimation _animationRunDirectional;
 
   DDMobilePlayerView({
     required super.position,
@@ -39,9 +39,9 @@ abstract class DDMobilePlayerView<
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    _walkAnimation = getAnimationWalkDirectional();
-    _runAnimation = getAnimationRunDirectional();
-    replaceAnimation(_walkAnimation);
+    _animationWalkDirectional = getAnimationWalkDirectional();
+    _animationRunDirectional = getAnimationRunDirectional();
+    replaceAnimation(_animationWalkDirectional);
   }
 
   SimpleDirectionAnimation getAnimationWalkDirectional();
@@ -130,13 +130,13 @@ abstract class DDMobilePlayerView<
   void transitionToRunAnimation() {
     if (isActionLocked) return;
 
-    replaceAnimation(_runAnimation, doIdle: isIdle);
+    replaceAnimation(_animationRunDirectional, doIdle: isIdle);
   }
 
   void transitionToWalkAnimation() {
     if (isActionLocked) return;
 
-    replaceAnimation(_walkAnimation, doIdle: isIdle);
+    replaceAnimation(_animationWalkDirectional, doIdle: isIdle);
   }
 
   void lockAction() {

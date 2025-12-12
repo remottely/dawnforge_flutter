@@ -16,7 +16,7 @@ final class WizardNpcConfig {
   static final Vector2 componentSize = textureSize;
 
   static final SimpleDirectionAnimation
-  walkAnimation = SimpleDirectionAnimation(
+  animationWalkDirectional = SimpleDirectionAnimation(
     idleRight:
         UISpriteAnimationsConfig.loadAnimationWizardNpcIdleLeft(), // TODO(Kevin): create right animation
     runRight: UISpriteAnimationsConfig.loadAnimationWizardNpcIdleLeft(),

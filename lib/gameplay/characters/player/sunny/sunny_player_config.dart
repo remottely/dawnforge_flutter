@@ -121,7 +121,7 @@ final class SunnyPlayerConfig {
   );
 
   static Future<SpriteAnimation>
-  loadRightSeedAnimation() => SpriteAnimation.load(
+  loadAnimationSeedRight() => SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_strip8.png',
     SpriteAnimationConfig.createStandardData(
       amount: 8,
@@ -130,7 +130,7 @@ final class SunnyPlayerConfig {
   );
 
   static Future<SpriteAnimation>
-  loadLeftSeedAnimation() => SpriteAnimation.load(
+  loadAnimationSeedLeft() => SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_left_strip8.png',
     SpriteAnimationConfig.createStandardData(
       amount: 8,
@@ -139,7 +139,7 @@ final class SunnyPlayerConfig {
   );
 
   static Future<SpriteAnimation>
-  loadRightHarvestBasketAnimation() => SpriteAnimation.load(
+  loadAnimationHarvestBasketRight() => SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_strip8.png',
     SpriteAnimationConfig.createStandardData(
       amount: 8,
@@ -148,7 +148,7 @@ final class SunnyPlayerConfig {
   );
 
   static Future<SpriteAnimation>
-  loadLeftHarvestBasketAnimation() => SpriteAnimation.load(
+  loadAnimationHarvestBasketLeft() => SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_left_strip8.png',
     SpriteAnimationConfig.createStandardData(
       amount: 8,

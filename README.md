@@ -127,7 +127,19 @@ magick row_06.png -crop 128x32+0+0 +repage row_06.png && magick row_07.png -crop
 magick player_attack_east_4.png -crop 32x32 +repage -flop +append player_attack_west_4.png
 
 magick player_walk_south_6.png -crop 32x32 \
-  -gravity center -background transparent -extent 48x48 \
-  +append player_walk_south_48x48_6.png
+ -gravity center -background transparent -extent 48x48 \
+ +append player_walk_south_48x48_6.png
 
-_48x48
+\_48x48
+
+animations type:
+
+- Directional
+- right
+- left
+- up
+- down
+- right Up
+- right Down
+- left Up
+- left Down

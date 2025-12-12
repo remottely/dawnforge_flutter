@@ -53,7 +53,7 @@ final class KnightPlayerConfig {
     hitboxStartPositionY: 8.0,
   );
 
-  static final SimpleDirectionAnimation walkAnimation =
+  static final SimpleDirectionAnimation animationWalkDirectional =
       SimpleDirectionAnimation(
         idleLeft: SpriteAnimation.load(
           'gameplay/characters/player/knight/knight_player_idle_left_6.png',

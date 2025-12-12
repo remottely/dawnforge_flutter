@@ -202,8 +202,7 @@ final class CutePlayerConfig {
       );
 
   static Future<SpriteAnimation>
-  loadRightSeedAnimation() => // TODO(Kevin): enhance this name
-  SpriteAnimation.load(
+  loadAnimationSeedRight() => SpriteAnimation.load(
     // TODO(Kevin): CREATE ANIMATION
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_strip8.png',
     SpriteAnimationConfig.createStandardData(
@@ -213,8 +212,7 @@ final class CutePlayerConfig {
   );
 
   static Future<SpriteAnimation>
-  loadLeftSeedAnimation() => // TODO(Kevin): enhance this name
-  SpriteAnimation.load(
+  loadAnimationSeedLeft() => SpriteAnimation.load(
     // TODO(Kevin): CREATE ANIMATION
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_left_strip8.png',
     SpriteAnimationConfig.createStandardData(
@@ -224,8 +222,7 @@ final class CutePlayerConfig {
   );
 
   static Future<SpriteAnimation>
-  loadRightHarvestBasketAnimation() => // TODO(Kevin): enhance this name
-  SpriteAnimation.load(
+  loadAnimationHarvestBasketRight() => SpriteAnimation.load(
     // TODO(Kevin): CREATE ANIMATION
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_strip8.png',
     SpriteAnimationConfig.createStandardData(
@@ -235,8 +232,7 @@ final class CutePlayerConfig {
   );
 
   static Future<SpriteAnimation>
-  loadLeftHarvestBasketAnimation() => // TODO(Kevin): enhance this name
-  SpriteAnimation.load(
+  loadAnimationHarvestBasketLeft() => SpriteAnimation.load(
     // TODO(Kevin): CREATE ANIMATION
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_left_strip8.png',
     SpriteAnimationConfig.createStandardData(

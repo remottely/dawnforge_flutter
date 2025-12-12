@@ -15,7 +15,7 @@ final class KidNpcConfig {
   ); // TODO(Kevin): change this size
 
   static final SimpleDirectionAnimation
-  walkAnimation = SimpleDirectionAnimation(
+  animationWalkDirectional = SimpleDirectionAnimation(
     idleRight:
         UISpriteAnimationsConfig.loadAnimationKidNpcIdleLeft(), // TODO(Kevin): create right animation
     runRight: UISpriteAnimationsConfig.loadAnimationKidNpcIdleLeft(),

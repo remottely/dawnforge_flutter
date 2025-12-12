@@ -140,7 +140,6 @@ abstract class DDFarmPlayerView<
         executionStartFrame: 4,
         onActionStart: lockAction,
         onActionEnd: unlockAction,
-
         onExecutionFrames: () {
           FarmToolActionConfig.execute(player: this);
         },
@@ -155,14 +154,13 @@ abstract class DDFarmPlayerView<
     executionInfo = meleeAttackController.execute(AttackType.melee, () {
       // TODO(Kevin): NOW - create dinamic animation injected by view interface configurations
       CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-        animationRight: SunnyPlayerConfig.loadRightSeedAnimation(),
-        animationLeft: SunnyPlayerConfig.loadLeftSeedAnimation(),
+        animationRight: SunnyPlayerConfig.loadAnimationSeedRight(),
+        animationLeft: SunnyPlayerConfig.loadAnimationSeedLeft(),
         currentAnimation: animation,
         target: this,
         executionStartFrame: 4,
         onActionStart: lockAction,
         onActionEnd: unlockAction,
-
         onExecutionFrames: () {
           FarmToolActionConfig.execute(player: this);
         },
@@ -177,14 +175,13 @@ abstract class DDFarmPlayerView<
     executionInfo = meleeAttackController.execute(AttackType.melee, () {
       // TODO(Kevin): NOW - create dinamic animation injected by view interface configurations
       CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-        animationRight: SunnyPlayerConfig.loadRightHarvestBasketAnimation(),
-        animationLeft: SunnyPlayerConfig.loadLeftHarvestBasketAnimation(),
+        animationRight: SunnyPlayerConfig.loadAnimationHarvestBasketRight(),
+        animationLeft: SunnyPlayerConfig.loadAnimationHarvestBasketLeft(),
         currentAnimation: animation,
         target: this,
         executionStartFrame: 4,
         onActionStart: lockAction,
         onActionEnd: unlockAction,
-
         onExecutionFrames: () {
           FarmToolActionConfig.execute(player: this);
         },
