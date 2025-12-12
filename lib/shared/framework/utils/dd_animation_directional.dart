@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 
-class AnimationDirectionalFactory {
+class DDAnimationDirectionalFactory {
   final Future<SpriteAnimation> loadRight;
   final Future<SpriteAnimation> loadLeft;
   final Future<SpriteAnimation>? loadUp;
@@ -10,7 +10,7 @@ class AnimationDirectionalFactory {
   final Future<SpriteAnimation>? loadLeftUp;
   final Future<SpriteAnimation>? loadLeftDown;
 
-  AnimationDirectionalFactory({
+  DDAnimationDirectionalFactory({
     required this.loadRight,
     required this.loadLeft,
     this.loadUp,
@@ -22,7 +22,7 @@ class AnimationDirectionalFactory {
   });
 }
 
-class AnimationDirectional {
+class DDAnimationDirectional {
   final SpriteAnimation right;
   final SpriteAnimation left;
   final SpriteAnimation? up;
@@ -32,7 +32,7 @@ class AnimationDirectional {
   final SpriteAnimation? rightDown;
   final SpriteAnimation? leftDown;
 
-  AnimationDirectional({
+  DDAnimationDirectional({
     required this.right,
     required this.left,
     this.up,

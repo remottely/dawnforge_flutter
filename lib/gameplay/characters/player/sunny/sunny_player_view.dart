@@ -2,7 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
-import 'package:darkness_dungeon/shared/framework/animation_directional.dart';
+import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_view.dart';
@@ -17,7 +17,7 @@ class SunnyPlayerView<
         config: DDFarmPlayerConfig(
           animationWalkDirectional: SunnyPlayerConfig.animationWalkDirectional,
           animationRunDirectional: SunnyPlayerConfig.animationRunDirectional,
-          animationAttackDirectionalFactory: AnimationDirectionalFactory(
+          animationAttackDirectionalFactory: DDAnimationDirectionalFactory(
             loadRight: SunnyPlayerConfig.loadAnimationAttackRight,
             loadLeft: SunnyPlayerConfig.loadAnimationAttackLeft,
             loadUp: null,
@@ -27,7 +27,7 @@ class SunnyPlayerView<
             loadLeftUp: null,
             loadLeftDown: null,
           ),
-          animationShovelFactory: AnimationDirectionalFactory(
+          animationShovelFactory: DDAnimationDirectionalFactory(
             loadRight: SunnyPlayerConfig.loadAnimationShovelRight,
             loadLeft: SunnyPlayerConfig.loadAnimationShovelLeft,
             loadUp: null,
@@ -37,7 +37,7 @@ class SunnyPlayerView<
             loadLeftUp: null,
             loadLeftDown: null,
           ),
-          animationWateringCanFactory: AnimationDirectionalFactory(
+          animationWateringCanFactory: DDAnimationDirectionalFactory(
             loadRight: SunnyPlayerConfig.loadAnimationWateringCanRight,
             loadLeft: SunnyPlayerConfig.loadAnimationWateringCanLeft,
             loadUp: null,
@@ -47,7 +47,7 @@ class SunnyPlayerView<
             loadLeftUp: null,
             loadLeftDown: null,
           ),
-          animationPlaceSeedFactory: AnimationDirectionalFactory(
+          animationPlaceSeedFactory: DDAnimationDirectionalFactory(
             loadRight: SunnyPlayerConfig.loadAnimationPlaceSeedRight,
             loadLeft: SunnyPlayerConfig.loadAnimationPlaceSeedLeft,
             loadUp: null,
@@ -57,7 +57,7 @@ class SunnyPlayerView<
             loadLeftUp: null,
             loadLeftDown: null,
           ),
-          animationHarvestBasketFactory: AnimationDirectionalFactory(
+          animationHarvestBasketFactory: DDAnimationDirectionalFactory(
             loadRight: SunnyPlayerConfig.loadAnimationHarvestBasketRight,
             loadLeft: SunnyPlayerConfig.loadAnimationHarvestBasketLeft,
             loadUp: null,

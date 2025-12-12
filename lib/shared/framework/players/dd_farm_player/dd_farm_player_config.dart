@@ -1,11 +1,11 @@
-import 'package:darkness_dungeon/shared/framework/animation_directional.dart';
+import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_config.dart';
 
 class DDFarmPlayerConfig extends DDCombatPlayerConfig {
-  final AnimationDirectionalFactory animationShovelFactory;
-  final AnimationDirectionalFactory animationWateringCanFactory;
-  final AnimationDirectionalFactory animationPlaceSeedFactory;
-  final AnimationDirectionalFactory animationHarvestBasketFactory;
+  final DDAnimationDirectionalFactory animationShovelFactory;
+  final DDAnimationDirectionalFactory animationWateringCanFactory;
+  final DDAnimationDirectionalFactory animationPlaceSeedFactory;
+  final DDAnimationDirectionalFactory animationHarvestBasketFactory;
 
   DDFarmPlayerConfig({
     required super.animationWalkDirectional,

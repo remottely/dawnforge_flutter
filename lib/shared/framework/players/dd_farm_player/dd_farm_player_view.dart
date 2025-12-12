@@ -4,7 +4,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/character_action_sprite_animation_helper.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/farm/services/farm_tool_action_config.dart';
-import 'package:darkness_dungeon/shared/framework/animation_directional.dart';
+import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_defense_player/dd_defense_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_controller.dart';
@@ -28,10 +28,10 @@ abstract class DDFarmPlayerView<
     required super.speed,
   }) : super(config: config);
 
-  late final AnimationDirectional animationShovelDirectional;
-  late final AnimationDirectional animationWateringCanDirectional;
-  late final AnimationDirectional animationPlaceSeedDirectional;
-  late final AnimationDirectional animationHarvestBasketDirectional;
+  late final DDAnimationDirectional animationShovelDirectional;
+  late final DDAnimationDirectional animationWateringCanDirectional;
+  late final DDAnimationDirectional animationPlaceSeedDirectional;
+  late final DDAnimationDirectional animationHarvestBasketDirectional;
 
   @override
   Future<void> onLoad() async {

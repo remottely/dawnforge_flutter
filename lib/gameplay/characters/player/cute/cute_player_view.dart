@@ -2,7 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_model.dart';
-import 'package:darkness_dungeon/shared/framework/animation_directional.dart';
+import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_view.dart';
@@ -17,7 +17,7 @@ class CutePlayerView<
         config: DDFarmPlayerConfig(
           animationWalkDirectional: CutePlayerConfig.animationWalkDirectional,
           animationRunDirectional: CutePlayerConfig.animationRunDirectional,
-          animationAttackDirectionalFactory: AnimationDirectionalFactory(
+          animationAttackDirectionalFactory: DDAnimationDirectionalFactory(
             loadRight: CutePlayerConfig.loadAnimationAttackRight,
             loadLeft: CutePlayerConfig.loadAnimationAttackLeft,
             loadUp: CutePlayerConfig.loadAnimationAttackUp,
@@ -27,7 +27,7 @@ class CutePlayerView<
             loadLeftUp: null,
             loadLeftDown: null,
           ),
-          animationShovelFactory: AnimationDirectionalFactory(
+          animationShovelFactory: DDAnimationDirectionalFactory(
             loadRight: CutePlayerConfig.loadAnimationShovelRight,
             loadLeft: CutePlayerConfig.loadAnimationShovelLeft,
             loadUp: CutePlayerConfig.loadAnimationShovelUp,
@@ -37,7 +37,7 @@ class CutePlayerView<
             loadLeftUp: null,
             loadLeftDown: null,
           ),
-          animationWateringCanFactory: AnimationDirectionalFactory(
+          animationWateringCanFactory: DDAnimationDirectionalFactory(
             loadRight: CutePlayerConfig.loadAnimationWateringCanRight,
             loadLeft: CutePlayerConfig.loadAnimationWateringCanLeft,
             loadUp: CutePlayerConfig.loadAnimationWateringCanUp,
@@ -47,7 +47,7 @@ class CutePlayerView<
             loadLeftUp: null,
             loadLeftDown: null,
           ),
-          animationPlaceSeedFactory: AnimationDirectionalFactory(
+          animationPlaceSeedFactory: DDAnimationDirectionalFactory(
             loadRight: CutePlayerConfig.loadAnimationPlaceSeedRight,
             loadLeft: CutePlayerConfig.loadAnimationPlaceSeedLeft,
             loadUp: CutePlayerConfig.loadAnimationPlaceSeedUp,
@@ -57,7 +57,7 @@ class CutePlayerView<
             loadLeftUp: null,
             loadLeftDown: null,
           ),
-          animationHarvestBasketFactory: AnimationDirectionalFactory(
+          animationHarvestBasketFactory: DDAnimationDirectionalFactory(
             loadRight: CutePlayerConfig.loadAnimationHarvestBasketRight,
             loadLeft: CutePlayerConfig.loadAnimationHarvestBasketLeft,
             loadUp: CutePlayerConfig.loadAnimationHarvestBasketUp,

@@ -4,7 +4,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/combat/controllers/player
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_config.dart';
-import 'package:darkness_dungeon/shared/framework/animation_directional.dart';
+import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';
@@ -28,7 +28,7 @@ abstract class DDCombatPlayerView<
     required super.speed,
   }) : super(config: config);
 
-  late final AnimationDirectional animationAttackDirectional;
+  late final DDAnimationDirectional animationAttackDirectional;
 
   late final SynchronizedAttackController meleeAttackController;
   late final SynchronizedAttackController rangedAttackController;
