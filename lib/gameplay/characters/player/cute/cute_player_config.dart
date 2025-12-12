@@ -350,5 +350,5 @@ final class CutePlayerConfig {
       );
 }
 
-    // - new/Player/axe/
-    // - new/Player/pickaxe/
+// - new/Player/axe/
+// - new/Player/pickaxe/

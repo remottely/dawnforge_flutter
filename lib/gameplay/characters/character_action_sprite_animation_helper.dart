@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/shared/framework/animation_directional.dart';
 
 final class CharacterActionSpriteAnimationHelper {
   CharacterActionSpriteAnimationHelper._();
@@ -236,5 +237,36 @@ final class CharacterActionSpriteAnimationHelper {
         .map((frame) => SpriteAnimationFrame(frame.sprite, frame.stepTime))
         .toList();
     return SpriteAnimation(clonedFrames, loop: loop);
+  }
+
+  static Future<AnimationDirectional> loadAnimationDirectionalFromFactory(
+    AnimationDirectionalFactory animationsFactory,
+  ) async {
+    Future<SpriteAnimation?> loadSafe(Future<SpriteAnimation>? loader) async {
+      if (loader == null) return null;
+      return await loader;
+    }
+
+    final loadedList = await Future.wait([
+      animationsFactory.loadRight,
+      animationsFactory.loadLeft,
+      loadSafe(animationsFactory.loadUp),
+      loadSafe(animationsFactory.loadDown),
+      loadSafe(animationsFactory.loadRightUp),
+      loadSafe(animationsFactory.loadRightDown),
+      loadSafe(animationsFactory.loadLeftUp),
+      loadSafe(animationsFactory.loadLeftDown),
+    ]);
+
+    return AnimationDirectional(
+      right: loadedList[0]!,
+      left: loadedList[1]!,
+      up: loadedList[2],
+      down: loadedList[3],
+      rightUp: loadedList[4],
+      rightDown: loadedList[5],
+      leftUp: loadedList[6],
+      leftDown: loadedList[7],
+    );
   }
 }

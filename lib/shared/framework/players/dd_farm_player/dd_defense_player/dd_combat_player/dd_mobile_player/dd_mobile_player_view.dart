@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_controller.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_model.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_controller.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_model.dart';
 import 'package:flutter/foundation.dart';
 
 class DDMobilePlayerConfig {
@@ -21,15 +21,9 @@ abstract class DDMobilePlayerView<
   M extends DDMobilePlayerModel
 >
     extends DDBasePlayerView<C, M> {
-  final double _baseSpeed;
-
-  bool _isInRunningState = false;
-
-  int _activeActionLockCount = 0;
-
-  bool _pendingAnimationChange = false;
-
+  @protected
   final DDMobilePlayerConfig config;
+  final double _baseSpeed;
 
   DDMobilePlayerView({
     required this.config,
@@ -40,6 +34,12 @@ abstract class DDMobilePlayerView<
     required double speed,
   }) : _baseSpeed = speed,
        super(speed: speed, animation: null);
+
+  bool _isInRunningState = false;
+
+  int _activeActionLockCount = 0;
+
+  bool _pendingAnimationChange = false;
 
   @protected
   bool get isActionLocked => _activeActionLockCount > 0;
@@ -107,14 +107,14 @@ abstract class DDMobilePlayerView<
       if (isActionLocked) {
         _pendingAnimationChange = true;
       } else {
-        transitionToRunAnimation();
+        _transitionToRunAnimation();
       }
     } else {
       speed = _baseSpeed;
       if (isActionLocked) {
         _pendingAnimationChange = true;
       } else {
-        transitionToWalkAnimation();
+        _transitionToWalkAnimation();
       }
     }
   }
@@ -125,20 +125,20 @@ abstract class DDMobilePlayerView<
     if (_pendingAnimationChange && !isActionLocked) {
       _pendingAnimationChange = false;
       if (_isInRunningState) {
-        transitionToRunAnimation();
+        _transitionToRunAnimation();
       } else {
-        transitionToWalkAnimation();
+        _transitionToWalkAnimation();
       }
     }
   }
 
-  void transitionToRunAnimation() {
+  void _transitionToRunAnimation() {
     if (isActionLocked) return;
 
     replaceAnimation(config.animationRunDirectional, doIdle: isIdle);
   }
 
-  void transitionToWalkAnimation() {
+  void _transitionToWalkAnimation() {
     if (isActionLocked) return;
 
     replaceAnimation(config.animationWalkDirectional, doIdle: isIdle);

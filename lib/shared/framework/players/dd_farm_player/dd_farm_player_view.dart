@@ -5,20 +5,18 @@ import 'package:darkness_dungeon/gameplay/characters/character_action_sprite_ani
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/farm/services/farm_tool_action_config.dart';
 import 'package:darkness_dungeon/shared/framework/animation_directional.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_defense_player/dd_defense_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_defense_player/dd_defense_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_model.dart';
-
-// Certifique-se de importar o arquivo onde está o DDFarmPlayerConfig criado acima
-// import 'path/to/dd_farm_player_config.dart';
+import 'package:flutter/foundation.dart';
 
 abstract class DDFarmPlayerView<
   C extends DDFarmPlayerController<M>,
   M extends DDFarmPlayerModel
 >
     extends DDDefensePlayerView<C, M> {
-  @override
+  @protected
   final DDFarmPlayerConfig config;
 
   DDFarmPlayerView({
@@ -30,7 +28,6 @@ abstract class DDFarmPlayerView<
     required super.speed,
   }) : super(config: config);
 
-  // Variáveis para armazenar as animações prontas
   late final AnimationDirectional animationShovelDirectional;
   late final AnimationDirectional animationWateringCanDirectional;
   late final AnimationDirectional animationPlaceSeedDirectional;
@@ -40,42 +37,19 @@ abstract class DDFarmPlayerView<
   Future<void> onLoad() async {
     await super.onLoad();
 
-    Future<AnimationDirectional> loadFromFactory(
-      AnimationDirectionalFactory animationsFactory,
-    ) async {
-      Future<SpriteAnimation?> loadSafe(Future<SpriteAnimation>? loader) async {
-        if (loader == null) return null;
-        return await loader;
-      }
-
-      final loadedList = await Future.wait([
-        animationsFactory.loadRight,
-        animationsFactory.loadLeft,
-        loadSafe(animationsFactory.loadUp),
-        loadSafe(animationsFactory.loadDown),
-        loadSafe(animationsFactory.loadRightUp),
-        loadSafe(animationsFactory.loadRightDown),
-        loadSafe(animationsFactory.loadLeftUp),
-        loadSafe(animationsFactory.loadLeftDown),
-      ]);
-
-      return AnimationDirectional(
-        right: loadedList[0]!,
-        left: loadedList[1]!,
-        up: loadedList[2],
-        down: loadedList[3],
-        rightUp: loadedList[4],
-        rightDown: loadedList[5],
-        leftUp: loadedList[6],
-        leftDown: loadedList[7],
-      );
-    }
-
     final toolsLoaded = await Future.wait([
-      loadFromFactory(config.animationShovelFactory),
-      loadFromFactory(config.animationWateringCanFactory),
-      loadFromFactory(config.animationPlaceSeedFactory),
-      loadFromFactory(config.animationHarvestBasketFactory),
+      CharacterActionSpriteAnimationHelper.loadAnimationDirectionalFromFactory(
+        config.animationShovelFactory,
+      ),
+      CharacterActionSpriteAnimationHelper.loadAnimationDirectionalFromFactory(
+        config.animationWateringCanFactory,
+      ),
+      CharacterActionSpriteAnimationHelper.loadAnimationDirectionalFromFactory(
+        config.animationPlaceSeedFactory,
+      ),
+      CharacterActionSpriteAnimationHelper.loadAnimationDirectionalFromFactory(
+        config.animationHarvestBasketFactory,
+      ),
     ]);
 
     animationShovelDirectional = toolsLoaded[0];
@@ -139,11 +113,6 @@ abstract class DDFarmPlayerView<
   void update(double dt) {
     super.update(dt);
   }
-
-  // ---------------------------------------------------------------------------
-  // EXECUTIONS
-  // Agora usam as variáveis 'animation...Directional' carregadas
-  // ---------------------------------------------------------------------------
 
   bool _onExecuteShovel() {
     final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
@@ -230,7 +199,7 @@ abstract class DDFarmPlayerView<
         CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
           animationRight: animationHarvestBasketDirectional.right,
           animationLeft: animationHarvestBasketDirectional.left,
-          // Adicione as outras direções se existirem na sua factory
+
           animationUp: animationHarvestBasketDirectional.up,
           animationDown: animationHarvestBasketDirectional.down,
           currentAnimation: animation,

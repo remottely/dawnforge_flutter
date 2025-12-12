@@ -5,25 +5,18 @@ import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attac
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_config.dart';
 import 'package:darkness_dungeon/shared/framework/animation_directional.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_combat_player/dd_combat_player_controller.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_combat_player/dd_combat_player_model.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_view.dart';
-
-class DDCombatPlayerConfig extends DDMobilePlayerConfig {
-  final AnimationDirectionalFactory animationAttackDirectionalFactory;
-
-  DDCombatPlayerConfig({
-    required super.animationWalkDirectional,
-    required super.animationRunDirectional,
-    required this.animationAttackDirectionalFactory,
-  });
-}
+import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_config.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_controller.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_view.dart';
+import 'package:flutter/foundation.dart';
 
 abstract class DDCombatPlayerView<
   C extends DDCombatPlayerController<M>,
   M extends DDCombatPlayerModel
 >
     extends DDMobilePlayerView<C, M> {
+  @protected
   final DDCombatPlayerConfig config;
 
   DDCombatPlayerView({
@@ -45,42 +38,10 @@ abstract class DDCombatPlayerView<
     await super.onLoad();
     _initializeCombatSystems();
 
-    Future<AnimationDirectional> loadFromFactory(
-      AnimationDirectionalFactory animationsFactory,
-    ) async {
-      Future<SpriteAnimation?> loadSafe(Future<SpriteAnimation>? loader) async {
-        if (loader == null) return null;
-        return await loader;
-      }
-
-      final loadedList = await Future.wait([
-        animationsFactory.loadRight,
-        animationsFactory.loadLeft,
-        loadSafe(animationsFactory.loadUp),
-        loadSafe(animationsFactory.loadDown),
-        loadSafe(animationsFactory.loadRightUp),
-        loadSafe(animationsFactory.loadRightDown),
-        loadSafe(animationsFactory.loadLeftUp),
-        loadSafe(animationsFactory.loadLeftDown),
-      ]);
-
-      return AnimationDirectional(
-        right: loadedList[0]!,
-        left: loadedList[1]!,
-        up: loadedList[2],
-        down: loadedList[3],
-        rightUp: loadedList[4],
-        rightDown: loadedList[5],
-        leftUp: loadedList[6],
-        leftDown: loadedList[7],
-      );
-    }
-
-    final toolsLoaded = await Future.wait([
-      loadFromFactory(config.animationAttackDirectionalFactory),
-    ]);
-
-    animationAttackDirectional = toolsLoaded[0];
+    animationAttackDirectional =
+        await CharacterActionSpriteAnimationHelper.loadAnimationDirectionalFromFactory(
+          config.animationAttackDirectionalFactory,
+        );
   }
 
   @override

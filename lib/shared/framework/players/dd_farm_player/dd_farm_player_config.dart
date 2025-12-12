@@ -1,5 +1,5 @@
 import 'package:darkness_dungeon/shared/framework/animation_directional.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_combat_player/dd_combat_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_config.dart';
 
 class DDFarmPlayerConfig extends DDCombatPlayerConfig {
   final AnimationDirectionalFactory animationShovelFactory;

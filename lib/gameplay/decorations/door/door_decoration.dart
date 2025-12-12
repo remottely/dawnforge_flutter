@@ -4,7 +4,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/decorations/door/door_decoration_config.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 
 class DoorDecorationView extends DDDecoration {
   bool _isOpen = false;
