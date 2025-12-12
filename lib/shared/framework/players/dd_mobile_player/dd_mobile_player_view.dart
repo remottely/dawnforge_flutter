@@ -45,7 +45,6 @@ abstract class DDMobilePlayerView<
   }
 
   SimpleDirectionAnimation getWalkAnimation();
-
   SimpleDirectionAnimation getRunAnimation();
 
   @override

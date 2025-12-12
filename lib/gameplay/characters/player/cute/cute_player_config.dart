@@ -46,21 +46,20 @@ final class CutePlayerConfig {
   static const int kHarvestBasketStaminaCost = 5;
 
   static final Vector2 textureSize = TileConstants.tileSizeCute;
-  static final Vector2 textureSizeActions = TileConstants.tileSizeCuteActions;
 
   static final Vector2 componentSize = textureSize;
 
   static final RectangleHitbox hitbox = HitboxUtils.createCustomHitbox(
     componentSize: componentSize,
-    left: 44.0,
-    top: 28.0,
-    right: 44.0,
-    bottom: 25.0,
+    left: 20.0,
+    top: 22.0,
+    right: 20.0,
+    bottom: 18.0,
   );
 
   static Future<SpriteAnimation> _loadCutePlayerIdleLeft6() =>
       SpriteAnimation.load(
-        'new/Player/idle/player_idle_west_6.png',
+        'new/Player/idle/player_idle_left_48x48_6.png',
         SpriteAnimationConfig.createStandardData(
           amount: 6,
           textureSize: CutePlayerConfig.textureSize,
@@ -69,7 +68,7 @@ final class CutePlayerConfig {
 
   static Future<SpriteAnimation> _loadCutePlayerIdleUp6() =>
       SpriteAnimation.load(
-        'new/Player/idle/player_idle_north_6.png',
+        'new/Player/idle/player_idle_up_48x48_6.png',
         SpriteAnimationConfig.createStandardData(
           amount: 6,
           textureSize: CutePlayerConfig.textureSize,
@@ -78,89 +77,122 @@ final class CutePlayerConfig {
 
   static Future<SpriteAnimation> _loadCutePlayerIdleDown6() =>
       SpriteAnimation.load(
-        'new/Player/idle/player_idle_south_6.png',
+        'new/Player/idle/player_idle_down_48x48_6.png',
         SpriteAnimationConfig.createStandardData(
           amount: 6,
           textureSize: CutePlayerConfig.textureSize,
         ),
       );
 
-  static Future<SpriteAnimation> loadRightAttackAnimation() =>
-      SpriteAnimation.load(
-        'new/Player/attack/player_attack_east_4.png',
-        SpriteAnimationConfig.createStandardData(
-          amount: 4,
-          textureSize: textureSize,
-        ),
-      );
-
-  static Future<SpriteAnimation> loadLeftAttackAnimation() =>
-      SpriteAnimation.load(
-        'new/Player/attack/player_attack_west_4.png',
-        SpriteAnimationConfig.createStandardData(
-          amount: 4,
-          textureSize: textureSize,
-        ),
-      );
-
-  static Future<SpriteAnimation> loadUpAttackAnimation() =>
-      SpriteAnimation.load(
-        // TODO(Kevin): NOW - create up and down verifications
-        'new/Player/attack/player_attack_north_4.png',
-        SpriteAnimationConfig.createStandardData(
-          amount: 4,
-          textureSize: textureSize,
-        ),
-      );
-
-  static Future<SpriteAnimation> loadDownAttackAnimation() =>
-      SpriteAnimation.load(
-        // TODO(Kevin): NOW - create up and down verifications
-        'new/Player/attack/player_attack_south_4.png',
-        SpriteAnimationConfig.createStandardData(
-          amount: 4,
-          textureSize: textureSize,
-        ),
-      );
-
-  static Future<SpriteAnimation> loadRightShovelAnimation() =>
-      SpriteAnimation.load(
-        'new/Player/shovel/player_shovel_east_2.dart',
-        SpriteAnimationConfig.createStandardData(
-          amount: 2,
-          textureSize: textureSize,
-        ),
-      );
-
-  static Future<SpriteAnimation> loadLeftShovelAnimation() =>
-      SpriteAnimation.load(
-        'new/Player/shovel/player_shovel_west_2.dart',
-        SpriteAnimationConfig.createStandardData(
-          amount: 2,
-          textureSize: textureSize,
-        ),
-      );
-
-  static Future<SpriteAnimation> loadRightWateringCanAnimation() =>
-      SpriteAnimation.load(
-        'new/Player/water/player_water_east_2.dart',
-        SpriteAnimationConfig.createStandardData(
-          amount: 5,
-          textureSize: textureSize,
-        ),
-      );
-
-  static Future<SpriteAnimation> loadLeftWateringCanAnimation() =>
-      SpriteAnimation.load(
-        'new/Player/water/player_water_west_2.dart',
-        SpriteAnimationConfig.createStandardData(
-          amount: 5,
-          textureSize: textureSize,
-        ),
-      );
+  static Future<SpriteAnimation>
+  loadRightAttackAnimation() => // TODO(Kevin): enhance this name
+  SpriteAnimation.load(
+    'new/Player/attack/player_attack_right_48x48_4.png',
+    SpriteAnimationConfig.createStandardData(
+      amount: 4,
+      textureSize: textureSize,
+    ),
+  );
 
   static Future<SpriteAnimation>
-  loadRightSeedAnimation() => SpriteAnimation.load(
+  loadLeftAttackAnimation() => // TODO(Kevin): enhance this name
+  SpriteAnimation.load(
+    'new/Player/attack/player_attack_left_48x48_4.png',
+    SpriteAnimationConfig.createStandardData(
+      amount: 4,
+      textureSize: textureSize,
+    ),
+  );
+
+  static Future<SpriteAnimation>
+  loadUpAttackAnimation() => // TODO(Kevin): enhance this name
+  SpriteAnimation.load(
+    // TODO(Kevin): NOW - create up and down verifications
+    'new/Player/attack/player_attack_up_48x48_4.png',
+    SpriteAnimationConfig.createStandardData(
+      amount: 4,
+      textureSize: textureSize,
+    ),
+  );
+
+  static Future<SpriteAnimation>
+  loadDownAttackAnimation() => // TODO(Kevin): enhance this name
+  SpriteAnimation.load(
+    // TODO(Kevin): NOW - create up and down verifications
+    'new/Player/attack/player_attack_down_48x48_4.png',
+    SpriteAnimationConfig.createStandardData(
+      amount: 4,
+      textureSize: textureSize,
+    ),
+  );
+
+  static Future<SpriteAnimation>
+  loadRightShovelAnimation() => // TODO(Kevin): enhance this name
+  SpriteAnimation.load(
+    'new/Player/shovel/player_shovel_right_48x48_2.png',
+    SpriteAnimationConfig.createCustomData(
+      amount: 2,
+      textureSize: textureSize,
+      stepTime: SpriteAnimationConfig.kStepTimeSlow,
+    ),
+  );
+
+  static Future<SpriteAnimation>
+  loadLeftShovelAnimation() => // TODO(Kevin): enhance this name
+  SpriteAnimation.load(
+    'new/Player/shovel/player_shovel_left_48x48_2.png',
+    SpriteAnimationConfig.createCustomData(
+      amount: 2,
+      textureSize: textureSize,
+      stepTime: SpriteAnimationConfig.kStepTimeSlow,
+    ),
+  );
+
+  static Future<SpriteAnimation>
+  loadUpShovelAnimation() => // TODO(Kevin): enhance this name
+  SpriteAnimation.load(
+    'new/Player/shovel/player_shovel_up_48x48_2.png',
+    SpriteAnimationConfig.createCustomData(
+      amount: 2,
+      textureSize: textureSize,
+      stepTime: SpriteAnimationConfig.kStepTimeSlow,
+    ),
+  );
+
+  static Future<SpriteAnimation>
+  loadDownShovelAnimation() => // TODO(Kevin): enhance this name
+  SpriteAnimation.load(
+    'new/Player/shovel/player_shovel_down_48x48_2.png',
+    SpriteAnimationConfig.createCustomData(
+      amount: 2,
+      textureSize: textureSize,
+      stepTime: SpriteAnimationConfig.kStepTimeSlow,
+    ),
+  );
+
+  static Future<SpriteAnimation>
+  loadRightWateringCanAnimation() => // TODO(Kevin): enhance this name
+  SpriteAnimation.load(
+    'new/Player/water/player_water_right_48x48_2.png',
+    SpriteAnimationConfig.createStandardData(
+      amount: 5,
+      textureSize: textureSize,
+    ),
+  );
+
+  static Future<SpriteAnimation>
+  loadLeftWateringCanAnimation() => // TODO(Kevin): enhance this name
+  SpriteAnimation.load(
+    'new/Player/water/player_water_left_48x48_2.png',
+    SpriteAnimationConfig.createStandardData(
+      amount: 5,
+      textureSize: textureSize,
+    ),
+  );
+
+  static Future<SpriteAnimation>
+  loadRightSeedAnimation() => // TODO(Kevin): enhance this name
+  SpriteAnimation.load(
     // TODO(Kevin): CREATE ANIMATION
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_strip8.png',
     SpriteAnimationConfig.createStandardData(
@@ -170,7 +202,8 @@ final class CutePlayerConfig {
   );
 
   static Future<SpriteAnimation>
-  loadLeftSeedAnimation() => SpriteAnimation.load(
+  loadLeftSeedAnimation() => // TODO(Kevin): enhance this name
+  SpriteAnimation.load(
     // TODO(Kevin): CREATE ANIMATION
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_left_strip8.png',
     SpriteAnimationConfig.createStandardData(
@@ -180,7 +213,8 @@ final class CutePlayerConfig {
   );
 
   static Future<SpriteAnimation>
-  loadRightHarvestBasketAnimation() => SpriteAnimation.load(
+  loadRightHarvestBasketAnimation() => // TODO(Kevin): enhance this name
+  SpriteAnimation.load(
     // TODO(Kevin): CREATE ANIMATION
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_strip8.png',
     SpriteAnimationConfig.createStandardData(
@@ -190,7 +224,8 @@ final class CutePlayerConfig {
   );
 
   static Future<SpriteAnimation>
-  loadLeftHarvestBasketAnimation() => SpriteAnimation.load(
+  loadLeftHarvestBasketAnimation() => // TODO(Kevin): enhance this name
+  SpriteAnimation.load(
     // TODO(Kevin): CREATE ANIMATION
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_left_strip8.png',
     SpriteAnimationConfig.createStandardData(
@@ -206,28 +241,28 @@ final class CutePlayerConfig {
         idleUp: _loadCutePlayerIdleUp6(),
         idleDown: _loadCutePlayerIdleDown6(),
         runLeft: SpriteAnimation.load(
-          'new/Player/walk/player_walk_west_6.png',
+          'new/Player/walk/player_walk_left_48x48_6.png',
           SpriteAnimationConfig.createStandardData(
             amount: 6,
             textureSize: textureSize,
           ),
         ),
         runRight: SpriteAnimation.load(
-          'new/Player/walk/player_walk_east_6.png',
+          'new/Player/walk/player_walk_right_48x48_6.png',
           SpriteAnimationConfig.createStandardData(
             amount: 6,
             textureSize: textureSize,
           ),
         ),
         runUp: SpriteAnimation.load(
-          'new/Player/walk/player_walk_north_6.png',
+          'new/Player/walk/player_walk_up_48x48_6.png',
           SpriteAnimationConfig.createStandardData(
             amount: 6,
             textureSize: textureSize,
           ),
         ),
         runDown: SpriteAnimation.load(
-          'new/Player/walk/player_walk_south_6.png',
+          'new/Player/walk/player_walk_down_48x48_6.png',
           SpriteAnimationConfig.createStandardData(
             amount: 6,
             textureSize: textureSize,
@@ -242,28 +277,28 @@ final class CutePlayerConfig {
     idleDown: _loadCutePlayerIdleDown6(),
     // TODO(Kevin): NOW - create run animations
     runLeft: SpriteAnimation.load(
-      'new/Player/walk/player_walk_west_6.png',
+      'new/Player/walk/player_walk_left_48x48_6.png',
       SpriteAnimationConfig.createStandardData(
         amount: 6,
         textureSize: textureSize,
       ),
     ),
     runRight: SpriteAnimation.load(
-      'new/Player/walk/player_walk_east_6.png',
+      'new/Player/walk/player_walk_right_48x48_6.png',
       SpriteAnimationConfig.createStandardData(
         amount: 6,
         textureSize: textureSize,
       ),
     ),
     runUp: SpriteAnimation.load(
-      'new/Player/walk/player_walk_north_6.png',
+      'new/Player/walk/player_walk_up_48x48_6.png',
       SpriteAnimationConfig.createStandardData(
         amount: 6,
         textureSize: textureSize,
       ),
     ),
     runDown: SpriteAnimation.load(
-      'new/Player/walk/player_walk_south_6.png',
+      'new/Player/walk/player_walk_down_48x48_6.png',
       SpriteAnimationConfig.createStandardData(
         amount: 6,
         textureSize: textureSize,
@@ -279,8 +314,9 @@ final class CutePlayerConfig {
 
   static final Vector2 cryptComponentSize = TileConstants.tileSizeStandard;
 
-  static Future<Sprite> loadCryptSprite() =>
-      Sprite.load('gameplay/characters/player/player_crypt_1.png');
+  static Future<Sprite> loadCryptSprite() => Sprite.load(
+    'gameplay/characters/player/player_crypt_1.png',
+  ); // TODO(Kevin): change to cute death animation playonce // - new/Player/death/
 
   static DDDecoration createDeathMarker(Vector2 position) =>
       DDDecoration.withSprite(
@@ -290,11 +326,5 @@ final class CutePlayerConfig {
       );
 }
 
-    // -
     // - new/Player/axe/
-    // - new/Player/death/
-    // - new/Player/idle/
     // - new/Player/pickaxe/
-    // - new/Player/shovel/
-    // - new/Player/walk/
-    // - new/Player/water/
