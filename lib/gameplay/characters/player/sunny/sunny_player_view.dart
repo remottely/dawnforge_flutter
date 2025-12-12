@@ -3,8 +3,8 @@ import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_c
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_combat_player/dd_combat_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_view.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_view.dart';
 
 class SunnyPlayerView<
   C extends SunnyPlayerController<M>,
@@ -13,9 +13,17 @@ class SunnyPlayerView<
     extends DDFarmPlayerView<C, M> {
   SunnyPlayerView({required super.position, required super.model})
     : super(
-        config: DDMobilePlayerConfig(
-          animationWalkFactory: SunnyPlayerConfig.animationWalkDirectional,
-          animationRunFactory: SunnyPlayerConfig.animationRunDirectional,
+        config: DDCombatPlayerConfig(
+          animationWalk: SunnyPlayerConfig.animationWalkDirectional,
+          animationRun: SunnyPlayerConfig.animationRunDirectional,
+          animationAttackRight: SunnyPlayerConfig.loadAnimationAttackRight(),
+          animationAttackLeft: SunnyPlayerConfig.loadAnimationAttackLeft(),
+          animationAttackUp: null,
+          animationAttackDown: null,
+          animationAttackRightUp: null,
+          animationAttackRightDown: null,
+          animationAttackLeftUp: null,
+          animationAttackLeftDown: null,
         ),
         size: SunnyPlayerConfig.componentSize,
         life: SunnyPlayerConfig.kLife,
@@ -64,32 +72,6 @@ class SunnyPlayerView<
   @override
   DDDecoration getDeathMarker(Vector2 position) =>
       SunnyPlayerConfig.createDeathMarker(position);
-
-  @override
-  Future<SpriteAnimation> getAnimationAttackRight() =>
-      SunnyPlayerConfig.loadAnimationAttackRight();
-
-  @override
-  Future<SpriteAnimation> getAnimationAttackLeft() =>
-      SunnyPlayerConfig.loadAnimationAttackLeft();
-
-  @override
-  Future<SpriteAnimation>? getAnimationAttackUp() => null;
-
-  @override
-  Future<SpriteAnimation>? getAnimationAttackDown() => null;
-
-  @override
-  Future<SpriteAnimation>? getAnimationAttackRightUp() => null;
-
-  @override
-  Future<SpriteAnimation>? getAnimationAttackRightDown() => null;
-
-  @override
-  Future<SpriteAnimation>? getAnimationAttackLeftUp() => null;
-
-  @override
-  Future<SpriteAnimation>? getAnimationAttackLeftDown() => null;
 
   @override
   Future<SpriteAnimation> getAnimationShovelRight() =>

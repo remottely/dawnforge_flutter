@@ -8,19 +8,45 @@ import 'package:darkness_dungeon/shared/framework/players/dd_combat_player/dd_co
 import 'package:darkness_dungeon/shared/framework/players/dd_combat_player/dd_combat_player_model.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_view.dart';
 
+class DDCombatPlayerConfig extends DDMobilePlayerConfig {
+  final Future<SpriteAnimation> animationAttackRight;
+  final Future<SpriteAnimation> animationAttackLeft;
+  final Future<SpriteAnimation>? animationAttackUp;
+  final Future<SpriteAnimation>? animationAttackDown;
+  final Future<SpriteAnimation>? animationAttackRightUp;
+  final Future<SpriteAnimation>? animationAttackRightDown;
+  final Future<SpriteAnimation>? animationAttackLeftUp;
+  final Future<SpriteAnimation>? animationAttackLeftDown;
+
+  DDCombatPlayerConfig({
+    required super.animationWalk,
+    required super.animationRun,
+    required this.animationAttackRight,
+    required this.animationAttackLeft,
+    this.animationAttackUp,
+    this.animationAttackDown,
+    this.animationAttackRightUp,
+    this.animationAttackRightDown,
+    this.animationAttackLeftUp,
+    this.animationAttackLeftDown,
+  });
+}
+
 abstract class DDCombatPlayerView<
   C extends DDCombatPlayerController<M>,
   M extends DDCombatPlayerModel
 >
     extends DDMobilePlayerView<C, M> {
+  final DDCombatPlayerConfig config;
+
   DDCombatPlayerView({
-    required super.config,
+    required this.config,
     required super.position,
     required super.model,
     required super.size,
     required super.life,
     required super.speed,
-  });
+  }) : super(config: config);
 
   late final SynchronizedAttackController meleeAttackController;
   late final SynchronizedAttackController rangedAttackController;
@@ -46,15 +72,6 @@ abstract class DDCombatPlayerView<
       spec: SynchronizedAttackSpecConfig.standard,
     );
   }
-
-  Future<SpriteAnimation> getAnimationAttackRight();
-  Future<SpriteAnimation> getAnimationAttackLeft();
-  Future<SpriteAnimation>? getAnimationAttackUp();
-  Future<SpriteAnimation>? getAnimationAttackDown();
-  Future<SpriteAnimation>? getAnimationAttackRightUp();
-  Future<SpriteAnimation>? getAnimationAttackRightDown();
-  Future<SpriteAnimation>? getAnimationAttackLeftUp();
-  Future<SpriteAnimation>? getAnimationAttackLeftDown();
 
   @override
   C createMobileController({
@@ -97,14 +114,14 @@ abstract class DDCombatPlayerView<
       AttackType.melee,
       () {
         CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-          animationRight: getAnimationAttackRight.call(),
-          animationLeft: getAnimationAttackLeft.call(),
-          animationUp: getAnimationAttackUp.call(),
-          animationDown: getAnimationAttackDown.call(),
-          animationRightUp: getAnimationAttackRightUp.call(),
-          animationRightDown: getAnimationAttackRightDown.call(),
-          animationLeftUp: getAnimationAttackLeftUp.call(),
-          animationLeftDown: getAnimationAttackLeftDown.call(),
+          animationRight: config.animationAttackRight,
+          animationLeft: config.animationAttackLeft,
+          animationUp: config.animationAttackUp,
+          animationDown: config.animationAttackDown,
+          animationRightUp: config.animationAttackRightUp,
+          animationRightDown: config.animationAttackRightDown,
+          animationLeftUp: config.animationAttackLeftUp,
+          animationLeftDown: config.animationAttackLeftDown,
           currentAnimation: animation,
           target: this,
           executionStartFrame: 1,

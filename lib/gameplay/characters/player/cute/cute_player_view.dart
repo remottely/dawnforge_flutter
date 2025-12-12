@@ -3,8 +3,8 @@ import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_con
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_model.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_combat_player/dd_combat_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_view.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_view.dart';
 
 class CutePlayerView<
   C extends CutePlayerController<M>,
@@ -13,9 +13,17 @@ class CutePlayerView<
     extends DDFarmPlayerView<C, M> {
   CutePlayerView({required super.position, required super.model})
     : super(
-        config: DDMobilePlayerConfig(
-          animationWalkFactory: CutePlayerConfig.animationWalkDirectional,
-          animationRunFactory: CutePlayerConfig.animationRunDirectional,
+        config: DDCombatPlayerConfig(
+          animationWalk: CutePlayerConfig.animationWalkDirectional,
+          animationRun: CutePlayerConfig.animationRunDirectional,
+          animationAttackRight: CutePlayerConfig.loadAnimationAttackRight(),
+          animationAttackLeft: CutePlayerConfig.loadAnimationAttackLeft(),
+          animationAttackUp: CutePlayerConfig.loadAnimationAttackUp(),
+          animationAttackDown: CutePlayerConfig.loadAnimationAttackDown(),
+          animationAttackRightUp: null,
+          animationAttackRightDown: null,
+          animationAttackLeftUp: null,
+          animationAttackLeftDown: null,
         ),
         size: CutePlayerConfig.componentSize,
         life: CutePlayerConfig.kLife,
@@ -64,34 +72,6 @@ class CutePlayerView<
   @override
   DDDecoration getDeathMarker(Vector2 position) =>
       CutePlayerConfig.createDeathMarker(position);
-
-  @override
-  Future<SpriteAnimation> getAnimationAttackRight() =>
-      CutePlayerConfig.loadAnimationAttackRight();
-
-  @override
-  Future<SpriteAnimation> getAnimationAttackLeft() =>
-      CutePlayerConfig.loadAnimationAttackLeft();
-
-  @override
-  Future<SpriteAnimation>? getAnimationAttackUp() =>
-      CutePlayerConfig.loadAnimationAttackUp();
-
-  @override
-  Future<SpriteAnimation>? getAnimationAttackDown() =>
-      CutePlayerConfig.loadAnimationAttackDown();
-
-  @override
-  Future<SpriteAnimation>? getAnimationAttackRightUp() => null;
-
-  @override
-  Future<SpriteAnimation>? getAnimationAttackRightDown() => null;
-
-  @override
-  Future<SpriteAnimation>? getAnimationAttackLeftUp() => null;
-
-  @override
-  Future<SpriteAnimation>? getAnimationAttackLeftDown() => null;
 
   @override
   Future<SpriteAnimation> getAnimationShovelRight() =>

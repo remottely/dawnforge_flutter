@@ -7,13 +7,13 @@ import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mo
 import 'package:flutter/foundation.dart';
 
 class DDMobilePlayerConfig {
-  final SimpleDirectionAnimation animationWalkFactory;
-  final SimpleDirectionAnimation animationRunFactory;
+  final SimpleDirectionAnimation animationWalk;
+  final SimpleDirectionAnimation animationRun;
   // final SimpleDirectionAnimation Function() exampleFactory;
 
   DDMobilePlayerConfig({
-    required this.animationWalkFactory,
-    required this.animationRunFactory,
+    required this.animationWalk,
+    required this.animationRun,
     // required this.exampleFactory,
   });
 }
@@ -56,7 +56,7 @@ abstract class DDMobilePlayerView<
     await super.onLoad();
     // _animationWalkDirectional = config.animationWalkFactory;
     // _animationRunDirectional = config.animationRunFactory;
-    replaceAnimation(config.animationWalkFactory);
+    replaceAnimation(config.animationWalk);
   }
 
   @override
@@ -142,13 +142,13 @@ abstract class DDMobilePlayerView<
   void transitionToRunAnimation() {
     if (isActionLocked) return;
 
-    replaceAnimation(config.animationRunFactory, doIdle: isIdle);
+    replaceAnimation(config.animationRun, doIdle: isIdle);
   }
 
   void transitionToWalkAnimation() {
     if (isActionLocked) return;
 
-    replaceAnimation(config.animationWalkFactory, doIdle: isIdle);
+    replaceAnimation(config.animationWalk, doIdle: isIdle);
   }
 
   void lockAction() {
