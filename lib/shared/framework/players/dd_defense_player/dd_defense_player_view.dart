@@ -10,6 +10,7 @@ abstract class DDDefensePlayerView<
 >
     extends DDCombatPlayerView<C, M> {
   DDDefensePlayerView({
+    required super.config,
     required super.position,
     required super.model,
     required super.size,

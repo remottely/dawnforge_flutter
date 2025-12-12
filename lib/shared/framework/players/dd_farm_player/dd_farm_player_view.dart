@@ -13,6 +13,7 @@ abstract class DDFarmPlayerView<
 >
     extends DDDefensePlayerView<C, M> {
   DDFarmPlayerView({
+    required super.config,
     required super.position,
     required super.model,
     required super.size,
@@ -108,22 +109,20 @@ abstract class DDFarmPlayerView<
       AttackType.melee,
       () {
         CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-          animationRight: getAnimationShovelRight(),
-          animationLeft: getAnimationShovelLeft(),
-          animationUp: getAnimationShovelUp(),
-          animationDown: getAnimationShovelDown(),
-          animationRightUp: getAnimationShovelRightUp(),
-          animationRightDown: getAnimationShovelRightDown(),
-          animationLeftUp: getAnimationShovelLeftUp(),
-          animationLeftDown: getAnimationShovelLeftDown(),
+          animationRight: getAnimationShovelRight.call(),
+          animationLeft: getAnimationShovelLeft.call(),
+          animationUp: getAnimationShovelUp.call(),
+          animationDown: getAnimationShovelDown.call(),
+          animationRightUp: getAnimationShovelRightUp.call(),
+          animationRightDown: getAnimationShovelRightDown.call(),
+          animationLeftUp: getAnimationShovelLeftUp.call(),
+          animationLeftDown: getAnimationShovelLeftDown.call(),
           currentAnimation: animation,
           target: this,
           executionStartFrame: 4,
           onActionStart: lockAction,
           onActionEnd: unlockAction,
-          onExecutionFrames: () {
-            FarmToolActionConfig.execute(player: this);
-          },
+          onExecutionFrames: () => FarmToolActionConfig.execute(player: this),
         );
       },
     );
@@ -136,22 +135,20 @@ abstract class DDFarmPlayerView<
     executionInfo = meleeAttackController.execute(AttackType.melee, () {
       // TODO(Kevin): NOW - create dinamic animation injected by view interface configurations
       CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-        animationRight: getAnimationWateringCanRight(),
-        animationLeft: getAnimationWateringCanLeft(),
-        animationUp: getAnimationWateringCanUp(),
-        animationDown: getAnimationWateringCanDown(),
-        animationRightUp: getAnimationWateringCanRightUp(),
-        animationRightDown: getAnimationWateringCanRightDown(),
-        animationLeftUp: getAnimationWateringCanLeftUp(),
-        animationLeftDown: getAnimationWateringCanLeftDown(),
+        animationRight: getAnimationWateringCanRight.call(),
+        animationLeft: getAnimationWateringCanLeft.call(),
+        animationUp: getAnimationWateringCanUp.call(),
+        animationDown: getAnimationWateringCanDown.call(),
+        animationRightUp: getAnimationWateringCanRightUp.call(),
+        animationRightDown: getAnimationWateringCanRightDown.call(),
+        animationLeftUp: getAnimationWateringCanLeftUp.call(),
+        animationLeftDown: getAnimationWateringCanLeftDown.call(),
         currentAnimation: animation,
         target: this,
         executionStartFrame: 4,
         onActionStart: lockAction,
         onActionEnd: unlockAction,
-        onExecutionFrames: () {
-          FarmToolActionConfig.execute(player: this);
-        },
+        onExecutionFrames: () => FarmToolActionConfig.execute(player: this),
       );
     });
 
@@ -163,22 +160,20 @@ abstract class DDFarmPlayerView<
     executionInfo = meleeAttackController.execute(AttackType.melee, () {
       // TODO(Kevin): NOW - create dinamic animation injected by view interface configurations
       CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-        animationRight: getAnimationPlaceSeedRight(),
-        animationLeft: getAnimationPlaceSeedLeft(),
-        animationUp: getAnimationPlaceSeedUp(),
-        animationDown: getAnimationPlaceSeedDown(),
-        animationRightUp: getAnimationPlaceSeedRightUp(),
-        animationRightDown: getAnimationPlaceSeedRightDown(),
-        animationLeftUp: getAnimationPlaceSeedLeftUp(),
-        animationLeftDown: getAnimationPlaceSeedLeftDown(),
+        animationRight: getAnimationPlaceSeedRight.call(),
+        animationLeft: getAnimationPlaceSeedLeft.call(),
+        animationUp: getAnimationPlaceSeedUp.call(),
+        animationDown: getAnimationPlaceSeedDown.call(),
+        animationRightUp: getAnimationPlaceSeedRightUp.call(),
+        animationRightDown: getAnimationPlaceSeedRightDown.call(),
+        animationLeftUp: getAnimationPlaceSeedLeftUp.call(),
+        animationLeftDown: getAnimationPlaceSeedLeftDown.call(),
         currentAnimation: animation,
         target: this,
         executionStartFrame: 4,
         onActionStart: lockAction,
         onActionEnd: unlockAction,
-        onExecutionFrames: () {
-          FarmToolActionConfig.execute(player: this);
-        },
+        onExecutionFrames: () => FarmToolActionConfig.execute(player: this),
       );
     });
 
@@ -197,9 +192,7 @@ abstract class DDFarmPlayerView<
         executionStartFrame: 4,
         onActionStart: lockAction,
         onActionEnd: unlockAction,
-        onExecutionFrames: () {
-          FarmToolActionConfig.execute(player: this);
-        },
+        onExecutionFrames: () => FarmToolActionConfig.execute(player: this),
       );
     });
 

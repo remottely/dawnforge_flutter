@@ -4,6 +4,7 @@ import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_c
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_view.dart';
 
 class SunnyPlayerView<
   C extends SunnyPlayerController<M>,
@@ -12,6 +13,10 @@ class SunnyPlayerView<
     extends DDFarmPlayerView<C, M> {
   SunnyPlayerView({required super.position, required super.model})
     : super(
+        config: DDMobilePlayerConfig(
+          animationWalkFactory: SunnyPlayerConfig.animationWalkDirectional,
+          animationRunFactory: SunnyPlayerConfig.animationRunDirectional,
+        ),
         size: SunnyPlayerConfig.componentSize,
         life: SunnyPlayerConfig.kLife,
         speed: SunnyPlayerConfig.kSpeed,
@@ -59,14 +64,6 @@ class SunnyPlayerView<
   @override
   DDDecoration getDeathMarker(Vector2 position) =>
       SunnyPlayerConfig.createDeathMarker(position);
-
-  @override
-  SimpleDirectionAnimation getAnimationWalkDirectional() =>
-      SunnyPlayerConfig.animationWalkDirectional;
-
-  @override
-  SimpleDirectionAnimation getAnimationRunDirectional() =>
-      SunnyPlayerConfig.animationRunDirectional;
 
   @override
   Future<SpriteAnimation> getAnimationAttackRight() =>

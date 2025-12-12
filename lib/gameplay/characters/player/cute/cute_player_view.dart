@@ -4,6 +4,7 @@ import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_con
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_model.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_view.dart';
 
 class CutePlayerView<
   C extends CutePlayerController<M>,
@@ -12,6 +13,10 @@ class CutePlayerView<
     extends DDFarmPlayerView<C, M> {
   CutePlayerView({required super.position, required super.model})
     : super(
+        config: DDMobilePlayerConfig(
+          animationWalkFactory: CutePlayerConfig.animationWalkDirectional,
+          animationRunFactory: CutePlayerConfig.animationRunDirectional,
+        ),
         size: CutePlayerConfig.componentSize,
         life: CutePlayerConfig.kLife,
         speed: CutePlayerConfig.kSpeed,
@@ -59,14 +64,6 @@ class CutePlayerView<
   @override
   DDDecoration getDeathMarker(Vector2 position) =>
       CutePlayerConfig.createDeathMarker(position);
-
-  @override
-  SimpleDirectionAnimation getAnimationWalkDirectional() =>
-      CutePlayerConfig.animationWalkDirectional;
-
-  @override
-  SimpleDirectionAnimation getAnimationRunDirectional() =>
-      CutePlayerConfig.animationRunDirectional;
 
   @override
   Future<SpriteAnimation> getAnimationAttackRight() =>

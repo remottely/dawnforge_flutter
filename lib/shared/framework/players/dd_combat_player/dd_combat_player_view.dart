@@ -14,6 +14,7 @@ abstract class DDCombatPlayerView<
 >
     extends DDMobilePlayerView<C, M> {
   DDCombatPlayerView({
+    required super.config,
     required super.position,
     required super.model,
     required super.size,
@@ -96,25 +97,24 @@ abstract class DDCombatPlayerView<
       AttackType.melee,
       () {
         CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-          animationRight: getAnimationAttackRight(),
-          animationLeft: getAnimationAttackLeft(),
-          animationUp: getAnimationAttackUp(),
-          animationDown: getAnimationAttackDown(),
-          animationRightUp: getAnimationAttackRightUp(),
-          animationRightDown: getAnimationAttackRightDown(),
-          animationLeftUp: getAnimationAttackLeftUp(),
-          animationLeftDown: getAnimationAttackLeftDown(),
+          animationRight: getAnimationAttackRight.call(),
+          animationLeft: getAnimationAttackLeft.call(),
+          animationUp: getAnimationAttackUp.call(),
+          animationDown: getAnimationAttackDown.call(),
+          animationRightUp: getAnimationAttackRightUp.call(),
+          animationRightDown: getAnimationAttackRightDown.call(),
+          animationLeftUp: getAnimationAttackLeftUp.call(),
+          animationLeftDown: getAnimationAttackLeftDown.call(),
           currentAnimation: animation,
           target: this,
           executionStartFrame: 1,
           onActionStart: lockAction,
           onActionEnd: unlockAction,
-          onExecutionFrames: () {
-            PlayerCombatActionController.executePrimaryAttack(
-              player: this,
-              damage: damage,
-            );
-          },
+          onExecutionFrames: () =>
+              PlayerCombatActionController.executePrimaryAttack(
+                player: this,
+                damage: damage,
+              ),
         );
       },
     );

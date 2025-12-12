@@ -6,6 +6,18 @@ import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mo
 import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_model.dart';
 import 'package:flutter/foundation.dart';
 
+class DDMobilePlayerConfig {
+  final SimpleDirectionAnimation animationWalkFactory;
+  final SimpleDirectionAnimation animationRunFactory;
+  // final SimpleDirectionAnimation Function() exampleFactory;
+
+  DDMobilePlayerConfig({
+    required this.animationWalkFactory,
+    required this.animationRunFactory,
+    // required this.exampleFactory,
+  });
+}
+
 abstract class DDMobilePlayerView<
   C extends DDMobilePlayerController<M>,
   M extends DDMobilePlayerModel
@@ -19,10 +31,10 @@ abstract class DDMobilePlayerView<
 
   bool _pendingAnimationChange = false;
 
-  late final SimpleDirectionAnimation _animationWalkDirectional;
-  late final SimpleDirectionAnimation _animationRunDirectional;
+  final DDMobilePlayerConfig config;
 
   DDMobilePlayerView({
+    required this.config,
     required super.position,
     required super.model,
     required super.size,
@@ -36,16 +48,16 @@ abstract class DDMobilePlayerView<
 
   JoystickDirectionalEvent? _bufferedDirectionalInput;
 
+  // late final SimpleDirectionAnimation _animationWalkDirectional;
+  // late final SimpleDirectionAnimation _animationRunDirectional;
+
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    _animationWalkDirectional = getAnimationWalkDirectional();
-    _animationRunDirectional = getAnimationRunDirectional();
-    replaceAnimation(_animationWalkDirectional);
+    // _animationWalkDirectional = config.animationWalkFactory;
+    // _animationRunDirectional = config.animationRunFactory;
+    replaceAnimation(config.animationWalkFactory);
   }
-
-  SimpleDirectionAnimation getAnimationWalkDirectional();
-  SimpleDirectionAnimation getAnimationRunDirectional();
 
   @override
   C createController({
@@ -130,13 +142,13 @@ abstract class DDMobilePlayerView<
   void transitionToRunAnimation() {
     if (isActionLocked) return;
 
-    replaceAnimation(_animationRunDirectional, doIdle: isIdle);
+    replaceAnimation(config.animationRunFactory, doIdle: isIdle);
   }
 
   void transitionToWalkAnimation() {
     if (isActionLocked) return;
 
-    replaceAnimation(_animationWalkDirectional, doIdle: isIdle);
+    replaceAnimation(config.animationWalkFactory, doIdle: isIdle);
   }
 
   void lockAction() {
