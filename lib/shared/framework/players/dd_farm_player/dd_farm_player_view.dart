@@ -29,6 +29,15 @@ abstract class DDFarmPlayerView<
   Future<SpriteAnimation>? getLeftUpShovelAnimation();
   Future<SpriteAnimation>? getLeftDownShovelAnimation();
 
+  Future<SpriteAnimation> getRightWateringCanAnimation();
+  Future<SpriteAnimation> getLeftWateringCanAnimation();
+  Future<SpriteAnimation>? getUpWateringCanAnimation();
+  Future<SpriteAnimation>? getDownWateringCanAnimation();
+  Future<SpriteAnimation>? getRightUpWateringCanAnimation();
+  Future<SpriteAnimation>? getRighDownWateringCanAnimation();
+  Future<SpriteAnimation>? getLeftUpWateringCanAnimation();
+  Future<SpriteAnimation>? getLeftDownWateringCanAnimation();
+
   @override
   C createCombatController({
     required M model,
@@ -118,8 +127,14 @@ abstract class DDFarmPlayerView<
     executionInfo = meleeAttackController.execute(AttackType.melee, () {
       // TODO(Kevin): NOW - create dinamic animation injected by view interface configurations
       CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-        animationRight: SunnyPlayerConfig.loadRightWateringCanAnimation(),
-        animationLeft: SunnyPlayerConfig.loadLeftWateringCanAnimation(),
+        animationRight: getRightWateringCanAnimation(),
+        animationLeft: getLeftWateringCanAnimation(),
+        animationUp: getUpWateringCanAnimation(),
+        animationDown: getDownWateringCanAnimation(),
+        animationRightUp: getRightUpWateringCanAnimation(),
+        animationRightDown: getRighDownWateringCanAnimation(),
+        animationLeftUp: getLeftUpWateringCanAnimation(),
+        animationLeftDown: getLeftDownWateringCanAnimation(),
         currentAnimation: animation,
         target: this,
         executionStartFrame: 4,

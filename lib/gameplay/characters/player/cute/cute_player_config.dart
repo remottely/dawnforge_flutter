@@ -174,9 +174,10 @@ final class CutePlayerConfig {
   loadRightWateringCanAnimation() => // TODO(Kevin): enhance this name
   SpriteAnimation.load(
     'new/Player/water/player_water_right_48x48_2.png',
-    SpriteAnimationConfig.createStandardData(
-      amount: 5,
+    SpriteAnimationConfig.createCustomData(
+      amount: 2,
       textureSize: textureSize,
+      stepTime: SpriteAnimationConfig.kStepTimeSlow,
     ),
   );
 
@@ -184,9 +185,32 @@ final class CutePlayerConfig {
   loadLeftWateringCanAnimation() => // TODO(Kevin): enhance this name
   SpriteAnimation.load(
     'new/Player/water/player_water_left_48x48_2.png',
-    SpriteAnimationConfig.createStandardData(
-      amount: 5,
+    SpriteAnimationConfig.createCustomData(
+      amount: 2,
       textureSize: textureSize,
+      stepTime: SpriteAnimationConfig.kStepTimeSlow,
+    ),
+  );
+
+  static Future<SpriteAnimation>
+  loadUpWateringCanAnimation() => // TODO(Kevin): enhance this name
+  SpriteAnimation.load(
+    'new/Player/water/player_water_up_48x48_2.png',
+    SpriteAnimationConfig.createCustomData(
+      amount: 2,
+      textureSize: textureSize,
+      stepTime: SpriteAnimationConfig.kStepTimeSlow,
+    ),
+  );
+
+  static Future<SpriteAnimation>
+  loadDownWateringCanAnimation() => // TODO(Kevin): enhance this name
+  SpriteAnimation.load(
+    'new/Player/water/player_water_down_48x48_2.png',
+    SpriteAnimationConfig.createCustomData(
+      amount: 2,
+      textureSize: textureSize,
+      stepTime: SpriteAnimationConfig.kStepTimeSlow,
     ),
   );
 

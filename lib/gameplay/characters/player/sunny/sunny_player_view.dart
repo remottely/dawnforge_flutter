@@ -118,4 +118,30 @@ class SunnyPlayerView<
 
   @override
   Future<SpriteAnimation>? getLeftDownShovelAnimation() => null;
+
+  @override
+  Future<SpriteAnimation> getRightWateringCanAnimation() =>
+      SunnyPlayerConfig.loadRightWateringCanAnimation();
+
+  @override
+  Future<SpriteAnimation> getLeftWateringCanAnimation() =>
+      SunnyPlayerConfig.loadLeftWateringCanAnimation();
+
+  @override
+  Future<SpriteAnimation>? getUpWateringCanAnimation() => null;
+
+  @override
+  Future<SpriteAnimation>? getDownWateringCanAnimation() => null;
+
+  @override
+  Future<SpriteAnimation>? getRightUpWateringCanAnimation() => null;
+
+  @override
+  Future<SpriteAnimation>? getRighDownWateringCanAnimation() => null;
+
+  @override
+  Future<SpriteAnimation>? getLeftUpWateringCanAnimation() => null;
+
+  @override
+  Future<SpriteAnimation>? getLeftDownWateringCanAnimation() => null;
 }
