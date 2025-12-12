@@ -150,4 +150,32 @@ class CutePlayerView<
 
   @override
   Future<SpriteAnimation>? getAnimationWateringCanLeftDown() => null;
+
+  @override
+  Future<SpriteAnimation> getAnimationPlaceSeedRight() =>
+      CutePlayerConfig.loadAnimationPlaceSeedRight();
+
+  @override
+  Future<SpriteAnimation> getAnimationPlaceSeedLeft() =>
+      CutePlayerConfig.loadAnimationPlaceSeedLeft();
+
+  @override
+  Future<SpriteAnimation>? getAnimationPlaceSeedUp() =>
+      CutePlayerConfig.loadAnimationPlaceSeedUp();
+
+  @override
+  Future<SpriteAnimation>? getAnimationPlaceSeedDown() =>
+      CutePlayerConfig.loadAnimationPlaceSeedDown();
+
+  @override
+  Future<SpriteAnimation>? getAnimationPlaceSeedRightUp() => null;
+
+  @override
+  Future<SpriteAnimation>? getAnimationPlaceSeedRightDown() => null;
+
+  @override
+  Future<SpriteAnimation>? getAnimationPlaceSeedLeftUp() => null;
+
+  @override
+  Future<SpriteAnimation>? getAnimationPlaceSeedLeftDown() => null;
 }

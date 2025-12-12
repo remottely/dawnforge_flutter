@@ -201,7 +201,27 @@ final class CutePlayerConfig {
         ),
       );
 
-  static Future<SpriteAnimation> loadAnimationSeedRight() =>
+  static Future<SpriteAnimation>
+  loadAnimationPlaceSeedRight() => SpriteAnimation.load(
+    // TODO(Kevin): CREATE ANIMATION
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_strip8.png',
+    SpriteAnimationConfig.createStandardData(
+      amount: 8,
+      textureSize: textureSize,
+    ),
+  );
+
+  static Future<SpriteAnimation>
+  loadAnimationPlaceSeedLeft() => SpriteAnimation.load(
+    // TODO(Kevin): CREATE ANIMATION
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_left_strip8.png',
+    SpriteAnimationConfig.createStandardData(
+      amount: 8,
+      textureSize: textureSize,
+    ),
+  );
+
+  static Future<SpriteAnimation> loadAnimationPlaceSeedUp() =>
       SpriteAnimation.load(
         // TODO(Kevin): CREATE ANIMATION
         '',
@@ -211,26 +231,7 @@ final class CutePlayerConfig {
         ),
       );
 
-  static Future<SpriteAnimation>
-  loadAnimationSeedLeft() => SpriteAnimation.load(
-    // TODO(Kevin): CREATE ANIMATION
-    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_left_strip8.png',
-    SpriteAnimationConfig.createStandardData(
-      amount: 8,
-      textureSize: textureSize,
-    ),
-  );
-
-  static Future<SpriteAnimation> loadAnimationSeedUp() => SpriteAnimation.load(
-    // TODO(Kevin): CREATE ANIMATION
-    '',
-    SpriteAnimationConfig.createStandardData(
-      amount: 8,
-      textureSize: textureSize,
-    ),
-  );
-
-  static Future<SpriteAnimation> loadAnimationSeedDown() =>
+  static Future<SpriteAnimation> loadAnimationPlaceSeedDown() =>
       SpriteAnimation.load(
         // TODO(Kevin): CREATE ANIMATION
         '',

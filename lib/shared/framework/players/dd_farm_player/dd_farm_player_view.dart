@@ -38,6 +38,15 @@ abstract class DDFarmPlayerView<
   Future<SpriteAnimation>? getAnimationWateringCanLeftUp();
   Future<SpriteAnimation>? getAnimationWateringCanLeftDown();
 
+  Future<SpriteAnimation> getAnimationPlaceSeedRight();
+  Future<SpriteAnimation> getAnimationPlaceSeedLeft();
+  Future<SpriteAnimation>? getAnimationPlaceSeedUp();
+  Future<SpriteAnimation>? getAnimationPlaceSeedDown();
+  Future<SpriteAnimation>? getAnimationPlaceSeedRightUp();
+  Future<SpriteAnimation>? getAnimationPlaceSeedRightDown();
+  Future<SpriteAnimation>? getAnimationPlaceSeedLeftUp();
+  Future<SpriteAnimation>? getAnimationPlaceSeedLeftDown();
+
   @override
   C createCombatController({
     required M model,
@@ -154,8 +163,14 @@ abstract class DDFarmPlayerView<
     executionInfo = meleeAttackController.execute(AttackType.melee, () {
       // TODO(Kevin): NOW - create dinamic animation injected by view interface configurations
       CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-        animationRight: SunnyPlayerConfig.loadAnimationSeedRight(),
-        animationLeft: SunnyPlayerConfig.loadAnimationSeedLeft(),
+        animationRight: getAnimationPlaceSeedRight(),
+        animationLeft: getAnimationPlaceSeedLeft(),
+        animationUp: getAnimationPlaceSeedUp(),
+        animationDown: getAnimationPlaceSeedDown(),
+        animationRightUp: getAnimationPlaceSeedRightUp(),
+        animationRightDown: getAnimationPlaceSeedRightDown(),
+        animationLeftUp: getAnimationPlaceSeedLeftUp(),
+        animationLeftDown: getAnimationPlaceSeedLeftDown(),
         currentAnimation: animation,
         target: this,
         executionStartFrame: 4,

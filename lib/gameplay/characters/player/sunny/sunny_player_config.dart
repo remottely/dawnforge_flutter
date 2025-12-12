@@ -121,7 +121,7 @@ final class SunnyPlayerConfig {
   );
 
   static Future<SpriteAnimation>
-  loadAnimationSeedRight() => SpriteAnimation.load(
+  loadAnimationPlaceSeedRight() => SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_strip8.png',
     SpriteAnimationConfig.createStandardData(
       amount: 8,
@@ -130,7 +130,7 @@ final class SunnyPlayerConfig {
   );
 
   static Future<SpriteAnimation>
-  loadAnimationSeedLeft() => SpriteAnimation.load(
+  loadAnimationPlaceSeedLeft() => SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_left_strip8.png',
     SpriteAnimationConfig.createStandardData(
       amount: 8,

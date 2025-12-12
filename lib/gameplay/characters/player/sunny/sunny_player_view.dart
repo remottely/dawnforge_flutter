@@ -145,4 +145,30 @@ class SunnyPlayerView<
 
   @override
   Future<SpriteAnimation>? getAnimationWateringCanLeftDown() => null;
+
+  @override
+  Future<SpriteAnimation> getAnimationPlaceSeedRight() =>
+      SunnyPlayerConfig.loadAnimationPlaceSeedRight();
+
+  @override
+  Future<SpriteAnimation> getAnimationPlaceSeedLeft() =>
+      SunnyPlayerConfig.loadAnimationPlaceSeedLeft();
+
+  @override
+  Future<SpriteAnimation>? getAnimationPlaceSeedUp() => null;
+
+  @override
+  Future<SpriteAnimation>? getAnimationPlaceSeedDown() => null;
+
+  @override
+  Future<SpriteAnimation>? getAnimationPlaceSeedRightUp() => null;
+
+  @override
+  Future<SpriteAnimation>? getAnimationPlaceSeedRightDown() => null;
+
+  @override
+  Future<SpriteAnimation>? getAnimationPlaceSeedLeftUp() => null;
+
+  @override
+  Future<SpriteAnimation>? getAnimationPlaceSeedLeftDown() => null;
 }
