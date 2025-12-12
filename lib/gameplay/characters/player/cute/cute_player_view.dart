@@ -93,4 +93,32 @@ class CutePlayerView<
 
   @override
   Future<SpriteAnimation>? getLeftDownAttackAnimation() => null;
+
+  @override
+  Future<SpriteAnimation> getRightShovelAnimation() =>
+      CutePlayerConfig.loadRightShovelAnimation();
+
+  @override
+  Future<SpriteAnimation> getLeftShovelAnimation() =>
+      CutePlayerConfig.loadLeftShovelAnimation();
+
+  @override
+  Future<SpriteAnimation>? getUpShovelAnimation() =>
+      CutePlayerConfig.loadUpShovelAnimation();
+
+  @override
+  Future<SpriteAnimation>? getDownShovelAnimation() =>
+      CutePlayerConfig.loadDownShovelAnimation();
+
+  @override
+  Future<SpriteAnimation>? getRightUpShovelAnimation() => null;
+
+  @override
+  Future<SpriteAnimation>? getRighDownShovelAnimation() => null;
+
+  @override
+  Future<SpriteAnimation>? getLeftUpShovelAnimation() => null;
+
+  @override
+  Future<SpriteAnimation>? getLeftDownShovelAnimation() => null;
 }
