@@ -20,23 +20,23 @@ abstract class DDFarmPlayerView<
     required super.speed,
   });
 
-  Future<SpriteAnimation> getAnimShovelRight();
-  Future<SpriteAnimation> getAnimShovelLeft();
-  Future<SpriteAnimation>? getAnimShovelUp();
-  Future<SpriteAnimation>? getAnimShovelDown();
-  Future<SpriteAnimation>? getAnimShovelRightUp();
-  Future<SpriteAnimation>? getAnimShovelRightDown();
-  Future<SpriteAnimation>? getAnimShovelLeftUp();
-  Future<SpriteAnimation>? getAnimShovelLeftDown();
+  Future<SpriteAnimation> getAnimationShovelRight();
+  Future<SpriteAnimation> getAnimationShovelLeft();
+  Future<SpriteAnimation>? getAnimationShovelUp();
+  Future<SpriteAnimation>? getAnimationShovelDown();
+  Future<SpriteAnimation>? getAnimationShovelRightUp();
+  Future<SpriteAnimation>? getAnimationShovelRightDown();
+  Future<SpriteAnimation>? getAnimationShovelLeftUp();
+  Future<SpriteAnimation>? getAnimationShovelLeftDown();
 
-  Future<SpriteAnimation> getAnimWateringCanRight();
-  Future<SpriteAnimation> getAnimWateringCanLeft();
-  Future<SpriteAnimation>? getAnimWateringCanUp();
-  Future<SpriteAnimation>? getAnimWateringCanDown();
-  Future<SpriteAnimation>? getAnimWateringCanRightUp();
-  Future<SpriteAnimation>? getAnimWateringCanRightDown();
-  Future<SpriteAnimation>? getAnimWateringCanLeftUp();
-  Future<SpriteAnimation>? getAnimWateringCanLeftDown();
+  Future<SpriteAnimation> getAnimationWateringCanRight();
+  Future<SpriteAnimation> getAnimationWateringCanLeft();
+  Future<SpriteAnimation>? getAnimationWateringCanUp();
+  Future<SpriteAnimation>? getAnimationWateringCanDown();
+  Future<SpriteAnimation>? getAnimationWateringCanRightUp();
+  Future<SpriteAnimation>? getAnimationWateringCanRightDown();
+  Future<SpriteAnimation>? getAnimationWateringCanLeftUp();
+  Future<SpriteAnimation>? getAnimationWateringCanLeftDown();
 
   @override
   C createCombatController({
@@ -99,14 +99,14 @@ abstract class DDFarmPlayerView<
       AttackType.melee,
       () {
         CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-          animationRight: getAnimShovelRight(),
-          animationLeft: getAnimShovelLeft(),
-          animationUp: getAnimShovelUp(),
-          animationDown: getAnimShovelDown(),
-          animationRightUp: getAnimShovelRightUp(),
-          animationRightDown: getAnimShovelRightDown(),
-          animationLeftUp: getAnimShovelLeftUp(),
-          animationLeftDown: getAnimShovelLeftDown(),
+          animationRight: getAnimationShovelRight(),
+          animationLeft: getAnimationShovelLeft(),
+          animationUp: getAnimationShovelUp(),
+          animationDown: getAnimationShovelDown(),
+          animationRightUp: getAnimationShovelRightUp(),
+          animationRightDown: getAnimationShovelRightDown(),
+          animationLeftUp: getAnimationShovelLeftUp(),
+          animationLeftDown: getAnimationShovelLeftDown(),
           currentAnimation: animation,
           target: this,
           executionStartFrame: 4,
@@ -127,14 +127,14 @@ abstract class DDFarmPlayerView<
     executionInfo = meleeAttackController.execute(AttackType.melee, () {
       // TODO(Kevin): NOW - create dinamic animation injected by view interface configurations
       CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-        animationRight: getAnimWateringCanRight(),
-        animationLeft: getAnimWateringCanLeft(),
-        animationUp: getAnimWateringCanUp(),
-        animationDown: getAnimWateringCanDown(),
-        animationRightUp: getAnimWateringCanRightUp(),
-        animationRightDown: getAnimWateringCanRightDown(),
-        animationLeftUp: getAnimWateringCanLeftUp(),
-        animationLeftDown: getAnimWateringCanLeftDown(),
+        animationRight: getAnimationWateringCanRight(),
+        animationLeft: getAnimationWateringCanLeft(),
+        animationUp: getAnimationWateringCanUp(),
+        animationDown: getAnimationWateringCanDown(),
+        animationRightUp: getAnimationWateringCanRightUp(),
+        animationRightDown: getAnimationWateringCanRightDown(),
+        animationLeftUp: getAnimationWateringCanLeftUp(),
+        animationLeftDown: getAnimationWateringCanLeftDown(),
         currentAnimation: animation,
         target: this,
         executionStartFrame: 4,

@@ -84,135 +84,123 @@ final class CutePlayerConfig {
         ),
       );
 
-  static Future<SpriteAnimation>
-  loadRightAttackAnimation() => // TODO(Kevin): enhance this name
-  SpriteAnimation.load(
-    'new/Player/attack/player_attack_right_48x48_4.png',
-    SpriteAnimationConfig.createStandardData(
-      amount: 4,
-      textureSize: textureSize,
-    ),
-  );
+  static Future<SpriteAnimation> loadAnimationAttackRight() =>
+      SpriteAnimation.load(
+        'new/Player/attack/player_attack_right_48x48_4.png',
+        SpriteAnimationConfig.createStandardData(
+          amount: 4,
+          textureSize: textureSize,
+        ),
+      );
 
-  static Future<SpriteAnimation>
-  loadLeftAttackAnimation() => // TODO(Kevin): enhance this name
-  SpriteAnimation.load(
-    'new/Player/attack/player_attack_left_48x48_4.png',
-    SpriteAnimationConfig.createStandardData(
-      amount: 4,
-      textureSize: textureSize,
-    ),
-  );
+  static Future<SpriteAnimation> loadAnimationAttackLeft() =>
+      SpriteAnimation.load(
+        'new/Player/attack/player_attack_left_48x48_4.png',
+        SpriteAnimationConfig.createStandardData(
+          amount: 4,
+          textureSize: textureSize,
+        ),
+      );
 
-  static Future<SpriteAnimation>
-  loadUpAttackAnimation() => // TODO(Kevin): enhance this name
-  SpriteAnimation.load(
-    // TODO(Kevin): NOW - create up and down verifications
-    'new/Player/attack/player_attack_up_48x48_4.png',
-    SpriteAnimationConfig.createStandardData(
-      amount: 4,
-      textureSize: textureSize,
-    ),
-  );
+  static Future<SpriteAnimation> loadAnimationAttackUp() =>
+      SpriteAnimation.load(
+        // TODO(Kevin): NOW - create up and down verifications
+        'new/Player/attack/player_attack_up_48x48_4.png',
+        SpriteAnimationConfig.createStandardData(
+          amount: 4,
+          textureSize: textureSize,
+        ),
+      );
 
-  static Future<SpriteAnimation>
-  loadDownAttackAnimation() => // TODO(Kevin): enhance this name
-  SpriteAnimation.load(
-    // TODO(Kevin): NOW - create up and down verifications
-    'new/Player/attack/player_attack_down_48x48_4.png',
-    SpriteAnimationConfig.createStandardData(
-      amount: 4,
-      textureSize: textureSize,
-    ),
-  );
+  static Future<SpriteAnimation> loadAnimationAttackDown() =>
+      SpriteAnimation.load(
+        // TODO(Kevin): NOW - create up and down verifications
+        'new/Player/attack/player_attack_down_48x48_4.png',
+        SpriteAnimationConfig.createStandardData(
+          amount: 4,
+          textureSize: textureSize,
+        ),
+      );
 
-  static Future<SpriteAnimation>
-  loadAnimShovelRight() => // TODO(Kevin): enhance this name
-  SpriteAnimation.load(
-    'new/Player/shovel/player_shovel_right_48x48_2.png',
-    SpriteAnimationConfig.createCustomData(
-      amount: 2,
-      textureSize: textureSize,
-      stepTime: SpriteAnimationConfig.kStepTimeSlow,
-    ),
-  );
+  static Future<SpriteAnimation> loadAnimationShovelRight() =>
+      SpriteAnimation.load(
+        'new/Player/shovel/player_shovel_right_48x48_2.png',
+        SpriteAnimationConfig.createCustomData(
+          amount: 2,
+          textureSize: textureSize,
+          stepTime: SpriteAnimationConfig.kStepTimeSlow,
+        ),
+      );
 
-  static Future<SpriteAnimation>
-  loadAnimShovelLeft() => // TODO(Kevin): enhance this name
-  SpriteAnimation.load(
-    'new/Player/shovel/player_shovel_left_48x48_2.png',
-    SpriteAnimationConfig.createCustomData(
-      amount: 2,
-      textureSize: textureSize,
-      stepTime: SpriteAnimationConfig.kStepTimeSlow,
-    ),
-  );
+  static Future<SpriteAnimation> loadAnimationShovelLeft() =>
+      SpriteAnimation.load(
+        'new/Player/shovel/player_shovel_left_48x48_2.png',
+        SpriteAnimationConfig.createCustomData(
+          amount: 2,
+          textureSize: textureSize,
+          stepTime: SpriteAnimationConfig.kStepTimeSlow,
+        ),
+      );
 
-  static Future<SpriteAnimation>
-  loadAnimShovelUp() => // TODO(Kevin): enhance this name
-  SpriteAnimation.load(
-    'new/Player/shovel/player_shovel_up_48x48_2.png',
-    SpriteAnimationConfig.createCustomData(
-      amount: 2,
-      textureSize: textureSize,
-      stepTime: SpriteAnimationConfig.kStepTimeSlow,
-    ),
-  );
+  static Future<SpriteAnimation> loadAnimationShovelUp() =>
+      SpriteAnimation.load(
+        'new/Player/shovel/player_shovel_up_48x48_2.png',
+        SpriteAnimationConfig.createCustomData(
+          amount: 2,
+          textureSize: textureSize,
+          stepTime: SpriteAnimationConfig.kStepTimeSlow,
+        ),
+      );
 
-  static Future<SpriteAnimation>
-  loadAnimShovelDown() => // TODO(Kevin): enhance this name
-  SpriteAnimation.load(
-    'new/Player/shovel/player_shovel_down_48x48_2.png',
-    SpriteAnimationConfig.createCustomData(
-      amount: 2,
-      textureSize: textureSize,
-      stepTime: SpriteAnimationConfig.kStepTimeSlow,
-    ),
-  );
+  static Future<SpriteAnimation> loadAnimationShovelDown() =>
+      SpriteAnimation.load(
+        'new/Player/shovel/player_shovel_down_48x48_2.png',
+        SpriteAnimationConfig.createCustomData(
+          amount: 2,
+          textureSize: textureSize,
+          stepTime: SpriteAnimationConfig.kStepTimeSlow,
+        ),
+      );
 
-  static Future<SpriteAnimation>
-  loadAnimWateringCanRight() => // TODO(Kevin): enhance this name
-  SpriteAnimation.load(
-    'new/Player/water/player_water_right_48x48_2.png',
-    SpriteAnimationConfig.createCustomData(
-      amount: 2,
-      textureSize: textureSize,
-      stepTime: SpriteAnimationConfig.kStepTimeSlow,
-    ),
-  );
+  static Future<SpriteAnimation> loadAnimationWateringCanRight() =>
+      SpriteAnimation.load(
+        'new/Player/water/player_water_right_48x48_2.png',
+        SpriteAnimationConfig.createCustomData(
+          amount: 2,
+          textureSize: textureSize,
+          stepTime: SpriteAnimationConfig.kStepTimeSlow,
+        ),
+      );
 
-  static Future<SpriteAnimation>
-  loadAnimWateringCanLeft() => // TODO(Kevin): enhance this name
-  SpriteAnimation.load(
-    'new/Player/water/player_water_left_48x48_2.png',
-    SpriteAnimationConfig.createCustomData(
-      amount: 2,
-      textureSize: textureSize,
-      stepTime: SpriteAnimationConfig.kStepTimeSlow,
-    ),
-  );
+  static Future<SpriteAnimation> loadAnimationWateringCanLeft() =>
+      SpriteAnimation.load(
+        'new/Player/water/player_water_left_48x48_2.png',
+        SpriteAnimationConfig.createCustomData(
+          amount: 2,
+          textureSize: textureSize,
+          stepTime: SpriteAnimationConfig.kStepTimeSlow,
+        ),
+      );
 
-  static Future<SpriteAnimation>
-  loadAnimWateringCanUp() => // TODO(Kevin): enhance this name
-  SpriteAnimation.load(
-    'new/Player/water/player_water_up_48x48_2.png',
-    SpriteAnimationConfig.createCustomData(
-      amount: 2,
-      textureSize: textureSize,
-      stepTime: SpriteAnimationConfig.kStepTimeSlow,
-    ),
-  );
+  static Future<SpriteAnimation> loadAnimationWateringCanUp() =>
+      SpriteAnimation.load(
+        'new/Player/water/player_water_up_48x48_2.png',
+        SpriteAnimationConfig.createCustomData(
+          amount: 2,
+          textureSize: textureSize,
+          stepTime: SpriteAnimationConfig.kStepTimeSlow,
+        ),
+      );
 
-  static Future<SpriteAnimation>
-  loadAnimWateringCanDown() => // TODO(Kevin): enhance this name
-  SpriteAnimation.load(
-    'new/Player/water/player_water_down_48x48_2.png',
-    SpriteAnimationConfig.createCustomData(
-      amount: 2,
-      textureSize: textureSize,
-      stepTime: SpriteAnimationConfig.kStepTimeSlow,
-    ),
-  );
+  static Future<SpriteAnimation> loadAnimationWateringCanDown() =>
+      SpriteAnimation.load(
+        'new/Player/water/player_water_down_48x48_2.png',
+        SpriteAnimationConfig.createCustomData(
+          amount: 2,
+          textureSize: textureSize,
+          stepTime: SpriteAnimationConfig.kStepTimeSlow,
+        ),
+      );
 
   static Future<SpriteAnimation>
   loadRightSeedAnimation() => // TODO(Kevin): enhance this name

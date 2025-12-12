@@ -46,14 +46,14 @@ abstract class DDCombatPlayerView<
     );
   }
 
-  Future<SpriteAnimation> getRightAttackAnimation();
-  Future<SpriteAnimation> getLeftAttackAnimation();
-  Future<SpriteAnimation>? getUpAttackAnimation();
-  Future<SpriteAnimation>? getDownAttackAnimation();
-  Future<SpriteAnimation>? getRightUpAttackAnimation();
-  Future<SpriteAnimation>? getRighDownAttackAnimation();
-  Future<SpriteAnimation>? getLeftUpAttackAnimation();
-  Future<SpriteAnimation>? getLeftDownAttackAnimation();
+  Future<SpriteAnimation> getAnimationAttackRight();
+  Future<SpriteAnimation> getAnimationAttackLeft();
+  Future<SpriteAnimation>? getAnimationAttackUp();
+  Future<SpriteAnimation>? getAnimationAttackDown();
+  Future<SpriteAnimation>? getAnimationAttackRightUp();
+  Future<SpriteAnimation>? getAnimationAttackRightDown();
+  Future<SpriteAnimation>? getAnimationAttackLeftUp();
+  Future<SpriteAnimation>? getAnimationAttackLeftDown();
 
   @override
   C createMobileController({
@@ -96,14 +96,14 @@ abstract class DDCombatPlayerView<
       AttackType.melee,
       () {
         CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-          animationRight: getRightAttackAnimation(),
-          animationLeft: getLeftAttackAnimation(),
-          animationUp: getUpAttackAnimation(),
-          animationDown: getDownAttackAnimation(),
-          animationRightUp: getRightUpAttackAnimation(),
-          animationRightDown: getRighDownAttackAnimation(),
-          animationLeftUp: getLeftUpAttackAnimation(),
-          animationLeftDown: getLeftDownAttackAnimation(),
+          animationRight: getAnimationAttackRight(),
+          animationLeft: getAnimationAttackLeft(),
+          animationUp: getAnimationAttackUp(),
+          animationDown: getAnimationAttackDown(),
+          animationRightUp: getAnimationAttackRightUp(),
+          animationRightDown: getAnimationAttackRightDown(),
+          animationLeftUp: getAnimationAttackLeftUp(),
+          animationLeftDown: getAnimationAttackLeftDown(),
           currentAnimation: animation,
           target: this,
           executionStartFrame: 1,
