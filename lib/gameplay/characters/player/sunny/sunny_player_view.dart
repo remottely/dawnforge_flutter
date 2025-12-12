@@ -94,54 +94,54 @@ class SunnyPlayerView<
   Future<SpriteAnimation>? getLeftDownAttackAnimation() => null;
 
   @override
-  Future<SpriteAnimation> getRightShovelAnimation() =>
-      SunnyPlayerConfig.loadRightShovelAnimation();
+  Future<SpriteAnimation> getAnimShovelRight() =>
+      SunnyPlayerConfig.loadAnimShovelRight();
 
   @override
-  Future<SpriteAnimation> getLeftShovelAnimation() =>
-      SunnyPlayerConfig.loadLeftShovelAnimation();
+  Future<SpriteAnimation> getAnimShovelLeft() =>
+      SunnyPlayerConfig.loadAnimShovelLeft();
 
   @override
-  Future<SpriteAnimation>? getUpShovelAnimation() => null;
+  Future<SpriteAnimation>? getAnimShovelUp() => null;
 
   @override
-  Future<SpriteAnimation>? getDownShovelAnimation() => null;
+  Future<SpriteAnimation>? getAnimShovelDown() => null;
 
   @override
-  Future<SpriteAnimation>? getRightUpShovelAnimation() => null;
+  Future<SpriteAnimation>? getAnimShovelRightUp() => null;
 
   @override
-  Future<SpriteAnimation>? getRighDownShovelAnimation() => null;
+  Future<SpriteAnimation>? getAnimShovelRightDown() => null;
 
   @override
-  Future<SpriteAnimation>? getLeftUpShovelAnimation() => null;
+  Future<SpriteAnimation>? getAnimShovelLeftUp() => null;
 
   @override
-  Future<SpriteAnimation>? getLeftDownShovelAnimation() => null;
+  Future<SpriteAnimation>? getAnimShovelLeftDown() => null;
 
   @override
-  Future<SpriteAnimation> getRightWateringCanAnimation() =>
-      SunnyPlayerConfig.loadRightWateringCanAnimation();
+  Future<SpriteAnimation> getAnimWateringCanRight() =>
+      SunnyPlayerConfig.loadAnimWateringCanRight();
 
   @override
-  Future<SpriteAnimation> getLeftWateringCanAnimation() =>
-      SunnyPlayerConfig.loadLeftWateringCanAnimation();
+  Future<SpriteAnimation> getAnimWateringCanLeft() =>
+      SunnyPlayerConfig.loadAnimWateringCanLeft();
 
   @override
-  Future<SpriteAnimation>? getUpWateringCanAnimation() => null;
+  Future<SpriteAnimation>? getAnimWateringCanUp() => null;
 
   @override
-  Future<SpriteAnimation>? getDownWateringCanAnimation() => null;
+  Future<SpriteAnimation>? getAnimWateringCanDown() => null;
 
   @override
-  Future<SpriteAnimation>? getRightUpWateringCanAnimation() => null;
+  Future<SpriteAnimation>? getAnimWateringCanRightUp() => null;
 
   @override
-  Future<SpriteAnimation>? getRighDownWateringCanAnimation() => null;
+  Future<SpriteAnimation>? getAnimWateringCanRightDown() => null;
 
   @override
-  Future<SpriteAnimation>? getLeftUpWateringCanAnimation() => null;
+  Future<SpriteAnimation>? getAnimWateringCanLeftUp() => null;
 
   @override
-  Future<SpriteAnimation>? getLeftDownWateringCanAnimation() => null;
+  Future<SpriteAnimation>? getAnimWateringCanLeftDown() => null;
 }

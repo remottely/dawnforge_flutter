@@ -127,7 +127,7 @@ final class CutePlayerConfig {
   );
 
   static Future<SpriteAnimation>
-  loadRightShovelAnimation() => // TODO(Kevin): enhance this name
+  loadAnimShovelRight() => // TODO(Kevin): enhance this name
   SpriteAnimation.load(
     'new/Player/shovel/player_shovel_right_48x48_2.png',
     SpriteAnimationConfig.createCustomData(
@@ -138,7 +138,7 @@ final class CutePlayerConfig {
   );
 
   static Future<SpriteAnimation>
-  loadLeftShovelAnimation() => // TODO(Kevin): enhance this name
+  loadAnimShovelLeft() => // TODO(Kevin): enhance this name
   SpriteAnimation.load(
     'new/Player/shovel/player_shovel_left_48x48_2.png',
     SpriteAnimationConfig.createCustomData(
@@ -149,7 +149,7 @@ final class CutePlayerConfig {
   );
 
   static Future<SpriteAnimation>
-  loadUpShovelAnimation() => // TODO(Kevin): enhance this name
+  loadAnimShovelUp() => // TODO(Kevin): enhance this name
   SpriteAnimation.load(
     'new/Player/shovel/player_shovel_up_48x48_2.png',
     SpriteAnimationConfig.createCustomData(
@@ -160,7 +160,7 @@ final class CutePlayerConfig {
   );
 
   static Future<SpriteAnimation>
-  loadDownShovelAnimation() => // TODO(Kevin): enhance this name
+  loadAnimShovelDown() => // TODO(Kevin): enhance this name
   SpriteAnimation.load(
     'new/Player/shovel/player_shovel_down_48x48_2.png',
     SpriteAnimationConfig.createCustomData(
@@ -171,7 +171,7 @@ final class CutePlayerConfig {
   );
 
   static Future<SpriteAnimation>
-  loadRightWateringCanAnimation() => // TODO(Kevin): enhance this name
+  loadAnimWateringCanRight() => // TODO(Kevin): enhance this name
   SpriteAnimation.load(
     'new/Player/water/player_water_right_48x48_2.png',
     SpriteAnimationConfig.createCustomData(
@@ -182,7 +182,7 @@ final class CutePlayerConfig {
   );
 
   static Future<SpriteAnimation>
-  loadLeftWateringCanAnimation() => // TODO(Kevin): enhance this name
+  loadAnimWateringCanLeft() => // TODO(Kevin): enhance this name
   SpriteAnimation.load(
     'new/Player/water/player_water_left_48x48_2.png',
     SpriteAnimationConfig.createCustomData(
@@ -193,7 +193,7 @@ final class CutePlayerConfig {
   );
 
   static Future<SpriteAnimation>
-  loadUpWateringCanAnimation() => // TODO(Kevin): enhance this name
+  loadAnimWateringCanUp() => // TODO(Kevin): enhance this name
   SpriteAnimation.load(
     'new/Player/water/player_water_up_48x48_2.png',
     SpriteAnimationConfig.createCustomData(
@@ -204,7 +204,7 @@ final class CutePlayerConfig {
   );
 
   static Future<SpriteAnimation>
-  loadDownWateringCanAnimation() => // TODO(Kevin): enhance this name
+  loadAnimWateringCanDown() => // TODO(Kevin): enhance this name
   SpriteAnimation.load(
     'new/Player/water/player_water_down_48x48_2.png',
     SpriteAnimationConfig.createCustomData(

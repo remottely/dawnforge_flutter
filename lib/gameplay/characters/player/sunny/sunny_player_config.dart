@@ -84,8 +84,7 @@ final class SunnyPlayerConfig {
     ),
   );
 
-  static Future<SpriteAnimation>
-  loadRightShovelAnimation() => SpriteAnimation.load(
+  static Future<SpriteAnimation> loadAnimShovelRight() => SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_strip13.png',
     SpriteAnimationConfig.createStandardData(
       amount: 10,
@@ -93,8 +92,7 @@ final class SunnyPlayerConfig {
     ),
   );
 
-  static Future<SpriteAnimation>
-  loadLeftShovelAnimation() => SpriteAnimation.load(
+  static Future<SpriteAnimation> loadAnimShovelLeft() => SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_left_strip13.png',
     SpriteAnimationConfig.createStandardData(
       amount: 10,
@@ -103,7 +101,7 @@ final class SunnyPlayerConfig {
   );
 
   static Future<SpriteAnimation>
-  loadRightWateringCanAnimation() => SpriteAnimation.load(
+  loadAnimWateringCanRight() => SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_watering_strip5.png',
     SpriteAnimationConfig.createStandardData(
       amount: 5,
@@ -112,7 +110,7 @@ final class SunnyPlayerConfig {
   );
 
   static Future<SpriteAnimation>
-  loadLeftWateringCanAnimation() => SpriteAnimation.load(
+  loadAnimWateringCanLeft() => SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_watering_left_strip5.png',
     SpriteAnimationConfig.createStandardData(
       amount: 5,
