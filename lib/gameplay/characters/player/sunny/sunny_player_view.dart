@@ -66,4 +66,30 @@ class SunnyPlayerView<
 
   @override
   SimpleDirectionAnimation getRunAnimation() => SunnyPlayerConfig.runAnimation;
+
+  @override
+  Future<SpriteAnimation> getRightAttackAnimation() =>
+      SunnyPlayerConfig.loadRightAttackAnimation();
+
+  @override
+  Future<SpriteAnimation> getLeftAttackAnimation() =>
+      SunnyPlayerConfig.loadLeftAttackAnimation();
+
+  @override
+  Future<SpriteAnimation>? getUpAttackAnimation() => null;
+
+  @override
+  Future<SpriteAnimation>? getDownAttackAnimation() => null;
+
+  @override
+  Future<SpriteAnimation>? getRightUpAttackAnimation() => null;
+
+  @override
+  Future<SpriteAnimation>? getRighDownAttackAnimation() => null;
+
+  @override
+  Future<SpriteAnimation>? getLeftUpAttackAnimation() => null;
+
+  @override
+  Future<SpriteAnimation>? getLeftDownAttackAnimation() => null;
 }

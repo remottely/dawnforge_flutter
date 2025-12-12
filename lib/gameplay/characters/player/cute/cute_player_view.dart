@@ -65,4 +65,32 @@ class CutePlayerView<
 
   @override
   SimpleDirectionAnimation getRunAnimation() => CutePlayerConfig.runAnimation;
+
+  @override
+  Future<SpriteAnimation> getRightAttackAnimation() =>
+      CutePlayerConfig.loadRightAttackAnimation();
+
+  @override
+  Future<SpriteAnimation> getLeftAttackAnimation() =>
+      CutePlayerConfig.loadLeftAttackAnimation();
+
+  @override
+  Future<SpriteAnimation>? getUpAttackAnimation() =>
+      CutePlayerConfig.loadUpAttackAnimation();
+
+  @override
+  Future<SpriteAnimation>? getDownAttackAnimation() =>
+      CutePlayerConfig.loadDownAttackAnimation();
+
+  @override
+  Future<SpriteAnimation>? getRightUpAttackAnimation() => null;
+
+  @override
+  Future<SpriteAnimation>? getRighDownAttackAnimation() => null;
+
+  @override
+  Future<SpriteAnimation>? getLeftUpAttackAnimation() => null;
+
+  @override
+  Future<SpriteAnimation>? getLeftDownAttackAnimation() => null;
 }
