@@ -4,31 +4,18 @@ import 'package:darkness_dungeon/gameplay/core/modules/combat/controllers/player
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_config.dart';
+import 'package:darkness_dungeon/shared/framework/animation_directional.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_combat_player/dd_combat_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_combat_player/dd_combat_player_model.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_mobile_player/dd_mobile_player_view.dart';
 
 class DDCombatPlayerConfig extends DDMobilePlayerConfig {
-  final Future<SpriteAnimation> animationAttackRight;
-  final Future<SpriteAnimation> animationAttackLeft;
-  final Future<SpriteAnimation>? animationAttackUp;
-  final Future<SpriteAnimation>? animationAttackDown;
-  final Future<SpriteAnimation>? animationAttackRightUp;
-  final Future<SpriteAnimation>? animationAttackRightDown;
-  final Future<SpriteAnimation>? animationAttackLeftUp;
-  final Future<SpriteAnimation>? animationAttackLeftDown;
+  final AnimationDirectionalFactory animationAttackDirectionalFactory;
 
   DDCombatPlayerConfig({
-    required super.animationWalk,
-    required super.animationRun,
-    required this.animationAttackRight,
-    required this.animationAttackLeft,
-    this.animationAttackUp,
-    this.animationAttackDown,
-    this.animationAttackRightUp,
-    this.animationAttackRightDown,
-    this.animationAttackLeftUp,
-    this.animationAttackLeftDown,
+    required super.animationWalkDirectional,
+    required super.animationRunDirectional,
+    required this.animationAttackDirectionalFactory,
   });
 }
 
@@ -48,6 +35,8 @@ abstract class DDCombatPlayerView<
     required super.speed,
   }) : super(config: config);
 
+  late final AnimationDirectional animationAttackDirectional;
+
   late final SynchronizedAttackController meleeAttackController;
   late final SynchronizedAttackController rangedAttackController;
 
@@ -55,6 +44,43 @@ abstract class DDCombatPlayerView<
   Future<void> onLoad() async {
     await super.onLoad();
     _initializeCombatSystems();
+
+    Future<AnimationDirectional> loadFromFactory(
+      AnimationDirectionalFactory animationsFactory,
+    ) async {
+      Future<SpriteAnimation?> loadSafe(Future<SpriteAnimation>? loader) async {
+        if (loader == null) return null;
+        return await loader;
+      }
+
+      final loadedList = await Future.wait([
+        animationsFactory.loadRight,
+        animationsFactory.loadLeft,
+        loadSafe(animationsFactory.loadUp),
+        loadSafe(animationsFactory.loadDown),
+        loadSafe(animationsFactory.loadRightUp),
+        loadSafe(animationsFactory.loadRightDown),
+        loadSafe(animationsFactory.loadLeftUp),
+        loadSafe(animationsFactory.loadLeftDown),
+      ]);
+
+      return AnimationDirectional(
+        right: loadedList[0]!,
+        left: loadedList[1]!,
+        up: loadedList[2],
+        down: loadedList[3],
+        rightUp: loadedList[4],
+        rightDown: loadedList[5],
+        leftUp: loadedList[6],
+        leftDown: loadedList[7],
+      );
+    }
+
+    final toolsLoaded = await Future.wait([
+      loadFromFactory(config.animationAttackDirectionalFactory),
+    ]);
+
+    animationAttackDirectional = toolsLoaded[0];
   }
 
   @override
@@ -114,14 +140,14 @@ abstract class DDCombatPlayerView<
       AttackType.melee,
       () {
         CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-          animationRight: config.animationAttackRight,
-          animationLeft: config.animationAttackLeft,
-          animationUp: config.animationAttackUp,
-          animationDown: config.animationAttackDown,
-          animationRightUp: config.animationAttackRightUp,
-          animationRightDown: config.animationAttackRightDown,
-          animationLeftUp: config.animationAttackLeftUp,
-          animationLeftDown: config.animationAttackLeftDown,
+          animationRight: animationAttackDirectional.right,
+          animationLeft: animationAttackDirectional.left,
+          animationUp: animationAttackDirectional.up,
+          animationDown: animationAttackDirectional.down,
+          animationRightUp: animationAttackDirectional.rightUp,
+          animationRightDown: animationAttackDirectional.rightDown,
+          animationLeftUp: animationAttackDirectional.leftUp,
+          animationLeftDown: animationAttackDirectional.leftDown,
           currentAnimation: animation,
           target: this,
           executionStartFrame: 1,

@@ -2,8 +2,9 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_model.dart';
+import 'package:darkness_dungeon/shared/framework/animation_directional.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_combat_player/dd_combat_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_view.dart';
 
 class CutePlayerView<
@@ -13,17 +14,59 @@ class CutePlayerView<
     extends DDFarmPlayerView<C, M> {
   CutePlayerView({required super.position, required super.model})
     : super(
-        config: DDCombatPlayerConfig(
-          animationWalk: CutePlayerConfig.animationWalkDirectional,
-          animationRun: CutePlayerConfig.animationRunDirectional,
-          animationAttackRight: CutePlayerConfig.loadAnimationAttackRight(),
-          animationAttackLeft: CutePlayerConfig.loadAnimationAttackLeft(),
-          animationAttackUp: CutePlayerConfig.loadAnimationAttackUp(),
-          animationAttackDown: CutePlayerConfig.loadAnimationAttackDown(),
-          animationAttackRightUp: null,
-          animationAttackRightDown: null,
-          animationAttackLeftUp: null,
-          animationAttackLeftDown: null,
+        config: DDFarmPlayerConfig(
+          animationWalkDirectional: CutePlayerConfig.animationWalkDirectional,
+          animationRunDirectional: CutePlayerConfig.animationRunDirectional,
+          animationAttackDirectionalFactory: AnimationDirectionalFactory(
+            loadRight: CutePlayerConfig.loadAnimationAttackRight,
+            loadLeft: CutePlayerConfig.loadAnimationAttackLeft,
+            loadUp: CutePlayerConfig.loadAnimationAttackUp,
+            loadDown: CutePlayerConfig.loadAnimationAttackDown,
+            loadRightUp: null,
+            loadRightDown: null,
+            loadLeftUp: null,
+            loadLeftDown: null,
+          ),
+          animationShovelFactory: AnimationDirectionalFactory(
+            loadRight: CutePlayerConfig.loadAnimationShovelRight,
+            loadLeft: CutePlayerConfig.loadAnimationShovelLeft,
+            loadUp: CutePlayerConfig.loadAnimationShovelUp,
+            loadDown: CutePlayerConfig.loadAnimationShovelDown,
+            loadRightUp: null,
+            loadRightDown: null,
+            loadLeftUp: null,
+            loadLeftDown: null,
+          ),
+          animationWateringCanFactory: AnimationDirectionalFactory(
+            loadRight: CutePlayerConfig.loadAnimationWateringCanRight,
+            loadLeft: CutePlayerConfig.loadAnimationWateringCanLeft,
+            loadUp: CutePlayerConfig.loadAnimationWateringCanUp,
+            loadDown: CutePlayerConfig.loadAnimationWateringCanDown,
+            loadRightUp: null,
+            loadRightDown: null,
+            loadLeftUp: null,
+            loadLeftDown: null,
+          ),
+          animationPlaceSeedFactory: AnimationDirectionalFactory(
+            loadRight: CutePlayerConfig.loadAnimationPlaceSeedRight,
+            loadLeft: CutePlayerConfig.loadAnimationPlaceSeedLeft,
+            loadUp: CutePlayerConfig.loadAnimationPlaceSeedUp,
+            loadDown: CutePlayerConfig.loadAnimationPlaceSeedDown,
+            loadRightUp: null,
+            loadRightDown: null,
+            loadLeftUp: null,
+            loadLeftDown: null,
+          ),
+          animationHarvestBasketFactory: AnimationDirectionalFactory(
+            loadRight: CutePlayerConfig.loadAnimationHarvestBasketRight,
+            loadLeft: CutePlayerConfig.loadAnimationHarvestBasketLeft,
+            loadUp: CutePlayerConfig.loadAnimationHarvestBasketUp,
+            loadDown: CutePlayerConfig.loadAnimationHarvestBasketDown,
+            loadRightUp: null,
+            loadRightDown: null,
+            loadLeftUp: null,
+            loadLeftDown: null,
+          ),
         ),
         size: CutePlayerConfig.componentSize,
         life: CutePlayerConfig.kLife,
@@ -72,87 +115,4 @@ class CutePlayerView<
   @override
   DDDecoration getDeathMarker(Vector2 position) =>
       CutePlayerConfig.createDeathMarker(position);
-
-  @override
-  Future<SpriteAnimation> getAnimationShovelRight() =>
-      CutePlayerConfig.loadAnimationShovelRight();
-
-  @override
-  Future<SpriteAnimation> getAnimationShovelLeft() =>
-      CutePlayerConfig.loadAnimationShovelLeft();
-
-  @override
-  Future<SpriteAnimation>? getAnimationShovelUp() =>
-      CutePlayerConfig.loadAnimationShovelUp();
-
-  @override
-  Future<SpriteAnimation>? getAnimationShovelDown() =>
-      CutePlayerConfig.loadAnimationShovelDown();
-  @override
-  Future<SpriteAnimation>? getAnimationShovelRightUp() => null;
-
-  @override
-  Future<SpriteAnimation>? getAnimationShovelRightDown() => null;
-
-  @override
-  Future<SpriteAnimation>? getAnimationShovelLeftUp() => null;
-
-  @override
-  Future<SpriteAnimation>? getAnimationShovelLeftDown() => null;
-
-  @override
-  Future<SpriteAnimation> getAnimationWateringCanRight() =>
-      CutePlayerConfig.loadAnimationWateringCanRight();
-
-  @override
-  Future<SpriteAnimation> getAnimationWateringCanLeft() =>
-      CutePlayerConfig.loadAnimationWateringCanLeft();
-
-  @override
-  Future<SpriteAnimation>? getAnimationWateringCanUp() =>
-      CutePlayerConfig.loadAnimationWateringCanUp();
-
-  @override
-  Future<SpriteAnimation>? getAnimationWateringCanDown() =>
-      CutePlayerConfig.loadAnimationWateringCanDown();
-
-  @override
-  Future<SpriteAnimation>? getAnimationWateringCanRightUp() => null;
-
-  @override
-  Future<SpriteAnimation>? getAnimationWateringCanRightDown() => null;
-
-  @override
-  Future<SpriteAnimation>? getAnimationWateringCanLeftUp() => null;
-
-  @override
-  Future<SpriteAnimation>? getAnimationWateringCanLeftDown() => null;
-
-  @override
-  Future<SpriteAnimation> getAnimationPlaceSeedRight() =>
-      CutePlayerConfig.loadAnimationPlaceSeedRight();
-
-  @override
-  Future<SpriteAnimation> getAnimationPlaceSeedLeft() =>
-      CutePlayerConfig.loadAnimationPlaceSeedLeft();
-
-  @override
-  Future<SpriteAnimation>? getAnimationPlaceSeedUp() =>
-      CutePlayerConfig.loadAnimationPlaceSeedUp();
-
-  @override
-  Future<SpriteAnimation>? getAnimationPlaceSeedDown() =>
-      CutePlayerConfig.loadAnimationPlaceSeedDown();
-
-  @override
-  Future<SpriteAnimation>? getAnimationPlaceSeedRightUp() => null;
-
-  @override
-  Future<SpriteAnimation>? getAnimationPlaceSeedRightDown() => null;
-
-  @override
-  Future<SpriteAnimation>? getAnimationPlaceSeedLeftUp() => null;
-
-  @override
-  Future<SpriteAnimation>? getAnimationPlaceSeedLeftDown() => null;
 }

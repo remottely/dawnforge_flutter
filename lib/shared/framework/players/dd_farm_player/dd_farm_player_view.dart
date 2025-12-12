@@ -1,52 +1,88 @@
+import 'dart:async';
+
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/character_action_sprite_animation_helper.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/farm/services/farm_tool_action_config.dart';
+import 'package:darkness_dungeon/shared/framework/animation_directional.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_defense_player/dd_defense_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_model.dart';
+
+// Certifique-se de importar o arquivo onde está o DDFarmPlayerConfig criado acima
+// import 'path/to/dd_farm_player_config.dart';
 
 abstract class DDFarmPlayerView<
   C extends DDFarmPlayerController<M>,
   M extends DDFarmPlayerModel
 >
     extends DDDefensePlayerView<C, M> {
+  @override
+  final DDFarmPlayerConfig config;
+
   DDFarmPlayerView({
-    required super.config,
+    required this.config,
     required super.position,
     required super.model,
     required super.size,
     required super.life,
     required super.speed,
-  });
+  }) : super(config: config);
 
-  Future<SpriteAnimation> getAnimationShovelRight();
-  Future<SpriteAnimation> getAnimationShovelLeft();
-  Future<SpriteAnimation>? getAnimationShovelUp();
-  Future<SpriteAnimation>? getAnimationShovelDown();
-  Future<SpriteAnimation>? getAnimationShovelRightUp();
-  Future<SpriteAnimation>? getAnimationShovelRightDown();
-  Future<SpriteAnimation>? getAnimationShovelLeftUp();
-  Future<SpriteAnimation>? getAnimationShovelLeftDown();
+  // Variáveis para armazenar as animações prontas
+  late final AnimationDirectional animationShovelDirectional;
+  late final AnimationDirectional animationWateringCanDirectional;
+  late final AnimationDirectional animationPlaceSeedDirectional;
+  late final AnimationDirectional animationHarvestBasketDirectional;
 
-  Future<SpriteAnimation> getAnimationWateringCanRight();
-  Future<SpriteAnimation> getAnimationWateringCanLeft();
-  Future<SpriteAnimation>? getAnimationWateringCanUp();
-  Future<SpriteAnimation>? getAnimationWateringCanDown();
-  Future<SpriteAnimation>? getAnimationWateringCanRightUp();
-  Future<SpriteAnimation>? getAnimationWateringCanRightDown();
-  Future<SpriteAnimation>? getAnimationWateringCanLeftUp();
-  Future<SpriteAnimation>? getAnimationWateringCanLeftDown();
+  @override
+  Future<void> onLoad() async {
+    await super.onLoad();
 
-  Future<SpriteAnimation> getAnimationPlaceSeedRight();
-  Future<SpriteAnimation> getAnimationPlaceSeedLeft();
-  Future<SpriteAnimation>? getAnimationPlaceSeedUp();
-  Future<SpriteAnimation>? getAnimationPlaceSeedDown();
-  Future<SpriteAnimation>? getAnimationPlaceSeedRightUp();
-  Future<SpriteAnimation>? getAnimationPlaceSeedRightDown();
-  Future<SpriteAnimation>? getAnimationPlaceSeedLeftUp();
-  Future<SpriteAnimation>? getAnimationPlaceSeedLeftDown();
+    Future<AnimationDirectional> loadFromFactory(
+      AnimationDirectionalFactory animationsFactory,
+    ) async {
+      Future<SpriteAnimation?> loadSafe(Future<SpriteAnimation>? loader) async {
+        if (loader == null) return null;
+        return await loader;
+      }
+
+      final loadedList = await Future.wait([
+        animationsFactory.loadRight,
+        animationsFactory.loadLeft,
+        loadSafe(animationsFactory.loadUp),
+        loadSafe(animationsFactory.loadDown),
+        loadSafe(animationsFactory.loadRightUp),
+        loadSafe(animationsFactory.loadRightDown),
+        loadSafe(animationsFactory.loadLeftUp),
+        loadSafe(animationsFactory.loadLeftDown),
+      ]);
+
+      return AnimationDirectional(
+        right: loadedList[0]!,
+        left: loadedList[1]!,
+        up: loadedList[2],
+        down: loadedList[3],
+        rightUp: loadedList[4],
+        rightDown: loadedList[5],
+        leftUp: loadedList[6],
+        leftDown: loadedList[7],
+      );
+    }
+
+    final toolsLoaded = await Future.wait([
+      loadFromFactory(config.animationShovelFactory),
+      loadFromFactory(config.animationWateringCanFactory),
+      loadFromFactory(config.animationPlaceSeedFactory),
+      loadFromFactory(config.animationHarvestBasketFactory),
+    ]);
+
+    animationShovelDirectional = toolsLoaded[0];
+    animationWateringCanDirectional = toolsLoaded[1];
+    animationPlaceSeedDirectional = toolsLoaded[2];
+    animationHarvestBasketDirectional = toolsLoaded[3];
+  }
 
   @override
   C createCombatController({
@@ -104,19 +140,24 @@ abstract class DDFarmPlayerView<
     super.update(dt);
   }
 
+  // ---------------------------------------------------------------------------
+  // EXECUTIONS
+  // Agora usam as variáveis 'animation...Directional' carregadas
+  // ---------------------------------------------------------------------------
+
   bool _onExecuteShovel() {
     final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
       AttackType.melee,
       () {
         CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-          animationRight: getAnimationShovelRight.call(),
-          animationLeft: getAnimationShovelLeft.call(),
-          animationUp: getAnimationShovelUp.call(),
-          animationDown: getAnimationShovelDown.call(),
-          animationRightUp: getAnimationShovelRightUp.call(),
-          animationRightDown: getAnimationShovelRightDown.call(),
-          animationLeftUp: getAnimationShovelLeftUp.call(),
-          animationLeftDown: getAnimationShovelLeftDown.call(),
+          animationRight: animationShovelDirectional.right,
+          animationLeft: animationShovelDirectional.left,
+          animationUp: animationShovelDirectional.up,
+          animationDown: animationShovelDirectional.down,
+          animationRightUp: animationShovelDirectional.rightUp,
+          animationRightDown: animationShovelDirectional.rightDown,
+          animationLeftUp: animationShovelDirectional.leftUp,
+          animationLeftDown: animationShovelDirectional.leftDown,
           currentAnimation: animation,
           target: this,
           executionStartFrame: 4,
@@ -131,70 +172,76 @@ abstract class DDFarmPlayerView<
   }
 
   bool _onExecuteWateringCan() {
-    final AttackExecutionInfo?
-    executionInfo = meleeAttackController.execute(AttackType.melee, () {
-      // TODO(Kevin): NOW - create dinamic animation injected by view interface configurations
-      CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-        animationRight: getAnimationWateringCanRight.call(),
-        animationLeft: getAnimationWateringCanLeft.call(),
-        animationUp: getAnimationWateringCanUp.call(),
-        animationDown: getAnimationWateringCanDown.call(),
-        animationRightUp: getAnimationWateringCanRightUp.call(),
-        animationRightDown: getAnimationWateringCanRightDown.call(),
-        animationLeftUp: getAnimationWateringCanLeftUp.call(),
-        animationLeftDown: getAnimationWateringCanLeftDown.call(),
-        currentAnimation: animation,
-        target: this,
-        executionStartFrame: 4,
-        onActionStart: lockAction,
-        onActionEnd: unlockAction,
-        onExecutionFrames: () => FarmToolActionConfig.execute(player: this),
-      );
-    });
+    final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
+      AttackType.melee,
+      () {
+        CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
+          animationRight: animationWateringCanDirectional.right,
+          animationLeft: animationWateringCanDirectional.left,
+          animationUp: animationWateringCanDirectional.up,
+          animationDown: animationWateringCanDirectional.down,
+          animationRightUp: animationWateringCanDirectional.rightUp,
+          animationRightDown: animationWateringCanDirectional.rightDown,
+          animationLeftUp: animationWateringCanDirectional.leftUp,
+          animationLeftDown: animationWateringCanDirectional.leftDown,
+          currentAnimation: animation,
+          target: this,
+          executionStartFrame: 4,
+          onActionStart: lockAction,
+          onActionEnd: unlockAction,
+          onExecutionFrames: () => FarmToolActionConfig.execute(player: this),
+        );
+      },
+    );
 
     return executionInfo != null;
   }
 
   bool _onExecuteSeed() {
-    final AttackExecutionInfo?
-    executionInfo = meleeAttackController.execute(AttackType.melee, () {
-      // TODO(Kevin): NOW - create dinamic animation injected by view interface configurations
-      CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-        animationRight: getAnimationPlaceSeedRight.call(),
-        animationLeft: getAnimationPlaceSeedLeft.call(),
-        animationUp: getAnimationPlaceSeedUp.call(),
-        animationDown: getAnimationPlaceSeedDown.call(),
-        animationRightUp: getAnimationPlaceSeedRightUp.call(),
-        animationRightDown: getAnimationPlaceSeedRightDown.call(),
-        animationLeftUp: getAnimationPlaceSeedLeftUp.call(),
-        animationLeftDown: getAnimationPlaceSeedLeftDown.call(),
-        currentAnimation: animation,
-        target: this,
-        executionStartFrame: 4,
-        onActionStart: lockAction,
-        onActionEnd: unlockAction,
-        onExecutionFrames: () => FarmToolActionConfig.execute(player: this),
-      );
-    });
+    final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
+      AttackType.melee,
+      () {
+        CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
+          animationRight: animationPlaceSeedDirectional.right,
+          animationLeft: animationPlaceSeedDirectional.left,
+          animationUp: animationPlaceSeedDirectional.up,
+          animationDown: animationPlaceSeedDirectional.down,
+          animationRightUp: animationPlaceSeedDirectional.rightUp,
+          animationRightDown: animationPlaceSeedDirectional.rightDown,
+          animationLeftUp: animationPlaceSeedDirectional.leftUp,
+          animationLeftDown: animationPlaceSeedDirectional.leftDown,
+          currentAnimation: animation,
+          target: this,
+          executionStartFrame: 4,
+          onActionStart: lockAction,
+          onActionEnd: unlockAction,
+          onExecutionFrames: () => FarmToolActionConfig.execute(player: this),
+        );
+      },
+    );
 
     return executionInfo != null;
   }
 
   bool _onExecuteHarvestBasket() {
-    final AttackExecutionInfo?
-    executionInfo = meleeAttackController.execute(AttackType.melee, () {
-      // TODO(Kevin): NOW - create dinamic animation injected by view interface configurations
-      CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-        animationRight: SunnyPlayerConfig.loadAnimationHarvestBasketRight(),
-        animationLeft: SunnyPlayerConfig.loadAnimationHarvestBasketLeft(),
-        currentAnimation: animation,
-        target: this,
-        executionStartFrame: 4,
-        onActionStart: lockAction,
-        onActionEnd: unlockAction,
-        onExecutionFrames: () => FarmToolActionConfig.execute(player: this),
-      );
-    });
+    final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
+      AttackType.melee,
+      () {
+        CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
+          animationRight: animationHarvestBasketDirectional.right,
+          animationLeft: animationHarvestBasketDirectional.left,
+          // Adicione as outras direções se existirem na sua factory
+          animationUp: animationHarvestBasketDirectional.up,
+          animationDown: animationHarvestBasketDirectional.down,
+          currentAnimation: animation,
+          target: this,
+          executionStartFrame: 4,
+          onActionStart: lockAction,
+          onActionEnd: unlockAction,
+          onExecutionFrames: () => FarmToolActionConfig.execute(player: this),
+        );
+      },
+    );
 
     return executionInfo != null;
   }

@@ -83,7 +83,7 @@ final class CutePlayerConfig {
         ),
       );
 
-  static Future<SpriteAnimation> loadAnimationAttackRight() =>
+  static final Future<SpriteAnimation> loadAnimationAttackRight =
       SpriteAnimation.load(
         'new/Player/attack/player_attack_right_48x48_4.png',
         SpriteAnimationConfig.createStandardData(
@@ -92,7 +92,7 @@ final class CutePlayerConfig {
         ),
       );
 
-  static Future<SpriteAnimation> loadAnimationAttackLeft() =>
+  static final Future<SpriteAnimation> loadAnimationAttackLeft =
       SpriteAnimation.load(
         'new/Player/attack/player_attack_left_48x48_4.png',
         SpriteAnimationConfig.createStandardData(
@@ -101,7 +101,7 @@ final class CutePlayerConfig {
         ),
       );
 
-  static Future<SpriteAnimation> loadAnimationAttackUp() =>
+  static final Future<SpriteAnimation> loadAnimationAttackUp =
       SpriteAnimation.load(
         // TODO(Kevin): NOW - create up and down verifications
         'new/Player/attack/player_attack_up_48x48_4.png',
@@ -111,7 +111,7 @@ final class CutePlayerConfig {
         ),
       );
 
-  static Future<SpriteAnimation> loadAnimationAttackDown() =>
+  static final Future<SpriteAnimation> loadAnimationAttackDown =
       SpriteAnimation.load(
         // TODO(Kevin): NOW - create up and down verifications
         'new/Player/attack/player_attack_down_48x48_4.png',
@@ -121,7 +121,7 @@ final class CutePlayerConfig {
         ),
       );
 
-  static Future<SpriteAnimation> loadAnimationShovelRight() =>
+  static final Future<SpriteAnimation> loadAnimationShovelRight =
       SpriteAnimation.load(
         'new/Player/shovel/player_shovel_right_48x48_2.png',
         SpriteAnimationConfig.createCustomData(
@@ -131,7 +131,7 @@ final class CutePlayerConfig {
         ),
       );
 
-  static Future<SpriteAnimation> loadAnimationShovelLeft() =>
+  static final Future<SpriteAnimation> loadAnimationShovelLeft =
       SpriteAnimation.load(
         'new/Player/shovel/player_shovel_left_48x48_2.png',
         SpriteAnimationConfig.createCustomData(
@@ -141,7 +141,7 @@ final class CutePlayerConfig {
         ),
       );
 
-  static Future<SpriteAnimation> loadAnimationShovelUp() =>
+  static final Future<SpriteAnimation> loadAnimationShovelUp =
       SpriteAnimation.load(
         'new/Player/shovel/player_shovel_up_48x48_2.png',
         SpriteAnimationConfig.createCustomData(
@@ -151,7 +151,7 @@ final class CutePlayerConfig {
         ),
       );
 
-  static Future<SpriteAnimation> loadAnimationShovelDown() =>
+  static final Future<SpriteAnimation> loadAnimationShovelDown =
       SpriteAnimation.load(
         'new/Player/shovel/player_shovel_down_48x48_2.png',
         SpriteAnimationConfig.createCustomData(
@@ -161,7 +161,7 @@ final class CutePlayerConfig {
         ),
       );
 
-  static Future<SpriteAnimation> loadAnimationWateringCanRight() =>
+  static final Future<SpriteAnimation> loadAnimationWateringCanRight =
       SpriteAnimation.load(
         'new/Player/water/player_water_right_48x48_2.png',
         SpriteAnimationConfig.createCustomData(
@@ -171,7 +171,7 @@ final class CutePlayerConfig {
         ),
       );
 
-  static Future<SpriteAnimation> loadAnimationWateringCanLeft() =>
+  static final Future<SpriteAnimation> loadAnimationWateringCanLeft =
       SpriteAnimation.load(
         'new/Player/water/player_water_left_48x48_2.png',
         SpriteAnimationConfig.createCustomData(
@@ -181,7 +181,7 @@ final class CutePlayerConfig {
         ),
       );
 
-  static Future<SpriteAnimation> loadAnimationWateringCanUp() =>
+  static final Future<SpriteAnimation> loadAnimationWateringCanUp =
       SpriteAnimation.load(
         'new/Player/water/player_water_up_48x48_2.png',
         SpriteAnimationConfig.createCustomData(
@@ -191,7 +191,7 @@ final class CutePlayerConfig {
         ),
       );
 
-  static Future<SpriteAnimation> loadAnimationWateringCanDown() =>
+  static final Future<SpriteAnimation> loadAnimationWateringCanDown =
       SpriteAnimation.load(
         'new/Player/water/player_water_down_48x48_2.png',
         SpriteAnimationConfig.createCustomData(
@@ -201,8 +201,8 @@ final class CutePlayerConfig {
         ),
       );
 
-  static Future<SpriteAnimation>
-  loadAnimationPlaceSeedRight() => SpriteAnimation.load(
+  static final Future<SpriteAnimation>
+  loadAnimationPlaceSeedRight = SpriteAnimation.load(
     // TODO(Kevin): CREATE ANIMATION
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_strip8.png',
     SpriteAnimationConfig.createStandardData(
@@ -211,8 +211,8 @@ final class CutePlayerConfig {
     ),
   );
 
-  static Future<SpriteAnimation>
-  loadAnimationPlaceSeedLeft() => SpriteAnimation.load(
+  static final Future<SpriteAnimation>
+  loadAnimationPlaceSeedLeft = SpriteAnimation.load(
     // TODO(Kevin): CREATE ANIMATION
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_left_strip8.png',
     SpriteAnimationConfig.createStandardData(
@@ -221,28 +221,16 @@ final class CutePlayerConfig {
     ),
   );
 
-  static Future<SpriteAnimation> loadAnimationPlaceSeedUp() =>
-      SpriteAnimation.load(
-        // TODO(Kevin): CREATE ANIMATION
-        '',
-        SpriteAnimationConfig.createStandardData(
-          amount: 8,
-          textureSize: textureSize,
-        ),
-      );
+  static final Future<SpriteAnimation> loadAnimationPlaceSeedUp =
+      // TODO(Kevin): create dedicated up animation
+      loadAnimationPlaceSeedRight;
 
-  static Future<SpriteAnimation> loadAnimationPlaceSeedDown() =>
-      SpriteAnimation.load(
-        // TODO(Kevin): CREATE ANIMATION
-        '',
-        SpriteAnimationConfig.createStandardData(
-          amount: 8,
-          textureSize: textureSize,
-        ),
-      );
+  static final Future<SpriteAnimation> loadAnimationPlaceSeedDown =
+      // TODO(Kevin): create dedicated down animation
+      loadAnimationPlaceSeedLeft;
 
-  static Future<SpriteAnimation>
-  loadAnimationHarvestBasketRight() => SpriteAnimation.load(
+  static final Future<SpriteAnimation>
+  loadAnimationHarvestBasketRight = SpriteAnimation.load(
     // TODO(Kevin): CREATE ANIMATION
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_strip8.png',
     SpriteAnimationConfig.createStandardData(
@@ -251,8 +239,8 @@ final class CutePlayerConfig {
     ),
   );
 
-  static Future<SpriteAnimation>
-  loadAnimationHarvestBasketLeft() => SpriteAnimation.load(
+  static final Future<SpriteAnimation>
+  loadAnimationHarvestBasketLeft = SpriteAnimation.load(
     // TODO(Kevin): CREATE ANIMATION
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_left_strip8.png',
     SpriteAnimationConfig.createStandardData(
@@ -261,25 +249,13 @@ final class CutePlayerConfig {
     ),
   );
 
-  static Future<SpriteAnimation> loadAnimationHarvestBasketUp() =>
-      SpriteAnimation.load(
-        // TODO(Kevin): CREATE ANIMATION
-        '',
-        SpriteAnimationConfig.createStandardData(
-          amount: 8,
-          textureSize: textureSize,
-        ),
-      );
+  static final Future<SpriteAnimation> loadAnimationHarvestBasketUp =
+      // TODO(Kevin): create dedicated up animation
+      loadAnimationHarvestBasketRight;
 
-  static Future<SpriteAnimation> loadAnimationHarvestBasketDown() =>
-      SpriteAnimation.load(
-        // TODO(Kevin): CREATE ANIMATION
-        '',
-        SpriteAnimationConfig.createStandardData(
-          amount: 8,
-          textureSize: textureSize,
-        ),
-      );
+  static final Future<SpriteAnimation> loadAnimationHarvestBasketDown =
+      // TODO(Kevin): create dedicated down animation
+      loadAnimationHarvestBasketLeft;
 
   static final SimpleDirectionAnimation animationWalkDirectional =
       SimpleDirectionAnimation(

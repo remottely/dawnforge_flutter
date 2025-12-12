@@ -6,18 +6,18 @@ final class CharacterActionSpriteAnimationHelper {
   CharacterActionSpriteAnimationHelper._();
 
   static Future<void> playOnce({
-    required Future<SpriteAnimation> animationRight,
-    required Future<SpriteAnimation> animationLeft,
-    Future<SpriteAnimation>? animationUp,
-    Future<SpriteAnimation>? animationDown,
-    Future<SpriteAnimation>? animationRightUp,
-    Future<SpriteAnimation>? animationRightDown,
-    Future<SpriteAnimation>? animationLeftUp,
-    Future<SpriteAnimation>? animationLeftDown,
+    required SpriteAnimation animationRight,
+    required SpriteAnimation animationLeft,
+    SpriteAnimation? animationUp,
+    SpriteAnimation? animationDown,
+    SpriteAnimation? animationRightUp,
+    SpriteAnimation? animationRightDown,
+    SpriteAnimation? animationLeftUp,
+    SpriteAnimation? animationLeftDown,
     required SimpleDirectionAnimation? currentAnimation,
     required Movement? target,
   }) async {
-    final attackAnimation = await _cloneSelectedAnimation(
+    final attackAnimation = _cloneSelectedAnimation(
       animationRight: animationRight,
       animationLeft: animationLeft,
       animationUp: animationUp,
@@ -39,15 +39,15 @@ final class CharacterActionSpriteAnimationHelper {
     }
   }
 
-  static Future<void> playLoop({
-    required Future<SpriteAnimation> animationRight,
-    required Future<SpriteAnimation> animationLeft,
-    Future<SpriteAnimation>? animationUp,
-    Future<SpriteAnimation>? animationDown,
-    Future<SpriteAnimation>? animationRightUp,
-    Future<SpriteAnimation>? animationRightDown,
-    Future<SpriteAnimation>? animationLeftUp,
-    Future<SpriteAnimation>? animationLeftDown,
+  static void playLoop({
+    required SpriteAnimation animationRight,
+    required SpriteAnimation animationLeft,
+    SpriteAnimation? animationUp,
+    SpriteAnimation? animationDown,
+    SpriteAnimation? animationRightUp,
+    SpriteAnimation? animationRightDown,
+    SpriteAnimation? animationLeftUp,
+    SpriteAnimation? animationLeftDown,
     required SimpleDirectionAnimation? currentAnimation,
     required Movement? target,
     String key = '_actionLoop',
@@ -59,7 +59,7 @@ final class CharacterActionSpriteAnimationHelper {
     }
 
     if (!currentAnimation.containOther(key)) {
-      final loopAnimation = await _cloneSelectedAnimation(
+      final loopAnimation = _cloneSelectedAnimation(
         animationRight: animationRight,
         animationLeft: animationLeft,
         animationUp: animationUp,
@@ -90,14 +90,14 @@ final class CharacterActionSpriteAnimationHelper {
   }
 
   static Future<void> playOnceExecutionEquipment({
-    required Future<SpriteAnimation> animationRight,
-    required Future<SpriteAnimation> animationLeft,
-    Future<SpriteAnimation>? animationUp,
-    Future<SpriteAnimation>? animationDown,
-    Future<SpriteAnimation>? animationRightUp,
-    Future<SpriteAnimation>? animationRightDown,
-    Future<SpriteAnimation>? animationLeftUp,
-    Future<SpriteAnimation>? animationLeftDown,
+    required SpriteAnimation animationRight,
+    required SpriteAnimation animationLeft,
+    SpriteAnimation? animationUp,
+    SpriteAnimation? animationDown,
+    SpriteAnimation? animationRightUp,
+    SpriteAnimation? animationRightDown,
+    SpriteAnimation? animationLeftUp,
+    SpriteAnimation? animationLeftDown,
     required SimpleDirectionAnimation? currentAnimation,
     required Movement? target,
     required int executionStartFrame,
@@ -162,15 +162,15 @@ final class CharacterActionSpriteAnimationHelper {
     }
   }
 
-  static Future<SpriteAnimation> _selectAnimationByDirection({
-    required Future<SpriteAnimation> animationRight,
-    required Future<SpriteAnimation> animationLeft,
-    Future<SpriteAnimation>? animationUp,
-    Future<SpriteAnimation>? animationDown,
-    Future<SpriteAnimation>? animationRightUp,
-    Future<SpriteAnimation>? animationRightDown,
-    Future<SpriteAnimation>? animationLeftUp,
-    Future<SpriteAnimation>? animationLeftDown,
+  static SpriteAnimation _selectAnimationByDirection({
+    required SpriteAnimation animationRight,
+    required SpriteAnimation animationLeft,
+    SpriteAnimation? animationUp,
+    SpriteAnimation? animationDown,
+    SpriteAnimation? animationRightUp,
+    SpriteAnimation? animationRightDown,
+    SpriteAnimation? animationLeftUp,
+    SpriteAnimation? animationLeftDown,
     required Movement? target,
   }) {
     final lastDirection = target?.lastDirection ?? Direction.right;
@@ -201,19 +201,19 @@ final class CharacterActionSpriteAnimationHelper {
     };
   }
 
-  static Future<SpriteAnimation> _cloneSelectedAnimation({
-    required Future<SpriteAnimation> animationRight,
-    required Future<SpriteAnimation> animationLeft,
-    Future<SpriteAnimation>? animationUp,
-    Future<SpriteAnimation>? animationDown,
-    Future<SpriteAnimation>? animationRightUp,
-    Future<SpriteAnimation>? animationRightDown,
-    Future<SpriteAnimation>? animationLeftUp,
-    Future<SpriteAnimation>? animationLeftDown,
+  static SpriteAnimation _cloneSelectedAnimation({
+    required SpriteAnimation animationRight,
+    required SpriteAnimation animationLeft,
+    SpriteAnimation? animationUp,
+    SpriteAnimation? animationDown,
+    SpriteAnimation? animationRightUp,
+    SpriteAnimation? animationRightDown,
+    SpriteAnimation? animationLeftUp,
+    SpriteAnimation? animationLeftDown,
     required Movement? target,
     required bool loop,
-  }) async {
-    final selected = await _selectAnimationByDirection(
+  }) {
+    final selected = _selectAnimationByDirection(
       animationRight: animationRight,
       animationLeft: animationLeft,
       animationUp: animationUp,

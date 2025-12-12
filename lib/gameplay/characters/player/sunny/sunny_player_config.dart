@@ -66,8 +66,8 @@ final class SunnyPlayerConfig {
     ),
   );
 
-  static Future<SpriteAnimation>
-  loadAnimationAttackRight() => SpriteAnimation.load(
+  static final Future<SpriteAnimation>
+  loadAnimationAttackRight = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_sword_strip10.png',
     SpriteAnimationConfig.createStandardData(
       amount: 10,
@@ -75,8 +75,8 @@ final class SunnyPlayerConfig {
     ),
   );
 
-  static Future<SpriteAnimation>
-  loadAnimationAttackLeft() => SpriteAnimation.load(
+  static final Future<SpriteAnimation>
+  loadAnimationAttackLeft = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_sword_left_strip10.png',
     SpriteAnimationConfig.createStandardData(
       amount: 10,
@@ -84,8 +84,8 @@ final class SunnyPlayerConfig {
     ),
   );
 
-  static Future<SpriteAnimation>
-  loadAnimationShovelRight() => SpriteAnimation.load(
+  static final Future<SpriteAnimation>
+  loadAnimationShovelRight = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_strip13.png',
     SpriteAnimationConfig.createStandardData(
       amount: 10,
@@ -93,8 +93,8 @@ final class SunnyPlayerConfig {
     ),
   );
 
-  static Future<SpriteAnimation>
-  loadAnimationShovelLeft() => SpriteAnimation.load(
+  static final Future<SpriteAnimation>
+  loadAnimationShovelLeft = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_left_strip13.png',
     SpriteAnimationConfig.createStandardData(
       amount: 10,
@@ -102,8 +102,8 @@ final class SunnyPlayerConfig {
     ),
   );
 
-  static Future<SpriteAnimation>
-  loadAnimationWateringCanRight() => SpriteAnimation.load(
+  static final Future<SpriteAnimation>
+  loadAnimationWateringCanRight = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_watering_strip5.png',
     SpriteAnimationConfig.createStandardData(
       amount: 5,
@@ -111,8 +111,8 @@ final class SunnyPlayerConfig {
     ),
   );
 
-  static Future<SpriteAnimation>
-  loadAnimationWateringCanLeft() => SpriteAnimation.load(
+  static final Future<SpriteAnimation>
+  loadAnimationWateringCanLeft = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_watering_left_strip5.png',
     SpriteAnimationConfig.createStandardData(
       amount: 5,
@@ -120,8 +120,8 @@ final class SunnyPlayerConfig {
     ),
   );
 
-  static Future<SpriteAnimation>
-  loadAnimationPlaceSeedRight() => SpriteAnimation.load(
+  static final Future<SpriteAnimation>
+  loadAnimationPlaceSeedRight = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_strip8.png',
     SpriteAnimationConfig.createStandardData(
       amount: 8,
@@ -129,8 +129,8 @@ final class SunnyPlayerConfig {
     ),
   );
 
-  static Future<SpriteAnimation>
-  loadAnimationPlaceSeedLeft() => SpriteAnimation.load(
+  static final Future<SpriteAnimation>
+  loadAnimationPlaceSeedLeft = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_left_strip8.png',
     SpriteAnimationConfig.createStandardData(
       amount: 8,
@@ -138,8 +138,8 @@ final class SunnyPlayerConfig {
     ),
   );
 
-  static Future<SpriteAnimation>
-  loadAnimationHarvestBasketRight() => SpriteAnimation.load(
+  static final Future<SpriteAnimation>
+  loadAnimationHarvestBasketRight = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_strip8.png',
     SpriteAnimationConfig.createStandardData(
       amount: 8,
@@ -147,8 +147,8 @@ final class SunnyPlayerConfig {
     ),
   );
 
-  static Future<SpriteAnimation>
-  loadAnimationHarvestBasketLeft() => SpriteAnimation.load(
+  static final Future<SpriteAnimation>
+  loadAnimationHarvestBasketLeft = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_left_strip8.png',
     SpriteAnimationConfig.createStandardData(
       amount: 8,
