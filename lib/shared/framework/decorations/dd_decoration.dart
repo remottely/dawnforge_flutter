@@ -9,9 +9,9 @@ class DDDecoration extends GameDecoration {
     required super.size,
     super.anchor,
     super.angle,
-    super.lightingConfig,
+    LightingConfig? lighting,
     super.renderAboveComponents,
-  }) : super.withSprite();
+  }) : super.withSprite(lightingConfig: lighting);
 
   DDDecoration.withAnimation({
     required super.animation,

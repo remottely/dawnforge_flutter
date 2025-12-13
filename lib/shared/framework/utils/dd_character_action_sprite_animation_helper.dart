@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
 
-final class CharacterActionSpriteAnimationHelper {
-  CharacterActionSpriteAnimationHelper._();
+final class DDCharacterActionSpriteAnimationHelper {
+  DDCharacterActionSpriteAnimationHelper._();
 
   static Future<void> playOnce({
     required SpriteAnimation animationRight,
@@ -240,7 +240,7 @@ final class CharacterActionSpriteAnimationHelper {
   }
 
   static Future<DDAnimationDirectional> loadAnimationDirectionalFromFactory(
-    DDAnimationDirectionalFactory animationsFactory,
+    DDAnimationDirectionalFactory animationDirectionalFactory,
   ) async {
     Future<SpriteAnimation?> loadSafe(Future<SpriteAnimation>? loader) async {
       if (loader == null) return null;
@@ -248,14 +248,14 @@ final class CharacterActionSpriteAnimationHelper {
     }
 
     final loadedList = await Future.wait([
-      animationsFactory.loadRight,
-      animationsFactory.loadLeft,
-      loadSafe(animationsFactory.loadUp),
-      loadSafe(animationsFactory.loadDown),
-      loadSafe(animationsFactory.loadRightUp),
-      loadSafe(animationsFactory.loadRightDown),
-      loadSafe(animationsFactory.loadLeftUp),
-      loadSafe(animationsFactory.loadLeftDown),
+      animationDirectionalFactory.loadRight,
+      animationDirectionalFactory.loadLeft,
+      loadSafe(animationDirectionalFactory.loadUp),
+      loadSafe(animationDirectionalFactory.loadDown),
+      loadSafe(animationDirectionalFactory.loadRightUp),
+      loadSafe(animationDirectionalFactory.loadRightDown),
+      loadSafe(animationDirectionalFactory.loadLeftUp),
+      loadSafe(animationDirectionalFactory.loadLeftDown),
     ]);
 
     return DDAnimationDirectional(

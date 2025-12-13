@@ -3,10 +3,11 @@ import 'dart:async';
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/conversation/emote_manager.dart';
-import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_view.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
+import 'package:flutter/foundation.dart';
 
 abstract class DDBasePlayerView<
   C extends DDBasePlayerController<M>,
@@ -15,8 +16,11 @@ abstract class DDBasePlayerView<
     extends SimplePlayer
     with Lighting, BlockMovementCollision {
   final M _model;
+  @protected
+  final DDBasePlayerConfig config;
 
   DDBasePlayerView({
+    required this.config,
     required super.position,
     required M model,
     required super.animation,
@@ -41,12 +45,6 @@ abstract class DDBasePlayerView<
     onDetectEnemyInLongVisionRadius,
   });
 
-  RectangleHitbox getHitbox();
-
-  LightingConfig getLightingConfig();
-
-  DDDecoration getDeathMarker(Vector2 position);
-
   @override
   Future<void> onLoad() async {
     await super.onLoad();
@@ -59,7 +57,7 @@ abstract class DDBasePlayerView<
       onDetectEnemyInLongVisionRadius: onDetectEnemyInLongVisionRadius,
     );
 
-    add(getHitbox());
+    add(config.hitbox);
 
     _restoreLifeFromModel();
   }
@@ -112,7 +110,7 @@ abstract class DDBasePlayerView<
   }
 
   void configureVisualEffects() {
-    setupLighting(getLightingConfig());
+    setupLighting(config.lighting);
     setupMovementByJoystick(intensityEnabled: true);
   }
 
@@ -127,7 +125,7 @@ abstract class DDBasePlayerView<
   }
 
   void displayDeathVisualEffects() {
-    gameRef.add(getDeathMarker(position));
+    gameRef.add(config.getDeathMarker.call(position));
   }
 
   void onDisplayExclamationEmote() {

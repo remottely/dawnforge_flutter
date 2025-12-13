@@ -18,7 +18,7 @@ final class CharacterFireballAttackConfig {
 
   static const double kSpeed = CharacterConstants.kSpeedFast * 2.5;
 
-  static final LightingConfig lightingConfig = LightingConfig(
+  static final LightingConfig lighting = LightingConfig(
     radius: TileConstants.kTileDimensionSmall,
     blurBorder: TileConstants.kTileDimensionSmall,
     color: LightingConstants.fireballAttackLighting,

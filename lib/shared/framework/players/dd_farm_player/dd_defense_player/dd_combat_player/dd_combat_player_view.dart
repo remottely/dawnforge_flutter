@@ -1,14 +1,14 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/character_action_sprite_animation_helper.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/controllers/player_combat_action_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_config.dart';
-import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
+import 'package:darkness_dungeon/shared/framework/utils/dd_character_action_sprite_animation_helper.dart';
 import 'package:flutter/foundation.dart';
 
 abstract class DDCombatPlayerView<
@@ -39,7 +39,7 @@ abstract class DDCombatPlayerView<
     _initializeCombatSystems();
 
     animationAttackDirectional =
-        await CharacterActionSpriteAnimationHelper.loadAnimationDirectionalFromFactory(
+        await DDCharacterActionSpriteAnimationHelper.loadAnimationDirectionalFromFactory(
           config.animationAttackDirectionalFactory,
         );
   }
@@ -100,7 +100,7 @@ abstract class DDCombatPlayerView<
     final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
       AttackType.melee,
       () {
-        CharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
+        DDCharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
           animationRight: animationAttackDirectional.right,
           animationLeft: animationAttackDirectional.left,
           animationUp: animationAttackDirectional.up,

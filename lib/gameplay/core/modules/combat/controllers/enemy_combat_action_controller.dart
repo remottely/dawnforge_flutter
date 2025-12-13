@@ -50,7 +50,7 @@ final class EnemyCombatActionController {
         enemy.simpleAttackRange(
           size: CharacterFireballAttackConfig.componentSize,
           speed: CharacterFireballAttackConfig.kSpeed,
-          lightingConfig: CharacterFireballAttackConfig.lightingConfig,
+          lightingConfig: CharacterFireballAttackConfig.lighting,
           damage: damage,
           collision: CharacterFireballAttackConfig.createHitbox(),
           animation: CharacterFireballAttackConfig.loadAnimationExecution(),

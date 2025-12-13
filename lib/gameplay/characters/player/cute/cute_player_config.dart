@@ -330,7 +330,7 @@ final class CutePlayerConfig {
     ),
   );
 
-  static final LightingConfig lightingConfig = LightingConfig(
+  static final LightingConfig lighting = LightingConfig(
     radius: TileConstants.kTileDimensionLarge,
     blurBorder: TileConstants.kTileDimensionStandard,
     color: LightingConstants.playerLighting,

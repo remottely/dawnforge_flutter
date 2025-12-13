@@ -56,7 +56,7 @@ final class PlayerCombatActionController {
     player.simpleAttackRangeByDirection(
       size: CharacterFireballAttackConfig.componentSize,
       speed: CharacterFireballAttackConfig.kSpeed,
-      lightingConfig: CharacterFireballAttackConfig.lightingConfig,
+      lightingConfig: CharacterFireballAttackConfig.lighting,
       damage: damage,
       collision: CharacterFireballAttackConfig.createHitbox(),
       animationRight: CharacterFireballAttackConfig.loadAnimationExecution(),

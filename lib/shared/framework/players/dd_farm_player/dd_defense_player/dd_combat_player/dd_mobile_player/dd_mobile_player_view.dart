@@ -2,19 +2,10 @@ import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_model.dart';
 import 'package:flutter/foundation.dart';
-
-class DDMobilePlayerConfig {
-  final SimpleDirectionAnimation animationWalkDirectional;
-  final SimpleDirectionAnimation animationRunDirectional;
-
-  DDMobilePlayerConfig({
-    required this.animationWalkDirectional,
-    required this.animationRunDirectional,
-  });
-}
 
 abstract class DDMobilePlayerView<
   C extends DDMobilePlayerController<M>,
@@ -33,7 +24,7 @@ abstract class DDMobilePlayerView<
     required super.life,
     required double speed,
   }) : _baseSpeed = speed,
-       super(speed: speed, animation: null);
+       super(config: config, speed: speed, animation: null);
 
   bool _isInRunningState = false;
 
