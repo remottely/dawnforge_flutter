@@ -5,6 +5,8 @@ import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_con
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_config.dart';
+import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 
 final class CutePlayerConfig {
@@ -49,7 +51,7 @@ final class CutePlayerConfig {
 
   static final Vector2 componentSize = textureSize;
 
-  static final RectangleHitbox hitbox = HitboxUtils.createCustomHitbox(
+  static final RectangleHitbox _hitbox = HitboxUtils.createCustomHitbox(
     componentSize: componentSize,
     left: 20.0,
     top: 22.0,
@@ -83,7 +85,7 @@ final class CutePlayerConfig {
         ),
       );
 
-  static final Future<SpriteAnimation> loadAnimationAttackRight =
+  static final Future<SpriteAnimation> _loadAnimationAttackRight =
       SpriteAnimation.load(
         'new/Player/attack/player_attack_right_48x48_4.png',
         SpriteAnimationConfig.createStandardData(
@@ -92,7 +94,7 @@ final class CutePlayerConfig {
         ),
       );
 
-  static final Future<SpriteAnimation> loadAnimationAttackLeft =
+  static final Future<SpriteAnimation> _loadAnimationAttackLeft =
       SpriteAnimation.load(
         'new/Player/attack/player_attack_left_48x48_4.png',
         SpriteAnimationConfig.createStandardData(
@@ -101,7 +103,7 @@ final class CutePlayerConfig {
         ),
       );
 
-  static final Future<SpriteAnimation> loadAnimationAttackUp =
+  static final Future<SpriteAnimation> _loadAnimationAttackUp =
       SpriteAnimation.load(
         // TODO(Kevin): NOW - create up and down verifications
         'new/Player/attack/player_attack_up_48x48_4.png',
@@ -111,7 +113,7 @@ final class CutePlayerConfig {
         ),
       );
 
-  static final Future<SpriteAnimation> loadAnimationAttackDown =
+  static final Future<SpriteAnimation> _loadAnimationAttackDown =
       SpriteAnimation.load(
         // TODO(Kevin): NOW - create up and down verifications
         'new/Player/attack/player_attack_down_48x48_4.png',
@@ -121,7 +123,19 @@ final class CutePlayerConfig {
         ),
       );
 
-  static final Future<SpriteAnimation> loadAnimationShovelRight =
+  static final _animationAttackDirectionalFactory =
+      DDAnimationDirectionalFactory(
+        loadRight: _loadAnimationAttackRight,
+        loadLeft: _loadAnimationAttackLeft,
+        loadUp: _loadAnimationAttackUp,
+        loadDown: _loadAnimationAttackDown,
+        loadRightUp: null,
+        loadRightDown: null,
+        loadLeftUp: null,
+        loadLeftDown: null,
+      );
+
+  static final Future<SpriteAnimation> _loadAnimationShovelRight =
       SpriteAnimation.load(
         'new/Player/shovel/player_shovel_right_48x48_2.png',
         SpriteAnimationConfig.createCustomData(
@@ -131,7 +145,7 @@ final class CutePlayerConfig {
         ),
       );
 
-  static final Future<SpriteAnimation> loadAnimationShovelLeft =
+  static final Future<SpriteAnimation> _loadAnimationShovelLeft =
       SpriteAnimation.load(
         'new/Player/shovel/player_shovel_left_48x48_2.png',
         SpriteAnimationConfig.createCustomData(
@@ -141,7 +155,7 @@ final class CutePlayerConfig {
         ),
       );
 
-  static final Future<SpriteAnimation> loadAnimationShovelUp =
+  static final Future<SpriteAnimation> _loadAnimationShovelUp =
       SpriteAnimation.load(
         'new/Player/shovel/player_shovel_up_48x48_2.png',
         SpriteAnimationConfig.createCustomData(
@@ -151,7 +165,7 @@ final class CutePlayerConfig {
         ),
       );
 
-  static final Future<SpriteAnimation> loadAnimationShovelDown =
+  static final Future<SpriteAnimation> _loadAnimationShovelDown =
       SpriteAnimation.load(
         'new/Player/shovel/player_shovel_down_48x48_2.png',
         SpriteAnimationConfig.createCustomData(
@@ -161,7 +175,18 @@ final class CutePlayerConfig {
         ),
       );
 
-  static final Future<SpriteAnimation> loadAnimationWateringCanRight =
+  static final _animationShovelFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationShovelRight,
+    loadLeft: _loadAnimationShovelLeft,
+    loadUp: _loadAnimationShovelUp,
+    loadDown: _loadAnimationShovelDown,
+    loadRightUp: null,
+    loadRightDown: null,
+    loadLeftUp: null,
+    loadLeftDown: null,
+  );
+
+  static final Future<SpriteAnimation> _loadAnimationWateringCanRight =
       SpriteAnimation.load(
         'new/Player/water/player_water_right_48x48_2.png',
         SpriteAnimationConfig.createCustomData(
@@ -171,7 +196,7 @@ final class CutePlayerConfig {
         ),
       );
 
-  static final Future<SpriteAnimation> loadAnimationWateringCanLeft =
+  static final Future<SpriteAnimation> _loadAnimationWateringCanLeft =
       SpriteAnimation.load(
         'new/Player/water/player_water_left_48x48_2.png',
         SpriteAnimationConfig.createCustomData(
@@ -181,7 +206,7 @@ final class CutePlayerConfig {
         ),
       );
 
-  static final Future<SpriteAnimation> loadAnimationWateringCanUp =
+  static final Future<SpriteAnimation> _loadAnimationWateringCanUp =
       SpriteAnimation.load(
         'new/Player/water/player_water_up_48x48_2.png',
         SpriteAnimationConfig.createCustomData(
@@ -191,7 +216,7 @@ final class CutePlayerConfig {
         ),
       );
 
-  static final Future<SpriteAnimation> loadAnimationWateringCanDown =
+  static final Future<SpriteAnimation> _loadAnimationWateringCanDown =
       SpriteAnimation.load(
         'new/Player/water/player_water_down_48x48_2.png',
         SpriteAnimationConfig.createCustomData(
@@ -201,8 +226,19 @@ final class CutePlayerConfig {
         ),
       );
 
+  static final _animationWateringCanFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationWateringCanRight,
+    loadLeft: _loadAnimationWateringCanLeft,
+    loadUp: _loadAnimationWateringCanUp,
+    loadDown: _loadAnimationWateringCanDown,
+    loadRightUp: null,
+    loadRightDown: null,
+    loadLeftUp: null,
+    loadLeftDown: null,
+  );
+
   static final Future<SpriteAnimation>
-  loadAnimationPlaceSeedRight = SpriteAnimation.load(
+  _loadAnimationPlaceSeedRight = SpriteAnimation.load(
     // TODO(Kevin): CREATE ANIMATION
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_strip8.png',
     SpriteAnimationConfig.createStandardData(
@@ -212,7 +248,7 @@ final class CutePlayerConfig {
   );
 
   static final Future<SpriteAnimation>
-  loadAnimationPlaceSeedLeft = SpriteAnimation.load(
+  _loadAnimationPlaceSeedLeft = SpriteAnimation.load(
     // TODO(Kevin): CREATE ANIMATION
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_left_strip8.png',
     SpriteAnimationConfig.createStandardData(
@@ -221,16 +257,27 @@ final class CutePlayerConfig {
     ),
   );
 
-  static final Future<SpriteAnimation> loadAnimationPlaceSeedUp =
+  static final Future<SpriteAnimation> _loadAnimationPlaceSeedUp =
       // TODO(Kevin): create dedicated up animation
-      loadAnimationPlaceSeedRight;
+      _loadAnimationPlaceSeedRight;
 
-  static final Future<SpriteAnimation> loadAnimationPlaceSeedDown =
+  static final Future<SpriteAnimation> _loadAnimationPlaceSeedDown =
       // TODO(Kevin): create dedicated down animation
-      loadAnimationPlaceSeedLeft;
+      _loadAnimationPlaceSeedLeft;
+
+  static final _animationPlaceSeedFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationPlaceSeedRight,
+    loadLeft: _loadAnimationPlaceSeedLeft,
+    loadUp: _loadAnimationPlaceSeedUp,
+    loadDown: _loadAnimationPlaceSeedDown,
+    loadRightUp: null,
+    loadRightDown: null,
+    loadLeftUp: null,
+    loadLeftDown: null,
+  );
 
   static final Future<SpriteAnimation>
-  loadAnimationHarvestBasketRight = SpriteAnimation.load(
+  _loadAnimationHarvestBasketRight = SpriteAnimation.load(
     // TODO(Kevin): CREATE ANIMATION
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_strip8.png',
     SpriteAnimationConfig.createStandardData(
@@ -240,7 +287,7 @@ final class CutePlayerConfig {
   );
 
   static final Future<SpriteAnimation>
-  loadAnimationHarvestBasketLeft = SpriteAnimation.load(
+  _loadAnimationHarvestBasketLeft = SpriteAnimation.load(
     // TODO(Kevin): CREATE ANIMATION
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_left_strip8.png',
     SpriteAnimationConfig.createStandardData(
@@ -249,15 +296,41 @@ final class CutePlayerConfig {
     ),
   );
 
-  static final Future<SpriteAnimation> loadAnimationHarvestBasketUp =
+  static final Future<SpriteAnimation> _loadAnimationHarvestBasketUp =
       // TODO(Kevin): create dedicated up animation
-      loadAnimationHarvestBasketRight;
+      _loadAnimationHarvestBasketRight;
 
-  static final Future<SpriteAnimation> loadAnimationHarvestBasketDown =
+  static final Future<SpriteAnimation> _loadAnimationHarvestBasketDown =
       // TODO(Kevin): create dedicated down animation
-      loadAnimationHarvestBasketLeft;
+      _loadAnimationHarvestBasketLeft;
 
-  static final SimpleDirectionAnimation animationWalkDirectional =
+  static final _animationHarvestBasketFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationHarvestBasketRight,
+    loadLeft: _loadAnimationHarvestBasketLeft,
+    loadUp: _loadAnimationHarvestBasketUp,
+    loadDown: _loadAnimationHarvestBasketDown,
+    loadRightUp: null,
+    loadRightDown: null,
+    loadLeftUp: null,
+    loadLeftDown: null,
+  );
+
+  static final config = DDFarmPlayerConfig(
+    hitbox: CutePlayerConfig._hitbox,
+    lighting: CutePlayerConfig._lighting,
+    getDeathMarker: (position) => CutePlayerConfig._createDeathMarker(position),
+    animationWalkDirectional: CutePlayerConfig._animationWalkDirectional,
+    animationRunDirectional: CutePlayerConfig._animationRunDirectional,
+    animationAttackDirectionalFactory:
+        CutePlayerConfig._animationAttackDirectionalFactory,
+    animationShovelFactory: CutePlayerConfig._animationShovelFactory,
+    animationWateringCanFactory: CutePlayerConfig._animationWateringCanFactory,
+    animationPlaceSeedFactory: CutePlayerConfig._animationPlaceSeedFactory,
+    animationHarvestBasketFactory:
+        CutePlayerConfig._animationHarvestBasketFactory,
+  );
+
+  static final SimpleDirectionAnimation _animationWalkDirectional =
       SimpleDirectionAnimation(
         idleLeft: _loadAnimationIdleLeft(),
         idleRight: UISpriteAnimationsConfig.loadAnimationCutePlayerIdleRight(),
@@ -294,7 +367,7 @@ final class CutePlayerConfig {
       );
 
   static final SimpleDirectionAnimation
-  animationRunDirectional = SimpleDirectionAnimation(
+  _animationRunDirectional = SimpleDirectionAnimation(
     idleLeft: _loadAnimationIdleLeft(),
     idleRight: UISpriteAnimationsConfig.loadAnimationCutePlayerIdleRight(),
     idleUp: _loadAnimationIdleUp(),
@@ -330,7 +403,7 @@ final class CutePlayerConfig {
     ),
   );
 
-  static final LightingConfig lighting = LightingConfig(
+  static final LightingConfig _lighting = LightingConfig(
     radius: TileConstants.kTileDimensionLarge,
     blurBorder: TileConstants.kTileDimensionStandard,
     color: LightingConstants.playerLighting,
@@ -342,7 +415,7 @@ final class CutePlayerConfig {
     'gameplay/characters/player/player_crypt_1.png',
   ); // TODO(Kevin): add cute death animation playonce // - new/Player/death/
 
-  static DDDecoration createDeathMarker(Vector2 position) =>
+  static DDDecoration _createDeathMarker(Vector2 position) =>
       DDDecoration.withSprite(
         sprite: loadSpriteCrypt(),
         position: Vector2(position.x, position.y),

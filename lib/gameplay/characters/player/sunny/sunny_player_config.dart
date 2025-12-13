@@ -5,6 +5,8 @@ import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_con
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_config.dart';
+import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
 import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 
 final class SunnyPlayerConfig {
@@ -49,7 +51,7 @@ final class SunnyPlayerConfig {
 
   static final Vector2 componentSize = textureSize;
 
-  static final RectangleHitbox hitbox = HitboxUtils.createCustomHitbox(
+  static final RectangleHitbox _hitbox = HitboxUtils.createCustomHitbox(
     componentSize: componentSize,
     left: 44.0,
     top: 28.0,
@@ -67,7 +69,7 @@ final class SunnyPlayerConfig {
   );
 
   static final Future<SpriteAnimation>
-  loadAnimationAttackRight = SpriteAnimation.load(
+  _loadAnimationAttackRight = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_sword_strip10.png',
     SpriteAnimationConfig.createStandardData(
       amount: 10,
@@ -76,7 +78,7 @@ final class SunnyPlayerConfig {
   );
 
   static final Future<SpriteAnimation>
-  loadAnimationAttackLeft = SpriteAnimation.load(
+  _loadAnimationAttackLeft = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_sword_left_strip10.png',
     SpriteAnimationConfig.createStandardData(
       amount: 10,
@@ -84,8 +86,20 @@ final class SunnyPlayerConfig {
     ),
   );
 
+  static final _animationAttackDirectionalFactory =
+      DDAnimationDirectionalFactory(
+        loadRight: _loadAnimationAttackRight,
+        loadLeft: _loadAnimationAttackLeft,
+        loadUp: null,
+        loadDown: null,
+        loadRightUp: null,
+        loadRightDown: null,
+        loadLeftUp: null,
+        loadLeftDown: null,
+      );
+
   static final Future<SpriteAnimation>
-  loadAnimationShovelRight = SpriteAnimation.load(
+  _loadAnimationShovelRight = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_strip13.png',
     SpriteAnimationConfig.createStandardData(
       amount: 10,
@@ -94,7 +108,7 @@ final class SunnyPlayerConfig {
   );
 
   static final Future<SpriteAnimation>
-  loadAnimationShovelLeft = SpriteAnimation.load(
+  _loadAnimationShovelLeft = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_left_strip13.png',
     SpriteAnimationConfig.createStandardData(
       amount: 10,
@@ -102,8 +116,19 @@ final class SunnyPlayerConfig {
     ),
   );
 
+  static final _animationShovelFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationShovelRight,
+    loadLeft: _loadAnimationShovelLeft,
+    loadUp: null,
+    loadDown: null,
+    loadRightUp: null,
+    loadRightDown: null,
+    loadLeftUp: null,
+    loadLeftDown: null,
+  );
+
   static final Future<SpriteAnimation>
-  loadAnimationWateringCanRight = SpriteAnimation.load(
+  _loadAnimationWateringCanRight = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_watering_strip5.png',
     SpriteAnimationConfig.createStandardData(
       amount: 5,
@@ -112,7 +137,7 @@ final class SunnyPlayerConfig {
   );
 
   static final Future<SpriteAnimation>
-  loadAnimationWateringCanLeft = SpriteAnimation.load(
+  _loadAnimationWateringCanLeft = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_watering_left_strip5.png',
     SpriteAnimationConfig.createStandardData(
       amount: 5,
@@ -120,8 +145,19 @@ final class SunnyPlayerConfig {
     ),
   );
 
+  static final _animationWateringCanFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationWateringCanRight,
+    loadLeft: _loadAnimationWateringCanLeft,
+    loadUp: null,
+    loadDown: null,
+    loadRightUp: null,
+    loadRightDown: null,
+    loadLeftUp: null,
+    loadLeftDown: null,
+  );
+
   static final Future<SpriteAnimation>
-  loadAnimationPlaceSeedRight = SpriteAnimation.load(
+  _loadAnimationPlaceSeedRight = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_strip8.png',
     SpriteAnimationConfig.createStandardData(
       amount: 8,
@@ -130,7 +166,7 @@ final class SunnyPlayerConfig {
   );
 
   static final Future<SpriteAnimation>
-  loadAnimationPlaceSeedLeft = SpriteAnimation.load(
+  _loadAnimationPlaceSeedLeft = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_left_strip8.png',
     SpriteAnimationConfig.createStandardData(
       amount: 8,
@@ -138,8 +174,19 @@ final class SunnyPlayerConfig {
     ),
   );
 
+  static final _animationPlaceSeedFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationPlaceSeedRight,
+    loadLeft: _loadAnimationPlaceSeedLeft,
+    loadUp: null,
+    loadDown: null,
+    loadRightUp: null,
+    loadRightDown: null,
+    loadLeftUp: null,
+    loadLeftDown: null,
+  );
+
   static final Future<SpriteAnimation>
-  loadAnimationHarvestBasketRight = SpriteAnimation.load(
+  _loadAnimationHarvestBasketRight = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_strip8.png',
     SpriteAnimationConfig.createStandardData(
       amount: 8,
@@ -148,7 +195,7 @@ final class SunnyPlayerConfig {
   );
 
   static final Future<SpriteAnimation>
-  loadAnimationHarvestBasketLeft = SpriteAnimation.load(
+  _loadAnimationHarvestBasketLeft = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_left_strip8.png',
     SpriteAnimationConfig.createStandardData(
       amount: 8,
@@ -156,8 +203,35 @@ final class SunnyPlayerConfig {
     ),
   );
 
+  static final _animationHarvestBasketFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationHarvestBasketRight,
+    loadLeft: _loadAnimationHarvestBasketLeft,
+    loadUp: null,
+    loadDown: null,
+    loadRightUp: null,
+    loadRightDown: null,
+    loadLeftUp: null,
+    loadLeftDown: null,
+  );
+
+  static final config = DDFarmPlayerConfig(
+    hitbox: SunnyPlayerConfig._hitbox,
+    lighting: SunnyPlayerConfig._lighting,
+    getDeathMarker: (position) =>
+        SunnyPlayerConfig._createDeathMarker(position),
+    animationWalkDirectional: SunnyPlayerConfig._animationWalkDirectional,
+    animationRunDirectional: SunnyPlayerConfig._animationRunDirectional,
+    animationAttackDirectionalFactory:
+        SunnyPlayerConfig._animationAttackDirectionalFactory,
+    animationShovelFactory: SunnyPlayerConfig._animationShovelFactory,
+    animationWateringCanFactory: SunnyPlayerConfig._animationWateringCanFactory,
+    animationPlaceSeedFactory: SunnyPlayerConfig._animationPlaceSeedFactory,
+    animationHarvestBasketFactory:
+        SunnyPlayerConfig._animationHarvestBasketFactory,
+  );
+
   static final SimpleDirectionAnimation
-  animationWalkDirectional = SimpleDirectionAnimation(
+  _animationWalkDirectional = SimpleDirectionAnimation(
     idleLeft: _loadAnimationIdleLeft(),
     idleRight: UISpriteAnimationsConfig.loadAnimationSunnyPlayerIdleRight(),
     runLeft: SpriteAnimation.load(
@@ -177,7 +251,7 @@ final class SunnyPlayerConfig {
   );
 
   static final SimpleDirectionAnimation
-  animationRunDirectional = SimpleDirectionAnimation(
+  _animationRunDirectional = SimpleDirectionAnimation(
     idleLeft: _loadAnimationIdleLeft(),
     idleRight: UISpriteAnimationsConfig.loadAnimationSunnyPlayerIdleRight(),
     runLeft: SpriteAnimation.load(
@@ -196,7 +270,7 @@ final class SunnyPlayerConfig {
     ),
   );
 
-  static final LightingConfig lighting = LightingConfig(
+  static final LightingConfig _lighting = LightingConfig(
     radius: TileConstants.kTileDimensionLarge,
     blurBorder: TileConstants.kTileDimensionStandard,
     color: LightingConstants.playerLighting,
@@ -207,7 +281,7 @@ final class SunnyPlayerConfig {
   static Future<Sprite> loadCryptSprite() =>
       Sprite.load('gameplay/characters/player/player_crypt_1.png');
 
-  static DDDecoration createDeathMarker(Vector2 position) =>
+  static DDDecoration _createDeathMarker(Vector2 position) =>
       DDDecoration.withSprite(
         sprite: loadCryptSprite(),
         position: Vector2(position.x, position.y),
