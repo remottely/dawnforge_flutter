@@ -5,7 +5,7 @@ import 'package:darkness_dungeon/gameplay/farm/constants/farm_feedback_config.da
 import 'package:darkness_dungeon/gameplay/farm/services/farm_action_service.dart';
 import 'package:darkness_dungeon/gameplay/farm/services/farm_feedback_service.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 
 final class FarmToolActionConfig {
   static final FarmActionService _actionService = FarmActionService.instance;

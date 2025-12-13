@@ -2,8 +2,8 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_model.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_config.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_farm_player/dd_farm_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_config.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
 
 class CutePlayerView<

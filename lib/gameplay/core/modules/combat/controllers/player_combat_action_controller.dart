@@ -5,7 +5,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_
 import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/player_primary_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/offset_helper.dart';
-import 'package:darkness_dungeon/shared/framework/players/mixins/dd_base_player_extension.dart';
+import 'package:darkness_dungeon/shared/framework/player/mixins/dd_base_player_extension.dart';
 
 final class PlayerCombatActionController {
   PlayerCombatActionController._();
