@@ -63,7 +63,7 @@ final class CutePlayerConfig {
     left: 20.0,
     top: 22.0,
     right: 20.0,
-    bottom: 18.0,
+    bottom: 16.0,
   );
 
   static Future<SpriteAnimation> _loadAnimationIdleLeft() =>

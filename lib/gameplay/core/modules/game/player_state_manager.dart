@@ -1,6 +1,7 @@
 import 'dart:developer' as developer;
 
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_model.dart';
 
 /// Singleton que centraliza o estado persistente do player
 ///
@@ -19,15 +20,14 @@ class PlayerStateManager {
   // ============================================================================
   // Player Models (persistentes entre mapas)
   // ============================================================================
-
-  SunnyPlayerModel? _sunnyPlayerModel; // TODO(Kevin): remove this nullable
+  DDFarmPlayerModel? currentPlayerModel; // TODO(Kevin): remove this nullable
 
   /// Obter ou criar modelo do Sunny
-  SunnyPlayerModel getSunnyModel() {
-    // TODO(Kevin): change it to accept dynamic player configs
-    _sunnyPlayerModel ??=
-        SunnyPlayerModel(); // TODO(Kevin): remove this nullable
-    return _sunnyPlayerModel!;
+  DDFarmPlayerModel? getFarmModel() {
+    // // TODO(Kevin): change it to accept dynamic player configs
+    // currentPlayerModel ??=
+    //     initialPlayerModel; // TODO(Kevin): remove this nullable
+    return currentPlayerModel;
   }
 
   // ============================================================================
@@ -36,13 +36,13 @@ class PlayerStateManager {
 
   /// Serializar estado completo para JSON
   Map<String, dynamic> toJson() {
-    return {'sunnyModel': _sunnyPlayerModel?.toJson()};
+    return {'sunnyModel': currentPlayerModel?.toJson()};
   }
 
   /// Restaurar estado completo de JSON
   void fromJson(Map<String, dynamic> json) {
     if (json['sunnyModel'] != null) {
-      _sunnyPlayerModel = SunnyPlayerModel.fromJson(
+      currentPlayerModel = SunnyPlayerModel.fromJson(
         json['sunnyModel'] as Map<String, dynamic>,
       );
     }
@@ -52,7 +52,7 @@ class PlayerStateManager {
 
   /// Resetar todo o estado (novo jogo)
   void reset() {
-    _sunnyPlayerModel = null;
+    currentPlayerModel = null;
     developer.log('[PlayerStateManager] State reset');
   }
 
