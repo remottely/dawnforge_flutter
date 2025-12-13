@@ -12,3 +12,17 @@ class DDBasePlayerViewConfig {
     required this.getDeathMarker,
   });
 }
+
+class DDBasePlayerModelConfig {
+  final double maxStamina;
+  final int maxEnergy;
+  final int staminaRegenIncrement;
+  final double longVisionRadius;
+
+  const DDBasePlayerModelConfig({
+    required this.maxStamina,
+    required this.maxEnergy,
+    required this.staminaRegenIncrement,
+    required this.longVisionRadius,
+  });
+}

@@ -1,6 +1,9 @@
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_config.dart';
 
 abstract class DDBasePlayerModel {
+  final DDBasePlayerModelConfig modelConfig;
+
   double _currentStamina;
   int _currentEnergy;
   double? _currentLife;
@@ -9,25 +12,16 @@ abstract class DDBasePlayerModel {
   EquippedHandType? _equipment;
 
   DDBasePlayerModel({
-    required double maxStamina,
-    required int maxEnergy,
+    required this.modelConfig,
     double? initialStamina,
     int? initialEnergy,
     double? initialLife,
     bool? initialHasKey,
-  }) : _currentStamina = initialStamina ?? maxStamina,
-       _currentEnergy = initialEnergy ?? maxEnergy,
+  }) : _currentStamina = initialStamina ?? modelConfig.maxStamina,
+       _currentEnergy = initialEnergy ?? modelConfig.maxEnergy,
        _currentLife = initialLife,
        _hasKeyItem = initialHasKey ?? false,
        _isObservingEnemies = false;
-
-  double get maxStamina;
-
-  int get maxEnergy;
-
-  int get staminaRegenIncrement;
-
-  double get longVisionRadius;
 
   double get currentStamina => _currentStamina;
 
@@ -47,22 +41,23 @@ abstract class DDBasePlayerModel {
   void setEquipment(EquippedHandType value) => _equipment = value;
 
   void consumeStamina(int amount) {
-    _currentStamina = (_currentStamina - amount).clamp(0, maxStamina);
-  }
-
-  void regenerateStamina() {
-    _currentStamina = (_currentStamina + staminaRegenIncrement).clamp(
+    _currentStamina = (_currentStamina - amount).clamp(
       0,
-      maxStamina,
+      modelConfig.maxStamina,
     );
   }
 
+  void regenerateStamina() {
+    _currentStamina = (_currentStamina + modelConfig.staminaRegenIncrement)
+        .clamp(0, modelConfig.maxStamina);
+  }
+
   void consumeEnergy(int amount) {
-    _currentEnergy = (_currentEnergy - amount).clamp(0, maxEnergy);
+    _currentEnergy = (_currentEnergy - amount).clamp(0, modelConfig.maxEnergy);
   }
 
   void restoreEnergy() {
-    _currentEnergy = maxEnergy;
+    _currentEnergy = modelConfig.maxEnergy;
   }
 
   void updateLife(double value) {
@@ -86,8 +81,8 @@ abstract class DDBasePlayerModel {
 
   void fromJson(Map<String, dynamic> json) {
     _currentStamina =
-        (json['currentStamina'] as num?)?.toDouble() ?? maxStamina;
-    _currentEnergy = (json['currentEnergy'] as int?) ?? maxEnergy;
+        (json['currentStamina'] as num?)?.toDouble() ?? modelConfig.maxStamina;
+    _currentEnergy = (json['currentEnergy'] as int?) ?? modelConfig.maxEnergy;
     _currentLife = (json['currentLife'] as num?)?.toDouble();
     _hasKeyItem = (json['hasKeyItem'] as bool?) ?? false;
     _isObservingEnemies = (json['isObservingEnemies'] as bool?) ?? false;

@@ -9,25 +9,11 @@ class CutePlayerModel extends DDFarmPlayerModel {
     bool? initialHasKey,
   }) : super(
          modelConfig: CutePlayerConfig.modelConfig,
-         maxStamina: CutePlayerConfig.kMaxStamina,
-         maxEnergy: CutePlayerConfig.kMaxEnergy,
          initialStamina: initialStamina,
          initialEnergy: initialEnergy,
          initialLife: initialLife,
          initialHasKey: initialHasKey,
        );
-
-  @override
-  double get maxStamina => CutePlayerConfig.kMaxStamina;
-
-  @override
-  int get maxEnergy => CutePlayerConfig.kMaxEnergy;
-
-  @override
-  int get staminaRegenIncrement => CutePlayerConfig.kStaminaIncrement;
-
-  @override
-  double get longVisionRadius => CutePlayerConfig.kLongVisionRadius;
 
   @override
   Map<String, dynamic> toJson() {

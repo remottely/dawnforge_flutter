@@ -80,7 +80,7 @@ abstract class DDBasePlayerController<M extends DDBasePlayerModel> {
 
   void processEnemyDetection() {
     onDetectEnemyInLongVisionRadius(
-      longVisionRadius: model.longVisionRadius,
+      longVisionRadius: model.modelConfig.longVisionRadius,
       notObserved: () => model.isObservingEnemy = false,
       observed: (List<Enemy> detectedEnemies) {
         if (model.isObservingEnemy) return;

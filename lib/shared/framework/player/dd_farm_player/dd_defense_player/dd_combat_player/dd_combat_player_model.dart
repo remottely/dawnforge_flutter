@@ -7,8 +7,6 @@ abstract class DDCombatPlayerModel extends DDMobilePlayerModel {
 
   DDCombatPlayerModel({
     required this.modelConfig,
-    required super.maxStamina,
-    required super.maxEnergy,
     super.initialStamina,
     super.initialEnergy,
     super.initialLife,

@@ -6,13 +6,11 @@ abstract class DDMobilePlayerModel extends DDBasePlayerModel {
 
   DDMobilePlayerModel({
     required this.modelConfig,
-    required super.maxStamina,
-    required super.maxEnergy,
     super.initialStamina,
     super.initialEnergy,
     super.initialLife,
     super.initialHasKey,
-  });
+  }) : super(modelConfig: modelConfig);
 
   bool _isInRunningState = false;
 

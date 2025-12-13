@@ -14,8 +14,14 @@ class DDMobilePlayerViewConfig extends DDBasePlayerViewConfig {
   });
 }
 
-class DDMobilePlayerModelConfig {
+class DDMobilePlayerModelConfig extends DDBasePlayerModelConfig {
   final double runSpeedMultiplier;
 
-  const DDMobilePlayerModelConfig({required this.runSpeedMultiplier});
+  const DDMobilePlayerModelConfig({
+    required super.maxStamina,
+    required super.maxEnergy,
+    required super.staminaRegenIncrement,
+    required super.longVisionRadius,
+    required this.runSpeedMultiplier,
+  });
 }

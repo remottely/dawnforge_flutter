@@ -7,8 +7,6 @@ abstract class DDFarmPlayerModel extends DDCombatPlayerModel {
 
   DDFarmPlayerModel({
     required this.modelConfig,
-    required super.maxStamina,
-    required super.maxEnergy,
     super.initialStamina,
     super.initialEnergy,
     super.initialLife,

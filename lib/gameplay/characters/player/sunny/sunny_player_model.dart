@@ -9,25 +9,11 @@ class SunnyPlayerModel extends DDFarmPlayerModel {
     bool? initialHasKey,
   }) : super(
          modelConfig: SunnyPlayerConfig.modelConfig,
-         maxStamina: SunnyPlayerConfig.kMaxStamina,
-         maxEnergy: SunnyPlayerConfig.kMaxEnergy,
          initialStamina: initialStamina,
          initialEnergy: initialEnergy,
          initialLife: initialLife,
          initialHasKey: initialHasKey,
        );
-
-  @override
-  double get maxStamina => SunnyPlayerConfig.kMaxStamina;
-
-  @override
-  int get maxEnergy => SunnyPlayerConfig.kMaxEnergy;
-
-  @override
-  int get staminaRegenIncrement => SunnyPlayerConfig.kStaminaIncrement;
-
-  @override
-  double get longVisionRadius => SunnyPlayerConfig.kLongVisionRadius;
 
   @override
   Map<String, dynamic> toJson() {

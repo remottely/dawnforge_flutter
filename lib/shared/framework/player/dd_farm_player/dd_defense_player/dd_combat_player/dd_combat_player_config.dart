@@ -21,6 +21,10 @@ class DDCombatPlayerModelConfig extends DDMobilePlayerModelConfig {
   final double rangedAttackDamage;
 
   const DDCombatPlayerModelConfig({
+    required super.maxStamina,
+    required super.maxEnergy,
+    required super.staminaRegenIncrement,
+    required super.longVisionRadius,
     required super.runSpeedMultiplier,
     required this.primaryAttackStaminaCost,
     required this.rangedAttackStaminaCost,

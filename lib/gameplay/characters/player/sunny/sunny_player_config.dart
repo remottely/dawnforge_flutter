@@ -12,29 +12,26 @@ import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
 final class SunnyPlayerConfig {
   SunnyPlayerConfig._();
 
-  static const double kLongVisionRadius =
-      CharacterConstants.kVisionRadiusSuperLarge;
-
   static const double kLife = CharacterConstants.kLifeExtraLarge;
 
   static double kSpeed = CharacterConstants.kSpeedFast;
 
-  static const double kMaxStamina = 100.0;
-
-  static const int kStaminaIncrement = 1;
-
   static const Duration kStaminaRegenDebounce = Duration(milliseconds: 150);
-
-  static const int kMaxEnergy = 100;
 
   static const int kToolActionEnergyCost = 2;
 
+  static const double _kMaxStamina = 100.0;
+  static const int _kMaxEnergy = 100;
+  static const int _kStaminaIncrement = 1;
+  static const double _kLongVisionRadius =
+      CharacterConstants.kVisionRadiusSuperLarge;
+
   static const double _kRunSpeedMultiplier = 1.4;
 
-  static const double _kPrimaryAttackDamage = 25.0;
   static const int _kPrimaryAttackStaminaCost = 15;
-  static const double _kFireballAttackDamage = 10.0;
   static const int _kFireballAttackStaminaCost = 10;
+  static const double _kPrimaryAttackDamage = 25.0;
+  static const double _kFireballAttackDamage = 10.0;
 
   static const int _kShovelStaminaCost = 5;
   static const int _kWateringCanStaminaCost = 5;
@@ -42,6 +39,10 @@ final class SunnyPlayerConfig {
   static const int _kHarvestBasketStaminaCost = 5;
 
   static const modelConfig = DDFarmPlayerModelConfig(
+    maxStamina: _kMaxStamina,
+    maxEnergy: _kMaxEnergy,
+    staminaRegenIncrement: _kStaminaIncrement,
+    longVisionRadius: _kLongVisionRadius,
     runSpeedMultiplier: _kRunSpeedMultiplier,
     primaryAttackStaminaCost: _kPrimaryAttackStaminaCost,
     rangedAttackStaminaCost: _kFireballAttackStaminaCost,
