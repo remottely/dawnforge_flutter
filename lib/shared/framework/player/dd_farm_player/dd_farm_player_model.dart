@@ -13,7 +13,7 @@ abstract class DDFarmPlayerModel extends DDCombatPlayerModel {
     super.initialEnergy,
     super.initialLife,
     super.initialHasKey,
-  });
+  }) : super(modelConfig: modelConfig);
 
   bool get canExecuteWateringCan =>
       (currentStamina >= modelConfig.wateringCanStaminaCost) &&

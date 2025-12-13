@@ -13,3 +13,17 @@ class DDCombatPlayerViewConfig extends DDMobilePlayerViewConfig {
     required this.animationAttackDirectionalFactory,
   });
 }
+
+class DDCombatPlayerModelConfig {
+  final int primaryAttackStaminaCost;
+  final int rangedAttackStaminaCost;
+  final double primaryAttackDamage;
+  final double rangedAttackDamage;
+
+  const DDCombatPlayerModelConfig({
+    required this.primaryAttackStaminaCost,
+    required this.rangedAttackStaminaCost,
+    required this.primaryAttackDamage,
+    required this.rangedAttackDamage,
+  });
+}

@@ -30,20 +30,6 @@ class CutePlayerModel extends DDFarmPlayerModel {
   double get longVisionRadius => CutePlayerConfig.kLongVisionRadius;
 
   @override
-  int get primaryAttackStaminaCost =>
-      CutePlayerConfig.kPrimaryAttackStaminaCost;
-
-  @override
-  int get rangedAttackStaminaCost =>
-      CutePlayerConfig.kFireballAttackStaminaCost;
-
-  @override
-  double get primaryAttackDamage => CutePlayerConfig.kPrimaryAttackDamage;
-
-  @override
-  double get rangedAttackDamage => CutePlayerConfig.kFireballAttackDamage;
-
-  @override
   double get runSpeedMultiplier => CutePlayerConfig.kRunSpeedMultiplier;
 
   @override

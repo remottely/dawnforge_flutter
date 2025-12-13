@@ -21,13 +21,17 @@ class DDFarmPlayerViewConfig extends DDCombatPlayerViewConfig {
   });
 }
 
-class DDFarmPlayerModelConfig {
+class DDFarmPlayerModelConfig extends DDCombatPlayerModelConfig {
   final int wateringCanStaminaCost;
   final int shovelStaminaCost;
   final int seedStaminaCost;
   final int harvestBasketStaminaCost;
 
   const DDFarmPlayerModelConfig({
+    required super.primaryAttackStaminaCost,
+    required super.rangedAttackStaminaCost,
+    required super.primaryAttackDamage,
+    required super.rangedAttackDamage,
     required this.wateringCanStaminaCost,
     required this.shovelStaminaCost,
     required this.seedStaminaCost,

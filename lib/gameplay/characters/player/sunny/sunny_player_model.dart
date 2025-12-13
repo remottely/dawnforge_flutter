@@ -30,20 +30,6 @@ class SunnyPlayerModel extends DDFarmPlayerModel {
   double get longVisionRadius => SunnyPlayerConfig.kLongVisionRadius;
 
   @override
-  int get primaryAttackStaminaCost =>
-      SunnyPlayerConfig.kPrimaryAttackStaminaCost;
-
-  @override
-  int get rangedAttackStaminaCost =>
-      SunnyPlayerConfig.kFireballAttackStaminaCost;
-
-  @override
-  double get primaryAttackDamage => SunnyPlayerConfig.kPrimaryAttackDamage;
-
-  @override
-  double get rangedAttackDamage => SunnyPlayerConfig.kFireballAttackDamage;
-
-  @override
   double get runSpeedMultiplier => SunnyPlayerConfig.kRunSpeedMultiplier;
 
   @override

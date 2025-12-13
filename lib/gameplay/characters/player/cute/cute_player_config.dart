@@ -32,11 +32,8 @@ final class CutePlayerConfig {
   static const int kToolActionEnergyCost = 2;
 
   static const double kPrimaryAttackDamage = 25.0;
-
   static const int kPrimaryAttackStaminaCost = 15;
-
   static const double kFireballAttackDamage = 10.0;
-
   static const int kFireballAttackStaminaCost = 10;
 
   static const int _kShovelStaminaCost = 5;
@@ -45,6 +42,10 @@ final class CutePlayerConfig {
   static const int _kHarvestBasketStaminaCost = 5;
 
   static const modelConfig = DDFarmPlayerModelConfig(
+    primaryAttackStaminaCost: kPrimaryAttackStaminaCost,
+    rangedAttackStaminaCost: kFireballAttackStaminaCost,
+    primaryAttackDamage: kPrimaryAttackDamage,
+    rangedAttackDamage: kFireballAttackDamage,
     shovelStaminaCost: _kShovelStaminaCost,
     wateringCanStaminaCost: _kWateringCanStaminaCost,
     seedStaminaCost: _kSeedStaminaCost,

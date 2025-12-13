@@ -2,8 +2,8 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/joysctick_setup.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_controller.dart';
 
 abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
@@ -43,14 +43,14 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
     beginStaminaConsumingAction();
 
     final bool wasExecuted = onExecutePrimaryAttack.call(
-      model.primaryAttackDamage,
+      model.modelConfig.primaryAttackDamage,
     );
     if (!wasExecuted) {
       endStaminaConsumingAction();
       return;
     }
 
-    model.consumeStamina(model.primaryAttackStaminaCost);
+    model.consumeStamina(model.modelConfig.primaryAttackStaminaCost);
 
     endStaminaConsumingAction();
   }
@@ -61,14 +61,14 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
     beginStaminaConsumingAction();
 
     final bool wasExecuted = onExecuteRangedAttack.call(
-      model.rangedAttackDamage,
+      model.modelConfig.rangedAttackDamage,
     );
     if (!wasExecuted) {
       endStaminaConsumingAction();
       return;
     }
 
-    model.consumeStamina(model.rangedAttackStaminaCost);
+    model.consumeStamina(model.modelConfig.rangedAttackStaminaCost);
 
     endStaminaConsumingAction();
   }
