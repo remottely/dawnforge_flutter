@@ -1,13 +1,13 @@
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
 
-class DDFarmPlayerConfig extends DDCombatPlayerConfig {
+class DDFarmPlayerViewConfig extends DDCombatPlayerViewConfig {
   final DDAnimationDirectionalFactory animationShovelFactory;
   final DDAnimationDirectionalFactory animationWateringCanFactory;
   final DDAnimationDirectionalFactory animationPlaceSeedFactory;
   final DDAnimationDirectionalFactory animationHarvestBasketFactory;
 
-  DDFarmPlayerConfig({
+  DDFarmPlayerViewConfig({
     required super.hitbox,
     required super.lighting,
     required super.getDeathMarker,
@@ -18,5 +18,19 @@ class DDFarmPlayerConfig extends DDCombatPlayerConfig {
     required this.animationWateringCanFactory,
     required this.animationPlaceSeedFactory,
     required this.animationHarvestBasketFactory,
+  });
+}
+
+class DDFarmPlayerModelConfig {
+  final int wateringCanStaminaCost;
+  final int shovelStaminaCost;
+  final int seedStaminaCost;
+  final int harvestBasketStaminaCost;
+
+  DDFarmPlayerModelConfig({
+    required this.wateringCanStaminaCost,
+    required this.shovelStaminaCost,
+    required this.seedStaminaCost,
+    required this.harvestBasketStaminaCost,
   });
 }

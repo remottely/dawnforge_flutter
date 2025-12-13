@@ -11,7 +11,7 @@ class SunnyPlayerView<
     extends DDFarmPlayerView<C, M> {
   SunnyPlayerView({required super.position, required super.model})
     : super(
-        config: SunnyPlayerConfig.config,
+        viewConfig: SunnyPlayerConfig.viewConfig,
         size: SunnyPlayerConfig.componentSize,
         life: SunnyPlayerConfig.kLife,
         speed: SunnyPlayerConfig.kSpeed,

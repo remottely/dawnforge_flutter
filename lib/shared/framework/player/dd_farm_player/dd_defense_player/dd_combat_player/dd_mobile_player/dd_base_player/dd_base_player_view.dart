@@ -17,10 +17,10 @@ abstract class DDBasePlayerView<
     with Lighting, BlockMovementCollision {
   final M _model;
   @protected
-  final DDBasePlayerConfig config;
+  final DDBasePlayerViewConfig viewConfig;
 
   DDBasePlayerView({
-    required this.config,
+    required this.viewConfig,
     required super.position,
     required M model,
     required super.animation,
@@ -57,7 +57,7 @@ abstract class DDBasePlayerView<
       onDetectEnemyInLongVisionRadius: onDetectEnemyInLongVisionRadius,
     );
 
-    add(config.hitbox);
+    add(viewConfig.hitbox);
 
     _restoreLifeFromModel();
   }
@@ -110,7 +110,7 @@ abstract class DDBasePlayerView<
   }
 
   void configureVisualEffects() {
-    setupLighting(config.lighting);
+    setupLighting(viewConfig.lighting);
     setupMovementByJoystick(intensityEnabled: true);
   }
 
@@ -125,7 +125,7 @@ abstract class DDBasePlayerView<
   }
 
   void displayDeathVisualEffects() {
-    gameRef.add(config.getDeathMarker.call(position));
+    gameRef.add(viewConfig.getDeathMarker.call(position));
   }
 
   void onDisplayExclamationEmote() {

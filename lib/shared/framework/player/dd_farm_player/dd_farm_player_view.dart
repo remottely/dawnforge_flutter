@@ -17,16 +17,16 @@ abstract class DDFarmPlayerView<
 >
     extends DDDefensePlayerView<C, M> {
   @protected
-  final DDFarmPlayerConfig config;
+  final DDFarmPlayerViewConfig viewConfig;
 
   DDFarmPlayerView({
-    required this.config,
+    required this.viewConfig,
     required super.position,
     required super.model,
     required super.size,
     required super.life,
     required super.speed,
-  }) : super(config: config);
+  }) : super(viewConfig: viewConfig);
 
   late final DDAnimationDirectional animationShovelDirectional;
   late final DDAnimationDirectional animationWateringCanDirectional;
@@ -39,16 +39,16 @@ abstract class DDFarmPlayerView<
 
     final toolsLoaded = await Future.wait([
       DDCharacterActionSpriteAnimationHelper.loadAnimationDirectionalFromFactory(
-        config.animationShovelFactory,
+        viewConfig.animationShovelFactory,
       ),
       DDCharacterActionSpriteAnimationHelper.loadAnimationDirectionalFromFactory(
-        config.animationWateringCanFactory,
+        viewConfig.animationWateringCanFactory,
       ),
       DDCharacterActionSpriteAnimationHelper.loadAnimationDirectionalFromFactory(
-        config.animationPlaceSeedFactory,
+        viewConfig.animationPlaceSeedFactory,
       ),
       DDCharacterActionSpriteAnimationHelper.loadAnimationDirectionalFromFactory(
-        config.animationHarvestBasketFactory,
+        viewConfig.animationHarvestBasketFactory,
       ),
     ]);
 

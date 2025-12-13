@@ -2,8 +2,8 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/joysctick_setup.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_controller.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_model.dart';
 
 abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
@@ -87,7 +87,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
       return;
     }
 
-    model.consumeStamina(model.shovelStaminaCost);
+    model.consumeStamina(model.modelConfig.shovelStaminaCost);
 
     endStaminaConsumingAction();
   }
@@ -103,7 +103,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
       return;
     }
 
-    model.consumeStamina(model.wateringCanStaminaCost);
+    model.consumeStamina(model.modelConfig.wateringCanStaminaCost);
 
     endStaminaConsumingAction();
   }
@@ -119,7 +119,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
       return;
     }
 
-    model.consumeStamina(model.seedStaminaCost);
+    model.consumeStamina(model.modelConfig.seedStaminaCost);
 
     endStaminaConsumingAction();
   }
@@ -135,7 +135,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
       return;
     }
 
-    model.consumeStamina(model.harvestBasketStaminaCost);
+    model.consumeStamina(model.modelConfig.harvestBasketStaminaCost);
 
     endStaminaConsumingAction();
   }

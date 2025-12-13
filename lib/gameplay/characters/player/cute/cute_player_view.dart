@@ -11,7 +11,7 @@ class CutePlayerView<
     extends DDFarmPlayerView<C, M> {
   CutePlayerView({required super.position, required super.model})
     : super(
-        config: CutePlayerConfig.config,
+        viewConfig: CutePlayerConfig.viewConfig,
         size: CutePlayerConfig.componentSize,
         life: CutePlayerConfig.kLife,
         speed: CutePlayerConfig.kSpeed,

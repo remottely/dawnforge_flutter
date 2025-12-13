@@ -13,18 +13,18 @@ abstract class DDMobilePlayerView<
 >
     extends DDBasePlayerView<C, M> {
   @protected
-  final DDMobilePlayerConfig config;
+  final DDMobilePlayerViewConfig viewConfig;
   final double _baseSpeed;
 
   DDMobilePlayerView({
-    required this.config,
+    required this.viewConfig,
     required super.position,
     required super.model,
     required super.size,
     required super.life,
     required double speed,
   }) : _baseSpeed = speed,
-       super(config: config, speed: speed, animation: null);
+       super(viewConfig: viewConfig, speed: speed, animation: null);
 
   bool _isInRunningState = false;
 
@@ -40,7 +40,7 @@ abstract class DDMobilePlayerView<
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    replaceAnimation(config.animationWalkDirectional);
+    replaceAnimation(viewConfig.animationWalkDirectional);
   }
 
   @override
@@ -126,13 +126,13 @@ abstract class DDMobilePlayerView<
   void _transitionToRunAnimation() {
     if (isActionLocked) return;
 
-    replaceAnimation(config.animationRunDirectional, doIdle: isIdle);
+    replaceAnimation(viewConfig.animationRunDirectional, doIdle: isIdle);
   }
 
   void _transitionToWalkAnimation() {
     if (isActionLocked) return;
 
-    replaceAnimation(config.animationWalkDirectional, doIdle: isIdle);
+    replaceAnimation(viewConfig.animationWalkDirectional, doIdle: isIdle);
   }
 
   void lockAction() {
