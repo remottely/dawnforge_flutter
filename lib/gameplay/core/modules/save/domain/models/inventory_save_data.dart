@@ -1,3 +1,5 @@
+import 'package:equatable/equatable.dart';
+
 /// Domain model for inventory and equipment save data.
 ///
 /// Represents all items, equipment, and storage containers
@@ -147,7 +149,7 @@ final class InventorySaveData {
 }
 
 /// Represents a single inventory slot.
-final class InventorySlotData {
+final class InventorySlotData extends Equatable {
   final String? itemId;
   final int quantity;
   final Map<String, dynamic>? metadata;
@@ -192,19 +194,11 @@ final class InventorySlotData {
   String toString() => 'Slot(item: $itemId, qty: $quantity)';
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is InventorySlotData &&
-        other.itemId == itemId &&
-        other.quantity == quantity;
-  }
-
-  @override
-  int get hashCode => Object.hash(itemId, quantity);
+  List<Object?> get props => [itemId, quantity];
 }
 
 /// Represents an equipped item with stats.
-final class EquippedItemData {
+final class EquippedItemData extends Equatable {
   final String itemId;
   final String slot;
   final Map<String, dynamic>? stats;
@@ -253,13 +247,6 @@ final class EquippedItemData {
   String toString() => 'Equipped($itemId in $slot)';
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is EquippedItemData &&
-        other.itemId == itemId &&
-        other.slot == slot;
-  }
-
-  @override
-  int get hashCode => Object.hash(itemId, slot);
+  // TODO: implement props
+  List<Object?> get props => [itemId, slot];
 }

@@ -1,3 +1,5 @@
+import 'package:equatable/equatable.dart';
+
 /// Domain model for farm/agriculture save data.
 ///
 /// Represents all farming-related persistent state including
@@ -148,7 +150,7 @@ final class FarmSaveData {
 }
 
 /// Represents a single crop tile.
-final class CropTileData {
+final class CropTileData extends Equatable {
   final int tileX;
   final int tileY;
   final String cropId;
@@ -214,16 +216,7 @@ final class CropTileData {
       'CropTileData($cropId at [$tileX,$tileY], stage: $growthStage/$maxGrowthStages)';
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is CropTileData &&
-        other.tileX == tileX &&
-        other.tileY == tileY &&
-        other.cropId == cropId;
-  }
-
-  @override
-  int get hashCode => Object.hash(tileX, tileY, cropId);
+  List<Object?> get props => [tileX, tileY, cropId];
 }
 
 /// Represents a farm animal.
@@ -336,7 +329,7 @@ final class FarmBuildingData {
 }
 
 /// Represents a tile position.
-final class TilePositionData {
+final class TilePositionData extends Equatable {
   final int tileX;
   final int tileY;
 
@@ -354,16 +347,9 @@ final class TilePositionData {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is TilePositionData &&
-        other.tileX == tileX &&
-        other.tileY == tileY;
-  }
-
-  @override
-  int get hashCode => Object.hash(tileX, tileY);
-
-  @override
   String toString() => '[$tileX,$tileY]';
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [tileX, tileY];
 }

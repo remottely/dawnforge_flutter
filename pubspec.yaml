@@ -3,13 +3,14 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.63.6+1
+version: 1.63.7+1
 
 environment:
   sdk: ^3.9.2
   flutter: ^3.35.0
 
 dependencies:
+  equatable: ^2.0.7
   flutter:
     sdk: flutter
   flutter_localizations:
@@ -28,7 +29,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
-
   very_good_analysis: ^10.0.0
 
 flutter:

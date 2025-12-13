@@ -1,6 +1,8 @@
+import 'package:equatable/equatable.dart';
+
 import 'item.dart';
 
-final class InventorySlot {
+final class InventorySlot extends Equatable {
   final int index;
   final Item? item;
   final int quantity;
@@ -57,14 +59,5 @@ final class InventorySlot {
       'InventorySlot(index: $index, item: ${item?.id}, quantity: $quantity)';
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is InventorySlot &&
-          runtimeType == other.runtimeType &&
-          index == other.index &&
-          item == other.item &&
-          quantity == other.quantity;
-
-  @override
-  int get hashCode => Object.hash(index, item, quantity);
+  List<Object?> get props => [index, item, quantity];
 }

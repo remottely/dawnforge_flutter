@@ -1,3 +1,5 @@
+import 'package:equatable/equatable.dart';
+
 import 'item.dart';
 
 enum EquipmentSlotType {
@@ -15,7 +17,7 @@ enum EquipmentSlotType {
   static EquipmentSlotType fromJson(String json) => values.byName(json);
 }
 
-final class EquipmentSlot {
+final class EquipmentSlot extends Equatable {
   final EquipmentSlotType slotType;
 
   final Item? equippedItem;
@@ -54,13 +56,6 @@ final class EquipmentSlot {
       'EquipmentSlot(slotType: $slotType, equippedItem: ${equippedItem?.id})';
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is EquipmentSlot &&
-          runtimeType == other.runtimeType &&
-          slotType == other.slotType &&
-          equippedItem == other.equippedItem;
-
-  @override
-  int get hashCode => Object.hash(slotType, equippedItem);
+  // TODO: implement props
+  List<Object?> get props => [slotType, equippedItem];
 }

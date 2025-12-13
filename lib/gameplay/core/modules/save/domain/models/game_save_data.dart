@@ -2,6 +2,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/save/domain/models/farm_s
 import 'package:darkness_dungeon/gameplay/core/modules/save/domain/models/inventory_save_data.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/save/domain/models/player_save_data.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/save/domain/models/world_save_data.dart';
+import 'package:equatable/equatable.dart';
 
 /// Main save data model with strongly-typed domain models.
 ///
@@ -30,7 +31,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/save/domain/models/world_
 /// print('Player level: ${saveData.player.level}');
 /// print('Current day: ${saveData.world.currentDay}');
 /// ```
-final class GameSaveData {
+final class GameSaveData extends Equatable {
   /// Current version of the save data format.
   /// Increment when making breaking changes.
   static const int kCurrentVersion = 2;
@@ -285,19 +286,12 @@ Save Summary (v$version):
   }
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is GameSaveData &&
-        other.version == version &&
-        other.timestamp == timestamp &&
-        other.player == player &&
-        other.world == world &&
-        other.inventory == inventory &&
-        other.farm == farm;
-  }
-
-  @override
-  int get hashCode {
-    return Object.hash(version, timestamp, player, world, inventory, farm);
-  }
+  List<Object?> get props => [
+    version,
+    timestamp,
+    player,
+    world,
+    inventory,
+    farm,
+  ];
 }

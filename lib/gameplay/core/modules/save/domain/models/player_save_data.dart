@@ -1,3 +1,5 @@
+import 'package:equatable/equatable.dart';
+
 /// Domain model for player-specific save data.
 ///
 /// Strongly-typed model that represents all persistent player state
@@ -8,7 +10,7 @@
 /// - Type-safe with explicit fields
 /// - Easy to test and validate
 /// - Scalable for future features
-final class PlayerSaveData {
+final class PlayerSaveData extends Equatable {
   /// Player's current position in the world
   final double positionX;
   final double positionY;
@@ -238,55 +240,27 @@ final class PlayerSaveData {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is PlayerSaveData &&
-        other.positionX == positionX &&
-        other.positionY == positionY &&
-        other.currentMapId == currentMapId &&
-        other.direction == direction &&
-        other.health == health &&
-        other.maxHealth == maxHealth &&
-        other.stamina == stamina &&
-        other.maxStamina == maxStamina &&
-        other.energy == energy &&
-        other.maxEnergy == maxEnergy &&
-        other.level == level &&
-        other.experience == experience &&
-        other.experienceToNextLevel == experienceToNextLevel &&
-        other.farmingLevel == farmingLevel &&
-        other.miningLevel == miningLevel &&
-        other.foragingLevel == foragingLevel &&
-        other.fishingLevel == fishingLevel &&
-        other.combatLevel == combatLevel &&
-        other.money == money &&
-        other.playerType == playerType &&
-        other.playerName == playerName;
-  }
-
-  @override
-  int get hashCode {
-    return Object.hash(
-      positionX,
-      positionY,
-      currentMapId,
-      direction,
-      health,
-      maxHealth,
-      stamina,
-      maxStamina,
-      energy,
-      maxEnergy,
-      level,
-      experience,
-      experienceToNextLevel,
-      farmingLevel,
-      miningLevel,
-      foragingLevel,
-      fishingLevel,
-      combatLevel,
-      money,
-      Object.hash(playerType, playerName),
-    );
-  }
+  List<Object?> get props => [
+    positionX,
+    positionY,
+    currentMapId,
+    direction,
+    health,
+    maxHealth,
+    stamina,
+    maxStamina,
+    energy,
+    maxEnergy,
+    level,
+    experience,
+    experienceToNextLevel,
+    farmingLevel,
+    miningLevel,
+    foragingLevel,
+    fishingLevel,
+    combatLevel,
+    money,
+    playerType,
+    playerName,
+  ];
 }
