@@ -25,7 +25,7 @@ abstract class DDFarmPlayerView<
     required super.model,
     required super.size,
     required super.life,
-    required super.speed,
+    required super.baseSpeed,
   }) : super(viewConfig: viewConfig);
 
   late final DDAnimationDirectional animationShovelDirectional;

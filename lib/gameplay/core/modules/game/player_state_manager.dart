@@ -24,6 +24,7 @@ class PlayerStateManager {
 
   /// Obter ou criar modelo do Sunny
   SunnyPlayerModel getSunnyModel() {
+    // TODO(Kevin): change it to accept dynamic player configs
     _sunnyPlayerModel ??=
         SunnyPlayerModel(); // TODO(Kevin): remove this nullable
     return _sunnyPlayerModel!;

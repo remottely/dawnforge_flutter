@@ -26,8 +26,9 @@ abstract class DDBasePlayerView<
     required super.animation,
     required super.size,
     required super.life,
-    required super.speed,
-  }) : _model = model {
+    required double baseSpeed,
+  }) : _model = model,
+       super(speed: baseSpeed) {
     anchor = Anchor.center;
   }
 

@@ -14,7 +14,7 @@ class CutePlayerView<
         viewConfig: CutePlayerConfig.viewConfig,
         size: CutePlayerConfig.componentSize,
         life: CutePlayerConfig.kLife,
-        speed: CutePlayerConfig.kSpeed,
+        baseSpeed: CutePlayerConfig.kSpeed,
       );
 
   @override

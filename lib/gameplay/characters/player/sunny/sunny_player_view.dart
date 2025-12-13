@@ -14,7 +14,7 @@ class SunnyPlayerView<
         viewConfig: SunnyPlayerConfig.viewConfig,
         size: SunnyPlayerConfig.componentSize,
         life: SunnyPlayerConfig.kLife,
-        speed: SunnyPlayerConfig.kSpeed,
+        baseSpeed: SunnyPlayerConfig.kSpeed,
       );
 
   @override
