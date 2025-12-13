@@ -28,6 +28,7 @@ class DDFarmPlayerModelConfig extends DDCombatPlayerModelConfig {
   final int harvestBasketStaminaCost;
 
   const DDFarmPlayerModelConfig({
+    required super.runSpeedMultiplier,
     required super.primaryAttackStaminaCost,
     required super.rangedAttackStaminaCost,
     required super.primaryAttackDamage,

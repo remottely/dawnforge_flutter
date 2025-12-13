@@ -13,7 +13,7 @@ abstract class DDCombatPlayerModel extends DDMobilePlayerModel {
     super.initialEnergy,
     super.initialLife,
     super.initialHasKey,
-  });
+  }) : super(modelConfig: modelConfig);
 
   bool get canExecutePrimaryAttack =>
       (currentStamina >= modelConfig.primaryAttackStaminaCost) &&

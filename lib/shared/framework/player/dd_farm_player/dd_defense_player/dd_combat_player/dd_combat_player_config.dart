@@ -14,13 +14,14 @@ class DDCombatPlayerViewConfig extends DDMobilePlayerViewConfig {
   });
 }
 
-class DDCombatPlayerModelConfig {
+class DDCombatPlayerModelConfig extends DDMobilePlayerModelConfig {
   final int primaryAttackStaminaCost;
   final int rangedAttackStaminaCost;
   final double primaryAttackDamage;
   final double rangedAttackDamage;
 
   const DDCombatPlayerModelConfig({
+    required super.runSpeedMultiplier,
     required this.primaryAttackStaminaCost,
     required this.rangedAttackStaminaCost,
     required this.primaryAttackDamage,

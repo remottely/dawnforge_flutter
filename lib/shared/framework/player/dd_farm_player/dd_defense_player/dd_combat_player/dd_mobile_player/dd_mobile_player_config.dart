@@ -13,3 +13,9 @@ class DDMobilePlayerViewConfig extends DDBasePlayerViewConfig {
     required this.animationRunDirectional,
   });
 }
+
+class DDMobilePlayerModelConfig {
+  final double runSpeedMultiplier;
+
+  const DDMobilePlayerModelConfig({required this.runSpeedMultiplier});
+}

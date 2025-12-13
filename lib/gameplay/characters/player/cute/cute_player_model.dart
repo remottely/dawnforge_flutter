@@ -30,9 +30,6 @@ class CutePlayerModel extends DDFarmPlayerModel {
   double get longVisionRadius => CutePlayerConfig.kLongVisionRadius;
 
   @override
-  double get runSpeedMultiplier => CutePlayerConfig.kRunSpeedMultiplier;
-
-  @override
   Map<String, dynamic> toJson() {
     final json = super.toJson();
     json['playerType'] = 'cute';

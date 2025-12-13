@@ -93,7 +93,7 @@ abstract class DDMobilePlayerView<
     _isInRunningState = shouldRun;
 
     if (shouldRun) {
-      speed = _baseSpeed * controller.model.runSpeedMultiplier;
+      speed = _baseSpeed * controller.model.modelConfig.runSpeedMultiplier;
 
       if (isActionLocked) {
         _pendingAnimationChange = true;

@@ -30,9 +30,6 @@ class SunnyPlayerModel extends DDFarmPlayerModel {
   double get longVisionRadius => SunnyPlayerConfig.kLongVisionRadius;
 
   @override
-  double get runSpeedMultiplier => SunnyPlayerConfig.kRunSpeedMultiplier;
-
-  @override
   Map<String, dynamic> toJson() {
     final json = super.toJson();
     json['playerType'] = 'sunny';

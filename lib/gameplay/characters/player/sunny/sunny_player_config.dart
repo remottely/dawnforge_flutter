@@ -19,8 +19,6 @@ final class SunnyPlayerConfig {
 
   static double kSpeed = CharacterConstants.kSpeedFast;
 
-  static const double kRunSpeedMultiplier = 1.4;
-
   static const double kMaxStamina = 100.0;
 
   static const int kStaminaIncrement = 1;
@@ -31,10 +29,12 @@ final class SunnyPlayerConfig {
 
   static const int kToolActionEnergyCost = 2;
 
-  static const double kPrimaryAttackDamage = 25.0;
-  static const int kPrimaryAttackStaminaCost = 15;
-  static const double kFireballAttackDamage = 10.0;
-  static const int kFireballAttackStaminaCost = 10;
+  static const double _kRunSpeedMultiplier = 1.4;
+
+  static const double _kPrimaryAttackDamage = 25.0;
+  static const int _kPrimaryAttackStaminaCost = 15;
+  static const double _kFireballAttackDamage = 10.0;
+  static const int _kFireballAttackStaminaCost = 10;
 
   static const int _kShovelStaminaCost = 5;
   static const int _kWateringCanStaminaCost = 5;
@@ -42,10 +42,11 @@ final class SunnyPlayerConfig {
   static const int _kHarvestBasketStaminaCost = 5;
 
   static const modelConfig = DDFarmPlayerModelConfig(
-    primaryAttackStaminaCost: kPrimaryAttackStaminaCost,
-    rangedAttackStaminaCost: kFireballAttackStaminaCost,
-    primaryAttackDamage: kPrimaryAttackDamage,
-    rangedAttackDamage: kFireballAttackDamage,
+    runSpeedMultiplier: _kRunSpeedMultiplier,
+    primaryAttackStaminaCost: _kPrimaryAttackStaminaCost,
+    rangedAttackStaminaCost: _kFireballAttackStaminaCost,
+    primaryAttackDamage: _kPrimaryAttackDamage,
+    rangedAttackDamage: _kFireballAttackDamage,
     shovelStaminaCost: _kShovelStaminaCost,
     wateringCanStaminaCost: _kWateringCanStaminaCost,
     seedStaminaCost: _kSeedStaminaCost,
