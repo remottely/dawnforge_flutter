@@ -18,5 +18,5 @@ class CutePlayerController<M extends CutePlayerModel>
   });
 
   @override
-  Duration get staminaRegenDebounce => CutePlayerConfig.kStaminaRegenDebounce;
+  Duration get staminaRegenDebounce => CutePlayerConfig.kStaminaRegenDebounce; // TODO(Kevin): now
 }

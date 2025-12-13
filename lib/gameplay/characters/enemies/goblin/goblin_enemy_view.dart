@@ -18,12 +18,12 @@ class GoblinEnemyView
   GoblinEnemyModel createModel() => GoblinEnemyModel();
 
   @override
-  GoblinEnemyController createController(GoblinEnemyModel model) {
-    return GoblinEnemyController(
-      model: model,
-      onDetectPlayerAndMoveToMeleeAttack: onDetectPlayerAndMoveToPrimaryAttack,
-    );
-  }
+  GoblinEnemyController createController(GoblinEnemyModel model) =>
+      GoblinEnemyController(
+        model: model,
+        onDetectPlayerAndMoveToMeleeAttack:
+            onDetectPlayerAndMoveToPrimaryAttack,
+      );
 
   @override
   RectangleHitbox getHitbox() => GoblinEnemyConfig.createHitbox();

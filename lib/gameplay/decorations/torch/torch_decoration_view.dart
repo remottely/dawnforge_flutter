@@ -68,9 +68,6 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
   }
 
   @override
-  void onMount() {}
-
-  @override
   Future<void> onLoad() {
     setupLighting(TorchDecorationConfig.lighting);
     _interactionPromptTextPaint = TorchDecorationConfig.createTextConfig(width);

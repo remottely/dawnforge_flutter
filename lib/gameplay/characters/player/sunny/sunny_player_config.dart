@@ -214,22 +214,6 @@ final class SunnyPlayerConfig {
     loadLeftDown: null,
   );
 
-  static final config = DDFarmPlayerConfig(
-    hitbox: SunnyPlayerConfig._hitbox,
-    lighting: SunnyPlayerConfig._lighting,
-    getDeathMarker: (position) =>
-        SunnyPlayerConfig._createDeathMarker(position),
-    animationWalkDirectional: SunnyPlayerConfig._animationWalkDirectional,
-    animationRunDirectional: SunnyPlayerConfig._animationRunDirectional,
-    animationAttackDirectionalFactory:
-        SunnyPlayerConfig._animationAttackDirectionalFactory,
-    animationShovelFactory: SunnyPlayerConfig._animationShovelFactory,
-    animationWateringCanFactory: SunnyPlayerConfig._animationWateringCanFactory,
-    animationPlaceSeedFactory: SunnyPlayerConfig._animationPlaceSeedFactory,
-    animationHarvestBasketFactory:
-        SunnyPlayerConfig._animationHarvestBasketFactory,
-  );
-
   static final SimpleDirectionAnimation
   _animationWalkDirectional = SimpleDirectionAnimation(
     idleLeft: _loadAnimationIdleLeft(),
@@ -276,15 +260,31 @@ final class SunnyPlayerConfig {
     color: LightingConstants.playerLighting,
   );
 
-  static final Vector2 cryptComponentSize = TileConstants.tileSizeStandard;
+  static final Vector2 _cryptComponentSize = TileConstants.tileSizeStandard;
 
-  static Future<Sprite> loadCryptSprite() =>
+  static Future<Sprite> _loadCryptSprite() =>
       Sprite.load('gameplay/characters/player/player_crypt_1.png');
 
   static DDDecoration _createDeathMarker(Vector2 position) =>
       DDDecoration.withSprite(
-        sprite: loadCryptSprite(),
+        sprite: _loadCryptSprite(),
         position: Vector2(position.x, position.y),
-        size: cryptComponentSize,
+        size: _cryptComponentSize,
       );
+
+  static final config = DDFarmPlayerConfig(
+    hitbox: SunnyPlayerConfig._hitbox,
+    lighting: SunnyPlayerConfig._lighting,
+    getDeathMarker: (position) =>
+        SunnyPlayerConfig._createDeathMarker(position),
+    animationWalkDirectional: SunnyPlayerConfig._animationWalkDirectional,
+    animationRunDirectional: SunnyPlayerConfig._animationRunDirectional,
+    animationAttackDirectionalFactory:
+        SunnyPlayerConfig._animationAttackDirectionalFactory,
+    animationShovelFactory: SunnyPlayerConfig._animationShovelFactory,
+    animationWateringCanFactory: SunnyPlayerConfig._animationWateringCanFactory,
+    animationPlaceSeedFactory: SunnyPlayerConfig._animationPlaceSeedFactory,
+    animationHarvestBasketFactory:
+        SunnyPlayerConfig._animationHarvestBasketFactory,
+  );
 }

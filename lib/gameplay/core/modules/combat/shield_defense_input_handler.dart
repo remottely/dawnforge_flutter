@@ -50,7 +50,7 @@ class ShieldDefenseInputHandler extends GameComponent
       }
 
       // Verificar se stamina acabou
-      if (player.controller.model.stamina <= 0) {
+      if (player.controller.model.currentStamina <= 0) {
         // Sem stamina, parar defesa automaticamente
         developer.log(
           '[ShieldDefenseInput] ✗ Stamina esgotada, parando defesa',
@@ -75,7 +75,7 @@ class ShieldDefenseInputHandler extends GameComponent
         event.logicalKey == KeyboardSetup.kSecondaryActionKey) {
       if (!_isDefending) {
         // Verificar se tem stamina antes de ativar
-        if (player.controller.model.stamina <= 0) {
+        if (player.controller.model.currentStamina <= 0) {
           developer.log('[ShieldDefenseInput] ✗ Sem stamina para defender');
           return false;
         }

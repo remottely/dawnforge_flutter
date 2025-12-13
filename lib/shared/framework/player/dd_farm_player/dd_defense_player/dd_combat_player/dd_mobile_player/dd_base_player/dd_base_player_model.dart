@@ -29,7 +29,7 @@ abstract class DDBasePlayerModel {
 
   double get longVisionRadius;
 
-  double get stamina => _currentStamina;
+  double get currentStamina => _currentStamina;
 
   int get energy => _currentEnergy;
 
@@ -48,21 +48,22 @@ abstract class DDBasePlayerModel {
 
   int get shovelStaminaCost;
   bool get canExecuteShovel =>
-      (stamina >= shovelStaminaCost) && (_equipment == EquippedHandType.shovel);
+      (_currentStamina >= shovelStaminaCost) &&
+      (_equipment == EquippedHandType.shovel);
 
   int get wateringCanStaminaCost;
   bool get canExecuteWateringCan =>
-      (stamina >= wateringCanStaminaCost) &&
+      (_currentStamina >= wateringCanStaminaCost) &&
       (_equipment == EquippedHandType.wateringCan);
 
   int get seedStaminaCost;
   bool get canExecuteSeed =>
-      (stamina >= seedStaminaCost) &&
+      (_currentStamina >= seedStaminaCost) &&
       (_equipment == EquippedHandType.strawberry);
 
   int get harvestBasketStaminaCost;
   bool get canExecuteHarvestBasket =>
-      (stamina >= harvestBasketStaminaCost) &&
+      (_currentStamina >= harvestBasketStaminaCost) &&
       (_equipment == EquippedHandType.harvestBasket);
 
   void consumeStamina(int amount) {

@@ -30,16 +30,16 @@ class BossEnemyView
   BossEnemyModel createModel() => BossEnemyModel();
 
   @override
-  BossEnemyController createController(BossEnemyModel model) {
-    return BossEnemyController(
-      model: model,
-      onDetectPlayerAndMoveToMeleeAttack: onDetectPlayerAndMoveToPrimaryAttack,
-      onPlayerFirstDetection: _onPlayerFirstDetection,
-      onRequestSpawnMinion: _onRequestSpawnMinion,
-      onRenderStatusBars: _onRenderStatusBars,
-      onDetectPlayerInCloseVisionRadius: _onDetectPlayerInCloseVisionRadius,
-    );
-  }
+  BossEnemyController createController(BossEnemyModel model) =>
+      BossEnemyController(
+        model: model,
+        onDetectPlayerAndMoveToMeleeAttack:
+            onDetectPlayerAndMoveToPrimaryAttack,
+        onPlayerFirstDetection: _onPlayerFirstDetection,
+        onRequestSpawnMinion: _onRequestSpawnMinion,
+        onRenderStatusBars: _onRenderStatusBars,
+        onDetectPlayerInCloseVisionRadius: _onDetectPlayerInCloseVisionRadius,
+      );
 
   @override
   RectangleHitbox getHitbox() => BossEnemyConfig.createHitbox();

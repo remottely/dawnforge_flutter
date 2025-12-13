@@ -18,5 +18,5 @@ class SunnyPlayerController<M extends SunnyPlayerModel>
   });
 
   @override
-  Duration get staminaRegenDebounce => SunnyPlayerConfig.kStaminaRegenDebounce;
+  Duration get staminaRegenDebounce => SunnyPlayerConfig.kStaminaRegenDebounce; // TODO(Kevin): now
 }

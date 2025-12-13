@@ -17,12 +17,12 @@ class ImpEnemyView extends DDBaseEnemyView<ImpEnemyController, ImpEnemyModel> {
   ImpEnemyModel createModel() => ImpEnemyModel();
 
   @override
-  ImpEnemyController createController(ImpEnemyModel model) {
-    return ImpEnemyController(
-      model: model,
-      onDetectPlayerAndMoveToMeleeAttack: onDetectPlayerAndMoveToPrimaryAttack,
-    );
-  }
+  ImpEnemyController createController(ImpEnemyModel model) =>
+      ImpEnemyController(
+        model: model,
+        onDetectPlayerAndMoveToMeleeAttack:
+            onDetectPlayerAndMoveToPrimaryAttack,
+      );
 
   @override
   RectangleHitbox getHitbox() => ImpEnemyConfig.createHitbox();

@@ -104,16 +104,6 @@ abstract class DDFarmPlayerView<
     required bool Function() onExecuteHarvestBasket,
   });
 
-  @override
-  void onJoystickChangeDirectional(JoystickDirectionalEvent event) {
-    super.onJoystickChangeDirectional(event);
-  }
-
-  @override
-  void update(double dt) {
-    super.update(dt);
-  }
-
   bool _onExecuteShovel() {
     final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
       AttackType.melee,

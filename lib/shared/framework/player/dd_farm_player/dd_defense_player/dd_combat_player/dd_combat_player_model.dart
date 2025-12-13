@@ -20,11 +20,11 @@ abstract class DDCombatPlayerModel extends DDMobilePlayerModel {
   double get rangedAttackDamage;
 
   bool get canExecutePrimaryAttack =>
-      (stamina >= primaryAttackStaminaCost) &&
+      (currentStamina >= primaryAttackStaminaCost) &&
       (equipment == EquippedHandType.ironSword);
 
   bool get canExecuteRangedAttack =>
-      (stamina >= rangedAttackStaminaCost) &&
+      (currentStamina >= rangedAttackStaminaCost) &&
       (equipment == EquippedHandType.staff);
 
   @override

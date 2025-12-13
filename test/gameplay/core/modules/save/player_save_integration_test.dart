@@ -46,7 +46,7 @@ void main() {
         // Assert - Verify player was restored correctly
         expect(loadedPlayer, isNotNull);
         expect(loadedPlayer, isA<SunnyPlayerModel>());
-        expect(loadedPlayer!.stamina, equals(50.0));
+        expect(loadedPlayer!.currentStamina, equals(50.0));
         expect(loadedPlayer.energy, equals(5));
         expect(loadedPlayer.hasKey, isTrue);
       });
@@ -70,7 +70,7 @@ void main() {
         expect(loadedPlayer, isNotNull);
         expect(loadedPlayer, isA<SunnyPlayerModel>());
         final loadedSunny = loadedPlayer as SunnyPlayerModel;
-        expect(loadedSunny.stamina, equals(75.0));
+        expect(loadedSunny.currentStamina, equals(75.0));
         expect(loadedSunny.energy, equals(8));
         expect(loadedSunny.hasKey, isFalse);
         expect(loadedSunny.isRunning, isTrue);
@@ -204,7 +204,7 @@ void main() {
 
         // Assert - Should have second player's state
         expect(loadedPlayer, isNotNull);
-        expect(loadedPlayer!.stamina, equals(25.0));
+        expect(loadedPlayer!.currentStamina, equals(25.0));
         expect(loadedPlayer.energy, equals(3));
         expect(loadedPlayer.hasKey, isTrue);
       });
@@ -239,7 +239,7 @@ void main() {
         // Assert
         expect(convertedPlayer, isNotNull);
         expect(convertedPlayer, isA<SunnyPlayerModel>());
-        expect(convertedPlayer!.stamina, equals(60.0));
+        expect(convertedPlayer!.currentStamina, equals(60.0));
         expect(convertedPlayer.energy, equals(4));
       });
 
@@ -357,7 +357,7 @@ void main() {
 
         // Assert - Everything restored
         expect(loadedPlayer, isNotNull);
-        expect(loadedPlayer!.stamina, equals(45.0));
+        expect(loadedPlayer!.currentStamina, equals(45.0));
         expect(loadedPlayer.energy, equals(6));
         expect(loadedPlayer.hasKey, isTrue);
 

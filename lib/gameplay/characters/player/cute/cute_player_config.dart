@@ -315,21 +315,6 @@ final class CutePlayerConfig {
     loadLeftDown: null,
   );
 
-  static final config = DDFarmPlayerConfig(
-    hitbox: CutePlayerConfig._hitbox,
-    lighting: CutePlayerConfig._lighting,
-    getDeathMarker: (position) => CutePlayerConfig._createDeathMarker(position),
-    animationWalkDirectional: CutePlayerConfig._animationWalkDirectional,
-    animationRunDirectional: CutePlayerConfig._animationRunDirectional,
-    animationAttackDirectionalFactory:
-        CutePlayerConfig._animationAttackDirectionalFactory,
-    animationShovelFactory: CutePlayerConfig._animationShovelFactory,
-    animationWateringCanFactory: CutePlayerConfig._animationWateringCanFactory,
-    animationPlaceSeedFactory: CutePlayerConfig._animationPlaceSeedFactory,
-    animationHarvestBasketFactory:
-        CutePlayerConfig._animationHarvestBasketFactory,
-  );
-
   static final SimpleDirectionAnimation _animationWalkDirectional =
       SimpleDirectionAnimation(
         idleLeft: _loadAnimationIdleLeft(),
@@ -409,18 +394,33 @@ final class CutePlayerConfig {
     color: LightingConstants.playerLighting,
   );
 
-  static final Vector2 cryptComponentSize = TileConstants.tileSizeStandard;
+  static final Vector2 _cryptComponentSize = TileConstants.tileSizeStandard;
 
-  static Future<Sprite> loadSpriteCrypt() => Sprite.load(
+  static Future<Sprite> _loadSpriteCrypt() => Sprite.load(
     'gameplay/characters/player/player_crypt_1.png',
   ); // TODO(Kevin): add cute death animation playonce // - new/Player/death/
 
   static DDDecoration _createDeathMarker(Vector2 position) =>
       DDDecoration.withSprite(
-        sprite: loadSpriteCrypt(),
+        sprite: _loadSpriteCrypt(),
         position: Vector2(position.x, position.y),
-        size: cryptComponentSize,
+        size: _cryptComponentSize,
       );
+
+  static final config = DDFarmPlayerConfig(
+    hitbox: CutePlayerConfig._hitbox,
+    lighting: CutePlayerConfig._lighting,
+    getDeathMarker: (position) => CutePlayerConfig._createDeathMarker(position),
+    animationWalkDirectional: CutePlayerConfig._animationWalkDirectional,
+    animationRunDirectional: CutePlayerConfig._animationRunDirectional,
+    animationAttackDirectionalFactory:
+        CutePlayerConfig._animationAttackDirectionalFactory,
+    animationShovelFactory: CutePlayerConfig._animationShovelFactory,
+    animationWateringCanFactory: CutePlayerConfig._animationWateringCanFactory,
+    animationPlaceSeedFactory: CutePlayerConfig._animationPlaceSeedFactory,
+    animationHarvestBasketFactory:
+        CutePlayerConfig._animationHarvestBasketFactory,
+  );
 }
 
 // - new/Player/axe/

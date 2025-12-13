@@ -26,11 +26,6 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
   }
 
   @override
-  void update(double dt) {
-    super.update(dt);
-  }
-
-  @override
   bool onKeyboard(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     if (event is KeyDownEvent) {
       if (event.logicalKey == KeyboardSetup.kToggleInventoryKey) {
