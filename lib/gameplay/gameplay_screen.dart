@@ -25,7 +25,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
   Widget build(BuildContext gameplayContext) {
     return MapNavigator(
       maps: MapManager.allMaps,
-      initialMap: MapConfig.kFarmTestId,
+      initialMap: MapConfig.kCombatTestId,
       builder: (context, arguments, mapItem) {
         final mapLightingColor = ColorHelper.fromHex(
           mapItem.properties[MapConfig.kLightingColorPropertyKey]?.toString(),
@@ -66,7 +66,6 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
             map: mapItem.map,
             components: [
               gameplayGameStateManager,
-
               inventoryInputHandler,
               shieldDefenseInputHandler,
               farmInputHandler,

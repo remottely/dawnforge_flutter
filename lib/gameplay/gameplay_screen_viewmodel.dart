@@ -16,9 +16,12 @@ import 'package:darkness_dungeon/gameplay/core/modules/save/game_save_controller
 import 'package:darkness_dungeon/gameplay/farm/handlers/farm_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen_config.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_view.dart';
 import 'package:flutter/material.dart';
 
 abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
+  final playerStateManager = PlayerStateManager.instance;
+
   final gameplayHUD = GameplayHUDView();
 
   late final CameraConfig cameraConfig;
@@ -28,9 +31,6 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   final shieldDefenseInputHandler = ShieldDefenseInputHandler();
   late PlayerController playerInput;
   late FarmInputHandler farmInputHandler;
-
-  SunnyPlayerView? _lastSunnyPlayer;
-  CutePlayerView? _lastCutePlayer;
 
   @override
   void initState() {
@@ -56,9 +56,8 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   }
 
   void _resetPlayerLifeOnNewGame() {
-    final stateManager = PlayerStateManager.instance;
-    final farmModel = stateManager
-        .getFarmModel(); // TODO(Kevin): change it to DDFarmPlayerModel
+    final farmModel = playerStateManager
+        .lastFarmPlayerModel; // TODO(Kevin): change it to DDFarmPlayerModel
 
     if (farmModel != null &&
         farmModel.life != null &&
@@ -78,55 +77,47 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
     cameraConfig = GameplayScreenConfig.createCameraConfig(context);
   }
 
-  SunnyPlayerView buildSunnyPlayer(Vector2 position) {
-    PlayerStateManager.instance.currentPlayerModel ??= SunnyPlayerModel();
-
-    final playerModel = PlayerStateManager.instance.getFarmModel();
-
-    if (_lastSunnyPlayer != null && !_lastSunnyPlayer!.isDead) {
-      final currentLife = _lastSunnyPlayer!.life;
-      playerModel?.updateLife(currentLife);
-      developer.log(
-        '[ViewModel] Captured Sunny life before rebuild: $currentLife',
-      );
+  DDFarmPlayerView buildSunnyPlayer(Vector2 position) {
+    if (playerStateManager.lastFarmPlayerModel is! SunnyPlayerModel) {
+      playerStateManager.lastFarmPlayerModel = SunnyPlayerModel();
     }
 
-    final player = SunnyPlayerView<SunnyPlayerController, SunnyPlayerModel>(
+    DDFarmPlayerView? lastPlayer = playerStateManager.lastFarmPlayerView;
+
+    final playerModel = playerStateManager.lastFarmPlayerModel;
+
+    if (lastPlayer != null && !lastPlayer.isDead) {
+      final currentLife = lastPlayer.life;
+      playerModel?.updateLife(currentLife);
+    }
+
+    lastPlayer = SunnyPlayerView<SunnyPlayerController, SunnyPlayerModel>(
       position: position,
       model: playerModel as SunnyPlayerModel? ?? SunnyPlayerModel(),
     );
 
-    developer.log(
-      '[ViewModel] Created Sunny with model life: ${playerModel?.life ?? 'null'}',
-    );
-
-    _lastSunnyPlayer = player;
-    return player;
+    return lastPlayer;
   }
 
-  CutePlayerView buildCutePlayer(Vector2 position) {
-    PlayerStateManager.instance.currentPlayerModel ??= CutePlayerModel();
-
-    final playerModel = PlayerStateManager.instance.getFarmModel();
-
-    if (_lastCutePlayer != null && !_lastCutePlayer!.isDead) {
-      final currentLife = _lastCutePlayer!.life;
-      playerModel?.updateLife(currentLife);
-      developer.log(
-        '[ViewModel] Captured Cute life before rebuild: $currentLife',
-      );
+  DDFarmPlayerView buildCutePlayer(Vector2 position) {
+    if (playerStateManager.lastFarmPlayerModel is! CutePlayerModel) {
+      playerStateManager.lastFarmPlayerModel = CutePlayerModel();
     }
 
-    final player = CutePlayerView<CutePlayerController, CutePlayerModel>(
+    DDFarmPlayerView? lastPlayer = playerStateManager.lastFarmPlayerView;
+
+    final playerModel = playerStateManager.lastFarmPlayerModel;
+
+    if (lastPlayer != null && !lastPlayer.isDead) {
+      final currentLife = lastPlayer.life;
+      playerModel?.updateLife(currentLife);
+    }
+
+    lastPlayer = CutePlayerView<CutePlayerController, CutePlayerModel>(
       position: position,
       model: playerModel as CutePlayerModel? ?? CutePlayerModel(),
     );
 
-    developer.log(
-      '[ViewModel] Created Cute with model life: ${playerModel?.life ?? 'null'}',
-    );
-
-    _lastCutePlayer = player;
-    return player;
+    return lastPlayer;
   }
 }
