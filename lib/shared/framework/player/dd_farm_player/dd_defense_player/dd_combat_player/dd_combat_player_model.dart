@@ -12,11 +12,8 @@ abstract class DDCombatPlayerModel extends DDMobilePlayerModel {
   });
 
   int get primaryAttackStaminaCost;
-
   int get rangedAttackStaminaCost;
-
   double get primaryAttackDamage;
-
   double get rangedAttackDamage;
 
   bool get canExecutePrimaryAttack =>

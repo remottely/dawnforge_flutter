@@ -8,6 +8,7 @@ class SunnyPlayerModel extends DDFarmPlayerModel {
     double? initialLife,
     bool? initialHasKey,
   }) : super(
+         modelConfig: SunnyPlayerConfig.modelConfig,
          maxStamina: SunnyPlayerConfig.kMaxStamina,
          maxEnergy: SunnyPlayerConfig.kMaxEnergy,
          initialStamina: initialStamina,
@@ -35,19 +36,6 @@ class SunnyPlayerModel extends DDFarmPlayerModel {
   @override
   int get rangedAttackStaminaCost =>
       SunnyPlayerConfig.kFireballAttackStaminaCost;
-
-  @override
-  int get shovelStaminaCost => SunnyPlayerConfig.kShovelStaminaCost;
-
-  @override
-  int get wateringCanStaminaCost => SunnyPlayerConfig.kWateringCanStaminaCost;
-
-  @override
-  int get seedStaminaCost => SunnyPlayerConfig.kSeedStaminaCost;
-
-  @override
-  int get harvestBasketStaminaCost =>
-      SunnyPlayerConfig.kHarvestBasketStaminaCost;
 
   @override
   double get primaryAttackDamage => SunnyPlayerConfig.kPrimaryAttackDamage;

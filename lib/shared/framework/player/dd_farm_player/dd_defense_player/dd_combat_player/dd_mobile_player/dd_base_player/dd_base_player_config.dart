@@ -6,7 +6,7 @@ class DDBasePlayerViewConfig {
   final LightingConfig lighting;
   final DDDecoration Function(Vector2 position) getDeathMarker;
 
-  DDBasePlayerViewConfig({
+  const DDBasePlayerViewConfig({
     required this.hitbox,
     required this.lighting,
     required this.getDeathMarker,

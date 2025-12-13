@@ -8,6 +8,7 @@ class CutePlayerModel extends DDFarmPlayerModel {
     double? initialLife,
     bool? initialHasKey,
   }) : super(
+         modelConfig: CutePlayerConfig.modelConfig,
          maxStamina: CutePlayerConfig.kMaxStamina,
          maxEnergy: CutePlayerConfig.kMaxEnergy,
          initialStamina: initialStamina,
@@ -35,19 +36,6 @@ class CutePlayerModel extends DDFarmPlayerModel {
   @override
   int get rangedAttackStaminaCost =>
       CutePlayerConfig.kFireballAttackStaminaCost;
-
-  @override
-  int get shovelStaminaCost => CutePlayerConfig.kShovelStaminaCost;
-
-  @override
-  int get wateringCanStaminaCost => CutePlayerConfig.kWateringCanStaminaCost;
-
-  @override
-  int get seedStaminaCost => CutePlayerConfig.kSeedStaminaCost;
-
-  @override
-  int get harvestBasketStaminaCost =>
-      CutePlayerConfig.kHarvestBasketStaminaCost;
 
   @override
   double get primaryAttackDamage => CutePlayerConfig.kPrimaryAttackDamage;

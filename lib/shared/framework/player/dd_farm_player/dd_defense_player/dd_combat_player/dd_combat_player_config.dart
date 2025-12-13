@@ -4,7 +4,7 @@ import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional
 class DDCombatPlayerViewConfig extends DDMobilePlayerViewConfig {
   final DDAnimationDirectionalFactory animationAttackDirectionalFactory;
 
-  DDCombatPlayerViewConfig({
+  const DDCombatPlayerViewConfig({
     required super.hitbox,
     required super.lighting,
     required super.getDeathMarker,

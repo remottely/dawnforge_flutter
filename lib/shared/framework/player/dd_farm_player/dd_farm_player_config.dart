@@ -7,7 +7,7 @@ class DDFarmPlayerViewConfig extends DDCombatPlayerViewConfig {
   final DDAnimationDirectionalFactory animationPlaceSeedFactory;
   final DDAnimationDirectionalFactory animationHarvestBasketFactory;
 
-  DDFarmPlayerViewConfig({
+  const DDFarmPlayerViewConfig({
     required super.hitbox,
     required super.lighting,
     required super.getDeathMarker,
@@ -27,7 +27,7 @@ class DDFarmPlayerModelConfig {
   final int seedStaminaCost;
   final int harvestBasketStaminaCost;
 
-  DDFarmPlayerModelConfig({
+  const DDFarmPlayerModelConfig({
     required this.wateringCanStaminaCost,
     required this.shovelStaminaCost,
     required this.seedStaminaCost,

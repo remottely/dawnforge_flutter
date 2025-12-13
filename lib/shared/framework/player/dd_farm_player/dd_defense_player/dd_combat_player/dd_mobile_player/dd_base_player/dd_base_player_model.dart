@@ -46,26 +46,6 @@ abstract class DDBasePlayerModel {
   EquippedHandType? get equipment => _equipment;
   void setEquipment(EquippedHandType value) => _equipment = value;
 
-  int get shovelStaminaCost;
-  bool get canExecuteShovel =>
-      (_currentStamina >= shovelStaminaCost) &&
-      (_equipment == EquippedHandType.shovel);
-
-  int get wateringCanStaminaCost;
-  bool get canExecuteWateringCan =>
-      (_currentStamina >= wateringCanStaminaCost) &&
-      (_equipment == EquippedHandType.wateringCan);
-
-  int get seedStaminaCost;
-  bool get canExecuteSeed =>
-      (_currentStamina >= seedStaminaCost) &&
-      (_equipment == EquippedHandType.strawberry);
-
-  int get harvestBasketStaminaCost;
-  bool get canExecuteHarvestBasket =>
-      (_currentStamina >= harvestBasketStaminaCost) &&
-      (_equipment == EquippedHandType.harvestBasket);
-
   void consumeStamina(int amount) {
     _currentStamina = (_currentStamina - amount).clamp(0, maxStamina);
   }

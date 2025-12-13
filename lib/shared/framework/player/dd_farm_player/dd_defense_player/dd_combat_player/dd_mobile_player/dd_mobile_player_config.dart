@@ -5,7 +5,7 @@ class DDMobilePlayerViewConfig extends DDBasePlayerViewConfig {
   final SimpleDirectionAnimation animationWalkDirectional;
   final SimpleDirectionAnimation animationRunDirectional;
 
-  DDMobilePlayerViewConfig({
+  const DDMobilePlayerViewConfig({
     required super.hitbox,
     required super.lighting,
     required super.getDeathMarker,

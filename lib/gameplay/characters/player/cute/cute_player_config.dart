@@ -39,13 +39,17 @@ final class CutePlayerConfig {
 
   static const int kFireballAttackStaminaCost = 10;
 
-  static const int kShovelStaminaCost = 5;
+  static const int _kShovelStaminaCost = 5;
+  static const int _kWateringCanStaminaCost = 5;
+  static const int _kSeedStaminaCost = 5;
+  static const int _kHarvestBasketStaminaCost = 5;
 
-  static const int kWateringCanStaminaCost = 5;
-
-  static const int kSeedStaminaCost = 5;
-
-  static const int kHarvestBasketStaminaCost = 5;
+  static const modelConfig = DDFarmPlayerModelConfig(
+    shovelStaminaCost: _kShovelStaminaCost,
+    wateringCanStaminaCost: _kWateringCanStaminaCost,
+    seedStaminaCost: _kSeedStaminaCost,
+    harvestBasketStaminaCost: _kHarvestBasketStaminaCost,
+  );
 
   static final Vector2 textureSize = TileConstants.tileSizeCute;
 
@@ -407,7 +411,7 @@ final class CutePlayerConfig {
         size: _cryptComponentSize,
       );
 
-  static final config = DDFarmPlayerConfig(
+  static final viewConfig = DDFarmPlayerViewConfig(
     hitbox: CutePlayerConfig._hitbox,
     lighting: CutePlayerConfig._lighting,
     getDeathMarker: (position) => CutePlayerConfig._createDeathMarker(position),
