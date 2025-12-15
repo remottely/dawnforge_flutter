@@ -3,7 +3,6 @@ import 'package:darkness_dungeon/gameplay/characters/character_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/lightning_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
-import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
@@ -272,8 +271,8 @@ final class SunnyPlayerConfig {
   static Future<Sprite> _loadCryptSprite() =>
       Sprite.load('gameplay/characters/player/player_crypt_1.png');
 
-  static DDDecoration _createDeathMarker(Vector2 position) =>
-      DDDecoration.withSprite(
+  static GameDecoration _createDeathMarker(Vector2 position) =>
+      GameDecoration.withSprite(
         sprite: _loadCryptSprite(),
         position: Vector2(position.x, position.y),
         size: _cryptComponentSize,

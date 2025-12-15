@@ -9,17 +9,16 @@ import 'package:darkness_dungeon/gameplay/farm/models/farm_tile_model.dart'
     as model;
 import 'package:darkness_dungeon/gameplay/farm/models/farm_tile_model.dart';
 import 'package:darkness_dungeon/gameplay/farm/models/soil_state_model.dart';
-import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 import 'package:darkness_dungeon/shared/framework/interaction/dd_tool_interactable_mixin.dart';
 
-class FarmTileView extends DDDecoration with DDToolInteractableMixin {
+class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   final int tileX;
   final int tileY;
 
   late FarmTileModel farmTile;
 
   SpriteComponent? _soilSprite;
-  DDDecoration? _cropDecoration;
+  GameDecoration? _cropDecoration;
   bool _isHighlighted = false;
 
   SoilStateModel? _lastRenderedSoilState;
@@ -74,7 +73,7 @@ class FarmTileView extends DDDecoration with DDToolInteractableMixin {
 
     final cropSprite = await Sprite.load(_getCropSpritePath());
 
-    _cropDecoration = DDDecoration.withSprite(
+    _cropDecoration = GameDecoration.withSprite(
       sprite: cropSprite,
       position: position,
       size: size,

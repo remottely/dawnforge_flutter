@@ -1,7 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 
-abstract class DDInputReceiverDecorationView extends DDDecoration
+abstract class DDInputReceiverDecorationView extends GameDecoration
     with Vision, KeyboardEventListener {
   DDInputReceiverDecorationView({required super.position, required super.size});
 

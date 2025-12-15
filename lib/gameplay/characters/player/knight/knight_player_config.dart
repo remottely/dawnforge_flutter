@@ -3,7 +3,6 @@ import 'package:darkness_dungeon/gameplay/characters/character_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/lightning_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
-import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_config.dart';
 
@@ -91,8 +90,8 @@ final class KnightPlayerConfig {
   static Future<Sprite> loadCryptSprite() =>
       Sprite.load('gameplay/characters/player/player_crypt_1.png');
 
-  static DDDecoration createCryptComponent(Vector2 position) =>
-      DDDecoration.withSprite(
+  static GameDecoration createCryptComponent(Vector2 position) =>
+      GameDecoration.withSprite(
         sprite: loadCryptSprite(),
         position: Vector2(position.x, position.y),
         size: cryptComponentSize,
