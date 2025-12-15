@@ -1,27 +1,13 @@
 import 'package:equatable/equatable.dart';
 
-/// Domain model for player-specific save data.
-///
-/// Strongly-typed model that represents all persistent player state
-/// for a Stardew Valley-style farming/RPG game.
-///
-/// **Design Principles:**
-/// - Immutable with copyWith for updates
-/// - Type-safe with explicit fields
-/// - Easy to test and validate
-/// - Scalable for future features
 final class PlayerSaveData extends Equatable {
-  /// Player's current position in the world
   final double positionX;
   final double positionY;
 
-  /// Player's current map/area identifier
   final String currentMapId;
 
-  /// Player's facing direction (left, right, up, down)
   final String direction;
 
-  /// Player stats
   final double health;
   final double maxHealth;
   final double stamina;
@@ -29,25 +15,20 @@ final class PlayerSaveData extends Equatable {
   final double energy;
   final double maxEnergy;
 
-  /// Player's current level and experience
   final int level;
   final int experience;
   final int experienceToNextLevel;
 
-  /// Player skills (Stardew Valley style)
   final int farmingLevel;
   final int miningLevel;
   final int foragingLevel;
   final int fishingLevel;
   final int combatLevel;
 
-  /// Player's wallet
   final int money;
 
-  /// Player type identifier (knight, sunny, etc.)
   final String playerType;
 
-  /// Player name (optional customization)
   final String? playerName;
 
   const PlayerSaveData({
@@ -74,7 +55,6 @@ final class PlayerSaveData extends Equatable {
     this.playerName,
   });
 
-  /// Creates default initial state for a new game.
   factory PlayerSaveData.initial({
     required String playerType,
     String? playerName,
@@ -104,7 +84,6 @@ final class PlayerSaveData extends Equatable {
     );
   }
 
-  /// Creates from JSON map (deserialization).
   factory PlayerSaveData.fromJson(Map<String, dynamic> json) {
     return PlayerSaveData(
       positionX: (json['positionX'] as num?)?.toDouble() ?? 0.0,
@@ -131,7 +110,6 @@ final class PlayerSaveData extends Equatable {
     );
   }
 
-  /// Converts to JSON map (serialization).
   Map<String, dynamic> toJson() {
     return {
       'positionX': positionX,
@@ -158,7 +136,6 @@ final class PlayerSaveData extends Equatable {
     };
   }
 
-  /// Validates that the data is in a valid state.
   bool isValid() {
     return health >= 0 &&
         health <= maxHealth &&
@@ -176,7 +153,6 @@ final class PlayerSaveData extends Equatable {
         playerType.isNotEmpty;
   }
 
-  /// Creates a copy with updated fields.
   PlayerSaveData copyWith({
     double? positionX,
     double? positionY,

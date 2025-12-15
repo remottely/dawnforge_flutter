@@ -35,7 +35,6 @@ class ConversationConfig {
     animation: UISpriteAnimationsConfig.loadAnimationBossEnemyIdleLeft(),
   );
 
-  /// Internal Methods
   static Say _createLeft({
     required String phraseKey,
     required Future<SpriteAnimation> animation,

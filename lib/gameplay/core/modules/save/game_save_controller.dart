@@ -7,38 +7,22 @@ import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager
 import 'package:darkness_dungeon/gameplay/farm/managers/farm_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
 
-/// Controller que coordena save/load do estado completo do jogo
-///
-/// Responsável por:
-/// - Coletar dados de todos os managers (player, inventory, farm, world)
-/// - Salvar no disco via SaveManager
-/// - Carregar do disco e restaurar estado de todos os managers
 final class GameSaveController {
   GameSaveController._();
 
   static final instance = GameSaveController._();
 
-  /// Salva o estado completo do jogo
-  ///
-  /// Coleta dados de:
-  /// - PlayerStateManager (vida, stamina, energy, etc)
-  /// - InventoryManager (items, slots)
-  /// - FarmManager (tiles, crops)
-  /// - WorldStateManager (dia, season, tempo)
   Future<bool> saveGame() async {
     try {
       developer.log('[GameSaveController] Starting game save...');
 
-      // Coletar dados de todos os managers
       final playerData = _collectPlayerData();
       final worldData = _collectWorldData();
       final inventoryData = _collectInventoryData();
       final farmData = _collectFarmData();
 
-      // Combinar farm data no worldData
       worldData['farmData'] = farmData;
 
-      // Criar SaveData
       final saveData = SaveData(
         version: SaveData.kCurrentVersion,
         timestamp: DateTime.now(),
@@ -47,7 +31,6 @@ final class GameSaveController {
         inventoryData: inventoryData,
       );
 
-      // Salvar via SaveManager
       final success = await SaveManager.instance.save(saveData);
 
       if (success) {
@@ -67,18 +50,10 @@ final class GameSaveController {
     }
   }
 
-  /// Carrega o estado completo do jogo
-  ///
-  /// Restaura:
-  /// - PlayerStateManager
-  /// - InventoryManager
-  /// - FarmManager
-  /// - WorldStateManager
   Future<bool> loadGame() async {
     try {
       developer.log('[GameSaveController] Starting game load...');
 
-      // Carregar via SaveManager
       final saveData = await SaveManager.instance.load();
 
       if (saveData == null) {
@@ -86,7 +61,6 @@ final class GameSaveController {
         return false;
       }
 
-      // Restaurar dados em cada manager
       _restorePlayerData(saveData.playerData);
       _restoreWorldData(saveData.worldData);
       _restoreInventoryData(saveData.inventoryData);
@@ -104,29 +78,18 @@ final class GameSaveController {
     }
   }
 
-  /// Verifica se existe um save
   Future<bool> hasSave() async {
     return await SaveManager.instance.hasSave();
   }
 
-  /// Deleta o save
   Future<bool> deleteSave() async {
     return await SaveManager.instance.deleteSave();
   }
 
-  /// Limpa completamente o jogo: reseta todos os managers e deleta o save
-  ///
-  /// Esta ação:
-  /// - Reseta PlayerStateManager (vida, stamina, energy)
-  /// - Limpa InventoryManager (remove todos os items)
-  /// - Reseta FarmManager (remove todas as plantas)
-  /// - Reseta WorldStateManager (volta para dia 1)
-  /// - Deleta o arquivo de save do disco
   Future<bool> clearGameAndSave() async {
     try {
       developer.log('[GameSaveController] 🗑️ Clearing game and save...');
 
-      // Resetar todos os managers
       PlayerStateManager.instance.reset();
       InventoryManager.instance.clear();
       FarmManager.instance.reset();
@@ -134,7 +97,6 @@ final class GameSaveController {
 
       developer.log('[GameSaveController] ✅ All managers reset');
 
-      // Deletar arquivo de save
       final deleted = await SaveManager.instance.deleteSave();
 
       if (deleted) {
@@ -157,10 +119,6 @@ final class GameSaveController {
     }
   }
 
-  // ==========================================================================
-  // Coleta de dados (serialização)
-  // ==========================================================================
-
   Map<String, dynamic> _collectPlayerData() {
     final playerState = PlayerStateManager.instance;
     return playerState.toJson();
@@ -180,10 +138,6 @@ final class GameSaveController {
     final farm = FarmManager.instance;
     return farm.toJson();
   }
-
-  // ==========================================================================
-  // Restauração de dados (deserialização)
-  // ==========================================================================
 
   void _restorePlayerData(Map<String, dynamic> data) {
     try {

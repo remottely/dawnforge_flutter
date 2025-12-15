@@ -170,7 +170,7 @@ class PlayerStateManager implements ISaveableManager<PlayerSaveData> {
 
 ```dart
 // OLD WAY
-import 'save_manager.dart';
+import '../../lib/gameplay/core/modules/save/docs/save_manager.dart';
 
 final saveData = SaveData(
   version: 1,
@@ -182,7 +182,7 @@ final saveData = SaveData(
 await SaveManager.instance.save(saveData);
 
 // NEW WAY
-import 'domain/services/save_service.dart';
+import '../../lib/gameplay/core/modules/save/docs/domain/services/save_service.dart';
 
 final service = SaveService();
 final result = await service.saveGame(

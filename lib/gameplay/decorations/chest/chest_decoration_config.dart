@@ -8,7 +8,6 @@ import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dar
 final class ChestDecorationConfig {
   ChestDecorationConfig._();
 
-  // Constants
   static const double kCloseVisionRadius =
       CharacterConstants.kVisionRadiusExtraSmall;
   static const int kVisionCheckInterval = 500;
@@ -17,11 +16,9 @@ final class ChestDecorationConfig {
       .getString('chest_decoration_open');
   static const double kHealAmountPerPotion = 30.0;
 
-  // Component size
   static final Vector2 _textureSize = TileConstants.tileSizeStandard;
   static final Vector2 componentSize = _textureSize / 1.5;
 
-  // Animations
   static Future<SpriteAnimation> loadAnimation() => SpriteAnimation.load(
     'gameplay/decorations/chest_decoration_8.png',
     SpriteAnimationConfigHelper.createStandardData(
@@ -36,7 +33,6 @@ final class ChestDecorationConfig {
     hitboxStartPositionY: 4.0,
   );
 
-  // Text configuration
   static TextPaint createTextConfig(double componentWidth) => TextPaint(
     style: TextStyle(
       color: const Color(0xFFFFFFFF),

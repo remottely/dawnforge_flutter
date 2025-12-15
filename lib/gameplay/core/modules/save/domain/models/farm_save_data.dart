@@ -1,35 +1,18 @@
 import 'package:equatable/equatable.dart';
 
-/// Domain model for farm/agriculture save data.
-///
-/// Represents all farming-related persistent state including
-/// crops, animals, buildings, and farm upgrades.
-///
-/// **Stardew Valley Inspiration:**
-/// - Crop growing system
-/// - Animal husbandry
-/// - Farm buildings and upgrades
-/// - Soil quality and irrigation
 final class FarmSaveData {
-  /// All crop tiles on the farm
   final List<CropTileData> crops;
 
-  /// Farm animals
   final List<FarmAnimalData> animals;
 
-  /// Farm buildings (barns, coops, silos, etc.)
   final List<FarmBuildingData> buildings;
 
-  /// Tilled/hoeed tiles (prepared for planting)
   final List<TilePositionData> tilledTiles;
 
-  /// Watered tiles
   final List<TilePositionData> wateredTiles;
 
-  /// Farm upgrades purchased
   final List<String> unlockedUpgrades;
 
-  /// Farm layout type (standard, forest, hilltop, etc.)
   final String farmLayout;
 
   const FarmSaveData({
@@ -42,7 +25,6 @@ final class FarmSaveData {
     required this.farmLayout,
   });
 
-  /// Creates initial empty farm.
   factory FarmSaveData.initial({String layout = 'standard'}) {
     return FarmSaveData(
       crops: const [],
@@ -109,13 +91,10 @@ final class FarmSaveData {
         animals.every((animal) => animal.isValid());
   }
 
-  /// Gets total number of crops.
   int get totalCrops => crops.length;
 
-  /// Gets total number of animals.
   int get totalAnimals => animals.length;
 
-  /// Gets total number of buildings.
   int get totalBuildings => buildings.length;
 
   FarmSaveData copyWith({
@@ -149,7 +128,6 @@ final class FarmSaveData {
   }
 }
 
-/// Represents a single crop tile.
 final class CropTileData extends Equatable {
   final int tileX;
   final int tileY;
@@ -219,10 +197,9 @@ final class CropTileData extends Equatable {
   List<Object?> get props => [tileX, tileY, cropId];
 }
 
-/// Represents a farm animal.
 final class FarmAnimalData {
   final String animalId;
-  final String animalType; // cow, chicken, pig, etc.
+  final String animalType;
   final String name;
   final int happiness;
   final int health;
@@ -283,7 +260,6 @@ final class FarmAnimalData {
       'Animal($name the $animalType, happiness: $happiness, health: $health)';
 }
 
-/// Represents a farm building.
 final class FarmBuildingData {
   final String buildingId;
   final String buildingType;
@@ -328,7 +304,6 @@ final class FarmBuildingData {
       'Building($buildingType at [$tileX,$tileY], level: $upgradeLevel)';
 }
 
-/// Represents a tile position.
 final class TilePositionData extends Equatable {
   final int tileX;
   final int tileY;
@@ -350,6 +325,5 @@ final class TilePositionData extends Equatable {
   String toString() => '[$tileX,$tileY]';
 
   @override
-  // TODO: implement props
   List<Object?> get props => [tileX, tileY];
 }

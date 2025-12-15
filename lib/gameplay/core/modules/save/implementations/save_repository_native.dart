@@ -6,22 +6,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../save_repository.dart';
 
-/// Factory function for platform-specific instantiation
 SaveRepository createRepository() => SaveRepositoryNative();
 
-/// Native platform implementation of [SaveRepository] using SharedPreferences.
-///
-/// Uses [SharedPreferences] for persistent storage on desktop and mobile platforms.
-/// Data is serialized to JSON strings before storage.
-///
-/// Only manages keys with the 'darkness_dungeon_' prefix to avoid
-/// interfering with other application data.
 final class SaveRepositoryNative implements SaveRepository {
   static const String _keyPrefix = 'darkness_dungeon_';
 
   SharedPreferences? _prefs;
 
-  /// Lazily initializes SharedPreferences instance.
   Future<SharedPreferences> get _sharedPreferences async {
     _prefs ??= await SharedPreferences.getInstance();
     return _prefs!;
@@ -34,7 +25,6 @@ final class SaveRepositoryNative implements SaveRepository {
       final prefixedKey = '$_keyPrefix$key';
       final jsonString = jsonEncode(data);
 
-      // Compress if data is large (>100KB)
       final shouldCompress = jsonString.length > 100 * 1024;
       String dataToSave;
 
@@ -65,7 +55,7 @@ final class SaveRepositoryNative implements SaveRepository {
         developer.log(
           '[SaveRepositoryNative] Failed to save data for key: $prefixedKey',
           name: 'SaveRepository',
-          level: 900, // WARNING
+          level: 900,
         );
       }
 
@@ -76,7 +66,7 @@ final class SaveRepositoryNative implements SaveRepository {
         name: 'SaveRepository',
         error: e,
         stackTrace: stackTrace,
-        level: 1000, // ERROR
+        level: 1000,
       );
       return false;
     }
@@ -93,12 +83,11 @@ final class SaveRepositoryNative implements SaveRepository {
         developer.log(
           '[SaveRepositoryNative] No data found for key: $prefixedKey',
           name: 'SaveRepository',
-          level: 500, // FINE
+          level: 500,
         );
         return null;
       }
 
-      // Check if data is compressed
       final isCompressed = prefs.getBool('${prefixedKey}_compressed') ?? false;
 
       String jsonString;
@@ -139,7 +128,7 @@ final class SaveRepositoryNative implements SaveRepository {
         name: 'SaveRepository',
         error: e,
         stackTrace: stackTrace,
-        level: 1000, // ERROR
+        level: 1000,
       );
       return null;
     }
@@ -167,7 +156,7 @@ final class SaveRepositoryNative implements SaveRepository {
         name: 'SaveRepository',
         error: e,
         stackTrace: stackTrace,
-        level: 1000, // ERROR
+        level: 1000,
       );
       return false;
     }
@@ -179,7 +168,6 @@ final class SaveRepositoryNative implements SaveRepository {
       final prefs = await _sharedPreferences;
       final allKeys = prefs.getKeys();
 
-      // Filter only game-related keys
       final gameKeys = allKeys.where((key) => key.startsWith(_keyPrefix));
 
       var allSuccess = true;
@@ -192,7 +180,7 @@ final class SaveRepositoryNative implements SaveRepository {
           developer.log(
             '[SaveRepositoryNative] Failed to remove key: $key',
             name: 'SaveRepository',
-            level: 900, // WARNING
+            level: 900,
           );
         } else {
           removedCount++;
@@ -211,7 +199,7 @@ final class SaveRepositoryNative implements SaveRepository {
         name: 'SaveRepository',
         error: e,
         stackTrace: stackTrace,
-        level: 1000, // ERROR
+        level: 1000,
       );
       return false;
     }
@@ -228,7 +216,7 @@ final class SaveRepositoryNative implements SaveRepository {
         '[SaveRepositoryNative] Error checking existence for key: $key',
         name: 'SaveRepository',
         error: e,
-        level: 900, // WARNING
+        level: 900,
       );
       return false;
     }
@@ -240,7 +228,6 @@ final class SaveRepositoryNative implements SaveRepository {
       final prefs = await _sharedPreferences;
       final allKeys = prefs.getKeys();
 
-      // Filter game keys and remove prefix
       final gameKeys = allKeys
           .where((key) => key.startsWith(_keyPrefix))
           .map((key) => key.substring(_keyPrefix.length))
@@ -258,7 +245,7 @@ final class SaveRepositoryNative implements SaveRepository {
         name: 'SaveRepository',
         error: e,
         stackTrace: stackTrace,
-        level: 1000, // ERROR
+        level: 1000,
       );
       return [];
     }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../save_repository.dart';
+import '../../lib/gameplay/core/modules/save/save_repository.dart';
 
 /// Example demonstrating SaveRepository usage.
 ///

@@ -5,24 +5,14 @@ import 'package:web/web.dart' as web;
 
 import '../save_repository.dart';
 
-/// Factory function for platform-specific instantiation
 SaveRepository createRepository() => SaveRepositoryWeb();
 
-/// Web platform implementation of [SaveRepository] using localStorage.
-///
-/// Uses browser's `localStorage` API for persistent storage on web platform.
-/// Data is serialized to JSON strings before storage.
-///
-/// Monitors storage usage and logs warnings when approaching the ~5MB limit.
 final class SaveRepositoryWeb implements SaveRepository {
   static const String _keyPrefix = 'darkness_dungeon_';
-  static const int _warningThresholdBytes =
-      4 * 1024 * 1024; // 4MB (warn before 5MB limit)
+  static const int _warningThresholdBytes = 4 * 1024 * 1024;
 
-  /// Gets the localStorage instance.
   web.Storage get _localStorage => web.window.localStorage;
 
-  /// Calculates approximate total size of game data in localStorage.
   int _calculateStorageSize() {
     var totalSize = 0;
     final length = _localStorage.length;
@@ -32,7 +22,6 @@ final class SaveRepositoryWeb implements SaveRepository {
       if (key != null && key.startsWith(_keyPrefix)) {
         final value = _localStorage.getItem(key);
         if (value != null) {
-          // Approximate size: key + value in UTF-16 (2 bytes per char)
           totalSize += ((key.length + value.length) * 2).toInt();
         }
       }
@@ -40,7 +29,6 @@ final class SaveRepositoryWeb implements SaveRepository {
     return totalSize;
   }
 
-  /// Logs a warning if storage size is approaching the limit.
   void _checkStorageSize() {
     final currentSize = _calculateStorageSize();
     if (currentSize > _warningThresholdBytes) {
@@ -48,7 +36,7 @@ final class SaveRepositoryWeb implements SaveRepository {
       developer.log(
         '[SaveRepositoryWeb] WARNING: Storage usage is $sizeMB MB (approaching 5MB limit)',
         name: 'SaveRepository',
-        level: 900, // WARNING
+        level: 900,
       );
     }
   }
@@ -66,7 +54,6 @@ final class SaveRepositoryWeb implements SaveRepository {
         name: 'SaveRepository',
       );
 
-      // Check storage size after save
       _checkStorageSize();
 
       return true;
@@ -76,7 +63,7 @@ final class SaveRepositoryWeb implements SaveRepository {
         name: 'SaveRepository',
         error: e,
         stackTrace: stackTrace,
-        level: 1000, // ERROR
+        level: 1000,
       );
       return false;
     }
@@ -92,7 +79,7 @@ final class SaveRepositoryWeb implements SaveRepository {
         developer.log(
           '[SaveRepositoryWeb] No data found for key: $prefixedKey',
           name: 'SaveRepository',
-          level: 500, // FINE
+          level: 500,
         );
         return null;
       }
@@ -111,7 +98,7 @@ final class SaveRepositoryWeb implements SaveRepository {
         name: 'SaveRepository',
         error: e,
         stackTrace: stackTrace,
-        level: 1000, // ERROR
+        level: 1000,
       );
       return null;
     }
@@ -135,7 +122,7 @@ final class SaveRepositoryWeb implements SaveRepository {
         name: 'SaveRepository',
         error: e,
         stackTrace: stackTrace,
-        level: 1000, // ERROR
+        level: 1000,
       );
       return false;
     }
@@ -144,7 +131,6 @@ final class SaveRepositoryWeb implements SaveRepository {
   @override
   Future<bool> clear() async {
     try {
-      // Collect all game keys first (to avoid concurrent modification)
       final gameKeys = <String>[];
       final length = _localStorage.length;
 
@@ -155,7 +141,6 @@ final class SaveRepositoryWeb implements SaveRepository {
         }
       }
 
-      // Remove all game keys
       for (final key in gameKeys) {
         _localStorage.removeItem(key);
       }
@@ -172,7 +157,7 @@ final class SaveRepositoryWeb implements SaveRepository {
         name: 'SaveRepository',
         error: e,
         stackTrace: stackTrace,
-        level: 1000, // ERROR
+        level: 1000,
       );
       return false;
     }
@@ -189,7 +174,7 @@ final class SaveRepositoryWeb implements SaveRepository {
         '[SaveRepositoryWeb] Error checking existence for key: $key',
         name: 'SaveRepository',
         error: e,
-        level: 900, // WARNING
+        level: 900,
       );
       return false;
     }
@@ -204,7 +189,6 @@ final class SaveRepositoryWeb implements SaveRepository {
       for (var i = 0; i < length; i++) {
         final key = _localStorage.key(i);
         if (key != null && key.startsWith(_keyPrefix)) {
-          // Remove prefix before adding to list
           gameKeys.add(key.substring(_keyPrefix.length));
         }
       }
@@ -221,7 +205,7 @@ final class SaveRepositoryWeb implements SaveRepository {
         name: 'SaveRepository',
         error: e,
         stackTrace: stackTrace,
-        level: 1000, // ERROR
+        level: 1000,
       );
       return [];
     }

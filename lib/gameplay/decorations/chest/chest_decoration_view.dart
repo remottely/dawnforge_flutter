@@ -26,7 +26,6 @@ class ChestDecorationView extends DDInputReceiverDecorationView {
     _initializeController(model);
   }
 
-  // Public API for external interaction
   ChestDecorationModel get model => _controller.model;
 
   void _initializeController(ChestDecorationModel model) {
@@ -87,7 +86,6 @@ class ChestDecorationView extends DDInputReceiverDecorationView {
     super.onRemove();
   }
 
-  /// Private helper methods - Controller callbacks implementation
   void _onDisplayExclamationEmote() {
     add(EmoteManager.getDecorationAnimatedObject(size));
   }

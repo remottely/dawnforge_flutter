@@ -29,14 +29,12 @@ class ChestDecorationController {
 
   void dispose() {}
 
-  // Actions
   void openChest() {
     if (!model.canInteract) return;
     model.markAsOpened();
     onOpenChest();
   }
 
-  // Private helpers
   void _handleDetectPlayerInCloseVisionRadius(DDBasePlayerView player) {
     onDetectPlayerInCloseVisionRadius.call(
       player: player,

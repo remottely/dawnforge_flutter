@@ -1,4 +1,4 @@
-import '../save_data_model.dart';
+import '../../lib/gameplay/core/modules/save/save_data_model.dart';
 
 /// Examples demonstrating SaveData usage.
 void main() {

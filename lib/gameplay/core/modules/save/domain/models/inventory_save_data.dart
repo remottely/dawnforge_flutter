@@ -1,23 +1,14 @@
 import 'package:equatable/equatable.dart';
 
-/// Domain model for inventory and equipment save data.
-///
-/// Represents all items, equipment, and storage containers
-/// in the player's possession.
 final class InventorySaveData {
-  /// Player's main inventory slots
   final List<InventorySlotData> inventorySlots;
 
-  /// Equipped items (weapon, armor, accessories)
   final Map<String, EquippedItemData?> equipment;
 
-  /// Storage containers (chests, fridges, etc.)
   final Map<String, List<InventorySlotData>> containers;
 
-  /// Quick bar slots for fast item access
   final List<InventorySlotData> quickBarSlots;
 
-  /// Maximum inventory capacity
   final int maxInventorySlots;
 
   const InventorySaveData({
@@ -28,7 +19,6 @@ final class InventorySaveData {
     required this.maxInventorySlots,
   });
 
-  /// Creates initial empty inventory.
   factory InventorySaveData.initial({int maxSlots = 36}) {
     return InventorySaveData(
       inventorySlots: List.generate(maxSlots, (_) => InventorySlotData.empty()),
@@ -112,12 +102,10 @@ final class InventorySaveData {
         maxInventorySlots > 0;
   }
 
-  /// Gets total number of used inventory slots.
   int get usedSlots {
     return inventorySlots.where((slot) => !slot.isEmpty).length;
   }
 
-  /// Gets list of all equipped items.
   List<EquippedItemData> get equippedItems {
     return equipment.values.whereType<EquippedItemData>().toList();
   }
@@ -148,7 +136,6 @@ final class InventorySaveData {
   }
 }
 
-/// Represents a single inventory slot.
 final class InventorySlotData extends Equatable {
   final String? itemId;
   final int quantity;
@@ -197,7 +184,6 @@ final class InventorySlotData extends Equatable {
   List<Object?> get props => [itemId, quantity];
 }
 
-/// Represents an equipped item with stats.
 final class EquippedItemData extends Equatable {
   final String itemId;
   final String slot;
@@ -247,6 +233,5 @@ final class EquippedItemData extends Equatable {
   String toString() => 'Equipped($itemId in $slot)';
 
   @override
-  // TODO: implement props
   List<Object?> get props => [itemId, slot];
 }

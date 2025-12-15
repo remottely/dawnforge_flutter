@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../save_data_model.dart';
-import '../save_manager.dart';
+import '../../lib/gameplay/core/modules/save/save_data_model.dart';
+import '../../lib/gameplay/core/modules/save/save_manager.dart';
 
 /// Example demonstrating SaveManager usage in a complete save/load cycle.
 void main() async {

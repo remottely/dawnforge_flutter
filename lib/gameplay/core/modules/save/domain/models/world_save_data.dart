@@ -1,42 +1,22 @@
-/// Domain model for world/environment save data.
-///
-/// Represents the persistent state of the game world including
-/// time, season, weather, and world progression.
-///
-/// **Stardew Valley Inspiration:**
-/// - Day/Season progression
-/// - Time of day system
-/// - Weather patterns
-/// - World events and festivals
 final class WorldSaveData {
-  /// Current in-game day (starts at 1)
   final int currentDay;
 
-  /// Current season (spring, summer, fall, winter)
   final String currentSeason;
 
-  /// Current year
   final int currentYear;
 
-  /// Time in seconds since start of day (0-86400)
   final int timeOfDaySeconds;
 
-  /// Current weather state
   final String weather;
 
-  /// Active world events/festivals
   final List<String> activeEvents;
 
-  /// Completed world events (one-time events)
   final List<String> completedEvents;
 
-  /// Active map states (which maps have been visited/unlocked)
   final Map<String, bool> unlockedMaps;
 
-  /// Current active map ID
   final String? currentMapId;
 
-  /// World settings
   final double timeScale;
   final bool isPaused;
 
@@ -54,13 +34,12 @@ final class WorldSaveData {
     this.currentMapId,
   });
 
-  /// Creates default initial world state.
   factory WorldSaveData.initial() {
     return WorldSaveData(
       currentDay: 1,
       currentSeason: 'spring',
       currentYear: 1,
-      timeOfDaySeconds: 21600, // 6:00 AM
+      timeOfDaySeconds: 21600,
       weather: 'sunny',
       activeEvents: const [],
       completedEvents: const [],
@@ -71,7 +50,6 @@ final class WorldSaveData {
     );
   }
 
-  /// Creates from JSON map.
   factory WorldSaveData.fromJson(Map<String, dynamic> json) {
     return WorldSaveData(
       currentDay: json['currentDay'] as int? ?? 1,
@@ -100,7 +78,6 @@ final class WorldSaveData {
     );
   }
 
-  /// Converts to JSON map.
   Map<String, dynamic> toJson() {
     return {
       'currentDay': currentDay,
@@ -117,7 +94,6 @@ final class WorldSaveData {
     };
   }
 
-  /// Validates the world state.
   bool isValid() {
     return currentDay > 0 &&
         currentYear > 0 &&
@@ -136,14 +112,12 @@ final class WorldSaveData {
     return ['sunny', 'rainy', 'snowy', 'stormy', 'cloudy'].contains(weather);
   }
 
-  /// Gets the current time of day in HH:MM format.
   String getFormattedTime() {
     final hours = timeOfDaySeconds ~/ 3600;
     final minutes = (timeOfDaySeconds % 3600) ~/ 60;
     return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}';
   }
 
-  /// Gets human-readable season name.
   String get seasonDisplayName {
     return currentSeason[0].toUpperCase() + currentSeason.substring(1);
   }
