@@ -1,15 +1,10 @@
-/// Represents the state of an individual map in the game world
 final class MapState {
-  /// List of modified decoration IDs
   final List<String> decorationsModified;
 
-  /// List of farm tile positions that have been modified
   final List<String> farmTiles;
 
-  /// List of enemy IDs that have been defeated in this map
   final List<String> enemiesDefeated;
 
-  /// Additional custom data for the map
   final Map<String, dynamic> customData;
 
   const MapState({
@@ -19,7 +14,6 @@ final class MapState {
     this.customData = const {},
   });
 
-  /// Serialize map state to JSON
   Map<String, dynamic> toJson() {
     return {
       'decorationsModified': decorationsModified,
@@ -29,7 +23,6 @@ final class MapState {
     };
   }
 
-  /// Deserialize map state from JSON
   factory MapState.fromJson(Map<String, dynamic> json) {
     return MapState(
       decorationsModified: List<String>.from(json['decorationsModified'] ?? []),
@@ -39,7 +32,6 @@ final class MapState {
     );
   }
 
-  /// Create a copy with modified fields
   MapState copyWith({
     List<String>? decorationsModified,
     List<String>? farmTiles,

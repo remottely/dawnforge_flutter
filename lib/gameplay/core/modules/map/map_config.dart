@@ -22,7 +22,6 @@ import 'package:darkness_dungeon/gameplay/farm/components/farm_tile_view.dart';
 final class MapConfig {
   MapConfig._();
 
-  /// Public
   static const String kNextMapPropertyKey = 'nextMap';
   static const String kPlayerPositionPropertyKey = 'playerPosition';
   static const String kPlayerDirectionPropertyKey = 'playerDirection';
@@ -31,7 +30,6 @@ final class MapConfig {
   static const String kLightingColorPropertyKey = 'lightingColor';
   static const String kBackgroundColorPropertyKey = 'backgroundColor';
 
-  /// Private
   static const String _kCloudyLightingColor = '#d0ffffff';
   static const String _kDarknessLightingColor = '#f0000000';
   static const String _kNoneLightingColor = '#00ffffff';
@@ -41,20 +39,16 @@ final class MapConfig {
   static const String _kLakeBackgroundColor = '#ff000000';
   static const String _kTempleBackgroundColor = '#ff424242';
 
-  ///
   static Map<String, ObjectBuilder> createEntityBuilder() =>
       <String, ObjectBuilder>{
-        /// Enemies
         'boss_enemy': (p) => BossEnemyView(position: p.position),
         'mini_boss_enemy': (p) => MiniBossEnemyView(position: p.position),
         'goblin_enemy': (p) => GoblinEnemyView(position: p.position),
         'imp_enemy': (p) => ImpEnemyView(position: p.position),
 
-        /// NPCs
         'kid_npc': (p) => KidNpcView(position: p.position),
         'wizard_npc': (p) => WizardNpcView(position: p.position),
 
-        /// Decorations
         'barrel_decoration': (p) => BarrelDecorationView(position: p.position),
         'torch_decoration': (p) => TorchDecorationView.lightingEnabled(
           position: p.position,
@@ -79,11 +73,9 @@ final class MapConfig {
           model: ChestDecorationModel(initialIsOpened: false),
         ),
 
-        /// Farm
         'farm_tile': (p) => FarmTileView(position: p.position),
       };
 
-  /// Testing
   static const String kFarmTestId = 'farm_test';
   static const String kConversationTestId = 'conversation_test';
   static const String kCombatTestId = 'combat_test';
@@ -91,14 +83,12 @@ final class MapConfig {
   // static const String kMineTestId = 'mine_test';
   // static const String kFishingTestId = 'fishing_test';
 
-  /// Maps
   static const String kLake1Id = 'lake_1';
   static const String kForest1Id = 'forest_1';
   static const String kDungeon1Id = 'dungeon_1';
   static const String kTemple1Id = 'temple_1';
 
   static const List<MapData> kAllMaps = [
-    /// Testing Maps
     const MapData(
       id: kFarmTestId,
       asset: 'tiled/$kFarmTestId.json',
@@ -139,7 +129,6 @@ final class MapConfig {
       backgroundColor: _kLakeBackgroundColor,
     ),
 
-    /// Game Maps
     const MapData(
       id: kLake1Id,
       asset: 'tiled/$kLake1Id.json',

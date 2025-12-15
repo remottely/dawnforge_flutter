@@ -25,7 +25,6 @@ class InputsHUDView extends GameInterface {
       fontSize: 11,
     );
 
-    // Fundo do painel
     final double panelHeight =
         InputsHUDConfig.inputGuide.length * lineHeight + padding * 2;
     final double panelWidth = 300;
@@ -44,7 +43,7 @@ class InputsHUDView extends GameInterface {
 
     for (int i = 0; i < InputsHUDConfig.inputGuide.length; i++) {
       final y = startY + i * lineHeight;
-      // Caixa da tecla
+
       canvas.drawRRect(
         RRect.fromRectAndRadius(
           Rect.fromLTWH(startX, y, keyBoxWidth, keyBoxHeight),
@@ -52,7 +51,7 @@ class InputsHUDView extends GameInterface {
         ),
         keyPaint,
       );
-      // Texto da tecla
+
       TextPainter(
           text: TextSpan(
             text: InputsHUDConfig.inputGuide[i]["key"],
@@ -62,7 +61,7 @@ class InputsHUDView extends GameInterface {
         )
         ..layout(minWidth: 0, maxWidth: keyBoxWidth)
         ..paint(canvas, Offset(startX + 8, y + 2));
-      // Descrição
+
       TextPainter(
           text: TextSpan(
             text: InputsHUDConfig.inputGuide[i]["desc"],

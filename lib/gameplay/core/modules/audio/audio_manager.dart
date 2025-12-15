@@ -95,20 +95,13 @@ final class AudioManager {
       return;
     }
 
-    // Se já está tocando a mesma música, não precisa fazer nada
-    if (_isBackgroundMusicPlaying && _currentBackgroundTrack == musicTrack) {
-      if (kDebugMode) {
-        print('[AudioManager] Already playing $musicTrack, skipping');
-      }
+    if (_isBackgroundMusicPlaying && _currentBackgroundTrack == musicTrack)
       return;
-    }
 
-    // Para a música atual se houver
     if (_isBackgroundMusicPlaying) {
       await stopBackgroundMusic();
     }
 
-    // Toca a nova música
     try {
       if (kDebugMode) {
         print('[AudioManager] Starting to play: $musicTrack');

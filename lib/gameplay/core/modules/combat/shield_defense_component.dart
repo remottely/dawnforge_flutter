@@ -4,10 +4,6 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 
-/// Componente visual do escudo durante a defesa
-///
-/// Mostra uma animação 16x16 na frente do player enquanto está defendendo.
-/// A animação bloqueia ataques e fornece feedback visual da defesa ativa.
 class ShieldDefenseComponent extends GameComponent {
   final SimplePlayer _player;
   SpriteAnimationComponent? _shieldAnimation;
@@ -25,7 +21,6 @@ class ShieldDefenseComponent extends GameComponent {
     try {
       developer.log('[ShieldDefenseComponent] Carregando animação de defesa');
 
-      // Criar animação do escudo (16x16) diretamente
       final loadAnimationRight = await SpriteAnimation.load(
         'gameplay/characters/player/shield_defense_right_12.png',
         SpriteAnimationConfigHelper.createStandardData(
@@ -42,13 +37,10 @@ class ShieldDefenseComponent extends GameComponent {
         anchor: Anchor.center,
       );
 
-      // Definir prioridade alta para renderizar na frente do player
       _shieldAnimation!.priority = 1000;
 
-      // Se já foi ativado antes da animação carregar, começar visível
       _shieldAnimation!.opacity = _isActive ? 1 : 0;
 
-      // Adicionar diretamente ao gameRef ao invés de como filho deste componente
       _player.gameRef.add(_shieldAnimation!);
 
       developer.log(
@@ -66,12 +58,10 @@ class ShieldDefenseComponent extends GameComponent {
     super.update(dt);
 
     if (_isActive && _shieldAnimation != null) {
-      // Posicionar o escudo na frente do player
       _shieldAnimation!.position = _player.center;
     }
   }
 
-  /// Ativa o modo de defesa
   void activate() {
     developer.log(
       '[ShieldDefenseComponent] Ativando defesa. Animação null? ${_shieldAnimation == null}',
@@ -85,7 +75,6 @@ class ShieldDefenseComponent extends GameComponent {
     }
   }
 
-  /// Desativa o modo de defesa
   void deactivate() {
     _isActive = false;
     if (_shieldAnimation != null) {
