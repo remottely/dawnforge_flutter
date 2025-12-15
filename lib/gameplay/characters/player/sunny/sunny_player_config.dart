@@ -1,13 +1,13 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/character_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/lightning_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
-import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
+import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
+import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_config.dart';
 
 final class SunnyPlayerConfig {
   SunnyPlayerConfig._();
@@ -69,7 +69,7 @@ final class SunnyPlayerConfig {
   static Future<SpriteAnimation>
   _loadAnimationIdleLeft() => SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_idle_left_strip9.png',
-    SpriteAnimationConfig.createStandardData(
+    SpriteAnimationConfigHelper.createStandardData(
       amount: 9,
       textureSize: SunnyPlayerConfig.textureSize,
     ),
@@ -78,7 +78,7 @@ final class SunnyPlayerConfig {
   static final Future<SpriteAnimation>
   _loadAnimationAttackRight = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_sword_strip10.png',
-    SpriteAnimationConfig.createStandardData(
+    SpriteAnimationConfigHelper.createStandardData(
       amount: 10,
       textureSize: textureSize,
     ),
@@ -87,7 +87,7 @@ final class SunnyPlayerConfig {
   static final Future<SpriteAnimation>
   _loadAnimationAttackLeft = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_sword_left_strip10.png',
-    SpriteAnimationConfig.createStandardData(
+    SpriteAnimationConfigHelper.createStandardData(
       amount: 10,
       textureSize: textureSize,
     ),
@@ -108,7 +108,7 @@ final class SunnyPlayerConfig {
   static final Future<SpriteAnimation>
   _loadAnimationShovelRight = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_strip13.png',
-    SpriteAnimationConfig.createStandardData(
+    SpriteAnimationConfigHelper.createStandardData(
       amount: 10,
       textureSize: textureSize,
     ),
@@ -117,7 +117,7 @@ final class SunnyPlayerConfig {
   static final Future<SpriteAnimation>
   _loadAnimationShovelLeft = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_left_strip13.png',
-    SpriteAnimationConfig.createStandardData(
+    SpriteAnimationConfigHelper.createStandardData(
       amount: 10,
       textureSize: textureSize,
     ),
@@ -137,7 +137,7 @@ final class SunnyPlayerConfig {
   static final Future<SpriteAnimation>
   _loadAnimationWateringCanRight = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_watering_strip5.png',
-    SpriteAnimationConfig.createStandardData(
+    SpriteAnimationConfigHelper.createStandardData(
       amount: 5,
       textureSize: textureSize,
     ),
@@ -146,7 +146,7 @@ final class SunnyPlayerConfig {
   static final Future<SpriteAnimation>
   _loadAnimationWateringCanLeft = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_watering_left_strip5.png',
-    SpriteAnimationConfig.createStandardData(
+    SpriteAnimationConfigHelper.createStandardData(
       amount: 5,
       textureSize: textureSize,
     ),
@@ -166,7 +166,7 @@ final class SunnyPlayerConfig {
   static final Future<SpriteAnimation>
   _loadAnimationPlaceSeedRight = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_strip8.png',
-    SpriteAnimationConfig.createStandardData(
+    SpriteAnimationConfigHelper.createStandardData(
       amount: 8,
       textureSize: textureSize,
     ),
@@ -175,7 +175,7 @@ final class SunnyPlayerConfig {
   static final Future<SpriteAnimation>
   _loadAnimationPlaceSeedLeft = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_left_strip8.png',
-    SpriteAnimationConfig.createStandardData(
+    SpriteAnimationConfigHelper.createStandardData(
       amount: 8,
       textureSize: textureSize,
     ),
@@ -195,7 +195,7 @@ final class SunnyPlayerConfig {
   static final Future<SpriteAnimation>
   _loadAnimationHarvestBasketRight = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_strip8.png',
-    SpriteAnimationConfig.createStandardData(
+    SpriteAnimationConfigHelper.createStandardData(
       amount: 8,
       textureSize: textureSize,
     ),
@@ -204,7 +204,7 @@ final class SunnyPlayerConfig {
   static final Future<SpriteAnimation>
   _loadAnimationHarvestBasketLeft = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_left_strip8.png',
-    SpriteAnimationConfig.createStandardData(
+    SpriteAnimationConfigHelper.createStandardData(
       amount: 8,
       textureSize: textureSize,
     ),
@@ -227,14 +227,14 @@ final class SunnyPlayerConfig {
     idleRight: UISpriteAnimationsConfig.loadAnimationSunnyPlayerIdleRight(),
     runLeft: SpriteAnimation.load(
       'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_walking_left_strip8.png',
-      SpriteAnimationConfig.createStandardData(
+      SpriteAnimationConfigHelper.createStandardData(
         amount: 8,
         textureSize: textureSize,
       ),
     ),
     runRight: SpriteAnimation.load(
       'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_walking_strip8.png',
-      SpriteAnimationConfig.createStandardData(
+      SpriteAnimationConfigHelper.createStandardData(
         amount: 8,
         textureSize: textureSize,
       ),
@@ -247,14 +247,14 @@ final class SunnyPlayerConfig {
     idleRight: UISpriteAnimationsConfig.loadAnimationSunnyPlayerIdleRight(),
     runLeft: SpriteAnimation.load(
       'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_run_left_strip8.png',
-      SpriteAnimationConfig.createStandardData(
+      SpriteAnimationConfigHelper.createStandardData(
         amount: 8,
         textureSize: textureSize,
       ),
     ),
     runRight: SpriteAnimation.load(
       'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_run_strip8.png',
-      SpriteAnimationConfig.createStandardData(
+      SpriteAnimationConfigHelper.createStandardData(
         amount: 8,
         textureSize: textureSize,
       ),

@@ -1,9 +1,9 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/character_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/lightning_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
+import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 
 /// Configuration constants and factory methods for torch decorations.
 ///
@@ -109,7 +109,7 @@ final class TorchDecorationConfig {
   /// Returns a Future that resolves to the configured SpriteAnimation.
   static Future<SpriteAnimation> loadAnimation() => SpriteAnimation.load(
     'gameplay/decorations/torch_decoration_6.png',
-    SpriteAnimationConfig.createStandardData(
+    SpriteAnimationConfigHelper.createStandardData(
       amount: 6,
       textureSize: _textureSize,
     ),

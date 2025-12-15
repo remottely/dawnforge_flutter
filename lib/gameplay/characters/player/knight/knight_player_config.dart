@@ -1,11 +1,11 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/character_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/lightning_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
-import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
+import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
+import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_config.dart';
 
 final class KnightPlayerConfig {
   KnightPlayerConfig._();
@@ -57,7 +57,7 @@ final class KnightPlayerConfig {
       SimpleDirectionAnimation(
         idleLeft: SpriteAnimation.load(
           'gameplay/characters/player/knight/knight_player_idle_left_6.png',
-          SpriteAnimationConfig.createStandardData(
+          SpriteAnimationConfigHelper.createStandardData(
             amount: 6,
             textureSize: textureSize,
           ),
@@ -66,14 +66,14 @@ final class KnightPlayerConfig {
             UISpriteAnimationsConfig.loadAnimationKnightPlayerIdleRight(),
         runLeft: SpriteAnimation.load(
           'gameplay/characters/player/knight/knight_player_walking_left_6.png',
-          SpriteAnimationConfig.createStandardData(
+          SpriteAnimationConfigHelper.createStandardData(
             amount: 6,
             textureSize: textureSize,
           ),
         ),
         runRight: SpriteAnimation.load(
           'gameplay/characters/player/knight/knight_player_walking_right_6.png',
-          SpriteAnimationConfig.createStandardData(
+          SpriteAnimationConfigHelper.createStandardData(
             amount: 6,
             textureSize: textureSize,
           ),

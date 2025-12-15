@@ -3,9 +3,9 @@ import 'package:darkness_dungeon/gameplay/characters/character_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_fx.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/lightning_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
+import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 
 final class CharacterFireballAttackConfig {
   CharacterFireballAttackConfig._();
@@ -31,7 +31,7 @@ final class CharacterFireballAttackConfig {
   static Future<SpriteAnimation> loadAnimationExecution() =>
       SpriteAnimation.load(
         'gameplay/characters/shared/character_fireball_attack_right_3.png',
-        SpriteAnimationConfig.createStandardData(
+        SpriteAnimationConfigHelper.createStandardData(
           amount: 3,
           textureSize: _textureSize,
         ),
@@ -39,7 +39,7 @@ final class CharacterFireballAttackConfig {
 
   static Future<SpriteAnimation> loadAnimationDestroy() => SpriteAnimation.load(
     'gameplay/characters/shared/character_fireball_explosion_right_6.png',
-    SpriteAnimationConfig.createStandardData(
+    SpriteAnimationConfigHelper.createStandardData(
       amount: 6,
       textureSize: TileConstants.tileSizeExtraLarge,
     ),

@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
+import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 
 class EmoteManager {
   static const String kExclamationEmoteAsset =
@@ -16,7 +16,7 @@ class EmoteManager {
     return AnimatedFollowerGameObject(
       animation: SpriteAnimation.load(
         asset,
-        SpriteAnimationConfig.createStandardData(
+        SpriteAnimationConfigHelper.createStandardData(
           amount: amount,
           textureSize: TileConstants.tileSizeExtraLarge,
         ),
@@ -33,7 +33,7 @@ class EmoteManager {
   static Future<SpriteAnimation> _loadAnimationEmoteDecoration() =>
       SpriteAnimation.load(
         EmoteManager.kExclamationEmoteAsset,
-        SpriteAnimationConfig.createStandardData(
+        SpriteAnimationConfigHelper.createStandardData(
           amount: 8,
           textureSize: _emoteTextureSize,
         ),

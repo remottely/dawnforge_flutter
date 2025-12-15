@@ -1,13 +1,14 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/character_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/lightning_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
-import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
+import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
+import 'package:darkness_dungeon/shared/utils/sprite_animation_constants.dart';
+import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_config.dart';
 
 final class CutePlayerConfig {
   CutePlayerConfig._();
@@ -69,7 +70,7 @@ final class CutePlayerConfig {
   static Future<SpriteAnimation> _loadAnimationIdleLeft() =>
       SpriteAnimation.load(
         'new/Player/idle/player_idle_left_48x48_6.png',
-        SpriteAnimationConfig.createStandardData(
+        SpriteAnimationConfigHelper.createStandardData(
           amount: 6,
           textureSize: CutePlayerConfig.textureSize,
         ),
@@ -77,7 +78,7 @@ final class CutePlayerConfig {
 
   static Future<SpriteAnimation> _loadAnimationIdleUp() => SpriteAnimation.load(
     'new/Player/idle/player_idle_up_48x48_6.png',
-    SpriteAnimationConfig.createStandardData(
+    SpriteAnimationConfigHelper.createStandardData(
       amount: 6,
       textureSize: CutePlayerConfig.textureSize,
     ),
@@ -86,7 +87,7 @@ final class CutePlayerConfig {
   static Future<SpriteAnimation> _loadAnimationIdleDown() =>
       SpriteAnimation.load(
         'new/Player/idle/player_idle_down_48x48_6.png',
-        SpriteAnimationConfig.createStandardData(
+        SpriteAnimationConfigHelper.createStandardData(
           amount: 6,
           textureSize: CutePlayerConfig.textureSize,
         ),
@@ -95,7 +96,7 @@ final class CutePlayerConfig {
   static final Future<SpriteAnimation> _loadAnimationAttackRight =
       SpriteAnimation.load(
         'new/Player/attack/player_attack_right_48x48_4.png',
-        SpriteAnimationConfig.createStandardData(
+        SpriteAnimationConfigHelper.createStandardData(
           amount: 4,
           textureSize: textureSize,
         ),
@@ -104,7 +105,7 @@ final class CutePlayerConfig {
   static final Future<SpriteAnimation> _loadAnimationAttackLeft =
       SpriteAnimation.load(
         'new/Player/attack/player_attack_left_48x48_4.png',
-        SpriteAnimationConfig.createStandardData(
+        SpriteAnimationConfigHelper.createStandardData(
           amount: 4,
           textureSize: textureSize,
         ),
@@ -114,7 +115,7 @@ final class CutePlayerConfig {
       SpriteAnimation.load(
         // TODO(Kevin): NOW - create up and down verifications
         'new/Player/attack/player_attack_up_48x48_4.png',
-        SpriteAnimationConfig.createStandardData(
+        SpriteAnimationConfigHelper.createStandardData(
           amount: 4,
           textureSize: textureSize,
         ),
@@ -124,7 +125,7 @@ final class CutePlayerConfig {
       SpriteAnimation.load(
         // TODO(Kevin): NOW - create up and down verifications
         'new/Player/attack/player_attack_down_48x48_4.png',
-        SpriteAnimationConfig.createStandardData(
+        SpriteAnimationConfigHelper.createStandardData(
           amount: 4,
           textureSize: textureSize,
         ),
@@ -145,40 +146,40 @@ final class CutePlayerConfig {
   static final Future<SpriteAnimation> _loadAnimationShovelRight =
       SpriteAnimation.load(
         'new/Player/shovel/player_shovel_right_48x48_2.png',
-        SpriteAnimationConfig.createCustomData(
+        SpriteAnimationConfigHelper.createCustomData(
           amount: 2,
           textureSize: textureSize,
-          stepTime: SpriteAnimationConfig.kStepTimeSlow,
+          stepTime: SpriteAnimationConstants.kStepTimeSlow,
         ),
       );
 
   static final Future<SpriteAnimation> _loadAnimationShovelLeft =
       SpriteAnimation.load(
         'new/Player/shovel/player_shovel_left_48x48_2.png',
-        SpriteAnimationConfig.createCustomData(
+        SpriteAnimationConfigHelper.createCustomData(
           amount: 2,
           textureSize: textureSize,
-          stepTime: SpriteAnimationConfig.kStepTimeSlow,
+          stepTime: SpriteAnimationConstants.kStepTimeSlow,
         ),
       );
 
   static final Future<SpriteAnimation> _loadAnimationShovelUp =
       SpriteAnimation.load(
         'new/Player/shovel/player_shovel_up_48x48_2.png',
-        SpriteAnimationConfig.createCustomData(
+        SpriteAnimationConfigHelper.createCustomData(
           amount: 2,
           textureSize: textureSize,
-          stepTime: SpriteAnimationConfig.kStepTimeSlow,
+          stepTime: SpriteAnimationConstants.kStepTimeSlow,
         ),
       );
 
   static final Future<SpriteAnimation> _loadAnimationShovelDown =
       SpriteAnimation.load(
         'new/Player/shovel/player_shovel_down_48x48_2.png',
-        SpriteAnimationConfig.createCustomData(
+        SpriteAnimationConfigHelper.createCustomData(
           amount: 2,
           textureSize: textureSize,
-          stepTime: SpriteAnimationConfig.kStepTimeSlow,
+          stepTime: SpriteAnimationConstants.kStepTimeSlow,
         ),
       );
 
@@ -196,40 +197,40 @@ final class CutePlayerConfig {
   static final Future<SpriteAnimation> _loadAnimationWateringCanRight =
       SpriteAnimation.load(
         'new/Player/water/player_water_right_48x48_2.png',
-        SpriteAnimationConfig.createCustomData(
+        SpriteAnimationConfigHelper.createCustomData(
           amount: 2,
           textureSize: textureSize,
-          stepTime: SpriteAnimationConfig.kStepTimeSlow,
+          stepTime: SpriteAnimationConstants.kStepTimeSlow,
         ),
       );
 
   static final Future<SpriteAnimation> _loadAnimationWateringCanLeft =
       SpriteAnimation.load(
         'new/Player/water/player_water_left_48x48_2.png',
-        SpriteAnimationConfig.createCustomData(
+        SpriteAnimationConfigHelper.createCustomData(
           amount: 2,
           textureSize: textureSize,
-          stepTime: SpriteAnimationConfig.kStepTimeSlow,
+          stepTime: SpriteAnimationConstants.kStepTimeSlow,
         ),
       );
 
   static final Future<SpriteAnimation> _loadAnimationWateringCanUp =
       SpriteAnimation.load(
         'new/Player/water/player_water_up_48x48_2.png',
-        SpriteAnimationConfig.createCustomData(
+        SpriteAnimationConfigHelper.createCustomData(
           amount: 2,
           textureSize: textureSize,
-          stepTime: SpriteAnimationConfig.kStepTimeSlow,
+          stepTime: SpriteAnimationConstants.kStepTimeSlow,
         ),
       );
 
   static final Future<SpriteAnimation> _loadAnimationWateringCanDown =
       SpriteAnimation.load(
         'new/Player/water/player_water_down_48x48_2.png',
-        SpriteAnimationConfig.createCustomData(
+        SpriteAnimationConfigHelper.createCustomData(
           amount: 2,
           textureSize: textureSize,
-          stepTime: SpriteAnimationConfig.kStepTimeSlow,
+          stepTime: SpriteAnimationConstants.kStepTimeSlow,
         ),
       );
 
@@ -248,7 +249,7 @@ final class CutePlayerConfig {
   _loadAnimationPlaceSeedRight = SpriteAnimation.load(
     // TODO(Kevin): CREATE ANIMATION
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_strip8.png',
-    SpriteAnimationConfig.createStandardData(
+    SpriteAnimationConfigHelper.createStandardData(
       amount: 8,
       textureSize: textureSize,
     ),
@@ -258,7 +259,7 @@ final class CutePlayerConfig {
   _loadAnimationPlaceSeedLeft = SpriteAnimation.load(
     // TODO(Kevin): CREATE ANIMATION
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_left_strip8.png',
-    SpriteAnimationConfig.createStandardData(
+    SpriteAnimationConfigHelper.createStandardData(
       amount: 8,
       textureSize: textureSize,
     ),
@@ -287,7 +288,7 @@ final class CutePlayerConfig {
   _loadAnimationHarvestBasketRight = SpriteAnimation.load(
     // TODO(Kevin): CREATE ANIMATION
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_strip8.png',
-    SpriteAnimationConfig.createStandardData(
+    SpriteAnimationConfigHelper.createStandardData(
       amount: 8,
       textureSize: textureSize,
     ),
@@ -297,7 +298,7 @@ final class CutePlayerConfig {
   _loadAnimationHarvestBasketLeft = SpriteAnimation.load(
     // TODO(Kevin): CREATE ANIMATION
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_left_strip8.png',
-    SpriteAnimationConfig.createStandardData(
+    SpriteAnimationConfigHelper.createStandardData(
       amount: 8,
       textureSize: textureSize,
     ),
@@ -330,28 +331,28 @@ final class CutePlayerConfig {
         idleDown: _loadAnimationIdleDown(),
         runLeft: SpriteAnimation.load(
           'new/Player/walk/player_walk_left_48x48_6.png',
-          SpriteAnimationConfig.createStandardData(
+          SpriteAnimationConfigHelper.createStandardData(
             amount: 6,
             textureSize: textureSize,
           ),
         ),
         runRight: SpriteAnimation.load(
           'new/Player/walk/player_walk_right_48x48_6.png',
-          SpriteAnimationConfig.createStandardData(
+          SpriteAnimationConfigHelper.createStandardData(
             amount: 6,
             textureSize: textureSize,
           ),
         ),
         runUp: SpriteAnimation.load(
           'new/Player/walk/player_walk_up_48x48_6.png',
-          SpriteAnimationConfig.createStandardData(
+          SpriteAnimationConfigHelper.createStandardData(
             amount: 6,
             textureSize: textureSize,
           ),
         ),
         runDown: SpriteAnimation.load(
           'new/Player/walk/player_walk_down_48x48_6.png',
-          SpriteAnimationConfig.createStandardData(
+          SpriteAnimationConfigHelper.createStandardData(
             amount: 6,
             textureSize: textureSize,
           ),
@@ -367,28 +368,28 @@ final class CutePlayerConfig {
     // TODO(Kevin): NOW - create run animations
     runLeft: SpriteAnimation.load(
       'new/Player/walk/player_walk_left_48x48_6.png', // TODO(Kevin): change to run animation
-      SpriteAnimationConfig.createStandardData(
+      SpriteAnimationConfigHelper.createStandardData(
         amount: 6,
         textureSize: textureSize,
       ),
     ),
     runRight: SpriteAnimation.load(
       'new/Player/walk/player_walk_right_48x48_6.png', // TODO(Kevin): change to run animation
-      SpriteAnimationConfig.createStandardData(
+      SpriteAnimationConfigHelper.createStandardData(
         amount: 6,
         textureSize: textureSize,
       ),
     ),
     runUp: SpriteAnimation.load(
       'new/Player/walk/player_walk_up_48x48_6.png', // TODO(Kevin): change to run animation
-      SpriteAnimationConfig.createStandardData(
+      SpriteAnimationConfigHelper.createStandardData(
         amount: 6,
         textureSize: textureSize,
       ),
     ),
     runDown: SpriteAnimation.load(
       'new/Player/walk/player_walk_down_48x48_6.png', // TODO(Kevin): change to run animation
-      SpriteAnimationConfig.createStandardData(
+      SpriteAnimationConfigHelper.createStandardData(
         amount: 6,
         textureSize: textureSize,
       ),

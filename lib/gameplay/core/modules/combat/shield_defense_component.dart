@@ -1,8 +1,8 @@
 import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
+import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 
 /// Componente visual do escudo durante a defesa
 ///
@@ -28,7 +28,7 @@ class ShieldDefenseComponent extends GameComponent {
       // Criar animação do escudo (16x16) diretamente
       final loadAnimationRight = await SpriteAnimation.load(
         'gameplay/characters/player/shield_defense_right_12.png',
-        SpriteAnimationConfig.createStandardData(
+        SpriteAnimationConfigHelper.createStandardData(
           amount: 12,
           textureSize: TileConstants.tileSizeSuperLarge,
         ),

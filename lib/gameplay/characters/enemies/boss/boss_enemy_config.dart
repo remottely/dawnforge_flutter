@@ -1,9 +1,9 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/character_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/conversation/conversation_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
-import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
+import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
+import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_config.dart';
 
 final class BossEnemyConfig {
   BossEnemyConfig._();
@@ -27,14 +27,14 @@ final class BossEnemyConfig {
         idleRight: UISpriteAnimationsConfig.loadAnimationBossEnemyIdleRight(),
         runLeft: SpriteAnimation.load(
           'gameplay/characters/enemies/boss/boss_enemy_run_left_4.png',
-          SpriteAnimationConfig.createStandardData(
+          SpriteAnimationConfigHelper.createStandardData(
             amount: 4,
             textureSize: textureSize,
           ),
         ),
         runRight: SpriteAnimation.load(
           'gameplay/characters/enemies/boss/boss_enemy_run_right_4.png',
-          SpriteAnimationConfig.createStandardData(
+          SpriteAnimationConfigHelper.createStandardData(
             amount: 4,
             textureSize: textureSize,
           ),

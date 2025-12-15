@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/decorations/decoration_constants.dart';
+import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 
 final class SpikeTrapDecorationConfig {
   SpikeTrapDecorationConfig._();
@@ -14,7 +14,7 @@ final class SpikeTrapDecorationConfig {
 
   static Future<SpriteAnimation> loadAnimation() => SpriteAnimation.load(
     'gameplay/decorations/spike_trap_decoration_10.png',
-    SpriteAnimationConfig.createStandardData(
+    SpriteAnimationConfigHelper.createStandardData(
       amount: 10,
       textureSize: _textureSize,
     ),

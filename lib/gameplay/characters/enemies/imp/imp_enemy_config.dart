@@ -1,9 +1,9 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/character_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
-import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
+import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
+import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_config.dart';
 
 final class ImpEnemyConfig {
   ImpEnemyConfig._();
@@ -24,7 +24,7 @@ final class ImpEnemyConfig {
       SimpleDirectionAnimation(
         idleLeft: SpriteAnimation.load(
           'gameplay/characters/enemies/imp/imp_enemy_idle_left_4.png',
-          SpriteAnimationConfig.createStandardData(
+          SpriteAnimationConfigHelper.createStandardData(
             amount: 4,
             textureSize: textureSize,
           ),
@@ -32,14 +32,14 @@ final class ImpEnemyConfig {
         idleRight: UISpriteAnimationsConfig.loadAnimationImpEnemyIdleRight(),
         runLeft: SpriteAnimation.load(
           'gameplay/characters/enemies/imp/imp_enemy_run_left_4.png',
-          SpriteAnimationConfig.createStandardData(
+          SpriteAnimationConfigHelper.createStandardData(
             amount: 4,
             textureSize: textureSize,
           ),
         ),
         runRight: SpriteAnimation.load(
           'gameplay/characters/enemies/imp/imp_enemy_run_right_4.png',
-          SpriteAnimationConfig.createStandardData(
+          SpriteAnimationConfigHelper.createStandardData(
             amount: 4,
             textureSize: textureSize,
           ),
