@@ -325,8 +325,7 @@ final class CutePlayerConfig {
   static final SimpleDirectionAnimation _animationWalkDirectional =
       SimpleDirectionAnimation(
         idleLeft: _loadAnimationIdleLeft(),
-        idleRight:
-            UISpriteAnimationsConfig.loadAnimationCutePlayerIdleRightOld(),
+        idleRight: UISpriteAnimationsConfig.loadAnimationCutePlayerIdleRight(),
         idleUp: _loadAnimationIdleUp(),
         idleDown: _loadAnimationIdleDown(),
         runLeft: SpriteAnimation.load(
@@ -362,7 +361,7 @@ final class CutePlayerConfig {
   static final SimpleDirectionAnimation
   _animationRunDirectional = SimpleDirectionAnimation(
     idleLeft: _loadAnimationIdleLeft(),
-    idleRight: UISpriteAnimationsConfig.loadAnimationCutePlayerIdleRightOld(),
+    idleRight: UISpriteAnimationsConfig.loadAnimationCutePlayerIdleRight(),
     idleUp: _loadAnimationIdleUp(),
     idleDown: _loadAnimationIdleDown(),
     // TODO(Kevin): NOW - create run animations
