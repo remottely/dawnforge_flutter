@@ -15,6 +15,7 @@ import 'package:darkness_dungeon/gameplay/farm/handlers/farm_input_handler.dart'
 import 'package:darkness_dungeon/gameplay/gameplay_screen.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen_config.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
+import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_config.dart';
 import 'package:flutter/material.dart';
 
 abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
@@ -77,6 +78,9 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
       playerStateManager.lastPlayerModel = lastPlayerModel;
     }
 
+    playerStateManager.currentPlayerAnimation =
+        UISpriteAnimationsConfig.loadAnimationSunnyPlayerIdleRight();
+
     return SunnyPlayerView<SunnyPlayerController, SunnyPlayerModel>(
       position: position,
       model: lastPlayerModel,
@@ -90,6 +94,9 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
       lastPlayerModel = CutePlayerModel();
       playerStateManager.lastPlayerModel = lastPlayerModel;
     }
+
+    playerStateManager.currentPlayerAnimation =
+        UISpriteAnimationsConfig.loadAnimationCutePlayerIdleRight();
 
     return CutePlayerView<CutePlayerController, CutePlayerModel>(
       position: position,

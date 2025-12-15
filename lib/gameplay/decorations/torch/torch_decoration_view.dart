@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/conversation/emote_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/ui/emote_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/gameplay/decorations/torch/torch_decoration_config.dart';
 import 'package:darkness_dungeon/gameplay/decorations/torch/torch_decoration_controller.dart';

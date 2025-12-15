@@ -51,8 +51,8 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
             (mapArguments?.playerPosition ?? Vector2(2, 1)) *
             TileConstants.kTileDimensionStandard;
 
-        // final player = buildSunnyPlayer(playerPosition);
-        final player = buildCutePlayer(playerPosition);
+        final player = buildSunnyPlayer(playerPosition);
+        // final player = buildCutePlayer(playerPosition);
 
         playerInput = GameplayScreenConfig.createPlayerInput();
 

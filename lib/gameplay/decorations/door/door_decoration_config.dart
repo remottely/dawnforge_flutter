@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/conversation/conversation_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/ui/conversation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
@@ -34,6 +34,6 @@ final class DoorDecorationConfig {
       'door_without_key'; // TODO(Kevin): enhance this nomenclature
 
   static List<Say> createConversationSequence() {
-    return [ConversationConfig.createKnightLeft(_kRequiredKeyMessage)];
+    return [ConversationConfig.createPlayerLeft(_kRequiredKeyMessage)];
   }
 }

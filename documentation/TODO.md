@@ -1,12 +1,21 @@
 # IMPORTANT BEFORE LAUNCH:
 
+- [PRIORITY] render in all conversations the actual player sprite animation dynamically
+
 - [PRIORITY] enhance: create a logic that we dont need to declare each crop asset path to pubspec.yaml like: "assets/images/gameplay/farm/crops/strawberry/"
+
 - [PRIORITY] farm crops need to have 3D behavior, fix it
+
 - [PRIORITY] fix die multiple times in the same second bug the game, handle cannot die more than once.
+
 - refactor all tiled decoration nomenclatures
+
 - save torch state
+
 - [PRIORITY] verify if need the \_activeAnimationLockCount logic
+
 - [PRIORITY] remove EquipmentToCustomPlayerAdapter from codebase??
+
 - [PRIORITY] Change background musics
 
 ---

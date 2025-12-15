@@ -3,9 +3,9 @@ import 'package:darkness_dungeon/shared/utils/sprite_animation_constants.dart';
 import 'package:flutter/material.dart';
 
 class DDSpriteAnimationWidget extends StatelessWidget {
+  final Future<SpriteAnimation> animation;
   final double _width;
   final double _height;
-  final Future<SpriteAnimation> animation;
 
   const DDSpriteAnimationWidget({super.key, required this.animation})
     : _width = SpriteAnimationConstants.kSizeStandard,
@@ -25,10 +25,9 @@ class DDSpriteAnimationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: _width,
       height: _height,
-      color: Colors.red.withOpacity(0.2),
       child: FutureBuilder<SpriteAnimation>(
         future: animation,
         builder: (context, snapshot) {

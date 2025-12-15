@@ -88,7 +88,7 @@ class _CharacterAnimation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DDSpriteAnimationWidget(animation: animation);
+    return DDSpriteAnimationWidget.large(animation: animation);
   }
 }
 

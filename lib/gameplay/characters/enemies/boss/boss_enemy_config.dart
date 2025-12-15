@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/character_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/conversation/conversation_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/ui/conversation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_config.dart';
@@ -51,7 +51,7 @@ final class BossEnemyConfig {
     return [
       ConversationConfig.createKidRight('talk_kid_1'),
       ConversationConfig.createBossLeft('talk_boss_1'),
-      ConversationConfig.createKnightLeft('talk_player_3'),
+      ConversationConfig.createPlayerLeft('talk_player_3'),
       ConversationConfig.createBossRight('talk_boss_2'),
     ];
   }

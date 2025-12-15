@@ -1,19 +1,32 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/shared/framework/widgets/dd_sprite_animation_widget.dart';
 import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_config.dart';
 import 'package:flutter/painting.dart';
 
-class ConversationConfig {
-  static Say createKnightLeft(String phraseKey) => _createLeft(
+final class ConversationConfig {
+  ConversationConfig._();
+
+  static Say createPlayerLeft(String phraseKey) => _createLeft(
     phraseKey: phraseKey,
-    animation: UISpriteAnimationsConfig.loadAnimationKnightPlayerIdleRight(),
+    animation: PlayerStateManager.instance.currentPlayerAnimation!,
   );
 
-  static Say createSunnyLeft(String phraseKey) => _createLeft(
-    phraseKey: phraseKey,
-    animation: UISpriteAnimationsConfig.loadAnimationSunnyPlayerIdleRight(),
-  );
+  // static Say createKnightLeft(String phraseKey) => _createLeft(
+  //   phraseKey: phraseKey,
+  //   animation: UISpriteAnimationsConfig.loadAnimationKnightPlayerIdleRight(),
+  // );
+
+  // static Say createCuteLeft(String phraseKey) => _createLeft(
+  //   phraseKey: phraseKey,
+  //   animation: UISpriteAnimationsConfig.loadAnimationCutePlayerIdleRight(),
+  // );
+
+  // static Say createSunnyLeft(String phraseKey) => _createLeft(
+  //   phraseKey: phraseKey,
+  //   animation: UISpriteAnimationsConfig.loadAnimationSunnyPlayerIdleRight(),
+  // );
 
   static Say createWizardRight(String phraseKey) => _createRight(
     phraseKey: phraseKey,
@@ -42,7 +55,7 @@ class ConversationConfig {
     text: [
       TextSpan(text: GameplayStringsLocation.instance.getString(phraseKey)),
     ],
-    person: DDSpriteAnimationWidget(animation: animation),
+    person: DDSpriteAnimationWidget.large(animation: animation),
     personSayDirection: PersonSayDirection.LEFT,
   );
 
@@ -53,7 +66,7 @@ class ConversationConfig {
     text: [
       TextSpan(text: GameplayStringsLocation.instance.getString(phraseKey)),
     ],
-    person: DDSpriteAnimationWidget(animation: animation),
+    person: DDSpriteAnimationWidget.large(animation: animation),
     personSayDirection: PersonSayDirection.RIGHT,
   );
 }
