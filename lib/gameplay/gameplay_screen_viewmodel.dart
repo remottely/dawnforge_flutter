@@ -1,11 +1,11 @@
-import 'dart:developer' as developer;
-
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_model.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/shield_defense_input_handler.dart';
-// import 'package:darkness_dungeon/gameplay/core/modules/game/custom_player_inventory_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/game_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/inventory_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager.dart';
@@ -14,21 +14,21 @@ import 'package:darkness_dungeon/gameplay/core/modules/save/game_save_controller
 import 'package:darkness_dungeon/gameplay/farm/handlers/farm_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen_config.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:flutter/material.dart';
 
 abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
+  final playerStateManager = PlayerStateManager.instance;
+
   final gameplayHUD = GameplayHUDView();
 
   late final CameraConfig cameraConfig;
   final gameplayGameStateManager = GameStateManager();
-  // final customPlayerInventoryInputHandler = CustomPlayerInventoryInputHandler();
+
   final inventoryInputHandler = InventoryInputHandler();
   final shieldDefenseInputHandler = ShieldDefenseInputHandler();
   late PlayerController playerInput;
   late FarmInputHandler farmInputHandler;
-
-  // Referências aos últimos players criados (para capturar vida antes de recriar)
-  SunnyPlayerView? _lastSunnyPlayer;
 
   @override
   void initState() {
@@ -36,42 +36,27 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
     _loadGameOrResetLife();
   }
 
-  /// Tenta carregar save existente, ou reseta vida se for novo jogo
   void _loadGameOrResetLife() {
-    // Tentar carregar save de forma assíncrona
     GameSaveController.instance
         .loadGame()
         .then((success) {
           if (success) {
-            developer.log('[ViewModel] ✅ Game loaded from save');
           } else {
-            developer.log('[ViewModel] No save found, starting new game');
             _resetPlayerLifeOnNewGame();
           }
         })
         .catchError((e) {
-          developer.log('[ViewModel] Error loading game: $e');
           _resetPlayerLifeOnNewGame();
         });
   }
 
   void _resetPlayerLifeOnNewGame() {
-    // Resetar vida no PlayerStateManager quando iniciar novo jogo
-    // Isso garante que mesmo após morte, o próximo jogo comece com vida cheia
-    final stateManager = PlayerStateManager.instance;
-    final sunnyModel = stateManager.getSunnyModel();
+    final lastPlayerModel = playerStateManager.lastPlayerModel;
 
-    if (sunnyModel.life != null && sunnyModel.life! <= 0) {
-      sunnyModel.updateLife(200); // Vida padrão do Sunny (kLifeExtraLarge)
-      developer.log('[ViewModel] Reset Sunny life to full on new game');
-    }
-  }
+    if (lastPlayerModel == null) return;
 
-  @override
-  void dispose() {
-    // NÃO para a música no dispose - deixa o AudioManager gerenciar
-    // A música deve continuar entre transições de tela
-    super.dispose();
+    final currentLife = lastPlayerModel.life ?? 0;
+    if (currentLife <= 0) lastPlayerModel.updateLife(200);
   }
 
   @override
@@ -84,30 +69,31 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
     cameraConfig = GameplayScreenConfig.createCameraConfig(context);
   }
 
-  SunnyPlayerView buildSunnyPlayer(Vector2 position) {
-    final stateManager = PlayerStateManager.instance;
-    final model = stateManager.getSunnyModel();
+  DDBasePlayerView buildSunnyPlayer(Vector2 position) {
+    var lastPlayerModel = playerStateManager.lastPlayerModel;
 
-    // Salvar vida do player anterior no model antes de criar novo
-    // (apenas se não estiver morto - evita loop de morte)
-    if (_lastSunnyPlayer != null && !_lastSunnyPlayer!.isDead) {
-      final currentLife = _lastSunnyPlayer!.life;
-      model.updateLife(currentLife);
-      developer.log(
-        '[ViewModel] Captured Sunny life before rebuild: $currentLife',
-      );
+    if (lastPlayerModel is! SunnyPlayerModel) {
+      lastPlayerModel = SunnyPlayerModel();
+      playerStateManager.lastPlayerModel = lastPlayerModel;
     }
 
-    final player = SunnyPlayerView<SunnyPlayerController, SunnyPlayerModel>(
+    return SunnyPlayerView<SunnyPlayerController, SunnyPlayerModel>(
       position: position,
-      model: model,
+      model: lastPlayerModel,
     );
+  }
 
-    developer.log(
-      '[ViewModel] Created Sunny with model life: ${model.life ?? 'null'}',
+  DDBasePlayerView buildCutePlayer(Vector2 position) {
+    var lastPlayerModel = playerStateManager.lastPlayerModel;
+
+    if (lastPlayerModel is! CutePlayerModel) {
+      lastPlayerModel = CutePlayerModel();
+      playerStateManager.lastPlayerModel = lastPlayerModel;
+    }
+
+    return CutePlayerView<CutePlayerController, CutePlayerModel>(
+      position: position,
+      model: lastPlayerModel,
     );
-
-    _lastSunnyPlayer = player;
-    return player;
   }
 }

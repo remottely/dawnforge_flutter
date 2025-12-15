@@ -6,14 +6,12 @@ import 'package:flutter/services.dart';
 import '../models/crop_model.dart';
 import '../models/crop_stage_model.dart';
 
-/// Database de crops disponíveis no jogo
 final class CropDatabase {
   CropDatabase._();
 
   static final Map<String, Map<String, dynamic>> _cropDatabase = {};
   static bool _isInitialized = false;
 
-  /// Carregar database do arquivo JSON
   static Future<void> initialize() async {
     if (_isInitialized) return;
 
@@ -35,7 +33,6 @@ final class CropDatabase {
     }
   }
 
-  /// Criar crop por ID (sempre começa como semente)
   static CropModel? createCrop(String cropId) {
     if (!_isInitialized) {
       developer.log('[CropDatabase] ERROR: Not initialized!');
@@ -52,7 +49,7 @@ final class CropDatabase {
       cropId: cropId,
       name: cropData['name'] as String,
       description: cropData['description'] as String,
-      stage: CropStageModel.seed, // Sempre começa como semente
+      stage: CropStageModel.seed,
       daysPlanted: 0,
       daysToMature: cropData['daysToMature'] as int,
       yieldAmount: cropData['yieldAmount'] as int,
@@ -62,10 +59,8 @@ final class CropDatabase {
     );
   }
 
-  /// Listar todas as crops
   static List<String> getAllCropIds() => _cropDatabase.keys.toList();
 
-  /// Listar crops por estação
   static List<String> getCropsBySeason(String season) {
     return _cropDatabase.entries
         .where(
@@ -77,11 +72,9 @@ final class CropDatabase {
         .toList();
   }
 
-  /// Obter dados de uma crop
   static Map<String, dynamic>? getCropData(String cropId) {
     return _cropDatabase[cropId];
   }
 
-  /// Database está inicializado?
   static bool get isInitialized => _isInitialized;
 }

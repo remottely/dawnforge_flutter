@@ -8,7 +8,7 @@ class MiniBossEnemyView
     extends DDRangedEnemyView<MiniBossEnemyController, MiniBossEnemyModel> {
   MiniBossEnemyView({required super.position})
     : super(
-        animation: MiniBossEnemyConfig.walkAnimation,
+        animation: MiniBossEnemyConfig.animationWalkDirectional,
         size: MiniBossEnemyConfig.componentSize,
         speed: MiniBossEnemyConfig.kSpeed,
         life: MiniBossEnemyConfig.kLife,
@@ -18,14 +18,13 @@ class MiniBossEnemyView
   MiniBossEnemyModel createModel() => MiniBossEnemyModel();
 
   @override
-  MiniBossEnemyController createController(MiniBossEnemyModel model) {
-    return MiniBossEnemyController(
-      model: model,
-      onDetectPlayerAndMoveToMeleeAttack: onDetectPlayerAndMoveToPrimaryAttack,
-      onDetectPlayerAndMoveToRangedAttack:
-          onDetectPlayerAndMoveToFireballAttack,
-    );
-  }
+  MiniBossEnemyController createController(
+    MiniBossEnemyModel model,
+  ) => MiniBossEnemyController(
+    model: model,
+    onDetectPlayerAndMoveToMeleeAttack: onDetectPlayerAndMoveToPrimaryAttack,
+    onDetectPlayerAndMoveToRangedAttack: onDetectPlayerAndMoveToFireballAttack,
+  );
 
   @override
   RectangleHitbox getHitbox() => MiniBossEnemyConfig.createHitbox();

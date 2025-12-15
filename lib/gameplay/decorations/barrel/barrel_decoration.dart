@@ -25,10 +25,9 @@ class BarrelDecorationView extends DDPushableDecoration with Attackable {
   }
 
   void _playBreakAndRemove() {
-    // Prevent multiple triggers
     if (sprite == null) return;
     playSpriteAnimationOnce(
-      BarrelDecorationConfig.loadBreakAnimation(),
+      BarrelDecorationConfig.loadAnimationBreak(),
       onStart: () {
         sprite = null;
       },

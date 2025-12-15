@@ -1,35 +1,15 @@
 import 'crop_stage_model.dart';
 
-/// Representa uma crop plantada em um tile
 final class CropModel {
-  /// ID da crop (carrot, potato, etc)
   final String cropId;
-
-  /// Nome exibido
   final String name;
-
-  /// Descrição da crop
   final String description;
-
-  /// Estágio atual de crescimento
   final CropStageModel stage;
-
-  /// Dias desde plantio
   final int daysPlanted;
-
-  /// Dias necessários para maturar
   final int daysToMature;
-
-  /// Quantidade colhida quando madura
   final int yieldAmount;
-
-  /// ID do item colhido
   final String harvestItemId;
-
-  /// Estação necessária (null = qualquer estação)
   final String? requiredSeason;
-
-  /// Sprite da crop
   final String iconPath;
 
   const CropModel({
@@ -45,20 +25,15 @@ final class CropModel {
     required this.iconPath,
   });
 
-  /// Progresso de crescimento (0.0-1.0)
   double get growthProgress => (daysPlanted / daysToMature).clamp(0.0, 1.0);
 
-  /// Está madura?
   bool get isMature => daysPlanted >= daysToMature;
 
-  /// Pode colher?
   bool get canHarvest => stage.canHarvest;
 
-  /// Avançar 1 dia de crescimento
   CropModel advanceDay() {
     final newDays = daysPlanted + 1;
 
-    // Determinar novo estágio baseado no progresso
     CropStageModel newStage;
     if (newDays >= daysToMature) {
       newStage = CropStageModel.mature;
@@ -73,7 +48,6 @@ final class CropModel {
     return copyWith(daysPlanted: newDays, stage: newStage);
   }
 
-  /// Serialização para JSON
   Map<String, dynamic> toJson() {
     return {
       'cropId': cropId,
@@ -89,7 +63,6 @@ final class CropModel {
     };
   }
 
-  /// Deserialização de JSON
   factory CropModel.fromJson(Map<String, dynamic> json) {
     return CropModel(
       cropId: json['cropId'] as String,
@@ -105,7 +78,6 @@ final class CropModel {
     );
   }
 
-  /// Criar cópia com modificações
   CropModel copyWith({
     String? cropId,
     String? name,

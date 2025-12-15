@@ -13,23 +13,14 @@ import 'models/item.dart';
 import 'models/item_category.dart';
 import 'models/item_type.dart';
 
-/// Factory para criação de itens a partir de um database JSON
-///
-/// O ItemFactory carrega um arquivo JSON com definições de todos os itens
-/// do jogo e permite criar instâncias de itens pelo seu ID.
 final class ItemFactory {
   ItemFactory._();
 
   static final Map<String, Map<String, dynamic>> _itemDatabase = {};
   static bool _isInitialized = false;
 
-  /// Caminho do arquivo de database de itens
   static const String _kDatabasePath = 'assets/items/items_database.json';
 
-  /// Inicializar factory carregando database de itens
-  ///
-  /// Deve ser chamado antes de usar [createItem] ou outros métodos.
-  /// É seguro chamar múltiplas vezes, só carrega uma vez.
   static Future<void> initialize() async {
     if (_isInitialized) {
       developer.log('[ItemFactory] Already initialized');
@@ -56,12 +47,6 @@ final class ItemFactory {
     }
   }
 
-  /// Criar item por ID
-  ///
-  /// Retorna null se:
-  /// - Factory não foi inicializado
-  /// - ID não existe no database
-  /// - Tipo de item não é suportado
   static Item? createItem(String itemId) {
     if (!_isInitialized) {
       developer.log(
@@ -81,9 +66,7 @@ final class ItemFactory {
 
       switch (type) {
         case ItemType.weapon:
-          return WeaponItem.fromJson(
-            itemData,
-          ); // TODO(kevin): remove weapons configurations from json file
+          return WeaponItem.fromJson(itemData);
         case ItemType.tool:
           return ToolItem.fromJson(itemData);
         case ItemType.consumable:
@@ -91,11 +74,10 @@ final class ItemFactory {
         case ItemType.seed:
           return SeedItem.fromJson(itemData);
         case ItemType.material:
-          // Check if it's actually a crop (has category field)
           final category = itemData['category'] as String?;
           if (category != null) {
             final itemCategory = ItemCategory.fromJson(category);
-            // If it's a farming category, create CropItem
+
             if ([
               ItemCategory.vegetables,
               ItemCategory.fruits,
@@ -104,7 +86,7 @@ final class ItemFactory {
               return CropItem.fromJson(itemData);
             }
           }
-          // Otherwise create regular MaterialItem
+
           return MaterialItem.fromJson(itemData);
         default:
           developer.log(
@@ -122,19 +104,14 @@ final class ItemFactory {
     }
   }
 
-  /// Criar múltiplos itens de uma vez
-  ///
-  /// Ignora IDs inválidos e retorna apenas itens válidos.
   static List<Item> createItems(List<String> itemIds) {
     return itemIds.map(createItem).whereType<Item>().toList();
   }
 
-  /// Listar todos os IDs de itens disponíveis
   static List<String> getAllItemIds() {
     return _itemDatabase.keys.toList();
   }
 
-  /// Listar IDs de itens por tipo
   static List<String> getItemIdsByType(ItemType type) {
     return _itemDatabase.entries
         .where((e) => e.value['type'] == type.toJson())
@@ -142,21 +119,17 @@ final class ItemFactory {
         .toList();
   }
 
-  /// Verificar se item existe no database
   static bool itemExists(String itemId) {
     return _itemDatabase.containsKey(itemId);
   }
 
-  /// Limpar database (útil para testes)
   static void reset() {
     _itemDatabase.clear();
     _isInitialized = false;
     developer.log('[ItemFactory] Reset');
   }
 
-  /// Factory foi inicializado?
   static bool get isInitialized => _isInitialized;
 
-  /// Quantidade de itens no database
   static int get itemCount => _itemDatabase.length;
 }

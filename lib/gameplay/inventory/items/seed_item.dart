@@ -2,23 +2,12 @@ import '../models/item.dart';
 import '../models/item_rarity.dart';
 import '../models/item_type.dart';
 
-/// Item de semente para agricultura
-///
-/// Sementes podem ser plantadas para crescer crops que podem ser colhidas.
 final class SeedItem extends Item {
-  /// ID da crop que será plantada (ex: 'carrot', 'wheat')
   final String cropId;
-
-  /// Tempo de crescimento em dias do jogo
   final int growthTime;
-
-  /// Quantidade de itens colhidos quando a crop crescer
   final int yield;
-
-  /// Estação ideal para plantar (spring, summer, fall, winter, any)
   final String season;
 
-  /// Cria uma semente
   const SeedItem({
     required super.id,
     required super.name,
@@ -35,7 +24,6 @@ final class SeedItem extends Item {
     this.season = 'any',
   });
 
-  /// Pode plantar na estação atual?
   bool canPlantInSeason(String currentSeason) {
     return season == 'any' ||
         season.toLowerCase() == currentSeason.toLowerCase();
@@ -59,7 +47,6 @@ final class SeedItem extends Item {
     };
   }
 
-  /// Cria semente a partir de JSON
   factory SeedItem.fromJson(Map<String, dynamic> json) {
     return SeedItem(
       id: json['id'] as String,

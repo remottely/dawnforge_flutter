@@ -7,7 +7,7 @@ import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_
 class ImpEnemyView extends DDBaseEnemyView<ImpEnemyController, ImpEnemyModel> {
   ImpEnemyView({required super.position})
     : super(
-        animation: ImpEnemyConfig.walkAnimation,
+        animation: ImpEnemyConfig.animationWalkDirectional,
         size: ImpEnemyConfig.componentSize,
         speed: ImpEnemyConfig.kSpeed,
         life: ImpEnemyConfig.kLife,
@@ -17,12 +17,12 @@ class ImpEnemyView extends DDBaseEnemyView<ImpEnemyController, ImpEnemyModel> {
   ImpEnemyModel createModel() => ImpEnemyModel();
 
   @override
-  ImpEnemyController createController(ImpEnemyModel model) {
-    return ImpEnemyController(
-      model: model,
-      onDetectPlayerAndMoveToMeleeAttack: onDetectPlayerAndMoveToPrimaryAttack,
-    );
-  }
+  ImpEnemyController createController(ImpEnemyModel model) =>
+      ImpEnemyController(
+        model: model,
+        onDetectPlayerAndMoveToMeleeAttack:
+            onDetectPlayerAndMoveToPrimaryAttack,
+      );
 
   @override
   RectangleHitbox getHitbox() => ImpEnemyConfig.createHitbox();

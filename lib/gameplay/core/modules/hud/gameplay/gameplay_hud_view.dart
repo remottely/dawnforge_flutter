@@ -4,7 +4,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/inputs_hud_vie
 import 'package:darkness_dungeon/gameplay/core/modules/hud/inventory/inventory_hud_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/player_vital_stats/player_vital_stats_hud_view.dart';
 import 'package:darkness_dungeon/gameplay/decorations/door_key/door_key_decoration_config.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 
 class GameplayHUDView extends GameInterface {
   late Sprite _keySprite;
@@ -53,6 +53,7 @@ class GameplayHUDView extends GameInterface {
   bool _hasPlayerWithKey() {
     return gameRef.player != null &&
         (gameRef.player as DDBasePlayerView)
+            .controller
             .model
             .hasKey; // TODO(Kevin): make this more generic, like DDBasePlayerView
   }

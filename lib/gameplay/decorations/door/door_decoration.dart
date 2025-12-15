@@ -4,13 +4,13 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/decorations/door/door_decoration_config.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 
 class DoorDecorationView extends DDDecoration {
   bool _isOpen = false;
 
   DoorDecorationView({required super.position, required super.size})
-    : super.withSprite(sprite: DoorDecorationConfig.loadClosedSprite());
+    : super.withSprite(sprite: DoorDecorationConfig.loadSpriteClosed());
 
   @override
   Future<void> onLoad() {
@@ -31,7 +31,7 @@ class DoorDecorationView extends DDDecoration {
 
   void _handlePlayerCollision(SimplePlayer player) {
     if (!_isOpen) {
-      if ((player as DDBasePlayerView).model.hasKey == true) {
+      if ((player as DDBasePlayerView).controller.model.hasKey == true) {
         // TODO(Kevin): make this more generic, like DDBasePlayerView
         _triggerDoorOpening(player);
       } else {
@@ -42,14 +42,14 @@ class DoorDecorationView extends DDDecoration {
 
   void _triggerDoorOpening(SimplePlayer player) {
     _isOpen = true;
-    (player as DDBasePlayerView).model
+    (player as DDBasePlayerView).controller.model
         .removeKey(); // TODO(Kevin): make this more generic, like DDBasePlayerView
-    _playDoorOpeningAnimation();
+    _playAnimationDoorOpening();
   }
 
-  void _playDoorOpeningAnimation() {
+  void _playAnimationDoorOpening() {
     playSpriteAnimationOnce(
-      DoorDecorationConfig.loadOpeningAnimation(),
+      DoorDecorationConfig.loadAnimationOpening(),
       onFinish: _cleanup,
       onStart: () {
         sprite = null;

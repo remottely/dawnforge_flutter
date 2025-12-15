@@ -1,15 +1,14 @@
 final class CharacterConstants {
   CharacterConstants._();
 
-  /// Components
   static const double kLifeSmall = 80.0;
   static const double kLifeMedium = 120.0;
   static const double kLifeLarge = 150.0;
   static const double kLifeExtraLarge = 200.0;
 
-  static const double kSpeedSlow = 24.0;
-  static const double kSpeedMedium = 32.0;
-  static const double kSpeedFast = 40.0;
+  static const double kSpeedSlow = 8.0;
+  static const double kSpeedMedium = 16.0;
+  static const double kSpeedFast = 24.0;
 
   static const double kVisionRadiusSuperSmall = 8.0;
   static const double kVisionRadiusExtraSmall = 16.0;
@@ -19,7 +18,6 @@ final class CharacterConstants {
   static const double kVisionRadiusExtraLarge = 80.0;
   static const double kVisionRadiusSuperLarge = 96.0;
 
-  /// Actions
   static const double kDamageSmall = 10.0;
   static const double kDamageMedium = 20.0;
   static const double kDamageLarge = 40.0;

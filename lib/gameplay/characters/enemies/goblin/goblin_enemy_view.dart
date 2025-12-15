@@ -8,7 +8,7 @@ class GoblinEnemyView
     extends DDBaseEnemyView<GoblinEnemyController, GoblinEnemyModel> {
   GoblinEnemyView({required super.position})
     : super(
-        animation: GoblinEnemyConfig.walkAnimation,
+        animation: GoblinEnemyConfig.animationWalkDirectional,
         size: GoblinEnemyConfig.componentSize,
         speed: GoblinEnemyConfig.kSpeed,
         life: GoblinEnemyConfig.kLife,
@@ -18,12 +18,12 @@ class GoblinEnemyView
   GoblinEnemyModel createModel() => GoblinEnemyModel();
 
   @override
-  GoblinEnemyController createController(GoblinEnemyModel model) {
-    return GoblinEnemyController(
-      model: model,
-      onDetectPlayerAndMoveToMeleeAttack: onDetectPlayerAndMoveToPrimaryAttack,
-    );
-  }
+  GoblinEnemyController createController(GoblinEnemyModel model) =>
+      GoblinEnemyController(
+        model: model,
+        onDetectPlayerAndMoveToMeleeAttack:
+            onDetectPlayerAndMoveToPrimaryAttack,
+      );
 
   @override
   RectangleHitbox getHitbox() => GoblinEnemyConfig.createHitbox();

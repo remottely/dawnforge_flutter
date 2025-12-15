@@ -2,23 +2,12 @@ import '../models/item.dart';
 import '../models/item_rarity.dart';
 import '../models/item_type.dart';
 
-/// Item de ferramenta (picareta, machado, enxada, etc)
-///
-/// Ferramentas são usadas para coletar recursos e têm durabilidade.
 final class ToolItem extends Item {
-  /// Tipo de ferramenta (pickaxe, axe, hoe, watering_can, etc)
   final String toolType;
-
-  /// Nível de poder da ferramenta (1-5, quanto maior melhor)
   final int powerLevel;
-
-  /// Durabilidade atual
   final int durability;
-
-  /// Durabilidade máxima
   final int maxDurability;
 
-  /// Cria uma ferramenta
   const ToolItem({
     required super.id,
     required super.name,
@@ -33,18 +22,14 @@ final class ToolItem extends Item {
     required this.maxDurability,
   });
 
-  /// Ferramenta está quebrada?
   bool get isBroken => durability <= 0;
 
-  /// Porcentagem de durabilidade restante (0.0-1.0)
   double get durabilityPercent => durability / maxDurability;
 
-  /// Usar ferramenta (reduz durabilidade)
   ToolItem use([int amount = 1]) {
     return copyWith(durability: (durability - amount).clamp(0, maxDurability));
   }
 
-  /// Reparar ferramenta
   ToolItem repair([int amount = 10]) {
     return copyWith(durability: (durability + amount).clamp(0, maxDurability));
   }
@@ -66,7 +51,6 @@ final class ToolItem extends Item {
     };
   }
 
-  /// Cria ferramenta a partir de JSON
   factory ToolItem.fromJson(Map<String, dynamic> json) {
     return ToolItem(
       id: json['id'] as String,

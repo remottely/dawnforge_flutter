@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/conversation/conversation_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
+import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 
 final class DoorDecorationConfig {
   DoorDecorationConfig._();
@@ -12,12 +12,12 @@ final class DoorDecorationConfig {
   static final Vector2 _textureSize = TileConstants.tileSizeExtraLarge;
   // static final Vector2 _componentSize = _textureSize;
 
-  static Future<Sprite> loadClosedSprite() =>
+  static Future<Sprite> loadSpriteClosed() =>
       Sprite.load('gameplay/decorations/door_decoration_locked_1.png');
 
-  static Future<SpriteAnimation> loadOpeningAnimation() => SpriteAnimation.load(
+  static Future<SpriteAnimation> loadAnimationOpening() => SpriteAnimation.load(
     'gameplay/decorations/door_decoration_opening_14.png',
-    SpriteAnimationConfig.createStandardData(
+    SpriteAnimationConfigHelper.createStandardData(
       amount: 14,
       textureSize: _textureSize,
     ),

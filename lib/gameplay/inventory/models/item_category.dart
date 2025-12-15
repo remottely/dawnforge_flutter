@@ -1,90 +1,28 @@
-/// Detailed item categories following Stardew Valley's classification system.
-///
-/// Items are organized into categories that affect:
-/// - Shop organization
-/// - Bundles and quests
-/// - Gifting preferences
-/// - Collection achievements
 enum ItemCategory {
-  // ========== FARMING ==========
-  /// Vegetables grown from seeds
   vegetables,
-
-  /// Fruits from trees and crops
   fruits,
-
-  /// Flowers for decoration and gifts
   flowers,
-
-  // ========== FORAGING ==========
-  /// Items found while foraging
   forage,
-
-  /// Seeds found or purchased
-  seeds, // TODO(Kevin): strawberry, carrot, etc.
-
-  // ========== ANIMAL PRODUCTS ==========
-  /// Products from animals (milk, eggs, wool)
+  seeds,
   animalProducts,
-
-  /// Artisan goods (cheese, mayo, cloth)
   artisanGoods,
-
-  // ========== FISHING ==========
-  /// Fish caught in water
   fish,
-
-  /// Bait and tackle
   fishingEquipment,
-
-  // ========== MINING ==========
-  /// Ores and bars
   ores,
-
-  /// Gems and minerals
   minerals,
-
-  /// Geodes
   geodes,
-
-  // ========== CRAFTING ==========
-  /// Raw materials for crafting
   craftingMaterials,
-
-  /// Resources (wood, stone, fiber)
   resources,
-
-  // ========== COOKING ==========
-  /// Ingredients for cooking
   cookingIngredients,
-
-  /// Cooked dishes
   cookedFood,
-
-  // ========== EQUIPMENT ==========
-  /// Weapons for combat
   weapons,
-
-  /// Tools (hoe, watering can, axe, pickaxe)
   tools,
-
-  /// Boots and rings
   equipment,
-
-  // ========== SPECIAL ==========
-  /// Furniture and decorations
   furniture,
-
-  /// Quest items
   questItems,
-
-  /// Trash and junk
   trash,
-
-  /// Miscellaneous
   misc;
 
-  /// Display name for UI
   String get displayName {
     switch (this) {
       case ItemCategory.vegetables:
@@ -136,7 +74,6 @@ enum ItemCategory {
     }
   }
 
-  /// Whether items in this category can have quality stars
   bool get canHaveQuality {
     return [
       ItemCategory.vegetables,
@@ -150,7 +87,6 @@ enum ItemCategory {
     ].contains(this);
   }
 
-  /// Whether items in this category are edible
   bool get isEdible {
     return [
       ItemCategory.vegetables,
@@ -162,15 +98,12 @@ enum ItemCategory {
     ].contains(this);
   }
 
-  /// Whether items in this category can be planted
   bool get isPlantable {
     return this == ItemCategory.seeds;
   }
 
-  /// Serialize to JSON
   String toJson() => name;
 
-  /// Deserialize from JSON
   static ItemCategory fromJson(String json) {
     return ItemCategory.values.firstWhere(
       (c) => c.name == json,

@@ -7,10 +7,6 @@ import '../domain/farm_rule_engine.dart';
 import '../models/crop_model.dart';
 import '../models/farm_tile_model.dart';
 
-/// Gerenciador singleton do sistema de agricultura
-///
-/// Gerencia todos os tiles de fazenda, crescimento de crops e
-/// interações do jogador (arar, regar, plantar, colher).
 final class FarmManager {
   FarmManager._();
 
@@ -19,33 +15,26 @@ final class FarmManager {
   final FarmTileStore _store = FarmTileStore();
   final FarmRuleEngine _rules = const FarmRuleEngine();
 
-  /// Obter tile por coordenadas
   FarmTileModel? getTile(int x, int y) {
     return _store.getTile(x, y);
   }
 
-  /// Definir tile
   void setTile(FarmTileModel tile) {
     _store.saveTile(tile);
   }
 
-  /// Obter todos os tiles
   List<FarmTileModel> getAllTiles() => _store.getAllTiles();
 
-  /// Limpar todos os tiles
   void clearAll() {
     _store.clear();
     developer.log('[FarmManager] All tiles cleared');
   }
 
-  /// Resetar farm para estado inicial (novo jogo)
   void reset() {
     _store.clear();
     developer.log('[FarmManager] Farm state reset');
   }
 
-  /// Arar solo
-  /// Retorna true se conseguiu arar
   bool tillSoil(int x, int y) {
     developer.log('[FarmManager] Tilling soil at ($x, $y)');
 
@@ -55,7 +44,6 @@ final class FarmManager {
     //   return false;
     // }
 
-    // Obter ou criar tile
     final tile = _rules.ensureTile(getTile(x, y), x: x, y: y);
     final updatedTile = _rules.till(tile);
     if (updatedTile == null) {
@@ -67,8 +55,6 @@ final class FarmManager {
     return true;
   }
 
-  /// Regar tile
-  /// Retorna true se conseguiu regar
   bool waterTile(int x, int y) {
     developer.log('[FarmManager] Watering tile at ($x, $y)');
 
@@ -78,7 +64,6 @@ final class FarmManager {
     //   return false;
     // }
 
-    // Obter tile
     final tile = getTile(x, y);
     if (tile == null) {
       developer.log('[FarmManager] Cannot water missing tile');
@@ -95,8 +80,6 @@ final class FarmManager {
     return true;
   }
 
-  /// Plantar semente
-  /// Retorna true se conseguiu plantar
   bool plantSeed(int x, int y, String cropId) {
     developer.log('[FarmManager] Planting $cropId at ($x, $y)');
 
@@ -109,14 +92,12 @@ final class FarmManager {
     // TODO(Kevin): Validar estação atual
     // final currentSeason = WorldStateManager.instance.currentSeason;
 
-    // Obter tile
     final tile = getTile(x, y);
     if (tile == null || !tile.canPlant) {
       developer.log('[FarmManager] Cannot plant on this tile');
       return false;
     }
 
-    // Criar crop
     final updatedTile = _rules.plant(tile, cropId);
     if (updatedTile == null) {
       return false;
@@ -131,12 +112,9 @@ final class FarmManager {
     return true;
   }
 
-  /// Colher crop
-  /// Retorna a crop colhida ou null se não pode colher
   CropModel? harvestCrop(int x, int y) {
     developer.log('[FarmManager] Harvesting crop at ($x, $y)');
 
-    // Obter tile
     final tile = getTile(x, y);
     if (tile == null || !tile.canHarvest) {
       developer.log('[FarmManager] Nothing to harvest');
@@ -156,12 +134,9 @@ final class FarmManager {
     return result.harvestedCrop;
   }
 
-  /// Avançar 1 dia em todos os tiles
   void advanceDay() {
     developer.log('[FarmManager] Advancing all crops for new day');
 
-    // World day has already been advanced by WorldStateManager when this
-    // method is called. The day that just ended is currentDay - 1.
     final dayEnded = WorldStateManager.instance.currentDay - 1;
 
     var cropsGrown = 0;
@@ -183,10 +158,8 @@ final class FarmManager {
     );
   }
 
-  /// Serialização para JSON
   Map<String, dynamic> toJson() => _store.toJson();
 
-  /// Deserialização de JSON
   void fromJson(Map<String, dynamic> json) {
     _store.fromJson(json);
   }

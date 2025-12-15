@@ -18,10 +18,9 @@ void main() async {
     await Flame.device.fullScreen();
   }
 
-  // Initialize game systems
   await AudioManager.instance.initialize();
-  await ItemFactory.initialize(); // Carrega database de itens
-  await CropDatabase.initialize(); // Carrega database de crops
+  await ItemFactory.initialize();
+  await CropDatabase.initialize();
 
   GameplayLocalizationsDelegate location =
       const GameplayLocalizationsDelegate();

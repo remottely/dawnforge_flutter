@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/conversation/conversation_config.dart';
-import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
+import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_config.dart';
 
 final class KidNpcConfig {
   KidNpcConfig._();
@@ -14,11 +14,12 @@ final class KidNpcConfig {
     11,
   ); // TODO(Kevin): change this size
 
-  static final SimpleDirectionAnimation walkAnimation =
-      SimpleDirectionAnimation(
-        idleRight: UISpriteAnimationsConfig.loadKidNpcIdleLeft4(),
-        runRight: UISpriteAnimationsConfig.loadKidNpcIdleLeft4(),
-      );
+  static final SimpleDirectionAnimation
+  animationWalkDirectional = SimpleDirectionAnimation(
+    idleRight:
+        UISpriteAnimationsConfig.loadAnimationKidNpcIdleLeft(), // TODO(Kevin): create right animation
+    runRight: UISpriteAnimationsConfig.loadAnimationKidNpcIdleLeft(),
+  );
 
   static List<Say> createConversationSequence() {
     return [

@@ -1,11 +1,11 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/character_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/lightning_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
-import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
+import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
+import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_config.dart';
 
 final class KnightPlayerConfig {
   KnightPlayerConfig._();
@@ -53,26 +53,27 @@ final class KnightPlayerConfig {
     hitboxStartPositionY: 8.0,
   );
 
-  static final SimpleDirectionAnimation walkAnimation =
+  static final SimpleDirectionAnimation animationWalkDirectional =
       SimpleDirectionAnimation(
         idleLeft: SpriteAnimation.load(
           'gameplay/characters/player/knight/knight_player_idle_left_6.png',
-          SpriteAnimationConfig.createStandardData(
+          SpriteAnimationConfigHelper.createStandardData(
             amount: 6,
             textureSize: textureSize,
           ),
         ),
-        idleRight: UISpriteAnimationsConfig.loadKnightPlayerIdleRight6(),
+        idleRight:
+            UISpriteAnimationsConfig.loadAnimationKnightPlayerIdleRight(),
         runLeft: SpriteAnimation.load(
           'gameplay/characters/player/knight/knight_player_walking_left_6.png',
-          SpriteAnimationConfig.createStandardData(
+          SpriteAnimationConfigHelper.createStandardData(
             amount: 6,
             textureSize: textureSize,
           ),
         ),
         runRight: SpriteAnimation.load(
           'gameplay/characters/player/knight/knight_player_walking_right_6.png',
-          SpriteAnimationConfig.createStandardData(
+          SpriteAnimationConfigHelper.createStandardData(
             amount: 6,
             textureSize: textureSize,
           ),
@@ -96,12 +97,4 @@ final class KnightPlayerConfig {
         position: Vector2(position.x, position.y),
         size: cryptComponentSize,
       );
-
-  static const String staffSpritePath = 'JellySquish Weapons Pack/staff.png';
-
-  static const String sword3SpritePath =
-      'SPUM/Resources/Addons/Legacy/0_Unit/0_Sprite/6_Weapons/0_Sword/Sword_3.png';
-
-  static const String axeNormal1SpritePath =
-      'SPUM/Resources/Addons/Ver121/0_Unit/0_Sprite/6_Weapons/2_Axe/AxeNormal1.png';
 }

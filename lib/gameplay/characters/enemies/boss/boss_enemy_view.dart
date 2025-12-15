@@ -7,9 +7,10 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_mod
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/mini_boss/mini_boss_enemy_view.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/death/character_fx_sprite_animations_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_calculations.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/death/character_fx_sprite_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_manager.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_view.dart';
@@ -19,7 +20,7 @@ class BossEnemyView
     extends DDBaseEnemyView<BossEnemyController, BossEnemyModel> {
   BossEnemyView({required super.position})
     : super(
-        animation: BossEnemyConfig.walkAnimation,
+        animation: BossEnemyConfig.animationWalkDirectional,
         size: BossEnemyConfig.componentSize,
         speed: BossEnemyConfig.kSpeed,
         life: BossEnemyConfig.kLife,
@@ -29,16 +30,16 @@ class BossEnemyView
   BossEnemyModel createModel() => BossEnemyModel();
 
   @override
-  BossEnemyController createController(BossEnemyModel model) {
-    return BossEnemyController(
-      model: model,
-      onDetectPlayerAndMoveToMeleeAttack: onDetectPlayerAndMoveToPrimaryAttack,
-      onPlayerFirstDetection: _onPlayerFirstDetection,
-      onRequestSpawnMinion: _onRequestSpawnMinion,
-      onRenderStatusBars: _onRenderStatusBars,
-      onDetectPlayerInCloseVisionRadius: _onDetectPlayerInCloseVisionRadius,
-    );
-  }
+  BossEnemyController createController(BossEnemyModel model) =>
+      BossEnemyController(
+        model: model,
+        onDetectPlayerAndMoveToMeleeAttack:
+            onDetectPlayerAndMoveToPrimaryAttack,
+        onPlayerFirstDetection: _onPlayerFirstDetection,
+        onRequestSpawnMinion: _onRequestSpawnMinion,
+        onRenderStatusBars: _onRenderStatusBars,
+        onDetectPlayerInCloseVisionRadius: _onDetectPlayerInCloseVisionRadius,
+      );
 
   @override
   RectangleHitbox getHitbox() => BossEnemyConfig.createHitbox();
@@ -57,7 +58,6 @@ class BossEnemyView
     super.onDie();
   }
 
-  /// Callbacks
   void _onPlayerFirstDetection(Player player) {
     gameRef.camera.moveToTargetAnimated(
       target: this,
@@ -124,15 +124,12 @@ class BossEnemyView
     seePlayer(radiusVision: closeVisionRadius, observed: observed);
   }
 
-  /// Helpers
   void _spawnMinionAtDirection({Direction? direction, Vector2? customOffset}) {
     Vector2 explosionPosition;
 
     if (customOffset != null) {
-      // Use custom offset when provided (for initial spawns)
       explosionPosition = position + customOffset;
     } else {
-      // Calculate position based on direction (for dynamic spawns)
       final spawnDirection = direction ?? directionThePlayerIsIn();
       explosionPosition = _getSpawnPositionForDirection(spawnDirection);
     }
@@ -146,7 +143,6 @@ class BossEnemyView
     _addEnemy(enemy);
   }
 
-  /// Calculates spawn position based on direction.
   Vector2 _getSpawnPositionForDirection(Direction? direction) {
     return switch (direction) {
       Direction.left => position.translated(width * -2, 0),
@@ -183,14 +179,13 @@ class BossEnemyView
           maxVisibleTile: TileConstants.kMaxVisibleTiles,
         ),
       );
-      // AudioManager.instance.playBackgroundMusic(
-      //   AudioConfig.kMusicBossBattleBackgroundAsset,
-      // ); // TODO(Kevin): put it back later
+      AudioManager.instance.playBackgroundMusic(
+        AudioConfig.kMusicBossBattleBackgroundAsset,
+      );
     });
   }
 
   void _spawnInitialMinions() {
-    // Spawn two imps at predefined positions using the unified spawn method
     _spawnMinionAtDirection(customOffset: Vector2(width * -2, 0));
     _spawnMinionAtDirection(customOffset: Vector2(width * -2, width));
   }
@@ -203,7 +198,8 @@ class BossEnemyView
   void _executeExplosionFx(Vector2 explosionPosition) {
     gameRef.add(
       AnimatedGameObject(
-        animation: CharacterFxSpriteAnimationsConfig.loadExplosionSmokeRight5(),
+        animation:
+            CharacterFxSpriteAnimationsConfig.loadAnimationExplosionSmokeRight(),
         position: explosionPosition,
         size: ImpEnemyConfig.componentSize,
         loop: false,

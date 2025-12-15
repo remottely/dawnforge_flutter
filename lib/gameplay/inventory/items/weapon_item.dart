@@ -3,28 +3,13 @@ import '../models/item.dart';
 import '../models/item_rarity.dart';
 import '../models/item_type.dart';
 
-/// Item de arma para combate
-///
-/// Armas causam dano aos inimigos e possuem atributos como
-/// velocidade de ataque e chance de crítico.
 final class WeaponItem extends Item {
-  // TODO(Kevin): now, change name to EquippedHandItem?
-  /// Dano base da arma
   final int damage;
-
-  /// Velocidade de ataque (ataques por segundo)
   final double attackSpeed;
-
-  /// Chance de acerto crítico (0.0-1.0)
   final double critChance;
-
-  /// Multiplicador de dano crítico
   final double critMultiplier;
-
-  /// Tipo de arma
   final EquippedHandType equippedHandType;
 
-  /// Cria uma arma
   const WeaponItem({
     required super.id,
     required super.name,
@@ -40,7 +25,6 @@ final class WeaponItem extends Item {
     required this.equippedHandType,
   });
 
-  /// Calcula o DPS médio da arma (considerando críticos)
   double get dps {
     final avgDamage = damage * (1 + critChance * (critMultiplier - 1));
     return avgDamage * attackSpeed;
@@ -64,7 +48,6 @@ final class WeaponItem extends Item {
     };
   }
 
-  /// Cria arma a partir de JSON
   factory WeaponItem.fromJson(Map<String, dynamic> json) {
     return WeaponItem(
       id: json['id'] as String,
@@ -111,8 +94,4 @@ final class WeaponItem extends Item {
       equippedHandType: equippedHandType ?? this.equippedHandType,
     );
   }
-
-  // @override
-  // String toString() =>
-  //     'WeaponItem(id: $id, name: $name, type: ${equippedHandType.displayName}, damage: $damage, dps: ${dps.toStringAsFixed(1)})';
 }

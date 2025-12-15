@@ -32,7 +32,7 @@ final class EnemyCombatActionController {
           interval: interval,
           // direction: attackDirection,
           // centerOffset: attackOffset,
-          animationRight: EnemyPrimaryAttackConfig.loadFxAnimationRight3(),
+          animationRight: EnemyPrimaryAttackConfig.loadAnimationFxRight(),
           execute: AudioManager.instance.playEnemyPrimaryAttackSfx,
         );
       },
@@ -50,13 +50,13 @@ final class EnemyCombatActionController {
         enemy.simpleAttackRange(
           size: CharacterFireballAttackConfig.componentSize,
           speed: CharacterFireballAttackConfig.kSpeed,
-          lightingConfig: CharacterFireballAttackConfig.lightingConfig,
+          lightingConfig: CharacterFireballAttackConfig.lighting,
           damage: damage,
           collision: CharacterFireballAttackConfig.createHitbox(),
-          animation: CharacterFireballAttackConfig.loadExecutionAnimation(),
+          animation: CharacterFireballAttackConfig.loadAnimationExecution(),
           animationDestroy:
-              CharacterFireballAttackConfig.loadDestroyAnimation(),
-          execute: CharacterFireballAttackConfig.playExecutionAudio,
+              CharacterFireballAttackConfig.loadAnimationDestroy(),
+          execute: CharacterFireballAttackConfig.playAudioExecution,
           onDestroy: () =>
               CharacterFireballAttackConfig.onDestroy(enemy.gameRef),
         );
@@ -64,28 +64,28 @@ final class EnemyCombatActionController {
     );
   }
 
-  static Direction? _resolveAttackDirection(SimpleEnemy enemy, Player player) {
-    final delta = player.center - enemy.center;
-    const double threshold = 2;
+  // static Direction? _resolveAttackDirection(SimpleEnemy enemy, Player player) {
+  //   final delta = player.center - enemy.center;
+  //   const double threshold = 2;
 
-    final bool hasHorizontal = delta.x.abs() > threshold;
-    final bool hasVertical = delta.y.abs() > threshold;
+  //   final bool hasHorizontal = delta.x.abs() > threshold;
+  //   final bool hasVertical = delta.y.abs() > threshold;
 
-    if (hasHorizontal && hasVertical) {
-      if (delta.x > 0 && delta.y > 0) return Direction.downRight;
-      if (delta.x > 0 && delta.y < 0) return Direction.upRight;
-      if (delta.x < 0 && delta.y > 0) return Direction.downLeft;
-      return Direction.upLeft;
-    }
+  //   if (hasHorizontal && hasVertical) {
+  //     if (delta.x > 0 && delta.y > 0) return Direction.downRight;
+  //     if (delta.x > 0 && delta.y < 0) return Direction.upRight;
+  //     if (delta.x < 0 && delta.y > 0) return Direction.downLeft;
+  //     return Direction.upLeft;
+  //   }
 
-    if (hasHorizontal) {
-      return delta.x > 0 ? Direction.right : Direction.left;
-    }
+  //   if (hasHorizontal) {
+  //     return delta.x > 0 ? Direction.right : Direction.left;
+  //   }
 
-    if (hasVertical) {
-      return delta.y > 0 ? Direction.down : Direction.up;
-    }
+  //   if (hasVertical) {
+  //     return delta.y > 0 ? Direction.down : Direction.up;
+  //   }
 
-    return null;
-  }
+  //   return null;
+  // }
 }

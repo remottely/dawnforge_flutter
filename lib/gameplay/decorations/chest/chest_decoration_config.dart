@@ -1,9 +1,9 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/character_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
+import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 
 final class ChestDecorationConfig {
   ChestDecorationConfig._();
@@ -22,9 +22,9 @@ final class ChestDecorationConfig {
   static final Vector2 componentSize = _textureSize / 1.5;
 
   // Animations
-  static Future<SpriteAnimation> loadChestAnimation() => SpriteAnimation.load(
+  static Future<SpriteAnimation> loadAnimation() => SpriteAnimation.load(
     'gameplay/decorations/chest_decoration_8.png',
-    SpriteAnimationConfig.createStandardData(
+    SpriteAnimationConfigHelper.createStandardData(
       amount: 8,
       textureSize: _textureSize,
     ),

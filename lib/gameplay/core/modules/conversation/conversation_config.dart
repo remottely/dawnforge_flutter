@@ -1,38 +1,38 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/shared/framework/widgets/dd_sprite_animation_widget.dart';
-import 'package:darkness_dungeon/shared/ui_sprite_animations_config.dart';
+import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_config.dart';
 import 'package:flutter/painting.dart';
 
 class ConversationConfig {
   static Say createKnightLeft(String phraseKey) => _createLeft(
     phraseKey: phraseKey,
-    animation: UISpriteAnimationsConfig.loadKnightPlayerIdleRight6(),
+    animation: UISpriteAnimationsConfig.loadAnimationKnightPlayerIdleRight(),
   );
 
   static Say createSunnyLeft(String phraseKey) => _createLeft(
     phraseKey: phraseKey,
-    animation: UISpriteAnimationsConfig.loadSunnyPlayerIdleRight6(),
+    animation: UISpriteAnimationsConfig.loadAnimationSunnyPlayerIdleRight(),
   );
 
   static Say createWizardRight(String phraseKey) => _createRight(
     phraseKey: phraseKey,
-    animation: UISpriteAnimationsConfig.loadWizardNpcIdleLeft4(),
+    animation: UISpriteAnimationsConfig.loadAnimationWizardNpcIdleLeft(),
   );
 
   static Say createKidRight(String phraseKey) => _createRight(
     phraseKey: phraseKey,
-    animation: UISpriteAnimationsConfig.loadKidNpcIdleLeft4(),
+    animation: UISpriteAnimationsConfig.loadAnimationKidNpcIdleLeft(),
   );
 
   static Say createBossLeft(String phraseKey) => _createLeft(
     phraseKey: phraseKey,
-    animation: UISpriteAnimationsConfig.loadBossEnemyIdleRight4(),
+    animation: UISpriteAnimationsConfig.loadAnimationBossEnemyIdleRight(),
   );
 
   static Say createBossRight(String phraseKey) => _createRight(
     phraseKey: phraseKey,
-    animation: UISpriteAnimationsConfig.loadBossEnemyIdleLeft4(),
+    animation: UISpriteAnimationsConfig.loadAnimationBossEnemyIdleLeft(),
   );
 
   /// Internal Methods

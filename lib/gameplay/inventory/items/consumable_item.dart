@@ -2,23 +2,12 @@ import '../models/item.dart';
 import '../models/item_rarity.dart';
 import '../models/item_type.dart';
 
-/// Item consumível (poção, comida, etc)
-///
-/// Consumíveis podem ser usados para restaurar HP/stamina ou aplicar buffs.
 final class ConsumableItem extends Item {
-  /// HP restaurado ao consumir
   final int healthRestore;
-
-  /// Stamina restaurada ao consumir
   final int staminaRestore;
-
-  /// Duração do efeito em segundos (0 = instantâneo)
   final int duration;
-
-  /// IDs de buffs aplicados ao consumir
   final List<String> buffs;
 
-  /// Cria um item consumível
   const ConsumableItem({
     required super.id,
     required super.name,
@@ -35,10 +24,8 @@ final class ConsumableItem extends Item {
     this.buffs = const [],
   });
 
-  /// Efeito é instantâneo?
   bool get isInstant => duration == 0;
 
-  /// Possui buffs?
   bool get hasBuffs => buffs.isNotEmpty;
 
   @override
@@ -59,7 +46,6 @@ final class ConsumableItem extends Item {
     };
   }
 
-  /// Cria consumível a partir de JSON
   factory ConsumableItem.fromJson(Map<String, dynamic> json) {
     return ConsumableItem(
       id: json['id'] as String,

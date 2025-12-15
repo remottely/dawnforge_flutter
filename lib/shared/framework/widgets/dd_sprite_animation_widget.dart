@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/sprite_animation_config.dart';
+import 'package:darkness_dungeon/shared/utils/sprite_animation_constants.dart';
 import 'package:flutter/material.dart';
 
 class DDSpriteAnimationWidget extends StatelessWidget {
@@ -8,20 +8,20 @@ class DDSpriteAnimationWidget extends StatelessWidget {
   final Future<SpriteAnimation> animation;
 
   const DDSpriteAnimationWidget({super.key, required this.animation})
-    : _width = SpriteAnimationConfig.kStandardSize,
-      _height = SpriteAnimationConfig.kStandardSize;
+    : _width = SpriteAnimationConstants.kSizeStandard,
+      _height = SpriteAnimationConstants.kSizeStandard;
 
   const DDSpriteAnimationWidget.small({super.key, required this.animation})
-    : _width = SpriteAnimationConfig.kSmallSize,
-      _height = SpriteAnimationConfig.kSmallSize;
+    : _width = SpriteAnimationConstants.kSizeSmall,
+      _height = SpriteAnimationConstants.kSizeSmall;
 
   const DDSpriteAnimationWidget.large({super.key, required this.animation})
-    : _width = SpriteAnimationConfig.kLargeSize,
-      _height = SpriteAnimationConfig.kLargeSize;
+    : _width = SpriteAnimationConstants.kSizeLarge,
+      _height = SpriteAnimationConstants.kSizeLarge;
 
   const DDSpriteAnimationWidget.extraLarge({super.key, required this.animation})
-    : _width = SpriteAnimationConfig.kExtraLargeSize,
-      _height = SpriteAnimationConfig.kExtraLargeSize;
+    : _width = SpriteAnimationConstants.kSizeExtraLarge,
+      _height = SpriteAnimationConstants.kSizeExtraLarge;
 
   @override
   Widget build(BuildContext context) {

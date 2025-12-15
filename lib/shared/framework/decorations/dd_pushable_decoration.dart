@@ -12,7 +12,7 @@ abstract class DDPushableDecoration extends DDDecoration
     required super.size,
     super.anchor,
     super.angle,
-    super.lightingConfig,
+    super.lighting,
     super.renderAboveComponents,
   }) : super.withSprite() {
     addForce(

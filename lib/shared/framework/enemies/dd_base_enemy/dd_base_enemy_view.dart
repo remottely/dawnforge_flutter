@@ -76,7 +76,8 @@ abstract class DDBaseEnemyView<
   void _executeDieFx() {
     gameRef.add(
       AnimatedGameObject(
-        animation: CharacterFxSpriteAnimationsConfig.loadExplosionRight7(),
+        animation:
+            CharacterFxSpriteAnimationsConfig.loadAnimationExplosionRight(),
         position: position,
         size: size,
         loop: false,

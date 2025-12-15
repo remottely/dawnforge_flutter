@@ -5,7 +5,7 @@ import 'package:darkness_dungeon/gameplay/farm/constants/farm_feedback_config.da
 import 'package:darkness_dungeon/gameplay/farm/services/farm_action_service.dart';
 import 'package:darkness_dungeon/gameplay/farm/services/farm_feedback_service.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 
 final class FarmToolActionConfig {
   static final FarmActionService _actionService = FarmActionService.instance;
@@ -13,7 +13,6 @@ final class FarmToolActionConfig {
       FarmFeedbackService.instance;
 
   static void execute({required DDBasePlayerView player}) {
-    // Compute the world position in front of the player where the shovel acts
     final attackOffset = OffsetHelper.getCenterOffset(
       Vector2(12, 0),
       player.lastDirection,
@@ -23,14 +22,12 @@ final class FarmToolActionConfig {
         player.rectCollision.center.toVector2() +
         Vector2(attackOffset.x, attackOffset.y);
 
-    // Define a small detection rect around the impact point
     final hitRect = Rect.fromCenter(
       center: Offset(startPos.x, startPos.y),
       width: 16,
       height: 16,
     );
 
-    // Query for farm tile views that overlap the impact area and pick the closest one
     FarmTileView? bestTarget;
     double bestDistSq = double.infinity;
 
@@ -49,7 +46,7 @@ final class FarmToolActionConfig {
     }
 
     if (bestTarget != null) {
-      switch (player.model.equipment) {
+      switch (player.controller.model.equipment) {
         case EquippedHandType.shovel:
           _handleTillSoil(bestTarget.tileX, bestTarget.tileY);
           return;
@@ -67,7 +64,6 @@ final class FarmToolActionConfig {
           _handleHarvest(player.gameRef, bestTarget.tileX, bestTarget.tileY);
           return;
         default:
-          // Valid target to till soil
           return;
       }
     }

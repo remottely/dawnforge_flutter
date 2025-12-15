@@ -5,7 +5,7 @@ import 'package:darkness_dungeon/gameplay/decorations/torch/torch_decoration_con
 import 'package:darkness_dungeon/gameplay/decorations/torch/torch_decoration_controller.dart';
 import 'package:darkness_dungeon/gameplay/decorations/torch/torch_decoration_model.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_input_receiver/dd_input_receiver_decoration_view.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:flutter/services.dart';
 
 /// Represents a visual torch decoration component with interactive capabilities.
@@ -27,7 +27,7 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
     required super.position,
     required TorchDecorationModel model,
   }) : super.withAnimation(
-         animation: TorchDecorationConfig.loadSpriteAnimation(),
+         animation: TorchDecorationConfig.loadAnimation(),
          size: TorchDecorationConfig.componentSize,
        ) {
     _initializeController(model);
@@ -43,7 +43,7 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
     required super.position,
     required TorchDecorationModel model,
   }) : super.withAnimation(
-         animation: TorchDecorationConfig.loadSpriteAnimation(),
+         animation: TorchDecorationConfig.loadAnimation(),
          size: TorchDecorationConfig.componentSize,
        ) {
     _initializeController(model);
@@ -68,11 +68,8 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
   }
 
   @override
-  void onMount() {}
-
-  @override
   Future<void> onLoad() {
-    setupLighting(TorchDecorationConfig.lightingConfig);
+    setupLighting(TorchDecorationConfig.lighting);
     _interactionPromptTextPaint = TorchDecorationConfig.createTextConfig(width);
 
     if (model.isOn)

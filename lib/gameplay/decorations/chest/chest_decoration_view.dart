@@ -9,7 +9,7 @@ import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_con
 import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_model.dart';
 import 'package:darkness_dungeon/gameplay/decorations/life_potion/life_potion_decoration.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_input_receiver/dd_input_receiver_decoration_view.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:flutter/services.dart';
 
 class ChestDecorationView extends DDInputReceiverDecorationView {
@@ -20,7 +20,7 @@ class ChestDecorationView extends DDInputReceiverDecorationView {
     required super.position,
     required ChestDecorationModel model,
   }) : super.withAnimation(
-         animation: ChestDecorationConfig.loadChestAnimation(),
+         animation: ChestDecorationConfig.loadAnimation(),
          size: ChestDecorationConfig.componentSize,
        ) {
     _initializeController(model);
@@ -119,7 +119,8 @@ class ChestDecorationView extends DDInputReceiverDecorationView {
   void _addSmokeExplosion(Vector2 potionPosition) {
     gameRef.add(
       AnimatedGameObject(
-        animation: CharacterFxSpriteAnimationsConfig.loadExplosionSmokeRight5(),
+        animation:
+            CharacterFxSpriteAnimationsConfig.loadAnimationExplosionSmokeRight(),
         position: potionPosition,
         size: size,
         loop: false,

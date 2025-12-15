@@ -10,7 +10,7 @@ import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/item_type.dart';
-import 'package:darkness_dungeon/shared/framework/players/dd_base_player/dd_base_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:flutter/services.dart';
 
 class InventoryInputHandler extends GameComponent with KeyboardEventListener {
@@ -23,11 +23,6 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
     developer.log('[InventoryInput] Component mounted!');
     developer.log('[InventoryInput] gameRef.interface: ${gameRef.interface}');
     _initializeTestItems();
-  }
-
-  @override
-  void update(double dt) {
-    super.update(dt);
   }
 
   @override
@@ -249,6 +244,6 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
 
     final player = players.first;
 
-    player.model.setEquipment(equippedHandType);
+    player.controller.model.setEquipment(equippedHandType);
   }
 }

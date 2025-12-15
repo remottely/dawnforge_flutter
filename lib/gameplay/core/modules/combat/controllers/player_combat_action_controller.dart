@@ -5,7 +5,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_
 import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fx_particles_animations_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/player_primary_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/offset_helper.dart';
-import 'package:darkness_dungeon/shared/framework/players/mixins/dd_base_player_extension.dart';
+import 'package:darkness_dungeon/shared/framework/player/mixins/dd_base_player_extension.dart';
 
 final class PlayerCombatActionController {
   PlayerCombatActionController._();
@@ -29,7 +29,7 @@ final class PlayerCombatActionController {
       damage: damage,
       size: PlayerPrimaryAttackConfig.componentSize,
       centerOffset: attackOffset,
-      animationRight: PlayerPrimaryAttackConfig.loadFxAnimationRight3(),
+      animationRight: PlayerPrimaryAttackConfig.loadAnimationFxRight(),
       onDamage: (_) => player.addParticle(
         CharacterFxParticlesAnimationsConfig.createPrimaryAttackParticles(),
         position: player.size / 2,
@@ -51,16 +51,16 @@ final class PlayerCombatActionController {
       position: player.size / 2,
     );
 
-    CharacterFireballAttackConfig.playExecutionAudio();
+    CharacterFireballAttackConfig.playAudioExecution();
 
     player.simpleAttackRangeByDirection(
       size: CharacterFireballAttackConfig.componentSize,
       speed: CharacterFireballAttackConfig.kSpeed,
-      lightingConfig: CharacterFireballAttackConfig.lightingConfig,
+      lightingConfig: CharacterFireballAttackConfig.lighting,
       damage: damage,
       collision: CharacterFireballAttackConfig.createHitbox(),
-      animationRight: CharacterFireballAttackConfig.loadExecutionAnimation(),
-      animationDestroy: CharacterFireballAttackConfig.loadDestroyAnimation(),
+      animationRight: CharacterFireballAttackConfig.loadAnimationExecution(),
+      animationDestroy: CharacterFireballAttackConfig.loadAnimationDestroy(),
       onDestroy: () => CharacterFireballAttackConfig.onDestroy(player.gameRef),
       direction: player.lastDirection,
       centerOffset: projectileOffset,

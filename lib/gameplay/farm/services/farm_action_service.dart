@@ -5,28 +5,11 @@ import 'package:darkness_dungeon/gameplay/farm/models/crop_model.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/item_factory.dart';
 
-/// Service responsible for executing farm-related actions.
-///
-/// Encapsulates the business logic for farm operations, coordinating between
-/// FarmManager and InventoryManager. This service handles:
-/// - Soil preparation (tilling)
-/// - Crop watering
-/// - Seed planting
-/// - Crop harvesting with inventory integration
-///
-/// All methods return results that can be used for UI feedback.
 final class FarmActionService {
   FarmActionService._();
 
   static final instance = FarmActionService._();
 
-  // ============================================================================
-  // Soil Management
-  // ============================================================================
-
-  /// Tills soil at the specified coordinates.
-  ///
-  /// Returns [FarmActionResult] indicating success or failure.
   FarmActionResult tillSoil(int x, int y) {
     developer.log('[FarmActionService] Attempting to till soil at ($x, $y)');
 
@@ -41,9 +24,6 @@ final class FarmActionService {
     return FarmActionResult.failure('Cannot till at this location');
   }
 
-  /// Waters the tile at the specified coordinates.
-  ///
-  /// Returns [FarmActionResult] indicating success or failure.
   FarmActionResult waterTile(int x, int y) {
     developer.log('[FarmActionService] Attempting to water tile at ($x, $y)');
 
@@ -58,16 +38,6 @@ final class FarmActionService {
     return FarmActionResult.failure('Cannot water at this location');
   }
 
-  // ============================================================================
-  // Planting
-  // ============================================================================
-
-  /// Plants a seed at the specified coordinates.
-  ///
-  /// [cropId] The ID of the crop type to plant (e.g., 'carrot').
-  ///
-  /// Returns [FarmActionResult] indicating success or failure.
-  ///
   /// TODO: Integrate with inventory to check for strawberries and consume them.
   FarmActionResult plantSeed(int x, int y, String cropId) {
     developer.log(
@@ -85,15 +55,6 @@ final class FarmActionService {
     return FarmActionResult.failure('Cannot plant at this location');
   }
 
-  // ============================================================================
-  // Harvesting
-  // ============================================================================
-
-  /// Harvests the crop at the specified coordinates.
-  ///
-  /// Automatically adds harvested items to the player's inventory.
-  ///
-  /// Returns [HarvestResult] containing crop info and success status.
   HarvestResult harvestCrop(int x, int y) {
     developer.log('[FarmActionService] Attempting to harvest at ($x, $y)');
 
@@ -108,15 +69,11 @@ final class FarmActionService {
       '[FarmActionService] ✅ Harvested ${crop.yieldAmount}x ${crop.name}',
     );
 
-    // Try to add items to inventory
     final inventoryResult = _addHarvestToInventory(crop);
 
     return HarvestResult.success(crop: crop, addedToInventory: inventoryResult);
   }
 
-  /// Adds harvested items to the player's inventory.
-  ///
-  /// Returns `true` if items were successfully added, `false` if inventory is full.
   bool _addHarvestToInventory(CropModel crop) {
     final harvestItem = ItemFactory.createItem(crop.harvestItemId);
 
@@ -144,11 +101,6 @@ final class FarmActionService {
   }
 }
 
-// ==============================================================================
-// Result Classes
-// ==============================================================================
-
-/// Result of a basic farm action.
 final class FarmActionResult {
   final bool success;
   final String? errorMessage;
@@ -161,7 +113,6 @@ final class FarmActionResult {
       FarmActionResult._(success: false, errorMessage: message);
 }
 
-/// Result of a harvest action with additional crop information.
 final class HarvestResult {
   final bool success;
   final CropModel? crop;

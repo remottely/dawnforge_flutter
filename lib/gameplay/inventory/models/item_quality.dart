@@ -1,29 +1,9 @@
-/// Quality level of farming items (crops, animal products, foraged items).
-///
-/// In Stardew Valley, quality affects the sell price of items:
-/// - Normal: base price
-/// - Silver: 1.25x base price
-/// - Gold: 1.5x base price
-/// - Iridium: 2x base price
-///
-/// Quality is determined by:
-/// - Farming skill level
-/// - Fertilizer used
-/// - Random chance
 enum ItemQuality {
-  /// Normal quality (no star)
   normal,
-
-  /// Silver quality (1 star)
   silver,
-
-  /// Gold quality (2 stars)
   gold,
-
-  /// Iridium quality (3 stars)
   iridium;
 
-  /// Display name for UI
   String get displayName {
     switch (this) {
       case ItemQuality.normal:
@@ -37,7 +17,6 @@ enum ItemQuality {
     }
   }
 
-  /// Price multiplier for this quality
   double get priceMultiplier {
     switch (this) {
       case ItemQuality.normal:
@@ -51,7 +30,6 @@ enum ItemQuality {
     }
   }
 
-  /// Star count for UI display
   int get starCount {
     switch (this) {
       case ItemQuality.normal:
@@ -65,10 +43,8 @@ enum ItemQuality {
     }
   }
 
-  /// Serialize to JSON
   String toJson() => name;
 
-  /// Deserialize from JSON
   static ItemQuality fromJson(String json) {
     return ItemQuality.values.firstWhere(
       (q) => q.name == json,

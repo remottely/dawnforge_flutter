@@ -25,7 +25,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
   Widget build(BuildContext gameplayContext) {
     return MapNavigator(
       maps: MapManager.allMaps,
-      initialMap: MapConfig.kFarmTestId,
+      initialMap: MapConfig.kCombatTestId,
       builder: (context, arguments, mapItem) {
         final mapLightingColor = ColorHelper.fromHex(
           mapItem.properties[MapConfig.kLightingColorPropertyKey]?.toString(),
@@ -37,7 +37,6 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
             .properties[MapConfig.kBackgroundMusicPropertyKey]
             ?.toString();
 
-        // Toca a música apenas se for diferente da última requisitada
         if (mapBackgroundMusic != null &&
             mapBackgroundMusic.isNotEmpty &&
             _lastRequestedMusic != mapBackgroundMusic) {
@@ -51,11 +50,12 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
         final playerPosition =
             (mapArguments?.playerPosition ?? Vector2(2, 1)) *
             TileConstants.kTileDimensionStandard;
-        final player = buildSunnyPlayer(playerPosition);
+
+        // final player = buildSunnyPlayer(playerPosition);
+        final player = buildCutePlayer(playerPosition);
 
         playerInput = GameplayScreenConfig.createPlayerInput();
 
-        // Criar novo farm input handler para este mapa
         farmInputHandler = FarmInputHandler(player: player);
 
         return Material(
@@ -66,7 +66,6 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
             map: mapItem.map,
             components: [
               gameplayGameStateManager,
-              // customPlayerInventoryInputHandler,
               inventoryInputHandler,
               shieldDefenseInputHandler,
               farmInputHandler,
