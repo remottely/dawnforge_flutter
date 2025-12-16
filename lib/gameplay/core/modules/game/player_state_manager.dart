@@ -13,6 +13,7 @@ class PlayerStateManager {
   Future<SpriteAnimation>? currentPlayerAnimation;
   DDBasePlayerView? lastPlayerView;
   DDBasePlayerModel? lastPlayerModel;
+  bool _respawnWithFullLife = false;
 
   Map<String, dynamic> toJson() {
     return {'playerModel': lastPlayerModel?.toJson()};
@@ -44,5 +45,16 @@ class PlayerStateManager {
 
   void reset() {
     lastPlayerModel = null;
+    _respawnWithFullLife = false;
+  }
+
+  void markRespawnWithFullLife() {
+    _respawnWithFullLife = true;
+  }
+
+  bool consumeRespawnWithFullLifeFlag() {
+    final shouldRespawn = _respawnWithFullLife;
+    _respawnWithFullLife = false;
+    return shouldRespawn;
   }
 }

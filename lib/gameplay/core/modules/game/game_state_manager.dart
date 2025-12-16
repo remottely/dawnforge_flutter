@@ -1,4 +1,5 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +42,7 @@ class GameStateManager extends GameComponent {
   }
 
   void _onPressRestartGame(BuildContext dialogContext) {
+    PlayerStateManager.instance.markRespawnWithFullLife();
     _resetGameState();
 
     Navigator.of(dialogContext).pop();
