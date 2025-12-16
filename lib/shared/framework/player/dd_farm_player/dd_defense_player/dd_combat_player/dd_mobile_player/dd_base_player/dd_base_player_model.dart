@@ -1,75 +1,77 @@
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_config.dart';
+import 'package:flutter/foundation.dart';
 
 class DDBasePlayerModel {
   final DDBasePlayerModelConfig modelConfig;
-  final DDBasePlayerModelState modelState;
+  final DDBasePlayerSaveData _saveData;
 
-  double _stamina;
-  int _energy;
-  double? _life;
-  bool _hasKey;
   bool _isObservingEnemy;
-  EquippedHandType? _equipment;
 
-  DDBasePlayerModel({required this.modelConfig, required this.modelState})
-    : _stamina = modelState.stamina ?? modelConfig.maxStamina,
-      _energy = modelState.energy ?? modelConfig.maxEnergy,
-      _life = modelState.life,
-      _hasKey = modelState.hasKey ?? false,
-      _isObservingEnemy = false;
+  @protected
+  DDBasePlayerModel.internal({
+    required this.modelConfig,
+    required DDBasePlayerSaveData saveData,
+  }) : _saveData = saveData,
+       _isObservingEnemy = false;
 
-  double get stamina => _stamina;
-  int get energy => _energy;
-  double? get life => _life;
-  bool get hasKey => _hasKey;
+  @protected
+  static EquippedHandType? parseEquipment(String? eq) {
+    if (eq == null || eq == 'null' || eq.isEmpty) return null;
+    try {
+      return EquippedHandType.values.byName(eq);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  double get stamina => _saveData.stamina;
+  int get energy => _saveData.energy;
+  double? get life => _saveData.life;
+  bool get hasKey => _saveData.hasKey;
+  bool get hasStamina => _saveData.stamina > 0;
+  EquippedHandType? get equipment => _saveData.equipment;
+
   bool get isObservingEnemy => _isObservingEnemy;
-  bool get hasStamina => _stamina > 0;
-  EquippedHandType? get equipment => _equipment;
-
-  void consumeStamina(int amount) {
-    _stamina -= amount;
-    if (_stamina < 0) _stamina = 0;
-  }
-
-  void regenerateStamina() {
-    _stamina += modelConfig.staminaRegenIncrement;
-    if (_stamina > modelConfig.maxStamina) _stamina = modelConfig.maxStamina;
-  }
-
-  void consumeEnergy(int amount) {
-    _energy -= amount;
-    if (_energy < 0) _energy = 0;
-  }
-
-  void restoreEnergy() => _energy = modelConfig.maxEnergy;
-
-  void updateLife(double value) => _life = value;
-
   void startObservingEnemy() => _isObservingEnemy = true;
   void stopObservingEnemy() => _isObservingEnemy = false;
 
-  void setEquipment(EquippedHandType? value) => _equipment = value;
+  void consumeStamina(int amount) {
+    _saveData.stamina -= amount;
+    if (_saveData.stamina < 0) _saveData.stamina = 0;
+  }
 
-  void obtainKey() => _hasKey = true;
-  void removeKey() => _hasKey = false;
+  void regenerateStamina() {
+    _saveData.stamina += modelConfig.staminaRegenIncrement;
+    if (_saveData.stamina > modelConfig.maxStamina) {
+      _saveData.stamina = modelConfig.maxStamina;
+    }
+  }
 
-  Map<String, dynamic> toJson() => {
-    'stamina': _stamina,
-    'energy': _energy,
-    'life': _life,
-    'hasKey': _hasKey,
-    'equipment': _equipment?.name,
-  };
+  void consumeEnergy(int amount) {
+    _saveData.energy -= amount;
+    if (_saveData.energy < 0) _saveData.energy = 0;
+  }
 
-  void fromJson(Map<String, dynamic> json) {
-    _stamina = (json['stamina'] as num?)?.toDouble() ?? modelConfig.maxStamina;
-    _energy = (json['energy'] as int?) ?? modelConfig.maxEnergy;
-    _life = (json['life'] as num?)?.toDouble();
-    _hasKey = json['hasKey'] as bool? ?? false;
-    final eq = json['equipment'] as String?;
-    _equipment = (eq == null || eq == 'null')
-        ? null
-        : EquippedHandType.values.byName(eq);
+  void restoreEnergy() => _saveData.energy = modelConfig.maxEnergy;
+
+  void updateLife(double value) => _saveData.life = value;
+
+  void setEquipment(EquippedHandType? value) => _saveData.equipment = value;
+
+  void obtainKey() => _saveData.hasKey = true;
+  void removeKey() => _saveData.hasKey = false;
+
+  Map<String, dynamic> toJson() => _saveData.toJson();
+
+  @protected
+  factory DDBasePlayerModel.fromJson(
+    Map<String, dynamic> json,
+    DDBasePlayerModelConfig modelConfig,
+  ) {
+    return DDBasePlayerModel.internal(
+      modelConfig: modelConfig,
+      saveData: DDBasePlayerSaveData.fromJson(json, modelConfig),
+    );
   }
 }

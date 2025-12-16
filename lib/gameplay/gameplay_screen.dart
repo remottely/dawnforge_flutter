@@ -23,9 +23,17 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
 
   @override
   Widget build(BuildContext gameplayContext) {
+    if (isLoadingSave) {
+      return const Material(
+        color: Colors.black,
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return MapNavigator(
       maps: MapManager.allMaps,
-      initialMap: MapConfig.kFarmId,
+      // initialMap: MapConfig.kFarmId,
+      initialMap: MapConfig.kFarmTestId,
       builder: (context, arguments, mapItem) {
         final mapLightingColor = ColorHelper.fromHex(
           mapItem.properties[MapConfig.kLightingColorPropertyKey]?.toString(),

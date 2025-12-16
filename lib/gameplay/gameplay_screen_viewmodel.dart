@@ -18,7 +18,6 @@ import 'package:darkness_dungeon/gameplay/core/modules/save/game_save_controller
 import 'package:darkness_dungeon/gameplay/farm/handlers/farm_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen_config.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_config.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +26,8 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   final playerStateManager = PlayerStateManager.instance;
 
   final gameplayHUD = GameplayHUDView();
+
+  bool isLoadingSave = true;
 
   late final CameraConfig cameraConfig;
   final gameplayGameStateManager = GameStateManager();
@@ -42,18 +43,22 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
     _loadGameOrResetLife();
   }
 
-  void _loadGameOrResetLife() {
-    GameSaveController.instance
-        .loadGame()
-        .then((success) {
-          if (success) {
-          } else {
-            _resetPlayerLifeOnNewGame();
-          }
-        })
-        .catchError((e) {
-          _resetPlayerLifeOnNewGame();
+  Future<void> _loadGameOrResetLife() async {
+    try {
+      final success = await GameSaveController.instance.loadGame();
+
+      if (!success) {
+        _resetPlayerLifeOnNewGame();
+      }
+    } catch (_) {
+      _resetPlayerLifeOnNewGame();
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoadingSave = false;
         });
+      }
+    }
   }
 
   void _resetPlayerLifeOnNewGame() {
@@ -76,10 +81,15 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   }
 
   DDBasePlayerView buildSunnyPlayer(Vector2 position) {
+    // if (isLoadingSave)
+    //   return SunnyPlayerView<SunnyPlayerController, SunnyPlayerModel>(
+    //     position: position,
+    //     model: SunnyPlayerModel.fromJson({}),
+    //   );
     var lastPlayerModel = playerStateManager.lastPlayerModel;
 
     if (lastPlayerModel is! SunnyPlayerModel) {
-      lastPlayerModel = SunnyPlayerModel(modelState: DDBasePlayerModelState());
+      lastPlayerModel = SunnyPlayerModel.fromJson({});
       playerStateManager.lastPlayerModel = lastPlayerModel;
     }
 
@@ -93,10 +103,15 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   }
 
   DDBasePlayerView buildCutePlayer(Vector2 position) {
+    // if (isLoadingSave)
+    //   return CutePlayerView<CutePlayerController, CutePlayerModel>(
+    //     position: position,
+    //     model: CutePlayerModel.fromJson({}),
+    //   );
     var lastPlayerModel = playerStateManager.lastPlayerModel;
 
     if (lastPlayerModel is! CutePlayerModel) {
-      lastPlayerModel = CutePlayerModel(modelState: DDBasePlayerModelState());
+      lastPlayerModel = CutePlayerModel.fromJson({});
       playerStateManager.lastPlayerModel = lastPlayerModel;
     }
 
@@ -110,10 +125,15 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   }
 
   DDBasePlayerView buildFarmerPlayer(Vector2 position) {
+    // if (isLoadingSave)
+    //   return FarmerPlayerView<FarmerPlayerController, FarmerPlayerModel>(
+    //     position: position,
+    //     model: FarmerPlayerModel.fromJson({}),
+    //   );
     var lastPlayerModel = playerStateManager.lastPlayerModel;
 
     if (lastPlayerModel is! FarmerPlayerModel) {
-      lastPlayerModel = FarmerPlayerModel(modelState: DDBasePlayerModelState());
+      lastPlayerModel = FarmerPlayerModel.fromJson({});
       playerStateManager.lastPlayerModel = lastPlayerModel;
     }
 

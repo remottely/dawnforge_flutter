@@ -1,12 +1,19 @@
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_config.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_model.dart';
+import 'package:flutter/foundation.dart';
 
-abstract class DDCombatPlayerModel extends DDMobilePlayerModel {
+class DDCombatPlayerModel extends DDMobilePlayerModel {
+  @override
   final DDCombatPlayerModelConfig modelConfig;
 
-  DDCombatPlayerModel({required this.modelConfig, required super.modelState})
-    : super(modelConfig: modelConfig);
+  @protected
+  DDCombatPlayerModel.internal({
+    required this.modelConfig,
+    required super.saveData,
+    required super.isInRunningState,
+  }) : super.internal(modelConfig: modelConfig);
 
   bool get canExecutePrimaryAttack =>
       (stamina >= modelConfig.primaryAttackStaminaCost) &&
@@ -21,8 +28,17 @@ abstract class DDCombatPlayerModel extends DDMobilePlayerModel {
     return super.toJson();
   }
 
-  @override
-  void fromJson(Map<String, dynamic> json) {
-    super.fromJson(json);
+  @protected
+  factory DDCombatPlayerModel.fromJson(
+    Map<String, dynamic> json,
+    DDCombatPlayerModelConfig modelConfig,
+  ) {
+    final baseData = DDBasePlayerSaveData.fromJson(json, modelConfig);
+
+    return DDCombatPlayerModel.internal(
+      modelConfig: modelConfig,
+      saveData: baseData,
+      isInRunningState: false,
+    );
   }
 }
