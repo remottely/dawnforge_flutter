@@ -26,7 +26,7 @@
 // }
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_config.dart';
 
 class MenuScreenConfig {
   MenuScreenConfig._();
@@ -38,13 +38,14 @@ class MenuScreenConfig {
   static const Duration kCharacterAnimationInterval = Duration(seconds: 2);
 
   static final List<Future<SpriteAnimation>> characterSpriteAnimations = [
-    UISpriteAnimationsConfig.loadAnimationCutePlayerIdleRight(),
-    UISpriteAnimationsConfig.loadAnimationSunnyPlayerIdleRight(),
-    UISpriteAnimationsConfig.loadAnimationKnightPlayerIdleRight(),
-    UISpriteAnimationsConfig.loadAnimationGoblinEnemyIdleRight(),
-    UISpriteAnimationsConfig.loadAnimationImpEnemyIdleRight(),
-    UISpriteAnimationsConfig.loadAnimationMiniBossEnemyIdleRight(),
-    UISpriteAnimationsConfig.loadAnimationBossEnemyIdleRight(),
+    FarmerPlayerConfig.loadAnimationIdleRight,
+    // UISpriteAnimationsConfig.loadAnimationCutePlayerIdleRight(),
+    // UISpriteAnimationsConfig.loadAnimationSunnyPlayerIdleRight(),
+    // UISpriteAnimationsConfig.loadAnimationKnightPlayerIdleRight(),
+    // UISpriteAnimationsConfig.loadAnimationGoblinEnemyIdleRight(),
+    // UISpriteAnimationsConfig.loadAnimationImpEnemyIdleRight(),
+    // UISpriteAnimationsConfig.loadAnimationMiniBossEnemyIdleRight(),
+    // UISpriteAnimationsConfig.loadAnimationBossEnemyIdleRight(),
   ];
 
   static final Future<Sprite> keyboardSprite = Sprite.load(

@@ -52,7 +52,8 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
             TileConstants.kTileDimensionStandard;
 
         // final player = buildSunnyPlayer(playerPosition);
-        final player = buildCutePlayer(playerPosition);
+        // final player = buildCutePlayer(playerPosition);
+        final player = buildFarmerPlayer(playerPosition);
 
         playerInput = GameplayScreenConfig.createPlayerInput();
 

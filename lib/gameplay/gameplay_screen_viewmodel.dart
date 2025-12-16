@@ -2,6 +2,10 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_model.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_view.dart';
@@ -99,6 +103,23 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
         UISpriteAnimationsConfig.loadAnimationCutePlayerIdleRight();
 
     return CutePlayerView<CutePlayerController, CutePlayerModel>(
+      position: position,
+      model: lastPlayerModel,
+    );
+  }
+
+  DDBasePlayerView buildFarmerPlayer(Vector2 position) {
+    var lastPlayerModel = playerStateManager.lastPlayerModel;
+
+    if (lastPlayerModel is! FarmerPlayerModel) {
+      lastPlayerModel = FarmerPlayerModel();
+      playerStateManager.lastPlayerModel = lastPlayerModel;
+    }
+
+    playerStateManager.currentPlayerAnimation =
+        FarmerPlayerConfig.loadAnimationIdleRight;
+
+    return FarmerPlayerView<FarmerPlayerController, FarmerPlayerModel>(
       position: position,
       model: lastPlayerModel,
     );
