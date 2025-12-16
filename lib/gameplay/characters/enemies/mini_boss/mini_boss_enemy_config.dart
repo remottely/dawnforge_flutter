@@ -27,31 +27,32 @@ final class MiniBossEnemyConfig {
   );
   static final Vector2 componentSize = textureSize;
 
-  static final SimpleDirectionAnimation
-  animationWalkDirectional = SimpleDirectionAnimation(
-    idleLeft: SpriteAnimation.load(
-      'gameplay/characters/enemies/mini_boss/mini_boss_enemy_idle_left_4.png',
-      SpriteAnimationConfigHelper.createStandardData(
-        amount: 4,
-        textureSize: textureSize,
+  static SimpleDirectionAnimation createAnimationWalkDirectional() {
+    return SimpleDirectionAnimation(
+      idleLeft: SpriteAnimation.load(
+        'gameplay/characters/enemies/mini_boss/mini_boss_enemy_idle_left_4.png',
+        SpriteAnimationConfigHelper.createStandardData(
+          amount: 4,
+          textureSize: textureSize,
+        ),
       ),
-    ),
-    idleRight: UISpriteAnimationsConfig.loadAnimationMiniBossEnemyIdleRight(),
-    runLeft: SpriteAnimation.load(
-      'gameplay/characters/enemies/mini_boss/mini_boss_enemy_run_left_4.png',
-      SpriteAnimationConfigHelper.createStandardData(
-        amount: 4,
-        textureSize: textureSize,
+      idleRight: UISpriteAnimationsConfig.loadAnimationMiniBossEnemyIdleRight(),
+      runLeft: SpriteAnimation.load(
+        'gameplay/characters/enemies/mini_boss/mini_boss_enemy_run_left_4.png',
+        SpriteAnimationConfigHelper.createStandardData(
+          amount: 4,
+          textureSize: textureSize,
+        ),
       ),
-    ),
-    runRight: SpriteAnimation.load(
-      'gameplay/characters/enemies/mini_boss/mini_boss_enemy_run_right_4.png',
-      SpriteAnimationConfigHelper.createStandardData(
-        amount: 4,
-        textureSize: textureSize,
+      runRight: SpriteAnimation.load(
+        'gameplay/characters/enemies/mini_boss/mini_boss_enemy_run_right_4.png',
+        SpriteAnimationConfigHelper.createStandardData(
+          amount: 4,
+          textureSize: textureSize,
+        ),
       ),
-    ),
-  );
+    );
+  }
 
   static RectangleHitbox createHitbox() => HitboxUtils.createBottomHitbox(
     componentSize: componentSize,

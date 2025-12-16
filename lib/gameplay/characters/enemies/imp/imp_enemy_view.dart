@@ -7,7 +7,7 @@ import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_
 class ImpEnemyView extends DDBaseEnemyView<ImpEnemyController, ImpEnemyModel> {
   ImpEnemyView({required super.position})
     : super(
-        animation: ImpEnemyConfig.animationWalkDirectional,
+        animation: ImpEnemyConfig.createAnimationWalkDirectional(),
         size: ImpEnemyConfig.componentSize,
         speed: ImpEnemyConfig.kSpeed,
         life: ImpEnemyConfig.kLife,

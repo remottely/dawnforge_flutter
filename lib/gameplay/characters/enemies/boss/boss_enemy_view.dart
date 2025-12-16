@@ -20,7 +20,7 @@ class BossEnemyView
     extends DDBaseEnemyView<BossEnemyController, BossEnemyModel> {
   BossEnemyView({required super.position})
     : super(
-        animation: BossEnemyConfig.animationWalkDirectional,
+        animation: BossEnemyConfig.createAnimationWalkDirectional(),
         size: BossEnemyConfig.componentSize,
         speed: BossEnemyConfig.kSpeed,
         life: BossEnemyConfig.kLife,

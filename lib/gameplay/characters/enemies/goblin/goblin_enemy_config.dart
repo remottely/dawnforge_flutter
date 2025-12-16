@@ -20,31 +20,32 @@ final class GoblinEnemyConfig {
   static final Vector2 textureSize = TileConstants.tileSizeStandard;
   static final Vector2 componentSize = textureSize;
 
-  static final SimpleDirectionAnimation animationWalkDirectional =
-      SimpleDirectionAnimation(
-        idleLeft: SpriteAnimation.load(
-          'gameplay/characters/enemies/goblin/goblin_enemy_idle_left_6.png',
-          SpriteAnimationConfigHelper.createStandardData(
-            amount: 6,
-            textureSize: textureSize,
-          ),
+  static SimpleDirectionAnimation createAnimationWalkDirectional() {
+    return SimpleDirectionAnimation(
+      idleLeft: SpriteAnimation.load(
+        'gameplay/characters/enemies/goblin/goblin_enemy_idle_left_6.png',
+        SpriteAnimationConfigHelper.createStandardData(
+          amount: 6,
+          textureSize: textureSize,
         ),
-        idleRight: UISpriteAnimationsConfig.loadAnimationGoblinEnemyIdleRight(),
-        runLeft: SpriteAnimation.load(
-          'gameplay/characters/enemies/goblin/goblin_enemy_run_left_6.png',
-          SpriteAnimationConfigHelper.createStandardData(
-            amount: 6,
-            textureSize: textureSize,
-          ),
+      ),
+      idleRight: UISpriteAnimationsConfig.loadAnimationGoblinEnemyIdleRight(),
+      runLeft: SpriteAnimation.load(
+        'gameplay/characters/enemies/goblin/goblin_enemy_run_left_6.png',
+        SpriteAnimationConfigHelper.createStandardData(
+          amount: 6,
+          textureSize: textureSize,
         ),
-        runRight: SpriteAnimation.load(
-          'gameplay/characters/enemies/goblin/goblin_enemy_run_right_6.png',
-          SpriteAnimationConfigHelper.createStandardData(
-            amount: 6,
-            textureSize: textureSize,
-          ),
+      ),
+      runRight: SpriteAnimation.load(
+        'gameplay/characters/enemies/goblin/goblin_enemy_run_right_6.png',
+        SpriteAnimationConfigHelper.createStandardData(
+          amount: 6,
+          textureSize: textureSize,
         ),
-      );
+      ),
+    );
+  }
 
   static RectangleHitbox createHitbox() => HitboxUtils.createBottomHitbox(
     componentSize: componentSize,

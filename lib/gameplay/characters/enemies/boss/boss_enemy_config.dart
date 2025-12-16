@@ -21,25 +21,26 @@ final class BossEnemyConfig {
   static final Vector2 textureSize = Vector2(32, 36);
   static final Vector2 componentSize = textureSize;
 
-  static final SimpleDirectionAnimation animationWalkDirectional =
-      SimpleDirectionAnimation(
-        idleLeft: UISpriteAnimationsConfig.loadAnimationBossEnemyIdleLeft(),
-        idleRight: UISpriteAnimationsConfig.loadAnimationBossEnemyIdleRight(),
-        runLeft: SpriteAnimation.load(
-          'gameplay/characters/enemies/boss/boss_enemy_run_left_4.png',
-          SpriteAnimationConfigHelper.createStandardData(
-            amount: 4,
-            textureSize: textureSize,
-          ),
+  static SimpleDirectionAnimation createAnimationWalkDirectional() {
+    return SimpleDirectionAnimation(
+      idleLeft: UISpriteAnimationsConfig.loadAnimationBossEnemyIdleLeft(),
+      idleRight: UISpriteAnimationsConfig.loadAnimationBossEnemyIdleRight(),
+      runLeft: SpriteAnimation.load(
+        'gameplay/characters/enemies/boss/boss_enemy_run_left_4.png',
+        SpriteAnimationConfigHelper.createStandardData(
+          amount: 4,
+          textureSize: textureSize,
         ),
-        runRight: SpriteAnimation.load(
-          'gameplay/characters/enemies/boss/boss_enemy_run_right_4.png',
-          SpriteAnimationConfigHelper.createStandardData(
-            amount: 4,
-            textureSize: textureSize,
-          ),
+      ),
+      runRight: SpriteAnimation.load(
+        'gameplay/characters/enemies/boss/boss_enemy_run_right_4.png',
+        SpriteAnimationConfigHelper.createStandardData(
+          amount: 4,
+          textureSize: textureSize,
         ),
-      );
+      ),
+    );
+  }
 
   static RectangleHitbox createHitbox() => HitboxUtils.createBottomHitbox(
     componentSize: componentSize,
