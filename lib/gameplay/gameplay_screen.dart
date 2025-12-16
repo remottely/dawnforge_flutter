@@ -25,7 +25,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
   Widget build(BuildContext gameplayContext) {
     return MapNavigator(
       maps: MapManager.allMaps,
-      initialMap: MapConfig.kCombatTestId,
+      initialMap: MapConfig.kFarmId,
       builder: (context, arguments, mapItem) {
         final mapLightingColor = ColorHelper.fromHex(
           mapItem.properties[MapConfig.kLightingColorPropertyKey]?.toString(),
@@ -51,8 +51,8 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
             (mapArguments?.playerPosition ?? Vector2(2, 1)) *
             TileConstants.kTileDimensionStandard;
 
-        final player = buildSunnyPlayer(playerPosition);
-        // final player = buildCutePlayer(playerPosition);
+        // final player = buildSunnyPlayer(playerPosition);
+        final player = buildCutePlayer(playerPosition);
 
         playerInput = GameplayScreenConfig.createPlayerInput();
 

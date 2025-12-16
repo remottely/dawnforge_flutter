@@ -76,6 +76,10 @@ final class MapConfig {
         'farm_tile': (p) => FarmTileView(position: p.position),
       };
 
+  /// Final maps
+  static const String kFarmId = 'farm';
+
+  /// Test maps
   static const String kFarmTestId = 'farm_test';
   static const String kConversationTestId = 'conversation_test';
   static const String kCombatTestId = 'combat_test';
@@ -89,6 +93,19 @@ final class MapConfig {
   static const String kTemple1Id = 'temple_1';
 
   static const List<MapData> kAllMaps = [
+    const MapData(
+      id: kFarmId,
+      asset: 'tiled/$kFarmId.json',
+      sensorIds: [
+        'sensor_$kBossTestId',
+        'sensor_$kConversationTestId',
+        'sensor_$kLake1Id',
+      ],
+      backgroundMusic: AudioConfig.kMusicRo1LettersBackgroundAsset,
+      lightingColor: _kNoneLightingColor,
+      backgroundColor: _kLakeBackgroundColor,
+    ),
+
     const MapData(
       id: kFarmTestId,
       asset: 'tiled/$kFarmTestId.json',
