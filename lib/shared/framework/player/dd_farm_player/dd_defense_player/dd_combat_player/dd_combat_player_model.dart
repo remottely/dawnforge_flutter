@@ -5,20 +5,15 @@ import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defen
 abstract class DDCombatPlayerModel extends DDMobilePlayerModel {
   final DDCombatPlayerModelConfig modelConfig;
 
-  DDCombatPlayerModel({
-    required this.modelConfig,
-    super.initialStamina,
-    super.initialEnergy,
-    super.initialLife,
-    super.initialHasKey,
-  }) : super(modelConfig: modelConfig);
+  DDCombatPlayerModel({required this.modelConfig, required super.modelState})
+    : super(modelConfig: modelConfig);
 
   bool get canExecutePrimaryAttack =>
-      (currentStamina >= modelConfig.primaryAttackStaminaCost) &&
+      (stamina >= modelConfig.primaryAttackStaminaCost) &&
       (equipment == EquippedHandType.ironSword);
 
   bool get canExecuteRangedAttack =>
-      (currentStamina >= modelConfig.rangedAttackStaminaCost) &&
+      (stamina >= modelConfig.rangedAttackStaminaCost) &&
       (equipment == EquippedHandType.staff);
 
   @override

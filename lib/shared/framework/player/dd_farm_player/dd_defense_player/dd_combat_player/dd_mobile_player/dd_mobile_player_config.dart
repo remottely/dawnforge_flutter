@@ -22,6 +22,7 @@ class DDMobilePlayerModelConfig extends DDBasePlayerModelConfig {
     required super.maxEnergy,
     required super.staminaRegenIncrement,
     required super.longVisionRadius,
+    required super.staminaRegenDebounce,
     required this.runSpeedMultiplier,
   });
 }

@@ -4,13 +4,8 @@ import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defen
 abstract class DDMobilePlayerModel extends DDBasePlayerModel {
   final DDMobilePlayerModelConfig modelConfig;
 
-  DDMobilePlayerModel({
-    required this.modelConfig,
-    super.initialStamina,
-    super.initialEnergy,
-    super.initialLife,
-    super.initialHasKey,
-  }) : super(modelConfig: modelConfig);
+  DDMobilePlayerModel({required this.modelConfig, required super.modelState})
+    : super(modelConfig: modelConfig);
 
   bool _isInRunningState = false;
 

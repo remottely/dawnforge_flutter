@@ -40,7 +40,7 @@ class ShieldDefenseInputHandler extends GameComponent
         }
       }
 
-      if (player.controller.model.currentStamina <= 0) {
+      if (player.controller.model.stamina <= 0) {
         developer.log(
           '[ShieldDefenseInput] ✗ Stamina esgotada, parando defesa',
         );
@@ -62,7 +62,7 @@ class ShieldDefenseInputHandler extends GameComponent
     if (event is KeyDownEvent &&
         event.logicalKey == KeyboardSetup.kSecondaryActionKey) {
       if (!_isDefending) {
-        if (player.controller.model.currentStamina <= 0) {
+        if (player.controller.model.stamina <= 0) {
           developer.log('[ShieldDefenseInput] ✗ Sem stamina para defender');
           return false;
         }

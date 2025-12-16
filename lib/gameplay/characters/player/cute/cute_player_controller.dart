@@ -1,4 +1,3 @@
-import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_model.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_controller.dart';
 
@@ -16,7 +15,4 @@ class CutePlayerController<M extends CutePlayerModel>
     required super.onDisplayExclamationEmote,
     required super.onDetectEnemyInLongVisionRadius,
   });
-
-  @override
-  Duration get staminaRegenDebounce => CutePlayerConfig.kStaminaRegenDebounce; // TODO(Kevin): now
 }

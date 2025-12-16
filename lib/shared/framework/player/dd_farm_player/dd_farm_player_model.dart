@@ -5,28 +5,23 @@ import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_
 class DDFarmPlayerModel extends DDCombatPlayerModel {
   final DDFarmPlayerModelConfig modelConfig;
 
-  DDFarmPlayerModel({
-    required this.modelConfig,
-    super.initialStamina,
-    super.initialEnergy,
-    super.initialLife,
-    super.initialHasKey,
-  }) : super(modelConfig: modelConfig);
+  DDFarmPlayerModel({required this.modelConfig, required super.modelState})
+    : super(modelConfig: modelConfig);
 
   bool get canExecuteWateringCan =>
-      (currentStamina >= modelConfig.wateringCanStaminaCost) &&
+      (stamina >= modelConfig.wateringCanStaminaCost) &&
       (equipment == EquippedHandType.wateringCan);
 
   bool get canExecuteShovel =>
-      (currentStamina >= modelConfig.shovelStaminaCost) &&
+      (stamina >= modelConfig.shovelStaminaCost) &&
       (equipment == EquippedHandType.shovel);
 
   bool get canExecuteSeed =>
-      (currentStamina >= modelConfig.seedStaminaCost) &&
+      (stamina >= modelConfig.seedStaminaCost) &&
       (equipment == EquippedHandType.strawberry);
 
   bool get canExecuteHarvestBasket =>
-      (currentStamina >= modelConfig.harvestBasketStaminaCost) &&
+      (stamina >= modelConfig.harvestBasketStaminaCost) &&
       (equipment == EquippedHandType.harvestBasket);
 
   @override

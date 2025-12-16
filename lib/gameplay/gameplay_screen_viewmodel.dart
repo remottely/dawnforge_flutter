@@ -18,6 +18,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/save/game_save_controller
 import 'package:darkness_dungeon/gameplay/farm/handlers/farm_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen_config.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_config.dart';
 import 'package:flutter/material.dart';
@@ -78,7 +79,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
     var lastPlayerModel = playerStateManager.lastPlayerModel;
 
     if (lastPlayerModel is! SunnyPlayerModel) {
-      lastPlayerModel = SunnyPlayerModel();
+      lastPlayerModel = SunnyPlayerModel(modelState: DDBasePlayerModelState());
       playerStateManager.lastPlayerModel = lastPlayerModel;
     }
 
@@ -95,7 +96,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
     var lastPlayerModel = playerStateManager.lastPlayerModel;
 
     if (lastPlayerModel is! CutePlayerModel) {
-      lastPlayerModel = CutePlayerModel();
+      lastPlayerModel = CutePlayerModel(modelState: DDBasePlayerModelState());
       playerStateManager.lastPlayerModel = lastPlayerModel;
     }
 
@@ -112,7 +113,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
     var lastPlayerModel = playerStateManager.lastPlayerModel;
 
     if (lastPlayerModel is! FarmerPlayerModel) {
-      lastPlayerModel = FarmerPlayerModel();
+      lastPlayerModel = FarmerPlayerModel(modelState: DDBasePlayerModelState());
       playerStateManager.lastPlayerModel = lastPlayerModel;
     }
 

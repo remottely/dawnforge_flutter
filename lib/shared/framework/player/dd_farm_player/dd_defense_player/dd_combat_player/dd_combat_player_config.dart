@@ -25,6 +25,7 @@ class DDCombatPlayerModelConfig extends DDMobilePlayerModelConfig {
     required super.maxEnergy,
     required super.staminaRegenIncrement,
     required super.longVisionRadius,
+    required super.staminaRegenDebounce,
     required super.runSpeedMultiplier,
     required this.primaryAttackStaminaCost,
     required this.rangedAttackStaminaCost,

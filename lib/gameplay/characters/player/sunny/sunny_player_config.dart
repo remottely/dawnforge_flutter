@@ -15,15 +15,12 @@ final class SunnyPlayerConfig {
 
   static double kSpeed = CharacterConstants.kSpeedFast;
 
-  static const Duration kStaminaRegenDebounce = Duration(milliseconds: 150);
-
-  static const int kToolActionEnergyCost = 2;
-
   static const double _kMaxStamina = 100.0;
   static const int _kMaxEnergy = 100;
   static const int _kStaminaIncrement = 1;
   static const double _kLongVisionRadius =
       CharacterConstants.kVisionRadiusSuperLarge;
+  static const Duration _kStaminaRegenDebounce = Duration(milliseconds: 150);
 
   static const double _kRunSpeedMultiplier = 1.4;
 
@@ -42,6 +39,7 @@ final class SunnyPlayerConfig {
     maxEnergy: _kMaxEnergy,
     staminaRegenIncrement: _kStaminaIncrement,
     longVisionRadius: _kLongVisionRadius,
+    staminaRegenDebounce: _kStaminaRegenDebounce,
     runSpeedMultiplier: _kRunSpeedMultiplier,
     primaryAttackStaminaCost: _kPrimaryAttackStaminaCost,
     rangedAttackStaminaCost: _kFireballAttackStaminaCost,

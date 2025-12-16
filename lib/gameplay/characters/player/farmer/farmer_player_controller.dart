@@ -1,4 +1,3 @@
-import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_model.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_controller.dart';
 
@@ -16,7 +15,4 @@ class FarmerPlayerController<M extends FarmerPlayerModel>
     required super.onDisplayExclamationEmote,
     required super.onDetectEnemyInLongVisionRadius,
   });
-
-  @override
-  Duration get staminaRegenDebounce => FarmerPlayerConfig.kStaminaRegenDebounce; // TODO(Kevin): now
 }

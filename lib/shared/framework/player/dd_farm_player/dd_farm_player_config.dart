@@ -32,6 +32,7 @@ class DDFarmPlayerModelConfig extends DDCombatPlayerModelConfig {
     required super.maxEnergy,
     required super.staminaRegenIncrement,
     required super.longVisionRadius,
+    required super.staminaRegenDebounce,
     required super.runSpeedMultiplier,
     required super.primaryAttackStaminaCost,
     required super.rangedAttackStaminaCost,
