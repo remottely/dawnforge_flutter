@@ -102,18 +102,16 @@ final class MapDef {
     const MapData(
       id: kFarmId,
       asset: 'tiled/maps/$kFarmId.json',
-      // sensorIds: ['sensor_$kLakeId', 'sensor_$kTownId'],
-      sensorIds: [],
+      sensorIds: ['sensor_$kForestId', 'sensor_$kTownId', 'sensor_$kLakeId'],
       backgroundMusic: AudioDef.kMusicRo1LettersBackgroundAsset,
       lightingColor: _kNoneLightingColor,
       backgroundColor: _kLakeBackgroundColor,
     ),
 
     const MapData(
-      id: kLakeId,
-      asset: 'tiled/maps/$kLakeId.json',
-      // sensorIds: ['sensor_$kLakeId', 'sensor_$kTownId'],
-      sensorIds: [],
+      id: kForestId,
+      asset: 'tiled/maps/$kForestId.json',
+      sensorIds: ['sensor_$kCaveId', 'sensor_$kTownId', 'sensor_$kFarmId'],
       backgroundMusic: AudioDef.kMusicRo1LettersBackgroundAsset,
       lightingColor: _kNoneLightingColor,
       backgroundColor: _kLakeBackgroundColor,
@@ -122,8 +120,39 @@ final class MapDef {
     const MapData(
       id: kTownId,
       asset: 'tiled/maps/$kTownId.json',
-      // sensorIds: ['sensor_$kLakeId', 'sensor_$kTownId'],
-      sensorIds: [],
+      sensorIds: [
+        'sensor_$kFarmId',
+        'sensor_$kForestId',
+        'sensor_$kBeachId',
+        'sensor_$kLakeId',
+      ],
+      backgroundMusic: AudioDef.kMusicRo1LettersBackgroundAsset,
+      lightingColor: _kNoneLightingColor,
+      backgroundColor: _kLakeBackgroundColor,
+    ),
+
+    const MapData(
+      id: kLakeId,
+      asset: 'tiled/maps/$kLakeId.json',
+      sensorIds: ['sensor_$kFarmId', 'sensor_$kTownId'],
+      backgroundMusic: AudioDef.kMusicRo1LettersBackgroundAsset,
+      lightingColor: _kNoneLightingColor,
+      backgroundColor: _kLakeBackgroundColor,
+    ),
+
+    const MapData(
+      id: kBeachId,
+      asset: 'tiled/maps/$kBeachId.json',
+      sensorIds: ['sensor_$kTownId'],
+      backgroundMusic: AudioDef.kMusicRo1LettersBackgroundAsset,
+      lightingColor: _kNoneLightingColor,
+      backgroundColor: _kLakeBackgroundColor,
+    ),
+
+    const MapData(
+      id: kCaveId,
+      asset: 'tiled/maps/$kCaveId.json',
+      sensorIds: ['sensor_$kForestId'],
       backgroundMusic: AudioDef.kMusicRo1LettersBackgroundAsset,
       lightingColor: _kNoneLightingColor,
       backgroundColor: _kLakeBackgroundColor,
