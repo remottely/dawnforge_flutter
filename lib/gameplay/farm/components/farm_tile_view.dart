@@ -71,7 +71,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   Future<void> _createCropDecoration() async {
     if (farmTile.crop == null) return;
 
-    final cropSprite = await Sprite.load(_getCropSpritePath());
+    final cropSprite = await _loadCropSpriteFromSheet();
 
     _cropDecoration = GameDecoration.withSprite(
       sprite: cropSprite,
@@ -153,25 +153,52 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
     }
   }
 
-  String _getCropSpritePath() {
-    if (farmTile.crop == null) return '';
+  Future<Sprite> _loadCropSpriteFromSheet() async {
     final crop = farmTile.crop!;
-    final stageName = _getStageFileName(crop.stage);
-    return 'gameplay/farm/crops/${crop.cropId}/$stageName.png';
+    final spritesheetPath = _getCropSpritesheetPath(crop.cropId);
+    final frameIndex = _getFrameIndexForStage(crop.stage);
+
+    final srcPosition = Vector2(
+      TileConstants.kTileDimensionStandard * frameIndex,
+      0,
+    );
+
+    final sprite = await Sprite.load(
+      spritesheetPath,
+      srcPosition: srcPosition,
+      srcSize: TileConstants.tileSizeStandard,
+    );
+
+    developer.log(
+      '[FarmTileView] 🌱 Crop sprite loaded from sheet: $spritesheetPath (frame: $frameIndex)',
+    );
+
+    return sprite;
   }
 
-  String _getStageFileName(CropStageModel stage) {
+  String _getCropSpritesheetPath(String cropId) {
+    final normalized = cropId
+        .split(RegExp(r'[-_]'))
+        .where((part) => part.isNotEmpty)
+        .map((part) => part[0].toUpperCase() + part.substring(1))
+        .join('_');
+
+    // Sprite.load expects the path relative to the declared asset root (no leading assets/).
+    return 'Modern_Farm_v1.2/16x16/Crops_Growth_16x16/${normalized}_Growth_Stages_16x16.png';
+  }
+
+  int _getFrameIndexForStage(CropStageModel stage) {
     switch (stage) {
       case CropStageModel.seed:
-        return 'seed';
+        return 0;
       case CropStageModel.sprout:
-        return 'sprout';
+        return 1;
       case CropStageModel.growing:
-        return 'growing';
+        return 3;
       case CropStageModel.mature:
+        return 6;
       case CropStageModel.withered:
-        // TODO(Kevin): create withered sprite
-        return 'mature';
+        return 7;
     }
   }
 
