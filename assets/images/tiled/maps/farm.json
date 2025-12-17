@@ -14474,6 +14474,10 @@
         {
          "firstgid":5761,
          "source":"..\/4_Crops_16x16.json"
+        }, 
+        {
+         "firstgid":6521,
+         "source":"..\/5_Fruit_Trees_16x16.json"
         }],
  "tilewidth":16,
  "type":"map",
