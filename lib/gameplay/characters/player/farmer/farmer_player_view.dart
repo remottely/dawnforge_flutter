@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_def.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_model.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_view.dart';
@@ -11,10 +11,10 @@ class FarmerPlayerView<
     extends DDFarmPlayerView<C, M> {
   FarmerPlayerView({required super.position, required super.model})
     : super(
-        viewConfig: FarmerPlayerConfig.viewConfig,
-        size: FarmerPlayerConfig.componentSize,
-        life: FarmerPlayerConfig.kLife,
-        baseSpeed: FarmerPlayerConfig.kSpeed,
+        config: FarmerPlayerDef.viewConfig,
+        size: FarmerPlayerDef.componentSize,
+        life: FarmerPlayerDef.kLife,
+        baseSpeed: FarmerPlayerDef.kSpeed,
       );
 
   @override

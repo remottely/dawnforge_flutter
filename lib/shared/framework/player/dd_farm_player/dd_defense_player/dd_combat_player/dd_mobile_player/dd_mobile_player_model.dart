@@ -5,17 +5,17 @@ import 'package:flutter/foundation.dart';
 
 class DDMobilePlayerModel extends DDBasePlayerModel {
   @override
-  final DDMobilePlayerModelConfig modelConfig;
+  final DDMobilePlayerModelConfig config;
 
   bool _isInRunningState;
 
   @protected
   DDMobilePlayerModel.internal({
-    required this.modelConfig,
+    required this.config,
     required super.saveData,
     required bool isInRunningState,
   }) : _isInRunningState = isInRunningState,
-       super.internal(modelConfig: modelConfig);
+       super.internal(config: config);
 
   bool get isRunning => _isInRunningState;
   set isRunning(bool value) => _isInRunningState = value;
@@ -28,12 +28,12 @@ class DDMobilePlayerModel extends DDBasePlayerModel {
   @protected
   factory DDMobilePlayerModel.fromJson(
     Map<String, dynamic> json,
-    DDMobilePlayerModelConfig modelConfig,
+    DDMobilePlayerModelConfig config,
   ) {
-    final baseData = DDBasePlayerSaveData.fromJson(json, modelConfig);
+    final baseData = DDBasePlayerSaveData.fromJson(json, config);
 
     return DDMobilePlayerModel.internal(
-      modelConfig: modelConfig,
+      config: config,
       saveData: baseData,
       isInRunningState: false,
     );

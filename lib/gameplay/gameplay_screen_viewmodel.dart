@@ -1,13 +1,13 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_def.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_view.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_def.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_view.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_def.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_view.dart';
@@ -79,17 +79,17 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
     if (model == null) return;
 
     if (model is FarmerPlayerModel) {
-      model.updateLife(FarmerPlayerConfig.kLife);
+      model.updateLife(FarmerPlayerDef.kLife);
       return;
     }
 
     if (model is CutePlayerModel) {
-      model.updateLife(CutePlayerConfig.kLife);
+      model.updateLife(CutePlayerDef.kLife);
       return;
     }
 
     if (model is SunnyPlayerModel) {
-      model.updateLife(SunnyPlayerConfig.kLife);
+      model.updateLife(SunnyPlayerDef.kLife);
       return;
     }
   }
@@ -162,7 +162,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
     }
 
     playerStateManager.currentPlayerAnimation =
-        FarmerPlayerConfig.loadAnimationIdleRight;
+        FarmerPlayerDef.loadAnimationIdleRight;
 
     return FarmerPlayerView<FarmerPlayerController, FarmerPlayerModel>(
       position: position,

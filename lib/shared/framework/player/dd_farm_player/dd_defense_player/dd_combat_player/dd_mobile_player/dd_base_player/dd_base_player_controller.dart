@@ -45,7 +45,7 @@ abstract class DDBasePlayerController<M extends DDBasePlayerModel> {
 
     _isStaminaRegenerationPending = true;
 
-    Future.delayed(model.modelConfig.staminaRegenDebounce, () {
+    Future.delayed(model.config.staminaRegenDebounce, () {
       _isStaminaRegenerationPending = false;
       if (!_isStaminaRegenerationPaused) {
         model.regenerateStamina();
@@ -78,7 +78,7 @@ abstract class DDBasePlayerController<M extends DDBasePlayerModel> {
 
   void processEnemyDetection() {
     onDetectEnemyInLongVisionRadius(
-      longVisionRadius: model.modelConfig.longVisionRadius,
+      longVisionRadius: model.config.longVisionRadius,
       notObserved: () => model.stopObservingEnemy(),
       observed: (List<Enemy> detectedEnemies) {
         if (model.isObservingEnemy) return;

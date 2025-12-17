@@ -3,14 +3,14 @@ import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defen
 import 'package:flutter/foundation.dart';
 
 class DDBasePlayerModel {
-  final DDBasePlayerModelConfig modelConfig;
+  final DDBasePlayerModelConfig config;
   final DDBasePlayerSaveData _saveData;
 
   bool _isObservingEnemy;
 
   @protected
   DDBasePlayerModel.internal({
-    required this.modelConfig,
+    required this.config,
     required DDBasePlayerSaveData saveData,
   }) : _saveData = saveData,
        _isObservingEnemy = false;
@@ -42,9 +42,9 @@ class DDBasePlayerModel {
   }
 
   void regenerateStamina() {
-    _saveData.stamina += modelConfig.staminaRegenIncrement;
-    if (_saveData.stamina > modelConfig.maxStamina) {
-      _saveData.stamina = modelConfig.maxStamina;
+    _saveData.stamina += config.staminaRegenIncrement;
+    if (_saveData.stamina > config.maxStamina) {
+      _saveData.stamina = config.maxStamina;
     }
   }
 
@@ -53,7 +53,7 @@ class DDBasePlayerModel {
     if (_saveData.energy < 0) _saveData.energy = 0;
   }
 
-  void restoreEnergy() => _saveData.energy = modelConfig.maxEnergy;
+  void restoreEnergy() => _saveData.energy = config.maxEnergy;
 
   void updateLife(double value) => _saveData.life = value;
 
@@ -67,11 +67,11 @@ class DDBasePlayerModel {
   @protected
   factory DDBasePlayerModel.fromJson(
     Map<String, dynamic> json,
-    DDBasePlayerModelConfig modelConfig,
+    DDBasePlayerModelConfig config,
   ) {
     return DDBasePlayerModel.internal(
-      modelConfig: modelConfig,
-      saveData: DDBasePlayerSaveData.fromJson(json, modelConfig),
+      config: config,
+      saveData: DDBasePlayerSaveData.fromJson(json, config),
     );
   }
 }

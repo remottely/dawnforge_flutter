@@ -6,28 +6,28 @@ import 'package:flutter/foundation.dart';
 
 class DDFarmPlayerModel extends DDCombatPlayerModel {
   @override
-  final DDFarmPlayerModelConfig modelConfig;
+  final DDFarmPlayerModelConfig config;
 
   @protected
   DDFarmPlayerModel.internal({
-    required this.modelConfig,
+    required this.config,
     required super.saveData,
     required super.isInRunningState,
-  }) : super.internal(modelConfig: modelConfig);
+  }) : super.internal(config: config);
 
   bool get canExecuteWateringCan =>
-      (stamina >= modelConfig.wateringCanStaminaCost) &&
+      (stamina >= config.wateringCanStaminaCost) &&
       (equipment == EquippedHandType.wateringCan);
 
   bool get canExecuteShovel =>
-      (stamina >= modelConfig.shovelStaminaCost) &&
+      (stamina >= config.shovelStaminaCost) &&
       (equipment == EquippedHandType.shovel);
 
   bool get canExecuteSeed =>
-      (stamina >= modelConfig.seedStaminaCost) && (equipment?.isSeed ?? false);
+      (stamina >= config.seedStaminaCost) && (equipment?.isSeed ?? false);
 
   bool get canExecuteHarvestBasket =>
-      (stamina >= modelConfig.harvestBasketStaminaCost) &&
+      (stamina >= config.harvestBasketStaminaCost) &&
       (equipment == EquippedHandType.harvestBasket);
 
   @override
@@ -38,12 +38,12 @@ class DDFarmPlayerModel extends DDCombatPlayerModel {
   @protected
   factory DDFarmPlayerModel.fromJson(
     Map<String, dynamic> json,
-    DDFarmPlayerModelConfig modelConfig,
+    DDFarmPlayerModelConfig config,
   ) {
-    final baseData = DDBasePlayerSaveData.fromJson(json, modelConfig);
+    final baseData = DDBasePlayerSaveData.fromJson(json, config);
 
     return DDFarmPlayerModel.internal(
-      modelConfig: modelConfig,
+      config: config,
       saveData: baseData,
       isInRunningState: false,
     );

@@ -43,14 +43,14 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
     beginStaminaConsumingAction();
 
     final bool wasExecuted = onExecutePrimaryAttack.call(
-      model.modelConfig.primaryAttackDamage,
+      model.config.primaryAttackDamage,
     );
     if (!wasExecuted) {
       endStaminaConsumingAction();
       return;
     }
 
-    model.consumeStamina(model.modelConfig.primaryAttackStaminaCost);
+    model.consumeStamina(model.config.primaryAttackStaminaCost);
 
     endStaminaConsumingAction();
   }
@@ -61,14 +61,14 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
     beginStaminaConsumingAction();
 
     final bool wasExecuted = onExecuteRangedAttack.call(
-      model.modelConfig.rangedAttackDamage,
+      model.config.rangedAttackDamage,
     );
     if (!wasExecuted) {
       endStaminaConsumingAction();
       return;
     }
 
-    model.consumeStamina(model.modelConfig.rangedAttackStaminaCost);
+    model.consumeStamina(model.config.rangedAttackStaminaCost);
 
     endStaminaConsumingAction();
   }

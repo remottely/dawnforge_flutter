@@ -8,8 +8,8 @@ import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_config.dart';
 
-final class SunnyPlayerConfig {
-  SunnyPlayerConfig._();
+final class SunnyPlayerDef {
+  SunnyPlayerDef._();
 
   static const double kLife = CharacterConstants.kLifeExtraLarge;
 
@@ -68,7 +68,7 @@ final class SunnyPlayerConfig {
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_idle_left_strip9.png',
     SpriteAnimationConfigHelper.createStandardData(
       amount: 9,
-      textureSize: SunnyPlayerConfig.textureSize,
+      textureSize: SunnyPlayerDef.textureSize,
     ),
   );
 
@@ -277,18 +277,17 @@ final class SunnyPlayerConfig {
       );
 
   static final viewConfig = DDFarmPlayerViewConfig(
-    hitbox: SunnyPlayerConfig._hitbox,
-    lighting: SunnyPlayerConfig._lighting,
-    getDeathMarker: (position) =>
-        SunnyPlayerConfig._createDeathMarker(position),
-    animationWalkDirectional: SunnyPlayerConfig._animationWalkDirectional,
-    animationRunDirectional: SunnyPlayerConfig._animationRunDirectional,
+    hitbox: SunnyPlayerDef._hitbox,
+    lighting: SunnyPlayerDef._lighting,
+    getDeathMarker: (position) => SunnyPlayerDef._createDeathMarker(position),
+    animationWalkDirectional: SunnyPlayerDef._animationWalkDirectional,
+    animationRunDirectional: SunnyPlayerDef._animationRunDirectional,
     animationAttackDirectionalFactory:
-        SunnyPlayerConfig._animationAttackDirectionalFactory,
-    animationShovelFactory: SunnyPlayerConfig._animationShovelFactory,
-    animationWateringCanFactory: SunnyPlayerConfig._animationWateringCanFactory,
-    animationPlaceSeedFactory: SunnyPlayerConfig._animationPlaceSeedFactory,
+        SunnyPlayerDef._animationAttackDirectionalFactory,
+    animationShovelFactory: SunnyPlayerDef._animationShovelFactory,
+    animationWateringCanFactory: SunnyPlayerDef._animationWateringCanFactory,
+    animationPlaceSeedFactory: SunnyPlayerDef._animationPlaceSeedFactory,
     animationHarvestBasketFactory:
-        SunnyPlayerConfig._animationHarvestBasketFactory,
+        SunnyPlayerDef._animationHarvestBasketFactory,
   );
 }

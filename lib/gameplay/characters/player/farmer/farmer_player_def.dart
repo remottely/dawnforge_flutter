@@ -7,8 +7,8 @@ import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_
 import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 
-final class FarmerPlayerConfig {
-  FarmerPlayerConfig._();
+final class FarmerPlayerDef {
+  FarmerPlayerDef._();
 
   static const double kLife = CharacterConstants.kLifeExtraLarge;
 
@@ -99,10 +99,10 @@ final class FarmerPlayerConfig {
     farmerPlayerAssetPath,
     SpriteAnimationConfigHelper.createStandardData(
       amount: amount,
-      textureSize: FarmerPlayerConfig.textureSize,
+      textureSize: FarmerPlayerDef.textureSize,
       texturePosition: Vector2(
         framePositionXPadding +
-            (framePositionX * FarmerPlayerConfig.textureSize.x),
+            (framePositionX * FarmerPlayerDef.textureSize.x),
         framePositionYPadding + 32 + (framePositionY * 32),
       ),
     ),
@@ -480,19 +480,18 @@ final class FarmerPlayerConfig {
       );
 
   static final viewConfig = DDFarmPlayerViewConfig(
-    hitbox: FarmerPlayerConfig._hitbox,
-    lighting: FarmerPlayerConfig._lighting,
-    getDeathMarker: (position) =>
-        FarmerPlayerConfig._createDeathMarker(position),
-    animationWalkDirectional: FarmerPlayerConfig._animationWalkDirectional,
-    animationRunDirectional: FarmerPlayerConfig._animationRunDirectional,
+    hitbox: FarmerPlayerDef._hitbox,
+    lighting: FarmerPlayerDef._lighting,
+    getDeathMarker: (position) => FarmerPlayerDef._createDeathMarker(position),
+    animationWalkDirectional: FarmerPlayerDef._animationWalkDirectional,
+    animationRunDirectional: FarmerPlayerDef._animationRunDirectional,
     animationAttackDirectionalFactory:
-        FarmerPlayerConfig._animationAttackDirectionalFactory,
-    animationShovelFactory: FarmerPlayerConfig._animationDigFactory,
-    animationWateringCanFactory: FarmerPlayerConfig._animationWateringFactory,
-    animationPlaceSeedFactory: FarmerPlayerConfig._animationPlaceSeedFactory,
+        FarmerPlayerDef._animationAttackDirectionalFactory,
+    animationShovelFactory: FarmerPlayerDef._animationDigFactory,
+    animationWateringCanFactory: FarmerPlayerDef._animationWateringFactory,
+    animationPlaceSeedFactory: FarmerPlayerDef._animationPlaceSeedFactory,
     animationHarvestBasketFactory:
-        FarmerPlayerConfig._animationHarvestBasketFactory,
+        FarmerPlayerDef._animationHarvestBasketFactory,
   );
 }
 

@@ -17,16 +17,16 @@ abstract class DDCombatPlayerView<
 >
     extends DDMobilePlayerView<C, M> {
   @protected
-  final DDCombatPlayerViewConfig viewConfig;
+  final DDCombatPlayerViewConfig config;
 
   DDCombatPlayerView({
-    required this.viewConfig,
+    required this.config,
     required super.position,
     required super.model,
     required super.size,
     required super.life,
     required super.baseSpeed,
-  }) : super(viewConfig: viewConfig);
+  }) : super(config: config);
 
   late final DDAnimationDirectional animationAttackDirectional;
 
@@ -40,7 +40,7 @@ abstract class DDCombatPlayerView<
 
     animationAttackDirectional =
         await DDCharacterActionSpriteAnimationHelper.loadAnimationDirectionalFromFactory(
-          viewConfig.animationAttackDirectionalFactory,
+          config.animationAttackDirectionalFactory,
         );
   }
 

@@ -87,7 +87,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
       return;
     }
 
-    model.consumeStamina(model.modelConfig.shovelStaminaCost);
+    model.consumeStamina(model.config.shovelStaminaCost);
 
     endStaminaConsumingAction();
   }
@@ -103,7 +103,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
       return;
     }
 
-    model.consumeStamina(model.modelConfig.wateringCanStaminaCost);
+    model.consumeStamina(model.config.wateringCanStaminaCost);
 
     endStaminaConsumingAction();
   }
@@ -119,7 +119,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
       return;
     }
 
-    model.consumeStamina(model.modelConfig.seedStaminaCost);
+    model.consumeStamina(model.config.seedStaminaCost);
 
     endStaminaConsumingAction();
   }
@@ -135,7 +135,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
       return;
     }
 
-    model.consumeStamina(model.modelConfig.harvestBasketStaminaCost);
+    model.consumeStamina(model.config.harvestBasketStaminaCost);
 
     endStaminaConsumingAction();
   }

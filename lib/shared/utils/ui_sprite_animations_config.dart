@@ -5,9 +5,9 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_confi
 import 'package:darkness_dungeon/gameplay/characters/enemies/mini_boss/mini_boss_enemy_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_def.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_def.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_def.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 
 class UISpriteAnimationsConfig {
@@ -16,7 +16,7 @@ class UISpriteAnimationsConfig {
         'gameplay/characters/player/knight/knight_player_idle_right_6.png',
         SpriteAnimationConfigHelper.createStandardData(
           amount: 6,
-          textureSize: KnightPlayerConfig.textureSize,
+          textureSize: KnightPlayerDef.textureSize,
         ),
       );
 
@@ -25,7 +25,7 @@ class UISpriteAnimationsConfig {
         'new/Player/idle/player_idle_right_48x48_6.png',
         SpriteAnimationConfigHelper.createStandardData(
           amount: 6,
-          textureSize: CutePlayerConfig.textureSize,
+          textureSize: CutePlayerDef.textureSize,
         ),
       );
 
@@ -34,7 +34,7 @@ class UISpriteAnimationsConfig {
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_idle_strip9.png',
     SpriteAnimationConfigHelper.createStandardData(
       amount: 9,
-      textureSize: SunnyPlayerConfig.textureSize,
+      textureSize: SunnyPlayerDef.textureSize,
     ),
   );
 

@@ -6,8 +6,8 @@ import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_config.dart';
 
-final class KnightPlayerConfig {
-  KnightPlayerConfig._();
+final class KnightPlayerDef {
+  KnightPlayerDef._();
 
   static const double kLongVisionRadius =
       CharacterConstants.kVisionRadiusSuperLarge;

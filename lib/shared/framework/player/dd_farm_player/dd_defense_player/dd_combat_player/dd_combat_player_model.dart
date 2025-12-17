@@ -6,21 +6,21 @@ import 'package:flutter/foundation.dart';
 
 class DDCombatPlayerModel extends DDMobilePlayerModel {
   @override
-  final DDCombatPlayerModelConfig modelConfig;
+  final DDCombatPlayerModelConfig config;
 
   @protected
   DDCombatPlayerModel.internal({
-    required this.modelConfig,
+    required this.config,
     required super.saveData,
     required super.isInRunningState,
-  }) : super.internal(modelConfig: modelConfig);
+  }) : super.internal(config: config);
 
   bool get canExecutePrimaryAttack =>
-      (stamina >= modelConfig.primaryAttackStaminaCost) &&
+      (stamina >= config.primaryAttackStaminaCost) &&
       (equipment == EquippedHandType.ironSword);
 
   bool get canExecuteRangedAttack =>
-      (stamina >= modelConfig.rangedAttackStaminaCost) &&
+      (stamina >= config.rangedAttackStaminaCost) &&
       (equipment == EquippedHandType.staff);
 
   @override
@@ -31,12 +31,12 @@ class DDCombatPlayerModel extends DDMobilePlayerModel {
   @protected
   factory DDCombatPlayerModel.fromJson(
     Map<String, dynamic> json,
-    DDCombatPlayerModelConfig modelConfig,
+    DDCombatPlayerModelConfig config,
   ) {
-    final baseData = DDBasePlayerSaveData.fromJson(json, modelConfig);
+    final baseData = DDBasePlayerSaveData.fromJson(json, config);
 
     return DDCombatPlayerModel.internal(
-      modelConfig: modelConfig,
+      config: config,
       saveData: baseData,
       isInRunningState: false,
     );

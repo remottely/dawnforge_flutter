@@ -9,8 +9,8 @@ import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dar
 import 'package:darkness_dungeon/shared/utils/sprite_animation_constants.dart';
 import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_config.dart';
 
-final class CutePlayerConfig {
-  CutePlayerConfig._();
+final class CutePlayerDef {
+  CutePlayerDef._();
 
   static const double kLife = CharacterConstants.kLifeExtraLarge;
 
@@ -69,7 +69,7 @@ final class CutePlayerConfig {
         'new/Player/idle/player_idle_left_48x48_6.png',
         SpriteAnimationConfigHelper.createStandardData(
           amount: 6,
-          textureSize: CutePlayerConfig.textureSize,
+          textureSize: CutePlayerDef.textureSize,
         ),
       );
 
@@ -77,7 +77,7 @@ final class CutePlayerConfig {
     'new/Player/idle/player_idle_up_48x48_6.png',
     SpriteAnimationConfigHelper.createStandardData(
       amount: 6,
-      textureSize: CutePlayerConfig.textureSize,
+      textureSize: CutePlayerDef.textureSize,
     ),
   );
 
@@ -86,7 +86,7 @@ final class CutePlayerConfig {
         'new/Player/idle/player_idle_down_48x48_6.png',
         SpriteAnimationConfigHelper.createStandardData(
           amount: 6,
-          textureSize: CutePlayerConfig.textureSize,
+          textureSize: CutePlayerDef.textureSize,
         ),
       );
 
@@ -413,18 +413,17 @@ final class CutePlayerConfig {
       );
 
   static final viewConfig = DDFarmPlayerViewConfig(
-    hitbox: CutePlayerConfig._hitbox,
-    lighting: CutePlayerConfig._lighting,
-    getDeathMarker: (position) => CutePlayerConfig._createDeathMarker(position),
-    animationWalkDirectional: CutePlayerConfig._animationWalkDirectional,
-    animationRunDirectional: CutePlayerConfig._animationRunDirectional,
+    hitbox: CutePlayerDef._hitbox,
+    lighting: CutePlayerDef._lighting,
+    getDeathMarker: (position) => CutePlayerDef._createDeathMarker(position),
+    animationWalkDirectional: CutePlayerDef._animationWalkDirectional,
+    animationRunDirectional: CutePlayerDef._animationRunDirectional,
     animationAttackDirectionalFactory:
-        CutePlayerConfig._animationAttackDirectionalFactory,
-    animationShovelFactory: CutePlayerConfig._animationShovelFactory,
-    animationWateringCanFactory: CutePlayerConfig._animationWateringCanFactory,
-    animationPlaceSeedFactory: CutePlayerConfig._animationPlaceSeedFactory,
-    animationHarvestBasketFactory:
-        CutePlayerConfig._animationHarvestBasketFactory,
+        CutePlayerDef._animationAttackDirectionalFactory,
+    animationShovelFactory: CutePlayerDef._animationShovelFactory,
+    animationWateringCanFactory: CutePlayerDef._animationWateringCanFactory,
+    animationPlaceSeedFactory: CutePlayerDef._animationPlaceSeedFactory,
+    animationHarvestBasketFactory: CutePlayerDef._animationHarvestBasketFactory,
   );
 }
 

@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_def.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_model.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_view.dart';
 
@@ -11,10 +11,10 @@ class CutePlayerView<
     extends DDFarmPlayerView<C, M> {
   CutePlayerView({required super.position, required super.model})
     : super(
-        viewConfig: CutePlayerConfig.viewConfig,
-        size: CutePlayerConfig.componentSize,
-        life: CutePlayerConfig.kLife,
-        baseSpeed: CutePlayerConfig.kSpeed,
+        config: CutePlayerDef.viewConfig,
+        size: CutePlayerDef.componentSize,
+        life: CutePlayerDef.kLife,
+        baseSpeed: CutePlayerDef.kSpeed,
       );
 
   @override

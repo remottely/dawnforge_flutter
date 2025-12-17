@@ -13,31 +13,6 @@ class DDBasePlayerViewConfig {
   });
 }
 
-// class DDBasePlayerModelConfig {
-//   final double maxStamina;
-//   final int maxEnergy;
-//   final int staminaRegenIncrement;
-//   final double longVisionRadius;
-//   final Duration staminaRegenDebounce;
-
-//   const DDBasePlayerModelConfig({
-//     required this.maxStamina,
-//     required this.maxEnergy,
-//     required this.staminaRegenIncrement,
-//     required this.longVisionRadius,
-//     required this.staminaRegenDebounce,
-//   });
-// }
-
-// class DDBasePlayerModelConfig {
-//   double? stamina;
-//   int? energy;
-//   double? life;
-//   bool? hasKey;
-
-//   DDBasePlayerModelConfig({this.stamina, this.energy, this.life, this.hasKey});
-// }
-
 class DDBasePlayerModelConfig {
   // TODO(Kevin): NOWNOW - DDBasePlayerSpec
   final double maxStamina;

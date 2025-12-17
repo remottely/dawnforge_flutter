@@ -26,7 +26,7 @@
 // }
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_def.dart';
 
 class MenuScreenConfig {
   MenuScreenConfig._();
@@ -38,7 +38,7 @@ class MenuScreenConfig {
   static const Duration kCharacterAnimationInterval = Duration(seconds: 2);
 
   static final List<Future<SpriteAnimation>> characterSpriteAnimations = [
-    FarmerPlayerConfig.loadAnimationIdleRight,
+    FarmerPlayerDef.loadAnimationIdleRight,
     // UISpriteAnimationsConfig.loadAnimationCutePlayerIdleRight(),
     // UISpriteAnimationsConfig.loadAnimationSunnyPlayerIdleRight(),
     // UISpriteAnimationsConfig.loadAnimationKnightPlayerIdleRight(),
