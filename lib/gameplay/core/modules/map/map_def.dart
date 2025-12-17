@@ -101,8 +101,29 @@ final class MapDef {
     /// NEW MAPS
     const MapData(
       id: kFarmId,
-      asset: 'tiled/$kFarmId.json',
-      sensorIds: ['sensor_$kLakeId', 'sensor_$kTownId'],
+      asset: 'tiled/maps/$kFarmId.json',
+      // sensorIds: ['sensor_$kLakeId', 'sensor_$kTownId'],
+      sensorIds: [],
+      backgroundMusic: AudioDef.kMusicRo1LettersBackgroundAsset,
+      lightingColor: _kNoneLightingColor,
+      backgroundColor: _kLakeBackgroundColor,
+    ),
+
+    const MapData(
+      id: kLakeId,
+      asset: 'tiled/maps/$kLakeId.json',
+      // sensorIds: ['sensor_$kLakeId', 'sensor_$kTownId'],
+      sensorIds: [],
+      backgroundMusic: AudioDef.kMusicRo1LettersBackgroundAsset,
+      lightingColor: _kNoneLightingColor,
+      backgroundColor: _kLakeBackgroundColor,
+    ),
+
+    const MapData(
+      id: kTownId,
+      asset: 'tiled/maps/$kTownId.json',
+      // sensorIds: ['sensor_$kLakeId', 'sensor_$kTownId'],
+      sensorIds: [],
       backgroundMusic: AudioDef.kMusicRo1LettersBackgroundAsset,
       lightingColor: _kNoneLightingColor,
       backgroundColor: _kLakeBackgroundColor,
