@@ -82,6 +82,8 @@ flutter:
     # Final Game Assets
     - assets/images/tiled/Modern_Farm_v1.2/16x16/Crops_Growth_16x16/ # Strawberry_Growth_Stages_16x16.png
     - assets/images/tiled/Modern_Farm_v1.2/16x16/Characters_16x16/ # Farmer_1_16x16.png
+    - assets/images/tiled/Modern_Farm_v1.2/16x16/tilesets/ # 1_Terrains_16x16.png
+    - assets/images/tiled/project/ # 1_Terrains_16x16.tsx
     - assets/images/tiled/maps/
 
   fonts:

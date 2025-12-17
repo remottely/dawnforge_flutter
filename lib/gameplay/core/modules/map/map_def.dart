@@ -78,6 +78,11 @@ final class MapDef {
 
   /// Final maps
   static const String kFarmId = 'farm';
+  static const String kLakeId = 'lake';
+  static const String kTownId = 'town';
+  static const String kBeachId = 'beach';
+  static const String kForestId = 'forest';
+  static const String kCaveId = 'cave';
 
   /// Test maps
   static const String kFarmTestId = 'farm_test';
@@ -93,19 +98,17 @@ final class MapDef {
   static const String kTemple1Id = 'temple_1';
 
   static const List<MapData> kAllMaps = [
+    /// NEW MAPS
     const MapData(
       id: kFarmId,
       asset: 'tiled/$kFarmId.json',
-      sensorIds: [
-        'sensor_$kBossTestId',
-        'sensor_$kConversationTestId',
-        'sensor_$kLake1Id',
-      ],
+      sensorIds: ['sensor_$kLakeId', 'sensor_$kTownId'],
       backgroundMusic: AudioDef.kMusicRo1LettersBackgroundAsset,
       lightingColor: _kNoneLightingColor,
       backgroundColor: _kLakeBackgroundColor,
     ),
 
+    /// OLD MAPS FOR TESTING
     const MapData(
       id: kFarmTestId,
       asset: 'tiled/$kFarmTestId.json',
