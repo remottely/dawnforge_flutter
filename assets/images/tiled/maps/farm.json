@@ -14462,6 +14462,18 @@
         {
          "firstgid":1,
          "source":"..\/1_Terrains_16x16.json"
+        }, 
+        {
+         "firstgid":737,
+         "source":"..\/2_Fences_16x16.json"
+        }, 
+        {
+         "firstgid":1281,
+         "source":"..\/3_Props_and_Buildings_16x16.json"
+        }, 
+        {
+         "firstgid":5761,
+         "source":"..\/4_Crops_16x16.json"
         }],
  "tilewidth":16,
  "type":"map",
