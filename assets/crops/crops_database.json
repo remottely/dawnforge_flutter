@@ -15,7 +15,7 @@
     "yieldAmount": 3,
     "harvestItemId": "strawberry_item",
     "requiredSeason": "any",
-    "iconPath": "assets/images/crops/TODO: strawberry.png"
+    "iconPath": "Modern_Farm_v1.2/16x16/Crops_Growth_16x16/Strawberry_Growth_Stages_16x16.png"
   },
   "potato": {
     "name": "Potato",

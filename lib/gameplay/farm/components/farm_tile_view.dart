@@ -155,7 +155,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
 
   Future<Sprite> _loadCropSpriteFromSheet() async {
     final crop = farmTile.crop!;
-    final spritesheetPath = _getCropSpritesheetPath(crop.cropId);
+    final spritesheetPath = crop.iconPath;
     final frameIndex = _getFrameIndexForStage(crop.stage);
 
     final srcPosition = Vector2(
@@ -174,17 +174,6 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
     );
 
     return sprite;
-  }
-
-  String _getCropSpritesheetPath(String cropId) {
-    final normalized = cropId
-        .split(RegExp(r'[-_]'))
-        .where((part) => part.isNotEmpty)
-        .map((part) => part[0].toUpperCase() + part.substring(1))
-        .join('_');
-
-    // Sprite.load expects the path relative to the declared asset root (no leading assets/).
-    return 'Modern_Farm_v1.2/16x16/Crops_Growth_16x16/${normalized}_Growth_Stages_16x16.png';
   }
 
   int _getFrameIndexForStage(CropStageModel stage) {
