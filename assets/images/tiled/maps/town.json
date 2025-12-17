@@ -117,8 +117,8 @@
                  "type":"",
                  "visible":true,
                  "width":71.5899,
-                 "x":363.53805,
-                 "y":351.513433333333
+                 "x":363.666666666667,
+                 "y":352.666666666667
                 }, 
                 {
                  "height":15.6398,
@@ -173,6 +173,105 @@
                  "width":71.5899,
                  "x":362.20505,
                  "y":446.1801
+                }, 
+                {
+                 "height":16,
+                 "id":6,
+                 "name":"torch_decoration",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":432,
+                 "y":352
+                }, 
+                {
+                 "height":16,
+                 "id":7,
+                 "name":"torch_decoration",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":352,
+                 "y":352
+                }, 
+                {
+                 "height":16,
+                 "id":8,
+                 "name":"torch_decoration",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":272,
+                 "y":400
+                }, 
+                {
+                 "height":16,
+                 "id":9,
+                 "name":"torch_decoration",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":350.333333333333,
+                 "y":399.333333333333
+                }, 
+                {
+                 "height":16,
+                 "id":11,
+                 "name":"torch_decoration",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":512,
+                 "y":400
+                }, 
+                {
+                 "height":16,
+                 "id":12,
+                 "name":"torch_decoration",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":352,
+                 "y":448
+                }, 
+                {
+                 "height":16,
+                 "id":14,
+                 "name":"wizard_npc",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":400,
+                 "y":400
+                }, 
+                {
+                 "height":16,
+                 "id":15,
+                 "name":"torch_decoration_empty",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":432,
+                 "y":400
+                }, 
+                {
+                 "height":16,
+                 "id":16,
+                 "name":"torch_decoration_empty",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":432,
+                 "y":448
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -181,7 +280,7 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":6,
+ "nextobjectid":17,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

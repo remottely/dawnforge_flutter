@@ -119,6 +119,17 @@
                  "width":71.5899,
                  "x":283.201915546219,
                  "y":94.6002680672269
+                }, 
+                {
+                 "height":16,
+                 "id":4,
+                 "name":"chest",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":320,
+                 "y":160
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -127,7 +138,7 @@
          "y":0
         }],
  "nextlayerid":3,
- "nextobjectid":4,
+ "nextobjectid":5,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

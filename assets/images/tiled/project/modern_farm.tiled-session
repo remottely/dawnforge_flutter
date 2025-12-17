@@ -21,12 +21,39 @@
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/SunnysideWorldTileset.json": {
             "scaleInDock": 1
         },
+        "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/boss_test.json": {
+            "scale": 8.082421875,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 63.96597554492292,
+                "y": 64.02783819051763
+            }
+        },
+        "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/combat_test.json": {
+            "scale": 8.082421875,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 63.96597554492292,
+                "y": 64.02783819051763
+            }
+        },
+        "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/conversation_test.json": {
+            "expandedObjectLayers": [
+                3
+            ],
+            "scale": 8.082421875,
+            "selectedLayer": 5,
+            "viewCenter": {
+                "x": 63.96597554492292,
+                "y": 64.02783819051763
+            }
+        },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/dungeon_1.json": {
             "scale": 1.1079375,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 399.84204885203354,
-                "y": 399.8420488520336
+                "x": 399.8420488520336,
+                "y": 284.7633553336718
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/forest_1.json": {
@@ -48,13 +75,19 @@
             ],
             "expandedObjectLayers": [
                 21,
-                16
+                16,
+                17,
+                20,
+                15,
+                3,
+                19,
+                14
             ],
             "scale": 4.6647,
-            "selectedLayer": 6,
+            "selectedLayer": 9,
             "viewCenter": {
-                "x": 124.76686603640107,
-                "y": 144.38227538748473
+                "x": 343.001693570862,
+                "y": -27.33294745642806
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/lake_1.json#TX Props 32": {
@@ -67,33 +100,33 @@
             "expandedObjectLayers": [
                 3
             ],
-            "scale": 1.1986328124999999,
+            "scale": 3,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 535.6102330128729,
-                "y": 434.24474498940856
+                "x": 351.3333333333333,
+                "y": 434.16666666666663
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/maps/cave.json": {
             "expandedObjectLayers": [
                 2
             ],
-            "scale": 1.19,
+            "scale": 3,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 383.1932773109244,
-                "y": 384.4537815126051
+                "x": 383.3333333333333,
+                "y": 451.5
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/maps/farm.json": {
             "expandedObjectLayers": [
                 3
             ],
-            "scale": 1.5,
+            "scale": 2,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 364.66666666666663,
-                "y": 344.33333333333326
+                "x": 364.5,
+                "y": 423.25
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/maps/farm.tmj": {
@@ -116,11 +149,11 @@
             "expandedObjectLayers": [
                 2
             ],
-            "scale": 1.1541015625,
+            "scale": 2,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 548.4785919783382,
-                "y": 390.3469284142833
+                "x": 548.5,
+                "y": 390.25
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/maps/lake.json": {
@@ -138,12 +171,44 @@
             "expandedObjectLayers": [
                 3
             ],
-            "scale": 1.5,
+            "scale": 3,
             "selectedLayer": 1,
             "viewCenter": {
                 "x": 374.66666666666663,
-                "y": 323.6666666666667
+                "y": 369.16666666666663
             }
+        },
+        "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/temple_1.json": {
+            "scale": 1.010302734375,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 511.72780435938336,
+                "y": 512.222705524141
+            }
+        },
+        "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/temple_1.json#TX Plant 32": {
+            "scaleInDock": 1
+        },
+        "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/temple_1.json#TX Props 32": {
+            "scaleInDock": 1
+        },
+        "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/temple_1.json#TX Shadow 32": {
+            "scaleInDock": 1
+        },
+        "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/temple_1.json#TX Shadow Plant 32": {
+            "scaleInDock": 1
+        },
+        "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/temple_1.json#TX Struct 32": {
+            "scaleInDock": 1
+        },
+        "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/temple_1.json#TX Tileset Grass 32": {
+            "scaleInDock": 1
+        },
+        "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/temple_1.json#TX Tileset Stone Ground 32": {
+            "scaleInDock": 1
+        },
+        "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/temple_1.json#TX Tileset Wall 32": {
+            "scaleInDock": 1
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/tileSet.json": {
             "scaleInDock": 1
