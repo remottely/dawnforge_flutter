@@ -24,8 +24,7 @@ class DDFarmPlayerModel extends DDCombatPlayerModel {
       (equipment == EquippedHandType.shovel);
 
   bool get canExecuteSeed =>
-      (stamina >= modelConfig.seedStaminaCost) &&
-      (equipment == EquippedHandType.strawberry);
+      (stamina >= modelConfig.seedStaminaCost) && (equipment?.isSeed ?? false);
 
   bool get canExecuteHarvestBasket =>
       (stamina >= modelConfig.harvestBasketStaminaCost) &&

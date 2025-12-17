@@ -27,6 +27,20 @@
     "critMultiplier": 1.5,
     "equippedHandType": "strawberry"
   },
+  "tomato": {
+    "id": "tomato",
+    "name": "Tomato",
+    "description": "TODO",
+    "type": "weapon",
+    "rarity": "common",
+    "baseValue": 100,
+    "iconPath": "",
+    "damage": 15,
+    "attackSpeed": 1.2,
+    "critChance": 0.05,
+    "critMultiplier": 1.5,
+    "equippedHandType": "tomato"
+  },
   "shovel": {
     "id": "shovel",
     "name": "Shovel",

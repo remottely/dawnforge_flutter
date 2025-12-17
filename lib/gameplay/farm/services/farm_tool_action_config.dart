@@ -46,24 +46,26 @@ final class FarmToolActionConfig {
     }
 
     if (bestTarget != null) {
-      switch (player.controller.model.equipment) {
+      final equipment = player.controller.model.equipment;
+
+      switch (equipment) {
         case EquippedHandType.shovel:
           _handleTillSoil(bestTarget.tileX, bestTarget.tileY);
           return;
         case EquippedHandType.wateringCan:
           _handleWater(bestTarget.tileX, bestTarget.tileY);
           return;
-        case EquippedHandType.strawberry:
-          _handlePlant(
-            cropId: EquippedHandType.strawberry.name,
-            x: bestTarget.tileX,
-            y: bestTarget.tileY,
-          );
-          return;
         case EquippedHandType.harvestBasket:
           _handleHarvest(player.gameRef, bestTarget.tileX, bestTarget.tileY);
           return;
         default:
+          if (equipment?.isSeed ?? false) {
+            _handlePlant(
+              cropId: equipment!.name,
+              x: bestTarget.tileX,
+              y: bestTarget.tileY,
+            );
+          }
           return;
       }
     }

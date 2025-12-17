@@ -1,13 +1,4 @@
 {
-  "carrot": {
-    "name": "Carrot",
-    "description": "A nutritious root vegetable",
-    "daysToMature": 4,
-    "yieldAmount": 3,
-    "harvestItemId": "carrot_item",
-    "requiredSeason": "any",
-    "iconPath": "assets/images/crops/TODO: carrot.png"
-  },
   "strawberry": {
     "name": "Strawberry",
     "description": "A nutritious root vegetable",
@@ -17,42 +8,6 @@
     "requiredSeason": "any",
     "iconPath": "Modern_Farm_v1.2/16x16/Crops_Growth_16x16/Strawberry_Growth_Stages_16x16.png"
   },
-  "potato": {
-    "name": "Potato",
-    "description": "Versatile tuber, great for cooking",
-    "daysToMature": 6,
-    "yieldAmount": 5,
-    "harvestItemId": "potato_item",
-    "requiredSeason": "spring",
-    "iconPath": "assets/images/crops/potato.png"
-  },
-  "wheat": {
-    "name": "Wheat",
-    "description": "Essential grain for bread",
-    "daysToMature": 8,
-    "yieldAmount": 10,
-    "harvestItemId": "wheat_item",
-    "requiredSeason": "summer",
-    "iconPath": "assets/images/crops/wheat.png"
-  },
-  "pumpkin": {
-    "name": "Pumpkin",
-    "description": "Large orange squash",
-    "daysToMature": 12,
-    "yieldAmount": 1,
-    "harvestItemId": "pumpkin_item",
-    "requiredSeason": "fall",
-    "iconPath": "assets/images/crops/pumpkin.png"
-  },
-  "turnip": {
-    "name": "Turnip",
-    "description": "Hardy winter vegetable",
-    "daysToMature": 5,
-    "yieldAmount": 4,
-    "harvestItemId": "turnip_item",
-    "requiredSeason": "winter",
-    "iconPath": "assets/images/crops/turnip.png"
-  },
   "tomato": {
     "name": "Tomato",
     "description": "Juicy red fruit, perfect for salads",
@@ -60,15 +15,6 @@
     "yieldAmount": 6,
     "harvestItemId": "tomato_item",
     "requiredSeason": "summer",
-    "iconPath": "assets/images/crops/tomato.png"
-  },
-  "corn": {
-    "name": "Corn",
-    "description": "Sweet golden kernels",
-    "daysToMature": 9,
-    "yieldAmount": 4,
-    "harvestItemId": "corn_item",
-    "requiredSeason": "summer",
-    "iconPath": "assets/images/crops/corn.png"
+    "iconPath": "Modern_Farm_v1.2/16x16/Crops_Growth_16x16/Tomato_Growth_Stages_16x16.png"
   }
 }

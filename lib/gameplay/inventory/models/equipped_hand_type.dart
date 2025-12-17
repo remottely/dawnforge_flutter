@@ -3,6 +3,7 @@ enum EquippedHandType {
   shovel,
   wateringCan,
   strawberry,
+  tomato,
   harvestBasket,
   axe,
   spear,
@@ -21,4 +22,6 @@ enum EquippedHandType {
       orElse: () => EquippedHandType.ironSword,
     );
   }
+
+  bool get isSeed => this == strawberry || this == tomato;
 }
