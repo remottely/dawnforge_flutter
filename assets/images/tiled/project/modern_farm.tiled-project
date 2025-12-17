@@ -1,0 +1,16 @@
+{
+    "automappingRulesFile": "",
+    "commands": [
+    ],
+    "compatibilityVersion": 1100,
+    "extensionsPath": "extensions",
+    "folders": [
+        ".",
+        "../Modern_Farm_v1.2/16x16/tilesets",
+        "../maps"
+    ],
+    "properties": [
+    ],
+    "propertyTypes": [
+    ]
+}
