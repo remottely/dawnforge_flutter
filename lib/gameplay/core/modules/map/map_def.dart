@@ -102,7 +102,14 @@ final class MapDef {
     const MapData(
       id: kFarmId,
       asset: 'tiled/maps/$kFarmId.json',
-      sensorIds: ['sensor_$kForestId', 'sensor_$kTownId', 'sensor_$kLakeId'],
+      sensorIds: [
+        'sensor_$kForestId',
+        'sensor_$kTownId',
+        'sensor_$kLakeId',
+        'sensor_$kDungeon1Id',
+        'sensor_$kForest1Id',
+        'sensor_$kLake1Id',
+      ],
       backgroundMusic: AudioDef.kMusicRo1LettersBackgroundAsset,
       lightingColor: _kNoneLightingColor,
       backgroundColor: _kLakeBackgroundColor,

@@ -8,24 +8,6 @@
     "requiredSeason": "any",
     "iconPath": "assets/images/crops/TODO: carrot.png"
   },
-  "strawberry": {
-    "name": "Strawberry",
-    "description": "A nutritious root vegetable",
-    "daysToMature": 8,
-    "yieldAmount": 3,
-    "harvestItemId": "strawberry_item",
-    "requiredSeason": "any",
-    "iconPath": "Modern_Farm_v1.2/16x16/Crops_Growth_16x16/Strawberry_Growth_Stages_16x16.png"
-  },
-  "tomato": {
-    "name": "Tomato",
-    "description": "Juicy red fruit, perfect for salads",
-    "daysToMature": 7,
-    "yieldAmount": 6,
-    "harvestItemId": "tomato_item",
-    "requiredSeason": "summer",
-    "iconPath": "Modern_Farm_v1.2/16x16/Crops_Growth_16x16/Tomato_Growth_Stages_16x16.png"
-  },
   "potato": {
     "name": "Potato",
     "description": "Versatile tuber, great for cooking",

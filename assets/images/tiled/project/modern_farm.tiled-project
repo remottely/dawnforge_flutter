@@ -6,7 +6,7 @@
     "extensionsPath": "extensions",
     "folders": [
         ".",
-        "../Modern_Farm_v1.2/16x16/tilesets",
+        "../Modern_Farm_v1.2/tilesets",
         "../maps"
     ],
     "properties": [

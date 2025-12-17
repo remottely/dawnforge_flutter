@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.64.25+1
+version: 1.64.26+1
 
 environment:
   sdk: ^3.9.2
@@ -80,11 +80,11 @@ flutter:
     - assets/images/new/Player/walk/
     - assets/images/new/Player/water/
     # Final Game Assets
-    - assets/images/tiled/Modern_Farm_v1.2/Crops_Growth/ # Strawberry_Growth_Stages_16x16.png
-    - assets/images/tiled/Modern_Farm_v1.2/Characters/ # Farmer_1_16x16.png
-    # - assets/images/tiled/Modern_Farm_v1.2/16x16/tilesets/ # 1_Terrains_16x16.png
-    # - assets/images/tiled/project/ # 1_Terrains_16x16.tsx
     - assets/images/tiled/maps/
+    - assets/images/tiled/project/
+    - assets/images/tiled/Modern_Farm_v1.2/tilesets/
+    - assets/images/tiled/Modern_Farm_v1.2/Crops_Growth/
+    - assets/images/tiled/Modern_Farm_v1.2/Characters/
 
   fonts:
     - family: Normal
