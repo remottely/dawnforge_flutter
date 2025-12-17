@@ -63,7 +63,7 @@ final class FarmerPlayerConfig {
   );
 
   static String farmerPlayerAssetPath =
-      'Modern_Farm_v1.2/16x16/Characters_16x16/Farmer_1_16x16.png';
+      'tiled/Modern_Farm_v1.2/16x16/Characters_16x16/Farmer_1_16x16.png';
 
   static const farmerPlayerFrameX6 = 6;
   static const farmerPlayerRightFrameX6 = farmerPlayerFrameX6 * 0.0;
