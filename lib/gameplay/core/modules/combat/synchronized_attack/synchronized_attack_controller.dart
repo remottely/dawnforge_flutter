@@ -1,20 +1,20 @@
 import 'dart:async' as async;
 import 'dart:math' as math;
 
+import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_model.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec.dart';
 
 class SynchronizedAttackController {
-  SynchronizedAttackController({required SynchronizedAttackSpec spec})
-    : _spec = spec,
+  SynchronizedAttackController({required SynchronizedAttackConfig config})
+    : _config = config,
       _model = SynchronizedAttackModel(
-        baseAttackSpeedMs: spec.baseAttackSpeedMs,
-        attackTypeMultipliers: spec.attackTypeMultipliers,
-        speedBonusPerLevel: spec.speedBonusPerLevel,
+        baseAttackSpeedMs: config.baseAttackSpeedMs,
+        attackTypeMultipliers: config.attackTypeMultipliers,
+        speedBonusPerLevel: config.speedBonusPerLevel,
       );
 
-  final SynchronizedAttackSpec _spec;
+  final SynchronizedAttackConfig _config;
   final SynchronizedAttackModel _model;
 
   async.Timer? _cooldownTimer;
@@ -167,7 +167,7 @@ class SynchronizedAttackController {
 
   Map<String, dynamic> getStatus() {
     return {
-      'spec': _spec.toMap(),
+      'config': _config.toMap(),
       'canAttack': _model.canAttack,
       'playerLevel': _model.playerLevel,
       'baseAttackSpeedMs': _model.baseAttackSpeedMs,

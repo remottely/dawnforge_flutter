@@ -55,11 +55,11 @@ class DDBasePlayerSaveData {
 
   factory DDBasePlayerSaveData.fromJson(
     Map<String, dynamic> json,
-    DDBasePlayerModelConfig spec,
+    DDBasePlayerModelConfig config,
   ) {
     return DDBasePlayerSaveData(
-      stamina: (json['stamina'] as num?)?.toDouble() ?? spec.maxStamina,
-      energy: (json['energy'] as int?) ?? spec.maxEnergy,
+      stamina: (json['stamina'] as num?)?.toDouble() ?? config.maxStamina,
+      energy: (json['energy'] as int?) ?? config.maxEnergy,
       life: (json['life'] as num?)?.toDouble(),
       hasKey: json['hasKey'] as bool? ?? false,
       equipment: _parseEquipment(json['equipment'] as String?),

@@ -1,10 +1,10 @@
+import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_config.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec.dart';
 
-final class SynchronizedAttackSpecDef {
-  SynchronizedAttackSpecDef._();
+final class SynchronizedAttackDef {
+  SynchronizedAttackDef._();
 
-  static const standard = SynchronizedAttackSpec(
+  static const standard = SynchronizedAttackConfig(
     baseAttackSpeedMs: 800,
     speedBonusPerLevel: 0.05,
     attackTypeMultipliers: {

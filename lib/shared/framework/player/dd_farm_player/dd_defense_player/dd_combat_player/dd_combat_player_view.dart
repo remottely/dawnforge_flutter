@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/controllers/player_combat_action_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_def.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';
@@ -53,10 +53,10 @@ abstract class DDCombatPlayerView<
 
   void _initializeCombatSystems() {
     meleeAttackController = SynchronizedAttackController(
-      spec: SynchronizedAttackSpecDef.standard,
+      config: SynchronizedAttackDef.standard,
     );
     rangedAttackController = SynchronizedAttackController(
-      spec: SynchronizedAttackSpecDef.standard,
+      config: SynchronizedAttackDef.standard,
     );
   }
 
