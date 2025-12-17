@@ -6,7 +6,6 @@ import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
-import 'package:darkness_dungeon/shared/utils/sprite_animation_constants.dart';
 
 final class FarmerPlayerConfig {
   FarmerPlayerConfig._();
@@ -65,93 +64,150 @@ final class FarmerPlayerConfig {
 
   static String farmerPlayerAssetPath =
       'Modern_Farm_v1.2/16x16/Characters_16x16/Farmer_1_16x16.png';
-  static double farmerPlayerRightFrameX = 0;
-  static double farmerPlayerUpFrameX = 6;
-  static double farmerPlayerLeftFrameX = 12;
-  static double farmerPlayerDownFrameX = 18;
 
-  static double farmerPlayerIdleFrameY = 2;
-  static double farmerPlayerWalkFrameY = 4; // TODO(Kevin): fix it to be 3
+  static const farmerPlayerFrameX6 = 6;
+  static const farmerPlayerRightFrameX6 = farmerPlayerFrameX6 * 0.0;
+  static const farmerPlayerUpFrameX6 = farmerPlayerFrameX6 * 1.0;
+  static const farmerPlayerLeftFrameX6 = farmerPlayerFrameX6 * 2.0;
+  static const farmerPlayerDownFrameX6 = farmerPlayerFrameX6 * 3.0;
+
+  static const farmerPlayerFrameX9 = 9;
+  static const farmerPlayerRightFrameX9 = farmerPlayerFrameX9 * 0.0;
+  static const farmerPlayerUpFrameX9 = farmerPlayerFrameX9 * 1.0;
+  static const farmerPlayerLeftFrameX9 = farmerPlayerFrameX9 * 2.0;
+  static const farmerPlayerDownFrameX9 = farmerPlayerFrameX9 * 3.0;
+
+  static const farmerPlayerFrameX14 = 14;
+  static const farmerPlayerRightFrameX14 = farmerPlayerFrameX14 * 0.0;
+  static const farmerPlayerUpFrameX14 = farmerPlayerFrameX14 * 1.0;
+  static const farmerPlayerLeftFrameX14 = farmerPlayerFrameX14 * 2.0;
+  static const farmerPlayerDownFrameX14 = farmerPlayerFrameX14 * 3.0;
+
+  static const farmerPlayerIdleFrameY = 2.0;
+  static const farmerPlayerWalkFrameY = 4.0;
+  static const farmerPlayerHarvestFrameY = 6.0;
+  static const farmerPlayerDigFrameY = 10.0;
+  static const farmerPlayerWateringFrameY = 14.0;
 
   static Future<SpriteAnimation> _loadAnimationFarmerPlayerByFramePosition(
+    double framePositionYPadding,
+    int amount,
+    double framePositionXPadding,
     double framePositionX,
     double framePositionY,
   ) => SpriteAnimation.load(
     farmerPlayerAssetPath,
     SpriteAnimationConfigHelper.createStandardData(
-      amount: 6,
+      amount: amount,
       textureSize: FarmerPlayerConfig.textureSize,
       texturePosition: Vector2(
-        framePositionX * FarmerPlayerConfig.textureSize.x,
-        32 + (framePositionY * 32),
+        framePositionXPadding +
+            (framePositionX * FarmerPlayerConfig.textureSize.x),
+        framePositionYPadding + 32 + (framePositionY * 32),
       ),
     ),
   );
 
   static final Future<SpriteAnimation> loadAnimationIdleRight =
       _loadAnimationFarmerPlayerByFramePosition(
-        farmerPlayerRightFrameX,
+        0,
+        6,
+        0,
+        farmerPlayerRightFrameX6,
         farmerPlayerIdleFrameY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationIdleLeft =
       _loadAnimationFarmerPlayerByFramePosition(
-        farmerPlayerLeftFrameX,
+        0,
+        6,
+        0,
+        farmerPlayerLeftFrameX6,
         farmerPlayerIdleFrameY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationIdleUp =
       _loadAnimationFarmerPlayerByFramePosition(
-        farmerPlayerUpFrameX,
+        0,
+        6,
+        0,
+        farmerPlayerUpFrameX6,
         farmerPlayerIdleFrameY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationIdleDown =
       _loadAnimationFarmerPlayerByFramePosition(
-        farmerPlayerDownFrameX,
+        0,
+        6,
+        0,
+        farmerPlayerDownFrameX6,
         farmerPlayerIdleFrameY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWalkLeft =
       _loadAnimationFarmerPlayerByFramePosition(
-        farmerPlayerLeftFrameX,
+        0,
+        6,
+        0,
+        farmerPlayerLeftFrameX6,
         farmerPlayerWalkFrameY,
       );
   static final Future<SpriteAnimation> _loadAnimationWalkRight =
       _loadAnimationFarmerPlayerByFramePosition(
-        farmerPlayerRightFrameX,
+        0,
+        6,
+        0,
+        farmerPlayerRightFrameX6,
         farmerPlayerWalkFrameY,
       );
   static final Future<SpriteAnimation> _loadAnimationWalkUp =
       _loadAnimationFarmerPlayerByFramePosition(
-        farmerPlayerUpFrameX,
+        0,
+        6,
+        0,
+        farmerPlayerUpFrameX6,
         farmerPlayerWalkFrameY,
       );
   static final Future<SpriteAnimation> _loadAnimationWalkDown =
       _loadAnimationFarmerPlayerByFramePosition(
-        farmerPlayerDownFrameX,
+        0,
+        6,
+        0,
+        farmerPlayerDownFrameX6,
         farmerPlayerWalkFrameY,
       );
 
   ///
   static final Future<SpriteAnimation> _loadAnimationRunLeft =
       _loadAnimationFarmerPlayerByFramePosition(
-        farmerPlayerLeftFrameX,
+        0,
+        6,
+        0,
+        farmerPlayerLeftFrameX6,
         farmerPlayerWalkFrameY,
       );
   static final Future<SpriteAnimation> _loadAnimationRunRight =
       _loadAnimationFarmerPlayerByFramePosition(
-        farmerPlayerRightFrameX,
+        0,
+        6,
+        0,
+        farmerPlayerRightFrameX6,
         farmerPlayerWalkFrameY,
       );
   static final Future<SpriteAnimation> _loadAnimationRunUp =
       _loadAnimationFarmerPlayerByFramePosition(
-        farmerPlayerUpFrameX,
+        0,
+        6,
+        0,
+        farmerPlayerUpFrameX6,
         farmerPlayerWalkFrameY,
       );
   static final Future<SpriteAnimation> _loadAnimationRunDown =
       _loadAnimationFarmerPlayerByFramePosition(
-        farmerPlayerDownFrameX,
+        0,
+        6,
+        0,
+        farmerPlayerDownFrameX6,
         farmerPlayerWalkFrameY,
       );
 
@@ -206,102 +262,95 @@ final class FarmerPlayerConfig {
         loadLeftDown: null,
       );
 
-  static final Future<SpriteAnimation> _loadAnimationShovelRight =
-      SpriteAnimation.load(
-        'new/Player/shovel/player_shovel_right_48x48_2.png',
-        SpriteAnimationConfigHelper.createCustomData(
-          amount: 2,
-          textureSize: textureSize,
-          stepTime: SpriteAnimationConstants.kStepTimeSlow,
-        ),
+  static final Future<SpriteAnimation> _loadAnimationDigRight =
+      _loadAnimationFarmerPlayerByFramePosition(
+        0,
+        9,
+        -8,
+        farmerPlayerRightFrameX9,
+        farmerPlayerDigFrameY,
       );
 
-  static final Future<SpriteAnimation> _loadAnimationShovelLeft =
-      SpriteAnimation.load(
-        'new/Player/shovel/player_shovel_left_48x48_2.png',
-        SpriteAnimationConfigHelper.createCustomData(
-          amount: 2,
-          textureSize: textureSize,
-          stepTime: SpriteAnimationConstants.kStepTimeSlow,
-        ),
+  static final Future<SpriteAnimation> _loadAnimationDigLeft =
+      _loadAnimationFarmerPlayerByFramePosition(
+        0,
+        9,
+        -8,
+        farmerPlayerLeftFrameX9,
+        farmerPlayerDigFrameY,
       );
 
-  static final Future<SpriteAnimation> _loadAnimationShovelUp =
-      SpriteAnimation.load(
-        'new/Player/shovel/player_shovel_up_48x48_2.png',
-        SpriteAnimationConfigHelper.createCustomData(
-          amount: 2,
-          textureSize: textureSize,
-          stepTime: SpriteAnimationConstants.kStepTimeSlow,
-        ),
+  static final Future<SpriteAnimation> _loadAnimationDigUp =
+      _loadAnimationFarmerPlayerByFramePosition(
+        0,
+        9,
+        -8,
+        farmerPlayerUpFrameX9,
+        farmerPlayerDigFrameY,
       );
 
-  static final Future<SpriteAnimation> _loadAnimationShovelDown =
-      SpriteAnimation.load(
-        'new/Player/shovel/player_shovel_down_48x48_2.png',
-        SpriteAnimationConfigHelper.createCustomData(
-          amount: 2,
-          textureSize: textureSize,
-          stepTime: SpriteAnimationConstants.kStepTimeSlow,
-        ),
+  static final Future<SpriteAnimation> _loadAnimationDigDown =
+      _loadAnimationFarmerPlayerByFramePosition(
+        -4,
+        9,
+        -8,
+        farmerPlayerDownFrameX9,
+        farmerPlayerDigFrameY,
       );
 
-  static final _animationShovelFactory = DDAnimationDirectionalFactory(
-    loadRight: _loadAnimationShovelRight,
-    loadLeft: _loadAnimationShovelLeft,
-    loadUp: _loadAnimationShovelUp,
-    loadDown: _loadAnimationShovelDown,
+  static final _animationDigFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationDigRight,
+    loadLeft: _loadAnimationDigLeft,
+    loadUp: _loadAnimationDigUp,
+    loadDown: _loadAnimationDigDown,
     loadRightUp: null,
     loadRightDown: null,
     loadLeftUp: null,
     loadLeftDown: null,
   );
 
-  static final Future<SpriteAnimation> _loadAnimationWateringCanRight =
-      SpriteAnimation.load(
-        'new/Player/water/player_water_right_48x48_2.png',
-        SpriteAnimationConfigHelper.createCustomData(
-          amount: 2,
-          textureSize: textureSize,
-          stepTime: SpriteAnimationConstants.kStepTimeSlow,
-        ),
+  static final Future<SpriteAnimation> _loadAnimationWateringRight =
+      _loadAnimationFarmerPlayerByFramePosition(
+        0,
+        farmerPlayerFrameX14,
+        -8,
+        farmerPlayerRightFrameX14,
+        farmerPlayerWateringFrameY,
       );
 
-  static final Future<SpriteAnimation> _loadAnimationWateringCanLeft =
-      SpriteAnimation.load(
-        'new/Player/water/player_water_left_48x48_2.png',
-        SpriteAnimationConfigHelper.createCustomData(
-          amount: 2,
-          textureSize: textureSize,
-          stepTime: SpriteAnimationConstants.kStepTimeSlow,
-        ),
+  static final Future<SpriteAnimation> _loadAnimationWateringLeft =
+      _loadAnimationFarmerPlayerByFramePosition(
+        0,
+        farmerPlayerFrameX14,
+        8,
+        farmerPlayerLeftFrameX14,
+        farmerPlayerWateringFrameY,
       );
 
-  static final Future<SpriteAnimation> _loadAnimationWateringCanUp =
-      SpriteAnimation.load(
-        'new/Player/water/player_water_up_48x48_2.png',
-        SpriteAnimationConfigHelper.createCustomData(
-          amount: 2,
-          textureSize: textureSize,
-          stepTime: SpriteAnimationConstants.kStepTimeSlow,
-        ),
+  static final Future<SpriteAnimation> _loadAnimationWateringUp =
+      _loadAnimationFarmerPlayerByFramePosition(
+        0,
+        farmerPlayerFrameX14,
+        0,
+        farmerPlayerUpFrameX14,
+        farmerPlayerWateringFrameY,
       );
 
-  static final Future<SpriteAnimation> _loadAnimationWateringCanDown =
-      SpriteAnimation.load(
-        'new/Player/water/player_water_down_48x48_2.png',
-        SpriteAnimationConfigHelper.createCustomData(
-          amount: 2,
-          textureSize: textureSize,
-          stepTime: SpriteAnimationConstants.kStepTimeSlow,
-        ),
+  static final Future<SpriteAnimation> _loadAnimationWateringDown =
+      _loadAnimationFarmerPlayerByFramePosition(
+        -16,
+        farmerPlayerFrameX14,
+        0,
+        farmerPlayerDownFrameX14,
+        farmerPlayerWateringFrameY,
       );
 
-  static final _animationWateringCanFactory = DDAnimationDirectionalFactory(
-    loadRight: _loadAnimationWateringCanRight,
-    loadLeft: _loadAnimationWateringCanLeft,
-    loadUp: _loadAnimationWateringCanUp,
-    loadDown: _loadAnimationWateringCanDown,
+  static final _animationWateringFactory = DDAnimationDirectionalFactory(
+    // TODO(Kevin): change all waterincan names to watering
+    loadRight: _loadAnimationWateringRight,
+    loadLeft: _loadAnimationWateringLeft,
+    loadUp: _loadAnimationWateringUp,
+    loadDown: _loadAnimationWateringDown,
     loadRightUp: null,
     loadRightDown: null,
     loadLeftUp: null,
@@ -439,9 +488,8 @@ final class FarmerPlayerConfig {
     animationRunDirectional: FarmerPlayerConfig._animationRunDirectional,
     animationAttackDirectionalFactory:
         FarmerPlayerConfig._animationAttackDirectionalFactory,
-    animationShovelFactory: FarmerPlayerConfig._animationShovelFactory,
-    animationWateringCanFactory:
-        FarmerPlayerConfig._animationWateringCanFactory,
+    animationShovelFactory: FarmerPlayerConfig._animationDigFactory,
+    animationWateringCanFactory: FarmerPlayerConfig._animationWateringFactory,
     animationPlaceSeedFactory: FarmerPlayerConfig._animationPlaceSeedFactory,
     animationHarvestBasketFactory:
         FarmerPlayerConfig._animationHarvestBasketFactory,
