@@ -11,6 +11,8 @@ final class CropModel {
   final String harvestItemId;
   final String? requiredSeason;
   final String iconPath;
+  final int spriteWidth;
+  final int spriteHeight;
 
   const CropModel({
     required this.cropId,
@@ -23,6 +25,8 @@ final class CropModel {
     required this.harvestItemId,
     this.requiredSeason,
     required this.iconPath,
+    required this.spriteWidth,
+    required this.spriteHeight,
   });
 
   double get growthProgress => (daysPlanted / daysToMature).clamp(0.0, 1.0);
@@ -67,6 +71,8 @@ final class CropModel {
       'harvestItemId': harvestItemId,
       'requiredSeason': requiredSeason,
       'iconPath': iconPath,
+      'spriteWidth': spriteWidth,
+      'spriteHeight': spriteHeight,
     };
   }
 
@@ -82,6 +88,8 @@ final class CropModel {
       harvestItemId: json['harvestItemId'] as String,
       requiredSeason: json['requiredSeason'] as String?,
       iconPath: json['iconPath'] as String,
+      spriteWidth: json['spriteWidth'] as int,
+      spriteHeight: json['spriteHeight'] as int,
     );
   }
 
@@ -96,6 +104,8 @@ final class CropModel {
     String? harvestItemId,
     String? requiredSeason,
     String? iconPath,
+    int? spriteWidth,
+    int? spriteHeight,
   }) {
     return CropModel(
       cropId: cropId ?? this.cropId,
@@ -108,6 +118,8 @@ final class CropModel {
       harvestItemId: harvestItemId ?? this.harvestItemId,
       requiredSeason: requiredSeason ?? this.requiredSeason,
       iconPath: iconPath ?? this.iconPath,
+      spriteWidth: spriteWidth ?? this.spriteWidth,
+      spriteHeight: spriteHeight ?? this.spriteHeight,
     );
   }
 

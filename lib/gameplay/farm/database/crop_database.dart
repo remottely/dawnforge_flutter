@@ -56,6 +56,12 @@ final class CropDatabase {
       harvestItemId: cropData['harvestItemId'] as String,
       requiredSeason: cropData['requiredSeason'] as String?,
       iconPath: cropData['iconPath'] as String,
+      spriteWidth:
+          (cropData['spriteWidth'] as int?) ??
+          16, // TODO(Kevin): remove this default value 16
+      spriteHeight:
+          (cropData['spriteHeight'] as int?) ??
+          16, // TODO(Kevin): remove this default value 16
     );
   }
 

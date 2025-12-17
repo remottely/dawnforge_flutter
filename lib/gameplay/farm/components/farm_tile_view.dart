@@ -72,18 +72,32 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
     if (farmTile.crop == null) return;
 
     final cropSprite = await _loadCropSpriteFromSheet();
+    final crop = farmTile.crop!;
+
+    // Tamanho real do sprite do crop
+    final cropSize = Vector2(
+      crop.spriteWidth.toDouble(),
+      crop.spriteHeight.toDouble(),
+    );
+
+    // Calcula posição para alinhar pelo bottom (base do crop com base do tile)
+    final cropPosition = Vector2(position.x, position.y + size.y - cropSize.y);
 
     _cropDecoration = GameDecoration.withSprite(
       sprite: cropSprite,
-      position: position,
-      size: size,
+      position: cropPosition,
+      size: cropSize,
     );
 
-    if (farmTile.crop!.stage == CropStageModel.withered) {
+    if (crop.stage == CropStageModel.withered) {
       _cropDecoration!.opacity = 0.5;
     }
 
     gameRef.add(_cropDecoration!);
+
+    developer.log(
+      '[FarmTileView] 🌱 Crop positioned: ${crop.cropId} at ($cropPosition) with size ($cropSize), aligned by bottom',
+    );
   }
 
   bool isPlayerOnTile(Player player) {
@@ -158,19 +172,21 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
     final spritesheetPath = crop.iconPath;
     final frameIndex = _getFrameIndexForStage(crop.stage);
 
-    final srcPosition = Vector2(
-      TileConstants.kTileDimensionStandard * frameIndex,
-      0,
+    final srcPosition = Vector2(crop.spriteWidth.toDouble() * frameIndex, 0);
+
+    final srcSize = Vector2(
+      crop.spriteWidth.toDouble(),
+      crop.spriteHeight.toDouble(),
     );
 
     final sprite = await Sprite.load(
       spritesheetPath,
       srcPosition: srcPosition,
-      srcSize: TileConstants.tileSizeStandard,
+      srcSize: srcSize,
     );
 
     developer.log(
-      '[FarmTileView] 🌱 Crop sprite loaded from sheet: $spritesheetPath (frame: $frameIndex)',
+      '[FarmTileView] 🌱 Crop sprite loaded from sheet: $spritesheetPath (frame: $frameIndex, size: ${crop.spriteWidth}x${crop.spriteHeight})',
     );
 
     return sprite;
