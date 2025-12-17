@@ -7,8 +7,8 @@ import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart'
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 
-final class CharacterFireballAttackConfig {
-  CharacterFireballAttackConfig._();
+final class CharacterFireballAttackDef {
+  CharacterFireballAttackDef._();
 
   static final Vector2 _textureSize = Vector2(
     23,

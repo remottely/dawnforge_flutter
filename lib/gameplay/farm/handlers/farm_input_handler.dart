@@ -44,9 +44,7 @@ class FarmInputHandler extends GameComponent with KeyboardEventListener {
     final currentDay = WorldStateManager.instance.currentDay;
     developer.log('[FarmInput] Advanced to day $currentDay');
 
-    _feedbackService.showFloatingText(
-      FarmFeedbackConfig.dayAdvanced(currentDay),
-    );
+    _feedbackService.showFloatingText(FarmFeedbackDef.dayAdvanced(currentDay));
 
     _saveGameAsync();
   }
@@ -58,8 +56,8 @@ class FarmInputHandler extends GameComponent with KeyboardEventListener {
         .clearGameAndSave()
         .then((success) {
           final message = success
-              ? FarmFeedbackConfig.kSaveCleared
-              : FarmFeedbackConfig.kClearSaveError;
+              ? FarmFeedbackDef.kSaveCleared
+              : FarmFeedbackDef.kClearSaveError;
 
           _feedbackService.showFloatingText(message);
 
@@ -81,8 +79,8 @@ class FarmInputHandler extends GameComponent with KeyboardEventListener {
         .saveGame()
         .then((success) {
           final message = success
-              ? FarmFeedbackConfig.kGameSaved
-              : FarmFeedbackConfig.kSaveError;
+              ? FarmFeedbackDef.kGameSaved
+              : FarmFeedbackDef.kSaveError;
 
           _feedbackService.showFloatingText(message);
 

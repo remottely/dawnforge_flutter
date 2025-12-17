@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
 
-final class PlayerVitalStatsHUDConfig {
-  PlayerVitalStatsHUDConfig._();
+final class PlayerVitalStatsHUDDef {
+  PlayerVitalStatsHUDDef._();
 
   /// Component settings
   static const double _kHUDPadding = 20.0;

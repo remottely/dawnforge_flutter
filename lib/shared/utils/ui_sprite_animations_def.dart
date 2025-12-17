@@ -1,16 +1,17 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/mini_boss/mini_boss_enemy_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_config.dart';
-import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_def.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_def.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_Def.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/mini_boss/mini_boss_enemy_def.dart';
+import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_def.dart';
+import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_def.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_def.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/knight/knight_player_def.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_def.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 
-class UISpriteAnimationsConfig {
+class UISpriteAnimationsDef {
+  // TODO(Kevin): remove this class
   static Future<SpriteAnimation> loadAnimationKnightPlayerIdleRight() =>
       SpriteAnimation.load(
         'gameplay/characters/player/knight/knight_player_idle_right_6.png',
@@ -43,7 +44,7 @@ class UISpriteAnimationsConfig {
         'gameplay/characters/enemies/goblin/goblin_enemy_idle_right_6.png',
         SpriteAnimationConfigHelper.createStandardData(
           amount: 6,
-          textureSize: GoblinEnemyConfig.textureSize,
+          textureSize: GoblinEnemyDef.textureSize,
         ),
       );
 
@@ -52,7 +53,7 @@ class UISpriteAnimationsConfig {
         'gameplay/characters/enemies/imp/imp_enemy_idle_right_4.png',
         SpriteAnimationConfigHelper.createStandardData(
           amount: 4,
-          textureSize: ImpEnemyConfig.textureSize,
+          textureSize: ImpEnemyDef.textureSize,
         ),
       );
 
@@ -61,7 +62,7 @@ class UISpriteAnimationsConfig {
     'gameplay/characters/enemies/mini_boss/mini_boss_enemy_idle_right_4.png',
     SpriteAnimationConfigHelper.createStandardData(
       amount: 4,
-      textureSize: MiniBossEnemyConfig.textureSize,
+      textureSize: MiniBossEnemyDef.textureSize,
     ),
   );
 
@@ -70,7 +71,7 @@ class UISpriteAnimationsConfig {
         'gameplay/characters/enemies/boss/boss_enemy_idle_right_4.png',
         SpriteAnimationConfigHelper.createStandardData(
           amount: 4,
-          textureSize: BossEnemyConfig.textureSize,
+          textureSize: BossEnemyDef.textureSize,
         ),
       );
 
@@ -79,7 +80,7 @@ class UISpriteAnimationsConfig {
         'gameplay/characters/enemies/boss/boss_enemy_idle_left_4.png',
         SpriteAnimationConfigHelper.createStandardData(
           amount: 4,
-          textureSize: BossEnemyConfig.textureSize,
+          textureSize: BossEnemyDef.textureSize,
         ),
       );
 
@@ -88,7 +89,7 @@ class UISpriteAnimationsConfig {
         'gameplay/characters/npcs/kid_npc_idle_left_4.png',
         SpriteAnimationConfigHelper.createStandardData(
           amount: 4,
-          textureSize: KidNpcConfig.textureSize,
+          textureSize: KidNpcDef.textureSize,
         ),
       );
 
@@ -97,7 +98,7 @@ class UISpriteAnimationsConfig {
         'gameplay/characters/npcs/wizard_npc_idle_left_4.png',
         SpriteAnimationConfigHelper.createStandardData(
           amount: 4,
-          textureSize: WizardNpcConfig.textureSize,
+          textureSize: WizardNpcDef.textureSize,
         ),
       );
 }

@@ -1,4 +1,4 @@
-class InputsHUDConfig {
+class InputsHUDDef {
   // Guia de inputs de teste
   static const List<Map<String, String>> inputGuide = [
     // {"key": "ESC", "desc": "Menu/Pause"},

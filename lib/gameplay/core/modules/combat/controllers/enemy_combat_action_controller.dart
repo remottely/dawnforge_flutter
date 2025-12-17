@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fireball_attack_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/enemy_primary_attack_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fireball_attack_def.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/enemy_primary_attack_def.dart';
 
 final class EnemyCombatActionController {
   EnemyCombatActionController._();
@@ -27,12 +27,12 @@ final class EnemyCombatActionController {
         // );
 
         enemy.simpleAttackMelee(
-          size: EnemyPrimaryAttackConfig.componentSize,
+          size: EnemyPrimaryAttackDef.componentSize,
           damage: damage,
           interval: interval,
           // direction: attackDirection,
           // centerOffset: attackOffset,
-          animationRight: EnemyPrimaryAttackConfig.loadAnimationFxRight(),
+          animationRight: EnemyPrimaryAttackDef.loadAnimationFxRight(),
           execute: AudioManager.instance.playEnemyPrimaryAttackSfx,
         );
       },
@@ -48,17 +48,15 @@ final class EnemyCombatActionController {
       radiusVision: longVisionRadius,
       positioned: (_) {
         enemy.simpleAttackRange(
-          size: CharacterFireballAttackConfig.componentSize,
-          speed: CharacterFireballAttackConfig.kSpeed,
-          lightingConfig: CharacterFireballAttackConfig.lighting,
+          size: CharacterFireballAttackDef.componentSize,
+          speed: CharacterFireballAttackDef.kSpeed,
+          lightingConfig: CharacterFireballAttackDef.lighting,
           damage: damage,
-          collision: CharacterFireballAttackConfig.createHitbox(),
-          animation: CharacterFireballAttackConfig.loadAnimationExecution(),
-          animationDestroy:
-              CharacterFireballAttackConfig.loadAnimationDestroy(),
-          execute: CharacterFireballAttackConfig.playAudioExecution,
-          onDestroy: () =>
-              CharacterFireballAttackConfig.onDestroy(enemy.gameRef),
+          collision: CharacterFireballAttackDef.createHitbox(),
+          animation: CharacterFireballAttackDef.loadAnimationExecution(),
+          animationDestroy: CharacterFireballAttackDef.loadAnimationDestroy(),
+          execute: CharacterFireballAttackDef.playAudioExecution,
+          onDestroy: () => CharacterFireballAttackDef.onDestroy(enemy.gameRef),
         );
       },
     );

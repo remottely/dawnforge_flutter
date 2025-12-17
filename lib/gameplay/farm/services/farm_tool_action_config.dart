@@ -7,7 +7,7 @@ import 'package:darkness_dungeon/gameplay/farm/services/farm_feedback_service.da
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 
-final class FarmToolActionConfig {
+final class FarmToolActionDef {
   static final FarmActionService _actionService = FarmActionService.instance;
   static final FarmFeedbackService _feedbackService =
       FarmFeedbackService.instance;
@@ -74,7 +74,7 @@ final class FarmToolActionConfig {
   static bool _handleTillSoil(int x, int y) {
     final result = _actionService.tillSoil(x, y);
     if (result.success) {
-      _feedbackService.showFloatingText(FarmFeedbackConfig.kSoilTilled);
+      _feedbackService.showFloatingText(FarmFeedbackDef.kSoilTilled);
     }
     return true;
   }
@@ -82,7 +82,7 @@ final class FarmToolActionConfig {
   static bool _handleWater(int x, int y) {
     final result = _actionService.waterTile(x, y);
     if (result.success) {
-      _feedbackService.showFloatingText(FarmFeedbackConfig.kCropWatered);
+      _feedbackService.showFloatingText(FarmFeedbackDef.kCropWatered);
     }
     return true;
   }
@@ -98,7 +98,7 @@ final class FarmToolActionConfig {
 
     final result = _actionService.plantSeed(x, y, cropId);
     if (result.success) {
-      _feedbackService.showFloatingText(FarmFeedbackConfig.kSeedPlanted);
+      _feedbackService.showFloatingText(FarmFeedbackDef.kSeedPlanted);
     }
     return true;
   }
@@ -108,11 +108,11 @@ final class FarmToolActionConfig {
 
     if (result.success && result.crop != null) {
       final message = result.addedToInventory
-          ? FarmFeedbackConfig.cropHarvested(
+          ? FarmFeedbackDef.cropHarvested(
               result.crop!.yieldAmount,
               result.crop!.name,
             )
-          : FarmFeedbackConfig.kInventoryFull;
+          : FarmFeedbackDef.kInventoryFull;
 
       _feedbackService.showFloatingText(message);
 

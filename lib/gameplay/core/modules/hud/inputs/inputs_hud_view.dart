@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/inputs_hud_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/inputs_hud_def.dart';
 import 'package:flutter/painting.dart';
 
 class InputsHUDView extends GameInterface {
@@ -26,7 +26,7 @@ class InputsHUDView extends GameInterface {
     );
 
     final double panelHeight =
-        InputsHUDConfig.inputGuide.length * lineHeight + padding * 2;
+        InputsHUDDef.inputGuide.length * lineHeight + padding * 2;
     final double panelWidth = 300;
     canvas.drawRRect(
       RRect.fromRectAndRadius(
@@ -41,7 +41,7 @@ class InputsHUDView extends GameInterface {
       bgPaint,
     );
 
-    for (int i = 0; i < InputsHUDConfig.inputGuide.length; i++) {
+    for (int i = 0; i < InputsHUDDef.inputGuide.length; i++) {
       final y = startY + i * lineHeight;
 
       canvas.drawRRect(
@@ -54,7 +54,7 @@ class InputsHUDView extends GameInterface {
 
       TextPainter(
           text: TextSpan(
-            text: InputsHUDConfig.inputGuide[i]["key"],
+            text: InputsHUDDef.inputGuide[i]["key"],
             style: keyTextStyle,
           ),
           textDirection: TextDirection.ltr,
@@ -64,7 +64,7 @@ class InputsHUDView extends GameInterface {
 
       TextPainter(
           text: TextSpan(
-            text: InputsHUDConfig.inputGuide[i]["desc"],
+            text: InputsHUDDef.inputGuide[i]["desc"],
             style: textStyle,
           ),
           textDirection: TextDirection.ltr,

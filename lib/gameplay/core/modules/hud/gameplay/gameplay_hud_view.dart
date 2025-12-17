@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/gameplay/gameplay_hud_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/gameplay/gameplay_hud_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/inputs_hud_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/inventory/inventory_hud_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/player_vital_stats/player_vital_stats_hud_view.dart';
@@ -27,7 +27,7 @@ class GameplayHUDView extends GameInterface {
 
   Future<void> _loadAssets() async {
     _keySprite =
-        await DoorKeyDecorationConfig.loadSprite(); // TODO(Kevin): put this into shared layer, and cache this?
+        await DoorKeyDecorationDef.loadSprite(); // TODO(Kevin): put this into shared layer, and cache this?
   }
 
   void _initializeComponents() {
@@ -41,10 +41,10 @@ class GameplayHUDView extends GameInterface {
       _keySprite.renderRect(
         canvas,
         Rect.fromLTWH(
-          GameplayHUDConfig.kKeyIconStartPositionX,
-          GameplayHUDConfig.kKeyIconStartPositionY,
-          GameplayHUDConfig.kKeyIconWidth,
-          GameplayHUDConfig.kKeyIconHeight,
+          GameplayHUDDef.kKeyIconStartPositionX,
+          GameplayHUDDef.kKeyIconStartPositionY,
+          GameplayHUDDef.kKeyIconWidth,
+          GameplayHUDDef.kKeyIconHeight,
         ),
       );
     }

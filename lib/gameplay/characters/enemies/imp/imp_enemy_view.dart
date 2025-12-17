@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_Def.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_model.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_view.dart';
@@ -7,10 +7,10 @@ import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_
 class ImpEnemyView extends DDBaseEnemyView<ImpEnemyController, ImpEnemyModel> {
   ImpEnemyView({required super.position})
     : super(
-        animation: ImpEnemyConfig.createAnimationWalkDirectional(),
-        size: ImpEnemyConfig.componentSize,
-        speed: ImpEnemyConfig.kSpeed,
-        life: ImpEnemyConfig.kLife,
+        animation: ImpEnemyDef.createAnimationWalkDirectional(),
+        size: ImpEnemyDef.componentSize,
+        speed: ImpEnemyDef.kSpeed,
+        life: ImpEnemyDef.kLife,
       );
 
   @override
@@ -25,5 +25,5 @@ class ImpEnemyView extends DDBaseEnemyView<ImpEnemyController, ImpEnemyModel> {
       );
 
   @override
-  RectangleHitbox getHitbox() => ImpEnemyConfig.createHitbox();
+  RectangleHitbox getHitbox() => ImpEnemyDef.createHitbox();
 }

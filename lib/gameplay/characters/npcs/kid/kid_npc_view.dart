@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_def.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_controller.dart';
 
 class KidNpcView extends SimpleNpc {
@@ -7,8 +7,8 @@ class KidNpcView extends SimpleNpc {
 
   KidNpcView({required super.position})
     : super(
-        animation: KidNpcConfig.animationWalkDirectional,
-        size: KidNpcConfig.componentSize,
+        animation: KidNpcDef.animationWalkDirectional,
+        size: KidNpcDef.componentSize,
       );
 
   @override

@@ -1,5 +1,5 @@
-final class FarmFeedbackConfig {
-  FarmFeedbackConfig._();
+final class FarmFeedbackDef {
+  FarmFeedbackDef._();
 
   static const String kSoilTilled = 'Terra Arada!';
   static const String kCropWatered = 'Regado!';

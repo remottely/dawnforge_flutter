@@ -42,7 +42,7 @@ class TorchDecorationController {
   void _handleDetectPlayerInCloseVisionRadius(DDBasePlayerView player) {
     onDetectPlayerInCloseVisionRadius.call(
       player: player,
-      closeVisionRadius: TorchDecorationConfig.kCloseVisionRadius,
+      closeVisionRadius: TorchDecorationDef.kCloseVisionRadius,
       observed: _handlePlayerEntersRange,
       notObserved: _handlePlayerExitsRange,
     );

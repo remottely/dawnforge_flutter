@@ -2,11 +2,11 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/shared/framework/widgets/dd_sprite_animation_widget.dart';
-import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_config.dart';
+import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_def.dart';
 import 'package:flutter/painting.dart';
 
-final class ConversationConfig {
-  ConversationConfig._();
+final class ConversationDef {
+  ConversationDef._();
 
   static Say createPlayerLeft(String phraseKey) => _createLeft(
     phraseKey: phraseKey,
@@ -15,37 +15,37 @@ final class ConversationConfig {
 
   // static Say createKnightLeft(String phraseKey) => _createLeft(
   //   phraseKey: phraseKey,
-  //   animation: UISpriteAnimationsConfig.loadAnimationKnightPlayerIdleRight(),
+  //   animation: UISpriteAnimationsDef.loadAnimationKnightPlayerIdleRight(),
   // );
 
   // static Say createCuteLeft(String phraseKey) => _createLeft(
   //   phraseKey: phraseKey,
-  //   animation: UISpriteAnimationsConfig.loadAnimationCutePlayerIdleRight(),
+  //   animation: UISpriteAnimationsDef.loadAnimationCutePlayerIdleRight(),
   // );
 
   // static Say createSunnyLeft(String phraseKey) => _createLeft(
   //   phraseKey: phraseKey,
-  //   animation: UISpriteAnimationsConfig.loadAnimationSunnyPlayerIdleRight(),
+  //   animation: UISpriteAnimationsDef.loadAnimationSunnyPlayerIdleRight(),
   // );
 
   static Say createWizardRight(String phraseKey) => _createRight(
     phraseKey: phraseKey,
-    animation: UISpriteAnimationsConfig.loadAnimationWizardNpcIdleLeft(),
+    animation: UISpriteAnimationsDef.loadAnimationWizardNpcIdleLeft(),
   );
 
   static Say createKidRight(String phraseKey) => _createRight(
     phraseKey: phraseKey,
-    animation: UISpriteAnimationsConfig.loadAnimationKidNpcIdleLeft(),
+    animation: UISpriteAnimationsDef.loadAnimationKidNpcIdleLeft(),
   );
 
   static Say createBossLeft(String phraseKey) => _createLeft(
     phraseKey: phraseKey,
-    animation: UISpriteAnimationsConfig.loadAnimationBossEnemyIdleRight(),
+    animation: UISpriteAnimationsDef.loadAnimationBossEnemyIdleRight(),
   );
 
   static Say createBossRight(String phraseKey) => _createRight(
     phraseKey: phraseKey,
-    animation: UISpriteAnimationsConfig.loadAnimationBossEnemyIdleLeft(),
+    animation: UISpriteAnimationsDef.loadAnimationBossEnemyIdleLeft(),
   );
 
   static Say _createLeft({

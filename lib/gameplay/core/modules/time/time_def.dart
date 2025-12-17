@@ -1,5 +1,5 @@
-final class TimeConfig {
-  TimeConfig._();
+final class TimeDef {
+  TimeDef._();
 
   static const double realSecondsPerDay = 1200.0;
 

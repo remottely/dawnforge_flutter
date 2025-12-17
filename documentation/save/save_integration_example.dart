@@ -1,9 +1,9 @@
 import 'dart:developer' as developer;
 
-import 'package:darkness_dungeon/gameplay/core/modules/save/player_progress_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/save/game_state_collector.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/save/player_progress_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/save/save_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/time/time_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/time/time_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/time/time_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/world/map_state_model.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
@@ -48,7 +48,7 @@ void main() async {
   // Setup time state
   final timeManager = TimeManager.instance;
   timeManager.reset();
-  timeManager.setTime(TimeConfig.eveningStartTime); // 18:00
+  timeManager.setTime(TimeDef.eveningStartTime); // 18:00
   timeManager.setTimeScale(2.0);
 
   developer.log('Time State:');

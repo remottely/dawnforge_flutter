@@ -5,8 +5,8 @@ import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart'
 import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 
-final class TorchDecorationConfig {
-  TorchDecorationConfig._();
+final class TorchDecorationDef {
+  TorchDecorationDef._();
 
   static const double kCloseVisionRadius =
       CharacterConstants.kVisionRadiusSuperSmall;

@@ -122,7 +122,7 @@ abstract class DDFarmPlayerView<
           executionStartFrame: 4,
           onActionStart: lockAction,
           onActionEnd: unlockAction,
-          onExecutionFrames: () => FarmToolActionConfig.execute(player: this),
+          onExecutionFrames: () => FarmToolActionDef.execute(player: this),
         );
       },
     );
@@ -148,7 +148,7 @@ abstract class DDFarmPlayerView<
           executionStartFrame: 4,
           onActionStart: lockAction,
           onActionEnd: unlockAction,
-          onExecutionFrames: () => FarmToolActionConfig.execute(player: this),
+          onExecutionFrames: () => FarmToolActionDef.execute(player: this),
         );
       },
     );
@@ -174,7 +174,7 @@ abstract class DDFarmPlayerView<
           executionStartFrame: 4,
           onActionStart: lockAction,
           onActionEnd: unlockAction,
-          onExecutionFrames: () => FarmToolActionConfig.execute(player: this),
+          onExecutionFrames: () => FarmToolActionDef.execute(player: this),
         );
       },
     );
@@ -197,7 +197,7 @@ abstract class DDFarmPlayerView<
           executionStartFrame: 4,
           onActionStart: lockAction,
           onActionEnd: unlockAction,
-          onExecutionFrames: () => FarmToolActionConfig.execute(player: this),
+          onExecutionFrames: () => FarmToolActionDef.execute(player: this),
         );
       },
     );

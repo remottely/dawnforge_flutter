@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/app/screens/menu_screen_config.dart';
+import 'package:darkness_dungeon/app/screens/menu_screen_def.dart';
 import 'package:darkness_dungeon/app/screens/menu_screen_viewmodel.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/shared/design_system/dd_design_system.dart';
@@ -21,7 +21,7 @@ class _MenuScreenState extends MenuScreenViewModel {
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
-      duration: MenuScreenConfig.kCharacterAnimationDuration,
+      duration: MenuScreenDef.kCharacterAnimationDuration,
       child: isSplashScreenVisible ? _createSplashScreen() : _createMainMenu(),
     );
   }
@@ -36,9 +36,9 @@ class _MenuScreenState extends MenuScreenViewModel {
             spacing: DDDesignSystem.kSpacingLarge,
             children: <Widget>[
               const _Title(),
-              if (MenuScreenConfig.characterSpriteAnimations.isNotEmpty) ...[
+              if (MenuScreenDef.characterSpriteAnimations.isNotEmpty) ...[
                 _CharacterAnimation(
-                  animation: MenuScreenConfig
+                  animation: MenuScreenDef
                       .characterSpriteAnimations[currentCharacterSpriteIndex],
                 ),
               ],
@@ -163,7 +163,7 @@ class _KeyboardTip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DDSpriteWidget.extraLarge(sprite: MenuScreenConfig.keyboardSprite);
+    return DDSpriteWidget.extraLarge(sprite: MenuScreenDef.keyboardSprite);
   }
 }
 
@@ -195,7 +195,7 @@ class _Footer extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
-                      onOpenURL(MenuScreenConfig.kKevinKoboriUrl);
+                      onOpenURL(MenuScreenDef.kKevinKoboriUrl);
                     },
                     child: const Text(
                       'kevinkobori',
@@ -224,7 +224,7 @@ class _Footer extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
-                      onOpenURL(MenuScreenConfig.kBonfireUrl);
+                      onOpenURL(MenuScreenDef.kBonfireUrl);
                     },
                     child: const Text(
                       'Bonfire',

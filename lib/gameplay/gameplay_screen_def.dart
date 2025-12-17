@@ -6,7 +6,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_se
 import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
 import 'package:flutter/widgets.dart';
 
-class GameplayScreenConfig {
+class GameplayScreenDef {
   static const double kCameraSpeed = 3.0;
 
   static CameraConfig createCameraConfig(BuildContext context) {

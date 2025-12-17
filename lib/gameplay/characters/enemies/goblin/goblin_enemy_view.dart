@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_def.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_model.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_view.dart';
@@ -8,10 +8,10 @@ class GoblinEnemyView
     extends DDBaseEnemyView<GoblinEnemyController, GoblinEnemyModel> {
   GoblinEnemyView({required super.position})
     : super(
-        animation: GoblinEnemyConfig.createAnimationWalkDirectional(),
-        size: GoblinEnemyConfig.componentSize,
-        speed: GoblinEnemyConfig.kSpeed,
-        life: GoblinEnemyConfig.kLife,
+        animation: GoblinEnemyDef.createAnimationWalkDirectional(),
+        size: GoblinEnemyDef.componentSize,
+        speed: GoblinEnemyDef.kSpeed,
+        life: GoblinEnemyDef.kLife,
       );
 
   @override
@@ -26,5 +26,5 @@ class GoblinEnemyView
       );
 
   @override
-  RectangleHitbox getHitbox() => GoblinEnemyConfig.createHitbox();
+  RectangleHitbox getHitbox() => GoblinEnemyDef.createHitbox();
 }

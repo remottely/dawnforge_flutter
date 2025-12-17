@@ -6,7 +6,7 @@ import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
-import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_config.dart';
+import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_def.dart';
 
 final class SunnyPlayerDef {
   SunnyPlayerDef._();
@@ -221,7 +221,7 @@ final class SunnyPlayerDef {
   static final SimpleDirectionAnimation
   _animationWalkDirectional = SimpleDirectionAnimation(
     idleLeft: _loadAnimationIdleLeft(),
-    idleRight: UISpriteAnimationsConfig.loadAnimationSunnyPlayerIdleRight(),
+    idleRight: UISpriteAnimationsDef.loadAnimationSunnyPlayerIdleRight(),
     runLeft: SpriteAnimation.load(
       'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_walking_left_strip8.png',
       SpriteAnimationConfigHelper.createStandardData(
@@ -241,7 +241,7 @@ final class SunnyPlayerDef {
   static final SimpleDirectionAnimation
   _animationRunDirectional = SimpleDirectionAnimation(
     idleLeft: _loadAnimationIdleLeft(),
-    idleRight: UISpriteAnimationsConfig.loadAnimationSunnyPlayerIdleRight(),
+    idleRight: UISpriteAnimationsDef.loadAnimationSunnyPlayerIdleRight(),
     runLeft: SpriteAnimation.load(
       'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_run_left_strip8.png',
       SpriteAnimationConfigHelper.createStandardData(

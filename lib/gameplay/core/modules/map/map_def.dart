@@ -5,7 +5,7 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.
 import 'package:darkness_dungeon/gameplay/characters/enemies/mini_boss/mini_boss_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_view.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/map_data.dart';
 import 'package:darkness_dungeon/gameplay/decorations/barrel/barrel_decoration.dart';
 import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_model.dart';
@@ -19,8 +19,8 @@ import 'package:darkness_dungeon/gameplay/decorations/torch/torch_decoration_mod
 import 'package:darkness_dungeon/gameplay/decorations/torch/torch_decoration_view.dart';
 import 'package:darkness_dungeon/gameplay/farm/components/farm_tile_view.dart';
 
-final class MapConfig {
-  MapConfig._();
+final class MapDef {
+  MapDef._();
 
   static const String kNextMapPropertyKey = 'nextMap';
   static const String kPlayerPositionPropertyKey = 'playerPosition';
@@ -64,7 +64,7 @@ final class MapConfig {
             DoorKeyDecorationView(position: p.position),
         'life_potion_decoration': (p) => LifePotionDecorationView(
           position: p.position,
-          healAmount: LifePotionConfig.kHealAmount,
+          healAmount: LifePotionDef.kHealAmount,
         ),
         'spike_trap_decoration': (p) =>
             SpikeTrapDecorationView(position: p.position),
@@ -101,7 +101,7 @@ final class MapConfig {
         'sensor_$kConversationTestId',
         'sensor_$kLake1Id',
       ],
-      backgroundMusic: AudioConfig.kMusicRo1LettersBackgroundAsset,
+      backgroundMusic: AudioDef.kMusicRo1LettersBackgroundAsset,
       lightingColor: _kNoneLightingColor,
       backgroundColor: _kLakeBackgroundColor,
     ),
@@ -114,7 +114,7 @@ final class MapConfig {
         'sensor_$kConversationTestId',
         'sensor_$kLake1Id',
       ],
-      backgroundMusic: AudioConfig.kMusicRo1LettersBackgroundAsset,
+      backgroundMusic: AudioDef.kMusicRo1LettersBackgroundAsset,
       lightingColor: _kNoneLightingColor,
       backgroundColor: _kLakeBackgroundColor,
     ),
@@ -123,7 +123,7 @@ final class MapConfig {
       id: kConversationTestId,
       asset: 'tiled/$kConversationTestId.json',
       sensorIds: ['sensor_$kFarmTestId', 'sensor_$kCombatTestId'],
-      backgroundMusic: AudioConfig.kMusicRo1LettersBackgroundAsset,
+      backgroundMusic: AudioDef.kMusicRo1LettersBackgroundAsset,
       lightingColor: _kCloudyLightingColor,
       backgroundColor: _kLakeBackgroundColor,
     ),
@@ -132,7 +132,7 @@ final class MapConfig {
       id: kCombatTestId,
       asset: 'tiled/$kCombatTestId.json',
       sensorIds: ['sensor_$kConversationTestId', 'sensor_$kBossTestId'],
-      backgroundMusic: AudioConfig.kMusicRo1LettersBackgroundAsset,
+      backgroundMusic: AudioDef.kMusicRo1LettersBackgroundAsset,
       lightingColor: _kDarknessLightingColor,
       backgroundColor: _kLakeBackgroundColor,
     ),
@@ -141,7 +141,7 @@ final class MapConfig {
       id: kBossTestId,
       asset: 'tiled/$kBossTestId.json',
       sensorIds: ['sensor_$kCombatTestId', 'sensor_$kFarmTestId'],
-      backgroundMusic: AudioConfig.kMusicRo1LettersBackgroundAsset,
+      backgroundMusic: AudioDef.kMusicRo1LettersBackgroundAsset,
       lightingColor: _kDarknessLightingColor,
       backgroundColor: _kLakeBackgroundColor,
     ),
@@ -154,7 +154,7 @@ final class MapConfig {
         'sensor_$kDungeon1Id',
         'sensor_$kFarmTestId',
       ],
-      backgroundMusic: AudioConfig.kMusicRo1LettersBackgroundAsset,
+      backgroundMusic: AudioDef.kMusicRo1LettersBackgroundAsset,
       lightingColor: _kDarknessLightingColor,
       backgroundColor: _kLakeBackgroundColor,
     ),
@@ -163,7 +163,7 @@ final class MapConfig {
       id: kForest1Id,
       asset: 'tiled/$kForest1Id.json',
       sensorIds: ['sensor_$kDungeon1Id'],
-      backgroundMusic: AudioConfig.kMusicRo1LettersBackgroundAsset,
+      backgroundMusic: AudioDef.kMusicRo1LettersBackgroundAsset,
       lightingColor: _kCloudyLightingColor,
       backgroundColor: _kForestBackgroundColor,
     ),
@@ -172,7 +172,7 @@ final class MapConfig {
       id: kDungeon1Id,
       asset: 'tiled/$kDungeon1Id.json',
       sensorIds: ['sensor_$kForest1Id', 'sensor_$kTemple1Id'],
-      backgroundMusic: AudioConfig.kMusicRo1DeathHexBackgroundAsset,
+      backgroundMusic: AudioDef.kMusicRo1DeathHexBackgroundAsset,
       lightingColor: _kDarknessLightingColor,
       backgroundColor: _kDungeonBackgroundColor,
     ),
@@ -181,14 +181,10 @@ final class MapConfig {
       id: kTemple1Id,
       asset: 'tiled/$kTemple1Id.json',
       sensorIds: ['sensor_$kLake1Id'],
-      backgroundMusic: AudioConfig
+      backgroundMusic: AudioDef
           .kMusicRo1DeathHexBackgroundAsset, // TODO(Kevin): Change music
       lightingColor: _kNoneLightingColor, // TODO(Kevin): Change color
       backgroundColor: _kTempleBackgroundColor, // TODO(Kevin): Change color
     ),
   ];
-}
-
-class LightingConfig {
-  LightingConfig._();
 }

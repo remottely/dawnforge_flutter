@@ -1,10 +1,10 @@
 import 'dart:math';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/death/character_fx_sprite_animations_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/ui/emote_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/death/character_fx_sprite_animations_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
-import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/ui/emote_manager.dart';
+import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_def.dart';
 import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_controller.dart';
 import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_model.dart';
 import 'package:darkness_dungeon/gameplay/decorations/life_potion/life_potion_decoration.dart';
@@ -118,7 +118,7 @@ class ChestDecorationView extends DDInputReceiverDecorationView {
     gameRef.add(
       AnimatedGameObject(
         animation:
-            CharacterFxSpriteAnimationsConfig.loadAnimationExplosionSmokeRight(),
+            CharacterFxSpriteAnimationsDef.loadAnimationExplosionSmokeRight(),
         position: potionPosition,
         size: size,
         loop: false,

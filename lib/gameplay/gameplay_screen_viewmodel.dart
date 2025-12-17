@@ -3,12 +3,12 @@ import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_con
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_def.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_view.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_def.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_def.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_view.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_def.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_def.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/shield_defense_input_handler.dart';
@@ -19,9 +19,9 @@ import 'package:darkness_dungeon/gameplay/core/modules/hud/gameplay/gameplay_hud
 import 'package:darkness_dungeon/gameplay/core/modules/save/game_save_controller.dart';
 import 'package:darkness_dungeon/gameplay/farm/handlers/farm_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen.dart';
-import 'package:darkness_dungeon/gameplay/gameplay_screen_config.dart';
+import 'package:darkness_dungeon/gameplay/gameplay_screen_def.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
-import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_config.dart';
+import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_def.dart';
 import 'package:flutter/material.dart';
 
 abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
@@ -101,7 +101,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   }
 
   void _initializeGameComponents() {
-    cameraConfig = GameplayScreenConfig.createCameraConfig(context);
+    cameraConfig = GameplayScreenDef.createCameraConfig(context);
   }
 
   DDBasePlayerView buildSunnyPlayer(Vector2 position) {
@@ -118,7 +118,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
     }
 
     playerStateManager.currentPlayerAnimation =
-        UISpriteAnimationsConfig.loadAnimationSunnyPlayerIdleRight();
+        UISpriteAnimationsDef.loadAnimationSunnyPlayerIdleRight();
 
     return SunnyPlayerView<SunnyPlayerController, SunnyPlayerModel>(
       position: position,
@@ -140,7 +140,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
     }
 
     playerStateManager.currentPlayerAnimation =
-        UISpriteAnimationsConfig.loadAnimationCutePlayerIdleRight();
+        UISpriteAnimationsDef.loadAnimationCutePlayerIdleRight();
 
     return CutePlayerView<CutePlayerController, CutePlayerModel>(
       position: position,

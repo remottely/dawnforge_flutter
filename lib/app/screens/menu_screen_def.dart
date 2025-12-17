@@ -1,5 +1,5 @@
 // import 'package:bonfire/bonfire.dart';
-// import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_config.dart';
+// import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_def.dart';
 
 // class MenuScreenConfig {
 //   MenuScreenConfig._();
@@ -9,12 +9,12 @@
 //   );
 //   static const Duration kCharacterAnimationInterval = Duration(seconds: 2);
 //   static final List<Future<SpriteAnimation>> characterSpriteAnimations = [
-//     UISpriteAnimationsConfig.loadAnimationKnightPlayerIdleRight(), // TODO(Kevin): delete this line
-//     UISpriteAnimationsConfig.loadAnimationCutePlayerIdleRight(),
-//     UISpriteAnimationsConfig.loadAnimationGoblinEnemyIdleRight(),
-//     UISpriteAnimationsConfig.loadAnimationImpEnemyIdleRight(),
-//     UISpriteAnimationsConfig.loadAnimationMiniBossEnemyIdleRight(),
-//     UISpriteAnimationsConfig.loadAnimationBossEnemyIdleRight(),
+//     UISpriteAnimationsDef.loadAnimationKnightPlayerIdleRight(), // TODO(Kevin): delete this line
+//     UISpriteAnimationsDef.loadAnimationCutePlayerIdleRight(),
+//     UISpriteAnimationsDef.loadAnimationGoblinEnemyIdleRight(),
+//     UISpriteAnimationsDef.loadAnimationImpEnemyIdleRight(),
+//     UISpriteAnimationsDef.loadAnimationMiniBossEnemyIdleRight(),
+//     UISpriteAnimationsDef.loadAnimationBossEnemyIdleRight(),
 //   ];
 
 //   static final Future<Sprite> keyboardSprite = Sprite.load(
@@ -27,9 +27,10 @@
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_def.dart';
+import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_def.dart';
 
-class MenuScreenConfig {
-  MenuScreenConfig._();
+class MenuScreenDef {
+  MenuScreenDef._();
 
   static const Duration kCharacterAnimationDuration = Duration(
     milliseconds: 300,
@@ -39,13 +40,13 @@ class MenuScreenConfig {
 
   static final List<Future<SpriteAnimation>> characterSpriteAnimations = [
     FarmerPlayerDef.loadAnimationIdleRight,
-    // UISpriteAnimationsConfig.loadAnimationCutePlayerIdleRight(),
-    // UISpriteAnimationsConfig.loadAnimationSunnyPlayerIdleRight(),
-    // UISpriteAnimationsConfig.loadAnimationKnightPlayerIdleRight(),
-    // UISpriteAnimationsConfig.loadAnimationGoblinEnemyIdleRight(),
-    // UISpriteAnimationsConfig.loadAnimationImpEnemyIdleRight(),
-    // UISpriteAnimationsConfig.loadAnimationMiniBossEnemyIdleRight(),
-    // UISpriteAnimationsConfig.loadAnimationBossEnemyIdleRight(),
+    UISpriteAnimationsDef.loadAnimationCutePlayerIdleRight(),
+    // UISpriteAnimationsDef.loadAnimationSunnyPlayerIdleRight(),
+    // UISpriteAnimationsDef.loadAnimationKnightPlayerIdleRight(),
+    // UISpriteAnimationsDef.loadAnimationGoblinEnemyIdleRight(),
+    // UISpriteAnimationsDef.loadAnimationImpEnemyIdleRight(),
+    // UISpriteAnimationsDef.loadAnimationMiniBossEnemyIdleRight(),
+    // UISpriteAnimationsDef.loadAnimationBossEnemyIdleRight(),
   ];
 
   static final Future<Sprite> keyboardSprite = Sprite.load(

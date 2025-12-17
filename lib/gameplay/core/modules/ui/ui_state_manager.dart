@@ -4,7 +4,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart'
 import 'package:darkness_dungeon/gameplay/core/modules/game/game_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_def.dart';
 import 'package:darkness_dungeon/shared/design_system/dd_design_system.dart';
 import 'package:darkness_dungeon/shared/design_system/widgets/atoms/dd_button.dart';
 import 'package:darkness_dungeon/shared/design_system/widgets/atoms/dd_dialog_widget.dart';
@@ -29,8 +29,8 @@ final class UIStateManager {
         return DDDialogWidget(
           children: [
             Image.asset(
-              UIStateConfig.kGameOverAsset,
-              height: UIStateConfig.kGameOverImageHeight,
+              UIStateDef.kGameOverAsset,
+              height: UIStateDef.kGameOverImageHeight,
             ),
             const SizedBox(height: DDDesignSystem.kSpacingExtraSmall),
             DDButton.text(
@@ -60,7 +60,7 @@ final class UIStateManager {
             const SizedBox(height: DDDesignSystem.kSpacingExtraSmall),
             Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: UIStateConfig.kHorizontalSpacing,
+                horizontal: UIStateDef.kHorizontalSpacing,
               ),
               child: DDText.small(
                 text: GameplayStringsLocation.instance.getString('thanks'),

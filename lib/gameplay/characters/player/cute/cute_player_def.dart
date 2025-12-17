@@ -7,7 +7,7 @@ import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_
 import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_constants.dart';
-import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_config.dart';
+import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_def.dart';
 
 final class CutePlayerDef {
   CutePlayerDef._();
@@ -323,7 +323,7 @@ final class CutePlayerDef {
   static final SimpleDirectionAnimation _animationWalkDirectional =
       SimpleDirectionAnimation(
         idleLeft: _loadAnimationIdleLeft(),
-        idleRight: UISpriteAnimationsConfig.loadAnimationCutePlayerIdleRight(),
+        idleRight: UISpriteAnimationsDef.loadAnimationCutePlayerIdleRight(),
         idleUp: _loadAnimationIdleUp(),
         idleDown: _loadAnimationIdleDown(),
         runLeft: SpriteAnimation.load(
@@ -359,7 +359,7 @@ final class CutePlayerDef {
   static final SimpleDirectionAnimation
   _animationRunDirectional = SimpleDirectionAnimation(
     idleLeft: _loadAnimationIdleLeft(),
-    idleRight: UISpriteAnimationsConfig.loadAnimationCutePlayerIdleRight(),
+    idleRight: UISpriteAnimationsDef.loadAnimationCutePlayerIdleRight(),
     idleUp: _loadAnimationIdleUp(),
     idleDown: _loadAnimationIdleDown(),
     // TODO(Kevin): NOW - create run animations

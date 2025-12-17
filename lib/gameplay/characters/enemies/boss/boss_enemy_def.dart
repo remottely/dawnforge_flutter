@@ -1,12 +1,12 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/character_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/ui/conversation_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/ui/conversation_def.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
-import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_config.dart';
+import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_def.dart';
 
-final class BossEnemyConfig {
-  BossEnemyConfig._();
+final class BossEnemyDef {
+  BossEnemyDef._();
 
   static const double kPrimaryAttackVisionRadius =
       CharacterConstants.kVisionRadiusSuperLarge;
@@ -23,8 +23,8 @@ final class BossEnemyConfig {
 
   static SimpleDirectionAnimation createAnimationWalkDirectional() {
     return SimpleDirectionAnimation(
-      idleLeft: UISpriteAnimationsConfig.loadAnimationBossEnemyIdleLeft(),
-      idleRight: UISpriteAnimationsConfig.loadAnimationBossEnemyIdleRight(),
+      idleLeft: UISpriteAnimationsDef.loadAnimationBossEnemyIdleLeft(),
+      idleRight: UISpriteAnimationsDef.loadAnimationBossEnemyIdleRight(),
       runLeft: SpriteAnimation.load(
         'gameplay/characters/enemies/boss/boss_enemy_run_left_4.png',
         SpriteAnimationConfigHelper.createStandardData(
@@ -50,10 +50,10 @@ final class BossEnemyConfig {
 
   static List<Say> createConversationSequence() {
     return [
-      ConversationConfig.createKidRight('talk_kid_1'),
-      ConversationConfig.createBossLeft('talk_boss_1'),
-      ConversationConfig.createPlayerLeft('talk_player_3'),
-      ConversationConfig.createBossRight('talk_boss_2'),
+      ConversationDef.createKidRight('talk_kid_1'),
+      ConversationDef.createBossLeft('talk_boss_1'),
+      ConversationDef.createPlayerLeft('talk_player_3'),
+      ConversationDef.createBossRight('talk_boss_2'),
     ];
   }
 }

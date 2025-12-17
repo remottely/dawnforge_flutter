@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fx_particles_animations_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fx_particles_animations_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/controllers/enemy_combat_action_controller.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/death/character_fx_sprite_animations_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/death/character_fx_sprite_animations_def.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_controller.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_model.dart';
 
@@ -66,18 +66,17 @@ abstract class DDBaseEnemyView<
   void _executeDamageFx(double damage) {
     showDamage(
       damage,
-      config: CharacterFxParticlesAnimationsConfig.kEnemyShowDamageTextStyle,
-      gravity: CharacterFxParticlesAnimationsConfig.kShowDamageGravity,
+      config: CharacterFxParticlesAnimationsDef.kEnemyShowDamageTextStyle,
+      gravity: CharacterFxParticlesAnimationsDef.kShowDamageGravity,
       initVelocityVertical:
-          CharacterFxParticlesAnimationsConfig.kShowDamageInitVelocityVertical,
+          CharacterFxParticlesAnimationsDef.kShowDamageInitVelocityVertical,
     );
   }
 
   void _executeDieFx() {
     gameRef.add(
       AnimatedGameObject(
-        animation:
-            CharacterFxSpriteAnimationsConfig.loadAnimationExplosionRight(),
+        animation: CharacterFxSpriteAnimationsDef.loadAnimationExplosionRight(),
         position: position,
         size: size,
         loop: false,

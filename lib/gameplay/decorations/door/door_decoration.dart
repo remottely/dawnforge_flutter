@@ -9,11 +9,11 @@ class DoorDecorationView extends GameDecoration {
   bool _isOpen = false;
 
   DoorDecorationView({required super.position, required super.size})
-    : super.withSprite(sprite: DoorDecorationConfig.loadSpriteClosed());
+    : super.withSprite(sprite: DoorDecorationDef.loadSpriteClosed());
 
   @override
   Future<void> onLoad() {
-    add(DoorDecorationConfig.createHitbox(this));
+    add(DoorDecorationDef.createHitbox(this));
     return super.onLoad();
   }
 
@@ -48,7 +48,7 @@ class DoorDecorationView extends GameDecoration {
 
   void _playAnimationDoorOpening() {
     playSpriteAnimationOnce(
-      DoorDecorationConfig.loadAnimationOpening(),
+      DoorDecorationDef.loadAnimationOpening(),
       onFinish: _cleanup,
       onStart: () {
         sprite = null;
@@ -67,7 +67,7 @@ class DoorDecorationView extends GameDecoration {
     UIStateManager.instance.showConversation(
       gameRef.context,
       player: player,
-      conversationSequence: DoorDecorationConfig.createConversationSequence(),
+      conversationSequence: DoorDecorationDef.createConversationSequence(),
       onCloseConversation: () {
         UIStateManager.instance.isShowingConversation = false;
       },

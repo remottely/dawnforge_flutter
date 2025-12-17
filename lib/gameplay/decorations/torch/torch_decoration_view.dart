@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/ui/emote_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/ui/emote_manager.dart';
 import 'package:darkness_dungeon/gameplay/decorations/torch/torch_decoration_config.dart';
 import 'package:darkness_dungeon/gameplay/decorations/torch/torch_decoration_controller.dart';
 import 'package:darkness_dungeon/gameplay/decorations/torch/torch_decoration_model.dart';
@@ -16,8 +16,8 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
     required super.position,
     required TorchDecorationModel model,
   }) : super.withAnimation(
-         animation: TorchDecorationConfig.loadAnimation(),
-         size: TorchDecorationConfig.componentSize,
+         animation: TorchDecorationDef.loadAnimation(),
+         size: TorchDecorationDef.componentSize,
        ) {
     _initializeController(model);
   }
@@ -26,8 +26,8 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
     required super.position,
     required TorchDecorationModel model,
   }) : super.withAnimation(
-         animation: TorchDecorationConfig.loadAnimation(),
-         size: TorchDecorationConfig.componentSize,
+         animation: TorchDecorationDef.loadAnimation(),
+         size: TorchDecorationDef.componentSize,
        ) {
     _initializeController(model);
   }
@@ -45,8 +45,8 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
 
   @override
   Future<void> onLoad() {
-    setupLighting(TorchDecorationConfig.lighting);
-    _interactionPromptTextPaint = TorchDecorationConfig.createTextConfig(width);
+    setupLighting(TorchDecorationDef.lighting);
+    _interactionPromptTextPaint = TorchDecorationDef.createTextConfig(width);
 
     if (model.isOn)
       lightingEnabled = true;
@@ -59,8 +59,8 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
   @override
   void update(double dt) {
     if (checkInterval(
-      TorchDecorationConfig.kVisionCheckIntervalId,
-      TorchDecorationConfig.kVisionCheckInterval,
+      TorchDecorationDef.kVisionCheckIntervalId,
+      TorchDecorationDef.kVisionCheckInterval,
       dt,
     )) {
       _controller.update(dt, gameRef.player as DDBasePlayerView?);
@@ -97,10 +97,10 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
   }
 
   void _renderInteractionPrompt(Canvas canvas) {
-    final textPosition = TorchDecorationConfig.getTextPosition(width, height);
+    final textPosition = TorchDecorationDef.getTextPosition(width, height);
     _interactionPromptTextPaint.render(
       canvas,
-      TorchDecorationConfig.interactionPromptText,
+      TorchDecorationDef.interactionPromptText,
       textPosition,
     );
   }

@@ -8,13 +8,13 @@ class DoorKeyDecorationView extends DDContactDecoration {
 
   DoorKeyDecorationView({required super.position})
     : super.withSprite(
-        sprite: DoorKeyDecorationConfig.loadSprite(),
-        size: DoorKeyDecorationConfig.componentSize,
+        sprite: DoorKeyDecorationDef.loadSprite(),
+        size: DoorKeyDecorationDef.componentSize,
       );
 
   @override
   Future<void> onLoad() {
-    add(DoorKeyDecorationConfig.createHitbox());
+    add(DoorKeyDecorationDef.createHitbox());
     return super.onLoad();
   }
 
