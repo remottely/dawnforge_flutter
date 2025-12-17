@@ -13,6 +13,7 @@ final class CropModel {
   final String iconPath;
   final int spriteWidth;
   final int spriteHeight;
+  final CropStageModel ySortingFromStage;
 
   const CropModel({
     required this.cropId,
@@ -27,6 +28,7 @@ final class CropModel {
     required this.iconPath,
     required this.spriteWidth,
     required this.spriteHeight,
+    required this.ySortingFromStage,
   });
 
   double get growthProgress => (daysPlanted / daysToMature).clamp(0.0, 1.0);
@@ -34,6 +36,8 @@ final class CropModel {
   bool get isMature => daysPlanted >= daysToMature;
 
   bool get canHarvest => stage.canHarvest;
+
+  bool get shouldUseYSorting => stage.index >= ySortingFromStage.index;
 
   CropModel advanceDay() {
     final newDays = daysPlanted + 1;
@@ -73,6 +77,7 @@ final class CropModel {
       'iconPath': iconPath,
       'spriteWidth': spriteWidth,
       'spriteHeight': spriteHeight,
+      'ySortingFromStage': ySortingFromStage.toJson(),
     };
   }
 
@@ -90,6 +95,9 @@ final class CropModel {
       iconPath: json['iconPath'] as String,
       spriteWidth: json['spriteWidth'] as int,
       spriteHeight: json['spriteHeight'] as int,
+      ySortingFromStage: CropStageModel.fromJson(
+        json['ySortingFromStage'] as String,
+      ),
     );
   }
 
@@ -106,6 +114,7 @@ final class CropModel {
     String? iconPath,
     int? spriteWidth,
     int? spriteHeight,
+    CropStageModel? ySortingFromStage,
   }) {
     return CropModel(
       cropId: cropId ?? this.cropId,
@@ -120,6 +129,7 @@ final class CropModel {
       iconPath: iconPath ?? this.iconPath,
       spriteWidth: spriteWidth ?? this.spriteWidth,
       spriteHeight: spriteHeight ?? this.spriteHeight,
+      ySortingFromStage: ySortingFromStage ?? this.ySortingFromStage,
     );
   }
 

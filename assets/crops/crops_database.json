@@ -8,7 +8,8 @@
     "requiredSeason": "any",
     "iconPath": "Modern_Farm_v1.2/16x16/Crops_Growth_16x16/Strawberry_Growth_Stages_16x16.png",
     "spriteWidth": 16,
-    "spriteHeight": 16
+    "spriteHeight": 16,
+    "ySortingFromStage": "growing1"
   },
   "tomato": {
     "name": "Tomato",
@@ -19,6 +20,7 @@
     "requiredSeason": "summer",
     "iconPath": "Modern_Farm_v1.2/16x16/Crops_Growth_16x16/Tomato_Growth_Stages_16x16.png",
     "spriteWidth": 16,
-    "spriteHeight": 32
+    "spriteHeight": 32,
+    "ySortingFromStage": "youngPlant"
   }
 }

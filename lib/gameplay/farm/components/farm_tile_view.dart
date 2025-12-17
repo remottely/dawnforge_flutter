@@ -19,6 +19,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
 
   SpriteComponent? _soilSprite;
   GameDecoration? _cropDecoration;
+  SpriteComponent? _cropSpriteGround;
   bool _isHighlighted = false;
 
   SoilStateModel? _lastRenderedSoilState;
@@ -80,24 +81,48 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
       crop.spriteHeight.toDouble(),
     );
 
-    // Calcula posição para alinhar pelo bottom (base do crop com base do tile)
-    final cropPosition = Vector2(position.x, position.y + size.y - cropSize.y);
+    if (crop.shouldUseYSorting) {
+      // Estágio avançado: usa Y-sorting (renderiza com profundidade 3D)
+      final cropPosition = Vector2(
+        position.x,
+        position.y + size.y - cropSize.y,
+      );
 
-    _cropDecoration = GameDecoration.withSprite(
-      sprite: cropSprite,
-      position: cropPosition,
-      size: cropSize,
-    );
+      _cropDecoration = GameDecoration.withSprite(
+        sprite: cropSprite,
+        position: cropPosition,
+        size: cropSize,
+      );
 
-    if (crop.stage == CropStageModel.withered) {
-      _cropDecoration!.opacity = 0.5;
+      if (crop.stage == CropStageModel.withered) {
+        _cropDecoration!.opacity = 0.5;
+      }
+
+      gameRef.add(_cropDecoration!);
+
+      developer.log(
+        '[FarmTileView] 🌱 Crop with Y-sorting: ${crop.cropId} at ($cropPosition) with size ($cropSize)',
+      );
+    } else {
+      // Estágio inicial: renderiza no chão (sempre abaixo do player)
+      _cropSpriteGround = SpriteComponent(
+        sprite: cropSprite,
+        size: cropSize,
+        anchor: Anchor.bottomLeft,
+        position: Vector2(0, size.y),
+        priority: 1,
+      );
+
+      if (crop.stage == CropStageModel.withered) {
+        _cropSpriteGround!.opacity = 0.5;
+      }
+
+      add(_cropSpriteGround!);
+
+      developer.log(
+        '[FarmTileView] 🌱 Crop on ground: ${crop.cropId} with size ($cropSize), always below player',
+      );
     }
-
-    gameRef.add(_cropDecoration!);
-
-    developer.log(
-      '[FarmTileView] 🌱 Crop positioned: ${crop.cropId} at ($cropPosition) with size ($cropSize), aligned by bottom',
-    );
   }
 
   bool isPlayerOnTile(Player player) {
@@ -137,20 +162,26 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   }
 
   Future<void> _updateCropDecoration() async {
+    // Remove decorações existentes
     if (_cropDecoration != null) {
       _cropDecoration!.removeFromParent();
       _cropDecoration = null;
     }
 
+    if (_cropSpriteGround != null) {
+      _cropSpriteGround!.removeFromParent();
+      _cropSpriteGround = null;
+    }
+
     if (farmTile.crop == null) {
-      developer.log('[FarmTileView] 🌱 Crop removed (no Y-sorting)');
+      developer.log('[FarmTileView] 🌱 Crop removed');
       return;
     }
 
     await _createCropDecoration();
 
     developer.log(
-      '[FarmTileView] 🌱 Crop decoration updated: ${farmTile.crop!.cropId} (${farmTile.crop!.stage.name}) with Y-sorting',
+      '[FarmTileView] 🌱 Crop decoration updated: ${farmTile.crop!.cropId} (${farmTile.crop!.stage.name})',
     );
   }
 
@@ -271,6 +302,10 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
     if (_cropDecoration != null) {
       _cropDecoration!.removeFromParent();
       _cropDecoration = null;
+    }
+    if (_cropSpriteGround != null) {
+      _cropSpriteGround!.removeFromParent();
+      _cropSpriteGround = null;
     }
     super.onRemove();
   }
