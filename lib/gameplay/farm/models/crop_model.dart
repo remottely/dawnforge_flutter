@@ -33,13 +33,20 @@ final class CropModel {
 
   CropModel advanceDay() {
     final newDays = daysPlanted + 1;
+    final progress = newDays / daysToMature;
 
     CropStageModel newStage;
     if (newDays >= daysToMature) {
       newStage = CropStageModel.mature;
-    } else if (newDays >= (daysToMature * 0.66)) {
-      newStage = CropStageModel.growing;
-    } else if (newDays >= (daysToMature * 0.33)) {
+    } else if (progress >= 0.85) {
+      newStage = CropStageModel.growing3;
+    } else if (progress >= 0.70) {
+      newStage = CropStageModel.growing2;
+    } else if (progress >= 0.55) {
+      newStage = CropStageModel.growing1;
+    } else if (progress >= 0.40) {
+      newStage = CropStageModel.youngPlant;
+    } else if (progress >= 0.20) {
       newStage = CropStageModel.sprout;
     } else {
       newStage = CropStageModel.seed;

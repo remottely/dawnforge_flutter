@@ -193,8 +193,14 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
         return 0;
       case CropStageModel.sprout:
         return 1;
-      case CropStageModel.growing:
+      case CropStageModel.youngPlant:
+        return 2;
+      case CropStageModel.growing1:
         return 3;
+      case CropStageModel.growing2:
+        return 4;
+      case CropStageModel.growing3:
+        return 5;
       case CropStageModel.mature:
         return 6;
       case CropStageModel.withered:

@@ -11,7 +11,7 @@
   "strawberry": {
     "name": "Strawberry",
     "description": "A nutritious root vegetable",
-    "daysToMature": 4,
+    "daysToMature": 8,
     "yieldAmount": 3,
     "harvestItemId": "strawberry_item",
     "requiredSeason": "any",

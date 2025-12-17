@@ -1,7 +1,10 @@
 enum CropStageModel {
   seed,
   sprout,
-  growing,
+  youngPlant,
+  growing1,
+  growing2,
+  growing3,
   mature,
   withered;
 
