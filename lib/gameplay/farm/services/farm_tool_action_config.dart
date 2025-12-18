@@ -99,8 +99,10 @@ final class FarmToolActionDef {
     final result = _actionService.plantSeed(x, y, cropId);
     if (result.success) {
       _feedbackService.showFloatingText(FarmFeedbackDef.kSeedPlanted);
+    } else {
+      _feedbackService.showFloatingText(FarmFeedbackDef.kCannotPlant);
     }
-    return true;
+    return result.success;
   }
 
   static bool _handleHarvest(BonfireGameInterface gameRef, int x, int y) {
