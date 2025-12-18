@@ -55,9 +55,11 @@ final class CropDatabase {
       yieldAmount: cropData['yieldAmount'] as int,
       harvestItemId: cropData['harvestItemId'] as String,
       requiredSeason: cropData['requiredSeason'] as String?,
-      iconPath: cropData['iconPath'] as String,
+      spritesheetPath: cropData['spritesheetPath'] as String,
       spriteWidth: (cropData['spriteWidth'] as int?) ?? 16,
       spriteHeight: (cropData['spriteHeight'] as int?) ?? 16,
+      spriteRowIndex: cropData['spriteRowIndex'] as int,
+      framesCount: cropData['framesCount'] as int,
       ySortingFromStage: CropStageModel.fromJson(
         (cropData['ySortingFromStage'] as String?) ?? 'seed',
       ),

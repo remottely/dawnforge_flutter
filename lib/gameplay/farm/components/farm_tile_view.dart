@@ -200,24 +200,27 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
 
   Future<Sprite> _loadCropSpriteFromSheet() async {
     final crop = farmTile.crop!;
-    final spritesheetPath = crop.iconPath;
     final frameIndex = _getFrameIndexForStage(crop.stage);
 
-    final srcPosition = Vector2(crop.spriteWidth.toDouble() * frameIndex, 0);
+    // Calcula a posição do frame no spritesheet
+    final framePositionX = crop.spriteWidth.toDouble() * frameIndex;
+    final framePositionY = crop.spriteRowIndex * crop.spriteHeight.toDouble();
 
+    final srcPosition = Vector2(framePositionX, framePositionY);
     final srcSize = Vector2(
       crop.spriteWidth.toDouble(),
       crop.spriteHeight.toDouble(),
     );
 
     final sprite = await Sprite.load(
-      spritesheetPath,
+      crop.spritesheetPath,
       srcPosition: srcPosition,
       srcSize: srcSize,
     );
 
     developer.log(
-      '[FarmTileView] 🌱 Crop sprite loaded from sheet: $spritesheetPath (frame: $frameIndex, size: ${crop.spriteWidth}x${crop.spriteHeight})',
+      '[FarmTileView] 🌱 Crop sprite loaded from sheet: ${crop.spritesheetPath} '
+      '(row: ${crop.spriteRowIndex}, frame: $frameIndex, pos: ($framePositionX, $framePositionY), size: ${crop.spriteWidth}x${crop.spriteHeight})',
     );
 
     return sprite;

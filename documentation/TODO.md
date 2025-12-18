@@ -26,13 +26,15 @@
 
 - [NOT_PRIORITY] save torch state
 
+- [NOT_PRIORITY] Create a way to config game view size dynamically, small, medium, large by changed user.
+
+- [NOT_PRIORITY] continuous attack with continuous press attack (space bar)
+
 ---
 
 # Fix:
 
 - [DONE] move map player spawn location to player center component and not top left of the component
-
-- [NOT_PRIORITY] continuous attack with continuous press attack (space bar)
 
 - [DONE] Player walk/run then attack, after attack steel previous attack walk/run animation
 

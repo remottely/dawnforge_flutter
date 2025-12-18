@@ -10,9 +10,11 @@ final class CropModel {
   final int yieldAmount;
   final String harvestItemId;
   final String? requiredSeason;
-  final String iconPath;
+  final String spritesheetPath;
   final int spriteWidth;
   final int spriteHeight;
+  final int spriteRowIndex;
+  final int framesCount;
   final CropStageModel ySortingFromStage;
 
   const CropModel({
@@ -25,9 +27,11 @@ final class CropModel {
     required this.yieldAmount,
     required this.harvestItemId,
     this.requiredSeason,
-    required this.iconPath,
+    required this.spritesheetPath,
     required this.spriteWidth,
     required this.spriteHeight,
+    required this.spriteRowIndex,
+    required this.framesCount,
     required this.ySortingFromStage,
   });
 
@@ -74,9 +78,11 @@ final class CropModel {
       'yieldAmount': yieldAmount,
       'harvestItemId': harvestItemId,
       'requiredSeason': requiredSeason,
-      'iconPath': iconPath,
+      'spritesheetPath': spritesheetPath,
       'spriteWidth': spriteWidth,
       'spriteHeight': spriteHeight,
+      'spriteRowIndex': spriteRowIndex,
+      'framesCount': framesCount,
       'ySortingFromStage': ySortingFromStage.toJson(),
     };
   }
@@ -92,9 +98,11 @@ final class CropModel {
       yieldAmount: json['yieldAmount'] as int,
       harvestItemId: json['harvestItemId'] as String,
       requiredSeason: json['requiredSeason'] as String?,
-      iconPath: json['iconPath'] as String,
+      spritesheetPath: json['spritesheetPath'] as String,
       spriteWidth: json['spriteWidth'] as int,
       spriteHeight: json['spriteHeight'] as int,
+      spriteRowIndex: json['spriteRowIndex'] as int,
+      framesCount: json['framesCount'] as int,
       ySortingFromStage: CropStageModel.fromJson(
         json['ySortingFromStage'] as String,
       ),
@@ -111,9 +119,11 @@ final class CropModel {
     int? yieldAmount,
     String? harvestItemId,
     String? requiredSeason,
-    String? iconPath,
+    String? spritesheetPath,
     int? spriteWidth,
     int? spriteHeight,
+    int? spriteRowIndex,
+    int? framesCount,
     CropStageModel? ySortingFromStage,
   }) {
     return CropModel(
@@ -126,9 +136,11 @@ final class CropModel {
       yieldAmount: yieldAmount ?? this.yieldAmount,
       harvestItemId: harvestItemId ?? this.harvestItemId,
       requiredSeason: requiredSeason ?? this.requiredSeason,
-      iconPath: iconPath ?? this.iconPath,
+      spritesheetPath: spritesheetPath ?? this.spritesheetPath,
       spriteWidth: spriteWidth ?? this.spriteWidth,
       spriteHeight: spriteHeight ?? this.spriteHeight,
+      spriteRowIndex: spriteRowIndex ?? this.spriteRowIndex,
+      framesCount: framesCount ?? this.framesCount,
       ySortingFromStage: ySortingFromStage ?? this.ySortingFromStage,
     );
   }

@@ -43,7 +43,7 @@ final class SpriteAnimationConfigHelper {
     final int usedFrames = totalFrames - skipFirstFrames;
     assert(
       usedFrames > 0,
-      'usedFrames deve ser > 0. '
+      'usedFrames must be > 0. '
       'totalFrames=$totalFrames, skipFirstFrames=$skipFirstFrames',
     );
 
