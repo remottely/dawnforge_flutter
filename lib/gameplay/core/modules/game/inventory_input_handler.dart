@@ -71,13 +71,19 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
 
     developer.log('[InventoryInput] Inicializando itens de teste...');
 
-    _debugInsertItem('shovel');
-    _debugInsertItem('ironSword');
-    _debugInsertItem('staff');
-    _debugInsertItem('wateringCan');
-    _debugInsertItem('strawberry');
-    _debugInsertItem('tomato');
-    _debugInsertItem('harvest');
+    const testItems = [
+      'shovel',
+      'ironSword',
+      'staff',
+      'wateringCan',
+      'strawberry',
+      'tomato',
+      'harvestBasket',
+    ];
+
+    for (final itemKey in testItems) {
+      _debugInsertItem(itemKey);
+    }
 
     developer.log(
       '[InventoryInput] Itens de teste adicionados! ${InventoryManager.instance.usedSlots} slots usados',
@@ -96,90 +102,54 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
   void _addTestItems() {
     developer.log('[InventoryInput] Adicionando mais itens de teste...');
 
-    final stone = ItemFactory.createItem('stone');
-    final ironOre = ItemFactory.createItem('iron_ore');
+    final testMaterials = [
+      ('stone', 100),
+      ('iron_ore', 25),
+    ];
 
-    if (stone != null) {
-      InventoryManager.instance.addItem(stone, 100);
-      developer.log('[InventoryInput] Adicionado 100x stone');
-    }
-
-    if (ironOre != null) {
-      InventoryManager.instance.addItem(ironOre, 25);
-      developer.log('[InventoryInput] Adicionado 25x iron_ore');
+    for (final (itemKey, quantity) in testMaterials) {
+      final item = ItemFactory.createItem(itemKey);
+      if (item != null) {
+        InventoryManager.instance.addItem(item, quantity);
+        developer.log('[InventoryInput] Adicionado ${quantity}x $itemKey');
+      }
     }
   }
 
   void _equipFirstWeapon() {
     developer.log(
-      '[InventoryInput] Procurando SWORD ou AXE para equipar no weapon (Space)...',
+      '[InventoryInput] Procurando item equipável para o weapon slot...',
     );
 
-    final max = InventoryManager.instance.maxSlots;
-    int? foundIndex;
+    // Busca o próximo item equipável usando o método helper
+    final result = InventoryManager.instance.findItem(
+      (item) {
+        if (item is! WeaponItem) return false;
+        return item.equippedHandType.canBeEquippedInWeaponSlot;
+      },
+      afterIndex: _currentWeaponIndex,
+    );
 
-    for (int i = _currentWeaponIndex + 1; i < max; i++) {
-      final slot = InventoryManager.instance.getSlotByIndex(i);
-      if (slot == null || slot.item == null) continue;
-      final item = slot.item!;
-      if (item.type != ItemType.weapon) continue;
-      if (item is! WeaponItem) continue;
-      final equippedHandType = item.equippedHandType;
-      if (equippedHandType != EquippedHandType.ironSword &&
-          equippedHandType != EquippedHandType.staff &&
-          equippedHandType != EquippedHandType.shovel &&
-          equippedHandType != EquippedHandType.wateringCan &&
-          equippedHandType != EquippedHandType.strawberry &&
-          equippedHandType != EquippedHandType.tomato &&
-          equippedHandType != EquippedHandType.harvest)
-        continue;
-      foundIndex = i;
-      break;
-    }
-
-    if (foundIndex == null) {
-      for (int i = 0; i <= _currentWeaponIndex && i < max; i++) {
-        final slot = InventoryManager.instance.getSlotByIndex(i);
-        if (slot == null || slot.item == null) continue;
-        final item = slot.item!;
-        if (item.type != ItemType.weapon) continue;
-        if (item is! WeaponItem) continue;
-        final equippedHandType = item.equippedHandType;
-        if (equippedHandType != EquippedHandType.ironSword &&
-            equippedHandType != EquippedHandType.staff &&
-            equippedHandType != EquippedHandType.shovel &&
-            equippedHandType != EquippedHandType.wateringCan &&
-            equippedHandType != EquippedHandType.strawberry &&
-            equippedHandType != EquippedHandType.tomato &&
-            equippedHandType != EquippedHandType.harvest)
-          continue;
-        foundIndex = i;
-        break;
-      }
-    }
-
-    if (foundIndex == null) {
+    if (result == null) {
       developer.log(
-        '[InventoryInput] Nenhuma SWORD ou AXE encontrada no inventário',
+        '[InventoryInput] Nenhum item equipável encontrado no inventário',
       );
       return;
     }
 
-    final slot = InventoryManager.instance.getSlotByIndex(foundIndex);
-    if (slot == null || slot.item == null) return;
-    final item = slot.item!;
-
+    final item = result.item;
     final success = EquipmentManager.instance.equip(
       EquipmentSlotType.weapon,
       item,
     );
 
     if (success) {
-      _currentWeaponIndex = foundIndex;
+      _currentWeaponIndex = result.index;
+      final weaponItem = item as WeaponItem;
       developer.log(
-        '[InventoryInput] ✓ Equipado no weapon: ${item.name} (${(item is WeaponItem) ? item.equippedHandType : 'unknown'})',
+        '[InventoryInput] ✓ Equipado no weapon: ${item.name} (${weaponItem.equippedHandType})',
       );
-      if (item is WeaponItem) _notifyEquipmentChanged(item.equippedHandType);
+      _notifyEquipmentChanged(weaponItem.equippedHandType);
     } else {
       developer.log('[InventoryInput] ✗ Falha ao equipar: ${item.name}');
     }
@@ -199,34 +169,34 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
 
   void _equipFirstOffhand() {
     developer.log(
-      '[InventoryInput] Procurando SHIELD ou STAFF para equipar no offhand (Z)...',
+      '[InventoryInput] Procurando item equipável para o offhand slot...',
     );
 
-    for (int i = 0; i < InventoryManager.instance.maxSlots; i++) {
-      final slot = InventoryManager.instance.getSlotByIndex(i);
-      if (slot != null && slot.item != null) {
-        final item = slot.item!;
+    final result = InventoryManager.instance.findItem(
+      (item) => item is WeaponItem && item.equippedHandType.isEquippable,
+    );
 
-        if (item.type != ItemType.weapon) continue;
+    if (result == null) {
+      developer.log(
+        '[InventoryInput] Nenhum item equipável encontrado no inventário',
+      );
+      return;
+    }
 
-        if (item is! WeaponItem) continue;
+    final item = result.item;
+    final success = EquipmentManager.instance.equip(
+      EquipmentSlotType.offhand,
+      item,
+    );
 
-        final equippedHandType = item.equippedHandType;
-
-        final success = EquipmentManager.instance.equip(
-          EquipmentSlotType.offhand,
-          item,
-        );
-
-        if (success) {
-          developer.log(
-            '[InventoryInput] ✓ Equipado no offhand: ${item.name} (${item.equippedHandType})',
-          );
-          _notifyEquipmentChanged(equippedHandType);
-        }
-
-        return;
-      }
+    if (success) {
+      final weaponItem = item as WeaponItem;
+      developer.log(
+        '[InventoryInput] ✓ Equipado no offhand: ${item.name} (${weaponItem.equippedHandType})',
+      );
+      _notifyEquipmentChanged(weaponItem.equippedHandType);
+    } else {
+      developer.log('[InventoryInput] ✗ Falha ao equipar: ${item.name}');
     }
   }
 

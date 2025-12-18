@@ -55,7 +55,7 @@ final class FarmToolActionDef {
         case EquippedHandType.wateringCan:
           _handleWater(bestTarget.tileX, bestTarget.tileY);
           return;
-        case EquippedHandType.harvest:
+        case EquippedHandType.harvestBasket:
           _handleHarvest(player.gameRef, bestTarget.tileX, bestTarget.tileY);
           return;
         default:
@@ -92,10 +92,6 @@ final class FarmToolActionDef {
     required int x,
     required int y,
   }) {
-    // TODO: Get crop type from inventory/UI selection
-    // const cropId = 'carrot'; // TODO(Kevin): remove 'carrot' dependency
-    // const cropId = 'strawberry'; // TODO(Kevin): remove 'carrot' dependency
-
     final result = _actionService.plantSeed(x, y, cropId);
     if (result.success) {
       _feedbackService.showFloatingText(FarmFeedbackDef.kSeedPlanted);

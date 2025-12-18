@@ -56,7 +56,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
   }) =>
       (actionId == JoystickSetup.kPrimaryActionId ||
           actionId == KeyboardSetup.kPrimaryActionKey) &&
-      player.controller.model.equipment == EquippedHandType.harvest;
+      player.controller.model.equipment == EquippedHandType.harvestBasket;
 
   @override
   void handleInputAction({
