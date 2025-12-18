@@ -4,7 +4,7 @@ enum EquippedHandType {
   wateringCan,
   strawberry,
   tomato,
-  harvestBasket,
+  harvest,
   axe,
   spear,
   dagger,

@@ -38,7 +38,7 @@ final class KnightPlayerDef {
 
   static const int kSeedStaminaCost = 5;
 
-  static const int kHarvestBasketStaminaCost = 5;
+  static const int kHarvestStaminaCost = 5;
 
   static final Vector2 textureSize = TileConstants.tileSizeStandard;
 

@@ -33,7 +33,7 @@ final class CutePlayerDef {
   static const int _kShovelStaminaCost = 5;
   static const int _kWateringCanStaminaCost = 5;
   static const int _kSeedStaminaCost = 5;
-  static const int _kHarvestBasketStaminaCost = 5;
+  static const int _kHarvestStaminaCost = 5;
 
   static const modelConfig = DDFarmPlayerModelConfig(
     maxStamina: _kMaxStamina,
@@ -49,7 +49,7 @@ final class CutePlayerDef {
     shovelStaminaCost: _kShovelStaminaCost,
     wateringCanStaminaCost: _kWateringCanStaminaCost,
     seedStaminaCost: _kSeedStaminaCost,
-    harvestBasketStaminaCost: _kHarvestBasketStaminaCost,
+    harvestStaminaCost: _kHarvestStaminaCost,
   );
 
   static final Vector2 textureSize = TileConstants.tileSizeCute;
@@ -282,7 +282,7 @@ final class CutePlayerDef {
   );
 
   static final Future<SpriteAnimation>
-  _loadAnimationHarvestBasketRight = SpriteAnimation.load(
+  _loadAnimationHarvestRight = SpriteAnimation.load(
     // TODO(Kevin): CREATE ANIMATION
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_strip8.png',
     SpriteAnimationConfigHelper.createStandardData(
@@ -292,7 +292,7 @@ final class CutePlayerDef {
   );
 
   static final Future<SpriteAnimation>
-  _loadAnimationHarvestBasketLeft = SpriteAnimation.load(
+  _loadAnimationHarvestLeft = SpriteAnimation.load(
     // TODO(Kevin): CREATE ANIMATION
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_left_strip8.png',
     SpriteAnimationConfigHelper.createStandardData(
@@ -301,19 +301,19 @@ final class CutePlayerDef {
     ),
   );
 
-  static final Future<SpriteAnimation> _loadAnimationHarvestBasketUp =
+  static final Future<SpriteAnimation> _loadAnimationHarvestUp =
       // TODO(Kevin): create dedicated up animation
-      _loadAnimationHarvestBasketRight;
+      _loadAnimationHarvestRight;
 
-  static final Future<SpriteAnimation> _loadAnimationHarvestBasketDown =
+  static final Future<SpriteAnimation> _loadAnimationHarvestDown =
       // TODO(Kevin): create dedicated down animation
-      _loadAnimationHarvestBasketLeft;
+      _loadAnimationHarvestLeft;
 
-  static final _animationHarvestBasketFactory = DDAnimationDirectionalFactory(
-    loadRight: _loadAnimationHarvestBasketRight,
-    loadLeft: _loadAnimationHarvestBasketLeft,
-    loadUp: _loadAnimationHarvestBasketUp,
-    loadDown: _loadAnimationHarvestBasketDown,
+  static final _animationHarvestFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationHarvestRight,
+    loadLeft: _loadAnimationHarvestLeft,
+    loadUp: _loadAnimationHarvestUp,
+    loadDown: _loadAnimationHarvestDown,
     loadRightUp: null,
     loadRightDown: null,
     loadLeftUp: null,
@@ -423,7 +423,7 @@ final class CutePlayerDef {
     animationShovelFactory: CutePlayerDef._animationShovelFactory,
     animationWateringCanFactory: CutePlayerDef._animationWateringCanFactory,
     animationPlaceSeedFactory: CutePlayerDef._animationPlaceSeedFactory,
-    animationHarvestBasketFactory: CutePlayerDef._animationHarvestBasketFactory,
+    animationHarvestFactory: CutePlayerDef._animationHarvestFactory,
   );
 }
 

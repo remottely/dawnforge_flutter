@@ -33,7 +33,7 @@ class SunnyPlayerView<
     required bool Function() onExecuteShovel,
     required bool Function() onExecuteWateringCan,
     required bool Function() onExecuteSeed,
-    required bool Function() onExecuteHarvestBasket,
+    required bool Function() onExecuteHarvest,
   }) {
     return SunnyPlayerController<SunnyPlayerModel>(
           model: model,
@@ -45,7 +45,7 @@ class SunnyPlayerView<
           onExecuteShovel: onExecuteShovel,
           onExecuteWateringCan: onExecuteWateringCan,
           onExecuteSeed: onExecuteSeed,
-          onExecuteHarvestBasket: onExecuteHarvestBasket,
+          onExecuteHarvest: onExecuteHarvest,
         )
         as C;
   }

@@ -33,7 +33,7 @@ class CutePlayerView<
     required bool Function() onExecuteShovel,
     required bool Function() onExecuteWateringCan,
     required bool Function() onExecuteSeed,
-    required bool Function() onExecuteHarvestBasket,
+    required bool Function() onExecuteHarvest,
   }) {
     return CutePlayerController<CutePlayerModel>(
           model: model,
@@ -45,7 +45,7 @@ class CutePlayerView<
           onExecuteShovel: onExecuteShovel,
           onExecuteWateringCan: onExecuteWateringCan,
           onExecuteSeed: onExecuteSeed,
-          onExecuteHarvestBasket: onExecuteHarvestBasket,
+          onExecuteHarvest: onExecuteHarvest,
         )
         as C;
   }

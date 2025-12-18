@@ -9,7 +9,7 @@ class CutePlayerController<M extends CutePlayerModel>
     required super.onExecuteShovel,
     required super.onExecuteWateringCan,
     required super.onExecuteSeed,
-    required super.onExecuteHarvestBasket,
+    required super.onExecuteHarvest,
     required super.onExecutePrimaryAttack,
     required super.onExecuteRangedAttack,
     required super.onDisplayExclamationEmote,

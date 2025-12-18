@@ -31,7 +31,7 @@ final class FarmerPlayerDef {
   static const int _kShovelStaminaCost = 5;
   static const int _kWateringCanStaminaCost = 5;
   static const int _kSeedStaminaCost = 5;
-  static const int _kHarvestBasketStaminaCost = 5;
+  static const int _kHarvestStaminaCost = 5;
 
   static const modelConfig = DDFarmPlayerModelConfig(
     maxStamina: _kMaxStamina,
@@ -47,7 +47,7 @@ final class FarmerPlayerDef {
     shovelStaminaCost: _kShovelStaminaCost,
     wateringCanStaminaCost: _kWateringCanStaminaCost,
     seedStaminaCost: _kSeedStaminaCost,
-    harvestBasketStaminaCost: _kHarvestBasketStaminaCost,
+    harvestStaminaCost: _kHarvestStaminaCost,
   );
 
   static final Vector2 textureSize = TileConstants.tileSizeFarmer;
@@ -597,7 +597,7 @@ final class FarmerPlayerDef {
         FarmerPlayerDef._animationWateringDirectionalFactory,
     animationPlaceSeedFactory:
         FarmerPlayerDef._animationPlaceSeedDirectionalFactory,
-    animationHarvestBasketFactory:
+    animationHarvestFactory:
         FarmerPlayerDef._animationHarvestDirectionalFactory,
   );
 }

@@ -32,7 +32,7 @@ final class SunnyPlayerDef {
   static const int _kShovelStaminaCost = 5;
   static const int _kWateringCanStaminaCost = 5;
   static const int _kSeedStaminaCost = 5;
-  static const int _kHarvestBasketStaminaCost = 5;
+  static const int _kHarvestStaminaCost = 5;
 
   static const modelConfig = DDFarmPlayerModelConfig(
     maxStamina: _kMaxStamina,
@@ -48,7 +48,7 @@ final class SunnyPlayerDef {
     shovelStaminaCost: _kShovelStaminaCost,
     wateringCanStaminaCost: _kWateringCanStaminaCost,
     seedStaminaCost: _kSeedStaminaCost,
-    harvestBasketStaminaCost: _kHarvestBasketStaminaCost,
+    harvestStaminaCost: _kHarvestStaminaCost,
   );
 
   static final Vector2 textureSize = TileConstants.tileSizeSunny;
@@ -190,7 +190,7 @@ final class SunnyPlayerDef {
   );
 
   static final Future<SpriteAnimation>
-  _loadAnimationHarvestBasketRight = SpriteAnimation.load(
+  _loadAnimationHarvestRight = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_strip8.png',
     SpriteAnimationConfigHelper.createStandardData(
       amount: 8,
@@ -199,7 +199,7 @@ final class SunnyPlayerDef {
   );
 
   static final Future<SpriteAnimation>
-  _loadAnimationHarvestBasketLeft = SpriteAnimation.load(
+  _loadAnimationHarvestLeft = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_left_strip8.png',
     SpriteAnimationConfigHelper.createStandardData(
       amount: 8,
@@ -207,9 +207,9 @@ final class SunnyPlayerDef {
     ),
   );
 
-  static final _animationHarvestBasketFactory = DDAnimationDirectionalFactory(
-    loadRight: _loadAnimationHarvestBasketRight,
-    loadLeft: _loadAnimationHarvestBasketLeft,
+  static final _animationHarvestFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationHarvestRight,
+    loadLeft: _loadAnimationHarvestLeft,
     loadUp: null,
     loadDown: null,
     loadRightUp: null,
@@ -287,7 +287,7 @@ final class SunnyPlayerDef {
     animationShovelFactory: SunnyPlayerDef._animationShovelFactory,
     animationWateringCanFactory: SunnyPlayerDef._animationWateringCanFactory,
     animationPlaceSeedFactory: SunnyPlayerDef._animationPlaceSeedFactory,
-    animationHarvestBasketFactory:
-        SunnyPlayerDef._animationHarvestBasketFactory,
+    animationHarvestFactory:
+        SunnyPlayerDef._animationHarvestFactory,
   );
 }

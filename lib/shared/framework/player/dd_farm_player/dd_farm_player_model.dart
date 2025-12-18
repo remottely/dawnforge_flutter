@@ -26,9 +26,9 @@ class DDFarmPlayerModel extends DDCombatPlayerModel {
   bool get canExecuteSeed =>
       (stamina >= config.seedStaminaCost) && (equipment?.isSeed ?? false);
 
-  bool get canExecuteHarvestBasket =>
-      (stamina >= config.harvestBasketStaminaCost) &&
-      (equipment == EquippedHandType.harvestBasket);
+  bool get canExecuteHarvest =>
+      (stamina >= config.harvestStaminaCost) &&
+      (equipment == EquippedHandType.harvest);
 
   @override
   Map<String, dynamic> toJson() {

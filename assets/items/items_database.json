@@ -1,6 +1,6 @@
 {
-  "harvestBasket": {
-    "id": "harvestBasket",
+  "harvest": {
+    "id": "harvest",
     "name": "Harvest Basket",
     "description": "TODO",
     "type": "weapon",
@@ -11,7 +11,7 @@
     "attackSpeed": 1.2,
     "critChance": 0.05,
     "critMultiplier": 1.5,
-    "equippedHandType": "harvestBasket"
+    "equippedHandType": "harvest"
   },
   "strawberry": {
     "id": "strawberry",

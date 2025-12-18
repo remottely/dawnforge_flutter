@@ -55,7 +55,7 @@ final class FarmToolActionDef {
         case EquippedHandType.wateringCan:
           _handleWater(bestTarget.tileX, bestTarget.tileY);
           return;
-        case EquippedHandType.harvestBasket:
+        case EquippedHandType.harvest:
           _handleHarvest(player.gameRef, bestTarget.tileX, bestTarget.tileY);
           return;
         default:
