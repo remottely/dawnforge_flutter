@@ -3,9 +3,9 @@ import 'package:darkness_dungeon/shared/utils/sprite_animation_constants.dart';
 import 'package:flutter/material.dart';
 
 class DDSpriteAnimationWidget extends StatelessWidget {
+  final Future<SpriteAnimation> animation;
   final double _width;
   final double _height;
-  final Future<SpriteAnimation> animation;
 
   const DDSpriteAnimationWidget({super.key, required this.animation})
     : _width = SpriteAnimationConstants.kSizeStandard,
@@ -28,7 +28,21 @@ class DDSpriteAnimationWidget extends StatelessWidget {
     return SizedBox(
       width: _width,
       height: _height,
-      child: animation.asWidget(),
+      child: FutureBuilder<SpriteAnimation>(
+        future: animation,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const SizedBox.shrink();
+          }
+
+          final spriteAnimation = snapshot.data!;
+
+          return Center(
+            // TODO(Kevin): adjust this logic to be bottomCenter and calculate the sprite bottom using hitbox size
+            child: Transform.scale(scale: 4, child: spriteAnimation.asWidget()),
+          );
+        },
+      ),
     );
   }
 }

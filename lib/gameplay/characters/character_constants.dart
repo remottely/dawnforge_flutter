@@ -6,9 +6,9 @@ final class CharacterConstants {
   static const double kLifeLarge = 150.0;
   static const double kLifeExtraLarge = 200.0;
 
-  static const double kSpeedSlow = 8.0;
-  static const double kSpeedMedium = 16.0;
-  static const double kSpeedFast = 24.0;
+  static const double kSpeedSlow = 16.0;
+  static const double kSpeedMedium = 24.0;
+  static const double kSpeedFast = 32.0;
 
   static const double kVisionRadiusSuperSmall = 8.0;
   static const double kVisionRadiusExtraSmall = 16.0;

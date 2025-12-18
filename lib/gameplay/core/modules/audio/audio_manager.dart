@@ -2,7 +2,7 @@ import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/foundation.dart';
 
-import 'audio_config.dart';
+import 'audio_def.dart';
 
 final class AudioManager {
   AudioManager._();
@@ -18,7 +18,7 @@ final class AudioManager {
       print('[AudioManager] Initializing...');
     }
     FlameAudio.bgm.initialize();
-    await FlameAudio.audioCache.loadAll(AudioConfig.kPreloadAudioFiles);
+    await FlameAudio.audioCache.loadAll(AudioDef.kPreloadAudioFiles);
     if (kDebugMode) {
       print('[AudioManager] Initialized successfully');
     }
@@ -27,36 +27,36 @@ final class AudioManager {
   /// SFX
   void playPlayerPrimaryAttackSfx() {
     FlameAudio.play(
-      AudioConfig.kSfxPlayerAttackAsset,
-      volume: AudioConfig.kPrimaryAttackVolume,
+      AudioDef.kSfxPlayerAttackAsset,
+      volume: AudioDef.kPrimaryAttackVolume,
     );
   }
 
   void playFireballAttackSfx() {
     FlameAudio.play(
-      AudioConfig.kSfxCharacterFireBallAttackAsset,
-      volume: AudioConfig.kCharacterFireballAttackVolume,
+      AudioDef.kSfxCharacterFireBallAttackAsset,
+      volume: AudioDef.kCharacterFireballAttackVolume,
     );
   }
 
   void playEnemyPrimaryAttackSfx() {
     FlameAudio.play(
-      AudioConfig.kSfxEnemyAttackAsset,
-      volume: AudioConfig.kPrimaryAttackVolume,
+      AudioDef.kSfxEnemyAttackAsset,
+      volume: AudioDef.kPrimaryAttackVolume,
     );
   }
 
   void playFireballExplosionSfx() {
     FlameAudio.play(
-      AudioConfig.kSfxCharacterFireballExplosionAsset,
-      volume: AudioConfig.kCharacterFireballExplosionVolume,
+      AudioDef.kSfxCharacterFireballExplosionAsset,
+      volume: AudioDef.kCharacterFireballExplosionVolume,
     );
   }
 
   void playConversationInteractionSfx() {
     FlameAudio.play(
-      AudioConfig.kSfxConversationInteractionAsset,
-      volume: AudioConfig.kConversationInteractionVolume,
+      AudioDef.kSfxConversationInteractionAsset,
+      volume: AudioDef.kConversationInteractionVolume,
     );
   }
 
@@ -95,20 +95,13 @@ final class AudioManager {
       return;
     }
 
-    // Se já está tocando a mesma música, não precisa fazer nada
-    if (_isBackgroundMusicPlaying && _currentBackgroundTrack == musicTrack) {
-      if (kDebugMode) {
-        print('[AudioManager] Already playing $musicTrack, skipping');
-      }
+    if (_isBackgroundMusicPlaying && _currentBackgroundTrack == musicTrack)
       return;
-    }
 
-    // Para a música atual se houver
     if (_isBackgroundMusicPlaying) {
       await stopBackgroundMusic();
     }
 
-    // Toca a nova música
     try {
       if (kDebugMode) {
         print('[AudioManager] Starting to play: $musicTrack');

@@ -7,7 +7,7 @@ import 'package:darkness_dungeon/gameplay/farm/services/farm_feedback_service.da
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 
-final class FarmToolActionConfig {
+final class FarmToolActionDef {
   static final FarmActionService _actionService = FarmActionService.instance;
   static final FarmFeedbackService _feedbackService =
       FarmFeedbackService.instance;
@@ -46,24 +46,26 @@ final class FarmToolActionConfig {
     }
 
     if (bestTarget != null) {
-      switch (player.controller.model.equipment) {
+      final equipment = player.controller.model.equipment;
+
+      switch (equipment) {
         case EquippedHandType.shovel:
           _handleTillSoil(bestTarget.tileX, bestTarget.tileY);
           return;
         case EquippedHandType.wateringCan:
           _handleWater(bestTarget.tileX, bestTarget.tileY);
           return;
-        case EquippedHandType.strawberry:
-          _handlePlant(
-            cropId: EquippedHandType.strawberry.name,
-            x: bestTarget.tileX,
-            y: bestTarget.tileY,
-          );
-          return;
-        case EquippedHandType.harvestBasket:
+        case EquippedHandType.harvest:
           _handleHarvest(player.gameRef, bestTarget.tileX, bestTarget.tileY);
           return;
         default:
+          if (equipment?.isSeed ?? false) {
+            _handlePlant(
+              cropId: equipment!.name,
+              x: bestTarget.tileX,
+              y: bestTarget.tileY,
+            );
+          }
           return;
       }
     }
@@ -72,7 +74,7 @@ final class FarmToolActionConfig {
   static bool _handleTillSoil(int x, int y) {
     final result = _actionService.tillSoil(x, y);
     if (result.success) {
-      _feedbackService.showFloatingText(FarmFeedbackConfig.kSoilTilled);
+      _feedbackService.showFloatingText(FarmFeedbackDef.kSoilTilled);
     }
     return true;
   }
@@ -80,7 +82,7 @@ final class FarmToolActionConfig {
   static bool _handleWater(int x, int y) {
     final result = _actionService.waterTile(x, y);
     if (result.success) {
-      _feedbackService.showFloatingText(FarmFeedbackConfig.kCropWatered);
+      _feedbackService.showFloatingText(FarmFeedbackDef.kCropWatered);
     }
     return true;
   }
@@ -96,9 +98,11 @@ final class FarmToolActionConfig {
 
     final result = _actionService.plantSeed(x, y, cropId);
     if (result.success) {
-      _feedbackService.showFloatingText(FarmFeedbackConfig.kSeedPlanted);
+      _feedbackService.showFloatingText(FarmFeedbackDef.kSeedPlanted);
+    } else {
+      _feedbackService.showFloatingText(FarmFeedbackDef.kCannotPlant);
     }
-    return true;
+    return result.success;
   }
 
   static bool _handleHarvest(BonfireGameInterface gameRef, int x, int y) {
@@ -106,11 +110,11 @@ final class FarmToolActionConfig {
 
     if (result.success && result.crop != null) {
       final message = result.addedToInventory
-          ? FarmFeedbackConfig.cropHarvested(
+          ? FarmFeedbackDef.cropHarvested(
               result.crop!.yieldAmount,
               result.crop!.name,
             )
-          : FarmFeedbackConfig.kInventoryFull;
+          : FarmFeedbackDef.kInventoryFull;
 
       _feedbackService.showFloatingText(message);
 

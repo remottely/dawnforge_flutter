@@ -1,7 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 
-abstract class DDPushableDecoration extends DDDecoration
+abstract class DDPushableDecoration extends GameDecoration
     with Movement, BlockMovementCollision, HandleForces, Pushable {
   static const String _kResistanceForceId = 'attr';
   static final Vector2 _resistanceForceValue = Vector2.all(100);
@@ -12,9 +11,9 @@ abstract class DDPushableDecoration extends DDDecoration
     required super.size,
     super.anchor,
     super.angle,
-    super.lighting,
+    LightingConfig? lighting,
     super.renderAboveComponents,
-  }) : super.withSprite() {
+  }) : super.withSprite(lightingConfig: lighting) {
     addForce(
       ResistanceForce2D(id: _kResistanceForceId, value: _resistanceForceValue),
     );

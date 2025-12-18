@@ -3,8 +3,8 @@ import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart'
 import 'package:darkness_dungeon/gameplay/decorations/decoration_constants.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 
-final class SpikeTrapDecorationConfig {
-  SpikeTrapDecorationConfig._();
+final class SpikeTrapDecorationDef {
+  SpikeTrapDecorationDef._();
 
   static const double kDamageAmount = DecorationConstants.kStatsAmountMedium;
   static const int kPriority = 1;

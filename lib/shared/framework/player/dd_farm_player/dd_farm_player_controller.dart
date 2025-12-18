@@ -11,7 +11,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
   final bool Function() onExecuteShovel;
   final bool Function() onExecuteWateringCan;
   final bool Function() onExecuteSeed;
-  final bool Function() onExecuteHarvestBasket;
+  final bool Function() onExecuteHarvest;
 
   DDFarmPlayerController({
     required super.model,
@@ -23,7 +23,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
     required this.onExecuteShovel,
     required this.onExecuteWateringCan,
     required this.onExecuteSeed,
-    required this.onExecuteHarvestBasket,
+    required this.onExecuteHarvest,
   });
 
   bool isShovelAction({
@@ -48,15 +48,15 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
   }) =>
       (actionId == JoystickSetup.kPrimaryActionId ||
           actionId == KeyboardSetup.kPrimaryActionKey) &&
-      player.controller.model.equipment == EquippedHandType.strawberry;
+      (player.controller.model.equipment?.isSeed ?? false);
 
-  bool isHarvestBasketAction({
+  bool isHarvestAction({
     required DDBasePlayerView player,
     required dynamic actionId,
   }) =>
       (actionId == JoystickSetup.kPrimaryActionId ||
           actionId == KeyboardSetup.kPrimaryActionKey) &&
-      player.controller.model.equipment == EquippedHandType.harvestBasket;
+      player.controller.model.equipment == EquippedHandType.harvest;
 
   @override
   void handleInputAction({
@@ -69,8 +69,8 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
       _handleExecuteWateringCan();
     } else if (isSeedAction(player: player, actionId: event.id)) {
       _handleExecuteSeed();
-    } else if (isHarvestBasketAction(player: player, actionId: event.id)) {
-      _handleExecuteHarvestBasket();
+    } else if (isHarvestAction(player: player, actionId: event.id)) {
+      _handleExecuteHarvest();
     }
 
     super.handleInputAction(player: player, event: event);
@@ -87,7 +87,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
       return;
     }
 
-    model.consumeStamina(model.modelConfig.shovelStaminaCost);
+    model.consumeStamina(model.config.shovelStaminaCost);
 
     endStaminaConsumingAction();
   }
@@ -103,7 +103,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
       return;
     }
 
-    model.consumeStamina(model.modelConfig.wateringCanStaminaCost);
+    model.consumeStamina(model.config.wateringCanStaminaCost);
 
     endStaminaConsumingAction();
   }
@@ -119,23 +119,23 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
       return;
     }
 
-    model.consumeStamina(model.modelConfig.seedStaminaCost);
+    model.consumeStamina(model.config.seedStaminaCost);
 
     endStaminaConsumingAction();
   }
 
-  void _handleExecuteHarvestBasket() {
-    if (!model.canExecuteHarvestBasket) return;
+  void _handleExecuteHarvest() {
+    if (!model.canExecuteHarvest) return;
 
     beginStaminaConsumingAction();
 
-    final bool wasExecuted = onExecuteHarvestBasket.call();
+    final bool wasExecuted = onExecuteHarvest.call();
     if (!wasExecuted) {
       endStaminaConsumingAction();
       return;
     }
 
-    model.consumeStamina(model.modelConfig.harvestBasketStaminaCost);
+    model.consumeStamina(model.config.harvestStaminaCost);
 
     endStaminaConsumingAction();
   }

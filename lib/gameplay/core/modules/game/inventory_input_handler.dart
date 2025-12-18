@@ -76,7 +76,8 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
     _debugInsertItem('staff');
     _debugInsertItem('wateringCan');
     _debugInsertItem('strawberry');
-    _debugInsertItem('harvestBasket');
+    _debugInsertItem('tomato');
+    _debugInsertItem('harvest');
 
     developer.log(
       '[InventoryInput] Itens de teste adicionados! ${InventoryManager.instance.usedSlots} slots usados',
@@ -129,7 +130,8 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
           equippedHandType != EquippedHandType.shovel &&
           equippedHandType != EquippedHandType.wateringCan &&
           equippedHandType != EquippedHandType.strawberry &&
-          equippedHandType != EquippedHandType.harvestBasket)
+          equippedHandType != EquippedHandType.tomato &&
+          equippedHandType != EquippedHandType.harvest)
         continue;
       foundIndex = i;
       break;
@@ -148,7 +150,8 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
             equippedHandType != EquippedHandType.shovel &&
             equippedHandType != EquippedHandType.wateringCan &&
             equippedHandType != EquippedHandType.strawberry &&
-            equippedHandType != EquippedHandType.harvestBasket)
+            equippedHandType != EquippedHandType.tomato &&
+            equippedHandType != EquippedHandType.harvest)
           continue;
         foundIndex = i;
         break;

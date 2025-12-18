@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/map/map_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/map/map_def.dart';
 import 'package:darkness_dungeon/gameplay/decorations/map_transition_sensor.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -47,9 +47,9 @@ void main() {
 
   group('GameplayMapConfig', () {
     test('should have correct property keys', () {
-      expect(MapConfig.kNextMapPropertyKey, equals('nextMap'));
-      expect(MapConfig.kPlayerPositionPropertyKey, equals('playerPosition'));
-      expect(MapConfig.kPlayerDirectionPropertyKey, equals('playerDirection'));
+      expect(MapDef.kNextMapPropertyKey, equals('nextMap'));
+      expect(MapDef.kPlayerPositionPropertyKey, equals('playerPosition'));
+      expect(MapDef.kPlayerDirectionPropertyKey, equals('playerDirection'));
     });
   });
 }

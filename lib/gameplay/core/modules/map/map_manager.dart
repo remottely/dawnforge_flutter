@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:bonfire/map/tiled/builder/tiled_world_builder.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/map/map_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/map/map_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/map_data.dart';
 import 'package:darkness_dungeon/gameplay/decorations/map_transition_sensor.dart';
 import 'package:flutter/widgets.dart';
@@ -12,7 +12,7 @@ class MapManager {
     TiledObjectProperties properties,
   ) {
     final List<String> _positionParts = properties
-        .others[MapConfig.kPlayerPositionPropertyKey]
+        .others[MapDef.kPlayerPositionPropertyKey]
         .toString()
         .split(',');
     final Vector2 _playerPosition = Vector2(
@@ -24,10 +24,10 @@ class MapManager {
       id: sensorId,
       position: properties.position,
       size: properties.size,
-      targetMap: properties.others[MapConfig.kNextMapPropertyKey].toString(),
+      targetMap: properties.others[MapDef.kNextMapPropertyKey].toString(),
       playerPosition: _playerPosition,
       playerDirection: Direction.fromName(
-        properties.others[MapConfig.kPlayerDirectionPropertyKey].toString(),
+        properties.others[MapDef.kPlayerDirectionPropertyKey].toString(),
       ),
     );
   }
@@ -43,7 +43,7 @@ class MapManager {
   }
 
   static void _addEntityBuilders(Map<String, ObjectBuilder> builders) {
-    builders.addEntries(MapConfig.createEntityBuilder().entries);
+    builders.addEntries(MapDef.createEntityBuilder().entries);
   }
 
   static Map<String, ObjectBuilder> _createObjectBuilder({
@@ -80,7 +80,7 @@ class MapManager {
       (() {
         final mapBuilders = <String, MapItemBuilder>{};
 
-        for (final config in MapConfig.kAllMaps) {
+        for (final config in MapDef.kAllMaps) {
           mapBuilders[config.id] = (context, args) => _createMapItem(config);
         }
 

@@ -17,21 +17,21 @@ abstract class DDFarmPlayerView<
 >
     extends DDDefensePlayerView<C, M> {
   @protected
-  final DDFarmPlayerViewConfig viewConfig;
+  final DDFarmPlayerViewConfig config;
 
   DDFarmPlayerView({
-    required this.viewConfig,
+    required this.config,
     required super.position,
     required super.model,
     required super.size,
     required super.life,
     required super.baseSpeed,
-  }) : super(viewConfig: viewConfig);
+  }) : super(config: config);
 
   late final DDAnimationDirectional animationShovelDirectional;
   late final DDAnimationDirectional animationWateringCanDirectional;
   late final DDAnimationDirectional animationPlaceSeedDirectional;
-  late final DDAnimationDirectional animationHarvestBasketDirectional;
+  late final DDAnimationDirectional animationHarvestDirectional;
 
   @override
   Future<void> onLoad() async {
@@ -39,23 +39,23 @@ abstract class DDFarmPlayerView<
 
     final toolsLoaded = await Future.wait([
       DDCharacterActionSpriteAnimationHelper.loadAnimationDirectionalFromFactory(
-        viewConfig.animationShovelFactory,
+        config.animationShovelFactory,
       ),
       DDCharacterActionSpriteAnimationHelper.loadAnimationDirectionalFromFactory(
-        viewConfig.animationWateringCanFactory,
+        config.animationWateringCanFactory,
       ),
       DDCharacterActionSpriteAnimationHelper.loadAnimationDirectionalFromFactory(
-        viewConfig.animationPlaceSeedFactory,
+        config.animationPlaceSeedFactory,
       ),
       DDCharacterActionSpriteAnimationHelper.loadAnimationDirectionalFromFactory(
-        viewConfig.animationHarvestBasketFactory,
+        config.animationHarvestFactory,
       ),
     ]);
 
     animationShovelDirectional = toolsLoaded[0];
     animationWateringCanDirectional = toolsLoaded[1];
     animationPlaceSeedDirectional = toolsLoaded[2];
-    animationHarvestBasketDirectional = toolsLoaded[3];
+    animationHarvestDirectional = toolsLoaded[3];
   }
 
   @override
@@ -82,7 +82,7 @@ abstract class DDFarmPlayerView<
       onExecuteShovel: _onExecuteShovel,
       onExecuteWateringCan: _onExecuteWateringCan,
       onExecuteSeed: _onExecuteSeed,
-      onExecuteHarvestBasket: _onExecuteHarvestBasket,
+      onExecuteHarvest: _onExecuteHarvest,
     );
   }
 
@@ -101,7 +101,7 @@ abstract class DDFarmPlayerView<
     required bool Function() onExecuteShovel,
     required bool Function() onExecuteWateringCan,
     required bool Function() onExecuteSeed,
-    required bool Function() onExecuteHarvestBasket,
+    required bool Function() onExecuteHarvest,
   });
 
   bool _onExecuteShovel() {
@@ -122,7 +122,7 @@ abstract class DDFarmPlayerView<
           executionStartFrame: 4,
           onActionStart: lockAction,
           onActionEnd: unlockAction,
-          onExecutionFrames: () => FarmToolActionConfig.execute(player: this),
+          onExecutionFrames: () => FarmToolActionDef.execute(player: this),
         );
       },
     );
@@ -148,7 +148,7 @@ abstract class DDFarmPlayerView<
           executionStartFrame: 4,
           onActionStart: lockAction,
           onActionEnd: unlockAction,
-          onExecutionFrames: () => FarmToolActionConfig.execute(player: this),
+          onExecutionFrames: () => FarmToolActionDef.execute(player: this),
         );
       },
     );
@@ -174,7 +174,7 @@ abstract class DDFarmPlayerView<
           executionStartFrame: 4,
           onActionStart: lockAction,
           onActionEnd: unlockAction,
-          onExecutionFrames: () => FarmToolActionConfig.execute(player: this),
+          onExecutionFrames: () => FarmToolActionDef.execute(player: this),
         );
       },
     );
@@ -182,22 +182,22 @@ abstract class DDFarmPlayerView<
     return executionInfo != null;
   }
 
-  bool _onExecuteHarvestBasket() {
+  bool _onExecuteHarvest() {
     final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
       AttackType.melee,
       () {
         DDCharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-          animationRight: animationHarvestBasketDirectional.right,
-          animationLeft: animationHarvestBasketDirectional.left,
+          animationRight: animationHarvestDirectional.right,
+          animationLeft: animationHarvestDirectional.left,
 
-          animationUp: animationHarvestBasketDirectional.up,
-          animationDown: animationHarvestBasketDirectional.down,
+          animationUp: animationHarvestDirectional.up,
+          animationDown: animationHarvestDirectional.down,
           currentAnimation: animation,
           target: this,
           executionStartFrame: 4,
           onActionStart: lockAction,
           onActionEnd: unlockAction,
-          onExecutionFrames: () => FarmToolActionConfig.execute(player: this),
+          onExecutionFrames: () => FarmToolActionDef.execute(player: this),
         );
       },
     );

@@ -10,7 +10,12 @@ final class CropModel {
   final int yieldAmount;
   final String harvestItemId;
   final String? requiredSeason;
-  final String iconPath;
+  final String spritesheetPath;
+  final int spriteWidth;
+  final int spriteHeight;
+  final int spriteRowIndex;
+  final int framesCount;
+  final CropStageModel ySortingFromStage;
 
   const CropModel({
     required this.cropId,
@@ -22,7 +27,12 @@ final class CropModel {
     required this.yieldAmount,
     required this.harvestItemId,
     this.requiredSeason,
-    required this.iconPath,
+    required this.spritesheetPath,
+    required this.spriteWidth,
+    required this.spriteHeight,
+    required this.spriteRowIndex,
+    required this.framesCount,
+    required this.ySortingFromStage,
   });
 
   double get growthProgress => (daysPlanted / daysToMature).clamp(0.0, 1.0);
@@ -31,15 +41,24 @@ final class CropModel {
 
   bool get canHarvest => stage.canHarvest;
 
+  bool get shouldUseYSorting => stage.index >= ySortingFromStage.index;
+
   CropModel advanceDay() {
     final newDays = daysPlanted + 1;
+    final progress = newDays / daysToMature;
 
     CropStageModel newStage;
     if (newDays >= daysToMature) {
       newStage = CropStageModel.mature;
-    } else if (newDays >= (daysToMature * 0.66)) {
-      newStage = CropStageModel.growing;
-    } else if (newDays >= (daysToMature * 0.33)) {
+    } else if (progress >= 0.85) {
+      newStage = CropStageModel.growing3;
+    } else if (progress >= 0.70) {
+      newStage = CropStageModel.growing2;
+    } else if (progress >= 0.55) {
+      newStage = CropStageModel.growing1;
+    } else if (progress >= 0.40) {
+      newStage = CropStageModel.youngPlant;
+    } else if (progress >= 0.20) {
       newStage = CropStageModel.sprout;
     } else {
       newStage = CropStageModel.seed;
@@ -59,7 +78,12 @@ final class CropModel {
       'yieldAmount': yieldAmount,
       'harvestItemId': harvestItemId,
       'requiredSeason': requiredSeason,
-      'iconPath': iconPath,
+      'spritesheetPath': spritesheetPath,
+      'spriteWidth': spriteWidth,
+      'spriteHeight': spriteHeight,
+      'spriteRowIndex': spriteRowIndex,
+      'framesCount': framesCount,
+      'ySortingFromStage': ySortingFromStage.toJson(),
     };
   }
 
@@ -74,7 +98,14 @@ final class CropModel {
       yieldAmount: json['yieldAmount'] as int,
       harvestItemId: json['harvestItemId'] as String,
       requiredSeason: json['requiredSeason'] as String?,
-      iconPath: json['iconPath'] as String,
+      spritesheetPath: json['spritesheetPath'] as String,
+      spriteWidth: json['spriteWidth'] as int,
+      spriteHeight: json['spriteHeight'] as int,
+      spriteRowIndex: json['spriteRowIndex'] as int,
+      framesCount: json['framesCount'] as int,
+      ySortingFromStage: CropStageModel.fromJson(
+        json['ySortingFromStage'] as String,
+      ),
     );
   }
 
@@ -88,7 +119,12 @@ final class CropModel {
     int? yieldAmount,
     String? harvestItemId,
     String? requiredSeason,
-    String? iconPath,
+    String? spritesheetPath,
+    int? spriteWidth,
+    int? spriteHeight,
+    int? spriteRowIndex,
+    int? framesCount,
+    CropStageModel? ySortingFromStage,
   }) {
     return CropModel(
       cropId: cropId ?? this.cropId,
@@ -100,7 +136,12 @@ final class CropModel {
       yieldAmount: yieldAmount ?? this.yieldAmount,
       harvestItemId: harvestItemId ?? this.harvestItemId,
       requiredSeason: requiredSeason ?? this.requiredSeason,
-      iconPath: iconPath ?? this.iconPath,
+      spritesheetPath: spritesheetPath ?? this.spritesheetPath,
+      spriteWidth: spriteWidth ?? this.spriteWidth,
+      spriteHeight: spriteHeight ?? this.spriteHeight,
+      spriteRowIndex: spriteRowIndex ?? this.spriteRowIndex,
+      framesCount: framesCount ?? this.framesCount,
+      ySortingFromStage: ySortingFromStage ?? this.ySortingFromStage,
     );
   }
 

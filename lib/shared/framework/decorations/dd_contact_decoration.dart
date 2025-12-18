@@ -1,7 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 
-abstract class DDContactDecoration extends DDDecoration
+abstract class DDContactDecoration extends GameDecoration
     with Sensor<SimplePlayer> {
   DDContactDecoration({required super.position, required super.size});
 

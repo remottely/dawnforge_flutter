@@ -1,0 +1,14 @@
+{ "columns":20,
+ "image":"Modern_Farm_v1.2\/tilesets\/4_Crops_16x16.png",
+ "imageheight":608,
+ "imagewidth":320,
+ "margin":0,
+ "name":"4_Crops_16x16",
+ "spacing":0,
+ "tilecount":760,
+ "tiledversion":"1.11.2",
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset",
+ "version":"1.10"
+}

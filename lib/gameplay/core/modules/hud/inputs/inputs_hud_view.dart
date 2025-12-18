@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/inputs_hud_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/inputs_hud_def.dart';
 import 'package:flutter/painting.dart';
 
 class InputsHUDView extends GameInterface {
@@ -25,9 +25,8 @@ class InputsHUDView extends GameInterface {
       fontSize: 11,
     );
 
-    // Fundo do painel
     final double panelHeight =
-        InputsHUDConfig.inputGuide.length * lineHeight + padding * 2;
+        InputsHUDDef.inputGuide.length * lineHeight + padding * 2;
     final double panelWidth = 300;
     canvas.drawRRect(
       RRect.fromRectAndRadius(
@@ -42,9 +41,9 @@ class InputsHUDView extends GameInterface {
       bgPaint,
     );
 
-    for (int i = 0; i < InputsHUDConfig.inputGuide.length; i++) {
+    for (int i = 0; i < InputsHUDDef.inputGuide.length; i++) {
       final y = startY + i * lineHeight;
-      // Caixa da tecla
+
       canvas.drawRRect(
         RRect.fromRectAndRadius(
           Rect.fromLTWH(startX, y, keyBoxWidth, keyBoxHeight),
@@ -52,20 +51,20 @@ class InputsHUDView extends GameInterface {
         ),
         keyPaint,
       );
-      // Texto da tecla
+
       TextPainter(
           text: TextSpan(
-            text: InputsHUDConfig.inputGuide[i]["key"],
+            text: InputsHUDDef.inputGuide[i]["key"],
             style: keyTextStyle,
           ),
           textDirection: TextDirection.ltr,
         )
         ..layout(minWidth: 0, maxWidth: keyBoxWidth)
         ..paint(canvas, Offset(startX + 8, y + 2));
-      // Descrição
+
       TextPainter(
           text: TextSpan(
-            text: InputsHUDConfig.inputGuide[i]["desc"],
+            text: InputsHUDDef.inputGuide[i]["desc"],
             style: textStyle,
           ),
           textDirection: TextDirection.ltr,

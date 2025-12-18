@@ -1,43 +1,51 @@
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_config.dart';
+import 'package:flutter/foundation.dart';
 
 class DDFarmPlayerModel extends DDCombatPlayerModel {
-  final DDFarmPlayerModelConfig modelConfig;
+  @override
+  final DDFarmPlayerModelConfig config;
 
-  DDFarmPlayerModel({
-    required this.modelConfig,
-    super.initialStamina,
-    super.initialEnergy,
-    super.initialLife,
-    super.initialHasKey,
-  }) : super(modelConfig: modelConfig);
+  @protected
+  DDFarmPlayerModel.internal({
+    required this.config,
+    required super.saveData,
+    required super.isInRunningState,
+  }) : super.internal(config: config);
 
   bool get canExecuteWateringCan =>
-      (currentStamina >= modelConfig.wateringCanStaminaCost) &&
+      (stamina >= config.wateringCanStaminaCost) &&
       (equipment == EquippedHandType.wateringCan);
 
   bool get canExecuteShovel =>
-      (currentStamina >= modelConfig.shovelStaminaCost) &&
+      (stamina >= config.shovelStaminaCost) &&
       (equipment == EquippedHandType.shovel);
 
   bool get canExecuteSeed =>
-      (currentStamina >= modelConfig.seedStaminaCost) &&
-      (equipment == EquippedHandType.strawberry);
+      (stamina >= config.seedStaminaCost) && (equipment?.isSeed ?? false);
 
-  bool get canExecuteHarvestBasket =>
-      (currentStamina >= modelConfig.harvestBasketStaminaCost) &&
-      (equipment == EquippedHandType.harvestBasket);
+  bool get canExecuteHarvest =>
+      (stamina >= config.harvestStaminaCost) &&
+      (equipment == EquippedHandType.harvest);
 
   @override
   Map<String, dynamic> toJson() {
-    final json = super.toJson();
-
-    return json;
+    return super.toJson();
   }
 
-  @override
-  void fromJson(Map<String, dynamic> json) {
-    super.fromJson(json);
+  @protected
+  factory DDFarmPlayerModel.fromJson(
+    Map<String, dynamic> json,
+    DDFarmPlayerModelConfig config,
+  ) {
+    final baseData = DDBasePlayerSaveData.fromJson(json, config);
+
+    return DDFarmPlayerModel.internal(
+      config: config,
+      saveData: baseData,
+      isInRunningState: false,
+    );
   }
 }

@@ -1,7 +1,7 @@
 import 'dart:async' as async;
 
 import 'package:darkness_dungeon/app/screens/menu_screen.dart';
-import 'package:darkness_dungeon/app/screens/menu_screen_config.dart';
+import 'package:darkness_dungeon/app/screens/menu_screen_def.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen.dart';
 import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
 import 'package:flutter/material.dart';
@@ -20,12 +20,12 @@ abstract class MenuScreenViewModel extends State<MenuScreen> {
 
   void _initializeCharacterAnimation() {
     _characterAnimationTimer = async.Timer.periodic(
-      MenuScreenConfig.kCharacterAnimationInterval,
+      MenuScreenDef.kCharacterAnimationInterval,
       (timer) {
         setState(() {
           currentCharacterSpriteIndex++;
           if (currentCharacterSpriteIndex >
-              MenuScreenConfig.characterSpriteAnimations.length - 1) {
+              MenuScreenDef.characterSpriteAnimations.length - 1) {
             currentCharacterSpriteIndex = 0;
           }
         });

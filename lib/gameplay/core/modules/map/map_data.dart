@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/gameplay/core/modules/map/map_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/map/map_def.dart';
 
 class MapData {
   final String id;
@@ -18,8 +18,8 @@ class MapData {
   });
 
   Map<String, dynamic> get properties => {
-    MapConfig.kBackgroundMusicPropertyKey: backgroundMusic,
-    MapConfig.kLightingColorPropertyKey: lightingColor,
-    MapConfig.kBackgroundColorPropertyKey: backgroundColor,
+    MapDef.kBackgroundMusicPropertyKey: backgroundMusic,
+    MapDef.kLightingColorPropertyKey: lightingColor,
+    MapDef.kBackgroundColorPropertyKey: backgroundColor,
   };
 }

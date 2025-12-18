@@ -23,4 +23,8 @@ final class TileConstants {
   );
   static final Vector2 tileSizeSunny = Vector2(96, 64);
   static final Vector2 tileSizeCute = Vector2(48, 48);
+  static final Vector2 tileSizeFarmer = Vector2(
+    48,
+    48,
+  ); // TODO(Kevin): confirm farmer tile size
 }

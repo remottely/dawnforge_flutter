@@ -1,12 +1,21 @@
 # IMPORTANT BEFORE LAUNCH:
 
+- [DONE] render in all conversations the actual player sprite animation dynamically
+
 - [PRIORITY] enhance: create a logic that we dont need to declare each crop asset path to pubspec.yaml like: "assets/images/gameplay/farm/crops/strawberry/"
-- [PRIORITY] farm crops need to have 3D behavior, fix it
+
+- [DONE] farm crops need to have 3D behavior, fix it
+
+- [PRIORITY] seeds planted cant have 3D behavior, fix it
+
 - [PRIORITY] fix die multiple times in the same second bug the game, handle cannot die more than once.
-- refactor all tiled decoration nomenclatures
-- save torch state
+
+- [PRIORITY] refactor all tiled decoration nomenclatures
+
 - [PRIORITY] verify if need the \_activeAnimationLockCount logic
+
 - [PRIORITY] remove EquipmentToCustomPlayerAdapter from codebase??
+
 - [PRIORITY] Change background musics
 
 ---
@@ -15,13 +24,17 @@
 
 - [DONE] add torch ON/OFF interaction
 
+- [NOT_PRIORITY] save torch state
+
+- [NOT_PRIORITY] Create a way to config game view size dynamically, small, medium, large by changed user.
+
+- [NOT_PRIORITY] continuous attack with continuous press attack (space bar)
+
 ---
 
 # Fix:
 
 - [DONE] move map player spawn location to player center component and not top left of the component
-
-- [NOT_PRIORITY] continuous attack with continuous press attack (space bar)
 
 - [DONE] Player walk/run then attack, after attack steel previous attack walk/run animation
 

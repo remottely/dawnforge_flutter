@@ -26,8 +26,6 @@ abstract class DDBasePlayerController<M extends DDBasePlayerModel> {
 
   int _activeStaminaConsumingActions = 0;
 
-  Duration get staminaRegenDebounce;
-
   void handleInputAction({
     required DDBasePlayerView player,
     required JoystickActionEvent event,
@@ -47,7 +45,7 @@ abstract class DDBasePlayerController<M extends DDBasePlayerModel> {
 
     _isStaminaRegenerationPending = true;
 
-    Future.delayed(staminaRegenDebounce, () {
+    Future.delayed(model.config.staminaRegenDebounce, () {
       _isStaminaRegenerationPending = false;
       if (!_isStaminaRegenerationPaused) {
         model.regenerateStamina();
@@ -80,12 +78,12 @@ abstract class DDBasePlayerController<M extends DDBasePlayerModel> {
 
   void processEnemyDetection() {
     onDetectEnemyInLongVisionRadius(
-      longVisionRadius: model.modelConfig.longVisionRadius,
-      notObserved: () => model.isObservingEnemy = false,
+      longVisionRadius: model.config.longVisionRadius,
+      notObserved: () => model.stopObservingEnemy(),
       observed: (List<Enemy> detectedEnemies) {
         if (model.isObservingEnemy) return;
 
-        model.isObservingEnemy = true;
+        model.startObservingEnemy();
         onDisplayExclamationEmote();
       },
     );

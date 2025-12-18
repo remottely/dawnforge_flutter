@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/inventory/inventory_hud_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/inventory/inventory_hud_def.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
@@ -8,59 +8,47 @@ import 'package:flutter/material.dart';
 class InventoryHUDView extends InterfaceComponent {
   InventoryHUDView()
     : super(
-        id: InventoryHUDConfig.kComponentId,
+        id: InventoryHUDDef.kComponentId,
         size: Vector2(
-          InventoryHUDConfig.kPadding * 2 +
-              (InventoryHUDConfig.kSlotSize * InventoryHUDConfig.kSlotsPerRow) +
-              (InventoryHUDConfig.kSpacing *
-                  (InventoryHUDConfig.kSlotsPerRow - 1)),
+          InventoryHUDDef.kPadding * 2 +
+              (InventoryHUDDef.kSlotSize * InventoryHUDDef.kSlotsPerRow) +
+              (InventoryHUDDef.kSpacing * (InventoryHUDDef.kSlotsPerRow - 1)),
           400,
         ),
         position: Vector2(10, 100),
       );
 
-  /// Visibility control
   bool _isVisible = false;
   bool get isVisible => _isVisible;
   void _show() => _isVisible = true;
   void _hide() => _isVisible = false;
   void toggleIsVisible() => _isVisible ? _hide() : _show();
 
-  /// Força um refresh do HUD (útil após mudanças no inventário)
-  void refresh() {
-    // O render() já é chamado todo frame, mas podemos adicionar lógica futura aqui
-  }
-
   @override
   void render(Canvas canvas) {
     if (!_isVisible) return;
 
-    // Background semi-transparente
     final bgRect = Rect.fromLTWH(0, 0, size.x, size.y);
     final bgPaint = Paint()
       ..color = Colors.black.withValues(alpha: 0.8)
       ..style = PaintingStyle.fill;
     canvas.drawRect(bgRect, bgPaint);
 
-    // Border
     final borderPaint = Paint()
       ..color = Colors.white.withValues(alpha: 0.5)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
     canvas.drawRect(bgRect, borderPaint);
 
-    // Título
     _drawText(
       canvas,
       'INVENTÁRIO (I para fechar)',
-      Offset(InventoryHUDConfig.kPadding, InventoryHUDConfig.kPadding),
+      Offset(InventoryHUDDef.kPadding, InventoryHUDDef.kPadding),
       fontSize: 14,
     );
 
-    // Desenhar slots do inventário
     _drawInventorySlots(canvas);
 
-    // Desenhar equipamentos
     _drawEquipmentSlots(canvas);
 
     super.render(canvas);
@@ -68,27 +56,27 @@ class InventoryHUDView extends InterfaceComponent {
 
   void _drawInventorySlots(Canvas canvas) {
     final manager = InventoryManager.instance;
-    double startY = InventoryHUDConfig.kPadding + 30;
+    double startY = InventoryHUDDef.kPadding + 30;
 
     _drawText(
       canvas,
       'Inventário (${manager.usedSlots}/${manager.maxSlots}):',
-      Offset(InventoryHUDConfig.kPadding, startY),
+      Offset(InventoryHUDDef.kPadding, startY),
       fontSize: 12,
     );
 
     startY += 20;
 
     for (int i = 0; i < manager.maxSlots; i++) {
-      final row = i ~/ InventoryHUDConfig.kSlotsPerRow;
-      final col = i % InventoryHUDConfig.kSlotsPerRow;
+      final row = i ~/ InventoryHUDDef.kSlotsPerRow;
+      final col = i % InventoryHUDDef.kSlotsPerRow;
 
       final x =
-          InventoryHUDConfig.kPadding +
-          (col * (InventoryHUDConfig.kSlotSize + InventoryHUDConfig.kSpacing));
+          InventoryHUDDef.kPadding +
+          (col * (InventoryHUDDef.kSlotSize + InventoryHUDDef.kSpacing));
       final y =
           startY +
-          (row * (InventoryHUDConfig.kSlotSize + InventoryHUDConfig.kSpacing));
+          (row * (InventoryHUDDef.kSlotSize + InventoryHUDDef.kSpacing));
       final slot = manager.getSlotByIndex(i);
       _drawSlot(canvas, Offset(x, y), slot?.item?.name, slot?.quantity);
     }
@@ -96,13 +84,12 @@ class InventoryHUDView extends InterfaceComponent {
 
   void _drawEquipmentSlots(Canvas canvas) {
     final manager = EquipmentManager.instance;
-    double startY =
-        InventoryHUDConfig.kPadding + 30 + 200; // Abaixo do inventário
+    double startY = InventoryHUDDef.kPadding + 30 + 200;
 
     _drawText(
       canvas,
       'Equipment:',
-      Offset(InventoryHUDConfig.kPadding, startY),
+      Offset(InventoryHUDDef.kPadding, startY),
       fontSize: 12,
     );
 
@@ -123,21 +110,14 @@ class InventoryHUDView extends InterfaceComponent {
       final row = i ~/ 3;
 
       final x =
-          InventoryHUDConfig.kPadding +
-          (col *
-              (InventoryHUDConfig.kSlotSize +
-                  10 +
-                  60)); // Espaço extra para label
+          InventoryHUDDef.kPadding +
+          (col * (InventoryHUDDef.kSlotSize + 10 + 60));
       final y =
           startY +
-          (row *
-              (InventoryHUDConfig.kSlotSize +
-                  InventoryHUDConfig.kSpacing +
-                  10));
+          (row * (InventoryHUDDef.kSlotSize + InventoryHUDDef.kSpacing + 10));
 
       final item = manager.getEquippedItem(slotType);
 
-      // Label do slot
       _drawText(
         canvas,
         slotType.name.toUpperCase(),
@@ -159,11 +139,10 @@ class InventoryHUDView extends InterfaceComponent {
     final slotRect = Rect.fromLTWH(
       position.dx,
       position.dy,
-      InventoryHUDConfig.kSlotSize,
-      InventoryHUDConfig.kSlotSize,
+      InventoryHUDDef.kSlotSize,
+      InventoryHUDDef.kSlotSize,
     );
 
-    // Background do slot
     final slotPaint = Paint()
       ..color = itemName != null
           ? Colors.blue.withValues(alpha: 0.3)
@@ -171,14 +150,12 @@ class InventoryHUDView extends InterfaceComponent {
       ..style = PaintingStyle.fill;
     canvas.drawRect(slotRect, slotPaint);
 
-    // Border do slot
     final borderPaint = Paint()
       ..color = Colors.white.withValues(alpha: 0.5)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1;
     canvas.drawRect(slotRect, borderPaint);
 
-    // Nome do item (abreviado)
     if (itemName != null) {
       final abbreviation = _abbreviateItemName(itemName);
       _drawText(
@@ -188,7 +165,6 @@ class InventoryHUDView extends InterfaceComponent {
         fontSize: 10,
       );
 
-      // Quantidade
       if (quantity != null && quantity > 1) {
         _drawText(
           canvas,
@@ -204,13 +180,11 @@ class InventoryHUDView extends InterfaceComponent {
   String _abbreviateItemName(String name) {
     if (name.length <= 4) return name;
 
-    // Pegar primeiras letras de cada palavra
     final words = name.split(' ');
     if (words.length > 1) {
       return words.map((w) => w.isNotEmpty ? w[0] : '').join('').toUpperCase();
     }
 
-    // Ou apenas primeiros 4 caracteres
     return name.substring(0, 4).toUpperCase();
   }
 

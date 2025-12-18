@@ -7,15 +7,15 @@ class LifePotionDecorationView extends DDContactDecoration {
   bool _hasBeenConsumed = false;
 
   LifePotionDecorationView({required super.position, double? healAmount})
-    : _healAmount = healAmount ?? LifePotionConfig.kStandardHealAmount,
+    : _healAmount = healAmount ?? LifePotionDef.kStandardHealAmount,
       super.withSprite(
-        sprite: LifePotionConfig.loadSprite(),
-        size: LifePotionConfig.componentSize,
+        sprite: LifePotionDef.loadSprite(),
+        size: LifePotionDef.componentSize,
       );
 
   @override
   Future<void> onLoad() {
-    add(LifePotionConfig.createHitbox());
+    add(LifePotionDef.createHitbox());
     return super.onLoad();
   }
 
@@ -36,7 +36,7 @@ class LifePotionDecorationView extends DDContactDecoration {
     double healingProgress = 0.0;
     gameRef.add(
       ValueGeneratorComponent(
-        LifePotionConfig.kHealingDuration,
+        LifePotionDef.kHealingDuration,
         onChange: (value) {
           if (healingProgress < _healAmount) {
             double currentHealAmount = _healAmount * value - healingProgress;

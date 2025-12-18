@@ -1,9 +1,9 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_fx.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fireball_attack_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fx_particles_animations_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/player_primary_attack_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fireball_attack_def.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fx_particles_animations_def.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/player_primary_attack_def.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/offset_helper.dart';
 import 'package:darkness_dungeon/shared/framework/player/mixins/dd_base_player_extension.dart';
 
@@ -27,11 +27,11 @@ final class PlayerCombatActionController {
 
     player.executeMeleeAttack(
       damage: damage,
-      size: PlayerPrimaryAttackConfig.componentSize,
+      size: PlayerPrimaryAttackDef.componentSize,
       centerOffset: attackOffset,
-      animationRight: PlayerPrimaryAttackConfig.loadAnimationFxRight(),
+      animationRight: PlayerPrimaryAttackDef.loadAnimationFxRight(),
       onDamage: (_) => player.addParticle(
-        CharacterFxParticlesAnimationsConfig.createPrimaryAttackParticles(),
+        CharacterFxParticlesAnimationsDef.createPrimaryAttackParticles(),
         position: player.size / 2,
       ),
     );
@@ -47,21 +47,21 @@ final class PlayerCombatActionController {
     );
 
     player.addParticle(
-      CharacterFxParticlesAnimationsConfig.createFireballAttackParticles(),
+      CharacterFxParticlesAnimationsDef.createFireballAttackParticles(),
       position: player.size / 2,
     );
 
-    CharacterFireballAttackConfig.playAudioExecution();
+    CharacterFireballAttackDef.playAudioExecution();
 
     player.simpleAttackRangeByDirection(
-      size: CharacterFireballAttackConfig.componentSize,
-      speed: CharacterFireballAttackConfig.kSpeed,
-      lightingConfig: CharacterFireballAttackConfig.lighting,
+      size: CharacterFireballAttackDef.componentSize,
+      speed: CharacterFireballAttackDef.kSpeed,
+      lightingConfig: CharacterFireballAttackDef.lighting,
       damage: damage,
-      collision: CharacterFireballAttackConfig.createHitbox(),
-      animationRight: CharacterFireballAttackConfig.loadAnimationExecution(),
-      animationDestroy: CharacterFireballAttackConfig.loadAnimationDestroy(),
-      onDestroy: () => CharacterFireballAttackConfig.onDestroy(player.gameRef),
+      collision: CharacterFireballAttackDef.createHitbox(),
+      animationRight: CharacterFireballAttackDef.loadAnimationExecution(),
+      animationDestroy: CharacterFireballAttackDef.loadAnimationDestroy(),
+      onDestroy: () => CharacterFireballAttackDef.onDestroy(player.gameRef),
       direction: player.lastDirection,
       centerOffset: projectileOffset,
       attackFrom: AttackOriginEnum.PLAYER_OR_ALLY,

@@ -9,7 +9,6 @@ import 'package:darkness_dungeon/gameplay/core/modules/save/domain/models/player
 import 'package:darkness_dungeon/gameplay/core/modules/save/domain/models/world_save_data.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/save/save_repository.dart';
 
-/// Result of a save operation.
 final class SaveResult {
   final bool success;
   final String? errorMessage;
@@ -28,7 +27,6 @@ final class SaveResult {
       timestamp = null;
 }
 
-/// Result of a load operation.
 final class LoadResult {
   final bool success;
   final GameSaveData? data;
@@ -47,48 +45,10 @@ final class LoadResult {
       errorMessage = error;
 }
 
-/// Clean Architecture use case for save/load operations.
-///
-/// This service orchestrates all save/load operations following
-/// Clean Architecture principles:
-/// - **Domain Layer**: Uses typed domain models (GameSaveData, etc.)
-/// - **Use Case Layer**: This service (business logic)
-/// - **Infrastructure Layer**: SaveRepository (persistence)
-///
-/// **Benefits:**
-/// - Testable (can mock SaveRepository)
-/// - Platform-agnostic
-/// - Type-safe
-/// - Single responsibility
-/// - Easy to extend
-///
-/// **Example:**
-/// ```dart
-/// final service = SaveService();
-///
-/// // Save game
-/// final saveResult = await service.saveGame(
-///   playerManager: playerStateManager,
-///   worldManager: worldStateManager,
-///   inventoryManager: inventoryManager,
-///   farmManager: farmManager,
-/// );
-///
-/// if (saveResult.success) {
-///   print('Game saved at ${saveResult.timestamp}');
-/// }
-///
-/// // Load game
-/// final loadResult = await service.loadGame();
-/// if (loadResult.success) {
-///   // Restore managers from loadResult.data
-/// }
-/// ```
 final class SaveService {
   final SaveRepository _repository;
   final String _saveKey;
 
-  /// Auto-save debounce duration.
   static const Duration kAutoSaveDebounce = Duration(seconds: 30);
 
   Timer? _autoSaveTimer;
@@ -98,18 +58,6 @@ final class SaveService {
     : _repository = repository ?? SaveRepository(),
       _saveKey = saveKey;
 
-  /// Saves complete game state.
-  ///
-  /// Collects data from all managers and persists to storage.
-  ///
-  /// **Parameters:**
-  /// - [playerManager]: Manager implementing ISaveable<PlayerSaveData>
-  /// - [worldManager]: Manager implementing ISaveable<WorldSaveData>
-  /// - [inventoryManager]: Manager implementing ISaveable<InventorySaveData>
-  /// - [farmManager]: Manager implementing ISaveable<FarmSaveData>
-  /// - [progressData]: Optional progress/achievement data
-  ///
-  /// **Returns:** SaveResult with success status and timestamp
   Future<SaveResult> saveGame({
     required ISaveable<PlayerSaveData> playerManager,
     required ISaveable<WorldSaveData> worldManager,
@@ -120,13 +68,11 @@ final class SaveService {
     try {
       developer.log('[SaveService] Starting save operation...');
 
-      // 1. Collect data from all managers
       final player = playerManager.toSaveData();
       final world = worldManager.toSaveData();
       final inventory = inventoryManager.toSaveData();
       final farm = farmManager.toSaveData();
 
-      // 2. Create GameSaveData
       final gameSaveData = GameSaveData(
         version: GameSaveData.kCurrentVersion,
         timestamp: DateTime.now(),
@@ -137,16 +83,11 @@ final class SaveService {
         progress: progressData ?? {},
       );
 
-      // 3. Validate before saving
       if (!gameSaveData.isValid()) {
-        developer.log(
-          '[SaveService] Save data validation failed',
-          level: 900, // WARNING
-        );
+        developer.log('[SaveService] Save data validation failed', level: 900);
         return const SaveResult.failure('Save data validation failed');
       }
 
-      // 4. Persist to storage
       final success = await _repository.save(_saveKey, gameSaveData.toJson());
 
       if (success) {
@@ -171,27 +112,10 @@ final class SaveService {
     }
   }
 
-  /// Loads complete game state.
-  ///
-  /// Reads from storage and returns strongly-typed GameSaveData.
-  /// Managers should call their respective fromSaveData methods.
-  ///
-  /// **Returns:** LoadResult with success status and game data
-  ///
-  /// **Example:**
-  /// ```dart
-  /// final result = await service.loadGame();
-  /// if (result.success && result.data != null) {
-  ///   playerManager.fromSaveData(result.data!.player);
-  ///   worldManager.fromSaveData(result.data!.world);
-  ///   // ... restore other managers
-  /// }
-  /// ```
   Future<LoadResult> loadGame() async {
     try {
       developer.log('[SaveService] Starting load operation...');
 
-      // 1. Load from storage
       final json = await _repository.load(_saveKey);
 
       if (json == null) {
@@ -199,16 +123,14 @@ final class SaveService {
         return const LoadResult.failure('No save file found');
       }
 
-      // 2. Deserialize to GameSaveData
       final gameSaveData = GameSaveData.fromJson(json);
 
-      // 3. Validate loaded data
       if (!gameSaveData.isValid()) {
         developer.log(
           '[SaveService] Loaded save data is corrupted',
           level: 900,
         );
-        // Attempt to backup corrupted save
+
         await _backupCorruptedSave(json);
         return const LoadResult.failure('Save data is corrupted');
       }
@@ -228,7 +150,6 @@ final class SaveService {
     }
   }
 
-  /// Checks if a save file exists.
   Future<bool> hasSave() async {
     try {
       return await _repository.exists(_saveKey);
@@ -238,7 +159,6 @@ final class SaveService {
     }
   }
 
-  /// Deletes the save file.
   Future<bool> deleteSave() async {
     try {
       developer.log('[SaveService] Deleting save file...');
@@ -259,12 +179,6 @@ final class SaveService {
     }
   }
 
-  /// Auto-saves with debouncing to prevent excessive saves.
-  ///
-  /// Call this periodically (e.g., after important actions).
-  /// Only saves if enough time has passed since last save.
-  ///
-  /// **Non-blocking**: Uses timer to defer save operation.
   void scheduleAutoSave({
     required ISaveable<PlayerSaveData> playerManager,
     required ISaveable<WorldSaveData> worldManager,
@@ -272,10 +186,8 @@ final class SaveService {
     required ISaveable<FarmSaveData> farmManager,
     Map<String, dynamic>? progressData,
   }) {
-    // Cancel previous timer
     _autoSaveTimer?.cancel();
 
-    // Check debounce interval
     if (_lastSaveTime != null) {
       final timeSinceLastSave = DateTime.now().difference(_lastSaveTime!);
       if (timeSinceLastSave < kAutoSaveDebounce) {
@@ -287,7 +199,6 @@ final class SaveService {
       }
     }
 
-    // Schedule auto-save
     _autoSaveTimer = Timer(const Duration(milliseconds: 500), () async {
       developer.log('[SaveService] Auto-save triggered');
       await saveGame(
@@ -300,7 +211,6 @@ final class SaveService {
     });
   }
 
-  /// Gets save file metadata without loading full game state.
   Future<Map<String, dynamic>?> getSaveMetadata() async {
     try {
       final json = await _repository.load(_saveKey);
@@ -320,7 +230,6 @@ final class SaveService {
     }
   }
 
-  /// Backs up a corrupted save file for debugging.
   Future<void> _backupCorruptedSave(Map<String, dynamic> data) async {
     try {
       final backupKey =
@@ -332,7 +241,6 @@ final class SaveService {
     }
   }
 
-  /// Disposes resources (timers).
   void dispose() {
     _autoSaveTimer?.cancel();
     _autoSaveTimer = null;

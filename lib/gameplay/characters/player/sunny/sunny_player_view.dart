@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_def.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_view.dart';
@@ -11,10 +11,10 @@ class SunnyPlayerView<
     extends DDFarmPlayerView<C, M> {
   SunnyPlayerView({required super.position, required super.model})
     : super(
-        viewConfig: SunnyPlayerConfig.viewConfig,
-        size: SunnyPlayerConfig.componentSize,
-        life: SunnyPlayerConfig.kLife,
-        baseSpeed: SunnyPlayerConfig.kSpeed,
+        config: SunnyPlayerDef.viewConfig,
+        size: SunnyPlayerDef.componentSize,
+        life: SunnyPlayerDef.kLife,
+        baseSpeed: SunnyPlayerDef.kSpeed,
       );
 
   @override
@@ -33,7 +33,7 @@ class SunnyPlayerView<
     required bool Function() onExecuteShovel,
     required bool Function() onExecuteWateringCan,
     required bool Function() onExecuteSeed,
-    required bool Function() onExecuteHarvestBasket,
+    required bool Function() onExecuteHarvest,
   }) {
     return SunnyPlayerController<SunnyPlayerModel>(
           model: model,
@@ -45,7 +45,7 @@ class SunnyPlayerView<
           onExecuteShovel: onExecuteShovel,
           onExecuteWateringCan: onExecuteWateringCan,
           onExecuteSeed: onExecuteSeed,
-          onExecuteHarvestBasket: onExecuteHarvestBasket,
+          onExecuteHarvest: onExecuteHarvest,
         )
         as C;
   }

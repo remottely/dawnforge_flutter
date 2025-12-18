@@ -39,16 +39,23 @@ final class FarmRuleEngine {
 
   FarmTileModel? plant(FarmTileModel tile, String cropId) {
     if (!tile.canPlant) {
-      developer.log('[FarmRuleEngine] Cannot plant at (${tile.x}, ${tile.y})');
+      developer.log(
+        '[FarmRuleEngine] ❌ Cannot plant at (${tile.x}, ${tile.y}): '
+        'isEmpty=${tile.isEmpty}, soilState=${tile.soilState.name}, '
+        'hasCrop=${tile.crop != null}',
+      );
       return null;
     }
 
     final crop = CropDatabase.createCrop(cropId);
     if (crop == null) {
-      developer.log('[FarmRuleEngine] Invalid crop: $cropId');
+      developer.log('[FarmRuleEngine] ❌ Invalid crop: $cropId');
       return null;
     }
 
+    developer.log(
+      '[FarmRuleEngine] ✅ Planting $cropId at (${tile.x}, ${tile.y})',
+    );
     return tile.plant(crop);
   }
 

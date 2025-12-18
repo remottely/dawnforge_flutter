@@ -50,7 +50,6 @@ final class CameraFx {
     });
   }
 
-  /// Public configs
   static void executePrimaryAttackShake(BonfireGameInterface gameRef) =>
       _executeLightShake(gameRef);
   static void executeFireballExplosionShake(BonfireGameInterface gameRef) =>

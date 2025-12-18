@@ -1,19 +1,14 @@
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_def.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_config.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_model.dart';
 
 class SunnyPlayerModel extends DDFarmPlayerModel {
-  SunnyPlayerModel({
-    double? initialStamina,
-    int? initialEnergy,
-    double? initialLife,
-    bool? initialHasKey,
-  }) : super(
-         modelConfig: SunnyPlayerConfig.modelConfig,
-         initialStamina: initialStamina,
-         initialEnergy: initialEnergy,
-         initialLife: initialLife,
-         initialHasKey: initialHasKey,
-       );
+  SunnyPlayerModel.internal({
+    required DDFarmPlayerModelConfig config,
+    required super.saveData,
+    required super.isInRunningState,
+  }) : super.internal(config: config);
 
   @override
   Map<String, dynamic> toJson() {
@@ -23,13 +18,14 @@ class SunnyPlayerModel extends DDFarmPlayerModel {
   }
 
   factory SunnyPlayerModel.fromJson(Map<String, dynamic> json) {
-    final model = SunnyPlayerModel(
-      initialStamina: (json['currentStamina'] as num?)?.toDouble(),
-      initialEnergy: (json['currentEnergy'] as int?),
-      initialLife: (json['currentLife'] as num?)?.toDouble(),
-      initialHasKey: (json['hasKeyItem'] as bool?),
+    final config = SunnyPlayerDef.modelConfig;
+
+    final baseData = DDBasePlayerSaveData.fromJson(json, config);
+
+    return SunnyPlayerModel.internal(
+      config: config,
+      saveData: baseData,
+      isInRunningState: false,
     );
-    model.fromJson(json);
-    return model;
   }
 }

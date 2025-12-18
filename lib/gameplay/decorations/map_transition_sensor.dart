@@ -11,8 +11,8 @@ class MapArguments {
   });
 }
 
-final class _MapTransitionSensorConfig {
-  _MapTransitionSensorConfig._();
+final class _MapTransitionSensorDef {
+  _MapTransitionSensorDef._();
 
   static const double _kSensorContactTime = 0.5;
   static const int _kTransitionDelayMs = 100;
@@ -57,7 +57,7 @@ class MapTransitionSensorView extends DDContactDecoration {
   void update(double dt) {
     if (_hasContact && !_hasNavigated) {
       _contactTime += dt;
-      if (_contactTime >= _MapTransitionSensorConfig._kSensorContactTime) {
+      if (_contactTime >= _MapTransitionSensorDef._kSensorContactTime) {
         _initiateMapTransition();
       }
     }
@@ -74,7 +74,7 @@ class MapTransitionSensorView extends DDContactDecoration {
     _hasNavigated = true;
     _hasContact = false;
     Future.delayed(
-      Duration(milliseconds: _MapTransitionSensorConfig._kTransitionDelayMs),
+      Duration(milliseconds: _MapTransitionSensorDef._kTransitionDelayMs),
       () => _performNavigation(),
     );
   }

@@ -1,33 +1,41 @@
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_config.dart';
+import 'package:flutter/foundation.dart';
 
-abstract class DDMobilePlayerModel extends DDBasePlayerModel {
-  final DDMobilePlayerModelConfig modelConfig;
+class DDMobilePlayerModel extends DDBasePlayerModel {
+  @override
+  final DDMobilePlayerModelConfig config;
 
-  DDMobilePlayerModel({
-    required this.modelConfig,
-    super.initialStamina,
-    super.initialEnergy,
-    super.initialLife,
-    super.initialHasKey,
-  }) : super(modelConfig: modelConfig);
+  bool _isInRunningState;
 
-  bool _isInRunningState = false;
+  @protected
+  DDMobilePlayerModel.internal({
+    required this.config,
+    required super.saveData,
+    required bool isInRunningState,
+  }) : _isInRunningState = isInRunningState,
+       super.internal(config: config);
 
   bool get isRunning => _isInRunningState;
-
   set isRunning(bool value) => _isInRunningState = value;
 
   @override
   Map<String, dynamic> toJson() {
-    final json = super.toJson();
-    json['isInRunningState'] = _isInRunningState;
-    return json;
+    return super.toJson();
   }
 
-  @override
-  void fromJson(Map<String, dynamic> json) {
-    super.fromJson(json);
-    _isInRunningState = (json['isInRunningState'] as bool?) ?? false;
+  @protected
+  factory DDMobilePlayerModel.fromJson(
+    Map<String, dynamic> json,
+    DDMobilePlayerModelConfig config,
+  ) {
+    final baseData = DDBasePlayerSaveData.fromJson(json, config);
+
+    return DDMobilePlayerModel.internal(
+      config: config,
+      saveData: baseData,
+      isInRunningState: false,
+    );
   }
 }

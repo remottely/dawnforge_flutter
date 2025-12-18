@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_def.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_model.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
@@ -16,8 +16,8 @@ class WizardNpcView extends SimpleNpc with KeyboardEventListener {
 
   WizardNpcView({required super.position})
     : super(
-        animation: WizardNpcConfig.animationWalkDirectional,
-        size: WizardNpcConfig.componentSize,
+        animation: WizardNpcDef.animationWalkDirectional,
+        size: WizardNpcDef.componentSize,
       );
 
   @override
@@ -37,7 +37,7 @@ class WizardNpcView extends SimpleNpc with KeyboardEventListener {
     if (gameRef.player is SimplePlayer) {
       seeComponent(
         gameRef.player!,
-        radiusVision: WizardNpcConfig.kCloseVisionRadius,
+        radiusVision: WizardNpcDef.kCloseVisionRadius,
         observed: (_) {
           if (!_playerIsNearby) {
             _playerIsNearby = true;
@@ -74,7 +74,7 @@ class WizardNpcView extends SimpleNpc with KeyboardEventListener {
     UIStateManager.instance.showConversation(
       gameRef.context,
       player: player,
-      conversationSequence: WizardNpcConfig.createConversationSequence(),
+      conversationSequence: WizardNpcDef.createConversationSequence(),
       onChangeConversation: _controller.onConversationChanged,
       onFinishConversation: _controller.onConversationFinished,
     );

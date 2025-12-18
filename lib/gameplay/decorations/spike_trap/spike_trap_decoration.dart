@@ -9,11 +9,11 @@ class SpikeTrapDecorationView extends DDContactDecoration {
 
   SpikeTrapDecorationView({
     required super.position,
-    double damageAmount = SpikeTrapDecorationConfig.kDamageAmount,
+    double damageAmount = SpikeTrapDecorationDef.kDamageAmount,
   }) : _damageAmount = damageAmount,
        super.withAnimation(
-         animation: SpikeTrapDecorationConfig.loadAnimation(),
-         size: SpikeTrapDecorationConfig.componentSize,
+         animation: SpikeTrapDecorationDef.loadAnimation(),
+         size: SpikeTrapDecorationDef.componentSize,
        );
 
   @override
@@ -41,7 +41,7 @@ class SpikeTrapDecorationView extends DDContactDecoration {
 
   @override
   int get priority =>
-      LayerPriority.getComponentPriority(SpikeTrapDecorationConfig.kPriority);
+      LayerPriority.getComponentPriority(SpikeTrapDecorationDef.kPriority);
 
   void _triggerEffect(SimplePlayer player) {
     player.handleAttack(AttackOriginEnum.ENEMY, _damageAmount, 0);

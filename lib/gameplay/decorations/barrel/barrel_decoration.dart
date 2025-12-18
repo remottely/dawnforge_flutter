@@ -1,21 +1,21 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/decorations/barrel/barrel_decoration_config.dart';
+import 'package:darkness_dungeon/gameplay/decorations/barrel/barrel_decoration_def.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_pushable_decoration.dart';
 
 class BarrelDecorationView extends DDPushableDecoration with Attackable {
   BarrelDecorationView({required super.position})
     : super.withSprite(
-        sprite: BarrelDecorationConfig.loadSprite(),
-        size: BarrelDecorationConfig.componentSize,
+        sprite: BarrelDecorationDef.loadSprite(),
+        size: BarrelDecorationDef.componentSize,
       ) {
     receivesAttackFrom = AcceptableAttackOriginEnum.PLAYER_AND_ALLY;
   }
 
   @override
   Future<void> onLoad() {
-    add(BarrelDecorationConfig.createHitbox());
+    add(BarrelDecorationDef.createHitbox());
     return super.onLoad();
   }
 
@@ -27,7 +27,7 @@ class BarrelDecorationView extends DDPushableDecoration with Attackable {
   void _playBreakAndRemove() {
     if (sprite == null) return;
     playSpriteAnimationOnce(
-      BarrelDecorationConfig.loadAnimationBreak(),
+      BarrelDecorationDef.loadAnimationBreak(),
       onStart: () {
         sprite = null;
       },

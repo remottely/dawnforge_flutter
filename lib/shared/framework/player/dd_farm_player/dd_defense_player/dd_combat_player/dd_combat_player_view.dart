@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/controllers/player_combat_action_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_spec_config.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';
@@ -17,16 +17,16 @@ abstract class DDCombatPlayerView<
 >
     extends DDMobilePlayerView<C, M> {
   @protected
-  final DDCombatPlayerViewConfig viewConfig;
+  final DDCombatPlayerViewConfig config;
 
   DDCombatPlayerView({
-    required this.viewConfig,
+    required this.config,
     required super.position,
     required super.model,
     required super.size,
     required super.life,
     required super.baseSpeed,
-  }) : super(viewConfig: viewConfig);
+  }) : super(config: config);
 
   late final DDAnimationDirectional animationAttackDirectional;
 
@@ -40,7 +40,7 @@ abstract class DDCombatPlayerView<
 
     animationAttackDirectional =
         await DDCharacterActionSpriteAnimationHelper.loadAnimationDirectionalFromFactory(
-          viewConfig.animationAttackDirectionalFactory,
+          config.animationAttackDirectionalFactory,
         );
   }
 
@@ -53,10 +53,10 @@ abstract class DDCombatPlayerView<
 
   void _initializeCombatSystems() {
     meleeAttackController = SynchronizedAttackController(
-      spec: SynchronizedAttackSpecConfig.standard,
+      config: SynchronizedAttackDef.standard,
     );
     rangedAttackController = SynchronizedAttackController(
-      spec: SynchronizedAttackSpecConfig.standard,
+      config: SynchronizedAttackDef.standard,
     );
   }
 

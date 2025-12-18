@@ -5,7 +5,7 @@ class DDFarmPlayerViewConfig extends DDCombatPlayerViewConfig {
   final DDAnimationDirectionalFactory animationShovelFactory;
   final DDAnimationDirectionalFactory animationWateringCanFactory;
   final DDAnimationDirectionalFactory animationPlaceSeedFactory;
-  final DDAnimationDirectionalFactory animationHarvestBasketFactory;
+  final DDAnimationDirectionalFactory animationHarvestFactory;
 
   const DDFarmPlayerViewConfig({
     required super.hitbox,
@@ -17,7 +17,7 @@ class DDFarmPlayerViewConfig extends DDCombatPlayerViewConfig {
     required this.animationShovelFactory,
     required this.animationWateringCanFactory,
     required this.animationPlaceSeedFactory,
-    required this.animationHarvestBasketFactory,
+    required this.animationHarvestFactory,
   });
 }
 
@@ -25,13 +25,14 @@ class DDFarmPlayerModelConfig extends DDCombatPlayerModelConfig {
   final int wateringCanStaminaCost;
   final int shovelStaminaCost;
   final int seedStaminaCost;
-  final int harvestBasketStaminaCost;
+  final int harvestStaminaCost;
 
   const DDFarmPlayerModelConfig({
     required super.maxStamina,
     required super.maxEnergy,
     required super.staminaRegenIncrement,
     required super.longVisionRadius,
+    required super.staminaRegenDebounce,
     required super.runSpeedMultiplier,
     required super.primaryAttackStaminaCost,
     required super.rangedAttackStaminaCost,
@@ -40,6 +41,6 @@ class DDFarmPlayerModelConfig extends DDCombatPlayerModelConfig {
     required this.wateringCanStaminaCost,
     required this.shovelStaminaCost,
     required this.seedStaminaCost,
-    required this.harvestBasketStaminaCost,
+    required this.harvestStaminaCost,
   });
 }

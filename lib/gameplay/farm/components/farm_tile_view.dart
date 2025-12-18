@@ -9,17 +9,17 @@ import 'package:darkness_dungeon/gameplay/farm/models/farm_tile_model.dart'
     as model;
 import 'package:darkness_dungeon/gameplay/farm/models/farm_tile_model.dart';
 import 'package:darkness_dungeon/gameplay/farm/models/soil_state_model.dart';
-import 'package:darkness_dungeon/shared/framework/decorations/dd_decoration.dart';
 import 'package:darkness_dungeon/shared/framework/interaction/dd_tool_interactable_mixin.dart';
 
-class FarmTileView extends DDDecoration with DDToolInteractableMixin {
+class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   final int tileX;
   final int tileY;
 
   late FarmTileModel farmTile;
 
   SpriteComponent? _soilSprite;
-  DDDecoration? _cropDecoration;
+  GameDecoration? _cropDecoration;
+  SpriteComponent? _cropSpriteGround;
   bool _isHighlighted = false;
 
   SoilStateModel? _lastRenderedSoilState;
@@ -72,19 +72,57 @@ class FarmTileView extends DDDecoration with DDToolInteractableMixin {
   Future<void> _createCropDecoration() async {
     if (farmTile.crop == null) return;
 
-    final cropSprite = await Sprite.load(_getCropSpritePath());
+    final cropSprite = await _loadCropSpriteFromSheet();
+    final crop = farmTile.crop!;
 
-    _cropDecoration = DDDecoration.withSprite(
-      sprite: cropSprite,
-      position: position,
-      size: size,
+    // Tamanho real do sprite do crop
+    final cropSize = Vector2(
+      crop.spriteWidth.toDouble(),
+      crop.spriteHeight.toDouble(),
     );
 
-    if (farmTile.crop!.stage == CropStageModel.withered) {
-      _cropDecoration!.opacity = 0.5;
-    }
+    if (crop.shouldUseYSorting) {
+      // Estágio avançado: usa Y-sorting (renderiza com profundidade 3D)
+      final cropPosition = Vector2(
+        position.x,
+        position.y + size.y - cropSize.y,
+      );
 
-    gameRef.add(_cropDecoration!);
+      _cropDecoration = GameDecoration.withSprite(
+        sprite: cropSprite,
+        position: cropPosition,
+        size: cropSize,
+      );
+
+      if (crop.stage == CropStageModel.withered) {
+        _cropDecoration!.opacity = 0.5;
+      }
+
+      gameRef.add(_cropDecoration!);
+
+      developer.log(
+        '[FarmTileView] 🌱 Crop with Y-sorting: ${crop.cropId} at ($cropPosition) with size ($cropSize)',
+      );
+    } else {
+      // Estágio inicial: renderiza no chão (sempre abaixo do player)
+      _cropSpriteGround = SpriteComponent(
+        sprite: cropSprite,
+        size: cropSize,
+        anchor: Anchor.bottomLeft,
+        position: Vector2(0, size.y),
+        priority: 1,
+      );
+
+      if (crop.stage == CropStageModel.withered) {
+        _cropSpriteGround!.opacity = 0.5;
+      }
+
+      add(_cropSpriteGround!);
+
+      developer.log(
+        '[FarmTileView] 🌱 Crop on ground: ${crop.cropId} with size ($cropSize), always below player',
+      );
+    }
   }
 
   bool isPlayerOnTile(Player player) {
@@ -124,20 +162,26 @@ class FarmTileView extends DDDecoration with DDToolInteractableMixin {
   }
 
   Future<void> _updateCropDecoration() async {
+    // Remove decorações existentes
     if (_cropDecoration != null) {
       _cropDecoration!.removeFromParent();
       _cropDecoration = null;
     }
 
+    if (_cropSpriteGround != null) {
+      _cropSpriteGround!.removeFromParent();
+      _cropSpriteGround = null;
+    }
+
     if (farmTile.crop == null) {
-      developer.log('[FarmTileView] 🌱 Crop removed (no Y-sorting)');
+      developer.log('[FarmTileView] 🌱 Crop removed');
       return;
     }
 
     await _createCropDecoration();
 
     developer.log(
-      '[FarmTileView] 🌱 Crop decoration updated: ${farmTile.crop!.cropId} (${farmTile.crop!.stage.name}) with Y-sorting',
+      '[FarmTileView] 🌱 Crop decoration updated: ${farmTile.crop!.cropId} (${farmTile.crop!.stage.name})',
     );
   }
 
@@ -154,25 +198,52 @@ class FarmTileView extends DDDecoration with DDToolInteractableMixin {
     }
   }
 
-  String _getCropSpritePath() {
-    if (farmTile.crop == null) return '';
+  Future<Sprite> _loadCropSpriteFromSheet() async {
     final crop = farmTile.crop!;
-    final stageName = _getStageFileName(crop.stage);
-    return 'gameplay/farm/crops/${crop.cropId}/$stageName.png';
+    final frameIndex = _getFrameIndexForStage(crop.stage);
+
+    // Calcula a posição do frame no spritesheet
+    final framePositionX = crop.spriteWidth.toDouble() * frameIndex;
+    final framePositionY = crop.spriteRowIndex * crop.spriteHeight.toDouble();
+
+    final srcPosition = Vector2(framePositionX, framePositionY);
+    final srcSize = Vector2(
+      crop.spriteWidth.toDouble(),
+      crop.spriteHeight.toDouble(),
+    );
+
+    final sprite = await Sprite.load(
+      crop.spritesheetPath,
+      srcPosition: srcPosition,
+      srcSize: srcSize,
+    );
+
+    developer.log(
+      '[FarmTileView] 🌱 Crop sprite loaded from sheet: ${crop.spritesheetPath} '
+      '(row: ${crop.spriteRowIndex}, frame: $frameIndex, pos: ($framePositionX, $framePositionY), size: ${crop.spriteWidth}x${crop.spriteHeight})',
+    );
+
+    return sprite;
   }
 
-  String _getStageFileName(CropStageModel stage) {
+  int _getFrameIndexForStage(CropStageModel stage) {
     switch (stage) {
       case CropStageModel.seed:
-        return 'seed';
+        return 0;
       case CropStageModel.sprout:
-        return 'sprout';
-      case CropStageModel.growing:
-        return 'growing';
+        return 1;
+      case CropStageModel.youngPlant:
+        return 2;
+      case CropStageModel.growing1:
+        return 3;
+      case CropStageModel.growing2:
+        return 4;
+      case CropStageModel.growing3:
+        return 5;
       case CropStageModel.mature:
+        return 6;
       case CropStageModel.withered:
-        // TODO(Kevin): create withered sprite
-        return 'mature';
+        return 7;
     }
   }
 
@@ -234,6 +305,10 @@ class FarmTileView extends DDDecoration with DDToolInteractableMixin {
     if (_cropDecoration != null) {
       _cropDecoration!.removeFromParent();
       _cropDecoration = null;
+    }
+    if (_cropSpriteGround != null) {
+      _cropSpriteGround!.removeFromParent();
+      _cropSpriteGround = null;
     }
     super.onRemove();
   }

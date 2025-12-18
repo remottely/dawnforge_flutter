@@ -1,16 +1,16 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_config.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_def.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_model.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_config.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_Def.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/mini_boss/mini_boss_enemy_view.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_calculations.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/death/character_fx_sprite_animations_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/death/character_fx_sprite_animations_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_manager.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_view.dart';
@@ -20,10 +20,10 @@ class BossEnemyView
     extends DDBaseEnemyView<BossEnemyController, BossEnemyModel> {
   BossEnemyView({required super.position})
     : super(
-        animation: BossEnemyConfig.animationWalkDirectional,
-        size: BossEnemyConfig.componentSize,
-        speed: BossEnemyConfig.kSpeed,
-        life: BossEnemyConfig.kLife,
+        animation: BossEnemyDef.createAnimationWalkDirectional(),
+        size: BossEnemyDef.componentSize,
+        speed: BossEnemyDef.kSpeed,
+        life: BossEnemyDef.kLife,
       );
 
   @override
@@ -42,7 +42,7 @@ class BossEnemyView
       );
 
   @override
-  RectangleHitbox getHitbox() => BossEnemyConfig.createHitbox();
+  RectangleHitbox getHitbox() => BossEnemyDef.createHitbox();
 
   @override
   void render(Canvas canvas) {
@@ -162,7 +162,7 @@ class BossEnemyView
     UIStateManager.instance.showConversation(
       gameRef.context,
       player: player,
-      conversationSequence: BossEnemyConfig.createConversationSequence(),
+      conversationSequence: BossEnemyDef.createConversationSequence(),
       onChangeConversation: (_) =>
           AudioManager.instance.playConversationInteractionSfx(),
       onFinishConversation: _onFinishConversation,
@@ -180,7 +180,7 @@ class BossEnemyView
         ),
       );
       AudioManager.instance.playBackgroundMusic(
-        AudioConfig.kMusicBossBattleBackgroundAsset,
+        AudioDef.kMusicBossBattleBackgroundAsset,
       );
     });
   }
@@ -199,9 +199,9 @@ class BossEnemyView
     gameRef.add(
       AnimatedGameObject(
         animation:
-            CharacterFxSpriteAnimationsConfig.loadAnimationExplosionSmokeRight(),
+            CharacterFxSpriteAnimationsDef.loadAnimationExplosionSmokeRight(),
         position: explosionPosition,
-        size: ImpEnemyConfig.componentSize,
+        size: ImpEnemyDef.componentSize,
         loop: false,
       ),
     );
