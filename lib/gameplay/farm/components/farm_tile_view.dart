@@ -201,7 +201,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
 
   Future<Sprite> _loadCropSpriteFromSheet() async {
     final crop = farmTile.crop!;
-    final frameIndex = _getFrameIndexForStage(crop.stage);
+    final frameIndex = _getFrameIndexForStage(crop.stage, crop.framesCount);
 
     final sprite = await SpriteAnimationConfigHelper.loadSpriteFromSheet(
       assetPath: crop.spritesheetPath,
@@ -216,31 +216,29 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
 
     developer.log(
       '[FarmTileView] 🌱 Crop sprite loaded from sheet: ${crop.spritesheetPath} '
-      '(row: ${crop.spriteRowIndex}, frame: $frameIndex, skipFirstFrames: ${crop.skipFirstFrames}, size: ${crop.spriteWidth}x${crop.spriteHeight})',
+      '(row: ${crop.spriteRowIndex}, stage: ${crop.stage.name}, frame: $frameIndex/${crop.framesCount}, '
+      'skipFirstFrames: ${crop.skipFirstFrames}, size: ${crop.spriteWidth}x${crop.spriteHeight})',
     );
 
     return sprite;
   }
 
-  int _getFrameIndexForStage(CropStageModel stage) {
-    switch (stage) {
-      case CropStageModel.seed:
-        return 0;
-      case CropStageModel.sprout:
-        return 1;
-      case CropStageModel.youngPlant:
-        return 2;
-      case CropStageModel.growing1:
-        return 3;
-      case CropStageModel.growing2:
-        return 4;
-      case CropStageModel.growing3:
-        return 5;
-      case CropStageModel.mature:
-        return 6;
-      case CropStageModel.withered:
-        return 7;
-    }
+  /// Mapeia os 8 estágios de crescimento para o número de frames disponíveis
+  /// 
+  /// Exemplo com 4 frames:
+  /// - seed(0), sprout(1) → frame 0
+  /// - youngPlant(2), growing1(3) → frame 1
+  /// - growing2(4), growing3(5) → frame 2
+  /// - mature(6), withered(7) → frame 3
+  int _getFrameIndexForStage(CropStageModel stage, int availableFrames) {
+    const totalStages = 8; // Total de estágios possíveis em CropStageModel
+    final stageIndex = stage.index;
+    
+    // Mapeia proporcionalmente o índice do estágio para os frames disponíveis
+    final frameIndex = (stageIndex * availableFrames) ~/ totalStages;
+    
+    // Garante que não ultrapassa o número de frames disponíveis
+    return frameIndex.clamp(0, availableFrames - 1);
   }
 
   Future<void> _updateSpritesIfNeeded() async {
