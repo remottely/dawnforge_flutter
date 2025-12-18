@@ -1,5 +1,4 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_def.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_constants.dart';
 
 final class SpriteAnimationConfigHelper {

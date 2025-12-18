@@ -100,7 +100,7 @@ final class FarmerPlayerDef {
 
   static final int skipFirstFrames6 = 6;
 
-  static final Future<SpriteAnimation> loadAnimationIdleRight =
+  static final Future<SpriteAnimation> _loadAnimationIdleRight =
       SpriteAnimationConfigHelper.loadAnimationFromSheet(
         assetPath: assetPath,
         textureSize: textureSize,
@@ -127,7 +127,7 @@ final class FarmerPlayerDef {
         framePositionY: _frameIdleY,
       );
 
-  static final Future<SpriteAnimation> _loadAnimationIdleDown =
+  static final Future<SpriteAnimation> loadAnimationIdleDown =
       SpriteAnimationConfigHelper.loadAnimationFromSheet(
         assetPath: assetPath,
         textureSize: textureSize,
@@ -175,9 +175,9 @@ final class FarmerPlayerDef {
   static final SimpleDirectionAnimation _animationWalkDirectional =
       SimpleDirectionAnimation(
         idleLeft: _loadAnimationIdleLeft,
-        idleRight: loadAnimationIdleRight,
+        idleRight: _loadAnimationIdleRight,
         idleUp: _loadAnimationIdleUp,
-        idleDown: _loadAnimationIdleDown,
+        idleDown: loadAnimationIdleDown,
         runLeft: _loadAnimationWalkLeft,
         runRight: _loadAnimationWalkRight,
         runUp: _loadAnimationWalkUp,
@@ -224,9 +224,9 @@ final class FarmerPlayerDef {
   static final SimpleDirectionAnimation _animationRunDirectional =
       SimpleDirectionAnimation(
         idleLeft: _loadAnimationIdleLeft,
-        idleRight: loadAnimationIdleRight,
+        idleRight: _loadAnimationIdleRight,
         idleUp: _loadAnimationIdleUp,
-        idleDown: _loadAnimationIdleDown,
+        idleDown: loadAnimationIdleDown,
         // TODO(Kevin): NOW - create run animations
         runLeft: _loadAnimationRunLeft,
         runRight: _loadAnimationRunRight,

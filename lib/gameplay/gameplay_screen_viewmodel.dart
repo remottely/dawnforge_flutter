@@ -162,7 +162,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
     }
 
     playerStateManager.currentPlayerAnimation =
-        FarmerPlayerDef.loadAnimationIdleRight;
+        FarmerPlayerDef.loadAnimationIdleDown;
 
     return FarmerPlayerView<FarmerPlayerController, FarmerPlayerModel>(
       position: position,
