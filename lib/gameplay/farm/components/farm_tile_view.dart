@@ -10,6 +10,7 @@ import 'package:darkness_dungeon/gameplay/farm/models/farm_tile_model.dart'
 import 'package:darkness_dungeon/gameplay/farm/models/farm_tile_model.dart';
 import 'package:darkness_dungeon/gameplay/farm/models/soil_state_model.dart';
 import 'package:darkness_dungeon/shared/framework/interaction/dd_tool_interactable_mixin.dart';
+import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 
 class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   final int tileX;
@@ -202,25 +203,20 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
     final crop = farmTile.crop!;
     final frameIndex = _getFrameIndexForStage(crop.stage);
 
-    // Calcula a posição do frame no spritesheet
-    final framePositionX = crop.spriteWidth.toDouble() * frameIndex;
-    final framePositionY = crop.spriteRowIndex * crop.spriteHeight.toDouble();
-
-    final srcPosition = Vector2(framePositionX, framePositionY);
-    final srcSize = Vector2(
-      crop.spriteWidth.toDouble(),
-      crop.spriteHeight.toDouble(),
-    );
-
-    final sprite = await Sprite.load(
-      crop.spritesheetPath,
-      srcPosition: srcPosition,
-      srcSize: srcSize,
+    final sprite = await SpriteAnimationConfigHelper.loadSpriteFromSheet(
+      assetPath: crop.spritesheetPath,
+      spriteSize: Vector2(
+        crop.spriteWidth.toDouble(),
+        crop.spriteHeight.toDouble(),
+      ),
+      frameIndex: frameIndex,
+      rowIndex: crop.spriteRowIndex,
+      skipFirstFrames: crop.skipFirstFrames,
     );
 
     developer.log(
       '[FarmTileView] 🌱 Crop sprite loaded from sheet: ${crop.spritesheetPath} '
-      '(row: ${crop.spriteRowIndex}, frame: $frameIndex, pos: ($framePositionX, $framePositionY), size: ${crop.spriteWidth}x${crop.spriteHeight})',
+      '(row: ${crop.spriteRowIndex}, frame: $frameIndex, skipFirstFrames: ${crop.skipFirstFrames}, size: ${crop.spriteWidth}x${crop.spriteHeight})',
     );
 
     return sprite;

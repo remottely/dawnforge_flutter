@@ -60,6 +60,7 @@ final class CropDatabase {
       spriteHeight: (cropData['spriteHeight'] as int?) ?? 16,
       spriteRowIndex: cropData['spriteRowIndex'] as int,
       framesCount: cropData['framesCount'] as int,
+      skipFirstFrames: (cropData['skipFirstFrames'] as int?) ?? 0,
       ySortingFromStage: CropStageModel.fromJson(
         (cropData['ySortingFromStage'] as String?) ?? 'seed',
       ),

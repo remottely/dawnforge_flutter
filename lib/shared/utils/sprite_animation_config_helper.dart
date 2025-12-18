@@ -59,4 +59,26 @@ final class SpriteAnimationConfigHelper {
       ),
     );
   }
+
+  /// Loads a single Sprite from a spritesheet
+  static Future<Sprite> loadSpriteFromSheet({
+    required String assetPath,
+    required Vector2 spriteSize,
+    required int frameIndex,
+    required int rowIndex,
+    int skipFirstFrames = 0,
+  }) {
+    final adjustedFrameIndex = frameIndex + skipFirstFrames;
+
+    final srcPosition = Vector2(
+      adjustedFrameIndex * spriteSize.x,
+      rowIndex * spriteSize.y,
+    );
+
+    return Sprite.load(
+      assetPath,
+      srcPosition: srcPosition,
+      srcSize: spriteSize,
+    );
+  }
 }

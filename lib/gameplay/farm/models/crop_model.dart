@@ -15,6 +15,7 @@ final class CropModel {
   final int spriteHeight;
   final int spriteRowIndex;
   final int framesCount;
+  final int skipFirstFrames;
   final CropStageModel ySortingFromStage;
 
   const CropModel({
@@ -32,6 +33,7 @@ final class CropModel {
     required this.spriteHeight,
     required this.spriteRowIndex,
     required this.framesCount,
+    required this.skipFirstFrames,
     required this.ySortingFromStage,
   });
 
@@ -83,6 +85,7 @@ final class CropModel {
       'spriteHeight': spriteHeight,
       'spriteRowIndex': spriteRowIndex,
       'framesCount': framesCount,
+      'skipFirstFrames': skipFirstFrames,
       'ySortingFromStage': ySortingFromStage.toJson(),
     };
   }
@@ -103,6 +106,7 @@ final class CropModel {
       spriteHeight: json['spriteHeight'] as int,
       spriteRowIndex: json['spriteRowIndex'] as int,
       framesCount: json['framesCount'] as int,
+      skipFirstFrames: json['skipFirstFrames'] as int,
       ySortingFromStage: CropStageModel.fromJson(
         json['ySortingFromStage'] as String,
       ),
@@ -124,6 +128,7 @@ final class CropModel {
     int? spriteHeight,
     int? spriteRowIndex,
     int? framesCount,
+    int? skipFirstFrames,
     CropStageModel? ySortingFromStage,
   }) {
     return CropModel(
@@ -141,6 +146,7 @@ final class CropModel {
       spriteHeight: spriteHeight ?? this.spriteHeight,
       spriteRowIndex: spriteRowIndex ?? this.spriteRowIndex,
       framesCount: framesCount ?? this.framesCount,
+      skipFirstFrames: skipFirstFrames ?? this.skipFirstFrames,
       ySortingFromStage: ySortingFromStage ?? this.ySortingFromStage,
     );
   }

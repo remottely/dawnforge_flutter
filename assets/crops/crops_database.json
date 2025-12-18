@@ -1,30 +1,32 @@
 {
   "strawberry": {
+    "harvestItemId": "strawberry_item",
     "name": "Strawberry",
     "description": "A nutritious root vegetable",
-    "daysToMature": 8,
-    "yieldAmount": 3,
-    "harvestItemId": "strawberry_item",
+    "daysToMature": 2,
+    "yieldAmount": 6,
     "requiredSeason": "any",
     "spritesheetPath": "tiled/Modern_Farm_v1.2/tilesets/4_Crops_16x16.png",
     "spriteWidth": 16,
     "spriteHeight": 32,
     "spriteRowIndex": 3,
-    "framesCount": 8,
+    "framesCount": 4,
+    "skipFirstFrames": 1,
     "ySortingFromStage": "growing1"
   },
   "tomato": {
+    "harvestItemId": "tomato_item",
     "name": "Tomato",
     "description": "Juicy red fruit, perfect for salads",
-    "daysToMature": 7,
-    "yieldAmount": 6,
-    "harvestItemId": "tomato_item",
+    "daysToMature": 2,
+    "yieldAmount": 3,
     "requiredSeason": "summer",
     "spritesheetPath": "tiled/Modern_Farm_v1.2/tilesets/4_Crops_16x16.png",
     "spriteWidth": 16,
     "spriteHeight": 32,
     "spriteRowIndex": 11,
-    "framesCount": 8,
+    "framesCount": 4,
+    "skipFirstFrames": 1,
     "ySortingFromStage": "youngPlant"
   }
 }
