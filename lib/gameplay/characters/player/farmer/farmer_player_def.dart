@@ -96,216 +96,190 @@ final class FarmerPlayerDef {
   static const _frameWateringY = 14.0;
   static const _frameChoppingY = 18.0;
   static const _frameAttackY = _frameChoppingY;
-  
+
   static final int skipFrameX6 = 6;
 
-  static Future<SpriteAnimation> _loadAnimationFarmerPlayerByFramePosition(
-    double framePositionYPadding,
-    int amount,
-    double framePositionXPadding,
-    double framePositionX,
-    double framePositionY,
-  ) => SpriteAnimation.load(
-    farmerPlayerAssetPath,
-    SpriteAnimationConfigHelper.createStandardData(
-      amount: amount,
-      textureSize: FarmerPlayerDef.textureSize,
-      texturePosition: Vector2(
-        framePositionXPadding +
-            (framePositionX * FarmerPlayerDef.textureSize.x),
-        framePositionYPadding + 32 + (framePositionY * 32),
-      ),
-    ),
-  );
+  static Future<SpriteAnimation> _loadAnimationFarmerPlayerByFramePosition({
+    required int skipFrameX,
+    required double framePositionYPadding,
+    required int amount,
+    required double framePositionXPadding,
+    required double framePositionX,
+    required double framePositionY,
+  }) =>
+      SpriteAnimation.load(
+        farmerPlayerAssetPath,
+        SpriteAnimationConfigHelper.createStandardData(
+          amount: amount - skipFrameX,
+          textureSize: FarmerPlayerDef.textureSize,
+          texturePosition: Vector2(
+            framePositionXPadding +
+                (framePositionX + skipFrameX) *
+                    FarmerPlayerDef.textureSize.x,
+            framePositionYPadding + 32 + (framePositionY * 32),
+          ),
+        ),
+      );
 
   static final Future<SpriteAnimation> loadAnimationIdleRight =
       _loadAnimationFarmerPlayerByFramePosition(
-        0,
-        _x6,
-        0,
-        _frameRightX6,
-        _frameIdleY,
+        amount: _x6,
+        framePositionX: _frameRightX6,
+        framePositionY: _frameIdleY,
+        framePositionXPadding: 0,
+        framePositionYPadding: 0,
+        skipFrameX: 0,
       );
 
   static final Future<SpriteAnimation> _loadAnimationIdleLeft =
       _loadAnimationFarmerPlayerByFramePosition(
-        0,
-        _x6,
-        0,
-        _frameLeftX6,
-        _frameIdleY,
+        amount: _x6,
+        framePositionX: _frameLeftX6,
+        framePositionY: _frameIdleY,
+        framePositionXPadding: 0,
+        framePositionYPadding: 0,
+        skipFrameX: 0,
       );
 
   static final Future<SpriteAnimation> _loadAnimationIdleUp =
       _loadAnimationFarmerPlayerByFramePosition(
-        0,
-        _x6,
-        0,
-        _frameUp6,
-        _frameIdleY,
+        amount: _x6,
+        framePositionX: _frameUp6,
+        framePositionY: _frameIdleY,
+        framePositionXPadding: 0,
+        framePositionYPadding: 0,
+        skipFrameX: 0,
       );
 
   static final Future<SpriteAnimation> _loadAnimationIdleDown =
       _loadAnimationFarmerPlayerByFramePosition(
-        0,
-        _x6,
-        0,
-        _frameDownX6,
-        _frameIdleY,
+        amount: _x6,
+        framePositionX: _frameDownX6,
+        framePositionY: _frameIdleY,
+        framePositionXPadding: 0,
+        framePositionYPadding: 0,
+        skipFrameX: 0,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWalkLeft =
       _loadAnimationFarmerPlayerByFramePosition(
-        0,
-        _x6,
-        0,
-        _frameLeftX6,
-        _frameWalkY,
+        amount: _x6,
+        framePositionX: _frameLeftX6,
+        framePositionY: _frameWalkY,
+        framePositionXPadding: 0,
+        framePositionYPadding: 0,
+        skipFrameX: 0,
       );
+
   static final Future<SpriteAnimation> _loadAnimationWalkRight =
       _loadAnimationFarmerPlayerByFramePosition(
-        0,
-        _x6,
-        0,
-        _frameRightX6,
-        _frameWalkY,
+        amount: _x6,
+        framePositionX: _frameRightX6,
+        framePositionY: _frameWalkY,
+        framePositionXPadding: 0,
+        framePositionYPadding: 0,
+        skipFrameX: 0,
       );
+
   static final Future<SpriteAnimation> _loadAnimationWalkUp =
       _loadAnimationFarmerPlayerByFramePosition(
-        0,
-        _x6,
-        0,
-        _frameUp6,
-        _frameWalkY,
+        amount: _x6,
+        framePositionX: _frameUp6,
+        framePositionY: _frameWalkY,
+        framePositionXPadding: 0,
+        framePositionYPadding: 0,
+        skipFrameX: 0,
       );
+
   static final Future<SpriteAnimation> _loadAnimationWalkDown =
       _loadAnimationFarmerPlayerByFramePosition(
-        0,
-        _x6,
-        0,
-        _frameDownX6,
-        _frameWalkY,
+        amount: _x6,
+        framePositionX: _frameDownX6,
+        framePositionY: _frameWalkY,
+        framePositionXPadding: 0,
+        framePositionYPadding: 0,
+        skipFrameX: 0,
       );
 
   ///
   static final Future<SpriteAnimation> _loadAnimationRunLeft =
       _loadAnimationFarmerPlayerByFramePosition(
-        0,
-        _x6,
-        0,
-        _frameLeftX6,
-        _frameWalkY,
+        amount: _x6,
+        framePositionX: _frameLeftX6,
+        framePositionY: _frameWalkY,
+        framePositionXPadding: 0,
+        framePositionYPadding: 0,
+        skipFrameX: 0,
       );
+
   static final Future<SpriteAnimation> _loadAnimationRunRight =
       _loadAnimationFarmerPlayerByFramePosition(
-        0,
-        _x6,
-        0,
-        _frameRightX6,
-        _frameWalkY,
+        amount: _x6,
+        framePositionX: _frameRightX6,
+        framePositionY: _frameWalkY,
+        framePositionXPadding: 0,
+        framePositionYPadding: 0,
+        skipFrameX: 0,
       );
+
   static final Future<SpriteAnimation> _loadAnimationRunUp =
       _loadAnimationFarmerPlayerByFramePosition(
-        0,
-        _x6,
-        0,
-        _frameUp6,
-        _frameWalkY,
+        amount: _x6,
+        framePositionX: _frameUp6,
+        framePositionY: _frameWalkY,
+        framePositionXPadding: 0,
+        framePositionYPadding: 0,
+        skipFrameX: 0,
       );
+
   static final Future<SpriteAnimation> _loadAnimationRunDown =
       _loadAnimationFarmerPlayerByFramePosition(
-        0,
-        6,
-        0,
-        _frameDownX6,
-        _frameWalkY,
+        amount: 6,
+        framePositionX: _frameDownX6,
+        framePositionY: _frameWalkY,
+        framePositionXPadding: 0,
+        framePositionYPadding: 0,
+        skipFrameX: 0,
       );
-
-  // ///
-  // static final Future<SpriteAnimation> _loadAnimationAttackRight =
-  //     SpriteAnimation.load(
-  //       'new/Player/attack/player_attack_right_48x48_4.png',
-  //       SpriteAnimationConfigHelper.createStandardData(
-  //         amount: 4,
-  //         textureSize: textureSize,
-  //       ),
-  //     );
-
-  // static final Future<SpriteAnimation> _loadAnimationAttackLeft =
-  //     SpriteAnimation.load(
-  //       'new/Player/attack/player_attack_left_48x48_4.png',
-  //       SpriteAnimationConfigHelper.createStandardData(
-  //         amount: 4,
-  //         textureSize: textureSize,
-  //       ),
-  //     );
-
-  // static final Future<SpriteAnimation> _loadAnimationAttackUp =
-  //     SpriteAnimation.load(
-  //       // TODO(Kevin): NOW - create up and down verifications
-  //       'new/Player/attack/player_attack_up_48x48_4.png',
-  //       SpriteAnimationConfigHelper.createStandardData(
-  //         amount: 4,
-  //         textureSize: textureSize,
-  //       ),
-  //     );
-
-  // static final Future<SpriteAnimation> _loadAnimationAttackDown =
-  //     SpriteAnimation.load(
-  //       // TODO(Kevin): NOW - create up and down verifications
-  //       'new/Player/attack/player_attack_down_48x48_4.png',
-  //       SpriteAnimationConfigHelper.createStandardData(
-  //         amount: 4,
-  //         textureSize: textureSize,
-  //       ),
-  //     );
-
-  // static final _animationAttackDirectionalFactory =
-  //     DDAnimationDirectionalFactory(
-  //       loadRight: _loadAnimationAttackRight,
-  //       loadLeft: _loadAnimationAttackLeft,
-  //       loadUp: _loadAnimationAttackUp,
-  //       loadDown: _loadAnimationAttackDown,
-  //       loadRightUp: null,
-  //       loadRightDown: null,
-  //       loadLeftUp: null,
-  //       loadLeftDown: null,
-  //     );
 
   static final Future<SpriteAnimation> _loadAnimationChoppingRight =
       _loadAnimationFarmerPlayerByFramePosition(
-        -6,
-        _x10,
-        -8,
-        _frameRightX10,
-        _frameChoppingY,
+        amount: _x10,
+        framePositionX: _frameRightX10,
+        framePositionY: _frameChoppingY,
+        framePositionXPadding: -8,
+        framePositionYPadding: -6,
+        skipFrameX: 0,
       );
 
   static final Future<SpriteAnimation> _loadAnimationChoppingLeft =
       _loadAnimationFarmerPlayerByFramePosition(
-        -6,
-        _x10,
-        -8,
-        _frameLeftX10,
-        _frameChoppingY,
+        amount: _x10,
+        framePositionX: _frameLeftX10,
+        framePositionY: _frameChoppingY,
+        framePositionXPadding: -8,
+        framePositionYPadding: -6,
+        skipFrameX: 0,
       );
 
   static final Future<SpriteAnimation> _loadAnimationChoppingUp =
       _loadAnimationFarmerPlayerByFramePosition(
-        -4,
-        _x10,
-        -8,
-        _frameUpX10,
-        _frameChoppingY,
+        amount: _x10,
+        framePositionX: _frameUpX10,
+        framePositionY: _frameChoppingY,
+        framePositionXPadding: -8,
+        framePositionYPadding: -4,
+        skipFrameX: 0,
       );
 
   static final Future<SpriteAnimation> _loadAnimationChoppingDown =
       _loadAnimationFarmerPlayerByFramePosition(
-        -8,
-        _x10,
-        -8,
-        _frameDownX10,
-        _frameChoppingY,
+        amount: _x10,
+        framePositionX: _frameDownX10,
+        framePositionY: _frameChoppingY,
+        framePositionXPadding: -8,
+        framePositionYPadding: -8,
+        skipFrameX: 0,
       );
 
   static final _animationChoppingDirectionalFactory =
@@ -320,41 +294,44 @@ final class FarmerPlayerDef {
         loadLeftDown: null,
       );
 
-
   static final Future<SpriteAnimation> _loadAnimationAttackRight =
       _loadAnimationFarmerPlayerByFramePosition(
-        -6,
-        _x10 - skipFrameX6,
-        -8,
-        _frameRightX10 + skipFrameX6,
-        _frameAttackY,
+        amount: _x10,
+        framePositionX: _frameRightX10,
+        framePositionY: _frameAttackY,
+        framePositionXPadding: -8,
+        framePositionYPadding: -6,
+        skipFrameX: skipFrameX6,
       );
 
   static final Future<SpriteAnimation> _loadAnimationAttackLeft =
       _loadAnimationFarmerPlayerByFramePosition(
-        -6,
-        _x10 - skipFrameX6,
-        -8,
-        _frameLeftX10 + skipFrameX6,
-        _frameAttackY,
+        amount: _x10,
+        framePositionX: _frameLeftX10,
+        framePositionY: _frameAttackY,
+        framePositionXPadding: -8,
+        framePositionYPadding: -6,
+        skipFrameX: skipFrameX6,
       );
 
   static final Future<SpriteAnimation> _loadAnimationAttackUp =
       _loadAnimationFarmerPlayerByFramePosition(
-        -4,
-        _x10 - skipFrameX6,
-        -8,
-        _frameUpX10 + skipFrameX6,
-        _frameAttackY,
+        amount: _x10,
+        framePositionX: _frameUpX10,
+        framePositionY: _frameAttackY,
+        framePositionXPadding: -8,
+        framePositionYPadding: -4,
+        skipFrameX: skipFrameX6,
       );
 
   static final Future<SpriteAnimation> _loadAnimationAttackDown =
       _loadAnimationFarmerPlayerByFramePosition(
-        -8,
-        _x10 - skipFrameX6,
-        -8,
-        _frameDownX10 + skipFrameX6,
-        _frameAttackY,
+        amount: _x10,
+        framePositionX: _frameDownX10,
+        framePositionY: _frameAttackY,
+        framePositionXPadding: -8,
+        framePositionYPadding: -8,
+        skipFrameX: skipFrameX6,
       );
 
   static final _animationAttackDirectionalFactory =
@@ -371,38 +348,42 @@ final class FarmerPlayerDef {
 
   static final Future<SpriteAnimation> _loadAnimationDigRight =
       _loadAnimationFarmerPlayerByFramePosition(
-        0,
-        _x9,
-        -8,
-        _frameRightX9,
-        _frameDigY,
+        amount: _x9,
+        framePositionX: _frameRightX9,
+        framePositionY: _frameDigY,
+        framePositionXPadding: -8,
+        framePositionYPadding: 0,
+        skipFrameX: 0,
       );
 
   static final Future<SpriteAnimation> _loadAnimationDigLeft =
       _loadAnimationFarmerPlayerByFramePosition(
-        0,
-        _x9,
-        -8,
-        _frameLeftX9,
-        _frameDigY,
+        amount: _x9,
+        framePositionX: _frameLeftX9,
+        framePositionY: _frameDigY,
+        framePositionXPadding: -8,
+        framePositionYPadding: 0,
+        skipFrameX: 0,
       );
 
   static final Future<SpriteAnimation> _loadAnimationDigUp =
       _loadAnimationFarmerPlayerByFramePosition(
-        0,
-        _x9,
-        -8,
-        _frameUpX9,
-        _frameDigY,
+        amount: _x9,
+        framePositionX: _frameUpX9,
+        framePositionY: _frameDigY,
+        framePositionXPadding: -8,
+        framePositionYPadding: 0,
+        skipFrameX: 0,
       );
 
   static final Future<SpriteAnimation> _loadAnimationDigDown =
       _loadAnimationFarmerPlayerByFramePosition(
-        -4,
-        _x9,
-        -8,
-        _frameDownX9,
-        _frameDigY,
+        amount: _x9,
+        framePositionX: _frameDownX9,
+        framePositionY: _frameDigY,
+        framePositionXPadding: -8,
+        framePositionYPadding: -4,
+        skipFrameX: 0,
       );
 
   static final _animationDigDirectionalFactory = DDAnimationDirectionalFactory(
@@ -418,38 +399,42 @@ final class FarmerPlayerDef {
 
   static final Future<SpriteAnimation> _loadAnimationWateringRight =
       _loadAnimationFarmerPlayerByFramePosition(
-        0,
-        _x14,
-        -8,
-        _frameRightX14,
-        _frameWateringY,
+        amount: _x14,
+        framePositionX: _frameRightX14,
+        framePositionY: _frameWateringY,
+        framePositionXPadding: -8,
+        framePositionYPadding: 0,
+        skipFrameX: 0,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWateringLeft =
       _loadAnimationFarmerPlayerByFramePosition(
-        0,
-        _x14,
-        8,
-        _frameLeftX14,
-        _frameWateringY,
+        amount: _x14,
+        framePositionX: _frameLeftX14,
+        framePositionY: _frameWateringY,
+        framePositionXPadding: 8,
+        framePositionYPadding: 0,
+        skipFrameX: 0,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWateringUp =
       _loadAnimationFarmerPlayerByFramePosition(
-        0,
-        _x14,
-        0,
-        _frameUpX14,
-        _frameWateringY,
+        amount: _x14,
+        framePositionX: _frameUpX14,
+        framePositionY: _frameWateringY,
+        framePositionXPadding: 0,
+        framePositionYPadding: 0,
+        skipFrameX: 0,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWateringDown =
       _loadAnimationFarmerPlayerByFramePosition(
-        -16,
-        _x14,
-        0,
-        _frameDownX14,
-        _frameWateringY,
+        amount: _x14,
+        framePositionX: _frameDownX14,
+        framePositionY: _frameWateringY,
+        framePositionXPadding: 0,
+        framePositionYPadding: -16,
+        skipFrameX: 0,
       );
 
   static final _animationWateringDirectionalFactory =
@@ -466,7 +451,7 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation>
-  _loadAnimationPlaceSeedRight = SpriteAnimation.load(
+      _loadAnimationPlaceSeedRight = SpriteAnimation.load(
     // TODO(Kevin): CREATE ANIMATION
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_strip8.png',
     SpriteAnimationConfigHelper.createStandardData(
@@ -476,7 +461,7 @@ final class FarmerPlayerDef {
   );
 
   static final Future<SpriteAnimation>
-  _loadAnimationPlaceSeedLeft = SpriteAnimation.load(
+      _loadAnimationPlaceSeedLeft = SpriteAnimation.load(
     // TODO(Kevin): CREATE ANIMATION
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_left_strip8.png',
     SpriteAnimationConfigHelper.createStandardData(
@@ -506,7 +491,7 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation>
-  _loadAnimationHarvestBasketRight = SpriteAnimation.load(
+      _loadAnimationHarvestBasketRight = SpriteAnimation.load(
     // TODO(Kevin): CREATE ANIMATION
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_strip8.png',
     SpriteAnimationConfigHelper.createStandardData(
@@ -516,7 +501,7 @@ final class FarmerPlayerDef {
   );
 
   static final Future<SpriteAnimation>
-  _loadAnimationHarvestBasketLeft = SpriteAnimation.load(
+      _loadAnimationHarvestBasketLeft = SpriteAnimation.load(
     // TODO(Kevin): CREATE ANIMATION
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_left_strip8.png',
     SpriteAnimationConfigHelper.createStandardData(
@@ -579,8 +564,8 @@ final class FarmerPlayerDef {
   static final Vector2 _cryptComponentSize = TileConstants.tileSizeStandard;
 
   static Future<Sprite> _loadSpriteCrypt() => Sprite.load(
-    'gameplay/characters/player/player_crypt_1.png',
-  ); // TODO(Kevin): add farmer death animation playonce // - new/Player/death/
+        'gameplay/characters/player/player_crypt_1.png',
+      ); // TODO(Kevin): add farmer death animation playonce // - new/Player/death/
 
   static GameDecoration _createDeathMarker(Vector2 position) =>
       GameDecoration.withSprite(
