@@ -31,27 +31,15 @@ final class EquipmentManager {
       return false;
     }
 
-    final currentItem = getEquippedItem(slotType);
-    if (currentItem != null) {
-      if (!InventoryManager.instance.addItem(currentItem)) {
-        developer.log('[EquipmentManager] Inventory full, cannot equip');
-        return false;
-      }
-    }
-
-    if (!InventoryManager.instance.removeItem(item.id, 1)) {
-      if (currentItem != null) {
-        InventoryManager.instance.removeItem(currentItem.id, 1);
-        _equipmentSlots[slotType] = _equipmentSlots[slotType]!.equip(
-          currentItem,
-        );
-      }
+    // Check if item exists in inventory
+    if (InventoryManager.instance.getItemQuantity(item.id) == 0) {
       developer.log('[EquipmentManager] Item not in inventory');
       return false;
     }
 
+    // Simply equip without removing from inventory
     _equipmentSlots[slotType] = _equipmentSlots[slotType]!.equip(item);
-    developer.log('[EquipmentManager] Item equipped successfully');
+    developer.log('[EquipmentManager] Item equipped successfully (kept in inventory)');
     return true;
   }
 
@@ -64,13 +52,9 @@ final class EquipmentManager {
       return null;
     }
 
-    if (!InventoryManager.instance.addItem(item)) {
-      developer.log('[EquipmentManager] Inventory full, cannot unequip');
-      return null;
-    }
-
+    // Simply unequip without adding back to inventory (it's already there)
     _equipmentSlots[slotType] = _equipmentSlots[slotType]!.unequip();
-    developer.log('[EquipmentManager] Item unequipped successfully');
+    developer.log('[EquipmentManager] Item unequipped successfully (remains in inventory)');
     return item;
   }
 
@@ -80,6 +64,16 @@ final class EquipmentManager {
 
   bool isSlotOccupied(EquipmentSlotType slotType) {
     return _equipmentSlots[slotType]?.isOccupied ?? false;
+  }
+
+  /// Returns the slot type where the item is equipped, or null if not equipped
+  EquipmentSlotType? getEquippedSlotForItem(String itemId) {
+    for (final entry in _equipmentSlots.entries) {
+      if (entry.value.equippedItem?.id == itemId) {
+        return entry.key;
+      }
+    }
+    return null;
   }
 
   List<Item> getAllEquippedItems() {

@@ -140,10 +140,24 @@ class InventoryHUDView extends InterfaceComponent {
       InventoryHUDDef.kSlotSize,
     );
 
+    // Check if item is equipped
+    EquipmentSlotType? equippedSlot;
+    Color slotColor = item != null
+        ? Colors.blue.withValues(alpha: 0.3)
+        : Colors.grey.withValues(alpha: 0.2);
+
+    if (item != null) {
+      equippedSlot = EquipmentManager.instance.getEquippedSlotForItem(item.id);
+      if (equippedSlot != null) {
+        // Red background for mainHand, green for offHand
+        slotColor = equippedSlot == EquipmentSlotType.mainHand
+            ? Colors.red.withValues(alpha: 0.5)
+            : Colors.green.withValues(alpha: 0.5);
+      }
+    }
+
     final slotPaint = Paint()
-      ..color = item != null
-          ? Colors.blue.withValues(alpha: 0.3)
-          : Colors.grey.withValues(alpha: 0.2)
+      ..color = slotColor
       ..style = PaintingStyle.fill;
     canvas.drawRect(slotRect, slotPaint);
 
