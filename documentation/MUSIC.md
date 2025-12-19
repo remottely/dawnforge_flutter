@@ -1,7 +1,29 @@
 # Musics:
 
+trash:
+
+- 116
+- 129
+
 # BEST OF ALL
 - https://www.youtube.com/watch?v=Ig2LiJBriR4&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=87
+- https://www.youtube.com/watch?v=TjX34wmhFC4&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=99
+- https://www.youtube.com/watch?v=HS6lu3NGRJY&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=101 - 10/10 - Esse precisa estar!
+- https://www.youtube.com/watch?v=H4BAEf5V-Yc&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=103 - 9/10 - não é para esse jogo
+- https://www.youtube.com/watch?v=LlU2X2AWhho&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=104 - 9/10 - não é para esse jogo
+- https://www.youtube.com/watch?v=smWb8dj1Jgs&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=107 - 9/10 - não é para esse jogo
+- https://www.youtube.com/watch?v=Lzofxb1vATw&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=108 - 9/10 - Legal para batalha em espaço aberto?
+- https://www.youtube.com/watch?v=lRwq7pfA4Gg&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=109 - 9/10 - boss extremamente dramatico!
+- https://www.youtube.com/watch?v=SPOfbFjD9eU&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=110 - 8/10 - não é para esse jogo, melancolico
+- https://www.youtube.com/watch?v=cTMOQiY0axo&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=111 - 9/10 - legal, bem happy para fazenda, porém possui muitas batidas. editar!
+- https://www.youtube.com/watch?v=DQ8ZwW3Hk9k&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=117 - 10/10 - Esse precisa estar!
+- https://www.youtube.com/watch?v=C_AWa-RbdeU&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=120 - 7/10 - leal para fazenda
+- https://www.youtube.com/watch?v=DqR-_OKU4R4&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=121 - 9/10 - não é para esse jogo
+- https://www.youtube.com/watch?v=MM2-z8inpY8&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=122 - 10/10 - legal para inverno na fazenda!
+- https://www.youtube.com/watch?v=3S8CXHs2yyo&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=123 - 9/10 - legal para iniciar o jogo e colocar nos dialogos com os npcs!
+- https://www.youtube.com/watch?v=X7j3Kfsq56A&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=124 - 10/10 - legal pegar alguns trechos no meio e editar para um efeito de floresta fantastica!
+- https://www.youtube.com/watch?v=hgn7kasl8Y0&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=127 - 10/10 - Esse precisa estar! tema de encorajamento e vitoria!! Jogo zerado??
+- 
 
 ## Menu / traillers:
 ### DD:
@@ -48,14 +70,15 @@
 ### DD:
 ### Kevin:
 
-- https://www.youtube.com/watch?v=C11iclSJTNA&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=92
-- https://www.youtube.com/watch?v=3TKghKSDnEM&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=96
+- https://www.youtube.com/watch?v=C11iclSJTNA&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=93 - 8/10 - legal para esse jogo
+
  
 ## Melancolic:
 ### DD:
 ### Kevin:
 
-- https://www.youtube.com/watch?v=gBmgk8WakJE&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=94
+- https://www.youtube.com/watch?v=gBmgk8WakJE&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=95 - 8/10 - legal para esse jogo
+- https://www.youtube.com/watch?v=3TKghKSDnEM&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=96 - 8/10 - não é para esse jogo
 
 # Muito bons:
 
@@ -66,6 +89,7 @@
 - https://ncs.io/music-search?q=&genre=1&mood=2&version=instrumental
 - https://www.youtube.com/watch?v=MCscTvpQ7po&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=83
 - https://www.youtube.com/watch?v=fn9fqTUHl7Q&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=86
+- https://www.youtube.com/watch?v=Do6VrSy64sA&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=100 - 8/10 - não é para esse jogo
 
 # Bons:
 

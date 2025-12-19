@@ -9,6 +9,7 @@ import 'package:darkness_dungeon/gameplay/decorations/map_transition_sensor.dart
 import 'package:darkness_dungeon/gameplay/farm/handlers/farm_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen_def.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen_viewmodel.dart';
+import 'package:darkness_dungeon/shared/framework/utils/dd_debug_hud.dart';
 import 'package:flutter/material.dart';
 
 class GameplayScreen extends StatefulWidget {
@@ -56,7 +57,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
 
         MapArguments? mapArguments = arguments as MapArguments?;
         final playerPosition =
-            (mapArguments?.playerPosition ?? Vector2(24,24)) *
+            (mapArguments?.playerPosition ?? Vector2(24, 24)) *
             TileConstants.kTileDimensionStandard;
 
         // final player = buildSunnyPlayer(playerPosition);
@@ -78,6 +79,13 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
               inventoryInputHandler,
               shieldDefenseInputHandler,
               farmInputHandler,
+            ],
+            hudComponents: [
+              DDDebugHud(
+                showFps: true,
+                showPosition: true,
+                showEntities: true,
+              ),
             ],
             interface: gameplayHUD,
             lightingColorGame: mapLightingColor,

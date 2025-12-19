@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.65.4+1
+version: 1.65.5+1
 
 environment:
   sdk: ^3.8.1
@@ -59,8 +59,8 @@ flutter:
     - assets/images/tiled/tilesets/
     - assets/audio/music/
     - assets/audio/sfx/
-    - assets/audio/ui/
-    - assets/audio/voice/
+    # - assets/audio/ui/
+    # - assets/audio/voice/
     - assets/l10n/
     - assets/crops/
     - assets/items/
