@@ -16,6 +16,7 @@ final class ToolItem extends Item {
     required super.iconPath,
     super.rarity = ItemRarity.common,
     super.type = ItemType.tool,
+    super.iconData,
     required this.toolType,
     this.powerLevel = 1,
     required this.durability,

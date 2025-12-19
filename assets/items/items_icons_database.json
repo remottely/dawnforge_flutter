@@ -1,0 +1,111 @@
+{
+  "spritesheetPath": "tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png",
+  "spriteWidth": 16,
+  "spriteHeight": 16,
+  "items": {
+    "cabbage": {
+      "rowIndex": 1,
+      "columnIndex": 0
+    },
+    "tomato": {
+      "rowIndex": 1,
+      "columnIndex": 1
+    },
+    "pumpkin": {
+      "rowIndex": 1,
+      "columnIndex": 2
+    },
+    "radish": {
+      "rowIndex": 1,
+      "columnIndex": 3
+    },
+    "wheat": {
+      "rowIndex": 1,
+      "columnIndex": 4
+    },
+    "corn": {
+      "rowIndex": 1,
+      "columnIndex": 5
+    },
+    "watermelon": {
+      "rowIndex": 1,
+      "columnIndex": 8
+    },
+    "onion": {
+      "rowIndex": 1,
+      "columnIndex": 9
+    },
+    "grape": {
+      "rowIndex": 1,
+      "columnIndex": 10
+    },
+    "pineapple": {
+      "rowIndex": 1,
+      "columnIndex": 11
+    },
+    "carrot": {
+      "rowIndex": 1,
+      "columnIndex": 12
+    },
+    "pepper": {
+      "rowIndex": 1,
+      "columnIndex": 13
+    },
+    "zuchini": {
+      "rowIndex": 1,
+      "columnIndex": 14
+    },
+    "strawberry": {
+      "rowIndex": 1,
+      "columnIndex": 15
+    },
+    "prickly_pear": {
+      "rowIndex": 2,
+      "columnIndex": 1
+    },
+    "cauliflower": {
+      "rowIndex": 2,
+      "columnIndex": 2
+    },
+    "turnip": {
+      "rowIndex": 2,
+      "columnIndex": 3
+    },
+    "cotton": {
+      "rowIndex": 2,
+      "columnIndex": 4
+    },
+    "coffee": {
+      "rowIndex": 2,
+      "columnIndex": 6
+    },
+    "ironSword": {
+      "rowIndex": 6,
+      "columnIndex": 2
+    },
+    "wateringCan": {
+      "rowIndex": 6,
+      "columnIndex": 3
+    },
+    "shovel": {
+      "rowIndex": 6,
+      "columnIndex": 4
+    },
+    "harvestBasket": {
+      "rowIndex": 6,
+      "columnIndex": 5
+    },
+    "staff": {
+      "rowIndex": 6,
+      "columnIndex": 1
+    },
+    "stone": {
+      "rowIndex": 999999,
+      "columnIndex": 999999
+    },
+    "iron_ore": {
+      "rowIndex": 999999,
+      "columnIndex": 999999
+    }
+  }
+}

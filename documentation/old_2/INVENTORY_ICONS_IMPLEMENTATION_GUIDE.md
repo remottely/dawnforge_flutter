@@ -4,7 +4,7 @@
 
 Este guia detalha a implementação do sistema de ícones baseados em sprites para o inventário, substituindo as abreviações de texto atuais por sprites visuais carregados de um texture atlas.
 
-**Texture Atlas**: `assets/images/tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png`
+**Texture Atlas**: `assets/tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png`
 - Grid de sprites 16x16
 - Contém todos os ícones de itens do jogo
 
@@ -26,7 +26,7 @@ O sistema segue o mesmo padrão usado pelo sistema de crops:
 
 ```json
 {
-  "spritesheetPath": "images/tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png",
+  "spritesheetPath": "tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png",
   "spriteWidth": 16,
   "spriteHeight": 16,
   "items": {

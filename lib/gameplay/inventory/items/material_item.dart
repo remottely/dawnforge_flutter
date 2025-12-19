@@ -15,6 +15,7 @@ final class MaterialItem extends Item {
     super.type = ItemType.material,
     super.isStackable = true,
     super.maxStackSize = 999,
+    super.iconData,
     required this.materialType,
   });
 

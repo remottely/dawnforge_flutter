@@ -25,6 +25,7 @@ final class CropItem extends Item {
     super.maxStackSize = 999,
     super.isDroppable = true,
     super.isTradeable = true,
+    super.iconData,
     this.category = ItemCategory.vegetables,
     this.quality = ItemQuality.normal,
     this.energyRestore = 13,

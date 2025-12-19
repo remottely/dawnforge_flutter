@@ -3,6 +3,7 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/services.dart' show rootBundle;
 
+import 'database/item_icon_database.dart';
 import 'items/consumable_item.dart';
 import 'items/crop_item.dart';
 import 'items/material_item.dart';
@@ -28,6 +29,9 @@ final class ItemFactory {
     }
 
     try {
+      await ItemIconDatabase().initialize();
+      developer.log('[ItemFactory] ItemIconDatabase initialized');
+
       final jsonString = await rootBundle.loadString(_kDatabasePath);
       final jsonData = jsonDecode(jsonString) as Map<String, dynamic>;
 
@@ -62,17 +66,73 @@ final class ItemFactory {
     }
 
     try {
+      final iconData = ItemIconDatabase().getIconData(itemId);
       final type = ItemType.fromJson(itemData['type'] as String);
 
       switch (type) {
         case ItemType.weapon:
-          return WeaponItem.fromJson(itemData);
+          final item = WeaponItem.fromJson(itemData);
+          return WeaponItem(
+            id: item.id,
+            name: item.name,
+            description: item.description,
+            baseValue: item.baseValue,
+            iconPath: item.iconPath,
+            rarity: item.rarity,
+            damage: item.damage,
+            attackSpeed: item.attackSpeed,
+            critChance: item.critChance,
+            critMultiplier: item.critMultiplier,
+            equippedHandType: item.equippedHandType,
+            iconData: iconData,
+          );
         case ItemType.tool:
-          return ToolItem.fromJson(itemData);
+          final item = ToolItem.fromJson(itemData);
+          return ToolItem(
+            id: item.id,
+            name: item.name,
+            description: item.description,
+            baseValue: item.baseValue,
+            iconPath: item.iconPath,
+            rarity: item.rarity,
+            toolType: item.toolType,
+            powerLevel: item.powerLevel,
+            durability: item.durability,
+            maxDurability: item.maxDurability,
+            iconData: iconData,
+          );
         case ItemType.consumable:
-          return ConsumableItem.fromJson(itemData);
+          final item = ConsumableItem.fromJson(itemData);
+          return ConsumableItem(
+            id: item.id,
+            name: item.name,
+            description: item.description,
+            baseValue: item.baseValue,
+            iconPath: item.iconPath,
+            rarity: item.rarity,
+            maxStackSize: item.maxStackSize,
+            healthRestore: item.healthRestore,
+            staminaRestore: item.staminaRestore,
+            duration: item.duration,
+            buffs: item.buffs,
+            iconData: iconData,
+          );
         case ItemType.seed:
-          return SeedItem.fromJson(itemData);
+          final item = SeedItem.fromJson(itemData);
+          return SeedItem(
+            id: item.id,
+            name: item.name,
+            description: item.description,
+            baseValue: item.baseValue,
+            iconPath: item.iconPath,
+            rarity: item.rarity,
+            maxStackSize: item.maxStackSize,
+            cropId: item.cropId,
+            growthTime: item.growthTime,
+            yield: item.yield,
+            season: item.season,
+            iconData: iconData,
+          );
         case ItemType.material:
           final category = itemData['category'] as String?;
           if (category != null) {
@@ -83,11 +143,39 @@ final class ItemFactory {
               ItemCategory.fruits,
               ItemCategory.flowers,
             ].contains(itemCategory)) {
-              return CropItem.fromJson(itemData);
+              final item = CropItem.fromJson(itemData);
+              return CropItem(
+                id: item.id,
+                name: item.name,
+                description: item.description,
+                baseValue: item.baseValue,
+                iconPath: item.iconPath,
+                rarity: item.rarity,
+                maxStackSize: item.maxStackSize,
+                category: item.category,
+                quality: item.quality,
+                energyRestore: item.energyRestore,
+                healthRestore: item.healthRestore,
+                season: item.season,
+                regrows: item.regrows,
+                regrowthDays: item.regrowthDays,
+                iconData: iconData,
+              );
             }
           }
 
-          return MaterialItem.fromJson(itemData);
+          final item = MaterialItem.fromJson(itemData);
+          return MaterialItem(
+            id: item.id,
+            name: item.name,
+            description: item.description,
+            baseValue: item.baseValue,
+            iconPath: item.iconPath,
+            rarity: item.rarity,
+            maxStackSize: item.maxStackSize,
+            materialType: item.materialType,
+            iconData: iconData,
+          );
         default:
           developer.log(
             '[ItemFactory] Unsupported type: $type for item $itemId',

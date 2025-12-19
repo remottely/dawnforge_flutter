@@ -1,3 +1,4 @@
+import 'item_icon_data.dart';
 import 'item_rarity.dart';
 import 'item_type.dart';
 
@@ -13,6 +14,7 @@ abstract class Item {
   final bool isStackable;
   final bool isDroppable;
   final bool isTradeable;
+  final ItemIconData? iconData;
 
   const Item({
     required this.id,
@@ -26,6 +28,7 @@ abstract class Item {
     this.isStackable = false,
     this.isDroppable = true,
     this.isTradeable = true,
+    this.iconData,
   });
 
   int get sellValue => (baseValue * rarity.sellValueMultiplier).round();

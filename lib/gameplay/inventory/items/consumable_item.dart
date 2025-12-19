@@ -18,6 +18,7 @@ final class ConsumableItem extends Item {
     super.type = ItemType.consumable,
     super.isStackable = true,
     super.maxStackSize = 99,
+    super.iconData,
     this.healthRestore = 0,
     this.staminaRestore = 0,
     this.duration = 0,

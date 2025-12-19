@@ -3,6 +3,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/hud/inventory/inventory_h
 import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
+import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 import 'package:flutter/material.dart';
 
 class InventoryHUDView extends InterfaceComponent {
@@ -18,6 +19,7 @@ class InventoryHUDView extends InterfaceComponent {
         position: Vector2(10, 100),
       );
 
+  final Map<String, Sprite> _spriteCache = {};
   bool _isVisible = false;
   bool get isVisible => _isVisible;
   void _show() => _isVisible = true;
@@ -78,7 +80,7 @@ class InventoryHUDView extends InterfaceComponent {
           startY +
           (row * (InventoryHUDDef.kSlotSize + InventoryHUDDef.kSpacing));
       final slot = manager.getSlotByIndex(i);
-      _drawSlot(canvas, Offset(x, y), slot?.item?.name, slot?.quantity);
+      _drawSlot(canvas, Offset(x, y), slot?.item, slot?.quantity);
     }
   }
 
@@ -126,16 +128,11 @@ class InventoryHUDView extends InterfaceComponent {
         color: Colors.yellow,
       );
 
-      _drawSlot(canvas, Offset(x, y), item?.name, item != null ? 1 : null);
+      _drawSlot(canvas, Offset(x, y), item, item != null ? 1 : null);
     }
   }
 
-  void _drawSlot(
-    Canvas canvas,
-    Offset position,
-    String? itemName,
-    int? quantity,
-  ) {
+  void _drawSlot(Canvas canvas, Offset position, dynamic item, int? quantity) {
     final slotRect = Rect.fromLTWH(
       position.dx,
       position.dy,
@@ -144,7 +141,7 @@ class InventoryHUDView extends InterfaceComponent {
     );
 
     final slotPaint = Paint()
-      ..color = itemName != null
+      ..color = item != null
           ? Colors.blue.withValues(alpha: 0.3)
           : Colors.grey.withValues(alpha: 0.2)
       ..style = PaintingStyle.fill;
@@ -156,14 +153,41 @@ class InventoryHUDView extends InterfaceComponent {
       ..strokeWidth = 1;
     canvas.drawRect(slotRect, borderPaint);
 
-    if (itemName != null) {
-      final abbreviation = _abbreviateItemName(itemName);
-      _drawText(
-        canvas,
-        abbreviation,
-        Offset(position.dx + 4, position.dy + 8),
-        fontSize: 10,
-      );
+    if (item != null) {
+      final iconData = item.iconData;
+
+      if (iconData != null) {
+        final cacheKey = '${iconData.spritesheetPath}_${iconData.spriteRowIndex}_${iconData.spriteColumnIndex}';
+        final cachedSprite = _spriteCache[cacheKey];
+
+        if (cachedSprite != null) {
+          cachedSprite.render(
+            canvas,
+            position: Vector2(position.dx + 4, position.dy + 4),
+            size: Vector2(
+              InventoryHUDDef.kSlotSize - 8,
+              InventoryHUDDef.kSlotSize - 8,
+            ),
+          );
+        } else {
+          _loadAndCacheSprite(cacheKey, iconData);
+          final abbreviation = _abbreviateItemName(item.name);
+          _drawText(
+            canvas,
+            abbreviation,
+            Offset(position.dx + 4, position.dy + 8),
+            fontSize: 10,
+          );
+        }
+      } else {
+        final abbreviation = _abbreviateItemName(item.name);
+        _drawText(
+          canvas,
+          abbreviation,
+          Offset(position.dx + 4, position.dy + 8),
+          fontSize: 10,
+        );
+      }
 
       if (quantity != null && quantity > 1) {
         _drawText(
@@ -175,6 +199,21 @@ class InventoryHUDView extends InterfaceComponent {
         );
       }
     }
+  }
+
+  void _loadAndCacheSprite(String cacheKey, dynamic iconData) {
+    SpriteAnimationConfigHelper.loadSpriteFromSheet(
+      assetPath: '${iconData.spritesheetPath}',
+      spriteSize: Vector2(
+        iconData.spriteWidth.toDouble(),
+        iconData.spriteHeight.toDouble(),
+      ),
+      frameIndex: iconData.spriteColumnIndex,
+      rowIndex: iconData.spriteRowIndex,
+      skipFirstFrames: 0,
+    ).then((sprite) {
+      _spriteCache[cacheKey] = sprite;
+    });
   }
 
   String _abbreviateItemName(String name) {

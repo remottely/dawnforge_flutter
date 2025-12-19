@@ -18,6 +18,7 @@ final class WeaponItem extends Item {
     required super.iconPath,
     super.rarity = ItemRarity.common,
     super.type = ItemType.weapon,
+    super.iconData,
     required this.damage,
     this.attackSpeed = 1.0,
     this.critChance = 0.05,

@@ -1,5 +1,18 @@
 # IMPORTANT BEFORE LAUNCH:
 
+- [NOW] **Nota**: Ajuste os índices de row/column conforme a posição real dos sprites no atlas.
+    final String spritesheetPath;
+  final int spriteWidth;
+  final int spriteHeight;
+  final int spriteRowIndex;
+  final int spriteColumnIndex;
+
+- [NOW]
+
+- [PRIORITY?] fazer o load da hand do player carregar oq ja possuimos salvo do player funcionando?
+
+- [PRIORITY] fazer o load e save como estado do jogo como um todo
+
 - [DONE] render in all conversations the actual player sprite animation dynamically
 
 - [PRIORITY] enhance: create a logic that we dont need to declare each crop asset path to pubspec.yaml like: "assets/images/gameplay/farm/crops/strawberry/"

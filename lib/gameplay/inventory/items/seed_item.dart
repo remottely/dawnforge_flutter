@@ -18,6 +18,7 @@ final class SeedItem extends Item {
     super.type = ItemType.seed,
     super.isStackable = true,
     super.maxStackSize = 99,
+    super.iconData,
     required this.cropId,
     required this.growthTime,
     this.yield = 1,

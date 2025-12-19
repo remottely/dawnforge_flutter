@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.64.40+1
+version: 1.65.0+1
 
 environment:
   sdk: ^3.8.1
@@ -38,6 +38,7 @@ flutter:
     - assets/
     - assets/images/
     # - assets/images/items/
+    - assets/items/items_icons_database.json
     - assets/images/gameplay/characters/emotes/
     - assets/images/gameplay/characters/enemies/
     - assets/images/gameplay/characters/enemies/goblin/
@@ -85,6 +86,7 @@ flutter:
     - assets/images/tiled/Modern_Farm_v1.2/tilesets/
     - assets/images/tiled/Modern_Farm_v1.2/Crops_Growth/
     - assets/images/tiled/Modern_Farm_v1.2/Characters/
+    - assets/images/tiled/Modern_Farm_v1.2/Icons/
 
   fonts:
     - family: Normal

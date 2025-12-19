@@ -71,6 +71,7 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
 
     developer.log('[InventoryInput] Inicializando itens de teste...');
 
+    // TODO(Kevin): NOW - put it all back
     const testItems = [
       'shovel',
       'ironSword',
@@ -102,10 +103,7 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
   void _addTestItems() {
     developer.log('[InventoryInput] Adicionando mais itens de teste...');
 
-    final testMaterials = [
-      ('stone', 100),
-      ('iron_ore', 25),
-    ];
+    final testMaterials = [('stone', 100), ('iron_ore', 25)];
 
     for (final (itemKey, quantity) in testMaterials) {
       final item = ItemFactory.createItem(itemKey);
@@ -122,13 +120,10 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
     );
 
     // Busca o próximo item equipável usando o método helper
-    final result = InventoryManager.instance.findItem(
-      (item) {
-        if (item is! WeaponItem) return false;
-        return item.equippedHandType.canBeEquippedInWeaponSlot;
-      },
-      afterIndex: _currentWeaponIndex,
-    );
+    final result = InventoryManager.instance.findItem((item) {
+      if (item is! WeaponItem) return false;
+      return item.equippedHandType.canBeEquippedInWeaponSlot;
+    }, afterIndex: _currentWeaponIndex);
 
     if (result == null) {
       developer.log(
