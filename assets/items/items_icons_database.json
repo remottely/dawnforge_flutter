@@ -180,6 +180,10 @@
       "rowIndex": 6,
       "columnIndex": 1
     },
+    "woodenShield": {
+      "rowIndex": 6,
+      "columnIndex": 0
+    },
     "stone": {
       "rowIndex": 999999,
       "columnIndex": 999999

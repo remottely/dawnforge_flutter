@@ -34,14 +34,17 @@ enum EquippedHandType {
   mace,
   bow,
   crossbow,
-  wand;
+  wand,
+
+  /// defense
+  woodenShield;
 
   String toJson() => name;
 
   static EquippedHandType fromJson(String json) {
     return EquippedHandType.values.firstWhere(
       (type) => type.name == json,
-      orElse: () => EquippedHandType.ironSword,
+      orElse: () => EquippedHandType.harvestBasket,
     );
   }
 
@@ -83,7 +86,12 @@ enum EquippedHandType {
       this == staff ||
       this == wand;
 
-  bool get isEquippable => isSeed || isFarmTool || isCombatWeapon;
+  bool get isDefense => this == woodenShield;
 
-  bool get canBeEquippedInWeaponSlot => isEquippable;
+  bool get isEquippable => isSeed || isFarmTool || isCombatWeapon || isDefense;
+
+  bool get canBeEquippedInMainHandSlot =>
+      isSeed || isFarmTool || isCombatWeapon;
+
+  bool get canBeEquippedInOffHandSlot => isDefense;
 }
