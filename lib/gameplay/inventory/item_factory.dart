@@ -84,6 +84,7 @@ final class ItemFactory {
             critChance: item.critChance,
             critMultiplier: item.critMultiplier,
             equippedHandType: item.equippedHandType,
+            cropId: item.cropId,
             iconData: iconData,
           );
         case ItemType.tool:

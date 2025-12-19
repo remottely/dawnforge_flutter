@@ -41,6 +41,36 @@
     "critMultiplier": 1.5,
     "equippedHandType": "tomato"
   },
+  "strawberry_seed_bag": {
+    "id": "strawberry_seed_bag",
+    "name": "Strawberry Seed Bag",
+    "description": "Plant these to grow strawberries",
+    "type": "weapon",
+    "rarity": "common",
+    "baseValue": 50,
+    "iconPath": "",
+    "damage": 0,
+    "attackSpeed": 1.0,
+    "critChance": 0.0,
+    "critMultiplier": 1.0,
+    "equippedHandType": "strawberry_seed_bag",
+    "cropId": "strawberry"
+  },
+  "tomato_seed_bag": {
+    "id": "tomato_seed_bag",
+    "name": "Tomato Seed Bag",
+    "description": "Plant these to grow tomatoes",
+    "type": "weapon",
+    "rarity": "common",
+    "baseValue": 60,
+    "iconPath": "",
+    "damage": 0,
+    "attackSpeed": 1.0,
+    "critChance": 0.0,
+    "critMultiplier": 1.0,
+    "equippedHandType": "tomato_seed_bag",
+    "cropId": "tomato"
+  },
   "shovel": {
     "id": "shovel",
     "name": "Shovel",

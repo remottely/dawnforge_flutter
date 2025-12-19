@@ -1,24 +1,24 @@
 enum EquippedHandType {
   /// Seeds
-  cabbage,
-  radish,
-  carrot,
-  strawberry,
-  wheat,
-  pepper,
-  turnip,
-  cotton,
-  onion,
-  cauliflower,
-  corn,
-  tomato,
-  grape,
-  prickly_pear,
-  coffee,
-  zuchini,
-  pumpkin,
-  pineapple,
-  watermelon,
+  cabbage_seed_bag,
+  radish_seed_bag,
+  carrot_seed_bag,
+  strawberry_seed_bag,
+  wheat_seed_bag,
+  pepper_seed_bag,
+  turnip_seed_bag,
+  cotton_seed_bag,
+  onion_seed_bag,
+  cauliflower_seed_bag,
+  corn_seed_bag,
+  tomato_seed_bag,
+  grape_seed_bag,
+  prickly_pear_seed_bag,
+  coffee_seed_bag,
+  zuchini_seed_bag,
+  pumpkin_seed_bag,
+  pineapple_seed_bag,
+  watermelon_seed_bag,
 
   /// Tools
   shovel,
@@ -46,25 +46,25 @@ enum EquippedHandType {
   }
 
   bool get isSeed =>
-      this == cabbage ||
-      this == radish ||
-      this == carrot ||
-      this == strawberry ||
-      this == wheat ||
-      this == pepper ||
-      this == turnip ||
-      this == cotton ||
-      this == onion ||
-      this == cauliflower ||
-      this == corn ||
-      this == tomato ||
-      this == grape ||
-      this == prickly_pear ||
-      this == coffee ||
-      this == zuchini ||
-      this == pumpkin ||
-      this == pineapple ||
-      this == watermelon;
+      this == cabbage_seed_bag ||
+      this == radish_seed_bag ||
+      this == carrot_seed_bag ||
+      this == strawberry_seed_bag ||
+      this == wheat_seed_bag ||
+      this == pepper_seed_bag ||
+      this == turnip_seed_bag ||
+      this == cotton_seed_bag ||
+      this == onion_seed_bag ||
+      this == cauliflower_seed_bag ||
+      this == corn_seed_bag ||
+      this == tomato_seed_bag ||
+      this == grape_seed_bag ||
+      this == prickly_pear_seed_bag ||
+      this == coffee_seed_bag ||
+      this == zuchini_seed_bag ||
+      this == pumpkin_seed_bag ||
+      this == pineapple_seed_bag ||
+      this == watermelon_seed_bag;
 
   bool get isFarmTool =>
       this == shovel ||

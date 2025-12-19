@@ -1,13 +1,10 @@
 # IMPORTANT BEFORE LAUNCH:
 
-- [NOW] **Nota**: Ajuste os índices de row/column conforme a posição real dos sprites no atlas.
-    final String spritesheetPath;
-  final int spriteWidth;
-  final int spriteHeight;
-  final int spriteRowIndex;
-  final int spriteColumnIndex;
+- [PRIORITY] Configurar os items de seed em items_icons_database
 
-- [NOW]
+- [PRIORITY] Refact crops_database to be like items_icons_database structure
+
+- [DONE] **Nota**: Ajuste os índices de row/column conforme a posição real dos sprites no atlas.
 
 - [PRIORITY?] fazer o load da hand do player carregar oq ja possuimos salvo do player funcionando?
 
@@ -42,6 +39,10 @@
 - [NOT_PRIORITY] Create a way to config game view size dynamically, small, medium, large by changed user.
 
 - [NOT_PRIORITY] continuous attack with continuous press attack (space bar)
+
+- [NOT_PROPRITY?] Future action: Refact all assets???
+
+- [NOT_PRIORITY] Add dynamic crop icons render when harvest action
 
 ---
 

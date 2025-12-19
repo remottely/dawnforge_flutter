@@ -4,6 +4,9 @@ import 'package:darkness_dungeon/gameplay/farm/components/farm_tile_view.dart';
 import 'package:darkness_dungeon/gameplay/farm/constants/farm_feedback_config.dart';
 import 'package:darkness_dungeon/gameplay/farm/services/farm_action_service.dart';
 import 'package:darkness_dungeon/gameplay/farm/services/farm_feedback_service.dart';
+import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
+import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 
@@ -46,7 +49,7 @@ final class FarmToolActionDef {
     }
 
     if (bestTarget != null) {
-      final equipment = player.controller.model.equipment;
+      final EquippedHandType? equipment = player.controller.model.equipment;
 
       switch (equipment) {
         case EquippedHandType.shovel:
@@ -60,8 +63,19 @@ final class FarmToolActionDef {
           return;
         default:
           if (equipment?.isSeed ?? false) {
+            // Get the actual equipped item to extract cropId
+            final equippedItem = EquipmentManager.instance.getEquippedItem(
+              EquipmentSlotType.weapon,
+            );
+            
+            // Extract cropId from WeaponItem if available
+            final cropId = (equippedItem is WeaponItem && 
+                           equippedItem.cropId != null)
+                ? equippedItem.cropId!
+                : equipment!.name;
+            
             _handlePlant(
-              cropId: equipment!.name,
+              cropId: cropId,
               x: bestTarget.tileX,
               y: bestTarget.tileY,
             );

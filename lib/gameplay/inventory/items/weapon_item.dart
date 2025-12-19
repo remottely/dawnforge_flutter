@@ -9,6 +9,7 @@ final class WeaponItem extends Item {
   final double critChance;
   final double critMultiplier;
   final EquippedHandType equippedHandType;
+  final String? cropId;
 
   const WeaponItem({
     required super.id,
@@ -24,6 +25,7 @@ final class WeaponItem extends Item {
     this.critChance = 0.05,
     this.critMultiplier = 1.5,
     required this.equippedHandType,
+    this.cropId,
   });
 
   double get dps {
@@ -46,6 +48,7 @@ final class WeaponItem extends Item {
       'critChance': critChance,
       'critMultiplier': critMultiplier,
       'equippedHandType': equippedHandType.toJson(),
+      if (cropId != null) 'cropId': cropId,
     };
   }
 
@@ -64,6 +67,7 @@ final class WeaponItem extends Item {
       equippedHandType: EquippedHandType.fromJson(
         json['equippedHandType'] as String,
       ),
+      cropId: json['cropId'] as String?,
     );
   }
 
@@ -80,6 +84,7 @@ final class WeaponItem extends Item {
     double? critChance,
     double? critMultiplier,
     EquippedHandType? equippedHandType,
+    String? cropId,
   }) {
     return WeaponItem(
       id: id ?? this.id,
@@ -93,6 +98,7 @@ final class WeaponItem extends Item {
       critChance: critChance ?? this.critChance,
       critMultiplier: critMultiplier ?? this.critMultiplier,
       equippedHandType: equippedHandType ?? this.equippedHandType,
+      cropId: cropId ?? this.cropId,
     );
   }
 }

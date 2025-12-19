@@ -77,8 +77,8 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
       'ironSword',
       'staff',
       'wateringCan',
-      'strawberry',
-      'tomato',
+      'strawberry_seed_bag',
+      'tomato_seed_bag',
       'harvestBasket',
     ];
 

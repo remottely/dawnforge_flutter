@@ -3,6 +3,87 @@
   "spriteWidth": 16,
   "spriteHeight": 16,
   "items": {
+    "empty_seed_bag": {
+      "rowIndex": 10,
+      "columnIndex": 0
+    },
+    "watermelon_seed_bag": {
+      "rowIndex": 10,
+      "columnIndex": 1
+    },
+    "pineapple_seed_bag": {
+      "rowIndex": 10,
+      "columnIndex": 1999999
+    },
+    "pumpkin_seed_bag": {
+      "rowIndex": 10,
+      "columnIndex": 3
+    },
+    "cabbage_seed_bag": {
+      "rowIndex": 10,
+      "columnIndex": 4
+    },
+
+    "radish_seed_bag": {
+      "rowIndex": 10,
+      "columnIndex": 5
+    },
+    "carrot_seed_bag": {
+      "rowIndex": 10,
+      "columnIndex": 6
+    },
+    "strawberry_seed_bag": {
+      "rowIndex": 10,
+      "columnIndex": 7
+    },
+    "wheat_seed_bag": {
+      "rowIndex": 10,
+      "columnIndex": 8
+    },
+    "pepper_seed_bag": {
+      "rowIndex": 10,
+      "columnIndex": 9
+    },
+    "turnip_seed_bag": {
+      "rowIndex": 10,
+      "columnIndex": 10
+    },
+    "cotton_seed_bag": {
+      "rowIndex": 10,
+      "columnIndex": 11
+    },
+    "onion_seed_bag": {
+      "rowIndex": 10,
+      "columnIndex": 12
+    },
+    "cauliflower_seed_bag": {
+      "rowIndex": 10,
+      "columnIndex": 13
+    },
+    "corn_seed_bag": {
+      "rowIndex": 10,
+      "columnIndex": 14
+    },
+    "tomato_seed_bag": {
+      "rowIndex": 10,
+      "columnIndex": 15
+    },
+    "grape_seed_bag": {
+      "rowIndex": 11,
+      "columnIndex": 0
+    },
+    "prickly_pear_seed_bag": {
+      "rowIndex": 11,
+      "columnIndex": 1
+    },
+    "coffee_seed_bag": {
+      "rowIndex": 11,
+      "columnIndex": 2
+    },
+    "zuchini_seed_bag": {
+      "rowIndex": 11,
+      "columnIndex": 3
+    },
     "cabbage": {
       "rowIndex": 1,
       "columnIndex": 0
