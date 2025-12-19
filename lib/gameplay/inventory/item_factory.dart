@@ -9,7 +9,7 @@ import 'items/crop_item.dart';
 import 'items/material_item.dart';
 import 'items/seed_item.dart';
 import 'items/tool_item.dart';
-import 'items/weapon_item.dart';
+import 'items/main_hand_item.dart';
 import 'models/item.dart';
 import 'models/item_category.dart';
 import 'models/item_type.dart';
@@ -71,8 +71,8 @@ final class ItemFactory {
 
       switch (type) {
         case ItemType.weapon:
-          final item = WeaponItem.fromJson(itemData);
-          return WeaponItem(
+          final item = MainHandItem.fromJson(itemData);
+          return MainHandItem(
             id: item.id,
             name: item.name,
             description: item.description,

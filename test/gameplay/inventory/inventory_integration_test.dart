@@ -32,8 +32,8 @@ void main() {
       InventoryManager.instance.addItem(seeds, 20);
 
       // 2. Equipar itens
-      EquipmentManager.instance.equip(EquipmentSlotType.weapon, sword);
-      EquipmentManager.instance.equip(EquipmentSlotType.offhand, axe);
+      EquipmentManager.instance.equip(EquipmentSlotType.mainHand, sword);
+      EquipmentManager.instance.equip(EquipmentSlotType.offHand, axe);
 
       // 3. Coletar estado do jogo
       final saveData = GameStateCollector.collectCurrentGameState();
@@ -62,12 +62,12 @@ void main() {
 
       // 8. Verificar equipamentos restaurados
       expect(
-        EquipmentManager.instance.getEquippedItem(EquipmentSlotType.weapon)?.id,
+        EquipmentManager.instance.getEquippedItem(EquipmentSlotType.mainHand)?.id,
         equals('iron_sword'),
       );
       expect(
         EquipmentManager.instance
-            .getEquippedItem(EquipmentSlotType.offhand)
+            .getEquippedItem(EquipmentSlotType.offHand)
             ?.id,
         equals('steel_axe'),
       );
@@ -119,11 +119,11 @@ void main() {
       InventoryManager.instance.addItem(legendary);
 
       // Equipar todos
-      EquipmentManager.instance.equip(EquipmentSlotType.weapon, sword);
-      EquipmentManager.instance.equip(EquipmentSlotType.offhand, axe);
+      EquipmentManager.instance.equip(EquipmentSlotType.mainHand, sword);
+      EquipmentManager.instance.equip(EquipmentSlotType.offHand, axe);
 
       // Trocar weapon
-      EquipmentManager.instance.equip(EquipmentSlotType.weapon, legendary);
+      EquipmentManager.instance.equip(EquipmentSlotType.mainHand, legendary);
 
       // Capturar damage antes do save
       final damageBeforeSave = EquipmentManager.instance.getTotalDamage();
@@ -135,7 +135,7 @@ void main() {
 
       // Verificar que legendary está equipado (não sword)
       expect(
-        EquipmentManager.instance.getEquippedItem(EquipmentSlotType.weapon)?.id,
+        EquipmentManager.instance.getEquippedItem(EquipmentSlotType.mainHand)?.id,
         equals('legendary_blade'),
       );
 
@@ -172,13 +172,13 @@ void main() {
       // Adicionar e equipar simultaneamente
       InventoryManager.instance.addItem(sword);
       InventoryManager.instance.addItem(potion, 5);
-      EquipmentManager.instance.equip(EquipmentSlotType.weapon, sword);
+      EquipmentManager.instance.equip(EquipmentSlotType.mainHand, sword);
 
       // Verificar que sword saiu do inventário
       expect(InventoryManager.instance.hasItem('iron_sword'), isFalse);
 
       // Desequipar
-      EquipmentManager.instance.unequip(EquipmentSlotType.weapon);
+      EquipmentManager.instance.unequip(EquipmentSlotType.mainHand);
 
       // Verificar que voltou
       expect(InventoryManager.instance.hasItem('iron_sword'), isTrue);
@@ -200,7 +200,7 @@ void main() {
 
       InventoryManager.instance.addItem(sword);
       InventoryManager.instance.addItem(wood, 100);
-      EquipmentManager.instance.equip(EquipmentSlotType.weapon, sword);
+      EquipmentManager.instance.equip(EquipmentSlotType.mainHand, sword);
 
       final summary = GameStateCollector.getCurrentStateSummary();
 
@@ -217,7 +217,7 @@ void main() {
 
       InventoryManager.instance.addItem(sword);
       InventoryManager.instance.addItem(wood, 500);
-      EquipmentManager.instance.equip(EquipmentSlotType.weapon, sword);
+      EquipmentManager.instance.equip(EquipmentSlotType.mainHand, sword);
 
       expect(InventoryManager.instance.usedSlots, greaterThan(0));
       expect(

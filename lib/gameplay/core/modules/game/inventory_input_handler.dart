@@ -6,7 +6,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_se
 import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/item_factory.dart';
-import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/item_type.dart';
@@ -15,7 +15,8 @@ import 'package:flutter/services.dart';
 
 class InventoryInputHandler extends GameComponent with KeyboardEventListener {
   bool _isInitialized = false;
-  int _currentWeaponIndex = -1;
+  int _currentMainHandIndex = -1;
+  int _currentOffHandIndex = -1; // ← ADICIONAR ESTA LINHA
 
   @override
   void onMount() {
@@ -38,18 +39,18 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
         return true;
       }
 
-      if (event.logicalKey == KeyboardSetup.kEquipWeaponKey) {
-        _equipFirstWeapon();
+      if (event.logicalKey == KeyboardSetup.kEquipMainHandKey) {
+        _equipMainHand();
         return true;
       }
 
-      if (event.logicalKey == KeyboardSetup.kUnequipWeaponKey) {
-        _unequipWeapon();
+      if (event.logicalKey == KeyboardSetup.kUnequipMainHandKey) {
+        _unequipMainHand();
         return true;
       }
 
       if (event.logicalKey == KeyboardSetup.kEquipOffhandKey) {
-        _equipFirstOffhand();
+        _equipOffhand();
         return true;
       }
 
@@ -71,11 +72,11 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
 
     developer.log('[InventoryInput] Inicializando itens de teste...');
 
-    // TODO(Kevin): NOW - put it all back
     const testItems = [
       'shovel',
-      'ironSword',
       'staff',
+      'ironSword',
+      'woodenShield',
       'wateringCan',
       'strawberry_seed_bag',
       'tomato_seed_bag',
@@ -114,16 +115,16 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
     }
   }
 
-  void _equipFirstWeapon() {
+  void _equipMainHand() {
     developer.log(
-      '[InventoryInput] Procurando item equipável para o weapon slot...',
+      '[InventoryInput] Procurando item equipável para o main hand slot...',
     );
 
     // Busca o próximo item equipável usando o método helper
     final result = InventoryManager.instance.findItem((item) {
-      if (item is! WeaponItem) return false;
-      return item.equippedHandType.canBeEquippedInWeaponSlot;
-    }, afterIndex: _currentWeaponIndex);
+      if (item is! MainHandItem) return false;
+      return item.equippedHandType.canBeEquippedInMainHandSlot;
+    }, afterIndex: _currentMainHandIndex);
 
     if (result == null) {
       developer.log(
@@ -134,42 +135,44 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
 
     final item = result.item;
     final success = EquipmentManager.instance.equip(
-      EquipmentSlotType.weapon,
+      EquipmentSlotType.mainHand,
       item,
     );
 
     if (success) {
-      _currentWeaponIndex = result.index;
-      final weaponItem = item as WeaponItem;
+      _currentMainHandIndex = result.index;
+      final mainHandItem = item as MainHandItem;
       developer.log(
-        '[InventoryInput] ✓ Equipado no weapon: ${item.name} (${weaponItem.equippedHandType})',
+        '[InventoryInput] ✓ Equipado no main hand: ${item.name} (${mainHandItem.equippedHandType})',
       );
-      _notifyEquipmentChanged(weaponItem.equippedHandType);
+      _notifyEquipmentChanged(mainHandItem.equippedHandType);
     } else {
       developer.log('[InventoryInput] ✗ Falha ao equipar: ${item.name}');
     }
   }
 
-  void _unequipWeapon() {
-    final item = EquipmentManager.instance.unequip(EquipmentSlotType.weapon);
+  void _unequipMainHand() {
+    final item = EquipmentManager.instance.unequip(EquipmentSlotType.mainHand);
     if (item != null) {
-      developer.log('[InventoryInput] ✓ Desequipado do weapon: ${item.name}');
-      final equippedHandType = (item as WeaponItem).equippedHandType;
+      developer.log('[InventoryInput] ✓ Desequipado do main hand: ${item.name}');
+      final equippedHandType = (item as MainHandItem).equippedHandType;
       _notifyEquipmentChanged(equippedHandType);
-      _currentWeaponIndex = -1;
+      _currentMainHandIndex = -1;
     } else {
-      developer.log('[InventoryInput] Weapon slot já está vazio');
+      developer.log('[InventoryInput] main hand slot já está vazio');
     }
   }
 
-  void _equipFirstOffhand() {
+  void _equipOffhand() {
     developer.log(
       '[InventoryInput] Procurando item equipável para o offhand slot...',
     );
 
-    final result = InventoryManager.instance.findItem(
-      (item) => item is WeaponItem && item.equippedHandType.isEquippable,
-    );
+    // ← MODIFICAR ESTA SEÇÃO PARA CICLAR COMO O MAINHAND
+    final result = InventoryManager.instance.findItem((item) {
+      if (item is! MainHandItem) return false;
+      return item.equippedHandType.canBeEquippedInOffHandSlot; // ← Assumindo que existe este método
+    }, afterIndex: _currentOffHandIndex); // ← Usar o índice do offhand
 
     if (result == null) {
       developer.log(
@@ -180,27 +183,31 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
 
     final item = result.item;
     final success = EquipmentManager.instance.equip(
-      EquipmentSlotType.offhand,
+      EquipmentSlotType.offHand,
       item,
     );
 
     if (success) {
-      final weaponItem = item as WeaponItem;
+      _currentOffHandIndex = result.index; // ← Atualizar o índice do offhand
+      final offHandItem = item as MainHandItem;
       developer.log(
-        '[InventoryInput] ✓ Equipado no offhand: ${item.name} (${weaponItem.equippedHandType})',
+        '[InventoryInput] ✓ Equipado no offhand: ${item.name} (${offHandItem.equippedHandType})',
       );
-      _notifyEquipmentChanged(weaponItem.equippedHandType);
+      _notifyEquipmentChanged(offHandItem.equippedHandType);
     } else {
       developer.log('[InventoryInput] ✗ Falha ao equipar: ${item.name}');
     }
   }
 
   void _unequipOffhand() {
-    final item = EquipmentManager.instance.unequip(EquipmentSlotType.offhand);
+    final item = EquipmentManager.instance.unequip(EquipmentSlotType.offHand);
     if (item != null) {
-      final equippedHandType = (item as WeaponItem).equippedHandType;
+      developer.log('[InventoryInput] ✓ Desequipado do offhand: ${item.name}'); // ← Melhorar log
+      final equippedHandType = (item as MainHandItem).equippedHandType;
       _notifyEquipmentChanged(equippedHandType);
-      _notifyEquipmentChanged(equippedHandType);
+      _currentOffHandIndex = -1; // ← Resetar o índice do offhand
+    } else {
+      developer.log('[InventoryInput] offhand slot já está vazio'); // ← Melhorar log
     }
   }
 

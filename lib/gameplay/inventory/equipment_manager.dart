@@ -2,7 +2,7 @@ import 'dart:developer' as developer;
 
 import 'inventory_manager.dart';
 import 'item_factory.dart';
-import 'items/weapon_item.dart';
+import 'items/main_hand_item.dart';
 import 'models/equipment_slot.dart';
 import 'models/item.dart';
 
@@ -90,9 +90,9 @@ final class EquipmentManager {
   }
 
   bool _canEquipItemInSlot(Item item, EquipmentSlotType slotType) {
-    if (item is WeaponItem) {
-      return slotType == EquipmentSlotType.weapon ||
-          slotType == EquipmentSlotType.offhand;
+    if (item is MainHandItem) {
+      return slotType == EquipmentSlotType.mainHand ||
+          slotType == EquipmentSlotType.offHand;
     }
 
     return false;
@@ -101,13 +101,13 @@ final class EquipmentManager {
   int getTotalDamage() {
     int total = 0;
 
-    final weapon = getEquippedItem(EquipmentSlotType.weapon);
-    if (weapon is WeaponItem) {
-      total += weapon.damage;
+    final mainHand = getEquippedItem(EquipmentSlotType.mainHand);
+    if (mainHand is MainHandItem) {
+      total += mainHand.damage;
     }
 
-    final offhand = getEquippedItem(EquipmentSlotType.offhand);
-    if (offhand is WeaponItem) {
+    final offhand = getEquippedItem(EquipmentSlotType.offHand);
+    if (offhand is MainHandItem) {
       total += offhand.damage;
     }
 
@@ -117,13 +117,13 @@ final class EquipmentManager {
   double getTotalDps() {
     double total = 0;
 
-    final weapon = getEquippedItem(EquipmentSlotType.weapon);
-    if (weapon is WeaponItem) {
-      total += weapon.dps;
+    final mainHand = getEquippedItem(EquipmentSlotType.mainHand);
+    if (mainHand is MainHandItem) {
+      total += mainHand.dps;
     }
 
-    final offhand = getEquippedItem(EquipmentSlotType.offhand);
-    if (offhand is WeaponItem) {
+    final offhand = getEquippedItem(EquipmentSlotType.offHand);
+    if (offhand is MainHandItem) {
       total += offhand.dps;
     }
 

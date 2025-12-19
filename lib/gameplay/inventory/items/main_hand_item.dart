@@ -3,7 +3,7 @@ import '../models/item.dart';
 import '../models/item_rarity.dart';
 import '../models/item_type.dart';
 
-final class WeaponItem extends Item {
+final class MainHandItem extends Item {
   final int damage;
   final double attackSpeed;
   final double critChance;
@@ -11,7 +11,7 @@ final class WeaponItem extends Item {
   final EquippedHandType equippedHandType;
   final String? cropId;
 
-  const WeaponItem({
+  const MainHandItem({
     required super.id,
     required super.name,
     required super.description,
@@ -52,8 +52,8 @@ final class WeaponItem extends Item {
     };
   }
 
-  factory WeaponItem.fromJson(Map<String, dynamic> json) {
-    return WeaponItem(
+  factory MainHandItem.fromJson(Map<String, dynamic> json) {
+    return MainHandItem(
       id: json['id'] as String,
       name: json['name'] as String,
       description: json['description'] as String,
@@ -72,7 +72,7 @@ final class WeaponItem extends Item {
   }
 
   @override
-  WeaponItem copyWith({
+  MainHandItem copyWith({
     String? id,
     String? name,
     String? description,
@@ -86,7 +86,7 @@ final class WeaponItem extends Item {
     EquippedHandType? equippedHandType,
     String? cropId,
   }) {
-    return WeaponItem(
+    return MainHandItem(
       id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,

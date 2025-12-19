@@ -3,8 +3,8 @@ import 'package:equatable/equatable.dart';
 import 'item.dart';
 
 enum EquipmentSlotType {
-  weapon,
-  offhand,
+  mainHand,
+  offHand,
   helmet,
   chest,
   legs,

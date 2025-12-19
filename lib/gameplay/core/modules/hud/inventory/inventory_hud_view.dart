@@ -98,8 +98,8 @@ class InventoryHUDView extends InterfaceComponent {
     startY += 32;
 
     final slots = [
-      EquipmentSlotType.weapon,
-      EquipmentSlotType.offhand,
+      EquipmentSlotType.mainHand,
+      EquipmentSlotType.offHand,
       EquipmentSlotType.helmet,
       EquipmentSlotType.chest,
       EquipmentSlotType.legs,

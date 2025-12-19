@@ -37,9 +37,9 @@ final class KeyboardSetup {
 
   static const LogicalKeyboardKey kAddTestItemsKey = LogicalKeyboardKey.keyT;
 
-  static const LogicalKeyboardKey kEquipWeaponKey = LogicalKeyboardKey.keyE;
+  static const LogicalKeyboardKey kEquipMainHandKey = LogicalKeyboardKey.keyE;
 
-  static const LogicalKeyboardKey kUnequipWeaponKey = LogicalKeyboardKey.keyU;
+  static const LogicalKeyboardKey kUnequipMainHandKey = LogicalKeyboardKey.keyU;
 
   static const LogicalKeyboardKey kEquipOffhandKey = LogicalKeyboardKey.keyO;
 

@@ -1,7 +1,7 @@
 import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/item_factory.dart';
-import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -29,17 +29,17 @@ void main() {
       InventoryManager.instance.addItem(sword);
 
       final result = EquipmentManager.instance.equip(
-        EquipmentSlotType.weapon,
+        EquipmentSlotType.mainHand,
         sword,
       );
 
       expect(result, isTrue);
       expect(
-        EquipmentManager.instance.isSlotOccupied(EquipmentSlotType.weapon),
+        EquipmentManager.instance.isSlotOccupied(EquipmentSlotType.mainHand),
         isTrue,
       );
       expect(
-        EquipmentManager.instance.getEquippedItem(EquipmentSlotType.weapon),
+        EquipmentManager.instance.getEquippedItem(EquipmentSlotType.mainHand),
         equals(sword),
       );
       expect(InventoryManager.instance.hasItem('iron_sword'), isFalse);
@@ -49,13 +49,13 @@ void main() {
       final sword = ItemFactory.createItem('iron_sword')!;
 
       final result = EquipmentManager.instance.equip(
-        EquipmentSlotType.weapon,
+        EquipmentSlotType.mainHand,
         sword,
       );
 
       expect(result, isFalse);
       expect(
-        EquipmentManager.instance.isSlotOccupied(EquipmentSlotType.weapon),
+        EquipmentManager.instance.isSlotOccupied(EquipmentSlotType.mainHand),
         isFalse,
       );
     });
@@ -65,7 +65,7 @@ void main() {
       InventoryManager.instance.addItem(wood);
 
       final result = EquipmentManager.instance.equip(
-        EquipmentSlotType.weapon,
+        EquipmentSlotType.mainHand,
         wood,
       );
 
@@ -81,16 +81,16 @@ void main() {
       InventoryManager.instance.addItem(sword2);
 
       // Equipar primeira espada
-      EquipmentManager.instance.equip(EquipmentSlotType.weapon, sword1);
+      EquipmentManager.instance.equip(EquipmentSlotType.mainHand, sword1);
       expect(
-        EquipmentManager.instance.getEquippedItem(EquipmentSlotType.weapon)?.id,
+        EquipmentManager.instance.getEquippedItem(EquipmentSlotType.mainHand)?.id,
         equals('iron_sword'),
       );
 
       // Equipar segunda espada (deve trocar)
-      EquipmentManager.instance.equip(EquipmentSlotType.weapon, sword2);
+      EquipmentManager.instance.equip(EquipmentSlotType.mainHand, sword2);
       expect(
-        EquipmentManager.instance.getEquippedItem(EquipmentSlotType.weapon)?.id,
+        EquipmentManager.instance.getEquippedItem(EquipmentSlotType.mainHand)?.id,
         equals('steel_axe'),
       );
       expect(InventoryManager.instance.hasItem('iron_sword'), isTrue);
@@ -100,16 +100,16 @@ void main() {
     test('unequip_returns_item_to_inventory', () {
       final sword = ItemFactory.createItem('iron_sword')!;
       InventoryManager.instance.addItem(sword);
-      EquipmentManager.instance.equip(EquipmentSlotType.weapon, sword);
+      EquipmentManager.instance.equip(EquipmentSlotType.mainHand, sword);
 
       final unequippedItem = EquipmentManager.instance.unequip(
-        EquipmentSlotType.weapon,
+        EquipmentSlotType.mainHand,
       );
 
       expect(unequippedItem, isNotNull);
       expect(unequippedItem?.id, equals('iron_sword'));
       expect(
-        EquipmentManager.instance.isSlotOccupied(EquipmentSlotType.weapon),
+        EquipmentManager.instance.isSlotOccupied(EquipmentSlotType.mainHand),
         isFalse,
       );
       expect(InventoryManager.instance.hasItem('iron_sword'), isTrue);
@@ -117,7 +117,7 @@ void main() {
 
     test('unequip_returns_null_when_slot_empty', () {
       final result = EquipmentManager.instance.unequip(
-        EquipmentSlotType.weapon,
+        EquipmentSlotType.mainHand,
       );
       expect(result, isNull);
     });
@@ -128,7 +128,7 @@ void main() {
 
       // Equipar espada primeiro
       InventoryManager.instance.addItem(sword);
-      EquipmentManager.instance.equip(EquipmentSlotType.weapon, sword);
+      EquipmentManager.instance.equip(EquipmentSlotType.mainHand, sword);
 
       // Encher inventário com itens empilháveis
       for (var i = 0; i < 30; i++) {
@@ -137,11 +137,11 @@ void main() {
 
       // Tentar desequipar (inventário cheio)
       final result = EquipmentManager.instance.unequip(
-        EquipmentSlotType.weapon,
+        EquipmentSlotType.mainHand,
       );
       expect(result, isNull);
       expect(
-        EquipmentManager.instance.isSlotOccupied(EquipmentSlotType.weapon),
+        EquipmentManager.instance.isSlotOccupied(EquipmentSlotType.mainHand),
         isTrue,
       );
     });
@@ -153,8 +153,8 @@ void main() {
       InventoryManager.instance.addItem(sword);
       InventoryManager.instance.addItem(axe);
 
-      EquipmentManager.instance.equip(EquipmentSlotType.weapon, sword);
-      EquipmentManager.instance.equip(EquipmentSlotType.offhand, axe);
+      EquipmentManager.instance.equip(EquipmentSlotType.mainHand, sword);
+      EquipmentManager.instance.equip(EquipmentSlotType.offHand, axe);
 
       final equipped = EquipmentManager.instance.getAllEquippedItems();
       expect(equipped.length, equals(2));
@@ -163,20 +163,20 @@ void main() {
     });
 
     test('get_total_damage_sums_weapons', () {
-      final sword = ItemFactory.createItem('iron_sword')! as WeaponItem;
+      final sword = ItemFactory.createItem('iron_sword')! as MainHandItem;
 
       InventoryManager.instance.addItem(sword);
-      EquipmentManager.instance.equip(EquipmentSlotType.weapon, sword);
+      EquipmentManager.instance.equip(EquipmentSlotType.mainHand, sword);
 
       final totalDamage = EquipmentManager.instance.getTotalDamage();
       expect(totalDamage, equals(sword.damage));
     });
 
     test('get_total_dps_sums_weapons', () {
-      final sword = ItemFactory.createItem('iron_sword')! as WeaponItem;
+      final sword = ItemFactory.createItem('iron_sword')! as MainHandItem;
 
       InventoryManager.instance.addItem(sword);
-      EquipmentManager.instance.equip(EquipmentSlotType.weapon, sword);
+      EquipmentManager.instance.equip(EquipmentSlotType.mainHand, sword);
 
       final totalDps = EquipmentManager.instance.getTotalDps();
       expect(totalDps, closeTo(sword.dps, 0.1));
@@ -185,7 +185,7 @@ void main() {
     test('get_total_stats_returns_all_stats', () {
       final sword = ItemFactory.createItem('iron_sword')!;
       InventoryManager.instance.addItem(sword);
-      EquipmentManager.instance.equip(EquipmentSlotType.weapon, sword);
+      EquipmentManager.instance.equip(EquipmentSlotType.mainHand, sword);
 
       final stats = EquipmentManager.instance.getTotalStats();
       expect(stats['damage'], greaterThan(0));
@@ -200,8 +200,8 @@ void main() {
       InventoryManager.instance.addItem(sword);
       InventoryManager.instance.addItem(axe);
 
-      EquipmentManager.instance.equip(EquipmentSlotType.weapon, sword);
-      EquipmentManager.instance.equip(EquipmentSlotType.offhand, axe);
+      EquipmentManager.instance.equip(EquipmentSlotType.mainHand, sword);
+      EquipmentManager.instance.equip(EquipmentSlotType.offHand, axe);
 
       final result = EquipmentManager.instance.unequipAll();
       expect(result, isTrue);
@@ -217,7 +217,7 @@ void main() {
 
       // Equipar espada
       InventoryManager.instance.addItem(sword);
-      EquipmentManager.instance.equip(EquipmentSlotType.weapon, sword);
+      EquipmentManager.instance.equip(EquipmentSlotType.mainHand, sword);
 
       // Encher inventário completamente
       for (var i = 0; i < 30; i++) {
@@ -227,7 +227,7 @@ void main() {
       final result = EquipmentManager.instance.unequipAll();
       expect(result, isFalse);
       expect(
-        EquipmentManager.instance.isSlotOccupied(EquipmentSlotType.weapon),
+        EquipmentManager.instance.isSlotOccupied(EquipmentSlotType.mainHand),
         isTrue,
       );
     });
@@ -239,8 +239,8 @@ void main() {
       InventoryManager.instance.addItem(sword);
       InventoryManager.instance.addItem(axe);
 
-      EquipmentManager.instance.equip(EquipmentSlotType.weapon, sword);
-      EquipmentManager.instance.equip(EquipmentSlotType.offhand, axe);
+      EquipmentManager.instance.equip(EquipmentSlotType.mainHand, sword);
+      EquipmentManager.instance.equip(EquipmentSlotType.offHand, axe);
 
       // Serializar
       final json = EquipmentManager.instance.toJson();
@@ -254,12 +254,12 @@ void main() {
 
       // Verificar que foi restaurado
       expect(
-        EquipmentManager.instance.getEquippedItem(EquipmentSlotType.weapon)?.id,
+        EquipmentManager.instance.getEquippedItem(EquipmentSlotType.mainHand)?.id,
         equals('iron_sword'),
       );
       expect(
         EquipmentManager.instance
-            .getEquippedItem(EquipmentSlotType.offhand)
+            .getEquippedItem(EquipmentSlotType.offHand)
             ?.id,
         equals('steel_axe'),
       );
@@ -270,7 +270,7 @@ void main() {
       InventoryManager.instance.addItem(sword);
 
       final result = EquipmentManager.instance.equip(
-        EquipmentSlotType.weapon,
+        EquipmentSlotType.mainHand,
         sword,
       );
       expect(result, isTrue);
@@ -281,7 +281,7 @@ void main() {
       InventoryManager.instance.addItem(sword);
 
       final result = EquipmentManager.instance.equip(
-        EquipmentSlotType.offhand,
+        EquipmentSlotType.offHand,
         sword,
       );
       expect(result, isTrue);
@@ -294,36 +294,36 @@ void main() {
       InventoryManager.instance.addItem(sword);
       InventoryManager.instance.addItem(axe);
 
-      EquipmentManager.instance.equip(EquipmentSlotType.weapon, sword);
-      EquipmentManager.instance.equip(EquipmentSlotType.offhand, axe);
+      EquipmentManager.instance.equip(EquipmentSlotType.mainHand, sword);
+      EquipmentManager.instance.equip(EquipmentSlotType.offHand, axe);
 
       expect(
-        EquipmentManager.instance.isSlotOccupied(EquipmentSlotType.weapon),
+        EquipmentManager.instance.isSlotOccupied(EquipmentSlotType.mainHand),
         isTrue,
       );
       expect(
-        EquipmentManager.instance.isSlotOccupied(EquipmentSlotType.offhand),
+        EquipmentManager.instance.isSlotOccupied(EquipmentSlotType.offHand),
         isTrue,
       );
 
       final totalDamage = EquipmentManager.instance.getTotalDamage();
-      expect(totalDamage, greaterThan((sword as WeaponItem).damage));
+      expect(totalDamage, greaterThan((sword as MainHandItem).damage));
     });
 
     test('reset_clears_all_equipment', () {
       final sword = ItemFactory.createItem('iron_sword')!;
       InventoryManager.instance.addItem(sword);
-      EquipmentManager.instance.equip(EquipmentSlotType.weapon, sword);
+      EquipmentManager.instance.equip(EquipmentSlotType.mainHand, sword);
 
       expect(
-        EquipmentManager.instance.isSlotOccupied(EquipmentSlotType.weapon),
+        EquipmentManager.instance.isSlotOccupied(EquipmentSlotType.mainHand),
         isTrue,
       );
 
       EquipmentManager.instance.reset();
 
       expect(
-        EquipmentManager.instance.isSlotOccupied(EquipmentSlotType.weapon),
+        EquipmentManager.instance.isSlotOccupied(EquipmentSlotType.mainHand),
         isFalse,
       );
       expect(EquipmentManager.instance.getAllEquippedItems().isEmpty, isTrue);

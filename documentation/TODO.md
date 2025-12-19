@@ -1,5 +1,7 @@
 # IMPORTANT BEFORE LAUNCH:
 
+- [PRIORITY] change snake_case names "strawberry_seed_bag" to camelCase "strawberrySeedBag"
+
 - [PRIORITY] Configurar os items de seed em items_icons_database
 
 - [PRIORITY] Refact crops_database to be like items_icons_database structure
