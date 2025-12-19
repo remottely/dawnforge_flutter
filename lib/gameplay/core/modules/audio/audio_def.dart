@@ -27,7 +27,10 @@ final class AudioDef {
       // 'music/music_boss_battle_background.mp3'; // TODO(Kevin): put it back, or change the music
       'music/music_ro1_letters_background.mp3';
 
+  static const bgm = 'music/Keys Of Moon - Enchanted.mp3';
+
   static const List<String> kPreloadAudioFiles = [
+    bgm,
     kSfxPlayerAttackAsset,
     kSfxCharacterFireBallAttackAsset,
     kSfxEnemyAttackAsset,

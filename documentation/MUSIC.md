@@ -1,55 +1,106 @@
 # Musics:
 
+dentro da caverna, usar musicas diferentes para diferentes estagios da caverna??
+usar musica diferente para cada dia de cada estacao do ano??
+
 trash:
 
 - 116
 - 129
 
-# BEST OF ALL
-- https://www.youtube.com/watch?v=Ig2LiJBriR4&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=87
-- https://www.youtube.com/watch?v=TjX34wmhFC4&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=99
-- https://www.youtube.com/watch?v=HS6lu3NGRJY&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=101 - 10/10 - Esse precisa estar!
+# 0 WORST
+- https://www.youtube.com/watch?v=znarNyPELcU&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=95 - 6/10 - muito artificial.
+- https://www.youtube.com/watch?v=C_AWa-RbdeU&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=120 - 7/10 - leal para fazenda
+- https://www.youtube.com/watch?v=5ntfgZ1s3gU&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=132 - 8/10 - desacelerar ou criarestilo parecido??
+- https://www.youtube.com/watch?v=CsBdbOHWTH4&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=134 - 8/10 - editar!!
+- https://www.youtube.com/watch?v=pBEdwmP8B4o&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=156 - 8/10 - editar, remover vocal! util para um dia do jogo.
+- https://www.youtube.com/watch?v=1NSx5K3xe7Y&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=158 - 8/10 - trailler!!
+- https://www.youtube.com/watch?v=Do6VrSy64sA&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=100 - 8/10 - não é para esse jogo
 - https://www.youtube.com/watch?v=H4BAEf5V-Yc&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=103 - 9/10 - não é para esse jogo
 - https://www.youtube.com/watch?v=LlU2X2AWhho&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=104 - 9/10 - não é para esse jogo
 - https://www.youtube.com/watch?v=smWb8dj1Jgs&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=107 - 9/10 - não é para esse jogo
+- https://www.youtube.com/watch?v=SPOfbFjD9eU&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=110 - 8/10 - não é para esse jogo, melancolico
+- https://www.youtube.com/watch?v=DqR-_OKU4R4&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=121 - 9/10 - não é para esse jogo
+- https://www.youtube.com/watch?v=Xos5NZpUORg&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=137 - 7/10 - não é para esse jogo. editar!!
+- https://www.youtube.com/watch?v=4Lq_M_Gz7Hg&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=138 - 10/10 - não é para esse jogo. Jogo infantil, de restaurante??
+- https://www.youtube.com/watch?v=sbIiBUdCBa8&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=139 - 8/10 - não é para esse jogo. editar, pegar só o inicio antes da batida!!
+
+# 1 BEST
+- https://www.youtube.com/watch?v=HS6lu3NGRJY&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=102 - 10/10 - Esse precisa estar! editar, desacelerar um pouco. # 1 - trilha sonora principal!
+Song: Enchanted
+Composer: Keys Of Moon
+Website: https://www.youtube.com/c/keysofmoonmusic
+License: Free To Use YouTube license youtube-free
+Music powered by BreakingCopyright: https://breakingcopyright.com
+
+- https://www.youtube.com/watch?v=hgn7kasl8Y0&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=128 - 10/10 - Esse precisa estar! tema de encorajamento e vitoria!! Jogo zerado?? separar em varios adios para diferentes estagios? missão mais importante do jogo? #1 - primeira e ultima missao do jogo!
+- https://www.youtube.com/watch?v=FAF7LPL0OUI&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=129 - 10/10 - Esse precisa estar! separar em varios adios para diferentes estagios? missão mais importante do jogo? #1 - segunda missão!
+- https://www.youtube.com/watch?v=powKEGuPvjc&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=82 - 10/10 - pefeito? editar, remover batidas?? #1 - trilha sonora principal de outono ou inverno?
+
+# 1.2 BEST
+- https://www.youtube.com/watch?v=QRF2zzEFu8c&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=69 - 10/10 - tema asiatico, inserir coisas asiaticas no jogo?? #2
+- https://www.youtube.com/watch?v=EGjI6ZbLnBY&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=74 - 9/10 - editar, remover vocal e batidas! #5
+- https://www.youtube.com/watch?v=MCscTvpQ7po&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=83 - 9/10 - trilha sonora epica aventura!! estilo A ORIGEM! #6
+- https://www.youtube.com/watch?v=h_SJmiVLM_g&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=79 - 10/10 - editar! um dia qualquer de outono no jogo!
+- https://www.youtube.com/watch?v=eZEczfSAjVQ&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=83 - 10/10 - Esse precisa estar! em um dia de inverno!!
+- https://www.youtube.com/watch?v=eR-bYwCcwbc&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=63 - 10/10 - Esse precisa estar! boss inicial!!
+- https://www.youtube.com/watch?v=25F5kUVM2So&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=85 - 10/10 - Esse precisa estar! usar em um dia de evento na praia do jogo!
+- https://www.youtube.com/watch?v=ICYH-bSLXms&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=91 - 10/10 - Esse precisa estar! em um andar muito extremo da caverna!
+- https://www.youtube.com/watch?v=DQ8ZwW3Hk9k&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=117 - 10/10 - Esse precisa estar! semi epico! Aventura!!
+- https://www.youtube.com/watch?v=WmHWg8tlfTY&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=154 - 10/10 - Esse precisa estar! Evento dentro do jogo!!
+
+# 2 GOOD
+- https://www.youtube.com/watch?v=uNckLiOYPZ8&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=65 - 8/10 - editar, remover voais e batidas?
+- https://www.youtube.com/watch?v=1lmgmCmhRSc&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=78 - 10/10 - trila sonora interestellar! otimo para jogo de aventura!
+- https://www.youtube.com/watch?v=C11iclSJTNA&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=94 - 8/10 - legal para esse jogo. em um dia do jogo!
+- https://www.youtube.com/watch?v=MM2-z8inpY8&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=122 - 10/10 - legal para inverno na fazenda!
+- https://www.youtube.com/watch?v=X7j3Kfsq56A&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=124 - 10/10 - legal pegar alguns trechos no meio e editar para um efeito de floresta fantastica!
+- https://www.youtube.com/watch?v=JsBBvctEblE&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=135 - 10/10 - tranquilissima, ótima para inverno??
+- https://www.youtube.com/watch?v=WeWHfalQVx0&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=140 - 10/10 - perfeito para trailler??
+- https://www.youtube.com/watch?v=8FMLB7vilt4&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=141 - 10/10 - perfeito para boss music!!
+- https://www.youtube.com/watch?v=LYf2gOIt_OQ&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=142 - 10/10 - perfeito para aventura, batalha, exploração!!
+- https://www.youtube.com/watch?v=LEm_RLKKGBQ&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=145 - 10/10 - hopeful theme!! paisagem encima da montanha!!
+- https://www.youtube.com/watch?v=VZzyKHoBKtQ&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=149 - 10/10 - editar, remover vocal!! otimo para trailler!! outras coisas??
+- https://www.youtube.com/watch?v=nX7-7miPPVk&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=151 - 10/10 - usar na estacao de outono?? trilha de vitoria intensa!! som de conquista, zerar jogo?
+
+# 3 GOOD ENOUGH
+- https://www.youtube.com/watch?v=Q7HjxOAU5Kc&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=76 - 9/10 - perfeita para jogo de restaurante??
+- https://www.youtube.com/watch?v=Ig2LiJBriR4&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=87 - 9/10 - bom para um dia do jogo! editar, remover final horrivel!!
+- https://www.youtube.com/watch?v=TjX34wmhFC4&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=99 - 9/10 - bom para um dia do jogo!
 - https://www.youtube.com/watch?v=Lzofxb1vATw&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=108 - 9/10 - Legal para batalha em espaço aberto?
 - https://www.youtube.com/watch?v=lRwq7pfA4Gg&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=109 - 9/10 - boss extremamente dramatico!
-- https://www.youtube.com/watch?v=SPOfbFjD9eU&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=110 - 8/10 - não é para esse jogo, melancolico
 - https://www.youtube.com/watch?v=cTMOQiY0axo&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=111 - 9/10 - legal, bem happy para fazenda, porém possui muitas batidas. editar!
-- https://www.youtube.com/watch?v=DQ8ZwW3Hk9k&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=117 - 10/10 - Esse precisa estar!
-- https://www.youtube.com/watch?v=C_AWa-RbdeU&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=120 - 7/10 - leal para fazenda
-- https://www.youtube.com/watch?v=DqR-_OKU4R4&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=121 - 9/10 - não é para esse jogo
-- https://www.youtube.com/watch?v=MM2-z8inpY8&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=122 - 10/10 - legal para inverno na fazenda!
 - https://www.youtube.com/watch?v=3S8CXHs2yyo&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=123 - 9/10 - legal para iniciar o jogo e colocar nos dialogos com os npcs!
-- https://www.youtube.com/watch?v=X7j3Kfsq56A&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=124 - 10/10 - legal pegar alguns trechos no meio e editar para um efeito de floresta fantastica!
-- https://www.youtube.com/watch?v=hgn7kasl8Y0&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=127 - 10/10 - Esse precisa estar! tema de encorajamento e vitoria!! Jogo zerado??
-- 
+- https://www.youtube.com/watch?v=KJlA0XBxY4w&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=131 - 9/10 - trailler do jogo??
+- https://www.youtube.com/watch?v=wfybL6t-1BQ&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=143 - 9/10 - happy day!! boa para eventos e missoes dentro do jogo!
+- https://www.youtube.com/watch?v=cWdC20Tx3zE&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=144 - 9/10 - trailler!!
+- https://www.youtube.com/watch?v=cDv_lNZ8VsM&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=150 - 9/10 - trailler suave e feliz?? tema romantico. bom para primeiro dia de verão??
+- https://www.youtube.com/watch?v=SO-ibuo_TAI&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=153 - 9/10 - simples mas util para um dia do jogo.
+- https://www.youtube.com/watch?v=EmkO1W6asvM&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=157 - 9/10 - perfeito para um dia do jogo!
 
 ## Menu / traillers:
 ### DD:
 ### Kevin:
 
-- https://www.youtube.com/watch?v=MCscTvpQ7po&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=83
-- https://www.youtube.com/watch?v=tSFSPZ3BcNw&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=76
-- https://www.youtube.com/watch?v=pBT01U9zgfQ&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=89
+- https://www.youtube.com/watch?v=MCscTvpQ7po&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=83 - 10/10 - trailler fantastico. vila do frodo senhor dos aneis!
+- https://www.youtube.com/watch?v=tSFSPZ3BcNw&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=76 - 10/10 - trailler epico!
+- https://www.youtube.com/watch?v=pBT01U9zgfQ&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=90 - 10/10 - trailler de venda do jogo, bom demais esse aqui!!!
 
 ## Forest_1:
 ### DD:
-- https://www.youtube.com/watch?v=znarNyPELcU&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=95
+
 
 ### Kevin:
 
-- https://www.youtube.com/watch?v=YM4iax9Mcnw&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=82
-- https://www.youtube.com/watch?v=Aofz5YAYIiY&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=80
-- https://www.youtube.com/watch?v=25F5kUVM2So&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=85
+- https://www.youtube.com/watch?v=YM4iax9Mcnw&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=82 - 9/10 - editar, pegar só inicio! usar em um dia do jogo!
+- https://www.youtube.com/watch?v=Aofz5YAYIiY&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=80 - 9/10 - usar um dia do jogo. bom para batalha. talvez um boss sorridente!!
 
 ## Dungeon_1:
 ### DD:
 ### Kevin:
 
-- https://www.youtube.com/watch?v=ICYH-bSLXms&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=91
-- https://www.youtube.com/watch?v=ICYH-bSLXms&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=91
-- https://www.youtube.com/watch?v=eR-bYwCcwbc&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=63
+
+
 
 ## Boss:
 ### DD:
@@ -61,16 +112,16 @@ trash:
 ### DD:
 ### Kevin:
 
-- https://www.youtube.com/watch?v=eZEczfSAjVQ&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=81
-- https://www.youtube.com/watch?v=1lmgmCmhRSc&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=77
-- https://www.youtube.com/watch?v=h_SJmiVLM_g&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=78
-- https://www.youtube.com/watch?v=powKEGuPvjc&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=79
+
+
+
+
 
 ## Pacific temples:
 ### DD:
 ### Kevin:
 
-- https://www.youtube.com/watch?v=C11iclSJTNA&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=93 - 8/10 - legal para esse jogo
+
 
  
 ## Melancolic:
@@ -82,14 +133,13 @@ trash:
 
 # Muito bons:
 
-- https://www.youtube.com/watch?v=uNckLiOYPZ8&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=64
-- https://www.youtube.com/watch?v=QRF2zzEFu8c&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=69
-- https://www.youtube.com/watch?v=EGjI6ZbLnBY&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=74
-- https://www.youtube.com/watch?v=Q7HjxOAU5Kc&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=75
+
+
+
+
 - https://ncs.io/music-search?q=&genre=1&mood=2&version=instrumental
-- https://www.youtube.com/watch?v=MCscTvpQ7po&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=83
-- https://www.youtube.com/watch?v=fn9fqTUHl7Q&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=86
-- https://www.youtube.com/watch?v=Do6VrSy64sA&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=100 - 8/10 - não é para esse jogo
+
+
 
 # Bons:
 

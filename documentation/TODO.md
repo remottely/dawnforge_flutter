@@ -1,4 +1,5 @@
 # IMPORTANT BEFORE LAUNCH:
+- [PRIORITY] criar uma maneira do jogo nunca quebrar todo por conta de um exception. trata-los!! principalmente pq um asset nao existe.
 
 - [PRIORITY] change snake_case names "strawberry_seed_bag" to camelCase "strawberrySeedBag"
 
