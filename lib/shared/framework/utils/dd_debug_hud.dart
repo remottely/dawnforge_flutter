@@ -100,14 +100,17 @@ class DDDebugHud extends GameComponent {
         );
         yOffset += lineHeight;
 
-        final tileX = (player.x / game.map.tileSize).floor();
-        final tileY = (player.y / game.map.tileSize).floor();
-        _textPaint.render(
-          canvas,
-          'Tile: ($tileX, $tileY)',
-          Vector2(10, yOffset),
-        );
-        yOffset += lineHeight;
+        final tileSize = game.map.tileSize;
+        if (tileSize > 0) {
+          final tileX = (player.x / tileSize).floor();
+          final tileY = (player.y / tileSize).floor();
+          _textPaint.render(
+            canvas,
+            'Tile: ($tileX, $tileY)',
+            Vector2(10, yOffset),
+          );
+          yOffset += lineHeight;
+        }
       }
     }
   }
