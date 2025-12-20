@@ -198,6 +198,42 @@ final class InventoryManager {
     return null;
   }
 
+  /// Find first item matching the predicate, searching backwards from beforeIndex
+  /// Returns null if no item is found
+  ({int index, Item item})? findItemReverse(
+    bool Function(Item item) predicate, {
+    int beforeIndex = -1,
+  }) {
+    // Se beforeIndex = -1 (primeira busca), busca do final ao início (sem wrap)
+    if (beforeIndex == -1) {
+      for (int i = _slots.length - 1; i >= 0; i--) {
+        final slot = _slots[i];
+        if (slot != null && slot.item != null && predicate(slot.item!)) {
+          return (index: i, item: slot.item!);
+        }
+      }
+      return null; // Não encontrou nada
+    }
+
+    // Se beforeIndex >= 0, busca de beforeIndex-1 até 0
+    for (int i = beforeIndex - 1; i >= 0; i--) {
+      final slot = _slots[i];
+      if (slot != null && slot.item != null && predicate(slot.item!)) {
+        return (index: i, item: slot.item!);
+      }
+    }
+
+    // Wrap around: do final até beforeIndex (inclusive)
+    for (int i = _slots.length - 1; i >= beforeIndex; i--) {
+      final slot = _slots[i];
+      if (slot != null && slot.item != null && predicate(slot.item!)) {
+        return (index: i, item: slot.item!);
+      }
+    }
+
+    return null;
+  }
+
   List<InventorySlot> getSlotsByItemId(String itemId) {
     return _slots.where((s) => s.item?.id == itemId).toList();
   }

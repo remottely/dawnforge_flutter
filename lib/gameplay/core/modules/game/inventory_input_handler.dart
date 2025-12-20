@@ -44,6 +44,11 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
         return true;
       }
 
+      if (event.logicalKey == KeyboardSetup.kEquipMainHandReverseKey) {
+        _equipMainHandReverse();
+        return true;
+      }
+
       if (event.logicalKey == KeyboardSetup.kUnequipMainHandKey) {
         _unequipMainHand();
         return true;
@@ -51,6 +56,11 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
 
       if (event.logicalKey == KeyboardSetup.kEquipOffhandKey) {
         _equipOffhand();
+        return true;
+      }
+
+      if (event.logicalKey == KeyboardSetup.kEquipOffhandReverseKey) {
+        _equipOffhandReverse();
         return true;
       }
 
@@ -151,6 +161,42 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
     }
   }
 
+  void _equipMainHandReverse() {
+    developer.log(
+      '[InventoryInput] Procurando item equipável ANTERIOR para o main hand slot...',
+    );
+
+    // Busca o item equipável anterior usando o método helper
+    final result = InventoryManager.instance.findItemReverse((item) {
+      if (item is! MainHandItem) return false;
+      return item.equippedHandType.canBeEquippedInMainHandSlot;
+    }, beforeIndex: _currentMainHandIndex);
+
+    if (result == null) {
+      developer.log(
+        '[InventoryInput] Nenhum item equipável encontrado no inventário',
+      );
+      return;
+    }
+
+    final item = result.item;
+    final success = EquipmentManager.instance.equip(
+      EquipmentSlotType.mainHand,
+      item,
+    );
+
+    if (success) {
+      _currentMainHandIndex = result.index;
+      final mainHandItem = item as MainHandItem;
+      developer.log(
+        '[InventoryInput] ✓ Equipado no main hand (reverso): ${item.name} (${mainHandItem.equippedHandType})',
+      );
+      _notifyEquipmentChanged(mainHandItem.equippedHandType);
+    } else {
+      developer.log('[InventoryInput] ✗ Falha ao equipar: ${item.name}');
+    }
+  }
+
   void _unequipMainHand() {
     final item = EquipmentManager.instance.unequip(EquipmentSlotType.mainHand);
     if (item != null) {
@@ -203,19 +249,55 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
     }
   }
 
+  void _equipOffhandReverse() {
+    developer.log(
+      '[InventoryInput] Procurando item equipável ANTERIOR para o offhand slot...',
+    );
+
+    // Busca o item equipável anterior usando o método helper
+    final result = InventoryManager.instance.findItemReverse((item) {
+      if (item is! MainHandItem) return false;
+      return item.equippedHandType.canBeEquippedInOffHandSlot;
+    }, beforeIndex: _currentOffHandIndex);
+
+    if (result == null) {
+      developer.log(
+        '[InventoryInput] Nenhum item equipável encontrado no inventário',
+      );
+      return;
+    }
+
+    final item = result.item;
+    final success = EquipmentManager.instance.equip(
+      EquipmentSlotType.offHand,
+      item,
+    );
+
+    if (success) {
+      _currentOffHandIndex = result.index;
+      final offHandItem = item as MainHandItem;
+      developer.log(
+        '[InventoryInput] ✓ Equipado no offhand (reverso): ${item.name} (${offHandItem.equippedHandType})',
+      );
+      _notifyEquipmentChanged(offHandItem.equippedHandType);
+    } else {
+      developer.log('[InventoryInput] ✗ Falha ao equipar: ${item.name}');
+    }
+  }
+
   void _unequipOffhand() {
     final item = EquipmentManager.instance.unequip(EquipmentSlotType.offHand);
     if (item != null) {
       developer.log(
         '[InventoryInput] ✓ Desequipado do offhand: ${item.name}',
-      ); // ← Melhorar log
+      );
       final equippedHandType = (item as MainHandItem).equippedHandType;
       _notifyEquipmentChanged(equippedHandType);
-      _currentOffHandIndex = -1; // ← Resetar o índice do offhand
+      _currentOffHandIndex = -1;
     } else {
       developer.log(
         '[InventoryInput] offhand slot já está vazio',
-      ); // ← Melhorar log
+      );
     }
   }
 
