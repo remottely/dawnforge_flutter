@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/death/character_fx_sprite_animations_def.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_def.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 
 final class BarrelDecorationDef {
   BarrelDecorationDef._();
 
-  static final Vector2 _textureSize = TileConstants.tileSizeStandard;
+  static final Vector2 _textureSize = TileDef.tileSizeStandard;
   static final Vector2 componentSize = _textureSize;
 
   static Future<Sprite> loadSprite() =>

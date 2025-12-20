@@ -62,7 +62,9 @@ void main() {
 
       // 8. Verificar equipamentos restaurados
       expect(
-        EquipmentManager.instance.getEquippedItem(EquipmentSlotType.mainHand)?.id,
+        EquipmentManager.instance
+            .getEquippedItem(EquipmentSlotType.mainHand)
+            ?.id,
         equals('iron_sword'),
       );
       expect(
@@ -135,7 +137,9 @@ void main() {
 
       // Verificar que legendary está equipado (não sword)
       expect(
-        EquipmentManager.instance.getEquippedItem(EquipmentSlotType.mainHand)?.id,
+        EquipmentManager.instance
+            .getEquippedItem(EquipmentSlotType.mainHand)
+            ?.id,
         equals('legendary_blade'),
       );
 

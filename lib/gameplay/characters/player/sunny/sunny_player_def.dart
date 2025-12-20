@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/character_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/lightning_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_def.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
@@ -51,7 +51,7 @@ final class SunnyPlayerDef {
     harvestStaminaCost: _kHarvestStaminaCost,
   );
 
-  static final Vector2 textureSize = TileConstants.tileSizeSunny;
+  static final Vector2 textureSize = TileDef.tileSizeSunny;
 
   static final Vector2 componentSize = textureSize;
 
@@ -259,12 +259,12 @@ final class SunnyPlayerDef {
   );
 
   static final LightingConfig _lighting = LightingConfig(
-    radius: TileConstants.kTileDimensionLarge,
-    blurBorder: TileConstants.kTileDimensionStandard,
+    radius: TileDef.kTileDimensionLarge,
+    blurBorder: TileDef.kTileDimensionStandard,
     color: LightingConstants.playerLighting,
   );
 
-  static final Vector2 _cryptComponentSize = TileConstants.tileSizeStandard;
+  static final Vector2 _cryptComponentSize = TileDef.tileSizeStandard;
 
   static Future<Sprite> _loadCryptSprite() =>
       Sprite.load('gameplay/characters/player/player_crypt_1.png');
@@ -287,7 +287,6 @@ final class SunnyPlayerDef {
     animationShovelFactory: SunnyPlayerDef._animationShovelFactory,
     animationWateringCanFactory: SunnyPlayerDef._animationWateringCanFactory,
     animationPlaceSeedFactory: SunnyPlayerDef._animationPlaceSeedFactory,
-    animationHarvestFactory:
-        SunnyPlayerDef._animationHarvestFactory,
+    animationHarvestFactory: SunnyPlayerDef._animationHarvestFactory,
   );
 }

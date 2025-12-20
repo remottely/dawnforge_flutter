@@ -64,11 +64,11 @@ abstract class DDDefensePlayerView<
     final offhandItem = EquipmentManager.instance.getEquippedItem(
       EquipmentSlotType.offHand,
     );
-    
+
     if (offhandItem == null || offhandItem is! MainHandItem) {
       return false;
     }
-    
+
     if (!offhandItem.equippedHandType.isDefense) {
       return false;
     }

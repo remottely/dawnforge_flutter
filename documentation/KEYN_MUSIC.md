@@ -21,3 +21,5 @@ audios:
 - dan2-2: caverna / boss??
 - fantasy: trailler music
 - fourth one
+- close: missão importante!
+- dan5: caverna nivel hard?

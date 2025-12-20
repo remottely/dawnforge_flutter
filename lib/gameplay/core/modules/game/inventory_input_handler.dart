@@ -154,7 +154,9 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
   void _unequipMainHand() {
     final item = EquipmentManager.instance.unequip(EquipmentSlotType.mainHand);
     if (item != null) {
-      developer.log('[InventoryInput] ✓ Desequipado do main hand: ${item.name}');
+      developer.log(
+        '[InventoryInput] ✓ Desequipado do main hand: ${item.name}',
+      );
       final equippedHandType = (item as MainHandItem).equippedHandType;
       _notifyEquipmentChanged(equippedHandType);
       _currentMainHandIndex = -1;
@@ -171,7 +173,9 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
     // ← MODIFICAR ESTA SEÇÃO PARA CICLAR COMO O MAINHAND
     final result = InventoryManager.instance.findItem((item) {
       if (item is! MainHandItem) return false;
-      return item.equippedHandType.canBeEquippedInOffHandSlot; // ← Assumindo que existe este método
+      return item
+          .equippedHandType
+          .canBeEquippedInOffHandSlot; // ← Assumindo que existe este método
     }, afterIndex: _currentOffHandIndex); // ← Usar o índice do offhand
 
     if (result == null) {
@@ -202,12 +206,16 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
   void _unequipOffhand() {
     final item = EquipmentManager.instance.unequip(EquipmentSlotType.offHand);
     if (item != null) {
-      developer.log('[InventoryInput] ✓ Desequipado do offhand: ${item.name}'); // ← Melhorar log
+      developer.log(
+        '[InventoryInput] ✓ Desequipado do offhand: ${item.name}',
+      ); // ← Melhorar log
       final equippedHandType = (item as MainHandItem).equippedHandType;
       _notifyEquipmentChanged(equippedHandType);
       _currentOffHandIndex = -1; // ← Resetar o índice do offhand
     } else {
-      developer.log('[InventoryInput] offhand slot já está vazio'); // ← Melhorar log
+      developer.log(
+        '[InventoryInput] offhand slot já está vazio',
+      ); // ← Melhorar log
     }
   }
 

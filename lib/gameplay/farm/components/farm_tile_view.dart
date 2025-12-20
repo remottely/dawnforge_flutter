@@ -2,7 +2,7 @@ import 'dart:developer' as developer;
 import 'dart:ui';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_def.dart';
 import 'package:darkness_dungeon/gameplay/farm/managers/farm_manager.dart';
 import 'package:darkness_dungeon/gameplay/farm/models/crop_stage_model.dart';
 import 'package:darkness_dungeon/gameplay/farm/models/farm_tile_model.dart'
@@ -29,7 +29,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   FarmTileView({required Vector2 position})
     : tileX = (position.x / 16).floor(),
       tileY = (position.y / 16).floor(),
-      super(position: position, size: TileConstants.tileSizeStandard) {
+      super(position: position, size: TileDef.tileSizeStandard) {
     final existingTile = FarmManager.instance.getTile(tileX, tileY);
     if (existingTile == null) {
       final newTile = model.FarmTileModel(x: tileX, y: tileY);
@@ -224,7 +224,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   }
 
   /// Mapeia os 8 estágios de crescimento para o número de frames disponíveis
-  /// 
+  ///
   /// Exemplo com 4 frames:
   /// - seed(0), sprout(1) → frame 0
   /// - youngPlant(2), growing1(3) → frame 1
@@ -233,10 +233,10 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   int _getFrameIndexForStage(CropStageModel stage, int availableFrames) {
     const totalStages = 8; // Total de estágios possíveis em CropStageModel
     final stageIndex = stage.index;
-    
+
     // Mapeia proporcionalmente o índice do estágio para os frames disponíveis
     final frameIndex = (stageIndex * availableFrames) ~/ totalStages;
-    
+
     // Garante que não ultrapassa o número de frames disponíveis
     return frameIndex.clamp(0, availableFrames - 1);
   }

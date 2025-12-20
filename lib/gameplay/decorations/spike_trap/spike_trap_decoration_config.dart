@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_def.dart';
 import 'package:darkness_dungeon/gameplay/decorations/decoration_constants.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 
@@ -9,7 +9,7 @@ final class SpikeTrapDecorationDef {
   static const double kDamageAmount = DecorationConstants.kStatsAmountMedium;
   static const int kPriority = 1;
 
-  static final Vector2 _textureSize = TileConstants.tileSizeStandard;
+  static final Vector2 _textureSize = TileDef.tileSizeStandard;
   static final Vector2 componentSize = _textureSize;
 
   static Future<SpriteAnimation> loadAnimation() => SpriteAnimation.load(

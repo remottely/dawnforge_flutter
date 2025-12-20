@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 /// State manager for equipment to communicate between Bonfire and Flutter
 class EquipmentState {
   EquipmentState._();
-  
+
   static final instance = EquipmentState._();
 
   // Map of slot type to equipped item
@@ -27,7 +27,9 @@ class EquipmentState {
       final newMap = Map<EquipmentSlotType, Item?>.from(equipment.value);
       newMap[slotType] = item;
       equipment.value = newMap;
-      developer.log('[EquipmentState] Updated slot $slotType: ${item?.name ?? "empty"}');
+      developer.log(
+        '[EquipmentState] Updated slot $slotType: ${item?.name ?? "empty"}',
+      );
     } catch (e, stack) {
       developer.log(
         '[EquipmentState] Error updating slot $slotType: $e',

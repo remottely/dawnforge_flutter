@@ -45,13 +45,13 @@ class _ItemSpriteWidgetState extends State<ItemSpriteWidget> {
     }
 
     if (!mounted) return;
-    
+
     setState(() => _isLoading = true);
 
     try {
       // Load sprite directly using Flame without depending on game context
       final image = await Flame.images.load(widget.iconData.spritesheetPath);
-      
+
       final spriteWidth = widget.iconData.spriteWidth.toDouble();
       final spriteHeight = widget.iconData.spriteHeight.toDouble();
       final col = widget.iconData.spriteColumnIndex;

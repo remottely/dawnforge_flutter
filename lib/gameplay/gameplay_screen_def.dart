@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_calculations.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/joysctick_setup.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
@@ -13,13 +13,14 @@ class GameplayScreenDef {
     final size = MediaQuery.of(context).size;
     final calculatedZoom = CameraCalculations.getCameraZoomFromMaxVisibleTile(
       context,
-      maxVisibleTile: TileConstants.kMaxVisibleTiles,
+      maxVisibleTile: TileDef.kMaxVisibleTiles,
     );
 
     final pixelPerfectZoom = calculatedZoom.roundToDouble();
 
     return CameraConfig(
-      speed: double.infinity, // TODO(Kevin): colocar de volta caso cause serrilhados no jogo
+      speed: double
+          .infinity, // TODO(Kevin): colocar de volta caso cause serrilhados no jogo
       zoom: pixelPerfectZoom,
       resolution: Vector2(size.width, size.height),
       moveOnlyMapArea: true,

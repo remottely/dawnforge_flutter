@@ -43,15 +43,19 @@ class InventoryHUDView extends InterfaceComponent {
   void _updatePosition() {
     // Guard: only update position if game is mounted AND has valid size
     if (!hasGameRef) {
-      developer.log('[InventoryHUDView] Cannot update position: gameRef not available');
+      developer.log(
+        '[InventoryHUDView] Cannot update position: gameRef not available',
+      );
       return;
     }
 
     final gameSize = gameRef.size;
-    
+
     // Guard: gameRef.size can be (0,0) during initialization, which causes NaN/Infinity errors
     if (gameSize.x <= 0 || gameSize.y <= 0) {
-      developer.log('[InventoryHUDView] Cannot update position: invalid game size $gameSize');
+      developer.log(
+        '[InventoryHUDView] Cannot update position: invalid game size $gameSize',
+      );
       return;
     }
 
@@ -59,9 +63,11 @@ class InventoryHUDView extends InterfaceComponent {
       // Center horizontally at bottom of screen
       position = Vector2(
         (gameSize.x - size.x) / 2, // Center horizontally
-        gameSize.y - size.y - 20,   // Bottom with 20px margin
+        gameSize.y - size.y - 20, // Bottom with 20px margin
       );
-      developer.log('[InventoryHUDView] Position updated to $position (gameSize: $gameSize)');
+      developer.log(
+        '[InventoryHUDView] Position updated to $position (gameSize: $gameSize)',
+      );
     } catch (e, stack) {
       developer.log(
         '[InventoryHUDView] Error updating position: $e',
@@ -166,7 +172,8 @@ class InventoryHUDView extends InterfaceComponent {
       final iconData = item.iconData;
 
       if (iconData != null) {
-        final cacheKey = '${iconData.spritesheetPath}_${iconData.spriteRowIndex}_${iconData.spriteColumnIndex}';
+        final cacheKey =
+            '${iconData.spritesheetPath}_${iconData.spriteRowIndex}_${iconData.spriteColumnIndex}';
         final cachedSprite = _spriteCache[cacheKey];
 
         if (cachedSprite != null) {

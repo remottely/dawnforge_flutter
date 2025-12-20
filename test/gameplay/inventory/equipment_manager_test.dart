@@ -83,14 +83,18 @@ void main() {
       // Equipar primeira espada
       EquipmentManager.instance.equip(EquipmentSlotType.mainHand, sword1);
       expect(
-        EquipmentManager.instance.getEquippedItem(EquipmentSlotType.mainHand)?.id,
+        EquipmentManager.instance
+            .getEquippedItem(EquipmentSlotType.mainHand)
+            ?.id,
         equals('iron_sword'),
       );
 
       // Equipar segunda espada (deve trocar)
       EquipmentManager.instance.equip(EquipmentSlotType.mainHand, sword2);
       expect(
-        EquipmentManager.instance.getEquippedItem(EquipmentSlotType.mainHand)?.id,
+        EquipmentManager.instance
+            .getEquippedItem(EquipmentSlotType.mainHand)
+            ?.id,
         equals('steel_axe'),
       );
       expect(InventoryManager.instance.hasItem('iron_sword'), isTrue);
@@ -254,7 +258,9 @@ void main() {
 
       // Verificar que foi restaurado
       expect(
-        EquipmentManager.instance.getEquippedItem(EquipmentSlotType.mainHand)?.id,
+        EquipmentManager.instance
+            .getEquippedItem(EquipmentSlotType.mainHand)
+            ?.id,
         equals('iron_sword'),
       );
       expect(

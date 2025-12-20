@@ -16,7 +16,8 @@ final class AppEnvironment {
   static const bool kShowCollisionBoxes = _kIsDevelopment;
   static const bool kIsDebugMode = _kIsDevelopment;
 
-  static const bool kPlayBackgroundMusic = false; // _kIsProduction; // TODO(Kevin): NOW - put it back
+  static const bool kPlayBackgroundMusic =
+      false; // _kIsProduction; // TODO(Kevin): NOW - put it back
 
   static T byEnvironment<T>({required T development, required T production}) {
     switch (_kEnvironment) {

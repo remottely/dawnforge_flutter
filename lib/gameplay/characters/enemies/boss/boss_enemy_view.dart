@@ -11,7 +11,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_calculations.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/death/character_fx_sprite_animations_def.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_manager.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_view.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +63,7 @@ class BossEnemyView
       target: this,
       zoom: CameraCalculations.getCameraZoomFromMaxVisibleTile(
         context,
-        maxVisibleTile: TileConstants.kBossConversationVisibleTiles,
+        maxVisibleTile: TileDef.kBossConversationVisibleTiles,
       ),
       onComplete: () => _showConversation(player),
     );
@@ -176,7 +176,7 @@ class BossEnemyView
       gameRef.camera.moveToPlayerAnimated(
         zoom: CameraCalculations.getCameraZoomFromMaxVisibleTile(
           context,
-          maxVisibleTile: TileConstants.kMaxVisibleTiles,
+          maxVisibleTile: TileDef.kMaxVisibleTiles,
         ),
       );
       AudioManager.instance.playBackgroundMusic(

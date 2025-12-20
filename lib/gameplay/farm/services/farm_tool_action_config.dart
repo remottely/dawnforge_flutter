@@ -67,13 +67,13 @@ final class FarmToolActionDef {
             final equippedItem = EquipmentManager.instance.getEquippedItem(
               EquipmentSlotType.mainHand,
             );
-            
+
             // Extract cropId from MainHandItem if available
-            final cropId = (equippedItem is MainHandItem && 
-                           equippedItem.cropId != null)
+            final cropId =
+                (equippedItem is MainHandItem && equippedItem.cropId != null)
                 ? equippedItem.cropId!
                 : equipment!.name;
-            
+
             _handlePlant(
               cropId: cropId,
               x: bestTarget.tileX,

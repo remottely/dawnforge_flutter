@@ -13,7 +13,9 @@ class ItemIconDatabase {
   Future<void> initialize() async {
     if (_initialized) return;
 
-    final String jsonString = await rootBundle.loadString('assets/items/items_icons_database.json');
+    final String jsonString = await rootBundle.loadString(
+      'assets/items/items_icons_database.json',
+    );
     final Map<String, dynamic> jsonData = json.decode(jsonString);
 
     final String globalSpritesheetPath = jsonData['spritesheetPath'];

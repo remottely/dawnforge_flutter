@@ -241,8 +241,7 @@ final class MapDef {
       id: kTemple1Id,
       asset: 'tiled/$kTemple1Id.json',
       sensorIds: ['sensor_$kLake1Id'],
-      backgroundMusic: AudioDef
-          .backgroundMusic1, // TODO(Kevin): Change music
+      backgroundMusic: AudioDef.backgroundMusic1, // TODO(Kevin): Change music
       lightingColor: _kNoneLightingColor, // TODO(Kevin): Change color
       backgroundColor: _kTempleBackgroundColor, // TODO(Kevin): Change color
     ),

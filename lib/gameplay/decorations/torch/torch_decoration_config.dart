@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/character_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/lightning_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 
@@ -20,7 +20,7 @@ final class TorchDecorationDef {
 
   static const double kHealAmountPerPotion = 30.0;
 
-  static final Vector2 _textureSize = TileConstants.tileSizeStandard;
+  static final Vector2 _textureSize = TileDef.tileSizeStandard;
 
   static final Vector2 componentSize = _textureSize;
 
@@ -45,8 +45,8 @@ final class TorchDecorationDef {
   );
 
   static final LightingConfig lighting = LightingConfig(
-    radius: TileConstants.kTileDimensionStandard,
-    blurBorder: TileConstants.kTileDimensionStandard,
+    radius: TileDef.kTileDimensionStandard,
+    blurBorder: TileDef.kTileDimensionStandard,
     color: LightingConstants.torchLighting,
   );
 }

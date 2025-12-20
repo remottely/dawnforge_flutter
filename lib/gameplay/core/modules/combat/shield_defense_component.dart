@@ -1,7 +1,7 @@
 import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_def.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 
 class ShieldDefenseComponent extends GameComponent {
@@ -25,7 +25,7 @@ class ShieldDefenseComponent extends GameComponent {
         'gameplay/characters/player/shield_defense_right_12.png',
         SpriteAnimationConfigHelper.createStandardData(
           amount: 12,
-          textureSize: TileConstants.tileSizeSuperLarge,
+          textureSize: TileDef.tileSizeSuperLarge,
         ),
       );
 
@@ -33,7 +33,7 @@ class ShieldDefenseComponent extends GameComponent {
 
       _shieldAnimation = SpriteAnimationComponent(
         animation: loadAnimationRight,
-        size: TileConstants.tileSizeStandard,
+        size: TileDef.tileSizeStandard,
         anchor: Anchor.center,
       );
 
