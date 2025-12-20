@@ -16,16 +16,16 @@ class ItemIconDatabase {
     final String jsonString = await rootBundle.loadString(
       'assets/items/items_icons_database.json',
     );
-    final Map<String, dynamic> jsonData = json.decode(jsonString);
+    final jsonData = json.decode(jsonString) as Map<String, dynamic>;
 
-    final String globalSpritesheetPath = jsonData['spritesheetPath'];
-    final int globalSpriteWidth = jsonData['spriteWidth'];
-    final int globalSpriteHeight = jsonData['spriteHeight'];
-    final Map<String, dynamic> items = jsonData['items'];
+    final globalSpritesheetPath = jsonData['spritesheetPath'] as String;
+    final globalSpriteWidth = jsonData['spriteWidth'] as int;
+    final globalSpriteHeight = jsonData['spriteHeight'] as int;
+    final items = jsonData['items'] as Map<String, dynamic>;
 
     items.forEach((key, value) {
       _icons[key] = ItemIconData.fromJson(
-        value,
+        value as Map<String, dynamic>,
         globalSpritesheetPath,
         globalSpriteWidth,
         globalSpriteHeight,

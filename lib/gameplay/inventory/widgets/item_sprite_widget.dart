@@ -1,8 +1,9 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/inventory/models/item_icon_data.dart';
 import 'package:flutter/material.dart';
 
 class ItemSpriteWidget extends StatefulWidget {
-  final dynamic iconData;
+  final ItemIconData? iconData;
   final double size;
 
   const ItemSpriteWidget({
@@ -50,17 +51,17 @@ class _ItemSpriteWidgetState extends State<ItemSpriteWidget> {
 
     try {
       // Load sprite directly using Flame without depending on game context
-      final image = await Flame.images.load(widget.iconData.spritesheetPath);
+      final image = await Flame.images.load(widget.iconData?.spritesheetPath ?? '');
 
-      final spriteWidth = widget.iconData.spriteWidth.toDouble();
-      final spriteHeight = widget.iconData.spriteHeight.toDouble();
-      final col = widget.iconData.spriteColumnIndex;
-      final row = widget.iconData.spriteRowIndex;
+      final spriteWidth = widget.iconData?.spriteWidth.toDouble();
+      final spriteHeight = widget.iconData?.spriteHeight.toDouble();
+      final col = widget.iconData?.spriteColumnIndex ?? 0;
+      final row = widget.iconData?.spriteRowIndex ?? 0;
 
       final sprite = Sprite(
         image,
-        srcPosition: Vector2(col * spriteWidth, row * spriteHeight),
-        srcSize: Vector2(spriteWidth, spriteHeight),
+        srcPosition: Vector2(col * (spriteWidth ?? 0), row * (spriteHeight ?? 0)),
+        srcSize: Vector2(spriteWidth ?? 0, spriteHeight ?? 0),
       );
 
       if (mounted) {

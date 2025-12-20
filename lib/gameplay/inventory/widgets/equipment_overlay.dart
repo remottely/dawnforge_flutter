@@ -1,5 +1,6 @@
 import 'package:darkness_dungeon/gameplay/inventory/equipment_state.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
+import 'package:darkness_dungeon/gameplay/inventory/models/item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/widgets/item_sprite_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -94,7 +95,7 @@ class EquipmentOverlay extends StatelessWidget {
   Widget _buildSlotRow(
     String label,
     EquipmentSlotType slotType,
-    Map<EquipmentSlotType, dynamic> equipmentMap,
+    Map<EquipmentSlotType, Item?> equipmentMap,
     Color slotColor,
   ) {
     final item = equipmentMap[slotType];

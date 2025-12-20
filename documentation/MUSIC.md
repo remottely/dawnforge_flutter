@@ -8,7 +8,18 @@ trash:
 - 116
 - 129
 
+parei em: 188
+
 # 0 WORST
+- https://www.youtube.com/watch?v=cxVXdnzX57o&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=186 - 10/10 - #1 jogo deserto, arabe, etc - não é para esse jogo
+- https://www.youtube.com/watch?v=9S9vyY1myiI&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=180 - 9/10 - não é para esse jogo
+- https://www.youtube.com/watch?v=53r8fZQiY9A&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=178 - 9/10 - não é para esse jogo
+- https://www.youtube.com/watch?v=D_YF4maTmPY&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=177 - 10/10 - não é para esse jogo
+- https://www.youtube.com/watch?v=qcWtVYTTDtY&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=176 - 8/10 - não é para esse jogo
+- https://www.youtube.com/watch?v=8NKW7ylXgZc&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=174 - 9/10 - não é para esse jogo
+- https://www.youtube.com/watch?v=waR2SMQyMno&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=173 - 9/10 - não é para esse jogo
+- https://www.youtube.com/watch?v=tvU1pmGotMw&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=172 - 9/10 - não é para esse jogo
+- https://www.youtube.com/watch?v=PH1ic-_cT2E&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=168 - 10/10 - não é para esse jogo
 - https://www.youtube.com/watch?v=znarNyPELcU&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=95 - 6/10 - muito artificial.
 - https://www.youtube.com/watch?v=C_AWa-RbdeU&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=120 - 7/10 - leal para fazenda
 - https://www.youtube.com/watch?v=5ntfgZ1s3gU&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=132 - 8/10 - desacelerar ou criarestilo parecido??
@@ -25,7 +36,7 @@ trash:
 - https://www.youtube.com/watch?v=4Lq_M_Gz7Hg&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=138 - 10/10 - não é para esse jogo. Jogo infantil, de restaurante??
 - https://www.youtube.com/watch?v=sbIiBUdCBa8&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=139 - 8/10 - não é para esse jogo. editar, pegar só o inicio antes da batida!!
 
-# 1 BEST
+# baixado:
 - https://www.youtube.com/watch?v=HS6lu3NGRJY&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=102 - 10/10 - Esse precisa estar! editar, desacelerar um pouco. # 1 - trilha sonora principal!
 Song: Enchanted
 Composer: Keys Of Moon
@@ -33,11 +44,32 @@ Website: https://www.youtube.com/c/keysofmoonmusic
 License: Free To Use YouTube license youtube-free
 Music powered by BreakingCopyright: https://breakingcopyright.com
 
+# 1 BEST
+- https://www.youtube.com/watch?v=AiBiu8XcIdc&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=188 - 10/10 - #1 - trilha sonora principal! - musica suuuper feliz!!!
+- https://www.youtube.com/watch?v=R7UlQrotjUA&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=185 - 10/10 - #1 - trilha sonora principal? estilo minecraft!
+- https://www.youtube.com/watch?v=hbkeq71v5PA&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=182 - 10/10 - # 1 - trilha sonora principal!
 - https://www.youtube.com/watch?v=hgn7kasl8Y0&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=128 - 10/10 - Esse precisa estar! tema de encorajamento e vitoria!! Jogo zerado?? separar em varios adios para diferentes estagios? missão mais importante do jogo? #1 - primeira e ultima missao do jogo!
 - https://www.youtube.com/watch?v=FAF7LPL0OUI&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=129 - 10/10 - Esse precisa estar! separar em varios adios para diferentes estagios? missão mais importante do jogo? #1 - segunda missão!
 - https://www.youtube.com/watch?v=powKEGuPvjc&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=82 - 10/10 - pefeito? editar, remover batidas?? #1 - trilha sonora principal de outono ou inverno?
+- https://www.youtube.com/watch?v=sYy1j449aLM&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=162 - 10/10 - #1 - trilha sonora principal!
+- https://www.youtube.com/watch?v=u5QBqjuMUaQ&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=163 - 9/10 - lofi bem suave. bom para fundo de um dia qualquer. #2
+- https://www.youtube.com/watch?v=gUgyfUIhGQc&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=165 - 10/10 - tema futuristico! #2
+- https://www.youtube.com/watch?v=ikz1aBQi2v0&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=166 - 10/10 - tema batalha!! #2
+- https://www.youtube.com/watch?v=JpuhuTkOQgw&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=167 - 10/10 - tema de mapa especifico ou missao? #2
+- https://www.youtube.com/watch?v=UhT5XTg0rk8&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=169 - 10/10 - tema principal! #2
+- https://www.youtube.com/watch?v=6E6m_kRnTuw&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=170 - 10/10 - trailler inspirador! #2
+- https://www.youtube.com/watch?v=MJQXY7KBsRI&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=171 - 9/10 - music fundo principal - #2
+- https://www.youtube.com/watch?v=anonH2CK-zI&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=175 - 9/10 - batalha, boss! #5
+- https://www.youtube.com/watch?v=p9z8ByzKQtc&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=179 - 10/10 - musica natalina! #3
+- https://www.youtube.com/watch?v=aDZE8kLSFF4&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=181 - 9/10 - trailler dramatico! jogo de aventura, batalha! #2
+- https://www.youtube.com/watch?v=8A0jlOPwECo&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=183 - 9/10 - #3
+- https://www.youtube.com/watch?v=r-3PRii66M0&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=184 - 9/10 - #3
+- https://www.youtube.com/watch?v=wXpFhFM-dNs&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=187 - 9/10 - #3 - estilo HP, senhor dos aneis.
 
 # 1.2 BEST
+
+- https://www.youtube.com/watch?v=E5KFB6nRZaY&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=161 - 9/10 - piano puro. bom para transicao de estacao??
+- https://www.youtube.com/watch?v=oRXRt2hkB0Y&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=160 - 9/10 - caverna? missao?
 - https://www.youtube.com/watch?v=QRF2zzEFu8c&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=69 - 10/10 - tema asiatico, inserir coisas asiaticas no jogo?? #2
 - https://www.youtube.com/watch?v=EGjI6ZbLnBY&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=74 - 9/10 - editar, remover vocal e batidas! #5
 - https://www.youtube.com/watch?v=MCscTvpQ7po&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=83 - 9/10 - trilha sonora epica aventura!! estilo A ORIGEM! #6
@@ -64,6 +96,7 @@ Music powered by BreakingCopyright: https://breakingcopyright.com
 - https://www.youtube.com/watch?v=nX7-7miPPVk&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=151 - 10/10 - usar na estacao de outono?? trilha de vitoria intensa!! som de conquista, zerar jogo?
 
 # 3 GOOD ENOUGH
+- https://www.youtube.com/watch?v=EMmVA1xtqc0&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=159 - 8/10 - trailler!
 - https://www.youtube.com/watch?v=Q7HjxOAU5Kc&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=76 - 9/10 - perfeita para jogo de restaurante??
 - https://www.youtube.com/watch?v=Ig2LiJBriR4&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=87 - 9/10 - bom para um dia do jogo! editar, remover final horrivel!!
 - https://www.youtube.com/watch?v=TjX34wmhFC4&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=99 - 9/10 - bom para um dia do jogo!

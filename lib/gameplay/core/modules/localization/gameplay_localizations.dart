@@ -22,10 +22,10 @@ class GameplayLocalizations {
   }
 
   Future<bool> load() async {
-    String data = await rootBundle.loadString(
+    final data = await rootBundle.loadString(
       'assets/l10n/${locale.languageCode}.json',
     );
-    final Map<String, dynamic> result = json.decode(data);
+    final result = json.decode(data) as Map<String, dynamic>;
 
     _sentences = result.map((String key, dynamic value) {
       return MapEntry(key, value.toString());

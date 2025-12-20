@@ -5,6 +5,8 @@ import 'package:darkness_dungeon/gameplay/core/modules/hud/inventory/inventory_h
 import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
+import 'package:darkness_dungeon/gameplay/inventory/models/item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/models/item_icon_data.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 import 'package:flutter/material.dart';
 
@@ -133,7 +135,7 @@ class InventoryHUDView extends InterfaceComponent {
     }
   }
 
-  void _drawSlot(Canvas canvas, Offset position, dynamic item, int? quantity) {
+  void _drawSlot(Canvas canvas, Offset position, Item? item, int? quantity) {
     final slotRect = Rect.fromLTWH(
       position.dx,
       position.dy,
@@ -217,15 +219,15 @@ class InventoryHUDView extends InterfaceComponent {
     }
   }
 
-  void _loadAndCacheSprite(String cacheKey, dynamic iconData) {
+  void _loadAndCacheSprite(String cacheKey, ItemIconData? iconData) {
     SpriteAnimationConfigHelper.loadSpriteFromSheet(
-      assetPath: '${iconData.spritesheetPath}',
+      assetPath: '${iconData?.spritesheetPath}',
       spriteSize: Vector2(
-        iconData.spriteWidth.toDouble(),
-        iconData.spriteHeight.toDouble(),
+        iconData?.spriteWidth.toDouble() ?? 0,
+        iconData?.spriteHeight.toDouble() ?? 0,
       ),
-      frameIndex: iconData.spriteColumnIndex,
-      rowIndex: iconData.spriteRowIndex,
+      frameIndex: iconData?.spriteColumnIndex ?? 0,
+      rowIndex: iconData?.spriteRowIndex ?? 0,
       skipFirstFrames: 0,
     ).then((sprite) {
       _spriteCache[cacheKey] = sprite;
