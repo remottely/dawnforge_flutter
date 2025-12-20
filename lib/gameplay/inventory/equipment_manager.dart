@@ -1,5 +1,6 @@
 import 'dart:developer' as developer;
 
+import 'equipment_state.dart';
 import 'inventory_manager.dart';
 import 'item_factory.dart';
 import 'items/main_hand_item.dart';
@@ -39,6 +40,10 @@ final class EquipmentManager {
 
     // Simply equip without removing from inventory
     _equipmentSlots[slotType] = _equipmentSlots[slotType]!.equip(item);
+    
+    // Notify Flutter overlay
+    EquipmentState.instance.updateSlot(slotType, item);
+    
     developer.log('[EquipmentManager] Item equipped successfully (kept in inventory)');
     return true;
   }
@@ -54,6 +59,10 @@ final class EquipmentManager {
 
     // Simply unequip without adding back to inventory (it's already there)
     _equipmentSlots[slotType] = _equipmentSlots[slotType]!.unequip();
+    
+    // Notify Flutter overlay
+    EquipmentState.instance.updateSlot(slotType, null);
+    
     developer.log('[EquipmentManager] Item unequipped successfully (remains in inventory)');
     return item;
   }

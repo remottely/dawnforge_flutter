@@ -9,6 +9,7 @@ import 'package:darkness_dungeon/gameplay/decorations/map_transition_sensor.dart
 import 'package:darkness_dungeon/gameplay/farm/handlers/farm_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen_def.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen_viewmodel.dart';
+import 'package:darkness_dungeon/gameplay/inventory/widgets/equipment_overlay.dart';
 import 'package:darkness_dungeon/shared/framework/utils/dd_debug_hud.dart';
 import 'package:flutter/material.dart';
 
@@ -68,32 +69,35 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
 
         farmInputHandler = FarmInputHandler(player: player);
 
-        return Material(
-          color: Colors.transparent,
-          child: BonfireWidget(
-            playerControllers: [playerInput],
-            player: player,
-            map: mapItem.map,
-            components: [
-              gameplayGameStateManager,
-              inventoryInputHandler,
-              shieldDefenseInputHandler,
-              farmInputHandler,
-            ],
-            hudComponents: [
-              DDDebugHud(
-                showFps: true,
-                showPosition: true,
-                showEntities: true,
+        return Stack(
+          children: [
+            BonfireWidget(
+                playerControllers: [playerInput],
+                player: player,
+                map: mapItem.map,
+                components: [
+                  gameplayGameStateManager,
+                  inventoryInputHandler,
+                  shieldDefenseInputHandler,
+                  farmInputHandler,
+                ],
+                hudComponents: [
+                  DDDebugHud(
+                    showFps: true,
+                    showPosition: true,
+                    showEntities: true,
+                  ),
+                ],
+                interface: gameplayHUD,
+                lightingColorGame: mapLightingColor,
+                backgroundColor: mapBackgroundColor,
+                cameraConfig: cameraConfig,
+                debugMode: AppEnvironment.kIsDebugMode,
+                showCollisionArea: AppEnvironment.kShowCollisionBoxes,
               ),
-            ],
-            interface: gameplayHUD,
-            lightingColorGame: mapLightingColor,
-            backgroundColor: mapBackgroundColor,
-            cameraConfig: cameraConfig,
-            debugMode: AppEnvironment.kIsDebugMode,
-            showCollisionArea: AppEnvironment.kShowCollisionBoxes,
-          ),
+            // Flutter Equipment Overlay - inside MapNavigator builder
+            const EquipmentOverlay(),
+          ],
         );
       },
     );

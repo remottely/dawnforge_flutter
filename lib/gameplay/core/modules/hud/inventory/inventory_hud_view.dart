@@ -14,9 +14,9 @@ class InventoryHUDView extends InterfaceComponent {
           InventoryHUDDef.kPadding * 2 +
               (InventoryHUDDef.kSlotSize * InventoryHUDDef.kSlotsPerRow) +
               (InventoryHUDDef.kSpacing * (InventoryHUDDef.kSlotsPerRow - 1)),
-          400,
+          220, // Reduced height since equipment slots are removed
         ),
-        position: Vector2(10, 100),
+        position: Vector2.zero(), // Will be set in onLoad
       );
 
   final Map<String, Sprite> _spriteCache = {};
@@ -25,6 +25,27 @@ class InventoryHUDView extends InterfaceComponent {
   void _show() => _isVisible = true;
   void _hide() => _isVisible = false;
   void toggleIsVisible() => _isVisible ? _hide() : _show();
+
+  @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+    _updatePosition();
+  }
+
+  @override
+  void onGameResize(Vector2 size) {
+    super.onGameResize(size);
+    _updatePosition();
+  }
+
+  void _updatePosition() {
+    // Center horizontally at bottom of screen
+    final gameSize = gameRef.size;
+    position = Vector2(
+      (gameSize.x - size.x) / 2, // Center horizontally
+      gameSize.y - size.y - 20,   // Bottom with 20px margin
+    );
+  }
 
   @override
   void render(Canvas canvas) {
@@ -50,8 +71,6 @@ class InventoryHUDView extends InterfaceComponent {
     );
 
     _drawInventorySlots(canvas);
-
-    _drawEquipmentSlots(canvas);
 
     super.render(canvas);
   }
@@ -81,54 +100,6 @@ class InventoryHUDView extends InterfaceComponent {
           (row * (InventoryHUDDef.kSlotSize + InventoryHUDDef.kSpacing));
       final slot = manager.getSlotByIndex(i);
       _drawSlot(canvas, Offset(x, y), slot?.item, slot?.quantity);
-    }
-  }
-
-  void _drawEquipmentSlots(Canvas canvas) {
-    final manager = EquipmentManager.instance;
-    double startY = InventoryHUDDef.kPadding + 30 + 200;
-
-    _drawText(
-      canvas,
-      'Equipment:',
-      Offset(InventoryHUDDef.kPadding, startY),
-      fontSize: 12,
-    );
-
-    startY += 32;
-
-    final slots = [
-      EquipmentSlotType.mainHand,
-      EquipmentSlotType.offHand,
-      EquipmentSlotType.helmet,
-      EquipmentSlotType.chest,
-      EquipmentSlotType.legs,
-      EquipmentSlotType.boots,
-    ];
-
-    for (int i = 0; i < slots.length; i++) {
-      final slotType = slots[i];
-      final col = i % 3;
-      final row = i ~/ 3;
-
-      final x =
-          InventoryHUDDef.kPadding +
-          (col * (InventoryHUDDef.kSlotSize + 10 + 60));
-      final y =
-          startY +
-          (row * (InventoryHUDDef.kSlotSize + InventoryHUDDef.kSpacing + 10));
-
-      final item = manager.getEquippedItem(slotType);
-
-      _drawText(
-        canvas,
-        slotType.name.toUpperCase(),
-        Offset(x, y - 12),
-        fontSize: 8,
-        color: Colors.yellow,
-      );
-
-      _drawSlot(canvas, Offset(x, y), item, item != null ? 1 : null);
     }
   }
 

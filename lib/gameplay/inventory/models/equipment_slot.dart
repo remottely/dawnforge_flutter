@@ -9,6 +9,8 @@ enum EquipmentSlotType {
   chest,
   legs,
   boots,
+  gloves,
+  necklace,
   accessory1,
   accessory2;
 
