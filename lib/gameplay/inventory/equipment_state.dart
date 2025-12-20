@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/item.dart';
 import 'package:flutter/foundation.dart';
@@ -21,13 +23,31 @@ class EquipmentState {
   });
 
   void updateSlot(EquipmentSlotType slotType, Item? item) {
-    final newMap = Map<EquipmentSlotType, Item?>.from(equipment.value);
-    newMap[slotType] = item;
-    equipment.value = newMap;
+    try {
+      final newMap = Map<EquipmentSlotType, Item?>.from(equipment.value);
+      newMap[slotType] = item;
+      equipment.value = newMap;
+      developer.log('[EquipmentState] Updated slot $slotType: ${item?.name ?? "empty"}');
+    } catch (e, stack) {
+      developer.log(
+        '[EquipmentState] Error updating slot $slotType: $e',
+        error: e,
+        stackTrace: stack,
+      );
+    }
   }
 
   void updateAll(Map<EquipmentSlotType, Item?> newEquipment) {
-    equipment.value = Map.from(newEquipment);
+    try {
+      equipment.value = Map.from(newEquipment);
+      developer.log('[EquipmentState] Updated all equipment');
+    } catch (e, stack) {
+      developer.log(
+        '[EquipmentState] Error updating all equipment: $e',
+        error: e,
+        stackTrace: stack,
+      );
+    }
   }
 
   Item? getItem(EquipmentSlotType slotType) {
