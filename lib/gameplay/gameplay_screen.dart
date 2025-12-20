@@ -72,29 +72,31 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
         return Stack(
           children: [
             BonfireWidget(
-                playerControllers: [playerInput],
-                player: player,
-                map: mapItem.map,
-                components: [
-                  gameplayGameStateManager,
-                  inventoryInputHandler,
-                  shieldDefenseInputHandler,
-                  farmInputHandler,
-                ],
-                hudComponents: [
-                  DDDebugHud(
-                    showFps: true,
-                    showPosition: true,
-                    showEntities: true,
-                  ),
-                ],
-                interface: gameplayHUD,
-                lightingColorGame: mapLightingColor,
-                backgroundColor: mapBackgroundColor,
-                cameraConfig: cameraConfig,
-                debugMode: AppEnvironment.kIsDebugMode,
-                showCollisionArea: AppEnvironment.kShowCollisionBoxes,
-              ),
+              playerControllers: [playerInput],
+              player: player,
+              map: mapItem.map,
+              components: [
+                gameplayGameStateManager,
+                inventoryInputHandler,
+                shieldDefenseInputHandler,
+                farmInputHandler,
+              ],
+              hudComponents: [
+                DDDebugHud(
+                  showFps: true,
+                  showPosition: true,
+                  showEntities: true,
+                ),
+              ],
+              interface: gameplayHUD,
+              lightingColorGame: mapLightingColor,
+              // backgroundColor: mapBackgroundColor, // TODO(Kevin): put it back?
+              overlayBuilderMap: {},
+              backgroundColor: const Color(0xFF000000),
+              cameraConfig: cameraConfig,
+              debugMode: AppEnvironment.kIsDebugMode,
+              showCollisionArea: AppEnvironment.kShowCollisionBoxes,
+            ),
             // Flutter Equipment Overlay - inside MapNavigator builder
             const EquipmentOverlay(),
           ],

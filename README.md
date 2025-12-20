@@ -143,3 +143,5 @@ animations type:
 - right Down
 - left Up
 - left Down
+
+// TODO: put all maps background color to be the same as map ground

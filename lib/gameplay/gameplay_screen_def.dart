@@ -10,12 +10,19 @@ class GameplayScreenDef {
   static const double kCameraSpeed = 3.0;
 
   static CameraConfig createCameraConfig(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final calculatedZoom = CameraCalculations.getCameraZoomFromMaxVisibleTile(
+      context,
+      maxVisibleTile: TileConstants.kMaxVisibleTiles,
+    );
+
+    final pixelPerfectZoom = calculatedZoom.roundToDouble();
+
     return CameraConfig(
-      speed: kCameraSpeed,
-      zoom: CameraCalculations.getCameraZoomFromMaxVisibleTile(
-        context,
-        maxVisibleTile: TileConstants.kMaxVisibleTiles,
-      ),
+      speed: double.infinity, // TODO(Kevin): colocar de volta caso cause serrilhados no jogo
+      zoom: pixelPerfectZoom,
+      resolution: Vector2(size.width, size.height),
+      moveOnlyMapArea: true,
     );
   }
 
