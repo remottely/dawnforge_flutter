@@ -56,7 +56,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
           });
         }
 
-        MapArguments? mapArguments = arguments as MapArguments?;
+        final mapArguments = arguments as MapArguments?;
         final playerPosition =
             (mapArguments?.playerPosition ?? Vector2(24, 24)) *
             TileDef.kTileDimensionStandard;

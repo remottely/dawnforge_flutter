@@ -34,7 +34,7 @@ class DDSpriteAnimationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.red,
+      // color: Colors.red,
       width: _width,
       height: _height,
       child: FutureBuilder<SpriteAnimation>(

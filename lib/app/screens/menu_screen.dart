@@ -43,7 +43,7 @@ class _MenuScreenState extends MenuScreenViewModel {
                 ),
               ],
               _StartButton(onPressed: navigateToGameplayScreen),
-              _Controls(onControlMethodChanged: onControlMethodChanged),
+              // _Controls(onControlMethodChanged: onControlMethodChanged), // TODO(Kevin): NOW - put it back
               switch (SettingsManager.instance.vIsJoystickInputSelected) {
                 InputActionsType.joystick =>
                   const SizedBox.shrink(), // TODO(Kevin): Replace with joystick tip widget
@@ -131,9 +131,9 @@ class _StartButton extends StatelessWidget {
 }
 
 class _Controls extends StatelessWidget {
-  final void Function(InputActionsType) onControlMethodChanged;
-
   const _Controls({required this.onControlMethodChanged});
+
+  final void Function(InputActionsType) onControlMethodChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -147,12 +147,12 @@ class _Controls extends StatelessWidget {
           group: SettingsManager.instance.vIsJoystickInputSelected,
           onChange: onControlMethodChanged,
         ),
-        DDRadioButton<InputActionsType>(
-          value: InputActionsType.joystick,
-          group: SettingsManager.instance.vIsJoystickInputSelected,
-          label: 'Joystick',
-          onChange: onControlMethodChanged,
-        ),
+        // DDRadioButton<InputActionsType>( // TODO(Kevin): NOW - put it back
+        //   value: InputActionsType.joystick,
+        //   group: SettingsManager.instance.vIsJoystickInputSelected,
+        //   label: 'Joystick',
+        //   onChange: onControlMethodChanged,
+        // ),
       ],
     );
   }
@@ -163,7 +163,8 @@ class _KeyboardTip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DDSpriteWidget.extraLarge(sprite: MenuScreenDef.keyboardSprite);
+    return const SizedBox.shrink();
+    // return DDSpriteWidget.extraLarge(sprite: MenuScreenDef.keyboardSprite); // TODO(Kevin): NOW - put it back
   }
 }
 
