@@ -16,6 +16,8 @@ void main() async {
   if (!kIsWeb) {
     await Flame.device.setLandscape();
     await Flame.device.fullScreen();
+  } else {
+    await Flame.device.setPortrait();
   }
 
   await AudioManager.instance.initialize();

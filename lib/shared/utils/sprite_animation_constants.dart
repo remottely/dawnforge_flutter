@@ -1,7 +1,7 @@
 final class SpriteAnimationConstants {
   SpriteAnimationConstants._();
 
-  static const double kStepTimeStandard = 0.1;
+  static const double kStepTimeStandard = 0.15;
   static const double kStepTimeSlow = 0.2;
 
   static const double kSizeSmall = 50.0;
