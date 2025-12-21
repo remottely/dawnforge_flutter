@@ -8,7 +8,7 @@ class InputsHUDView extends InterfaceComponent {
   InputsHUDView()
       : super(
           id:  3,
-          size: Vector2(300, 0), // Width fixed, height calculated dynamically
+          size: Vector2(360, 0), // Width fixed, height calculated dynamically
           position: Vector2.zero(), // Will be set in onLoad
         );
 
