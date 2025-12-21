@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.67.1+1
+version: 1.67.2+1
 
 environment:
   sdk: ^3.8.1
@@ -225,6 +225,7 @@ flutter:
     # TODO
     - assets/images/tiled/tile_set.png
     - assets/game_over.png
+    - assets/images/tiled/sv/maps/sv_farm.json
 
   fonts:
     - family: Normal

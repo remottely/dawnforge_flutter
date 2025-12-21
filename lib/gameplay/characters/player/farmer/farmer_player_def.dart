@@ -56,46 +56,50 @@ final class FarmerPlayerDef {
 
   static final RectangleHitbox _hitbox = HitboxUtils.createCustomHitbox(
     componentSize: componentSize,
-    left: 20.0,
-    top: 22.0,
-    right: 20.0,
-    bottom: 16.0,
+    // left: 20,
+    // top: 22,
+    // right: 20,
+    // bottom: 16,
+    left: 16,
+    top: 23,
+    right: 16,
+    bottom: 16,
   );
 
   static String assetPath =
       'tiled/Modern_Farm_v1.2/Characters/Farmer_1_16x16.png';
 
   static const int _x6 = 6;
-  static const double _frameRightX6 = _x6 * 0.0;
-  static const double _frameUpX6 = _x6 * 1.0;
-  static const double _frameLeftX6 = _x6 * 2.0;
-  static const double _frameDownX6 = _x6 * 3.0;
+  static const double _frameRightX6 = _x6 * 0;
+  static const double _frameUpX6 = _x6 * 1;
+  static const double _frameLeftX6 = _x6 * 2;
+  static const double _frameDownX6 = _x6 * 3;
 
   static const int _x9 = 9;
-  static const double _frameRightX9 = _x9 * 0.0;
-  static const double _frameUpX9 = _x9 * 1.0;
-  static const double _frameLeftX9 = _x9 * 2.0;
-  static const double _frameDownX9 = _x9 * 3.0;
+  static const double _frameRightX9 = _x9 * 0;
+  static const double _frameUpX9 = _x9 * 1;
+  static const double _frameLeftX9 = _x9 * 2;
+  static const double _frameDownX9 = _x9 * 3;
 
   static const int _x10 = 10;
-  static const double _frameRightX10 = _x10 * 0.0;
-  static const double _frameUpX10 = _x10 * 1.0;
-  static const double _frameLeftX10 = _x10 * 2.0;
-  static const double _frameDownX10 = _x10 * 3.0;
+  static const double _frameRightX10 = _x10 * 0;
+  static const double _frameUpX10 = _x10 * 1;
+  static const double _frameLeftX10 = _x10 * 2;
+  static const double _frameDownX10 = _x10 * 3;
 
   static const int _x14 = 14;
-  static const double _frameRightX14 = _x14 * 0.0;
-  static const double _frameUpX14 = _x14 * 1.0;
-  static const double _frameLeftX14 = _x14 * 2.0;
-  static const double _frameDownX14 = _x14 * 3.0;
+  static const double _frameRightX14 = _x14 * 0;
+  static const double _frameUpX14 = _x14 * 1;
+  static const double _frameLeftX14 = _x14 * 2;
+  static const double _frameDownX14 = _x14 * 3;
 
-  static const double _frameIdleY = 2.0;
-  static const double _frameWalkY = 4.0;
-  static const double _frameHarvestY = 6.0;
+  static const double _frameIdleY = 2;
+  static const double _frameWalkY = 4;
+  static const double _frameHarvestY = 6;
   static const double _framePlaceSeedY = _frameHarvestY;
-  static const double _frameDigY = 10.0;
-  static const double _frameWateringY = 14.0;
-  static const double _frameChoppingY = 18.0;
+  static const double _frameDigY = 10;
+  static const double _frameWateringY = 14;
+  static const double _frameChoppingY = 18;
   static const double _frameAttackY = _frameChoppingY;
 
   static final int _skipFirstFramesX6 = 6;

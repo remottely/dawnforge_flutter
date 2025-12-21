@@ -76,6 +76,14 @@ final class MapDef {
         'farm_tile': (p) => FarmTileView(position: p.position),
       };
 
+  /// SV Maps
+  static const String kSVFarmId = 'sv_farm';
+  static const String kSVLakeId = 'sv_lake';
+  static const String kSVTownId = 'sv_town';
+  static const String kSVBeachId = 'sv_beach';
+  static const String kSVForestId = 'sv_forest';
+  static const String kSVCaveId = 'sv_cave';
+
   /// Final maps
   static const String kFarmId = 'farm';
   static const String kLakeId = 'lake';
@@ -98,6 +106,20 @@ final class MapDef {
   static const String kTemple1Id = 'temple_1';
 
   static const List<MapData> kAllMaps = [
+    /// SV MAPS
+    const MapData(
+      id: kSVFarmId,
+      asset: 'tiled/sv/maps/$kSVFarmId.json',
+      sensorIds: [
+        'sensor_$kSVForestId',
+        'sensor_$kSVTownId',
+        'sensor_$kSVLakeId',
+      ],
+      backgroundMusic: AudioDef.backgroundMusic1,
+      lightingColor: _kNoneLightingColor,
+      backgroundColor: _kLakeBackgroundColor,
+    ),
+
     /// NEW MAPS
     const MapData(
       id: kFarmId,
