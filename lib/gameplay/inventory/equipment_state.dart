@@ -10,6 +10,9 @@ class EquipmentState {
 
   static final instance = EquipmentState._();
 
+  // Controls equipment overlay visibility
+  final isVisible = ValueNotifier<bool>(true);
+
   // Map of slot type to equipped item
   final equipment = ValueNotifier<Map<EquipmentSlotType, Item?>>({
     EquipmentSlotType.mainHand: null,
@@ -56,7 +59,12 @@ class EquipmentState {
     return equipment.value[slotType];
   }
 
+  void show() => isVisible.value = true;
+  void hide() => isVisible.value = false;
+  void toggle() => isVisible.value = !isVisible.value;
+
   void dispose() {
     equipment.dispose();
+    isVisible.dispose();
   }
 }

@@ -1,86 +1,120 @@
+import 'package:darkness_dungeon/gameplay/core/modules/hud/responsive/responsive_overlay_base.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_state.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/widgets/item_sprite_widget.dart';
 import 'package:flutter/material.dart';
 
-class EquipmentOverlay extends StatelessWidget {
+class EquipmentOverlay extends ResponsiveOverlayBase {
   const EquipmentOverlay({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      top: 20,
-      right: 20,
-      child: Material(
-        color: Colors.transparent,
+  String get overlayId => 'equipment';
+
+  @override
+  ValueNotifier<bool> get visibilityNotifier =>
+      EquipmentState.instance.isVisible;
+
+  @override
+  OverlayPosition getOverlayPosition(BuildContext context) {
+    final margin = getResponsiveMargin(context);
+    return OverlayPosition.topRight(
+      margin: margin,
+      safeAreaPadding: EdgeInsets.all(margin / 2),
+    );
+  }
+
+  @override
+  Widget buildOverlayContent(
+    BuildContext context,
+    ResponsiveOverlayData data,
+  ) {
+    return Material(
+      color: Colors.transparent,
+      child: IntrinsicWidth(
         child: Container(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(data.padding),
           decoration: BoxDecoration(
             color: Colors.black.withOpacity(0.8),
-            border: Border.all(color: Colors.white.withOpacity(0.5), width: 2),
-            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: Colors.white.withOpacity(0.5),
+              width: data.isSmallScreen ? 1.5 : 2,
+            ),
+            borderRadius: BorderRadius.circular(data.isSmallScreen ? 6 : 8),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'EQUIPMENT',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Normal',
-                ),
-              ),
-              const SizedBox(height: 16),
+              // Text(
+              //   'EQUIPMENT',
+              //   style: TextStyle(
+              //     color: Colors.white,
+              //     fontSize: data.titleFontSize,
+              //     fontWeight: FontWeight.bold,
+              //     fontFamily: 'Normal',
+              //   ),
+              // ),
+              // SizedBox(height: data.spacing * 2),
               ValueListenableBuilder(
                 valueListenable: EquipmentState.instance.equipment,
                 builder: (context, equipmentMap, child) {
                   return Column(
                     children: [
                       _buildSlotRow(
+                        context,
+                        data,
                         'MAIN HAND',
                         EquipmentSlotType.mainHand,
                         equipmentMap,
                         Colors.red.withOpacity(0.3),
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: data.spacing),
                       _buildSlotRow(
+                        context,
+                        data,
                         'OFF HAND',
                         EquipmentSlotType.offHand,
                         equipmentMap,
                         Colors.green.withOpacity(0.3),
                       ),
-                      const SizedBox(height: 8),
-                      _buildSlotRow(
-                        'HELMET',
-                        EquipmentSlotType.helmet,
-                        equipmentMap,
-                        Colors.blue.withOpacity(0.3),
-                      ),
-                      const SizedBox(height: 8),
-                      _buildSlotRow(
-                        'CHEST',
-                        EquipmentSlotType.chest,
-                        equipmentMap,
-                        Colors.blue.withOpacity(0.3),
-                      ),
-                      const SizedBox(height: 8),
-                      _buildSlotRow(
-                        'LEGS',
-                        EquipmentSlotType.legs,
-                        equipmentMap,
-                        Colors.blue.withOpacity(0.3),
-                      ),
-                      const SizedBox(height: 8),
-                      _buildSlotRow(
-                        'BOOTS',
-                        EquipmentSlotType.boots,
-                        equipmentMap,
-                        Colors.blue.withOpacity(0.3),
-                      ),
+                      // TODO(Kevin): put it back:
+                      // SizedBox(height: data.spacing),
+                      // _buildSlotRow(
+                      //   context,
+                      //   data,
+                      //   'HELMET',
+                      //   EquipmentSlotType.helmet,
+                      //   equipmentMap,
+                      //   Colors.blue.withOpacity(0.3),
+                      // ),
+                      // SizedBox(height: data.spacing),
+                      // _buildSlotRow(
+                      //   context,
+                      //   data,
+                      //   'CHEST',
+                      //   EquipmentSlotType.chest,
+                      //   equipmentMap,
+                      //   Colors.blue.withOpacity(0.3),
+                      // ),
+                      // SizedBox(height: data.spacing),
+                      // _buildSlotRow(
+                      //   context,
+                      //   data,
+                      //   'LEGS',
+                      //   EquipmentSlotType.legs,
+                      //   equipmentMap,
+                      //   Colors.blue.withOpacity(0.3),
+                      // ),
+                      // SizedBox(height: data.spacing),
+                      // _buildSlotRow(
+                      //   context,
+                      //   data,
+                      //   'BOOTS',
+                      //   EquipmentSlotType.boots,
+                      //   equipmentMap,
+                      //   Colors.blue.withOpacity(0.3),
+                      // ),
                     ],
                   );
                 },
@@ -93,29 +127,32 @@ class EquipmentOverlay extends StatelessWidget {
   }
 
   Widget _buildSlotRow(
+    BuildContext context,
+    ResponsiveOverlayData data,
     String label,
     EquipmentSlotType slotType,
     Map<EquipmentSlotType, Item?> equipmentMap,
     Color slotColor,
   ) {
     final item = equipmentMap[slotType];
+    final labelWidth = data.isSmallScreen ? 32.0 : 70.0;
 
     return Row(
       children: [
         SizedBox(
-          width: 100,
+          width: labelWidth,
           child: Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.yellow,
-              fontSize: 10,
+              fontSize: data.baseFontSize - 2,
               fontFamily: 'Normal',
             ),
           ),
         ),
         Container(
-          width: 40,
-          height: 40,
+          width: data.slotSize,
+          height: data.slotSize,
           decoration: BoxDecoration(
             color: item != null ? slotColor : Colors.grey.withOpacity(0.2),
             border: Border.all(color: Colors.white.withOpacity(0.5)),
@@ -123,29 +160,29 @@ class EquipmentOverlay extends StatelessWidget {
           child: item != null
               ? (item.iconData != null
                     ? Padding(
-                        padding: const EdgeInsets.all(4.0),
+                        padding: EdgeInsets.all(data.spacing / 2),
                         child: ItemSpriteWidget(
                           iconData: item.iconData,
-                          size: 32,
+                          size: data.slotSize - data.spacing,
                         ),
                       )
                     : Center(
                         child: Text(
                           _abbreviateItemName(item.name),
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.white,
-                            fontSize: 10,
+                            fontSize: data.baseFontSize - 2,
                             fontFamily: 'Normal',
                           ),
                           textAlign: TextAlign.center,
                         ),
                       ))
-              : const Center(
+              : Center(
                   child: Text(
                     '-',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 16,
+                      fontSize: data.titleFontSize,
                       fontFamily: 'Normal',
                     ),
                   ),
@@ -155,7 +192,7 @@ class EquipmentOverlay extends StatelessWidget {
     );
   }
 
-  String _abbreviateItemName(String name) {
+  static String _abbreviateItemName(String name) {
     if (name.length <= 4) return name;
 
     final words = name.split(' ');

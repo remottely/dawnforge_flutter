@@ -1,3 +1,4 @@
+import 'package:darkness_dungeon/gameplay/core/modules/hud/responsive/responsive_overlay_base.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_state.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
@@ -7,83 +8,88 @@ import 'package:darkness_dungeon/gameplay/inventory/models/item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/widgets/item_sprite_widget.dart';
 import 'package:flutter/material.dart';
 
-class InventoryOverlay extends StatelessWidget {
+class InventoryOverlay extends ResponsiveOverlayBase {
   const InventoryOverlay({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder<bool>(
-      valueListenable: InventoryState.instance.isVisible,
-      builder: (context, isVisible, child) {
-        if (!isVisible) {
-          return const SizedBox.shrink();
-        }
+  String get overlayId => 'inventory';
 
-        return child!;
-      },
-      child: _buildOverlay(),
+  @override
+  ValueNotifier<bool> get visibilityNotifier =>
+      InventoryState.instance.isVisible;
+
+  @override
+  OverlayPosition getOverlayPosition(BuildContext context) {
+    final margin = getResponsiveMargin(context);
+    return OverlayPosition.bottomRight(
+      margin: margin,
+      safeAreaPadding: EdgeInsets.all(margin / 2),
     );
   }
 
-  Widget _buildOverlay() {
-    return Positioned(
-      left: 0,
-      right: 0,
-      bottom: 20,
-      child: Center(
-        child: Material(
-          color: Colors.transparent,
-          child: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.8),
-              border: Border.all(
-                color: Colors.white.withOpacity(0.5),
-                width: 2,
-              ),
-              borderRadius: BorderRadius.circular(4),
+  @override
+  Widget buildOverlayContent(
+    BuildContext context,
+    ResponsiveOverlayData data,
+  ) {
+    return Material(
+      color: Colors.transparent,
+      child: IntrinsicWidth(
+        child: Container(
+          padding: EdgeInsets.all(data.padding),
+          decoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.8),
+            border: Border.all(
+              color: Colors.white.withOpacity(0.5),
+              width: data.isSmallScreen ? 1.5 : 2,
             ),
-            child: _buildInventoryGrid(),
+            borderRadius: BorderRadius.circular(data.isSmallScreen ? 3 : 4),
           ),
+          child: _buildInventoryGrid(context, data),
         ),
       ),
     );
   }
 
-  Widget _buildInventoryGrid() {
+  Widget _buildInventoryGrid(BuildContext context, ResponsiveOverlayData data) {
     final manager = InventoryManager.instance;
-    const int slotsPerRow = 10;
-    const double slotSize = 40.0;
-    const double spacing = 4.0;
-
-    final int rows = (manager.maxSlots / slotsPerRow).ceil();
+    
+    // Ajusta o número de slots por linha baseado no tamanho da tela
+    final int slotsPerRow = valueByScreenSize(
+      context,
+      small: 6,
+      medium: 8,
+      large: 10,
+      extraLarge: 12,
+    );
 
     return ValueListenableBuilder<Map<EquipmentSlotType, Item?>>(
       valueListenable: EquipmentState.instance.equipment,
       builder: (context, equipmentMap, child) {
-        return SizedBox(
-          width: (slotSize * slotsPerRow) + (spacing * (slotsPerRow - 1)) + 16,
-          child: Wrap(
-            spacing: spacing,
-            runSpacing: spacing,
-            children: List.generate(
-              manager.maxSlots,
-              (index) {
-                final slot = manager.getSlotByIndex(index);
-                return _buildInventorySlot(
-                  slot?.item,
-                  slot?.quantity,
-                  slotSize,
-                );
-              },
-            ),
+        return Wrap(
+          spacing: data.spacing,
+          runSpacing: data.spacing,
+          children: List.generate(
+            manager.maxSlots,
+            (index) {
+              final slot = manager.getSlotByIndex(index);
+              return _buildInventorySlot(
+                data,
+                slot?.item,
+                slot?.quantity,
+              );
+            },
           ),
         );
       },
     );
   }
 
-  Widget _buildInventorySlot(Item? item, int? quantity, double slotSize) {
+  Widget _buildInventorySlot(
+    ResponsiveOverlayData data,
+    Item? item,
+    int? quantity,
+  ) {
     // Check if item is equipped
     EquipmentSlotType? equippedSlot;
     Color slotColor = item != null
@@ -101,8 +107,8 @@ class InventoryOverlay extends StatelessWidget {
     }
 
     return Container(
-      width: slotSize,
-      height: slotSize,
+      width: data.slotSize,
+      height: data.slotSize,
       decoration: BoxDecoration(
         color: slotColor,
         border: Border.all(color: Colors.white.withOpacity(0.5)),
@@ -114,17 +120,17 @@ class InventoryOverlay extends StatelessWidget {
             Center(
               child: item.iconData != null
                   ? Padding(
-                      padding: const EdgeInsets.all(4.0),
+                      padding: EdgeInsets.all(data.spacing),
                       child: ItemSpriteWidget(
                         iconData: item.iconData,
-                        size: slotSize - 8,
+                        size: data.slotSize - (data.spacing * 2),
                       ),
                     )
                   : Text(
                       _abbreviateItemName(item.name),
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white,
-                        fontSize: 10,
+                        fontSize: data.baseFontSize - 2,
                         fontFamily: 'Normal',
                       ),
                       textAlign: TextAlign.center,
@@ -136,8 +142,8 @@ class InventoryOverlay extends StatelessWidget {
                 bottom: 2,
                 left: 2,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 2,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: data.spacing / 2,
                     vertical: 1,
                   ),
                   decoration: BoxDecoration(
@@ -146,9 +152,9 @@ class InventoryOverlay extends StatelessWidget {
                   ),
                   child: Text(
                     'x$quantity',
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.yellow,
-                      fontSize: 8,
+                      fontSize: data.baseFontSize - 4,
                       fontFamily: 'Normal',
                     ),
                   ),

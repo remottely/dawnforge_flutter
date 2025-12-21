@@ -1,46 +1,47 @@
 import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/inputs_hud_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/inputs_state.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/responsive/responsive_overlay_base.dart';
 import 'package:flutter/material.dart';
 
-class InputsOverlay extends StatelessWidget {
+class InputsOverlay extends ResponsiveOverlayBase {
   const InputsOverlay({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder<bool>(
-      valueListenable: InputsState.instance.isVisible,
-      builder: (context, isVisible, child) {
-        if (!isVisible) {
-          return const SizedBox.shrink();
-        }
+  String get overlayId => 'inputs';
 
-        return child!;
-      },
-      child: _buildOverlay(),
+  @override
+  ValueNotifier<bool> get visibilityNotifier => InputsState.instance.isVisible;
+
+  @override
+  OverlayPosition getOverlayPosition(BuildContext context) {
+    final margin = getResponsiveMargin(context);
+    return OverlayPosition.bottomLeft(
+      margin: margin,
+      safeAreaPadding: EdgeInsets.all(margin / 2),
     );
   }
 
-  Widget _buildOverlay() {
-    const double padding = 6;
-    const double lineHeight = 22;
-    const double keyBoxWidth = 96;
-    const double keyBoxHeight = 20;
+  @override
+  Widget buildOverlayContent(
+    BuildContext context,
+    ResponsiveOverlayData data,
+  ) {
+    final keyBoxWidth = valueByScreenSize(
+      context,
+      small: 80.0,
+      medium: 96.0,
+      large: 110.0,
+      extraLarge: 120.0,
+    );
 
-    final double panelHeight =
-        InputsHUDDef.inputGuide.length * lineHeight + padding * 2;
-
-    return Positioned(
-      left: 16,
-      bottom: 20,
-      child: Material(
-        color: Colors.transparent,
+    return Material(
+      color: Colors.transparent,
+      child: IntrinsicWidth(
         child: Container(
-          width: 360,
-          height: panelHeight,
-          padding: const EdgeInsets.all(padding),
+          padding: EdgeInsets.all(data.padding),
           decoration: BoxDecoration(
             color: const Color(0xAA222222),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(data.isSmallScreen ? 6 : 8),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -48,11 +49,11 @@ class InputsOverlay extends StatelessWidget {
             children: List.generate(
               InputsHUDDef.inputGuide.length,
               (index) => _buildInputRow(
+                context,
+                data,
                 InputsHUDDef.inputGuide[index]['key']!,
                 InputsHUDDef.inputGuide[index]['desc']!,
                 keyBoxWidth,
-                keyBoxHeight,
-                padding,
               ),
             ),
           ),
@@ -62,15 +63,31 @@ class InputsOverlay extends StatelessWidget {
   }
 
   Widget _buildInputRow(
+    BuildContext context,
+    ResponsiveOverlayData data,
     String key,
     String description,
     double keyBoxWidth,
-    double keyBoxHeight,
-    double padding,
   ) {
+    final rowHeight = valueByScreenSize(
+      context,
+      small: 20.0,
+      medium: 22.0,
+      large: 24.0,
+      extraLarge: 26.0,
+    );
+
+    final keyBoxHeight = valueByScreenSize(
+      context,
+      small: 18.0,
+      medium: 20.0,
+      large: 22.0,
+      extraLarge: 24.0,
+    );
+
     return Container(
-      height: 22,
-      margin: const EdgeInsets.only(bottom: 0),
+      height: rowHeight,
+      margin: EdgeInsets.only(bottom: data.spacing / 2),
       child: Row(
         children: [
           Container(
@@ -78,29 +95,30 @@ class InputsOverlay extends StatelessWidget {
             height: keyBoxHeight,
             decoration: BoxDecoration(
               color: const Color(0xFF444444),
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(data.isSmallScreen ? 3 : 4),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 8),
+            padding: EdgeInsets.symmetric(horizontal: data.spacing),
             alignment: Alignment.centerLeft,
             child: Text(
               key,
-              style: const TextStyle(
-                color: Color(0xFF00FFAA),
+              style: TextStyle(
+                color: const Color(0xFF00FFAA),
                 fontWeight: FontWeight.bold,
-                fontSize: 11,
+                fontSize: data.baseFontSize - 1,
                 fontFamily: 'Normal',
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: data.spacing * 1.5),
           Expanded(
             child: Text(
               description,
-              style: const TextStyle(
-                color: Color(0xFFFFFFFF),
-                fontSize: 13,
+              style: TextStyle(
+                color: const Color(0xFFFFFFFF),
+                fontSize: data.baseFontSize,
                 fontFamily: 'Normal',
               ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
