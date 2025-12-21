@@ -10,6 +10,7 @@ import 'package:darkness_dungeon/gameplay/farm/handlers/farm_input_handler.dart'
 import 'package:darkness_dungeon/gameplay/gameplay_screen_def.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen_viewmodel.dart';
 import 'package:darkness_dungeon/gameplay/inventory/widgets/equipment_overlay.dart';
+import 'package:darkness_dungeon/gameplay/inventory/widgets/inventory_overlay.dart';
 import 'package:darkness_dungeon/shared/framework/utils/dd_debug_hud.dart';
 import 'package:flutter/material.dart';
 
@@ -99,6 +100,8 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
             ),
             // Flutter Equipment Overlay - inside MapNavigator builder
             const EquipmentOverlay(),
+            // Flutter Inventory Overlay - inside MapNavigator builder
+            const InventoryOverlay(),
           ],
         );
       },

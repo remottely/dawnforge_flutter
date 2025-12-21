@@ -1,5 +1,7 @@
 # IMPORTANT BEFORE LAUNCH:
 
+- [PRIORITY] setar a cor de fundo dos mapas para a cor dos tiles do chao para quando der problemas de (criacao de linhas) nos mapas, ele nao ficar tão visivel.
+
 - [PRIORITY] refatorar assets para nao haver tiles repitidos nunca. decidir isso quando tiver certeza dos assets do jogo final!
 
 - [PRIORITY] criar uma maneira do jogo nunca quebrar todo por conta de um exception. trata-los!! principalmente pq um asset nao existe.
