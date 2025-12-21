@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.67.8+1
+version: 1.67.9+1
 
 environment:
   sdk: ^3.8.1
@@ -14,17 +14,17 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  
+
   # Game Framework
   bonfire: ^3.16.1
   flame_audio: ^2.10.2
   flame_splash_screen: ^0.3.1
-  
+
   # Utilities
   equatable: ^2.0.7
   url_launcher: ^6.3.1
   shared_preferences: ^2.3.4
-  
+
   # Platform Specific
   win32: ^5.10.0
   web: ^1.1.0
@@ -33,7 +33,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   test: any
-  
+
   # Linting
   flutter_lints: ^5.0.0
   very_good_analysis: ^9.0.0
@@ -46,11 +46,11 @@ flutter:
     - assets/crops/crops_database.json
     - assets/items/items_database.json
     - assets/items/items_icons_database.json
-    
+
     # === LOCALIZATION ===
     - assets/l10n/en.json
     - assets/l10n/pt.json
-    
+
     # === DECORATIONS ===
     - assets/images/gameplay/decorations/barrel_decoration_1.png
     - assets/images/gameplay/decorations/chest_decoration_8.png
@@ -60,7 +60,7 @@ flutter:
     - assets/images/gameplay/decorations/life_potion_decoration_1.png
     - assets/images/gameplay/decorations/spike_trap_decoration_10.png
     - assets/images/gameplay/decorations/torch_decoration_6.png
-    
+
     # === ENEMIES ===
     # Boss
     - assets/images/gameplay/characters/enemies/boss/boss_enemy_idle_left_4.png
@@ -68,29 +68,29 @@ flutter:
     - assets/images/gameplay/characters/enemies/boss/boss_enemy_run_left_4.png
     - assets/images/gameplay/characters/enemies/boss/boss_enemy_run_right_4.png
     - assets/images/gameplay/characters/enemies/enemy_primary_attack_right_3.png
-    
+
     # Goblin
     - assets/images/gameplay/characters/enemies/goblin/goblin_enemy_idle_left_6.png
     - assets/images/gameplay/characters/enemies/goblin/goblin_enemy_idle_right_6.png
     - assets/images/gameplay/characters/enemies/goblin/goblin_enemy_run_left_6.png
     - assets/images/gameplay/characters/enemies/goblin/goblin_enemy_run_right_6.png
-    
+
     # Imp
     - assets/images/gameplay/characters/enemies/imp/imp_enemy_idle_left_4.png
     - assets/images/gameplay/characters/enemies/imp/imp_enemy_idle_right_4.png
     - assets/images/gameplay/characters/enemies/imp/imp_enemy_run_left_4.png
     - assets/images/gameplay/characters/enemies/imp/imp_enemy_run_right_4.png
-    
+
     # Mini Boss
     - assets/images/gameplay/characters/enemies/mini_boss/mini_boss_enemy_idle_left_4.png
     - assets/images/gameplay/characters/enemies/mini_boss/mini_boss_enemy_idle_right_4.png
     - assets/images/gameplay/characters/enemies/mini_boss/mini_boss_enemy_run_left_4.png
     - assets/images/gameplay/characters/enemies/mini_boss/mini_boss_enemy_run_right_4.png
-    
+
     # === NPCs ===
     - assets/images/gameplay/characters/npcs/kid_npc_idle_left_4.png
     - assets/images/gameplay/characters/npcs/wizard_npc_idle_left_4.png
-    
+
     # === PLAYER - Knight ===
     - assets/images/gameplay/characters/player/knight/knight_player_idle_left_6.png
     - assets/images/gameplay/characters/player/knight/knight_player_idle_right_6.png
@@ -99,36 +99,36 @@ flutter:
     - assets/images/gameplay/characters/player/player_crypt_1.png
     - assets/images/gameplay/characters/player/player_primary_attack_right_3.png
     - assets/images/gameplay/characters/player/shield_defense_right_12.png
-    
+
     # === PLAYER - New Sprites (48x48) ===
     # Attack
     - assets/images/new/Player/attack/player_attack_left_48x48_4.png
     - assets/images/new/Player/attack/player_attack_right_48x48_4.png
-    
+
     # Idle
     - assets/images/new/Player/idle/player_idle_down_48x48_6.png
     - assets/images/new/Player/idle/player_idle_left_48x48_6.png
     - assets/images/new/Player/idle/player_idle_right_48x48_6.png
     - assets/images/new/Player/idle/player_idle_up_48x48_6.png
-    
+
     # Shovel
     - assets/images/new/Player/shovel/player_shovel_down_48x48_2.png
     - assets/images/new/Player/shovel/player_shovel_left_48x48_2.png
     - assets/images/new/Player/shovel/player_shovel_right_48x48_2.png
     - assets/images/new/Player/shovel/player_shovel_up_48x48_2.png
-    
+
     # Walk
     - assets/images/new/Player/walk/player_walk_down_48x48_6.png
     - assets/images/new/Player/walk/player_walk_left_48x48_6.png
     - assets/images/new/Player/walk/player_walk_right_48x48_6.png
     - assets/images/new/Player/walk/player_walk_up_48x48_6.png
-    
+
     # Water
     - assets/images/new/Player/water/player_water_down_48x48_2.png
     - assets/images/new/Player/water/player_water_left_48x48_2.png
     - assets/images/new/Player/water/player_water_right_48x48_2.png
     - assets/images/new/Player/water/player_water_up_48x48_2.png
-    
+
     # === PLAYER - SunnysideWorld Farm Character ===
     - assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_left_strip13.png
     - assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_strip13.png
@@ -146,22 +146,22 @@ flutter:
     - assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_walking_strip8.png
     - assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_watering_left_strip5.png
     - assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_watering_strip5.png
-    
+
     # === PLAYER - Farmer (Modern Farm) ===
     - assets/images/tiled/Modern_Farm_v1.2/Characters/Farmer_1_16x16.png
-    
+
     # === SHARED CHARACTER EFFECTS ===
     - assets/images/gameplay/characters/shared/character_explosion_right_7.png
     - assets/images/gameplay/characters/shared/character_explosion_smoke_right_5.png
     - assets/images/gameplay/characters/shared/character_fireball_attack_right_3.png
     - assets/images/gameplay/characters/shared/character_fireball_explosion_right_6.png
-    
+
     # === FARM - Soil States ===
     - assets/images/gameplay/farm/soil/untilled.png
     - assets/images/gameplay/farm/soil/tilled.png
     - assets/images/gameplay/farm/soil/fertilized.png
     - assets/images/gameplay/farm/soil/watered.png
-    
+
     # === TILED - Tilesets ===
     - assets/images/tiled/tilesets/TX Plant.png
     - assets/images/tiled/tilesets/TX Props.png
@@ -171,7 +171,7 @@ flutter:
     - assets/images/tiled/tilesets/TX Tileset Grass.png
     - assets/images/tiled/tilesets/TX Tileset Stone Ground.png
     - assets/images/tiled/tilesets/TX Tileset Wall.png
-    
+
     # === TILED - Tileset JSON Definitions ===
     - assets/images/tiled/1_Terrains_16x16.json
     - assets/images/tiled/2_Fences_16x16.json
@@ -181,6 +181,7 @@ flutter:
     - assets/images/tiled/6_Trees_16x16.json
     - assets/images/tiled/SunnysideWorldTileset.json
     - assets/images/tiled/tileSet.json
+    # TODO(Kevin): verify if need to import these assets
     - assets/images/tiled/Modern_Farm_v1.2/tilesets/1_Terrains_16x16.png
     - assets/images/tiled/Modern_Farm_v1.2/tilesets/2_Fences_16x16.png
     - assets/images/tiled/Modern_Farm_v1.2/tilesets/3_Props_and_Buildings_16x16.png
@@ -197,24 +198,24 @@ flutter:
     - assets/images/tiled/forest_1.json
     - assets/images/tiled/lake_1.json
     - assets/images/tiled/temple_1.json
-    
+
     # === TILED - Maps (Folder - Loaded Dynamically) ===
     - assets/images/tiled/maps/
-    
+
     # === TILED - Icons ===
     - assets/images/tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png
-    
+
     # === HUD / UI ===
     - assets/images/hud/health_ui.png
     - assets/images/ui/input/keyboard_tip.png
-    
+
     # === AUDIO - Music ===
     - assets/audio/music/Keys Of Moon - Enchanted.mp3
     - assets/audio/music/music_boss_battle_background.mp3
     - assets/audio/music/music_gameplay_background.mp3
     - assets/audio/music/music_ro1_death_hex_background.mp3
     - assets/audio/music/music_ro1_letters_background.mp3
-    
+
     # === AUDIO - SFX ===
     - assets/audio/sfx/sfx_character_fireball_attack.wav
     - assets/audio/sfx/sfx_character_fireball_explosion.wav
