@@ -14,21 +14,6 @@ final class ConversationDef {
     animation: PlayerStateManager.instance.currentPlayerAnimation!,
   );
 
-  // static Say createKnightLeft(String phraseKey) => _createLeft(
-  //   phraseKey: phraseKey,
-  //   animation: UISpriteAnimationsDef.loadAnimationKnightPlayerIdleRight(),
-  // );
-
-  // static Say createCuteLeft(String phraseKey) => _createLeft(
-  //   phraseKey: phraseKey,
-  //   animation: UISpriteAnimationsDef.loadAnimationCutePlayerIdleRight(),
-  // );
-
-  // static Say createSunnyLeft(String phraseKey) => _createLeft(
-  //   phraseKey: phraseKey,
-  //   animation: UISpriteAnimationsDef.loadAnimationSunnyPlayerIdleRight(),
-  // );
-
   static Say createWizardRight(String phraseKey) => _createRight(
     phraseKey: phraseKey,
     animation: UISpriteAnimationsDef.loadAnimationWizardNpcIdleLeft(),

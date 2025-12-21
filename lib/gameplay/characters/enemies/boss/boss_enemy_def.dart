@@ -21,10 +21,28 @@ final class BossEnemyDef {
   static final Vector2 textureSize = Vector2(32, 36);
   static final Vector2 componentSize = textureSize;
 
+  static Future<SpriteAnimation> loadAnimationIdleRight() =>
+      SpriteAnimation.load(
+        'gameplay/characters/enemies/boss/boss_enemy_idle_right_4.png',
+        SpriteAnimationConfigHelper.createStandardData(
+          amount: 4,
+          textureSize: BossEnemyDef.textureSize,
+        ),
+      );
+
+  static Future<SpriteAnimation> loadAnimationIdleLeft() =>
+      SpriteAnimation.load(
+        'gameplay/characters/enemies/boss/boss_enemy_idle_left_4.png',
+        SpriteAnimationConfigHelper.createStandardData(
+          amount: 4,
+          textureSize: BossEnemyDef.textureSize,
+        ),
+      );
+
   static SimpleDirectionAnimation createAnimationWalkDirectional() {
     return SimpleDirectionAnimation(
-      idleLeft: UISpriteAnimationsDef.loadAnimationBossEnemyIdleLeft(),
-      idleRight: UISpriteAnimationsDef.loadAnimationBossEnemyIdleRight(),
+      idleLeft: loadAnimationIdleLeft(),
+      idleRight: loadAnimationIdleRight(),
       runLeft: SpriteAnimation.load(
         'gameplay/characters/enemies/boss/boss_enemy_run_left_4.png',
         SpriteAnimationConfigHelper.createStandardData(

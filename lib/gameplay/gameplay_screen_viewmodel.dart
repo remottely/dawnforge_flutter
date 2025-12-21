@@ -118,7 +118,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
     }
 
     playerStateManager.currentPlayerAnimation =
-        UISpriteAnimationsDef.loadAnimationSunnyPlayerIdleRight();
+        UISpriteAnimationsDef.loadAnimationSunnyPlayerIdleRight;
 
     return SunnyPlayerView<SunnyPlayerController, SunnyPlayerModel>(
       position: position,
@@ -140,7 +140,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
     }
 
     playerStateManager.currentPlayerAnimation =
-        UISpriteAnimationsDef.loadAnimationCutePlayerIdleRight();
+        UISpriteAnimationsDef.loadAnimationCutePlayerIdleRight;
 
     return CutePlayerView<CutePlayerController, CutePlayerModel>(
       position: position,

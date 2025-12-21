@@ -27,6 +27,15 @@ final class MiniBossEnemyDef {
   );
   static final Vector2 componentSize = textureSize;
 
+  static Future<SpriteAnimation>
+  loadAnimationIdleRight() => SpriteAnimation.load(
+    'gameplay/characters/enemies/mini_boss/mini_boss_enemy_idle_right_4.png',
+    SpriteAnimationConfigHelper.createStandardData(
+      amount: 4,
+      textureSize: MiniBossEnemyDef.textureSize,
+    ),
+  );
+
   static SimpleDirectionAnimation createAnimationWalkDirectional() {
     return SimpleDirectionAnimation(
       idleLeft: SpriteAnimation.load(
@@ -36,7 +45,7 @@ final class MiniBossEnemyDef {
           textureSize: textureSize,
         ),
       ),
-      idleRight: UISpriteAnimationsDef.loadAnimationMiniBossEnemyIdleRight(),
+      idleRight: loadAnimationIdleRight(),
       runLeft: SpriteAnimation.load(
         'gameplay/characters/enemies/mini_boss/mini_boss_enemy_run_left_4.png',
         SpriteAnimationConfigHelper.createStandardData(

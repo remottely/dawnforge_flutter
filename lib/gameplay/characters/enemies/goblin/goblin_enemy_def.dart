@@ -20,6 +20,15 @@ final class GoblinEnemyDef {
   static final Vector2 textureSize = TileDef.tileSizeStandard;
   static final Vector2 componentSize = textureSize;
 
+  static Future<SpriteAnimation> loadAnimationIdleRight() =>
+      SpriteAnimation.load(
+        'gameplay/characters/enemies/goblin/goblin_enemy_idle_right_6.png',
+        SpriteAnimationConfigHelper.createStandardData(
+          amount: 6,
+          textureSize: GoblinEnemyDef.textureSize,
+        ),
+      );
+
   static SimpleDirectionAnimation createAnimationWalkDirectional() {
     return SimpleDirectionAnimation(
       idleLeft: SpriteAnimation.load(
@@ -29,7 +38,7 @@ final class GoblinEnemyDef {
           textureSize: textureSize,
         ),
       ),
-      idleRight: UISpriteAnimationsDef.loadAnimationGoblinEnemyIdleRight(),
+      idleRight: loadAnimationIdleRight(),
       runLeft: SpriteAnimation.load(
         'gameplay/characters/enemies/goblin/goblin_enemy_run_left_6.png',
         SpriteAnimationConfigHelper.createStandardData(

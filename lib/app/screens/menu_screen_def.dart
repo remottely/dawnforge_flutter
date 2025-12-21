@@ -1,5 +1,4 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_def.dart';
 import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_def.dart';
 
 class MenuScreenDef {
@@ -12,11 +11,12 @@ class MenuScreenDef {
   static const Duration kCharacterAnimationInterval = Duration(seconds: 2);
 
   static final List<Future<SpriteAnimation>> characterSpriteAnimations = [
-    FarmerPlayerDef.loadAnimationIdleDown,
+    UISpriteAnimationsDef.loadAnimationFarmerPlayerIdleDown,
+    UISpriteAnimationsDef.loadAnimationCutePlayerIdleRight,
+    UISpriteAnimationsDef.loadAnimationSunnyPlayerIdleRight,
+    UISpriteAnimationsDef.loadAnimationKnightPlayerIdleRight,
     UISpriteAnimationsDef.loadAnimationWizardNpcIdleLeft(),
-    UISpriteAnimationsDef.loadAnimationCutePlayerIdleRight(),
-    UISpriteAnimationsDef.loadAnimationSunnyPlayerIdleRight(),
-    UISpriteAnimationsDef.loadAnimationKnightPlayerIdleRight(),
+    UISpriteAnimationsDef.loadAnimationKidNpcIdleLeft(),
     UISpriteAnimationsDef.loadAnimationGoblinEnemyIdleRight(),
     UISpriteAnimationsDef.loadAnimationImpEnemyIdleRight(),
     UISpriteAnimationsDef.loadAnimationMiniBossEnemyIdleRight(),

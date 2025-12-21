@@ -5,7 +5,6 @@ import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_str
 import 'package:darkness_dungeon/shared/design_system/dd_design_system.dart';
 import 'package:darkness_dungeon/shared/design_system/widgets/atoms/dd_radio_button.dart';
 import 'package:darkness_dungeon/shared/framework/widgets/dd_sprite_animation_widget.dart';
-import 'package:darkness_dungeon/shared/framework/widgets/dd_sprite_widget.dart';
 import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
 import 'package:flame_splash_screen/flame_splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +46,7 @@ class _MenuScreenState extends MenuScreenViewModel {
               switch (SettingsManager.instance.vIsJoystickInputSelected) {
                 InputActionsType.joystick =>
                   const SizedBox.shrink(), // TODO(Kevin): Replace with joystick tip widget
-                InputActionsType.keyboard => _KeyboardTip(),
+                InputActionsType.keyboard => const _KeyboardTip(),
               },
             ],
           ),
@@ -71,7 +70,7 @@ class _Title extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Text(
-      'Darkness Dungeon',
+      'Greenleaf Valley',
       style: TextStyle(
         color: Colors.white,
         fontFamily: DDDesignSystem.kTypographyPrimaryFontFamily,
@@ -82,9 +81,8 @@ class _Title extends StatelessWidget {
 }
 
 class _CharacterAnimation extends StatelessWidget {
-  final Future<SpriteAnimation> animation;
-
   const _CharacterAnimation({required this.animation});
+  final Future<SpriteAnimation> animation;
 
   @override
   Widget build(BuildContext context) {
@@ -93,9 +91,8 @@ class _CharacterAnimation extends StatelessWidget {
 }
 
 class _StartButton extends StatelessWidget {
-  final VoidCallback onPressed;
-
   const _StartButton({required this.onPressed});
+  final VoidCallback onPressed;
 
   // final BuildContext context;
 
@@ -113,7 +110,7 @@ class _StartButton extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5),
             ),
-            minimumSize: Size(100, 40),
+            minimumSize: const Size(100, 40),
           ),
           onPressed: onPressed,
           child: Text(
@@ -169,9 +166,8 @@ class _KeyboardTip extends StatelessWidget {
 }
 
 class _Footer extends StatelessWidget {
-  final Future<void> Function(String) onOpenURL;
-
   const _Footer({required this.onOpenURL});
+  final Future<void> Function(String) onOpenURL;
 
   @override
   Widget build(BuildContext context) {

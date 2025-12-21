@@ -50,6 +50,15 @@ final class KnightPlayerDef {
     hitboxStartPositionY: 8.0,
   );
 
+  static final Future<SpriteAnimation> loadAnimationIdleRight =
+      SpriteAnimation.load(
+        'gameplay/characters/player/knight/knight_player_idle_right_6.png',
+        SpriteAnimationConfigHelper.createStandardData(
+          amount: 6,
+          textureSize: KnightPlayerDef.textureSize,
+        ),
+      );
+
   static final SimpleDirectionAnimation animationWalkDirectional =
       SimpleDirectionAnimation(
         idleLeft: SpriteAnimation.load(
@@ -59,7 +68,7 @@ final class KnightPlayerDef {
             textureSize: textureSize,
           ),
         ),
-        idleRight: UISpriteAnimationsDef.loadAnimationKnightPlayerIdleRight(),
+        idleRight: loadAnimationIdleRight,
         runLeft: SpriteAnimation.load(
           'gameplay/characters/player/knight/knight_player_walking_left_6.png',
           SpriteAnimationConfigHelper.createStandardData(

@@ -320,10 +320,19 @@ final class CutePlayerDef {
     loadLeftDown: null,
   );
 
+  static final Future<SpriteAnimation> loadAnimationIdleRight =
+      SpriteAnimation.load(
+        'new/Player/idle/player_idle_right_48x48_6.png',
+        SpriteAnimationConfigHelper.createStandardData(
+          amount: 6,
+          textureSize: CutePlayerDef.textureSize,
+        ),
+      );
+
   static final SimpleDirectionAnimation _animationWalkDirectional =
       SimpleDirectionAnimation(
         idleLeft: _loadAnimationIdleLeft(),
-        idleRight: UISpriteAnimationsDef.loadAnimationCutePlayerIdleRight(),
+        idleRight: loadAnimationIdleRight,
         idleUp: _loadAnimationIdleUp(),
         idleDown: _loadAnimationIdleDown(),
         runLeft: SpriteAnimation.load(
@@ -359,7 +368,7 @@ final class CutePlayerDef {
   static final SimpleDirectionAnimation
   _animationRunDirectional = SimpleDirectionAnimation(
     idleLeft: _loadAnimationIdleLeft(),
-    idleRight: UISpriteAnimationsDef.loadAnimationCutePlayerIdleRight(),
+    idleRight: loadAnimationIdleRight,
     idleUp: _loadAnimationIdleUp(),
     idleDown: _loadAnimationIdleDown(),
     // TODO(Kevin): NOW - create run animations
