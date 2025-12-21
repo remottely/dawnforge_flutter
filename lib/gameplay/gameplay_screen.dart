@@ -83,19 +83,19 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
               ],
               hudComponents: [
                 DDDebugHud(
-                  showFps: AppEnvironment.kIsDebugMode,
-                  showPosition: AppEnvironment.kIsDebugMode,
-                  showEntities: AppEnvironment.kIsDebugMode,
+                  showFps: AppEnvironment.kIsDevToolsMode,
+                  showPosition: AppEnvironment.kIsDevToolsMode,
+                  showEntities: AppEnvironment.kIsDevToolsMode,
                 ),
               ],
               interface: gameplayHUD,
               lightingColorGame: mapLightingColor,
               // backgroundColor: mapBackgroundColor, // TODO(Kevin): put it back?
-              overlayBuilderMap: {},
+              overlayBuilderMap: const {},
               backgroundColor: const Color(0xFF000000),
               cameraConfig: cameraConfig,
               debugMode: AppEnvironment.kIsDebugMode,
-              showCollisionArea: AppEnvironment.kShowCollisionBoxes,
+              showCollisionArea: AppEnvironment.kShowCollisionArea,
             ),
             // Flutter Equipment Overlay - inside MapNavigator builder
             const EquipmentOverlay(),

@@ -58,10 +58,10 @@ final class CutePlayerDef {
 
   static final RectangleHitbox _hitbox = HitboxUtils.createCustomHitbox(
     componentSize: componentSize,
-    left: 20.0,
-    top: 22.0,
-    right: 20.0,
-    bottom: 16.0,
+    left: 20,
+    top: 22,
+    right: 20,
+    bottom: 16,
   );
 
   static Future<SpriteAnimation> _loadAnimationIdleLeft() =>

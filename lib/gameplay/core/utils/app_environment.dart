@@ -3,8 +3,8 @@ final class AppEnvironment {
 
   static const String _kEnvKey = 'GAME_ENVIRONMENT';
   static const String _kEnvDevelopmentValue = 'DEVELOPMENT';
-  static const String _kEnvProductionValue = 'PRODUCTION';
   static const String _kEnvStagingValue = 'STAGING';
+  static const String _kEnvProductionValue = 'PRODUCTION';
 
   static const String _kEnvironment = String.fromEnvironment(
     _kEnvKey,
@@ -15,19 +15,16 @@ final class AppEnvironment {
   static const bool _kIsStaging = _kEnvironment == _kEnvStagingValue;
   static const bool _kIsProduction = _kEnvironment == _kEnvProductionValue;
 
-  static const bool kShowCollisionBoxes = _kIsDevelopment;
-  static const bool kIsDebugMode = _kIsDevelopment || _kIsStaging;
+  /// GENERAL
+  static const bool kIsDebugMode = _kIsDevelopment;
+  static const bool kIsDevToolsMode = _kIsDevelopment || _kIsStaging;
 
+  /// DEV
+  static const bool kShowCollisionArea = kIsDebugMode;
+  static const double kGameSpeedMultiplier = kIsDebugMode ? 4.0 : 1.0;
+
+  /// STG
+
+  /// PRD
   static const bool kPlayBackgroundMusic = _kIsProduction;
-
-  // static T byEnvironment<T>({required T development, required T production}) {
-  //   switch (_kEnvironment) {
-  //     case _kEnvDevelopmentValue:
-  //       return development;
-  //     case _kEnvProductionValue:
-  //       return production;
-  //     default:
-  //       return production;
-  //   }
-  // }
 }

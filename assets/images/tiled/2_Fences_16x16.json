@@ -289,15 +289,15 @@
              "name":"",
              "objects":[
                     {
-                     "height":16,
+                     "height":13.0360509799231,
                      "id":1,
                      "name":"",
                      "rotation":0,
                      "type":"",
                      "visible":true,
-                     "width":13,
+                     "width":11.9080187820769,
                      "x":0,
-                     "y":0
+                     "y":2.96394902007685
                     }],
              "opacity":1,
              "type":"objectgroup",

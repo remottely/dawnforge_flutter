@@ -56,10 +56,6 @@ final class FarmerPlayerDef {
 
   static final RectangleHitbox _hitbox = HitboxUtils.createCustomHitbox(
     componentSize: componentSize,
-    // left: 20,
-    // top: 22,
-    // right: 20,
-    // bottom: 16,
     left: 16,
     top: 23,
     right: 16,
