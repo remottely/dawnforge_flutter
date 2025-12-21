@@ -83,9 +83,9 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
               ],
               hudComponents: [
                 DDDebugHud(
-                  showFps: true,
-                  showPosition: true,
-                  showEntities: true,
+                  showFps: AppEnvironment.kIsDebugMode,
+                  showPosition: AppEnvironment.kIsDebugMode,
+                  showEntities: AppEnvironment.kIsDebugMode,
                 ),
               ],
               interface: gameplayHUD,
