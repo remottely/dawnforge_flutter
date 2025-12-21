@@ -18,13 +18,13 @@ class InventoryHUDView extends InterfaceComponent {
           InventoryHUDDef.kPadding * 2 +
               (InventoryHUDDef.kSlotSize * InventoryHUDDef.kSlotsPerRow) +
               (InventoryHUDDef.kSpacing * (InventoryHUDDef.kSlotsPerRow - 1)),
-          220, // Reduced height since equipment slots are removed
+          64, // Reduced height since equipment slots are removed
         ),
         position: Vector2.zero(), // Will be set in onLoad
       );
 
   final Map<String, Sprite> _spriteCache = {};
-  bool _isVisible = false;
+  bool _isVisible = true;
   bool get isVisible => _isVisible;
   void _show() => _isVisible = true;
   void _hide() => _isVisible = false;
@@ -84,10 +84,10 @@ class InventoryHUDView extends InterfaceComponent {
     if (!_isVisible) return;
 
     final bgRect = Rect.fromLTWH(0, 0, size.x, size.y);
-    final bgPaint = Paint()
-      ..color = Colors.black.withValues(alpha: 0.8)
-      ..style = PaintingStyle.fill;
-    canvas.drawRect(bgRect, bgPaint);
+    // final bgPaint = Paint()
+    //   ..color = Colors.black.withValues(alpha: 0.8)
+    //   ..style = PaintingStyle.fill;
+    // canvas.drawRect(bgRect, bgPaint);
 
     final borderPaint = Paint()
       ..color = Colors.white.withValues(alpha: 0.5)
@@ -95,12 +95,12 @@ class InventoryHUDView extends InterfaceComponent {
       ..strokeWidth = 2;
     canvas.drawRect(bgRect, borderPaint);
 
-    _drawText(
-      canvas,
-      'INVENTÁRIO (I para fechar)',
-      Offset(InventoryHUDDef.kPadding, InventoryHUDDef.kPadding),
-      fontSize: 14,
-    );
+    // _drawText(
+    //   canvas,
+    //   'INVENTÁRIO (I para fechar)',
+    //   Offset(InventoryHUDDef.kPadding, InventoryHUDDef.kPadding),
+    //   fontSize: 14,
+    // );
 
     _drawInventorySlots(canvas);
 
@@ -109,16 +109,16 @@ class InventoryHUDView extends InterfaceComponent {
 
   void _drawInventorySlots(Canvas canvas) {
     final manager = InventoryManager.instance;
-    double startY = InventoryHUDDef.kPadding + 30;
+    // double startY = InventoryHUDDef.kPadding + 30;
 
-    _drawText(
-      canvas,
-      'Inventário (${manager.usedSlots}/${manager.maxSlots}):',
-      Offset(InventoryHUDDef.kPadding, startY),
-      fontSize: 12,
-    );
+    // _drawText(
+    //   canvas,
+    //   'Inventário (${manager.usedSlots}/${manager.maxSlots}):',
+    //   Offset(InventoryHUDDef.kPadding, startY),
+    //   fontSize: 12,
+    // );
 
-    startY += 20;
+    // startY += 20;
 
     for (int i = 0; i < manager.maxSlots; i++) {
       final row = i ~/ InventoryHUDDef.kSlotsPerRow;
@@ -128,7 +128,8 @@ class InventoryHUDView extends InterfaceComponent {
           InventoryHUDDef.kPadding +
           (col * (InventoryHUDDef.kSlotSize + InventoryHUDDef.kSpacing));
       final y =
-          startY +
+          // startY +
+          InventoryHUDDef.kPadding +
           (row * (InventoryHUDDef.kSlotSize + InventoryHUDDef.kSpacing));
       final slot = manager.getSlotByIndex(i);
       _drawSlot(canvas, Offset(x, y), slot?.item, slot?.quantity);
