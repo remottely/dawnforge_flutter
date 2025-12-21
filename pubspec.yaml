@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.67.9+1
+version: 1.68.0+1
 
 environment:
   sdk: ^3.8.1
@@ -44,6 +44,7 @@ flutter:
   assets:
     # === DATABASES ===
     - assets/crops/crops_database.json
+    - assets/farm/soil_database.json
     - assets/items/items_database.json
     - assets/items/items_icons_database.json
 

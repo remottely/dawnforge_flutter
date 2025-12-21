@@ -1,0 +1,23 @@
+{
+  "spritesheetPath": "tiled/Modern_Farm_v1.2/tilesets/1_Terrains_16x16.png",
+  "spriteWidth": 16,
+  "spriteHeight": 16,
+  "soilStates": {
+    "untilled": {
+      "rowIndex": 17,
+      "columnIndex": 9
+    },
+    "tilled": {
+      "rowIndex": 17,
+      "columnIndex": 1
+    },
+    "watered": {
+      "rowIndex": 1,
+      "columnIndex": 17
+    },
+    "fertilized": {
+      "rowIndex": 2,
+      "columnIndex": 3
+    }
+  }
+}

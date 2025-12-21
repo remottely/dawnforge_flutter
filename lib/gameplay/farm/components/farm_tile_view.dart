@@ -8,11 +8,14 @@ import 'package:darkness_dungeon/gameplay/farm/models/crop_stage_model.dart';
 import 'package:darkness_dungeon/gameplay/farm/models/farm_tile_model.dart'
     as model;
 import 'package:darkness_dungeon/gameplay/farm/models/farm_tile_model.dart';
+import 'package:darkness_dungeon/gameplay/farm/models/soil_sprite_config.dart';
 import 'package:darkness_dungeon/gameplay/farm/models/soil_state_model.dart';
 import 'package:darkness_dungeon/shared/framework/interaction/dd_tool_interactable_mixin.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 
 class FarmTileView extends GameDecoration with DDToolInteractableMixin {
+  static SoilSpriteConfig? _soilConfig;
+  
   final int tileX;
   final int tileY;
 
@@ -43,9 +46,12 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
 
     developer.log('[FarmTileView] Loading tile at ($tileX, $tileY)');
 
+    // Carrega a configuração de sprites de solo apenas uma vez
+    _soilConfig ??= await SoilSpriteConfig.load();
+
     farmTile = FarmManager.instance.getTile(tileX, tileY)!;
 
-    final soilSprite = await Sprite.load(_getSoilSpritePath());
+    final soilSprite = await _loadSoilSpriteFromSheet();
     _soilSprite = SpriteComponent(
       sprite: soilSprite,
       size: size,
@@ -56,7 +62,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
     add(_soilSprite!);
 
     developer.log(
-      '[FarmTileView] 🟤 Soil sprite loaded: ${_getSoilSpritePath()}',
+      '[FarmTileView] 🟤 Soil sprite loaded from texture atlas: ${farmTile.soilState.name}',
     );
 
     if (farmTile.crop != null) {
@@ -155,11 +161,10 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   }
 
   Future<void> _updateSoilSprite() async {
-    final spritePath = _getSoilSpritePath();
-    final sprite = await Sprite.load(spritePath);
+    final sprite = await _loadSoilSpriteFromSheet();
     _soilSprite!.sprite = sprite;
 
-    developer.log('[FarmTileView] 🟤 Soil sprite updated: $spritePath');
+    developer.log('[FarmTileView] 🟤 Soil sprite updated: ${farmTile.soilState.name}');
   }
 
   Future<void> _updateCropDecoration() async {
@@ -186,17 +191,36 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
     );
   }
 
-  String _getSoilSpritePath() {
-    switch (farmTile.soilState) {
-      case SoilStateModel.untilled:
-        return 'gameplay/farm/soil/untilled.png';
-      case SoilStateModel.tilled:
-        return 'gameplay/farm/soil/tilled.png';
-      case SoilStateModel.watered:
-        return 'gameplay/farm/soil/watered.png';
-      case SoilStateModel.fertilized:
-        return 'gameplay/farm/soil/fertilized.png';
+  Future<Sprite> _loadSoilSpriteFromSheet() async {
+    if (_soilConfig == null) {
+      throw Exception('[FarmTileView] SoilSpriteConfig not loaded!');
     }
+
+    final stateName = farmTile.soilState.name;
+    final position = _soilConfig!.getPosition(stateName);
+
+    if (position == null) {
+      throw Exception('[FarmTileView] Soil state "$stateName" not found in config!');
+    }
+
+    final sprite = await SpriteAnimationConfigHelper.loadSpriteFromSheet(
+      assetPath: _soilConfig!.spritesheetPath,
+      spriteSize: Vector2(
+        _soilConfig!.spriteWidth.toDouble(),
+        _soilConfig!.spriteHeight.toDouble(),
+      ),
+      frameIndex: position.columnIndex,
+      rowIndex: position.rowIndex,
+      skipFirstFrames: 0,
+    );
+
+    developer.log(
+      '[FarmTileView] 🟤 Soil sprite loaded from sheet: ${_soilConfig!.spritesheetPath} '
+      '(row: ${position.rowIndex}, col: ${position.columnIndex}, state: $stateName, '
+      'size: ${_soilConfig!.spriteWidth}x${_soilConfig!.spriteHeight})',
+    );
+
+    return sprite;
   }
 
   Future<Sprite> _loadCropSpriteFromSheet() async {
