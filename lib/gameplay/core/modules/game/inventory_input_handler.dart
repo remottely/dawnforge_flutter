@@ -1,6 +1,7 @@
 import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/inputs_state.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
@@ -29,6 +30,11 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
   @override
   bool onKeyboard(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     if (event is KeyDownEvent) {
+      if (event.logicalKey == KeyboardSetup.kToggleInputsKey) {
+        _toggleInputs();
+        return true;
+      }
+
       if (event.logicalKey == KeyboardSetup.kToggleInventoryKey) {
         _toggleInventory();
         return true;
@@ -74,6 +80,10 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
 
   void _toggleInventory() {
     InventoryState.instance.toggle();
+  }
+
+  void _toggleInputs() {
+    InputsState.instance.toggle();
   }
 
   void _initializeTestItems() {

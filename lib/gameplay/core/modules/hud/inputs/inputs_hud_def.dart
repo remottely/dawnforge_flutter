@@ -8,6 +8,7 @@ class InputsHUDDef {
     // {'key': 'Espaço', 'desc': 'Interagir / Usar ferramenta'},
     // {'key': 'Q/E', 'desc': 'Trocar item rápido'},
     // {'key': 'I', 'desc': 'Inventário'},
+    {'key': 'Esc', 'desc': 'Abre|Fecha menu de controles'},
     {'key': '←↑→↓ / AWSD', 'desc': 'Andar (8 direções)'},
     {'key': 'Espaço', 'desc': 'Executa MAIN HAND (8 direções)'},
     {'key': 'Z', 'desc': 'Executa OFF HAND'},

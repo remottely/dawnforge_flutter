@@ -33,6 +33,8 @@ final class KeyboardSetup {
 
   static const LogicalKeyboardKey kClearSaveKey = LogicalKeyboardKey.keyG;
 
+  static const LogicalKeyboardKey kToggleInputsKey = LogicalKeyboardKey.escape;
+
   static const LogicalKeyboardKey kToggleInventoryKey = LogicalKeyboardKey.keyI;
 
   static const LogicalKeyboardKey kAddTestItemsKey = LogicalKeyboardKey.keyT;
