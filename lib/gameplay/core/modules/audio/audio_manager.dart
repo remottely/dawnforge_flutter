@@ -13,6 +13,20 @@ final class AudioManager {
   bool _isBackgroundMusicPlaying = false;
   String? _currentBackgroundTrack;
 
+  double musicVolume = 0.5; // TODO(Kevin): save/load from cache
+
+  void changeMusicVolume(double newVolume) {
+    musicVolume = newVolume;
+    
+    // Só tenta mudar o volume se houver música tocando
+    if (_isBackgroundMusicPlaying && FlameAudio.bgm.audioPlayer.state == PlayerState.playing) {
+      FlameAudio.bgm.audioPlayer.setVolume(musicVolume);
+      if (kDebugMode) {
+        print('[AudioManager] Volume changed to: $musicVolume');
+      }
+    }
+  }
+
   Future<void> initialize() async {
     if (kDebugMode) {
       print('[AudioManager] Initializing...');
@@ -104,11 +118,15 @@ final class AudioManager {
 
     try {
       if (kDebugMode) {
-        print('[AudioManager] Starting to play: $musicTrack');
+        print('[AudioManager] Starting to play: $musicTrack with volume: $musicVolume');
       }
-      await FlameAudio.bgm.play(musicTrack);
+      
+      // CORREÇÃO: Passar o volume diretamente no play()
+      await FlameAudio.bgm.play(musicTrack, volume: musicVolume);
+      
       _isBackgroundMusicPlaying = true;
       _currentBackgroundTrack = musicTrack;
+      
       if (kDebugMode) {
         print('[AudioManager] Successfully started playing: $musicTrack');
       }
@@ -122,21 +140,25 @@ final class AudioManager {
   }
 
   void pauseBackgroundMusic() {
-    FlameAudio.bgm.pause();
+    if (_isBackgroundMusicPlaying) {
+      FlameAudio.bgm.pause();
+    }
   }
 
   void resumeBackgroundMusic() {
-    FlameAudio.bgm.resume();
+    if (_isBackgroundMusicPlaying) {
+      FlameAudio.bgm.resume();
+    }
   }
 
   void enableBackgroundMusic() {
-    resumeBackgroundMusic();
     _isBackgroundMusicEnabled = true;
+    resumeBackgroundMusic();
   }
 
   void disableBackgroundMusic() {
-    pauseBackgroundMusic();
     _isBackgroundMusicEnabled = false;
+    pauseBackgroundMusic();
   }
 
   void disposeBackgroundMusic() {

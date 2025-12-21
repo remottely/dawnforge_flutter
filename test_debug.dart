@@ -2,7 +2,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/save/player_progress_mana
 import 'dart:convert';
 
 void main() {
-  final manager = PlayerProgressManager.instance;
+  final PlayerProgressManager manager = PlayerProgressManager.instance;
   manager.reset();
 
   // Setup
@@ -15,15 +15,15 @@ void main() {
   print('Before JSON: enemiesDefeated stat = ${manager.enemiesDefeated}');
 
   // Serialize
-  final json = manager.toJson();
+  final Map<String, dynamic> json = manager.toJson();
   print('JSON: $json');
   print('JSON achievements type: ${json['achievements'].runtimeType}');
   print('JSON achievements content: ${json['achievements']}');
 
   // Simulate real JSON encoding/decoding
-  final jsonString = jsonEncode(json);
+  final String jsonString = jsonEncode(json);
   print('JSON string: $jsonString');
-  final decodedJson = jsonDecode(jsonString) as Map<String, dynamic>;
+  final Map<String, dynamic> decodedJson = jsonDecode(jsonString) as Map<String, dynamic>;
   print('Decoded JSON: $decodedJson');
   print(
     'Decoded achievements type: ${decodedJson['achievements'].runtimeType}',

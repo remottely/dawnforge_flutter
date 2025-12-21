@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/character_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/lightning_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/tile_def.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
@@ -52,7 +52,7 @@ final class CutePlayerDef {
     harvestStaminaCost: _kHarvestStaminaCost,
   );
 
-  static final Vector2 textureSize = TileDef.tileSizeCute;
+  static final Vector2 textureSize = TileConstants.tileSizeCute;
 
   static final Vector2 componentSize = textureSize;
 
@@ -403,12 +403,12 @@ final class CutePlayerDef {
   );
 
   static final LightingConfig _lighting = LightingConfig(
-    radius: TileDef.kTileDimensionLarge,
-    blurBorder: TileDef.kTileDimensionStandard,
+    radius: TileConstants.kTileDimensionLarge,
+    blurBorder: TileConstants.kTileDimensionStandard,
     color: LightingConstants.playerLighting,
   );
 
-  static final Vector2 _cryptComponentSize = TileDef.tileSizeStandard;
+  static final Vector2 _cryptComponentSize = TileConstants.tileSizeStandard;
 
   static Future<Sprite> _loadSpriteCrypt() => Sprite.load(
     'gameplay/characters/player/player_crypt_1.png',

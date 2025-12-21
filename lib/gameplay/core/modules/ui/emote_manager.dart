@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/tile_def.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 
 class EmoteManager {
@@ -18,17 +18,17 @@ class EmoteManager {
         asset,
         SpriteAnimationConfigHelper.createStandardData(
           amount: amount,
-          textureSize: TileDef.tileSizeExtraLarge,
+          textureSize: TileConstants.tileSizeExtraLarge,
         ),
       ),
       target: target,
       loop: false,
-      size: TileDef.tileSizeSmall,
+      size: TileConstants.tileSizeSmall,
       offset: Vector2(0, -3),
     );
   }
 
-  static final Vector2 _emoteTextureSize = TileDef.tileSizeExtraLarge;
+  static final Vector2 _emoteTextureSize = TileConstants.tileSizeExtraLarge;
 
   static Future<SpriteAnimation> _loadAnimationEmoteDecoration() =>
       SpriteAnimation.load(

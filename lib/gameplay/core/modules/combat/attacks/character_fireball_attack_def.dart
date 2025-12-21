@@ -3,7 +3,7 @@ import 'package:darkness_dungeon/gameplay/characters/character_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_fx.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/lightning_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/tile_def.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 
@@ -19,8 +19,8 @@ final class CharacterFireballAttackDef {
   static const double kSpeed = CharacterConstants.kSpeedFast * 2.5;
 
   static final LightingConfig lighting = LightingConfig(
-    radius: TileDef.kTileDimensionSmall,
-    blurBorder: TileDef.kTileDimensionSmall,
+    radius: TileConstants.kTileDimensionSmall,
+    blurBorder: TileConstants.kTileDimensionSmall,
     color: LightingConstants.fireballAttackLighting,
   );
 
@@ -41,7 +41,7 @@ final class CharacterFireballAttackDef {
     'gameplay/characters/shared/character_fireball_explosion_right_6.png',
     SpriteAnimationConfigHelper.createStandardData(
       amount: 6,
-      textureSize: TileDef.tileSizeExtraLarge,
+      textureSize: TileConstants.tileSizeExtraLarge,
     ),
   );
 

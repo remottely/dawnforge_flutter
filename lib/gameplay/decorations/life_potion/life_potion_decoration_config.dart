@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/tile_def.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/gameplay/decorations/decoration_constants.dart';
 
@@ -10,7 +10,7 @@ final class LifePotionDef {
   static const double kStandardHealAmount = 50.0;
   static const double kHealAmount = DecorationConstants.kStatsAmountLarge;
 
-  static final Vector2 _textureSize = TileDef.tileSizeStandard;
+  static final Vector2 _textureSize = TileConstants.tileSizeStandard;
   static final Vector2 componentSize = _textureSize;
 
   static Future<Sprite> loadSprite() =>

@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 
-final class TileDef {
-  TileDef._();
+final class TileConstants {
+  TileConstants._();
 
   static const int kMaxVisibleTiles = 16;
   static const int kBossConversationVisibleTiles = 32;
@@ -26,5 +26,5 @@ final class TileDef {
   static final Vector2 tileSizeFarmer = Vector2(
     48,
     48,
-  ); // TODO(Kevin): confirm farmer tile size
+  );
 }

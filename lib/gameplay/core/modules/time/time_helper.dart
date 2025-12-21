@@ -1,5 +1,5 @@
-final class TimeDef {
-  TimeDef._();
+final class TimeHelper {
+  TimeHelper._();
 
   static const double realSecondsPerDay = 1200.0;
 

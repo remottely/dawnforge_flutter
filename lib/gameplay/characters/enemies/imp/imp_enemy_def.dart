@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/character_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/tile_def.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_def.dart';
@@ -17,7 +17,7 @@ final class ImpEnemyDef {
   static const double kLife = CharacterConstants.kLifeSmall;
   static const double kSpeed = CharacterConstants.kSpeedMedium;
 
-  static final Vector2 textureSize = TileDef.tileSizeStandard;
+  static final Vector2 textureSize = TileConstants.tileSizeStandard;
   static final Vector2 componentSize = textureSize;
 
   static Future<SpriteAnimation> loadAnimationIdleRight() =>

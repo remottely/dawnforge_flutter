@@ -2,7 +2,7 @@ import 'dart:developer' as developer;
 import 'dart:ui';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/tile_def.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/farm/managers/farm_manager.dart';
 import 'package:darkness_dungeon/gameplay/farm/models/crop_stage_model.dart';
 import 'package:darkness_dungeon/gameplay/farm/models/farm_tile_model.dart'
@@ -32,7 +32,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   FarmTileView({required Vector2 position})
     : tileX = (position.x / 16).floor(),
       tileY = (position.y / 16).floor(),
-      super(position: position, size: TileDef.tileSizeStandard) {
+      super(position: position, size: TileConstants.tileSizeStandard) {
     final existingTile = FarmManager.instance.getTile(tileX, tileY);
     if (existingTile == null) {
       final newTile = model.FarmTileModel(x: tileX, y: tileY);
