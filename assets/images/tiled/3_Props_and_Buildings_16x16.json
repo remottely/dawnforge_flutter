@@ -955,12 +955,12 @@
              "objects":[
                     {
                      "height":16,
-                     "id":1,
+                     "id":2,
                      "name":"",
                      "rotation":0,
                      "type":"",
                      "visible":true,
-                     "width":14,
+                     "width":10.9840518743078,
                      "x":0,
                      "y":0
                     }],
@@ -1064,7 +1064,7 @@
                      "rotation":0,
                      "type":"",
                      "visible":true,
-                     "width":12,
+                     "width":11.0120169933077,
                      "x":0,
                      "y":0
                     }],

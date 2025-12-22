@@ -145,3 +145,8 @@ animations type:
 - left Down
 
 // TODO: put all maps background color to be the same as map ground
+
+
+dicas:
+- importar apenas arquivos diretamente, nada de importar pastas do pubspec
+- 

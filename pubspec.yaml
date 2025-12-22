@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.71.2+1
+version: 1.71.4+1
 
 environment:
   sdk: ^3.8.1
@@ -158,10 +158,10 @@ flutter:
     - assets/images/gameplay/characters/shared/character_fireball_explosion_right_6.png
 
     # === FARM - Soil States ===
-    - assets/images/gameplay/farm/soil/untilled.png
-    - assets/images/gameplay/farm/soil/tilled.png
-    - assets/images/gameplay/farm/soil/fertilized.png
-    - assets/images/gameplay/farm/soil/watered.png
+    # - assets/images/gameplay/farm/soil/untilled.png
+    # - assets/images/gameplay/farm/soil/tilled.png
+    # - assets/images/gameplay/farm/soil/fertilized.png
+    # - assets/images/gameplay/farm/soil/watered.png
 
     # === TILED - Tilesets ===
     - assets/images/tiled/tilesets/TX Plant.png
@@ -172,6 +172,8 @@ flutter:
     - assets/images/tiled/tilesets/TX Tileset Grass.png
     - assets/images/tiled/tilesets/TX Tileset Stone Ground.png
     - assets/images/tiled/tilesets/TX Tileset Wall.png
+    - assets/images/new/Tilesets/Hills.png
+    - assets/images/tiled/tile_set.png
 
     # === TILED - Tileset JSON Definitions ===
     - assets/images/tiled/1_Terrains_16x16.json
@@ -181,7 +183,9 @@ flutter:
     - assets/images/tiled/5_Fruit_Trees_16x16.json
     - assets/images/tiled/6_Trees_16x16.json
     - assets/images/tiled/SunnysideWorldTileset.json
-    - assets/images/tiled/tileSet.json
+    - assets/images/tiled/tileSet.json # TODO(Kevin): remove it
+    - assets/images/tiled/Hills.json 
+
     # TODO(Kevin): verify if need to import these assets
     - assets/images/tiled/Modern_Farm_v1.2/tilesets/1_Terrains_16x16.png
     - assets/images/tiled/Modern_Farm_v1.2/tilesets/2_Fences_16x16.png
@@ -225,9 +229,9 @@ flutter:
     - assets/audio/sfx/sfx_player_attack.mp3
 
     # TODO
-    - assets/images/tiled/tile_set.png
     - assets/game_over.png
     - assets/images/tiled/sv/maps/sv_farm.json
+    - assets/images/tiled/sv/maps/sv_town.json
 
   fonts:
     - family: Normal

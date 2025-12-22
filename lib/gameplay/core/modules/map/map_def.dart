@@ -107,13 +107,26 @@ final class MapDef {
 
   static const List<MapData> kAllMaps = [
     /// SV MAPS
-    const MapData(
+    MapData(
       id: kSVFarmId,
       asset: 'tiled/sv/maps/$kSVFarmId.json',
       sensorIds: [
         'sensor_$kSVForestId',
         'sensor_$kSVTownId',
         'sensor_$kSVLakeId',
+      ],
+      backgroundMusic: AudioDef.backgroundMusic1,
+      lightingColor: _kNoneLightingColor,
+      backgroundColor: _kLakeBackgroundColor,
+    ),
+
+    MapData(
+      id: kSVTownId,
+      asset: 'tiled/sv/maps/$kSVTownId.json',
+      sensorIds: [
+        'sensor_$kSVFarmId',
+        'sensor_$kSVForestId',
+        'sensor_$kSVBeachId',
       ],
       backgroundMusic: AudioDef.backgroundMusic1,
       lightingColor: _kNoneLightingColor,

@@ -37,7 +37,8 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
     return MapNavigator(
       maps: MapManager.allMaps,
       // initialMap: MapConfig.kFarmId,
-      initialMap: MapDef.kSVFarmId,
+      // initialMap: MapDef.kSVFarmId,
+      initialMap: MapDef.kSVTownId,
       builder: (context, arguments, mapItem) {
         final mapLightingColor = ColorHelper.fromHex(
           mapItem.properties[MapDef.kLightingColorPropertyKey]?.toString(),
