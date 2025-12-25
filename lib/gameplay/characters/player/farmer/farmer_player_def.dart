@@ -98,7 +98,7 @@ final class FarmerPlayerDef {
   static const double _frameChoppingY = 18;
   static const double _frameAttackY = _frameChoppingY;
 
-  static final int _skipFirstFramesX6 = 6;
+  static const int _skipFirstFramesX6 = 6;
 
   static final Future<SpriteAnimation> _loadAnimationIdleRight =
       SpriteAnimationConfigHelper.loadAnimationFromSheet(
@@ -276,10 +276,6 @@ final class FarmerPlayerDef {
         loadLeft: _loadAnimationHarvestLeft,
         loadUp: _loadAnimationHarvestUp,
         loadDown: _loadAnimationHarvestDown,
-        loadRightUp: null,
-        loadRightDown: null,
-        loadLeftUp: null,
-        loadLeftDown: null,
       );
 
   static final Future<SpriteAnimation> _loadAnimationChoppingRight =
@@ -332,10 +328,6 @@ final class FarmerPlayerDef {
         loadLeft: _loadAnimationChoppingLeft,
         loadUp: _loadAnimationChoppingUp,
         loadDown: _loadAnimationChoppingDown,
-        loadRightUp: null,
-        loadRightDown: null,
-        loadLeftUp: null,
-        loadLeftDown: null,
       );
 
   static final Future<SpriteAnimation> _loadAnimationAttackRight =
@@ -392,10 +384,6 @@ final class FarmerPlayerDef {
         loadLeft: _loadAnimationAttackLeft,
         loadUp: _loadAnimationAttackUp,
         loadDown: _loadAnimationAttackDown,
-        loadRightUp: null,
-        loadRightDown: null,
-        loadLeftUp: null,
-        loadLeftDown: null,
       );
 
   static final Future<SpriteAnimation> _loadAnimationDigRight =
@@ -444,10 +432,6 @@ final class FarmerPlayerDef {
     loadLeft: _loadAnimationDigLeft,
     loadUp: _loadAnimationDigUp,
     loadDown: _loadAnimationDigDown,
-    loadRightUp: null,
-    loadRightDown: null,
-    loadLeftUp: null,
-    loadLeftDown: null,
   );
 
   // static final Future<SpriteAnimation> _loadAnimationWateringRight =
@@ -496,10 +480,6 @@ final class FarmerPlayerDef {
         loadLeft: _loadAnimationWateringLeft,
         loadUp: _loadAnimationWateringUp,
         loadDown: _loadAnimationWateringDown,
-        loadRightUp: null,
-        loadRightDown: null,
-        loadLeftUp: null,
-        loadLeftDown: null,
       );
 
   // static final Future<SpriteAnimation> _loadAnimationPlaceSeedRight =
@@ -544,10 +524,6 @@ final class FarmerPlayerDef {
         loadLeft: _loadAnimationPlaceSeedLeft,
         loadUp: _loadAnimationPlaceSeedUp,
         loadDown: _loadAnimationPlaceSeedDown,
-        loadRightUp: null,
-        loadRightDown: null,
-        loadLeftUp: null,
-        loadLeftDown: null,
       );
 
   static final LightingConfig _lighting = LightingConfig(

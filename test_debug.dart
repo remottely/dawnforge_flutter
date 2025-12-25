@@ -23,7 +23,8 @@ void main() {
   // Simulate real JSON encoding/decoding
   final String jsonString = jsonEncode(json);
   print('JSON string: $jsonString');
-  final Map<String, dynamic> decodedJson = jsonDecode(jsonString) as Map<String, dynamic>;
+  final Map<String, dynamic> decodedJson =
+      jsonDecode(jsonString) as Map<String, dynamic>;
   print('Decoded JSON: $decodedJson');
   print(
     'Decoded achievements type: ${decodedJson['achievements'].runtimeType}',

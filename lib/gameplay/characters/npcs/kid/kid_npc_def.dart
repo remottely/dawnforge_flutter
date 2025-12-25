@@ -24,12 +24,12 @@ final class KidNpcDef {
         ),
       );
 
-  static final SimpleDirectionAnimation
-  animationWalkDirectional = SimpleDirectionAnimation(
-    idleRight:
-        loadAnimationIdleLeft(), // TODO(Kevin): create right animation
-    runRight: loadAnimationIdleLeft(),
-  );
+  static final SimpleDirectionAnimation animationWalkDirectional =
+      SimpleDirectionAnimation(
+        idleRight:
+            loadAnimationIdleLeft(), // TODO(Kevin): create right animation
+        runRight: loadAnimationIdleLeft(),
+      );
 
   static List<Say> createConversationSequence() {
     return [

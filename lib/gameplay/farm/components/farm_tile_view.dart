@@ -15,7 +15,7 @@ import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dar
 
 class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   static SoilSpriteConfig? _soilConfig;
-  
+
   final int tileX;
   final int tileY;
 
@@ -164,7 +164,9 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
     final sprite = await _loadSoilSpriteFromSheet();
     _soilSprite!.sprite = sprite;
 
-    developer.log('[FarmTileView] 🟤 Soil sprite updated: ${farmTile.soilState.name}');
+    developer.log(
+      '[FarmTileView] 🟤 Soil sprite updated: ${farmTile.soilState.name}',
+    );
   }
 
   Future<void> _updateCropDecoration() async {
@@ -200,7 +202,9 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
     final position = _soilConfig!.getPosition(stateName);
 
     if (position == null) {
-      throw Exception('[FarmTileView] Soil state "$stateName" not found in config!');
+      throw Exception(
+        '[FarmTileView] Soil state "$stateName" not found in config!',
+      );
     }
 
     final sprite = await SpriteAnimationConfigHelper.loadSpriteFromSheet(

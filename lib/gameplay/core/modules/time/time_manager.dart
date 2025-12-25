@@ -180,7 +180,8 @@ final class TimeManager {
   void fromJson(Map<String, dynamic> json) {
     developer.log('[TimeManager] Loading time state from JSON');
 
-    _currentTime = json['currentTime'] as double? ?? TimeConstants.morningStartTime;
+    _currentTime =
+        json['currentTime'] as double? ?? TimeConstants.morningStartTime;
     _timeScale = json['timeScale'] as double? ?? TimeConstants.defaultTimeScale;
     _isPaused = json['isPaused'] as bool? ?? false;
     _currentTimeOfDay = TimeOfDay.fromJson(

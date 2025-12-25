@@ -32,7 +32,7 @@ void main() async {
   final sortedUsed = assetsUsed.toList()..sort();
   print('\n✅ ASSETS UTILIZADOS NO CÓDIGO (${sortedUsed.length}):');
   print('-' * 80);
-  
+
   final categorized = <String, List<String>>{};
   for (final asset in sortedUsed) {
     final category = _categorizeAsset(asset);
@@ -73,7 +73,7 @@ Future<void> _scanPhysicalAssets(Directory dir, Set<String> assets) async {
     if (entity is File) {
       final relativePath = entity.path.replaceFirst('${dir.path}/', '');
       // Ignorar arquivos de sistema
-      if (!relativePath.contains('.DS_Store') && 
+      if (!relativePath.contains('.DS_Store') &&
           !relativePath.endsWith('.gitkeep')) {
         assets.add(relativePath);
       }
@@ -99,7 +99,7 @@ Future<void> _scanDartFiles(Directory dir, Set<String> assetsUsed) async {
   await for (final entity in libDir.list(recursive: true)) {
     if (entity is File && entity.path.endsWith('.dart')) {
       final content = await entity.readAsString();
-      
+
       for (final pattern in patterns) {
         final matches = pattern.allMatches(content);
         for (final match in matches) {
@@ -137,8 +137,8 @@ void _extractAssetsFromJson(dynamic json, Set<String> assetsUsed) {
     json.forEach((key, value) {
       if (value is String) {
         // Procurar por caminhos de assets
-        if (value.contains('assets/') || 
-            value.endsWith('.png') || 
+        if (value.contains('assets/') ||
+            value.endsWith('.png') ||
             value.endsWith('.jpg') ||
             value.endsWith('.json') ||
             value.endsWith('.mp3')) {
@@ -166,14 +166,15 @@ Future<void> _scanTiledMaps(Directory dir, Set<String> assetsUsed) async {
       try {
         final content = await entity.readAsString();
         final json = jsonDecode(content);
-        
+
         // Extrair tilesets
         if (json is Map && json.containsKey('tilesets')) {
           for (final tileset in json['tilesets'] as List) {
             if (tileset is Map && tileset.containsKey('image')) {
               final imagePath = tileset['image'] as String;
               // Converter caminho relativo para absoluto
-              final normalized = 'assets/images/tiled/${imagePath.replaceAll('../', '')}';
+              final normalized =
+                  'assets/images/tiled/${imagePath.replaceAll('../', '')}';
               assetsUsed.add(normalized);
             }
           }
@@ -213,7 +214,7 @@ void _generatePubspecSection(Map<String, List<String>> categorized) {
   print('  uses-material-design: true');
   print('');
   print('  assets:');
-  
+
   for (final category in categorized.keys.toList()..sort()) {
     print('    # $category');
     for (final asset in categorized[category]!) {
@@ -221,7 +222,7 @@ void _generatePubspecSection(Map<String, List<String>> categorized) {
     }
     print('');
   }
-  
+
   print('  fonts:');
   print('    - family: Normal');
   print('      fonts:');

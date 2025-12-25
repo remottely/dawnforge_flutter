@@ -51,7 +51,9 @@ class _ItemSpriteWidgetState extends State<ItemSpriteWidget> {
 
     try {
       // Load sprite directly using Flame without depending on game context
-      final image = await Flame.images.load(widget.iconData?.spritesheetPath ?? '');
+      final image = await Flame.images.load(
+        widget.iconData?.spritesheetPath ?? '',
+      );
 
       final spriteWidth = widget.iconData?.spriteWidth.toDouble();
       final spriteHeight = widget.iconData?.spriteHeight.toDouble();
@@ -60,7 +62,10 @@ class _ItemSpriteWidgetState extends State<ItemSpriteWidget> {
 
       final sprite = Sprite(
         image,
-        srcPosition: Vector2(col * (spriteWidth ?? 0), row * (spriteHeight ?? 0)),
+        srcPosition: Vector2(
+          col * (spriteWidth ?? 0),
+          row * (spriteHeight ?? 0),
+        ),
         srcSize: Vector2(spriteWidth ?? 0, spriteHeight ?? 0),
       );
 

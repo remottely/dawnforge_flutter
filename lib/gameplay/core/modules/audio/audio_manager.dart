@@ -17,9 +17,10 @@ final class AudioManager {
 
   void changeMusicVolume(double newVolume) {
     musicVolume = newVolume;
-    
+
     // Só tenta mudar o volume se houver música tocando
-    if (_isBackgroundMusicPlaying && FlameAudio.bgm.audioPlayer.state == PlayerState.playing) {
+    if (_isBackgroundMusicPlaying &&
+        FlameAudio.bgm.audioPlayer.state == PlayerState.playing) {
       FlameAudio.bgm.audioPlayer.setVolume(musicVolume);
       if (kDebugMode) {
         print('[AudioManager] Volume changed to: $musicVolume');
@@ -118,15 +119,17 @@ final class AudioManager {
 
     try {
       if (kDebugMode) {
-        print('[AudioManager] Starting to play: $musicTrack with volume: $musicVolume');
+        print(
+          '[AudioManager] Starting to play: $musicTrack with volume: $musicVolume',
+        );
       }
-      
+
       // CORREÇÃO: Passar o volume diretamente no play()
       await FlameAudio.bgm.play(musicTrack, volume: musicVolume);
-      
+
       _isBackgroundMusicPlaying = true;
       _currentBackgroundTrack = musicTrack;
-      
+
       if (kDebugMode) {
         print('[AudioManager] Successfully started playing: $musicTrack');
       }

@@ -53,7 +53,7 @@ class InventoryOverlay extends ResponsiveOverlayBase {
 
   Widget _buildInventoryGrid(BuildContext context, ResponsiveOverlayData data) {
     final manager = InventoryManager.instance;
-    
+
     // Ajusta o número de slots por linha baseado no tamanho da tela
     final int slotsPerRow = valueByScreenSize(
       context,

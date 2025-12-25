@@ -54,7 +54,9 @@ abstract class MenuScreenViewModel extends State<MenuScreen> {
   void navigateToGameplayScreen() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const GameplayScreen()),
+      MaterialPageRoute<GameplayScreen>(
+        builder: (context) => const GameplayScreen(),
+      ),
     );
   }
 

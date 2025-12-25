@@ -4,7 +4,6 @@ import 'package:darkness_dungeon/gameplay/core/modules/game/lightning_constants.
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
-import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_def.dart';
 
 final class KnightPlayerDef {
   KnightPlayerDef._();

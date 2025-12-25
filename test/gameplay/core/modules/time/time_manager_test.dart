@@ -157,7 +157,9 @@ void main() {
 
     test('test_time_wraps_at_midnight', () {
       // Arrange
-      manager.setTime(TimeConstants.secondsPerDay - 10); // 10 seconds before midnight
+      manager.setTime(
+        TimeConstants.secondsPerDay - 10,
+      ); // 10 seconds before midnight
 
       // Act
       manager.setTimeScale(1.0); // 1:1 time scale for predictability
