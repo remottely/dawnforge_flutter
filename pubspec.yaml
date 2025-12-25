@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.71.9+1
+version: 1.71.10+1
 
 environment:
   sdk: ^3.8.1
@@ -184,7 +184,7 @@ flutter:
     - assets/images/tiled/6_Trees_16x16.json
     - assets/images/tiled/SunnysideWorldTileset.json
     - assets/images/tiled/tileSet.json # TODO(Kevin): remove it
-    - assets/images/tiled/Hills.json 
+    - assets/images/tiled/Hills.json
 
     # TODO(Kevin): verify if need to import these assets
     - assets/images/tiled/Modern_Farm_v1.2/tilesets/1_Terrains_16x16.png

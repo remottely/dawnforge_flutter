@@ -1,7 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/conversation_def.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
-import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_def.dart';
 
 final class KidNpcDef {
   KidNpcDef._();

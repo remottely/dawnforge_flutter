@@ -69,7 +69,7 @@ final class UIStateManager {
             ),
             const SizedBox(height: DDDesignSystem.kSpacingExtraLarge),
             DDButton.elevated(
-              labelText: "OK",
+              labelText: 'OK',
               onPressed: () => _navigateToMainMenu(context),
             ),
           ],

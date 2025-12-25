@@ -7,7 +7,6 @@ import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_
 import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_constants.dart';
-import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_def.dart';
 
 final class CutePlayerDef {
   CutePlayerDef._();
@@ -134,10 +133,6 @@ final class CutePlayerDef {
         loadLeft: _loadAnimationAttackLeft,
         loadUp: _loadAnimationAttackUp,
         loadDown: _loadAnimationAttackDown,
-        loadRightUp: null,
-        loadRightDown: null,
-        loadLeftUp: null,
-        loadLeftDown: null,
       );
 
   static final Future<SpriteAnimation> _loadAnimationShovelRight =
@@ -185,10 +180,6 @@ final class CutePlayerDef {
     loadLeft: _loadAnimationShovelLeft,
     loadUp: _loadAnimationShovelUp,
     loadDown: _loadAnimationShovelDown,
-    loadRightUp: null,
-    loadRightDown: null,
-    loadLeftUp: null,
-    loadLeftDown: null,
   );
 
   static final Future<SpriteAnimation> _loadAnimationWateringCanRight =
@@ -236,10 +227,6 @@ final class CutePlayerDef {
     loadLeft: _loadAnimationWateringCanLeft,
     loadUp: _loadAnimationWateringCanUp,
     loadDown: _loadAnimationWateringCanDown,
-    loadRightUp: null,
-    loadRightDown: null,
-    loadLeftUp: null,
-    loadLeftDown: null,
   );
 
   static final Future<SpriteAnimation>
@@ -275,10 +262,6 @@ final class CutePlayerDef {
     loadLeft: _loadAnimationPlaceSeedLeft,
     loadUp: _loadAnimationPlaceSeedUp,
     loadDown: _loadAnimationPlaceSeedDown,
-    loadRightUp: null,
-    loadRightDown: null,
-    loadLeftUp: null,
-    loadLeftDown: null,
   );
 
   static final Future<SpriteAnimation>
@@ -314,10 +297,6 @@ final class CutePlayerDef {
     loadLeft: _loadAnimationHarvestLeft,
     loadUp: _loadAnimationHarvestUp,
     loadDown: _loadAnimationHarvestDown,
-    loadRightUp: null,
-    loadRightDown: null,
-    loadLeftUp: null,
-    loadLeftDown: null,
   );
 
   static final Future<SpriteAnimation> loadAnimationIdleRight =
@@ -424,7 +403,7 @@ final class CutePlayerDef {
   static final viewConfig = DDFarmPlayerViewConfig(
     hitbox: CutePlayerDef._hitbox,
     lighting: CutePlayerDef._lighting,
-    getDeathMarker: (position) => CutePlayerDef._createDeathMarker(position),
+    getDeathMarker: CutePlayerDef._createDeathMarker,
     animationWalkDirectional: CutePlayerDef._animationWalkDirectional,
     animationRunDirectional: CutePlayerDef._animationRunDirectional,
     animationAttackDirectionalFactory:
