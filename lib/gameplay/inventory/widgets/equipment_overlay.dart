@@ -197,7 +197,7 @@ class EquipmentOverlay extends ResponsiveOverlayBase {
 
     final words = name.split(' ');
     if (words.length > 1) {
-      return words.map((w) => w.isNotEmpty ? w[0] : '').join('').toUpperCase();
+      return words.map((w) => w.isNotEmpty ? w[0] : '').join().toUpperCase();
     }
 
     return name.substring(0, 4).toUpperCase();

@@ -25,7 +25,7 @@ import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_def.dart';
 import 'package:flutter/material.dart';
 
 abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
-  final playerStateManager = PlayerStateManager.instance;
+  final PlayerStateManager playerStateManager = PlayerStateManager.instance;
 
   final gameplayHUD = GameplayHUDView();
 

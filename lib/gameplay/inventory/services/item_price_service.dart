@@ -1,10 +1,10 @@
 import 'dart:developer' as developer;
 
-import '../constants/inventory_constants.dart';
-import '../items/crop_item.dart';
-import '../models/item.dart';
-import '../models/item_category.dart';
-import '../models/item_quality.dart';
+import 'package:darkness_dungeon/gameplay/inventory/constants/inventory_constants.dart';
+import 'package:darkness_dungeon/gameplay/inventory/items/crop_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/models/item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/models/item_category.dart';
+import 'package:darkness_dungeon/gameplay/inventory/models/item_quality.dart';
 
 final class ItemPriceService {
   ItemPriceService._();
@@ -46,7 +46,7 @@ final class ItemPriceService {
     }
 
     final professionBonus = _getProfessionBonus(item);
-    price *= (1.0 + professionBonus);
+    price *= 1.0 + professionBonus;
 
     if (!isShippingBin) {
       price *= InventoryConstants.kShopSellPriceModifier;
@@ -66,8 +66,8 @@ final class ItemPriceService {
   }
 
   int calculateBuyPrice(Item item) {
-    final baseSellPrice = calculateSellPrice(item, isShippingBin: true);
-    return (baseSellPrice * 2).round();
+    final baseSellPrice = calculateSellPrice(item);
+    return baseSellPrice * 2;
   }
 
   double _getProfessionBonus(Item item) {

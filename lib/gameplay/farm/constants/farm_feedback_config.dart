@@ -4,7 +4,7 @@ final class FarmFeedbackDef {
   static const String kSoilTilled = 'Soil tilled!';
   static const String kCropWatered = 'Watered!';
   static const String kSeedPlanted = 'Planted!';
-  static const String kCannotPlant = 'You can\'t plant here!';
+  static const String kCannotPlant = "You can't plant here!";
   static const String kGameSaved = 'Game saved!';
   static const String kSaveCleared = 'Save cleared! Restart the game.';
 

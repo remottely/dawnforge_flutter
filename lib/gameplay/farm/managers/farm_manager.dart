@@ -1,11 +1,10 @@
 import 'dart:developer' as developer;
 
 import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
-
-import '../data/farm_tile_store.dart';
-import '../domain/farm_rule_engine.dart';
-import '../models/crop_model.dart';
-import '../models/farm_tile_model.dart';
+import 'package:darkness_dungeon/gameplay/farm/data/farm_tile_store.dart';
+import 'package:darkness_dungeon/gameplay/farm/domain/farm_rule_engine.dart';
+import 'package:darkness_dungeon/gameplay/farm/models/crop_model.dart';
+import 'package:darkness_dungeon/gameplay/farm/models/farm_tile_model.dart';
 
 final class FarmManager {
   FarmManager._();

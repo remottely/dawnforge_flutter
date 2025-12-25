@@ -1,10 +1,9 @@
 import 'dart:developer' as developer;
 
 import 'package:darkness_dungeon/gameplay/farm/database/crop_database.dart';
-
-import '../models/crop_model.dart';
-import '../models/farm_tile_model.dart';
-import '../models/soil_state_model.dart';
+import 'package:darkness_dungeon/gameplay/farm/models/crop_model.dart';
+import 'package:darkness_dungeon/gameplay/farm/models/farm_tile_model.dart';
+import 'package:darkness_dungeon/gameplay/farm/models/soil_state_model.dart';
 
 final class FarmRuleEngine {
   const FarmRuleEngine();
@@ -79,7 +78,6 @@ final class FarmRuleEngine {
       if (_shouldConsumeWater(tile, dayEnded)) {
         return tile.copyWith(
           soilState: SoilStateModel.tilled,
-          lastWateredDay: null,
         );
       }
       return tile;

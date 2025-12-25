@@ -1,6 +1,6 @@
 import 'dart:developer' as developer;
 
-import '../models/farm_tile_model.dart';
+import 'package:darkness_dungeon/gameplay/farm/models/farm_tile_model.dart';
 
 final class FarmTileStore {
   FarmTileStore();

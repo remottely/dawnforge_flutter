@@ -77,7 +77,7 @@ abstract class DDDefensePlayerView<
 
     if (_defenseComponent == null) {
       _defenseComponent = ShieldDefenseComponent(player: this);
-      this.gameRef.add(_defenseComponent!);
+      gameRef.add(_defenseComponent!);
     }
 
     _defenseComponent!.activate();

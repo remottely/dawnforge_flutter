@@ -1,18 +1,17 @@
 import 'dart:convert';
 import 'dart:developer' as developer;
 
+import 'package:darkness_dungeon/gameplay/inventory/database/item_icon_database.dart';
+import 'package:darkness_dungeon/gameplay/inventory/items/consumable_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/items/crop_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/items/material_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/items/seed_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/items/tool_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/models/item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/models/item_category.dart';
+import 'package:darkness_dungeon/gameplay/inventory/models/item_type.dart';
 import 'package:flutter/services.dart' show rootBundle;
-
-import 'database/item_icon_database.dart';
-import 'items/consumable_item.dart';
-import 'items/crop_item.dart';
-import 'items/material_item.dart';
-import 'items/seed_item.dart';
-import 'items/tool_item.dart';
-import 'items/main_hand_item.dart';
-import 'models/item.dart';
-import 'models/item_category.dart';
-import 'models/item_type.dart';
 
 final class ItemFactory {
   ItemFactory._();

@@ -1,11 +1,11 @@
 import 'dart:developer' as developer;
 
-import 'equipment_state.dart';
-import 'inventory_manager.dart';
-import 'item_factory.dart';
-import 'items/main_hand_item.dart';
-import 'models/equipment_slot.dart';
-import 'models/item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/equipment_state.dart';
+import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
+import 'package:darkness_dungeon/gameplay/inventory/item_factory.dart';
+import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
+import 'package:darkness_dungeon/gameplay/inventory/models/item.dart';
 
 final class EquipmentManager {
   EquipmentManager._() {
