@@ -24,7 +24,7 @@
 
 - [DONE] farm crops need to have 3D behavior, fix it
 
-- [PRIORITY] seeds planted cant have 3D behavior, fix it
+- [DONE] seeds planted cant have 3D behavior, fix it
 
 - [PRIORITY] fix die multiple times in the same second bug the game, handle cannot die more than once.
 
