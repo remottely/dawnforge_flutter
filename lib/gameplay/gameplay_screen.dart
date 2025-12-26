@@ -38,7 +38,8 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
       maps: MapManager.allMaps,
       // initialMap: MapConfig.kFarmId,
       // initialMap: MapDef.kSVFarmId,
-      initialMap: MapDef.kSVTownId,
+      // initialMap: MapDef.kSVTownId,
+      initialMap: MapDef.kF1Id,
       builder: (context, arguments, mapItem) {
         final mapLightingColor = ColorHelper.fromHex(
           mapItem.properties[MapDef.kLightingColorPropertyKey]?.toString(),
@@ -61,7 +62,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
 
         final mapArguments = arguments as MapArguments?;
         final playerPosition =
-            (mapArguments?.playerPosition ?? Vector2(24, 24)) *
+            (mapArguments?.playerPosition ??  Vector2(7, 7)) *// Vector2(24, 24)) * // TODO(Kevin): NOW - put it back
             TileConstants.kTileDimensionStandard;
 
         // final player = buildSunnyPlayer(playerPosition);
