@@ -50,17 +50,11 @@ abstract class ResponsiveOverlayBase extends StatelessWidget
             child: content,
           );
 
-          return Positioned(
-            left: position.left,
-            top: position.top,
-            right: position.right,
-            bottom: position.bottom,
-            child: Align(
-              alignment: position.alignment,
-              child: SafeArea(
-                minimum: position.safeAreaPadding,
-                child: content,
-              ),
+          return Align(
+            alignment: position.alignment,
+            child: SafeArea(
+              minimum: position.safeAreaPadding,
+              child: content,
             ),
           );
         },

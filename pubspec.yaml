@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.71.14+1
+version: 1.71.15+1
 
 environment:
   sdk: ^3.8.1
@@ -213,6 +213,14 @@ flutter:
     # === HUD / UI ===
     - assets/images/hud/health_ui.png
     - assets/images/ui/input/keyboard_tip.png
+
+    # === JOYSTICK ===
+    - assets/images/joystick/joystick_background.png
+    - assets/images/joystick/joystick_knob.png
+    - assets/images/joystick/joystick_melee_attack_default.png
+    - assets/images/joystick/joystick_melee_attack_pressed.png
+    - assets/images/joystick/joystick_ranged_attack_default.png
+    - assets/images/joystick/joystick_ranged_attack_pressed.png
 
     # === AUDIO - Music ===
     - assets/audio/music/Keys Of Moon - Enchanted.mp3

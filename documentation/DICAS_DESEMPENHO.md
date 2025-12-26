@@ -137,3 +137,185 @@ class MyNPC extends SimpleNpc {
 - Clone 100% do Stardew é viável, mas limite NPCs simultâneos
 
 Boa sorte com seu clone! 🔥🎮
+
+---
+
+Sim, você pode limitar os FPS no Flame! Aqui estão as formas de fazer isso:
+
+## 🎮 Limitando FPS no Flame + Bonfire
+
+### **Opção 1: Usando `paused` (Recomendado para Flame 1.0+)**
+
+No seu `BonfireWidget` ou classe principal do jogo:
+
+```dart
+class MyGame extends BonfireGame {
+  MyGame() : super(
+    // ... suas configurações
+  ) {
+    // Limita para 30 FPS
+    pauseEngineDuringTouch = false;
+  }
+
+  @override
+  void onLoad() {
+    super.onLoad();
+    // Define o FPS target
+    // Flame usa variável de tempo delta, então precisamos controlar o update
+  }
+}
+```
+
+### **Opção 2: Throttle Manual do Update (Mais Controle)**
+
+```dart
+class MyGame extends BonfireGame {
+  static const double targetFPS = 30.0;
+  static const double targetDelta = 1.0 / targetFPS;
+  double _accumulator = 0.0;
+
+  @override
+  void update(double dt) {
+    _accumulator += dt;
+    
+    // Só atualiza quando acumular tempo suficiente para o próximo frame
+    if (_accumulator >= targetDelta) {
+      super.update(targetDelta);
+      _accumulator -= targetDelta;
+    }
+  }
+}
+```
+
+### **Opção 3: Configuração Global do Flutter Engine**
+
+No seu `main.dart`:
+
+```dart
+import 'package:flutter/scheduler.dart';
+
+void main() {
+  // Força 30 FPS globalmente
+  timeDilation = 2.0; // Isso deixa tudo mais lento, NÃO recomendado
+  
+  runApp(MyApp());
+}
+```
+
+## ⚠️ **ATENÇÃO: Limitação de FPS pode não resolver performance**
+
+Antes de limitar FPS, considere estas otimizações:
+
+### 🔧 **Otimizações Recomendadas para Bonfire + Flame:**
+
+#### 1. **Reduzir Tile Size / Resolução**
+```dart
+BonfireWidget(
+  map: WorldMapByTiled(
+    'map.json',
+    forceTileSize: Size(16, 16), // Use tiles menores
+  ),
+  cameraConfig: CameraConfig(
+    zoom: 2.0, // Ajuste o zoom para compensar
+    resolution: Size(800, 600), // Resolução menor
+  ),
+)
+```
+
+#### 2. **Desabilitar Sombras/Luzes Desnecessárias**
+```dart
+BonfireWidget(
+  lightingColorGame: Colors.transparent, // Desabilita sistema de luz
+  // ...
+)
+```
+
+#### 3. **Limitar Distância de Visão dos Enemies**
+```dart
+class MyEnemy extends SimpleEnemy {
+  MyEnemy(Vector2 position) : super(
+    position: position,
+    size: Vector2(32, 32),
+    speed: 50,
+    life: 100,
+    visionCells: 3, // REDUZIR ISSO - menos células de visão
+  );
+}
+```
+
+#### 4. **Usar `HasGameRef` ao invés de `gameRef` em todo lugar**
+```dart
+// RUIM - busca o gameRef toda hora
+void update(double dt) {
+  gameRef.player; // Lento
+}
+
+// BOM - cache a referência
+class MyComponent extends GameComponent with HasGameRef {
+  late Player _player;
+  
+  @override
+  void onMount() {
+    super.onMount();
+    _player = gameRef.player; // Cache uma vez
+  }
+  
+  void update(double dt) {
+    _player.position; // Rápido
+  }
+}
+```
+
+#### 5. **Reduzir Partículas e Efeitos**
+```dart
+// Reduza quantidade de partículas
+// Desabilite sombras desnecessárias
+// Use menos frames de animação
+```
+
+#### 6. **Profile o Jogo**
+```dart
+import 'package:flutter/foundation.dart';
+
+void main() {
+  // Ativa performance overlay
+  runApp(
+    MaterialApp(
+      showPerformanceOverlay: true, // IMPORTANTE!
+      home: GameWidget(game: MyGame()),
+    ),
+  );
+}
+```
+
+## 🎯 **Solução Recomendada**
+
+**Ao invés de limitar FPS, faça isso:**
+
+```dart
+class MyGame extends BonfireGame {
+  MyGame() : super(
+    map: WorldMapByTiled(
+      'map.json',
+      forceTileSize: Size(16, 16), // Tiles menores
+    ),
+    cameraConfig: CameraConfig(
+      zoom: 2.5,
+      resolution: Size(960, 540), // ~540p ao invés de 1080p
+      moveOnlyMapArea: true,
+    ),
+    lightingColorGame: Colors.transparent, // Desabilita luzes
+    // ...
+  );
+}
+```
+
+## 📊 **Diagnóstico**
+
+Me diga:
+1. Qual plataforma você está testando? (Android/iOS/Desktop/Web)
+2. Quantos enemies/objetos você tem na tela simultaneamente?
+3. Está usando sistema de iluminação do Bonfire?
+4. Qual o tamanho do seu mapa (em tiles)?
+
+Com essas informações posso te dar uma solução mais específica! 🚀

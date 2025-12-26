@@ -9,26 +9,30 @@ final class JoystickSetup {
   static const String _kBackgroundAsset =
       '${_kBasePath}joystick_background.png';
   static const String _kKnobAsset = '${_kBasePath}joystick_knob.png';
-  static const String _kMeleeAttackUpAsset =
-      '${_kBasePath}joystick_melee_attack_up.png';
-  static const String _kMeleeAttackDownAsset =
-      '${_kBasePath}joystick_melee_attack_down.png';
-  static const String _kRangedAttackUpAsset =
-      '${_kBasePath}joystick_ranged_attack_up.png';
-  static const String _kRangedAttackDownAsset =
-      '${_kBasePath}joystick_ranged_attack_down.png';
+  static const String _kMeleeAttackDefaultAsset =
+      '${_kBasePath}joystick_melee_attack_default.png';
+  static const String _kMeleeAttackPressedAsset =
+      '${_kBasePath}joystick_melee_attack_pressed.png';
+  static const String _kRangedAttackDefaultAsset =
+      '${_kBasePath}joystick_ranged_attack_default.png';
+  static const String _kRangedAttackPressedAsset =
+      '${_kBasePath}joystick_ranged_attack_pressed.png';
 
   /// Asset Loaders
-  static Future<Sprite> _loadBackground() => Sprite.load(_kBackgroundAsset);
-  static Future<Sprite> _loadKnob() => Sprite.load(_kKnobAsset);
-  static Future<Sprite> _loadMeleeAttackUp() =>
-      Sprite.load(_kMeleeAttackUpAsset);
-  static Future<Sprite> _loadMeleeAttackDown() =>
-      Sprite.load(_kMeleeAttackDownAsset);
-  static Future<Sprite> _loadRangedAttackUp() =>
-      Sprite.load(_kRangedAttackUpAsset);
-  static Future<Sprite> _loadRangedAttackDown() =>
-      Sprite.load(_kRangedAttackDownAsset);
+  static final Future<Sprite> _loadBackground = Sprite.load(_kBackgroundAsset);
+  static final Future<Sprite> _loadKnob = Sprite.load(_kKnobAsset);
+  static final Future<Sprite> _loadMeleeAttackDefault = Sprite.load(
+    _kMeleeAttackDefaultAsset,
+  );
+  static final Future<Sprite> _loadMeleeAttackPressed = Sprite.load(
+    _kMeleeAttackPressedAsset,
+  );
+  static final Future<Sprite> _loadRangedAttackDefault = Sprite.load(
+    _kRangedAttackDefaultAsset,
+  );
+  static final Future<Sprite> _loadRangedAttackPressed = Sprite.load(
+    _kRangedAttackPressedAsset,
+  );
 
   /// Identifiers
   static const String kPrimaryActionId = 'primaryActionId';
@@ -45,8 +49,8 @@ final class JoystickSetup {
   static PlayerController createJoystickInput() {
     return Joystick(
       directional: JoystickDirectional(
-        spriteBackgroundDirectional: _loadBackground(),
-        spriteKnobDirectional: _loadKnob(),
+        spriteBackgroundDirectional: _loadBackground,
+        spriteKnobDirectional: _loadKnob,
         size: _kJoystickComponentSize,
         isFixed: false,
       ),
@@ -57,8 +61,8 @@ final class JoystickSetup {
   static JoystickAction _createPrimaryAttackAction() {
     return JoystickAction(
       actionId: kPrimaryActionId,
-      sprite: _loadMeleeAttackUp(),
-      spritePressed: _loadMeleeAttackDown(),
+      sprite: _loadMeleeAttackDefault,
+      spritePressed: _loadMeleeAttackPressed,
       size: kActionButtonSize,
       margin: const EdgeInsets.only(
         bottom: kActionButtonMarginBottom,
@@ -70,8 +74,8 @@ final class JoystickSetup {
   static JoystickAction _createRangedAttackAction() {
     return JoystickAction(
       actionId: kSecondaryActionId,
-      sprite: _loadRangedAttackUp(),
-      spritePressed: _loadRangedAttackDown(),
+      sprite: _loadRangedAttackDefault,
+      spritePressed: _loadRangedAttackPressed,
       size: kActionButtonSize,
       margin: const EdgeInsets.only(
         bottom: kActionButtonMarginBottom,

@@ -69,8 +69,6 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
         // final player = buildCutePlayer(playerPosition);
         final player = buildFarmerPlayer(playerPosition);
 
-        playerInput = GameplayScreenDef.createPlayerInput();
-
         farmInputHandler = FarmInputHandler(player: player);
 
         return Stack(

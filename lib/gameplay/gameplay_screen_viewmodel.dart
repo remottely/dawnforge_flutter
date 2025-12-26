@@ -36,12 +36,13 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
 
   final inventoryInputHandler = InventoryInputHandler();
   final shieldDefenseInputHandler = ShieldDefenseInputHandler();
-  late PlayerController playerInput;
+  late final PlayerController playerInput;
   late FarmInputHandler farmInputHandler;
 
   @override
   void initState() {
     super.initState();
+    playerInput = GameplayScreenDef.createPlayerInput();
     _loadGameOrResetLife();
   }
 
