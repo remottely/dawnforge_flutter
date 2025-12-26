@@ -31,7 +31,7 @@ final class KnightPlayerDef {
 
   static const int kFireballAttackStaminaCost = 10;
 
-  static const int kShovelStaminaCost = 5;
+  static const int kDigStaminaCost = 5;
 
   static const int kWateringCanStaminaCost = 5;
 

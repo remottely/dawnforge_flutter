@@ -28,7 +28,7 @@ final class FarmerPlayerDef {
   static const double _kPrimaryAttackDamage = 25.0;
   static const double _kFireballAttackDamage = 10.0;
 
-  static const int _kShovelStaminaCost = 5;
+  static const int _kDigStaminaCost = 5;
   static const int _kWateringCanStaminaCost = 5;
   static const int _kSeedStaminaCost = 5;
   static const int _kHarvestStaminaCost = 5;
@@ -44,7 +44,7 @@ final class FarmerPlayerDef {
     rangedAttackStaminaCost: _kFireballAttackStaminaCost,
     primaryAttackDamage: _kPrimaryAttackDamage,
     rangedAttackDamage: _kFireballAttackDamage,
-    shovelStaminaCost: _kShovelStaminaCost,
+    digStaminaCost: _kDigStaminaCost,
     wateringCanStaminaCost: _kWateringCanStaminaCost,
     seedStaminaCost: _kSeedStaminaCost,
     harvestStaminaCost: _kHarvestStaminaCost,
@@ -553,7 +553,7 @@ final class FarmerPlayerDef {
     animationRunDirectional: FarmerPlayerDef._animationRunDirectional,
     animationAttackDirectionalFactory:
         FarmerPlayerDef._animationAttackDirectionalFactory,
-    animationShovelFactory: FarmerPlayerDef._animationDigDirectionalFactory,
+    animationDigFactory: FarmerPlayerDef._animationDigDirectionalFactory,
     animationWateringCanFactory:
         FarmerPlayerDef._animationWateringDirectionalFactory,
     animationPlaceSeedFactory:

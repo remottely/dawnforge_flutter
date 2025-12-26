@@ -29,7 +29,7 @@ final class CutePlayerDef {
   static const double _kPrimaryAttackDamage = 25.0;
   static const double _kFireballAttackDamage = 10.0;
 
-  static const int _kShovelStaminaCost = 5;
+  static const int _kDigStaminaCost = 5;
   static const int _kWateringCanStaminaCost = 5;
   static const int _kSeedStaminaCost = 5;
   static const int _kHarvestStaminaCost = 5;
@@ -45,7 +45,7 @@ final class CutePlayerDef {
     rangedAttackStaminaCost: _kFireballAttackStaminaCost,
     primaryAttackDamage: _kPrimaryAttackDamage,
     rangedAttackDamage: _kFireballAttackDamage,
-    shovelStaminaCost: _kShovelStaminaCost,
+    digStaminaCost: _kDigStaminaCost,
     wateringCanStaminaCost: _kWateringCanStaminaCost,
     seedStaminaCost: _kSeedStaminaCost,
     harvestStaminaCost: _kHarvestStaminaCost,
@@ -135,7 +135,7 @@ final class CutePlayerDef {
         loadDown: _loadAnimationAttackDown,
       );
 
-  static final Future<SpriteAnimation> _loadAnimationShovelRight =
+  static final Future<SpriteAnimation> _loadAnimationDigRight =
       SpriteAnimation.load(
         'new/Player/shovel/player_shovel_right_48x48_2.png',
         SpriteAnimationConfigHelper.createCustomData(
@@ -145,7 +145,7 @@ final class CutePlayerDef {
         ),
       );
 
-  static final Future<SpriteAnimation> _loadAnimationShovelLeft =
+  static final Future<SpriteAnimation> _loadAnimationDigLeft =
       SpriteAnimation.load(
         'new/Player/shovel/player_shovel_left_48x48_2.png',
         SpriteAnimationConfigHelper.createCustomData(
@@ -155,7 +155,7 @@ final class CutePlayerDef {
         ),
       );
 
-  static final Future<SpriteAnimation> _loadAnimationShovelUp =
+  static final Future<SpriteAnimation> _loadAnimationDigUp =
       SpriteAnimation.load(
         'new/Player/shovel/player_shovel_up_48x48_2.png',
         SpriteAnimationConfigHelper.createCustomData(
@@ -165,7 +165,7 @@ final class CutePlayerDef {
         ),
       );
 
-  static final Future<SpriteAnimation> _loadAnimationShovelDown =
+  static final Future<SpriteAnimation> _loadAnimationDigDown =
       SpriteAnimation.load(
         'new/Player/shovel/player_shovel_down_48x48_2.png',
         SpriteAnimationConfigHelper.createCustomData(
@@ -175,11 +175,11 @@ final class CutePlayerDef {
         ),
       );
 
-  static final _animationShovelFactory = DDAnimationDirectionalFactory(
-    loadRight: _loadAnimationShovelRight,
-    loadLeft: _loadAnimationShovelLeft,
-    loadUp: _loadAnimationShovelUp,
-    loadDown: _loadAnimationShovelDown,
+  static final _animationDigDirectionalFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationDigRight,
+    loadLeft: _loadAnimationDigLeft,
+    loadUp: _loadAnimationDigUp,
+    loadDown: _loadAnimationDigDown,
   );
 
   static final Future<SpriteAnimation> _loadAnimationWateringCanRight =
@@ -408,7 +408,7 @@ final class CutePlayerDef {
     animationRunDirectional: CutePlayerDef._animationRunDirectional,
     animationAttackDirectionalFactory:
         CutePlayerDef._animationAttackDirectionalFactory,
-    animationShovelFactory: CutePlayerDef._animationShovelFactory,
+    animationDigFactory: CutePlayerDef._animationDigDirectionalFactory,
     animationWateringCanFactory: CutePlayerDef._animationWateringCanFactory,
     animationPlaceSeedFactory: CutePlayerDef._animationPlaceSeedFactory,
     animationHarvestFactory: CutePlayerDef._animationHarvestFactory,

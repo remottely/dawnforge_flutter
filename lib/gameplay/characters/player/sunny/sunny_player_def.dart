@@ -28,7 +28,7 @@ final class SunnyPlayerDef {
   static const double _kPrimaryAttackDamage = 25.0;
   static const double _kFireballAttackDamage = 10.0;
 
-  static const int _kShovelStaminaCost = 5;
+  static const int _kDigStaminaCost = 5;
   static const int _kWateringCanStaminaCost = 5;
   static const int _kSeedStaminaCost = 5;
   static const int _kHarvestStaminaCost = 5;
@@ -44,7 +44,7 @@ final class SunnyPlayerDef {
     rangedAttackStaminaCost: _kFireballAttackStaminaCost,
     primaryAttackDamage: _kPrimaryAttackDamage,
     rangedAttackDamage: _kFireballAttackDamage,
-    shovelStaminaCost: _kShovelStaminaCost,
+    digStaminaCost: _kDigStaminaCost,
     wateringCanStaminaCost: _kWateringCanStaminaCost,
     seedStaminaCost: _kSeedStaminaCost,
     harvestStaminaCost: _kHarvestStaminaCost,
@@ -93,16 +93,10 @@ final class SunnyPlayerDef {
       DDAnimationDirectionalFactory(
         loadRight: _loadAnimationAttackRight,
         loadLeft: _loadAnimationAttackLeft,
-        loadUp: null,
-        loadDown: null,
-        loadRightUp: null,
-        loadRightDown: null,
-        loadLeftUp: null,
-        loadLeftDown: null,
       );
 
   static final Future<SpriteAnimation>
-  _loadAnimationShovelRight = SpriteAnimation.load(
+  _loadAnimationDigRight = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_strip13.png',
     SpriteAnimationConfigHelper.createStandardData(
       amount: 10,
@@ -111,7 +105,7 @@ final class SunnyPlayerDef {
   );
 
   static final Future<SpriteAnimation>
-  _loadAnimationShovelLeft = SpriteAnimation.load(
+  _loadAnimationDigLeft = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_left_strip13.png',
     SpriteAnimationConfigHelper.createStandardData(
       amount: 10,
@@ -119,15 +113,9 @@ final class SunnyPlayerDef {
     ),
   );
 
-  static final _animationShovelFactory = DDAnimationDirectionalFactory(
-    loadRight: _loadAnimationShovelRight,
-    loadLeft: _loadAnimationShovelLeft,
-    loadUp: null,
-    loadDown: null,
-    loadRightUp: null,
-    loadRightDown: null,
-    loadLeftUp: null,
-    loadLeftDown: null,
+  static final _animationDigDirectionalFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationDigRight,
+    loadLeft: _loadAnimationDigLeft,
   );
 
   static final Future<SpriteAnimation>
@@ -151,12 +139,6 @@ final class SunnyPlayerDef {
   static final _animationWateringCanFactory = DDAnimationDirectionalFactory(
     loadRight: _loadAnimationWateringCanRight,
     loadLeft: _loadAnimationWateringCanLeft,
-    loadUp: null,
-    loadDown: null,
-    loadRightUp: null,
-    loadRightDown: null,
-    loadLeftUp: null,
-    loadLeftDown: null,
   );
 
   static final Future<SpriteAnimation>
@@ -180,12 +162,6 @@ final class SunnyPlayerDef {
   static final _animationPlaceSeedFactory = DDAnimationDirectionalFactory(
     loadRight: _loadAnimationPlaceSeedRight,
     loadLeft: _loadAnimationPlaceSeedLeft,
-    loadUp: null,
-    loadDown: null,
-    loadRightUp: null,
-    loadRightDown: null,
-    loadLeftUp: null,
-    loadLeftDown: null,
   );
 
   static final Future<SpriteAnimation>
@@ -209,12 +185,6 @@ final class SunnyPlayerDef {
   static final _animationHarvestFactory = DDAnimationDirectionalFactory(
     loadRight: _loadAnimationHarvestRight,
     loadLeft: _loadAnimationHarvestLeft,
-    loadUp: null,
-    loadDown: null,
-    loadRightUp: null,
-    loadRightDown: null,
-    loadLeftUp: null,
-    loadLeftDown: null,
   );
 
   static final Future<SpriteAnimation>
@@ -292,7 +262,7 @@ final class SunnyPlayerDef {
     animationRunDirectional: SunnyPlayerDef._animationRunDirectional,
     animationAttackDirectionalFactory:
         SunnyPlayerDef._animationAttackDirectionalFactory,
-    animationShovelFactory: SunnyPlayerDef._animationShovelFactory,
+    animationDigFactory: SunnyPlayerDef._animationDigDirectionalFactory,
     animationWateringCanFactory: SunnyPlayerDef._animationWateringCanFactory,
     animationPlaceSeedFactory: SunnyPlayerDef._animationPlaceSeedFactory,
     animationHarvestFactory: SunnyPlayerDef._animationHarvestFactory,

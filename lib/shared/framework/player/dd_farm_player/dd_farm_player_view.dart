@@ -28,7 +28,7 @@ abstract class DDFarmPlayerView<
     required super.baseSpeed,
   }) : super(config: config);
 
-  late final DDAnimationDirectional animationShovelDirectional;
+  late final DDAnimationDirectional animationDigDirectional;
   late final DDAnimationDirectional animationWateringCanDirectional;
   late final DDAnimationDirectional animationPlaceSeedDirectional;
   late final DDAnimationDirectional animationHarvestDirectional;
@@ -39,7 +39,7 @@ abstract class DDFarmPlayerView<
 
     final toolsLoaded = await Future.wait([
       DDCharacterActionSpriteAnimationHelper.loadAnimationDirectionalFromFactory(
-        config.animationShovelFactory,
+        config.animationDigFactory,
       ),
       DDCharacterActionSpriteAnimationHelper.loadAnimationDirectionalFromFactory(
         config.animationWateringCanFactory,
@@ -52,7 +52,7 @@ abstract class DDFarmPlayerView<
       ),
     ]);
 
-    animationShovelDirectional = toolsLoaded[0];
+    animationDigDirectional = toolsLoaded[0];
     animationWateringCanDirectional = toolsLoaded[1];
     animationPlaceSeedDirectional = toolsLoaded[2];
     animationHarvestDirectional = toolsLoaded[3];
@@ -79,7 +79,7 @@ abstract class DDFarmPlayerView<
       onChangeRunState: onChangeRunState,
       onExecutePrimaryAttack: onExecutePrimaryAttack,
       onExecuteRangedAttack: onExecuteRangedAttack,
-      onExecuteShovel: _onExecuteShovel,
+      onExecuteDig: _onExecuteDig,
       onExecuteWateringCan: _onExecuteWateringCan,
       onExecuteSeed: _onExecuteSeed,
       onExecuteHarvest: _onExecuteHarvest,
@@ -98,25 +98,25 @@ abstract class DDFarmPlayerView<
     required void Function(bool isRunning) onChangeRunState,
     required bool Function(double damage) onExecutePrimaryAttack,
     required bool Function(double damage) onExecuteRangedAttack,
-    required bool Function() onExecuteShovel,
+    required bool Function() onExecuteDig,
     required bool Function() onExecuteWateringCan,
     required bool Function() onExecuteSeed,
     required bool Function() onExecuteHarvest,
   });
 
-  bool _onExecuteShovel() {
+  bool _onExecuteDig() {
     final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
       AttackType.melee,
       () {
         DDCharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-          animationRight: animationShovelDirectional.right,
-          animationLeft: animationShovelDirectional.left,
-          animationUp: animationShovelDirectional.up,
-          animationDown: animationShovelDirectional.down,
-          animationRightUp: animationShovelDirectional.rightUp,
-          animationRightDown: animationShovelDirectional.rightDown,
-          animationLeftUp: animationShovelDirectional.leftUp,
-          animationLeftDown: animationShovelDirectional.leftDown,
+          animationRight: animationDigDirectional.right,
+          animationLeft: animationDigDirectional.left,
+          animationUp: animationDigDirectional.up,
+          animationDown: animationDigDirectional.down,
+          animationRightUp: animationDigDirectional.rightUp,
+          animationRightDown: animationDigDirectional.rightDown,
+          animationLeftUp: animationDigDirectional.leftUp,
+          animationLeftDown: animationDigDirectional.leftDown,
           currentAnimation: animation,
           target: this,
           executionStartFrame: 4,

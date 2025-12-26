@@ -6,7 +6,7 @@ class FarmerPlayerController<M extends FarmerPlayerModel>
   FarmerPlayerController({
     required super.model,
     required super.onChangeRunState,
-    required super.onExecuteShovel,
+    required super.onExecuteDig,
     required super.onExecuteWateringCan,
     required super.onExecuteSeed,
     required super.onExecuteHarvest,

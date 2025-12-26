@@ -8,7 +8,7 @@ import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_
 
 abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
     extends DDCombatPlayerController<M> {
-  final bool Function() onExecuteShovel;
+  final bool Function() onExecuteDig;
   final bool Function() onExecuteWateringCan;
   final bool Function() onExecuteSeed;
   final bool Function() onExecuteHarvest;
@@ -20,13 +20,13 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
     required super.onChangeRunState,
     required super.onExecutePrimaryAttack,
     required super.onExecuteRangedAttack,
-    required this.onExecuteShovel,
+    required this.onExecuteDig,
     required this.onExecuteWateringCan,
     required this.onExecuteSeed,
     required this.onExecuteHarvest,
   });
 
-  bool isShovelAction({
+  bool isDigAction({
     required DDBasePlayerView player,
     required dynamic actionId,
   }) =>
@@ -63,8 +63,8 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
     required DDBasePlayerView player,
     required JoystickActionEvent event,
   }) {
-    if (isShovelAction(player: player, actionId: event.id)) {
-      _handleExecuteShovel();
+    if (isDigAction(player: player, actionId: event.id)) {
+      _handleExecuteDig();
     } else if (isWateringCanAction(player: player, actionId: event.id)) {
       _handleExecuteWateringCan();
     } else if (isSeedAction(player: player, actionId: event.id)) {
@@ -76,18 +76,18 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
     super.handleInputAction(player: player, event: event);
   }
 
-  void _handleExecuteShovel() {
-    if (!model.canExecuteShovel) return;
+  void _handleExecuteDig() {
+    if (!model.canExecuteDig) return;
 
     beginStaminaConsumingAction();
 
-    final bool wasExecuted = onExecuteShovel.call();
+    final bool wasExecuted = onExecuteDig.call();
     if (!wasExecuted) {
       endStaminaConsumingAction();
       return;
     }
 
-    model.consumeStamina(model.config.shovelStaminaCost);
+    model.consumeStamina(model.config.digStaminaCost);
 
     endStaminaConsumingAction();
   }

@@ -6,7 +6,7 @@ class SunnyPlayerController<M extends SunnyPlayerModel>
   SunnyPlayerController({
     required super.model,
     required super.onChangeRunState,
-    required super.onExecuteShovel,
+    required super.onExecuteDig,
     required super.onExecuteWateringCan,
     required super.onExecuteSeed,
     required super.onExecuteHarvest,

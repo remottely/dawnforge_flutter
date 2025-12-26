@@ -19,8 +19,8 @@ class DDFarmPlayerModel extends DDCombatPlayerModel {
       (stamina >= config.wateringCanStaminaCost) &&
       (equipment == EquippedHandType.wateringCan);
 
-  bool get canExecuteShovel =>
-      (stamina >= config.shovelStaminaCost) &&
+  bool get canExecuteDig =>
+      (stamina >= config.digStaminaCost) &&
       (equipment == EquippedHandType.shovel);
 
   bool get canExecuteSeed =>
