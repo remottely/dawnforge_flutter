@@ -199,7 +199,7 @@ class InventoryHUDView extends InterfaceComponent {
   }
 
   void _loadAndCacheSprite(String cacheKey, ItemIconData? iconData) {
-    SpriteAnimationConfigHelper.loadSpriteFromSheet(
+    SpriteAnimationConfigHelper.loadSpriteFromTextureAtlas(
       assetPath: '${iconData?.spritesheetPath}',
       spriteSize: Vector2(
         iconData?.spriteWidth.toDouble() ?? 0,

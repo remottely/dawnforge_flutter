@@ -18,8 +18,8 @@ final class SpriteAnimationConfigHelper {
   static SpriteAnimationData createCustomData({
     required int amount,
     required Vector2 textureSize,
-    Vector2? texturePosition,
     required double stepTime,
+    Vector2? texturePosition,
     bool loop = true,
   }) => SpriteAnimationData.sequenced(
     amount: amount,
@@ -29,7 +29,7 @@ final class SpriteAnimationConfigHelper {
     loop: loop,
   );
 
-  static Future<SpriteAnimation> loadAnimationFromSheet({
+  static Future<SpriteAnimation> loadAnimationFromTextureAtlas({
     required String assetPath,
     required Vector2 textureSize,
     required int totalFrames,
@@ -60,8 +60,7 @@ final class SpriteAnimationConfigHelper {
     );
   }
 
-  /// Loads a single Sprite from a spritesheet
-  static Future<Sprite> loadSpriteFromSheet({
+  static Future<Sprite> loadSpriteFromTextureAtlas({
     required String assetPath,
     required Vector2 spriteSize,
     required int frameIndex,

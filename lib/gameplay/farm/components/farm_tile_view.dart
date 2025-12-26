@@ -207,7 +207,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
       );
     }
 
-    final sprite = await SpriteAnimationConfigHelper.loadSpriteFromSheet(
+    final sprite = await SpriteAnimationConfigHelper.loadSpriteFromTextureAtlas(
       assetPath: _soilConfig!.spritesheetPath,
       spriteSize: Vector2(
         _soilConfig!.spriteWidth.toDouble(),
@@ -231,7 +231,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
     final crop = farmTile.crop!;
     final frameIndex = _getFrameIndexForStage(crop.stage, crop.framesCount);
 
-    final sprite = await SpriteAnimationConfigHelper.loadSpriteFromSheet(
+    final sprite = await SpriteAnimationConfigHelper.loadSpriteFromTextureAtlas(
       assetPath: crop.spritesheetPath,
       spriteSize: Vector2(
         crop.spriteWidth.toDouble(),

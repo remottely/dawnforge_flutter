@@ -101,7 +101,7 @@ final class FarmerPlayerDef {
   static const int _skipFirstFramesX6 = 6;
 
   static final Future<SpriteAnimation> _loadAnimationIdleRight =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x6,
@@ -110,7 +110,7 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationIdleLeft =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x6,
@@ -119,7 +119,7 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationIdleUp =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x6,
@@ -128,7 +128,7 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> loadAnimationIdleDown =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x6,
@@ -137,7 +137,7 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationWalkLeft =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x6,
@@ -146,7 +146,7 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationWalkRight =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x6,
@@ -155,7 +155,7 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationWalkUp =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x6,
@@ -164,7 +164,7 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationWalkDown =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x6,
@@ -186,7 +186,7 @@ final class FarmerPlayerDef {
 
   ///
   static final Future<SpriteAnimation> _loadAnimationRunLeft =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x6,
@@ -195,7 +195,7 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationRunRight =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x6,
@@ -204,7 +204,7 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationRunUp =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x6,
@@ -213,7 +213,7 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationRunDown =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: 6,
@@ -235,7 +235,7 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationHarvestRight =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x9,
@@ -244,7 +244,7 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationHarvestLeft =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x9,
@@ -253,7 +253,7 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationHarvestUp =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x9,
@@ -262,12 +262,13 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationHarvestDown =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x9,
         framePositionX: _frameDownX9,
         framePositionY: _frameHarvestY,
+        framePositionYPadding: -1,
       );
 
   static final _animationHarvestDirectionalFactory =
@@ -279,7 +280,7 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationChoppingRight =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x10,
@@ -290,7 +291,7 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationChoppingLeft =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x10,
@@ -301,7 +302,7 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationChoppingUp =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x10,
@@ -312,7 +313,7 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationChoppingDown =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x10,
@@ -331,7 +332,7 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationAttackRight =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x10,
@@ -343,7 +344,7 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationAttackLeft =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x10,
@@ -355,7 +356,7 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationAttackUp =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x10,
@@ -367,7 +368,7 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationAttackDown =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x10,
@@ -387,7 +388,7 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationDigRight =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x9,
@@ -397,7 +398,7 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationDigLeft =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x9,
@@ -407,24 +408,25 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationDigUp =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x9,
         framePositionX: _frameUpX9,
         framePositionY: _frameDigY,
         framePositionXPadding: -8,
+        framePositionYPadding: -2,
       );
 
   static final Future<SpriteAnimation> _loadAnimationDigDown =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x9,
         framePositionX: _frameDownX9,
         framePositionY: _frameDigY,
         framePositionXPadding: -8,
-        framePositionYPadding: -4,
+        framePositionYPadding: -7,
       );
 
   static final _animationDigDirectionalFactory = DDAnimationDirectionalFactory(
@@ -435,7 +437,7 @@ final class FarmerPlayerDef {
   );
 
   // static final Future<SpriteAnimation> _loadAnimationWateringRight =
-  //     SpriteAnimationConfigHelper.loadAnimationFromSheet(
+  //     SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
   //       assetPath: assetPath,
   //       textureSize: textureSize,
   //       totalFrames: _x14,
@@ -445,7 +447,7 @@ final class FarmerPlayerDef {
   //     );
 
   // static final Future<SpriteAnimation> _loadAnimationWateringLeft =
-  //     SpriteAnimationConfigHelper.loadAnimationFromSheet(
+  //     SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
   //       assetPath: assetPath,
   //       textureSize: textureSize,
   //       totalFrames: _x14,
@@ -455,7 +457,7 @@ final class FarmerPlayerDef {
   //     );
 
   // static final Future<SpriteAnimation> _loadAnimationWateringUp =
-  //     SpriteAnimationConfigHelper.loadAnimationFromSheet(
+  //     SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
   //       assetPath: assetPath,
   //       textureSize: textureSize,
   //       totalFrames: _x14,
@@ -464,7 +466,7 @@ final class FarmerPlayerDef {
   //     );
 
   // static final Future<SpriteAnimation> _loadAnimationWateringDown =
-  //     SpriteAnimationConfigHelper.loadAnimationFromSheet(
+  //     SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
   //       assetPath: assetPath,
   //       textureSize: textureSize,
   //       totalFrames: _x14,
@@ -482,41 +484,43 @@ final class FarmerPlayerDef {
         loadDown: _loadAnimationWateringDown,
       );
 
-  // static final Future<SpriteAnimation> _loadAnimationPlaceSeedRight =
-  //     SpriteAnimationConfigHelper.loadAnimationFromSheet(
-  //       assetPath: assetPath,
-  //       textureSize: textureSize,
-  //       totalFrames: _x6,
-  //       framePositionX: _frameRightX9,
-  //       framePositionY: _framePlaceSeedY,
-  //     );
+  /// TODO(Kevin): remove this test animations
+  static final Future<SpriteAnimation> _loadAnimationPlaceSeedRight =
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
+        assetPath: assetPath,
+        textureSize: textureSize,
+        totalFrames: 2,
+        framePositionX: _frameRightX9,
+        framePositionY: _framePlaceSeedY,
+      );
 
-  // static final Future<SpriteAnimation> _loadAnimationPlaceSeedLeft =
-  //     SpriteAnimationConfigHelper.loadAnimationFromSheet(
-  //       assetPath: assetPath,
-  //       textureSize: textureSize,
-  //       totalFrames: _x6,
-  //       framePositionX: _frameLeftX9,
-  //       framePositionY: _framePlaceSeedY,
-  //     );
+  static final Future<SpriteAnimation> _loadAnimationPlaceSeedLeft =
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
+        assetPath: assetPath,
+        textureSize: textureSize,
+        totalFrames: 2,
+        framePositionX: _frameLeftX9,
+        framePositionY: _framePlaceSeedY,
+      );
 
-  // static final Future<SpriteAnimation> _loadAnimationPlaceSeedUp =
-  //     SpriteAnimationConfigHelper.loadAnimationFromSheet(
-  //       assetPath: assetPath,
-  //       textureSize: textureSize,
-  //       totalFrames: _x6,
-  //       framePositionX: _frameUpX9,
-  //       framePositionY: _framePlaceSeedY,
-  //     );
+  static final Future<SpriteAnimation> _loadAnimationPlaceSeedUp =
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
+        assetPath: assetPath,
+        textureSize: textureSize,
+        totalFrames: 2,
+        framePositionX: _frameUpX9,
+        framePositionY: _framePlaceSeedY,
+      );
 
-  // static final Future<SpriteAnimation> _loadAnimationPlaceSeedDown =
-  //     SpriteAnimationConfigHelper.loadAnimationFromSheet(
-  //       assetPath: assetPath,
-  //       textureSize: textureSize,
-  //       totalFrames: _x6,
-  //       framePositionX: _frameDownX9,
-  //       framePositionY: _framePlaceSeedY,
-  //     );
+  static final Future<SpriteAnimation> _loadAnimationPlaceSeedDown =
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
+        assetPath: assetPath,
+        textureSize: textureSize,
+        totalFrames: 2,
+        framePositionX: _frameDownX9,
+        framePositionY: _framePlaceSeedY,
+        framePositionYPadding: -1,
+      );
 
   static final _animationPlaceSeedDirectionalFactory =
       DDAnimationDirectionalFactory(
@@ -562,45 +566,8 @@ final class FarmerPlayerDef {
         FarmerPlayerDef._animationHarvestDirectionalFactory,
   );
 
-  /// TODO(Kevin): remove this test animations
-  static final Future<SpriteAnimation> _loadAnimationPlaceSeedRight =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
-        assetPath: assetPath,
-        textureSize: textureSize,
-        totalFrames: 2,
-        framePositionX: _frameRightX9,
-        framePositionY: _framePlaceSeedY,
-      );
-
-  static final Future<SpriteAnimation> _loadAnimationPlaceSeedLeft =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
-        assetPath: assetPath,
-        textureSize: textureSize,
-        totalFrames: 2,
-        framePositionX: _frameLeftX9,
-        framePositionY: _framePlaceSeedY,
-      );
-
-  static final Future<SpriteAnimation> _loadAnimationPlaceSeedUp =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
-        assetPath: assetPath,
-        textureSize: textureSize,
-        totalFrames: 2,
-        framePositionX: _frameUpX9,
-        framePositionY: _framePlaceSeedY,
-      );
-
-  static final Future<SpriteAnimation> _loadAnimationPlaceSeedDown =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
-        assetPath: assetPath,
-        textureSize: textureSize,
-        totalFrames: 2,
-        framePositionX: _frameDownX9,
-        framePositionY: _framePlaceSeedY,
-      );
-
   static final Future<SpriteAnimation> _loadAnimationWateringRight =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: 2,
@@ -610,7 +577,7 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationWateringLeft =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: 2,
@@ -620,7 +587,7 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationWateringUp =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: 2,
@@ -629,7 +596,7 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationWateringDown =
-      SpriteAnimationConfigHelper.loadAnimationFromSheet(
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: 2,
