@@ -1,5 +1,4 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
 
 class DDBasePlayerViewConfig {
   final RectangleHitbox hitbox;
@@ -35,23 +34,20 @@ class DDBasePlayerSaveData {
   int energy;
   double? life;
   bool hasKey;
-  EquippedHandType? equipment;
 
   DDBasePlayerSaveData({
     required this.stamina,
     required this.energy,
     this.life,
     this.hasKey = false,
-    this.equipment,
   });
 
   Map<String, dynamic> toJson() => {
-    'stamina': stamina,
-    'energy': energy,
-    'life': life,
-    'hasKey': hasKey,
-    'equipment': equipment?.name,
-  };
+        'stamina': stamina,
+        'energy': energy,
+        'life': life,
+        'hasKey': hasKey,
+      };
 
   factory DDBasePlayerSaveData.fromJson(
     Map<String, dynamic> json,
@@ -62,13 +58,6 @@ class DDBasePlayerSaveData {
       energy: (json['energy'] as int?) ?? config.maxEnergy,
       life: (json['life'] as num?)?.toDouble(),
       hasKey: json['hasKey'] as bool? ?? false,
-      equipment: _parseEquipment(json['equipment'] as String?),
     );
-  }
-
-  static EquippedHandType? _parseEquipment(String? eq) {
-    return (eq == null || eq == 'null')
-        ? null
-        : EquippedHandType.values.byName(eq);
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 class DDBasePlayerModel {
   final DDBasePlayerModelConfig config;
   final DDBasePlayerSaveData _saveData;
+  EquippedHandType? _equipment;
 
   bool _isObservingEnemy;
 
@@ -13,24 +14,15 @@ class DDBasePlayerModel {
     required this.config,
     required DDBasePlayerSaveData saveData,
   }) : _saveData = saveData,
+       _equipment = null,
        _isObservingEnemy = false;
-
-  @protected
-  static EquippedHandType? parseEquipment(String? eq) {
-    if (eq == null || eq == 'null' || eq.isEmpty) return null;
-    try {
-      return EquippedHandType.values.byName(eq);
-    } catch (e) {
-      return null;
-    }
-  }
 
   double get stamina => _saveData.stamina;
   int get energy => _saveData.energy;
   double? get life => _saveData.life;
   bool get hasKey => _saveData.hasKey;
   bool get hasStamina => _saveData.stamina > 0;
-  EquippedHandType? get equipment => _saveData.equipment;
+  EquippedHandType? get equipment => _equipment;
 
   bool get isObservingEnemy => _isObservingEnemy;
   void startObservingEnemy() => _isObservingEnemy = true;
@@ -57,7 +49,7 @@ class DDBasePlayerModel {
 
   void updateLife(double value) => _saveData.life = value;
 
-  void setEquipment(EquippedHandType? value) => _saveData.equipment = value;
+  void setEquipment(EquippedHandType? value) => _equipment = value;
 
   void obtainKey() => _saveData.hasKey = true;
   void removeKey() => _saveData.hasKey = false;

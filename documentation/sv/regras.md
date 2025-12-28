@@ -1,0 +1,12 @@
+PC:
+- Controle:
+- teclado:
+    - mouse:
+        - botao direito interage com os objetos do mundo, consome itens(x tb consome itens).
+        - botao esquerdo seleciona item do inventario, etc???.
+    - "X": consome item da mão.
+    - ele por padrao corre, e clicando shift desacelera(anda)
+    - inventorio:
+        - "1 a =" (12 espaços)
+        - hover mostra detalhes do item
+    - 

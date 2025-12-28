@@ -27,6 +27,13 @@ final class EquipmentManager {
   bool equip(EquipmentSlotType slotType, Item item) {
     developer.log('[EquipmentManager] Equipping ${item.name} to $slotType');
 
+    if (slotType != EquipmentSlotType.mainHand) {
+      developer.log(
+        '[EquipmentManager] Slot $slotType is not available for equipping at the moment',
+      );
+      return false;
+    }
+
     if (!_canEquipItemInSlot(item, slotType)) {
       developer.log('[EquipmentManager] Item cannot be equipped in this slot');
       return false;
@@ -97,44 +104,18 @@ final class EquipmentManager {
   }
 
   bool _canEquipItemInSlot(Item item, EquipmentSlotType slotType) {
-    if (item is MainHandItem) {
-      return slotType == EquipmentSlotType.mainHand ||
-          slotType == EquipmentSlotType.offHand;
-    }
-
-    return false;
+    if (slotType != EquipmentSlotType.mainHand) return false;
+    return item is MainHandItem;
   }
 
   int getTotalDamage() {
-    int total = 0;
-
     final mainHand = getEquippedItem(EquipmentSlotType.mainHand);
-    if (mainHand is MainHandItem) {
-      total += mainHand.damage;
-    }
-
-    final offhand = getEquippedItem(EquipmentSlotType.offHand);
-    if (offhand is MainHandItem) {
-      total += offhand.damage;
-    }
-
-    return total;
+    return mainHand is MainHandItem ? mainHand.damage : 0;
   }
 
   double getTotalDps() {
-    double total = 0;
-
     final mainHand = getEquippedItem(EquipmentSlotType.mainHand);
-    if (mainHand is MainHandItem) {
-      total += mainHand.dps;
-    }
-
-    final offhand = getEquippedItem(EquipmentSlotType.offHand);
-    if (offhand is MainHandItem) {
-      total += offhand.dps;
-    }
-
-    return total;
+    return mainHand is MainHandItem ? mainHand.dps : 0;
   }
 
   int getTotalDefense() {

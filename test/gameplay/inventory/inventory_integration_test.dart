@@ -33,7 +33,6 @@ void main() {
 
       // 2. Equipar itens
       EquipmentManager.instance.equip(EquipmentSlotType.mainHand, sword);
-      EquipmentManager.instance.equip(EquipmentSlotType.offHand, axe);
 
       // 3. Coletar estado do jogo
       final saveData = GameStateCollector.collectCurrentGameState();
@@ -66,12 +65,6 @@ void main() {
             .getEquippedItem(EquipmentSlotType.mainHand)
             ?.id,
         equals('iron_sword'),
-      );
-      expect(
-        EquipmentManager.instance
-            .getEquippedItem(EquipmentSlotType.offHand)
-            ?.id,
-        equals('steel_axe'),
       );
 
       // 9. Verificar stats calculados
@@ -122,7 +115,6 @@ void main() {
 
       // Equipar todos
       EquipmentManager.instance.equip(EquipmentSlotType.mainHand, sword);
-      EquipmentManager.instance.equip(EquipmentSlotType.offHand, axe);
 
       // Trocar weapon
       EquipmentManager.instance.equip(EquipmentSlotType.mainHand, legendary);

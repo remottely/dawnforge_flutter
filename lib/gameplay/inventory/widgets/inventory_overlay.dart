@@ -103,12 +103,11 @@ class InventoryOverlay extends ResponsiveOverlayBase {
         : Colors.grey.withOpacity(0.2);
 
     if (item != null) {
-      equippedSlot = EquipmentManager.instance.getEquippedSlotForItem(item.id);
-      if (equippedSlot != null) {
-        // Red background for mainHand, green for offHand
-        slotColor = equippedSlot == EquipmentSlotType.mainHand
-            ? Colors.red.withOpacity(0.5)
-            : Colors.green.withOpacity(0.5);
+      final isMainHand =
+          EquipmentManager.instance.getEquippedSlotForItem(item.id) ==
+              EquipmentSlotType.mainHand;
+      if (isMainHand) {
+        slotColor = Colors.red.withOpacity(0.5);
       }
     }
 

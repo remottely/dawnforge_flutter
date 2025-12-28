@@ -67,21 +67,6 @@ final class InputDef {
         actionId == KeyboardSetup.kUnequipMainHandKey;
   }
 
-  static bool isEquipOffhandAction(dynamic actionId) {
-    return actionId == JoystickSetup.kEquipOffhandId ||
-        actionId == KeyboardSetup.kEquipOffhandKey;
-  }
-
-  static bool isEquipOffhandReverseAction(dynamic actionId) {
-    return actionId == JoystickSetup.kEquipOffhandReverseId ||
-        actionId == KeyboardSetup.kEquipOffhandReverseKey;
-  }
-
-  static bool isUnequipOffhandAction(dynamic actionId) {
-    return actionId == JoystickSetup.kUnequipOffhandId ||
-        actionId == KeyboardSetup.kUnequipOffhandKey;
-  }
-
   static bool isAddTestItemsAction(dynamic actionId) {
     return actionId == JoystickSetup.kAddTestItemsId ||
         actionId == KeyboardSetup.kAddTestItemsKey;

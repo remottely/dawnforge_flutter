@@ -42,11 +42,4 @@ final class KeyboardSetup {
   static const LogicalKeyboardKey kAddTestItemsKey = LogicalKeyboardKey.keyT;
 
   static const LogicalKeyboardKey kUnequipMainHandKey = LogicalKeyboardKey.keyU;
-
-  static const LogicalKeyboardKey kEquipOffhandKey = LogicalKeyboardKey.keyO;
-
-  static const LogicalKeyboardKey kEquipOffhandReverseKey =
-      LogicalKeyboardKey.keyL;
-
-  static const LogicalKeyboardKey kUnequipOffhandKey = LogicalKeyboardKey.keyP;
 }

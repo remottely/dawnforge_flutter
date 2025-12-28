@@ -60,16 +60,16 @@ abstract class DDDefensePlayerView<
   bool startDefense() {
     if (_isDefending) return true;
 
-    // Check if player has a shield equipped in offhand
-    final offhandItem = EquipmentManager.instance.getEquippedItem(
-      EquipmentSlotType.offHand,
+    // Check if player has a shield equipped in the main hand
+    final mainHandItem = EquipmentManager.instance.getEquippedItem(
+      EquipmentSlotType.mainHand,
     );
 
-    if (offhandItem == null || offhandItem is! MainHandItem) {
+    if (mainHandItem == null || mainHandItem is! MainHandItem) {
       return false;
     }
 
-    if (!offhandItem.equippedHandType.isDefense) {
+    if (!mainHandItem.equippedHandType.isDefense) {
       return false;
     }
 
