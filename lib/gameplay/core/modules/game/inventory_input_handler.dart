@@ -3,7 +3,6 @@ import 'dart:developer' as developer;
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/tutorial_inputs/tutorial_inputs_state.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_state.dart';
@@ -20,7 +19,6 @@ class InventoryInputHandler extends GameComponent
   final PlayerController? playerController;
 
   bool _isInitialized = false;
-  int _currentMainHandIndex = -1;
 
   InventoryInputHandler({this.playerController});
 
@@ -30,6 +28,8 @@ class InventoryInputHandler extends GameComponent
     if (playerController != null) {
       playerController!.addObserver(this);
     }
+    EquipmentManager.instance.selectedSlotIndexNotifier
+        .addListener(_handleSelectedSlotChanged);
   }
 
   @override
@@ -37,6 +37,8 @@ class InventoryInputHandler extends GameComponent
     if (playerController != null) {
       playerController!.removeObserver(this);
     }
+    EquipmentManager.instance.selectedSlotIndexNotifier
+        .removeListener(_handleSelectedSlotChanged);
     super.onRemove();
   }
 
@@ -152,11 +154,10 @@ class InventoryInputHandler extends GameComponent
     );
 
     // Busca o próximo item equipável usando o método helper
+    final currentSlotIndex = EquipmentManager.instance.currentMainHandSlotIndex;
     final result = InventoryManager.instance.findItem((item) {
       return item is MainHandItem;
-      // if (item is! MainHandItem) return false;
-      // return item.equippedHandType.canBeEquippedInMainHandSlot;
-    }, afterIndex: _currentMainHandIndex);
+    }, afterIndex: currentSlotIndex);
 
     if (result == null) {
       developer.log(
@@ -166,18 +167,13 @@ class InventoryInputHandler extends GameComponent
     }
 
     final item = result.item;
-    final success = EquipmentManager.instance.equip(
-      EquipmentSlotType.mainHand,
-      item,
-    );
+    final success = EquipmentManager.instance.selectSlotIndex(result.index);
 
     if (success) {
-      _currentMainHandIndex = result.index;
       final mainHandItem = item as MainHandItem;
       developer.log(
         '[InventoryInput] ✓ Equipado no main hand: ${item.name} (${mainHandItem.equippedHandType})',
       );
-      _notifyEquipmentChanged(mainHandItem.equippedHandType);
     } else {
       developer.log('[InventoryInput] ✗ Falha ao equipar: ${item.name}');
     }
@@ -189,11 +185,10 @@ class InventoryInputHandler extends GameComponent
     );
 
     // Busca o item equipável anterior usando o método helper
+    final currentSlotIndex = EquipmentManager.instance.currentMainHandSlotIndex;
     final result = InventoryManager.instance.findItemReverse((item) {
       return item is MainHandItem;
-      // if (item is! MainHandItem) return false;
-      // return item.equippedHandType.canBeEquippedInMainHandSlot;
-    }, beforeIndex: _currentMainHandIndex);
+    }, beforeIndex: currentSlotIndex);
 
     if (result == null) {
       developer.log(
@@ -203,18 +198,13 @@ class InventoryInputHandler extends GameComponent
     }
 
     final item = result.item;
-    final success = EquipmentManager.instance.equip(
-      EquipmentSlotType.mainHand,
-      item,
-    );
+    final success = EquipmentManager.instance.selectSlotIndex(result.index);
 
     if (success) {
-      _currentMainHandIndex = result.index;
       final mainHandItem = item as MainHandItem;
       developer.log(
         '[InventoryInput] ✓ Equipado no main hand (reverso): ${item.name} (${mainHandItem.equippedHandType})',
       );
-      _notifyEquipmentChanged(mainHandItem.equippedHandType);
     } else {
       developer.log('[InventoryInput] ✗ Falha ao equipar: ${item.name}');
     }
@@ -226,15 +216,13 @@ class InventoryInputHandler extends GameComponent
       developer.log(
         '[InventoryInput] ✓ Desequipado do main hand: ${item.name}',
       );
-      final equippedHandType = (item as MainHandItem).equippedHandType;
-      _notifyEquipmentChanged(equippedHandType);
-      _currentMainHandIndex = -1;
+      _notifyEquipmentChanged(null);
     } else {
       developer.log('[InventoryInput] main hand slot já está vazio');
     }
   }
 
-  void _notifyEquipmentChanged(EquippedHandType equippedHandType) {
+  void _notifyEquipmentChanged(EquippedHandType? equippedHandType) {
     final players = gameRef.query<DDBasePlayerView>();
     if (players.isEmpty) {
       return;
@@ -243,5 +231,14 @@ class InventoryInputHandler extends GameComponent
     final player = players.first;
 
     player.controller.model.setEquipment(equippedHandType);
+  }
+
+  void _handleSelectedSlotChanged() {
+    final selectedItem = EquipmentManager.instance
+        .getEquippedItem(EquipmentSlotType.mainHand);
+    final equippedHandType = selectedItem is MainHandItem
+        ? selectedItem.equippedHandType
+        : null;
+    _notifyEquipmentChanged(equippedHandType);
   }
 }

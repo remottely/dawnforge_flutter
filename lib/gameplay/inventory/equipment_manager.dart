@@ -1,5 +1,7 @@
 import 'dart:developer' as developer;
 
+import 'package:flutter/foundation.dart';
+
 import 'package:darkness_dungeon/gameplay/inventory/equipment_state.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/item_factory.dart';
@@ -20,11 +22,16 @@ final class EquipmentManager {
   static final instance = EquipmentManager._();
 
   final Map<EquipmentSlotType, EquipmentSlot> _equipmentSlots = {};
+  final ValueNotifier<int> selectedSlotIndexNotifier = ValueNotifier(0);
+  int _currentMainHandSlotIndex = 0;
 
   Map<EquipmentSlotType, EquipmentSlot> get equipmentSlots =>
       Map.unmodifiable(_equipmentSlots);
 
-  bool equip(EquipmentSlotType slotType, Item item) {
+  int get currentMainHandSlotIndex => _currentMainHandSlotIndex;
+
+  bool equip(EquipmentSlotType slotType, Item item,
+      {int? inventorySlotIndex}) {
     developer.log('[EquipmentManager] Equipping ${item.name} to $slotType');
 
     if (slotType != EquipmentSlotType.mainHand) {
@@ -54,6 +61,10 @@ final class EquipmentManager {
     developer.log(
       '[EquipmentManager] Item equipped successfully (kept in inventory)',
     );
+    if (inventorySlotIndex != null) {
+      _currentMainHandSlotIndex = inventorySlotIndex;
+      selectedSlotIndexNotifier.value = inventorySlotIndex;
+    }
     return true;
   }
 
@@ -76,6 +87,36 @@ final class EquipmentManager {
       '[EquipmentManager] Item unequipped successfully (remains in inventory)',
     );
     return item;
+  }
+
+  bool selectSlotIndex(int index) {
+    final slot = InventoryManager.instance.getSlotByIndex(index);
+    if (slot == null) {
+      developer.log('[EquipmentManager] Slot $index not found');
+      return false;
+    }
+
+    final item = slot.item;
+    if (item == null) {
+      _equipmentSlots[EquipmentSlotType.mainHand] =
+          _equipmentSlots[EquipmentSlotType.mainHand]!.unequip();
+      EquipmentState.instance.updateSlot(EquipmentSlotType.mainHand, null);
+      _currentMainHandSlotIndex = index;
+      selectedSlotIndexNotifier.value = index;
+      return true;
+    }
+
+    final equipped = equip(
+      EquipmentSlotType.mainHand,
+      item,
+      inventorySlotIndex: index,
+    );
+
+    if (equipped) {
+      _currentMainHandSlotIndex = index;
+    }
+
+    return equipped;
   }
 
   Item? getEquippedItem(EquipmentSlotType slotType) {
@@ -172,6 +213,8 @@ final class EquipmentManager {
     for (final slotType in EquipmentSlotType.values) {
       _equipmentSlots[slotType] = EquipmentSlot(slotType: slotType);
     }
+    _currentMainHandSlotIndex = 0;
+    selectedSlotIndexNotifier.value = 0;
     developer.log('[EquipmentManager] Reset');
   }
 

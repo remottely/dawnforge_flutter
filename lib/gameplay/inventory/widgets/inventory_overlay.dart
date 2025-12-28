@@ -79,6 +79,7 @@ class InventoryOverlay extends ResponsiveOverlayBase {
                   final slot = slots[index];
                   return _buildInventorySlot(
                     data,
+                    slot,
                     slot.item,
                     slot.quantity,
                   );
@@ -93,80 +94,85 @@ class InventoryOverlay extends ResponsiveOverlayBase {
 
   Widget _buildInventorySlot(
     ResponsiveOverlayData data,
+    InventorySlot slot,
     Item? item,
     int? quantity,
   ) {
-    // Check if item is equipped
-    EquipmentSlotType? equippedSlot;
     Color slotColor = item != null
         ? Colors.blue.withOpacity(0.3)
         : Colors.grey.withOpacity(0.2);
 
     if (item != null) {
       final isMainHand =
-          EquipmentManager.instance.getEquippedSlotForItem(item.id) ==
-              EquipmentSlotType.mainHand;
+        EquipmentManager.instance.getEquippedSlotForItem(item.id) ==
+          EquipmentSlotType.mainHand;
       if (isMainHand) {
         slotColor = Colors.red.withOpacity(0.5);
       }
     }
 
-    return Container(
-      width: data.slotSize,
-      height: data.slotSize,
-      decoration: BoxDecoration(
-        color: slotColor,
-        border: Border.all(color: Colors.white.withOpacity(0.5)),
-      ),
-      child: Stack(
-        children: [
-          if (item != null) ...[
-            // Item icon or abbreviation
-            Center(
-              child: item.iconData != null
-                  ? Padding(
-                      padding: EdgeInsets.all(data.spacing),
-                      child: ItemSpriteWidget(
-                        iconData: item.iconData,
-                        size: data.slotSize - (data.spacing * 2),
+    final isSelected =
+      EquipmentManager.instance.currentMainHandSlotIndex == slot.index;
+
+    return GestureDetector(
+      onTap: () => EquipmentManager.instance.selectSlotIndex(slot.index),
+      child: Container(
+        width: data.slotSize,
+        height: data.slotSize,
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.red.withOpacity(0.5) : slotColor,
+          border: Border.all(color: Colors.white.withOpacity(0.5)),
+        ),
+        child: Stack(
+          children: [
+            if (item != null) ...[
+              // Item icon or abbreviation
+              Center(
+                child: item.iconData != null
+                    ? Padding(
+                        padding: EdgeInsets.all(data.spacing),
+                        child: ItemSpriteWidget(
+                          iconData: item.iconData,
+                          size: data.slotSize - (data.spacing * 2),
+                        ),
+                      )
+                    : Text(
+                        _abbreviateItemName(item.name),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: data.baseFontSize - 2,
+                          fontFamily: 'Normal',
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                    )
-                  : Text(
-                      _abbreviateItemName(item.name),
+              ),
+              // Quantity indicator
+              if (quantity != null && quantity > 1)
+                Positioned(
+                  bottom: 2,
+                  left: 2,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: data.spacing / 2,
+                      vertical: 1,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.7),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                    child: Text(
+                      'x$quantity',
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: data.baseFontSize - 2,
+                        color: Colors.yellow,
+                        fontSize: data.baseFontSize - 4,
                         fontFamily: 'Normal',
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-            ),
-            // Quantity indicator
-            if (quantity != null && quantity > 1)
-              Positioned(
-                bottom: 2,
-                left: 2,
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: data.spacing / 2,
-                    vertical: 1,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.7),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                  child: Text(
-                    'x$quantity',
-                    style: TextStyle(
-                      color: Colors.yellow,
-                      fontSize: data.baseFontSize - 4,
-                      fontFamily: 'Normal',
                     ),
                   ),
                 ),
-              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
