@@ -1,6 +1,8 @@
 import 'dart:developer' as developer;
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
+
 import 'constants/inventory_constants.dart';
 import 'item_factory.dart';
 import 'models/inventory_slot.dart';
@@ -19,6 +21,14 @@ final class InventoryManager {
   int _currentMaxSlots = InventoryConstants.kDefaultInventorySize;
 
   late List<InventorySlot> _slots;
+
+  /// Notifies listeners when inventory changes with the current slots state
+  late final ValueNotifier<List<InventorySlot>> slotsNotifier;
+
+  void _notifyChange() {
+    slotsNotifier.value = List.unmodifiable(_slots);
+    developer.log('[InventoryManager] Notifying change with ${_slots.length} slots');
+  }
 
   int get maxSlots => _currentMaxSlots;
 
@@ -47,11 +57,13 @@ final class InventoryManager {
     developer.log(
       '[InventoryManager] Upgraded from $oldSize to $_currentMaxSlots slots',
     );
+    _notifyChange();
     return true;
   }
 
   void _initializeSlots(int count) {
     _slots = List.generate(count, (index) => InventorySlot(index: index));
+    slotsNotifier = ValueNotifier(List.unmodifiable(_slots));
   }
 
   int get usedSlots => _slots.where((s) => !s.isEmpty).length;
@@ -120,6 +132,7 @@ final class InventoryManager {
     }
 
     developer.log('[InventoryManager] Item added successfully');
+    _notifyChange();
     return true;
   }
 
@@ -153,6 +166,7 @@ final class InventoryManager {
     }
 
     developer.log('[InventoryManager] Item removed successfully');
+    _notifyChange();
     return true;
   }
 
@@ -258,6 +272,7 @@ final class InventoryManager {
       developer.log(
         '[InventoryManager] Moved item from $fromIndex to $toIndex',
       );
+      _notifyChange();
       return true;
     }
 
@@ -271,6 +286,7 @@ final class InventoryManager {
         developer.log(
           '[InventoryManager] Stacked $amountToMove from $fromIndex to $toIndex',
         );
+        _notifyChange();
         return true;
       }
     }
@@ -298,6 +314,7 @@ final class InventoryManager {
     );
 
     developer.log('[InventoryManager] Swapped slots $index1 and $index2');
+    _notifyChange();
     return true;
   }
 
@@ -307,6 +324,7 @@ final class InventoryManager {
       (index) => InventorySlot(index: index),
     );
     developer.log('[InventoryManager] Inventory cleared');
+    _notifyChange();
   }
 
   void sortByType() {
@@ -325,6 +343,7 @@ final class InventoryManager {
     }
 
     developer.log('[InventoryManager] Sorted by type');
+    _notifyChange();
   }
 
   void sortByRarity() {
@@ -343,6 +362,7 @@ final class InventoryManager {
     }
 
     developer.log('[InventoryManager] Sorted by rarity');
+    _notifyChange();
   }
 
   void sortByName() {
@@ -359,6 +379,7 @@ final class InventoryManager {
     }
 
     developer.log('[InventoryManager] Sorted by name');
+    _notifyChange();
   }
 
   Map<String, dynamic> toJson() {
@@ -390,10 +411,12 @@ final class InventoryManager {
     developer.log(
       '[InventoryManager] Loaded ${slotsData.length} slots from JSON',
     );
+    _notifyChange();
   }
 
   void reset() {
     clear();
     developer.log('[InventoryManager] Reset');
+    _notifyChange();
   }
 }

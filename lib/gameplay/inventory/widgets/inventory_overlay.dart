@@ -4,6 +4,7 @@ import 'package:darkness_dungeon/gameplay/inventory/equipment_state.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_state.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
+import 'package:darkness_dungeon/gameplay/inventory/models/inventory_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/widgets/item_sprite_widget.dart';
 import 'package:flutter/material.dart';
@@ -52,8 +53,6 @@ class InventoryOverlay extends ResponsiveOverlayBase {
   }
 
   Widget _buildInventoryGrid(BuildContext context, ResponsiveOverlayData data) {
-    final manager = InventoryManager.instance;
-
     // Ajusta o número de slots por linha baseado no tamanho da tela
     final int slotsPerRow = valueByScreenSize(
       context,
@@ -63,23 +62,30 @@ class InventoryOverlay extends ResponsiveOverlayBase {
       extraLarge: 12,
     );
 
-    return ValueListenableBuilder<Map<EquipmentSlotType, Item?>>(
-      valueListenable: EquipmentState.instance.equipment,
-      builder: (context, equipmentMap, child) {
-        return Wrap(
-          spacing: data.spacing,
-          runSpacing: data.spacing,
-          children: List.generate(
-            manager.maxSlots,
-            (index) {
-              final slot = manager.getSlotByIndex(index);
-              return _buildInventorySlot(
-                data,
-                slot?.item,
-                slot?.quantity,
-              );
-            },
-          ),
+    // Listen to inventory changes with the actual slots list
+    return ValueListenableBuilder<List<InventorySlot>>(
+      valueListenable: InventoryManager.instance.slotsNotifier,
+      builder: (context, slots, _) {
+        // Listen to equipment changes for highlighting
+        return ValueListenableBuilder<Map<EquipmentSlotType, Item?>>(
+          valueListenable: EquipmentState.instance.equipment,
+          builder: (context, equipmentMap, child) {
+            return Wrap(
+              spacing: data.spacing,
+              runSpacing: data.spacing,
+              children: List.generate(
+                slots.length,
+                (index) {
+                  final slot = slots[index];
+                  return _buildInventorySlot(
+                    data,
+                    slot.item,
+                    slot.quantity,
+                  );
+                },
+              ),
+            );
+          },
         );
       },
     );
