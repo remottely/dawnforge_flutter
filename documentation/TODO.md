@@ -1,5 +1,11 @@
 # IMPORTANT BEFORE LAUNCH:
 
+- [PRIORITY] a reatividade do inventario esta ruim, quando clico "G" deveria refletir a limpeza do inventario/jogo em tempo real. quando clico em "G" alem de nao apagar tudo do inventario em tempo real, quando eu reincio o jogo ele reiniciar com o inventario vazio sendo q deveria trazer os itens iniciais de base de teste, mas eles so aparecem se eu fechar e abrir o inventario ou interagir com trocas do equipamento. quero uma solucao robusta em tempo real e q priorize tb o desempenho.
+
+- [PRIORITY] hoje eu possuo o onJoystickAction, hoje existente em Keyboard do bonfire. nele consigo hoje utilizar os inputs do player na classe do player. mas agora eu preciso q vc faca com q esse onJoystickAction(q gerencia tanto o keyboard quanto o joystick do meu jogo), para q funcione tb em FarmInputHandler. hoje o FarmInputHandler só funciona no keyboard, mas quero tb q ele funciona na versão mobile, com input de joystick.
+
+<!-- - [PRIORITY] quando eu carrego o meu jogo, ele deveria ja vir com o ultimo item equipado e salvo do player, tendo tb o feedback visual do inventario e do equipamento refletidos corretamente -->
+
 - [PRIORITY] setar a cor de fundo dos mapas para a cor dos tiles do chao para quando der problemas de (criacao de linhas) nos mapas, ele nao ficar tão visivel.
 
 - [PRIORITY] refatorar assets para nao haver tiles repitidos nunca. decidir isso quando tiver certeza dos assets do jogo final!

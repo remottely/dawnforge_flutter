@@ -1,7 +1,7 @@
 import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_defense_player_view.dart';
 import 'package:flutter/services.dart';
 
@@ -59,8 +59,7 @@ class ShieldDefenseInputHandler extends GameComponent
     final player = _getCurrentPlayer();
     if (player == null) return false;
 
-    if (event is KeyDownEvent &&
-        event.logicalKey == KeyboardSetup.kSecondaryActionKey) {
+    if (event is KeyDownEvent && InputDef.isSecondaryAction(event.logicalKey)) {
       if (!_isDefending) {
         if (player.controller.model.stamina <= 0) {
           developer.log('[ShieldDefenseInput] ✗ Sem stamina para defender');
@@ -83,8 +82,7 @@ class ShieldDefenseInputHandler extends GameComponent
       return false;
     }
 
-    if (event is KeyUpEvent &&
-        event.logicalKey == KeyboardSetup.kSecondaryActionKey) {
+    if (event is KeyUpEvent && InputDef.isSecondaryAction(event.logicalKey)) {
       if (_isDefending) {
         player.stopShieldDefense();
         _isDefending = false;

@@ -46,17 +46,15 @@ final class JoystickSetup {
   static const double kPrimaryActionMarginRight = 50.0;
   static const double kSecondaryActionMarginRight = 160.0;
 
-  static PlayerController createJoystickInput() {
-    return Joystick(
-      directional: JoystickDirectional(
-        spriteBackgroundDirectional: _loadBackground,
-        spriteKnobDirectional: _loadKnob,
-        size: _kJoystickComponentSize,
-        isFixed: false,
-      ),
-      actions: [_createPrimaryAttackAction(), _createRangedAttackAction()],
-    );
-  }
+  static final PlayerController createJoystickInput = Joystick(
+    directional: JoystickDirectional(
+      spriteBackgroundDirectional: _loadBackground,
+      spriteKnobDirectional: _loadKnob,
+      size: _kJoystickComponentSize,
+      isFixed: false,
+    ),
+    actions: [_createPrimaryAttackAction(), _createRangedAttackAction()],
+  );
 
   static JoystickAction _createPrimaryAttackAction() {
     return JoystickAction(

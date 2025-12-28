@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_def.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_def.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_model.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';

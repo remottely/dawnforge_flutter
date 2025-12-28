@@ -5,10 +5,10 @@ final class SettingsManager {
 
   static final SettingsManager instance = SettingsManager._();
 
-  InputActionsType _vIsJoystickInputSelected = InputActionsType.keyboard;
-  InputActionsType get vIsJoystickInputSelected => _vIsJoystickInputSelected;
+  InputActionsType _inputSelected = InputActionsType.keyboard;
+  InputActionsType get inputSelected => _inputSelected;
 
-  void setInputSelected(InputActionsType newInput) {
-    _vIsJoystickInputSelected = newInput;
+  void setInputSelected(InputActionsType value) {
+    _inputSelected = value;
   }
 }

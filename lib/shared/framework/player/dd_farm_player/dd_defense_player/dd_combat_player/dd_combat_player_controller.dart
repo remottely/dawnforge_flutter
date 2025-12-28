@@ -1,6 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/input_actions/joysctick_setup.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
@@ -25,16 +24,14 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
     required DDBasePlayerView player,
     required dynamic actionId,
   }) =>
-      (actionId == JoystickSetup.kPrimaryActionId ||
-          actionId == KeyboardSetup.kPrimaryActionKey) &&
+      InputDef.isPrimaryAction(actionId) &&
       player.controller.model.equipment == EquippedHandType.ironSword;
 
   bool isRangedAttackAction({
     required DDBasePlayerView player,
     required dynamic actionId,
   }) =>
-      (actionId == JoystickSetup.kSecondaryActionId ||
-          actionId == KeyboardSetup.kPrimaryActionKey) &&
+      InputDef.isPrimaryAction(actionId) &&
       player.controller.model.equipment == EquippedHandType.staff;
 
   void handleExecutePrimaryAttack() {
