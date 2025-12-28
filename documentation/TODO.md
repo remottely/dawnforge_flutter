@@ -1,5 +1,7 @@
 # IMPORTANT BEFORE LAUNCH:
 
+- [PRIORITY] renomear "isPrimaryAction", "isRunAction", etc para "isActionPrimary", "isActionRun", etc.
+
 - [PRIORITY] a reatividade do inventario esta ruim, quando clico "G" deveria refletir a limpeza do inventario/jogo em tempo real. quando clico em "G" alem de nao apagar tudo do inventario em tempo real, quando eu reincio o jogo ele reiniciar com o inventario vazio sendo q deveria trazer os itens iniciais de base de teste, mas eles so aparecem se eu fechar e abrir o inventario ou interagir com trocas do equipamento. quero uma solucao robusta em tempo real e q priorize tb o desempenho.
 
 - [PRIORITY] hoje eu possuo o onJoystickAction, hoje existente em Keyboard do bonfire. nele consigo hoje utilizar os inputs do player na classe do player. mas agora eu preciso q vc faca com q esse onJoystickAction(q gerencia tanto o keyboard quanto o joystick do meu jogo), para q funcione tb em FarmInputHandler. hoje o FarmInputHandler só funciona no keyboard, mas quero tb q ele funciona na versão mobile, com input de joystick.

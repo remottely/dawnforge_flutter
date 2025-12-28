@@ -49,14 +49,6 @@ class InventoryInputHandler extends GameComponent
   }
 
   @override
-  bool onKeyboard(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-    if (event is KeyDownEvent) {
-      return _handleAction(event.logicalKey);
-    }
-    return false;
-  }
-
-  @override
   void onJoystickAction(JoystickActionEvent event) {
     if (event.event == ActionEvent.DOWN) {
       _handleAction(event.id);

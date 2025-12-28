@@ -21,6 +21,14 @@ final class KeyboardSetup {
     kSecondaryActionKey,
     kInteractionKey,
     kRunKey,
+    kEquipMainHandKey,
+    kEquipMainHandReverseKey,
+    kUnequipMainHandKey,
+    kAdvanceDayKey,
+    kClearSaveKey,
+    kToggleInputsKey,
+    kToggleInventoryKey,
+    kAddTestItemsKey,
   ];
 
   static final PlayerController createKeyboardInput = Keyboard(
