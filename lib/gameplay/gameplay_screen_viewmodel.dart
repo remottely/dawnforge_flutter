@@ -34,7 +34,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   late final CameraConfig cameraConfig;
   final gameplayGameStateManager = GameStateManager();
 
-  final inventoryInputHandler = InventoryInputHandler();
+  late final InventoryInputHandler inventoryInputHandler;
   final shieldDefenseInputHandler = ShieldDefenseInputHandler();
   late final PlayerController playerInput;
   late FarmInputHandler farmInputHandler;
@@ -43,6 +43,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   void initState() {
     super.initState();
     playerInput = GameplayScreenDef.createPlayerInput();
+    inventoryInputHandler = InventoryInputHandler(playerController: playerInput);
     _loadGameOrResetLife();
   }
 

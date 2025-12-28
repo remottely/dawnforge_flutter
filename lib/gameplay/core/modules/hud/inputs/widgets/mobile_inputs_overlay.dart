@@ -17,7 +17,8 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
   String get overlayId => 'mobile_inputs';
 
   @override
-  ValueNotifier<bool> get visibilityNotifier => MobileInputsState.instance.isVisible;
+  ValueNotifier<bool> get visibilityNotifier =>
+      MobileInputsState.instance.isVisible;
 
   @override
   OverlayPosition getOverlayPosition(BuildContext context) {
@@ -176,6 +177,14 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
+        _buildActionButton(
+          context: context,
+          label: 'Esc',
+          icon: Icons.settings,
+          size: buttonSize,
+          actionId: JoystickSetup.kToggleTutorialInputsId,
+          color: Colors.brown,
+        ),
         _buildActionButton(
           context: context,
           label: 'Inv',

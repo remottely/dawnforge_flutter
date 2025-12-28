@@ -2,6 +2,7 @@ import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/tutorial_inputs/tutorial_inputs_state.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
@@ -13,10 +14,32 @@ import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.da
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:flutter/services.dart';
 
-class InventoryInputHandler extends GameComponent with KeyboardEventListener {
+/// Handles inventory and equipment inputs from both keyboard and joystick/mobile
+class InventoryInputHandler extends GameComponent
+    with KeyboardEventListener, PlayerControllerListener {
+  final PlayerController? playerController;
+
   bool _isInitialized = false;
   int _currentMainHandIndex = -1;
-  int _currentOffHandIndex = -1; // ← ADICIONAR ESTA LINHA
+  int _currentOffHandIndex = -1;
+
+  InventoryInputHandler({this.playerController});
+
+  @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+    if (playerController != null) {
+      playerController!.addObserver(this);
+    }
+  }
+
+  @override
+  void onRemove() {
+    if (playerController != null) {
+      playerController!.removeObserver(this);
+    }
+    super.onRemove();
+  }
 
   @override
   void onMount() {
@@ -29,51 +52,64 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
   @override
   bool onKeyboard(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     if (event is KeyDownEvent) {
-      if (event.logicalKey == KeyboardSetup.kToggleInputsKey) {
-        _toggleInputs();
-        return true;
-      }
-
-      if (event.logicalKey == KeyboardSetup.kToggleInventoryKey) {
-        _toggleInventory();
-        return true;
-      }
-
-      if (event.logicalKey == KeyboardSetup.kAddTestItemsKey) {
-        _addTestItems();
-        return true;
-      }
-
-      if (event.logicalKey == KeyboardSetup.kEquipMainHandKey) {
-        _equipMainHand();
-        return true;
-      }
-
-      if (event.logicalKey == KeyboardSetup.kEquipMainHandReverseKey) {
-        _equipMainHandReverse();
-        return true;
-      }
-
-      if (event.logicalKey == KeyboardSetup.kUnequipMainHandKey) {
-        _unequipMainHand();
-        return true;
-      }
-
-      if (event.logicalKey == KeyboardSetup.kEquipOffhandKey) {
-        _equipOffhand();
-        return true;
-      }
-
-      if (event.logicalKey == KeyboardSetup.kEquipOffhandReverseKey) {
-        _equipOffhandReverse();
-        return true;
-      }
-
-      if (event.logicalKey == KeyboardSetup.kUnequipOffhandKey) {
-        _unequipOffhand();
-        return true;
-      }
+      return _handleAction(event.logicalKey);
     }
+    return false;
+  }
+
+  @override
+  void onJoystickAction(JoystickActionEvent event) {
+    if (event.event == ActionEvent.DOWN) {
+      _handleAction(event.id);
+    }
+  }
+
+  bool _handleAction(dynamic actionId) {
+    if (InputDef.isToggleInventoryAction(actionId)) {
+      _toggleInventory();
+      return true;
+    }
+
+    if (InputDef.isToggleTutorialInputsAction(actionId)) {
+      _toggleInputs();
+      return true;
+    }
+
+    if (InputDef.isAddTestItemsAction(actionId)) {
+      _addTestItems();
+      return true;
+    }
+
+    if (InputDef.isEquipMainHandAction(actionId)) {
+      _equipMainHand();
+      return true;
+    }
+
+    if (InputDef.isEquipMainHandReverseAction(actionId)) {
+      _equipMainHandReverse();
+      return true;
+    }
+
+    if (InputDef.isUnequipMainHandAction(actionId)) {
+      _unequipMainHand();
+      return true;
+    }
+
+    if (InputDef.isEquipOffhandAction(actionId)) {
+      _equipOffhand();
+      return true;
+    }
+
+    if (InputDef.isEquipOffhandReverseAction(actionId)) {
+      _equipOffhandReverse();
+      return true;
+    }
+
+    if (InputDef.isUnequipOffhandAction(actionId)) {
+      _unequipOffhand();
+      return true;
+    }
+
     return false;
   }
 

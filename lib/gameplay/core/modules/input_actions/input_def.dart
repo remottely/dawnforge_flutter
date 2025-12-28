@@ -27,11 +27,63 @@ final class InputDef {
         actionId == KeyboardSetup.kRunKey;
   }
 
+  static bool isInteractionAction(dynamic actionId) {
+    return actionId == JoystickSetup.kInteractionId ||
+        actionId == KeyboardSetup.kInteractionKey;
+  }
+
   static bool isAdvanceDayAction(dynamic actionId) {
-    return actionId == KeyboardSetup.kAdvanceDayKey;
+    return actionId == JoystickSetup.kAdvanceDayId ||
+        actionId == KeyboardSetup.kAdvanceDayKey;
   }
 
   static bool isClearSaveAction(dynamic actionId) {
-    return actionId == KeyboardSetup.kClearSaveKey;
+    return actionId == JoystickSetup.kClearSaveId ||
+        actionId == KeyboardSetup.kClearSaveKey;
+  }
+
+  static bool isToggleInventoryAction(dynamic actionId) {
+    return actionId == JoystickSetup.kToggleInventoryId ||
+        actionId == KeyboardSetup.kToggleInventoryKey;
+  }
+
+  static bool isToggleTutorialInputsAction(dynamic actionId) {
+    return actionId == JoystickSetup.kToggleTutorialInputsId ||
+        actionId == KeyboardSetup.kToggleInputsKey;
+  }
+
+  static bool isEquipMainHandAction(dynamic actionId) {
+    return actionId == JoystickSetup.kEquipMainHandId ||
+        actionId == KeyboardSetup.kEquipMainHandKey;
+  }
+
+  static bool isEquipMainHandReverseAction(dynamic actionId) {
+    return actionId == JoystickSetup.kEquipMainHandReverseId ||
+        actionId == KeyboardSetup.kEquipMainHandReverseKey;
+  }
+
+  static bool isUnequipMainHandAction(dynamic actionId) {
+    return actionId == JoystickSetup.kUnequipMainHandId ||
+        actionId == KeyboardSetup.kUnequipMainHandKey;
+  }
+
+  static bool isEquipOffhandAction(dynamic actionId) {
+    return actionId == JoystickSetup.kEquipOffhandId ||
+        actionId == KeyboardSetup.kEquipOffhandKey;
+  }
+
+  static bool isEquipOffhandReverseAction(dynamic actionId) {
+    return actionId == JoystickSetup.kEquipOffhandReverseId ||
+        actionId == KeyboardSetup.kEquipOffhandReverseKey;
+  }
+
+  static bool isUnequipOffhandAction(dynamic actionId) {
+    return actionId == JoystickSetup.kUnequipOffhandId ||
+        actionId == KeyboardSetup.kUnequipOffhandKey;
+  }
+
+  static bool isAddTestItemsAction(dynamic actionId) {
+    return actionId == JoystickSetup.kAddTestItemsId ||
+        actionId == KeyboardSetup.kAddTestItemsKey;
   }
 }

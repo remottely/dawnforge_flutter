@@ -14,6 +14,7 @@ import 'package:darkness_dungeon/gameplay/gameplay_screen_viewmodel.dart';
 import 'package:darkness_dungeon/gameplay/inventory/widgets/equipment_overlay.dart';
 import 'package:darkness_dungeon/gameplay/inventory/widgets/inventory_overlay.dart';
 import 'package:darkness_dungeon/shared/framework/utils/dd_debug_hud.dart';
+import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
 import 'package:flutter/material.dart';
 
 class GameplayScreen extends StatefulWidget {
@@ -109,8 +110,9 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
             const InventoryOverlay(),
             // Flutter Tutorial Inputs Overlay - inside MapNavigator builder
             const TutorialInputsOverlay(),
-            // Flutter Mobile Inputs Overlay - inside MapNavigator builder
-            MobileInputsOverlay(playerController: playerInput),
+            // Flutter Mobile Inputs Overlay - only for joystick mode
+            if (SettingsManager.instance.inputSelected == InputActionsType.joystick)
+              MobileInputsOverlay(playerController: playerInput),
           ],
         );
       },
