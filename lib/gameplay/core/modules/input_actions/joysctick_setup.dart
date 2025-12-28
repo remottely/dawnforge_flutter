@@ -37,7 +37,20 @@ final class JoystickSetup {
   /// Identifiers
   static const String kPrimaryActionId = 'primaryActionId';
   static const String kSecondaryActionId = 'secondaryActionId';
+  static const String kInteractionId = 'interactionId';
   static const String kRunId = 'runId';
+  static const String kEquipMainHandId = 'equipMainHandId';
+  static const String kEquipMainHandReverseId = 'equipMainHandReverseId';
+  static const String kToggleInventoryId = 'toggleInventoryId';
+  static const String kUnequipMainHandId = 'unequipMainHandId';
+  static const String kEquipOffhandId = 'equipOffhandId';
+  static const String kEquipOffhandReverseId = 'equipOffhandReverseId';
+  static const String kUnequipOffhandId = 'unequipOffhandId';
+
+  /// Testing Identifiers
+  static const String kAdvanceDayId = 'advanceDayId';
+  static const String kClearSaveId = 'clearSaveId';
+  static const String kAddTestItemsId = 'addTestItemsId';
 
   /// Factories
   static const double _kJoystickComponentSize = 100.0;

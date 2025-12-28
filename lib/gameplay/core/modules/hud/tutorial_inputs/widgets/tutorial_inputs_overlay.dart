@@ -7,7 +7,7 @@ class TutorialInputsOverlay extends ResponsiveOverlayBase {
   const TutorialInputsOverlay({super.key});
 
   @override
-  String get overlayId => 'inputs';
+  String get overlayId => 'tutorial_inputs';
 
   @override
   ValueNotifier<bool> get visibilityNotifier => TutorialInputsState.instance.isVisible;

@@ -145,11 +145,17 @@ class OverlayResponsiveConfig {
       minHeight: 80,
       maxHeight: 300,
     ),
-    'inputs': BoxConstraints(
+    'tutorial_inputs': BoxConstraints(
       minWidth: 280,
       maxWidth: 500,
       minHeight: 200,
       maxHeight: 500,
+    ),
+    'mobile_inputs': BoxConstraints(
+      minWidth: double.infinity,
+      maxWidth: double.infinity,
+      minHeight: double.infinity,
+      maxHeight: double.infinity,
     ),
   };
 
