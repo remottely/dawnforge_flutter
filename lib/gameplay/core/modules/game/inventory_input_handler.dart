@@ -1,7 +1,7 @@
 import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/inputs_state.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/tutorial_inputs/tutorial_inputs_state.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
@@ -82,7 +82,7 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
   }
 
   void _toggleInputs() {
-    InputsState.instance.toggle();
+    TutorialInputsState.instance.toggle();
   }
 
   void _initializeTestItems() {

@@ -1,16 +1,16 @@
-import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/inputs_hud_def.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/inputs_state.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/tutorial_inputs/tutorial_inputs_hud_def.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/tutorial_inputs/tutorial_inputs_state.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/responsive/responsive_overlay_base.dart';
 import 'package:flutter/material.dart';
 
-class InputsOverlay extends ResponsiveOverlayBase {
-  const InputsOverlay({super.key});
+class TutorialInputsOverlay extends ResponsiveOverlayBase {
+  const TutorialInputsOverlay({super.key});
 
   @override
   String get overlayId => 'inputs';
 
   @override
-  ValueNotifier<bool> get visibilityNotifier => InputsState.instance.isVisible;
+  ValueNotifier<bool> get visibilityNotifier => TutorialInputsState.instance.isVisible;
 
   @override
   OverlayPosition getOverlayPosition(BuildContext context) {
@@ -47,12 +47,12 @@ class InputsOverlay extends ResponsiveOverlayBase {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: List.generate(
-              InputsHUDDef.inputGuide.length,
+              TutorialInputsHUDDef.inputGuide.length,
               (index) => _buildInputRow(
                 context,
                 data,
-                InputsHUDDef.inputGuide[index]['key']!,
-                InputsHUDDef.inputGuide[index]['desc']!,
+                TutorialInputsHUDDef.inputGuide[index]['key']!,
+                TutorialInputsHUDDef.inputGuide[index]['desc']!,
                 keyBoxWidth,
               ),
             ),

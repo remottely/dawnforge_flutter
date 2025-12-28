@@ -7,7 +7,7 @@ import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/color_helper.dart';
 import 'package:darkness_dungeon/gameplay/decorations/map_transition_sensor.dart';
 import 'package:darkness_dungeon/gameplay/farm/handlers/farm_input_handler.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/widgets/inputs_overlay.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/tutorial_inputs/widgets/tutorial_inputs_overlay.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen_def.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen_viewmodel.dart';
 import 'package:darkness_dungeon/gameplay/inventory/widgets/equipment_overlay.dart';
@@ -69,7 +69,10 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
         // final player = buildCutePlayer(playerPosition);
         final player = buildFarmerPlayer(playerPosition);
 
-        farmInputHandler = FarmInputHandler(player: player);
+        farmInputHandler = FarmInputHandler(
+          player: player,
+          playerController: playerInput,
+        );
 
         return Stack(
           children: [
@@ -104,7 +107,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
             // Flutter Inventory Overlay - inside MapNavigator builder
             const InventoryOverlay(),
             // Flutter Inputs Overlay - inside MapNavigator builder
-            const InputsOverlay(),
+            const TutorialInputsOverlay(),
           ],
         );
       },
