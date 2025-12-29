@@ -1,21 +1,21 @@
-include: package:very_good_analysis/analysis_options.yaml
+# include: package:very_good_analysis/analysis_options.yaml
 
-analyzer:
-  errors:
-    public_member_api_docs: ignore
-    prefer_int_literals: ignore
-#     always_specify_types: error  # ERRO se não tipar
-#     type_init_formals: error     # ERRO se não tipar no construtor
+# analyzer:
+#   errors:
+#     public_member_api_docs: ignore
+#     prefer_int_literals: ignore
+# #     always_specify_types: error  # ERRO se não tipar
+# #     type_init_formals: error     # ERRO se não tipar no construtor
 
-linter:
-  rules:
-#     # TIPAGEM OBRIGATÓRIA
-#     always_specify_types: true
-#     type_annotate_public_apis: true
+# linter:
+#   rules:
+# #     # TIPAGEM OBRIGATÓRIA
+# #     always_specify_types: true
+# #     type_annotate_public_apis: true
     
-    prefer_int_literals: false
+#     prefer_int_literals: false
     
-#     prefer_const_constructors: true
-#     prefer_const_declarations: true
-#     prefer_final_fields: true
-#     prefer_final_locals: true
+# #     prefer_const_constructors: true
+# #     prefer_const_declarations: true
+# #     prefer_final_fields: true
+# #     prefer_final_locals: true

@@ -2,6 +2,8 @@ import 'package:equatable/equatable.dart';
 
 import 'item.dart';
 
+/// Re-export EquipmentSlotType from models
+
 enum EquipmentSlotType {
   mainHand,
   offHand,
@@ -19,15 +21,14 @@ enum EquipmentSlotType {
   static EquipmentSlotType fromJson(String json) => values.byName(json);
 }
 
+/// Entity representing an equipment slot (D2: Entity with Serialization)
 final class EquipmentSlot extends Equatable {
   final EquipmentSlotType slotType;
-
   final Item? equippedItem;
 
   const EquipmentSlot({required this.slotType, this.equippedItem});
 
   bool get isEmpty => equippedItem == null;
-
   bool get isOccupied => equippedItem != null;
 
   EquipmentSlot equip(Item item) {
@@ -38,10 +39,12 @@ final class EquipmentSlot extends Equatable {
     return EquipmentSlot(slotType: slotType);
   }
 
+  /// Serialization (D2)
   Map<String, dynamic> toJson() {
     return {'slotType': slotType.toJson(), 'equippedItemId': equippedItem?.id};
   }
 
+  /// Deserialization with item resolver
   static EquipmentSlot fromJson(
     Map<String, dynamic> json,
     Item? Function(String) itemResolver,
@@ -58,6 +61,5 @@ final class EquipmentSlot extends Equatable {
       'EquipmentSlot(slotType: $slotType, equippedItem: ${equippedItem?.id})';
 
   @override
-  // TODO: implement props
   List<Object?> get props => [slotType, equippedItem];
 }

@@ -1,7 +1,8 @@
 import 'package:equatable/equatable.dart';
 
-import 'item.dart';
+import '../entities/item.dart';
 
+/// Entity representing a slot in the inventory (D2: Entity with Serialization)
 final class InventorySlot extends Equatable {
   final int index;
   final Item? item;
@@ -38,10 +39,12 @@ final class InventorySlot extends Equatable {
     return InventorySlot(index: index, item: item, quantity: newQuantity);
   }
 
+  /// Serialization (D2)
   Map<String, dynamic> toJson() {
     return {'index': index, 'itemId': item?.id, 'quantity': quantity};
   }
 
+  /// Deserialization with item resolver
   static InventorySlot fromJson(
     Map<String, dynamic> json,
     Item? Function(String) itemResolver,

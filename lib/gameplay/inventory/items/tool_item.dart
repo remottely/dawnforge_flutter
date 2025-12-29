@@ -1,12 +1,10 @@
-import '../models/item.dart';
+import '../entities/item.dart';
 import '../models/item_rarity.dart';
 import '../models/item_type.dart';
 
 final class ToolItem extends Item {
   final String toolType;
   final int powerLevel;
-  final int durability;
-  final int maxDurability;
 
   const ToolItem({
     required super.id,
@@ -19,21 +17,7 @@ final class ToolItem extends Item {
     super.iconData,
     required this.toolType,
     this.powerLevel = 1,
-    required this.durability,
-    required this.maxDurability,
   });
-
-  bool get isBroken => durability <= 0;
-
-  double get durabilityPercent => durability / maxDurability;
-
-  ToolItem use([int amount = 1]) {
-    return copyWith(durability: (durability - amount).clamp(0, maxDurability));
-  }
-
-  ToolItem repair([int amount = 10]) {
-    return copyWith(durability: (durability + amount).clamp(0, maxDurability));
-  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -47,8 +31,6 @@ final class ToolItem extends Item {
       'iconPath': iconPath,
       'toolType': toolType,
       'powerLevel': powerLevel,
-      'durability': durability,
-      'maxDurability': maxDurability,
     };
   }
 
@@ -62,8 +44,6 @@ final class ToolItem extends Item {
       rarity: ItemRarity.fromJson(json['rarity'] as String),
       toolType: json['toolType'] as String,
       powerLevel: json['powerLevel'] as int? ?? 1,
-      durability: json['durability'] as int,
-      maxDurability: json['maxDurability'] as int,
     );
   }
 
@@ -77,8 +57,6 @@ final class ToolItem extends Item {
     ItemRarity? rarity,
     String? toolType,
     int? powerLevel,
-    int? durability,
-    int? maxDurability,
   }) {
     return ToolItem(
       id: id ?? this.id,
@@ -89,12 +67,10 @@ final class ToolItem extends Item {
       rarity: rarity ?? this.rarity,
       toolType: toolType ?? this.toolType,
       powerLevel: powerLevel ?? this.powerLevel,
-      durability: durability ?? this.durability,
-      maxDurability: maxDurability ?? this.maxDurability,
     );
   }
 
   @override
   String toString() =>
-      'ToolItem(id: $id, name: $name, toolType: $toolType, durability: $durability/$maxDurability)';
+      'ToolItem(id: $id, name: $name, toolType: $toolType)';
 }

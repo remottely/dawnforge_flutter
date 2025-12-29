@@ -6,8 +6,8 @@ import 'package:darkness_dungeon/gameplay/inventory/equipment_state.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/item_factory.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
-import 'package:darkness_dungeon/gameplay/inventory/models/item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/equipment_slot.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/item.dart';
 
 final class EquipmentManager {
   EquipmentManager._() {

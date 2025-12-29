@@ -1,4 +1,4 @@
-import '../models/item.dart';
+import '../entities/item.dart';
 import '../models/item_category.dart';
 import '../models/item_quality.dart';
 import '../models/item_rarity.dart';

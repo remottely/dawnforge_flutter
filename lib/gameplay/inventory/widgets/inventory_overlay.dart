@@ -3,10 +3,11 @@ import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_state.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_state.dart';
-import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
-import 'package:darkness_dungeon/gameplay/inventory/models/inventory_slot.dart';
-import 'package:darkness_dungeon/gameplay/inventory/models/item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/equipment_slot.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/inventory_slot.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/widgets/item_sprite_widget.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class InventoryOverlay extends ResponsiveOverlayBase {
@@ -64,7 +65,9 @@ class InventoryOverlay extends ResponsiveOverlayBase {
 
     // Listen to inventory changes with the actual slots list
     return ValueListenableBuilder<List<InventorySlot>>(
-      valueListenable: InventoryManager.instance.slotsNotifier,
+      valueListenable: InventoryManager.instance.slotsNotifier as ValueListenable<
+          List<
+              InventorySlot>>, // TODO(kevin): remove "as ValueListenable<List<InventorySlot>>"
       builder: (context, slots, _) {
         // Listen to equipment changes for highlighting
         return ValueListenableBuilder<Map<EquipmentSlotType, Item?>>(
@@ -104,15 +107,15 @@ class InventoryOverlay extends ResponsiveOverlayBase {
 
     if (item != null) {
       final isMainHand =
-        EquipmentManager.instance.getEquippedSlotForItem(item.id) ==
-          EquipmentSlotType.mainHand;
+          EquipmentManager.instance.getEquippedSlotForItem(item.id) ==
+              EquipmentSlotType.mainHand;
       if (isMainHand) {
         slotColor = Colors.red.withOpacity(0.5);
       }
     }
 
     final isSelected =
-      EquipmentManager.instance.currentMainHandSlotIndex == slot.index;
+        EquipmentManager.instance.currentMainHandSlotIndex == slot.index;
 
     return GestureDetector(
       onTap: () => EquipmentManager.instance.selectSlotIndex(slot.index),

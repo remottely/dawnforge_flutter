@@ -1,7 +1,7 @@
 import 'dart:developer' as developer;
 
-import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
-import 'package:darkness_dungeon/gameplay/inventory/models/item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/equipment_slot.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/item.dart';
 import 'package:flutter/foundation.dart';
 
 /// State manager for equipment to communicate between Bonfire and Flutter

@@ -206,9 +206,7 @@
     "baseValue": 80,
     "iconPath": "assets/images/items/iron_pickaxe.png",
     "toolType": "pickaxe",
-    "powerLevel": 2,
-    "durability": 100,
-    "maxDurability": 100
+    "powerLevel": 2
   },
   "steel_pickaxe": {
     "id": "steel_pickaxe",
@@ -219,9 +217,7 @@
     "baseValue": 200,
     "iconPath": "assets/images/items/steel_pickaxe.png",
     "toolType": "pickaxe",
-    "powerLevel": 3,
-    "durability": 200,
-    "maxDurability": 200
+    "powerLevel": 3
   },
   "wooden_axe": {
     "id": "wooden_axe",
@@ -232,9 +228,7 @@
     "baseValue": 20,
     "iconPath": "assets/images/items/wooden_axe.png",
     "toolType": "axe",
-    "powerLevel": 1,
-    "durability": 50,
-    "maxDurability": 50
+    "powerLevel": 1
   },
   "basic_hoe": {
     "id": "basic_hoe",
@@ -245,9 +239,7 @@
     "baseValue": 30,
     "iconPath": "assets/images/items/basic_hoe.png",
     "toolType": "hoe",
-    "powerLevel": 1,
-    "durability": 80,
-    "maxDurability": 80
+    "powerLevel": 1
   },
   "health_potion": {
     "id": "health_potion",

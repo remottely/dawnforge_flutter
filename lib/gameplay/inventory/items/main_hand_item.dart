@@ -1,5 +1,5 @@
 import '../models/equipped_hand_type.dart';
-import '../models/item.dart';
+import '../entities/item.dart';
 import '../models/item_rarity.dart';
 import '../models/item_type.dart';
 

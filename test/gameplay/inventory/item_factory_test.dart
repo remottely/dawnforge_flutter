@@ -40,7 +40,6 @@ void main() {
       expect(item, isA<ToolItem>());
       expect(item!.id, equals('iron_pickaxe'));
       expect((item as ToolItem).toolType, equals('pickaxe'));
-      expect(item.maxDurability, equals(100));
     });
 
     test('create_consumable_item_returns_correct_type', () {
@@ -63,12 +62,12 @@ void main() {
     });
 
     test('create_seed_item_returns_correct_type', () {
-      final item = ItemFactory.createItem('carrot_seeds');
+      final item = ItemFactory.createItem('carrot_seeds') as SeedItem?;
 
       expect(item, isNotNull);
       expect(item, isA<SeedItem>());
       expect(item!.id, equals('carrot_seeds'));
-      expect((item as SeedItem).cropId, equals('carrot'));
+      expect(item.cropId, equals('carrot'));
       expect(item.growthTime, equals(4));
     });
 
@@ -139,22 +138,6 @@ void main() {
       expect(wheatSeeds, isNotNull);
       expect(wheatSeeds!.canPlantInSeason('spring'), isTrue);
       expect(wheatSeeds.canPlantInSeason('summer'), isFalse);
-    });
-
-    test('tool_durability_mechanics', () {
-      final pickaxe = ItemFactory.createItem('iron_pickaxe') as ToolItem?;
-      expect(pickaxe, isNotNull);
-      expect(pickaxe!.isBroken, isFalse);
-      expect(pickaxe.durabilityPercent, equals(1.0));
-
-      final usedPickaxe = pickaxe.use(50);
-      expect(usedPickaxe.durability, equals(50));
-      expect(usedPickaxe.durabilityPercent, equals(0.5));
-      expect(usedPickaxe.isBroken, isFalse);
-
-      final brokenPickaxe = usedPickaxe.use(100);
-      expect(brokenPickaxe.durability, equals(0));
-      expect(brokenPickaxe.isBroken, isTrue);
     });
 
     test('weapon_dps_calculation', () {

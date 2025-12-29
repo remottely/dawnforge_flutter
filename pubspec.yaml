@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.73.0+1
+version: 1.74.0+1
 
 environment:
   sdk: ^3.8.1
@@ -24,6 +24,9 @@ dependencies:
   equatable: ^2.0.7
   url_launcher: ^6.3.1
   shared_preferences: ^2.3.4
+  
+  # Dependency Injection
+  get_it: ^9.2.0
 
   # Platform Specific
   win32: ^5.10.0
@@ -37,6 +40,9 @@ dev_dependencies:
   # Linting
   flutter_lints: ^5.0.0
   very_good_analysis: ^9.0.0
+  
+  # Testing
+  mocktail: ^1.0.4
 
 flutter:
   uses-material-design: true

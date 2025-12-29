@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/item.dart';
 import 'package:flutter/material.dart';
-import '../models/item.dart';
 import '../../../shared/utils/sprite_animation_config_helper.dart';
 
 class ItemIconWidget extends StatelessWidget {

@@ -3,12 +3,12 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 
-import 'constants/inventory_constants.dart';
-import 'item_factory.dart';
-import 'entities/inventory_slot.dart';
-import 'entities/item.dart';
+import '../constants/inventory_constants.dart';
+import '../entities/inventory_slot.dart';
+import '../entities/item.dart';
 
-final class InventoryManager {
+/// Manager for inventory state (C1: Singleton + ValueNotifier, I2: Manager = Singleton State)
+class InventoryManager {
   InventoryManager._() {
     _initializeSlots(_currentMaxSlots);
     developer.log(
@@ -22,18 +22,39 @@ final class InventoryManager {
 
   late List<InventorySlot> _slots;
 
-  /// Notifies listeners when inventory changes with the current slots state
+  /// Notifies listeners when inventory changes (C1: ValueNotifier)
   late final ValueNotifier<List<InventorySlot>> slotsNotifier;
 
   void _notifyChange() {
     slotsNotifier.value = List.unmodifiable(_slots);
-    developer.log('[InventoryManager] Notifying change with ${_slots.length} slots');
+    developer.log(
+      '[InventoryManager] Notifying change with ${_slots.length} slots',
+    );
   }
 
   int get maxSlots => _currentMaxSlots;
 
   bool get canUpgrade =>
       _currentMaxSlots < InventoryConstants.kMaxInventorySize;
+
+  /// Manually set max slots (used by LoadInventoryUseCase)
+  void setMaxSlots(int newMaxSlots) {
+    if (newMaxSlots == _currentMaxSlots) return;
+
+    if (newMaxSlots > _currentMaxSlots) {
+      // Add new slots
+      final slotsToAdd = newMaxSlots - _currentMaxSlots;
+      for (var i = 0; i < slotsToAdd; i++) {
+        _slots.add(InventorySlot(index: _currentMaxSlots + i));
+      }
+    } else {
+      // Remove slots (only empty ones)
+      _slots = _slots.sublist(0, newMaxSlots);
+    }
+
+    _currentMaxSlots = newMaxSlots;
+    _notifyChange();
+  }
 
   bool upgradeInventory() {
     if (!canUpgrade) {
@@ -185,8 +206,14 @@ final class InventoryManager {
     return _slots[index];
   }
 
+  InventorySlot? findSlotByItemId(String itemId) {
+    for (final slot in _slots) {
+      if (slot.item?.id == itemId) return slot;
+    }
+    return null;
+  }
+
   /// Find first item matching the predicate, starting from afterIndex
-  /// Returns null if no item is found
   ({int index, Item item})? findItem(
     bool Function(Item item) predicate, {
     int afterIndex = -1,
@@ -194,7 +221,7 @@ final class InventoryManager {
     // Search forward from afterIndex + 1
     for (int i = afterIndex + 1; i < _slots.length; i++) {
       final slot = _slots[i];
-      if (slot != null && slot.item != null && predicate(slot.item!)) {
+      if (slot.item != null && predicate(slot.item!)) {
         return (index: i, item: slot.item!);
       }
     }
@@ -203,7 +230,7 @@ final class InventoryManager {
     if (afterIndex >= 0) {
       for (int i = 0; i <= afterIndex && i < _slots.length; i++) {
         final slot = _slots[i];
-        if (slot != null && slot.item != null && predicate(slot.item!)) {
+        if (slot.item != null && predicate(slot.item!)) {
           return (index: i, item: slot.item!);
         }
       }
@@ -212,110 +239,36 @@ final class InventoryManager {
     return null;
   }
 
-  /// Find first item matching the predicate, searching backwards from beforeIndex
-  /// Returns null if no item is found
+  /// Find first item matching the predicate, searching backwards
   ({int index, Item item})? findItemReverse(
     bool Function(Item item) predicate, {
     int beforeIndex = -1,
   }) {
-    // Se beforeIndex = -1 (primeira busca), busca do final ao início (sem wrap)
     if (beforeIndex == -1) {
       for (int i = _slots.length - 1; i >= 0; i--) {
         final slot = _slots[i];
-        if (slot != null && slot.item != null && predicate(slot.item!)) {
+        if (slot.item != null && predicate(slot.item!)) {
           return (index: i, item: slot.item!);
         }
       }
-      return null; // Não encontrou nada
+      return null;
     }
 
-    // Se beforeIndex >= 0, busca de beforeIndex-1 até 0
     for (int i = beforeIndex - 1; i >= 0; i--) {
       final slot = _slots[i];
-      if (slot != null && slot.item != null && predicate(slot.item!)) {
+      if (slot.item != null && predicate(slot.item!)) {
         return (index: i, item: slot.item!);
       }
     }
 
-    // Wrap around: do final até beforeIndex (inclusive)
     for (int i = _slots.length - 1; i >= beforeIndex; i--) {
       final slot = _slots[i];
-      if (slot != null && slot.item != null && predicate(slot.item!)) {
+      if (slot.item != null && predicate(slot.item!)) {
         return (index: i, item: slot.item!);
       }
     }
 
     return null;
-  }
-
-  List<InventorySlot> getSlotsByItemId(String itemId) {
-    return _slots.where((s) => s.item?.id == itemId).toList();
-  }
-
-  bool moveItem(int fromIndex, int toIndex) {
-    if (fromIndex < 0 || fromIndex >= _slots.length) return false;
-    if (toIndex < 0 || toIndex >= _slots.length) return false;
-    if (fromIndex == toIndex) return true;
-
-    final fromSlot = _slots[fromIndex];
-    final toSlot = _slots[toIndex];
-
-    if (fromSlot.isEmpty) return false;
-
-    if (toSlot.isEmpty) {
-      _slots[toIndex] = InventorySlot(
-        index: toIndex,
-        item: fromSlot.item,
-        quantity: fromSlot.quantity,
-      );
-      _slots[fromIndex] = InventorySlot(index: fromIndex);
-      developer.log(
-        '[InventoryManager] Moved item from $fromIndex to $toIndex',
-      );
-      _notifyChange();
-      return true;
-    }
-
-    if (toSlot.item!.id == fromSlot.item!.id && toSlot.item!.isStackable) {
-      final spaceInTo = toSlot.item!.maxStackSize - toSlot.quantity;
-      final amountToMove = min(fromSlot.quantity, spaceInTo);
-
-      if (amountToMove > 0) {
-        _slots[toIndex] = toSlot.addQuantity(amountToMove);
-        _slots[fromIndex] = fromSlot.removeQuantity(amountToMove);
-        developer.log(
-          '[InventoryManager] Stacked $amountToMove from $fromIndex to $toIndex',
-        );
-        _notifyChange();
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  bool swapSlots(int index1, int index2) {
-    if (index1 < 0 || index1 >= _slots.length) return false;
-    if (index2 < 0 || index2 >= _slots.length) return false;
-    if (index1 == index2) return true;
-
-    final slot1 = _slots[index1];
-    final slot2 = _slots[index2];
-
-    _slots[index1] = InventorySlot(
-      index: index1,
-      item: slot2.item,
-      quantity: slot2.quantity,
-    );
-    _slots[index2] = InventorySlot(
-      index: index2,
-      item: slot1.item,
-      quantity: slot1.quantity,
-    );
-
-    developer.log('[InventoryManager] Swapped slots $index1 and $index2');
-    _notifyChange();
-    return true;
   }
 
   void clear() {
@@ -323,100 +276,7 @@ final class InventoryManager {
       _currentMaxSlots,
       (index) => InventorySlot(index: index),
     );
+    _notifyChange();
     developer.log('[InventoryManager] Inventory cleared');
-    _notifyChange();
-  }
-
-  void sortByType() {
-    final occupiedSlots = _slots.where((s) => !s.isEmpty).toList();
-    occupiedSlots.sort(
-      (a, b) => a.item!.type.index.compareTo(b.item!.type.index),
-    );
-
-    clear();
-    for (var i = 0; i < occupiedSlots.length; i++) {
-      _slots[i] = InventorySlot(
-        index: i,
-        item: occupiedSlots[i].item,
-        quantity: occupiedSlots[i].quantity,
-      );
-    }
-
-    developer.log('[InventoryManager] Sorted by type');
-    _notifyChange();
-  }
-
-  void sortByRarity() {
-    final occupiedSlots = _slots.where((s) => !s.isEmpty).toList();
-    occupiedSlots.sort(
-      (a, b) => b.item!.rarity.index.compareTo(a.item!.rarity.index),
-    );
-
-    clear();
-    for (var i = 0; i < occupiedSlots.length; i++) {
-      _slots[i] = InventorySlot(
-        index: i,
-        item: occupiedSlots[i].item,
-        quantity: occupiedSlots[i].quantity,
-      );
-    }
-
-    developer.log('[InventoryManager] Sorted by rarity');
-    _notifyChange();
-  }
-
-  void sortByName() {
-    final occupiedSlots = _slots.where((s) => !s.isEmpty).toList();
-    occupiedSlots.sort((a, b) => a.item!.name.compareTo(b.item!.name));
-
-    clear();
-    for (var i = 0; i < occupiedSlots.length; i++) {
-      _slots[i] = InventorySlot(
-        index: i,
-        item: occupiedSlots[i].item,
-        quantity: occupiedSlots[i].quantity,
-      );
-    }
-
-    developer.log('[InventoryManager] Sorted by name');
-    _notifyChange();
-  }
-
-  Map<String, dynamic> toJson() {
-    final slotsData = _slots
-        .where((s) => !s.isEmpty)
-        .map((s) => s.toJson())
-        .toList();
-
-    return {'maxSlots': maxSlots, 'slots': slotsData};
-  }
-
-  void fromJson(Map<String, dynamic> json) {
-    clear();
-
-    final slotsData = json['slots'] as List<dynamic>?;
-    if (slotsData == null) return;
-
-    for (final slotJson in slotsData) {
-      final slot = InventorySlot.fromJson(
-        slotJson as Map<String, dynamic>,
-        ItemFactory.createItem,
-      );
-
-      if (slot.index >= 0 && slot.index < _slots.length) {
-        _slots[slot.index] = slot;
-      }
-    }
-
-    developer.log(
-      '[InventoryManager] Loaded ${slotsData.length} slots from JSON',
-    );
-    _notifyChange();
-  }
-
-  void reset() {
-    clear();
-    developer.log('[InventoryManager] Reset');
-    _notifyChange();
   }
 }

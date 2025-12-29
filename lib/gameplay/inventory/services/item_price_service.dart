@@ -2,7 +2,7 @@ import 'dart:developer' as developer;
 
 import 'package:darkness_dungeon/gameplay/inventory/constants/inventory_constants.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/crop_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/models/item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/item_category.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/item_quality.dart';
 

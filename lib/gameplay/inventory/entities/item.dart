@@ -1,7 +1,8 @@
-import 'item_icon_data.dart';
-import 'item_rarity.dart';
-import 'item_type.dart';
+import '../models/item_icon_data.dart';
+import '../models/item_rarity.dart';
+import '../models/item_type.dart';
 
+/// Base entity for all items in the game (D2: Entity with Serialization)
 abstract class Item {
   final String id;
   final String name;
@@ -33,8 +34,10 @@ abstract class Item {
 
   int get sellValue => (baseValue * rarity.sellValueMultiplier).round();
 
+  /// Serialization for persistence (D2)
   Map<String, dynamic> toJson();
 
+  /// Create a copy with modifications
   Item copyWith();
 
   @override

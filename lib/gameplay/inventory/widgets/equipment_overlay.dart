@@ -1,7 +1,7 @@
 import 'package:darkness_dungeon/gameplay/core/modules/hud/responsive/responsive_overlay_base.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_state.dart';
-import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
-import 'package:darkness_dungeon/gameplay/inventory/models/item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/equipment_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/widgets/item_sprite_widget.dart';
 import 'package:flutter/material.dart';
 
