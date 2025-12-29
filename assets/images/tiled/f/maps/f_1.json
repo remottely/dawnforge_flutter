@@ -145,10 +145,11 @@
             50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50],
          "height":64,
          "id":4,
+         "locked":true,
          "name":"1",
          "opacity":1,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":64,
          "x":0,
          "y":0
@@ -220,6 +221,7 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":64,
          "id":5,
+         "locked":true,
          "name":"2",
          "opacity":1,
          "type":"tilelayer",
@@ -231,6 +233,7 @@
         {
          "draworder":"topdown",
          "id":6,
+         "locked":true,
          "name":"farm_tiles",
          "objects":[
                 {
@@ -1336,12 +1339,78 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
+         "visible":false,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":7,
+         "name":"enemies",
+         "objects":[
+                {
+                 "height":16,
+                 "id":109,
+                 "name":"imp_enemy",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":212.904954367995,
+                 "y":131.42991398346
+                }, 
+                {
+                 "height":16,
+                 "id":110,
+                 "name":"goblin_enemy",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":193.325514545989,
+                 "y":130.305450736745
+                }, 
+                {
+                 "height":16,
+                 "id":111,
+                 "name":"mini_boss_enemy",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":97.1765868351454,
+                 "y":240.4076595441
+                }, 
+                {
+                 "height":16,
+                 "id":112,
+                 "name":"boss_enemy",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":216.50036027035,
+                 "y":215.09264338189
+                }, 
+                {
+                 "height":16,
+                 "id":113,
+                 "name":"kid_npc",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":239.684609462239,
+                 "y":242.846977792704
+                }],
+         "opacity":1,
+         "type":"objectgroup",
          "visible":true,
          "x":0,
          "y":0
         }],
- "nextlayerid":7,
- "nextobjectid":109,
+ "nextlayerid":8,
+ "nextobjectid":114,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

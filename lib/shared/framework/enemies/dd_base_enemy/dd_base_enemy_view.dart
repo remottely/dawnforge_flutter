@@ -1,6 +1,7 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/enemy_primary_attack_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fx_particles_animations_def.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/controllers/enemy_combat_action_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/death/character_fx_sprite_animations_def.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_controller.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_model.dart';
@@ -88,12 +89,45 @@ abstract class DDBaseEnemyView<
     required double closeVisionRadius,
     void Function(Player)? onCloseToPlayer,
   }) {
-    EnemyCombatActionController.executePrimaryAttack(
+    _executePrimaryAttack(
       enemy: this,
       damage: _controller.model.primaryAttackDamage,
       interval: _controller.model.primaryAttackInterval,
       closeVisionRadius: closeVisionRadius,
       onCloseToPlayer: onCloseToPlayer,
+    );
+  }
+
+  static void _executePrimaryAttack({
+    required SimpleEnemy enemy,
+    required double damage,
+    required int interval,
+    required double closeVisionRadius,
+    void Function(Player)? onCloseToPlayer,
+  }) {
+    enemy.seeAndMoveToPlayer(
+      radiusVision: closeVisionRadius,
+      closePlayer: (player) {
+        onCloseToPlayer?.call(player);
+
+        // TODO(Kevin): fix this attackDirection and attackOffset behavior
+        // final attackDirection =
+        //     _resolveAttackDirection(enemy, player) ?? enemy.lastDirection;
+        // final attackOffset = OffsetHelper.getCenterOffset(
+        //   Vector2(enemy.width / 2, 0),
+        //   attackDirection,
+        // );
+
+        enemy.simpleAttackMelee(
+          size: EnemyPrimaryAttackDef.componentSize,
+          damage: damage,
+          interval: interval,
+          // direction: attackDirection,
+          // centerOffset: attackOffset,
+          animationRight: EnemyPrimaryAttackDef.loadAnimationFxRight(),
+          execute: AudioManager.instance.playEnemyPrimaryAttackSfx,
+        );
+      },
     );
   }
 }

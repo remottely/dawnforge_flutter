@@ -1,5 +1,10 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/controllers/player_combat_action_controller.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fireball_attack_def.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fx_particles_animations_def.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/offset_helper.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_fx.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/player_primary_attack_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
@@ -114,11 +119,7 @@ abstract class DDCombatPlayerView<
           executionStartFrame: 1,
           onActionStart: lockAction,
           onActionEnd: unlockAction,
-          onExecutionFrames: () =>
-              PlayerCombatActionController.executePrimaryAttack(
-                player: this,
-                damage: damage,
-              ),
+          onExecutionFrames: () => _executePrimaryAttack(damage: damage),
         );
       },
     );
@@ -129,12 +130,61 @@ abstract class DDCombatPlayerView<
   bool _onExecuteRangedAttack(double damage) {
     final AttackExecutionInfo? executionInfo = rangedAttackController.execute(
       AttackType.ranged,
-      () => PlayerCombatActionController.executeFireballAttack(
-        player: this,
-        damage: damage,
-      ),
+      () => _executeFireballAttack(damage: damage),
     );
 
     return executionInfo != null;
+  }
+
+  void _executePrimaryAttack({required double damage}) {
+    final attackOffset = OffsetHelper.getCenterOffset(
+      Vector2(6, 0),
+      lastDirection,
+    );
+
+    CameraFx.executePrimaryAttackShake(gameRef);
+
+    AudioManager.instance.playPlayerPrimaryAttackSfx();
+
+    simpleAttackMeleeByDirection(
+      direction: lastDirection,
+      damage: damage,
+      size: PlayerPrimaryAttackDef.componentSize,
+      centerOffset: attackOffset,
+      animationRight: PlayerPrimaryAttackDef.loadAnimationFxRight(),
+      attackFrom: AttackOriginEnum.PLAYER_OR_ALLY,
+      onDamage: (_) => addParticle(
+        CharacterFxParticlesAnimationsDef.createPrimaryAttackParticles(),
+        position: size / 2,
+      ),
+    );
+  }
+
+  void _executeFireballAttack({required double damage}) {
+    final Vector2 projectileOffset = OffsetHelper.getCenterOffset(
+      Vector2(-16, 0),
+      lastDirection,
+    );
+
+    addParticle(
+      CharacterFxParticlesAnimationsDef.createFireballAttackParticles(),
+      position: size / 2,
+    );
+
+    CharacterFireballAttackDef.playAudioExecution();
+
+    simpleAttackRangeByDirection(
+      size: CharacterFireballAttackDef.componentSize,
+      speed: CharacterFireballAttackDef.kSpeed,
+      lightingConfig: CharacterFireballAttackDef.lighting,
+      damage: damage,
+      collision: CharacterFireballAttackDef.createHitbox(),
+      animationRight: CharacterFireballAttackDef.loadAnimationExecution(),
+      animationDestroy: CharacterFireballAttackDef.loadAnimationDestroy(),
+      onDestroy: () => CharacterFireballAttackDef.onDestroy(gameRef),
+      direction: lastDirection,
+      centerOffset: projectileOffset,
+      attackFrom: AttackOriginEnum.PLAYER_OR_ALLY,
+    );
   }
 }
