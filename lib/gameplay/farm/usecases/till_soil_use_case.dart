@@ -1,7 +1,6 @@
 import 'dart:developer' as developer;
 
-import 'package:darkness_dungeon/gameplay/farm/entities/farm_tile.dart';
-import 'package:darkness_dungeon/gameplay/farm/entities/soil_state.dart';
+import 'package:darkness_dungeon/gameplay/world/entities/world_entities.dart';
 
 import '../managers/farm_manager.dart';
 
@@ -59,16 +58,19 @@ class TillSoilUseCase {
     developer.log('[FarmManager] Tilling soil at ($x, $y)');
 
     final existingTile = _manager.getTile(x, y);
+    final existingFarmObject = existingTile?.object as FarmObject?;
 
     // Check if already tilled
-    if (existingTile != null && existingTile.soilState != SoilState.untilled) {
+    if (existingFarmObject != null && existingFarmObject.soilState != SoilState.untilled) {
       developer.log('[FarmManager] Soil already tilled');
       return false;
     }
 
     // Create or update tile
-    final tile = existingTile ?? FarmTile(x: x, y: y);
-    final tilledTile = tile.till();
+    final farmObject = existingFarmObject ?? FarmObject(objectId: 'farm_${x}_$y');
+    final tilledFarmObject = farmObject.till();
+    final tilledTile = existingTile?.placeObject(tilledFarmObject) ?? 
+        GridTile(x: x, y: y, object: tilledFarmObject);
 
     _manager.setTile(tilledTile);
     _manager.lastTilledNotifier.value =

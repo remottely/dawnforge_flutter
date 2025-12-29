@@ -1,6 +1,6 @@
 import 'dart:developer' as developer;
 
-import 'package:darkness_dungeon/gameplay/farm/entities/crop/crop_entity.dart';
+import 'package:darkness_dungeon/gameplay/world/entities/objects/farm/crop_entity.dart';
 import 'package:darkness_dungeon/gameplay/farm/managers/farm_manager.dart';
 import 'package:darkness_dungeon/gameplay/farm/usecases/till_soil_use_case.dart';
 import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';

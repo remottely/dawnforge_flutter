@@ -37,7 +37,7 @@
 //       cropId: 'strawberry',
 //       name: 'Strawberry',
 //       description: 'A sweet berry',
-//       stage: CropStage.mature,
+//       stage: CropStage.harvestable,
 //       daysPlanted: 5,
 //       daysToMature: 5,
 //       yieldAmount: harvestQuantity,
@@ -48,14 +48,14 @@
 //       spriteRowIndex: 0,
 //       framesCount: 8,
 //       skipFirstFrames: 0,
-//       ySortingFromStage: CropStage.growing2,
+//       ySortingFromStage: CropStage.flowering,
 //     );
 
 //     final immatureCrop = Crop(
 //       cropId: 'strawberry',
 //       name: 'Strawberry',
 //       description: 'A sweet berry',
-//       stage: CropStage.growing1,
+//       stage: CropStage.budding,
 //       daysPlanted: 2,
 //       daysToMature: 5,
 //       yieldAmount: harvestQuantity,
@@ -66,7 +66,7 @@
 //       spriteRowIndex: 0,
 //       framesCount: 8,
 //       skipFirstFrames: 0,
-//       ySortingFromStage: CropStage.growing2,
+//       ySortingFromStage: CropStage.flowering,
 //     );
 
 //     final tileWithMatureCrop = FarmTile(
@@ -90,7 +90,7 @@
 //       crop: null,
 //     );
 
-//     test('should harvest crop successfully when crop is mature', () {
+//     test('should harvest crop successfully when crop is harvestable', () {
 //       // Arrange
 //       when(() => mockFarmManager.getTile(x, y)).thenReturn(tileWithMatureCrop);
 //       when(() => mockFarmManager.harvestCrop(x, y)).thenReturn(matureCrop);
@@ -136,7 +136,7 @@
 //       verifyNever(() => mockInventoryManager.addItem(any(), quantity: any(named: 'quantity')));
 //     });
 
-//     test('should fail when crop is not mature', () {
+//     test('should fail when crop is not harvestable', () {
 //       // Arrange
 //       when(() => mockFarmManager.getTile(x, y)).thenReturn(tileWithImmatureCrop);
 
@@ -192,7 +192,7 @@
 //         cropId: 'golden_strawberry',
 //         name: 'Golden Strawberry',
 //         description: 'A rare golden berry',
-//         stage: CropStage.mature,
+//         stage: CropStage.harvestable,
 //         daysPlanted: 7,
 //         daysToMature: 7,
 //         yieldAmount: customHarvestQuantity,
@@ -203,7 +203,7 @@
 //         spriteRowIndex: 0,
 //         framesCount: 8,
 //         skipFirstFrames: 0,
-//         ySortingFromStage: CropStage.growing2,
+//         ySortingFromStage: CropStage.flowering,
 //       );
 
 //       final tileWithCustomCrop = FarmTile(

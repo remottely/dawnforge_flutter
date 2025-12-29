@@ -32,13 +32,13 @@
 
 //       // Dia 9+: Mature
 //       crop = crop.advanceDay().advanceDay().advanceDay();
-//       expect(crop.stage, equals(CropStageModel.mature));
+//       expect(crop.stage, equals(CropStageModel.harvestable));
 //       expect(crop.daysPlanted, equals(9));
 //       expect(crop.isMature, isTrue);
 //       expect(crop.canHarvest, isTrue);
 //     });
 
-//     test('crop becomes mature after correct days', () {
+//     test('crop becomes harvestable after correct days', () {
 //       var crop = const CropModel(
 //         cropId: 'carrot',
 //         name: 'Carrot',
@@ -60,7 +60,7 @@
 
 //       expect(crop.daysPlanted, equals(4));
 //       expect(crop.isMature, isTrue);
-//       expect(crop.stage, equals(CropStageModel.mature));
+//       expect(crop.stage, equals(CropStageModel.harvestable));
 //     });
 
 //     test('growth progress calculates correctly', () {

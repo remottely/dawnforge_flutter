@@ -1,6 +1,8 @@
 import 'dart:developer' as developer;
 
-import '../entities/soil_state.dart';
+import 'package:darkness_dungeon/gameplay/world/entities/objects/farm/farm_object.dart';
+
+import '../../world/entities/objects/farm/soil_state.dart';
 import '../managers/farm_manager.dart';
 
 /// UseCase para regar um tile da fazenda.
@@ -36,7 +38,9 @@ class WaterTileUseCase {
 
     // Valida se o tile existe
     final tile = _manager.getTile(x, y);
-    if (tile == null) {
+    final farmObject = tile?.object as FarmObject?;
+    
+    if (tile == null || farmObject == null) {
       developer.log(
         'WaterTileUseCase: Tile at ($x, $y) does not exist',
         name: 'farm.usecases.water_tile',
@@ -46,7 +50,7 @@ class WaterTileUseCase {
     }
 
     // Valida se o tile está arado (pode ser regado)
-    if (tile.soilState == SoilState.untilled) {
+    if (farmObject.soilState == SoilState.untilled) {
       developer.log(
         'WaterTileUseCase: Tile at ($x, $y) is not tilled, cannot water',
         name: 'farm.usecases.water_tile',

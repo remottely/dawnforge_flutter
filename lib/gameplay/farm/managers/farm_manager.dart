@@ -3,9 +3,7 @@ import 'dart:developer' as developer;
 import 'package:flutter/foundation.dart';
 
 import '../../core/modules/world/world_state_manager.dart';
-import '../entities/crop/crop_entity.dart';
-import '../entities/farm_tile.dart';
-import '../entities/soil_state.dart';
+import '../../world/entities/world_entities.dart';
 
 /// Manager for farm state (C1: Singleton + ValueNotifier, I2: Manager = Singleton State)
 class FarmManager {
@@ -16,13 +14,13 @@ class FarmManager {
 
   static final instance = FarmManager._();
 
-  final Map<String, FarmTile> _tiles = {}; // key: "x,y"
+  final Map<String, GridTile> _tiles = {}; // key: "x,y"
 
   /// C1: ValueNotifier para reatividade
-  late final ValueNotifier<Map<String, FarmTile>> tilesNotifier;
+  late final ValueNotifier<Map<String, GridTile>> tilesNotifier;
 
   /// J3: ValueNotifiers para cross-module communication
-  final ValueNotifier<FarmTile?> lastTilledNotifier = ValueNotifier(null);
+  final ValueNotifier<GridTile?> lastTilledNotifier = ValueNotifier(null);
   final ValueNotifier<CropEntity?> lastHarvestedNotifier = ValueNotifier(null);
 
   void _initializeTiles() {
@@ -40,18 +38,23 @@ class FarmManager {
   String _makeKey(int x, int y) => '$x,$y';
 
   /// Get a tile at specific coordinates
-  FarmTile? getTile(int x, int y) {
+  GridTile? getTile(int x, int y) {
     return _tiles[_makeKey(x, y)];
   }
 
   /// Get all tiles
-  List<FarmTile> getAllTiles() {
+  List<GridTile> getAllTiles() {
     return _tiles.values.toList();
   }
 
   /// Update or create a tile
-  void setTile(FarmTile tile) {
+  void setTile(GridTile tile) {
     _tiles[_makeKey(tile.x, tile.y)] = tile;
+  }
+
+  /// Get FarmObject from tile (helper)
+  FarmObject? _getFarmObject(GridTile? tile) {
+    return tile?.object as FarmObject?;
   }
 
   /// Water tile at coordinates
@@ -59,23 +62,25 @@ class FarmManager {
     developer.log('[FarmManager] Watering tile at ($x, $y)');
 
     final tile = getTile(x, y);
-    if (tile == null) {
+    final farmObject = _getFarmObject(tile);
+    if (tile == null || farmObject == null) {
       developer.log('[FarmManager] Cannot water missing tile');
       return false;
     }
 
-    if (tile.soilState == SoilState.untilled) {
+    if (farmObject.soilState == SoilState.untilled) {
       developer.log('[FarmManager] Cannot water untilled soil');
       return false;
     }
 
-    if (tile.soilState == SoilState.watered) {
+    if (farmObject.soilState == SoilState.watered) {
       developer.log('[FarmManager] Tile already watered');
       return false;
     }
 
     final currentDay = WorldStateManager.instance.currentDay;
-    final wateredTile = tile.water(currentDay);
+    final wateredFarmObject = farmObject.water(currentDay);
+    final wateredTile = tile.placeObject(wateredFarmObject);
 
     setTile(wateredTile);
     notifyChange();
@@ -89,13 +94,14 @@ class FarmManager {
     developer.log('[FarmManager] Planting ${crop.name} at ($x, $y)');
 
     final tile = getTile(x, y);
-    if (tile == null) {
+    final farmObject = _getFarmObject(tile);
+    if (tile == null || farmObject == null) {
       developer.log('[FarmManager] No tile at ($x, $y)');
       return false;
     }
 
-    if (!tile.canPlant) {
-      if (tile.isOccupied) {
+    if (!farmObject.canPlant) {
+      if (farmObject.isOccupied) {
         developer.log('[FarmManager] Tile already has a crop');
       } else {
         developer.log('[FarmManager] Soil not prepared for planting');
@@ -103,7 +109,8 @@ class FarmManager {
       return false;
     }
 
-    final plantedTile = tile.plant(crop);
+    final plantedFarmObject = farmObject.plant(crop);
+    final plantedTile = tile.placeObject(plantedFarmObject);
     setTile(plantedTile);
     notifyChange();
 
@@ -116,13 +123,14 @@ class FarmManager {
     developer.log('[FarmManager] Harvesting crop at ($x, $y)');
 
     final tile = getTile(x, y);
-    if (tile == null) {
+    final farmObject = _getFarmObject(tile);
+    if (tile == null || farmObject == null) {
       developer.log('[FarmManager] No tile at ($x, $y)');
       return null;
     }
 
-    if (!tile.canHarvest) {
-      if (tile.isEmpty) {
+    if (!farmObject.canHarvest) {
+      if (farmObject.isEmpty) {
         developer.log('[FarmManager] No crop to harvest');
       } else {
         developer.log('[FarmManager] Crop not ready to harvest');
@@ -130,8 +138,9 @@ class FarmManager {
       return null;
     }
 
-    final harvestedCrop = tile.crop!;
-    final harvestedTile = tile.harvest();
+    final harvestedCrop = farmObject.crop!;
+    final harvestedFarmObject = farmObject.harvest();
+    final harvestedTile = tile.placeObject(harvestedFarmObject);
 
     setTile(harvestedTile);
     lastHarvestedNotifier.value =
@@ -152,12 +161,16 @@ class FarmManager {
     var cropsGrown = 0;
 
     for (final tile in _tiles.values.toList()) {
-      final advancedTile = tile.advanceDay(dayEnded);
+      final farmObject = _getFarmObject(tile);
+      if (farmObject == null) continue;
+
+      final advancedFarmObject = farmObject.advanceDay(dayEnded);
+      final advancedTile = tile.placeObject(advancedFarmObject);
       
       // Track crop growth
-      if (tile.crop != null && advancedTile.crop != null) {
-        final beforeDays = tile.crop!.daysPlanted;
-        final afterDays = advancedTile.crop!.daysPlanted;
+      if (farmObject.crop != null && advancedFarmObject.crop != null) {
+        final beforeDays = farmObject.crop!.daysPlanted;
+        final afterDays = advancedFarmObject.crop!.daysPlanted;
         
         if (afterDays > beforeDays) {
           cropsGrown++;
@@ -196,9 +209,13 @@ class FarmManager {
     }
 
     for (final tileJson in tilesData) {
-      final tile = FarmTile.fromJson(
-        tileJson as Map<String, dynamic>,
-        cropFactory,
+      final tileData = tileJson as Map<String, dynamic>;
+      final farmObject = FarmObject.fromJson(tileData);
+      final tile = GridTile(
+        x: tileData['x'] as int,
+        y: tileData['y'] as int,
+        object: farmObject,
+        metadata: tileData['metadata'] as Map<String, dynamic>?,
       );
       setTile(tile);
     }

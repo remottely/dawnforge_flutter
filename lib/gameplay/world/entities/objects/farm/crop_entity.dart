@@ -43,7 +43,7 @@ final class CropEntity extends Equatable {
   /// Calculate growth progress (0.0 to 1.0)
   double get growthProgress => (daysPlanted / daysToMature).clamp(0.0, 1.0);
 
-  /// Check if crop is fully mature
+  /// Check if crop is fully harvestable
   bool get isMature => daysPlanted >= daysToMature;
 
   /// Check if crop can be harvested

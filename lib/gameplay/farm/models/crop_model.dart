@@ -1,4 +1,4 @@
-import '../entities/crop/crop_stage_type.dart';
+import '../../world/entities/objects/farm/crop_stage_type.dart';
 
 final class CropModel {
   final String cropId;

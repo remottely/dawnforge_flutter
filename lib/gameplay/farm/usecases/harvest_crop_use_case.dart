@@ -1,5 +1,7 @@
 import 'dart:developer' as developer;
 
+import 'package:darkness_dungeon/gameplay/world/entities/objects/farm/farm_object.dart';
+
 import '../../inventory/usecases/add_item_use_case.dart';
 import '../managers/farm_manager.dart';
 
@@ -30,7 +32,9 @@ class HarvestCropUseCase {
 
     // 1. Valida se o crop existe e está pronto
     final tile = _farmManager.getTile(x, y);
-    if (tile == null) {
+    final farmObject = tile?.object as FarmObject?;
+    
+    if (tile == null || farmObject == null) {
       developer.log(
         'HarvestCropUseCase: Tile at ($x, $y) does not exist',
         name: 'farm.usecases.harvest_crop',
@@ -39,7 +43,7 @@ class HarvestCropUseCase {
       return false;
     }
 
-    if (!tile.canHarvest) {
+    if (!farmObject.canHarvest) {
       developer.log(
         'HarvestCropUseCase: Tile at ($x, $y) has no crop or crop is not ready to harvest',
         name: 'farm.usecases.harvest_crop',
@@ -48,7 +52,7 @@ class HarvestCropUseCase {
       return false;
     }
 
-    final crop = tile.crop;
+    final crop = farmObject.crop;
     if (crop == null) {
       developer.log(
         'HarvestCropUseCase: No crop found at ($x, $y)',

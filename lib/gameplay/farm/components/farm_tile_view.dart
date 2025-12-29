@@ -3,9 +3,7 @@ import 'dart:ui';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
-import 'package:darkness_dungeon/gameplay/farm/entities/crop/crop_stage_type.dart';
-import 'package:darkness_dungeon/gameplay/farm/entities/farm_tile.dart';
-import 'package:darkness_dungeon/gameplay/farm/entities/soil_state.dart';
+import 'package:darkness_dungeon/gameplay/world/entities/world_entities.dart';
 import 'package:darkness_dungeon/gameplay/farm/farm_service_locator.dart';
 import 'package:darkness_dungeon/gameplay/farm/managers/farm_manager.dart';
 import 'package:darkness_dungeon/gameplay/farm/models/soil_sprite_config.dart';
@@ -19,7 +17,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   final int tileX;
   final int tileY;
 
-  late FarmTile farmTile;
+  late GridTile farmTile;
 
   SpriteComponent? _soilSprite;
   GameDecoration? _cropDecoration;
@@ -29,6 +27,9 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   SoilState? _lastRenderedSoilState;
   String? _lastRenderedCropKey;
 
+  /// Helper to get FarmObject from GridTile
+  FarmObject get _farmObject => farmTile.object as FarmObject;
+
   FarmTileView({required Vector2 position})
     : tileX = (position.x / 16).floor(),
       tileY = (position.y / 16).floor(),
@@ -36,8 +37,12 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
     // Garante que o tile existe no manager
     final existingTile = FarmManager.instance.getTile(tileX, tileY);
     if (existingTile == null) {
-      // Cria um novo tile vazio
-      final newTile = FarmTile(x: tileX, y: tileY);
+      // Cria um novo tile vazio com FarmObject
+      final newTile = GridTile(
+        x: tileX,
+        y: tileY,
+        object: FarmObject(objectId: 'farm_${tileX}_$tileY'),
+      );
       FarmManager.instance.setTile(newTile);
     }
   }
@@ -64,25 +69,25 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
     add(_soilSprite!);
 
     developer.log(
-      '[FarmTileView] 🟤 Soil sprite loaded from texture atlas: ${farmTile.soilState.name}',
+      '[FarmTileView] 🟤 Soil sprite loaded from texture atlas: ${_farmObject.soilState.name}',
     );
 
-    if (farmTile.crop != null) {
+    if (_farmObject.crop != null) {
       await _createCropDecoration();
       developer.log(
-        '[FarmTileView] 🌱 Crop decoration loaded: ${farmTile.crop!.cropId} (${farmTile.crop!.stage.name}) with Y-sorting',
+        '[FarmTileView] 🌱 Crop decoration loaded: ${_farmObject.crop!.cropId} (${_farmObject.crop!.stage.name}) with Y-sorting',
       );
     }
 
-    _lastRenderedSoilState = farmTile.soilState;
+    _lastRenderedSoilState = _farmObject.soilState;
     _lastRenderedCropKey = _getCropKey();
   }
 
   Future<void> _createCropDecoration() async {
-    if (farmTile.crop == null) return;
+    if (_farmObject.crop == null) return;
 
     final cropSprite = await _loadCropSpriteFromSheet();
-    final crop = farmTile.crop!;
+    final crop = _farmObject.crop!;
 
     // Tamanho real do sprite do crop
     final cropSize = Vector2(
@@ -148,9 +153,12 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
 
     final currentTile = getIt<FarmManager>().getTile(tileX, tileY);
     if (currentTile != null) {
-      if (currentTile.soilState != _lastRenderedSoilState ||
-          currentTile.crop?.cropId != _lastRenderedCropKey) {}
-      updateTile(currentTile);
+      final currentFarmObject = currentTile.object as FarmObject?;
+      if (currentFarmObject != null &&
+          (currentFarmObject.soilState != _lastRenderedSoilState ||
+          currentFarmObject.crop?.cropId != _lastRenderedCropKey)) {
+        updateTile(currentTile);
+      }
     }
   }
 
@@ -167,7 +175,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
     _soilSprite!.sprite = sprite;
 
     developer.log(
-      '[FarmTileView] 🟤 Soil sprite updated: ${farmTile.soilState.name}',
+      '[FarmTileView] 🟤 Soil sprite updated: ${_farmObject.soilState.name}',
     );
   }
 
@@ -183,7 +191,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
       _cropSpriteGround = null;
     }
 
-    if (farmTile.crop == null) {
+    if (_farmObject.crop == null) {
       developer.log('[FarmTileView] 🌱 Crop removed');
       return;
     }
@@ -191,7 +199,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
     await _createCropDecoration();
 
     developer.log(
-      '[FarmTileView] 🌱 Crop decoration updated: ${farmTile.crop!.cropId} (${farmTile.crop!.stage.name})',
+      '[FarmTileView] 🌱 Crop decoration updated: ${_farmObject.crop!.cropId} (${_farmObject.crop!.stage.name})',
     );
   }
 
@@ -200,7 +208,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
       throw Exception('[FarmTileView] SoilSpriteConfig not loaded!');
     }
 
-    final stateName = farmTile.soilState.name;
+    final stateName = _farmObject.soilState.name;
     final position = _soilConfig!.getPosition(stateName);
 
     if (position == null) {
@@ -230,7 +238,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   }
 
   Future<Sprite> _loadCropSpriteFromSheet() async {
-    final crop = farmTile.crop!;
+    final crop = _farmObject.crop!;
     final frameIndex = _getFrameIndexForStage(crop.stage, crop.framesCount);
 
     final sprite = await SpriteAnimationConfigHelper.loadSpriteFromTextureAtlas(
@@ -257,9 +265,9 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   ///
   /// Exemplo com 4 frames:
   /// - seed(0), sprout(1) → frame 0
-  /// - youngPlant(2), growing1(3) → frame 1
-  /// - growing2(4), growing3(5) → frame 2
-  /// - mature(6), withered(7) → frame 3
+  /// - seedling(2), budding(3) → frame 1
+  /// - flowering(4), fruiting(5) → frame 2
+  /// - harvestable(6), dead(7) → frame 3
   int _getFrameIndexForStage(CropStageType stage, int availableFrames) {
     const totalStages = 8; // Total de estágios possíveis em CropStage
     final stageIndex = stage.index;
@@ -272,7 +280,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   }
 
   Future<void> _updateSpritesIfNeeded() async {
-    final currentSoilState = farmTile.soilState;
+    final currentSoilState = _farmObject.soilState;
     final currentCropKey = _getCropKey();
 
     if (currentSoilState != _lastRenderedSoilState) {
@@ -287,8 +295,8 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   }
 
   String? _getCropKey() {
-    if (farmTile.crop == null) return null;
-    return '${farmTile.crop!.cropId}_${farmTile.crop!.stage.name}';
+    if (_farmObject.crop == null) return null;
+    return '${_farmObject.crop!.cropId}_${_farmObject.crop!.stage.name}';
   }
 
   void _renderHighlight(Canvas canvas) {
@@ -298,7 +306,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
     canvas.drawRect(size.toRect(), paint);
   }
 
-  Future<void> updateTile(FarmTile newTile) async {
+  Future<void> updateTile(GridTile newTile) async {
     farmTile = newTile;
     await _updateSpritesIfNeeded();
   }

@@ -76,7 +76,7 @@ enum CropStageType {
     }
   }
 
-  /// Get the next stage (or same if already at withered)
+  /// Get the next stage (or same if already at dead)
   CropStageType? get nextStage {
     if (this == CropStageType.dead) return null;
     final nextIndex = index + 1;

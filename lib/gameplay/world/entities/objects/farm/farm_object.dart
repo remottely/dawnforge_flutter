@@ -1,23 +1,48 @@
 import 'package:equatable/equatable.dart';
 
-import 'crop/crop_entity.dart';
+import '../../tile_object.dart';
+import '../../tile_object_type.dart';
+import 'crop_entity.dart';
 import 'soil_state.dart';
 
-/// Entity representing a tile in the farm (D2: Entity with Serialization)
-final class FarmTile extends Equatable {
-  final int x;
-  final int y;
+/// Farm-specific tile object that represents farmable soil and planted crops.
+/// This implements TileObject to integrate with the generic GridTile system.
+final class FarmObject extends Equatable implements TileObject {
+  @override
+  final String objectId;
+
   final SoilState soilState;
   final CropEntity? crop;
   final int? lastWateredDay;
 
-  const FarmTile({
-    required this.x,
-    required this.y,
+  const FarmObject({
+    required this.objectId,
     this.soilState = SoilState.untilled,
     this.crop,
     this.lastWateredDay,
   });
+
+  @override
+  String get name => crop?.name ?? soilState.displayName;
+
+  @override
+  TileObjectType get type => TileObjectType.farm;
+
+  @override
+  bool get blocksMovement => false; // Farm tiles don't block movement
+
+  @override
+  bool get isInteractable => true; // Farm tiles can be tilled, planted, watered, etc.
+
+  @override
+  bool get shouldUseYSorting =>
+      crop != null && crop!.shouldUseYSorting; // Tall crops need Y-sorting
+
+  @override
+  Map<String, dynamic> get visualData => {
+        'soilState': soilState.toJson(),
+        if (crop != null) 'crop': crop!.toJson(),
+      };
 
   /// Check if tile is empty (no crop planted)
   bool get isEmpty => crop == null;
@@ -41,12 +66,12 @@ final class FarmTile extends Equatable {
   }
 
   /// Till the soil
-  FarmTile till() {
+  FarmObject till() {
     return copyWith(soilState: SoilState.tilled);
   }
 
   /// Water the tile
-  FarmTile water(int currentDay) {
+  FarmObject water(int currentDay) {
     return copyWith(
       soilState: SoilState.watered,
       lastWateredDay: currentDay,
@@ -54,17 +79,16 @@ final class FarmTile extends Equatable {
   }
 
   /// Plant a crop on this tile
-  FarmTile plant(CropEntity newCrop) {
+  FarmObject plant(CropEntity newCrop) {
     if (!canPlant) return this;
     return copyWith(crop: newCrop);
   }
 
   /// Harvest the crop and reset tile
-  FarmTile harvest() {
+  FarmObject harvest() {
     if (!canHarvest) return this;
-    return FarmTile(
-      x: x,
-      y: y,
+    return FarmObject(
+      objectId: objectId,
       soilState: SoilState.untilled,
       crop: null,
       lastWateredDay: null,
@@ -72,13 +96,13 @@ final class FarmTile extends Equatable {
   }
 
   /// Advance day logic - update crop growth if watered
-  FarmTile advanceDay(int dayEnded) {
+  FarmObject advanceDay(int dayEnded) {
     final wasWateredThatDay =
         lastWateredDay != null && lastWateredDay == dayEnded;
 
-    // Consome água mesmo sem crop
+    // Consume water even without crop
     if (wasWateredThatDay && soilState == SoilState.watered) {
-      // Se não tem crop, apenas consome a água
+      // If no crop, just consume water
       if (crop == null) {
         return copyWith(
           soilState: SoilState.tilled,
@@ -86,7 +110,7 @@ final class FarmTile extends Equatable {
         );
       }
 
-      // Se tem crop, faz crescer
+      // If has crop, grow it
       final advancedCrop = crop!.advanceDay();
 
       return copyWith(
@@ -96,47 +120,40 @@ final class FarmTile extends Equatable {
       );
     }
 
-    // Não foi regado ou já não está watered
+    // Was not watered or already not watered
     return this;
   }
 
-  /// Serialization (D2)
+  @override
   Map<String, dynamic> toJson() {
     return {
-      'x': x,
-      'y': y,
+      'objectId': objectId,
+      'type': type.toJson(),
       'soilState': soilState.toJson(),
       'crop': crop?.toJson(),
       'lastWateredDay': lastWateredDay,
     };
   }
 
-  /// Deserialization (D2)
-  static FarmTile fromJson(
-    Map<String, dynamic> json,
-    CropEntity? Function(String cropId) cropResolver,
-  ) {
+  static FarmObject fromJson(Map<String, dynamic> json) {
     final cropData = json['crop'] as Map<String, dynamic>?;
-    return FarmTile(
-      x: json['x'] as int,
-      y: json['y'] as int,
+    return FarmObject(
+      objectId: json['objectId'] as String,
       soilState: SoilState.fromJson(json['soilState'] as String),
       crop: cropData != null ? CropEntity.fromJson(cropData) : null,
       lastWateredDay: json['lastWateredDay'] as int?,
     );
   }
 
-  /// Create a copy with modifications
-  FarmTile copyWith({
-    int? x,
-    int? y,
+  @override
+  FarmObject copyWith({
+    String? objectId,
     SoilState? soilState,
     CropEntity? crop,
     int? lastWateredDay,
   }) {
-    return FarmTile(
-      x: x ?? this.x,
-      y: y ?? this.y,
+    return FarmObject(
+      objectId: objectId ?? this.objectId,
       soilState: soilState ?? this.soilState,
       crop: crop ?? this.crop,
       lastWateredDay: lastWateredDay ?? this.lastWateredDay,
@@ -144,9 +161,9 @@ final class FarmTile extends Equatable {
   }
 
   @override
-  List<Object?> get props => [x, y, soilState, crop, lastWateredDay];
+  List<Object?> get props => [objectId, soilState, crop, lastWateredDay];
 
   @override
   String toString() =>
-      'FarmTile(x: $x, y: $y, soil: $soilState, crop: ${crop?.name ?? "empty"})';
+      'FarmObject(id: $objectId, soil: $soilState, crop: ${crop?.name ?? "empty"})';
 }

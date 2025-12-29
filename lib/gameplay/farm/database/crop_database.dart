@@ -3,7 +3,7 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/services.dart';
 
-import '../entities/crop/crop_stage_type.dart';
+import '../../world/entities/objects/farm/crop_stage_type.dart';
 import '../models/crop_model.dart';
 
 final class CropDatabase {

@@ -16,4 +16,18 @@ enum SoilState {
 
   /// Check if soil needs watering
   bool get needsWater => this == SoilState.tilled;
+
+  /// Get human-readable display name
+  String get displayName {
+    switch (this) {
+      case SoilState.untilled:
+        return 'Untilled';
+      case SoilState.tilled:
+        return 'Tilled';
+      case SoilState.watered:
+        return 'Watered';
+      case SoilState.fertilized:
+        return 'Fertilized';
+    }
+  }
 }

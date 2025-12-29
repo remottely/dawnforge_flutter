@@ -1,6 +1,7 @@
+import 'package:darkness_dungeon/gameplay/world/entities/objects/farm/farm_object.dart';
 import 'package:flutter/foundation.dart';
 
-import '../entities/soil_state.dart';
+import '../../world/entities/objects/farm/soil_state.dart';
 import '../managers/farm_manager.dart';
 import '../usecases/harvest_crop_use_case.dart';
 import '../usecases/plant_seed_use_case.dart';
@@ -94,17 +95,18 @@ class FarmViewModel {
   void _updateTilesUI() {
     final tiles = _farmManager.getAllTiles();
     tilesUINotifier.value = tiles.map((tile) {
+      final farmObject = tile.object as FarmObject?;
       return FarmTileUI(
         x: tile.x,
         y: tile.y,
-        isTilled: tile.soilState == SoilState.tilled ||
-            tile.soilState == SoilState.watered ||
-            tile.soilState == SoilState.fertilized,
-        isWatered: tile.soilState == SoilState.watered,
-        hasCrop: tile.crop != null,
-        cropName: tile.crop?.name,
-        cropSpriteKey: _getCropSpriteKey(tile.crop?.cropId),
-        isReadyToHarvest: tile.isReadyToHarvest,
+        isTilled: farmObject?.soilState == SoilState.tilled ||
+            farmObject?.soilState == SoilState.watered ||
+            farmObject?.soilState == SoilState.fertilized,
+        isWatered: farmObject?.soilState == SoilState.watered,
+        hasCrop: farmObject?.crop != null,
+        cropName: farmObject?.crop?.name,
+        cropSpriteKey: _getCropSpriteKey(farmObject?.crop?.cropId),
+        isReadyToHarvest: farmObject?.isReadyToHarvest ?? false,
       );
     }).toList();
   }

@@ -2,34 +2,36 @@ import 'dart:developer' as developer;
 
 import '../../inventory/items/main_hand_item.dart';
 import '../../inventory/models/equipped_hand_type.dart';
-import '../entities/farm_tile.dart';
-import '../entities/soil_state.dart';
+import '../../world/entities/world_entities.dart';
 
 /// Service for validating farm tool usage (I2: Service = stateless)
 class FarmToolService {
   /// Check if a tool can be used on a specific tile
-  bool canUseTool(MainHandItem tool, FarmTile tile) {
+  bool canUseTool(MainHandItem tool, GridTile tile) {
+    final farmObject = tile.object as FarmObject?;
+    if (farmObject == null) return false;
+
     final handType = tool.equippedHandType;
 
     switch (handType) {
       case EquippedHandType.shovel:
-        return canTill(tile);
+        return canTill(farmObject);
       case EquippedHandType.wateringCan:
-        return canWater(tile);
+        return canWater(farmObject);
       case EquippedHandType.harvestBasket:
-        return canHarvest(tile);
+        return canHarvest(farmObject);
       default:
         // Check if it's a seed
         if (handType.isSeed && tool.cropId != null) {
-          return canPlant(tile);
+          return canPlant(farmObject);
         }
         return false;
     }
   }
 
   /// Check if tile can be tilled
-  bool canTill(FarmTile tile) {
-    final canTill = tile.soilState == SoilState.untilled;
+  bool canTill(FarmObject farmObject) {
+    final canTill = farmObject.soilState == SoilState.untilled;
     if (!canTill) {
       developer.log('[FarmToolService] Cannot till: soil already tilled');
     }
@@ -37,13 +39,13 @@ class FarmToolService {
   }
 
   /// Check if tile can be watered
-  bool canWater(FarmTile tile) {
-    if (tile.soilState == SoilState.untilled) {
+  bool canWater(FarmObject farmObject) {
+    if (farmObject.soilState == SoilState.untilled) {
       developer.log('[FarmToolService] Cannot water: soil not tilled yet');
       return false;
     }
 
-    if (tile.soilState == SoilState.watered) {
+    if (farmObject.soilState == SoilState.watered) {
       developer.log('[FarmToolService] Cannot water: already watered');
       return false;
     }
@@ -52,11 +54,11 @@ class FarmToolService {
   }
 
   /// Check if tile can receive a plant
-  bool canPlant(FarmTile tile) {
-    if (!tile.canPlant) {
-      if (tile.isOccupied) {
+  bool canPlant(FarmObject farmObject) {
+    if (!farmObject.canPlant) {
+      if (farmObject.isOccupied) {
         developer.log('[FarmToolService] Cannot plant: tile already has a crop');
-      } else if (!tile.soilState.canPlant) {
+      } else if (!farmObject.soilState.canPlant) {
         developer.log('[FarmToolService] Cannot plant: soil not prepared');
       }
       return false;
@@ -65,13 +67,13 @@ class FarmToolService {
   }
 
   /// Check if crop can be harvested
-  bool canHarvest(FarmTile tile) {
-    if (tile.isEmpty) {
+  bool canHarvest(FarmObject farmObject) {
+    if (farmObject.isEmpty) {
       developer.log('[FarmToolService] Cannot harvest: no crop planted');
       return false;
     }
 
-    if (!tile.canHarvest) {
+    if (!farmObject.canHarvest) {
       developer.log('[FarmToolService] Cannot harvest: crop not ready');
       return false;
     }

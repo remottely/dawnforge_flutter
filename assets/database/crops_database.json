@@ -57,7 +57,7 @@
     "spriteRowIndex": 3,
     "framesCount": 4,
     "skipFirstFrames": 1,
-    "ySortingFromStage": "growing1"
+    "ySortingFromStage": "budding"
   },
   "wheat": {
     "harvestItemId": "wheat_item",
@@ -177,7 +177,7 @@
     "spriteRowIndex": 11,
     "framesCount": 4,
     "skipFirstFrames": 1,
-    "ySortingFromStage": "youngPlant"
+    "ySortingFromStage": "seedling"
   },
   "grape": {
     "harvestItemId": "grape_item",

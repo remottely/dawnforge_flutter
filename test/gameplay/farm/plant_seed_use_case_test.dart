@@ -62,7 +62,7 @@
 //       spriteRowIndex: 0,
 //       framesCount: 8,
 //       skipFirstFrames: 0,
-//       ySortingFromStage: CropStage.growing2,
+//       ySortingFromStage: CropStage.flowering,
 //     );
 
 //     final tilledTile = FarmTile(

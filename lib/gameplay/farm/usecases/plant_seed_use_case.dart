@@ -1,5 +1,7 @@
 import 'dart:developer' as developer;
 
+import 'package:darkness_dungeon/gameplay/world/entities/objects/farm/farm_object.dart';
+
 import '../../inventory/usecases/add_item_use_case.dart';
 import '../../inventory/usecases/remove_item_use_case.dart';
 import '../managers/farm_manager.dart';
@@ -51,7 +53,9 @@ class PlantSeedUseCase {
 
     // 2. Valida se o tile existe e pode receber planta
     final tile = _farmManager.getTile(x, y);
-    if (tile == null) {
+    final farmObject = tile?.object as FarmObject?;
+    
+    if (tile == null || farmObject == null) {
       developer.log(
         'PlantSeedUseCase: Tile at ($x, $y) does not exist',
         name: 'farm.usecases.plant_seed',
@@ -60,7 +64,7 @@ class PlantSeedUseCase {
       return false;
     }
 
-    if (!tile.canPlant) {
+    if (!farmObject.canPlant) {
       developer.log(
         'PlantSeedUseCase: Tile at ($x, $y) cannot be planted (not tilled or already has crop)',
         name: 'farm.usecases.plant_seed',

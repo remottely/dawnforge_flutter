@@ -3,8 +3,8 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/services.dart' show rootBundle;
 
-import '../entities/crop/crop_entity.dart';
-import '../entities/crop/crop_stage_type.dart';
+import '../../world/entities/objects/farm/crop_entity.dart';
+import '../../world/entities/objects/farm/crop_stage_type.dart';
 
 /// Service for creating crops from JSON database (L2: Factory with JSON database, I2: Service = stateless)
 class CropFactoryService {

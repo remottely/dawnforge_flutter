@@ -119,7 +119,7 @@
 //   });
 
 //   group('FarmManager - Harvest Crop', () {
-//     test('should harvest mature crop', () {
+//     test('should harvest harvestable crop', () {
 //       FarmManager.instance.tillSoil(0, 0);
 //       FarmManager.instance.plantSeed(0, 0, 'carrot');
 
@@ -136,7 +136,7 @@
 
 //       expect(crop, isNotNull);
 //       expect(crop!.cropId, equals('carrot'));
-//       expect(crop.stage, equals(CropStageModel.mature));
+//       expect(crop.stage, equals(CropStageModel.harvestable));
 
 //       // Tile deve estar vazio após colheita
 //       final tile = FarmManager.instance.getTile(0, 0);
