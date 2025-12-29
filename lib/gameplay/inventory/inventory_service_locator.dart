@@ -12,9 +12,11 @@ import 'usecases/load_inventory_use_case.dart';
 
 final getIt = GetIt.instance;
 
-void setupInventoryDependencies() {
-  // Services (stateless helpers)
-  getIt.registerLazySingleton<ItemFactoryService>(() => ItemFactoryService());
+Future<void> setupInventoryDependencies() async {
+  // Services (stateless helpers) - Initialize first!
+  final itemFactory = ItemFactoryService();
+  await itemFactory.initialize();
+  getIt.registerSingleton<ItemFactoryService>(itemFactory);
 
   // Managers (singleton state)
   getIt.registerSingleton<InventoryManager>(InventoryManager.instance);
@@ -48,6 +50,7 @@ void setupInventoryDependencies() {
 
   getIt.registerFactory<LoadInventoryUseCase>(
     () => LoadInventoryUseCase(
+      getIt<AddItemUseCase>(),
       getIt<InventoryManager>(),
       getIt<EquipmentManager>(),
       getIt<ItemFactoryService>(),

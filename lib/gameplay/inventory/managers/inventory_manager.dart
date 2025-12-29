@@ -1,5 +1,4 @@
 import 'dart:developer' as developer;
-import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 
@@ -97,98 +96,14 @@ class InventoryManager {
 
   bool get isEmpty => usedSlots == 0;
 
-  bool addItem(Item item, [int quantity = 1]) {
-    developer.log('[InventoryManager] Adding $quantity x ${item.name}');
-
-    if (quantity <= 0) {
-      developer.log('[InventoryManager] Invalid quantity: $quantity');
-      return false;
+  /// Update a slot at the given index and notify listeners
+  void updateSlot(int index, InventorySlot slot) {
+    if (index < 0 || index >= _slots.length) {
+      developer.log('[InventoryManager] Invalid slot index: $index');
+      return;
     }
-
-    int remainingQuantity = quantity;
-
-    if (item.isStackable) {
-      for (var i = 0; i < _slots.length && remainingQuantity > 0; i++) {
-        final slot = _slots[i];
-        if (slot.isEmpty) continue;
-        if (slot.item!.id != item.id) continue;
-        if (slot.isFull) continue;
-
-        final spaceInSlot = item.maxStackSize - slot.quantity;
-        if (spaceInSlot <= 0) continue;
-
-        final amountToAdd = min(remainingQuantity, spaceInSlot);
-        _slots[i] = slot.addQuantity(amountToAdd);
-        remainingQuantity -= amountToAdd;
-
-        developer.log(
-          '[InventoryManager] Stacked $amountToAdd in slot $i, remaining: $remainingQuantity',
-        );
-      }
-    }
-
-    while (remainingQuantity > 0) {
-      final emptySlotIndex = _slots.indexWhere((s) => s.isEmpty);
-      if (emptySlotIndex == -1) {
-        developer.log(
-          '[InventoryManager] Inventory full! Cannot add remaining $remainingQuantity',
-        );
-        return quantity > remainingQuantity;
-      }
-
-      final amountForSlot = item.isStackable
-          ? min(remainingQuantity, item.maxStackSize)
-          : 1;
-
-      _slots[emptySlotIndex] = InventorySlot(
-        index: emptySlotIndex,
-        item: item,
-        quantity: amountForSlot,
-      );
-
-      remainingQuantity -= amountForSlot;
-      developer.log(
-        '[InventoryManager] Created new slot $emptySlotIndex with $amountForSlot items',
-      );
-    }
-
-    developer.log('[InventoryManager] Item added successfully');
+    _slots[index] = slot;
     _notifyChange();
-    return true;
-  }
-
-  bool removeItem(String itemId, [int quantity = 1]) {
-    developer.log('[InventoryManager] Removing $quantity x $itemId');
-
-    if (quantity <= 0) {
-      developer.log('[InventoryManager] Invalid quantity: $quantity');
-      return false;
-    }
-
-    final totalQuantity = getItemQuantity(itemId);
-    if (totalQuantity < quantity) {
-      developer.log(
-        '[InventoryManager] Not enough items. Has: $totalQuantity, needs: $quantity',
-      );
-      return false;
-    }
-
-    int remainingToRemove = quantity;
-
-    for (var i = _slots.length - 1; i >= 0 && remainingToRemove > 0; i--) {
-      final slot = _slots[i];
-      if (slot.item?.id != itemId) continue;
-
-      final amountToRemove = min(remainingToRemove, slot.quantity);
-      _slots[i] = slot.removeQuantity(amountToRemove);
-      remainingToRemove -= amountToRemove;
-
-      developer.log('[InventoryManager] Removed $amountToRemove from slot $i');
-    }
-
-    developer.log('[InventoryManager] Item removed successfully');
-    _notifyChange();
-    return true;
   }
 
   int getItemQuantity(String itemId) {

@@ -22,11 +22,10 @@ void main() async {
   }
 
   await AudioManager.instance.initialize();
-  await ItemFactory.initialize();
   await CropDatabase.initialize();
 
   // Setup dependency injection
-  setupInventoryDependencies();
+  await setupInventoryDependencies();
 
   GameplayLocalizationsDelegate location =
       const GameplayLocalizationsDelegate();

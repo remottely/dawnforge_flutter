@@ -196,7 +196,7 @@ final class InventoryManager {
     // Search forward from afterIndex + 1
     for (int i = afterIndex + 1; i < _slots.length; i++) {
       final slot = _slots[i];
-      if (slot != null && slot.item != null && predicate(slot.item!)) {
+      if (slot.item != null && predicate(slot.item!)) {
         return (index: i, item: slot.item!);
       }
     }
@@ -205,7 +205,7 @@ final class InventoryManager {
     if (afterIndex >= 0) {
       for (int i = 0; i <= afterIndex && i < _slots.length; i++) {
         final slot = _slots[i];
-        if (slot != null && slot.item != null && predicate(slot.item!)) {
+        if (slot.item != null && predicate(slot.item!)) {
           return (index: i, item: slot.item!);
         }
       }
@@ -224,7 +224,7 @@ final class InventoryManager {
     if (beforeIndex == -1) {
       for (int i = _slots.length - 1; i >= 0; i--) {
         final slot = _slots[i];
-        if (slot != null && slot.item != null && predicate(slot.item!)) {
+        if (slot.item != null && predicate(slot.item!)) {
           return (index: i, item: slot.item!);
         }
       }
@@ -234,7 +234,7 @@ final class InventoryManager {
     // Se beforeIndex >= 0, busca de beforeIndex-1 até 0
     for (int i = beforeIndex - 1; i >= 0; i--) {
       final slot = _slots[i];
-      if (slot != null && slot.item != null && predicate(slot.item!)) {
+      if (slot.item != null && predicate(slot.item!)) {
         return (index: i, item: slot.item!);
       }
     }
@@ -242,7 +242,7 @@ final class InventoryManager {
     // Wrap around: do final até beforeIndex (inclusive)
     for (int i = _slots.length - 1; i >= beforeIndex; i--) {
       final slot = _slots[i];
-      if (slot != null && slot.item != null && predicate(slot.item!)) {
+      if (slot.item != null && predicate(slot.item!)) {
         return (index: i, item: slot.item!);
       }
     }

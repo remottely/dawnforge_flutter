@@ -2,9 +2,9 @@ import 'dart:developer' as developer;
 
 import 'package:darkness_dungeon/gameplay/farm/managers/farm_manager.dart';
 import 'package:darkness_dungeon/gameplay/farm/models/crop_model.dart';
-import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_service_locator.dart';
 import 'package:darkness_dungeon/gameplay/inventory/item_factory.dart';
+import 'package:darkness_dungeon/gameplay/inventory/usecases/add_item_use_case.dart';
 
 final class FarmActionService {
   FarmActionService._();
@@ -85,7 +85,7 @@ final class FarmActionService {
       return false;
     }
 
-    final success = getIt<InventoryManager>().addItem(
+    final success = getIt<AddItemUseCase>().addItemEntity(
       harvestItem,
       crop.yieldAmount,
     );

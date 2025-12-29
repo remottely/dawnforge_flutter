@@ -7,7 +7,8 @@ import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.d
 import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_state.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_service_locator.dart';
-import 'package:darkness_dungeon/gameplay/inventory/item_factory.dart';
+import 'package:darkness_dungeon/gameplay/inventory/usecases/add_item_use_case.dart';
+import 'package:darkness_dungeon/gameplay/inventory/usecases/unequip_item_use_case.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/equipment_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
@@ -129,10 +130,7 @@ class InventoryInputHandler extends GameComponent
 
   void _debugInsertItem(String itemKey) {
     if (getIt<InventoryManager>().getItemQuantity(itemKey) == 0) {
-      final item = ItemFactory.createItem(itemKey);
-      if (item != null) {
-        getIt<InventoryManager>().addItem(item);
-      }
+      getIt<AddItemUseCase>()(itemKey, 1);
     }
   }
 
@@ -142,9 +140,8 @@ class InventoryInputHandler extends GameComponent
     final testMaterials = [('stone', 100), ('iron_ore', 25)];
 
     for (final (itemKey, quantity) in testMaterials) {
-      final item = ItemFactory.createItem(itemKey);
-      if (item != null) {
-        getIt<InventoryManager>().addItem(item, quantity);
+      final success = getIt<AddItemUseCase>()(itemKey, quantity);
+      if (success) {
         developer.log('[InventoryInput] Adicionado ${quantity}x $itemKey');
       }
     }
@@ -213,7 +210,7 @@ class InventoryInputHandler extends GameComponent
   }
 
   void _unequipMainHand() {
-    final item = getIt<EquipmentManager>().unequip(EquipmentSlotType.mainHand);
+    final item = getIt<UnequipItemUseCase>()(EquipmentSlotType.mainHand);
     if (item != null) {
       developer.log(
         '[InventoryInput] ✓ Desequipado do main hand: ${item.name}',

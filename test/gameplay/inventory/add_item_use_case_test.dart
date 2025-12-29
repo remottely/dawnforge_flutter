@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:darkness_dungeon/gameplay/inventory/entities/inventory_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
@@ -43,7 +44,7 @@ void main() {
 
       // Verify no interaction with mocks
       verifyNever(() => mockItemFactory.createItem(any()));
-      verifyNever(() => mockInventoryManager.addItem(any(), any()));
+      verifyNever(() => mockInventoryManager.updateSlot(any(), any()));
     });
 
     test('should return false when item does not exist', () {
@@ -57,7 +58,7 @@ void main() {
       // Assert
       expect(result, false);
       verify(() => mockItemFactory.createItem(itemId)).called(1);
-      verifyNever(() => mockInventoryManager.addItem(any(), any()));
+      verifyNever(() => mockInventoryManager.updateSlot(any(), any()));
     });
 
     test('should add item to inventory when valid', () {
@@ -75,10 +76,17 @@ void main() {
         equippedHandType: EquippedHandType.ironSword,
       );
 
+      // Mock empty slots
+      final emptySlots = List.generate(
+        10,
+        (index) => InventorySlot(index: index),
+      );
+
       when(() => mockItemFactory.createItem(itemId)).thenReturn(mockItem);
+      when(() => mockInventoryManager.slots).thenReturn(emptySlots);
       when(
-        () => mockInventoryManager.addItem(mockItem, quantity),
-      ).thenReturn(true);
+        () => mockInventoryManager.updateSlot(any(), any()),
+      ).thenReturn(null);
 
       // Act
       final result = addItemUseCase(itemId, quantity);
@@ -86,7 +94,7 @@ void main() {
       // Assert
       expect(result, true);
       verify(() => mockItemFactory.createItem(itemId)).called(1);
-      verify(() => mockInventoryManager.addItem(mockItem, quantity)).called(1);
+      verify(() => mockInventoryManager.updateSlot(any(), any())).called(1);
     });
 
     test('should return false when inventory is full', () {
@@ -104,10 +112,14 @@ void main() {
         equippedHandType: EquippedHandType.ironSword,
       );
 
+      // Mock full slots (all slots have items)
+      final fullSlots = List.generate(
+        10,
+        (index) => InventorySlot(index: index, item: mockItem, quantity: 1),
+      );
+
       when(() => mockItemFactory.createItem(itemId)).thenReturn(mockItem);
-      when(
-        () => mockInventoryManager.addItem(mockItem, quantity),
-      ).thenReturn(false);
+      when(() => mockInventoryManager.slots).thenReturn(fullSlots);
 
       // Act
       final result = addItemUseCase(itemId, quantity);
@@ -115,7 +127,6 @@ void main() {
       // Assert
       expect(result, false);
       verify(() => mockItemFactory.createItem(itemId)).called(1);
-      verify(() => mockInventoryManager.addItem(mockItem, quantity)).called(1);
     });
   });
 }

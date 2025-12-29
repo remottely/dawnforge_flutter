@@ -55,6 +55,16 @@ class InventoryViewModel {
        _removeItemUseCase = removeItemUseCase,
        _equipItemUseCase = equipItemUseCase;
 
+  /// Add item to inventory
+  bool addItem(String itemId, int quantity) {
+    return _addItemUseCase(itemId, quantity);
+  }
+
+  /// Remove item from inventory
+  bool removeItem(String itemId, int quantity) {
+    return _removeItemUseCase(itemId, quantity);
+  }
+
   /// Transform entity data to UI-friendly format
   ValueNotifier<List<InventorySlotUI>> get slotsUI {
     final notifier = ValueNotifier<List<InventorySlotUI>>([]);

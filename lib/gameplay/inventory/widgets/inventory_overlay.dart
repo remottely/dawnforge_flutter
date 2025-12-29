@@ -8,7 +8,6 @@ import 'package:darkness_dungeon/gameplay/inventory/entities/inventory_slot.dart
 import 'package:darkness_dungeon/gameplay/inventory/entities/item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/widgets/item_sprite_widget.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_service_locator.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class InventoryOverlay extends ResponsiveOverlayBase {

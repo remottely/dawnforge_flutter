@@ -1,3 +1,6 @@
+import 'dart:developer' as developer;
+import 'dart:math';
+
 import '../managers/inventory_manager.dart';
 
 /// UseCase for removing items from inventory (B1: Concrete UseCase)
@@ -9,14 +12,46 @@ class RemoveItemUseCase {
   /// Remove an item from inventory by ID and quantity
   /// Returns true if successful, false otherwise
   bool call(String itemId, int quantity) {
-    if (quantity <= 0) return false;
-    return _inventoryManager.removeItem(itemId, quantity);
+    developer.log('[RemoveItemUseCase] Removing $quantity x $itemId');
+
+    if (quantity <= 0) {
+      developer.log('[RemoveItemUseCase] Invalid quantity: $quantity');
+      return false;
+    }
+
+    final totalQuantity = _inventoryManager.getItemQuantity(itemId);
+    if (totalQuantity < quantity) {
+      developer.log(
+        '[RemoveItemUseCase] Not enough items. Has: $totalQuantity, needs: $quantity',
+      );
+      return false;
+    }
+
+    int remainingToRemove = quantity;
+
+    for (
+      var i = _inventoryManager.maxSlots - 1;
+      i >= 0 && remainingToRemove > 0;
+      i--
+    ) {
+      final slot = _inventoryManager.getSlotByIndex(i);
+      if (slot == null || slot.item?.id != itemId) continue;
+
+      final amountToRemove = min(remainingToRemove, slot.quantity);
+      _inventoryManager.updateSlot(i, slot.removeQuantity(amountToRemove));
+      remainingToRemove -= amountToRemove;
+
+      developer.log('[RemoveItemUseCase] Removed $amountToRemove from slot $i');
+    }
+
+    developer.log('[RemoveItemUseCase] Item removed successfully');
+    return true;
   }
 
   /// Remove all items with the given ID from inventory
   bool removeAll(String itemId) {
     final currentQuantity = _inventoryManager.getItemQuantity(itemId);
     if (currentQuantity == 0) return false;
-    return _inventoryManager.removeItem(itemId, currentQuantity);
+    return call(itemId, currentQuantity);
   }
 }
