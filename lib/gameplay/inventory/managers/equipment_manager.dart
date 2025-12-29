@@ -129,6 +129,87 @@ final class EquipmentManager {
     return _equipmentSlots[slotType]?.isOccupied ?? false;
   }
 
+  /// Returns the slot type where the item is equipped, or null if not equipped
+  EquipmentSlotType? getEquippedSlotForItem(String itemId) {
+    for (final entry in _equipmentSlots.entries) {
+      if (entry.value.equippedItem?.id == itemId) {
+        return entry.key;
+      }
+    }
+    return null;
+  }
+
+  List<Item> getAllEquippedItems() {
+    return _equipmentSlots.values
+        .where((slot) => slot.isOccupied)
+        .map((slot) => slot.equippedItem!)
+        .toList();
+  }
+
+  int getTotalDamage() {
+    final mainHand = getEquippedItem(EquipmentSlotType.mainHand);
+    return mainHand is MainHandItem ? mainHand.damage : 0;
+  }
+
+  double getTotalDps() {
+    final mainHand = getEquippedItem(EquipmentSlotType.mainHand);
+    return mainHand is MainHandItem ? mainHand.dps : 0;
+  }
+
+  int getTotalDefense() {
+    return 0;
+  }
+
+  Map<String, dynamic> getTotalStats() {
+    return {
+      'damage': getTotalDamage(),
+      'dps': getTotalDps(),
+      'defense': getTotalDefense(),
+    };
+  }
+
+  Map<String, dynamic> toJson() {
+    final slotsData = <String, dynamic>{};
+    for (final entry in _equipmentSlots.entries) {
+      if (entry.value.isOccupied) {
+        slotsData[entry.key.toJson()] = entry.value.toJson();
+      }
+    }
+    return {'equipmentSlots': slotsData};
+  }
+
+  void fromJson(
+    Map<String, dynamic> json,
+    Item? Function(String itemId) itemFactory,
+  ) {
+    for (final slotType in EquipmentSlotType.values) {
+      _equipmentSlots[slotType] = EquipmentSlot(slotType: slotType);
+    }
+
+    final slotsData = json['equipmentSlots'] as Map<String, dynamic>?;
+    if (slotsData == null) return;
+
+    for (final entry in slotsData.entries) {
+      try {
+        final slotType = EquipmentSlotType.fromJson(entry.key);
+        final slot = EquipmentSlot.fromJson(
+          entry.value as Map<String, dynamic>,
+          itemFactory,
+        );
+        _equipmentSlots[slotType] = slot;
+
+        // Notify Flutter overlay
+        EquipmentState.instance.updateSlot(slotType, slot.equippedItem);
+      } catch (e) {
+        developer.log('[EquipmentManager] Error loading slot ${entry.key}: $e');
+      }
+    }
+
+    developer.log(
+      '[EquipmentManager] Loaded ${slotsData.length} equipped items from JSON',
+    );
+  }
+
   bool _canEquipItemInSlot(Item item, EquipmentSlotType slotType) {
     if (slotType == EquipmentSlotType.mainHand) {
       return item is MainHandItem;

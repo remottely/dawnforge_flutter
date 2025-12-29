@@ -279,4 +279,59 @@ class InventoryManager {
     _notifyChange();
     developer.log('[InventoryManager] Inventory cleared');
   }
+
+  Map<String, dynamic> toJson() {
+    final slotsData =
+        _slots.where((s) => !s.isEmpty).map((s) => s.toJson()).toList();
+
+    return {'maxSlots': maxSlots, 'slots': slotsData};
+  }
+
+  void fromJson(
+    Map<String, dynamic> json,
+    Item? Function(String itemId) itemFactory,
+  ) {
+    // Load maxSlots first
+    final maxSlotsFromJson = json['maxSlots'] as int? ?? _currentMaxSlots;
+    if (maxSlotsFromJson != _currentMaxSlots) {
+      setMaxSlots(maxSlotsFromJson);
+    }
+
+    // Clear all slots
+    for (var i = 0; i < _slots.length; i++) {
+      _slots[i] = InventorySlot(index: i);
+    }
+
+    final slotsData = json['slots'] as List<dynamic>?;
+    if (slotsData == null) {
+      _notifyChange();
+      return;
+    }
+
+    for (final slotJson in slotsData) {
+      final slot = InventorySlot.fromJson(
+        slotJson as Map<String, dynamic>,
+        itemFactory,
+      );
+
+      if (slot.index >= 0 && slot.index < _slots.length) {
+        _slots[slot.index] = slot;
+      }
+    }
+
+    developer.log(
+      '[InventoryManager] Loaded ${slotsData.length} slots from JSON',
+    );
+    _notifyChange();
+  }
+
+  void reset() {
+    _currentMaxSlots = InventoryConstants.kDefaultInventorySize;
+    _slots = List.generate(
+      _currentMaxSlots,
+      (index) => InventorySlot(index: index),
+    );
+    _notifyChange();
+    developer.log('[InventoryManager] Reset');
+  }
 }

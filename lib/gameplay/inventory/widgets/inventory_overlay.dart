@@ -1,7 +1,7 @@
 import 'package:darkness_dungeon/gameplay/core/modules/hud/responsive/responsive_overlay_base.dart';
-import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
+import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_state.dart';
-import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
+import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_state.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/equipment_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/inventory_slot.dart';
@@ -65,9 +65,7 @@ class InventoryOverlay extends ResponsiveOverlayBase {
 
     // Listen to inventory changes with the actual slots list
     return ValueListenableBuilder<List<InventorySlot>>(
-      valueListenable: InventoryManager.instance.slotsNotifier as ValueListenable<
-          List<
-              InventorySlot>>, // TODO(kevin): remove "as ValueListenable<List<InventorySlot>>"
+      valueListenable: InventoryManager.instance.slotsNotifier,
       builder: (context, slots, _) {
         // Listen to equipment changes for highlighting
         return ValueListenableBuilder<Map<EquipmentSlotType, Item?>>(
