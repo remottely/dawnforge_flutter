@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/gameplay/inventory/inventory_service_locator.dart';
+import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/consumable_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/material_item.dart';

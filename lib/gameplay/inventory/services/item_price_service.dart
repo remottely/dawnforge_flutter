@@ -1,6 +1,6 @@
 import 'dart:developer' as developer;
 
-import 'package:darkness_dungeon/gameplay/inventory/constants/inventory_constants.dart';
+import 'package:darkness_dungeon/gameplay/inventory/config/inventory_def.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/crop_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/item_category.dart';
@@ -49,7 +49,7 @@ final class ItemPriceService {
     price *= 1.0 + professionBonus;
 
     if (!isShippingBin) {
-      price *= InventoryConstants.kShopSellPriceModifier;
+      price *= InventoryDef.kShopSellPriceModifier;
     }
 
     final finalPrice = price.round();
@@ -78,20 +78,20 @@ final class ItemPriceService {
             ItemCategory.fruits,
             ItemCategory.flowers,
           ].contains(item.category)) {
-        return InventoryConstants.kTillerProfessionBonus;
+        return InventoryDef.kTillerProfessionBonus;
       }
 
       if (_hasRancherProfession &&
           item.category == ItemCategory.animalProducts) {
-        return InventoryConstants.kRancherProfessionBonus;
+        return InventoryDef.kRancherProfessionBonus;
       }
 
       if (_hasArtisanProfession && item.category == ItemCategory.artisanGoods) {
-        return InventoryConstants.kArtisanProfessionBonus;
+        return InventoryDef.kArtisanProfessionBonus;
       }
 
       if (_hasAnglerProfession && item.category == ItemCategory.fish) {
-        return InventoryConstants.kAnglerProfessionBonus;
+        return InventoryDef.kAnglerProfessionBonus;
       }
     }
 
@@ -106,13 +106,13 @@ final class ItemPriceService {
     final effectiveLevel = farmingLevel + fertilizerQualityBoost;
 
     final iridiumChance = (effectiveLevel >= 10)
-        ? (effectiveLevel - 10) * InventoryConstants.kQualityChancePerLevel
+        ? (effectiveLevel - 10) * InventoryDef.kQualityChancePerLevel
         : 0.0;
     final goldChance = (effectiveLevel >= 5)
-        ? (effectiveLevel - 5) * InventoryConstants.kQualityChancePerLevel
+        ? (effectiveLevel - 5) * InventoryDef.kQualityChancePerLevel
         : 0.0;
     final silverChance =
-        effectiveLevel * InventoryConstants.kQualityChancePerLevel;
+        effectiveLevel * InventoryDef.kQualityChancePerLevel;
 
     if (randomValue < iridiumChance) {
       return ItemQuality.iridium;

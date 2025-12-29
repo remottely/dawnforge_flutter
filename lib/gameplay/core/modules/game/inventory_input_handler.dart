@@ -5,8 +5,8 @@ import 'package:darkness_dungeon/gameplay/core/modules/hud/tutorial_inputs/tutor
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/inventory_state.dart';
-import 'package:darkness_dungeon/gameplay/inventory/inventory_service_locator.dart';
+import 'package:darkness_dungeon/gameplay/inventory/state/inventory_state.dart';
+import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
 import 'package:darkness_dungeon/gameplay/inventory/usecases/add_item_use_case.dart';
 import 'package:darkness_dungeon/gameplay/inventory/usecases/unequip_item_use_case.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';

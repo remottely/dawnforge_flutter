@@ -1,7 +1,7 @@
 import 'package:darkness_dungeon/app/screens/menu_screen.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_localizations_delegate.dart';
 import 'package:darkness_dungeon/gameplay/farm/database/crop_database.dart';
-import 'package:darkness_dungeon/gameplay/inventory/inventory_service_locator.dart';
+import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';

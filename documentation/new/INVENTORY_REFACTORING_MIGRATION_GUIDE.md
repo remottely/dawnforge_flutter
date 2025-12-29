@@ -88,8 +88,8 @@ lib/gameplay/inventory/
 ```dart
 import 'package:darkness_dungeon/gameplay/inventory/entities/item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/inventory_slot.dart';
-import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
+import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
+import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/item_factory.dart';
 ```
 
@@ -380,7 +380,7 @@ Error: Not found: 'package:darkness_dungeon/gameplay/inventory/inventory_manager
 **Solução:**
 ```dart
 // ANTES
-import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
+import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
 
 // DEPOIS
 import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';

@@ -1,16 +1,18 @@
-final class InventoryConstants {
-  InventoryConstants._();
-  static const int kDefaultInventorySize = 12;
-  static const int kMaxInventorySize = 36;
-  static const int kFirstUpgradeSize = 24;
-  static const int kSecondUpgradeSize = 36;
-  static const int kDefaultStackSize = 999;
-  static const int kEquipmentStackSize = 1;
-  static const int kSeedStackSize = 999;
-  static const int kResourceStackSize = 999;
-  static const int kCropStackSize = 999;
-  static const int kFoodStackSize = 999;
-  static const int kBaitStackSize = 999;
+final class InventoryDef {
+  InventoryDef._();
+  static const int kSizeInventoryDefault = 12;
+  static const int kSizeInventoryMax = 36;
+  static const int kSizeInventoryUpgradeLvl2 = 24;
+  static const int kSizeInventoryUpgradeLvl3 = 36;
+
+  static const int kStackAmountDefault = 999;
+  static const int kStackAmountEquipment = 1;
+  static const int kStackAmountSeed = 999;
+  static const int kStackAmountResource = 999;
+  static const int kStackAmountCrop = 999;
+  static const int kStackAmountFood = 999;
+  static const int kStackAmountBait = 999;
+
   static const double kNormalQualityMultiplier = 1.0;
   static const double kSilverQualityMultiplier = 1.25;
   static const double kGoldQualityMultiplier = 1.5;

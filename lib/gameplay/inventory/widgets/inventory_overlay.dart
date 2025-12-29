@@ -1,13 +1,13 @@
 import 'package:darkness_dungeon/gameplay/core/modules/hud/responsive/responsive_overlay_base.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/equipment_state.dart';
+import 'package:darkness_dungeon/gameplay/inventory/state/equipment_state.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/inventory_state.dart';
+import 'package:darkness_dungeon/gameplay/inventory/state/inventory_state.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/equipment_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/inventory_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/widgets/item_sprite_widget.dart';
-import 'package:darkness_dungeon/gameplay/inventory/inventory_service_locator.dart';
+import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
 import 'package:flutter/material.dart';
 
 class InventoryOverlay extends ResponsiveOverlayBase {

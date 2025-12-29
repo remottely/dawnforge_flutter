@@ -2,7 +2,7 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/foundation.dart';
 
-import '../constants/inventory_constants.dart';
+import '../config/inventory_def.dart';
 import '../entities/inventory_slot.dart';
 import '../entities/item.dart';
 
@@ -17,7 +17,7 @@ class InventoryManager {
 
   static final instance = InventoryManager._();
 
-  int _currentMaxSlots = InventoryConstants.kDefaultInventorySize;
+  int _currentMaxSlots = InventoryDef.kSizeInventoryDefault;
 
   late List<InventorySlot> _slots;
 
@@ -33,8 +33,7 @@ class InventoryManager {
 
   int get maxSlots => _currentMaxSlots;
 
-  bool get canUpgrade =>
-      _currentMaxSlots < InventoryConstants.kMaxInventorySize;
+  bool get canUpgrade => _currentMaxSlots < InventoryDef.kSizeInventoryMax;
 
   /// Manually set max slots (used by LoadInventoryUseCase)
   void setMaxSlots(int newMaxSlots) {
@@ -63,10 +62,10 @@ class InventoryManager {
 
     final oldSize = _currentMaxSlots;
 
-    if (_currentMaxSlots == InventoryConstants.kDefaultInventorySize) {
-      _currentMaxSlots = InventoryConstants.kFirstUpgradeSize;
-    } else if (_currentMaxSlots == InventoryConstants.kFirstUpgradeSize) {
-      _currentMaxSlots = InventoryConstants.kSecondUpgradeSize;
+    if (_currentMaxSlots == InventoryDef.kSizeInventoryDefault) {
+      _currentMaxSlots = InventoryDef.kSizeInventoryUpgradeLvl2;
+    } else if (_currentMaxSlots == InventoryDef.kSizeInventoryUpgradeLvl2) {
+      _currentMaxSlots = InventoryDef.kSizeInventoryUpgradeLvl3;
     }
 
     final newSlotsNeeded = _currentMaxSlots - oldSize;
@@ -243,7 +242,7 @@ class InventoryManager {
   }
 
   void reset() {
-    _currentMaxSlots = InventoryConstants.kDefaultInventorySize;
+    _currentMaxSlots = InventoryDef.kSizeInventoryDefault;
     _slots = List.generate(
       _currentMaxSlots,
       (index) => InventorySlot(index: index),

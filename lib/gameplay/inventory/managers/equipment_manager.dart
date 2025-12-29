@@ -6,7 +6,7 @@ import '../entities/equipment_slot.dart';
 import '../entities/item.dart';
 import '../items/main_hand_item.dart';
 import 'inventory_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/equipment_state.dart';
+import 'package:darkness_dungeon/gameplay/inventory/state/equipment_state.dart';
 
 /// Manager for equipment state (C1: Singleton + ValueNotifier, I2: Manager = Singleton State)
 final class EquipmentManager {
