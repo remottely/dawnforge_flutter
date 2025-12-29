@@ -104,7 +104,7 @@ final class GameStateCollector {
       if (inventoryState != null) {
         InventoryManager.instance.fromJson(
           inventoryState,
-          ItemFactory.createItem,
+          ItemFactoryService.createItem,
         );
         developer.log('[GameStateCollector] Inventory state restored');
       } else {
@@ -119,7 +119,7 @@ final class GameStateCollector {
       if (equipmentState != null) {
         EquipmentManager.instance.fromJson(
           equipmentState,
-          ItemFactory.createItem,
+          ItemFactoryService.createItem,
         );
         developer.log('[GameStateCollector] Equipment state restored');
       } else {

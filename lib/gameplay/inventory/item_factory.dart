@@ -13,8 +13,8 @@ import 'package:darkness_dungeon/gameplay/inventory/models/item_category.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/item_type.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
-final class ItemFactory {
-  ItemFactory._();
+final class ItemFactoryService {
+  ItemFactoryService._();
 
   static final Map<String, Map<String, dynamic>> _itemDatabase = {};
   static bool _isInitialized = false;
@@ -23,13 +23,13 @@ final class ItemFactory {
 
   static Future<void> initialize() async {
     if (_isInitialized) {
-      developer.log('[ItemFactory] Already initialized');
+      developer.log('[ItemFactoryService] Already initialized');
       return;
     }
 
     try {
       await ItemIconDatabase().initialize();
-      developer.log('[ItemFactory] ItemIconDatabase initialized');
+      developer.log('[ItemFactoryService] ItemIconDatabase initialized');
 
       final jsonString = await rootBundle.loadString(_kDatabasePath);
       final jsonData = jsonDecode(jsonString) as Map<String, dynamic>;
@@ -39,10 +39,10 @@ final class ItemFactory {
       }
 
       _isInitialized = true;
-      developer.log('[ItemFactory] Loaded ${_itemDatabase.length} items');
+      developer.log('[ItemFactoryService] Loaded ${_itemDatabase.length} items');
     } catch (e, stackTrace) {
       developer.log(
-        '[ItemFactory] ERROR loading database',
+        '[ItemFactoryService] ERROR loading database',
         error: e,
         stackTrace: stackTrace,
       );
@@ -53,14 +53,14 @@ final class ItemFactory {
   static Item? createItem(String itemId) {
     if (!_isInitialized) {
       developer.log(
-        '[ItemFactory] ERROR: Not initialized! Call initialize() first',
+        '[ItemFactoryService] ERROR: Not initialized! Call initialize() first',
       );
       return null;
     }
 
     final itemData = _itemDatabase[itemId];
     if (itemData == null) {
-      developer.log('[ItemFactory] Item not found: $itemId');
+      developer.log('[ItemFactoryService] Item not found: $itemId');
       return null;
     }
 
@@ -176,13 +176,13 @@ final class ItemFactory {
           );
         default:
           developer.log(
-            '[ItemFactory] Unsupported type: $type for item $itemId',
+            '[ItemFactoryService] Unsupported type: $type for item $itemId',
           );
           return null;
       }
     } catch (e, stackTrace) {
       developer.log(
-        '[ItemFactory] ERROR creating item $itemId',
+        '[ItemFactoryService] ERROR creating item $itemId',
         error: e,
         stackTrace: stackTrace,
       );
@@ -212,7 +212,7 @@ final class ItemFactory {
   static void reset() {
     _itemDatabase.clear();
     _isInitialized = false;
-    developer.log('[ItemFactory] Reset');
+    developer.log('[ItemFactoryService] Reset');
   }
 
   static bool get isInitialized => _isInitialized;

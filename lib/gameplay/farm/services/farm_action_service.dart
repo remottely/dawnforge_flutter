@@ -76,7 +76,7 @@ final class FarmActionService {
   }
 
   bool _addHarvestToInventory(CropModel crop) {
-    final harvestItem = ItemFactory.createItem(crop.harvestItemId);
+    final harvestItem = ItemFactoryService.createItem(crop.harvestItemId);
 
     if (harvestItem == null) {
       developer.log(

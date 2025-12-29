@@ -402,7 +402,7 @@ final class InventoryManager {
     for (final slotJson in slotsData) {
       final slot = InventorySlot.fromJson(
         slotJson as Map<String, dynamic>,
-        ItemFactory.createItem,
+        ItemFactoryService.createItem,
       );
 
       if (slot.index >= 0 && slot.index < _slots.length) {

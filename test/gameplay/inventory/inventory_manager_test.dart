@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   setUpAll(() async {
     TestWidgetsFlutterBinding.ensureInitialized();
-    await ItemFactory.initialize();
+    await ItemFactoryService.initialize();
   });
 
   setUp(() {
@@ -23,7 +23,7 @@ void main() {
     });
 
     test('add_item_to_empty_slot', () {
-      final sword = ItemFactory.createItem('iron_sword')!;
+      final sword = ItemFactoryService.createItem('iron_sword')!;
       final result = InventoryManager.instance.addItem(sword);
 
       expect(result, isTrue);
@@ -36,7 +36,7 @@ void main() {
     });
 
     test('add_stackable_item_stacks_correctly', () {
-      final wood = ItemFactory.createItem('wood')!;
+      final wood = ItemFactoryService.createItem('wood')!;
 
       // Adicionar 100 madeiras (deve criar 1 slot)
       InventoryManager.instance.addItem(wood, 100);
@@ -50,7 +50,7 @@ void main() {
     });
 
     test('add_item_creates_multiple_stacks_when_needed', () {
-      final wood = ItemFactory.createItem('wood')!;
+      final wood = ItemFactoryService.createItem('wood')!;
 
       // Adicionar 2500 madeiras (maxStackSize = 999, deve criar 3 slots)
       InventoryManager.instance.addItem(wood, 2500);
@@ -59,7 +59,7 @@ void main() {
     });
 
     test('add_non_stackable_item_creates_multiple_slots', () {
-      final sword = ItemFactory.createItem('iron_sword')!;
+      final sword = ItemFactoryService.createItem('iron_sword')!;
 
       // Espadas não empilham
       InventoryManager.instance.addItem(sword, 3);
@@ -71,7 +71,7 @@ void main() {
     });
 
     test('add_item_returns_false_when_full', () {
-      final sword = ItemFactory.createItem('iron_sword')!;
+      final sword = ItemFactoryService.createItem('iron_sword')!;
 
       // Encher inventário (30 slots)
       for (var i = 0; i < 30; i++) {
@@ -86,7 +86,7 @@ void main() {
     });
 
     test('remove_item_decreases_quantity', () {
-      final wood = ItemFactory.createItem('wood')!;
+      final wood = ItemFactoryService.createItem('wood')!;
       InventoryManager.instance.addItem(wood, 100);
 
       final result = InventoryManager.instance.removeItem('wood', 30);
@@ -95,7 +95,7 @@ void main() {
     });
 
     test('remove_item_clears_slot_when_quantity_zero', () {
-      final sword = ItemFactory.createItem('iron_sword')!;
+      final sword = ItemFactoryService.createItem('iron_sword')!;
       InventoryManager.instance.addItem(sword);
 
       expect(InventoryManager.instance.usedSlots, equals(1));
@@ -106,7 +106,7 @@ void main() {
     });
 
     test('remove_item_returns_false_when_not_enough', () {
-      final wood = ItemFactory.createItem('wood')!;
+      final wood = ItemFactoryService.createItem('wood')!;
       InventoryManager.instance.addItem(wood, 50);
 
       final result = InventoryManager.instance.removeItem('wood', 100);
@@ -115,7 +115,7 @@ void main() {
     });
 
     test('get_item_quantity_counts_all_stacks', () {
-      final wood = ItemFactory.createItem('wood')!;
+      final wood = ItemFactoryService.createItem('wood')!;
 
       // Adicionar em múltiplos stacks
       InventoryManager.instance.addItem(wood, 999);
@@ -126,7 +126,7 @@ void main() {
     });
 
     test('has_item_checks_minimum_quantity', () {
-      final wood = ItemFactory.createItem('wood')!;
+      final wood = ItemFactoryService.createItem('wood')!;
       InventoryManager.instance.addItem(wood, 50);
 
       expect(InventoryManager.instance.hasItem('wood', 30), isTrue);
@@ -135,7 +135,7 @@ void main() {
     });
 
     test('get_slot_by_index_returns_correct_slot', () {
-      final sword = ItemFactory.createItem('iron_sword')!;
+      final sword = ItemFactoryService.createItem('iron_sword')!;
       InventoryManager.instance.addItem(sword);
 
       final slot = InventoryManager.instance.getSlotByIndex(0);
@@ -144,7 +144,7 @@ void main() {
     });
 
     test('get_slots_by_item_id_returns_all_matching', () {
-      final wood = ItemFactory.createItem('wood')!;
+      final wood = ItemFactoryService.createItem('wood')!;
       InventoryManager.instance.addItem(wood, 2000); // Cria 3 slots
 
       final slots = InventoryManager.instance.getSlotsByItemId('wood');
@@ -152,7 +152,7 @@ void main() {
     });
 
     test('move_item_to_empty_slot', () {
-      final sword = ItemFactory.createItem('iron_sword')!;
+      final sword = ItemFactoryService.createItem('iron_sword')!;
       InventoryManager.instance.addItem(sword);
 
       final result = InventoryManager.instance.moveItem(0, 5);
@@ -166,8 +166,8 @@ void main() {
     });
 
     test('move_item_stacks_when_same_item', () {
-      final wood = ItemFactory.createItem('wood')!;
-      final stone = ItemFactory.createItem('stone')!;
+      final wood = ItemFactoryService.createItem('wood')!;
+      final stone = ItemFactoryService.createItem('stone')!;
 
       // Adicionar wood no slot 0 e stone no slot 1 primeiro
       InventoryManager.instance.addItem(wood, 50);
@@ -195,8 +195,8 @@ void main() {
     });
 
     test('swap_slots_exchanges_items', () {
-      final sword = ItemFactory.createItem('iron_sword')!;
-      final potion = ItemFactory.createItem('health_potion')!;
+      final sword = ItemFactoryService.createItem('iron_sword')!;
+      final potion = ItemFactoryService.createItem('health_potion')!;
 
       InventoryManager.instance.addItem(sword);
       InventoryManager.instance.addItem(potion);
@@ -214,9 +214,9 @@ void main() {
     });
 
     test('sort_by_type_organizes_items', () {
-      final sword = ItemFactory.createItem('iron_sword')!;
-      final wood = ItemFactory.createItem('wood')!;
-      final potion = ItemFactory.createItem('health_potion')!;
+      final sword = ItemFactoryService.createItem('iron_sword')!;
+      final wood = ItemFactoryService.createItem('wood')!;
+      final potion = ItemFactoryService.createItem('health_potion')!;
 
       InventoryManager.instance.addItem(wood);
       InventoryManager.instance.addItem(sword);
@@ -229,8 +229,8 @@ void main() {
     });
 
     test('sort_by_rarity_organizes_items', () {
-      final common = ItemFactory.createItem('iron_sword')!;
-      final legendary = ItemFactory.createItem('legendary_blade')!;
+      final common = ItemFactoryService.createItem('iron_sword')!;
+      final legendary = ItemFactoryService.createItem('legendary_blade')!;
 
       InventoryManager.instance.addItem(common);
       InventoryManager.instance.addItem(legendary);
@@ -245,8 +245,8 @@ void main() {
     });
 
     test('sort_by_name_organizes_alphabetically', () {
-      final wood = ItemFactory.createItem('wood')!;
-      final axe = ItemFactory.createItem('steel_axe')!;
+      final wood = ItemFactoryService.createItem('wood')!;
+      final axe = ItemFactoryService.createItem('steel_axe')!;
 
       InventoryManager.instance.addItem(wood);
       InventoryManager.instance.addItem(axe);
@@ -259,8 +259,8 @@ void main() {
     });
 
     test('clear_removes_all_items', () {
-      final sword = ItemFactory.createItem('iron_sword')!;
-      final wood = ItemFactory.createItem('wood')!;
+      final sword = ItemFactoryService.createItem('iron_sword')!;
+      final wood = ItemFactoryService.createItem('wood')!;
 
       InventoryManager.instance.addItem(sword);
       InventoryManager.instance.addItem(wood, 100);
@@ -273,9 +273,9 @@ void main() {
     });
 
     test('serialization_roundtrip', () {
-      final sword = ItemFactory.createItem('iron_sword')!;
-      final wood = ItemFactory.createItem('wood')!;
-      final potion = ItemFactory.createItem('health_potion')!;
+      final sword = ItemFactoryService.createItem('iron_sword')!;
+      final wood = ItemFactoryService.createItem('wood')!;
+      final potion = ItemFactoryService.createItem('health_potion')!;
 
       InventoryManager.instance.addItem(sword);
       InventoryManager.instance.addItem(wood, 250);
@@ -301,7 +301,7 @@ void main() {
     });
 
     test('add_zero_quantity_returns_false', () {
-      final sword = ItemFactory.createItem('iron_sword')!;
+      final sword = ItemFactoryService.createItem('iron_sword')!;
       final result = InventoryManager.instance.addItem(sword, 0);
       expect(result, isFalse);
     });

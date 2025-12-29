@@ -195,7 +195,7 @@ final class EquipmentManager {
         final slotType = EquipmentSlotType.fromJson(entry.key);
         final slot = EquipmentSlot.fromJson(
           entry.value as Map<String, dynamic>,
-          ItemFactory.createItem,
+          ItemFactoryService.createItem,
         );
         _equipmentSlots[slotType] = slot;
       } catch (e) {

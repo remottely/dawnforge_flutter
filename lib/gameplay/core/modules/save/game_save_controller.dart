@@ -163,7 +163,7 @@ final class GameSaveController {
   void _restoreInventoryData(Map<String, dynamic> data) {
     try {
       final inventory = InventoryManager.instance;
-      inventory.fromJson(data, ItemFactory.createItem);
+      inventory.fromJson(data, ItemFactoryService.createItem);
       developer.log('[GameSaveController] Inventory restored');
     } catch (e) {
       developer.log('[GameSaveController] Error restoring inventory data: $e');
