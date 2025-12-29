@@ -1,14 +1,15 @@
 import 'package:darkness_dungeon/gameplay/core/modules/save/game_state_collector.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/equipment_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/item_factory.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/equipment_slot.dart';
+import 'package:darkness_dungeon/gameplay/inventory/inventory_service_locator.dart';
+import 'package:darkness_dungeon/gameplay/inventory/services/item_factory_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   setUpAll(() async {
     TestWidgetsFlutterBinding.ensureInitialized();
-    await ItemFactoryService.initialize();
+    await getIt<ItemFactoryService>().initialize();
   });
 
   setUp(() {
@@ -19,11 +20,11 @@ void main() {
   group('Inventory Integration Tests', () {
     test('complete_save_load_cycle_with_inventory', () {
       // 1. Adicionar itens ao inventário
-      final sword = ItemFactoryService.createItem('iron_sword')!;
-      final axe = ItemFactoryService.createItem('steel_axe')!;
-      final potion = ItemFactoryService.createItem('health_potion')!;
-      final wood = ItemFactoryService.createItem('wood')!;
-      final seeds = ItemFactoryService.createItem('tomato_seeds')!;
+      final sword = getIt<ItemFactoryService>().createItem('iron_sword')!;
+      final axe = getIt<ItemFactoryService>().createItem('steel_axe')!;
+      final potion = getIt<ItemFactoryService>().createItem('health_potion')!;
+      final wood = getIt<ItemFactoryService>().createItem('wood')!;
+      final seeds = getIt<ItemFactoryService>().createItem('tomato_seeds')!;
 
       InventoryManager.instance.addItem(sword);
       InventoryManager.instance.addItem(axe);
@@ -74,9 +75,9 @@ void main() {
 
     test('serialization_roundtrip_with_full_inventory', () {
       // Encher inventário com vários itens (12 slots = kDefaultInventorySize)
-      final wood = ItemFactoryService.createItem('wood')!;
-      final stone = ItemFactoryService.createItem('stone')!;
-      final iron = ItemFactoryService.createItem('iron_ore')!;
+      final wood = getIt<ItemFactoryService>().createItem('wood')!;
+      final stone = getIt<ItemFactoryService>().createItem('stone')!;
+      final iron = getIt<ItemFactoryService>().createItem('iron_ore')!;
 
       // Adicionar 4 slots de cada item (4*3 = 12 slots total)
       for (var i = 0; i < 4; i++) {
@@ -105,9 +106,11 @@ void main() {
     });
 
     test('equipment_persists_across_save_load', () {
-      final sword = ItemFactoryService.createItem('iron_sword')!;
-      final axe = ItemFactoryService.createItem('steel_axe')!;
-      final legendary = ItemFactoryService.createItem('legendary_blade')!;
+      final sword = getIt<ItemFactoryService>().createItem('iron_sword')!;
+      final axe = getIt<ItemFactoryService>().createItem('steel_axe')!;
+      final legendary = getIt<ItemFactoryService>().createItem(
+        'legendary_blade',
+      )!;
 
       InventoryManager.instance.addItem(sword);
       InventoryManager.instance.addItem(axe);
@@ -150,7 +153,7 @@ void main() {
       final saveData = GameStateCollector.collectCurrentGameState();
 
       // Adicionar algo
-      final wood = ItemFactoryService.createItem('wood')!;
+      final wood = getIt<ItemFactoryService>().createItem('wood')!;
       InventoryManager.instance.addItem(wood, 100);
 
       // Restaurar estado vazio
@@ -162,8 +165,8 @@ void main() {
     });
 
     test('concurrent_inventory_equipment_operations', () {
-      final sword = ItemFactoryService.createItem('iron_sword')!;
-      final potion = ItemFactoryService.createItem('health_potion')!;
+      final sword = getIt<ItemFactoryService>().createItem('iron_sword')!;
+      final potion = getIt<ItemFactoryService>().createItem('health_potion')!;
 
       // Adicionar e equipar simultaneamente
       InventoryManager.instance.addItem(sword);
@@ -191,8 +194,8 @@ void main() {
     });
 
     test('game_state_summary_includes_inventory', () {
-      final sword = ItemFactoryService.createItem('iron_sword')!;
-      final wood = ItemFactoryService.createItem('wood')!;
+      final sword = getIt<ItemFactoryService>().createItem('iron_sword')!;
+      final wood = getIt<ItemFactoryService>().createItem('wood')!;
 
       InventoryManager.instance.addItem(sword);
       InventoryManager.instance.addItem(wood, 100);
@@ -208,8 +211,8 @@ void main() {
     });
 
     test('reset_all_managers_clears_inventory_and_equipment', () {
-      final sword = ItemFactoryService.createItem('iron_sword')!;
-      final wood = ItemFactoryService.createItem('wood')!;
+      final sword = getIt<ItemFactoryService>().createItem('iron_sword')!;
+      final wood = getIt<ItemFactoryService>().createItem('wood')!;
 
       InventoryManager.instance.addItem(sword);
       InventoryManager.instance.addItem(wood, 500);

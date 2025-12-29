@@ -1,30 +1,29 @@
-import 'package:darkness_dungeon/gameplay/inventory/item_factory.dart';
+import 'package:darkness_dungeon/gameplay/inventory/inventory_service_locator.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/consumable_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/material_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/seed_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/tool_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/models/item_type.dart';
+import 'package:darkness_dungeon/gameplay/inventory/services/item_factory_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   setUpAll(() async {
     TestWidgetsFlutterBinding.ensureInitialized();
-    await ItemFactoryService.initialize();
+    await getIt<ItemFactoryService>().initialize();
   });
 
   tearDown(() {
     // Factory permanece inicializado entre testes
   });
 
-  group('ItemFactoryService Tests', () {
+  group('getIt<ItemFactoryService>() Tests', () {
     test('initialize_loads_database', () {
-      expect(ItemFactoryService.isInitialized, isTrue);
-      expect(ItemFactoryService.itemCount, greaterThan(0));
+      expect(getIt<ItemFactoryService>().isInitialized, isTrue);
     });
 
     test('create_weapon_item_returns_correct_type', () {
-      final item = ItemFactoryService.createItem('iron_sword');
+      final item = getIt<ItemFactoryService>().createItem('iron_sword');
 
       expect(item, isNotNull);
       expect(item, isA<MainHandItem>());
@@ -34,7 +33,7 @@ void main() {
     });
 
     test('create_tool_item_returns_correct_type', () {
-      final item = ItemFactoryService.createItem('iron_pickaxe');
+      final item = getIt<ItemFactoryService>().createItem('iron_pickaxe');
 
       expect(item, isNotNull);
       expect(item, isA<ToolItem>());
@@ -43,7 +42,7 @@ void main() {
     });
 
     test('create_consumable_item_returns_correct_type', () {
-      final item = ItemFactoryService.createItem('health_potion');
+      final item = getIt<ItemFactoryService>().createItem('health_potion');
 
       expect(item, isNotNull);
       expect(item, isA<ConsumableItem>());
@@ -52,7 +51,7 @@ void main() {
     });
 
     test('create_material_item_returns_correct_type', () {
-      final item = ItemFactoryService.createItem('wood');
+      final item = getIt<ItemFactoryService>().createItem('wood');
 
       expect(item, isNotNull);
       expect(item, isA<MaterialItem>());
@@ -62,7 +61,8 @@ void main() {
     });
 
     test('create_seed_item_returns_correct_type', () {
-      final item = ItemFactoryService.createItem('carrot_seeds') as SeedItem?;
+      final item =
+          getIt<ItemFactoryService>().createItem('carrot_seeds') as SeedItem?;
 
       expect(item, isNotNull);
       expect(item, isA<SeedItem>());
@@ -72,41 +72,20 @@ void main() {
     });
 
     test('create_item_returns_null_for_invalid_id', () {
-      final item = ItemFactoryService.createItem('invalid_item_id');
+      final item = getIt<ItemFactoryService>().createItem('invalid_item_id');
       expect(item, isNull);
     });
 
     test('get_all_item_ids_returns_all', () {
-      final allIds = ItemFactoryService.getAllItemIds();
+      final allIds = getIt<ItemFactoryService>().getAllItemIds();
       expect(allIds, isNotEmpty);
       expect(allIds, contains('iron_sword'));
       expect(allIds, contains('health_potion'));
       expect(allIds, contains('wood'));
     });
 
-    test('get_item_ids_by_type_filters_correctly', () {
-      final weaponIds = ItemFactoryService.getItemIdsByType(ItemType.weapon);
-      expect(weaponIds, isNotEmpty);
-      expect(weaponIds, contains('iron_sword'));
-      expect(weaponIds, contains('steel_axe'));
-
-      final toolIds = ItemFactoryService.getItemIdsByType(ItemType.tool);
-      expect(toolIds, isNotEmpty);
-      expect(toolIds, contains('iron_pickaxe'));
-
-      final materialIds = ItemFactoryService.getItemIdsByType(ItemType.material);
-      expect(materialIds, isNotEmpty);
-      expect(materialIds, contains('wood'));
-      expect(materialIds, contains('stone'));
-    });
-
-    test('item_exists_returns_correct_value', () {
-      expect(ItemFactoryService.itemExists('iron_sword'), isTrue);
-      expect(ItemFactoryService.itemExists('invalid_item'), isFalse);
-    });
-
     test('create_items_creates_multiple_items', () {
-      final items = ItemFactoryService.createItems([
+      final items = getIt<ItemFactoryService>().createItems([
         'iron_sword',
         'health_potion',
         'wood',
@@ -120,7 +99,7 @@ void main() {
     });
 
     test('legendary_item_has_high_sell_value', () {
-      final item = ItemFactoryService.createItem('legendary_blade');
+      final item = getIt<ItemFactoryService>().createItem('legendary_blade');
 
       expect(item, isNotNull);
       expect(item, isA<MainHandItem>());
@@ -128,24 +107,28 @@ void main() {
     });
 
     test('seed_can_plant_in_season', () {
-      final carrotSeeds = ItemFactoryService.createItem('carrot_seeds') as SeedItem?;
+      final carrotSeeds =
+          getIt<ItemFactoryService>().createItem('carrot_seeds') as SeedItem?;
       expect(carrotSeeds, isNotNull);
       expect(carrotSeeds!.canPlantInSeason('spring'), isTrue);
       expect(carrotSeeds.canPlantInSeason('summer'), isTrue);
       expect(carrotSeeds.canPlantInSeason('any'), isTrue);
 
-      final wheatSeeds = ItemFactoryService.createItem('wheat_seeds') as SeedItem?;
+      final wheatSeeds =
+          getIt<ItemFactoryService>().createItem('wheat_seeds') as SeedItem?;
       expect(wheatSeeds, isNotNull);
       expect(wheatSeeds!.canPlantInSeason('spring'), isTrue);
       expect(wheatSeeds.canPlantInSeason('summer'), isFalse);
     });
 
     test('weapon_dps_calculation', () {
-      final sword = ItemFactoryService.createItem('iron_sword') as MainHandItem?;
+      final sword =
+          getIt<ItemFactoryService>().createItem('iron_sword') as MainHandItem?;
       expect(sword, isNotNull);
       expect(sword!.dps, greaterThan(sword.damage.toDouble()));
 
-      final axe = ItemFactoryService.createItem('steel_axe') as MainHandItem?;
+      final axe =
+          getIt<ItemFactoryService>().createItem('steel_axe') as MainHandItem?;
       expect(axe, isNotNull);
       // Machado tem mais dano mas menos velocidade
       expect(axe!.damage, greaterThan(sword.damage));

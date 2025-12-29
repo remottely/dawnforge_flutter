@@ -17,12 +17,12 @@ import '../models/item_type.dart';
 /// Service for creating items from JSON database (L2: Factory with JSON database, I2: Service = External)
 class ItemFactoryService {
   final Map<String, Map<String, dynamic>> _itemDatabase = {};
-  bool _isInitialized = false;
+  bool isInitialized = false;
 
-  static const String _kDatabasePath = 'assets/items/items_database.json';
+  final String _kDatabasePath = 'assets/items/items_database.json';
 
   Future<void> initialize() async {
-    if (_isInitialized) {
+    if (isInitialized) {
       developer.log('[ItemFactoryService] Already initialized');
       return;
     }
@@ -38,7 +38,7 @@ class ItemFactoryService {
         _itemDatabase[entry.key] = entry.value as Map<String, dynamic>;
       }
 
-      _isInitialized = true;
+      isInitialized = true;
       developer.log(
         '[ItemFactoryService] Loaded ${_itemDatabase.length} items',
       );
@@ -53,7 +53,7 @@ class ItemFactoryService {
   }
 
   Item? createItem(String itemId) {
-    if (!_isInitialized) {
+    if (!isInitialized) {
       developer.log(
         '[ItemFactoryService] ERROR: Not initialized! Call initialize() first',
       );

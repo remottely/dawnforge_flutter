@@ -1,14 +1,15 @@
+import 'package:darkness_dungeon/gameplay/inventory/entities/equipment_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/item_factory.dart';
+import 'package:darkness_dungeon/gameplay/inventory/inventory_service_locator.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/equipment_slot.dart';
+import 'package:darkness_dungeon/gameplay/inventory/services/item_factory_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   setUpAll(() async {
     TestWidgetsFlutterBinding.ensureInitialized();
-    await ItemFactoryService.initialize();
+    await getIt<ItemFactoryService>().initialize();
   });
 
   setUp(() {
@@ -25,7 +26,7 @@ void main() {
     });
 
     test('equip_weapon_success', () {
-      final sword = ItemFactoryService.createItem('iron_sword')!;
+      final sword = getIt<ItemFactoryService>().createItem('iron_sword')!;
       InventoryManager.instance.addItem(sword);
 
       final result = EquipmentManager.instance.equip(
@@ -46,7 +47,7 @@ void main() {
     });
 
     test('equip_returns_false_when_item_not_in_inventory', () {
-      final sword = ItemFactoryService.createItem('iron_sword')!;
+      final sword = getIt<ItemFactoryService>().createItem('iron_sword')!;
 
       final result = EquipmentManager.instance.equip(
         EquipmentSlotType.mainHand,
@@ -61,7 +62,7 @@ void main() {
     });
 
     test('equip_returns_false_for_wrong_slot_type', () {
-      final wood = ItemFactoryService.createItem('wood')!;
+      final wood = getIt<ItemFactoryService>().createItem('wood')!;
       InventoryManager.instance.addItem(wood);
 
       final result = EquipmentManager.instance.equip(
@@ -74,8 +75,8 @@ void main() {
     });
 
     test('equip_replaces_existing_item', () {
-      final sword1 = ItemFactoryService.createItem('iron_sword')!;
-      final sword2 = ItemFactoryService.createItem('steel_axe')!;
+      final sword1 = getIt<ItemFactoryService>().createItem('iron_sword')!;
+      final sword2 = getIt<ItemFactoryService>().createItem('steel_axe')!;
 
       InventoryManager.instance.addItem(sword1);
       InventoryManager.instance.addItem(sword2);
@@ -102,7 +103,7 @@ void main() {
     });
 
     test('unequip_returns_item_to_inventory', () {
-      final sword = ItemFactoryService.createItem('iron_sword')!;
+      final sword = getIt<ItemFactoryService>().createItem('iron_sword')!;
       InventoryManager.instance.addItem(sword);
       EquipmentManager.instance.equip(EquipmentSlotType.mainHand, sword);
 
@@ -127,8 +128,8 @@ void main() {
     });
 
     test('unequip_returns_null_when_inventory_full', () {
-      final sword = ItemFactoryService.createItem('iron_sword')!;
-      final stone = ItemFactoryService.createItem('stone')!;
+      final sword = getIt<ItemFactoryService>().createItem('iron_sword')!;
+      final stone = getIt<ItemFactoryService>().createItem('stone')!;
 
       // Equipar espada primeiro
       InventoryManager.instance.addItem(sword);
@@ -151,8 +152,8 @@ void main() {
     });
 
     test('get_all_equipped_items_returns_all', () {
-      final sword = ItemFactoryService.createItem('iron_sword')!;
-      final axe = ItemFactoryService.createItem('steel_axe')!;
+      final sword = getIt<ItemFactoryService>().createItem('iron_sword')!;
+      final axe = getIt<ItemFactoryService>().createItem('steel_axe')!;
 
       InventoryManager.instance.addItem(sword);
       InventoryManager.instance.addItem(axe);
@@ -165,7 +166,8 @@ void main() {
     });
 
     test('get_total_damage_sums_weapons', () {
-      final sword = ItemFactoryService.createItem('iron_sword')! as MainHandItem;
+      final sword =
+          getIt<ItemFactoryService>().createItem('iron_sword')! as MainHandItem;
 
       InventoryManager.instance.addItem(sword);
       EquipmentManager.instance.equip(EquipmentSlotType.mainHand, sword);
@@ -175,7 +177,8 @@ void main() {
     });
 
     test('get_total_dps_sums_weapons', () {
-      final sword = ItemFactoryService.createItem('iron_sword')! as MainHandItem;
+      final sword =
+          getIt<ItemFactoryService>().createItem('iron_sword')! as MainHandItem;
 
       InventoryManager.instance.addItem(sword);
       EquipmentManager.instance.equip(EquipmentSlotType.mainHand, sword);
@@ -185,7 +188,7 @@ void main() {
     });
 
     test('get_total_stats_returns_all_stats', () {
-      final sword = ItemFactoryService.createItem('iron_sword')!;
+      final sword = getIt<ItemFactoryService>().createItem('iron_sword')!;
       InventoryManager.instance.addItem(sword);
       EquipmentManager.instance.equip(EquipmentSlotType.mainHand, sword);
 
@@ -196,8 +199,8 @@ void main() {
     });
 
     test('unequip_all_moves_all_items_to_inventory', () {
-      final sword = ItemFactoryService.createItem('iron_sword')!;
-      final axe = ItemFactoryService.createItem('steel_axe')!;
+      final sword = getIt<ItemFactoryService>().createItem('iron_sword')!;
+      final axe = getIt<ItemFactoryService>().createItem('steel_axe')!;
 
       InventoryManager.instance.addItem(sword);
       InventoryManager.instance.addItem(axe);
@@ -213,8 +216,8 @@ void main() {
     });
 
     test('unequip_all_fails_when_inventory_full', () {
-      final sword = ItemFactoryService.createItem('iron_sword')!;
-      final stone = ItemFactoryService.createItem('stone')!;
+      final sword = getIt<ItemFactoryService>().createItem('iron_sword')!;
+      final stone = getIt<ItemFactoryService>().createItem('stone')!;
 
       // Equipar espada
       InventoryManager.instance.addItem(sword);
@@ -234,8 +237,8 @@ void main() {
     });
 
     test('serialization_roundtrip', () {
-      final sword = ItemFactoryService.createItem('iron_sword')!;
-      final axe = ItemFactoryService.createItem('steel_axe')!;
+      final sword = getIt<ItemFactoryService>().createItem('iron_sword')!;
+      final axe = getIt<ItemFactoryService>().createItem('steel_axe')!;
 
       InventoryManager.instance.addItem(sword);
       InventoryManager.instance.addItem(axe);
@@ -262,7 +265,7 @@ void main() {
     });
 
     test('weapon_can_be_equipped_in_weapon_slot', () {
-      final sword = ItemFactoryService.createItem('iron_sword')!;
+      final sword = getIt<ItemFactoryService>().createItem('iron_sword')!;
       InventoryManager.instance.addItem(sword);
 
       final result = EquipmentManager.instance.equip(
@@ -273,7 +276,7 @@ void main() {
     });
 
     test('offhand_slot_is_locked', () {
-      final sword = ItemFactoryService.createItem('iron_sword')!;
+      final sword = getIt<ItemFactoryService>().createItem('iron_sword')!;
       InventoryManager.instance.addItem(sword);
 
       final result = EquipmentManager.instance.equip(
@@ -285,7 +288,7 @@ void main() {
     });
 
     test('reset_clears_all_equipment', () {
-      final sword = ItemFactoryService.createItem('iron_sword')!;
+      final sword = getIt<ItemFactoryService>().createItem('iron_sword')!;
       InventoryManager.instance.addItem(sword);
       EquipmentManager.instance.equip(EquipmentSlotType.mainHand, sword);
 

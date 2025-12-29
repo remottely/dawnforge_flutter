@@ -5,8 +5,9 @@ import 'package:darkness_dungeon/gameplay/core/modules/save/save_data_model.dart
 import 'package:darkness_dungeon/gameplay/core/modules/save/save_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/farm/managers/farm_manager.dart';
+import 'package:darkness_dungeon/gameplay/inventory/inventory_service_locator.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/item_factory.dart';
+import 'package:darkness_dungeon/gameplay/inventory/services/item_factory_service.dart';
 
 final class GameSaveController {
   GameSaveController._();
@@ -163,7 +164,7 @@ final class GameSaveController {
   void _restoreInventoryData(Map<String, dynamic> data) {
     try {
       final inventory = InventoryManager.instance;
-      inventory.fromJson(data, ItemFactoryService.createItem);
+      inventory.fromJson(data, getIt<ItemFactoryService>().createItem);
       developer.log('[GameSaveController] Inventory restored');
     } catch (e) {
       developer.log('[GameSaveController] Error restoring inventory data: $e');

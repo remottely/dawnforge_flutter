@@ -1,6 +1,3 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
-
 import 'package:darkness_dungeon/gameplay/inventory/entities/inventory_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
@@ -8,6 +5,8 @@ import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.d
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
 import 'package:darkness_dungeon/gameplay/inventory/services/item_factory_service.dart';
 import 'package:darkness_dungeon/gameplay/inventory/usecases/add_item_use_case.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 
 // Mock classes using Mocktail (G2)
 class MockInventoryManager extends Mock implements InventoryManager {}

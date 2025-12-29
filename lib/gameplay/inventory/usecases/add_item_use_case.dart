@@ -37,7 +37,11 @@ class AddItemUseCase {
 
     // Try to stack in existing slots
     if (item.isStackable) {
-      for (var i = 0; i < _inventoryManager.maxSlots && remainingQuantity > 0; i++) {
+      for (
+        var i = 0;
+        i < _inventoryManager.maxSlots && remainingQuantity > 0;
+        i++
+      ) {
         final slot = _inventoryManager.getSlotByIndex(i);
         if (slot == null || slot.isEmpty) continue;
         if (slot.item!.id != item.id) continue;
@@ -67,7 +71,7 @@ class AddItemUseCase {
           break;
         }
       }
-      
+
       if (emptySlotIndex == -1) {
         developer.log(
           '[AddItemUseCase] Inventory full! Cannot add remaining $remainingQuantity',

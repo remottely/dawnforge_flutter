@@ -1,10 +1,11 @@
 import 'dart:developer' as developer;
 import 'dart:math';
 
+import 'package:darkness_dungeon/gameplay/inventory/inventory_service_locator.dart';
+import 'package:darkness_dungeon/gameplay/inventory/services/item_factory_service.dart';
 import 'package:flutter/foundation.dart';
 
 import 'constants/inventory_constants.dart';
-import 'item_factory.dart';
 import 'entities/inventory_slot.dart';
 import 'entities/item.dart';
 
@@ -402,7 +403,7 @@ final class InventoryManager {
     for (final slotJson in slotsData) {
       final slot = InventorySlot.fromJson(
         slotJson as Map<String, dynamic>,
-        ItemFactoryService.createItem,
+        getIt<ItemFactoryService>().createItem,
       );
 
       if (slot.index >= 0 && slot.index < _slots.length) {

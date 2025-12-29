@@ -4,9 +4,10 @@ import 'package:darkness_dungeon/gameplay/core/modules/save/player_progress_mana
 import 'package:darkness_dungeon/gameplay/core/modules/save/save_data_model.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/time/time_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/inventory/inventory_service_locator.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/item_factory.dart';
+import 'package:darkness_dungeon/gameplay/inventory/services/item_factory_service.dart';
 
 final class GameStateCollector {
   GameStateCollector._();
@@ -104,7 +105,7 @@ final class GameStateCollector {
       if (inventoryState != null) {
         InventoryManager.instance.fromJson(
           inventoryState,
-          ItemFactoryService.createItem,
+          getIt<ItemFactoryService>().createItem,
         );
         developer.log('[GameStateCollector] Inventory state restored');
       } else {
@@ -119,7 +120,7 @@ final class GameStateCollector {
       if (equipmentState != null) {
         EquipmentManager.instance.fromJson(
           equipmentState,
-          ItemFactoryService.createItem,
+          getIt<ItemFactoryService>().createItem,
         );
         developer.log('[GameStateCollector] Equipment state restored');
       } else {
