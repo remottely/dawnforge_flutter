@@ -11,12 +11,15 @@ final class SaveData {
 
   final Map<String, dynamic> inventoryData;
 
+  final Map<String, dynamic>? farmData;
+
   const SaveData({
     required this.version,
     required this.timestamp,
     required this.playerData,
     required this.worldData,
     required this.inventoryData,
+    this.farmData,
   });
 
   factory SaveData.fromJson(Map<String, dynamic> json) {
@@ -42,6 +45,9 @@ final class SaveData {
         inventoryData: Map<String, dynamic>.from(
           data['inventoryData'] as Map? ?? {},
         ),
+        farmData: data['farmData'] != null
+            ? Map<String, dynamic>.from(data['farmData'] as Map)
+            : null,
       );
     } catch (e) {
       return SaveData(
@@ -50,6 +56,7 @@ final class SaveData {
         playerData: {},
         worldData: {},
         inventoryData: {},
+        farmData: null,
       );
     }
   }
@@ -92,6 +99,7 @@ final class SaveData {
       'timestamp': timestamp.toIso8601String(),
       'playerData': playerData,
       'worldData': worldData,
+      if (farmData != null) 'farmData': farmData,
       'inventoryData': inventoryData,
     };
   }
@@ -102,6 +110,7 @@ final class SaveData {
     Map<String, dynamic>? playerData,
     Map<String, dynamic>? worldData,
     Map<String, dynamic>? inventoryData,
+    Map<String, dynamic>? farmData,
   }) {
     return SaveData(
       version: version ?? this.version,
@@ -109,6 +118,7 @@ final class SaveData {
       playerData: playerData ?? this.playerData,
       worldData: worldData ?? this.worldData,
       inventoryData: inventoryData ?? this.inventoryData,
+      farmData: farmData ?? this.farmData,
     );
   }
 
@@ -119,7 +129,8 @@ final class SaveData {
         'timestamp: ${timestamp.toIso8601String()}, '
         'playerData: ${playerData.keys.length} keys, '
         'worldData: ${worldData.keys.length} keys, '
-        'inventoryData: ${inventoryData.keys.length} keys'
+        'inventoryData: ${inventoryData.keys.length} keys, '
+        'farmData: ${farmData?.keys.length ?? 0} keys'
         ')';
   }
 
@@ -132,7 +143,11 @@ final class SaveData {
         other.timestamp == timestamp &&
         _mapsEqual(other.playerData, playerData) &&
         _mapsEqual(other.worldData, worldData) &&
-        _mapsEqual(other.inventoryData, inventoryData);
+        _mapsEqual(other.inventoryData, inventoryData) &&
+        ((other.farmData == null && farmData == null) ||
+            (other.farmData != null &&
+                farmData != null &&
+                _mapsEqual(other.farmData!, farmData!)));
   }
 
   @override
@@ -147,6 +162,11 @@ final class SaveData {
       Object.hashAll(
         inventoryData.entries.map((e) => Object.hash(e.key, e.value)),
       ),
+      farmData != null
+          ? Object.hashAll(
+              farmData!.entries.map((e) => Object.hash(e.key, e.value)),
+            )
+          : 0,
     );
   }
 

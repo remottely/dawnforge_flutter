@@ -1,7 +1,8 @@
 import 'dart:developer' as developer;
 
+import 'package:darkness_dungeon/gameplay/farm/entities/crop.dart';
 import 'package:darkness_dungeon/gameplay/farm/managers/farm_manager.dart';
-import 'package:darkness_dungeon/gameplay/farm/models/crop_model.dart';
+import 'package:darkness_dungeon/gameplay/farm/usecases/till_soil_use_case.dart';
 import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
 import 'package:darkness_dungeon/gameplay/inventory/services/item_factory_service.dart';
 import 'package:darkness_dungeon/gameplay/inventory/usecases/add_item_use_case.dart';
@@ -14,7 +15,8 @@ final class FarmActionService {
   FarmActionResult tillSoil(int x, int y) {
     developer.log('[FarmActionService] Attempting to till soil at ($x, $y)');
 
-    final success = FarmManager.instance.tillSoil(x, y);
+    final success = getIt<TillSoilUseCase>().call(x, y);
+    // final success = getIt<FarmManager>().tillSoil(x, y);
 
     if (success) {
       developer.log('[FarmActionService] ✅ Soil tilled successfully');
@@ -28,7 +30,7 @@ final class FarmActionService {
   FarmActionResult waterTile(int x, int y) {
     developer.log('[FarmActionService] Attempting to water tile at ($x, $y)');
 
-    final success = FarmManager.instance.waterTile(x, y);
+    final success = getIt<FarmManager>().waterTile(x, y);
 
     if (success) {
       developer.log('[FarmActionService] ✅ Tile watered successfully');
@@ -40,12 +42,12 @@ final class FarmActionService {
   }
 
   /// TODO: Integrate with inventory to check for strawberries and consume them.
-  FarmActionResult plantSeed(int x, int y, String cropId) {
+  FarmActionResult plantSeed(int x, int y, Crop crop) {
     developer.log(
-      '[FarmActionService] Attempting to plant $cropId at ($x, $y)',
+      '[FarmActionService] Attempting to plant ${crop.cropId} at ($x, $y)',
     );
 
-    final success = FarmManager.instance.plantSeed(x, y, cropId);
+    final success = getIt<FarmManager>().plantSeed(x, y, crop);
 
     if (success) {
       developer.log('[FarmActionService] ✅ Seed planted successfully');
@@ -59,7 +61,7 @@ final class FarmActionService {
   HarvestResult harvestCrop(int x, int y) {
     developer.log('[FarmActionService] Attempting to harvest at ($x, $y)');
 
-    final crop = FarmManager.instance.harvestCrop(x, y);
+    final crop = getIt<FarmManager>().harvestCrop(x, y);
 
     if (crop == null) {
       developer.log('[FarmActionService] ❌ Nothing to harvest');
@@ -75,7 +77,7 @@ final class FarmActionService {
     return HarvestResult.success(crop: crop, addedToInventory: inventoryResult);
   }
 
-  bool _addHarvestToInventory(CropModel crop) {
+  bool _addHarvestToInventory(Crop crop) {
     final harvestItem = getIt<ItemFactoryService>().createItem(
       crop.harvestItemId,
     );
@@ -118,7 +120,7 @@ final class FarmActionResult {
 
 final class HarvestResult {
   final bool success;
-  final CropModel? crop;
+  final Crop? crop;
   final bool addedToInventory;
 
   const HarvestResult._({
@@ -128,7 +130,7 @@ final class HarvestResult {
   });
 
   factory HarvestResult.success({
-    required CropModel crop,
+    required Crop crop,
     required bool addedToInventory,
   }) => HarvestResult._(
     success: true,

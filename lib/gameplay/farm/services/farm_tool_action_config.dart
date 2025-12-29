@@ -2,6 +2,9 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/offset_helper.dart';
 import 'package:darkness_dungeon/gameplay/farm/components/farm_tile_view.dart';
 import 'package:darkness_dungeon/gameplay/farm/constants/farm_feedback_config.dart';
+import 'package:darkness_dungeon/gameplay/farm/farm_service_locator.dart'
+    as farm_di;
+import 'package:darkness_dungeon/gameplay/farm/services/crop_factory_service.dart';
 import 'package:darkness_dungeon/gameplay/farm/services/farm_action_service.dart';
 import 'package:darkness_dungeon/gameplay/farm/services/farm_feedback_service.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
@@ -13,8 +16,6 @@ import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defen
 
 final class FarmToolActionDef {
   static final FarmActionService _actionService = FarmActionService.instance;
-  static final FarmFeedbackService _feedbackService =
-      FarmFeedbackService.instance;
 
   static void execute({required DDBasePlayerView player}) {
     final attackOffset = OffsetHelper.getCenterOffset(
@@ -87,6 +88,7 @@ final class FarmToolActionDef {
   }
 
   static bool _handleTillSoil(int x, int y) {
+    final _feedbackService = farm_di.getIt<FarmFeedbackService>();
     final result = _actionService.tillSoil(x, y);
     if (result.success) {
       _feedbackService.showFloatingText(FarmFeedbackDef.kSoilTilled);
@@ -95,6 +97,7 @@ final class FarmToolActionDef {
   }
 
   static bool _handleWater(int x, int y) {
+    final _feedbackService = farm_di.getIt<FarmFeedbackService>();
     final result = _actionService.waterTile(x, y);
     if (result.success) {
       _feedbackService.showFloatingText(FarmFeedbackDef.kCropWatered);
@@ -107,7 +110,17 @@ final class FarmToolActionDef {
     required int x,
     required int y,
   }) {
-    final result = _actionService.plantSeed(x, y, cropId);
+    final _feedbackService = farm_di.getIt<FarmFeedbackService>();
+    final _cropFactory = farm_di.getIt<CropFactoryService>();
+    
+    // Create crop from cropId
+    final crop = _cropFactory.createCrop(cropId);
+    if (crop == null) {
+      _feedbackService.showFloatingText(FarmFeedbackDef.kCannotPlant);
+      return false;
+    }
+    
+    final result = _actionService.plantSeed(x, y, crop);
     if (result.success) {
       _feedbackService.showFloatingText(FarmFeedbackDef.kSeedPlanted);
     } else {
@@ -117,6 +130,7 @@ final class FarmToolActionDef {
   }
 
   static bool _handleHarvest(BonfireGameInterface gameRef, int x, int y) {
+    final _feedbackService = farm_di.getIt<FarmFeedbackService>();
     final result = _actionService.harvestCrop(x, y);
 
     if (result.success && result.crop != null) {

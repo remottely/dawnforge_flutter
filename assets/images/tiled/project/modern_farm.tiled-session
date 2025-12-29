@@ -171,8 +171,8 @@
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/maps/farm.json": {
             "expandedObjectLayers": [
-                3,
-                5
+                5,
+                3
             ],
             "scale": 2.5506,
             "selectedLayer": 1,

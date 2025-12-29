@@ -4,7 +4,11 @@ import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager
 import 'package:darkness_dungeon/gameplay/core/modules/save/save_data_model.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/save/save_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/farm/farm_service_locator.dart'
+    as farm_di;
 import 'package:darkness_dungeon/gameplay/farm/managers/farm_manager.dart';
+import 'package:darkness_dungeon/gameplay/farm/usecases/load_farm_use_case.dart';
+import 'package:darkness_dungeon/gameplay/farm/usecases/save_farm_use_case.dart';
 import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/services/item_factory_service.dart';
@@ -94,7 +98,7 @@ final class GameSaveController {
 
       PlayerStateManager.instance.reset();
       InventoryManager.instance.clear();
-      FarmManager.instance.reset();
+      getIt<FarmManager>().reset();
       WorldStateManager.instance.reset();
 
       developer.log('[GameSaveController] ✅ All managers reset');
@@ -137,8 +141,8 @@ final class GameSaveController {
   }
 
   Map<String, dynamic> _collectFarmData() {
-    final farm = FarmManager.instance;
-    return farm.toJson();
+    final saveFarmUseCase = farm_di.getIt<SaveFarmUseCase>();
+    return saveFarmUseCase.call();
   }
 
   void _restorePlayerData(Map<String, dynamic> data) {
@@ -178,8 +182,8 @@ final class GameSaveController {
         return;
       }
 
-      final farm = FarmManager.instance;
-      farm.fromJson(data);
+      final loadFarmUseCase = farm_di.getIt<LoadFarmUseCase>();
+      loadFarmUseCase.call(data);
       developer.log('[GameSaveController] Farm state restored');
     } catch (e) {
       developer.log('[GameSaveController] Error restoring farm data: $e');

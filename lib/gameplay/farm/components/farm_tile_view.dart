@@ -3,13 +3,13 @@ import 'dart:ui';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/farm/entities/crop_stage.dart';
+import 'package:darkness_dungeon/gameplay/farm/entities/farm_tile.dart';
+import 'package:darkness_dungeon/gameplay/farm/entities/soil_state.dart';
+import 'package:darkness_dungeon/gameplay/farm/farm_service_locator.dart';
 import 'package:darkness_dungeon/gameplay/farm/managers/farm_manager.dart';
-import 'package:darkness_dungeon/gameplay/farm/models/crop_stage_model.dart';
-import 'package:darkness_dungeon/gameplay/farm/models/farm_tile_model.dart'
-    as model;
-import 'package:darkness_dungeon/gameplay/farm/models/farm_tile_model.dart';
 import 'package:darkness_dungeon/gameplay/farm/models/soil_sprite_config.dart';
-import 'package:darkness_dungeon/gameplay/farm/models/soil_state_model.dart';
+import 'package:darkness_dungeon/gameplay/farm/usecases/till_soil_use_case.dart';
 import 'package:darkness_dungeon/shared/framework/interaction/dd_tool_interactable_mixin.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 
@@ -19,23 +19,25 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   final int tileX;
   final int tileY;
 
-  late FarmTileModel farmTile;
+  late FarmTile farmTile;
 
   SpriteComponent? _soilSprite;
   GameDecoration? _cropDecoration;
   SpriteComponent? _cropSpriteGround;
   bool _isHighlighted = false;
 
-  SoilStateModel? _lastRenderedSoilState;
+  SoilState? _lastRenderedSoilState;
   String? _lastRenderedCropKey;
 
   FarmTileView({required Vector2 position})
     : tileX = (position.x / 16).floor(),
       tileY = (position.y / 16).floor(),
       super(position: position, size: TileConstants.tileSizeStandard) {
+    // Garante que o tile existe no manager
     final existingTile = FarmManager.instance.getTile(tileX, tileY);
     if (existingTile == null) {
-      final newTile = model.FarmTileModel(x: tileX, y: tileY);
+      // Cria um novo tile vazio
+      final newTile = FarmTile(x: tileX, y: tileY);
       FarmManager.instance.setTile(newTile);
     }
   }
@@ -49,7 +51,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
     // Carrega a configuração de sprites de solo apenas uma vez
     _soilConfig ??= await SoilSpriteConfig.load();
 
-    farmTile = FarmManager.instance.getTile(tileX, tileY)!;
+    farmTile = getIt<FarmManager>().getTile(tileX, tileY)!;
 
     final soilSprite = await _loadSoilSpriteFromSheet();
     _soilSprite = SpriteComponent(
@@ -101,7 +103,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
         size: cropSize,
       );
 
-      if (crop.stage == CropStageModel.withered) {
+      if (crop.stage == CropStage.withered) {
         _cropDecoration!.opacity = 0.5;
       }
 
@@ -120,7 +122,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
         priority: 1,
       );
 
-      if (crop.stage == CropStageModel.withered) {
+      if (crop.stage == CropStage.withered) {
         _cropSpriteGround!.opacity = 0.5;
       }
 
@@ -144,7 +146,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   void update(double dt) {
     super.update(dt);
 
-    final currentTile = FarmManager.instance.getTile(tileX, tileY);
+    final currentTile = getIt<FarmManager>().getTile(tileX, tileY);
     if (currentTile != null) {
       if (currentTile.soilState != _lastRenderedSoilState ||
           currentTile.crop?.cropId != _lastRenderedCropKey) {}
@@ -258,8 +260,8 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   /// - youngPlant(2), growing1(3) → frame 1
   /// - growing2(4), growing3(5) → frame 2
   /// - mature(6), withered(7) → frame 3
-  int _getFrameIndexForStage(CropStageModel stage, int availableFrames) {
-    const totalStages = 8; // Total de estágios possíveis em CropStageModel
+  int _getFrameIndexForStage(CropStage stage, int availableFrames) {
+    const totalStages = 8; // Total de estágios possíveis em CropStage
     final stageIndex = stage.index;
 
     // Mapeia proporcionalmente o índice do estágio para os frames disponíveis
@@ -296,7 +298,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
     canvas.drawRect(size.toRect(), paint);
   }
 
-  Future<void> updateTile(FarmTileModel newTile) async {
+  Future<void> updateTile(FarmTile newTile) async {
     farmTile = newTile;
     await _updateSpritesIfNeeded();
   }
@@ -313,12 +315,13 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   }) {
     if (tool != ToolType.shovel) return;
 
-    final success = FarmManager.instance.tillSoil(farmTile.x, farmTile.y);
+    // Usa o UseCase através do GetIt (nova arquitetura)
+    final tillSoilUseCase = getIt<TillSoilUseCase>();
+    final success = tillSoilUseCase.call(farmTile.x, farmTile.y);
+
     if (success) {
-      final updated = FarmManager.instance.getTile(farmTile.x, farmTile.y);
-      if (updated != null) {
-        updateTile(updated);
-      }
+      final updated = getIt<FarmManager>().getTile(farmTile.x, farmTile.y);
+      if (updated != null) updateTile(updated);
     }
   }
 

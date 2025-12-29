@@ -5,6 +5,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.d
 import 'package:darkness_dungeon/gameplay/core/modules/save/game_save_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/farm/constants/farm_feedback_config.dart';
+import 'package:darkness_dungeon/gameplay/farm/farm_service_locator.dart';
 import 'package:darkness_dungeon/gameplay/farm/managers/farm_manager.dart';
 import 'package:darkness_dungeon/gameplay/farm/services/farm_feedback_service.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
@@ -14,13 +15,14 @@ import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defen
 class FarmInputHandler extends GameComponent with PlayerControllerListener {
   final DDBasePlayerView player;
   final PlayerController playerController;
-  final FarmFeedbackService _feedbackService = FarmFeedbackService.instance;
+  late final FarmFeedbackService _feedbackService;
 
   FarmInputHandler({required this.player, required this.playerController});
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
+    _feedbackService = getIt<FarmFeedbackService>();
     playerController.addObserver(this);
   }
 
@@ -43,7 +45,7 @@ class FarmInputHandler extends GameComponent with PlayerControllerListener {
 
   void _handleAdvanceDay() {
     WorldStateManager.instance.advanceDay();
-    FarmManager.instance.advanceDay();
+    getIt<FarmManager>().advanceDay();
 
     final currentDay = WorldStateManager.instance.currentDay;
     developer.log('[FarmInput] Advanced to day $currentDay');

@@ -4,7 +4,12 @@ import 'package:darkness_dungeon/gameplay/core/modules/save/player_progress_mana
 import 'package:darkness_dungeon/gameplay/core/modules/save/save_data_model.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/time/time_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
+import 'package:darkness_dungeon/gameplay/farm/farm_service_locator.dart'
+    as farm_di;
+import 'package:darkness_dungeon/gameplay/farm/usecases/load_farm_use_case.dart';
+import 'package:darkness_dungeon/gameplay/farm/usecases/save_farm_use_case.dart';
+import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart'
+    as inv_di;
 import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/services/item_factory_service.dart';
@@ -20,6 +25,10 @@ final class GameStateCollector {
     final progressState = PlayerProgressManager.instance.toJson();
     final inventoryState = InventoryManager.instance.toJson();
     final equipmentState = EquipmentManager.instance.toJson();
+
+    // Farm state using SaveFarmUseCase (E2)
+    final saveFarmUseCase = farm_di.getIt<SaveFarmUseCase>();
+    final farmData = saveFarmUseCase.call();
 
     final worldData = {
       'world': worldState,
@@ -38,6 +47,7 @@ final class GameStateCollector {
       playerData: {'_placeholder': true},
       worldData: worldData,
       inventoryData: inventoryData,
+      farmData: farmData,
     );
 
     developer.log(
@@ -66,6 +76,7 @@ final class GameStateCollector {
 
       final worldData = saveData.worldData;
       final inventoryData = saveData.inventoryData;
+      final farmData = saveData.farmData;
 
       final worldState = worldData['world'] as Map<String, dynamic>?;
       if (worldState != null) {
@@ -105,7 +116,7 @@ final class GameStateCollector {
       if (inventoryState != null) {
         InventoryManager.instance.fromJson(
           inventoryState,
-          getIt<ItemFactoryService>().createItem,
+          inv_di.getIt<ItemFactoryService>().createItem,
         );
         developer.log('[GameStateCollector] Inventory state restored');
       } else {
@@ -120,7 +131,7 @@ final class GameStateCollector {
       if (equipmentState != null) {
         EquipmentManager.instance.fromJson(
           equipmentState,
-          getIt<ItemFactoryService>().createItem,
+          inv_di.getIt<ItemFactoryService>().createItem,
         );
         developer.log('[GameStateCollector] Equipment state restored');
       } else {
@@ -129,7 +140,19 @@ final class GameStateCollector {
           level: 500,
         );
       }
+// Farm state using LoadFarmUseCase (E2)
+      if (farmData != null) {
+        final loadFarmUseCase = farm_di.getIt<LoadFarmUseCase>();
+        loadFarmUseCase.call(farmData);
+        developer.log('[GameStateCollector] Farm state restored');
+      } else {
+        developer.log(
+          '[GameStateCollector] No farm state data found',
+          level: 500,
+        );
+      }
 
+      
       developer.log(
         '[GameStateCollector] Game state restored successfully: '
         'Day ${WorldStateManager.instance.currentDay}, '
@@ -146,6 +169,7 @@ final class GameStateCollector {
         error: e,
         stackTrace: stackTrace,
         level: 1000,
+    // Note: getIt<FarmManager>().reset() should be called if needed
       );
       return false;
     }

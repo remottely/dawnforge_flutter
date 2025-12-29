@@ -1,67 +1,62 @@
 import 'dart:developer' as developer;
 
-import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
-import 'package:darkness_dungeon/gameplay/farm/data/farm_tile_store.dart';
-import 'package:darkness_dungeon/gameplay/farm/domain/farm_rule_engine.dart';
-import 'package:darkness_dungeon/gameplay/farm/models/crop_model.dart';
-import 'package:darkness_dungeon/gameplay/farm/models/farm_tile_model.dart';
+import 'package:flutter/foundation.dart';
 
-final class FarmManager {
-  FarmManager._();
+import '../../core/modules/world/world_state_manager.dart';
+import '../entities/crop.dart';
+import '../entities/farm_tile.dart';
+import '../entities/soil_state.dart';
+
+/// Manager for farm state (C1: Singleton + ValueNotifier, I2: Manager = Singleton State)
+class FarmManager {
+  FarmManager._() {
+    _initializeTiles();
+    developer.log('[FarmManager] Initialized');
+  }
 
   static final instance = FarmManager._();
 
-  final FarmTileStore _store = FarmTileStore();
-  final FarmRuleEngine _rules = const FarmRuleEngine();
+  final Map<String, FarmTile> _tiles = {}; // key: "x,y"
 
-  FarmTileModel? getTile(int x, int y) {
-    return _store.getTile(x, y);
+  /// C1: ValueNotifier para reatividade
+  late final ValueNotifier<Map<String, FarmTile>> tilesNotifier;
+
+  /// J3: ValueNotifiers para cross-module communication
+  final ValueNotifier<FarmTile?> lastTilledNotifier = ValueNotifier(null);
+  final ValueNotifier<Crop?> lastHarvestedNotifier = ValueNotifier(null);
+
+  void _initializeTiles() {
+    // Initialize with empty tiles if needed
+    // For now, tiles are created on-demand
+    tilesNotifier = ValueNotifier(Map.unmodifiable(_tiles));
+    developer.log('[FarmManager] Tiles initialized');
   }
 
-  void setTile(FarmTileModel tile) {
-    _store.saveTile(tile);
+  void notifyChange() {
+    tilesNotifier.value = Map.unmodifiable(_tiles);
+    developer.log('[FarmManager] Notifying tile changes');
   }
 
-  List<FarmTileModel> getAllTiles() => _store.getAllTiles();
+  String _makeKey(int x, int y) => '$x,$y';
 
-  void clearAll() {
-    _store.clear();
-    developer.log('[FarmManager] All tiles cleared');
+  /// Get a tile at specific coordinates
+  FarmTile? getTile(int x, int y) {
+    return _tiles[_makeKey(x, y)];
   }
 
-  void reset() {
-    _store.clear();
-    developer.log('[FarmManager] Farm state reset');
+  /// Get all tiles
+  List<FarmTile> getAllTiles() {
+    return _tiles.values.toList();
   }
 
-  bool tillSoil(int x, int y) {
-    developer.log('[FarmManager] Tilling soil at ($x, $y)');
-
-    // TODO(Kevin): Validar que player tem enxada equipada
-    // if (!_playerHasTool('hoe')) {
-    //   developer.log('[FarmManager] Player needs hoe');
-    //   return false;
-    // }
-
-    final tile = _rules.ensureTile(getTile(x, y), x: x, y: y);
-    final updatedTile = _rules.till(tile);
-    if (updatedTile == null) {
-      return false;
-    }
-
-    _store.saveTile(updatedTile);
-    developer.log('[FarmManager] ✓ Soil tilled successfully');
-    return true;
+  /// Update or create a tile
+  void setTile(FarmTile tile) {
+    _tiles[_makeKey(tile.x, tile.y)] = tile;
   }
 
+  /// Water tile at coordinates
   bool waterTile(int x, int y) {
     developer.log('[FarmManager] Watering tile at ($x, $y)');
-
-    // TODO(Kevin): Validar que player tem regador equipado
-    // if (!_playerHasTool('watering_can')) {
-    //   developer.log('[FarmManager] Player needs watering can');
-    //   return false;
-    // }
 
     final tile = getTile(x, y);
     if (tile == null) {
@@ -69,97 +64,164 @@ final class FarmManager {
       return false;
     }
 
-    final updatedTile = _rules.water(tile);
-    if (updatedTile == null) {
+    if (tile.soilState == SoilState.untilled) {
+      developer.log('[FarmManager] Cannot water untilled soil');
       return false;
     }
 
-    _store.saveTile(updatedTile);
+    if (tile.soilState == SoilState.watered) {
+      developer.log('[FarmManager] Tile already watered');
+      return false;
+    }
+
+    final currentDay = WorldStateManager.instance.currentDay;
+    final wateredTile = tile.water(currentDay);
+
+    setTile(wateredTile);
+    notifyChange();
+
     developer.log('[FarmManager] ✓ Tile watered successfully');
     return true;
   }
 
-  bool plantSeed(int x, int y, String cropId) {
-    developer.log('[FarmManager] Planting $cropId at ($x, $y)');
-
-    // TODO(Kevin): Validar que player tem seed no inventário
-    // if (!InventoryManager.instance.hasItem(seedItemId, 1)) {
-    //   developer.log('[FarmManager] Player does not have seed');
-    //   return false;
-    // }
-
-    // TODO(Kevin): Validar estação atual
-    // final currentSeason = WorldStateManager.instance.currentSeason;
+  /// Plant a crop at coordinates
+  bool plantSeed(int x, int y, Crop crop) {
+    developer.log('[FarmManager] Planting ${crop.name} at ($x, $y)');
 
     final tile = getTile(x, y);
-    if (tile == null || !tile.canPlant) {
-      developer.log('[FarmManager] Cannot plant on this tile');
+    if (tile == null) {
+      developer.log('[FarmManager] No tile at ($x, $y)');
       return false;
     }
 
-    final updatedTile = _rules.plant(tile, cropId);
-    if (updatedTile == null) {
+    if (!tile.canPlant) {
+      if (tile.isOccupied) {
+        developer.log('[FarmManager] Tile already has a crop');
+      } else {
+        developer.log('[FarmManager] Soil not prepared for planting');
+      }
       return false;
     }
 
-    _store.saveTile(updatedTile);
+    final plantedTile = tile.plant(crop);
+    setTile(plantedTile);
+    notifyChange();
 
-    // TODO(Kevin): Remover seed do inventário
-    // InventoryManager.instance.removeItem(seedItemId, 1);
-
-    developer.log('[FarmManager] ✓ Seed planted successfully');
+    developer.log('[FarmManager] ✓ ${crop.name} planted successfully');
     return true;
   }
 
-  CropModel? harvestCrop(int x, int y) {
+  /// Harvest crop at coordinates
+  Crop? harvestCrop(int x, int y) {
     developer.log('[FarmManager] Harvesting crop at ($x, $y)');
 
     final tile = getTile(x, y);
-    if (tile == null || !tile.canHarvest) {
-      developer.log('[FarmManager] Nothing to harvest');
+    if (tile == null) {
+      developer.log('[FarmManager] No tile at ($x, $y)');
       return null;
     }
 
-    final result = _rules.harvest(tile);
-    if (result == null) {
+    if (!tile.canHarvest) {
+      if (tile.isEmpty) {
+        developer.log('[FarmManager] No crop to harvest');
+      } else {
+        developer.log('[FarmManager] Crop not ready to harvest');
+      }
       return null;
     }
 
-    _store.saveTile(result.updatedTile);
+    final harvestedCrop = tile.crop!;
+    final harvestedTile = tile.harvest();
+
+    setTile(harvestedTile);
+    lastHarvestedNotifier.value =
+        harvestedCrop; // J3: Cross-module notification
+    notifyChange();
 
     developer.log(
-      '[FarmManager] ✓ Harvested ${result.harvestedCrop.yieldAmount}x ${result.harvestedCrop.name}',
+      '[FarmManager] ✓ Harvested ${harvestedCrop.yieldAmount}x ${harvestedCrop.name}',
     );
-    return result.harvestedCrop;
+    return harvestedCrop;
   }
 
+  /// Advance day for all crops
   void advanceDay() {
     developer.log('[FarmManager] Advancing all crops for new day');
 
     final dayEnded = WorldStateManager.instance.currentDay - 1;
-
     var cropsGrown = 0;
-    final tiles = _store.getAllTiles();
-    for (final oldTile in tiles) {
-      final beforeDays = oldTile.crop?.daysPlanted;
-      final newTile = _rules.advanceDay(oldTile, dayEnded);
-      final afterDays = newTile.crop?.daysPlanted;
 
-      if (beforeDays != null && afterDays != null && afterDays > beforeDays) {
-        cropsGrown++;
+    for (final tile in _tiles.values.toList()) {
+      final advancedTile = tile.advanceDay(dayEnded);
+      
+      // Track crop growth
+      if (tile.crop != null && advancedTile.crop != null) {
+        final beforeDays = tile.crop!.daysPlanted;
+        final afterDays = advancedTile.crop!.daysPlanted;
+        
+        if (afterDays > beforeDays) {
+          cropsGrown++;
+        }
       }
 
-      _store.saveTile(newTile);
+      setTile(advancedTile);
     }
+
+    notifyChange();
 
     developer.log(
       '[FarmManager] ✓ Advanced $cropsGrown crops for day $dayEnded',
     );
   }
 
-  Map<String, dynamic> toJson() => _store.toJson();
+  /// Serialization (E2)
+  Map<String, dynamic> toJson() {
+    final tilesData = _tiles.values.map((t) => t.toJson()).toList();
 
-  void fromJson(Map<String, dynamic> json) {
-    _store.fromJson(json);
+    return {'tiles': tilesData};
+  }
+
+  /// Deserialization (E2)
+  void fromJson(
+    Map<String, dynamic> json,
+    Crop? Function(String cropId) cropFactory,
+  ) {
+    _tiles.clear();
+
+    final tilesData = json['tiles'] as List<dynamic>?;
+    if (tilesData == null) {
+      developer.log('[FarmManager] No tiles to load');
+      notifyChange();
+      return;
+    }
+
+    for (final tileJson in tilesData) {
+      final tile = FarmTile.fromJson(
+        tileJson as Map<String, dynamic>,
+        cropFactory,
+      );
+      setTile(tile);
+    }
+
+    developer.log('[FarmManager] Loaded ${_tiles.length} tiles from JSON');
+    notifyChange();
+  }
+
+  /// Clear all tiles
+  void clear() {
+    _tiles.clear();
+    lastTilledNotifier.value = null;
+    lastHarvestedNotifier.value = null;
+    notifyChange();
+    developer.log('[FarmManager] All tiles cleared');
+  }
+
+  /// Reset farm state
+  void reset() {
+    _tiles.clear();
+    lastTilledNotifier.value = null;
+    lastHarvestedNotifier.value = null;
+    notifyChange();
+    developer.log('[FarmManager] Farm state reset');
   }
 }

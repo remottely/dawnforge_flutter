@@ -92,7 +92,6 @@ lib/gameplay/farm/
 
 ### **PROMPT 1: Criar Entities (D2)**
 
-```
 Com base na arquitetura D2 (Entity com Serialização), crie as entities no módulo farm seguindo o padrão usado no módulo inventory.
 
 Analise os arquivos existentes:
@@ -129,13 +128,12 @@ Certifique-se de:
 - Adicionar métodos de serialização completos
 - Usar padrão similar ao inventory/entities/item.dart
 - Manter lógica de negócio nas entities (ex: canPlant, needsWater, isReadyToHarvest)
-```
 
 ---
 
 ### **PROMPT 2: Criar Services (I2, L2)**
 
-```
+
 Com base na arquitetura I2 (Manager/UseCase/Service naming) e L2 (Factory com Database JSON), crie os serviços no módulo farm.
 
 Analise os arquivos existentes:
@@ -175,13 +173,11 @@ Certifique-se de:
 - Services são classes NÃO-FINAL (para permitir mock com Mocktail)
 - Não têm estado interno
 - Recebem dependências via construtor
-```
 
 ---
 
 ### **PROMPT 3: Refatorar Manager (C1, J3)**
 
-```
 Com base na arquitetura C1 (Singleton + ValueNotifier) e J3 (ValueNotifier cross-module), refatore o FarmManager.
 
 Analise o arquivo existente:
@@ -249,13 +245,11 @@ Certifique-se de:
 - Chamar _notifyChange() após cada modificação
 - Adicionar logs com developer.log
 - Validações antes de modificar estado
-```
 
 ---
 
 ### **PROMPT 4: Criar UseCases (B1)**
 
-```
 Com base na arquitetura B1 (UseCases Concretos), crie os casos de uso do módulo farm.
 
 Crie em lib/gameplay/farm/usecases/:
@@ -365,13 +359,11 @@ Certifique-se de:
 - Recebem dependências via construtor
 - Lógica de negócio fica nos UseCases, não nos Managers
 - Adicionar logs para debug
-```
 
 ---
 
 ### **PROMPT 5: Criar ViewModel (F2)**
 
-```
 Com base na arquitetura F2 (ViewModel intermediário), crie o ViewModel para UI do farm.
 
 Crie em lib/gameplay/farm/viewmodels/farm_view_model.dart:
@@ -460,13 +452,11 @@ Certifique-se de:
 - Expõe métodos para ações da UI
 - Escuta mudanças do Manager
 - Implementa dispose corretamente
-```
 
 ---
 
 ### **PROMPT 6: Setup GetIt (H1)**
 
-```
 Com base na arquitetura H1 (Service Locator GetIt), crie o setup de dependências do farm.
 
 Crie em lib/gameplay/farm/farm_service_locator.dart:
@@ -551,13 +541,11 @@ Certifique-se de:
 - Managers registrados como Singleton
 - UseCases registrados como Factory
 - Ordem de registro respeita dependências
-```
 
 ---
 
 ### **PROMPT 7: Criar Testes (G2)**
 
-```
 Com base na arquitetura G2 (Mocktail), crie testes unitários para os UseCases do farm.
 
 Crie em test/gameplay/farm/:
@@ -615,13 +603,11 @@ Certifique-se de:
 - Registrar fallback values com registerFallbackValue se necessário
 - Testar casos de sucesso e falha
 - Verificar chamadas aos mocks com verify()
-```
 
 ---
 
 ### **PROMPT 8: Atualizar Arquivos Existentes**
 
-```
 Atualize os arquivos existentes para usar a nova arquitetura:
 
 1. **lib/gameplay/farm/handlers/farm_input_handler.dart**
@@ -665,13 +651,11 @@ Certifique-se de:
 - Todos os imports atualizados
 - Nenhuma referência direta aos models/ antigos
 - Uso consistente de GetIt
-```
 
 ---
 
 ### **PROMPT 9: Criar Constantes (K1)**
 
-```
 Com base na arquitetura K1 (Constantes locais ao módulo), crie as constantes do farm.
 
 Crie em lib/gameplay/farm/constants/farm_constants.dart:
@@ -713,13 +697,11 @@ Certifique-se de:
 - Constantes agrupadas logicamente
 - Prefixo 'k' para identificar constantes
 - Comentários explicativos
-```
 
 ---
 
 ### **PROMPT 10: Validação Final**
 
-```
 Execute a validação final da refatoração do módulo farm:
 
 1. **Análise de Código**
@@ -762,7 +744,6 @@ Execute a validação final da refatoração do módulo farm:
    - [ ] Widgets usam FarmViewModel
 
 Se tudo passar, a refatoração está completa! ✅
-```
 
 ---
 

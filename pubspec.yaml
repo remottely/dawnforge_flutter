@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.74.8+1
+version: 1.75.0+1
 
 environment:
   sdk: ^3.8.1
@@ -244,7 +244,7 @@ flutter:
     - assets/audio/sfx/sfx_player_attack.mp3
 
     # TODO
-    - assets/ui/game_over.png
+    - assets/images/ui/game_over.png
     - assets/images/tiled/sv/maps/sv_farm.json
     - assets/images/tiled/sv/maps/sv_town.json
     - assets/images/tiled/f/maps/f_1.json
