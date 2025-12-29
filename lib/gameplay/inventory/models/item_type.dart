@@ -3,7 +3,7 @@ enum ItemType {
   tool,
   consumable,
   material,
-  seed,
+  cropSeed,
   equipment,
   quest,
   treasure;

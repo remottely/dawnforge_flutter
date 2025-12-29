@@ -15,7 +15,7 @@ final class SeedItem extends Item {
     required super.baseValue,
     required super.iconPath,
     super.rarity = ItemRarity.common,
-    super.type = ItemType.seed,
+    super.type = ItemType.cropSeed,
     super.isStackable = true,
     super.maxStackSize = 99,
     super.iconData,

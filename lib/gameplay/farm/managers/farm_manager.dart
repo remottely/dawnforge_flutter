@@ -3,7 +3,7 @@ import 'dart:developer' as developer;
 import 'package:flutter/foundation.dart';
 
 import '../../core/modules/world/world_state_manager.dart';
-import '../entities/crop.dart';
+import '../entities/crop/crop_entity.dart';
 import '../entities/farm_tile.dart';
 import '../entities/soil_state.dart';
 
@@ -23,7 +23,7 @@ class FarmManager {
 
   /// J3: ValueNotifiers para cross-module communication
   final ValueNotifier<FarmTile?> lastTilledNotifier = ValueNotifier(null);
-  final ValueNotifier<Crop?> lastHarvestedNotifier = ValueNotifier(null);
+  final ValueNotifier<CropEntity?> lastHarvestedNotifier = ValueNotifier(null);
 
   void _initializeTiles() {
     // Initialize with empty tiles if needed
@@ -85,7 +85,7 @@ class FarmManager {
   }
 
   /// Plant a crop at coordinates
-  bool plantSeed(int x, int y, Crop crop) {
+  bool plantSeed(int x, int y, CropEntity crop) {
     developer.log('[FarmManager] Planting ${crop.name} at ($x, $y)');
 
     final tile = getTile(x, y);
@@ -112,7 +112,7 @@ class FarmManager {
   }
 
   /// Harvest crop at coordinates
-  Crop? harvestCrop(int x, int y) {
+  CropEntity? harvestCrop(int x, int y) {
     developer.log('[FarmManager] Harvesting crop at ($x, $y)');
 
     final tile = getTile(x, y);
@@ -184,7 +184,7 @@ class FarmManager {
   /// Deserialization (E2)
   void fromJson(
     Map<String, dynamic> json,
-    Crop? Function(String cropId) cropFactory,
+    CropEntity? Function(String cropId) cropFactory,
   ) {
     _tiles.clear();
 

@@ -120,7 +120,7 @@ class ItemFactoryService {
             iconData: iconData,
           );
 
-        case ItemType.seed:
+        case ItemType.cropSeed:
           final item = SeedItem.fromJson(itemData);
           return SeedItem(
             id: item.id,

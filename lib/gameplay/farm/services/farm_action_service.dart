@@ -1,6 +1,6 @@
 import 'dart:developer' as developer;
 
-import 'package:darkness_dungeon/gameplay/farm/entities/crop.dart';
+import 'package:darkness_dungeon/gameplay/farm/entities/crop/crop_entity.dart';
 import 'package:darkness_dungeon/gameplay/farm/managers/farm_manager.dart';
 import 'package:darkness_dungeon/gameplay/farm/usecases/till_soil_use_case.dart';
 import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
@@ -42,7 +42,7 @@ final class FarmActionService {
   }
 
   /// TODO: Integrate with inventory to check for strawberries and consume them.
-  FarmActionResult plantSeed(int x, int y, Crop crop) {
+  FarmActionResult plantSeed(int x, int y, CropEntity crop) {
     developer.log(
       '[FarmActionService] Attempting to plant ${crop.cropId} at ($x, $y)',
     );
@@ -77,7 +77,7 @@ final class FarmActionService {
     return HarvestResult.success(crop: crop, addedToInventory: inventoryResult);
   }
 
-  bool _addHarvestToInventory(Crop crop) {
+  bool _addHarvestToInventory(CropEntity crop) {
     final harvestItem = getIt<ItemFactoryService>().createItem(
       crop.harvestItemId,
     );
@@ -120,7 +120,7 @@ final class FarmActionResult {
 
 final class HarvestResult {
   final bool success;
-  final Crop? crop;
+  final CropEntity? crop;
   final bool addedToInventory;
 
   const HarvestResult._({
@@ -130,7 +130,7 @@ final class HarvestResult {
   });
 
   factory HarvestResult.success({
-    required Crop crop,
+    required CropEntity crop,
     required bool addedToInventory,
   }) => HarvestResult._(
     success: true,

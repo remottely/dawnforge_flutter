@@ -3,8 +3,8 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/services.dart' show rootBundle;
 
-import '../entities/crop.dart';
-import '../entities/crop_stage.dart';
+import '../entities/crop/crop_entity.dart';
+import '../entities/crop/crop_stage_type.dart';
 
 /// Service for creating crops from JSON database (L2: Factory with JSON database, I2: Service = stateless)
 class CropFactoryService {
@@ -43,7 +43,7 @@ class CropFactoryService {
   }
 
   /// Create a crop instance from the database by cropId
-  Crop? createCrop(String cropId) {
+  CropEntity? createCrop(String cropId) {
     if (!_isInitialized) {
       developer.log(
         '[CropFactoryService] ERROR: Not initialized! Call initialize() first',
@@ -58,11 +58,11 @@ class CropFactoryService {
     }
 
     try {
-      return Crop(
+      return CropEntity(
         cropId: cropId,
         name: cropData['name'] as String,
         description: cropData['description'] as String,
-        stage: CropStage.seed,
+        stage: CropStageType.planted,
         daysPlanted: 0,
         daysToMature: cropData['daysToMature'] as int,
         yieldAmount: cropData['yieldAmount'] as int,
@@ -74,7 +74,7 @@ class CropFactoryService {
         spriteRowIndex: cropData['spriteRowIndex'] as int,
         framesCount: cropData['framesCount'] as int,
         skipFirstFrames: (cropData['skipFirstFrames'] as int?) ?? 0,
-        ySortingFromStage: CropStage.fromJson(
+        ySortingFromStage: CropStageType.fromJson(
           (cropData['ySortingFromStage'] as String?) ?? 'seed',
         ),
       );

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'crop.dart';
+import 'crop/crop_entity.dart';
 import 'soil_state.dart';
 
 /// Entity representing a tile in the farm (D2: Entity with Serialization)
@@ -8,7 +8,7 @@ final class FarmTile extends Equatable {
   final int x;
   final int y;
   final SoilState soilState;
-  final Crop? crop;
+  final CropEntity? crop;
   final int? lastWateredDay;
 
   const FarmTile({
@@ -54,7 +54,7 @@ final class FarmTile extends Equatable {
   }
 
   /// Plant a crop on this tile
-  FarmTile plant(Crop newCrop) {
+  FarmTile plant(CropEntity newCrop) {
     if (!canPlant) return this;
     return copyWith(crop: newCrop);
   }
@@ -114,14 +114,14 @@ final class FarmTile extends Equatable {
   /// Deserialization (D2)
   static FarmTile fromJson(
     Map<String, dynamic> json,
-    Crop? Function(String cropId) cropResolver,
+    CropEntity? Function(String cropId) cropResolver,
   ) {
     final cropData = json['crop'] as Map<String, dynamic>?;
     return FarmTile(
       x: json['x'] as int,
       y: json['y'] as int,
       soilState: SoilState.fromJson(json['soilState'] as String),
-      crop: cropData != null ? Crop.fromJson(cropData) : null,
+      crop: cropData != null ? CropEntity.fromJson(cropData) : null,
       lastWateredDay: json['lastWateredDay'] as int?,
     );
   }
@@ -131,7 +131,7 @@ final class FarmTile extends Equatable {
     int? x,
     int? y,
     SoilState? soilState,
-    Crop? crop,
+    CropEntity? crop,
     int? lastWateredDay,
   }) {
     return FarmTile(

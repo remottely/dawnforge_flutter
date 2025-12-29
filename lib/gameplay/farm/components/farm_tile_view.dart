@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
-import 'package:darkness_dungeon/gameplay/farm/entities/crop_stage.dart';
+import 'package:darkness_dungeon/gameplay/farm/entities/crop/crop_stage_type.dart';
 import 'package:darkness_dungeon/gameplay/farm/entities/farm_tile.dart';
 import 'package:darkness_dungeon/gameplay/farm/entities/soil_state.dart';
 import 'package:darkness_dungeon/gameplay/farm/farm_service_locator.dart';
@@ -103,7 +103,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
         size: cropSize,
       );
 
-      if (crop.stage == CropStage.withered) {
+      if (crop.stage == CropStageType.dead) {
         _cropDecoration!.opacity = 0.5;
       }
 
@@ -122,7 +122,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
         priority: 1,
       );
 
-      if (crop.stage == CropStage.withered) {
+      if (crop.stage == CropStageType.dead) {
         _cropSpriteGround!.opacity = 0.5;
       }
 
@@ -260,7 +260,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   /// - youngPlant(2), growing1(3) → frame 1
   /// - growing2(4), growing3(5) → frame 2
   /// - mature(6), withered(7) → frame 3
-  int _getFrameIndexForStage(CropStage stage, int availableFrames) {
+  int _getFrameIndexForStage(CropStageType stage, int availableFrames) {
     const totalStages = 8; // Total de estágios possíveis em CropStage
     final stageIndex = stage.index;
 

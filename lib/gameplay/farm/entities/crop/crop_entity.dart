@@ -1,13 +1,13 @@
 import 'package:equatable/equatable.dart';
 
-import 'crop_stage.dart';
+import 'crop_stage_type.dart';
 
 /// Entity representing a planted crop in the farm (D2: Entity with Serialization)
-final class Crop extends Equatable {
+final class CropEntity extends Equatable {
   final String cropId;
   final String name;
   final String description;
-  final CropStage stage;
+  final CropStageType stage;
   final int daysPlanted;
   final int daysToMature;
   final int yieldAmount;
@@ -19,9 +19,9 @@ final class Crop extends Equatable {
   final int spriteRowIndex;
   final int framesCount;
   final int skipFirstFrames;
-  final CropStage ySortingFromStage;
+  final CropStageType ySortingFromStage;
 
-  const Crop({
+  const CropEntity({
     required this.cropId,
     required this.name,
     required this.description,
@@ -56,26 +56,10 @@ final class Crop extends Equatable {
   bool get shouldUseYSorting => stage.index >= ySortingFromStage.index;
 
   /// Advance crop growth by one day
-  Crop advanceDay() {
+  CropEntity advanceDay() {
     final newDays = daysPlanted + 1;
     final progress = newDays / daysToMature;
-
-    CropStage newStage;
-    if (newDays >= daysToMature) {
-      newStage = CropStage.mature;
-    } else if (progress >= 0.85) {
-      newStage = CropStage.growing3;
-    } else if (progress >= 0.70) {
-      newStage = CropStage.growing2;
-    } else if (progress >= 0.55) {
-      newStage = CropStage.growing1;
-    } else if (progress >= 0.40) {
-      newStage = CropStage.youngPlant;
-    } else if (progress >= 0.20) {
-      newStage = CropStage.sprout;
-    } else {
-      newStage = CropStage.seed;
-    }
+    final newStage = CropStageType.fromProgress(progress);
 
     return copyWith(daysPlanted: newDays, stage: newStage);
   }
@@ -103,12 +87,12 @@ final class Crop extends Equatable {
   }
 
   /// Deserialization (D2)
-  static Crop fromJson(Map<String, dynamic> json) {
-    return Crop(
+  static CropEntity fromJson(Map<String, dynamic> json) {
+    return CropEntity(
       cropId: json['cropId'] as String,
       name: json['name'] as String,
       description: json['description'] as String,
-      stage: CropStage.fromJson(json['stage'] as String),
+      stage: CropStageType.fromJson(json['stage'] as String),
       daysPlanted: json['daysPlanted'] as int,
       daysToMature: json['daysToMature'] as int,
       yieldAmount: json['yieldAmount'] as int,
@@ -120,18 +104,18 @@ final class Crop extends Equatable {
       spriteRowIndex: json['spriteRowIndex'] as int,
       framesCount: json['framesCount'] as int,
       skipFirstFrames: json['skipFirstFrames'] as int,
-      ySortingFromStage: CropStage.fromJson(
+      ySortingFromStage: CropStageType.fromJson(
         json['ySortingFromStage'] as String,
       ),
     );
   }
 
   /// Create a copy with modifications
-  Crop copyWith({
+  CropEntity copyWith({
     String? cropId,
     String? name,
     String? description,
-    CropStage? stage,
+    CropStageType? stage,
     int? daysPlanted,
     int? daysToMature,
     int? yieldAmount,
@@ -143,9 +127,9 @@ final class Crop extends Equatable {
     int? spriteRowIndex,
     int? framesCount,
     int? skipFirstFrames,
-    CropStage? ySortingFromStage,
+    CropStageType? ySortingFromStage,
   }) {
-    return Crop(
+    return CropEntity(
       cropId: cropId ?? this.cropId,
       name: name ?? this.name,
       description: description ?? this.description,

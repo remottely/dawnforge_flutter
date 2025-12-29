@@ -1,10 +1,10 @@
-import 'crop_stage_model.dart';
+import '../entities/crop/crop_stage_type.dart';
 
 final class CropModel {
   final String cropId;
   final String name;
   final String description;
-  final CropStageModel stage;
+  final CropStageType stage;
   final int daysPlanted;
   final int daysToMature;
   final int yieldAmount;
@@ -16,7 +16,7 @@ final class CropModel {
   final int spriteRowIndex;
   final int framesCount;
   final int skipFirstFrames;
-  final CropStageModel ySortingFromStage;
+  final CropStageType ySortingFromStage;
 
   const CropModel({
     required this.cropId,
@@ -48,23 +48,7 @@ final class CropModel {
   CropModel advanceDay() {
     final newDays = daysPlanted + 1;
     final progress = newDays / daysToMature;
-
-    CropStageModel newStage;
-    if (newDays >= daysToMature) {
-      newStage = CropStageModel.mature;
-    } else if (progress >= 0.85) {
-      newStage = CropStageModel.growing3;
-    } else if (progress >= 0.70) {
-      newStage = CropStageModel.growing2;
-    } else if (progress >= 0.55) {
-      newStage = CropStageModel.growing1;
-    } else if (progress >= 0.40) {
-      newStage = CropStageModel.youngPlant;
-    } else if (progress >= 0.20) {
-      newStage = CropStageModel.sprout;
-    } else {
-      newStage = CropStageModel.seed;
-    }
+    final newStage = CropStageType.fromProgress(progress);
 
     return copyWith(daysPlanted: newDays, stage: newStage);
   }
@@ -95,7 +79,7 @@ final class CropModel {
       cropId: json['cropId'] as String,
       name: json['name'] as String,
       description: json['description'] as String,
-      stage: CropStageModel.fromJson(json['stage'] as String),
+      stage: CropStageType.fromJson(json['stage'] as String),
       daysPlanted: json['daysPlanted'] as int,
       daysToMature: json['daysToMature'] as int,
       yieldAmount: json['yieldAmount'] as int,
@@ -107,7 +91,7 @@ final class CropModel {
       spriteRowIndex: json['spriteRowIndex'] as int,
       framesCount: json['framesCount'] as int,
       skipFirstFrames: json['skipFirstFrames'] as int,
-      ySortingFromStage: CropStageModel.fromJson(
+      ySortingFromStage: CropStageType.fromJson(
         json['ySortingFromStage'] as String,
       ),
     );
@@ -117,7 +101,7 @@ final class CropModel {
     String? cropId,
     String? name,
     String? description,
-    CropStageModel? stage,
+    CropStageType? stage,
     int? daysPlanted,
     int? daysToMature,
     int? yieldAmount,
@@ -129,7 +113,7 @@ final class CropModel {
     int? spriteRowIndex,
     int? framesCount,
     int? skipFirstFrames,
-    CropStageModel? ySortingFromStage,
+    CropStageType? ySortingFromStage,
   }) {
     return CropModel(
       cropId: cropId ?? this.cropId,

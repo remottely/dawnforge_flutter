@@ -3,8 +3,8 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/services.dart';
 
+import '../entities/crop/crop_stage_type.dart';
 import '../models/crop_model.dart';
-import '../models/crop_stage_model.dart';
 
 final class CropDatabase {
   CropDatabase._();
@@ -49,7 +49,7 @@ final class CropDatabase {
       cropId: cropId,
       name: cropData['name'] as String,
       description: cropData['description'] as String,
-      stage: CropStageModel.seed,
+      stage: CropStageType.planted,
       daysPlanted: 0,
       daysToMature: cropData['daysToMature'] as int,
       yieldAmount: cropData['yieldAmount'] as int,
@@ -61,7 +61,7 @@ final class CropDatabase {
       spriteRowIndex: cropData['spriteRowIndex'] as int,
       framesCount: cropData['framesCount'] as int,
       skipFirstFrames: (cropData['skipFirstFrames'] as int?) ?? 0,
-      ySortingFromStage: CropStageModel.fromJson(
+      ySortingFromStage: CropStageType.fromJson(
         (cropData['ySortingFromStage'] as String?) ?? 'seed',
       ),
     );
