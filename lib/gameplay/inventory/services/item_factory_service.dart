@@ -19,7 +19,7 @@ class ItemFactoryService {
   final Map<String, Map<String, dynamic>> _itemDatabase = {};
   bool isInitialized = false;
 
-  final String _kDatabasePath = 'assets/items/items_database.json';
+  final String _kDatabasePath = 'assets/database/items_database.json';
 
   Future<void> initialize() async {
     if (isInitialized) {

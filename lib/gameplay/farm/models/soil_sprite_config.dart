@@ -38,7 +38,7 @@ class SoilSpriteConfig {
     developer.log('[SoilSpriteConfig] Loading soil database...');
 
     final jsonString = await rootBundle.loadString(
-      'assets/farm/soil_database.json',
+      'assets/database/soil_database.json',
     );
     final jsonData = json.decode(jsonString) as Map<String, dynamic>;
 

@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.74.7+1
+version: 1.74.8+1
 
 environment:
   sdk: ^3.8.1
@@ -50,10 +50,10 @@ flutter:
 
   assets:
     # === DATABASES ===
-    - assets/crops/crops_database.json
-    - assets/farm/soil_database.json
-    - assets/items/items_database.json
-    - assets/items/items_icons_database.json
+    - assets/database/crops_database.json
+    - assets/database/soil_database.json
+    - assets/database/items_database.json
+    - assets/database/items_icons_database.json
 
     # === LOCALIZATION ===
     - assets/l10n/en.json
@@ -244,7 +244,7 @@ flutter:
     - assets/audio/sfx/sfx_player_attack.mp3
 
     # TODO
-    - assets/game_over.png
+    - assets/ui/game_over.png
     - assets/images/tiled/sv/maps/sv_farm.json
     - assets/images/tiled/sv/maps/sv_town.json
     - assets/images/tiled/f/maps/f_1.json

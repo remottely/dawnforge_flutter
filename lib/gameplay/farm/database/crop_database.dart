@@ -17,7 +17,7 @@ final class CropDatabase {
 
     try {
       final jsonString = await rootBundle.loadString(
-        'assets/crops/crops_database.json',
+        'assets/database/crops_database.json',
       );
       final jsonData = jsonDecode(jsonString) as Map<String, dynamic>;
 

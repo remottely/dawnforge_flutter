@@ -14,7 +14,7 @@ class ItemIconDatabase {
     if (_initialized) return;
 
     final String jsonString = await rootBundle.loadString(
-      'assets/items/items_icons_database.json',
+      'assets/database/items_icons_database.json',
     );
     final jsonData = json.decode(jsonString) as Map<String, dynamic>;
 
