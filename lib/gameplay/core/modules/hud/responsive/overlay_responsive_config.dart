@@ -9,10 +9,7 @@ enum ScreenSize {
 }
 
 /// Enumeração de orientação de tela
-enum ScreenOrientation {
-  portrait,
-  landscape,
-}
+enum ScreenOrientation { portrait, landscape }
 
 /// Configuração responsiva para overlays
 class OverlayResponsiveConfig {

@@ -25,10 +25,7 @@ class EquipmentOverlay extends ResponsiveOverlayBase {
   }
 
   @override
-  Widget buildOverlayContent(
-    BuildContext context,
-    ResponsiveOverlayData data,
-  ) {
+  Widget buildOverlayContent(BuildContext context, ResponsiveOverlayData data) {
     return Material(
       color: Colors.transparent,
       child: IntrinsicWidth(

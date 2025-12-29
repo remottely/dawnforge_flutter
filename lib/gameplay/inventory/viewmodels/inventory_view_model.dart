@@ -24,10 +24,7 @@ class InventorySlotUI {
     required this.isEmpty,
   });
 
-  factory InventorySlotUI.fromEntity(
-    InventorySlot slot,
-    bool isSelected,
-  ) {
+  factory InventorySlotUI.fromEntity(InventorySlot slot, bool isSelected) {
     return InventorySlotUI(
       index: slot.index,
       item: slot.item,
@@ -52,11 +49,11 @@ class InventoryViewModel {
     required AddItemUseCase addItemUseCase,
     required RemoveItemUseCase removeItemUseCase,
     required EquipItemUseCase equipItemUseCase,
-  })  : _inventoryManager = inventoryManager,
-        _equipmentManager = equipmentManager,
-        _addItemUseCase = addItemUseCase,
-        _removeItemUseCase = removeItemUseCase,
-        _equipItemUseCase = equipItemUseCase;
+  }) : _inventoryManager = inventoryManager,
+       _equipmentManager = equipmentManager,
+       _addItemUseCase = addItemUseCase,
+       _removeItemUseCase = removeItemUseCase,
+       _equipItemUseCase = equipItemUseCase;
 
   /// Transform entity data to UI-friendly format
   ValueNotifier<List<InventorySlotUI>> get slotsUI {
@@ -67,8 +64,10 @@ class InventoryViewModel {
       final slots = _inventoryManager.slots;
 
       notifier.value = slots
-          .map((slot) =>
-              InventorySlotUI.fromEntity(slot, slot.index == selectedIndex))
+          .map(
+            (slot) =>
+                InventorySlotUI.fromEntity(slot, slot.index == selectedIndex),
+          )
           .toList();
     }
 

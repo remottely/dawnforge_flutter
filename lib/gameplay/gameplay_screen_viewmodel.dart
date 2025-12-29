@@ -43,7 +43,9 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   void initState() {
     super.initState();
     playerInput = GameplayScreenDef.createPlayerInput();
-    inventoryInputHandler = InventoryInputHandler(playerController: playerInput);
+    inventoryInputHandler = InventoryInputHandler(
+      playerController: playerInput,
+    );
     _loadGameOrResetLife();
   }
 

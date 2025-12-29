@@ -7,6 +7,7 @@ import 'package:darkness_dungeon/gameplay/inventory/entities/equipment_slot.dart
 import 'package:darkness_dungeon/gameplay/inventory/entities/inventory_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/widgets/item_sprite_widget.dart';
+import 'package:darkness_dungeon/gameplay/inventory/inventory_service_locator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -30,10 +31,7 @@ class InventoryOverlay extends ResponsiveOverlayBase {
   }
 
   @override
-  Widget buildOverlayContent(
-    BuildContext context,
-    ResponsiveOverlayData data,
-  ) {
+  Widget buildOverlayContent(BuildContext context, ResponsiveOverlayData data) {
     return Material(
       color: Colors.transparent,
       child: IntrinsicWidth(
@@ -65,7 +63,7 @@ class InventoryOverlay extends ResponsiveOverlayBase {
 
     // Listen to inventory changes with the actual slots list
     return ValueListenableBuilder<List<InventorySlot>>(
-      valueListenable: InventoryManager.instance.slotsNotifier,
+      valueListenable: getIt<InventoryManager>().slotsNotifier,
       builder: (context, slots, _) {
         // Listen to equipment changes for highlighting
         return ValueListenableBuilder<Map<EquipmentSlotType, Item?>>(
@@ -74,18 +72,15 @@ class InventoryOverlay extends ResponsiveOverlayBase {
             return Wrap(
               spacing: data.spacing,
               runSpacing: data.spacing,
-              children: List.generate(
-                slots.length,
-                (index) {
-                  final slot = slots[index];
-                  return _buildInventorySlot(
-                    data,
-                    slot,
-                    slot.item,
-                    slot.quantity,
-                  );
-                },
-              ),
+              children: List.generate(slots.length, (index) {
+                final slot = slots[index];
+                return _buildInventorySlot(
+                  data,
+                  slot,
+                  slot.item,
+                  slot.quantity,
+                );
+              }),
             );
           },
         );
@@ -105,18 +100,18 @@ class InventoryOverlay extends ResponsiveOverlayBase {
 
     if (item != null) {
       final isMainHand =
-          EquipmentManager.instance.getEquippedSlotForItem(item.id) ==
-              EquipmentSlotType.mainHand;
+          getIt<EquipmentManager>().getEquippedSlotForItem(item.id) ==
+          EquipmentSlotType.mainHand;
       if (isMainHand) {
         slotColor = Colors.red.withOpacity(0.5);
       }
     }
 
     final isSelected =
-        EquipmentManager.instance.currentMainHandSlotIndex == slot.index;
+        getIt<EquipmentManager>().currentMainHandSlotIndex == slot.index;
 
     return GestureDetector(
-      onTap: () => EquipmentManager.instance.selectSlotIndex(slot.index),
+      onTap: () => getIt<EquipmentManager>().selectSlotIndex(slot.index),
       child: Container(
         width: data.slotSize,
         height: data.slotSize,

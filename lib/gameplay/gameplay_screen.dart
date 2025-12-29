@@ -64,7 +64,11 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
 
         final mapArguments = arguments as MapArguments?;
         final playerPosition =
-            (mapArguments?.playerPosition ??  Vector2(7, 7)) *// Vector2(24, 24)) * // TODO(Kevin): NOW - put it back
+            (mapArguments?.playerPosition ??
+                Vector2(
+                  7,
+                  7,
+                )) * // Vector2(24, 24)) * // TODO(Kevin): NOW - put it back
             TileConstants.kTileDimensionStandard;
 
         // final player = buildSunnyPlayer(playerPosition);
@@ -111,7 +115,8 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
             // Flutter Tutorial Inputs Overlay - inside MapNavigator builder
             const TutorialInputsOverlay(),
             // Flutter Mobile Inputs Overlay - only for joystick mode
-            if (SettingsManager.instance.inputSelected == InputActionsType.joystick)
+            if (SettingsManager.instance.inputSelected ==
+                InputActionsType.joystick)
               MobileInputsOverlay(playerController: playerInput),
           ],
         );

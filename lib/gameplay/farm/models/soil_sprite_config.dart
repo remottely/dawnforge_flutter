@@ -60,10 +60,7 @@ class SoilSpritePosition {
   final int rowIndex;
   final int columnIndex;
 
-  SoilSpritePosition({
-    required this.rowIndex,
-    required this.columnIndex,
-  });
+  SoilSpritePosition({required this.rowIndex, required this.columnIndex});
 
   factory SoilSpritePosition.fromJson(Map<String, dynamic> json) {
     return SoilSpritePosition(

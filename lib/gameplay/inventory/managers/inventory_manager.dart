@@ -281,8 +281,10 @@ class InventoryManager {
   }
 
   Map<String, dynamic> toJson() {
-    final slotsData =
-        _slots.where((s) => !s.isEmpty).map((s) => s.toJson()).toList();
+    final slotsData = _slots
+        .where((s) => !s.isEmpty)
+        .map((s) => s.toJson())
+        .toList();
 
     return {'maxSlots': maxSlots, 'slots': slotsData};
   }

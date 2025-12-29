@@ -76,8 +76,9 @@ void main() {
       );
 
       when(() => mockItemFactory.createItem(itemId)).thenReturn(mockItem);
-      when(() => mockInventoryManager.addItem(mockItem, quantity))
-          .thenReturn(true);
+      when(
+        () => mockInventoryManager.addItem(mockItem, quantity),
+      ).thenReturn(true);
 
       // Act
       final result = addItemUseCase(itemId, quantity);
@@ -104,8 +105,9 @@ void main() {
       );
 
       when(() => mockItemFactory.createItem(itemId)).thenReturn(mockItem);
-      when(() => mockInventoryManager.addItem(mockItem, quantity))
-          .thenReturn(false);
+      when(
+        () => mockInventoryManager.addItem(mockItem, quantity),
+      ).thenReturn(false);
 
       // Act
       final result = addItemUseCase(itemId, quantity);

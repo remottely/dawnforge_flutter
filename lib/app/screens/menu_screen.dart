@@ -42,7 +42,9 @@ class _MenuScreenState extends MenuScreenViewModel {
                 ),
               ],
               _StartButton(onPressed: navigateToGameplayScreen),
-              _Controls(onControlMethodChanged: onControlMethodChanged), // TODO(Kevin): NOW - put it back
+              _Controls(
+                onControlMethodChanged: onControlMethodChanged,
+              ), // TODO(Kevin): NOW - put it back
               switch (SettingsManager.instance.inputSelected) {
                 InputActionsType.joystick =>
                   const SizedBox.shrink(), // TODO(Kevin): Replace with joystick tip widget
@@ -144,7 +146,8 @@ class _Controls extends StatelessWidget {
           group: SettingsManager.instance.inputSelected,
           onChange: onControlMethodChanged,
         ),
-        DDRadioButton<InputActionsType>( // TODO(Kevin): NOW - put it back
+        DDRadioButton<InputActionsType>(
+          // TODO(Kevin): NOW - put it back
           value: InputActionsType.joystick,
           group: SettingsManager.instance.inputSelected,
           label: 'Joystick',

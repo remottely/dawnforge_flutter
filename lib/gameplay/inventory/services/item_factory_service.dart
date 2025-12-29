@@ -40,7 +40,8 @@ class ItemFactoryService {
 
       _isInitialized = true;
       developer.log(
-          '[ItemFactoryService] Loaded ${_itemDatabase.length} items');
+        '[ItemFactoryService] Loaded ${_itemDatabase.length} items',
+      );
     } catch (e, stackTrace) {
       developer.log(
         '[ItemFactoryService] ERROR loading database',

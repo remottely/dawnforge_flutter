@@ -14,9 +14,7 @@ final getIt = GetIt.instance;
 
 void setupInventoryDependencies() {
   // Services (stateless helpers)
-  getIt.registerLazySingleton<ItemFactoryService>(
-    () => ItemFactoryService(),
-  );
+  getIt.registerLazySingleton<ItemFactoryService>(() => ItemFactoryService());
 
   // Managers (singleton state)
   getIt.registerSingleton<InventoryManager>(InventoryManager.instance);
@@ -24,10 +22,8 @@ void setupInventoryDependencies() {
 
   // UseCases (operations)
   getIt.registerFactory<AddItemUseCase>(
-    () => AddItemUseCase(
-      getIt<InventoryManager>(),
-      getIt<ItemFactoryService>(),
-    ),
+    () =>
+        AddItemUseCase(getIt<InventoryManager>(), getIt<ItemFactoryService>()),
   );
 
   getIt.registerFactory<RemoveItemUseCase>(
@@ -35,10 +31,8 @@ void setupInventoryDependencies() {
   );
 
   getIt.registerFactory<EquipItemUseCase>(
-    () => EquipItemUseCase(
-      getIt<EquipmentManager>(),
-      getIt<InventoryManager>(),
-    ),
+    () =>
+        EquipItemUseCase(getIt<EquipmentManager>(), getIt<InventoryManager>()),
   );
 
   getIt.registerFactory<UnequipItemUseCase>(

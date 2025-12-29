@@ -10,7 +10,8 @@ class TutorialInputsOverlay extends ResponsiveOverlayBase {
   String get overlayId => 'tutorial_inputs';
 
   @override
-  ValueNotifier<bool> get visibilityNotifier => TutorialInputsState.instance.isVisible;
+  ValueNotifier<bool> get visibilityNotifier =>
+      TutorialInputsState.instance.isVisible;
 
   @override
   OverlayPosition getOverlayPosition(BuildContext context) {
@@ -22,10 +23,7 @@ class TutorialInputsOverlay extends ResponsiveOverlayBase {
   }
 
   @override
-  Widget buildOverlayContent(
-    BuildContext context,
-    ResponsiveOverlayData data,
-  ) {
+  Widget buildOverlayContent(BuildContext context, ResponsiveOverlayData data) {
     final keyBoxWidth = valueByScreenSize(
       context,
       small: 80.0,

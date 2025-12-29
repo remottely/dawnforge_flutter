@@ -8,10 +8,7 @@ import 'package:flutter/material.dart';
 class MobileInputsOverlay extends ResponsiveOverlayBase {
   final PlayerController? playerController;
 
-  const MobileInputsOverlay({
-    super.key,
-    this.playerController,
-  });
+  const MobileInputsOverlay({super.key, this.playerController});
 
   @override
   String get overlayId => 'mobile_inputs';
@@ -33,10 +30,7 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
   }
 
   @override
-  Widget buildOverlayContent(
-    BuildContext context,
-    ResponsiveOverlayData data,
-  ) {
+  Widget buildOverlayContent(BuildContext context, ResponsiveOverlayData data) {
     return Stack(
       children: [
         // Right side - Action buttons
@@ -211,10 +205,7 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
         decoration: BoxDecoration(
           color: color.withOpacity(0.7),
           borderRadius: BorderRadius.circular(size * 0.2),
-          border: Border.all(
-            color: Colors.white.withOpacity(0.3),
-            width: 2,
-          ),
+          border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.3),
@@ -226,11 +217,7 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              size: size * 0.4,
-              color: Colors.white,
-            ),
+            Icon(icon, size: size * 0.4, color: Colors.white),
             if (label.isNotEmpty && size > 45)
               Padding(
                 padding: const EdgeInsets.only(top: 2),
@@ -253,10 +240,7 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
     if (playerController == null) return;
 
     playerController!.onJoystickAction(
-      JoystickActionEvent(
-        id: actionId,
-        event: event,
-      ),
+      JoystickActionEvent(id: actionId, event: event),
     );
   }
 }

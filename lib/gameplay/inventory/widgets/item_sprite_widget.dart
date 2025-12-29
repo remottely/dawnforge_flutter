@@ -6,11 +6,7 @@ class ItemSpriteWidget extends StatefulWidget {
   final ItemIconData? iconData;
   final double size;
 
-  const ItemSpriteWidget({
-    super.key,
-    required this.iconData,
-    this.size = 32,
-  });
+  const ItemSpriteWidget({super.key, required this.iconData, this.size = 32});
 
   @override
   State<ItemSpriteWidget> createState() => _ItemSpriteWidgetState();
@@ -105,18 +101,13 @@ class _ItemSpriteWidgetState extends State<ItemSpriteWidget> {
     }
 
     if (_sprite == null) {
-      return SizedBox(
-        width: widget.size,
-        height: widget.size,
-      );
+      return SizedBox(width: widget.size, height: widget.size);
     }
 
     return SizedBox(
       width: widget.size,
       height: widget.size,
-      child: CustomPaint(
-        painter: _SpritePainter(_sprite!),
-      ),
+      child: CustomPaint(painter: _SpritePainter(_sprite!)),
     );
   }
 }

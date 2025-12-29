@@ -74,10 +74,7 @@ class LoadInventoryUseCase {
         (itemId) => _itemFactory.createItem(itemId),
       );
       if (slot.equippedItem != null) {
-        _equipmentManager.equip(
-          slot.slotType,
-          slot.equippedItem!,
-        );
+        _equipmentManager.equip(slot.slotType, slot.equippedItem!);
       }
     }
 

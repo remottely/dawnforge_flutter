@@ -6,12 +6,12 @@ import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.d
 import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/inventory_state.dart';
+import 'package:darkness_dungeon/gameplay/inventory/inventory_service_locator.dart';
 import 'package:darkness_dungeon/gameplay/inventory/item_factory.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/equipment_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
-import 'package:flutter/services.dart';
 
 /// Handles inventory and equipment inputs from both keyboard and joystick/mobile
 class InventoryInputHandler extends GameComponent
@@ -28,8 +28,9 @@ class InventoryInputHandler extends GameComponent
     if (playerController != null) {
       playerController!.addObserver(this);
     }
-    EquipmentManager.instance.selectedSlotIndexNotifier
-        .addListener(_handleSelectedSlotChanged);
+    getIt<EquipmentManager>().selectedSlotIndexNotifier.addListener(
+      _handleSelectedSlotChanged,
+    );
   }
 
   @override
@@ -37,8 +38,9 @@ class InventoryInputHandler extends GameComponent
     if (playerController != null) {
       playerController!.removeObserver(this);
     }
-    EquipmentManager.instance.selectedSlotIndexNotifier
-        .removeListener(_handleSelectedSlotChanged);
+    getIt<EquipmentManager>().selectedSlotIndexNotifier.removeListener(
+      _handleSelectedSlotChanged,
+    );
     super.onRemove();
   }
 
@@ -121,15 +123,15 @@ class InventoryInputHandler extends GameComponent
     }
 
     developer.log(
-      '[InventoryInput] Itens de teste adicionados! ${InventoryManager.instance.usedSlots} slots usados',
+      '[InventoryInput] Itens de teste adicionados! ${getIt<InventoryManager>().usedSlots} slots usados',
     );
   }
 
   void _debugInsertItem(String itemKey) {
-    if (InventoryManager.instance.getItemQuantity(itemKey) == 0) {
+    if (getIt<InventoryManager>().getItemQuantity(itemKey) == 0) {
       final item = ItemFactory.createItem(itemKey);
       if (item != null) {
-        InventoryManager.instance.addItem(item);
+        getIt<InventoryManager>().addItem(item);
       }
     }
   }
@@ -142,7 +144,7 @@ class InventoryInputHandler extends GameComponent
     for (final (itemKey, quantity) in testMaterials) {
       final item = ItemFactory.createItem(itemKey);
       if (item != null) {
-        InventoryManager.instance.addItem(item, quantity);
+        getIt<InventoryManager>().addItem(item, quantity);
         developer.log('[InventoryInput] Adicionado ${quantity}x $itemKey');
       }
     }
@@ -154,8 +156,8 @@ class InventoryInputHandler extends GameComponent
     );
 
     // Busca o próximo item equipável usando o método helper
-    final currentSlotIndex = EquipmentManager.instance.currentMainHandSlotIndex;
-    final result = InventoryManager.instance.findItem((item) {
+    final currentSlotIndex = getIt<EquipmentManager>().currentMainHandSlotIndex;
+    final result = getIt<InventoryManager>().findItem((item) {
       return item is MainHandItem;
     }, afterIndex: currentSlotIndex);
 
@@ -167,7 +169,7 @@ class InventoryInputHandler extends GameComponent
     }
 
     final item = result.item;
-    final success = EquipmentManager.instance.selectSlotIndex(result.index);
+    final success = getIt<EquipmentManager>().selectSlotIndex(result.index);
 
     if (success) {
       final mainHandItem = item as MainHandItem;
@@ -185,8 +187,8 @@ class InventoryInputHandler extends GameComponent
     );
 
     // Busca o item equipável anterior usando o método helper
-    final currentSlotIndex = EquipmentManager.instance.currentMainHandSlotIndex;
-    final result = InventoryManager.instance.findItemReverse((item) {
+    final currentSlotIndex = getIt<EquipmentManager>().currentMainHandSlotIndex;
+    final result = getIt<InventoryManager>().findItemReverse((item) {
       return item is MainHandItem;
     }, beforeIndex: currentSlotIndex);
 
@@ -198,7 +200,7 @@ class InventoryInputHandler extends GameComponent
     }
 
     final item = result.item;
-    final success = EquipmentManager.instance.selectSlotIndex(result.index);
+    final success = getIt<EquipmentManager>().selectSlotIndex(result.index);
 
     if (success) {
       final mainHandItem = item as MainHandItem;
@@ -211,7 +213,7 @@ class InventoryInputHandler extends GameComponent
   }
 
   void _unequipMainHand() {
-    final item = EquipmentManager.instance.unequip(EquipmentSlotType.mainHand);
+    final item = getIt<EquipmentManager>().unequip(EquipmentSlotType.mainHand);
     if (item != null) {
       developer.log(
         '[InventoryInput] ✓ Desequipado do main hand: ${item.name}',
@@ -234,8 +236,9 @@ class InventoryInputHandler extends GameComponent
   }
 
   void _handleSelectedSlotChanged() {
-    final selectedItem = EquipmentManager.instance
-        .getEquippedItem(EquipmentSlotType.mainHand);
+    final selectedItem = getIt<EquipmentManager>().getEquippedItem(
+      EquipmentSlotType.mainHand,
+    );
     final equippedHandType = selectedItem is MainHandItem
         ? selectedItem.equippedHandType
         : null;

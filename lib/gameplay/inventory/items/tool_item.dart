@@ -71,6 +71,5 @@ final class ToolItem extends Item {
   }
 
   @override
-  String toString() =>
-      'ToolItem(id: $id, name: $name, toolType: $toolType)';
+  String toString() => 'ToolItem(id: $id, name: $name, toolType: $toolType)';
 }

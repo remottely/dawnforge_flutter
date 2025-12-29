@@ -43,11 +43,11 @@ class DDBasePlayerSaveData {
   });
 
   Map<String, dynamic> toJson() => {
-        'stamina': stamina,
-        'energy': energy,
-        'life': life,
-        'hasKey': hasKey,
-      };
+    'stamina': stamina,
+    'energy': energy,
+    'life': life,
+    'hasKey': hasKey,
+  };
 
   factory DDBasePlayerSaveData.fromJson(
     Map<String, dynamic> json,

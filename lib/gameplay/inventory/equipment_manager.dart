@@ -30,8 +30,7 @@ final class EquipmentManager {
 
   int get currentMainHandSlotIndex => _currentMainHandSlotIndex;
 
-  bool equip(EquipmentSlotType slotType, Item item,
-      {int? inventorySlotIndex}) {
+  bool equip(EquipmentSlotType slotType, Item item, {int? inventorySlotIndex}) {
     developer.log('[EquipmentManager] Equipping ${item.name} to $slotType');
 
     if (slotType != EquipmentSlotType.mainHand) {

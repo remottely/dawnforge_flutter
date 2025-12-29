@@ -11,10 +11,7 @@ abstract class ResponsiveOverlayBase extends StatelessWidget
   ValueNotifier<bool> get visibilityNotifier;
 
   /// Constrói o conteúdo do overlay com informações responsivas
-  Widget buildOverlayContent(
-    BuildContext context,
-    ResponsiveOverlayData data,
-  );
+  Widget buildOverlayContent(BuildContext context, ResponsiveOverlayData data);
 
   /// Define a posição do overlay na tela
   OverlayPosition getOverlayPosition(BuildContext context);
@@ -52,10 +49,7 @@ abstract class ResponsiveOverlayBase extends StatelessWidget
 
           return Align(
             alignment: position.alignment,
-            child: SafeArea(
-              minimum: position.safeAreaPadding,
-              child: content,
-            ),
+            child: SafeArea(minimum: position.safeAreaPadding, child: content),
           );
         },
       ),

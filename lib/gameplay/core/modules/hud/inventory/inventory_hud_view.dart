@@ -4,6 +4,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/inventory/inventory_hud_def.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
+import 'package:darkness_dungeon/gameplay/inventory/inventory_service_locator.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/equipment_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/item_icon_data.dart';
@@ -96,7 +97,7 @@ class InventoryHUDView extends InterfaceComponent {
   }
 
   void _drawInventorySlots(Canvas canvas) {
-    final manager = InventoryManager.instance;
+    final manager = getIt<InventoryManager>();
 
     for (int i = 0; i < manager.maxSlots; i++) {
       final row = i ~/ InventoryHUDDef.kSlotsPerRow;
@@ -123,15 +124,14 @@ class InventoryHUDView extends InterfaceComponent {
     );
 
     // Check if item is equipped
-    EquipmentSlotType? equippedSlot;
     Color slotColor = item != null
         ? Colors.blue.withValues(alpha: 0.3)
         : Colors.grey.withValues(alpha: 0.2);
 
     if (item != null) {
       final isMainHand =
-          EquipmentManager.instance.getEquippedSlotForItem(item.id) ==
-              EquipmentSlotType.mainHand;
+          getIt<EquipmentManager>().getEquippedSlotForItem(item.id) ==
+          EquipmentSlotType.mainHand;
       if (isMainHand) {
         slotColor = Colors.red.withValues(alpha: 0.5);
       }

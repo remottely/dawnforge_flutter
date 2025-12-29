@@ -27,7 +27,9 @@ final class InventoryManager {
 
   void _notifyChange() {
     slotsNotifier.value = List.unmodifiable(_slots);
-    developer.log('[InventoryManager] Notifying change with ${_slots.length} slots');
+    developer.log(
+      '[InventoryManager] Notifying change with ${_slots.length} slots',
+    );
   }
 
   int get maxSlots => _currentMaxSlots;

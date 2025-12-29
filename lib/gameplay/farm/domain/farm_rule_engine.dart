@@ -76,9 +76,7 @@ final class FarmRuleEngine {
   FarmTileModel advanceDay(FarmTileModel tile, int dayEnded) {
     if (tile.crop == null) {
       if (_shouldConsumeWater(tile, dayEnded)) {
-        return tile.copyWith(
-          soilState: SoilStateModel.tilled,
-        );
+        return tile.copyWith(soilState: SoilStateModel.tilled);
       }
       return tile;
     }

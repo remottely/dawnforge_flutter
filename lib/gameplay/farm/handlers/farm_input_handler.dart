@@ -16,10 +16,7 @@ class FarmInputHandler extends GameComponent with PlayerControllerListener {
   final PlayerController playerController;
   final FarmFeedbackService _feedbackService = FarmFeedbackService.instance;
 
-  FarmInputHandler({
-    required this.player,
-    required this.playerController,
-  });
+  FarmInputHandler({required this.player, required this.playerController});
 
   @override
   Future<void> onLoad() async {
