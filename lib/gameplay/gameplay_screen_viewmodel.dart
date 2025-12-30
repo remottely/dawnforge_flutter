@@ -42,6 +42,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   @override
   void initState() {
     super.initState();
+    print('[GameplayViewModel] initState - Creating new player input');
     playerInput = GameplayScreenDef.createPlayerInput();
     inventoryInputHandler = InventoryInputHandler(
       playerController: playerInput,
@@ -55,8 +56,6 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
 
       if (!success) {
         _resetPlayerLifeOnNewGame();
-      } else if (playerStateManager.consumeRespawnWithFullLifeFlag()) {
-        _restoreFullLifeForCurrentPlayer();
       }
     } catch (_) {
       _resetPlayerLifeOnNewGame();
@@ -76,26 +75,6 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
 
     final currentLife = lastPlayerModel.life ?? 0;
     if (currentLife <= 0) lastPlayerModel.updateLife(200);
-  }
-
-  void _restoreFullLifeForCurrentPlayer() {
-    final model = playerStateManager.lastPlayerModel;
-    if (model == null) return;
-
-    if (model is FarmerPlayerModel) {
-      model.updateLife(FarmerPlayerDef.kLife);
-      return;
-    }
-
-    if (model is CutePlayerModel) {
-      model.updateLife(CutePlayerDef.kLife);
-      return;
-    }
-
-    if (model is SunnyPlayerModel) {
-      model.updateLife(SunnyPlayerDef.kLife);
-      return;
-    }
   }
 
   @override
@@ -153,6 +132,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   }
 
   DDBasePlayerView buildFarmerPlayer(Vector2 position) {
+    print('[GameplayViewModel] Building farmer player at position: $position');
     // if (isLoadingSave)
     //   return FarmerPlayerView<FarmerPlayerController, FarmerPlayerModel>(
     //     position: position,

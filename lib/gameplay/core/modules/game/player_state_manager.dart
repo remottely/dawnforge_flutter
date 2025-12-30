@@ -47,14 +47,4 @@ class PlayerStateManager {
     lastPlayerModel = null;
     _respawnWithFullLife = false;
   }
-
-  void markRespawnWithFullLife() {
-    _respawnWithFullLife = true;
-  }
-
-  bool consumeRespawnWithFullLifeFlag() {
-    final shouldRespawn = _respawnWithFullLife;
-    _respawnWithFullLife = false;
-    return shouldRespawn;
-  }
 }
