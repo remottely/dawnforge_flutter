@@ -1,7 +1,4 @@
-import 'dart:developer' as dev;
-
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/input_actions/debug_keyboard.dart';
 import 'package:flutter/services.dart';
 
 final class KeyboardSetup {
@@ -34,7 +31,7 @@ final class KeyboardSetup {
     kAddTestItemsKey,
   ];
 
-  static PlayerController createKeyboardInput() => DebugKeyboard(
+  static PlayerController createKeyboardInput() => Keyboard(
     config: KeyboardConfig(
       directionalKeys: keyboardDirectionalKeys,
       acceptedKeys: keyboardAcceptedKeys,

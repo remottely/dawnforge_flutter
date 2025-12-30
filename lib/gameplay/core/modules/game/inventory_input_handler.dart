@@ -112,7 +112,6 @@ class InventoryInputHandler extends GameComponent
       'shovel',
       'staff',
       'ironSword',
-      'woodenShield',
       'wateringCan',
       'strawberry_seed_bag',
       'tomato_seed_bag',

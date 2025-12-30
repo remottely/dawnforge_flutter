@@ -91,11 +91,11 @@
             "expandedObjectLayers": [
                 6
             ],
-            "scale": 2.3821,
-            "selectedLayer": 4,
+            "scale": 0.8997,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": 140.21241761470972,
-                "y": 193.3168212921372
+                "x": 251.1948427253529,
+                "y": 434.0335667444705
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/f_1.json": {
@@ -168,8 +168,8 @@
             "scale": 2.3026,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 435.1602536263355,
-                "y": 395.8568574654738
+                "x": 383.9138365326153,
+                "y": 384.1309823677582
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/maps/farm.json": {
@@ -177,11 +177,11 @@
                 5,
                 3
             ],
-            "scale": 2.5506,
+            "scale": 1.1948,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 383.8312553908884,
-                "y": 381.67490002352383
+                "x": 400.90391697355204,
+                "y": 398.8115165718112
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/maps/farm.tmj": {
@@ -204,11 +204,11 @@
             "expandedObjectLayers": [
                 2
             ],
-            "scale": 2.99,
+            "scale": 2.2633,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 383.94648829431435,
-                "y": 384.11371237458195
+                "x": 387.48729730923867,
+                "y": 399.1958644457209
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/maps/lake.json": {
@@ -219,7 +219,7 @@
             "selectedLayer": 1,
             "viewCenter": {
                 "x": 384.03361344537814,
-                "y": 383.6134453781513
+                "y": 383.61344537815125
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/maps/town.json": {
@@ -235,10 +235,10 @@
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/sv/maps/sv_farm.json": {
             "scale": 2.21,
-            "selectedLayer": -1,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 474.2081447963801,
-                "y": 452.71493212669685
+                "x": 639.8190045248869,
+                "y": 520.1357466063348
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/sv/maps/sv_town.json": {

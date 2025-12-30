@@ -127,20 +127,6 @@
     "critMultiplier": 1.5,
     "equippedHandType": "ironSword"
   },
-  "woodenShield": {
-    "id": "woodenShield",
-    "name": "Wooden Shield",
-    "description": "A basic wooden shield for defense",
-    "type": "weapon",
-    "rarity": "common",
-    "baseValue": 50,
-    "iconPath": "",
-    "damage": 0,
-    "attackSpeed": 0,
-    "critChance": 0,
-    "critMultiplier": 1.0,
-    "equippedHandType": "woodenShield"
-  },
   "steel_axe": {
     "id": "steel_axe",
     "name": "Steel Axe",

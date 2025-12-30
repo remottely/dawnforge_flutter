@@ -67,7 +67,7 @@ abstract class DDDefensePlayerView<
       return false;
     }
 
-    if (!mainHandItem.equippedHandType.isDefense) {
+    if (!mainHandItem.equippedHandType.canDefense) {
       return false;
     }
 

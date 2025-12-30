@@ -26,18 +26,9 @@ enum EquippedHandType {
   harvestBasket,
   axe,
 
-  /// Weapons // TODO(Kevin): deprecated, remove this
+  /// Weapons
   ironSword,
-  staff,
-  spear,
-  dagger,
-  mace,
-  bow,
-  crossbow,
-  wand,
-
-  /// defense
-  woodenShield;
+  staff;
 
   String toJson() => name;
 
@@ -77,21 +68,13 @@ enum EquippedHandType {
 
   bool get isCombatWeapon =>
       this == ironSword ||
-      this == axe || // TODO(Kevin): define axe isCombatWeapon?
-      this == spear ||
-      this == dagger ||
-      this == mace ||
-      this == bow ||
-      this == crossbow ||
-      this == staff ||
-      this == wand;
+      // this == axe || // TODO(Kevin): define axe isCombatWeapon?
+      this == staff;
 
-  bool get isDefense => this == woodenShield;
+  bool get canDefense => this == ironSword;
 
-  bool get isEquippable => isSeed || isFarmTool || isCombatWeapon || isDefense;
+  bool get isEquippable => isSeed || isFarmTool || isCombatWeapon;
 
   bool get canBeEquippedInMainHandSlot =>
       isSeed || isFarmTool || isCombatWeapon;
-
-  bool get canBeEquippedInOffHandSlot => isDefense;
 }
