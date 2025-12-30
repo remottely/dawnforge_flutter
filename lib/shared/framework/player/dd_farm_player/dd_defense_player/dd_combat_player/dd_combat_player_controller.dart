@@ -20,21 +20,21 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
     required this.onExecuteRangedAttack,
   });
 
-  bool isPrimaryAttackAction({
+  bool _isPrimaryAttackAction({
     required DDBasePlayerView player,
     required dynamic actionId,
   }) =>
       InputDef.isPrimaryAction(actionId) &&
       player.controller.model.equipment == EquippedHandType.ironSword;
 
-  bool isRangedAttackAction({
+  bool _isRangedAttackAction({
     required DDBasePlayerView player,
     required dynamic actionId,
   }) =>
       InputDef.isPrimaryAction(actionId) &&
       player.controller.model.equipment == EquippedHandType.staff;
 
-  void handleExecutePrimaryAttack() {
+  void _handleExecutePrimaryAttack() {
     if (!model.canExecutePrimaryAttack) return;
 
     beginStaminaConsumingAction();
@@ -52,7 +52,7 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
     endStaminaConsumingAction();
   }
 
-  void handleExecuteRangedAttack() {
+  void _handleExecuteRangedAttack() {
     if (!model.canExecuteRangedAttack) return;
 
     beginStaminaConsumingAction();
@@ -75,10 +75,10 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
     required DDBasePlayerView player,
     required JoystickActionEvent event,
   }) {
-    if (isPrimaryAttackAction(player: player, actionId: event.id)) {
-      handleExecutePrimaryAttack();
-    } else if (isRangedAttackAction(player: player, actionId: event.id)) {
-      handleExecuteRangedAttack();
+    if (_isPrimaryAttackAction(player: player, actionId: event.id)) {
+      _handleExecutePrimaryAttack();
+    } else if (_isRangedAttackAction(player: player, actionId: event.id)) {
+      _handleExecuteRangedAttack();
     }
 
     super.handleInputAction(player: player, event: event);

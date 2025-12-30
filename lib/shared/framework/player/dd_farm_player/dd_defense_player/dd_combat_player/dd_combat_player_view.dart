@@ -135,7 +135,7 @@ abstract class DDCombatPlayerView<
 
   void _executePrimaryAttack({required double damage}) {
     final attackOffset = OffsetHelper.getCenterOffset(
-      Vector2(6, 0),
+      Vector2(-4, 0),
       lastDirection,
     );
 
