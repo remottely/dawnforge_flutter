@@ -23,9 +23,6 @@ abstract class DDFarmPlayerView<
     required this.config,
     required super.position,
     required super.model,
-    required super.size,
-    required super.life,
-    required super.baseSpeed,
   }) : super(config: config);
 
   late final DDAnimationDirectional animationDigDirectional;

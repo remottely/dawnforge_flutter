@@ -10,12 +10,7 @@ class SunnyPlayerView<
 >
     extends DDFarmPlayerView<C, M> {
   SunnyPlayerView({required super.position, required super.model})
-    : super(
-        config: SunnyPlayerDef.viewConfig,
-        size: SunnyPlayerDef.componentSize,
-        life: SunnyPlayerDef.kLife,
-        baseSpeed: SunnyPlayerDef.kSpeed,
-      );
+    : super(config: SunnyPlayerDef.viewConfig);
 
   @override
   C createFarmController({

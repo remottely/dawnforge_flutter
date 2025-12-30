@@ -10,12 +10,7 @@ class FarmerPlayerView<
 >
     extends DDFarmPlayerView<C, M> {
   FarmerPlayerView({required super.position, required super.model})
-    : super(
-        config: FarmerPlayerDef.viewConfig,
-        size: FarmerPlayerDef.componentSize,
-        life: FarmerPlayerDef.kLife,
-        baseSpeed: FarmerPlayerDef.kSpeed,
-      );
+    : super(config: FarmerPlayerDef.viewConfig);
 
   @override
   C createFarmController({

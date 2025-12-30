@@ -5,6 +5,9 @@ class DDCombatPlayerViewConfig extends DDMobilePlayerViewConfig {
   final DDAnimationDirectionalFactory animationAttackDirectionalFactory;
 
   const DDCombatPlayerViewConfig({
+    required super.size,
+    required super.life,
+    required super.baseSpeed,
     required super.hitbox,
     required super.lighting,
     required super.getDeathMarker,

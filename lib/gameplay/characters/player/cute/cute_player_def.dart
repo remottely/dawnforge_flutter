@@ -11,10 +11,6 @@ import 'package:darkness_dungeon/shared/utils/sprite_animation_constants.dart';
 final class CutePlayerDef {
   CutePlayerDef._();
 
-  static const double kLife = CharacterConstants.kLifeExtraLarge;
-
-  static double kSpeed = CharacterConstants.kSpeedFast;
-
   static const double _kMaxStamina = 100.0;
   static const int _kMaxEnergy = 100;
   static const int _kStaminaIncrement = 1;
@@ -51,8 +47,10 @@ final class CutePlayerDef {
     harvestStaminaCost: _kHarvestStaminaCost,
   );
 
-  static final Vector2 textureSize = TileConstants.tileSizeCute;
+  static const double _kLife = CharacterConstants.kLifeExtraLarge;
+  static double _kBaseSpeed = CharacterConstants.kSpeedFast;
 
+  static final Vector2 textureSize = TileConstants.tileSizeCute;
   static final Vector2 componentSize = textureSize;
 
   static final RectangleHitbox _hitbox = HitboxUtils.createCustomHitbox(
@@ -68,7 +66,7 @@ final class CutePlayerDef {
         'new/Player/idle/player_idle_left_48x48_6.png',
         SpriteAnimationConfigHelper.createStandardData(
           amount: 6,
-          textureSize: CutePlayerDef.textureSize,
+          textureSize: textureSize,
         ),
       );
 
@@ -76,7 +74,7 @@ final class CutePlayerDef {
     'new/Player/idle/player_idle_up_48x48_6.png',
     SpriteAnimationConfigHelper.createStandardData(
       amount: 6,
-      textureSize: CutePlayerDef.textureSize,
+      textureSize: textureSize,
     ),
   );
 
@@ -85,7 +83,7 @@ final class CutePlayerDef {
         'new/Player/idle/player_idle_down_48x48_6.png',
         SpriteAnimationConfigHelper.createStandardData(
           amount: 6,
-          textureSize: CutePlayerDef.textureSize,
+          textureSize: textureSize,
         ),
       );
 
@@ -304,7 +302,7 @@ final class CutePlayerDef {
         'new/Player/idle/player_idle_right_48x48_6.png',
         SpriteAnimationConfigHelper.createStandardData(
           amount: 6,
-          textureSize: CutePlayerDef.textureSize,
+          textureSize: textureSize,
         ),
       );
 
@@ -401,17 +399,19 @@ final class CutePlayerDef {
       );
 
   static final viewConfig = DDFarmPlayerViewConfig(
-    hitbox: CutePlayerDef._hitbox,
-    lighting: CutePlayerDef._lighting,
-    getDeathMarker: CutePlayerDef._createDeathMarker,
-    animationWalkDirectional: CutePlayerDef._animationWalkDirectional,
-    animationRunDirectional: CutePlayerDef._animationRunDirectional,
-    animationAttackDirectionalFactory:
-        CutePlayerDef._animationAttackDirectionalFactory,
-    animationDigFactory: CutePlayerDef._animationDigDirectionalFactory,
-    animationWateringCanFactory: CutePlayerDef._animationWateringCanFactory,
-    animationPlaceSeedFactory: CutePlayerDef._animationPlaceSeedFactory,
-    animationHarvestFactory: CutePlayerDef._animationHarvestFactory,
+    size: componentSize,
+    life: _kLife,
+    baseSpeed: _kBaseSpeed,
+    hitbox: _hitbox,
+    lighting: _lighting,
+    getDeathMarker: _createDeathMarker,
+    animationWalkDirectional: _animationWalkDirectional,
+    animationRunDirectional: _animationRunDirectional,
+    animationAttackDirectionalFactory: _animationAttackDirectionalFactory,
+    animationDigFactory: _animationDigDirectionalFactory,
+    animationWateringCanFactory: _animationWateringCanFactory,
+    animationPlaceSeedFactory: _animationPlaceSeedFactory,
+    animationHarvestFactory: _animationHarvestFactory,
   );
 }
 

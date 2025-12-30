@@ -23,12 +23,13 @@ abstract class DDBasePlayerView<
     required this.config,
     required super.position,
     required M model,
-    required super.animation,
-    required super.size,
-    required super.life,
-    required double baseSpeed,
   }) : _model = model,
-       super(speed: baseSpeed) {
+       super(
+         animation: null,
+         size: config.size,
+         life: config.life,
+         speed: config.baseSpeed,
+       ) {
     anchor = Anchor.center;
   }
 

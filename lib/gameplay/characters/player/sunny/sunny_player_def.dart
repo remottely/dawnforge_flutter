@@ -10,10 +10,6 @@ import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dar
 final class SunnyPlayerDef {
   SunnyPlayerDef._();
 
-  static const double kLife = CharacterConstants.kLifeExtraLarge;
-
-  static double kSpeed = CharacterConstants.kSpeedFast;
-
   static const double _kMaxStamina = 100.0;
   static const int _kMaxEnergy = 100;
   static const int _kStaminaIncrement = 1;
@@ -50,12 +46,14 @@ final class SunnyPlayerDef {
     harvestStaminaCost: _kHarvestStaminaCost,
   );
 
-  static final Vector2 textureSize = TileConstants.tileSizeSunny;
+  static const double _kLife = CharacterConstants.kLifeExtraLarge;
+  static double _kBaseSpeed = CharacterConstants.kSpeedFast;
 
-  static final Vector2 componentSize = textureSize;
+  static final Vector2 textureSize = TileConstants.tileSizeSunny;
+  static final Vector2 _componentSize = textureSize;
 
   static final RectangleHitbox _hitbox = HitboxUtils.createCustomHitbox(
-    componentSize: componentSize,
+    componentSize: _componentSize,
     left: 44.0,
     top: 28.0,
     right: 44.0,
@@ -67,7 +65,7 @@ final class SunnyPlayerDef {
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_idle_left_strip9.png',
     SpriteAnimationConfigHelper.createStandardData(
       amount: 9,
-      textureSize: SunnyPlayerDef.textureSize,
+      textureSize: textureSize,
     ),
   );
 
@@ -192,7 +190,7 @@ final class SunnyPlayerDef {
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_idle_strip9.png',
     SpriteAnimationConfigHelper.createStandardData(
       amount: 9,
-      textureSize: SunnyPlayerDef.textureSize,
+      textureSize: textureSize,
     ),
   );
 
@@ -255,16 +253,18 @@ final class SunnyPlayerDef {
       );
 
   static final viewConfig = DDFarmPlayerViewConfig(
-    hitbox: SunnyPlayerDef._hitbox,
-    lighting: SunnyPlayerDef._lighting,
-    getDeathMarker: (position) => SunnyPlayerDef._createDeathMarker(position),
-    animationWalkDirectional: SunnyPlayerDef._animationWalkDirectional,
-    animationRunDirectional: SunnyPlayerDef._animationRunDirectional,
-    animationAttackDirectionalFactory:
-        SunnyPlayerDef._animationAttackDirectionalFactory,
-    animationDigFactory: SunnyPlayerDef._animationDigDirectionalFactory,
-    animationWateringCanFactory: SunnyPlayerDef._animationWateringCanFactory,
-    animationPlaceSeedFactory: SunnyPlayerDef._animationPlaceSeedFactory,
-    animationHarvestFactory: SunnyPlayerDef._animationHarvestFactory,
+    size: _componentSize,
+    life: _kLife,
+    baseSpeed: _kBaseSpeed,
+    hitbox: _hitbox,
+    lighting: _lighting,
+    getDeathMarker: (position) => _createDeathMarker(position),
+    animationWalkDirectional: _animationWalkDirectional,
+    animationRunDirectional: _animationRunDirectional,
+    animationAttackDirectionalFactory: _animationAttackDirectionalFactory,
+    animationDigFactory: _animationDigDirectionalFactory,
+    animationWateringCanFactory: _animationWateringCanFactory,
+    animationPlaceSeedFactory: _animationPlaceSeedFactory,
+    animationHarvestFactory: _animationHarvestFactory,
   );
 }

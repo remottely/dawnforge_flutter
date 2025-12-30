@@ -10,10 +10,6 @@ import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dar
 final class FarmerPlayerDef {
   FarmerPlayerDef._();
 
-  static const double kLife = CharacterConstants.kLifeExtraLarge;
-
-  static double kSpeed = CharacterConstants.kSpeedFast;
-
   static const double _kMaxStamina = 100.0;
   static const int _kMaxEnergy = 100;
   static const int _kStaminaIncrement = 1;
@@ -50,12 +46,14 @@ final class FarmerPlayerDef {
     harvestStaminaCost: _kHarvestStaminaCost,
   );
 
-  static final Vector2 textureSize = TileConstants.tileSizeFarmer;
+  static const double _kLife = CharacterConstants.kLifeExtraLarge;
+  static double _kBaseSpeed = CharacterConstants.kSpeedFast;
 
-  static final Vector2 componentSize = textureSize;
+  static final Vector2 textureSize = TileConstants.tileSizeFarmer;
+  static final Vector2 _componentSize = textureSize;
 
   static final RectangleHitbox _hitbox = HitboxUtils.createCustomHitbox(
-    componentSize: componentSize,
+    componentSize: _componentSize,
     left: 16,
     top: 23,
     right: 16,
@@ -549,23 +547,6 @@ final class FarmerPlayerDef {
         size: _cryptComponentSize,
       );
 
-  static final viewConfig = DDFarmPlayerViewConfig(
-    hitbox: FarmerPlayerDef._hitbox,
-    lighting: FarmerPlayerDef._lighting,
-    getDeathMarker: (position) => FarmerPlayerDef._createDeathMarker(position),
-    animationWalkDirectional: FarmerPlayerDef._animationWalkDirectional,
-    animationRunDirectional: FarmerPlayerDef._animationRunDirectional,
-    animationAttackDirectionalFactory:
-        FarmerPlayerDef._animationAttackDirectionalFactory,
-    animationDigFactory: FarmerPlayerDef._animationDigDirectionalFactory,
-    animationWateringCanFactory:
-        FarmerPlayerDef._animationWateringDirectionalFactory,
-    animationPlaceSeedFactory:
-        FarmerPlayerDef._animationPlaceSeedDirectionalFactory,
-    animationHarvestFactory:
-        FarmerPlayerDef._animationHarvestDirectionalFactory,
-  );
-
   static final Future<SpriteAnimation> _loadAnimationWateringRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
@@ -604,6 +585,22 @@ final class FarmerPlayerDef {
         framePositionY: _frameWateringY,
         framePositionYPadding: -16,
       );
+
+  static final viewConfig = DDFarmPlayerViewConfig(
+    size: _componentSize,
+    life: _kLife,
+    baseSpeed: _kBaseSpeed,
+    hitbox: _hitbox,
+    lighting: _lighting,
+    getDeathMarker: (position) => _createDeathMarker(position),
+    animationWalkDirectional: _animationWalkDirectional,
+    animationRunDirectional: _animationRunDirectional,
+    animationAttackDirectionalFactory: _animationAttackDirectionalFactory,
+    animationDigFactory: _animationDigDirectionalFactory,
+    animationWateringCanFactory: _animationWateringDirectionalFactory,
+    animationPlaceSeedFactory: _animationPlaceSeedDirectionalFactory,
+    animationHarvestFactory: _animationHarvestDirectionalFactory,
+  );
 }
 
 // - new/Player/axe/

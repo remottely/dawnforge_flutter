@@ -20,11 +20,8 @@ abstract class DDMobilePlayerView<
     required this.config,
     required super.position,
     required super.model,
-    required super.size,
-    required super.life,
-    required super.baseSpeed,
-  }) : _baseSpeed = baseSpeed,
-       super(config: config, animation: null);
+  }) : _baseSpeed = config.baseSpeed,
+       super(config: config);
 
   bool _isInRunningState = false;
 

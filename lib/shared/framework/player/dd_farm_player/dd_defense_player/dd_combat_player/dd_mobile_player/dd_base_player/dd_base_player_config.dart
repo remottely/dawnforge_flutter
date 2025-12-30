@@ -1,11 +1,17 @@
 import 'package:bonfire/bonfire.dart';
 
 class DDBasePlayerViewConfig {
+  final Vector2 size;
+  final double life;
+  final double baseSpeed;
   final RectangleHitbox hitbox;
   final LightingConfig lighting;
   final GameDecoration Function(Vector2 position) getDeathMarker;
 
   const DDBasePlayerViewConfig({
+    required this.size,
+    required this.life,
+    required this.baseSpeed,
     required this.hitbox,
     required this.lighting,
     required this.getDeathMarker,

@@ -10,12 +10,7 @@ class CutePlayerView<
 >
     extends DDFarmPlayerView<C, M> {
   CutePlayerView({required super.position, required super.model})
-    : super(
-        config: CutePlayerDef.viewConfig,
-        size: CutePlayerDef.componentSize,
-        life: CutePlayerDef.kLife,
-        baseSpeed: CutePlayerDef.kSpeed,
-      );
+    : super(config: CutePlayerDef.viewConfig);
 
   @override
   C createFarmController({

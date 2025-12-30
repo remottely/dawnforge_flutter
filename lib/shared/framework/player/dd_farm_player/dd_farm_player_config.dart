@@ -8,6 +8,9 @@ class DDFarmPlayerViewConfig extends DDCombatPlayerViewConfig {
   final DDAnimationDirectionalFactory animationHarvestFactory;
 
   const DDFarmPlayerViewConfig({
+    required super.size,
+    required super.life,
+    required super.baseSpeed,
     required super.hitbox,
     required super.lighting,
     required super.getDeathMarker,
