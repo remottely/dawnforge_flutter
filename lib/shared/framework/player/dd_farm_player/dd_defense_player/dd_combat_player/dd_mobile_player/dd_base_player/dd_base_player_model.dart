@@ -33,12 +33,18 @@ class DDBasePlayerModel {
     if (_saveData.stamina < 0) _saveData.stamina = 0;
   }
 
-  void regenerateStamina() {
-    _saveData.stamina += config.staminaRegenIncrement;
+  void regenerateStamina() => restoreStamina(config.staminaRegenIncrement);
+
+  /// Restore a specific amount of stamina (e.g., from consumables)
+  void restoreStamina(int amount) {
+    _saveData.stamina += amount;
     if (_saveData.stamina > config.maxStamina) {
       _saveData.stamina = config.maxStamina;
     }
   }
+
+  /// Restore stamina to maximum (e.g., when a new day starts)
+  void restoreStaminaFully() => _saveData.stamina = config.maxStamina;
 
   void consumeEnergy(int amount) {
     _saveData.energy -= amount;

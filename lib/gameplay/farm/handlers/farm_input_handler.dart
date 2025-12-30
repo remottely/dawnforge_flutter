@@ -1,6 +1,7 @@
 import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/save/game_save_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
@@ -46,6 +47,10 @@ class FarmInputHandler extends GameComponent with PlayerControllerListener {
   void _handleAdvanceDay() {
     WorldStateManager.instance.advanceDay();
     getIt<FarmManager>().advanceDay();
+
+    // Restore stamina fully when advancing to a new day
+    PlayerStateManager.instance.lastPlayerModel?.restoreStaminaFully();
+    developer.log('[FarmInput] Stamina restored to 100%');
 
     final currentDay = WorldStateManager.instance.currentDay;
     developer.log('[FarmInput] Advanced to day $currentDay');

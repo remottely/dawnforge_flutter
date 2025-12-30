@@ -1,5 +1,7 @@
 # IMPORTANT BEFORE LAUNCH:
 
+- [PRIORITY] mudar a logica de regeneracao da vida em contato com a tocha ligada? mudar para em contato com a cama? criar cama!
+
 - [PRIORITY] renomear "isPrimaryAction", "isRunAction", etc para "isActionPrimary", "isActionRun", etc.
 
 - [PRIORITY] a reatividade do inventario esta ruim, quando clico "G" deveria refletir a limpeza do inventario/jogo em tempo real. quando clico em "G" alem de nao apagar tudo do inventario em tempo real, quando eu reincio o jogo ele reiniciar com o inventario vazio sendo q deveria trazer os itens iniciais de base de teste, mas eles so aparecem se eu fechar e abrir o inventario ou interagir com trocas do equipamento. quero uma solucao robusta em tempo real e q priorize tb o desempenho.

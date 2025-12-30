@@ -32,7 +32,7 @@ abstract class DDBasePlayerController<M extends DDBasePlayerModel> {
   }) {}
 
   void update(double dt) {
-    processStaminaRegeneration();
+    // processStaminaRegeneration();
     processEnemyDetection();
   }
 

@@ -18,6 +18,12 @@ class TorchDecorationController {
   })
   onDetectPlayerInCloseVisionRadius;
 
+  // Stamina regeneration system for torches
+  // bool _isPlayerInRange = false;
+  // double _staminaRegenTimer = 0.0;
+  // static const double kStaminaRegenInterval = 2.0; // seconds
+  // static const int kStaminaRegenAmount = 5; // stamina points per interval
+
   TorchDecorationController({
     required this.model,
     required this.onDisplayExclamationEmote,
@@ -28,6 +34,12 @@ class TorchDecorationController {
   void update(double dt, DDBasePlayerView? player) {
     if (player == null) return;
     _handleDetectPlayerInCloseVisionRadius(player);
+    _updateStaminaRegeneration(dt, player);
+  }
+
+  void _updateStaminaRegeneration(double dt, DDBasePlayerView player) {
+    if (model.isDetectPlayer && model.isOn)
+      player.controller.processStaminaRegeneration();
   }
 
   void dispose() {}
@@ -49,15 +61,9 @@ class TorchDecorationController {
   }
 
   void _handlePlayerEntersRange(GameComponent _) {
-    if (!model.isDetectPlayer) {
-      model.setIsDetectPlayer(true);
-      onDisplayExclamationEmote();
-    }
+    model.setIsDetectPlayer(true);
+    onDisplayExclamationEmote();
   }
 
-  void _handlePlayerExitsRange() {
-    if (model.isDetectPlayer) {
-      model.setIsDetectPlayer(false);
-    }
-  }
+  void _handlePlayerExitsRange() => model.setIsDetectPlayer(false);
 }
