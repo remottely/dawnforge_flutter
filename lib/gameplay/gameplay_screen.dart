@@ -3,6 +3,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart'
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/map_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/map_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_widget.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/color_helper.dart';
 import 'package:darkness_dungeon/gameplay/decorations/map_transition_sensor.dart';
@@ -117,6 +118,8 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
             if (SettingsManager.instance.inputSelected ==
                 InputActionsType.joystick)
               MobileInputsOverlay(playerController: playerInput),
+            // Flutter Overlay Message - centralized messages
+            const OverlayMessageWidget(),
           ],
         );
       },
