@@ -67,7 +67,7 @@ final class KeyboardSetup {
 
   // ========== MENUS (Stardew Valley style) ==========
   /// Open/close inventory (Tab in Stardew, E also works)
-  static const LogicalKeyboardKey kToggleInventoryKey = LogicalKeyboardKey.tab;
+  static const LogicalKeyboardKey kToggleInventoryKey = LogicalKeyboardKey.keyI;
 
   /// Open crafting menu (C in Stardew - future)
   static const LogicalKeyboardKey kCraftingKey = LogicalKeyboardKey.keyC;

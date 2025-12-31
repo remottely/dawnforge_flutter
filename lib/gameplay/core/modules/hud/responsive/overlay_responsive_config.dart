@@ -45,8 +45,15 @@ class OverlayResponsiveConfig {
   // Icon/slot sizes responsivos
   static const Map<ScreenSize, double> kSlotSize = {
     ScreenSize.mobile: 40.0,
-    ScreenSize.tablet: 44.0,
-    ScreenSize.desktop: 48.0,
+    ScreenSize.tablet: 52.0,
+    ScreenSize.desktop: 64.0,
+  };
+
+  // Equipment slot sizes (menores que inventory slots)
+  static const Map<ScreenSize, double> kEquipmentSlotSize = {
+    ScreenSize.mobile: 12.0,
+    ScreenSize.tablet: 18.0,
+    ScreenSize.desktop: 24.0,
   };
 
   static const Map<ScreenSize, double> kSpacing = {
@@ -97,6 +104,11 @@ class OverlayResponsiveConfig {
     return kSlotSize[size] ?? kSlotSize[ScreenSize.tablet]!;
   }
 
+  /// Obtém o tamanho de slot de equipamento responsivo (menor)
+  static double getEquipmentSlotSize(ScreenSize size) {
+    return kEquipmentSlotSize[size] ?? kEquipmentSlotSize[ScreenSize.tablet]!;
+  }
+
   /// Obtém o espaçamento responsivo
   static double getSpacing(ScreenSize size) {
     return kSpacing[size] ?? kSpacing[ScreenSize.tablet]!;
@@ -120,7 +132,7 @@ class OverlayResponsiveConfig {
     ),
     'inventory': BoxConstraints(
       minWidth: 200,
-      maxWidth: 350,
+      maxWidth: 550,
     ),
     'tutorial_inputs': BoxConstraints(
       minWidth: 300,

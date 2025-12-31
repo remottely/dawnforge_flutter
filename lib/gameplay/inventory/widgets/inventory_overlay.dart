@@ -1,4 +1,5 @@
-import 'package:darkness_dungeon/gameplay/core/modules/hud/responsive/responsive_overlay_base.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/responsive/responsive_overlay_mixin.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/responsive/overlay_responsive_config.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/state/equipment_state.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
@@ -10,93 +11,121 @@ import 'package:darkness_dungeon/gameplay/inventory/widgets/item_sprite_widget.d
 import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
 import 'package:flutter/material.dart';
 
-class InventoryOverlay extends ResponsiveOverlayBase {
+class InventoryOverlay extends StatelessWidget with ResponsiveOverlayMixin {
   const InventoryOverlay({super.key});
 
-  @override
   String get overlayId => 'inventory';
 
   @override
-  ValueNotifier<bool> get visibilityNotifier =>
-      InventoryState.instance.isVisible;
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: InventoryState.instance.isVisible,
+      builder: (context, isVisible, child) {
+        if (!isVisible) return const SizedBox.shrink();
+        
+        // LayoutBuilder para reagir a mudanças de tamanho em tempo real
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final screenSize = getScreenSize(context);
+            final padding = OverlayResponsiveConfig.getPadding(screenSize);
+            final spacing = OverlayResponsiveConfig.getSpacing(screenSize);
+            final slotSize = OverlayResponsiveConfig.getSlotSize(screenSize);
+            final baseFontSize = OverlayResponsiveConfig.getBaseFontSize(screenSize);
 
-  @override
-  OverlayPosition getOverlayPosition(BuildContext context) {
-    final margin = getResponsiveMargin(context);
-    return OverlayPosition.bottomRight(
-      margin: margin,
-      safeAreaPadding: EdgeInsets.all(margin / 2),
+            return Material(
+              color: Colors.transparent,
+              child: Container(
+                padding: EdgeInsets.all(padding),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.8),
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.5),
+                    width: screenSize == ScreenSize.mobile ? 1.5 : 2,
+                  ),
+                  borderRadius: BorderRadius.circular(
+                    screenSize == ScreenSize.mobile ? 3 : 4,
+                  ),
+                ),
+                child: _buildInventoryGrid(
+                  context,
+                  spacing,
+                  slotSize,
+                  baseFontSize,
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
-  @override
-  Widget buildOverlayContent(BuildContext context, ResponsiveOverlayData data) {
-    return Material(
-      color: Colors.transparent,
-      child: IntrinsicWidth(
-        child: Container(
-          padding: EdgeInsets.all(data.padding),
-          decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.8),
-            border: Border.all(
-              color: Colors.white.withOpacity(0.5),
-              width: data.isSmallScreen ? 1.5 : 2,
-            ),
-            borderRadius: BorderRadius.circular(data.isSmallScreen ? 3 : 4),
-          ),
-          child: _buildInventoryGrid(context, data),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInventoryGrid(BuildContext context, ResponsiveOverlayData data) {
+  Widget _buildInventoryGrid(
+    BuildContext context,
+    double spacing,
+    double slotSize,
+    double baseFontSize,
+  ) {
     // Listen to inventory changes with the actual slots list
     return ValueListenableBuilder<List<InventorySlot>>(
       valueListenable: getIt<InventoryManager>().slotsNotifier,
       builder: (context, slots, _) {
-        // Sempre renderiza em 2 linhas com 6 slots cada
-        const slotsPerRow = 6;
-        final totalRows = (slots.length / slotsPerRow).ceil();
-
         return ValueListenableBuilder<Map<EquipmentSlotType, Item?>>(
           valueListenable: EquipmentState.instance.equipment,
           builder: (context, equipmentMap, child) {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: List.generate(totalRows, (rowIndex) {
-                final startIndex = rowIndex * slotsPerRow;
-                final endIndex = (startIndex + slotsPerRow).clamp(
-                  0,
-                  slots.length,
-                );
-                final rowSlots = slots.sublist(startIndex, endIndex);
+            // Desktop: 1 linha horizontal com rolagem horizontal
+            if (isDesktopScreen(context)) {
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: List.generate(slots.length, (index) {
+                    final slot = slots[index];
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        right: index < slots.length - 1 ? spacing : 0,
+                      ),
+                      child: _buildInventorySlot(
+                        spacing,
+                        slotSize,
+                        baseFontSize,
+                        slot,
+                        slot.item,
+                        slot.quantity,
+                      ),
+                    );
+                  }),
+                ),
+              );
+            }
 
-                return Padding(
-                  padding: EdgeInsets.only(
-                    bottom: rowIndex < totalRows - 1 ? data.spacing : 0,
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: List.generate(rowSlots.length, (colIndex) {
-                      final slot = rowSlots[colIndex];
-                      return Padding(
-                        padding: EdgeInsets.only(
-                          right: colIndex < rowSlots.length - 1
-                              ? data.spacing
-                              : 0,
-                        ),
-                        child: _buildInventorySlot(
-                          data,
-                          slot,
-                          slot.item,
-                          slot.quantity,
-                        ),
-                      );
-                    }),
-                  ),
-                );
-              }),
+            // Mobile e Tablet: 1 coluna vertical com rolagem vertical
+            return ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.6,
+              ),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: List.generate(slots.length, (index) {
+                    final slot = slots[index];
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        bottom: index < slots.length - 1 ? spacing : 0,
+                      ),
+                      child: _buildInventorySlot(
+                        spacing,
+                        slotSize,
+                        baseFontSize,
+                        slot,
+                        slot.item,
+                        slot.quantity,
+                      ),
+                    );
+                  }),
+                ),
+              ),
             );
           },
         );
@@ -105,7 +134,9 @@ class InventoryOverlay extends ResponsiveOverlayBase {
   }
 
   Widget _buildInventorySlot(
-    ResponsiveOverlayData data,
+    double spacing,
+    double slotSize,
+    double baseFontSize,
     InventorySlot slot,
     Item? item,
     int? quantity,
@@ -141,8 +172,8 @@ class InventoryOverlay extends ResponsiveOverlayBase {
     return GestureDetector(
       onTap: () => getIt<EquipmentManager>().selectSlotIndex(slot.index),
       child: Container(
-        width: data.slotSize,
-        height: data.slotSize,
+        width: slotSize,
+        height: slotSize,
         decoration: BoxDecoration(
           color: isSelected ? Colors.red.withOpacity(0.5) : slotColor,
           border: Border.all(color: Colors.white.withOpacity(0.5)),
@@ -156,7 +187,7 @@ class InventoryOverlay extends ResponsiveOverlayBase {
                 left: 2,
                 child: Container(
                   padding: EdgeInsets.symmetric(
-                    horizontal: data.spacing / 2,
+                    horizontal: spacing / 2,
                     vertical: 1,
                   ),
                   decoration: BoxDecoration(
@@ -167,7 +198,7 @@ class InventoryOverlay extends ResponsiveOverlayBase {
                     slotNumberLabel,
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.9),
-                      fontSize: data.baseFontSize - 4,
+                      fontSize: baseFontSize - 4,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Normal',
                     ),
@@ -179,17 +210,17 @@ class InventoryOverlay extends ResponsiveOverlayBase {
               Center(
                 child: item.iconData != null
                     ? Padding(
-                        padding: EdgeInsets.all(data.spacing),
+                        padding: EdgeInsets.all(spacing),
                         child: ItemSpriteWidget(
                           iconData: item.iconData,
-                          size: data.slotSize - (data.spacing * 2),
+                          size: slotSize - (spacing * 2),
                         ),
                       )
                     : Text(
                         _abbreviateItemName(item.name),
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: data.baseFontSize - 2,
+                          fontSize: baseFontSize - 2,
                           fontFamily: 'Normal',
                         ),
                         textAlign: TextAlign.center,
@@ -202,7 +233,7 @@ class InventoryOverlay extends ResponsiveOverlayBase {
                   left: 2,
                   child: Container(
                     padding: EdgeInsets.symmetric(
-                      horizontal: data.spacing / 2,
+                      horizontal: spacing / 2,
                       vertical: 1,
                     ),
                     decoration: BoxDecoration(
@@ -213,7 +244,7 @@ class InventoryOverlay extends ResponsiveOverlayBase {
                       'x$quantity',
                       style: TextStyle(
                         color: Colors.yellow,
-                        fontSize: data.baseFontSize - 4,
+                        fontSize: baseFontSize - 4,
                         fontFamily: 'Normal',
                       ),
                     ),

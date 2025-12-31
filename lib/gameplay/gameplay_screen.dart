@@ -3,16 +3,13 @@ import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart'
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/map_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/map_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_widget.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/color_helper.dart';
 import 'package:darkness_dungeon/gameplay/decorations/map_transition_sensor.dart';
 import 'package:darkness_dungeon/gameplay/farm/handlers/farm_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/widgets/mobile_inputs_overlay.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/tutorial_inputs/widgets/tutorial_inputs_overlay.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/unified_game_overlay.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen_viewmodel.dart';
-import 'package:darkness_dungeon/gameplay/inventory/widgets/equipment_overlay.dart';
-import 'package:darkness_dungeon/gameplay/inventory/widgets/inventory_overlay.dart';
 import 'package:darkness_dungeon/shared/framework/utils/dd_debug_hud.dart';
 import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
 import 'package:flutter/material.dart';
@@ -108,18 +105,14 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
               debugMode: AppEnvironment.kIsDebugMode,
               showCollisionArea: AppEnvironment.kShowCollisionArea,
             ),
-            // Flutter Equipment Overlay - inside MapNavigator builder
-            const EquipmentOverlay(),
-            // Flutter Inventory Overlay - inside MapNavigator builder
-            const InventoryOverlay(),
-            // Flutter Tutorial Inputs Overlay - inside MapNavigator builder
-            const TutorialInputsOverlay(),
+
             // Flutter Mobile Inputs Overlay - only for joystick mode
             if (SettingsManager.instance.inputSelected ==
                 InputActionsType.joystick)
               MobileInputsOverlay(playerController: playerInput),
-            // Flutter Overlay Message - centralized messages
-            const OverlayMessageWidget(),
+
+            // Unified Game Overlay - all HUD components organized in a grid
+            const UnifiedGameOverlay(),
           ],
         );
       },

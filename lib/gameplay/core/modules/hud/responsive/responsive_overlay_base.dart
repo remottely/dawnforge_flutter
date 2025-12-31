@@ -65,12 +65,13 @@ class ResponsiveOverlayData {
   final double baseFontSize;
   final double titleFontSize;
   final double slotSize;
+  final double equipmentSlotSize;
   final double spacing;
   final double scale;
   final bool isPortrait;
-  final bool isSmallScreen;
-  final bool isMediumScreen;
-  final bool isLargeScreen;
+  final bool isMobileScreen;
+  final bool isTabletScreen;
+  final bool isDesktopScreen;
   final EdgeInsets safeAreaInsets;
 
   const ResponsiveOverlayData({
@@ -80,12 +81,13 @@ class ResponsiveOverlayData {
     required this.baseFontSize,
     required this.titleFontSize,
     required this.slotSize,
+    required this.equipmentSlotSize,
     required this.spacing,
     required this.scale,
     required this.isPortrait,
-    required this.isSmallScreen,
-    required this.isMediumScreen,
-    required this.isLargeScreen,
+    required this.isMobileScreen,
+    required this.isTabletScreen,
+    required this.isDesktopScreen,
     required this.safeAreaInsets,
   });
 
@@ -99,12 +101,13 @@ class ResponsiveOverlayData {
       baseFontSize: mixin.getResponsiveBaseFontSize(context),
       titleFontSize: mixin.getResponsiveTitleFontSize(context),
       slotSize: mixin.getResponsiveSlotSize(context),
+      equipmentSlotSize: mixin.getResponsiveEquipmentSlotSize(context),
       spacing: mixin.getResponsiveSpacing(context),
       scale: mixin.getResponsiveScale(context),
       isPortrait: mixin.isPortrait(context),
-      isSmallScreen: mixin.isSmallScreen(context),
-      isMediumScreen: mixin.isMediumScreen(context),
-      isLargeScreen: mixin.isLargeScreen(context),
+      isMobileScreen: mixin.isMobileScreen(context),
+      isTabletScreen: mixin.isTabletScreen(context),
+      isDesktopScreen: mixin.isDesktopScreen(context),
       safeAreaInsets: mixin.getSafeAreaInsets(context),
     );
   }

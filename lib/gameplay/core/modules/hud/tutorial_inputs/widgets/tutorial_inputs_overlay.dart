@@ -38,7 +38,7 @@ class TutorialInputsOverlay extends ResponsiveOverlayBase {
           padding: EdgeInsets.all(data.padding),
           decoration: BoxDecoration(
             color: const Color(0xAA222222),
-            borderRadius: BorderRadius.circular(data.isSmallScreen ? 6 : 8),
+            borderRadius: BorderRadius.circular(data.isMobileScreen ? 6 : 8),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -90,7 +90,7 @@ class TutorialInputsOverlay extends ResponsiveOverlayBase {
             height: keyBoxHeight,
             decoration: BoxDecoration(
               color: const Color(0xFF444444),
-              borderRadius: BorderRadius.circular(data.isSmallScreen ? 3 : 4),
+              borderRadius: BorderRadius.circular(data.isMobileScreen ? 3 : 4),
             ),
             padding: EdgeInsets.symmetric(horizontal: data.spacing),
             alignment: Alignment.centerLeft,

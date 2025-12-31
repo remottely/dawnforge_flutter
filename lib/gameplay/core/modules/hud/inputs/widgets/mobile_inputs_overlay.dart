@@ -56,7 +56,7 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
   }
 
   Widget _buildActionButtons(BuildContext context, ResponsiveOverlayData data) {
-    final buttonSize = data.isSmallScreen ? 50.0 : 60.0;
+    final buttonSize = data.isMobileScreen ? 50.0 : 60.0;
     final spacing = data.spacing;
 
     return Column(
@@ -88,7 +88,7 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
     BuildContext context,
     ResponsiveOverlayData data,
   ) {
-    final buttonSize = data.isSmallScreen ? 45.0 : 55.0;
+    final buttonSize = data.isMobileScreen ? 45.0 : 55.0;
     final spacing = data.spacing;
 
     return Column(
@@ -133,7 +133,7 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
     BuildContext context,
     ResponsiveOverlayData data,
   ) {
-    final buttonSize = data.isSmallScreen ? 40.0 : 50.0;
+    final buttonSize = data.isMobileScreen ? 40.0 : 50.0;
     final spacing = data.spacing;
 
     return Column(

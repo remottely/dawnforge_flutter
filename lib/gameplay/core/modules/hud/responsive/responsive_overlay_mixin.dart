@@ -31,17 +31,17 @@ mixin ResponsiveOverlayMixin {
   }
 
   /// Verifica se é uma tela pequena (mobile)
-  bool isSmallScreen(BuildContext context) {
+  bool isMobileScreen(BuildContext context) {
     return getScreenSize(context) == ScreenSize.mobile;
   }
 
   /// Verifica se é uma tela média (tablet)
-  bool isMediumScreen(BuildContext context) {
+  bool isTabletScreen(BuildContext context) {
     return getScreenSize(context) == ScreenSize.tablet;
   }
 
   /// Verifica se é uma tela grande (desktop)
-  bool isLargeScreen(BuildContext context) {
+  bool isDesktopScreen(BuildContext context) {
     return getScreenSize(context) == ScreenSize.desktop;
   }
 
@@ -73,6 +73,12 @@ mixin ResponsiveOverlayMixin {
   double getResponsiveSlotSize(BuildContext context) {
     final screenSize = getScreenSize(context);
     return OverlayResponsiveConfig.getSlotSize(screenSize);
+  }
+
+  /// Obtém tamanho de slot de equipamento responsivo
+  double getResponsiveEquipmentSlotSize(BuildContext context) {
+    final screenSize = getScreenSize(context);
+    return OverlayResponsiveConfig.getEquipmentSlotSize(screenSize);
   }
 
   /// Obtém espaçamento responsivo

@@ -28,50 +28,28 @@ class EquipmentOverlay extends ResponsiveOverlayBase {
   Widget buildOverlayContent(BuildContext context, ResponsiveOverlayData data) {
     return Material(
       color: Colors.transparent,
-      child: IntrinsicWidth(
-        child: Container(
-          padding: EdgeInsets.all(data.padding),
-          decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.8),
-            border: Border.all(
-              color: Colors.white.withOpacity(0.5),
-              width: data.isSmallScreen ? 1.5 : 2,
-            ),
-            borderRadius: BorderRadius.circular(data.isSmallScreen ? 6 : 8),
+      child: Container(
+        padding: EdgeInsets.all(data.padding),
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.8),
+          border: Border.all(
+            color: Colors.white.withOpacity(0.5),
+            width: data.isMobileScreen ? 1.5 : 2,
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Text(
-              //   'EQUIPMENT',
-              //   style: TextStyle(
-              //     color: Colors.white,
-              //     fontSize: data.titleFontSize,
-              //     fontWeight: FontWeight.bold,
-              //     fontFamily: 'Normal',
-              //   ),
-              // ),
-              // SizedBox(height: data.spacing * 2),
-              ValueListenableBuilder(
-                valueListenable: EquipmentState.instance.equipment,
-                builder: (context, equipmentMap, child) {
-                  return Column(
-                    children: [
-                      _buildSlotRow(
-                        context,
-                        data,
-                        'MAIN HAND',
-                        EquipmentSlotType.mainHand,
-                        equipmentMap,
-                        Colors.red.withOpacity(0.3),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ],
-          ),
+          borderRadius: BorderRadius.circular(data.isMobileScreen ? 6 : 8),
+        ),
+        child: ValueListenableBuilder(
+          valueListenable: EquipmentState.instance.equipment,
+          builder: (context, equipmentMap, child) {
+            return _buildSlotRow(
+              context,
+              data,
+              'MAIN HAND',
+              EquipmentSlotType.mainHand,
+              equipmentMap,
+              Colors.red.withOpacity(0.3),
+            );
+          },
         ),
       ),
     );
@@ -86,24 +64,13 @@ class EquipmentOverlay extends ResponsiveOverlayBase {
     Color slotColor,
   ) {
     final item = equipmentMap[slotType];
-    final labelWidth = data.isSmallScreen ? 32.0 : 70.0;
 
-    return Row(
-      children: [
-        SizedBox(
-          width: labelWidth,
-          child: Text(
-            label,
-            style: TextStyle(
-              color: Colors.yellow,
-              fontSize: data.baseFontSize - 2,
-              fontFamily: 'Normal',
-            ),
-          ),
-        ),
-        Container(
-          width: data.slotSize,
-          height: data.slotSize,
+    return AspectRatio(
+      aspectRatio: 1,
+      child: SizedBox(
+        width: data.equipmentSlotSize,
+        height: data.equipmentSlotSize,
+        child: Container(
           decoration: BoxDecoration(
             color: item != null ? slotColor : Colors.grey.withOpacity(0.2),
             border: Border.all(color: Colors.white.withOpacity(0.5)),
@@ -111,10 +78,10 @@ class EquipmentOverlay extends ResponsiveOverlayBase {
           child: item != null
               ? (item.iconData != null
                     ? Padding(
-                        padding: EdgeInsets.all(data.spacing / 2),
+                        padding: EdgeInsets.zero,
                         child: ItemSpriteWidget(
                           iconData: item.iconData,
-                          size: data.slotSize - data.spacing,
+                          size: data.equipmentSlotSize - data.spacing,
                         ),
                       )
                     : Center(
@@ -139,7 +106,7 @@ class EquipmentOverlay extends ResponsiveOverlayBase {
                   ),
                 ),
         ),
-      ],
+      ),
     );
   }
 
