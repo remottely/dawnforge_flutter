@@ -5,6 +5,7 @@ import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/inventory/widgets/equipment_overlay.dart';
 import 'package:darkness_dungeon/gameplay/inventory/widgets/inventory_overlay.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/player_vital_stats/player_vital_stats_overlay.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/debug/debug_overlay.dart';
 import 'package:flutter/material.dart';
 
 /// Overlay unificado que organiza todos os componentes da HUD em um grid 3x3
@@ -63,9 +64,21 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                             ? Colors.green.withOpacity(0.03)
                             : Colors.transparent,
                         alignment: Alignment.topRight,
-                        child: AppEnvironment.kIsDebugMode
-                            ? const EquipmentOverlay()
-                            : const SizedBox.shrink(),
+                        child: Stack(
+                          children: [
+                            if (AppEnvironment.kIsDebugMode)
+                              const Align(
+                                alignment: Alignment.topRight,
+                                child: EquipmentOverlay(),
+                              ),
+                            DebugOverlay(
+                              player: player,
+                              showFps: AppEnvironment.kIsDevToolsMode,
+                              showPosition: AppEnvironment.kIsDevToolsMode,
+                              showEntities: AppEnvironment.kIsDevToolsMode,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],

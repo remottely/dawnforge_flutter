@@ -10,7 +10,6 @@ import 'package:darkness_dungeon/gameplay/farm/handlers/farm_input_handler.dart'
 import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/widgets/mobile_inputs_overlay.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/unified_game_overlay.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen_viewmodel.dart';
-import 'package:darkness_dungeon/shared/framework/utils/dd_debug_hud.dart';
 import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
 import 'package:flutter/material.dart';
 
@@ -89,13 +88,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
                 shieldDefenseInputHandler,
                 farmInputHandler,
               ],
-              hudComponents: [
-                DDDebugHud(
-                  showFps: AppEnvironment.kIsDevToolsMode,
-                  showPosition: AppEnvironment.kIsDevToolsMode,
-                  showEntities: AppEnvironment.kIsDevToolsMode,
-                ),
-              ],
+              hudComponents: [],
               interface: gameplayHUD,
               lightingColorGame: mapLightingColor,
               // backgroundColor: mapBackgroundColor, // TODO(Kevin): put it back?
