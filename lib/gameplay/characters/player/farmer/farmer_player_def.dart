@@ -429,6 +429,7 @@ final class FarmerPlayerDef {
       );
 
   static final _animationDigDirectionalFactory = DDAnimationDirectionalFactory(
+    // executionStartFrame: 4,
     loadRight: _loadAnimationDigRight,
     loadLeft: _loadAnimationDigLeft,
     loadUp: _loadAnimationDigUp,
@@ -500,6 +501,7 @@ final class FarmerPlayerDef {
 
   static final _animationWateringDirectionalFactory =
       DDAnimationDirectionalFactory(
+        // executionStartFrame: 14,
         // TODO(Kevin): change all waterincan names to watering
         loadRight: _loadAnimationWateringRight,
         loadLeft: _loadAnimationWateringLeft,

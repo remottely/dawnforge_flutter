@@ -32,18 +32,17 @@ mixin ResponsiveOverlayMixin {
 
   /// Verifica se é uma tela pequena (mobile)
   bool isSmallScreen(BuildContext context) {
-    return getScreenSize(context) == ScreenSize.small;
+    return getScreenSize(context) == ScreenSize.mobile;
   }
 
   /// Verifica se é uma tela média (tablet)
   bool isMediumScreen(BuildContext context) {
-    return getScreenSize(context) == ScreenSize.medium;
+    return getScreenSize(context) == ScreenSize.tablet;
   }
 
   /// Verifica se é uma tela grande (desktop)
   bool isLargeScreen(BuildContext context) {
-    final size = getScreenSize(context);
-    return size == ScreenSize.large || size == ScreenSize.extraLarge;
+    return getScreenSize(context) == ScreenSize.desktop;
   }
 
   /// Obtém margem responsiva
@@ -112,21 +111,18 @@ mixin ResponsiveOverlayMixin {
   /// Retorna valor baseado no tamanho da tela
   T valueByScreenSize<T>(
     BuildContext context, {
-    required T small,
-    T? medium,
-    T? large,
-    T? extraLarge,
+    required T mobile,
+    T? tablet,
+    T? desktop,
   }) {
     final screenSize = getScreenSize(context);
     switch (screenSize) {
-      case ScreenSize.small:
-        return small;
-      case ScreenSize.medium:
-        return medium ?? small;
-      case ScreenSize.large:
-        return large ?? medium ?? small;
-      case ScreenSize.extraLarge:
-        return extraLarge ?? large ?? medium ?? small;
+      case ScreenSize.mobile:
+        return mobile;
+      case ScreenSize.tablet:
+        return tablet ?? mobile;
+      case ScreenSize.desktop:
+        return desktop ?? tablet ?? mobile;
     }
   }
 

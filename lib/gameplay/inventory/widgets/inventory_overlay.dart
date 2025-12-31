@@ -51,33 +51,50 @@ class InventoryOverlay extends ResponsiveOverlayBase {
   }
 
   Widget _buildInventoryGrid(BuildContext context, ResponsiveOverlayData data) {
-    // Ajusta o número de slots por linha baseado no tamanho da tela
-    final int slotsPerRow = valueByScreenSize(
-      context,
-      small: 6,
-      medium: 8,
-      large: 10,
-      extraLarge: 12,
-    );
-
     // Listen to inventory changes with the actual slots list
     return ValueListenableBuilder<List<InventorySlot>>(
       valueListenable: getIt<InventoryManager>().slotsNotifier,
       builder: (context, slots, _) {
-        // Listen to equipment changes for highlighting
+        // Sempre renderiza em 2 linhas com 6 slots cada
+        const slotsPerRow = 6;
+        final totalRows = (slots.length / slotsPerRow).ceil();
+
         return ValueListenableBuilder<Map<EquipmentSlotType, Item?>>(
           valueListenable: EquipmentState.instance.equipment,
           builder: (context, equipmentMap, child) {
-            return Wrap(
-              spacing: data.spacing,
-              runSpacing: data.spacing,
-              children: List.generate(slots.length, (index) {
-                final slot = slots[index];
-                return _buildInventorySlot(
-                  data,
-                  slot,
-                  slot.item,
-                  slot.quantity,
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: List.generate(totalRows, (rowIndex) {
+                final startIndex = rowIndex * slotsPerRow;
+                final endIndex = (startIndex + slotsPerRow).clamp(
+                  0,
+                  slots.length,
+                );
+                final rowSlots = slots.sublist(startIndex, endIndex);
+
+                return Padding(
+                  padding: EdgeInsets.only(
+                    bottom: rowIndex < totalRows - 1 ? data.spacing : 0,
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: List.generate(rowSlots.length, (colIndex) {
+                      final slot = rowSlots[colIndex];
+                      return Padding(
+                        padding: EdgeInsets.only(
+                          right: colIndex < rowSlots.length - 1
+                              ? data.spacing
+                              : 0,
+                        ),
+                        child: _buildInventorySlot(
+                          data,
+                          slot,
+                          slot.item,
+                          slot.quantity,
+                        ),
+                      );
+                    }),
+                  ),
                 );
               }),
             );

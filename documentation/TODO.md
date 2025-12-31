@@ -1,5 +1,9 @@
 # IMPORTANT BEFORE LAUNCH:
 
+- [PRIORITY] refactor executionStartFrame to be injected
+
+- [PRIORITY] change battle music, and all musics on the game to keyn music??
+
 - [PRIORITY] transformar ataque bola de fogo evrmelho em azul
 
 - [PRIORITY] mudar a logica de regeneracao da vida em contato com a tocha ligada? mudar para em contato com a cama? criar cama!

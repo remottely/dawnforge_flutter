@@ -31,7 +31,7 @@ final class MapDef {
   static const String kBackgroundColorPropertyKey = 'backgroundColor';
 
   static const String _kCloudyLightingColor = '#d0ffffff';
-  static const String _kDarknessLightingColor = '#f0000000';
+  static const String _kDarknessLightingColor = '#d0101010';
   static const String _kNoneLightingColor = '#00ffffff';
 
   static const String _kForestBackgroundColor = '#ff63c74d';
@@ -119,7 +119,7 @@ final class MapDef {
         'sensor_$kSVLakeId',
       ],
       backgroundMusic: AudioDef.backgroundMusic1,
-      lightingColor: _kCloudyLightingColor,
+      lightingColor: _kDarknessLightingColor,
       backgroundColor: _kLakeBackgroundColor,
     ),
 

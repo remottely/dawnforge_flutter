@@ -122,7 +122,7 @@ abstract class DDFarmPlayerView<
           animationLeftDown: animationDigDirectional.leftDown,
           currentAnimation: animation,
           target: this,
-          executionStartFrame: 4,
+          executionStartFrame: 5, // TODO(Kevin): inject this value
           onActionStart: lockAction,
           onActionEnd: unlockAction,
           onExecutionFrames: () => FarmToolActionDef.execute(player: this),
@@ -153,7 +153,7 @@ abstract class DDFarmPlayerView<
           animationLeftDown: animationWateringCanDirectional.leftDown,
           currentAnimation: animation,
           target: this,
-          executionStartFrame: 4,
+          executionStartFrame: 12, // TODO(Kevin): inject this value
           onActionStart: lockAction,
           onActionEnd: unlockAction,
           onExecutionFrames: () => FarmToolActionDef.execute(player: this),
@@ -184,7 +184,7 @@ abstract class DDFarmPlayerView<
           animationLeftDown: animationPlaceSeedDirectional.leftDown,
           currentAnimation: animation,
           target: this,
-          executionStartFrame: 4,
+          executionStartFrame: 4, // TODO(Kevin): inject this value
           onActionStart: lockAction,
           onActionEnd: unlockAction,
           onExecutionFrames: () => FarmToolActionDef.execute(player: this),
@@ -212,7 +212,7 @@ abstract class DDFarmPlayerView<
           animationDown: animationHarvestDirectional.down,
           currentAnimation: animation,
           target: this,
-          executionStartFrame: 4,
+          executionStartFrame: 4, // TODO(Kevin): inject this value
           onActionStart: lockAction,
           onActionEnd: unlockAction,
           onExecutionFrames: () => FarmToolActionDef.execute(player: this),

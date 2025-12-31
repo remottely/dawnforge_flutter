@@ -26,10 +26,9 @@ class TutorialInputsOverlay extends ResponsiveOverlayBase {
   Widget buildOverlayContent(BuildContext context, ResponsiveOverlayData data) {
     final keyBoxWidth = valueByScreenSize(
       context,
-      small: 80.0,
-      medium: 96.0,
-      large: 110.0,
-      extraLarge: 120.0,
+      mobile: 80.0,
+      tablet: 96.0,
+      desktop: 120.0,
     );
 
     return Material(
@@ -69,18 +68,16 @@ class TutorialInputsOverlay extends ResponsiveOverlayBase {
   ) {
     final rowHeight = valueByScreenSize(
       context,
-      small: 20.0,
-      medium: 22.0,
-      large: 24.0,
-      extraLarge: 26.0,
+      mobile: 20.0,
+      tablet: 22.0,
+      desktop: 26.0,
     );
 
     final keyBoxHeight = valueByScreenSize(
       context,
-      small: 18.0,
-      medium: 20.0,
-      large: 22.0,
-      extraLarge: 24.0,
+      mobile: 18.0,
+      tablet: 20.0,
+      desktop: 24.0,
     );
 
     return Container(
