@@ -75,3 +75,22 @@ Controls are now organized by category (Movement, Actions, Inventory, Menus) for
 - **Shift** must be held down to run (not a toggle)
 - Debug keys (**N, T, G**) should be disabled in production builds
 - The game automatically equips the first valid tool when starting
+
+---
+
+nao quero cmbinacoes de teclas, quero simplesmente q vc me sugira a melhor configuracao possivel para o jogo do jeito q esta hoje.
+
+Analisando ergonomia do teclado com mão esquerda no WASD, aqui está minha sugestão:
+
+🎯 MELHOR CONFIGURAÇÃO (sem conflitos):
+MOVE O CRAFTING para:
+
+✅ POR QUE ESSA CONFIGURAÇÃO?
+C - Tecla central, muito acessível com indicador da mão esquerda
+V - Logo abaixo do C, fácil alternar entre ataque e defesa
+F - Padrão em 90% dos jogos modernos para interação (Unity, Unreal padrão)
+R - Padrão universal para "reload/pickup" em jogos
+K - Crafting fica em posição confortável para ação menos frequente
+
+🎮 ALTERNATIVA (se quiser manter Space):
+Qual você prefere? Primeira (C como ação) ou segunda (Space mantém)?

@@ -15,12 +15,9 @@ final class InputDef {
       };
 
   static bool isPrimaryAction(dynamic actionId) {
-    final isPrimary = actionId == JoystickSetup.kPrimaryActionId ||
+    final isPrimary =
+        actionId == JoystickSetup.kPrimaryActionId ||
         actionId == KeyboardSetup.kPrimaryActionKey;
-
-    developer.log(
-      '[InputDef] isPrimaryAction check: actionId=$actionId, result=$isPrimary (keyboard=${KeyboardSetup.kPrimaryActionKey}, joystick=${JoystickSetup.kPrimaryActionId})',
-    );
 
     return isPrimary;
   }
@@ -30,14 +27,14 @@ final class InputDef {
         actionId == KeyboardSetup.kSecondaryActionKey;
   }
 
-  static bool isRunAction(dynamic actionId) {
-    return actionId == JoystickSetup.kRunId ||
-        actionId == KeyboardSetup.kRunKey;
-  }
-
   static bool isInteractionAction(dynamic actionId) {
     return actionId == JoystickSetup.kInteractionId ||
         actionId == KeyboardSetup.kInteractionKey;
+  }
+
+  static bool isRunAction(dynamic actionId) {
+    return actionId == JoystickSetup.kRunId ||
+        actionId == KeyboardSetup.kRunKey;
   }
 
   static bool isAdvanceDayAction(dynamic actionId) {

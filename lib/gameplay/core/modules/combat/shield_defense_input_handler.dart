@@ -59,43 +59,45 @@ class ShieldDefenseInputHandler extends GameComponent
     final player = _getCurrentPlayer();
     if (player == null) return false;
 
-    if (event is KeyDownEvent && InputDef.isSecondaryAction(event.logicalKey)) {
-      if (!_isDefending) {
-        if (player.controller.model.stamina <= 0) {
-          developer.log('[ShieldDefenseInput] ✗ Sem stamina para defender');
-          return false;
-        }
+    if (InputDef.isSecondaryAction(event.logicalKey)) {
+      if (event is KeyDownEvent) {
+        if (!_isDefending) {
+          if (player.controller.model.stamina <= 0) {
+            developer.log('[ShieldDefenseInput] ✗ Sem stamina para defender');
+            return false;
+          }
 
-        final success = player.startShieldDefense();
-        if (success) {
-          _isDefending = true;
+          final success = player.startShieldDefense();
+          if (success) {
+            _isDefending = true;
+            _defenseTime = 0.0;
+            _staminaAccumulator = 0.0;
+
+            player.controller.beginStaminaConsumingAction();
+            developer.log(
+              '[ShieldDefenseInput] ✓ Defesa iniciada - regeneração pausada',
+            );
+            return true;
+          }
+        }
+        return false;
+      }
+
+      if (event is KeyUpEvent) {
+        if (_isDefending) {
+          player.stopShieldDefense();
+          _isDefending = false;
           _defenseTime = 0.0;
           _staminaAccumulator = 0.0;
 
-          player.controller.beginStaminaConsumingAction();
+          player.controller.endStaminaConsumingAction();
           developer.log(
-            '[ShieldDefenseInput] ✓ Defesa iniciada - regeneração pausada',
+            '[ShieldDefenseInput] ✓ Defesa finalizada (tempo: ${_defenseTime.toStringAsFixed(2)}s) - regeneração retomada',
           );
           return true;
         }
+        return false;
       }
-      return false;
-    }
-
-    if (event is KeyUpEvent && InputDef.isSecondaryAction(event.logicalKey)) {
-      if (_isDefending) {
-        player.stopShieldDefense();
-        _isDefending = false;
-        _defenseTime = 0.0;
-        _staminaAccumulator = 0.0;
-
-        player.controller.endStaminaConsumingAction();
-        developer.log(
-          '[ShieldDefenseInput] ✓ Defesa finalizada (tempo: ${_defenseTime.toStringAsFixed(2)}s) - regeneração retomada',
-        );
-        return true;
-      }
-      return false;
     }
 
     return false;
