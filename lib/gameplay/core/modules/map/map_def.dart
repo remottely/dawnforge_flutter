@@ -119,7 +119,7 @@ final class MapDef {
         'sensor_$kSVLakeId',
       ],
       backgroundMusic: AudioDef.backgroundMusic1,
-      lightingColor: _kNoneLightingColor,
+      lightingColor: _kDarknessLightingColor,
       backgroundColor: _kLakeBackgroundColor,
     ),
 

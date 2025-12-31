@@ -109,6 +109,18 @@ class InventoryOverlay extends ResponsiveOverlayBase {
     final isSelected =
         getIt<EquipmentManager>().currentMainHandSlotIndex == slot.index;
 
+    // Get slot number label (1-9, 0 for slot 10, - for slot 11, + for slot 12)
+    String? slotNumberLabel;
+    if (slot.index < 9) {
+      slotNumberLabel = '${slot.index + 1}';
+    } else if (slot.index == 9) {
+      slotNumberLabel = '0';
+    } else if (slot.index == 10) {
+      slotNumberLabel = '-';
+    } else if (slot.index == 11) {
+      slotNumberLabel = '+';
+    }
+
     return GestureDetector(
       onTap: () => getIt<EquipmentManager>().selectSlotIndex(slot.index),
       child: Container(
@@ -120,6 +132,31 @@ class InventoryOverlay extends ResponsiveOverlayBase {
         ),
         child: Stack(
           children: [
+            // Slot number (keyboard shortcut indicator)
+            if (slotNumberLabel != null)
+              Positioned(
+                top: 1,
+                left: 2,
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: data.spacing / 2,
+                    vertical: 1,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.7),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                  child: Text(
+                    slotNumberLabel,
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.9),
+                      fontSize: data.baseFontSize - 4,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Normal',
+                    ),
+                  ),
+                ),
+              ),
             if (item != null) ...[
               // Item icon or abbreviation
               Center(

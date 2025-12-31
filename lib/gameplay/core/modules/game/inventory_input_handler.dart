@@ -60,6 +60,13 @@ class InventoryInputHandler extends GameComponent
   }
 
   bool _handleAction(dynamic actionId) {
+    // Check toolbar slot number keys (1-0 in Stardew Valley style)
+    final slotNumber = InputDef.getToolbarSlotNumber(actionId);
+    if (slotNumber != null) {
+      _selectSlotByNumber(slotNumber);
+      return true;
+    }
+
     if (InputDef.isToggleInventoryAction(actionId)) {
       _toggleInventory();
       return true;
@@ -87,6 +94,11 @@ class InventoryInputHandler extends GameComponent
 
     if (InputDef.isUnequipMainHandAction(actionId)) {
       _unequipMainHand();
+      return true;
+    }
+
+    if (InputDef.isCraftingAction(actionId)) {
+      _openCrafting();
       return true;
     }
 
@@ -278,5 +290,48 @@ class InventoryInputHandler extends GameComponent
         ? selectedItem.equippedHandType
         : null;
     _notifyEquipmentChanged(equippedHandType);
+  }
+
+  // ========== STARDEW VALLEY STYLE SLOT SELECTION ==========
+  void _selectSlotByNumber(int slotIndex) {
+    final inventoryManager = getIt<InventoryManager>();
+    final equipmentManager = getIt<EquipmentManager>();
+    
+    // Check if slot exists
+    if (slotIndex >= inventoryManager.maxSlots) {
+      developer.log(
+        '[InventoryInput] Slot $slotIndex não existe (max: ${inventoryManager.maxSlots})',
+      );
+      return;
+    }
+    
+    final slot = inventoryManager.getSlotByIndex(slotIndex);
+    if (slot == null) {
+      developer.log('[InventoryInput] Slot $slotIndex não encontrado');
+      return;
+    }
+    
+    // Select the slot (even if empty - Stardew Valley style)
+    final success = equipmentManager.selectSlotIndex(slotIndex);
+    
+    if (success) {
+      final item = slot.item;
+      if (item != null) {
+        developer.log(
+          '[InventoryInput] ✓ Slot ${slotIndex + 1} selecionado: ${item.name}',
+        );
+      } else {
+        developer.log(
+          '[InventoryInput] ✓ Slot ${slotIndex + 1} selecionado (vazio)',
+        );
+      }
+    } else {
+      developer.log('[InventoryInput] ✗ Falha ao selecionar slot ${slotIndex + 1}');
+    }
+  }
+
+  void _openCrafting() {
+    developer.log('[InventoryInput] Crafting menu não implementado ainda (tecla C)');
+    // TODO: Implementar menu de crafting no futuro
   }
 }

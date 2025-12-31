@@ -79,4 +79,25 @@ final class InputDef {
     return actionId == JoystickSetup.kAddTestItemsId ||
         actionId == KeyboardSetup.kAddTestItemsKey;
   }
+
+  // ========== TOOLBAR SLOT SELECTION (Stardew Valley style) ==========
+  static int? getToolbarSlotNumber(dynamic actionId) {
+    if (actionId == KeyboardSetup.kSlot1Key) return 0;
+    if (actionId == KeyboardSetup.kSlot2Key) return 1;
+    if (actionId == KeyboardSetup.kSlot3Key) return 2;
+    if (actionId == KeyboardSetup.kSlot4Key) return 3;
+    if (actionId == KeyboardSetup.kSlot5Key) return 4;
+    if (actionId == KeyboardSetup.kSlot6Key) return 5;
+    if (actionId == KeyboardSetup.kSlot7Key) return 6;
+    if (actionId == KeyboardSetup.kSlot8Key) return 7;
+    if (actionId == KeyboardSetup.kSlot9Key) return 8;
+    if (actionId == KeyboardSetup.kSlot10Key) return 9;
+    if (actionId == KeyboardSetup.kSlot11Key) return 10;
+    if (actionId == KeyboardSetup.kSlot12Key) return 11;
+    return null;
+  }
+
+  static bool isCraftingAction(dynamic actionId) {
+    return actionId == KeyboardSetup.kCraftingKey;
+  }
 }
