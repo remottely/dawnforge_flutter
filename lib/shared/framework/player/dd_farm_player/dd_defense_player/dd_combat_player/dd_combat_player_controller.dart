@@ -2,7 +2,7 @@ import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_service.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_def.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
@@ -46,7 +46,7 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
       developer.log('[CombatController] ✗ Não pode executar primary attack');
       // Só mostra "Sem Stamina" se realmente for problema de stamina
       if (model.stamina < model.config.primaryAttackStaminaCost) {
-        OverlayMessageService.instance.showWarning('Sem Stamina!');
+        OverlayMessageDef.showNoStamina();
       }
       return;
     }
@@ -80,7 +80,7 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
       developer.log('[CombatController] ✗ Não pode executar ranged attack');
       // Só mostra "Sem Stamina" se realmente for problema de stamina
       if (model.stamina < model.config.rangedAttackStaminaCost) {
-        OverlayMessageService.instance.showWarning('Sem Stamina!');
+        OverlayMessageDef.showNoStamina();
       }
       return;
     }

@@ -5,10 +5,10 @@
 /// ## Como Usar
 /// 
 /// ```dart
-/// import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_service.dart';
+/// import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_def.dart';
 /// 
 /// // Mostrar mensagem de aviso (laranja)
-/// OverlayMessageService.instance.showWarning('Sem Stamina!');
+/// OverlayMessageDef.showNoStamina();
 /// 
 /// // Mostrar mensagem de erro (vermelho)
 /// OverlayMessageService.instance.showError('Você morreu!');
@@ -50,7 +50,7 @@
 /// Basta importar o service e chamar o método apropriado quando necessário:
 /// 
 /// ```dart
-/// import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_service.dart';
+/// import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_def.dart';
 /// 
 /// void tentarAbrirPorta() {
 ///   if (!playerTemChave) {

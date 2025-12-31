@@ -2,7 +2,7 @@ import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_service.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_def.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
@@ -101,7 +101,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
       developer.log('[FarmController] ✗ Não pode executar dig');
       // Só mostra "Sem Stamina" se realmente for problema de stamina
       if (model.stamina < model.config.digStaminaCost) {
-        OverlayMessageService.instance.showWarning('Sem Stamina!');
+        OverlayMessageDef.showNoStamina();
       }
       return;
     }
@@ -131,7 +131,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
       developer.log('[FarmController] ✗ Não pode executar watering can');
       // Só mostra "Sem Stamina" se realmente for problema de stamina
       if (model.stamina < model.config.wateringCanStaminaCost) {
-        OverlayMessageService.instance.showWarning('Sem Stamina!');
+        OverlayMessageDef.showNoStamina();
       }
       return;
     }
@@ -161,7 +161,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
       developer.log('[FarmController] ✗ Não pode executar seed');
       // Só mostra "Sem Stamina" se realmente for problema de stamina
       if (model.stamina < model.config.seedStaminaCost) {
-        OverlayMessageService.instance.showWarning('Sem Stamina!');
+        OverlayMessageDef.showNoStamina();
       }
       return;
     }
@@ -191,7 +191,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
       developer.log('[FarmController] ✗ Não pode executar harvest');
       // Só mostra "Sem Stamina" se realmente for problema de stamina
       if (model.stamina < model.config.harvestStaminaCost) {
-        OverlayMessageService.instance.showWarning('Sem Stamina!');
+        OverlayMessageDef.showNoStamina();
       }
       return;
     }
