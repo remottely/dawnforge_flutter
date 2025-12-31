@@ -1,5 +1,7 @@
 # IMPORTANT BEFORE LAUNCH:
 
+- [PRIORITY] criar um botao q ocupa a tela inteira para modo web: cmd + shift + f
+
 - [PRIORITY] refactor executionStartFrame to be injected
 
 - [PRIORITY] change battle music, and all musics on the game to keyn music??

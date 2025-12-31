@@ -3,7 +3,9 @@ import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/mobile_inputs_
 import 'package:darkness_dungeon/gameplay/core/modules/hud/responsive/responsive_overlay_base.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/joysctick_setup.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'dart:html' as html;
 
 /// Mobile touch inputs overlay with buttons for all game actions
 class MobileInputsOverlay extends ResponsiveOverlayBase {
@@ -80,7 +82,7 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
         SizedBox(height: spacing),
         _buildActionButton(
           context: context,
-          label: 'Secondary',
+          label: 'Defense', // 'Secondary'
           icon: Icons.auto_awesome,
           size: buttonSize,
           actionId: JoystickSetup.kSecondaryActionId,
@@ -175,6 +177,34 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
               )
             : SizedBox.shrink(),
         SizedBox(height: spacing / 2),
+        // Fullscreen button (only visible on web)
+        if (kIsWeb)
+          GestureDetector(
+            onTap: _toggleFullscreen,
+            child: Container(
+              width: buttonSize,
+              height: buttonSize,
+              decoration: BoxDecoration(
+                color: Colors.indigo.withOpacity(0.7),
+                borderRadius: BorderRadius.circular(buttonSize * 0.2),
+                border:
+                    Border.all(color: Colors.white.withOpacity(0.3), width: 2),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Icon(
+                Icons.fullscreen,
+                size: buttonSize * 0.5,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        if (kIsWeb) SizedBox(height: spacing / 2),
         _buildActionButton(
           context: context,
           label: 'Next Day',
@@ -264,5 +294,16 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
     playerController!.onJoystickAction(
       JoystickActionEvent(id: actionId, event: event),
     );
+  }
+
+  void _toggleFullscreen() {
+    if (kIsWeb) {
+      final doc = html.document.documentElement;
+      if (html.document.fullscreenElement == null) {
+        doc?.requestFullscreen();
+      } else {
+        html.document.exitFullscreen();
+      }
+    }
   }
 }
