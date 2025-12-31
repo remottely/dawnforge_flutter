@@ -53,9 +53,10 @@ final class JoystickSetup {
   /// Factories
   static const double _kJoystickComponentSize = 100.0;
   static const double kActionButtonSize = 80.0;
-  static const double kActionButtonMarginBottom = 50.0;
-  static const double kPrimaryActionMarginRight = 50.0;
-  static const double kSecondaryActionMarginRight = 160.0;
+  // static const double kActionButtonMarginBottom = 50.0;
+  static const double kActionButtonMarginBottom = 4.0;
+  static const double kPrimaryActionMarginRight = 4.0;
+  static const double kSecondaryActionMarginRight = 100.0;
 
   static PlayerController createJoystickInput() => Joystick(
     directional: JoystickDirectional(

@@ -5,7 +5,7 @@
 - https://www.youtube.com/watch?v=2E_zus3M-6k&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=190 - 8/10 - drama walking dead
 - https://www.youtube.com/watch?v=izrMDzCk7Yc&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=193 - 9/10 - não é para esse jogo
 - https://www.youtube.com/watch?v=Nd7BEK84Hyg&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=194 - 9/10 - epic game - não é para esse jogo
-
+- https://www.youtube.com/watch?v=g9h7FJHj0vk - 10/10 - não é para esse jogo
 
 
 dentro da caverna, usar musicas diferentes para diferentes estagios da caverna??
@@ -16,7 +16,7 @@ trash:
 - 116
 - 129
 
-parei em: 194
+parei em: de 194 pulei para 208
 
 # 0 WORST
 - https://www.youtube.com/watch?v=cxVXdnzX57o&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=186 - 10/10 - #1 jogo deserto, arabe, etc - não é para esse jogo

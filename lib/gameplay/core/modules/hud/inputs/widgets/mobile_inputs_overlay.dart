@@ -5,7 +5,9 @@ import 'package:darkness_dungeon/gameplay/core/modules/input_actions/joysctick_s
 import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'dart:html' as html;
+
+import 'fullscreen_helper_stub.dart'
+    if (dart.library.html) 'fullscreen_helper_web.dart';
 
 /// Mobile touch inputs overlay with buttons for all game actions
 class MobileInputsOverlay extends ResponsiveOverlayBase {
@@ -47,18 +49,18 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
             ],
           ),
         ),
-        // Left side - Equipment buttons
-        Positioned(
-          left: data.margin,
-          bottom: data.margin,
-          child: _buildEquipmentButtons(context, data),
-        ),
-        // Top right - Utility buttons
+        // // Left side - Equipment buttons
         // Positioned(
-        //   right: data.margin,
-        //   top: data.margin * 3,
-        //   child: _buildUtilityButtons(context, data),
+        //   left: data.margin,
+        //   bottom: data.margin,
+        //   child: _buildEquipmentButtons(context, data),
         // ),
+        // // Top right - Utility buttons
+        // // Positioned(
+        // //   right: data.margin,
+        // //   top: data.margin * 3,
+        // //   child: _buildUtilityButtons(context, data),
+        // // ),
       ],
     );
   }
@@ -101,51 +103,51 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
     );
   }
 
-  Widget _buildEquipmentButtons(
-    BuildContext context,
-    ResponsiveOverlayData data,
-  ) {
-    final buttonSize = data.isMobileScreen ? 45.0 : 55.0;
-    final spacing = data.spacing;
+  // Widget _buildEquipmentButtons(
+  //   BuildContext context,
+  //   ResponsiveOverlayData data,
+  // ) {
+  //   final buttonSize = data.isMobileScreen ? 45.0 : 55.0;
+  //   final spacing = data.spacing;
 
-    return
-    // Column(
-    //   mainAxisSize: MainAxisSize.min,
-    //   crossAxisAlignment: CrossAxisAlignment.start,
-    //   children: [
-    Row(
-      children: [
-        _buildActionButton(
-          context: context,
-          label: 'Prev',
-          icon: Icons.arrow_back_ios,
-          size: buttonSize,
-          actionId: JoystickSetup.kEquipMainHandReverseId,
-          color: Colors.orange,
-        ),
-        SizedBox(width: spacing / 2),
-        _buildActionButton(
-          context: context,
-          label: 'Next',
-          icon: Icons.arrow_forward_ios,
-          size: buttonSize,
-          actionId: JoystickSetup.kEquipMainHandId,
-          color: Colors.orange,
-        ),
-      ],
-      // ),
-      // SizedBox(height: spacing / 2),
-      // _buildActionButton(
-      //   context: context,
-      //   label: 'Unequip',
-      //   icon: Icons.close,
-      //   size: buttonSize,
-      //   actionId: JoystickSetup.kUnequipMainHandId,
-      //   color: Colors.red.shade300,
-      // ),
-      // ],
-    );
-  }
+  //   return
+  //   // Column(
+  //   //   mainAxisSize: MainAxisSize.min,
+  //   //   crossAxisAlignment: CrossAxisAlignment.start,
+  //   //   children: [
+  //   Row(
+  //     children: [
+  //       _buildActionButton(
+  //         context: context,
+  //         label: 'Prev',
+  //         icon: Icons.arrow_back_ios,
+  //         size: buttonSize,
+  //         actionId: JoystickSetup.kEquipMainHandReverseId,
+  //         color: Colors.orange,
+  //       ),
+  //       SizedBox(width: spacing / 2),
+  //       _buildActionButton(
+  //         context: context,
+  //         label: 'Next',
+  //         icon: Icons.arrow_forward_ios,
+  //         size: buttonSize,
+  //         actionId: JoystickSetup.kEquipMainHandId,
+  //         color: Colors.orange,
+  //       ),
+  //     ],
+  //     // ),
+  //     // SizedBox(height: spacing / 2),
+  //     // _buildActionButton(
+  //     //   context: context,
+  //     //   label: 'Unequip',
+  //     //   icon: Icons.close,
+  //     //   size: buttonSize,
+  //     //   actionId: JoystickSetup.kUnequipMainHandId,
+  //     //   color: Colors.red.shade300,
+  //     // ),
+  //     // ],
+  //   );
+  // }
 
   Widget _buildUtilityButtons(
     BuildContext context,
@@ -298,12 +300,7 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
 
   void _toggleFullscreen() {
     if (kIsWeb) {
-      final doc = html.document.documentElement;
-      if (html.document.fullscreenElement == null) {
-        doc?.requestFullscreen();
-      } else {
-        html.document.exitFullscreen();
-      }
+      toggleFullscreen();
     }
   }
 }

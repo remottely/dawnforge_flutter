@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
   final dynamic player;
   final PlayerController? playerController;
-  
+
   const UnifiedGameOverlay({
     super.key,
     required this.player,
@@ -81,9 +81,9 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                               ),
                             DebugOverlay(
                               player: player,
-                              showFps: AppEnvironment.kIsDevToolsMode,
-                              showPosition: AppEnvironment.kIsDevToolsMode,
-                              showEntities: AppEnvironment.kIsDevToolsMode,
+                              // showFps: AppEnvironment.kIsDevToolsMode,
+                              // showPosition: AppEnvironment.kIsDevToolsMode,
+                              // showEntities: AppEnvironment.kIsDevToolsMode,
                             ),
                           ],
                         ),
@@ -122,11 +122,11 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                         child: Stack(
                           children: [
                             const TutorialInputsOverlay(),
-                            if (SettingsManager.instance.inputSelected ==
-                                InputActionsType.joystick)
-                              MobileInputsOverlay(
-                                playerController: playerController,
-                              ),
+                            // if (SettingsManager.instance.inputSelected ==
+                            //     InputActionsType.joystick)
+                            //   MobileInputsOverlay(
+                            //     playerController: playerController,
+                            //   ),
                           ],
                         ),
                       ),
@@ -138,10 +138,16 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                         color: AppEnvironment.kIsDebugMode
                             ? Colors.brown.withOpacity(0.03)
                             : null,
-                        child: const SizedBox(
-                          width: double.infinity,
-                          height: double.infinity,
-                        ),
+                        child:
+                            SettingsManager.instance.inputSelected ==
+                                InputActionsType.joystick
+                            ? MobileInputsOverlay(
+                                playerController: playerController,
+                              )
+                            : const SizedBox(
+                                width: double.infinity,
+                                height: double.infinity,
+                              ),
                       ),
                     ),
                   ],

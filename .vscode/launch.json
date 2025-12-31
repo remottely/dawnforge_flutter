@@ -10,7 +10,7 @@
       "request": "launch",
       "program": "lib/main.dart",
       "flutterMode": "debug",
-      // "deviceId": "macos",
+      "deviceId": "macos",
       "args": ["--dart-define=GAME_ENVIRONMENT=DEVELOPMENT"]
     },
     {
@@ -19,7 +19,7 @@
       "request": "launch",
       "program": "lib/main.dart",
       "flutterMode": "debug",
-      // "deviceId": "macos",
+      "deviceId": "macos",
       "args": ["--dart-define=GAME_ENVIRONMENT=STAGING"]
     },
     {
@@ -28,7 +28,7 @@
       "request": "launch",
       "program": "lib/main.dart",
       "flutterMode": "debug",
-      // "deviceId": "macos",
+      "deviceId": "macos",
       "args": ["--dart-define=GAME_ENVIRONMENT=PRODUCTION"]
     },
     {
@@ -37,7 +37,7 @@
       "request": "launch",
       "program": "lib/main.dart",
       "flutterMode": "debug",
-      // "deviceId": "macos",
+      "deviceId": "macos",
       "env": {
         "PUB_HOSTED_URL": "",
         "PUB_CACHE_URL": "",
@@ -52,7 +52,7 @@
       "request": "launch",
       "program": "lib/main.dart",
       "flutterMode": "debug",
-      // "deviceId": "macos",
+      "deviceId": "macos",
       "env": {
         "PUB_HOSTED_URL": "",
         "PUB_CACHE_URL": "",
@@ -67,7 +67,7 @@
       "request": "launch",
       "program": "lib/main.dart",
       "flutterMode": "debug",
-      // "deviceId": "macos",
+      "deviceId": "macos",
       "env": {
         "PUB_HOSTED_URL": "",
         "PUB_CACHE_URL": "",
@@ -75,6 +75,26 @@
         "FLUTTER_TOOL_ANALYTICS_DISABLED": "true"
       },
       "args": ["--no-pub", "--dart-define=GAME_ENVIRONMENT=PRODUCTION"]
+    },
+
+    {
+      "name": "Offline Chrome (STG)",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "chrome",
+      "args": [
+        "--web-renderer",
+        "canvaskit",
+        "--web-port",
+        "5000",
+        "--dart-define=GAME_ENVIRONMENT=STAGING",
+        "--no-pub"
+      ],
+      "env": {
+        "FLUTTER_TOOL_ANALYTICS_DISABLED": "true"
+      }
     }
     // {
     //   "name": "Chrome (Debug)",

@@ -38,15 +38,15 @@ class _DebugOverlayState extends State<DebugOverlay> {
     if (_lastFrameTime != null) {
       final frameDuration = timestamp - _lastFrameTime!;
       _frameTimes.add(frameDuration);
-      
+
       if (_frameTimes.length > _windowSize) {
         _frameTimes.removeAt(0);
       }
 
       if (_frameTimes.isNotEmpty) {
-        final avgMicroseconds = _frameTimes
-            .map((d) => d.inMicroseconds)
-            .reduce((a, b) => a + b) / _frameTimes.length;
+        final avgMicroseconds =
+            _frameTimes.map((d) => d.inMicroseconds).reduce((a, b) => a + b) /
+            _frameTimes.length;
         _fps = avgMicroseconds > 0 ? 1000000 / avgMicroseconds : 0;
       }
     }
@@ -73,9 +73,9 @@ class _DebugOverlayState extends State<DebugOverlay> {
 
   @override
   Widget build(BuildContext context) {
-    if (!AppEnvironment.kIsDevToolsMode) {
-      return const SizedBox.shrink();
-    }
+    // if (!AppEnvironment.kIsDevToolsMode) { // TODO(Kevin): NOW - put it back
+    //   return const SizedBox.shrink();
+    // }
 
     return Positioned(
       top: 10,
@@ -92,7 +92,7 @@ class _DebugOverlayState extends State<DebugOverlay> {
           children: [
             if (widget.showFps)
               Text(
-                'FPS: ${_fps.toStringAsFixed(0)}',
+                'FPS:${_fps.toStringAsFixed(0)}',
                 style: TextStyle(
                   color: _getFpsColor(),
                   fontSize: 14,
@@ -110,7 +110,23 @@ class _DebugOverlayState extends State<DebugOverlay> {
             if (widget.showPosition && widget.player != null) ...[
               const SizedBox(height: 4),
               Text(
-                'Pos: (${widget.player.x.toInt()}, ${widget.player.y.toInt()})',
+                'x:${widget.player.x.toInt()}',
+                style: const TextStyle(
+                  color: Color(0xFF00FF00),
+                  fontSize: 14,
+                  fontFamily: 'monospace',
+                  fontWeight: FontWeight.bold,
+                  shadows: [
+                    Shadow(
+                      color: Colors.black87,
+                      offset: Offset(1, 1),
+                      blurRadius: 2,
+                    ),
+                  ],
+                ),
+              ),
+              Text(
+                'y:${widget.player.y.toInt()}',
                 style: const TextStyle(
                   color: Color(0xFF00FF00),
                   fontSize: 14,
