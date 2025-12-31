@@ -144,11 +144,13 @@ class InventoryInputHandler extends GameComponent
     final currentSlotIndex = equipmentManager.currentMainHandSlotIndex;
     final currentSlot = getIt<InventoryManager>().getSlotByIndex(currentSlotIndex);
     
-    // If current slot already has a MainHandItem, we're good
+    // If current slot already has a MainHandItem, select it to sync UI
     if (currentSlot?.item is MainHandItem) {
       developer.log(
-        '[InventoryInput] Slot $currentSlotIndex already has a MainHandItem: ${currentSlot?.item?.name}',
+        '[InventoryInput] Slot $currentSlotIndex already has a MainHandItem: ${currentSlot?.item?.name}, syncing with UI',
       );
+      // Force sync with EquipmentState
+      equipmentManager.selectSlotIndex(currentSlotIndex);
       return;
     }
 
