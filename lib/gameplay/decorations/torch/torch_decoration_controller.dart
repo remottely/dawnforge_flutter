@@ -61,9 +61,15 @@ class TorchDecorationController {
   }
 
   void _handlePlayerEntersRange(GameComponent _) {
-    model.setIsDetectPlayer(true);
-    onDisplayExclamationEmote();
+    if (!model.isDetectPlayer) {
+      model.setIsDetectPlayer(true);
+      onDisplayExclamationEmote();
+    }
   }
 
-  void _handlePlayerExitsRange() => model.setIsDetectPlayer(false);
+  void _handlePlayerExitsRange() {
+    if (model.isDetectPlayer) {
+      model.setIsDetectPlayer(false);
+    }
+  }
 }
