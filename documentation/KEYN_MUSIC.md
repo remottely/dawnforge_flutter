@@ -4,7 +4,7 @@ projects:
 - be 3: cave
 - battery life 1.2(112bpm?): missão?
 - hardcore 1: cave nivel medio
-- guitar hero: tema principal do jogo?
+- guitar hero: tema principal do jogo? ruim
 - hey 2: ??
 - house: ??
 - kevin-original: ??

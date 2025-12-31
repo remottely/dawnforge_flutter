@@ -112,7 +112,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
               MobileInputsOverlay(playerController: playerInput),
 
             // Unified Game Overlay - all HUD components organized in a grid
-            const UnifiedGameOverlay(),
+            UnifiedGameOverlay(player: player),
           ],
         );
       },

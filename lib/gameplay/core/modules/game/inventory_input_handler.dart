@@ -3,6 +3,7 @@ import 'dart:developer' as developer;
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/tutorial_inputs/tutorial_inputs_state.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/state/inventory_state.dart';
@@ -68,7 +69,9 @@ class InventoryInputHandler extends GameComponent
     }
 
     if (InputDef.isToggleInventoryAction(actionId)) {
-      _toggleInventory();
+      if (AppEnvironment.kIsDebugMode) {
+        _toggleInventory();
+      }
       return true;
     }
 
@@ -154,8 +157,10 @@ class InventoryInputHandler extends GameComponent
   void _ensureInitialSlotSelection() {
     final equipmentManager = getIt<EquipmentManager>();
     final currentSlotIndex = equipmentManager.currentMainHandSlotIndex;
-    final currentSlot = getIt<InventoryManager>().getSlotByIndex(currentSlotIndex);
-    
+    final currentSlot = getIt<InventoryManager>().getSlotByIndex(
+      currentSlotIndex,
+    );
+
     // If current slot already has a MainHandItem, select it to sync UI
     if (currentSlot?.item is MainHandItem) {
       developer.log(
@@ -167,8 +172,10 @@ class InventoryInputHandler extends GameComponent
     }
 
     // Find first slot with a MainHandItem and select it
-    final result = getIt<InventoryManager>().findItem((item) => item is MainHandItem);
-    
+    final result = getIt<InventoryManager>().findItem(
+      (item) => item is MainHandItem,
+    );
+
     if (result != null) {
       equipmentManager.selectSlotIndex(result.index);
       developer.log(
@@ -296,7 +303,7 @@ class InventoryInputHandler extends GameComponent
   void _selectSlotByNumber(int slotIndex) {
     final inventoryManager = getIt<InventoryManager>();
     final equipmentManager = getIt<EquipmentManager>();
-    
+
     // Check if slot exists
     if (slotIndex >= inventoryManager.maxSlots) {
       developer.log(
@@ -304,16 +311,16 @@ class InventoryInputHandler extends GameComponent
       );
       return;
     }
-    
+
     final slot = inventoryManager.getSlotByIndex(slotIndex);
     if (slot == null) {
       developer.log('[InventoryInput] Slot $slotIndex não encontrado');
       return;
     }
-    
+
     // Select the slot (even if empty - Stardew Valley style)
     final success = equipmentManager.selectSlotIndex(slotIndex);
-    
+
     if (success) {
       final item = slot.item;
       if (item != null) {
@@ -326,12 +333,16 @@ class InventoryInputHandler extends GameComponent
         );
       }
     } else {
-      developer.log('[InventoryInput] ✗ Falha ao selecionar slot ${slotIndex + 1}');
+      developer.log(
+        '[InventoryInput] ✗ Falha ao selecionar slot ${slotIndex + 1}',
+      );
     }
   }
 
   void _openCrafting() {
-    developer.log('[InventoryInput] Crafting menu não implementado ainda (tecla C)');
+    developer.log(
+      '[InventoryInput] Crafting menu não implementado ainda (tecla C)',
+    );
     // TODO: Implementar menu de crafting no futuro
   }
 }
