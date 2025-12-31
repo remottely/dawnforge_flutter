@@ -12,7 +12,6 @@ import 'package:darkness_dungeon/gameplay/inventory/usecases/unequip_item_use_ca
 import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/equipment_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 
 /// Handles inventory and equipment inputs from both keyboard and joystick/mobile
 class InventoryInputHandler extends GameComponent
@@ -125,6 +124,37 @@ class InventoryInputHandler extends GameComponent
     developer.log(
       '[InventoryInput] Itens de teste adicionados! ${getIt<InventoryManager>().usedSlots} slots usados',
     );
+
+    // Ensure first slot with a MainHandItem is selected
+    _ensureInitialSlotSelection();
+  }
+
+  void _ensureInitialSlotSelection() {
+    final equipmentManager = getIt<EquipmentManager>();
+    final currentSlotIndex = equipmentManager.currentMainHandSlotIndex;
+    final currentSlot = getIt<InventoryManager>().getSlotByIndex(currentSlotIndex);
+    
+    // If current slot already has a MainHandItem, we're good
+    if (currentSlot?.item is MainHandItem) {
+      developer.log(
+        '[InventoryInput] Slot $currentSlotIndex already has a MainHandItem: ${currentSlot?.item?.name}',
+      );
+      return;
+    }
+
+    // Find first slot with a MainHandItem and select it
+    final result = getIt<InventoryManager>().findItem((item) => item is MainHandItem);
+    
+    if (result != null) {
+      equipmentManager.selectSlotIndex(result.index);
+      developer.log(
+        '[InventoryInput] Auto-selected slot ${result.index} with ${result.item.name}',
+      );
+    } else {
+      developer.log(
+        '[InventoryInput] No MainHandItem found in inventory - slot 0 remains selected (empty)',
+      );
+    }
   }
 
   void _debugInsertItem(String itemKey) {
@@ -221,14 +251,11 @@ class InventoryInputHandler extends GameComponent
   }
 
   void _notifyEquipmentChanged(EquippedHandType? equippedHandType) {
-    final players = gameRef.query<DDBasePlayerView>();
-    if (players.isEmpty) {
-      return;
-    }
-
-    final player = players.first;
-
-    player.controller.model.setEquipment(equippedHandType);
+    // Equipment is now queried dynamically from the player model
+    // No need to notify - the model always returns the current selected slot
+    developer.log(
+      '[InventoryInput] Equipment changed to: ${equippedHandType?.name ?? "empty"}',
+    );
   }
 
   void _handleSelectedSlotChanged() {
