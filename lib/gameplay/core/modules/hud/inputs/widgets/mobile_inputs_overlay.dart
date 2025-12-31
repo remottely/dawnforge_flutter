@@ -37,18 +37,18 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
         // Right side - Action buttons
         Positioned(
           right: data.margin,
-          top: data.margin,
+          bottom: data.margin,
           child: Column(
             children: [
-              _buildActionButtons(context, data),
               _buildUtilityButtons(context, data),
+              _buildActionButtons(context, data),
             ],
           ),
         ),
         // Left side - Equipment buttons
         Positioned(
           left: data.margin,
-          top: MediaQuery.of(context).size.height * 0.3,
+          bottom: data.margin,
           child: _buildEquipmentButtons(context, data),
         ),
         // Top right - Utility buttons
@@ -106,41 +106,42 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
     final buttonSize = data.isMobileScreen ? 45.0 : 55.0;
     final spacing = data.spacing;
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return
+    // Column(
+    //   mainAxisSize: MainAxisSize.min,
+    //   crossAxisAlignment: CrossAxisAlignment.start,
+    //   children: [
+    Row(
       children: [
-        Row(
-          children: [
-            _buildActionButton(
-              context: context,
-              label: 'Prev',
-              icon: Icons.arrow_back_ios,
-              size: buttonSize,
-              actionId: JoystickSetup.kEquipMainHandReverseId,
-              color: Colors.orange,
-            ),
-            SizedBox(width: spacing / 2),
-            _buildActionButton(
-              context: context,
-              label: 'Next',
-              icon: Icons.arrow_forward_ios,
-              size: buttonSize,
-              actionId: JoystickSetup.kEquipMainHandId,
-              color: Colors.orange,
-            ),
-          ],
-        ),
-        SizedBox(height: spacing / 2),
         _buildActionButton(
           context: context,
-          label: 'Unequip',
-          icon: Icons.close,
+          label: 'Prev',
+          icon: Icons.arrow_back_ios,
           size: buttonSize,
-          actionId: JoystickSetup.kUnequipMainHandId,
-          color: Colors.red.shade300,
+          actionId: JoystickSetup.kEquipMainHandReverseId,
+          color: Colors.orange,
+        ),
+        SizedBox(width: spacing / 2),
+        _buildActionButton(
+          context: context,
+          label: 'Next',
+          icon: Icons.arrow_forward_ios,
+          size: buttonSize,
+          actionId: JoystickSetup.kEquipMainHandId,
+          color: Colors.orange,
         ),
       ],
+      // ),
+      // SizedBox(height: spacing / 2),
+      // _buildActionButton(
+      //   context: context,
+      //   label: 'Unequip',
+      //   icon: Icons.close,
+      //   size: buttonSize,
+      //   actionId: JoystickSetup.kUnequipMainHandId,
+      //   color: Colors.red.shade300,
+      // ),
+      // ],
     );
   }
 
@@ -183,23 +184,27 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
           color: Colors.amber,
         ),
         SizedBox(height: spacing / 2),
-        _buildActionButton(
-          context: context,
-          label: 'Items',
-          icon: Icons.add_box,
-          size: buttonSize,
-          actionId: JoystickSetup.kAddTestItemsId,
-          color: Colors.teal,
-        ),
-        SizedBox(height: spacing / 2),
-        _buildActionButton(
-          context: context,
-          label: 'Clear',
-          icon: Icons.delete_forever,
-          size: buttonSize,
-          actionId: JoystickSetup.kClearSaveId,
-          color: Colors.red,
-        ),
+        if (AppEnvironment.kIsDebugMode) ...[
+          _buildActionButton(
+            context: context,
+            label: 'Items',
+            icon: Icons.add_box,
+            size: buttonSize,
+            actionId: JoystickSetup.kAddTestItemsId,
+            color: Colors.teal,
+          ),
+          SizedBox(height: spacing / 2),
+        ],
+        AppEnvironment.kIsDebugMode
+            ? _buildActionButton(
+                context: context,
+                label: 'Clear',
+                icon: Icons.delete_forever,
+                size: buttonSize,
+                actionId: JoystickSetup.kClearSaveId,
+                color: Colors.red,
+              )
+            : SizedBox.shrink(),
       ],
     );
   }

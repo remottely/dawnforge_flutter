@@ -70,7 +70,7 @@ class InventoryInputHandler extends GameComponent
 
     if (InputDef.isToggleInventoryAction(actionId)) {
       if (AppEnvironment.kIsDebugMode) {
-        _toggleInventory();
+        _toggleInventory(); // TODO(kevin): remove it?
       }
       return true;
     }
@@ -96,7 +96,9 @@ class InventoryInputHandler extends GameComponent
     }
 
     if (InputDef.isUnequipMainHandAction(actionId)) {
-      _unequipMainHand();
+      if (AppEnvironment.kIsDebugMode) {
+        _unequipMainHand(); // TODO(kevin): remove it?
+      }
       return true;
     }
 

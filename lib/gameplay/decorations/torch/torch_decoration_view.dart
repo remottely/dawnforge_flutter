@@ -1,12 +1,11 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/emote_manager.dart';
 import 'package:darkness_dungeon/gameplay/decorations/torch/torch_decoration_config.dart';
 import 'package:darkness_dungeon/gameplay/decorations/torch/torch_decoration_controller.dart';
 import 'package:darkness_dungeon/gameplay/decorations/torch/torch_decoration_model.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_input_receiver/dd_input_receiver_decoration_view.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
-import 'package:flutter/services.dart';
 
 class TorchDecorationView extends DDInputReceiverDecorationView {
   late final TorchDecorationController _controller;
@@ -77,13 +76,22 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
     }
   }
 
+  // @override
+  // bool onKeyboard(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+  //   if (_isValidInteractionAttempt(event)) {
+  //     _controller.toggleTorchState();
+  //     return true;
+  //   }
+  //   return false;
+  // }
+
   @override
-  bool onKeyboard(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-    if (_isValidInteractionAttempt(event)) {
+  void onJoystickAction(JoystickActionEvent event) {
+    if (_controller.model.canInteract &&
+        event.event == ActionEvent.DOWN &&
+        InputDef.isInteractionAction(event.id)) {
       _controller.toggleTorchState();
-      return true;
     }
-    return false;
   }
 
   @override
@@ -105,12 +113,6 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
     );
   }
 
-  bool _isValidInteractionAttempt(KeyEvent event) {
-    return _controller.model.canInteract &&
-        event is KeyDownEvent &&
-        event.logicalKey == KeyboardSetup.kInteractionKey;
-  }
-
   void _onDisplayExclamationEmote() {
     add(EmoteManager.displayEmoteAboveDecoration(size));
   }
@@ -129,9 +131,19 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
       player as GameComponent,
       radiusVision: closeVisionRadius,
       observed: (GameComponent comp) {
-        observed(comp as DDBasePlayerView);
+        final playerView = comp as DDBasePlayerView;
+        // Register to receive player controller events when player is nearby
+        final playerController = gameRef.playerControllers?.firstOrNull;
+        if (playerController != null) {
+          registerToPlayerController(playerController);
+        }
+        observed(playerView);
       },
-      notObserved: notObserved,
+      notObserved: () {
+        // Unregister when player leaves
+        unregisterFromPlayerController();
+        notObserved();
+      },
     );
   }
 }

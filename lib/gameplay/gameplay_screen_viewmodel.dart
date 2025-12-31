@@ -35,7 +35,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   final gameplayGameStateManager = GameStateManager();
 
   late final InventoryInputHandler inventoryInputHandler;
-  final shieldDefenseInputHandler = ShieldDefenseInputHandler();
+  late final ShieldDefenseInputHandler shieldDefenseInputHandler;
   late final PlayerController playerInput;
   late FarmInputHandler farmInputHandler;
 
@@ -45,6 +45,9 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
     print('[GameplayViewModel] initState - Creating new player input');
     playerInput = GameplayScreenDef.createPlayerInput();
     inventoryInputHandler = InventoryInputHandler(
+      playerController: playerInput,
+    );
+    shieldDefenseInputHandler = ShieldDefenseInputHandler(
       playerController: playerInput,
     );
     _loadGameOrResetLife();
