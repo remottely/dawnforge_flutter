@@ -131,7 +131,16 @@ final class GameSaveController {
 
   Map<String, dynamic> _collectPlayerData() {
     final playerState = PlayerStateManager.instance;
-    return playerState.toJson();
+    final playerData = playerState.toJson();
+    
+    developer.log(
+      '[GameSaveController] Collecting player data: '
+      'model=${playerState.lastPlayerModel != null ? playerState.lastPlayerModel.runtimeType : "null"}, '
+      'stamina=${playerState.lastPlayerModel?.stamina}, '
+      'life=${playerState.lastPlayerModel?.life}',
+    );
+    
+    return playerData;
   }
 
   Map<String, dynamic> _collectWorldData() {
@@ -156,7 +165,13 @@ final class GameSaveController {
       );
       final playerState = PlayerStateManager.instance;
       playerState.fromJson(data);
-      developer.log('[GameSaveController] ✅ Player state restored');
+      
+      developer.log(
+        '[GameSaveController] ✅ Player state restored: '
+        'model=${playerState.lastPlayerModel != null ? playerState.lastPlayerModel.runtimeType : "null"}, '
+        'stamina=${playerState.lastPlayerModel?.stamina}, '
+        'life=${playerState.lastPlayerModel?.life}',
+      );
     } catch (e, stackTrace) {
       developer.log(
         '[GameSaveController] ❌ Error restoring player data: $e',

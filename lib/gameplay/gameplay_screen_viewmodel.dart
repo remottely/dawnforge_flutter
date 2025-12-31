@@ -105,8 +105,17 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
     var lastPlayerModel = playerStateManager.lastPlayerModel;
 
     if (lastPlayerModel is! SunnyPlayerModel) {
+      print(
+        '[GameplayViewModel] Creating NEW Sunny model (no saved model found)',
+      );
       lastPlayerModel = SunnyPlayerModel.fromJson({});
       playerStateManager.lastPlayerModel = lastPlayerModel;
+    } else {
+      print(
+        '[GameplayViewModel] Using EXISTING Sunny model: '
+        'stamina=${lastPlayerModel.stamina}, '
+        'life=${lastPlayerModel.life}',
+      );
     }
 
     playerStateManager.currentPlayerAnimation =
