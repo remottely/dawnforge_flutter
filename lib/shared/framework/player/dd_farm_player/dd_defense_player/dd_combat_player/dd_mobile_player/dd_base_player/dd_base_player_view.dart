@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fx_particles_animations_def.dart';
@@ -89,7 +90,14 @@ abstract class DDBasePlayerView<
 
   @override
   void onJoystickAction(JoystickActionEvent event) {
-    if (isDead) return;
+    developer.log(
+      '[PlayerInput] 🎮 Input recebido: ${event.id} | evento: ${event.event} | equipamento: ${_model.equipment}',
+    );
+
+    if (isDead) {
+      developer.log('[PlayerInput] ✗ Input ignorado: player está morto');
+      return;
+    }
 
     _controller.handleInputAction(player: this, event: event);
     super.onJoystickAction(event);

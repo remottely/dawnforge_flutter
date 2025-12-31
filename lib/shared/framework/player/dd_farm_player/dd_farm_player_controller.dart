@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
@@ -58,25 +60,47 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
     required DDBasePlayerView player,
     required JoystickActionEvent event,
   }) {
+    developer.log(
+      '[FarmController] Verificando ação: ${event.id} | equipment: ${player.controller.model.equipment}',
+    );
+
     if (isDigAction(player: player, actionId: event.id)) {
+      developer.log('[FarmController] ✓ É dig action (shovel)');
       _handleExecuteDig();
     } else if (isWateringCanAction(player: player, actionId: event.id)) {
+      developer.log('[FarmController] ✓ É watering can action');
       _handleExecuteWateringCan();
     } else if (isSeedAction(player: player, actionId: event.id)) {
+      developer.log('[FarmController] ✓ É seed action');
       _handleExecuteSeed();
     } else if (isHarvestAction(player: player, actionId: event.id)) {
+      developer.log('[FarmController] ✓ É harvest action');
       _handleExecuteHarvest();
+    } else {
+      developer.log(
+        '[FarmController] ✗ Não é ação de farm, passando para super',
+      );
     }
 
     super.handleInputAction(player: player, event: event);
   }
 
   void _handleExecuteDig() {
-    if (!model.canExecuteDig) return;
+    developer.log(
+      '[FarmController] _handleExecuteDig: stamina=${model.stamina}, canExecute=${model.canExecuteDig}',
+    );
+
+    if (!model.canExecuteDig) {
+      developer.log('[FarmController] ✗ Não pode executar dig');
+      return;
+    }
 
     beginStaminaConsumingAction();
 
     final bool wasExecuted = onExecuteDig.call();
+
+    developer.log('[FarmController] Dig wasExecuted: $wasExecuted');
+
     if (!wasExecuted) {
       endStaminaConsumingAction();
       return;
@@ -88,11 +112,21 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
   }
 
   void _handleExecuteWateringCan() {
-    if (!model.canExecuteWateringCan) return;
+    developer.log(
+      '[FarmController] _handleExecuteWateringCan: stamina=${model.stamina}, canExecute=${model.canExecuteWateringCan}',
+    );
+
+    if (!model.canExecuteWateringCan) {
+      developer.log('[FarmController] ✗ Não pode executar watering can');
+      return;
+    }
 
     beginStaminaConsumingAction();
 
     final bool wasExecuted = onExecuteWateringCan.call();
+
+    developer.log('[FarmController] WateringCan wasExecuted: $wasExecuted');
+
     if (!wasExecuted) {
       endStaminaConsumingAction();
       return;
@@ -104,11 +138,21 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
   }
 
   void _handleExecuteSeed() {
-    if (!model.canExecuteSeed) return;
+    developer.log(
+      '[FarmController] _handleExecuteSeed: stamina=${model.stamina}, canExecute=${model.canExecuteSeed}',
+    );
+
+    if (!model.canExecuteSeed) {
+      developer.log('[FarmController] ✗ Não pode executar seed');
+      return;
+    }
 
     beginStaminaConsumingAction();
 
     final bool wasExecuted = onExecuteSeed.call();
+
+    developer.log('[FarmController] Seed wasExecuted: $wasExecuted');
+
     if (!wasExecuted) {
       endStaminaConsumingAction();
       return;
@@ -120,11 +164,21 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
   }
 
   void _handleExecuteHarvest() {
-    if (!model.canExecuteHarvest) return;
+    developer.log(
+      '[FarmController] _handleExecuteHarvest: stamina=${model.stamina}, canExecute=${model.canExecuteHarvest}',
+    );
+
+    if (!model.canExecuteHarvest) {
+      developer.log('[FarmController] ✗ Não pode executar harvest');
+      return;
+    }
 
     beginStaminaConsumingAction();
 
     final bool wasExecuted = onExecuteHarvest.call();
+
+    developer.log('[FarmController] Harvest wasExecuted: $wasExecuted');
+
     if (!wasExecuted) {
       endStaminaConsumingAction();
       return;

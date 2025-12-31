@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:bonfire/input/player_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/joysctick_setup.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
@@ -13,8 +15,14 @@ final class InputDef {
       };
 
   static bool isPrimaryAction(dynamic actionId) {
-    return actionId == JoystickSetup.kPrimaryActionId ||
+    final isPrimary = actionId == JoystickSetup.kPrimaryActionId ||
         actionId == KeyboardSetup.kPrimaryActionKey;
+
+    developer.log(
+      '[InputDef] isPrimaryAction check: actionId=$actionId, result=$isPrimary (keyboard=${KeyboardSetup.kPrimaryActionKey}, joystick=${JoystickSetup.kPrimaryActionId})',
+    );
+
+    return isPrimary;
   }
 
   static bool isSecondaryAction(dynamic actionId) {

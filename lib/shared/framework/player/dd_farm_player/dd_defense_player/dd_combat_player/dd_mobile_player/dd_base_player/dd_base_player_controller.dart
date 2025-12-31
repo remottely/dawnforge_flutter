@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
@@ -29,7 +31,11 @@ abstract class DDBasePlayerController<M extends DDBasePlayerModel> {
   void handleInputAction({
     required DDBasePlayerView player,
     required JoystickActionEvent event,
-  }) {}
+  }) {
+    developer.log(
+      '[BaseController] handleInputAction chamado: ${event.id}',
+    );
+  }
 
   void update(double dt) {
     // processStaminaRegeneration();

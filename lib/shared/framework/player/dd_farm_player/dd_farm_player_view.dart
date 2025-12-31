@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
@@ -102,9 +103,14 @@ abstract class DDFarmPlayerView<
   });
 
   bool _onExecuteDig() {
+    developer.log('[FarmPlayerView] _onExecuteDig chamado');
+
     final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
       AttackType.melee,
       () {
+        developer.log(
+          '[FarmPlayerView] _onExecuteDig: Executando animação de dig',
+        );
         DDCharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
           animationRight: animationDigDirectional.right,
           animationLeft: animationDigDirectional.left,
@@ -124,7 +130,12 @@ abstract class DDFarmPlayerView<
       },
     );
 
-    return executionInfo != null;
+    final wasExecuted = executionInfo != null;
+    developer.log(
+      '[FarmPlayerView] _onExecuteDig resultado: $wasExecuted (executionInfo=$executionInfo)',
+    );
+
+    return wasExecuted;
   }
 
   bool _onExecuteWateringCan() {
@@ -154,9 +165,14 @@ abstract class DDFarmPlayerView<
   }
 
   bool _onExecuteSeed() {
+    developer.log('[FarmPlayerView] _onExecuteSeed chamado');
+
     final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
       AttackType.melee,
       () {
+        developer.log(
+          '[FarmPlayerView] _onExecuteSeed: Executando animação de seed',
+        );
         DDCharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
           animationRight: animationPlaceSeedDirectional.right,
           animationLeft: animationPlaceSeedDirectional.left,
@@ -176,7 +192,12 @@ abstract class DDFarmPlayerView<
       },
     );
 
-    return executionInfo != null;
+    final wasExecuted = executionInfo != null;
+    developer.log(
+      '[FarmPlayerView] _onExecuteSeed resultado: $wasExecuted (executionInfo=$executionInfo)',
+    );
+
+    return wasExecuted;
   }
 
   bool _onExecuteHarvest() {

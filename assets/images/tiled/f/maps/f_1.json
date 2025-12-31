@@ -233,7 +233,6 @@
         {
          "draworder":"topdown",
          "id":6,
-         "locked":true,
          "name":"farm_tiles",
          "objects":[
                 {

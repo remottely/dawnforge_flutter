@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
@@ -35,13 +37,25 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
       player.controller.model.equipment == EquippedHandType.staff;
 
   void _handleExecutePrimaryAttack() {
-    if (!model.canExecutePrimaryAttack) return;
+    developer.log(
+      '[CombatController] _handleExecutePrimaryAttack: stamina=${model.stamina}, canExecute=${model.canExecutePrimaryAttack}',
+    );
+
+    if (!model.canExecutePrimaryAttack) {
+      developer.log('[CombatController] ✗ Não pode executar primary attack');
+      return;
+    }
 
     beginStaminaConsumingAction();
 
     final bool wasExecuted = onExecutePrimaryAttack.call(
       model.config.primaryAttackDamage,
     );
+
+    developer.log(
+      '[CombatController] Primary attack wasExecuted: $wasExecuted',
+    );
+
     if (!wasExecuted) {
       endStaminaConsumingAction();
       return;
@@ -53,13 +67,25 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
   }
 
   void _handleExecuteRangedAttack() {
-    if (!model.canExecuteRangedAttack) return;
+    developer.log(
+      '[CombatController] _handleExecuteRangedAttack: stamina=${model.stamina}, canExecute=${model.canExecuteRangedAttack}',
+    );
+
+    if (!model.canExecuteRangedAttack) {
+      developer.log('[CombatController] ✗ Não pode executar ranged attack');
+      return;
+    }
 
     beginStaminaConsumingAction();
 
     final bool wasExecuted = onExecuteRangedAttack.call(
       model.config.rangedAttackDamage,
     );
+
+    developer.log(
+      '[CombatController] Ranged attack wasExecuted: $wasExecuted',
+    );
+
     if (!wasExecuted) {
       endStaminaConsumingAction();
       return;
@@ -75,10 +101,20 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
     required DDBasePlayerView player,
     required JoystickActionEvent event,
   }) {
+    developer.log(
+      '[CombatController] Verificando ação: ${event.id} | equipment: ${player.controller.model.equipment}',
+    );
+
     if (_isPrimaryAttackAction(player: player, actionId: event.id)) {
+      developer.log('[CombatController] ✓ É primary attack action (iron sword)');
       _handleExecutePrimaryAttack();
     } else if (_isRangedAttackAction(player: player, actionId: event.id)) {
+      developer.log('[CombatController] ✓ É ranged attack action (staff)');
       _handleExecuteRangedAttack();
+    } else {
+      developer.log(
+        '[CombatController] ✗ Não é ação de combate, passando para super',
+      );
     }
 
     super.handleInputAction(player: player, event: event);
