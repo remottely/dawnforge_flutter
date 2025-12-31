@@ -7,10 +7,8 @@ import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/color_helper.dart';
 import 'package:darkness_dungeon/gameplay/decorations/map_transition_sensor.dart';
 import 'package:darkness_dungeon/gameplay/farm/handlers/farm_input_handler.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/widgets/mobile_inputs_overlay.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/unified_game_overlay.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen_viewmodel.dart';
-import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
 import 'package:flutter/material.dart';
 
 class GameplayScreen extends StatefulWidget {
@@ -99,13 +97,11 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
               showCollisionArea: AppEnvironment.kShowCollisionArea,
             ),
 
-            // Flutter Mobile Inputs Overlay - only for joystick mode
-            if (SettingsManager.instance.inputSelected ==
-                InputActionsType.joystick)
-              MobileInputsOverlay(playerController: playerInput),
-
             // Unified Game Overlay - all HUD components organized in a grid
-            UnifiedGameOverlay(player: player),
+            UnifiedGameOverlay(
+              player: player,
+              playerController: playerInput,
+            ),
           ],
         );
       },

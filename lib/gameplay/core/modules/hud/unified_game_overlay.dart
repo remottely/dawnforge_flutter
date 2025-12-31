@@ -1,3 +1,4 @@
+import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_widget.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/tutorial_inputs/widgets/tutorial_inputs_overlay.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/responsive/responsive_overlay_mixin.dart';
@@ -6,6 +7,8 @@ import 'package:darkness_dungeon/gameplay/inventory/widgets/equipment_overlay.da
 import 'package:darkness_dungeon/gameplay/inventory/widgets/inventory_overlay.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/player_vital_stats/player_vital_stats_overlay.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/debug/debug_overlay.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/widgets/mobile_inputs_overlay.dart';
+import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
 import 'package:flutter/material.dart';
 
 /// Overlay unificado que organiza todos os componentes da HUD em um grid 3x3
@@ -13,8 +16,13 @@ import 'package:flutter/material.dart';
 /// Linha 1 (flex 1), Linha 2 (flex 2), Linha 3 (flex 1)
 class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
   final dynamic player;
+  final PlayerController? playerController;
   
-  const UnifiedGameOverlay({super.key, required this.player});
+  const UnifiedGameOverlay({
+    super.key,
+    required this.player,
+    this.playerController,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +48,7 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                       child: Container(
                         color: AppEnvironment.kIsDebugMode
                             ? Colors.red.withOpacity(0.03)
-                            : Colors.transparent,
+                            : null,
                         alignment: Alignment.topLeft,
                         child: PlayerVitalStatsOverlay(player: player),
                       ),
@@ -51,7 +59,7 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                       child: Container(
                         color: AppEnvironment.kIsDebugMode
                             ? Colors.blue.withOpacity(0.03)
-                            : Colors.transparent,
+                            : null,
                         alignment: Alignment.center,
                         child: const OverlayMessageWidget(),
                       ),
@@ -62,7 +70,7 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                       child: Container(
                         color: AppEnvironment.kIsDebugMode
                             ? Colors.green.withOpacity(0.03)
-                            : Colors.transparent,
+                            : null,
                         alignment: Alignment.topRight,
                         child: Stack(
                           children: [
@@ -96,7 +104,7 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                       child: Container(
                         color: AppEnvironment.kIsDebugMode
                             ? Colors.pink.withOpacity(0.03)
-                            : Colors.transparent,
+                            : null,
                         alignment: Alignment.centerLeft,
                         child: !isDesktop
                             ? const InventoryOverlay()
@@ -109,9 +117,18 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                       child: Container(
                         color: AppEnvironment.kIsDebugMode
                             ? Colors.yellow.withOpacity(0.03)
-                            : Colors.transparent,
+                            : null,
                         alignment: Alignment.center,
-                        child: const TutorialInputsOverlay(),
+                        child: Stack(
+                          children: [
+                            const TutorialInputsOverlay(),
+                            if (SettingsManager.instance.inputSelected ==
+                                InputActionsType.joystick)
+                              MobileInputsOverlay(
+                                playerController: playerController,
+                              ),
+                          ],
+                        ),
                       ),
                     ),
                     // Quadrante 6 (Middle Right) - flex 1
@@ -120,7 +137,7 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                       child: Container(
                         color: AppEnvironment.kIsDebugMode
                             ? Colors.brown.withOpacity(0.03)
-                            : Colors.transparent,
+                            : null,
                         child: const SizedBox(
                           width: double.infinity,
                           height: double.infinity,
@@ -141,7 +158,7 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                       child: Container(
                         color: AppEnvironment.kIsDebugMode
                             ? Colors.purple.withOpacity(0.03)
-                            : Colors.transparent,
+                            : null,
                         child: const SizedBox(
                           width: double.infinity,
                           height: double.infinity,
@@ -155,7 +172,7 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                       child: Container(
                         color: AppEnvironment.kIsDebugMode
                             ? Colors.orange.withOpacity(0.03)
-                            : Colors.transparent,
+                            : null,
                         alignment: Alignment.bottomCenter,
                         child: isDesktop
                             ? const InventoryOverlay()
@@ -168,7 +185,7 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                       child: Container(
                         color: AppEnvironment.kIsDebugMode
                             ? Colors.grey.withOpacity(0.03)
-                            : Colors.transparent,
+                            : null,
                         child: const SizedBox(
                           width: double.infinity,
                           height: double.infinity,

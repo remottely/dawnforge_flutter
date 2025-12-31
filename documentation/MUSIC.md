@@ -1,5 +1,13 @@
 # Musics:
 
+## good news:
+- https://www.youtube.com/watch?v=xctVZJjXP84&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=189 - 8/10 - missao musica classica
+- https://www.youtube.com/watch?v=2E_zus3M-6k&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=190 - 8/10 - drama walking dead
+- https://www.youtube.com/watch?v=izrMDzCk7Yc&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=193 - 9/10 - não é para esse jogo
+- https://www.youtube.com/watch?v=Nd7BEK84Hyg&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=194 - 9/10 - epic game - não é para esse jogo
+
+
+
 dentro da caverna, usar musicas diferentes para diferentes estagios da caverna??
 usar musica diferente para cada dia de cada estacao do ano??
 
@@ -8,7 +16,7 @@ trash:
 - 116
 - 129
 
-parei em: 188
+parei em: 194
 
 # 0 WORST
 - https://www.youtube.com/watch?v=cxVXdnzX57o&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=186 - 10/10 - #1 jogo deserto, arabe, etc - não é para esse jogo

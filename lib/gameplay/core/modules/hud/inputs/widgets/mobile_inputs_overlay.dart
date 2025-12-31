@@ -2,6 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/mobile_inputs_state.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/responsive/responsive_overlay_base.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/joysctick_setup.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
 import 'package:flutter/material.dart';
 
 /// Mobile touch inputs overlay with buttons for all game actions
@@ -36,8 +37,13 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
         // Right side - Action buttons
         Positioned(
           right: data.margin,
-          top: MediaQuery.of(context).size.height * 0.3,
-          child: _buildActionButtons(context, data),
+          top: data.margin,
+          child: Column(
+            children: [
+              _buildActionButtons(context, data),
+              _buildUtilityButtons(context, data),
+            ],
+          ),
         ),
         // Left side - Equipment buttons
         Positioned(
@@ -46,11 +52,11 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
           child: _buildEquipmentButtons(context, data),
         ),
         // Top right - Utility buttons
-        Positioned(
-          right: data.margin,
-          top: data.margin * 3,
-          child: _buildUtilityButtons(context, data),
-        ),
+        // Positioned(
+        //   right: data.margin,
+        //   top: data.margin * 3,
+        //   child: _buildUtilityButtons(context, data),
+        // ),
       ],
     );
   }
@@ -70,6 +76,15 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
           size: buttonSize,
           actionId: JoystickSetup.kInteractionId,
           color: Colors.green,
+        ),
+        SizedBox(height: spacing),
+        _buildActionButton(
+          context: context,
+          label: 'Secondary',
+          icon: Icons.auto_awesome,
+          size: buttonSize,
+          actionId: JoystickSetup.kSecondaryActionId,
+          color: Colors.purple,
         ),
         SizedBox(height: spacing),
         _buildActionButton(
@@ -148,14 +163,16 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
           actionId: JoystickSetup.kToggleTutorialInputsId,
           color: Colors.brown,
         ),
-        _buildActionButton(
-          context: context,
-          label: 'Inv',
-          icon: Icons.backpack,
-          size: buttonSize,
-          actionId: JoystickSetup.kToggleInventoryId,
-          color: Colors.brown,
-        ),
+        AppEnvironment.kIsDebugMode
+            ? _buildActionButton(
+                context: context,
+                label: 'Inv',
+                icon: Icons.backpack,
+                size: buttonSize,
+                actionId: JoystickSetup.kToggleInventoryId,
+                color: Colors.brown,
+              )
+            : SizedBox.shrink(),
         SizedBox(height: spacing / 2),
         _buildActionButton(
           context: context,

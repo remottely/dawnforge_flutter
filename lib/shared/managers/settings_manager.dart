@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 enum InputActionsType { keyboard, joystick }
 
 final class SettingsManager {
@@ -5,7 +7,10 @@ final class SettingsManager {
 
   static final SettingsManager instance = SettingsManager._();
 
-  InputActionsType _inputSelected = InputActionsType.keyboard;
+  InputActionsType _inputSelected = kIsWeb
+      ? InputActionsType.keyboard
+      : InputActionsType.joystick;
+      
   InputActionsType get inputSelected => _inputSelected;
 
   void setInputSelected(InputActionsType value) {
