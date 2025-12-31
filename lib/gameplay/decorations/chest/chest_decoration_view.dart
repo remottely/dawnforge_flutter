@@ -87,7 +87,7 @@ class ChestDecorationView extends DDInputReceiverDecorationView {
   }
 
   void _onDisplayExclamationEmote() {
-    add(EmoteManager.getDecorationAnimatedObject(size));
+    add(EmoteManager.displayEmoteAboveDecoration(size));
   }
 
   void _onOpenChest() {

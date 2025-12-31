@@ -112,7 +112,7 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
   }
 
   void _onDisplayExclamationEmote() {
-    add(EmoteManager.getDecorationAnimatedObject(size));
+    add(EmoteManager.displayEmoteAboveDecoration(size));
   }
 
   void _onToggleTorchState() {

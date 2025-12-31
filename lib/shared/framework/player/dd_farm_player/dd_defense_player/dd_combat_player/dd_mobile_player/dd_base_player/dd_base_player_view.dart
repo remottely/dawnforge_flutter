@@ -133,8 +133,7 @@ abstract class DDBasePlayerView<
   void onDisplayExclamationEmote() {
     add(
       EmoteManager.displayEmoteAboveCharacter(
-        asset: EmoteManager.kExclamationEmoteAsset,
-        amount: 8,
+        animation: EmoteManager.loadExclamationEmote(),
         target: this,
       ),
     );

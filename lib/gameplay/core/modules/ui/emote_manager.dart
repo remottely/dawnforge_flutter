@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
@@ -8,19 +10,40 @@ class EmoteManager {
   static const String kQuestionEmoteAsset =
       'gameplay/characters/emotes/question_emote_8.png';
 
-  static AnimatedFollowerGameObject displayEmoteAboveCharacter({
+  static const int kExclamationEmoteAmount = 8;
+  static const int kQuestionEmoteAmount = 8;
+
+  static final Vector2 _emoteTextureSize = TileConstants.tileSizeExtraLarge;
+
+  static Future<SpriteAnimation> loadExclamationEmote() =>
+      _loadAnimationEmoteDecoration(
+        asset: kExclamationEmoteAsset,
+        amount: kExclamationEmoteAmount,
+      );
+
+  static Future<SpriteAnimation> loadQuestionEmote() =>
+      _loadAnimationEmoteDecoration(
+        asset: kQuestionEmoteAsset,
+        amount: kQuestionEmoteAmount,
+      );
+
+  static Future<SpriteAnimation> _loadAnimationEmoteDecoration({
     required String asset,
     required int amount,
+  }) => SpriteAnimation.load(
+    asset,
+    SpriteAnimationConfigHelper.createStandardData(
+      amount: amount,
+      textureSize: _emoteTextureSize,
+    ),
+  );
+
+  static AnimatedFollowerGameObject displayEmoteAboveCharacter({
+    required FutureOr<SpriteAnimation> animation,
     required GameComponent target,
   }) {
     return AnimatedFollowerGameObject(
-      animation: SpriteAnimation.load(
-        asset,
-        SpriteAnimationConfigHelper.createStandardData(
-          amount: amount,
-          textureSize: TileConstants.tileSizeExtraLarge,
-        ),
-      ),
+      animation: animation,
       target: target,
       loop: false,
       size: TileConstants.tileSizeSmall,
@@ -28,20 +51,9 @@ class EmoteManager {
     );
   }
 
-  static final Vector2 _emoteTextureSize = TileConstants.tileSizeExtraLarge;
-
-  static Future<SpriteAnimation> _loadAnimationEmoteDecoration() =>
-      SpriteAnimation.load(
-        EmoteManager.kExclamationEmoteAsset,
-        SpriteAnimationConfigHelper.createStandardData(
-          amount: 8,
-          textureSize: _emoteTextureSize,
-        ),
-      );
-
-  static AnimatedGameObject getDecorationAnimatedObject(Vector2 size) =>
+  static AnimatedGameObject displayEmoteAboveDecoration(Vector2 size) =>
       AnimatedGameObject(
-        animation: EmoteManager._loadAnimationEmoteDecoration(),
+        animation: loadExclamationEmote(),
         size: size,
         position: Vector2(size.x / 2, -size.y + 4),
         loop: false,
