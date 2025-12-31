@@ -4,12 +4,12 @@
   "spriteHeight": 16,
   "soilStates": {
     "untilled": {
-      "rowIndex": 17,
-      "columnIndex": 9
+      "rowIndex": 3,
+      "columnIndex": 0
     },
     "tilled": {
       "rowIndex": 17,
-      "columnIndex": 1
+      "columnIndex": 9
     },
     "watered": {
       "rowIndex": 1,

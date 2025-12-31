@@ -1,5 +1,7 @@
 # IMPORTANT BEFORE LAUNCH:
 
+- [PRIORITY] transformar ataque bola de fogo evrmelho em azul
+
 - [PRIORITY] mudar a logica de regeneracao da vida em contato com a tocha ligada? mudar para em contato com a cama? criar cama!
 
 - [PRIORITY] renomear "isPrimaryAction", "isRunAction", etc para "isActionPrimary", "isActionRun", etc.

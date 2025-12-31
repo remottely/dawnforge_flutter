@@ -2,6 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/character_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/lightning_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
@@ -437,41 +438,65 @@ final class FarmerPlayerDef {
   // static final Future<SpriteAnimation> _loadAnimationWateringRight =
   //     SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
   //       assetPath: assetPath,
-  //       textureSize: textureSize,
-  //       totalFrames: _x14,
-  //       framePositionX: _frameRightX14,
+  //       textureSize: textureSize + Vector2(4, 0),
+  //       totalFrames: AppEnvironment.kIsDebugMode ? 2 : _x14,
+  //       framePositionX: _frameRightX14 +4 ,
   //       framePositionY: _frameWateringY,
-  //       framePositionXPadding: -8,
+  //       framePositionXPadding: -8 - 4,
+  //       framePositionYPadding: -1,
   //     );
 
   // static final Future<SpriteAnimation> _loadAnimationWateringLeft =
   //     SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
   //       assetPath: assetPath,
-  //       textureSize: textureSize,
-  //       totalFrames: _x14,
-  //       framePositionX: _frameLeftX14,
+  //       textureSize: textureSize + Vector2(4, 0),
+  //       totalFrames: AppEnvironment.kIsDebugMode ? 2 : _x14,
+  //       framePositionX: _frameLeftX14 + 4,
   //       framePositionY: _frameWateringY,
-  //       framePositionXPadding: 8,
+  //       framePositionXPadding: 8 - 4,
+  //       framePositionYPadding: -1,
   //     );
 
-  // static final Future<SpriteAnimation> _loadAnimationWateringUp =
-  //     SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
-  //       assetPath: assetPath,
-  //       textureSize: textureSize,
-  //       totalFrames: _x14,
-  //       framePositionX: _frameUpX14,
-  //       framePositionY: _frameWateringY,
-  //     );
+  static final Future<SpriteAnimation> _loadAnimationWateringRight =
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
+        assetPath: assetPath,
+        textureSize: textureSize,
+        totalFrames: AppEnvironment.kIsDebugMode ? 2 : _x14,
+        framePositionX: _frameRightX14,
+        framePositionY: _frameWateringY,
+        framePositionXPadding: -8,
+        framePositionYPadding: -1,
+      );
 
-  // static final Future<SpriteAnimation> _loadAnimationWateringDown =
-  //     SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
-  //       assetPath: assetPath,
-  //       textureSize: textureSize,
-  //       totalFrames: _x14,
-  //       framePositionX: _frameDownX14,
-  //       framePositionY: _frameWateringY,
-  //       framePositionYPadding: -16,
-  //     );
+  static final Future<SpriteAnimation> _loadAnimationWateringLeft =
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
+        assetPath: assetPath,
+        textureSize: textureSize,
+        totalFrames: AppEnvironment.kIsDebugMode ? 2 : _x14,
+        framePositionX: _frameLeftX14,
+        framePositionY: _frameWateringY,
+        framePositionXPadding: 8,
+        framePositionYPadding: -1,
+      );
+
+  static final Future<SpriteAnimation> _loadAnimationWateringUp =
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
+        assetPath: assetPath,
+        textureSize: textureSize,
+        totalFrames: AppEnvironment.kIsDebugMode ? 2 : _x14,
+        framePositionX: _frameUpX14,
+        framePositionY: _frameWateringY,
+      );
+
+  static final Future<SpriteAnimation> _loadAnimationWateringDown =
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
+        assetPath: assetPath,
+        textureSize: textureSize,
+        totalFrames: AppEnvironment.kIsDebugMode ? 2 : _x14,
+        framePositionX: _frameDownX14,
+        framePositionY: _frameWateringY,
+        framePositionYPadding: -17,
+      );
 
   static final _animationWateringDirectionalFactory =
       DDAnimationDirectionalFactory(
@@ -487,7 +512,9 @@ final class FarmerPlayerDef {
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
-        totalFrames: 2,
+        totalFrames: AppEnvironment.kIsDebugMode
+            ? 2
+            : 5, // TODO(Kevin): change the real value
         framePositionX: _frameRightX9,
         framePositionY: _framePlaceSeedY,
       );
@@ -496,7 +523,9 @@ final class FarmerPlayerDef {
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
-        totalFrames: 2,
+        totalFrames: AppEnvironment.kIsDebugMode
+            ? 2
+            : 5, // TODO(Kevin): change the real value
         framePositionX: _frameLeftX9,
         framePositionY: _framePlaceSeedY,
       );
@@ -505,7 +534,9 @@ final class FarmerPlayerDef {
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
-        totalFrames: 2,
+        totalFrames: AppEnvironment.kIsDebugMode
+            ? 2
+            : 5, // TODO(Kevin): change the real value
         framePositionX: _frameUpX9,
         framePositionY: _framePlaceSeedY,
       );
@@ -514,7 +545,9 @@ final class FarmerPlayerDef {
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
-        totalFrames: 2,
+        totalFrames: AppEnvironment.kIsDebugMode
+            ? 2
+            : 5, // TODO(Kevin): change the real value
         framePositionX: _frameDownX9,
         framePositionY: _framePlaceSeedY,
         framePositionYPadding: -1,
@@ -545,45 +578,6 @@ final class FarmerPlayerDef {
         sprite: _loadSpriteCrypt(),
         position: Vector2(position.x, position.y),
         size: _cryptComponentSize,
-      );
-
-  static final Future<SpriteAnimation> _loadAnimationWateringRight =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
-        assetPath: assetPath,
-        textureSize: textureSize,
-        totalFrames: 2,
-        framePositionX: _frameRightX14,
-        framePositionY: _frameWateringY,
-        framePositionXPadding: -8,
-      );
-
-  static final Future<SpriteAnimation> _loadAnimationWateringLeft =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
-        assetPath: assetPath,
-        textureSize: textureSize,
-        totalFrames: 2,
-        framePositionX: _frameLeftX14,
-        framePositionY: _frameWateringY,
-        framePositionXPadding: 8,
-      );
-
-  static final Future<SpriteAnimation> _loadAnimationWateringUp =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
-        assetPath: assetPath,
-        textureSize: textureSize,
-        totalFrames: 2,
-        framePositionX: _frameUpX14,
-        framePositionY: _frameWateringY,
-      );
-
-  static final Future<SpriteAnimation> _loadAnimationWateringDown =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
-        assetPath: assetPath,
-        textureSize: textureSize,
-        totalFrames: 2,
-        framePositionX: _frameDownX14,
-        framePositionY: _frameWateringY,
-        framePositionYPadding: -16,
       );
 
   static final viewConfig = DDFarmPlayerViewConfig(

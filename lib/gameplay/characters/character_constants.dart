@@ -8,9 +8,9 @@ final class CharacterConstants {
   static const double kLifeLarge = 150;
   static const double kLifeExtraLarge = 200;
 
-  static const double kSpeedSlow = 12 * AppEnvironment.kGameSpeedMultiplier;
-  static const double kSpeedMedium = 16 * AppEnvironment.kGameSpeedMultiplier;
-  static const double kSpeedFast = 24 * AppEnvironment.kGameSpeedMultiplier;
+  static const double kSpeedSlow = 18 * AppEnvironment.kGameSpeedMultiplier;
+  static const double kSpeedMedium = 24 * AppEnvironment.kGameSpeedMultiplier;
+  static const double kSpeedFast = 32 * AppEnvironment.kGameSpeedMultiplier;
 
   static const double kVisionRadiusSuperSmall = 8;
   static const double kVisionRadiusExtraSmall = 16;
