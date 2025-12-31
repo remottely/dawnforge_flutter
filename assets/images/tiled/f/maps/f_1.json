@@ -17861,6 +17861,61 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
+         "visible":false,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":9,
+         "name":"farm_tiles_test",
+         "objects":[
+                {
+                 "height":16,
+                 "id":1640,
+                 "name":"farm_tile",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":112,
+                 "y":96
+                }, 
+                {
+                 "height":16,
+                 "id":1641,
+                 "name":"farm_tile",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":96,
+                 "y":96
+                }, 
+                {
+                 "height":16,
+                 "id":1642,
+                 "name":"farm_tile",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":112,
+                 "y":112
+                }, 
+                {
+                 "height":16,
+                 "id":1643,
+                 "name":"farm_tile",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":96,
+                 "y":112
+                }],
+         "opacity":1,
+         "type":"objectgroup",
          "visible":true,
          "x":0,
          "y":0
@@ -17928,7 +17983,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -18178,59 +18233,15 @@
                  "width":16,
                  "x":128,
                  "y":240
-                }, 
-                {
-                 "height":16,
-                 "id":1636,
-                 "name":"life_potion_decoration",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":352,
-                 "y":112
-                }, 
-                {
-                 "height":16,
-                 "id":1637,
-                 "name":"life_potion_decoration",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":336,
-                 "y":112
-                }, 
-                {
-                 "height":16,
-                 "id":1638,
-                 "name":"life_potion_decoration",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":336,
-                 "y":128
-                }, 
-                {
-                 "height":16,
-                 "id":1639,
-                 "name":"life_potion_decoration",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":352,
-                 "y":128
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }],
- "nextlayerid":9,
- "nextobjectid":1640,
+ "nextlayerid":10,
+ "nextobjectid":3240,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

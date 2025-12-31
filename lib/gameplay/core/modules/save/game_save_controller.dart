@@ -67,6 +67,10 @@ final class GameSaveController {
         return false;
       }
 
+      developer.log(
+        '[GameSaveController] Save data loaded, restoring components...',
+      );
+
       _restorePlayerData(saveData.playerData);
       _restoreWorldData(saveData.worldData);
       _restoreInventoryData(saveData.inventoryData);
@@ -147,46 +151,74 @@ final class GameSaveController {
 
   void _restorePlayerData(Map<String, dynamic> data) {
     try {
+      developer.log(
+        '[GameSaveController] Restoring player data: ${data.keys.toList()}',
+      );
       final playerState = PlayerStateManager.instance;
       playerState.fromJson(data);
-      developer.log('[GameSaveController] Player state restored');
-    } catch (e) {
-      developer.log('[GameSaveController] Error restoring player data: $e');
+      developer.log('[GameSaveController] ✅ Player state restored');
+    } catch (e, stackTrace) {
+      developer.log(
+        '[GameSaveController] ❌ Error restoring player data: $e',
+        error: e,
+        stackTrace: stackTrace,
+      );
     }
   }
 
   void _restoreWorldData(Map<String, dynamic> data) {
     try {
+      developer.log(
+        '[GameSaveController] Restoring world data: ${data.keys.toList()}',
+      );
       final worldState = WorldStateManager.instance;
       worldState.fromJson(data);
-      developer.log('[GameSaveController] World state restored');
-    } catch (e) {
-      developer.log('[GameSaveController] Error restoring world data: $e');
+      developer.log('[GameSaveController] ✅ World state restored');
+    } catch (e, stackTrace) {
+      developer.log(
+        '[GameSaveController] ❌ Error restoring world data: $e',
+        error: e,
+        stackTrace: stackTrace,
+      );
     }
   }
 
   void _restoreInventoryData(Map<String, dynamic> data) {
     try {
+      developer.log(
+        '[GameSaveController] Restoring inventory data: ${data.keys.toList()}',
+      );
       final inventory = InventoryManager.instance;
       inventory.fromJson(data, getIt<ItemFactoryService>().createItem);
-      developer.log('[GameSaveController] Inventory restored');
-    } catch (e) {
-      developer.log('[GameSaveController] Error restoring inventory data: $e');
+      developer.log('[GameSaveController] ✅ Inventory restored');
+    } catch (e, stackTrace) {
+      developer.log(
+        '[GameSaveController] ❌ Error restoring inventory data: $e',
+        error: e,
+        stackTrace: stackTrace,
+      );
     }
   }
 
   void _restoreFarmData(Map<String, dynamic>? data) {
     try {
       if (data == null) {
-        developer.log('[GameSaveController] No farm data to restore');
+        developer.log('[GameSaveController] ⚠️ No farm data to restore');
         return;
       }
 
+      developer.log(
+        '[GameSaveController] Restoring farm data: ${data.keys.toList()}',
+      );
       final loadFarmUseCase = farm_di.getIt<LoadFarmUseCase>();
       loadFarmUseCase.call(data);
-      developer.log('[GameSaveController] Farm state restored');
-    } catch (e) {
-      developer.log('[GameSaveController] Error restoring farm data: $e');
+      developer.log('[GameSaveController] ✅ Farm state restored');
+    } catch (e, stackTrace) {
+      developer.log(
+        '[GameSaveController] ❌ Error restoring farm data: $e',
+        error: e,
+        stackTrace: stackTrace,
+      );
     }
   }
 }

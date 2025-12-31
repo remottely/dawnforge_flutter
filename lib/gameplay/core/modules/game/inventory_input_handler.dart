@@ -105,6 +105,16 @@ class InventoryInputHandler extends GameComponent
     if (_isInitialized) return;
     _isInitialized = true;
 
+    // Se já tem itens (carregados de save), não adicionar itens de teste
+    final inventoryManager = getIt<InventoryManager>();
+    if (inventoryManager.usedSlots > 0) {
+      developer.log(
+        '[InventoryInput] ✓ Inventário já possui ${inventoryManager.usedSlots} itens (carregado de save), pulando itens de teste',
+      );
+      _ensureInitialSlotSelection();
+      return;
+    }
+
     developer.log('[InventoryInput] Inicializando itens de teste...');
 
     const testItems = [

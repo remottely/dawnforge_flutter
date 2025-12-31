@@ -210,7 +210,14 @@ class FarmManager {
 
     for (final tileJson in tilesData) {
       final tileData = tileJson as Map<String, dynamic>;
-      final farmObject = FarmObject.fromJson(tileData);
+      
+      // GridTile.toJson() salva: {x, y, object, metadata}
+      // Precisamos reconstruir o GridTile a partir disso
+      final objectData = tileData['object'] as Map<String, dynamic>?;
+      final FarmObject? farmObject = objectData != null 
+          ? FarmObject.fromJson(objectData)
+          : null;
+      
       final tile = GridTile(
         x: tileData['x'] as int,
         y: tileData['y'] as int,

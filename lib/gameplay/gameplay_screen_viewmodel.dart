@@ -52,18 +52,27 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
 
   Future<void> _loadGameOrResetLife() async {
     try {
+      print('[GameplayViewModel] _loadGameOrResetLife - Starting...');
       final success = await GameSaveController.instance.loadGame();
 
+      print('[GameplayViewModel] Load game result: $success');
+
       if (!success) {
+        print('[GameplayViewModel] No save found, resetting player life');
         _resetPlayerLifeOnNewGame();
+      } else {
+        print('[GameplayViewModel] ✅ Save loaded successfully!');
       }
-    } catch (_) {
+    } catch (e, stackTrace) {
+      print('[GameplayViewModel] ❌ Error loading game: $e');
+      print('[GameplayViewModel] Stack trace: $stackTrace');
       _resetPlayerLifeOnNewGame();
     } finally {
       if (mounted) {
         setState(() {
           isLoadingSave = false;
         });
+        print('[GameplayViewModel] Loading complete, isLoadingSave = false');
       }
     }
   }
