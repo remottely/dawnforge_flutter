@@ -30,7 +30,7 @@ class _MenuScreenState extends MenuScreenViewModel {
       backgroundColor: Colors.black,
       body: Center(
         child: SingleChildScrollView(
-          child: Column(
+          child: Row(
             mainAxisSize: MainAxisSize.min,
             spacing: DDDesignSystem.kSpacingLarge,
             children: <Widget>[
@@ -41,7 +41,6 @@ class _MenuScreenState extends MenuScreenViewModel {
                       .characterSpriteAnimations[currentCharacterSpriteIndex],
                 ),
               ],
-              _StartButton(onPressed: navigateToGameplayScreen),
               _Controls(
                 onControlMethodChanged: onControlMethodChanged,
               ), // TODO(Kevin): NOW - put it back
@@ -50,6 +49,7 @@ class _MenuScreenState extends MenuScreenViewModel {
                   const SizedBox.shrink(), // TODO(Kevin): Replace with joystick tip widget
                 InputActionsType.keyboard => const _KeyboardTip(),
               },
+              _StartButton(onPressed: navigateToGameplayScreen),
             ],
           ),
         ),
@@ -108,6 +108,7 @@ class _StartButton extends StatelessWidget {
       children: [
         ElevatedButton(
           style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blue,
             elevation: 3,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5),

@@ -8,8 +8,8 @@ final class InputDef {
 
   static PlayerController create() =>
       switch (SettingsManager.instance.inputSelected) {
-        InputActionsType.keyboard => KeyboardSetup.createKeyboardInput(),
-        InputActionsType.joystick => JoystickSetup.createJoystickInput(),
+        InputActionsType.keyboard => KeyboardSetup.createKeyboardInput,
+        InputActionsType.joystick => JoystickSetup.createJoystickInput,
       };
 
   static bool isPrimaryAction(dynamic actionId) {
