@@ -32,8 +32,6 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
 
   bool isLoadingSave = true;
 
-  CameraConfig? _cameraConfig;
-  Size? _lastScreenSize;
   final gameplayGameStateManager = GameStateManager();
 
   late final InventoryInputHandler inventoryInputHandler;
@@ -60,26 +58,6 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-  }
-
-  @override
-  void didChangeMetrics() {
-    super.didChangeMetrics();
-    // Força rebuild quando as métricas da tela mudam (orientação, tamanho, etc)
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        final currentSize = MediaQuery.of(context).size;
-        if (_lastScreenSize == null || 
-            _lastScreenSize!.width != currentSize.width ||
-            _lastScreenSize!.height != currentSize.height) {
-          print('[GameplayViewModel] Screen size changed: $_lastScreenSize -> $currentSize');
-          setState(() {
-            _lastScreenSize = currentSize;
-            _cameraConfig = null;
-          });
-        }
-      }
-    });
   }
 
   Future<void> _loadGameOrResetLife() async {
@@ -121,30 +99,20 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Camera config agora é criado no build para responder a mudanças de orientação
   }
 
-  /// Key única baseada no tamanho da tela para forçar rebuild do BonfireWidget
-  Key get bonfireKey {
-    final size = _lastScreenSize ?? MediaQuery.of(context).size;
-    return ValueKey('bonfire_${size.width.toInt()}_${size.height.toInt()}');
-  }
-
-  /// Retorna a configuração da câmera, recriando quando necessário
-  /// para responder a mudanças de orientação/tamanho da tela
+  /// Retorna a configuração da câmera, recalculando dinamicamente
+  /// baseado no tamanho atual da tela sem forçar rebuilds do BonfireWidget
   CameraConfig getCameraConfig(BuildContext context) {
+    // Sempre recalcula baseado no MediaQuery atual
+    // Isso permite que a câmera se ajuste em fullscreen e orientação
+    // sem precisar reconstruir o BonfireWidget (que resetaria o player)
     final newConfig = GameplayScreenDef.createCameraConfig(context);
     
-    // Só atualiza se houve mudança real na configuração
-    if (_cameraConfig == null ||
-        _cameraConfig!.resolution != newConfig.resolution ||
-        _cameraConfig!.zoom != newConfig.zoom) {
-      print('[GameplayViewModel] Camera config updated: '
-          'resolution=${newConfig.resolution}, zoom=${newConfig.zoom}');
-      _cameraConfig = newConfig;
-    }
+    print('[GameplayViewModel] Camera config: '
+        'resolution=${newConfig.resolution}, zoom=${newConfig.zoom}');
     
-    return _cameraConfig!;
+    return newConfig;
   }
 
   DDBasePlayerView buildSunnyPlayer(Vector2 position) {
@@ -202,11 +170,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
 
   DDBasePlayerView buildFarmerPlayer(Vector2 position) {
     print('[GameplayViewModel] Building farmer player at position: $position');
-    // if (isLoadingSave)
-    //   return FarmerPlayerView<FarmerPlayerController, FarmerPlayerModel>(
-    //     position: position,
-    //     model: FarmerPlayerModel.fromJson({}),
-    //   );
+    
     var lastPlayerModel = playerStateManager.lastPlayerModel;
 
     if (lastPlayerModel is! FarmerPlayerModel) {

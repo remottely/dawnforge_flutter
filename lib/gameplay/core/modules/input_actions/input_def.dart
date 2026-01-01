@@ -1,5 +1,3 @@
-import 'dart:developer' as developer;
-
 import 'package:bonfire/input/player_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/joysctick_setup.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';

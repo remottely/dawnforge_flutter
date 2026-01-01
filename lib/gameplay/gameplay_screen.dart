@@ -57,6 +57,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
         }
 
         final mapArguments = arguments as MapArguments?;
+        
         final playerPosition =
             (mapArguments?.playerPosition ??
                 Vector2(
@@ -77,7 +78,6 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
         return Stack(
           children: [
             BonfireWidget(
-              key: bonfireKey,
               playerControllers: [playerInput],
               player: player,
               map: mapItem.map,

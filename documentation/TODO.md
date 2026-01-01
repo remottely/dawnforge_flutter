@@ -1,5 +1,6 @@
 # IMPORTANT BEFORE LAUNCH:
 
+- [PRIORITY] toggleFullscreen deve estar visivel para todos os modos web, keyboard/joystick
 
 - [PRIORITY] mudar o design dos action buttons para nao ser fireball e sword
 
