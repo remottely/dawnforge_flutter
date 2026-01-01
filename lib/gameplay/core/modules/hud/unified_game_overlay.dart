@@ -94,10 +94,7 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                               ),
                             const Align(
                               alignment: Alignment.topRight,
-                              child: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: FullscreenButtonOverlay(),
-                              ),
+                              child: FullscreenButtonOverlay(),
                             ),
                           ],
                         ),

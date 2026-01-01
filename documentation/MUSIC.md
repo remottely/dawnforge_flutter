@@ -6,7 +6,9 @@
 - https://www.youtube.com/watch?v=izrMDzCk7Yc&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=193 - 9/10 - não é para esse jogo
 - https://www.youtube.com/watch?v=Nd7BEK84Hyg&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=194 - 9/10 - epic game - não é para esse jogo
 - https://www.youtube.com/watch?v=g9h7FJHj0vk - 10/10 - não é para esse jogo
-
+- https://www.youtube.com/watch?v=uc6qbi0YT-k - 10/10 - boss
+- https://www.youtube.com/watch?v=NyNjNiwl-SE - 10/10 - boss
+- https://www.youtube.com/watch?v=VIRio46kGyA - 10/10 - epic adventure - trailler
 
 dentro da caverna, usar musicas diferentes para diferentes estagios da caverna??
 usar musica diferente para cada dia de cada estacao do ano??

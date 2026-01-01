@@ -77,19 +77,16 @@ class _DebugOverlayState extends State<DebugOverlay> {
     //   return const SizedBox.shrink();
     // }
 
-    return Positioned(
-      top: 10,
-      right: 10,
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
             if (widget.showFps)
               Text(
                 'FPS:${_fps.toStringAsFixed(0)}',
@@ -145,7 +142,6 @@ class _DebugOverlayState extends State<DebugOverlay> {
             // Note: showEntities removed as we can't easily access game.visibles() from Flutter widget
           ],
         ),
-      ),
-    );
+      );
   }
 }

@@ -13,9 +13,12 @@ class PlayerVitalStatsOverlay extends StatefulWidget {
 }
 
 class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
+  DDBasePlayerView? _cachedPlayer;
+  
   @override
   void initState() {
     super.initState();
+    _updateCachedPlayer();
     // Initialize player stats immediately
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _updatePlayerStats();
@@ -27,30 +30,45 @@ class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
     super.didUpdateWidget(oldWidget);
     // Update when player changes
     if (oldWidget.player != widget.player) {
+      _updateCachedPlayer();
       _updatePlayerStats();
     }
   }
 
-  void _updatePlayerStats() {
+  void _updateCachedPlayer() {
     final player = widget.player;
-    if (player != null && mounted) {
+    if (player is DDBasePlayerView && player.hasGameRef) {
+      _cachedPlayer = player;
+    }
+  }
+
+  void _updatePlayerStats() {
+    if (_cachedPlayer != null && mounted) {
       setState(() {});
     }
   }
 
-  double get _currentLife => widget.player?.life ?? 0.0;
-  double get _maxLife => widget.player?.maxLife ?? 100.0;
+  double get _currentLife => _cachedPlayer?.life ?? 0.0;
+  double get _maxLife => _cachedPlayer?.maxLife ?? 100.0;
   double get _currentStamina {
-    final player = widget.player;
-    if (player is DDBasePlayerView) {
-      return player.controller.model.stamina;
+    final player = _cachedPlayer;
+    if (player != null) {
+      try {
+        return player.controller.model.stamina;
+      } catch (e) {
+        // Silenciosamente retorna 0 se houver erro
+      }
     }
     return 0.0;
   }
   bool get _hasKey {
-    final player = widget.player;
-    if (player is DDBasePlayerView) {
-      return player.controller.model.hasKey;
+    final player = _cachedPlayer;
+    if (player != null) {
+      try {
+        return player.controller.model.hasKey;
+      } catch (e) {
+        // Silenciosamente retorna false se houver erro
+      }
     }
     return false;
   }
