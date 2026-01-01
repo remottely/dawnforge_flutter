@@ -54,6 +54,7 @@ final class JoystickSetup {
   static const double _kJoystickComponentSize = 100.0;
   static const double kActionButtonSize = 80.0;
   // static const double kActionButtonMarginBottom = 50.0;
+  static const double kDirectionalMargin = 0.0;
   static const double kActionButtonMarginBottom = 4.0;
   static const double kPrimaryActionMarginRight = 4.0;
   static const double kSecondaryActionMarginRight = 100.0;
@@ -64,6 +65,8 @@ final class JoystickSetup {
       spriteKnobDirectional: _loadKnob,
       size: _kJoystickComponentSize,
       isFixed: false,
+      margin: EdgeInsets.all(kDirectionalMargin),
+      alignment: Alignment.center, // Permite uso em toda a tela
     ),
     actions: [_createPrimaryAttackAction(), _createRangedAttackAction()],
   );

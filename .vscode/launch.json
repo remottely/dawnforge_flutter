@@ -85,8 +85,8 @@
       "flutterMode": "debug",
       "deviceId": "chrome",
       "args": [
-        "--web-renderer",
-        "canvaskit",
+        // "--web-renderer",
+        // "canvaskit",
         "--web-port",
         "5000",
         "--dart-define=GAME_ENVIRONMENT=STAGING",

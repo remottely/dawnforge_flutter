@@ -1,10 +1,17 @@
 import 'dart:html' as html;
 
 void toggleFullscreen() {
-  final doc = html.document.documentElement;
-  if (html.document.fullscreenElement == null) {
-    doc?.requestFullscreen();
-  } else {
-    html.document.exitFullscreen();
+  try {
+    final doc = html.document.documentElement;
+    if (doc == null) return;
+    
+    if (html.document.fullscreenElement == null) {
+      doc.requestFullscreen();
+    } else {
+      html.document.exitFullscreen();
+    }
+  } catch (e) {
+    // Silently fail if fullscreen is not supported
+    print('Fullscreen not supported or failed: $e');
   }
 }

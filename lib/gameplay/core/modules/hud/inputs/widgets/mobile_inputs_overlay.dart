@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'fullscreen_helper_stub.dart'
-    if (dart.library.html) 'fullscreen_helper_web.dart';
+    if (dart.library.js_interop) 'fullscreen_helper_web.dart';
 
 /// Mobile touch inputs overlay with buttons for all game actions
 class MobileInputsOverlay extends ResponsiveOverlayBase {
@@ -25,82 +25,105 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
   @override
   OverlayPosition getOverlayPosition(BuildContext context) {
     return OverlayPosition.custom(
-      left: 0,
-      top: 0,
-      right: 0,
-      bottom: 0,
-      alignment: Alignment.center,
+      alignment: Alignment.bottomRight,
       safeAreaPadding: EdgeInsets.zero,
     );
   }
 
   @override
   Widget buildOverlayContent(BuildContext context, ResponsiveOverlayData data) {
-    return Stack(
-      children: [
-        // Right side - Action buttons
-        Positioned(
-          right: data.margin,
-          bottom: data.margin,
-          child: Column(
+    // Calcula a altura total necessária para os botões
+    final buttonSize = data.isMobileScreen ? 50.0 : 60.0;
+    final utilityButtonSize = data.isMobileScreen ? 40.0 : 50.0;
+    final spacing = data.spacing;
+    
+    // Estima altura necessária (3 action buttons + utility buttons)
+    final utilityButtonsCount = _countUtilityButtons();
+    final estimatedHeight = 
+      (buttonSize * 3) + // Action buttons
+      (spacing * 2) + // Spacing entre action buttons
+      (utilityButtonSize * utilityButtonsCount) + // Utility buttons
+      (spacing / 2 * (utilityButtonsCount - 1)) + // Spacing entre utility buttons
+      (data.margin * 2); // Margens
+    
+    final screenHeight = MediaQuery.of(context).size.height;
+    final needsScroll = estimatedHeight > screenHeight * 0.8;
+
+    // Botões alinhados à direita (sem Stack/Positioned)
+    return Padding(
+      padding: EdgeInsets.all(data.margin),
+      child: needsScroll
+        ? ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: screenHeight * 0.8,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ..._buildUtilityButtons(context, data),
+                  ..._buildActionButtons(context, data),
+                ],
+              ),
+            ),
+          )
+        : Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              _buildUtilityButtons(context, data),
-              _buildActionButtons(context, data),
+              ..._buildUtilityButtons(context, data),
+              ..._buildActionButtons(context, data),
             ],
           ),
-        ),
-        // // Left side - Equipment buttons
-        // Positioned(
-        //   left: data.margin,
-        //   bottom: data.margin,
-        //   child: _buildEquipmentButtons(context, data),
-        // ),
-        // // Top right - Utility buttons
-        // // Positioned(
-        // //   right: data.margin,
-        // //   top: data.margin * 3,
-        // //   child: _buildUtilityButtons(context, data),
-        // // ),
-      ],
     );
   }
 
-  Widget _buildActionButtons(BuildContext context, ResponsiveOverlayData data) {
+  int _countUtilityButtons() {
+    int count = 1; // Esc button sempre visível
+    if (AppEnvironment.kIsDebugMode) count++; // Inv button
+    if (kIsWeb) count++; // Fullscreen button
+    count++; // Next Day button
+    if (AppEnvironment.kIsDebugMode) {
+      count++; // Items button
+      count++; // Clear button
+    }
+    return count;
+  }
+
+  List<Widget> _buildActionButtons(
+    BuildContext context,
+    ResponsiveOverlayData data,
+  ) {
     final buttonSize = data.isMobileScreen ? 50.0 : 60.0;
     final spacing = data.spacing;
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        _buildActionButton(
-          context: context,
-          label: 'Interact',
-          icon: Icons.touch_app,
-          size: buttonSize,
-          actionId: JoystickSetup.kInteractionId,
-          color: Colors.green,
-        ),
-        SizedBox(height: spacing),
-        _buildActionButton(
-          context: context,
-          label: 'Defense', // 'Secondary'
-          icon: Icons.auto_awesome,
-          size: buttonSize,
-          actionId: JoystickSetup.kSecondaryActionId,
-          color: Colors.purple,
-        ),
-        SizedBox(height: spacing),
-        _buildActionButton(
-          context: context,
-          label: 'Run',
-          icon: Icons.directions_run,
-          size: buttonSize,
-          actionId: JoystickSetup.kRunId,
-          color: Colors.blue,
-        ),
-      ],
-    );
+    return [
+      _buildActionButton(
+        context: context,
+        label: 'Interact',
+        icon: Icons.touch_app,
+        size: buttonSize,
+        actionId: JoystickSetup.kInteractionId,
+        color: Colors.green,
+      ),
+      SizedBox(height: spacing),
+      _buildActionButton(
+        context: context,
+        label: 'Defense', // 'Secondary'
+        icon: Icons.auto_awesome,
+        size: buttonSize,
+        actionId: JoystickSetup.kSecondaryActionId,
+        color: Colors.purple,
+      ),
+      SizedBox(height: spacing),
+      _buildActionButton(
+        context: context,
+        label: 'Run',
+        icon: Icons.directions_run,
+        size: buttonSize,
+        actionId: JoystickSetup.kRunId,
+        color: Colors.blue,
+      ),
+    ];
   }
 
   // Widget _buildEquipmentButtons(
@@ -149,96 +172,94 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
   //   );
   // }
 
-  Widget _buildUtilityButtons(
+  List<Widget> _buildUtilityButtons(
     BuildContext context,
     ResponsiveOverlayData data,
   ) {
     final buttonSize = data.isMobileScreen ? 40.0 : 50.0;
     final spacing = data.spacing;
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        _buildActionButton(
-          context: context,
-          label: 'Esc',
-          icon: Icons.settings,
-          size: buttonSize,
-          actionId: JoystickSetup.kToggleTutorialInputsId,
-          color: Colors.brown,
-        ),
-        AppEnvironment.kIsDebugMode
-            ? _buildActionButton(
-                context: context,
-                label: 'Inv',
-                icon: Icons.backpack,
-                size: buttonSize,
-                actionId: JoystickSetup.kToggleInventoryId,
-                color: Colors.brown,
-              )
-            : SizedBox.shrink(),
-        SizedBox(height: spacing / 2),
-        // Fullscreen button (only visible on web)
-        if (kIsWeb)
-          GestureDetector(
-            onTap: _toggleFullscreen,
-            child: Container(
-              width: buttonSize,
-              height: buttonSize,
-              decoration: BoxDecoration(
-                color: Colors.indigo.withOpacity(0.7),
-                borderRadius: BorderRadius.circular(buttonSize * 0.2),
-                border:
-                    Border.all(color: Colors.white.withOpacity(0.3), width: 2),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.3),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
+    return [
+      _buildActionButton(
+        context: context,
+        label: 'Esc',
+        icon: Icons.settings,
+        size: buttonSize,
+        actionId: JoystickSetup.kToggleTutorialInputsId,
+        color: Colors.brown,
+      ),
+      AppEnvironment.kIsDebugMode
+          ? _buildActionButton(
+              context: context,
+              label: 'Inv',
+              icon: Icons.backpack,
+              size: buttonSize,
+              actionId: JoystickSetup.kToggleInventoryId,
+              color: Colors.brown,
+            )
+          : SizedBox.shrink(),
+      SizedBox(height: spacing / 2),
+      // Fullscreen button (only visible on web)
+      if (kIsWeb)
+        GestureDetector(
+          onTap: _toggleFullscreen,
+          child: Container(
+            width: buttonSize,
+            height: buttonSize,
+            decoration: BoxDecoration(
+              color: Colors.purple.withOpacity(0.7),
+              borderRadius: BorderRadius.circular(buttonSize * 0.2),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.3),
+                width: 2,
               ),
-              child: Icon(
-                Icons.fullscreen,
-                size: buttonSize * 0.5,
-                color: Colors.white,
-              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Icon(
+              Icons.fullscreen,
+              size: buttonSize * 0.5,
+              color: Colors.white,
             ),
           ),
-        if (kIsWeb) SizedBox(height: spacing / 2),
+        ),
+      if (kIsWeb) SizedBox(height: spacing / 2),
+      _buildActionButton(
+        context: context,
+        label: 'Next Day',
+        icon: Icons.wb_sunny,
+        size: buttonSize,
+        actionId: JoystickSetup.kAdvanceDayId,
+        color: Colors.amber,
+      ),
+      SizedBox(height: spacing / 2),
+      if (AppEnvironment.kIsDebugMode) ...[
         _buildActionButton(
           context: context,
-          label: 'Next Day',
-          icon: Icons.wb_sunny,
+          label: 'Items',
+          icon: Icons.add_box,
           size: buttonSize,
-          actionId: JoystickSetup.kAdvanceDayId,
-          color: Colors.amber,
+          actionId: JoystickSetup.kAddTestItemsId,
+          color: Colors.teal,
         ),
         SizedBox(height: spacing / 2),
-        if (AppEnvironment.kIsDebugMode) ...[
-          _buildActionButton(
-            context: context,
-            label: 'Items',
-            icon: Icons.add_box,
-            size: buttonSize,
-            actionId: JoystickSetup.kAddTestItemsId,
-            color: Colors.teal,
-          ),
-          SizedBox(height: spacing / 2),
-        ],
-        AppEnvironment.kIsDebugMode
-            ? _buildActionButton(
-                context: context,
-                label: 'Clear',
-                icon: Icons.delete_forever,
-                size: buttonSize,
-                actionId: JoystickSetup.kClearSaveId,
-                color: Colors.red,
-              )
-            : SizedBox.shrink(),
       ],
-    );
+      AppEnvironment.kIsDebugMode
+          ? _buildActionButton(
+              context: context,
+              label: 'Clear',
+              icon: Icons.delete_forever,
+              size: buttonSize,
+              actionId: JoystickSetup.kClearSaveId,
+              color: Colors.red,
+            )
+          : SizedBox.shrink(),
+    ];
   }
 
   Widget _buildActionButton({
