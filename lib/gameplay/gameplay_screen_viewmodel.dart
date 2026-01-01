@@ -24,14 +24,16 @@ import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defen
 import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_def.dart';
 import 'package:flutter/material.dart';
 
-abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
+abstract class GameplayScreenViewmodel extends State<GameplayScreen>
+    with WidgetsBindingObserver {
   final PlayerStateManager playerStateManager = PlayerStateManager.instance;
 
   final gameplayHUD = GameplayHUDView();
 
   bool isLoadingSave = true;
 
-  late final CameraConfig cameraConfig;
+  CameraConfig? _cameraConfig;
+  Size? _lastScreenSize;
   final gameplayGameStateManager = GameStateManager();
 
   late final InventoryInputHandler inventoryInputHandler;
@@ -42,6 +44,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     print('[GameplayViewModel] initState - Creating new player input');
     playerInput = GameplayScreenDef.createPlayerInput();
     inventoryInputHandler = InventoryInputHandler(
@@ -51,6 +54,32 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
       playerController: playerInput,
     );
     _loadGameOrResetLife();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+    // Força rebuild quando as métricas da tela mudam (orientação, tamanho, etc)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        final currentSize = MediaQuery.of(context).size;
+        if (_lastScreenSize == null || 
+            _lastScreenSize!.width != currentSize.width ||
+            _lastScreenSize!.height != currentSize.height) {
+          print('[GameplayViewModel] Screen size changed: $_lastScreenSize -> $currentSize');
+          setState(() {
+            _lastScreenSize = currentSize;
+            _cameraConfig = null;
+          });
+        }
+      }
+    });
   }
 
   Future<void> _loadGameOrResetLife() async {
@@ -92,11 +121,30 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _initializeGameComponents();
+    // Camera config agora é criado no build para responder a mudanças de orientação
   }
 
-  void _initializeGameComponents() {
-    cameraConfig = GameplayScreenDef.createCameraConfig(context);
+  /// Key única baseada no tamanho da tela para forçar rebuild do BonfireWidget
+  Key get bonfireKey {
+    final size = _lastScreenSize ?? MediaQuery.of(context).size;
+    return ValueKey('bonfire_${size.width.toInt()}_${size.height.toInt()}');
+  }
+
+  /// Retorna a configuração da câmera, recriando quando necessário
+  /// para responder a mudanças de orientação/tamanho da tela
+  CameraConfig getCameraConfig(BuildContext context) {
+    final newConfig = GameplayScreenDef.createCameraConfig(context);
+    
+    // Só atualiza se houve mudança real na configuração
+    if (_cameraConfig == null ||
+        _cameraConfig!.resolution != newConfig.resolution ||
+        _cameraConfig!.zoom != newConfig.zoom) {
+      print('[GameplayViewModel] Camera config updated: '
+          'resolution=${newConfig.resolution}, zoom=${newConfig.zoom}');
+      _cameraConfig = newConfig;
+    }
+    
+    return _cameraConfig!;
   }
 
   DDBasePlayerView buildSunnyPlayer(Vector2 position) {

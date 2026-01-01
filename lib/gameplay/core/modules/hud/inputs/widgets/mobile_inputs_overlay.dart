@@ -207,7 +207,7 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
             width: buttonSize,
             height: buttonSize,
             decoration: BoxDecoration(
-              color: Colors.purple.withOpacity(0.7),
+              color: Colors.yellow.withOpacity(0.7),
               borderRadius: BorderRadius.circular(buttonSize * 0.2),
               border: Border.all(
                 color: Colors.white.withOpacity(0.3),

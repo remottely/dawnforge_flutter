@@ -86,13 +86,13 @@ final class KeyboardSetup {
   static const LogicalKeyboardKey kAddTestItemsKey = LogicalKeyboardKey.keyT;
 
   // ========== MOVEMENT ==========
-  static final List<KeyboardDirectionalKeys> keyboardDirectionalKeys = [
+  static List<KeyboardDirectionalKeys> keyboardDirectionalKeys() => [
     KeyboardDirectionalKeys.wasd(),
     KeyboardDirectionalKeys.arrows(),
   ];
 
   // ========== ALL ACCEPTED KEYS ==========
-  static final List<LogicalKeyboardKey> keyboardAcceptedKeys = [
+  static List<LogicalKeyboardKey> keyboardAcceptedKeys() => [
     // Core actions
     kPrimaryActionKey,
     kSecondaryActionKey,
@@ -127,8 +127,8 @@ final class KeyboardSetup {
 
   static PlayerController createKeyboardInput() => Keyboard(
     config: KeyboardConfig(
-      directionalKeys: keyboardDirectionalKeys,
-      acceptedKeys: keyboardAcceptedKeys,
+      directionalKeys: keyboardDirectionalKeys(),
+      acceptedKeys: keyboardAcceptedKeys(),
     ),
   );
 }

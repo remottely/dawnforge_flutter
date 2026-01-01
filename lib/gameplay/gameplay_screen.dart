@@ -77,6 +77,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
         return Stack(
           children: [
             BonfireWidget(
+              key: bonfireKey,
               playerControllers: [playerInput],
               player: player,
               map: mapItem.map,
@@ -92,7 +93,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
               // backgroundColor: mapBackgroundColor, // TODO(Kevin): put it back?
               overlayBuilderMap: const {},
               backgroundColor: const Color(0xFF000000),
-              cameraConfig: cameraConfig,
+              cameraConfig: getCameraConfig(gameplayContext),
               debugMode: AppEnvironment.kIsDebugMode,
               showCollisionArea: AppEnvironment.kShowCollisionArea,
             ),
