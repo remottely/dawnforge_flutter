@@ -8,6 +8,7 @@ import 'package:darkness_dungeon/gameplay/inventory/widgets/inventory_overlay.da
 import 'package:darkness_dungeon/gameplay/core/modules/hud/player_vital_stats/player_vital_stats_overlay.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/debug/debug_overlay.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/widgets/mobile_inputs_overlay.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/widgets/joystick_actions_overlay.dart';
 import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
 import 'package:flutter/material.dart';
 
@@ -173,29 +174,35 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                     ),
                     // Quadrante 8 (Bottom Center) - flex 2
                     // Desktop: InventoryOverlay aqui
-                    Expanded(
-                      flex: flexB,
-                      child: Container(
-                        color: AppEnvironment.kIsDebugMode
-                            ? Colors.orange.withOpacity(0.03)
-                            : null,
-                        alignment: Alignment.bottomCenter,
-                        child: isDesktop
-                            ? const InventoryOverlay()
-                            : const SizedBox.shrink(),
+                    // Mobile: não existe (removido)
+                    if (isDesktop)
+                      Expanded(
+                        flex: flexB,
+                        child: Container(
+                          color: AppEnvironment.kIsDebugMode
+                              ? Colors.orange.withOpacity(0.03)
+                              : null,
+                          alignment: Alignment.bottomCenter,
+                          child: const InventoryOverlay(),
+                        ),
                       ),
-                    ),
                     // Quadrante 9 (Bottom Right) - flex 1
+                    // JoystickActionsOverlay sempre no último quadrante
                     Expanded(
                       flex: flexA,
                       child: Container(
                         color: AppEnvironment.kIsDebugMode
                             ? Colors.grey.withOpacity(0.03)
                             : null,
-                        child: const SizedBox(
-                          width: double.infinity,
-                          height: double.infinity,
-                        ),
+                        child: SettingsManager.instance.inputSelected ==
+                                InputActionsType.joystick
+                            ? JoystickActionsOverlay(
+                                playerController: playerController,
+                              )
+                            : const SizedBox(
+                                width: double.infinity,
+                                height: double.infinity,
+                              ),
                       ),
                     ),
                   ],

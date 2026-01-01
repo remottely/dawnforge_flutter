@@ -126,19 +126,16 @@ class OverlayResponsiveConfig {
 
   // Constraints simplificados para overlays (apenas width, height automático)
   static const Map<String, BoxConstraints> kOverlayConstraints = {
-    'equipment': BoxConstraints(
-      minWidth: 100,
-      maxWidth: 200,
-    ),
-    'inventory': BoxConstraints(
-      minWidth: 200,
-      maxWidth: 550,
-    ),
-    'tutorial_inputs': BoxConstraints(
-      minWidth: 300,
-      maxWidth: 500,
-    ),
+    'equipment': BoxConstraints(minWidth: 100, maxWidth: 200),
+    'inventory': BoxConstraints(minWidth: 200, maxWidth: 550),
+    'tutorial_inputs': BoxConstraints(minWidth: 300, maxWidth: 500),
     'mobile_inputs': BoxConstraints(
+      minWidth: double.infinity,
+      maxWidth: double.infinity,
+      minHeight: double.infinity,
+      maxHeight: double.infinity,
+    ),
+    'joystick_actions': BoxConstraints(
       minWidth: double.infinity,
       maxWidth: double.infinity,
       minHeight: double.infinity,
@@ -151,11 +148,9 @@ class OverlayResponsiveConfig {
     String overlayId, {
     ScreenSize? screenSize,
   }) {
-    final baseConstraints = kOverlayConstraints[overlayId] ??
-        const BoxConstraints(
-          minWidth: 200,
-          maxWidth: 400,
-        );
+    final baseConstraints =
+        kOverlayConstraints[overlayId] ??
+        const BoxConstraints(minWidth: 200, maxWidth: 400);
 
     // Ajusta constraints para mobile (reduz 15%)
     if (screenSize == ScreenSize.mobile) {

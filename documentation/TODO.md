@@ -1,5 +1,8 @@
 # IMPORTANT BEFORE LAUNCH:
 
+
+- [PRIORITY] mudar o design dos action buttons para nao ser fireball e sword
+
 - [PRIORITY] criar um botao q ocupa a tela inteira para modo web: cmd + shift + f
 
 - [PRIORITY] refactor executionStartFrame to be injected

@@ -106,15 +106,15 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
         color: Colors.green,
       ),
       SizedBox(height: spacing),
-      _buildActionButton(
-        context: context,
-        label: 'Defense', // 'Secondary'
-        icon: Icons.auto_awesome,
-        size: buttonSize,
-        actionId: JoystickSetup.kSecondaryActionId,
-        color: Colors.purple,
-      ),
-      SizedBox(height: spacing),
+      // _buildActionButton(
+      //   context: context,
+      //   label: 'Defense', // 'Secondary'
+      //   icon: Icons.auto_awesome,
+      //   size: buttonSize,
+      //   actionId: JoystickSetup.kSecondaryActionId,
+      //   color: Colors.purple,
+      // ),
+      // SizedBox(height: spacing),
       _buildActionButton(
         context: context,
         label: 'Run',
