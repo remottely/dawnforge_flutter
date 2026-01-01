@@ -1,5 +1,53 @@
 # IMPORTANT BEFORE LAUNCH:
 
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] No SV eu posso selecionar slots vazios, fazer o mesmo aqui?
+
+- [PRIORITY] No SV mobile, quando o usuario apenas sai do jogo, ele salva mesmo nao mudando de um dia para o outro, ou seja, salva o ultimo momento do player no jogo, faco o mesmo para o meu jogo?
+
+- [PRIORITY] Finalizar comportamento de mudanca entre landscape/portraitup na versão mobile/web. setar sempre antes de carregar o jogo?(limitação do bonfire/flame). E ai
+1. manter o mundo no size inicial porem permitir mudar a orientecao mesmo assim e ai o usuario bloqueia manualmente a orientacao no dispositivo dele, ou
+2. bloquear a orientacao apos iniciar o jogo??
+
 - [PRIORITY] toggleFullscreen deve estar visivel para todos os modos web, keyboard/joystick
 
 - [PRIORITY] mudar o design dos action buttons para nao ser fireball e sword

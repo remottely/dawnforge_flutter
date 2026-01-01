@@ -1,6 +1,9 @@
+import 'package:darkness_dungeon/app/screens/menu_screen.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/tutorial_inputs/tutorial_inputs_hud_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/tutorial_inputs/tutorial_inputs_state.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/responsive/responsive_overlay_base.dart';
+import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
 import 'package:flutter/material.dart';
 
 class TutorialInputsOverlay extends ResponsiveOverlayBase {
@@ -31,6 +34,9 @@ class TutorialInputsOverlay extends ResponsiveOverlayBase {
       desktop: 120.0,
     );
 
+    final isKeyboardMode =
+        SettingsManager.instance.inputSelected == InputActionsType.keyboard;
+
     return Material(
       color: Colors.transparent,
       child: IntrinsicWidth(
@@ -40,18 +46,27 @@ class TutorialInputsOverlay extends ResponsiveOverlayBase {
             color: const Color(0xAA222222),
             borderRadius: BorderRadius.circular(data.isMobileScreen ? 6 : 8),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: List.generate(
-              TutorialInputsHUDDef.inputGuide.length,
-              (index) => _buildInputRow(
-                context,
-                data,
-                TutorialInputsHUDDef.inputGuide[index]['key']!,
-                TutorialInputsHUDDef.inputGuide[index]['desc']!,
-                keyBoxWidth,
-              ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ElevatedButton(
+                  onPressed: () => _navigateToMainMenu(context),
+                  child: const Text('Sair para Menu Principal'),
+                ),
+                if (isKeyboardMode)
+                  ...List.generate(
+                    TutorialInputsHUDDef.inputGuide.length,
+                    (index) => _buildInputRow(
+                      context,
+                      data,
+                      TutorialInputsHUDDef.inputGuide[index]['key']!,
+                      TutorialInputsHUDDef.inputGuide[index]['desc']!,
+                      keyBoxWidth,
+                    ),
+                  ),
+              ],
             ),
           ),
         ),
@@ -118,6 +133,15 @@ class TutorialInputsOverlay extends ResponsiveOverlayBase {
           ),
         ],
       ),
+    );
+  }
+
+  void _navigateToMainMenu(BuildContext context) {
+    AudioManager.instance.stopBackgroundMusic();
+
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => const MenuScreen()),
+      (Route<dynamic> route) => false,
     );
   }
 }
