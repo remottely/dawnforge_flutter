@@ -9,6 +9,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/hud/player_vital_stats/pl
 import 'package:darkness_dungeon/gameplay/core/modules/hud/debug/debug_overlay.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/widgets/mobile_inputs_overlay.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/widgets/joystick_actions_overlay.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/widgets/fullscreen_button_overlay.dart';
 import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
 import 'package:flutter/material.dart';
 
@@ -62,7 +63,18 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                             ? Colors.blue.withOpacity(0.03)
                             : null,
                         alignment: Alignment.center,
-                        child: const OverlayMessageWidget(),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            DebugOverlay(
+                              player: player,
+                              // showFps: AppEnvironment.kIsDevToolsMode,
+                              // showPosition: AppEnvironment.kIsDevToolsMode,
+                              // showEntities: AppEnvironment.kIsDevToolsMode,
+                            ),
+                            const OverlayMessageWidget(),
+                          ],
+                        ),
                       ),
                     ),
                     // Quadrante 3 (Top Right) - flex 1
@@ -80,11 +92,12 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                                 alignment: Alignment.topRight,
                                 child: EquipmentOverlay(),
                               ),
-                            DebugOverlay(
-                              player: player,
-                              // showFps: AppEnvironment.kIsDevToolsMode,
-                              // showPosition: AppEnvironment.kIsDevToolsMode,
-                              // showEntities: AppEnvironment.kIsDevToolsMode,
+                            const Align(
+                              alignment: Alignment.topRight,
+                              child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: FullscreenButtonOverlay(),
+                              ),
                             ),
                           ],
                         ),
@@ -194,7 +207,8 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                         color: AppEnvironment.kIsDebugMode
                             ? Colors.grey.withOpacity(0.03)
                             : null,
-                        child: SettingsManager.instance.inputSelected ==
+                        child:
+                            SettingsManager.instance.inputSelected ==
                                 InputActionsType.joystick
                             ? JoystickActionsOverlay(
                                 playerController: playerController,

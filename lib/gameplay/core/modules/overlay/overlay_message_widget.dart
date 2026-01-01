@@ -105,7 +105,7 @@ class _OverlayMessageWidgetState extends State<OverlayMessageWidget>
     }
 
     return Positioned(
-      top: 100,
+      top: 0,
       left: 0,
       right: 0,
       child: FadeTransition(
@@ -121,22 +121,22 @@ class _OverlayMessageWidgetState extends State<OverlayMessageWidget>
                   minWidth: 200,
                 ),
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 16,
+                  horizontal: 4,
+                  vertical: 2,
                 ),
                 decoration: BoxDecoration(
                   color: _getBackgroundColor(_currentMessage!.type),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(8),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.3),
-                      blurRadius: 12,
+                      blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),
                   ],
                   border: Border.all(
                     color: Colors.white.withOpacity(0.2),
-                    width: 2,
+                    width: 1,
                   ),
                 ),
                 child: Row(
@@ -145,15 +145,15 @@ class _OverlayMessageWidgetState extends State<OverlayMessageWidget>
                     Icon(
                       _getIcon(_currentMessage!.type),
                       color: Colors.white,
-                      size: 28,
+                      size: 18,
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 4),
                     Flexible(
                       child: Text(
                         _currentMessage!.text,
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 18,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Normal',
                           shadows: [
