@@ -67,16 +67,16 @@ class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
     return 0.0;
   }
 
-  bool get _hasAnyKey =>
-      getIt<InventoryManager>().hasItem(DoorKeyDecorationDef.kItemId);
+  // bool get _hasAnyKey =>
+  //     getIt<InventoryManager>().hasItem(DoorKeyDecorationDef.kItemId);
 
-  bool get _hasKeySelected {
-    final selectedIndex =
-        getIt<EquipmentManager>().currentMainHandSlotIndex;
-    final slot = getIt<InventoryManager>().getSlotByIndex(selectedIndex);
-    if (slot == null || slot.item == null) return false;
-    return slot.item!.id == DoorKeyDecorationDef.kItemId && slot.quantity > 0;
-  }
+  // bool get _hasKeySelected {
+  //   final selectedIndex =
+  //       getIt<EquipmentManager>().currentMainHandSlotIndex;
+  //   final slot = getIt<InventoryManager>().getSlotByIndex(selectedIndex);
+  //   if (slot == null || slot.item == null) return false;
+  //   return slot.item!.id == DoorKeyDecorationDef.kItemId && slot.quantity > 0;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -118,8 +118,8 @@ class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
             _buildHealthBar(),
             const SizedBox(width: 8),
             _buildStaminaBar(),
-            const SizedBox(width: 12),
-            _buildKeyIndicator(),
+            // const SizedBox(width: 12),
+            // _buildKeyIndicator(),
           ],
         ),
       ),
@@ -209,34 +209,34 @@ class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
     );
   }
 
-  Widget _buildKeyIndicator() {
-    final hasKeySelected = _hasKeySelected;
-    final hasAnyKey = _hasAnyKey;
-    final keyColor = hasKeySelected
-        ? Colors.yellow
-        : (hasAnyKey ? Colors.white : Colors.grey);
+  // Widget _buildKeyIndicator() {
+  //   final hasKeySelected = _hasKeySelected;
+  //   final hasAnyKey = _hasAnyKey;
+  //   final keyColor = hasKeySelected
+  //       ? Colors.yellow
+  //       : (hasAnyKey ? Colors.white : Colors.grey);
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          Icons.vpn_key,
-          color: keyColor,
-          size: 16,
-        ),
-        const SizedBox(width: 4),
-        Text(
-          hasAnyKey ? 'KEY' : '-',
-          style: TextStyle(
-            color: keyColor,
-            fontSize: 12,
-            fontFamily: 'Normal',
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
-    );
-  }
+  //   return Row(
+  //     mainAxisSize: MainAxisSize.min,
+  //     children: [
+  //       Icon(
+  //         Icons.vpn_key,
+  //         color: keyColor,
+  //         size: 16,
+  //       ),
+  //       const SizedBox(width: 4),
+  //       Text(
+  //         hasAnyKey ? 'KEY' : '-',
+  //         style: TextStyle(
+  //           color: keyColor,
+  //           fontSize: 12,
+  //           fontFamily: 'Normal',
+  //           fontWeight: FontWeight.bold,
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Color _getHealthBarColor(double percentage) {
     if (percentage > 2.0 / 3.0) {
