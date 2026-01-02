@@ -105,6 +105,16 @@ class InventoryManager {
     _notifyChange();
   }
 
+  /// Consume a quantity from a slot and free it when it reaches zero
+  void consumeFromSlot(int index, int amount) {
+    if (amount <= 0) return;
+    final slot = getSlotByIndex(index);
+    if (slot == null || slot.isEmpty) return;
+
+    final updated = slot.removeQuantity(amount);
+    updateSlot(index, updated);
+  }
+
   int getItemQuantity(String itemId) {
     return _slots
         .where((s) => s.item?.id == itemId)

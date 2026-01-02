@@ -28,11 +28,11 @@
 
 - [PRIORITY] 
 
-- [PRIORITY] 
+- [PRIORITY] garantir que conversation seja o display de qualquer interacao q demande mensagem na tela. inclusive sobre alerta de "sem estamina"?
 
-- [PRIORITY] 
+- [PRIORITY] gameplay diario(missoes) deve ser um overlay q sobrepoem-se por toda a tela do jogo.
 
-- [PRIORITY] 
+- [PRIORITY] gameplay menu(config, etc) deve ser um overlay q sobrepoem-se por toda a tela do jogo.
 
 - [PRIORITY] comecar novo jogo com 500 de ouro
 

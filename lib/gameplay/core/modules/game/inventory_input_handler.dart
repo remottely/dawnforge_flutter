@@ -152,7 +152,7 @@ class InventoryInputHandler extends GameComponent
       '[InventoryInput] Itens de teste adicionados! ${getIt<InventoryManager>().usedSlots} slots usados',
     );
 
-    // Ensure first slot with a MainHandItem is selected
+    // Ensure first non-empty slot is selected
     _ensureInitialSlotSelection();
   }
 
@@ -163,20 +163,17 @@ class InventoryInputHandler extends GameComponent
       currentSlotIndex,
     );
 
-    // If current slot already has a MainHandItem, select it to sync UI
-    if (currentSlot?.item is MainHandItem) {
+    // If current slot already has any item, select it to sync UI
+    if (currentSlot?.item != null) {
       developer.log(
-        '[InventoryInput] Slot $currentSlotIndex already has a MainHandItem: ${currentSlot?.item?.name}, syncing with UI',
+        '[InventoryInput] Slot $currentSlotIndex already has item: ${currentSlot?.item?.name}, syncing with UI',
       );
-      // Force sync with EquipmentState
       equipmentManager.selectSlotIndex(currentSlotIndex);
       return;
     }
 
-    // Find first slot with a MainHandItem and select it
-    final result = getIt<InventoryManager>().findItem(
-      (item) => item is MainHandItem,
-    );
+    // Find first non-empty slot and select it
+    final result = getIt<InventoryManager>().findItem((_) => true);
 
     if (result != null) {
       equipmentManager.selectSlotIndex(result.index);
@@ -185,7 +182,7 @@ class InventoryInputHandler extends GameComponent
       );
     } else {
       developer.log(
-        '[InventoryInput] No MainHandItem found in inventory - slot 0 remains selected (empty)',
+        '[InventoryInput] No items found in inventory - slot 0 remains selected (empty)',
       );
     }
   }

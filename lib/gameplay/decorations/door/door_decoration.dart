@@ -56,9 +56,7 @@ class DoorDecorationView extends GameDecoration {
   }
 
   void _consumeKey(int slotIndex) {
-    final slot = getIt<InventoryManager>().getSlotByIndex(slotIndex);
-    if (slot == null) return;
-    getIt<InventoryManager>().updateSlot(slotIndex, slot.removeQuantity(1));
+    getIt<InventoryManager>().consumeFromSlot(slotIndex, 1);
   }
 
   void _triggerDoorOpening() {

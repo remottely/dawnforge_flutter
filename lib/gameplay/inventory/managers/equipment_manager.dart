@@ -17,6 +17,11 @@ final class EquipmentManager {
     developer.log(
       '[EquipmentManager] Initialized with ${_equipmentSlots.length} slots',
     );
+
+    // Sync when inventory slots change (e.g., consumption/move clearing the selected slot)
+    InventoryManager.instance.slotsNotifier.addListener(
+      _handleInventorySlotsChanged,
+    );
   }
 
   static final instance = EquipmentManager._();
@@ -36,17 +41,17 @@ final class EquipmentManager {
   bool equip(EquipmentSlotType slotType, Item item, {int? inventorySlotIndex}) {
     developer.log('[EquipmentManager] Equipping ${item.name} to $slotType');
 
-    if (slotType != EquipmentSlotType.mainHand) {
-      developer.log(
-        '[EquipmentManager] Slot $slotType is not available for equipping at the moment',
-      );
-      return false;
-    }
+    // if (slotType != EquipmentSlotType.mainHand) {
+    //   developer.log(
+    //     '[EquipmentManager] Slot $slotType is not available for equipping at the moment',
+    //   );
+    //   return false;
+    // }
 
-    if (!_canEquipItemInSlot(item, slotType)) {
-      developer.log('[EquipmentManager] Item cannot be equipped in this slot');
-      return false;
-    }
+    // if (!_canEquipItemInSlot(item, slotType)) {
+    //   developer.log('[EquipmentManager] Item cannot be equipped in this slot');
+    //   return false;
+    // }
 
     if (InventoryManager.instance.getItemQuantity(item.id) == 0) {
       developer.log('[EquipmentManager] Item not in inventory');
@@ -71,22 +76,14 @@ final class EquipmentManager {
   }
 
   Item? unequip(EquipmentSlotType slotType) {
-    developer.log('[EquipmentManager] Unequipping from $slotType');
+    developer.log('[EquipmentManager] Clearing equipment in $slotType');
 
     final item = getEquippedItem(slotType);
-    if (item == null) {
-      developer.log('[EquipmentManager] Slot is empty');
-      return null;
-    }
-
     _equipmentSlots[slotType] = _equipmentSlots[slotType]!.unequip();
 
     // Notify Flutter overlay
     EquipmentState.instance.updateSlot(slotType, null);
 
-    developer.log(
-      '[EquipmentManager] Item unequipped successfully (remains in inventory)',
-    );
     return item;
   }
 
@@ -97,28 +94,37 @@ final class EquipmentManager {
       return false;
     }
 
+    // Always move selection first so toolbar can stay in sync even on empty slots
+    _currentMainHandSlotIndex = index;
+    selectedSlotIndexNotifier.value = index;
+
     final item = slot.item;
     if (item == null) {
       developer.log('[EquipmentManager] Slot $index is empty');
-      final success = unequip(EquipmentSlotType.mainHand) != null;
-      _currentMainHandSlotIndex = index;
-      selectedSlotIndexNotifier.value = index;
-      return success;
+      // Still allow selecting empty slots; clear equipped display
+      clearSelectedEquipment();
+      return true;
     }
 
-    if (item is MainHandItem) {
-      final success = equip(
-        EquipmentSlotType.mainHand,
-        item,
-        inventorySlotIndex: index,
-      );
-      return success;
-    }
-
-    developer.log(
-      '[EquipmentManager] Item at slot $index is not a MainHandItem',
+    final success = equip(
+      EquipmentSlotType.mainHand,
+      item,
+      inventorySlotIndex: index,
     );
-    return false;
+
+    if (!success) {
+      developer.log('[EquipmentManager] Failed to equip item at slot $index');
+      // Keep selection but ensure we don't show stale equipment
+      clearSelectedEquipment();
+      return false;
+    }
+    return true;
+  }
+
+  void clearSelectedEquipment() {
+    _equipmentSlots[EquipmentSlotType.mainHand] =
+        _equipmentSlots[EquipmentSlotType.mainHand]!.unequip();
+    EquipmentState.instance.updateSlot(EquipmentSlotType.mainHand, null);
   }
 
   Item? getEquippedItem(EquipmentSlotType slotType) {
@@ -148,12 +154,16 @@ final class EquipmentManager {
 
   int getTotalDamage() {
     final mainHand = getEquippedItem(EquipmentSlotType.mainHand);
-    return mainHand is MainHandItem ? mainHand.damage : 0;
+    if (mainHand == null) return 0;
+    if (mainHand is MainHandItem) return mainHand.damage;
+    return 0;
   }
 
   double getTotalDps() {
     final mainHand = getEquippedItem(EquipmentSlotType.mainHand);
-    return mainHand is MainHandItem ? mainHand.dps : 0;
+    if (mainHand == null) return 0;
+    if (mainHand is MainHandItem) return mainHand.dps;
+    return 0;
   }
 
   int getTotalDefense() {
@@ -210,12 +220,10 @@ final class EquipmentManager {
     );
   }
 
-  bool _canEquipItemInSlot(Item item, EquipmentSlotType slotType) {
-    if (slotType == EquipmentSlotType.mainHand) {
-      return item is MainHandItem;
-    }
-    return false;
-  }
+  // bool _canEquipItemInSlot(Item item, EquipmentSlotType slotType) {
+  //   // Now permissive: any item can be equipped/selected.
+  //   return true;
+  // }
 
   void reset() {
     for (final slotType in EquipmentSlotType.values) {
@@ -230,5 +238,16 @@ final class EquipmentManager {
     }
 
     developer.log('[EquipmentManager] Equipment reset');
+  }
+
+  void _handleInventorySlotsChanged() {
+    final selectedIndex = _currentMainHandSlotIndex;
+    final slot = InventoryManager.instance.getSlotByIndex(selectedIndex);
+    if (slot == null) return;
+
+    // If the selected slot became empty, clear the equipped display
+    if (slot.isEmpty && getEquippedItem(EquipmentSlotType.mainHand) != null) {
+      clearSelectedEquipment();
+    }
   }
 }
