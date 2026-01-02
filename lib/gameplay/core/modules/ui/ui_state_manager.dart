@@ -95,7 +95,7 @@ final class UIStateManager {
       onChangeTalk: onChangeConversation,
       onFinish: onFinishConversation,
       onClose: onCloseConversation,
-      logicalKeyboardKeysToNext: [KeyboardSetup.kPrimaryActionKey],
+      logicalKeyboardKeysToNext: [KeyboardSetup.kInteractionKey],
     );
   }
 
