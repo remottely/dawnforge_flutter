@@ -39,20 +39,17 @@ class DDBasePlayerSaveData {
   double stamina;
   int energy;
   double? life;
-  bool hasKey;
 
   DDBasePlayerSaveData({
     required this.stamina,
     required this.energy,
     this.life,
-    this.hasKey = false,
   });
 
   Map<String, dynamic> toJson() => {
     'stamina': stamina,
     'energy': energy,
     'life': life,
-    'hasKey': hasKey,
   };
 
   factory DDBasePlayerSaveData.fromJson(
@@ -63,7 +60,6 @@ class DDBasePlayerSaveData {
       stamina: (json['stamina'] as num?)?.toDouble() ?? config.maxStamina,
       energy: (json['energy'] as int?) ?? config.maxEnergy,
       life: (json['life'] as num?)?.toDouble(),
-      hasKey: json['hasKey'] as bool? ?? false,
     );
   }
 }

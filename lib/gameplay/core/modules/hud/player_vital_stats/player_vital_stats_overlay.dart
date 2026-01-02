@@ -1,4 +1,8 @@
 import 'package:darkness_dungeon/gameplay/core/modules/hud/player_vital_stats/player_vital_stats_state.dart';
+import 'package:darkness_dungeon/gameplay/decorations/door_key/door_key_decoration_config.dart';
+import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
+import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
+import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
@@ -63,16 +67,15 @@ class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
     return 0.0;
   }
 
-  bool get _hasKey {
-    final player = _cachedPlayer;
-    if (player != null) {
-      try {
-        return player.controller.model.hasKey;
-      } catch (e) {
-        // Silenciosamente retorna false se houver erro
-      }
-    }
-    return false;
+  bool get _hasAnyKey =>
+      getIt<InventoryManager>().hasItem(DoorKeyDecorationDef.kItemId);
+
+  bool get _hasKeySelected {
+    final selectedIndex =
+        getIt<EquipmentManager>().currentMainHandSlotIndex;
+    final slot = getIt<InventoryManager>().getSlotByIndex(selectedIndex);
+    if (slot == null || slot.item == null) return false;
+    return slot.item!.id == DoorKeyDecorationDef.kItemId && slot.quantity > 0;
   }
 
   @override
@@ -207,19 +210,25 @@ class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
   }
 
   Widget _buildKeyIndicator() {
+    final hasKeySelected = _hasKeySelected;
+    final hasAnyKey = _hasAnyKey;
+    final keyColor = hasKeySelected
+        ? Colors.yellow
+        : (hasAnyKey ? Colors.white : Colors.grey);
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(
           Icons.vpn_key,
-          color: _hasKey ? Colors.yellow : Colors.grey,
+          color: keyColor,
           size: 16,
         ),
         const SizedBox(width: 4),
         Text(
-          _hasKey ? 'KEY' : '-',
+          hasAnyKey ? 'KEY' : '-',
           style: TextStyle(
-            color: _hasKey ? Colors.yellow : Colors.grey,
+            color: keyColor,
             fontSize: 12,
             fontFamily: 'Normal',
             fontWeight: FontWeight.bold,

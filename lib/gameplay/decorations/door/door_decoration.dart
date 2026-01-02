@@ -3,7 +3,10 @@ import 'dart:async';
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/decorations/door/door_decoration_config.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
+import 'package:darkness_dungeon/gameplay/decorations/door_key/door_key_decoration_config.dart';
+import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
+import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
+import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
 
 class DoorDecorationView extends GameDecoration {
   bool _isOpen = false;
@@ -29,20 +32,37 @@ class DoorDecorationView extends GameDecoration {
   }
 
   void _handlePlayerCollision(SimplePlayer player) {
-    if (!_isOpen) {
-      if ((player as DDBasePlayerView).controller.model.hasKey == true) {
-        // TODO(Kevin): make this more generic, like DDBasePlayerView
-        _triggerDoorOpening(player);
-      } else {
-        _showKeyRequiredMessage(player);
-      }
+    if (_isOpen) return;
+
+    final keySlotIndex = _getSelectedKeySlotIndex();
+    if (keySlotIndex != null) {
+      _consumeKey(keySlotIndex);
+      _triggerDoorOpening();
+    } else {
+      _showKeyRequiredMessage(player);
     }
   }
 
-  void _triggerDoorOpening(SimplePlayer player) {
+  int? _getSelectedKeySlotIndex() {
+    final selectedIndex =
+        getIt<EquipmentManager>().currentMainHandSlotIndex;
+    final slot = getIt<InventoryManager>().getSlotByIndex(selectedIndex);
+
+    if (slot == null || slot.item == null) return null;
+
+    final isKeySelected = slot.item!.id == DoorKeyDecorationDef.kItemId;
+    final hasQuantity = slot.quantity > 0;
+    return isKeySelected && hasQuantity ? selectedIndex : null;
+  }
+
+  void _consumeKey(int slotIndex) {
+    final slot = getIt<InventoryManager>().getSlotByIndex(slotIndex);
+    if (slot == null) return;
+    getIt<InventoryManager>().updateSlot(slotIndex, slot.removeQuantity(1));
+  }
+
+  void _triggerDoorOpening() {
     _isOpen = true;
-    (player as DDBasePlayerView).controller.model
-        .removeKey(); // TODO(Kevin): make this more generic, like DDBasePlayerView
     _playAnimationDoorOpening();
   }
 

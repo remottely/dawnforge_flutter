@@ -34,7 +34,7 @@
 
 - [PRIORITY] 
 
-- [PRIORITY] 
+- [PRIORITY] comecar novo jogo com 500 de ouro
 
 - [PRIORITY] A chave deve deixar de ser um item vinculado ao player e passar a ser um item do inventario, e para consumi-la na door, é preciso estar com ela equipada no momento, ou seja, slot da chave selecionada, assim como ocorre o comportamento de todos os itens consumiveis do stardew valley.
 

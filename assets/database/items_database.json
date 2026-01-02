@@ -352,6 +352,17 @@
     "maxStackSize": 999,
     "materialType": "fiber"
   },
+  "dungeon_key": {
+    "id": "dungeon_key",
+    "name": "Dungeon Key",
+    "description": "Opens locked dungeon doors. Consumed on use.",
+    "type": "material",
+    "rarity": "common",
+    "baseValue": 0,
+    "iconPath": "",
+    "maxStackSize": 1,
+    "materialType": "key"
+  },
   "carrot_item": {
     "id": "carrot_item",
     "name": "Carrot",

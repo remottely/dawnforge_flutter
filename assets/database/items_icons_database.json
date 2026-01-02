@@ -187,6 +187,10 @@
     "iron_ore": {
       "rowIndex": 999999,
       "columnIndex": 999999
+    },
+    "dungeon_key": {
+      "rowIndex": 6,
+      "columnIndex": 6
     }
   }
 }

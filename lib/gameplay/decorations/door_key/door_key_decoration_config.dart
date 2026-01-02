@@ -5,6 +5,8 @@ import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 final class DoorKeyDecorationDef {
   DoorKeyDecorationDef._();
 
+  static const String kItemId = 'dungeon_key';
+
   static final Vector2 _textureSize = TileConstants.tileSizeStandard;
   static final Vector2 componentSize = _textureSize;
 
