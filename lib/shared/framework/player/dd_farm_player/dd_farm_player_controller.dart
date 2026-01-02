@@ -1,9 +1,11 @@
+import 'dart:async' show unawaited;
 import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_def.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/ui/dialog/binary_choice_dialog.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
@@ -20,6 +22,8 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
   final bool Function() onExecuteWateringCan;
   final bool Function() onExecuteSeed;
   final bool Function() onExecuteHarvest;
+
+  bool _isShowingConsumeDialog = false;
 
   DDFarmPlayerController({
     required super.model,
@@ -132,7 +136,16 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
       return false;
     }
 
+    if (_isShowingConsumeDialog) {
+      developer.log('[FarmController] Consumo já em progresso');
+      return true;
+    }
+
     final item = slot.item;
+    if (item == null) {
+      developer.log('[FarmController] Consumo falhou: item nulo ($selectedIndex)');
+      return false;
+    }
     int staminaGain = 0;
     double healthGain = 0;
 
@@ -151,6 +164,41 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
       return false;
     }
 
+    unawaited(_confirmConsumeSelectedVegetable(
+      player: player,
+      slotIndex: selectedIndex,
+      itemName: item.name,
+      staminaGain: staminaGain,
+      healthGain: healthGain,
+    ));
+
+    // Diálogo é assíncrono; retornamos true para bloquear outras ações enquanto a escolha é feita.
+    return true;
+  }
+
+  Future<void> _confirmConsumeSelectedVegetable({
+    required DDBasePlayerView player,
+    required int slotIndex,
+    required String itemName,
+    required int staminaGain,
+    required double healthGain,
+  }) async {
+    _isShowingConsumeDialog = true;
+
+    final result = await BinaryChoiceDialog.show(
+      context: player.gameRef.context,
+      question: 'Consumir $itemName?',
+      yesLabel: 'Sim',
+      noLabel: 'Não',
+    );
+
+    _isShowingConsumeDialog = false;
+
+    if (result != true) {
+      developer.log('[FarmController] Consumo cancelado');
+      return;
+    }
+
     if (healthGain > 0) {
       player.addLife(healthGain);
     }
@@ -159,10 +207,8 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
       model.restoreStamina(staminaGain);
     }
 
-    InventoryManager.instance.consumeFromSlot(selectedIndex, 1);
-    developer.log('[FarmController] Consumo aplicado: hp=+$healthGain, stamina=+$staminaGain, slot=$selectedIndex');
-
-    return true;
+    InventoryManager.instance.consumeFromSlot(slotIndex, 1);
+    developer.log('[FarmController] Consumo aplicado: hp=+$healthGain, stamina=+$staminaGain, slot=$slotIndex');
   }
 
   void _handleExecuteDig() {

@@ -43,7 +43,11 @@ class ItemFactoryService {
         final jsonString = await rootBundle.loadString(path);
         final jsonData = jsonDecode(jsonString) as Map<String, dynamic>;
         for (final entry in jsonData.entries) {
-          mergedDatabase[entry.key] = entry.value as Map<String, dynamic>;
+          final value =
+              Map<String, dynamic>.from(entry.value as Map<String, dynamic>);
+          value['id'] ??= entry.key;
+          value['name'] ??= entry.key;
+          mergedDatabase[entry.key] = value;
         }
       }
 
