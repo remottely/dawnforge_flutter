@@ -19,7 +19,13 @@ class ItemFactoryService {
   final Map<String, Map<String, dynamic>> _itemDatabase = {};
   bool isInitialized = false;
 
-  final String _kDatabasePath = 'assets/database/items_database.json';
+  static const List<String> _kDatabasePaths = [
+    'assets/database/items/weapons.json',
+    'assets/database/items/tools.json',
+    'assets/database/items/consumables.json',
+    'assets/database/items/materials.json',
+    'assets/database/items/seeds.json',
+  ];
 
   Future<void> initialize() async {
     if (isInitialized) {
@@ -31,17 +37,40 @@ class ItemFactoryService {
       await ItemIconDatabase().initialize();
       developer.log('[ItemFactoryService] ItemIconDatabase initialized');
 
-      final jsonString = await rootBundle.loadString(_kDatabasePath);
-      final jsonData = jsonDecode(jsonString) as Map<String, dynamic>;
+      final mergedDatabase = <String, Map<String, dynamic>>{};
 
-      for (final entry in jsonData.entries) {
-        _itemDatabase[entry.key] = entry.value as Map<String, dynamic>;
+      Future<void> loadDatabase(String path) async {
+        final jsonString = await rootBundle.loadString(path);
+        final jsonData = jsonDecode(jsonString) as Map<String, dynamic>;
+        for (final entry in jsonData.entries) {
+          mergedDatabase[entry.key] = entry.value as Map<String, dynamic>;
+        }
       }
 
+      try {
+        for (final path in _kDatabasePaths) {
+          await loadDatabase(path);
+        }
+
+        developer.log(
+          '[ItemFactoryService] Loaded ${mergedDatabase.length} items from split database (${_kDatabasePaths.length} files)',
+        );
+      } catch (e) {
+        developer.log(
+          '[ItemFactoryService] Split database unavailable, falling back to legacy file',
+          error: e,
+        );
+
+        developer.log(
+          '[ItemFactoryService] Loaded ${mergedDatabase.length} items from legacy database',
+        );
+      }
+
+      _itemDatabase
+        ..clear()
+        ..addAll(mergedDatabase);
+
       isInitialized = true;
-      developer.log(
-        '[ItemFactoryService] Loaded ${_itemDatabase.length} items',
-      );
     } catch (e, stackTrace) {
       developer.log(
         '[ItemFactoryService] ERROR loading database',
