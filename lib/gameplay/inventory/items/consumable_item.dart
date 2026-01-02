@@ -48,6 +48,8 @@ final class ConsumableItem extends Item {
   }
 
   factory ConsumableItem.fromJson(Map<String, dynamic> json) {
+    final healAmount = json['healAmount'] as int?;
+
     return ConsumableItem(
       id: json['id'] as String,
       name: json['name'] as String,
@@ -56,8 +58,9 @@ final class ConsumableItem extends Item {
       iconPath: json['iconPath'] as String,
       rarity: ItemRarity.fromJson(json['rarity'] as String),
       maxStackSize: json['maxStackSize'] as int? ?? 99,
-      healthRestore: json['healthRestore'] as int? ?? 0,
-      staminaRestore: json['staminaRestore'] as int? ?? 0,
+      // Fallback: some data uses healAmount instead of healthRestore/staminaRestore
+      healthRestore: json['healthRestore'] as int? ?? healAmount ?? 0,
+      staminaRestore: json['staminaRestore'] as int? ?? healAmount ?? 0,
       duration: json['duration'] as int? ?? 0,
       buffs:
           (json['buffs'] as List<dynamic>?)?.map((e) => e as String).toList() ??

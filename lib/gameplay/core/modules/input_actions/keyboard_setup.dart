@@ -51,7 +51,7 @@ final class KeyboardSetup {
 
   static const LogicalKeyboardKey kToggleInventoryKey = LogicalKeyboardKey.keyI;
 
-  static const LogicalKeyboardKey kCraftingKey = LogicalKeyboardKey.keyC;
+  static const LogicalKeyboardKey kCraftingKey = LogicalKeyboardKey.keyV;
 
   static const LogicalKeyboardKey kToggleInputsKey = LogicalKeyboardKey.escape;
 

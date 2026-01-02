@@ -4,6 +4,8 @@
 
 - [NOT_PRIORITY] adicionar "arar"?
 
+- [NOT_PRIORITY] adicionar mouse como ponteiro 16x16 do meu jogo seguindo a logica de SV.
+
 - [PRIORITY] 
 
 - [PRIORITY] 

@@ -2,11 +2,17 @@ import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_def.dart';
+import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
+import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
+import 'package:darkness_dungeon/gameplay/inventory/items/consumable_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/items/crop_item.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_model.dart';
+import 'package:flutter/services.dart';
 
 abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
     extends DDCombatPlayerController<M> {
@@ -56,6 +62,17 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
       InputDef.isPrimaryAction(actionId) &&
       player.controller.model.equipment == EquippedHandType.harvestBasket;
 
+  bool _isConsumeVegetableAction(dynamic actionId) {
+    if (InputDef.isInteractionAction(actionId)) return true;
+
+    // Fallback apenas para garantir que X seja reconhecido mesmo se vier como instância diferente.
+    if (actionId is LogicalKeyboardKey) {
+      if (actionId.keyId == LogicalKeyboardKey.keyX.keyId) return true;
+    }
+
+    return false;
+  }
+
   @override
   void handleInputAction({
     required DDBasePlayerView player,
@@ -64,6 +81,21 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
     developer.log(
       '[FarmController] Verificando ação: ${event.id} | equipment: ${player.controller.model.equipment} | evento: ${event.event}',
     );
+
+    final bool isInteraction = _isConsumeVegetableAction(event.id);
+    final bool isConsumeVegetable =
+        event.event == ActionEvent.DOWN && isInteraction;
+    developer.log(
+      '[FarmController] Check consumo: isInteraction=$isInteraction | isConsumeVegetable=$isConsumeVegetable | actionId=${event.id}',
+    );
+
+    if (isConsumeVegetable) {
+      final consumed = _tryConsumeSelectedVegetable(player);
+      developer.log('[FarmController] Consumo via interação: success=$consumed');
+      if (consumed) return;
+      // Se não consumiu, não prossiga para ações de farm; evita log de "não é ação de farm" poluir
+      return;
+    }
 
     // Só processa ações no DOWN, não no UP
     if (event.event != ActionEvent.DOWN) {
@@ -90,6 +122,47 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
     }
 
     super.handleInputAction(player: player, event: event);
+  }
+
+  bool _tryConsumeSelectedVegetable(DDBasePlayerView player) {
+    final selectedIndex = EquipmentManager.instance.currentMainHandSlotIndex;
+    final slot = InventoryManager.instance.getSlotByIndex(selectedIndex);
+    if (slot == null || slot.isEmpty) {
+      developer.log('[FarmController] Consumo falhou: slot vazio ($selectedIndex)');
+      return false;
+    }
+
+    final item = slot.item;
+    int staminaGain = 0;
+    double healthGain = 0;
+
+    developer.log(
+      '[FarmController] Consumo tentativa: slot=$selectedIndex item=${item.runtimeType} qty=${slot.quantity}',
+    );
+
+    if (item is CropItem) {
+      if (!item.isEdible) return false;
+      staminaGain = item.effectiveEnergyRestore;
+      healthGain = item.effectiveHealthRestore.toDouble();
+    } else if (item is ConsumableItem) {
+      staminaGain = item.staminaRestore;
+      healthGain = item.healthRestore.toDouble();
+    } else {
+      return false;
+    }
+
+    if (healthGain > 0) {
+      player.addLife(healthGain);
+    }
+
+    if (staminaGain > 0) {
+      model.restoreStamina(staminaGain);
+    }
+
+    InventoryManager.instance.consumeFromSlot(selectedIndex, 1);
+    developer.log('[FarmController] Consumo aplicado: hp=+$healthGain, stamina=+$staminaGain, slot=$selectedIndex');
+
+    return true;
   }
 
   void _handleExecuteDig() {

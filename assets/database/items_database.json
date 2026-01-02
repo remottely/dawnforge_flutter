@@ -236,8 +236,8 @@
     "baseValue": 25,
     "iconPath": "assets/images/items/health_potion.png",
     "maxStackSize": 99,
-    "healthRestore": 50,
-    "staminaRestore": 0,
+    "healthRestore": 20,
+    "staminaRestore": 10,
     "duration": 0,
     "buffs": []
   },
@@ -250,7 +250,7 @@
     "baseValue": 20,
     "iconPath": "assets/images/items/stamina_potion.png",
     "maxStackSize": 99,
-    "healthRestore": 0,
+    "healthRestore": 20,
     "staminaRestore": 30,
     "duration": 0,
     "buffs": []
@@ -265,7 +265,7 @@
     "iconPath": "assets/images/items/super_health_potion.png",
     "maxStackSize": 50,
     "healthRestore": 150,
-    "staminaRestore": 0,
+    "staminaRestore": 10,
     "duration": 0,
     "buffs": []
   },
@@ -292,8 +292,8 @@
     "baseValue": 75,
     "iconPath": "assets/images/items/strength_elixir.png",
     "maxStackSize": 20,
-    "healthRestore": 0,
-    "staminaRestore": 0,
+    "healthRestore": 20,
+    "staminaRestore": 10,
     "duration": 60,
     "buffs": ["strength_buff"]
   },
