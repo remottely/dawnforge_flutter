@@ -16,7 +16,7 @@
 
 - [PRIORITY] 
 
-- [PRIORITY] 
+- [PRIORITY] melhorar a maneira como é renderizado os crops, pois a base do crop(render) deveria bater com a base do crop(sprite) para nao dar bug visual no fake 3D(ordem Y)
 
 - [PRIORITY] Impossibilitar do player sair destruindo tudo sem querer com picareta no jogo??
 

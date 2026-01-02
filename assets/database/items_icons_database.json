@@ -68,6 +68,14 @@
       "rowIndex": 10,
       "columnIndex": 15
     },
+    "tomato_item": {
+      "rowIndex": 1,
+      "columnIndex": 1
+    },
+    "strawberry_item": {
+      "rowIndex": 1,
+      "columnIndex": 15
+    },
     "grape_seed_bag": {
       "rowIndex": 11,
       "columnIndex": 0
