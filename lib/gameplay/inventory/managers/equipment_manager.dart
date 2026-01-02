@@ -11,12 +11,7 @@ import 'package:darkness_dungeon/gameplay/inventory/state/equipment_state.dart';
 /// Manager for equipment state (C1: Singleton + ValueNotifier, I2: Manager = Singleton State)
 final class EquipmentManager {
   EquipmentManager._() {
-    for (final slotType in EquipmentSlotType.values) {
-      _equipmentSlots[slotType] = EquipmentSlot(slotType: slotType);
-    }
-    developer.log(
-      '[EquipmentManager] Initialized with ${_equipmentSlots.length} slots',
-    );
+    developer.log('[EquipmentManager] Initialized with single equipped slot');
 
     // Sync when inventory slots change (e.g., consumption/move clearing the selected slot)
     InventoryManager.instance.slotsNotifier.addListener(
@@ -26,42 +21,27 @@ final class EquipmentManager {
 
   static final instance = EquipmentManager._();
 
-  final Map<EquipmentSlotType, EquipmentSlot> _equipmentSlots = {};
+  EquipmentSlot _equippedSlot = const EquipmentSlot();
 
   /// J3: ValueNotifier for cross-module communication
   final ValueNotifier<int> selectedSlotIndexNotifier = ValueNotifier(0);
 
   int _currentMainHandSlotIndex = 0;
 
-  Map<EquipmentSlotType, EquipmentSlot> get equipmentSlots =>
-      Map.unmodifiable(_equipmentSlots);
-
   int get currentMainHandSlotIndex => _currentMainHandSlotIndex;
 
-  bool equip(EquipmentSlotType slotType, Item item, {int? inventorySlotIndex}) {
-    developer.log('[EquipmentManager] Equipping ${item.name} to $slotType');
-
-    // if (slotType != EquipmentSlotType.mainHand) {
-    //   developer.log(
-    //     '[EquipmentManager] Slot $slotType is not available for equipping at the moment',
-    //   );
-    //   return false;
-    // }
-
-    // if (!_canEquipItemInSlot(item, slotType)) {
-    //   developer.log('[EquipmentManager] Item cannot be equipped in this slot');
-    //   return false;
-    // }
+  bool equip(Item item, {int? inventorySlotIndex}) {
+    developer.log('[EquipmentManager] Equipping ${item.name}');
 
     if (InventoryManager.instance.getItemQuantity(item.id) == 0) {
       developer.log('[EquipmentManager] Item not in inventory');
       return false;
     }
 
-    _equipmentSlots[slotType] = _equipmentSlots[slotType]!.equip(item);
+    _equippedSlot = _equippedSlot.equip(item);
 
     // Notify Flutter overlay
-    EquipmentState.instance.updateSlot(slotType, item);
+    EquipmentState.instance.updateEquippedItem(item);
 
     developer.log(
       '[EquipmentManager] Item equipped successfully (kept in inventory)',
@@ -75,14 +55,14 @@ final class EquipmentManager {
     return true;
   }
 
-  Item? unequip(EquipmentSlotType slotType) {
-    developer.log('[EquipmentManager] Clearing equipment in $slotType');
+  Item? unequip() {
+    developer.log('[EquipmentManager] Clearing equipped item');
 
-    final item = getEquippedItem(slotType);
-    _equipmentSlots[slotType] = _equipmentSlots[slotType]!.unequip();
+    final item = _equippedSlot.equippedItem;
+    _equippedSlot = _equippedSlot.unequip();
 
     // Notify Flutter overlay
-    EquipmentState.instance.updateSlot(slotType, null);
+    EquipmentState.instance.updateEquippedItem(null);
 
     return item;
   }
@@ -106,11 +86,7 @@ final class EquipmentManager {
       return true;
     }
 
-    final success = equip(
-      EquipmentSlotType.mainHand,
-      item,
-      inventorySlotIndex: index,
-    );
+    final success = equip(item, inventorySlotIndex: index);
 
     if (!success) {
       developer.log('[EquipmentManager] Failed to equip item at slot $index');
@@ -122,45 +98,27 @@ final class EquipmentManager {
   }
 
   void clearSelectedEquipment() {
-    _equipmentSlots[EquipmentSlotType.mainHand] =
-        _equipmentSlots[EquipmentSlotType.mainHand]!.unequip();
-    EquipmentState.instance.updateSlot(EquipmentSlotType.mainHand, null);
+    _equippedSlot = _equippedSlot.unequip();
+    EquipmentState.instance.updateEquippedItem(null);
   }
 
-  Item? getEquippedItem(EquipmentSlotType slotType) {
-    return _equipmentSlots[slotType]?.equippedItem;
-  }
+  Item? getEquippedItem() => _equippedSlot.equippedItem;
 
-  bool isSlotOccupied(EquipmentSlotType slotType) {
-    return _equipmentSlots[slotType]?.isOccupied ?? false;
-  }
-
-  /// Returns the slot type where the item is equipped, or null if not equipped
-  EquipmentSlotType? getEquippedSlotForItem(String itemId) {
-    for (final entry in _equipmentSlots.entries) {
-      if (entry.value.equippedItem?.id == itemId) {
-        return entry.key;
-      }
-    }
-    return null;
-  }
+  bool hasEquippedItem() => _equippedSlot.isOccupied;
 
   List<Item> getAllEquippedItems() {
-    return _equipmentSlots.values
-        .where((slot) => slot.isOccupied)
-        .map((slot) => slot.equippedItem!)
-        .toList();
+    return _equippedSlot.isOccupied ? [_equippedSlot.equippedItem!] : [];
   }
 
   int getTotalDamage() {
-    final mainHand = getEquippedItem(EquipmentSlotType.mainHand);
+    final mainHand = getEquippedItem();
     if (mainHand == null) return 0;
     if (mainHand is MainHandItem) return mainHand.damage;
     return 0;
   }
 
   double getTotalDps() {
-    final mainHand = getEquippedItem(EquipmentSlotType.mainHand);
+    final mainHand = getEquippedItem();
     if (mainHand == null) return 0;
     if (mainHand is MainHandItem) return mainHand.dps;
     return 0;
@@ -179,63 +137,41 @@ final class EquipmentManager {
   }
 
   Map<String, dynamic> toJson() {
-    final slotsData = <String, dynamic>{};
-    for (final entry in _equipmentSlots.entries) {
-      if (entry.value.isOccupied) {
-        slotsData[entry.key.toJson()] = entry.value.toJson();
-      }
-    }
-    return {'equipmentSlots': slotsData};
+    return {
+      'equipped': _equippedSlot.toJson(),
+      'selectedSlotIndex': _currentMainHandSlotIndex,
+    };
   }
 
   void fromJson(
     Map<String, dynamic> json,
     Item? Function(String itemId) itemFactory,
   ) {
-    for (final slotType in EquipmentSlotType.values) {
-      _equipmentSlots[slotType] = EquipmentSlot(slotType: slotType);
-    }
+    _equippedSlot = const EquipmentSlot();
 
-    final slotsData = json['equipmentSlots'] as Map<String, dynamic>?;
-    if (slotsData == null) return;
-
-    for (final entry in slotsData.entries) {
+    final equippedData = json['equipped'] as Map<String, dynamic>?;
+    if (equippedData != null) {
       try {
-        final slotType = EquipmentSlotType.fromJson(entry.key);
-        final slot = EquipmentSlot.fromJson(
-          entry.value as Map<String, dynamic>,
-          itemFactory,
-        );
-        _equipmentSlots[slotType] = slot;
-
-        // Notify Flutter overlay
-        EquipmentState.instance.updateSlot(slotType, slot.equippedItem);
+        _equippedSlot = EquipmentSlot.fromJson(equippedData, itemFactory);
+        EquipmentState.instance.updateEquippedItem(_equippedSlot.equippedItem);
       } catch (e) {
-        developer.log('[EquipmentManager] Error loading slot ${entry.key}: $e');
+        developer.log('[EquipmentManager] Error loading equipped item: $e');
       }
     }
 
-    developer.log(
-      '[EquipmentManager] Loaded ${slotsData.length} equipped items from JSON',
-    );
+    _currentMainHandSlotIndex = json['selectedSlotIndex'] as int? ?? 0;
+    selectedSlotIndexNotifier.value = _currentMainHandSlotIndex;
+
+    developer.log('[EquipmentManager] Loaded equipped item from JSON');
   }
 
-  // bool _canEquipItemInSlot(Item item, EquipmentSlotType slotType) {
-  //   // Now permissive: any item can be equipped/selected.
-  //   return true;
-  // }
-
   void reset() {
-    for (final slotType in EquipmentSlotType.values) {
-      _equipmentSlots[slotType] = EquipmentSlot(slotType: slotType);
-    }
+    _equippedSlot = const EquipmentSlot();
     _currentMainHandSlotIndex = 0;
     selectedSlotIndexNotifier.value = 0;
 
     // Notify Flutter overlays
-    for (final slotType in EquipmentSlotType.values) {
-      EquipmentState.instance.updateSlot(slotType, null);
-    }
+    EquipmentState.instance.updateEquippedItem(null);
 
     developer.log('[EquipmentManager] Equipment reset');
   }
@@ -246,7 +182,7 @@ final class EquipmentManager {
     if (slot == null) return;
 
     // If the selected slot became empty, clear the equipped display
-    if (slot.isEmpty && getEquippedItem(EquipmentSlotType.mainHand) != null) {
+    if (slot.isEmpty && getEquippedItem() != null) {
       clearSelectedEquipment();
     }
   }

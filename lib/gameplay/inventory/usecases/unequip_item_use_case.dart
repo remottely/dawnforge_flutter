@@ -1,4 +1,3 @@
-import '../entities/equipment_slot.dart';
 import '../entities/item.dart';
 import '../managers/equipment_manager.dart';
 
@@ -8,16 +7,14 @@ class UnequipItemUseCase {
 
   UnequipItemUseCase(this._equipmentManager);
 
-  /// Unequip an item from a slot
-  /// Returns the unequipped item or null if slot was empty
-  Item? call(EquipmentSlotType slotType) {
-    return _equipmentManager.unequip(slotType);
+  /// Unequip the currently equipped item
+  /// Returns the unequipped item or null if none was equipped
+  Item? call() {
+    return _equipmentManager.unequip();
   }
 
   /// Unequip all items
   void unequipAll() {
-    for (final slotType in EquipmentSlotType.values) {
-      _equipmentManager.unequip(slotType);
-    }
+    _equipmentManager.unequip();
   }
 }

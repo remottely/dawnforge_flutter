@@ -2,7 +2,6 @@ import 'dart:developer' as developer;
 
 import 'package:darkness_dungeon/gameplay/inventory/usecases/add_item_use_case.dart';
 
-import '../entities/equipment_slot.dart';
 import '../entities/inventory_slot.dart';
 import '../managers/equipment_manager.dart';
 import '../managers/inventory_manager.dart';
@@ -70,20 +69,9 @@ class LoadInventoryUseCase {
   }
 
   void _loadEquipment(Map<String, dynamic> equipmentData) {
-    final selectedSlotIndex = equipmentData['selectedSlotIndex'] as int? ?? 0;
-
-    final slotsData = equipmentData['slots'] as List<dynamic>? ?? [];
-    for (final slotJson in slotsData) {
-      final slot = EquipmentSlot.fromJson(
-        slotJson as Map<String, dynamic>,
-        (itemId) => _itemFactory.createItem(itemId),
-      );
-      if (slot.equippedItem != null) {
-        _equipmentManager.equip(slot.slotType, slot.equippedItem!);
-      }
-    }
-
-    // Restore selected slot
-    _equipmentManager.selectSlotIndex(selectedSlotIndex);
+    _equipmentManager.fromJson(
+      equipmentData,
+      (itemId) => _itemFactory.createItem(itemId),
+    );
   }
 }

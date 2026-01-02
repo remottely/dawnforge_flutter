@@ -5,7 +5,6 @@ import 'package:darkness_dungeon/gameplay/core/modules/hud/inventory/inventory_h
 import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/equipment_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/item_icon_data.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
@@ -129,10 +128,9 @@ class InventoryHUDView extends InterfaceComponent {
         : Colors.grey.withValues(alpha: 0.2);
 
     if (item != null) {
-      final isMainHand =
-          getIt<EquipmentManager>().getEquippedSlotForItem(item.id) ==
-          EquipmentSlotType.mainHand;
-      if (isMainHand) {
+      final equippedItem = getIt<EquipmentManager>().getEquippedItem();
+      final isEquipped = equippedItem?.id == item.id;
+      if (isEquipped) {
         slotColor = Colors.red.withValues(alpha: 0.5);
       }
     }

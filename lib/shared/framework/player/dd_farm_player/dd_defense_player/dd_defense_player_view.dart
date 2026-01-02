@@ -3,7 +3,6 @@ import 'package:darkness_dungeon/gameplay/core/modules/combat/shield_defense_com
 import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/equipment_slot.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_view.dart';
@@ -59,9 +58,7 @@ abstract class DDDefensePlayerView<
     if (_isDefending) return true;
 
     // Check if player has a shield equipped in the main hand
-    final mainHandItem = getIt<EquipmentManager>().getEquippedItem(
-      EquipmentSlotType.mainHand,
-    );
+    final mainHandItem = getIt<EquipmentManager>().getEquippedItem();
 
     if (mainHandItem == null || mainHandItem is! MainHandItem) {
       return false;

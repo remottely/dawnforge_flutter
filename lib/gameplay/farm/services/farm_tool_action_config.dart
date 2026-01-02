@@ -10,7 +10,6 @@ import 'package:darkness_dungeon/gameplay/farm/services/farm_feedback_service.da
 import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/equipment_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 
@@ -66,9 +65,7 @@ final class FarmToolActionDef {
         default:
           if (equipment?.isSeed ?? false) {
             // Get the actual equipped item to extract cropId
-            final equippedItem = getIt<EquipmentManager>().getEquippedItem(
-              EquipmentSlotType.mainHand,
-            );
+            final equippedItem = getIt<EquipmentManager>().getEquippedItem();
 
             // Extract cropId from MainHandItem if available
             final cropId =

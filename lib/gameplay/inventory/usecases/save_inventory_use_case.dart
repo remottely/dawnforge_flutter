@@ -20,13 +20,7 @@ class SaveInventoryUseCase {
             .map((slot) => slot.toJson())
             .toList(),
       },
-      'equipment': {
-        'selectedSlotIndex': _equipmentManager.currentMainHandSlotIndex,
-        'slots': _equipmentManager.equipmentSlots.values
-            .where((slot) => !slot.isEmpty)
-            .map((slot) => slot.toJson())
-            .toList(),
-      },
+      'equipment': _equipmentManager.toJson(),
     };
   }
 }

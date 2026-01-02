@@ -4,7 +4,6 @@ import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.d
 import 'package:darkness_dungeon/gameplay/inventory/state/equipment_state.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/state/inventory_state.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/equipment_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/inventory_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/widgets/item_sprite_widget.dart';
@@ -67,65 +66,74 @@ class InventoryOverlay extends StatelessWidget with ResponsiveOverlayMixin {
     double baseFontSize,
   ) {
     // Listen to inventory changes with the actual slots list
-    return ValueListenableBuilder<List<InventorySlot>>(
-      valueListenable: getIt<InventoryManager>().slotsNotifier,
-      builder: (context, slots, _) {
-        return ValueListenableBuilder<Map<EquipmentSlotType, Item?>>(
-          valueListenable: EquipmentState.instance.equipment,
-          builder: (context, equipmentMap, child) {
-            // Desktop: 1 linha horizontal com rolagem horizontal
-            if (isDesktopScreen(context)) {
-              return SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: List.generate(slots.length, (index) {
-                    final slot = slots[index];
-                    return Padding(
-                      padding: EdgeInsets.only(
-                        right: index < slots.length - 1 ? spacing : 0,
-                      ),
-                      child: _buildInventorySlot(
-                        spacing,
-                        slotSize,
-                        baseFontSize,
-                        slot,
-                        slot.item,
-                        slot.quantity,
-                      ),
-                    );
-                  }),
-                ),
-              );
-            }
+    return ValueListenableBuilder<int>(
+      valueListenable: getIt<EquipmentManager>().selectedSlotIndexNotifier,
+      builder: (context, selectedIndex, _) {
+        return ValueListenableBuilder<List<InventorySlot>>(
+          valueListenable: getIt<InventoryManager>().slotsNotifier,
+          builder: (context, slots, _) {
+            return ValueListenableBuilder<Item?>(
+              valueListenable: EquipmentState.instance.equippedItem,
+              builder: (context, equippedItem, child) {
+                // Desktop: 1 linha horizontal com rolagem horizontal
+                if (isDesktopScreen(context)) {
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: List.generate(slots.length, (index) {
+                        final slot = slots[index];
+                        return Padding(
+                          padding: EdgeInsets.only(
+                            right: index < slots.length - 1 ? spacing : 0,
+                          ),
+                          child: _buildInventorySlot(
+                            spacing,
+                            slotSize,
+                            baseFontSize,
+                            slot,
+                            slot.item,
+                            slot.quantity,
+                            equippedItem,
+                            selectedIndex,
+                          ),
+                        );
+                      }),
+                    ),
+                  );
+                }
 
-            // Mobile e Tablet: 1 coluna vertical com rolagem vertical
-            return ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * 0.6,
-              ),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: List.generate(slots.length, (index) {
-                    final slot = slots[index];
-                    return Padding(
-                      padding: EdgeInsets.only(
-                        bottom: index < slots.length - 1 ? spacing : 0,
-                      ),
-                      child: _buildInventorySlot(
-                        spacing,
-                        slotSize,
-                        baseFontSize,
-                        slot,
-                        slot.item,
-                        slot.quantity,
-                      ),
-                    );
-                  }),
-                ),
-              ),
+                // Mobile e Tablet: 1 coluna vertical com rolagem vertical
+                return ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.6,
+                  ),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: List.generate(slots.length, (index) {
+                        final slot = slots[index];
+                        return Padding(
+                          padding: EdgeInsets.only(
+                            bottom: index < slots.length - 1 ? spacing : 0,
+                          ),
+                          child: _buildInventorySlot(
+                            spacing,
+                            slotSize,
+                            baseFontSize,
+                            slot,
+                            slot.item,
+                            slot.quantity,
+                            equippedItem,
+                            selectedIndex,
+                          ),
+                        );
+                      }),
+                    ),
+                  ),
+                );
+              },
             );
           },
         );
@@ -140,22 +148,18 @@ class InventoryOverlay extends StatelessWidget with ResponsiveOverlayMixin {
     InventorySlot slot,
     Item? item,
     int? quantity,
+    Item? equippedItem,
+    int selectedIndex,
   ) {
     Color slotColor = item != null
         ? Colors.blue.withOpacity(0.3)
         : Colors.grey.withOpacity(0.2);
 
-    if (item != null) {
-      final isMainHand =
-          getIt<EquipmentManager>().getEquippedSlotForItem(item.id) ==
-          EquipmentSlotType.mainHand;
-      if (isMainHand) {
-        slotColor = Colors.red.withOpacity(0.5);
-      }
+    if (item != null && equippedItem != null && equippedItem.id == item.id) {
+      slotColor = Colors.red.withOpacity(0.5);
     }
 
-    final isSelected =
-        getIt<EquipmentManager>().currentMainHandSlotIndex == slot.index;
+    final isSelected = selectedIndex == slot.index;
 
     // Get slot number label (1-9, 0 for slot 10, - for slot 11, + for slot 12)
     String? slotNumberLabel;

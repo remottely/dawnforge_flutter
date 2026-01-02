@@ -1,7 +1,6 @@
 import 'package:darkness_dungeon/gameplay/core/modules/hud/responsive/responsive_overlay_base.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/state/equipment_state.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/equipment_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/widgets/item_sprite_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -38,15 +37,13 @@ class EquipmentOverlay extends ResponsiveOverlayBase {
           ),
           borderRadius: BorderRadius.circular(data.isMobileScreen ? 6 : 8),
         ),
-        child: ValueListenableBuilder(
-          valueListenable: EquipmentState.instance.equipment,
-          builder: (context, equipmentMap, child) {
+        child: ValueListenableBuilder<Item?>(
+          valueListenable: EquipmentState.instance.equippedItem,
+          builder: (context, equippedItem, child) {
             return _buildSlotRow(
               context,
               data,
-              'MAIN HAND',
-              EquipmentSlotType.mainHand,
-              equipmentMap,
+              equippedItem,
               Colors.red.withOpacity(0.3),
             );
           },
@@ -58,13 +55,9 @@ class EquipmentOverlay extends ResponsiveOverlayBase {
   Widget _buildSlotRow(
     BuildContext context,
     ResponsiveOverlayData data,
-    String label,
-    EquipmentSlotType slotType,
-    Map<EquipmentSlotType, Item?> equipmentMap,
+    Item? equippedItem,
     Color slotColor,
   ) {
-    final item = equipmentMap[slotType];
-
     return AspectRatio(
       aspectRatio: 1,
       child: SizedBox(
@@ -72,21 +65,23 @@ class EquipmentOverlay extends ResponsiveOverlayBase {
         height: data.equipmentSlotSize,
         child: Container(
           decoration: BoxDecoration(
-            color: item != null ? slotColor : Colors.grey.withOpacity(0.2),
+            color: equippedItem != null
+                ? slotColor
+                : Colors.grey.withOpacity(0.2),
             border: Border.all(color: Colors.white.withOpacity(0.5)),
           ),
-          child: item != null
-              ? (item.iconData != null
+          child: equippedItem != null
+              ? (equippedItem.iconData != null
                     ? Padding(
                         padding: EdgeInsets.zero,
                         child: ItemSpriteWidget(
-                          iconData: item.iconData,
+                          iconData: equippedItem.iconData,
                           size: data.equipmentSlotSize - data.spacing,
                         ),
                       )
                     : Center(
                         child: Text(
-                          _abbreviateItemName(item.name),
+                          _abbreviateItemName(equippedItem.name),
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: data.baseFontSize - 2,

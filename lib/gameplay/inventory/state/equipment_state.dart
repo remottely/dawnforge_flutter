@@ -1,6 +1,5 @@
 import 'dart:developer' as developer;
 
-import 'package:darkness_dungeon/gameplay/inventory/entities/equipment_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/item.dart';
 import 'package:flutter/foundation.dart';
 
@@ -13,50 +12,26 @@ class EquipmentState {
   // Controls equipment overlay visibility
   final isVisible = ValueNotifier<bool>(true);
 
-  // Map of slot type to equipped item
-  final equipment = ValueNotifier<Map<EquipmentSlotType, Item?>>({
-    EquipmentSlotType.mainHand: null,
-    EquipmentSlotType.offHand: null,
-    EquipmentSlotType.helmet: null,
-    EquipmentSlotType.chest: null,
-    EquipmentSlotType.legs: null,
-    EquipmentSlotType.boots: null,
-    EquipmentSlotType.gloves: null,
-    EquipmentSlotType.necklace: null,
-  });
+  // Single equipped item (no slot distinction)
+  final equippedItem = ValueNotifier<Item?>(null);
 
-  void updateSlot(EquipmentSlotType slotType, Item? item) {
+  void updateEquippedItem(Item? item) {
     try {
-      final newMap = Map<EquipmentSlotType, Item?>.from(equipment.value);
-      newMap[slotType] = item;
-      equipment.value = newMap;
+      equippedItem.value = item;
       developer.log(
-        '[EquipmentState] Updated slot $slotType: ${item?.name ?? "empty"}',
+        '[EquipmentState] Updated equipped item: ${item?.name ?? "empty"}',
       );
     } catch (e, stack) {
       developer.log(
-        '[EquipmentState] Error updating slot $slotType: $e',
+        '[EquipmentState] Error updating equipped item: $e',
         error: e,
         stackTrace: stack,
       );
     }
   }
 
-  void updateAll(Map<EquipmentSlotType, Item?> newEquipment) {
-    try {
-      equipment.value = Map.from(newEquipment);
-      developer.log('[EquipmentState] Updated all equipment');
-    } catch (e, stack) {
-      developer.log(
-        '[EquipmentState] Error updating all equipment: $e',
-        error: e,
-        stackTrace: stack,
-      );
-    }
-  }
-
-  Item? getItem(EquipmentSlotType slotType) {
-    return equipment.value[slotType];
+  Item? getItem() {
+    return equippedItem.value;
   }
 
   void show() => isVisible.value = true;
@@ -64,7 +39,7 @@ class EquipmentState {
   void toggle() => isVisible.value = !isVisible.value;
 
   void dispose() {
-    equipment.dispose();
+    equippedItem.dispose();
     isVisible.dispose();
   }
 }

@@ -11,7 +11,6 @@ import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_loc
 import 'package:darkness_dungeon/gameplay/inventory/usecases/add_item_use_case.dart';
 import 'package:darkness_dungeon/gameplay/inventory/usecases/unequip_item_use_case.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/equipment_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
 
 /// Handles inventory and equipment inputs from both keyboard and joystick/mobile
@@ -269,7 +268,7 @@ class InventoryInputHandler extends GameComponent
   }
 
   void _unequipMainHand() {
-    final item = getIt<UnequipItemUseCase>()(EquipmentSlotType.mainHand);
+    final item = getIt<UnequipItemUseCase>()();
     if (item != null) {
       developer.log(
         '[InventoryInput] ✓ Desequipado do main hand: ${item.name}',
@@ -289,9 +288,7 @@ class InventoryInputHandler extends GameComponent
   }
 
   void _handleSelectedSlotChanged() {
-    final selectedItem = getIt<EquipmentManager>().getEquippedItem(
-      EquipmentSlotType.mainHand,
-    );
+    final selectedItem = getIt<EquipmentManager>().getEquippedItem();
     final equippedHandType = selectedItem is MainHandItem
         ? selectedItem.equippedHandType
         : null;
