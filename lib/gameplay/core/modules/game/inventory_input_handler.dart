@@ -207,13 +207,12 @@ class InventoryInputHandler extends GameComponent
 
   void _equipMainHand() {
     developer.log(
-      '[InventoryInput] Procurando item equipável para o main hand slot...',
+      '[InventoryInput] Procurando próximo item no inventário para selecionar...',
     );
 
-    // Busca o próximo item equipável usando o método helper
     final currentSlotIndex = getIt<EquipmentManager>().currentMainHandSlotIndex;
     final result = getIt<InventoryManager>().findItem((item) {
-      return item is MainHandItem;
+      return true; // Aceita qualquer item no inventário
     }, afterIndex: currentSlotIndex);
 
     if (result == null) {
@@ -227,9 +226,11 @@ class InventoryInputHandler extends GameComponent
     final success = getIt<EquipmentManager>().selectSlotIndex(result.index);
 
     if (success) {
-      final mainHandItem = item as MainHandItem;
+      final handSuffix = item is MainHandItem
+          ? ' (${item.equippedHandType})'
+          : '';
       developer.log(
-        '[InventoryInput] ✓ Equipado no main hand: ${item.name} (${mainHandItem.equippedHandType})',
+        '[InventoryInput] ✓ Slot selecionado: ${item.name}$handSuffix',
       );
     } else {
       developer.log('[InventoryInput] ✗ Falha ao equipar: ${item.name}');
@@ -238,13 +239,12 @@ class InventoryInputHandler extends GameComponent
 
   void _equipMainHandReverse() {
     developer.log(
-      '[InventoryInput] Procurando item equipável ANTERIOR para o main hand slot...',
+      '[InventoryInput] Procurando item anterior no inventário para selecionar...',
     );
 
-    // Busca o item equipável anterior usando o método helper
     final currentSlotIndex = getIt<EquipmentManager>().currentMainHandSlotIndex;
     final result = getIt<InventoryManager>().findItemReverse((item) {
-      return item is MainHandItem;
+      return true; // Aceita qualquer item no inventário
     }, beforeIndex: currentSlotIndex);
 
     if (result == null) {
@@ -258,9 +258,11 @@ class InventoryInputHandler extends GameComponent
     final success = getIt<EquipmentManager>().selectSlotIndex(result.index);
 
     if (success) {
-      final mainHandItem = item as MainHandItem;
+      final handSuffix = item is MainHandItem
+          ? ' (${item.equippedHandType})'
+          : '';
       developer.log(
-        '[InventoryInput] ✓ Equipado no main hand (reverso): ${item.name} (${mainHandItem.equippedHandType})',
+        '[InventoryInput] ✓ Slot selecionado (reverso): ${item.name}$handSuffix',
       );
     } else {
       developer.log('[InventoryInput] ✗ Falha ao equipar: ${item.name}');
