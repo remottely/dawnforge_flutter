@@ -33,7 +33,13 @@ final class DoorDecorationDef {
   static const String _kRequiredKeyMessage =
       'door_without_key'; // TODO(Kevin): enhance this nomenclature
 
+  static const String _kWithKeyMessage = 'door_with_key';
+
   static List<Say> createConversationSequence() {
     return [ConversationDef.createPlayerLeft(_kRequiredKeyMessage)];
+  }
+
+  static List<Say> createConversationSequenceWithKey() {
+    return [ConversationDef.createPlayerLeft(_kWithKeyMessage)];
   }
 }

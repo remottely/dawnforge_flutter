@@ -4,12 +4,15 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/decorations/door/door_decoration_config.dart';
 import 'package:darkness_dungeon/gameplay/decorations/door_key/door_key_decoration_config.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/ui/dialog/binary_choice_dialog.dart';
 import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
+import 'package:flutter/widgets.dart';
 
 class DoorDecorationView extends GameDecoration {
   bool _isOpen = false;
+  bool _isShowingChoice = false;
 
   DoorDecorationView({required super.position, required super.size})
     : super.withSprite(sprite: DoorDecorationDef.loadSpriteClosed());
@@ -32,12 +35,11 @@ class DoorDecorationView extends GameDecoration {
   }
 
   void _handlePlayerCollision(SimplePlayer player) {
-    if (_isOpen) return;
+    if (_isOpen || UIStateManager.instance.isShowingConversation) return;
 
     final keySlotIndex = _getSelectedKeySlotIndex();
     if (keySlotIndex != null) {
-      _consumeKey(keySlotIndex);
-      _triggerDoorOpening();
+      _showKeyFlow(player, keySlotIndex);
     } else {
       _showKeyRequiredMessage(player);
     }
@@ -57,6 +59,49 @@ class DoorDecorationView extends GameDecoration {
 
   void _consumeKey(int slotIndex) {
     getIt<InventoryManager>().consumeFromSlot(slotIndex, 1);
+  }
+
+  void _showKeyFlow(Player player, int slotIndex) {
+    final slot = getIt<InventoryManager>().getSlotByIndex(slotIndex);
+    final itemName = slot?.item?.name ?? 'dungeon_key';
+
+    UIStateManager.instance.isShowingConversation = true;
+    UIStateManager.instance.showConversation(
+      gameRef.context,
+      player: player,
+      conversationSequence:
+          DoorDecorationDef.createConversationSequenceWithKey(),
+      onCloseConversation: () {
+        UIStateManager.instance.isShowingConversation = false;
+        if (_isShowingChoice) return;
+        // Defer to next microtask/frame to avoid Navigator lock during TalkDialog dispose
+        Future.microtask(() {
+          if (!_isShowingChoice) {
+            _showUseKeyConfirmation(itemName: itemName, slotIndex: slotIndex);
+          }
+        });
+      },
+    );
+  }
+
+  Future<void> _showUseKeyConfirmation({
+    required String itemName,
+    required int slotIndex,
+  }) async {
+    _isShowingChoice = true;
+    final result = await BinaryChoiceDialog.show(
+      context: gameRef.context,
+      question: 'Use $itemName to open?',
+      yesLabel: 'Yes',
+      noLabel: 'No',
+    );
+
+    _isShowingChoice = false;
+
+    if (result == true) {
+      _consumeKey(slotIndex);
+      _triggerDoorOpening();
+    }
   }
 
   void _triggerDoorOpening() {
@@ -96,3 +141,4 @@ class DoorDecorationView extends GameDecoration {
     removeFromParent();
   }
 }
+
