@@ -24,9 +24,9 @@
 
 - [PRIORITY] 
 
-- [PRIORITY] 
+- [PRIORITY] mudar todos os inputs do jogo para se alinhar com SV
 
-- [PRIORITY] 
+- [PRIORITY] picareta quebra literalmente tudo, desfaz farm tiles (acao reversad)
 
 - [PRIORITY] garantir que conversation seja o display de qualquer interacao q demande mensagem na tela. inclusive sobre alerta de "sem estamina"?
 
