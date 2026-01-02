@@ -1,6 +1,8 @@
 # IMPORTANT BEFORE LAUNCH:
 
-- [PRIORITY] 
+- [NOT_PRIORITY] mudar todos os inputs do jogo para se alinhar com SV
+
+- [NOT_PRIORITY] adicionar "arar"?
 
 - [PRIORITY] 
 
@@ -16,15 +18,13 @@
 
 - [PRIORITY] 
 
-- [PRIORITY] 
+- [PRIORITY] Impossibilitar do player sair destruindo tudo sem querer com picareta no jogo??
 
-- [PRIORITY] 
+- [PRIORITY] No SV não existe um equipamento em si para colheita, vc pode colher a qualquer momento, porém se vc tiver com uma picareta na hr da colheita, ele destroi a plata ao inves de colher. fazer funcionar da mesma maneira ou mudar o comportamento? manter o implementado atualmente com harvestBasket??
 
-- [PRIORITY] 
+- [PRIORITY] "X" da conflito da defesa com interacao, priorizar defesa sempre? refatorar.
 
-- [PRIORITY] 
-
-- [PRIORITY] mudar todos os inputs do jogo para se alinhar com SV
+- [PRIORITY] a defesa deve durar sempre um tempo em especifico e nao o tempo q ficar pressionado "X" infinitamente
 
 - [PRIORITY] picareta quebra literalmente tudo, desfaz farm tiles (acao reversad)
 
@@ -36,7 +36,7 @@
 
 - [PRIORITY] comecar novo jogo com 500 de ouro
 
-- [PRIORITY] A chave deve deixar de ser um item vinculado ao player e passar a ser um item do inventario, e para consumi-la na door, é preciso estar com ela equipada no momento, ou seja, slot da chave selecionada, assim como ocorre o comportamento de todos os itens consumiveis do stardew valley.
+- [PRIORITY] A chave deve deixar de ser um item vinculado ao player e passar a ser um item do inventario, e para consumi-la na door, é preciso estar com ela equipada no momento, ou seja, slot da chave selecionada, assim como ocorre o comportamento de todos os itens consumiveis do SV.
 
 - [PRIORITY] hoje eu chamo de stamina oq deveria ser energy do sv pois estou fazendo um clone. renomear
 
@@ -183,7 +183,7 @@
 
 - AI Prompts:
 
-  - Preciso que você finalize o planejamento da logica inicial de meu farmable. Levando em conta que quero fazer o clone do stardew valley... TODO(Kevin): finalizar esse prompt
+  - Preciso que você finalize o planejamento da logica inicial de meu farmable. Levando em conta que quero fazer o clone do SV... TODO(Kevin): finalizar esse prompt
 
   - Preciso que você percorra todo o meu código fazendo melhorias onde necessário para deixar tudo bem implementado e padronizado. use como referência o módulo de "lib/gameplay/characters/player/knight", utilizando o MVC e camada de config.
 

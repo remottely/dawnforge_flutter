@@ -60,7 +60,7 @@ class InventoryInputHandler extends GameComponent
   }
 
   bool _handleAction(dynamic actionId) {
-    // Check toolbar slot number keys (1-0 in Stardew Valley style)
+    // Check toolbar slot number keys (1-0 in SV style)
     final slotNumber = InputDef.getToolbarSlotNumber(actionId);
     if (slotNumber != null) {
       _selectSlotByNumber(slotNumber);
@@ -295,7 +295,7 @@ class InventoryInputHandler extends GameComponent
     _notifyEquipmentChanged(equippedHandType);
   }
 
-  // ========== STARDEW VALLEY STYLE SLOT SELECTION ==========
+  // ========== SV STYLE SLOT SELECTION ==========
   void _selectSlotByNumber(int slotIndex) {
     final inventoryManager = getIt<InventoryManager>();
     final equipmentManager = getIt<EquipmentManager>();
@@ -314,7 +314,7 @@ class InventoryInputHandler extends GameComponent
       return;
     }
 
-    // Select the slot (even if empty - Stardew Valley style)
+    // Select the slot (even if empty - SV style)
     final success = equipmentManager.selectSlotIndex(slotIndex);
 
     if (success) {

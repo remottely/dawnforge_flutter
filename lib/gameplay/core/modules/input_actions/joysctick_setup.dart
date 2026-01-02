@@ -36,7 +36,6 @@ final class JoystickSetup {
 
   /// Identifiers
   static const String kPrimaryActionId = 'primaryActionId';
-  static const String kSecondaryActionId = 'secondaryActionId';
   static const String kInteractionId = 'interactionId';
   static const String kRunId = 'runId';
   static const String kEquipMainHandId = 'equipMainHandId';

@@ -70,7 +70,7 @@ class ShieldDefenseInputHandler extends GameComponent
   //   final player = _getCurrentPlayer();
   //   if (player == null) return false;
 
-  //   if (InputDef.isSecondaryAction(event.logicalKey)) {
+  //   if (InputDef.isInteractionAction(event.logicalKey)) {
   //     if (event is KeyDownEvent) {
   //       return _handleDefenseStart(player);
   //     } else if (event is KeyUpEvent) {
@@ -86,7 +86,7 @@ class ShieldDefenseInputHandler extends GameComponent
     final player = _getCurrentPlayer();
     if (player == null) return;
 
-    if (InputDef.isSecondaryAction(event.id)) {
+    if (InputDef.isInteractionAction(event.id)) {
       if (event.event == ActionEvent.DOWN) {
         _handleDefenseStart(player);
       } else if (event.event == ActionEvent.UP) {

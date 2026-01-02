@@ -1,4 +1,4 @@
-# 🎮 Game Controls (Stardew Valley Style)
+# 🎮 Game Controls (SV Style)
 
 ## Movement
 | Action | Keyboard |
@@ -46,17 +46,17 @@
 
 ---
 
-## 🎯 Key Improvements (Aligned with Stardew Valley)
+## 🎯 Key Improvements (Aligned with SV)
 
 ### ✅ Number Keys for Quick Selection
-Just like in Stardew Valley, you can now press **1-9** and **0** to instantly select toolbar slots without cycling through them.
+Just like in SV, you can now press **1-9** and **0** to instantly select toolbar slots without cycling through them.
 
 ### ✅ Tab for Inventory
-Changed from **I** to **Tab** to match Stardew Valley's default control.
+Changed from **I** to **Tab** to match SV's default control.
 
 ### ✅ E/Q for Toolbar Cycling
-- **E**: Next slot (like Stardew Valley)
-- **Q**: Previous slot (like Stardew Valley)
+- **E**: Next slot (like SV)
+- **Q**: Previous slot (like SV)
 
 ### ✅ Better Organization
 Controls are now organized by category (Movement, Actions, Inventory, Menus) for easier reference.
@@ -71,7 +71,7 @@ Controls are now organized by category (Movement, Actions, Inventory, Menus) for
 
 ## 📝 Notes
 
-- All number keys (**1-0**) work for direct slot selection, matching Stardew Valley's intuitive toolbar system
+- All number keys (**1-0**) work for direct slot selection, matching SV's intuitive toolbar system
 - **Shift** must be held down to run (not a toggle)
 - Debug keys (**N, T, G**) should be disabled in production builds
 - The game automatically equips the first valid tool when starting

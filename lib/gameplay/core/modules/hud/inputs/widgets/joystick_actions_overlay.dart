@@ -44,7 +44,7 @@ class JoystickActionsOverlay extends ResponsiveOverlayBase {
               if (hasIronSword) ...[
                 _buildActionButton(
                   context: context,
-                  actionId: JoystickSetup.kSecondaryActionId,
+                  actionId: JoystickSetup.kInteractionId,
                   assetPath: 'assets/images/joystick/joystick_ranged_attack_default.png',
                   assetPathPressed: 'assets/images/joystick/joystick_ranged_attack_pressed.png',
                   size: JoystickSetup.kActionButtonSize,

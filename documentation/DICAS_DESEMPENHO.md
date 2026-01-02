@@ -61,7 +61,7 @@ BonfireTiledWidget(
 )
 ```
 
-## 🚀 Checklist de Otimização para Clone de Stardew Valley
+## 🚀 Checklist de Otimização para Clone de SV
 
 ### **Tier S - Faça AGORA:**
 - ✅ Ative culling de tiles (Bonfire faz automaticamente)

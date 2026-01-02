@@ -1,7 +1,7 @@
-# Sistema de Stamina - Refatoração para Modelo Stardew Valley
+# Sistema de Stamina - Refatoração para Modelo SV
 
 ## Objetivo
-Transformar o sistema de stamina atual (regeneração automática contínua) para o modelo do Stardew Valley:
+Transformar o sistema de stamina atual (regeneração automática contínua) para o modelo do SV:
 - Stamina NÃO regenera automaticamente ao longo do tempo
 - Regeneração completa ao avançar o dia
 - Regeneração gradual ao interagir com Tochas
@@ -391,7 +391,7 @@ Atualize a documentação do projeto:
 
 ## Resumo Executivo
 
-**Problema**: Sistema atual regenera stamina automaticamente, diferente do Stardew Valley.
+**Problema**: Sistema atual regenera stamina automaticamente, diferente do SV.
 
 **Solução**: 
 1. Remover regeneração automática contínua

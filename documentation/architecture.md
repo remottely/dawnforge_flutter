@@ -1,6 +1,6 @@
 # Planejamento de Arquitetura - Módulo Inventory (e padrão para outros módulos)
 
-Este documento apresenta opções modulares de arquitetura para refatoração do sistema de inventário, com foco em replicabilidade para outros módulos (farm, world, etc) em um jogo estilo Stardew Valley.
+Este documento apresenta opções modulares de arquitetura para refatoração do sistema de inventário, com foco em replicabilidade para outros módulos (farm, world, etc) em um jogo estilo SV.
 
 ---
 

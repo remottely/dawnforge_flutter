@@ -20,11 +20,6 @@ final class InputDef {
     return isPrimary;
   }
 
-  static bool isSecondaryAction(dynamic actionId) {
-    return actionId == JoystickSetup.kSecondaryActionId ||
-        actionId == KeyboardSetup.kSecondaryActionKey;
-  }
-
   static bool isInteractionAction(dynamic actionId) {
     return actionId == JoystickSetup.kInteractionId ||
         actionId == KeyboardSetup.kInteractionKey;
@@ -75,7 +70,7 @@ final class InputDef {
         actionId == KeyboardSetup.kAddTestItemsKey;
   }
 
-  // ========== TOOLBAR SLOT SELECTION (Stardew Valley style) ==========
+  // ========== TOOLBAR SLOT SELECTION (SV style) ==========
   static int? getToolbarSlotNumber(dynamic actionId) {
     if (actionId == KeyboardSetup.kSlot1Key) return 0;
     if (actionId == KeyboardSetup.kSlot2Key) return 1;
