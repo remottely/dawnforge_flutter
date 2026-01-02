@@ -2,7 +2,7 @@ import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_defense_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_defense_player_view.dart';
 
 class ShieldDefenseInputHandler extends GameComponent
     with PlayerControllerListener {
