@@ -5,16 +5,17 @@ import 'package:flutter/material.dart';
 
 class PlayerVitalStatsOverlay extends StatefulWidget {
   final dynamic player;
-  
+
   const PlayerVitalStatsOverlay({super.key, required this.player});
 
   @override
-  State<PlayerVitalStatsOverlay> createState() => _PlayerVitalStatsOverlayState();
+  State<PlayerVitalStatsOverlay> createState() =>
+      _PlayerVitalStatsOverlayState();
 }
 
 class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
   DDBasePlayerView? _cachedPlayer;
-  
+
   @override
   void initState() {
     super.initState();
@@ -61,6 +62,7 @@ class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
     }
     return 0.0;
   }
+
   bool get _hasKey {
     final player = _cachedPlayer;
     if (player != null) {
@@ -85,7 +87,7 @@ class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
         });
       }
     });
-    
+
     return ValueListenableBuilder<bool>(
       valueListenable: PlayerVitalStatsState.instance.isVisible,
       builder: (context, isVisible, child) {
@@ -103,20 +105,17 @@ class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: Colors.black.withOpacity(0.8),
-          border: Border.all(
-            color: Colors.white.withOpacity(0.5),
-            width: 2,
-          ),
+          border: Border.all(color: Colors.white.withOpacity(0.5), width: 2),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Column(
+        child: Row(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHealthBar(),
-            const SizedBox(height: 4),
+            const SizedBox(width: 8),
             _buildStaminaBar(),
-            const SizedBox(height: 4),
+            const SizedBox(width: 12),
             _buildKeyIndicator(),
           ],
         ),
@@ -125,7 +124,9 @@ class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
   }
 
   Widget _buildHealthBar() {
-    final percentage = _maxLife > 0 ? (_currentLife / _maxLife).clamp(0.0, 1.0) : 0.0;
+    final percentage = _maxLife > 0
+        ? (_currentLife / _maxLife).clamp(0.0, 1.0)
+        : 0.0;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,20 +142,21 @@ class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
         ),
         const SizedBox(height: 2),
         Container(
-          width: 90,
-          height: 12,
+          width: 18,
+          height: 80,
           decoration: BoxDecoration(
             color: const Color(0xFF455A64),
             border: Border.all(color: Colors.white.withOpacity(0.5)),
-            borderRadius: BorderRadius.circular(2),
+            borderRadius: BorderRadius.circular(3),
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(1),
-            child: FractionallySizedBox(
-              widthFactor: percentage,
-              alignment: Alignment.centerLeft,
-              child: Container(
-                color: _getHealthBarColor(percentage),
+            borderRadius: BorderRadius.circular(2),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: FractionallySizedBox(
+                heightFactor: percentage,
+                alignment: Alignment.bottomCenter,
+                child: Container(color: _getHealthBarColor(percentage)),
               ),
             ),
           ),
@@ -181,20 +183,21 @@ class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
         ),
         const SizedBox(height: 2),
         Container(
-          width: 90,
-          height: 12,
+          width: 18,
+          height: 80,
           decoration: BoxDecoration(
             color: const Color(0xFF455A64),
             border: Border.all(color: Colors.white.withOpacity(0.5)),
-            borderRadius: BorderRadius.circular(2),
+            borderRadius: BorderRadius.circular(3),
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(1),
-            child: FractionallySizedBox(
-              widthFactor: percentage,
-              alignment: Alignment.centerLeft,
-              child: Container(
-                color: Colors.yellow,
+            borderRadius: BorderRadius.circular(2),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: FractionallySizedBox(
+                heightFactor: percentage,
+                alignment: Alignment.bottomCenter,
+                child: Container(color: Colors.yellow),
               ),
             ),
           ),

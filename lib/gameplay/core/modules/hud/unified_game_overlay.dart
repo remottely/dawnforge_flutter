@@ -29,7 +29,8 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
   @override
   Widget build(BuildContext context) {
     final flexA = 1;
-    final flexB = 4;
+    final flexB = 6;
+    final flexC = flexA + flexB;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -37,183 +38,212 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
 
         return IgnorePointer(
           ignoring: false,
-          child: Column(
+          child: Row(
             children: [
-              // Linha 1 (Top) - flex 1
               Expanded(
-                flex: flexA,
-                child: Row(
+                child: Expanded(
+                  flex: flexA,
+                  child: Container(
+                    color: AppEnvironment.kIsDebugMode
+                        ? Colors.purple.withOpacity(0.05)
+                        : null,
+                    alignment: Alignment.centerLeft,
+                    child: !isDesktop
+                        ? const InventoryOverlay()
+                        : const SizedBox.shrink(),
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: flexC,
+                child: Column(
                   children: [
-                    // Quadrante 1 (Top Left) - flex 1
+                    // Linha 1 (Top) - flex 1
                     Expanded(
                       flex: flexA,
-                      child: Container(
-                        color: AppEnvironment.kIsDebugMode
-                            ? Colors.red.withOpacity(0.03)
-                            : null,
-                        alignment: Alignment.topLeft,
-                        child: PlayerVitalStatsOverlay(player: player),
-                      ),
-                    ),
-                    // Quadrante 2 (Top Center) - flex 2
-                    Expanded(
-                      flex: flexB,
-                      child: Container(
-                        color: AppEnvironment.kIsDebugMode
-                            ? Colors.blue.withOpacity(0.03)
-                            : null,
-                        alignment: Alignment.center,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            DebugOverlay(
-                              player: player,
-                              // showFps: AppEnvironment.kIsDevToolsMode,
-                              // showPosition: AppEnvironment.kIsDevToolsMode,
-                              // showEntities: AppEnvironment.kIsDevToolsMode,
-                            ),
-                            const OverlayMessageWidget(),
-                          ],
-                        ),
-                      ),
-                    ),
-                    // Quadrante 3 (Top Right) - flex 1
-                    Expanded(
-                      flex: flexA,
-                      child: Container(
-                        color: AppEnvironment.kIsDebugMode
-                            ? Colors.green.withOpacity(0.03)
-                            : null,
-                        alignment: Alignment.topRight,
-                        child: Stack(
-                          children: [
-                            if (AppEnvironment.kIsDebugMode)
-                              const Align(
-                                alignment: Alignment.topRight,
-                                child: EquipmentOverlay(),
+                      child: Row(
+                        children: [
+                          // // Quadrante 1 (Top Left) - flex 1
+                          // Expanded(
+                          //   flex: flexA,
+                          //   child: Container(
+                          //     color: AppEnvironment.kIsDebugMode
+                          //         ? Colors.red.withOpacity(0.05)
+                          //         : null,
+                          //     alignment: Alignment.topLeft,
+                          //     // child: PlayerVitalStatsOverlay(player: player),
+                          //   ),
+                          // ),
+                          // Quadrante 2 (Top Center) - flex 2
+                          Expanded(
+                            flex: flexB,
+                            child: Container(
+                              color: AppEnvironment.kIsDebugMode
+                                  ? Colors.blue.withOpacity(0.05)
+                                  : null,
+                              // alignment: Alignment.center,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  DebugOverlay(
+                                    player: player,
+                                    // showFps: AppEnvironment.kIsDevToolsMode,
+                                    // showPosition: AppEnvironment.kIsDevToolsMode,
+                                    // showEntities: AppEnvironment.kIsDevToolsMode,
+                                  ),
+                                  const OverlayMessageWidget(),
+                                ],
                               ),
-                            const Align(
+                            ),
+                          ),
+                          // Quadrante 3 (Top Right) - flex 1
+                          Expanded(
+                            flex: flexA,
+                            child: Container(
+                              color: AppEnvironment.kIsDebugMode
+                                  ? Colors.green.withOpacity(0.05)
+                                  : null,
                               alignment: Alignment.topRight,
-                              child: FullscreenButtonOverlay(),
+                              child: Stack(
+                                children: [
+                                  if (AppEnvironment.kIsDebugMode)
+                                    const Align(
+                                      alignment: Alignment.topRight,
+                                      child: EquipmentOverlay(),
+                                    ),
+                                  const Align(
+                                    alignment: Alignment.topRight,
+                                    child: FullscreenButtonOverlay(),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-              // Linha 2 (Middle) - flex 2
-              Expanded(
-                flex: flexB,
-                child: Row(
-                  children: [
-                    // Quadrante 4 (Middle Left) - flex 1
-                    // Mobile/Tablet: InventoryOverlay aqui
-                    Expanded(
-                      flex: flexA,
-                      child: Container(
-                        color: AppEnvironment.kIsDebugMode
-                            ? Colors.pink.withOpacity(0.03)
-                            : null,
-                        alignment: Alignment.centerLeft,
-                        child: !isDesktop
-                            ? const InventoryOverlay()
-                            : const SizedBox.shrink(),
-                      ),
-                    ),
-                    // Quadrante 5 (Center) - flex 2
+                    // Linha 2 (Middle) - flex 2
                     Expanded(
                       flex: flexB,
-                      child: Container(
-                        color: AppEnvironment.kIsDebugMode
-                            ? Colors.yellow.withOpacity(0.03)
-                            : null,
-                        alignment: Alignment.center,
-                        child: Stack(
-                          children: [
-                            const TutorialInputsOverlay(),
-                            // if (SettingsManager.instance.inputSelected ==
-                            //     InputActionsType.joystick)
-                            //   MobileInputsOverlay(
-                            //     playerController: playerController,
-                            //   ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    // Quadrante 6 (Middle Right) - flex 1
-                    Expanded(
-                      flex: flexA,
-                      child: Container(
-                        color: AppEnvironment.kIsDebugMode
-                            ? Colors.brown.withOpacity(0.03)
-                            : null,
-                        child:
-                            SettingsManager.instance.inputSelected ==
-                                InputActionsType.joystick
-                            ? MobileInputsOverlay(
-                                playerController: playerController,
-                              )
-                            : const SizedBox(
-                                width: double.infinity,
-                                height: double.infinity,
+                      child: Row(
+                        children: [
+                          // // Quadrante 4 (Middle Left) - flex 1
+                          // // Mobile/Tablet: InventoryOverlay aqui
+                          // Expanded(
+                          //   flex: flexA,
+                          //   child: Container(
+                          //     color: AppEnvironment.kIsDebugMode
+                          //         ? Colors.pink.withOpacity(0.05)
+                          //         : null,
+                          //     alignment: Alignment.centerLeft,
+                          //     child: !isDesktop
+                          //         ? const InventoryOverlay()
+                          //         : const SizedBox.shrink(),
+                          //   ),
+                          // ),
+                          // Quadrante 5 (Center) - flex 2
+                          Expanded(
+                            flex: flexB,
+                            child: Container(
+                              color: AppEnvironment.kIsDebugMode
+                                  ? Colors.yellow.withOpacity(0.05)
+                                  : null,
+                              alignment: Alignment.center,
+                              child: Stack(
+                                children: [
+                                  const TutorialInputsOverlay(),
+                                  // if (SettingsManager.instance.inputSelected ==
+                                  //     InputActionsType.joystick)
+                                  //   MobileInputsOverlay(
+                                  //     playerController: playerController,
+                                  //   ),
+                                ],
                               ),
+                            ),
+                          ),
+                          // Quadrante 6 (Middle Right) - flex 1
+                          Expanded(
+                            flex: flexA,
+                            child: Container(
+                              color: AppEnvironment.kIsDebugMode
+                                  ? Colors.brown.withOpacity(0.05)
+                                  : null,
+                              child:
+                                  SettingsManager.instance.inputSelected ==
+                                      InputActionsType.joystick
+                                  ? MobileInputsOverlay(
+                                      playerController: playerController,
+                                    )
+                                  : const SizedBox(
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                    ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-              // Linha 3 (Bottom) - flex 1
-              Expanded(
-                flex: flexA,
-                child: Row(
-                  children: [
-                    // Quadrante 7 (Bottom Left) - flex 1
+                    // Linha 3 (Bottom) - flex 1
                     Expanded(
-                      flex: flexA,
-                      child: Container(
-                        color: AppEnvironment.kIsDebugMode
-                            ? Colors.purple.withOpacity(0.03)
-                            : null,
-                        child: const SizedBox(
-                          width: double.infinity,
-                          height: double.infinity,
-                        ),
-                      ),
-                    ),
-                    // Quadrante 8 (Bottom Center) - flex 2
-                    // Desktop: InventoryOverlay aqui
-                    // Mobile: não existe (removido)
-                    if (isDesktop)
-                      Expanded(
-                        flex: flexB,
-                        child: Container(
-                          color: AppEnvironment.kIsDebugMode
-                              ? Colors.orange.withOpacity(0.03)
-                              : null,
-                          alignment: Alignment.bottomCenter,
-                          child: const InventoryOverlay(),
-                        ),
-                      ),
-                    // Quadrante 9 (Bottom Right) - flex 1
-                    // JoystickActionsOverlay sempre no último quadrante
-                    Expanded(
-                      flex: flexA,
-                      child: Container(
-                        color: AppEnvironment.kIsDebugMode
-                            ? Colors.grey.withOpacity(0.03)
-                            : null,
-                        child:
-                            SettingsManager.instance.inputSelected ==
-                                InputActionsType.joystick
-                            ? JoystickActionsOverlay(
-                                playerController: playerController,
-                              )
-                            : const SizedBox(
-                                width: double.infinity,
-                                height: double.infinity,
+                      flex: flexA + 1,
+                      child: Row(
+                        children: [
+                          // // Quadrante 7 (Bottom Left) - flex 1
+                          // Expanded(
+                          //   flex: flexA,
+                          //   child: Container(
+                          //     color: AppEnvironment.kIsDebugMode
+                          //         ? Colors.purple.withOpacity(0.05)
+                          //         : null,
+                          //     child: const SizedBox(
+                          //       width: double.infinity,
+                          //       height: double.infinity,
+                          //     ),
+                          //   ),
+                          // ),
+                          // Quadrante 8 (Bottom Center) - flex 2
+                          // Desktop: InventoryOverlay aqui
+                          // Mobile: não existe (removido)
+                          if (isDesktop)
+                            Expanded(
+                              flex: flexB,
+                              child: Container(
+                                color: AppEnvironment.kIsDebugMode
+                                    ? Colors.orange.withOpacity(0.05)
+                                    : null,
+                                alignment: Alignment.bottomCenter,
+                                child: const InventoryOverlay(),
                               ),
+                            ),
+                          // Quadrante 9 (Bottom Right) - flex 1
+                          // JoystickActionsOverlay sempre no último quadrante
+                          Expanded(
+                            flex: flexA,
+                            child: Container(
+                              color: AppEnvironment.kIsDebugMode
+                                  ? Colors.grey.withOpacity(0.05)
+                                  : null,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Expanded(
+                                    child: SettingsManager.instance.inputSelected ==
+                                            InputActionsType.joystick
+                                        ? JoystickActionsOverlay(
+                                            playerController: playerController,
+                                          )
+                                        : const SizedBox(
+                                            width: double.infinity,
+                                            height: double.infinity,
+                                          ),
+                                  ),
+                                  PlayerVitalStatsOverlay(player: player),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
