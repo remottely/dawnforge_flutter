@@ -114,7 +114,11 @@ class FarmManager {
     setTile(plantedTile);
     notifyChange();
 
-    developer.log('[FarmManager] ✓ ${crop.name} planted successfully');
+    developer.log(
+      '[FarmManager] ✓ ${crop.name} planted successfully at ($x,$y) '
+      'soil:${plantedFarmObject.soilState.name} stage:${crop.stage.name}',
+      name: 'farm.manager.plant',
+    );
     return true;
   }
 
@@ -148,7 +152,9 @@ class FarmManager {
     notifyChange();
 
     developer.log(
-      '[FarmManager] ✓ Harvested ${harvestedCrop.yieldAmount}x ${harvestedCrop.name}',
+      '[FarmManager] ✓ Harvested ${harvestedCrop.yieldAmount}x ${harvestedCrop.name} '
+      'at ($x,$y) -> soil:${harvestedFarmObject.soilState.name} crop:${harvestedFarmObject.crop?.cropId ?? "none"}',
+      name: 'farm.manager.harvest',
     );
     return harvestedCrop;
   }
@@ -175,6 +181,19 @@ class FarmManager {
         if (afterDays > beforeDays) {
           cropsGrown++;
         }
+      }
+
+      if (farmObject.crop != advancedFarmObject.crop ||
+          farmObject.soilState != advancedFarmObject.soilState) {
+        developer.log(
+          '[FarmManager] ↻ advanced tile (${
+            tile.x
+          },${tile.y}) '
+          'soil ${farmObject.soilState.name} -> ${advancedFarmObject.soilState.name}, '
+          'crop ${farmObject.crop?.cropId ?? "none"}/${farmObject.crop?.stage.name ?? "none"} '
+          '-> ${advancedFarmObject.crop?.cropId ?? "none"}/${advancedFarmObject.crop?.stage.name ?? "none"}',
+          name: 'farm.manager.advance',
+        );
       }
 
       setTile(advancedTile);

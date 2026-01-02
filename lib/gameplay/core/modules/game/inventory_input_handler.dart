@@ -135,12 +135,12 @@ class InventoryInputHandler extends GameComponent
 
     const testItems = [
       'shovel',
-      'staff',
-      'ironSword',
-      'wateringCan',
       'strawberry_seed_bag',
       'tomato_seed_bag',
+      'wateringCan',
       'harvestBasket',
+      'ironSword',
+      'staff',
     ];
 
     for (final itemKey in testItems) {

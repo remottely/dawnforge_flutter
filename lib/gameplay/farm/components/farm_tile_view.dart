@@ -12,7 +12,14 @@ import 'package:darkness_dungeon/shared/framework/interaction/dd_tool_interactab
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 
 class FarmTileView extends GameDecoration with DDToolInteractableMixin {
+  // Toggle verbose tile logs to avoid flooding output each frame.
+  static const bool _kVerboseLogs = false;
+
+  // Track existing views to prevent duplicates per tile coord.
+  static final Map<String, FarmTileView> _instances = {};
   static SoilSpriteConfig? _soilConfig;
+
+  static String _makeKey(int x, int y) => '$x,$y';
 
   final int tileX;
   final int tileY;
@@ -50,6 +57,19 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   @override
   Future<void> onLoad() async {
     await super.onLoad();
+
+    final key = _makeKey(tileX, tileY);
+    final existing = _instances[key];
+    if (existing != null && existing != this && !existing.isRemoved) {
+      // Duplicate view for same tile; remove this instance to avoid double render.
+      developer.log(
+        '[FarmTileView] 🚫 duplicate instance for ($tileX,$tileY), removing self',
+        name: 'farm.tile.dedupe',
+      );
+      removeFromParent();
+      return;
+    }
+    _instances[key] = this;
 
     developer.log('[FarmTileView] Loading tile at ($tileX, $tileY)');
 
@@ -154,9 +174,20 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
     final currentTile = getIt<FarmManager>().getTile(tileX, tileY);
     if (currentTile != null) {
       final currentFarmObject = currentTile.object as FarmObject?;
+      final currentCropKey =
+          currentFarmObject != null ? _buildCropKey(currentFarmObject) : null;
       if (currentFarmObject != null &&
           (currentFarmObject.soilState != _lastRenderedSoilState ||
-          currentFarmObject.crop?.cropId != _lastRenderedCropKey)) {
+          currentCropKey != _lastRenderedCropKey)) {
+        if (_kVerboseLogs) {
+          developer.log(
+            '[FarmTileView] 🧭 change detected at ($tileX,$tileY) | '
+            'soil ${_lastRenderedSoilState?.name ?? "null"} -> ${currentFarmObject.soilState.name}, '
+            'crop ${_lastRenderedCropKey ?? "null"} -> ${currentCropKey ?? "null"} '
+            'stage ${currentFarmObject.crop?.stage.name ?? "none"}',
+            name: 'farm.tile.update_check',
+          );
+        }
         updateTile(currentTile);
       }
     }
@@ -182,11 +213,25 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   Future<void> _updateCropDecoration() async {
     // Remove decorações existentes
     if (_cropDecoration != null) {
+      if (_kVerboseLogs) {
+        developer.log(
+          '[FarmTileView] 🗑 removing Y-sorted crop decoration at ($tileX,$tileY) '
+          'for ${_farmObject.crop?.cropId ?? "null"}',
+          name: 'farm.tile.crop_update',
+        );
+      }
       _cropDecoration!.removeFromParent();
       _cropDecoration = null;
     }
 
     if (_cropSpriteGround != null) {
+      if (_kVerboseLogs) {
+        developer.log(
+          '[FarmTileView] 🗑 removing ground crop sprite at ($tileX,$tileY) '
+          'for ${_farmObject.crop?.cropId ?? "null"}',
+          name: 'farm.tile.crop_update',
+        );
+      }
       _cropSpriteGround!.removeFromParent();
       _cropSpriteGround = null;
     }
@@ -198,9 +243,11 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
 
     await _createCropDecoration();
 
-    developer.log(
-      '[FarmTileView] 🌱 Crop decoration updated: ${_farmObject.crop!.cropId} (${_farmObject.crop!.stage.name})',
-    );
+    if (_kVerboseLogs) {
+      developer.log(
+        '[FarmTileView] 🌱 Crop decoration updated: ${_farmObject.crop!.cropId} (${_farmObject.crop!.stage.name})',
+      );
+    }
   }
 
   Future<Sprite> _loadSoilSpriteFromSheet() async {
@@ -296,7 +343,13 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
 
   String? _getCropKey() {
     if (_farmObject.crop == null) return null;
-    return '${_farmObject.crop!.cropId}_${_farmObject.crop!.stage.name}';
+    return _buildCropKey(_farmObject);
+  }
+
+  String? _buildCropKey(FarmObject farmObject) {
+    final crop = farmObject.crop;
+    if (crop == null) return null;
+    return '${crop.cropId}_${crop.stage.name}';
   }
 
   void _renderHighlight(Canvas canvas) {
@@ -308,6 +361,12 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
 
   Future<void> updateTile(GridTile newTile) async {
     farmTile = newTile;
+    developer.log(
+      '[FarmTileView] 🔄 updateTile at ($tileX,$tileY) -> '
+      'soil:${_farmObject.soilState.name} crop:${_farmObject.crop?.cropId ?? "null"} '
+      'stage:${_farmObject.crop?.stage.name ?? "none"}',
+      name: 'farm.tile.update',
+    );
     await _updateSpritesIfNeeded();
   }
 
@@ -335,6 +394,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
 
   @override
   void onRemove() {
+    _instances.remove(_makeKey(tileX, tileY));
     if (_cropDecoration != null) {
       _cropDecoration!.removeFromParent();
       _cropDecoration = null;
@@ -343,6 +403,10 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
       _cropSpriteGround!.removeFromParent();
       _cropSpriteGround = null;
     }
+    developer.log(
+      '[FarmTileView] ❌ removed from game ($tileX,$tileY)',
+      name: 'farm.tile.lifecycle',
+    );
     super.onRemove();
   }
 
