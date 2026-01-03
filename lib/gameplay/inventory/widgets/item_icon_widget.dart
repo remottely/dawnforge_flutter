@@ -31,7 +31,7 @@ class ItemIconWidget extends StatelessWidget {
     }
 
     return FutureBuilder<Sprite>(
-      future: SpriteAnimationConfigHelper.loadSpriteFromTextureAtlas(
+      future: SpriteAnimationConfigHelper.loadSpriteFromTextureAtlasModernFarm(
         assetPath: 'assets/${iconData.spritesheetPath}',
         spriteSize: Vector2(
           iconData.spriteWidth.toDouble(),

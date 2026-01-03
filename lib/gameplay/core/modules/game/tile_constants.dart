@@ -24,4 +24,10 @@ final class TileConstants {
   static final Vector2 tileSizeSunny = Vector2(96, 64);
   static final Vector2 tileSizeCute = Vector2(48, 48);
   static final Vector2 tileSizeFarmer = Vector2(48, 48);
+
+  static const double kCharacterDimensionDemo = 64.0;
+  static final Vector2 tileSizeDemo = Vector2(
+    kCharacterDimensionDemo,
+    kCharacterDimensionDemo,
+  );
 }

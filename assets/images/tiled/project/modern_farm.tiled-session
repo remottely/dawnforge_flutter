@@ -94,9 +94,9 @@
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/f/maps/f_1.json": {
             "expandedObjectLayers": [
-                10,
                 6,
-                8
+                8,
+                10
             ],
             "scale": 1.43,
             "selectedLayer": 6,
@@ -241,11 +241,11 @@
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/small_burg/maps/sb_farm.json": {
-            "scale": 1.8995,
-            "selectedLayer": 0,
+            "scale": 0.7165,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 381.4161621479336,
-                "y": 695.9726243748355
+                "x": 637.1249127704117,
+                "y": 457.78087927424974
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/smallburg_winter_terrain.json": {
@@ -261,11 +261,11 @@
                 18,
                 9
             ],
-            "scale": 0.7226,
-            "selectedLayer": 5,
+            "scale": 0.2866,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 639.3578743426515,
-                "y": 519.6512593412675
+                "x": 638.5205861828332,
+                "y": 521.6329378925332
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/sv/maps/sv_town.json": {

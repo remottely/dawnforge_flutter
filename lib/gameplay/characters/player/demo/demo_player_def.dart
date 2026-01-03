@@ -8,8 +8,8 @@ import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_
 import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 
-final class FarmerPlayerDef {
-  FarmerPlayerDef._();
+final class DemoPlayerDef {
+  DemoPlayerDef._();
 
   static const double _kMaxStamina = 100.0;
   static const int _kMaxEnergy = 100;
@@ -50,7 +50,7 @@ final class FarmerPlayerDef {
   static const double _kLife = CharacterConstants.kLifeExtraLarge;
   static double _kBaseSpeed = CharacterConstants.kSpeedFast;
 
-  static final Vector2 textureSize = TileConstants.tileSizeFarmer;
+  static final Vector2 textureSize = TileConstants.tileSizeDemo;
   static final Vector2 _componentSize = textureSize;
 
   static final RectangleHitbox _hitbox = HitboxUtils.createCustomHitbox(
@@ -61,14 +61,28 @@ final class FarmerPlayerDef {
     bottom: 16,
   );
 
-  static String assetPath =
-      'tiled/Modern_Farm_v1.2/Characters/Farmer_1_16x16.png';
+  static String idleAssetPath =
+      'tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_idle_full_light_demo.png';
+  static String walkAssetPath =
+      'tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_walk_full_light_demo.png';
+  static String runAssetPath =
+      'tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_run_full_light_with_dust_specs_demo.png';
+  static String digAssetPath =
+      'tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_tools_shovel_full_light_demo.png';
+  static String wateringAssetPath =
+      'tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_tools_watercan_full_light_demo.png';
+  static String harvestAssetPath =
+      'tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_tools_hoe_full_light_demo.png';
 
+  static const int _x2 = 2;
+  static const int _x4 = 4;
   static const int _x6 = 6;
-  static const double _frameRightX6 = _x6 * 0;
-  static const double _frameUpX6 = _x6 * 1;
-  static const double _frameLeftX6 = _x6 * 2;
-  static const double _frameDownX6 = _x6 * 3;
+  static const int _x7 = 7;
+  static const int _x10 = 10;
+  static const double _frameRightY = 0;
+  static const double _frameLeftY = TileConstants.kCharacterDimensionDemo * 1;
+  static const double _frameDownY = TileConstants.kCharacterDimensionDemo * 2;
+  static const double _frameUpY = TileConstants.kCharacterDimensionDemo * 3;
 
   static const int _x9 = 9;
   static const double _frameRightX9 = _x9 * 0;
@@ -76,7 +90,6 @@ final class FarmerPlayerDef {
   static const double _frameLeftX9 = _x9 * 2;
   static const double _frameDownX9 = _x9 * 3;
 
-  static const int _x10 = 10;
   static const double _frameRightX10 = _x10 * 0;
   static const double _frameUpX10 = _x10 * 1;
   static const double _frameLeftX10 = _x10 * 2;
@@ -100,75 +113,75 @@ final class FarmerPlayerDef {
   static const int _skipFirstFramesX6 = 6;
 
   static final Future<SpriteAnimation> _loadAnimationIdleRight =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: idleAssetPath,
         textureSize: textureSize,
-        totalFrames: _x6,
-        framePositionX: _frameRightX6,
-        framePositionY: _frameIdleY,
+        totalFrames: _x2,
+        framePositionX: 0,
+        framePositionY: _frameRightY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationIdleLeft =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: idleAssetPath,
         textureSize: textureSize,
-        totalFrames: _x6,
-        framePositionX: _frameLeftX6,
-        framePositionY: _frameIdleY,
+        totalFrames: _x2,
+        framePositionX: 0,
+        framePositionY: _frameLeftY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationIdleUp =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: idleAssetPath,
         textureSize: textureSize,
-        totalFrames: _x6,
-        framePositionX: _frameUpX6,
-        framePositionY: _frameIdleY,
+        totalFrames: _x2,
+        framePositionX: 0,
+        framePositionY: _frameUpY,
       );
 
   static final Future<SpriteAnimation> loadAnimationIdleDown =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: idleAssetPath,
         textureSize: textureSize,
-        totalFrames: _x6,
-        framePositionX: _frameDownX6,
-        framePositionY: _frameIdleY,
-      );
-
-  static final Future<SpriteAnimation> _loadAnimationWalkLeft =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
-        textureSize: textureSize,
-        totalFrames: _x6,
-        framePositionX: _frameLeftX6,
-        framePositionY: _frameWalkY,
+        totalFrames: _x2,
+        framePositionX: 0,
+        framePositionY: _frameDownY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWalkRight =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: walkAssetPath,
         textureSize: textureSize,
         totalFrames: _x6,
-        framePositionX: _frameRightX6,
-        framePositionY: _frameWalkY,
+        framePositionX: 0,
+        framePositionY: _frameRightY,
+      );
+
+  static final Future<SpriteAnimation> _loadAnimationWalkLeft =
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: walkAssetPath,
+        textureSize: textureSize,
+        totalFrames: _x6,
+        framePositionX: 0,
+        framePositionY: _frameLeftY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWalkUp =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: walkAssetPath,
         textureSize: textureSize,
         totalFrames: _x6,
-        framePositionX: _frameUpX6,
-        framePositionY: _frameWalkY,
+        framePositionX: 0,
+        framePositionY: _frameUpY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWalkDown =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: walkAssetPath,
         textureSize: textureSize,
         totalFrames: _x6,
-        framePositionX: _frameDownX6,
-        framePositionY: _frameWalkY,
+        framePositionX: 0,
+        framePositionY: _frameDownY,
       );
 
   static final SimpleDirectionAnimation _animationWalkDirectional =
@@ -183,41 +196,40 @@ final class FarmerPlayerDef {
         runDown: _loadAnimationWalkDown,
       );
 
-  ///
-  static final Future<SpriteAnimation> _loadAnimationRunLeft =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+  static final Future<SpriteAnimation> _loadAnimationRunRight =
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: runAssetPath,
         textureSize: textureSize,
-        totalFrames: _x6,
-        framePositionX: _frameLeftX6,
-        framePositionY: _frameWalkY,
+        totalFrames: _x4,
+        framePositionX: 0,
+        framePositionY: _frameRightY,
       );
 
-  static final Future<SpriteAnimation> _loadAnimationRunRight =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+  static final Future<SpriteAnimation> _loadAnimationRunLeft =
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: runAssetPath,
         textureSize: textureSize,
-        totalFrames: _x6,
-        framePositionX: _frameRightX6,
-        framePositionY: _frameWalkY,
+        totalFrames: _x4,
+        framePositionX: 0,
+        framePositionY: _frameLeftY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationRunUp =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: runAssetPath,
         textureSize: textureSize,
-        totalFrames: _x6,
-        framePositionX: _frameUpX6,
-        framePositionY: _frameWalkY,
+        totalFrames: _x4,
+        framePositionX: 0,
+        framePositionY: _frameUpY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationRunDown =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: runAssetPath,
         textureSize: textureSize,
-        totalFrames: 6,
-        framePositionX: _frameDownX6,
-        framePositionY: _frameWalkY,
+        totalFrames: _x4,
+        framePositionX: 0,
+        framePositionY: _frameDownY,
       );
 
   static final SimpleDirectionAnimation _animationRunDirectional =
@@ -238,40 +250,39 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationHarvestRight =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: harvestAssetPath,
         textureSize: textureSize,
-        totalFrames: _x9,
-        framePositionX: _frameRightX9,
-        framePositionY: _frameHarvestY,
+        totalFrames: _x7,
+        framePositionX: 0,
+        framePositionY: _frameRightY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationHarvestLeft =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: harvestAssetPath,
         textureSize: textureSize,
-        totalFrames: _x9,
-        framePositionX: _frameLeftX9,
-        framePositionY: _frameHarvestY,
+        totalFrames: _x7,
+        framePositionX: 0,
+        framePositionY: _frameLeftY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationHarvestUp =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: harvestAssetPath,
         textureSize: textureSize,
-        totalFrames: _x9,
-        framePositionX: _frameUpX9,
-        framePositionY: _frameHarvestY,
+        totalFrames: _x7,
+        framePositionX: 0,
+        framePositionY: _frameUpY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationHarvestDown =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: harvestAssetPath,
         textureSize: textureSize,
-        totalFrames: _x9,
-        framePositionX: _frameDownX9,
-        framePositionY: _frameHarvestY,
-        framePositionYPadding: -1,
+        totalFrames: _x7,
+        framePositionX: 0,
+        framePositionY: _frameDownY,
       );
 
   static final _animationHarvestDirectionalFactory =
@@ -283,8 +294,8 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationChoppingRight =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: idleAssetPath,
         textureSize: textureSize,
         totalFrames: _x10,
         framePositionX: _frameRightX10,
@@ -294,8 +305,8 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationChoppingLeft =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: idleAssetPath,
         textureSize: textureSize,
         totalFrames: _x10,
         framePositionX: _frameLeftX10,
@@ -305,8 +316,8 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationChoppingUp =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: idleAssetPath,
         textureSize: textureSize,
         totalFrames: _x10,
         framePositionX: _frameUpX10,
@@ -316,8 +327,8 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationChoppingDown =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: idleAssetPath,
         textureSize: textureSize,
         totalFrames: _x10,
         framePositionX: _frameDownX10,
@@ -335,8 +346,8 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationAttackRight =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: idleAssetPath,
         textureSize: textureSize,
         totalFrames: _x10,
         skipFirstFrames: _skipFirstFramesX6,
@@ -347,8 +358,8 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationAttackLeft =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: idleAssetPath,
         textureSize: textureSize,
         totalFrames: _x10,
         skipFirstFrames: _skipFirstFramesX6,
@@ -359,8 +370,8 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationAttackUp =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: idleAssetPath,
         textureSize: textureSize,
         totalFrames: _x10,
         skipFirstFrames: _skipFirstFramesX6,
@@ -371,8 +382,8 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationAttackDown =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: idleAssetPath,
         textureSize: textureSize,
         totalFrames: _x10,
         skipFirstFrames: _skipFirstFramesX6,
@@ -391,45 +402,39 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationDigRight =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: digAssetPath,
         textureSize: textureSize,
-        totalFrames: _x9,
-        framePositionX: _frameRightX9,
-        framePositionY: _frameDigY,
-        framePositionXPadding: -8,
+        totalFrames: _x6,
+        framePositionX: 0,
+        framePositionY: _frameRightY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationDigLeft =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: digAssetPath,
         textureSize: textureSize,
-        totalFrames: _x9,
-        framePositionX: _frameLeftX9,
-        framePositionY: _frameDigY,
-        framePositionXPadding: -8,
+        totalFrames: _x6,
+        framePositionX: 0,
+        framePositionY: _frameLeftY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationDigUp =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: digAssetPath,
         textureSize: textureSize,
-        totalFrames: _x9,
-        framePositionX: _frameUpX9,
-        framePositionY: _frameDigY,
-        framePositionXPadding: -8,
-        framePositionYPadding: -2,
+        totalFrames: _x6,
+        framePositionX: 0,
+        framePositionY: _frameUpY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationDigDown =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: digAssetPath,
         textureSize: textureSize,
-        totalFrames: _x9,
-        framePositionX: _frameDownX9,
-        framePositionY: _frameDigY,
-        framePositionXPadding: -8,
-        framePositionYPadding: -7,
+        totalFrames: _x6,
+        framePositionX: 0,
+        framePositionY: _frameDownY,
       );
 
   static final _animationDigDirectionalFactory = DDAnimationDirectionalFactory(
@@ -440,67 +445,40 @@ final class FarmerPlayerDef {
     loadDown: _loadAnimationDigDown,
   );
 
-  // static final Future<SpriteAnimation> _loadAnimationWateringRight =
-  //     SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
-  //       assetPath: assetPath,
-  //       textureSize: textureSize + Vector2(4, 0),
-  //       totalFrames: AppEnvironment.kIsDevToolsMode ? 2 : _x14,
-  //       framePositionX: _frameRightX14 +4 ,
-  //       framePositionY: _frameWateringY,
-  //       framePositionXPadding: -8 - 4,
-  //       framePositionYPadding: -1,
-  //     );
-
-  // static final Future<SpriteAnimation> _loadAnimationWateringLeft =
-  //     SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
-  //       assetPath: assetPath,
-  //       textureSize: textureSize + Vector2(4, 0),
-  //       totalFrames: AppEnvironment.kIsDevToolsMode ? 2 : _x14,
-  //       framePositionX: _frameLeftX14 + 4,
-  //       framePositionY: _frameWateringY,
-  //       framePositionXPadding: 8 - 4,
-  //       framePositionYPadding: -1,
-  //     );
-
   static final Future<SpriteAnimation> _loadAnimationWateringRight =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: wateringAssetPath,
         textureSize: textureSize,
-        totalFrames: AppEnvironment.kIsDevToolsMode ? 2 : _x14,
-        framePositionX: _frameRightX14,
-        framePositionY: _frameWateringY,
-        framePositionXPadding: -8,
-        framePositionYPadding: -1,
+        totalFrames: _x10,
+        framePositionX: 0,
+        framePositionY: _frameRightY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWateringLeft =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: wateringAssetPath,
         textureSize: textureSize,
-        totalFrames: AppEnvironment.kIsDevToolsMode ? 2 : _x14,
-        framePositionX: _frameLeftX14,
-        framePositionY: _frameWateringY,
-        framePositionXPadding: 8,
-        framePositionYPadding: -1,
+        totalFrames: _x10,
+        framePositionX: 0,
+        framePositionY: _frameLeftY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWateringUp =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: wateringAssetPath,
         textureSize: textureSize,
-        totalFrames: AppEnvironment.kIsDevToolsMode ? 2 : _x14,
-        framePositionX: _frameUpX14,
-        framePositionY: _frameWateringY,
+        totalFrames: _x10,
+        framePositionX: 0,
+        framePositionY: _frameUpY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWateringDown =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: wateringAssetPath,
         textureSize: textureSize,
-        totalFrames: AppEnvironment.kIsDevToolsMode ? 2 : _x14,
-        framePositionX: _frameDownX14,
-        framePositionY: _frameWateringY,
-        framePositionYPadding: -17,
+        totalFrames: _x10,
+        framePositionX: 0,
+        framePositionY: _frameDownY,
       );
 
   static final _animationWateringDirectionalFactory =
@@ -515,8 +493,8 @@ final class FarmerPlayerDef {
 
   /// TODO(Kevin): remove this test animations
   static final Future<SpriteAnimation> _loadAnimationPlaceSeedRight =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: idleAssetPath,
         textureSize: textureSize,
         totalFrames: AppEnvironment.kIsDevToolsMode
             ? 2
@@ -526,8 +504,8 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationPlaceSeedLeft =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: idleAssetPath,
         textureSize: textureSize,
         totalFrames: AppEnvironment.kIsDevToolsMode
             ? 2
@@ -537,8 +515,8 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationPlaceSeedUp =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: idleAssetPath,
         textureSize: textureSize,
         totalFrames: AppEnvironment.kIsDevToolsMode
             ? 2
@@ -548,8 +526,8 @@ final class FarmerPlayerDef {
       );
 
   static final Future<SpriteAnimation> _loadAnimationPlaceSeedDown =
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
-        assetPath: assetPath,
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: idleAssetPath,
         textureSize: textureSize,
         totalFrames: AppEnvironment.kIsDevToolsMode
             ? 2
@@ -577,7 +555,7 @@ final class FarmerPlayerDef {
 
   static Future<Sprite> _loadSpriteCrypt() => Sprite.load(
     'gameplay/characters/player/player_crypt_1.png',
-  ); // TODO(Kevin): add farmer death animation playonce // - new/Player/death/
+  ); // TODO(Kevin): add demo death animation playonce // - new/Player/death/
 
   static GameDecoration _createDeathMarker(Vector2 position) =>
       GameDecoration.withSprite(

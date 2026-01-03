@@ -29,7 +29,7 @@ final class SpriteAnimationConfigHelper {
     loop: loop,
   );
 
-  static Future<SpriteAnimation> loadAnimationFromTextureAtlas({
+  static Future<SpriteAnimation> loadAnimationFromTextureAtlasModernFarm({
     required String assetPath,
     required Vector2 textureSize,
     required int totalFrames,
@@ -60,7 +60,7 @@ final class SpriteAnimationConfigHelper {
     );
   }
 
-  static Future<Sprite> loadSpriteFromTextureAtlas({
+  static Future<Sprite> loadSpriteFromTextureAtlasModernFarm({
     required String assetPath,
     required Vector2 spriteSize,
     required int frameIndex,
@@ -78,6 +78,37 @@ final class SpriteAnimationConfigHelper {
       assetPath,
       srcPosition: srcPosition,
       srcSize: spriteSize,
+    );
+  }
+
+  static Future<SpriteAnimation> loadAnimationFromTextureAtlasSmallBurg({
+    required String assetPath,
+    required Vector2 textureSize,
+    required int totalFrames,
+    required double framePositionX,
+    required double framePositionY,
+    int skipFirstFrames = 0,
+    double framePositionYPadding = 0,
+    double framePositionXPadding = 0,
+  }) {
+    final int usedFrames = totalFrames - skipFirstFrames;
+    assert(
+      usedFrames > 0,
+      'usedFrames must be > 0. '
+      'totalFrames=$totalFrames, skipFirstFrames=$skipFirstFrames',
+    );
+
+    return SpriteAnimation.load(
+      assetPath,
+      createStandardData(
+        amount: usedFrames,
+        textureSize: textureSize,
+        texturePosition: Vector2(
+          framePositionXPadding +
+              (framePositionX + skipFirstFrames) * textureSize.x,
+          framePositionYPadding + (framePositionY),
+        ),
+      ),
     );
   }
 }

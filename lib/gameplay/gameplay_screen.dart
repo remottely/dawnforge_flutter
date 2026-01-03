@@ -98,7 +98,8 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
 
         // final player = buildSunnyPlayer(playerPosition);
         // final player = buildCutePlayer(playerPosition);
-        final player = buildFarmerPlayer(playerPosition);
+        // final player = buildFarmerPlayer(playerPosition);
+        final player = buildDemoPlayer(playerPosition);
 
         farmInputHandler = FarmInputHandler(
           player: player,

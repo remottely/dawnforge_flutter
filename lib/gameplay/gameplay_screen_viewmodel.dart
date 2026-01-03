@@ -3,6 +3,10 @@ import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_con
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_def.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/demo/demo_player_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/demo/demo_player_def.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/demo/demo_player_model.dart';
+import 'package:darkness_dungeon/gameplay/characters/player/demo/demo_player_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_def.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_model.dart';
@@ -104,10 +108,12 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
     // Isso permite que a câmera se ajuste em fullscreen e orientação
     // sem precisar reconstruir o BonfireWidget (que resetaria o player)
     final newConfig = GameplayScreenDef.createCameraConfig(context);
-    
-    print('[GameplayViewModel] Camera config: '
-        'resolution=${newConfig.resolution}, zoom=${newConfig.zoom}');
-    
+
+    print(
+      '[GameplayViewModel] Camera config: '
+      'resolution=${newConfig.resolution}, zoom=${newConfig.zoom}',
+    );
+
     return newConfig;
   }
 
@@ -166,7 +172,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
 
   DDBasePlayerView buildFarmerPlayer(Vector2 position) {
     print('[GameplayViewModel] Building farmer player at position: $position');
-    
+
     var lastPlayerModel = playerStateManager.lastPlayerModel;
 
     if (lastPlayerModel is! FarmerPlayerModel) {
@@ -178,6 +184,25 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
         FarmerPlayerDef.loadAnimationIdleDown;
 
     return FarmerPlayerView<FarmerPlayerController, FarmerPlayerModel>(
+      position: position,
+      model: lastPlayerModel,
+    );
+  }
+
+  DDBasePlayerView buildDemoPlayer(Vector2 position) {
+    print('[GameplayViewModel] Building farmer player at position: $position');
+
+    var lastPlayerModel = playerStateManager.lastPlayerModel;
+
+    if (lastPlayerModel is! DemoPlayerModel) {
+      lastPlayerModel = DemoPlayerModel.fromJson({});
+      playerStateManager.lastPlayerModel = lastPlayerModel;
+    }
+
+    playerStateManager.currentPlayerAnimation =
+        DemoPlayerDef.loadAnimationIdleDown;
+
+    return DemoPlayerView<DemoPlayerController, DemoPlayerModel>(
       position: position,
       model: lastPlayerModel,
     );
