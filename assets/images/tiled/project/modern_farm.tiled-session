@@ -237,13 +237,14 @@
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/sv/maps/sv_farm.json": {
             "expandedObjectLayers": [
-                9
+                9,
+                18
             ],
-            "scale": 0.6313,
-            "selectedLayer": 4,
+            "scale": 6.0982,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": 616.9808332013306,
-                "y": 549.6594329162047
+                "x": 1006.1165589846185,
+                "y": 262.53648617624873
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/sv/maps/sv_town.json": {
