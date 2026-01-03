@@ -102,25 +102,28 @@ class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
   }
 
   Widget _buildContent() {
-    return Material(
-      color: Colors.transparent,
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.8),
-          border: Border.all(color: Colors.white.withOpacity(0.5), width: 2),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHealthBar(),
-            const SizedBox(width: 8),
-            _buildStaminaBar(),
-            // const SizedBox(width: 12),
-            // _buildKeyIndicator(),
-          ],
+    return Align(
+      alignment: Alignment.bottomRight,
+      child: Material(
+        color: Colors.transparent,
+        child: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.8),
+            border: Border.all(color: Colors.white.withOpacity(0.5), width: 2),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHealthBar(),
+              const SizedBox(width: 8),
+              _buildStaminaBar(),
+              // const SizedBox(width: 12),
+              // _buildKeyIndicator(),
+            ],
+          ),
         ),
       ),
     );

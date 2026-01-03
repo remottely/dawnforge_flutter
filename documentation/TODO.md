@@ -6,9 +6,9 @@
 
 - [NOT_PRIORITY] adicionar mouse como ponteiro 16x16 do meu jogo seguindo a logica de SV.
 
-- [PRIORITY] 
+- [NOT_PRIORITY] add as outras camadas de DDDefensePlayer, elimine ShieldDefenseComponent e ShieldDefenseInputHandler
 
-- [PRIORITY] 
+- [NOT_PRIORITY] add as outras camadas de DDConsumablePlayer
 
 - [PRIORITY] 
 

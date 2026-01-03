@@ -224,22 +224,29 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                               color: AppEnvironment.kIsDebugMode
                                   ? Colors.grey.withOpacity(0.05)
                                   : null,
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Expanded(
-                                    child: SettingsManager.instance.inputSelected ==
-                                            InputActionsType.joystick
-                                        ? JoystickActionsOverlay(
-                                            playerController: playerController,
-                                          )
-                                        : const SizedBox(
-                                            width: double.infinity,
-                                            height: double.infinity,
-                                          ),
-                                  ),
-                                  PlayerVitalStatsOverlay(player: player),
-                                ],
+                              child: Align(
+                                alignment: Alignment.bottomRight,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Expanded(
+                                      child:
+                                          SettingsManager
+                                                  .instance
+                                                  .inputSelected ==
+                                              InputActionsType.joystick
+                                          ? JoystickActionsOverlay(
+                                              playerController:
+                                                  playerController,
+                                            )
+                                          : const SizedBox(
+                                              width: double.infinity,
+                                              height: double.infinity,
+                                            ),
+                                    ),
+                                    PlayerVitalStatsOverlay(player: player),
+                                  ],
+                                ),
                               ),
                             ),
                           ),

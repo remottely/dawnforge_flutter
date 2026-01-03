@@ -34,8 +34,8 @@ class JoystickActionsOverlay extends ResponsiveOverlayBase {
       builder: (context, equippedItem, _) {
         final hasIronSword = equippedItem?.id == 'ironSword';
 
-        return Padding(
-          padding: EdgeInsets.all(data.margin),
+        return Align(
+          alignment: Alignment.bottomRight,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.end,
@@ -45,8 +45,10 @@ class JoystickActionsOverlay extends ResponsiveOverlayBase {
                 _buildActionButton(
                   context: context,
                   actionId: JoystickSetup.kInteractionId,
-                  assetPath: 'assets/images/joystick/joystick_ranged_attack_default.png',
-                  assetPathPressed: 'assets/images/joystick/joystick_ranged_attack_pressed.png',
+                  assetPath:
+                      'assets/images/joystick/joystick_ranged_attack_default.png',
+                  assetPathPressed:
+                      'assets/images/joystick/joystick_ranged_attack_pressed.png',
                   size: JoystickSetup.kActionButtonSize,
                   marginBottom: JoystickSetup.kActionButtonMarginBottom,
                 ),
@@ -56,8 +58,10 @@ class JoystickActionsOverlay extends ResponsiveOverlayBase {
               _buildActionButton(
                 context: context,
                 actionId: JoystickSetup.kPrimaryActionId,
-                assetPath: 'assets/images/joystick/joystick_melee_attack_default.png',
-                assetPathPressed: 'assets/images/joystick/joystick_melee_attack_pressed.png',
+                assetPath:
+                    'assets/images/joystick/joystick_melee_attack_default.png',
+                assetPathPressed:
+                    'assets/images/joystick/joystick_melee_attack_pressed.png',
                 size: JoystickSetup.kActionButtonSize,
                 marginBottom: JoystickSetup.kActionButtonMarginBottom,
               ),
