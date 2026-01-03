@@ -163,10 +163,10 @@ abstract class DDCombatPlayerView<
       lastDirection,
     );
 
-    addParticle(
-      CharacterFxParticlesAnimationsDef.createFireballAttackParticles(),
-      position: size / 2,
-    );
+    // addParticle(
+    //   CharacterFxParticlesAnimationsDef.createFireballAttackParticles(),
+    //   position: size / 2,
+    // );
 
     CharacterFireballAttackDef.playAudioExecution();
 

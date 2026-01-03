@@ -1,5 +1,7 @@
 # IMPORTANT BEFORE LAUNCH:
 
+- [NOT_PRIORITY] criar um programa dart com todos os meus itens do jogo de maneira tipada e q a partir desta configuracao tipada ele cria os meus json database assets posteriormente evitando erros durante a execucao do jogo. ou inicialmente apenas criando arquivos definitions ja definindo diretamente no jogo??
+
 - [NOT_PRIORITY] mudar todos os inputs do jogo para se alinhar com SV
 
 - [NOT_PRIORITY] adicionar "arar"?
@@ -10,13 +12,11 @@
 
 - [NOT_PRIORITY] add as outras camadas de DDConsumablePlayer
 
-- [PRIORITY] 
+- [PRIORITY] configurar o ySortingFromStage de todos os crops antes de lançar o jogo
 
-- [PRIORITY] 
+- [PRIORITY] remover iconPath de weapons(crops)
 
-- [PRIORITY] 
-
-- [PRIORITY] 
+- [PRIORITY]
 
 - [PRIORITY] melhorar a maneira como é renderizado os crops, pois a base do crop(render) deveria bater com a base do crop(sprite) para nao dar bug visual no fake 3D(ordem Y)
 
@@ -47,6 +47,7 @@
 - [PRIORITY] No SV mobile, quando o usuario apenas sai do jogo, ele salva mesmo nao mudando de um dia para o outro, ou seja, salva o ultimo momento do player no jogo, faco o mesmo para o meu jogo?
 
 - [PRIORITY] Finalizar comportamento de mudanca entre landscape/portraitup na versão mobile/web. setar sempre antes de carregar o jogo?(limitação do bonfire/flame). E ai
+
 1. manter o mundo no size inicial porem permitir mudar a orientecao mesmo assim e ai o usuario bloqueia manualmente a orientacao no dispositivo dele, ou
 2. bloquear a orientacao apos iniciar o jogo??
 

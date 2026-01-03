@@ -35,16 +35,16 @@ class CharacterFxParticlesAnimationsDef {
     ),
   );
 
-  static Particle createFireballAttackParticles() => Particle.generate(
-    count: 30,
-    lifespan: 1,
-    generator: (i) => AcceleratedParticle(
-      acceleration: Vector2(0, 200),
-      speed: (Vector2.random() - Vector2.random()) * 100,
-      child: CircleParticle(
-        radius: _kAttackParticlesRadius,
-        paint: Paint()..color = Colors.yellow,
-      ),
-    ),
-  );
+  // static Particle createFireballAttackParticles() => Particle.generate(
+  //   count: 30,
+  //   lifespan: 1,
+  //   generator: (i) => AcceleratedParticle(
+  //     acceleration: Vector2(0, 200),
+  //     speed: (Vector2.random() - Vector2.random()) * 100,
+  //     child: CircleParticle(
+  //       radius: _kAttackParticlesRadius,
+  //       paint: Paint()..color = Colors.yellow,
+  //     ),
+  //   ),
+  // );
 }
