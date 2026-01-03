@@ -28,29 +28,25 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
     with WidgetsBindingObserver {
   final PlayerStateManager playerStateManager = PlayerStateManager.instance;
 
-  final gameplayHUD = GameplayHUDView();
+  GameplayHUDView gameplayHUD = GameplayHUDView();
 
   bool isLoadingSave = true;
 
-  final gameplayGameStateManager = GameStateManager();
+  GameStateManager gameplayGameStateManager = GameStateManager();
 
-  late final InventoryInputHandler inventoryInputHandler;
-  late final ShieldDefenseInputHandler shieldDefenseInputHandler;
-  late final PlayerController playerInput;
+  late InventoryInputHandler inventoryInputHandler;
+  late ShieldDefenseInputHandler shieldDefenseInputHandler;
+  late PlayerController playerInput;
   late FarmInputHandler farmInputHandler;
+
+  String? lastMapId;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     print('[GameplayViewModel] initState - Creating new player input');
-    playerInput = GameplayScreenDef.createPlayerInput();
-    inventoryInputHandler = InventoryInputHandler(
-      playerController: playerInput,
-    );
-    shieldDefenseInputHandler = ShieldDefenseInputHandler(
-      playerController: playerInput,
-    );
+    recreatePerMapDependencies(mapId: null);
     _loadGameOrResetLife();
   }
 
@@ -185,5 +181,18 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
       position: position,
       model: lastPlayerModel,
     );
+  }
+
+  void recreatePerMapDependencies({required String? mapId}) {
+    playerInput = GameplayScreenDef.createPlayerInput();
+    inventoryInputHandler = InventoryInputHandler(
+      playerController: playerInput,
+    );
+    shieldDefenseInputHandler = ShieldDefenseInputHandler(
+      playerController: playerInput,
+    );
+    gameplayGameStateManager = GameStateManager();
+    gameplayHUD = GameplayHUDView();
+    lastMapId = mapId;
   }
 }

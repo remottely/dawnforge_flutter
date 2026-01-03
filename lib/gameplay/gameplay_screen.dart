@@ -86,9 +86,15 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
           // Placeholder: map time overrides are intentionally ignored for now.
         }
 
+        // Recreate per-map dependencies when map changes to avoid stale gameRef
+        // references after navigation.
+        if (lastMapId != mapItem.id) {
+          recreatePerMapDependencies(mapId: mapItem.id);
+        }
+
         final playerPosition =
-            (mapArguments?.playerPosition ?? initialPlayerPosition ?? Vector2(7, 7))
-                * TileConstants.kTileDimensionStandard;
+            (mapArguments?.playerPosition ?? initialPlayerPosition ?? Vector2(7, 7)) *
+                TileConstants.kTileDimensionStandard;
 
         // final player = buildSunnyPlayer(playerPosition);
         // final player = buildCutePlayer(playerPosition);
@@ -102,6 +108,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
         return Stack(
           children: [
             BonfireWidget(
+              key: ValueKey(mapItem.id),
               playerControllers: [playerInput],
               player: player,
               map: mapItem.map,
@@ -111,7 +118,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
                 shieldDefenseInputHandler,
                 farmInputHandler,
               ],
-              hudComponents: [],
+              hudComponents: const [],
               interface: gameplayHUD,
               lightingColorGame: mapLightingColor,
               // backgroundColor: mapBackgroundColor, // TODO(Kevin): put it back?
