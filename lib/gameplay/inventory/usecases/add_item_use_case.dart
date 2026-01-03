@@ -101,4 +101,23 @@ class AddItemUseCase {
     developer.log('[AddItemUseCase] Item added successfully');
     return true;
   }
+
+  /// Add multiple items (id, quantity) in one call. Useful for shop purchases.
+  /// Returns true if at least one item was added.
+  bool addMultiple(List<(String itemId, int quantity)> items) {
+    var anyAdded = false;
+
+    for (final (itemId, quantity) in items) {
+      final success = call(itemId, quantity);
+
+      if (success) {
+        anyAdded = true;
+        developer.log('[AddItemUseCase] Added $quantity x $itemId');
+      } else {
+        developer.log('[AddItemUseCase] Failed to add $quantity x $itemId');
+      }
+    }
+
+    return anyAdded;
+  }
 }

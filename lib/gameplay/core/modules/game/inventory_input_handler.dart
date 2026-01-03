@@ -126,19 +126,17 @@ class InventoryInputHandler extends GameComponent
     developer.log('[InventoryInput] Inicializando itens de teste...');
 
     const testItems = [
-      'shovel',
-      'radish_seed_bag',
-      'strawberry_seed_bag',
-      'tomato_seed_bag',
-      'wateringCan',
-      'harvestBasket',
-      'ironSword',
-      'staff',
+      ('shovel', 1),
+      ('radish_seed_bag', 1),
+      ('strawberry_seed_bag', 50),
+      ('tomato_seed_bag', 1),
+      ('wateringCan', 1),
+      ('harvestBasket', 1),
+      ('ironSword', 1),
+      ('staff', 1),
     ];
 
-    for (final itemKey in testItems) {
-      _debugInsertItem(itemKey);
-    }
+    _addItems(testItems);
 
     developer.log(
       '[InventoryInput] Itens de teste adicionados! ${getIt<InventoryManager>().usedSlots} slots usados',
@@ -182,6 +180,14 @@ class InventoryInputHandler extends GameComponent
   void _debugInsertItem(String itemKey) {
     if (getIt<InventoryManager>().getItemQuantity(itemKey) == 0) {
       getIt<AddItemUseCase>()(itemKey, 1);
+    }
+  }
+
+  void _addItems(List<(String, int)> items) {
+    final success = getIt<AddItemUseCase>().addMultiple(items);
+
+    if (!success) {
+      developer.log('[InventoryInput] Nenhum item adicionado (talvez inventário cheio)');
     }
   }
 
