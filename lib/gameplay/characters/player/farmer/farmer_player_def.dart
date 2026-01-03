@@ -444,7 +444,7 @@ final class FarmerPlayerDef {
   //     SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
   //       assetPath: assetPath,
   //       textureSize: textureSize + Vector2(4, 0),
-  //       totalFrames: AppEnvironment.kIsDebugMode ? 2 : _x14,
+  //       totalFrames: AppEnvironment.kIsDevToolsMode ? 2 : _x14,
   //       framePositionX: _frameRightX14 +4 ,
   //       framePositionY: _frameWateringY,
   //       framePositionXPadding: -8 - 4,
@@ -455,7 +455,7 @@ final class FarmerPlayerDef {
   //     SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
   //       assetPath: assetPath,
   //       textureSize: textureSize + Vector2(4, 0),
-  //       totalFrames: AppEnvironment.kIsDebugMode ? 2 : _x14,
+  //       totalFrames: AppEnvironment.kIsDevToolsMode ? 2 : _x14,
   //       framePositionX: _frameLeftX14 + 4,
   //       framePositionY: _frameWateringY,
   //       framePositionXPadding: 8 - 4,
@@ -466,7 +466,7 @@ final class FarmerPlayerDef {
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
-        totalFrames: AppEnvironment.kIsDebugMode ? 2 : _x14,
+        totalFrames: AppEnvironment.kIsDevToolsMode ? 2 : _x14,
         framePositionX: _frameRightX14,
         framePositionY: _frameWateringY,
         framePositionXPadding: -8,
@@ -477,7 +477,7 @@ final class FarmerPlayerDef {
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
-        totalFrames: AppEnvironment.kIsDebugMode ? 2 : _x14,
+        totalFrames: AppEnvironment.kIsDevToolsMode ? 2 : _x14,
         framePositionX: _frameLeftX14,
         framePositionY: _frameWateringY,
         framePositionXPadding: 8,
@@ -488,7 +488,7 @@ final class FarmerPlayerDef {
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
-        totalFrames: AppEnvironment.kIsDebugMode ? 2 : _x14,
+        totalFrames: AppEnvironment.kIsDevToolsMode ? 2 : _x14,
         framePositionX: _frameUpX14,
         framePositionY: _frameWateringY,
       );
@@ -497,7 +497,7 @@ final class FarmerPlayerDef {
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
-        totalFrames: AppEnvironment.kIsDebugMode ? 2 : _x14,
+        totalFrames: AppEnvironment.kIsDevToolsMode ? 2 : _x14,
         framePositionX: _frameDownX14,
         framePositionY: _frameWateringY,
         framePositionYPadding: -17,
@@ -518,7 +518,7 @@ final class FarmerPlayerDef {
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
-        totalFrames: AppEnvironment.kIsDebugMode
+        totalFrames: AppEnvironment.kIsDevToolsMode
             ? 2
             : 5, // TODO(Kevin): change the real value
         framePositionX: _frameRightX9,
@@ -529,7 +529,7 @@ final class FarmerPlayerDef {
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
-        totalFrames: AppEnvironment.kIsDebugMode
+        totalFrames: AppEnvironment.kIsDevToolsMode
             ? 2
             : 5, // TODO(Kevin): change the real value
         framePositionX: _frameLeftX9,
@@ -540,7 +540,7 @@ final class FarmerPlayerDef {
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
-        totalFrames: AppEnvironment.kIsDebugMode
+        totalFrames: AppEnvironment.kIsDevToolsMode
             ? 2
             : 5, // TODO(Kevin): change the real value
         framePositionX: _frameUpX9,
@@ -551,7 +551,7 @@ final class FarmerPlayerDef {
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
         assetPath: assetPath,
         textureSize: textureSize,
-        totalFrames: AppEnvironment.kIsDebugMode
+        totalFrames: AppEnvironment.kIsDevToolsMode
             ? 2
             : 5, // TODO(Kevin): change the real value
         framePositionX: _frameDownX9,

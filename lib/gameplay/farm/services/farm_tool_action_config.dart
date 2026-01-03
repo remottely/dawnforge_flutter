@@ -4,12 +4,11 @@ import 'package:darkness_dungeon/gameplay/farm/components/farm_tile_view.dart';
 import 'package:darkness_dungeon/gameplay/farm/constants/farm_feedback_config.dart';
 import 'package:darkness_dungeon/gameplay/farm/farm_service_locator.dart'
     as farm_di;
-import 'package:darkness_dungeon/gameplay/farm/services/crop_factory_service.dart';
 import 'package:darkness_dungeon/gameplay/farm/services/farm_action_service.dart';
 import 'package:darkness_dungeon/gameplay/farm/services/farm_feedback_service.dart';
+import 'package:darkness_dungeon/gameplay/farm/usecases/plant_seed_use_case.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
-import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 
@@ -64,17 +63,17 @@ final class FarmToolActionDef {
           return;
         default:
           if (equipment?.isSeed ?? false) {
-            // Get the actual equipped item to extract cropId
             final equippedItem = getIt<EquipmentManager>().getEquippedItem();
-
-            // Extract cropId from MainHandItem if available
-            final cropId =
-                (equippedItem is MainHandItem && equippedItem.cropId != null)
-                ? equippedItem.cropId!
-                : equipment!.name;
+            final seedItemId = equippedItem?.id;
+            if (seedItemId == null) {
+              farm_di
+                  .getIt<FarmFeedbackService>()
+                  .showFloatingText(FarmFeedbackDef.kCannotPlant);
+              return;
+            }
 
             _handlePlant(
-              cropId: cropId,
+              seedItemId: seedItemId,
               x: bestTarget.tileX,
               y: bestTarget.tileY,
             );
@@ -103,27 +102,24 @@ final class FarmToolActionDef {
   }
 
   static bool _handlePlant({
-    required String cropId,
+    required String seedItemId,
     required int x,
     required int y,
   }) {
     final _feedbackService = farm_di.getIt<FarmFeedbackService>();
-    final _cropFactory = farm_di.getIt<CropFactoryService>();
-    
-    // Create crop from cropId
-    final crop = _cropFactory.createCrop(cropId);
-    if (crop == null) {
-      _feedbackService.showFloatingText(FarmFeedbackDef.kCannotPlant);
-      return false;
-    }
-    
-    final result = _actionService.plantSeed(x, y, crop);
-    if (result.success) {
+
+    final planted = farm_di.getIt<PlantSeedUseCase>().call(
+          x,
+          y,
+          seedItemId,
+        );
+
+    if (planted) {
       _feedbackService.showFloatingText(FarmFeedbackDef.kSeedPlanted);
     } else {
       _feedbackService.showFloatingText(FarmFeedbackDef.kCannotPlant);
     }
-    return result.success;
+    return planted;
   }
 
   static bool _handleHarvest(BonfireGameInterface gameRef, int x, int y) {
