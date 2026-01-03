@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.86.4+1
+version: 1.86.5+1
 
 environment:
   sdk: ^3.8.1
@@ -238,11 +238,51 @@ flutter:
     - assets/images/joystick/joystick_ranged_attack_pressed.png
 
     # === AUDIO - Music ===
-    - assets/audio/music/Keys Of Moon - Enchanted.mp3
-    - assets/audio/music/music_boss_battle_background.mp3
-    - assets/audio/music/music_gameplay_background.mp3
-    - assets/audio/music/music_ro1_death_hex_background.mp3
-    - assets/audio/music/music_ro1_letters_background.mp3
+    # - assets/audio/music/Keys Of Moon - Enchanted.mp3 # TODO(Kevin): remove it
+    # - assets/audio/music/music_boss_battle_background.mp3 # TODO(Kevin): remove it
+    # - assets/audio/music/music_gameplay_background.mp3 # TODO(Kevin): remove it
+    # - assets/audio/music/music_ro1_death_hex_background.mp3 # TODO(Kevin): remove it
+    # - assets/audio/music/music_ro1_letters_background.mp3 # TODO(Kevin): remove it
+
+    # Credits:
+    # 'Phase Shift' by Scott Buckley - released under CC-BY 4.0. www.scottbuckley.com.au
+    - assets/audio/bg/music/farm - PhaseShift.mp3
+
+    # Credits:
+    # Song: Clarion
+    # Composer: Scott Buckley
+    # Website: https://youtube.com/user/musicbyscottb
+    # License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
+    # Music powered by BreakingCopyright: https://breakingcopyright.com
+    - assets/audio/bg/music/town - Scott Buckley - Clarion.mp3
+
+    # Credits:
+    # Song: Rounding
+    # Composer: Savfk
+    # Website: https://youtube.com/savfkmusic
+    # License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
+    # Music powered by BreakingCopyright: https://breakingcopyright.com
+    - assets/audio/bg/music/forest - Savfk - Rounding.mp3
+
+    # Credits:
+    # Song: Antigone
+    # Composer: Justin Allan Arnold
+    # Website: https://soundcloud.com/justin-allan-arnold
+    # License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
+    # Music powered by BreakingCopyright: https://breakingcopyright.com
+    - assets/audio/bg/music/lake - Justin Allan Arnold - Antigone.mp3
+
+    # Credits:
+    # Song: Prehistory
+    # Composer: Glitch
+    # Website: https://www.youtube.com/playlist
+    # License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
+    # Music powered by BreakingCopyright: https://breakingcopyright.com
+    - assets/audio/bg/music/beach - Glitch - Prehistory.mp3
+
+    # Credits:
+    # 'Rites of Passage' by Scott Buckley - released under CC-BY 4.0. www.scottbuckley.com.au
+    - assets/audio/bg/music/cave_boss - RitesOfPassage.mp3
 
     # === AUDIO - SFX ===
     - assets/audio/sfx/sfx_character_fireball_attack.wav

@@ -1970,13 +1970,14 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
         {
          "draworder":"topdown",
          "id":18,
+         "locked":true,
          "name":"farm_tiles_test",
          "objects":[
                 {

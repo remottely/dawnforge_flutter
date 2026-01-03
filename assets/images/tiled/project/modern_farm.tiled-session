@@ -239,11 +239,11 @@
             "expandedObjectLayers": [
                 9
             ],
-            "scale": 0.52,
-            "selectedLayer": 0,
+            "scale": 0.6313,
+            "selectedLayer": 4,
             "viewCenter": {
-                "x": 502.88461538461536,
-                "y": 332.69230769230774
+                "x": 616.9808332013306,
+                "y": 549.6594329162047
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/sv/maps/sv_town.json": {

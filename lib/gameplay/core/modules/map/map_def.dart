@@ -32,14 +32,14 @@ final class MapDef {
   static const String kLightingColorPropertyKey = 'lightingColor';
   static const String kBackgroundColorPropertyKey = 'backgroundColor';
 
-  static const String _kCloudyLightingColor = '#d0ffffff';
+  static const String _kCloudyLightingColor = '#80fdfdfd';
   static const String _kDarknessLightingColor = '#d0101010';
   static const String _kNoneLightingColor = '#00ffffff';
 
   static const String _kForestBackgroundColor = '#ff63c74d';
-  static const String _kDungeonBackgroundColor = '#ff424242';
+  // static const String _kDungeonBackgroundColor = '#ff424242';
   static const String _kLakeBackgroundColor = '#ff000000';
-  static const String _kTempleBackgroundColor = '#ff424242';
+  // static const String _kTempleBackgroundColor = '#ff424242';
 
   static Map<String, ObjectBuilder> createEntityBuilder() =>
       <String, ObjectBuilder>{
@@ -83,10 +83,10 @@ final class MapDef {
 
   /// SV Maps
   static const String kSVFarmId = 'sv_farm';
-  static const String kSVLakeId = 'sv_lake';
   static const String kSVTownId = 'sv_town';
-  static const String kSVBeachId = 'sv_beach';
   static const String kSVForestId = 'sv_forest';
+  static const String kSVLakeId = 'sv_lake';
+  static const String kSVBeachId = 'sv_beach';
   static const String kSVCaveId = 'sv_cave';
 
   /// Final maps
@@ -111,20 +111,20 @@ final class MapDef {
   static const String kTemple1Id = 'temple_1';
 
   static const List<MapData> kAllMaps = [
-    /// F MAPS
-    MapData(
-      id: kF1Id,
-      asset: 'tiled/f/maps/$kF1Id.json',
-      sensorIds: [
-        'sensor_$kSVForestId',
-        'sensor_$kSVTownId',
-        'sensor_$kSVLakeId',
-      ],
-      backgroundMusic: AudioDef.backgroundMusic1,
-      lightingColor: _kDarknessLightingColor,
-      backgroundColor: _kLakeBackgroundColor,
-      initialPlayerPosition: '10,10',
-    ),
+    // /// TEST MAP
+    // MapData(
+    //   id: kF1Id,
+    //   asset: 'tiled/f/maps/$kF1Id.json',
+    //   sensorIds: [
+    //     'sensor_$kSVForestId',
+    //     'sensor_$kSVTownId',
+    //     'sensor_$kSVLakeId',
+    //   ],
+    //   backgroundMusic: AudioDef.bGMusicFarm,
+    //   lightingColor: _kDarknessLightingColor,
+    //   backgroundColor: _kLakeBackgroundColor,
+    //   initialPlayerPosition: '10,10',
+    // ),
 
     /// SV MAPS
     MapData(
@@ -135,7 +135,7 @@ final class MapDef {
         'sensor_$kSVTownId',
         'sensor_$kSVLakeId',
       ],
-      backgroundMusic: AudioDef.backgroundMusic1,
+      backgroundMusic: AudioDef.bGMusicFarm,
       lightingColor: _kNoneLightingColor,
       backgroundColor: _kLakeBackgroundColor,
       initialPlayerPosition: '52,20',
@@ -149,172 +149,172 @@ final class MapDef {
         'sensor_$kSVForestId',
         'sensor_$kSVBeachId',
       ],
-      backgroundMusic: AudioDef.backgroundMusic1,
-      lightingColor: _kNoneLightingColor,
-      backgroundColor: _kLakeBackgroundColor,
-      initialPlayerPosition: '10,10',
-    ),
-
-    /// NEW MAPS
-    const MapData(
-      id: kFarmId,
-      asset: 'tiled/maps/$kFarmId.json',
-      sensorIds: [
-        'sensor_$kForestId',
-        'sensor_$kTownId',
-        'sensor_$kLakeId',
-        'sensor_$kDungeon1Id',
-        'sensor_$kForest1Id',
-        'sensor_$kLake1Id',
-      ],
-      backgroundMusic: AudioDef.backgroundMusic1,
-      lightingColor: _kNoneLightingColor,
-      backgroundColor: _kLakeBackgroundColor,
-      initialPlayerPosition: '10,10',
-    ),
-
-    const MapData(
-      id: kForestId,
-      asset: 'tiled/maps/$kForestId.json',
-      sensorIds: ['sensor_$kCaveId', 'sensor_$kTownId', 'sensor_$kFarmId'],
-      backgroundMusic: AudioDef.backgroundMusic1,
-      lightingColor: _kNoneLightingColor,
-      backgroundColor: _kLakeBackgroundColor,
-      initialPlayerPosition: '10,10',
-    ),
-
-    const MapData(
-      id: kTownId,
-      asset: 'tiled/maps/$kTownId.json',
-      sensorIds: [
-        'sensor_$kFarmId',
-        'sensor_$kForestId',
-        'sensor_$kBeachId',
-        'sensor_$kLakeId',
-      ],
-      backgroundMusic: AudioDef.backgroundMusic1,
-      lightingColor: _kNoneLightingColor,
-      backgroundColor: _kLakeBackgroundColor,
-      initialPlayerPosition: '10,10',
-    ),
-
-    const MapData(
-      id: kLakeId,
-      asset: 'tiled/maps/$kLakeId.json',
-      sensorIds: ['sensor_$kFarmId', 'sensor_$kTownId'],
-      backgroundMusic: AudioDef.backgroundMusic1,
-      lightingColor: _kNoneLightingColor,
-      backgroundColor: _kLakeBackgroundColor,
-      initialPlayerPosition: '10,10',
-    ),
-
-    const MapData(
-      id: kBeachId,
-      asset: 'tiled/maps/$kBeachId.json',
-      sensorIds: ['sensor_$kTownId'],
-      backgroundMusic: AudioDef.backgroundMusic1,
-      lightingColor: _kNoneLightingColor,
-      backgroundColor: _kLakeBackgroundColor,
-      initialPlayerPosition: '10,10',
-    ),
-
-    const MapData(
-      id: kCaveId,
-      asset: 'tiled/maps/$kCaveId.json',
-      sensorIds: ['sensor_$kForestId'],
-      backgroundMusic: AudioDef.backgroundMusic1,
-      lightingColor: _kNoneLightingColor,
-      backgroundColor: _kLakeBackgroundColor,
-      initialPlayerPosition: '10,10',
-    ),
-
-    /// OLD MAPS FOR TESTING
-    const MapData(
-      id: kFarmTestId,
-      asset: 'tiled/$kFarmTestId.json',
-      sensorIds: [
-        'sensor_$kBossTestId',
-        'sensor_$kConversationTestId',
-        'sensor_$kLake1Id',
-      ],
-      backgroundMusic: AudioDef.backgroundMusic1,
-      lightingColor: _kNoneLightingColor,
-      backgroundColor: _kLakeBackgroundColor,
-      initialPlayerPosition: '10,10',
-    ),
-
-    const MapData(
-      id: kConversationTestId,
-      asset: 'tiled/$kConversationTestId.json',
-      sensorIds: ['sensor_$kFarmTestId', 'sensor_$kCombatTestId'],
-      backgroundMusic: AudioDef.backgroundMusic1,
+      backgroundMusic: AudioDef.bGMusicTown,
       lightingColor: _kCloudyLightingColor,
       backgroundColor: _kLakeBackgroundColor,
       initialPlayerPosition: '10,10',
     ),
 
-    const MapData(
-      id: kCombatTestId,
-      asset: 'tiled/$kCombatTestId.json',
-      sensorIds: ['sensor_$kConversationTestId', 'sensor_$kBossTestId'],
-      backgroundMusic: AudioDef.backgroundMusic1,
-      lightingColor: _kDarknessLightingColor,
-      backgroundColor: _kLakeBackgroundColor,
-      initialPlayerPosition: '10,10',
-    ),
+    // /// NEW MAPS
+    // const MapData(
+    //   id: kFarmId,
+    //   asset: 'tiled/maps/$kFarmId.json',
+    //   sensorIds: [
+    //     'sensor_$kForestId',
+    //     'sensor_$kTownId',
+    //     'sensor_$kLakeId',
+    //     'sensor_$kDungeon1Id',
+    //     'sensor_$kForest1Id',
+    //     'sensor_$kLake1Id',
+    //   ],
+    //   backgroundMusic: AudioDef.bGMusicFarm,
+    //   lightingColor: _kNoneLightingColor,
+    //   backgroundColor: _kLakeBackgroundColor,
+    //   initialPlayerPosition: '10,10',
+    // ),
 
-    const MapData(
-      id: kBossTestId,
-      asset: 'tiled/$kBossTestId.json',
-      sensorIds: ['sensor_$kCombatTestId', 'sensor_$kFarmTestId'],
-      backgroundMusic: AudioDef.backgroundMusic1,
-      lightingColor: _kDarknessLightingColor,
-      backgroundColor: _kLakeBackgroundColor,
-      initialPlayerPosition: '10,10',
-    ),
+    // const MapData(
+    //   id: kForestId,
+    //   asset: 'tiled/maps/$kForestId.json',
+    //   sensorIds: ['sensor_$kCaveId', 'sensor_$kTownId', 'sensor_$kFarmId'],
+    //   backgroundMusic: AudioDef.bGMusicFarm,
+    //   lightingColor: _kNoneLightingColor,
+    //   backgroundColor: _kLakeBackgroundColor,
+    //   initialPlayerPosition: '10,10',
+    // ),
 
-    const MapData(
-      id: kLake1Id,
-      asset: 'tiled/$kLake1Id.json',
-      sensorIds: [
-        'sensor_$kForest1Id',
-        'sensor_$kDungeon1Id',
-        'sensor_$kFarmTestId',
-      ],
-      backgroundMusic: AudioDef.backgroundMusic1,
-      lightingColor: _kDarknessLightingColor,
-      backgroundColor: _kLakeBackgroundColor,
-      initialPlayerPosition: '10,10',
-    ),
+    // const MapData(
+    //   id: kTownId,
+    //   asset: 'tiled/maps/$kTownId.json',
+    //   sensorIds: [
+    //     'sensor_$kFarmId',
+    //     'sensor_$kForestId',
+    //     'sensor_$kBeachId',
+    //     'sensor_$kLakeId',
+    //   ],
+    //   backgroundMusic: AudioDef.bGMusicFarm,
+    //   lightingColor: _kNoneLightingColor,
+    //   backgroundColor: _kLakeBackgroundColor,
+    //   initialPlayerPosition: '10,10',
+    // ),
 
-    const MapData(
-      id: kForest1Id,
-      asset: 'tiled/$kForest1Id.json',
-      sensorIds: ['sensor_$kDungeon1Id'],
-      backgroundMusic: AudioDef.backgroundMusic1,
-      lightingColor: _kCloudyLightingColor,
-      backgroundColor: _kForestBackgroundColor,
-      initialPlayerPosition: '10,10',
-    ),
+    // const MapData(
+    //   id: kLakeId,
+    //   asset: 'tiled/maps/$kLakeId.json',
+    //   sensorIds: ['sensor_$kFarmId', 'sensor_$kTownId'],
+    //   backgroundMusic: AudioDef.bGMusicFarm,
+    //   lightingColor: _kNoneLightingColor,
+    //   backgroundColor: _kLakeBackgroundColor,
+    //   initialPlayerPosition: '10,10',
+    // ),
 
-    const MapData(
-      id: kDungeon1Id,
-      asset: 'tiled/$kDungeon1Id.json',
-      sensorIds: ['sensor_$kForest1Id', 'sensor_$kTemple1Id'],
-      backgroundMusic: AudioDef.backgroundMusic1,
-      lightingColor: _kDarknessLightingColor,
-      backgroundColor: _kDungeonBackgroundColor,
-      initialPlayerPosition: '10,10',
-    ),
+    // const MapData(
+    //   id: kBeachId,
+    //   asset: 'tiled/maps/$kBeachId.json',
+    //   sensorIds: ['sensor_$kTownId'],
+    //   backgroundMusic: AudioDef.bGMusicFarm,
+    //   lightingColor: _kNoneLightingColor,
+    //   backgroundColor: _kLakeBackgroundColor,
+    //   initialPlayerPosition: '10,10',
+    // ),
 
-    const MapData(
-      id: kTemple1Id,
-      asset: 'tiled/$kTemple1Id.json',
-      sensorIds: ['sensor_$kLake1Id'],
-      backgroundMusic: AudioDef.backgroundMusic1, // TODO(Kevin): Change music
-      lightingColor: _kNoneLightingColor, // TODO(Kevin): Change color
-      backgroundColor: _kTempleBackgroundColor, // TODO(Kevin): Change color
-      initialPlayerPosition: '10,10',
-    ),
+    // const MapData(
+    //   id: kCaveId,
+    //   asset: 'tiled/maps/$kCaveId.json',
+    //   sensorIds: ['sensor_$kForestId'],
+    //   backgroundMusic: AudioDef.bGMusicFarm,
+    //   lightingColor: _kNoneLightingColor,
+    //   backgroundColor: _kLakeBackgroundColor,
+    //   initialPlayerPosition: '10,10',
+    // ),
+
+    // /// OLD MAPS FOR TESTING
+    // const MapData(
+    //   id: kFarmTestId,
+    //   asset: 'tiled/$kFarmTestId.json',
+    //   sensorIds: [
+    //     'sensor_$kBossTestId',
+    //     'sensor_$kConversationTestId',
+    //     'sensor_$kLake1Id',
+    //   ],
+    //   backgroundMusic: AudioDef.bGMusicFarm,
+    //   lightingColor: _kNoneLightingColor,
+    //   backgroundColor: _kLakeBackgroundColor,
+    //   initialPlayerPosition: '10,10',
+    // ),
+
+    // const MapData(
+    //   id: kConversationTestId,
+    //   asset: 'tiled/$kConversationTestId.json',
+    //   sensorIds: ['sensor_$kFarmTestId', 'sensor_$kCombatTestId'],
+    //   backgroundMusic: AudioDef.bGMusicFarm,
+    //   lightingColor: _kCloudyLightingColor,
+    //   backgroundColor: _kLakeBackgroundColor,
+    //   initialPlayerPosition: '10,10',
+    // ),
+
+    // const MapData(
+    //   id: kCombatTestId,
+    //   asset: 'tiled/$kCombatTestId.json',
+    //   sensorIds: ['sensor_$kConversationTestId', 'sensor_$kBossTestId'],
+    //   backgroundMusic: AudioDef.bGMusicFarm,
+    //   lightingColor: _kDarknessLightingColor,
+    //   backgroundColor: _kLakeBackgroundColor,
+    //   initialPlayerPosition: '10,10',
+    // ),
+
+    // const MapData(
+    //   id: kBossTestId,
+    //   asset: 'tiled/$kBossTestId.json',
+    //   sensorIds: ['sensor_$kCombatTestId', 'sensor_$kFarmTestId'],
+    //   backgroundMusic: AudioDef.bGMusicFarm,
+    //   lightingColor: _kDarknessLightingColor,
+    //   backgroundColor: _kLakeBackgroundColor,
+    //   initialPlayerPosition: '10,10',
+    // ),
+
+    // const MapData(
+    //   id: kLake1Id,
+    //   asset: 'tiled/$kLake1Id.json',
+    //   sensorIds: [
+    //     'sensor_$kForest1Id',
+    //     'sensor_$kDungeon1Id',
+    //     'sensor_$kFarmTestId',
+    //   ],
+    //   backgroundMusic: AudioDef.bGMusicFarm,
+    //   lightingColor: _kDarknessLightingColor,
+    //   backgroundColor: _kLakeBackgroundColor,
+    //   initialPlayerPosition: '10,10',
+    // ),
+
+    // const MapData(
+    //   id: kForest1Id,
+    //   asset: 'tiled/$kForest1Id.json',
+    //   sensorIds: ['sensor_$kDungeon1Id'],
+    //   backgroundMusic: AudioDef.bGMusicFarm,
+    //   lightingColor: _kCloudyLightingColor,
+    //   backgroundColor: _kForestBackgroundColor,
+    //   initialPlayerPosition: '10,10',
+    // ),
+
+    // const MapData(
+    //   id: kDungeon1Id,
+    //   asset: 'tiled/$kDungeon1Id.json',
+    //   sensorIds: ['sensor_$kForest1Id', 'sensor_$kTemple1Id'],
+    //   backgroundMusic: AudioDef.bGMusicFarm,
+    //   lightingColor: _kDarknessLightingColor,
+    //   backgroundColor: _kDungeonBackgroundColor,
+    //   initialPlayerPosition: '10,10',
+    // ),
+
+    // const MapData(
+    //   id: kTemple1Id,
+    //   asset: 'tiled/$kTemple1Id.json',
+    //   sensorIds: ['sensor_$kLake1Id'],
+    //   backgroundMusic: AudioDef.bGMusicFarm, // TODO(Kevin): Change music
+    //   lightingColor: _kNoneLightingColor, // TODO(Kevin): Change color
+    //   backgroundColor: _kTempleBackgroundColor, // TODO(Kevin): Change color
+    //   initialPlayerPosition: '10,10',
+    // ),
   ];
 }
