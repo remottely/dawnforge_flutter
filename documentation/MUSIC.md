@@ -3,6 +3,8 @@
 STATUS DICIONADOS EM PLAYLISTS:
 🔥 (Precisa estar no jogo)
 ⭐ (Futuramente)
+🤍 (Não é para esse jogo?)
+❓ (Em dúvida)
 🔴 (Não é para esse jogo)
 🟡 (9/10)
 🟢 (10/10)
@@ -16,28 +18,78 @@ STATUS DICIONADOS EM PLAYLISTS:
   License: Free To Use YouTube license youtube-free
   Music powered by BreakingCopyright: https://breakingcopyright.com
 
-# 1 BEST
+# 1 BEST (MVP)
 
-🟢 - https://www.youtube.com/watch?v=AiBiu8XcIdc&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=188 - 10/10 - #1 - trilha sonora principal! - musica suuuper feliz!!!
-🔥🟢 - https://www.youtube.com/watch?v=R7UlQrotjUA&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=185 - 10/10 - #1 - trilha sonora principal? estilo minecraft!
-🔥🟢 - https://www.youtube.com/watch?v=hbkeq71v5PA&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=182 - 10/10 - # 1 - trilha sonora principal!
-🟢 - https://www.youtube.com/watch?v=hgn7kasl8Y0&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=128 - 10/10 - Esse precisa estar! tema de encorajamento e vitoria!! Jogo zerado?? separar em varios adios para diferentes estagios? missão mais importante do jogo? #1 - primeira e ultima missao do jogo!
-🟢 - https://www.youtube.com/watch?v=FAF7LPL0OUI&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=129 - 10/10 - Esse precisa estar! separar em varios adios para diferentes estagios? missão mais importante do jogo? #1 - segunda missão!
-🟢 - https://www.youtube.com/watch?v=powKEGuPvjc&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=82 - 10/10 - pefeito? editar, remover batidas?? #1 - trilha sonora principal de outono ou inverno?
-🟢 - https://www.youtube.com/watch?v=sYy1j449aLM&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=162 - 10/10 - #1 - trilha sonora principal!
-🟢 - https://www.youtube.com/watch?v=u5QBqjuMUaQ&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=163 - 9/10 - lofi bem suave. bom para fundo de um dia qualquer. #2
-🟢 - https://www.youtube.com/watch?v=gUgyfUIhGQc&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=165 - 10/10 - tema futuristico! #2
-🟢 - https://www.youtube.com/watch?v=ikz1aBQi2v0&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=166 - 10/10 - tema batalha!! #2
-🟢 - https://www.youtube.com/watch?v=JpuhuTkOQgw&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=167 - 10/10 - tema de mapa especifico ou missao? #2
-🟢 - https://www.youtube.com/watch?v=UhT5XTg0rk8&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=169 - 10/10 - tema principal! #2
-🟢 - https://www.youtube.com/watch?v=6E6m_kRnTuw&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=170 - 10/10 - trailler inspirador! #2
-🟢 - https://www.youtube.com/watch?v=MJQXY7KBsRI&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=171 - 9/10 - music fundo principal - #2
-🟢 - https://www.youtube.com/watch?v=anonH2CK-zI&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=175 - 9/10 - batalha, boss! #5
-🟢 - https://www.youtube.com/watch?v=p9z8ByzKQtc&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=179 - 10/10 - musica natalina! #3
-🟢 - https://www.youtube.com/watch?v=aDZE8kLSFF4&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=181 - 9/10 - trailler dramatico! jogo de aventura, batalha! #2
-🟢 - https://www.youtube.com/watch?v=8A0jlOPwECo&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=183 - 9/10 - #3
-🟢 - https://www.youtube.com/watch?v=r-3PRii66M0&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=184 - 9/10 - #3
-🟢 - https://www.youtube.com/watch?v=wXpFhFM-dNs&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=187 - 9/10 - #3 - estilo HP, senhor dos aneis.
+## Selected A Playlist
+
+[farm]🔥🟢 - ☁️ Classical & Contemplative (Free Music) - "PHASE SHIFT" by Scott Buckley 🇦🇺
+https://www.youtube.com/watch?v=hbkeq71v5PA&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=182 - 10/10 - # 1 - trilha sonora principal!
+Credits:
+'Phase Shift' by Scott Buckley - released under CC-BY 4.0. www.scottbuckley.com.au
+
+[town]🔥🟢 - 🍃 Free Uplifting Music (For Videos) - "Clarion" by @ScottBuckley 🇦🇺
+https://www.youtube.com/watch?v=hgn7kasl8Y0&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=128 - 10/10 - Esse precisa estar! tema de encorajamento e vitoria!! Jogo zerado?? separar em varios adios para diferentes estagios? missão mais importante do jogo? #1 - primeira e ultima missao do jogo! Trailler??
+Credits:
+Song: Clarion
+Composer: Scott Buckley
+Website: https://youtube.com/user/musicbyscottb
+License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
+Music powered by BreakingCopyright: https://breakingcopyright.com
+
+[forest]🔥🟢 - 🌈 Free Ambient Electronic Music (For Videos) - "Rounding" by @SavfkMusic 🇬🇧 🇮🇹
+https://www.youtube.com/watch?v=FAF7LPL0OUI&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=129 - 10/10 - Esse precisa estar! separar em varios adios para diferentes estagios? missão mais importante do jogo? #1 - segunda missão!
+Credits:
+Song: Rounding
+Composer: Savfk
+Website: https://youtube.com/savfkmusic
+License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
+Music powered by BreakingCopyright: https://breakingcopyright.com
+
+[lake]🔥🟢 - 🎵 Classical & Symphony (Royalty Free Music) - "ANTIGONE" by Justin Allan Arnold 🇺🇸
+https://www.youtube.com/watch?v=wXpFhFM-dNs&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=187 - 9/10 - #3 - estilo HP, senhor dos aneis.
+Credits:
+Song: Antigone
+Composer: Justin Allan Arnold
+Website: https://soundcloud.com/justin-allan-arnold
+License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
+Music powered by BreakingCopyright: https://breakingcopyright.com
+
+[beach]🔥🟢 - 🛖 Ambient & Ancient (Royalty Free Music) - "PREHISTORY" by Glitch 🇵🇱
+https://www.youtube.com/watch?v=R7UlQrotjUA&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=185 - 10/10 - #1 - trilha sonora principal? estilo minecraft!
+Credits:
+Song: Prehistory
+Composer: Glitch
+Website: https://www.youtube.com/playlist
+License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
+Music powered by BreakingCopyright: https://breakingcopyright.com
+
+[cave_boss]🔥🟢 - ⚔️ Epic (Free Music) - "RITES OF PASSAGE" by Scott Buckley 🇦🇺🇸🇪
+https://www.youtube.com/watch?v=aDZE8kLSFF4&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=181 - 9/10 - trailler dramatico! jogo de aventura, batalha, boss! #2
+Credits:
+'Rites of Passage' by Scott Buckley - released under CC-BY 4.0. www.scottbuckley.com.au
+
+[event_christmas]⭐🟢 - 
+🎄 Christmas & Festive (Free Music) - "CHRISTMAS IS COMING" by Alex Productions 🇮🇹
+https://www.youtube.com/watch?v=p9z8ByzKQtc&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=179 - 10/10 - musica natalina! #3
+Credits:
+
+[???]⭐🟢[precisa editar e remover beats] - https://www.youtube.com/watch?v=8A0jlOPwECo&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=183 - 9/10 - #3
+[???]⭐🟢 - https://www.youtube.com/watch?v=r-3PRii66M0&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=184 - 9/10 - #3
+
+## Selected B Playlist
+❓🟢 - https://www.youtube.com/watch?v=AiBiu8XcIdc&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=188 - 10/10 - #1 - trilha sonora trailler! - musica suuuper feliz!!!
+
+## 10/10 Playlist
+🤍🟢 - https://www.youtube.com/watch?v=powKEGuPvjc&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=82 - 10/10 - pefeito? editar, remover batidas?? #1 - trilha sonora principal de outono ou inverno?
+🤍🟢 - https://www.youtube.com/watch?v=sYy1j449aLM&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=162 - 10/10 - #1 - trilha sonora principal!
+🤍🟢 - https://www.youtube.com/watch?v=u5QBqjuMUaQ&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=163 - 9/10 - lofi bem suave. bom para fundo de um dia qualquer. #2
+🤍🟢 - https://www.youtube.com/watch?v=gUgyfUIhGQc&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=165 - 10/10 - tema futuristico! #2
+❓🟢 - https://www.youtube.com/watch?v=ikz1aBQi2v0&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=166 - 10/10 - tema batalha!! #2 - trailler??
+🤍🟢 - https://www.youtube.com/watch?v=JpuhuTkOQgw&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=167 - 10/10 - tema de mapa especifico ou missao? #2
+🤍🟢 - https://www.youtube.com/watch?v=UhT5XTg0rk8&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=169 - 10/10 - tema principal! #2
+🤍🟢 - https://www.youtube.com/watch?v=6E6m_kRnTuw&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=170 - 10/10 - trailler inspirador! #2
+🤍🟢 - https://www.youtube.com/watch?v=MJQXY7KBsRI&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=171 - 9/10 - music fundo principal - #2
+🤍🟢 - https://www.youtube.com/watch?v=anonH2CK-zI&list=PLfP6i5T0-DkJPT4dkMAr0PwRq1m25UtoO&index=175 - 9/10 - batalha, boss! #5
 
 # 1.2 BEST
 

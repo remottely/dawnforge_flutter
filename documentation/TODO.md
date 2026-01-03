@@ -24,9 +24,9 @@
 
 - [PRIORITY] quando o dia virar, o player deve spawnar na posicao x,y da cama(MVP local fixo)
 
-- [PRIORITY]
+- [NOT_PRIORITY] quero adicionar uma nova funcionalidade ao jogo, onde utilizando LogicalKeyboardKey.space(e um equivalente no joystick) eu consiga pausar o jogo por inteiro, incluindo o relogio do jogo
 
-- [PRIORITY]
+- [PRIORITY] Adicionar musicas finais + adicionar segunda camada q toca ao mesmo tempo de natureza, passaros etc(um som de natureza para cada mapa)!
 
 - [PRIORITY]
 

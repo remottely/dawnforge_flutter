@@ -1,3 +1,5 @@
+import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
+
 /// Constants for the in-game clock and calendar.
 final class TimeConstants {
   TimeConstants._();
@@ -16,8 +18,7 @@ final class TimeConstants {
   static const int kSleepHour = 2;
 
   /// Default start hour (6 AM).
-  // static const int kStartHour = 6; // TODO(Kevin): NOW - put it back
-  static const int kStartHour = 1; // TODO(Kevin): NOW - remove it
+  static const int kStartHour = AppEnvironment.kIsDevToolsMode ? 1 : 6;
 
   /// Days per season (Stardew Valley rules).
   static const int kDaysPerSeason = 28;

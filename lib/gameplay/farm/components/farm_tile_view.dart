@@ -38,9 +38,10 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   FarmObject get _farmObject => farmTile.object as FarmObject;
 
   FarmTileView({required Vector2 position})
-    : tileX = (position.x / 16).floor(),
-      tileY = (position.y / 16).floor(),
+    : tileX = (position.x / TileConstants.kTileDimensionStandard).floor(),
+      tileY = (position.y / TileConstants.kTileDimensionStandard).floor(),
       super(position: position, size: TileConstants.tileSizeStandard) {
+    anchor = Anchor.topLeft;
     // Garante que o tile existe no manager
     final existingTile = FarmManager.instance.getTile(tileX, tileY);
     if (existingTile == null) {
@@ -57,6 +58,12 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   @override
   Future<void> onLoad() async {
     await super.onLoad();
+
+    // Snap to the exact grid to avoid sub-pixel drift/bleeding after Tiled import.
+    position = Vector2(
+      tileX * TileConstants.kTileDimensionStandard,
+      tileY * TileConstants.kTileDimensionStandard,
+    );
 
     final key = _makeKey(tileX, tileY);
     final existing = _instances[key];

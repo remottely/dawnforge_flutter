@@ -29,7 +29,7 @@ STATUS:
 8. KPIs e Critérios de Pronto
 9. Riscos e Mitigações
 10. Roadmap Macro
-<!-- 11. Refatorar -->
+<!-- 11. Melhorar / Refatorar -->
 12. Resumo Executivo
 
 ## 1. Visão e Metas do MVP
@@ -48,14 +48,16 @@ Entregar um protótipo jogável que capture o loop central de farming:
 
 ## 3. Escopo do MVP (Must-Have)
 🔥🟡 Mapa único de fazenda simples (grids aráveis + poucas decorações).
-🔥🟡 Sistema de tempo: dia/noite, passagem acelerada, dormir para avançar o dia.
-🔥🟡 Plantio, rega, crescimento em etapas e colheita de pelo menos 3 cultivos (strawberry, tomato, radish).
-🔥🟡 Inventário básico com stack e slots limitados; seeds, ferramentas e colheita como itens.
-🔥🟡 Ferramentas: pá(cavar), enxada (arar), regador (regar), mão/foice (colher).
+<!-- 🔥🟢 Sistema de tempo: dia/noite, passagem acelerada, dormir para avançar o dia. -->
+<!-- 🔥🟢 Plantio, rega, crescimento em etapas e colheita de pelo menos 3 cultivos (strawberry, tomato, radish). -->
+<!-- 🔥🟢 Inventário básico com stack e slots limitados; seeds, ferramentas e colheita como itens. -->
+🔥🟡 Ferramentas: pá(cavar), regador (regar), mão/foice (colher).
+<!-- ⭐🔴 Ferramentas: enxada (arar) -->
 <!-- ⭐🔴 Economia: vender itens colhidos para obter dinheiro; loja simples de seeds. -->
 🔥🟡 HUD: barras de vida/energia, relógio, estação/dia, hotbar/atalhos principais.
 🔥🟡 Save/Load funcional cobrindo inventário, cultivos, tempo, dinheiro.
-🔥🟡 Áudio mínimo: música de fundo e SFX de ações-chave (cavar, arar, regar, colher, UI).
+🔥🟡 Áudio mínimo: música de fundo e SFX de ações-chave (cavar, regar, colher, UI).
+<!-- ⭐🔴 Áudio mínimo: música de fundo e SFX de ações-chave (arar). -->
 
 ## 4. Fora de Escopo (Nice-to-Have / Posterior)
 <!-- ⭐🟡 NPCs, diálogos, quests e relacionamentos. -->
@@ -66,7 +68,7 @@ Entregar um protótipo jogável que capture o loop central de farming:
 
 ## 5. Loop Principal de Jogo
 🔥🟡 1. cavar solo grid_tile (consome energia).
-🔥🟡 2. Arar solo arável (consome energia).
+<!-- ⭐🔴 2. Arar solo arável (consome energia). -->
 🔥🟡 3. Plantar semente (consome item seed).
 <!-- 🔥🟢 4. Regar diariamente até crescer. -->
 <!-- 🔥🟢 5. Colher quando maduro. -->
@@ -87,7 +89,8 @@ Entregar um protótipo jogável que capture o loop central de farming:
 
 ### 6.3 Jogador e Progressão
 <!-- 🔥🟢 Atributos: vida, energia (stamina), posição. -->
-🔥🟡 Energia é consumida ao cavar/arar/regar/colher; dormir restaura energia total.
+🔥🟡 Energia é consumida ao cavar/regar/colher; dormir restaura energia total.
+<!-- ⭐🔴 Energia é consumida ao arar. -->
 <!-- ⭐🔴 Sem níveis/skills no MVP; progresso via economia e mais seeds. -->
 
 ### 6.4 Inventário e Itens
@@ -97,13 +100,13 @@ Slots:
 Itens mínimos:
     <!-- 🔥🟢 seeds (2 tipos) -->
     🔥🟡 colheitas (2). Falta melhorar renderização dos crops no inventorio
-    🔥🟡 ferramentas (pá, enxada, regador, foice/mão)
+    🔥🟡 ferramentas (pá, regador, foice/mão)
     <!-- ⭐🔴 dinheiro (saldo numérico) -->
     <!-- 🔥🟢 água (implícita no regador com uso ilimitado no MVP). -->
 
 ### 6.5 Ferramentas e Ações de Fazenda
 🔥🟡 Pá: torna grama em terra.
-🔥🟡 Enxada: torna tile arável.
+<!-- ⭐🔴 Enxada: torna tile arável. -->
 <!-- 🔥🟢 Regador: marca tile como regado para o dia. -->
 🔥🟡 Foice/Mão: colhe e coleta item.
 🔥🟡 Interação contextual via botão de ação (keyboard/joystick). Entender esse tópico e verificar comportamento.
@@ -140,7 +143,9 @@ Persistir:
 
 ### 6.10 Áudio (Música e SFX)
 🔥🟡 1–2 faixas de música de fundo (loop).
-🔥🔴 SFX mínimos: cavar, arar, regar, colher, abrir/fechar UI, confirmação de compra/venda.
+🔥🟡 1–2 faixas de som de natureza de fundo (loop).
+🔥🔴 SFX mínimos: cavar, regar, colher, abrir/fechar UI, confirmação de compra/venda.
+<!-- ⭐🔴 SFX mínimos: arar. -->
 🔥🔴 Respeitar flag de mute/volume global.
 
 ### 6.11 Performance e Plataforma
@@ -170,13 +175,15 @@ Persistir:
 
 ## 10. Roadmap Macro
 🔥🟡 Semana 1: Mundo, movimento, HUD básico, inventário e itens.
-🔥🟡 Semana 2: Ferramentas (arar, regar), sistema de cultivos e estágios.
+🔥🟡 Semana 2: Ferramentas (cavar, regar, etc), sistema de cultivos e estágios.
 🔥🟡 Semana 3: Economia (loja + venda), dia/noite, dormir, energia.
 🔥🟡 Semana 4: Polish de HUD, SFX/Música, save/load, testes de resize/fullscreen.
 
-## 11. Refatorar
+## 11. Melhorar / Refatorar
 <!-- ⭐🔴 Mudar sistema de recuperação de vida. De potion para consumiveis. -->
 <!-- ⭐🔴 Mudar o que hoje é stamina para energia. -->
+<!-- ⭐🔴 Criar passagem de dia para noite no filtro do jogo, criar uma camada (stack) q escureça e clareie a tela, inclusive tempo nublado, depois futuramente outro stack sendo a chuva. -->
+<!-- ⭐🔴 Adicionar enxada (arar). SFX arar -->
 
 ## 12. Resumo Executivo
 Um MVP focado no loop essencial de fazenda: plantar, regar, colher e vender. Conteúdo enxuto (um mapa, três cultivos, ferramentas básicas) com ênfase em clareza de feedback, estabilidade de save/load e UX robusta em diferentes modos de input e resize. Os pilares são ritmo curto, progressão tangível e controles estáveis; tudo o que for além (NPCs, combate, crafting avançado) fica para depois do MVP.
