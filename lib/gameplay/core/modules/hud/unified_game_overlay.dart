@@ -109,11 +109,11 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                               alignment: Alignment.topRight,
                               child: Stack(
                                 children: [
-                                  if (AppEnvironment.kIsDebugMode)
-                                    const Align(
-                                      alignment: Alignment.topRight,
-                                      child: EquipmentOverlay(),
-                                    ),
+                                  // if (AppEnvironment.kIsDebugMode)
+                                  const Align(
+                                    alignment: Alignment.topRight,
+                                    child: EquipmentOverlay(),
+                                  ),
                                   TimeHudPanel(
                                     timeManager: new_time.TimeManager.instance,
                                   ),

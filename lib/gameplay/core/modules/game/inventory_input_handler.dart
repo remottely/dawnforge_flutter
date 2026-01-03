@@ -211,30 +211,28 @@ class InventoryInputHandler extends GameComponent
       '[InventoryInput] Procurando próximo item no inventário para selecionar...',
     );
 
-    final currentSlotIndex = getIt<EquipmentManager>().currentMainHandSlotIndex;
-    final result = getIt<InventoryManager>().findItem((item) {
-      return true; // Aceita qualquer item no inventário
-    }, afterIndex: currentSlotIndex);
+    final inventoryManager = getIt<InventoryManager>();
+    final equipmentManager = getIt<EquipmentManager>();
 
-    if (result == null) {
-      developer.log(
-        '[InventoryInput] Nenhum item equipável encontrado no inventário',
-      );
+    if (inventoryManager.maxSlots == 0) {
+      developer.log('[InventoryInput] Nenhum slot disponível no inventário');
       return;
     }
 
-    final item = result.item;
-    final success = getIt<EquipmentManager>().selectSlotIndex(result.index);
+    final currentSlotIndex = equipmentManager.currentMainHandSlotIndex;
+    final nextIndex = (currentSlotIndex + 1) % inventoryManager.maxSlots;
+
+    final success = equipmentManager.selectSlotIndex(nextIndex);
 
     if (success) {
+      final item = inventoryManager.getSlotByIndex(nextIndex)?.item;
       final handSuffix = item is MainHandItem
           ? ' (${item.equippedHandType})'
           : '';
-      developer.log(
-        '[InventoryInput] ✓ Slot selecionado: ${item.name}$handSuffix',
-      );
+      final itemName = item?.name ?? 'vazio';
+      developer.log('[InventoryInput] ✓ Slot selecionado: $itemName$handSuffix');
     } else {
-      developer.log('[InventoryInput] ✗ Falha ao equipar: ${item.name}');
+      developer.log('[InventoryInput] ✗ Falha ao selecionar slot ${nextIndex + 1}');
     }
   }
 
@@ -243,30 +241,34 @@ class InventoryInputHandler extends GameComponent
       '[InventoryInput] Procurando item anterior no inventário para selecionar...',
     );
 
-    final currentSlotIndex = getIt<EquipmentManager>().currentMainHandSlotIndex;
-    final result = getIt<InventoryManager>().findItemReverse((item) {
-      return true; // Aceita qualquer item no inventário
-    }, beforeIndex: currentSlotIndex);
+    final inventoryManager = getIt<InventoryManager>();
+    final equipmentManager = getIt<EquipmentManager>();
 
-    if (result == null) {
-      developer.log(
-        '[InventoryInput] Nenhum item equipável encontrado no inventário',
-      );
+    if (inventoryManager.maxSlots == 0) {
+      developer.log('[InventoryInput] Nenhum slot disponível no inventário');
       return;
     }
 
-    final item = result.item;
-    final success = getIt<EquipmentManager>().selectSlotIndex(result.index);
+    final currentSlotIndex = equipmentManager.currentMainHandSlotIndex;
+    final previousIndex =
+        (currentSlotIndex - 1 + inventoryManager.maxSlots) %
+            inventoryManager.maxSlots;
+
+    final success = equipmentManager.selectSlotIndex(previousIndex);
 
     if (success) {
+      final item = inventoryManager.getSlotByIndex(previousIndex)?.item;
       final handSuffix = item is MainHandItem
           ? ' (${item.equippedHandType})'
           : '';
+      final itemName = item?.name ?? 'vazio';
       developer.log(
-        '[InventoryInput] ✓ Slot selecionado (reverso): ${item.name}$handSuffix',
+        '[InventoryInput] ✓ Slot selecionado (reverso): $itemName$handSuffix',
       );
     } else {
-      developer.log('[InventoryInput] ✗ Falha ao equipar: ${item.name}');
+      developer.log(
+        '[InventoryInput] ✗ Falha ao selecionar slot ${previousIndex + 1}',
+      );
     }
   }
 

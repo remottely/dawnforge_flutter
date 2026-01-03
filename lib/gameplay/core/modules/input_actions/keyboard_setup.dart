@@ -18,10 +18,9 @@ final class KeyboardSetup {
 
   static const LogicalKeyboardKey kRunKey = LogicalKeyboardKey.shiftLeft;
 
-  static const LogicalKeyboardKey kEquipMainHandKey = LogicalKeyboardKey.keyE;
+  static const LogicalKeyboardKey kSlotNavNextKey = LogicalKeyboardKey.keyE;
 
-  static const LogicalKeyboardKey kEquipMainHandReverseKey =
-      LogicalKeyboardKey.keyQ;
+  static const LogicalKeyboardKey kSlotNavPrevKey = LogicalKeyboardKey.keyQ;
 
   static const LogicalKeyboardKey kUnequipMainHandKey = LogicalKeyboardKey.keyU;
 
@@ -71,8 +70,8 @@ final class KeyboardSetup {
     kInteractionKey,
     kRunKey,
 
-    kEquipMainHandKey,
-    kEquipMainHandReverseKey,
+    kSlotNavNextKey,
+    kSlotNavPrevKey,
     kUnequipMainHandKey,
 
     kSlot1Key,

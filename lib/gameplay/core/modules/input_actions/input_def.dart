@@ -51,13 +51,13 @@ final class InputDef {
   }
 
   static bool isEquipMainHandAction(dynamic actionId) {
-    return actionId == JoystickSetup.kEquipMainHandId ||
-        actionId == KeyboardSetup.kEquipMainHandKey;
+    return actionId == JoystickSetup.kSlotNavNextId ||
+        actionId == KeyboardSetup.kSlotNavNextKey;
   }
 
   static bool isEquipMainHandReverseAction(dynamic actionId) {
-    return actionId == JoystickSetup.kEquipMainHandReverseId ||
-        actionId == KeyboardSetup.kEquipMainHandReverseKey;
+    return actionId == JoystickSetup.kSlotNavPrevId ||
+        actionId == KeyboardSetup.kSlotNavPrevKey;
   }
 
   static bool isUnequipMainHandAction(dynamic actionId) {

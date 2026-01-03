@@ -38,8 +38,8 @@ final class JoystickSetup {
   static const String kPrimaryActionId = 'primaryActionId';
   static const String kInteractionId = 'interactionId';
   static const String kRunId = 'runId';
-  static const String kEquipMainHandId = 'equipMainHandId';
-  static const String kEquipMainHandReverseId = 'equipMainHandReverseId';
+  static const String kSlotNavNextId = 'equipMainHandId';
+  static const String kSlotNavPrevId = 'equipMainHandReverseId';
   static const String kToggleInventoryId = 'toggleInventoryId';
   static const String kToggleTutorialInputsId = 'toggleTutorialInputsId';
   static const String kUnequipMainHandId = 'unequipMainHandId';
