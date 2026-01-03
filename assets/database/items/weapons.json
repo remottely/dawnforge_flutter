@@ -54,7 +54,9 @@
     "critChance": 0.0,
     "critMultiplier": 1.0,
     "equippedHandType": "strawberry_seed_bag",
-    "cropId": "strawberry"
+    "cropId": "strawberry",
+    "isStackable": true,
+    "maxStackSize": 99
   },
   "radish_seed_bag": {
     "id": "radish_seed_bag",
@@ -69,7 +71,9 @@
     "critChance": 0.0,
     "critMultiplier": 1.0,
     "equippedHandType": "radish_seed_bag",
-    "cropId": "radish"
+    "cropId": "radish",
+    "isStackable": true,
+    "maxStackSize": 99
   },
   "tomato_seed_bag": {
     "id": "tomato_seed_bag",
@@ -84,7 +88,9 @@
     "critChance": 0.0,
     "critMultiplier": 1.0,
     "equippedHandType": "tomato_seed_bag",
-    "cropId": "tomato"
+    "cropId": "tomato",
+    "isStackable": true,
+    "maxStackSize": 99
   },
   "shovel": {
     "id": "shovel",

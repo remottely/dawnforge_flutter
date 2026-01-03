@@ -120,6 +120,8 @@ class ItemFactoryService {
             equippedHandType: item.equippedHandType,
             cropId: item.cropId,
             iconData: iconData,
+            isStackable: item.isStackable,
+            maxStackSize: item.maxStackSize,
           );
 
         case ItemType.tool:

@@ -26,6 +26,8 @@ final class MainHandItem extends Item {
     this.critMultiplier = 1.5,
     required this.equippedHandType,
     this.cropId,
+    super.isStackable = false,
+    super.maxStackSize = 1,
   });
 
   double get dps {
@@ -49,6 +51,8 @@ final class MainHandItem extends Item {
       'critMultiplier': critMultiplier,
       'equippedHandType': equippedHandType.toJson(),
       if (cropId != null) 'cropId': cropId,
+      'isStackable': isStackable,
+      'maxStackSize': maxStackSize,
     };
   }
 
@@ -68,6 +72,8 @@ final class MainHandItem extends Item {
         json['equippedHandType'] as String,
       ),
       cropId: json['cropId'] as String?,
+      isStackable: json['isStackable'] as bool? ?? false,
+      maxStackSize: json['maxStackSize'] as int? ?? 1,
     );
   }
 
@@ -85,6 +91,8 @@ final class MainHandItem extends Item {
     double? critMultiplier,
     EquippedHandType? equippedHandType,
     String? cropId,
+    bool? isStackable,
+    int? maxStackSize,
   }) {
     return MainHandItem(
       id: id ?? this.id,
@@ -99,6 +107,8 @@ final class MainHandItem extends Item {
       critMultiplier: critMultiplier ?? this.critMultiplier,
       equippedHandType: equippedHandType ?? this.equippedHandType,
       cropId: cropId ?? this.cropId,
+      isStackable: isStackable ?? this.isStackable,
+      maxStackSize: maxStackSize ?? this.maxStackSize,
     );
   }
 }

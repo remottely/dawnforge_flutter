@@ -68,9 +68,9 @@ Entregar um protótipo jogável que capture o loop central de farming:
 <!-- ⭐🔴 Sistema complexo de clima (chuva com irrigação automática) — pode ser protótipo simples depois. -->
 
 ## 5. Loop Principal de Jogo
-🔥🟡 1. cavar solo grid_tile (consome energia).
+<!-- 🔥🟢 1. cavar solo grid_tile (consome energia). -->
 <!-- ⭐🔴 2. Arar solo arável (consome energia). -->
-🔥🟡 3. Plantar semente (consome item seed).
+<!-- 🔥🟢 3. Plantar semente (consome item seed). -->
 <!-- 🔥🟢 4. Regar diariamente até crescer. -->
 <!-- 🔥🟢 5. Colher quando maduro. -->
 <!-- ⭐🔴 6. Vender colheita → receber dinheiro. -->
@@ -143,8 +143,8 @@ Persistir:
 <!-- ⭐🔴 opção de save manual simples. -->
 
 ### 6.10 Áudio (Música e SFX)
-🔥🟡 1–2 faixas de música de fundo (loop).
-🔥🟡 1–2 faixas de som de natureza de fundo (loop).
+<!-- 🔥🟢 1 faixa de música de fundo (loop) para cada mapa. -->
+🔥🟡 1 faixa de som de natureza de fundo (loop) para cada mapa.
 🔥🔴 SFX mínimos: cavar, regar, colher, abrir/fechar UI, confirmação de compra/venda.
 <!-- ⭐🔴 SFX mínimos: arar. -->
 🔥🔴 Respeitar flag de mute/volume global.
@@ -157,8 +157,8 @@ Persistir:
 ## 7. Conteúdo Inicial do MVP
 🔥🟡 1 mapa de fazenda pequeno com "~10–20 tiles aráveis úteis."?
 2 tipos de cultivos: 
-  🔥🟡 Médio (4 dias, lucro baixo).
-  🔥🟡 Lento (7 dias, lucro médio).
+  <!-- 🔥🟢 Médio (4 dias, lucro baixo). -->
+  <!-- 🔥🟢 Lento (7 dias, lucro médio). -->
   <!-- ⭐🔴 Lento + recorrencia (7 dias com recorrencias, lucro alto). -->
 <!-- ⭐🔴 Loja com 2 seeds; preços e retornos diferenciados para ensinar risco/recompensa. -->
 <!-- ⭐🔴 Caixa de venda. -->
@@ -175,10 +175,10 @@ Persistir:
 🔥🟡 **Save corrompido** → Validação ao carregar; fallback para estado inicial se inválido.
 
 ## 10. Roadmap Macro
-🔥🟡 Semana 1: Mundo, movimento, HUD básico, inventário e itens.
-🔥🟡 Semana 2: Ferramentas (cavar, regar, etc), sistema de cultivos e estágios.
-🔥🟡 Semana 3: Economia (loja + venda), dia/noite, dormir, energia.
-🔥🟡 Semana 4: Polish de HUD, SFX/Música, save/load, testes de resize/fullscreen.
+Semana 1: Mundo, movimento, HUD básico, inventário e itens.
+Semana 2: Ferramentas (cavar, regar, etc), sistema de cultivos e estágios.
+Semana 3: Economia (loja + venda), dia/noite, dormir, energia.
+Semana 4: Polish de HUD, SFX/Música, save/load, testes de resize/fullscreen.
 
 ## 11. Melhorar / Refatorar
 <!-- ⭐🔴 Mudar sistema de recuperação de vida. De potion para consumiveis. -->

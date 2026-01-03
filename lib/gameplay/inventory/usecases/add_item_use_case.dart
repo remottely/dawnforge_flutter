@@ -3,6 +3,7 @@ import 'dart:math';
 
 import '../entities/inventory_slot.dart';
 import '../entities/item.dart';
+import '../items/main_hand_item.dart';
 import '../managers/inventory_manager.dart';
 import '../services/item_factory_service.dart';
 
@@ -26,7 +27,9 @@ class AddItemUseCase {
 
   /// Add an item entity directly to inventory
   bool addItemEntity(Item item, [int quantity = 1]) {
-    developer.log('[AddItemUseCase] Adding $quantity x ${item.name}');
+    final normalizedItem = _normalizeStackBehavior(item);
+
+    developer.log('[AddItemUseCase] Adding $quantity x ${normalizedItem.name}');
 
     if (quantity <= 0) {
       developer.log('[AddItemUseCase] Invalid quantity: $quantity');
@@ -36,7 +39,7 @@ class AddItemUseCase {
     int remainingQuantity = quantity;
 
     // Try to stack in existing slots
-    if (item.isStackable) {
+    if (normalizedItem.isStackable) {
       for (
         var i = 0;
         i < _inventoryManager.maxSlots && remainingQuantity > 0;
@@ -44,14 +47,33 @@ class AddItemUseCase {
       ) {
         final slot = _inventoryManager.getSlotByIndex(i);
         if (slot == null || slot.isEmpty) continue;
-        if (slot.item!.id != item.id) continue;
-        if (slot.isFull) continue;
+        if (slot.item!.id != normalizedItem.id) continue;
+        // If the slot has an old non-stackable instance of the same item, refresh it
+        final slotItem = slot.item!;
+        final needsUpgrade =
+            (!slotItem.isStackable || slotItem.maxStackSize < normalizedItem.maxStackSize) &&
+            normalizedItem.isStackable;
+        final upgradedSlot = needsUpgrade
+            ? InventorySlot(
+                index: slot.index,
+                item: normalizedItem, // replace with stackable instance
+                quantity: slot.quantity,
+              )
+            : slot;
 
-        final spaceInSlot = item.maxStackSize - slot.quantity;
+        if (upgradedSlot.isFull) {
+          _inventoryManager.updateSlot(i, upgradedSlot);
+          continue;
+        }
+
+        final spaceInSlot = normalizedItem.maxStackSize - upgradedSlot.quantity;
         if (spaceInSlot <= 0) continue;
 
         final amountToAdd = min(remainingQuantity, spaceInSlot);
-        _inventoryManager.updateSlot(i, slot.addQuantity(amountToAdd));
+        _inventoryManager.updateSlot(
+          i,
+          upgradedSlot.addQuantity(amountToAdd),
+        );
         remainingQuantity -= amountToAdd;
 
         developer.log(
@@ -79,15 +101,15 @@ class AddItemUseCase {
         return quantity > remainingQuantity;
       }
 
-      final amountForSlot = item.isStackable
-          ? min(remainingQuantity, item.maxStackSize)
+      final amountForSlot = normalizedItem.isStackable
+          ? min(remainingQuantity, normalizedItem.maxStackSize)
           : 1;
 
       _inventoryManager.updateSlot(
         emptySlotIndex,
         InventorySlot(
           index: emptySlotIndex,
-          item: item,
+          item: normalizedItem,
           quantity: amountForSlot,
         ),
       );
@@ -119,5 +141,24 @@ class AddItemUseCase {
     }
 
     return anyAdded;
+  }
+
+  Item _normalizeStackBehavior(Item item) {
+    if (item is MainHandItem && item.equippedHandType.isSeed) {
+      final desiredStackSize = item.maxStackSize > 1 ? item.maxStackSize : 99;
+
+      if (!item.isStackable || item.maxStackSize != desiredStackSize) {
+        developer.log(
+          '[AddItemUseCase] Normalizing seed item ${item.id} to stackable x$desiredStackSize',
+        );
+      }
+
+      return item.copyWith(
+        isStackable: true,
+        maxStackSize: desiredStackSize,
+      );
+    }
+
+    return item;
   }
 }
