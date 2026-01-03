@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.87.10+1
+version: 1.87.11+1
 
 environment:
   sdk: ^3.8.1
@@ -200,9 +200,6 @@ flutter:
     - assets/images/tiled/SunnysideWorldTileset.json
     - assets/images/tiled/tileSet.json # TODO(Kevin): remove it
     - assets/images/tiled/Hills.json
-    - assets/images/tiled/smallburg_winter_terrain_with_shadows.json
-    - assets/images/tiled/treesn_bushes_seasons.json
-    - assets/images/tiled/SmallBurg_outside_assets_with_shadows.json
 
     # TODO(Kevin): verify if need to import these assets
     - assets/images/tiled/Modern_Farm_v1.2/tilesets/1_Terrains_16x16.png
@@ -225,11 +222,6 @@ flutter:
     # === TILED - Maps (Folder - Loaded Dynamically) ===
     - assets/images/tiled/maps/ #TODO(Kevin): put manually all maps here
     - assets/images/tiled/small_burg/maps/
-
-    # === TILED - SmallBurg Tileset (used by small_burg maps) ===
-    - assets/images/tiled/SmallBurg_village_pack_v3.18.1_commercial/assets/tileset_v2/terrain/smallburg_winter_terrain_with_shadows.png
-    - assets/images/tiled/SmallBurg_village_pack_v3.18.1_commercial/assets/tileset_v2/treesn_bushes_seasons.png
-    - assets/images/tiled/SmallBurg_village_pack_v3.18.1_commercial/assets/tileset_v2/SmallBurg_outside_assets_with_shadows.png
 
     # === TILED - Icons ===
     - assets/images/tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png
@@ -306,10 +298,17 @@ flutter:
     - assets/images/tiled/sv/maps/sv_town.json
     - assets/images/tiled/f/maps/f_1.json
 
-    # Small Burg
-    # - assets/images/tiled/SmallBurg_village_pack_v3.18.1_commercial/assets/tileset_v2/terrain/smallburg_winter_terrain_with_shadows.png
-    # - assets/images/tiled/SmallBurg_village_pack_v3.18.1_commercial/assets/tileset_v2/treesn_bushes_seasons.png
-    # - assets/images/tiled/SmallBurg_village_pack_v3.18.1_commercial/assets/tileset_v2/SmallBurg_outside_assets_with_shadows.png
+    # ------------------------ DEMO ------------------------------------
+    # SmallBurg Assets
+    # === TILED - SmallBurg Tileset JSON Definitions ===
+    - assets/images/tiled/smallburg_winter_terrain.json
+    - assets/images/tiled/treesn_bushes_seasons.json
+    - assets/images/tiled/SmallBurg_outside_assets.json
+
+    # === TILED - SmallBurg Tileset (used by small_burg maps) ===
+    - assets/images/tiled/SmallBurg_village_pack_v3.18.1_commercial/assets/tileset_v2/terrain/smallburg_winter_terrain.png
+    - assets/images/tiled/SmallBurg_village_pack_v3.18.1_commercial/assets/tileset_v2/treesn_bushes_seasons.png
+    - assets/images/tiled/SmallBurg_village_pack_v3.18.1_commercial/assets/tileset_v2/SmallBurg_outside_assets.png
 
     - assets/images/tiled/small_burg/maps/sb_farm.json
 

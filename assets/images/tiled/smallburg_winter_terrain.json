@@ -1,9 +1,9 @@
 { "columns":63,
- "image":"SmallBurg_village_pack_v3.18.1_commercial\/assets\/tileset_v2\/terrain\/smallburg_winter_terrain_with_shadows.png",
+ "image":"SmallBurg_village_pack_v3.18.1_commercial\/assets\/tileset_v2\/terrain\/smallburg_winter_terrain.png",
  "imageheight":399,
  "imagewidth":1008,
  "margin":0,
- "name":"smallburg_winter_terrain_with_shadows",
+ "name":"smallburg_winter_terrain",
  "spacing":0,
  "tilecount":1512,
  "tiledversion":"1.11.2",
@@ -45,7 +45,7 @@
              "objects":[
                     {
                      "height":16,
-                     "id":2,
+                     "id":1,
                      "name":"",
                      "rotation":0,
                      "type":"",
@@ -123,7 +123,7 @@
              "objects":[
                     {
                      "height":16,
-                     "id":2,
+                     "id":1,
                      "name":"",
                      "rotation":0,
                      "type":"",
@@ -409,7 +409,7 @@
              "objects":[
                     {
                      "height":16,
-                     "id":1,
+                     "id":2,
                      "name":"",
                      "rotation":0,
                      "type":"",
