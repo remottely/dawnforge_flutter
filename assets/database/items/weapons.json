@@ -56,6 +56,21 @@
     "equippedHandType": "strawberry_seed_bag",
     "cropId": "strawberry"
   },
+  "radish_seed_bag": {
+    "id": "radish_seed_bag",
+    "name": "Radish Seed Bag",
+    "description": "Plant these to grow radishes",
+    "type": "weapon",
+    "rarity": "common",
+    "baseValue": 50,
+    "iconPath": "",
+    "damage": 0,
+    "attackSpeed": 1.0,
+    "critChance": 0.0,
+    "critMultiplier": 1.0,
+    "equippedHandType": "radish_seed_bag",
+    "cropId": "radish"
+  },
   "tomato_seed_bag": {
     "id": "tomato_seed_bag",
     "name": "Tomato Seed Bag",

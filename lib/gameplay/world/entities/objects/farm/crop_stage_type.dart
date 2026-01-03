@@ -12,8 +12,21 @@ enum CropStageType {
   /// Serialization (D2)
   String toJson() => name;
 
-  /// Deserialization (D2)
+  /// Deserialization for required fields (throws on invalid)
   static CropStageType fromJson(String json) => values.byName(json);
+
+  /// Deserialization that tolerates null/empty/"none" and invalid values, returning null.
+  static CropStageType? fromJsonNullable(String? json) {
+    if (json == null) return null;
+    final normalized = json.trim();
+    if (normalized.isEmpty) return null;
+    if (normalized.toLowerCase() == 'none') return null;
+    try {
+      return values.byName(normalized);
+    } catch (_) {
+      return null;
+    }
+  }
 
   /// Check if crop can be harvested at this stage
   bool get canHarvest => this == CropStageType.harvestable;

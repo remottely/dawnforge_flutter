@@ -135,6 +135,7 @@ class InventoryInputHandler extends GameComponent
 
     const testItems = [
       'shovel',
+      'radish_seed_bag',
       'strawberry_seed_bag',
       'tomato_seed_bag',
       'wateringCan',

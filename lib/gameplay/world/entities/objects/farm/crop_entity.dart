@@ -19,7 +19,7 @@ final class CropEntity extends Equatable {
   final int spriteRowIndex;
   final int framesCount;
   final int skipFirstFrames;
-  final CropStageType ySortingFromStage;
+  final CropStageType? ySortingFromStage;
 
   const CropEntity({
     required this.cropId,
@@ -53,7 +53,8 @@ final class CropEntity extends Equatable {
   bool get isReadyToHarvest => isMature && canHarvest;
 
   /// Check if crop should use Y-sorting (for taller plants)
-  bool get shouldUseYSorting => stage.index >= ySortingFromStage.index;
+  bool get shouldUseYSorting =>
+      ySortingFromStage != null && stage.index >= ySortingFromStage!.index;
 
   /// Advance crop growth by one day
   CropEntity advanceDay() {
@@ -82,7 +83,7 @@ final class CropEntity extends Equatable {
       'spriteRowIndex': spriteRowIndex,
       'framesCount': framesCount,
       'skipFirstFrames': skipFirstFrames,
-      'ySortingFromStage': ySortingFromStage.toJson(),
+      'ySortingFromStage': ySortingFromStage?.toJson(),
     };
   }
 
@@ -104,8 +105,8 @@ final class CropEntity extends Equatable {
       spriteRowIndex: json['spriteRowIndex'] as int,
       framesCount: json['framesCount'] as int,
       skipFirstFrames: json['skipFirstFrames'] as int,
-      ySortingFromStage: CropStageType.fromJson(
-        json['ySortingFromStage'] as String,
+      ySortingFromStage: CropStageType.fromJsonNullable(
+        json['ySortingFromStage'] as String?,
       ),
     );
   }

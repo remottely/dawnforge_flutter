@@ -12,14 +12,14 @@
     "spriteRowIndex": 0,
     "framesCount": 4,
     "skipFirstFrames": 1,
-    "ySortingFromStage": "TODO"
+    "ySortingFromStage": "none"
   },
   "radish": {
     "harvestItemId": "radish_item",
     "name": "Radish",
     "description": "A nutritious root vegetable",
     "daysToMature": 7,
-    "yieldAmount": 3,
+    "yieldAmount": 6,
     "requiredSeason": "any",
     "spritesheetPath": "tiled/Modern_Farm_v1.2/tilesets/4_Crops_16x16.png",
     "spriteWidth": 16,
@@ -27,7 +27,7 @@
     "spriteRowIndex": 1,
     "framesCount": 7,
     "skipFirstFrames": 1,
-    "ySortingFromStage": "TODO"
+    "ySortingFromStage": "none"
   },
   "carrot": {
     "harvestItemId": "carrot_item",
@@ -42,7 +42,7 @@
     "spriteRowIndex": 2,
     "framesCount": 7,
     "skipFirstFrames": 1,
-    "ySortingFromStage": "TODO"
+    "ySortingFromStage": "none"
   },
   "strawberry": {
     "harvestItemId": "strawberry_item",
@@ -72,7 +72,7 @@
     "spriteRowIndex": 4,
     "framesCount": 4,
     "skipFirstFrames": 1,
-    "ySortingFromStage": "TODO"
+    "ySortingFromStage": "none"
   },
   "pepper": {
     "harvestItemId": "pepper_item",
@@ -87,7 +87,7 @@
     "spriteRowIndex": 5,
     "framesCount": 4,
     "skipFirstFrames": 1,
-    "ySortingFromStage": "TODO"
+    "ySortingFromStage": "none"
   },
   "turnip": {
     "harvestItemId": "turnip_item",
@@ -102,7 +102,7 @@
     "spriteRowIndex": 6,
     "framesCount": 4,
     "skipFirstFrames": 1,
-    "ySortingFromStage": "TODO"
+    "ySortingFromStage": "none"
   },
   "cotton": {
     "harvestItemId": "cotton_item",
@@ -282,6 +282,6 @@
     "spriteRowIndex": 18,
     "framesCount": 4,
     "skipFirstFrames": 1,
-    "ySortingFromStage": "TODO"
+    "ySortingFromStage": "none"
   }
 }

@@ -74,8 +74,8 @@ class CropFactoryService {
         spriteRowIndex: cropData['spriteRowIndex'] as int,
         framesCount: cropData['framesCount'] as int,
         skipFirstFrames: (cropData['skipFirstFrames'] as int?) ?? 0,
-        ySortingFromStage: CropStageType.fromJson(
-          (cropData['ySortingFromStage'] as String?) ?? 'seed',
+        ySortingFromStage: CropStageType.fromJsonNullable(
+          cropData['ySortingFromStage'] as String?,
         ),
       );
     } catch (e, stackTrace) {
