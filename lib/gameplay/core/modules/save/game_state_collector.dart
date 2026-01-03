@@ -2,7 +2,6 @@ import 'dart:developer' as developer;
 
 import 'package:darkness_dungeon/gameplay/core/modules/save/player_progress_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/save/save_data_model.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/time/time_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/farm/farm_service_locator.dart'
     as farm_di;
@@ -13,6 +12,8 @@ import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_loc
 import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/services/item_factory_service.dart';
+import 'package:darkness_dungeon/gameplay/time/time_constants.dart';
+import 'package:darkness_dungeon/gameplay/time/time_manager.dart' as new_time;
 
 final class GameStateCollector {
   GameStateCollector._();
@@ -21,7 +22,7 @@ final class GameStateCollector {
     developer.log('[GameStateCollector] Collecting current game state');
 
     final worldState = WorldStateManager.instance.toJson();
-    final timeState = TimeManager.instance.toJson();
+    final timeState = new_time.TimeManager.instance.toJson();
     final progressState = PlayerProgressManager.instance.toJson();
     final inventoryState = InventoryManager.instance.toJson();
     final equipmentState = EquipmentManager.instance.toJson();
@@ -53,7 +54,7 @@ final class GameStateCollector {
     developer.log(
       '[GameStateCollector] Game state collected: '
       'Day ${WorldStateManager.instance.currentDay}, '
-      'Time ${TimeManager.instance.currentHour}:${TimeManager.instance.currentMinute}, '
+      'Time ${new_time.TimeManager.instance.currentHour}:${new_time.TimeManager.instance.currentMinute}, '
       '${PlayerProgressManager.instance.getAllFlags().length} flags, '
       'Items: ${InventoryManager.instance.usedSlots}, '
       'Equipment: ${EquipmentManager.instance.getAllEquippedItems().length}',
@@ -91,7 +92,7 @@ final class GameStateCollector {
 
       final timeState = worldData['time'] as Map<String, dynamic>?;
       if (timeState != null) {
-        TimeManager.instance.fromJson(timeState);
+        new_time.TimeManager.instance.fromJson(timeState);
         developer.log('[GameStateCollector] Time state restored');
       } else {
         developer.log(
@@ -156,7 +157,7 @@ final class GameStateCollector {
       developer.log(
         '[GameStateCollector] Game state restored successfully: '
         'Day ${WorldStateManager.instance.currentDay}, '
-        'Time ${TimeManager.instance.currentHour}:${TimeManager.instance.currentMinute}, '
+        'Time ${new_time.TimeManager.instance.currentHour}:${new_time.TimeManager.instance.currentMinute}, '
         '${PlayerProgressManager.instance.getAllFlags().length} flags, '
         'Items: ${InventoryManager.instance.usedSlots}, '
         'Equipment: ${EquipmentManager.instance.getAllEquippedItems().length}',
@@ -179,7 +180,7 @@ final class GameStateCollector {
     developer.log('[GameStateCollector] Resetting all managers');
 
     WorldStateManager.instance.reset();
-    TimeManager.instance.reset();
+    new_time.TimeManager.instance.reset();
     PlayerProgressManager.instance.reset();
     InventoryManager.instance.reset();
     EquipmentManager.instance.reset();
@@ -198,8 +199,10 @@ final class GameStateCollector {
         return false;
       }
 
-      final currentTime = TimeManager.instance.currentTime;
-      if (currentTime < 0 || currentTime >= 86400) {
+      final currentTimeMinutes =
+          new_time.TimeManager.instance.currentTime.totalMinutes;
+      if (currentTimeMinutes < 0 ||
+          currentTimeMinutes >= TimeConstants.kHoursPerDay * 60) {
         developer.log(
           '[GameStateCollector] Invalid time state: time out of range',
           level: 900,
@@ -222,7 +225,7 @@ final class GameStateCollector {
 
   static String getCurrentStateSummary() {
     final world = WorldStateManager.instance;
-    final time = TimeManager.instance;
+    final time = new_time.TimeManager.instance;
     final progress = PlayerProgressManager.instance;
     final inventory = InventoryManager.instance;
     final equipment = EquipmentManager.instance;
@@ -230,7 +233,7 @@ final class GameStateCollector {
     return '''
 Game State Summary:
 - Day: ${world.currentDay} (${world.currentSeason.displayName})
-- Time: ${time.currentHour.toString().padLeft(2, '0')}:${time.currentMinute.toString().padLeft(2, '0')} (${time.currentTimeOfDay.displayName})
+- Time: ${time.currentHour.toString().padLeft(2, '0')}:${time.currentMinute.toString().padLeft(2, '0')}
 - Current Map: ${world.currentMapId ?? 'None'}
 - Active Maps: ${world.activeMapCount}
 - Flags: ${progress.getAllFlags().length}

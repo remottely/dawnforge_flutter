@@ -11,6 +11,8 @@ import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/widgets/mobile
 import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/widgets/joystick_actions_overlay.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/widgets/fullscreen_button_overlay.dart';
 import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
+import 'package:darkness_dungeon/gameplay/time/time_manager.dart' as new_time;
+import 'package:darkness_dungeon/gameplay/time/widgets/time_hud_panel.dart';
 import 'package:flutter/material.dart';
 
 /// Overlay unificado que organiza todos os componentes da HUD em um grid 3x3
@@ -86,12 +88,17 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  TimeHudPanel(
+                                    timeManager: new_time.TimeManager.instance,
+                                  ),
+                                  const SizedBox(width: 8),
                                   DebugOverlay(
                                     player: player,
                                     // showFps: AppEnvironment.kIsDevToolsMode,
                                     // showPosition: AppEnvironment.kIsDevToolsMode,
                                     // showEntities: AppEnvironment.kIsDevToolsMode,
                                   ),
+                                  const SizedBox(width: 8),
                                   const OverlayMessageWidget(),
                                 ],
                               ),

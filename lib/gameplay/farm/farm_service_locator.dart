@@ -1,4 +1,8 @@
 import 'package:get_it/get_it.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/time/day_state.dart';
+import 'package:darkness_dungeon/gameplay/time/time_manager.dart' as new_time;
 
 import '../inventory/usecases/add_item_use_case.dart';
 import '../inventory/usecases/remove_item_use_case.dart';
@@ -15,6 +19,7 @@ import 'usecases/water_tile_use_case.dart';
 import 'viewmodels/farm_view_model.dart';
 
 final getIt = GetIt.instance;
+bool _timeListenersRegistered = false;
 
 /// Setup de dependências do módulo Farm (H1: Service Locator GetIt)
 /// 
@@ -44,6 +49,8 @@ Future<void> setupFarmDependencies() async {
   
   // FarmManager: Core do módulo, gerencia estado de todos os tiles
   getIt.registerSingleton<FarmManager>(FarmManager.instance);
+
+  _registerDayChangeListener();
   
   // ==================== UseCases (stateless, Factory) ====================
   
@@ -100,4 +107,23 @@ Future<void> setupFarmDependencies() async {
       getIt<HarvestCropUseCase>(),
     ),
   );
+}
+
+void _registerDayChangeListener() {
+  if (_timeListenersRegistered) return;
+  _timeListenersRegistered = true;
+
+  final time = new_time.TimeManager.instance;
+  time.addDayChangeListener(_onDayChanged);
+}
+
+void _onDayChanged(DayState previous, DayState current) {
+  // Keep world calendar in sync.
+  WorldStateManager.instance.advanceDay();
+
+  // Advance crops and soil hydration.
+  getIt<FarmManager>().advanceDay();
+
+  // Reset stamina/energy daily if available.
+  PlayerStateManager.instance.lastPlayerModel?.restoreStaminaFully();
 }

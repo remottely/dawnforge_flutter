@@ -9,6 +9,7 @@ import 'package:darkness_dungeon/gameplay/decorations/map_transition_sensor.dart
 import 'package:darkness_dungeon/gameplay/farm/handlers/farm_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/unified_game_overlay.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen_viewmodel.dart';
+import 'package:darkness_dungeon/gameplay/time/time_manager.dart' as new_time;
 import 'package:flutter/material.dart';
 
 class GameplayScreen extends StatefulWidget {
@@ -49,6 +50,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
         final mapInitialPlayerPosition = mapItem
             .properties[MapDef.kInitialPlayerPositionPropertyKey]
             ?.toString();
+        final mapTimeOverride = mapItem.properties['timeOverride'];
 
         Vector2? _tryParsePosition(String? raw) {
           if (raw == null || raw.isEmpty) return null;
@@ -73,6 +75,16 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
         final initialPlayerPosition = _tryParsePosition(
           mapInitialPlayerPosition,
         );
+
+        // Keep current time; start ticking if not already running. Ignore time
+        // overrides unless explicitly handled elsewhere.
+        if (!new_time.TimeManager.instance.isRunning) {
+          new_time.TimeManager.instance.start();
+        }
+
+        if (mapTimeOverride != null && mapTimeOverride.toString().isNotEmpty) {
+          // Placeholder: map time overrides are intentionally ignored for now.
+        }
 
         final playerPosition =
             (mapArguments?.playerPosition ?? initialPlayerPosition ?? Vector2(7, 7))

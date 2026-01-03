@@ -10,6 +10,7 @@ import 'package:darkness_dungeon/gameplay/farm/farm_service_locator.dart';
 import 'package:darkness_dungeon/gameplay/farm/managers/farm_manager.dart';
 import 'package:darkness_dungeon/gameplay/farm/services/farm_feedback_service.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
+import 'package:darkness_dungeon/gameplay/time/time_manager.dart' as new_time;
 
 /// Handles farm-specific debug inputs from both keyboard and joystick.
 /// Uses PlayerControllerListener to receive unified input events.
@@ -45,12 +46,7 @@ class FarmInputHandler extends GameComponent with PlayerControllerListener {
   }
 
   void _handleAdvanceDay() {
-    WorldStateManager.instance.advanceDay();
-    getIt<FarmManager>().advanceDay();
-
-    // Restore stamina fully when advancing to a new day
-    PlayerStateManager.instance.lastPlayerModel?.restoreStaminaFully();
-    developer.log('[FarmInput] Stamina restored to 100%');
+    new_time.TimeManager.instance.advanceToNextDay();
 
     final currentDay = WorldStateManager.instance.currentDay;
     developer.log('[FarmInput] Advanced to day $currentDay');

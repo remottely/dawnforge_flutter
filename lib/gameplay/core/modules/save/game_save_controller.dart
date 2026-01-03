@@ -12,6 +12,7 @@ import 'package:darkness_dungeon/gameplay/farm/usecases/save_farm_use_case.dart'
 import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/services/item_factory_service.dart';
+import 'package:darkness_dungeon/gameplay/time/time_manager.dart' as new_time;
 
 final class GameSaveController {
   GameSaveController._();
@@ -26,6 +27,8 @@ final class GameSaveController {
       final worldData = _collectWorldData();
       final inventoryData = _collectInventoryData();
       final farmData = _collectFarmData();
+
+      worldData['time'] = new_time.TimeManager.instance.toJson();
 
       worldData['farmData'] = farmData;
 
@@ -73,6 +76,7 @@ final class GameSaveController {
 
       _restorePlayerData(saveData.playerData);
       _restoreWorldData(saveData.worldData);
+      _restoreTimeData(saveData.worldData['time'] as Map<String, dynamic>?);
       _restoreInventoryData(saveData.inventoryData);
       _restoreFarmData(saveData.worldData['farmData'] as Map<String, dynamic>?);
 
@@ -192,6 +196,24 @@ final class GameSaveController {
     } catch (e, stackTrace) {
       developer.log(
         '[GameSaveController] ❌ Error restoring world data: $e',
+        error: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  void _restoreTimeData(Map<String, dynamic>? data) {
+    try {
+      if (data == null) {
+        developer.log('[GameSaveController] No time state data found');
+        return;
+      }
+
+      new_time.TimeManager.instance.fromJson(data);
+      developer.log('[GameSaveController] ✅ Time state restored');
+    } catch (e, stackTrace) {
+      developer.log(
+        '[GameSaveController] ❌ Error restoring time state: $e',
         error: e,
         stackTrace: stackTrace,
       );

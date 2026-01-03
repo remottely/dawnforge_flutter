@@ -1,0 +1,119 @@
+import 'dart:math';
+
+import 'season_type.dart';
+import 'weather_type.dart';
+import 'time_constants.dart';
+
+/// Captures calendar state (day, season, weather) for the current day.
+class DayState {
+  final int dayNumber; // 1-based within the season
+  final SeasonType season;
+  final WeatherType weather;
+  final int weekdayIndex; // 0 = Monday
+  final bool isFestival;
+  final String? festivalId;
+
+  static final Random _rng = Random();
+
+  const DayState({
+    required this.dayNumber,
+    required this.season,
+    required this.weather,
+    required this.weekdayIndex,
+    this.isFestival = false,
+    this.festivalId,
+  });
+
+  DayState copyWith({
+    int? dayNumber,
+    SeasonType? season,
+    WeatherType? weather,
+    int? weekdayIndex,
+    bool? isFestival,
+    String? festivalId,
+  }) {
+    return DayState(
+      dayNumber: dayNumber ?? this.dayNumber,
+      season: season ?? this.season,
+      weather: weather ?? this.weather,
+      weekdayIndex: weekdayIndex ?? this.weekdayIndex,
+      isFestival: isFestival ?? this.isFestival,
+      festivalId: festivalId ?? this.festivalId,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'dayNumber': dayNumber,
+        'season': season.toJson(),
+        'weather': weather.toJson(),
+        'weekdayIndex': weekdayIndex,
+        'isFestival': isFestival,
+        'festivalId': festivalId,
+      };
+
+  static DayState fromJson(Map<String, dynamic> json) {
+    return DayState(
+      dayNumber: json['dayNumber'] as int,
+      season: SeasonTypeJson.fromJson(json['season'] as String),
+      weather: WeatherTypeJson.fromJson(json['weather'] as String),
+      weekdayIndex: json['weekdayIndex'] as int,
+      isFestival: json['isFestival'] as bool? ?? false,
+      festivalId: json['festivalId'] as String?,
+    );
+  }
+
+  /// Creates the default day-one state.
+  factory DayState.dayOne() => DayState(
+        dayNumber: 1,
+        season: SeasonType.spring,
+        weather: WeatherType.sunny,
+        weekdayIndex: 0,
+      );
+
+  /// Compute the next day state, wrapping seasons every 28 days.
+  DayState nextDay({WeatherType Function(SeasonType, int)? weatherRng}) {
+    final nextDayNumber = dayNumber % TimeConstants.kDaysPerSeason + 1;
+    final nextSeason =
+        nextDayNumber == 1 ? season.next() : season;
+    final nextWeekday = (weekdayIndex + 1) % 7;
+    final nextWeather = weatherRng != null
+      ? weatherRng(nextSeason, nextDayNumber)
+      : DayState.defaultWeatherRng(nextSeason, nextDayNumber);
+
+    return copyWith(
+      dayNumber: nextDayNumber,
+      season: nextSeason,
+      weather: nextWeather,
+      weekdayIndex: nextWeekday,
+      isFestival: false,
+      festivalId: null,
+    );
+  }
+
+  /// Default simple weather generator (rule-based, minimal viable).
+  /// - Summer: higher storm and rain chance.
+  /// - Winter: snow common, storms rare.
+  /// - Spring/Fall: moderate rain, occasional storm.
+  static WeatherType defaultWeatherRng(SeasonType season, int dayNumber) {
+    final roll = _rng.nextDouble();
+    switch (season) {
+      case SeasonType.winter:
+        if (roll < 0.10) return WeatherType.storm;
+        if (roll < 0.65) return WeatherType.snow;
+        return WeatherType.sunny;
+      case SeasonType.summer:
+        if (roll < 0.20) return WeatherType.storm;
+        if (roll < 0.55) return WeatherType.rain;
+        return WeatherType.sunny;
+      case SeasonType.fall:
+        if (roll < 0.15) return WeatherType.storm;
+        if (roll < 0.50) return WeatherType.rain;
+        return WeatherType.sunny;
+      case SeasonType.spring:
+      default:
+        if (roll < 0.10) return WeatherType.storm;
+        if (roll < 0.45) return WeatherType.rain;
+        return WeatherType.sunny;
+    }
+  }
+}
