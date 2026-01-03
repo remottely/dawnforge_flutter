@@ -9,7 +9,6 @@ import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.d
 import 'package:darkness_dungeon/gameplay/inventory/state/inventory_state.dart';
 import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
 import 'package:darkness_dungeon/gameplay/inventory/usecases/add_item_use_case.dart';
-import 'package:darkness_dungeon/gameplay/inventory/usecases/unequip_item_use_case.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
 
@@ -91,13 +90,6 @@ class InventoryInputHandler extends GameComponent
 
     if (InputDef.isEquipMainHandReverseAction(actionId)) {
       _equipMainHandReverse();
-      return true;
-    }
-
-    if (InputDef.isUnequipMainHandAction(actionId)) {
-      if (AppEnvironment.kIsDebugMode) {
-        _unequipMainHand(); // TODO(kevin): remove it?
-      }
       return true;
     }
 
@@ -230,9 +222,13 @@ class InventoryInputHandler extends GameComponent
           ? ' (${item.equippedHandType})'
           : '';
       final itemName = item?.name ?? 'vazio';
-      developer.log('[InventoryInput] ✓ Slot selecionado: $itemName$handSuffix');
+      developer.log(
+        '[InventoryInput] ✓ Slot selecionado: $itemName$handSuffix',
+      );
     } else {
-      developer.log('[InventoryInput] ✗ Falha ao selecionar slot ${nextIndex + 1}');
+      developer.log(
+        '[InventoryInput] ✗ Falha ao selecionar slot ${nextIndex + 1}',
+      );
     }
   }
 
@@ -252,7 +248,7 @@ class InventoryInputHandler extends GameComponent
     final currentSlotIndex = equipmentManager.currentMainHandSlotIndex;
     final previousIndex =
         (currentSlotIndex - 1 + inventoryManager.maxSlots) %
-            inventoryManager.maxSlots;
+        inventoryManager.maxSlots;
 
     final success = equipmentManager.selectSlotIndex(previousIndex);
 
@@ -269,18 +265,6 @@ class InventoryInputHandler extends GameComponent
       developer.log(
         '[InventoryInput] ✗ Falha ao selecionar slot ${previousIndex + 1}',
       );
-    }
-  }
-
-  void _unequipMainHand() {
-    final item = getIt<UnequipItemUseCase>()();
-    if (item != null) {
-      developer.log(
-        '[InventoryInput] ✓ Desequipado do main hand: ${item.name}',
-      );
-      _notifyEquipmentChanged(null);
-    } else {
-      developer.log('[InventoryInput] main hand slot já está vazio');
     }
   }
 

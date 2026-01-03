@@ -22,8 +22,6 @@ final class KeyboardSetup {
 
   static const LogicalKeyboardKey kSlotNavPrevKey = LogicalKeyboardKey.keyQ;
 
-  static const LogicalKeyboardKey kUnequipMainHandKey = LogicalKeyboardKey.keyU;
-
   static const LogicalKeyboardKey kSlot1Key = LogicalKeyboardKey.digit1;
 
   static const LogicalKeyboardKey kSlot2Key = LogicalKeyboardKey.digit2;
@@ -72,7 +70,6 @@ final class KeyboardSetup {
 
     kSlotNavNextKey,
     kSlotNavPrevKey,
-    kUnequipMainHandKey,
 
     kSlot1Key,
     kSlot2Key,

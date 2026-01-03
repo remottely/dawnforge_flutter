@@ -6,7 +6,6 @@ import '../services/item_factory_service.dart';
 import '../usecases/add_item_use_case.dart';
 import '../usecases/remove_item_use_case.dart';
 import '../usecases/equip_item_use_case.dart';
-import '../usecases/unequip_item_use_case.dart';
 import '../usecases/save_inventory_use_case.dart';
 import '../usecases/load_inventory_use_case.dart';
 
@@ -35,10 +34,6 @@ Future<void> setupInventoryDependencies() async {
   getIt.registerFactory<EquipItemUseCase>(
     () =>
         EquipItemUseCase(getIt<EquipmentManager>(), getIt<InventoryManager>()),
-  );
-
-  getIt.registerFactory<UnequipItemUseCase>(
-    () => UnequipItemUseCase(getIt<EquipmentManager>()),
   );
 
   getIt.registerFactory<SaveInventoryUseCase>(

@@ -42,7 +42,6 @@ final class JoystickSetup {
   static const String kSlotNavPrevId = 'equipMainHandReverseId';
   static const String kToggleInventoryId = 'toggleInventoryId';
   static const String kToggleTutorialInputsId = 'toggleTutorialInputsId';
-  static const String kUnequipMainHandId = 'unequipMainHandId';
 
   /// Testing Identifiers
   static const String kAdvanceDayId = 'advanceDayId';

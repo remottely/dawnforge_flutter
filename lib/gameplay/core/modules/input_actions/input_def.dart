@@ -60,11 +60,6 @@ final class InputDef {
         actionId == KeyboardSetup.kSlotNavPrevKey;
   }
 
-  static bool isUnequipMainHandAction(dynamic actionId) {
-    return actionId == JoystickSetup.kUnequipMainHandId ||
-        actionId == KeyboardSetup.kUnequipMainHandKey;
-  }
-
   static bool isAddTestItemsAction(dynamic actionId) {
     return actionId == JoystickSetup.kAddTestItemsId ||
         actionId == KeyboardSetup.kAddTestItemsKey;

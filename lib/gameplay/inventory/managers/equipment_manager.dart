@@ -55,18 +55,6 @@ final class EquipmentManager {
     return true;
   }
 
-  Item? unequip() {
-    developer.log('[EquipmentManager] Clearing equipped item');
-
-    final item = _equippedSlot.equippedItem;
-    _equippedSlot = _equippedSlot.unequip();
-
-    // Notify Flutter overlay
-    EquipmentState.instance.updateEquippedItem(null);
-
-    return item;
-  }
-
   bool selectSlotIndex(int index) {
     final slot = InventoryManager.instance.getSlotByIndex(index);
     if (slot == null) {
