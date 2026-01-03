@@ -78,37 +78,45 @@ final class MapDef {
         'farm_tile': (p) => FarmTileView(position: p.position),
       };
 
-  /// F Maps
-  static const String kF1Id = 'f_1';
+  // /// F Maps
+  // static const String kF1Id = 'f_1';
 
-  /// SV Maps
-  static const String kSVFarmId = 'sv_farm';
-  static const String kSVTownId = 'sv_town';
-  static const String kSVForestId = 'sv_forest';
-  static const String kSVLakeId = 'sv_lake';
-  static const String kSVBeachId = 'sv_beach';
-  static const String kSVCaveId = 'sv_cave';
+  /// SB Maps
+  static const String kSBFarmId = 'sb_farm';
+  static const String kSBTownId = 'sb_town';
+  static const String kSBForestId = 'sb_forest';
+  static const String kSBLakeId = 'sb_lake';
+  static const String kSBBeachId = 'sb_beach';
+  static const String kSBCaveId = 'sb_cave';
 
-  /// Final maps
-  static const String kFarmId = 'farm';
-  static const String kLakeId = 'lake';
-  static const String kTownId = 'town';
-  static const String kBeachId = 'beach';
-  static const String kForestId = 'forest';
-  static const String kCaveId = 'cave';
+  // /// SV Maps
+  // static const String kSVFarmId = 'sv_farm';
+  // static const String kSVTownId = 'sv_town';
+  // static const String kSVForestId = 'sv_forest';
+  // static const String kSVLakeId = 'sv_lake';
+  // static const String kSVBeachId = 'sv_beach';
+  // static const String kSVCaveId = 'sv_cave';
 
-  /// Test maps
-  static const String kFarmTestId = 'farm_test';
-  static const String kConversationTestId = 'conversation_test';
-  static const String kCombatTestId = 'combat_test';
-  static const String kBossTestId = 'boss_test';
-  // static const String kMineTestId = 'mine_test';
-  // static const String kFishingTestId = 'fishing_test';
+  // /// Final maps
+  // static const String kFarmId = 'farm';
+  // static const String kLakeId = 'lake';
+  // static const String kTownId = 'town';
+  // static const String kBeachId = 'beach';
+  // static const String kForestId = 'forest';
+  // static const String kCaveId = 'cave';
 
-  static const String kLake1Id = 'lake_1';
-  static const String kForest1Id = 'forest_1';
-  static const String kDungeon1Id = 'dungeon_1';
-  static const String kTemple1Id = 'temple_1';
+  // /// Test maps
+  // static const String kFarmTestId = 'farm_test';
+  // static const String kConversationTestId = 'conversation_test';
+  // static const String kCombatTestId = 'combat_test';
+  // static const String kBossTestId = 'boss_test';
+  // // static const String kMineTestId = 'mine_test';
+  // // static const String kFishingTestId = 'fishing_test';
+
+  // static const String kLake1Id = 'lake_1';
+  // static const String kForest1Id = 'forest_1';
+  // static const String kDungeon1Id = 'dungeon_1';
+  // static const String kTemple1Id = 'temple_1';
 
   static const List<MapData> kAllMaps = [
     // /// TEST MAP
@@ -126,14 +134,14 @@ final class MapDef {
     //   initialPlayerPosition: '10,10',
     // ),
 
-    /// SV MAPS
+    /// SB MAPS
     MapData(
-      id: kSVFarmId,
-      asset: 'tiled/sv/maps/$kSVFarmId.json',
+      id: kSBFarmId,
+      asset: 'tiled/small_burg/maps/$kSBFarmId.json',
       sensorIds: [
-        'sensor_$kSVForestId',
-        'sensor_$kSVTownId',
-        'sensor_$kSVLakeId',
+        'sensor_$kSBForestId',
+        'sensor_$kSBTownId',
+        'sensor_$kSBLakeId',
       ],
       backgroundMusic: AudioDef.bGMusicFarm,
       lightingColor: _kNoneLightingColor,
@@ -141,19 +149,34 @@ final class MapDef {
       initialPlayerPosition: '52,20',
     ),
 
-    MapData(
-      id: kSVTownId,
-      asset: 'tiled/sv/maps/$kSVTownId.json',
-      sensorIds: [
-        'sensor_$kSVFarmId',
-        'sensor_$kSVForestId',
-        'sensor_$kSVBeachId',
-      ],
-      backgroundMusic: AudioDef.bGMusicTown,
-      lightingColor: _kCloudyLightingColor,
-      backgroundColor: _kLakeBackgroundColor,
-      initialPlayerPosition: '10,10',
-    ),
+    // /// SV MAPS
+    // MapData(
+    //   id: kSVFarmId,
+    //   asset: 'tiled/sv/maps/$kSVFarmId.json',
+    //   sensorIds: [
+    //     'sensor_$kSVForestId',
+    //     'sensor_$kSVTownId',
+    //     'sensor_$kSVLakeId',
+    //   ],
+    //   backgroundMusic: AudioDef.bGMusicFarm,
+    //   lightingColor: _kNoneLightingColor,
+    //   backgroundColor: _kLakeBackgroundColor,
+    //   initialPlayerPosition: '52,20',
+    // ),
+
+    // MapData(
+    //   id: kSVTownId,
+    //   asset: 'tiled/sv/maps/$kSVTownId.json',
+    //   sensorIds: [
+    //     'sensor_$kSVFarmId',
+    //     'sensor_$kSVForestId',
+    //     'sensor_$kSVBeachId',
+    //   ],
+    //   backgroundMusic: AudioDef.bGMusicTown,
+    //   lightingColor: _kCloudyLightingColor,
+    //   backgroundColor: _kLakeBackgroundColor,
+    //   initialPlayerPosition: '10,10',
+    // ),
 
     // /// NEW MAPS
     // const MapData(

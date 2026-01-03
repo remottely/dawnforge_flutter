@@ -243,8 +243,8 @@
             "scale": 0.7226,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 532.1062828674231,
-                "y": 575.6988652089676
+                "x": 676.030999169665,
+                "y": 536.9499031275948
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/sv/maps/sv_town.json": {
@@ -309,7 +309,7 @@
         }
     },
     "last.externalTilesetPath": "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled",
-    "last.imagePath": "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/new/Tilesets",
+    "last.imagePath": "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/SmallBurg_village_pack_v3.18.1_commercial/assets/tileset_v2",
     "map.height": 64,
     "map.lastUsedFormat": "json",
     "map.tileHeight": 16,
