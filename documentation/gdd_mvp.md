@@ -42,14 +42,14 @@ Entregar um protótipo jogável que capture o loop central de farming:
 
 ## 2. Pilares de Experiência
 🔥🔴 **Clareza**: feedback visual/sonoro imediato ao plantar, regar e colher.
-🔥🟡 **Ritmo curto**: ciclos de cultivo rápidos para validar o loop (4-7 dias por cultivo no MVP).
+🔥🟢 **Ritmo curto**: ciclos de cultivo rápidos para validar o loop (4-7 dias por cultivo no MVP).
 <!-- ⭐🔴 **Progresso tangível**: vender colheita gera dinheiro que habilita novos seeds/slots. -->
 🔥🟡 **Conforto de input**: HUD simples, botões essenciais sempre acessíveis e inputs que não quebram em resize/fullscreen.
 
 ## 3. Escopo do MVP (Must-Have)
 🔥🟡 Mapa único de fazenda simples (grids aráveis + poucas decorações).
 🔥🟡 Sistema de tempo: dia/noite, passagem acelerada, dormir para avançar o dia.
-🔥🟡 Plantio, rega, crescimento em etapas e colheita de pelo menos 2 cultivos (strawberry, tomato).
+🔥🟡 Plantio, rega, crescimento em etapas e colheita de pelo menos 3 cultivos (strawberry, tomato, radish).
 🔥🟡 Inventário básico com stack e slots limitados; seeds, ferramentas e colheita como itens.
 🔥🟡 Ferramentas: pá(cavar), enxada (arar), regador (regar), mão/foice (colher).
 <!-- ⭐🔴 Economia: vender itens colhidos para obter dinheiro; loja simples de seeds. -->
@@ -111,7 +111,7 @@ Itens mínimos:
 ### 6.6 Cultivos (Plantio, Crescimento, Colheita)
 <!-- 🔥🟢 Ao plantar, registra estágio 0 e dia de plantio. -->
 <!-- 🔥🟢 Cada dia avança estágio se regado no dia anterior. -->
-2 cultivos:
+3 cultivos:
     🔥🟡 com durações de 4 e 7 dias.
     <!-- ⭐🔴 Preços diferentes para teste de balanceamento. -->
 Colheita gera item:
@@ -150,7 +150,7 @@ Persistir:
 
 ## 7. Conteúdo Inicial do MVP
 🔥🟡 1 mapa de fazenda pequeno com "~10–20 tiles aráveis úteis."?
-2 cultivos: 
+2 tipos de cultivos: 
   🔥🟡 Médio (4 dias, lucro baixo).
   🔥🟡 Lento (7 dias, lucro médio).
   <!-- ⭐🔴 Lento + recorrencia (7 dias com recorrencias, lucro alto). -->

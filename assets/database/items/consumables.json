@@ -134,6 +134,19 @@
     "healAmount": 8,
     "cooldown": 2.0
   },
+  "radish_item": {
+    "id": "radish_item",
+    "name": "Radish",
+    "description": "A crisp radish. Can be eaten or sold.",
+    "type": "consumable",
+    "rarity": "common",
+    "baseValue": 12,
+    "iconPath": "assets/images/items/radish.png",
+    "maxStackSize": 99,
+    "consumableType": "food",
+    "healAmount": 8,
+    "cooldown": 2.0
+  },
   "tomato_item": {
     "id": "tomato_item",
     "name": "Tomato",
