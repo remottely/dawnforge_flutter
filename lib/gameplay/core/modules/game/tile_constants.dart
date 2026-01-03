@@ -3,7 +3,7 @@ import 'package:bonfire/bonfire.dart';
 final class TileConstants {
   TileConstants._();
 
-  static const int kMaxVisibleTiles = 32;
+  static const int kMaxVisibleTiles = 24;
   static const int kBossConversationVisibleTiles = 32;
 
   static const double kTileDimensionSmall = 8.0;

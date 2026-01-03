@@ -240,11 +240,11 @@
                 9,
                 18
             ],
-            "scale": 6.0982,
+            "scale": 0.7226,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 1006.1165589846185,
-                "y": 262.53648617624873
+                "x": 532.1062828674231,
+                "y": 575.6988652089676
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/sv/maps/sv_town.json": {
