@@ -24,11 +24,7 @@ abstract class DDMobilePlayerView<
   }) : _baseSpeed = config.baseSpeed,
        super(config: config);
 
-  bool _isInRunningState = false;
-
   int _activeActionLockCount = 0;
-
-  bool _pendingAnimationChange = false;
 
   @protected
   bool get isActionLocked => _activeActionLockCount > 0;
@@ -85,39 +81,15 @@ abstract class DDMobilePlayerView<
     super.onJoystickChangeDirectional(event);
   }
 
-  void _onChangeRunState(bool shouldRun) {
-    if (_isInRunningState == shouldRun) return;
-
-    _isInRunningState = shouldRun;
-
-    if (shouldRun) {
+  void _onChangeRunState(bool isRunning) {
+    if (isRunning) {
       speed = _baseSpeed * controller.model.config.runSpeedMultiplier;
 
-      if (isActionLocked) {
-        _pendingAnimationChange = true;
-      } else {
-        _transitionToRunAnimation();
-      }
+      _transitionToRunAnimation();
     } else {
       speed = _baseSpeed;
-      if (isActionLocked) {
-        _pendingAnimationChange = true;
-      } else {
-        _transitionToWalkAnimation();
-      }
-    }
-  }
 
-  @override
-  void update(double dt) {
-    super.update(dt);
-    if (_pendingAnimationChange && !isActionLocked) {
-      _pendingAnimationChange = false;
-      if (_isInRunningState) {
-        _transitionToRunAnimation();
-      } else {
-        _transitionToWalkAnimation();
-      }
+      _transitionToWalkAnimation();
     }
   }
 

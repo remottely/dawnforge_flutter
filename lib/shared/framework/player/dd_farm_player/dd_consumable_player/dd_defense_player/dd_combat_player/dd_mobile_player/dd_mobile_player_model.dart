@@ -14,7 +14,12 @@ class DDMobilePlayerModel extends DDBasePlayerModel {
     : super.internal(config: config);
 
   bool get isRunning => _isInRunningState;
-  set isRunning(bool value) => _isInRunningState = value;
+
+  bool setRunning(bool value) {
+    if (_isInRunningState == value) return false;
+    _isInRunningState = value;
+    return true;
+  }
 
   @override
   Map<String, dynamic> toJson() {

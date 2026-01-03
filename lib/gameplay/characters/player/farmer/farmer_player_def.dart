@@ -231,6 +231,10 @@ final class FarmerPlayerDef {
         runRight: _loadAnimationRunRight,
         runUp: _loadAnimationRunUp,
         runDown: _loadAnimationRunDown,
+        // runLeft: _loadAnimationHarvestLeft,
+        // runRight: _loadAnimationHarvestRight,
+        // runUp: _loadAnimationHarvestUp,
+        // runDown: _loadAnimationHarvestDown,
       );
 
   static final Future<SpriteAnimation> _loadAnimationHarvestRight =

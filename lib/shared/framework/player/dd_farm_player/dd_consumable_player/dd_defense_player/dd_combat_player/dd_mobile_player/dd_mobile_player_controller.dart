@@ -33,12 +33,18 @@ abstract class DDMobilePlayerController<M extends DDMobilePlayerModel>
   }
 
   void _handleRunInput(ActionEvent eventType) {
+    bool desiredState;
     if (eventType == ActionEvent.DOWN) {
-      model.isRunning = true;
-      onChangeRunState.call(true);
+      desiredState = true;
     } else if (eventType == ActionEvent.UP) {
-      model.isRunning = false;
-      onChangeRunState.call(false);
+      desiredState = false;
+    } else {
+      return;
+    }
+
+    final changed = model.setRunning(desiredState);
+    if (changed) {
+      onChangeRunState.call(model.isRunning);
     }
   }
 }
