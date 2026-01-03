@@ -19196,6 +19196,12 @@
                  "height":16,
                  "id":3346,
                  "name":"door_key_decoration",
+                 "properties":[
+                        {
+                         "name":"initialPlayerPosition",
+                         "type":"string",
+                         "value":"7,7"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,

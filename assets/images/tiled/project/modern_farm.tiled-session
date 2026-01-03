@@ -90,13 +90,14 @@
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/f/maps/f_1.json": {
             "expandedObjectLayers": [
                 8,
+                10,
                 6
             ],
             "scale": 1.4318,
-            "selectedLayer": 5,
+            "selectedLayer": 6,
             "viewCenter": {
-                "x": 441.4024305070541,
-                "y": 604.4838664617964
+                "x": 452.926386366811,
+                "y": 415.56083251850816
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/f_1.json": {
@@ -181,8 +182,8 @@
             "scale": 1.1948,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 384.164713759625,
-                "y": 378.7244727150987
+                "x": 400.4854368932039,
+                "y": 399.2299966521593
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/maps/farm.tmj": {
@@ -235,11 +236,14 @@
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/sv/maps/sv_farm.json": {
-            "scale": 2.21,
-            "selectedLayer": 0,
+            "expandedObjectLayers": [
+                9
+            ],
+            "scale": 0.8494,
+            "selectedLayer": 13,
             "viewCenter": {
-                "x": 639.8190045248869,
-                "y": 520.1357466063348
+                "x": 900.047092064987,
+                "y": 452.08382387567696
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/sv/maps/sv_town.json": {
@@ -249,8 +253,8 @@
             "scale": 1.77,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 800,
-                "y": 543.7853107344633
+                "x": 800.2824858757062,
+                "y": 544.0677966101695
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/temple_1.json": {

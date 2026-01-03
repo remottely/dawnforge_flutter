@@ -25,6 +25,8 @@ final class MapDef {
   static const String kNextMapPropertyKey = 'nextMap';
   static const String kPlayerPositionPropertyKey = 'playerPosition';
   static const String kPlayerDirectionPropertyKey = 'playerDirection';
+  static const String kInitialPlayerPositionPropertyKey =
+      'initialPlayerPosition';
 
   static const String kBackgroundMusicPropertyKey = 'backgroundMusic';
   static const String kLightingColorPropertyKey = 'lightingColor';
@@ -121,6 +123,7 @@ final class MapDef {
       backgroundMusic: AudioDef.backgroundMusic1,
       lightingColor: _kDarknessLightingColor,
       backgroundColor: _kLakeBackgroundColor,
+      initialPlayerPosition: '10,10',
     ),
 
     /// SV MAPS
@@ -135,6 +138,7 @@ final class MapDef {
       backgroundMusic: AudioDef.backgroundMusic1,
       lightingColor: _kNoneLightingColor,
       backgroundColor: _kLakeBackgroundColor,
+      initialPlayerPosition: '52,20',
     ),
 
     MapData(
@@ -148,6 +152,7 @@ final class MapDef {
       backgroundMusic: AudioDef.backgroundMusic1,
       lightingColor: _kNoneLightingColor,
       backgroundColor: _kLakeBackgroundColor,
+      initialPlayerPosition: '10,10',
     ),
 
     /// NEW MAPS
@@ -165,6 +170,7 @@ final class MapDef {
       backgroundMusic: AudioDef.backgroundMusic1,
       lightingColor: _kNoneLightingColor,
       backgroundColor: _kLakeBackgroundColor,
+      initialPlayerPosition: '10,10',
     ),
 
     const MapData(
@@ -174,6 +180,7 @@ final class MapDef {
       backgroundMusic: AudioDef.backgroundMusic1,
       lightingColor: _kNoneLightingColor,
       backgroundColor: _kLakeBackgroundColor,
+      initialPlayerPosition: '10,10',
     ),
 
     const MapData(
@@ -188,6 +195,7 @@ final class MapDef {
       backgroundMusic: AudioDef.backgroundMusic1,
       lightingColor: _kNoneLightingColor,
       backgroundColor: _kLakeBackgroundColor,
+      initialPlayerPosition: '10,10',
     ),
 
     const MapData(
@@ -197,6 +205,7 @@ final class MapDef {
       backgroundMusic: AudioDef.backgroundMusic1,
       lightingColor: _kNoneLightingColor,
       backgroundColor: _kLakeBackgroundColor,
+      initialPlayerPosition: '10,10',
     ),
 
     const MapData(
@@ -206,6 +215,7 @@ final class MapDef {
       backgroundMusic: AudioDef.backgroundMusic1,
       lightingColor: _kNoneLightingColor,
       backgroundColor: _kLakeBackgroundColor,
+      initialPlayerPosition: '10,10',
     ),
 
     const MapData(
@@ -215,6 +225,7 @@ final class MapDef {
       backgroundMusic: AudioDef.backgroundMusic1,
       lightingColor: _kNoneLightingColor,
       backgroundColor: _kLakeBackgroundColor,
+      initialPlayerPosition: '10,10',
     ),
 
     /// OLD MAPS FOR TESTING
@@ -229,6 +240,7 @@ final class MapDef {
       backgroundMusic: AudioDef.backgroundMusic1,
       lightingColor: _kNoneLightingColor,
       backgroundColor: _kLakeBackgroundColor,
+      initialPlayerPosition: '10,10',
     ),
 
     const MapData(
@@ -238,6 +250,7 @@ final class MapDef {
       backgroundMusic: AudioDef.backgroundMusic1,
       lightingColor: _kCloudyLightingColor,
       backgroundColor: _kLakeBackgroundColor,
+      initialPlayerPosition: '10,10',
     ),
 
     const MapData(
@@ -247,6 +260,7 @@ final class MapDef {
       backgroundMusic: AudioDef.backgroundMusic1,
       lightingColor: _kDarknessLightingColor,
       backgroundColor: _kLakeBackgroundColor,
+      initialPlayerPosition: '10,10',
     ),
 
     const MapData(
@@ -256,6 +270,7 @@ final class MapDef {
       backgroundMusic: AudioDef.backgroundMusic1,
       lightingColor: _kDarknessLightingColor,
       backgroundColor: _kLakeBackgroundColor,
+      initialPlayerPosition: '10,10',
     ),
 
     const MapData(
@@ -269,6 +284,7 @@ final class MapDef {
       backgroundMusic: AudioDef.backgroundMusic1,
       lightingColor: _kDarknessLightingColor,
       backgroundColor: _kLakeBackgroundColor,
+      initialPlayerPosition: '10,10',
     ),
 
     const MapData(
@@ -278,6 +294,7 @@ final class MapDef {
       backgroundMusic: AudioDef.backgroundMusic1,
       lightingColor: _kCloudyLightingColor,
       backgroundColor: _kForestBackgroundColor,
+      initialPlayerPosition: '10,10',
     ),
 
     const MapData(
@@ -287,6 +304,7 @@ final class MapDef {
       backgroundMusic: AudioDef.backgroundMusic1,
       lightingColor: _kDarknessLightingColor,
       backgroundColor: _kDungeonBackgroundColor,
+      initialPlayerPosition: '10,10',
     ),
 
     const MapData(
@@ -296,6 +314,7 @@ final class MapDef {
       backgroundMusic: AudioDef.backgroundMusic1, // TODO(Kevin): Change music
       lightingColor: _kNoneLightingColor, // TODO(Kevin): Change color
       backgroundColor: _kTempleBackgroundColor, // TODO(Kevin): Change color
+      initialPlayerPosition: '10,10',
     ),
   ];
 }

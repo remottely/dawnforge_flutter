@@ -18,9 +18,9 @@
 
 - [PRIORITY] A primeira vez que 
 
-- [PRIORITY]
+- [PRIORITY] criar sprite para harvestBasket
 
-- [PRIORITY]
+- [PRIORITY] criar sprite e animacao para ironSword
 
 - [PRIORITY]
 

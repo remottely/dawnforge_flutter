@@ -33,9 +33,9 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
     return MapNavigator(
       maps: MapManager.allMaps,
       // initialMap: MapConfig.kFarmId,
-      // initialMap: MapDef.kSVFarmId,
+      initialMap: MapDef.kSVFarmId,
       // initialMap: MapDef.kSVTownId,
-      initialMap: MapDef.kF1Id,
+      // initialMap: MapDef.kF1Id,
       builder: (context, arguments, mapItem) {
         final mapLightingColor = ColorHelper.fromHex(
           mapItem.properties[MapDef.kLightingColorPropertyKey]?.toString(),
@@ -46,6 +46,19 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
         final mapBackgroundMusic = mapItem
             .properties[MapDef.kBackgroundMusicPropertyKey]
             ?.toString();
+        final mapInitialPlayerPosition = mapItem
+            .properties[MapDef.kInitialPlayerPositionPropertyKey]
+            ?.toString();
+
+        Vector2? _tryParsePosition(String? raw) {
+          if (raw == null || raw.isEmpty) return null;
+          final parts = raw.split(',');
+          if (parts.length != 2) return null;
+          final x = double.tryParse(parts[0].trim());
+          final y = double.tryParse(parts[1].trim());
+          if (x == null || y == null) return null;
+          return Vector2(x, y);
+        }
 
         if (mapBackgroundMusic != null &&
             mapBackgroundMusic.isNotEmpty &&
@@ -57,13 +70,13 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
         }
 
         final mapArguments = arguments as MapArguments?;
+        final initialPlayerPosition = _tryParsePosition(
+          mapInitialPlayerPosition,
+        );
 
         final playerPosition =
-            (mapArguments?.playerPosition ?? 
-            Vector2(7, 7))
-            // Vector2(24, 24))  // TODO(Kevin): NOW - put it back
-            *
-            TileConstants.kTileDimensionStandard;
+            (mapArguments?.playerPosition ?? initialPlayerPosition ?? Vector2(7, 7))
+                * TileConstants.kTileDimensionStandard;
 
         // final player = buildSunnyPlayer(playerPosition);
         // final player = buildCutePlayer(playerPosition);
