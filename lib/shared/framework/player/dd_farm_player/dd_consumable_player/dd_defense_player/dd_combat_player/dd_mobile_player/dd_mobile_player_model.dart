@@ -7,15 +7,11 @@ class DDMobilePlayerModel extends DDBasePlayerModel {
   @override
   final DDMobilePlayerModelConfig config;
 
-  bool _isInRunningState;
+  bool _isInRunningState = false;
 
   @protected
-  DDMobilePlayerModel.internal({
-    required this.config,
-    required super.saveData,
-    required bool isInRunningState,
-  }) : _isInRunningState = isInRunningState,
-       super.internal(config: config);
+  DDMobilePlayerModel.internal({required this.config, required super.saveData})
+    : super.internal(config: config);
 
   bool get isRunning => _isInRunningState;
   set isRunning(bool value) => _isInRunningState = value;
@@ -32,10 +28,6 @@ class DDMobilePlayerModel extends DDBasePlayerModel {
   ) {
     final baseData = DDBasePlayerSaveData.fromJson(json, config);
 
-    return DDMobilePlayerModel.internal(
-      config: config,
-      saveData: baseData,
-      isInRunningState: false,
-    );
+    return DDMobilePlayerModel.internal(config: config, saveData: baseData);
   }
 }

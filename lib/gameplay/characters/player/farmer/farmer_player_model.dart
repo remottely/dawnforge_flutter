@@ -7,7 +7,6 @@ class FarmerPlayerModel extends DDFarmPlayerModel {
   FarmerPlayerModel.internal({
     required DDFarmPlayerModelConfig config,
     required super.saveData,
-    required super.isInRunningState,
   }) : super.internal(config: config);
 
   @override
@@ -22,10 +21,6 @@ class FarmerPlayerModel extends DDFarmPlayerModel {
 
     final baseData = DDBasePlayerSaveData.fromJson(json, config);
 
-    return FarmerPlayerModel.internal(
-      config: config,
-      saveData: baseData,
-      isInRunningState: false,
-    );
+    return FarmerPlayerModel.internal(config: config, saveData: baseData);
   }
 }

@@ -7,7 +7,6 @@ class CutePlayerModel extends DDFarmPlayerModel {
   CutePlayerModel.internal({
     required DDFarmPlayerModelConfig config,
     required super.saveData,
-    required super.isInRunningState,
   }) : super.internal(config: config);
 
   @override
@@ -22,10 +21,6 @@ class CutePlayerModel extends DDFarmPlayerModel {
 
     final baseData = DDBasePlayerSaveData.fromJson(json, config);
 
-    return CutePlayerModel.internal(
-      config: config,
-      saveData: baseData,
-      isInRunningState: false,
-    );
+    return CutePlayerModel.internal(config: config, saveData: baseData);
   }
 }

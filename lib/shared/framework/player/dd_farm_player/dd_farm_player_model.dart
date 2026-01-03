@@ -9,11 +9,8 @@ class DDFarmPlayerModel extends DDCombatPlayerModel {
   final DDFarmPlayerModelConfig config;
 
   @protected
-  DDFarmPlayerModel.internal({
-    required this.config,
-    required super.saveData,
-    required super.isInRunningState,
-  }) : super.internal(config: config);
+  DDFarmPlayerModel.internal({required this.config, required super.saveData})
+    : super.internal(config: config);
 
   bool get canExecuteWateringCan =>
       (stamina >= config.wateringCanStaminaCost) &&
@@ -42,10 +39,6 @@ class DDFarmPlayerModel extends DDCombatPlayerModel {
   ) {
     final baseData = DDBasePlayerSaveData.fromJson(json, config);
 
-    return DDFarmPlayerModel.internal(
-      config: config,
-      saveData: baseData,
-      isInRunningState: false,
-    );
+    return DDFarmPlayerModel.internal(config: config, saveData: baseData);
   }
 }

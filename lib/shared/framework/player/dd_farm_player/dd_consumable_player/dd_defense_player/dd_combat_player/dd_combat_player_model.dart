@@ -9,11 +9,8 @@ class DDCombatPlayerModel extends DDMobilePlayerModel {
   final DDCombatPlayerModelConfig config;
 
   @protected
-  DDCombatPlayerModel.internal({
-    required this.config,
-    required super.saveData,
-    required super.isInRunningState,
-  }) : super.internal(config: config);
+  DDCombatPlayerModel.internal({required this.config, required super.saveData})
+    : super.internal(config: config);
 
   bool get canExecutePrimaryAttack =>
       (stamina >= config.primaryAttackStaminaCost) &&
@@ -35,10 +32,6 @@ class DDCombatPlayerModel extends DDMobilePlayerModel {
   ) {
     final baseData = DDBasePlayerSaveData.fromJson(json, config);
 
-    return DDCombatPlayerModel.internal(
-      config: config,
-      saveData: baseData,
-      isInRunningState: false,
-    );
+    return DDCombatPlayerModel.internal(config: config, saveData: baseData);
   }
 }

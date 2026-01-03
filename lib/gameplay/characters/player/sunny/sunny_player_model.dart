@@ -7,7 +7,6 @@ class SunnyPlayerModel extends DDFarmPlayerModel {
   SunnyPlayerModel.internal({
     required DDFarmPlayerModelConfig config,
     required super.saveData,
-    required super.isInRunningState,
   }) : super.internal(config: config);
 
   @override
@@ -22,10 +21,6 @@ class SunnyPlayerModel extends DDFarmPlayerModel {
 
     final baseData = DDBasePlayerSaveData.fromJson(json, config);
 
-    return SunnyPlayerModel.internal(
-      config: config,
-      saveData: baseData,
-      isInRunningState: false,
-    );
+    return SunnyPlayerModel.internal(config: config, saveData: baseData);
   }
 }
