@@ -22,7 +22,7 @@
 
 - [PRIORITY] criar sprite e animacao para ironSword
 
-- [PRIORITY]
+- [PRIORITY] quando o dia virar, o player deve spawnar na posicao x,y da cama(MVP local fixo)
 
 - [PRIORITY]
 

@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/save/game_save_controller.dart';
 import 'package:darkness_dungeon/gameplay/time/day_state.dart';
 import 'package:darkness_dungeon/gameplay/time/time_manager.dart' as new_time;
 
@@ -126,4 +127,8 @@ void _onDayChanged(DayState previous, DayState current) {
 
   // Reset stamina/energy daily if available.
   PlayerStateManager.instance.lastPlayerModel?.restoreStaminaFully();
+
+   // Persist state after any day change (auto cutoff at 2 AM or manual advance).
+  // Fire and forget to avoid blocking the tick loop.
+  GameSaveController.instance.saveGame();
 }

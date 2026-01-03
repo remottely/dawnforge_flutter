@@ -43,17 +43,15 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
           child: Row(
             children: [
               Expanded(
-                child: Expanded(
-                  flex: flexA,
-                  child: Container(
-                    color: AppEnvironment.kIsDebugMode
-                        ? Colors.purple.withOpacity(0.05)
-                        : null,
-                    alignment: Alignment.centerLeft,
-                    child: !isDesktop
-                        ? const InventoryOverlay()
-                        : const SizedBox.shrink(),
-                  ),
+                flex: flexA,
+                child: Container(
+                  color: AppEnvironment.kIsDebugMode
+                      ? Colors.purple.withOpacity(0.05)
+                      : null,
+                  alignment: Alignment.centerLeft,
+                  child: !isDesktop
+                      ? const InventoryOverlay()
+                      : const SizedBox.shrink(),
                 ),
               ),
               Expanded(

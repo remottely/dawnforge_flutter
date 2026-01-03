@@ -16,7 +16,8 @@ final class TimeConstants {
   static const int kSleepHour = 2;
 
   /// Default start hour (6 AM).
-  static const int kStartHour = 6;
+  // static const int kStartHour = 6; // TODO(Kevin): NOW - put it back
+  static const int kStartHour = 1; // TODO(Kevin): NOW - remove it
 
   /// Days per season (Stardew Valley rules).
   static const int kDaysPerSeason = 28;

@@ -141,9 +141,10 @@ class TimeManager {
   void advanceToNextDay() {
     final previousDay = dayStateNotifier.value;
     final nextDay = _nextDayState();
+    // Reset clock before notifying listeners so saves/load capture 06:00.
+    timeNotifier.value = GameTime(hour: TimeConstants.kStartHour, minute: 0);
     dayStateNotifier.value = nextDay;
     _notifyDayChange(previousDay, nextDay);
-    timeNotifier.value = GameTime(hour: TimeConstants.kStartHour, minute: 0);
   }
 
   DayState _nextDayState() {
