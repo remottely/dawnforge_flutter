@@ -85,6 +85,10 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
       anchor: Anchor.topLeft,
       position: Vector2.zero(),
       priority: 0,
+      paint: Paint()
+        ..filterQuality = FilterQuality.none
+        ..isAntiAlias = false
+        // ..isDither = false,
     );
     add(_soilSprite!);
 
@@ -127,6 +131,11 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
         position: cropPosition,
         size: cropSize,
       );
+      _cropDecoration!.paint = Paint()
+        ..filterQuality = FilterQuality.none
+        ..isAntiAlias = false
+        // ..isDither = false
+        ;
 
       if (crop.stage == CropStageType.dead) {
         _cropDecoration!.opacity = 0.5;
@@ -145,6 +154,10 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
         anchor: Anchor.bottomLeft,
         position: Vector2(0, size.y),
         priority: 1,
+        paint: Paint()
+          ..filterQuality = FilterQuality.none
+          ..isAntiAlias = false
+          // ..isDither = false,
       );
 
       if (crop.stage == CropStageType.dead) {

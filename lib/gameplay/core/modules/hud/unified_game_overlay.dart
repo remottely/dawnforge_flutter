@@ -86,9 +86,6 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  TimeHudPanel(
-                                    timeManager: new_time.TimeManager.instance,
-                                  ),
                                   const SizedBox(width: 8),
                                   DebugOverlay(
                                     player: player,
@@ -117,6 +114,9 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                                       alignment: Alignment.topRight,
                                       child: EquipmentOverlay(),
                                     ),
+                                  TimeHudPanel(
+                                    timeManager: new_time.TimeManager.instance,
+                                  ),
                                   const Align(
                                     alignment: Alignment.topRight,
                                     child: FullscreenButtonOverlay(),
