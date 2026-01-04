@@ -3,7 +3,7 @@ import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_quality.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/item_icon_data.dart';
 
-final class MaterialItemDatabaseDef {
+final class ModernFarmMaterialItemDatabaseDef {
   static const Map<HandItemId, MaterialItem> materialItemList = {
     // HandItemId.wood: MaterialItem(
     //   id: HandItemId.wood,

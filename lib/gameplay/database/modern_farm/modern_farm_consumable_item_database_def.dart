@@ -3,8 +3,8 @@ import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_quality.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/item_icon_data.dart';
 
-final class ConsumableItemDatabaseDef {
-  ConsumableItemDatabaseDef._();
+final class ModernFarmConsumableItemDatabaseDef {
+  ModernFarmConsumableItemDatabaseDef._();
   static const Map<HandItemId, ConsumableItem> consumableItemList = {
     // HandItemId.health_potion: ConsumableItem(
     //   id: HandItemId.health_potion,

@@ -1,6 +1,6 @@
 import 'dart:developer' as developer;
 
-import 'package:darkness_dungeon/gameplay/database/soil_state_sprite_database_def.dart';
+import 'package:darkness_dungeon/gameplay/database/modern_farm/modern_farm_soil_state_sprite_database_def.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/item_icon_data.dart';
 
 class SoilSpriteConfig {
@@ -15,7 +15,7 @@ class SoilSpriteConfig {
 
     final config = SoilSpriteConfig(
       soilStates: Map<String, ItemIconData>.from(
-        SoilStateSpriteDatabaseDef.soilStateSpriteList,
+        ModernFarmSoilStateSpriteDatabaseDef.soilStateSpriteList,
       ),
     );
 

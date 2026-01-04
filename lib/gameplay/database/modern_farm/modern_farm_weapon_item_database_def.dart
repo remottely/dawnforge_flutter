@@ -3,8 +3,8 @@ import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_quality.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/item_icon_data.dart';
 
-final class WeaponItemDatabaseDef {
-  WeaponItemDatabaseDef._();
+final class ModernFarmWeaponItemDatabaseDef {
+  ModernFarmWeaponItemDatabaseDef._();
 
   static const Map<HandItemId, WeaponItem> weaponsItemList = {
     HandItemId.staff: WeaponItem(

@@ -1,7 +1,7 @@
 import 'package:darkness_dungeon/gameplay/inventory/entities/item_icon_data.dart';
 
-final class SoilStateSpriteDatabaseDef {
-  SoilStateSpriteDatabaseDef._();
+final class ModernFarmSoilStateSpriteDatabaseDef {
+  ModernFarmSoilStateSpriteDatabaseDef._();
 
   static const Map<String, ItemIconData> soilStateSpriteList = {
     'untilled': ItemIconData(

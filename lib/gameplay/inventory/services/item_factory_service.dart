@@ -8,11 +8,11 @@ import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
 import '../entities/hand_item.dart';
 import '../items/seed_bag_item.dart';
 import '../entities/enums/hand_item_id.dart';
-import '../../database/weapon_item_database_def.dart';
-import '../../database/tool_item_database_def.dart';
-import '../../database/consumable_item_database_def.dart';
-import '../../database/material_item_database_def.dart';
-import '../../database/seed_bag_item_database_def.dart';
+import '../../database/modern_farm/modern_farm_weapon_item_database_def.dart';
+import '../../database/modern_farm/modern_farm_tool_item_database_def.dart';
+import '../../database/modern_farm/modern_farm_consumable_item_database_def.dart';
+import '../../database/modern_farm/modern_farm_material_item_database_def.dart';
+import '../../database/modern_farm/modern_farm_seed_bag_item_database_def.dart';
 
 /// Service for creating items from JSON database (L2: Factory with JSON database, I2: Service = External)
 class ItemFactoryService {
@@ -32,23 +32,23 @@ class ItemFactoryService {
     try {
       _weapons
         ..clear()
-        ..addAll(WeaponItemDatabaseDef.weapons);
+        ..addAll(ModernFarmWeaponItemDatabaseDef.weapons);
 
       _tools
         ..clear()
-        ..addAll(ToolItemDatabaseDef.toolItemList);
+        ..addAll(ModernFarmToolItemDatabaseDef.toolItemList);
 
       _consumables
         ..clear()
-        ..addAll(ConsumableItemDatabaseDef.consumableItemList);
+        ..addAll(ModernFarmConsumableItemDatabaseDef.consumableItemList);
 
       _materials
         ..clear()
-        ..addAll(MaterialItemDatabaseDef.materialItemList);
+        ..addAll(ModernFarmMaterialItemDatabaseDef.materialItemList);
 
       _seeds
         ..clear()
-        ..addAll(SeedBagItemDatabaseDef.seedBagList);
+        ..addAll(ModernFarmSeedBagItemDatabaseDef.seedBagList);
 
       final totalItems = _weapons.length +
           _tools.length +

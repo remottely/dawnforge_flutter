@@ -3,7 +3,7 @@ import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_quality.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/item_icon_data.dart';
 
-final class SeedBagItemDatabaseDef {
+final class ModernFarmSeedBagItemDatabaseDef {
   static const Map<HandItemId, SeedBagItem> seedBagList = {
     HandItemId.strawberry_seed_bag: SeedBagItem(
       id: HandItemId.strawberry_seed_bag,
