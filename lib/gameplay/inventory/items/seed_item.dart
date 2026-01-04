@@ -4,24 +4,33 @@ import '../models/item_icon_data.dart';
 import '../entities/hand/hand_item_rarity.dart';
 import '../entities/hand/hand_item_type.dart';
 
-final class ConsumableItem extends HandItem {
-  final int healthRestore;
-  final int staminaRestore;
+final class SeedBagItem extends HandItem {
+  final String cropId;
+  final int growthTime;
+  final int yield;
+  final String season;
 
-  const ConsumableItem({
+  const SeedBagItem({
     required super.id,
     required super.name,
     required super.description,
     required super.baseValue,
     required super.iconPath,
     super.rarity = HandItemRarity.common,
-    super.category = HandItemCategory.consumable,
+    super.category = HandItemCategory.cropSeed,
     super.isStackable = true,
     super.maxStackSize = 99,
     super.iconData,
-    this.healthRestore = 0,
-    this.staminaRestore = 0,
+    required this.cropId,
+    required this.growthTime,
+    this.yield = 1,
+    this.season = 'any',
   });
+
+  bool canPlantInSeason(String currentSeason) {
+    return season == 'any' ||
+        season.toLowerCase() == currentSeason.toLowerCase();
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -34,15 +43,15 @@ final class ConsumableItem extends HandItem {
       'baseValue': baseValue,
       'iconPath': iconPath,
       'maxStackSize': maxStackSize,
-      'healthRestore': healthRestore,
-      'staminaRestore': staminaRestore,
+      'cropId': cropId,
+      'growthTime': growthTime,
+      'yield': yield,
+      'season': season,
     };
   }
 
-  factory ConsumableItem.fromJson(Map<String, dynamic> json) {
-    final healAmount = json['healAmount'] as int?;
-
-    return ConsumableItem(
+  factory SeedBagItem.fromJson(Map<String, dynamic> json) {
+    return SeedBagItem(
       id: HandItemId.fromJson(json['id'] as String),
       name: json['name'] as String,
       description: json['description'] as String,
@@ -50,14 +59,15 @@ final class ConsumableItem extends HandItem {
       iconPath: json['iconPath'] as String,
       rarity: HandItemRarity.fromJson(json['rarity'] as String),
       maxStackSize: json['maxStackSize'] as int? ?? 99,
-      // Fallback: some data uses healAmount instead of healthRestore/staminaRestore
-      healthRestore: json['healthRestore'] as int? ?? healAmount ?? 0,
-      staminaRestore: json['staminaRestore'] as int? ?? healAmount ?? 0,
+      cropId: json['cropId'] as String,
+      growthTime: json['growthTime'] as int,
+      yield: json['yield'] as int? ?? 1,
+      season: json['season'] as String? ?? 'any',
     );
   }
 
   @override
-  ConsumableItem copyWith({
+  SeedBagItem copyWith({
     HandItemId? id,
     String? name,
     String? description,
@@ -65,12 +75,13 @@ final class ConsumableItem extends HandItem {
     String? iconPath,
     HandItemRarity? rarity,
     int? maxStackSize,
-    int? healthRestore,
-    int? staminaRestore,
-    int? duration,
+    String? cropId,
+    int? growthTime,
+    int? yield,
+    String? season,
     ItemIconData? iconData,
   }) {
-    return ConsumableItem(
+    return SeedBagItem(
       id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
@@ -78,13 +89,15 @@ final class ConsumableItem extends HandItem {
       iconPath: iconPath ?? this.iconPath,
       rarity: rarity ?? this.rarity,
       maxStackSize: maxStackSize ?? this.maxStackSize,
-      healthRestore: healthRestore ?? this.healthRestore,
-      staminaRestore: staminaRestore ?? this.staminaRestore,
+      cropId: cropId ?? this.cropId,
+      growthTime: growthTime ?? this.growthTime,
+      yield: yield ?? this.yield,
+      season: season ?? this.season,
       iconData: iconData ?? this.iconData,
     );
   }
 
   @override
   String toString() =>
-      'ConsumableItem(id: ${id.name}, name: $name, hp: +$healthRestore, stamina: +$staminaRestore)';
+      'SeedItem(id: ${id.name}, name: $name, cropId: $cropId, growthTime: ${growthTime}d)';
 }

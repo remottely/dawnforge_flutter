@@ -7,7 +7,7 @@ abstract class HandItem {
   final HandItemId id;
   final String name;
   final String description;
-  final HandItemCategory type;
+  final HandItemCategory category;
   final HandItemRarity rarity;
   final int maxStackSize;
   final int baseValue;
@@ -21,7 +21,7 @@ abstract class HandItem {
     required this.id,
     required this.name,
     required this.description,
-    required this.type,
+    required this.category,
     this.rarity = HandItemRarity.common,
     this.maxStackSize = 1,
     required this.baseValue,
@@ -49,5 +49,5 @@ abstract class HandItem {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() => 'Item(id: ${id.name}, name: $name, type: $type)';
+  String toString() => 'Item(id: ${id.name}, name: $name, category: $category)';
 }
