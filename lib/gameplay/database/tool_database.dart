@@ -1,31 +1,10 @@
+import 'package:darkness_dungeon/gameplay/inventory/items/tool_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/item_rarity.dart';
-
-class ToolData {
-  final String id;
-  final String name;
-  final String description;
-  final ItemRarity rarity;
-  final int baseValue;
-  final String iconPath;
-  final String toolType;
-  final int powerLevel;
-
-  const ToolData({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.rarity,
-    required this.baseValue,
-    required this.iconPath,
-    required this.toolType,
-    required this.powerLevel,
-  });
-}
 
 final class ToolDatabaseDef {
   ToolDatabaseDef._();
-  static const Map<String, ToolData> tools = {
-    'iron_pickaxe': ToolData(
+  static const Map<String, ToolItem> tools = {
+    'iron_pickaxe': ToolItem(
       id: 'iron_pickaxe',
       name: 'Iron Pickaxe',
       description: 'Mine rocks and ores efficiently',
@@ -35,7 +14,7 @@ final class ToolDatabaseDef {
       toolType: 'pickaxe',
       powerLevel: 2,
     ),
-    'steel_pickaxe': ToolData(
+    'steel_pickaxe': ToolItem(
       id: 'steel_pickaxe',
       name: 'Steel Pickaxe',
       description: 'A superior pickaxe for harder minerals',
@@ -45,7 +24,7 @@ final class ToolDatabaseDef {
       toolType: 'pickaxe',
       powerLevel: 3,
     ),
-    'wooden_axe': ToolData(
+    'wooden_axe': ToolItem(
       id: 'wooden_axe',
       name: 'Wooden Axe',
       description: 'Basic tool for chopping trees',
@@ -55,7 +34,7 @@ final class ToolDatabaseDef {
       toolType: 'axe',
       powerLevel: 1,
     ),
-    'basic_hoe': ToolData(
+    'basic_hoe': ToolItem(
       id: 'basic_hoe',
       name: 'Basic Hoe',
       description: 'Till soil for planting crops',

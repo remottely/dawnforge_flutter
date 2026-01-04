@@ -2,12 +2,12 @@ import 'dart:developer' as developer;
 
 import 'package:darkness_dungeon/gameplay/inventory/items/consumable_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/material_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/items/tool_item.dart';
 
 import '../database/item_icon_database.dart';
 import '../entities/item.dart';
 import '../items/main_hand_item.dart';
 import '../items/seed_item.dart';
-import '../items/tool_item.dart';
 import '../models/equipped_hand_type.dart';
 import '../../database/weapon_database.dart';
 import '../../database/tool_database.dart';
@@ -18,7 +18,7 @@ import '../../database/seed_database.dart';
 /// Service for creating items from JSON database (L2: Factory with JSON database, I2: Service = External)
 class ItemFactoryService {
   final Map<String, WeaponData> _weapons = {};
-  final Map<String, ToolData> _tools = {};
+  final Map<String, ToolItem> _tools = {};
   final Map<String, ConsumableItem> _consumables = {};
   final Map<String, MaterialItem> _materials = {};
   final Map<String, SeedItem> _seeds = {};
@@ -108,19 +108,9 @@ class ItemFactoryService {
         );
       }
 
-      final toolData = _tools[itemId];
-      if (toolData != null) {
-        return ToolItem(
-          id: toolData.id,
-          name: toolData.name,
-          description: toolData.description,
-          baseValue: toolData.baseValue,
-          iconPath: toolData.iconPath,
-          rarity: toolData.rarity,
-          toolType: toolData.toolType,
-          powerLevel: toolData.powerLevel,
-          iconData: iconData,
-        );
+      final tool = _tools[itemId];
+      if (tool != null) {
+        return tool.copyWith(iconData: iconData);
       }
 
       final consumable = _consumables[itemId];

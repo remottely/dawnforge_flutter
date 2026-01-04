@@ -1,4 +1,5 @@
 import '../entities/item.dart';
+import '../models/item_icon_data.dart';
 import '../models/item_rarity.dart';
 import '../models/item_type.dart';
 
@@ -57,6 +58,7 @@ final class ToolItem extends Item {
     ItemRarity? rarity,
     String? toolType,
     int? powerLevel,
+    ItemIconData? iconData,
   }) {
     return ToolItem(
       id: id ?? this.id,
@@ -67,6 +69,7 @@ final class ToolItem extends Item {
       rarity: rarity ?? this.rarity,
       toolType: toolType ?? this.toolType,
       powerLevel: powerLevel ?? this.powerLevel,
+      iconData: iconData ?? this.iconData,
     );
   }
 
