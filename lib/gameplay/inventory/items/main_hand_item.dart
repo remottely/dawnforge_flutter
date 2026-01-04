@@ -2,7 +2,7 @@ import '../entities/hand_item_id.dart';
 import '../entities/hand_item.dart';
 import '../models/item_icon_data.dart';
 import '../models/item_rarity.dart';
-import '../models/item_type.dart';
+import '../entities/hand_item_type.dart';
 
 final class MainHandItem extends HandItem {
   final int damage;
@@ -19,7 +19,7 @@ final class MainHandItem extends HandItem {
     required super.baseValue,
     required super.iconPath,
     super.rarity = ItemRarity.common,
-    super.type = ItemType.weapon,
+    super.type = HandItemType.weapon,
     super.iconData,
     required this.damage,
     this.attackSpeed = 1.0,

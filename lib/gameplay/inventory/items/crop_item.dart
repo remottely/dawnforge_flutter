@@ -3,7 +3,7 @@ import '../entities/hand_item_id.dart';
 import '../models/item_category.dart';
 import '../models/item_quality.dart';
 import '../models/item_rarity.dart';
-import '../models/item_type.dart';
+import '../entities/hand_item_type.dart';
 
 final class CropItem extends HandItem {
   final ItemCategory category;
@@ -21,7 +21,7 @@ final class CropItem extends HandItem {
     required super.baseValue,
     required super.iconPath,
     super.rarity = ItemRarity.common,
-    super.type = ItemType.material,
+    super.type = HandItemType.material,
     super.isStackable = true,
     super.maxStackSize = 999,
     super.isDroppable = true,

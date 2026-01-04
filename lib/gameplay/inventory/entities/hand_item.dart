@@ -1,13 +1,13 @@
 import 'hand_item_id.dart';
 import '../models/item_icon_data.dart';
 import '../models/item_rarity.dart';
-import '../models/item_type.dart';
+import 'hand_item_type.dart';
 
 abstract class HandItem {
   final HandItemId id;
   final String name;
   final String description;
-  final ItemType type;
+  final HandItemType type;
   final ItemRarity rarity;
   final int maxStackSize;
   final int baseValue;

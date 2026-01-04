@@ -2,7 +2,7 @@ import '../entities/hand_item.dart';
 import '../entities/hand_item_id.dart';
 import '../models/item_icon_data.dart';
 import '../models/item_rarity.dart';
-import '../models/item_type.dart';
+import '../entities/hand_item_type.dart';
 
 final class SeedItem extends HandItem {
   final String cropId;
@@ -17,7 +17,7 @@ final class SeedItem extends HandItem {
     required super.baseValue,
     required super.iconPath,
     super.rarity = ItemRarity.common,
-    super.type = ItemType.cropSeed,
+    super.type = HandItemType.cropSeed,
     super.isStackable = true,
     super.maxStackSize = 99,
     super.iconData,

@@ -2,7 +2,7 @@ import '../entities/hand_item.dart';
 import '../entities/hand_item_id.dart';
 import '../models/item_icon_data.dart';
 import '../models/item_rarity.dart';
-import '../models/item_type.dart';
+import '../entities/hand_item_type.dart';
 
 final class ToolItem extends HandItem {
   final String toolType;
@@ -15,7 +15,7 @@ final class ToolItem extends HandItem {
     required super.baseValue,
     required super.iconPath,
     super.rarity = ItemRarity.common,
-    super.type = ItemType.tool,
+    super.type = HandItemType.tool,
     super.iconData,
     required this.toolType,
     this.powerLevel = 1,

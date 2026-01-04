@@ -2,7 +2,7 @@ import '../entities/hand_item.dart';
 import '../entities/hand_item_id.dart';
 import '../models/item_icon_data.dart';
 import '../models/item_rarity.dart';
-import '../models/item_type.dart';
+import '../entities/hand_item_type.dart';
 
 final class MaterialItem extends HandItem {
   final String materialType;
@@ -14,7 +14,7 @@ final class MaterialItem extends HandItem {
     required super.baseValue,
     required super.iconPath,
     super.rarity = ItemRarity.common,
-    super.type = ItemType.material,
+    super.type = HandItemType.material,
     super.isStackable = true,
     super.maxStackSize = 999,
     super.iconData,
