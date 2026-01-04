@@ -2,7 +2,6 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/foundation.dart';
 
-import '../entities/equipment_slot.dart';
 import '../entities/item.dart';
 import '../items/main_hand_item.dart';
 import 'inventory_manager.dart';
@@ -11,17 +10,15 @@ import 'package:darkness_dungeon/gameplay/inventory/state/equipment_state.dart';
 /// Manager for equipment state (C1: Singleton + ValueNotifier, I2: Manager = Singleton State)
 final class EquipmentManager {
   EquipmentManager._() {
-    developer.log('[EquipmentManager] Initialized with single equipped slot');
+    developer.log('[EquipmentManager] Initialized (selection mirrors inventory)');
 
-    // Sync when inventory slots change (e.g., consumption/move clearing the selected slot)
+    // Keep UI in sync when slots change (consumption/move/clear)
     InventoryManager.instance.slotsNotifier.addListener(
       _handleInventorySlotsChanged,
     );
   }
 
   static final instance = EquipmentManager._();
-
-  EquipmentSlot _equippedSlot = const EquipmentSlot();
 
   /// J3: ValueNotifier for cross-module communication
   final ValueNotifier<int> selectedSlotIndexNotifier = ValueNotifier(0);
@@ -30,30 +27,23 @@ final class EquipmentManager {
 
   int get currentMainHandSlotIndex => _currentMainHandSlotIndex;
 
-  bool equip(Item item, {int? inventorySlotIndex}) {
-    developer.log('[EquipmentManager] Equipping ${item.name}');
+  // /// In this design, "equipping" means selecting the inventory slot that holds the item.
+  // bool equip(Item item, {int? inventorySlotIndex}) {
+  //   developer.log('[EquipmentManager] Selecting slot for ${item.name}');
 
-    if (InventoryManager.instance.getItemQuantity(item.id) == 0) {
-      developer.log('[EquipmentManager] Item not in inventory');
-      return false;
-    }
+  //   // If caller provided the slot index, just select it.
+  //   if (inventorySlotIndex != null) {
+  //     return selectSlotIndex(inventorySlotIndex);
+  //   }
 
-    _equippedSlot = _equippedSlot.equip(item);
-
-    // Notify Flutter overlay
-    EquipmentState.instance.updateEquippedItem(item);
-
-    developer.log(
-      '[EquipmentManager] Item equipped successfully (kept in inventory)',
-    );
-
-    if (inventorySlotIndex != null) {
-      _currentMainHandSlotIndex = inventorySlotIndex;
-      selectedSlotIndexNotifier.value = inventorySlotIndex;
-    }
-
-    return true;
-  }
+  //   // Otherwise, find the first slot containing this item id.
+  //   final slot = InventoryManager.instance.findSlotByItemId(item.id);
+  //   if (slot == null) {
+  //     developer.log('[EquipmentManager] Item not in inventory');
+  //     return false;
+  //   }
+  //   return selectSlotIndex(slot.index);
+  // }
 
   bool selectSlotIndex(int index) {
     final slot = InventoryManager.instance.getSlotByIndex(index);
@@ -62,40 +52,27 @@ final class EquipmentManager {
       return false;
     }
 
-    // Always move selection first so toolbar can stay in sync even on empty slots
     _currentMainHandSlotIndex = index;
     selectedSlotIndexNotifier.value = index;
 
-    final item = slot.item;
-    if (item == null) {
-      developer.log('[EquipmentManager] Slot $index is empty');
-      // Still allow selecting empty slots; clear equipped display
-      clearSelectedEquipment();
-      return true;
-    }
-
-    final success = equip(item, inventorySlotIndex: index);
-
-    if (!success) {
-      developer.log('[EquipmentManager] Failed to equip item at slot $index');
-      // Keep selection but ensure we don't show stale equipment
-      clearSelectedEquipment();
-      return false;
-    }
+    // Update overlays with current item (can be null if slot empty)
+    EquipmentState.instance.updateEquippedItem(slot.item);
+    developer.log('[EquipmentManager] Selected slot $index (${slot.item?.name ?? 'empty'})');
     return true;
   }
 
   void clearSelectedEquipment() {
-    _equippedSlot = _equippedSlot.unequip();
     EquipmentState.instance.updateEquippedItem(null);
   }
 
-  Item? getEquippedItem() => _equippedSlot.equippedItem;
+  Item? getEquippedItem() =>
+      InventoryManager.instance.getSlotByIndex(_currentMainHandSlotIndex)?.item;
 
-  bool hasEquippedItem() => _equippedSlot.isOccupied;
+  bool hasEquippedItem() => getEquippedItem() != null;
 
   List<Item> getAllEquippedItems() {
-    return _equippedSlot.isOccupied ? [_equippedSlot.equippedItem!] : [];
+    final item = getEquippedItem();
+    return item != null ? [item] : [];
   }
 
   int getTotalDamage() {
@@ -126,7 +103,6 @@ final class EquipmentManager {
 
   Map<String, dynamic> toJson() {
     return {
-      'equipped': _equippedSlot.toJson(),
       'selectedSlotIndex': _currentMainHandSlotIndex,
     };
   }
@@ -135,31 +111,30 @@ final class EquipmentManager {
     Map<String, dynamic> json,
     Item? Function(String itemId) itemFactory,
   ) {
-    _equippedSlot = const EquipmentSlot();
-
-    final equippedData = json['equipped'] as Map<String, dynamic>?;
-    if (equippedData != null) {
-      try {
-        _equippedSlot = EquipmentSlot.fromJson(equippedData, itemFactory);
-        EquipmentState.instance.updateEquippedItem(_equippedSlot.equippedItem);
-      } catch (e) {
-        developer.log('[EquipmentManager] Error loading equipped item: $e');
-      }
-    }
-
     _currentMainHandSlotIndex = json['selectedSlotIndex'] as int? ?? 0;
+    // Clamp to available slots
+    if (_currentMainHandSlotIndex >= InventoryManager.instance.maxSlots) {
+      _currentMainHandSlotIndex = 0;
+    }
     selectedSlotIndexNotifier.value = _currentMainHandSlotIndex;
 
-    developer.log('[EquipmentManager] Loaded equipped item from JSON');
+    // Update UI with current item
+    final item = InventoryManager.instance
+        .getSlotByIndex(_currentMainHandSlotIndex)
+        ?.item;
+    EquipmentState.instance.updateEquippedItem(item);
+
+    developer.log('[EquipmentManager] Loaded selected slot $_currentMainHandSlotIndex');
   }
 
   void reset() {
-    _equippedSlot = const EquipmentSlot();
     _currentMainHandSlotIndex = 0;
     selectedSlotIndexNotifier.value = 0;
 
     // Notify Flutter overlays
-    EquipmentState.instance.updateEquippedItem(null);
+    EquipmentState.instance.updateEquippedItem(
+      InventoryManager.instance.getSlotByIndex(0)?.item,
+    );
 
     developer.log('[EquipmentManager] Equipment reset');
   }
@@ -169,9 +144,7 @@ final class EquipmentManager {
     final slot = InventoryManager.instance.getSlotByIndex(selectedIndex);
     if (slot == null) return;
 
-    // If the selected slot became empty, clear the equipped display
-    if (slot.isEmpty && getEquippedItem() != null) {
-      clearSelectedEquipment();
-    }
+    // Keep overlay synced with whatever is in the selected slot
+    EquipmentState.instance.updateEquippedItem(slot.item);
   }
 }

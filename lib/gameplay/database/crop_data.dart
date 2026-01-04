@@ -2,7 +2,6 @@
 /// All values are fully typed to avoid runtime parsing/Map<String, dynamic> usage.
 
 import '../world/entities/objects/farm/crop_stage_type.dart';
-import '../inventory/models/item_rarity.dart';
 
 // ----------------------------
 // Data models

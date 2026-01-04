@@ -15,10 +15,7 @@ class EquipItemUseCase {
     final slot = _inventoryManager.findSlotByItemId(itemId);
     if (slot == null || slot.item == null) return false;
 
-    return _equipmentManager.equip(
-      slot.item!,
-      inventorySlotIndex: slot.index,
-    );
+    return _equipmentManager.selectSlotIndex(slot.index);
   }
 
   /// Equip an item entity directly
@@ -26,10 +23,13 @@ class EquipItemUseCase {
     Item item,
     int? inventorySlotIndex,
   ) {
-    return _equipmentManager.equip(
-      item,
-      inventorySlotIndex: inventorySlotIndex,
-    );
+    if (inventorySlotIndex != null) {
+      return _equipmentManager.selectSlotIndex(inventorySlotIndex);
+    }
+
+    final slot = _inventoryManager.findSlotByItemId(item.id);
+    if (slot == null) return false;
+    return _equipmentManager.selectSlotIndex(slot.index);
   }
 
   /// Select a slot index for main hand equipment
