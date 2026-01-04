@@ -129,6 +129,7 @@ class InventoryInputHandler extends GameComponent
       ('shovel', 1),
       ('radish_seed_bag', 50),
       ('strawberry_seed_bag', 50),
+      ('apple_seed_bag', 50),
       ('tomato_seed_bag', 50),
       ('wateringCan', 1),
       ('harvestBasket', 1),
@@ -187,7 +188,9 @@ class InventoryInputHandler extends GameComponent
     final success = getIt<AddItemUseCase>().addMultiple(items);
 
     if (!success) {
-      developer.log('[InventoryInput] Nenhum item adicionado (talvez inventário cheio)');
+      developer.log(
+        '[InventoryInput] Nenhum item adicionado (talvez inventário cheio)',
+      );
     }
   }
 

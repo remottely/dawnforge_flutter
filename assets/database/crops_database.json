@@ -59,6 +59,22 @@
     "skipFirstFrames": 1,
     "ySortingFromStage": "budding"
   },
+  "apple": {
+    "harvestItemId": "apple_item",
+    "name": "Apple",
+    "description": "Crisp red apple",
+    "daysToMature": 7,
+    "yieldAmount": 3,
+    "requiredSeason": "any",
+    "spritesheetPath": "tiled/Modern_Farm_v1.2/tilesets/4_Crops_16x16.png",
+    "spriteWidth": 16,
+    "spriteHeight": 32,
+    "spriteRowIndex": 18,
+    "framesCount": 7,
+    "skipFirstFrames": 1,
+    "ySortingFromStage": "budding",
+    "isTree": true
+  },
   "wheat": {
     "harvestItemId": "wheat_item",
     "name": "Wheat",

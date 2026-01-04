@@ -27,6 +27,20 @@
     "critMultiplier": 1.5,
     "equippedHandType": "strawberry"
   },
+  "apple": {
+    "id": "apple",
+    "name": "Apple",
+    "description": "TODO",
+    "type": "weapon",
+    "rarity": "common",
+    "baseValue": 100,
+    "iconPath": "",
+    "damage": 15,
+    "attackSpeed": 1.2,
+    "critChance": 0.05,
+    "critMultiplier": 1.5,
+    "equippedHandType": "apple"
+  },
   "tomato": {
     "id": "tomato",
     "name": "Tomato",
@@ -55,6 +69,23 @@
     "critMultiplier": 1.0,
     "equippedHandType": "strawberry_seed_bag",
     "cropId": "strawberry",
+    "isStackable": true,
+    "maxStackSize": 99
+  },
+  "apple_seed_bag": {
+    "id": "apple_seed_bag",
+    "name": "Apple Seed Bag",
+    "description": "Plant these to grow apples",
+    "type": "weapon",
+    "rarity": "common",
+    "baseValue": 50,
+    "iconPath": "",
+    "damage": 0,
+    "attackSpeed": 1.0,
+    "critChance": 0.0,
+    "critMultiplier": 1.0,
+    "equippedHandType": "apple_seed_bag",
+    "cropId": "apple",
     "isStackable": true,
     "maxStackSize": 99
   },

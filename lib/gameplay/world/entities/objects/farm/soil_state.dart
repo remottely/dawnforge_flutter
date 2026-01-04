@@ -14,6 +14,9 @@ enum SoilState {
   /// Check if soil is ready for planting
   bool get canPlantCrop => this == SoilState.tilled || this == SoilState.watered;
 
+  /// Tree planting rule: only on untilled soil
+  bool get canPlantTree => this == SoilState.untilled;
+
   /// Check if soil needs watering
   bool get needsWater => this == SoilState.tilled;
 

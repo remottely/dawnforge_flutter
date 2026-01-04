@@ -96,6 +96,10 @@
       "rowIndex": 11,
       "columnIndex": 3
     },
+    "apple_seed_bag": {
+      "rowIndex": 10,
+      "columnIndex": 8
+    },
     "cabbage": {
       "rowIndex": 1,
       "columnIndex": 0
@@ -152,6 +156,10 @@
       "rowIndex": 1,
       "columnIndex": 15
     },
+    "apple": {
+      "rowIndex": 1,
+      "columnIndex": 16
+    },
     "prickly_pear": {
       "rowIndex": 2,
       "columnIndex": 1
@@ -203,6 +211,10 @@
     "dungeon_key": {
       "rowIndex": 6,
       "columnIndex": 6
+    },
+    "apple_item": {
+      "rowIndex": 2,
+      "columnIndex": 5
     }
   }
 }

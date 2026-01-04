@@ -29,9 +29,7 @@ class CropFactoryService {
       }
 
       _isInitialized = true;
-      developer.log(
-        '[CropFactoryService] Loaded ${_database.length} crops',
-      );
+      developer.log('[CropFactoryService] Loaded ${_database.length} crops');
     } catch (e, stackTrace) {
       developer.log(
         '[CropFactoryService] ERROR loading database',
@@ -58,10 +56,14 @@ class CropFactoryService {
     }
 
     try {
+      final isTree = cropData['isTree'] as bool? ?? false;
+
       return CropEntity(
         cropId: cropId,
         name: cropData['name'] as String,
         description: cropData['description'] as String,
+        // Trees start visible as seedlings; crops start as planted seeds.
+        // stage: isTree ? CropStageType.seedling : CropStageType.planted, // TODO(Kevin): review this, remove this
         stage: CropStageType.planted,
         daysPlanted: 0,
         daysToMature: cropData['daysToMature'] as int,
@@ -77,6 +79,7 @@ class CropFactoryService {
         ySortingFromStage: CropStageType.fromJsonNullable(
           cropData['ySortingFromStage'] as String?,
         ),
+        isTree: isTree,
       );
     } catch (e, stackTrace) {
       developer.log(
@@ -97,7 +100,7 @@ class CropFactoryService {
   /// Get crops that can be planted in a specific season
   List<String> getCropsBySeason(String season) {
     if (!_isInitialized) return [];
-    
+
     return _database.entries
         .where(
           (e) =>

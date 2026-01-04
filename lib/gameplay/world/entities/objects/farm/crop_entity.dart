@@ -20,6 +20,7 @@ final class CropEntity extends Equatable {
   final int framesCount;
   final int skipFirstFrames;
   final CropStageType? ySortingFromStage;
+  final bool isTree;
 
   const CropEntity({
     required this.cropId,
@@ -38,6 +39,7 @@ final class CropEntity extends Equatable {
     required this.framesCount,
     required this.skipFirstFrames,
     required this.ySortingFromStage,
+    this.isTree = false,
   });
 
   /// Calculate growth progress (0.0 to 1.0)
@@ -84,6 +86,7 @@ final class CropEntity extends Equatable {
       'framesCount': framesCount,
       'skipFirstFrames': skipFirstFrames,
       'ySortingFromStage': ySortingFromStage?.toJson(),
+      'isTree': isTree,
     };
   }
 
@@ -108,6 +111,7 @@ final class CropEntity extends Equatable {
       ySortingFromStage: CropStageType.fromJsonNullable(
         json['ySortingFromStage'] as String?,
       ),
+      isTree: json['isTree'] as bool? ?? false,
     );
   }
 
@@ -129,6 +133,7 @@ final class CropEntity extends Equatable {
     int? framesCount,
     int? skipFirstFrames,
     CropStageType? ySortingFromStage,
+    bool? isTree,
   }) {
     return CropEntity(
       cropId: cropId ?? this.cropId,
@@ -147,6 +152,7 @@ final class CropEntity extends Equatable {
       framesCount: framesCount ?? this.framesCount,
       skipFirstFrames: skipFirstFrames ?? this.skipFirstFrames,
       ySortingFromStage: ySortingFromStage ?? this.ySortingFromStage,
+      isTree: isTree ?? this.isTree,
     );
   }
 
@@ -168,6 +174,7 @@ final class CropEntity extends Equatable {
         framesCount,
         skipFirstFrames,
         ySortingFromStage,
+        isTree,
       ];
 
   @override

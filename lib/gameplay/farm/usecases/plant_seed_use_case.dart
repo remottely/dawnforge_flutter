@@ -1,6 +1,7 @@
 import 'dart:developer' as developer;
 
 import 'package:darkness_dungeon/gameplay/world/entities/objects/farm/farm_object.dart';
+import 'package:darkness_dungeon/gameplay/world/entities/objects/farm/soil_state.dart';
 
 import '../../inventory/usecases/add_item_use_case.dart';
 import '../../inventory/usecases/remove_item_use_case.dart';
@@ -64,15 +65,6 @@ class PlantSeedUseCase {
       return false;
     }
 
-    if (!farmObject.canPlantCrop) {
-      developer.log(
-        'PlantSeedUseCase: Tile at ($x, $y) cannot be planted (not tilled or already has crop)',
-        name: 'farm.usecases.plant_seed',
-        level: 900, // WARNING
-      );
-      return false;
-    }
-
     // Extrai o cropId do seedItemId (remove "_seed" ou "_seed_bag" sufixo)
     final cropId = _extractCropIdFromSeedId(seedItemId);
 
@@ -85,6 +77,22 @@ class PlantSeedUseCase {
         level: 1000, // ERROR
       );
       // Devolver a semente ao inventário
+      _addItemUseCase.call(seedItemId, 1);
+      return false;
+    }
+
+    // 3.1 Valida regra de plantio: árvores só em soil untilled; demais seguem regra padrão
+    final bool canPlantHere = crop.isTree
+      ? farmObject.canPlantTree
+      : farmObject.canPlantCrop;
+
+    if (!canPlantHere) {
+      developer.log(
+        'PlantSeedUseCase: Tile at ($x, $y) cannot be planted for ${crop.isTree ? "trees (needs untilled)" : "crops (needs tilled/watered)"}',
+        name: 'farm.usecases.plant_seed',
+        level: 900, // WARNING
+      );
+      // Tenta devolver a semente ao inventário
       _addItemUseCase.call(seedItemId, 1);
       return false;
     }

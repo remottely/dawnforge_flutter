@@ -1,5 +1,6 @@
 enum EquippedHandType {
   /// Seeds
+  apple_seed_bag,
   cabbage_seed_bag,
   radish_seed_bag,
   carrot_seed_bag,
@@ -40,6 +41,7 @@ enum EquippedHandType {
   }
 
   bool get isSeed =>
+      this == apple_seed_bag ||
       this == cabbage_seed_bag ||
       this == radish_seed_bag ||
       this == carrot_seed_bag ||

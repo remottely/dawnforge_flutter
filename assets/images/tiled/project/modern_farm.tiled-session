@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/small_burg/maps/sb_farm.json",
+    "activeFile": "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/maps/farm_map.json",
     "expandedProjectPaths": [
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/maps",
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/Modern_Farm_v1.2/tilesets"
@@ -13,7 +13,7 @@
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/1_Terrains_16x16.json": {
             "dynamicWrapping": false,
             "scaleInDock": 1.5,
-            "scaleInEditor": 1.41
+            "scaleInEditor": 1
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/1_Terrains_16x16.tsx": {
             "scaleInDock": 1
@@ -28,7 +28,7 @@
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/4_Crops_16x16.json": {
             "scaleInDock": 1.5,
-            "scaleInEditor": 1.41
+            "scaleInEditor": 1
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/5_Fruit_Trees.json": {
             "scaleInDock": 1,
@@ -47,7 +47,7 @@
             "scaleInEditor": 1
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/SmallBurg_outside_assets.json": {
-            "scaleInDock": 2.1359,
+            "scaleInDock": 0.4907,
             "scaleInEditor": 1
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/SunnysideWorldTileset.json": {
@@ -85,7 +85,7 @@
             "scale": 3.08,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 400,
+                "x": 400.1623376623377,
                 "y": 400.1623376623377
             }
         },
@@ -95,13 +95,13 @@
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/f/maps/f_1.json": {
             "expandedObjectLayers": [
                 6,
-                8,
-                10
+                10,
+                8
             ],
             "scale": 1.43,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 511.88811188811195,
+                "x": 512.2377622377624,
                 "y": 512.2377622377624
             }
         },
@@ -164,7 +164,7 @@
             "scale": 1,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 384,
+                "x": 384.5,
                 "y": 383.5
             }
         },
@@ -175,19 +175,19 @@
             "scale": 2.3026,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 383.91383653261533,
+                "x": 384.1309823677582,
                 "y": 384.1309823677582
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/maps/farm.json": {
             "expandedObjectLayers": [
-                3,
-                5
+                5,
+                3
             ],
             "scale": 1.1948,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 384.164713759625,
+                "x": 383.7462336792769,
                 "y": 378.7244727150987
             }
         },
@@ -200,11 +200,11 @@
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/maps/farm_map.json": {
-            "scale": 1.009,
-            "selectedLayer": 3,
+            "scale": 0.8529,
+            "selectedLayer": 4,
             "viewCenter": {
-                "x": 481.6650148662042,
-                "y": 412.28939544103076
+                "x": 262.6333685074452,
+                "y": 449.05616133192643
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/maps/florest.json": {
@@ -222,7 +222,7 @@
             "scale": 2.2633,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 383.9526355321875,
+                "x": 384.17355189325315,
                 "y": 384.1735518932532
             }
         },
@@ -233,7 +233,7 @@
             "scale": 1.19,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 384.03361344537814,
+                "x": 383.61344537815125,
                 "y": 383.61344537815125
             }
         },
@@ -244,35 +244,38 @@
             "scale": 3.92,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 383.92857142857144,
+                "x": 384.0561224489796,
                 "y": 384.05612244897964
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/small_burg/maps/sb_farm.json": {
+            "expandedObjectLayers": [
+                10
+            ],
             "scale": 1.293,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 1067.2853828306265,
-                "y": 580.046403712297
+                "x": 512.3743232791957,
+                "y": 512.3743232791958
             }
+        },
+        "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/smallburg_terrain_spring.json": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/smallburg_winter_terrain.json": {
             "scaleInDock": 1.7268,
-            "scaleInEditor": 1.41
-        },
-        "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/smallburg_winter_terrain.tsj": {
-            "scaleInDock": 1,
             "scaleInEditor": 1
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/sv/maps/sv_farm.json": {
             "expandedObjectLayers": [
-                18,
-                9
+                9,
+                18
             ],
             "scale": 0.2866,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 638.5205861828332,
+                "x": 640.26517794836,
                 "y": 521.6329378925332
             }
         },
@@ -283,7 +286,7 @@
             "scale": 1.77,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 800,
+                "x": 800.2824858757062,
                 "y": 543.7853107344633
             }
         },
@@ -362,7 +365,8 @@
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/f/maps/f_1.json",
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/1_Terrains_16x16.json",
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/small_burg/maps/sb_farm.json",
-        "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/smallburg_winter_terrain.json"
+        "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/smallburg_winter_terrain.json",
+        "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/maps/farm_map.json"
     ],
     "project": "modern_farm.tiled-project",
     "recentFiles": [

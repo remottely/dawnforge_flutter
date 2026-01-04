@@ -53,6 +53,9 @@ final class FarmObject extends Equatable implements TileObject {
   /// Check if tile can receive a plant
   bool get canPlantCrop => isEmpty && soilState.canPlantCrop;
 
+  /// Check if tile can receive a tree (only on untilled soil)
+  bool get canPlantTree => isEmpty && soilState.canPlantTree;
+
   /// Check if crop can be harvested
   bool get canHarvest => isOccupied && crop!.canHarvest;
 
@@ -84,6 +87,12 @@ final class FarmObject extends Equatable implements TileObject {
     return copyWith(crop: newCrop);
   }
 
+  /// Plant a tree on this tile (trees use untilled soil)
+  FarmObject plantTree(CropEntity newCrop) {
+    if (!canPlantTree) return this;
+    return copyWith(crop: newCrop);
+  }
+
   /// Harvest the crop and reset tile
   FarmObject harvest() {
     if (!canHarvest) return this;
@@ -97,6 +106,12 @@ final class FarmObject extends Equatable implements TileObject {
 
   /// Advance day logic - update crop growth if watered
   FarmObject advanceDay(int dayEnded) {
+    // Trees grow daily without watering and keep soil untilled
+    if (crop != null && crop!.isTree) {
+      final advancedTree = crop!.advanceDay();
+      return copyWith(crop: advancedTree);
+    }
+
     final wasWateredThatDay =
         lastWateredDay != null && lastWateredDay == dayEnded;
 

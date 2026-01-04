@@ -100,16 +100,25 @@ class FarmManager {
       return false;
     }
 
-    if (!farmObject.canPlantCrop) {
+    final bool canPlantHere = crop.isTree
+        ? farmObject.canPlantTree
+        : farmObject.canPlantCrop;
+
+    if (!canPlantHere) {
       if (farmObject.isOccupied) {
         developer.log('[FarmManager] Tile already has a crop');
       } else {
-        developer.log('[FarmManager] Soil not prepared for planting');
+        developer.log(
+          '[FarmManager] Soil not prepared for planting '
+          '(${crop.isTree ? 'needs untilled for trees' : 'needs tilled/watered for crops'})',
+        );
       }
       return false;
     }
 
-    final plantedFarmObject = farmObject.plant(crop);
+    final plantedFarmObject = crop.isTree
+        ? farmObject.plantTree(crop)
+        : farmObject.plant(crop);
     final plantedTile = tile.placeObject(plantedFarmObject);
     setTile(plantedTile);
     notifyChange();
