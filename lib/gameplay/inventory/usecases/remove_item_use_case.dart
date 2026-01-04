@@ -2,7 +2,7 @@ import 'dart:developer' as developer;
 import 'dart:math';
 
 import '../managers/inventory_manager.dart';
-import '../entities/hand_item_type.dart';
+import '../entities/hand_item_id.dart';
 
 /// UseCase for removing items from inventory (B1: Concrete UseCase)
 class RemoveItemUseCase {
@@ -12,7 +12,7 @@ class RemoveItemUseCase {
 
   /// Remove an item from inventory by ID and quantity
   /// Returns true if successful, false otherwise
-  bool call(HandItemType itemId, int quantity) {
+  bool call(HandItemId itemId, int quantity) {
     developer.log('[RemoveItemUseCase] Removing $quantity x ${itemId.name}');
 
     if (quantity <= 0) {
@@ -50,7 +50,7 @@ class RemoveItemUseCase {
   }
 
   /// Remove all items with the given ID from inventory
-  bool removeAll(HandItemType itemId) {
+  bool removeAll(HandItemId itemId) {
     final currentQuantity = _inventoryManager.getItemQuantity(itemId.name);
     if (currentQuantity == 0) return false;
     return call(itemId, currentQuantity);

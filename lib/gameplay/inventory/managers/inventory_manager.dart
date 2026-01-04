@@ -1,6 +1,6 @@
 import 'dart:developer' as developer;
 
-import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_type.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_id.dart';
 import 'package:flutter/foundation.dart';
 
 import '../config/inventory_def.dart';
@@ -216,7 +216,7 @@ class InventoryManager {
 
   void fromJson(
     Map<String, dynamic> json,
-    HandItem? Function(HandItemType itemId) itemFactory,
+    HandItem? Function(HandItemId itemId) itemFactory,
   ) {
     // Load maxSlots first
     final maxSlotsFromJson = json['maxSlots'] as int? ?? _currentMaxSlots;

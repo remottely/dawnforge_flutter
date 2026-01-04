@@ -1,5 +1,5 @@
 import '../entities/hand_item.dart';
-import '../entities/hand_item_type.dart';
+import '../entities/hand_item_id.dart';
 import '../models/item_icon_data.dart';
 import '../models/item_rarity.dart';
 import '../models/item_type.dart';
@@ -43,7 +43,7 @@ final class ConsumableItem extends HandItem {
     final healAmount = json['healAmount'] as int?;
 
     return ConsumableItem(
-      id: HandItemType.fromJson(json['id'] as String),
+      id: HandItemId.fromJson(json['id'] as String),
       name: json['name'] as String,
       description: json['description'] as String,
       baseValue: json['baseValue'] as int,
@@ -58,7 +58,7 @@ final class ConsumableItem extends HandItem {
 
   @override
   ConsumableItem copyWith({
-    HandItemType? id,
+    HandItemId? id,
     String? name,
     String? description,
     int? baseValue,

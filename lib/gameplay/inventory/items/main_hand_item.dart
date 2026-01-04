@@ -1,4 +1,4 @@
-import '../entities/hand_item_type.dart';
+import '../entities/hand_item_id.dart';
 import '../entities/hand_item.dart';
 import '../models/item_icon_data.dart';
 import '../models/item_rarity.dart';
@@ -9,7 +9,7 @@ final class MainHandItem extends HandItem {
   final double attackSpeed;
   final double critChance;
   final double critMultiplier;
-  final HandItemType equippedHandType;
+  final HandItemId equippedHandType;
   final String? cropId;
 
   const MainHandItem({
@@ -59,7 +59,7 @@ final class MainHandItem extends HandItem {
 
   factory MainHandItem.fromJson(Map<String, dynamic> json) {
     return MainHandItem(
-      id: HandItemType.fromJson(json['id'] as String),
+      id: HandItemId.fromJson(json['id'] as String),
       name: json['name'] as String,
       description: json['description'] as String,
       baseValue: json['baseValue'] as int,
@@ -69,7 +69,7 @@ final class MainHandItem extends HandItem {
       attackSpeed: (json['attackSpeed'] as num?)?.toDouble() ?? 1.0,
       critChance: (json['critChance'] as num?)?.toDouble() ?? 0.05,
       critMultiplier: (json['critMultiplier'] as num?)?.toDouble() ?? 1.5,
-      equippedHandType: HandItemType.fromJson(
+      equippedHandType: HandItemId.fromJson(
         json['equippedHandType'] as String,
       ),
       cropId: json['cropId'] as String?,
@@ -89,7 +89,7 @@ final class MainHandItem extends HandItem {
     double? attackSpeed,
     double? critChance,
     double? critMultiplier,
-    HandItemType? equippedHandType,
+    HandItemId? equippedHandType,
     String? cropId,
     bool? isStackable,
     int? maxStackSize,

@@ -2,7 +2,7 @@ import 'package:darkness_dungeon/gameplay/inventory/entities/inventory_slot.dart
 import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_type.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_id.dart';
 import 'package:darkness_dungeon/gameplay/inventory/services/item_factory_service.dart';
 import 'package:darkness_dungeon/gameplay/inventory/usecases/add_item_use_case.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -35,7 +35,7 @@ void main() {
 
     test('should return false when quantity is zero or negative', () {
       // Arrange
-      const itemId = HandItemType.sword;
+      const itemId = HandItemId.sword;
 
       // Act & Assert
       expect(addItemUseCase(itemId, 0), false);
@@ -48,7 +48,7 @@ void main() {
 
     test('should return false when item does not exist', () {
       // Arrange
-      const itemId = HandItemType.apple;
+      const itemId = HandItemId.apple;
       when(() => mockItemFactory.createItem(itemId.name)).thenReturn(null);
 
       // Act
@@ -62,17 +62,17 @@ void main() {
 
     test('should add item to inventory when valid', () {
       // Arrange
-      const itemId = HandItemType.ironSword;
+      const itemId = HandItemId.ironSword;
       const quantity = 2;
 
       const mockItem = MainHandItem(
-        id: HandItemType.ironSword,
+        id: HandItemId.ironSword,
         name: 'Iron Sword',
         description: 'A basic sword',
         baseValue: 100,
         iconPath: 'path/to/icon',
         damage: 10,
-        equippedHandType: HandItemType.ironSword,
+        equippedHandType: HandItemId.ironSword,
       );
 
       // Mock empty slots
@@ -98,17 +98,17 @@ void main() {
 
     test('should return false when inventory is full', () {
       // Arrange
-      const itemId = HandItemType.sword;
+      const itemId = HandItemId.sword;
       const quantity = 1;
 
       const mockItem = MainHandItem(
-        id: HandItemType.sword,
+        id: HandItemId.sword,
         name: 'Iron Sword',
         description: 'A basic sword',
         baseValue: 100,
         iconPath: 'path/to/icon',
         damage: 10,
-        equippedHandType: HandItemType.ironSword,
+        equippedHandType: HandItemId.ironSword,
       );
 
       // Mock full slots (all slots have items)

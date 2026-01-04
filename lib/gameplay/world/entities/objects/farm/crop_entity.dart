@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_type.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_id.dart';
 import 'package:equatable/equatable.dart';
 
 import 'crop_stage_type.dart';
@@ -12,7 +12,7 @@ final class CropEntity extends Equatable {
   final int daysPlanted;
   final int daysToMature;
   final int yieldAmount;
-  final HandItemType harvestItemId;
+  final HandItemId harvestItemId;
   final String? requiredSeason;
   final String spritesheetPath;
   final int spriteWidth;
@@ -101,7 +101,7 @@ final class CropEntity extends Equatable {
       daysPlanted: json['daysPlanted'] as int,
       daysToMature: json['daysToMature'] as int,
       yieldAmount: json['yieldAmount'] as int,
-      harvestItemId: HandItemType.fromJson(json['harvestItemId'] as String),
+      harvestItemId: HandItemId.fromJson(json['harvestItemId'] as String),
       requiredSeason: json['requiredSeason'] as String?,
       spritesheetPath: json['spritesheetPath'] as String,
       spriteWidth: json['spriteWidth'] as int,
@@ -125,7 +125,7 @@ final class CropEntity extends Equatable {
     int? daysPlanted,
     int? daysToMature,
     int? yieldAmount,
-    HandItemType? harvestItemId,
+    HandItemId? harvestItemId,
     String? requiredSeason,
     String? spritesheetPath,
     int? spriteWidth,

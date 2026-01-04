@@ -5,7 +5,7 @@ import 'package:darkness_dungeon/gameplay/world/entities/objects/farm/soil_state
 
 import '../../inventory/usecases/add_item_use_case.dart';
 import '../../inventory/usecases/remove_item_use_case.dart';
-import '../../inventory/entities/hand_item_type.dart';
+import '../../inventory/entities/hand_item_id.dart';
 import '../managers/farm_manager.dart';
 import '../services/crop_factory_service.dart';
 
@@ -35,7 +35,7 @@ class PlantSeedUseCase {
   /// [seedItemId] é o ID do item semente no inventário.
   /// 
   /// Retorna `true` se a operação foi bem-sucedida, `false` caso contrário.
-  bool call(int x, int y, HandItemType seedItemId) {
+  bool call(int x, int y, HandItemId seedItemId) {
     developer.log(
       'PlantSeedUseCase: Attempting to plant seed "${seedItemId.name}" at ($x, $y)',
       name: 'farm.usecases.plant_seed',
@@ -125,7 +125,7 @@ class PlantSeedUseCase {
   /// - "strawberry_seed_bag" -> "strawberry"
   /// - "tomato_seed" -> "tomato"
   /// - "potato_seed_bag" -> "potato"
-  HandItemType _extractCropIdFromSeedId(HandItemType seedItemId) {
+  HandItemId _extractCropIdFromSeedId(HandItemId seedItemId) {
     var cropIdName = seedItemId.name;
 
     if (cropIdName.endsWith('_seed_bag')) {
@@ -134,6 +134,6 @@ class PlantSeedUseCase {
       cropIdName = cropIdName.replaceAll('_seed', '');
     }
 
-    return HandItemType.fromString(cropIdName);
+    return HandItemId.fromString(cropIdName);
   }
 }

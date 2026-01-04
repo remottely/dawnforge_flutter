@@ -8,7 +8,7 @@ import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
 import '../database/item_icon_database.dart';
 import '../entities/hand_item.dart';
 import '../items/seed_item.dart';
-import '../entities/hand_item_type.dart';
+import '../entities/hand_item_id.dart';
 import '../../database/weapon_database.dart';
 import '../../database/tool_database.dart';
 import '../../database/consumable_database.dart';
@@ -17,11 +17,11 @@ import '../../database/seed_database.dart';
 
 /// Service for creating items from JSON database (L2: Factory with JSON database, I2: Service = External)
 class ItemFactoryService {
-  final Map<HandItemType, MainHandItem> _weapons = {};
-  final Map<HandItemType, ToolItem> _tools = {};
-  final Map<HandItemType, ConsumableItem> _consumables = {};
-  final Map<HandItemType, MaterialItem> _materials = {};
-  final Map<HandItemType, SeedItem> _seeds = {};
+  final Map<HandItemId, MainHandItem> _weapons = {};
+  final Map<HandItemId, ToolItem> _tools = {};
+  final Map<HandItemId, ConsumableItem> _consumables = {};
+  final Map<HandItemId, MaterialItem> _materials = {};
+  final Map<HandItemId, SeedItem> _seeds = {};
   bool isInitialized = false;
 
   Future<void> initialize() async {
@@ -75,7 +75,7 @@ class ItemFactoryService {
     }
   }
 
-  HandItem? createItem(HandItemType itemId) {
+  HandItem? createItem(HandItemId itemId) {
     if (!isInitialized) {
       developer.log(
         '[ItemFactoryService] ERROR: Not initialized! Call initialize() first',
@@ -123,11 +123,11 @@ class ItemFactoryService {
     }
   }
 
-  List<HandItem> createItems(List<HandItemType> itemIds) {
+  List<HandItem> createItems(List<HandItemId> itemIds) {
     return itemIds.map(createItem).whereType<HandItem>().toList();
   }
 
-  List<HandItemType> getAllItemIds() {
+  List<HandItemId> getAllItemIds() {
     return {
       ..._weapons.keys,
       ..._tools.keys,
@@ -138,7 +138,7 @@ class ItemFactoryService {
   }
 
   bool hasItem(String itemId) {
-    final idEnum = HandItemType.fromString(itemId);
+    final idEnum = HandItemId.fromString(itemId);
     return _weapons.containsKey(idEnum) ||
         _tools.containsKey(idEnum) ||
         _consumables.containsKey(idEnum) ||

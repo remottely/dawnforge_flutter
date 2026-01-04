@@ -1,5 +1,5 @@
 import '../entities/hand_item.dart';
-import '../entities/hand_item_type.dart';
+import '../entities/hand_item_id.dart';
 import '../models/item_category.dart';
 import '../models/item_quality.dart';
 import '../models/item_rarity.dart';
@@ -75,7 +75,7 @@ final class CropItem extends HandItem {
 
   factory CropItem.fromJson(Map<String, dynamic> json) {
     return CropItem(
-      id: HandItemType.fromJson(json['id'] as String),
+      id: HandItemId.fromJson(json['id'] as String),
       name: json['name'] as String,
       description: json['description'] as String,
       baseValue: json['baseValue'] as int,
@@ -99,7 +99,7 @@ final class CropItem extends HandItem {
 
   @override
   CropItem copyWith({
-    HandItemType? id,
+    HandItemId? id,
     String? name,
     String? description,
     int? baseValue,

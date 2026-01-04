@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_type.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_id.dart';
 
 import '../models/item_icon_data.dart';
 import '../../database/item_icon_database.dart';
@@ -8,7 +8,7 @@ class ItemIconDatabase {
   factory ItemIconDatabase() => _instance;
   ItemIconDatabase._internal();
 
-  final Map<HandItemType, ItemIconData> _icons = {};
+  final Map<HandItemId, ItemIconData> _icons = {};
   bool _initialized = false;
 
   Future<void> initialize() async {
@@ -32,7 +32,7 @@ class ItemIconDatabase {
     _initialized = true;
   }
 
-  ItemIconData? getIconData(HandItemType itemKey) {
+  ItemIconData? getIconData(HandItemId itemKey) {
     return _icons[itemKey];
   }
 

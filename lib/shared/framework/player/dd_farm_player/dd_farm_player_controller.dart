@@ -3,7 +3,7 @@ import 'dart:developer' as developer;
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_def.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_type.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_id.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_consumable_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_model.dart';
@@ -33,14 +33,14 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
     required dynamic actionId,
   }) =>
       InputDef.isPrimaryAction(actionId) &&
-      player.controller.model.equipment == HandItemType.shovel;
+      player.controller.model.equipment == HandItemId.shovel;
 
   bool isWateringCanAction({
     required DDBasePlayerView player,
     required dynamic actionId,
   }) =>
       InputDef.isPrimaryAction(actionId) &&
-      player.controller.model.equipment == HandItemType.wateringCan;
+      player.controller.model.equipment == HandItemId.wateringCan;
 
   bool isSeedAction({
     required DDBasePlayerView player,
@@ -54,7 +54,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
     required dynamic actionId,
   }) =>
       InputDef.isPrimaryAction(actionId) &&
-      player.controller.model.equipment == HandItemType.harvestBasket;
+      player.controller.model.equipment == HandItemId.harvestBasket;
 
   @override
   void handleInputAction({

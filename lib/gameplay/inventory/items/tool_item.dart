@@ -1,5 +1,5 @@
 import '../entities/hand_item.dart';
-import '../entities/hand_item_type.dart';
+import '../entities/hand_item_id.dart';
 import '../models/item_icon_data.dart';
 import '../models/item_rarity.dart';
 import '../models/item_type.dart';
@@ -38,7 +38,7 @@ final class ToolItem extends HandItem {
 
   factory ToolItem.fromJson(Map<String, dynamic> json) {
     return ToolItem(
-      id: HandItemType.fromJson(json['id'] as String),
+      id: HandItemId.fromJson(json['id'] as String),
       name: json['name'] as String,
       description: json['description'] as String,
       baseValue: json['baseValue'] as int,
@@ -51,7 +51,7 @@ final class ToolItem extends HandItem {
 
   @override
   ToolItem copyWith({
-    HandItemType? id,
+    HandItemId? id,
     String? name,
     String? description,
     int? baseValue,

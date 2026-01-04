@@ -1,12 +1,12 @@
 import 'package:darkness_dungeon/gameplay/inventory/items/tool_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_type.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_id.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/item_rarity.dart';
 
 final class ToolDatabaseDef {
   ToolDatabaseDef._();
-  static const Map<HandItemType, ToolItem> tools = {
-    HandItemType.iron_pickaxe: ToolItem(
-      id: HandItemType.iron_pickaxe,
+  static const Map<HandItemId, ToolItem> tools = {
+    HandItemId.iron_pickaxe: ToolItem(
+      id: HandItemId.iron_pickaxe,
       name: 'Iron Pickaxe',
       description: 'Mine rocks and ores efficiently',
       rarity: ItemRarity.common,
@@ -15,8 +15,8 @@ final class ToolDatabaseDef {
       toolType: 'pickaxe',
       powerLevel: 2,
     ),
-    HandItemType.steel_pickaxe: ToolItem(
-      id: HandItemType.steel_pickaxe,
+    HandItemId.steel_pickaxe: ToolItem(
+      id: HandItemId.steel_pickaxe,
       name: 'Steel Pickaxe',
       description: 'A superior pickaxe for harder minerals',
       rarity: ItemRarity.uncommon,
@@ -25,8 +25,8 @@ final class ToolDatabaseDef {
       toolType: 'pickaxe',
       powerLevel: 3,
     ),
-    HandItemType.wooden_axe: ToolItem(
-      id: HandItemType.wooden_axe,
+    HandItemId.wooden_axe: ToolItem(
+      id: HandItemId.wooden_axe,
       name: 'Wooden Axe',
       description: 'Basic tool for chopping trees',
       rarity: ItemRarity.common,
@@ -35,8 +35,8 @@ final class ToolDatabaseDef {
       toolType: 'axe',
       powerLevel: 1,
     ),
-    HandItemType.basic_hoe: ToolItem(
-      id: HandItemType.basic_hoe,
+    HandItemId.basic_hoe: ToolItem(
+      id: HandItemId.basic_hoe,
       name: 'Basic Hoe',
       description: 'Till soil for planting crops',
       rarity: ItemRarity.common,

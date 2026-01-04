@@ -3,7 +3,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/mobile_inputs_
 import 'package:darkness_dungeon/gameplay/core/modules/hud/responsive/responsive_overlay_base.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/joysctick_setup.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_type.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_id.dart';
 import 'package:darkness_dungeon/gameplay/inventory/state/equipment_state.dart';
 import 'package:flutter/material.dart';
 
@@ -33,7 +33,7 @@ class JoystickActionsOverlay extends ResponsiveOverlayBase {
     return ValueListenableBuilder<HandItem?>(
       valueListenable: EquipmentState.instance.equippedItem,
       builder: (context, equippedItem, _) {
-        final hasIronSword = equippedItem?.id == HandItemType.ironSword;
+        final hasIronSword = equippedItem?.id == HandItemId.ironSword;
 
         return Align(
           alignment: Alignment.bottomRight,
