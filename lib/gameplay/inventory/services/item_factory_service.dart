@@ -9,11 +9,11 @@ import '../database/item_icon_database.dart';
 import '../entities/hand/hand_item.dart';
 import '../items/seed_item.dart';
 import '../entities/hand/hand_item_id.dart';
-import '../../database/weapon_database.dart';
-import '../../database/tool_database.dart';
-import '../../database/consumable_database.dart';
-import '../../database/material_database.dart';
-import '../../database/seed_database.dart';
+import '../../database/weapon_database_def.dart';
+import '../../database/tool_database_def.dart';
+import '../../database/consumable_database_def.dart';
+import '../../database/material_database_def.dart';
+import '../../database/seed_database_def.dart';
 
 /// Service for creating items from JSON database (L2: Factory with JSON database, I2: Service = External)
 class ItemFactoryService {
@@ -52,7 +52,7 @@ class ItemFactoryService {
 
       _seeds
         ..clear()
-        ..addAll(SeedDatabaseDef.seeds);
+        ..addAll(SeedDatabaseDef.seedBagList);
 
       final totalItems = _weapons.length +
           _tools.length +

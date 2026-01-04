@@ -1,8 +1,8 @@
 import 'dart:developer' as developer;
 
-import 'package:darkness_dungeon/gameplay/database/soil_database.dart';
+import 'package:darkness_dungeon/gameplay/database/soil_database_def.dart';
 
-import '../../database/item_icon_database.dart';
+import '../../database/item_icon_database_def.dart';
 
 class SoilSpriteConfig {
   final String spritesheetPath;

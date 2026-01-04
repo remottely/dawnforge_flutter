@@ -1,7 +1,7 @@
 import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_id.dart';
 
 import '../models/item_icon_data.dart';
-import '../../database/item_icon_database.dart';
+import '../../database/item_icon_database_def.dart';
 
 class ItemIconDatabase {
   static final ItemIconDatabase _instance = ItemIconDatabase._internal();

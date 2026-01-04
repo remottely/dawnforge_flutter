@@ -5,7 +5,7 @@ import '../models/item_quality.dart';
 import '../entities/hand/hand_item_rarity.dart';
 import '../entities/hand/hand_item_type.dart';
 
-final class CropItem extends HandItem {
+final class HarvestLootItem extends HandItem {
   final ItemCategory category;
   final ItemQuality quality;
   final int energyRestore;
@@ -14,7 +14,7 @@ final class CropItem extends HandItem {
   final bool regrows;
   final int regrowthDays;
 
-  const CropItem({
+  const HarvestLootItem({
     required super.id,
     required super.name,
     required super.description,
@@ -73,8 +73,8 @@ final class CropItem extends HandItem {
     };
   }
 
-  factory CropItem.fromJson(Map<String, dynamic> json) {
-    return CropItem(
+  factory HarvestLootItem.fromJson(Map<String, dynamic> json) {
+    return HarvestLootItem(
       id: HandItemId.fromJson(json['id'] as String),
       name: json['name'] as String,
       description: json['description'] as String,
@@ -98,7 +98,7 @@ final class CropItem extends HandItem {
   }
 
   @override
-  CropItem copyWith({
+  HarvestLootItem copyWith({
     HandItemId? id,
     String? name,
     String? description,
@@ -117,7 +117,7 @@ final class CropItem extends HandItem {
     bool? regrows,
     int? regrowthDays,
   }) {
-    return CropItem(
+    return HarvestLootItem(
       id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
@@ -138,7 +138,7 @@ final class CropItem extends HandItem {
     );
   }
 
-  CropItem withQuality(ItemQuality newQuality) {
+  HarvestLootItem withQuality(ItemQuality newQuality) {
     return copyWith(quality: newQuality);
   }
 

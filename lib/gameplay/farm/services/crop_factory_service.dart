@@ -1,6 +1,6 @@
 import 'dart:developer' as developer;
 
-import 'package:darkness_dungeon/gameplay/database/crop_database.dart';
+import 'package:darkness_dungeon/gameplay/database/crop_database_def.dart';
 
 import '../../world/entities/objects/farm/crop_entity.dart';
 

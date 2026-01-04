@@ -5,7 +5,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/dialog/binary_choice_dialog.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/consumable_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/items/crop_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/items/harvest_loot_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_controller.dart';
@@ -105,7 +105,7 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
       '[ConsumableController] Consumo tentativa: slot=$selectedIndex item=${item.runtimeType} qty=${slot.quantity}',
     );
 
-    if (item is CropItem) {
+    if (item is HarvestLootItem) {
       if (!item.isEdible) return false;
       staminaGain = item.effectiveEnergyRestore;
       healthGain = item.effectiveHealthRestore.toDouble();

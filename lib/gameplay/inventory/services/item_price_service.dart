@@ -1,7 +1,7 @@
 import 'dart:developer' as developer;
 
 import 'package:darkness_dungeon/gameplay/inventory/config/inventory_def.dart';
-import 'package:darkness_dungeon/gameplay/inventory/items/crop_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/items/harvest_loot_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/item_category.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/item_quality.dart';
@@ -40,7 +40,7 @@ final class ItemPriceService {
   }) {
     var price = item.baseValue.toDouble();
 
-    if (item is CropItem) {
+    if (item is HarvestLootItem) {
       final itemQuality = quality ?? item.quality;
       price *= itemQuality.priceMultiplier;
     }
@@ -57,7 +57,7 @@ final class ItemPriceService {
     developer.log(
       '[ItemPriceService] Price for ${item.name}: '
       'base=${item.baseValue}, final=$finalPrice '
-      '(quality=${item is CropItem ? item.quality.name : "N/A"}, '
+      '(quality=${item is HarvestLootItem ? item.quality.name : "N/A"}, '
       'profession=${(professionBonus * 100).toStringAsFixed(0)}%, '
       'location=${isShippingBin ? "shipping" : "shop"})',
     );
@@ -71,7 +71,7 @@ final class ItemPriceService {
   }
 
   double _getProfessionBonus(HandItem item) {
-    if (item is CropItem) {
+    if (item is HarvestLootItem) {
       if (_hasTillerProfession &&
           [
             ItemCategory.vegetables,
