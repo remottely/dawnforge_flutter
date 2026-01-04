@@ -77,20 +77,20 @@ final class ItemPriceService {
             ItemCategory.vegetables,
             ItemCategory.fruits,
             ItemCategory.flowers,
-          ].contains(item.category)) {
+          ].contains(item.type)) {
         return InventoryDef.kTillerProfessionBonus;
       }
 
       if (_hasRancherProfession &&
-          item.category == ItemCategory.animalProducts) {
+          item.type == ItemCategory.animalProducts) {
         return InventoryDef.kRancherProfessionBonus;
       }
 
-      if (_hasArtisanProfession && item.category == ItemCategory.artisanGoods) {
+      if (_hasArtisanProfession && item.type == ItemCategory.artisanGoods) {
         return InventoryDef.kArtisanProfessionBonus;
       }
 
-      if (_hasAnglerProfession && item.category == ItemCategory.fish) {
+      if (_hasAnglerProfession && item.type == ItemCategory.fish) {
         return InventoryDef.kAnglerProfessionBonus;
       }
     }

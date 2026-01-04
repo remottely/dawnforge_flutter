@@ -1,4 +1,4 @@
-enum HandItemCategory {
+enum HandItemType {
   weapon,
   tool,
   consumable,
@@ -10,5 +10,5 @@ enum HandItemCategory {
 
   String toJson() => name;
 
-  static HandItemCategory fromJson(String json) => values.byName(json);
+  static HandItemType fromJson(String json) => values.byName(json);
 }

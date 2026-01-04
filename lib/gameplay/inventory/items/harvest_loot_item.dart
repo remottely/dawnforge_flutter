@@ -21,7 +21,7 @@ final class HarvestLootItem extends HandItem {
     required super.baseValue,
     required super.iconPath,
     super.rarity = HandItemRarity.common,
-    super.category = HandItemCategory.material,
+    super.type = HandItemType.material,
     super.isStackable = true,
     super.maxStackSize = 999,
     super.isDroppable = true,
@@ -55,7 +55,7 @@ final class HarvestLootItem extends HandItem {
       'id': id.name,
       'name': name,
       'description': description,
-      'category': category.toJson(),
+      'type': type.toJson(),
       'lootCategory': lootCategory.toJson(),
       'rarity': rarity.toJson(),
       'quality': quality.toJson(),
@@ -81,12 +81,12 @@ final class HarvestLootItem extends HandItem {
       baseValue: json['baseValue'] as int,
       iconPath: json['iconPath'] as String,
       rarity: HandItemRarity.fromJson(json['rarity'] as String? ?? 'common'),
-      category: HandItemCategory.fromJson(
-        json['category'] as String? ??
+      type: HandItemType.fromJson(
+        json['type'] as String? ??
             'weapon', // TODO(kevin): change this default value
       ),
       lootCategory: ItemCategory.fromJson(
-        json['category'] as String? ??
+        json['lootCategory'] as String? ??
             'vegetables', // TODO(kevin): change this default value
       ),
       quality: ItemQuality.fromJson(json['quality'] as String? ?? 'normal'),
@@ -110,7 +110,7 @@ final class HarvestLootItem extends HandItem {
     int? baseValue,
     String? iconPath,
     HandItemRarity? rarity,
-    HandItemCategory? category,
+    HandItemType? type,
     ItemCategory? lootCategory,
     ItemQuality? quality,
     int? maxStackSize,
@@ -130,7 +130,7 @@ final class HarvestLootItem extends HandItem {
       baseValue: baseValue ?? this.baseValue,
       iconPath: iconPath ?? this.iconPath,
       rarity: rarity ?? this.rarity,
-      category: category ?? this.category,
+      type: type ?? this.type,
       lootCategory: lootCategory ?? this.lootCategory,
       quality: quality ?? this.quality,
       maxStackSize: maxStackSize ?? this.maxStackSize,
@@ -154,6 +154,6 @@ final class HarvestLootItem extends HandItem {
     final qualityStr = quality != ItemQuality.normal
         ? ' (${quality.displayName})'
         : '';
-    return 'CropItem(id: ${id.name}, name: $name$qualityStr, category: ${category.name}, lootCategory: ${lootCategory.displayName}, season: $season)';
+    return 'CropItem(id: ${id.name}, name: $name$qualityStr, type: ${type.name}, lootCategory: ${lootCategory.displayName}, season: $season)';
   }
 }
