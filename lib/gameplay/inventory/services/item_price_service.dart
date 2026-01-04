@@ -2,9 +2,9 @@ import 'dart:developer' as developer;
 
 import 'package:darkness_dungeon/gameplay/inventory/config/inventory_def.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/harvest_loot_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_loot_category.dart';
-import 'package:darkness_dungeon/gameplay/inventory/models/item_quality.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/enums/loot_category.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/enums/item_quality.dart';
 
 final class ItemPriceService {
   ItemPriceService._();
@@ -74,23 +74,23 @@ final class ItemPriceService {
     if (item is HarvestLootItem) {
       if (_hasTillerProfession &&
           [
-            HandLootCategory.vegetable,
-            HandLootCategory.fruit,
-            HandLootCategory.flower,
+            LootCategory.vegetable,
+            LootCategory.fruit,
+            LootCategory.flower,
           ].contains(item.type)) {
         return InventoryDef.kTillerProfessionBonus;
       }
 
       if (_hasRancherProfession &&
-          item.type == HandLootCategory.animalProduct) {
+          item.type == LootCategory.animalProduct) {
         return InventoryDef.kRancherProfessionBonus;
       }
 
-      if (_hasArtisanProfession && item.type == HandLootCategory.artisanGood) {
+      if (_hasArtisanProfession && item.type == LootCategory.artisanGood) {
         return InventoryDef.kArtisanProfessionBonus;
       }
 
-      if (_hasAnglerProfession && item.type == HandLootCategory.fish) {
+      if (_hasAnglerProfession && item.type == LootCategory.fish) {
         return InventoryDef.kAnglerProfessionBonus;
       }
     }

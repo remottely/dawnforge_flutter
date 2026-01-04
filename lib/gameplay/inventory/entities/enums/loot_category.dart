@@ -1,4 +1,4 @@
-enum HandLootCategory { // TODO(Kevin): refact this
+enum LootCategory { // TODO(Kevin): refact this
   vegetable,
   fruit,
   flower,
@@ -26,21 +26,21 @@ enum HandLootCategory { // TODO(Kevin): refact this
 
   String get displayName {
     switch (this) {
-      case HandLootCategory.vegetable:
+      case LootCategory.vegetable:
         return 'Vegetable';
-      case HandLootCategory.fruit:
+      case LootCategory.fruit:
         return 'Fruit';
-      case HandLootCategory.flower:
+      case LootCategory.flower:
         return 'Flower';
       // case ItemCategory.forage:
       //   return 'Forage';
       // case ItemCategory.seed:
       //   return 'Seed';
-      case HandLootCategory.animalProduct:
+      case LootCategory.animalProduct:
         return 'Animal Product';
-      case HandLootCategory.artisanGood:
+      case LootCategory.artisanGood:
         return 'Artisan Good';
-      case HandLootCategory.fish:
+      case LootCategory.fish:
         return 'Fish';
       // case ItemCategory.fishingEquipment:
       //   return 'Fishing Equipment';
@@ -70,19 +70,19 @@ enum HandLootCategory { // TODO(Kevin): refact this
       //   return 'Quest Item';
       // case ItemCategory.trash:
       //   return 'Trash';
-      case HandLootCategory.misc:
+      case LootCategory.misc:
         return 'Miscellaneou';
     }
   }
 
   bool get canHaveQuality {
     return [
-      HandLootCategory.vegetable,
-      HandLootCategory.fruit,
-      HandLootCategory.flower,
+      LootCategory.vegetable,
+      LootCategory.fruit,
+      LootCategory.flower,
       // ItemCategory.forage,
-      HandLootCategory.animalProduct,
-      HandLootCategory.fish,
+      LootCategory.animalProduct,
+      LootCategory.fish,
       // ItemCategory.ore,
       // ItemCategory.mineral,
     ].contains(this);
@@ -90,11 +90,11 @@ enum HandLootCategory { // TODO(Kevin): refact this
 
   bool get isEdible {
     return [
-      HandLootCategory.vegetable,
-      HandLootCategory.fruit,
+      LootCategory.vegetable,
+      LootCategory.fruit,
       // ItemCategory.forage,
-      HandLootCategory.animalProduct,
-      HandLootCategory.fish,
+      LootCategory.animalProduct,
+      LootCategory.fish,
       // ItemCategory.cookedFood,
     ].contains(this);
   }
@@ -105,10 +105,10 @@ enum HandLootCategory { // TODO(Kevin): refact this
 
   String toJson() => name;
 
-  static HandLootCategory fromJson(String json) {
-    return HandLootCategory.values.firstWhere(
+  static LootCategory fromJson(String json) {
+    return LootCategory.values.firstWhere(
       (c) => c.name == json,
-      orElse: () => HandLootCategory.misc,
+      orElse: () => LootCategory.misc,
     );
   }
 

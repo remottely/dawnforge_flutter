@@ -1,7 +1,7 @@
-import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_id.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:equatable/equatable.dart';
 
-import 'hand/hand_item.dart';
+import 'hand_item.dart';
 
 /// Entity representing a slot in the inventory (D2: Entity with Serialization)
 final class InventorySlot extends Equatable {

@@ -1,12 +1,12 @@
-import '../entities/hand/hand_item.dart';
-import '../entities/hand/hand_item_id.dart';
-import '../entities/hand/hand_loot_category.dart';
-import '../models/item_quality.dart';
-import '../entities/hand/hand_item_rarity.dart';
-import '../entities/hand/hand_item_type.dart';
+import '../entities/hand_item.dart';
+import '../entities/enums/hand_item_id.dart';
+import '../entities/enums/loot_category.dart';
+import '../entities/enums/item_quality.dart';
+import '../entities/enums/hand_item_rarity.dart';
+import '../entities/enums/hand_item_type.dart';
 
 final class HarvestLootItem extends HandItem {
-  final HandLootCategory category;
+  final LootCategory category;
   final ItemQuality quality;
   final int energyRestore;
   final int healthRestore;
@@ -27,7 +27,7 @@ final class HarvestLootItem extends HandItem {
     super.isDroppable = true,
     super.isTradeable = true,
     super.iconData,
-    this.category = HandLootCategory.vegetable,
+    this.category = LootCategory.vegetable,
     this.quality = ItemQuality.normal,
     this.energyRestore = 13,
     this.healthRestore = 5,
@@ -85,7 +85,7 @@ final class HarvestLootItem extends HandItem {
         json['type'] as String? ??
             'weapon', // TODO(kevin): change this default value
       ),
-      category: HandLootCategory.fromJson(
+      category: LootCategory.fromJson(
         json['category'] as String? ??
             'vegetables', // TODO(kevin): change this default value
       ),
@@ -111,7 +111,7 @@ final class HarvestLootItem extends HandItem {
     String? iconPath,
     HandItemRarity? rarity,
     HandItemType? type,
-    HandLootCategory? category,
+    LootCategory? category,
     ItemQuality? quality,
     int? maxStackSize,
     bool? isStackable,

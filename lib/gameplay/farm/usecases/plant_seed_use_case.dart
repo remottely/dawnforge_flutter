@@ -5,7 +5,7 @@ import 'package:darkness_dungeon/gameplay/world/entities/objects/farm/soil_state
 
 import '../../inventory/usecases/add_item_use_case.dart';
 import '../../inventory/usecases/remove_item_use_case.dart';
-import '../../inventory/entities/hand/hand_item_id.dart';
+import '../../inventory/entities/enums/hand_item_id.dart';
 import '../managers/farm_manager.dart';
 import '../services/crop_factory_service.dart';
 

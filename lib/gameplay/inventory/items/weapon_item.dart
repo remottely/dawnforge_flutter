@@ -1,8 +1,8 @@
-import '../entities/hand/hand_item_id.dart';
-import '../entities/hand/hand_item.dart';
-import '../models/item_icon_data.dart';
-import '../entities/hand/hand_item_rarity.dart';
-import '../entities/hand/hand_item_type.dart';
+import '../entities/enums/hand_item_id.dart';
+import '../entities/hand_item.dart';
+import '../entities/item_icon_data.dart';
+import '../entities/enums/hand_item_rarity.dart';
+import '../entities/enums/hand_item_type.dart';
 
 final class WeaponItem extends HandItem {
   final int damage;

@@ -1,8 +1,8 @@
-import '../entities/hand/hand_item.dart';
-import '../entities/hand/hand_item_id.dart';
-import '../models/item_icon_data.dart';
-import '../entities/hand/hand_item_rarity.dart';
-import '../entities/hand/hand_item_type.dart';
+import '../entities/hand_item.dart';
+import '../entities/enums/hand_item_id.dart';
+import '../entities/item_icon_data.dart';
+import '../entities/enums/hand_item_rarity.dart';
+import '../entities/enums/hand_item_type.dart';
 
 final class SeedBagItem extends HandItem {
   final String cropId;

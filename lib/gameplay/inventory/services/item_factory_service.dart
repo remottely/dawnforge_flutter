@@ -6,9 +6,9 @@ import 'package:darkness_dungeon/gameplay/inventory/items/tool_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
 
 import '../database/item_icon_database.dart';
-import '../entities/hand/hand_item.dart';
+import '../entities/hand_item.dart';
 import '../items/seed_bag_item.dart';
-import '../entities/hand/hand_item_id.dart';
+import '../entities/enums/hand_item_id.dart';
 import '../../database/weapon_item_database_def.dart';
 import '../../database/tool_item_database_def.dart';
 import '../../database/consumable_item_database_def.dart';

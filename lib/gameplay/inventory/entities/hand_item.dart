@@ -1,7 +1,7 @@
-import 'hand_item_id.dart';
-import '../../models/item_icon_data.dart';
-import 'hand_item_rarity.dart';
-import 'hand_item_type.dart';
+import 'enums/hand_item_id.dart';
+import 'item_icon_data.dart';
+import 'enums/hand_item_rarity.dart';
+import 'enums/hand_item_type.dart';
 
 abstract class HandItem {
   final HandItemId id;

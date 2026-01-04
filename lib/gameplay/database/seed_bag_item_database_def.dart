@@ -1,6 +1,6 @@
 import 'package:darkness_dungeon/gameplay/inventory/items/seed_bag_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_id.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_rarity.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_rarity.dart';
 
 final class SeedBagItemDatabaseDef {
   static const Map<HandItemId, SeedBagItem> seedBagList = {

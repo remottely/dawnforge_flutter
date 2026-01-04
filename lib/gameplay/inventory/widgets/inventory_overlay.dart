@@ -5,7 +5,7 @@ import 'package:darkness_dungeon/gameplay/inventory/state/equipment_state.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/state/inventory_state.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/inventory_slot.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/widgets/item_sprite_widget.dart';
 import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
 import 'package:flutter/material.dart';

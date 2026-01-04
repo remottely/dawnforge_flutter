@@ -1,4 +1,4 @@
-import '../entities/hand/hand_item.dart';
+import '../entities/hand_item.dart';
 import '../managers/equipment_manager.dart';
 import '../managers/inventory_manager.dart';
 
