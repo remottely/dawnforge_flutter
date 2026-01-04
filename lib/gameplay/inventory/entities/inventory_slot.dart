@@ -41,7 +41,11 @@ final class InventorySlot extends Equatable {
 
   /// Serialization (D2)
   Map<String, dynamic> toJson() {
-    return {'index': index, 'itemId': item?.id, 'quantity': quantity};
+    return {
+      'index': index,
+      'itemId': item?.id.name,
+      'quantity': quantity,
+    };
   }
 
   /// Deserialization with item resolver
@@ -59,7 +63,7 @@ final class InventorySlot extends Equatable {
 
   @override
   String toString() =>
-      'InventorySlot(index: $index, item: ${item?.id}, quantity: $quantity)';
+      'InventorySlot(index: $index, item: ${item?.id.name}, quantity: $quantity)';
 
   @override
   List<Object?> get props => [index, item, quantity];

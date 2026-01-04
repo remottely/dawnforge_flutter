@@ -27,7 +27,7 @@ class EquipItemUseCase {
       return _equipmentManager.selectSlotIndex(inventorySlotIndex);
     }
 
-    final slot = _inventoryManager.findSlotByItemId(item.id);
+    final slot = _inventoryManager.findSlotByItemId(item.id.name);
     if (slot == null) return false;
     return _equipmentManager.selectSlotIndex(slot.index);
   }

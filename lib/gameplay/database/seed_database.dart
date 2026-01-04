@@ -1,10 +1,11 @@
 import 'package:darkness_dungeon/gameplay/inventory/items/seed_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/item_rarity.dart';
 
 final class SeedDatabaseDef {
-  static const Map<String, SeedItem> seeds = {
-    'carrot_seeds': SeedItem(
-      id: 'carrot_seeds',
+  static const Map<EquippedHandType, SeedItem> seeds = {
+    EquippedHandType.carrot_seeds: SeedItem(
+      id: EquippedHandType.carrot_seeds,
       name: 'Carrot Seeds',
       description: 'Plant to grow carrots in any season',
       rarity: ItemRarity.common,
@@ -16,8 +17,8 @@ final class SeedDatabaseDef {
       yield: 3,
       season: 'any',
     ),
-    'wheat_seeds': SeedItem(
-      id: 'wheat_seeds',
+    EquippedHandType.wheat_seeds: SeedItem(
+      id: EquippedHandType.wheat_seeds,
       name: 'Wheat Seeds',
       description: 'Grow wheat in spring or fall',
       rarity: ItemRarity.common,
@@ -29,8 +30,8 @@ final class SeedDatabaseDef {
       yield: 4,
       season: 'spring',
     ),
-    'tomato_seeds': SeedItem(
-      id: 'tomato_seeds',
+    EquippedHandType.tomato_seeds: SeedItem(
+      id: EquippedHandType.tomato_seeds,
       name: 'Tomato Seeds',
       description: 'Summer crop that produces many tomatoes',
       rarity: ItemRarity.uncommon,
@@ -42,8 +43,8 @@ final class SeedDatabaseDef {
       yield: 6,
       season: 'summer',
     ),
-    'pumpkin_seeds': SeedItem(
-      id: 'pumpkin_seeds',
+    EquippedHandType.pumpkin_seeds: SeedItem(
+      id: EquippedHandType.pumpkin_seeds,
       name: 'Pumpkin Seeds',
       description: 'Fall crop that grows large pumpkins',
       rarity: ItemRarity.uncommon,
@@ -55,8 +56,8 @@ final class SeedDatabaseDef {
       yield: 2,
       season: 'fall',
     ),
-    'ancient_seeds': SeedItem(
-      id: 'ancient_seeds',
+    EquippedHandType.ancient_seeds: SeedItem(
+      id: EquippedHandType.ancient_seeds,
       name: 'Ancient Seeds',
       description: 'Rare ancient seeds that grow valuable crops',
       rarity: ItemRarity.legendary,

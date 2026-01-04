@@ -1,10 +1,11 @@
 import 'package:darkness_dungeon/gameplay/inventory/items/material_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/item_rarity.dart';
 
 final class MaterialDatabaseDef {
-  static const Map<String, MaterialItem> materials = {
-    'wood': MaterialItem(
-      id: 'wood',
+  static const Map<EquippedHandType, MaterialItem> materials = {
+    EquippedHandType.wood: MaterialItem(
+      id: EquippedHandType.wood,
       name: 'Wood',
       description: 'Basic crafting material from trees',
       rarity: ItemRarity.common,
@@ -13,8 +14,8 @@ final class MaterialDatabaseDef {
       maxStackSize: 999,
       materialType: 'wood',
     ),
-    'stone': MaterialItem(
-      id: 'stone',
+    EquippedHandType.stone: MaterialItem(
+      id: EquippedHandType.stone,
       name: 'Stone',
       description: 'Common building material',
       rarity: ItemRarity.common,
@@ -23,8 +24,8 @@ final class MaterialDatabaseDef {
       maxStackSize: 999,
       materialType: 'stone',
     ),
-    'iron_ore': MaterialItem(
-      id: 'iron_ore',
+    EquippedHandType.iron_ore: MaterialItem(
+      id: EquippedHandType.iron_ore,
       name: 'Iron Ore',
       description: 'Raw iron ore for smelting',
       rarity: ItemRarity.uncommon,
@@ -33,8 +34,8 @@ final class MaterialDatabaseDef {
       maxStackSize: 999,
       materialType: 'ore',
     ),
-    'gold_ore': MaterialItem(
-      id: 'gold_ore',
+    EquippedHandType.gold_ore: MaterialItem(
+      id: EquippedHandType.gold_ore,
       name: 'Gold Ore',
       description: 'Precious gold ore',
       rarity: ItemRarity.rare,
@@ -43,8 +44,8 @@ final class MaterialDatabaseDef {
       maxStackSize: 999,
       materialType: 'ore',
     ),
-    'fiber': MaterialItem(
-      id: 'fiber',
+    EquippedHandType.fiber: MaterialItem(
+      id: EquippedHandType.fiber,
       name: 'Fiber',
       description: 'Plant fiber for crafting',
       rarity: ItemRarity.common,
@@ -53,8 +54,8 @@ final class MaterialDatabaseDef {
       maxStackSize: 999,
       materialType: 'fiber',
     ),
-    'dungeon_key': MaterialItem(
-      id: 'dungeon_key',
+    EquippedHandType.dungeon_key: MaterialItem(
+      id: EquippedHandType.dungeon_key,
       name: 'Dungeon Key',
       description: 'Opens locked dungeon doors. Consumed on use.',
       rarity: ItemRarity.common,
@@ -63,8 +64,8 @@ final class MaterialDatabaseDef {
       maxStackSize: 99,
       materialType: 'key',
     ),
-    'wheat_item': MaterialItem(
-      id: 'wheat_item',
+    EquippedHandType.wheat_item: MaterialItem(
+      id: EquippedHandType.wheat_item,
       name: 'Wheat',
       description: 'Golden wheat grain. Can be milled into flour.',
       rarity: ItemRarity.common,

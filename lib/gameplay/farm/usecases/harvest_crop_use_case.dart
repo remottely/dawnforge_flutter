@@ -1,6 +1,7 @@
 import 'dart:developer' as developer;
 
 import 'package:darkness_dungeon/gameplay/world/entities/objects/farm/farm_object.dart';
+import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
 
 import '../../inventory/usecases/add_item_use_case.dart';
 import '../managers/farm_manager.dart';
@@ -84,7 +85,7 @@ class HarvestCropUseCase {
 
     // 3. Adiciona item ao inventário
     final added = _addItemUseCase.call(
-      harvestItemId,
+      EquippedHandType.fromString(harvestItemId),
       harvestQuantity,
     );
 

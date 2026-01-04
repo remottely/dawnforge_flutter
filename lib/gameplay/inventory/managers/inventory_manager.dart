@@ -117,7 +117,7 @@ class InventoryManager {
 
   int getItemQuantity(String itemId) {
     return _slots
-        .where((s) => s.item?.id == itemId)
+      .where((s) => s.item?.id.name == itemId)
         .fold(0, (sum, slot) => sum + slot.quantity);
   }
 
@@ -132,7 +132,7 @@ class InventoryManager {
 
   InventorySlot? findSlotByItemId(String itemId) {
     for (final slot in _slots) {
-      if (slot.item?.id == itemId) return slot;
+      if (slot.item?.id.name == itemId) return slot;
     }
     return null;
   }

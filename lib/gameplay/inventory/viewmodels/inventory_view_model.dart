@@ -7,6 +7,7 @@ import '../managers/inventory_manager.dart';
 import '../usecases/add_item_use_case.dart';
 import '../usecases/equip_item_use_case.dart';
 import '../usecases/remove_item_use_case.dart';
+import '../models/equipped_hand_type.dart';
 
 /// ViewModel UI data for inventory slot
 class InventorySlotUI {
@@ -56,12 +57,12 @@ class InventoryViewModel {
        _equipItemUseCase = equipItemUseCase;
 
   /// Add item to inventory
-  bool addItem(String itemId, int quantity) {
+  bool addItem(EquippedHandType itemId, int quantity) {
     return _addItemUseCase(itemId, quantity);
   }
 
   /// Remove item from inventory
-  bool removeItem(String itemId, int quantity) {
+  bool removeItem(EquippedHandType itemId, int quantity) {
     return _removeItemUseCase(itemId, quantity);
   }
 

@@ -12,10 +12,18 @@ enum EquippedHandType {
   onion_seed_bag,
   cauliflower_seed_bag,
   corn_seed_bag,
+
+  /// Inventory seed items (non-equip variants)
+  carrot_seeds,
+  wheat_seeds,
+  tomato_seeds,
+  pumpkin_seeds,
+  ancient_seeds,
   tomato_seed_bag,
   grape_seed_bag,
   prickly_pear_seed_bag,
   coffee_seed_bag,
+  carrot,
   zuchini_seed_bag,
   pumpkin_seed_bag,
   pineapple_seed_bag,
@@ -24,27 +32,62 @@ enum EquippedHandType {
   strawberry,
   apple,
   tomato,
+  radish,
+  harvestBasket,
 
   /// Tools
   shovel,
   wateringCan,
-  harvestBasket,
   axe,
+  staff_fire,
   sword,
   wand,
 
   /// Weapons
   ironSword,
-  staff;
+  staff,
 
-  String toJson() => name;
+  /// Inventory tools/items
+  iron_pickaxe,
+  steel_pickaxe,
+  wooden_axe,
+  basic_hoe,
 
-  static EquippedHandType fromJson(String json) {
+  /// Consumables
+  health_potion,
+  stamina_potion,
+  super_health_potion,
+  cooked_meat,
+  strength_elixir,
+  carrot_item,
+  strawberry_item,
+  potato_item,
+  pumpkin_item,
+  turnip_item,
+  radish_item,
+  tomato_item,
+  corn_item,
+  apple_item,
+
+  /// Materials
+  wood,
+  stone,
+  iron_ore,
+  gold_ore,
+  fiber,
+  dungeon_key,
+  wheat_item;
+
+  static EquippedHandType fromString(String json) {
     return EquippedHandType.values.firstWhere(
       (type) => type.name == json,
       orElse: () => EquippedHandType.harvestBasket,
     );
   }
+
+  String toJson() => name;
+
+  static EquippedHandType fromJson(String json) => fromString(json);
 
   bool get isSeed =>
       this == apple_seed_bag ||
@@ -78,6 +121,7 @@ enum EquippedHandType {
       this == ironSword ||
       this == sword ||
       this == wand ||
+      this == staff_fire ||
       // this == axe || // TODO(Kevin): define axe isCombatWeapon?
       this == staff;
 

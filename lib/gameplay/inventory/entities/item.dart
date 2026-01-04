@@ -1,10 +1,11 @@
+import '../models/equipped_hand_type.dart';
 import '../models/item_icon_data.dart';
 import '../models/item_rarity.dart';
 import '../models/item_type.dart';
 
 /// Base entity for all items in the game (D2: Entity with Serialization)
 abstract class Item {
-  final String id;
+  final EquippedHandType id;
   final String name;
   final String description;
   final ItemType type;
@@ -49,5 +50,5 @@ abstract class Item {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() => 'Item(id: $id, name: $name, type: $type)';
+  String toString() => 'Item(id: ${id.name}, name: $name, type: $type)';
 }

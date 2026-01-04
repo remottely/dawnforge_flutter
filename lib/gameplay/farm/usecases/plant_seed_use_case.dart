@@ -5,6 +5,7 @@ import 'package:darkness_dungeon/gameplay/world/entities/objects/farm/soil_state
 
 import '../../inventory/usecases/add_item_use_case.dart';
 import '../../inventory/usecases/remove_item_use_case.dart';
+import '../../inventory/models/equipped_hand_type.dart';
 import '../managers/farm_manager.dart';
 import '../services/crop_factory_service.dart';
 
@@ -34,9 +35,9 @@ class PlantSeedUseCase {
   /// [seedItemId] é o ID do item semente no inventário.
   /// 
   /// Retorna `true` se a operação foi bem-sucedida, `false` caso contrário.
-  bool call(int x, int y, String seedItemId) {
+  bool call(int x, int y, EquippedHandType seedItemId) {
     developer.log(
-      'PlantSeedUseCase: Attempting to plant seed "$seedItemId" at ($x, $y)',
+      'PlantSeedUseCase: Attempting to plant seed "${seedItemId.name}" at ($x, $y)',
       name: 'farm.usecases.plant_seed',
     );
 
@@ -69,10 +70,10 @@ class PlantSeedUseCase {
     final cropId = _extractCropIdFromSeedId(seedItemId);
 
     // 3. Cria a crop usando o factory
-    final crop = _cropFactory.createCrop(cropId);
+    final crop = _cropFactory.createCrop(cropId.name);
     if (crop == null) {
       developer.log(
-        'PlantSeedUseCase: Failed to create crop from id "$cropId"',
+        'PlantSeedUseCase: Failed to create crop from id "${cropId.name}"',
         name: 'farm.usecases.plant_seed',
         level: 1000, // ERROR
       );
@@ -111,7 +112,7 @@ class PlantSeedUseCase {
     }
 
     developer.log(
-      'PlantSeedUseCase: Successfully planted "$cropId" at ($x, $y)',
+      'PlantSeedUseCase: Successfully planted "${cropId.name}" at ($x, $y)',
       name: 'farm.usecases.plant_seed',
     );
 
@@ -124,16 +125,15 @@ class PlantSeedUseCase {
   /// - "strawberry_seed_bag" -> "strawberry"
   /// - "tomato_seed" -> "tomato"
   /// - "potato_seed_bag" -> "potato"
-  String _extractCropIdFromSeedId(String seedItemId) {
-    String cropId = seedItemId;
+  EquippedHandType _extractCropIdFromSeedId(EquippedHandType seedItemId) {
+    var cropIdName = seedItemId.name;
 
-    // Remove sufixos comuns
-    if (cropId.endsWith('_seed_bag')) {
-      cropId = cropId.replaceAll('_seed_bag', '');
-    } else if (cropId.endsWith('_seed')) {
-      cropId = cropId.replaceAll('_seed', '');
+    if (cropIdName.endsWith('_seed_bag')) {
+      cropIdName = cropIdName.replaceAll('_seed_bag', '');
+    } else if (cropIdName.endsWith('_seed')) {
+      cropIdName = cropIdName.replaceAll('_seed', '');
     }
 
-    return cropId;
+    return EquippedHandType.fromString(cropIdName);
   }
 }

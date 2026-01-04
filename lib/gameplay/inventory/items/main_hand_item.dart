@@ -39,7 +39,7 @@ final class MainHandItem extends Item {
   @override
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'id': id.name,
       'name': name,
       'description': description,
       'type': type.toJson(),
@@ -59,7 +59,7 @@ final class MainHandItem extends Item {
 
   factory MainHandItem.fromJson(Map<String, dynamic> json) {
     return MainHandItem(
-      id: json['id'] as String,
+      id: EquippedHandType.fromJson(json['id'] as String),
       name: json['name'] as String,
       description: json['description'] as String,
       baseValue: json['baseValue'] as int,
@@ -80,7 +80,6 @@ final class MainHandItem extends Item {
 
   @override
   MainHandItem copyWith({
-    String? id,
     String? name,
     String? description,
     int? baseValue,
@@ -97,7 +96,7 @@ final class MainHandItem extends Item {
     ItemIconData? iconData,
   }) {
     return MainHandItem(
-      id: id ?? this.id,
+      id: this.id,
       name: name ?? this.name,
       description: description ?? this.description,
       baseValue: baseValue ?? this.baseValue,

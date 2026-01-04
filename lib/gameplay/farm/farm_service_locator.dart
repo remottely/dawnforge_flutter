@@ -102,10 +102,10 @@ Future<void> setupFarmDependencies() async {
   getIt.registerFactory<FarmViewModel>(
     () => FarmViewModel(
       getIt<FarmManager>(),
-      getIt<TillSoilUseCase>(),
-      getIt<PlantSeedUseCase>(),
-      getIt<WaterTileUseCase>(),
-      getIt<HarvestCropUseCase>(),
+      // getIt<TillSoilUseCase>(), // TODO(Kevin): put it back? use this implementation?
+      // getIt<PlantSeedUseCase>(), // TODO(Kevin): put it back? use this implementation?
+      // getIt<WaterTileUseCase>(), // TODO(Kevin): put it back? use this implementation?
+      // getIt<HarvestCropUseCase>(), // TODO(Kevin): put it back? use this implementation?
     ),
   );
 }

@@ -17,11 +17,11 @@ import '../../database/seed_database.dart';
 
 /// Service for creating items from JSON database (L2: Factory with JSON database, I2: Service = External)
 class ItemFactoryService {
-  final Map<String, MainHandItem> _weapons = {};
-  final Map<String, ToolItem> _tools = {};
-  final Map<String, ConsumableItem> _consumables = {};
-  final Map<String, MaterialItem> _materials = {};
-  final Map<String, SeedItem> _seeds = {};
+  final Map<EquippedHandType, MainHandItem> _weapons = {};
+  final Map<EquippedHandType, ToolItem> _tools = {};
+  final Map<EquippedHandType, ConsumableItem> _consumables = {};
+  final Map<EquippedHandType, MaterialItem> _materials = {};
+  final Map<EquippedHandType, SeedItem> _seeds = {};
   bool isInitialized = false;
 
   Future<void> initialize() async {
@@ -84,29 +84,30 @@ class ItemFactoryService {
     }
 
     try {
+      final idEnum = EquippedHandType.fromJson(itemId);
       final iconData = ItemIconDatabase().getIconData(itemId);
 
-      final weapon = _weapons[itemId];
+      final weapon = _weapons[idEnum];
       if (weapon != null) {
         return weapon.copyWith(iconData: iconData);
       }
 
-      final tool = _tools[itemId];
+      final tool = _tools[idEnum];
       if (tool != null) {
         return tool.copyWith(iconData: iconData);
       }
 
-      final consumable = _consumables[itemId];
+      final consumable = _consumables[idEnum];
       if (consumable != null) {
         return consumable.copyWith(iconData: iconData);
       }
 
-      final seed = _seeds[itemId];
+      final seed = _seeds[idEnum];
       if (seed != null) {
         return seed.copyWith(iconData: iconData);
       }
 
-      final material = _materials[itemId];
+      final material = _materials[idEnum];
       if (material != null) {
         return material.copyWith(iconData: iconData);
       }
@@ -127,7 +128,7 @@ class ItemFactoryService {
     return itemIds.map(createItem).whereType<Item>().toList();
   }
 
-  List<String> getAllItemIds() {
+  List<EquippedHandType> getAllItemIds() {
     return {
       ..._weapons.keys,
       ..._tools.keys,
@@ -138,10 +139,11 @@ class ItemFactoryService {
   }
 
   bool hasItem(String itemId) {
-    return _weapons.containsKey(itemId) ||
-        _tools.containsKey(itemId) ||
-        _consumables.containsKey(itemId) ||
-        _materials.containsKey(itemId) ||
-        _seeds.containsKey(itemId);
+    final idEnum = EquippedHandType.fromJson(itemId);
+    return _weapons.containsKey(idEnum) ||
+        _tools.containsKey(idEnum) ||
+        _consumables.containsKey(idEnum) ||
+        _materials.containsKey(idEnum) ||
+        _seeds.containsKey(idEnum);
   }
 }

@@ -35,7 +35,7 @@ void main() {
 
     test('should return false when quantity is zero or negative', () {
       // Arrange
-      const itemId = 'sword';
+      const itemId = EquippedHandType.sword;
 
       // Act & Assert
       expect(addItemUseCase(itemId, 0), false);
@@ -48,25 +48,25 @@ void main() {
 
     test('should return false when item does not exist', () {
       // Arrange
-      const itemId = 'nonexistent_item';
-      when(() => mockItemFactory.createItem(itemId)).thenReturn(null);
+      const itemId = EquippedHandType.apple;
+      when(() => mockItemFactory.createItem(itemId.name)).thenReturn(null);
 
       // Act
       final result = addItemUseCase(itemId, 1);
 
       // Assert
       expect(result, false);
-      verify(() => mockItemFactory.createItem(itemId)).called(1);
+      verify(() => mockItemFactory.createItem(itemId.name)).called(1);
       verifyNever(() => mockInventoryManager.updateSlot(any(), any()));
     });
 
     test('should add item to inventory when valid', () {
       // Arrange
-      const itemId = 'sword';
+      const itemId = EquippedHandType.ironSword;
       const quantity = 2;
 
       const mockItem = MainHandItem(
-        id: 'sword',
+        id: EquippedHandType.ironSword,
         name: 'Iron Sword',
         description: 'A basic sword',
         baseValue: 100,
@@ -81,7 +81,7 @@ void main() {
         (index) => InventorySlot(index: index),
       );
 
-      when(() => mockItemFactory.createItem(itemId)).thenReturn(mockItem);
+      when(() => mockItemFactory.createItem(itemId.name)).thenReturn(mockItem);
       when(() => mockInventoryManager.slots).thenReturn(emptySlots);
       when(
         () => mockInventoryManager.updateSlot(any(), any()),
@@ -92,17 +92,17 @@ void main() {
 
       // Assert
       expect(result, true);
-      verify(() => mockItemFactory.createItem(itemId)).called(1);
+      verify(() => mockItemFactory.createItem(itemId.name)).called(1);
       verify(() => mockInventoryManager.updateSlot(any(), any())).called(1);
     });
 
     test('should return false when inventory is full', () {
       // Arrange
-      const itemId = 'sword';
+      const itemId = EquippedHandType.sword;
       const quantity = 1;
 
       const mockItem = MainHandItem(
-        id: 'sword',
+        id: EquippedHandType.sword,
         name: 'Iron Sword',
         description: 'A basic sword',
         baseValue: 100,
@@ -117,7 +117,7 @@ void main() {
         (index) => InventorySlot(index: index, item: mockItem, quantity: 1),
       );
 
-      when(() => mockItemFactory.createItem(itemId)).thenReturn(mockItem);
+      when(() => mockItemFactory.createItem(itemId.name)).thenReturn(mockItem);
       when(() => mockInventoryManager.slots).thenReturn(fullSlots);
 
       // Act
@@ -125,7 +125,7 @@ void main() {
 
       // Assert
       expect(result, false);
-      verify(() => mockItemFactory.createItem(itemId)).called(1);
+      verify(() => mockItemFactory.createItem(itemId.name)).called(1);
     });
   });
 }

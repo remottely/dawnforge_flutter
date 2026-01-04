@@ -102,17 +102,17 @@ final class FarmToolActionDef {
   }
 
   static bool _handlePlant({
-    required String seedItemId,
+    required EquippedHandType seedItemId,
     required int x,
     required int y,
   }) {
     final _feedbackService = farm_di.getIt<FarmFeedbackService>();
 
     final planted = farm_di.getIt<PlantSeedUseCase>().call(
-          x,
-          y,
-          seedItemId,
-        );
+      x,
+      y,
+      seedItemId,
+    );
 
     if (planted) {
       _feedbackService.showFloatingText(FarmFeedbackDef.kSeedPlanted);

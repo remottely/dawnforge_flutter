@@ -1,12 +1,13 @@
+// import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
 import 'package:darkness_dungeon/gameplay/world/entities/objects/farm/farm_object.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../world/entities/objects/farm/soil_state.dart';
 import '../managers/farm_manager.dart';
-import '../usecases/harvest_crop_use_case.dart';
-import '../usecases/plant_seed_use_case.dart';
-import '../usecases/till_soil_use_case.dart';
-import '../usecases/water_tile_use_case.dart';
+// import '../usecases/harvest_crop_use_case.dart';
+// import '../usecases/plant_seed_use_case.dart';
+// import '../usecases/till_soil_use_case.dart';
+// import '../usecases/water_tile_use_case.dart';
 
 /// DTO (Data Transfer Object) for UI representation of a farm tile (F2: ViewModel pattern)
 class FarmTileUI {
@@ -71,17 +72,17 @@ class FarmTileUI {
 /// - Gerenciar ciclo de vida (dispose)
 class FarmViewModel {
   final FarmManager _farmManager;
-  final TillSoilUseCase _tillSoilUseCase;
-  final PlantSeedUseCase _plantSeedUseCase;
-  final WaterTileUseCase _waterTileUseCase;
-  final HarvestCropUseCase _harvestCropUseCase;
+  // final TillSoilUseCase _tillSoilUseCase; // TODO(Kevin): put it back? use this implementation?
+  // final PlantSeedUseCase _plantSeedUseCase; // TODO(Kevin): put it back? use this implementation?
+  // final WaterTileUseCase _waterTileUseCase; // TODO(Kevin): put it back? use this implementation?
+  // final HarvestCropUseCase _harvestCropUseCase; // TODO(Kevin): put it back? use this implementation?
 
   FarmViewModel(
     this._farmManager,
-    this._tillSoilUseCase,
-    this._plantSeedUseCase,
-    this._waterTileUseCase,
-    this._harvestCropUseCase,
+    // this._tillSoilUseCase,
+    // this._plantSeedUseCase,
+    // this._waterTileUseCase,
+    // this._harvestCropUseCase,
   ) {
     // Escuta mudanças no manager e atualiza UI
     _farmManager.tilesNotifier.addListener(_updateTilesUI);
@@ -121,58 +122,58 @@ class FarmViewModel {
 
   // ==================== Métodos de Ação para UI ====================
 
-  /// Executa ação de arar solo na posição (x, y)
-  void onTillSoil(int x, int y) {
-    _tillSoilUseCase.call(x, y);
-    // O manager notifica mudanças via ValueNotifier
-  }
+  // /// Executa ação de arar solo na posição (x, y)
+  // void onTillSoil(int x, int y) {
+  //   _tillSoilUseCase.call(x, y);
+  //   // O manager notifica mudanças via ValueNotifier
+  // } // TODO(Kevin): put it back? use this implementation?
 
-  /// Executa ação de plantar semente na posição (x, y)
-  void onPlantSeed(int x, int y, String seedItemId) {
-    _plantSeedUseCase.call(x, y, seedItemId);
-    // O manager notifica mudanças via ValueNotifier
-  }
+  // /// Executa ação de plantar semente na posição (x, y)
+  // void onPlantSeed(int x, int y, EquippedHandType seedItemId) {
+  //   _plantSeedUseCase.call(x, y, seedItemId);
+  //   // O manager notifica mudanças via ValueNotifier
+  // } // TODO(Kevin): put it back? use this implementation?
 
-  /// Executa ação de regar tile na posição (x, y)
-  void onWaterTile(int x, int y) {
-    _waterTileUseCase.call(x, y);
-    // O manager notifica mudanças via ValueNotifier
-  }
+  // /// Executa ação de regar tile na posição (x, y)
+  // void onWaterTile(int x, int y) {
+  //   _waterTileUseCase.call(x, y);
+  //   // O manager notifica mudanças via ValueNotifier
+  // } // TODO(Kevin): put it back? use this implementation?
 
-  /// Executa ação de colher plantação na posição (x, y)
-  void onHarvestCrop(int x, int y) {
-    _harvestCropUseCase.call(x, y);
-    // O manager notifica mudanças via ValueNotifier
-  }
+  // /// Executa ação de colher plantação na posição (x, y)
+  // void onHarvestCrop(int x, int y) {
+  //   _harvestCropUseCase.call(x, y);
+  //   // O manager notifica mudanças via ValueNotifier
+  // } // TODO(Kevin): put it back? use this implementation?
 
-  // ==================== Métodos de Query para UI ====================
+  // // ==================== Métodos de Query para UI ====================
 
-  /// Obtém tile UI específico por posição
-  FarmTileUI? getTileUI(int x, int y) {
-    try {
-      return tilesUINotifier.value.firstWhere(
-        (tile) => tile.x == x && tile.y == y,
-      );
-    } catch (e) {
-      return null;
-    }
-  }
+  // /// Obtém tile UI específico por posição
+  // FarmTileUI? getTileUI(int x, int y) {
+  //   try {
+  //     return tilesUINotifier.value.firstWhere(
+  //       (tile) => tile.x == x && tile.y == y,
+  //     );
+  //   } catch (e) {
+  //     return null;
+  //   }
+  // } // TODO(Kevin): put it back? use this implementation?
 
-  /// Obtém todas as tiles UI
-  List<FarmTileUI> getAllTilesUI() {
-    return List.unmodifiable(tilesUINotifier.value);
-  }
+  // /// Obtém todas as tiles UI
+  // List<FarmTileUI> getAllTilesUI() {
+  //   return List.unmodifiable(tilesUINotifier.value);
+  // } // TODO(Kevin): put it back? use this implementation?
 
-  /// Obtém tiles UI filtradas por condição
-  List<FarmTileUI> getTilesUIWhere(bool Function(FarmTileUI) predicate) {
-    return tilesUINotifier.value.where(predicate).toList();
-  }
+  // /// Obtém tiles UI filtradas por condição
+  // List<FarmTileUI> getTilesUIWhere(bool Function(FarmTileUI) predicate) {
+  //   return tilesUINotifier.value.where(predicate).toList();
+  // } // TODO(Kevin): put it back? use this implementation?
 
-  // ==================== Lifecycle ====================
+  // // ==================== Lifecycle ====================
 
-  /// Libera recursos (remover listeners, dispose notifiers)
-  void dispose() {
-    _farmManager.tilesNotifier.removeListener(_updateTilesUI);
-    tilesUINotifier.dispose();
-  }
+  // /// Libera recursos (remover listeners, dispose notifiers)
+  // void dispose() {
+  //   _farmManager.tilesNotifier.removeListener(_updateTilesUI);
+  //   tilesUINotifier.dispose();
+  // } // TODO(Kevin): put it back? use this implementation?
 }

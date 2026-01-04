@@ -1,3 +1,5 @@
+import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
+
 class ItemIconEntry {
   final int rowIndex;
   final int columnIndex;
@@ -67,5 +69,24 @@ final class ItemIconDatabaseDef {
     'iron_ore': ItemIconEntry(rowIndex: 999999, columnIndex: 999999),
     'dungeon_key': ItemIconEntry(rowIndex: 6, columnIndex: 6),
     'apple_item': ItemIconEntry(rowIndex: 2, columnIndex: 5),
+  };
+
+  /// Handy lookup keyed by equipped hand type so weapon templates can share the same authority.
+  static const Map<EquippedHandType, ItemIconEntry> equippedHandIcons = {
+    EquippedHandType.harvestBasket: ItemIconEntry(rowIndex: 6, columnIndex: 5),
+    EquippedHandType.strawberry_seed_bag: ItemIconEntry(rowIndex: 10, columnIndex: 7),
+    EquippedHandType.apple_seed_bag: ItemIconEntry(rowIndex: 10, columnIndex: 8),
+    EquippedHandType.radish_seed_bag: ItemIconEntry(rowIndex: 10, columnIndex: 5),
+    EquippedHandType.tomato_seed_bag: ItemIconEntry(rowIndex: 10, columnIndex: 15),
+    EquippedHandType.shovel: ItemIconEntry(rowIndex: 6, columnIndex: 4),
+    EquippedHandType.wateringCan: ItemIconEntry(rowIndex: 6, columnIndex: 3),
+    EquippedHandType.staff: ItemIconEntry(rowIndex: 6, columnIndex: 7),
+    EquippedHandType.staff_fire: ItemIconEntry(rowIndex: 6, columnIndex: 7),
+    EquippedHandType.axe: ItemIconEntry(rowIndex: 6, columnIndex: 2),
+    EquippedHandType.sword: ItemIconEntry(rowIndex: 6, columnIndex: 2),
+    EquippedHandType.wand: ItemIconEntry(rowIndex: 6, columnIndex: 7),
+    EquippedHandType.apple: ItemIconEntry(rowIndex: 1, columnIndex: 16),
+    EquippedHandType.strawberry: ItemIconEntry(rowIndex: 1, columnIndex: 15),
+    EquippedHandType.tomato: ItemIconEntry(rowIndex: 1, columnIndex: 1),
   };
 }

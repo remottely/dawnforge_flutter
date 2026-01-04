@@ -5,6 +5,7 @@ import '../entities/inventory_slot.dart';
 import '../entities/item.dart';
 import '../items/main_hand_item.dart';
 import '../managers/inventory_manager.dart';
+import '../models/equipped_hand_type.dart';
 import '../services/item_factory_service.dart';
 
 /// UseCase for adding items to inventory (B1: Concrete UseCase)
@@ -16,10 +17,10 @@ class AddItemUseCase {
 
   /// Add an item to inventory by ID and quantity
   /// Returns true if successful, false otherwise
-  bool call(String itemId, int quantity) {
+  bool call(EquippedHandType itemId, int quantity) {
     if (quantity <= 0) return false;
 
-    final item = _itemFactory.createItem(itemId);
+    final item = _itemFactory.createItem(itemId.name);
     if (item == null) return false;
 
     return addItemEntity(item, quantity);
@@ -126,7 +127,7 @@ class AddItemUseCase {
 
   /// Add multiple items (id, quantity) in one call. Useful for shop purchases.
   /// Returns true if at least one item was added.
-  bool addMultiple(List<(String itemId, int quantity)> items) {
+  bool addMultiple(List<(EquippedHandType itemId, int quantity)> items) {
     var anyAdded = false;
 
     for (final (itemId, quantity) in items) {
@@ -134,9 +135,9 @@ class AddItemUseCase {
 
       if (success) {
         anyAdded = true;
-        developer.log('[AddItemUseCase] Added $quantity x $itemId');
+        developer.log('[AddItemUseCase] Added $quantity x ${itemId.name}');
       } else {
-        developer.log('[AddItemUseCase] Failed to add $quantity x $itemId');
+        developer.log('[AddItemUseCase] Failed to add $quantity x ${itemId.name}');
       }
     }
 

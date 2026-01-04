@@ -126,15 +126,15 @@ class InventoryInputHandler extends GameComponent
     developer.log('[InventoryInput] Inicializando itens de teste...');
 
     const testItems = [
-      ('shovel', 1),
-      ('radish_seed_bag', 50),
-      ('strawberry_seed_bag', 50),
-      ('apple_seed_bag', 50),
-      ('tomato_seed_bag', 50),
-      ('wateringCan', 1),
-      ('harvestBasket', 1),
-      ('ironSword', 1),
-      ('staff', 1),
+      (EquippedHandType.shovel, 1),
+      (EquippedHandType.radish_seed_bag, 50),
+      (EquippedHandType.strawberry_seed_bag, 50),
+      (EquippedHandType.apple_seed_bag, 50),
+      (EquippedHandType.tomato_seed_bag, 50),
+      (EquippedHandType.wateringCan, 1),
+      (EquippedHandType.harvestBasket, 1),
+      (EquippedHandType.ironSword, 1),
+      (EquippedHandType.staff, 1),
     ];
 
     _addItems(testItems);
@@ -178,13 +178,13 @@ class InventoryInputHandler extends GameComponent
     }
   }
 
-  void _debugInsertItem(String itemKey) {
-    if (getIt<InventoryManager>().getItemQuantity(itemKey) == 0) {
+  void _debugInsertItem(EquippedHandType itemKey) {
+    if (getIt<InventoryManager>().getItemQuantity(itemKey.name) == 0) {
       getIt<AddItemUseCase>()(itemKey, 1);
     }
   }
 
-  void _addItems(List<(String, int)> items) {
+  void _addItems(List<(EquippedHandType, int)> items) {
     final success = getIt<AddItemUseCase>().addMultiple(items);
 
     if (!success) {
@@ -197,7 +197,10 @@ class InventoryInputHandler extends GameComponent
   void _addTestItems() {
     developer.log('[InventoryInput] Adicionando mais itens de teste...');
 
-    final testMaterials = [('stone', 100), ('iron_ore', 25)];
+    final testMaterials = [
+      (EquippedHandType.stone, 100),
+      (EquippedHandType.iron_ore, 25),
+    ];
 
     for (final (itemKey, quantity) in testMaterials) {
       final success = getIt<AddItemUseCase>()(itemKey, quantity);
