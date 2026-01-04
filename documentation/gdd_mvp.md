@@ -79,26 +79,27 @@ Entregar um protótipo jogável que capture o loop central de farming:
 
 ## 6. Sistemas Centrais
 ### 6.1 Mundo e Mapa
-🔥🟡 Grid 16x16 tiles, área arável delimitada e clara.
+<!-- 🔥🟢 Grid 16x16 tiles -->
 <!-- 🔥🟢 Colisões mínimas (casas/rochas/decor) para guiar o jogador -->
 <!-- ⭐🔴 Ponto de venda (caixa/cofre) e ponto de compra (loja simples UI) -->
 
 ### 6.2 Tempo, Dia/Noite, Estações e Clima
 🔥🔴 Relógio interno: 10min = 7s reais. 1 dia ≈ 12,6 minutos reais no MVP.
-🔥🟡 Dormir avança para o próximo dia e regenera energia.
-    ⭐🔴 Desmaiar as 2h da manhã joga player para cama e ele acorda com 70% da energia.
-🔥🟡 Estação fixa (primavera) no MVP; sem variação climática obrigatória.
+Dormir:
+    🔥🟡 avança para o próximo dia e regenera energia.
+    🔥🟡 Desmaiar as 2h da manhã joga player para cama e ele acorda com 70% da energia.
+<!-- 🔥🟢 Estação fixa (primavera) no MVP; sem variação climática obrigatória. -->
 
 ### 6.3 Jogador e Progressão
 <!-- 🔥🟢 Atributos: vida, energia (stamina), posição -->
-🔥🟡 Energia é consumida ao cavar/regar/colher; dormir restaura energia total.
+<!-- 🔥🟢 Energia é consumida ao cavar/regar/colher; dormir restaura energia total. -->
 <!-- ⭐🔴 Energia é consumida ao arar -->
 <!-- ⭐🔴 Sem níveis/skills no MVP; progresso via economia e mais seeds -->
 
 ### 6.4 Inventário e Itens
 Slots: 
     <!-- 🔥🟢 limitados a 12 espaços -->
-    🔥🟡 com stack para recursos. Falta melhorar.
+    <!-- 🔥🟢 com stack para recursos --> 
 Itens mínimos:
     <!-- 🔥🟢 seeds (2 tipos) -->
     <!-- 🔥🟢 colheitas (2). Falta melhorar renderização dos crops no inventorio -->
@@ -107,10 +108,10 @@ Itens mínimos:
     <!-- 🔥🟢 água (implícita no regador com uso ilimitado no MVP) -->
 
 ### 6.5 Ferramentas e Ações de Fazenda
-🔥🟡 Pá: torna grama em terra.
+<!-- 🔥🟢 Pá: torna grama em terra. -->
 <!-- ⭐🔴 Enxada: torna tile arável -->
 <!-- 🔥🟢 Regador: marca tile como regado para o dia -->
-🔥🟡 Foice/Mão: colhe e coleta item.
+<!-- 🔥🟢 Foice/Mão: colhe e coleta item. -->
 🔥🟡 Interação contextual via botão de ação (keyboard/joystick). Entender esse tópico e verificar comportamento.
 
 ### 6.6 Cultivos (Plantio, Crescimento, Colheita)
@@ -171,7 +172,10 @@ Persistir:
 ## 8. KPIs e Critérios de Pronto
 🔥🔴 O jogador completa "2 ciclos de plantio-colheita-venda em ≤30 minutos"?
 🔥🔴 Nenhum softlock ao dormir (sempre há seeds ou dinheiro suficiente inicial para recomeçar)
-🔥🟡 Save/Load preserva cultivos, inventário, dinheiro e tempo de forma consistente
+Save/Load preserva de forma consistente:
+    <!-- 🔥🟢 cultivos, inventário -->
+    <!-- ⭐🔴 dinheiro -->
+    <!-- ⭐🔴 tempo -->
 🔥🟡 Inputs e overlays funcionam após resize/fullscreen no web/desktop
 
 ## 9. Riscos e Mitigações

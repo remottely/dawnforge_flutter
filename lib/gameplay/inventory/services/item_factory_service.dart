@@ -8,7 +8,7 @@ import '../items/material_item.dart';
 import '../items/seed_item.dart';
 import '../items/tool_item.dart';
 import '../models/equipped_hand_type.dart';
-import '../../database/weapon_data.dart';
+import '../../database/weapon_database.dart';
 import '../../database/tool_database.dart';
 import '../../database/consumable_database.dart';
 import '../../database/material_database.dart';

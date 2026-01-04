@@ -1,5 +1,5 @@
 import '../models/item_icon_data.dart';
-import '../../database/game_data_constants.dart';
+import '../../database/item_icon_database.dart';
 
 class ItemIconDatabase {
   static final ItemIconDatabase _instance = ItemIconDatabase._internal();
