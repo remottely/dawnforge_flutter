@@ -1,4 +1,5 @@
 import '../entities/item.dart';
+import '../models/item_icon_data.dart';
 import '../models/item_rarity.dart';
 import '../models/item_type.dart';
 
@@ -77,6 +78,7 @@ final class SeedItem extends Item {
     int? growthTime,
     int? yield,
     String? season,
+    ItemIconData? iconData,
   }) {
     return SeedItem(
       id: id ?? this.id,
@@ -90,6 +92,7 @@ final class SeedItem extends Item {
       growthTime: growthTime ?? this.growthTime,
       yield: yield ?? this.yield,
       season: season ?? this.season,
+      iconData: iconData ?? this.iconData,
     );
   }
 

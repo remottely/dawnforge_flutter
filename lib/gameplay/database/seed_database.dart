@@ -1,36 +1,9 @@
+import 'package:darkness_dungeon/gameplay/inventory/items/seed_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/item_rarity.dart';
 
-class SeedData {
-  final String id;
-  final String name;
-  final String description;
-  final ItemRarity rarity;
-  final int baseValue;
-  final String iconPath;
-  final int maxStackSize;
-  final String cropId;
-  final int growthTime;
-  final int yield;
-  final String season;
-
-  const SeedData({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.rarity,
-    required this.baseValue,
-    required this.iconPath,
-    required this.maxStackSize,
-    required this.cropId,
-    required this.growthTime,
-    required this.yield,
-    required this.season,
-  });
-}
-
 final class SeedDatabaseDef {
-  static const Map<String, SeedData> seeds = {
-    'carrot_seeds': SeedData(
+  static const Map<String, SeedItem> seeds = {
+    'carrot_seeds': SeedItem(
       id: 'carrot_seeds',
       name: 'Carrot Seeds',
       description: 'Plant to grow carrots in any season',
@@ -43,7 +16,7 @@ final class SeedDatabaseDef {
       yield: 3,
       season: 'any',
     ),
-    'wheat_seeds': SeedData(
+    'wheat_seeds': SeedItem(
       id: 'wheat_seeds',
       name: 'Wheat Seeds',
       description: 'Grow wheat in spring or fall',
@@ -56,7 +29,7 @@ final class SeedDatabaseDef {
       yield: 4,
       season: 'spring',
     ),
-    'tomato_seeds': SeedData(
+    'tomato_seeds': SeedItem(
       id: 'tomato_seeds',
       name: 'Tomato Seeds',
       description: 'Summer crop that produces many tomatoes',
@@ -69,7 +42,7 @@ final class SeedDatabaseDef {
       yield: 6,
       season: 'summer',
     ),
-    'pumpkin_seeds': SeedData(
+    'pumpkin_seeds': SeedItem(
       id: 'pumpkin_seeds',
       name: 'Pumpkin Seeds',
       description: 'Fall crop that grows large pumpkins',
@@ -82,7 +55,7 @@ final class SeedDatabaseDef {
       yield: 2,
       season: 'fall',
     ),
-    'ancient_seeds': SeedData(
+    'ancient_seeds': SeedItem(
       id: 'ancient_seeds',
       name: 'Ancient Seeds',
       description: 'Rare ancient seeds that grow valuable crops',

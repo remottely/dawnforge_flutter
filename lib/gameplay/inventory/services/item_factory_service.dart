@@ -21,7 +21,7 @@ class ItemFactoryService {
   final Map<String, ToolData> _tools = {};
   final Map<String, ConsumableItem> _consumables = {};
   final Map<String, MaterialItem> _materials = {};
-  final Map<String, SeedData> _seeds = {};
+  final Map<String, SeedItem> _seeds = {};
   bool isInitialized = false;
 
   Future<void> initialize() async {
@@ -128,22 +128,9 @@ class ItemFactoryService {
         return consumable.copyWith(iconData: iconData);
       }
 
-      final seedData = _seeds[itemId];
-      if (seedData != null) {
-        return SeedItem(
-          id: seedData.id,
-          name: seedData.name,
-          description: seedData.description,
-          baseValue: seedData.baseValue,
-          iconPath: seedData.iconPath,
-          rarity: seedData.rarity,
-          maxStackSize: seedData.maxStackSize,
-          cropId: seedData.cropId,
-          growthTime: seedData.growthTime,
-          yield: seedData.yield,
-          season: seedData.season,
-          iconData: iconData,
-        );
+      final seed = _seeds[itemId];
+      if (seed != null) {
+        return seed.copyWith(iconData: iconData);
       }
 
       final material = _materials[itemId];
