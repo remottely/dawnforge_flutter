@@ -107,8 +107,8 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
 
     if (item is HarvestLootItem) {
       if (!item.isEdible) return false;
-      staminaGain = item.effectiveEnergyRestore;
-      healthGain = item.effectiveHealthRestore.toDouble();
+      staminaGain = item.staminaRestore;
+      healthGain = item.staminaRestore.toDouble();
     } else if (item is ConsumableItem) {
       staminaGain = item.staminaRestore;
       healthGain = item.healthRestore.toDouble();

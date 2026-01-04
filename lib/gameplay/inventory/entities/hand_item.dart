@@ -11,7 +11,6 @@ abstract class HandItem {
   final HandItemQuality quality;
   final int maxStackSize;
   final int baseValue;
-  final String iconPath;
   final bool isStackable;
   final bool isDroppable;
   final bool isTradeable;
@@ -25,7 +24,6 @@ abstract class HandItem {
     this.quality = HandItemQuality.normal,
     this.maxStackSize = 1,
     required this.baseValue,
-    required this.iconPath,
     this.isStackable = false,
     this.isDroppable = true,
     this.isTradeable = true,

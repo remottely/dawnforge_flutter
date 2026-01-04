@@ -1,13 +1,12 @@
-import '../entities/hand_item.dart';
+import 'consumable_item.dart';
 import '../entities/enums/hand_item_id.dart';
 import '../entities/enums/loot_category.dart';
 import '../entities/enums/hand_item_quality.dart';
 import '../entities/enums/hand_item_type.dart';
+import '../entities/item_icon_data.dart';
 
-final class HarvestLootItem extends HandItem {
+final class HarvestLootItem extends ConsumableItem {
   final LootCategory category;
-  final int energyRestore;
-  final int healthRestore;
   final String season;
   final bool regrows;
   final int regrowthDays;
@@ -17,17 +16,16 @@ final class HarvestLootItem extends HandItem {
     required super.name,
     required super.description,
     required super.baseValue,
-    required super.iconPath,
     super.quality = HandItemQuality.normal,
     super.type = HandItemType.material,
     super.isStackable = true,
     super.maxStackSize = 999,
-    super.isDroppable = true,
-    super.isTradeable = true,
     super.iconData,
     this.category = LootCategory.vegetable,
-    this.energyRestore = 13,
-    this.healthRestore = 5,
+    super.isDroppable = true,
+    super.isTradeable = true,
+    super.healthRestore = 5,
+    super.staminaRestore = 13,
     required this.season,
     this.regrows = false,
     this.regrowthDays = 0,
@@ -35,14 +33,6 @@ final class HarvestLootItem extends HandItem {
 
   @override
   int get sellValue => (baseValue * quality.priceMultiplier).round();
-
-  int get effectiveEnergyRestore {
-    return energyRestore;
-  }
-
-  int get effectiveHealthRestore {
-    return healthRestore;
-  }
 
   bool get isEdible => category.isEdible;
 
@@ -56,12 +46,11 @@ final class HarvestLootItem extends HandItem {
       'category': category.toJson(),
       'quality': quality.toJson(),
       'baseValue': baseValue,
-      'iconPath': iconPath,
       'maxStackSize': maxStackSize,
       'isStackable': isStackable,
       'isDroppable': isDroppable,
       'isTradeable': isTradeable,
-      'energyRestore': energyRestore,
+      'staminaRestore': staminaRestore,
       'healthRestore': healthRestore,
       'season': season,
       'regrows': regrows,
@@ -75,7 +64,6 @@ final class HarvestLootItem extends HandItem {
       name: json['name'] as String,
       description: json['description'] as String,
       baseValue: json['baseValue'] as int,
-      iconPath: json['iconPath'] as String,
       quality: HandItemQuality.fromJson(json['quality'] as String? ?? 'common'),
       type: HandItemType.fromJson(
         json['type'] as String? ??
@@ -89,7 +77,7 @@ final class HarvestLootItem extends HandItem {
       isStackable: json['isStackable'] as bool? ?? true,
       isDroppable: json['isDroppable'] as bool? ?? true,
       isTradeable: json['isTradeable'] as bool? ?? true,
-      energyRestore: json['energyRestore'] as int? ?? 13,
+      staminaRestore: json['staminaRestore'] as int? ?? 13,
       healthRestore: json['healthRestore'] as int? ?? 5,
       season: json['season'] as String,
       regrows: json['regrows'] as bool? ?? false,
@@ -103,16 +91,18 @@ final class HarvestLootItem extends HandItem {
     String? name,
     String? description,
     int? baseValue,
-    String? iconPath,
     HandItemQuality? quality,
+    int? maxStackSize,
+    int? healthRestore,
+    int? staminaRestore,
+    int? duration,
+    ItemIconData? iconData,
+    // Extra fields specific to HarvestLootItem
     HandItemType? type,
     LootCategory? category,
-    int? maxStackSize,
     bool? isStackable,
     bool? isDroppable,
     bool? isTradeable,
-    int? energyRestore,
-    int? healthRestore,
     String? season,
     bool? regrows,
     int? regrowthDays,
@@ -122,7 +112,6 @@ final class HarvestLootItem extends HandItem {
       name: name ?? this.name,
       description: description ?? this.description,
       baseValue: baseValue ?? this.baseValue,
-      iconPath: iconPath ?? this.iconPath,
       quality: quality ?? this.quality,
       type: type ?? this.type,
       category: category ?? this.category,
@@ -130,11 +119,12 @@ final class HarvestLootItem extends HandItem {
       isStackable: isStackable ?? this.isStackable,
       isDroppable: isDroppable ?? this.isDroppable,
       isTradeable: isTradeable ?? this.isTradeable,
-      energyRestore: energyRestore ?? this.energyRestore,
+      staminaRestore: staminaRestore ?? this.staminaRestore,
       healthRestore: healthRestore ?? this.healthRestore,
       season: season ?? this.season,
       regrows: regrows ?? this.regrows,
       regrowthDays: regrowthDays ?? this.regrowthDays,
+      iconData: iconData ?? this.iconData,
     );
   }
 

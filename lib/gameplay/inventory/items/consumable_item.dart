@@ -4,7 +4,7 @@ import '../entities/item_icon_data.dart';
 import '../entities/enums/hand_item_quality.dart';
 import '../entities/enums/hand_item_type.dart';
 
-final class ConsumableItem extends HandItem {
+class ConsumableItem extends HandItem {
   final int healthRestore;
   final int staminaRestore;
 
@@ -13,11 +13,12 @@ final class ConsumableItem extends HandItem {
     required super.name,
     required super.description,
     required super.baseValue,
-    required super.iconPath,
     super.quality = HandItemQuality.normal,
     super.type = HandItemType.consumable,
     super.isStackable = true,
     super.maxStackSize = 99,
+    super.isDroppable = true,
+    super.isTradeable = true,
     super.iconData,
     this.healthRestore = 0,
     this.staminaRestore = 0,
@@ -32,7 +33,6 @@ final class ConsumableItem extends HandItem {
       'type': type.toJson(),
       'quality': quality.toJson(),
       'baseValue': baseValue,
-      'iconPath': iconPath,
       'maxStackSize': maxStackSize,
       'healthRestore': healthRestore,
       'staminaRestore': staminaRestore,
@@ -47,7 +47,6 @@ final class ConsumableItem extends HandItem {
       name: json['name'] as String,
       description: json['description'] as String,
       baseValue: json['baseValue'] as int,
-      iconPath: json['iconPath'] as String,
       quality: HandItemQuality.fromJson(json['quality'] as String),
       maxStackSize: json['maxStackSize'] as int? ?? 99,
       // Fallback: some data uses healAmount instead of healthRestore/staminaRestore
@@ -62,7 +61,6 @@ final class ConsumableItem extends HandItem {
     String? name,
     String? description,
     int? baseValue,
-    String? iconPath,
     HandItemQuality? quality,
     int? maxStackSize,
     int? healthRestore,
@@ -75,7 +73,6 @@ final class ConsumableItem extends HandItem {
       name: name ?? this.name,
       description: description ?? this.description,
       baseValue: baseValue ?? this.baseValue,
-      iconPath: iconPath ?? this.iconPath,
       quality: quality ?? this.quality,
       maxStackSize: maxStackSize ?? this.maxStackSize,
       healthRestore: healthRestore ?? this.healthRestore,
