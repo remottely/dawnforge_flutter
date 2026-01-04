@@ -9,6 +9,7 @@ import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.d
 import 'package:darkness_dungeon/gameplay/inventory/state/inventory_state.dart';
 import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
 import 'package:darkness_dungeon/gameplay/inventory/usecases/add_item_use_case.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_id.dart';
 
@@ -230,9 +231,8 @@ class InventoryInputHandler extends GameComponent
 
     if (success) {
       final item = inventoryManager.getSlotByIndex(nextIndex)?.item;
-      final handSuffix = item is WeaponItem
-          ? ' (${item.equippedHandType})'
-          : '';
+      final handType = _extractHandType(item);
+      final handSuffix = handType != null ? ' ($handType)' : '';
       final itemName = item?.name ?? 'vazio';
       developer.log(
         '[InventoryInput] ✓ Slot selecionado: $itemName$handSuffix',
@@ -266,9 +266,8 @@ class InventoryInputHandler extends GameComponent
 
     if (success) {
       final item = inventoryManager.getSlotByIndex(previousIndex)?.item;
-      final handSuffix = item is WeaponItem
-          ? ' (${item.equippedHandType})'
-          : '';
+      final handType = _extractHandType(item);
+      final handSuffix = handType != null ? ' ($handType)' : '';
       final itemName = item?.name ?? 'vazio';
       developer.log(
         '[InventoryInput] ✓ Slot selecionado (reverso): $itemName$handSuffix',
@@ -290,10 +289,14 @@ class InventoryInputHandler extends GameComponent
 
   void _handleSelectedSlotChanged() {
     final selectedItem = getIt<EquipmentManager>().getEquippedItem();
-    final equippedHandType = selectedItem is WeaponItem
-        ? selectedItem.equippedHandType
-        : null;
+    final equippedHandType = _extractHandType(selectedItem);
     _notifyEquipmentChanged(equippedHandType);
+  }
+
+  HandItemId? _extractHandType(HandItem? item) {
+    if (item == null) return null;
+    if (item is WeaponItem) return item.equippedHandType;
+    return item.id;
   }
 
   // ========== SV STYLE SLOT SELECTION ==========

@@ -1,5 +1,8 @@
 import 'dart:developer' as developer;
 
+import '../../inventory/entities/hand/hand_item.dart';
+import '../../inventory/items/seed_item.dart';
+import '../../inventory/items/tool_item.dart';
 import '../../inventory/items/weapon_item.dart';
 import '../../inventory/entities/hand/hand_item_id.dart';
 import '../../world/entities/world_entities.dart';
@@ -7,11 +10,13 @@ import '../../world/entities/world_entities.dart';
 /// Service for validating farm tool usage (I2: Service = stateless)
 class FarmToolService {
   /// Check if a tool can be used on a specific tile
-  bool canUseTool(WeaponItem tool, GridTile tile) {
+  bool canUseTool(HandItem tool, GridTile tile) {
     final farmObject = tile.object as FarmObject?;
     if (farmObject == null) return false;
 
-    final handType = tool.equippedHandType;
+    final handType = _extractHandType(tool);
+    if (handType == null) return false;
+    final cropId = _extractCropId(tool);
 
     switch (handType) {
       case HandItemId.shovel:
@@ -22,7 +27,7 @@ class FarmToolService {
         return canHarvest(farmObject);
       default:
         // Check if it's a seed
-        if (handType.isSeed && tool.cropId != null) {
+        if (handType.isSeed && cropId != null) {
           return canPlantCrop(farmObject);
         }
         return false;
@@ -82,9 +87,9 @@ class FarmToolService {
   }
 
   /// Get the crop ID from a tool (if it's a seed)
-  String? getCropIdFromTool(WeaponItem tool) {
-    if (!tool.equippedHandType.isSeed) return null;
-    return tool.cropId;
+  String? getCropIdFromTool(HandItem tool) {
+    if (!(_extractHandType(tool)?.isSeed ?? true)) return null;
+    return _extractCropId(tool);
   }
 
   /// Validate if tool is a farm tool
@@ -93,5 +98,17 @@ class FarmToolService {
         handType == HandItemId.wateringCan ||
         handType == HandItemId.harvestBasket ||
         handType.isSeed;
+  }
+
+  HandItemId? _extractHandType(HandItem tool) {
+    if (tool is WeaponItem) return tool.equippedHandType;
+    return tool.id;
+  }
+
+  String? _extractCropId(HandItem tool) {
+    if (tool is WeaponItem) return tool.cropId;
+    if (tool is SeedItem) return tool.cropId;
+    if (tool is ToolItem) return null;
+    return null;
   }
 }

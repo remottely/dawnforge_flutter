@@ -5,6 +5,36 @@ import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_rari
 final class ToolDatabaseDef {
   ToolDatabaseDef._();
   static const Map<HandItemId, ToolItem> tools = {
+    HandItemId.harvestBasket: ToolItem(
+      id: HandItemId.harvestBasket,
+      name: 'Harvest Basket',
+      description: 'Increase carrying efficiency when harvesting',
+      rarity: HandItemRarity.common,
+      baseValue: 100,
+      iconPath: '',
+      toolType: 'harvest',
+      powerLevel: 1,
+    ),
+    HandItemId.shovel: ToolItem(
+      id: HandItemId.shovel,
+      name: 'Shovel',
+      description: 'Used to dig and move soil',
+      rarity: HandItemRarity.common,
+      baseValue: 100,
+      iconPath: '',
+      toolType: 'shovel',
+      powerLevel: 1,
+    ),
+    HandItemId.wateringCan: ToolItem(
+      id: HandItemId.wateringCan,
+      name: 'Watering Can',
+      description: 'Waters soil to help crops grow',
+      rarity: HandItemRarity.common,
+      baseValue: 100,
+      iconPath: '',
+      toolType: 'watering_can',
+      powerLevel: 1,
+    ),
     HandItemId.iron_pickaxe: ToolItem(
       id: HandItemId.iron_pickaxe,
       name: 'Iron Pickaxe',
@@ -44,6 +74,16 @@ final class ToolDatabaseDef {
       iconPath: 'assets/images/items/basic_hoe.png',
       toolType: 'hoe',
       powerLevel: 1,
+    ),
+    HandItemId.axe: ToolItem(
+      id: HandItemId.axe,
+      name: 'Steel Axe',
+      description: 'Heavy-duty axe for chopping and clearing',
+      rarity: HandItemRarity.uncommon,
+      baseValue: 180,
+      iconPath: 'assets/images/items/steel_axe.png',
+      toolType: 'axe',
+      powerLevel: 3,
     ),
   };
 }

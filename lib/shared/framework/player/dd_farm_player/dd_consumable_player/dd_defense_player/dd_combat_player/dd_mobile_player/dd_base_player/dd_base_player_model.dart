@@ -31,12 +31,12 @@ class DDBasePlayerModel {
     final selectedSlotIndex = getIt<EquipmentManager>().currentMainHandSlotIndex;
     final slot = getIt<InventoryManager>().getSlotByIndex(selectedSlotIndex);
     final item = slot?.item;
-    
+
     if (item is WeaponItem) {
       return item.equippedHandType;
     }
-    
-    return null;
+
+    return item?.id;
   }
 
   bool get isObservingEnemy => _isObservingEnemy;
