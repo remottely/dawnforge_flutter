@@ -17,7 +17,7 @@ final class SeedBagItem extends HandItem {
     required super.baseValue,
     required super.iconPath,
     super.rarity = HandItemRarity.common,
-    super.type = HandItemType.cropSeed,
+    super.type = HandItemCategory.cropSeed,
     super.isStackable = true,
     super.maxStackSize = 99,
     super.iconData,

@@ -21,7 +21,7 @@ final class HarvestLootItem extends HandItem {
     required super.baseValue,
     required super.iconPath,
     super.rarity = HandItemRarity.common,
-    super.type = HandItemType.material,
+    super.type = HandItemCategory.material,
     super.isStackable = true,
     super.maxStackSize = 999,
     super.isDroppable = true,

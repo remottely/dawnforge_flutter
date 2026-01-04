@@ -7,7 +7,7 @@ abstract class HandItem {
   final HandItemId id;
   final String name;
   final String description;
-  final HandItemType type;
+  final HandItemCategory type;
   final HandItemRarity rarity;
   final int maxStackSize;
   final int baseValue;

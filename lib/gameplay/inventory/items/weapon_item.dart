@@ -18,7 +18,7 @@ final class WeaponItem extends HandItem {
     required super.baseValue,
     required super.iconPath,
     super.rarity = HandItemRarity.common,
-    super.type = HandItemType.weapon,
+    super.type = HandItemCategory.weapon,
     super.iconData,
     required this.damage,
     this.attackSpeed = 1.0,

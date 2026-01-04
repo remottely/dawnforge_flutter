@@ -15,7 +15,7 @@ final class ToolItem extends HandItem {
     required super.baseValue,
     required super.iconPath,
     super.rarity = HandItemRarity.common,
-    super.type = HandItemType.tool,
+    super.type = HandItemCategory.tool,
     super.iconData,
     required this.toolType,
     this.powerLevel = 1,

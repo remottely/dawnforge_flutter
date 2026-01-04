@@ -15,7 +15,7 @@ final class ConsumableItem extends HandItem {
     required super.baseValue,
     required super.iconPath,
     super.rarity = HandItemRarity.common,
-    super.type = HandItemType.consumable,
+    super.type = HandItemCategory.consumable,
     super.isStackable = true,
     super.maxStackSize = 99,
     super.iconData,
