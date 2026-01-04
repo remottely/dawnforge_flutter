@@ -87,7 +87,7 @@ class FarmToolService {
   }
 
   /// Get the crop ID from a tool (if it's a seed)
-  String? getCropIdFromTool(HandItem tool) {
+  HandItemId? getCropIdFromTool(HandItem tool) {
     if (!(tool.id.isSeed)) return null;
     return _extractCropId(tool);
   }
@@ -100,8 +100,7 @@ class FarmToolService {
         handType.isSeed;
   }
 
-  String? _extractCropId(HandItem tool) {
-    if (tool is WeaponItem) return tool.cropId;
+  HandItemId? _extractCropId(HandItem tool) {
     if (tool is SeedBagItem) return tool.cropId;
     if (tool is ToolItem) return null;
     return null;

@@ -5,7 +5,7 @@ import '../entities/hand/hand_item_rarity.dart';
 import '../entities/hand/hand_item_type.dart';
 
 final class SeedBagItem extends HandItem {
-  final String cropId;
+  final HandItemId cropId;
   final int growthTime;
   final int yield;
   final String season;
@@ -43,7 +43,7 @@ final class SeedBagItem extends HandItem {
       'baseValue': baseValue,
       'iconPath': iconPath,
       'maxStackSize': maxStackSize,
-      'cropId': cropId,
+      'cropId': cropId.toJson(),
       'growthTime': growthTime,
       'yield': yield,
       'season': season,
@@ -59,7 +59,7 @@ final class SeedBagItem extends HandItem {
       iconPath: json['iconPath'] as String,
       rarity: HandItemRarity.fromJson(json['rarity'] as String),
       maxStackSize: json['maxStackSize'] as int? ?? 99,
-      cropId: json['cropId'] as String,
+      cropId: HandItemId.fromJson(json['cropId'] as String),
       growthTime: json['growthTime'] as int,
       yield: json['yield'] as int? ?? 1,
       season: json['season'] as String? ?? 'any',
@@ -75,7 +75,7 @@ final class SeedBagItem extends HandItem {
     String? iconPath,
     HandItemRarity? rarity,
     int? maxStackSize,
-    String? cropId,
+    HandItemId? cropId,
     int? growthTime,
     int? yield,
     String? season,
