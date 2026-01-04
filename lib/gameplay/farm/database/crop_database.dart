@@ -1,6 +1,6 @@
 import 'dart:developer' as developer;
 
-import 'package:darkness_dungeon/gameplay/database/crop_database_def.dart';
+import 'package:darkness_dungeon/gameplay/database/modern_farm/modern_farm_crop_database_def.dart';
 
 import '../../world/entities/objects/farm/crop_entity.dart';
 import '../models/crop_model.dart';
@@ -16,7 +16,7 @@ final class CropDatabase {
 
     _cropDatabase
       ..clear()
-      ..addAll(CropDatabaseDef.crops);
+      ..addAll(ModernFarmCropDatabaseDef.crops);
 
     _isInitialized = true;
     developer.log('[CropDatabase] Loaded ${_cropDatabase.length} crops');

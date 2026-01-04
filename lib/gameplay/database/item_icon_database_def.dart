@@ -18,7 +18,10 @@ final class ItemIconDatabaseDef {
   static const Map<HandItemId, ItemIconEntry> items = {
     HandItemId.empty_seed_bag: ItemIconEntry(rowIndex: 10, columnIndex: 0),
     HandItemId.watermelon_seed_bag: ItemIconEntry(rowIndex: 10, columnIndex: 1),
-    HandItemId.pineapple_seed_bag: ItemIconEntry(rowIndex: 10, columnIndex: 1999999),
+    HandItemId.pineapple_seed_bag: ItemIconEntry(
+      rowIndex: 10,
+      columnIndex: 1999999,
+    ),
     HandItemId.pumpkin_seed_bag: ItemIconEntry(rowIndex: 10, columnIndex: 3),
     HandItemId.cabbage_seed_bag: ItemIconEntry(rowIndex: 10, columnIndex: 4),
     HandItemId.radish_seed_bag: ItemIconEntry(rowIndex: 10, columnIndex: 5),
@@ -29,14 +32,20 @@ final class ItemIconDatabaseDef {
     HandItemId.turnip_seed_bag: ItemIconEntry(rowIndex: 10, columnIndex: 10),
     HandItemId.cotton_seed_bag: ItemIconEntry(rowIndex: 10, columnIndex: 11),
     HandItemId.onion_seed_bag: ItemIconEntry(rowIndex: 10, columnIndex: 12),
-    HandItemId.cauliflower_seed_bag: ItemIconEntry(rowIndex: 10, columnIndex: 13),
+    HandItemId.cauliflower_seed_bag: ItemIconEntry(
+      rowIndex: 10,
+      columnIndex: 13,
+    ),
     HandItemId.corn_seed_bag: ItemIconEntry(rowIndex: 10, columnIndex: 14),
     HandItemId.tomato_seed_bag: ItemIconEntry(rowIndex: 10, columnIndex: 15),
-    HandItemId.tomato_item: ItemIconEntry(rowIndex: 1, columnIndex: 1),
-    HandItemId.strawberry_item: ItemIconEntry(rowIndex: 1, columnIndex: 15),
-    HandItemId.radish_item: ItemIconEntry(rowIndex: 2, columnIndex: 5),
+    HandItemId.tomato_loot_item: ItemIconEntry(rowIndex: 1, columnIndex: 1),
+    HandItemId.strawberry_loot_item: ItemIconEntry(rowIndex: 1, columnIndex: 15),
+    HandItemId.radish_loot_item: ItemIconEntry(rowIndex: 2, columnIndex: 5),
     HandItemId.grape_seed_bag: ItemIconEntry(rowIndex: 11, columnIndex: 0),
-    HandItemId.prickly_pear_seed_bag: ItemIconEntry(rowIndex: 11, columnIndex: 1),
+    HandItemId.prickly_pear_seed_bag: ItemIconEntry(
+      rowIndex: 11,
+      columnIndex: 1,
+    ),
     HandItemId.coffee_seed_bag: ItemIconEntry(rowIndex: 11, columnIndex: 2),
     HandItemId.zuchini_seed_bag: ItemIconEntry(rowIndex: 11, columnIndex: 3),
     HandItemId.apple_seed_bag: ItemIconEntry(rowIndex: 10, columnIndex: 8),
@@ -68,25 +77,6 @@ final class ItemIconDatabaseDef {
     HandItemId.stone: ItemIconEntry(rowIndex: 999999, columnIndex: 999999),
     HandItemId.iron_ore: ItemIconEntry(rowIndex: 999999, columnIndex: 999999),
     HandItemId.dungeon_key: ItemIconEntry(rowIndex: 6, columnIndex: 6),
-    HandItemId.apple_item: ItemIconEntry(rowIndex: 2, columnIndex: 5),
-  };
-
-  /// Handy lookup keyed by equipped hand type so weapon templates can share the same authority.
-  static const Map<HandItemId, ItemIconEntry> equippedHandIcons = {
-    HandItemId.harvestBasket: ItemIconEntry(rowIndex: 6, columnIndex: 5),
-    HandItemId.strawberry_seed_bag: ItemIconEntry(rowIndex: 10, columnIndex: 7),
-    HandItemId.apple_seed_bag: ItemIconEntry(rowIndex: 10, columnIndex: 8),
-    HandItemId.radish_seed_bag: ItemIconEntry(rowIndex: 10, columnIndex: 5),
-    HandItemId.tomato_seed_bag: ItemIconEntry(rowIndex: 10, columnIndex: 15),
-    HandItemId.shovel: ItemIconEntry(rowIndex: 6, columnIndex: 4),
-    HandItemId.wateringCan: ItemIconEntry(rowIndex: 6, columnIndex: 3),
-    HandItemId.staff: ItemIconEntry(rowIndex: 6, columnIndex: 7),
-    HandItemId.staff_fire: ItemIconEntry(rowIndex: 6, columnIndex: 7),
-    HandItemId.axe: ItemIconEntry(rowIndex: 6, columnIndex: 2),
-    HandItemId.sword: ItemIconEntry(rowIndex: 6, columnIndex: 2),
-    HandItemId.wand: ItemIconEntry(rowIndex: 6, columnIndex: 7),
-    HandItemId.apple: ItemIconEntry(rowIndex: 1, columnIndex: 16),
-    HandItemId.strawberry: ItemIconEntry(rowIndex: 1, columnIndex: 15),
-    HandItemId.tomato: ItemIconEntry(rowIndex: 1, columnIndex: 1),
+    HandItemId.apple_loot_item: ItemIconEntry(rowIndex: 2, columnIndex: 5),
   };
 }
