@@ -16,7 +16,6 @@ final class ConsumableDatabaseDef {
       healthRestore: 20,
       staminaRestore: 10,
       duration: 0,
-      buffs: const [],
     ),
     HandItemType.stamina_potion: ConsumableItem(
       id: HandItemType.stamina_potion,
@@ -29,7 +28,6 @@ final class ConsumableDatabaseDef {
       healthRestore: 20,
       staminaRestore: 30,
       duration: 0,
-      buffs: const [],
     ),
     HandItemType.super_health_potion: ConsumableItem(
       id: HandItemType.super_health_potion,
@@ -42,7 +40,6 @@ final class ConsumableDatabaseDef {
       healthRestore: 150,
       staminaRestore: 10,
       duration: 0,
-      buffs: const [],
     ),
     HandItemType.cooked_meat: ConsumableItem(
       id: HandItemType.cooked_meat,
@@ -55,7 +52,6 @@ final class ConsumableDatabaseDef {
       healthRestore: 30,
       staminaRestore: 10,
       duration: 0,
-      buffs: const [],
     ),
     HandItemType.strength_elixir: ConsumableItem(
       id: HandItemType.strength_elixir,
@@ -68,7 +64,6 @@ final class ConsumableDatabaseDef {
       healthRestore: 20,
       staminaRestore: 10,
       duration: 60,
-      buffs: const ['strength_buff'],
     ),
     HandItemType.carrot_item: ConsumableItem(
       id: HandItemType.carrot_item,
@@ -81,7 +76,6 @@ final class ConsumableDatabaseDef {
       healthRestore: 10,
       staminaRestore: 10,
       duration: 0,
-      buffs: const [],
     ),
     HandItemType.strawberry_item: ConsumableItem(
       id: HandItemType.strawberry_item,
@@ -94,7 +88,6 @@ final class ConsumableDatabaseDef {
       healthRestore: 10,
       staminaRestore: 10,
       duration: 0,
-      buffs: const [],
     ),
     HandItemType.potato_item: ConsumableItem(
       id: HandItemType.potato_item,
@@ -107,7 +100,6 @@ final class ConsumableDatabaseDef {
       healthRestore: 15,
       staminaRestore: 15,
       duration: 0,
-      buffs: const [],
     ),
     HandItemType.pumpkin_item: ConsumableItem(
       id: HandItemType.pumpkin_item,
@@ -120,7 +112,6 @@ final class ConsumableDatabaseDef {
       healthRestore: 30,
       staminaRestore: 30,
       duration: 0,
-      buffs: const [],
     ),
     HandItemType.turnip_item: ConsumableItem(
       id: HandItemType.turnip_item,
@@ -133,7 +124,6 @@ final class ConsumableDatabaseDef {
       healthRestore: 8,
       staminaRestore: 8,
       duration: 0,
-      buffs: const [],
     ),
     HandItemType.radish_item: ConsumableItem(
       id: HandItemType.radish_item,
@@ -146,7 +136,6 @@ final class ConsumableDatabaseDef {
       healthRestore: 8,
       staminaRestore: 8,
       duration: 0,
-      buffs: const [],
     ),
     HandItemType.tomato_item: ConsumableItem(
       id: HandItemType.tomato_item,
@@ -159,7 +148,6 @@ final class ConsumableDatabaseDef {
       healthRestore: 12,
       staminaRestore: 12,
       duration: 0,
-      buffs: const [],
     ),
     HandItemType.corn_item: ConsumableItem(
       id: HandItemType.corn_item,
@@ -172,7 +160,6 @@ final class ConsumableDatabaseDef {
       healthRestore: 14,
       staminaRestore: 14,
       duration: 0,
-      buffs: const [],
     ),
     HandItemType.apple_item: ConsumableItem(
       id: HandItemType.apple_item,
@@ -185,7 +172,6 @@ final class ConsumableDatabaseDef {
       healthRestore: 8,
       staminaRestore: 8,
       duration: 0,
-      buffs: const [],
     ),
   };
 }

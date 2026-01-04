@@ -8,7 +8,6 @@ final class ConsumableItem extends HandItem {
   final int healthRestore;
   final int staminaRestore;
   final int duration;
-  final List<String> buffs;
 
   const ConsumableItem({
     required super.id,
@@ -24,12 +23,9 @@ final class ConsumableItem extends HandItem {
     this.healthRestore = 0,
     this.staminaRestore = 0,
     this.duration = 0,
-    this.buffs = const [],
   });
 
   bool get isInstant => duration == 0;
-
-  bool get hasBuffs => buffs.isNotEmpty;
 
   @override
   Map<String, dynamic> toJson() {
@@ -45,7 +41,6 @@ final class ConsumableItem extends HandItem {
       'healthRestore': healthRestore,
       'staminaRestore': staminaRestore,
       'duration': duration,
-      'buffs': buffs,
     };
   }
 
@@ -64,9 +59,6 @@ final class ConsumableItem extends HandItem {
       healthRestore: json['healthRestore'] as int? ?? healAmount ?? 0,
       staminaRestore: json['staminaRestore'] as int? ?? healAmount ?? 0,
       duration: json['duration'] as int? ?? 0,
-      buffs:
-          (json['buffs'] as List<dynamic>?)?.map((e) => e as String).toList() ??
-          const [],
     );
   }
 
@@ -82,7 +74,6 @@ final class ConsumableItem extends HandItem {
     int? healthRestore,
     int? staminaRestore,
     int? duration,
-    List<String>? buffs,
     ItemIconData? iconData,
   }) {
     return ConsumableItem(
@@ -96,7 +87,6 @@ final class ConsumableItem extends HandItem {
       healthRestore: healthRestore ?? this.healthRestore,
       staminaRestore: staminaRestore ?? this.staminaRestore,
       duration: duration ?? this.duration,
-      buffs: buffs ?? this.buffs,
       iconData: iconData ?? this.iconData,
     );
   }
