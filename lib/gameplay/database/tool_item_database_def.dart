@@ -1,6 +1,6 @@
 import 'package:darkness_dungeon/gameplay/inventory/items/tool_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_rarity.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_quality.dart';
 
 final class ToolItemDatabaseDef {
   ToolItemDatabaseDef._();
@@ -9,7 +9,7 @@ final class ToolItemDatabaseDef {
       id: HandItemId.harvestBasket,
       name: 'Harvest Basket',
       description: 'Increase carrying efficiency when harvesting',
-      rarity: HandItemRarity.common,
+      rarity: HandItemQuality.normal,
       baseValue: 100,
       iconPath: '',
       toolType: 'harvest',
@@ -19,7 +19,7 @@ final class ToolItemDatabaseDef {
       id: HandItemId.shovel,
       name: 'Shovel',
       description: 'Used to dig and move soil',
-      rarity: HandItemRarity.common,
+      rarity: HandItemQuality.normal,
       baseValue: 100,
       iconPath: '',
       toolType: 'shovel',
@@ -29,7 +29,7 @@ final class ToolItemDatabaseDef {
       id: HandItemId.wateringCan,
       name: 'Watering Can',
       description: 'Waters soil to help crops grow',
-      rarity: HandItemRarity.common,
+      rarity: HandItemQuality.normal,
       baseValue: 100,
       iconPath: '',
       toolType: 'watering_can',
@@ -39,7 +39,7 @@ final class ToolItemDatabaseDef {
       id: HandItemId.iron_pickaxe,
       name: 'Iron Pickaxe',
       description: 'Mine rocks and ores efficiently',
-      rarity: HandItemRarity.common,
+      rarity: HandItemQuality.normal,
       baseValue: 80,
       iconPath: 'assets/images/items/iron_pickaxe.png',
       toolType: 'pickaxe',
@@ -49,7 +49,7 @@ final class ToolItemDatabaseDef {
       id: HandItemId.steel_pickaxe,
       name: 'Steel Pickaxe',
       description: 'A superior pickaxe for harder minerals',
-      rarity: HandItemRarity.uncommon,
+      rarity: HandItemQuality.silver,
       baseValue: 200,
       iconPath: 'assets/images/items/steel_pickaxe.png',
       toolType: 'pickaxe',
@@ -59,7 +59,7 @@ final class ToolItemDatabaseDef {
       id: HandItemId.wooden_axe,
       name: 'Wooden Axe',
       description: 'Basic tool for chopping trees',
-      rarity: HandItemRarity.common,
+      rarity: HandItemQuality.normal,
       baseValue: 20,
       iconPath: 'assets/images/items/wooden_axe.png',
       toolType: 'axe',
@@ -69,7 +69,7 @@ final class ToolItemDatabaseDef {
       id: HandItemId.basic_hoe,
       name: 'Basic Hoe',
       description: 'Till soil for planting crops',
-      rarity: HandItemRarity.common,
+      rarity: HandItemQuality.normal,
       baseValue: 30,
       iconPath: 'assets/images/items/basic_hoe.png',
       toolType: 'hoe',
@@ -79,7 +79,7 @@ final class ToolItemDatabaseDef {
       id: HandItemId.axe,
       name: 'Steel Axe',
       description: 'Heavy-duty axe for chopping and clearing',
-      rarity: HandItemRarity.uncommon,
+      rarity: HandItemQuality.silver,
       baseValue: 180,
       iconPath: 'assets/images/items/steel_axe.png',
       toolType: 'axe',

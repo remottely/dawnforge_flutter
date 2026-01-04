@@ -1,6 +1,6 @@
 import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_rarity.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_quality.dart';
 
 final class WeaponItemDatabaseDef {
   WeaponItemDatabaseDef._();
@@ -10,7 +10,7 @@ final class WeaponItemDatabaseDef {
       id: HandItemId.staff,
       name: 'Staff',
       description: 'TODO',
-      rarity: HandItemRarity.common,
+      rarity: HandItemQuality.normal,
       baseValue: 100,
       iconPath: '',
       damage: 15,
@@ -22,7 +22,7 @@ final class WeaponItemDatabaseDef {
       id: HandItemId.ironSword,
       name: 'Iron Sword',
       description: 'A sturdy iron sword for basic combat',
-      rarity: HandItemRarity.common,
+      rarity: HandItemQuality.normal,
       baseValue: 100,
       iconPath: '',
       damage: 15,
@@ -34,7 +34,7 @@ final class WeaponItemDatabaseDef {
       id: HandItemId.sword,
       name: 'Legendary Blade',
       description: 'A mythical sword forged by ancient smiths',
-      rarity: HandItemRarity.legendary,
+      rarity: HandItemQuality.iridium,
       baseValue: 5000,
       iconPath: 'assets/images/items/legendary_blade.png',
       damage: 80,
@@ -46,7 +46,7 @@ final class WeaponItemDatabaseDef {
       id: HandItemId.staff_fire,
       name: 'Fire Staff',
       description: 'A magical staff that shoots fireballs',
-      rarity: HandItemRarity.rare,
+      rarity: HandItemQuality.gold,
       baseValue: 350,
       iconPath: 'assets/images/items/fire_staff.png',
       damage: 20,
@@ -58,7 +58,7 @@ final class WeaponItemDatabaseDef {
       id: HandItemId.wand,
       name: 'Ice Wand',
       description: 'A magical wand that shoots ice projectiles',
-      rarity: HandItemRarity.uncommon,
+      rarity: HandItemQuality.silver,
       baseValue: 200,
       iconPath: 'assets/images/items/ice_wand.png',
       damage: 12,

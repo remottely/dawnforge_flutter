@@ -1,7 +1,7 @@
 import '../entities/hand_item.dart';
 import '../entities/enums/hand_item_id.dart';
 import '../entities/item_icon_data.dart';
-import '../entities/enums/hand_item_rarity.dart';
+import '../entities/enums/hand_item_quality.dart';
 import '../entities/enums/hand_item_type.dart';
 
 final class ToolItem extends HandItem {
@@ -14,7 +14,7 @@ final class ToolItem extends HandItem {
     required super.description,
     required super.baseValue,
     required super.iconPath,
-    super.rarity = HandItemRarity.common,
+    super.rarity = HandItemQuality.normal,
     super.type = HandItemType.tool,
     super.iconData,
     required this.toolType,
@@ -43,7 +43,7 @@ final class ToolItem extends HandItem {
       description: json['description'] as String,
       baseValue: json['baseValue'] as int,
       iconPath: json['iconPath'] as String,
-      rarity: HandItemRarity.fromJson(json['rarity'] as String),
+      rarity: HandItemQuality.fromJson(json['rarity'] as String),
       toolType: json['toolType'] as String,
       powerLevel: json['powerLevel'] as int? ?? 1,
     );
@@ -56,7 +56,7 @@ final class ToolItem extends HandItem {
     String? description,
     int? baseValue,
     String? iconPath,
-    HandItemRarity? rarity,
+    HandItemQuality? rarity,
     String? toolType,
     int? powerLevel,
     ItemIconData? iconData,

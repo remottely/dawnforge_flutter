@@ -1,6 +1,6 @@
 import 'package:darkness_dungeon/gameplay/inventory/items/seed_bag_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_rarity.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_quality.dart';
 
 final class SeedBagItemDatabaseDef {
   static const Map<HandItemId, SeedBagItem> seedBagList = {
@@ -8,7 +8,7 @@ final class SeedBagItemDatabaseDef {
       id: HandItemId.strawberry_seed_bag,
       name: 'Strawberry Seed Bag',
       description: 'Plant these to grow strawberries',
-      rarity: HandItemRarity.common,
+      rarity: HandItemQuality.normal,
       baseValue: 50,
       iconPath: '',
       cropId: HandItemId.strawberry,
@@ -20,7 +20,7 @@ final class SeedBagItemDatabaseDef {
       id: HandItemId.apple_seed_bag,
       name: 'Apple Seed Bag',
       description: 'Plant these to grow apples',
-      rarity: HandItemRarity.common,
+      rarity: HandItemQuality.normal,
       baseValue: 50,
       iconPath: '',
       cropId: HandItemId.apple,
@@ -32,7 +32,7 @@ final class SeedBagItemDatabaseDef {
       id: HandItemId.radish_seed_bag,
       name: 'Radish Seed Bag',
       description: 'Plant these to grow radishes',
-      rarity: HandItemRarity.common,
+      rarity: HandItemQuality.normal,
       baseValue: 50,
       iconPath: '',
       cropId: HandItemId.radish,
@@ -44,7 +44,7 @@ final class SeedBagItemDatabaseDef {
       id: HandItemId.tomato_seed_bag,
       name: 'Tomato Seed Bag',
       description: 'Plant these to grow tomatoes',
-      rarity: HandItemRarity.common,
+      rarity: HandItemQuality.normal,
       baseValue: 60,
       iconPath: '',
       cropId: HandItemId.tomato,

@@ -1,7 +1,7 @@
 import '../entities/enums/hand_item_id.dart';
 import '../entities/hand_item.dart';
 import '../entities/item_icon_data.dart';
-import '../entities/enums/hand_item_rarity.dart';
+import '../entities/enums/hand_item_quality.dart';
 import '../entities/enums/hand_item_type.dart';
 
 final class WeaponItem extends HandItem {
@@ -17,7 +17,7 @@ final class WeaponItem extends HandItem {
     required super.description,
     required super.baseValue,
     required super.iconPath,
-    super.rarity = HandItemRarity.common,
+    super.rarity = HandItemQuality.normal,
     super.type = HandItemType.weapon,
     super.iconData,
     required this.damage,
@@ -61,7 +61,7 @@ final class WeaponItem extends HandItem {
       description: json['description'] as String,
       baseValue: json['baseValue'] as int,
       iconPath: json['iconPath'] as String,
-      rarity: HandItemRarity.fromJson(json['rarity'] as String),
+      rarity: HandItemQuality.fromJson(json['rarity'] as String),
       damage: json['damage'] as int,
       attackSpeed: (json['attackSpeed'] as num?)?.toDouble() ?? 1.0,
       critChance: (json['critChance'] as num?)?.toDouble() ?? 0.05,
@@ -78,7 +78,7 @@ final class WeaponItem extends HandItem {
     String? description,
     int? baseValue,
     String? iconPath,
-    HandItemRarity? rarity,
+    HandItemQuality? rarity,
     int? damage,
     double? attackSpeed,
     double? critChance,

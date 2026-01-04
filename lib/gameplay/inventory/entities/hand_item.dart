@@ -1,6 +1,6 @@
 import 'enums/hand_item_id.dart';
 import 'item_icon_data.dart';
-import 'enums/hand_item_rarity.dart';
+import 'enums/hand_item_quality.dart';
 import 'enums/hand_item_type.dart';
 
 abstract class HandItem {
@@ -8,7 +8,7 @@ abstract class HandItem {
   final String name;
   final String description;
   final HandItemType type;
-  final HandItemRarity rarity;
+  final HandItemQuality rarity;
   final int maxStackSize;
   final int baseValue;
   final String iconPath;
@@ -22,7 +22,7 @@ abstract class HandItem {
     required this.name,
     required this.description,
     required this.type,
-    this.rarity = HandItemRarity.common,
+    this.rarity = HandItemQuality.normal,
     this.maxStackSize = 1,
     required this.baseValue,
     required this.iconPath,
@@ -32,7 +32,7 @@ abstract class HandItem {
     this.iconData,
   });
 
-  int get sellValue => (baseValue * rarity.sellValueMultiplier).round();
+  int get sellValue => (baseValue * rarity.priceMultiplier).round();
 
   /// Serialization for persistence (D2)
   Map<String, dynamic> toJson();
