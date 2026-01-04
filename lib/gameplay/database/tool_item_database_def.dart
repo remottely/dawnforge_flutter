@@ -1,6 +1,7 @@
 import 'package:darkness_dungeon/gameplay/inventory/items/tool_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_quality.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/item_icon_data.dart';
 
 final class ToolItemDatabaseDef {
   ToolItemDatabaseDef._();
@@ -13,6 +14,13 @@ final class ToolItemDatabaseDef {
       baseValue: 100,
       toolType: 'harvest',
       powerLevel: 1,
+      iconData: ItemIconData(
+        spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
+        spriteWidth: 16,
+        spriteHeight: 16,
+        spriteRowIndex: 6,
+        spriteColumnIndex: 5,
+      ),
     ),
     HandItemId.shovel: ToolItem(
       id: HandItemId.shovel,
@@ -22,6 +30,13 @@ final class ToolItemDatabaseDef {
       baseValue: 100,
       toolType: 'shovel',
       powerLevel: 1,
+      iconData: ItemIconData(
+        spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
+        spriteWidth: 16,
+        spriteHeight: 16,
+        spriteRowIndex: 6,
+        spriteColumnIndex: 4,
+      ),
     ),
     HandItemId.wateringCan: ToolItem(
       id: HandItemId.wateringCan,
@@ -31,6 +46,13 @@ final class ToolItemDatabaseDef {
       baseValue: 100,
       toolType: 'watering_can',
       powerLevel: 1,
+      iconData: ItemIconData(
+        spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
+        spriteWidth: 16,
+        spriteHeight: 16,
+        spriteRowIndex: 6,
+        spriteColumnIndex: 3,
+      ),
     ),
     // HandItemId.iron_pickaxe: ToolItem(
     //   id: HandItemId.iron_pickaxe,

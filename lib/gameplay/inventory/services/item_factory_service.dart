@@ -5,7 +5,6 @@ import 'package:darkness_dungeon/gameplay/inventory/items/material_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/tool_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
 
-import '../database/item_icon_database.dart';
 import '../entities/hand_item.dart';
 import '../items/seed_bag_item.dart';
 import '../entities/enums/hand_item_id.dart';
@@ -31,9 +30,6 @@ class ItemFactoryService {
     }
 
     try {
-      await ItemIconDatabase().initialize();
-      developer.log('[ItemFactoryService] ItemIconDatabase initialized');
-
       _weapons
         ..clear()
         ..addAll(WeaponItemDatabaseDef.weapons);
@@ -84,31 +80,29 @@ class ItemFactoryService {
     }
 
     try {
-      final iconData = ItemIconDatabase().getIconData(itemId);
-
       final weapon = _weapons[itemId];
       if (weapon != null) {
-        return weapon.copyWith(iconData: iconData);
+        return weapon.copyWith();
       }
 
       final tool = _tools[itemId];
       if (tool != null) {
-        return tool.copyWith(iconData: iconData);
+        return tool.copyWith();
       }
 
       final consumable = _consumables[itemId];
       if (consumable != null) {
-        return consumable.copyWith(iconData: iconData);
+        return consumable.copyWith();
       }
 
       final seed = _seeds[itemId];
       if (seed != null) {
-        return seed.copyWith(iconData: iconData);
+        return seed.copyWith();
       }
 
       final material = _materials[itemId];
       if (material != null) {
-        return material.copyWith(iconData: iconData);
+        return material.copyWith();
       }
 
       developer.log('[ItemFactoryService] Item not found: $itemId');

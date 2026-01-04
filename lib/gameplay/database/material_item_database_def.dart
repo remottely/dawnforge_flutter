@@ -1,6 +1,7 @@
 import 'package:darkness_dungeon/gameplay/inventory/items/material_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_quality.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/item_icon_data.dart';
 
 final class MaterialItemDatabaseDef {
   static const Map<HandItemId, MaterialItem> materialItemList = {
@@ -57,6 +58,13 @@ final class MaterialItemDatabaseDef {
       baseValue: 0,
       maxStackSize: 99,
       materialType: 'key',
+      iconData: ItemIconData(
+        spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
+        spriteWidth: 16,
+        spriteHeight: 16,
+        spriteRowIndex: 6,
+        spriteColumnIndex: 6,
+      ),
     ),
     // HandItemId.wheat_item: MaterialItem(
     //   id: HandItemId.wheat_item,

@@ -5,7 +5,7 @@ class ItemIconData {
   final int spriteRowIndex;
   final int spriteColumnIndex;
 
-  ItemIconData({
+  const ItemIconData({
     required this.spritesheetPath,
     required this.spriteWidth,
     required this.spriteHeight,

@@ -1,6 +1,7 @@
 import 'package:darkness_dungeon/gameplay/inventory/items/consumable_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_quality.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/item_icon_data.dart';
 
 final class ConsumableItemDatabaseDef {
   ConsumableItemDatabaseDef._();
@@ -64,6 +65,13 @@ final class ConsumableItemDatabaseDef {
       maxStackSize: 99,
       healthRestore: 10,
       staminaRestore: 10,
+      iconData: ItemIconData(
+        spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
+        spriteWidth: 16,
+        spriteHeight: 16,
+        spriteRowIndex: 1,
+        spriteColumnIndex: 12,
+      ),
     ),
     HandItemId.strawberry_loot_item: ConsumableItem(
       id: HandItemId.strawberry_loot_item,
@@ -74,6 +82,13 @@ final class ConsumableItemDatabaseDef {
       maxStackSize: 99,
       healthRestore: 10,
       staminaRestore: 10,
+      iconData: ItemIconData(
+        spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
+        spriteWidth: 16,
+        spriteHeight: 16,
+        spriteRowIndex: 1,
+        spriteColumnIndex: 15,
+      ),
     ),
     HandItemId.potato_loot_item: ConsumableItem(
       id: HandItemId.potato_loot_item,
@@ -84,6 +99,13 @@ final class ConsumableItemDatabaseDef {
       maxStackSize: 99,
       healthRestore: 15,
       staminaRestore: 15,
+      iconData: ItemIconData(
+        spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
+        spriteWidth: 16,
+        spriteHeight: 16,
+        spriteRowIndex: 2,
+        spriteColumnIndex: 3,
+      ),
     ),
     HandItemId.pumpkin_loot_item: ConsumableItem(
       id: HandItemId.pumpkin_loot_item,
@@ -94,6 +116,13 @@ final class ConsumableItemDatabaseDef {
       maxStackSize: 50,
       healthRestore: 30,
       staminaRestore: 30,
+      iconData: ItemIconData(
+        spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
+        spriteWidth: 16,
+        spriteHeight: 16,
+        spriteRowIndex: 1,
+        spriteColumnIndex: 2,
+      ),
     ),
     HandItemId.turnip_loot_item: ConsumableItem(
       id: HandItemId.turnip_loot_item,
@@ -104,6 +133,13 @@ final class ConsumableItemDatabaseDef {
       maxStackSize: 99,
       healthRestore: 8,
       staminaRestore: 8,
+      iconData: ItemIconData(
+        spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
+        spriteWidth: 16,
+        spriteHeight: 16,
+        spriteRowIndex: 2,
+        spriteColumnIndex: 3,
+      ),
     ),
     HandItemId.radish_loot_item: ConsumableItem(
       id: HandItemId.radish_loot_item,
@@ -114,6 +150,13 @@ final class ConsumableItemDatabaseDef {
       maxStackSize: 99,
       healthRestore: 8,
       staminaRestore: 8,
+      iconData: ItemIconData(
+        spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
+        spriteWidth: 16,
+        spriteHeight: 16,
+        spriteRowIndex: 2,
+        spriteColumnIndex: 5,
+      ),
     ),
     HandItemId.tomato_loot_item: ConsumableItem(
       id: HandItemId.tomato_loot_item,
@@ -124,6 +167,13 @@ final class ConsumableItemDatabaseDef {
       maxStackSize: 99,
       healthRestore: 12,
       staminaRestore: 12,
+      iconData: ItemIconData(
+        spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
+        spriteWidth: 16,
+        spriteHeight: 16,
+        spriteRowIndex: 1,
+        spriteColumnIndex: 1,
+      ),
     ),
     HandItemId.corn_loot_item: ConsumableItem(
       id: HandItemId.corn_loot_item,
@@ -134,6 +184,13 @@ final class ConsumableItemDatabaseDef {
       maxStackSize: 99,
       healthRestore: 14,
       staminaRestore: 14,
+      iconData: ItemIconData(
+        spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
+        spriteWidth: 16,
+        spriteHeight: 16,
+        spriteRowIndex: 1,
+        spriteColumnIndex: 5,
+      ),
     ),
     HandItemId.apple_loot_item: ConsumableItem(
       id: HandItemId.apple_loot_item,
@@ -144,6 +201,13 @@ final class ConsumableItemDatabaseDef {
       maxStackSize: 99,
       healthRestore: 8,
       staminaRestore: 8,
+      iconData: ItemIconData(
+        spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
+        spriteWidth: 16,
+        spriteHeight: 16,
+        spriteRowIndex: 2,
+        spriteColumnIndex: 5,
+      ),
     ),
     HandItemId.apple: ConsumableItem(
       id: HandItemId.apple,
@@ -154,6 +218,13 @@ final class ConsumableItemDatabaseDef {
       maxStackSize: 99,
       healthRestore: 8,
       staminaRestore: 8,
+      iconData: ItemIconData(
+        spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
+        spriteWidth: 16,
+        spriteHeight: 16,
+        spriteRowIndex: 1,
+        spriteColumnIndex: 16,
+      ),
     ),
     HandItemId.strawberry: ConsumableItem(
       id: HandItemId.strawberry,
@@ -164,6 +235,13 @@ final class ConsumableItemDatabaseDef {
       maxStackSize: 99,
       healthRestore: 10,
       staminaRestore: 10,
+      iconData: ItemIconData(
+        spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
+        spriteWidth: 16,
+        spriteHeight: 16,
+        spriteRowIndex: 1,
+        spriteColumnIndex: 15,
+      ),
     ),
     HandItemId.tomato: ConsumableItem(
       id: HandItemId.tomato,
@@ -174,6 +252,13 @@ final class ConsumableItemDatabaseDef {
       maxStackSize: 99,
       healthRestore: 12,
       staminaRestore: 12,
+      iconData: ItemIconData(
+        spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
+        spriteWidth: 16,
+        spriteHeight: 16,
+        spriteRowIndex: 1,
+        spriteColumnIndex: 1,
+      ),
     ),
   };
 }

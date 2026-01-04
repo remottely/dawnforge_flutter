@@ -1,6 +1,7 @@
 import 'package:darkness_dungeon/gameplay/inventory/items/seed_bag_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_quality.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/item_icon_data.dart';
 
 final class SeedBagItemDatabaseDef {
   static const Map<HandItemId, SeedBagItem> seedBagList = {
@@ -14,6 +15,13 @@ final class SeedBagItemDatabaseDef {
       growthTime: 4,
       yield: 3,
       season: 'any',
+      iconData: ItemIconData(
+        spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
+        spriteWidth: 16,
+        spriteHeight: 16,
+        spriteRowIndex: 10,
+        spriteColumnIndex: 7,
+      ),
     ),
     HandItemId.apple_seed_bag: SeedBagItem(
       id: HandItemId.apple_seed_bag,
@@ -25,6 +33,13 @@ final class SeedBagItemDatabaseDef {
       growthTime: 7,
       yield: 3,
       season: 'any',
+      iconData: ItemIconData(
+        spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
+        spriteWidth: 16,
+        spriteHeight: 16,
+        spriteRowIndex: 10,
+        spriteColumnIndex: 8,
+      ),
     ),
     HandItemId.radish_seed_bag: SeedBagItem(
       id: HandItemId.radish_seed_bag,
@@ -36,6 +51,13 @@ final class SeedBagItemDatabaseDef {
       growthTime: 7,
       yield: 6,
       season: 'any',
+      iconData: ItemIconData(
+        spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
+        spriteWidth: 16,
+        spriteHeight: 16,
+        spriteRowIndex: 10,
+        spriteColumnIndex: 5,
+      ),
     ),
     HandItemId.tomato_seed_bag: SeedBagItem(
       id: HandItemId.tomato_seed_bag,
@@ -47,6 +69,13 @@ final class SeedBagItemDatabaseDef {
       growthTime: 4,
       yield: 3,
       season: 'summer',
+      iconData: ItemIconData(
+        spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
+        spriteWidth: 16,
+        spriteHeight: 16,
+        spriteRowIndex: 10,
+        spriteColumnIndex: 15,
+      ),
     ),
   };
 }

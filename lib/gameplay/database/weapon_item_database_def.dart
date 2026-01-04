@@ -1,6 +1,7 @@
 import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_quality.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/item_icon_data.dart';
 
 final class WeaponItemDatabaseDef {
   WeaponItemDatabaseDef._();
@@ -16,6 +17,13 @@ final class WeaponItemDatabaseDef {
       attackSpeed: 1.2,
       critChance: 0.05,
       critMultiplier: 1.5,
+      iconData: ItemIconData(
+        spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
+        spriteWidth: 16,
+        spriteHeight: 16,
+        spriteRowIndex: 6,
+        spriteColumnIndex: 7,
+      ),
     ),
     HandItemId.ironSword: WeaponItem(
       id: HandItemId.ironSword,
@@ -27,6 +35,13 @@ final class WeaponItemDatabaseDef {
       attackSpeed: 1.2,
       critChance: 0.05,
       critMultiplier: 1.5,
+      iconData: ItemIconData(
+        spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
+        spriteWidth: 16,
+        spriteHeight: 16,
+        spriteRowIndex: 6,
+        spriteColumnIndex: 2,
+      ),
     ),
     // HandItemId.sword: WeaponItem(
     //   id: HandItemId.sword,
