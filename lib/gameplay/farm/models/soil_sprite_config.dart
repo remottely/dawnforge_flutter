@@ -1,17 +1,12 @@
 import 'dart:developer' as developer;
 
 import 'package:darkness_dungeon/gameplay/database/soil_state_sprite_database_def.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/item_icon_data.dart';
 
 class SoilSpriteConfig {
-  final String spritesheetPath;
-  final int spriteWidth;
-  final int spriteHeight;
-  final Map<String, SoilStateSprite> soilStates;
+  final Map<String, ItemIconData> soilStates;
 
   SoilSpriteConfig({
-    required this.spritesheetPath,
-    required this.spriteWidth,
-    required this.spriteHeight,
     required this.soilStates,
   });
 
@@ -19,22 +14,19 @@ class SoilSpriteConfig {
     developer.log('[SoilSpriteConfig] Loading soil database...');
 
     final config = SoilSpriteConfig(
-      spritesheetPath: SoilStateSpriteDatabaseDef.spritesheetPath,
-      spriteWidth: SoilStateSpriteDatabaseDef.spriteWidth,
-      spriteHeight: SoilStateSpriteDatabaseDef.spriteHeight,
-      soilStates: Map<String, SoilStateSprite>.from(
+      soilStates: Map<String, ItemIconData>.from(
         SoilStateSpriteDatabaseDef.soilStateSpriteList,
       ),
     );
 
     developer.log(
-      '[SoilSpriteConfig] ✅ Loaded ${config.soilStates.length} soil states from ${config.spritesheetPath}',
+      '[SoilSpriteConfig] ✅ Loaded ${config.soilStates.length} soil states',
     );
 
     return config;
   }
 
-  SoilStateSprite? getPosition(String stateName) {
+  ItemIconData? getPosition(String stateName) {
     return soilStates[stateName];
   }
 }

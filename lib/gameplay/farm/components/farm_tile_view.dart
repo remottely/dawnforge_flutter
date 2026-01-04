@@ -284,21 +284,22 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
       );
     }
 
-    final sprite = await SpriteAnimationConfigHelper.loadSpriteFromTextureAtlasModernFarm(
-      assetPath: _soilConfig!.spritesheetPath,
+    final sprite = await SpriteAnimationConfigHelper
+        .loadSpriteFromTextureAtlasModernFarm(
+      assetPath: position.spritesheetPath,
       spriteSize: Vector2(
-        _soilConfig!.spriteWidth.toDouble(),
-        _soilConfig!.spriteHeight.toDouble(),
+        position.spriteWidth.toDouble(),
+        position.spriteHeight.toDouble(),
       ),
-      frameIndex: position.columnIndex,
-      rowIndex: position.rowIndex,
+      frameIndex: position.spriteColumnIndex,
+      rowIndex: position.spriteRowIndex,
       skipFirstFrames: 0,
     );
 
     developer.log(
-      '[FarmTileView] 🟤 Soil sprite loaded from sheet: ${_soilConfig!.spritesheetPath} '
-      '(row: ${position.rowIndex}, col: ${position.columnIndex}, state: $stateName, '
-      'size: ${_soilConfig!.spriteWidth}x${_soilConfig!.spriteHeight})',
+      '[FarmTileView] 🟤 Soil sprite loaded from sheet: ${position.spritesheetPath} '
+      '(row: ${position.spriteRowIndex}, col: ${position.spriteColumnIndex}, state: $stateName, '
+      'size: ${position.spriteWidth}x${position.spriteHeight})',
     );
 
     return sprite;
