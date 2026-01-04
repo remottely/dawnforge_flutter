@@ -95,7 +95,7 @@ class FarmViewModel {
         isWatered: farmObject?.soilState == SoilState.watered,
         hasCrop: farmObject?.crop != null,
         cropName: farmObject?.crop?.name,
-        cropSpriteKey: _getCropSpriteKey(farmObject?.crop?.cropId),
+        cropSpriteKey: _getCropSpriteKey(farmObject?.crop?.id),
         isReadyToHarvest: farmObject?.isReadyToHarvest ?? false,
       );
     }).toList();

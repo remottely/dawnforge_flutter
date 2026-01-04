@@ -5,7 +5,7 @@ import 'crop_stage_type.dart';
 
 /// Entity representing a planted crop in the farm (D2: Entity with Serialization)
 final class CropEntity extends Equatable {
-  final HandItemId cropId;
+  final HandItemId id;
   final String name;
   final String description;
   final CropStageType stage;
@@ -24,7 +24,7 @@ final class CropEntity extends Equatable {
   final bool isTree;
 
   const CropEntity({
-    required this.cropId,
+    required this.id,
     required this.name,
     required this.description,
     required this.stage,
@@ -71,7 +71,7 @@ final class CropEntity extends Equatable {
   /// Serialization (D2)
   Map<String, dynamic> toJson() {
     return {
-      'cropId': cropId.toJson(),
+      'id': id.toJson(),
       'name': name,
       'description': description,
       'stage': stage.toJson(),
@@ -94,7 +94,7 @@ final class CropEntity extends Equatable {
   /// Deserialization (D2)
   static CropEntity fromJson(Map<String, dynamic> json) {
     return CropEntity(
-      cropId: HandItemId.fromJson(json['cropId'] as String),
+      id: HandItemId.fromJson(json['id'] as String),
       name: json['name'] as String,
       description: json['description'] as String,
       stage: CropStageType.fromJson(json['stage'] as String),
@@ -118,7 +118,7 @@ final class CropEntity extends Equatable {
 
   /// Create a copy with modifications
   CropEntity copyWith({
-    HandItemId? cropId,
+    HandItemId? id,
     String? name,
     String? description,
     CropStageType? stage,
@@ -137,7 +137,7 @@ final class CropEntity extends Equatable {
     bool? isTree,
   }) {
     return CropEntity(
-      cropId: cropId ?? this.cropId,
+      id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
       stage: stage ?? this.stage,
@@ -159,7 +159,7 @@ final class CropEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        cropId,
+        id,
         name,
         description,
         stage,
@@ -180,5 +180,5 @@ final class CropEntity extends Equatable {
 
   @override
   String toString() =>
-      'Crop(id: $cropId, name: $name, stage: $stage, days: $daysPlanted/$daysToMature)';
+      'Crop(id: $id, name: $name, stage: $stage, days: $daysPlanted/$daysToMature)';
 }

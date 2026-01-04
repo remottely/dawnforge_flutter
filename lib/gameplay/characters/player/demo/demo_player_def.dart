@@ -449,7 +449,7 @@ final class DemoPlayerDef {
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: wateringAssetPath,
         textureSize: textureSize,
-        totalFrames: _x10,
+        totalFrames: AppEnvironment.kIsDevToolsMode ? 1 : _x10,
         framePositionX: 0,
         framePositionY: _frameRightY,
       );
@@ -458,7 +458,7 @@ final class DemoPlayerDef {
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: wateringAssetPath,
         textureSize: textureSize,
-        totalFrames: _x10,
+        totalFrames: AppEnvironment.kIsDevToolsMode ? 1 : _x10,
         framePositionX: 0,
         framePositionY: _frameLeftY,
       );
@@ -467,7 +467,7 @@ final class DemoPlayerDef {
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: wateringAssetPath,
         textureSize: textureSize,
-        totalFrames: _x10,
+        totalFrames: AppEnvironment.kIsDevToolsMode ? 1 : _x10,
         framePositionX: 0,
         framePositionY: _frameUpY,
       );
@@ -476,7 +476,7 @@ final class DemoPlayerDef {
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: wateringAssetPath,
         textureSize: textureSize,
-        totalFrames: _x10,
+        totalFrames: AppEnvironment.kIsDevToolsMode ? 1 : _x10,
         framePositionX: 0,
         framePositionY: _frameDownY,
       );

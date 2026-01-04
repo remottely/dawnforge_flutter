@@ -67,7 +67,7 @@ class HarvestCropUseCase {
     final harvestQuantity = crop.yieldAmount;
 
     developer.log(
-      'HarvestCropUseCase: Crop "${crop.cropId}" will yield $harvestQuantity x "$harvestItemId"',
+      'HarvestCropUseCase: Crop "${crop.id}" will yield $harvestQuantity x "$harvestItemId"',
       name: 'farm.usecases.harvest_crop',
     );
 
@@ -100,7 +100,7 @@ class HarvestCropUseCase {
     }
 
     developer.log(
-      'HarvestCropUseCase: Successfully harvested "${harvestedCrop.cropId}" at ($x, $y)',
+      'HarvestCropUseCase: Successfully harvested "${harvestedCrop.id}" at ($x, $y)',
       name: 'farm.usecases.harvest_crop',
     );
 

@@ -106,7 +106,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
     if (_farmObject.crop != null) {
       await _createCropDecoration();
       developer.log(
-        '[FarmTileView] 🌱 Crop decoration loaded: ${_farmObject.crop!.cropId} (${_farmObject.crop!.stage.name}) with Y-sorting',
+        '[FarmTileView] 🌱 Crop decoration loaded: ${_farmObject.crop!.id} (${_farmObject.crop!.stage.name}) with Y-sorting',
       );
     }
 
@@ -151,7 +151,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
       gameRef.add(_cropDecoration!);
 
       developer.log(
-        '[FarmTileView] 🌱 Crop with Y-sorting: ${crop.cropId} at ($cropPosition) with size ($cropSize)',
+        '[FarmTileView] 🌱 Crop with Y-sorting: ${crop.id} at ($cropPosition) with size ($cropSize)',
       );
     } else {
       // Estágio inicial: renderiza no chão (sempre abaixo do player)
@@ -174,7 +174,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
       add(_cropSpriteGround!);
 
       developer.log(
-        '[FarmTileView] 🌱 Crop on ground: ${crop.cropId} with size ($cropSize), always below player',
+        '[FarmTileView] 🌱 Crop on ground: ${crop.id} with size ($cropSize), always below player',
       );
     }
   }
@@ -236,7 +236,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
       if (_kVerboseLogs) {
         developer.log(
           '[FarmTileView] 🗑 removing Y-sorted crop decoration at ($tileX,$tileY) '
-          'for ${_farmObject.crop?.cropId ?? "null"}',
+          'for ${_farmObject.crop?.id ?? "null"}',
           name: 'farm.tile.crop_update',
         );
       }
@@ -248,7 +248,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
       if (_kVerboseLogs) {
         developer.log(
           '[FarmTileView] 🗑 removing ground crop sprite at ($tileX,$tileY) '
-          'for ${_farmObject.crop?.cropId ?? "null"}',
+          'for ${_farmObject.crop?.id ?? "null"}',
           name: 'farm.tile.crop_update',
         );
       }
@@ -265,7 +265,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
 
     if (_kVerboseLogs) {
       developer.log(
-        '[FarmTileView] 🌱 Crop decoration updated: ${_farmObject.crop!.cropId} (${_farmObject.crop!.stage.name})',
+        '[FarmTileView] 🌱 Crop decoration updated: ${_farmObject.crop!.id} (${_farmObject.crop!.stage.name})',
       );
     }
   }
@@ -369,7 +369,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   String? _buildCropKey(FarmObject farmObject) {
     final crop = farmObject.crop;
     if (crop == null) return null;
-    return '${crop.cropId}_${crop.stage.name}';
+    return '${crop.id}_${crop.stage.name}';
   }
 
   void _renderHighlight(Canvas canvas) {
@@ -383,7 +383,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
     farmTile = newTile;
     developer.log(
       '[FarmTileView] 🔄 updateTile at ($tileX,$tileY) -> '
-      'soil:${_farmObject.soilState.name} crop:${_farmObject.crop?.cropId ?? "null"} '
+      'soil:${_farmObject.soilState.name} crop:${_farmObject.crop?.id ?? "null"} '
       'stage:${_farmObject.crop?.stage.name ?? "none"}',
       name: 'farm.tile.update',
     );

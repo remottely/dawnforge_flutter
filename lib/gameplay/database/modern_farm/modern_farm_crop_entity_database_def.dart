@@ -8,7 +8,7 @@ final class ModernFarmCropEntityDatabaseDef {
 
   static const Map<HandItemId, CropEntity> cropEntityList = {
     HandItemId.cabbage: CropEntity(
-      cropId: HandItemId.cabbage,
+      id: HandItemId.cabbage,
       name: 'Cabbage',
       description: 'A leafy green vegetable',
       stage: CropStageType.planted,
@@ -26,7 +26,7 @@ final class ModernFarmCropEntityDatabaseDef {
       ySortingFromStage: null,
     ),
     HandItemId.radish: CropEntity(
-      cropId: HandItemId.radish,
+      id: HandItemId.radish,
       name: 'Radish',
       description: 'A nutritious root vegetable',
       stage: CropStageType.planted,
@@ -44,7 +44,7 @@ final class ModernFarmCropEntityDatabaseDef {
       ySortingFromStage: null,
     ),
     HandItemId.carrot: CropEntity(
-      cropId: HandItemId.carrot,
+      id: HandItemId.carrot,
       name: 'Carrot',
       description: 'A crunchy orange root vegetable',
       stage: CropStageType.planted,
@@ -62,7 +62,7 @@ final class ModernFarmCropEntityDatabaseDef {
       ySortingFromStage: null,
     ),
     HandItemId.strawberry: CropEntity(
-      cropId: HandItemId.strawberry,
+      id: HandItemId.strawberry,
       name: 'Strawberry',
       description: 'A nutritious root vegetable',
       stage: CropStageType.planted,
@@ -80,7 +80,7 @@ final class ModernFarmCropEntityDatabaseDef {
       ySortingFromStage: CropStageType.budding,
     ),
     HandItemId.apple: CropEntity(
-      cropId: HandItemId.apple,
+      id: HandItemId.apple,
       name: 'Apple',
       description: 'Crisp red apple',
       stage: CropStageType.seedling,
@@ -99,7 +99,7 @@ final class ModernFarmCropEntityDatabaseDef {
       isTree: true,
     ),
     HandItemId.wheat: CropEntity(
-      cropId: HandItemId.wheat,
+      id: HandItemId.wheat,
       name: 'Wheat',
       description: 'Golden wheat grain',
       stage: CropStageType.planted,
@@ -117,7 +117,7 @@ final class ModernFarmCropEntityDatabaseDef {
       ySortingFromStage: null,
     ),
     HandItemId.pepper: CropEntity(
-      cropId: HandItemId.pepper,
+      id: HandItemId.pepper,
       name: 'Pepper',
       description: 'Spicy hot peppers',
       stage: CropStageType.planted,
@@ -135,7 +135,7 @@ final class ModernFarmCropEntityDatabaseDef {
       ySortingFromStage: null,
     ),
     HandItemId.turnip: CropEntity(
-      cropId: HandItemId.turnip,
+      id: HandItemId.turnip,
       name: 'Turnip',
       description: 'A purple-white root vegetable',
       stage: CropStageType.planted,
@@ -153,7 +153,7 @@ final class ModernFarmCropEntityDatabaseDef {
       ySortingFromStage: null,
     ),
     HandItemId.cotton: CropEntity(
-      cropId: HandItemId.cotton,
+      id: HandItemId.cotton,
       name: 'Cotton',
       description: 'Soft white cotton',
       stage: CropStageType.planted,
@@ -171,7 +171,7 @@ final class ModernFarmCropEntityDatabaseDef {
       ySortingFromStage: null,
     ),
     HandItemId.onion: CropEntity(
-      cropId: HandItemId.onion,
+      id: HandItemId.onion,
       name: 'Onion',
       description: 'A pungent bulb vegetable',
       stage: CropStageType.planted,
@@ -189,7 +189,7 @@ final class ModernFarmCropEntityDatabaseDef {
       ySortingFromStage: null,
     ),
     HandItemId.cauliflower: CropEntity(
-      cropId: HandItemId.cauliflower,
+      id: HandItemId.cauliflower,
       name: 'Cauliflower',
       description: 'A white flowering vegetable',
       stage: CropStageType.planted,
@@ -207,7 +207,7 @@ final class ModernFarmCropEntityDatabaseDef {
       ySortingFromStage: null,
     ),
     HandItemId.corn: CropEntity(
-      cropId: HandItemId.corn,
+      id: HandItemId.corn,
       name: 'Corn',
       description: 'Sweet golden corn',
       stage: CropStageType.planted,
@@ -225,7 +225,7 @@ final class ModernFarmCropEntityDatabaseDef {
       ySortingFromStage: null,
     ),
     HandItemId.tomato: CropEntity(
-      cropId: HandItemId.tomato,
+      id: HandItemId.tomato,
       name: 'Tomato',
       description: 'Juicy red fruit, perfect for salads',
       stage: CropStageType.seedling,
@@ -243,7 +243,7 @@ final class ModernFarmCropEntityDatabaseDef {
       ySortingFromStage: CropStageType.seedling,
     ),
     HandItemId.grape: CropEntity(
-      cropId: HandItemId.grape,
+      id: HandItemId.grape,
       name: 'Grape',
       description: 'Sweet purple grapes',
       stage: CropStageType.planted,
@@ -261,7 +261,7 @@ final class ModernFarmCropEntityDatabaseDef {
       ySortingFromStage: null,
     ),
     HandItemId.prickly_pear: CropEntity(
-      cropId: HandItemId.prickly_pear,
+      id: HandItemId.prickly_pear,
       name: 'Prickly Pear',
       description: 'Desert cactus fruit',
       stage: CropStageType.planted,
@@ -279,7 +279,7 @@ final class ModernFarmCropEntityDatabaseDef {
       ySortingFromStage: null,
     ),
     HandItemId.coffee: CropEntity(
-      cropId: HandItemId.coffee,
+      id: HandItemId.coffee,
       name: 'Coffee',
       description: 'Aromatic coffee beans',
       stage: CropStageType.planted,
@@ -297,7 +297,7 @@ final class ModernFarmCropEntityDatabaseDef {
       ySortingFromStage: null,
     ),
     HandItemId.zuchini: CropEntity(
-      cropId: HandItemId.zuchini,
+      id: HandItemId.zuchini,
       name: 'Zuchini',
       description: 'Green summer squash',
       stage: CropStageType.planted,
@@ -315,7 +315,7 @@ final class ModernFarmCropEntityDatabaseDef {
       ySortingFromStage: null,
     ),
     HandItemId.pumpkin: CropEntity(
-      cropId: HandItemId.pumpkin,
+      id: HandItemId.pumpkin,
       name: 'Pumpkin',
       description: 'Large orange pumpkin',
       stage: CropStageType.planted,
@@ -333,7 +333,7 @@ final class ModernFarmCropEntityDatabaseDef {
       ySortingFromStage: null,
     ),
     HandItemId.pineapple: CropEntity(
-      cropId: HandItemId.pineapple,
+      id: HandItemId.pineapple,
       name: 'Pineapple',
       description: 'Tropical sweet fruit',
       stage: CropStageType.planted,
@@ -351,7 +351,7 @@ final class ModernFarmCropEntityDatabaseDef {
       ySortingFromStage: null,
     ),
     HandItemId.watermelon: CropEntity(
-      cropId: HandItemId.watermelon,
+      id: HandItemId.watermelon,
       name: 'Watermelon',
       description: 'Large juicy watermelon',
       stage: CropStageType.planted,

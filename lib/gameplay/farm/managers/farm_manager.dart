@@ -163,7 +163,7 @@ class FarmManager {
 
     developer.log(
       '[FarmManager] ✓ Harvested ${harvestedCrop.yieldAmount}x ${harvestedCrop.name} '
-      'at ($x,$y) -> soil:${harvestedFarmObject.soilState.name} crop:${harvestedFarmObject.crop?.cropId ?? "none"}',
+      'at ($x,$y) -> soil:${harvestedFarmObject.soilState.name} crop:${harvestedFarmObject.crop?.id ?? "none"}',
       name: 'farm.manager.harvest',
     );
     return harvestedCrop;
@@ -200,8 +200,8 @@ class FarmManager {
             tile.x
           },${tile.y}) '
           'soil ${farmObject.soilState.name} -> ${advancedFarmObject.soilState.name}, '
-          'crop ${farmObject.crop?.cropId ?? "none"}/${farmObject.crop?.stage.name ?? "none"} '
-          '-> ${advancedFarmObject.crop?.cropId ?? "none"}/${advancedFarmObject.crop?.stage.name ?? "none"}',
+          'crop ${farmObject.crop?.id ?? "none"}/${farmObject.crop?.stage.name ?? "none"} '
+          '-> ${advancedFarmObject.crop?.id ?? "none"}/${advancedFarmObject.crop?.stage.name ?? "none"}',
           name: 'farm.manager.advance',
         );
       }

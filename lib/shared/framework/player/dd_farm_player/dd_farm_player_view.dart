@@ -3,6 +3,7 @@ import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/farm/services/farm_tool_action_config.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_defense_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_config.dart';
@@ -153,7 +154,7 @@ abstract class DDFarmPlayerView<
           animationLeftDown: animationWateringCanDirectional.leftDown,
           currentAnimation: animation,
           target: this,
-          executionStartFrame: 12, // TODO(Kevin): inject this value
+          executionStartFrame: AppEnvironment.kIsDevToolsMode ? 0 : 8, // TODO(Kevin): inject this value dynamically
           onActionStart: lockAction,
           onActionEnd: unlockAction,
           onExecutionFrames: () => FarmToolActionDef.execute(player: this),

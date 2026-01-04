@@ -35,7 +35,7 @@ final class CropDatabase {
     }
 
     return CropEntity(
-      cropId: cropId,
+      id: cropId,
       name: template.name,
       description: template.description,
       stage: template.stage,

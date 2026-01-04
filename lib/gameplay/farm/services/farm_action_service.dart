@@ -44,7 +44,7 @@ final class FarmActionService {
   /// TODO: Integrate with inventory to check for strawberries and consume them.
   FarmActionResult plantSeed(int x, int y, CropEntity crop) {
     developer.log(
-      '[FarmActionService] Attempting to plant ${crop.cropId} at ($x, $y)',
+      '[FarmActionService] Attempting to plant ${crop.id} at ($x, $y)',
     );
 
     final success = getIt<FarmManager>().plantSeed(x, y, crop);
