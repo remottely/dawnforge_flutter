@@ -5,7 +5,7 @@ import 'crop_stage_type.dart';
 
 /// Entity representing a planted crop in the farm (D2: Entity with Serialization)
 final class CropEntity extends Equatable {
-  final String cropId;
+  final HandItemId cropId;
   final String name;
   final String description;
   final CropStageType stage;
@@ -71,7 +71,7 @@ final class CropEntity extends Equatable {
   /// Serialization (D2)
   Map<String, dynamic> toJson() {
     return {
-      'cropId': cropId,
+      'cropId': cropId.toJson(),
       'name': name,
       'description': description,
       'stage': stage.toJson(),
@@ -94,7 +94,7 @@ final class CropEntity extends Equatable {
   /// Deserialization (D2)
   static CropEntity fromJson(Map<String, dynamic> json) {
     return CropEntity(
-      cropId: json['cropId'] as String,
+      cropId: HandItemId.fromJson(json['cropId'] as String),
       name: json['name'] as String,
       description: json['description'] as String,
       stage: CropStageType.fromJson(json['stage'] as String),
@@ -118,7 +118,7 @@ final class CropEntity extends Equatable {
 
   /// Create a copy with modifications
   CropEntity copyWith({
-    String? cropId,
+    HandItemId? cropId,
     String? name,
     String? description,
     CropStageType? stage,

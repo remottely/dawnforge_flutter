@@ -2,7 +2,7 @@ import '../../world/entities/objects/farm/crop_stage_type.dart';
 import '../../inventory/entities/hand/hand_item_id.dart';
 
 final class CropModel {
-  final String cropId;
+  final HandItemId cropId;
   final String name;
   final String description;
   final CropStageType stage;
@@ -56,7 +56,7 @@ final class CropModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'cropId': cropId,
+      'cropId': cropId.toJson(),
       'name': name,
       'description': description,
       'stage': stage.toJson(),
@@ -77,7 +77,7 @@ final class CropModel {
 
   factory CropModel.fromJson(Map<String, dynamic> json) {
     return CropModel(
-      cropId: json['cropId'] as String,
+      cropId: HandItemId.fromJson(json['cropId'] as String),
       name: json['name'] as String,
       description: json['description'] as String,
       stage: CropStageType.fromJson(json['stage'] as String),
@@ -99,7 +99,7 @@ final class CropModel {
   }
 
   CropModel copyWith({
-    String? cropId,
+    HandItemId? cropId,
     String? name,
     String? description,
     CropStageType? stage,

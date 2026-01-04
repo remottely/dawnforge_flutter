@@ -70,7 +70,7 @@ class PlantSeedUseCase {
     final cropId = _extractCropIdFromSeedId(seedItemId);
 
     // 3. Cria a crop usando o factory
-    final crop = _cropFactory.createCrop(cropId.name);
+    final crop = _cropFactory.createCrop(cropId);
     if (crop == null) {
       developer.log(
         'PlantSeedUseCase: Failed to create crop from id "$cropId"',

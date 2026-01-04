@@ -2,13 +2,14 @@ import 'dart:developer' as developer;
 
 import 'package:darkness_dungeon/gameplay/database/modern_farm/modern_farm_crop_database_def.dart';
 
+import '../../inventory/entities/hand/hand_item_id.dart';
 import '../../world/entities/objects/farm/crop_entity.dart';
 import '../models/crop_model.dart';
 
 final class CropDatabase {
   CropDatabase._();
 
-  static final Map<String, CropEntity> _cropDatabase = {};
+  static final Map<HandItemId, CropEntity> _cropDatabase = {};
   static bool _isInitialized = false;
 
   static Future<void> initialize() async {
@@ -16,13 +17,13 @@ final class CropDatabase {
 
     _cropDatabase
       ..clear()
-      ..addAll(ModernFarmCropDatabaseDef.crops);
+      ..addAll(ModernFarmCropDatabaseDef.cropEntityList);
 
     _isInitialized = true;
     developer.log('[CropDatabase] Loaded ${_cropDatabase.length} crops');
   }
 
-  static CropModel? createCrop(String cropId) {
+  static CropModel? createCrop(HandItemId cropId) {
     if (!_isInitialized) {
       developer.log('[CropDatabase] ERROR: Not initialized!');
       return null;
@@ -54,9 +55,9 @@ final class CropDatabase {
     );
   }
 
-  static List<String> getAllCropIds() => _cropDatabase.keys.toList();
+  static List<HandItemId> getAllCropIds() => _cropDatabase.keys.toList();
 
-  static List<String> getCropsBySeason(String season) {
+  static List<HandItemId> getCropsBySeason(String season) {
     return _cropDatabase.entries
         .where((e) {
           final requiredSeason = e.value.requiredSeason;
@@ -66,7 +67,7 @@ final class CropDatabase {
         .toList();
   }
 
-  static CropEntity? getCropData(String cropId) {
+  static CropEntity? getCropData(HandItemId cropId) {
     return _cropDatabase[cropId];
   }
 

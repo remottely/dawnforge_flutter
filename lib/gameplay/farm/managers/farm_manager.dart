@@ -1,5 +1,6 @@
 import 'dart:developer' as developer;
 
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_id.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../core/modules/world/world_state_manager.dart';
@@ -225,7 +226,7 @@ class FarmManager {
   /// Deserialization (E2)
   void fromJson(
     Map<String, dynamic> json,
-    CropEntity? Function(String cropId) cropFactory,
+    // CropEntity? Function(HandItemId cropId) cropFactory,
   ) {
     _tiles.clear();
 

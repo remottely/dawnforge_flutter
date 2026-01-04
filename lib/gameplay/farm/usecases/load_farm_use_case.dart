@@ -57,7 +57,9 @@ class LoadFarmUseCase {
       }
 
       // Restaura estado usando o manager
-      _manager.fromJson(farmData, _cropFactory.createCrop);
+      _manager.fromJson(farmData
+      // , _cropFactory.createCrop
+      );
 
       final tiles = _manager.getAllTiles();
       developer.log(

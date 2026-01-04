@@ -1,5 +1,7 @@
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_id.dart';
 import 'package:darkness_dungeon/gameplay/world/entities/objects/farm/farm_object.dart';
 import 'package:flutter/foundation.dart';
+import 'package:equatable/equatable.dart';
 
 import '../../world/entities/objects/farm/soil_state.dart';
 import '../managers/farm_manager.dart';
@@ -9,14 +11,14 @@ import '../managers/farm_manager.dart';
 // import '../usecases/water_tile_use_case.dart';
 
 /// DTO (Data Transfer Object) for UI representation of a farm tile (F2: ViewModel pattern)
-class FarmTileUI {
+class FarmTileUI extends Equatable {
   final int x;
   final int y;
   final bool isTilled;
   final bool isWatered;
   final bool hasCrop;
   final String? cropName;
-  final String? cropSpriteKey;
+  final HandItemId? cropSpriteKey;
   final bool isReadyToHarvest;
 
   FarmTileUI({
@@ -31,29 +33,16 @@ class FarmTileUI {
   });
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is FarmTileUI &&
-          runtimeType == other.runtimeType &&
-          x == other.x &&
-          y == other.y &&
-          isTilled == other.isTilled &&
-          isWatered == other.isWatered &&
-          hasCrop == other.hasCrop &&
-          cropName == other.cropName &&
-          cropSpriteKey == other.cropSpriteKey &&
-          isReadyToHarvest == other.isReadyToHarvest;
-
-  @override
-  int get hashCode =>
-      x.hashCode ^
-      y.hashCode ^
-      isTilled.hashCode ^
-      isWatered.hashCode ^
-      hasCrop.hashCode ^
-      cropName.hashCode ^
-      cropSpriteKey.hashCode ^
-      isReadyToHarvest.hashCode;
+  List<Object?> get props => [
+    x,
+    y,
+    isTilled,
+    isWatered,
+    hasCrop,
+    cropName,
+    cropSpriteKey,
+    isReadyToHarvest,
+  ];
 
   @override
   String toString() {
@@ -63,7 +52,7 @@ class FarmTileUI {
 }
 
 /// ViewModel intermediário para UI do farm (F2: ViewModel pattern)
-/// 
+///
 /// Responsabilidades:
 /// - Transformar dados de Entity (FarmTile, Crop) para UI (FarmTileUI)
 /// - Expor métodos para ações da UI (onTillSoil, onPlantSeed, etc.)
@@ -99,7 +88,8 @@ class FarmViewModel {
       return FarmTileUI(
         x: tile.x,
         y: tile.y,
-        isTilled: farmObject?.soilState == SoilState.tilled ||
+        isTilled:
+            farmObject?.soilState == SoilState.tilled ||
             farmObject?.soilState == SoilState.watered ||
             farmObject?.soilState == SoilState.fertilized,
         isWatered: farmObject?.soilState == SoilState.watered,
@@ -112,7 +102,7 @@ class FarmViewModel {
   }
 
   /// Helper para obter sprite key do crop (pode ser estendido no futuro)
-  String? _getCropSpriteKey(String? cropId) {
+  HandItemId? _getCropSpriteKey(HandItemId? cropId) {
     if (cropId == null) return null;
     // Retorna o cropId como key por enquanto
     // No futuro pode ser mapeado para sprite paths específicos

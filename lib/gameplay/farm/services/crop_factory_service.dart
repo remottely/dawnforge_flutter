@@ -2,11 +2,12 @@ import 'dart:developer' as developer;
 
 import 'package:darkness_dungeon/gameplay/database/modern_farm/modern_farm_crop_database_def.dart';
 
+import '../../inventory/entities/hand/hand_item_id.dart';
 import '../../world/entities/objects/farm/crop_entity.dart';
 
 /// Service for creating crops from JSON database (L2: Factory with JSON database, I2: Service = stateless)
 class CropFactoryService {
-  final Map<String, CropEntity> _database = {};
+  final Map<HandItemId, CropEntity> _database = {};
   bool _isInitialized = false;
 
   /// Initialize the service by loading the crop database
@@ -18,7 +19,7 @@ class CropFactoryService {
 
     _database
       ..clear()
-      ..addAll(ModernFarmCropDatabaseDef.crops);
+      ..addAll(ModernFarmCropDatabaseDef.cropEntityList);
 
     _isInitialized = true;
     developer.log(
@@ -27,7 +28,7 @@ class CropFactoryService {
   }
 
   /// Create a crop instance from the database by cropId
-  CropEntity? createCrop(String cropId) {
+  CropEntity? createCrop(HandItemId cropId) {
     if (!_isInitialized) {
       developer.log(
         '[CropFactoryService] ERROR: Not initialized! Call initialize() first',
@@ -54,13 +55,13 @@ class CropFactoryService {
   }
 
   /// Get all available crop IDs
-  List<String> getAllCropIds() {
+  List<HandItemId> getAllCropIds() {
     if (!_isInitialized) return [];
     return _database.keys.toList();
   }
 
   /// Get crops that can be planted in a specific season
-  List<String> getCropsBySeason(String season) {
+  List<HandItemId> getCropsBySeason(String season) {
     if (!_isInitialized) return [];
 
     return _database.entries
@@ -73,7 +74,7 @@ class CropFactoryService {
   }
 
   /// Get raw crop data from database
-  CropEntity? getCropData(String cropId) {
+  CropEntity? getCropData(HandItemId cropId) {
     if (!_isInitialized) return null;
     return _database[cropId];
   }
