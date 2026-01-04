@@ -58,7 +58,7 @@
 //     return tile.plant(crop);
 //   }
 
-//   ({FarmTileModel updatedTile, CropModel harvestedCrop})? harvest(
+//   ({FarmTileModel updatedTile, CropEntity harvestedCrop})? harvest(
 //     FarmTileModel tile,
 //   ) {
 //     if (!tile.canHarvest) {

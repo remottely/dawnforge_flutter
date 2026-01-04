@@ -4,7 +4,6 @@ import 'package:darkness_dungeon/gameplay/database/modern_farm/modern_farm_crop_
 
 import '../../inventory/entities/hand/hand_item_id.dart';
 import '../../world/entities/objects/farm/crop_entity.dart';
-import '../models/crop_model.dart';
 
 final class CropDatabase {
   CropDatabase._();
@@ -23,7 +22,7 @@ final class CropDatabase {
     developer.log('[CropDatabase] Loaded ${_cropDatabase.length} crops');
   }
 
-  static CropModel? createCrop(HandItemId cropId) {
+  static CropEntity? createCrop(HandItemId cropId) {
     if (!_isInitialized) {
       developer.log('[CropDatabase] ERROR: Not initialized!');
       return null;
@@ -35,7 +34,7 @@ final class CropDatabase {
       return null;
     }
 
-    return CropModel(
+    return CropEntity(
       cropId: cropId,
       name: template.name,
       description: template.description,

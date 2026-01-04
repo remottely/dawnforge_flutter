@@ -7,7 +7,7 @@
 //   final int x;
 //   final int y;
 //   final SoilStateModel soilState;
-//   final CropModel? crop;
+//   final CropEntity? crop;
 //   final int? lastWateredDay;
 
 //   const FarmTileModel({
@@ -46,7 +46,7 @@
 //     );
 //   }
 
-//   FarmTileModel plant(CropModel crop) {
+//   FarmTileModel plant(CropEntity crop) {
 //     if (!canPlantCrop) return this;
 //     return copyWith(crop: crop);
 //   }
@@ -101,7 +101,7 @@
 //       y: json['y'] as int,
 //       soilState: SoilStateModel.fromJson(json['soilState'] as String),
 //       crop: json['crop'] != null
-//           ? CropModel.fromJson(json['crop'] as Map<String, dynamic>)
+//           ? CropEntity.fromJson(json['crop'] as Map<String, dynamic>)
 //           : null,
 //       lastWateredDay: json['lastWateredDay'] as int?,
 //     );
@@ -111,7 +111,7 @@
 //     int? x,
 //     int? y,
 //     SoilStateModel? soilState,
-//     CropModel? crop,
+//     CropEntity? crop,
 //     int? lastWateredDay,
 //   }) {
 //     return FarmTileModel(
