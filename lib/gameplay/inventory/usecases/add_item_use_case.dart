@@ -2,10 +2,10 @@ import 'dart:developer' as developer;
 import 'dart:math';
 
 import '../entities/inventory_slot.dart';
-import '../entities/item.dart';
+import '../entities/hand_item.dart';
 import '../items/main_hand_item.dart';
 import '../managers/inventory_manager.dart';
-import '../models/equipped_hand_type.dart';
+import '../entities/hand_item_type.dart';
 import '../services/item_factory_service.dart';
 
 /// UseCase for adding items to inventory (B1: Concrete UseCase)
@@ -17,7 +17,7 @@ class AddItemUseCase {
 
   /// Add an item to inventory by ID and quantity
   /// Returns true if successful, false otherwise
-  bool call(EquippedHandType itemId, int quantity) {
+  bool call(HandItemType itemId, int quantity) {
     if (quantity <= 0) return false;
 
     final item = _itemFactory.createItem(itemId.name);
@@ -27,7 +27,7 @@ class AddItemUseCase {
   }
 
   /// Add an item entity directly to inventory
-  bool addItemEntity(Item item, [int quantity = 1]) {
+  bool addItemEntity(HandItem item, [int quantity = 1]) {
     final normalizedItem = _normalizeStackBehavior(item);
 
     developer.log('[AddItemUseCase] Adding $quantity x ${normalizedItem.name}');
@@ -127,7 +127,7 @@ class AddItemUseCase {
 
   /// Add multiple items (id, quantity) in one call. Useful for shop purchases.
   /// Returns true if at least one item was added.
-  bool addMultiple(List<(EquippedHandType itemId, int quantity)> items) {
+  bool addMultiple(List<(HandItemType itemId, int quantity)> items) {
     var anyAdded = false;
 
     for (final (itemId, quantity) in items) {
@@ -144,7 +144,7 @@ class AddItemUseCase {
     return anyAdded;
   }
 
-  Item _normalizeStackBehavior(Item item) {
+  HandItem _normalizeStackBehavior(HandItem item) {
     if (item is MainHandItem && item.equippedHandType.isSeed) {
       final desiredStackSize = item.maxStackSize > 1 ? item.maxStackSize : 99;
 

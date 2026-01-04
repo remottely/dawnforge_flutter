@@ -2,7 +2,7 @@ import 'dart:developer' as developer;
 
 import 'package:darkness_dungeon/gameplay/inventory/config/inventory_def.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/crop_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/item_category.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/item_quality.dart';
 
@@ -34,7 +34,7 @@ final class ItemPriceService {
   }
 
   int calculateSellPrice(
-    Item item, {
+    HandItem item, {
     bool isShippingBin = true,
     ItemQuality? quality,
   }) {
@@ -65,12 +65,12 @@ final class ItemPriceService {
     return finalPrice;
   }
 
-  int calculateBuyPrice(Item item) {
+  int calculateBuyPrice(HandItem item) {
     final baseSellPrice = calculateSellPrice(item);
     return baseSellPrice * 2;
   }
 
-  double _getProfessionBonus(Item item) {
+  double _getProfessionBonus(HandItem item) {
     if (item is CropItem) {
       if (_hasTillerProfession &&
           [
@@ -126,7 +126,7 @@ final class ItemPriceService {
   }
 
   int calculateStackValue(
-    Item item,
+    HandItem item,
     int quantity, {
     bool isShippingBin = true,
     ItemQuality? quality,

@@ -1,17 +1,17 @@
 import 'package:equatable/equatable.dart';
 
-import 'item.dart';
+import 'hand_item.dart';
 
 /// Simple wrapper for the single equipped item (slot type removed)
 final class EquipmentSlot extends Equatable {
-  final Item? equippedItem;
+  final HandItem? equippedItem;
 
   const EquipmentSlot({this.equippedItem});
 
   bool get isEmpty => equippedItem == null;
   bool get isOccupied => equippedItem != null;
 
-  EquipmentSlot equip(Item item) {
+  EquipmentSlot equip(HandItem item) {
     return EquipmentSlot(equippedItem: item);
   }
 
@@ -25,7 +25,7 @@ final class EquipmentSlot extends Equatable {
 
   static EquipmentSlot fromJson(
     Map<String, dynamic> json,
-    Item? Function(String) itemResolver,
+    HandItem? Function(String) itemResolver,
   ) {
     final itemId = json['equippedItemId'] as String?;
     return EquipmentSlot(

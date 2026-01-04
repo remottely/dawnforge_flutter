@@ -2,7 +2,7 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/foundation.dart';
 
-import '../entities/item.dart';
+import '../entities/hand_item.dart';
 import '../items/main_hand_item.dart';
 import 'inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/state/equipment_state.dart';
@@ -65,12 +65,12 @@ final class EquipmentManager {
     EquipmentState.instance.updateEquippedItem(null);
   }
 
-  Item? getEquippedItem() =>
+  HandItem? getEquippedItem() =>
       InventoryManager.instance.getSlotByIndex(_currentMainHandSlotIndex)?.item;
 
   bool hasEquippedItem() => getEquippedItem() != null;
 
-  List<Item> getAllEquippedItems() {
+  List<HandItem> getAllEquippedItems() {
     final item = getEquippedItem();
     return item != null ? [item] : [];
   }
@@ -109,7 +109,7 @@ final class EquipmentManager {
 
   void fromJson(
     Map<String, dynamic> json,
-    Item? Function(String itemId) itemFactory,
+    HandItem? Function(String itemId) itemFactory,
   ) {
     _currentMainHandSlotIndex = json['selectedSlotIndex'] as int? ?? 0;
     // Clamp to available slots

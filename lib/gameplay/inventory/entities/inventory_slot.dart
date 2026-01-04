@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
 
-import '../entities/item.dart';
+import 'hand_item.dart';
 
 /// Entity representing a slot in the inventory (D2: Entity with Serialization)
 final class InventorySlot extends Equatable {
   final int index;
-  final Item? item;
+  final HandItem? item;
   final int quantity;
 
   const InventorySlot({required this.index, this.item, this.quantity = 0});
@@ -14,7 +14,7 @@ final class InventorySlot extends Equatable {
   bool get isOccupied => !isEmpty;
   bool get isFull => item != null && quantity >= item!.maxStackSize;
 
-  bool canAddItem(Item itemToAdd, int quantityToAdd) {
+  bool canAddItem(HandItem itemToAdd, int quantityToAdd) {
     if (isEmpty) return true;
     if (item!.id != itemToAdd.id) return false;
     if (!item!.isStackable) return false;
@@ -51,7 +51,7 @@ final class InventorySlot extends Equatable {
   /// Deserialization with item resolver
   static InventorySlot fromJson(
     Map<String, dynamic> json,
-    Item? Function(String) itemResolver,
+    HandItem? Function(String) itemResolver,
   ) {
     final itemId = json['itemId'] as String?;
     return InventorySlot(

@@ -1,10 +1,10 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item.dart';
 import 'package:flutter/material.dart';
 import '../../../shared/utils/sprite_animation_config_helper.dart';
 
 class ItemIconWidget extends StatelessWidget {
-  final Item item;
+  final HandItem item;
   final double size;
 
   const ItemIconWidget({super.key, required this.item, this.size = 32.0});

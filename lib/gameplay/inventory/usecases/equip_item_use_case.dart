@@ -1,4 +1,4 @@
-import '../entities/item.dart';
+import '../entities/hand_item.dart';
 import '../managers/equipment_manager.dart';
 import '../managers/inventory_manager.dart';
 
@@ -20,7 +20,7 @@ class EquipItemUseCase {
 
   /// Equip an item entity directly
   bool equipItemEntity(
-    Item item,
+    HandItem item,
     int? inventorySlotIndex,
   ) {
     if (inventorySlotIndex != null) {

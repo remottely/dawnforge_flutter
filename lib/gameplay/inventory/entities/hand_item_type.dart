@@ -1,4 +1,4 @@
-enum EquippedHandType {
+enum HandItemType {
   /// Seeds
   apple_seed_bag,
   cabbage_seed_bag,
@@ -78,16 +78,16 @@ enum EquippedHandType {
   dungeon_key,
   wheat_item;
 
-  static EquippedHandType fromString(String json) {
-    return EquippedHandType.values.firstWhere(
+  static HandItemType fromString(String json) {
+    return HandItemType.values.firstWhere(
       (type) => type.name == json,
-      orElse: () => EquippedHandType.harvestBasket,
+      orElse: () => HandItemType.harvestBasket,
     );
   }
 
   String toJson() => name;
 
-  static EquippedHandType fromJson(String json) => fromString(json);
+  static HandItemType fromJson(String json) => fromString(json);
 
   bool get isSeed =>
       this == apple_seed_bag ||

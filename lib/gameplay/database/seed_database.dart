@@ -1,11 +1,11 @@
 import 'package:darkness_dungeon/gameplay/inventory/items/seed_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_type.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/item_rarity.dart';
 
 final class SeedDatabaseDef {
-  static const Map<EquippedHandType, SeedItem> seeds = {
-    EquippedHandType.carrot_seeds: SeedItem(
-      id: EquippedHandType.carrot_seeds,
+  static const Map<HandItemType, SeedItem> seeds = {
+    HandItemType.carrot_seeds: SeedItem(
+      id: HandItemType.carrot_seeds,
       name: 'Carrot Seeds',
       description: 'Plant to grow carrots in any season',
       rarity: ItemRarity.common,
@@ -17,8 +17,8 @@ final class SeedDatabaseDef {
       yield: 3,
       season: 'any',
     ),
-    EquippedHandType.wheat_seeds: SeedItem(
-      id: EquippedHandType.wheat_seeds,
+    HandItemType.wheat_seeds: SeedItem(
+      id: HandItemType.wheat_seeds,
       name: 'Wheat Seeds',
       description: 'Grow wheat in spring or fall',
       rarity: ItemRarity.common,
@@ -30,8 +30,8 @@ final class SeedDatabaseDef {
       yield: 4,
       season: 'spring',
     ),
-    EquippedHandType.tomato_seeds: SeedItem(
-      id: EquippedHandType.tomato_seeds,
+    HandItemType.tomato_seeds: SeedItem(
+      id: HandItemType.tomato_seeds,
       name: 'Tomato Seeds',
       description: 'Summer crop that produces many tomatoes',
       rarity: ItemRarity.uncommon,
@@ -43,8 +43,8 @@ final class SeedDatabaseDef {
       yield: 6,
       season: 'summer',
     ),
-    EquippedHandType.pumpkin_seeds: SeedItem(
-      id: EquippedHandType.pumpkin_seeds,
+    HandItemType.pumpkin_seeds: SeedItem(
+      id: HandItemType.pumpkin_seeds,
       name: 'Pumpkin Seeds',
       description: 'Fall crop that grows large pumpkins',
       rarity: ItemRarity.uncommon,
@@ -56,8 +56,8 @@ final class SeedDatabaseDef {
       yield: 2,
       season: 'fall',
     ),
-    EquippedHandType.ancient_seeds: SeedItem(
-      id: EquippedHandType.ancient_seeds,
+    HandItemType.ancient_seeds: SeedItem(
+      id: HandItemType.ancient_seeds,
       name: 'Ancient Seeds',
       description: 'Rare ancient seeds that grow valuable crops',
       rarity: ItemRarity.legendary,

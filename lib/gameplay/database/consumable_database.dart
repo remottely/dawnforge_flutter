@@ -1,12 +1,12 @@
 import 'package:darkness_dungeon/gameplay/inventory/items/consumable_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_type.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/item_rarity.dart';
 
 final class ConsumableDatabaseDef {
   ConsumableDatabaseDef._();
-  static const Map<EquippedHandType, ConsumableItem> consumables = {
-    EquippedHandType.health_potion: ConsumableItem(
-      id: EquippedHandType.health_potion,
+  static const Map<HandItemType, ConsumableItem> consumables = {
+    HandItemType.health_potion: ConsumableItem(
+      id: HandItemType.health_potion,
       name: 'Health Potion',
       description: 'Restores 50 HP instantly',
       rarity: ItemRarity.common,
@@ -18,8 +18,8 @@ final class ConsumableDatabaseDef {
       duration: 0,
       buffs: const [],
     ),
-    EquippedHandType.stamina_potion: ConsumableItem(
-      id: EquippedHandType.stamina_potion,
+    HandItemType.stamina_potion: ConsumableItem(
+      id: HandItemType.stamina_potion,
       name: 'Stamina Potion',
       description: 'Restores 30 stamina instantly',
       rarity: ItemRarity.common,
@@ -31,8 +31,8 @@ final class ConsumableDatabaseDef {
       duration: 0,
       buffs: const [],
     ),
-    EquippedHandType.super_health_potion: ConsumableItem(
-      id: EquippedHandType.super_health_potion,
+    HandItemType.super_health_potion: ConsumableItem(
+      id: HandItemType.super_health_potion,
       name: 'Super Health Potion',
       description: 'Restores 150 HP instantly',
       rarity: ItemRarity.rare,
@@ -44,8 +44,8 @@ final class ConsumableDatabaseDef {
       duration: 0,
       buffs: const [],
     ),
-    EquippedHandType.cooked_meat: ConsumableItem(
-      id: EquippedHandType.cooked_meat,
+    HandItemType.cooked_meat: ConsumableItem(
+      id: HandItemType.cooked_meat,
       name: 'Cooked Meat',
       description: 'Delicious cooked meat that restores health',
       rarity: ItemRarity.common,
@@ -57,8 +57,8 @@ final class ConsumableDatabaseDef {
       duration: 0,
       buffs: const [],
     ),
-    EquippedHandType.strength_elixir: ConsumableItem(
-      id: EquippedHandType.strength_elixir,
+    HandItemType.strength_elixir: ConsumableItem(
+      id: HandItemType.strength_elixir,
       name: 'Strength Elixir',
       description: 'Increases damage for 60 seconds',
       rarity: ItemRarity.uncommon,
@@ -70,8 +70,8 @@ final class ConsumableDatabaseDef {
       duration: 60,
       buffs: const ['strength_buff'],
     ),
-    EquippedHandType.carrot_item: ConsumableItem(
-      id: EquippedHandType.carrot_item,
+    HandItemType.carrot_item: ConsumableItem(
+      id: HandItemType.carrot_item,
       name: 'Carrot',
       description: 'A fresh orange carrot. Can be eaten or sold.',
       rarity: ItemRarity.common,
@@ -83,8 +83,8 @@ final class ConsumableDatabaseDef {
       duration: 0,
       buffs: const [],
     ),
-    EquippedHandType.strawberry_item: ConsumableItem(
-      id: EquippedHandType.strawberry_item,
+    HandItemType.strawberry_item: ConsumableItem(
+      id: HandItemType.strawberry_item,
       name: 'Strawberry',
       description: 'A fresh red strawberry. Can be eaten or sold.',
       rarity: ItemRarity.common,
@@ -96,8 +96,8 @@ final class ConsumableDatabaseDef {
       duration: 0,
       buffs: const [],
     ),
-    EquippedHandType.potato_item: ConsumableItem(
-      id: EquippedHandType.potato_item,
+    HandItemType.potato_item: ConsumableItem(
+      id: HandItemType.potato_item,
       name: 'Potato',
       description: 'A starchy potato. Can be cooked or sold.',
       rarity: ItemRarity.common,
@@ -109,8 +109,8 @@ final class ConsumableDatabaseDef {
       duration: 0,
       buffs: const [],
     ),
-    EquippedHandType.pumpkin_item: ConsumableItem(
-      id: EquippedHandType.pumpkin_item,
+    HandItemType.pumpkin_item: ConsumableItem(
+      id: HandItemType.pumpkin_item,
       name: 'Pumpkin',
       description: 'A large orange pumpkin. Great for cooking.',
       rarity: ItemRarity.uncommon,
@@ -122,8 +122,8 @@ final class ConsumableDatabaseDef {
       duration: 0,
       buffs: const [],
     ),
-    EquippedHandType.turnip_item: ConsumableItem(
-      id: EquippedHandType.turnip_item,
+    HandItemType.turnip_item: ConsumableItem(
+      id: HandItemType.turnip_item,
       name: 'Turnip',
       description: 'A purple and white turnip. Nutritious vegetable.',
       rarity: ItemRarity.common,
@@ -135,8 +135,8 @@ final class ConsumableDatabaseDef {
       duration: 0,
       buffs: const [],
     ),
-    EquippedHandType.radish_item: ConsumableItem(
-      id: EquippedHandType.radish_item,
+    HandItemType.radish_item: ConsumableItem(
+      id: HandItemType.radish_item,
       name: 'Radish',
       description: 'A crisp radish. Can be eaten or sold.',
       rarity: ItemRarity.common,
@@ -148,8 +148,8 @@ final class ConsumableDatabaseDef {
       duration: 0,
       buffs: const [],
     ),
-    EquippedHandType.tomato_item: ConsumableItem(
-      id: EquippedHandType.tomato_item,
+    HandItemType.tomato_item: ConsumableItem(
+      id: HandItemType.tomato_item,
       name: 'Tomato',
       description: 'A juicy red tomato. Perfect for salads.',
       rarity: ItemRarity.uncommon,
@@ -161,8 +161,8 @@ final class ConsumableDatabaseDef {
       duration: 0,
       buffs: const [],
     ),
-    EquippedHandType.corn_item: ConsumableItem(
-      id: EquippedHandType.corn_item,
+    HandItemType.corn_item: ConsumableItem(
+      id: HandItemType.corn_item,
       name: 'Corn',
       description: 'Sweet corn on the cob. Can be roasted.',
       rarity: ItemRarity.uncommon,
@@ -174,8 +174,8 @@ final class ConsumableDatabaseDef {
       duration: 0,
       buffs: const [],
     ),
-    EquippedHandType.apple_item: ConsumableItem(
-      id: EquippedHandType.apple_item,
+    HandItemType.apple_item: ConsumableItem(
+      id: HandItemType.apple_item,
       name: 'Apple',
       description: 'A crisp apple. Can be eaten or sold.',
       rarity: ItemRarity.common,

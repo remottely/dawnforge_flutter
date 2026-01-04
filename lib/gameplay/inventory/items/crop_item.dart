@@ -1,11 +1,11 @@
-import '../entities/item.dart';
-import '../models/equipped_hand_type.dart';
+import '../entities/hand_item.dart';
+import '../entities/hand_item_type.dart';
 import '../models/item_category.dart';
 import '../models/item_quality.dart';
 import '../models/item_rarity.dart';
 import '../models/item_type.dart';
 
-final class CropItem extends Item {
+final class CropItem extends HandItem {
   final ItemCategory category;
   final ItemQuality quality;
   final int energyRestore;
@@ -75,7 +75,7 @@ final class CropItem extends Item {
 
   factory CropItem.fromJson(Map<String, dynamic> json) {
     return CropItem(
-      id: EquippedHandType.fromJson(json['id'] as String),
+      id: HandItemType.fromJson(json['id'] as String),
       name: json['name'] as String,
       description: json['description'] as String,
       baseValue: json['baseValue'] as int,
@@ -99,7 +99,7 @@ final class CropItem extends Item {
 
   @override
   CropItem copyWith({
-    EquippedHandType? id,
+    HandItemType? id,
     String? name,
     String? description,
     int? baseValue,

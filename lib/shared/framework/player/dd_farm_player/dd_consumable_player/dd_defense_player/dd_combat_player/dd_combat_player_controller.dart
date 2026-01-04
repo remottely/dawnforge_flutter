@@ -3,7 +3,7 @@ import 'dart:developer' as developer;
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_def.dart';
-import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_type.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_controller.dart';
@@ -28,14 +28,14 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
     required dynamic actionId,
   }) =>
       InputDef.isPrimaryAction(actionId) &&
-      player.controller.model.equipment == EquippedHandType.ironSword;
+      player.controller.model.equipment == HandItemType.ironSword;
 
   bool _isRangedAttackAction({
     required DDBasePlayerView player,
     required dynamic actionId,
   }) =>
       InputDef.isPrimaryAction(actionId) &&
-      player.controller.model.equipment == EquippedHandType.staff;
+      player.controller.model.equipment == HandItemType.staff;
 
   void _handleExecutePrimaryAttack() {
     developer.log(

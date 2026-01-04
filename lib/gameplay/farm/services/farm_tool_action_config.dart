@@ -9,7 +9,7 @@ import 'package:darkness_dungeon/gameplay/farm/services/farm_feedback_service.da
 import 'package:darkness_dungeon/gameplay/farm/usecases/plant_seed_use_case.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
-import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_type.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 
 final class FarmToolActionDef {
@@ -49,16 +49,16 @@ final class FarmToolActionDef {
     }
 
     if (bestTarget != null) {
-      final EquippedHandType? equipment = player.controller.model.equipment;
+      final HandItemType? equipment = player.controller.model.equipment;
 
       switch (equipment) {
-        case EquippedHandType.shovel:
+        case HandItemType.shovel:
           _handleTillSoil(bestTarget.tileX, bestTarget.tileY);
           return;
-        case EquippedHandType.wateringCan:
+        case HandItemType.wateringCan:
           _handleWater(bestTarget.tileX, bestTarget.tileY);
           return;
-        case EquippedHandType.harvestBasket:
+        case HandItemType.harvestBasket:
           _handleHarvest(player.gameRef, bestTarget.tileX, bestTarget.tileY);
           return;
         default:
@@ -102,7 +102,7 @@ final class FarmToolActionDef {
   }
 
   static bool _handlePlant({
-    required EquippedHandType seedItemId,
+    required HandItemType seedItemId,
     required int x,
     required int y,
   }) {

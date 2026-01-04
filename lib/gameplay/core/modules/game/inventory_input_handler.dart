@@ -10,7 +10,7 @@ import 'package:darkness_dungeon/gameplay/inventory/state/inventory_state.dart';
 import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
 import 'package:darkness_dungeon/gameplay/inventory/usecases/add_item_use_case.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_type.dart';
 
 /// Handles inventory and equipment inputs from both keyboard and joystick/mobile
 class InventoryInputHandler extends GameComponent
@@ -126,15 +126,15 @@ class InventoryInputHandler extends GameComponent
     developer.log('[InventoryInput] Inicializando itens de teste...');
 
     const testItems = [
-      (EquippedHandType.shovel, 1),
-      (EquippedHandType.radish_seed_bag, 50),
-      (EquippedHandType.strawberry_seed_bag, 50),
-      (EquippedHandType.apple_seed_bag, 50),
-      (EquippedHandType.tomato_seed_bag, 50),
-      (EquippedHandType.wateringCan, 1),
-      (EquippedHandType.harvestBasket, 1),
-      (EquippedHandType.ironSword, 1),
-      (EquippedHandType.staff, 1),
+      (HandItemType.shovel, 1),
+      (HandItemType.radish_seed_bag, 50),
+      (HandItemType.strawberry_seed_bag, 50),
+      (HandItemType.apple_seed_bag, 50),
+      (HandItemType.tomato_seed_bag, 50),
+      (HandItemType.wateringCan, 1),
+      (HandItemType.harvestBasket, 1),
+      (HandItemType.ironSword, 1),
+      (HandItemType.staff, 1),
     ];
 
     _addItems(testItems);
@@ -178,13 +178,13 @@ class InventoryInputHandler extends GameComponent
     }
   }
 
-  void _debugInsertItem(EquippedHandType itemKey) {
+  void _debugInsertItem(HandItemType itemKey) {
     if (getIt<InventoryManager>().getItemQuantity(itemKey.name) == 0) {
       getIt<AddItemUseCase>()(itemKey, 1);
     }
   }
 
-  void _addItems(List<(EquippedHandType, int)> items) {
+  void _addItems(List<(HandItemType, int)> items) {
     final success = getIt<AddItemUseCase>().addMultiple(items);
 
     if (!success) {
@@ -198,8 +198,8 @@ class InventoryInputHandler extends GameComponent
     developer.log('[InventoryInput] Adicionando mais itens de teste...');
 
     final testMaterials = [
-      (EquippedHandType.stone, 100),
-      (EquippedHandType.iron_ore, 25),
+      (HandItemType.stone, 100),
+      (HandItemType.iron_ore, 25),
     ];
 
     for (final (itemKey, quantity) in testMaterials) {
@@ -280,7 +280,7 @@ class InventoryInputHandler extends GameComponent
     }
   }
 
-  void _notifyEquipmentChanged(EquippedHandType? equippedHandType) {
+  void _notifyEquipmentChanged(HandItemType? equippedHandType) {
     // Equipment is now queried dynamically from the player model
     // No need to notify - the model always returns the current selected slot
     developer.log(

@@ -1,10 +1,10 @@
-import '../entities/item.dart';
-import '../models/equipped_hand_type.dart';
+import '../entities/hand_item.dart';
+import '../entities/hand_item_type.dart';
 import '../models/item_icon_data.dart';
 import '../models/item_rarity.dart';
 import '../models/item_type.dart';
 
-final class SeedItem extends Item {
+final class SeedItem extends HandItem {
   final String cropId;
   final int growthTime;
   final int yield;
@@ -52,7 +52,7 @@ final class SeedItem extends Item {
 
   factory SeedItem.fromJson(Map<String, dynamic> json) {
     return SeedItem(
-      id: EquippedHandType.fromJson(json['id'] as String),
+      id: HandItemType.fromJson(json['id'] as String),
       name: json['name'] as String,
       description: json['description'] as String,
       baseValue: json['baseValue'] as int,
@@ -68,7 +68,7 @@ final class SeedItem extends Item {
 
   @override
   SeedItem copyWith({
-    EquippedHandType? id,
+    HandItemType? id,
     String? name,
     String? description,
     int? baseValue,

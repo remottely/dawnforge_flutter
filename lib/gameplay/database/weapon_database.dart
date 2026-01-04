@@ -1,5 +1,5 @@
 import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_type.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/item_rarity.dart';
 
 final class ItemWeaponDatabaseDef {
@@ -7,9 +7,9 @@ final class ItemWeaponDatabaseDef {
 
   /// Authoritative weapon definitions keyed by EquippedHandType to keep
   /// id/equippedHandType/map key aligned.
-  static const Map<EquippedHandType, MainHandItem> weaponsByHandType = {
-    EquippedHandType.harvestBasket: MainHandItem(
-      id: EquippedHandType.harvestBasket,
+  static const Map<HandItemType, MainHandItem> weaponsByHandType = {
+    HandItemType.harvestBasket: MainHandItem(
+      id: HandItemType.harvestBasket,
       name: 'Harvest Basket',
       description: 'TODO',
       rarity: ItemRarity.common,
@@ -19,10 +19,10 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.2,
       critChance: 0.05,
       critMultiplier: 1.5,
-      equippedHandType: EquippedHandType.harvestBasket,
+      equippedHandType: HandItemType.harvestBasket,
     ),
-    EquippedHandType.strawberry: MainHandItem(
-      id: EquippedHandType.strawberry,
+    HandItemType.strawberry: MainHandItem(
+      id: HandItemType.strawberry,
       name: 'Strawberry',
       description: 'TODO',
       rarity: ItemRarity.common,
@@ -32,10 +32,10 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.2,
       critChance: 0.05,
       critMultiplier: 1.5,
-      equippedHandType: EquippedHandType.strawberry,
+      equippedHandType: HandItemType.strawberry,
     ),
-    EquippedHandType.apple: MainHandItem(
-      id: EquippedHandType.apple,
+    HandItemType.apple: MainHandItem(
+      id: HandItemType.apple,
       name: 'Apple',
       description: 'TODO',
       rarity: ItemRarity.common,
@@ -45,10 +45,10 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.2,
       critChance: 0.05,
       critMultiplier: 1.5,
-      equippedHandType: EquippedHandType.apple,
+      equippedHandType: HandItemType.apple,
     ),
-    EquippedHandType.tomato: MainHandItem(
-      id: EquippedHandType.tomato,
+    HandItemType.tomato: MainHandItem(
+      id: HandItemType.tomato,
       name: 'Tomato',
       description: 'TODO',
       rarity: ItemRarity.common,
@@ -58,10 +58,10 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.2,
       critChance: 0.05,
       critMultiplier: 1.5,
-      equippedHandType: EquippedHandType.tomato,
+      equippedHandType: HandItemType.tomato,
     ),
-    EquippedHandType.strawberry_seed_bag: MainHandItem(
-      id: EquippedHandType.strawberry_seed_bag,
+    HandItemType.strawberry_seed_bag: MainHandItem(
+      id: HandItemType.strawberry_seed_bag,
       name: 'Strawberry Seed Bag',
       description: 'Plant these to grow strawberries',
       rarity: ItemRarity.common,
@@ -71,13 +71,13 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.0,
       critChance: 0.0,
       critMultiplier: 1.0,
-      equippedHandType: EquippedHandType.strawberry_seed_bag,
+      equippedHandType: HandItemType.strawberry_seed_bag,
       cropId: 'strawberry',
       isStackable: true,
       maxStackSize: 99,
     ),
-    EquippedHandType.apple_seed_bag: MainHandItem(
-      id: EquippedHandType.apple_seed_bag,
+    HandItemType.apple_seed_bag: MainHandItem(
+      id: HandItemType.apple_seed_bag,
       name: 'Apple Seed Bag',
       description: 'Plant these to grow apples',
       rarity: ItemRarity.common,
@@ -87,13 +87,13 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.0,
       critChance: 0.0,
       critMultiplier: 1.0,
-      equippedHandType: EquippedHandType.apple_seed_bag,
+      equippedHandType: HandItemType.apple_seed_bag,
       cropId: 'apple',
       isStackable: true,
       maxStackSize: 99,
     ),
-    EquippedHandType.radish_seed_bag: MainHandItem(
-      id: EquippedHandType.radish_seed_bag,
+    HandItemType.radish_seed_bag: MainHandItem(
+      id: HandItemType.radish_seed_bag,
       name: 'Radish Seed Bag',
       description: 'Plant these to grow radishes',
       rarity: ItemRarity.common,
@@ -103,13 +103,13 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.0,
       critChance: 0.0,
       critMultiplier: 1.0,
-      equippedHandType: EquippedHandType.radish_seed_bag,
+      equippedHandType: HandItemType.radish_seed_bag,
       cropId: 'radish',
       isStackable: true,
       maxStackSize: 99,
     ),
-    EquippedHandType.tomato_seed_bag: MainHandItem(
-      id: EquippedHandType.tomato_seed_bag,
+    HandItemType.tomato_seed_bag: MainHandItem(
+      id: HandItemType.tomato_seed_bag,
       name: 'Tomato Seed Bag',
       description: 'Plant these to grow tomatoes',
       rarity: ItemRarity.common,
@@ -119,13 +119,13 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.0,
       critChance: 0.0,
       critMultiplier: 1.0,
-      equippedHandType: EquippedHandType.tomato_seed_bag,
+      equippedHandType: HandItemType.tomato_seed_bag,
       cropId: 'tomato',
       isStackable: true,
       maxStackSize: 99,
     ),
-    EquippedHandType.shovel: MainHandItem(
-      id: EquippedHandType.shovel,
+    HandItemType.shovel: MainHandItem(
+      id: HandItemType.shovel,
       name: 'Shovel',
       description: 'TODO',
       rarity: ItemRarity.common,
@@ -135,10 +135,10 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.2,
       critChance: 0.05,
       critMultiplier: 1.5,
-      equippedHandType: EquippedHandType.shovel,
+      equippedHandType: HandItemType.shovel,
     ),
-    EquippedHandType.wateringCan: MainHandItem(
-      id: EquippedHandType.wateringCan,
+    HandItemType.wateringCan: MainHandItem(
+      id: HandItemType.wateringCan,
       name: 'Watering Can',
       description: 'TODO',
       rarity: ItemRarity.common,
@@ -148,10 +148,10 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.2,
       critChance: 0.05,
       critMultiplier: 1.5,
-      equippedHandType: EquippedHandType.wateringCan,
+      equippedHandType: HandItemType.wateringCan,
     ),
-    EquippedHandType.staff: MainHandItem(
-      id: EquippedHandType.staff,
+    HandItemType.staff: MainHandItem(
+      id: HandItemType.staff,
       name: 'Staff',
       description: 'TODO',
       rarity: ItemRarity.common,
@@ -161,10 +161,10 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.2,
       critChance: 0.05,
       critMultiplier: 1.5,
-      equippedHandType: EquippedHandType.staff,
+      equippedHandType: HandItemType.staff,
     ),
-    EquippedHandType.ironSword: MainHandItem(
-      id: EquippedHandType.ironSword,
+    HandItemType.ironSword: MainHandItem(
+      id: HandItemType.ironSword,
       name: 'Iron Sword',
       description: 'A sturdy iron sword for basic combat',
       rarity: ItemRarity.common,
@@ -174,10 +174,10 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.2,
       critChance: 0.05,
       critMultiplier: 1.5,
-      equippedHandType: EquippedHandType.ironSword,
+      equippedHandType: HandItemType.ironSword,
     ),
-    EquippedHandType.axe: MainHandItem(
-      id: EquippedHandType.axe,
+    HandItemType.axe: MainHandItem(
+      id: HandItemType.axe,
       name: 'Steel Axe',
       description: 'A heavy steel axe with high damage',
       rarity: ItemRarity.uncommon,
@@ -187,10 +187,10 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 0.8,
       critChance: 0.08,
       critMultiplier: 1.8,
-      equippedHandType: EquippedHandType.axe,
+      equippedHandType: HandItemType.axe,
     ),
-    EquippedHandType.sword: MainHandItem(
-      id: EquippedHandType.sword,
+    HandItemType.sword: MainHandItem(
+      id: HandItemType.sword,
       name: 'Legendary Blade',
       description: 'A mythical sword forged by ancient smiths',
       rarity: ItemRarity.legendary,
@@ -200,10 +200,10 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.5,
       critChance: 0.25,
       critMultiplier: 2.5,
-      equippedHandType: EquippedHandType.sword,
+      equippedHandType: HandItemType.sword,
     ),
-    EquippedHandType.staff_fire: MainHandItem(
-      id: EquippedHandType.staff_fire,
+    HandItemType.staff_fire: MainHandItem(
+      id: HandItemType.staff_fire,
       name: 'Fire Staff',
       description: 'A magical staff that shoots fireballs',
       rarity: ItemRarity.rare,
@@ -213,10 +213,10 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.0,
       critChance: 0.1,
       critMultiplier: 2.0,
-      equippedHandType: EquippedHandType.staff_fire,
+      equippedHandType: HandItemType.staff_fire,
     ),
-    EquippedHandType.wand: MainHandItem(
-      id: EquippedHandType.wand,
+    HandItemType.wand: MainHandItem(
+      id: HandItemType.wand,
       name: 'Ice Wand',
       description: 'A magical wand that shoots ice projectiles',
       rarity: ItemRarity.uncommon,
@@ -226,12 +226,12 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.3,
       critChance: 0.07,
       critMultiplier: 1.6,
-      equippedHandType: EquippedHandType.wand,
+      equippedHandType: HandItemType.wand,
     ),
   };
 
   /// Enum-keyed view mirroring weaponsByHandType for consumers expecting a mutable map.
-  static final Map<EquippedHandType, MainHandItem> weapons = {
+  static final Map<HandItemType, MainHandItem> weapons = {
     for (final entry in weaponsByHandType.entries) entry.key: entry.value,
   };
 }

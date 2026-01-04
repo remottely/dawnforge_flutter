@@ -1,6 +1,6 @@
 import 'dart:developer' as developer;
 
-import 'package:darkness_dungeon/gameplay/inventory/entities/item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item.dart';
 import 'package:flutter/foundation.dart';
 
 /// State manager for equipment to communicate between Bonfire and Flutter
@@ -13,9 +13,9 @@ class EquipmentState {
   final isVisible = ValueNotifier<bool>(true);
 
   // Single equipped item (no slot distinction)
-  final equippedItem = ValueNotifier<Item?>(null);
+  final equippedItem = ValueNotifier<HandItem?>(null);
 
-  void updateEquippedItem(Item? item) {
+  void updateEquippedItem(HandItem? item) {
     try {
       equippedItem.value = item;
       developer.log(
@@ -30,7 +30,7 @@ class EquipmentState {
     }
   }
 
-  Item? getItem() {
+  HandItem? getItem() {
     return equippedItem.value;
   }
 

@@ -6,9 +6,9 @@ import 'package:darkness_dungeon/gameplay/inventory/items/tool_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
 
 import '../database/item_icon_database.dart';
-import '../entities/item.dart';
+import '../entities/hand_item.dart';
 import '../items/seed_item.dart';
-import '../models/equipped_hand_type.dart';
+import '../entities/hand_item_type.dart';
 import '../../database/weapon_database.dart';
 import '../../database/tool_database.dart';
 import '../../database/consumable_database.dart';
@@ -17,11 +17,11 @@ import '../../database/seed_database.dart';
 
 /// Service for creating items from JSON database (L2: Factory with JSON database, I2: Service = External)
 class ItemFactoryService {
-  final Map<EquippedHandType, MainHandItem> _weapons = {};
-  final Map<EquippedHandType, ToolItem> _tools = {};
-  final Map<EquippedHandType, ConsumableItem> _consumables = {};
-  final Map<EquippedHandType, MaterialItem> _materials = {};
-  final Map<EquippedHandType, SeedItem> _seeds = {};
+  final Map<HandItemType, MainHandItem> _weapons = {};
+  final Map<HandItemType, ToolItem> _tools = {};
+  final Map<HandItemType, ConsumableItem> _consumables = {};
+  final Map<HandItemType, MaterialItem> _materials = {};
+  final Map<HandItemType, SeedItem> _seeds = {};
   bool isInitialized = false;
 
   Future<void> initialize() async {
@@ -75,7 +75,7 @@ class ItemFactoryService {
     }
   }
 
-  Item? createItem(String itemId) {
+  HandItem? createItem(String itemId) {
     if (!isInitialized) {
       developer.log(
         '[ItemFactoryService] ERROR: Not initialized! Call initialize() first',
@@ -84,7 +84,7 @@ class ItemFactoryService {
     }
 
     try {
-      final idEnum = EquippedHandType.fromJson(itemId);
+      final idEnum = HandItemType.fromJson(itemId);
       final iconData = ItemIconDatabase().getIconData(itemId);
 
       final weapon = _weapons[idEnum];
@@ -124,11 +124,11 @@ class ItemFactoryService {
     }
   }
 
-  List<Item> createItems(List<String> itemIds) {
-    return itemIds.map(createItem).whereType<Item>().toList();
+  List<HandItem> createItems(List<String> itemIds) {
+    return itemIds.map(createItem).whereType<HandItem>().toList();
   }
 
-  List<EquippedHandType> getAllItemIds() {
+  List<HandItemType> getAllItemIds() {
     return {
       ..._weapons.keys,
       ..._tools.keys,
@@ -139,7 +139,7 @@ class ItemFactoryService {
   }
 
   bool hasItem(String itemId) {
-    final idEnum = EquippedHandType.fromJson(itemId);
+    final idEnum = HandItemType.fromJson(itemId);
     return _weapons.containsKey(idEnum) ||
         _tools.containsKey(idEnum) ||
         _consumables.containsKey(idEnum) ||

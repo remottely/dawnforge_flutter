@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 
 import '../config/inventory_def.dart';
 import '../entities/inventory_slot.dart';
-import '../entities/item.dart';
+import '../entities/hand_item.dart';
 
 /// Manager for inventory state (C1: Singleton + ValueNotifier, I2: Manager = Singleton State)
 class InventoryManager {
@@ -138,8 +138,8 @@ class InventoryManager {
   }
 
   /// Find first item matching the predicate, starting from afterIndex
-  ({int index, Item item})? findItem(
-    bool Function(Item item) predicate, {
+  ({int index, HandItem item})? findItem(
+    bool Function(HandItem item) predicate, {
     int afterIndex = -1,
   }) {
     // Search forward from afterIndex + 1
@@ -164,8 +164,8 @@ class InventoryManager {
   }
 
   /// Find first item matching the predicate, searching backwards
-  ({int index, Item item})? findItemReverse(
-    bool Function(Item item) predicate, {
+  ({int index, HandItem item})? findItemReverse(
+    bool Function(HandItem item) predicate, {
     int beforeIndex = -1,
   }) {
     if (beforeIndex == -1) {
@@ -215,7 +215,7 @@ class InventoryManager {
 
   void fromJson(
     Map<String, dynamic> json,
-    Item? Function(String itemId) itemFactory,
+    HandItem? Function(String itemId) itemFactory,
   ) {
     // Load maxSlots first
     final maxSlotsFromJson = json['maxSlots'] as int? ?? _currentMaxSlots;

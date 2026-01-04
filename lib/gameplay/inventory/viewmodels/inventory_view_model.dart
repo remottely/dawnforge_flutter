@@ -1,18 +1,18 @@
 import 'package:flutter/foundation.dart';
 
 import '../entities/inventory_slot.dart';
-import '../entities/item.dart';
+import '../entities/hand_item.dart';
 import '../managers/equipment_manager.dart';
 import '../managers/inventory_manager.dart';
 import '../usecases/add_item_use_case.dart';
 import '../usecases/equip_item_use_case.dart';
 import '../usecases/remove_item_use_case.dart';
-import '../models/equipped_hand_type.dart';
+import '../entities/hand_item_type.dart';
 
 /// ViewModel UI data for inventory slot
 class InventorySlotUI {
   final int index;
-  final Item? item;
+  final HandItem? item;
   final int quantity;
   final bool isSelected;
   final bool isEmpty;
@@ -57,12 +57,12 @@ class InventoryViewModel {
        _equipItemUseCase = equipItemUseCase;
 
   /// Add item to inventory
-  bool addItem(EquippedHandType itemId, int quantity) {
+  bool addItem(HandItemType itemId, int quantity) {
     return _addItemUseCase(itemId, quantity);
   }
 
   /// Remove item from inventory
-  bool removeItem(EquippedHandType itemId, int quantity) {
+  bool removeItem(HandItemType itemId, int quantity) {
     return _removeItemUseCase(itemId, quantity);
   }
 

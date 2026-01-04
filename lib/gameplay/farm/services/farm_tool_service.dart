@@ -1,7 +1,7 @@
 import 'dart:developer' as developer;
 
 import '../../inventory/items/main_hand_item.dart';
-import '../../inventory/models/equipped_hand_type.dart';
+import '../../inventory/entities/hand_item_type.dart';
 import '../../world/entities/world_entities.dart';
 
 /// Service for validating farm tool usage (I2: Service = stateless)
@@ -14,11 +14,11 @@ class FarmToolService {
     final handType = tool.equippedHandType;
 
     switch (handType) {
-      case EquippedHandType.shovel:
+      case HandItemType.shovel:
         return canTill(farmObject);
-      case EquippedHandType.wateringCan:
+      case HandItemType.wateringCan:
         return canWater(farmObject);
-      case EquippedHandType.harvestBasket:
+      case HandItemType.harvestBasket:
         return canHarvest(farmObject);
       default:
         // Check if it's a seed
@@ -88,10 +88,10 @@ class FarmToolService {
   }
 
   /// Validate if tool is a farm tool
-  bool isFarmTool(EquippedHandType handType) {
-    return handType == EquippedHandType.shovel ||
-        handType == EquippedHandType.wateringCan ||
-        handType == EquippedHandType.harvestBasket ||
+  bool isFarmTool(HandItemType handType) {
+    return handType == HandItemType.shovel ||
+        handType == HandItemType.wateringCan ||
+        handType == HandItemType.harvestBasket ||
         handType.isSeed;
   }
 }

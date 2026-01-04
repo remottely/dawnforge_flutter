@@ -1,10 +1,10 @@
-import '../entities/item.dart';
-import '../models/equipped_hand_type.dart';
+import '../entities/hand_item.dart';
+import '../entities/hand_item_type.dart';
 import '../models/item_icon_data.dart';
 import '../models/item_rarity.dart';
 import '../models/item_type.dart';
 
-final class ToolItem extends Item {
+final class ToolItem extends HandItem {
   final String toolType;
   final int powerLevel;
 
@@ -38,7 +38,7 @@ final class ToolItem extends Item {
 
   factory ToolItem.fromJson(Map<String, dynamic> json) {
     return ToolItem(
-      id: EquippedHandType.fromJson(json['id'] as String),
+      id: HandItemType.fromJson(json['id'] as String),
       name: json['name'] as String,
       description: json['description'] as String,
       baseValue: json['baseValue'] as int,
@@ -51,7 +51,7 @@ final class ToolItem extends Item {
 
   @override
   ToolItem copyWith({
-    EquippedHandType? id,
+    HandItemType? id,
     String? name,
     String? description,
     int? baseValue,

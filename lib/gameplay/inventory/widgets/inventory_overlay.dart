@@ -5,7 +5,7 @@ import 'package:darkness_dungeon/gameplay/inventory/state/equipment_state.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/state/inventory_state.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/inventory_slot.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/widgets/item_sprite_widget.dart';
 import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +72,7 @@ class InventoryOverlay extends StatelessWidget with ResponsiveOverlayMixin {
         return ValueListenableBuilder<List<InventorySlot>>(
           valueListenable: getIt<InventoryManager>().slotsNotifier,
           builder: (context, slots, _) {
-            return ValueListenableBuilder<Item?>(
+            return ValueListenableBuilder<HandItem?>(
               valueListenable: EquipmentState.instance.equippedItem,
               builder: (context, equippedItem, child) {
                 // Desktop: 1 linha horizontal com rolagem horizontal
@@ -146,9 +146,9 @@ class InventoryOverlay extends StatelessWidget with ResponsiveOverlayMixin {
     double slotSize,
     double baseFontSize,
     InventorySlot slot,
-    Item? item,
+    HandItem? item,
     int? quantity,
-    Item? equippedItem,
+    HandItem? equippedItem,
     int selectedIndex,
   ) {
     Color slotColor = item != null
