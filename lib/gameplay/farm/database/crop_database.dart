@@ -1,21 +1,22 @@
 import 'dart:developer' as developer;
 
+import 'package:darkness_dungeon/gameplay/database/crop_data.dart';
+
 import '../../world/entities/objects/farm/crop_stage_type.dart';
 import '../models/crop_model.dart';
-import '../../data/game_data_constants.dart';
 
 final class CropDatabase {
   CropDatabase._();
 
-  static final Map<String, Map<String, dynamic>> _cropDatabase = {};
+  static final Map<String, CropData> _cropDatabase = {};
   static bool _isInitialized = false;
 
   static Future<void> initialize() async {
     if (_isInitialized) return;
 
-    for (var entry in CropDbConstants.crops.entries) {
-      _cropDatabase[entry.key] = Map<String, dynamic>.from(entry.value);
-    }
+    _cropDatabase
+      ..clear()
+      ..addAll(CropDatabaseDef.crops);
 
     _isInitialized = true;
     developer.log('[CropDatabase] Loaded ${_cropDatabase.length} crops');
@@ -35,23 +36,21 @@ final class CropDatabase {
 
     return CropModel(
       cropId: cropId,
-      name: cropData['name'] as String,
-      description: cropData['description'] as String,
+      name: cropData.name,
+      description: cropData.description,
       stage: CropStageType.planted,
       daysPlanted: 0,
-      daysToMature: cropData['daysToMature'] as int,
-      yieldAmount: cropData['yieldAmount'] as int,
-      harvestItemId: cropData['harvestItemId'] as String,
-      requiredSeason: cropData['requiredSeason'] as String?,
-      spritesheetPath: cropData['spritesheetPath'] as String,
-      spriteWidth: (cropData['spriteWidth'] as int?) ?? 16,
-      spriteHeight: (cropData['spriteHeight'] as int?) ?? 16,
-      spriteRowIndex: cropData['spriteRowIndex'] as int,
-      framesCount: cropData['framesCount'] as int,
-      skipFirstFrames: (cropData['skipFirstFrames'] as int?) ?? 0,
-      ySortingFromStage: CropStageType.fromJson(
-        (cropData['ySortingFromStage'] as String?) ?? 'seed',
-      ),
+      daysToMature: cropData.daysToMature ?? 0,
+      yieldAmount: cropData.yieldAmount,
+      harvestItemId: cropData.harvestItemId,
+      requiredSeason: cropData.requiredSeason,
+      spritesheetPath: cropData.spritesheetPath,
+      spriteWidth: cropData.spriteWidth,
+      spriteHeight: cropData.spriteHeight,
+      spriteRowIndex: cropData.spriteRowIndex,
+      framesCount: cropData.framesCount,
+      skipFirstFrames: cropData.skipFirstFrames,
+      ySortingFromStage: cropData.ySortingFromStage ?? CropStageType.planted,
     );
   }
 
@@ -59,16 +58,15 @@ final class CropDatabase {
 
   static List<String> getCropsBySeason(String season) {
     return _cropDatabase.entries
-        .where(
-          (e) =>
-              e.value['requiredSeason'] == season ||
-              e.value['requiredSeason'] == 'any',
-        )
+        .where((e) {
+          final requiredSeason = e.value.requiredSeason;
+          return requiredSeason == 'any' || requiredSeason == season;
+        })
         .map((e) => e.key)
         .toList();
   }
 
-  static Map<String, dynamic>? getCropData(String cropId) {
+  static CropData? getCropData(String cropId) {
     return _cropDatabase[cropId];
   }
 

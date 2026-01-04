@@ -154,7 +154,7 @@ final class MapDef {
       backgroundMusic: AudioDef.bgMusicFarm,
       lightingColor: _kNoneLightingColor,
       backgroundColor: _kLakeBackgroundColor,
-      initialPlayerPosition: '52,20',
+      initialPlayerPosition: '24,24',
     ),
 
     // /// SB MAPS

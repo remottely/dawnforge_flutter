@@ -1,5 +1,5 @@
 import '../models/item_icon_data.dart';
-import '../../data/game_data_constants.dart';
+import '../../database/game_data_constants.dart';
 
 class ItemIconDatabase {
   static final ItemIconDatabase _instance = ItemIconDatabase._internal();
@@ -12,19 +12,20 @@ class ItemIconDatabase {
   Future<void> initialize() async {
     if (_initialized) return;
 
-    final globalSpritesheetPath = ItemIconDbConstants.spritesheetPath;
-    final globalSpriteWidth = ItemIconDbConstants.spriteWidth;
-    final globalSpriteHeight = ItemIconDbConstants.spriteHeight;
-    final items = ItemIconDbConstants.items;
+    final globalSpritesheetPath = ItemIconDatabaseDef.spritesheetPath;
+    final globalSpriteWidth = ItemIconDatabaseDef.spriteWidth;
+    final globalSpriteHeight = ItemIconDatabaseDef.spriteHeight;
 
-    items.forEach((key, value) {
-      _icons[key] = ItemIconData.fromJson(
-        value,
-        globalSpritesheetPath,
-        globalSpriteWidth,
-        globalSpriteHeight,
+    for (final entry in ItemIconDatabaseDef.items.entries) {
+      final icon = entry.value;
+      _icons[entry.key] = ItemIconData(
+        spritesheetPath: globalSpritesheetPath,
+        spriteWidth: globalSpriteWidth,
+        spriteHeight: globalSpriteHeight,
+        spriteRowIndex: icon.rowIndex,
+        spriteColumnIndex: icon.columnIndex,
       );
-    });
+    }
 
     _initialized = true;
   }
