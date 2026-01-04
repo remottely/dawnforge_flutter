@@ -7,15 +7,15 @@ class ItemIconEntry {
   const ItemIconEntry({required this.rowIndex, required this.columnIndex});
 }
 
-final class ItemIconDatabaseDef {
-  ItemIconDatabaseDef._();
+final class ItemIconEntryDatabaseDef {
+  ItemIconEntryDatabaseDef._();
 
   static const String spritesheetPath =
       'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png';
   static const int spriteWidth = 16;
   static const int spriteHeight = 16;
 
-  static const Map<HandItemId, ItemIconEntry> items = {
+  static const Map<HandItemId, ItemIconEntry> itemIconEntryList = {
     HandItemId.empty_seed_bag: ItemIconEntry(rowIndex: 10, columnIndex: 0),
     HandItemId.watermelon_seed_bag: ItemIconEntry(rowIndex: 10, columnIndex: 1),
     HandItemId.pineapple_seed_bag: ItemIconEntry(

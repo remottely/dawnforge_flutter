@@ -1,8 +1,8 @@
 import 'dart:developer' as developer;
 
-import 'package:darkness_dungeon/gameplay/database/soil_database_def.dart';
+import 'package:darkness_dungeon/gameplay/database/soil_state_sprite_database_def.dart';
 
-import '../../database/item_icon_database_def.dart';
+import '../../database/item_icon_entry_database_def.dart';
 
 class SoilSpriteConfig {
   final String spritesheetPath;
@@ -21,11 +21,11 @@ class SoilSpriteConfig {
     developer.log('[SoilSpriteConfig] Loading soil database...');
 
     final config = SoilSpriteConfig(
-      spritesheetPath: SoilDatabaseDef.spritesheetPath,
-      spriteWidth: SoilDatabaseDef.spriteWidth,
-      spriteHeight: SoilDatabaseDef.spriteHeight,
+      spritesheetPath: SoilStateSpriteDatabaseDef.spritesheetPath,
+      spriteWidth: SoilStateSpriteDatabaseDef.spriteWidth,
+      spriteHeight: SoilStateSpriteDatabaseDef.spriteHeight,
       soilStates: Map<String, SoilStateSprite>.from(
-        SoilDatabaseDef.soilStates,
+        SoilStateSpriteDatabaseDef.soilStateSpriteList,
       ),
     );
 

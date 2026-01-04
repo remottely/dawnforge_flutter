@@ -1,6 +1,6 @@
 import 'dart:developer' as developer;
 
-import 'package:darkness_dungeon/gameplay/database/modern_farm/modern_farm_crop_database_def.dart';
+import 'package:darkness_dungeon/gameplay/database/modern_farm/modern_farm_crop_entity_database_def.dart';
 
 import '../../inventory/entities/hand/hand_item_id.dart';
 import '../../world/entities/objects/farm/crop_entity.dart';
@@ -19,7 +19,7 @@ class CropFactoryService {
 
     _database
       ..clear()
-      ..addAll(ModernFarmCropDatabaseDef.cropEntityList);
+      ..addAll(ModernFarmCropEntityDatabaseDef.cropEntityList);
 
     _isInitialized = true;
     developer.log(

@@ -1,7 +1,7 @@
 import 'dart:developer' as developer;
 
 import '../../inventory/entities/hand/hand_item.dart';
-import '../../inventory/items/seed_item.dart';
+import '../../inventory/items/seed_bag_item.dart';
 import '../../inventory/items/tool_item.dart';
 import '../../inventory/items/weapon_item.dart';
 import '../../inventory/entities/hand/hand_item_id.dart';
@@ -102,7 +102,7 @@ class FarmToolService {
 
   String? _extractCropId(HandItem tool) {
     if (tool is WeaponItem) return tool.cropId;
-    if (tool is SeedItem) return tool.cropId;
+    if (tool is SeedBagItem) return tool.cropId;
     if (tool is ToolItem) return null;
     return null;
   }

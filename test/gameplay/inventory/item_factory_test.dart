@@ -2,7 +2,7 @@ import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_loc
 import 'package:darkness_dungeon/gameplay/inventory/items/consumable_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/material_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/items/seed_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/items/seed_bag_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/tool_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/services/item_factory_service.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -62,10 +62,10 @@ void main() {
 
     test('create_seed_item_returns_correct_type', () {
       final item =
-          getIt<ItemFactoryService>().createItem('carrot_seeds') as SeedItem?;
+          getIt<ItemFactoryService>().createItem('carrot_seeds') as SeedBagItem?;
 
       expect(item, isNotNull);
-      expect(item, isA<SeedItem>());
+      expect(item, isA<SeedBagItem>());
       expect(item!.id, equals('carrot_seeds'));
       expect(item.cropId, equals('carrot'));
       expect(item.growthTime, equals(4));
@@ -108,14 +108,14 @@ void main() {
 
     test('seed_can_plant_in_season', () {
       final carrotSeeds =
-          getIt<ItemFactoryService>().createItem('carrot_seeds') as SeedItem?;
+          getIt<ItemFactoryService>().createItem('carrot_seeds') as SeedBagItem?;
       expect(carrotSeeds, isNotNull);
       expect(carrotSeeds!.canPlantInSeason('spring'), isTrue);
       expect(carrotSeeds.canPlantInSeason('summer'), isTrue);
       expect(carrotSeeds.canPlantInSeason('any'), isTrue);
 
       final wheatSeeds =
-          getIt<ItemFactoryService>().createItem('wheat_seeds') as SeedItem?;
+          getIt<ItemFactoryService>().createItem('wheat_seeds') as SeedBagItem?;
       expect(wheatSeeds, isNotNull);
       expect(wheatSeeds!.canPlantInSeason('spring'), isTrue);
       expect(wheatSeeds.canPlantInSeason('summer'), isFalse);

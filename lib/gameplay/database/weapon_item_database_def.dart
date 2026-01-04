@@ -2,10 +2,10 @@ import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_id.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_rarity.dart';
 
-final class WeaponDatabaseDef {
-  WeaponDatabaseDef._();
+final class WeaponItemDatabaseDef {
+  WeaponItemDatabaseDef._();
 
-  static const Map<HandItemId, WeaponItem> weaponsByHandType = {
+  static const Map<HandItemId, WeaponItem> weaponsItemList = {
     HandItemId.staff: WeaponItem(
       id: HandItemId.staff,
       name: 'Staff',
@@ -70,6 +70,6 @@ final class WeaponDatabaseDef {
 
   /// Enum-keyed view mirroring weaponsByHandType for consumers expecting a mutable map.
   static final Map<HandItemId, WeaponItem> weapons = {
-    for (final entry in weaponsByHandType.entries) entry.key: entry.value,
+    for (final entry in weaponsItemList.entries) entry.key: entry.value,
   };
 }

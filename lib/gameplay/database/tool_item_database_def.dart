@@ -2,9 +2,9 @@ import 'package:darkness_dungeon/gameplay/inventory/items/tool_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_id.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_rarity.dart';
 
-final class ToolDatabaseDef {
-  ToolDatabaseDef._();
-  static const Map<HandItemId, ToolItem> tools = {
+final class ToolItemDatabaseDef {
+  ToolItemDatabaseDef._();
+  static const Map<HandItemId, ToolItem> toolItemList = {
     HandItemId.harvestBasket: ToolItem(
       id: HandItemId.harvestBasket,
       name: 'Harvest Basket',

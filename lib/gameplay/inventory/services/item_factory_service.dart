@@ -7,13 +7,13 @@ import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
 
 import '../database/item_icon_database.dart';
 import '../entities/hand/hand_item.dart';
-import '../items/seed_item.dart';
+import '../items/seed_bag_item.dart';
 import '../entities/hand/hand_item_id.dart';
-import '../../database/weapon_database_def.dart';
-import '../../database/tool_database_def.dart';
-import '../../database/consumable_database_def.dart';
-import '../../database/material_database_def.dart';
-import '../../database/seed_database_def.dart';
+import '../../database/weapon_item_database_def.dart';
+import '../../database/tool_item_database_def.dart';
+import '../../database/consumable_item_database_def.dart';
+import '../../database/material_item_database_def.dart';
+import '../../database/seed_bag_item_database_def.dart';
 
 /// Service for creating items from JSON database (L2: Factory with JSON database, I2: Service = External)
 class ItemFactoryService {
@@ -21,7 +21,7 @@ class ItemFactoryService {
   final Map<HandItemId, ToolItem> _tools = {};
   final Map<HandItemId, ConsumableItem> _consumables = {};
   final Map<HandItemId, MaterialItem> _materials = {};
-  final Map<HandItemId, SeedItem> _seeds = {};
+  final Map<HandItemId, SeedBagItem> _seeds = {};
   bool isInitialized = false;
 
   Future<void> initialize() async {
@@ -36,23 +36,23 @@ class ItemFactoryService {
 
       _weapons
         ..clear()
-        ..addAll(WeaponDatabaseDef.weapons);
+        ..addAll(WeaponItemDatabaseDef.weapons);
 
       _tools
         ..clear()
-        ..addAll(ToolDatabaseDef.tools);
+        ..addAll(ToolItemDatabaseDef.toolItemList);
 
       _consumables
         ..clear()
-        ..addAll(ConsumableDatabaseDef.consumables);
+        ..addAll(ConsumableItemDatabaseDef.consumableItemList);
 
       _materials
         ..clear()
-        ..addAll(MaterialDatabaseDef.materials);
+        ..addAll(MaterialItemDatabaseDef.materialItemList);
 
       _seeds
         ..clear()
-        ..addAll(SeedDatabaseDef.seedBagList);
+        ..addAll(SeedBagItemDatabaseDef.seedBagList);
 
       final totalItems = _weapons.length +
           _tools.length +

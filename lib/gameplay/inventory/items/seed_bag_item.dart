@@ -4,13 +4,13 @@ import '../models/item_icon_data.dart';
 import '../entities/hand/hand_item_rarity.dart';
 import '../entities/hand/hand_item_type.dart';
 
-final class SeedItem extends HandItem {
+final class SeedBagItem extends HandItem {
   final String cropId;
   final int growthTime;
   final int yield;
   final String season;
 
-  const SeedItem({
+  const SeedBagItem({
     required super.id,
     required super.name,
     required super.description,
@@ -50,8 +50,8 @@ final class SeedItem extends HandItem {
     };
   }
 
-  factory SeedItem.fromJson(Map<String, dynamic> json) {
-    return SeedItem(
+  factory SeedBagItem.fromJson(Map<String, dynamic> json) {
+    return SeedBagItem(
       id: HandItemId.fromJson(json['id'] as String),
       name: json['name'] as String,
       description: json['description'] as String,
@@ -67,7 +67,7 @@ final class SeedItem extends HandItem {
   }
 
   @override
-  SeedItem copyWith({
+  SeedBagItem copyWith({
     HandItemId? id,
     String? name,
     String? description,
@@ -81,7 +81,7 @@ final class SeedItem extends HandItem {
     String? season,
     ItemIconData? iconData,
   }) {
-    return SeedItem(
+    return SeedBagItem(
       id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,

@@ -2,8 +2,8 @@ import 'package:darkness_dungeon/gameplay/inventory/items/material_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_id.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_rarity.dart';
 
-final class MaterialDatabaseDef {
-  static const Map<HandItemId, MaterialItem> materials = {
+final class MaterialItemDatabaseDef {
+  static const Map<HandItemId, MaterialItem> materialItemList = {
     HandItemId.wood: MaterialItem(
       id: HandItemId.wood,
       name: 'Wood',

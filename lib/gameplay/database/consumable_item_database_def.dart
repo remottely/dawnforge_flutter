@@ -2,9 +2,9 @@ import 'package:darkness_dungeon/gameplay/inventory/items/consumable_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_id.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_rarity.dart';
 
-final class ConsumableDatabaseDef {
-  ConsumableDatabaseDef._();
-  static const Map<HandItemId, ConsumableItem> consumables = {
+final class ConsumableItemDatabaseDef {
+  ConsumableItemDatabaseDef._();
+  static const Map<HandItemId, ConsumableItem> consumableItemList = {
     // HandItemId.health_potion: ConsumableItem(
     //   id: HandItemId.health_potion,
     //   name: 'Health Potion',

@@ -3,8 +3,8 @@ import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_id.d
 import '../../world/entities/objects/farm/crop_entity.dart';
 import '../../world/entities/objects/farm/crop_stage_type.dart';
 
-final class ModernFarmCropDatabaseDef {
-  ModernFarmCropDatabaseDef._();
+final class ModernFarmCropEntityDatabaseDef {
+  ModernFarmCropEntityDatabaseDef._();
 
   static const Map<HandItemId, CropEntity> cropEntityList = {
     HandItemId.cabbage: CropEntity(
