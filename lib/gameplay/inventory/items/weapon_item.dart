@@ -9,7 +9,6 @@ final class WeaponItem extends HandItem {
   final double attackSpeed;
   final double critChance;
   final double critMultiplier;
-  final HandItemId equippedHandType;
   final String? cropId;
 
   const WeaponItem({
@@ -25,7 +24,6 @@ final class WeaponItem extends HandItem {
     this.attackSpeed = 1.0,
     this.critChance = 0.05,
     this.critMultiplier = 1.5,
-    required this.equippedHandType,
     this.cropId,
     super.isStackable = false,
     super.maxStackSize = 1,
@@ -50,7 +48,6 @@ final class WeaponItem extends HandItem {
       'attackSpeed': attackSpeed,
       'critChance': critChance,
       'critMultiplier': critMultiplier,
-      'equippedHandType': equippedHandType.toJson(),
       if (cropId != null) 'cropId': cropId,
       'isStackable': isStackable,
       'maxStackSize': maxStackSize,
@@ -69,9 +66,6 @@ final class WeaponItem extends HandItem {
       attackSpeed: (json['attackSpeed'] as num?)?.toDouble() ?? 1.0,
       critChance: (json['critChance'] as num?)?.toDouble() ?? 0.05,
       critMultiplier: (json['critMultiplier'] as num?)?.toDouble() ?? 1.5,
-      equippedHandType: HandItemId.fromJson(
-        json['equippedHandType'] as String,
-      ),
       cropId: json['cropId'] as String?,
       isStackable: json['isStackable'] as bool? ?? false,
       maxStackSize: json['maxStackSize'] as int? ?? 1,
@@ -89,7 +83,6 @@ final class WeaponItem extends HandItem {
     double? attackSpeed,
     double? critChance,
     double? critMultiplier,
-    HandItemId? equippedHandType,
     String? cropId,
     bool? isStackable,
     int? maxStackSize,
@@ -106,7 +99,6 @@ final class WeaponItem extends HandItem {
       attackSpeed: attackSpeed ?? this.attackSpeed,
       critChance: critChance ?? this.critChance,
       critMultiplier: critMultiplier ?? this.critMultiplier,
-      equippedHandType: equippedHandType ?? this.equippedHandType,
       cropId: cropId ?? this.cropId,
       isStackable: isStackable ?? this.isStackable,
       maxStackSize: maxStackSize ?? this.maxStackSize,

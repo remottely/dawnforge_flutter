@@ -14,11 +14,9 @@ class FarmToolService {
     final farmObject = tile.object as FarmObject?;
     if (farmObject == null) return false;
 
-    final handType = _extractHandType(tool);
-    if (handType == null) return false;
     final cropId = _extractCropId(tool);
 
-    switch (handType) {
+    switch (tool.id) {
       case HandItemId.shovel:
         return canTill(farmObject);
       case HandItemId.wateringCan:
@@ -27,7 +25,7 @@ class FarmToolService {
         return canHarvest(farmObject);
       default:
         // Check if it's a seed
-        if (handType.isSeed && cropId != null) {
+        if (tool.id.isSeed && cropId != null) {
           return canPlantCrop(farmObject);
         }
         return false;
@@ -62,7 +60,9 @@ class FarmToolService {
   bool canPlantCrop(FarmObject farmObject) {
     if (!farmObject.canPlantCrop) {
       if (farmObject.isOccupied) {
-        developer.log('[FarmToolService] Cannot plant: tile already has a crop');
+        developer.log(
+          '[FarmToolService] Cannot plant: tile already has a crop',
+        );
       } else if (!farmObject.soilState.canPlantCrop) {
         developer.log('[FarmToolService] Cannot plant: soil not prepared');
       }
@@ -88,7 +88,7 @@ class FarmToolService {
 
   /// Get the crop ID from a tool (if it's a seed)
   String? getCropIdFromTool(HandItem tool) {
-    if (!(_extractHandType(tool)?.isSeed ?? true)) return null;
+    if (!(tool.id.isSeed)) return null;
     return _extractCropId(tool);
   }
 
@@ -98,11 +98,6 @@ class FarmToolService {
         handType == HandItemId.wateringCan ||
         handType == HandItemId.harvestBasket ||
         handType.isSeed;
-  }
-
-  HandItemId? _extractHandType(HandItem tool) {
-    if (tool is WeaponItem) return tool.equippedHandType;
-    return tool.id;
   }
 
   String? _extractCropId(HandItem tool) {

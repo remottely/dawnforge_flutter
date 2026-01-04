@@ -5,8 +5,6 @@ import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_rari
 final class WeaponDatabaseDef {
   WeaponDatabaseDef._();
 
-  /// Authoritative weapon definitions keyed by EquippedHandType to keep
-  /// id/equippedHandType/map key aligned.
   static const Map<HandItemId, WeaponItem> weaponsByHandType = {
     HandItemId.staff: WeaponItem(
       id: HandItemId.staff,
@@ -19,7 +17,6 @@ final class WeaponDatabaseDef {
       attackSpeed: 1.2,
       critChance: 0.05,
       critMultiplier: 1.5,
-      equippedHandType: HandItemId.staff,
     ),
     HandItemId.ironSword: WeaponItem(
       id: HandItemId.ironSword,
@@ -32,7 +29,6 @@ final class WeaponDatabaseDef {
       attackSpeed: 1.2,
       critChance: 0.05,
       critMultiplier: 1.5,
-      equippedHandType: HandItemId.ironSword,
     ),
     HandItemId.sword: WeaponItem(
       id: HandItemId.sword,
@@ -45,7 +41,6 @@ final class WeaponDatabaseDef {
       attackSpeed: 1.5,
       critChance: 0.25,
       critMultiplier: 2.5,
-      equippedHandType: HandItemId.sword,
     ),
     HandItemId.staff_fire: WeaponItem(
       id: HandItemId.staff_fire,
@@ -58,7 +53,6 @@ final class WeaponDatabaseDef {
       attackSpeed: 1.0,
       critChance: 0.1,
       critMultiplier: 2.0,
-      equippedHandType: HandItemId.staff_fire,
     ),
     HandItemId.wand: WeaponItem(
       id: HandItemId.wand,
@@ -71,7 +65,6 @@ final class WeaponDatabaseDef {
       attackSpeed: 1.3,
       critChance: 0.07,
       critMultiplier: 1.6,
-      equippedHandType: HandItemId.wand,
     ),
   };
 

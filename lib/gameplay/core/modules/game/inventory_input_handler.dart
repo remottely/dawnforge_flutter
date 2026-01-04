@@ -198,10 +198,7 @@ class InventoryInputHandler extends GameComponent
   void _addTestItems() {
     developer.log('[InventoryInput] Adicionando mais itens de teste...');
 
-    final testMaterials = [
-      (HandItemId.stone, 100),
-      (HandItemId.iron_ore, 25),
-    ];
+    final testMaterials = [(HandItemId.stone, 100), (HandItemId.iron_ore, 25)];
 
     for (final (itemKey, quantity) in testMaterials) {
       final success = getIt<AddItemUseCase>()(itemKey, quantity);
@@ -231,8 +228,7 @@ class InventoryInputHandler extends GameComponent
 
     if (success) {
       final item = inventoryManager.getSlotByIndex(nextIndex)?.item;
-      final handType = _extractHandType(item);
-      final handSuffix = handType != null ? ' ($handType)' : '';
+      final handSuffix = item != null ? ' (${item.id})' : '';
       final itemName = item?.name ?? 'vazio';
       developer.log(
         '[InventoryInput] ✓ Slot selecionado: $itemName$handSuffix',
@@ -266,8 +262,7 @@ class InventoryInputHandler extends GameComponent
 
     if (success) {
       final item = inventoryManager.getSlotByIndex(previousIndex)?.item;
-      final handType = _extractHandType(item);
-      final handSuffix = handType != null ? ' ($handType)' : '';
+      final handSuffix = item != null ? ' (${item.id})' : '';
       final itemName = item?.name ?? 'vazio';
       developer.log(
         '[InventoryInput] ✓ Slot selecionado (reverso): $itemName$handSuffix',
@@ -279,24 +274,17 @@ class InventoryInputHandler extends GameComponent
     }
   }
 
-  void _notifyEquipmentChanged(HandItemId? equippedHandType) {
+  void _notifyEquipmentChanged(HandItemId? handItemId) {
     // Equipment is now queried dynamically from the player model
     // No need to notify - the model always returns the current selected slot
     developer.log(
-      '[InventoryInput] Equipment changed to: ${equippedHandType?.name ?? "empty"}',
+      '[InventoryInput] Equipment changed to: ${handItemId?.name ?? "empty"}',
     );
   }
 
   void _handleSelectedSlotChanged() {
     final selectedItem = getIt<EquipmentManager>().getEquippedItem();
-    final equippedHandType = _extractHandType(selectedItem);
-    _notifyEquipmentChanged(equippedHandType);
-  }
-
-  HandItemId? _extractHandType(HandItem? item) {
-    if (item == null) return null;
-    if (item is WeaponItem) return item.equippedHandType;
-    return item.id;
+    _notifyEquipmentChanged(selectedItem?.id);
   }
 
   // ========== SV STYLE SLOT SELECTION ==========

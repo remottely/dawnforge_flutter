@@ -145,7 +145,7 @@ class AddItemUseCase {
   }
 
   HandItem _normalizeStackBehavior(HandItem item) {
-    if (item is WeaponItem && item.equippedHandType.isSeed) {
+    if (item is WeaponItem && item.id.isSeed) {
       final desiredStackSize = item.maxStackSize > 1 ? item.maxStackSize : 99;
 
       if (!item.isStackable || item.maxStackSize != desiredStackSize) {

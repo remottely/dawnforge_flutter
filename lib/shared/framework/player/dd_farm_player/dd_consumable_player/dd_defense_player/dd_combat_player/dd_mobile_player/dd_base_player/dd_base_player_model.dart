@@ -23,17 +23,18 @@ class DDBasePlayerModel {
   int get energy => _saveData.energy;
   double? get life => _saveData.life;
   bool get hasStamina => _saveData.stamina > 0;
-  
+
   /// Equipment always points to the currently selected inventory slot
   /// This is never null - it always represents the selected slot
   /// If the slot is empty, equipment will be null
   HandItemId? get equipment {
-    final selectedSlotIndex = getIt<EquipmentManager>().currentMainHandSlotIndex;
+    final selectedSlotIndex =
+        getIt<EquipmentManager>().currentMainHandSlotIndex;
     final slot = getIt<InventoryManager>().getSlotByIndex(selectedSlotIndex);
     final item = slot?.item;
 
     if (item is WeaponItem) {
-      return item.equippedHandType;
+      return item.id;
     }
 
     return item?.id;
