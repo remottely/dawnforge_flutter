@@ -1,4 +1,3 @@
-// import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
 import 'package:darkness_dungeon/gameplay/world/entities/objects/farm/farm_object.dart';
 import 'package:flutter/foundation.dart';
 
