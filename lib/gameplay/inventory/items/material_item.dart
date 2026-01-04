@@ -16,7 +16,7 @@ final class MaterialItem extends HandItem {
     super.type = HandItemType.material,
     super.isStackable = true,
     super.maxStackSize = 999,
-    super.iconData,
+    required super.iconData,
     required this.materialType,
   });
 
@@ -43,6 +43,7 @@ final class MaterialItem extends HandItem {
       quality: HandItemQuality.fromJson(json['quality'] as String),
       maxStackSize: json['maxStackSize'] as int? ?? 999,
       materialType: json['materialType'] as String,
+      iconData: ItemIconData.fromJson(json['iconData'] as Map<String, dynamic>),
     );
   }
 

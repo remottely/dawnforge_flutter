@@ -18,7 +18,7 @@ final class WeaponItem extends HandItem {
     required super.baseValue,
     super.quality = HandItemQuality.normal,
     super.type = HandItemType.weapon,
-    super.iconData,
+    required super.iconData,
     required this.damage,
     this.attackSpeed = 1.0,
     this.critChance = 0.05,
@@ -66,6 +66,7 @@ final class WeaponItem extends HandItem {
       cropId: json['cropId'] as String?,
       isStackable: json['isStackable'] as bool? ?? false,
       maxStackSize: json['maxStackSize'] as int? ?? 1,
+      iconData: ItemIconData.fromJson(json['iconData'] as Map<String, dynamic>),
     );
   }
 

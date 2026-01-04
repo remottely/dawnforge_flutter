@@ -20,7 +20,7 @@ final class HarvestLootItem extends ConsumableItem {
     super.type = HandItemType.material,
     super.isStackable = true,
     super.maxStackSize = 999,
-    super.iconData,
+    required super.iconData,
     this.category = LootCategory.vegetable,
     super.isDroppable = true,
     super.isTradeable = true,
@@ -82,6 +82,7 @@ final class HarvestLootItem extends ConsumableItem {
       season: json['season'] as String,
       regrows: json['regrows'] as bool? ?? false,
       regrowthDays: json['regrowthDays'] as int? ?? 0,
+      iconData: ItemIconData.fromJson(json['iconData'] as Map<String, dynamic>),
     );
   }
 

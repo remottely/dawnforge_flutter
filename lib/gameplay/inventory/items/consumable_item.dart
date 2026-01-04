@@ -13,13 +13,13 @@ class ConsumableItem extends HandItem {
     required super.name,
     required super.description,
     required super.baseValue,
+    required super.iconData,
     super.quality = HandItemQuality.normal,
     super.type = HandItemType.consumable,
     super.isStackable = true,
     super.maxStackSize = 99,
     super.isDroppable = true,
     super.isTradeable = true,
-    super.iconData,
     this.healthRestore = 0,
     this.staminaRestore = 0,
   });
@@ -52,6 +52,7 @@ class ConsumableItem extends HandItem {
       // Fallback: some data uses healAmount instead of healthRestore/staminaRestore
       healthRestore: json['healthRestore'] as int? ?? healAmount ?? 0,
       staminaRestore: json['staminaRestore'] as int? ?? healAmount ?? 0,
+      iconData: ItemIconData.fromJson(json['iconData'] as Map<String, dynamic>),
     );
   }
 

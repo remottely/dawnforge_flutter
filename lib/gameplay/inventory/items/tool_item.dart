@@ -15,7 +15,7 @@ final class ToolItem extends HandItem {
     required super.baseValue,
     super.quality = HandItemQuality.normal,
     super.type = HandItemType.tool,
-    super.iconData,
+    required super.iconData,
     required this.toolType,
     this.powerLevel = 1,
   });
@@ -43,6 +43,7 @@ final class ToolItem extends HandItem {
       quality: HandItemQuality.fromJson(json['quality'] as String),
       toolType: json['toolType'] as String,
       powerLevel: json['powerLevel'] as int? ?? 1,
+      iconData: ItemIconData.fromJson(json['iconData'] as Map<String, dynamic>),
     );
   }
 

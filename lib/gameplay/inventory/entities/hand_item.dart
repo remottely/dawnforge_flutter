@@ -14,7 +14,7 @@ abstract class HandItem {
   final bool isStackable;
   final bool isDroppable;
   final bool isTradeable;
-  final ItemIconData? iconData;
+  final ItemIconData iconData;
 
   const HandItem({
     required this.id,
@@ -27,7 +27,7 @@ abstract class HandItem {
     this.isStackable = false,
     this.isDroppable = true,
     this.isTradeable = true,
-    this.iconData,
+    required this.iconData,
   });
 
   int get sellValue => (baseValue * quality.priceMultiplier).round();

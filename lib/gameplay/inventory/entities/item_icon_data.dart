@@ -13,16 +13,11 @@ class ItemIconData {
     required this.spriteColumnIndex,
   });
 
-  factory ItemIconData.fromJson(
-    Map<String, dynamic> json,
-    String globalSpritesheetPath,
-    int globalSpriteWidth,
-    int globalSpriteHeight,
-  ) {
+  factory ItemIconData.fromJson(Map<String, dynamic> json) {
     return ItemIconData(
-      spritesheetPath: globalSpritesheetPath,
-      spriteWidth: globalSpriteWidth,
-      spriteHeight: globalSpriteHeight,
+      spritesheetPath: json['spritesheetPath'] as String,
+      spriteWidth: json['spriteWidth'] as int,
+      spriteHeight: json['spriteHeight'] as int,
       spriteRowIndex: json['rowIndex'] as int,
       spriteColumnIndex: json['columnIndex'] as int,
     );

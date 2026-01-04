@@ -19,7 +19,7 @@ final class SeedBagItem extends HandItem {
     super.type = HandItemType.cropSeed,
     super.isStackable = true,
     super.maxStackSize = 99,
-    super.iconData,
+    required super.iconData,
     required this.cropId,
     required this.growthTime,
     this.yield = 1,
@@ -60,6 +60,7 @@ final class SeedBagItem extends HandItem {
       growthTime: json['growthTime'] as int,
       yield: json['yield'] as int? ?? 1,
       season: json['season'] as String? ?? 'any',
+      iconData: ItemIconData.fromJson(json['iconData'] as Map<String, dynamic>),
     );
   }
 
