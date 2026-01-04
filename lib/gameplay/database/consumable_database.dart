@@ -1,37 +1,10 @@
+import 'package:darkness_dungeon/gameplay/inventory/items/consumable_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/item_rarity.dart';
-
-class ConsumableData {
-  final String id;
-  final String name;
-  final String description;
-  final ItemRarity rarity;
-  final int baseValue;
-  final String iconPath;
-  final int maxStackSize;
-  final int healthRestore;
-  final int staminaRestore;
-  final int duration;
-  final List<String> buffs;
-
-  const ConsumableData({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.rarity,
-    required this.baseValue,
-    required this.iconPath,
-    required this.maxStackSize,
-    required this.healthRestore,
-    required this.staminaRestore,
-    required this.duration,
-    required this.buffs,
-  });
-}
 
 final class ConsumableDatabaseDef {
   ConsumableDatabaseDef._();
-  static const Map<String, ConsumableData> consumables = {
-    'health_potion': ConsumableData(
+  static const Map<String, ConsumableItem> consumables = {
+    'health_potion': ConsumableItem(
       id: 'health_potion',
       name: 'Health Potion',
       description: 'Restores 50 HP instantly',
@@ -44,7 +17,7 @@ final class ConsumableDatabaseDef {
       duration: 0,
       buffs: const [],
     ),
-    'stamina_potion': ConsumableData(
+    'stamina_potion': ConsumableItem(
       id: 'stamina_potion',
       name: 'Stamina Potion',
       description: 'Restores 30 stamina instantly',
@@ -57,7 +30,7 @@ final class ConsumableDatabaseDef {
       duration: 0,
       buffs: const [],
     ),
-    'super_health_potion': ConsumableData(
+    'super_health_potion': ConsumableItem(
       id: 'super_health_potion',
       name: 'Super Health Potion',
       description: 'Restores 150 HP instantly',
@@ -70,7 +43,7 @@ final class ConsumableDatabaseDef {
       duration: 0,
       buffs: const [],
     ),
-    'cooked_meat': ConsumableData(
+    'cooked_meat': ConsumableItem(
       id: 'cooked_meat',
       name: 'Cooked Meat',
       description: 'Delicious cooked meat that restores health',
@@ -83,7 +56,7 @@ final class ConsumableDatabaseDef {
       duration: 0,
       buffs: const [],
     ),
-    'strength_elixir': ConsumableData(
+    'strength_elixir': ConsumableItem(
       id: 'strength_elixir',
       name: 'Strength Elixir',
       description: 'Increases damage for 60 seconds',
@@ -96,7 +69,7 @@ final class ConsumableDatabaseDef {
       duration: 60,
       buffs: const ['strength_buff'],
     ),
-    'carrot_item': ConsumableData(
+    'carrot_item': ConsumableItem(
       id: 'carrot_item',
       name: 'Carrot',
       description: 'A fresh orange carrot. Can be eaten or sold.',
@@ -109,7 +82,7 @@ final class ConsumableDatabaseDef {
       duration: 0,
       buffs: const [],
     ),
-    'strawberry_item': ConsumableData(
+    'strawberry_item': ConsumableItem(
       id: 'strawberry_item',
       name: 'Strawberry',
       description: 'A fresh red strawberry. Can be eaten or sold.',
@@ -122,7 +95,7 @@ final class ConsumableDatabaseDef {
       duration: 0,
       buffs: const [],
     ),
-    'potato_item': ConsumableData(
+    'potato_item': ConsumableItem(
       id: 'potato_item',
       name: 'Potato',
       description: 'A starchy potato. Can be cooked or sold.',
@@ -135,7 +108,7 @@ final class ConsumableDatabaseDef {
       duration: 0,
       buffs: const [],
     ),
-    'pumpkin_item': ConsumableData(
+    'pumpkin_item': ConsumableItem(
       id: 'pumpkin_item',
       name: 'Pumpkin',
       description: 'A large orange pumpkin. Great for cooking.',
@@ -148,7 +121,7 @@ final class ConsumableDatabaseDef {
       duration: 0,
       buffs: const [],
     ),
-    'turnip_item': ConsumableData(
+    'turnip_item': ConsumableItem(
       id: 'turnip_item',
       name: 'Turnip',
       description: 'A purple and white turnip. Nutritious vegetable.',
@@ -161,7 +134,7 @@ final class ConsumableDatabaseDef {
       duration: 0,
       buffs: const [],
     ),
-    'radish_item': ConsumableData(
+    'radish_item': ConsumableItem(
       id: 'radish_item',
       name: 'Radish',
       description: 'A crisp radish. Can be eaten or sold.',
@@ -174,7 +147,7 @@ final class ConsumableDatabaseDef {
       duration: 0,
       buffs: const [],
     ),
-    'tomato_item': ConsumableData(
+    'tomato_item': ConsumableItem(
       id: 'tomato_item',
       name: 'Tomato',
       description: 'A juicy red tomato. Perfect for salads.',
@@ -187,7 +160,7 @@ final class ConsumableDatabaseDef {
       duration: 0,
       buffs: const [],
     ),
-    'corn_item': ConsumableData(
+    'corn_item': ConsumableItem(
       id: 'corn_item',
       name: 'Corn',
       description: 'Sweet corn on the cob. Can be roasted.',
@@ -200,7 +173,7 @@ final class ConsumableDatabaseDef {
       duration: 0,
       buffs: const [],
     ),
-    'apple_item': ConsumableData(
+    'apple_item': ConsumableItem(
       id: 'apple_item',
       name: 'Apple',
       description: 'A crisp apple. Can be eaten or sold.',

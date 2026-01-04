@@ -1,4 +1,5 @@
 import '../entities/item.dart';
+import '../models/item_icon_data.dart';
 import '../models/item_rarity.dart';
 import '../models/item_type.dart';
 
@@ -81,6 +82,7 @@ final class ConsumableItem extends Item {
     int? staminaRestore,
     int? duration,
     List<String>? buffs,
+    ItemIconData? iconData,
   }) {
     return ConsumableItem(
       id: id ?? this.id,
@@ -94,6 +96,7 @@ final class ConsumableItem extends Item {
       staminaRestore: staminaRestore ?? this.staminaRestore,
       duration: duration ?? this.duration,
       buffs: buffs ?? this.buffs,
+      iconData: iconData ?? this.iconData,
     );
   }
 

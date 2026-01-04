@@ -1,12 +1,9 @@
-/// Compile-time crop definitions stored directly as `CropEntity` templates.
-
 import '../world/entities/objects/farm/crop_entity.dart';
 import '../world/entities/objects/farm/crop_stage_type.dart';
 
 final class CropDatabaseDef {
   CropDatabaseDef._();
 
-  /// Template crops; create runtime instances by copying these.
   static const Map<String, CropEntity> crops = {
     'cabbage': CropEntity(
       cropId: 'cabbage',

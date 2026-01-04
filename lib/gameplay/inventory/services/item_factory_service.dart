@@ -1,8 +1,9 @@
 import 'dart:developer' as developer;
 
+import 'package:darkness_dungeon/gameplay/inventory/items/consumable_item.dart';
+
 import '../database/item_icon_database.dart';
 import '../entities/item.dart';
-import '../items/consumable_item.dart';
 import '../items/main_hand_item.dart';
 import '../items/material_item.dart';
 import '../items/seed_item.dart';
@@ -18,7 +19,7 @@ import '../../database/seed_database.dart';
 class ItemFactoryService {
   final Map<String, WeaponData> _weapons = {};
   final Map<String, ToolData> _tools = {};
-  final Map<String, ConsumableData> _consumables = {};
+  final Map<String, ConsumableItem> _consumables = {};
   final Map<String, MaterialData> _materials = {};
   final Map<String, SeedData> _seeds = {};
   bool isInitialized = false;
@@ -122,22 +123,9 @@ class ItemFactoryService {
         );
       }
 
-      final consumableData = _consumables[itemId];
-      if (consumableData != null) {
-        return ConsumableItem(
-          id: consumableData.id,
-          name: consumableData.name,
-          description: consumableData.description,
-          baseValue: consumableData.baseValue,
-          iconPath: consumableData.iconPath,
-          rarity: consumableData.rarity,
-          maxStackSize: consumableData.maxStackSize,
-          healthRestore: consumableData.healthRestore,
-          staminaRestore: consumableData.staminaRestore,
-          duration: consumableData.duration,
-          buffs: consumableData.buffs,
-          iconData: iconData,
-        );
+      final consumable = _consumables[itemId];
+      if (consumable != null) {
+        return consumable.copyWith(iconData: iconData);
       }
 
       final seedData = _seeds[itemId];
