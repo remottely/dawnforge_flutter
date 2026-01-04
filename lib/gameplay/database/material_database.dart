@@ -1,30 +1,9 @@
+import 'package:darkness_dungeon/gameplay/inventory/items/material_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/item_rarity.dart';
 
-class MaterialData {
-  final String id;
-  final String name;
-  final String description;
-  final ItemRarity rarity;
-  final int baseValue;
-  final String iconPath;
-  final int maxStackSize;
-  final String materialType;
-
-  const MaterialData({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.rarity,
-    required this.baseValue,
-    required this.iconPath,
-    required this.maxStackSize,
-    required this.materialType,
-  });
-}
-
 final class MaterialDatabaseDef {
-  static const Map<String, MaterialData> materials = {
-    'wood': MaterialData(
+  static const Map<String, MaterialItem> materials = {
+    'wood': MaterialItem(
       id: 'wood',
       name: 'Wood',
       description: 'Basic crafting material from trees',
@@ -34,7 +13,7 @@ final class MaterialDatabaseDef {
       maxStackSize: 999,
       materialType: 'wood',
     ),
-    'stone': MaterialData(
+    'stone': MaterialItem(
       id: 'stone',
       name: 'Stone',
       description: 'Common building material',
@@ -44,7 +23,7 @@ final class MaterialDatabaseDef {
       maxStackSize: 999,
       materialType: 'stone',
     ),
-    'iron_ore': MaterialData(
+    'iron_ore': MaterialItem(
       id: 'iron_ore',
       name: 'Iron Ore',
       description: 'Raw iron ore for smelting',
@@ -54,7 +33,7 @@ final class MaterialDatabaseDef {
       maxStackSize: 999,
       materialType: 'ore',
     ),
-    'gold_ore': MaterialData(
+    'gold_ore': MaterialItem(
       id: 'gold_ore',
       name: 'Gold Ore',
       description: 'Precious gold ore',
@@ -64,7 +43,7 @@ final class MaterialDatabaseDef {
       maxStackSize: 999,
       materialType: 'ore',
     ),
-    'fiber': MaterialData(
+    'fiber': MaterialItem(
       id: 'fiber',
       name: 'Fiber',
       description: 'Plant fiber for crafting',
@@ -74,7 +53,7 @@ final class MaterialDatabaseDef {
       maxStackSize: 999,
       materialType: 'fiber',
     ),
-    'dungeon_key': MaterialData(
+    'dungeon_key': MaterialItem(
       id: 'dungeon_key',
       name: 'Dungeon Key',
       description: 'Opens locked dungeon doors. Consumed on use.',
@@ -84,7 +63,7 @@ final class MaterialDatabaseDef {
       maxStackSize: 99,
       materialType: 'key',
     ),
-    'wheat_item': MaterialData(
+    'wheat_item': MaterialItem(
       id: 'wheat_item',
       name: 'Wheat',
       description: 'Golden wheat grain. Can be milled into flour.',

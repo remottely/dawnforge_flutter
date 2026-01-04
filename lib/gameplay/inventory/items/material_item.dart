@@ -1,4 +1,5 @@
 import '../entities/item.dart';
+import '../models/item_icon_data.dart';
 import '../models/item_rarity.dart';
 import '../models/item_type.dart';
 
@@ -57,6 +58,7 @@ final class MaterialItem extends Item {
     ItemRarity? rarity,
     int? maxStackSize,
     String? materialType,
+    ItemIconData? iconData,
   }) {
     return MaterialItem(
       id: id ?? this.id,
@@ -67,6 +69,7 @@ final class MaterialItem extends Item {
       rarity: rarity ?? this.rarity,
       maxStackSize: maxStackSize ?? this.maxStackSize,
       materialType: materialType ?? this.materialType,
+      iconData: iconData ?? this.iconData,
     );
   }
 

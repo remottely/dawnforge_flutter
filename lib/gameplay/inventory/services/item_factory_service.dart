@@ -1,11 +1,11 @@
 import 'dart:developer' as developer;
 
 import 'package:darkness_dungeon/gameplay/inventory/items/consumable_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/items/material_item.dart';
 
 import '../database/item_icon_database.dart';
 import '../entities/item.dart';
 import '../items/main_hand_item.dart';
-import '../items/material_item.dart';
 import '../items/seed_item.dart';
 import '../items/tool_item.dart';
 import '../models/equipped_hand_type.dart';
@@ -20,7 +20,7 @@ class ItemFactoryService {
   final Map<String, WeaponData> _weapons = {};
   final Map<String, ToolData> _tools = {};
   final Map<String, ConsumableItem> _consumables = {};
-  final Map<String, MaterialData> _materials = {};
+  final Map<String, MaterialItem> _materials = {};
   final Map<String, SeedData> _seeds = {};
   bool isInitialized = false;
 
@@ -146,19 +146,9 @@ class ItemFactoryService {
         );
       }
 
-      final materialData = _materials[itemId];
-      if (materialData != null) {
-        return MaterialItem(
-          id: materialData.id,
-          name: materialData.name,
-          description: materialData.description,
-          baseValue: materialData.baseValue,
-          iconPath: materialData.iconPath,
-          rarity: materialData.rarity,
-          maxStackSize: materialData.maxStackSize,
-          materialType: materialData.materialType,
-          iconData: iconData,
-        );
+      final material = _materials[itemId];
+      if (material != null) {
+        return material.copyWith(iconData: iconData);
       }
 
       developer.log('[ItemFactoryService] Item not found: $itemId');
