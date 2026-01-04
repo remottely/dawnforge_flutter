@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item.dart';
 import 'package:flutter/material.dart';
 import '../../../shared/utils/sprite_animation_config_helper.dart';
 

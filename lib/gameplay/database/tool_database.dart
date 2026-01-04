@@ -1,6 +1,6 @@
 import 'package:darkness_dungeon/gameplay/inventory/items/tool_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_id.dart';
-import 'package:darkness_dungeon/gameplay/inventory/models/item_rarity.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_id.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_rarity.dart';
 
 final class ToolDatabaseDef {
   ToolDatabaseDef._();
@@ -9,7 +9,7 @@ final class ToolDatabaseDef {
       id: HandItemId.iron_pickaxe,
       name: 'Iron Pickaxe',
       description: 'Mine rocks and ores efficiently',
-      rarity: ItemRarity.common,
+      rarity: HandItemRarity.common,
       baseValue: 80,
       iconPath: 'assets/images/items/iron_pickaxe.png',
       toolType: 'pickaxe',
@@ -19,7 +19,7 @@ final class ToolDatabaseDef {
       id: HandItemId.steel_pickaxe,
       name: 'Steel Pickaxe',
       description: 'A superior pickaxe for harder minerals',
-      rarity: ItemRarity.uncommon,
+      rarity: HandItemRarity.uncommon,
       baseValue: 200,
       iconPath: 'assets/images/items/steel_pickaxe.png',
       toolType: 'pickaxe',
@@ -29,7 +29,7 @@ final class ToolDatabaseDef {
       id: HandItemId.wooden_axe,
       name: 'Wooden Axe',
       description: 'Basic tool for chopping trees',
-      rarity: ItemRarity.common,
+      rarity: HandItemRarity.common,
       baseValue: 20,
       iconPath: 'assets/images/items/wooden_axe.png',
       toolType: 'axe',
@@ -39,7 +39,7 @@ final class ToolDatabaseDef {
       id: HandItemId.basic_hoe,
       name: 'Basic Hoe',
       description: 'Till soil for planting crops',
-      rarity: ItemRarity.common,
+      rarity: HandItemRarity.common,
       baseValue: 30,
       iconPath: 'assets/images/items/basic_hoe.png',
       toolType: 'hoe',

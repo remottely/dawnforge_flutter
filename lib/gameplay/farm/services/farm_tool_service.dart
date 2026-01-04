@@ -1,7 +1,7 @@
 import 'dart:developer' as developer;
 
 import '../../inventory/items/main_hand_item.dart';
-import '../../inventory/entities/hand_item_id.dart';
+import '../../inventory/entities/hand/hand_item_id.dart';
 import '../../world/entities/world_entities.dart';
 
 /// Service for validating farm tool usage (I2: Service = stateless)

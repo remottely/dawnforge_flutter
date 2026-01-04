@@ -1,8 +1,8 @@
-import '../entities/hand_item_id.dart';
-import '../entities/hand_item.dart';
+import '../entities/hand/hand_item_id.dart';
+import '../entities/hand/hand_item.dart';
 import '../models/item_icon_data.dart';
-import '../models/item_rarity.dart';
-import '../entities/hand_item_type.dart';
+import '../entities/hand/hand_item_rarity.dart';
+import '../entities/hand/hand_item_type.dart';
 
 final class MainHandItem extends HandItem {
   final int damage;
@@ -18,7 +18,7 @@ final class MainHandItem extends HandItem {
     required super.description,
     required super.baseValue,
     required super.iconPath,
-    super.rarity = ItemRarity.common,
+    super.rarity = HandItemRarity.common,
     super.type = HandItemType.weapon,
     super.iconData,
     required this.damage,
@@ -64,7 +64,7 @@ final class MainHandItem extends HandItem {
       description: json['description'] as String,
       baseValue: json['baseValue'] as int,
       iconPath: json['iconPath'] as String,
-      rarity: ItemRarity.fromJson(json['rarity'] as String),
+      rarity: HandItemRarity.fromJson(json['rarity'] as String),
       damage: json['damage'] as int,
       attackSpeed: (json['attackSpeed'] as num?)?.toDouble() ?? 1.0,
       critChance: (json['critChance'] as num?)?.toDouble() ?? 0.05,
@@ -84,7 +84,7 @@ final class MainHandItem extends HandItem {
     String? description,
     int? baseValue,
     String? iconPath,
-    ItemRarity? rarity,
+    HandItemRarity? rarity,
     int? damage,
     double? attackSpeed,
     double? critChance,

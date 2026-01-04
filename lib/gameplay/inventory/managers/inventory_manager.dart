@@ -1,11 +1,11 @@
 import 'dart:developer' as developer;
 
-import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_id.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_id.dart';
 import 'package:flutter/foundation.dart';
 
 import '../config/inventory_def.dart';
 import '../entities/inventory_slot.dart';
-import '../entities/hand_item.dart';
+import '../entities/hand/hand_item.dart';
 
 /// Manager for inventory state (C1: Singleton + ValueNotifier, I2: Manager = Singleton State)
 class InventoryManager {

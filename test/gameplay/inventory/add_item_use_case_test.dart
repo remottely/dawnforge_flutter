@@ -1,8 +1,8 @@
 import 'package:darkness_dungeon/gameplay/inventory/entities/inventory_slot.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_id.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_id.dart';
 import 'package:darkness_dungeon/gameplay/inventory/services/item_factory_service.dart';
 import 'package:darkness_dungeon/gameplay/inventory/usecases/add_item_use_case.dart';
 import 'package:flutter_test/flutter_test.dart';

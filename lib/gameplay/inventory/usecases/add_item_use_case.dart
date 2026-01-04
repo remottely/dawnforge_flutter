@@ -2,10 +2,10 @@ import 'dart:developer' as developer;
 import 'dart:math';
 
 import '../entities/inventory_slot.dart';
-import '../entities/hand_item.dart';
+import '../entities/hand/hand_item.dart';
 import '../items/main_hand_item.dart';
 import '../managers/inventory_manager.dart';
-import '../entities/hand_item_id.dart';
+import '../entities/hand/hand_item_id.dart';
 import '../services/item_factory_service.dart';
 
 /// UseCase for adding items to inventory (B1: Concrete UseCase)

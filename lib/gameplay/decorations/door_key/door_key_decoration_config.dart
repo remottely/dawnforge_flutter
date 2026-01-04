@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_id.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_id.dart';
 
 final class DoorKeyDecorationDef {
   DoorKeyDecorationDef._();

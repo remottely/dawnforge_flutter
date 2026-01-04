@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_id.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_id.dart';
 
 import '../world/entities/objects/farm/crop_entity.dart';
 import '../world/entities/objects/farm/crop_stage_type.dart';

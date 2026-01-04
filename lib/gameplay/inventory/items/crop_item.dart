@@ -1,9 +1,9 @@
-import '../entities/hand_item.dart';
-import '../entities/hand_item_id.dart';
+import '../entities/hand/hand_item.dart';
+import '../entities/hand/hand_item_id.dart';
 import '../models/item_category.dart';
 import '../models/item_quality.dart';
-import '../models/item_rarity.dart';
-import '../entities/hand_item_type.dart';
+import '../entities/hand/hand_item_rarity.dart';
+import '../entities/hand/hand_item_type.dart';
 
 final class CropItem extends HandItem {
   final ItemCategory category;
@@ -20,7 +20,7 @@ final class CropItem extends HandItem {
     required super.description,
     required super.baseValue,
     required super.iconPath,
-    super.rarity = ItemRarity.common,
+    super.rarity = HandItemRarity.common,
     super.type = HandItemType.material,
     super.isStackable = true,
     super.maxStackSize = 999,
@@ -80,7 +80,7 @@ final class CropItem extends HandItem {
       description: json['description'] as String,
       baseValue: json['baseValue'] as int,
       iconPath: json['iconPath'] as String,
-      rarity: ItemRarity.fromJson(json['rarity'] as String? ?? 'common'),
+      rarity: HandItemRarity.fromJson(json['rarity'] as String? ?? 'common'),
       category: ItemCategory.fromJson(
         json['category'] as String? ?? 'vegetables',
       ),
@@ -104,7 +104,7 @@ final class CropItem extends HandItem {
     String? description,
     int? baseValue,
     String? iconPath,
-    ItemRarity? rarity,
+    HandItemRarity? rarity,
     ItemCategory? category,
     ItemQuality? quality,
     int? maxStackSize,

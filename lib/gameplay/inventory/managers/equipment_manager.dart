@@ -1,9 +1,9 @@
 import 'dart:developer' as developer;
 
-import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_id.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_id.dart';
 import 'package:flutter/foundation.dart';
 
-import '../entities/hand_item.dart';
+import '../entities/hand/hand_item.dart';
 import '../items/main_hand_item.dart';
 import 'inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/state/equipment_state.dart';

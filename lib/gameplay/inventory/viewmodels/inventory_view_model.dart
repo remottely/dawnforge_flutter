@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 
 import '../entities/inventory_slot.dart';
-import '../entities/hand_item.dart';
+import '../entities/hand/hand_item.dart';
 import '../managers/equipment_manager.dart';
 import '../managers/inventory_manager.dart';
 import '../usecases/add_item_use_case.dart';
 import '../usecases/equip_item_use_case.dart';
 import '../usecases/remove_item_use_case.dart';
-import '../entities/hand_item_id.dart';
+import '../entities/hand/hand_item_id.dart';
 
 /// ViewModel UI data for inventory slot
 class InventorySlotUI {

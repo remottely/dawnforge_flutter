@@ -1,5 +1,5 @@
 import '../../world/entities/objects/farm/crop_stage_type.dart';
-import '../../inventory/entities/hand_item_id.dart';
+import '../../inventory/entities/hand/hand_item_id.dart';
 
 final class CropModel {
   final String cropId;

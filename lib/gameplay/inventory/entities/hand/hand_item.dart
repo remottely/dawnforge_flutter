@@ -1,6 +1,6 @@
 import 'hand_item_id.dart';
-import '../models/item_icon_data.dart';
-import '../models/item_rarity.dart';
+import '../../models/item_icon_data.dart';
+import 'hand_item_rarity.dart';
 import 'hand_item_type.dart';
 
 abstract class HandItem {
@@ -8,7 +8,7 @@ abstract class HandItem {
   final String name;
   final String description;
   final HandItemType type;
-  final ItemRarity rarity;
+  final HandItemRarity rarity;
   final int maxStackSize;
   final int baseValue;
   final String iconPath;
@@ -22,7 +22,7 @@ abstract class HandItem {
     required this.name,
     required this.description,
     required this.type,
-    this.rarity = ItemRarity.common,
+    this.rarity = HandItemRarity.common,
     this.maxStackSize = 1,
     required this.baseValue,
     required this.iconPath,

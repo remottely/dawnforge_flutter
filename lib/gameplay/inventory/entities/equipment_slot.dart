@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'hand_item.dart';
+import 'hand/hand_item.dart';
 
 /// Simple wrapper for the single equipped item (slot type removed)
 final class EquipmentSlot extends Equatable {

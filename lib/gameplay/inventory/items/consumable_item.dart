@@ -1,8 +1,8 @@
-import '../entities/hand_item.dart';
-import '../entities/hand_item_id.dart';
+import '../entities/hand/hand_item.dart';
+import '../entities/hand/hand_item_id.dart';
 import '../models/item_icon_data.dart';
-import '../models/item_rarity.dart';
-import '../entities/hand_item_type.dart';
+import '../entities/hand/hand_item_rarity.dart';
+import '../entities/hand/hand_item_type.dart';
 
 final class ConsumableItem extends HandItem {
   final int healthRestore;
@@ -14,7 +14,7 @@ final class ConsumableItem extends HandItem {
     required super.description,
     required super.baseValue,
     required super.iconPath,
-    super.rarity = ItemRarity.common,
+    super.rarity = HandItemRarity.common,
     super.type = HandItemType.consumable,
     super.isStackable = true,
     super.maxStackSize = 99,
@@ -48,7 +48,7 @@ final class ConsumableItem extends HandItem {
       description: json['description'] as String,
       baseValue: json['baseValue'] as int,
       iconPath: json['iconPath'] as String,
-      rarity: ItemRarity.fromJson(json['rarity'] as String),
+      rarity: HandItemRarity.fromJson(json['rarity'] as String),
       maxStackSize: json['maxStackSize'] as int? ?? 99,
       // Fallback: some data uses healAmount instead of healthRestore/staminaRestore
       healthRestore: json['healthRestore'] as int? ?? healAmount ?? 0,
@@ -63,7 +63,7 @@ final class ConsumableItem extends HandItem {
     String? description,
     int? baseValue,
     String? iconPath,
-    ItemRarity? rarity,
+    HandItemRarity? rarity,
     int? maxStackSize,
     int? healthRestore,
     int? staminaRestore,

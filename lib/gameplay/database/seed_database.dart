@@ -1,6 +1,6 @@
 import 'package:darkness_dungeon/gameplay/inventory/items/seed_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_id.dart';
-import 'package:darkness_dungeon/gameplay/inventory/models/item_rarity.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_id.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_rarity.dart';
 
 final class SeedDatabaseDef {
   static const Map<HandItemId, SeedItem> seeds = {
@@ -8,7 +8,7 @@ final class SeedDatabaseDef {
       id: HandItemId.carrot_seeds,
       name: 'Carrot Seeds',
       description: 'Plant to grow carrots in any season',
-      rarity: ItemRarity.common,
+      rarity: HandItemRarity.common,
       baseValue: 10,
       iconPath: 'assets/images/items/carrot_seeds.png',
       maxStackSize: 99,
@@ -21,7 +21,7 @@ final class SeedDatabaseDef {
       id: HandItemId.wheat_seeds,
       name: 'Wheat Seeds',
       description: 'Grow wheat in spring or fall',
-      rarity: ItemRarity.common,
+      rarity: HandItemRarity.common,
       baseValue: 8,
       iconPath: 'assets/images/items/wheat_seeds.png',
       maxStackSize: 99,
@@ -34,7 +34,7 @@ final class SeedDatabaseDef {
       id: HandItemId.tomato_seeds,
       name: 'Tomato Seeds',
       description: 'Summer crop that produces many tomatoes',
-      rarity: ItemRarity.uncommon,
+      rarity: HandItemRarity.uncommon,
       baseValue: 25,
       iconPath: 'assets/images/items/tomato_seeds.png',
       maxStackSize: 99,
@@ -47,7 +47,7 @@ final class SeedDatabaseDef {
       id: HandItemId.pumpkin_seeds,
       name: 'Pumpkin Seeds',
       description: 'Fall crop that grows large pumpkins',
-      rarity: ItemRarity.uncommon,
+      rarity: HandItemRarity.uncommon,
       baseValue: 30,
       iconPath: 'assets/images/items/pumpkin_seeds.png',
       maxStackSize: 99,
@@ -60,7 +60,7 @@ final class SeedDatabaseDef {
       id: HandItemId.ancient_seeds,
       name: 'Ancient Seeds',
       description: 'Rare ancient seeds that grow valuable crops',
-      rarity: ItemRarity.legendary,
+      rarity: HandItemRarity.legendary,
       baseValue: 500,
       iconPath: 'assets/images/items/ancient_seeds.png',
       maxStackSize: 10,
