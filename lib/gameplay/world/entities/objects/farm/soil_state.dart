@@ -12,7 +12,7 @@ enum SoilState {
   static SoilState fromJson(String json) => values.byName(json);
 
   /// Check if soil is ready for planting
-  bool get canPlant => this == SoilState.tilled || this == SoilState.watered;
+  bool get canPlantCrop => this == SoilState.tilled || this == SoilState.watered;
 
   /// Check if soil needs watering
   bool get needsWater => this == SoilState.tilled;

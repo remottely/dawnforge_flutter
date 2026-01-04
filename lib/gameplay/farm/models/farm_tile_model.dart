@@ -22,7 +22,7 @@
 
 //   bool get isOccupied => crop != null;
 
-//   bool get canPlant =>
+//   bool get canPlantCrop =>
 //       isEmpty &&
 //       (soilState == SoilStateModel.tilled ||
 //           soilState == SoilStateModel.watered);
@@ -47,7 +47,7 @@
 //   }
 
 //   FarmTileModel plant(CropModel crop) {
-//     if (!canPlant) return this;
+//     if (!canPlantCrop) return this;
 //     return copyWith(crop: crop);
 //   }
 

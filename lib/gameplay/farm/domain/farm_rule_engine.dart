@@ -37,7 +37,7 @@
 //   }
 
 //   FarmTileModel? plant(FarmTileModel tile, String cropId) {
-//     if (!tile.canPlant) {
+//     if (!tile.canPlantCrop) {
 //       developer.log(
 //         '[FarmRuleEngine] ❌ Cannot plant at (${tile.x}, ${tile.y}): '
 //         'isEmpty=${tile.isEmpty}, soilState=${tile.soilState.name}, '

@@ -100,7 +100,7 @@ class FarmManager {
       return false;
     }
 
-    if (!farmObject.canPlant) {
+    if (!farmObject.canPlantCrop) {
       if (farmObject.isOccupied) {
         developer.log('[FarmManager] Tile already has a crop');
       } else {

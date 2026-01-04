@@ -23,7 +23,7 @@ class FarmToolService {
       default:
         // Check if it's a seed
         if (handType.isSeed && tool.cropId != null) {
-          return canPlant(farmObject);
+          return canPlantCrop(farmObject);
         }
         return false;
     }
@@ -54,11 +54,11 @@ class FarmToolService {
   }
 
   /// Check if tile can receive a plant
-  bool canPlant(FarmObject farmObject) {
-    if (!farmObject.canPlant) {
+  bool canPlantCrop(FarmObject farmObject) {
+    if (!farmObject.canPlantCrop) {
       if (farmObject.isOccupied) {
         developer.log('[FarmToolService] Cannot plant: tile already has a crop');
-      } else if (!farmObject.soilState.canPlant) {
+      } else if (!farmObject.soilState.canPlantCrop) {
         developer.log('[FarmToolService] Cannot plant: soil not prepared');
       }
       return false;

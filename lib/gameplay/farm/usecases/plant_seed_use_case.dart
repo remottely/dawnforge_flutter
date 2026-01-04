@@ -64,7 +64,7 @@ class PlantSeedUseCase {
       return false;
     }
 
-    if (!farmObject.canPlant) {
+    if (!farmObject.canPlantCrop) {
       developer.log(
         'PlantSeedUseCase: Tile at ($x, $y) cannot be planted (not tilled or already has crop)',
         name: 'farm.usecases.plant_seed',

@@ -51,7 +51,7 @@ final class FarmObject extends Equatable implements TileObject {
   bool get isOccupied => crop != null;
 
   /// Check if tile can receive a plant
-  bool get canPlant => isEmpty && soilState.canPlant;
+  bool get canPlantCrop => isEmpty && soilState.canPlantCrop;
 
   /// Check if crop can be harvested
   bool get canHarvest => isOccupied && crop!.canHarvest;
@@ -80,7 +80,7 @@ final class FarmObject extends Equatable implements TileObject {
 
   /// Plant a crop on this tile
   FarmObject plant(CropEntity newCrop) {
-    if (!canPlant) return this;
+    if (!canPlantCrop) return this;
     return copyWith(crop: newCrop);
   }
 
