@@ -1,60 +1,22 @@
-/// Compile-time game data constants migrated from JSON assets.
-/// All values are fully typed to avoid runtime parsing/Map<String, dynamic> usage.
+/// Compile-time crop definitions stored directly as `CropEntity` templates.
 
+import '../world/entities/objects/farm/crop_entity.dart';
 import '../world/entities/objects/farm/crop_stage_type.dart';
-
-// ----------------------------
-// Data models
-// ----------------------------
-
-class CropData {
-  final String id;
-  final String harvestItemId;
-  final String name;
-  final String description;
-  final int? daysToMature;
-  final int yieldAmount;
-  final String requiredSeason;
-  final String spritesheetPath;
-  final int spriteWidth;
-  final int spriteHeight;
-  final int spriteRowIndex;
-  final int framesCount;
-  final int skipFirstFrames;
-  final CropStageType? ySortingFromStage;
-  final bool isTree;
-
-  const CropData({
-    required this.id,
-    required this.harvestItemId,
-    required this.name,
-    required this.description,
-    required this.daysToMature,
-    required this.yieldAmount,
-    required this.requiredSeason,
-    required this.spritesheetPath,
-    required this.spriteWidth,
-    required this.spriteHeight,
-    required this.spriteRowIndex,
-    required this.framesCount,
-    required this.skipFirstFrames,
-    required this.ySortingFromStage,
-    this.isTree = false,
-  });
-}
-
 
 final class CropDatabaseDef {
   CropDatabaseDef._();
 
-  static const Map<String, CropData> crops = {
-    'cabbage': CropData(
-      id: 'cabbage',
-      harvestItemId: 'cabbage_item',
+  /// Template crops; create runtime instances by copying these.
+  static const Map<String, CropEntity> crops = {
+    'cabbage': CropEntity(
+      cropId: 'cabbage',
       name: 'Cabbage',
       description: 'A leafy green vegetable',
-      daysToMature: null,
+      stage: CropStageType.planted,
+      daysPlanted: 0,
+      daysToMature: 0,
       yieldAmount: 3,
+      harvestItemId: 'cabbage_item',
       requiredSeason: 'any',
       spritesheetPath: 'tiled/Modern_Farm_v1.2/tilesets/4_Crops_16x16.png',
       spriteWidth: 16,
@@ -64,13 +26,15 @@ final class CropDatabaseDef {
       skipFirstFrames: 1,
       ySortingFromStage: null,
     ),
-    'radish': CropData(
-      id: 'radish',
-      harvestItemId: 'radish_item',
+    'radish': CropEntity(
+      cropId: 'radish',
       name: 'Radish',
       description: 'A nutritious root vegetable',
+      stage: CropStageType.planted,
+      daysPlanted: 0,
       daysToMature: 7,
       yieldAmount: 6,
+      harvestItemId: 'radish_item',
       requiredSeason: 'any',
       spritesheetPath: 'tiled/Modern_Farm_v1.2/tilesets/4_Crops_16x16.png',
       spriteWidth: 16,
@@ -80,13 +44,15 @@ final class CropDatabaseDef {
       skipFirstFrames: 1,
       ySortingFromStage: null,
     ),
-    'carrot': CropData(
-      id: 'carrot',
-      harvestItemId: 'carrot_item',
+    'carrot': CropEntity(
+      cropId: 'carrot',
       name: 'Carrot',
       description: 'A crunchy orange root vegetable',
+      stage: CropStageType.planted,
+      daysPlanted: 0,
       daysToMature: 7,
       yieldAmount: 3,
+      harvestItemId: 'carrot_item',
       requiredSeason: 'any',
       spritesheetPath: 'tiled/Modern_Farm_v1.2/tilesets/4_Crops_16x16.png',
       spriteWidth: 16,
@@ -96,13 +62,15 @@ final class CropDatabaseDef {
       skipFirstFrames: 1,
       ySortingFromStage: null,
     ),
-    'strawberry': CropData(
-      id: 'strawberry',
-      harvestItemId: 'strawberry_item',
+    'strawberry': CropEntity(
+      cropId: 'strawberry',
       name: 'Strawberry',
       description: 'A nutritious root vegetable',
+      stage: CropStageType.planted,
+      daysPlanted: 0,
       daysToMature: 4,
       yieldAmount: 3,
+      harvestItemId: 'strawberry_item',
       requiredSeason: 'any',
       spritesheetPath: 'tiled/Modern_Farm_v1.2/tilesets/4_Crops_16x16.png',
       spriteWidth: 16,
@@ -112,13 +80,15 @@ final class CropDatabaseDef {
       skipFirstFrames: 1,
       ySortingFromStage: CropStageType.budding,
     ),
-    'apple': CropData(
-      id: 'apple',
-      harvestItemId: 'apple_item',
+    'apple': CropEntity(
+      cropId: 'apple',
       name: 'Apple',
       description: 'Crisp red apple',
+      stage: CropStageType.seedling,
+      daysPlanted: 0,
       daysToMature: 7,
       yieldAmount: 3,
+      harvestItemId: 'apple_item',
       requiredSeason: 'any',
       spritesheetPath: 'tiled/Modern_Farm_v1.2/tilesets/4_Crops_16x16.png',
       spriteWidth: 16,
@@ -129,13 +99,15 @@ final class CropDatabaseDef {
       ySortingFromStage: CropStageType.budding,
       isTree: true,
     ),
-    'wheat': CropData(
-      id: 'wheat',
-      harvestItemId: 'wheat_item',
+    'wheat': CropEntity(
+      cropId: 'wheat',
       name: 'Wheat',
       description: 'Golden wheat grain',
-      daysToMature: null,
+      stage: CropStageType.planted,
+      daysPlanted: 0,
+      daysToMature: 0,
       yieldAmount: 3,
+      harvestItemId: 'wheat_item',
       requiredSeason: 'any',
       spritesheetPath: 'tiled/Modern_Farm_v1.2/tilesets/4_Crops_16x16.png',
       spriteWidth: 16,
@@ -145,13 +117,15 @@ final class CropDatabaseDef {
       skipFirstFrames: 1,
       ySortingFromStage: null,
     ),
-    'pepper': CropData(
-      id: 'pepper',
-      harvestItemId: 'pepper_item',
+    'pepper': CropEntity(
+      cropId: 'pepper',
       name: 'Pepper',
       description: 'Spicy hot peppers',
-      daysToMature: null,
+      stage: CropStageType.planted,
+      daysPlanted: 0,
+      daysToMature: 0,
       yieldAmount: 3,
+      harvestItemId: 'pepper_item',
       requiredSeason: 'any',
       spritesheetPath: 'tiled/Modern_Farm_v1.2/tilesets/4_Crops_16x16.png',
       spriteWidth: 16,
@@ -161,13 +135,15 @@ final class CropDatabaseDef {
       skipFirstFrames: 1,
       ySortingFromStage: null,
     ),
-    'turnip': CropData(
-      id: 'turnip',
-      harvestItemId: 'turnip_item',
+    'turnip': CropEntity(
+      cropId: 'turnip',
       name: 'Turnip',
       description: 'A purple-white root vegetable',
-      daysToMature: null,
+      stage: CropStageType.planted,
+      daysPlanted: 0,
+      daysToMature: 0,
       yieldAmount: 3,
+      harvestItemId: 'turnip_item',
       requiredSeason: 'any',
       spritesheetPath: 'tiled/Modern_Farm_v1.2/tilesets/4_Crops_16x16.png',
       spriteWidth: 16,
@@ -177,13 +153,15 @@ final class CropDatabaseDef {
       skipFirstFrames: 1,
       ySortingFromStage: null,
     ),
-    'cotton': CropData(
-      id: 'cotton',
-      harvestItemId: 'cotton_item',
+    'cotton': CropEntity(
+      cropId: 'cotton',
       name: 'Cotton',
       description: 'Soft white cotton',
-      daysToMature: null,
+      stage: CropStageType.planted,
+      daysPlanted: 0,
+      daysToMature: 0,
       yieldAmount: 3,
+      harvestItemId: 'cotton_item',
       requiredSeason: 'any',
       spritesheetPath: 'tiled/Modern_Farm_v1.2/tilesets/4_Crops_16x16.png',
       spriteWidth: 16,
@@ -193,13 +171,15 @@ final class CropDatabaseDef {
       skipFirstFrames: 1,
       ySortingFromStage: null,
     ),
-    'onion': CropData(
-      id: 'onion',
-      harvestItemId: 'onion_item',
+    'onion': CropEntity(
+      cropId: 'onion',
       name: 'Onion',
       description: 'A pungent bulb vegetable',
-      daysToMature: null,
+      stage: CropStageType.planted,
+      daysPlanted: 0,
+      daysToMature: 0,
       yieldAmount: 3,
+      harvestItemId: 'onion_item',
       requiredSeason: 'any',
       spritesheetPath: 'tiled/Modern_Farm_v1.2/tilesets/4_Crops_16x16.png',
       spriteWidth: 16,
@@ -209,13 +189,15 @@ final class CropDatabaseDef {
       skipFirstFrames: 1,
       ySortingFromStage: null,
     ),
-    'cauliflower': CropData(
-      id: 'cauliflower',
-      harvestItemId: 'cauliflower_item',
+    'cauliflower': CropEntity(
+      cropId: 'cauliflower',
       name: 'Cauliflower',
       description: 'A white flowering vegetable',
-      daysToMature: null,
+      stage: CropStageType.planted,
+      daysPlanted: 0,
+      daysToMature: 0,
       yieldAmount: 3,
+      harvestItemId: 'cauliflower_item',
       requiredSeason: 'any',
       spritesheetPath: 'tiled/Modern_Farm_v1.2/tilesets/4_Crops_16x16.png',
       spriteWidth: 16,
@@ -225,13 +207,15 @@ final class CropDatabaseDef {
       skipFirstFrames: 1,
       ySortingFromStage: null,
     ),
-    'corn': CropData(
-      id: 'corn',
-      harvestItemId: 'corn_item',
+    'corn': CropEntity(
+      cropId: 'corn',
       name: 'Corn',
       description: 'Sweet golden corn',
-      daysToMature: null,
+      stage: CropStageType.planted,
+      daysPlanted: 0,
+      daysToMature: 0,
       yieldAmount: 3,
+      harvestItemId: 'corn_item',
       requiredSeason: 'any',
       spritesheetPath: 'tiled/Modern_Farm_v1.2/tilesets/4_Crops_16x16.png',
       spriteWidth: 16,
@@ -241,13 +225,15 @@ final class CropDatabaseDef {
       skipFirstFrames: 1,
       ySortingFromStage: null,
     ),
-    'tomato': CropData(
-      id: 'tomato',
-      harvestItemId: 'tomato_item',
+    'tomato': CropEntity(
+      cropId: 'tomato',
       name: 'Tomato',
       description: 'Juicy red fruit, perfect for salads',
+      stage: CropStageType.seedling,
+      daysPlanted: 0,
       daysToMature: 4,
       yieldAmount: 3,
+      harvestItemId: 'tomato_item',
       requiredSeason: 'summer',
       spritesheetPath: 'tiled/Modern_Farm_v1.2/tilesets/4_Crops_16x16.png',
       spriteWidth: 16,
@@ -257,13 +243,15 @@ final class CropDatabaseDef {
       skipFirstFrames: 1,
       ySortingFromStage: CropStageType.seedling,
     ),
-    'grape': CropData(
-      id: 'grape',
-      harvestItemId: 'grape_item',
+    'grape': CropEntity(
+      cropId: 'grape',
       name: 'Grape',
       description: 'Sweet purple grapes',
-      daysToMature: null,
+      stage: CropStageType.planted,
+      daysPlanted: 0,
+      daysToMature: 0,
       yieldAmount: 3,
+      harvestItemId: 'grape_item',
       requiredSeason: 'any',
       spritesheetPath: 'tiled/Modern_Farm_v1.2/tilesets/4_Crops_16x16.png',
       spriteWidth: 16,
@@ -273,13 +261,15 @@ final class CropDatabaseDef {
       skipFirstFrames: 1,
       ySortingFromStage: null,
     ),
-    'prickly_pear': CropData(
-      id: 'prickly_pear',
-      harvestItemId: 'prickly_pear_item',
+    'prickly_pear': CropEntity(
+      cropId: 'prickly_pear',
       name: 'Prickly Pear',
       description: 'Desert cactus fruit',
-      daysToMature: null,
+      stage: CropStageType.planted,
+      daysPlanted: 0,
+      daysToMature: 0,
       yieldAmount: 3,
+      harvestItemId: 'prickly_pear_item',
       requiredSeason: 'any',
       spritesheetPath: 'tiled/Modern_Farm_v1.2/tilesets/4_Crops_16x16.png',
       spriteWidth: 16,
@@ -289,13 +279,15 @@ final class CropDatabaseDef {
       skipFirstFrames: 1,
       ySortingFromStage: null,
     ),
-    'coffee': CropData(
-      id: 'coffee',
-      harvestItemId: 'coffee_item',
+    'coffee': CropEntity(
+      cropId: 'coffee',
       name: 'Coffee',
       description: 'Aromatic coffee beans',
-      daysToMature: null,
+      stage: CropStageType.planted,
+      daysPlanted: 0,
+      daysToMature: 0,
       yieldAmount: 3,
+      harvestItemId: 'coffee_item',
       requiredSeason: 'any',
       spritesheetPath: 'tiled/Modern_Farm_v1.2/tilesets/4_Crops_16x16.png',
       spriteWidth: 16,
@@ -305,13 +297,15 @@ final class CropDatabaseDef {
       skipFirstFrames: 1,
       ySortingFromStage: null,
     ),
-    'zuchini': CropData(
-      id: 'zuchini',
-      harvestItemId: 'zuchini_item',
+    'zuchini': CropEntity(
+      cropId: 'zuchini',
       name: 'Zuchini',
       description: 'Green summer squash',
-      daysToMature: null,
+      stage: CropStageType.planted,
+      daysPlanted: 0,
+      daysToMature: 0,
       yieldAmount: 3,
+      harvestItemId: 'zuchini_item',
       requiredSeason: 'any',
       spritesheetPath: 'tiled/Modern_Farm_v1.2/tilesets/4_Crops_16x16.png',
       spriteWidth: 16,
@@ -321,13 +315,15 @@ final class CropDatabaseDef {
       skipFirstFrames: 1,
       ySortingFromStage: null,
     ),
-    'pumpkin': CropData(
-      id: 'pumpkin',
-      harvestItemId: 'pumpkin_item',
+    'pumpkin': CropEntity(
+      cropId: 'pumpkin',
       name: 'Pumpkin',
       description: 'Large orange pumpkin',
-      daysToMature: null,
+      stage: CropStageType.planted,
+      daysPlanted: 0,
+      daysToMature: 0,
       yieldAmount: 3,
+      harvestItemId: 'pumpkin_item',
       requiredSeason: 'any',
       spritesheetPath: 'tiled/Modern_Farm_v1.2/tilesets/4_Crops_16x16.png',
       spriteWidth: 16,
@@ -337,13 +333,15 @@ final class CropDatabaseDef {
       skipFirstFrames: 1,
       ySortingFromStage: null,
     ),
-    'pineapple': CropData(
-      id: 'pineapple',
-      harvestItemId: 'pineapple_item',
+    'pineapple': CropEntity(
+      cropId: 'pineapple',
       name: 'Pineapple',
       description: 'Tropical sweet fruit',
-      daysToMature: null,
+      stage: CropStageType.planted,
+      daysPlanted: 0,
+      daysToMature: 0,
       yieldAmount: 3,
+      harvestItemId: 'pineapple_item',
       requiredSeason: 'any',
       spritesheetPath: 'tiled/Modern_Farm_v1.2/tilesets/4_Crops_16x16.png',
       spriteWidth: 16,
@@ -353,13 +351,15 @@ final class CropDatabaseDef {
       skipFirstFrames: 1,
       ySortingFromStage: null,
     ),
-    'watermelon': CropData(
-      id: 'watermelon',
-      harvestItemId: 'watermelon_item',
+    'watermelon': CropEntity(
+      cropId: 'watermelon',
       name: 'Watermelon',
       description: 'Large juicy watermelon',
-      daysToMature: null,
+      stage: CropStageType.planted,
+      daysPlanted: 0,
+      daysToMature: 0,
       yieldAmount: 3,
+      harvestItemId: 'watermelon_item',
       requiredSeason: 'any',
       spritesheetPath: 'tiled/Modern_Farm_v1.2/tilesets/4_Crops_16x16.png',
       spriteWidth: 16,

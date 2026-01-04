@@ -2,13 +2,13 @@ import 'dart:developer' as developer;
 
 import 'package:darkness_dungeon/gameplay/database/crop_database.dart';
 
-import '../../world/entities/objects/farm/crop_stage_type.dart';
+import '../../world/entities/objects/farm/crop_entity.dart';
 import '../models/crop_model.dart';
 
 final class CropDatabase {
   CropDatabase._();
 
-  static final Map<String, CropData> _cropDatabase = {};
+  static final Map<String, CropEntity> _cropDatabase = {};
   static bool _isInitialized = false;
 
   static Future<void> initialize() async {
@@ -28,29 +28,29 @@ final class CropDatabase {
       return null;
     }
 
-    final cropData = _cropDatabase[cropId];
-    if (cropData == null) {
+    final template = _cropDatabase[cropId];
+    if (template == null) {
       developer.log('[CropDatabase] Crop not found: $cropId');
       return null;
     }
 
     return CropModel(
       cropId: cropId,
-      name: cropData.name,
-      description: cropData.description,
-      stage: CropStageType.planted,
+      name: template.name,
+      description: template.description,
+      stage: template.stage,
       daysPlanted: 0,
-      daysToMature: cropData.daysToMature ?? 0,
-      yieldAmount: cropData.yieldAmount,
-      harvestItemId: cropData.harvestItemId,
-      requiredSeason: cropData.requiredSeason,
-      spritesheetPath: cropData.spritesheetPath,
-      spriteWidth: cropData.spriteWidth,
-      spriteHeight: cropData.spriteHeight,
-      spriteRowIndex: cropData.spriteRowIndex,
-      framesCount: cropData.framesCount,
-      skipFirstFrames: cropData.skipFirstFrames,
-      ySortingFromStage: cropData.ySortingFromStage ?? CropStageType.planted,
+      daysToMature: template.daysToMature,
+      yieldAmount: template.yieldAmount,
+      harvestItemId: template.harvestItemId,
+      requiredSeason: template.requiredSeason,
+      spritesheetPath: template.spritesheetPath,
+      spriteWidth: template.spriteWidth,
+      spriteHeight: template.spriteHeight,
+      spriteRowIndex: template.spriteRowIndex,
+      framesCount: template.framesCount,
+      skipFirstFrames: template.skipFirstFrames,
+      ySortingFromStage: template.ySortingFromStage ?? template.stage,
     );
   }
 
@@ -60,13 +60,13 @@ final class CropDatabase {
     return _cropDatabase.entries
         .where((e) {
           final requiredSeason = e.value.requiredSeason;
-          return requiredSeason == 'any' || requiredSeason == season;
+          return requiredSeason == null || requiredSeason == 'any' || requiredSeason == season;
         })
         .map((e) => e.key)
         .toList();
   }
 
-  static CropData? getCropData(String cropId) {
+  static CropEntity? getCropData(String cropId) {
     return _cropDatabase[cropId];
   }
 
