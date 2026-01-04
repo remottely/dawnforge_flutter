@@ -1,17 +1,13 @@
-import 'dart:convert';
 import 'dart:developer' as developer;
-
-import 'package:flutter/services.dart' show rootBundle;
 
 import '../../world/entities/objects/farm/crop_entity.dart';
 import '../../world/entities/objects/farm/crop_stage_type.dart';
+import '../../data/game_data_constants.dart';
 
 /// Service for creating crops from JSON database (L2: Factory with JSON database, I2: Service = stateless)
 class CropFactoryService {
   final Map<String, Map<String, dynamic>> _database = {};
   bool _isInitialized = false;
-
-  static const String _kDatabasePath = 'assets/database/crops_database.json';
 
   /// Initialize the service by loading the crop database
   Future<void> initialize() async {
@@ -20,24 +16,18 @@ class CropFactoryService {
       return;
     }
 
-    try {
-      final jsonString = await rootBundle.loadString(_kDatabasePath);
-      final jsonData = jsonDecode(jsonString) as Map<String, dynamic>;
-
-      for (final entry in jsonData.entries) {
-        _database[entry.key] = entry.value as Map<String, dynamic>;
-      }
-
-      _isInitialized = true;
-      developer.log('[CropFactoryService] Loaded ${_database.length} crops');
-    } catch (e, stackTrace) {
-      developer.log(
-        '[CropFactoryService] ERROR loading database',
-        error: e,
-        stackTrace: stackTrace,
+    _database
+      ..clear()
+      ..addAll(
+        CropDbConstants.crops.map(
+          (key, value) => MapEntry(key, Map<String, dynamic>.from(value)),
+        ),
       );
-      rethrow;
-    }
+
+    _isInitialized = true;
+    developer.log(
+      '[CropFactoryService] Loaded ${_database.length} crops from constants',
+    );
   }
 
   /// Create a crop instance from the database by cropId
@@ -63,19 +53,18 @@ class CropFactoryService {
         name: cropData['name'] as String,
         description: cropData['description'] as String,
         // Trees start visible as seedlings; crops start as planted seeds.
-        // stage: isTree ? CropStageType.seedling : CropStageType.planted, // TODO(Kevin): review this, remove this
-        stage: CropStageType.planted,
+        stage: isTree ? CropStageType.seedling : CropStageType.planted,
         daysPlanted: 0,
-        daysToMature: cropData['daysToMature'] as int,
-        yieldAmount: cropData['yieldAmount'] as int,
+        daysToMature: _readInt(cropData['daysToMature'], defaultValue: 0),
+        yieldAmount: _readInt(cropData['yieldAmount'], defaultValue: 1),
         harvestItemId: cropData['harvestItemId'] as String,
         requiredSeason: cropData['requiredSeason'] as String?,
         spritesheetPath: cropData['spritesheetPath'] as String,
-        spriteWidth: (cropData['spriteWidth'] as int?) ?? 16,
-        spriteHeight: (cropData['spriteHeight'] as int?) ?? 16,
-        spriteRowIndex: cropData['spriteRowIndex'] as int,
-        framesCount: cropData['framesCount'] as int,
-        skipFirstFrames: (cropData['skipFirstFrames'] as int?) ?? 0,
+        spriteWidth: _readInt(cropData['spriteWidth'], defaultValue: 16),
+        spriteHeight: _readInt(cropData['spriteHeight'], defaultValue: 16),
+        spriteRowIndex: _readInt(cropData['spriteRowIndex'], defaultValue: 0),
+        framesCount: _readInt(cropData['framesCount'], defaultValue: 1),
+        skipFirstFrames: _readInt(cropData['skipFirstFrames'], defaultValue: 0),
         ySortingFromStage: CropStageType.fromJsonNullable(
           cropData['ySortingFromStage'] as String?,
         ),
@@ -120,4 +109,14 @@ class CropFactoryService {
 
   /// Check if service is initialized
   bool get isInitialized => _isInitialized;
+
+  int _readInt(Object? value, {required int defaultValue}) {
+    if (value is int) return value;
+    if (value is double) return value.round();
+    if (value is String) {
+      final parsed = int.tryParse(value);
+      if (parsed != null) return parsed;
+    }
+    return defaultValue;
+  }
 }

@@ -1,7 +1,4 @@
-import 'dart:convert';
 import 'dart:developer' as developer;
-
-import 'package:flutter/services.dart' show rootBundle;
 
 import '../database/item_icon_database.dart';
 import '../entities/item.dart';
@@ -13,19 +10,12 @@ import '../items/seed_item.dart';
 import '../items/tool_item.dart';
 import '../models/item_category.dart';
 import '../models/item_type.dart';
+import '../../data/game_data_constants.dart';
 
 /// Service for creating items from JSON database (L2: Factory with JSON database, I2: Service = External)
 class ItemFactoryService {
   final Map<String, Map<String, dynamic>> _itemDatabase = {};
   bool isInitialized = false;
-
-  static const List<String> _kDatabasePaths = [
-    'assets/database/items/weapons.json',
-    'assets/database/items/tools.json',
-    'assets/database/items/consumables.json',
-    'assets/database/items/materials.json',
-    'assets/database/items/seeds.json',
-  ];
 
   Future<void> initialize() async {
     if (isInitialized) {
@@ -39,36 +29,24 @@ class ItemFactoryService {
 
       final mergedDatabase = <String, Map<String, dynamic>>{};
 
-      Future<void> loadDatabase(String path) async {
-        final jsonString = await rootBundle.loadString(path);
-        final jsonData = jsonDecode(jsonString) as Map<String, dynamic>;
-        for (final entry in jsonData.entries) {
-          final value =
-              Map<String, dynamic>.from(entry.value as Map<String, dynamic>);
+      void merge(Map<String, Map<String, Object?>> source) {
+        for (final entry in source.entries) {
+          final value = Map<String, dynamic>.from(entry.value);
           value['id'] ??= entry.key;
           value['name'] ??= entry.key;
           mergedDatabase[entry.key] = value;
         }
       }
 
-      try {
-        for (final path in _kDatabasePaths) {
-          await loadDatabase(path);
-        }
+      merge(ItemDbConstants.weapons);
+      merge(ItemDbConstants.tools);
+      merge(ItemDbConstants.consumables);
+      merge(ItemDbConstants.materials);
+      merge(ItemDbConstants.seeds);
 
-        developer.log(
-          '[ItemFactoryService] Loaded ${mergedDatabase.length} items from split database (${_kDatabasePaths.length} files)',
-        );
-      } catch (e) {
-        developer.log(
-          '[ItemFactoryService] Split database unavailable, falling back to legacy file',
-          error: e,
-        );
-
-        developer.log(
-          '[ItemFactoryService] Loaded ${mergedDatabase.length} items from legacy database',
-        );
-      }
+      developer.log(
+        '[ItemFactoryService] Loaded ${mergedDatabase.length} items from constants',
+      );
 
       _itemDatabase
         ..clear()

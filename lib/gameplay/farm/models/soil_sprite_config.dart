@@ -1,7 +1,6 @@
-import 'dart:convert';
 import 'dart:developer' as developer;
 
-import 'package:flutter/services.dart';
+import '../../data/game_data_constants.dart';
 
 class SoilSpriteConfig {
   final String spritesheetPath;
@@ -37,12 +36,20 @@ class SoilSpriteConfig {
   static Future<SoilSpriteConfig> load() async {
     developer.log('[SoilSpriteConfig] Loading soil database...');
 
-    final jsonString = await rootBundle.loadString(
-      'assets/database/soil_database.json',
+    final config = SoilSpriteConfig(
+      spritesheetPath: SoilDbConstants.spritesheetPath,
+      spriteWidth: SoilDbConstants.spriteWidth,
+      spriteHeight: SoilDbConstants.spriteHeight,
+      soilStates: SoilDbConstants.soilStates.map(
+        (key, value) => MapEntry(
+          key,
+          SoilSpritePosition(
+            rowIndex: value['rowIndex']!,
+            columnIndex: value['columnIndex']!,
+          ),
+        ),
+      ),
     );
-    final jsonData = json.decode(jsonString) as Map<String, dynamic>;
-
-    final config = SoilSpriteConfig.fromJson(jsonData);
 
     developer.log(
       '[SoilSpriteConfig] ✅ Loaded ${config.soilStates.length} soil states from ${config.spritesheetPath}',

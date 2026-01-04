@@ -1,10 +1,8 @@
-import 'dart:convert';
 import 'dart:developer' as developer;
-
-import 'package:flutter/services.dart';
 
 import '../../world/entities/objects/farm/crop_stage_type.dart';
 import '../models/crop_model.dart';
+import '../../data/game_data_constants.dart';
 
 final class CropDatabase {
   CropDatabase._();
@@ -15,22 +13,12 @@ final class CropDatabase {
   static Future<void> initialize() async {
     if (_isInitialized) return;
 
-    try {
-      final jsonString = await rootBundle.loadString(
-        'assets/database/crops_database.json',
-      );
-      final jsonData = jsonDecode(jsonString) as Map<String, dynamic>;
-
-      for (var entry in jsonData.entries) {
-        _cropDatabase[entry.key] = entry.value as Map<String, dynamic>;
-      }
-
-      _isInitialized = true;
-      developer.log('[CropDatabase] Loaded ${_cropDatabase.length} crops');
-    } catch (e) {
-      developer.log('[CropDatabase] ERROR loading database: $e');
-      rethrow;
+    for (var entry in CropDbConstants.crops.entries) {
+      _cropDatabase[entry.key] = Map<String, dynamic>.from(entry.value);
     }
+
+    _isInitialized = true;
+    developer.log('[CropDatabase] Loaded ${_cropDatabase.length} crops');
   }
 
   static CropModel? createCrop(String cropId) {

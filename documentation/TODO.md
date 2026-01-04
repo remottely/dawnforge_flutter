@@ -30,7 +30,8 @@
 
 - [PRIORITY] 
 
-- [PRIORITY] 
+- [PRIORITY] prompt: leia o meu projeto, só oq for necessario para a conclusao da tarefa, crie um documento com todos os prompts necessarios para a refatoraca a seguir:
+preciso melhorar a organizacao dos itens do meu jogo como um todo, hj é tudo muito confuso e repetitivo, recrie toda a logica de configuracao(definitions), recuperacao e manipulacao desses dados para q fique mais centralizado, modularizado e sem repetição de logica. estou clonando stardew valley e preciso deixar redondo essa questao antes de lancar o jogo.
 
 - [PRIORITY] mudar "farm_tile" para "grid_tile"
 
