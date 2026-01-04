@@ -6,6 +6,7 @@ import '../entities/inventory_slot.dart';
 import '../managers/equipment_manager.dart';
 import '../managers/inventory_manager.dart';
 import '../services/item_factory_service.dart';
+import '../entities/hand_item_type.dart';
 
 /// UseCase for loading inventory state (E2: UseCase for Save/Load)
 class LoadInventoryUseCase {

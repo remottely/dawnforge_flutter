@@ -20,7 +20,7 @@ class AddItemUseCase {
   bool call(HandItemType itemId, int quantity) {
     if (quantity <= 0) return false;
 
-    final item = _itemFactory.createItem(itemId.name);
+    final item = _itemFactory.createItem(itemId);
     if (item == null) return false;
 
     return addItemEntity(item, quantity);

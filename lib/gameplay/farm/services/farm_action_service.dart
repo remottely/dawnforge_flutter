@@ -79,7 +79,7 @@ final class FarmActionService {
 
   bool _addHarvestToInventory(CropEntity crop) {
     final harvestItem = getIt<ItemFactoryService>().createItem(
-      crop.harvestItemId.name,
+      crop.harvestItemId,
     );
 
     if (harvestItem == null) {

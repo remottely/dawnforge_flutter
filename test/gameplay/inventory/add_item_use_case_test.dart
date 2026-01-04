@@ -81,7 +81,7 @@ void main() {
         (index) => InventorySlot(index: index),
       );
 
-      when(() => mockItemFactory.createItem(itemId.name)).thenReturn(mockItem);
+      when(() => mockItemFactory.createItem(itemId)).thenReturn(mockItem);
       when(() => mockInventoryManager.slots).thenReturn(emptySlots);
       when(
         () => mockInventoryManager.updateSlot(any(), any()),
@@ -92,7 +92,7 @@ void main() {
 
       // Assert
       expect(result, true);
-      verify(() => mockItemFactory.createItem(itemId.name)).called(1);
+      verify(() => mockItemFactory.createItem(itemId)).called(1);
       verify(() => mockInventoryManager.updateSlot(any(), any())).called(1);
     });
 
@@ -117,7 +117,7 @@ void main() {
         (index) => InventorySlot(index: index, item: mockItem, quantity: 1),
       );
 
-      when(() => mockItemFactory.createItem(itemId.name)).thenReturn(mockItem);
+      when(() => mockItemFactory.createItem(itemId)).thenReturn(mockItem);
       when(() => mockInventoryManager.slots).thenReturn(fullSlots);
 
       // Act
@@ -125,7 +125,7 @@ void main() {
 
       // Assert
       expect(result, false);
-      verify(() => mockItemFactory.createItem(itemId.name)).called(1);
+      verify(() => mockItemFactory.createItem(itemId)).called(1);
     });
   });
 }

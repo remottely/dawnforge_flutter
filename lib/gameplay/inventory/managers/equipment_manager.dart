@@ -1,5 +1,6 @@
 import 'dart:developer' as developer;
 
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_type.dart';
 import 'package:flutter/foundation.dart';
 
 import '../entities/hand_item.dart';
@@ -109,7 +110,7 @@ final class EquipmentManager {
 
   void fromJson(
     Map<String, dynamic> json,
-    HandItem? Function(String itemId) itemFactory,
+    HandItem? Function(HandItemType itemId) itemFactory,
   ) {
     _currentMainHandSlotIndex = json['selectedSlotIndex'] as int? ?? 0;
     // Clamp to available slots

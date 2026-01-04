@@ -1,4 +1,27 @@
 enum HandItemType {
+  /// todo
+  empty_seed_bag,
+  cabbage,
+  tomato,
+  pumpkin,
+  radish,
+  wheat,
+  corn,
+  watermelon,
+  onion,
+  grape,
+  pineapple,
+  carrot,
+  pepper,
+  zuchini,
+  strawberry,
+  apple,
+  prickly_pear,
+  cauliflower,
+  turnip,
+  cotton,
+  coffee,
+
   /// Seeds
   apple_seed_bag,
   cabbage_seed_bag,
@@ -23,16 +46,11 @@ enum HandItemType {
   grape_seed_bag,
   prickly_pear_seed_bag,
   coffee_seed_bag,
-  carrot,
   zuchini_seed_bag,
   pumpkin_seed_bag,
   pineapple_seed_bag,
   watermelon_seed_bag,
 
-  strawberry,
-  apple,
-  tomato,
-  radish,
   harvestBasket,
 
   /// Tools

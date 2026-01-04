@@ -75,7 +75,7 @@ class ItemFactoryService {
     }
   }
 
-  HandItem? createItem(String itemId) {
+  HandItem? createItem(HandItemType itemId) {
     if (!isInitialized) {
       developer.log(
         '[ItemFactoryService] ERROR: Not initialized! Call initialize() first',
@@ -84,30 +84,29 @@ class ItemFactoryService {
     }
 
     try {
-      final idEnum = HandItemType.fromJson(itemId);
       final iconData = ItemIconDatabase().getIconData(itemId);
 
-      final weapon = _weapons[idEnum];
+      final weapon = _weapons[itemId];
       if (weapon != null) {
         return weapon.copyWith(iconData: iconData);
       }
 
-      final tool = _tools[idEnum];
+      final tool = _tools[itemId];
       if (tool != null) {
         return tool.copyWith(iconData: iconData);
       }
 
-      final consumable = _consumables[idEnum];
+      final consumable = _consumables[itemId];
       if (consumable != null) {
         return consumable.copyWith(iconData: iconData);
       }
 
-      final seed = _seeds[idEnum];
+      final seed = _seeds[itemId];
       if (seed != null) {
         return seed.copyWith(iconData: iconData);
       }
 
-      final material = _materials[idEnum];
+      final material = _materials[itemId];
       if (material != null) {
         return material.copyWith(iconData: iconData);
       }
@@ -124,7 +123,7 @@ class ItemFactoryService {
     }
   }
 
-  List<HandItem> createItems(List<String> itemIds) {
+  List<HandItem> createItems(List<HandItemType> itemIds) {
     return itemIds.map(createItem).whereType<HandItem>().toList();
   }
 
@@ -139,7 +138,7 @@ class ItemFactoryService {
   }
 
   bool hasItem(String itemId) {
-    final idEnum = HandItemType.fromJson(itemId);
+    final idEnum = HandItemType.fromString(itemId);
     return _weapons.containsKey(idEnum) ||
         _tools.containsKey(idEnum) ||
         _consumables.containsKey(idEnum) ||

@@ -73,7 +73,7 @@ class PlantSeedUseCase {
     final crop = _cropFactory.createCrop(cropId.name);
     if (crop == null) {
       developer.log(
-        'PlantSeedUseCase: Failed to create crop from id "${cropId.name}"',
+        'PlantSeedUseCase: Failed to create crop from id "$cropId"',
         name: 'farm.usecases.plant_seed',
         level: 1000, // ERROR
       );

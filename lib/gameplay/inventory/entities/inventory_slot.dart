@@ -1,3 +1,4 @@
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item_type.dart';
 import 'package:equatable/equatable.dart';
 
 import 'hand_item.dart';
@@ -51,12 +52,12 @@ final class InventorySlot extends Equatable {
   /// Deserialization with item resolver
   static InventorySlot fromJson(
     Map<String, dynamic> json,
-    HandItem? Function(String) itemResolver,
+    HandItem? Function(HandItemType) itemResolver,
   ) {
     final itemId = json['itemId'] as String?;
     return InventorySlot(
       index: json['index'] as int,
-      item: itemId != null ? itemResolver(itemId) : null,
+      item: itemId != null ? itemResolver(HandItemType.fromJson(itemId)) : null,
       quantity: json['quantity'] as int? ?? 0,
     );
   }
