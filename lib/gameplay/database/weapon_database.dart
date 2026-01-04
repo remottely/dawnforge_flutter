@@ -1,44 +1,12 @@
+import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
 import 'package:darkness_dungeon/gameplay/inventory/models/item_rarity.dart';
-
-class WeaponData {
-  final String id;
-  final String name;
-  final String description;
-  final ItemRarity rarity;
-  final int baseValue;
-  final String iconPath;
-  final int damage;
-  final double attackSpeed;
-  final double critChance;
-  final double critMultiplier;
-  final String equippedHandType;
-  final String? cropId;
-  final bool isStackable;
-  final int maxStackSize;
-
-  const WeaponData({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.rarity,
-    required this.baseValue,
-    required this.iconPath,
-    required this.damage,
-    required this.attackSpeed,
-    required this.critChance,
-    required this.critMultiplier,
-    required this.equippedHandType,
-    this.cropId,
-    this.isStackable = false,
-    this.maxStackSize = 1,
-  });
-}
 
 final class ItemWeaponDatabaseDef {
   ItemWeaponDatabaseDef._();
 
-  static const Map<String, WeaponData> weapons = {
-    'harvestBasket': WeaponData(
+  static const Map<String, MainHandItem> weapons = {
+    'harvestBasket': MainHandItem(
       id: 'harvestBasket',
       name: 'Harvest Basket',
       description: 'TODO',
@@ -49,9 +17,9 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.2,
       critChance: 0.05,
       critMultiplier: 1.5,
-      equippedHandType: 'harvestBasket',
+      equippedHandType: EquippedHandType.harvestBasket,
     ),
-    'strawberry': WeaponData(
+    'strawberry': MainHandItem(
       id: 'strawberry',
       name: 'Strawberry',
       description: 'TODO',
@@ -62,9 +30,9 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.2,
       critChance: 0.05,
       critMultiplier: 1.5,
-      equippedHandType: 'strawberry',
+      equippedHandType: EquippedHandType.strawberry,
     ),
-    'apple': WeaponData(
+    'apple': MainHandItem(
       id: 'apple',
       name: 'Apple',
       description: 'TODO',
@@ -75,9 +43,9 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.2,
       critChance: 0.05,
       critMultiplier: 1.5,
-      equippedHandType: 'apple',
+      equippedHandType: EquippedHandType.apple,
     ),
-    'tomato': WeaponData(
+    'tomato': MainHandItem(
       id: 'tomato',
       name: 'Tomato',
       description: 'TODO',
@@ -88,9 +56,9 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.2,
       critChance: 0.05,
       critMultiplier: 1.5,
-      equippedHandType: 'tomato',
+      equippedHandType: EquippedHandType.tomato,
     ),
-    'strawberry_seed_bag': WeaponData(
+    'strawberry_seed_bag': MainHandItem(
       id: 'strawberry_seed_bag',
       name: 'Strawberry Seed Bag',
       description: 'Plant these to grow strawberries',
@@ -101,12 +69,12 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.0,
       critChance: 0.0,
       critMultiplier: 1.0,
-      equippedHandType: 'strawberry_seed_bag',
+      equippedHandType: EquippedHandType.strawberry_seed_bag,
       cropId: 'strawberry',
       isStackable: true,
       maxStackSize: 99,
     ),
-    'apple_seed_bag': WeaponData(
+    'apple_seed_bag': MainHandItem(
       id: 'apple_seed_bag',
       name: 'Apple Seed Bag',
       description: 'Plant these to grow apples',
@@ -117,12 +85,12 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.0,
       critChance: 0.0,
       critMultiplier: 1.0,
-      equippedHandType: 'apple_seed_bag',
+      equippedHandType: EquippedHandType.apple_seed_bag,
       cropId: 'apple',
       isStackable: true,
       maxStackSize: 99,
     ),
-    'radish_seed_bag': WeaponData(
+    'radish_seed_bag': MainHandItem(
       id: 'radish_seed_bag',
       name: 'Radish Seed Bag',
       description: 'Plant these to grow radishes',
@@ -133,12 +101,12 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.0,
       critChance: 0.0,
       critMultiplier: 1.0,
-      equippedHandType: 'radish_seed_bag',
+      equippedHandType: EquippedHandType.radish_seed_bag,
       cropId: 'radish',
       isStackable: true,
       maxStackSize: 99,
     ),
-    'tomato_seed_bag': WeaponData(
+    'tomato_seed_bag': MainHandItem(
       id: 'tomato_seed_bag',
       name: 'Tomato Seed Bag',
       description: 'Plant these to grow tomatoes',
@@ -149,12 +117,12 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.0,
       critChance: 0.0,
       critMultiplier: 1.0,
-      equippedHandType: 'tomato_seed_bag',
+      equippedHandType: EquippedHandType.tomato_seed_bag,
       cropId: 'tomato',
       isStackable: true,
       maxStackSize: 99,
     ),
-    'shovel': WeaponData(
+    'shovel': MainHandItem(
       id: 'shovel',
       name: 'Shovel',
       description: 'TODO',
@@ -165,9 +133,9 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.2,
       critChance: 0.05,
       critMultiplier: 1.5,
-      equippedHandType: 'shovel',
+      equippedHandType: EquippedHandType.shovel,
     ),
-    'wateringCan': WeaponData(
+    'wateringCan': MainHandItem(
       id: 'wateringCan',
       name: 'Watering Can',
       description: 'TODO',
@@ -178,9 +146,9 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.2,
       critChance: 0.05,
       critMultiplier: 1.5,
-      equippedHandType: 'wateringCan',
+      equippedHandType: EquippedHandType.wateringCan,
     ),
-    'staff': WeaponData(
+    'staff': MainHandItem(
       id: 'staff',
       name: 'Staff',
       description: 'TODO',
@@ -191,9 +159,9 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.2,
       critChance: 0.05,
       critMultiplier: 1.5,
-      equippedHandType: 'staff',
+      equippedHandType: EquippedHandType.staff,
     ),
-    'ironSword': WeaponData(
+    'ironSword': MainHandItem(
       id: 'ironSword',
       name: 'Iron Sword',
       description: 'A sturdy iron sword for basic combat',
@@ -204,9 +172,9 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.2,
       critChance: 0.05,
       critMultiplier: 1.5,
-      equippedHandType: 'ironSword',
+      equippedHandType: EquippedHandType.ironSword,
     ),
-    'steel_axe': WeaponData(
+    'steel_axe': MainHandItem(
       id: 'steel_axe',
       name: 'Steel Axe',
       description: 'A heavy steel axe with high damage',
@@ -217,9 +185,9 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 0.8,
       critChance: 0.08,
       critMultiplier: 1.8,
-      equippedHandType: 'axe',
+      equippedHandType: EquippedHandType.axe,
     ),
-    'legendary_blade': WeaponData(
+    'legendary_blade': MainHandItem(
       id: 'legendary_blade',
       name: 'Legendary Blade',
       description: 'A mythical sword forged by ancient smiths',
@@ -230,9 +198,9 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.5,
       critChance: 0.25,
       critMultiplier: 2.5,
-      equippedHandType: 'sword',
+      equippedHandType: EquippedHandType.sword,
     ),
-    'fire_staff': WeaponData(
+    'fire_staff': MainHandItem(
       id: 'fire_staff',
       name: 'Fire Staff',
       description: 'A magical staff that shoots fireballs',
@@ -243,9 +211,9 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.0,
       critChance: 0.1,
       critMultiplier: 2.0,
-      equippedHandType: 'staff',
+      equippedHandType: EquippedHandType.staff,
     ),
-    'ice_wand': WeaponData(
+    'ice_wand': MainHandItem(
       id: 'ice_wand',
       name: 'Ice Wand',
       description: 'A magical wand that shoots ice projectiles',
@@ -256,7 +224,7 @@ final class ItemWeaponDatabaseDef {
       attackSpeed: 1.3,
       critChance: 0.07,
       critMultiplier: 1.6,
-      equippedHandType: 'wand',
+      equippedHandType: EquippedHandType.wand,
     ),
   };
 }

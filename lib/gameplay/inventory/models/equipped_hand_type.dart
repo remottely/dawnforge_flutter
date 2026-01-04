@@ -21,11 +21,17 @@ enum EquippedHandType {
   pineapple_seed_bag,
   watermelon_seed_bag,
 
+  strawberry,
+  apple,
+  tomato,
+
   /// Tools
   shovel,
   wateringCan,
   harvestBasket,
   axe,
+  sword,
+  wand,
 
   /// Weapons
   ironSword,
@@ -70,6 +76,8 @@ enum EquippedHandType {
 
   bool get isCombatWeapon =>
       this == ironSword ||
+      this == sword ||
+      this == wand ||
       // this == axe || // TODO(Kevin): define axe isCombatWeapon?
       this == staff;
 

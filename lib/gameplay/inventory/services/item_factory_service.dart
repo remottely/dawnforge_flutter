@@ -3,10 +3,10 @@ import 'dart:developer' as developer;
 import 'package:darkness_dungeon/gameplay/inventory/items/consumable_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/material_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/tool_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
 
 import '../database/item_icon_database.dart';
 import '../entities/item.dart';
-import '../items/main_hand_item.dart';
 import '../items/seed_item.dart';
 import '../models/equipped_hand_type.dart';
 import '../../database/weapon_database.dart';
@@ -17,7 +17,7 @@ import '../../database/seed_database.dart';
 
 /// Service for creating items from JSON database (L2: Factory with JSON database, I2: Service = External)
 class ItemFactoryService {
-  final Map<String, WeaponData> _weapons = {};
+  final Map<String, MainHandItem> _weapons = {};
   final Map<String, ToolItem> _tools = {};
   final Map<String, ConsumableItem> _consumables = {};
   final Map<String, MaterialItem> _materials = {};
@@ -86,26 +86,9 @@ class ItemFactoryService {
     try {
       final iconData = ItemIconDatabase().getIconData(itemId);
 
-      final weaponData = _weapons[itemId];
-      if (weaponData != null) {
-        return MainHandItem(
-          id: weaponData.id,
-          name: weaponData.name,
-          description: weaponData.description,
-          baseValue: weaponData.baseValue,
-          iconPath: weaponData.iconPath,
-          rarity: weaponData.rarity,
-          damage: weaponData.damage,
-          attackSpeed: weaponData.attackSpeed,
-          critChance: weaponData.critChance,
-          critMultiplier: weaponData.critMultiplier,
-          equippedHandType:
-              EquippedHandType.fromJson(weaponData.equippedHandType),
-          cropId: weaponData.cropId,
-          iconData: iconData,
-          isStackable: weaponData.isStackable,
-          maxStackSize: weaponData.maxStackSize,
-        );
+      final weapon = _weapons[itemId];
+      if (weapon != null) {
+        return weapon.copyWith(iconData: iconData);
       }
 
       final tool = _tools[itemId];

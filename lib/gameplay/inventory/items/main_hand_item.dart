@@ -1,5 +1,6 @@
 import '../models/equipped_hand_type.dart';
 import '../entities/item.dart';
+import '../models/item_icon_data.dart';
 import '../models/item_rarity.dart';
 import '../models/item_type.dart';
 
@@ -93,6 +94,7 @@ final class MainHandItem extends Item {
     String? cropId,
     bool? isStackable,
     int? maxStackSize,
+    ItemIconData? iconData,
   }) {
     return MainHandItem(
       id: id ?? this.id,
@@ -109,6 +111,7 @@ final class MainHandItem extends Item {
       cropId: cropId ?? this.cropId,
       isStackable: isStackable ?? this.isStackable,
       maxStackSize: maxStackSize ?? this.maxStackSize,
+      iconData: iconData ?? this.iconData,
     );
   }
 }
