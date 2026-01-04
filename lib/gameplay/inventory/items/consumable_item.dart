@@ -7,7 +7,6 @@ import '../models/item_type.dart';
 final class ConsumableItem extends HandItem {
   final int healthRestore;
   final int staminaRestore;
-  final int duration;
 
   const ConsumableItem({
     required super.id,
@@ -22,10 +21,7 @@ final class ConsumableItem extends HandItem {
     super.iconData,
     this.healthRestore = 0,
     this.staminaRestore = 0,
-    this.duration = 0,
   });
-
-  bool get isInstant => duration == 0;
 
   @override
   Map<String, dynamic> toJson() {
@@ -40,7 +36,6 @@ final class ConsumableItem extends HandItem {
       'maxStackSize': maxStackSize,
       'healthRestore': healthRestore,
       'staminaRestore': staminaRestore,
-      'duration': duration,
     };
   }
 
@@ -58,7 +53,6 @@ final class ConsumableItem extends HandItem {
       // Fallback: some data uses healAmount instead of healthRestore/staminaRestore
       healthRestore: json['healthRestore'] as int? ?? healAmount ?? 0,
       staminaRestore: json['staminaRestore'] as int? ?? healAmount ?? 0,
-      duration: json['duration'] as int? ?? 0,
     );
   }
 
@@ -86,7 +80,6 @@ final class ConsumableItem extends HandItem {
       maxStackSize: maxStackSize ?? this.maxStackSize,
       healthRestore: healthRestore ?? this.healthRestore,
       staminaRestore: staminaRestore ?? this.staminaRestore,
-      duration: duration ?? this.duration,
       iconData: iconData ?? this.iconData,
     );
   }
