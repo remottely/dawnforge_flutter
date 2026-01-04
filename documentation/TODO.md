@@ -1,5 +1,39 @@
 # IMPORTANT BEFORE LAUNCH:
 
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] 
+
+- [PRIORITY] mudar "farm_tile" para "grid_tile"
+
 - [NOT_PRIORITY] criar um programa dart com todos os meus itens do jogo de maneira tipada e q a partir desta configuracao tipada ele cria os meus json database assets posteriormente evitando erros durante a execucao do jogo. ou inicialmente apenas criando arquivos definitions ja definindo diretamente no jogo??
 
 - [NOT_PRIORITY] mudar todos os inputs do jogo para se alinhar com SV

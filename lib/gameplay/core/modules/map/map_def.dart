@@ -78,16 +78,24 @@ final class MapDef {
         'farm_tile': (p) => FarmTileView(position: p.position),
       };
 
+  /// Official Maps
+  static const String kFarmMapId = 'farm_map';
+  static const String kTownMapId = 'town_map';
+  static const String kForestMapId = 'forest_map';
+  static const String kLakeMapId = 'lake_map';
+  static const String kBeachMapId = 'beach_map';
+  static const String kCaveMapId = 'cave_map';
+
   // /// F Maps
   // static const String kF1Id = 'f_1';
 
-  /// SB Maps
-  static const String kSBFarmId = 'sb_farm';
-  static const String kSBTownId = 'sb_town';
-  static const String kSBForestId = 'sb_forest';
-  static const String kSBLakeId = 'sb_lake';
-  static const String kSBBeachId = 'sb_beach';
-  static const String kSBCaveId = 'sb_cave';
+  // /// SB Maps
+  // static const String kSBFarmId = 'sb_farm';
+  // static const String kSBTownId = 'sb_town';
+  // static const String kSBForestId = 'sb_forest';
+  // static const String kSBLakeId = 'sb_lake';
+  // static const String kSBBeachId = 'sb_beach';
+  // static const String kSBCaveId = 'sb_cave';
 
   // /// SV Maps
   // static const String kSVFarmId = 'sv_farm';
@@ -134,20 +142,35 @@ final class MapDef {
     //   initialPlayerPosition: '10,10',
     // ),
 
-    /// SB MAPS
+    /// Official Maps
     MapData(
-      id: kSBFarmId,
-      asset: 'tiled/small_burg/maps/$kSBFarmId.json',
+      id: kFarmMapId,
+      asset: 'tiled/maps/$kFarmMapId.json',
       sensorIds: [
-        'sensor_$kSBForestId',
-        'sensor_$kSBTownId',
-        'sensor_$kSBLakeId',
+        'sensor_$kForestMapId',
+        'sensor_$kTownMapId',
+        'sensor_$kLakeMapId',
       ],
-      backgroundMusic: AudioDef.bGMusicFarm,
+      backgroundMusic: AudioDef.bgMusicFarm,
       lightingColor: _kNoneLightingColor,
       backgroundColor: _kLakeBackgroundColor,
       initialPlayerPosition: '52,20',
     ),
+
+    // /// SB MAPS
+    // MapData(
+    //   id: kSBFarmId,
+    //   asset: 'tiled/small_burg/maps/$kSBFarmId.json',
+    //   sensorIds: [
+    //     'sensor_$kSBForestId',
+    //     'sensor_$kSBTownId',
+    //     'sensor_$kSBLakeId',
+    //   ],
+    //   backgroundMusic: AudioDef.bGMusicFarm,
+    //   lightingColor: _kNoneLightingColor,
+    //   backgroundColor: _kLakeBackgroundColor,
+    //   initialPlayerPosition: '52,20',
+    // ),
 
     // /// SV MAPS
     // MapData(

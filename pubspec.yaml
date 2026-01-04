@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.87.12+1
+version: 1.87.13+1
 
 environment:
   sdk: ^3.8.1
@@ -301,16 +301,19 @@ flutter:
     # ------------------------ DEMO ------------------------------------
     # SmallBurg Assets
     # === TILED - SmallBurg Tileset JSON Definitions ===
-    - assets/images/tiled/smallburg_winter_terrain.json
+    # - assets/images/tiled/smallburg_winter_terrain.json
     - assets/images/tiled/treesn_bushes_seasons.json
     - assets/images/tiled/SmallBurg_outside_assets.json
+    - assets/images/tiled/smallburg_terrain_spring.json
 
     # === TILED - SmallBurg Tileset (used by small_burg maps) ===
-    - assets/images/tiled/SmallBurg_village_pack_v3.18.1_commercial/assets/tileset_v2/terrain/smallburg_winter_terrain.png
+    # - assets/images/tiled/SmallBurg_village_pack_v3.18.1_commercial/assets/tileset_v2/terrain/smallburg_winter_terrain.png
+    - assets/images/tiled/SmallBurg_village_pack_v3.18.1_commercial/assets/tileset_v2/terrain/smallburg_terrain_spring.png
     - assets/images/tiled/SmallBurg_village_pack_v3.18.1_commercial/assets/tileset_v2/treesn_bushes_seasons.png
     - assets/images/tiled/SmallBurg_village_pack_v3.18.1_commercial/assets/tileset_v2/SmallBurg_outside_assets.png
 
-    - assets/images/tiled/small_burg/maps/sb_farm.json
+    # - assets/images/tiled/small_burg/maps/sb_farm.json # TODO(Kevin): remove it from all project
+    - assets/images/tiled/maps/farm_map.json
 
     - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_idle_full_light_demo.png
     - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_run_full_light_with_dust_specs_demo.png

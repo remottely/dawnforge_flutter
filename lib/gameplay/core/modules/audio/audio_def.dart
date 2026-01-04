@@ -29,13 +29,13 @@ final class AudioDef {
 
   // static const backgroundMusic1 = 'music/Keys Of Moon - Enchanted.mp3';
 
-  static const bGMusicFarm = 'bg/music/farm - PhaseShift.mp3';
-  static const bGMusicTown = 'bg/music/town - Scott Buckley - Clarion.mp3';
-  static const bGMusicForest = 'bg/music/forest - Savfk - Rounding.mp3';
-  static const bGMusicLake =
+  static const bgMusicFarm = 'bg/music/farm - PhaseShift.mp3';
+  static const bgMusicTown = 'bg/music/town - Scott Buckley - Clarion.mp3';
+  static const bgMusicForest = 'bg/music/forest - Savfk - Rounding.mp3';
+  static const bgMusicLake =
       'bg/music/lake - Justin Allan Arnold - Antigone.mp3';
-  static const bGMusicBeach = 'bg/music/beach - Glitch - Prehistory.mp3';
-  static const bGMusicCaveBoss = 'bg/music/cave_boss - RitesOfPassage.mp3';
+  static const bgMusicBeach = 'bg/music/beach - Glitch - Prehistory.mp3';
+  static const bgMusicCaveBoss = 'bg/music/cave_boss - RitesOfPassage.mp3';
 
   static const List<String> kPreloadAudioFiles = [
     kSfxPlayerAttackAsset,
@@ -47,11 +47,11 @@ final class AudioDef {
     // kMusicRo1DeathHexBackgroundAsset,
     // kMusicRo1LettersBackgroundAsset,
     // kMusicBossBattleBackgroundAsset,
-    bGMusicFarm,
-    bGMusicTown,
-    bGMusicForest,
-    bGMusicLake,
-    bGMusicBeach,
-    bGMusicCaveBoss,
+    bgMusicFarm,
+    bgMusicTown,
+    bgMusicForest,
+    bgMusicLake,
+    bgMusicBeach,
+    bgMusicCaveBoss,
   ];
 }
