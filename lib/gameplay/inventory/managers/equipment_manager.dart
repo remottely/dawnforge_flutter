@@ -4,7 +4,7 @@ import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_id.d
 import 'package:flutter/foundation.dart';
 
 import '../entities/hand/hand_item.dart';
-import '../items/main_hand_item.dart';
+import '../items/weapon_item.dart';
 import 'inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/state/equipment_state.dart';
 
@@ -79,14 +79,14 @@ final class EquipmentManager {
   int getTotalDamage() {
     final mainHand = getEquippedItem();
     if (mainHand == null) return 0;
-    if (mainHand is MainHandItem) return mainHand.damage;
+    if (mainHand is WeaponItem) return mainHand.damage;
     return 0;
   }
 
   double getTotalDps() {
     final mainHand = getEquippedItem();
     if (mainHand == null) return 0;
-    if (mainHand is MainHandItem) return mainHand.dps;
+    if (mainHand is WeaponItem) return mainHand.dps;
     return 0;
   }
 

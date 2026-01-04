@@ -1,6 +1,6 @@
 import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/consumable_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/material_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/seed_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/tool_item.dart';
@@ -26,10 +26,10 @@ void main() {
       final item = getIt<ItemFactoryService>().createItem('iron_sword');
 
       expect(item, isNotNull);
-      expect(item, isA<MainHandItem>());
+      expect(item, isA<WeaponItem>());
       expect(item!.id, equals('iron_sword'));
       expect(item.name, equals('Iron Sword'));
-      expect((item as MainHandItem).damage, equals(15));
+      expect((item as WeaponItem).damage, equals(15));
     });
 
     test('create_tool_item_returns_correct_type', () {
@@ -93,7 +93,7 @@ void main() {
       ]);
 
       expect(items.length, equals(3));
-      expect(items[0], isA<MainHandItem>());
+      expect(items[0], isA<WeaponItem>());
       expect(items[1], isA<ConsumableItem>());
       expect(items[2], isA<MaterialItem>());
     });
@@ -102,7 +102,7 @@ void main() {
       final item = getIt<ItemFactoryService>().createItem('legendary_blade');
 
       expect(item, isNotNull);
-      expect(item, isA<MainHandItem>());
+      expect(item, isA<WeaponItem>());
       expect(item!.sellValue, greaterThan(item.baseValue));
     });
 
@@ -123,12 +123,12 @@ void main() {
 
     test('weapon_dps_calculation', () {
       final sword =
-          getIt<ItemFactoryService>().createItem('iron_sword') as MainHandItem?;
+          getIt<ItemFactoryService>().createItem('iron_sword') as WeaponItem?;
       expect(sword, isNotNull);
       expect(sword!.dps, greaterThan(sword.damage.toDouble()));
 
       final axe =
-          getIt<ItemFactoryService>().createItem('steel_axe') as MainHandItem?;
+          getIt<ItemFactoryService>().createItem('steel_axe') as WeaponItem?;
       expect(axe, isNotNull);
       // Machado tem mais dano mas menos velocidade
       expect(axe!.damage, greaterThan(sword.damage));

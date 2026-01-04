@@ -3,7 +3,7 @@ import 'dart:developer' as developer;
 import 'package:darkness_dungeon/gameplay/inventory/items/consumable_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/material_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/tool_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
 
 import '../database/item_icon_database.dart';
 import '../entities/hand/hand_item.dart';
@@ -17,7 +17,7 @@ import '../../database/seed_database.dart';
 
 /// Service for creating items from JSON database (L2: Factory with JSON database, I2: Service = External)
 class ItemFactoryService {
-  final Map<HandItemId, MainHandItem> _weapons = {};
+  final Map<HandItemId, WeaponItem> _weapons = {};
   final Map<HandItemId, ToolItem> _tools = {};
   final Map<HandItemId, ConsumableItem> _consumables = {};
   final Map<HandItemId, MaterialItem> _materials = {};
@@ -36,7 +36,7 @@ class ItemFactoryService {
 
       _weapons
         ..clear()
-        ..addAll(ItemWeaponDatabaseDef.weapons);
+        ..addAll(WeaponDatabaseDef.weapons);
 
       _tools
         ..clear()

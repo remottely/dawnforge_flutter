@@ -1,13 +1,13 @@
 import 'dart:developer' as developer;
 
-import '../../inventory/items/main_hand_item.dart';
+import '../../inventory/items/weapon_item.dart';
 import '../../inventory/entities/hand/hand_item_id.dart';
 import '../../world/entities/world_entities.dart';
 
 /// Service for validating farm tool usage (I2: Service = stateless)
 class FarmToolService {
   /// Check if a tool can be used on a specific tile
-  bool canUseTool(MainHandItem tool, GridTile tile) {
+  bool canUseTool(WeaponItem tool, GridTile tile) {
     final farmObject = tile.object as FarmObject?;
     if (farmObject == null) return false;
 
@@ -82,7 +82,7 @@ class FarmToolService {
   }
 
   /// Get the crop ID from a tool (if it's a seed)
-  String? getCropIdFromTool(MainHandItem tool) {
+  String? getCropIdFromTool(WeaponItem tool) {
     if (!tool.equippedHandType.isSeed) return null;
     return tool.cropId;
   }

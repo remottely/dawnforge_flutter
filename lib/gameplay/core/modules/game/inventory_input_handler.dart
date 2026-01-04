@@ -9,7 +9,7 @@ import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.d
 import 'package:darkness_dungeon/gameplay/inventory/state/inventory_state.dart';
 import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
 import 'package:darkness_dungeon/gameplay/inventory/usecases/add_item_use_case.dart';
-import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_id.dart';
 
 /// Handles inventory and equipment inputs from both keyboard and joystick/mobile
@@ -230,7 +230,7 @@ class InventoryInputHandler extends GameComponent
 
     if (success) {
       final item = inventoryManager.getSlotByIndex(nextIndex)?.item;
-      final handSuffix = item is MainHandItem
+      final handSuffix = item is WeaponItem
           ? ' (${item.equippedHandType})'
           : '';
       final itemName = item?.name ?? 'vazio';
@@ -266,7 +266,7 @@ class InventoryInputHandler extends GameComponent
 
     if (success) {
       final item = inventoryManager.getSlotByIndex(previousIndex)?.item;
-      final handSuffix = item is MainHandItem
+      final handSuffix = item is WeaponItem
           ? ' (${item.equippedHandType})'
           : '';
       final itemName = item?.name ?? 'vazio';
@@ -290,7 +290,7 @@ class InventoryInputHandler extends GameComponent
 
   void _handleSelectedSlotChanged() {
     final selectedItem = getIt<EquipmentManager>().getEquippedItem();
-    final equippedHandType = selectedItem is MainHandItem
+    final equippedHandType = selectedItem is WeaponItem
         ? selectedItem.equippedHandType
         : null;
     _notifyEquipmentChanged(equippedHandType);

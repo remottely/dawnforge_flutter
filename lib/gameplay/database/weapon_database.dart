@@ -1,14 +1,14 @@
-import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_id.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_rarity.dart';
 
-final class ItemWeaponDatabaseDef {
-  ItemWeaponDatabaseDef._();
+final class WeaponDatabaseDef {
+  WeaponDatabaseDef._();
 
   /// Authoritative weapon definitions keyed by EquippedHandType to keep
   /// id/equippedHandType/map key aligned.
-  static const Map<HandItemId, MainHandItem> weaponsByHandType = {
-    HandItemId.harvestBasket: MainHandItem(
+  static const Map<HandItemId, WeaponItem> weaponsByHandType = {
+    HandItemId.harvestBasket: WeaponItem(
       id: HandItemId.harvestBasket,
       name: 'Harvest Basket',
       description: 'TODO',
@@ -21,7 +21,7 @@ final class ItemWeaponDatabaseDef {
       critMultiplier: 1.5,
       equippedHandType: HandItemId.harvestBasket,
     ),
-    HandItemId.strawberry: MainHandItem(
+    HandItemId.strawberry: WeaponItem(
       id: HandItemId.strawberry,
       name: 'Strawberry',
       description: 'TODO',
@@ -34,7 +34,7 @@ final class ItemWeaponDatabaseDef {
       critMultiplier: 1.5,
       equippedHandType: HandItemId.strawberry,
     ),
-    HandItemId.apple: MainHandItem(
+    HandItemId.apple: WeaponItem(
       id: HandItemId.apple,
       name: 'Apple',
       description: 'TODO',
@@ -47,7 +47,7 @@ final class ItemWeaponDatabaseDef {
       critMultiplier: 1.5,
       equippedHandType: HandItemId.apple,
     ),
-    HandItemId.tomato: MainHandItem(
+    HandItemId.tomato: WeaponItem(
       id: HandItemId.tomato,
       name: 'Tomato',
       description: 'TODO',
@@ -60,7 +60,7 @@ final class ItemWeaponDatabaseDef {
       critMultiplier: 1.5,
       equippedHandType: HandItemId.tomato,
     ),
-    HandItemId.strawberry_seed_bag: MainHandItem(
+    HandItemId.strawberry_seed_bag: WeaponItem(
       id: HandItemId.strawberry_seed_bag,
       name: 'Strawberry Seed Bag',
       description: 'Plant these to grow strawberries',
@@ -76,7 +76,7 @@ final class ItemWeaponDatabaseDef {
       isStackable: true,
       maxStackSize: 99,
     ),
-    HandItemId.apple_seed_bag: MainHandItem(
+    HandItemId.apple_seed_bag: WeaponItem(
       id: HandItemId.apple_seed_bag,
       name: 'Apple Seed Bag',
       description: 'Plant these to grow apples',
@@ -92,7 +92,7 @@ final class ItemWeaponDatabaseDef {
       isStackable: true,
       maxStackSize: 99,
     ),
-    HandItemId.radish_seed_bag: MainHandItem(
+    HandItemId.radish_seed_bag: WeaponItem(
       id: HandItemId.radish_seed_bag,
       name: 'Radish Seed Bag',
       description: 'Plant these to grow radishes',
@@ -108,7 +108,7 @@ final class ItemWeaponDatabaseDef {
       isStackable: true,
       maxStackSize: 99,
     ),
-    HandItemId.tomato_seed_bag: MainHandItem(
+    HandItemId.tomato_seed_bag: WeaponItem(
       id: HandItemId.tomato_seed_bag,
       name: 'Tomato Seed Bag',
       description: 'Plant these to grow tomatoes',
@@ -124,7 +124,7 @@ final class ItemWeaponDatabaseDef {
       isStackable: true,
       maxStackSize: 99,
     ),
-    HandItemId.shovel: MainHandItem(
+    HandItemId.shovel: WeaponItem(
       id: HandItemId.shovel,
       name: 'Shovel',
       description: 'TODO',
@@ -137,7 +137,7 @@ final class ItemWeaponDatabaseDef {
       critMultiplier: 1.5,
       equippedHandType: HandItemId.shovel,
     ),
-    HandItemId.wateringCan: MainHandItem(
+    HandItemId.wateringCan: WeaponItem(
       id: HandItemId.wateringCan,
       name: 'Watering Can',
       description: 'TODO',
@@ -150,7 +150,7 @@ final class ItemWeaponDatabaseDef {
       critMultiplier: 1.5,
       equippedHandType: HandItemId.wateringCan,
     ),
-    HandItemId.staff: MainHandItem(
+    HandItemId.staff: WeaponItem(
       id: HandItemId.staff,
       name: 'Staff',
       description: 'TODO',
@@ -163,7 +163,7 @@ final class ItemWeaponDatabaseDef {
       critMultiplier: 1.5,
       equippedHandType: HandItemId.staff,
     ),
-    HandItemId.ironSword: MainHandItem(
+    HandItemId.ironSword: WeaponItem(
       id: HandItemId.ironSword,
       name: 'Iron Sword',
       description: 'A sturdy iron sword for basic combat',
@@ -176,7 +176,7 @@ final class ItemWeaponDatabaseDef {
       critMultiplier: 1.5,
       equippedHandType: HandItemId.ironSword,
     ),
-    HandItemId.axe: MainHandItem(
+    HandItemId.axe: WeaponItem(
       id: HandItemId.axe,
       name: 'Steel Axe',
       description: 'A heavy steel axe with high damage',
@@ -189,7 +189,7 @@ final class ItemWeaponDatabaseDef {
       critMultiplier: 1.8,
       equippedHandType: HandItemId.axe,
     ),
-    HandItemId.sword: MainHandItem(
+    HandItemId.sword: WeaponItem(
       id: HandItemId.sword,
       name: 'Legendary Blade',
       description: 'A mythical sword forged by ancient smiths',
@@ -202,7 +202,7 @@ final class ItemWeaponDatabaseDef {
       critMultiplier: 2.5,
       equippedHandType: HandItemId.sword,
     ),
-    HandItemId.staff_fire: MainHandItem(
+    HandItemId.staff_fire: WeaponItem(
       id: HandItemId.staff_fire,
       name: 'Fire Staff',
       description: 'A magical staff that shoots fireballs',
@@ -215,7 +215,7 @@ final class ItemWeaponDatabaseDef {
       critMultiplier: 2.0,
       equippedHandType: HandItemId.staff_fire,
     ),
-    HandItemId.wand: MainHandItem(
+    HandItemId.wand: WeaponItem(
       id: HandItemId.wand,
       name: 'Ice Wand',
       description: 'A magical wand that shoots ice projectiles',
@@ -231,7 +231,7 @@ final class ItemWeaponDatabaseDef {
   };
 
   /// Enum-keyed view mirroring weaponsByHandType for consumers expecting a mutable map.
-  static final Map<HandItemId, MainHandItem> weapons = {
+  static final Map<HandItemId, WeaponItem> weapons = {
     for (final entry in weaponsByHandType.entries) entry.key: entry.value,
   };
 }

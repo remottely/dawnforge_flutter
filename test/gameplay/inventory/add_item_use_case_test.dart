@@ -1,6 +1,6 @@
 import 'package:darkness_dungeon/gameplay/inventory/entities/inventory_slot.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/items/main_hand_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/hand/hand_item_id.dart';
 import 'package:darkness_dungeon/gameplay/inventory/services/item_factory_service.dart';
@@ -65,7 +65,7 @@ void main() {
       const itemId = HandItemId.ironSword;
       const quantity = 2;
 
-      const mockItem = MainHandItem(
+      const mockItem = WeaponItem(
         id: HandItemId.ironSword,
         name: 'Iron Sword',
         description: 'A basic sword',
@@ -101,7 +101,7 @@ void main() {
       const itemId = HandItemId.sword;
       const quantity = 1;
 
-      const mockItem = MainHandItem(
+      const mockItem = WeaponItem(
         id: HandItemId.sword,
         name: 'Iron Sword',
         description: 'A basic sword',

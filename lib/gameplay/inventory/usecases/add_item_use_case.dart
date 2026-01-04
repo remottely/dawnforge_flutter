@@ -3,7 +3,7 @@ import 'dart:math';
 
 import '../entities/inventory_slot.dart';
 import '../entities/hand/hand_item.dart';
-import '../items/main_hand_item.dart';
+import '../items/weapon_item.dart';
 import '../managers/inventory_manager.dart';
 import '../entities/hand/hand_item_id.dart';
 import '../services/item_factory_service.dart';
@@ -145,7 +145,7 @@ class AddItemUseCase {
   }
 
   HandItem _normalizeStackBehavior(HandItem item) {
-    if (item is MainHandItem && item.equippedHandType.isSeed) {
+    if (item is WeaponItem && item.equippedHandType.isSeed) {
       final desiredStackSize = item.maxStackSize > 1 ? item.maxStackSize : 99;
 
       if (!item.isStackable || item.maxStackSize != desiredStackSize) {
