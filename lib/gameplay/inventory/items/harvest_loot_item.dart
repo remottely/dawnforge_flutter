@@ -1,13 +1,11 @@
 import '../entities/hand_item.dart';
 import '../entities/enums/hand_item_id.dart';
 import '../entities/enums/loot_category.dart';
-import '../entities/enums/item_quality.dart';
 import '../entities/enums/hand_item_quality.dart';
 import '../entities/enums/hand_item_type.dart';
 
 final class HarvestLootItem extends HandItem {
   final LootCategory category;
-  final ItemQuality quality;
   final int energyRestore;
   final int healthRestore;
   final String season;
@@ -20,7 +18,7 @@ final class HarvestLootItem extends HandItem {
     required super.description,
     required super.baseValue,
     required super.iconPath,
-    super.rarity = HandItemQuality.normal,
+    super.quality = HandItemQuality.normal,
     super.type = HandItemType.material,
     super.isStackable = true,
     super.maxStackSize = 999,
@@ -28,7 +26,6 @@ final class HarvestLootItem extends HandItem {
     super.isTradeable = true,
     super.iconData,
     this.category = LootCategory.vegetable,
-    this.quality = ItemQuality.normal,
     this.energyRestore = 13,
     this.healthRestore = 5,
     required this.season,
@@ -57,7 +54,6 @@ final class HarvestLootItem extends HandItem {
       'description': description,
       'type': type.toJson(),
       'category': category.toJson(),
-      'rarity': rarity.toJson(),
       'quality': quality.toJson(),
       'baseValue': baseValue,
       'iconPath': iconPath,
@@ -80,7 +76,7 @@ final class HarvestLootItem extends HandItem {
       description: json['description'] as String,
       baseValue: json['baseValue'] as int,
       iconPath: json['iconPath'] as String,
-      rarity: HandItemQuality.fromJson(json['rarity'] as String? ?? 'common'),
+      quality: HandItemQuality.fromJson(json['quality'] as String? ?? 'common'),
       type: HandItemType.fromJson(
         json['type'] as String? ??
             'weapon', // TODO(kevin): change this default value
@@ -89,7 +85,6 @@ final class HarvestLootItem extends HandItem {
         json['category'] as String? ??
             'vegetables', // TODO(kevin): change this default value
       ),
-      quality: ItemQuality.fromJson(json['quality'] as String? ?? 'normal'),
       maxStackSize: json['maxStackSize'] as int? ?? 999,
       isStackable: json['isStackable'] as bool? ?? true,
       isDroppable: json['isDroppable'] as bool? ?? true,
@@ -109,10 +104,9 @@ final class HarvestLootItem extends HandItem {
     String? description,
     int? baseValue,
     String? iconPath,
-    HandItemQuality? rarity,
+    HandItemQuality? quality,
     HandItemType? type,
     LootCategory? category,
-    ItemQuality? quality,
     int? maxStackSize,
     bool? isStackable,
     bool? isDroppable,
@@ -129,10 +123,9 @@ final class HarvestLootItem extends HandItem {
       description: description ?? this.description,
       baseValue: baseValue ?? this.baseValue,
       iconPath: iconPath ?? this.iconPath,
-      rarity: rarity ?? this.rarity,
+      quality: quality ?? this.quality,
       type: type ?? this.type,
       category: category ?? this.category,
-      quality: quality ?? this.quality,
       maxStackSize: maxStackSize ?? this.maxStackSize,
       isStackable: isStackable ?? this.isStackable,
       isDroppable: isDroppable ?? this.isDroppable,
@@ -145,15 +138,15 @@ final class HarvestLootItem extends HandItem {
     );
   }
 
-  HarvestLootItem withQuality(ItemQuality newQuality) {
+  HarvestLootItem withQuality(HandItemQuality newQuality) {
     return copyWith(quality: newQuality);
   }
 
   @override
   String toString() {
-    final qualityStr = quality != ItemQuality.normal
+    final rarityStr = quality != HandItemQuality.normal
         ? ' (${quality.displayName})'
         : '';
-    return 'CropItem(id: ${id.name}, name: $name$qualityStr, type: ${type.name}, category: ${category.displayName}, season: $season)';
+    return 'CropItem(id: ${id.name}, name: $name$rarityStr, type: ${type.name}, category: ${category.displayName}, season: $season)';
   }
 }

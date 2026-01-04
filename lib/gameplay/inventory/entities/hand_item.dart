@@ -8,7 +8,7 @@ abstract class HandItem {
   final String name;
   final String description;
   final HandItemType type;
-  final HandItemQuality rarity;
+  final HandItemQuality quality;
   final int maxStackSize;
   final int baseValue;
   final String iconPath;
@@ -22,7 +22,7 @@ abstract class HandItem {
     required this.name,
     required this.description,
     required this.type,
-    this.rarity = HandItemQuality.normal,
+    this.quality = HandItemQuality.normal,
     this.maxStackSize = 1,
     required this.baseValue,
     required this.iconPath,
@@ -32,7 +32,7 @@ abstract class HandItem {
     this.iconData,
   });
 
-  int get sellValue => (baseValue * rarity.priceMultiplier).round();
+  int get sellValue => (baseValue * quality.priceMultiplier).round();
 
   /// Serialization for persistence (D2)
   Map<String, dynamic> toJson();

@@ -1,10 +1,10 @@
 import 'dart:developer' as developer;
 
 import 'package:darkness_dungeon/gameplay/inventory/config/inventory_def.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_quality.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/harvest_loot_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/loot_category.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/item_quality.dart';
 
 final class ItemPriceService {
   ItemPriceService._();
@@ -36,7 +36,7 @@ final class ItemPriceService {
   int calculateSellPrice(
     HandItem item, {
     bool isShippingBin = true,
-    ItemQuality? quality,
+    HandItemQuality? quality,
   }) {
     var price = item.baseValue.toDouble();
 
@@ -98,7 +98,7 @@ final class ItemPriceService {
     return 0.0;
   }
 
-  ItemQuality determineHarvestQuality({
+  HandItemQuality determineHarvestQuality({
     required int farmingLevel,
     int fertilizerQualityBoost = 0,
     double randomValue = 0.5,
@@ -115,13 +115,13 @@ final class ItemPriceService {
         effectiveLevel * InventoryDef.kQualityChancePerLevel;
 
     if (randomValue < iridiumChance) {
-      return ItemQuality.iridium;
+      return HandItemQuality.iridium;
     } else if (randomValue < goldChance) {
-      return ItemQuality.gold;
+      return HandItemQuality.gold;
     } else if (randomValue < silverChance) {
-      return ItemQuality.silver;
+      return HandItemQuality.silver;
     } else {
-      return ItemQuality.normal;
+      return HandItemQuality.normal;
     }
   }
 
@@ -129,7 +129,7 @@ final class ItemPriceService {
     HandItem item,
     int quantity, {
     bool isShippingBin = true,
-    ItemQuality? quality,
+    HandItemQuality? quality,
   }) {
     final unitPrice = calculateSellPrice(
       item,
