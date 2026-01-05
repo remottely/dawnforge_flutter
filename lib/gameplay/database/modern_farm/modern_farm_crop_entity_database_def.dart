@@ -42,6 +42,7 @@ final class ModernFarmCropEntityDatabaseDef {
       framesCount: 7,
       skipFirstFrames: 1,
       ySortingFromStage: null,
+      regrows: false,
     ),
     HandItemId.carrot: CropEntity(
       id: HandItemId.carrot,
@@ -78,6 +79,7 @@ final class ModernFarmCropEntityDatabaseDef {
       framesCount: 4,
       skipFirstFrames: 1,
       ySortingFromStage: CropStageType.budding,
+      regrows: true,
     ),
     HandItemId.apple: CropEntity(
       id: HandItemId.apple,
@@ -97,6 +99,8 @@ final class ModernFarmCropEntityDatabaseDef {
       skipFirstFrames: 1,
       ySortingFromStage: CropStageType.budding,
       isTree: true,
+      regrows: true,
+      requireWaterForRegrowth: false,
     ),
     HandItemId.wheat: CropEntity(
       id: HandItemId.wheat,
@@ -241,6 +245,7 @@ final class ModernFarmCropEntityDatabaseDef {
       framesCount: 4,
       skipFirstFrames: 1,
       ySortingFromStage: CropStageType.seedling,
+      regrows: false,
     ),
     HandItemId.grape: CropEntity(
       id: HandItemId.grape,

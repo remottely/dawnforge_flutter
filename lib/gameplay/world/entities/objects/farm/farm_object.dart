@@ -93,15 +93,18 @@ final class FarmObject extends Equatable implements TileObject {
     return copyWith(crop: newCrop);
   }
 
-  /// Harvest the crop and reset tile
+  /// Harvest the crop keeping soil/water state
   FarmObject harvest() {
     if (!canHarvest) return this;
-    return FarmObject(
-      objectId: objectId,
-      soilState: SoilState.untilled,
-      crop: null,
-      lastWateredDay: null,
-    );
+    if (crop == null) return this;
+
+    // Non-regrowing crops are removed; regrowing crops stay with rollback
+    if (!crop!.regrows) {
+      return copyWith(crop: null, setCrop: true);
+    }
+
+    final regrownCrop = crop!.regrowAfterHarvest();
+    return copyWith(crop: regrownCrop, setCrop: true);
   }
 
   /// Advance day logic - update crop growth if watered
@@ -115,9 +118,8 @@ final class FarmObject extends Equatable implements TileObject {
     final wasWateredThatDay =
         lastWateredDay != null && lastWateredDay == dayEnded;
 
-    // Consume water even without crop
+    // Crops only advance if watered; consume water after advancing
     if (wasWateredThatDay && soilState == SoilState.watered) {
-      // If no crop, just consume water
       if (crop == null) {
         return copyWith(
           soilState: SoilState.tilled,
@@ -125,7 +127,6 @@ final class FarmObject extends Equatable implements TileObject {
         );
       }
 
-      // If has crop, grow it
       final advancedCrop = crop!.advanceDay();
 
       return copyWith(
@@ -135,7 +136,7 @@ final class FarmObject extends Equatable implements TileObject {
       );
     }
 
-    // Was not watered or already not watered
+    // Not watered: no crop advance, keep soil/water state
     return this;
   }
 
@@ -166,11 +167,12 @@ final class FarmObject extends Equatable implements TileObject {
     SoilState? soilState,
     CropEntity? crop,
     int? lastWateredDay,
+    bool setCrop = false,
   }) {
     return FarmObject(
       objectId: objectId ?? this.objectId,
       soilState: soilState ?? this.soilState,
-      crop: crop ?? this.crop,
+      crop: setCrop ? crop : (crop ?? this.crop),
       lastWateredDay: lastWateredDay ?? this.lastWateredDay,
     );
   }

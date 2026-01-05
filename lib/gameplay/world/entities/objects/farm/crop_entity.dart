@@ -22,6 +22,12 @@ final class CropEntity extends Equatable {
   final int skipFirstFrames;
   final CropStageType? ySortingFromStage;
   final bool isTree;
+  final bool regrows;
+  final int regrowStageRollback;
+  final int regrowStepDays;
+  final bool requireWaterForRegrowth;
+  final bool isRegrowing;
+  final int daysInStage;
 
   const CropEntity({
     required this.id,
@@ -41,10 +47,19 @@ final class CropEntity extends Equatable {
     required this.skipFirstFrames,
     required this.ySortingFromStage,
     this.isTree = false,
+    this.regrows = false,
+    this.regrowStageRollback = 2,
+    this.regrowStepDays = 2,
+    this.requireWaterForRegrowth = true,
+    this.isRegrowing = false,
+    this.daysInStage = 0,
   });
 
   /// Calculate growth progress (0.0 to 1.0)
-  double get growthProgress => (daysPlanted / daysToMature).clamp(0.0, 1.0);
+  double get growthProgress {
+    if (daysToMature <= 0) return 1.0;
+    return (daysPlanted / daysToMature).clamp(0.0, 1.0);
+  }
 
   /// Check if crop is fully harvestable
   bool get isMature => daysPlanted >= daysToMature;
@@ -53,19 +68,41 @@ final class CropEntity extends Equatable {
   bool get canHarvest => stage.canHarvest;
 
   /// Check if crop is ready to harvest
-  bool get isReadyToHarvest => isMature && canHarvest;
+  bool get isReadyToHarvest => canHarvest;
 
   /// Check if crop should use Y-sorting (for taller plants)
   bool get shouldUseYSorting =>
       ySortingFromStage != null && stage.index >= ySortingFromStage!.index;
 
-  /// Advance crop growth by one day
+  /// Advance crop growth by one day (water gating ocorre em FarmObject)
   CropEntity advanceDay() {
-    final newDays = daysPlanted + 1;
-    final progress = newDays / daysToMature;
-    final newStage = CropStageType.fromProgress(progress);
+    // Árvores sempre avançam; crops só são chamadas quando regadas
+    final stepDays = isRegrowing ? regrowStepDays : _initialStageStepDays;
 
-    return copyWith(daysPlanted: newDays, stage: newStage);
+    var nextStage = stage;
+    var nextDaysInStage = daysInStage + 1;
+    var nextDaysPlanted = daysPlanted + 1;
+
+    if (stage != CropStageType.harvestable && nextDaysInStage >= stepDays) {
+      final maybeNext = stage.nextStage;
+      if (maybeNext != null) {
+        nextStage = maybeNext;
+      }
+      nextDaysInStage = 0;
+    }
+
+    return copyWith(
+      stage: nextStage,
+      daysPlanted: nextDaysPlanted,
+      daysInStage: nextDaysInStage,
+    );
+  }
+
+  int get _initialStageStepDays {
+    final stagesToHarvest = CropStageType.harvestable.index;
+    if (stagesToHarvest <= 0) return 1;
+    final step = (daysToMature / stagesToHarvest).ceil();
+    return step < 1 ? 1 : step;
   }
 
   /// Serialization (D2)
@@ -88,6 +125,12 @@ final class CropEntity extends Equatable {
       'skipFirstFrames': skipFirstFrames,
       'ySortingFromStage': ySortingFromStage?.toJson(),
       'isTree': isTree,
+      'regrows': regrows,
+      'regrowStageRollback': regrowStageRollback,
+      'regrowStepDays': regrowStepDays,
+      'requireWaterForRegrowth': requireWaterForRegrowth,
+      'isRegrowing': isRegrowing,
+      'daysInStage': daysInStage,
     };
   }
 
@@ -113,6 +156,13 @@ final class CropEntity extends Equatable {
         json['ySortingFromStage'] as String?,
       ),
       isTree: json['isTree'] as bool? ?? false,
+      regrows: json['regrows'] as bool? ?? false,
+      regrowStageRollback: json['regrowStageRollback'] as int? ?? 2,
+      regrowStepDays: json['regrowStepDays'] as int? ?? 2,
+      requireWaterForRegrowth:
+          json['requireWaterForRegrowth'] as bool? ?? true,
+      isRegrowing: json['isRegrowing'] as bool? ?? false,
+      daysInStage: json['daysInStage'] as int? ?? 0,
     );
   }
 
@@ -135,6 +185,12 @@ final class CropEntity extends Equatable {
     int? skipFirstFrames,
     CropStageType? ySortingFromStage,
     bool? isTree,
+    bool? regrows,
+    int? regrowStageRollback,
+    int? regrowStepDays,
+    bool? requireWaterForRegrowth,
+    bool? isRegrowing,
+    int? daysInStage,
   }) {
     return CropEntity(
       id: id ?? this.id,
@@ -154,6 +210,34 @@ final class CropEntity extends Equatable {
       skipFirstFrames: skipFirstFrames ?? this.skipFirstFrames,
       ySortingFromStage: ySortingFromStage ?? this.ySortingFromStage,
       isTree: isTree ?? this.isTree,
+      regrows: regrows ?? this.regrows,
+      regrowStageRollback: regrowStageRollback ?? this.regrowStageRollback,
+      regrowStepDays: regrowStepDays ?? this.regrowStepDays,
+      requireWaterForRegrowth:
+          requireWaterForRegrowth ?? this.requireWaterForRegrowth,
+      isRegrowing: isRegrowing ?? this.isRegrowing,
+      daysInStage: daysInStage ?? this.daysInStage,
+    );
+  }
+
+  /// Apply regrowth rollback; returns null if crop does not regrow
+  CropEntity? regrowAfterHarvest() {
+    if (!regrows) return null;
+
+    final minIndex = CropStageType.sprout.index;
+    final targetIndex = stage.index - regrowStageRollback;
+    final newIndex = targetIndex < minIndex ? minIndex : targetIndex;
+    final newStage = CropStageType.values[newIndex];
+
+    // Reset intra-stage progress: set daysPlanted to the start of the newStage
+    final stageCount = CropStageType.values.length - 1;
+    final stageStartDays = ((daysToMature * newIndex) / stageCount).floor();
+
+    return copyWith(
+      stage: newStage,
+      daysPlanted: stageStartDays,
+      daysInStage: 0,
+      isRegrowing: true,
     );
   }
 
@@ -176,6 +260,12 @@ final class CropEntity extends Equatable {
         skipFirstFrames,
         ySortingFromStage,
         isTree,
+        regrows,
+        regrowStageRollback,
+        regrowStepDays,
+        requireWaterForRegrowth,
+        isRegrowing,
+        daysInStage,
       ];
 
   @override

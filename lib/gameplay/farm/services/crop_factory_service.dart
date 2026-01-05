@@ -43,7 +43,11 @@ class CropFactoryService {
     }
 
     try {
-      return template.copyWith(daysPlanted: 0);
+      return template.copyWith(
+        daysPlanted: 0,
+        daysInStage: 0,
+        isRegrowing: false,
+      );
     } catch (e, stackTrace) {
       developer.log(
         '[CropFactoryService] ERROR creating crop $cropId',
