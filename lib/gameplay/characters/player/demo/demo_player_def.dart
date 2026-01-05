@@ -62,7 +62,7 @@ final class DemoPlayerDef {
   );
 
   static String idleAssetPath =
-      'tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_idle_full_light_demo.png';
+      'tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_idle_full_light_demo_4.png';
   static String walkAssetPath =
       'tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_walk_full_light_demo.png';
   static String runAssetPath =
@@ -116,7 +116,7 @@ final class DemoPlayerDef {
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: idleAssetPath,
         textureSize: textureSize,
-        totalFrames: _x2,
+        totalFrames: _x4,
         framePositionX: 0,
         framePositionY: _frameRightY,
       );
@@ -125,7 +125,7 @@ final class DemoPlayerDef {
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: idleAssetPath,
         textureSize: textureSize,
-        totalFrames: _x2,
+        totalFrames: _x4,
         framePositionX: 0,
         framePositionY: _frameLeftY,
       );
@@ -134,7 +134,7 @@ final class DemoPlayerDef {
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: idleAssetPath,
         textureSize: textureSize,
-        totalFrames: _x2,
+        totalFrames: _x4,
         framePositionX: 0,
         framePositionY: _frameUpY,
       );
@@ -143,7 +143,7 @@ final class DemoPlayerDef {
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: idleAssetPath,
         textureSize: textureSize,
-        totalFrames: _x2,
+        totalFrames: _x4,
         framePositionX: 0,
         framePositionY: _frameDownY,
       );

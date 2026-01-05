@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.89.33+1
+version: 1.89.34+1
 
 environment:
   sdk: ^3.8.1
@@ -315,7 +315,8 @@ flutter:
     # - assets/images/tiled/small_burg/maps/sb_farm.json # TODO(Kevin): remove it from all project
     - assets/images/tiled/maps/farm_map.json
 
-    - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_idle_full_light_demo.png
+    # - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_idle_full_light_demo.png
+    - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_idle_full_light_demo_4.png
     - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_run_full_light_with_dust_specs_demo.png
     - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_tools_hoe_full_light_demo.png
     - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_tools_shovel_full_light_demo.png
