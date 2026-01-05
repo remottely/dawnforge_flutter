@@ -4,7 +4,7 @@
 
 - [PRIORITY] cropId deve ser do tipo HandItemId, refatore no codigo
 
-- [PRIORITY] 
+- [PRIORITY] prompt: hoje eu possuo a logica de harvest onde eu consigo colher crops e trees, porem o meu tree ele nao deve simplesmente sumir do tile e sim continuar la so q resetando o tempo de colheita apenas, assim como inclusive quero acrescentar essa funcionalidade para crops. entao oq vc deve fazer primeiro é adicionar essa logica para crops com colheita recorrentes e em seguida adicionar que isTree segue a mesma logica, depois de crescido eles apenas oferecem colheitas de tempos em tempos. e sempre depois de colher eles voltam dois estagios, e a cada dia novo q passa de um estagio para o outro(sprite) demora agora 2 dias e nao mais 1 dia como é feito durante o crescimento do crop/tree.
 
 - [PRIORITY] 
 

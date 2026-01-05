@@ -7,8 +7,8 @@ import '../entities/data/item_icon_data.dart';
 
 final class SeedBagItem extends HandItem {
   final HandItemId cropId;
-  final int growthTime;
-  final int yield;
+  final int growthTime; // TODO(Kevin): criar enum
+  final int yield; // TODO(Kevin): criar enum
   final SeasonType seasonType;
 
   const SeedBagItem({

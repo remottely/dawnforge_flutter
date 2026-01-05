@@ -6,8 +6,8 @@ import '../entities/data/item_icon_data.dart';
 import '../entities/enums/hand_item_quality.dart';
 
 class ConsumableItem extends HandItem {
-  final int healthRestore;
-  final int staminaRestore;
+  final int healthRestore; // TODO(Kevin): criar enum
+  final int staminaRestore; // TODO(Kevin): criar enum, mudar de stamina para energy
 
   const ConsumableItem({
     required super.id,

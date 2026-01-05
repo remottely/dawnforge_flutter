@@ -9,7 +9,7 @@ import '../entities/data/item_icon_data.dart';
 final class HarvestLootItem extends ConsumableItem {
   final LootCategory category;
   final SeasonType seasonType;
-  final int regrowthDays; // TODO(Kevin): improve this behavior
+  final int regrowthDays; // TODO(Kevin): improve this behavior, turn it into enum
 
   const HarvestLootItem({
     required super.id,
