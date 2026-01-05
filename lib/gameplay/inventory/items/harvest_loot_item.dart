@@ -7,9 +7,9 @@ import '../entities/item_icon_data.dart';
 
 final class HarvestLootItem extends ConsumableItem {
   final LootCategory category;
-  final String season;
+  final String season; // TODO(Kevin): change to enum
   final bool regrows;
-  final int regrowthDays;
+  final int regrowthDays; // TODO(Kevin): improve this behavior
 
   const HarvestLootItem({
     required super.id,
@@ -60,18 +60,10 @@ final class HarvestLootItem extends ConsumableItem {
       description: json['description'] as String,
       baseValue: json['baseValue'] as int,
       quality: HandItemQuality.fromJson(json['quality'] as String? ?? 'common'),
-      type: HandItemType.fromJson(
-        json['type'] as String? ??
-            'weapon', // TODO(kevin): change this default value
-      ),
       category: LootCategory.fromJson(
         json['category'] as String? ??
             'vegetables', // TODO(kevin): change this default value
       ),
-      maxStackSize: json['maxStackSize'] as int? ?? 99,
-      isStackable: json['isStackable'] as bool? ?? true,
-      isDroppable: json['isDroppable'] as bool? ?? true,
-      isTradeable: json['isTradeable'] as bool? ?? true,
       staminaRestore: json['staminaRestore'] as int? ?? 13,
       healthRestore: json['healthRestore'] as int? ?? 5,
       season: json['season'] as String,
@@ -93,7 +85,6 @@ final class HarvestLootItem extends ConsumableItem {
     int? staminaRestore,
     int? duration,
     ItemIconData? iconData,
-    // Extra fields specific to HarvestLootItem
     HandItemType? type,
     LootCategory? category,
     bool? isStackable,
@@ -109,12 +100,7 @@ final class HarvestLootItem extends ConsumableItem {
       description: description ?? this.description,
       baseValue: baseValue ?? this.baseValue,
       quality: quality ?? this.quality,
-      type: type ?? this.type,
       category: category ?? this.category,
-      maxStackSize: maxStackSize ?? this.maxStackSize,
-      isStackable: isStackable ?? this.isStackable,
-      isDroppable: isDroppable ?? this.isDroppable,
-      isTradeable: isTradeable ?? this.isTradeable,
       staminaRestore: staminaRestore ?? this.staminaRestore,
       healthRestore: healthRestore ?? this.healthRestore,
       season: season ?? this.season,

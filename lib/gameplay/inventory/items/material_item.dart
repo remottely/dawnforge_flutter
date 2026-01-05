@@ -43,7 +43,6 @@ final class MaterialItem extends HandItem {
       description: json['description'] as String,
       baseValue: json['baseValue'] as int,
       quality: HandItemQuality.fromJson(json['quality'] as String),
-      maxStackSize: json['maxStackSize'] as int? ?? 99,
       materialType: json['materialType'] as String,
       iconData: ItemIconData.fromJson(json['iconData'] as Map<String, dynamic>),
     );
@@ -66,7 +65,6 @@ final class MaterialItem extends HandItem {
       description: description ?? this.description,
       baseValue: baseValue ?? this.baseValue,
       quality: quality ?? this.quality,
-      maxStackSize: maxStackSize ?? this.maxStackSize,
       materialType: materialType ?? this.materialType,
       iconData: iconData ?? this.iconData,
     );

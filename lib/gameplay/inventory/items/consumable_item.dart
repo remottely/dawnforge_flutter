@@ -1,3 +1,5 @@
+import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_type.dart';
+
 import '../entities/hand_item.dart';
 import '../entities/enums/hand_item_id.dart';
 import '../entities/item_icon_data.dart';
@@ -35,18 +37,15 @@ class ConsumableItem extends HandItem {
   }
 
   factory ConsumableItem.fromJson(Map<String, dynamic> json) {
-    final healAmount = json['healAmount'] as int?;
-
     return ConsumableItem(
       id: HandItemId.fromJson(json['id'] as String),
       name: json['name'] as String,
       description: json['description'] as String,
       baseValue: json['baseValue'] as int,
       quality: HandItemQuality.fromJson(json['quality'] as String),
-      maxStackSize: json['maxStackSize'] as int? ?? 99,
-      // Fallback: some data uses healAmount instead of healthRestore/staminaRestore
-      healthRestore: json['healthRestore'] as int? ?? healAmount ?? 0,
-      staminaRestore: json['staminaRestore'] as int? ?? healAmount ?? 0,
+      type: HandItemType.fromJson(json['type'] as String),
+      healthRestore: json['healthRestore'] as int,
+      staminaRestore: json['staminaRestore'] as int,
       iconData: ItemIconData.fromJson(json['iconData'] as Map<String, dynamic>),
     );
   }
@@ -58,6 +57,7 @@ class ConsumableItem extends HandItem {
     String? description,
     int? baseValue,
     HandItemQuality? quality,
+    HandItemType? type,
     int? maxStackSize,
     int? healthRestore,
     int? staminaRestore,
@@ -70,10 +70,10 @@ class ConsumableItem extends HandItem {
       description: description ?? this.description,
       baseValue: baseValue ?? this.baseValue,
       quality: quality ?? this.quality,
-      maxStackSize: maxStackSize ?? this.maxStackSize,
       healthRestore: healthRestore ?? this.healthRestore,
       staminaRestore: staminaRestore ?? this.staminaRestore,
       iconData: iconData ?? this.iconData,
+      type: type ?? this.type,
     );
   }
 

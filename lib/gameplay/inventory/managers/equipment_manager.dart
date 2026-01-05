@@ -86,7 +86,7 @@ final class EquipmentManager {
   double getTotalDps() {
     final mainHand = getEquippedItem();
     if (mainHand == null) return 0;
-    if (mainHand is WeaponItem) return mainHand.dps;
+    if (mainHand is WeaponItem) return mainHand.damage.toDouble();
     return 0;
   }
 
