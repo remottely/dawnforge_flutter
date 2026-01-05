@@ -13,7 +13,6 @@ final class ModernFarmToolItemDatabaseDef {
       quality: HandItemQuality.normal,
       baseValue: 100,
       toolType: 'harvest',
-      powerLevel: 1,
       iconData: ItemIconData(
         spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
         spriteWidth: 16,
@@ -29,7 +28,6 @@ final class ModernFarmToolItemDatabaseDef {
       quality: HandItemQuality.normal,
       baseValue: 100,
       toolType: 'shovel',
-      powerLevel: 1,
       iconData: ItemIconData(
         spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
         spriteWidth: 16,
@@ -45,7 +43,6 @@ final class ModernFarmToolItemDatabaseDef {
       quality: HandItemQuality.normal,
       baseValue: 100,
       toolType: 'watering_can',
-      powerLevel: 1,
       iconData: ItemIconData(
         spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
         spriteWidth: 16,
@@ -61,7 +58,6 @@ final class ModernFarmToolItemDatabaseDef {
     //   quality: HandItemQuality.normal,
     //   baseValue: 80,
     //   toolType: 'pickaxe',
-    //   powerLevel: 2,
     // ),
     // HandItemId.steel_pickaxe: ToolItem(
     //   id: HandItemId.steel_pickaxe,
@@ -70,7 +66,6 @@ final class ModernFarmToolItemDatabaseDef {
     //   quality: HandItemQuality.silver,
     //   baseValue: 200,
     //   toolType: 'pickaxe',
-    //   powerLevel: 3,
     // ),
     // HandItemId.wooden_axe: ToolItem(
     //   id: HandItemId.wooden_axe,
@@ -79,7 +74,6 @@ final class ModernFarmToolItemDatabaseDef {
     //   quality: HandItemQuality.normal,
     //   baseValue: 20,
     //   toolType: 'axe',
-    //   powerLevel: 1,
     // ),
     // HandItemId.basic_hoe: ToolItem(
     //   id: HandItemId.basic_hoe,
@@ -88,7 +82,6 @@ final class ModernFarmToolItemDatabaseDef {
     //   quality: HandItemQuality.normal,
     //   baseValue: 30,
     //   toolType: 'hoe',
-    //   powerLevel: 1,
     // ),
     // HandItemId.axe: ToolItem(
     //   id: HandItemId.axe,
@@ -97,7 +90,6 @@ final class ModernFarmToolItemDatabaseDef {
     //   quality: HandItemQuality.silver,
     //   baseValue: 180,
     //   toolType: 'axe',
-    //   powerLevel: 3,
     // ),
   };
 }

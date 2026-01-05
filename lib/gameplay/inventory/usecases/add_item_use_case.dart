@@ -146,17 +146,16 @@ class AddItemUseCase {
 
   HandItem _normalizeStackBehavior(HandItem item) {
     if (item is WeaponItem && item.id.isSeed) {
-      final desiredStackSize = item.maxStackSize > 1 ? item.maxStackSize : 99;
 
-      if (!item.isStackable || item.maxStackSize != desiredStackSize) {
+      if (!item.isStackable) {
         developer.log(
-          '[AddItemUseCase] Normalizing seed item ${item.id} to stackable x$desiredStackSize',
+          '[AddItemUseCase] Normalizing seed item ${item.id} to stackable x${item.maxStackSize}',
         );
       }
 
       return item.copyWith(
         isStackable: true,
-        maxStackSize: desiredStackSize,
+        maxStackSize: item.maxStackSize,
       );
     }
 

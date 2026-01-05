@@ -14,9 +14,6 @@ final class ModernFarmWeaponItemDatabaseDef {
       quality: HandItemQuality.normal,
       baseValue: 100,
       damage: 15,
-      attackSpeed: 1.2,
-      critChance: 0.05,
-      critMultiplier: 1.5,
       iconData: ItemIconData(
         spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
         spriteWidth: 16,
@@ -32,9 +29,6 @@ final class ModernFarmWeaponItemDatabaseDef {
       quality: HandItemQuality.normal,
       baseValue: 100,
       damage: 15,
-      attackSpeed: 1.2,
-      critChance: 0.05,
-      critMultiplier: 1.5,
       iconData: ItemIconData(
         spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
         spriteWidth: 16,
@@ -50,9 +44,6 @@ final class ModernFarmWeaponItemDatabaseDef {
     //   quality: HandItemQuality.iridium,
     //   baseValue: 5000,
     //   damage: 80,
-    //   attackSpeed: 1.5,
-    //   critChance: 0.25,
-    //   critMultiplier: 2.5,
     // ),
     // HandItemId.staff_fire: WeaponItem(
     //   id: HandItemId.staff_fire,
@@ -61,9 +52,6 @@ final class ModernFarmWeaponItemDatabaseDef {
     //   quality: HandItemQuality.gold,
     //   baseValue: 350,
     //   damage: 20,
-    //   attackSpeed: 1.0,
-    //   critChance: 0.1,
-    //   critMultiplier: 2.0,
     // ),
     // HandItemId.wand: WeaponItem(
     //   id: HandItemId.wand,
@@ -72,9 +60,6 @@ final class ModernFarmWeaponItemDatabaseDef {
     //   quality: HandItemQuality.silver,
     //   baseValue: 200,
     //   damage: 12,
-    //   attackSpeed: 1.3,
-    //   critChance: 0.07,
-    //   critMultiplier: 1.6,
     // ),
   };
 

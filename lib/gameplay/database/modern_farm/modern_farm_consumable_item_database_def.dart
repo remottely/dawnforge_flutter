@@ -1,68 +1,63 @@
-import 'package:darkness_dungeon/gameplay/inventory/items/consumable_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_quality.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/item_icon_data.dart';
+import 'package:darkness_dungeon/gameplay/inventory/items/harvest_loot_item.dart';
 
-final class ModernFarmConsumableItemDatabaseDef {
-  ModernFarmConsumableItemDatabaseDef._();
-  static const Map<HandItemId, ConsumableItem> consumableItemList = {
-    // HandItemId.health_potion: ConsumableItem(
+final class ModernFarmHarvestLootItemDatabaseDef {
+  ModernFarmHarvestLootItemDatabaseDef._();
+  static const Map<HandItemId, HarvestLootItem> harvestLootItemList = {
+    // HandItemId.health_potion: HarvestLootItem(season: 'any',
     //   id: HandItemId.health_potion,
     //   name: 'Health Potion',
     //   description: 'Restores 50 HP instantly',
     //   quality: HandItemRarity.normal,
     //   baseValue: 25,
-    //   maxStackSize: 99,
     //   healthRestore: 20,
     //   staminaRestore: 10,
     // ),
-    // HandItemId.stamina_potion: ConsumableItem(
+    // HandItemId.stamina_potion: HarvestLootItem(season: 'any',
     //   id: HandItemId.stamina_potion,
     //   name: 'Stamina Potion',
     //   description: 'Restores 30 stamina instantly',
     //   quality: HandItemRarity.normal,
     //   baseValue: 20,
-    //   maxStackSize: 99,
     //   healthRestore: 20,
     //   staminaRestore: 30,
     // ),
-    // HandItemId.super_health_potion: ConsumableItem(
+    // HandItemId.super_health_potion: HarvestLootItem(season: 'any',
     //   id: HandItemId.super_health_potion,
     //   name: 'Super Health Potion',
     //   description: 'Restores 150 HP instantly',
     //   quality: HandItemRarity.gold,
     //   baseValue: 100,
-    //   maxStackSize: 50,
     //   healthRestore: 150,
     //   staminaRestore: 10,
     // ),
-    // HandItemId.cooked_meat: ConsumableItem(
+    // HandItemId.cooked_meat: HarvestLootItem(season: 'any',
     //   id: HandItemId.cooked_meat,
     //   name: 'Cooked Meat',
     //   description: 'Delicious cooked meat that restores health',
     //   quality: HandItemRarity.normal,
     //   baseValue: 15,
-    //   maxStackSize: 99,
     //   healthRestore: 30,
     //   staminaRestore: 10,
     // ),
-    // HandItemId.strength_elixir: ConsumableItem(
+    // HandItemId.strength_elixir: HarvestLootItem(season: 'any',
     //   id: HandItemId.strength_elixir,
     //   name: 'Strength Elixir',
     //   description: 'Increases damage for 60 seconds',
     //   quality: HandItemRarity.silver,
     //   baseValue: 75,
-    //   maxStackSize: 20,
     //   healthRestore: 20,
     //   staminaRestore: 10,
     // ),
-    HandItemId.carrot_loot_item: ConsumableItem(
+    HandItemId.carrot_loot_item: HarvestLootItem(
+      season: 'any',
       id: HandItemId.carrot_loot_item,
       name: 'Carrot',
       description: 'A fresh orange carrot. Can be eaten or sold.',
       quality: HandItemQuality.normal,
       baseValue: 15,
-      maxStackSize: 99,
       healthRestore: 10,
       staminaRestore: 10,
       iconData: ItemIconData(
@@ -73,13 +68,13 @@ final class ModernFarmConsumableItemDatabaseDef {
         spriteColumnIndex: 12,
       ),
     ),
-    HandItemId.strawberry_loot_item: ConsumableItem(
+    HandItemId.strawberry_loot_item: HarvestLootItem(
+      season: 'any',
       id: HandItemId.strawberry_loot_item,
       name: 'Strawberry',
       description: 'A fresh red strawberry. Can be eaten or sold.',
       quality: HandItemQuality.normal,
       baseValue: 15,
-      maxStackSize: 99,
       healthRestore: 10,
       staminaRestore: 10,
       iconData: ItemIconData(
@@ -90,13 +85,13 @@ final class ModernFarmConsumableItemDatabaseDef {
         spriteColumnIndex: 15,
       ),
     ),
-    HandItemId.potato_loot_item: ConsumableItem(
+    HandItemId.potato_loot_item: HarvestLootItem(
+      season: 'any',
       id: HandItemId.potato_loot_item,
       name: 'Potato',
       description: 'A starchy potato. Can be cooked or sold.',
       quality: HandItemQuality.normal,
       baseValue: 12,
-      maxStackSize: 99,
       healthRestore: 15,
       staminaRestore: 15,
       iconData: ItemIconData(
@@ -107,13 +102,13 @@ final class ModernFarmConsumableItemDatabaseDef {
         spriteColumnIndex: 3,
       ),
     ),
-    HandItemId.pumpkin_loot_item: ConsumableItem(
+    HandItemId.pumpkin_loot_item: HarvestLootItem(
+      season: 'any',
       id: HandItemId.pumpkin_loot_item,
       name: 'Pumpkin',
       description: 'A large orange pumpkin. Great for cooking.',
       quality: HandItemQuality.silver,
       baseValue: 35,
-      maxStackSize: 50,
       healthRestore: 30,
       staminaRestore: 30,
       iconData: ItemIconData(
@@ -124,13 +119,13 @@ final class ModernFarmConsumableItemDatabaseDef {
         spriteColumnIndex: 2,
       ),
     ),
-    HandItemId.turnip_loot_item: ConsumableItem(
+    HandItemId.turnip_loot_item: HarvestLootItem(
+      season: 'any',
       id: HandItemId.turnip_loot_item,
       name: 'Turnip',
       description: 'A purple and white turnip. Nutritious vegetable.',
       quality: HandItemQuality.normal,
       baseValue: 10,
-      maxStackSize: 99,
       healthRestore: 8,
       staminaRestore: 8,
       iconData: ItemIconData(
@@ -141,13 +136,13 @@ final class ModernFarmConsumableItemDatabaseDef {
         spriteColumnIndex: 3,
       ),
     ),
-    HandItemId.radish_loot_item: ConsumableItem(
+    HandItemId.radish_loot_item: HarvestLootItem(
+      season: 'any',
       id: HandItemId.radish_loot_item,
       name: 'Radish',
       description: 'A crisp radish. Can be eaten or sold.',
       quality: HandItemQuality.normal,
       baseValue: 12,
-      maxStackSize: 99,
       healthRestore: 8,
       staminaRestore: 8,
       iconData: ItemIconData(
@@ -158,13 +153,13 @@ final class ModernFarmConsumableItemDatabaseDef {
         spriteColumnIndex: 5,
       ),
     ),
-    HandItemId.tomato_loot_item: ConsumableItem(
+    HandItemId.tomato_loot_item: HarvestLootItem(
+      season: 'any',
       id: HandItemId.tomato_loot_item,
       name: 'Tomato',
       description: 'A juicy red tomato. Perfect for salads.',
       quality: HandItemQuality.silver,
       baseValue: 20,
-      maxStackSize: 99,
       healthRestore: 12,
       staminaRestore: 12,
       iconData: ItemIconData(
@@ -175,13 +170,13 @@ final class ModernFarmConsumableItemDatabaseDef {
         spriteColumnIndex: 1,
       ),
     ),
-    HandItemId.corn_loot_item: ConsumableItem(
+    HandItemId.corn_loot_item: HarvestLootItem(
+      season: 'any',
       id: HandItemId.corn_loot_item,
       name: 'Corn',
       description: 'Sweet corn on the cob. Can be roasted.',
       quality: HandItemQuality.silver,
       baseValue: 18,
-      maxStackSize: 99,
       healthRestore: 14,
       staminaRestore: 14,
       iconData: ItemIconData(
@@ -192,13 +187,13 @@ final class ModernFarmConsumableItemDatabaseDef {
         spriteColumnIndex: 5,
       ),
     ),
-    HandItemId.apple_loot_item: ConsumableItem(
+    HandItemId.apple_loot_item: HarvestLootItem(
+      season: 'any',
       id: HandItemId.apple_loot_item,
       name: 'Apple',
       description: 'A crisp apple. Can be eaten or sold.',
       quality: HandItemQuality.normal,
       baseValue: 12,
-      maxStackSize: 99,
       healthRestore: 8,
       staminaRestore: 8,
       iconData: ItemIconData(
@@ -209,13 +204,13 @@ final class ModernFarmConsumableItemDatabaseDef {
         spriteColumnIndex: 5,
       ),
     ),
-    HandItemId.apple: ConsumableItem(
+    HandItemId.apple: HarvestLootItem(
+      season: 'any',
       id: HandItemId.apple,
       name: 'Apple',
       description: 'Fresh apple you can eat or sell.',
       quality: HandItemQuality.normal,
       baseValue: 12,
-      maxStackSize: 99,
       healthRestore: 8,
       staminaRestore: 8,
       iconData: ItemIconData(
@@ -226,13 +221,13 @@ final class ModernFarmConsumableItemDatabaseDef {
         spriteColumnIndex: 16,
       ),
     ),
-    HandItemId.strawberry: ConsumableItem(
+    HandItemId.strawberry: HarvestLootItem(
+      season: 'any',
       id: HandItemId.strawberry,
       name: 'Strawberry',
       description: 'Sweet strawberry ready to eat.',
       quality: HandItemQuality.normal,
       baseValue: 15,
-      maxStackSize: 99,
       healthRestore: 10,
       staminaRestore: 10,
       iconData: ItemIconData(
@@ -243,13 +238,13 @@ final class ModernFarmConsumableItemDatabaseDef {
         spriteColumnIndex: 15,
       ),
     ),
-    HandItemId.tomato: ConsumableItem(
+    HandItemId.tomato: HarvestLootItem(
+      season: 'any',
       id: HandItemId.tomato,
       name: 'Tomato',
       description: 'Juicy tomato perfect for salads.',
       quality: HandItemQuality.silver,
       baseValue: 20,
-      maxStackSize: 99,
       healthRestore: 12,
       staminaRestore: 12,
       iconData: ItemIconData(

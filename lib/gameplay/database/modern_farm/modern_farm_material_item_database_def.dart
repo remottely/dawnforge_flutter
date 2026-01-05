@@ -11,7 +11,6 @@ final class ModernFarmMaterialItemDatabaseDef {
     //   description: 'Basic crafting material from trees',
     //   quality: HandItemQuality.normal,
     //   baseValue: 5,
-    //   maxStackSize: 99,
     //   materialType: 'wood',
     // ),
     // HandItemId.stone: MaterialItem(
@@ -20,7 +19,6 @@ final class ModernFarmMaterialItemDatabaseDef {
     //   description: 'Common building material',
     //   quality: HandItemQuality.normal,
     //   baseValue: 3,
-    //   maxStackSize: 99,
     //   materialType: 'stone',
     // ),
     // HandItemId.iron_ore: MaterialItem(
@@ -29,7 +27,6 @@ final class ModernFarmMaterialItemDatabaseDef {
     //   description: 'Raw iron ore for smelting',
     //   quality: HandItemQuality.silver,
     //   baseValue: 15,
-    //   maxStackSize: 99,
     //   materialType: 'ore',
     // ),
     // HandItemId.gold_ore: MaterialItem(
@@ -38,7 +35,6 @@ final class ModernFarmMaterialItemDatabaseDef {
     //   description: 'Precious gold ore',
     //   quality: HandItemQuality.gold,
     //   baseValue: 50,
-    //   maxStackSize: 99,
     //   materialType: 'ore',
     // ),
     // HandItemId.fiber: MaterialItem(
@@ -47,7 +43,6 @@ final class ModernFarmMaterialItemDatabaseDef {
     //   description: 'Plant fiber for crafting',
     //   quality: HandItemQuality.normal,
     //   baseValue: 2,
-    //   maxStackSize: 99,
     //   materialType: 'fiber',
     // ),
     HandItemId.dungeon_key: MaterialItem(
@@ -56,7 +51,6 @@ final class ModernFarmMaterialItemDatabaseDef {
       description: 'Opens locked dungeon doors. Consumed on use.',
       quality: HandItemQuality.normal,
       baseValue: 0,
-      maxStackSize: 99,
       materialType: 'key',
       iconData: ItemIconData(
         spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
@@ -72,7 +66,6 @@ final class ModernFarmMaterialItemDatabaseDef {
     //   description: 'Golden wheat grain. Can be milled into flour.',
     //   quality: HandItemQuality.normal,
     //   baseValue: 8,
-    //   maxStackSize: 99,
     //   materialType: 'crop',
     // ),
   };

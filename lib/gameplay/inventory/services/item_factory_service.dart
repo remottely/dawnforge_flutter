@@ -23,6 +23,7 @@ class ItemFactoryService {
   final Map<HandItemId, SeedBagItem> _seeds = {};
   bool isInitialized = false;
 
+  // TODO(Kevin): change all this initialize logic??
   Future<void> initialize() async {
     if (isInitialized) {
       developer.log('[ItemFactoryService] Already initialized');
@@ -40,7 +41,7 @@ class ItemFactoryService {
 
       _consumables
         ..clear()
-        ..addAll(ModernFarmConsumableItemDatabaseDef.consumableItemList);
+        ..addAll(ModernFarmHarvestLootItemDatabaseDef.harvestLootItemList);
 
       _materials
         ..clear()
@@ -50,7 +51,8 @@ class ItemFactoryService {
         ..clear()
         ..addAll(ModernFarmSeedBagItemDatabaseDef.seedBagList);
 
-      final totalItems = _weapons.length +
+      final totalItems =
+          _weapons.length +
           _tools.length +
           _consumables.length +
           _materials.length +
