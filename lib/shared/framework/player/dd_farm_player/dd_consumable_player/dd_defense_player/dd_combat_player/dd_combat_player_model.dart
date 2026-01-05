@@ -21,9 +21,7 @@ class DDCombatPlayerModel extends DDMobilePlayerModel {
       (equipment == HandItemId.staff);
 
   @override
-  Map<String, dynamic> toJson() {
-    return super.toJson();
-  }
+  Map<String, dynamic> toJson() => super.toJson();
 
   @protected
   factory DDCombatPlayerModel.fromJson(

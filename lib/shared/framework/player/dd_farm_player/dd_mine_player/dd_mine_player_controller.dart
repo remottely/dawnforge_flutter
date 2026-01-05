@@ -1,0 +1,101 @@
+import 'dart:developer' as developer;
+
+import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_def.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_controller.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_mine_player/dd_mine_player_model.dart';
+
+abstract class DDMinePlayerController<M extends DDMinePlayerModel>
+    extends DDFarmPlayerController<M> {
+  final bool Function() onExecuteMine;
+
+  DDMinePlayerController({
+    required this.onExecuteMine,
+    required super.model,
+    required super.onDisplayExclamationEmote,
+    required super.onDetectEnemyInLongVisionRadius,
+    required super.onChangeRunState,
+    required super.onExecutePrimaryAttack,
+    required super.onExecuteRangedAttack,
+    required super.onExecuteDig,
+    required super.onExecuteWateringCan,
+    required super.onExecuteSeed,
+    required super.onExecuteHarvest,
+  });
+
+  bool _isPickaxe(HandItemId? id) =>
+      id == HandItemId.iron_pickaxe || id == HandItemId.steel_pickaxe;
+
+  bool isMineAction({
+    required DDBasePlayerView player,
+    required dynamic actionId,
+  }) {
+    return InputDef.isPrimaryAction(actionId) &&
+        _isPickaxe(player.controller.model.equipment);
+  }
+
+  @override
+  void handleInputAction({
+    required DDBasePlayerView player,
+    required JoystickActionEvent event,
+  }) {
+    developer.log(
+      '[MineController] Verificando ação: ${event.id} | equipment: ${player.controller.model.equipment} | evento: ${event.event}',
+    );
+
+    if (handleConsumableInput(player: player, event: event)) {
+      return;
+    }
+
+    // Só processa ações no DOWN, não no UP
+    if (event.event != ActionEvent.DOWN) {
+      super.handleInputAction(player: player, event: event);
+      return;
+    }
+
+    if (isMineAction(player: player, actionId: event.id)) {
+      developer.log('[MineController] ✓ É mine action (pickaxe)');
+      _handleExecuteMine();
+    } else {
+      developer.log(
+        '[MineController] ✗ Não é ação de mine, passando para super',
+      );
+    }
+
+    // Encaminha para a cadeia de combate base (sem reprocessar consumo).
+    handleBaseCombatInputAction(player: player, event: event);
+  }
+
+  void _handleExecuteMine() {
+    developer.log(
+      '[MineController] _handleExecuteMine: stamina=${model.stamina}, canExecute=${model.canExecuteMine}',
+    );
+
+    if (!model.canExecuteMine) {
+      developer.log('[MineController] ✗ Não pode executar mine');
+      // Só mostra "Sem Stamina" se realmente for problema de stamina
+      if (model.stamina < model.config.mineStaminaCost) {
+        OverlayMessageDef.showNoStamina();
+      }
+      return;
+    }
+
+    beginStaminaConsumingAction();
+
+    final bool wasExecuted = onExecuteMine.call();
+
+    developer.log('[MineController] Mine wasExecuted: $wasExecuted');
+
+    if (!wasExecuted) {
+      endStaminaConsumingAction();
+      return;
+    }
+
+    model.consumeStamina(model.config.mineStaminaCost);
+
+    endStaminaConsumingAction();
+  }
+}

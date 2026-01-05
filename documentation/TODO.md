@@ -8,7 +8,7 @@
 
 - [PRIORITY] prompt: melhore essa logica de requireWaterForRegrowth, pois todos os crops precisarão de???
 
-- [PRIORITY] 
+- [PRIORITY] prompt: hj em DDMinePlayerView eu utilizo FarmToolActionDef, só q eu preciso q vc crie MineToolActionDef q eu não possuo hj com o _handleMine assim como tenho para outros _handle em FarmToolActionDef hj. crie _handleMine para mim e toda lógica necessaria para que a minha ação de mineração funcione. No caso eu quero q primeiro vc me crie um documento contendo os 10 passos (como prompts) necessarios para que essa feature fique completa. a ideia é eu ter uma picareta que quebre pedras, e ao quebra-las eu automaticamente adquiro(sem dropar itens para depois colhe-los do chão). lembrando que isso tudo ficara em um novo modulo no meu jogo, assim como existe o modulo "farm", preciso do modulo "mine" com a funcionalidade basica de quebrar e colher pedras, assim como faco com crops hj em farm só que com a logica bem mais simples.
 
 - [PRIORITY] 
 

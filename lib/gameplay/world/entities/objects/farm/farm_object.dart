@@ -99,7 +99,7 @@ final class FarmObject extends Equatable implements TileObject {
     if (crop == null) return this;
 
     // Non-regrowing crops are removed; regrowing crops stay with rollback
-    if (!crop!.isRegrow) {
+    if (!crop!.regrowData.isRegrow) {
       return copyWith(crop: null, setCrop: true);
     }
 

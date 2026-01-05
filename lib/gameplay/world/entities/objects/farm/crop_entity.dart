@@ -53,12 +53,6 @@ final class CropEntity extends Equatable {
     ),
   });
 
-  bool get isRegrow => regrowData.isRegrow;
-  int get regrowStageRollback => regrowData.regrowStageRollback;
-  int get regrowStepDays => regrowData.regrowStepDays;
-  bool get isRegrowing => regrowData.isRegrowing;
-  int get daysInStage => regrowData.daysInStage;
-
   /// Calculate growth progress (0.0 to 1.0)
   double get growthProgress {
     if (daysToMature <= 0) return 1.0;
@@ -211,10 +205,10 @@ final class CropEntity extends Equatable {
 
   /// Apply regrowth rollback; returns null if crop does not regrow
   CropEntity? regrowAfterHarvest() {
-    if (!isRegrow) return null;
+    if (!regrowData.isRegrow) return null;
 
     final minIndex = CropStageType.sprout.index;
-    final targetIndex = stage.index - regrowStageRollback;
+    final targetIndex = stage.index - regrowData.regrowStageRollback;
     final newIndex = targetIndex < minIndex ? minIndex : targetIndex;
     final newStage = CropStageType.values[newIndex];
 

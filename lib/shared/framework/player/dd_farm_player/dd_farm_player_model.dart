@@ -13,24 +13,21 @@ class DDFarmPlayerModel extends DDCombatPlayerModel {
     : super.internal(config: config);
 
   bool get canExecuteWateringCan =>
-      (stamina >= config.wateringCanStaminaCost) &&
-      (equipment == HandItemId.wateringCan);
+      stamina >= config.wateringCanStaminaCost &&
+      equipment == HandItemId.wateringCan;
 
   bool get canExecuteDig =>
-      (stamina >= config.digStaminaCost) &&
-      (equipment == HandItemId.shovel);
+      stamina >= config.digStaminaCost && equipment == HandItemId.shovel;
 
   bool get canExecuteSeed =>
-      (stamina >= config.seedStaminaCost) && (equipment?.isSeed ?? false);
+      stamina >= config.seedStaminaCost && (equipment?.isSeed ?? false);
 
   bool get canExecuteHarvest =>
-      (stamina >= config.harvestStaminaCost) &&
-      (equipment == HandItemId.harvestBasket);
+      stamina >= config.harvestStaminaCost &&
+      equipment == HandItemId.harvestBasket;
 
   @override
-  Map<String, dynamic> toJson() {
-    return super.toJson();
-  }
+  Map<String, dynamic> toJson() => super.toJson();
 
   @protected
   factory DDFarmPlayerModel.fromJson(
