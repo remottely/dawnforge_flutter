@@ -45,8 +45,7 @@ class CropFactoryService {
     try {
       return template.copyWith(
         daysPlanted: 0,
-        daysInStage: 0,
-        isRegrowing: false,
+        regrowData: template.regrowData.resetState(),
       );
     } catch (e, stackTrace) {
       developer.log(

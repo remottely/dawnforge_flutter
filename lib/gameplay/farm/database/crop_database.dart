@@ -52,12 +52,7 @@ final class CropDatabase {
       skipFirstFrames: template.skipFirstFrames,
       ySortingFromStage: template.ySortingFromStage ?? template.stage,
       isTree: template.isTree,
-      regrows: template.regrows,
-      regrowStageRollback: template.regrowStageRollback,
-      regrowStepDays: template.regrowStepDays,
-      requireWaterForRegrowth: template.requireWaterForRegrowth,
-      isRegrowing: template.isRegrowing,
-      daysInStage: template.daysInStage,
+      regrowData: template.regrowData.resetState(),
     );
   }
 

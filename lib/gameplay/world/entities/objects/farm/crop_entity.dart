@@ -1,6 +1,8 @@
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/enums/season.dart';
 import 'package:equatable/equatable.dart';
 
+import 'crop_regrow_data.dart';
 import 'crop_stage_type.dart';
 
 /// Entity representing a planted crop in the farm (D2: Entity with Serialization)
@@ -13,7 +15,7 @@ final class CropEntity extends Equatable {
   final int daysToMature;
   final int yieldAmount;
   final HandItemId harvestItemId;
-  final String? requiredSeason;
+  final SeasonType requiredSeason;
   final String spritesheetPath;
   final int spriteWidth;
   final int spriteHeight;
@@ -22,12 +24,7 @@ final class CropEntity extends Equatable {
   final int skipFirstFrames;
   final CropStageType? ySortingFromStage;
   final bool isTree;
-  final bool regrows;
-  final int regrowStageRollback;
-  final int regrowStepDays;
-  final bool requireWaterForRegrowth;
-  final bool isRegrowing;
-  final int daysInStage;
+  final CropRegrowData regrowData;
 
   const CropEntity({
     required this.id,
@@ -38,7 +35,7 @@ final class CropEntity extends Equatable {
     required this.daysToMature,
     required this.yieldAmount,
     required this.harvestItemId,
-    this.requiredSeason,
+    required this.requiredSeason,
     required this.spritesheetPath,
     required this.spriteWidth,
     required this.spriteHeight,
@@ -47,13 +44,20 @@ final class CropEntity extends Equatable {
     required this.skipFirstFrames,
     required this.ySortingFromStage,
     this.isTree = false,
-    this.regrows = false,
-    this.regrowStageRollback = 2,
-    this.regrowStepDays = 2,
-    this.requireWaterForRegrowth = true,
-    this.isRegrowing = false,
-    this.daysInStage = 0,
+    this.regrowData = const CropRegrowData(
+      isRegrow: false,
+      regrowStageRollback: 0,
+      regrowStepDays: 0,
+      isRegrowing: false,
+      daysInStage: 0,
+    ),
   });
+
+  bool get isRegrow => regrowData.isRegrow;
+  int get regrowStageRollback => regrowData.regrowStageRollback;
+  int get regrowStepDays => regrowData.regrowStepDays;
+  bool get isRegrowing => regrowData.isRegrowing;
+  int get daysInStage => regrowData.daysInStage;
 
   /// Calculate growth progress (0.0 to 1.0)
   double get growthProgress {
@@ -77,24 +81,29 @@ final class CropEntity extends Equatable {
   /// Advance crop growth by one day (water gating ocorre em FarmObject)
   CropEntity advanceDay() {
     // Árvores sempre avançam; crops só são chamadas quando regadas
-    final stepDays = isRegrowing ? regrowStepDays : _initialStageStepDays;
+    final stepDays = regrowData.isRegrowing
+        ? regrowData.regrowStepDays
+        : _initialStageStepDays;
 
     var nextStage = stage;
-    var nextDaysInStage = daysInStage + 1;
+    var nextRegrowData = regrowData.copyWith(
+      daysInStage: regrowData.daysInStage + 1,
+    );
     var nextDaysPlanted = daysPlanted + 1;
 
-    if (stage != CropStageType.harvestable && nextDaysInStage >= stepDays) {
+    if (stage != CropStageType.harvestable &&
+        nextRegrowData.daysInStage >= stepDays) {
       final maybeNext = stage.nextStage;
       if (maybeNext != null) {
         nextStage = maybeNext;
       }
-      nextDaysInStage = 0;
+      nextRegrowData = nextRegrowData.copyWith(daysInStage: 0);
     }
 
     return copyWith(
       stage: nextStage,
       daysPlanted: nextDaysPlanted,
-      daysInStage: nextDaysInStage,
+      regrowData: nextRegrowData,
     );
   }
 
@@ -116,7 +125,7 @@ final class CropEntity extends Equatable {
       'daysToMature': daysToMature,
       'yieldAmount': yieldAmount,
       'harvestItemId': harvestItemId.toJson(),
-      'requiredSeason': requiredSeason,
+      'requiredSeason': requiredSeason.toJson(),
       'spritesheetPath': spritesheetPath,
       'spriteWidth': spriteWidth,
       'spriteHeight': spriteHeight,
@@ -125,12 +134,7 @@ final class CropEntity extends Equatable {
       'skipFirstFrames': skipFirstFrames,
       'ySortingFromStage': ySortingFromStage?.toJson(),
       'isTree': isTree,
-      'regrows': regrows,
-      'regrowStageRollback': regrowStageRollback,
-      'regrowStepDays': regrowStepDays,
-      'requireWaterForRegrowth': requireWaterForRegrowth,
-      'isRegrowing': isRegrowing,
-      'daysInStage': daysInStage,
+      'regrowData': regrowData.toJson(),
     };
   }
 
@@ -145,7 +149,7 @@ final class CropEntity extends Equatable {
       daysToMature: json['daysToMature'] as int,
       yieldAmount: json['yieldAmount'] as int,
       harvestItemId: HandItemId.fromJson(json['harvestItemId'] as String),
-      requiredSeason: json['requiredSeason'] as String?,
+      requiredSeason: SeasonType.fromJson(json['requiredSeason'] as String),
       spritesheetPath: json['spritesheetPath'] as String,
       spriteWidth: json['spriteWidth'] as int,
       spriteHeight: json['spriteHeight'] as int,
@@ -156,13 +160,9 @@ final class CropEntity extends Equatable {
         json['ySortingFromStage'] as String?,
       ),
       isTree: json['isTree'] as bool? ?? false,
-      regrows: json['regrows'] as bool? ?? false,
-      regrowStageRollback: json['regrowStageRollback'] as int? ?? 2,
-      regrowStepDays: json['regrowStepDays'] as int? ?? 2,
-      requireWaterForRegrowth:
-          json['requireWaterForRegrowth'] as bool? ?? true,
-      isRegrowing: json['isRegrowing'] as bool? ?? false,
-      daysInStage: json['daysInStage'] as int? ?? 0,
+      regrowData: CropRegrowData.fromJson(
+        json['regrowData'] as Map<String, dynamic>,
+      ),
     );
   }
 
@@ -176,7 +176,7 @@ final class CropEntity extends Equatable {
     int? daysToMature,
     int? yieldAmount,
     HandItemId? harvestItemId,
-    String? requiredSeason,
+    SeasonType? requiredSeason,
     String? spritesheetPath,
     int? spriteWidth,
     int? spriteHeight,
@@ -185,12 +185,7 @@ final class CropEntity extends Equatable {
     int? skipFirstFrames,
     CropStageType? ySortingFromStage,
     bool? isTree,
-    bool? regrows,
-    int? regrowStageRollback,
-    int? regrowStepDays,
-    bool? requireWaterForRegrowth,
-    bool? isRegrowing,
-    int? daysInStage,
+    CropRegrowData? regrowData,
   }) {
     return CropEntity(
       id: id ?? this.id,
@@ -210,19 +205,13 @@ final class CropEntity extends Equatable {
       skipFirstFrames: skipFirstFrames ?? this.skipFirstFrames,
       ySortingFromStage: ySortingFromStage ?? this.ySortingFromStage,
       isTree: isTree ?? this.isTree,
-      regrows: regrows ?? this.regrows,
-      regrowStageRollback: regrowStageRollback ?? this.regrowStageRollback,
-      regrowStepDays: regrowStepDays ?? this.regrowStepDays,
-      requireWaterForRegrowth:
-          requireWaterForRegrowth ?? this.requireWaterForRegrowth,
-      isRegrowing: isRegrowing ?? this.isRegrowing,
-      daysInStage: daysInStage ?? this.daysInStage,
+      regrowData: regrowData ?? this.regrowData,
     );
   }
 
   /// Apply regrowth rollback; returns null if crop does not regrow
   CropEntity? regrowAfterHarvest() {
-    if (!regrows) return null;
+    if (!isRegrow) return null;
 
     final minIndex = CropStageType.sprout.index;
     final targetIndex = stage.index - regrowStageRollback;
@@ -233,42 +222,41 @@ final class CropEntity extends Equatable {
     final stageCount = CropStageType.values.length - 1;
     final stageStartDays = ((daysToMature * newIndex) / stageCount).floor();
 
+    final updatedRegrowData = regrowData.copyWith(
+      isRegrowing: true,
+      daysInStage: 0,
+    );
+
     return copyWith(
       stage: newStage,
       daysPlanted: stageStartDays,
-      daysInStage: 0,
-      isRegrowing: true,
+      regrowData: updatedRegrowData,
     );
   }
 
   @override
   List<Object?> get props => [
-        id,
-        name,
-        description,
-        stage,
-        daysPlanted,
-        daysToMature,
-        yieldAmount,
-        harvestItemId,
-        requiredSeason,
-        spritesheetPath,
-        spriteWidth,
-        spriteHeight,
-        spriteRowIndex,
-        framesCount,
-        skipFirstFrames,
-        ySortingFromStage,
-        isTree,
-        regrows,
-        regrowStageRollback,
-        regrowStepDays,
-        requireWaterForRegrowth,
-        isRegrowing,
-        daysInStage,
-      ];
+    id,
+    name,
+    description,
+    stage,
+    daysPlanted,
+    daysToMature,
+    yieldAmount,
+    harvestItemId,
+    requiredSeason,
+    spritesheetPath,
+    spriteWidth,
+    spriteHeight,
+    spriteRowIndex,
+    framesCount,
+    skipFirstFrames,
+    ySortingFromStage,
+    isTree,
+    regrowData,
+  ];
 
   @override
   String toString() =>
-      'Crop(id: $id, name: $name, stage: $stage, days: $daysPlanted/$daysToMature)';
+      'Crop(id: $id, name: $name, stage: $stage, days: $daysPlanted/$daysToMature)'; // TODO(Kevin): complete this
 }
