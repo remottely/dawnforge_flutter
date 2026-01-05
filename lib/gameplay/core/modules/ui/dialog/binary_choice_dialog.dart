@@ -17,7 +17,8 @@ class BinaryChoiceDialog {
     String noLabel = 'No',
     LogicalKeyboardKey upKey = LogicalKeyboardKey.keyW,
     LogicalKeyboardKey downKey = LogicalKeyboardKey.keyS,
-    LogicalKeyboardKey confirmKey = KeyboardSetup.kInteractionKey,
+    LogicalKeyboardKey cancelKey = KeyboardSetup.kInteractionKey,
+    LogicalKeyboardKey confirmKey = KeyboardSetup.kPrimaryActionKey,
     String? hint,
   }) {
     return showDialog<bool>(
@@ -60,6 +61,11 @@ class BinaryChoiceDialog {
                   return KeyEventResult.handled;
                 }
 
+                if (event.logicalKey == cancelKey) {
+                  Navigator.of(dialogContext).pop(false);
+                  return KeyEventResult.handled;
+                }
+
                 return KeyEventResult.ignored;
               },
               child: DDDialogWidget(
@@ -77,7 +83,10 @@ class BinaryChoiceDialog {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
-                      border: Border.all(color: const Color(0xFF8BA6C1), width: 2),
+                      border: Border.all(
+                        color: const Color(0xFF8BA6C1),
+                        width: 2,
+                      ),
                       boxShadow: const [
                         BoxShadow(
                           color: Colors.black54,
@@ -107,7 +116,8 @@ class BinaryChoiceDialog {
                         const SizedBox(height: 14),
                         Center(
                           child: DDText.small(
-                            text: hint ??
+                            text:
+                                hint ??
                                 'Use ${upKey.keyLabel ?? upKey.debugName ?? 'W'} / ${downKey.keyLabel ?? downKey.debugName ?? 'S'} and ${confirmKey.keyLabel ?? confirmKey.debugName ?? 'confirm'} to choose.',
                           ),
                         ),
@@ -154,10 +164,7 @@ class _DialogOption extends StatelessWidget {
               ]
             : null,
       ),
-      child: DDText.small(
-        text: label,
-        textAlign: TextAlign.center,
-      ),
+      child: DDText.small(text: label, textAlign: TextAlign.center),
     );
   }
 }
