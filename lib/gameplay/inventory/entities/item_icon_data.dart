@@ -13,6 +13,16 @@ class ItemIconData {
     required this.spriteColumnIndex,
   });
 
+  Map<String, dynamic> toJson() {
+    return {
+      'spritesheetPath': spritesheetPath,
+      'spriteWidth': spriteWidth,
+      'spriteHeight': spriteHeight,
+      'rowIndex': spriteRowIndex,
+      'columnIndex': spriteColumnIndex,
+    };
+  }
+
   factory ItemIconData.fromJson(Map<String, dynamic> json) {
     return ItemIconData(
       spritesheetPath: json['spritesheetPath'] as String,

@@ -25,41 +25,34 @@ final class MaterialItem extends HandItem {
 
   @override
   Map<String, dynamic> toJson() {
-    return {
-      'id': id.name,
-      'name': name,
-      'description': description,
-      'type': type.toJson(),
-      'quality': quality.toJson(),
-      'baseValue': baseValue,
-      'maxStackSize': maxStackSize,
-      'materialType': materialType.toJson(),
-    };
+    final baseData = super.toJson();
+    return {...baseData, 'materialType': materialType.toJson()};
   }
 
   factory MaterialItem.fromJson(Map<String, dynamic> json) {
+    final baseData = HandItem.fromJson(json);
+
     return MaterialItem(
-      id: HandItemId.fromJson(json['id'] as String),
-      name: json['name'] as String,
-      description: json['description'] as String,
-      baseValue: json['baseValue'] as int,
-      quality: HandItemQuality.fromJson(json['quality'] as String),
-      materialType:
-          MaterialType.fromJson(json['materialType'] as String? ?? 'unknown'),
-      iconData: ItemIconData.fromJson(json['iconData'] as Map<String, dynamic>),
+      id: baseData.id,
+      name: baseData.name,
+      description: baseData.description,
+      quality: baseData.quality,
+      baseValue: baseData.baseValue,
+      iconData: baseData.iconData,
+      materialType: MaterialType.fromJson(
+        json['materialType'] as String? ?? 'unknown',
+      ),
     );
   }
 
-  @override
   MaterialItem copyWith({
     HandItemId? id,
     String? name,
     String? description,
     int? baseValue,
     HandItemQuality? quality,
-    int? maxStackSize,
-    MaterialType? materialType,
     ItemIconData? iconData,
+    MaterialType? materialType,
   }) {
     return MaterialItem(
       id: id ?? this.id,
@@ -67,8 +60,8 @@ final class MaterialItem extends HandItem {
       description: description ?? this.description,
       baseValue: baseValue ?? this.baseValue,
       quality: quality ?? this.quality,
-      materialType: materialType ?? this.materialType,
       iconData: iconData ?? this.iconData,
+      materialType: materialType ?? this.materialType,
     );
   }
 

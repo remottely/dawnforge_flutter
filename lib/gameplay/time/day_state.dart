@@ -27,7 +27,7 @@ class DayState {
 
   DayState copyWith({
     int? dayNumber,
-    SeasonType? season,
+    SeasonType? seasonType,
     WeatherType? weather,
     int? weekdayIndex,
     bool? isFestival,
@@ -35,7 +35,7 @@ class DayState {
   }) {
     return DayState(
       dayNumber: dayNumber ?? this.dayNumber,
-      seasonType: season ?? this.seasonType,
+      seasonType: seasonType ?? this.seasonType,
       weather: weather ?? this.weather,
       weekdayIndex: weekdayIndex ?? this.weekdayIndex,
       isFestival: isFestival ?? this.isFestival,
@@ -45,7 +45,7 @@ class DayState {
 
   Map<String, dynamic> toJson() => {
         'dayNumber': dayNumber,
-        'season': seasonType.toJson(),
+        'seasonType': seasonType.toJson(),
         'weather': weather.toJson(),
         'weekdayIndex': weekdayIndex,
         'isFestival': isFestival,
@@ -55,7 +55,7 @@ class DayState {
   static DayState fromJson(Map<String, dynamic> json) {
     return DayState(
       dayNumber: json['dayNumber'] as int,
-      seasonType: SeasonType.fromJson(json['season'] as String),
+      seasonType: SeasonType.fromJson(json['seasonType'] as String),
       weather: WeatherTypeJson.fromJson(json['weather'] as String),
       weekdayIndex: json['weekdayIndex'] as int,
       isFestival: json['isFestival'] as bool? ?? false,
@@ -83,7 +83,7 @@ class DayState {
 
     return copyWith(
       dayNumber: nextDayNumber,
-      season: nextSeason,
+      seasonType: nextSeason,
       weather: nextWeather,
       weekdayIndex: nextWeekday,
       isFestival: false,

@@ -1,4 +1,5 @@
-import '../entities/enums/hand_item_id.dart';
+import 'package:flutter/material.dart';
+
 import '../entities/hand_item.dart';
 import '../entities/item_icon_data.dart';
 import '../entities/enums/hand_item_quality.dart';
@@ -24,44 +25,34 @@ final class WeaponItem extends HandItem {
 
   @override
   Map<String, dynamic> toJson() {
+    final baseData = super.toJson();
     return {
-      'id': id.name,
-      'name': name,
-      'description': description,
-      'type': type.toJson(),
-      'quality': quality.toJson(),
-      'baseValue': baseValue,
+      ...baseData,
       'damage': damage,
-      'isStackable': isStackable,
-      'maxStackSize': maxStackSize,
     };
   }
 
+  @protected
   factory WeaponItem.fromJson(Map<String, dynamic> json) {
+    final baseData = HandItem.fromJson(json);
+
     return WeaponItem(
-      id: HandItemId.fromJson(json['id'] as String),
-      name: json['name'] as String,
-      description: json['description'] as String,
-      baseValue: json['baseValue'] as int,
-      quality: HandItemQuality.fromJson(json['quality'] as String),
+      id: baseData.id,
+      name: baseData.name,
+      description: baseData.description,
+      quality: baseData.quality,
+      baseValue: baseData.baseValue,
+      iconData: baseData.iconData,
       damage: json['damage'] as int,
-      iconData: ItemIconData.fromJson(json['iconData'] as Map<String, dynamic>),
     );
   }
 
-  @override
   WeaponItem copyWith({
     String? name,
     String? description,
     int? baseValue,
     HandItemQuality? quality,
     int? damage,
-    double? attackSpeed,
-    double? critChance,
-    double? critMultiplier,
-    String? cropId,
-    bool? isStackable,
-    int? maxStackSize,
     ItemIconData? iconData,
   }) {
     return WeaponItem(

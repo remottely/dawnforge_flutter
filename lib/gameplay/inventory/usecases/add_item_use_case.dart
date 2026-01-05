@@ -3,7 +3,6 @@ import 'dart:math';
 
 import '../entities/inventory_slot.dart';
 import '../entities/hand_item.dart';
-import '../items/weapon_item.dart';
 import '../managers/inventory_manager.dart';
 import '../entities/enums/hand_item_id.dart';
 import '../services/item_factory_service.dart';
@@ -28,9 +27,7 @@ class AddItemUseCase {
 
   /// Add an item entity directly to inventory
   bool addItemEntity(HandItem item, [int quantity = 1]) {
-    final normalizedItem = _normalizeStackBehavior(item);
-
-    developer.log('[AddItemUseCase] Adding $quantity x ${normalizedItem.name}');
+    developer.log('[AddItemUseCase] Adding $quantity x ${item.name}');
 
     if (quantity <= 0) {
       developer.log('[AddItemUseCase] Invalid quantity: $quantity');
@@ -40,7 +37,7 @@ class AddItemUseCase {
     int remainingQuantity = quantity;
 
     // Try to stack in existing slots
-    if (normalizedItem.isStackable) {
+    if (item.isStackable) {
       for (
         var i = 0;
         i < _inventoryManager.maxSlots && remainingQuantity > 0;
@@ -48,16 +45,17 @@ class AddItemUseCase {
       ) {
         final slot = _inventoryManager.getSlotByIndex(i);
         if (slot == null || slot.isEmpty) continue;
-        if (slot.item!.id != normalizedItem.id) continue;
+        if (slot.item!.id != item.id) continue;
         // If the slot has an old non-stackable instance of the same item, refresh it
         final slotItem = slot.item!;
         final needsUpgrade =
-            (!slotItem.isStackable || slotItem.maxStackSize < normalizedItem.maxStackSize) &&
-            normalizedItem.isStackable;
+            (!slotItem.isStackable ||
+                slotItem.maxStackSize < item.maxStackSize) &&
+            item.isStackable;
         final upgradedSlot = needsUpgrade
             ? InventorySlot(
                 index: slot.index,
-                item: normalizedItem, // replace with stackable instance
+                item: item, // replace with stackable instance
                 quantity: slot.quantity,
               )
             : slot;
@@ -67,14 +65,11 @@ class AddItemUseCase {
           continue;
         }
 
-        final spaceInSlot = normalizedItem.maxStackSize - upgradedSlot.quantity;
+        final spaceInSlot = item.maxStackSize - upgradedSlot.quantity;
         if (spaceInSlot <= 0) continue;
 
         final amountToAdd = min(remainingQuantity, spaceInSlot);
-        _inventoryManager.updateSlot(
-          i,
-          upgradedSlot.addQuantity(amountToAdd),
-        );
+        _inventoryManager.updateSlot(i, upgradedSlot.addQuantity(amountToAdd));
         remainingQuantity -= amountToAdd;
 
         developer.log(
@@ -102,15 +97,15 @@ class AddItemUseCase {
         return quantity > remainingQuantity;
       }
 
-      final amountForSlot = normalizedItem.isStackable
-          ? min(remainingQuantity, normalizedItem.maxStackSize)
+      final amountForSlot = item.isStackable
+          ? min(remainingQuantity, item.maxStackSize)
           : 1;
 
       _inventoryManager.updateSlot(
         emptySlotIndex,
         InventorySlot(
           index: emptySlotIndex,
-          item: normalizedItem,
+          item: item,
           quantity: amountForSlot,
         ),
       );
@@ -137,28 +132,12 @@ class AddItemUseCase {
         anyAdded = true;
         developer.log('[AddItemUseCase] Added $quantity x ${itemId.name}');
       } else {
-        developer.log('[AddItemUseCase] Failed to add $quantity x ${itemId.name}');
+        developer.log(
+          '[AddItemUseCase] Failed to add $quantity x ${itemId.name}',
+        );
       }
     }
 
     return anyAdded;
-  }
-
-  HandItem _normalizeStackBehavior(HandItem item) {
-    if (item is WeaponItem && item.id.isSeed) {
-
-      if (!item.isStackable) {
-        developer.log(
-          '[AddItemUseCase] Normalizing seed item ${item.id} to stackable x${item.maxStackSize}',
-        );
-      }
-
-      return item.copyWith(
-        isStackable: true,
-        maxStackSize: item.maxStackSize,
-      );
-    }
-
-    return item;
   }
 }

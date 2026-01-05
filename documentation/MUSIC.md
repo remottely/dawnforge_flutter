@@ -1,5 +1,8 @@
 # Musics:
 
+## DECISÃO FINAL:
+- Trailler: 🍃 Free Uplifting Music (For Videos) - "Clarion" by @ScottBuckley 🇦🇺
+
 STATUS DICIONADOS EM PLAYLISTS:
 🔥 (Precisa estar no jogo)
 ⭐ (Futuramente)

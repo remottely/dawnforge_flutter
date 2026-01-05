@@ -23,34 +23,30 @@ class ConsumableItem extends HandItem {
 
   @override
   Map<String, dynamic> toJson() {
+    final baseData = super.toJson();
     return {
-      'id': id.name,
-      'name': name,
-      'description': description,
-      'type': type.toJson(),
-      'quality': quality.toJson(),
-      'baseValue': baseValue,
-      'maxStackSize': maxStackSize,
+      ...baseData,
       'healthRestore': healthRestore,
       'staminaRestore': staminaRestore,
     };
   }
 
   factory ConsumableItem.fromJson(Map<String, dynamic> json) {
+    final baseData = HandItem.fromJson(json);
+
     return ConsumableItem(
-      id: HandItemId.fromJson(json['id'] as String),
-      name: json['name'] as String,
-      description: json['description'] as String,
-      baseValue: json['baseValue'] as int,
-      quality: HandItemQuality.fromJson(json['quality'] as String),
-      type: HandItemType.fromJson(json['type'] as String),
+      id: baseData.id,
+      name: baseData.name,
+      description: baseData.description,
+      type: baseData.type,
+      quality: baseData.quality,
+      baseValue: baseData.baseValue,
+      iconData: baseData.iconData,
       healthRestore: json['healthRestore'] as int,
       staminaRestore: json['staminaRestore'] as int,
-      iconData: ItemIconData.fromJson(json['iconData'] as Map<String, dynamic>),
     );
   }
 
-  @override
   ConsumableItem copyWith({
     HandItemId? id,
     String? name,
@@ -58,10 +54,8 @@ class ConsumableItem extends HandItem {
     int? baseValue,
     HandItemQuality? quality,
     HandItemType? type,
-    int? maxStackSize,
     int? healthRestore,
     int? staminaRestore,
-    int? duration,
     ItemIconData? iconData,
   }) {
     return ConsumableItem(

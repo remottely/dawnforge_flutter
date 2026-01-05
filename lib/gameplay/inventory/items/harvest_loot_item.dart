@@ -34,38 +34,30 @@ final class HarvestLootItem extends ConsumableItem {
 
   @override
   Map<String, dynamic> toJson() {
+    final baseData = super.toJson();
     return {
-      'id': id.name,
-      'name': name,
-      'description': description,
-      'type': type.toJson(),
+      ...baseData,
       'category': category.toJson(),
-      'quality': quality.toJson(),
-      'baseValue': baseValue,
-      'maxStackSize': maxStackSize,
-      'isStackable': isStackable,
-      'isDroppable': isDroppable,
-      'isTradeable': isTradeable,
-      'staminaRestore': staminaRestore,
-      'healthRestore': healthRestore,
-      'season': seasonType.toJson(),
+      'seasonType': seasonType.toJson(),
       'regrowthDays': regrowthDays,
     };
   }
 
   factory HarvestLootItem.fromJson(Map<String, dynamic> json) {
+    final baseData = ConsumableItem.fromJson(json);
+
     return HarvestLootItem(
-      id: HandItemId.fromJson(json['id'] as String),
-      name: json['name'] as String,
-      description: json['description'] as String,
-      baseValue: json['baseValue'] as int,
-      quality: HandItemQuality.fromJson(json['quality'] as String),
+      id: baseData.id,
+      name: baseData.name,
+      description: baseData.description,
+      quality: baseData.quality,
+      baseValue: baseData.baseValue,
+      iconData: baseData.iconData,
+      healthRestore: baseData.healthRestore,
+      staminaRestore: baseData.healthRestore,
       category: LootCategory.fromJson(json['category'] as String),
-      staminaRestore: json['staminaRestore'] as int,
-      healthRestore: json['healthRestore'] as int,
-      seasonType: SeasonType.fromJson(json['season'] as String? ?? 'any'),
+      seasonType: SeasonType.fromJson(json['seasonType'] as String? ?? 'any'),
       regrowthDays: json['regrowthDays'] as int,
-      iconData: ItemIconData.fromJson(json['iconData'] as Map<String, dynamic>),
     );
   }
 
@@ -83,10 +75,8 @@ final class HarvestLootItem extends ConsumableItem {
     ItemIconData? iconData,
     HandItemType? type,
     LootCategory? category,
-    bool? isStackable,
-    bool? isDroppable,
     bool? isTradeable,
-    SeasonType? season,
+    SeasonType? seasonType,
     int? regrowthDays,
   }) {
     return HarvestLootItem(
@@ -98,7 +88,7 @@ final class HarvestLootItem extends ConsumableItem {
       category: category ?? this.category,
       staminaRestore: staminaRestore ?? this.staminaRestore,
       healthRestore: healthRestore ?? this.healthRestore,
-      seasonType: season ?? this.seasonType,
+      seasonType: seasonType ?? this.seasonType,
       regrowthDays: regrowthDays ?? this.regrowthDays,
       iconData: iconData ?? this.iconData,
     );

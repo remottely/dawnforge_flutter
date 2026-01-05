@@ -35,49 +35,44 @@ final class SeedBagItem extends HandItem {
 
   @override
   Map<String, dynamic> toJson() {
+    final baseData = super.toJson();
     return {
-      'id': id.name,
-      'name': name,
-      'description': description,
-      'type': type.toJson(),
-      'quality': quality.toJson(),
-      'baseValue': baseValue,
-      'maxStackSize': maxStackSize,
+      ...baseData,
       'cropId': cropId.toJson(),
       'growthTime': growthTime,
       'yield': yield,
-      'season': seasonType.toJson(),
+      'seasonType': seasonType.toJson(),
     };
   }
 
   factory SeedBagItem.fromJson(Map<String, dynamic> json) {
+    final baseData = HandItem.fromJson(json);
+
     return SeedBagItem(
-      id: HandItemId.fromJson(json['id'] as String),
-      name: json['name'] as String,
-      description: json['description'] as String,
-      baseValue: json['baseValue'] as int,
-      quality: HandItemQuality.fromJson(json['quality'] as String),
+      id: baseData.id,
+      name: baseData.name,
+      description: baseData.description,
+      quality: baseData.quality,
+      baseValue: baseData.baseValue,
+      iconData: baseData.iconData,
       cropId: HandItemId.fromJson(json['cropId'] as String),
       growthTime: json['growthTime'] as int,
       yield: json['yield'] as int? ?? 1,
-      seasonType: SeasonType.fromJson(json['season'] as String? ?? 'any'),
-      iconData: ItemIconData.fromJson(json['iconData'] as Map<String, dynamic>),
+      seasonType: SeasonType.fromJson(json['seasonType'] as String? ?? 'any'),
     );
   }
 
-  @override
   SeedBagItem copyWith({
     HandItemId? id,
     String? name,
     String? description,
     int? baseValue,
     HandItemQuality? quality,
-    int? maxStackSize,
+    ItemIconData? iconData,
     HandItemId? cropId,
     int? growthTime,
     int? yield,
-    SeasonType? season,
-    ItemIconData? iconData,
+    SeasonType? seasonType,
   }) {
     return SeedBagItem(
       id: id ?? this.id,
@@ -85,11 +80,11 @@ final class SeedBagItem extends HandItem {
       description: description ?? this.description,
       baseValue: baseValue ?? this.baseValue,
       quality: quality ?? this.quality,
+      iconData: iconData ?? this.iconData,
       cropId: cropId ?? this.cropId,
       growthTime: growthTime ?? this.growthTime,
       yield: yield ?? this.yield,
-      seasonType: season ?? this.seasonType,
-      iconData: iconData ?? this.iconData,
+      seasonType: seasonType ?? this.seasonType,
     );
   }
 
