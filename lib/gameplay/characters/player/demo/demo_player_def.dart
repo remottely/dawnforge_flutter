@@ -61,18 +61,37 @@ final class DemoPlayerDef {
     bottom: 16,
   );
 
+  // static String idleAssetPath =
+  //     'tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_idle_full_light_demo_2.png';
+  // static String walkAssetPath =
+  //     'tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_walk_full_light_demo.png';
+  // static String runAssetPath =
+  //     'tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_run_full_light_with_dust_specs_demo.png';
+  // static String digAssetPath =
+  //     'tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_tools_shovel_full_light_demo.png';
+  // static String wateringAssetPath =
+  //     'tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_tools_watercan_full_light_demo.png';
+  // static String harvestAssetPath =
+  //     'tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_tools_hoe_full_light_demo.png';
+
   static String idleAssetPath =
-      'tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_idle_full_light_demo_4.png';
-  static String walkAssetPath =
-      'tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_walk_full_light_demo.png';
+      'tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/idle/character_body/character_idle_body_light_2.png';
+  static String placeSeedAssetPath =
+      'tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/place_seed/character_body/character_place_seed_body_light_6.png';
   static String runAssetPath =
-      'tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_run_full_light_with_dust_specs_demo.png';
-  static String digAssetPath =
-      'tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_tools_shovel_full_light_demo.png';
-  static String wateringAssetPath =
-      'tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_tools_watercan_full_light_demo.png';
+      'tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/run/character_body/character_run_body_light_with_dust_specs_4.png';
+  static String chopAssetPath =
+      'tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/tools_axe/character_body/character_tools_axe_body_light_7.png';
   static String harvestAssetPath =
-      'tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_tools_hoe_full_light_demo.png';
+      'tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/tools_hoe/character_body/character_tools_hoe_body_light_7.png';
+  static String mineAssetPath =
+      'tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/tools_pickaxe/character_body/character_tools_pickaxe_body_light_7.png';
+  static String digAssetPath =
+      'tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/tools_shovel/character_body/character_tools_shovel_body_light_6.png';
+  static String wateringAssetPath =
+      'tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/tools_watercan/character_body/character_tools_watercan_body_light_10.png';
+  static String walkAssetPath =
+      'tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/walk/character_body/character_walk_body_light_6.png';
 
   static const int _x2 = 2;
   static const int _x4 = 4;
@@ -95,18 +114,8 @@ final class DemoPlayerDef {
   static const double _frameLeftX10 = _x10 * 2;
   static const double _frameDownX10 = _x10 * 3;
 
-  static const int _x14 = 14;
-  static const double _frameRightX14 = _x14 * 0;
-  static const double _frameUpX14 = _x14 * 1;
-  static const double _frameLeftX14 = _x14 * 2;
-  static const double _frameDownX14 = _x14 * 3;
-
-  static const double _frameIdleY = 2;
-  static const double _frameWalkY = 4;
   static const double _frameHarvestY = 6;
   static const double _framePlaceSeedY = _frameHarvestY;
-  static const double _frameDigY = 10;
-  static const double _frameWateringY = 14;
   static const double _frameChoppingY = 18;
   static const double _frameAttackY = _frameChoppingY;
 
@@ -116,7 +125,7 @@ final class DemoPlayerDef {
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: idleAssetPath,
         textureSize: textureSize,
-        totalFrames: _x4,
+        totalFrames: _x2,
         framePositionX: 0,
         framePositionY: _frameRightY,
       );
@@ -125,7 +134,7 @@ final class DemoPlayerDef {
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: idleAssetPath,
         textureSize: textureSize,
-        totalFrames: _x4,
+        totalFrames: _x2,
         framePositionX: 0,
         framePositionY: _frameLeftY,
       );
@@ -134,7 +143,7 @@ final class DemoPlayerDef {
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: idleAssetPath,
         textureSize: textureSize,
-        totalFrames: _x4,
+        totalFrames: _x2,
         framePositionX: 0,
         framePositionY: _frameUpY,
       );
@@ -143,7 +152,7 @@ final class DemoPlayerDef {
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: idleAssetPath,
         textureSize: textureSize,
-        totalFrames: _x4,
+        totalFrames: _x2,
         framePositionX: 0,
         framePositionY: _frameDownY,
       );
@@ -491,50 +500,40 @@ final class DemoPlayerDef {
         loadDown: _loadAnimationWateringDown,
       );
 
-  /// TODO(Kevin): remove this test animations
   static final Future<SpriteAnimation> _loadAnimationPlaceSeedRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: idleAssetPath,
+        assetPath: placeSeedAssetPath,
         textureSize: textureSize,
-        totalFrames: AppEnvironment.kIsDevToolsMode
-            ? 2
-            : 5, // TODO(Kevin): change the real value
-        framePositionX: _frameRightX9,
-        framePositionY: _framePlaceSeedY,
+        totalFrames: _x6,
+        framePositionX: 0,
+        framePositionY: _frameRightY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationPlaceSeedLeft =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: idleAssetPath,
+        assetPath: placeSeedAssetPath,
         textureSize: textureSize,
-        totalFrames: AppEnvironment.kIsDevToolsMode
-            ? 2
-            : 5, // TODO(Kevin): change the real value
-        framePositionX: _frameLeftX9,
-        framePositionY: _framePlaceSeedY,
+        totalFrames: _x6,
+        framePositionX: 0,
+        framePositionY: _frameLeftY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationPlaceSeedUp =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: idleAssetPath,
+        assetPath: placeSeedAssetPath,
         textureSize: textureSize,
-        totalFrames: AppEnvironment.kIsDevToolsMode
-            ? 2
-            : 5, // TODO(Kevin): change the real value
-        framePositionX: _frameUpX9,
-        framePositionY: _framePlaceSeedY,
+        totalFrames: _x6,
+        framePositionX: 0,
+        framePositionY: _frameUpY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationPlaceSeedDown =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: idleAssetPath,
+        assetPath: placeSeedAssetPath,
         textureSize: textureSize,
-        totalFrames: AppEnvironment.kIsDevToolsMode
-            ? 2
-            : 5, // TODO(Kevin): change the real value
-        framePositionX: _frameDownX9,
-        framePositionY: _framePlaceSeedY,
-        framePositionYPadding: -1,
+        totalFrames: _x6,
+        framePositionX: 0,
+        framePositionY: _frameDownY,
       );
 
   static final _animationPlaceSeedDirectionalFactory =

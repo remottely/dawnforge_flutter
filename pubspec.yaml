@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.91.0+1
+version: 1.91.2+1
 
 environment:
   sdk: ^3.8.1
@@ -315,13 +315,24 @@ flutter:
     # - assets/images/tiled/small_burg/maps/sb_farm.json # TODO(Kevin): remove it from all project
     - assets/images/tiled/maps/farm_map.json
 
-    # - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_idle_full_light_demo.png
-    - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_idle_full_light_demo_4.png
-    - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_run_full_light_with_dust_specs_demo.png
-    - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_tools_hoe_full_light_demo.png
-    - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_tools_shovel_full_light_demo.png
-    - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_tools_watercan_full_light_demo.png
-    - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_walk_full_light_demo.png
+    # # - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_idle_full_light_demo.png
+    # - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_idle_full_light_demo_2.png
+    # - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_idle_full_light_demo_4.png
+    # - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_run_full_light_with_dust_specs_demo.png
+    # - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_tools_hoe_full_light_demo.png
+    # - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_tools_shovel_full_light_demo.png
+    # - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_tools_watercan_full_light_demo.png
+    # - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_walk_full_light_demo.png
+
+    - assets/images/tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/idle/character_body/character_idle_body_light_2.png
+    - assets/images/tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/place_seed/character_body/character_place_seed_body_light_6.png
+    - assets/images/tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/run/character_body/character_run_body_light_with_dust_specs_4.png
+    - assets/images/tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/tools_axe/character_body/character_tools_axe_body_light_7.png
+    - assets/images/tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/tools_hoe/character_body/character_tools_hoe_body_light_7.png
+    - assets/images/tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/tools_pickaxe/character_body/character_tools_pickaxe_body_light_7.png
+    - assets/images/tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/tools_shovel/character_body/character_tools_shovel_body_light_6.png
+    - assets/images/tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/tools_watercan/character_body/character_tools_watercan_body_light_10.png
+    - assets/images/tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/walk/character_body/character_walk_body_light_6.png
 
   fonts:
     - family: Normal
