@@ -17,19 +17,14 @@ final class HarvestLootItem extends ConsumableItem {
     required super.description,
     required super.baseValue,
     super.quality = HandItemQuality.normal,
-    super.type = HandItemType.material,
-    super.isStackable = true,
-    super.maxStackSize = 999,
     required super.iconData,
     this.category = LootCategory.vegetable,
-    super.isDroppable = true,
-    super.isTradeable = true,
     super.healthRestore = 5,
     super.staminaRestore = 13,
     required this.season,
     this.regrows = false,
     this.regrowthDays = 0,
-  });
+  }) : super(type: HandItemType.material);
 
   @override
   int get sellValue => (baseValue * quality.priceMultiplier).round();
@@ -73,7 +68,7 @@ final class HarvestLootItem extends ConsumableItem {
         json['category'] as String? ??
             'vegetables', // TODO(kevin): change this default value
       ),
-      maxStackSize: json['maxStackSize'] as int? ?? 999,
+      maxStackSize: json['maxStackSize'] as int? ?? 99,
       isStackable: json['isStackable'] as bool? ?? true,
       isDroppable: json['isDroppable'] as bool? ?? true,
       isTradeable: json['isTradeable'] as bool? ?? true,

@@ -8,23 +8,26 @@ final class SeedBagItem extends HandItem {
   final HandItemId cropId;
   final int growthTime;
   final int yield;
-  final String season;
+  final String season; // TODO(Kevin): change to enum
 
   const SeedBagItem({
     required super.id,
     required super.name,
     required super.description,
     required super.baseValue,
-    super.quality = HandItemQuality.normal,
-    super.type = HandItemType.cropSeed,
-    super.isStackable = true,
-    super.maxStackSize = 99,
     required super.iconData,
     required this.cropId,
     required this.growthTime,
-    this.yield = 1,
-    this.season = 'any',
-  });
+    required super.quality,
+    required this.season,
+    // this.season = 'any', // TODO(Kevin): put it as required
+    this.yield = 1, // TODO(Kevin): entender oq é isso
+  }) : super(
+         maxStackSize: 99,
+         isDroppable: true,
+         isTradeable: true,
+         type: HandItemType.cropSeed,
+       );
 
   bool canPlantInSeason(String currentSeason) {
     return season == 'any' ||

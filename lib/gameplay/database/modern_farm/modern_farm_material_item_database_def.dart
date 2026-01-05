@@ -11,7 +11,7 @@ final class ModernFarmMaterialItemDatabaseDef {
     //   description: 'Basic crafting material from trees',
     //   quality: HandItemQuality.normal,
     //   baseValue: 5,
-    //   maxStackSize: 999,
+    //   maxStackSize: 99,
     //   materialType: 'wood',
     // ),
     // HandItemId.stone: MaterialItem(
@@ -20,7 +20,7 @@ final class ModernFarmMaterialItemDatabaseDef {
     //   description: 'Common building material',
     //   quality: HandItemQuality.normal,
     //   baseValue: 3,
-    //   maxStackSize: 999,
+    //   maxStackSize: 99,
     //   materialType: 'stone',
     // ),
     // HandItemId.iron_ore: MaterialItem(
@@ -29,7 +29,7 @@ final class ModernFarmMaterialItemDatabaseDef {
     //   description: 'Raw iron ore for smelting',
     //   quality: HandItemQuality.silver,
     //   baseValue: 15,
-    //   maxStackSize: 999,
+    //   maxStackSize: 99,
     //   materialType: 'ore',
     // ),
     // HandItemId.gold_ore: MaterialItem(
@@ -38,7 +38,7 @@ final class ModernFarmMaterialItemDatabaseDef {
     //   description: 'Precious gold ore',
     //   quality: HandItemQuality.gold,
     //   baseValue: 50,
-    //   maxStackSize: 999,
+    //   maxStackSize: 99,
     //   materialType: 'ore',
     // ),
     // HandItemId.fiber: MaterialItem(
@@ -47,7 +47,7 @@ final class ModernFarmMaterialItemDatabaseDef {
     //   description: 'Plant fiber for crafting',
     //   quality: HandItemQuality.normal,
     //   baseValue: 2,
-    //   maxStackSize: 999,
+    //   maxStackSize: 99,
     //   materialType: 'fiber',
     // ),
     HandItemId.dungeon_key: MaterialItem(

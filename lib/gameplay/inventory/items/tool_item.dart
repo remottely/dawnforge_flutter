@@ -6,19 +6,21 @@ import '../entities/enums/hand_item_type.dart';
 
 final class ToolItem extends HandItem {
   final String toolType;
-  final int powerLevel;
 
   const ToolItem({
     required super.id,
     required super.name,
     required super.description,
     required super.baseValue,
-    super.quality = HandItemQuality.normal,
-    super.type = HandItemType.tool,
     required super.iconData,
+    required super.quality,
     required this.toolType,
-    this.powerLevel = 1,
-  });
+  }) : super(
+         maxStackSize: 1,
+         isDroppable: true,
+         isTradeable: true,
+         type: HandItemType.tool,
+       );
 
   @override
   Map<String, dynamic> toJson() {
@@ -30,7 +32,6 @@ final class ToolItem extends HandItem {
       'quality': quality.toJson(),
       'baseValue': baseValue,
       'toolType': toolType,
-      'powerLevel': powerLevel,
     };
   }
 
@@ -42,7 +43,6 @@ final class ToolItem extends HandItem {
       baseValue: json['baseValue'] as int,
       quality: HandItemQuality.fromJson(json['quality'] as String),
       toolType: json['toolType'] as String,
-      powerLevel: json['powerLevel'] as int? ?? 1,
       iconData: ItemIconData.fromJson(json['iconData'] as Map<String, dynamic>),
     );
   }
@@ -65,7 +65,6 @@ final class ToolItem extends HandItem {
       baseValue: baseValue ?? this.baseValue,
       quality: quality ?? this.quality,
       toolType: toolType ?? this.toolType,
-      powerLevel: powerLevel ?? this.powerLevel,
       iconData: iconData ?? this.iconData,
     );
   }

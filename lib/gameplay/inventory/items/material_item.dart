@@ -5,20 +5,22 @@ import '../entities/enums/hand_item_quality.dart';
 import '../entities/enums/hand_item_type.dart';
 
 final class MaterialItem extends HandItem {
-  final String materialType;
+  final String materialType; // TODO(Kevin): change to enum
 
   const MaterialItem({
     required super.id,
     required super.name,
     required super.description,
     required super.baseValue,
-    super.quality = HandItemQuality.normal,
-    super.type = HandItemType.material,
-    super.isStackable = true,
-    super.maxStackSize = 999,
     required super.iconData,
+    required super.quality,
     required this.materialType,
-  });
+  }) : super(
+         maxStackSize: 99,
+         isDroppable: true,
+         isTradeable: true,
+         type: HandItemType.material,
+       );
 
   @override
   Map<String, dynamic> toJson() {
@@ -41,7 +43,7 @@ final class MaterialItem extends HandItem {
       description: json['description'] as String,
       baseValue: json['baseValue'] as int,
       quality: HandItemQuality.fromJson(json['quality'] as String),
-      maxStackSize: json['maxStackSize'] as int? ?? 999,
+      maxStackSize: json['maxStackSize'] as int? ?? 99,
       materialType: json['materialType'] as String,
       iconData: ItemIconData.fromJson(json['iconData'] as Map<String, dynamic>),
     );

@@ -11,7 +11,6 @@ abstract class HandItem {
   final HandItemQuality quality;
   final int maxStackSize;
   final int baseValue;
-  final bool isStackable;
   final bool isDroppable;
   final bool isTradeable;
   final ItemIconData iconData;
@@ -21,14 +20,15 @@ abstract class HandItem {
     required this.name,
     required this.description,
     required this.type,
-    this.quality = HandItemQuality.normal,
-    this.maxStackSize = 1,
     required this.baseValue,
-    this.isStackable = false,
-    this.isDroppable = true,
-    this.isTradeable = true,
+    required this.maxStackSize,
+    required this.quality,
+    required this.isDroppable,
+    required this.isTradeable,
     required this.iconData,
   });
+
+  bool get isStackable => maxStackSize > 1;
 
   int get sellValue => (baseValue * quality.priceMultiplier).round();
 

@@ -7,29 +7,26 @@ import '../entities/enums/hand_item_type.dart';
 final class WeaponItem extends HandItem {
   final int damage;
   final double attackSpeed;
-  final double critChance;
-  final double critMultiplier;
-  final String? cropId;
 
   const WeaponItem({
     required super.id,
     required super.name,
     required super.description,
     required super.baseValue,
-    super.quality = HandItemQuality.normal,
-    super.type = HandItemType.weapon,
     required super.iconData,
+    required super.quality,
     required this.damage,
-    this.attackSpeed = 1.0,
-    this.critChance = 0.05,
-    this.critMultiplier = 1.5,
-    this.cropId,
-    super.isStackable = false,
-    super.maxStackSize = 1,
-  });
+    required this.attackSpeed,
+    // this.attackSpeed = 1.0,
+  }) : super(
+         maxStackSize: 1,
+         isDroppable: true,
+         isTradeable: true,
+         type: HandItemType.weapon,
+       );
 
   double get dps {
-    final avgDamage = damage * (1 + critChance * (critMultiplier - 1));
+    final avgDamage = damage;
     return avgDamage * attackSpeed;
   }
 

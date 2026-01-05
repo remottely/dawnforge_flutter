@@ -5,13 +5,13 @@ final class InventoryDef {
   static const int kSizeInventoryUpgradeLvl2 = 24;
   static const int kSizeInventoryUpgradeLvl3 = 36;
 
-  static const int kStackAmountDefault = 999;
+  static const int kStackAmountDefault = 99;
   static const int kStackAmountEquipment = 1;
-  static const int kStackAmountSeed = 999;
-  static const int kStackAmountResource = 999;
-  static const int kStackAmountCrop = 999;
-  static const int kStackAmountFood = 999;
-  static const int kStackAmountBait = 999;
+  static const int kStackAmountSeed = 99;
+  static const int kStackAmountResource = 99;
+  static const int kStackAmountCrop = 99;
+  static const int kStackAmountFood = 99;
+  static const int kStackAmountBait = 99;
 
   static const double kNormalQualityMultiplier = 1.0;
   static const double kSilverQualityMultiplier = 1.25;

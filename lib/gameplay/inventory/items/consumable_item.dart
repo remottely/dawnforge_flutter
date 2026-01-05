@@ -2,7 +2,6 @@ import '../entities/hand_item.dart';
 import '../entities/enums/hand_item_id.dart';
 import '../entities/item_icon_data.dart';
 import '../entities/enums/hand_item_quality.dart';
-import '../entities/enums/hand_item_type.dart';
 
 class ConsumableItem extends HandItem {
   final int healthRestore;
@@ -14,15 +13,11 @@ class ConsumableItem extends HandItem {
     required super.description,
     required super.baseValue,
     required super.iconData,
-    super.quality = HandItemQuality.normal,
-    super.type = HandItemType.consumable,
-    super.isStackable = true,
-    super.maxStackSize = 99,
-    super.isDroppable = true,
-    super.isTradeable = true,
-    this.healthRestore = 0,
-    this.staminaRestore = 0,
-  });
+    required super.quality,
+    required super.type,
+    required this.healthRestore,
+    required this.staminaRestore,
+  }) : super(maxStackSize: 99, isDroppable: true, isTradeable: true);
 
   @override
   Map<String, dynamic> toJson() {
