@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../entities/hand_item.dart';
-import '../entities/item_icon_data.dart';
+import '../entities/data/item_icon_data.dart';
 import '../entities/enums/hand_item_quality.dart';
 import '../entities/enums/hand_item_type.dart';
 
@@ -18,8 +18,7 @@ final class WeaponItem extends HandItem {
     required this.damage,
   }) : super(
          maxStackSize: 1,
-         isDroppable: true,
-         isTradeable: true,
+         isTradeable: false,
          type: HandItemType.weapon,
        );
 
@@ -52,8 +51,8 @@ final class WeaponItem extends HandItem {
     String? description,
     int? baseValue,
     HandItemQuality? quality,
-    int? damage,
     ItemIconData? iconData,
+    int? damage,
   }) {
     return WeaponItem(
       id: this.id,
@@ -61,8 +60,8 @@ final class WeaponItem extends HandItem {
       description: description ?? this.description,
       baseValue: baseValue ?? this.baseValue,
       quality: quality ?? this.quality,
-      damage: damage ?? this.damage,
       iconData: iconData ?? this.iconData,
+      damage: damage ?? this.damage,
     );
   }
 }

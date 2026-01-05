@@ -3,7 +3,7 @@ import '../entities/enums/hand_item_quality.dart';
 import '../entities/enums/hand_item_type.dart';
 import '../entities/enums/season.dart';
 import '../entities/hand_item.dart';
-import '../entities/item_icon_data.dart';
+import '../entities/data/item_icon_data.dart';
 
 final class SeedBagItem extends HandItem {
   final HandItemId cropId;
@@ -24,7 +24,6 @@ final class SeedBagItem extends HandItem {
     this.yield = 1, // TODO(Kevin): entender oq é isso
   }) : super(
          maxStackSize: 99,
-         isDroppable: true,
          isTradeable: true,
          type: HandItemType.cropSeed,
        );

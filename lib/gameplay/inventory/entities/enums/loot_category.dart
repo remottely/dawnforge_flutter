@@ -1,4 +1,5 @@
-enum LootCategory { // TODO(Kevin): refact this
+enum LootCategory {
+  // TODO(Kevin): refact this
   vegetable,
   fruit,
   flower,
@@ -21,8 +22,8 @@ enum LootCategory { // TODO(Kevin): refact this
   // furniture,
   // questItem,
   // trash,
-  misc
-  ;
+  misc,
+  unknown;
 
   String get displayName {
     switch (this) {
@@ -72,6 +73,8 @@ enum LootCategory { // TODO(Kevin): refact this
       //   return 'Trash';
       case LootCategory.misc:
         return 'Miscellaneou';
+      case LootCategory.unknown:
+        return 'Unknown';
     }
   }
 
@@ -108,7 +111,7 @@ enum LootCategory { // TODO(Kevin): refact this
   static LootCategory fromJson(String json) {
     return LootCategory.values.firstWhere(
       (c) => c.name == json,
-      orElse: () => LootCategory.misc,
+      orElse: () => LootCategory.unknown,
     );
   }
 

@@ -1,7 +1,8 @@
 import 'package:darkness_dungeon/gameplay/inventory/items/tool_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_quality.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/item_icon_data.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/enums/tool_type.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/data/item_icon_data.dart';
 
 final class ModernFarmToolItemDatabaseDef {
   ModernFarmToolItemDatabaseDef._();
@@ -12,7 +13,7 @@ final class ModernFarmToolItemDatabaseDef {
       description: 'Increase carrying efficiency when harvesting',
       quality: HandItemQuality.normal,
       baseValue: 100,
-      toolType: 'harvest',
+      toolType: ToolType.harvest,
       iconData: ItemIconData(
         spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
         spriteWidth: 16,
@@ -27,7 +28,7 @@ final class ModernFarmToolItemDatabaseDef {
       description: 'Used to dig and move soil',
       quality: HandItemQuality.normal,
       baseValue: 100,
-      toolType: 'shovel',
+      toolType: ToolType.shovel,
       iconData: ItemIconData(
         spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
         spriteWidth: 16,
@@ -42,7 +43,7 @@ final class ModernFarmToolItemDatabaseDef {
       description: 'Waters soil to help crops grow',
       quality: HandItemQuality.normal,
       baseValue: 100,
-      toolType: 'watering_can',
+      toolType: ToolType.watering_can,
       iconData: ItemIconData(
         spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
         spriteWidth: 16,
@@ -57,7 +58,7 @@ final class ModernFarmToolItemDatabaseDef {
     //   description: 'Mine rocks and ores efficiently',
     //   quality: HandItemQuality.normal,
     //   baseValue: 80,
-    //   toolType: 'pickaxe',
+    //   toolType: ToolType.pickaxe,
     // ),
     // HandItemId.steel_pickaxe: ToolItem(
     //   id: HandItemId.steel_pickaxe,
@@ -65,7 +66,7 @@ final class ModernFarmToolItemDatabaseDef {
     //   description: 'A superior pickaxe for harder minerals',
     //   quality: HandItemQuality.silver,
     //   baseValue: 200,
-    //   toolType: 'pickaxe',
+    //   toolType: ToolType.pickaxe,
     // ),
     // HandItemId.wooden_axe: ToolItem(
     //   id: HandItemId.wooden_axe,
@@ -73,7 +74,7 @@ final class ModernFarmToolItemDatabaseDef {
     //   description: 'Basic tool for chopping trees',
     //   quality: HandItemQuality.normal,
     //   baseValue: 20,
-    //   toolType: 'axe',
+    //   toolType: ToolType.axe,
     // ),
     // HandItemId.basic_hoe: ToolItem(
     //   id: HandItemId.basic_hoe,
@@ -81,7 +82,7 @@ final class ModernFarmToolItemDatabaseDef {
     //   description: 'Till soil for planting crops',
     //   quality: HandItemQuality.normal,
     //   baseValue: 30,
-    //   toolType: 'hoe',
+    //   toolType: ToolType.hoe,
     // ),
     // HandItemId.axe: ToolItem(
     //   id: HandItemId.axe,
@@ -89,7 +90,7 @@ final class ModernFarmToolItemDatabaseDef {
     //   description: 'Heavy-duty axe for chopping and clearing',
     //   quality: HandItemQuality.silver,
     //   baseValue: 180,
-    //   toolType: 'axe',
+    //   toolType: ToolType.axe,
     // ),
   };
 }

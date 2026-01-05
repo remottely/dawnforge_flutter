@@ -25,14 +25,15 @@ enum TileObjectType {
   terrain,
 
   /// Other custom objects
-  custom;
+  custom,
+  unknown;
 
   String toJson() => name;
 
   static TileObjectType fromJson(String json) {
     return TileObjectType.values.firstWhere(
       (e) => e.name == json,
-      orElse: () => TileObjectType.empty,
+      orElse: () => TileObjectType.unknown,
     );
   }
 }

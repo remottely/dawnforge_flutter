@@ -2,7 +2,7 @@ import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_typ
 
 import '../entities/hand_item.dart';
 import '../entities/enums/hand_item_id.dart';
-import '../entities/item_icon_data.dart';
+import '../entities/data/item_icon_data.dart';
 import '../entities/enums/hand_item_quality.dart';
 
 class ConsumableItem extends HandItem {
@@ -19,7 +19,7 @@ class ConsumableItem extends HandItem {
     required super.type,
     required this.healthRestore,
     required this.staminaRestore,
-  }) : super(maxStackSize: 99, isDroppable: true, isTradeable: true);
+  }) : super(maxStackSize: 99, isTradeable: true);
 
   @override
   Map<String, dynamic> toJson() {

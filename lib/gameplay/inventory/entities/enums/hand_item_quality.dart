@@ -2,7 +2,8 @@ enum HandItemQuality {
   normal,
   silver,
   gold,
-  iridium;
+  iridium,
+  unknown;
 
   String get displayName {
     switch (this) {
@@ -14,6 +15,8 @@ enum HandItemQuality {
         return 'Gold';
       case HandItemQuality.iridium:
         return 'Iridium';
+      case HandItemQuality.unknown:
+        return 'Unknown';
     }
   }
 
@@ -27,6 +30,8 @@ enum HandItemQuality {
         return 1.5;
       case HandItemQuality.iridium:
         return 2.0;
+      case HandItemQuality.unknown:
+        return 1.0;
     }
   }
 
@@ -40,6 +45,8 @@ enum HandItemQuality {
         return 2;
       case HandItemQuality.iridium:
         return 3;
+      case HandItemQuality.unknown:
+        return 0;
     }
   }
 
@@ -48,7 +55,7 @@ enum HandItemQuality {
   static HandItemQuality fromJson(String json) {
     return HandItemQuality.values.firstWhere(
       (q) => q.name == json,
-      orElse: () => HandItemQuality.normal,
+      orElse: () => HandItemQuality.unknown,
     );
   }
 

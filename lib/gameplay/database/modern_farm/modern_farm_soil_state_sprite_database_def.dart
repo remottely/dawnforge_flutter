@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/gameplay/inventory/entities/item_icon_data.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/data/item_icon_data.dart';
 
 final class ModernFarmSoilStateSpriteDatabaseDef {
   ModernFarmSoilStateSpriteDatabaseDef._();

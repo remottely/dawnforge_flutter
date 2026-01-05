@@ -9,8 +9,6 @@ import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.d
 import 'package:darkness_dungeon/gameplay/inventory/state/inventory_state.dart';
 import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
 import 'package:darkness_dungeon/gameplay/inventory/usecases/add_item_use_case.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
 
 /// Handles inventory and equipment inputs from both keyboard and joystick/mobile

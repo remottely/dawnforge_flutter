@@ -98,19 +98,20 @@ enum HandItemId {
   radish_loot_item,
   apple_loot_item,
 
-  /// Materials
+  // /// Materials
   wood,
   stone,
   iron_ore,
-  gold_ore,
-  fiber,
+  // gold_ore,
+  // fiber,
   dungeon_key,
-  wheat_item;
+  wheat_item,
+  unknown;
 
   static HandItemId fromString(String json) {
     return HandItemId.values.firstWhere(
       (type) => type.name == json,
-      orElse: () => HandItemId.harvestBasket,
+      orElse: () => HandItemId.unknown,
     );
   }
 

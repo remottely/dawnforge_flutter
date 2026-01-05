@@ -1,11 +1,12 @@
 import '../entities/hand_item.dart';
 import '../entities/enums/hand_item_id.dart';
-import '../entities/item_icon_data.dart';
+import '../entities/data/item_icon_data.dart';
 import '../entities/enums/hand_item_quality.dart';
 import '../entities/enums/hand_item_type.dart';
+import '../entities/enums/tool_type.dart';
 
 final class ToolItem extends HandItem {
-  final String toolType;
+  final ToolType toolType;
 
   const ToolItem({
     required super.id,
@@ -17,7 +18,6 @@ final class ToolItem extends HandItem {
     required this.toolType,
   }) : super(
          maxStackSize: 1,
-         isDroppable: true,
          isTradeable: true,
          type: HandItemType.tool,
        );
@@ -25,7 +25,7 @@ final class ToolItem extends HandItem {
   @override
   Map<String, dynamic> toJson() {
     final baseData = super.toJson();
-    return {...baseData, 'toolType': toolType};
+    return {...baseData, 'toolType': toolType.toJson()};
   }
 
   factory ToolItem.fromJson(Map<String, dynamic> json) {
@@ -38,7 +38,7 @@ final class ToolItem extends HandItem {
       quality: baseData.quality,
       baseValue: baseData.baseValue,
       iconData: baseData.iconData,
-      toolType: json['toolType'] as String,
+      toolType: ToolType.fromJson(json['toolType'] as String),
     );
   }
 
@@ -49,7 +49,7 @@ final class ToolItem extends HandItem {
     int? baseValue,
     HandItemQuality? quality,
     ItemIconData? iconData,
-    String? toolType,
+    ToolType? toolType,
   }) {
     return ToolItem(
       id: id ?? this.id,

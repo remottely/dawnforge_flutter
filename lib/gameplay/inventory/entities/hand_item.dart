@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import 'enums/hand_item_id.dart';
-import 'item_icon_data.dart';
+import 'data/item_icon_data.dart';
 import 'enums/hand_item_quality.dart';
 import 'enums/hand_item_type.dart';
 
@@ -13,7 +13,6 @@ class HandItem {
   final HandItemQuality quality;
   final int baseValue;
   final int maxStackSize;
-  final bool isDroppable;
   final bool isTradeable;
   final ItemIconData iconData;
 
@@ -25,7 +24,6 @@ class HandItem {
     required this.quality,
     required this.baseValue,
     required this.maxStackSize,
-    required this.isDroppable,
     required this.isTradeable,
     required this.iconData,
   });
@@ -44,7 +42,6 @@ class HandItem {
       'quality': quality.toJson(),
       'baseValue': baseValue,
       'maxStackSize': maxStackSize,
-      'isDroppable': isDroppable,
       'isTradeable': isTradeable,
       'iconData': iconData.toJson(),
     };
@@ -61,19 +58,10 @@ class HandItem {
       baseValue: json['baseValue'] as int,
       iconData: ItemIconData.fromJson(json['iconData'] as Map<String, dynamic>),
       maxStackSize: json['maxStackSize'] as int,
-      isDroppable: json['isDroppable'] as bool,
       isTradeable: json['isTradeable'] as bool,
     );
   }
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is HandItem && runtimeType == other.runtimeType && id == other.id;
-
-  @override
-  int get hashCode => id.hashCode;
-
-  @override
-  String toString() => 'Item(id: ${id.name}, name: $name, type: $type)';
+  String toString() => 'Item(id: ${id.name}, name: $name, type: $type)'; // TODO(Kevin): complete this method
 }

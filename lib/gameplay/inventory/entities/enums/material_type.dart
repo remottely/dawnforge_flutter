@@ -4,7 +4,7 @@ enum MaterialType {
   ore,
   fiber,
   key,
-  crop,
+  harvestLoot,
   unknown;
 
   String toJson() => name;

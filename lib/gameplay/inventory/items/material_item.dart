@@ -3,7 +3,7 @@ import '../entities/enums/hand_item_quality.dart';
 import '../entities/enums/hand_item_type.dart';
 import '../entities/enums/material_type.dart';
 import '../entities/hand_item.dart';
-import '../entities/item_icon_data.dart';
+import '../entities/data/item_icon_data.dart';
 
 final class MaterialItem extends HandItem {
   final MaterialType materialType;
@@ -18,7 +18,6 @@ final class MaterialItem extends HandItem {
     required this.materialType,
   }) : super(
          maxStackSize: 99,
-         isDroppable: true,
          isTradeable: true,
          type: HandItemType.material,
        );

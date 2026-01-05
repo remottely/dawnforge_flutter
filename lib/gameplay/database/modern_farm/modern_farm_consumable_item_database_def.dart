@@ -2,7 +2,7 @@ import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_quality.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/loot_category.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/season.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/item_icon_data.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/data/item_icon_data.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/harvest_loot_item.dart';
 
 final class ModernFarmHarvestLootItemDatabaseDef {
