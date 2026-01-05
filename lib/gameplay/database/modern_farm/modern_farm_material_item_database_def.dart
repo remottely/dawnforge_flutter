@@ -1,6 +1,7 @@
 import 'package:darkness_dungeon/gameplay/inventory/items/material_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_quality.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/enums/material_type.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/item_icon_data.dart';
 
 final class ModernFarmMaterialItemDatabaseDef {
@@ -11,7 +12,7 @@ final class ModernFarmMaterialItemDatabaseDef {
     //   description: 'Basic crafting material from trees',
     //   quality: HandItemQuality.normal,
     //   baseValue: 5,
-    //   materialType: 'wood',
+    //   materialType: MaterialType.wood,
     // ),
     // HandItemId.stone: MaterialItem(
     //   id: HandItemId.stone,
@@ -19,7 +20,7 @@ final class ModernFarmMaterialItemDatabaseDef {
     //   description: 'Common building material',
     //   quality: HandItemQuality.normal,
     //   baseValue: 3,
-    //   materialType: 'stone',
+    //   materialType: MaterialType.stone,
     // ),
     // HandItemId.iron_ore: MaterialItem(
     //   id: HandItemId.iron_ore,
@@ -27,7 +28,7 @@ final class ModernFarmMaterialItemDatabaseDef {
     //   description: 'Raw iron ore for smelting',
     //   quality: HandItemQuality.silver,
     //   baseValue: 15,
-    //   materialType: 'ore',
+    //   materialType: MaterialType.ore,
     // ),
     // HandItemId.gold_ore: MaterialItem(
     //   id: HandItemId.gold_ore,
@@ -35,7 +36,7 @@ final class ModernFarmMaterialItemDatabaseDef {
     //   description: 'Precious gold ore',
     //   quality: HandItemQuality.gold,
     //   baseValue: 50,
-    //   materialType: 'ore',
+    //   materialType: MaterialType.ore,
     // ),
     // HandItemId.fiber: MaterialItem(
     //   id: HandItemId.fiber,
@@ -43,7 +44,7 @@ final class ModernFarmMaterialItemDatabaseDef {
     //   description: 'Plant fiber for crafting',
     //   quality: HandItemQuality.normal,
     //   baseValue: 2,
-    //   materialType: 'fiber',
+    //   materialType: MaterialType.fiber,
     // ),
     HandItemId.dungeon_key: MaterialItem(
       id: HandItemId.dungeon_key,
@@ -51,7 +52,7 @@ final class ModernFarmMaterialItemDatabaseDef {
       description: 'Opens locked dungeon doors. Consumed on use.',
       quality: HandItemQuality.normal,
       baseValue: 0,
-      materialType: 'key',
+      materialType: MaterialType.key,
       iconData: ItemIconData(
         spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
         spriteWidth: 16,
@@ -66,7 +67,7 @@ final class ModernFarmMaterialItemDatabaseDef {
     //   description: 'Golden wheat grain. Can be milled into flour.',
     //   quality: HandItemQuality.normal,
     //   baseValue: 8,
-    //   materialType: 'crop',
+    //   materialType: MaterialType.crop,
     // ),
   };
 }

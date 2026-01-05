@@ -1,7 +1,7 @@
+import 'package:darkness_dungeon/gameplay/inventory/entities/enums/season.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/seed_bag_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_quality.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/season.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/item_icon_data.dart';
 
 final class ModernFarmSeedBagItemDatabaseDef {
@@ -69,7 +69,7 @@ final class ModernFarmSeedBagItemDatabaseDef {
       cropId: HandItemId.tomato,
       growthTime: 4,
       yield: 3,
-      seasonType: SeasonType.summer,
+      seasonType: SeasonType.any,
       iconData: ItemIconData(
         spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
         spriteWidth: 16,

@@ -1,8 +1,9 @@
 import 'dart:collection';
 
+import 'package:darkness_dungeon/gameplay/inventory/entities/enums/season.dart';
+
 import 'day_state.dart';
 import 'game_time.dart';
-import 'season_type.dart';
 import 'time_constants.dart';
 
 /// Defines repeat constraints for scheduled callbacks.
@@ -29,7 +30,7 @@ class RepeatRule {
         weekdayIndices = weekdayIndices;
 
   bool allows(_DayProjection day) {
-    if (seasons != null && !seasons!.contains(day.season)) return false;
+    if (seasons != null && !seasons!.contains(day.seasonType)) return false;
     if (dayNumbers != null && !dayNumbers!.contains(day.dayNumber)) return false;
     if (weekdayIndices != null && !weekdayIndices!.contains(day.weekdayIndex)) {
       return false;
@@ -179,7 +180,7 @@ class TimeScheduler {
 
   int _ordinalInYear(DayState state) {
     final ordinal =
-        state.season.index * TimeConstants.kDaysPerSeason + (state.dayNumber - 1);
+        state.seasonType.index * TimeConstants.kDaysPerSeason + (state.dayNumber - 1);
     return ordinal;
   }
 
@@ -195,7 +196,7 @@ class TimeScheduler {
     final weekdayIndex = epochDay % 7;
     return _DayProjection(
       dayNumber: dayNumber,
-      season: SeasonType.values[seasonIndex % SeasonType.values.length],
+      seasonType: SeasonType.values[seasonIndex % SeasonType.values.length],
       weekdayIndex: weekdayIndex < 0 ? (weekdayIndex + 7) % 7 : weekdayIndex,
     );
   }
@@ -219,12 +220,12 @@ class TimeScheduler {
 
 class _DayProjection {
   final int dayNumber;
-  final SeasonType season;
+  final SeasonType seasonType;
   final int weekdayIndex;
 
   const _DayProjection({
     required this.dayNumber,
-    required this.season,
+    required this.seasonType,
     required this.weekdayIndex,
   });
 }

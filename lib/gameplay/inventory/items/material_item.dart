@@ -1,11 +1,12 @@
-import '../entities/hand_item.dart';
 import '../entities/enums/hand_item_id.dart';
-import '../entities/item_icon_data.dart';
 import '../entities/enums/hand_item_quality.dart';
 import '../entities/enums/hand_item_type.dart';
+import '../entities/enums/material_type.dart';
+import '../entities/hand_item.dart';
+import '../entities/item_icon_data.dart';
 
 final class MaterialItem extends HandItem {
-  final String materialType; // TODO(Kevin): change to enum
+  final MaterialType materialType;
 
   const MaterialItem({
     required super.id,
@@ -32,7 +33,7 @@ final class MaterialItem extends HandItem {
       'quality': quality.toJson(),
       'baseValue': baseValue,
       'maxStackSize': maxStackSize,
-      'materialType': materialType,
+      'materialType': materialType.toJson(),
     };
   }
 
@@ -43,7 +44,8 @@ final class MaterialItem extends HandItem {
       description: json['description'] as String,
       baseValue: json['baseValue'] as int,
       quality: HandItemQuality.fromJson(json['quality'] as String),
-      materialType: json['materialType'] as String,
+      materialType:
+          MaterialType.fromJson(json['materialType'] as String? ?? 'unknown'),
       iconData: ItemIconData.fromJson(json['iconData'] as Map<String, dynamic>),
     );
   }
@@ -56,7 +58,7 @@ final class MaterialItem extends HandItem {
     int? baseValue,
     HandItemQuality? quality,
     int? maxStackSize,
-    String? materialType,
+    MaterialType? materialType,
     ItemIconData? iconData,
   }) {
     return MaterialItem(
@@ -72,5 +74,5 @@ final class MaterialItem extends HandItem {
 
   @override
   String toString() =>
-      'MaterialItem(id: ${id.name}, name: $name, materialType: $materialType)';
+      'MaterialItem(id: ${id.name}, name: $name, materialType: ${materialType.name})';
 }

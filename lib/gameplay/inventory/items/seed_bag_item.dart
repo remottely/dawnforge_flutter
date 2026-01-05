@@ -1,14 +1,15 @@
-import '../entities/hand_item.dart';
 import '../entities/enums/hand_item_id.dart';
-import '../entities/item_icon_data.dart';
 import '../entities/enums/hand_item_quality.dart';
 import '../entities/enums/hand_item_type.dart';
+import '../entities/enums/season.dart';
+import '../entities/hand_item.dart';
+import '../entities/item_icon_data.dart';
 
 final class SeedBagItem extends HandItem {
   final HandItemId cropId;
   final int growthTime;
   final int yield;
-  final String season; // TODO(Kevin): change to enum
+  final SeasonType seasonType;
 
   const SeedBagItem({
     required super.id,
@@ -19,8 +20,7 @@ final class SeedBagItem extends HandItem {
     required this.cropId,
     required this.growthTime,
     required super.quality,
-    required this.season,
-    // this.season = 'any', // TODO(Kevin): put it as required
+    required this.seasonType,
     this.yield = 1, // TODO(Kevin): entender oq é isso
   }) : super(
          maxStackSize: 99,
@@ -29,9 +29,8 @@ final class SeedBagItem extends HandItem {
          type: HandItemType.cropSeed,
        );
 
-  bool canPlantInSeason(String currentSeason) {
-    return season == 'any' ||
-        season.toLowerCase() == currentSeason.toLowerCase();
+  bool canPlantInSeason(SeasonType currentSeason) {
+    return seasonType.matches(currentSeason);
   }
 
   @override
@@ -47,7 +46,7 @@ final class SeedBagItem extends HandItem {
       'cropId': cropId.toJson(),
       'growthTime': growthTime,
       'yield': yield,
-      'season': season,
+      'season': seasonType.toJson(),
     };
   }
 
@@ -61,7 +60,7 @@ final class SeedBagItem extends HandItem {
       cropId: HandItemId.fromJson(json['cropId'] as String),
       growthTime: json['growthTime'] as int,
       yield: json['yield'] as int? ?? 1,
-      season: json['season'] as String? ?? 'any',
+      seasonType: SeasonType.fromJson(json['season'] as String? ?? 'any'),
       iconData: ItemIconData.fromJson(json['iconData'] as Map<String, dynamic>),
     );
   }
@@ -77,7 +76,7 @@ final class SeedBagItem extends HandItem {
     HandItemId? cropId,
     int? growthTime,
     int? yield,
-    String? season,
+    SeasonType? season,
     ItemIconData? iconData,
   }) {
     return SeedBagItem(
@@ -89,12 +88,12 @@ final class SeedBagItem extends HandItem {
       cropId: cropId ?? this.cropId,
       growthTime: growthTime ?? this.growthTime,
       yield: yield ?? this.yield,
-      season: season ?? this.season,
+      seasonType: season ?? this.seasonType,
       iconData: iconData ?? this.iconData,
     );
   }
 
   @override
   String toString() =>
-      'SeedItem(id: ${id.name}, name: $name, cropId: $cropId, growthTime: ${growthTime}d)';
+      'SeedItem(id: ${id.name}, name: $name, cropId: $cropId, growthTime: ${growthTime}d, season: ${seasonType.name})';
 }

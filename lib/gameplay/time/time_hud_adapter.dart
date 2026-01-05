@@ -1,10 +1,10 @@
+import 'package:darkness_dungeon/gameplay/inventory/entities/enums/season.dart';
 import 'package:flutter/foundation.dart';
 
 import 'day_state.dart';
 import 'game_time.dart';
 import 'time_manager.dart';
 import 'weather_type.dart';
-import 'season_type.dart';
 
 /// Lightweight HUD adapter that exposes formatted time/day strings.
 class TimeHudAdapter {
@@ -42,12 +42,12 @@ class TimeHudAdapter {
 
   void _updateDay(DayState day) {
     dayLabel.value = 'Day ${day.dayNumber}';
-    seasonLabel.value = _seasonName(day.season);
+    seasonLabel.value = _seasonName(day.seasonType);
     weatherLabel.value = _weatherName(day.weather);
   }
 
-  String _seasonName(SeasonType season) {
-    switch (season) {
+  String _seasonName(SeasonType seasonType) {
+    switch (seasonType) {
       case SeasonType.spring:
         return 'Spring';
       case SeasonType.summer:
@@ -56,6 +56,10 @@ class TimeHudAdapter {
         return 'Fall';
       case SeasonType.winter:
         return 'Winter';
+      case SeasonType.any:
+        return 'Any';
+      case SeasonType.unknown:
+        return 'Unknown';
     }
   }
 

@@ -1,13 +1,14 @@
 import 'dart:math';
 
-import 'season_type.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/enums/season.dart';
+
 import 'weather_type.dart';
 import 'time_constants.dart';
 
 /// Captures calendar state (day, season, weather) for the current day.
 class DayState {
   final int dayNumber; // 1-based within the season
-  final SeasonType season;
+  final SeasonType seasonType;
   final WeatherType weather;
   final int weekdayIndex; // 0 = Monday
   final bool isFestival;
@@ -17,7 +18,7 @@ class DayState {
 
   const DayState({
     required this.dayNumber,
-    required this.season,
+    required this.seasonType,
     required this.weather,
     required this.weekdayIndex,
     this.isFestival = false,
@@ -34,7 +35,7 @@ class DayState {
   }) {
     return DayState(
       dayNumber: dayNumber ?? this.dayNumber,
-      season: season ?? this.season,
+      seasonType: season ?? this.seasonType,
       weather: weather ?? this.weather,
       weekdayIndex: weekdayIndex ?? this.weekdayIndex,
       isFestival: isFestival ?? this.isFestival,
@@ -44,7 +45,7 @@ class DayState {
 
   Map<String, dynamic> toJson() => {
         'dayNumber': dayNumber,
-        'season': season.toJson(),
+        'season': seasonType.toJson(),
         'weather': weather.toJson(),
         'weekdayIndex': weekdayIndex,
         'isFestival': isFestival,
@@ -54,7 +55,7 @@ class DayState {
   static DayState fromJson(Map<String, dynamic> json) {
     return DayState(
       dayNumber: json['dayNumber'] as int,
-      season: SeasonTypeJson.fromJson(json['season'] as String),
+      seasonType: SeasonType.fromJson(json['season'] as String),
       weather: WeatherTypeJson.fromJson(json['weather'] as String),
       weekdayIndex: json['weekdayIndex'] as int,
       isFestival: json['isFestival'] as bool? ?? false,
@@ -65,7 +66,7 @@ class DayState {
   /// Creates the default day-one state.
   factory DayState.dayOne() => DayState(
         dayNumber: 1,
-        season: SeasonType.spring,
+        seasonType: SeasonType.spring,
         weather: WeatherType.sunny,
         weekdayIndex: 0,
       );
@@ -74,7 +75,7 @@ class DayState {
   DayState nextDay({WeatherType Function(SeasonType, int)? weatherRng}) {
     final nextDayNumber = dayNumber % TimeConstants.kDaysPerSeason + 1;
     final nextSeason =
-        nextDayNumber == 1 ? season.next() : season;
+        nextDayNumber == 1 ? seasonType.next() : seasonType;
     final nextWeekday = (weekdayIndex + 1) % 7;
     final nextWeather = weatherRng != null
       ? weatherRng(nextSeason, nextDayNumber)
@@ -94,9 +95,9 @@ class DayState {
   /// - Summer: higher storm and rain chance.
   /// - Winter: snow common, storms rare.
   /// - Spring/Fall: moderate rain, occasional storm.
-  static WeatherType defaultWeatherRng(SeasonType season, int dayNumber) {
+  static WeatherType defaultWeatherRng(SeasonType seasonType, int dayNumber) {
     final roll = _rng.nextDouble();
-    switch (season) {
+    switch (seasonType) {
       case SeasonType.winter:
         if (roll < 0.10) return WeatherType.storm;
         if (roll < 0.65) return WeatherType.snow;
