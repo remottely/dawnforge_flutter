@@ -9,7 +9,7 @@ final class ModernFarmHarvestLootItemDatabaseDef {
   ModernFarmHarvestLootItemDatabaseDef._();
   static const Map<HandItemId, HarvestLootItem> harvestLootItemList = {
     HandItemId.carrot_loot_item: HarvestLootItem(
-      seasonType: SeasonType.any,
+      requiredSeason: SeasonType.any,
       id: HandItemId.carrot_loot_item,
       name: 'Carrot',
       description: 'A fresh orange carrot. Can be eaten or sold.',
@@ -28,7 +28,7 @@ final class ModernFarmHarvestLootItemDatabaseDef {
       regrowthDays: 0,
     ),
     HandItemId.strawberry_loot_item: HarvestLootItem(
-      seasonType: SeasonType.any,
+      requiredSeason: SeasonType.any,
       id: HandItemId.strawberry_loot_item,
       name: 'Strawberry',
       description: 'A fresh red strawberry. Can be eaten or sold.',
@@ -47,7 +47,7 @@ final class ModernFarmHarvestLootItemDatabaseDef {
       regrowthDays: 0,
     ),
     HandItemId.potato_loot_item: HarvestLootItem(
-      seasonType: SeasonType.any,
+      requiredSeason: SeasonType.any,
       id: HandItemId.potato_loot_item,
       name: 'Potato',
       description: 'A starchy potato. Can be cooked or sold.',
@@ -66,7 +66,7 @@ final class ModernFarmHarvestLootItemDatabaseDef {
       regrowthDays: 0,
     ),
     HandItemId.pumpkin_loot_item: HarvestLootItem(
-      seasonType: SeasonType.any,
+      requiredSeason: SeasonType.any,
       id: HandItemId.pumpkin_loot_item,
       name: 'Pumpkin',
       description: 'A large orange pumpkin. Great for cooking.',
@@ -85,7 +85,7 @@ final class ModernFarmHarvestLootItemDatabaseDef {
       regrowthDays: 0,
     ),
     HandItemId.turnip_loot_item: HarvestLootItem(
-      seasonType: SeasonType.any,
+      requiredSeason: SeasonType.any,
       id: HandItemId.turnip_loot_item,
       name: 'Turnip',
       description: 'A purple and white turnip. Nutritious vegetable.',
@@ -104,7 +104,7 @@ final class ModernFarmHarvestLootItemDatabaseDef {
       regrowthDays: 0,
     ),
     HandItemId.radish_loot_item: HarvestLootItem(
-      seasonType: SeasonType.any,
+      requiredSeason: SeasonType.any,
       id: HandItemId.radish_loot_item,
       name: 'Radish',
       description: 'A crisp radish. Can be eaten or sold.',
@@ -123,7 +123,7 @@ final class ModernFarmHarvestLootItemDatabaseDef {
       regrowthDays: 0,
     ),
     HandItemId.tomato_loot_item: HarvestLootItem(
-      seasonType: SeasonType.any,
+      requiredSeason: SeasonType.any,
       id: HandItemId.tomato_loot_item,
       name: 'Tomato',
       description: 'A juicy red tomato. Perfect for salads.',
@@ -142,7 +142,7 @@ final class ModernFarmHarvestLootItemDatabaseDef {
       regrowthDays: 0,
     ),
     HandItemId.corn_loot_item: HarvestLootItem(
-      seasonType: SeasonType.any,
+      requiredSeason: SeasonType.any,
       id: HandItemId.corn_loot_item,
       name: 'Corn',
       description: 'Sweet corn on the cob. Can be roasted.',
@@ -161,7 +161,7 @@ final class ModernFarmHarvestLootItemDatabaseDef {
       regrowthDays: 0,
     ),
     HandItemId.apple_loot_item: HarvestLootItem(
-      seasonType: SeasonType.any,
+      requiredSeason: SeasonType.any,
       id: HandItemId.apple_loot_item,
       name: 'Apple',
       description: 'A crisp apple. Can be eaten or sold.',
@@ -180,7 +180,7 @@ final class ModernFarmHarvestLootItemDatabaseDef {
       regrowthDays: 0,
     ),
     HandItemId.apple: HarvestLootItem(
-      seasonType: SeasonType.any,
+      requiredSeason: SeasonType.any,
       id: HandItemId.apple,
       name: 'Apple',
       description: 'Fresh apple you can eat or sell.',
@@ -199,7 +199,7 @@ final class ModernFarmHarvestLootItemDatabaseDef {
       regrowthDays: 0,
     ),
     HandItemId.strawberry: HarvestLootItem(
-      seasonType: SeasonType.any,
+      requiredSeason: SeasonType.any,
       id: HandItemId.strawberry,
       name: 'Strawberry',
       description: 'Sweet strawberry ready to eat.',
@@ -218,7 +218,7 @@ final class ModernFarmHarvestLootItemDatabaseDef {
       regrowthDays: 0,
     ),
     HandItemId.tomato: HarvestLootItem(
-      seasonType: SeasonType.any,
+      requiredSeason: SeasonType.any,
       id: HandItemId.tomato,
       name: 'Tomato',
       description: 'Juicy tomato perfect for salads.',

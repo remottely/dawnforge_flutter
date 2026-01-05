@@ -15,7 +15,7 @@ final class ModernFarmSeedBagItemDatabaseDef {
       cropId: HandItemId.strawberry,
       growthTime: 4,
       yield: 3,
-      seasonType: SeasonType.any,
+      requiredSeason: SeasonType.any,
       iconData: ItemIconData(
         spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
         spriteWidth: 16,
@@ -33,7 +33,7 @@ final class ModernFarmSeedBagItemDatabaseDef {
       cropId: HandItemId.apple,
       growthTime: 7,
       yield: 3,
-      seasonType: SeasonType.any,
+      requiredSeason: SeasonType.any,
       iconData: ItemIconData(
         spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
         spriteWidth: 16,
@@ -51,7 +51,7 @@ final class ModernFarmSeedBagItemDatabaseDef {
       cropId: HandItemId.radish,
       growthTime: 7,
       yield: 6,
-      seasonType: SeasonType.any,
+      requiredSeason: SeasonType.any,
       iconData: ItemIconData(
         spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
         spriteWidth: 16,
@@ -69,7 +69,7 @@ final class ModernFarmSeedBagItemDatabaseDef {
       cropId: HandItemId.tomato,
       growthTime: 4,
       yield: 3,
-      seasonType: SeasonType.any,
+      requiredSeason: SeasonType.any,
       iconData: ItemIconData(
         spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
         spriteWidth: 16,

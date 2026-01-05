@@ -42,12 +42,12 @@ class TimeHudAdapter {
 
   void _updateDay(DayState day) {
     dayLabel.value = 'Day ${day.dayNumber}';
-    seasonLabel.value = _seasonName(day.seasonType);
+    seasonLabel.value = _seasonName(day.requiredSeason);
     weatherLabel.value = _weatherName(day.weather);
   }
 
-  String _seasonName(SeasonType seasonType) {
-    switch (seasonType) {
+  String _seasonName(SeasonType requiredSeason) {
+    switch (requiredSeason) {
       case SeasonType.spring:
         return 'Spring';
       case SeasonType.summer:

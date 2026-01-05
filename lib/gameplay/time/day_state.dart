@@ -8,7 +8,7 @@ import 'time_constants.dart';
 /// Captures calendar state (day, season, weather) for the current day.
 class DayState {
   final int dayNumber; // 1-based within the season
-  final SeasonType seasonType;
+  final SeasonType requiredSeason;
   final WeatherType weather;
   final int weekdayIndex; // 0 = Monday
   final bool isFestival;
@@ -18,7 +18,7 @@ class DayState {
 
   const DayState({
     required this.dayNumber,
-    required this.seasonType,
+    required this.requiredSeason,
     required this.weather,
     required this.weekdayIndex,
     this.isFestival = false,
@@ -27,7 +27,7 @@ class DayState {
 
   DayState copyWith({
     int? dayNumber,
-    SeasonType? seasonType,
+    SeasonType? requiredSeason,
     WeatherType? weather,
     int? weekdayIndex,
     bool? isFestival,
@@ -35,7 +35,7 @@ class DayState {
   }) {
     return DayState(
       dayNumber: dayNumber ?? this.dayNumber,
-      seasonType: seasonType ?? this.seasonType,
+      requiredSeason: requiredSeason ?? this.requiredSeason,
       weather: weather ?? this.weather,
       weekdayIndex: weekdayIndex ?? this.weekdayIndex,
       isFestival: isFestival ?? this.isFestival,
@@ -45,7 +45,7 @@ class DayState {
 
   Map<String, dynamic> toJson() => {
         'dayNumber': dayNumber,
-        'seasonType': seasonType.toJson(),
+        'requiredSeason': requiredSeason.toJson(),
         'weather': weather.toJson(),
         'weekdayIndex': weekdayIndex,
         'isFestival': isFestival,
@@ -55,7 +55,7 @@ class DayState {
   static DayState fromJson(Map<String, dynamic> json) {
     return DayState(
       dayNumber: json['dayNumber'] as int,
-      seasonType: SeasonType.fromJson(json['seasonType'] as String),
+      requiredSeason: SeasonType.fromJson(json['requiredSeason'] as String),
       weather: WeatherTypeJson.fromJson(json['weather'] as String),
       weekdayIndex: json['weekdayIndex'] as int,
       isFestival: json['isFestival'] as bool? ?? false,
@@ -66,7 +66,7 @@ class DayState {
   /// Creates the default day-one state.
   factory DayState.dayOne() => DayState(
         dayNumber: 1,
-        seasonType: SeasonType.spring,
+        requiredSeason: SeasonType.spring,
         weather: WeatherType.sunny,
         weekdayIndex: 0,
       );
@@ -75,7 +75,7 @@ class DayState {
   DayState nextDay({WeatherType Function(SeasonType, int)? weatherRng}) {
     final nextDayNumber = dayNumber % TimeConstants.kDaysPerSeason + 1;
     final nextSeason =
-        nextDayNumber == 1 ? seasonType.next() : seasonType;
+        nextDayNumber == 1 ? requiredSeason.next() : requiredSeason;
     final nextWeekday = (weekdayIndex + 1) % 7;
     final nextWeather = weatherRng != null
       ? weatherRng(nextSeason, nextDayNumber)
@@ -83,7 +83,7 @@ class DayState {
 
     return copyWith(
       dayNumber: nextDayNumber,
-      seasonType: nextSeason,
+      requiredSeason: nextSeason,
       weather: nextWeather,
       weekdayIndex: nextWeekday,
       isFestival: false,
@@ -95,9 +95,9 @@ class DayState {
   /// - Summer: higher storm and rain chance.
   /// - Winter: snow common, storms rare.
   /// - Spring/Fall: moderate rain, occasional storm.
-  static WeatherType defaultWeatherRng(SeasonType seasonType, int dayNumber) {
+  static WeatherType defaultWeatherRng(SeasonType requiredSeason, int dayNumber) {
     final roll = _rng.nextDouble();
-    switch (seasonType) {
+    switch (requiredSeason) {
       case SeasonType.winter:
         if (roll < 0.10) return WeatherType.storm;
         if (roll < 0.65) return WeatherType.snow;

@@ -30,7 +30,7 @@ class RepeatRule {
         weekdayIndices = weekdayIndices;
 
   bool allows(_DayProjection day) {
-    if (seasons != null && !seasons!.contains(day.seasonType)) return false;
+    if (seasons != null && !seasons!.contains(day.requiredSeason)) return false;
     if (dayNumbers != null && !dayNumbers!.contains(day.dayNumber)) return false;
     if (weekdayIndices != null && !weekdayIndices!.contains(day.weekdayIndex)) {
       return false;
@@ -180,7 +180,7 @@ class TimeScheduler {
 
   int _ordinalInYear(DayState state) {
     final ordinal =
-        state.seasonType.index * TimeConstants.kDaysPerSeason + (state.dayNumber - 1);
+        state.requiredSeason.index * TimeConstants.kDaysPerSeason + (state.dayNumber - 1);
     return ordinal;
   }
 
@@ -196,7 +196,7 @@ class TimeScheduler {
     final weekdayIndex = epochDay % 7;
     return _DayProjection(
       dayNumber: dayNumber,
-      seasonType: SeasonType.values[seasonIndex % SeasonType.values.length],
+      requiredSeason: SeasonType.values[seasonIndex % SeasonType.values.length],
       weekdayIndex: weekdayIndex < 0 ? (weekdayIndex + 7) % 7 : weekdayIndex,
     );
   }
@@ -220,12 +220,12 @@ class TimeScheduler {
 
 class _DayProjection {
   final int dayNumber;
-  final SeasonType seasonType;
+  final SeasonType requiredSeason;
   final int weekdayIndex;
 
   const _DayProjection({
     required this.dayNumber,
-    required this.seasonType,
+    required this.requiredSeason,
     required this.weekdayIndex,
   });
 }

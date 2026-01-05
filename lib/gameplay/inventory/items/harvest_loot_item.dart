@@ -8,7 +8,7 @@ import '../entities/data/item_icon_data.dart';
 
 final class HarvestLootItem extends ConsumableItem {
   final LootCategory category;
-  final SeasonType seasonType;
+  final SeasonType requiredSeason;
   final int regrowthDays; // TODO(Kevin): improve this behavior, turn it into enum
 
   const HarvestLootItem({
@@ -21,7 +21,7 @@ final class HarvestLootItem extends ConsumableItem {
     required super.healthRestore,
     required super.staminaRestore,
     required this.category,
-    required this.seasonType,
+    required this.requiredSeason,
     required this.regrowthDays,
   }) : super(type: HandItemType.material);
 
@@ -38,7 +38,7 @@ final class HarvestLootItem extends ConsumableItem {
     return {
       ...baseData,
       'category': category.toJson(),
-      'seasonType': seasonType.toJson(),
+      'requiredSeason': requiredSeason.toJson(),
       'regrowthDays': regrowthDays,
     };
   }
@@ -56,7 +56,7 @@ final class HarvestLootItem extends ConsumableItem {
       healthRestore: baseData.healthRestore,
       staminaRestore: baseData.healthRestore,
       category: LootCategory.fromJson(json['category'] as String),
-      seasonType: SeasonType.fromJson(json['seasonType'] as String? ?? 'any'),
+      requiredSeason: SeasonType.fromJson(json['requiredSeason'] as String? ?? 'any'),
       regrowthDays: json['regrowthDays'] as int,
     );
   }
@@ -76,7 +76,7 @@ final class HarvestLootItem extends ConsumableItem {
     HandItemType? type,
     LootCategory? category,
     bool? isTradeable,
-    SeasonType? seasonType,
+    SeasonType? requiredSeason,
     int? regrowthDays,
   }) {
     return HarvestLootItem(
@@ -88,7 +88,7 @@ final class HarvestLootItem extends ConsumableItem {
       category: category ?? this.category,
       staminaRestore: staminaRestore ?? this.staminaRestore,
       healthRestore: healthRestore ?? this.healthRestore,
-      seasonType: seasonType ?? this.seasonType,
+      requiredSeason: requiredSeason ?? this.requiredSeason,
       regrowthDays: regrowthDays ?? this.regrowthDays,
       iconData: iconData ?? this.iconData,
     );
@@ -103,6 +103,6 @@ final class HarvestLootItem extends ConsumableItem {
     final rarityStr = quality != HandItemQuality.normal
         ? ' (${quality.displayName})'
         : '';
-    return 'HarvestLootItem(id: ${id.name}, name: $name$rarityStr, type: ${type.name}, category: ${category.displayName}, season: ${seasonType.name})';
+    return 'HarvestLootItem(id: ${id.name}, name: $name$rarityStr, type: ${type.name}, category: ${category.displayName}, season: ${requiredSeason.name})';
   }
 }

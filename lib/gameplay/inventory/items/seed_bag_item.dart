@@ -9,7 +9,7 @@ final class SeedBagItem extends HandItem {
   final HandItemId cropId;
   final int growthTime; // TODO(Kevin): criar enum
   final int yield; // TODO(Kevin): criar enum
-  final SeasonType seasonType;
+  final SeasonType requiredSeason;
 
   const SeedBagItem({
     required super.id,
@@ -20,7 +20,7 @@ final class SeedBagItem extends HandItem {
     required this.cropId,
     required this.growthTime,
     required super.quality,
-    required this.seasonType,
+    required this.requiredSeason,
     this.yield = 1, // TODO(Kevin): entender oq é isso
   }) : super(
          maxStackSize: 99,
@@ -29,7 +29,7 @@ final class SeedBagItem extends HandItem {
        );
 
   bool canPlantInSeason(SeasonType currentSeason) {
-    return seasonType.matches(currentSeason);
+    return requiredSeason.matches(currentSeason);
   }
 
   @override
@@ -40,7 +40,7 @@ final class SeedBagItem extends HandItem {
       'cropId': cropId.toJson(),
       'growthTime': growthTime,
       'yield': yield,
-      'seasonType': seasonType.toJson(),
+      'requiredSeason': requiredSeason.toJson(),
     };
   }
 
@@ -57,7 +57,7 @@ final class SeedBagItem extends HandItem {
       cropId: HandItemId.fromJson(json['cropId'] as String),
       growthTime: json['growthTime'] as int,
       yield: json['yield'] as int? ?? 1,
-      seasonType: SeasonType.fromJson(json['seasonType'] as String? ?? 'any'),
+      requiredSeason: SeasonType.fromJson(json['requiredSeason'] as String? ?? 'any'),
     );
   }
 
@@ -71,7 +71,7 @@ final class SeedBagItem extends HandItem {
     HandItemId? cropId,
     int? growthTime,
     int? yield,
-    SeasonType? seasonType,
+    SeasonType? requiredSeason,
   }) {
     return SeedBagItem(
       id: id ?? this.id,
@@ -83,11 +83,11 @@ final class SeedBagItem extends HandItem {
       cropId: cropId ?? this.cropId,
       growthTime: growthTime ?? this.growthTime,
       yield: yield ?? this.yield,
-      seasonType: seasonType ?? this.seasonType,
+      requiredSeason: requiredSeason ?? this.requiredSeason,
     );
   }
 
   @override
   String toString() =>
-      'SeedItem(id: ${id.name}, name: $name, cropId: $cropId, growthTime: ${growthTime}d, season: ${seasonType.name})';
+      'SeedItem(id: ${id.name}, name: $name, cropId: $cropId, growthTime: ${growthTime}d, season: ${requiredSeason.name})';
 }
