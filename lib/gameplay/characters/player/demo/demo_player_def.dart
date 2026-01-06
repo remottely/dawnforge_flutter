@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/character_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/lightning_constants.dart';
@@ -359,7 +361,7 @@ final class DemoPlayerDef {
         loadUp: _loadAnimationChoppingUp,
         loadDown: _loadAnimationChoppingDown,
       );
-  static Future<SpriteAnimation> _loadAnimationAttackRight =
+  static Future<SpriteAnimation> _loadAnimationAttack1Right =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attac1kAssetPath,
         textureSize: textureSize,
@@ -368,7 +370,7 @@ final class DemoPlayerDef {
         framePositionY: _frameRightY,
       );
 
-  static Future<SpriteAnimation> _loadAnimationAttackLeft =
+  static Future<SpriteAnimation> _loadAnimationAttack1Left =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attac1kAssetPath,
         textureSize: textureSize,
@@ -377,7 +379,7 @@ final class DemoPlayerDef {
         framePositionY: _frameLeftY,
       );
 
-  static Future<SpriteAnimation> _loadAnimationAttackUp =
+  static Future<SpriteAnimation> _loadAnimationAttack1Up =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attac1kAssetPath,
         textureSize: textureSize,
@@ -386,7 +388,7 @@ final class DemoPlayerDef {
         framePositionY: _frameUpY,
       );
 
-  static Future<SpriteAnimation> _loadAnimationAttackDown =
+  static Future<SpriteAnimation> _loadAnimationAttack1Down =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attac1kAssetPath,
         textureSize: textureSize,
@@ -395,12 +397,100 @@ final class DemoPlayerDef {
         framePositionY: _frameDownY,
       );
 
-  static final _animationAttackDirectionalFactory =
+  static final _animationAttack1DirectionalFactory =
       DDAnimationDirectionalFactory(
-        loadRight: _loadAnimationAttackRight,
-        loadLeft: _loadAnimationAttackLeft,
-        loadUp: _loadAnimationAttackUp,
-        loadDown: _loadAnimationAttackDown,
+        loadRight: _loadAnimationAttack1Right,
+        loadLeft: _loadAnimationAttack1Left,
+        loadUp: _loadAnimationAttack1Up,
+        loadDown: _loadAnimationAttack1Down,
+      );
+
+  static Future<SpriteAnimation> _loadAnimationAttack2Right =
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: attack2AssetPath,
+        textureSize: textureSize,
+        totalFrames: _x6,
+        framePositionX: 0,
+        framePositionY: _frameRightY,
+      );
+
+  static Future<SpriteAnimation> _loadAnimationAttack2Left =
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: attack2AssetPath,
+        textureSize: textureSize,
+        totalFrames: _x6,
+        framePositionX: 0,
+        framePositionY: _frameLeftY,
+      );
+
+  static Future<SpriteAnimation> _loadAnimationAttack2Up =
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: attack2AssetPath,
+        textureSize: textureSize,
+        totalFrames: _x6,
+        framePositionX: 0,
+        framePositionY: _frameUpY,
+      );
+
+  static Future<SpriteAnimation> _loadAnimationAttack2Down =
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: attack2AssetPath,
+        textureSize: textureSize,
+        totalFrames: _x6,
+        framePositionX: 0,
+        framePositionY: _frameDownY,
+      );
+
+  static final _animationAttack2DirectionalFactory =
+      DDAnimationDirectionalFactory(
+        loadRight: _loadAnimationAttack2Right,
+        loadLeft: _loadAnimationAttack2Left,
+        loadUp: _loadAnimationAttack2Up,
+        loadDown: _loadAnimationAttack2Down,
+      );
+
+  static Future<SpriteAnimation> _loadAnimationAttack3Right =
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: attack3AssetPath,
+        textureSize: textureSize,
+        totalFrames: _x6,
+        framePositionX: 0,
+        framePositionY: _frameRightY,
+      );
+
+  static Future<SpriteAnimation> _loadAnimationAttack3Left =
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: attack3AssetPath,
+        textureSize: textureSize,
+        totalFrames: _x6,
+        framePositionX: 0,
+        framePositionY: _frameLeftY,
+      );
+
+  static Future<SpriteAnimation> _loadAnimationAttack3Up =
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: attack3AssetPath,
+        textureSize: textureSize,
+        totalFrames: _x6,
+        framePositionX: 0,
+        framePositionY: _frameUpY,
+      );
+
+  static Future<SpriteAnimation> _loadAnimationAttack3Down =
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: attack3AssetPath,
+        textureSize: textureSize,
+        totalFrames: _x6,
+        framePositionX: 0,
+        framePositionY: _frameDownY,
+      );
+
+  static final _animationAttack3DirectionalFactory =
+      DDAnimationDirectionalFactory(
+        loadRight: _loadAnimationAttack3Right,
+        loadLeft: _loadAnimationAttack3Left,
+        loadUp: _loadAnimationAttack3Up,
+        loadDown: _loadAnimationAttack3Down,
       );
 
   static final Future<SpriteAnimation> _loadAnimationDigRight =
@@ -565,7 +655,12 @@ final class DemoPlayerDef {
     getDeathMarker: (position) => _createDeathMarker(position),
     animationWalkDirectional: _animationWalkDirectional,
     animationRunDirectional: _animationRunDirectional,
-    animationAttackDirectionalFactory: _animationAttackDirectionalFactory,
+    animationAttackDirectionalFactory: _animationAttack1DirectionalFactory,
+    comboAttackAnimationFactories: [
+      _animationAttack1DirectionalFactory,
+      _animationAttack2DirectionalFactory,
+      _animationAttack3DirectionalFactory,
+    ],
     animationDigFactory: _animationDigDirectionalFactory,
     animationWateringCanFactory: _animationWateringDirectionalFactory,
     animationPlaceSeedFactory: _animationPlaceSeedDirectionalFactory,

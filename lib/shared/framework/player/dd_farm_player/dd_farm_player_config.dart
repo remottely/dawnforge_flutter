@@ -17,6 +17,7 @@ class DDFarmPlayerViewConfig extends DDCombatPlayerViewConfig {
     required super.animationWalkDirectional,
     required super.animationRunDirectional,
     required super.animationAttackDirectionalFactory,
+    super.comboAttackAnimationFactories,
     required this.animationDigFactory,
     required this.animationWateringCanFactory,
     required this.animationPlaceSeedFactory,

@@ -3,6 +3,7 @@ import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional
 
 class DDCombatPlayerViewConfig extends DDMobilePlayerViewConfig {
   final DDAnimationDirectionalFactory animationAttackDirectionalFactory;
+  final List<DDAnimationDirectionalFactory> comboAttackAnimationFactories;
 
   const DDCombatPlayerViewConfig({
     required super.size,
@@ -14,6 +15,7 @@ class DDCombatPlayerViewConfig extends DDMobilePlayerViewConfig {
     required super.animationWalkDirectional,
     required super.animationRunDirectional,
     required this.animationAttackDirectionalFactory,
+    this.comboAttackAnimationFactories = const [],
   });
 }
 

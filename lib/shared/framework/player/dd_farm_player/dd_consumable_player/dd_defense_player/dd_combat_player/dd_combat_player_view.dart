@@ -1,3 +1,5 @@
+import 'dart:async' as async;
+
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fireball_attack_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fx_particles_animations_def.dart';
@@ -30,7 +32,12 @@ abstract class DDCombatPlayerView<
     required super.model,
   }) : super(config: config);
 
-  late final DDAnimationDirectional animationAttackDirectional;
+  late final List<DDAnimationDirectional> _comboAttackAnimations;
+  int _comboStep = 0;
+  bool _isAttackPlaying = false;
+  bool _comboQueued = false;
+  async.Timer? _comboResetTimer;
+  static const Duration _kComboResetDelay = Duration(milliseconds: 450);
 
   late final SynchronizedAttackController meleeAttackController;
   late final SynchronizedAttackController rangedAttackController;
@@ -40,14 +47,23 @@ abstract class DDCombatPlayerView<
     await super.onLoad();
     _initializeCombatSystems();
 
-    animationAttackDirectional =
-        await DDCharacterActionSpriteAnimationHelper.loadAnimationDirectionalFromFactory(
-          config.animationAttackDirectionalFactory,
-        );
+    final factories = config.comboAttackAnimationFactories.isNotEmpty
+        ? config.comboAttackAnimationFactories
+        : [config.animationAttackDirectionalFactory];
+
+    final animations = await Future.wait(
+      factories.map(
+        DDCharacterActionSpriteAnimationHelper
+            .loadAnimationDirectionalFromFactory,
+      ),
+    );
+
+    _comboAttackAnimations = animations;
   }
 
   @override
   void onRemove() {
+    _comboResetTimer?.cancel();
     meleeAttackController.dispose();
     rangedAttackController.dispose();
     super.onRemove();
@@ -99,29 +115,81 @@ abstract class DDCombatPlayerView<
   });
 
   bool _onExecutePrimaryAttack(double damage) {
+    if (_isAttackPlaying) {
+      _comboQueued = true;
+      return false; // evita cobrar stamina em cliques extras durante a animação
+    }
+
+    return _startComboAttack(damage);
+  }
+
+  bool _startComboAttack(double damage, {bool consumeStamina = false}) {
+    if (consumeStamina) {
+      final cost = controller.model.config.primaryAttackStaminaCost;
+      if (controller.model.stamina < cost) {
+        _comboQueued = false;
+        _comboStep = 0;
+        return false;
+      }
+      controller.model.consumeStamina(cost);
+    }
+
+    final DDAnimationDirectional comboAnimation =
+        _comboAttackAnimations[_comboStep];
+
     final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
       AttackType.melee,
       () {
         DDCharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-          animationRight: animationAttackDirectional.right,
-          animationLeft: animationAttackDirectional.left,
-          animationUp: animationAttackDirectional.up,
-          animationDown: animationAttackDirectional.down,
-          animationRightUp: animationAttackDirectional.rightUp,
-          animationRightDown: animationAttackDirectional.rightDown,
-          animationLeftUp: animationAttackDirectional.leftUp,
-          animationLeftDown: animationAttackDirectional.leftDown,
+          animationRight: comboAnimation.right,
+          animationLeft: comboAnimation.left,
+          animationUp: comboAnimation.up,
+          animationDown: comboAnimation.down,
+          animationRightUp: comboAnimation.rightUp,
+          animationRightDown: comboAnimation.rightDown,
+          animationLeftUp: comboAnimation.leftUp,
+          animationLeftDown: comboAnimation.leftDown,
           currentAnimation: animation,
           target: this,
           executionStartFrame: 1,
-          onActionStart: lockAction,
-          onActionEnd: unlockAction,
+          onActionStart: () {
+            _isAttackPlaying = true;
+            _comboResetTimer?.cancel();
+            lockAction();
+          },
+          onActionEnd: () => _handleAttackEnd(damage),
           onExecutionFrames: () => _executePrimaryAttack(damage: damage),
         );
       },
     );
 
-    return executionInfo != null;
+    if (executionInfo == null) {
+      _isAttackPlaying = false;
+      _comboQueued = false;
+      return false;
+    }
+
+    _comboStep = (_comboStep + 1) % _comboAttackAnimations.length;
+    return true;
+  }
+
+  void _handleAttackEnd(double damage) {
+    unlockAction();
+    _isAttackPlaying = false;
+
+    if (_comboQueued) {
+      _comboQueued = false;
+      if (!meleeAttackController.canPerformAttack) {
+        meleeAttackController.forceReadyForCombo();
+      }
+      _startComboAttack(damage, consumeStamina: true);
+      return;
+    }
+
+    _comboResetTimer?.cancel();
+    _comboResetTimer = async.Timer(_kComboResetDelay, () {
+      _comboStep = 0;
+    });
   }
 
   bool _onExecuteRangedAttack(double damage) {

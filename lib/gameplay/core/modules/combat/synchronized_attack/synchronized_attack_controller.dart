@@ -174,6 +174,13 @@ class SynchronizedAttackController {
     return 1000.0 / cooldown;
   }
 
+  void forceReadyForCombo() {
+    _cooldownTimer?.cancel();
+    _cooldownTimer = null;
+    _model.canAttack = true;
+    _model.startCooldown(Duration.zero);
+  }
+
   Duration getCalculatedCooldown(AttackType type) =>
       _calculateDurations(type).cooldown;
 
