@@ -17,6 +17,7 @@ class MarketDecoration extends DDContactDecoration {
   final Sprite? interactionIcon;
   bool _dialogOpen = false;
   bool _registered = false;
+  bool _lockedUntilExit = false;
 
   MarketDecoration({
     required super.position,
@@ -45,9 +46,25 @@ class MarketDecoration extends DDContactDecoration {
   @override
   void onContact(SimplePlayer component) {
     super.onContact(component);
-    if (_dialogOpen) return;
+    final marketAlreadyOpen = MarketState.instance.isOpen.value;
+    if (_dialogOpen || _lockedUntilExit || marketAlreadyOpen) {
+      debugPrint(
+        '[MarketDecoration] onContact ignored (dialogOpen=$_dialogOpen, lockedUntilExit=$_lockedUntilExit, marketAlreadyOpen=$marketAlreadyOpen) at $_spawnKey',
+      );
+      return;
+    }
 
     _dialogOpen = true;
+    _lockedUntilExit = true;
+    debugPrint('[MarketDecoration] onContact -> opening market at $_spawnKey');
+
+    // Stop player movement so it doesn't keep walking while dialog is open.
+    try {
+      component.stopMove();
+    } catch (_) {
+      // ignore if player implementation differs.
+    }
+
     MarketState.instance.open();
     _openMarket(component);
   }
@@ -56,6 +73,8 @@ class MarketDecoration extends DDContactDecoration {
   void onContactExit(SimplePlayer component) {
     super.onContactExit(component);
     _dialogOpen = false;
+    _lockedUntilExit = false;
+    debugPrint('[MarketDecoration] onContactExit -> unlock at $_spawnKey');
     MarketState.instance.close();
   }
 
@@ -91,18 +110,21 @@ class MarketDecoration extends DDContactDecoration {
     if (_registered) {
       _spawnedPositions.remove(_spawnKey);
     }
+    debugPrint('[MarketDecoration] removed at $_spawnKey (registered=$_registered)');
     super.onRemove();
   }
 
   void _openMarket(SimplePlayer component) {
     // Prefer callback if provided (e.g., to push a Flutter dialog).
     if (onOpenMarket != null) {
+      debugPrint('[MarketDecoration] opening via onOpenMarket callback');
       onOpenMarket!();
       return;
     }
 
     // Fallback: use overlay id if provided.
     if (overlayId != null) {
+      debugPrint('[MarketDecoration] opening via overlay=$overlayId');
       if (!gameRef.overlays.isActive(overlayId!)) {
         gameRef.overlays.add(overlayId!);
       }
@@ -115,6 +137,7 @@ class MarketDecoration extends DDContactDecoration {
         : null;
 
     if (model != null) {
+      debugPrint('[MarketDecoration] opening via fallback showDialog');
       showDialog<void>(
         context: gameRef.context,
         barrierDismissible: true,
@@ -122,12 +145,18 @@ class MarketDecoration extends DDContactDecoration {
           return MarketDialog(
             player: model,
             onClose: () {
+              debugPrint('[MarketDecoration] MarketDialog onClose callback');
               _dialogOpen = false;
               MarketState.instance.close();
             },
           );
         },
       ).then((_) {
+        debugPrint('[MarketDecoration] MarketDialog closed (Future.then)');
+        _dialogOpen = false;
+        MarketState.instance.close();
+      }).catchError((error, stack) {
+        debugPrint('[MarketDecoration] showDialog error: $error');
         _dialogOpen = false;
         MarketState.instance.close();
       });

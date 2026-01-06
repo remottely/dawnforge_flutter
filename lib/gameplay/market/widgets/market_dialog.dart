@@ -24,6 +24,9 @@ class MarketDialog extends StatefulWidget {
 }
 
 class _MarketDialogState extends State<MarketDialog> {
+  static int _instanceCounter = 0;
+  late final int _id;
+
   final _catalog = MarketManager.instance.getMarketCatalog();
   late final InventoryManager _inventory;
   late final ItemFactoryService _itemFactory;
@@ -34,6 +37,8 @@ class _MarketDialogState extends State<MarketDialog> {
   @override
   void initState() {
     super.initState();
+    _id = ++_MarketDialogState._instanceCounter;
+    debugPrint('[MarketDialog#$_id] initState');
     MarketState.instance.open();
     _inventory = getIt<InventoryManager>();
     _itemFactory = getIt<ItemFactoryService>();
@@ -43,16 +48,18 @@ class _MarketDialogState extends State<MarketDialog> {
       if (item != null) {
         _itemCache[entry.itemId] = item;
       } else {
-        debugPrint('[MarketDialog] ItemFactoryService returned null for ${entry.itemId}');
+        debugPrint('[MarketDialog#$_id] ItemFactoryService returned null for ${entry.itemId}');
       }
     }
     _visibleCatalog = _catalog
         .where((entry) => _itemCache.containsKey(entry.itemId))
         .toList();
+    debugPrint('[MarketDialog#$_id] visibleCatalog size=${_visibleCatalog.length}');
   }
 
   @override
   void dispose() {
+    debugPrint('[MarketDialog#$_id] dispose');
     MarketState.instance.close();
     super.dispose();
   }
@@ -64,7 +71,7 @@ class _MarketDialogState extends State<MarketDialog> {
     final crossAxisCount = isWide ? 4 : (media.size.width >= 600 ? 3 : 2);
 
     return Scaffold(
-      backgroundColor: Colors.black.withOpacity(0.6),
+      backgroundColor: Colors.transparent,
       body: SafeArea(
         child: Center(
           child: Container(
@@ -72,7 +79,7 @@ class _MarketDialogState extends State<MarketDialog> {
             margin: const EdgeInsets.all(12),
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.85),
+              color: Colors.transparent,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: Colors.white.withOpacity(0.5)),
             ),
@@ -124,6 +131,7 @@ class _MarketDialogState extends State<MarketDialog> {
         const Spacer(),
         IconButton(
           onPressed: () {
+            debugPrint('[MarketDialog#$_id] close button tapped');
             widget.onClose?.call();
             Navigator.of(context).maybePop();
           },
