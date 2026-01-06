@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.91.2+1
+version: 1.91.3+1
 
 environment:
   sdk: ^3.8.1
@@ -312,7 +312,7 @@ flutter:
     - assets/images/tiled/SmallBurg_village_pack_v3.18.1_commercial/assets/tileset_v2/treesn_bushes_seasons.png
     - assets/images/tiled/SmallBurg_village_pack_v3.18.1_commercial/assets/tileset_v2/SmallBurg_outside_assets.png
 
-    # - assets/images/tiled/small_burg/maps/sb_farm.json # TODO(Kevin): remove it from all project
+    - assets/images/tiled/small_burg/maps/sb_farm.json # TODO(Kevin): remove it from all project
     - assets/images/tiled/maps/farm_map.json
 
     # # - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_idle_full_light_demo.png

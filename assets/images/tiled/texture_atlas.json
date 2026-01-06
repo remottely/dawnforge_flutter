@@ -1,0 +1,14 @@
+{ "columns":256,
+ "image":"small_burg\/texture_atlas_1.png",
+ "imageheight":4096,
+ "imagewidth":4096,
+ "margin":0,
+ "name":"texture_atlas",
+ "spacing":0,
+ "tilecount":65536,
+ "tiledversion":"1.11.2",
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset",
+ "version":"1.10"
+}

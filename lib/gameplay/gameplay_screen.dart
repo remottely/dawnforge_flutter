@@ -34,7 +34,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
     return MapNavigator(
       maps: MapManager.allMaps,
       // initialMap: MapConfig.kFarmId,
-      initialMap: MapDef.kFarmMapId,
+      initialMap: MapDef.kSBFarmId,
       // initialMap: MapDef.kSVTownId,
       // initialMap: MapDef.kF1Id,
       builder: (context, arguments, mapItem) {

@@ -60,6 +60,7 @@ Entregar um protótipo jogável que capture o loop central de farming:
 <!-- 🔥🟢 Áudio mínimo: música de fundo -->
 <!-- 🔥🟢 Áudio mínimo: SFX de ações-chave (cavar, regar, colher, UI) -->
 <!-- ⭐🔴 Áudio mínimo: SFX de ações-chave (arar) -->
+🔥🟡 morrer volta para last save.
 
 ## 4. Fora de Escopo (Nice-to-Have / Posterior)
 <!-- ⭐🟡 NPCs, diálogos, quests e relacionamentos -->
