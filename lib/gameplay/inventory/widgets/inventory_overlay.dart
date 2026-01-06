@@ -9,6 +9,11 @@ import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/widgets/item_sprite_widget.dart';
 import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
 import 'package:flutter/material.dart';
+import 'package:darkness_dungeon/gameplay/market/market_state.dart';
+import 'package:darkness_dungeon/gameplay/market/market_manager.dart';
+import 'package:darkness_dungeon/gameplay/inventory/items/harvest_loot_item.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_service.dart';
 
 class InventoryOverlay extends StatelessWidget with ResponsiveOverlayMixin {
   const InventoryOverlay({super.key});
@@ -174,7 +179,7 @@ class InventoryOverlay extends StatelessWidget with ResponsiveOverlayMixin {
     }
 
     return GestureDetector(
-      onTap: () => getIt<EquipmentManager>().selectSlotIndex(slot.index),
+      onTap: () => _handleTap(slot),
       child: Container(
         width: slotSize,
         height: slotSize,
@@ -270,5 +275,37 @@ class InventoryOverlay extends StatelessWidget with ResponsiveOverlayMixin {
     }
 
     return name.substring(0, 4).toUpperCase();
+  }
+
+  void _handleTap(InventorySlot slot) {
+    // Venda ao tocar quando o market estiver aberto e o item for HarvestLootItem.
+    if (MarketState.instance.isOpen.value) {
+      final item = slot.item;
+      if (item is HarvestLootItem && !slot.isEmpty) {
+        final player = PlayerStateManager.instance.lastPlayerModel;
+        if (player == null) {
+          OverlayMessageService.instance.showError('Player não disponível.');
+          return;
+        }
+
+        final result = MarketManager.instance.sellItem(
+          item.id,
+          1,
+          player,
+          getIt<InventoryManager>(),
+        );
+
+        if (result.success) {
+          OverlayMessageService.instance.showSuccess(result.message);
+        } else {
+          OverlayMessageService.instance.showError(result.message);
+        }
+      }
+      // Não deixa equipar/usar enquanto o market está aberto.
+      return;
+    }
+
+    // Comportamento normal: selecionar slot / equipar.
+    getIt<EquipmentManager>().selectSlotIndex(slot.index);
   }
 }

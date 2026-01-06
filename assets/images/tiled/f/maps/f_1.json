@@ -17786,13 +17786,14 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
         {
          "draworder":"topdown",
          "id":7,
+         "locked":true,
          "name":"enemies",
          "objects":[
                 {
@@ -18270,13 +18271,14 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
         {
          "draworder":"topdown",
          "id":8,
+         "locked":true,
          "name":"npcs",
          "objects":[
                 {
@@ -18292,13 +18294,14 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
         {
          "draworder":"topdown",
          "id":11,
+         "locked":true,
          "name":"barrel_torch",
          "objects":[
                 {
@@ -18985,13 +18988,14 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
         {
          "draworder":"topdown",
          "id":10,
+         "locked":true,
          "name":"door_chest",
          "objects":[
                 {

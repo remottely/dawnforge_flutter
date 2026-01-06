@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.92.3+1
+version: 1.93.0+1
 
 environment:
   sdk: ^3.8.1
@@ -229,6 +229,7 @@ flutter:
     # === HUD / UI ===
     - assets/images/hud/health_ui.png
     - assets/images/ui/input/keyboard_tip.png
+    - assets/images/hud/commerce_marketplace_stall_open.png
 
     # === JOYSTICK ===
     - assets/images/joystick/joystick_background.png

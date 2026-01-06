@@ -9,6 +9,7 @@ import 'package:flutter/foundation.dart';
 class DDBasePlayerModel {
   final DDBasePlayerModelConfig config;
   final DDBasePlayerSaveData _saveData;
+  final ValueNotifier<int> coinsNotifier;
 
   bool _isObservingEnemy;
 
@@ -17,11 +18,13 @@ class DDBasePlayerModel {
     required this.config,
     required DDBasePlayerSaveData saveData,
   }) : _saveData = saveData,
+       coinsNotifier = ValueNotifier<int>(saveData.coins),
        _isObservingEnemy = false;
 
   double get stamina => _saveData.stamina;
   int get energy => _saveData.energy;
   double? get life => _saveData.life;
+  int get coins => _saveData.coins;
   bool get hasStamina => _saveData.stamina > 0;
 
   /// Equipment always points to the currently selected inventory slot
@@ -70,6 +73,22 @@ class DDBasePlayerModel {
   void restoreEnergy() => _saveData.energy = config.maxEnergy;
 
   void updateLife(double value) => _saveData.life = value;
+
+  void addCoins(int amount) {
+    if (amount <= 0) return;
+    _saveData.coins += amount;
+    coinsNotifier.value = _saveData.coins;
+  }
+
+  bool removeCoins(int amount) {
+    if (amount <= 0) return true;
+    if (!canAfford(amount)) return false;
+    _saveData.coins -= amount;
+    coinsNotifier.value = _saveData.coins;
+    return true;
+  }
+
+  bool canAfford(int amount) => amount <= _saveData.coins;
 
   Map<String, dynamic> toJson() => _saveData.toJson();
 
