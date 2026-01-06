@@ -92,6 +92,12 @@ final class DemoPlayerDef {
       'tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/tools_watercan/character_body/character_tools_watercan_body_light_10.png';
   static String walkAssetPath =
       'tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/walk/character_body/character_walk_body_light_6.png';
+  static String attac1kAssetPath =
+      'tiled/Smallburg_dungeon_pack_v2.13/edited_assets/characters/slash_1/character_demo/character_slash_1_light_full_6.png';
+  static String attack2AssetPath =
+      'tiled/Smallburg_dungeon_pack_v2.13/edited_assets/characters/slash_2/character_demo/character_slash_2_light_full_6.png';
+  static String attack3AssetPath =
+      'tiled/Smallburg_dungeon_pack_v2.13/edited_assets/characters/super_slash/character_demo/character_super_slash_light_full_6.png';
 
   static const int _x2 = 2;
   static const int _x4 = 4;
@@ -353,53 +359,40 @@ final class DemoPlayerDef {
         loadUp: _loadAnimationChoppingUp,
         loadDown: _loadAnimationChoppingDown,
       );
-
-  static final Future<SpriteAnimation> _loadAnimationAttackRight =
+  static Future<SpriteAnimation> _loadAnimationAttackRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: idleAssetPath,
+        assetPath: attac1kAssetPath,
         textureSize: textureSize,
-        totalFrames: _x10,
-        skipFirstFrames: _skipFirstFramesX6,
-        framePositionX: _frameRightX10,
-        framePositionY: _frameAttackY,
-        framePositionXPadding: -8,
-        framePositionYPadding: -6,
+        totalFrames: _x6,
+        framePositionX: 0,
+        framePositionY: _frameRightY,
       );
 
-  static final Future<SpriteAnimation> _loadAnimationAttackLeft =
+  static Future<SpriteAnimation> _loadAnimationAttackLeft =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: idleAssetPath,
+        assetPath: attac1kAssetPath,
         textureSize: textureSize,
-        totalFrames: _x10,
-        skipFirstFrames: _skipFirstFramesX6,
-        framePositionX: _frameLeftX10,
-        framePositionY: _frameAttackY,
-        framePositionXPadding: -8,
-        framePositionYPadding: -6,
+        totalFrames: _x6,
+        framePositionX: 0,
+        framePositionY: _frameLeftY,
       );
 
-  static final Future<SpriteAnimation> _loadAnimationAttackUp =
+  static Future<SpriteAnimation> _loadAnimationAttackUp =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: idleAssetPath,
+        assetPath: attac1kAssetPath,
         textureSize: textureSize,
-        totalFrames: _x10,
-        skipFirstFrames: _skipFirstFramesX6,
-        framePositionX: _frameUpX10,
-        framePositionY: _frameAttackY,
-        framePositionXPadding: -8,
-        framePositionYPadding: -4,
+        totalFrames: _x6,
+        framePositionX: 0,
+        framePositionY: _frameUpY,
       );
 
-  static final Future<SpriteAnimation> _loadAnimationAttackDown =
+  static Future<SpriteAnimation> _loadAnimationAttackDown =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: idleAssetPath,
+        assetPath: attac1kAssetPath,
         textureSize: textureSize,
-        totalFrames: _x10,
-        skipFirstFrames: _skipFirstFramesX6,
-        framePositionX: _frameDownX10,
-        framePositionY: _frameAttackY,
-        framePositionXPadding: -8,
-        framePositionYPadding: -8,
+        totalFrames: _x6,
+        framePositionX: 0,
+        framePositionY: _frameDownY,
       );
 
   static final _animationAttackDirectionalFactory =
