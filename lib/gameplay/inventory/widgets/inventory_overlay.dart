@@ -11,7 +11,6 @@ import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_loc
 import 'package:flutter/material.dart';
 import 'package:darkness_dungeon/gameplay/market/market_state.dart';
 import 'package:darkness_dungeon/gameplay/market/market_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/items/harvest_loot_item.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_service.dart';
 
@@ -278,29 +277,38 @@ class InventoryOverlay extends StatelessWidget with ResponsiveOverlayMixin {
   }
 
   void _handleTap(InventorySlot slot) {
-    // Venda ao tocar quando o market estiver aberto e o item for HarvestLootItem.
+    // Venda ao tocar quando o market estiver aberto e houver item vendável.
     if (MarketState.instance.isOpen.value) {
-      final item = slot.item;
-      if (item is HarvestLootItem && !slot.isEmpty) {
-        final player = PlayerStateManager.instance.lastPlayerModel;
-        if (player == null) {
-          OverlayMessageService.instance.showError('Player não disponível.');
-          return;
-        }
-
-        final result = MarketManager.instance.sellItem(
-          item.id,
-          1,
-          player,
-          getIt<InventoryManager>(),
-        );
-
-        if (result.success) {
-          OverlayMessageService.instance.showSuccess(result.message);
-        } else {
-          OverlayMessageService.instance.showError(result.message);
-        }
+      if (slot.isEmpty || slot.item == null) {
+        OverlayMessageService.instance.showError('Slot vazio.');
+        return;
       }
+
+      final item = slot.item!;
+      final player = PlayerStateManager.instance.lastPlayerModel;
+      if (player == null) {
+        OverlayMessageService.instance.showError('Player não disponível.');
+        return;
+      }
+
+      if (!MarketManager.instance.canSellItem(item.id, getIt<InventoryManager>())) {
+        OverlayMessageService.instance.showError('Item não vendável no market.');
+        return;
+      }
+
+      final result = MarketManager.instance.sellItem(
+        item.id,
+        1,
+        player,
+        getIt<InventoryManager>(),
+      );
+
+      if (result.success) {
+        OverlayMessageService.instance.showSuccess(result.message);
+      } else {
+        OverlayMessageService.instance.showError(result.message);
+      }
+
       // Não deixa equipar/usar enquanto o market está aberto.
       return;
     }
