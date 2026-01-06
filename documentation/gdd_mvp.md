@@ -104,7 +104,7 @@ Slots:
 Itens mínimos:
     <!-- 🔥🟢 seeds (2 tipos) -->
     <!-- 🔥🟢 colheitas (2). Falta melhorar renderização dos crops no inventorio -->
-    🔥🟡 ferramentas (pá, regador, foice/mão)
+    <!-- 🔥🟢 ferramentas (pá, regador, foice/mão) -->
     <!-- ⭐🔴 dinheiro (saldo numérico) -->
     <!-- 🔥🟢 água (implícita no regador com uso ilimitado no MVP) -->
 

@@ -76,9 +76,29 @@ abstract class DDMobilePlayerView<
       radAngle: event.radAngle,
     );
 
+    _updateFacingDirection(event);
+
     if (isActionLocked) return;
 
     super.onJoystickChangeDirectional(event);
+  }
+
+  void _updateFacingDirection(JoystickDirectionalEvent event) {
+    final dir = switch (event.directional) {
+      JoystickMoveDirectional.MOVE_LEFT => Direction.left,
+      JoystickMoveDirectional.MOVE_RIGHT => Direction.right,
+      JoystickMoveDirectional.MOVE_UP => Direction.up,
+      JoystickMoveDirectional.MOVE_DOWN => Direction.down,
+      JoystickMoveDirectional.MOVE_UP_LEFT => Direction.upLeft,
+      JoystickMoveDirectional.MOVE_UP_RIGHT => Direction.upRight,
+      JoystickMoveDirectional.MOVE_DOWN_LEFT => Direction.downLeft,
+      JoystickMoveDirectional.MOVE_DOWN_RIGHT => Direction.downRight,
+      _ => null,
+    };
+
+    if (dir != null) {
+      lastDirection = dir;
+    }
   }
 
   void _onChangeRunState(bool isRunning) {
