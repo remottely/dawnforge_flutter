@@ -1,3 +1,4 @@
+import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
 import 'package:flutter/foundation.dart';
 
@@ -15,6 +16,7 @@ class MarketState {
   void openWithPlayer(DDBasePlayerModel player) {
     activePlayer.value = player;
     isOpen.value = true;
+    PlayerStateManager.instance.setLastPlayerModel(player);
   }
 
   void close() {

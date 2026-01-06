@@ -39,105 +39,125 @@ class MarketCatalog {
 
   /// Lista de itens de sementes com preços balanceados simples.
   static const List<MarketItem> seeds = [
-    MarketItem(
-      itemId: HandItemId.carrot_seed_bag,
-      buyPrice: 15,
-      sellPrice: 9,
-    ),
-    MarketItem(
-      itemId: HandItemId.radish_seed_bag,
-      buyPrice: 18,
-      sellPrice: 11,
-    ),
-    MarketItem(
-      itemId: HandItemId.cabbage_seed_bag,
-      buyPrice: 25,
-      sellPrice: 15,
-    ),
-    MarketItem(
-      itemId: HandItemId.turnip_seed_bag,
-      buyPrice: 20,
-      sellPrice: 12,
-    ),
-    MarketItem(
-      itemId: HandItemId.wheat_seed_bag,
-      buyPrice: 12,
-      sellPrice: 7,
-    ),
-    MarketItem(
-      itemId: HandItemId.pepper_seed_bag,
-      buyPrice: 28,
-      sellPrice: 17,
-    ),
-    MarketItem(
-      itemId: HandItemId.cotton_seed_bag,
-      buyPrice: 22,
-      sellPrice: 13,
-    ),
-    MarketItem(
-      itemId: HandItemId.onion_seed_bag,
-      buyPrice: 24,
-      sellPrice: 14,
-    ),
-    MarketItem(
-      itemId: HandItemId.cauliflower_seed_bag,
-      buyPrice: 30,
-      sellPrice: 18,
-    ),
-    MarketItem(
-      itemId: HandItemId.corn_seed_bag,
-      buyPrice: 26,
-      sellPrice: 16,
-    ),
-    MarketItem(
-      itemId: HandItemId.tomato_seed_bag,
-      buyPrice: 24,
-      sellPrice: 14,
-    ),
-    MarketItem(
-      itemId: HandItemId.grape_seed_bag,
-      buyPrice: 32,
-      sellPrice: 19,
-    ),
-    MarketItem(
-      itemId: HandItemId.prickly_pear_seed_bag,
-      buyPrice: 38,
-      sellPrice: 23,
-    ),
-    MarketItem(
-      itemId: HandItemId.coffee_seed_bag,
-      buyPrice: 50,
-      sellPrice: 30,
-    ),
-    MarketItem(
-      itemId: HandItemId.zuchini_seed_bag,
-      buyPrice: 27,
-      sellPrice: 16,
-    ),
-    MarketItem(
-      itemId: HandItemId.pumpkin_seed_bag,
-      buyPrice: 34,
-      sellPrice: 20,
-    ),
-    MarketItem(
-      itemId: HandItemId.pineapple_seed_bag,
-      buyPrice: 55,
-      sellPrice: 33,
-    ),
-    MarketItem(
-      itemId: HandItemId.watermelon_seed_bag,
-      buyPrice: 45,
-      sellPrice: 27,
-    ),
-    MarketItem(
-      itemId: HandItemId.apple_seed_bag,
-      buyPrice: 40,
-      sellPrice: 24,
-    ),
+    // MarketItem(
+    //   itemId: HandItemId.carrot_seed_bag,
+    //   buyPrice: 15,
+    //   sellPrice: 9,
+    // ),
+    MarketItem(itemId: HandItemId.radish_seed_bag, buyPrice: 18, sellPrice: 11),
+    // MarketItem(
+    //   itemId: HandItemId.cabbage_seed_bag,
+    //   buyPrice: 25,
+    //   sellPrice: 15,
+    // ),
+    // MarketItem(
+    //   itemId: HandItemId.turnip_seed_bag,
+    //   buyPrice: 20,
+    //   sellPrice: 12,
+    // ),
+    // MarketItem(
+    //   itemId: HandItemId.wheat_seed_bag,
+    //   buyPrice: 12,
+    //   sellPrice: 7,
+    // ),
+    // MarketItem(
+    //   itemId: HandItemId.pepper_seed_bag,
+    //   buyPrice: 28,
+    //   sellPrice: 17,
+    // ),
+    // MarketItem(
+    //   itemId: HandItemId.cotton_seed_bag,
+    //   buyPrice: 22,
+    //   sellPrice: 13,
+    // ),
+    // MarketItem(
+    //   itemId: HandItemId.onion_seed_bag,
+    //   buyPrice: 24,
+    //   sellPrice: 14,
+    // ),
+    // MarketItem(
+    //   itemId: HandItemId.cauliflower_seed_bag,
+    //   buyPrice: 30,
+    //   sellPrice: 18,
+    // ),
+    // MarketItem(
+    //   itemId: HandItemId.corn_seed_bag,
+    //   buyPrice: 26,
+    //   sellPrice: 16,
+    // ),
+    MarketItem(itemId: HandItemId.tomato_seed_bag, buyPrice: 24, sellPrice: 14),
+    // MarketItem(
+    //   itemId: HandItemId.grape_seed_bag,
+    //   buyPrice: 32,
+    //   sellPrice: 19,
+    // ),
+    // MarketItem(
+    //   itemId: HandItemId.prickly_pear_seed_bag,
+    //   buyPrice: 38,
+    //   sellPrice: 23,
+    // ),
+    // MarketItem(
+    //   itemId: HandItemId.coffee_seed_bag,
+    //   buyPrice: 50,
+    //   sellPrice: 30,
+    // ),
+    // MarketItem(
+    //   itemId: HandItemId.zuchini_seed_bag,
+    //   buyPrice: 27,
+    //   sellPrice: 16,
+    // ),
+    // MarketItem(
+    //   itemId: HandItemId.pumpkin_seed_bag,
+    //   buyPrice: 34,
+    //   sellPrice: 20,
+    // ),
+    // MarketItem(
+    //   itemId: HandItemId.pineapple_seed_bag,
+    //   buyPrice: 55,
+    //   sellPrice: 33,
+    // ),
+    // MarketItem(
+    //   itemId: HandItemId.watermelon_seed_bag,
+    //   buyPrice: 45,
+    //   sellPrice: 27,
+    // ),
+    MarketItem(itemId: HandItemId.apple_seed_bag, buyPrice: 40, sellPrice: 24),
     MarketItem(
       itemId: HandItemId.strawberry_seed_bag,
       buyPrice: 35,
       sellPrice: 21,
+    ),
+
+    // Loots disponíveis para compra direta (MVP possui 4 loots atuais).
+    MarketItem(
+      itemId: HandItemId.carrot_loot_item,
+      buyPrice: 15,
+      sellPrice: 9,
+      category: 'loot',
+    ),
+    MarketItem(
+      itemId: HandItemId.strawberry_loot_item,
+      buyPrice: 35,
+      sellPrice: 21,
+      category: 'loot',
+    ),
+    MarketItem(
+      itemId: HandItemId.potato_loot_item,
+      buyPrice: 17,
+      sellPrice: 10,
+      category: 'loot',
+    ),
+    MarketItem(
+      itemId: HandItemId.pumpkin_loot_item,
+      buyPrice: 34,
+      sellPrice: 20,
+      category: 'loot',
+    ),
+    MarketItem(
+      itemId: HandItemId.apple_loot_item,
+      buyPrice: 40,
+      sellPrice: 24,
+      category: 'loot',
     ),
   ];
 
@@ -200,25 +220,125 @@ class MarketPriceTable {
   MarketPriceTable._();
 
   static const List<MarketPriceEntry> seeds = [
-    MarketPriceEntry(id: HandItemId.carrot_seed_bag, buyPrice: 15, sellPrice: 9, note: 'comum'),
-    MarketPriceEntry(id: HandItemId.radish_seed_bag, buyPrice: 18, sellPrice: 11, note: 'comum'),
-    MarketPriceEntry(id: HandItemId.cabbage_seed_bag, buyPrice: 25, sellPrice: 15, note: 'incomum'),
-    MarketPriceEntry(id: HandItemId.turnip_seed_bag, buyPrice: 20, sellPrice: 12, note: 'comum'),
-    MarketPriceEntry(id: HandItemId.wheat_seed_bag, buyPrice: 12, sellPrice: 7, note: 'comum'),
-    MarketPriceEntry(id: HandItemId.pepper_seed_bag, buyPrice: 28, sellPrice: 17, note: 'incomum'),
-    MarketPriceEntry(id: HandItemId.cotton_seed_bag, buyPrice: 22, sellPrice: 13, note: 'comum'),
-    MarketPriceEntry(id: HandItemId.onion_seed_bag, buyPrice: 24, sellPrice: 14, note: 'comum'),
-    MarketPriceEntry(id: HandItemId.cauliflower_seed_bag, buyPrice: 30, sellPrice: 18, note: 'incomum'),
-    MarketPriceEntry(id: HandItemId.corn_seed_bag, buyPrice: 26, sellPrice: 16, note: 'incomum'),
-    MarketPriceEntry(id: HandItemId.tomato_seed_bag, buyPrice: 24, sellPrice: 14, note: 'comum'),
-    MarketPriceEntry(id: HandItemId.grape_seed_bag, buyPrice: 32, sellPrice: 19, note: 'incomum'),
-    MarketPriceEntry(id: HandItemId.prickly_pear_seed_bag, buyPrice: 38, sellPrice: 23, note: 'rara'),
-    MarketPriceEntry(id: HandItemId.coffee_seed_bag, buyPrice: 50, sellPrice: 30, note: 'rara'),
-    MarketPriceEntry(id: HandItemId.zuchini_seed_bag, buyPrice: 27, sellPrice: 16, note: 'incomum'),
-    MarketPriceEntry(id: HandItemId.pumpkin_seed_bag, buyPrice: 34, sellPrice: 20, note: 'rara'),
-    MarketPriceEntry(id: HandItemId.pineapple_seed_bag, buyPrice: 55, sellPrice: 33, note: 'rara'),
-    MarketPriceEntry(id: HandItemId.watermelon_seed_bag, buyPrice: 45, sellPrice: 27, note: 'rara'),
-    MarketPriceEntry(id: HandItemId.apple_seed_bag, buyPrice: 40, sellPrice: 24, note: 'rara'),
-    MarketPriceEntry(id: HandItemId.strawberry_seed_bag, buyPrice: 35, sellPrice: 21, note: 'incomum'),
+    MarketPriceEntry(
+      id: HandItemId.carrot_seed_bag,
+      buyPrice: 15,
+      sellPrice: 9,
+      note: 'comum',
+    ),
+    MarketPriceEntry(
+      id: HandItemId.radish_seed_bag,
+      buyPrice: 18,
+      sellPrice: 11,
+      note: 'comum',
+    ),
+    MarketPriceEntry(
+      id: HandItemId.cabbage_seed_bag,
+      buyPrice: 25,
+      sellPrice: 15,
+      note: 'incomum',
+    ),
+    MarketPriceEntry(
+      id: HandItemId.turnip_seed_bag,
+      buyPrice: 20,
+      sellPrice: 12,
+      note: 'comum',
+    ),
+    MarketPriceEntry(
+      id: HandItemId.wheat_seed_bag,
+      buyPrice: 12,
+      sellPrice: 7,
+      note: 'comum',
+    ),
+    MarketPriceEntry(
+      id: HandItemId.pepper_seed_bag,
+      buyPrice: 28,
+      sellPrice: 17,
+      note: 'incomum',
+    ),
+    MarketPriceEntry(
+      id: HandItemId.cotton_seed_bag,
+      buyPrice: 22,
+      sellPrice: 13,
+      note: 'comum',
+    ),
+    MarketPriceEntry(
+      id: HandItemId.onion_seed_bag,
+      buyPrice: 24,
+      sellPrice: 14,
+      note: 'comum',
+    ),
+    MarketPriceEntry(
+      id: HandItemId.cauliflower_seed_bag,
+      buyPrice: 30,
+      sellPrice: 18,
+      note: 'incomum',
+    ),
+    MarketPriceEntry(
+      id: HandItemId.corn_seed_bag,
+      buyPrice: 26,
+      sellPrice: 16,
+      note: 'incomum',
+    ),
+    MarketPriceEntry(
+      id: HandItemId.tomato_seed_bag,
+      buyPrice: 24,
+      sellPrice: 14,
+      note: 'comum',
+    ),
+    MarketPriceEntry(
+      id: HandItemId.grape_seed_bag,
+      buyPrice: 32,
+      sellPrice: 19,
+      note: 'incomum',
+    ),
+    MarketPriceEntry(
+      id: HandItemId.prickly_pear_seed_bag,
+      buyPrice: 38,
+      sellPrice: 23,
+      note: 'rara',
+    ),
+    MarketPriceEntry(
+      id: HandItemId.coffee_seed_bag,
+      buyPrice: 50,
+      sellPrice: 30,
+      note: 'rara',
+    ),
+    MarketPriceEntry(
+      id: HandItemId.zuchini_seed_bag,
+      buyPrice: 27,
+      sellPrice: 16,
+      note: 'incomum',
+    ),
+    MarketPriceEntry(
+      id: HandItemId.pumpkin_seed_bag,
+      buyPrice: 34,
+      sellPrice: 20,
+      note: 'rara',
+    ),
+    MarketPriceEntry(
+      id: HandItemId.pineapple_seed_bag,
+      buyPrice: 55,
+      sellPrice: 33,
+      note: 'rara',
+    ),
+    MarketPriceEntry(
+      id: HandItemId.watermelon_seed_bag,
+      buyPrice: 45,
+      sellPrice: 27,
+      note: 'rara',
+    ),
+    MarketPriceEntry(
+      id: HandItemId.apple_seed_bag,
+      buyPrice: 40,
+      sellPrice: 24,
+      note: 'rara',
+    ),
+    MarketPriceEntry(
+      id: HandItemId.strawberry_seed_bag,
+      buyPrice: 35,
+      sellPrice: 21,
+      note: 'incomum',
+    ),
   ];
 }

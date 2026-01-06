@@ -9,6 +9,7 @@ import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consu
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
 import 'package:flutter/foundation.dart';
+import 'package:darkness_dungeon/gameplay/market/market_state.dart';
 
 abstract class DDBasePlayerView<
   C extends DDBasePlayerController<M>,
@@ -75,6 +76,13 @@ abstract class DDBasePlayerView<
 
   @override
   void update(double dt) {
+    if (MarketState.instance.isOpen.value) {
+      // Bloqueia qualquer movimento enquanto o market está aberto.
+      stopMove();
+      velocity = Vector2.zero();
+      return;
+    }
+
     if (isDead) return;
 
     _syncLifeToModel();
@@ -90,6 +98,10 @@ abstract class DDBasePlayerView<
 
   @override
   void onJoystickAction(JoystickActionEvent event) {
+    if (MarketState.instance.isOpen.value) {
+      developer.log('[PlayerInput] input ignored: market open');
+      return;
+    }
     developer.log(
       '[PlayerInput] 🎮 Input recebido: ${event.id} | evento: ${event.event} | equipamento: ${_model.equipment}',
     );

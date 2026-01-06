@@ -47,4 +47,12 @@ class PlayerStateManager {
     lastPlayerModel = null;
     _respawnWithFullLife = false;
   }
+
+  void setLastPlayerModel(DDBasePlayerModel model) {
+    lastPlayerModel = model;
+  }
+
+  void setLastPlayerView(DDBasePlayerView view) {
+    lastPlayerView = view;
+  }
 }

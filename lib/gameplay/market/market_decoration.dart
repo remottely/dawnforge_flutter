@@ -48,6 +48,7 @@ class MarketDecoration extends DDContactDecoration with PlayerControllerListener
   @override
   void onContact(SimplePlayer component) {
     super.onContact(component);
+    if (_hasActiveContact) return;
     _hasActiveContact = true;
     _currentPlayer = component is DDBasePlayerView ? component : _currentPlayer;
     _registerToPlayerController();
