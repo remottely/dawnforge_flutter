@@ -37781,10 +37781,6 @@
         {
          "firstgid":545,
          "source":"..\/..\/SmallBurg_outside_assets.json"
-        }, 
-        {
-         "firstgid":1473,
-         "source":"..\/..\/smallburg_winter_terrain.json"
         }],
  "tilewidth":16,
  "type":"map",

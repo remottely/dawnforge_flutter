@@ -55,10 +55,10 @@ final class DemoPlayerDef {
 
   static final RectangleHitbox _hitbox = HitboxUtils.createCustomHitbox(
     componentSize: _componentSize,
-    left: 16,
-    top: 23,
-    right: 16,
-    bottom: 16,
+    left: 26,
+    top: 35,
+    right: 26,
+    bottom: 22,
   );
 
   // static String idleAssetPath =
