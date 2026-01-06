@@ -10,7 +10,8 @@
 
 - [PRIORITY] prompt: hj em DDMinePlayerView eu utilizo FarmToolActionDef, só q eu preciso q vc crie MineToolActionDef q eu não possuo hj com o _handleMine assim como tenho para outros _handle em FarmToolActionDef hj. crie _handleMine para mim e toda lógica necessaria para que a minha ação de mineração funcione. No caso eu quero q primeiro vc me crie um documento contendo os 10 passos (como prompts) necessarios para que essa feature fique completa. a ideia é eu ter uma picareta que quebre pedras, e ao quebra-las eu automaticamente adquiro(sem dropar itens para depois colhe-los do chão). lembrando que isso tudo ficara em um novo modulo no meu jogo, assim como existe o modulo "farm", preciso do modulo "mine" com a funcionalidade basica de quebrar e colher pedras, assim como faco com crops hj em farm só que com a logica bem mais simples.
 
-- [PRIORITY] 
+- [PRIORITY] prompt: hj, quando eu entro em contato com MarketDecoration ele para o player e abre o MarketPanel, porem eu consigo continuar andando com o player por tras, oq é o esperado mesmo. mas quando eu ando com o player mesmo com o MarketPanel aberto, ele fica piscando o MarketPanel, ou seja, reabindo, preciso que a logica do contato funcione assim: quando ele entra na zona de contato com MarketDecoration a primeira vez, nada acontece, ele na vdd espera o player dar o input de "isInteractionAction" para entao abrir o MarketPanel. quando o MarketPanel abre, se ele andar o MarketPanel fecha. E se dentro da zona ele interagir novamente com "isInteractionAction", então o MarketPanel abre. mantena o botao de fechar o MarketPanel.
+
 
 - [PRIORITY] 
 

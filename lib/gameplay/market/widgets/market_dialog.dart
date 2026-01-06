@@ -12,21 +12,17 @@ import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_s
 import 'package:darkness_dungeon/gameplay/market/market_state.dart';
 import 'package:flutter/material.dart';
 
-/// Dialog fullscreen/semi-fullscreen para o market.
-class MarketDialog extends StatefulWidget {
+/// Painel do market exibido dentro do grid da HUD (Quadrante 5).
+class MarketPanel extends StatefulWidget {
   final DDBasePlayerModel player;
-  final VoidCallback? onClose;
 
-  const MarketDialog({super.key, required this.player, this.onClose});
+  const MarketPanel({super.key, required this.player});
 
   @override
-  State<MarketDialog> createState() => _MarketDialogState();
+  State<MarketPanel> createState() => _MarketPanelState();
 }
 
-class _MarketDialogState extends State<MarketDialog> {
-  static int _instanceCounter = 0;
-  late final int _id;
-
+class _MarketPanelState extends State<MarketPanel> {
   final _catalog = MarketManager.instance.getMarketCatalog();
   late final InventoryManager _inventory;
   late final ItemFactoryService _itemFactory;
@@ -37,9 +33,6 @@ class _MarketDialogState extends State<MarketDialog> {
   @override
   void initState() {
     super.initState();
-    _id = ++_MarketDialogState._instanceCounter;
-    debugPrint('[MarketDialog#$_id] initState');
-    MarketState.instance.open();
     _inventory = getIt<InventoryManager>();
     _itemFactory = getIt<ItemFactoryService>();
     _itemCache = {};
@@ -48,20 +41,13 @@ class _MarketDialogState extends State<MarketDialog> {
       if (item != null) {
         _itemCache[entry.itemId] = item;
       } else {
-        debugPrint('[MarketDialog#$_id] ItemFactoryService returned null for ${entry.itemId}');
+        debugPrint('[MarketPanel] ItemFactoryService returned null for ${entry.itemId}');
       }
     }
     _visibleCatalog = _catalog
         .where((entry) => _itemCache.containsKey(entry.itemId))
         .toList();
-    debugPrint('[MarketDialog#$_id] visibleCatalog size=${_visibleCatalog.length}');
-  }
-
-  @override
-  void dispose() {
-    debugPrint('[MarketDialog#$_id] dispose');
-    MarketState.instance.close();
-    super.dispose();
+    debugPrint('[MarketPanel] visibleCatalog size=${_visibleCatalog.length}');
   }
 
   @override
@@ -70,46 +56,42 @@ class _MarketDialogState extends State<MarketDialog> {
     final isWide = media.size.width >= 900;
     final crossAxisCount = isWide ? 4 : (media.size.width >= 600 ? 3 : 2);
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: SafeArea(
-        child: Center(
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: 1024, maxHeight: 720),
-            margin: const EdgeInsets.all(12),
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.white.withOpacity(0.5)),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildHeader(context),
-                const SizedBox(height: 12),
-                _buildCoinsRow(),
-                const SizedBox(height: 12),
-                Expanded(
-                  child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: crossAxisCount,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
-                      childAspectRatio: 1,
-                    ),
-                    itemCount: _visibleCatalog.length,
-                    itemBuilder: (context, index) {
-                      final entry = _visibleCatalog[index];
-                      final item = _itemCache[entry.itemId]!;
-                      return _buildCard(entry, item);
-                    },
-                  ),
-                ),
-              ],
+    return Container(
+      constraints: const BoxConstraints(
+        maxWidth: 1024,
+        maxHeight: 720,
+      ),
+      margin: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.82),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.white.withOpacity(0.5)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _buildHeader(context),
+          const SizedBox(height: 12),
+          _buildCoinsRow(),
+          const SizedBox(height: 12),
+          Expanded(
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: crossAxisCount,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+                childAspectRatio: 1,
+              ),
+              itemCount: _visibleCatalog.length,
+              itemBuilder: (context, index) {
+                final entry = _visibleCatalog[index];
+                final item = _itemCache[entry.itemId]!;
+                return _buildCard(entry, item);
+              },
             ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -131,9 +113,8 @@ class _MarketDialogState extends State<MarketDialog> {
         const Spacer(),
         IconButton(
           onPressed: () {
-            debugPrint('[MarketDialog#$_id] close button tapped');
-            widget.onClose?.call();
-            Navigator.of(context).maybePop();
+                  debugPrint('[MarketPanel] close button tapped');
+                  MarketState.instance.close();
           },
           icon: const Icon(Icons.close, color: Colors.white70),
         ),
@@ -183,7 +164,9 @@ class _MarketDialogState extends State<MarketDialog> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
             side: BorderSide(
-              color: canBuy ? Colors.greenAccent.withOpacity(0.6) : Colors.white24,
+              color: canBuy
+                  ? Colors.greenAccent.withOpacity(0.6)
+                  : Colors.white24,
             ),
           ),
           child: InkWell(
@@ -196,10 +179,7 @@ class _MarketDialogState extends State<MarketDialog> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
-                    child: ItemSpriteWidget(
-                      iconData: item.iconData,
-                      size: 48,
-                    ),
+                    child: ItemSpriteWidget(iconData: item.iconData, size: 48),
                   ),
                   const SizedBox(height: 6),
                   Text(

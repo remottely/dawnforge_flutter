@@ -1,15 +1,15 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
 import 'package:darkness_dungeon/gameplay/market/market_state.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_contact_decoration.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
-import 'package:darkness_dungeon/gameplay/market/widgets/market_dialog.dart';
 import 'package:flutter/material.dart';
 
-/// Decoração interativa do market. Quando o jogador encosta, dispara a abertura do dialog/overlay.
-class MarketDecoration extends DDContactDecoration {
+/// Decoração interativa do market. Ao encostar, aguarda o input de interação para abrir o painel.
+class MarketDecoration extends DDContactDecoration with PlayerControllerListener {
   static final Set<String> _spawnedPositions = <String>{};
 
   final String? overlayId;
@@ -17,7 +17,9 @@ class MarketDecoration extends DDContactDecoration {
   final Sprite? interactionIcon;
   bool _dialogOpen = false;
   bool _registered = false;
-  bool _lockedUntilExit = false;
+  bool _hasActiveContact = false;
+  PlayerController? _registeredController;
+  DDBasePlayerView? _currentPlayer;
 
   MarketDecoration({
     required super.position,
@@ -46,36 +48,22 @@ class MarketDecoration extends DDContactDecoration {
   @override
   void onContact(SimplePlayer component) {
     super.onContact(component);
-    final marketAlreadyOpen = MarketState.instance.isOpen.value;
-    if (_dialogOpen || _lockedUntilExit || marketAlreadyOpen) {
-      debugPrint(
-        '[MarketDecoration] onContact ignored (dialogOpen=$_dialogOpen, lockedUntilExit=$_lockedUntilExit, marketAlreadyOpen=$marketAlreadyOpen) at $_spawnKey',
-      );
-      return;
-    }
+    _hasActiveContact = true;
+    _currentPlayer = component is DDBasePlayerView ? component : _currentPlayer;
+    _registerToPlayerController();
 
-    _dialogOpen = true;
-    _lockedUntilExit = true;
-    debugPrint('[MarketDecoration] onContact -> opening market at $_spawnKey');
-
-    // Stop player movement so it doesn't keep walking while dialog is open.
-    try {
-      component.stopMove();
-    } catch (_) {
-      // ignore if player implementation differs.
-    }
-
-    MarketState.instance.open();
-    _openMarket(component);
+    debugPrint('[MarketDecoration] onContact -> waiting interaction at $_spawnKey');
   }
 
   @override
   void onContactExit(SimplePlayer component) {
     super.onContactExit(component);
+    _hasActiveContact = false;
     _dialogOpen = false;
-    _lockedUntilExit = false;
+    _currentPlayer = null;
+    _unregisterFromPlayerController();
     debugPrint('[MarketDecoration] onContactExit -> unlock at $_spawnKey');
-    MarketState.instance.close();
+    _closeMarket();
   }
 
   @override
@@ -94,6 +82,7 @@ class MarketDecoration extends DDContactDecoration {
   @override
   void onMount() {
     super.onMount();
+    MarketState.instance.isOpen.addListener(_syncDialogState);
     final key = _spawnKey;
     if (_spawnedPositions.contains(key)) {
       debugPrint('[MarketDecoration] Duplicate instance detected at $key; removing extra copy.');
@@ -107,6 +96,8 @@ class MarketDecoration extends DDContactDecoration {
 
   @override
   void onRemove() {
+    MarketState.instance.isOpen.removeListener(_syncDialogState);
+    _unregisterFromPlayerController();
     if (_registered) {
       _spawnedPositions.remove(_spawnKey);
     }
@@ -131,40 +122,67 @@ class MarketDecoration extends DDContactDecoration {
       return;
     }
 
-    // Fallback: abre o dialog Flutter diretamente, usando o modelo do player.
+    // Fallback: abre via estado global para ser renderizado no HUD central.
     final model = (component is DDBasePlayerView)
         ? component.controller.model as DDBasePlayerModel?
         : null;
 
     if (model != null) {
-      debugPrint('[MarketDecoration] opening via fallback showDialog');
-      showDialog<void>(
-        context: gameRef.context,
-        barrierDismissible: true,
-        builder: (dialogContext) {
-          return MarketDialog(
-            player: model,
-            onClose: () {
-              debugPrint('[MarketDecoration] MarketDialog onClose callback');
-              _dialogOpen = false;
-              MarketState.instance.close();
-            },
-          );
-        },
-      ).then((_) {
-        debugPrint('[MarketDecoration] MarketDialog closed (Future.then)');
-        _dialogOpen = false;
-        MarketState.instance.close();
-      }).catchError((error, stack) {
-        debugPrint('[MarketDecoration] showDialog error: $error');
-        _dialogOpen = false;
-        MarketState.instance.close();
-      });
+      debugPrint('[MarketDecoration] opening via MarketState.openWithPlayer');
+      MarketState.instance.openWithPlayer(model);
+      return;
+    }
+  }
+
+  @override
+  void onJoystickAction(JoystickActionEvent event) {
+    if (!_hasActiveContact) return;
+    if (event.event != ActionEvent.DOWN) return;
+    if (!InputDef.isInteractionAction(event.id)) return;
+    if (_dialogOpen) {
+      debugPrint('[MarketDecoration] interaction ignored, dialog already open at $_spawnKey');
       return;
     }
 
-    // As último recurso, apenas loga.
-    debugPrint('[MarketDecoration] Nenhum handler de abertura do market configurado.');
+    final player = _currentPlayer;
+    if (player == null) {
+      debugPrint('[MarketDecoration] interaction ignored, no player reference at $_spawnKey');
+      return;
+    }
+
+    _dialogOpen = true;
+    _openMarket(player);
+  }
+
+  @override
+  void onJoystickChangeDirectional(JoystickDirectionalEvent event) {
+    if (!_dialogOpen) return;
+    if (event.directional == JoystickMoveDirectional.IDLE) return;
+    debugPrint('[MarketDecoration] movement detected -> closing market at $_spawnKey');
+    _closeMarket();
+  }
+
+  void _closeMarket() {
+    MarketState.instance.close();
+    _dialogOpen = false;
+  }
+
+  void _syncDialogState() {
+    _dialogOpen = MarketState.instance.isOpen.value;
+  }
+
+  void _registerToPlayerController() {
+    final controller = gameRef.playerControllers?.firstOrNull;
+    if (controller == null || _registeredController == controller) return;
+
+    _registeredController?.removeObserver(this);
+    controller.addObserver(this);
+    _registeredController = controller;
+  }
+
+  void _unregisterFromPlayerController() {
+    _registeredController?.removeObserver(this);
+    _registeredController = null;
   }
 
   @override
