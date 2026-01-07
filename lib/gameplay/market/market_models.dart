@@ -129,30 +129,30 @@ class MarketCatalog {
     ),
 
     // Loots disponíveis para compra direta (MVP possui 4 loots atuais).
-    MarketItem(
-      itemId: HandItemId.carrot_loot_item,
-      buyPrice: 15,
-      sellPrice: 9,
-      category: 'loot',
-    ),
+    // MarketItem(
+    //   itemId: HandItemId.carrot_loot_item,
+    //   buyPrice: 15,
+    //   sellPrice: 9,
+    //   category: 'loot',
+    // ),
     MarketItem(
       itemId: HandItemId.strawberry_loot_item,
       buyPrice: 35,
       sellPrice: 21,
       category: 'loot',
     ),
-    MarketItem(
-      itemId: HandItemId.potato_loot_item,
-      buyPrice: 17,
-      sellPrice: 10,
-      category: 'loot',
-    ),
-    MarketItem(
-      itemId: HandItemId.pumpkin_loot_item,
-      buyPrice: 34,
-      sellPrice: 20,
-      category: 'loot',
-    ),
+    // MarketItem(
+    //   itemId: HandItemId.potato_loot_item,
+    //   buyPrice: 17,
+    //   sellPrice: 10,
+    //   category: 'loot',
+    // ),
+    // MarketItem(
+    //   itemId: HandItemId.pumpkin_loot_item,
+    //   buyPrice: 34,
+    //   sellPrice: 20,
+    //   category: 'loot',
+    // ),
     MarketItem(
       itemId: HandItemId.apple_loot_item,
       buyPrice: 40,

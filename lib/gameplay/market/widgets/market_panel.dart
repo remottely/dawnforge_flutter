@@ -81,10 +81,7 @@ class _MarketPanelState extends State<MarketPanel> {
   @override
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context);
-    final isWide = media.size.width >= 900;
-    // final targetCardWidth = isWide ? 220 : 150; // TODO(Kevin): put it back and improve this
-    final targetCardWidth = isWide ? 220 : 220;
-    final crossAxisCount = math.max(3, (media.size.width / targetCardWidth).floor());
+    final crossAxisCount = _gridCrossAxisCount(media.size.width);
 
     if (!_focusNode.hasFocus) {
       // Reaplica foco caso tenha sido perdido ao abrir o market.
@@ -495,9 +492,15 @@ class _MarketPanelState extends State<MarketPanel> {
 
   int _currentCrossAxisCount() {
     final media = MediaQuery.of(context);
-    if (media.size.width >= 900) return 4;
-    if (media.size.width >= 600) return 3;
-    return 2;
+    // Keep navigation logic aligned with grid layout to avoid skipping items.
+    return _gridCrossAxisCount(media.size.width);
+  }
+
+  int _gridCrossAxisCount(double width) {
+    const double wideCardWidth = 220;
+    const double narrowCardWidth = 220; // TODO: ajusta largura alvo se precisar diferenciar mobile
+    final targetCardWidth = width >= 900 ? wideCardWidth : narrowCardWidth;
+    return math.max(3, (width / targetCardWidth).floor());
   }
 
   bool _isUp(LogicalKeyboardKey key) =>
