@@ -40,9 +40,13 @@ final class AudioManager {
   }
 
   /// SFX
-  void playPlayerPrimaryAttackSfx() {
+  void playPlayerPrimaryAttackSfx(int comboStep) {
     FlameAudio.play(
-      AudioDef.kSfxPlayerAttackAsset,
+      comboStep == 0
+          ? AudioDef.kSfxPlayerAttack1Asset
+          : comboStep == 1
+          ? AudioDef.kSfxPlayerAttack2Asset
+          : AudioDef.kSfxPlayerAttack3Asset,
       volume: AudioDef.kPrimaryAttackVolume,
     );
   }

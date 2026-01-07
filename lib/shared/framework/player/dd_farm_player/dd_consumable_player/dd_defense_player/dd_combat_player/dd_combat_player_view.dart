@@ -222,7 +222,7 @@ abstract class DDCombatPlayerView<
 
     CameraFx.executePrimaryAttackShake(gameRef);
 
-    AudioManager.instance.playPlayerPrimaryAttackSfx();
+    AudioManager.instance.playPlayerPrimaryAttackSfx(comboStep);
 
     // Terceiro ataque do combo (índice 2) usa tamanho maior
     final attackSize = comboStep == 2

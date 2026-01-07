@@ -6,7 +6,11 @@ final class AudioDef {
   static const double kCharacterFireballExplosionVolume = 1.0;
   static const double kConversationInteractionVolume = 0.4;
 
-  static const String kSfxPlayerAttackAsset = 'sfx/sfx_player_attack.mp3';
+  // static const String kSfxPlayerAttackAsset = 'sfx/sfx_player_attack.mp3';
+  static const String kSfxPlayerAttack1Asset = 'sfx/combat/primary_attack_1.wav';
+  static const String kSfxPlayerAttack2Asset = 'sfx/combat/primary_attack_2.wav';
+  static const String kSfxPlayerAttack3Asset = 'sfx/combat/primary_attack_3.wav';
+  
   static const String kSfxCharacterFireBallAttackAsset =
       'sfx/sfx_character_fireball_attack.wav';
   static const String kSfxEnemyAttackAsset = 'sfx/sfx_enemy_attack.mp3';
@@ -38,7 +42,10 @@ final class AudioDef {
   static const bgMusicCaveBoss = 'bg/music/cave_boss - RitesOfPassage.mp3';
 
   static const List<String> kPreloadAudioFiles = [
-    kSfxPlayerAttackAsset,
+    // kSfxPlayerAttackAsset,
+    kSfxPlayerAttack1Asset,
+    kSfxPlayerAttack2Asset,
+    kSfxPlayerAttack3Asset,
     kSfxCharacterFireBallAttackAsset,
     kSfxEnemyAttackAsset,
     kSfxCharacterFireballExplosionAsset,

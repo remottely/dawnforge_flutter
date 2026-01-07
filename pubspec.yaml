@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.96.13+1
+version: 1.96.14+1
 
 environment:
   sdk: ^3.8.1
@@ -291,7 +291,10 @@ flutter:
     - assets/audio/sfx/sfx_character_fireball_explosion.wav
     - assets/audio/sfx/sfx_conversation_interaction.wav
     - assets/audio/sfx/sfx_enemy_attack.mp3
-    - assets/audio/sfx/sfx_player_attack.mp3
+    # - assets/audio/sfx/sfx_player_attack.mp3
+    - assets/audio/sfx/combat/primary_attack_1.wav
+    - assets/audio/sfx/combat/primary_attack_2.wav
+    - assets/audio/sfx/combat/primary_attack_3.wav
 
     # TODO
     - assets/images/ui/game_over.png

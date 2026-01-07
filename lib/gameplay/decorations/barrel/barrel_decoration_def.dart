@@ -18,7 +18,7 @@ final class BarrelDecorationDef {
   static RectangleHitbox createHitbox() => HitboxUtils.createCenterHitbox(
     componentSize: componentSize,
     hitboxStartPositionX: 2.0,
-    hitboxStartPositionY: 6.0,
+    hitboxStartPositionY: 4.0,
   );
 
   static Future<SpriteAnimation> loadAnimationBreak() async {
