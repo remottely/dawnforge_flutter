@@ -27,7 +27,7 @@ final class SaveManager {
     try {
       if (!data.isValid()) {
         developer.log(
-          '[SaveManager] Cannot save invalid data',
+          '[SaveManager] Cannot save invalid data | playerData=${data.playerData}',
           name: 'SaveManager',
           level: 900,
         );

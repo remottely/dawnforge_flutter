@@ -20,8 +20,6 @@ final class ImpEnemyDef {
 
   static final Vector2 textureSize = TileConstants.tileSizeStandard;
   static final Vector2 componentSize = textureSize;
-  static const String attack1AssetPath =
-      'tiled/Smallburg_dungeon_pack_v2.13/assets/enemies/slimes/red/attack/slime_red_attack.png';
 
   static const int _attackFrameCount = 6;
   static const double _attackFrameRightY = 0;
@@ -72,54 +70,4 @@ final class ImpEnemyDef {
     hitboxStartPositionX: 4.0,
     hitboxStartPositionY: 6.0,
   );
-
-  static Future<SpriteAnimation> _loadAnimationAttackRight() =>
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: attack1AssetPath,
-        stepTime: SpriteAnimationConstants.kStepTimeFast,
-        textureSize: TileConstants.tileSizeDemo,
-        totalFrames: _attackFrameCount,
-        framePositionX: 0,
-        framePositionY: _attackFrameRightY,
-      );
-
-  static Future<SpriteAnimation> _loadAnimationAttackLeft() =>
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: attack1AssetPath,
-        stepTime: SpriteAnimationConstants.kStepTimeFast,
-        textureSize: TileConstants.tileSizeDemo,
-        totalFrames: _attackFrameCount,
-        framePositionX: 0,
-        framePositionY: _attackFrameLeftY,
-      );
-
-  static Future<SpriteAnimation> _loadAnimationAttackUp() =>
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: attack1AssetPath,
-        stepTime: SpriteAnimationConstants.kStepTimeFast,
-        textureSize: TileConstants.tileSizeDemo,
-        totalFrames: _attackFrameCount,
-        framePositionX: 0,
-        framePositionY: _attackFrameUpY,
-      );
-
-  static Future<SpriteAnimation> _loadAnimationAttackDown() =>
-      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: attack1AssetPath,
-        stepTime: SpriteAnimationConstants.kStepTimeFast,
-        textureSize: TileConstants.tileSizeDemo,
-        totalFrames: _attackFrameCount,
-        framePositionX: 0,
-        framePositionY: _attackFrameDownY,
-      );
-
-  static List<DDAnimationDirectionalFactory> comboAttackAnimationFactories() =>
-      [
-        DDAnimationDirectionalFactory(
-          loadRight: _loadAnimationAttackRight(),
-          loadLeft: _loadAnimationAttackLeft(),
-          loadUp: _loadAnimationAttackUp(),
-          loadDown: _loadAnimationAttackDown(),
-        ),
-      ];
 }

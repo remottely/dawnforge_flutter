@@ -28,8 +28,4 @@ class GoblinEnemyView
 
   @override
   RectangleHitbox getHitbox() => GoblinEnemyDef.createHitbox();
-
-  @override
-  List<DDAnimationDirectionalFactory> get comboAttackAnimationFactories =>
-      GoblinEnemyDef.comboAttackAnimationFactories();
 }

@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:bonfire/bonfire.dart';
 
 class DDBasePlayerViewConfig {
@@ -59,11 +61,37 @@ class DDBasePlayerSaveData {
     Map<String, dynamic> json,
     DDBasePlayerModelConfig config,
   ) {
+    final stamina = (json['stamina'] as num?)?.toDouble() ?? config.maxStamina;
+    final energy = (json['energy'] as num?)?.toInt() ?? config.maxEnergy;
+    final life = (json['life'] as num?)?.toDouble();
+    final coins = _readCoins(json);
+
+    developer.log(
+      '[DDBasePlayerSaveData] fromJson stamina=$stamina, life=$life, energy=$energy, coins=$coins, raw=$json',
+    );
+    if (life == null || life <= 0) {
+      developer.log(
+        '[DDBasePlayerSaveData] ⚠️ life is null/<=0 during load; check death flow or save timing',
+        level: 900,
+      );
+    }
+
+    developer.log(
+      '[DDBasePlayerSaveData] fromJson stamina=$stamina, life=$life, energy=$energy, coins=$coins, raw=$json',
+    );
+
+    if (life == null || life <= 0) {
+      developer.log(
+        '[DDBasePlayerSaveData] ⚠️ life is null/<=0 during load; check death flow or save timing',
+        level: 900,
+      );
+    }
+
     return DDBasePlayerSaveData(
-      stamina: (json['stamina'] as num?)?.toDouble() ?? config.maxStamina,
-      energy: (json['energy'] as num?)?.toInt() ?? config.maxEnergy,
-      life: (json['life'] as num?)?.toDouble(),
-      coins: _readCoins(json),
+      stamina: stamina,
+      energy: energy,
+      life: life,
+      coins: coins,
     );
   }
 

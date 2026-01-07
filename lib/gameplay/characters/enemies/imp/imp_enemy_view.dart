@@ -27,8 +27,4 @@ class ImpEnemyView extends DDBaseEnemyView<ImpEnemyController, ImpEnemyModel> {
 
   @override
   RectangleHitbox getHitbox() => ImpEnemyDef.createHitbox();
-
-  @override
-  List<DDAnimationDirectionalFactory> get comboAttackAnimationFactories =>
-      ImpEnemyDef.comboAttackAnimationFactories();
 }

@@ -24,6 +24,14 @@ final class GameSaveController {
       developer.log('[GameSaveController] Starting game save...');
 
       final playerData = _collectPlayerData();
+      final life = (playerData['playerModel'] as Map?)?['life'];
+      if (life == null || (life is num && life <= 0)) {
+        developer.log(
+          '[GameSaveController] ❌ Aborting save: player life is null/<=0 (life=$life). Avoid overwriting good saves after death.',
+          level: 1000,
+        );
+        return false;
+      }
       final worldData = _collectWorldData();
       final inventoryData = _collectInventoryData();
       final farmData = _collectFarmData();
@@ -137,14 +145,30 @@ final class GameSaveController {
     final playerState = PlayerStateManager.instance;
     final playerData = playerState.toJson();
 
-    final coins = (playerData['playerModel'] as Map?)?['coins'];
+    final playerModelJson = (playerData['playerModel'] as Map?) ?? const {};
+    final coins = playerModelJson['coins'];
+    final life = playerModelJson['life'];
+    final stamina = playerModelJson['stamina'];
+
     developer.log(
       '[GameSaveController] Collecting player data: '
       'model=${playerState.lastPlayerModel != null ? playerState.lastPlayerModel.runtimeType : "null"}, '
-      'stamina=${playerState.lastPlayerModel?.stamina}, '
-      'life=${playerState.lastPlayerModel?.life}, '
-      'coins=$coins',
+      'stamina=$stamina, life=$life, coins=$coins, raw=$playerModelJson',
     );
+
+    if (life == null || (life is num && life <= 0)) {
+      developer.log(
+        '[GameSaveController] ⚠️ Player life is null/<=0 during save, skipping validation? raw=$playerModelJson',
+        level: 900,
+      );
+    }
+
+    if (coins is num && coins < 0) {
+      developer.log(
+        '[GameSaveController] ⚠️ Player coins negative during save, raw=$playerModelJson',
+        level: 900,
+      );
+    }
 
     return playerData;
   }
@@ -180,6 +204,14 @@ final class GameSaveController {
         'life=${playerState.lastPlayerModel?.life}, '
         'coins=${playerState.lastPlayerModel?.coins}',
       );
+
+      final restoredLife = playerState.lastPlayerModel?.life;
+      if (restoredLife == null || restoredLife <= 0) {
+        developer.log(
+          '[GameSaveController] ⚠️ Restored player life is null/<=0. payload=${data['playerModel']}',
+          level: 900,
+        );
+      }
     } catch (e, stackTrace) {
       developer.log(
         '[GameSaveController] ❌ Error restoring player data: $e',
