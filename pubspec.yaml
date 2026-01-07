@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.94.1+1
+version: 1.94.2+1
 
 environment:
   sdk: ^3.8.1
@@ -229,7 +229,7 @@ flutter:
     # === HUD / UI ===
     - assets/images/hud/health_ui.png
     - assets/images/ui/input/keyboard_tip.png
-    - assets/images/hud/commerce_marketplace_stall_open.png
+    - assets/images/hud/commerce_marketplace_stall_open.png # TODO(Kevin): remove this test asset
 
     # === JOYSTICK ===
     - assets/images/joystick/joystick_background.png

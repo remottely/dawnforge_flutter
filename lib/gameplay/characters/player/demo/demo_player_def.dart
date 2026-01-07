@@ -9,6 +9,7 @@ import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
+import 'package:darkness_dungeon/shared/utils/sprite_animation_constants.dart';
 
 final class DemoPlayerDef {
   DemoPlayerDef._();
@@ -132,6 +133,7 @@ final class DemoPlayerDef {
   static final Future<SpriteAnimation> _loadAnimationIdleRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: idleAssetPath,
+        stepTime: SpriteAnimationConstants.kStepTimeSlow,
         textureSize: textureSize,
         totalFrames: _x2,
         framePositionX: 0,
@@ -141,6 +143,7 @@ final class DemoPlayerDef {
   static final Future<SpriteAnimation> _loadAnimationIdleLeft =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: idleAssetPath,
+        stepTime: SpriteAnimationConstants.kStepTimeSlow,
         textureSize: textureSize,
         totalFrames: _x2,
         framePositionX: 0,
@@ -150,6 +153,7 @@ final class DemoPlayerDef {
   static final Future<SpriteAnimation> _loadAnimationIdleUp =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: idleAssetPath,
+        stepTime: SpriteAnimationConstants.kStepTimeSlow,
         textureSize: textureSize,
         totalFrames: _x2,
         framePositionX: 0,
@@ -159,6 +163,7 @@ final class DemoPlayerDef {
   static final Future<SpriteAnimation> loadAnimationIdleDown =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: idleAssetPath,
+        stepTime: SpriteAnimationConstants.kStepTimeSlow,
         textureSize: textureSize,
         totalFrames: _x2,
         framePositionX: 0,
@@ -364,6 +369,7 @@ final class DemoPlayerDef {
   static Future<SpriteAnimation> _loadAnimationAttack1Right =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attac1kAssetPath,
+        stepTime: SpriteAnimationConstants.kStepTimeFast,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
@@ -373,6 +379,7 @@ final class DemoPlayerDef {
   static Future<SpriteAnimation> _loadAnimationAttack1Left =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attac1kAssetPath,
+        stepTime: SpriteAnimationConstants.kStepTimeFast,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
@@ -382,6 +389,7 @@ final class DemoPlayerDef {
   static Future<SpriteAnimation> _loadAnimationAttack1Up =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attac1kAssetPath,
+        stepTime: SpriteAnimationConstants.kStepTimeFast,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
@@ -391,6 +399,7 @@ final class DemoPlayerDef {
   static Future<SpriteAnimation> _loadAnimationAttack1Down =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attac1kAssetPath,
+        stepTime: SpriteAnimationConstants.kStepTimeFast,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
@@ -408,6 +417,7 @@ final class DemoPlayerDef {
   static Future<SpriteAnimation> _loadAnimationAttack2Right =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attack2AssetPath,
+        stepTime: SpriteAnimationConstants.kStepTimeFast,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
@@ -417,6 +427,7 @@ final class DemoPlayerDef {
   static Future<SpriteAnimation> _loadAnimationAttack2Left =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attack2AssetPath,
+        stepTime: SpriteAnimationConstants.kStepTimeFast,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
@@ -426,6 +437,7 @@ final class DemoPlayerDef {
   static Future<SpriteAnimation> _loadAnimationAttack2Up =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attack2AssetPath,
+        stepTime: SpriteAnimationConstants.kStepTimeFast,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
@@ -435,6 +447,7 @@ final class DemoPlayerDef {
   static Future<SpriteAnimation> _loadAnimationAttack2Down =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attack2AssetPath,
+        stepTime: SpriteAnimationConstants.kStepTimeFast,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
@@ -452,6 +465,7 @@ final class DemoPlayerDef {
   static Future<SpriteAnimation> _loadAnimationAttack3Right =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attack3AssetPath,
+        stepTime: SpriteAnimationConstants.kStepTimeFast,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
@@ -461,6 +475,7 @@ final class DemoPlayerDef {
   static Future<SpriteAnimation> _loadAnimationAttack3Left =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attack3AssetPath,
+        stepTime: SpriteAnimationConstants.kStepTimeFast,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
@@ -470,6 +485,7 @@ final class DemoPlayerDef {
   static Future<SpriteAnimation> _loadAnimationAttack3Up =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attack3AssetPath,
+        stepTime: SpriteAnimationConstants.kStepTimeFast,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
@@ -479,6 +495,7 @@ final class DemoPlayerDef {
   static Future<SpriteAnimation> _loadAnimationAttack3Down =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attack3AssetPath,
+        stepTime: SpriteAnimationConstants.kStepTimeFast,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
