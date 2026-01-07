@@ -44032,6 +44032,61 @@
                  "width":57.4696437150732,
                  "x":624,
                  "y":240
+                }, 
+                {
+                 "height":16,
+                 "id":4653,
+                 "name":"goblin_enemy",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":544,
+                 "y":400
+                }, 
+                {
+                 "height":16,
+                 "id":4654,
+                 "name":"imp_enemy",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":592,
+                 "y":400
+                }, 
+                {
+                 "height":16,
+                 "id":4655,
+                 "name":"boss_enemy",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":640,
+                 "y":480
+                }, 
+                {
+                 "height":16,
+                 "id":4656,
+                 "name":"kid_npc",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":686.508,
+                 "y":528.542
+                }, 
+                {
+                 "height":16,
+                 "id":4657,
+                 "name":"mini_boss_enemy",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":544,
+                 "y":576
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -44040,7 +44095,7 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":4653,
+ "nextobjectid":4658,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

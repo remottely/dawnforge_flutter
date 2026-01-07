@@ -95,14 +95,15 @@
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/f/maps/f_1.json": {
             "expandedObjectLayers": [
                 10,
+                7,
                 8,
                 6
             ],
             "scale": 1.43,
-            "selectedLayer": 6,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 512.2377622377624,
-                "y": 512.2377622377624
+                "x": 512.2377622377622,
+                "y": 786.3636363636365
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/f_1.json": {
@@ -225,8 +226,8 @@
             "scale": 3.9547,
             "selectedLayer": 9,
             "viewCenter": {
-                "x": 383.97349988621136,
-                "y": 382.45631779907455
+                "x": 661.3649581510608,
+                "y": 480.8202897817787
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/maps/florest.json": {

@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.94.2+1
+version: 1.95.0+1
 
 environment:
   sdk: ^3.8.1
@@ -339,6 +339,8 @@ flutter:
     - assets/images/tiled/Smallburg_dungeon_pack_v2.13/edited_assets/characters/slash_1/character_demo/character_slash_1_light_full_6.png
     - assets/images/tiled/Smallburg_dungeon_pack_v2.13/edited_assets/characters/slash_2/character_demo/character_slash_2_light_full_6.png
     - assets/images/tiled/Smallburg_dungeon_pack_v2.13/edited_assets/characters/super_slash/character_demo/character_super_slash_light_full_6.png
+    - assets/images/tiled/Smallburg_dungeon_pack_v2.13/assets/enemies/skeletons/skeleton/attack/skeleton_attack.png
+    - assets/images/tiled/Smallburg_dungeon_pack_v2.13/assets/enemies/slimes/red/attack/slime_red_attack.png 
 
   fonts:
     - family: Normal
