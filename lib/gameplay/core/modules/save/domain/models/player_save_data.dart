@@ -54,7 +54,13 @@ final class PlayerSaveData extends Equatable {
     required this.coins,
     required this.playerType,
     this.playerName,
-  });
+  })  : assert(health > 0, 'health must be > 0'),
+        assert(stamina > 0, 'stamina must be > 0'),
+        assert(energy > 0, 'energy must be > 0'),
+        assert(coins >= 0, 'coins must be >= 0'),
+        assert(maxHealth > 0, 'maxHealth must be > 0'),
+        assert(maxStamina > 0, 'maxStamina must be > 0'),
+        assert(maxEnergy > 0, 'maxEnergy must be > 0');
 
   factory PlayerSaveData.initial({
     required String playerType,
@@ -86,7 +92,7 @@ final class PlayerSaveData extends Equatable {
   }
 
   factory PlayerSaveData.fromJson(Map<String, dynamic> json) {
-    return PlayerSaveData(
+    final data = PlayerSaveData(
       positionX: (json['positionX'] as num?)?.toDouble() ?? 0.0,
       positionY: (json['positionY'] as num?)?.toDouble() ?? 0.0,
       currentMapId: json['currentMapId'] as String? ?? 'farm',
@@ -109,6 +115,9 @@ final class PlayerSaveData extends Equatable {
       playerType: json['playerType'] as String? ?? 'knight',
       playerName: json['playerName'] as String?,
     );
+
+    data._throwIfPersistenceRuleBreak();
+    return data;
   }
 
   static int _readCoins(Map<String, dynamic> json) {
@@ -144,13 +153,13 @@ final class PlayerSaveData extends Equatable {
   }
 
   bool isValid() {
-    return health >= 0 &&
+    return health > 0 &&
         health <= maxHealth &&
         maxHealth > 0 &&
-        stamina >= 0 &&
+        stamina > 0 &&
         stamina <= maxStamina &&
         maxStamina > 0 &&
-        energy >= 0 &&
+        energy > 0 &&
         energy <= maxEnergy &&
         maxEnergy > 0 &&
         level > 0 &&
@@ -183,7 +192,7 @@ final class PlayerSaveData extends Equatable {
     String? playerType,
     String? playerName,
   }) {
-    return PlayerSaveData(
+    final data = PlayerSaveData(
       positionX: positionX ?? this.positionX,
       positionY: positionY ?? this.positionY,
       currentMapId: currentMapId ?? this.currentMapId,
@@ -207,6 +216,25 @@ final class PlayerSaveData extends Equatable {
       playerType: playerType ?? this.playerType,
       playerName: playerName ?? this.playerName,
     );
+
+    data._throwIfPersistenceRuleBreak();
+    return data;
+  }
+
+  // Guard against persisting impossible player states.
+  void _throwIfPersistenceRuleBreak() {
+    if (coins < 0) {
+      throw StateError('PlayerSaveData persistence: coins cannot be negative');
+    }
+    if (health <= 0) {
+      throw StateError('PlayerSaveData persistence: health must be > 0');
+    }
+    if (stamina <= 0) {
+      throw StateError('PlayerSaveData persistence: stamina must be > 0');
+    }
+    if (energy <= 0) {
+      throw StateError('PlayerSaveData persistence: energy must be > 0');
+    }
   }
 
   @override
