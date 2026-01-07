@@ -113,13 +113,13 @@ final class GoblinEnemyDef {
         framePositionY: _attackFrameDownY,
       );
 
-  static final List<DDAnimationDirectionalFactory>
-  comboAttackAnimationFactories = [
-    DDAnimationDirectionalFactory(
-      loadRight: _loadAnimationAttackRight(),
-      loadLeft: _loadAnimationAttackLeft(),
-      loadUp: _loadAnimationAttackUp(),
-      loadDown: _loadAnimationAttackDown(),
-    ),
-  ];
+  static List<DDAnimationDirectionalFactory> comboAttackAnimationFactories() =>
+      [
+        DDAnimationDirectionalFactory(
+          loadRight: _loadAnimationAttackRight(),
+          loadLeft: _loadAnimationAttackLeft(),
+          loadUp: _loadAnimationAttackUp(),
+          loadDown: _loadAnimationAttackDown(),
+        ),
+      ];
 }

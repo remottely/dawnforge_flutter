@@ -18,7 +18,36 @@
 
 - [PRIORITY] prompt: nao corrigiu o problema, continuo com os 420 sempre, foi eliminar a possibilidade de coins ser nulo e vou obrigar a instancia ser sempre carregada do json salvo
 
-- [PRIORITY] 
+- [PRIORITY] prompt: hoje o meu enemy ele executa o primary attack uma primeira vez e depois buga com ele nao conseguindo dar mais dano mesmo com a animacao sendo realizada e caindo o breakpoint em simpleAttackMelee do bonfire. preciso q vc entenda o problema, crie logs, leia a documentacao do bonfire, verifique se não é um problema de memoria (uso de final/const indevidamente) etc. preciso q corrija o problema com eficiencia, investigue bem e entenda o problema. quando digo q o player nao recebe o dano é o dano que o bonfire ja entrega pronto em simpleAttackMelee. se eu tenho 10 skeletons no jogo, os 10 executam o ataque no primeiro contato com o player, mas depois disso o breakpoint continua caindo em simpleAttackMelee mas sem dano nenhum ao player e sem render da animacao EnemyPrimaryAttackDef.loadAnimationFxRight(). ou seja, se o EnemyPrimaryAttackDef.loadAnimationFxRight() é executado com sucesso significa q o dano é aplicado. entenda o problema e corrija crie logs etc para investigarmos. realizei o teste e vou contoinua-los com um unico skeleton para facilitar nos logs.
+flutter: [MarketDecoration] onContactExit -> unlock at 623.000|239.000
+flutter: [MarketDecoration] onContactExit -> unlock at 623.000|239.000
+flutter: [EnemyAttack] Start combo attack step=0 damage=20.0 interval=800 isDead=false
+flutter: [EnemyAttack] onActionStart step=0
+flutter: [EnemyAttack] Combo queued (animation running). damage=20.0 interval=800
+flutter: [EnemyAttack] onExecutionFrames step=0 isDead=false
+flutter: [EnemyAttack] simpleAttackMelee damage=20.0 interval=800 direction=Direction.up offset=(0.00,-4.00) time=2026-01-07T06:47:13.626886
+flutter: [EnemyAttack] onActionEnd step=0 queued=true
+flutter: [EnemyAttack] Start combo attack step=0 damage=20.0 interval=800 isDead=false
+flutter: [EnemyAttack] onActionStart step=0
+flutter: [EnemyAttack] Combo queued (animation running). damage=20.0 interval=800
+flutter: [EnemyAttack] onExecutionFrames step=0 isDead=false
+flutter: [EnemyAttack] simpleAttackMelee damage=20.0 interval=800 direction=Direction.up offset=(0.00,-4.00) time=2026-01-07T06:47:14.230295
+flutter: [EnemyAttack] onActionEnd step=0 queued=true
+flutter: [EnemyAttack] Start combo attack step=0 damage=20.0 interval=800 isDead=false
+flutter: [EnemyAttack] onActionStart step=0
+flutter: [EnemyAttack] Combo queued (animation running). damage=20.0 interval=800
+flutter: [EnemyAttack] onExecutionFrames step=0 isDead=false
+flutter: [EnemyAttack] simpleAttackMelee damage=20.0 interval=800 direction=Direction.up offset=(0.00,-4.00) time=2026-01-07T06:47:14.829732
+flutter: [EnemyAttack] onActionEnd step=0 queued=true
+flutter: [EnemyAttack] Start combo attack step=0 damage=20.0 interval=800 isDead=false
+flutter: [EnemyAttack] onActionStart step=0
+flutter: [EnemyAttack] Combo queued (animation running). damage=20.0 interval=800
+flutter: [EnemyAttack] onExecutionFrames step=0 isDead=false
+flutter: [EnemyAttack] simpleAttackMelee damage=20.0 interval=800 direction=Direction.up offset=(0.00,-4.00) time=2026-01-07T06:47:15.429459
+flutter: [EnemyAttack] onActionEnd step=0 queued=true
+flutter: [EnemyAttack] Start combo attack step=0 damage=20.0 interval=800 isDead=false
+flutter: [EnemyAttack] onActionStart step=0
+flutter: [EnemyAttack] Combo queued (animation running). damage=20.0 interval=800
 
 - [PRIORITY] 
 

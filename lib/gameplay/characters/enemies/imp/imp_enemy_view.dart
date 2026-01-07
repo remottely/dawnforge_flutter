@@ -30,5 +30,5 @@ class ImpEnemyView extends DDBaseEnemyView<ImpEnemyController, ImpEnemyModel> {
 
   @override
   List<DDAnimationDirectionalFactory> get comboAttackAnimationFactories =>
-      ImpEnemyDef.comboAttackAnimationFactories;
+      ImpEnemyDef.comboAttackAnimationFactories();
 }

@@ -44019,7 +44019,6 @@
         {
          "draworder":"topdown",
          "id":16,
-         "locked":true,
          "name":"market",
          "objects":[
                 {
@@ -44087,6 +44086,28 @@
                  "width":16,
                  "x":544,
                  "y":576
+                }, 
+                {
+                 "height":16,
+                 "id":4658,
+                 "name":"skeleton_enemy",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":512,
+                 "y":368
+                }, 
+                {
+                 "height":16,
+                 "id":4659,
+                 "name":"skeleton_enemy",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":560,
+                 "y":304
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -44095,7 +44116,7 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":4658,
+ "nextobjectid":4660,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

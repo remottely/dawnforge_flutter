@@ -3,6 +3,7 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_vie
 import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/mini_boss/mini_boss_enemy_view.dart';
+import 'package:darkness_dungeon/gameplay/characters/enemies/skeleton/skeleton_enemy_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_def.dart';
@@ -49,6 +50,7 @@ final class MapDef {
         'mini_boss_enemy': (p) => MiniBossEnemyView(position: p.position),
         'goblin_enemy': (p) => GoblinEnemyView(position: p.position),
         'imp_enemy': (p) => ImpEnemyView(position: p.position),
+        'skeleton_enemy': (p) => SkeletonEnemyView(position: p.position),
 
         'kid_npc': (p) => KidNpcView(position: p.position),
         'wizard_npc': (p) => WizardNpcView(position: p.position),

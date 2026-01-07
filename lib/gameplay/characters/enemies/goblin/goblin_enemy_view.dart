@@ -31,5 +31,5 @@ class GoblinEnemyView
 
   @override
   List<DDAnimationDirectionalFactory> get comboAttackAnimationFactories =>
-      GoblinEnemyDef.comboAttackAnimationFactories;
+      GoblinEnemyDef.comboAttackAnimationFactories();
 }

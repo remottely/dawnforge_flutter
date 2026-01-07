@@ -26,8 +26,10 @@ final class ImpEnemyDef {
   static const int _attackFrameCount = 6;
   static const double _attackFrameRightY = 0;
   static const double _attackFrameLeftY = TileConstants.kCharacterDimensionDemo;
-  static const double _attackFrameUpY = TileConstants.kCharacterDimensionDemo * 2;
-  static const double _attackFrameDownY = TileConstants.kCharacterDimensionDemo * 3;
+  static const double _attackFrameUpY =
+      TileConstants.kCharacterDimensionDemo * 2;
+  static const double _attackFrameDownY =
+      TileConstants.kCharacterDimensionDemo * 3;
 
   static Future<SpriteAnimation> loadAnimationIdleRight() =>
       SpriteAnimation.load(
@@ -111,12 +113,13 @@ final class ImpEnemyDef {
         framePositionY: _attackFrameDownY,
       );
 
-  static final List<DDAnimationDirectionalFactory> comboAttackAnimationFactories = [
-    DDAnimationDirectionalFactory(
-      loadRight: _loadAnimationAttackRight(),
-      loadLeft: _loadAnimationAttackLeft(),
-      loadUp: _loadAnimationAttackUp(),
-      loadDown: _loadAnimationAttackDown(),
-    ),
-  ];
+  static List<DDAnimationDirectionalFactory> comboAttackAnimationFactories() =>
+      [
+        DDAnimationDirectionalFactory(
+          loadRight: _loadAnimationAttackRight(),
+          loadLeft: _loadAnimationAttackLeft(),
+          loadUp: _loadAnimationAttackUp(),
+          loadDown: _loadAnimationAttackDown(),
+        ),
+      ];
 }
