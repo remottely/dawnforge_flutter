@@ -25,6 +25,7 @@ import 'package:darkness_dungeon/gameplay/farm/handlers/farm_input_handler.dart'
 import 'package:darkness_dungeon/gameplay/gameplay_screen.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen_def.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/save/domain/models/player_save_data.dart';
 import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_def.dart';
 import 'package:flutter/material.dart';
 
@@ -155,9 +156,11 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
     //     model: CutePlayerModel.fromJson({}),
     //   );
     var lastPlayerModel = playerStateManager.lastPlayerModel;
+    final lastPlayerJson =
+      lastPlayerModel?.toJson() ?? PlayerSaveData.initial(playerType: 'cute').toJson();
 
     if (lastPlayerModel is! CutePlayerModel) {
-      lastPlayerModel = CutePlayerModel.fromJson({});
+      lastPlayerModel = CutePlayerModel.fromJson(lastPlayerJson);
       playerStateManager.lastPlayerModel = lastPlayerModel;
     }
 
@@ -174,9 +177,11 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
     print('[GameplayViewModel] Building farmer player at position: $position');
 
     var lastPlayerModel = playerStateManager.lastPlayerModel;
+    final lastPlayerJson = lastPlayerModel?.toJson() ??
+      PlayerSaveData.initial(playerType: 'farmer').toJson();
 
     if (lastPlayerModel is! FarmerPlayerModel) {
-      lastPlayerModel = FarmerPlayerModel.fromJson({});
+      lastPlayerModel = FarmerPlayerModel.fromJson(lastPlayerJson);
       playerStateManager.lastPlayerModel = lastPlayerModel;
     }
 
@@ -193,9 +198,11 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
     print('[GameplayViewModel] Building farmer player at position: $position');
 
     var lastPlayerModel = playerStateManager.lastPlayerModel;
+    final lastPlayerJson =
+      lastPlayerModel?.toJson() ?? PlayerSaveData.initial(playerType: 'demo').toJson();
 
     if (lastPlayerModel is! DemoPlayerModel) {
-      lastPlayerModel = DemoPlayerModel.fromJson({});
+      lastPlayerModel = DemoPlayerModel.fromJson(lastPlayerJson);
       playerStateManager.lastPlayerModel = lastPlayerModel;
     }
 

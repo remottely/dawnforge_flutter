@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 final class PlayerSaveData extends Equatable {
+  static const int kInitialCoins = 520;
   final double positionX;
   final double positionY;
 
@@ -25,7 +26,7 @@ final class PlayerSaveData extends Equatable {
   final int fishingLevel;
   final int combatLevel;
 
-  final int money;
+  final int coins;
 
   final String playerType;
 
@@ -50,7 +51,7 @@ final class PlayerSaveData extends Equatable {
     required this.foragingLevel,
     required this.fishingLevel,
     required this.combatLevel,
-    required this.money,
+    required this.coins,
     required this.playerType,
     this.playerName,
   });
@@ -78,7 +79,7 @@ final class PlayerSaveData extends Equatable {
       foragingLevel: 1,
       fishingLevel: 1,
       combatLevel: 1,
-      money: 500,
+      coins: kInitialCoins,
       playerType: playerType,
       playerName: playerName,
     );
@@ -104,10 +105,16 @@ final class PlayerSaveData extends Equatable {
       foragingLevel: json['foragingLevel'] as int? ?? 1,
       fishingLevel: json['fishingLevel'] as int? ?? 1,
       combatLevel: json['combatLevel'] as int? ?? 1,
-      money: json['money'] as int? ?? 500,
+      coins: _readCoins(json),
       playerType: json['playerType'] as String? ?? 'knight',
       playerName: json['playerName'] as String?,
     );
+  }
+
+  static int _readCoins(Map<String, dynamic> json) {
+    final coinsValue = json['coins'];
+    if (coinsValue is num) return coinsValue.toInt();
+    throw ArgumentError('PlayerSaveData.fromJson: missing coins in payload');
   }
 
   Map<String, dynamic> toJson() {
@@ -130,7 +137,7 @@ final class PlayerSaveData extends Equatable {
       'foragingLevel': foragingLevel,
       'fishingLevel': fishingLevel,
       'combatLevel': combatLevel,
-      'money': money,
+      'coins': coins,
       'playerType': playerType,
       if (playerName != null) 'playerName': playerName,
     };
@@ -148,7 +155,7 @@ final class PlayerSaveData extends Equatable {
         maxEnergy > 0 &&
         level > 0 &&
         experience >= 0 &&
-        money >= 0 &&
+        coins >= 0 &&
         currentMapId.isNotEmpty &&
         playerType.isNotEmpty;
   }
@@ -172,7 +179,7 @@ final class PlayerSaveData extends Equatable {
     int? foragingLevel,
     int? fishingLevel,
     int? combatLevel,
-    int? money,
+    int? coins,
     String? playerType,
     String? playerName,
   }) {
@@ -196,7 +203,7 @@ final class PlayerSaveData extends Equatable {
       foragingLevel: foragingLevel ?? this.foragingLevel,
       fishingLevel: fishingLevel ?? this.fishingLevel,
       combatLevel: combatLevel ?? this.combatLevel,
-      money: money ?? this.money,
+      coins: coins ?? this.coins,
       playerType: playerType ?? this.playerType,
       playerName: playerName ?? this.playerName,
     );
@@ -209,7 +216,7 @@ final class PlayerSaveData extends Equatable {
         'name: ${playerName ?? "Unknown"}, '
         'level: $level, '
         'health: $health/$maxHealth, '
-        'money: $money, '
+        'coins: $coins, '
         'position: ($positionX, $positionY), '
         'map: $currentMapId'
         ')';
@@ -235,7 +242,7 @@ final class PlayerSaveData extends Equatable {
     foragingLevel,
     fishingLevel,
     combatLevel,
-    money,
+    coins,
     playerType,
     playerName,
   ];

@@ -1,5 +1,7 @@
 # IMPORTANT BEFORE LAUNCH:
 
+- [NOT_PRIORITY] criar feat que vende e compra itens em massa, grandes quantidades
+
 - [DONE] EquippedHandType deve ser HandItemType e Item deve ser HandItem pois todos os items do jogo hj sao itens capazes de serem segurados pelo player e eu quero q tanto as keys de maps quanto os ids dos items sejam tipados pelo tipo e nao mais strings, entao as keys e ids serão do tipo HandItemType.
 
 - [PRIORITY] cropId deve ser do tipo HandItemId, refatore no codigo
@@ -14,7 +16,7 @@
 
 - [PRIORITY] quero mudar um comportamento, hj quando estou com o market aberto, eu so consigo comprar e vender itens com o touch ou mouse, queria na vdd utilizar os inputs de keyboardDirectionalKeys() para ao inves de controlar o player andando (ou seja, deve bloquear q ele ande no jogo enquanto o market estiver aberto), esses botoes de direcoes deve na verdade navegar entre os itens do grid de compra do market e os kSlotNavNextKey e kSlotNavPrevKey navegar entre os itens do inventario para venda. e kInteractionKey compra o item elecionado 1x e kPrimaryActionKey vende o item do inventario 1x.
 
-- [PRIORITY] 
+- [PRIORITY] prompt: nao corrigiu o problema, continuo com os 420 sempre, foi eliminar a possibilidade de coins ser nulo e vou obrigar a instancia ser sempre carregada do json salvo
 
 - [PRIORITY] 
 

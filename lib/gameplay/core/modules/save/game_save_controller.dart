@@ -136,14 +136,16 @@ final class GameSaveController {
   Map<String, dynamic> _collectPlayerData() {
     final playerState = PlayerStateManager.instance;
     final playerData = playerState.toJson();
-    
+
+    final coins = (playerData['playerModel'] as Map?)?['coins'];
     developer.log(
       '[GameSaveController] Collecting player data: '
       'model=${playerState.lastPlayerModel != null ? playerState.lastPlayerModel.runtimeType : "null"}, '
       'stamina=${playerState.lastPlayerModel?.stamina}, '
-      'life=${playerState.lastPlayerModel?.life}',
+      'life=${playerState.lastPlayerModel?.life}, '
+      'coins=$coins',
     );
-    
+
     return playerData;
   }
 
@@ -165,7 +167,8 @@ final class GameSaveController {
   void _restorePlayerData(Map<String, dynamic> data) {
     try {
       developer.log(
-        '[GameSaveController] Restoring player data: ${data.keys.toList()}',
+        '[GameSaveController] Restoring player data: ${data.keys.toList()}, '
+        'coinsField=${(data['playerModel'] as Map?)?['coins']}',
       );
       final playerState = PlayerStateManager.instance;
       playerState.fromJson(data);
@@ -174,7 +177,8 @@ final class GameSaveController {
         '[GameSaveController] ✅ Player state restored: '
         'model=${playerState.lastPlayerModel != null ? playerState.lastPlayerModel.runtimeType : "null"}, '
         'stamina=${playerState.lastPlayerModel?.stamina}, '
-        'life=${playerState.lastPlayerModel?.life}',
+        'life=${playerState.lastPlayerModel?.life}, '
+        'coins=${playerState.lastPlayerModel?.coins}',
       );
     } catch (e, stackTrace) {
       developer.log(

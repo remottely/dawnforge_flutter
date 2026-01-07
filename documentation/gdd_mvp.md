@@ -1,200 +1,194 @@
 # GDD — MVP
 
-STATUS:
-🔥 (Critical)
-⭐ (Standard)
-🔴 (TODO)
-🟡 (WIP)
-🟢 (DONE)
+**STATUS:**
+- 🔥 Critical
+- ⭐ Standard
+- 🔴 TODO | 🟡 WIP | 🟢 DONE
 
-## Sumário
-1. Visão e Metas do MVP
-2. Pilares de Experiência
-3. Escopo do MVP (Must-Have)
-<!-- 4. Fora de Escopo (Nice-to-Have / Posterior) -->
-5. Loop Principal de Jogo
-6. Sistemas Centrais
-   6.1 Mundo e Mapa
-   6.2 Tempo, Dia/Noite, Estações e Clima
-   6.3 Jogador e Progressão
-   6.4 Inventário e Itens
-   6.5 Ferramentas e Ações de Fazenda
-   6.6 Cultivos (Plantio, Crescimento, Colheita)
-   <!-- 6.7 Economia e Vendas -->
-   6.8 HUD, Input e UX
-   6.9 Salvamento/Carregamento
-   6.10 Áudio (Música e SFX)
-   6.11 Performance e Plataforma
-7. Conteúdo Inicial do MVP
-8. KPIs e Critérios de Pronto
-9. Riscos e Mitigações
-10. Roadmap Macro
-<!-- 11. Melhorar / Refatorar -->
-12. Resumo Executivo
+---
 
 ## 1. Visão e Metas do MVP
-Entregar um protótipo jogável que capture o loop central de farming:
-    <!-- 🔥🟢 plantar → esperar → colher -->
-    <!-- ⭐🔴 → vender → reinvestir -->
-🔥🟡 Ser jogável em 20–30 minutos, demonstrando ciclo completo de 7 dias in-game
-🔥🟡 Priorizar clareza e responsividade de controles (keyboard/mouse e joystick, web/mobile/desktop)
-🔥🟡 Estabilidade de save/load e ausência de softlocks no loop de fazenda
+
+Protótipo jogável do loop central de farming (🔥🟢 plantar → esperar → colher → ⭐🟢 vender → reinvestir).
+
+**Objetivos:**
+- 🔥🟡 Sessão completa de 20-30 min demonstrando 7 dias in-game
+- 🔥🟡 Controles responsivos (keyboard/mouse, joystick, multi-plataforma)
+- 🔥🟡 Save/load estável sem softlocks
+
+---
 
 ## 2. Pilares de Experiência
-🔥🔴 **Clareza**: feedback visual/sonoro imediato ao plantar, regar e colher
-🔥🟢 **Ritmo curto**: ciclos de cultivo rápidos para validar o loop (4-7 dias por cultivo no MVP)
-<!-- ⭐🔴 **Progresso tangível**: vender colheita gera dinheiro que habilita novos seeds/slots -->
-🔥🟡 **Conforto de input**: HUD simples, botões essenciais sempre acessíveis e inputs que não quebram em resize/fullscreen
 
-## 3. Escopo do MVP (Must-Have)
-🔥🟡 Mapa de fazenda simples (grids aráveis + poucas decorações)
-🔥🟡 Mapa de cidade simples (2 npcs + poucas decorações)
-<!-- 🔥🟢 Sistema de tempo: dia/noite, passagem acelerada, dormir para avançar o dia -->
-<!-- 🔥🟢 Plantio, rega, crescimento em etapas e colheita de pelo menos 3 cultivos (strawberry, tomato, radish) -->
-<!-- 🔥🟢 Inventário básico com stack e slots limitados; seeds, ferramentas e colheita como itens -->
-<!-- 🔥🟢 Ferramentas: pá(cavar), regador (regar), mão/foice (colher) -->
-<!-- ⭐🔴 Ferramentas: enxada (arar) -->
-<!-- ⭐🔴 Economia: vender itens colhidos para obter dinheiro; loja simples de seeds -->
-🔥🟡 HUD: barras de vida/energia, relógio, estação/dia, hotbar/atalhos principais
-🔥🟡 Save/Load funcional cobrindo inventário, cultivos, tempo, dinheiro
-<!-- 🔥🟢 Áudio mínimo: música de fundo -->
-<!-- 🔥🟢 Áudio mínimo: SFX de ações-chave (cavar, regar, colher, UI) -->
-<!-- ⭐🔴 Áudio mínimo: SFX de ações-chave (arar) -->
-🔥🟡 morrer volta para last save.
+- 🔥🔴 **Clareza**: Feedback visual/sonoro imediato
+- 🔥🟢 **Ritmo curto**: Ciclos de 4-7 dias por cultivo
+- 🔥🟡 **Conforto de input**: HUD simples, funcional em resize/fullscreen
 
-## 4. Fora de Escopo (Nice-to-Have / Posterior)
-<!-- ⭐🟡 NPCs, diálogos, quests e relacionamentos -->
-<!-- ⭐🟡 Combate e masmorras -->
-<!-- ⭐🔴 Pesca, mineração, crafting avançado -->
-<!-- ⭐🔴 Eventos de calendário, festivais, pets/animais de fazenda -->
-<!-- ⭐🔴 Sistema complexo de clima (chuva com irrigação automática) — pode ser protótipo simples depois -->
+---
 
-## 5. Loop Principal de Jogo
-<!-- 🔥🟢 1. cavar solo grid_tile (consome energia) -->
-<!-- ⭐🔴 2. Arar solo arável (consome energia) -->
-<!-- 🔥🟢 3. Plantar semente (consome item seed) -->
-<!-- 🔥🟢 4. Regar diariamente até crescer -->
-<!-- 🔥🟢 5. Colher quando maduro -->
-<!-- ⭐🔴 6. Vender colheita → receber dinheiro -->
-<!-- ⭐🔴 7. Comprar novas seeds/ferramentas → repetir com mais eficiência -->
+## 3. Loop Principal
 
-## 6. Sistemas Centrais
-### 6.1 Mundo e Mapa
-<!-- 🔥🟢 Grid 16x16 tiles -->
-<!-- 🔥🟢 Colisões mínimas (casas/rochas/decor) para guiar o jogador -->
-<!-- ⭐🔴 Ponto de venda (caixa/cofre) e ponto de compra (loja simples UI) -->
+1. 🔥🟢 Cavar solo (energia)
+2. ⭐🔴 Arar solo arável (energia)
+3. 🔥🟢 Plantar semente (consome item)
+4. 🔥🟢 Regar diariamente
+5. 🔥🟢 Colher quando maduro
+6. ⭐🟢 Vender colheita → dinheiro
+7. ⭐🔴 Comprar novas seeds → repetir
 
-### 6.2 Tempo, Dia/Noite, Estações e Clima
-🔥🔴 Relógio interno: 10min = 7s reais. 1 dia ≈ 12,6 minutos reais no MVP.
-Dormir:
-    🔥🟡 avança para o próximo dia e regenera energia.
-    🔥🟡 Desmaiar as 2h da manhã joga player para cama e ele acorda com 70% da energia.
-<!-- 🔥🟢 Estação fixa (primavera) no MVP; sem variação climática obrigatória. -->
+---
 
-### 6.3 Jogador e Progressão
-<!-- 🔥🟢 Atributos: vida, energia (stamina), posição -->
-<!-- 🔥🟢 Energia é consumida ao cavar/regar/colher; dormir restaura energia total. -->
-<!-- ⭐🔴 Energia é consumida ao arar -->
-<!-- ⭐🔴 Sem níveis/skills no MVP; progresso via economia e mais seeds -->
+## 4. Sistemas Centrais
 
-### 6.4 Inventário e Itens
-Slots: 
-    <!-- 🔥🟢 limitados a 12 espaços -->
-    <!-- 🔥🟢 com stack para recursos --> 
-Itens mínimos:
-    <!-- 🔥🟢 seeds (2 tipos) -->
-    <!-- 🔥🟢 colheitas (2). Falta melhorar renderização dos crops no inventorio -->
-    <!-- 🔥🟢 ferramentas (pá, regador, foice/mão) -->
-    <!-- ⭐🔴 dinheiro (saldo numérico) -->
-    <!-- 🔥🟢 água (implícita no regador com uso ilimitado no MVP) -->
+### 4.1 Mundo
+- 🔥🟢 Grid 16×16 tiles
+- 🔥🟢 Colisões básicas (casas/rochas/decor)
+- 🔥🟡 Mapa fazenda + mapa cidade (2 NPCs, decorações)
+- ⭐🟢 Ponto de compra/venda (loja simples UI)
+- ⭐🔴 Caixa de venda
 
-### 6.5 Ferramentas e Ações de Fazenda
-<!-- 🔥🟢 Pá: torna grama em terra. -->
-<!-- ⭐🔴 Enxada: torna tile arável -->
-<!-- 🔥🟢 Regador: marca tile como regado para o dia -->
-<!-- 🔥🟢 Foice/Mão: colhe e coleta item. -->
-🔥🟡 Interação contextual via botão de ação (keyboard/joystick). Entender esse tópico e verificar comportamento.
+### 4.2 Tempo
+- 🔥🔴 **Relógio**: 10 min = 7s reais (1 dia ≈ 12,6 min)
+- 🔥🟢 Estação fixa (primavera) no MVP
+- 🔥🟡 **Dormir**: avança dia, regenera energia
+- 🔥🟡 **Desmaio (2h)**: acorda com 70% energia
 
-### 6.6 Cultivos (Plantio, Crescimento, Colheita)
-<!-- 🔥🟢 Ao plantar, registra estágio 0 e dia de plantio -->
-<!-- 🔥🟢 Cada dia avança estágio se regado no dia anterior -->
-3 cultivos:
-    <!-- 🔥🟢 com durações de 4 e 7 dias -->
-    <!-- ⭐🔴 Preços diferentes para teste de balanceamento -->
-Colheita gera item:
-    <!-- 🔥🟢 remove planta -->
-    <!-- ⭐🔴 reseta para estágio colhido -->
+### 4.3 Jogador
+- 🔥🟢 Atributos: vida, energia, posição
+- 🔥🟢 Energia consumida em ações (cavar, regar, colher)
+- ⭐🔴 Energia consumida ao arar
+- ⭐🔴 Sem níveis/skills no MVP; progresso via economia
+- 🔥🟡 Morrer retorna ao último save
 
-### 6.7 Economia e Vendas
-<!-- ⭐🔴 Caixa de venda: deposita itens e recebe dinheiro instantâneo (ou ao dormir, se quiser reforçar loop diário — opcional no MVP) -->
-<!-- ⭐🔴 Loja simples: compra de seeds; preços fixos -->
+### 4.4 Inventário
+- 🔥🟢 12 slots com stack
+- 🔥🟢 Seeds (2 tipos)
+- 🔥🟢 Colheitas (2) — melhorar renderização no inventário
+- 🔥🟢 Ferramentas (pá, regador, foice/mão)
+- ⭐🟢 Dinheiro (saldo numérico)
+- 🔥🟢 Água (implícita no regador, uso ilimitado)
 
-### 6.8 HUD, Input e UX
-HUD:
-    <!-- 🔥🟢 barra de vida/energia -->
-    🔥🟡 relógio/dia/estação
-    <!-- ⭐🔴 dinheiro -->
-    <!-- 🔥🟢 hotbar/slots rápidos -->
-🔥🔴 Overlays: inventory, ações contextuais; tutorial/hints básicos.
-🔥🟡 Input: teclado/mouse e joystick; fullscreen opcional; overlays não devem quebrar com resize.
+### 4.5 Ferramentas
+- 🔥🟢 **Pá**: Grama → terra
+- ⭐🔴 **Enxada**: Torna tile arável
+- 🔥🟢 **Regador**: Marca tile regado
+- 🔥🟢 **Foice/Mão**: Colhe e coleta
+- 🔥🟡 Interação contextual por botão de ação
 
-### 6.9 Salvamento/Carregamento
-Persistir:
-    <!-- ⭐🔴 dia/estação, hora -->
-    <!-- 🔥🟢 inventário -->
-    <!-- 🔥🟢 cultivos (tipo, estágio, regado, posição) -->
-    <!-- ⭐🔴 dinheiro -->
-    <!-- ⭐🔴 posição do jogador -->
-    🔥🟢 energia/vida
-<!-- 🔥🟢 Auto-save ao dormir -->
-<!-- ⭐🔴 opção de save manual simples -->
+### 4.6 Cultivos
+- 🔥🟢 Ao plantar, registra estágio 0 e dia de plantio
+- 🔥🟢 Cada dia avança estágio se regado no dia anterior
+- **3 cultivos:**
+  - 🔥🟢 Médio (4 dias, lucro baixo)
+  - 🔥🟢 Lento (7 dias, lucro médio)
+  - ⭐🔴 Lento recorrente (7 dias, lucro alto)
+- ⭐🟢 Preços diferentes para balanceamento
+- **Colheita:**
+  - 🔥🟢 Remove planta
+  - ⭐🔴 Opção: resetar para estágio colhido (recorrente)
 
-### 6.10 Áudio (Música e SFX)
-<!-- 🔥🟢 1 faixa de música de fundo (loop) para cada mapa -->
-<!-- ⭐🔴 1 faixa de som de natureza de fundo (loop) para cada mapa -->
-🔥🔴 SFX mínimos: cavar, regar, colher, abrir/fechar UI, confirmação de compra/venda
-<!-- ⭐🔴 SFX mínimos: arar -->
-🔥🔴 Respeitar flag de mute/volume global
+### 4.7 Economia
+- ⭐🟢 Loja: compra de seeds (preços fixos)
+- ⭐🔴 Caixa de venda: deposita itens, recebe dinheiro
 
-### 6.11 Performance e Plataforma
-🔥🔴 Alvo: 60 FPS em desktop/web; degrade aceitável em mobile web
-🔥🔴 Tile culling básico via engine (Bonfire) já usado
-🔥🔴 Atenção a alocação de sprites/atlases e batch de draw calls
+### 4.8 HUD e Input
+- **HUD:**
+  - 🔥🟢 Barra vida/energia
+  - 🔥🟡 Relógio/dia/estação
+  - ⭐🟢 Dinheiro
+  - 🔥🟢 Hotbar/slots rápidos
+- 🔥🔴 **Overlays**: inventário, ações contextuais, tutorial/hints
+- 🔥🟡 **Input**: teclado/mouse, joystick; funcional em resize/fullscreen
 
-## 7. Conteúdo Inicial do MVP
-<!-- 🔥🟢 1 mapa de fazenda pequeno com "~10–20 tiles aráveis úteis."? -->
-2 tipos de cultivos: 
-  <!-- 🔥🟢 Médio (4 dias, lucro baixo) -->
-  <!-- 🔥🟢 Lento (7 dias, lucro médio) -->
-  <!-- ⭐🔴 Lento + recorrencia (7 dias com recorrencias, lucro alto) -->
-<!-- ⭐🔴 Loja com 2 seeds; preços e retornos diferenciados para ensinar risco/recompensa -->
-<!-- ⭐🔴 Caixa de venda -->
+### 4.9 Save/Load
+- **Persistir:**
+  - 🔥🟢 Inventário
+  - 🔥🟢 Cultivos (tipo, estágio, regado, posição)
+  - 🔥🟢 Vida/energia
+  - ⭐🟢 Dinheiro
+  - ⭐🔴 Dia/estação/hora
+  - ⭐🔴 Posição do jogador
+- 🔥🟢 Auto-save ao dormir
+- ⭐🔴 Save manual opcional
 
-## 8. KPIs e Critérios de Pronto
-🔥🔴 O jogador completa "2 ciclos de plantio-colheita-venda em ≤30 minutos"?
-🔥🔴 Nenhum softlock ao dormir (sempre há seeds ou dinheiro suficiente inicial para recomeçar)
-Save/Load preserva de forma consistente:
-    <!-- 🔥🟢 cultivos, inventário -->
-    <!-- ⭐🔴 dinheiro -->
-    <!-- ⭐🔴 tempo -->
-🔥🟡 Inputs e overlays funcionam após resize/fullscreen no web/desktop
+### 4.10 Áudio
+- 🔥🟢 1 faixa música de fundo (loop) por mapa
+- ⭐🔴 1 faixa som natureza de fundo (loop) por mapa
+- 🔥🔴 **SFX**: cavar, regar, colher, UI, compra/venda
+- ⭐🔴 **SFX**: arar
+- 🔥🔴 Controle de mute/volume global
 
-## 9. Riscos e Mitigações
-🔥🟡 **Resize/Fullscreen quebra HUD ou input** → Testes dedicados em web/desktop; evitar reconstruir player ao recalcular câmera; caches em overlays (como vital stats).
-🔥🟡 **Balanceamento inadequado (loop lento)** → Durações curtas de cultivo no MVP; preços fáceis de ajustar por config.
-🔥🟡 **Save corrompido** → Validação ao carregar; fallback para estado inicial se inválido.
+### 4.11 Performance
+- 🔥🔴 60 FPS (desktop/web), degradê aceitável (mobile)
+- 🔥🔴 Tile culling via engine (Bonfire)
+- 🔥🔴 Otimização de sprites/atlases e batch de draw calls
 
-## 10. Roadmap Macro
-Semana 1: Mundo, movimento, HUD básico, inventário e itens.
-Semana 2: Ferramentas (cavar, regar, etc), sistema de cultivos e estágios.
-Semana 3: Economia (loja + venda), dia/noite, dormir, energia.
-Semana 4: Polish de HUD, SFX/Música, save/load, testes de resize/fullscreen.
+---
 
-## 11. Melhorar / Refatorar
-<!-- ⭐🔴 Mudar sistema de recuperação de vida. De potion para consumiveis -->
-<!-- ⭐🔴 Mudar o que hoje é stamina para energia -->
-<!-- ⭐🔴 Criar passagem de dia para noite no filtro do jogo, criar uma camada (stack) q escureça e clareie a tela, inclusive tempo nublado, depois futuramente outro stack sendo a chuva -->
-<!-- ⭐🔴 Adicionar enxada (arar). SFX arar -->
+## 5. Conteúdo Inicial
 
-## 12. Resumo Executivo
-Um MVP focado no loop essencial de fazenda: plantar, regar, colher e vender. Conteúdo enxuto (um mapa, três cultivos, ferramentas básicas) com ênfase em clareza de feedback, estabilidade de save/load e UX robusta em diferentes modos de input e resize. Os pilares são ritmo curto, progressão tangível e controles estáveis; tudo o que for além (NPCs, combate, crafting avançado) fica para depois do MVP.
+- 🔥🟢 1 mapa fazenda (~10-20 tiles aráveis)
+- **2-3 cultivos:**
+  - 🔥🟢 Médio (4 dias)
+  - 🔥🟢 Lento (7 dias)
+  - ⭐🔴 Lento recorrente (7 dias)
+- ⭐🟢 Loja com 2 seeds
+- ⭐🔴 Caixa de venda
+
+---
+
+## 6. Critérios de Pronto
+
+- 🔥🔴 Completar 2 ciclos plantio-colheita-venda em ≤30 min
+- 🔥🔴 Sem softlocks (seeds/dinheiro inicial suficientes)
+- **Save/load consistente:**
+  - 🔥🟢 Cultivos, inventário
+  - ⭐🟢 Dinheiro
+  - ⭐🔴 Tempo
+- 🔥🟡 HUD/input estáveis após resize/fullscreen
+
+---
+
+## 7. Riscos e Mitigações
+
+| Risco | Status | Mitigação |
+|-------|--------|-----------|
+| HUD quebra em resize/fullscreen | 🔥🟡 | Testes dedicados, cache em overlays |
+| Loop lento (balanceamento) | 🔥🟡 | Durações curtas, preços ajustáveis |
+| Save corrompido | 🔥🟡 | Validação + fallback para estado inicial |
+
+---
+
+## 8. Roadmap (4 semanas)
+
+1. **Semana 1**: Mundo, movimento, HUD, inventário
+2. **Semana 2**: Ferramentas, cultivos, estágios
+3. **Semana 3**: Economia, tempo, energia, dormir
+4. **Semana 4**: Polish (SFX/música, save/load, testes)
+
+---
+
+## 9. Backlog (Pós-MVP)
+
+**Melhorias/Refatorações:**
+- ⭐🔴 Mudar recuperação de vida (potion → consumíveis)
+- ⭐🔴 Renomear stamina → energia
+- ⭐🔴 Sistema dia/noite visual (filtros, camadas de luz)
+- ⭐🔴 Adicionar enxada (arar) + SFX
+
+**Fora de Escopo:**
+- ⭐🟡 NPCs, diálogos, quests, relacionamentos
+- ⭐🟡 Combate e masmorras
+- ⭐🔴 Pesca, mineração, crafting avançado
+- ⭐🔴 Eventos de calendário, festivais, pets/animais
+- ⭐🔴 Sistema complexo de clima
+
+**Extras:**
+- ⭐🟢 Combo attacks
+- ⭐🟢 Market
+
+---
+
+## 10. Resumo Executivo
+
+MVP focado no loop essencial: **plantar → regar → colher → vender**. Conteúdo mínimo (1 mapa, 3 cultivos, ferramentas básicas) priorizando **clareza de feedback**, **estabilidade** e **UX multi-plataforma**. Tudo além (NPCs, combate, crafting avançado) fica para iterações futuras.

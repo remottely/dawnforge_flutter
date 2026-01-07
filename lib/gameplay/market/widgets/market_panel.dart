@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
@@ -80,7 +82,9 @@ class _MarketPanelState extends State<MarketPanel> {
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context);
     final isWide = media.size.width >= 900;
-    final crossAxisCount = isWide ? 4 : (media.size.width >= 600 ? 3 : 2);
+    // final targetCardWidth = isWide ? 220 : 150; // TODO(Kevin): put it back and improve this
+    final targetCardWidth = isWide ? 220 : 220;
+    final crossAxisCount = math.max(3, (media.size.width / targetCardWidth).floor());
 
     if (!_focusNode.hasFocus) {
       // Reaplica foco caso tenha sido perdido ao abrir o market.
@@ -101,7 +105,7 @@ class _MarketPanelState extends State<MarketPanel> {
         maxHeight: 720,
       ),
       margin: const EdgeInsets.all(12),
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
         color: Colors.black.withOpacity(0.82),
         borderRadius: BorderRadius.circular(12),
@@ -118,9 +122,9 @@ class _MarketPanelState extends State<MarketPanel> {
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: crossAxisCount,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                childAspectRatio: 1,
+                mainAxisSpacing: 8,
+                crossAxisSpacing: 8,
+                childAspectRatio: 0.78,
               ),
               itemCount: _visibleCatalog.length,
               itemBuilder: (context, index) {
@@ -168,7 +172,7 @@ class _MarketPanelState extends State<MarketPanel> {
       valueListenable: widget.player.coinsNotifier,
       builder: (context, coins, _) {
         return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           decoration: BoxDecoration(
             color: Colors.black.withOpacity(0.5),
             borderRadius: BorderRadius.circular(8),
@@ -200,67 +204,128 @@ class _MarketPanelState extends State<MarketPanel> {
       valueListenable: widget.player.coinsNotifier,
       builder: (context, coins, _) {
         final canBuy = coins >= entry.buyPrice;
-        return Card(
-          color: isSelected
-              ? Colors.white.withOpacity(0.12)
-              : Colors.white.withOpacity(0.06),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-            side: BorderSide(
-              color: isSelected
-                  ? Colors.orangeAccent
-                  : canBuy
-                      ? Colors.greenAccent.withOpacity(0.6)
-                      : Colors.white24,
-            ),
-          ),
+        final borderColor = isSelected
+            ? Colors.orangeAccent
+            : canBuy
+                ? Colors.greenAccent.withOpacity(0.7)
+                : Colors.white24;
+        return Material(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(8),
+          clipBehavior: Clip.antiAlias,
           child: InkWell(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(8),
             onTap: canBuy ? () => _handleBuy(entry, item) : null,
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: ItemSpriteWidget(iconData: item.iconData, size: 48),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    item.name,
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Normal',
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.monetization_on,
-                        color: canBuy ? Colors.greenAccent : Colors.white38,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        entry.buyPrice.toString(),
-                        style: TextStyle(
-                          color: canBuy ? Colors.greenAccent : Colors.white70,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Normal',
-                        ),
-                      ),
-                    ],
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 120),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: borderColor, width: 1.2),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.white.withOpacity(isSelected ? 0.12 : 0.06),
+                    Colors.black.withOpacity(0.2),
+                  ],
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: isSelected
+                        ? Colors.orangeAccent.withOpacity(0.18)
+                        : Colors.black.withOpacity(0.25),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
                   ),
                 ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.08),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            '${entry.buyPrice}g',
+                            style: TextStyle(
+                              color: canBuy ? Colors.greenAccent : Colors.white70,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                              fontFamily: 'Normal',
+                            ),
+                          ),
+                        ),
+                        const Spacer(),
+                        Icon(
+                          Icons.shopping_bag,
+                          size: 16,
+                          color: isSelected ? Colors.orangeAccent : Colors.white60,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Expanded(
+                      child: Center(
+                        child: ItemSpriteWidget(iconData: item.iconData, size: 40),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      item.name,
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        fontFamily: 'Normal',
+                        // overflow: TextOverflow.ellipsis
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.monetization_on,
+                              color: canBuy ? Colors.greenAccent : Colors.white38,
+                              size: 14,
+                            ),
+                            const SizedBox(width: 3),
+                            Text(
+                              entry.buyPrice.toString(),
+                              style: TextStyle(
+                                color: canBuy ? Colors.greenAccent : Colors.white70,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Normal',
+                              ),
+                            ),
+                          ],
+                        ),
+                        Text(
+                          canBuy ? 'Comprar' : 'Sem moedas',
+                          style: TextStyle(
+                            color: canBuy ? Colors.orangeAccent : Colors.white54,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Normal',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

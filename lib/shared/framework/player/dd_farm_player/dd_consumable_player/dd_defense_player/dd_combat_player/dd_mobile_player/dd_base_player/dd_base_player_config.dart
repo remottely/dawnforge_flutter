@@ -61,9 +61,15 @@ class DDBasePlayerSaveData {
   ) {
     return DDBasePlayerSaveData(
       stamina: (json['stamina'] as num?)?.toDouble() ?? config.maxStamina,
-      energy: (json['energy'] as int?) ?? config.maxEnergy,
+      energy: (json['energy'] as num?)?.toInt() ?? config.maxEnergy,
       life: (json['life'] as num?)?.toDouble(),
-      coins: (json['coins'] as int?) ?? 500,
+      coins: _readCoins(json),
     );
+  }
+
+  static int _readCoins(Map<String, dynamic> json) {
+    final coinsValue = json['coins'];
+    if (coinsValue is num) return coinsValue.toInt();
+    throw ArgumentError('DDBasePlayerSaveData.fromJson: missing coins in payload');
   }
 }

@@ -6,7 +6,7 @@ import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/inventory/widgets/equipment_overlay.dart';
 import 'package:darkness_dungeon/gameplay/inventory/widgets/inventory_overlay.dart';
 import 'package:darkness_dungeon/gameplay/market/market_state.dart';
-import 'package:darkness_dungeon/gameplay/market/widgets/market_dialog.dart';
+import 'package:darkness_dungeon/gameplay/market/widgets/market_panel.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/player_vital_stats/player_vital_stats_overlay.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/debug/debug_overlay.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/widgets/mobile_inputs_overlay.dart';
