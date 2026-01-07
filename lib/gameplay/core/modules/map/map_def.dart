@@ -93,14 +93,6 @@ final class MapDef {
   // /// F Maps
   // static const String kF1Id = 'f_1';
 
-  // /// SB Maps
-  // static const String kSBFarmId = 'sb_farm';
-  // static const String kSBTownId = 'sb_town';
-  // static const String kSBForestId = 'sb_forest';
-  // static const String kSBLakeId = 'sb_lake';
-  // static const String kSBBeachId = 'sb_beach';
-  // static const String kSBCaveId = 'sb_cave';
-
   // /// SV Maps
   // static const String kSVFarmId = 'sv_farm';
   // static const String kSVTownId = 'sv_town';
@@ -160,21 +152,6 @@ final class MapDef {
       backgroundColor: _kLakeBackgroundColor,
       initialPlayerPosition: '40,12',
     ),
-
-    // /// SB MAPS
-    // MapData(
-    //   id: kSBFarmId,
-    //   asset: 'tiled/small_burg/maps/$kSBFarmId.json',
-    //   sensorIds: [
-    //     'sensor_$kSBForestId',
-    //     'sensor_$kSBTownId',
-    //     'sensor_$kSBLakeId',
-    //   ],
-    //   backgroundMusic: AudioDef.bgMusicFarm,
-    //   lightingColor: _kNoneLightingColor,
-    //   backgroundColor: _kLakeBackgroundColor,
-    //   initialPlayerPosition: '52,20',
-    // ),
 
     // /// SV MAPS
     // MapData(
