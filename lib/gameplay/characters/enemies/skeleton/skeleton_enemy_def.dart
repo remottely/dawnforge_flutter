@@ -152,18 +152,12 @@ final class SkeletonEnemyDef {
         runDown: _loadAnimationWalkDown,
       );
 
-  // static RectangleHitbox createHitbox() => HitboxUtils.createBottomHitbox(
-  //   componentSize: componentSize,
-  //   hitboxStartPositionX: 4.0,
-  //   hitboxStartPositionY: 6.0,
-  // );
-
   static RectangleHitbox createHitbox() => HitboxUtils.createCustomHitbox(
     componentSize: componentSize,
     left: 26,
-    top: 35,
+    top: 29,
     right: 26,
-    bottom: 22,
+    bottom: 25,
   );
 
   static Future<SpriteAnimation> _loadAnimationAttackRight() =>

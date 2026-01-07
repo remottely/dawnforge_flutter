@@ -193,16 +193,39 @@ Protótipo jogável do loop central de farming (🔥🟢 plantar → esperar →
 
 MVP focado no loop essencial: **plantar → regar → colher → vender**. Conteúdo mínimo (1 mapa, 3 cultivos, ferramentas básicas) priorizando **clareza de feedback**, **estabilidade** e **UX multi-plataforma**. Tudo além (NPCs, combate, crafting avançado) fica para iterações futuras.
 
-# TODO: MUDAR NO MVP
+# TODO: MUDAR
+## No MVP:
 - 🔥🔴 refactor: mudar todas as falas do MVP do jogo
-- 🔥🔴 refactor: remover antigos enemies, imp, goblin, mini_boss e boss
+- 🔥🔴 refactor: esconder antigos enemies, imp, goblin, mini_boss e boss
 - 🔥🔴 refactor: ajustar tamanho da caixa de vida do skeleton pois hj é proporcional ao componentsize (bonfire?)
 - 🔥🔴 refactor: ajustar comportamento do render do market, adicionar hitbox e comportamento no eixo Y assim como é hj com Door
 - 🔥🔴 fix: corrigir a direcao para qual o player olha quando teleporta para um novo mapa, ele sempre olha para a direita. não é config no tiled, é a criacao da instancia do player no mapa, criar feature q controla a direcao para o qual ele inicia olhando, se nao criar instancia e fazer ele olhar para as 4 direcoes forcadamente
-- 🔥🔴 fix: o ESC quando aberto a loja deveria fechar a loja e nao sair o jogo de tela cheia
+- 🔥🔴 fix: o ESC quando aberto a loja deveria fechar a loja e nao sair de tela cheia
 - 🔥🔴 feat: melhorar hitbox behavior de todos os assets(tiled) e componentes(decoration) do jogo
-- 🔥🔴
-- 🔥🔴
-- 🔥🔴
-- 🔥🔴
-- 🔥🔴
+- 🔥🔴 mudar SFX de primary e fireball ataque player/enemy
+- 🔥🔴 esconder a utilização de fireball no MVP
+- 🔥🔴 
+- 🔥🔴 
+- 🔥🔴 
+- 🔥🔴 
+- 🔥🔴 
+- 🔥🔴 
+- 🔥🔴 
+- 🔥🔴 
+- 🔥🔴 
+
+## Pós MVP:
+- ⭐🔴 mudar stamina para energy
+- ⭐🔴 criar sistema de smatina q consome em primary attack e correr
+- ⭐🔴 criar sistema de mana para utilização de fireball attack
+- ⭐🔴 botar de volta fireball no jogo e mudar sprite de fireball para azul? roxo? assets já encontrados antes
+- ⭐🔴 adicionar toda a logica de input de mouse no jogo
+- ⭐🔴
+- ⭐🔴
+- ⭐🔴
+- ⭐🔴
+- ⭐🔴
+- ⭐🔴
+- ⭐🔴
+- ⭐🔴
+- ⭐🔴

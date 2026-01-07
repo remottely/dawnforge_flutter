@@ -59,8 +59,8 @@ final class DemoPlayerDef {
   static final RectangleHitbox _hitbox = HitboxUtils.createCustomHitbox(
     componentSize: _componentSize,
     left: 26,
-    top: 35,
-    right: 26,
+    top: 33,
+    right: 27,
     bottom: 22,
   );
 

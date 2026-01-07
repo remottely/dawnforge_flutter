@@ -138,6 +138,9 @@ abstract class DDCombatPlayerView<
 
     final DDAnimationDirectional comboAnimation =
         _comboAttackAnimations[_comboStep];
+    
+    // Captura o valor atual do combo para evitar que o closure capture a referência
+    final currentComboStep = _comboStep;
 
     final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
       AttackType.melee,
@@ -160,7 +163,10 @@ abstract class DDCombatPlayerView<
             lockAction();
           },
           onActionEnd: () => _handleAttackEnd(damage),
-          onExecutionFrames: () => _executePrimaryAttack(damage: damage),
+          onExecutionFrames: () => _executePrimaryAttack(
+            damage: damage,
+            comboStep: currentComboStep,
+          ),
         );
       },
     );
@@ -205,9 +211,12 @@ abstract class DDCombatPlayerView<
     return executionInfo != null;
   }
 
-  void _executePrimaryAttack({required double damage}) {
+  void _executePrimaryAttack({
+    required double damage,
+    required int comboStep,
+  }) {
     final attackOffset = OffsetHelper.getCenterOffset(
-      Vector2(-4, 0),
+      comboStep == 2 ? Vector2(4, 0) : Vector2(-4, 0),
       lastDirection,
     );
 
@@ -215,12 +224,17 @@ abstract class DDCombatPlayerView<
 
     AudioManager.instance.playPlayerPrimaryAttackSfx();
 
+    // Terceiro ataque do combo (índice 2) usa tamanho maior
+    final attackSize = comboStep == 2
+        ? PlayerPrimaryAttackDef.componentSizeLarge
+        : PlayerPrimaryAttackDef.componentSizeStandard;
+
     simpleAttackMeleeByDirection(
       direction: lastDirection,
       damage: damage,
-      size: PlayerPrimaryAttackDef.componentSize,
+      size: attackSize,
       centerOffset: attackOffset,
-      animationRight: PlayerPrimaryAttackDef.loadAnimationFxRight(),
+      // animationRight: PlayerPrimaryAttackDef.loadAnimationFxRight(),
       attackFrom: AttackOriginEnum.PLAYER_OR_ALLY,
       onDamage: (_) => addParticle(
         CharacterFxParticlesAnimationsDef.createPrimaryAttackParticles(),

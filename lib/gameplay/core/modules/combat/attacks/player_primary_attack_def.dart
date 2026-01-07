@@ -6,7 +6,8 @@ final class PlayerPrimaryAttackDef {
   PlayerPrimaryAttackDef._();
 
   static final Vector2 _textureSize = TileConstants.tileSizeStandard;
-  static final Vector2 componentSize = _textureSize;
+  static final Vector2 componentSizeStandard = _textureSize;
+  static final Vector2 componentSizeLarge = _textureSize * 2;
 
   static Future<SpriteAnimation> loadAnimationFxRight() => SpriteAnimation.load(
     'gameplay/characters/player/player_primary_attack_right_3.png',
