@@ -505,7 +505,7 @@
                         {
                          "name":"playerPosition",
                          "type":"string",
-                         "value":"18,8"
+                         "value":"15,45"
                         }],
                  "rotation":0,
                  "type":"",
@@ -532,7 +532,7 @@
                         {
                          "name":"playerPosition",
                          "type":"string",
-                         "value":"18,8"
+                         "value":"45,20"
                         }],
                  "rotation":0,
                  "type":"",
@@ -540,6 +540,33 @@
                  "width":30.7924,
                  "x":-16.230483852045,
                  "y":280.856444516865
+                }, 
+                {
+                 "height":30.7924,
+                 "id":3,
+                 "name":"sensor_beach_map",
+                 "properties":[
+                        {
+                         "name":"nextMap",
+                         "type":"string",
+                         "value":"beach_map"
+                        }, 
+                        {
+                         "name":"playerDirection",
+                         "type":"string",
+                         "value":"right"
+                        }, 
+                        {
+                         "name":"playerPosition",
+                         "type":"string",
+                         "value":"15,2"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":216.746983478745,
+                 "y":751.264278930759
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -548,7 +575,7 @@
          "y":0
         }],
  "nextlayerid":10,
- "nextobjectid":3,
+ "nextobjectid":4,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

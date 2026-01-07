@@ -18456,7 +18456,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -44107,7 +44107,7 @@
                         {
                          "name":"playerPosition",
                          "type":"string",
-                         "value":"18,8"
+                         "value":"2,20"
                         }],
                  "rotation":0,
                  "type":"",
@@ -44134,7 +44134,7 @@
                         {
                          "name":"playerPosition",
                          "type":"string",
-                         "value":"18,8"
+                         "value":"15,45"
                         }],
                  "rotation":0,
                  "type":"",
@@ -44161,7 +44161,7 @@
                         {
                          "name":"playerPosition",
                          "type":"string",
-                         "value":"18,8"
+                         "value":"15,2"
                         }],
                  "rotation":0,
                  "type":"",

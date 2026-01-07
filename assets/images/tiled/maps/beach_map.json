@@ -265,7 +265,7 @@
                         {
                          "name":"playerPosition",
                          "type":"string",
-                         "value":"18,8"
+                         "value":"15,45"
                         }],
                  "rotation":0,
                  "type":"",
@@ -292,7 +292,7 @@
                         {
                          "name":"playerPosition",
                          "type":"string",
-                         "value":"18,8"
+                         "value":"45,20"
                         }],
                  "rotation":0,
                  "type":"",

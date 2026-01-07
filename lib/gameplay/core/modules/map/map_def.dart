@@ -153,6 +153,62 @@ final class MapDef {
       initialPlayerPosition: '40,12',
     ),
 
+    MapData(
+      id: kForestMapId,
+      asset: 'tiled/maps/$kForestMapId.json',
+      sensorIds: ['sensor_$kFarmMapId', 'sensor_$kCaveMapId'],
+      backgroundMusic: AudioDef.bgMusicFarm,
+      lightingColor: _kNoneLightingColor,
+      backgroundColor: _kLakeBackgroundColor,
+      initialPlayerPosition: '40,12',
+    ),
+
+    MapData(
+      id: kTownMapId,
+      asset: 'tiled/maps/$kTownMapId.json',
+      sensorIds: ['sensor_$kFarmMapId', 'sensor_$kCaveMapId'],
+      backgroundMusic: AudioDef.bgMusicFarm,
+      lightingColor: _kNoneLightingColor,
+      backgroundColor: _kLakeBackgroundColor,
+      initialPlayerPosition: '40,12',
+    ),
+
+    MapData(
+      id: kLakeMapId,
+      asset: 'tiled/maps/$kLakeMapId.json',
+      sensorIds: ['sensor_$kFarmMapId', 'sensor_$kBeachMapId'],
+      backgroundMusic: AudioDef.bgMusicFarm,
+      lightingColor: _kNoneLightingColor,
+      backgroundColor: _kLakeBackgroundColor,
+      initialPlayerPosition: '40,12',
+    ),
+
+    MapData(
+      id: kBeachMapId,
+      asset: 'tiled/maps/$kBeachMapId.json',
+      sensorIds: [
+        'sensor_$kTownMapId',
+        'sensor_$kLakeMapId',
+      ],
+      backgroundMusic: AudioDef.bgMusicFarm,
+      lightingColor: _kNoneLightingColor,
+      backgroundColor: _kLakeBackgroundColor,
+      initialPlayerPosition: '40,12',
+    ),
+
+    MapData(
+      id: kCaveMapId,
+      asset: 'tiled/maps/$kCaveMapId.json',
+      sensorIds: [
+        'sensor_$kForestMapId',
+        'sensor_$kTownMapId',
+      ],
+      backgroundMusic: AudioDef.bgMusicFarm,
+      lightingColor: _kNoneLightingColor,
+      backgroundColor: _kLakeBackgroundColor,
+      initialPlayerPosition: '40,12',
+    ),
+
     // /// SV MAPS
     // MapData(
     //   id: kSVFarmId,
