@@ -19,8 +19,8 @@ final class SunnyPlayerDef {
 
   static const double _kRunSpeedMultiplier = 1.4;
 
-  static const int _kPrimaryAttackStaminaCost = 15;
-  static const int _kFireballAttackStaminaCost = 10;
+  static const int _kPrimaryAttackStaminaCost = 1;
+  static const int _kFireballAttackStaminaCost = 2;
   static const double _kPrimaryAttackDamage = 25.0;
   static const double _kFireballAttackDamage = 10.0;
 
