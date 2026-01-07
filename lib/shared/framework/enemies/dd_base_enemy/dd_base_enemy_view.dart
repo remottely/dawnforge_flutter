@@ -5,6 +5,9 @@ import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_
 import 'package:darkness_dungeon/gameplay/core/modules/combat/death/character_fx_sprite_animations_def.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_controller.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_model.dart';
+import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
+import 'package:darkness_dungeon/shared/framework/utils/dd_character_action_sprite_animation_helper.dart';
+import 'package:flutter/foundation.dart';
 
 abstract class DDBaseEnemyView<
   C extends DDBaseEnemyController<M>,
@@ -13,6 +16,8 @@ abstract class DDBaseEnemyView<
     extends SimpleEnemy
     with BlockMovementCollision, UseLifeBar {
   late final C _controller;
+  late final DDAnimationDirectional _attackAnimation;
+  bool _isAttackPlaying = false;
 
   DDBaseEnemyView({
     required super.position,
@@ -30,11 +35,11 @@ abstract class DDBaseEnemyView<
   RectangleHitbox getHitbox();
 
   @override
-  Future<void> onLoad() {
+  Future<void> onLoad() async {
     _controller = createController(createModel());
     add(getHitbox());
-
-    return super.onLoad();
+    _attackAnimation = await _loadAttackAnimation();
+    await super.onLoad();
   }
 
   @override
@@ -89,45 +94,101 @@ abstract class DDBaseEnemyView<
     required double closeVisionRadius,
     void Function(Player)? onCloseToPlayer,
   }) {
-    _executePrimaryAttack(
-      enemy: this,
-      damage: _controller.model.primaryAttackDamage,
-      interval: _controller.model.primaryAttackInterval,
-      closeVisionRadius: closeVisionRadius,
-      onCloseToPlayer: onCloseToPlayer,
-    );
-  }
-
-  static void _executePrimaryAttack({
-    required SimpleEnemy enemy,
-    required double damage,
-    required int interval,
-    required double closeVisionRadius,
-    void Function(Player)? onCloseToPlayer,
-  }) {
-    enemy.seeAndMoveToPlayer(
+    seeAndMoveToPlayer(
       radiusVision: closeVisionRadius,
       closePlayer: (player) {
         onCloseToPlayer?.call(player);
-
-        // TODO(Kevin): fix this attackDirection and attackOffset behavior
-        // final attackDirection =
-        //     _resolveAttackDirection(enemy, player) ?? enemy.lastDirection;
-        // final attackOffset = OffsetHelper.getCenterOffset(
-        //   Vector2(enemy.width / 2, 0),
-        //   attackDirection,
-        // );
-
-        enemy.simpleAttackMelee(
+        
+        // Deixa o Bonfire gerenciar o interval através do simpleAttackMelee
+        // Quando o interval passar, o callback execute é chamado e aí iniciamos a animação
+        simpleAttackMelee(
           size: EnemyPrimaryAttackDef.componentSize,
-          damage: damage,
-          interval: interval,
-          // direction: attackDirection,
-          // centerOffset: attackOffset,
+          damage: controller.model.primaryAttackDamage,
+          interval: controller.model.primaryAttackInterval,
           animationRight: EnemyPrimaryAttackDef.loadAnimationFxRight(),
-          execute: AudioManager.instance.playEnemyPrimaryAttackSfx,
+          execute: () {
+            _log(
+              'Attack executed: damage=${controller.model.primaryAttackDamage} '
+              'time=${DateTime.now().toIso8601String()}',
+            );
+            AudioManager.instance.playEnemyPrimaryAttackSfx();
+            
+            // Inicia a animação do corpo do enemy apenas quando o ataque é realmente executado
+            _playAttackBodyAnimation();
+          },
         );
       },
     );
+  }
+
+  /// Override this to provide custom attack animation factory
+  /// By default, returns null and will use a simple directional animation
+  DDAnimationDirectionalFactory? get attackAnimationFactory => null;
+
+  /// Override this to provide custom attack animation (fallback if no factory)
+  Future<SpriteAnimation> attackAnimationFallback() {
+    return EnemyPrimaryAttackDef.loadAnimationFxRight();
+  }
+
+  Future<DDAnimationDirectional> _loadAttackAnimation() async {
+    final factory = attackAnimationFactory;
+    
+    if (factory != null) {
+      // Usa o factory fornecido pelo enemy específico
+      return DDCharacterActionSpriteAnimationHelper
+          .loadAnimationDirectionalFromFactory(factory);
+    }
+    
+    // Fallback: usa a mesma animação para todas as direções
+    final animation = await attackAnimationFallback();
+    return DDAnimationDirectional(
+      right: animation,
+      left: animation,
+      up: animation,
+      down: animation,
+      rightUp: animation,
+      rightDown: animation,
+      leftUp: animation,
+      leftDown: animation,
+    );
+  }
+
+  void _playAttackBodyAnimation() {
+    // Evita múltiplas animações simultâneas
+    if (_isAttackPlaying) {
+      return;
+    }
+
+    _isAttackPlaying = true;
+
+    DDCharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
+      animationRight: _attackAnimation.right,
+      animationLeft: _attackAnimation.left,
+      animationUp: _attackAnimation.up,
+      animationDown: _attackAnimation.down,
+      animationRightUp: _attackAnimation.rightUp,
+      animationRightDown: _attackAnimation.rightDown,
+      animationLeftUp: _attackAnimation.leftUp,
+      animationLeftDown: _attackAnimation.leftDown,
+      currentAnimation: animation,
+      target: this,
+      executionStartFrame: 1,
+      onActionStart: () {
+        _log('Attack body animation started');
+      },
+      onExecutionFrames: () {
+        // A animação está apenas visual, o dano já foi aplicado pelo simpleAttackMelee
+      },
+      onActionEnd: () {
+        _isAttackPlaying = false;
+        _log('Attack body animation ended');
+      },
+    );
+  }
+
+  void _log(String message) {
+    if (kDebugMode) {
+      debugPrint('[EnemyAttack] $message');
+    }
   }
 }

@@ -222,7 +222,7 @@ final class SaveService {
         'playerType': (json['player'] as Map?)?['playerType'],
         'playerLevel': (json['player'] as Map?)?['level'],
         'currentDay': (json['world'] as Map?)?['currentDay'],
-        'money': (json['player'] as Map?)?['money'],
+        'coins': (json['player'] as Map?)?['coins'],
       };
     } catch (e) {
       developer.log('[SaveService] Error getting metadata', error: e);

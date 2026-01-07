@@ -2,6 +2,8 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/character_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
+import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
+import 'package:darkness_dungeon/shared/utils/sprite_animation_constants.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 
 final class GoblinEnemyDef {
@@ -18,6 +20,14 @@ final class GoblinEnemyDef {
 
   static final Vector2 textureSize = TileConstants.tileSizeStandard;
   static final Vector2 componentSize = textureSize;
+
+  static const int _attackFrameCount = 6;
+  static const double _attackFrameRightY = 0;
+  static const double _attackFrameLeftY = TileConstants.kCharacterDimensionDemo;
+  static const double _attackFrameUpY =
+      TileConstants.kCharacterDimensionDemo * 2;
+  static const double _attackFrameDownY =
+      TileConstants.kCharacterDimensionDemo * 3;
 
   static Future<SpriteAnimation> loadAnimationIdleRight() =>
       SpriteAnimation.load(

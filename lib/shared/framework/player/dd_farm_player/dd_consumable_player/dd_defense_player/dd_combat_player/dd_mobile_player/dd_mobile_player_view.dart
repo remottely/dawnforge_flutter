@@ -7,6 +7,7 @@ import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consu
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_model.dart';
 import 'package:flutter/foundation.dart';
+import 'package:darkness_dungeon/gameplay/market/market_state.dart';
 
 abstract class DDMobilePlayerView<
   C extends DDMobilePlayerController<M>,
@@ -70,15 +71,39 @@ abstract class DDMobilePlayerView<
 
   @override
   void onJoystickChangeDirectional(JoystickDirectionalEvent event) {
+    if (MarketState.instance.isOpen.value) {
+      stopMove();
+      return;
+    }
     _bufferedDirectionalInput = JoystickDirectionalEvent(
       directional: event.directional,
       intensity: event.intensity,
       radAngle: event.radAngle,
     );
 
+    _updateFacingDirection(event);
+
     if (isActionLocked) return;
 
     super.onJoystickChangeDirectional(event);
+  }
+
+  void _updateFacingDirection(JoystickDirectionalEvent event) {
+    final dir = switch (event.directional) {
+      JoystickMoveDirectional.MOVE_LEFT => Direction.left,
+      JoystickMoveDirectional.MOVE_RIGHT => Direction.right,
+      JoystickMoveDirectional.MOVE_UP => Direction.up,
+      JoystickMoveDirectional.MOVE_DOWN => Direction.down,
+      JoystickMoveDirectional.MOVE_UP_LEFT => Direction.upLeft,
+      JoystickMoveDirectional.MOVE_UP_RIGHT => Direction.upRight,
+      JoystickMoveDirectional.MOVE_DOWN_LEFT => Direction.downLeft,
+      JoystickMoveDirectional.MOVE_DOWN_RIGHT => Direction.downRight,
+      _ => null,
+    };
+
+    if (dir != null) {
+      lastDirection = dir;
+    }
   }
 
   void _onChangeRunState(bool isRunning) {

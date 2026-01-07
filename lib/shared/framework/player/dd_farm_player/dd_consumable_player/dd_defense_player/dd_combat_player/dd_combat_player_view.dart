@@ -124,6 +124,8 @@ abstract class DDCombatPlayerView<
   }
 
   bool _startComboAttack(double damage, {bool consumeStamina = false}) {
+    _refreshFacingFromJoystick();
+
     if (consumeStamina) {
       final cost = controller.model.config.primaryAttackStaminaCost;
       if (controller.model.stamina < cost) {
@@ -172,6 +174,8 @@ abstract class DDCombatPlayerView<
     _comboStep = (_comboStep + 1) % _comboAttackAnimations.length;
     return true;
   }
+
+  void _refreshFacingFromJoystick() {}
 
   void _handleAttackEnd(double damage) {
     unlockAction();

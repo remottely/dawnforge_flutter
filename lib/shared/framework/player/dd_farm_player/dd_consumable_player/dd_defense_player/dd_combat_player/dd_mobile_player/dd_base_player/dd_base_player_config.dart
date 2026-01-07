@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:bonfire/bonfire.dart';
 
 class DDBasePlayerViewConfig {
@@ -39,27 +41,63 @@ class DDBasePlayerSaveData {
   double stamina;
   int energy;
   double? life;
+  int coins;
 
   DDBasePlayerSaveData({
     required this.stamina,
     required this.energy,
     this.life,
+    required this.coins,
   });
 
   Map<String, dynamic> toJson() => {
     'stamina': stamina,
     'energy': energy,
     'life': life,
+    'coins': coins,
   };
 
   factory DDBasePlayerSaveData.fromJson(
     Map<String, dynamic> json,
     DDBasePlayerModelConfig config,
   ) {
-    return DDBasePlayerSaveData(
-      stamina: (json['stamina'] as num?)?.toDouble() ?? config.maxStamina,
-      energy: (json['energy'] as int?) ?? config.maxEnergy,
-      life: (json['life'] as num?)?.toDouble(),
+    final stamina = (json['stamina'] as num?)?.toDouble() ?? config.maxStamina;
+    final energy = (json['energy'] as num?)?.toInt() ?? config.maxEnergy;
+    final life = (json['life'] as num?)?.toDouble();
+    final coins = _readCoins(json);
+
+    developer.log(
+      '[DDBasePlayerSaveData] fromJson stamina=$stamina, life=$life, energy=$energy, coins=$coins, raw=$json',
     );
+    if (life == null || life <= 0) {
+      developer.log(
+        '[DDBasePlayerSaveData] ⚠️ life is null/<=0 during load; check death flow or save timing',
+        level: 900,
+      );
+    }
+
+    developer.log(
+      '[DDBasePlayerSaveData] fromJson stamina=$stamina, life=$life, energy=$energy, coins=$coins, raw=$json',
+    );
+
+    if (life == null || life <= 0) {
+      developer.log(
+        '[DDBasePlayerSaveData] ⚠️ life is null/<=0 during load; check death flow or save timing',
+        level: 900,
+      );
+    }
+
+    return DDBasePlayerSaveData(
+      stamina: stamina,
+      energy: energy,
+      life: life,
+      coins: coins,
+    );
+  }
+
+  static int _readCoins(Map<String, dynamic> json) {
+    final coinsValue = json['coins'];
+    if (coinsValue is num) return coinsValue.toInt();
+    throw ArgumentError('DDBasePlayerSaveData.fromJson: missing coins in payload');
   }
 }

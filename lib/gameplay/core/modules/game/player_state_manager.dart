@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_model.dart';
@@ -16,7 +18,15 @@ class PlayerStateManager {
   bool _respawnWithFullLife = false;
 
   Map<String, dynamic> toJson() {
-    return {'playerModel': lastPlayerModel?.toJson()};
+    final json = {'playerModel': lastPlayerModel?.toJson()};
+    final life = lastPlayerModel?.life;
+    final stamina = lastPlayerModel?.stamina;
+    final coins = lastPlayerModel?.coins;
+
+    developer.log(
+      '[PlayerStateManager] toJson life=$life, stamina=$stamina, coins=$coins, json=$json',
+    );
+    return json;
   }
 
   void fromJson(Map<String, dynamic> json) {
@@ -41,10 +51,22 @@ class PlayerStateManager {
         lastPlayerModel = SunnyPlayerModel.fromJson(data);
         break;
     }
+
+    developer.log(
+      '[PlayerStateManager] fromJson restored type=$playerType, life=${lastPlayerModel?.life}, stamina=${lastPlayerModel?.stamina}, coins=${lastPlayerModel?.coins}, raw=$data',
+    );
   }
 
   void reset() {
     lastPlayerModel = null;
     _respawnWithFullLife = false;
+  }
+
+  void setLastPlayerModel(DDBasePlayerModel model) {
+    lastPlayerModel = model;
+  }
+
+  void setLastPlayerView(DDBasePlayerView view) {
+    lastPlayerView = view;
   }
 }

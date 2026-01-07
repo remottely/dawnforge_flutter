@@ -2,6 +2,7 @@
 
 ## DECISÃO FINAL:
 - Trailler: 🍃 Free Uplifting Music (For Videos) - "Clarion" by @ScottBuckley 🇦🇺
+- https://www.youtube.com/watch?v=eZ_r1H9vHkI&list=PLu42KRC4K0uOvrv5rXUZ11BTWGN-Oc5De&index=1 - town
 
 STATUS DICIONADOS EM PLAYLISTS:
 🔥 (Precisa estar no jogo)

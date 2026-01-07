@@ -1,5 +1,7 @@
 # IMPORTANT BEFORE LAUNCH:
 
+- [NOT_PRIORITY] criar feat que vende e compra itens em massa, grandes quantidades
+
 - [DONE] EquippedHandType deve ser HandItemType e Item deve ser HandItem pois todos os items do jogo hj sao itens capazes de serem segurados pelo player e eu quero q tanto as keys de maps quanto os ids dos items sejam tipados pelo tipo e nao mais strings, entao as keys e ids serão do tipo HandItemType.
 
 - [PRIORITY] cropId deve ser do tipo HandItemId, refatore no codigo
@@ -10,17 +12,17 @@
 
 - [PRIORITY] prompt: hj em DDMinePlayerView eu utilizo FarmToolActionDef, só q eu preciso q vc crie MineToolActionDef q eu não possuo hj com o _handleMine assim como tenho para outros _handle em FarmToolActionDef hj. crie _handleMine para mim e toda lógica necessaria para que a minha ação de mineração funcione. No caso eu quero q primeiro vc me crie um documento contendo os 10 passos (como prompts) necessarios para que essa feature fique completa. a ideia é eu ter uma picareta que quebre pedras, e ao quebra-las eu automaticamente adquiro(sem dropar itens para depois colhe-los do chão). lembrando que isso tudo ficara em um novo modulo no meu jogo, assim como existe o modulo "farm", preciso do modulo "mine" com a funcionalidade basica de quebrar e colher pedras, assim como faco com crops hj em farm só que com a logica bem mais simples.
 
-- [PRIORITY] 
+- [DONE] prompt: hj, quando eu entro em contato com MarketDecoration ele para o player e abre o MarketPanel, porem eu consigo continuar andando com o player por tras, oq é o esperado mesmo. mas quando eu ando com o player mesmo com o MarketPanel aberto, ele fica piscando o MarketPanel, ou seja, reabindo, preciso que a logica do contato funcione assim: quando ele entra na zona de contato com MarketDecoration a primeira vez, nada acontece, ele na vdd espera o player dar o input de "isInteractionAction" para entao abrir o MarketPanel. quando o MarketPanel abre, se ele andar o MarketPanel fecha. E se dentro da zona ele interagir novamente com "isInteractionAction", então o MarketPanel abre. mantena o botao de fechar o MarketPanel.
 
-- [PRIORITY] 
+- [PRIORITY] quero mudar um comportamento, hj quando estou com o market aberto, eu so consigo comprar e vender itens com o touch ou mouse, queria na vdd utilizar os inputs de keyboardDirectionalKeys() para ao inves de controlar o player andando (ou seja, deve bloquear q ele ande no jogo enquanto o market estiver aberto), esses botoes de direcoes deve na verdade navegar entre os itens do grid de compra do market e os kSlotNavNextKey e kSlotNavPrevKey navegar entre os itens do inventario para venda. e kInteractionKey compra o item elecionado 1x e kPrimaryActionKey vende o item do inventario 1x.
 
-- [PRIORITY] 
+- [PRIORITY] prompt: nao corrigiu o problema, continuo com os 420 sempre, foi eliminar a possibilidade de coins ser nulo e vou obrigar a instancia ser sempre carregada do json salvo
 
-- [PRIORITY] 
+- [DONE] prompt: hoje o meu enemy ele executa o primary attack uma primeira vez e depois buga com ele nao conseguindo dar mais dano mesmo com a animacao sendo realizada e caindo o breakpoint em simpleAttackMelee do bonfire. preciso q vc entenda o problema, crie logs, leia a documentacao do bonfire, verifique se não é um problema de memoria (uso de final/const indevidamente) etc. preciso q corrija o problema com eficiencia, investigue bem e entenda o problema. quando digo q o player nao recebe o dano é o dano que o bonfire ja entrega pronto em simpleAttackMelee. se eu tenho 10 skeletons no jogo, os 10 executam o ataque no primeiro contato com o player, mas depois disso o breakpoint continua caindo em simpleAttackMelee mas sem dano nenhum ao player e sem render da animacao EnemyPrimaryAttackDef.loadAnimationFxRight(). ou seja, se o EnemyPrimaryAttackDef.loadAnimationFxRight() é executado com sucesso significa q o dano é aplicado. entenda o problema e corrija crie logs etc para investigarmos. realizei o teste e vou contoinua-los com um unico skeleton para facilitar nos logs.
 
-- [PRIORITY] 
+- [PRIORITY] prompt: hj quando eu morro o meu jogo deve retornar ao ultimo save, porem ele esta retornando morto, provavelmente estou salvando o estado do player na hr da morte ou algo do tipo, investigue.
 
-- [PRIORITY] 
+- [DONE] prompt: preciso adicionar uma regra de q jamais deve ser salvo o player data contendo coins negativos, vida,eneryg,stamina menor ou igual a 0.
 
 - [PRIORITY] 
 

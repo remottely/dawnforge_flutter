@@ -85,6 +85,7 @@ final class SpriteAnimationConfigHelper {
     required String assetPath,
     required Vector2 textureSize,
     required int totalFrames,
+    double stepTime = SpriteAnimationConstants.kStepTimeStandard,
     required double framePositionX,
     required double framePositionY,
     int skipFirstFrames = 0,
@@ -100,7 +101,8 @@ final class SpriteAnimationConfigHelper {
 
     return SpriteAnimation.load(
       assetPath,
-      createStandardData(
+      createCustomData(
+        stepTime: stepTime,
         amount: usedFrames,
         textureSize: textureSize,
         texturePosition: Vector2(

@@ -5,6 +5,8 @@ import 'package:darkness_dungeon/gameplay/core/modules/hud/responsive/responsive
 import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/inventory/widgets/equipment_overlay.dart';
 import 'package:darkness_dungeon/gameplay/inventory/widgets/inventory_overlay.dart';
+import 'package:darkness_dungeon/gameplay/market/market_state.dart';
+import 'package:darkness_dungeon/gameplay/market/widgets/market_panel.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/player_vital_stats/player_vital_stats_overlay.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/debug/debug_overlay.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/widgets/mobile_inputs_overlay.dart';
@@ -158,6 +160,25 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                               child: Stack(
                                 children: [
                                   const TutorialInputsOverlay(),
+                                  ValueListenableBuilder<bool>(
+                                    valueListenable: MarketState.instance.isOpen,
+                                    builder: (context, isOpen, _) {
+                                      if (!isOpen) return const SizedBox.shrink();
+                                      return ValueListenableBuilder(
+                                        valueListenable:
+                                            MarketState.instance.activePlayer,
+                                        builder: (context, player, __) {
+                                          if (player == null) {
+                                            return const SizedBox.shrink();
+                                          }
+                                          return Align(
+                                            alignment: Alignment.center,
+                                            child: MarketPanel(player: player),
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ),
                                   // if (SettingsManager.instance.inputSelected ==
                                   //     InputActionsType.joystick)
                                   //   MobileInputsOverlay(

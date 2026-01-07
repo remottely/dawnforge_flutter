@@ -17793,6 +17793,7 @@
         {
          "draworder":"topdown",
          "id":7,
+         "locked":true,
          "name":"enemies",
          "objects":[
                 {
@@ -18277,6 +18278,7 @@
         {
          "draworder":"topdown",
          "id":8,
+         "locked":true,
          "name":"npcs",
          "objects":[
                 {
@@ -18299,6 +18301,7 @@
         {
          "draworder":"topdown",
          "id":11,
+         "locked":true,
          "name":"barrel_torch",
          "objects":[
                 {
@@ -18992,6 +18995,7 @@
         {
          "draworder":"topdown",
          "id":10,
+         "locked":true,
          "name":"door_chest",
          "objects":[
                 {
