@@ -12,6 +12,12 @@ import 'package:flutter/material.dart';
 class MarketDecoration extends DDContactDecoration with PlayerControllerListener {
   static final Set<String> _spawnedPositions = <String>{};
 
+  /// Clear cached spawn registry (e.g., when rebuilding the game after death/restart).
+  static void clearSpawnRegistry() {
+    debugPrint('[MarketDecoration] Clearing spawn registry (${_spawnedPositions.length} entries)');
+    _spawnedPositions.clear();
+  }
+
   final String? overlayId;
   final FutureOr<void> Function()? onOpenMarket;
   final Sprite? interactionIcon;
