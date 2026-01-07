@@ -10,7 +10,7 @@ void main() {
       expect(data.level, 1);
       expect(data.health, 100.0);
       expect(data.maxHealth, 100.0);
-      expect(data.money, 500);
+      expect(data.coins, 500);
       expect(data.isValid(), isTrue);
     });
 
@@ -21,7 +21,7 @@ void main() {
         'level': 5,
         'health': 80.0,
         'maxHealth': 120.0,
-        'money': 1000,
+        'coins': 1000,
         'positionX': 10.0,
         'positionY': 20.0,
         'currentMapId': 'town',
@@ -45,7 +45,7 @@ void main() {
       expect(data.playerName, 'Test Player');
       expect(data.level, 5);
       expect(data.health, 80.0);
-      expect(data.money, 1000);
+      expect(data.coins, 1000);
       expect(data.isValid(), isTrue);
     });
 
@@ -61,7 +61,7 @@ void main() {
       expect(json['playerName'], 'Hero');
       expect(json['level'], 1);
       expect(json['health'], 100.0);
-      expect(json['money'], 500);
+      expect(json['coins'], 500);
     });
 
     test('isValid() detects invalid states', () {
@@ -71,11 +71,11 @@ void main() {
       ).copyWith(health: 150.0, maxHealth: 100.0);
       expect(invalidHealth.isValid(), isFalse);
 
-      // Negative money
-      final negativeMoney = PlayerSaveData.initial(
+      // Negative coins
+      final negativeCoins = PlayerSaveData.initial(
         playerType: 'knight',
-      ).copyWith(money: -10);
-      expect(negativeMoney.isValid(), isFalse);
+      ).copyWith(coins: -10);
+      expect(negativeCoins.isValid(), isFalse);
 
       // Invalid level
       final invalidLevel = PlayerSaveData.initial(
@@ -90,10 +90,10 @@ void main() {
 
     test('copyWith() creates modified copy', () {
       final original = PlayerSaveData.initial(playerType: 'knight');
-      final modified = original.copyWith(level: 10, money: 5000);
+      final modified = original.copyWith(level: 10, coins: 5000);
 
       expect(modified.level, 10);
-      expect(modified.money, 5000);
+      expect(modified.coins, 5000);
       expect(modified.playerType, original.playerType);
       expect(modified.health, original.health);
     });
@@ -115,7 +115,7 @@ void main() {
       expect(data.playerType, 'knight');
       expect(data.level, 1); // Default
       expect(data.health, 100.0); // Default
-      expect(data.money, 500); // Default
+      expect(data.coins, 500); // Default
       expect(data.isValid(), isTrue);
     });
   });

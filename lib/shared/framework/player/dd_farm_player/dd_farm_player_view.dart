@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
 import 'package:darkness_dungeon/gameplay/farm/services/farm_tool_action_config.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_defense_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_defense_player_view.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_controller.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_model.dart';
@@ -23,12 +25,9 @@ abstract class DDFarmPlayerView<
     required this.config,
     required super.position,
     required super.model,
-    required super.size,
-    required super.life,
-    required super.baseSpeed,
   }) : super(config: config);
 
-  late final DDAnimationDirectional animationShovelDirectional;
+  late final DDAnimationDirectional animationDigDirectional;
   late final DDAnimationDirectional animationWateringCanDirectional;
   late final DDAnimationDirectional animationPlaceSeedDirectional;
   late final DDAnimationDirectional animationHarvestDirectional;
@@ -39,7 +38,7 @@ abstract class DDFarmPlayerView<
 
     final toolsLoaded = await Future.wait([
       DDCharacterActionSpriteAnimationHelper.loadAnimationDirectionalFromFactory(
-        config.animationShovelFactory,
+        config.animationDigFactory,
       ),
       DDCharacterActionSpriteAnimationHelper.loadAnimationDirectionalFromFactory(
         config.animationWateringCanFactory,
@@ -52,7 +51,7 @@ abstract class DDFarmPlayerView<
       ),
     ]);
 
-    animationShovelDirectional = toolsLoaded[0];
+    animationDigDirectional = toolsLoaded[0];
     animationWateringCanDirectional = toolsLoaded[1];
     animationPlaceSeedDirectional = toolsLoaded[2];
     animationHarvestDirectional = toolsLoaded[3];
@@ -79,7 +78,7 @@ abstract class DDFarmPlayerView<
       onChangeRunState: onChangeRunState,
       onExecutePrimaryAttack: onExecutePrimaryAttack,
       onExecuteRangedAttack: onExecuteRangedAttack,
-      onExecuteShovel: _onExecuteShovel,
+      onExecuteDig: _onExecuteDig,
       onExecuteWateringCan: _onExecuteWateringCan,
       onExecuteSeed: _onExecuteSeed,
       onExecuteHarvest: _onExecuteHarvest,
@@ -98,28 +97,33 @@ abstract class DDFarmPlayerView<
     required void Function(bool isRunning) onChangeRunState,
     required bool Function(double damage) onExecutePrimaryAttack,
     required bool Function(double damage) onExecuteRangedAttack,
-    required bool Function() onExecuteShovel,
+    required bool Function() onExecuteDig,
     required bool Function() onExecuteWateringCan,
     required bool Function() onExecuteSeed,
     required bool Function() onExecuteHarvest,
   });
 
-  bool _onExecuteShovel() {
+  bool _onExecuteDig() {
+    developer.log('[FarmPlayerView] _onExecuteDig chamado');
+
     final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
       AttackType.melee,
       () {
+        developer.log(
+          '[FarmPlayerView] _onExecuteDig: Executando animação de dig',
+        );
         DDCharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-          animationRight: animationShovelDirectional.right,
-          animationLeft: animationShovelDirectional.left,
-          animationUp: animationShovelDirectional.up,
-          animationDown: animationShovelDirectional.down,
-          animationRightUp: animationShovelDirectional.rightUp,
-          animationRightDown: animationShovelDirectional.rightDown,
-          animationLeftUp: animationShovelDirectional.leftUp,
-          animationLeftDown: animationShovelDirectional.leftDown,
+          animationRight: animationDigDirectional.right,
+          animationLeft: animationDigDirectional.left,
+          animationUp: animationDigDirectional.up,
+          animationDown: animationDigDirectional.down,
+          animationRightUp: animationDigDirectional.rightUp,
+          animationRightDown: animationDigDirectional.rightDown,
+          animationLeftUp: animationDigDirectional.leftUp,
+          animationLeftDown: animationDigDirectional.leftDown,
           currentAnimation: animation,
           target: this,
-          executionStartFrame: 4,
+          executionStartFrame: 5, // TODO(Kevin): inject this value
           onActionStart: lockAction,
           onActionEnd: unlockAction,
           onExecutionFrames: () => FarmToolActionDef.execute(player: this),
@@ -127,7 +131,12 @@ abstract class DDFarmPlayerView<
       },
     );
 
-    return executionInfo != null;
+    final wasExecuted = executionInfo != null;
+    developer.log(
+      '[FarmPlayerView] _onExecuteDig resultado: $wasExecuted (executionInfo=$executionInfo)',
+    );
+
+    return wasExecuted;
   }
 
   bool _onExecuteWateringCan() {
@@ -145,7 +154,7 @@ abstract class DDFarmPlayerView<
           animationLeftDown: animationWateringCanDirectional.leftDown,
           currentAnimation: animation,
           target: this,
-          executionStartFrame: 4,
+          executionStartFrame: AppEnvironment.kIsDevToolsMode ? 0 : 8, // TODO(Kevin): inject this value dynamically
           onActionStart: lockAction,
           onActionEnd: unlockAction,
           onExecutionFrames: () => FarmToolActionDef.execute(player: this),
@@ -157,9 +166,14 @@ abstract class DDFarmPlayerView<
   }
 
   bool _onExecuteSeed() {
+    developer.log('[FarmPlayerView] _onExecuteSeed chamado');
+
     final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
       AttackType.melee,
       () {
+        developer.log(
+          '[FarmPlayerView] _onExecuteSeed: Executando animação de seed',
+        );
         DDCharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
           animationRight: animationPlaceSeedDirectional.right,
           animationLeft: animationPlaceSeedDirectional.left,
@@ -171,7 +185,7 @@ abstract class DDFarmPlayerView<
           animationLeftDown: animationPlaceSeedDirectional.leftDown,
           currentAnimation: animation,
           target: this,
-          executionStartFrame: 4,
+          executionStartFrame: 4, // TODO(Kevin): inject this value
           onActionStart: lockAction,
           onActionEnd: unlockAction,
           onExecutionFrames: () => FarmToolActionDef.execute(player: this),
@@ -179,7 +193,12 @@ abstract class DDFarmPlayerView<
       },
     );
 
-    return executionInfo != null;
+    final wasExecuted = executionInfo != null;
+    developer.log(
+      '[FarmPlayerView] _onExecuteSeed resultado: $wasExecuted (executionInfo=$executionInfo)',
+    );
+
+    return wasExecuted;
   }
 
   bool _onExecuteHarvest() {
@@ -194,7 +213,7 @@ abstract class DDFarmPlayerView<
           animationDown: animationHarvestDirectional.down,
           currentAnimation: animation,
           target: this,
-          executionStartFrame: 4,
+          executionStartFrame: 4, // TODO(Kevin): inject this value
           onActionStart: lockAction,
           onActionEnd: unlockAction,
           onExecutionFrames: () => FarmToolActionDef.execute(player: this),

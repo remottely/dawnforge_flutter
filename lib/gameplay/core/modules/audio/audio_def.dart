@@ -14,18 +14,28 @@ final class AudioDef {
       'sfx/sfx_character_fireball_explosion.wav';
   static const String kSfxConversationInteractionAsset =
       'sfx/sfx_conversation_interaction.wav';
-  static const String
-  kMusicRo1DeathHexBackgroundAsset = // TODO(Kevin): change this name
-      // 'music/music_gameplay_background.mp3'; // TODO(Kevin): put it back, or change the music
-      'music/music_ro1_death_hex_background.mp3';
-  static const String
-  kMusicRo1LettersBackgroundAsset = // TODO(Kevin): change this name
-      // 'music/music_gameplay_background.mp3'; // TODO(Kevin): put it back, or change the music
-      'music/music_ro1_death_hex_background.mp3';
-  static const String
-  kMusicBossBattleBackgroundAsset = // TODO(Kevin): change this name
-      // 'music/music_boss_battle_background.mp3'; // TODO(Kevin): put it back, or change the music
-      'music/music_ro1_letters_background.mp3';
+  // static const String
+  // kMusicRo1DeathHexBackgroundAsset = // TODO(Kevin): change this name
+  //     // 'music/music_gameplay_background.mp3'; // TODO(Kevin): put it back, or change the music
+  //     'music/music_ro1_death_hex_background.mp3';
+  // static const String
+  // kMusicRo1LettersBackgroundAsset = // TODO(Kevin): change this name
+  //     // 'music/music_gameplay_background.mp3'; // TODO(Kevin): put it back, or change the music
+  //     'music/music_ro1_death_hex_background.mp3';
+  // static const String
+  // kMusicBossBattleBackgroundAsset = // TODO(Kevin): change this name
+  //     // 'music/music_boss_battle_background.mp3'; // TODO(Kevin): put it back, or change the music
+  //     'music/music_ro1_letters_background.mp3';
+
+  // static const backgroundMusic1 = 'music/Keys Of Moon - Enchanted.mp3';
+
+  static const bgMusicFarm = 'bg/music/farm - PhaseShift.mp3';
+  static const bgMusicTown = 'bg/music/town - Scott Buckley - Clarion.mp3';
+  static const bgMusicForest = 'bg/music/forest - Savfk - Rounding.mp3';
+  static const bgMusicLake =
+      'bg/music/lake - Justin Allan Arnold - Antigone.mp3';
+  static const bgMusicBeach = 'bg/music/beach - Glitch - Prehistory.mp3';
+  static const bgMusicCaveBoss = 'bg/music/cave_boss - RitesOfPassage.mp3';
 
   static const List<String> kPreloadAudioFiles = [
     kSfxPlayerAttackAsset,
@@ -33,8 +43,15 @@ final class AudioDef {
     kSfxEnemyAttackAsset,
     kSfxCharacterFireballExplosionAsset,
     kSfxConversationInteractionAsset,
-    kMusicRo1DeathHexBackgroundAsset,
-    kMusicRo1LettersBackgroundAsset,
-    kMusicBossBattleBackgroundAsset,
+    // backgroundMusic1,
+    // kMusicRo1DeathHexBackgroundAsset,
+    // kMusicRo1LettersBackgroundAsset,
+    // kMusicBossBattleBackgroundAsset,
+    bgMusicFarm,
+    bgMusicTown,
+    bgMusicForest,
+    bgMusicLake,
+    bgMusicBeach,
+    bgMusicCaveBoss,
   ];
 }

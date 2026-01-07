@@ -6,7 +6,7 @@ class CutePlayerController<M extends CutePlayerModel>
   CutePlayerController({
     required super.model,
     required super.onChangeRunState,
-    required super.onExecuteShovel,
+    required super.onExecuteDig,
     required super.onExecuteWateringCan,
     required super.onExecuteSeed,
     required super.onExecuteHarvest,

@@ -206,7 +206,7 @@ Save Summary (v$version):
 - Player: ${player.playerName ?? player.playerType} (Level ${player.level})
 - Day: ${world.currentDay} of ${world.seasonDisplayName}, Year ${world.currentYear}
 - Time: ${world.getFormattedTime()}
-- Money: \$${player.money}
+- Coins: \$${player.coins}
 - Inventory: ${inventory.usedSlots}/${inventory.maxInventorySlots} slots
 - Equipment: ${inventory.equippedItems.length} items
 - Farm: ${farm.totalCrops} crops, ${farm.totalAnimals} animals, ${farm.totalBuildings} buildings
@@ -220,7 +220,7 @@ Save Summary (v$version):
         'v$version, '
         '${player.playerType} Lv${player.level}, '
         'Day ${world.currentDay}, '
-        '\$${player.money}, '
+        '\$${player.coins}, '
         '${inventory.usedSlots} items, '
         '${farm.totalCrops} crops'
         ')';

@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/gameplay/core/modules/time/time_def.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/time/time_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/time/time_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/time/time_of_day.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
@@ -39,24 +39,24 @@ void main() {
       expect(manager.currentTime, greaterThan(0));
 
       // With default time scale (72x), 1 real second = 72 game seconds
-      expect(manager.currentTime, closeTo(TimeDef.defaultTimeScale, 0.1));
+      expect(manager.currentTime, closeTo(TimeConstants.defaultTimeScale, 0.1));
     });
 
     test('test_time_of_day_changes_correctly', () {
       // Test Morning
-      manager.setTime(TimeDef.morningStartTime); // 6:00
+      manager.setTime(TimeConstants.morningStartTime); // 6:00
       expect(manager.currentTimeOfDay, equals(TimeOfDay.morning));
 
       // Test Noon
-      manager.setTime(TimeDef.noonStartTime); // 12:00
+      manager.setTime(TimeConstants.noonStartTime); // 12:00
       expect(manager.currentTimeOfDay, equals(TimeOfDay.noon));
 
       // Test Evening
-      manager.setTime(TimeDef.eveningStartTime); // 18:00
+      manager.setTime(TimeConstants.eveningStartTime); // 18:00
       expect(manager.currentTimeOfDay, equals(TimeOfDay.evening));
 
       // Test Night
-      manager.setTime(TimeDef.nightStartTime); // 21:00
+      manager.setTime(TimeConstants.nightStartTime); // 21:00
       expect(manager.currentTimeOfDay, equals(TimeOfDay.night));
 
       // Test Night continues past midnight
@@ -75,17 +75,17 @@ void main() {
       }
 
       manager.addTimeOfDayListener(listener);
-      manager.setTime(TimeDef.morningStartTime); // Start at morning
+      manager.setTime(TimeConstants.morningStartTime); // Start at morning
 
       // Act - Change to noon
-      manager.setTime(TimeDef.noonStartTime);
+      manager.setTime(TimeConstants.noonStartTime);
 
       // Assert
       expect(callbackCount, equals(1));
       expect(callbackReceived, equals(TimeOfDay.noon));
 
       // Act - Change to evening
-      manager.setTime(TimeDef.eveningStartTime);
+      manager.setTime(TimeConstants.eveningStartTime);
 
       // Assert
       expect(callbackCount, equals(2));
@@ -140,7 +140,7 @@ void main() {
       expect(worldManager.currentDay, equals(1));
 
       // Set time to just before midnight
-      manager.setTime(TimeDef.secondsPerDay - 1);
+      manager.setTime(TimeConstants.secondsPerDay - 1);
 
       // Act - Advance time past midnight
       manager.update(1.0); // This should trigger new day
@@ -148,7 +148,7 @@ void main() {
       // Assert - World manager should advance day
       // Note: Due to time scale, we might need multiple updates or adjust scale
       manager.setTimeScale(1.0); // Disable time scale for precise control
-      manager.setTime(TimeDef.secondsPerDay - 1);
+      manager.setTime(TimeConstants.secondsPerDay - 1);
       manager.update(2.0); // Cross midnight
 
       // The day should have advanced
@@ -157,14 +157,16 @@ void main() {
 
     test('test_time_wraps_at_midnight', () {
       // Arrange
-      manager.setTime(TimeDef.secondsPerDay - 10); // 10 seconds before midnight
+      manager.setTime(
+        TimeConstants.secondsPerDay - 10,
+      ); // 10 seconds before midnight
 
       // Act
       manager.setTimeScale(1.0); // 1:1 time scale for predictability
       manager.update(20.0); // Cross midnight
 
       // Assert - Time should wrap
-      expect(manager.currentTime, lessThan(TimeDef.secondsPerDay));
+      expect(manager.currentTime, lessThan(TimeConstants.secondsPerDay));
       expect(
         manager.currentTime,
         closeTo(10.0, 1.0),
@@ -184,7 +186,7 @@ void main() {
       manager.reset();
       expect(
         manager.currentTime,
-        equals(TimeDef.morningStartTime),
+        equals(TimeConstants.morningStartTime),
       ); // Verify reset
 
       manager.fromJson(json);
@@ -201,11 +203,11 @@ void main() {
       expect(manager.getProgress(), equals(0.0));
 
       // Test noon (50%)
-      manager.setTime(TimeDef.secondsPerDay / 2);
+      manager.setTime(TimeConstants.secondsPerDay / 2);
       expect(manager.getProgress(), closeTo(0.5, 0.01));
 
       // Test almost midnight (99%)
-      manager.setTime(TimeDef.secondsPerDay - 1);
+      manager.setTime(TimeConstants.secondsPerDay - 1);
       expect(manager.getProgress(), greaterThan(0.99));
     });
 
@@ -219,10 +221,10 @@ void main() {
       manager.addTimeOfDayListener((time) => listener2Calls++);
       manager.addTimeOfDayListener((time) => listener3Calls++);
 
-      manager.setTime(TimeDef.morningStartTime);
+      manager.setTime(TimeConstants.morningStartTime);
 
       // Act
-      manager.setTime(TimeDef.noonStartTime);
+      manager.setTime(TimeConstants.noonStartTime);
 
       // Assert
       expect(listener1Calls, equals(1));

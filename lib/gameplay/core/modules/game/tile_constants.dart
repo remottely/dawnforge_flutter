@@ -3,7 +3,7 @@ import 'package:bonfire/bonfire.dart';
 final class TileConstants {
   TileConstants._();
 
-  static const int kMaxVisibleTiles = 16;
+  static const int kMaxVisibleTiles = 24;
   static const int kBossConversationVisibleTiles = 32;
 
   static const double kTileDimensionSmall = 8.0;
@@ -23,8 +23,11 @@ final class TileConstants {
   );
   static final Vector2 tileSizeSunny = Vector2(96, 64);
   static final Vector2 tileSizeCute = Vector2(48, 48);
-  static final Vector2 tileSizeFarmer = Vector2(
-    48,
-    48,
-  ); // TODO(Kevin): confirm farmer tile size
+  static final Vector2 tileSizeFarmer = Vector2(48, 48);
+
+  static const double kCharacterDimensionDemo = 64.0;
+  static final Vector2 tileSizeDemo = Vector2(
+    kCharacterDimensionDemo,
+    kCharacterDimensionDemo,
+  );
 }

@@ -21,8 +21,7 @@ class WizardNpcController {
         (model.hasBeenFirstInteraction && interactionRequested)) {
       _view.add(
         EmoteManager.displayEmoteAboveCharacter(
-          asset: EmoteManager.kQuestionEmoteAsset,
-          amount: 8,
+          animation: EmoteManager.loadQuestionEmote(),
           target: _view,
         ),
       );

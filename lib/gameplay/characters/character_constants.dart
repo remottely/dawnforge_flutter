@@ -1,27 +1,29 @@
+import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
+
 final class CharacterConstants {
   CharacterConstants._();
 
-  static const double kLifeSmall = 80.0;
-  static const double kLifeMedium = 120.0;
-  static const double kLifeLarge = 150.0;
-  static const double kLifeExtraLarge = 200.0;
+  static const double kLifeSmall = 80;
+  static const double kLifeMedium = 120;
+  static const double kLifeLarge = 150;
+  static const double kLifeExtraLarge = 200;
 
-  static const double kSpeedSlow = 16.0;
-  static const double kSpeedMedium = 24.0;
-  static const double kSpeedFast = 32.0;
+  static const double kSpeedSlow = 18 * AppEnvironment.kGameSpeedMultiplier;
+  static const double kSpeedMedium = 24 * AppEnvironment.kGameSpeedMultiplier;
+  static const double kSpeedFast = 32 * AppEnvironment.kGameSpeedMultiplier;
 
-  static const double kVisionRadiusSuperSmall = 8.0;
-  static const double kVisionRadiusExtraSmall = 16.0;
-  static const double kVisionRadiusSmall = 32.0;
-  static const double kVisionRadiusMedium = 48.0;
-  static const double kVisionRadiusLarge = 64.0;
-  static const double kVisionRadiusExtraLarge = 80.0;
-  static const double kVisionRadiusSuperLarge = 96.0;
+  static const double kVisionRadiusSuperSmall = 8;
+  static const double kVisionRadiusExtraSmall = 16;
+  static const double kVisionRadiusSmall = 32;
+  static const double kVisionRadiusMedium = 48;
+  static const double kVisionRadiusLarge = 64;
+  static const double kVisionRadiusExtraLarge = 80;
+  static const double kVisionRadiusSuperLarge = 96;
 
-  static const double kDamageSmall = 10.0;
-  static const double kDamageMedium = 20.0;
-  static const double kDamageLarge = 40.0;
-  static const double kDamageExtraLarge = 60.0;
+  static const double kDamageSmall = 10;
+  static const double kDamageMedium = 20;
+  static const double kDamageLarge = 40;
+  static const double kDamageExtraLarge = 60;
 
   static const int kAttackIntervalSmall = 300;
   static const int kAttackIntervalMedium = 800;

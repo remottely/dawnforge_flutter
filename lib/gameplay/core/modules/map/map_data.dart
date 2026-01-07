@@ -7,6 +7,7 @@ class MapData {
   final String backgroundMusic;
   final String lightingColor;
   final String backgroundColor;
+  final String? initialPlayerPosition;
 
   const MapData({
     required this.id,
@@ -15,11 +16,14 @@ class MapData {
     required this.backgroundMusic,
     required this.lightingColor,
     required this.backgroundColor,
+    this.initialPlayerPosition,
   });
 
   Map<String, dynamic> get properties => {
     MapDef.kBackgroundMusicPropertyKey: backgroundMusic,
     MapDef.kLightingColorPropertyKey: lightingColor,
     MapDef.kBackgroundColorPropertyKey: backgroundColor,
+    if (initialPlayerPosition != null)
+      MapDef.kInitialPlayerPositionPropertyKey: initialPlayerPosition,
   };
 }

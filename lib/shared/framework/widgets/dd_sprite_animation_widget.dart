@@ -7,25 +7,34 @@ class DDSpriteAnimationWidget extends StatelessWidget {
   final double _width;
   final double _height;
 
-  const DDSpriteAnimationWidget({super.key, required this.animation})
+  const DDSpriteAnimationWidget({
+    required this.animation,
+    required double width,
+    required double height,
+    super.key,
+  }) : _width = width,
+       _height = height;
+
+  const DDSpriteAnimationWidget.standard({required this.animation, super.key})
     : _width = SpriteAnimationConstants.kSizeStandard,
       _height = SpriteAnimationConstants.kSizeStandard;
 
-  const DDSpriteAnimationWidget.small({super.key, required this.animation})
+  const DDSpriteAnimationWidget.small({required this.animation, super.key})
     : _width = SpriteAnimationConstants.kSizeSmall,
       _height = SpriteAnimationConstants.kSizeSmall;
 
-  const DDSpriteAnimationWidget.large({super.key, required this.animation})
+  const DDSpriteAnimationWidget.large({required this.animation, super.key})
     : _width = SpriteAnimationConstants.kSizeLarge,
       _height = SpriteAnimationConstants.kSizeLarge;
 
-  const DDSpriteAnimationWidget.extraLarge({super.key, required this.animation})
+  const DDSpriteAnimationWidget.extraLarge({required this.animation, super.key})
     : _width = SpriteAnimationConstants.kSizeExtraLarge,
       _height = SpriteAnimationConstants.kSizeExtraLarge;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
+      // color: Colors.red,
       width: _width,
       height: _height,
       child: FutureBuilder<SpriteAnimation>(

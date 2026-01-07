@@ -1,4 +1,5 @@
-import 'package:darkness_dungeon/gameplay/core/modules/combat/controllers/enemy_combat_action_controller.dart';
+import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fireball_attack_def.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_controller.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_model.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_view.dart';
@@ -19,10 +20,33 @@ abstract class DDRangedEnemyView<
   void onDetectPlayerAndMoveToFireballAttack({
     required double longVisionRadius,
   }) {
-    EnemyCombatActionController.executeFireballAttack(
+    _executeFireballAttack(
       enemy: this,
       damage: controller.model.primaryAttackDamage,
       longVisionRadius: longVisionRadius,
+    );
+  }
+
+  static void _executeFireballAttack({
+    required SimpleEnemy enemy,
+    required double damage,
+    required double longVisionRadius,
+  }) {
+    enemy.seeAndMoveToAttackRange(
+      radiusVision: longVisionRadius,
+      positioned: (_) {
+        enemy.simpleAttackRange(
+          size: CharacterFireballAttackDef.componentSize,
+          speed: CharacterFireballAttackDef.kSpeed,
+          lightingConfig: CharacterFireballAttackDef.lighting,
+          damage: damage,
+          collision: CharacterFireballAttackDef.createHitbox(),
+          animation: CharacterFireballAttackDef.loadAnimationExecution(),
+          animationDestroy: CharacterFireballAttackDef.loadAnimationDestroy(),
+          execute: CharacterFireballAttackDef.playAudioExecution,
+          onDestroy: () => CharacterFireballAttackDef.onDestroy(enemy.gameRef),
+        );
+      },
     );
   }
 }

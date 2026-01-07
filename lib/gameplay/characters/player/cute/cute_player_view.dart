@@ -10,12 +10,7 @@ class CutePlayerView<
 >
     extends DDFarmPlayerView<C, M> {
   CutePlayerView({required super.position, required super.model})
-    : super(
-        config: CutePlayerDef.viewConfig,
-        size: CutePlayerDef.componentSize,
-        life: CutePlayerDef.kLife,
-        baseSpeed: CutePlayerDef.kSpeed,
-      );
+    : super(config: CutePlayerDef.viewConfig);
 
   @override
   C createFarmController({
@@ -30,7 +25,7 @@ class CutePlayerView<
     required void Function(bool isRunning) onChangeRunState,
     required bool Function(double damage) onExecutePrimaryAttack,
     required bool Function(double damage) onExecuteRangedAttack,
-    required bool Function() onExecuteShovel,
+    required bool Function() onExecuteDig,
     required bool Function() onExecuteWateringCan,
     required bool Function() onExecuteSeed,
     required bool Function() onExecuteHarvest,
@@ -42,7 +37,7 @@ class CutePlayerView<
           onChangeRunState: onChangeRunState,
           onExecutePrimaryAttack: onExecutePrimaryAttack,
           onExecuteRangedAttack: onExecuteRangedAttack,
-          onExecuteShovel: onExecuteShovel,
+          onExecuteDig: onExecuteDig,
           onExecuteWateringCan: onExecuteWateringCan,
           onExecuteSeed: onExecuteSeed,
           onExecuteHarvest: onExecuteHarvest,

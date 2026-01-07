@@ -2,46 +2,49 @@ import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
 
-final class FarmFeedbackService {
-  FarmFeedbackService._();
-
-  static final instance = FarmFeedbackService._();
-
+/// Service for providing user feedback during farm actions (I2: Service = stateless)
+class FarmFeedbackService {
+  /// Show a floating text message to the user
   void showFloatingText(String message) {
     developer.log('[FarmFeedback] 💬 $message');
     // TODO: Add visual floating text implementation
   }
 
+  /// Refresh the inventory HUD in the game interface
   void refreshInventoryHUD(
     BonfireGameInterface gameRef, {
     bool autoShow = true,
   }) {
+    developer.log(
+      '[FarmFeedback] Refreshing inventory HUD (autoShow: $autoShow)',
+    );
     // TODO: Implementation pending
     // 1. Find inventory HUD component in gameRef
     // 2. Call its refresh/update method
     // 3. If autoShow is true, call its show method
-    developer.log(
-      '[FarmFeedback] Refreshing inventory HUD (autoShow: $autoShow)',
-    );
   }
 
-  /// TODO: Implement audio feedback.
+  /// Play sound effect for tilling soil
   void playTillSound() {
-    // Future: AudioManager.instance.playTillSfx();
+    developer.log('[FarmFeedback] 🔊 Till sound');
+    // TODO: AudioManager.instance.playTillSfx();
   }
 
-  /// TODO: Implement audio feedback.
+  /// Play sound effect for watering
   void playWaterSound() {
-    // Future: AudioManager.instance.playWaterSfx();
+    developer.log('[FarmFeedback] 🔊 Water sound');
+    // TODO: AudioManager.instance.playWaterSfx();
   }
 
-  /// TODO: Implement audio feedback.
+  /// Play sound effect for planting
   void playPlantSound() {
-    // Future: AudioManager.instance.playPlantSfx();
+    developer.log('[FarmFeedback] 🔊 Plant sound');
+    // TODO: AudioManager.instance.playPlantSfx();
   }
 
-  /// TODO: Implement audio feedback.
+  /// Play sound effect for harvesting
   void playHarvestSound() {
-    // Future: AudioManager.instance.playHarvestSfx();
+    developer.log('[FarmFeedback] 🔊 Harvest sound');
+    // TODO: AudioManager.instance.playHarvestSfx();
   }
 }

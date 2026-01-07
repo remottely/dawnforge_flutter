@@ -1,97 +1,67 @@
-import '../models/equipped_hand_type.dart';
-import '../models/item.dart';
-import '../models/item_rarity.dart';
-import '../models/item_type.dart';
+import 'package:flutter/material.dart';
 
-final class WeaponItem extends Item {
+import '../entities/hand_item.dart';
+import '../entities/data/item_icon_data.dart';
+import '../entities/enums/hand_item_quality.dart';
+import '../entities/enums/hand_item_type.dart';
+
+final class WeaponItem extends HandItem {
   final int damage;
-  final double attackSpeed;
-  final double critChance;
-  final double critMultiplier;
-  final EquippedHandType equippedHandType;
 
   const WeaponItem({
     required super.id,
     required super.name,
     required super.description,
     required super.baseValue,
-    required super.iconPath,
-    super.rarity = ItemRarity.common,
-    super.type = ItemType.weapon,
+    required super.iconData,
+    required super.quality,
     required this.damage,
-    this.attackSpeed = 1.0,
-    this.critChance = 0.05,
-    this.critMultiplier = 1.5,
-    required this.equippedHandType,
-  });
-
-  double get dps {
-    final avgDamage = damage * (1 + critChance * (critMultiplier - 1));
-    return avgDamage * attackSpeed;
-  }
+  }) : super(
+         maxStackSize: 1,
+         isTradeable: false,
+         type: HandItemType.weapon,
+       );
 
   @override
   Map<String, dynamic> toJson() {
+    final baseData = super.toJson();
     return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'type': type.toJson(),
-      'rarity': rarity.toJson(),
-      'baseValue': baseValue,
-      'iconPath': iconPath,
+      ...baseData,
       'damage': damage,
-      'attackSpeed': attackSpeed,
-      'critChance': critChance,
-      'critMultiplier': critMultiplier,
-      'equippedHandType': equippedHandType.toJson(),
     };
   }
 
+  @protected
   factory WeaponItem.fromJson(Map<String, dynamic> json) {
+    final baseData = HandItem.fromJson(json);
+
     return WeaponItem(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      description: json['description'] as String,
-      baseValue: json['baseValue'] as int,
-      iconPath: json['iconPath'] as String,
-      rarity: ItemRarity.fromJson(json['rarity'] as String),
+      id: baseData.id,
+      name: baseData.name,
+      description: baseData.description,
+      quality: baseData.quality,
+      baseValue: baseData.baseValue,
+      iconData: baseData.iconData,
       damage: json['damage'] as int,
-      attackSpeed: (json['attackSpeed'] as num?)?.toDouble() ?? 1.0,
-      critChance: (json['critChance'] as num?)?.toDouble() ?? 0.05,
-      critMultiplier: (json['critMultiplier'] as num?)?.toDouble() ?? 1.5,
-      equippedHandType: EquippedHandType.fromJson(
-        json['equippedHandType'] as String,
-      ),
     );
   }
 
-  @override
   WeaponItem copyWith({
-    String? id,
     String? name,
     String? description,
     int? baseValue,
-    String? iconPath,
-    ItemRarity? rarity,
+    HandItemQuality? quality,
+    ItemIconData? iconData,
     int? damage,
-    double? attackSpeed,
-    double? critChance,
-    double? critMultiplier,
-    EquippedHandType? equippedHandType,
   }) {
     return WeaponItem(
-      id: id ?? this.id,
+      id: this.id,
       name: name ?? this.name,
       description: description ?? this.description,
       baseValue: baseValue ?? this.baseValue,
-      iconPath: iconPath ?? this.iconPath,
-      rarity: rarity ?? this.rarity,
+      quality: quality ?? this.quality,
+      iconData: iconData ?? this.iconData,
       damage: damage ?? this.damage,
-      attackSpeed: attackSpeed ?? this.attackSpeed,
-      critChance: critChance ?? this.critChance,
-      critMultiplier: critMultiplier ?? this.critMultiplier,
-      equippedHandType: equippedHandType ?? this.equippedHandType,
     );
   }
 }

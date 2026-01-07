@@ -25,10 +25,18 @@ final class MapState {
 
   factory MapState.fromJson(Map<String, dynamic> json) {
     return MapState(
-      decorationsModified: List<String>.from(json['decorationsModified'] ?? []),
-      farmTiles: List<String>.from(json['farmTiles'] ?? []),
-      enemiesDefeated: List<String>.from(json['enemiesDefeated'] ?? []),
-      customData: Map<String, dynamic>.from(json['customData'] ?? {}),
+      decorationsModified: List<String>.from(
+        (json['decorationsModified'] ?? <String>[]) as Iterable,
+      ),
+      farmTiles: List<String>.from(
+        (json['farmTiles'] ?? <String>[]) as Iterable,
+      ),
+      enemiesDefeated: List<String>.from(
+        (json['enemiesDefeated'] ?? <String>[]) as Iterable,
+      ),
+      customData: Map<String, dynamic>.from(
+        (json['customData'] as Map<dynamic, dynamic>?) ?? {},
+      ),
     );
   }
 

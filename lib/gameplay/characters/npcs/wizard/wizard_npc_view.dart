@@ -1,14 +1,14 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_def.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_controller.dart';
+import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_def.dart';
 import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_model.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_manager.dart';
-import 'package:flutter/services.dart';
 
-class WizardNpcView extends SimpleNpc with KeyboardEventListener {
+class WizardNpcView extends SimpleNpc with PlayerControllerListener {
   bool _playerIsNearby = false;
+  PlayerController? _registeredController;
 
   final WizardNpcController _controller = WizardNpcController(
     model: WizardNpcModel(),
@@ -42,6 +42,14 @@ class WizardNpcView extends SimpleNpc with KeyboardEventListener {
           if (!_playerIsNearby) {
             _playerIsNearby = true;
 
+            // Register to receive player controller events
+            final playerController = gameRef.playerControllers?.firstOrNull;
+            if (playerController != null && _registeredController != playerController) {
+              _registeredController?.removeObserver(this);
+              _registeredController = playerController;
+              playerController.addObserver(this);
+            }
+
             _controller.onPlayerDetected(
               gameRef.player!,
               interactionRequested: false,
@@ -50,22 +58,36 @@ class WizardNpcView extends SimpleNpc with KeyboardEventListener {
         },
         notObserved: () {
           _playerIsNearby = false;
+          // Unregister when player leaves
+          if (_registeredController != null) {
+            _registeredController!.removeObserver(this);
+            _registeredController = null;
+          }
         },
       );
     }
   }
 
+  // @override
+  // bool onKeyboard(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+  //   if (_playerIsNearby &&
+  //       event is KeyDownEvent &&
+  //       event.logicalKey == KeyboardSetup.kInteractionKey) {
+  //     _controller.onPlayerDetected(gameRef.player!, interactionRequested: true);
+
+  //     return true;
+  //   }
+
+  //   return false;
+  // }
+
   @override
-  bool onKeyboard(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+  void onJoystickAction(JoystickActionEvent event) {
     if (_playerIsNearby &&
-        event is KeyDownEvent &&
-        event.logicalKey == KeyboardSetup.kInteractionKey) {
+        event.event == ActionEvent.DOWN &&
+        InputDef.isInteractionAction(event.id)) {
       _controller.onPlayerDetected(gameRef.player!, interactionRequested: true);
-
-      return true;
     }
-
-    return false;
   }
 
   void showConversation(Player player) {
@@ -78,5 +100,14 @@ class WizardNpcView extends SimpleNpc with KeyboardEventListener {
       onChangeConversation: _controller.onConversationChanged,
       onFinishConversation: _controller.onConversationFinished,
     );
+  }
+
+  @override
+  void onRemove() {
+    if (_registeredController != null) {
+      _registeredController!.removeObserver(this);
+      _registeredController = null;
+    }
+    super.onRemove();
   }
 }

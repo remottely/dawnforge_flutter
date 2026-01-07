@@ -10,12 +10,7 @@ class SunnyPlayerView<
 >
     extends DDFarmPlayerView<C, M> {
   SunnyPlayerView({required super.position, required super.model})
-    : super(
-        config: SunnyPlayerDef.viewConfig,
-        size: SunnyPlayerDef.componentSize,
-        life: SunnyPlayerDef.kLife,
-        baseSpeed: SunnyPlayerDef.kSpeed,
-      );
+    : super(config: SunnyPlayerDef.viewConfig);
 
   @override
   C createFarmController({
@@ -30,7 +25,7 @@ class SunnyPlayerView<
     required void Function(bool isRunning) onChangeRunState,
     required bool Function(double damage) onExecutePrimaryAttack,
     required bool Function(double damage) onExecuteRangedAttack,
-    required bool Function() onExecuteShovel,
+    required bool Function() onExecuteDig,
     required bool Function() onExecuteWateringCan,
     required bool Function() onExecuteSeed,
     required bool Function() onExecuteHarvest,
@@ -42,7 +37,7 @@ class SunnyPlayerView<
           onChangeRunState: onChangeRunState,
           onExecutePrimaryAttack: onExecutePrimaryAttack,
           onExecuteRangedAttack: onExecuteRangedAttack,
-          onExecuteShovel: onExecuteShovel,
+          onExecuteDig: onExecuteDig,
           onExecuteWateringCan: onExecuteWateringCan,
           onExecuteSeed: onExecuteSeed,
           onExecuteHarvest: onExecuteHarvest,

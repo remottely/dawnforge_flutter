@@ -1,0 +1,14 @@
+{ "columns":63,
+ "image":"SmallBurg_village_pack_v3.18.1_commercial\/assets\/tileset_v2\/terrain\/smallburg_terrain_spring.png",
+ "imageheight":399,
+ "imagewidth":1008,
+ "margin":0,
+ "name":"smallburg_terrain_spring",
+ "spacing":0,
+ "tilecount":1512,
+ "tiledversion":"1.11.2",
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset",
+ "version":"1.10"
+}

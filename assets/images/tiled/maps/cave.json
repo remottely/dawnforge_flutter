@@ -271,72 +271,6 @@
                 }, 
                 {
                  "height":16,
-                 "id":24,
-                 "name":"imp_enemy",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":487.242,
-                 "y":464
-                }, 
-                {
-                 "height":16,
-                 "id":25,
-                 "name":"goblin_enemy",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":464,
-                 "y":465.004
-                }, 
-                {
-                 "height":16,
-                 "id":26,
-                 "name":"imp_enemy",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":327.242,
-                 "y":464
-                }, 
-                {
-                 "height":16,
-                 "id":27,
-                 "name":"goblin_enemy",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":304,
-                 "y":465.004
-                }, 
-                {
-                 "height":16,
-                 "id":28,
-                 "name":"imp_enemy",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":279.242,
-                 "y":352
-                }, 
-                {
-                 "height":16,
-                 "id":29,
-                 "name":"goblin_enemy",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":256,
-                 "y":353.004
-                }, 
-                {
-                 "height":16,
                  "id":30,
                  "name":"imp_enemy",
                  "rotation":0,
@@ -365,8 +299,8 @@
                  "type":"",
                  "visible":true,
                  "width":16,
-                 "x":464,
-                 "y":384
+                 "x":520.333333333333,
+                 "y":377
                 }, 
                 {
                  "height":16,
@@ -420,8 +354,8 @@
                  "type":"",
                  "visible":true,
                  "width":16,
-                 "x":432,
-                 "y":464
+                 "x":430.333333333333,
+                 "y":478
                 }, 
                 {
                  "height":16,
@@ -431,8 +365,8 @@
                  "type":"",
                  "visible":true,
                  "width":16,
-                 "x":352,
-                 "y":464
+                 "x":354.333333333333,
+                 "y":474.333333333333
                 }],
          "opacity":1,
          "type":"objectgroup",

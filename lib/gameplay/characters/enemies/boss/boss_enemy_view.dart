@@ -180,7 +180,7 @@ class BossEnemyView
         ),
       );
       AudioManager.instance.playBackgroundMusic(
-        AudioDef.kMusicBossBattleBackgroundAsset,
+        AudioDef.bgMusicCaveBoss,
       );
     });
   }

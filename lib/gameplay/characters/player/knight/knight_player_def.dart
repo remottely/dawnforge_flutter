@@ -4,7 +4,6 @@ import 'package:darkness_dungeon/gameplay/core/modules/game/lightning_constants.
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
-import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_def.dart';
 
 final class KnightPlayerDef {
   KnightPlayerDef._();
@@ -32,7 +31,7 @@ final class KnightPlayerDef {
 
   static const int kFireballAttackStaminaCost = 10;
 
-  static const int kShovelStaminaCost = 5;
+  static const int kDigStaminaCost = 5;
 
   static const int kWateringCanStaminaCost = 5;
 
@@ -50,6 +49,15 @@ final class KnightPlayerDef {
     hitboxStartPositionY: 8.0,
   );
 
+  static final Future<SpriteAnimation> loadAnimationIdleRight =
+      SpriteAnimation.load(
+        'gameplay/characters/player/knight/knight_player_idle_right_6.png',
+        SpriteAnimationConfigHelper.createStandardData(
+          amount: 6,
+          textureSize: KnightPlayerDef.textureSize,
+        ),
+      );
+
   static final SimpleDirectionAnimation animationWalkDirectional =
       SimpleDirectionAnimation(
         idleLeft: SpriteAnimation.load(
@@ -59,7 +67,7 @@ final class KnightPlayerDef {
             textureSize: textureSize,
           ),
         ),
-        idleRight: UISpriteAnimationsDef.loadAnimationKnightPlayerIdleRight(),
+        idleRight: loadAnimationIdleRight,
         runLeft: SpriteAnimation.load(
           'gameplay/characters/player/knight/knight_player_walking_left_6.png',
           SpriteAnimationConfigHelper.createStandardData(

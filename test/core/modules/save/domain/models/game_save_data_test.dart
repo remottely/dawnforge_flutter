@@ -7,7 +7,6 @@ void main() {
       final data = GameSaveData.newGame(
         playerType: 'knight',
         playerName: 'Hero',
-        farmLayout: 'standard',
       );
 
       expect(data.version, GameSaveData.kCurrentVersion);

@@ -3,88 +3,346 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.64.34+1
+version: 1.96.5+1
 
 environment:
-  sdk: ^3.9.2
-  flutter: ^3.35.0
+  sdk: ^3.8.1
+  flutter: ^3.32.5
 
 dependencies:
-  equatable: ^2.0.7
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
 
-  bonfire: ^3.15.1
+  # Game Framework
+  bonfire: ^3.16.1
   flame_audio: ^2.10.2
   flame_splash_screen: ^0.3.1
+
+  # Utilities
+  equatable: ^2.0.7
   url_launcher: ^6.3.1
-  win32: ^5.10.0
   shared_preferences: ^2.3.4
+
+  # Dependency Injection
+  get_it: ^9.2.0
+
+  # Platform Specific
+  win32: ^5.10.0
   web: ^1.1.0
 
+  flame: any
 dev_dependencies:
-  test: any
   flutter_test:
     sdk: flutter
+  test: any
+
+  # Linting
   flutter_lints: ^5.0.0
-  very_good_analysis: ^10.0.0
+  very_good_analysis: ^9.0.0
+
+  # Testing
+  mocktail: ^1.0.4
 
 flutter:
   uses-material-design: true
 
   assets:
-    - assets/
-    - assets/images/
-    # - assets/images/items/
-    - assets/images/gameplay/characters/emotes/
-    - assets/images/gameplay/characters/enemies/
-    - assets/images/gameplay/characters/enemies/goblin/
-    - assets/images/gameplay/characters/enemies/imp/
-    - assets/images/gameplay/characters/enemies/mini_boss/
-    - assets/images/gameplay/characters/enemies/boss/
-    - assets/images/gameplay/characters/npcs/
-    - assets/images/gameplay/characters/player/
-    - assets/images/gameplay/characters/player/knight/
-    - assets/images/gameplay/characters/shared/
-    - assets/images/gameplay/characters/weapons/
-    - assets/images/gameplay/decorations/
-    # - assets/images/gameplay/farmable/
-    - assets/images/ui/input/
-    - assets/images/hud/
-    - assets/images/joystick/
-    - assets/images/tiled/
-    - assets/images/tiled/tilesets/
-    - assets/audio/music/
-    - assets/audio/sfx/
-    - assets/audio/ui/
-    - assets/audio/voice/
-    - assets/l10n/
-    - assets/crops/
-    - assets/items/
-    - assets/images/gameplay/farm/crops/strawberry/
-    - assets/images/gameplay/farm/soil/
-    - assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/
-    - assets/images/SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/ATTACK/
-    - assets/images/SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/AXE/
-    - assets/images/SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/CAUGHT/
-    - assets/images/SunnysideWorld/Sprites/SUNNYSIDE_WORLD_CHARACTERS_PARTS_V0.3.1/DIG/
-    - assets/images/gameplay/farm/test/
-    - assets/images/new/Player/attack/
-    - assets/images/new/Player/axe/
-    - assets/images/new/Player/death/
-    - assets/images/new/Player/idle/
-    - assets/images/new/Player/pickaxe/
-    - assets/images/new/Player/shovel/
-    - assets/images/new/Player/walk/
-    - assets/images/new/Player/water/
-    # Final Game Assets
-    - assets/images/tiled/maps/
-    - assets/images/tiled/project/
-    - assets/images/tiled/Modern_Farm_v1.2/tilesets/
-    - assets/images/tiled/Modern_Farm_v1.2/Crops_Growth/
-    - assets/images/tiled/Modern_Farm_v1.2/Characters/
+    # === DATABASES ===
+    # - assets/database/crops_database.json
+    # - assets/database/soil_database.json
+    # - assets/database/items/weapons.json
+    # - assets/database/items/tools.json
+    # - assets/database/items/consumables.json
+    # - assets/database/items/materials.json
+    # - assets/database/items/seeds.json
+    # - assets/database/items_icons_database.json
+
+    # === LOCALIZATION ===
+    - assets/l10n/en.json
+    - assets/l10n/pt.json
+
+    # === DECORATIONS ===
+    - assets/images/gameplay/decorations/barrel_decoration_1.png
+    - assets/images/gameplay/decorations/chest_decoration_8.png
+    - assets/images/gameplay/decorations/door_decoration_locked_1.png
+    - assets/images/gameplay/decorations/door_decoration_opening_14.png
+    - assets/images/gameplay/decorations/door_key_decoration_1.png
+    - assets/images/gameplay/decorations/life_potion_decoration_1.png
+    - assets/images/gameplay/decorations/spike_trap_decoration_10.png
+    - assets/images/gameplay/decorations/torch_decoration_6.png
+
+    # === EMOTES ===
+    - assets/images/gameplay/characters/emotes/exclamation_emote_8.png
+    - assets/images/gameplay/characters/emotes/question_emote_8.png
+
+    # === ENEMIES ===
+    # Boss
+    - assets/images/gameplay/characters/enemies/boss/boss_enemy_idle_left_4.png
+    - assets/images/gameplay/characters/enemies/boss/boss_enemy_idle_right_4.png
+    - assets/images/gameplay/characters/enemies/boss/boss_enemy_run_left_4.png
+    - assets/images/gameplay/characters/enemies/boss/boss_enemy_run_right_4.png
+    - assets/images/gameplay/characters/enemies/enemy_primary_attack_right_3.png
+
+    # Goblin
+    - assets/images/gameplay/characters/enemies/goblin/goblin_enemy_idle_left_6.png
+    - assets/images/gameplay/characters/enemies/goblin/goblin_enemy_idle_right_6.png
+    - assets/images/gameplay/characters/enemies/goblin/goblin_enemy_run_left_6.png
+    - assets/images/gameplay/characters/enemies/goblin/goblin_enemy_run_right_6.png
+
+    # Imp
+    - assets/images/gameplay/characters/enemies/imp/imp_enemy_idle_left_4.png
+    - assets/images/gameplay/characters/enemies/imp/imp_enemy_idle_right_4.png
+    - assets/images/gameplay/characters/enemies/imp/imp_enemy_run_left_4.png
+    - assets/images/gameplay/characters/enemies/imp/imp_enemy_run_right_4.png
+
+    # Mini Boss
+    - assets/images/gameplay/characters/enemies/mini_boss/mini_boss_enemy_idle_left_4.png
+    - assets/images/gameplay/characters/enemies/mini_boss/mini_boss_enemy_idle_right_4.png
+    - assets/images/gameplay/characters/enemies/mini_boss/mini_boss_enemy_run_left_4.png
+    - assets/images/gameplay/characters/enemies/mini_boss/mini_boss_enemy_run_right_4.png
+
+    # === NPCs ===
+    - assets/images/gameplay/characters/npcs/kid_npc_idle_left_4.png
+    - assets/images/gameplay/characters/npcs/wizard_npc_idle_left_4.png
+
+    # === PLAYER - Knight ===
+    - assets/images/gameplay/characters/player/knight/knight_player_idle_left_6.png
+    - assets/images/gameplay/characters/player/knight/knight_player_idle_right_6.png
+    - assets/images/gameplay/characters/player/knight/knight_player_walking_left_6.png
+    - assets/images/gameplay/characters/player/knight/knight_player_walking_right_6.png
+    - assets/images/gameplay/characters/player/player_crypt_1.png
+    - assets/images/gameplay/characters/player/player_primary_attack_right_3.png
+    - assets/images/gameplay/characters/player/shield_defense_right_12.png
+
+    # === PLAYER - New Sprites (48x48) ===
+    # Attack
+    - assets/images/new/Player/attack/player_attack_left_48x48_4.png
+    - assets/images/new/Player/attack/player_attack_right_48x48_4.png
+
+    # Idle
+    - assets/images/new/Player/idle/player_idle_down_48x48_6.png
+    - assets/images/new/Player/idle/player_idle_left_48x48_6.png
+    - assets/images/new/Player/idle/player_idle_right_48x48_6.png
+    - assets/images/new/Player/idle/player_idle_up_48x48_6.png
+
+    # Shovel
+    - assets/images/new/Player/shovel/player_shovel_down_48x48_2.png
+    - assets/images/new/Player/shovel/player_shovel_left_48x48_2.png
+    - assets/images/new/Player/shovel/player_shovel_right_48x48_2.png
+    - assets/images/new/Player/shovel/player_shovel_up_48x48_2.png
+
+    # Walk
+    - assets/images/new/Player/walk/player_walk_down_48x48_6.png
+    - assets/images/new/Player/walk/player_walk_left_48x48_6.png
+    - assets/images/new/Player/walk/player_walk_right_48x48_6.png
+    - assets/images/new/Player/walk/player_walk_up_48x48_6.png
+
+    # Water
+    - assets/images/new/Player/water/player_water_down_48x48_2.png
+    - assets/images/new/Player/water/player_water_left_48x48_2.png
+    - assets/images/new/Player/water/player_water_right_48x48_2.png
+    - assets/images/new/Player/water/player_water_up_48x48_2.png
+
+    # === PLAYER - SunnysideWorld Farm Character ===
+    - assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_left_strip13.png
+    - assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_strip13.png
+    - assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_left_strip8.png
+    - assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_left_strip8.png
+    - assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_strip8.png
+    - assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_strip8.png
+    - assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_idle_left_strip9.png
+    - assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_idle_strip9.png
+    - assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_run_left_strip8.png
+    - assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_run_strip8.png
+    - assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_sword_left_strip10.png
+    - assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_sword_strip10.png
+    - assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_walking_left_strip8.png
+    - assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_walking_strip8.png
+    - assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_watering_left_strip5.png
+    - assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_watering_strip5.png
+
+    # === PLAYER - Farmer (Modern Farm) ===
+    - assets/images/tiled/Modern_Farm_v1.2/Characters/Farmer_1_16x16.png
+
+    # === SHARED CHARACTER EFFECTS ===
+    - assets/images/gameplay/characters/shared/character_explosion_right_7.png
+    - assets/images/gameplay/characters/shared/character_explosion_smoke_right_5.png
+    - assets/images/gameplay/characters/shared/character_fireball_attack_right_3.png
+    - assets/images/gameplay/characters/shared/character_fireball_explosion_right_6.png
+
+    # === FARM - Soil States ===
+    # - assets/images/gameplay/farm/soil/untilled.png
+    # - assets/images/gameplay/farm/soil/tilled.png
+    # - assets/images/gameplay/farm/soil/fertilized.png
+    # - assets/images/gameplay/farm/soil/watered.png
+
+    # === TILED - Tilesets ===
+    - assets/images/tiled/tilesets/TX Plant.png
+    - assets/images/tiled/tilesets/TX Props.png
+    - assets/images/tiled/tilesets/TX Shadow Plant.png
+    - assets/images/tiled/tilesets/TX Shadow.png
+    - assets/images/tiled/tilesets/TX Struct.png
+    - assets/images/tiled/tilesets/TX Tileset Grass.png
+    - assets/images/tiled/tilesets/TX Tileset Stone Ground.png
+    - assets/images/tiled/tilesets/TX Tileset Wall.png
+    - assets/images/new/Tilesets/Hills.png
+    - assets/images/tiled/tile_set.png
+
+    # === TILED - Tileset JSON Definitions ===
+    - assets/images/tiled/1_Terrains_16x16.json
+    - assets/images/tiled/2_Fences_16x16.json
+    - assets/images/tiled/3_Props_and_Buildings_16x16.json
+    - assets/images/tiled/4_Crops_16x16.json
+    - assets/images/tiled/5_Fruit_Trees_16x16.json
+    - assets/images/tiled/6_Trees_16x16.json
+    - assets/images/tiled/SunnysideWorldTileset.json
+    - assets/images/tiled/tileSet.json # TODO(Kevin): remove it
+    - assets/images/tiled/Hills.json
+
+    # TODO(Kevin): verify if need to import these assets
+    - assets/images/tiled/Modern_Farm_v1.2/tilesets/1_Terrains_16x16.png
+    - assets/images/tiled/Modern_Farm_v1.2/tilesets/2_Fences_16x16.png
+    - assets/images/tiled/Modern_Farm_v1.2/tilesets/3_Props_and_Buildings_16x16.png
+    - assets/images/tiled/Modern_Farm_v1.2/tilesets/4_Crops_16x16.png
+    - assets/images/tiled/Modern_Farm_v1.2/tilesets/5_Fruit_Trees_16x16.png
+    - assets/images/tiled/Modern_Farm_v1.2/tilesets/6_Trees_16x16.png
+
+    # === TILED - Maps (Individual Files) ===
+    - assets/images/tiled/boss_test.json
+    - assets/images/tiled/combat_test.json
+    - assets/images/tiled/conversation_test.json
+    - assets/images/tiled/dungeon_1.json
+    - assets/images/tiled/farm_test.json
+    - assets/images/tiled/forest_1.json
+    - assets/images/tiled/lake_1.json
+    - assets/images/tiled/temple_1.json
+
+    # === TILED - Maps (Folder - Loaded Dynamically) ===
+    - assets/images/tiled/maps/ #TODO(Kevin): put manually all maps here
+    - assets/images/tiled/small_burg/maps/
+
+    # === TILED - Icons ===
+    - assets/images/tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png
+
+    # === HUD / UI ===
+    - assets/images/hud/health_ui.png
+    - assets/images/ui/input/keyboard_tip.png
+    - assets/images/hud/commerce_marketplace_stall_open.png # TODO(Kevin): remove this test asset
+
+    # === JOYSTICK ===
+    - assets/images/joystick/joystick_background.png
+    - assets/images/joystick/joystick_knob.png
+    - assets/images/joystick/joystick_melee_attack_default.png
+    - assets/images/joystick/joystick_melee_attack_pressed.png
+    - assets/images/joystick/joystick_ranged_attack_default.png
+    - assets/images/joystick/joystick_ranged_attack_pressed.png
+
+    # === AUDIO - Music ===
+    # - assets/audio/music/Keys Of Moon - Enchanted.mp3 # TODO(Kevin): remove it
+    # - assets/audio/music/music_boss_battle_background.mp3 # TODO(Kevin): remove it
+    # - assets/audio/music/music_gameplay_background.mp3 # TODO(Kevin): remove it
+    # - assets/audio/music/music_ro1_death_hex_background.mp3 # TODO(Kevin): remove it
+    # - assets/audio/music/music_ro1_letters_background.mp3 # TODO(Kevin): remove it
+
+    # Credits:
+    # 'Phase Shift' by Scott Buckley - released under CC-BY 4.0. www.scottbuckley.com.au
+    - assets/audio/bg/music/farm - PhaseShift.mp3
+
+    # Credits:
+    # Song: Clarion
+    # Composer: Scott Buckley
+    # Website: https://youtube.com/user/musicbyscottb
+    # License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
+    # Music powered by BreakingCopyright: https://breakingcopyright.com
+    - assets/audio/bg/music/town - Scott Buckley - Clarion.mp3
+
+    # Credits:
+    # Song: Rounding
+    # Composer: Savfk
+    # Website: https://youtube.com/savfkmusic
+    # License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
+    # Music powered by BreakingCopyright: https://breakingcopyright.com
+    - assets/audio/bg/music/forest - Savfk - Rounding.mp3
+
+    # Credits:
+    # Song: Antigone
+    # Composer: Justin Allan Arnold
+    # Website: https://soundcloud.com/justin-allan-arnold
+    # License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
+    # Music powered by BreakingCopyright: https://breakingcopyright.com
+    - assets/audio/bg/music/lake - Justin Allan Arnold - Antigone.mp3
+
+    # Credits:
+    # Song: Prehistory
+    # Composer: Glitch
+    # Website: https://www.youtube.com/playlist
+    # License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
+    # Music powered by BreakingCopyright: https://breakingcopyright.com
+    - assets/audio/bg/music/beach - Glitch - Prehistory.mp3
+
+    # Credits:
+    # 'Rites of Passage' by Scott Buckley - released under CC-BY 4.0. www.scottbuckley.com.au
+    - assets/audio/bg/music/cave_boss - RitesOfPassage.mp3
+
+    # === AUDIO - SFX ===
+    - assets/audio/sfx/sfx_character_fireball_attack.wav
+    - assets/audio/sfx/sfx_character_fireball_explosion.wav
+    - assets/audio/sfx/sfx_conversation_interaction.wav
+    - assets/audio/sfx/sfx_enemy_attack.mp3
+    - assets/audio/sfx/sfx_player_attack.mp3
+
+    # TODO
+    - assets/images/ui/game_over.png
+    - assets/images/tiled/sv/maps/sv_farm.json
+    - assets/images/tiled/sv/maps/sv_town.json
+    - assets/images/tiled/f/maps/f_1.json
+
+    # ------------------------ DEMO ------------------------------------
+    # SmallBurg Assets
+    # === TILED - SmallBurg Tileset JSON Definitions ===
+    # - assets/images/tiled/smallburg_winter_terrain.json
+    - assets/images/tiled/treesn_bushes_seasons.json
+    - assets/images/tiled/SmallBurg_outside_assets.json
+    - assets/images/tiled/smallburg_terrain_spring.json
+
+    # === TILED - SmallBurg Tileset (used by small_burg maps) ===
+    # - assets/images/tiled/SmallBurg_village_pack_v3.18.1_commercial/assets/tileset_v2/terrain/smallburg_winter_terrain.png
+    - assets/images/tiled/SmallBurg_village_pack_v3.18.1_commercial/assets/tileset_v2/terrain/smallburg_terrain_spring.png
+    - assets/images/tiled/SmallBurg_village_pack_v3.18.1_commercial/assets/tileset_v2/treesn_bushes_seasons.png
+    - assets/images/tiled/SmallBurg_village_pack_v3.18.1_commercial/assets/tileset_v2/SmallBurg_outside_assets.png
+
+    - assets/images/tiled/small_burg/maps/sb_farm.json # TODO(Kevin): remove it from all project
+    - assets/images/tiled/maps/farm_map.json
+    - assets/images/tiled/small_burg/texture_atlas_1.png
+    - assets/images/tiled/texture_atlas.json
+
+    # # - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_idle_full_light_demo.png
+    # - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_idle_full_light_demo_2.png
+    # - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_idle_full_light_demo_4.png
+    # - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_run_full_light_with_dust_specs_demo.png
+    # - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_tools_hoe_full_light_demo.png
+    # - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_tools_shovel_full_light_demo.png
+    # - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_tools_watercan_full_light_demo.png
+    # - assets/images/tiled/SmallBurg_farm_pack_v3.18/assets/demo/character_walk_full_light_demo.png
+
+    - assets/images/tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/idle/character_body/character_idle_body_light_2.png
+    - assets/images/tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/place_seed/character_body/character_place_seed_body_light_6.png
+    - assets/images/tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/run/character_body/character_run_body_light_with_dust_specs_4.png
+    - assets/images/tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/tools_axe/character_body/character_tools_axe_body_light_7.png
+    - assets/images/tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/tools_hoe/character_body/character_tools_hoe_body_light_7.png
+    - assets/images/tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/tools_pickaxe/character_body/character_tools_pickaxe_body_light_7.png
+    - assets/images/tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/tools_shovel/character_body/character_tools_shovel_body_light_6.png
+    - assets/images/tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/tools_watercan/character_body/character_tools_watercan_body_light_10.png
+    - assets/images/tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/walk/character_body/character_walk_body_light_6.png
+    - assets/images/tiled/Smallburg_dungeon_pack_v2.13/edited_assets/characters/slash_1/character_demo/character_slash_1_light_full_6.png
+    - assets/images/tiled/Smallburg_dungeon_pack_v2.13/edited_assets/characters/slash_2/character_demo/character_slash_2_light_full_6.png
+    - assets/images/tiled/Smallburg_dungeon_pack_v2.13/edited_assets/characters/super_slash/character_demo/character_super_slash_light_full_6.png
+    - assets/images/tiled/Smallburg_dungeon_pack_v2.13/assets/enemies/slimes/red/attack/slime_red_attack.png 
+    - assets/images/tiled/Smallburg_dungeon_pack_v2.13/assets/enemies/skeletons/skeleton/idle/skeleton_idle_2.png
+    - assets/images/tiled/Smallburg_dungeon_pack_v2.13/assets/enemies/skeletons/skeleton/walk/skeleton_walk_4.png
+    - assets/images/tiled/Smallburg_dungeon_pack_v2.13/assets/enemies/skeletons/skeleton/attack/skeleton_attack.png
 
   fonts:
     - family: Normal

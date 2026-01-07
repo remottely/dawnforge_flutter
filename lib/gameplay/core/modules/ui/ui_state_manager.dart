@@ -69,7 +69,7 @@ final class UIStateManager {
             ),
             const SizedBox(height: DDDesignSystem.kSpacingExtraLarge),
             DDButton.elevated(
-              labelText: "OK",
+              labelText: 'OK',
               onPressed: () => _navigateToMainMenu(context),
             ),
           ],
@@ -95,7 +95,7 @@ final class UIStateManager {
       onChangeTalk: onChangeConversation,
       onFinish: onFinishConversation,
       onClose: onCloseConversation,
-      logicalKeyboardKeysToNext: [KeyboardSetup.kPrimaryActionKey],
+      logicalKeyboardKeysToNext: [KeyboardSetup.kInteractionKey],
     );
   }
 

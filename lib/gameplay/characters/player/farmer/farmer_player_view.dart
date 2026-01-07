@@ -10,12 +10,7 @@ class FarmerPlayerView<
 >
     extends DDFarmPlayerView<C, M> {
   FarmerPlayerView({required super.position, required super.model})
-    : super(
-        config: FarmerPlayerDef.viewConfig,
-        size: FarmerPlayerDef.componentSize,
-        life: FarmerPlayerDef.kLife,
-        baseSpeed: FarmerPlayerDef.kSpeed,
-      );
+    : super(config: FarmerPlayerDef.viewConfig);
 
   @override
   C createFarmController({
@@ -30,7 +25,7 @@ class FarmerPlayerView<
     required void Function(bool isRunning) onChangeRunState,
     required bool Function(double damage) onExecutePrimaryAttack,
     required bool Function(double damage) onExecuteRangedAttack,
-    required bool Function() onExecuteShovel,
+    required bool Function() onExecuteDig,
     required bool Function() onExecuteWateringCan,
     required bool Function() onExecuteSeed,
     required bool Function() onExecuteHarvest,
@@ -42,7 +37,7 @@ class FarmerPlayerView<
           onChangeRunState: onChangeRunState,
           onExecutePrimaryAttack: onExecutePrimaryAttack,
           onExecuteRangedAttack: onExecuteRangedAttack,
-          onExecuteShovel: onExecuteShovel,
+          onExecuteDig: onExecuteDig,
           onExecuteWateringCan: onExecuteWateringCan,
           onExecuteSeed: onExecuteSeed,
           onExecuteHarvest: onExecuteHarvest,

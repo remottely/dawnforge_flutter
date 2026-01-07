@@ -1,8 +1,13 @@
+import 'dart:developer' as developer;
+
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/inventory/inventory_hud_def.dart';
-import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
+import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
+import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
+import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/data/item_icon_data.dart';
+import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 import 'package:flutter/material.dart';
 
 class InventoryHUDView extends InterfaceComponent {
@@ -13,59 +18,85 @@ class InventoryHUDView extends InterfaceComponent {
           InventoryHUDDef.kPadding * 2 +
               (InventoryHUDDef.kSlotSize * InventoryHUDDef.kSlotsPerRow) +
               (InventoryHUDDef.kSpacing * (InventoryHUDDef.kSlotsPerRow - 1)),
-          400,
+          64, // Reduced height since equipment slots are removed
         ),
-        position: Vector2(10, 100),
+        position: Vector2.zero(), // Will be set in onLoad
       );
 
-  bool _isVisible = false;
+  final Map<String, Sprite> _spriteCache = {};
+  bool _isVisible = true;
   bool get isVisible => _isVisible;
   void _show() => _isVisible = true;
   void _hide() => _isVisible = false;
   void toggleIsVisible() => _isVisible ? _hide() : _show();
 
   @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+    _updatePosition();
+  }
+
+  @override
+  void onGameResize(Vector2 size) {
+    super.onGameResize(size);
+    _updatePosition();
+  }
+
+  void _updatePosition() {
+    // Guard: only update position if game is mounted AND has valid size
+    if (!hasGameRef) {
+      developer.log(
+        '[InventoryHUDView] Cannot update position: gameRef not available',
+      );
+      return;
+    }
+
+    final gameSize = gameRef.size;
+
+    // Guard: gameRef.size can be (0,0) during initialization, which causes NaN/Infinity errors
+    if (gameSize.x <= 0 || gameSize.y <= 0) {
+      developer.log(
+        '[InventoryHUDView] Cannot update position: invalid game size $gameSize',
+      );
+      return;
+    }
+
+    try {
+      // Center horizontally at bottom of screen
+      position = Vector2(
+        (gameSize.x - size.x) / 2, // Center horizontally
+        gameSize.y - size.y - 20, // Bottom with 20px margin
+      );
+      developer.log(
+        '[InventoryHUDView] Position updated to $position (gameSize: $gameSize)',
+      );
+    } catch (e, stack) {
+      developer.log(
+        '[InventoryHUDView] Error updating position: $e',
+        error: e,
+        stackTrace: stack,
+      );
+    }
+  }
+
+  @override
   void render(Canvas canvas) {
     if (!_isVisible) return;
 
     final bgRect = Rect.fromLTWH(0, 0, size.x, size.y);
-    final bgPaint = Paint()
-      ..color = Colors.black.withValues(alpha: 0.8)
-      ..style = PaintingStyle.fill;
-    canvas.drawRect(bgRect, bgPaint);
-
     final borderPaint = Paint()
       ..color = Colors.white.withValues(alpha: 0.5)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
     canvas.drawRect(bgRect, borderPaint);
 
-    _drawText(
-      canvas,
-      'INVENTÁRIO (I para fechar)',
-      Offset(InventoryHUDDef.kPadding, InventoryHUDDef.kPadding),
-      fontSize: 14,
-    );
-
     _drawInventorySlots(canvas);
-
-    _drawEquipmentSlots(canvas);
 
     super.render(canvas);
   }
 
   void _drawInventorySlots(Canvas canvas) {
-    final manager = InventoryManager.instance;
-    double startY = InventoryHUDDef.kPadding + 30;
-
-    _drawText(
-      canvas,
-      'Inventário (${manager.usedSlots}/${manager.maxSlots}):',
-      Offset(InventoryHUDDef.kPadding, startY),
-      fontSize: 12,
-    );
-
-    startY += 20;
+    final manager = getIt<InventoryManager>();
 
     for (int i = 0; i < manager.maxSlots; i++) {
       final row = i ~/ InventoryHUDDef.kSlotsPerRow;
@@ -75,67 +106,15 @@ class InventoryHUDView extends InterfaceComponent {
           InventoryHUDDef.kPadding +
           (col * (InventoryHUDDef.kSlotSize + InventoryHUDDef.kSpacing));
       final y =
-          startY +
+          // startY +
+          InventoryHUDDef.kPadding +
           (row * (InventoryHUDDef.kSlotSize + InventoryHUDDef.kSpacing));
       final slot = manager.getSlotByIndex(i);
-      _drawSlot(canvas, Offset(x, y), slot?.item?.name, slot?.quantity);
+      _drawSlot(canvas, Offset(x, y), slot?.item, slot?.quantity);
     }
   }
 
-  void _drawEquipmentSlots(Canvas canvas) {
-    final manager = EquipmentManager.instance;
-    double startY = InventoryHUDDef.kPadding + 30 + 200;
-
-    _drawText(
-      canvas,
-      'Equipment:',
-      Offset(InventoryHUDDef.kPadding, startY),
-      fontSize: 12,
-    );
-
-    startY += 32;
-
-    final slots = [
-      EquipmentSlotType.weapon,
-      EquipmentSlotType.offhand,
-      EquipmentSlotType.helmet,
-      EquipmentSlotType.chest,
-      EquipmentSlotType.legs,
-      EquipmentSlotType.boots,
-    ];
-
-    for (int i = 0; i < slots.length; i++) {
-      final slotType = slots[i];
-      final col = i % 3;
-      final row = i ~/ 3;
-
-      final x =
-          InventoryHUDDef.kPadding +
-          (col * (InventoryHUDDef.kSlotSize + 10 + 60));
-      final y =
-          startY +
-          (row * (InventoryHUDDef.kSlotSize + InventoryHUDDef.kSpacing + 10));
-
-      final item = manager.getEquippedItem(slotType);
-
-      _drawText(
-        canvas,
-        slotType.name.toUpperCase(),
-        Offset(x, y - 12),
-        fontSize: 8,
-        color: Colors.yellow,
-      );
-
-      _drawSlot(canvas, Offset(x, y), item?.name, item != null ? 1 : null);
-    }
-  }
-
-  void _drawSlot(
-    Canvas canvas,
-    Offset position,
-    String? itemName,
-    int? quantity,
-  ) {
+  void _drawSlot(Canvas canvas, Offset position, HandItem? item, int? quantity) {
     final slotRect = Rect.fromLTWH(
       position.dx,
       position.dy,
@@ -143,10 +122,21 @@ class InventoryHUDView extends InterfaceComponent {
       InventoryHUDDef.kSlotSize,
     );
 
+    // Check if item is equipped
+    Color slotColor = item != null
+        ? Colors.blue.withValues(alpha: 0.3)
+        : Colors.grey.withValues(alpha: 0.2);
+
+    if (item != null) {
+      final equippedItem = getIt<EquipmentManager>().getEquippedItem();
+      final isEquipped = equippedItem?.id == item.id;
+      if (isEquipped) {
+        slotColor = Colors.red.withValues(alpha: 0.5);
+      }
+    }
+
     final slotPaint = Paint()
-      ..color = itemName != null
-          ? Colors.blue.withValues(alpha: 0.3)
-          : Colors.grey.withValues(alpha: 0.2)
+      ..color = slotColor
       ..style = PaintingStyle.fill;
     canvas.drawRect(slotRect, slotPaint);
 
@@ -156,14 +146,42 @@ class InventoryHUDView extends InterfaceComponent {
       ..strokeWidth = 1;
     canvas.drawRect(slotRect, borderPaint);
 
-    if (itemName != null) {
-      final abbreviation = _abbreviateItemName(itemName);
-      _drawText(
-        canvas,
-        abbreviation,
-        Offset(position.dx + 4, position.dy + 8),
-        fontSize: 10,
-      );
+    if (item != null) {
+      final iconData = item.iconData;
+
+      if (iconData != null) {
+        final cacheKey =
+            '${iconData.spritesheetPath}_${iconData.spriteRowIndex}_${iconData.spriteColumnIndex}';
+        final cachedSprite = _spriteCache[cacheKey];
+
+        if (cachedSprite != null) {
+          cachedSprite.render(
+            canvas,
+            position: Vector2(position.dx + 4, position.dy + 4),
+            size: Vector2(
+              InventoryHUDDef.kSlotSize - 8,
+              InventoryHUDDef.kSlotSize - 8,
+            ),
+          );
+        } else {
+          _loadAndCacheSprite(cacheKey, iconData);
+          final abbreviation = _abbreviateItemName(item.name);
+          _drawText(
+            canvas,
+            abbreviation,
+            Offset(position.dx + 4, position.dy + 8),
+            fontSize: 10,
+          );
+        }
+      } else {
+        final abbreviation = _abbreviateItemName(item.name);
+        _drawText(
+          canvas,
+          abbreviation,
+          Offset(position.dx + 4, position.dy + 8),
+          fontSize: 10,
+        );
+      }
 
       if (quantity != null && quantity > 1) {
         _drawText(
@@ -175,6 +193,21 @@ class InventoryHUDView extends InterfaceComponent {
         );
       }
     }
+  }
+
+  void _loadAndCacheSprite(String cacheKey, ItemIconData? iconData) {
+    SpriteAnimationConfigHelper.loadSpriteFromTextureAtlasModernFarm(
+      assetPath: '${iconData?.spritesheetPath}',
+      spriteSize: Vector2(
+        iconData?.spriteWidth.toDouble() ?? 0,
+        iconData?.spriteHeight.toDouble() ?? 0,
+      ),
+      frameIndex: iconData?.spriteColumnIndex ?? 0,
+      rowIndex: iconData?.spriteRowIndex ?? 0,
+      skipFirstFrames: 0,
+    ).then((sprite) {
+      _spriteCache[cacheKey] = sprite;
+    });
   }
 
   String _abbreviateItemName(String name) {

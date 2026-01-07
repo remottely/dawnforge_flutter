@@ -3,7 +3,6 @@ import 'package:darkness_dungeon/gameplay/characters/character_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
-import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_def.dart';
 
 final class MiniBossEnemyDef {
   MiniBossEnemyDef._();
@@ -27,6 +26,15 @@ final class MiniBossEnemyDef {
   );
   static final Vector2 componentSize = textureSize;
 
+  static Future<SpriteAnimation>
+  loadAnimationIdleRight() => SpriteAnimation.load(
+    'gameplay/characters/enemies/mini_boss/mini_boss_enemy_idle_right_4.png',
+    SpriteAnimationConfigHelper.createStandardData(
+      amount: 4,
+      textureSize: MiniBossEnemyDef.textureSize,
+    ),
+  );
+
   static SimpleDirectionAnimation createAnimationWalkDirectional() {
     return SimpleDirectionAnimation(
       idleLeft: SpriteAnimation.load(
@@ -36,7 +44,7 @@ final class MiniBossEnemyDef {
           textureSize: textureSize,
         ),
       ),
-      idleRight: UISpriteAnimationsDef.loadAnimationMiniBossEnemyIdleRight(),
+      idleRight: loadAnimationIdleRight(),
       runLeft: SpriteAnimation.load(
         'gameplay/characters/enemies/mini_boss/mini_boss_enemy_run_left_4.png',
         SpriteAnimationConfigHelper.createStandardData(

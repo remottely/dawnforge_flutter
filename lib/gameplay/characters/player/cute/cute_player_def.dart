@@ -7,14 +7,9 @@ import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_
 import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_constants.dart';
-import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_def.dart';
 
 final class CutePlayerDef {
   CutePlayerDef._();
-
-  static const double kLife = CharacterConstants.kLifeExtraLarge;
-
-  static double kSpeed = CharacterConstants.kSpeedFast;
 
   static const double _kMaxStamina = 100.0;
   static const int _kMaxEnergy = 100;
@@ -30,7 +25,7 @@ final class CutePlayerDef {
   static const double _kPrimaryAttackDamage = 25.0;
   static const double _kFireballAttackDamage = 10.0;
 
-  static const int _kShovelStaminaCost = 5;
+  static const int _kDigStaminaCost = 5;
   static const int _kWateringCanStaminaCost = 5;
   static const int _kSeedStaminaCost = 5;
   static const int _kHarvestStaminaCost = 5;
@@ -46,22 +41,24 @@ final class CutePlayerDef {
     rangedAttackStaminaCost: _kFireballAttackStaminaCost,
     primaryAttackDamage: _kPrimaryAttackDamage,
     rangedAttackDamage: _kFireballAttackDamage,
-    shovelStaminaCost: _kShovelStaminaCost,
+    digStaminaCost: _kDigStaminaCost,
     wateringCanStaminaCost: _kWateringCanStaminaCost,
     seedStaminaCost: _kSeedStaminaCost,
     harvestStaminaCost: _kHarvestStaminaCost,
   );
 
-  static final Vector2 textureSize = TileConstants.tileSizeCute;
+  static const double _kLife = CharacterConstants.kLifeExtraLarge;
+  static double _kBaseSpeed = CharacterConstants.kSpeedFast;
 
+  static final Vector2 textureSize = TileConstants.tileSizeCute;
   static final Vector2 componentSize = textureSize;
 
   static final RectangleHitbox _hitbox = HitboxUtils.createCustomHitbox(
     componentSize: componentSize,
-    left: 20.0,
-    top: 22.0,
-    right: 20.0,
-    bottom: 16.0,
+    left: 20,
+    top: 22,
+    right: 20,
+    bottom: 16,
   );
 
   static Future<SpriteAnimation> _loadAnimationIdleLeft() =>
@@ -69,7 +66,7 @@ final class CutePlayerDef {
         'new/Player/idle/player_idle_left_48x48_6.png',
         SpriteAnimationConfigHelper.createStandardData(
           amount: 6,
-          textureSize: CutePlayerDef.textureSize,
+          textureSize: textureSize,
         ),
       );
 
@@ -77,7 +74,7 @@ final class CutePlayerDef {
     'new/Player/idle/player_idle_up_48x48_6.png',
     SpriteAnimationConfigHelper.createStandardData(
       amount: 6,
-      textureSize: CutePlayerDef.textureSize,
+      textureSize: textureSize,
     ),
   );
 
@@ -86,7 +83,7 @@ final class CutePlayerDef {
         'new/Player/idle/player_idle_down_48x48_6.png',
         SpriteAnimationConfigHelper.createStandardData(
           amount: 6,
-          textureSize: CutePlayerDef.textureSize,
+          textureSize: textureSize,
         ),
       );
 
@@ -134,13 +131,9 @@ final class CutePlayerDef {
         loadLeft: _loadAnimationAttackLeft,
         loadUp: _loadAnimationAttackUp,
         loadDown: _loadAnimationAttackDown,
-        loadRightUp: null,
-        loadRightDown: null,
-        loadLeftUp: null,
-        loadLeftDown: null,
       );
 
-  static final Future<SpriteAnimation> _loadAnimationShovelRight =
+  static final Future<SpriteAnimation> _loadAnimationDigRight =
       SpriteAnimation.load(
         'new/Player/shovel/player_shovel_right_48x48_2.png',
         SpriteAnimationConfigHelper.createCustomData(
@@ -150,7 +143,7 @@ final class CutePlayerDef {
         ),
       );
 
-  static final Future<SpriteAnimation> _loadAnimationShovelLeft =
+  static final Future<SpriteAnimation> _loadAnimationDigLeft =
       SpriteAnimation.load(
         'new/Player/shovel/player_shovel_left_48x48_2.png',
         SpriteAnimationConfigHelper.createCustomData(
@@ -160,7 +153,7 @@ final class CutePlayerDef {
         ),
       );
 
-  static final Future<SpriteAnimation> _loadAnimationShovelUp =
+  static final Future<SpriteAnimation> _loadAnimationDigUp =
       SpriteAnimation.load(
         'new/Player/shovel/player_shovel_up_48x48_2.png',
         SpriteAnimationConfigHelper.createCustomData(
@@ -170,7 +163,7 @@ final class CutePlayerDef {
         ),
       );
 
-  static final Future<SpriteAnimation> _loadAnimationShovelDown =
+  static final Future<SpriteAnimation> _loadAnimationDigDown =
       SpriteAnimation.load(
         'new/Player/shovel/player_shovel_down_48x48_2.png',
         SpriteAnimationConfigHelper.createCustomData(
@@ -180,15 +173,11 @@ final class CutePlayerDef {
         ),
       );
 
-  static final _animationShovelFactory = DDAnimationDirectionalFactory(
-    loadRight: _loadAnimationShovelRight,
-    loadLeft: _loadAnimationShovelLeft,
-    loadUp: _loadAnimationShovelUp,
-    loadDown: _loadAnimationShovelDown,
-    loadRightUp: null,
-    loadRightDown: null,
-    loadLeftUp: null,
-    loadLeftDown: null,
+  static final _animationDigDirectionalFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationDigRight,
+    loadLeft: _loadAnimationDigLeft,
+    loadUp: _loadAnimationDigUp,
+    loadDown: _loadAnimationDigDown,
   );
 
   static final Future<SpriteAnimation> _loadAnimationWateringCanRight =
@@ -236,10 +225,6 @@ final class CutePlayerDef {
     loadLeft: _loadAnimationWateringCanLeft,
     loadUp: _loadAnimationWateringCanUp,
     loadDown: _loadAnimationWateringCanDown,
-    loadRightUp: null,
-    loadRightDown: null,
-    loadLeftUp: null,
-    loadLeftDown: null,
   );
 
   static final Future<SpriteAnimation>
@@ -275,10 +260,6 @@ final class CutePlayerDef {
     loadLeft: _loadAnimationPlaceSeedLeft,
     loadUp: _loadAnimationPlaceSeedUp,
     loadDown: _loadAnimationPlaceSeedDown,
-    loadRightUp: null,
-    loadRightDown: null,
-    loadLeftUp: null,
-    loadLeftDown: null,
   );
 
   static final Future<SpriteAnimation>
@@ -314,16 +295,21 @@ final class CutePlayerDef {
     loadLeft: _loadAnimationHarvestLeft,
     loadUp: _loadAnimationHarvestUp,
     loadDown: _loadAnimationHarvestDown,
-    loadRightUp: null,
-    loadRightDown: null,
-    loadLeftUp: null,
-    loadLeftDown: null,
   );
+
+  static final Future<SpriteAnimation> loadAnimationIdleRight =
+      SpriteAnimation.load(
+        'new/Player/idle/player_idle_right_48x48_6.png',
+        SpriteAnimationConfigHelper.createStandardData(
+          amount: 6,
+          textureSize: textureSize,
+        ),
+      );
 
   static final SimpleDirectionAnimation _animationWalkDirectional =
       SimpleDirectionAnimation(
         idleLeft: _loadAnimationIdleLeft(),
-        idleRight: UISpriteAnimationsDef.loadAnimationCutePlayerIdleRight(),
+        idleRight: loadAnimationIdleRight,
         idleUp: _loadAnimationIdleUp(),
         idleDown: _loadAnimationIdleDown(),
         runLeft: SpriteAnimation.load(
@@ -359,7 +345,7 @@ final class CutePlayerDef {
   static final SimpleDirectionAnimation
   _animationRunDirectional = SimpleDirectionAnimation(
     idleLeft: _loadAnimationIdleLeft(),
-    idleRight: UISpriteAnimationsDef.loadAnimationCutePlayerIdleRight(),
+    idleRight: loadAnimationIdleRight,
     idleUp: _loadAnimationIdleUp(),
     idleDown: _loadAnimationIdleDown(),
     // TODO(Kevin): NOW - create run animations
@@ -413,17 +399,19 @@ final class CutePlayerDef {
       );
 
   static final viewConfig = DDFarmPlayerViewConfig(
-    hitbox: CutePlayerDef._hitbox,
-    lighting: CutePlayerDef._lighting,
-    getDeathMarker: (position) => CutePlayerDef._createDeathMarker(position),
-    animationWalkDirectional: CutePlayerDef._animationWalkDirectional,
-    animationRunDirectional: CutePlayerDef._animationRunDirectional,
-    animationAttackDirectionalFactory:
-        CutePlayerDef._animationAttackDirectionalFactory,
-    animationShovelFactory: CutePlayerDef._animationShovelFactory,
-    animationWateringCanFactory: CutePlayerDef._animationWateringCanFactory,
-    animationPlaceSeedFactory: CutePlayerDef._animationPlaceSeedFactory,
-    animationHarvestFactory: CutePlayerDef._animationHarvestFactory,
+    size: componentSize,
+    life: _kLife,
+    baseSpeed: _kBaseSpeed,
+    hitbox: _hitbox,
+    lighting: _lighting,
+    getDeathMarker: _createDeathMarker,
+    animationWalkDirectional: _animationWalkDirectional,
+    animationRunDirectional: _animationRunDirectional,
+    animationAttackDirectionalFactory: _animationAttackDirectionalFactory,
+    animationDigFactory: _animationDigDirectionalFactory,
+    animationWateringCanFactory: _animationWateringCanFactory,
+    animationPlaceSeedFactory: _animationPlaceSeedFactory,
+    animationHarvestFactory: _animationHarvestFactory,
   );
 }
 

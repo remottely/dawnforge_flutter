@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 final class PlayerSaveData extends Equatable {
+  static const int kInitialCoins = 520;
   final double positionX;
   final double positionY;
 
@@ -25,7 +26,7 @@ final class PlayerSaveData extends Equatable {
   final int fishingLevel;
   final int combatLevel;
 
-  final int money;
+  final int coins;
 
   final String playerType;
 
@@ -50,10 +51,16 @@ final class PlayerSaveData extends Equatable {
     required this.foragingLevel,
     required this.fishingLevel,
     required this.combatLevel,
-    required this.money,
+    required this.coins,
     required this.playerType,
     this.playerName,
-  });
+  })  : assert(health > 0, 'health must be > 0'),
+        assert(stamina > 0, 'stamina must be > 0'),
+        assert(energy > 0, 'energy must be > 0'),
+        assert(coins >= 0, 'coins must be >= 0'),
+        assert(maxHealth > 0, 'maxHealth must be > 0'),
+        assert(maxStamina > 0, 'maxStamina must be > 0'),
+        assert(maxEnergy > 0, 'maxEnergy must be > 0');
 
   factory PlayerSaveData.initial({
     required String playerType,
@@ -78,14 +85,14 @@ final class PlayerSaveData extends Equatable {
       foragingLevel: 1,
       fishingLevel: 1,
       combatLevel: 1,
-      money: 500,
+      coins: kInitialCoins,
       playerType: playerType,
       playerName: playerName,
     );
   }
 
   factory PlayerSaveData.fromJson(Map<String, dynamic> json) {
-    return PlayerSaveData(
+    final data = PlayerSaveData(
       positionX: (json['positionX'] as num?)?.toDouble() ?? 0.0,
       positionY: (json['positionY'] as num?)?.toDouble() ?? 0.0,
       currentMapId: json['currentMapId'] as String? ?? 'farm',
@@ -104,10 +111,19 @@ final class PlayerSaveData extends Equatable {
       foragingLevel: json['foragingLevel'] as int? ?? 1,
       fishingLevel: json['fishingLevel'] as int? ?? 1,
       combatLevel: json['combatLevel'] as int? ?? 1,
-      money: json['money'] as int? ?? 500,
+      coins: _readCoins(json),
       playerType: json['playerType'] as String? ?? 'knight',
       playerName: json['playerName'] as String?,
     );
+
+    data._throwIfPersistenceRuleBreak();
+    return data;
+  }
+
+  static int _readCoins(Map<String, dynamic> json) {
+    final coinsValue = json['coins'];
+    if (coinsValue is num) return coinsValue.toInt();
+    throw ArgumentError('PlayerSaveData.fromJson: missing coins in payload');
   }
 
   Map<String, dynamic> toJson() {
@@ -130,25 +146,25 @@ final class PlayerSaveData extends Equatable {
       'foragingLevel': foragingLevel,
       'fishingLevel': fishingLevel,
       'combatLevel': combatLevel,
-      'money': money,
+      'coins': coins,
       'playerType': playerType,
       if (playerName != null) 'playerName': playerName,
     };
   }
 
   bool isValid() {
-    return health >= 0 &&
+    return health > 0 &&
         health <= maxHealth &&
         maxHealth > 0 &&
-        stamina >= 0 &&
+        stamina > 0 &&
         stamina <= maxStamina &&
         maxStamina > 0 &&
-        energy >= 0 &&
+        energy > 0 &&
         energy <= maxEnergy &&
         maxEnergy > 0 &&
         level > 0 &&
         experience >= 0 &&
-        money >= 0 &&
+        coins >= 0 &&
         currentMapId.isNotEmpty &&
         playerType.isNotEmpty;
   }
@@ -172,11 +188,11 @@ final class PlayerSaveData extends Equatable {
     int? foragingLevel,
     int? fishingLevel,
     int? combatLevel,
-    int? money,
+    int? coins,
     String? playerType,
     String? playerName,
   }) {
-    return PlayerSaveData(
+    final data = PlayerSaveData(
       positionX: positionX ?? this.positionX,
       positionY: positionY ?? this.positionY,
       currentMapId: currentMapId ?? this.currentMapId,
@@ -196,10 +212,29 @@ final class PlayerSaveData extends Equatable {
       foragingLevel: foragingLevel ?? this.foragingLevel,
       fishingLevel: fishingLevel ?? this.fishingLevel,
       combatLevel: combatLevel ?? this.combatLevel,
-      money: money ?? this.money,
+      coins: coins ?? this.coins,
       playerType: playerType ?? this.playerType,
       playerName: playerName ?? this.playerName,
     );
+
+    data._throwIfPersistenceRuleBreak();
+    return data;
+  }
+
+  // Guard against persisting impossible player states.
+  void _throwIfPersistenceRuleBreak() {
+    if (coins < 0) {
+      throw StateError('PlayerSaveData persistence: coins cannot be negative');
+    }
+    if (health <= 0) {
+      throw StateError('PlayerSaveData persistence: health must be > 0');
+    }
+    if (stamina <= 0) {
+      throw StateError('PlayerSaveData persistence: stamina must be > 0');
+    }
+    if (energy <= 0) {
+      throw StateError('PlayerSaveData persistence: energy must be > 0');
+    }
   }
 
   @override
@@ -209,7 +244,7 @@ final class PlayerSaveData extends Equatable {
         'name: ${playerName ?? "Unknown"}, '
         'level: $level, '
         'health: $health/$maxHealth, '
-        'money: $money, '
+        'coins: $coins, '
         'position: ($positionX, $positionY), '
         'map: $currentMapId'
         ')';
@@ -235,7 +270,7 @@ final class PlayerSaveData extends Equatable {
     foragingLevel,
     fishingLevel,
     combatLevel,
-    money,
+    coins,
     playerType,
     playerName,
   ];

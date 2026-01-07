@@ -1,4 +1,5 @@
 import 'dart:async' as async;
+import 'dart:developer' as developer;
 import 'dart:math' as math;
 
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_config.dart';
@@ -33,11 +34,20 @@ class SynchronizedAttackController {
     void Function() attackAction, {
     void Function()? visualEffectCallback,
   }) {
+    developer.log(
+      '[SyncAttackController] execute chamado: type=$attackType, canAttack=${_model.canAttack}',
+    );
+
     if (!_model.canAttack) {
       final remaining = getRemainingCooldown();
+      developer.log(
+        '[SyncAttackController] ✗ Attack bloqueado! Cooldown restante: ${remaining.inMilliseconds}ms',
+      );
       _onAttackBlocked?.call(attackType, remaining);
       return null;
     }
+
+    developer.log('[SyncAttackController] ✓ Attack permitido, executando...');
 
     _model.purgeExpiredModifiers();
     final durations = _calculateDurations(attackType);
@@ -55,10 +65,15 @@ class SynchronizedAttackController {
     _model.lastAttackInfo = info;
     _model.startCooldown(durations.cooldown);
 
+    developer.log(
+      '[SyncAttackController] Cooldown iniciado: ${durations.cooldown.inMilliseconds}ms',
+    );
+
     _cooldownTimer?.cancel();
     _cooldownTimer = async.Timer(durations.cooldown, () {
       _model.canAttack = true;
       _cooldownTimer = null;
+      developer.log('[SyncAttackController] ✓ Cooldown finalizado, pronto para novo attack');
     });
 
     attackAction();
@@ -157,6 +172,13 @@ class SynchronizedAttackController {
     final cooldown = _calculateDurations(type).cooldown.inMilliseconds;
     if (cooldown == 0) return 0;
     return 1000.0 / cooldown;
+  }
+
+  void forceReadyForCombo() {
+    _cooldownTimer?.cancel();
+    _cooldownTimer = null;
+    _model.canAttack = true;
+    _model.startCooldown(Duration.zero);
   }
 
   Duration getCalculatedCooldown(AttackType type) =>

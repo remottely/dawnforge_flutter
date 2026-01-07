@@ -6,14 +6,9 @@ import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
-import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_def.dart';
 
 final class SunnyPlayerDef {
   SunnyPlayerDef._();
-
-  static const double kLife = CharacterConstants.kLifeExtraLarge;
-
-  static double kSpeed = CharacterConstants.kSpeedFast;
 
   static const double _kMaxStamina = 100.0;
   static const int _kMaxEnergy = 100;
@@ -29,7 +24,7 @@ final class SunnyPlayerDef {
   static const double _kPrimaryAttackDamage = 25.0;
   static const double _kFireballAttackDamage = 10.0;
 
-  static const int _kShovelStaminaCost = 5;
+  static const int _kDigStaminaCost = 5;
   static const int _kWateringCanStaminaCost = 5;
   static const int _kSeedStaminaCost = 5;
   static const int _kHarvestStaminaCost = 5;
@@ -45,18 +40,20 @@ final class SunnyPlayerDef {
     rangedAttackStaminaCost: _kFireballAttackStaminaCost,
     primaryAttackDamage: _kPrimaryAttackDamage,
     rangedAttackDamage: _kFireballAttackDamage,
-    shovelStaminaCost: _kShovelStaminaCost,
+    digStaminaCost: _kDigStaminaCost,
     wateringCanStaminaCost: _kWateringCanStaminaCost,
     seedStaminaCost: _kSeedStaminaCost,
     harvestStaminaCost: _kHarvestStaminaCost,
   );
 
-  static final Vector2 textureSize = TileConstants.tileSizeSunny;
+  static const double _kLife = CharacterConstants.kLifeExtraLarge;
+  static double _kBaseSpeed = CharacterConstants.kSpeedFast;
 
-  static final Vector2 componentSize = textureSize;
+  static final Vector2 textureSize = TileConstants.tileSizeSunny;
+  static final Vector2 _componentSize = textureSize;
 
   static final RectangleHitbox _hitbox = HitboxUtils.createCustomHitbox(
-    componentSize: componentSize,
+    componentSize: _componentSize,
     left: 44.0,
     top: 28.0,
     right: 44.0,
@@ -68,7 +65,7 @@ final class SunnyPlayerDef {
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_idle_left_strip9.png',
     SpriteAnimationConfigHelper.createStandardData(
       amount: 9,
-      textureSize: SunnyPlayerDef.textureSize,
+      textureSize: textureSize,
     ),
   );
 
@@ -94,16 +91,10 @@ final class SunnyPlayerDef {
       DDAnimationDirectionalFactory(
         loadRight: _loadAnimationAttackRight,
         loadLeft: _loadAnimationAttackLeft,
-        loadUp: null,
-        loadDown: null,
-        loadRightUp: null,
-        loadRightDown: null,
-        loadLeftUp: null,
-        loadLeftDown: null,
       );
 
   static final Future<SpriteAnimation>
-  _loadAnimationShovelRight = SpriteAnimation.load(
+  _loadAnimationDigRight = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_strip13.png',
     SpriteAnimationConfigHelper.createStandardData(
       amount: 10,
@@ -112,7 +103,7 @@ final class SunnyPlayerDef {
   );
 
   static final Future<SpriteAnimation>
-  _loadAnimationShovelLeft = SpriteAnimation.load(
+  _loadAnimationDigLeft = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_left_strip13.png',
     SpriteAnimationConfigHelper.createStandardData(
       amount: 10,
@@ -120,15 +111,9 @@ final class SunnyPlayerDef {
     ),
   );
 
-  static final _animationShovelFactory = DDAnimationDirectionalFactory(
-    loadRight: _loadAnimationShovelRight,
-    loadLeft: _loadAnimationShovelLeft,
-    loadUp: null,
-    loadDown: null,
-    loadRightUp: null,
-    loadRightDown: null,
-    loadLeftUp: null,
-    loadLeftDown: null,
+  static final _animationDigDirectionalFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationDigRight,
+    loadLeft: _loadAnimationDigLeft,
   );
 
   static final Future<SpriteAnimation>
@@ -152,12 +137,6 @@ final class SunnyPlayerDef {
   static final _animationWateringCanFactory = DDAnimationDirectionalFactory(
     loadRight: _loadAnimationWateringCanRight,
     loadLeft: _loadAnimationWateringCanLeft,
-    loadUp: null,
-    loadDown: null,
-    loadRightUp: null,
-    loadRightDown: null,
-    loadLeftUp: null,
-    loadLeftDown: null,
   );
 
   static final Future<SpriteAnimation>
@@ -181,12 +160,6 @@ final class SunnyPlayerDef {
   static final _animationPlaceSeedFactory = DDAnimationDirectionalFactory(
     loadRight: _loadAnimationPlaceSeedRight,
     loadLeft: _loadAnimationPlaceSeedLeft,
-    loadUp: null,
-    loadDown: null,
-    loadRightUp: null,
-    loadRightDown: null,
-    loadLeftUp: null,
-    loadLeftDown: null,
   );
 
   static final Future<SpriteAnimation>
@@ -210,18 +183,21 @@ final class SunnyPlayerDef {
   static final _animationHarvestFactory = DDAnimationDirectionalFactory(
     loadRight: _loadAnimationHarvestRight,
     loadLeft: _loadAnimationHarvestLeft,
-    loadUp: null,
-    loadDown: null,
-    loadRightUp: null,
-    loadRightDown: null,
-    loadLeftUp: null,
-    loadLeftDown: null,
+  );
+
+  static final Future<SpriteAnimation>
+  loadAnimationIdleRight = SpriteAnimation.load(
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_idle_strip9.png',
+    SpriteAnimationConfigHelper.createStandardData(
+      amount: 9,
+      textureSize: textureSize,
+    ),
   );
 
   static final SimpleDirectionAnimation
   _animationWalkDirectional = SimpleDirectionAnimation(
     idleLeft: _loadAnimationIdleLeft(),
-    idleRight: UISpriteAnimationsDef.loadAnimationSunnyPlayerIdleRight(),
+    idleRight: loadAnimationIdleRight,
     runLeft: SpriteAnimation.load(
       'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_walking_left_strip8.png',
       SpriteAnimationConfigHelper.createStandardData(
@@ -241,7 +217,7 @@ final class SunnyPlayerDef {
   static final SimpleDirectionAnimation
   _animationRunDirectional = SimpleDirectionAnimation(
     idleLeft: _loadAnimationIdleLeft(),
-    idleRight: UISpriteAnimationsDef.loadAnimationSunnyPlayerIdleRight(),
+    idleRight: loadAnimationIdleRight,
     runLeft: SpriteAnimation.load(
       'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_run_left_strip8.png',
       SpriteAnimationConfigHelper.createStandardData(
@@ -277,17 +253,18 @@ final class SunnyPlayerDef {
       );
 
   static final viewConfig = DDFarmPlayerViewConfig(
-    hitbox: SunnyPlayerDef._hitbox,
-    lighting: SunnyPlayerDef._lighting,
-    getDeathMarker: (position) => SunnyPlayerDef._createDeathMarker(position),
-    animationWalkDirectional: SunnyPlayerDef._animationWalkDirectional,
-    animationRunDirectional: SunnyPlayerDef._animationRunDirectional,
-    animationAttackDirectionalFactory:
-        SunnyPlayerDef._animationAttackDirectionalFactory,
-    animationShovelFactory: SunnyPlayerDef._animationShovelFactory,
-    animationWateringCanFactory: SunnyPlayerDef._animationWateringCanFactory,
-    animationPlaceSeedFactory: SunnyPlayerDef._animationPlaceSeedFactory,
-    animationHarvestFactory:
-        SunnyPlayerDef._animationHarvestFactory,
+    size: _componentSize,
+    life: _kLife,
+    baseSpeed: _kBaseSpeed,
+    hitbox: _hitbox,
+    lighting: _lighting,
+    getDeathMarker: (position) => _createDeathMarker(position),
+    animationWalkDirectional: _animationWalkDirectional,
+    animationRunDirectional: _animationRunDirectional,
+    animationAttackDirectionalFactory: _animationAttackDirectionalFactory,
+    animationDigFactory: _animationDigDirectionalFactory,
+    animationWateringCanFactory: _animationWateringCanFactory,
+    animationPlaceSeedFactory: _animationPlaceSeedFactory,
+    animationHarvestFactory: _animationHarvestFactory,
   );
 }

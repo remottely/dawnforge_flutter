@@ -1,6 +1,6 @@
-import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_config.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_config.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_config.dart';
 import 'package:flutter/foundation.dart';
 
@@ -9,31 +9,25 @@ class DDFarmPlayerModel extends DDCombatPlayerModel {
   final DDFarmPlayerModelConfig config;
 
   @protected
-  DDFarmPlayerModel.internal({
-    required this.config,
-    required super.saveData,
-    required super.isInRunningState,
-  }) : super.internal(config: config);
+  DDFarmPlayerModel.internal({required this.config, required super.saveData})
+    : super.internal(config: config);
 
   bool get canExecuteWateringCan =>
-      (stamina >= config.wateringCanStaminaCost) &&
-      (equipment == EquippedHandType.wateringCan);
+      stamina >= config.wateringCanStaminaCost &&
+      equipment == HandItemId.wateringCan;
 
-  bool get canExecuteShovel =>
-      (stamina >= config.shovelStaminaCost) &&
-      (equipment == EquippedHandType.shovel);
+  bool get canExecuteDig =>
+      stamina >= config.digStaminaCost && equipment == HandItemId.shovel;
 
   bool get canExecuteSeed =>
-      (stamina >= config.seedStaminaCost) && (equipment?.isSeed ?? false);
+      stamina >= config.seedStaminaCost && (equipment?.isSeed ?? false);
 
   bool get canExecuteHarvest =>
-      (stamina >= config.harvestStaminaCost) &&
-      (equipment == EquippedHandType.harvest);
+      stamina >= config.harvestStaminaCost &&
+      equipment == HandItemId.harvestBasket;
 
   @override
-  Map<String, dynamic> toJson() {
-    return super.toJson();
-  }
+  Map<String, dynamic> toJson() => super.toJson();
 
   @protected
   factory DDFarmPlayerModel.fromJson(
@@ -42,10 +36,6 @@ class DDFarmPlayerModel extends DDCombatPlayerModel {
   ) {
     final baseData = DDBasePlayerSaveData.fromJson(json, config);
 
-    return DDFarmPlayerModel.internal(
-      config: config,
-      saveData: baseData,
-      isInRunningState: false,
-    );
+    return DDFarmPlayerModel.internal(config: config, saveData: baseData);
   }
 }

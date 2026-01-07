@@ -18,6 +18,7 @@
   "congratulations": "CONGRATULATIONS!",
   "thanks": "Thanks for testing the game and feeling the power of Flame and Bonfire in building 2D games.\nMaybe we can have a continuation of the game!\nI hope that you enjoyed!",
   "door_without_key": "I think I need a key to get through here!",
+  "door_with_key": "I have the key equipped. Should I use it?",
   "chest_decoration_open": "Open",
   "torch_decoration_light_up": "Light up"
 }

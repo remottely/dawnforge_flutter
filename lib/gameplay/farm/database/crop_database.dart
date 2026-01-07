@@ -1,85 +1,74 @@
-import 'dart:convert';
 import 'dart:developer' as developer;
 
-import 'package:flutter/services.dart';
+import 'package:darkness_dungeon/gameplay/database/modern_farm/modern_farm_crop_entity_database_def.dart';
 
-import '../models/crop_model.dart';
-import '../models/crop_stage_model.dart';
+import '../../inventory/entities/enums/hand_item_id.dart';
+import '../../world/entities/objects/farm/crop_entity.dart';
 
 final class CropDatabase {
   CropDatabase._();
 
-  static final Map<String, Map<String, dynamic>> _cropDatabase = {};
+  static final Map<HandItemId, CropEntity> _cropDatabase = {};
   static bool _isInitialized = false;
 
   static Future<void> initialize() async {
     if (_isInitialized) return;
 
-    try {
-      final jsonString = await rootBundle.loadString(
-        'assets/crops/crops_database.json',
-      );
-      final jsonData = jsonDecode(jsonString) as Map<String, dynamic>;
+    _cropDatabase
+      ..clear()
+      ..addAll(ModernFarmCropEntityDatabaseDef.cropEntityList);
 
-      for (var entry in jsonData.entries) {
-        _cropDatabase[entry.key] = entry.value as Map<String, dynamic>;
-      }
-
-      _isInitialized = true;
-      developer.log('[CropDatabase] Loaded ${_cropDatabase.length} crops');
-    } catch (e) {
-      developer.log('[CropDatabase] ERROR loading database: $e');
-      rethrow;
-    }
+    _isInitialized = true;
+    developer.log('[CropDatabase] Loaded ${_cropDatabase.length} crops');
   }
 
-  static CropModel? createCrop(String cropId) {
+  static CropEntity? createCrop(HandItemId cropId) {
     if (!_isInitialized) {
       developer.log('[CropDatabase] ERROR: Not initialized!');
       return null;
     }
 
-    final cropData = _cropDatabase[cropId];
-    if (cropData == null) {
+    final template = _cropDatabase[cropId];
+    if (template == null) {
       developer.log('[CropDatabase] Crop not found: $cropId');
       return null;
     }
 
-    return CropModel(
-      cropId: cropId,
-      name: cropData['name'] as String,
-      description: cropData['description'] as String,
-      stage: CropStageModel.seed,
+    return CropEntity(
+      id: cropId,
+      name: template.name,
+      description: template.description,
+      stage: template.stage,
       daysPlanted: 0,
-      daysToMature: cropData['daysToMature'] as int,
-      yieldAmount: cropData['yieldAmount'] as int,
-      harvestItemId: cropData['harvestItemId'] as String,
-      requiredSeason: cropData['requiredSeason'] as String?,
-      spritesheetPath: cropData['spritesheetPath'] as String,
-      spriteWidth: (cropData['spriteWidth'] as int?) ?? 16,
-      spriteHeight: (cropData['spriteHeight'] as int?) ?? 16,
-      spriteRowIndex: cropData['spriteRowIndex'] as int,
-      framesCount: cropData['framesCount'] as int,
-      ySortingFromStage: CropStageModel.fromJson(
-        (cropData['ySortingFromStage'] as String?) ?? 'seed',
-      ),
+      daysToMature: template.daysToMature,
+      yieldAmount: template.yieldAmount,
+      harvestItemId: template.harvestItemId,
+      requiredSeason: template.requiredSeason,
+      spritesheetPath: template.spritesheetPath,
+      spriteWidth: template.spriteWidth,
+      spriteHeight: template.spriteHeight,
+      spriteRowIndex: template.spriteRowIndex,
+      framesCount: template.framesCount,
+      skipFirstFrames: template.skipFirstFrames,
+      ySortingFromStage: template.ySortingFromStage ?? template.stage,
+      isTree: template.isTree,
+      regrowData: template.regrowData.resetState(),
     );
   }
 
-  static List<String> getAllCropIds() => _cropDatabase.keys.toList();
+  static List<HandItemId> getAllCropIds() => _cropDatabase.keys.toList();
 
-  static List<String> getCropsBySeason(String season) {
+  static List<HandItemId> getCropsBySeason(String season) {
     return _cropDatabase.entries
-        .where(
-          (e) =>
-              e.value['requiredSeason'] == season ||
-              e.value['requiredSeason'] == 'any',
-        )
+        .where((e) {
+          final requiredSeason = e.value.requiredSeason;
+          return requiredSeason == null || requiredSeason == 'any' || requiredSeason == season;
+        })
         .map((e) => e.key)
         .toList();
   }
 
-  static Map<String, dynamic>? getCropData(String cropId) {
+  static CropEntity? getCropData(HandItemId cropId) {
     return _cropDatabase[cropId];
   }
 

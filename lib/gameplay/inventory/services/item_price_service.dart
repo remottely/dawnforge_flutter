@@ -1,10 +1,10 @@
 import 'dart:developer' as developer;
 
-import '../constants/inventory_constants.dart';
-import '../items/crop_item.dart';
-import '../models/item.dart';
-import '../models/item_category.dart';
-import '../models/item_quality.dart';
+import 'package:darkness_dungeon/gameplay/inventory/config/inventory_def.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_quality.dart';
+import 'package:darkness_dungeon/gameplay/inventory/items/harvest_loot_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/enums/loot_category.dart';
 
 final class ItemPriceService {
   ItemPriceService._();
@@ -34,22 +34,22 @@ final class ItemPriceService {
   }
 
   int calculateSellPrice(
-    Item item, {
+    HandItem item, {
     bool isShippingBin = true,
-    ItemQuality? quality,
+    HandItemQuality? quality,
   }) {
     var price = item.baseValue.toDouble();
 
-    if (item is CropItem) {
+    if (item is HarvestLootItem) {
       final itemQuality = quality ?? item.quality;
       price *= itemQuality.priceMultiplier;
     }
 
     final professionBonus = _getProfessionBonus(item);
-    price *= (1.0 + professionBonus);
+    price *= 1.0 + professionBonus;
 
     if (!isShippingBin) {
-      price *= InventoryConstants.kShopSellPriceModifier;
+      price *= InventoryDef.kShopSellPriceModifier;
     }
 
     final finalPrice = price.round();
@@ -57,7 +57,7 @@ final class ItemPriceService {
     developer.log(
       '[ItemPriceService] Price for ${item.name}: '
       'base=${item.baseValue}, final=$finalPrice '
-      '(quality=${item is CropItem ? item.quality.name : "N/A"}, '
+      '(quality=${item is HarvestLootItem ? item.quality.name : "N/A"}, '
       'profession=${(professionBonus * 100).toStringAsFixed(0)}%, '
       'location=${isShippingBin ? "shipping" : "shop"})',
     );
@@ -65,40 +65,40 @@ final class ItemPriceService {
     return finalPrice;
   }
 
-  int calculateBuyPrice(Item item) {
-    final baseSellPrice = calculateSellPrice(item, isShippingBin: true);
-    return (baseSellPrice * 2).round();
+  int calculateBuyPrice(HandItem item) {
+    final baseSellPrice = calculateSellPrice(item);
+    return baseSellPrice * 2;
   }
 
-  double _getProfessionBonus(Item item) {
-    if (item is CropItem) {
+  double _getProfessionBonus(HandItem item) {
+    if (item is HarvestLootItem) {
       if (_hasTillerProfession &&
           [
-            ItemCategory.vegetables,
-            ItemCategory.fruits,
-            ItemCategory.flowers,
-          ].contains(item.category)) {
-        return InventoryConstants.kTillerProfessionBonus;
+            LootCategory.vegetable,
+            LootCategory.fruit,
+            LootCategory.flower,
+          ].contains(item.type)) {
+        return InventoryDef.kTillerProfessionBonus;
       }
 
       if (_hasRancherProfession &&
-          item.category == ItemCategory.animalProducts) {
-        return InventoryConstants.kRancherProfessionBonus;
+          item.type == LootCategory.animalProduct) {
+        return InventoryDef.kRancherProfessionBonus;
       }
 
-      if (_hasArtisanProfession && item.category == ItemCategory.artisanGoods) {
-        return InventoryConstants.kArtisanProfessionBonus;
+      if (_hasArtisanProfession && item.type == LootCategory.artisanGood) {
+        return InventoryDef.kArtisanProfessionBonus;
       }
 
-      if (_hasAnglerProfession && item.category == ItemCategory.fish) {
-        return InventoryConstants.kAnglerProfessionBonus;
+      if (_hasAnglerProfession && item.type == LootCategory.fish) {
+        return InventoryDef.kAnglerProfessionBonus;
       }
     }
 
     return 0.0;
   }
 
-  ItemQuality determineHarvestQuality({
+  HandItemQuality determineHarvestQuality({
     required int farmingLevel,
     int fertilizerQualityBoost = 0,
     double randomValue = 0.5,
@@ -106,30 +106,30 @@ final class ItemPriceService {
     final effectiveLevel = farmingLevel + fertilizerQualityBoost;
 
     final iridiumChance = (effectiveLevel >= 10)
-        ? (effectiveLevel - 10) * InventoryConstants.kQualityChancePerLevel
+        ? (effectiveLevel - 10) * InventoryDef.kQualityChancePerLevel
         : 0.0;
     final goldChance = (effectiveLevel >= 5)
-        ? (effectiveLevel - 5) * InventoryConstants.kQualityChancePerLevel
+        ? (effectiveLevel - 5) * InventoryDef.kQualityChancePerLevel
         : 0.0;
     final silverChance =
-        effectiveLevel * InventoryConstants.kQualityChancePerLevel;
+        effectiveLevel * InventoryDef.kQualityChancePerLevel;
 
     if (randomValue < iridiumChance) {
-      return ItemQuality.iridium;
+      return HandItemQuality.iridium;
     } else if (randomValue < goldChance) {
-      return ItemQuality.gold;
+      return HandItemQuality.gold;
     } else if (randomValue < silverChance) {
-      return ItemQuality.silver;
+      return HandItemQuality.silver;
     } else {
-      return ItemQuality.normal;
+      return HandItemQuality.normal;
     }
   }
 
   int calculateStackValue(
-    Item item,
+    HandItem item,
     int quantity, {
     bool isShippingBin = true,
-    ItemQuality? quality,
+    HandItemQuality? quality,
   }) {
     final unitPrice = calculateSellPrice(
       item,

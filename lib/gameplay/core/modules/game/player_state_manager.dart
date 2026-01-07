@@ -1,9 +1,11 @@
+import 'dart:developer' as developer;
+
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 
 class PlayerStateManager {
   PlayerStateManager._();
@@ -16,7 +18,15 @@ class PlayerStateManager {
   bool _respawnWithFullLife = false;
 
   Map<String, dynamic> toJson() {
-    return {'playerModel': lastPlayerModel?.toJson()};
+    final json = {'playerModel': lastPlayerModel?.toJson()};
+    final life = lastPlayerModel?.life;
+    final stamina = lastPlayerModel?.stamina;
+    final coins = lastPlayerModel?.coins;
+
+    developer.log(
+      '[PlayerStateManager] toJson life=$life, stamina=$stamina, coins=$coins, json=$json',
+    );
+    return json;
   }
 
   void fromJson(Map<String, dynamic> json) {
@@ -41,6 +51,10 @@ class PlayerStateManager {
         lastPlayerModel = SunnyPlayerModel.fromJson(data);
         break;
     }
+
+    developer.log(
+      '[PlayerStateManager] fromJson restored type=$playerType, life=${lastPlayerModel?.life}, stamina=${lastPlayerModel?.stamina}, coins=${lastPlayerModel?.coins}, raw=$data',
+    );
   }
 
   void reset() {
@@ -48,13 +62,11 @@ class PlayerStateManager {
     _respawnWithFullLife = false;
   }
 
-  void markRespawnWithFullLife() {
-    _respawnWithFullLife = true;
+  void setLastPlayerModel(DDBasePlayerModel model) {
+    lastPlayerModel = model;
   }
 
-  bool consumeRespawnWithFullLifeFlag() {
-    final shouldRespawn = _respawnWithFullLife;
-    _respawnWithFullLife = false;
-    return shouldRespawn;
+  void setLastPlayerView(DDBasePlayerView view) {
+    lastPlayerView = view;
   }
 }

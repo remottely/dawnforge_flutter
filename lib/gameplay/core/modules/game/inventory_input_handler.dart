@@ -1,21 +1,46 @@
 import 'dart:developer' as developer;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/gameplay/gameplay_hud_view.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
-import 'package:darkness_dungeon/gameplay/inventory/equipment_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/item_factory.dart';
-import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/models/equipment_slot.dart';
-import 'package:darkness_dungeon/gameplay/inventory/models/equipped_hand_type.dart';
-import 'package:darkness_dungeon/gameplay/inventory/models/item_type.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
-import 'package:flutter/services.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/hud/tutorial_inputs/tutorial_inputs_state.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
+import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
+import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
+import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
+import 'package:darkness_dungeon/gameplay/inventory/state/inventory_state.dart';
+import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
+import 'package:darkness_dungeon/gameplay/inventory/usecases/add_item_use_case.dart';
+import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
 
-class InventoryInputHandler extends GameComponent with KeyboardEventListener {
+/// Handles inventory and equipment inputs from both keyboard and joystick/mobile
+class InventoryInputHandler extends GameComponent
+    with KeyboardEventListener, PlayerControllerListener {
+  final PlayerController? playerController;
+
   bool _isInitialized = false;
-  int _currentWeaponIndex = -1;
+
+  InventoryInputHandler({this.playerController});
+
+  @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+    if (playerController != null) {
+      playerController!.addObserver(this);
+    }
+    getIt<EquipmentManager>().selectedSlotIndexNotifier.addListener(
+      _handleSelectedSlotChanged,
+    );
+  }
+
+  @override
+  void onRemove() {
+    if (playerController != null) {
+      playerController!.removeObserver(this);
+    }
+    getIt<EquipmentManager>().selectedSlotIndexNotifier.removeListener(
+      _handleSelectedSlotChanged,
+    );
+    super.onRemove();
+  }
 
   @override
   void onMount() {
@@ -26,227 +51,284 @@ class InventoryInputHandler extends GameComponent with KeyboardEventListener {
   }
 
   @override
-  bool onKeyboard(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-    if (event is KeyDownEvent) {
-      if (event.logicalKey == KeyboardSetup.kToggleInventoryKey) {
-        _toggleInventory();
-        return true;
-      }
-
-      if (event.logicalKey == KeyboardSetup.kAddTestItemsKey) {
-        _addTestItems();
-        return true;
-      }
-
-      if (event.logicalKey == KeyboardSetup.kEquipWeaponKey) {
-        _equipFirstWeapon();
-        return true;
-      }
-
-      if (event.logicalKey == KeyboardSetup.kUnequipWeaponKey) {
-        _unequipWeapon();
-        return true;
-      }
-
-      if (event.logicalKey == KeyboardSetup.kEquipOffhandKey) {
-        _equipFirstOffhand();
-        return true;
-      }
-
-      if (event.logicalKey == KeyboardSetup.kUnequipOffhandKey) {
-        _unequipOffhand();
-        return true;
-      }
+  void onJoystickAction(JoystickActionEvent event) {
+    if (event.event == ActionEvent.DOWN) {
+      _handleAction(event.id);
     }
+  }
+
+  bool _handleAction(dynamic actionId) {
+    // Check toolbar slot number keys (1-0 in SV style)
+    final slotNumber = InputDef.getToolbarSlotNumber(actionId);
+    if (slotNumber != null) {
+      _selectSlotByNumber(slotNumber);
+      return true;
+    }
+
+    if (InputDef.isToggleInventoryAction(actionId)) {
+      if (AppEnvironment.kIsDebugMode) {
+        _toggleInventory(); // TODO(kevin): remove it?
+      }
+      return true;
+    }
+
+    if (InputDef.isToggleTutorialInputsAction(actionId)) {
+      _toggleInputs();
+      return true;
+    }
+
+    if (InputDef.isAddTestItemsAction(actionId)) {
+      _addTestItems();
+      return true;
+    }
+
+    if (InputDef.isEquipMainHandAction(actionId)) {
+      _equipMainHand();
+      return true;
+    }
+
+    if (InputDef.isEquipMainHandReverseAction(actionId)) {
+      _equipMainHandReverse();
+      return true;
+    }
+
+    if (InputDef.isCraftingAction(actionId)) {
+      _openCrafting();
+      return true;
+    }
+
     return false;
   }
 
   void _toggleInventory() {
-    (gameRef.interface as GameplayHUDView).inventoryHUD.toggleIsVisible();
+    InventoryState.instance.toggle();
+  }
+
+  void _toggleInputs() {
+    TutorialInputsState.instance.toggle();
   }
 
   void _initializeTestItems() {
     if (_isInitialized) return;
     _isInitialized = true;
 
+    // Se já tem itens (carregados de save), não adicionar itens de teste
+    final inventoryManager = getIt<InventoryManager>();
+    if (inventoryManager.usedSlots > 0) {
+      developer.log(
+        '[InventoryInput] ✓ Inventário já possui ${inventoryManager.usedSlots} itens (carregado de save), pulando itens de teste',
+      );
+      _ensureInitialSlotSelection();
+      return;
+    }
+
     developer.log('[InventoryInput] Inicializando itens de teste...');
 
-    _debugInsertItem('shovel');
-    _debugInsertItem('ironSword');
-    _debugInsertItem('staff');
-    _debugInsertItem('wateringCan');
-    _debugInsertItem('strawberry');
-    _debugInsertItem('tomato');
-    _debugInsertItem('harvest');
+    const testItems = [
+      (HandItemId.shovel, 1),
+      (HandItemId.radish_seed_bag, 50),
+      (HandItemId.strawberry_seed_bag, 50),
+      (HandItemId.apple_seed_bag, 50),
+      (HandItemId.tomato_seed_bag, 50),
+      (HandItemId.wateringCan, 1),
+      (HandItemId.harvestBasket, 1),
+      (HandItemId.ironSword, 1),
+      (HandItemId.staff, 1),
+    ];
+
+    _addItems(testItems);
 
     developer.log(
-      '[InventoryInput] Itens de teste adicionados! ${InventoryManager.instance.usedSlots} slots usados',
+      '[InventoryInput] Itens de teste adicionados! ${getIt<InventoryManager>().usedSlots} slots usados',
     );
+
+    // Ensure first non-empty slot is selected
+    _ensureInitialSlotSelection();
   }
 
-  void _debugInsertItem(String itemKey) {
-    if (InventoryManager.instance.getItemQuantity(itemKey) == 0) {
-      final item = ItemFactory.createItem(itemKey);
-      if (item != null) {
-        InventoryManager.instance.addItem(item);
-      }
+  void _ensureInitialSlotSelection() {
+    final equipmentManager = getIt<EquipmentManager>();
+    final currentSlotIndex = equipmentManager.currentMainHandSlotIndex;
+    final currentSlot = getIt<InventoryManager>().getSlotByIndex(
+      currentSlotIndex,
+    );
+
+    // If current slot already has any item, select it to sync UI
+    if (currentSlot?.item != null) {
+      developer.log(
+        '[InventoryInput] Slot $currentSlotIndex already has item: ${currentSlot?.item?.name}, syncing with UI',
+      );
+      equipmentManager.selectSlotIndex(currentSlotIndex);
+      return;
+    }
+
+    // Find first non-empty slot and select it
+    final result = getIt<InventoryManager>().findItem((_) => true);
+
+    if (result != null) {
+      equipmentManager.selectSlotIndex(result.index);
+      developer.log(
+        '[InventoryInput] Auto-selected slot ${result.index} with ${result.item.name}',
+      );
+    } else {
+      developer.log(
+        '[InventoryInput] No items found in inventory - slot 0 remains selected (empty)',
+      );
+    }
+  }
+
+  void _debugInsertItem(HandItemId itemKey) {
+    if (getIt<InventoryManager>().getItemQuantity(itemKey.name) == 0) {
+      getIt<AddItemUseCase>()(itemKey, 1);
+    }
+  }
+
+  void _addItems(List<(HandItemId, int)> items) {
+    final success = getIt<AddItemUseCase>().addMultiple(items);
+
+    if (!success) {
+      developer.log(
+        '[InventoryInput] Nenhum item adicionado (talvez inventário cheio)',
+      );
     }
   }
 
   void _addTestItems() {
     developer.log('[InventoryInput] Adicionando mais itens de teste...');
 
-    final stone = ItemFactory.createItem('stone');
-    final ironOre = ItemFactory.createItem('iron_ore');
+    final testMaterials = [(HandItemId.stone, 100), (HandItemId.iron_ore, 25)];
 
-    if (stone != null) {
-      InventoryManager.instance.addItem(stone, 100);
-      developer.log('[InventoryInput] Adicionado 100x stone');
-    }
-
-    if (ironOre != null) {
-      InventoryManager.instance.addItem(ironOre, 25);
-      developer.log('[InventoryInput] Adicionado 25x iron_ore');
+    for (final (itemKey, quantity) in testMaterials) {
+      final success = getIt<AddItemUseCase>()(itemKey, quantity);
+      if (success) {
+        developer.log('[InventoryInput] Adicionado ${quantity}x $itemKey');
+      }
     }
   }
 
-  void _equipFirstWeapon() {
+  void _equipMainHand() {
     developer.log(
-      '[InventoryInput] Procurando SWORD ou AXE para equipar no weapon (Space)...',
+      '[InventoryInput] Procurando próximo item no inventário para selecionar...',
     );
 
-    final max = InventoryManager.instance.maxSlots;
-    int? foundIndex;
+    final inventoryManager = getIt<InventoryManager>();
+    final equipmentManager = getIt<EquipmentManager>();
 
-    for (int i = _currentWeaponIndex + 1; i < max; i++) {
-      final slot = InventoryManager.instance.getSlotByIndex(i);
-      if (slot == null || slot.item == null) continue;
-      final item = slot.item!;
-      if (item.type != ItemType.weapon) continue;
-      if (item is! WeaponItem) continue;
-      final equippedHandType = item.equippedHandType;
-      if (equippedHandType != EquippedHandType.ironSword &&
-          equippedHandType != EquippedHandType.staff &&
-          equippedHandType != EquippedHandType.shovel &&
-          equippedHandType != EquippedHandType.wateringCan &&
-          equippedHandType != EquippedHandType.strawberry &&
-          equippedHandType != EquippedHandType.tomato &&
-          equippedHandType != EquippedHandType.harvest)
-        continue;
-      foundIndex = i;
-      break;
-    }
-
-    if (foundIndex == null) {
-      for (int i = 0; i <= _currentWeaponIndex && i < max; i++) {
-        final slot = InventoryManager.instance.getSlotByIndex(i);
-        if (slot == null || slot.item == null) continue;
-        final item = slot.item!;
-        if (item.type != ItemType.weapon) continue;
-        if (item is! WeaponItem) continue;
-        final equippedHandType = item.equippedHandType;
-        if (equippedHandType != EquippedHandType.ironSword &&
-            equippedHandType != EquippedHandType.staff &&
-            equippedHandType != EquippedHandType.shovel &&
-            equippedHandType != EquippedHandType.wateringCan &&
-            equippedHandType != EquippedHandType.strawberry &&
-            equippedHandType != EquippedHandType.tomato &&
-            equippedHandType != EquippedHandType.harvest)
-          continue;
-        foundIndex = i;
-        break;
-      }
-    }
-
-    if (foundIndex == null) {
-      developer.log(
-        '[InventoryInput] Nenhuma SWORD ou AXE encontrada no inventário',
-      );
+    if (inventoryManager.maxSlots == 0) {
+      developer.log('[InventoryInput] Nenhum slot disponível no inventário');
       return;
     }
 
-    final slot = InventoryManager.instance.getSlotByIndex(foundIndex);
-    if (slot == null || slot.item == null) return;
-    final item = slot.item!;
+    final currentSlotIndex = equipmentManager.currentMainHandSlotIndex;
+    final nextIndex = (currentSlotIndex + 1) % inventoryManager.maxSlots;
 
-    final success = EquipmentManager.instance.equip(
-      EquipmentSlotType.weapon,
-      item,
-    );
+    final success = equipmentManager.selectSlotIndex(nextIndex);
 
     if (success) {
-      _currentWeaponIndex = foundIndex;
+      final item = inventoryManager.getSlotByIndex(nextIndex)?.item;
+      final handSuffix = item != null ? ' (${item.id})' : '';
+      final itemName = item?.name ?? 'vazio';
       developer.log(
-        '[InventoryInput] ✓ Equipado no weapon: ${item.name} (${(item is WeaponItem) ? item.equippedHandType : 'unknown'})',
+        '[InventoryInput] ✓ Slot selecionado: $itemName$handSuffix',
       );
-      if (item is WeaponItem) _notifyEquipmentChanged(item.equippedHandType);
     } else {
-      developer.log('[InventoryInput] ✗ Falha ao equipar: ${item.name}');
+      developer.log(
+        '[InventoryInput] ✗ Falha ao selecionar slot ${nextIndex + 1}',
+      );
     }
   }
 
-  void _unequipWeapon() {
-    final item = EquipmentManager.instance.unequip(EquipmentSlotType.weapon);
-    if (item != null) {
-      developer.log('[InventoryInput] ✓ Desequipado do weapon: ${item.name}');
-      final equippedHandType = (item as WeaponItem).equippedHandType;
-      _notifyEquipmentChanged(equippedHandType);
-      _currentWeaponIndex = -1;
-    } else {
-      developer.log('[InventoryInput] Weapon slot já está vazio');
-    }
-  }
-
-  void _equipFirstOffhand() {
+  void _equipMainHandReverse() {
     developer.log(
-      '[InventoryInput] Procurando SHIELD ou STAFF para equipar no offhand (Z)...',
+      '[InventoryInput] Procurando item anterior no inventário para selecionar...',
     );
 
-    for (int i = 0; i < InventoryManager.instance.maxSlots; i++) {
-      final slot = InventoryManager.instance.getSlotByIndex(i);
-      if (slot != null && slot.item != null) {
-        final item = slot.item!;
+    final inventoryManager = getIt<InventoryManager>();
+    final equipmentManager = getIt<EquipmentManager>();
 
-        if (item.type != ItemType.weapon) continue;
-
-        if (item is! WeaponItem) continue;
-
-        final equippedHandType = item.equippedHandType;
-
-        final success = EquipmentManager.instance.equip(
-          EquipmentSlotType.offhand,
-          item,
-        );
-
-        if (success) {
-          developer.log(
-            '[InventoryInput] ✓ Equipado no offhand: ${item.name} (${item.equippedHandType})',
-          );
-          _notifyEquipmentChanged(equippedHandType);
-        }
-
-        return;
-      }
-    }
-  }
-
-  void _unequipOffhand() {
-    final item = EquipmentManager.instance.unequip(EquipmentSlotType.offhand);
-    if (item != null) {
-      final equippedHandType = (item as WeaponItem).equippedHandType;
-      _notifyEquipmentChanged(equippedHandType);
-      _notifyEquipmentChanged(equippedHandType);
-    }
-  }
-
-  void _notifyEquipmentChanged(EquippedHandType equippedHandType) {
-    final players = gameRef.query<DDBasePlayerView>();
-    if (players.isEmpty) {
+    if (inventoryManager.maxSlots == 0) {
+      developer.log('[InventoryInput] Nenhum slot disponível no inventário');
       return;
     }
 
-    final player = players.first;
+    final currentSlotIndex = equipmentManager.currentMainHandSlotIndex;
+    final previousIndex =
+        (currentSlotIndex - 1 + inventoryManager.maxSlots) %
+        inventoryManager.maxSlots;
 
-    player.controller.model.setEquipment(equippedHandType);
+    final success = equipmentManager.selectSlotIndex(previousIndex);
+
+    if (success) {
+      final item = inventoryManager.getSlotByIndex(previousIndex)?.item;
+      final handSuffix = item != null ? ' (${item.id})' : '';
+      final itemName = item?.name ?? 'vazio';
+      developer.log(
+        '[InventoryInput] ✓ Slot selecionado (reverso): $itemName$handSuffix',
+      );
+    } else {
+      developer.log(
+        '[InventoryInput] ✗ Falha ao selecionar slot ${previousIndex + 1}',
+      );
+    }
+  }
+
+  void _notifyEquipmentChanged(HandItemId? handItemId) {
+    // Equipment is now queried dynamically from the player model
+    // No need to notify - the model always returns the current selected slot
+    developer.log(
+      '[InventoryInput] Equipment changed to: ${handItemId?.name ?? "empty"}',
+    );
+  }
+
+  void _handleSelectedSlotChanged() {
+    final selectedItem = getIt<EquipmentManager>().getEquippedItem();
+    _notifyEquipmentChanged(selectedItem?.id);
+  }
+
+  // ========== SV STYLE SLOT SELECTION ==========
+  void _selectSlotByNumber(int slotIndex) {
+    final inventoryManager = getIt<InventoryManager>();
+    final equipmentManager = getIt<EquipmentManager>();
+
+    // Check if slot exists
+    if (slotIndex >= inventoryManager.maxSlots) {
+      developer.log(
+        '[InventoryInput] Slot $slotIndex não existe (max: ${inventoryManager.maxSlots})',
+      );
+      return;
+    }
+
+    final slot = inventoryManager.getSlotByIndex(slotIndex);
+    if (slot == null) {
+      developer.log('[InventoryInput] Slot $slotIndex não encontrado');
+      return;
+    }
+
+    // Select the slot (even if empty - SV style)
+    final success = equipmentManager.selectSlotIndex(slotIndex);
+
+    if (success) {
+      final item = slot.item;
+      if (item != null) {
+        developer.log(
+          '[InventoryInput] ✓ Slot ${slotIndex + 1} selecionado: ${item.name}',
+        );
+      } else {
+        developer.log(
+          '[InventoryInput] ✓ Slot ${slotIndex + 1} selecionado (vazio)',
+        );
+      }
+    } else {
+      developer.log(
+        '[InventoryInput] ✗ Falha ao selecionar slot ${slotIndex + 1}',
+      );
+    }
+  }
+
+  void _openCrafting() {
+    developer.log(
+      '[InventoryInput] Crafting menu não implementado ainda (tecla C)',
+    );
+    // TODO: Implementar menu de crafting no futuro
   }
 }

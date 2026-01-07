@@ -1,0 +1,1 @@
+hoje eu faço "getIt.registerSingleton<InventoryManager>(InventoryManager.instance);", entao nao preciso mais que InventoryManager seja do tipo instance.

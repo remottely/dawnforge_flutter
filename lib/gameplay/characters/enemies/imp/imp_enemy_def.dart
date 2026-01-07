@@ -2,8 +2,9 @@ import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/character_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
+import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
+import 'package:darkness_dungeon/shared/utils/sprite_animation_constants.dart';
 import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
-import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_def.dart';
 
 final class ImpEnemyDef {
   ImpEnemyDef._();
@@ -20,6 +21,23 @@ final class ImpEnemyDef {
   static final Vector2 textureSize = TileConstants.tileSizeStandard;
   static final Vector2 componentSize = textureSize;
 
+  static const int _attackFrameCount = 6;
+  static const double _attackFrameRightY = 0;
+  static const double _attackFrameLeftY = TileConstants.kCharacterDimensionDemo;
+  static const double _attackFrameUpY =
+      TileConstants.kCharacterDimensionDemo * 2;
+  static const double _attackFrameDownY =
+      TileConstants.kCharacterDimensionDemo * 3;
+
+  static Future<SpriteAnimation> loadAnimationIdleRight() =>
+      SpriteAnimation.load(
+        'gameplay/characters/enemies/imp/imp_enemy_idle_right_4.png',
+        SpriteAnimationConfigHelper.createStandardData(
+          amount: 4,
+          textureSize: ImpEnemyDef.textureSize,
+        ),
+      );
+
   static SimpleDirectionAnimation createAnimationWalkDirectional() {
     return SimpleDirectionAnimation(
       idleLeft: SpriteAnimation.load(
@@ -29,7 +47,7 @@ final class ImpEnemyDef {
           textureSize: textureSize,
         ),
       ),
-      idleRight: UISpriteAnimationsDef.loadAnimationImpEnemyIdleRight(),
+      idleRight: loadAnimationIdleRight(),
       runLeft: SpriteAnimation.load(
         'gameplay/characters/enemies/imp/imp_enemy_run_left_4.png',
         SpriteAnimationConfigHelper.createStandardData(

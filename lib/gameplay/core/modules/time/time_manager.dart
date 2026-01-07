@@ -1,6 +1,7 @@
 import 'dart:developer' as developer;
 
-import 'package:darkness_dungeon/gameplay/core/modules/time/time_def.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/time/time_constants.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/time/time_helper.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/time/time_of_day.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
 
@@ -9,9 +10,9 @@ final class TimeManager {
 
   static final instance = TimeManager._();
 
-  double _currentTime = TimeDef.morningStartTime;
+  double _currentTime = TimeConstants.morningStartTime;
 
-  double _timeScale = TimeDef.defaultTimeScale;
+  double _timeScale = TimeConstants.defaultTimeScale;
 
   bool _isPaused = false;
 
@@ -39,15 +40,15 @@ final class TimeManager {
 
     _currentTime += dt * _timeScale;
 
-    if (previousTime < TimeDef.secondsPerDay &&
-        _currentTime >= TimeDef.secondsPerDay) {
+    if (previousTime < TimeConstants.secondsPerDay &&
+        _currentTime >= TimeConstants.secondsPerDay) {
       developer.log(
         '[TimeManager] New day begins! Advancing to day ${previousDay + 1}',
       );
       WorldStateManager.instance.advanceDay();
     }
 
-    _currentTime = _currentTime % TimeDef.secondsPerDay;
+    _currentTime = _currentTime % TimeConstants.secondsPerDay;
 
     _updateTimeOfDay();
   }
@@ -80,14 +81,14 @@ final class TimeManager {
   }
 
   TimeOfDay _calculateTimeOfDay(double timeInSeconds) {
-    if (timeInSeconds >= TimeDef.morningStartTime &&
-        timeInSeconds < TimeDef.noonStartTime) {
+    if (timeInSeconds >= TimeConstants.morningStartTime &&
+        timeInSeconds < TimeConstants.noonStartTime) {
       return TimeOfDay.morning;
-    } else if (timeInSeconds >= TimeDef.noonStartTime &&
-        timeInSeconds < TimeDef.eveningStartTime) {
+    } else if (timeInSeconds >= TimeConstants.noonStartTime &&
+        timeInSeconds < TimeConstants.eveningStartTime) {
       return TimeOfDay.noon;
-    } else if (timeInSeconds >= TimeDef.eveningStartTime &&
-        timeInSeconds < TimeDef.nightStartTime) {
+    } else if (timeInSeconds >= TimeConstants.eveningStartTime &&
+        timeInSeconds < TimeConstants.nightStartTime) {
       return TimeOfDay.evening;
     } else {
       return TimeOfDay.night;
@@ -122,7 +123,7 @@ final class TimeManager {
   }
 
   void setTime(double timeInSeconds) {
-    if (timeInSeconds < 0 || timeInSeconds >= TimeDef.secondsPerDay) {
+    if (timeInSeconds < 0 || timeInSeconds >= TimeConstants.secondsPerDay) {
       developer.log(
         '[TimeManager] Warning: Invalid time value, wrapping to valid range',
         level: 900,
@@ -130,18 +131,18 @@ final class TimeManager {
     }
 
     final previousTime = _currentTime;
-    _currentTime = timeInSeconds % TimeDef.secondsPerDay;
+    _currentTime = timeInSeconds % TimeConstants.secondsPerDay;
 
     developer.log(
-      '[TimeManager] Time set: ${TimeDef.secondsToHours(previousTime).toStringAsFixed(2)}h -> '
-      '${TimeDef.secondsToHours(_currentTime).toStringAsFixed(2)}h',
+      '[TimeManager] Time set: ${TimeHelper.secondsToHours(previousTime).toStringAsFixed(2)}h -> '
+      '${TimeHelper.secondsToHours(_currentTime).toStringAsFixed(2)}h',
     );
 
     _updateTimeOfDay();
   }
 
   double getProgress() {
-    return _currentTime / TimeDef.secondsPerDay;
+    return _currentTime / TimeConstants.secondsPerDay;
   }
 
   void addTimeOfDayListener(Function(TimeOfDay) callback) {
@@ -179,8 +180,9 @@ final class TimeManager {
   void fromJson(Map<String, dynamic> json) {
     developer.log('[TimeManager] Loading time state from JSON');
 
-    _currentTime = json['currentTime'] as double? ?? TimeDef.morningStartTime;
-    _timeScale = json['timeScale'] as double? ?? TimeDef.defaultTimeScale;
+    _currentTime =
+        json['currentTime'] as double? ?? TimeConstants.morningStartTime;
+    _timeScale = json['timeScale'] as double? ?? TimeConstants.defaultTimeScale;
     _isPaused = json['isPaused'] as bool? ?? false;
     _currentTimeOfDay = TimeOfDay.fromJson(
       json['currentTimeOfDay'] as String? ?? 'morning',
@@ -195,8 +197,8 @@ final class TimeManager {
 
   void reset() {
     developer.log('[TimeManager] Resetting time state');
-    _currentTime = TimeDef.morningStartTime;
-    _timeScale = TimeDef.defaultTimeScale;
+    _currentTime = TimeConstants.morningStartTime;
+    _timeScale = TimeConstants.defaultTimeScale;
     _isPaused = false;
     _currentTimeOfDay = TimeOfDay.morning;
     clearListeners();

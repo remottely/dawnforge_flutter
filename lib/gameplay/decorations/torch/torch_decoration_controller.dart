@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/decorations/torch/torch_decoration_config.dart';
 import 'package:darkness_dungeon/gameplay/decorations/torch/torch_decoration_model.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 
 class TorchDecorationController {
   final TorchDecorationModel model;
@@ -18,6 +18,12 @@ class TorchDecorationController {
   })
   onDetectPlayerInCloseVisionRadius;
 
+  // Stamina regeneration system for torches
+  // bool _isPlayerInRange = false;
+  // double _staminaRegenTimer = 0.0;
+  // static const double kStaminaRegenInterval = 2.0; // seconds
+  // static const int kStaminaRegenAmount = 5; // stamina points per interval
+
   TorchDecorationController({
     required this.model,
     required this.onDisplayExclamationEmote,
@@ -28,6 +34,12 @@ class TorchDecorationController {
   void update(double dt, DDBasePlayerView? player) {
     if (player == null) return;
     _handleDetectPlayerInCloseVisionRadius(player);
+    _updateStaminaRegeneration(dt, player);
+  }
+
+  void _updateStaminaRegeneration(double dt, DDBasePlayerView player) {
+    if (model.isDetectPlayer && model.isOn)
+      player.controller.processStaminaRegeneration();
   }
 
   void dispose() {}

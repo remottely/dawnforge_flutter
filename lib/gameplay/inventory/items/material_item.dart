@@ -1,75 +1,70 @@
-import '../models/item.dart';
-import '../models/item_rarity.dart';
-import '../models/item_type.dart';
+import '../entities/enums/hand_item_id.dart';
+import '../entities/enums/hand_item_quality.dart';
+import '../entities/enums/hand_item_type.dart';
+import '../entities/enums/material_type.dart';
+import '../entities/hand_item.dart';
+import '../entities/data/item_icon_data.dart';
 
-final class MaterialItem extends Item {
-  final String materialType;
+final class MaterialItem extends HandItem {
+  final MaterialType materialType;
 
   const MaterialItem({
     required super.id,
     required super.name,
     required super.description,
     required super.baseValue,
-    required super.iconPath,
-    super.rarity = ItemRarity.common,
-    super.type = ItemType.material,
-    super.isStackable = true,
-    super.maxStackSize = 999,
+    required super.iconData,
+    required super.quality,
     required this.materialType,
-  });
+  }) : super(
+         maxStackSize: 99,
+         isTradeable: true,
+         type: HandItemType.material,
+       );
 
   @override
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'type': type.toJson(),
-      'rarity': rarity.toJson(),
-      'baseValue': baseValue,
-      'iconPath': iconPath,
-      'maxStackSize': maxStackSize,
-      'materialType': materialType,
-    };
+    final baseData = super.toJson();
+    return {...baseData, 'materialType': materialType.toJson()};
   }
 
   factory MaterialItem.fromJson(Map<String, dynamic> json) {
+    final baseData = HandItem.fromJson(json);
+
     return MaterialItem(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      description: json['description'] as String,
-      baseValue: json['baseValue'] as int,
-      iconPath: json['iconPath'] as String,
-      rarity: ItemRarity.fromJson(json['rarity'] as String),
-      maxStackSize: json['maxStackSize'] as int? ?? 999,
-      materialType: json['materialType'] as String,
+      id: baseData.id,
+      name: baseData.name,
+      description: baseData.description,
+      quality: baseData.quality,
+      baseValue: baseData.baseValue,
+      iconData: baseData.iconData,
+      materialType: MaterialType.fromJson(
+        json['materialType'] as String? ?? 'unknown',
+      ),
     );
   }
 
-  @override
   MaterialItem copyWith({
-    String? id,
+    HandItemId? id,
     String? name,
     String? description,
     int? baseValue,
-    String? iconPath,
-    ItemRarity? rarity,
-    int? maxStackSize,
-    String? materialType,
+    HandItemQuality? quality,
+    ItemIconData? iconData,
+    MaterialType? materialType,
   }) {
     return MaterialItem(
       id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
       baseValue: baseValue ?? this.baseValue,
-      iconPath: iconPath ?? this.iconPath,
-      rarity: rarity ?? this.rarity,
-      maxStackSize: maxStackSize ?? this.maxStackSize,
+      quality: quality ?? this.quality,
+      iconData: iconData ?? this.iconData,
       materialType: materialType ?? this.materialType,
     );
   }
 
   @override
   String toString() =>
-      'MaterialItem(id: $id, name: $name, materialType: $materialType)';
+      'MaterialItem(id: ${id.name}, name: $name, materialType: ${materialType.name})';
 }
