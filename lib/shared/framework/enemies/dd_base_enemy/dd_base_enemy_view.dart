@@ -1,15 +1,12 @@
-import 'dart:async' as async;
-
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/enemy_primary_attack_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fx_particles_animations_def.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/offset_helper.dart';
-import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
-import 'package:darkness_dungeon/shared/framework/utils/dd_character_action_sprite_animation_helper.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/death/character_fx_sprite_animations_def.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_controller.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_model.dart';
+import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
+import 'package:darkness_dungeon/shared/framework/utils/dd_character_action_sprite_animation_helper.dart';
 import 'package:flutter/foundation.dart';
 
 abstract class DDBaseEnemyView<
@@ -18,13 +15,9 @@ abstract class DDBaseEnemyView<
 >
     extends SimpleEnemy
     with BlockMovementCollision, UseLifeBar {
-  late final List<DDAnimationDirectional> _comboAttackAnimations;
-  int _comboStep = 0;
-  bool _isAttackPlaying = false;
-  bool _comboQueued = false;
-  async.Timer? _comboResetTimer;
-  static const Duration _kComboResetDelay = Duration(milliseconds: 450);
   late final C _controller;
+  late final DDAnimationDirectional _attackAnimation;
+  bool _isAttackPlaying = false;
 
   DDBaseEnemyView({
     required super.position,
@@ -45,9 +38,7 @@ abstract class DDBaseEnemyView<
   Future<void> onLoad() async {
     _controller = createController(createModel());
     add(getHitbox());
-
-    _comboAttackAnimations = await _loadComboAttackAnimations();
-
+    _attackAnimation = await _loadAttackAnimation();
     await super.onLoad();
   }
 
@@ -60,7 +51,6 @@ abstract class DDBaseEnemyView<
 
   @override
   void onRemove() {
-    _comboResetTimer?.cancel();
     _controller.dispose();
     super.onRemove();
   }
@@ -104,34 +94,53 @@ abstract class DDBaseEnemyView<
     required double closeVisionRadius,
     void Function(Player)? onCloseToPlayer,
   }) {
-    _executePrimaryAttackCombo(
-      damage: controller.model.primaryAttackDamage,
-      interval: controller.model.primaryAttackInterval,
-      closeVisionRadius: closeVisionRadius,
-      onCloseToPlayer: onCloseToPlayer,
+    seeAndMoveToPlayer(
+      radiusVision: closeVisionRadius,
+      closePlayer: (player) {
+        onCloseToPlayer?.call(player);
+        
+        // Deixa o Bonfire gerenciar o interval através do simpleAttackMelee
+        // Quando o interval passar, o callback execute é chamado e aí iniciamos a animação
+        simpleAttackMelee(
+          size: EnemyPrimaryAttackDef.componentSize,
+          damage: controller.model.primaryAttackDamage,
+          interval: controller.model.primaryAttackInterval,
+          animationRight: EnemyPrimaryAttackDef.loadAnimationFxRight(),
+          execute: () {
+            _log(
+              'Attack executed: damage=${controller.model.primaryAttackDamage} '
+              'time=${DateTime.now().toIso8601String()}',
+            );
+            AudioManager.instance.playEnemyPrimaryAttackSfx();
+            
+            // Inicia a animação do corpo do enemy apenas quando o ataque é realmente executado
+            _playAttackBodyAnimation();
+          },
+        );
+      },
     );
   }
 
-  Future<List<DDAnimationDirectional>> _loadComboAttackAnimations() async {
-    final factories = comboAttackAnimationFactories;
-    if (factories.isEmpty) {
-      return [await _loadDefaultAttackAnimation()];
+  /// Override this to provide custom attack animation factory
+  /// By default, returns null and will use a simple directional animation
+  DDAnimationDirectionalFactory? get attackAnimationFactory => null;
+
+  /// Override this to provide custom attack animation (fallback if no factory)
+  Future<SpriteAnimation> attackAnimationFallback() {
+    return EnemyPrimaryAttackDef.loadAnimationFxRight();
+  }
+
+  Future<DDAnimationDirectional> _loadAttackAnimation() async {
+    final factory = attackAnimationFactory;
+    
+    if (factory != null) {
+      // Usa o factory fornecido pelo enemy específico
+      return DDCharacterActionSpriteAnimationHelper
+          .loadAnimationDirectionalFromFactory(factory);
     }
-
-    final animations = await Future.wait(
-      factories.map(
-        DDCharacterActionSpriteAnimationHelper
-            .loadAnimationDirectionalFromFactory,
-      ),
-    );
-
-    return animations.isNotEmpty ? animations : [await _loadDefaultAttackAnimation()];
-  }
-
-  List<DDAnimationDirectionalFactory> get comboAttackAnimationFactories => const [];
-
-  Future<DDAnimationDirectional> _loadDefaultAttackAnimation() async {
-    final animation = await EnemyPrimaryAttackDef.loadAnimationFxRight();
+    
+    // Fallback: usa a mesma animação para todas as direções
+    final animation = await attackAnimationFallback();
     return DDAnimationDirectional(
       right: animation,
       left: animation,
@@ -144,116 +153,36 @@ abstract class DDBaseEnemyView<
     );
   }
 
-  void _executePrimaryAttackCombo({
-    required double damage,
-    required int interval,
-    required double closeVisionRadius,
-    void Function(Player)? onCloseToPlayer,
-  }) {
-    seeAndMoveToPlayer(
-      radiusVision: closeVisionRadius,
-      closePlayer: (player) {
-        onCloseToPlayer?.call(player);
-        _onExecutePrimaryAttack(damage: damage, interval: interval);
-      },
-    );
-  }
-
-  void _onExecutePrimaryAttack({required double damage, required int interval}) {
-    if (_comboAttackAnimations.isEmpty) {
-      return;
-    }
-
+  void _playAttackBodyAnimation() {
+    // Evita múltiplas animações simultâneas
     if (_isAttackPlaying) {
-      if (_comboQueued) {
-        // Already queued; avoid log spam.
-        return;
-      }
-      _comboQueued = true;
-      _log('Combo queued (animation running). damage=$damage interval=$interval');
       return;
     }
 
-    _startComboAttack(damage: damage, interval: interval);
-  }
-
-  void _startComboAttack({required double damage, required int interval}) {
-    final comboAnimation = _comboAttackAnimations[_comboStep];
-
-    _log(
-      'Start combo attack step=$_comboStep damage=$damage interval=$interval '
-      'isDead=$isDead',
-    );
+    _isAttackPlaying = true;
 
     DDCharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-      animationRight: comboAnimation.right,
-      animationLeft: comboAnimation.left,
-      animationUp: comboAnimation.up,
-      animationDown: comboAnimation.down,
-      animationRightUp: comboAnimation.rightUp,
-      animationRightDown: comboAnimation.rightDown,
-      animationLeftUp: comboAnimation.leftUp,
-      animationLeftDown: comboAnimation.leftDown,
+      animationRight: _attackAnimation.right,
+      animationLeft: _attackAnimation.left,
+      animationUp: _attackAnimation.up,
+      animationDown: _attackAnimation.down,
+      animationRightUp: _attackAnimation.rightUp,
+      animationRightDown: _attackAnimation.rightDown,
+      animationLeftUp: _attackAnimation.leftUp,
+      animationLeftDown: _attackAnimation.leftDown,
       currentAnimation: animation,
       target: this,
       executionStartFrame: 1,
       onActionStart: () {
-        _log('onActionStart step=$_comboStep');
-        _isAttackPlaying = true;
-        _comboResetTimer?.cancel();
+        _log('Attack body animation started');
       },
       onExecutionFrames: () {
-        _log('onExecutionFrames step=$_comboStep isDead=$isDead');
-        if (isDead) return;
-        _applyPrimaryAttackHit(damage: damage, interval: interval);
+        // A animação está apenas visual, o dano já foi aplicado pelo simpleAttackMelee
       },
-      onActionEnd: _handleAttackEnd,
-    );
-
-    _comboStep = (_comboStep + 1) % _comboAttackAnimations.length;
-  }
-
-  void _handleAttackEnd() {
-    _log('onActionEnd step=$_comboStep queued=$_comboQueued');
-    _isAttackPlaying = false;
-
-    if (_comboQueued) {
-      _comboQueued = false;
-      _startComboAttack(
-        damage: controller.model.primaryAttackDamage,
-        interval: controller.model.primaryAttackInterval,
-      );
-      return;
-    }
-
-    _comboResetTimer?.cancel();
-    _comboResetTimer = async.Timer(_kComboResetDelay, () {
-      _comboStep = 0;
-    });
-  }
-
-  void _applyPrimaryAttackHit({required double damage, required int interval}) {
-    final player = gameRef.player;
-    final Direction direction =
-        player != null ? getDirectionToTarget(player) : lastDirection;
-    final Vector2 centerOffset = OffsetHelper.getCenterOffset(
-      Vector2(EnemyPrimaryAttackDef.componentSize.x / 2, 0),
-      direction,
-    );
-
-    _log(
-      'simpleAttackMelee damage=$damage interval=$interval direction=$direction '
-      'offset=(${centerOffset.x.toStringAsFixed(2)},${centerOffset.y.toStringAsFixed(2)}) '
-      'time=${DateTime.now().toIso8601String()}',
-    );
-    simpleAttackMelee(
-      size: EnemyPrimaryAttackDef.componentSize,
-      damage: damage,
-      interval: interval,
-      direction: direction,
-      centerOffset: centerOffset,
-      animationRight: EnemyPrimaryAttackDef.loadAnimationFxRight(),
-      execute: AudioManager.instance.playEnemyPrimaryAttackSfx,
+      onActionEnd: () {
+        _isAttackPlaying = false;
+        _log('Attack body animation ended');
+      },
     );
   }
 
