@@ -166,7 +166,7 @@ final class MapDef {
     MapData(
       id: kTownMapId,
       asset: 'tiled/maps/$kTownMapId.json',
-      sensorIds: ['sensor_$kFarmMapId', 'sensor_$kCaveMapId'],
+      sensorIds: ['sensor_$kFarmMapId', 'sensor_$kCaveMapId', 'sensor_$kBeachMapId'],
       backgroundMusic: AudioDef.bgMusicFarm,
       lightingColor: _kNoneLightingColor,
       backgroundColor: _kLakeBackgroundColor,

@@ -1,5 +1,7 @@
 # IMPORTANT BEFORE LAUNCH:
 
+- [PRIORITY] mudar todas as falas do MVP do jogo
+
 - [NOT_PRIORITY] criar feat que vende e compra itens em massa, grandes quantidades
 
 - [DONE] EquippedHandType deve ser HandItemType e Item deve ser HandItem pois todos os items do jogo hj sao itens capazes de serem segurados pelo player e eu quero q tanto as keys de maps quanto os ids dos items sejam tipados pelo tipo e nao mais strings, entao as keys e ids serão do tipo HandItemType.

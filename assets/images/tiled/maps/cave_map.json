@@ -411,10 +411,11 @@
         {
          "draworder":"topdown",
          "id":9,
+         "locked":true,
          "name":"teleports",
          "objects":[
                 {
-                 "height":64,
+                 "height":124.908365145173,
                  "id":28,
                  "name":"sensor_forest_map",
                  "properties":[
@@ -436,12 +437,12 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":30.7924,
-                 "x":-14.0299864608239,
-                 "y":291.792608784753
+                 "width":60.0973178577535,
+                 "x":-45.3049178577535,
+                 "y":259.091634854827
                 }, 
                 {
-                 "height":30.7924,
+                 "height":45.1131143521533,
                  "id":29,
                  "name":"sensor_town_map",
                  "properties":[
@@ -463,8 +464,8 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":64,
-                 "x":208,
+                 "width":93.7646730536695,
+                 "x":192,
                  "y":752
                 }],
          "opacity":1,
