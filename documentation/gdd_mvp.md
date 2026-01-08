@@ -220,7 +220,7 @@ MVP focado no loop essencial: **plantar → regar → colher → vender**. Conte
 - ⭐🔴 criar sistema de mana para utilização de fireball attack
 - ⭐🔴 botar de volta fireball no jogo e mudar sprite de fireball para azul? roxo? assets já encontrados antes
 - ⭐🔴 adicionar toda a logica de input de mouse no jogo
-- ⭐🔴
+- ⭐🔴 toda vez q ocorrer falas com inimigos, os inimigos devem permanecer em idle, "a mas pq nao pausar o jogo todo?", as animacoes do jogo param tb e quero q elas permanecam ocorrendo. um exemplo é no dialogo com o boss, ele ataca, anda, etc enquanto ainda estamo no dialogo
 - ⭐🔴
 - ⭐🔴
 - ⭐🔴

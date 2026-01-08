@@ -179,9 +179,7 @@ class BossEnemyView
           maxVisibleTile: TileConstants.kMaxVisibleTiles,
         ),
       );
-      AudioManager.instance.playBackgroundMusic(
-        AudioDef.bgMusicCaveBoss,
-      );
+      AudioManager.instance.playBackgroundMusic(AudioDef.bgMusicCaveBoss);
     });
   }
 

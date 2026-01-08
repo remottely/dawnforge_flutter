@@ -33,7 +33,15 @@ final class AudioManager {
       print('[AudioManager] Initializing...');
     }
     FlameAudio.bgm.initialize();
-    await FlameAudio.audioCache.loadAll(AudioDef.kPreloadAudioFiles);
+    for (final asset in AudioDef.kPreloadAudioFiles) {
+      try {
+        await FlameAudio.audioCache.load(asset);
+      } catch (e) {
+        if (kDebugMode) {
+          print('[AudioManager] Skipping missing/invalid asset: $asset -> $e');
+        }
+      }
+    }
     if (kDebugMode) {
       print('[AudioManager] Initialized successfully');
     }

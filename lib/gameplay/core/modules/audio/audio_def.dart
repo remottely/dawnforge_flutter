@@ -7,10 +7,13 @@ final class AudioDef {
   static const double kConversationInteractionVolume = 0.4;
 
   // static const String kSfxPlayerAttackAsset = 'sfx/sfx_player_attack.mp3';
-  static const String kSfxPlayerAttack1Asset = 'sfx/combat/primary_attack_1.wav';
-  static const String kSfxPlayerAttack2Asset = 'sfx/combat/primary_attack_2.wav';
-  static const String kSfxPlayerAttack3Asset = 'sfx/combat/primary_attack_3.wav';
-  
+  static const String kSfxPlayerAttack1Asset =
+      'sfx/combat/primary_attack_1.wav';
+  static const String kSfxPlayerAttack2Asset =
+      'sfx/combat/primary_attack_2.wav';
+  static const String kSfxPlayerAttack3Asset =
+      'sfx/combat/primary_attack_3.wav';
+
   static const String kSfxCharacterFireBallAttackAsset =
       'sfx/sfx_character_fireball_attack.wav';
   static const String kSfxEnemyAttackAsset = 'sfx/sfx_enemy_attack.mp3';
@@ -33,13 +36,23 @@ final class AudioDef {
 
   // static const backgroundMusic1 = 'music/Keys Of Moon - Enchanted.mp3';
 
-  static const bgMusicFarm = 'bg/music/farm - PhaseShift.mp3';
-  static const bgMusicTown = 'bg/music/town - Scott Buckley - Clarion.mp3';
-  static const bgMusicForest = 'bg/music/forest - Savfk - Rounding.mp3';
-  static const bgMusicLake =
-      'bg/music/lake - Justin Allan Arnold - Antigone.mp3';
-  static const bgMusicBeach = 'bg/music/beach - Glitch - Prehistory.mp3';
+  // static const bgMusicFarm = 'bg/music/farm - PhaseShift.mp3';
+  // static const bgMusicForest = 'bg/music/forest - Savfk - Rounding.mp3';
+  // static const bgMusicTown = 'bg/music/town - Scott Buckley - Clarion.mp3';
+  // static const bgMusicLake =
+  //     'bg/music/lake - Justin Allan Arnold - Antigone.mp3';
+  // static const bgMusicBeach = 'bg/music/beach - Glitch - Prehistory.mp3';
   static const bgMusicCaveBoss = 'bg/music/cave_boss - RitesOfPassage.mp3';
+  static const bgMusicGameOverSuccess = 'bg/music/game_over_success - Scott Buckley - Clarion.ogg';
+
+  static const bgMusicFarm = 'maps/farm/bgm/Pixverses - Big Helmet.ogg';
+  static const bgMusicForest = 'maps/forest/bgm/Pixverses - A Green Pig.ogg';
+  static const bgMusicTown =
+      'maps/town/bgm/Pixverses - A Lonely Cherry Tree.ogg';
+  static const bgMusicLake =
+      'maps/lake/bgm/Pixverses - The Most Powerful Chicken.ogg';
+  static const bgMusicBeach = 'maps/beach/bgm/Pixverses - A Lost Soul.ogg';
+  static const bgMusicCave = 'maps/cave/bgm/Pixverses - A Midnight Bat.ogg';
 
   static const List<String> kPreloadAudioFiles = [
     // kSfxPlayerAttackAsset,
@@ -59,6 +72,8 @@ final class AudioDef {
     bgMusicForest,
     bgMusicLake,
     bgMusicBeach,
+    bgMusicCave,
     bgMusicCaveBoss,
+    bgMusicGameOverSuccess,
   ];
 }

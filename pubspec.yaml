@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.97.0+1
+version: 1.98.0+1
 
 environment:
   sdk: ^3.8.1
@@ -246,45 +246,53 @@ flutter:
     # - assets/audio/music/music_ro1_death_hex_background.mp3 # TODO(Kevin): remove it
     # - assets/audio/music/music_ro1_letters_background.mp3 # TODO(Kevin): remove it
 
-    # Credits:
-    # 'Phase Shift' by Scott Buckley - released under CC-BY 4.0. www.scottbuckley.com.au
-    - assets/audio/bg/music/farm - PhaseShift.mp3
+    # # Credits:
+    # # 'Phase Shift' by Scott Buckley - released under CC-BY 4.0. www.scottbuckley.com.au
+    # - assets/audio/bg/music/farm - PhaseShift.mp3
 
-    # Credits:
-    # Song: Clarion
-    # Composer: Scott Buckley
-    # Website: https://youtube.com/user/musicbyscottb
-    # License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
-    # Music powered by BreakingCopyright: https://breakingcopyright.com
-    - assets/audio/bg/music/town - Scott Buckley - Clarion.mp3
+    # # Credits:
+    # # Song: Rounding
+    # # Composer: Savfk
+    # # Website: https://youtube.com/savfkmusic
+    # # License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
+    # # Music powered by BreakingCopyright: https://breakingcopyright.com
+    # - assets/audio/bg/music/forest - Savfk - Rounding.mp3
 
-    # Credits:
-    # Song: Rounding
-    # Composer: Savfk
-    # Website: https://youtube.com/savfkmusic
-    # License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
-    # Music powered by BreakingCopyright: https://breakingcopyright.com
-    - assets/audio/bg/music/forest - Savfk - Rounding.mp3
+    # # Credits:
+    # # Song: Clarion
+    # # Composer: Scott Buckley
+    # # Website: https://youtube.com/user/musicbyscottb
+    # # License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
+    # # Music powered by BreakingCopyright: https://breakingcopyright.com
+    # - assets/audio/bg/music/town - Scott Buckley - Clarion.mp3
 
-    # Credits:
-    # Song: Antigone
-    # Composer: Justin Allan Arnold
-    # Website: https://soundcloud.com/justin-allan-arnold
-    # License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
-    # Music powered by BreakingCopyright: https://breakingcopyright.com
-    - assets/audio/bg/music/lake - Justin Allan Arnold - Antigone.mp3
+    # # Credits:
+    # # Song: Antigone
+    # # Composer: Justin Allan Arnold
+    # # Website: https://soundcloud.com/justin-allan-arnold
+    # # License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
+    # # Music powered by BreakingCopyright: https://breakingcopyright.com
+    # - assets/audio/bg/music/lake - Justin Allan Arnold - Antigone.mp3
 
-    # Credits:
-    # Song: Prehistory
-    # Composer: Glitch
-    # Website: https://www.youtube.com/playlist
-    # License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
-    # Music powered by BreakingCopyright: https://breakingcopyright.com
-    - assets/audio/bg/music/beach - Glitch - Prehistory.mp3
+    # # Credits:
+    # # Song: Prehistory
+    # # Composer: Glitch
+    # # Website: https://www.youtube.com/playlist
+    # # License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
+    # # Music powered by BreakingCopyright: https://breakingcopyright.com
+    # - assets/audio/bg/music/beach - Glitch - Prehistory.mp3
 
-    # Credits:
-    # 'Rites of Passage' by Scott Buckley - released under CC-BY 4.0. www.scottbuckley.com.au
+    # # Credits:
+    # # 'Rites of Passage' by Scott Buckley - released under CC-BY 4.0. www.scottbuckley.com.au
     - assets/audio/bg/music/cave_boss - RitesOfPassage.mp3
+
+    # # Credits:
+    # # Song: Clarion
+    # # Composer: Scott Buckley
+    # # Website: https://youtube.com/user/musicbyscottb
+    # # License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
+    # # Music powered by BreakingCopyright: https://breakingcopyright.com
+    - assets/audio/bg/music/game_over_success - Scott Buckley - Clarion.ogg
 
     # === AUDIO - SFX ===
     - assets/audio/sfx/sfx_character_fireball_attack.wav
@@ -347,10 +355,16 @@ flutter:
     - assets/images/tiled/Smallburg_dungeon_pack_v2.13/edited_assets/characters/slash_1/character_demo/character_slash_1_light_full_6.png
     - assets/images/tiled/Smallburg_dungeon_pack_v2.13/edited_assets/characters/slash_2/character_demo/character_slash_2_light_full_6.png
     - assets/images/tiled/Smallburg_dungeon_pack_v2.13/edited_assets/characters/super_slash/character_demo/character_super_slash_light_full_6.png
-    - assets/images/tiled/Smallburg_dungeon_pack_v2.13/assets/enemies/slimes/red/attack/slime_red_attack.png 
+    - assets/images/tiled/Smallburg_dungeon_pack_v2.13/assets/enemies/slimes/red/attack/slime_red_attack.png
     - assets/images/tiled/Smallburg_dungeon_pack_v2.13/assets/enemies/skeletons/skeleton/idle/skeleton_idle_2.png
     - assets/images/tiled/Smallburg_dungeon_pack_v2.13/assets/enemies/skeletons/skeleton/walk/skeleton_walk_4.png
     - assets/images/tiled/Smallburg_dungeon_pack_v2.13/assets/enemies/skeletons/skeleton/attack/skeleton_attack.png
+    - assets/audio/maps/farm/bgm/Pixverses - Big Helmet.ogg
+    - assets/audio/maps/forest/bgm/Pixverses - A Green Pig.ogg
+    - assets/audio/maps/town/bgm/Pixverses - A Lonely Cherry Tree.ogg
+    - assets/audio/maps/lake/bgm/Pixverses - The Most Powerful Chicken.ogg
+    - assets/audio/maps/beach/bgm/Pixverses - A Lost Soul.ogg
+    - assets/audio/maps/cave/bgm/Pixverses - A Midnight Bat.ogg
 
   fonts:
     - family: Normal

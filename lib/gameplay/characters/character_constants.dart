@@ -7,6 +7,7 @@ final class CharacterConstants {
   static const double kLifeMedium = 120;
   static const double kLifeLarge = 150;
   static const double kLifeExtraLarge = 200;
+  static const double kLifeBoss = 200;
 
   static const double kSpeedSlow = 18 * AppEnvironment.kGameSpeedMultiplier;
   static const double kSpeedMedium = 24 * AppEnvironment.kGameSpeedMultiplier;

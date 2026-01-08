@@ -14,7 +14,7 @@ final class BossEnemyDef {
   static const int kPrimaryAttackInterval =
       CharacterConstants.kAttackIntervalExtraLarge;
 
-  static const double kLife = CharacterConstants.kLifeExtraLarge;
+  static const double kLife = CharacterConstants.kLifeBoss;
   static const double kSpeed = CharacterConstants.kSpeedSlow;
 
   static final Vector2 textureSize = Vector2(32, 36);
