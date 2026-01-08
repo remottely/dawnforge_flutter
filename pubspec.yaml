@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.96.14+1
+version: 1.96.15+1
 
 environment:
   sdk: ^3.8.1
@@ -220,8 +220,8 @@ flutter:
     - assets/images/tiled/temple_1.json
 
     # === TILED - Maps (Folder - Loaded Dynamically) ===
-    - assets/images/tiled/maps/ #TODO(Kevin): put manually all maps here
-    - assets/images/tiled/small_burg/maps/
+    # - assets/images/tiled/maps/ #TODO(Kevin): put manually all maps here
+    # - assets/images/tiled/small_burg/maps/
 
     # === TILED - Icons ===
     - assets/images/tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png
@@ -318,6 +318,11 @@ flutter:
 
     # - assets/images/tiled/small_burg/maps/sb_farm.json # TODO(Kevin): remove it from all project
     - assets/images/tiled/maps/farm_map.json
+    - assets/images/tiled/maps/forest_map.json
+    - assets/images/tiled/maps/town_map.json
+    - assets/images/tiled/maps/lake_map.json
+    - assets/images/tiled/maps/beach_map.json
+    - assets/images/tiled/maps/cave_map.json
     - assets/images/tiled/small_burg/texture_atlas_1.png
     - assets/images/tiled/texture_atlas.json
 

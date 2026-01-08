@@ -1,6 +1,5 @@
 import 'dart:math' as math;
 
-import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_service.dart';
@@ -364,6 +363,12 @@ class _MarketPanelState extends State<MarketPanel> {
     if (event is! RawKeyDownEvent) return KeyEventResult.ignored;
 
     final key = event.logicalKey;
+
+    // Fechar market com ESC
+    if (key == LogicalKeyboardKey.escape) {
+      MarketState.instance.close();
+      return KeyEventResult.handled;
+    }
 
     // Navegação no grid do market via direcionais.
     if (_isUp(key)) {

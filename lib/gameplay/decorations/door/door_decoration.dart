@@ -8,7 +8,6 @@ import 'package:darkness_dungeon/gameplay/core/modules/ui/dialog/binary_choice_d
 import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
-import 'package:flutter/widgets.dart';
 
 class DoorDecorationView extends GameDecoration {
   bool _isOpen = false;

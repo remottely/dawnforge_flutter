@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
+// import 'package:darkness_dungeon/gameplay/market/market_decoration_def.dart';
 import 'package:darkness_dungeon/gameplay/market/market_state.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_contact_decoration.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
@@ -9,12 +10,15 @@ import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consu
 import 'package:flutter/material.dart';
 
 /// Decoração interativa do market. Ao encostar, aguarda o input de interação para abrir o painel.
-class MarketDecoration extends DDContactDecoration with PlayerControllerListener {
+class MarketDecoration extends DDContactDecoration
+    with PlayerControllerListener {
   static final Set<String> _spawnedPositions = <String>{};
 
   /// Clear cached spawn registry (e.g., when rebuilding the game after death/restart).
   static void clearSpawnRegistry() {
-    debugPrint('[MarketDecoration] Clearing spawn registry (${_spawnedPositions.length} entries)');
+    debugPrint(
+      '[MarketDecoration] Clearing spawn registry (${_spawnedPositions.length} entries)',
+    );
     _spawnedPositions.clear();
   }
 
@@ -30,26 +34,23 @@ class MarketDecoration extends DDContactDecoration with PlayerControllerListener
   MarketDecoration({
     required super.position,
     required super.size,
-    Sprite? sprite,
     this.overlayId,
     this.onOpenMarket,
     this.interactionIcon,
-  }) : super.withSprite(
-          sprite: sprite ??
-              Sprite.load(
-                'hud/commerce_marketplace_stall_open.png',
-              ),
-        );
+  });
+  // : super.withSprite(
+  //        sprite: MarketDecorationDef.loadSprite(),
+  //       //  size: MarketDecorationDef.componentSize,
+  //      )
+  // {
+  //   anchor = Anchor.bottomLeft;
+  // }
 
-  /// Facilita criação com sprite já carregado.
-  MarketDecoration.withSprite({
-    required super.sprite,
-    required super.position,
-    required super.size,
-    this.overlayId,
-    this.onOpenMarket,
-    this.interactionIcon,
-  }) : super.withSprite();
+  // @override
+  // Future<void> onLoad() {
+  //   add(MarketDecorationDef.createHitbox());
+  //   return super.onLoad();
+  // }
 
   @override
   void onContact(SimplePlayer component) {
@@ -59,7 +60,9 @@ class MarketDecoration extends DDContactDecoration with PlayerControllerListener
     _currentPlayer = component is DDBasePlayerView ? component : _currentPlayer;
     _registerToPlayerController();
 
-    debugPrint('[MarketDecoration] onContact -> waiting interaction at $_spawnKey');
+    debugPrint(
+      '[MarketDecoration] onContact -> waiting interaction at $_spawnKey',
+    );
   }
 
   @override
@@ -74,25 +77,14 @@ class MarketDecoration extends DDContactDecoration with PlayerControllerListener
   }
 
   @override
-  Future<void> onLoad() async {
-    await super.onLoad();
-    // Alinha visualmente a banca pela base e adiciona hitbox para bloqueio.
-    anchor = Anchor.bottomCenter;
-    add(
-      RectangleHitbox(
-        size: size,
-        collisionType: CollisionType.passive,
-      ),
-    );
-  }
-
-  @override
   void onMount() {
     super.onMount();
     MarketState.instance.isOpen.addListener(_syncDialogState);
     final key = _spawnKey;
     if (_spawnedPositions.contains(key)) {
-      debugPrint('[MarketDecoration] Duplicate instance detected at $key; removing extra copy.');
+      debugPrint(
+        '[MarketDecoration] Duplicate instance detected at $key; removing extra copy.',
+      );
       scheduleMicrotask(removeFromParent);
       return;
     }
@@ -108,7 +100,9 @@ class MarketDecoration extends DDContactDecoration with PlayerControllerListener
     if (_registered) {
       _spawnedPositions.remove(_spawnKey);
     }
-    debugPrint('[MarketDecoration] removed at $_spawnKey (registered=$_registered)');
+    debugPrint(
+      '[MarketDecoration] removed at $_spawnKey (registered=$_registered)',
+    );
     super.onRemove();
   }
 
@@ -147,13 +141,17 @@ class MarketDecoration extends DDContactDecoration with PlayerControllerListener
     if (event.event != ActionEvent.DOWN) return;
     if (!InputDef.isInteractionAction(event.id)) return;
     if (_dialogOpen) {
-      debugPrint('[MarketDecoration] interaction ignored, dialog already open at $_spawnKey');
+      debugPrint(
+        '[MarketDecoration] interaction ignored, dialog already open at $_spawnKey',
+      );
       return;
     }
 
     final player = _currentPlayer;
     if (player == null) {
-      debugPrint('[MarketDecoration] interaction ignored, no player reference at $_spawnKey');
+      debugPrint(
+        '[MarketDecoration] interaction ignored, no player reference at $_spawnKey',
+      );
       return;
     }
 
@@ -165,7 +163,9 @@ class MarketDecoration extends DDContactDecoration with PlayerControllerListener
   void onJoystickChangeDirectional(JoystickDirectionalEvent event) {
     if (!_dialogOpen) return;
     if (event.directional == JoystickMoveDirectional.IDLE) return;
-    debugPrint('[MarketDecoration] movement detected -> closing market at $_spawnKey');
+    debugPrint(
+      '[MarketDecoration] movement detected -> closing market at $_spawnKey',
+    );
     _closeMarket();
   }
 

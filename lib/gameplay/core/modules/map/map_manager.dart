@@ -5,6 +5,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/map/map_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/map_data.dart';
 import 'package:darkness_dungeon/gameplay/decorations/map_transition_sensor.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart';
 
 class MapManager {
   static MapTransitionSensorView _createMapSensor(
@@ -32,6 +33,17 @@ class MapManager {
     );
   }
 
+  static GameComponent _createCollision(TiledObjectProperties properties) {
+    debugPrint('🔥 Creating collision at: ${properties.position}, size: ${properties.size}');
+    debugPrint('🔥 Properties type: ${properties.type}');
+    // debugPrint('🔥 Properties class: ${properties.className}');
+    
+    return _MapCollisionDecoration(
+      position: properties.position,
+      size: properties.size,
+    );
+  }
+
   static void _addSensorBuilders(
     Map<String, ObjectBuilder> builders,
     List<String> sensorIds,
@@ -46,6 +58,14 @@ class MapManager {
     builders.addEntries(MapDef.createEntityBuilder().entries);
   }
 
+  static void _addCollisionBuilder(Map<String, ObjectBuilder> builders) {
+    debugPrint('🔥 Registering collision builder');
+    builders['collision'] = (properties) {
+      debugPrint('🔥 Collision builder called!');
+      return _createCollision(properties);
+    };
+  }
+
   static Map<String, ObjectBuilder> _createObjectBuilder({
     required List<String> sensorIds,
   }) {
@@ -53,7 +73,10 @@ class MapManager {
 
     _addSensorBuilders(builders, sensorIds);
     _addEntityBuilders(builders);
+    _addCollisionBuilder(builders);
 
+    debugPrint('🔥 Total builders registered: ${builders.keys.toList()}');
+    
     return builders;
   }
 
@@ -93,5 +116,31 @@ class MapManager {
     if (builder != null) return builder(context, null);
 
     return null;
+  }
+}
+
+class _MapCollisionDecoration extends GameDecoration with Movement, BlockMovementCollision {
+  _MapCollisionDecoration({
+    required super.position,
+    required super.size,
+  });
+
+  @override
+  Future<void> onLoad() async {
+    debugPrint('🔥 _MapCollisionDecoration onLoad started');
+    await super.onLoad();
+    
+    add(
+      RectangleHitbox(
+        // size: size,
+        // position: Vector2.zero(),
+        collisionType: CollisionType.passive,
+        // isSensor: false,
+      ),
+    );
+
+    
+    
+    debugPrint('✅ Collision hitbox added at: $position, size: $size');
   }
 }
