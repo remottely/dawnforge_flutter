@@ -16,6 +16,7 @@ import 'package:darkness_dungeon/gameplay/market/market_state.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 /// Painel do market exibido dentro do grid da HUD (Quadrante 5).
 class MarketPanel extends StatefulWidget {
@@ -55,13 +56,13 @@ class _MarketPanelState extends State<MarketPanel> {
       if (item != null) {
         _itemCache[entry.itemId] = item;
       } else {
-        debugPrint('[MarketPanel] ItemFactoryService returned null for ${entry.itemId}');
+        GameLogger.debug('[MarketPanel] ItemFactoryService returned null for ${entry.itemId}');
       }
     }
     _visibleCatalog = _catalog
         .where((entry) => _itemCache.containsKey(entry.itemId))
         .toList();
-    debugPrint('[MarketPanel] visibleCatalog size=${_visibleCatalog.length}');
+    GameLogger.debug('[MarketPanel] visibleCatalog size=${_visibleCatalog.length}');
 
     // Garante que o overlay pegue o foco do teclado assim que abrir.
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -154,7 +155,7 @@ class _MarketPanelState extends State<MarketPanel> {
         const Spacer(),
         IconButton(
           onPressed: () {
-                  debugPrint('[MarketPanel] close button tapped');
+                  GameLogger.debug('[MarketPanel] close button tapped');
                   MarketState.instance.close();
           },
           icon: const Icon(Icons.close, color: Colors.white70),

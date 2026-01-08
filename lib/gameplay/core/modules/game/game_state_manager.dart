@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/save/game_save_controller.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/gameplay_screen.dart';
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 import 'package:flutter/material.dart';
 
 class GameStateManager extends GameComponent {
@@ -38,13 +38,13 @@ class GameStateManager extends GameComponent {
   }
 
   void _displayGameOverDialog() {
-    print('[GameStateManager] Displaying game over dialog');
+    GameLogger.info('[GameStateManager] Displaying game over dialog');
     _vIsGameOverDisplayed = true;
     UIStateManager.instance.displayGameOverDialog(context, _onPressRestartGame);
   }
 
   void _onPressRestartGame(BuildContext dialogContext) async {
-    print('[GameStateManager] Restart button pressed');
+    GameLogger.info('[GameStateManager] Restart button pressed');
     
     Navigator.of(dialogContext).pop();
     
@@ -52,17 +52,17 @@ class GameStateManager extends GameComponent {
     final hasSave = await GameSaveController.instance.hasSave();
     
     if (hasSave) {
-      print('[GameStateManager] Save found - Loading last save...');
+      GameLogger.info('[GameStateManager] Save found - Loading last save...');
       await GameSaveController.instance.loadGame();
     } else {
-      print('[GameStateManager] No save found - Resetting to initial state...');
+      GameLogger.info('[GameStateManager] No save found - Resetting to initial state...');
       await GameSaveController.instance.clearGameAndSave();
     }
     
     _resetGameState();
     
     Future.delayed(const Duration(milliseconds: 100), () {
-      print('[GameStateManager] Restarting game...');
+      GameLogger.info('[GameStateManager] Restarting game...');
       _restartGame();
     });
   }

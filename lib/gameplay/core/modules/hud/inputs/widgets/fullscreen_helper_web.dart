@@ -1,10 +1,11 @@
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 import 'dart:html' as html;
 
 void toggleFullscreen() {
   try {
     final doc = html.document.documentElement;
     if (doc == null) return;
-    
+
     if (html.document.fullscreenElement == null) {
       doc.requestFullscreen();
     } else {
@@ -12,6 +13,7 @@ void toggleFullscreen() {
     }
   } catch (e) {
     // Silently fail if fullscreen is not supported
-    print('Fullscreen not supported or failed: $e');
+    // ignore: avoid_print
+    GameLogger.warning('Fullscreen not supported or failed: $e');
   }
 }

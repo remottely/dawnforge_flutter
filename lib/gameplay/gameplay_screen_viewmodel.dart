@@ -27,6 +27,7 @@ import 'package:darkness_dungeon/gameplay/gameplay_screen_def.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/save/domain/models/player_save_data.dart';
 import 'package:darkness_dungeon/gameplay/market/market_decoration.dart';
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_def.dart';
 import 'package:flutter/material.dart';
 
@@ -53,7 +54,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
     // Reset market spawn registry to allow re-adding decoration after reloads.
     MarketDecoration.clearSpawnRegistry();
     WidgetsBinding.instance.addObserver(this);
-    print('[GameplayViewModel] initState - Creating new player input');
+    GameLogger.debug('[GameplayViewModel] initState - Creating new player input');
     recreatePerMapDependencies(mapId: null);
     _loadGameOrResetLife();
   }
@@ -66,27 +67,27 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
 
   Future<void> _loadGameOrResetLife() async {
     try {
-      print('[GameplayViewModel] _loadGameOrResetLife - Starting...');
+      GameLogger.debug('[GameplayViewModel] _loadGameOrResetLife - Starting...');
       final success = await GameSaveController.instance.loadGame();
 
-      print('[GameplayViewModel] Load game result: $success');
+      GameLogger.debug('[GameplayViewModel] Load game result: $success');
 
       if (!success) {
-        print('[GameplayViewModel] No save found, resetting player life');
+        GameLogger.info('[GameplayViewModel] No save found, resetting player life');
         _resetPlayerLifeOnNewGame();
       } else {
-        print('[GameplayViewModel] ✅ Save loaded successfully!');
+        GameLogger.info('[GameplayViewModel] ✅ Save loaded successfully!');
       }
     } catch (e, stackTrace) {
-      print('[GameplayViewModel] ❌ Error loading game: $e');
-      print('[GameplayViewModel] Stack trace: $stackTrace');
+      GameLogger.error('[GameplayViewModel] ❌ Error loading game: $e');
+      GameLogger.error('[GameplayViewModel] Stack trace: $stackTrace');
       _resetPlayerLifeOnNewGame();
     } finally {
       if (mounted) {
         setState(() {
           isLoadingSave = false;
         });
-        print('[GameplayViewModel] Loading complete, isLoadingSave = false');
+        GameLogger.debug('[GameplayViewModel] Loading complete, isLoadingSave = false');
       }
     }
   }
@@ -113,10 +114,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
     // sem precisar reconstruir o BonfireWidget (que resetaria o player)
     final newConfig = GameplayScreenDef.createCameraConfig(context);
 
-    print(
-      '[GameplayViewModel] Camera config: '
-      'resolution=${newConfig.resolution}, zoom=${newConfig.zoom}',
-    );
+    GameLogger.debug('[GameplayViewModel] Camera config: resolution=${newConfig.resolution}, zoom=${newConfig.zoom}');
 
     return newConfig;
   }
@@ -130,17 +128,11 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
     var lastPlayerModel = playerStateManager.lastPlayerModel;
 
     if (lastPlayerModel is! SunnyPlayerModel) {
-      print(
-        '[GameplayViewModel] Creating NEW Sunny model (no saved model found)',
-      );
+      GameLogger.info('[GameplayViewModel] Creating NEW Sunny model (no saved model found)');
       lastPlayerModel = SunnyPlayerModel.fromJson({});
       playerStateManager.lastPlayerModel = lastPlayerModel;
     } else {
-      print(
-        '[GameplayViewModel] Using EXISTING Sunny model: '
-        'stamina=${lastPlayerModel.stamina}, '
-        'life=${lastPlayerModel.life}',
-      );
+      GameLogger.info('[GameplayViewModel] Using EXISTING Sunny model: stamina=${lastPlayerModel.stamina}, life=${lastPlayerModel.life}');
     }
 
     playerStateManager.currentPlayerAnimation =
@@ -177,7 +169,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
   }
 
   DDBasePlayerView buildFarmerPlayer(Vector2 position) {
-    print('[GameplayViewModel] Building farmer player at position: $position');
+    GameLogger.debug('[GameplayViewModel] Building farmer player at position: $position');
 
     var lastPlayerModel = playerStateManager.lastPlayerModel;
     final lastPlayerJson = lastPlayerModel?.toJson() ??
@@ -198,7 +190,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
   }
 
   DDBasePlayerView buildDemoPlayer(Vector2 position) {
-    print('[GameplayViewModel] Building farmer player at position: $position');
+    GameLogger.debug('[GameplayViewModel] Building farmer player at position: $position');
 
     var lastPlayerModel = playerStateManager.lastPlayerModel;
     final lastPlayerJson =

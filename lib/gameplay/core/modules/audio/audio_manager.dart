@@ -1,6 +1,6 @@
 import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
 import 'package:flame_audio/flame_audio.dart';
-import 'package:flutter/foundation.dart';
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'audio_def.dart';
 
@@ -22,29 +22,21 @@ final class AudioManager {
     if (_isBackgroundMusicPlaying &&
         FlameAudio.bgm.audioPlayer.state == PlayerState.playing) {
       FlameAudio.bgm.audioPlayer.setVolume(musicVolume);
-      if (kDebugMode) {
-        print('[AudioManager] Volume changed to: $musicVolume');
-      }
+      GameLogger.debug('[AudioManager] Volume changed to: $musicVolume');
     }
   }
 
   Future<void> initialize() async {
-    if (kDebugMode) {
-      print('[AudioManager] Initializing...');
-    }
+    GameLogger.debug('[AudioManager] Initializing...');
     FlameAudio.bgm.initialize();
     for (final asset in AudioDef.kPreloadAudioFiles) {
       try {
         await FlameAudio.audioCache.load(asset);
       } catch (e) {
-        if (kDebugMode) {
-          print('[AudioManager] Skipping missing/invalid asset: $asset -> $e');
-        }
+        GameLogger.warning('[AudioManager] Skipping missing/invalid asset: $asset -> $e');
       }
     }
-    if (kDebugMode) {
-      print('[AudioManager] Initialized successfully');
-    }
+    GameLogger.debug('[AudioManager] Initialized successfully');
   }
 
   /// SFX
@@ -89,36 +81,24 @@ final class AudioManager {
 
   /// Background Music
   Future<void> stopBackgroundMusic() async {
-    if (kDebugMode) {
-      print('[AudioManager] Stopping music. Current: $_currentBackgroundTrack');
-    }
+    GameLogger.debug('[AudioManager] Stopping music. Current: $_currentBackgroundTrack');
     await FlameAudio.bgm.stop();
     _isBackgroundMusicPlaying = false;
     _currentBackgroundTrack = null;
   }
 
   Future<void> playBackgroundMusic(String musicTrack) async {
-    if (kDebugMode) {
-      print('[AudioManager] playBackgroundMusic called with: $musicTrack');
-      print(
-        '[AudioManager] Current state - playing: $_isBackgroundMusicPlaying, track: $_currentBackgroundTrack',
-      );
-    }
+    GameLogger.debug('[AudioManager] playBackgroundMusic called with: $musicTrack');
+    GameLogger.debug('[AudioManager] Current state - playing: $_isBackgroundMusicPlaying, track: $_currentBackgroundTrack');
 
     // Verifica se deve tocar música
     if (!_isBackgroundMusicEnabled) {
-      if (kDebugMode) {
-        print('[AudioManager] Background music disabled, skipping');
-      }
+      GameLogger.info('[AudioManager] Background music disabled, skipping');
       return;
     }
 
     if (!AppEnvironment.kPlayBackgroundMusic) {
-      if (kDebugMode) {
-        print(
-          '[AudioManager] AppEnvironment.kPlayBackgroundMusic is false, skipping',
-        );
-      }
+      GameLogger.info('[AudioManager] AppEnvironment.kPlayBackgroundMusic is false, skipping');
       return;
     }
 
@@ -130,11 +110,7 @@ final class AudioManager {
     }
 
     try {
-      if (kDebugMode) {
-        print(
-          '[AudioManager] Starting to play: $musicTrack with volume: $musicVolume',
-        );
-      }
+      GameLogger.debug('[AudioManager] Starting to play: $musicTrack with volume: $musicVolume');
 
       // CORREÇÃO: Passar o volume diretamente no play()
       await FlameAudio.bgm.play(musicTrack, volume: musicVolume);
@@ -142,13 +118,9 @@ final class AudioManager {
       _isBackgroundMusicPlaying = true;
       _currentBackgroundTrack = musicTrack;
 
-      if (kDebugMode) {
-        print('[AudioManager] Successfully started playing: $musicTrack');
-      }
+      GameLogger.debug('[AudioManager] Successfully started playing: $musicTrack');
     } catch (e) {
-      if (kDebugMode) {
-        print('[AudioManager] ERROR playing music: $e');
-      }
+      GameLogger.error('[AudioManager] ERROR playing music: $e');
       _isBackgroundMusicPlaying = false;
       _currentBackgroundTrack = null;
     }

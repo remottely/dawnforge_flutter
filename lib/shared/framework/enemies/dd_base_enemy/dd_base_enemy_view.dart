@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
@@ -9,7 +10,6 @@ import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_model.dart';
 import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
 import 'package:darkness_dungeon/shared/framework/utils/dd_character_action_sprite_animation_helper.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 abstract class DDBaseEnemyView<
@@ -78,7 +78,7 @@ abstract class DDBaseEnemyView<
       ),
       showLifeText: true,
       barLifetextBuilder: (currentLife, maxLife) {
-        return ' ${currentLife.toInt()} / ${maxLife.toInt() }';
+        return ' ${currentLife.toInt()} / ${maxLife.toInt()}';
         // return '${currentLife.toInt()}';
       },
       // padding: EdgeInsets.all(4),
@@ -215,7 +215,9 @@ abstract class DDBaseEnemyView<
       damage: controller.model.primaryAttackDamage,
       interval: controller.model.primaryAttackInterval,
       id: _meleeAttackId,
-      animationRight: _attackAnimation != null ? null : EnemyPrimaryAttackDef.loadAnimationFxRight(),
+      animationRight: _attackAnimation != null
+          ? null
+          : EnemyPrimaryAttackDef.loadAnimationFxRight(),
       execute: () {
         if (_interruptedAttackToken == attackToken) {
           _log('Attack canceled before execution');
@@ -298,8 +300,6 @@ abstract class DDBaseEnemyView<
   }
 
   void _log(String message) {
-    if (kDebugMode) {
-      debugPrint('[EnemyAttack] $message');
-    }
+    GameLogger.debug('[EnemyAttack] $message');
   }
 }
