@@ -229,10 +229,10 @@
                 16
             ],
             "scale": 4.84,
-            "selectedLayer": 14,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 493.59504132231405,
-                "y": 219.21487603305786
+                "x": 497.10743801652893,
+                "y": 246.90082644628097
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/maps/florest.json": {
@@ -273,7 +273,7 @@
                 9
             ],
             "scale": 5.8184,
-            "selectedLayer": 10,
+            "selectedLayer": 9,
             "viewCenter": {
                 "x": 77.68458682799397,
                 "y": 77.34084971813559

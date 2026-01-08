@@ -9,6 +9,9 @@ import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dar
 final class SkeletonEnemyDef {
   SkeletonEnemyDef._();
 
+  static const double fixedLifeBarWidth = CharacterConstants.fixedLifeBarWidthMedium;
+  static final Vector2 fixedLifeBarOffset = CharacterConstants.fixedLifeBarOffsetLarge;
+
   static const double kPrimaryAttackVisionRadius =
       CharacterConstants.kVisionRadiusLarge;
   static const double kPrimaryAttackDamage = CharacterConstants.kDamageMedium;

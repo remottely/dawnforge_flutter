@@ -1,3 +1,4 @@
+import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
 
 final class CharacterConstants {
@@ -8,6 +9,15 @@ final class CharacterConstants {
   static const double kLifeLarge = 150;
   static const double kLifeExtraLarge = 200;
   static const double kLifeBoss = 2000;
+
+  static const double fixedLifeBarWidthSmall = 12;
+  static const double fixedLifeBarWidthMedium = 15;
+  static const double fixedLifeBarWidthLarge = 20;
+
+  static final Vector2 fixedLifeBarOffsetNone =  Vector2(0, 0);
+  static final Vector2 fixedLifeBarOffsetSmall =  Vector2(0, 1);
+  static final Vector2 fixedLifeBarOffsetMedium =  Vector2(0, 2);
+  static final Vector2 fixedLifeBarOffsetLarge =  Vector2(0, 4);
 
   static const double kSpeedSlow = 18 * AppEnvironment.kGameSpeedMultiplier;
   static const double kSpeedMedium = 24 * AppEnvironment.kGameSpeedMultiplier;

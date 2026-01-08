@@ -27,6 +27,12 @@ class BossEnemyView
       );
 
   @override
+  double get fixedLifeBarWidth => BossEnemyDef.fixedLifeBarWidth;
+
+  @override
+  Vector2 get fixedLifeBarOffset => BossEnemyDef.fixedLifeBarOffset;
+
+  @override
   BossEnemyModel createModel() => BossEnemyModel();
 
   @override

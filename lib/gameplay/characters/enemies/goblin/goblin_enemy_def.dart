@@ -9,6 +9,9 @@ import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dar
 final class GoblinEnemyDef {
   GoblinEnemyDef._();
 
+  static const double fixedLifeBarWidth = CharacterConstants.fixedLifeBarWidthMedium;
+  static final Vector2 fixedLifeBarOffset = CharacterConstants.fixedLifeBarOffsetNone;
+
   static const double kPrimaryAttackVisionRadius =
       CharacterConstants.kVisionRadiusLarge;
   static const double kPrimaryAttackDamage = CharacterConstants.kDamageMedium;

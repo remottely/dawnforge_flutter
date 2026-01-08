@@ -10,6 +10,7 @@ import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_
 import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
 import 'package:darkness_dungeon/shared/framework/utils/dd_character_action_sprite_animation_helper.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 abstract class DDBaseEnemyView<
   C extends DDBaseEnemyController<M>,
@@ -17,11 +18,15 @@ abstract class DDBaseEnemyView<
 >
     extends SimpleEnemy
     with BlockMovementCollision, UseLifeBar {
+  /// Override para definir largura fixa da barra de vida. Se null, usa size.x
+  double get fixedLifeBarWidth;
+  Vector2 get fixedLifeBarOffset;
+
   static const int _kDefaultInitialAttackDelayMs = 350;
   static const int _kContactResetGraceMs = 600;
 
   late final C _controller;
-  late final DDAnimationDirectional _attackAnimation;
+  late final DDAnimationDirectional? _attackAnimation;
   bool _isAttackPlaying = false;
   int _currentAttackToken = 0;
   int _interruptedAttackToken = -1;
@@ -52,6 +57,32 @@ abstract class DDBaseEnemyView<
     add(getHitbox());
     _attackAnimation = await _loadAttackAnimation();
     await super.onLoad();
+    // if (fixedLifeBarWidth != null) {
+    // setupLifeBar(size: Vector2(fixedLifeBarWidth!, 4.0));
+    // }
+
+    setupLifeBar(
+      size: Vector2(fixedLifeBarWidth, 4),
+      backgroundColor: Colors.black,
+      borderColor: Colors.white,
+      borderWidth: 1,
+      colors: [Colors.red, Colors.orange, Colors.green],
+      borderRadius: BorderRadius.circular(1),
+      barLifeDrawPosition: BarLifeDrawPosition.top,
+      offset: fixedLifeBarOffset,
+      // textOffset: Vector2(0, -5),
+      textStyle: TextStyle(
+        color: Colors.white,
+        fontSize: 3,
+        fontWeight: FontWeight.bold,
+      ),
+      showLifeText: true,
+      barLifetextBuilder: (currentLife, maxLife) {
+        return ' ${currentLife.toInt()} / ${maxLife.toInt() }';
+        // return '${currentLife.toInt()}';
+      },
+      // padding: EdgeInsets.all(4),
+    );
   }
 
   @override
@@ -120,32 +151,17 @@ abstract class DDBaseEnemyView<
   /// By default, returns null and will use a simple directional animation
   DDAnimationDirectionalFactory? get attackAnimationFactory => null;
 
-  /// Override this to provide custom attack animation (fallback if no factory)
-  Future<SpriteAnimation> attackAnimationFallback() {
-    return EnemyPrimaryAttackDef.loadAnimationFxRight();
-  }
-
-  Future<DDAnimationDirectional> _loadAttackAnimation() async {
+  Future<DDAnimationDirectional?> _loadAttackAnimation() async {
     final factory = attackAnimationFactory;
-    
+
     if (factory != null) {
       // Usa o factory fornecido pelo enemy específico
-      return DDCharacterActionSpriteAnimationHelper
-          .loadAnimationDirectionalFromFactory(factory);
+      return DDCharacterActionSpriteAnimationHelper.loadAnimationDirectionalFromFactory(
+        factory,
+      );
     }
-    
-    // Fallback: usa a mesma animação para todas as direções
-    final animation = await attackAnimationFallback();
-    return DDAnimationDirectional(
-      right: animation,
-      left: animation,
-      up: animation,
-      down: animation,
-      rightUp: animation,
-      rightDown: animation,
-      leftUp: animation,
-      leftDown: animation,
-    );
+
+    return null;
   }
 
   void _handleClosePlayer(
@@ -250,7 +266,7 @@ abstract class DDBaseEnemyView<
 
   void _playAttackBodyAnimation() {
     // Evita múltiplas animações simultâneas
-    if (_isAttackPlaying) {
+    if (_isAttackPlaying || _attackAnimation == null) {
       return;
     }
 

@@ -16,6 +16,12 @@ class SkeletonEnemyView
       );
 
   @override
+  double get fixedLifeBarWidth => SkeletonEnemyDef.fixedLifeBarWidth;
+
+  @override
+  Vector2 get fixedLifeBarOffset => SkeletonEnemyDef.fixedLifeBarOffset;
+
+  @override
   SkeletonEnemyModel createModel() => SkeletonEnemyModel();
 
   @override
@@ -33,7 +39,7 @@ class SkeletonEnemyView
   DDAnimationDirectionalFactory get attackAnimationFactory =>
       SkeletonEnemyDef.animationAttack1DirectionalFactory();
 
-  @override
-  List<DDAnimationDirectionalFactory> get comboAttackAnimationFactories =>
-      SkeletonEnemyDef.comboAttackAnimationFactories();
+  // @override
+  // List<DDAnimationDirectionalFactory> get comboAttackAnimationFactories =>
+  //     SkeletonEnemyDef.comboAttackAnimationFactories();
 }

@@ -3,7 +3,6 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy
 import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_def.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/goblin/goblin_enemy_model.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_view.dart';
-import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
 
 class GoblinEnemyView
     extends DDBaseEnemyView<GoblinEnemyController, GoblinEnemyModel> {
@@ -14,6 +13,12 @@ class GoblinEnemyView
         speed: GoblinEnemyDef.kSpeed,
         life: GoblinEnemyDef.kLife,
       );
+
+  @override
+  double get fixedLifeBarWidth => GoblinEnemyDef.fixedLifeBarWidth;
+
+  @override
+  Vector2 get fixedLifeBarOffset => GoblinEnemyDef.fixedLifeBarOffset;
 
   @override
   GoblinEnemyModel createModel() => GoblinEnemyModel();

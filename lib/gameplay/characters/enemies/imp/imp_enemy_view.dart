@@ -3,7 +3,6 @@ import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_def.d
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_model.dart';
 import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_view.dart';
-import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
 
 class ImpEnemyView extends DDBaseEnemyView<ImpEnemyController, ImpEnemyModel> {
   ImpEnemyView({required super.position})
@@ -13,6 +12,12 @@ class ImpEnemyView extends DDBaseEnemyView<ImpEnemyController, ImpEnemyModel> {
         speed: ImpEnemyDef.kSpeed,
         life: ImpEnemyDef.kLife,
       );
+
+  @override
+  double get fixedLifeBarWidth => ImpEnemyDef.fixedLifeBarWidth;
+
+  @override
+  Vector2 get fixedLifeBarOffset => ImpEnemyDef.fixedLifeBarOffset;
 
   @override
   ImpEnemyModel createModel() => ImpEnemyModel();

@@ -208,7 +208,7 @@ MVP focado no loop essencial: **plantar → regar → colher → vender**. Conte
 - 🔥🔴 refactor: esconder escudo para o MVP
 - 🔥🔴 remover sombras de todos os tiles do jogo
 - 🔥🔴 Implementar Casa + cama com respawn na cama
-- 🔥🔴 
+- 🔥🔴 bug com keyX no market, criar state machine que controle todos os panels/dialogs em um componente centralizado
 - 🔥🔴 
 - 🔥🔴 
 - 🔥🔴 

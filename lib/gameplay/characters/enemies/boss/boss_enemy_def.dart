@@ -7,6 +7,9 @@ import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dar
 final class BossEnemyDef {
   BossEnemyDef._();
 
+  static final double fixedLifeBarWidth = CharacterConstants.fixedLifeBarWidthLarge;
+  static final Vector2 fixedLifeBarOffset = CharacterConstants.fixedLifeBarOffsetNone;
+
   static const double kPrimaryAttackVisionRadius =
       CharacterConstants.kVisionRadiusSuperLarge;
   static const double kPrimaryAttackDamage =
