@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.98.0+1
+version: 1.99.0+1
 
 environment:
   sdk: ^3.8.1
@@ -331,6 +331,7 @@ flutter:
     - assets/images/tiled/maps/lake_map.json
     - assets/images/tiled/maps/beach_map.json
     - assets/images/tiled/maps/cave_map.json
+    - assets/images/tiled/maps/home_map.json
     - assets/images/tiled/small_burg/texture_atlas_1.png
     - assets/images/tiled/texture_atlas.json
 

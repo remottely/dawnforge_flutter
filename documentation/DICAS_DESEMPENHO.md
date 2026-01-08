@@ -328,3 +328,8 @@ KEVIN TODO DESEMPENHO SURREAL:
 - usar .mp3(pesquisar outros formatos), evitar .wav
 - usar texture_atlas, animation_atlas unicos ao inves de centenas de assets
 - importar no pubspec apenas assets usados e de maneira direta, nunca importar pastas inteiras
+- remover logs e prints do codigo para PRD:
+// Use constantes ou remova em release
+if (kDebugMode) {
+  debugPrint('🔥 Creating collision at: ...');
+}

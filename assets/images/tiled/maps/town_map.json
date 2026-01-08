@@ -113,6 +113,7 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 531, 0, 0, 0, 529, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 793, 274, 274, 274, 274, 274, 274, 274, 274, 795, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":48,
          "id":2,
+         "locked":true,
          "name":"t3",
          "opacity":1,
          "type":"tilelayer",
@@ -429,6 +430,86 @@
         }, 
         {
          "draworder":"topdown",
+         "id":12,
+         "locked":true,
+         "name":"market",
+         "objects":[
+                {
+                 "height":15.1467,
+                 "id":4,
+                 "name":"market",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":12.1087,
+                 "x":655.259739058018,
+                 "y":329.892847228648
+                }, 
+                {
+                 "height":15.1467,
+                 "id":5,
+                 "name":"market",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":12.1087,
+                 "x":651.112301244564,
+                 "y":504.872287087073
+                }, 
+                {
+                 "height":15.1467,
+                 "id":6,
+                 "name":"market",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":12.1087,
+                 "x":93.0257000381929,
+                 "y":188.040558846354
+                }, 
+                {
+                 "height":15.1467,
+                 "id":7,
+                 "name":"market",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":12.1087,
+                 "x":128.672377258638,
+                 "y":185.05155175023
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "class":"collision",
+         "draworder":"topdown",
+         "id":13,
+         "locked":true,
+         "name":"collision",
+         "objects":[
+                {
+                 "height":56.9294,
+                 "id":8,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":115.552357103668,
+                 "x":51.6690413707407,
+                 "y":140.77168816757
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "id":9,
          "locked":true,
          "name":"teleports",
@@ -520,8 +601,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":12,
- "nextobjectid":4,
+ "nextlayerid":14,
+ "nextobjectid":9,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

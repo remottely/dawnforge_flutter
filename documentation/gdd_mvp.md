@@ -204,10 +204,10 @@ MVP focado no loop essencial: **plantar → regar → colher → vender**. Conte
 - 🔥🔴 feat: melhorar hitbox behavior de todos os assets(tiled) e componentes(decoration) do jogo
 - 🔥🔴 mudar SFX de primary e fireball ataque player/enemy
 - 🔥🔴 esconder a utilização de fireball no MVP
-- 🔥🔴 
-- 🔥🔴 
-- 🔥🔴 
-- 🔥🔴 
+- 🔥🔴 quando player ataca ele joga o enemy para tras na direcao do ataque do player e nao na direcao em q o enemy se encontra, corrigir
+- 🔥🔴 refactor: esconder escudo para o MVP
+- 🔥🔴 remover sombras de todos os tiles do jogo
+- 🔥🔴 Implementar Casa + cama com respawn na cama
 - 🔥🔴 
 - 🔥🔴 
 - 🔥🔴 
@@ -221,8 +221,8 @@ MVP focado no loop essencial: **plantar → regar → colher → vender**. Conte
 - ⭐🔴 botar de volta fireball no jogo e mudar sprite de fireball para azul? roxo? assets já encontrados antes
 - ⭐🔴 adicionar toda a logica de input de mouse no jogo
 - ⭐🔴 toda vez q ocorrer falas com inimigos, os inimigos devem permanecer em idle, "a mas pq nao pausar o jogo todo?", as animacoes do jogo param tb e quero q elas permanecam ocorrendo. um exemplo é no dialogo com o boss, ele ataca, anda, etc enquanto ainda estamo no dialogo
-- ⭐🔴
-- ⭐🔴
+- ⭐🔴 configurar para jogar no controle de PS5, é possível??
+- ⭐🔴 mostrar escudo/defesa de volta
 - ⭐🔴
 - ⭐🔴
 - ⭐🔴

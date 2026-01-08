@@ -5,6 +5,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.d
 // import 'package:darkness_dungeon/gameplay/market/market_decoration_def.dart';
 import 'package:darkness_dungeon/gameplay/market/market_state.dart';
 import 'package:darkness_dungeon/shared/framework/decorations/dd_contact_decoration.dart';
+// import 'package:darkness_dungeon/shared/framework/interaction/dd_contact_interaction.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:flutter/material.dart';

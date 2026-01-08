@@ -184,6 +184,64 @@
         }, 
         {
          "draworder":"topdown",
+         "id":7,
+         "locked":true,
+         "name":"market",
+         "objects":[
+                {
+                 "height":15.1467,
+                 "id":3,
+                 "name":"market",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":12.1087,
+                 "x":130.181038956066,
+                 "y":166.146924083031
+                }, 
+                {
+                 "height":15.1467,
+                 "id":4,
+                 "name":"market",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":12.1087,
+                 "x":163.433759633212,
+                 "y":169.976025251915
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "class":"collision",
+         "draworder":"topdown",
+         "id":8,
+         "locked":true,
+         "name":"collision",
+         "objects":[
+                {
+                 "height":56.9294,
+                 "id":6,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":125.4,
+                 "x":65.474123337364,
+                 "y":120.66871394599
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "id":6,
          "locked":true,
          "name":"teleports",
@@ -248,8 +306,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":7,
- "nextobjectid":3,
+ "nextlayerid":9,
+ "nextobjectid":7,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

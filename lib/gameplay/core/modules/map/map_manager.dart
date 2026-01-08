@@ -4,6 +4,7 @@ import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart'
 import 'package:darkness_dungeon/gameplay/core/modules/map/map_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/map_data.dart';
 import 'package:darkness_dungeon/gameplay/decorations/map_transition_sensor.dart';
+import 'package:darkness_dungeon/shared/framework/interaction/dd_collision_interaction.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 
@@ -34,11 +35,7 @@ class MapManager {
   }
 
   static GameComponent _createCollision(TiledObjectProperties properties) {
-    debugPrint('🔥 Creating collision at: ${properties.position}, size: ${properties.size}');
-    debugPrint('🔥 Properties type: ${properties.type}');
-    // debugPrint('🔥 Properties class: ${properties.className}');
-    
-    return _MapCollisionDecoration(
+    return DDCollisionInteraction(
       position: properties.position,
       size: properties.size,
     );
@@ -59,11 +56,7 @@ class MapManager {
   }
 
   static void _addCollisionBuilder(Map<String, ObjectBuilder> builders) {
-    debugPrint('🔥 Registering collision builder');
-    builders['collision'] = (properties) {
-      debugPrint('🔥 Collision builder called!');
-      return _createCollision(properties);
-    };
+    builders['collision'] = _createCollision;
   }
 
   static Map<String, ObjectBuilder> _createObjectBuilder({
@@ -75,8 +68,6 @@ class MapManager {
     _addEntityBuilders(builders);
     _addCollisionBuilder(builders);
 
-    debugPrint('🔥 Total builders registered: ${builders.keys.toList()}');
-    
     return builders;
   }
 
@@ -112,35 +103,6 @@ class MapManager {
 
   static MapItem? getMapById(BuildContext context, String id) {
     final builder = allMaps[id];
-
-    if (builder != null) return builder(context, null);
-
-    return null;
-  }
-}
-
-class _MapCollisionDecoration extends GameDecoration with Movement, BlockMovementCollision {
-  _MapCollisionDecoration({
-    required super.position,
-    required super.size,
-  });
-
-  @override
-  Future<void> onLoad() async {
-    debugPrint('🔥 _MapCollisionDecoration onLoad started');
-    await super.onLoad();
-    
-    add(
-      RectangleHitbox(
-        // size: size,
-        // position: Vector2.zero(),
-        collisionType: CollisionType.passive,
-        // isSensor: false,
-      ),
-    );
-
-    
-    
-    debugPrint('✅ Collision hitbox added at: $position, size: $size');
+    return builder?.call(context, null);
   }
 }
