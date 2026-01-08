@@ -1,4 +1,5 @@
-import 'dart:developer' as developer;
+
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 import 'dart:math';
 
 import '../entities/inventory_slot.dart';
@@ -27,10 +28,10 @@ class AddItemUseCase {
 
   /// Add an item entity directly to inventory
   bool addItemEntity(HandItem item, [int quantity = 1]) {
-    developer.log('[AddItemUseCase] Adding $quantity x ${item.name}');
+    GameLogger.info('[AddItemUseCase] Adding $quantity x ${item.name}');
 
     if (quantity <= 0) {
-      developer.log('[AddItemUseCase] Invalid quantity: $quantity');
+      GameLogger.warning('[AddItemUseCase] Invalid quantity: $quantity');
       return false;
     }
 
@@ -72,9 +73,7 @@ class AddItemUseCase {
         _inventoryManager.updateSlot(i, upgradedSlot.addQuantity(amountToAdd));
         remainingQuantity -= amountToAdd;
 
-        developer.log(
-          '[AddItemUseCase] Stacked $amountToAdd in slot $i, remaining: $remainingQuantity',
-        );
+        GameLogger.info('[AddItemUseCase] Stacked $amountToAdd in slot $i, remaining: $remainingQuantity');
       }
     }
 
@@ -91,9 +90,7 @@ class AddItemUseCase {
       }
 
       if (emptySlotIndex == -1) {
-        developer.log(
-          '[AddItemUseCase] Inventory full! Cannot add remaining $remainingQuantity',
-        );
+        GameLogger.warning('[AddItemUseCase] Inventory full! Cannot add remaining $remainingQuantity');
         return quantity > remainingQuantity;
       }
 
@@ -111,12 +108,10 @@ class AddItemUseCase {
       );
 
       remainingQuantity -= amountForSlot;
-      developer.log(
-        '[AddItemUseCase] Created new slot $emptySlotIndex with $amountForSlot items',
-      );
+      GameLogger.info('[AddItemUseCase] Created new slot $emptySlotIndex with $amountForSlot items');
     }
 
-    developer.log('[AddItemUseCase] Item added successfully');
+    GameLogger.info('[AddItemUseCase] Item added successfully');
     return true;
   }
 
@@ -130,11 +125,9 @@ class AddItemUseCase {
 
       if (success) {
         anyAdded = true;
-        developer.log('[AddItemUseCase] Added $quantity x ${itemId.name}');
+        GameLogger.info('[AddItemUseCase] Added $quantity x ${itemId.name}');
       } else {
-        developer.log(
-          '[AddItemUseCase] Failed to add $quantity x ${itemId.name}',
-        );
+        GameLogger.warning('[AddItemUseCase] Failed to add $quantity x ${itemId.name}');
       }
     }
 

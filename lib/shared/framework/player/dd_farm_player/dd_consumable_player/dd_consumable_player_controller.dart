@@ -1,5 +1,5 @@
 import 'dart:async' show unawaited;
-import 'dart:developer' as developer;
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
@@ -55,7 +55,7 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
     }
 
     final consumed = _tryConsumeSelectedItem(player);
-    developer.log('[ConsumableController] Consumo via interação: success=$consumed');
+    GameLogger.info('[ConsumableController] Consumo via interação: success=$consumed');
     return consumed;
   }
 
@@ -83,27 +83,25 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
     final selectedIndex = EquipmentManager.instance.currentMainHandSlotIndex;
     final slot = InventoryManager.instance.getSlotByIndex(selectedIndex);
     if (slot == null || slot.isEmpty) {
-      developer.log('[ConsumableController] Consumo falhou: slot vazio ($selectedIndex)');
+      GameLogger.warning('[ConsumableController] Consumo falhou: slot vazio ($selectedIndex)');
       return false;
     }
 
     if (_isShowingConsumeDialog) {
-      developer.log('[ConsumableController] Consumo já em progresso');
+      GameLogger.warning('[ConsumableController] Consumo já em progresso');
       return true;
     }
 
     final item = slot.item;
     if (item == null) {
-      developer.log('[ConsumableController] Consumo falhou: item nulo ($selectedIndex)');
+      GameLogger.warning('[ConsumableController] Consumo falhou: item nulo ($selectedIndex)');
       return false;
     }
 
     int staminaGain = 0;
     double healthGain = 0;
 
-    developer.log(
-      '[ConsumableController] Consumo tentativa: slot=$selectedIndex item=${item.runtimeType} qty=${slot.quantity}',
-    );
+    GameLogger.info('[ConsumableController] Consumo tentativa: slot=$selectedIndex item=${item.runtimeType} qty=${slot.quantity}');
 
     if (item is HarvestLootItem) {
       if (!item.isEdible) return false;
@@ -147,7 +145,7 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
     _isShowingConsumeDialog = false;
 
     if (result != true) {
-      developer.log('[ConsumableController] Consumo cancelado');
+      GameLogger.info('[ConsumableController] Consumo cancelado');
       return;
     }
 
@@ -160,6 +158,6 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
     }
 
     InventoryManager.instance.consumeFromSlot(slotIndex, 1);
-    developer.log('[ConsumableController] Consumo aplicado: hp=+$healthGain, stamina=+$staminaGain, slot=$slotIndex');
+    GameLogger.info('[ConsumableController] Consumo aplicado: hp=+$healthGain, stamina=+$staminaGain, slot=$slotIndex');
   }
 }

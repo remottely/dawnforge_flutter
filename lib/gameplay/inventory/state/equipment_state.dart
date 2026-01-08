@@ -1,4 +1,5 @@
-import 'dart:developer' as developer;
+
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item.dart';
 import 'package:flutter/foundation.dart';
@@ -18,15 +19,9 @@ class EquipmentState {
   void updateEquippedItem(HandItem? item) {
     try {
       equippedItem.value = item;
-      developer.log(
-        '[EquipmentState] Updated equipped item: ${item?.name ?? "empty"}',
-      );
+      GameLogger.info('[EquipmentState] Updated equipped item: ${item?.name ?? "empty"}');
     } catch (e, stack) {
-      developer.log(
-        '[EquipmentState] Error updating equipped item: $e',
-        error: e,
-        stackTrace: stack,
-      );
+      GameLogger.error('[EquipmentState] Error updating equipped item: $e\n$stack');
     }
   }
 

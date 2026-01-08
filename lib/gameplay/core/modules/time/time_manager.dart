@@ -1,4 +1,4 @@
-import 'dart:developer' as developer;
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:darkness_dungeon/gameplay/core/modules/time/time_constants.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/time/time_helper.dart';
@@ -42,9 +42,7 @@ final class TimeManager {
 
     if (previousTime < TimeConstants.secondsPerDay &&
         _currentTime >= TimeConstants.secondsPerDay) {
-      developer.log(
-        '[TimeManager] New day begins! Advancing to day ${previousDay + 1}',
-      );
+      GameLogger.info('[TimeManager] New day begins! Advancing to day ${previousDay + 1}');
       WorldStateManager.instance.advanceDay();
     }
 
@@ -60,10 +58,8 @@ final class TimeManager {
       final previousTimeOfDay = _currentTimeOfDay;
       _currentTimeOfDay = newTimeOfDay;
 
-      developer.log(
-        '[TimeManager] Time of day changed: $previousTimeOfDay -> $newTimeOfDay '
-        '(${currentHour.toString().padLeft(2, '0')}:${currentMinute.toString().padLeft(2, '0')})',
-      );
+      GameLogger.info('[TimeManager] Time of day changed: $previousTimeOfDay -> $newTimeOfDay '
+        '(${currentHour.toString().padLeft(2, '0')}:${currentMinute.toString().padLeft(2, '0')})');
 
       WorldStateManager.instance.setTimeOfDay(newTimeOfDay);
 
@@ -71,10 +67,7 @@ final class TimeManager {
         try {
           callback(newTimeOfDay);
         } catch (e) {
-          developer.log(
-            '[TimeManager] Error in time of day callback: $e',
-            level: 900,
-          );
+          GameLogger.warning('[TimeManager] Error in time of day callback: $e');
         }
       }
     }
@@ -97,46 +90,38 @@ final class TimeManager {
 
   void setTimeScale(double scale) {
     if (scale < 0) {
-      developer.log(
-        '[TimeManager] Warning: Time scale cannot be negative, using absolute value',
-        level: 900,
-      );
+      GameLogger.warning('[TimeManager] Warning: Time scale cannot be negative, using absolute value');
       scale = scale.abs();
     }
 
-    developer.log('[TimeManager] Time scale changed: $_timeScale -> $scale');
+    GameLogger.info('[TimeManager] Time scale changed: $_timeScale -> $scale');
     _timeScale = scale;
   }
 
   void pause() {
     if (!_isPaused) {
-      developer.log('[TimeManager] Time paused');
+      GameLogger.info('[TimeManager] Time paused');
       _isPaused = true;
     }
   }
 
   void resume() {
     if (_isPaused) {
-      developer.log('[TimeManager] Time resumed');
+      GameLogger.info('[TimeManager] Time resumed');
       _isPaused = false;
     }
   }
 
   void setTime(double timeInSeconds) {
     if (timeInSeconds < 0 || timeInSeconds >= TimeConstants.secondsPerDay) {
-      developer.log(
-        '[TimeManager] Warning: Invalid time value, wrapping to valid range',
-        level: 900,
-      );
+      GameLogger.warning('[TimeManager] Warning: Invalid time value, wrapping to valid range');
     }
 
     final previousTime = _currentTime;
     _currentTime = timeInSeconds % TimeConstants.secondsPerDay;
 
-    developer.log(
-      '[TimeManager] Time set: ${TimeHelper.secondsToHours(previousTime).toStringAsFixed(2)}h -> '
-      '${TimeHelper.secondsToHours(_currentTime).toStringAsFixed(2)}h',
-    );
+    GameLogger.info('[TimeManager] Time set: ${TimeHelper.secondsToHours(previousTime).toStringAsFixed(2)}h -> '
+      '${TimeHelper.secondsToHours(_currentTime).toStringAsFixed(2)}h');
 
     _updateTimeOfDay();
   }
@@ -148,24 +133,20 @@ final class TimeManager {
   void addTimeOfDayListener(Function(TimeOfDay) callback) {
     if (!_onTimeOfDayChanged.contains(callback)) {
       _onTimeOfDayChanged.add(callback);
-      developer.log(
-        '[TimeManager] Time of day listener added (total: ${_onTimeOfDayChanged.length})',
-      );
+      GameLogger.info('[TimeManager] Time of day listener added (total: ${_onTimeOfDayChanged.length})');
     }
   }
 
   void removeTimeOfDayListener(Function(TimeOfDay) callback) {
     if (_onTimeOfDayChanged.remove(callback)) {
-      developer.log(
-        '[TimeManager] Time of day listener removed (total: ${_onTimeOfDayChanged.length})',
-      );
+      GameLogger.info('[TimeManager] Time of day listener removed (total: ${_onTimeOfDayChanged.length})');
     }
   }
 
   void clearListeners() {
     final count = _onTimeOfDayChanged.length;
     _onTimeOfDayChanged.clear();
-    developer.log('[TimeManager] Cleared $count listener(s)');
+    GameLogger.info('[TimeManager] Cleared $count listener(s)');
   }
 
   Map<String, dynamic> toJson() {
@@ -178,7 +159,7 @@ final class TimeManager {
   }
 
   void fromJson(Map<String, dynamic> json) {
-    developer.log('[TimeManager] Loading time state from JSON');
+    GameLogger.info('[TimeManager] Loading time state from JSON');
 
     _currentTime =
         json['currentTime'] as double? ?? TimeConstants.morningStartTime;
@@ -188,7 +169,7 @@ final class TimeManager {
       json['currentTimeOfDay'] as String? ?? 'morning',
     );
 
-    developer.log(
+    GameLogger.info(
       '[TimeManager] Loaded: ${currentHour.toString().padLeft(2, '0')}:'
       '${currentMinute.toString().padLeft(2, '0')}, $_currentTimeOfDay, '
       'scale: $_timeScale, paused: $_isPaused',
@@ -196,7 +177,7 @@ final class TimeManager {
   }
 
   void reset() {
-    developer.log('[TimeManager] Resetting time state');
+    GameLogger.info('[TimeManager] Resetting time state');
     _currentTime = TimeConstants.morningStartTime;
     _timeScale = TimeConstants.defaultTimeScale;
     _isPaused = false;

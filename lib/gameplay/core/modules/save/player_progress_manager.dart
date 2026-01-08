@@ -1,4 +1,4 @@
-import 'dart:developer' as developer;
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 final class PlayerProgressManager {
   PlayerProgressManager._();
@@ -19,7 +19,7 @@ final class PlayerProgressManager {
 
   void setFlag(String flag) {
     if (_flags.add(flag)) {
-      developer.log('[PlayerProgressManager] Flag set: $flag');
+      GameLogger.info('[PlayerProgressManager] Flag set: $flag');
     }
   }
 
@@ -29,7 +29,7 @@ final class PlayerProgressManager {
 
   void removeFlag(String flag) {
     if (_flags.remove(flag)) {
-      developer.log('[PlayerProgressManager] Flag removed: $flag');
+      GameLogger.info('[PlayerProgressManager] Flag removed: $flag');
     }
   }
 
@@ -42,9 +42,9 @@ final class PlayerProgressManager {
     final newValue = previousValue + amount;
     _achievements[achievementId] = newValue;
 
-    developer.log(
+    GameLogger.info(
       '[PlayerProgressManager] Achievement "$achievementId" incremented: '
-      '$previousValue -> $newValue (+$amount)',
+      '	$previousValue -> $newValue (+$amount)',
     );
   }
 
@@ -77,15 +77,12 @@ final class PlayerProgressManager {
           distanceTraveled += entry.value;
           break;
         default:
-          developer.log(
-            '[PlayerProgressManager] Unknown stat: ${entry.key}',
-            level: 900,
-          );
+          GameLogger.warning('[PlayerProgressManager] Unknown stat: ${entry.key}');
       }
     }
 
     if (updates.isNotEmpty) {
-      developer.log('[PlayerProgressManager] Stats updated: $updates');
+      GameLogger.info('[PlayerProgressManager] Stats updated: $updates');
     }
   }
 
@@ -119,7 +116,7 @@ final class PlayerProgressManager {
   }
 
   void fromJson(Map<String, dynamic> json) {
-    developer.log('[PlayerProgressManager] Loading player progress from JSON');
+    GameLogger.info('[PlayerProgressManager] Loading player progress from JSON');
 
     _flags.clear();
     final flagsList = json['flags'] as List<dynamic>?;
@@ -140,14 +137,14 @@ final class PlayerProgressManager {
     itemsCrafted = json['itemsCrafted'] as int? ?? 0;
     distanceTraveled = json['distanceTraveled'] as int? ?? 0;
 
-    developer.log(
+    GameLogger.info(
       '[PlayerProgressManager] Loaded: ${_flags.length} flags, '
       '${_achievements.length} achievements, $totalPlayTimeSeconds seconds played',
     );
   }
 
   void reset() {
-    developer.log('[PlayerProgressManager] Resetting all player progress');
+    GameLogger.info('[PlayerProgressManager] Resetting all player progress');
     _flags.clear();
     _achievements.clear();
     totalPlayTimeSeconds = 0;

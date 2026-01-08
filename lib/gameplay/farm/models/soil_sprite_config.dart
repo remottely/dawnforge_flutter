@@ -1,4 +1,5 @@
-import 'dart:developer' as developer;
+
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:darkness_dungeon/gameplay/database/modern_farm/modern_farm_soil_state_sprite_database_def.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/data/item_icon_data.dart';
@@ -11,7 +12,7 @@ class SoilSpriteConfig {
   });
 
   static Future<SoilSpriteConfig> load() async {
-    developer.log('[SoilSpriteConfig] Loading soil database...');
+    GameLogger.info('[SoilSpriteConfig] Loading soil database...');
 
     final config = SoilSpriteConfig(
       soilStates: Map<String, ItemIconData>.from(
@@ -19,9 +20,7 @@ class SoilSpriteConfig {
       ),
     );
 
-    developer.log(
-      '[SoilSpriteConfig] ✅ Loaded ${config.soilStates.length} soil states',
-    );
+    GameLogger.info('[SoilSpriteConfig] ✓ Loaded ${config.soilStates.length} soil states');
 
     return config;
   }

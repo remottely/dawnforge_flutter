@@ -1,4 +1,5 @@
-import 'dart:developer' as developer;
+
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:darkness_dungeon/gameplay/database/modern_farm/modern_farm_crop_entity_database_def.dart';
 
@@ -13,7 +14,7 @@ class CropFactoryService {
   /// Initialize the service by loading the crop database
   Future<void> initialize() async {
     if (_isInitialized) {
-      developer.log('[CropFactoryService] Already initialized');
+      GameLogger.info('[CropFactoryService] Already initialized');
       return;
     }
 
@@ -22,23 +23,19 @@ class CropFactoryService {
       ..addAll(ModernFarmCropEntityDatabaseDef.cropEntityList);
 
     _isInitialized = true;
-    developer.log(
-      '[CropFactoryService] Loaded ${_database.length} crops from constants',
-    );
+    GameLogger.info('[CropFactoryService] Loaded ${_database.length} crops from constants');
   }
 
   /// Create a crop instance from the database by cropId
   CropEntity? createCrop(HandItemId cropId) {
     if (!_isInitialized) {
-      developer.log(
-        '[CropFactoryService] ERROR: Not initialized! Call initialize() first',
-      );
+      GameLogger.error('[CropFactoryService] ERROR: Not initialized! Call initialize() first');
       return null;
     }
 
     final template = _database[cropId];
     if (template == null) {
-      developer.log('[CropFactoryService] Crop not found: $cropId');
+      GameLogger.warning('[CropFactoryService] Crop not found: $cropId');
       return null;
     }
 
@@ -48,11 +45,7 @@ class CropFactoryService {
         regrowData: template.regrowData.resetState(),
       );
     } catch (e, stackTrace) {
-      developer.log(
-        '[CropFactoryService] ERROR creating crop $cropId',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      GameLogger.error('[CropFactoryService] ERROR creating crop $cropId: $e\n$stackTrace');
       return null;
     }
   }
@@ -70,7 +63,7 @@ class CropFactoryService {
     return _database.entries
         .where((e) {
           final requiredSeason = e.value.requiredSeason;
-          return requiredSeason == null || requiredSeason == 'any' || requiredSeason == season;
+          return requiredSeason == 'any' || requiredSeason == season;
         })
         .map((e) => e.key)
         .toList();

@@ -1,4 +1,4 @@
-import 'dart:developer' as developer;
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:flutter/foundation.dart';
 
@@ -13,17 +13,17 @@ class TutorialInputsState {
 
   void show() {
     isVisible.value = true;
-    developer.log('[InputsState] Inputs shown');
+    GameLogger.info('[InputsState] Inputs shown');
   }
 
   void hide() {
     isVisible.value = false;
-    developer.log('[InputsState] Inputs hidden');
+    GameLogger.info('[InputsState] Inputs hidden');
   }
 
   void toggle() {
     isVisible.value = !isVisible.value;
-    developer.log('[InputsState] Inputs toggled: ${isVisible.value}');
+    GameLogger.info('[InputsState] Inputs toggled: ${isVisible.value}');
   }
 
   void dispose() {

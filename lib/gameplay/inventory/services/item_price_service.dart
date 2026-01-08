@@ -1,4 +1,5 @@
-import 'dart:developer' as developer;
+
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:darkness_dungeon/gameplay/inventory/config/inventory_def.dart';
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_quality.dart';
@@ -27,10 +28,7 @@ final class ItemPriceService {
     _hasArtisanProfession = artisan;
     _hasAnglerProfession = angler;
 
-    developer.log(
-      '[ItemPriceService] Professions set: '
-      'Tiller=$tiller, Rancher=$rancher, Artisan=$artisan, Angler=$angler',
-    );
+    GameLogger.info('[ItemPriceService] Professions set: Tiller=$tiller, Rancher=$rancher, Artisan=$artisan, Angler=$angler');
   }
 
   int calculateSellPrice(
@@ -54,13 +52,7 @@ final class ItemPriceService {
 
     final finalPrice = price.round();
 
-    developer.log(
-      '[ItemPriceService] Price for ${item.name}: '
-      'base=${item.baseValue}, final=$finalPrice '
-      '(quality=${item is HarvestLootItem ? item.quality.name : "N/A"}, '
-      'profession=${(professionBonus * 100).toStringAsFixed(0)}%, '
-      'location=${isShippingBin ? "shipping" : "shop"})',
-    );
+    GameLogger.info('[ItemPriceService] Price for ${item.name}: base=${item.baseValue}, final=$finalPrice (quality=${item is HarvestLootItem ? item.quality.name : "N/A"}, profession=${(professionBonus * 100).toStringAsFixed(0)}%, location=${isShippingBin ? "shipping" : "shop"})');
 
     return finalPrice;
   }
@@ -144,6 +136,6 @@ final class ItemPriceService {
     _hasRancherProfession = false;
     _hasArtisanProfession = false;
     _hasAnglerProfession = false;
-    developer.log('[ItemPriceService] Reset');
+    GameLogger.info('[ItemPriceService] Reset');
   }
 }

@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:developer' as developer;
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
@@ -132,26 +132,20 @@ abstract class DDMobilePlayerView<
 
   void lockAction() {
     _activeActionLockCount += 1;
-    developer.log(
-      '[MobilePlayerView] 🔒 Action LOCKED (count: $_activeActionLockCount)',
-    );
+    GameLogger.info('[MobilePlayerView] 🔒 Action LOCKED (count: $_activeActionLockCount)');
   }
 
   void unlockAction() {
     if (_activeActionLockCount > 0) {
       _activeActionLockCount -= 1;
-      developer.log(
-        '[MobilePlayerView] 🔓 Action UNLOCKED (count: $_activeActionLockCount)',
-      );
+      GameLogger.info('[MobilePlayerView] 🔓 Action UNLOCKED (count: $_activeActionLockCount)');
 
       if (_activeActionLockCount == 0) {
-        developer.log('[MobilePlayerView] ✅ Action FULLY UNLOCKED');
+        GameLogger.info('[MobilePlayerView] ✅ Action FULLY UNLOCKED');
         onActionFullyUnlocked();
       }
     } else {
-      developer.log(
-        '[MobilePlayerView] ⚠️ Tentativa de unlock quando já estava unlocked!',
-      );
+      GameLogger.warning('[MobilePlayerView] ⚠️ Tentativa de unlock quando já estava unlocked!');
     }
   }
 

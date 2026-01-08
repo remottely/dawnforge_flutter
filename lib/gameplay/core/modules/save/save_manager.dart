@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:developer' as developer;
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'save_data_model.dart';
 import 'save_repository.dart';
@@ -26,11 +26,7 @@ final class SaveManager {
   Future<bool> save(SaveData data) async {
     try {
       if (!data.isValid()) {
-        developer.log(
-          '[SaveManager] Cannot save invalid data | playerData=${data.playerData}',
-          name: 'SaveManager',
-          level: 900,
-        );
+        GameLogger.warning('[SaveManager] Cannot save invalid data | playerData=${data.playerData}');
         return false;
       }
 
@@ -42,27 +38,14 @@ final class SaveManager {
 
         await _updateMetadata();
 
-        developer.log(
-          '[SaveManager] Save successful at ${_lastSaveTime!.toIso8601String()}',
-          name: 'SaveManager',
-        );
+        GameLogger.info('[SaveManager] Save successful at ${_lastSaveTime!.toIso8601String()}');
       } else {
-        developer.log(
-          '[SaveManager] Save failed',
-          name: 'SaveManager',
-          level: 1000,
-        );
+        GameLogger.error('[SaveManager] Save failed');
       }
 
       return success;
     } catch (e, stackTrace) {
-      developer.log(
-        '[SaveManager] Error during save',
-        name: 'SaveManager',
-        error: e,
-        stackTrace: stackTrace,
-        level: 1000,
-      );
+      GameLogger.error('[SaveManager] Error during save');
       return false;
     }
   }
@@ -72,22 +55,14 @@ final class SaveManager {
       final json = await _repository.load(_kSaveKey);
 
       if (json == null) {
-        developer.log(
-          '[SaveManager] No save data found',
-          name: 'SaveManager',
-          level: 500,
-        );
+        GameLogger.warning('[SaveManager] No save data found');
         return null;
       }
 
       final saveData = SaveData.fromJson(json);
 
       if (!saveData.isValid()) {
-        developer.log(
-          '[SaveManager] Loaded save data is corrupted',
-          name: 'SaveManager',
-          level: 900,
-        );
+        GameLogger.warning('[SaveManager] Loaded save data is corrupted');
 
         await _recoverCorruptedSave(json);
 
@@ -96,20 +71,11 @@ final class SaveManager {
 
       _cachedSaveData = saveData;
 
-      developer.log(
-        '[SaveManager] Load successful (version ${saveData.version})',
-        name: 'SaveManager',
-      );
+      GameLogger.info('[SaveManager] Load successful (version ${saveData.version})');
 
       return saveData;
     } catch (e, stackTrace) {
-      developer.log(
-        '[SaveManager] Error during load',
-        name: 'SaveManager',
-        error: e,
-        stackTrace: stackTrace,
-        level: 1000,
-      );
+      GameLogger.error('[SaveManager] Error during load');
 
       return null;
     }
@@ -120,12 +86,7 @@ final class SaveManager {
       final data = await _repository.load(_kSaveKey);
       return data != null;
     } catch (e) {
-      developer.log(
-        '[SaveManager] Error checking for save',
-        name: 'SaveManager',
-        error: e,
-        level: 900,
-      );
+      GameLogger.warning('[SaveManager] Error checking for save');
       return false;
     }
   }
@@ -138,17 +99,11 @@ final class SaveManager {
       _cachedSaveData = null;
       _lastSaveTime = null;
 
-      developer.log('[SaveManager] Save deleted', name: 'SaveManager');
+      GameLogger.info('[SaveManager] Save deleted');
 
       return mainDeleted && metaDeleted;
     } catch (e, stackTrace) {
-      developer.log(
-        '[SaveManager] Error deleting save',
-        name: 'SaveManager',
-        error: e,
-        stackTrace: stackTrace,
-        level: 1000,
-      );
+      GameLogger.error('[SaveManager] Error deleting save');
       return false;
     }
   }
@@ -157,28 +112,20 @@ final class SaveManager {
     _autoSaveTimer?.cancel();
 
     if (_cachedSaveData == null) {
-      developer.log(
-        '[SaveManager] Auto-save skipped: no cached data',
-        name: 'SaveManager',
-        level: 500,
-      );
+      GameLogger.info('[SaveManager] Auto-save skipped: no cached data');
       return;
     }
 
     if (_lastSaveTime != null) {
       final timeSinceLastSave = DateTime.now().difference(_lastSaveTime!);
       if (timeSinceLastSave < _kAutoSaveDebounceInterval) {
-        developer.log(
-          '[SaveManager] Auto-save debounced (${timeSinceLastSave.inSeconds}s since last save)',
-          name: 'SaveManager',
-          level: 500,
-        );
+        GameLogger.info('[SaveManager] Auto-save debounced (${timeSinceLastSave.inSeconds}s since last save)');
         return;
       }
     }
 
     _autoSaveTimer = Timer(const Duration(milliseconds: 500), () async {
-      developer.log('[SaveManager] Auto-save triggered', name: 'SaveManager');
+      GameLogger.info('[SaveManager] Auto-save triggered');
 
       final updatedData = _cachedSaveData!.copyWith(timestamp: DateTime.now());
 
@@ -190,12 +137,7 @@ final class SaveManager {
     try {
       return await _repository.load(_kMetadataKey);
     } catch (e) {
-      developer.log(
-        '[SaveManager] Error loading metadata',
-        name: 'SaveManager',
-        error: e,
-        level: 900,
-      );
+      GameLogger.warning('[SaveManager] Error loading metadata');
       return null;
     }
   }
@@ -214,12 +156,7 @@ final class SaveManager {
 
       await _repository.save(_kMetadataKey, updatedMetadata);
     } catch (e) {
-      developer.log(
-        '[SaveManager] Failed to update metadata',
-        name: 'SaveManager',
-        error: e,
-        level: 500,
-      );
+      GameLogger.warning('[SaveManager] Failed to update metadata');
     }
   }
 
@@ -229,17 +166,9 @@ final class SaveManager {
           'backup_corrupted_${DateTime.now().millisecondsSinceEpoch}';
       await _repository.save(backupKey, corruptedData);
 
-      developer.log(
-        '[SaveManager] Corrupted save backed up to: $backupKey',
-        name: 'SaveManager',
-      );
+      GameLogger.info('[SaveManager] Corrupted save backed up to: $backupKey');
     } catch (e) {
-      developer.log(
-        '[SaveManager] Failed to backup corrupted save',
-        name: 'SaveManager',
-        error: e,
-        level: 900,
-      );
+      GameLogger.warning('[SaveManager] Failed to backup corrupted save');
     }
   }
 

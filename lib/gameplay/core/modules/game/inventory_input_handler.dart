@@ -1,5 +1,5 @@
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 import 'dart:developer' as developer;
-
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/tutorial_inputs/tutorial_inputs_state.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
@@ -45,8 +45,8 @@ class InventoryInputHandler extends GameComponent
   @override
   void onMount() {
     super.onMount();
-    developer.log('[InventoryInput] Component mounted!');
-    developer.log('[InventoryInput] gameRef.interface: ${gameRef.interface}');
+    GameLogger.info('[InventoryInput] Component mounted!');
+    GameLogger.info('[InventoryInput] gameRef.interface: ${gameRef.interface}');
     _initializeTestItems();
   }
 
@@ -115,14 +115,14 @@ class InventoryInputHandler extends GameComponent
     // Se já tem itens (carregados de save), não adicionar itens de teste
     final inventoryManager = getIt<InventoryManager>();
     if (inventoryManager.usedSlots > 0) {
-      developer.log(
+      GameLogger.info(
         '[InventoryInput] ✓ Inventário já possui ${inventoryManager.usedSlots} itens (carregado de save), pulando itens de teste',
       );
       _ensureInitialSlotSelection();
       return;
     }
 
-    developer.log('[InventoryInput] Inicializando itens de teste...');
+    GameLogger.info('[InventoryInput] Inicializando itens de teste...');
 
     const testItems = [
       (HandItemId.shovel, 1),
@@ -138,7 +138,7 @@ class InventoryInputHandler extends GameComponent
 
     _addItems(testItems);
 
-    developer.log(
+    GameLogger.info(
       '[InventoryInput] Itens de teste adicionados! ${getIt<InventoryManager>().usedSlots} slots usados',
     );
 
@@ -155,7 +155,7 @@ class InventoryInputHandler extends GameComponent
 
     // If current slot already has any item, select it to sync UI
     if (currentSlot?.item != null) {
-      developer.log(
+      GameLogger.info(
         '[InventoryInput] Slot $currentSlotIndex already has item: ${currentSlot?.item?.name}, syncing with UI',
       );
       equipmentManager.selectSlotIndex(currentSlotIndex);
@@ -167,11 +167,11 @@ class InventoryInputHandler extends GameComponent
 
     if (result != null) {
       equipmentManager.selectSlotIndex(result.index);
-      developer.log(
+      GameLogger.info(
         '[InventoryInput] Auto-selected slot ${result.index} with ${result.item.name}',
       );
     } else {
-      developer.log(
+      GameLogger.info(
         '[InventoryInput] No items found in inventory - slot 0 remains selected (empty)',
       );
     }
@@ -187,27 +187,27 @@ class InventoryInputHandler extends GameComponent
     final success = getIt<AddItemUseCase>().addMultiple(items);
 
     if (!success) {
-      developer.log(
+      GameLogger.warning(
         '[InventoryInput] Nenhum item adicionado (talvez inventário cheio)',
       );
     }
   }
 
   void _addTestItems() {
-    developer.log('[InventoryInput] Adicionando mais itens de teste...');
+    GameLogger.info('[InventoryInput] Adicionando mais itens de teste...');
 
     final testMaterials = [(HandItemId.stone, 100), (HandItemId.iron_ore, 25)];
 
     for (final (itemKey, quantity) in testMaterials) {
       final success = getIt<AddItemUseCase>()(itemKey, quantity);
       if (success) {
-        developer.log('[InventoryInput] Adicionado ${quantity}x $itemKey');
+        GameLogger.info('[InventoryInput] Adicionado ${quantity}x $itemKey');
       }
     }
   }
 
   void _equipMainHand() {
-    developer.log(
+    GameLogger.info(
       '[InventoryInput] Procurando próximo item no inventário para selecionar...',
     );
 
@@ -215,10 +215,11 @@ class InventoryInputHandler extends GameComponent
     final equipmentManager = getIt<EquipmentManager>();
 
     if (inventoryManager.maxSlots == 0) {
-      developer.log('[InventoryInput] Nenhum slot disponível no inventário');
+      GameLogger.warning(
+        '[InventoryInput] Nenhum slot disponível no inventário',
+      );
       return;
     }
-
     final currentSlotIndex = equipmentManager.currentMainHandSlotIndex;
     final nextIndex = (currentSlotIndex + 1) % inventoryManager.maxSlots;
 
@@ -228,18 +229,18 @@ class InventoryInputHandler extends GameComponent
       final item = inventoryManager.getSlotByIndex(nextIndex)?.item;
       final handSuffix = item != null ? ' (${item.id})' : '';
       final itemName = item?.name ?? 'vazio';
-      developer.log(
+      GameLogger.info(
         '[InventoryInput] ✓ Slot selecionado: $itemName$handSuffix',
       );
     } else {
-      developer.log(
+      GameLogger.warning(
         '[InventoryInput] ✗ Falha ao selecionar slot ${nextIndex + 1}',
       );
     }
   }
 
   void _equipMainHandReverse() {
-    developer.log(
+    GameLogger.info(
       '[InventoryInput] Procurando item anterior no inventário para selecionar...',
     );
 
@@ -247,10 +248,11 @@ class InventoryInputHandler extends GameComponent
     final equipmentManager = getIt<EquipmentManager>();
 
     if (inventoryManager.maxSlots == 0) {
-      developer.log('[InventoryInput] Nenhum slot disponível no inventário');
+      GameLogger.warning(
+        '[InventoryInput] Nenhum slot disponível no inventário',
+      );
       return;
     }
-
     final currentSlotIndex = equipmentManager.currentMainHandSlotIndex;
     final previousIndex =
         (currentSlotIndex - 1 + inventoryManager.maxSlots) %
@@ -262,11 +264,11 @@ class InventoryInputHandler extends GameComponent
       final item = inventoryManager.getSlotByIndex(previousIndex)?.item;
       final handSuffix = item != null ? ' (${item.id})' : '';
       final itemName = item?.name ?? 'vazio';
-      developer.log(
+      GameLogger.info(
         '[InventoryInput] ✓ Slot selecionado (reverso): $itemName$handSuffix',
       );
     } else {
-      developer.log(
+      GameLogger.warning(
         '[InventoryInput] ✗ Falha ao selecionar slot ${previousIndex + 1}',
       );
     }
@@ -275,7 +277,7 @@ class InventoryInputHandler extends GameComponent
   void _notifyEquipmentChanged(HandItemId? handItemId) {
     // Equipment is now queried dynamically from the player model
     // No need to notify - the model always returns the current selected slot
-    developer.log(
+    GameLogger.info(
       '[InventoryInput] Equipment changed to: ${handItemId?.name ?? "empty"}',
     );
   }
@@ -292,15 +294,13 @@ class InventoryInputHandler extends GameComponent
 
     // Check if slot exists
     if (slotIndex >= inventoryManager.maxSlots) {
-      developer.log(
-        '[InventoryInput] Slot $slotIndex não existe (max: ${inventoryManager.maxSlots})',
-      );
+      GameLogger.warning('[InventoryInput] Slot $slotIndex não existe (max: ${inventoryManager.maxSlots})');
       return;
     }
 
     final slot = inventoryManager.getSlotByIndex(slotIndex);
     if (slot == null) {
-      developer.log('[InventoryInput] Slot $slotIndex não encontrado');
+      GameLogger.warning('[InventoryInput] Slot $slotIndex não encontrado');
       return;
     }
 
@@ -310,23 +310,23 @@ class InventoryInputHandler extends GameComponent
     if (success) {
       final item = slot.item;
       if (item != null) {
-        developer.log(
+        GameLogger.info(
           '[InventoryInput] ✓ Slot ${slotIndex + 1} selecionado: ${item.name}',
         );
       } else {
-        developer.log(
+        GameLogger.info(
           '[InventoryInput] ✓ Slot ${slotIndex + 1} selecionado (vazio)',
         );
       }
     } else {
-      developer.log(
+      GameLogger.warning(
         '[InventoryInput] ✗ Falha ao selecionar slot ${slotIndex + 1}',
       );
     }
   }
 
   void _openCrafting() {
-    developer.log(
+    GameLogger.info(
       '[InventoryInput] Crafting menu não implementado ainda (tecla C)',
     );
     // TODO: Implementar menu de crafting no futuro

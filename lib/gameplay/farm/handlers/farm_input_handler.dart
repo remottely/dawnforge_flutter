@@ -1,4 +1,4 @@
-import 'dart:developer' as developer;
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager.dart';
@@ -49,7 +49,7 @@ class FarmInputHandler extends GameComponent with PlayerControllerListener {
     new_time.TimeManager.instance.advanceToNextDay();
 
     final currentDay = WorldStateManager.instance.currentDay;
-    developer.log('[FarmInput] Advanced to day $currentDay');
+    GameLogger.info('[FarmInput] Advanced to day $currentDay');
 
     _feedbackService.showFloatingText(FarmFeedbackDef.dayAdvanced(currentDay));
 
@@ -57,7 +57,7 @@ class FarmInputHandler extends GameComponent with PlayerControllerListener {
   }
 
   void _handleClearSave() {
-    developer.log('[FarmInput] Clearing game and save...');
+    GameLogger.info('[FarmInput] Clearing game and save...');
 
     GameSaveController.instance
         .clearGameAndSave()
@@ -69,18 +69,18 @@ class FarmInputHandler extends GameComponent with PlayerControllerListener {
           _feedbackService.showFloatingText(message);
 
           if (success) {
-            developer.log('[FarmInput] ✅ Game and save cleared');
+            GameLogger.info('[FarmInput] ✅ Game and save cleared');
           } else {
-            developer.log('[FarmInput] ❌ Failed to clear game');
+            GameLogger.warning('[FarmInput] ❌ Failed to clear game');
           }
         })
         .catchError((e) {
-          developer.log('[FarmInput] Error clearing game: $e');
+          GameLogger.error('[FarmInput] Error clearing game: $e');
         });
   }
 
   void _saveGameAsync() {
-    developer.log('[FarmInput] Saving game...');
+    GameLogger.info('[FarmInput] Saving game...');
 
     GameSaveController.instance
         .saveGame()
@@ -92,13 +92,13 @@ class FarmInputHandler extends GameComponent with PlayerControllerListener {
           _feedbackService.showFloatingText(message);
 
           if (success) {
-            developer.log('[FarmInput] ✅ Game saved');
+            GameLogger.info('[FarmInput] ✅ Game saved');
           } else {
-            developer.log('[FarmInput] ❌ Failed to save game');
+            GameLogger.warning('[FarmInput] ❌ Failed to save game');
           }
         })
         .catchError((e) {
-          developer.log('[FarmInput] Error saving game: $e');
+          GameLogger.error('[FarmInput] Error saving game: $e');
         });
   }
 }

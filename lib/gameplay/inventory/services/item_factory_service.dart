@@ -1,4 +1,5 @@
-import 'dart:developer' as developer;
+
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:darkness_dungeon/gameplay/inventory/items/consumable_item.dart';
 import 'package:darkness_dungeon/gameplay/inventory/items/material_item.dart';
@@ -26,7 +27,7 @@ class ItemFactoryService {
   // TODO(Kevin): change all this initialize logic??
   Future<void> initialize() async {
     if (isInitialized) {
-      developer.log('[ItemFactoryService] Already initialized');
+      GameLogger.info('[ItemFactoryService] Already initialized');
       return;
     }
 
@@ -58,26 +59,18 @@ class ItemFactoryService {
           _materials.length +
           _seeds.length;
 
-      developer.log(
-        '[ItemFactoryService] Loaded $totalItems items from typed constants',
-      );
+      GameLogger.info('[ItemFactoryService] Loaded $totalItems items from typed constants');
 
       isInitialized = true;
     } catch (e, stackTrace) {
-      developer.log(
-        '[ItemFactoryService] ERROR loading database',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      GameLogger.error('[ItemFactoryService] ERROR loading database: $e\n$stackTrace');
       rethrow;
     }
   }
 
   HandItem? createItem(HandItemId itemId) {
     if (!isInitialized) {
-      developer.log(
-        '[ItemFactoryService] ERROR: Not initialized! Call initialize() first',
-      );
+      GameLogger.error('[ItemFactoryService] ERROR: Not initialized! Call initialize() first');
       return null;
     }
 
@@ -107,14 +100,10 @@ class ItemFactoryService {
         return material.copyWith();
       }
 
-      developer.log('[ItemFactoryService] Item not found: $itemId');
+      GameLogger.warning('[ItemFactoryService] Item not found: $itemId');
       return null;
     } catch (e, stackTrace) {
-      developer.log(
-        '[ItemFactoryService] ERROR creating item $itemId',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      GameLogger.error('[ItemFactoryService] ERROR creating item $itemId: $e\n$stackTrace');
       return null;
     }
   }

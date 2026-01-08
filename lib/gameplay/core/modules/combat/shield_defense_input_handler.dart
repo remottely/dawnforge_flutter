@@ -1,4 +1,4 @@
-import 'dart:developer' as developer;
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
@@ -52,9 +52,7 @@ class ShieldDefenseInputHandler extends GameComponent
       }
 
       if (player.controller.model.stamina <= 0) {
-        developer.log(
-          '[ShieldDefenseInput] ✗ Stamina esgotada, parando defesa',
-        );
+        GameLogger.warning('[ShieldDefenseInput] ✗ Stamina esgotada, parando defesa');
         player.stopShieldDefense();
         _isDefending = false;
         _defenseTime = 0.0;
@@ -98,7 +96,7 @@ class ShieldDefenseInputHandler extends GameComponent
   bool _handleDefenseStart(DDDefensePlayerView player) {
     if (!_isDefending) {
       if (player.controller.model.stamina <= 0) {
-        developer.log('[ShieldDefenseInput] ✗ Sem stamina para defender');
+        GameLogger.warning('[ShieldDefenseInput] ✗ Sem stamina para defender');
         return false;
       }
 
@@ -109,9 +107,7 @@ class ShieldDefenseInputHandler extends GameComponent
         _staminaAccumulator = 0.0;
 
         player.controller.beginStaminaConsumingAction();
-        developer.log(
-          '[ShieldDefenseInput] ✓ Defesa iniciada - regeneração pausada',
-        );
+        GameLogger.info('[ShieldDefenseInput] ✓ Defesa iniciada - regeneração pausada');
         return true;
       }
     }
@@ -126,9 +122,7 @@ class ShieldDefenseInputHandler extends GameComponent
       _staminaAccumulator = 0.0;
 
       player.controller.endStaminaConsumingAction();
-      developer.log(
-        '[ShieldDefenseInput] ✓ Defesa finalizada (tempo: ${_defenseTime.toStringAsFixed(2)}s) - regeneração retomada',
-      );
+      GameLogger.info('[ShieldDefenseInput] ✓ Defesa finalizada (tempo: ${_defenseTime.toStringAsFixed(2)}s) - regeneração retomada');
       return true;
     }
     return false;

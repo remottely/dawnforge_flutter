@@ -1,4 +1,4 @@
-import 'dart:developer' as developer;
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
@@ -38,12 +38,10 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
       player.controller.model.equipment == HandItemId.staff;
 
   void _handleExecutePrimaryAttack() {
-    developer.log(
-      '[CombatController] _handleExecutePrimaryAttack: stamina=${model.stamina}, canExecute=${model.canExecutePrimaryAttack}',
-    );
+    GameLogger.info('[CombatController] _handleExecutePrimaryAttack: stamina=${model.stamina}, canExecute=${model.canExecutePrimaryAttack}');
 
     if (!model.canExecutePrimaryAttack) {
-      developer.log('[CombatController] ✗ Não pode executar primary attack');
+      GameLogger.warning('[CombatController] ✗ Não pode executar primary attack');
       // Só mostra "Sem Stamina" se realmente for problema de stamina
       if (model.stamina < model.config.primaryAttackStaminaCost) {
         OverlayMessageDef.showNoStamina();
@@ -57,9 +55,7 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
       model.config.primaryAttackDamage,
     );
 
-    developer.log(
-      '[CombatController] Primary attack wasExecuted: $wasExecuted',
-    );
+    GameLogger.info('[CombatController] Primary attack wasExecuted: $wasExecuted');
 
     if (!wasExecuted) {
       endStaminaConsumingAction();
@@ -72,12 +68,10 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
   }
 
   void _handleExecuteRangedAttack() {
-    developer.log(
-      '[CombatController] _handleExecuteRangedAttack: stamina=${model.stamina}, canExecute=${model.canExecuteRangedAttack}',
-    );
+    GameLogger.info('[CombatController] _handleExecuteRangedAttack: stamina=${model.stamina}, canExecute=${model.canExecuteRangedAttack}');
 
     if (!model.canExecuteRangedAttack) {
-      developer.log('[CombatController] ✗ Não pode executar ranged attack');
+      GameLogger.warning('[CombatController] ✗ Não pode executar ranged attack');
       // Só mostra "Sem Stamina" se realmente for problema de stamina
       if (model.stamina < model.config.rangedAttackStaminaCost) {
         OverlayMessageDef.showNoStamina();
@@ -91,7 +85,7 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
       model.config.rangedAttackDamage,
     );
 
-    developer.log('[CombatController] Ranged attack wasExecuted: $wasExecuted');
+    GameLogger.info('[CombatController] Ranged attack wasExecuted: $wasExecuted');
 
     if (!wasExecuted) {
       endStaminaConsumingAction();
@@ -108,9 +102,7 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
     required DDBasePlayerView player,
     required JoystickActionEvent event,
   }) {
-    developer.log(
-      '[CombatController] Verificando ação: ${event.id} | equipment: ${player.controller.model.equipment} | evento: ${event.event}',
-    );
+    GameLogger.info('[CombatController] Verificando ação: ${event.id} | equipment: ${player.controller.model.equipment} | evento: ${event.event}');
 
     // Só processa ações no DOWN, não no UP
     if (event.event != ActionEvent.DOWN) {
@@ -118,17 +110,13 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
       return;
     } else {
       if (_isPrimaryAttackAction(player: player, actionId: event.id)) {
-        developer.log(
-          '[CombatController] ✓ É primary attack action (iron sword)',
-        );
+        GameLogger.info('[CombatController] ✓ É primary attack action (iron sword)');
         _handleExecutePrimaryAttack();
       } else if (_isRangedAttackAction(player: player, actionId: event.id)) {
-        developer.log('[CombatController] ✓ É ranged attack action (staff)');
+        GameLogger.info('[CombatController] ✓ É ranged attack action (staff)');
         _handleExecuteRangedAttack();
       } else {
-        developer.log(
-          '[CombatController] ✗ Não é ação de combate, passando para super',
-        );
+        GameLogger.info('[CombatController] ✗ Não é ação de combate, passando para super');
       }
 
       super.handleInputAction(player: player, event: event);

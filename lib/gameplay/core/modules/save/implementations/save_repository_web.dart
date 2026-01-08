@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:developer' as developer;
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:web/web.dart' as web;
 
@@ -33,11 +33,7 @@ final class SaveRepositoryWeb implements SaveRepository {
     final currentSize = _calculateStorageSize();
     if (currentSize > _warningThresholdBytes) {
       final sizeMB = (currentSize / (1024 * 1024)).toStringAsFixed(2);
-      developer.log(
-        '[SaveRepositoryWeb] WARNING: Storage usage is $sizeMB MB (approaching 5MB limit)',
-        name: 'SaveRepository',
-        level: 900,
-      );
+      GameLogger.warning('[SaveRepositoryWeb] WARNING: Storage usage is $sizeMB MB (approaching 5MB limit)');
     }
   }
 
@@ -49,22 +45,13 @@ final class SaveRepositoryWeb implements SaveRepository {
 
       _localStorage.setItem(prefixedKey, jsonString);
 
-      developer.log(
-        '[SaveRepositoryWeb] Saved data for key: $prefixedKey',
-        name: 'SaveRepository',
-      );
+      GameLogger.info('[SaveRepositoryWeb] Saved data for key: $prefixedKey');
 
       _checkStorageSize();
 
       return true;
     } catch (e, stackTrace) {
-      developer.log(
-        '[SaveRepositoryWeb] Error saving data for key: $key',
-        name: 'SaveRepository',
-        error: e,
-        stackTrace: stackTrace,
-        level: 1000,
-      );
+      GameLogger.error('[SaveRepositoryWeb] Error saving data for key: $key');
       return false;
     }
   }
@@ -76,30 +63,17 @@ final class SaveRepositoryWeb implements SaveRepository {
       final jsonString = _localStorage.getItem(prefixedKey);
 
       if (jsonString == null) {
-        developer.log(
-          '[SaveRepositoryWeb] No data found for key: $prefixedKey',
-          name: 'SaveRepository',
-          level: 500,
-        );
+        GameLogger.warning('[SaveRepositoryWeb] No data found for key: $prefixedKey');
         return null;
       }
 
       final data = jsonDecode(jsonString) as Map<String, dynamic>;
 
-      developer.log(
-        '[SaveRepositoryWeb] Loaded data for key: $prefixedKey',
-        name: 'SaveRepository',
-      );
+      GameLogger.info('[SaveRepositoryWeb] Loaded data for key: $prefixedKey');
 
       return data;
     } catch (e, stackTrace) {
-      developer.log(
-        '[SaveRepositoryWeb] Error loading data for key: $key',
-        name: 'SaveRepository',
-        error: e,
-        stackTrace: stackTrace,
-        level: 1000,
-      );
+      GameLogger.error('[SaveRepositoryWeb] Error loading data for key: $key');
       return null;
     }
   }
@@ -110,20 +84,11 @@ final class SaveRepositoryWeb implements SaveRepository {
       final prefixedKey = '$_keyPrefix$key';
       _localStorage.removeItem(prefixedKey);
 
-      developer.log(
-        '[SaveRepositoryWeb] Deleted data for key: $prefixedKey',
-        name: 'SaveRepository',
-      );
+      GameLogger.info('[SaveRepositoryWeb] Deleted data for key: $prefixedKey');
 
       return true;
     } catch (e, stackTrace) {
-      developer.log(
-        '[SaveRepositoryWeb] Error deleting data for key: $key',
-        name: 'SaveRepository',
-        error: e,
-        stackTrace: stackTrace,
-        level: 1000,
-      );
+      GameLogger.error('[SaveRepositoryWeb] Error deleting data for key: $key');
       return false;
     }
   }
@@ -145,20 +110,11 @@ final class SaveRepositoryWeb implements SaveRepository {
         _localStorage.removeItem(key);
       }
 
-      developer.log(
-        '[SaveRepositoryWeb] Cleared ${gameKeys.length} game keys',
-        name: 'SaveRepository',
-      );
+      GameLogger.info('[SaveRepositoryWeb] Cleared ${gameKeys.length} game keys');
 
       return true;
     } catch (e, stackTrace) {
-      developer.log(
-        '[SaveRepositoryWeb] Error clearing game data',
-        name: 'SaveRepository',
-        error: e,
-        stackTrace: stackTrace,
-        level: 1000,
-      );
+      GameLogger.error('[SaveRepositoryWeb] Error clearing game data');
       return false;
     }
   }
@@ -170,12 +126,7 @@ final class SaveRepositoryWeb implements SaveRepository {
       final value = _localStorage.getItem(prefixedKey);
       return value != null;
     } catch (e) {
-      developer.log(
-        '[SaveRepositoryWeb] Error checking existence for key: $key',
-        name: 'SaveRepository',
-        error: e,
-        level: 900,
-      );
+      GameLogger.warning('[SaveRepositoryWeb] Error checking existence for key: $key');
       return false;
     }
   }
@@ -193,20 +144,11 @@ final class SaveRepositoryWeb implements SaveRepository {
         }
       }
 
-      developer.log(
-        '[SaveRepositoryWeb] Found ${gameKeys.length} game save keys',
-        name: 'SaveRepository',
-      );
+      GameLogger.info('[SaveRepositoryWeb] Found ${gameKeys.length} game save keys');
 
       return gameKeys;
     } catch (e, stackTrace) {
-      developer.log(
-        '[SaveRepositoryWeb] Error listing keys',
-        name: 'SaveRepository',
-        error: e,
-        stackTrace: stackTrace,
-        level: 1000,
-      );
+      GameLogger.error('[SaveRepositoryWeb] Error listing keys');
       return [];
     }
   }

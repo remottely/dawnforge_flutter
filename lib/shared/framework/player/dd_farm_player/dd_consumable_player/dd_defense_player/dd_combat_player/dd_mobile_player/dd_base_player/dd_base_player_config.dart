@@ -1,4 +1,4 @@
-import 'dart:developer' as developer;
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
 
@@ -66,25 +66,15 @@ class DDBasePlayerSaveData {
     final life = (json['life'] as num?)?.toDouble();
     final coins = _readCoins(json);
 
-    developer.log(
-      '[DDBasePlayerSaveData] fromJson stamina=$stamina, life=$life, energy=$energy, coins=$coins, raw=$json',
-    );
+    GameLogger.info('[DDBasePlayerSaveData] fromJson stamina=$stamina, life=$life, energy=$energy, coins=$coins, raw=$json');
     if (life == null || life <= 0) {
-      developer.log(
-        '[DDBasePlayerSaveData] ⚠️ life is null/<=0 during load; check death flow or save timing',
-        level: 900,
-      );
+      GameLogger.warning('[DDBasePlayerSaveData] ⚠️ life is null/<=0 during load; check death flow or save timing');
     }
 
-    developer.log(
-      '[DDBasePlayerSaveData] fromJson stamina=$stamina, life=$life, energy=$energy, coins=$coins, raw=$json',
-    );
+    GameLogger.info('[DDBasePlayerSaveData] fromJson stamina=$stamina, life=$life, energy=$energy, coins=$coins, raw=$json');
 
     if (life == null || life <= 0) {
-      developer.log(
-        '[DDBasePlayerSaveData] ⚠️ life is null/<=0 during load; check death flow or save timing',
-        level: 900,
-      );
+      GameLogger.warning('[DDBasePlayerSaveData] ⚠️ life is null/<=0 during load; check death flow or save timing');
     }
 
     return DDBasePlayerSaveData(

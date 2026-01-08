@@ -1,4 +1,5 @@
-import 'dart:developer' as developer;
+
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 import 'dart:math';
 
 import '../managers/inventory_manager.dart';
@@ -13,18 +14,16 @@ class RemoveItemUseCase {
   /// Remove an item from inventory by ID and quantity
   /// Returns true if successful, false otherwise
   bool call(HandItemId itemId, int quantity) {
-    developer.log('[RemoveItemUseCase] Removing $quantity x ${itemId.name}');
+    GameLogger.info('[RemoveItemUseCase] Removing $quantity x ${itemId.name}');
 
     if (quantity <= 0) {
-      developer.log('[RemoveItemUseCase] Invalid quantity: $quantity');
+      GameLogger.warning('[RemoveItemUseCase] Invalid quantity: $quantity');
       return false;
     }
 
     final totalQuantity = _inventoryManager.getItemQuantity(itemId.name);
     if (totalQuantity < quantity) {
-      developer.log(
-        '[RemoveItemUseCase] Not enough items. Has: $totalQuantity, needs: $quantity',
-      );
+      GameLogger.warning('[RemoveItemUseCase] Not enough items. Has: $totalQuantity, needs: $quantity');
       return false;
     }
 
@@ -42,10 +41,10 @@ class RemoveItemUseCase {
       _inventoryManager.updateSlot(i, slot.removeQuantity(amountToRemove));
       remainingToRemove -= amountToRemove;
 
-      developer.log('[RemoveItemUseCase] Removed $amountToRemove from slot $i');
+      GameLogger.info('[RemoveItemUseCase] Removed $amountToRemove from slot $i');
     }
 
-    developer.log('[RemoveItemUseCase] Item removed successfully');
+    GameLogger.info('[RemoveItemUseCase] Item removed successfully');
     return true;
   }
 

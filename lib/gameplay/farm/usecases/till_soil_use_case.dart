@@ -1,4 +1,5 @@
-import 'dart:developer' as developer;
+
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:darkness_dungeon/gameplay/world/entities/world_entities.dart';
 
@@ -19,18 +20,11 @@ class TillSoilUseCase {
   ///
   /// Retorna `true` se a operação foi bem-sucedida, `false` caso contrário.
   bool call(int x, int y) {
-    developer.log(
-      'TillSoilUseCase: Attempting to till soil at ($x, $y)',
-      name: 'farm.usecases.till_soil',
-    );
+    GameLogger.info('TillSoilUseCase: Attempting to till soil at ($x, $y)');
 
     // Valida se as coordenadas são válidas
     if (x < 0 || y < 0) {
-      developer.log(
-        'TillSoilUseCase: Invalid coordinates ($x, $y)',
-        name: 'farm.usecases.till_soil',
-        level: 900, // WARNING
-      );
+      GameLogger.warning('TillSoilUseCase: Invalid coordinates ($x, $y)');
       return false;
     }
 
@@ -38,16 +32,9 @@ class TillSoilUseCase {
     final result = _tillSoil(x, y);
 
     if (result) {
-      developer.log(
-        'TillSoilUseCase: Successfully tilled soil at ($x, $y)',
-        name: 'farm.usecases.till_soil',
-      );
+      GameLogger.info('TillSoilUseCase: Successfully tilled soil at ($x, $y)');
     } else {
-      developer.log(
-        'TillSoilUseCase: Failed to till soil at ($x, $y)',
-        name: 'farm.usecases.till_soil',
-        level: 900, // WARNING
-      );
+      GameLogger.warning('TillSoilUseCase: Failed to till soil at ($x, $y)');
     }
 
     return result;
@@ -55,14 +42,14 @@ class TillSoilUseCase {
 
   /// Till soil at coordinates
   bool _tillSoil(int x, int y) {
-    developer.log('[FarmManager] Tilling soil at ($x, $y)');
+    GameLogger.info('[FarmManager] Tilling soil at ($x, $y)');
 
     final existingTile = _manager.getTile(x, y);
     final existingFarmObject = existingTile?.object as FarmObject?;
 
     // Check if already tilled
     if (existingFarmObject != null && existingFarmObject.soilState != SoilState.untilled) {
-      developer.log('[FarmManager] Soil already tilled');
+      GameLogger.warning('[FarmManager] Soil already tilled');
       return false;
     }
 
@@ -77,7 +64,7 @@ class TillSoilUseCase {
         tilledTile; // J3: Cross-module notification
     _manager.notifyChange();
 
-    developer.log('[FarmManager] ✓ Soil tilled successfully');
+    GameLogger.info('[FarmManager] ✓ Soil tilled successfully');
     return true;
   }
 }

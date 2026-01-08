@@ -1,4 +1,5 @@
-import 'dart:developer' as developer;
+
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/save/save_data_model.dart';
@@ -21,15 +22,12 @@ final class GameSaveController {
 
   Future<bool> saveGame() async {
     try {
-      developer.log('[GameSaveController] Starting game save...');
+      GameLogger.info('[GameSaveController] Starting game save...');
 
       final playerData = _collectPlayerData();
       final life = (playerData['playerModel'] as Map?)?['life'];
       if (life == null || (life is num && life <= 0)) {
-        developer.log(
-          '[GameSaveController] ❌ Aborting save: player life is null/<=0 (life=$life). Avoid overwriting good saves after death.',
-          level: 1000,
-        );
+        GameLogger.warning('[GameSaveController] ❌ Aborting save: player life is null/<=0 (life=$life). Avoid overwriting good saves after death.');
         return false;
       }
       final worldData = _collectWorldData();
@@ -51,36 +49,30 @@ final class GameSaveController {
       final success = await SaveManager.instance.save(saveData);
 
       if (success) {
-        developer.log('[GameSaveController] ✅ Game saved successfully!');
+        GameLogger.info('[GameSaveController] ✅ Game saved successfully!');
       } else {
-        developer.log('[GameSaveController] ❌ Failed to save game');
+        GameLogger.error('[GameSaveController] ❌ Failed to save game');
       }
 
       return success;
-    } catch (e, stackTrace) {
-      developer.log(
-        '[GameSaveController] Error saving game',
-        error: e,
-        stackTrace: stackTrace,
-      );
+    } catch (e) {
+      GameLogger.error('[GameSaveController] Error saving game: $e');
       return false;
     }
   }
 
   Future<bool> loadGame() async {
     try {
-      developer.log('[GameSaveController] Starting game load...');
+      GameLogger.info('[GameSaveController] Starting game load...');
 
       final saveData = await SaveManager.instance.load();
 
       if (saveData == null) {
-        developer.log('[GameSaveController] No save file found');
+          GameLogger.warning('[GameSaveController] No save file found');
         return false;
       }
 
-      developer.log(
-        '[GameSaveController] Save data loaded, restoring components...',
-      );
+      GameLogger.info('[GameSaveController] Save data loaded, restoring components...');
 
       _restorePlayerData(saveData.playerData);
       _restoreWorldData(saveData.worldData);
@@ -88,14 +80,10 @@ final class GameSaveController {
       _restoreInventoryData(saveData.inventoryData);
       _restoreFarmData(saveData.worldData['farmData'] as Map<String, dynamic>?);
 
-      developer.log('[GameSaveController] ✅ Game loaded successfully!');
+      GameLogger.info('[GameSaveController] ✅ Game loaded successfully!');
       return true;
-    } catch (e, stackTrace) {
-      developer.log(
-        '[GameSaveController] Error loading game',
-        error: e,
-        stackTrace: stackTrace,
-      );
+    } catch (e) {
+      GameLogger.error('[GameSaveController] Error loading game: $e');
       return false;
     }
   }
@@ -110,33 +98,26 @@ final class GameSaveController {
 
   Future<bool> clearGameAndSave() async {
     try {
-      developer.log('[GameSaveController] 🗑️ Clearing game and save...');
+      GameLogger.info('[GameSaveController] 🗑️ Clearing game and save...');
 
       PlayerStateManager.instance.reset();
       InventoryManager.instance.clear();
       getIt<FarmManager>().reset();
       WorldStateManager.instance.reset();
 
-      developer.log('[GameSaveController] ✅ All managers reset');
+      GameLogger.info('[GameSaveController] ✅ All managers reset');
 
       final deleted = await SaveManager.instance.deleteSave();
 
       if (deleted) {
-        developer.log('[GameSaveController] ✅ Save file deleted');
+          GameLogger.info('[GameSaveController] ✅ Save file deleted');
       } else {
-        developer.log('[GameSaveController] ⚠️ No save file to delete');
+          GameLogger.warning('[GameSaveController] ⚠️ No save file to delete');
       }
 
-      developer.log(
-        '[GameSaveController] ✅ Game and save cleared successfully!',
-      );
       return true;
-    } catch (e, stackTrace) {
-      developer.log(
-        '[GameSaveController] Error clearing game and save',
-        error: e,
-        stackTrace: stackTrace,
-      );
+    } catch (e) {
+      GameLogger.error('[GameSaveController] Error clearing game and save: $e');
       return false;
     }
   }
@@ -150,24 +131,14 @@ final class GameSaveController {
     final life = playerModelJson['life'];
     final stamina = playerModelJson['stamina'];
 
-    developer.log(
-      '[GameSaveController] Collecting player data: '
-      'model=${playerState.lastPlayerModel != null ? playerState.lastPlayerModel.runtimeType : "null"}, '
-      'stamina=$stamina, life=$life, coins=$coins, raw=$playerModelJson',
-    );
+    GameLogger.info('[GameSaveController] Collecting player data: model=${playerState.lastPlayerModel != null ? playerState.lastPlayerModel.runtimeType : "null"}, stamina=$stamina, life=$life, coins=$coins, raw=$playerModelJson');
 
     if (life == null || (life is num && life <= 0)) {
-      developer.log(
-        '[GameSaveController] ⚠️ Player life is null/<=0 during save, skipping validation? raw=$playerModelJson',
-        level: 900,
-      );
+      GameLogger.warning('[GameSaveController] ⚠️ Player life is null/<=0 during save, skipping validation? raw=$playerModelJson');
     }
 
     if (coins is num && coins < 0) {
-      developer.log(
-        '[GameSaveController] ⚠️ Player coins negative during save, raw=$playerModelJson',
-        level: 900,
-      );
+      GameLogger.warning('[GameSaveController] ⚠️ Player coins negative during save, raw=$playerModelJson');
     }
 
     return playerData;
@@ -190,108 +161,69 @@ final class GameSaveController {
 
   void _restorePlayerData(Map<String, dynamic> data) {
     try {
-      developer.log(
-        '[GameSaveController] Restoring player data: ${data.keys.toList()}, '
-        'coinsField=${(data['playerModel'] as Map?)?['coins']}',
-      );
+      GameLogger.info('[GameSaveController] Restoring player data: ${data.keys.toList()}, coinsField=${(data['playerModel'] as Map?)?['coins']}');
       final playerState = PlayerStateManager.instance;
       playerState.fromJson(data);
-      
-      developer.log(
-        '[GameSaveController] ✅ Player state restored: '
-        'model=${playerState.lastPlayerModel != null ? playerState.lastPlayerModel.runtimeType : "null"}, '
-        'stamina=${playerState.lastPlayerModel?.stamina}, '
-        'life=${playerState.lastPlayerModel?.life}, '
-        'coins=${playerState.lastPlayerModel?.coins}',
-      );
+      GameLogger.info('[GameSaveController] ✅ Player state restored: model=${playerState.lastPlayerModel != null ? playerState.lastPlayerModel.runtimeType : "null"}, stamina=${playerState.lastPlayerModel?.stamina}, life=${playerState.lastPlayerModel?.life}, coins=${playerState.lastPlayerModel?.coins}');
 
       final restoredLife = playerState.lastPlayerModel?.life;
       if (restoredLife == null || restoredLife <= 0) {
-        developer.log(
-          '[GameSaveController] ⚠️ Restored player life is null/<=0. payload=${data['playerModel']}',
-          level: 900,
-        );
+        GameLogger.warning('[GameSaveController] ⚠️ Restored player life is null/<=0. payload=${data['playerModel']}');
       }
-    } catch (e, stackTrace) {
-      developer.log(
-        '[GameSaveController] ❌ Error restoring player data: $e',
-        error: e,
-        stackTrace: stackTrace,
-      );
+    } catch (e) {
+      GameLogger.error('[GameSaveController] ❌ Error restoring player data: $e');
     }
   }
 
   void _restoreWorldData(Map<String, dynamic> data) {
     try {
-      developer.log(
-        '[GameSaveController] Restoring world data: ${data.keys.toList()}',
-      );
+      GameLogger.info('[GameSaveController] Restoring world data: ${data.keys.toList()}');
       final worldState = WorldStateManager.instance;
       worldState.fromJson(data);
-      developer.log('[GameSaveController] ✅ World state restored');
-    } catch (e, stackTrace) {
-      developer.log(
-        '[GameSaveController] ❌ Error restoring world data: $e',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      GameLogger.info('[GameSaveController] ✅ World state restored');
+    } catch (e) {
+      GameLogger.error('[GameSaveController] ❌ Error restoring world data: $e');
     }
   }
 
   void _restoreTimeData(Map<String, dynamic>? data) {
     try {
       if (data == null) {
-        developer.log('[GameSaveController] No time state data found');
+        GameLogger.warning('[GameSaveController] No time state data found');
         return;
       }
 
       new_time.TimeManager.instance.fromJson(data);
-      developer.log('[GameSaveController] ✅ Time state restored');
-    } catch (e, stackTrace) {
-      developer.log(
-        '[GameSaveController] ❌ Error restoring time state: $e',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      GameLogger.info('[GameSaveController] ✅ Time state restored');
+    } catch (e) {
+      GameLogger.error('[GameSaveController] ❌ Error restoring time state: $e');
     }
   }
 
   void _restoreInventoryData(Map<String, dynamic> data) {
     try {
-      developer.log(
-        '[GameSaveController] Restoring inventory data: ${data.keys.toList()}',
-      );
+      GameLogger.info('[GameSaveController] Restoring inventory data: ${data.keys.toList()}');
       final inventory = InventoryManager.instance;
       inventory.fromJson(data, getIt<ItemFactoryService>().createItem);
-      developer.log('[GameSaveController] ✅ Inventory restored');
-    } catch (e, stackTrace) {
-      developer.log(
-        '[GameSaveController] ❌ Error restoring inventory data: $e',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      GameLogger.info('[GameSaveController] ✅ Inventory restored');
+    } catch (e) {
+      GameLogger.error('[GameSaveController] ❌ Error restoring inventory data: $e');
     }
   }
 
   void _restoreFarmData(Map<String, dynamic>? data) {
     try {
       if (data == null) {
-        developer.log('[GameSaveController] ⚠️ No farm data to restore');
+        GameLogger.warning('[GameSaveController] ⚠️ No farm data to restore');
         return;
       }
 
-      developer.log(
-        '[GameSaveController] Restoring farm data: ${data.keys.toList()}',
-      );
+      GameLogger.info('[GameSaveController] Restoring farm data: ${data.keys.toList()}');
       final loadFarmUseCase = farm_di.getIt<LoadFarmUseCase>();
       loadFarmUseCase.call(data);
-      developer.log('[GameSaveController] ✅ Farm state restored');
-    } catch (e, stackTrace) {
-      developer.log(
-        '[GameSaveController] ❌ Error restoring farm data: $e',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      GameLogger.info('[GameSaveController] ✅ Farm state restored');
+    } catch (e) {
+      GameLogger.error('[GameSaveController] ❌ Error restoring farm data: $e');
     }
   }
 }

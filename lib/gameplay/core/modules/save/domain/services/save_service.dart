@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:developer' as developer;
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:darkness_dungeon/gameplay/core/modules/save/domain/interfaces/i_saveable.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/save/domain/models/farm_save_data.dart';
@@ -66,7 +66,7 @@ final class SaveService {
     Map<String, dynamic>? progressData,
   }) async {
     try {
-      developer.log('[SaveService] Starting save operation...');
+      GameLogger.info('[SaveService] Starting save operation...');
 
       final player = playerManager.toSaveData();
       final world = worldManager.toSaveData();
@@ -84,7 +84,7 @@ final class SaveService {
       );
 
       if (!gameSaveData.isValid()) {
-        developer.log('[SaveService] Save data validation failed', level: 900);
+        GameLogger.warning('[SaveService] Save data validation failed');
         return const SaveResult.failure('Save data validation failed');
       }
 
@@ -92,60 +92,44 @@ final class SaveService {
 
       if (success) {
         _lastSaveTime = gameSaveData.timestamp;
-        developer.log(
-          '[SaveService] ✅ Game saved successfully at ${gameSaveData.timestamp}',
-        );
-        developer.log('[SaveService] ${gameSaveData.getSummary()}');
+        GameLogger.info('[SaveService] ✅ Game saved successfully at ${gameSaveData.timestamp}');
+        GameLogger.info('[SaveService] ${gameSaveData.getSummary()}');
         return SaveResult.success(gameSaveData.timestamp);
       } else {
-        developer.log('[SaveService] ❌ Save operation failed', level: 1000);
+        GameLogger.error('[SaveService] ❌ Save operation failed');
         return const SaveResult.failure('Failed to write save data to storage');
       }
     } catch (e, stackTrace) {
-      developer.log(
-        '[SaveService] Error during save',
-        error: e,
-        stackTrace: stackTrace,
-        level: 1000,
-      );
+      GameLogger.error('[SaveService] Error during save');
       return SaveResult.failure('Save error: $e');
     }
   }
 
   Future<LoadResult> loadGame() async {
     try {
-      developer.log('[SaveService] Starting load operation...');
+      GameLogger.info('[SaveService] Starting load operation...');
 
       final json = await _repository.load(_saveKey);
 
       if (json == null) {
-        developer.log('[SaveService] No save file found', level: 500);
+        GameLogger.warning('[SaveService] No save file found');
         return const LoadResult.failure('No save file found');
       }
 
       final gameSaveData = GameSaveData.fromJson(json);
 
       if (!gameSaveData.isValid()) {
-        developer.log(
-          '[SaveService] Loaded save data is corrupted',
-          level: 900,
-        );
-
+        GameLogger.warning('[SaveService] Loaded save data is corrupted');
         await _backupCorruptedSave(json);
         return const LoadResult.failure('Save data is corrupted');
       }
 
-      developer.log('[SaveService] ✅ Game loaded successfully');
-      developer.log('[SaveService] ${gameSaveData.getSummary()}');
+      GameLogger.info('[SaveService] ✅ Game loaded successfully');
+      GameLogger.info('[SaveService] ${gameSaveData.getSummary()}');
 
       return LoadResult.success(gameSaveData);
     } catch (e, stackTrace) {
-      developer.log(
-        '[SaveService] Error during load',
-        error: e,
-        stackTrace: stackTrace,
-        level: 1000,
-      );
+      GameLogger.error('[SaveService] Error during load');
       return LoadResult.failure('Load error: $e');
     }
   }
@@ -154,27 +138,22 @@ final class SaveService {
     try {
       return await _repository.exists(_saveKey);
     } catch (e) {
-      developer.log('[SaveService] Error checking save existence', error: e);
+      GameLogger.error('[SaveService] Error checking save existence');
       return false;
     }
   }
 
   Future<bool> deleteSave() async {
     try {
-      developer.log('[SaveService] Deleting save file...');
+      GameLogger.info('[SaveService] Deleting save file...');
       final success = await _repository.delete(_saveKey);
       if (success) {
-        developer.log('[SaveService] ✅ Save file deleted');
+        GameLogger.info('[SaveService] ✅ Save file deleted');
         _lastSaveTime = null;
       }
       return success;
     } catch (e, stackTrace) {
-      developer.log(
-        '[SaveService] Error deleting save',
-        error: e,
-        stackTrace: stackTrace,
-        level: 1000,
-      );
+      GameLogger.error('[SaveService] Error deleting save');
       return false;
     }
   }
@@ -191,16 +170,13 @@ final class SaveService {
     if (_lastSaveTime != null) {
       final timeSinceLastSave = DateTime.now().difference(_lastSaveTime!);
       if (timeSinceLastSave < kAutoSaveDebounce) {
-        developer.log(
-          '[SaveService] Auto-save debounced (${timeSinceLastSave.inSeconds}s since last save)',
-          level: 500,
-        );
+        GameLogger.info('[SaveService] Auto-save debounced (${timeSinceLastSave.inSeconds}s since last save)');
         return;
       }
     }
 
     _autoSaveTimer = Timer(const Duration(milliseconds: 500), () async {
-      developer.log('[SaveService] Auto-save triggered');
+      GameLogger.info('[SaveService] Auto-save triggered');
       await saveGame(
         playerManager: playerManager,
         worldManager: worldManager,
@@ -225,7 +201,7 @@ final class SaveService {
         'coins': (json['player'] as Map?)?['coins'],
       };
     } catch (e) {
-      developer.log('[SaveService] Error getting metadata', error: e);
+      GameLogger.error('[SaveService] Error getting metadata');
       return null;
     }
   }
@@ -235,9 +211,9 @@ final class SaveService {
       final backupKey =
           'backup_corrupted_${DateTime.now().millisecondsSinceEpoch}';
       await _repository.save(backupKey, data);
-      developer.log('[SaveService] Corrupted save backed up to: $backupKey');
+      GameLogger.info('[SaveService] Corrupted save backed up to: $backupKey');
     } catch (e) {
-      developer.log('[SaveService] Failed to backup corrupted save', error: e);
+      GameLogger.error('[SaveService] Failed to backup corrupted save');
     }
   }
 

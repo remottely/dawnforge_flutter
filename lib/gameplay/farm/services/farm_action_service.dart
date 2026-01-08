@@ -1,4 +1,5 @@
-import 'dart:developer' as developer;
+
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:darkness_dungeon/gameplay/world/entities/objects/farm/crop_entity.dart';
 import 'package:darkness_dungeon/gameplay/farm/managers/farm_manager.dart';
@@ -13,64 +14,60 @@ final class FarmActionService {
   static final instance = FarmActionService._();
 
   FarmActionResult tillSoil(int x, int y) {
-    developer.log('[FarmActionService] Attempting to till soil at ($x, $y)');
+    GameLogger.info('[FarmActionService] Attempting to till soil at ($x, $y)');
 
     final success = getIt<TillSoilUseCase>().call(x, y);
     // final success = getIt<FarmManager>().tillSoil(x, y);
 
     if (success) {
-      developer.log('[FarmActionService] ✅ Soil tilled successfully');
+      GameLogger.info('[FarmActionService] ✅ Soil tilled successfully');
       return FarmActionResult.success();
     }
 
-    developer.log('[FarmActionService] ❌ Failed to till soil');
+    GameLogger.warning('[FarmActionService] ❌ Failed to till soil');
     return FarmActionResult.failure('Cannot till at this location');
   }
 
   FarmActionResult waterTile(int x, int y) {
-    developer.log('[FarmActionService] Attempting to water tile at ($x, $y)');
+    GameLogger.info('[FarmActionService] Attempting to water tile at ($x, $y)');
 
     final success = getIt<FarmManager>().waterTile(x, y);
 
     if (success) {
-      developer.log('[FarmActionService] ✅ Tile watered successfully');
+      GameLogger.info('[FarmActionService] ✅ Tile watered successfully');
       return FarmActionResult.success();
     }
 
-    developer.log('[FarmActionService] ❌ Failed to water tile');
+    GameLogger.warning('[FarmActionService] ❌ Failed to water tile');
     return FarmActionResult.failure('Cannot water at this location');
   }
 
   /// TODO: Integrate with inventory to check for strawberries and consume them.
   FarmActionResult plantSeed(int x, int y, CropEntity crop) {
-    developer.log(
-      '[FarmActionService] Attempting to plant ${crop.id} at ($x, $y)',
-    );
+    GameLogger.info('[FarmActionService] Attempting to plant ${crop.id} at ($x, $y)');
 
     final success = getIt<FarmManager>().plantSeed(x, y, crop);
 
     if (success) {
-      developer.log('[FarmActionService] ✅ Seed planted successfully');
+      GameLogger.info('[FarmActionService] ✅ Seed planted successfully');
       return FarmActionResult.success();
     }
 
-    developer.log('[FarmActionService] ❌ Failed to plant seed');
+    GameLogger.warning('[FarmActionService] ❌ Failed to plant seed');
     return FarmActionResult.failure('Cannot plant at this location');
   }
 
   HarvestResult harvestCrop(int x, int y) {
-    developer.log('[FarmActionService] Attempting to harvest at ($x, $y)');
+    GameLogger.info('[FarmActionService] Attempting to harvest at ($x, $y)');
 
     final crop = getIt<FarmManager>().harvestCrop(x, y);
 
     if (crop == null) {
-      developer.log('[FarmActionService] ❌ Nothing to harvest');
+      GameLogger.warning('[FarmActionService] ❌ Nothing to harvest');
       return HarvestResult.failure();
     }
 
-    developer.log(
-      '[FarmActionService] ✅ Harvested ${crop.yieldAmount}x ${crop.name}',
-    );
+    GameLogger.info('[FarmActionService] ✅ Harvested ${crop.yieldAmount}x ${crop.name}');
 
     final inventoryResult = _addHarvestToInventory(crop);
 
@@ -83,9 +80,7 @@ final class FarmActionService {
     );
 
     if (harvestItem == null) {
-      developer.log(
-        '[FarmActionService] ⚠️ Harvest item not found: ${crop.harvestItemId}',
-      );
+      GameLogger.warning('[FarmActionService] ⚠️ Harvest item not found: ${crop.harvestItemId}');
       return false;
     }
 
@@ -95,11 +90,9 @@ final class FarmActionService {
     );
 
     if (success) {
-      developer.log(
-        '[FarmActionService] 🎒 Added ${crop.yieldAmount}x ${harvestItem.name} to inventory',
-      );
+      GameLogger.info('[FarmActionService] 🎒 Added ${crop.yieldAmount}x ${harvestItem.name} to inventory');
     } else {
-      developer.log('[FarmActionService] ⚠️ Inventory full, items lost!');
+      GameLogger.warning('[FarmActionService] ⚠️ Inventory full, items lost!');
     }
 
     return success;

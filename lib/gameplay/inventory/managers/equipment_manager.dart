@@ -1,4 +1,5 @@
-import 'dart:developer' as developer;
+
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:flutter/foundation.dart';
@@ -11,7 +12,7 @@ import 'package:darkness_dungeon/gameplay/inventory/state/equipment_state.dart';
 /// Manager for equipment state (C1: Singleton + ValueNotifier, I2: Manager = Singleton State)
 final class EquipmentManager {
   EquipmentManager._() {
-    developer.log('[EquipmentManager] Initialized (selection mirrors inventory)');
+    GameLogger.info('[EquipmentManager] Initialized (selection mirrors inventory)');
 
     // Keep UI in sync when slots change (consumption/move/clear)
     InventoryManager.instance.slotsNotifier.addListener(
@@ -49,7 +50,7 @@ final class EquipmentManager {
   bool selectSlotIndex(int index) {
     final slot = InventoryManager.instance.getSlotByIndex(index);
     if (slot == null) {
-      developer.log('[EquipmentManager] Slot $index not found');
+      GameLogger.warning('[EquipmentManager] Slot $index not found');
       return false;
     }
 
@@ -58,7 +59,7 @@ final class EquipmentManager {
 
     // Update overlays with current item (can be null if slot empty)
     EquipmentState.instance.updateEquippedItem(slot.item);
-    developer.log('[EquipmentManager] Selected slot $index (${slot.item?.name ?? 'empty'})');
+    GameLogger.info('[EquipmentManager] Selected slot $index (${slot.item?.name ?? 'empty'})');
     return true;
   }
 
@@ -125,7 +126,7 @@ final class EquipmentManager {
         ?.item;
     EquipmentState.instance.updateEquippedItem(item);
 
-    developer.log('[EquipmentManager] Loaded selected slot $_currentMainHandSlotIndex');
+    GameLogger.info('[EquipmentManager] Loaded selected slot $_currentMainHandSlotIndex');
   }
 
   void reset() {
@@ -137,7 +138,7 @@ final class EquipmentManager {
       InventoryManager.instance.getSlotByIndex(0)?.item,
     );
 
-    developer.log('[EquipmentManager] Equipment reset');
+    GameLogger.info('[EquipmentManager] Equipment reset');
   }
 
   void _handleInventorySlotsChanged() {

@@ -1,4 +1,4 @@
-import 'dart:developer' as developer;
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
@@ -42,9 +42,7 @@ abstract class DDMinePlayerController<M extends DDMinePlayerModel>
     required DDBasePlayerView player,
     required JoystickActionEvent event,
   }) {
-    developer.log(
-      '[MineController] Verificando ação: ${event.id} | equipment: ${player.controller.model.equipment} | evento: ${event.event}',
-    );
+    GameLogger.info('[MineController] Verificando ação: ${event.id} | equipment: ${player.controller.model.equipment} | evento: ${event.event}');
 
     if (handleConsumableInput(player: player, event: event)) {
       return;
@@ -57,12 +55,10 @@ abstract class DDMinePlayerController<M extends DDMinePlayerModel>
     }
 
     if (isMineAction(player: player, actionId: event.id)) {
-      developer.log('[MineController] ✓ É mine action (pickaxe)');
+      GameLogger.info('[MineController] ✓ É mine action (pickaxe)');
       _handleExecuteMine();
     } else {
-      developer.log(
-        '[MineController] ✗ Não é ação de mine, passando para super',
-      );
+      GameLogger.info('[MineController] ✗ Não é ação de mine, passando para super');
     }
 
     // Encaminha para a cadeia de combate base (sem reprocessar consumo).
@@ -70,12 +66,10 @@ abstract class DDMinePlayerController<M extends DDMinePlayerModel>
   }
 
   void _handleExecuteMine() {
-    developer.log(
-      '[MineController] _handleExecuteMine: stamina=${model.stamina}, canExecute=${model.canExecuteMine}',
-    );
+    GameLogger.info('[MineController] _handleExecuteMine: stamina=${model.stamina}, canExecute=${model.canExecuteMine}');
 
     if (!model.canExecuteMine) {
-      developer.log('[MineController] ✗ Não pode executar mine');
+      GameLogger.warning('[MineController] ✗ Não pode executar mine');
       // Só mostra "Sem Stamina" se realmente for problema de stamina
       if (model.stamina < model.config.mineStaminaCost) {
         OverlayMessageDef.showNoStamina();
@@ -87,7 +81,7 @@ abstract class DDMinePlayerController<M extends DDMinePlayerModel>
 
     final bool wasExecuted = onExecuteMine.call();
 
-    developer.log('[MineController] Mine wasExecuted: $wasExecuted');
+    GameLogger.info('[MineController] Mine wasExecuted: $wasExecuted');
 
     if (!wasExecuted) {
       endStaminaConsumingAction();

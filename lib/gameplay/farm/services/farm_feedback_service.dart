@@ -1,4 +1,4 @@
-import 'dart:developer' as developer;
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
 
@@ -6,7 +6,7 @@ import 'package:bonfire/bonfire.dart';
 class FarmFeedbackService {
   /// Show a floating text message to the user
   void showFloatingText(String message) {
-    developer.log('[FarmFeedback] 💬 $message');
+    GameLogger.info('[FarmFeedback] 💬 $message');
     // TODO: Add visual floating text implementation
   }
 
@@ -15,9 +15,7 @@ class FarmFeedbackService {
     BonfireGameInterface gameRef, {
     bool autoShow = true,
   }) {
-    developer.log(
-      '[FarmFeedback] Refreshing inventory HUD (autoShow: $autoShow)',
-    );
+    GameLogger.info('[FarmFeedback] Refreshing inventory HUD (autoShow: $autoShow)');
     // TODO: Implementation pending
     // 1. Find inventory HUD component in gameRef
     // 2. Call its refresh/update method
@@ -26,25 +24,25 @@ class FarmFeedbackService {
 
   /// Play sound effect for tilling soil
   void playTillSound() {
-    developer.log('[FarmFeedback] 🔊 Till sound');
+    GameLogger.info('[FarmFeedback] 🔊 Till sound');
     // TODO: AudioManager.instance.playTillSfx();
   }
 
   /// Play sound effect for watering
   void playWaterSound() {
-    developer.log('[FarmFeedback] 🔊 Water sound');
+    GameLogger.info('[FarmFeedback] 🔊 Water sound');
     // TODO: AudioManager.instance.playWaterSfx();
   }
 
   /// Play sound effect for planting
   void playPlantSound() {
-    developer.log('[FarmFeedback] 🔊 Plant sound');
+    GameLogger.info('[FarmFeedback] 🔊 Plant sound');
     // TODO: AudioManager.instance.playPlantSfx();
   }
 
   /// Play sound effect for harvesting
   void playHarvestSound() {
-    developer.log('[FarmFeedback] 🔊 Harvest sound');
+    GameLogger.info('[FarmFeedback] 🔊 Harvest sound');
     // TODO: AudioManager.instance.playHarvestSfx();
   }
 }

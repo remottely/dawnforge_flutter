@@ -1,4 +1,4 @@
-import 'dart:developer' as developer;
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
@@ -93,14 +93,12 @@ abstract class DDMinePlayerView<
   });
 
   bool _onExecuteMine() {
-    developer.log('[FarmPlayerView] _onExecuteDig chamado');
+    GameLogger.info('[FarmPlayerView] _onExecuteDig chamado');
 
     final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
       AttackType.melee,
       () {
-        developer.log(
-          '[FarmPlayerView] _onExecuteDig: Executando animação de dig',
-        );
+        GameLogger.info('[FarmPlayerView] _onExecuteDig: Executando animação de dig');
         DDCharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
           animationRight: animationMineDirectional.right,
           animationLeft: animationMineDirectional.left,
@@ -121,9 +119,7 @@ abstract class DDMinePlayerView<
     );
 
     final wasExecuted = executionInfo != null;
-    developer.log(
-      '[FarmPlayerView] _onExecuteDig resultado: $wasExecuted (executionInfo=$executionInfo)',
-    );
+    GameLogger.info('[FarmPlayerView] _onExecuteDig resultado: $wasExecuted (executionInfo=$executionInfo)');
 
     return wasExecuted;
   }

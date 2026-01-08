@@ -1,4 +1,4 @@
-import 'dart:developer' as developer;
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:darkness_dungeon/gameplay/world/entities/objects/farm/farm_object.dart';
 
@@ -25,40 +25,25 @@ class HarvestCropUseCase {
   /// 
   /// Retorna `true` se a operação foi bem-sucedida, `false` caso contrário.
   bool call(int x, int y) {
-    developer.log(
-      'HarvestCropUseCase: Attempting to harvest crop at ($x, $y)',
-      name: 'farm.usecases.harvest_crop',
-    );
+    GameLogger.info('HarvestCropUseCase: Attempting to harvest crop at ($x, $y)');
 
     // 1. Valida se o crop existe e está pronto
     final tile = _farmManager.getTile(x, y);
     final farmObject = tile?.object as FarmObject?;
     
     if (tile == null || farmObject == null) {
-      developer.log(
-        'HarvestCropUseCase: Tile at ($x, $y) does not exist',
-        name: 'farm.usecases.harvest_crop',
-        level: 900, // WARNING
-      );
+      GameLogger.warning('HarvestCropUseCase: Tile at ($x, $y) does not exist');
       return false;
     }
 
     if (!farmObject.canHarvest) {
-      developer.log(
-        'HarvestCropUseCase: Tile at ($x, $y) has no crop or crop is not ready to harvest',
-        name: 'farm.usecases.harvest_crop',
-        level: 900, // WARNING
-      );
+      GameLogger.warning('HarvestCropUseCase: Tile at ($x, $y) has no crop or crop is not ready to harvest');
       return false;
     }
 
     final crop = farmObject.crop;
     if (crop == null) {
-      developer.log(
-        'HarvestCropUseCase: No crop found at ($x, $y)',
-        name: 'farm.usecases.harvest_crop',
-        level: 1000, // ERROR
-      );
+      GameLogger.error('HarvestCropUseCase: No crop found at ($x, $y)');
       return false;
     }
 
@@ -66,19 +51,12 @@ class HarvestCropUseCase {
     final harvestItemId = crop.harvestItemId;
     final harvestQuantity = crop.yieldAmount;
 
-    developer.log(
-      'HarvestCropUseCase: Crop "${crop.id}" will yield $harvestQuantity x "$harvestItemId"',
-      name: 'farm.usecases.harvest_crop',
-    );
+    GameLogger.info('HarvestCropUseCase: Crop "${crop.id}" will yield $harvestQuantity x "$harvestItemId"');
 
     // 2. Colhe do manager
     final harvestedCrop = _farmManager.harvestCrop(x, y);
     if (harvestedCrop == null) {
-      developer.log(
-        'HarvestCropUseCase: Failed to harvest crop at ($x, $y)',
-        name: 'farm.usecases.harvest_crop',
-        level: 1000, // ERROR
-      );
+      GameLogger.error('HarvestCropUseCase: Failed to harvest crop at ($x, $y)');
       return false;
     }
 
@@ -89,20 +67,13 @@ class HarvestCropUseCase {
     );
 
     if (!added) {
-      developer.log(
-        'HarvestCropUseCase: Failed to add item "$harvestItemId" to inventory',
-        name: 'farm.usecases.harvest_crop',
-        level: 1000, // ERROR
-      );
+      GameLogger.error('HarvestCropUseCase: Failed to add item "$harvestItemId" to inventory');
       // Nota: O crop já foi removido do tile, então não há como reverter completamente.
       // Em um sistema mais robusto, poderíamos ter uma transação ou compensação.
       return false;
     }
 
-    developer.log(
-      'HarvestCropUseCase: Successfully harvested "${harvestedCrop.id}" at ($x, $y)',
-      name: 'farm.usecases.harvest_crop',
-    );
+    GameLogger.info('HarvestCropUseCase: Successfully harvested "${harvestedCrop.id}" at ($x, $y)');
 
     return true;
   }

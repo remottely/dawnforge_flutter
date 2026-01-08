@@ -1,6 +1,8 @@
-import 'dart:developer' as developer;
 
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
+
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+
+
 import 'package:flutter/foundation.dart';
 
 import '../../core/modules/world/world_state_manager.dart';
@@ -10,7 +12,7 @@ import '../../world/entities/world_entities.dart';
 class FarmManager {
   FarmManager._() {
     _initializeTiles();
-    developer.log('[FarmManager] Initialized');
+    GameLogger.info('[FarmManager] Initialized');
   }
 
   static final instance = FarmManager._();
@@ -28,12 +30,12 @@ class FarmManager {
     // Initialize with empty tiles if needed
     // For now, tiles are created on-demand
     tilesNotifier = ValueNotifier(Map.unmodifiable(_tiles));
-    developer.log('[FarmManager] Tiles initialized');
+    GameLogger.info('[FarmManager] Tiles initialized');
   }
 
   void notifyChange() {
     tilesNotifier.value = Map.unmodifiable(_tiles);
-    developer.log('[FarmManager] Notifying tile changes');
+    GameLogger.info('[FarmManager] Notifying tile changes');
   }
 
   String _makeKey(int x, int y) => '$x,$y';
@@ -60,22 +62,22 @@ class FarmManager {
 
   /// Water tile at coordinates
   bool waterTile(int x, int y) {
-    developer.log('[FarmManager] Watering tile at ($x, $y)');
+    GameLogger.info('[FarmManager] Watering tile at ($x, $y)');
 
     final tile = getTile(x, y);
     final farmObject = _getFarmObject(tile);
     if (tile == null || farmObject == null) {
-      developer.log('[FarmManager] Cannot water missing tile');
+      GameLogger.warning('[FarmManager] Cannot water missing tile');
       return false;
     }
 
     if (farmObject.soilState == SoilState.untilled) {
-      developer.log('[FarmManager] Cannot water untilled soil');
+      GameLogger.warning('[FarmManager] Cannot water untilled soil');
       return false;
     }
 
     if (farmObject.soilState == SoilState.watered) {
-      developer.log('[FarmManager] Tile already watered');
+      GameLogger.info('[FarmManager] Tile already watered');
       return false;
     }
 
@@ -86,18 +88,18 @@ class FarmManager {
     setTile(wateredTile);
     notifyChange();
 
-    developer.log('[FarmManager] ✓ Tile watered successfully');
+    GameLogger.info('[FarmManager] ✓ Tile watered successfully');
     return true;
   }
 
   /// Plant a crop at coordinates
   bool plantSeed(int x, int y, CropEntity crop) {
-    developer.log('[FarmManager] Planting ${crop.name} at ($x, $y)');
+    GameLogger.info('[FarmManager] Planting ${crop.name} at ($x, $y)');
 
     final tile = getTile(x, y);
     final farmObject = _getFarmObject(tile);
     if (tile == null || farmObject == null) {
-      developer.log('[FarmManager] No tile at ($x, $y)');
+      GameLogger.warning('[FarmManager] No tile at ($x, $y)');
       return false;
     }
 
@@ -107,12 +109,9 @@ class FarmManager {
 
     if (!canPlantHere) {
       if (farmObject.isOccupied) {
-        developer.log('[FarmManager] Tile already has a crop');
+        GameLogger.warning('[FarmManager] Tile already has a crop');
       } else {
-        developer.log(
-          '[FarmManager] Soil not prepared for planting '
-          '(${crop.isTree ? 'needs untilled for trees' : 'needs tilled/watered for crops'})',
-        );
+        GameLogger.warning('[FarmManager] Soil not prepared for planting (${crop.isTree ? 'needs untilled for trees' : 'needs tilled/watered for crops'})');
       }
       return false;
     }
@@ -124,30 +123,26 @@ class FarmManager {
     setTile(plantedTile);
     notifyChange();
 
-    developer.log(
-      '[FarmManager] ✓ ${crop.name} planted successfully at ($x,$y) '
-      'soil:${plantedFarmObject.soilState.name} stage:${crop.stage.name}',
-      name: 'farm.manager.plant',
-    );
+    GameLogger.info('[FarmManager] ✓ ${crop.name} planted successfully at ($x,$y) soil:${plantedFarmObject.soilState.name} stage:${crop.stage.name}');
     return true;
   }
 
   /// Harvest crop at coordinates
   CropEntity? harvestCrop(int x, int y) {
-    developer.log('[FarmManager] Harvesting crop at ($x, $y)');
+    GameLogger.info('[FarmManager] Harvesting crop at ($x, $y)');
 
     final tile = getTile(x, y);
     final farmObject = _getFarmObject(tile);
     if (tile == null || farmObject == null) {
-      developer.log('[FarmManager] No tile at ($x, $y)');
+      GameLogger.warning('[FarmManager] No tile at ($x, $y)');
       return null;
     }
 
     if (!farmObject.canHarvest) {
       if (farmObject.isEmpty) {
-        developer.log('[FarmManager] No crop to harvest');
+        GameLogger.warning('[FarmManager] No crop to harvest');
       } else {
-        developer.log('[FarmManager] Crop not ready to harvest');
+        GameLogger.warning('[FarmManager] Crop not ready to harvest');
       }
       return null;
     }
@@ -161,17 +156,13 @@ class FarmManager {
         harvestedCrop; // J3: Cross-module notification
     notifyChange();
 
-    developer.log(
-      '[FarmManager] ✓ Harvested ${harvestedCrop.yieldAmount}x ${harvestedCrop.name} '
-      'at ($x,$y) -> soil:${harvestedFarmObject.soilState.name} crop:${harvestedFarmObject.crop?.id ?? "none"}',
-      name: 'farm.manager.harvest',
-    );
+    GameLogger.info('[FarmManager] ✓ Harvested ${harvestedCrop.yieldAmount}x ${harvestedCrop.name} at ($x,$y) -> soil:${harvestedFarmObject.soilState.name} crop:${harvestedFarmObject.crop?.id ?? "none"}');
     return harvestedCrop;
   }
 
   /// Advance day for all crops
   void advanceDay() {
-    developer.log('[FarmManager] Advancing all crops for new day');
+    GameLogger.info('[FarmManager] Advancing all crops for new day');
 
     final dayEnded = WorldStateManager.instance.currentDay - 1;
     var cropsGrown = 0;
@@ -195,15 +186,7 @@ class FarmManager {
 
       if (farmObject.crop != advancedFarmObject.crop ||
           farmObject.soilState != advancedFarmObject.soilState) {
-        developer.log(
-          '[FarmManager] ↻ advanced tile (${
-            tile.x
-          },${tile.y}) '
-          'soil ${farmObject.soilState.name} -> ${advancedFarmObject.soilState.name}, '
-          'crop ${farmObject.crop?.id ?? "none"}/${farmObject.crop?.stage.name ?? "none"} '
-          '-> ${advancedFarmObject.crop?.id ?? "none"}/${advancedFarmObject.crop?.stage.name ?? "none"}',
-          name: 'farm.manager.advance',
-        );
+        GameLogger.info('[FarmManager] ↻ advanced tile (${tile.x},${tile.y}) soil ${farmObject.soilState.name} -> ${advancedFarmObject.soilState.name}, crop ${farmObject.crop?.id ?? "none"}/${farmObject.crop?.stage.name ?? "none"} -> ${advancedFarmObject.crop?.id ?? "none"}/${advancedFarmObject.crop?.stage.name ?? "none"}');
       }
 
       setTile(advancedTile);
@@ -211,9 +194,7 @@ class FarmManager {
 
     notifyChange();
 
-    developer.log(
-      '[FarmManager] ✓ Advanced $cropsGrown crops for day $dayEnded',
-    );
+    GameLogger.info('[FarmManager] ✓ Advanced $cropsGrown crops for day $dayEnded');
   }
 
   /// Serialization (E2)
@@ -232,7 +213,7 @@ class FarmManager {
 
     final tilesData = json['tiles'] as List<dynamic>?;
     if (tilesData == null) {
-      developer.log('[FarmManager] No tiles to load');
+      GameLogger.warning('[FarmManager] No tiles to load');
       notifyChange();
       return;
     }
@@ -256,7 +237,7 @@ class FarmManager {
       setTile(tile);
     }
 
-    developer.log('[FarmManager] Loaded ${_tiles.length} tiles from JSON');
+    GameLogger.info('[FarmManager] Loaded ${_tiles.length} tiles from JSON');
     notifyChange();
   }
 
@@ -266,7 +247,7 @@ class FarmManager {
     lastTilledNotifier.value = null;
     lastHarvestedNotifier.value = null;
     notifyChange();
-    developer.log('[FarmManager] All tiles cleared');
+    GameLogger.info('[FarmManager] All tiles cleared');
   }
 
   /// Reset farm state
@@ -275,6 +256,6 @@ class FarmManager {
     lastTilledNotifier.value = null;
     lastHarvestedNotifier.value = null;
     notifyChange();
-    developer.log('[FarmManager] Farm state reset');
+    GameLogger.info('[FarmManager] Farm state reset');
   }
 }

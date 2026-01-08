@@ -1,4 +1,5 @@
-import 'dart:developer' as developer;
+
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:flutter/foundation.dart';
 
@@ -13,17 +14,17 @@ class InventoryState {
 
   void show() {
     isVisible.value = true;
-    developer.log('[InventoryState] Inventory shown');
+    GameLogger.info('[InventoryState] Inventory shown');
   }
 
   void hide() {
     isVisible.value = false;
-    developer.log('[InventoryState] Inventory hidden');
+    GameLogger.info('[InventoryState] Inventory hidden');
   }
 
   void toggle() {
     isVisible.value = !isVisible.value;
-    developer.log('[InventoryState] Inventory toggled: ${isVisible.value}');
+    GameLogger.info('[InventoryState] Inventory toggled: ${isVisible.value}');
   }
 
   void dispose() {

@@ -1,4 +1,4 @@
-import 'dart:developer' as developer;
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:darkness_dungeon/gameplay/database/modern_farm/modern_farm_crop_entity_database_def.dart';
 
@@ -19,18 +19,18 @@ final class CropDatabase {
       ..addAll(ModernFarmCropEntityDatabaseDef.cropEntityList);
 
     _isInitialized = true;
-    developer.log('[CropDatabase] Loaded ${_cropDatabase.length} crops');
+    GameLogger.info('[CropDatabase] Loaded ${_cropDatabase.length} crops');
   }
 
   static CropEntity? createCrop(HandItemId cropId) {
     if (!_isInitialized) {
-      developer.log('[CropDatabase] ERROR: Not initialized!');
+      GameLogger.error('[CropDatabase] ERROR: Not initialized!');
       return null;
     }
 
     final template = _cropDatabase[cropId];
     if (template == null) {
-      developer.log('[CropDatabase] Crop not found: $cropId');
+      GameLogger.warning('[CropDatabase] Crop not found: $cropId');
       return null;
     }
 
@@ -62,7 +62,7 @@ final class CropDatabase {
     return _cropDatabase.entries
         .where((e) {
           final requiredSeason = e.value.requiredSeason;
-          return requiredSeason == null || requiredSeason == 'any' || requiredSeason == season;
+          return requiredSeason == 'any' || requiredSeason == season;
         })
         .map((e) => e.key)
         .toList();

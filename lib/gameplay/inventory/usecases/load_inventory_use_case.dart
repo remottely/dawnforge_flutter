@@ -1,4 +1,5 @@
-import 'dart:developer' as developer;
+
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:darkness_dungeon/gameplay/inventory/usecases/add_item_use_case.dart';
 
@@ -6,7 +7,7 @@ import '../entities/inventory_slot.dart';
 import '../managers/equipment_manager.dart';
 import '../managers/inventory_manager.dart';
 import '../services/item_factory_service.dart';
-import '../entities/enums/hand_item_id.dart';
+
 
 /// UseCase for loading inventory state (E2: UseCase for Save/Load)
 class LoadInventoryUseCase {
@@ -27,7 +28,7 @@ class LoadInventoryUseCase {
   bool call(Map<String, dynamic> data) {
     try {
       final version = data['version'] as int? ?? 1;
-      developer.log('[LoadInventoryUseCase] Loading version $version');
+      GameLogger.info('[LoadInventoryUseCase] Loading version $version');
 
       // Load inventory
       if (data.containsKey('inventory')) {
@@ -41,11 +42,7 @@ class LoadInventoryUseCase {
 
       return true;
     } catch (e, stackTrace) {
-      developer.log(
-        '[LoadInventoryUseCase] Error loading inventory',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      GameLogger.error('[LoadInventoryUseCase] Error loading inventory: $e\n$stackTrace');
       return false;
     }
   }

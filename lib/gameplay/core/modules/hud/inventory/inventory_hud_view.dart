@@ -1,4 +1,4 @@
-import 'dart:developer' as developer;
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/inventory/inventory_hud_def.dart';
@@ -45,9 +45,7 @@ class InventoryHUDView extends InterfaceComponent {
   void _updatePosition() {
     // Guard: only update position if game is mounted AND has valid size
     if (!hasGameRef) {
-      developer.log(
-        '[InventoryHUDView] Cannot update position: gameRef not available',
-      );
+      GameLogger.info('[InventoryHUDView] Cannot update position: gameRef not available');
       return;
     }
 
@@ -55,9 +53,7 @@ class InventoryHUDView extends InterfaceComponent {
 
     // Guard: gameRef.size can be (0,0) during initialization, which causes NaN/Infinity errors
     if (gameSize.x <= 0 || gameSize.y <= 0) {
-      developer.log(
-        '[InventoryHUDView] Cannot update position: invalid game size $gameSize',
-      );
+      GameLogger.info('[InventoryHUDView] Cannot update position: invalid game size $gameSize');
       return;
     }
 
@@ -67,15 +63,9 @@ class InventoryHUDView extends InterfaceComponent {
         (gameSize.x - size.x) / 2, // Center horizontally
         gameSize.y - size.y - 20, // Bottom with 20px margin
       );
-      developer.log(
-        '[InventoryHUDView] Position updated to $position (gameSize: $gameSize)',
-      );
+      GameLogger.info('[InventoryHUDView] Position updated to $position (gameSize: $gameSize)');
     } catch (e, stack) {
-      developer.log(
-        '[InventoryHUDView] Error updating position: $e',
-        error: e,
-        stackTrace: stack,
-      );
+      GameLogger.error('[InventoryHUDView] Error updating position: $e\n$stack');
     }
   }
 

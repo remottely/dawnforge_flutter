@@ -1,4 +1,5 @@
-import 'dart:developer' as developer;
+
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:flutter/foundation.dart';
@@ -11,9 +12,7 @@ import '../entities/hand_item.dart';
 class InventoryManager {
   InventoryManager._() {
     _initializeSlots(_currentMaxSlots);
-    developer.log(
-      '[InventoryManager] Initialized with $_currentMaxSlots slots',
-    );
+    GameLogger.info('[InventoryManager] Initialized with $_currentMaxSlots slots');
   }
 
   static final instance = InventoryManager._();
@@ -27,9 +26,7 @@ class InventoryManager {
 
   void _notifyChange() {
     slotsNotifier.value = List.unmodifiable(_slots);
-    developer.log(
-      '[InventoryManager] Notifying change with ${_slots.length} slots',
-    );
+    GameLogger.info('[InventoryManager] Notifying change with ${_slots.length} slots');
   }
 
   int get maxSlots => _currentMaxSlots;
@@ -57,7 +54,7 @@ class InventoryManager {
 
   bool upgradeInventory() {
     if (!canUpgrade) {
-      developer.log('[InventoryManager] Already at max capacity');
+      GameLogger.warning('[InventoryManager] Already at max capacity');
       return false;
     }
 
@@ -74,9 +71,7 @@ class InventoryManager {
       _slots.add(InventorySlot(index: oldSize + i));
     }
 
-    developer.log(
-      '[InventoryManager] Upgraded from $oldSize to $_currentMaxSlots slots',
-    );
+    GameLogger.info('[InventoryManager] Upgraded from $oldSize to $_currentMaxSlots slots');
     _notifyChange();
     return true;
   }
@@ -99,7 +94,7 @@ class InventoryManager {
   /// Update a slot at the given index and notify listeners
   void updateSlot(int index, InventorySlot slot) {
     if (index < 0 || index >= _slots.length) {
-      developer.log('[InventoryManager] Invalid slot index: $index');
+      GameLogger.warning('[InventoryManager] Invalid slot index: $index');
       return;
     }
     _slots[index] = slot;
@@ -202,7 +197,7 @@ class InventoryManager {
       (index) => InventorySlot(index: index),
     );
     _notifyChange();
-    developer.log('[InventoryManager] Inventory cleared');
+    GameLogger.info('[InventoryManager] Inventory cleared');
   }
 
   Map<String, dynamic> toJson() {
@@ -246,9 +241,7 @@ class InventoryManager {
       }
     }
 
-    developer.log(
-      '[InventoryManager] Loaded ${slotsData.length} slots from JSON',
-    );
+    GameLogger.info('[InventoryManager] Loaded ${slotsData.length} slots from JSON');
     _notifyChange();
   }
 
@@ -259,6 +252,6 @@ class InventoryManager {
       (index) => InventorySlot(index: index),
     );
     _notifyChange();
-    developer.log('[InventoryManager] Reset');
+    GameLogger.info('[InventoryManager] Reset');
   }
 }

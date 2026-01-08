@@ -1,4 +1,4 @@
-import 'dart:developer' as developer;
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
@@ -61,9 +61,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
     required DDBasePlayerView player,
     required JoystickActionEvent event,
   }) {
-    developer.log(
-      '[FarmController] Verificando ação: ${event.id} | equipment: ${player.controller.model.equipment} | evento: ${event.event}',
-    );
+    GameLogger.info('[FarmController] Verificando ação: ${event.id} | equipment: ${player.controller.model.equipment} | evento: ${event.event}');
 
     if (handleConsumableInput(player: player, event: event)) {
       return;
@@ -76,21 +74,19 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
     }
 
     if (isDigAction(player: player, actionId: event.id)) {
-      developer.log('[FarmController] ✓ É dig action (shovel)');
+      GameLogger.info('[FarmController] ✓ É dig action (shovel)');
       _handleExecuteDig();
     } else if (isWateringCanAction(player: player, actionId: event.id)) {
-      developer.log('[FarmController] ✓ É watering can action');
+      GameLogger.info('[FarmController] ✓ É watering can action');
       _handleExecuteWateringCan();
     } else if (isSeedAction(player: player, actionId: event.id)) {
-      developer.log('[FarmController] ✓ É seed action');
+      GameLogger.info('[FarmController] ✓ É seed action');
       _handleExecuteSeed();
     } else if (isHarvestAction(player: player, actionId: event.id)) {
-      developer.log('[FarmController] ✓ É harvest action');
+      GameLogger.info('[FarmController] ✓ É harvest action');
       _handleExecuteHarvest();
     } else {
-      developer.log(
-        '[FarmController] ✗ Não é ação de farm, passando para super',
-      );
+      GameLogger.info('[FarmController] ✗ Não é ação de farm, passando para super');
     }
 
     // Encaminha para a cadeia de combate base (sem reprocessar consumo).
@@ -98,12 +94,10 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
   }
 
   void _handleExecuteDig() {
-    developer.log(
-      '[FarmController] _handleExecuteDig: stamina=${model.stamina}, canExecute=${model.canExecuteDig}',
-    );
+    GameLogger.info('[FarmController] _handleExecuteDig: stamina=${model.stamina}, canExecute=${model.canExecuteDig}');
 
     if (!model.canExecuteDig) {
-      developer.log('[FarmController] ✗ Não pode executar dig');
+      GameLogger.warning('[FarmController] ✗ Não pode executar dig');
       // Só mostra "Sem Stamina" se realmente for problema de stamina
       if (model.stamina < model.config.digStaminaCost) {
         OverlayMessageDef.showNoStamina();
@@ -115,7 +109,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
 
     final bool wasExecuted = onExecuteDig.call();
 
-    developer.log('[FarmController] Dig wasExecuted: $wasExecuted');
+    GameLogger.info('[FarmController] Dig wasExecuted: $wasExecuted');
 
     if (!wasExecuted) {
       endStaminaConsumingAction();
@@ -128,12 +122,10 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
   }
 
   void _handleExecuteWateringCan() {
-    developer.log(
-      '[FarmController] _handleExecuteWateringCan: stamina=${model.stamina}, canExecute=${model.canExecuteWateringCan}',
-    );
+    GameLogger.info('[FarmController] _handleExecuteWateringCan: stamina=${model.stamina}, canExecute=${model.canExecuteWateringCan}');
 
     if (!model.canExecuteWateringCan) {
-      developer.log('[FarmController] ✗ Não pode executar watering can');
+      GameLogger.warning('[FarmController] ✗ Não pode executar watering can');
       // Só mostra "Sem Stamina" se realmente for problema de stamina
       if (model.stamina < model.config.wateringCanStaminaCost) {
         OverlayMessageDef.showNoStamina();
@@ -145,7 +137,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
 
     final bool wasExecuted = onExecuteWateringCan.call();
 
-    developer.log('[FarmController] WateringCan wasExecuted: $wasExecuted');
+    GameLogger.info('[FarmController] WateringCan wasExecuted: $wasExecuted');
 
     if (!wasExecuted) {
       endStaminaConsumingAction();
@@ -158,12 +150,10 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
   }
 
   void _handleExecuteSeed() {
-    developer.log(
-      '[FarmController] _handleExecuteSeed: stamina=${model.stamina}, canExecute=${model.canExecuteSeed}',
-    );
+    GameLogger.info('[FarmController] _handleExecuteSeed: stamina=${model.stamina}, canExecute=${model.canExecuteSeed}');
 
     if (!model.canExecuteSeed) {
-      developer.log('[FarmController] ✗ Não pode executar seed');
+      GameLogger.warning('[FarmController] ✗ Não pode executar seed');
       // Só mostra "Sem Stamina" se realmente for problema de stamina
       if (model.stamina < model.config.seedStaminaCost) {
         OverlayMessageDef.showNoStamina();
@@ -175,7 +165,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
 
     final bool wasExecuted = onExecuteSeed.call();
 
-    developer.log('[FarmController] Seed wasExecuted: $wasExecuted');
+    GameLogger.info('[FarmController] Seed wasExecuted: $wasExecuted');
 
     if (!wasExecuted) {
       endStaminaConsumingAction();
@@ -188,12 +178,10 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
   }
 
   void _handleExecuteHarvest() {
-    developer.log(
-      '[FarmController] _handleExecuteHarvest: stamina=${model.stamina}, canExecute=${model.canExecuteHarvest}',
-    );
+    GameLogger.info('[FarmController] _handleExecuteHarvest: stamina=${model.stamina}, canExecute=${model.canExecuteHarvest}');
 
     if (!model.canExecuteHarvest) {
-      developer.log('[FarmController] ✗ Não pode executar harvest');
+      GameLogger.warning('[FarmController] ✗ Não pode executar harvest');
       // Só mostra "Sem Stamina" se realmente for problema de stamina
       if (model.stamina < model.config.harvestStaminaCost) {
         OverlayMessageDef.showNoStamina();
@@ -205,7 +193,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
 
     final bool wasExecuted = onExecuteHarvest.call();
 
-    developer.log('[FarmController] Harvest wasExecuted: $wasExecuted');
+    GameLogger.info('[FarmController] Harvest wasExecuted: $wasExecuted');
 
     if (!wasExecuted) {
       endStaminaConsumingAction();

@@ -1,4 +1,4 @@
-import 'dart:developer' as developer;
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:darkness_dungeon/gameplay/core/modules/time/time_of_day.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/world/map_state_model.dart';
@@ -30,15 +30,13 @@ final class WorldStateManager {
   int get activeMapCount => _activeMapStates.length;
 
   void setCurrentMap(String mapId) {
-    developer.log('[WorldStateManager] Setting current map: $mapId');
+    GameLogger.info('[WorldStateManager] Setting current map: $mapId');
     _currentMapId = mapId;
   }
 
   void setTimeOfDay(TimeOfDay time) {
     if (_timeOfDay != time) {
-      developer.log(
-        '[WorldStateManager] Time of day changed: $_timeOfDay -> $time',
-      );
+      GameLogger.info('[WorldStateManager] Time of day changed: $_timeOfDay -> $time');
       _timeOfDay = time;
     }
   }
@@ -48,12 +46,10 @@ final class WorldStateManager {
     final previousSeason = _currentSeason;
     _currentSeason = getSeasonForDay(_currentDay);
 
-    developer.log('[WorldStateManager] Advanced to day $_currentDay');
+    GameLogger.info('[WorldStateManager] Advanced to day $_currentDay');
 
     if (previousSeason != _currentSeason) {
-      developer.log(
-        '[WorldStateManager] Season changed: $previousSeason -> $_currentSeason',
-      );
+      GameLogger.info('[WorldStateManager] Season changed: $previousSeason -> $_currentSeason');
     }
   }
 
@@ -67,15 +63,13 @@ final class WorldStateManager {
   }
 
   void setMapState(String mapId, MapState state) {
-    developer.log('[WorldStateManager] Setting map state for: $mapId');
+    GameLogger.info('[WorldStateManager] Setting map state for: $mapId');
     _activeMapStates[mapId] = state;
   }
 
   void unloadInactiveMaps() {
     if (_currentMapId == null) {
-      developer.log(
-        '[WorldStateManager] No current map, clearing all cached maps',
-      );
+      GameLogger.info('[WorldStateManager] No current map, clearing all cached maps');
       _activeMapStates.clear();
       return;
     }
@@ -85,9 +79,7 @@ final class WorldStateManager {
     final removedCount = initialCount - _activeMapStates.length;
 
     if (removedCount > 0) {
-      developer.log(
-        '[WorldStateManager] Unloaded $removedCount inactive map(s)',
-      );
+      GameLogger.info('[WorldStateManager] Unloaded $removedCount inactive map(s)');
     }
   }
 
@@ -104,7 +96,7 @@ final class WorldStateManager {
   }
 
   void fromJson(Map<String, dynamic> json) {
-    developer.log('[WorldStateManager] Loading world state from JSON');
+    GameLogger.info('[WorldStateManager] Loading world state from JSON');
 
     _currentDay = json['currentDay'] as int? ?? 1;
     _currentSeason = Season.fromJson(
@@ -123,14 +115,11 @@ final class WorldStateManager {
       }
     }
 
-    developer.log(
-      '[WorldStateManager] Loaded: Day $_currentDay, Season: $_currentSeason, '
-      'Maps: ${_activeMapStates.length}',
-    );
+    GameLogger.info('[WorldStateManager] Loaded: Day $_currentDay, Season: $_currentSeason, Maps: ${_activeMapStates.length}');
   }
 
   void reset() {
-    developer.log('[WorldStateManager] Resetting world state');
+    GameLogger.info('[WorldStateManager] Resetting world state');
     _currentDay = 1;
     _currentSeason = Season.spring;
     _timeOfDay = TimeOfDay.morning;

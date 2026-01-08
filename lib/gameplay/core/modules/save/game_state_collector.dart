@@ -1,4 +1,4 @@
-import 'dart:developer' as developer;
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:darkness_dungeon/gameplay/core/modules/save/player_progress_manager.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/save/save_data_model.dart';
@@ -19,7 +19,7 @@ final class GameStateCollector {
   GameStateCollector._();
 
   static SaveData collectCurrentGameState() {
-    developer.log('[GameStateCollector] Collecting current game state');
+    GameLogger.info('[GameStateCollector] Collecting current game state');
 
     final worldState = WorldStateManager.instance.toJson();
     final timeState = new_time.TimeManager.instance.toJson();
@@ -51,7 +51,7 @@ final class GameStateCollector {
       farmData: farmData,
     );
 
-    developer.log(
+    GameLogger.info(
       '[GameStateCollector] Game state collected: '
       'Day ${WorldStateManager.instance.currentDay}, '
       'Time ${new_time.TimeManager.instance.currentHour}:${new_time.TimeManager.instance.currentMinute}, '
@@ -65,13 +65,10 @@ final class GameStateCollector {
 
   static bool restoreGameState(SaveData saveData) {
     try {
-      developer.log('[GameStateCollector] Restoring game state');
+      GameLogger.info('[GameStateCollector] Restoring game state');
 
       if (!saveData.isValid()) {
-        developer.log(
-          '[GameStateCollector] Cannot restore from invalid save data',
-          level: 900,
-        );
+        GameLogger.warning('[GameStateCollector] Cannot restore from invalid save data');
         return false;
       }
 
@@ -82,34 +79,25 @@ final class GameStateCollector {
       final worldState = worldData['world'] as Map<String, dynamic>?;
       if (worldState != null) {
         WorldStateManager.instance.fromJson(worldState);
-        developer.log('[GameStateCollector] World state restored');
+        GameLogger.info('[GameStateCollector] World state restored');
       } else {
-        developer.log(
-          '[GameStateCollector] No world state data found',
-          level: 500,
-        );
+        GameLogger.warning('[GameStateCollector] No world state data found');
       }
 
       final timeState = worldData['time'] as Map<String, dynamic>?;
       if (timeState != null) {
         new_time.TimeManager.instance.fromJson(timeState);
-        developer.log('[GameStateCollector] Time state restored');
+        GameLogger.info('[GameStateCollector] Time state restored');
       } else {
-        developer.log(
-          '[GameStateCollector] No time state data found',
-          level: 500,
-        );
+        GameLogger.warning('[GameStateCollector] No time state data found');
       }
 
       final progressState = worldData['progress'] as Map<String, dynamic>?;
       if (progressState != null) {
         PlayerProgressManager.instance.fromJson(progressState);
-        developer.log('[GameStateCollector] Progress state restored');
+        GameLogger.info('[GameStateCollector] Progress state restored');
       } else {
-        developer.log(
-          '[GameStateCollector] No progress state data found',
-          level: 500,
-        );
+        GameLogger.warning('[GameStateCollector] No progress state data found');
       }
 
       final inventoryState =
@@ -119,12 +107,9 @@ final class GameStateCollector {
           inventoryState,
           inv_di.getIt<ItemFactoryService>().createItem,
         );
-        developer.log('[GameStateCollector] Inventory state restored');
+        GameLogger.info('[GameStateCollector] Inventory state restored');
       } else {
-        developer.log(
-          '[GameStateCollector] No inventory state data found',
-          level: 500,
-        );
+        GameLogger.warning('[GameStateCollector] No inventory state data found');
       }
 
       final equipmentState =
@@ -134,27 +119,21 @@ final class GameStateCollector {
           equipmentState,
           inv_di.getIt<ItemFactoryService>().createItem,
         );
-        developer.log('[GameStateCollector] Equipment state restored');
+        GameLogger.info('[GameStateCollector] Equipment state restored');
       } else {
-        developer.log(
-          '[GameStateCollector] No equipment state data found',
-          level: 500,
-        );
+        GameLogger.warning('[GameStateCollector] No equipment state data found');
       }
 // Farm state using LoadFarmUseCase (E2)
       if (farmData != null) {
         final loadFarmUseCase = farm_di.getIt<LoadFarmUseCase>();
         loadFarmUseCase.call(farmData);
-        developer.log('[GameStateCollector] Farm state restored');
+        GameLogger.info('[GameStateCollector] Farm state restored');
       } else {
-        developer.log(
-          '[GameStateCollector] No farm state data found',
-          level: 500,
-        );
+        GameLogger.warning('[GameStateCollector] No farm state data found');
       }
 
       
-      developer.log(
+      GameLogger.info(
         '[GameStateCollector] Game state restored successfully: '
         'Day ${WorldStateManager.instance.currentDay}, '
         'Time ${new_time.TimeManager.instance.currentHour}:${new_time.TimeManager.instance.currentMinute}, '
@@ -164,20 +143,15 @@ final class GameStateCollector {
       );
 
       return true;
-    } catch (e, stackTrace) {
-      developer.log(
-        '[GameStateCollector] Error restoring game state',
-        error: e,
-        stackTrace: stackTrace,
-        level: 1000,
-    // Note: getIt<FarmManager>().reset() should be called if needed
-      );
+    } catch (e) {
+      GameLogger.error('[GameStateCollector] Error restoring game state');
+      // Note: getIt<FarmManager>().reset() should be called if needed
       return false;
     }
   }
 
   static void resetAllManagers() {
-    developer.log('[GameStateCollector] Resetting all managers');
+    GameLogger.info('[GameStateCollector] Resetting all managers');
 
     WorldStateManager.instance.reset();
     new_time.TimeManager.instance.reset();
@@ -185,17 +159,14 @@ final class GameStateCollector {
     InventoryManager.instance.reset();
     EquipmentManager.instance.reset();
 
-    developer.log('[GameStateCollector] All managers reset complete');
+    GameLogger.info('[GameStateCollector] All managers reset complete');
   }
 
   static bool validateCurrentState() {
     try {
       final worldDay = WorldStateManager.instance.currentDay;
       if (worldDay < 1) {
-        developer.log(
-          '[GameStateCollector] Invalid world state: day < 1',
-          level: 900,
-        );
+        GameLogger.warning('[GameStateCollector] Invalid world state: day < 1');
         return false;
       }
 
@@ -203,22 +174,14 @@ final class GameStateCollector {
           new_time.TimeManager.instance.currentTime.totalMinutes;
       if (currentTimeMinutes < 0 ||
           currentTimeMinutes >= TimeConstants.kHoursPerDay * 60) {
-        developer.log(
-          '[GameStateCollector] Invalid time state: time out of range',
-          level: 900,
-        );
+        GameLogger.warning('[GameStateCollector] Invalid time state: time out of range');
         return false;
       }
 
-      developer.log('[GameStateCollector] Current state is valid');
+      GameLogger.info('[GameStateCollector] Current state is valid');
       return true;
-    } catch (e, stackTrace) {
-      developer.log(
-        '[GameStateCollector] Error validating state',
-        error: e,
-        stackTrace: stackTrace,
-        level: 1000,
-      );
+    } catch (e) {
+      GameLogger.error('[GameStateCollector] Error validating state');
       return false;
     }
   }

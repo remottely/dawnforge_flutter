@@ -1,4 +1,4 @@
-import 'dart:developer' as developer;
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import '../managers/farm_manager.dart';
 import '../services/crop_factory_service.dart';
@@ -19,40 +19,26 @@ class LoadFarmUseCase {
   /// 
   /// [data] deve conter os dados salvos previamente pelo SaveFarmUseCase.
   void call(Map<String, dynamic> data) {
-    developer.log(
-      'LoadFarmUseCase: Loading farm state',
-      name: 'farm.usecases.load_farm',
-    );
+    GameLogger.info('LoadFarmUseCase: Loading farm state');
 
     try {
       // Valida versão
       final version = data['version'] as int? ?? 1;
       if (version > 1) {
-        developer.log(
-          'LoadFarmUseCase: Unsupported save version: $version',
-          name: 'farm.usecases.load_farm',
-          level: 1000, // ERROR
-        );
+        GameLogger.error('LoadFarmUseCase: Unsupported save version: $version');
         throw Exception('Unsupported farm save version: $version');
       }
 
       // Valida timestamp (opcional, para debug)
       final timestamp = data['timestamp'] as String?;
       if (timestamp != null) {
-        developer.log(
-          'LoadFarmUseCase: Loading save from $timestamp',
-          name: 'farm.usecases.load_farm',
-        );
+        GameLogger.info('LoadFarmUseCase: Loading save from $timestamp');
       }
 
       // Extrai dados da fazenda
       final farmData = data['farm'] as Map<String, dynamic>?;
       if (farmData == null) {
-        developer.log(
-          'LoadFarmUseCase: No farm data found in save',
-          name: 'farm.usecases.load_farm',
-          level: 1000, // ERROR
-        );
+        GameLogger.error('LoadFarmUseCase: No farm data found in save');
         throw Exception('No farm data found in save');
       }
 
@@ -62,18 +48,9 @@ class LoadFarmUseCase {
       );
 
       final tiles = _manager.getAllTiles();
-      developer.log(
-        'LoadFarmUseCase: Successfully loaded farm state with ${tiles.length} tiles',
-        name: 'farm.usecases.load_farm',
-      );
+      GameLogger.info('LoadFarmUseCase: Successfully loaded farm state with ${tiles.length} tiles');
     } catch (e, stackTrace) {
-      developer.log(
-        'LoadFarmUseCase: Error loading farm state: $e',
-        name: 'farm.usecases.load_farm',
-        level: 1000, // ERROR
-        error: e,
-        stackTrace: stackTrace,
-      );
+      GameLogger.error('LoadFarmUseCase: Error loading farm state: $e\n$stackTrace');
       rethrow;
     }
   }

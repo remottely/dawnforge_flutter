@@ -1,4 +1,4 @@
-import 'dart:developer' as developer;
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
@@ -19,7 +19,7 @@ class ShieldDefenseComponent extends GameComponent {
     super.onLoad();
 
     try {
-      developer.log('[ShieldDefenseComponent] Carregando animação de defesa');
+      GameLogger.info('[ShieldDefenseComponent] Carregando animação de defesa');
 
       final loadAnimationRight = await SpriteAnimation.load(
         'gameplay/characters/player/shield_defense_right_12.png',
@@ -29,7 +29,7 @@ class ShieldDefenseComponent extends GameComponent {
         ),
       );
 
-      developer.log('[ShieldDefenseComponent] Animação carregada com sucesso');
+      GameLogger.info('[ShieldDefenseComponent] Animação carregada com sucesso');
 
       _shieldAnimation = SpriteAnimationComponent(
         animation: loadAnimationRight,
@@ -43,13 +43,9 @@ class ShieldDefenseComponent extends GameComponent {
 
       _player.gameRef.add(_shieldAnimation!);
 
-      developer.log(
-        '[ShieldDefenseComponent] Componente criado. Opacity: ${_shieldAnimation!.opacity}, IsActive: $_isActive',
-      );
+      GameLogger.info('[ShieldDefenseComponent] Componente criado. Opacity: ${_shieldAnimation!.opacity}, IsActive: $_isActive');
     } catch (e, stackTrace) {
-      developer.log(
-        '[ShieldDefenseComponent] ERRO ao carregar animação: $e\n$stackTrace',
-      );
+      GameLogger.error('[ShieldDefenseComponent] ERRO ao carregar animação: $e\n$stackTrace');
     }
   }
 
@@ -63,15 +59,11 @@ class ShieldDefenseComponent extends GameComponent {
   }
 
   void activate() {
-    developer.log(
-      '[ShieldDefenseComponent] Ativando defesa. Animação null? ${_shieldAnimation == null}',
-    );
+    GameLogger.info('[ShieldDefenseComponent] Ativando defesa. Animação null? ${_shieldAnimation == null}');
     _isActive = true;
     if (_shieldAnimation != null) {
       _shieldAnimation!.opacity = 1;
-      developer.log(
-        '[ShieldDefenseComponent] Animação opacity = 1. Posição: ${_shieldAnimation!.position}',
-      );
+      GameLogger.info('[ShieldDefenseComponent] Animação opacity = 1. Posição: ${_shieldAnimation!.position}');
     }
   }
 

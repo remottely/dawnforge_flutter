@@ -1,4 +1,4 @@
-import 'dart:developer' as developer;
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import '../../inventory/entities/hand_item.dart';
 import '../../inventory/items/seed_bag_item.dart';
@@ -36,7 +36,7 @@ class FarmToolService {
   bool canTill(FarmObject farmObject) {
     final canTill = farmObject.soilState == SoilState.untilled;
     if (!canTill) {
-      developer.log('[FarmToolService] Cannot till: soil already tilled');
+      GameLogger.warning('[FarmToolService] Cannot till: soil already tilled');
     }
     return canTill;
   }
@@ -44,12 +44,12 @@ class FarmToolService {
   /// Check if tile can be watered
   bool canWater(FarmObject farmObject) {
     if (farmObject.soilState == SoilState.untilled) {
-      developer.log('[FarmToolService] Cannot water: soil not tilled yet');
+      GameLogger.warning('[FarmToolService] Cannot water: soil not tilled yet');
       return false;
     }
 
     if (farmObject.soilState == SoilState.watered) {
-      developer.log('[FarmToolService] Cannot water: already watered');
+      GameLogger.warning('[FarmToolService] Cannot water: already watered');
       return false;
     }
 
@@ -60,11 +60,9 @@ class FarmToolService {
   bool canPlantCrop(FarmObject farmObject) {
     if (!farmObject.canPlantCrop) {
       if (farmObject.isOccupied) {
-        developer.log(
-          '[FarmToolService] Cannot plant: tile already has a crop',
-        );
+        GameLogger.warning('[FarmToolService] Cannot plant: tile already has a crop');
       } else if (!farmObject.soilState.canPlantCrop) {
-        developer.log('[FarmToolService] Cannot plant: soil not prepared');
+        GameLogger.warning('[FarmToolService] Cannot plant: soil not prepared');
       }
       return false;
     }
@@ -74,12 +72,12 @@ class FarmToolService {
   /// Check if crop can be harvested
   bool canHarvest(FarmObject farmObject) {
     if (farmObject.isEmpty) {
-      developer.log('[FarmToolService] Cannot harvest: no crop planted');
+      GameLogger.warning('[FarmToolService] Cannot harvest: no crop planted');
       return false;
     }
 
     if (!farmObject.canHarvest) {
-      developer.log('[FarmToolService] Cannot harvest: crop not ready');
+      GameLogger.warning('[FarmToolService] Cannot harvest: crop not ready');
       return false;
     }
 

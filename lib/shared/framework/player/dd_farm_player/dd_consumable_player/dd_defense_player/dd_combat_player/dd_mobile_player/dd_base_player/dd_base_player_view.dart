@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:developer' as developer;
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fx_particles_animations_def.dart';
@@ -99,15 +99,13 @@ abstract class DDBasePlayerView<
   @override
   void onJoystickAction(JoystickActionEvent event) {
     if (MarketState.instance.isOpen.value) {
-      developer.log('[PlayerInput] input ignored: market open');
+      GameLogger.info('[PlayerInput] input ignored: market open');
       return;
     }
-    developer.log(
-      '[PlayerInput] 🎮 Input recebido: ${event.id} | evento: ${event.event} | equipamento: ${_model.equipment}',
-    );
+    GameLogger.info('[PlayerInput] 🎮 Input recebido: ${event.id} | evento: ${event.event} | equipamento: ${_model.equipment}');
 
     if (isDead) {
-      developer.log('[PlayerInput] ✗ Input ignorado: player está morto');
+      GameLogger.info('[PlayerInput] ✗ Input ignorado: player está morto');
       return;
     }
 
