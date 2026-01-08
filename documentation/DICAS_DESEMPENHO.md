@@ -319,3 +319,12 @@ Me diga:
 4. Qual o tamanho do seu mapa (em tiles)?
 
 Com essas informações posso te dar uma solução mais específica! 🚀
+
+---
+
+KEVIN TODO DESEMPENHO SURREAL:
+- uma unica camada de colisão manualmente no tiled ao inves de 1 colision para cada 16x16
+- Não usar sprites quando possivel e sim desenhar diretamente no tiled e criar colisao no tiled tb e no gamecomponent usar apenas o comportamento de contact
+- usar .mp3(pesquisar outros formatos), evitar .wav
+- usar texture_atlas, animation_atlas unicos ao inves de centenas de assets
+- importar no pubspec apenas assets usados e de maneira direta, nunca importar pastas inteiras

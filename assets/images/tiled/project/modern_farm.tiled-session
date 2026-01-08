@@ -226,11 +226,11 @@
                 15,
                 5
             ],
-            "scale": 4.4328,
-            "selectedLayer": 1,
+            "scale": 5.69,
+            "selectedLayer": 10,
             "viewCenter": {
-                "x": 274.7698971304818,
-                "y": 706.2127774769897
+                "x": 657.8207381370826,
+                "y": 230.14059753954302
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/maps/florest.json": {
@@ -406,6 +406,7 @@
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/texture_atlas.json"
     ],
     "project": "modern_farm.tiled-project",
+    "property.type": "bool",
     "recentFiles": [
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/maps/farm_map.json",
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/texture_atlas.json",
