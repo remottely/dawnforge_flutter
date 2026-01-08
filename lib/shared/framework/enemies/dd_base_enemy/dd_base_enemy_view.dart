@@ -215,7 +215,7 @@ abstract class DDBaseEnemyView<
       damage: controller.model.primaryAttackDamage,
       interval: controller.model.primaryAttackInterval,
       id: _meleeAttackId,
-      animationRight: EnemyPrimaryAttackDef.loadAnimationFxRight(),
+      animationRight: _attackAnimation != null ? null : EnemyPrimaryAttackDef.loadAnimationFxRight(),
       execute: () {
         if (_interruptedAttackToken == attackToken) {
           _log('Attack canceled before execution');

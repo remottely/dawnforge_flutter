@@ -1,10 +1,5 @@
 import 'package:darkness_dungeon/gameplay/core/modules/hud/player_vital_stats/player_vital_stats_state.dart';
-import 'package:darkness_dungeon/gameplay/decorations/door_key/door_key_decoration_config.dart';
-import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
-import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
-import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
 
 class PlayerVitalStatsOverlay extends StatefulWidget {
