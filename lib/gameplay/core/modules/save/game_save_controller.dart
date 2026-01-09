@@ -1,4 +1,4 @@
-
+import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager.dart';
@@ -14,6 +14,58 @@ import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_loc
 import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/services/item_factory_service.dart';
 import 'package:darkness_dungeon/gameplay/time/time_manager.dart' as new_time;
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
+
+/// Helper para conversão de coordenadas pixel → tile
+/// Segue o padrão de jogos 2D grid-based
+class _PositionHelper {
+  _PositionHelper._();
+
+  /// Tamanho padrão do tile em pixels (16x16)
+  static const double kTileSize = 16.0;
+
+  /// Converte posição em pixels para coordenadas de tile
+  ///
+  /// Por padrão usa arredondamento para baixo (floor) seguindo o padrão
+  /// de grid-based games onde a posição representa o tile onde o centro
+  /// da entidade está localizado.
+  ///
+  /// Exemplos:
+  /// - (15.9, 15.9) pixels → (0, 0) tile
+  /// - (16.0, 16.0) pixels → (1, 1) tile
+  /// - (24.0, 24.0) pixels → (1, 1) tile
+  static Vector2 pixelsToTile(
+    Vector2 pixelPosition, {
+    double tileSize = kTileSize,
+  }) {
+    return Vector2(
+      (pixelPosition.x / tileSize).floor().toDouble(),
+      (pixelPosition.y / tileSize).floor().toDouble(),
+    );
+  }
+
+  /// Converte coordenadas de tile para pixels (centro do tile)
+  ///
+  /// Usado no restore para spawnar o player no centro do tile,
+  /// evitando que apareça "grudado" no canto superior esquerdo.
+  static Vector2 tileToPixelsCenter(
+    Vector2 tilePosition, {
+    double tileSize = kTileSize,
+  }) {
+    return Vector2(
+      (tilePosition.x * tileSize) + (tileSize / 2),
+      (tilePosition.y * tileSize) + (tileSize / 2),
+    );
+  }
+
+  /// Converte coordenadas de tile para pixels (centro do tile)
+  ///
+  /// Usado no restore para spawnar o player no centro do tile,
+  /// evitando que apareça "grudado" no canto superior esquerdo.
+  static Vector2 toSavePos(Vector2 tilePosition) {
+    return Vector2(tilePosition.x + 1, tilePosition.y + 1);
+  }
+}
 
 final class GameSaveController {
   GameSaveController._();
@@ -27,7 +79,9 @@ final class GameSaveController {
       final playerData = _collectPlayerData();
       final life = (playerData['playerModel'] as Map?)?['life'];
       if (life == null || (life is num && life <= 0)) {
-        GameLogger.warning('[GameSaveController] ❌ Aborting save: player life is null/<=0 (life=$life). Avoid overwriting good saves after death.');
+        GameLogger.warning(
+          '[GameSaveController] ❌ Aborting save: player life is null/<=0 (life=$life). Avoid overwriting good saves after death.',
+        );
         return false;
       }
       final worldData = _collectWorldData();
@@ -68,11 +122,13 @@ final class GameSaveController {
       final saveData = await SaveManager.instance.load();
 
       if (saveData == null) {
-          GameLogger.warning('[GameSaveController] No save file found');
+        GameLogger.warning('[GameSaveController] No save file found');
         return false;
       }
 
-      GameLogger.info('[GameSaveController] Save data loaded, restoring components...');
+      GameLogger.info(
+        '[GameSaveController] Save data loaded, restoring components...',
+      );
 
       _restorePlayerData(saveData.playerData);
       _restoreWorldData(saveData.worldData);
@@ -110,9 +166,9 @@ final class GameSaveController {
       final deleted = await SaveManager.instance.deleteSave();
 
       if (deleted) {
-          GameLogger.info('[GameSaveController] ✅ Save file deleted');
+        GameLogger.info('[GameSaveController] ✅ Save file deleted');
       } else {
-          GameLogger.warning('[GameSaveController] ⚠️ No save file to delete');
+        GameLogger.warning('[GameSaveController] ⚠️ No save file to delete');
       }
 
       return true;
@@ -124,21 +180,58 @@ final class GameSaveController {
 
   Map<String, dynamic> _collectPlayerData() {
     final playerState = PlayerStateManager.instance;
-    final playerData = playerState.toJson();
 
+    // Save current player position before serializing
+    if (playerState.lastPlayerView != null &&
+        playerState.lastPlayerModel != null) {
+      final pixelPos = playerState.lastPlayerView!.position;
+
+      // Converte pixels → tile usando floor (padrão de mercado)
+      final tilePosConfig = _PositionHelper.pixelsToTile(
+        Vector2(pixelPos.x, pixelPos.y),
+      );
+
+      final tilePos = _PositionHelper.toSavePos(tilePosConfig);
+
+      GameLogger.info(
+        '[GameSaveController] 💾 Converting position: pixels(${pixelPos.x.toStringAsFixed(2)}, ${pixelPos.y.toStringAsFixed(2)}) → tile(${tilePos.x}, ${tilePos.y})',
+      );
+
+      // Salva em tiles na propriedade do modelo
+      if (playerState.lastPlayerModel is DDBasePlayerModel) {
+        (playerState.lastPlayerModel as DDBasePlayerModel).setPosition(tilePos);
+      } else {
+        // fallback para modelos customizados
+        try {
+          (playerState.lastPlayerModel as dynamic).position = [
+            tilePos.x,
+            tilePos.y,
+          ];
+        } catch (_) {}
+      }
+    }
+
+    final playerData = playerState.toJson();
     final playerModelJson = (playerData['playerModel'] as Map?) ?? const {};
     final coins = playerModelJson['coins'];
     final life = playerModelJson['life'];
     final stamina = playerModelJson['stamina'];
+    final position = playerModelJson['position'];
 
-    GameLogger.info('[GameSaveController] Collecting player data: model=${playerState.lastPlayerModel != null ? playerState.lastPlayerModel.runtimeType : "null"}, stamina=$stamina, life=$life, coins=$coins, raw=$playerModelJson');
+    GameLogger.info(
+      '[GameSaveController] Collecting player data: model=${playerState.lastPlayerModel != null ? playerState.lastPlayerModel.runtimeType : "null"}, stamina=$stamina, life=$life, coins=$coins, position=$position',
+    );
 
     if (life == null || (life is num && life <= 0)) {
-      GameLogger.warning('[GameSaveController] ⚠️ Player life is null/<=0 during save, skipping validation? raw=$playerModelJson');
+      GameLogger.warning(
+        '[GameSaveController] ⚠️ Player life is null/<=0 during save, skipping validation? raw=$playerModelJson',
+      );
     }
 
     if (coins is num && coins < 0) {
-      GameLogger.warning('[GameSaveController] ⚠️ Player coins negative during save, raw=$playerModelJson');
+      GameLogger.warning(
+        '[GameSaveController] ⚠️ Player coins negative during save, raw=$playerModelJson',
+      );
     }
 
     return playerData;
@@ -161,23 +254,63 @@ final class GameSaveController {
 
   void _restorePlayerData(Map<String, dynamic> data) {
     try {
-      GameLogger.info('[GameSaveController] Restoring player data: ${data.keys.toList()}, coinsField=${(data['playerModel'] as Map?)?['coins']}');
+      GameLogger.info(
+        '[GameSaveController] Restoring player data: ${data.keys.toList()}, coinsField=${(data['playerModel'] as Map?)?['coins']}',
+      );
       final playerState = PlayerStateManager.instance;
       playerState.fromJson(data);
-      GameLogger.info('[GameSaveController] ✅ Player state restored: model=${playerState.lastPlayerModel != null ? playerState.lastPlayerModel.runtimeType : "null"}, stamina=${playerState.lastPlayerModel?.stamina}, life=${playerState.lastPlayerModel?.life}, coins=${playerState.lastPlayerModel?.coins}');
+      GameLogger.info(
+        '[GameSaveController] ✅ Player state restored: model=${playerState.lastPlayerModel != null ? playerState.lastPlayerModel.runtimeType : "null"}, stamina=${playerState.lastPlayerModel?.stamina}, life=${playerState.lastPlayerModel?.life}, coins=${playerState.lastPlayerModel?.coins}',
+      );
 
       final restoredLife = playerState.lastPlayerModel?.life;
       if (restoredLife == null || restoredLife <= 0) {
-        GameLogger.warning('[GameSaveController] ⚠️ Restored player life is null/<=0. payload=${data['playerModel']}');
+        GameLogger.warning(
+          '[GameSaveController] ⚠️ Restored player life is null/<=0. payload=${data['playerModel']}',
+        );
+      }
+
+      // Restore player position if available
+      final playerModelJson = data['playerModel'] as Map?;
+      final positionRaw = playerModelJson?['position'];
+      if (positionRaw is List && positionRaw.length == 2) {
+        final tileX = (positionRaw[0] as num).toDouble();
+        final tileY = (positionRaw[1] as num).toDouble();
+
+        // Converte pixels → tile usando floor (padrão de mercado)
+        final pixelPos = _PositionHelper.pixelsToTile(
+          Vector2(tileX, tileY),
+        );
+
+        // final pixelPos = _PositionHelper.toSavePos(tilePosConfig);
+
+        GameLogger.info(
+          '[GameSaveController] 📍 Converting position: tile($tileX, $tileY) → pixels(${pixelPos.x.toStringAsFixed(2)}, ${pixelPos.y.toStringAsFixed(2)})',
+        );
+
+        if (playerState.lastPlayerView != null) {
+          playerState.lastPlayerView!.position = pixelPos;
+          GameLogger.info(
+            '[GameSaveController] ✅ Player position restored to tile($tileX, $tileY) / pixels(${pixelPos.x}, ${pixelPos.y})',
+          );
+        } else {
+          GameLogger.warning(
+            '[GameSaveController] ⚠️ Could not restore player position: lastPlayerView is null',
+          );
+        }
       }
     } catch (e) {
-      GameLogger.error('[GameSaveController] ❌ Error restoring player data: $e');
+      GameLogger.error(
+        '[GameSaveController] ❌ Error restoring player data: $e',
+      );
     }
   }
 
   void _restoreWorldData(Map<String, dynamic> data) {
     try {
-      GameLogger.info('[GameSaveController] Restoring world data: ${data.keys.toList()}');
+      GameLogger.info(
+        '[GameSaveController] Restoring world data: ${data.keys.toList()}',
+      );
       final worldState = WorldStateManager.instance;
       worldState.fromJson(data);
       GameLogger.info('[GameSaveController] ✅ World state restored');
@@ -202,12 +335,16 @@ final class GameSaveController {
 
   void _restoreInventoryData(Map<String, dynamic> data) {
     try {
-      GameLogger.info('[GameSaveController] Restoring inventory data: ${data.keys.toList()}');
+      GameLogger.info(
+        '[GameSaveController] Restoring inventory data: ${data.keys.toList()}',
+      );
       final inventory = InventoryManager.instance;
       inventory.fromJson(data, getIt<ItemFactoryService>().createItem);
       GameLogger.info('[GameSaveController] ✅ Inventory restored');
     } catch (e) {
-      GameLogger.error('[GameSaveController] ❌ Error restoring inventory data: $e');
+      GameLogger.error(
+        '[GameSaveController] ❌ Error restoring inventory data: $e',
+      );
     }
   }
 
@@ -218,7 +355,9 @@ final class GameSaveController {
         return;
       }
 
-      GameLogger.info('[GameSaveController] Restoring farm data: ${data.keys.toList()}');
+      GameLogger.info(
+        '[GameSaveController] Restoring farm data: ${data.keys.toList()}',
+      );
       final loadFarmUseCase = farm_di.getIt<LoadFarmUseCase>();
       loadFarmUseCase.call(data);
       GameLogger.info('[GameSaveController] ✅ Farm state restored');

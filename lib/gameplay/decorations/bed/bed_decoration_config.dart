@@ -10,7 +10,7 @@ final class BedDecorationDef {
   BedDecorationDef._();
 
   static final Vector2 _textureSize = TileConstants.tileSizeExtraLarge;
-  static final Vector2 componentSize = TileConstants.tileSizeExtraLarge;
+  static final Vector2 componentSize = _textureSize;
 
   static Future<Sprite> loadSpriteIdle() =>
       Sprite.load('gameplay/decorations/bed_decoration_idle_1.png');
@@ -24,11 +24,7 @@ final class BedDecorationDef {
   );
 
   static RectangleHitbox createHitbox(GameComponent target) =>
-      HitboxUtils.createBottomHitbox(
-        componentSize: target.size,
-        hitboxStartPositionX: 0.0,
-        hitboxStartPositionY: target.height * 0.75,
-      );
+      HitboxUtils.createExpandHitbox(target.size);
 
   static const String _kRestMessage = 'bed_rest_message';
 

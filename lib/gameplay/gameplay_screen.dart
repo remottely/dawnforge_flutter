@@ -34,7 +34,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
     return MapNavigator(
       maps: MapManager.allMaps,
       // initialMap: MapConfig.kFarmId,
-      initialMap: MapDef.kFarmMapId,
+      initialMap: MapDef.kHomeMapId,
       // initialMap: MapDef.kSVTownId,
       // initialMap: MapDef.kF1Id,
       builder: (context, arguments, mapItem) {
@@ -93,8 +93,12 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
         }
 
         final playerPosition =
-            (mapArguments?.playerPosition ?? initialPlayerPosition ?? Vector2(7, 7)) *
-                TileConstants.kTileDimensionStandard;
+            (mapItem.id == MapDef.kHomeMapId
+                ? loadedPlayerPosition ?? Vector2(5, 5)
+                : (mapArguments?.playerPosition ??
+                      initialPlayerPosition ??
+                      Vector2(7, 7))) *
+            TileConstants.kTileDimensionStandard;
 
         // final player = buildSunnyPlayer(playerPosition);
         // final player = buildCutePlayer(playerPosition);

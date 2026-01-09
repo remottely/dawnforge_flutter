@@ -1,3 +1,4 @@
+import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
 import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
@@ -26,6 +27,8 @@ class DDBasePlayerModel {
   double? get life => _saveData.life;
   int get coins => _saveData.coins;
   bool get hasStamina => _saveData.stamina > 0;
+  Vector2 get position => _saveData.position;
+  void setPosition(Vector2 value) => _saveData.position = value;
 
   /// Equipment always points to the currently selected inventory slot
   /// This is never null - it always represents the selected slot

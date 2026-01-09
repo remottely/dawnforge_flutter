@@ -220,7 +220,7 @@ final class MapDef {
       backgroundMusic: AudioDef.bgMusicFarm,
       lightingColor: _kNoneLightingColor,
       backgroundColor: _kLakeBackgroundColor,
-      initialPlayerPosition: '3,3',
+      initialPlayerPosition: '5,5',
     ),
 
     // /// SV MAPS

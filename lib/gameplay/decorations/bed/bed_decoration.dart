@@ -79,7 +79,7 @@ class BedDecorationView extends GameDecoration {
 
   void _triggerBedUse() {
     _isUsed = true;
-    _playAnimationBedUse();
+    // _playAnimationBedUse();
   }
 
   void _advanceDayAndSaveGame() {
@@ -92,17 +92,17 @@ class BedDecorationView extends GameDecoration {
     GameSaveController.instance.saveGame();
   }
 
-  void _playAnimationBedUse() {
-    playSpriteAnimationOnce(
-      BedDecorationDef.loadAnimationUse(),
-      onFinish: _cleanup,
-      onStart: () {
-        sprite = null;
-      },
-    );
-  }
+  // void _playAnimationBedUse() {
+  //   playSpriteAnimationOnce(
+  //     BedDecorationDef.loadAnimationUse(),
+  //     onFinish: _cleanup,
+  //     onStart: () {
+  //       sprite = null;
+  //     },
+  //   );
+  // }
 
-  void _cleanup() {
-    removeFromParent();
-  }
+  // void _cleanup() {
+  //   removeFromParent();
+  // }
 }

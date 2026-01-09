@@ -39,6 +39,9 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
 
   bool isLoadingSave = true;
 
+  /// Holds the loaded player position from save, if available
+  Vector2? loadedPlayerPosition;
+
   GameStateManager gameplayGameStateManager = GameStateManager();
 
   late InventoryInputHandler inventoryInputHandler;
@@ -54,7 +57,9 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
     // Reset market spawn registry to allow re-adding decoration after reloads.
     MarketDecoration.clearSpawnRegistry();
     WidgetsBinding.instance.addObserver(this);
-    GameLogger.debug('[GameplayViewModel] initState - Creating new player input');
+    GameLogger.debug(
+      '[GameplayViewModel] initState - Creating new player input',
+    );
     recreatePerMapDependencies(mapId: null);
     _loadGameOrResetLife();
   }
@@ -67,27 +72,48 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
 
   Future<void> _loadGameOrResetLife() async {
     try {
-      GameLogger.debug('[GameplayViewModel] _loadGameOrResetLife - Starting...');
+      GameLogger.debug(
+        '[GameplayViewModel] _loadGameOrResetLife - Starting...',
+      );
       final success = await GameSaveController.instance.loadGame();
 
       GameLogger.debug('[GameplayViewModel] Load game result: $success');
 
       if (!success) {
-        GameLogger.info('[GameplayViewModel] No save found, resetting player life');
+        GameLogger.info(
+          '[GameplayViewModel] No save found, resetting player life',
+        );
         _resetPlayerLifeOnNewGame();
+        loadedPlayerPosition = null;
       } else {
         GameLogger.info('[GameplayViewModel] ✅ Save loaded successfully!');
+        // Try to extract position from loaded player model
+        final lastPlayerModel = playerStateManager.lastPlayerModel;
+        final positionList = (lastPlayerModel?.toJson()['position'] as List?)
+            ?.map((e) => (e as num).toDouble())
+            .toList();
+        if (positionList != null && positionList.length == 2) {
+          loadedPlayerPosition = Vector2(positionList[0], positionList[1]);
+          GameLogger.info(
+            '[GameplayViewModel] Loaded player position from save: $loadedPlayerPosition',
+          );
+        } else {
+          loadedPlayerPosition = null;
+        }
       }
     } catch (e, stackTrace) {
       GameLogger.error('[GameplayViewModel] ❌ Error loading game: $e');
       GameLogger.error('[GameplayViewModel] Stack trace: $stackTrace');
       _resetPlayerLifeOnNewGame();
+      loadedPlayerPosition = null;
     } finally {
       if (mounted) {
         setState(() {
           isLoadingSave = false;
         });
-        GameLogger.debug('[GameplayViewModel] Loading complete, isLoadingSave = false');
+        GameLogger.debug(
+          '[GameplayViewModel] Loading complete, isLoadingSave = false',
+        );
       }
     }
   }
@@ -114,7 +140,9 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
     // sem precisar reconstruir o BonfireWidget (que resetaria o player)
     final newConfig = GameplayScreenDef.createCameraConfig(context);
 
-    GameLogger.debug('[GameplayViewModel] Camera config: resolution=${newConfig.resolution}, zoom=${newConfig.zoom}');
+    GameLogger.debug(
+      '[GameplayViewModel] Camera config: resolution=${newConfig.resolution}, zoom=${newConfig.zoom}',
+    );
 
     return newConfig;
   }
@@ -128,11 +156,15 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
     var lastPlayerModel = playerStateManager.lastPlayerModel;
 
     if (lastPlayerModel is! SunnyPlayerModel) {
-      GameLogger.info('[GameplayViewModel] Creating NEW Sunny model (no saved model found)');
+      GameLogger.info(
+        '[GameplayViewModel] Creating NEW Sunny model (no saved model found)',
+      );
       lastPlayerModel = SunnyPlayerModel.fromJson({});
       playerStateManager.lastPlayerModel = lastPlayerModel;
     } else {
-      GameLogger.info('[GameplayViewModel] Using EXISTING Sunny model: stamina=${lastPlayerModel.stamina}, life=${lastPlayerModel.life}');
+      GameLogger.info(
+        '[GameplayViewModel] Using EXISTING Sunny model: stamina=${lastPlayerModel.stamina}, life=${lastPlayerModel.life}',
+      );
     }
 
     playerStateManager.currentPlayerAnimation =
@@ -152,7 +184,8 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
     //   );
     var lastPlayerModel = playerStateManager.lastPlayerModel;
     final lastPlayerJson =
-      lastPlayerModel?.toJson() ?? PlayerSaveData.initial(playerType: 'cute').toJson();
+        lastPlayerModel?.toJson() ??
+        PlayerSaveData.initial(playerType: 'cute').toJson();
 
     if (lastPlayerModel is! CutePlayerModel) {
       lastPlayerModel = CutePlayerModel.fromJson(lastPlayerJson);
@@ -169,11 +202,14 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
   }
 
   DDBasePlayerView buildFarmerPlayer(Vector2 position) {
-    GameLogger.debug('[GameplayViewModel] Building farmer player at position: $position');
+    GameLogger.debug(
+      '[GameplayViewModel] Building farmer player at position: $position',
+    );
 
     var lastPlayerModel = playerStateManager.lastPlayerModel;
-    final lastPlayerJson = lastPlayerModel?.toJson() ??
-      PlayerSaveData.initial(playerType: 'farmer').toJson();
+    final lastPlayerJson =
+        lastPlayerModel?.toJson() ??
+        PlayerSaveData.initial(playerType: 'farmer').toJson();
 
     if (lastPlayerModel is! FarmerPlayerModel) {
       lastPlayerModel = FarmerPlayerModel.fromJson(lastPlayerJson);
@@ -190,11 +226,14 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
   }
 
   DDBasePlayerView buildDemoPlayer(Vector2 position) {
-    GameLogger.debug('[GameplayViewModel] Building farmer player at position: $position');
+    GameLogger.debug(
+      '[GameplayViewModel] Building farmer player at position: $position',
+    );
 
     var lastPlayerModel = playerStateManager.lastPlayerModel;
     final lastPlayerJson =
-      lastPlayerModel?.toJson() ?? PlayerSaveData.initial(playerType: 'demo').toJson();
+        lastPlayerModel?.toJson() ??
+        PlayerSaveData.initial(playerType: 'demo').toJson();
 
     if (lastPlayerModel is! DemoPlayerModel) {
       lastPlayerModel = DemoPlayerModel.fromJson(lastPlayerJson);
@@ -203,11 +242,14 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
 
     playerStateManager.currentPlayerAnimation =
         DemoPlayerDef.loadAnimationIdleDown;
-
-    return DemoPlayerView<DemoPlayerController, DemoPlayerModel>(
+    final player = DemoPlayerView<DemoPlayerController, DemoPlayerModel>(
       position: position,
       model: lastPlayerModel,
     );
+
+    PlayerStateManager.instance.setLastPlayerView(player);
+
+    return player;
   }
 
   void recreatePerMapDependencies({required String? mapId}) {
