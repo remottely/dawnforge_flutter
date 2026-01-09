@@ -1,4 +1,9 @@
-import 'dart:async';
+import 'dart:async' as async;
+import 'package:bonfire/bonfire.dart';
+import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+// import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/map/map_def.dart';
+import 'package:darkness_dungeon/gameplay/core/modules/map/map_transition_controller.dart';
 import 'package:flutter/foundation.dart';
 
 import 'day_state.dart';
@@ -19,18 +24,20 @@ class TimeManager {
     DayState.dayOne(),
   );
 
-  final StreamController<GameTime> _tickStream = StreamController.broadcast();
+  final async.StreamController<GameTime> _tickStream = async.StreamController.broadcast();
   Stream<GameTime> get tickStream => _tickStream.stream;
 
   final TimeScheduler scheduler = TimeScheduler();
 
   final List<void Function(DayState previous, DayState current)>
-  _dayChangeListeners = [];
+      _dayChangeListeners = [];
 
-  Timer? _timer;
+  async.Timer? _timer;
   bool _isRunning = false;
   double _accumulator = 0;
   bool _isPaused = false;
+  
+  BonfireGameInterface? _game;
 
   bool get isRunning => _isRunning;
   bool get isPaused => _isPaused;
@@ -38,6 +45,10 @@ class TimeManager {
   DayState get currentDayState => dayStateNotifier.value;
   int get currentHour => timeNotifier.value.hour;
   int get currentMinute => timeNotifier.value.minute;
+
+  void setGame(BonfireGameInterface game) {
+    _game = game;
+  }
 
   void addDayChangeListener(
     void Function(DayState previous, DayState current) listener,
@@ -52,41 +63,36 @@ class TimeManager {
     _dayChangeListeners.remove(listener);
   }
 
-  /// Start ticking the clock.
   void start() {
     if (_isRunning) return;
     _isRunning = true;
     final secondsPerTick =
         TimeConstants.kMinutesPerTick * TimeConstants.kRealSecondsPerGameMinute;
-    _timer = Timer.periodic(
+    _timer = async.Timer.periodic(
       Duration(milliseconds: (secondsPerTick * 1000).round()),
       _onTimer,
     );
   }
 
-  /// Stop ticking the clock.
   void stop() {
     _timer?.cancel();
     _timer = null;
     _isRunning = false;
   }
 
-  /// Pause ticking without disposing timers (useful for menus/cutscenes).
   void pause() {
     _isPaused = true;
   }
 
-  /// Resume ticking after a pause.
   void resume() {
     _isPaused = false;
   }
 
-  /// Manual tick for integration tests or external drive.
   void tick(double dtSeconds) {
     _advanceBySeconds(dtSeconds);
   }
 
-  void _onTimer(Timer _) {
+  void _onTimer(async.Timer _) {
     final secondsPerTick =
         TimeConstants.kMinutesPerTick * TimeConstants.kRealSecondsPerGameMinute;
     _advanceBySeconds(secondsPerTick);
@@ -115,13 +121,12 @@ class TimeManager {
       currentTime: newTime,
     );
 
-    // Detect cutoff (2:00 next day) relative to the start hour (6:00).
     final playableMinutes =
         ((TimeConstants.kHoursPerDay -
                 TimeConstants.kStartHour +
                 TimeConstants.kSleepHour) %
             TimeConstants.kHoursPerDay) *
-        60; // 20h => 1200 minutes
+        60;
 
     int _elapsedSinceStart(GameTime t) {
       return (t.totalMinutes -
@@ -141,14 +146,30 @@ class TimeManager {
     }
   }
 
-  /// Advance to the next day and reset clock to start hour.
   void advanceToNextDay() {
     final previousDay = dayStateNotifier.value;
     final nextDay = _nextDayState();
-    // Reset clock before notifying listeners so saves/load capture 06:00.
+    
     timeNotifier.value = GameTime(hour: TimeConstants.kStartHour, minute: 0);
     dayStateNotifier.value = nextDay;
+    
+    _teleportPlayerToHome();
     _notifyDayChange(previousDay, nextDay);
+  }
+
+  void _teleportPlayerToHome() {
+    try {
+      // ✅ Solicita transição de mapa via controller
+      MapTransitionController.instance.requestTransition(
+        mapId: MapDef.kHomeMapId,
+        playerPosition: Vector2(5, 5), // Posição inicial em tiles
+        playerDirection: Direction.down,
+      );
+      
+      GameLogger.info('[TimeManager] Solicitada transição para Home');
+    } catch (e, stack) {
+      GameLogger.error('[TimeManager] Erro ao solicitar transição: $e\n$stack');
+    }
   }
 
   DayState _nextDayState() {
@@ -175,7 +196,6 @@ class TimeManager {
     if (wasRunning) start();
   }
 
-  /// Reset to day-one, 6:00 AM and clear scheduled tasks.
   void reset() {
     stop();
     scheduler.clear();
@@ -193,5 +213,11 @@ class TimeManager {
         // Swallow listener errors to avoid breaking the time loop.
       }
     }
+  }
+  
+  void dispose() {
+    _timer?.cancel();
+    _tickStream.close();
+    _game = null;
   }
 }

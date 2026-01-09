@@ -603,3 +603,6 @@ MVP focado no **loop essencial de farming**: **plantar → regar → colher → 
 - melhorar todo o sistema de save do meu jogo:
     - unificar todos os sunny, cute, demo player save classes em uma unica, usar bem o MVC e todos os dados volateis ficar em model unico e dados de save em savedata unico tb, KISS.
     - jogar _PositionHelper para tilehelper?
+- criar um orquestrador state machine q controla o estado global do jogo de maneira unificada, musica, mapa, hora, etc.
+- reestruturar toda a arquitetura do jogo, criar uma arquitetura onde todos os modulos de comunicarao da mesma maneira, atraves de listeners de stream??? de valuenotifier??? qual é mais leve e performatico e facil de gerenciar, faz sentido utilizar bloc ja q ele faz o dispose automatico etc???
+- mesmo estando no mapa home_map ele deve teleportar(mudar posicao) para perto da cama ou manter onde o player esta e animar ele dormindo e acordando no chao mesmo e com 70% da energia??
