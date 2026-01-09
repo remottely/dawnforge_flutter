@@ -183,9 +183,8 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
     //     model: CutePlayerModel.fromJson({}),
     //   );
     var lastPlayerModel = playerStateManager.lastPlayerModel;
-    final lastPlayerJson =
-        lastPlayerModel?.toJson() ??
-        PlayerSaveData.initial(playerType: 'cute').toJson();
+    final lastPlayerJson = lastPlayerModel?.toJson() ?? {'coins': 500};
+    //  ?? PlayerSaveData.initial(playerType: 'cute').toJson();
 
     if (lastPlayerModel is! CutePlayerModel) {
       lastPlayerModel = CutePlayerModel.fromJson(lastPlayerJson);
@@ -207,9 +206,8 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
     );
 
     var lastPlayerModel = playerStateManager.lastPlayerModel;
-    final lastPlayerJson =
-        lastPlayerModel?.toJson() ??
-        PlayerSaveData.initial(playerType: 'farmer').toJson();
+    final lastPlayerJson = lastPlayerModel?.toJson() ?? {'coins': 500};
+    //  ?? PlayerSaveData.initial(playerType: 'farmer').toJson();
 
     if (lastPlayerModel is! FarmerPlayerModel) {
       lastPlayerModel = FarmerPlayerModel.fromJson(lastPlayerJson);
@@ -231,9 +229,8 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
     );
 
     var lastPlayerModel = playerStateManager.lastPlayerModel;
-    final lastPlayerJson =
-        lastPlayerModel?.toJson() ??
-        PlayerSaveData.initial(playerType: 'demo').toJson();
+    final lastPlayerJson = lastPlayerModel?.toJson() ?? {'coins': 500};
+    //  ?? PlayerSaveData.initial(playerType: 'demo').toJson();
 
     if (lastPlayerModel is! DemoPlayerModel) {
       lastPlayerModel = DemoPlayerModel.fromJson(lastPlayerJson);
