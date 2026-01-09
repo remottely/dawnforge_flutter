@@ -17,7 +17,7 @@ class TutorialInputsHUDDef {
     {'key': 'X', 'desc': 'Mão - Defesa (espada)'},
     {'key': 'X', 'desc': 'Interage com Objetos (Baú/NPC/...) '},
     {'key': 'I', 'desc': 'Abre|Fecha Inventário'},
-    {'key': 'N', 'desc': 'Pula p/ próximo dia (Salva jogo)'},
+    // {'key': 'N', 'desc': 'Pula p/ próximo dia (Salva jogo)'},
     {'key': 'G', 'desc': 'Apaga Jogo Salvo (precisa reiniciar)'},
     // {'key': 'O', 'desc': 'Equipa escudo'},
     // {'key': 'P', 'desc': 'Desequipa escudo'},

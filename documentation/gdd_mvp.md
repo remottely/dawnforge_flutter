@@ -600,3 +600,6 @@ MVP focado no **loop essencial de farming**: **plantar → regar → colher → 
 - fix: bug, quando o player morre e esta executando algo ele executa ao renascer
 - toda vez q o player navega entre mapas a vida dele refaz a animacao de perdendo vida, corrigir ou eliminar essa animacao para o MVP e colocar de volta pós mvp?
 - colocar o tamanha do campo de visao do final boss bem maior do q é hoje, ou pelo menos mudar quando ele iniciar a batalha
+- melhorar todo o sistema de save do meu jogo:
+    - unificar todos os sunny, cute, demo player save classes em uma unica, usar bem o MVC e todos os dados volateis ficar em model unico e dados de save em savedata unico tb, KISS.
+    - jogar _PositionHelper para tilehelper?

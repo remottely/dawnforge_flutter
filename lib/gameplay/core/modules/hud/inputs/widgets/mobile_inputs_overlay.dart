@@ -194,15 +194,15 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
               color: Colors.brown,
             )
           : SizedBox.shrink(),
-      SizedBox(height: spacing / 2),
-      _buildActionButton(
-        context: context,
-        label: 'Next Day',
-        icon: Icons.wb_sunny,
-        size: buttonSize,
-        actionId: JoystickSetup.kAdvanceDayId,
-        color: Colors.amber,
-      ),
+      // SizedBox(height: spacing / 2),
+      // _buildActionButton(
+      //   context: context,
+      //   label: 'Next Day',
+      //   icon: Icons.wb_sunny,
+      //   size: buttonSize,
+      //   actionId: JoystickSetup.kAdvanceDayId,
+      //   color: Colors.amber,
+      // ),
       SizedBox(height: spacing / 2),
       if (AppEnvironment.kIsDebugMode) ...[
         _buildActionButton(

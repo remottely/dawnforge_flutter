@@ -18,8 +18,8 @@ import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consu
 
 /// Helper para conversão de coordenadas pixel → tile
 /// Segue o padrão de jogos 2D grid-based
-class _PositionHelper {
-  _PositionHelper._();
+class PositionHelper {
+  PositionHelper._();
 
   /// Tamanho padrão do tile em pixels (16x16)
   static const double kTileSize = 16.0;
@@ -64,6 +64,10 @@ class _PositionHelper {
   /// evitando que apareça "grudado" no canto superior esquerdo.
   static Vector2 toSavePos(Vector2 tilePosition) {
     return Vector2(tilePosition.x + 1, tilePosition.y + 1);
+  }
+
+  static Vector2 toMVPPosition() {
+    return Vector2(5, 5);
   }
 }
 
@@ -184,18 +188,21 @@ final class GameSaveController {
     // Save current player position before serializing
     if (playerState.lastPlayerView != null &&
         playerState.lastPlayerModel != null) {
-      final pixelPos = playerState.lastPlayerView!.position;
+      // final pixelPos = playerState.lastPlayerView!.position; // TODO(Kevin): put it back
 
-      // Converte pixels → tile usando floor (padrão de mercado)
-      final tilePosConfig = _PositionHelper.pixelsToTile(
-        Vector2(pixelPos.x, pixelPos.y),
-      );
+      // // Converte pixels → tile usando floor (padrão de mercado)
+      // final tilePosConfig = _PositionHelper.pixelsToTile(
+      //   Vector2(pixelPos.x, pixelPos.y),
+      // ); // TODO(Kevin): put it back
 
-      final tilePos = _PositionHelper.toSavePos(tilePosConfig);
+      // final tilePosConfig2 = _PositionHelper.toSavePos(tilePosConfig); // TODO(Kevin): put it back
 
-      GameLogger.info(
-        '[GameSaveController] 💾 Converting position: pixels(${pixelPos.x.toStringAsFixed(2)}, ${pixelPos.y.toStringAsFixed(2)}) → tile(${tilePos.x}, ${tilePos.y})',
-      );
+      // GameLogger.info(
+      //   '[GameSaveController] 💾 Converting position: pixels(${pixelPos.x.toStringAsFixed(2)}, ${pixelPos.y.toStringAsFixed(2)}) → tile(${tilePos.x}, ${tilePos.y})',
+      // );
+
+      final tilePos = PositionHelper.toMVPPosition(); // TODO(Kevin): remove it
+
 
       // Salva em tiles na propriedade do modelo
       if (playerState.lastPlayerModel is DDBasePlayerModel) {
@@ -278,9 +285,7 @@ final class GameSaveController {
         final tileY = (positionRaw[1] as num).toDouble();
 
         // Converte pixels → tile usando floor (padrão de mercado)
-        final pixelPos = _PositionHelper.pixelsToTile(
-          Vector2(tileX, tileY),
-        );
+        final pixelPos = PositionHelper.pixelsToTile(Vector2(tileX, tileY));
 
         // final pixelPos = _PositionHelper.toSavePos(tilePosConfig);
 

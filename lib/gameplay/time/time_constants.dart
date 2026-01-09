@@ -18,7 +18,9 @@ final class TimeConstants {
   static const int kSleepHour = 2;
 
   /// Default start hour (6 AM).
+  static const int totalMinutesPerDay = TimeConstants.kHoursPerDay * 60;
   static const int kStartHour = AppEnvironment.kIsDevToolsMode ? 1 : 6;
+  static const int startOffset = TimeConstants.kStartHour * 60;
 
   /// Days per season (Stardew Valley rules).
   static const int kDaysPerSeason = 28;

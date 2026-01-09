@@ -38,23 +38,21 @@ class FarmInputHandler extends GameComponent with PlayerControllerListener {
   void onJoystickAction(JoystickActionEvent event) {
     if (event.event != ActionEvent.DOWN) return;
 
-    if (InputDef.isAdvanceDayAction(event.id)) {
-      _handleAdvanceDay();
-    } else if (InputDef.isClearSaveAction(event.id)) {
+    // if (InputDef.isAdvanceDayAction(event.id)) {
+    //   _handleAdvanceDayAndSaveGame();
+    // } else 
+    if (InputDef.isClearSaveAction(event.id)) {
       _handleClearSave();
     }
   }
 
-  void _handleAdvanceDay() {
-    new_time.TimeManager.instance.advanceToNextDay();
+  // void _handleAdvanceDayAndSaveGame() {
+  //   new_time.TimeManager.instance.advanceToNextDay();
+  //   final currentDay = WorldStateManager.instance.currentDay;
+  //   GameLogger.info('[FarmInput] Advanced to day $currentDay');
 
-    final currentDay = WorldStateManager.instance.currentDay;
-    GameLogger.info('[FarmInput] Advanced to day $currentDay');
-
-    _feedbackService.showFloatingText(FarmFeedbackDef.dayAdvanced(currentDay));
-
-    _saveGameAsync();
-  }
+  //   // GameSaveController.instance.saveGame();
+  // }
 
   void _handleClearSave() {
     GameLogger.info('[FarmInput] Clearing game and save...');
@@ -76,29 +74,6 @@ class FarmInputHandler extends GameComponent with PlayerControllerListener {
         })
         .catchError((e) {
           GameLogger.error('[FarmInput] Error clearing game: $e');
-        });
-  }
-
-  void _saveGameAsync() {
-    GameLogger.info('[FarmInput] Saving game...');
-
-    GameSaveController.instance
-        .saveGame()
-        .then((success) {
-          final message = success
-              ? FarmFeedbackDef.kGameSaved
-              : FarmFeedbackDef.kSaveError;
-
-          _feedbackService.showFloatingText(message);
-
-          if (success) {
-            GameLogger.info('[FarmInput] ✅ Game saved');
-          } else {
-            GameLogger.warning('[FarmInput] ❌ Failed to save game');
-          }
-        })
-        .catchError((e) {
-          GameLogger.error('[FarmInput] Error saving game: $e');
         });
   }
 }

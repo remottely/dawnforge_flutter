@@ -30,10 +30,10 @@ final class InputDef {
         actionId == KeyboardSetup.kRunKey;
   }
 
-  static bool isAdvanceDayAction(dynamic actionId) {
-    return actionId == JoystickSetup.kAdvanceDayId ||
-        actionId == KeyboardSetup.kAdvanceDayKey;
-  }
+  // static bool isAdvanceDayAction(dynamic actionId) {
+  //   return actionId == JoystickSetup.kAdvanceDayId ||
+  //       actionId == KeyboardSetup.kAdvanceDayKey;
+  // }
 
   static bool isClearSaveAction(dynamic actionId) {
     return actionId == JoystickSetup.kClearSaveId ||

@@ -52,7 +52,7 @@ final class KeyboardSetup {
 
   static const LogicalKeyboardKey kToggleInputsKey = LogicalKeyboardKey.escape;
 
-  static const LogicalKeyboardKey kAdvanceDayKey = LogicalKeyboardKey.keyN;
+  // static const LogicalKeyboardKey kAdvanceDayKey = LogicalKeyboardKey.keyN;
 
   static const LogicalKeyboardKey kClearSaveKey = LogicalKeyboardKey.keyG;
 
@@ -88,7 +88,7 @@ final class KeyboardSetup {
     kCraftingKey,
     kToggleInputsKey,
 
-    kAdvanceDayKey,
+    // kAdvanceDayKey,
     kClearSaveKey,
     kAddTestItemsKey,
   ];

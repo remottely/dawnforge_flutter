@@ -5,7 +5,6 @@ import 'day_state.dart';
 import 'game_time.dart';
 import 'time_constants.dart';
 import 'time_scheduler.dart';
-import 'weather_type.dart';
 
 /// Central authority for time/day progression.
 class TimeManager {
@@ -13,10 +12,12 @@ class TimeManager {
 
   static final TimeManager instance = TimeManager._();
 
-  final ValueNotifier<GameTime> timeNotifier =
-      ValueNotifier<GameTime>(GameTime(hour: TimeConstants.kStartHour, minute: 0));
-  final ValueNotifier<DayState> dayStateNotifier =
-      ValueNotifier<DayState>(DayState.dayOne());
+  final ValueNotifier<GameTime> timeNotifier = ValueNotifier<GameTime>(
+    GameTime(hour: TimeConstants.kStartHour, minute: 0),
+  );
+  final ValueNotifier<DayState> dayStateNotifier = ValueNotifier<DayState>(
+    DayState.dayOne(),
+  );
 
   final StreamController<GameTime> _tickStream = StreamController.broadcast();
   Stream<GameTime> get tickStream => _tickStream.stream;
@@ -24,7 +25,7 @@ class TimeManager {
   final TimeScheduler scheduler = TimeScheduler();
 
   final List<void Function(DayState previous, DayState current)>
-      _dayChangeListeners = [];
+  _dayChangeListeners = [];
 
   Timer? _timer;
   bool _isRunning = false;
@@ -95,8 +96,8 @@ class TimeManager {
     if (_isPaused) return;
 
     _accumulator += dtSeconds;
-    final secondsPerTick = TimeConstants.kMinutesPerTick *
-        TimeConstants.kRealSecondsPerGameMinute;
+    final secondsPerTick =
+        TimeConstants.kMinutesPerTick * TimeConstants.kRealSecondsPerGameMinute;
     while (_accumulator + 1e-6 >= secondsPerTick) {
       _accumulator -= secondsPerTick;
       _advanceByMinutes(TimeConstants.kMinutesPerTick);
@@ -115,21 +116,25 @@ class TimeManager {
     );
 
     // Detect cutoff (2:00 next day) relative to the start hour (6:00).
-    final totalMinutesPerDay = TimeConstants.kHoursPerDay * 60;
-    final startOffset = TimeConstants.kStartHour * 60;
     final playableMinutes =
-        ((TimeConstants.kHoursPerDay - TimeConstants.kStartHour + TimeConstants.kSleepHour) %
-                TimeConstants.kHoursPerDay) *
-            60; // 20h => 1200 minutes
+        ((TimeConstants.kHoursPerDay -
+                TimeConstants.kStartHour +
+                TimeConstants.kSleepHour) %
+            TimeConstants.kHoursPerDay) *
+        60; // 20h => 1200 minutes
 
     int _elapsedSinceStart(GameTime t) {
-      return (t.totalMinutes - startOffset + totalMinutesPerDay) % totalMinutesPerDay;
+      return (t.totalMinutes -
+              TimeConstants.startOffset +
+              TimeConstants.totalMinutesPerDay) %
+          TimeConstants.totalMinutesPerDay;
     }
 
     final previousElapsed = _elapsedSinceStart(currentTime);
     final newElapsed = _elapsedSinceStart(newTime);
 
-    final crossedCutoff = previousElapsed < playableMinutes && newElapsed >= playableMinutes;
+    final crossedCutoff =
+        previousElapsed < playableMinutes && newElapsed >= playableMinutes;
 
     if (crossedCutoff) {
       advanceToNextDay();

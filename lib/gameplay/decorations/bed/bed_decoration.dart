@@ -72,7 +72,7 @@ class BedDecorationView extends GameDecoration {
     if (result == true) {
       // Stardew Valley behavior: advance day and save game
       _triggerBedUse();
-      _advanceDayAndSaveGame();
+      _handleAdvanceDayAndSaveGame();
     }
   }
 
@@ -82,12 +82,7 @@ class BedDecorationView extends GameDecoration {
     // _playAnimationBedUse();
   }
 
-  void _advanceDayAndSaveGame() {
-    // Advance the day
-    // Import these if not present:
-    // import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
-    // import 'package:darkness_dungeon/gameplay/time/time_manager.dart' as new_time;
-    // import 'package:darkness_dungeon/gameplay/core/modules/save/game_save_controller.dart';
+  void _handleAdvanceDayAndSaveGame() {
     new_time.TimeManager.instance.advanceToNextDay();
     GameSaveController.instance.saveGame();
   }
