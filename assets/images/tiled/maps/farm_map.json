@@ -44195,7 +44195,6 @@
         {
          "draworder":"topdown",
          "id":18,
-         "locked":true,
          "name":"enemies_test",
          "objects":[
                 {
@@ -44621,6 +44620,17 @@
                  "width":16,
                  "x":256,
                  "y":176
+                }, 
+                {
+                 "height":9.96999416384665,
+                 "id":4783,
+                 "name":"spike_trap_decoration",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":10.4632158539531,
+                 "x":637.147783293071,
+                 "y":364.487188976101
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -44784,7 +44794,7 @@
          "y":0
         }],
  "nextlayerid":30,
- "nextobjectid":4783,
+ "nextobjectid":4784,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

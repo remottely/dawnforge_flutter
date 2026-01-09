@@ -586,3 +586,16 @@ MVP focado no **loop essencial de farming**: **plantar → regar → colher → 
 ---
 
 **Nota Final:** Este GDD unificado mantém TODOS os itens dos documentos originais, reorganizados por sistema e priorizados por status. Use como referência única para desenvolvimento do MVP.
+
+---
+
+# Questões pré MVP:
+- substituir spike animation
+
+# Questões pós MVP:
+- marketing
+- reter usuario (mobile)
+- mobile: microtransacoes?
+- como a comunidade irá criar mods para flutter?
+- fix: bug, quando o player morre e esta executando algo ele executa ao renascer
+- toda vez q o player navega entre mapas a vida dele refaz a animacao de perdendo vida, corrigir ou eliminar essa animacao para o MVP e colocar de volta pós mvp?

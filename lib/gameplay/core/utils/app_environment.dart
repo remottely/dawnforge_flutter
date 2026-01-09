@@ -27,5 +27,5 @@ final class AppEnvironment {
   /// STG
 
   /// PRD
-  static const bool kPlayBackgroundMusic = _kIsProduction;
+  static const bool kPlayBackgroundMusic = _kIsProduction || kIsDevToolsMode;
 }

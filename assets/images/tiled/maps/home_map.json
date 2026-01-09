@@ -215,6 +215,7 @@
         {
          "draworder":"topdown",
          "id":8,
+         "locked":true,
          "name":"teleports",
          "objects":[
                 {
@@ -251,6 +252,29 @@
          "y":0
         },
     
+        {
+         "draworder":"topdown",
+         "id":13,
+         "locked":true,
+         "name":"objects",
+         "objects":[
+                {
+                 "height":20.1086209267153,
+                 "id":13,
+                 "name":"bed_decoration",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":22.3429121407947,
+                 "x":20.2804894816444,
+                 "y":29.2176543379623
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
         {
          "class":"collision",
          "draworder":"topdown",
@@ -374,8 +398,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":13,
- "nextobjectid":13,
+ "nextlayerid":14,
+ "nextobjectid":14,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

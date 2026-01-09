@@ -9,6 +9,7 @@ import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_view
 import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_def.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/map/map_data.dart';
 import 'package:darkness_dungeon/gameplay/decorations/barrel/barrel_decoration.dart';
+import 'package:darkness_dungeon/gameplay/decorations/bed/bed_decoration.dart';
 import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_model.dart';
 import 'package:darkness_dungeon/gameplay/decorations/chest/chest_decoration_view.dart';
 import 'package:darkness_dungeon/gameplay/decorations/door/door_decoration.dart';
@@ -65,6 +66,8 @@ final class MapDef {
           position: p.position,
           model: TorchDecorationModel(initialIsOn: false),
         ),
+        'bed_decoration': (p) =>
+            BedDecorationView(position: p.position, size: p.size),
         'door_decoration': (p) =>
             DoorDecorationView(position: p.position, size: p.size),
         'door_key_decoration': (p) =>
@@ -214,7 +217,7 @@ final class MapDef {
       id: kHomeMapId,
       asset: 'tiled/maps/$kHomeMapId.json',
       sensorIds: ['sensor_$kFarmMapId'],
-      backgroundMusic: AudioDef.bgMusicCave,
+      backgroundMusic: AudioDef.bgMusicFarm,
       lightingColor: _kNoneLightingColor,
       backgroundColor: _kLakeBackgroundColor,
       initialPlayerPosition: '3,3',

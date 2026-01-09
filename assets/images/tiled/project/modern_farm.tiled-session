@@ -221,18 +221,17 @@
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/maps/farm_map.json": {
             "expandedObjectLayers": [
-                21,
                 15,
                 5,
                 18,
                 6,
                 16
             ],
-            "scale": 4.84,
-            "selectedLayer": 3,
+            "scale": 5.866,
+            "selectedLayer": 12,
             "viewCenter": {
-                "x": 497.10743801652893,
-                "y": 246.90082644628097
+                "x": 646.4370951244459,
+                "y": 240.53869757927038
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/maps/florest.json": {

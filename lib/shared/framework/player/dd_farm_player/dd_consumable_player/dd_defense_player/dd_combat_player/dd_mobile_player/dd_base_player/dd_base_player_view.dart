@@ -102,7 +102,9 @@ abstract class DDBasePlayerView<
       GameLogger.info('[PlayerInput] input ignored: market open');
       return;
     }
-    GameLogger.info('[PlayerInput] 🎮 Input recebido: ${event.id} | evento: ${event.event} | equipamento: ${_model.equipment}');
+    GameLogger.info(
+      '[PlayerInput] 🎮 Input recebido: ${event.id} | evento: ${event.event} | equipamento: ${_model.equipment}',
+    );
 
     if (isDead) {
       GameLogger.info('[PlayerInput] ✗ Input ignorado: player está morto');
@@ -134,14 +136,15 @@ abstract class DDBasePlayerView<
     setupMovementByJoystick(intensityEnabled: true);
   }
 
+  @override
   void displayDamageVisualEffects(double damage) {
-    showDamage(
-      damage,
-      config: CharacterFxParticlesAnimationsDef.kPlayerShowDamageTextStyle,
-      gravity: CharacterFxParticlesAnimationsDef.kShowDamageGravity,
-      initVelocityVertical:
-          CharacterFxParticlesAnimationsDef.kShowDamageInitVelocityVertical,
-    );
+    // showDamage(
+    //   damage,
+    //   config: CharacterFxParticlesAnimationsDef.kPlayerShowDamageTextStyle,
+    //   gravity: CharacterFxParticlesAnimationsDef.kShowDamageGravity,
+    //   initVelocityVertical:
+    //       CharacterFxParticlesAnimationsDef.kShowDamageInitVelocityVertical,
+    // );
   }
 
   void displayDeathVisualEffects() {
