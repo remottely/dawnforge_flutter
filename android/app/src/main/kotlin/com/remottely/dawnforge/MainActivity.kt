@@ -1,4 +1,4 @@
-package com.remottely.darkness_dungeon
+package com.remottely.dawnforge
 
 import io.flutter.embedding.android.FlutterActivity
 

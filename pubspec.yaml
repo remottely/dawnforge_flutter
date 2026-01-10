@@ -1,13 +1,12 @@
-name: darkness_dungeon
+name: dawnforge
 description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.103.0+1
+version: 1.104.0+1
 
 environment:
-  sdk: ^3.8.1
-  flutter: ^3.32.5
+  sdk: ^3.12.0-14.0.dev
 
 dependencies:
   flutter:
@@ -39,8 +38,8 @@ dev_dependencies:
   test: any
 
   # Linting
-  flutter_lints: ^5.0.0
-  very_good_analysis: ^9.0.0
+  flutter_lints: ^6.0.0
+  very_good_analysis: ^10.0.0
 
   # Testing
   mocktail: ^1.0.4
