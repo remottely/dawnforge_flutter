@@ -1,7 +1,7 @@
-import 'package:darkness_dungeon/gameplay/characters/player/demo/demo_player_model.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_controller.dart';
 
-class DemoPlayerController<M extends DemoPlayerModel>
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_controller.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_model.dart';
+class DemoPlayerController<M extends DDFarmPlayerModel>
     extends DDFarmPlayerController<M> {
   DemoPlayerController({
     required super.model,

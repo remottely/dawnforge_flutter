@@ -1,7 +1,8 @@
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_controller.dart';
 
-class SunnyPlayerController<M extends SunnyPlayerModel>
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_controller.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_model.dart';
+
+class SunnyPlayerController<M extends DDFarmPlayerModel>
     extends DDFarmPlayerController<M> {
   SunnyPlayerController({
     required super.model,

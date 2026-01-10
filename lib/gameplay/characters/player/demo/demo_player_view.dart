@@ -1,12 +1,12 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/demo/demo_player_def.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/demo/demo_player_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/demo/demo_player_model.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_model.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_view.dart';
 
 class DemoPlayerView<
   C extends DemoPlayerController<M>,
-  M extends DemoPlayerModel
+  M extends DDFarmPlayerModel
 >
     extends DDFarmPlayerView<C, M> {
   DemoPlayerView({required super.position, required super.model})
@@ -30,7 +30,7 @@ class DemoPlayerView<
     required bool Function() onExecuteSeed,
     required bool Function() onExecuteHarvest,
   }) {
-    return DemoPlayerController<DemoPlayerModel>(
+    return DemoPlayerController<DDFarmPlayerModel>(
           model: model,
           onDisplayExclamationEmote: onDisplayExclamationEmote,
           onDetectEnemyInLongVisionRadius: onDetectEnemyInLongVisionRadius,

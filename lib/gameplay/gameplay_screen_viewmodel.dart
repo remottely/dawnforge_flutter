@@ -1,19 +1,18 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_def.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_model.dart';
+
 import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/demo/demo_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/demo/demo_player_def.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/demo/demo_player_model.dart';
+
 import 'package:darkness_dungeon/gameplay/characters/player/demo/demo_player_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_def.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_model.dart';
+
 import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_view.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_controller.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_def.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_view.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/combat/shield_defense_input_handler.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/game/game_state_manager.dart';
@@ -28,6 +27,7 @@ import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consu
 import 'package:darkness_dungeon/gameplay/core/modules/save/domain/models/player_save_data.dart';
 import 'package:darkness_dungeon/gameplay/market/market_decoration.dart';
 import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_model.dart';
 import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_def.dart';
 import 'package:flutter/material.dart';
 
@@ -149,17 +149,20 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
 
   DDBasePlayerView buildSunnyPlayer(Vector2 position) {
     // if (isLoadingSave)
-    //   return SunnyPlayerView<SunnyPlayerController, SunnyPlayerModel>(
+    //   return SunnyPlayerView<SunnyPlayerController, DDFarmPlayerModel>(
     //     position: position,
-    //     model: SunnyPlayerModel.fromJson({}),
+    //     model: DDFarmPlayerModel.fromJson({}),
     //   );
     var lastPlayerModel = playerStateManager.lastPlayerModel;
 
-    if (lastPlayerModel is! SunnyPlayerModel) {
+    if (lastPlayerModel is! DDFarmPlayerModel) {
       GameLogger.info(
         '[GameplayViewModel] Creating NEW Sunny model (no saved model found)',
       );
-      lastPlayerModel = SunnyPlayerModel.fromJson({});
+      lastPlayerModel = DDFarmPlayerModel.fromJson(
+        {},
+        SunnyPlayerDef.modelConfig,
+      );
       playerStateManager.lastPlayerModel = lastPlayerModel;
     } else {
       GameLogger.info(
@@ -170,7 +173,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
     playerStateManager.currentPlayerAnimation =
         UISpriteAnimationsDef.loadAnimationSunnyPlayerIdleRight;
 
-    return SunnyPlayerView<SunnyPlayerController, SunnyPlayerModel>(
+    return SunnyPlayerView<SunnyPlayerController, DDFarmPlayerModel>(
       position: position,
       model: lastPlayerModel,
     );
@@ -178,23 +181,26 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
 
   DDBasePlayerView buildCutePlayer(Vector2 position) {
     // if (isLoadingSave)
-    //   return CutePlayerView<CutePlayerController, CutePlayerModel>(
+    //   return CutePlayerView<CutePlayerController, DDFarmPlayerModel>(
     //     position: position,
-    //     model: CutePlayerModel.fromJson({}),
+    //     model: DDFarmPlayerModel.fromJson({}),
     //   );
     var lastPlayerModel = playerStateManager.lastPlayerModel;
     final lastPlayerJson = lastPlayerModel?.toJson() ?? {'coins': 500};
     //  ?? PlayerSaveData.initial(playerType: 'cute').toJson();
 
-    if (lastPlayerModel is! CutePlayerModel) {
-      lastPlayerModel = CutePlayerModel.fromJson(lastPlayerJson);
+    if (lastPlayerModel is! DDFarmPlayerModel) {
+      lastPlayerModel = DDFarmPlayerModel.fromJson(
+        lastPlayerJson,
+        CutePlayerDef.modelConfig,
+      );
       playerStateManager.lastPlayerModel = lastPlayerModel;
     }
 
     playerStateManager.currentPlayerAnimation =
         UISpriteAnimationsDef.loadAnimationCutePlayerIdleRight;
 
-    return CutePlayerView<CutePlayerController, CutePlayerModel>(
+    return CutePlayerView<CutePlayerController, DDFarmPlayerModel>(
       position: position,
       model: lastPlayerModel,
     );
@@ -209,15 +215,18 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
     final lastPlayerJson = lastPlayerModel?.toJson() ?? {'coins': 500};
     //  ?? PlayerSaveData.initial(playerType: 'farmer').toJson();
 
-    if (lastPlayerModel is! FarmerPlayerModel) {
-      lastPlayerModel = FarmerPlayerModel.fromJson(lastPlayerJson);
+    if (lastPlayerModel is! DDFarmPlayerModel) {
+      lastPlayerModel = DDFarmPlayerModel.fromJson(
+        lastPlayerJson,
+        FarmerPlayerDef.modelConfig,
+      );
       playerStateManager.lastPlayerModel = lastPlayerModel;
     }
 
     playerStateManager.currentPlayerAnimation =
         FarmerPlayerDef.loadAnimationIdleDown;
 
-    return FarmerPlayerView<FarmerPlayerController, FarmerPlayerModel>(
+    return FarmerPlayerView<FarmerPlayerController, DDFarmPlayerModel>(
       position: position,
       model: lastPlayerModel,
     );
@@ -232,14 +241,17 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
     final lastPlayerJson = lastPlayerModel?.toJson() ?? {'coins': 500};
     //  ?? PlayerSaveData.initial(playerType: 'demo').toJson();
 
-    if (lastPlayerModel is! DemoPlayerModel) {
-      lastPlayerModel = DemoPlayerModel.fromJson(lastPlayerJson);
+    if (lastPlayerModel is! DDFarmPlayerModel) {
+      lastPlayerModel = DDFarmPlayerModel.fromJson(
+        lastPlayerJson,
+        DemoPlayerDef.modelConfig,
+      );
       playerStateManager.lastPlayerModel = lastPlayerModel;
     }
 
     playerStateManager.currentPlayerAnimation =
         DemoPlayerDef.loadAnimationIdleDown;
-    final player = DemoPlayerView<DemoPlayerController, DemoPlayerModel>(
+    final player = DemoPlayerView<DemoPlayerController, DDFarmPlayerModel>(
       position: position,
       model: lastPlayerModel,
     );

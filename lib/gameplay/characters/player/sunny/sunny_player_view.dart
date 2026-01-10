@@ -1,12 +1,12 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_def.dart';
 import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
+import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_model.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_view.dart';
 
 class SunnyPlayerView<
   C extends SunnyPlayerController<M>,
-  M extends SunnyPlayerModel
+  M extends DDFarmPlayerModel
 >
     extends DDFarmPlayerView<C, M> {
   SunnyPlayerView({required super.position, required super.model})
@@ -30,7 +30,7 @@ class SunnyPlayerView<
     required bool Function() onExecuteSeed,
     required bool Function() onExecuteHarvest,
   }) {
-    return SunnyPlayerController<SunnyPlayerModel>(
+    return SunnyPlayerController<DDFarmPlayerModel>(
           model: model,
           onDisplayExclamationEmote: onDisplayExclamationEmote,
           onDetectEnemyInLongVisionRadius: onDetectEnemyInLongVisionRadius,

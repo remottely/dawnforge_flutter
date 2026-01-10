@@ -1,10 +1,9 @@
 import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_model.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/demo/demo_player_model.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_model.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
+
+
+
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
 import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 
@@ -41,23 +40,23 @@ class PlayerStateManager {
 
     final playerType = data['playerType'] as String?;
 
-    switch (playerType) {
-      case 'farmer':
-        lastPlayerModel = FarmerPlayerModel.fromJson(data);
-        break;
-      case 'cute':
-        lastPlayerModel = CutePlayerModel.fromJson(data);
-        break;
-      case 'sunny':
-        lastPlayerModel = SunnyPlayerModel.fromJson(data);
-        break;
-      case 'demo':
-        lastPlayerModel = DemoPlayerModel.fromJson(data);
-        break;
-      default:
-        lastPlayerModel = DemoPlayerModel.fromJson(data);
-        break;
-    }
+    // switch (playerType) {
+    //   case 'farmer':
+    //     lastPlayerModel = DDFarmPlayerModel.fromJson(data);
+    //     break;
+    //   case 'cute':
+    //     lastPlayerModel = DDFarmPlayerModel.fromJson(data);
+    //     break;
+    //   case 'sunny':
+    //     lastPlayerModel = DDFarmPlayerModel.fromJson(data);
+    //     break;
+    //   case 'demo':
+    //     lastPlayerModel = DDFarmPlayerModel.fromJson(data);
+    //     break;
+    //   default:
+    //     lastPlayerModel = DDFarmPlayerModel.fromJson(data);
+    //     break;
+    // }
 
     GameLogger.info(
       '[PlayerStateManager] fromJson restored type=$playerType, life=${lastPlayerModel?.life}, stamina=${lastPlayerModel?.stamina}, coins=${lastPlayerModel?.coins}, raw=$data',
