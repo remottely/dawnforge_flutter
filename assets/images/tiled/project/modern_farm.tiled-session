@@ -173,7 +173,7 @@
             "scale": 5.2766,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 383.9593677747034,
+                "x": 384.05412576280185,
                 "y": 384.0541257628018
             }
         },
@@ -195,7 +195,7 @@
             "scale": 1.2513,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 383.60105490290096,
+                "x": 383.20147047071043,
                 "y": 384.0006393350915
             }
         },
@@ -223,14 +223,14 @@
             "expandedObjectLayers": [
                 15,
                 16,
-                6,
+                5,
                 18,
-                5
+                6
             ],
             "scale": 5.866,
             "selectedLayer": 12,
             "viewCenter": {
-                "x": 384.0777361063757,
+                "x": 384.16297306512104,
                 "y": 382.9696556426867
             }
         },
@@ -256,14 +256,14 @@
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/maps/forest_map.json": {
             "expandedObjectLayers": [
                 7,
-                6,
-                8
+                8,
+                6
             ],
             "scale": 4.962,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 383.91777509068925,
-                "y": 384.0185409109231
+                "x": 384.01854091092304,
+                "y": 384.01854091092304
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/maps/home_map.json": {
@@ -271,11 +271,11 @@
                 8,
                 9
             ],
-            "scale": 5.8184,
-            "selectedLayer": 10,
+            "scale": 5.81,
+            "selectedLayer": 11,
             "viewCenter": {
-                "x": 60.927402722397915,
-                "y": 74.76282139419773
+                "x": 61.015490533562826,
+                "y": 77.71084337349399
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/maps/lake.json": {
@@ -292,14 +292,14 @@
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/maps/lake_map.json": {
             "expandedObjectLayers": [
                 7,
-                6,
-                5
+                5,
+                6
             ],
             "scale": 7.4607,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 384.01222405404314,
-                "y": 383.9452062138941
+                "x": 383.94520621389415,
+                "y": 383.94520621389415
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/maps/town.json": {
@@ -315,14 +315,14 @@
         },
         "/Users/kevinkobori/Documents/flutter/remottely/darkness_dungeon/assets/images/tiled/maps/town_map.json": {
             "expandedObjectLayers": [
+                12,
                 13,
-                9,
-                12
+                9
             ],
             "scale": 7.1083,
             "selectedLayer": 8,
             "viewCenter": {
-                "x": 384.0580729569658,
+                "x": 384.1284132633682,
                 "y": 383.98773265056343
             }
         },

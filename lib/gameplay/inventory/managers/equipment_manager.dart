@@ -31,7 +31,7 @@ final class EquipmentManager {
 
   // /// In this design, "equipping" means selecting the inventory slot that holds the item.
   // bool equip(Item item, {int? inventorySlotIndex}) {
-  //   developer.log('[EquipmentManager] Selecting slot for ${item.name}');
+  //   GameLogger.info('[EquipmentManager] Selecting slot for ${item.name}');
 
   //   // If caller provided the slot index, just select it.
   //   if (inventorySlotIndex != null) {
@@ -41,7 +41,7 @@ final class EquipmentManager {
   //   // Otherwise, find the first slot containing this item id.
   //   final slot = InventoryManager.instance.findSlotByItemId(item.id);
   //   if (slot == null) {
-  //     developer.log('[EquipmentManager] Item not in inventory');
+  //     GameLogger.warning('[EquipmentManager] Item not in inventory');
   //     return false;
   //   }
   //   return selectSlotIndex(slot.index);

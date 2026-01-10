@@ -25,14 +25,14 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
   String? _lastRequestedMusic;
   StreamSubscription<MapTransitionRequest>? _transitionSubscription;
   
-  // ✅ Usamos BuildContext do MapNavigator para navegação
+  // Usamos BuildContext do MapNavigator para navegação
   BuildContext? _mapNavigatorContext;
 
   @override
   void initState() {
     super.initState();
     
-    // ✅ Escuta solicitações de transição de mapa
+    // Escuta solicitações de transição de mapa
     _transitionSubscription = MapTransitionController.instance.onTransitionRequested.listen(
       _handleMapTransition,
     );
@@ -44,10 +44,10 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
     super.dispose();
   }
 
-  // ✅ Handler para transição de mapa
+  // Handler para transição de mapa
   void _handleMapTransition(MapTransitionRequest request) {
     if (_mapNavigatorContext != null) {
-      // ✅ Usa o contexto do MapNavigator para navegar
+      // Usa o contexto do MapNavigator para navegar
       MapNavigator.of(_mapNavigatorContext!).toNamed(
         request.mapId,
         arguments: MapArguments(
@@ -71,7 +71,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
       maps: MapManager.allMaps,
       initialMap: MapDef.kHomeMapId,
       builder: (context, arguments, mapItem) {
-        // ✅ Salva o contexto do MapNavigator
+        // Salva o contexto do MapNavigator
         _mapNavigatorContext = context;
         
         final mapLightingColor = ColorHelper.fromHex(

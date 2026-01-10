@@ -1,5 +1,4 @@
 import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
-import 'dart:developer' as developer;
 import 'package:bonfire/bonfire.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/hud/tutorial_inputs/tutorial_inputs_state.dart';
 import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';

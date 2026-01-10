@@ -159,7 +159,7 @@ class TimeManager {
 
   void _teleportPlayerToHome() {
     try {
-      // ✅ Solicita transição de mapa via controller
+      // Solicita transição de mapa via controller
       MapTransitionController.instance.requestTransition(
         mapId: MapDef.kHomeMapId,
         playerPosition: Vector2(5, 5), // Posição inicial em tiles

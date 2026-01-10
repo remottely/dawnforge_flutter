@@ -47,7 +47,6 @@ final class MapDef {
   static Map<String, ObjectBuilder> createEntityBuilder() =>
       <String, ObjectBuilder>{
         'market': (p) => MarketDecoration(position: p.position, size: p.size),
-        // 'market': (p) => MarketDecoration(position: p.position),
         'boss_enemy': (p) => BossEnemyView(position: p.position),
         'mini_boss_enemy': (p) => MiniBossEnemyView(position: p.position),
         'goblin_enemy': (p) => GoblinEnemyView(position: p.position),
