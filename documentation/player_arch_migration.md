@@ -38,15 +38,15 @@ abstract class DDMinePlayerView<
 ...
 
 exemplo completo de uma das camadas:
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_def.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_controller.dart';
+import 'package:dawnforge/gameplay/core/modules/input_actions/input_def.dart';
+import 'package:dawnforge/gameplay/core/modules/overlay/overlay_message_def.dart';
+import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_controller.dart';
 
 abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
     extends DDMobilePlayerController<M> {
@@ -164,10 +164,10 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
   }
 }
 
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_config.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_config.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_model.dart';
+import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_config.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_config.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_model.dart';
 import 'package:flutter/foundation.dart';
 
 class DDCombatPlayerModel extends DDMobilePlayerModel {
@@ -203,21 +203,21 @@ class DDCombatPlayerModel extends DDMobilePlayerModel {
 import 'dart:async' as async;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fireball_attack_def.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fx_particles_animations_def.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/offset_helper.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_fx.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/player_primary_attack_def.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_def.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_config.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_controller.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_view.dart';
-import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
-import 'package:darkness_dungeon/shared/framework/utils/dd_character_action_sprite_animation_helper.dart';
+import 'package:dawnforge/gameplay/core/modules/combat/attacks/character_fireball_attack_def.dart';
+import 'package:dawnforge/gameplay/core/modules/combat/attacks/character_fx_particles_animations_def.dart';
+import 'package:dawnforge/gameplay/core/utils/offset_helper.dart';
+import 'package:dawnforge/gameplay/core/modules/audio/audio_manager.dart';
+import 'package:dawnforge/gameplay/core/modules/camera/camera_fx.dart';
+import 'package:dawnforge/gameplay/core/modules/combat/attacks/player_primary_attack_def.dart';
+import 'package:dawnforge/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
+import 'package:dawnforge/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_def.dart';
+import 'package:dawnforge/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_config.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_controller.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_view.dart';
+import 'package:dawnforge/shared/framework/utils/dd_animation_directional.dart';
+import 'package:dawnforge/shared/framework/utils/dd_character_action_sprite_animation_helper.dart';
 import 'package:flutter/foundation.dart';
 
 abstract class DDCombatPlayerView<
@@ -474,15 +474,15 @@ abstract class DDCombatPlayerView<
   }
 }
 
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_def.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_controller.dart';
+import 'package:dawnforge/gameplay/core/modules/input_actions/input_def.dart';
+import 'package:dawnforge/gameplay/core/modules/overlay/overlay_message_def.dart';
+import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_controller.dart';
 
 abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
     extends DDMobilePlayerController<M> {
@@ -601,10 +601,10 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
 }
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/demo/demo_player_def.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/demo/demo_player_controller.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_model.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_view.dart';
+import 'package:dawnforge/gameplay/characters/player/demo/demo_player_def.dart';
+import 'package:dawnforge/gameplay/characters/player/demo/demo_player_controller.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_model.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_view.dart';
 
 class DemoPlayerView<
   C extends DemoPlayerController<M>,
@@ -649,8 +649,8 @@ class DemoPlayerView<
 }
 
 
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_controller.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_model.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_controller.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_model.dart';
 class DemoPlayerController<M extends DDFarmPlayerModel>
     extends DDFarmPlayerController<M> {
   DemoPlayerController({
@@ -670,15 +670,15 @@ class DemoPlayerController<M extends DDFarmPlayerModel>
 // ignore_for_file: unused_field
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/character_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/lightning_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_config.dart';
-import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
-import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
-import 'package:darkness_dungeon/shared/utils/sprite_animation_constants.dart';
+import 'package:dawnforge/gameplay/characters/character_constants.dart';
+import 'package:dawnforge/gameplay/core/modules/game/lightning_constants.dart';
+import 'package:dawnforge/gameplay/core/modules/game/tile_constants.dart';
+import 'package:dawnforge/gameplay/core/utils/app_environment.dart';
+import 'package:dawnforge/gameplay/core/utils/hitbox_utils.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_config.dart';
+import 'package:dawnforge/shared/framework/utils/dd_animation_directional.dart';
+import 'package:dawnforge/shared/utils/sprite_animation_config_helper.dart';
+import 'package:dawnforge/shared/utils/sprite_animation_constants.dart';
 
 final class DemoPlayerDef {
   DemoPlayerDef._();
