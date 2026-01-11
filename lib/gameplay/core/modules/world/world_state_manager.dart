@@ -36,7 +36,9 @@ final class WorldStateManager {
 
   void setTimeOfDay(TimeOfDay time) {
     if (_timeOfDay != time) {
-      GameLogger.info('[WorldStateManager] Time of day changed: $_timeOfDay -> $time');
+      GameLogger.info(
+        '[WorldStateManager] Time of day changed: $_timeOfDay -> $time',
+      );
       _timeOfDay = time;
     }
   }
@@ -49,7 +51,9 @@ final class WorldStateManager {
     GameLogger.info('[WorldStateManager] Advanced to day $_currentDay');
 
     if (previousSeason != _currentSeason) {
-      GameLogger.info('[WorldStateManager] Season changed: $previousSeason -> $_currentSeason');
+      GameLogger.info(
+        '[WorldStateManager] Season changed: $previousSeason -> $_currentSeason',
+      );
     }
   }
 
@@ -69,7 +73,9 @@ final class WorldStateManager {
 
   void unloadInactiveMaps() {
     if (_currentMapId == null) {
-      GameLogger.info('[WorldStateManager] No current map, clearing all cached maps');
+      GameLogger.info(
+        '[WorldStateManager] No current map, clearing all cached maps',
+      );
       _activeMapStates.clear();
       return;
     }
@@ -79,7 +85,9 @@ final class WorldStateManager {
     final removedCount = initialCount - _activeMapStates.length;
 
     if (removedCount > 0) {
-      GameLogger.info('[WorldStateManager] Unloaded $removedCount inactive map(s)');
+      GameLogger.info(
+        '[WorldStateManager] Unloaded $removedCount inactive map(s)',
+      );
     }
   }
 
@@ -115,7 +123,9 @@ final class WorldStateManager {
       }
     }
 
-    GameLogger.info('[WorldStateManager] Loaded: Day $_currentDay, Season: $_currentSeason, Maps: ${_activeMapStates.length}');
+    GameLogger.info(
+      '[WorldStateManager] Loaded: Day $_currentDay, Season: $_currentSeason, Maps: ${_activeMapStates.length}',
+    );
   }
 
   void reset() {

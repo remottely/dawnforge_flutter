@@ -1,4 +1,3 @@
-
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
 import 'package:dawnforge/gameplay/inventory/entities/hand_item.dart';
@@ -19,9 +18,13 @@ class EquipmentState {
   void updateEquippedItem(HandItem? item) {
     try {
       equippedItem.value = item;
-      GameLogger.info('[EquipmentState] Updated equipped item: ${item?.name ?? "empty"}');
+      GameLogger.info(
+        '[EquipmentState] Updated equipped item: ${item?.name ?? "empty"}',
+      );
     } catch (e, stack) {
-      GameLogger.error('[EquipmentState] Error updating equipped item: $e\n$stack');
+      GameLogger.error(
+        '[EquipmentState] Error updating equipped item: $e\n$stack',
+      );
     }
   }
 

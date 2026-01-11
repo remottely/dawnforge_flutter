@@ -16,12 +16,14 @@ class MapTransitionRequest {
 
 class MapTransitionController {
   MapTransitionController._();
-  
+
   static final MapTransitionController instance = MapTransitionController._();
 
-  final _transitionController = StreamController<MapTransitionRequest>.broadcast();
-  
-  Stream<MapTransitionRequest> get onTransitionRequested => _transitionController.stream;
+  final _transitionController =
+      StreamController<MapTransitionRequest>.broadcast();
+
+  Stream<MapTransitionRequest> get onTransitionRequested =>
+      _transitionController.stream;
 
   void requestTransition({
     required String mapId,

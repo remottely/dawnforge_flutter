@@ -34,11 +34,15 @@ class SynchronizedAttackController {
     void Function() attackAction, {
     void Function()? visualEffectCallback,
   }) {
-    GameLogger.info('[SyncAttackController] execute chamado: type=$attackType, canAttack=${_model.canAttack}');
+    GameLogger.info(
+      '[SyncAttackController] execute chamado: type=$attackType, canAttack=${_model.canAttack}',
+    );
 
     if (!_model.canAttack) {
       final remaining = getRemainingCooldown();
-      GameLogger.warning('[SyncAttackController] ✗ Attack bloqueado! Cooldown restante: ${remaining.inMilliseconds}ms');
+      GameLogger.warning(
+        '[SyncAttackController] ✗ Attack bloqueado! Cooldown restante: ${remaining.inMilliseconds}ms',
+      );
       _onAttackBlocked?.call(attackType, remaining);
       return null;
     }
@@ -61,13 +65,17 @@ class SynchronizedAttackController {
     _model.lastAttackInfo = info;
     _model.startCooldown(durations.cooldown);
 
-    GameLogger.info('[SyncAttackController] Cooldown iniciado: ${durations.cooldown.inMilliseconds}ms');
+    GameLogger.info(
+      '[SyncAttackController] Cooldown iniciado: ${durations.cooldown.inMilliseconds}ms',
+    );
 
     _cooldownTimer?.cancel();
     _cooldownTimer = async.Timer(durations.cooldown, () {
       _model.canAttack = true;
       _cooldownTimer = null;
-      GameLogger.info('[SyncAttackController] ✓ Cooldown finalizado, pronto para novo attack');
+      GameLogger.info(
+        '[SyncAttackController] ✓ Cooldown finalizado, pronto para novo attack',
+      );
     });
 
     attackAction();

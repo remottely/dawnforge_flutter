@@ -34,4 +34,3 @@ abstract class DDInputReceiverDecorationView extends GameDecoration
     super.onRemove();
   }
 }
-

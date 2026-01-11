@@ -21,7 +21,9 @@ final class AppEnvironment {
 
   /// DEV
   static const bool kShowCollisionArea = kIsDebugMode;
-  static const double kGameSpeedMultiplier = kIsDebugMode ? 4.0 : 1.0; // TODO(Kevin): NOW - put it back: kIsDebugMode
+  static const double kGameSpeedMultiplier = kIsDebugMode
+      ? 4.0
+      : 1.0; // TODO(Kevin): NOW - put it back: kIsDebugMode
   // static const double kGameSpeedMultiplier = kIsDevToolsMode ? 4.0 : 1.0;
 
   /// STG

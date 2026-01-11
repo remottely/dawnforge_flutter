@@ -19,10 +19,7 @@ class EquipItemUseCase {
   }
 
   /// Equip an item entity directly
-  bool equipItemEntity(
-    HandItem item,
-    int? inventorySlotIndex,
-  ) {
+  bool equipItemEntity(HandItem item, int? inventorySlotIndex) {
     if (inventorySlotIndex != null) {
       return _equipmentManager.selectSlotIndex(inventorySlotIndex);
     }

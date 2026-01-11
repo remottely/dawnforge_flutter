@@ -7,8 +7,10 @@ import 'package:dawnforge/shared/utils/sprite_animation_config_helper.dart';
 final class GoblinEnemyDef {
   GoblinEnemyDef._();
 
-  static const double fixedLifeBarWidth = CharacterConstants.fixedLifeBarWidthMedium;
-  static final Vector2 fixedLifeBarOffset = CharacterConstants.fixedLifeBarOffsetNone;
+  static const double fixedLifeBarWidth =
+      CharacterConstants.fixedLifeBarWidthMedium;
+  static final Vector2 fixedLifeBarOffset =
+      CharacterConstants.fixedLifeBarOffsetNone;
 
   static const double kPrimaryAttackVisionRadius =
       CharacterConstants.kVisionRadiusLarge;

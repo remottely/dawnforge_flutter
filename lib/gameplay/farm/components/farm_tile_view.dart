@@ -1,4 +1,3 @@
-
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
 import 'dart:ui';
 
@@ -70,7 +69,9 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
     final existing = _instances[key];
     if (existing != null && existing != this && !existing.isRemoved) {
       // Duplicate view for same tile; remove this instance to avoid double render.
-      GameLogger.warning('[FarmTileView] 🚫 duplicate instance for ($tileX,$tileY), removing self');
+      GameLogger.warning(
+        '[FarmTileView] 🚫 duplicate instance for ($tileX,$tileY), removing self',
+      );
       removeFromParent();
       return;
     }
@@ -92,16 +93,20 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
       priority: 0,
       paint: Paint()
         ..filterQuality = FilterQuality.none
-        ..isAntiAlias = false
-        // ..isDither = false,
+        ..isAntiAlias = false,
+      // ..isDither = false,
     );
     add(_soilSprite!);
 
-    GameLogger.info('[FarmTileView] 🟤 Soil sprite loaded from texture atlas: ${_farmObject.soilState.name}');
+    GameLogger.info(
+      '[FarmTileView] 🟤 Soil sprite loaded from texture atlas: ${_farmObject.soilState.name}',
+    );
 
     if (_farmObject.crop != null) {
       await _createCropDecoration();
-      GameLogger.info('[FarmTileView] 🌱 Crop decoration loaded: ${_farmObject.crop!.id} (${_farmObject.crop!.stage.name}) with Y-sorting');
+      GameLogger.info(
+        '[FarmTileView] 🌱 Crop decoration loaded: ${_farmObject.crop!.id} (${_farmObject.crop!.stage.name}) with Y-sorting',
+      );
     }
 
     _lastRenderedSoilState = _farmObject.soilState;
@@ -135,8 +140,8 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
       _cropDecoration!.paint = Paint()
         ..filterQuality = FilterQuality.none
         ..isAntiAlias = false
-        // ..isDither = false
-        ;
+      // ..isDither = false
+      ;
 
       if (crop.stage == CropStageType.dead) {
         _cropDecoration!.opacity = 0.5;
@@ -144,7 +149,9 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
 
       gameRef.add(_cropDecoration!);
 
-      GameLogger.info('[FarmTileView] 🌱 Crop with Y-sorting: ${crop.id} at ($cropPosition) with size ($cropSize)');
+      GameLogger.info(
+        '[FarmTileView] 🌱 Crop with Y-sorting: ${crop.id} at ($cropPosition) with size ($cropSize)',
+      );
     } else {
       // Estágio inicial: renderiza no chão (sempre abaixo do player)
       _cropSpriteGround = SpriteComponent(
@@ -155,8 +162,8 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
         priority: 1,
         paint: Paint()
           ..filterQuality = FilterQuality.none
-          ..isAntiAlias = false
-          // ..isDither = false,
+          ..isAntiAlias = false,
+        // ..isDither = false,
       );
 
       if (crop.stage == CropStageType.dead) {
@@ -165,7 +172,9 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
 
       add(_cropSpriteGround!);
 
-      GameLogger.info('[FarmTileView] 🌱 Crop on ground: ${crop.id} with size ($cropSize), always below player');
+      GameLogger.info(
+        '[FarmTileView] 🌱 Crop on ground: ${crop.id} with size ($cropSize), always below player',
+      );
     }
   }
 
@@ -184,13 +193,16 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
     final currentTile = getIt<FarmManager>().getTile(tileX, tileY);
     if (currentTile != null) {
       final currentFarmObject = currentTile.object as FarmObject?;
-      final currentCropKey =
-          currentFarmObject != null ? _buildCropKey(currentFarmObject) : null;
+      final currentCropKey = currentFarmObject != null
+          ? _buildCropKey(currentFarmObject)
+          : null;
       if (currentFarmObject != null &&
           (currentFarmObject.soilState != _lastRenderedSoilState ||
-          currentCropKey != _lastRenderedCropKey)) {
+              currentCropKey != _lastRenderedCropKey)) {
         if (_kVerboseLogs) {
-          GameLogger.info('[FarmTileView] 🧭 change detected at ($tileX,$tileY) | soil ${_lastRenderedSoilState?.name ?? "null"} -> ${currentFarmObject.soilState.name}, crop ${_lastRenderedCropKey ?? "null"} -> ${currentCropKey ?? "null"} stage ${currentFarmObject.crop?.stage.name ?? "none"}');
+          GameLogger.info(
+            '[FarmTileView] 🧭 change detected at ($tileX,$tileY) | soil ${_lastRenderedSoilState?.name ?? "null"} -> ${currentFarmObject.soilState.name}, crop ${_lastRenderedCropKey ?? "null"} -> ${currentCropKey ?? "null"} stage ${currentFarmObject.crop?.stage.name ?? "none"}',
+          );
         }
         updateTile(currentTile);
       }
@@ -209,14 +221,18 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
     final sprite = await _loadSoilSpriteFromSheet();
     _soilSprite!.sprite = sprite;
 
-    GameLogger.info('[FarmTileView] 🟤 Soil sprite updated: ${_farmObject.soilState.name}');
+    GameLogger.info(
+      '[FarmTileView] 🟤 Soil sprite updated: ${_farmObject.soilState.name}',
+    );
   }
 
   Future<void> _updateCropDecoration() async {
     // Remove decorações existentes
     if (_cropDecoration != null) {
       if (_kVerboseLogs) {
-        GameLogger.info('[FarmTileView] 🗑️ removing Y-sorted crop decoration at ($tileX,$tileY) for ${_farmObject.crop?.id ?? "null"}');
+        GameLogger.info(
+          '[FarmTileView] 🗑️ removing Y-sorted crop decoration at ($tileX,$tileY) for ${_farmObject.crop?.id ?? "null"}',
+        );
       }
       _cropDecoration!.removeFromParent();
       _cropDecoration = null;
@@ -224,7 +240,9 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
 
     if (_cropSpriteGround != null) {
       if (_kVerboseLogs) {
-        GameLogger.info('[FarmTileView] 🗑️ removing ground crop sprite at ($tileX,$tileY) for ${_farmObject.crop?.id ?? "null"}');
+        GameLogger.info(
+          '[FarmTileView] 🗑️ removing ground crop sprite at ($tileX,$tileY) for ${_farmObject.crop?.id ?? "null"}',
+        );
       }
       _cropSpriteGround!.removeFromParent();
       _cropSpriteGround = null;
@@ -238,7 +256,9 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
     await _createCropDecoration();
 
     if (_kVerboseLogs) {
-      GameLogger.info('[FarmTileView] 🌱 Crop decoration updated: ${_farmObject.crop!.id} (${_farmObject.crop!.stage.name})');
+      GameLogger.info(
+        '[FarmTileView] 🌱 Crop decoration updated: ${_farmObject.crop!.id} (${_farmObject.crop!.stage.name})',
+      );
     }
   }
 
@@ -256,19 +276,21 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
       );
     }
 
-    final sprite = await SpriteAnimationConfigHelper
-        .loadSpriteFromTextureAtlasModernFarm(
-      assetPath: position.spritesheetPath,
-      spriteSize: Vector2(
-        position.spriteWidth.toDouble(),
-        position.spriteHeight.toDouble(),
-      ),
-      frameIndex: position.spriteColumnIndex,
-      rowIndex: position.spriteRowIndex,
-      skipFirstFrames: 0,
-    );
+    final sprite =
+        await SpriteAnimationConfigHelper.loadSpriteFromTextureAtlasModernFarm(
+          assetPath: position.spritesheetPath,
+          spriteSize: Vector2(
+            position.spriteWidth.toDouble(),
+            position.spriteHeight.toDouble(),
+          ),
+          frameIndex: position.spriteColumnIndex,
+          rowIndex: position.spriteRowIndex,
+          skipFirstFrames: 0,
+        );
 
-    GameLogger.info('[FarmTileView] 🟤 Soil sprite loaded from sheet: ${position.spritesheetPath} (row: ${position.spriteRowIndex}, col: ${position.spriteColumnIndex}, state: $stateName, size: ${position.spriteWidth}x${position.spriteHeight})');
+    GameLogger.info(
+      '[FarmTileView] 🟤 Soil sprite loaded from sheet: ${position.spritesheetPath} (row: ${position.spriteRowIndex}, col: ${position.spriteColumnIndex}, state: $stateName, size: ${position.spriteWidth}x${position.spriteHeight})',
+    );
 
     return sprite;
   }
@@ -277,18 +299,21 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
     final crop = _farmObject.crop!;
     final frameIndex = _getFrameIndexForStage(crop.stage, crop.framesCount);
 
-    final sprite = await SpriteAnimationConfigHelper.loadSpriteFromTextureAtlasModernFarm(
-      assetPath: crop.spritesheetPath,
-      spriteSize: Vector2(
-        crop.spriteWidth.toDouble(),
-        crop.spriteHeight.toDouble(),
-      ),
-      frameIndex: frameIndex,
-      rowIndex: crop.spriteRowIndex,
-      skipFirstFrames: crop.skipFirstFrames,
-    );
+    final sprite =
+        await SpriteAnimationConfigHelper.loadSpriteFromTextureAtlasModernFarm(
+          assetPath: crop.spritesheetPath,
+          spriteSize: Vector2(
+            crop.spriteWidth.toDouble(),
+            crop.spriteHeight.toDouble(),
+          ),
+          frameIndex: frameIndex,
+          rowIndex: crop.spriteRowIndex,
+          skipFirstFrames: crop.skipFirstFrames,
+        );
 
-    GameLogger.info('[FarmTileView] 🌱 Crop sprite loaded from sheet: ${crop.spritesheetPath} (row: ${crop.spriteRowIndex}, stage: ${crop.stage.name}, frame: $frameIndex/${crop.framesCount}, skipFirstFrames: ${crop.skipFirstFrames}, size: ${crop.spriteWidth}x${crop.spriteHeight})');
+    GameLogger.info(
+      '[FarmTileView] 🌱 Crop sprite loaded from sheet: ${crop.spritesheetPath} (row: ${crop.spriteRowIndex}, stage: ${crop.stage.name}, frame: $frameIndex/${crop.framesCount}, skipFirstFrames: ${crop.skipFirstFrames}, size: ${crop.spriteWidth}x${crop.spriteHeight})',
+    );
 
     return sprite;
   }
@@ -346,7 +371,9 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
 
   Future<void> updateTile(GridTile newTile) async {
     farmTile = newTile;
-    GameLogger.info('[FarmTileView] 🔄 updateTile at ($tileX,$tileY) -> soil:${_farmObject.soilState.name} crop:${_farmObject.crop?.id ?? "null"} stage:${_farmObject.crop?.stage.name ?? "none"}');
+    GameLogger.info(
+      '[FarmTileView] 🔄 updateTile at ($tileX,$tileY) -> soil:${_farmObject.soilState.name} crop:${_farmObject.crop?.id ?? "null"} stage:${_farmObject.crop?.stage.name ?? "none"}',
+    );
     await _updateSpritesIfNeeded();
   }
 

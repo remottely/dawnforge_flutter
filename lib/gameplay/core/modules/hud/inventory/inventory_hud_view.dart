@@ -45,7 +45,9 @@ class InventoryHUDView extends InterfaceComponent {
   void _updatePosition() {
     // Guard: only update position if game is mounted AND has valid size
     if (!hasGameRef) {
-      GameLogger.info('[InventoryHUDView] Cannot update position: gameRef not available');
+      GameLogger.info(
+        '[InventoryHUDView] Cannot update position: gameRef not available',
+      );
       return;
     }
 
@@ -53,7 +55,9 @@ class InventoryHUDView extends InterfaceComponent {
 
     // Guard: gameRef.size can be (0,0) during initialization, which causes NaN/Infinity errors
     if (gameSize.x <= 0 || gameSize.y <= 0) {
-      GameLogger.info('[InventoryHUDView] Cannot update position: invalid game size $gameSize');
+      GameLogger.info(
+        '[InventoryHUDView] Cannot update position: invalid game size $gameSize',
+      );
       return;
     }
 
@@ -63,9 +67,13 @@ class InventoryHUDView extends InterfaceComponent {
         (gameSize.x - size.x) / 2, // Center horizontally
         gameSize.y - size.y - 20, // Bottom with 20px margin
       );
-      GameLogger.info('[InventoryHUDView] Position updated to $position (gameSize: $gameSize)');
+      GameLogger.info(
+        '[InventoryHUDView] Position updated to $position (gameSize: $gameSize)',
+      );
     } catch (e, stack) {
-      GameLogger.error('[InventoryHUDView] Error updating position: $e\n$stack');
+      GameLogger.error(
+        '[InventoryHUDView] Error updating position: $e\n$stack',
+      );
     }
   }
 
@@ -104,7 +112,12 @@ class InventoryHUDView extends InterfaceComponent {
     }
   }
 
-  void _drawSlot(Canvas canvas, Offset position, HandItem? item, int? quantity) {
+  void _drawSlot(
+    Canvas canvas,
+    Offset position,
+    HandItem? item,
+    int? quantity,
+  ) {
     final slotRect = Rect.fromLTWH(
       position.dx,
       position.dy,
@@ -162,7 +175,7 @@ class InventoryHUDView extends InterfaceComponent {
           fontSize: 10,
         );
       }
-    
+
       if (quantity != null && quantity > 1) {
         _drawText(
           canvas,

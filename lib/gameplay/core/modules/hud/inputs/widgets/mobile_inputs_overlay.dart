@@ -32,16 +32,18 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
     final buttonSize = data.isMobileScreen ? 50.0 : 60.0;
     final utilityButtonSize = data.isMobileScreen ? 40.0 : 50.0;
     final spacing = data.spacing;
-    
+
     // Estima altura necessária (3 action buttons + utility buttons)
     final utilityButtonsCount = _countUtilityButtons();
-    final estimatedHeight = 
-      (buttonSize * 3) + // Action buttons
-      (spacing * 2) + // Spacing entre action buttons
-      (utilityButtonSize * utilityButtonsCount) + // Utility buttons
-      (spacing / 2 * (utilityButtonsCount - 1)) + // Spacing entre utility buttons
-      (data.margin * 2); // Margens
-    
+    final estimatedHeight =
+        (buttonSize * 3) + // Action buttons
+        (spacing * 2) + // Spacing entre action buttons
+        (utilityButtonSize * utilityButtonsCount) + // Utility buttons
+        (spacing /
+            2 *
+            (utilityButtonsCount - 1)) + // Spacing entre utility buttons
+        (data.margin * 2); // Margens
+
     final screenHeight = MediaQuery.of(context).size.height;
     final needsScroll = estimatedHeight > screenHeight * 0.8;
 
@@ -49,27 +51,25 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
     return Padding(
       padding: EdgeInsets.all(data.margin),
       child: needsScroll
-        ? ConstrainedBox(
-            constraints: BoxConstraints(
-              maxHeight: screenHeight * 0.8,
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ..._buildUtilityButtons(context, data),
-                  ..._buildActionButtons(context, data),
-                ],
+          ? ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: screenHeight * 0.8),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ..._buildUtilityButtons(context, data),
+                    ..._buildActionButtons(context, data),
+                  ],
+                ),
               ),
+            )
+          : Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ..._buildUtilityButtons(context, data),
+                ..._buildActionButtons(context, data),
+              ],
             ),
-          )
-        : Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ..._buildUtilityButtons(context, data),
-              ..._buildActionButtons(context, data),
-            ],
-          ),
     );
   }
 

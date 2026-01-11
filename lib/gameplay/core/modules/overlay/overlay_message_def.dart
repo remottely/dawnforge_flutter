@@ -17,7 +17,8 @@ final class OverlayMessageDef {
   static const Color kSuccessColor = Colors.green;
 
   /// Common messages
-  static const String kNoStaminaMessage = 'Sem Stamina! Recarregue ficando perto de uma tocha!';
+  static const String kNoStaminaMessage =
+      'Sem Stamina! Recarregue ficando perto de uma tocha!';
   static const String kNoKeysMessage = 'Você não tem chaves!';
   static const String kCannotDigMessage = 'Não é possível cavar aqui!';
   static const String kCannotWaterMessage = 'Não é possível regar aqui!';

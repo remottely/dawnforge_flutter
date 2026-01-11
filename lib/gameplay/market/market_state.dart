@@ -23,5 +23,6 @@ class MarketState {
     isOpen.value = false;
     activePlayer.value = null;
   }
+
   void toggle() => isOpen.value = !isOpen.value;
 }

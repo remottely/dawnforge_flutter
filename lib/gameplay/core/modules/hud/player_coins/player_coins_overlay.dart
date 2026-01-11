@@ -86,21 +86,13 @@ class _PlayerCoinsOverlayState extends State<PlayerCoinsOverlay> {
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Colors.white.withOpacity(0.5), width: 1.5),
         boxShadow: const [
-          BoxShadow(
-            color: Colors.black54,
-            blurRadius: 6,
-            offset: Offset(0, 3),
-          ),
+          BoxShadow(color: Colors.black54, blurRadius: 6, offset: Offset(0, 3)),
         ],
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(
-            Icons.monetization_on,
-            color: Color(0xFFFFD54F),
-            size: 18,
-          ),
+          const Icon(Icons.monetization_on, color: Color(0xFFFFD54F), size: 18),
           const SizedBox(width: 6),
           Text(
             _coins.toString(),

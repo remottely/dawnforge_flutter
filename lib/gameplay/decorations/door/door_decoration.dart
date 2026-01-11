@@ -45,8 +45,7 @@ class DoorDecorationView extends GameDecoration {
   }
 
   int? _getSelectedKeySlotIndex() {
-    final selectedIndex =
-        getIt<EquipmentManager>().currentMainHandSlotIndex;
+    final selectedIndex = getIt<EquipmentManager>().currentMainHandSlotIndex;
     final slot = getIt<InventoryManager>().getSlotByIndex(selectedIndex);
 
     if (slot == null || slot.item == null) return null;
@@ -140,4 +139,3 @@ class DoorDecorationView extends GameDecoration {
     removeFromParent();
   }
 }
-

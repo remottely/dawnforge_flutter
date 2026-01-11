@@ -38,10 +38,14 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
       player.controller.model.equipment == HandItemId.staff;
 
   void _handleExecutePrimaryAttack() {
-    GameLogger.info('[CombatController] _handleExecutePrimaryAttack: stamina=${model.stamina}, canExecute=${model.canExecutePrimaryAttack}');
+    GameLogger.info(
+      '[CombatController] _handleExecutePrimaryAttack: stamina=${model.stamina}, canExecute=${model.canExecutePrimaryAttack}',
+    );
 
     if (!model.canExecutePrimaryAttack) {
-      GameLogger.warning('[CombatController] ✗ Não pode executar primary attack');
+      GameLogger.warning(
+        '[CombatController] ✗ Não pode executar primary attack',
+      );
       // Só mostra "Sem Stamina" se realmente for problema de stamina
       if (model.stamina < model.config.primaryAttackStaminaCost) {
         OverlayMessageDef.showNoStamina();
@@ -55,7 +59,9 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
       model.config.primaryAttackDamage,
     );
 
-    GameLogger.info('[CombatController] Primary attack wasExecuted: $wasExecuted');
+    GameLogger.info(
+      '[CombatController] Primary attack wasExecuted: $wasExecuted',
+    );
 
     if (!wasExecuted) {
       endStaminaConsumingAction();
@@ -68,10 +74,14 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
   }
 
   void _handleExecuteRangedAttack() {
-    GameLogger.info('[CombatController] _handleExecuteRangedAttack: stamina=${model.stamina}, canExecute=${model.canExecuteRangedAttack}');
+    GameLogger.info(
+      '[CombatController] _handleExecuteRangedAttack: stamina=${model.stamina}, canExecute=${model.canExecuteRangedAttack}',
+    );
 
     if (!model.canExecuteRangedAttack) {
-      GameLogger.warning('[CombatController] ✗ Não pode executar ranged attack');
+      GameLogger.warning(
+        '[CombatController] ✗ Não pode executar ranged attack',
+      );
       // Só mostra "Sem Stamina" se realmente for problema de stamina
       if (model.stamina < model.config.rangedAttackStaminaCost) {
         OverlayMessageDef.showNoStamina();
@@ -85,7 +95,9 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
       model.config.rangedAttackDamage,
     );
 
-    GameLogger.info('[CombatController] Ranged attack wasExecuted: $wasExecuted');
+    GameLogger.info(
+      '[CombatController] Ranged attack wasExecuted: $wasExecuted',
+    );
 
     if (!wasExecuted) {
       endStaminaConsumingAction();
@@ -102,7 +114,9 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
     required DDBasePlayerView player,
     required JoystickActionEvent event,
   }) {
-    GameLogger.info('[CombatController] Verificando ação: ${event.id} | equipment: ${player.controller.model.equipment} | evento: ${event.event}');
+    GameLogger.info(
+      '[CombatController] Verificando ação: ${event.id} | equipment: ${player.controller.model.equipment} | evento: ${event.event}',
+    );
 
     // Só processa ações no DOWN, não no UP
     if (event.event != ActionEvent.DOWN) {
@@ -110,13 +124,17 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
       return;
     } else {
       if (_isPrimaryAttackAction(player: player, actionId: event.id)) {
-        GameLogger.info('[CombatController] ✓ É primary attack action (iron sword)');
+        GameLogger.info(
+          '[CombatController] ✓ É primary attack action (iron sword)',
+        );
         _handleExecutePrimaryAttack();
       } else if (_isRangedAttackAction(player: player, actionId: event.id)) {
         GameLogger.info('[CombatController] ✓ É ranged attack action (staff)');
         _handleExecuteRangedAttack();
       } else {
-        GameLogger.info('[CombatController] ✗ Não é ação de combate, passando para super');
+        GameLogger.info(
+          '[CombatController] ✗ Não é ação de combate, passando para super',
+        );
       }
 
       super.handleInputAction(player: player, event: event);

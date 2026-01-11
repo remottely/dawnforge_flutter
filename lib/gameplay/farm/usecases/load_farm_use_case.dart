@@ -4,7 +4,7 @@ import '../managers/farm_manager.dart';
 import '../services/crop_factory_service.dart';
 
 /// UseCase para carregar o estado da fazenda (padrão E2).
-/// 
+///
 /// Responsabilidades:
 /// - Validar versão dos dados salvos
 /// - Usar CropFactoryService para resolver Crops
@@ -16,7 +16,7 @@ class LoadFarmUseCase {
   LoadFarmUseCase(this._manager, this._cropFactory);
 
   /// Executa a operação de carregar o estado da fazenda.
-  /// 
+  ///
   /// [data] deve conter os dados salvos previamente pelo SaveFarmUseCase.
   void call(Map<String, dynamic> data) {
     GameLogger.info('LoadFarmUseCase: Loading farm state');
@@ -43,14 +43,19 @@ class LoadFarmUseCase {
       }
 
       // Restaura estado usando o manager
-      _manager.fromJson(farmData
-      // , _cropFactory.createCrop
+      _manager.fromJson(
+        farmData,
+        // , _cropFactory.createCrop
       );
 
       final tiles = _manager.getAllTiles();
-      GameLogger.info('LoadFarmUseCase: Successfully loaded farm state with ${tiles.length} tiles');
+      GameLogger.info(
+        'LoadFarmUseCase: Successfully loaded farm state with ${tiles.length} tiles',
+      );
     } catch (e, stackTrace) {
-      GameLogger.error('LoadFarmUseCase: Error loading farm state: $e\n$stackTrace');
+      GameLogger.error(
+        'LoadFarmUseCase: Error loading farm state: $e\n$stackTrace',
+      );
       rethrow;
     }
   }

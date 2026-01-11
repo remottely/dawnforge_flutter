@@ -26,7 +26,9 @@ final class SaveManager {
   Future<bool> save(SaveData data) async {
     try {
       if (!data.isValid()) {
-        GameLogger.warning('[SaveManager] Cannot save invalid data | playerData=${data.playerData}');
+        GameLogger.warning(
+          '[SaveManager] Cannot save invalid data | playerData=${data.playerData}',
+        );
         return false;
       }
 
@@ -38,7 +40,9 @@ final class SaveManager {
 
         await _updateMetadata();
 
-        GameLogger.info('[SaveManager] Save successful at ${_lastSaveTime!.toIso8601String()}');
+        GameLogger.info(
+          '[SaveManager] Save successful at ${_lastSaveTime!.toIso8601String()}',
+        );
       } else {
         GameLogger.error('[SaveManager] Save failed');
       }
@@ -71,7 +75,9 @@ final class SaveManager {
 
       _cachedSaveData = saveData;
 
-      GameLogger.info('[SaveManager] Load successful (version ${saveData.version})');
+      GameLogger.info(
+        '[SaveManager] Load successful (version ${saveData.version})',
+      );
 
       return saveData;
     } catch (e) {
@@ -119,7 +125,9 @@ final class SaveManager {
     if (_lastSaveTime != null) {
       final timeSinceLastSave = DateTime.now().difference(_lastSaveTime!);
       if (timeSinceLastSave < _kAutoSaveDebounceInterval) {
-        GameLogger.info('[SaveManager] Auto-save debounced (${timeSinceLastSave.inSeconds}s since last save)');
+        GameLogger.info(
+          '[SaveManager] Auto-save debounced (${timeSinceLastSave.inSeconds}s since last save)',
+        );
         return;
       }
     }

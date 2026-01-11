@@ -9,7 +9,8 @@ import '../entities/data/item_icon_data.dart';
 final class HarvestLootItem extends ConsumableItem {
   final LootCategory category;
   final SeasonType requiredSeason;
-  final int regrowthDays; // TODO(Kevin): improve this behavior, turn it into enum
+  final int
+  regrowthDays; // TODO(Kevin): improve this behavior, turn it into enum
 
   const HarvestLootItem({
     required super.id,
@@ -56,7 +57,9 @@ final class HarvestLootItem extends ConsumableItem {
       healthRestore: baseData.healthRestore,
       staminaRestore: baseData.healthRestore,
       category: LootCategory.fromJson(json['category'] as String),
-      requiredSeason: SeasonType.fromJson(json['requiredSeason'] as String? ?? 'any'),
+      requiredSeason: SeasonType.fromJson(
+        json['requiredSeason'] as String? ?? 'any',
+      ),
       regrowthDays: json['regrowthDays'] as int,
     );
   }

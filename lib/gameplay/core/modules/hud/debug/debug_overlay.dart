@@ -86,61 +86,61 @@ class _DebugOverlayState extends State<DebugOverlay> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-            if (widget.showFps)
-              Text(
-                'FPS:${_fps.toStringAsFixed(0)}',
-                style: TextStyle(
-                  color: _getFpsColor(),
-                  fontSize: 14,
-                  fontFamily: 'monospace',
-                  fontWeight: FontWeight.bold,
-                  shadows: const [
-                    Shadow(
-                      color: Colors.black87,
-                      offset: Offset(1, 1),
-                      blurRadius: 2,
-                    ),
-                  ],
-                ),
+          if (widget.showFps)
+            Text(
+              'FPS:${_fps.toStringAsFixed(0)}',
+              style: TextStyle(
+                color: _getFpsColor(),
+                fontSize: 14,
+                fontFamily: 'monospace',
+                fontWeight: FontWeight.bold,
+                shadows: const [
+                  Shadow(
+                    color: Colors.black87,
+                    offset: Offset(1, 1),
+                    blurRadius: 2,
+                  ),
+                ],
               ),
-            if (widget.showPosition && widget.player != null) ...[
-              const SizedBox(height: 4),
-              Text(
-                'x:${widget.player.x.toInt()}',
-                style: const TextStyle(
-                  color: Color(0xFF00FF00),
-                  fontSize: 14,
-                  fontFamily: 'monospace',
-                  fontWeight: FontWeight.bold,
-                  shadows: [
-                    Shadow(
-                      color: Colors.black87,
-                      offset: Offset(1, 1),
-                      blurRadius: 2,
-                    ),
-                  ],
-                ),
+            ),
+          if (widget.showPosition && widget.player != null) ...[
+            const SizedBox(height: 4),
+            Text(
+              'x:${widget.player.x.toInt()}',
+              style: const TextStyle(
+                color: Color(0xFF00FF00),
+                fontSize: 14,
+                fontFamily: 'monospace',
+                fontWeight: FontWeight.bold,
+                shadows: [
+                  Shadow(
+                    color: Colors.black87,
+                    offset: Offset(1, 1),
+                    blurRadius: 2,
+                  ),
+                ],
               ),
-              Text(
-                'y:${widget.player.y.toInt()}',
-                style: const TextStyle(
-                  color: Color(0xFF00FF00),
-                  fontSize: 14,
-                  fontFamily: 'monospace',
-                  fontWeight: FontWeight.bold,
-                  shadows: [
-                    Shadow(
-                      color: Colors.black87,
-                      offset: Offset(1, 1),
-                      blurRadius: 2,
-                    ),
-                  ],
-                ),
+            ),
+            Text(
+              'y:${widget.player.y.toInt()}',
+              style: const TextStyle(
+                color: Color(0xFF00FF00),
+                fontSize: 14,
+                fontFamily: 'monospace',
+                fontWeight: FontWeight.bold,
+                shadows: [
+                  Shadow(
+                    color: Colors.black87,
+                    offset: Offset(1, 1),
+                    blurRadius: 2,
+                  ),
+                ],
               ),
-            ],
-            // Note: showEntities removed as we can't easily access game.visibles() from Flutter widget
+            ),
           ],
-        ),
-      );
+          // Note: showEntities removed as we can't easily access game.visibles() from Flutter widget
+        ],
+      ),
+    );
   }
 }

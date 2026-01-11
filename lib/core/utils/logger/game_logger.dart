@@ -2,7 +2,10 @@
 /// Ativa logs apenas em builds de debug, ignora em release.
 
 class GameLogger {
-  static const bool _enableLogs = bool.fromEnvironment('DEBUG_MODE', defaultValue: false);
+  static const bool _enableLogs = bool.fromEnvironment(
+    'DEBUG_MODE',
+    defaultValue: false,
+  );
 
   static void log(String message, {String? tag}) {
     if (_enableLogs) {

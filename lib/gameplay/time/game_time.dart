@@ -25,12 +25,10 @@ class GameTime {
   Map<String, dynamic> toJson() => {'hour': hour, 'minute': minute};
 
   static GameTime fromJson(Map<String, dynamic> json) {
-    return GameTime(
-      hour: json['hour'] as int,
-      minute: json['minute'] as int,
-    );
+    return GameTime(hour: json['hour'] as int, minute: json['minute'] as int);
   }
 
   @override
-  String toString() => '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
+  String toString() =>
+      '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
 }

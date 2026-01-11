@@ -13,10 +13,10 @@ class BedDecorationView extends GameDecoration {
   bool _isShowingChoice = false;
 
   BedDecorationView({required super.position, required super.size});
-    // : super.withSprite(
-    //     sprite: BedDecorationDef.loadSpriteIdle(),
-    //     size: BedDecorationDef.componentSize,
-    //   );
+  // : super.withSprite(
+  //     sprite: BedDecorationDef.loadSpriteIdle(),
+  //     size: BedDecorationDef.componentSize,
+  //   );
 
   @override
   Future<void> onLoad() {
@@ -75,7 +75,6 @@ class BedDecorationView extends GameDecoration {
       _handleAdvanceDayAndSaveGame();
     }
   }
-
 
   void _triggerBedUse() {
     _isUsed = true;

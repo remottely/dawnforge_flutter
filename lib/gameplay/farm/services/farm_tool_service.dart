@@ -59,7 +59,9 @@ class FarmToolService {
   bool canPlantCrop(FarmObject farmObject) {
     if (!farmObject.canPlantCrop) {
       if (farmObject.isOccupied) {
-        GameLogger.warning('[FarmToolService] Cannot plant: tile already has a crop');
+        GameLogger.warning(
+          '[FarmToolService] Cannot plant: tile already has a crop',
+        );
       } else if (!farmObject.soilState.canPlantCrop) {
         GameLogger.warning('[FarmToolService] Cannot plant: soil not prepared');
       }

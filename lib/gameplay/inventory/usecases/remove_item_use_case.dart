@@ -1,4 +1,3 @@
-
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
 import 'dart:math';
 
@@ -23,7 +22,9 @@ class RemoveItemUseCase {
 
     final totalQuantity = _inventoryManager.getItemQuantity(itemId.name);
     if (totalQuantity < quantity) {
-      GameLogger.warning('[RemoveItemUseCase] Not enough items. Has: $totalQuantity, needs: $quantity');
+      GameLogger.warning(
+        '[RemoveItemUseCase] Not enough items. Has: $totalQuantity, needs: $quantity',
+      );
       return false;
     }
 
@@ -41,7 +42,9 @@ class RemoveItemUseCase {
       _inventoryManager.updateSlot(i, slot.removeQuantity(amountToRemove));
       remainingToRemove -= amountToRemove;
 
-      GameLogger.info('[RemoveItemUseCase] Removed $amountToRemove from slot $i');
+      GameLogger.info(
+        '[RemoveItemUseCase] Removed $amountToRemove from slot $i',
+      );
     }
 
     GameLogger.info('[RemoveItemUseCase] Item removed successfully');

@@ -1,4 +1,3 @@
-
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
 import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
@@ -12,7 +11,9 @@ import '../entities/hand_item.dart';
 class InventoryManager {
   InventoryManager._() {
     _initializeSlots(_currentMaxSlots);
-    GameLogger.info('[InventoryManager] Initialized with $_currentMaxSlots slots');
+    GameLogger.info(
+      '[InventoryManager] Initialized with $_currentMaxSlots slots',
+    );
   }
 
   static final instance = InventoryManager._();
@@ -26,7 +27,9 @@ class InventoryManager {
 
   void _notifyChange() {
     slotsNotifier.value = List.unmodifiable(_slots);
-    GameLogger.info('[InventoryManager] Notifying change with ${_slots.length} slots');
+    GameLogger.info(
+      '[InventoryManager] Notifying change with ${_slots.length} slots',
+    );
   }
 
   int get maxSlots => _currentMaxSlots;
@@ -71,7 +74,9 @@ class InventoryManager {
       _slots.add(InventorySlot(index: oldSize + i));
     }
 
-    GameLogger.info('[InventoryManager] Upgraded from $oldSize to $_currentMaxSlots slots');
+    GameLogger.info(
+      '[InventoryManager] Upgraded from $oldSize to $_currentMaxSlots slots',
+    );
     _notifyChange();
     return true;
   }
@@ -113,7 +118,7 @@ class InventoryManager {
 
   int getItemQuantity(String itemId) {
     return _slots
-      .where((s) => s.item?.id.name == itemId)
+        .where((s) => s.item?.id.name == itemId)
         .fold(0, (sum, slot) => sum + slot.quantity);
   }
 
@@ -241,7 +246,9 @@ class InventoryManager {
       }
     }
 
-    GameLogger.info('[InventoryManager] Loaded ${slotsData.length} slots from JSON');
+    GameLogger.info(
+      '[InventoryManager] Loaded ${slotsData.length} slots from JSON',
+    );
     _notifyChange();
   }
 

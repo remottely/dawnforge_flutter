@@ -36,7 +36,7 @@ class FarmInputHandler extends GameComponent with PlayerControllerListener {
 
     // if (InputDef.isAdvanceDayAction(event.id)) {
     //   _handleAdvanceDayAndSaveGame();
-    // } else 
+    // } else
     if (InputDef.isClearSaveAction(event.id)) {
       _handleClearSave();
     }

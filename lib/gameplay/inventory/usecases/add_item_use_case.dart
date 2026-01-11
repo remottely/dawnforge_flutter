@@ -1,4 +1,3 @@
-
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
 import 'dart:math';
 
@@ -73,7 +72,9 @@ class AddItemUseCase {
         _inventoryManager.updateSlot(i, upgradedSlot.addQuantity(amountToAdd));
         remainingQuantity -= amountToAdd;
 
-        GameLogger.info('[AddItemUseCase] Stacked $amountToAdd in slot $i, remaining: $remainingQuantity');
+        GameLogger.info(
+          '[AddItemUseCase] Stacked $amountToAdd in slot $i, remaining: $remainingQuantity',
+        );
       }
     }
 
@@ -90,7 +91,9 @@ class AddItemUseCase {
       }
 
       if (emptySlotIndex == -1) {
-        GameLogger.warning('[AddItemUseCase] Inventory full! Cannot add remaining $remainingQuantity');
+        GameLogger.warning(
+          '[AddItemUseCase] Inventory full! Cannot add remaining $remainingQuantity',
+        );
         return quantity > remainingQuantity;
       }
 
@@ -108,7 +111,9 @@ class AddItemUseCase {
       );
 
       remainingQuantity -= amountForSlot;
-      GameLogger.info('[AddItemUseCase] Created new slot $emptySlotIndex with $amountForSlot items');
+      GameLogger.info(
+        '[AddItemUseCase] Created new slot $emptySlotIndex with $amountForSlot items',
+      );
     }
 
     GameLogger.info('[AddItemUseCase] Item added successfully');
@@ -127,7 +132,9 @@ class AddItemUseCase {
         anyAdded = true;
         GameLogger.info('[AddItemUseCase] Added $quantity x ${itemId.name}');
       } else {
-        GameLogger.warning('[AddItemUseCase] Failed to add $quantity x ${itemId.name}');
+        GameLogger.warning(
+          '[AddItemUseCase] Failed to add $quantity x ${itemId.name}',
+        );
       }
     }
 

@@ -42,7 +42,9 @@ abstract class DDMinePlayerController<M extends DDMinePlayerModel>
     required DDBasePlayerView player,
     required JoystickActionEvent event,
   }) {
-    GameLogger.info('[MineController] Verificando ação: ${event.id} | equipment: ${player.controller.model.equipment} | evento: ${event.event}');
+    GameLogger.info(
+      '[MineController] Verificando ação: ${event.id} | equipment: ${player.controller.model.equipment} | evento: ${event.event}',
+    );
 
     if (handleConsumableInput(player: player, event: event)) {
       return;
@@ -58,7 +60,9 @@ abstract class DDMinePlayerController<M extends DDMinePlayerModel>
       GameLogger.info('[MineController] ✓ É mine action (pickaxe)');
       _handleExecuteMine();
     } else {
-      GameLogger.info('[MineController] ✗ Não é ação de mine, passando para super');
+      GameLogger.info(
+        '[MineController] ✗ Não é ação de mine, passando para super',
+      );
     }
 
     // Encaminha para a cadeia de combate base (sem reprocessar consumo).
@@ -66,7 +70,9 @@ abstract class DDMinePlayerController<M extends DDMinePlayerModel>
   }
 
   void _handleExecuteMine() {
-    GameLogger.info('[MineController] _handleExecuteMine: stamina=${model.stamina}, canExecute=${model.canExecuteMine}');
+    GameLogger.info(
+      '[MineController] _handleExecuteMine: stamina=${model.stamina}, canExecute=${model.canExecuteMine}',
+    );
 
     if (!model.canExecuteMine) {
       GameLogger.warning('[MineController] ✗ Não pode executar mine');

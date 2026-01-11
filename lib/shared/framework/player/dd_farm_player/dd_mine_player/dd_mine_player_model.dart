@@ -14,7 +14,7 @@ class DDMinePlayerModel extends DDFarmPlayerModel {
 
   bool get canExecuteMine =>
       (stamina >= config.mineStaminaCost) && _isPickaxeEquipped;
-  
+
   bool get _isPickaxeEquipped =>
       equipment == HandItemId.iron_pickaxe ||
       equipment == HandItemId.steel_pickaxe;

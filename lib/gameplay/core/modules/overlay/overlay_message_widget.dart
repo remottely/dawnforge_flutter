@@ -32,12 +32,13 @@ class _OverlayMessageWidgetState extends State<OverlayMessageWidget>
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
 
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, -0.5),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic),
-    );
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, -0.5), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: Curves.easeOutCubic,
+          ),
+        );
 
     _subscription = OverlayMessageService.instance.messageStream.listen(
       _handleNewMessage,
@@ -116,14 +117,8 @@ class _OverlayMessageWidgetState extends State<OverlayMessageWidget>
             child: Material(
               color: Colors.transparent,
               child: Container(
-                constraints: const BoxConstraints(
-                  maxWidth: 400,
-                  minWidth: 200,
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 4,
-                  vertical: 2,
-                ),
+                constraints: const BoxConstraints(maxWidth: 400, minWidth: 200),
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                 decoration: BoxDecoration(
                   color: _getBackgroundColor(_currentMessage!.type),
                   borderRadius: BorderRadius.circular(8),

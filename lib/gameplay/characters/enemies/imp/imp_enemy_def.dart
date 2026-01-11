@@ -7,8 +7,10 @@ import 'package:dawnforge/shared/utils/sprite_animation_config_helper.dart';
 final class ImpEnemyDef {
   ImpEnemyDef._();
 
-  static const double fixedLifeBarWidth = CharacterConstants.fixedLifeBarWidthSmall;
-  static final Vector2 fixedLifeBarOffset = CharacterConstants.fixedLifeBarOffsetSmall;
+  static const double fixedLifeBarWidth =
+      CharacterConstants.fixedLifeBarWidthSmall;
+  static final Vector2 fixedLifeBarOffset =
+      CharacterConstants.fixedLifeBarOffsetSmall;
 
   static const double kPrimaryAttackVisionRadius =
       CharacterConstants.kVisionRadiusExtraLarge;

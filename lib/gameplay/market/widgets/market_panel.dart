@@ -56,13 +56,17 @@ class _MarketPanelState extends State<MarketPanel> {
       if (item != null) {
         _itemCache[entry.itemId] = item;
       } else {
-        GameLogger.debug('[MarketPanel] ItemFactoryService returned null for ${entry.itemId}');
+        GameLogger.debug(
+          '[MarketPanel] ItemFactoryService returned null for ${entry.itemId}',
+        );
       }
     }
     _visibleCatalog = _catalog
         .where((entry) => _itemCache.containsKey(entry.itemId))
         .toList();
-    GameLogger.debug('[MarketPanel] visibleCatalog size=${_visibleCatalog.length}');
+    GameLogger.debug(
+      '[MarketPanel] visibleCatalog size=${_visibleCatalog.length}',
+    );
 
     // Garante que o overlay pegue o foco do teclado assim que abrir.
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -97,44 +101,41 @@ class _MarketPanelState extends State<MarketPanel> {
       autofocus: true,
       onKey: _handleKeyEvent,
       child: Container(
-      constraints: const BoxConstraints(
-        maxWidth: 1024,
-        maxHeight: 720,
-      ),
-      margin: const EdgeInsets.all(12),
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.82),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.5)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _buildHeader(context),
-          const SizedBox(height: 12),
-          _buildCoinsRow(),
-          const SizedBox(height: 12),
-          Expanded(
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: crossAxisCount,
-                mainAxisSpacing: 8,
-                crossAxisSpacing: 8,
-                childAspectRatio: 0.78,
+        constraints: const BoxConstraints(maxWidth: 1024, maxHeight: 720),
+        margin: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.82),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.white.withOpacity(0.5)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _buildHeader(context),
+            const SizedBox(height: 12),
+            _buildCoinsRow(),
+            const SizedBox(height: 12),
+            Expanded(
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  mainAxisSpacing: 8,
+                  crossAxisSpacing: 8,
+                  childAspectRatio: 0.78,
+                ),
+                itemCount: _visibleCatalog.length,
+                itemBuilder: (context, index) {
+                  final entry = _visibleCatalog[index];
+                  final item = _itemCache[entry.itemId]!;
+                  final isSelected = index == _selectedMarketIndex;
+                  return _buildCard(entry, item, isSelected);
+                },
               ),
-              itemCount: _visibleCatalog.length,
-              itemBuilder: (context, index) {
-                final entry = _visibleCatalog[index];
-                final item = _itemCache[entry.itemId]!;
-                final isSelected = index == _selectedMarketIndex;
-                return _buildCard(entry, item, isSelected);
-              },
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
     );
   }
 
@@ -155,8 +156,8 @@ class _MarketPanelState extends State<MarketPanel> {
         const Spacer(),
         IconButton(
           onPressed: () {
-                  GameLogger.debug('[MarketPanel] close button tapped');
-                  MarketState.instance.close();
+            GameLogger.debug('[MarketPanel] close button tapped');
+            MarketState.instance.close();
           },
           icon: const Icon(Icons.close, color: Colors.white70),
         ),
@@ -204,8 +205,8 @@ class _MarketPanelState extends State<MarketPanel> {
         final borderColor = isSelected
             ? Colors.orangeAccent
             : canBuy
-                ? Colors.greenAccent.withOpacity(0.7)
-                : Colors.white24;
+            ? Colors.greenAccent.withOpacity(0.7)
+            : Colors.white24;
         return Material(
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(8),
@@ -244,7 +245,10 @@ class _MarketPanelState extends State<MarketPanel> {
                     Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.08),
                             borderRadius: BorderRadius.circular(6),
@@ -252,7 +256,9 @@ class _MarketPanelState extends State<MarketPanel> {
                           child: Text(
                             '${entry.buyPrice}g',
                             style: TextStyle(
-                              color: canBuy ? Colors.greenAccent : Colors.white70,
+                              color: canBuy
+                                  ? Colors.greenAccent
+                                  : Colors.white70,
                               fontSize: 11,
                               fontWeight: FontWeight.w700,
                               fontFamily: 'Normal',
@@ -263,14 +269,19 @@ class _MarketPanelState extends State<MarketPanel> {
                         Icon(
                           Icons.shopping_bag,
                           size: 16,
-                          color: isSelected ? Colors.orangeAccent : Colors.white60,
+                          color: isSelected
+                              ? Colors.orangeAccent
+                              : Colors.white60,
                         ),
                       ],
                     ),
                     const SizedBox(height: 6),
                     Expanded(
                       child: Center(
-                        child: ItemSpriteWidget(iconData: item.iconData, size: 40),
+                        child: ItemSpriteWidget(
+                          iconData: item.iconData,
+                          size: 40,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 6),
@@ -295,14 +306,18 @@ class _MarketPanelState extends State<MarketPanel> {
                           children: [
                             Icon(
                               Icons.monetization_on,
-                              color: canBuy ? Colors.greenAccent : Colors.white38,
+                              color: canBuy
+                                  ? Colors.greenAccent
+                                  : Colors.white38,
                               size: 14,
                             ),
                             const SizedBox(width: 3),
                             Text(
                               entry.buyPrice.toString(),
                               style: TextStyle(
-                                color: canBuy ? Colors.greenAccent : Colors.white70,
+                                color: canBuy
+                                    ? Colors.greenAccent
+                                    : Colors.white70,
                                 fontSize: 11,
                                 fontWeight: FontWeight.w600,
                                 fontFamily: 'Normal',
@@ -313,7 +328,9 @@ class _MarketPanelState extends State<MarketPanel> {
                         Text(
                           canBuy ? 'Comprar' : 'Sem moedas',
                           style: TextStyle(
-                            color: canBuy ? Colors.orangeAccent : Colors.white54,
+                            color: canBuy
+                                ? Colors.orangeAccent
+                                : Colors.white54,
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
                             fontFamily: 'Normal',
@@ -452,7 +469,11 @@ class _MarketPanelState extends State<MarketPanel> {
 
   void _buySelected() {
     if (_visibleCatalog.isEmpty) return;
-    final entry = _visibleCatalog[_selectedMarketIndex.clamp(0, _visibleCatalog.length - 1)];
+    final entry =
+        _visibleCatalog[_selectedMarketIndex.clamp(
+          0,
+          _visibleCatalog.length - 1,
+        )];
     final item = _itemCache[entry.itemId];
     if (item == null) return;
     _handleBuy(entry, item);
@@ -504,7 +525,8 @@ class _MarketPanelState extends State<MarketPanel> {
 
   int _gridCrossAxisCount(double width) {
     const double wideCardWidth = 220;
-    const double narrowCardWidth = 220; // TODO: ajusta largura alvo se precisar diferenciar mobile
+    const double narrowCardWidth =
+        220; // TODO: ajusta largura alvo se precisar diferenciar mobile
     final targetCardWidth = width >= 900 ? wideCardWidth : narrowCardWidth;
     return math.max(3, (width / targetCardWidth).floor());
   }

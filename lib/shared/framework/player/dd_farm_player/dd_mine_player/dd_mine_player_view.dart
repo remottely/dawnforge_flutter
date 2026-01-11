@@ -98,7 +98,9 @@ abstract class DDMinePlayerView<
     final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
       AttackType.melee,
       () {
-        GameLogger.info('[FarmPlayerView] _onExecuteDig: Executando animação de dig');
+        GameLogger.info(
+          '[FarmPlayerView] _onExecuteDig: Executando animação de dig',
+        );
         DDCharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
           animationRight: animationMineDirectional.right,
           animationLeft: animationMineDirectional.left,
@@ -113,13 +115,17 @@ abstract class DDMinePlayerView<
           executionStartFrame: 5, // TODO(Kevin): inject this value
           onActionStart: lockAction,
           onActionEnd: unlockAction,
-          onExecutionFrames: () => FarmToolActionDef.execute(player: this), // TODO(kevin): change this to MineToolActionDef
+          onExecutionFrames: () => FarmToolActionDef.execute(
+            player: this,
+          ), // TODO(kevin): change this to MineToolActionDef
         );
       },
     );
 
     final wasExecuted = executionInfo != null;
-    GameLogger.info('[FarmPlayerView] _onExecuteDig resultado: $wasExecuted (executionInfo=$executionInfo)');
+    GameLogger.info(
+      '[FarmPlayerView] _onExecuteDig resultado: $wasExecuted (executionInfo=$executionInfo)',
+    );
 
     return wasExecuted;
   }

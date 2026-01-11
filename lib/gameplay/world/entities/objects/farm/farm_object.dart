@@ -35,14 +35,13 @@ final class FarmObject extends Equatable implements TileObject {
   bool get isInteractable => true; // Farm tiles can be tilled, planted, watered, etc.
 
   @override
-  bool get shouldUseYSorting =>
-      crop != null && crop!.shouldUseYSorting; // Tall crops need Y-sorting
+  bool get shouldUseYSorting => crop != null && crop!.shouldUseYSorting; // Tall crops need Y-sorting
 
   @override
   Map<String, dynamic> get visualData => {
-        'soilState': soilState.toJson(),
-        if (crop != null) 'crop': crop!.toJson(),
-      };
+    'soilState': soilState.toJson(),
+    if (crop != null) 'crop': crop!.toJson(),
+  };
 
   /// Check if tile is empty (no crop planted)
   bool get isEmpty => crop == null;
@@ -75,10 +74,7 @@ final class FarmObject extends Equatable implements TileObject {
 
   /// Water the tile
   FarmObject water(int currentDay) {
-    return copyWith(
-      soilState: SoilState.watered,
-      lastWateredDay: currentDay,
-    );
+    return copyWith(soilState: SoilState.watered, lastWateredDay: currentDay);
   }
 
   /// Plant a crop on this tile
@@ -121,10 +117,7 @@ final class FarmObject extends Equatable implements TileObject {
     // Crops only advance if watered; consume water after advancing
     if (wasWateredThatDay && soilState == SoilState.watered) {
       if (crop == null) {
-        return copyWith(
-          soilState: SoilState.tilled,
-          lastWateredDay: null,
-        );
+        return copyWith(soilState: SoilState.tilled, lastWateredDay: null);
       }
 
       final advancedCrop = crop!.advanceDay();

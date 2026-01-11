@@ -30,30 +30,30 @@ class _MenuScreenState extends MenuScreenViewModel {
       backgroundColor: Colors.black,
       body: Center(
         child: SingleChildScrollView(
-            child: Wrap(
-              alignment: WrapAlignment.center,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              spacing: DDDesignSystem.kSpacingLarge,
-              runSpacing: DDDesignSystem.kSpacingLarge,
-              children: <Widget>[
-                const _Title(),
-                if (MenuScreenDef.characterSpriteAnimations.isNotEmpty) ...[
-                  _CharacterAnimation(
-                    animation: MenuScreenDef
-                        .characterSpriteAnimations[currentCharacterSpriteIndex],
-                  ),
-                ],
-                _Controls(
-                  onControlMethodChanged: onControlMethodChanged,
-                ), // TODO(Kevin): NOW - put it back
-                switch (SettingsManager.instance.inputSelected) {
-                  InputActionsType.joystick =>
-                    const SizedBox.shrink(), // TODO(Kevin): Replace with joystick tip widget
-                  InputActionsType.keyboard => const _KeyboardTip(),
-                },
-                _StartButton(onPressed: navigateToGameplayScreen),
+          child: Wrap(
+            alignment: WrapAlignment.center,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: DDDesignSystem.kSpacingLarge,
+            runSpacing: DDDesignSystem.kSpacingLarge,
+            children: <Widget>[
+              const _Title(),
+              if (MenuScreenDef.characterSpriteAnimations.isNotEmpty) ...[
+                _CharacterAnimation(
+                  animation: MenuScreenDef
+                      .characterSpriteAnimations[currentCharacterSpriteIndex],
+                ),
               ],
-            ),
+              _Controls(
+                onControlMethodChanged: onControlMethodChanged,
+              ), // TODO(Kevin): NOW - put it back
+              switch (SettingsManager.instance.inputSelected) {
+                InputActionsType.joystick =>
+                  const SizedBox.shrink(), // TODO(Kevin): Replace with joystick tip widget
+                InputActionsType.keyboard => const _KeyboardTip(),
+              },
+              _StartButton(onPressed: navigateToGameplayScreen),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: _Footer(onOpenURL: openExternalURL),

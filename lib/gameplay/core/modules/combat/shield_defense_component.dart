@@ -29,7 +29,9 @@ class ShieldDefenseComponent extends GameComponent {
         ),
       );
 
-      GameLogger.info('[ShieldDefenseComponent] Animação carregada com sucesso');
+      GameLogger.info(
+        '[ShieldDefenseComponent] Animação carregada com sucesso',
+      );
 
       _shieldAnimation = SpriteAnimationComponent(
         animation: loadAnimationRight,
@@ -43,9 +45,13 @@ class ShieldDefenseComponent extends GameComponent {
 
       _player.gameRef.add(_shieldAnimation!);
 
-      GameLogger.info('[ShieldDefenseComponent] Componente criado. Opacity: ${_shieldAnimation!.opacity}, IsActive: $_isActive');
+      GameLogger.info(
+        '[ShieldDefenseComponent] Componente criado. Opacity: ${_shieldAnimation!.opacity}, IsActive: $_isActive',
+      );
     } catch (e, stackTrace) {
-      GameLogger.error('[ShieldDefenseComponent] ERRO ao carregar animação: $e\n$stackTrace');
+      GameLogger.error(
+        '[ShieldDefenseComponent] ERRO ao carregar animação: $e\n$stackTrace',
+      );
     }
   }
 
@@ -59,11 +65,15 @@ class ShieldDefenseComponent extends GameComponent {
   }
 
   void activate() {
-    GameLogger.info('[ShieldDefenseComponent] Ativando defesa. Animação null? ${_shieldAnimation == null}');
+    GameLogger.info(
+      '[ShieldDefenseComponent] Ativando defesa. Animação null? ${_shieldAnimation == null}',
+    );
     _isActive = true;
     if (_shieldAnimation != null) {
       _shieldAnimation!.opacity = 1;
-      GameLogger.info('[ShieldDefenseComponent] Animação opacity = 1. Posição: ${_shieldAnimation!.position}');
+      GameLogger.info(
+        '[ShieldDefenseComponent] Animação opacity = 1. Posição: ${_shieldAnimation!.position}',
+      );
     }
   }
 

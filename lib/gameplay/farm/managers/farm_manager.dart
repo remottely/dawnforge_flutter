@@ -1,7 +1,4 @@
-
-
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
-
 
 import 'package:flutter/foundation.dart';
 
@@ -111,7 +108,9 @@ class FarmManager {
       if (farmObject.isOccupied) {
         GameLogger.warning('[FarmManager] Tile already has a crop');
       } else {
-        GameLogger.warning('[FarmManager] Soil not prepared for planting (${crop.isTree ? 'needs untilled for trees' : 'needs tilled/watered for crops'})');
+        GameLogger.warning(
+          '[FarmManager] Soil not prepared for planting (${crop.isTree ? 'needs untilled for trees' : 'needs tilled/watered for crops'})',
+        );
       }
       return false;
     }
@@ -123,7 +122,9 @@ class FarmManager {
     setTile(plantedTile);
     notifyChange();
 
-    GameLogger.info('[FarmManager] ✓ ${crop.name} planted successfully at ($x,$y) soil:${plantedFarmObject.soilState.name} stage:${crop.stage.name}');
+    GameLogger.info(
+      '[FarmManager] ✓ ${crop.name} planted successfully at ($x,$y) soil:${plantedFarmObject.soilState.name} stage:${crop.stage.name}',
+    );
     return true;
   }
 
@@ -156,7 +157,9 @@ class FarmManager {
         harvestedCrop; // J3: Cross-module notification
     notifyChange();
 
-    GameLogger.info('[FarmManager] ✓ Harvested ${harvestedCrop.yieldAmount}x ${harvestedCrop.name} at ($x,$y) -> soil:${harvestedFarmObject.soilState.name} crop:${harvestedFarmObject.crop?.id ?? "none"}');
+    GameLogger.info(
+      '[FarmManager] ✓ Harvested ${harvestedCrop.yieldAmount}x ${harvestedCrop.name} at ($x,$y) -> soil:${harvestedFarmObject.soilState.name} crop:${harvestedFarmObject.crop?.id ?? "none"}',
+    );
     return harvestedCrop;
   }
 
@@ -173,12 +176,12 @@ class FarmManager {
 
       final advancedFarmObject = farmObject.advanceDay(dayEnded);
       final advancedTile = tile.placeObject(advancedFarmObject);
-      
+
       // Track crop growth
       if (farmObject.crop != null && advancedFarmObject.crop != null) {
         final beforeDays = farmObject.crop!.daysPlanted;
         final afterDays = advancedFarmObject.crop!.daysPlanted;
-        
+
         if (afterDays > beforeDays) {
           cropsGrown++;
         }
@@ -186,7 +189,9 @@ class FarmManager {
 
       if (farmObject.crop != advancedFarmObject.crop ||
           farmObject.soilState != advancedFarmObject.soilState) {
-        GameLogger.info('[FarmManager] ↻ advanced tile (${tile.x},${tile.y}) soil ${farmObject.soilState.name} -> ${advancedFarmObject.soilState.name}, crop ${farmObject.crop?.id ?? "none"}/${farmObject.crop?.stage.name ?? "none"} -> ${advancedFarmObject.crop?.id ?? "none"}/${advancedFarmObject.crop?.stage.name ?? "none"}');
+        GameLogger.info(
+          '[FarmManager] ↻ advanced tile (${tile.x},${tile.y}) soil ${farmObject.soilState.name} -> ${advancedFarmObject.soilState.name}, crop ${farmObject.crop?.id ?? "none"}/${farmObject.crop?.stage.name ?? "none"} -> ${advancedFarmObject.crop?.id ?? "none"}/${advancedFarmObject.crop?.stage.name ?? "none"}',
+        );
       }
 
       setTile(advancedTile);
@@ -194,7 +199,9 @@ class FarmManager {
 
     notifyChange();
 
-    GameLogger.info('[FarmManager] ✓ Advanced $cropsGrown crops for day $dayEnded');
+    GameLogger.info(
+      '[FarmManager] ✓ Advanced $cropsGrown crops for day $dayEnded',
+    );
   }
 
   /// Serialization (E2)
@@ -220,14 +227,14 @@ class FarmManager {
 
     for (final tileJson in tilesData) {
       final tileData = tileJson as Map<String, dynamic>;
-      
+
       // GridTile.toJson() salva: {x, y, object, metadata}
       // Precisamos reconstruir o GridTile a partir disso
       final objectData = tileData['object'] as Map<String, dynamic>?;
-      final FarmObject? farmObject = objectData != null 
+      final FarmObject? farmObject = objectData != null
           ? FarmObject.fromJson(objectData)
           : null;
-      
+
       final tile = GridTile(
         x: tileData['x'] as int,
         y: tileData['y'] as int,

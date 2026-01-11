@@ -160,9 +160,11 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                                 children: [
                                   const TutorialInputsOverlay(),
                                   ValueListenableBuilder<bool>(
-                                    valueListenable: MarketState.instance.isOpen,
+                                    valueListenable:
+                                        MarketState.instance.isOpen,
                                     builder: (context, isOpen, _) {
-                                      if (!isOpen) return const SizedBox.shrink();
+                                      if (!isOpen)
+                                        return const SizedBox.shrink();
                                       return ValueListenableBuilder(
                                         valueListenable:
                                             MarketState.instance.activePlayer,

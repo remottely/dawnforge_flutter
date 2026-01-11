@@ -132,7 +132,6 @@
 //         GameLogger.warning('[GameStateCollector] No farm state data found');
 //       }
 
-      
 //       GameLogger.info(
 //         '[GameStateCollector] Game state restored successfully: '
 //         'Day ${WorldStateManager.instance.currentDay}, '

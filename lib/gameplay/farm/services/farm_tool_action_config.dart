@@ -2,8 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/gameplay/core/utils/offset_helper.dart';
 import 'package:dawnforge/gameplay/farm/components/farm_tile_view.dart';
 import 'package:dawnforge/gameplay/farm/constants/farm_feedback_config.dart';
-import 'package:dawnforge/gameplay/farm/farm_service_locator.dart'
-    as farm_di;
+import 'package:dawnforge/gameplay/farm/farm_service_locator.dart' as farm_di;
 import 'package:dawnforge/gameplay/farm/services/farm_action_service.dart';
 import 'package:dawnforge/gameplay/farm/services/farm_feedback_service.dart';
 import 'package:dawnforge/gameplay/farm/usecases/plant_seed_use_case.dart';
@@ -66,9 +65,9 @@ final class FarmToolActionDef {
             final equippedItem = getIt<EquipmentManager>().getEquippedItem();
             final seedItemId = equippedItem?.id;
             if (seedItemId == null) {
-              farm_di
-                  .getIt<FarmFeedbackService>()
-                  .showFloatingText(FarmFeedbackDef.kCannotPlant);
+              farm_di.getIt<FarmFeedbackService>().showFloatingText(
+                FarmFeedbackDef.kCannotPlant,
+              );
               return;
             }
 
@@ -108,11 +107,7 @@ final class FarmToolActionDef {
   }) {
     final _feedbackService = farm_di.getIt<FarmFeedbackService>();
 
-    final planted = farm_di.getIt<PlantSeedUseCase>().call(
-      x,
-      y,
-      seedItemId,
-    );
+    final planted = farm_di.getIt<PlantSeedUseCase>().call(x, y, seedItemId);
 
     if (planted) {
       _feedbackService.showFloatingText(FarmFeedbackDef.kSeedPlanted);

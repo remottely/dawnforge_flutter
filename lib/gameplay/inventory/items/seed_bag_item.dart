@@ -22,11 +22,7 @@ final class SeedBagItem extends HandItem {
     required super.quality,
     required this.requiredSeason,
     this.yield = 1, // TODO(Kevin): entender oq é isso
-  }) : super(
-         maxStackSize: 99,
-         isTradeable: true,
-         type: HandItemType.cropSeed,
-       );
+  }) : super(maxStackSize: 99, isTradeable: true, type: HandItemType.cropSeed);
 
   bool canPlantInSeason(SeasonType currentSeason) {
     return requiredSeason.matches(currentSeason);
@@ -57,7 +53,9 @@ final class SeedBagItem extends HandItem {
       cropId: HandItemId.fromJson(json['cropId'] as String),
       growthTime: json['growthTime'] as int,
       yield: json['yield'] as int? ?? 1,
-      requiredSeason: SeasonType.fromJson(json['requiredSeason'] as String? ?? 'any'),
+      requiredSeason: SeasonType.fromJson(
+        json['requiredSeason'] as String? ?? 'any',
+      ),
     );
   }
 

@@ -43,7 +43,8 @@ final class AudioDef {
   //     'bg/music/lake - Justin Allan Arnold - Antigone.mp3';
   // static const bgMusicBeach = 'bg/music/beach - Glitch - Prehistory.mp3';
   static const bgMusicCaveBoss = 'bg/music/cave_boss - RitesOfPassage.mp3';
-  static const bgMusicGameOverSuccess = 'bg/music/game_over_success - Scott Buckley - Clarion.ogg';
+  static const bgMusicGameOverSuccess =
+      'bg/music/game_over_success - Scott Buckley - Clarion.ogg';
 
   static const bgMusicFarm = 'maps/farm/bgm/Pixverses - Big Helmet.ogg';
   static const bgMusicForest = 'maps/forest/bgm/Pixverses - A Green Pig.ogg';

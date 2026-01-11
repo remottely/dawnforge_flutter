@@ -9,8 +9,10 @@ import 'package:dawnforge/shared/utils/sprite_animation_config_helper.dart';
 final class SkeletonEnemyDef {
   SkeletonEnemyDef._();
 
-  static const double fixedLifeBarWidth = CharacterConstants.fixedLifeBarWidthMedium;
-  static final Vector2 fixedLifeBarOffset = CharacterConstants.fixedLifeBarOffsetLarge;
+  static const double fixedLifeBarWidth =
+      CharacterConstants.fixedLifeBarWidthMedium;
+  static final Vector2 fixedLifeBarOffset =
+      CharacterConstants.fixedLifeBarOffsetLarge;
 
   static const double kPrimaryAttackVisionRadius =
       CharacterConstants.kVisionRadiusLarge;

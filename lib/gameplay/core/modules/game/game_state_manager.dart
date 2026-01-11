@@ -45,22 +45,24 @@ class GameStateManager extends GameComponent {
 
   void _onPressRestartGame(BuildContext dialogContext) async {
     GameLogger.info('[GameStateManager] Restart button pressed');
-    
+
     Navigator.of(dialogContext).pop();
-    
+
     // Verifica se existe save
     final hasSave = await GameSaveController.instance.hasSave();
-    
+
     if (hasSave) {
       GameLogger.info('[GameStateManager] Save found - Loading last save...');
       await GameSaveController.instance.loadGame();
     } else {
-      GameLogger.info('[GameStateManager] No save found - Resetting to initial state...');
+      GameLogger.info(
+        '[GameStateManager] No save found - Resetting to initial state...',
+      );
       await GameSaveController.instance.clearGameAndSave();
     }
-    
+
     _resetGameState();
-    
+
     Future.delayed(const Duration(milliseconds: 100), () {
       GameLogger.info('[GameStateManager] Restarting game...');
       _restartGame();

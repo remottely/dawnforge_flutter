@@ -1,4 +1,3 @@
-
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
 import 'package:dawnforge/gameplay/database/modern_farm/modern_farm_crop_entity_database_def.dart';
@@ -23,13 +22,17 @@ class CropFactoryService {
       ..addAll(ModernFarmCropEntityDatabaseDef.cropEntityList);
 
     _isInitialized = true;
-    GameLogger.info('[CropFactoryService] Loaded ${_database.length} crops from constants');
+    GameLogger.info(
+      '[CropFactoryService] Loaded ${_database.length} crops from constants',
+    );
   }
 
   /// Create a crop instance from the database by cropId
   CropEntity? createCrop(HandItemId cropId) {
     if (!_isInitialized) {
-      GameLogger.error('[CropFactoryService] ERROR: Not initialized! Call initialize() first');
+      GameLogger.error(
+        '[CropFactoryService] ERROR: Not initialized! Call initialize() first',
+      );
       return null;
     }
 
@@ -45,7 +48,9 @@ class CropFactoryService {
         regrowData: template.regrowData.resetState(),
       );
     } catch (e, stackTrace) {
-      GameLogger.error('[CropFactoryService] ERROR creating crop $cropId: $e\n$stackTrace');
+      GameLogger.error(
+        '[CropFactoryService] ERROR creating crop $cropId: $e\n$stackTrace',
+      );
       return null;
     }
   }

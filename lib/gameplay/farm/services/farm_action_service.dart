@@ -1,4 +1,3 @@
-
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
 import 'package:dawnforge/gameplay/world/entities/objects/farm/crop_entity.dart';
@@ -44,7 +43,9 @@ final class FarmActionService {
 
   /// TODO: Integrate with inventory to check for strawberries and consume them.
   FarmActionResult plantSeed(int x, int y, CropEntity crop) {
-    GameLogger.info('[FarmActionService] Attempting to plant ${crop.id} at ($x, $y)');
+    GameLogger.info(
+      '[FarmActionService] Attempting to plant ${crop.id} at ($x, $y)',
+    );
 
     final success = getIt<FarmManager>().plantSeed(x, y, crop);
 
@@ -67,7 +68,9 @@ final class FarmActionService {
       return HarvestResult.failure();
     }
 
-    GameLogger.info('[FarmActionService] ✅ Harvested ${crop.yieldAmount}x ${crop.name}');
+    GameLogger.info(
+      '[FarmActionService] ✅ Harvested ${crop.yieldAmount}x ${crop.name}',
+    );
 
     final inventoryResult = _addHarvestToInventory(crop);
 
@@ -80,7 +83,9 @@ final class FarmActionService {
     );
 
     if (harvestItem == null) {
-      GameLogger.warning('[FarmActionService] ⚠️ Harvest item not found: ${crop.harvestItemId}');
+      GameLogger.warning(
+        '[FarmActionService] ⚠️ Harvest item not found: ${crop.harvestItemId}',
+      );
       return false;
     }
 
@@ -90,7 +95,9 @@ final class FarmActionService {
     );
 
     if (success) {
-      GameLogger.info('[FarmActionService] 🎒 Added ${crop.yieldAmount}x ${harvestItem.name} to inventory');
+      GameLogger.info(
+        '[FarmActionService] 🎒 Added ${crop.yieldAmount}x ${harvestItem.name} to inventory',
+      );
     } else {
       GameLogger.warning('[FarmActionService] ⚠️ Inventory full, items lost!');
     }

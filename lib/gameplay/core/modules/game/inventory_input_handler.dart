@@ -293,7 +293,9 @@ class InventoryInputHandler extends GameComponent
 
     // Check if slot exists
     if (slotIndex >= inventoryManager.maxSlots) {
-      GameLogger.warning('[InventoryInput] Slot $slotIndex não existe (max: ${inventoryManager.maxSlots})');
+      GameLogger.warning(
+        '[InventoryInput] Slot $slotIndex não existe (max: ${inventoryManager.maxSlots})',
+      );
       return;
     }
 

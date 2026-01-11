@@ -24,14 +24,15 @@ class RepeatRule {
     Set<SeasonType>? seasons,
     Set<int>? dayNumbers,
     Set<int>? weekdayIndices,
-  })  : intervalDays = 1,
-        seasons = seasons,
-        dayNumbers = dayNumbers,
-        weekdayIndices = weekdayIndices;
+  }) : intervalDays = 1,
+       seasons = seasons,
+       dayNumbers = dayNumbers,
+       weekdayIndices = weekdayIndices;
 
   bool allows(_DayProjection day) {
     if (seasons != null && !seasons!.contains(day.requiredSeason)) return false;
-    if (dayNumbers != null && !dayNumbers!.contains(day.dayNumber)) return false;
+    if (dayNumbers != null && !dayNumbers!.contains(day.dayNumber))
+      return false;
     if (weekdayIndices != null && !weekdayIndices!.contains(day.weekdayIndex)) {
       return false;
     }
@@ -117,7 +118,10 @@ class TimeScheduler {
     required GameTime currentTime,
   }) {
     final epochDay = _updateEpochDay(currentDayState);
-    final currentEpochMinute = _toEpochMinute(epochDay, currentTime.totalMinutes);
+    final currentEpochMinute = _toEpochMinute(
+      epochDay,
+      currentTime.totalMinutes,
+    );
     _lastEpochMinute ??= currentEpochMinute - TimeConstants.kMinutesPerTick;
 
     // Snapshot keys to avoid mutation during iteration.
@@ -128,9 +132,13 @@ class TimeScheduler {
 
       // Loop to catch up multiple missed occurrences (manual day jumps).
       while (true) {
-        final taskEpochMinute = _toEpochMinute(task.targetEpochDay, task.minuteOfDay);
+        final taskEpochMinute = _toEpochMinute(
+          task.targetEpochDay,
+          task.minuteOfDay,
+        );
         final inWindow =
-            taskEpochMinute > _lastEpochMinute! && taskEpochMinute <= currentEpochMinute;
+            taskEpochMinute > _lastEpochMinute! &&
+            taskEpochMinute <= currentEpochMinute;
         if (!inWindow) break;
 
         final projection = _projectDay(task.targetEpochDay);
@@ -168,7 +176,8 @@ class TimeScheduler {
 
   int _updateEpochDay(DayState state) {
     final ordinal = _ordinalInYear(state);
-    final daysPerYear = TimeConstants.kDaysPerSeason * TimeConstants.kSeasonsPerYear;
+    final daysPerYear =
+        TimeConstants.kDaysPerSeason * TimeConstants.kSeasonsPerYear;
     if (_lastOrdinalInYear != null && ordinal < _lastOrdinalInYear!) {
       // Wrapped to a new year.
       _yearOffset += daysPerYear;
@@ -180,7 +189,8 @@ class TimeScheduler {
 
   int _ordinalInYear(DayState state) {
     final ordinal =
-        state.requiredSeason.index * TimeConstants.kDaysPerSeason + (state.dayNumber - 1);
+        state.requiredSeason.index * TimeConstants.kDaysPerSeason +
+        (state.dayNumber - 1);
     return ordinal;
   }
 
@@ -189,7 +199,8 @@ class TimeScheduler {
   }
 
   _DayProjection _projectDay(int epochDay) {
-    final daysPerYear = TimeConstants.kDaysPerSeason * TimeConstants.kSeasonsPerYear;
+    final daysPerYear =
+        TimeConstants.kDaysPerSeason * TimeConstants.kSeasonsPerYear;
     final dayWithinYear = epochDay % daysPerYear;
     final seasonIndex = dayWithinYear ~/ TimeConstants.kDaysPerSeason;
     final dayNumber = (dayWithinYear % TimeConstants.kDaysPerSeason) + 1;
@@ -205,7 +216,8 @@ class TimeScheduler {
     final rule = task.repeat!;
     final interval = rule.intervalDays.clamp(1, 365);
     // Limit search to avoid infinite loops if filters are impossible.
-    final maxSearch = TimeConstants.kDaysPerSeason * TimeConstants.kSeasonsPerYear * 3;
+    final maxSearch =
+        TimeConstants.kDaysPerSeason * TimeConstants.kSeasonsPerYear * 3;
     var candidate = task.targetEpochDay + interval;
     for (var i = 0; i < maxSearch; i++) {
       final projection = _projectDay(candidate);

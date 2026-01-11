@@ -16,11 +16,7 @@ final class ToolItem extends HandItem {
     required super.iconData,
     required super.quality,
     required this.toolType,
-  }) : super(
-         maxStackSize: 1,
-         isTradeable: true,
-         type: HandItemType.tool,
-       );
+  }) : super(maxStackSize: 1, isTradeable: true, type: HandItemType.tool);
 
   @override
   Map<String, dynamic> toJson() {

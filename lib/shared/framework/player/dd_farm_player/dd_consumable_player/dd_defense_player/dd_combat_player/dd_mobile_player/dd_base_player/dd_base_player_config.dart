@@ -68,7 +68,7 @@ class DDBasePlayerSaveData {
     final life = (json['life'] as num?)?.toDouble();
     final coins = _readCoins(json);
     final positionRaw = json['position'];
-    
+
     // ✨ Converte List para Vector2
     Vector2 position = Vector2.zero();
     if (positionRaw != null && positionRaw is List && positionRaw.length >= 2) {

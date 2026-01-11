@@ -70,12 +70,7 @@ final class GridTile extends Equatable {
 
   /// Serialization
   Map<String, dynamic> toJson() {
-    return {
-      'x': x,
-      'y': y,
-      'object': object?.toJson(),
-      'metadata': metadata,
-    };
+    return {'x': x, 'y': y, 'object': object?.toJson(), 'metadata': metadata};
   }
 
   /// Deserialization (requires object factory)

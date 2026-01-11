@@ -1,5 +1,5 @@
 /// Weather types mirrored from Stardew Valley style.
-enum WeatherType { sunny, rain, storm, snow, festival; }
+enum WeatherType { sunny, rain, storm, snow, festival }
 
 extension WeatherTypeJson on WeatherType {
   String toJson() => name;

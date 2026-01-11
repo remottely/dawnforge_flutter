@@ -77,7 +77,9 @@ final class PlayerProgressManager {
           distanceTraveled += entry.value;
           break;
         default:
-          GameLogger.warning('[PlayerProgressManager] Unknown stat: ${entry.key}');
+          GameLogger.warning(
+            '[PlayerProgressManager] Unknown stat: ${entry.key}',
+          );
       }
     }
 
@@ -116,7 +118,9 @@ final class PlayerProgressManager {
   }
 
   void fromJson(Map<String, dynamic> json) {
-    GameLogger.info('[PlayerProgressManager] Loading player progress from JSON');
+    GameLogger.info(
+      '[PlayerProgressManager] Loading player progress from JSON',
+    );
 
     _flags.clear();
     final flagsList = json['flags'] as List<dynamic>?;

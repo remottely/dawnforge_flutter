@@ -52,7 +52,9 @@ class ShieldDefenseInputHandler extends GameComponent
       }
 
       if (player.controller.model.stamina <= 0) {
-        GameLogger.warning('[ShieldDefenseInput] ✗ Stamina esgotada, parando defesa');
+        GameLogger.warning(
+          '[ShieldDefenseInput] ✗ Stamina esgotada, parando defesa',
+        );
         player.stopShieldDefense();
         _isDefending = false;
         _defenseTime = 0.0;
@@ -107,7 +109,9 @@ class ShieldDefenseInputHandler extends GameComponent
         _staminaAccumulator = 0.0;
 
         player.controller.beginStaminaConsumingAction();
-        GameLogger.info('[ShieldDefenseInput] ✓ Defesa iniciada - regeneração pausada');
+        GameLogger.info(
+          '[ShieldDefenseInput] ✓ Defesa iniciada - regeneração pausada',
+        );
         return true;
       }
     }
@@ -122,7 +126,9 @@ class ShieldDefenseInputHandler extends GameComponent
       _staminaAccumulator = 0.0;
 
       player.controller.endStaminaConsumingAction();
-      GameLogger.info('[ShieldDefenseInput] ✓ Defesa finalizada (tempo: ${_defenseTime.toStringAsFixed(2)}s) - regeneração retomada');
+      GameLogger.info(
+        '[ShieldDefenseInput] ✓ Defesa finalizada (tempo: ${_defenseTime.toStringAsFixed(2)}s) - regeneração retomada',
+      );
       return true;
     }
     return false;

@@ -15,7 +15,9 @@ class FarmFeedbackService {
     BonfireGameInterface gameRef, {
     bool autoShow = true,
   }) {
-    GameLogger.info('[FarmFeedback] Refreshing inventory HUD (autoShow: $autoShow)');
+    GameLogger.info(
+      '[FarmFeedback] Refreshing inventory HUD (autoShow: $autoShow)',
+    );
     // TODO: Implementation pending
     // 1. Find inventory HUD component in gameRef
     // 2. Call its refresh/update method

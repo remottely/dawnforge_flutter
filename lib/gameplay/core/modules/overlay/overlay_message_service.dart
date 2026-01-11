@@ -1,11 +1,6 @@
 import 'dart:async';
 
-enum OverlayMessageType {
-  warning,
-  error,
-  info,
-  success,
-}
+enum OverlayMessageType { warning, error, info, success }
 
 class OverlayMessage {
   final String text;

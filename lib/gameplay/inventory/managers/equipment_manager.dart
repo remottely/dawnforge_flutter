@@ -1,4 +1,3 @@
-
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
 import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
@@ -12,7 +11,9 @@ import 'package:dawnforge/gameplay/inventory/state/equipment_state.dart';
 /// Manager for equipment state (C1: Singleton + ValueNotifier, I2: Manager = Singleton State)
 final class EquipmentManager {
   EquipmentManager._() {
-    GameLogger.info('[EquipmentManager] Initialized (selection mirrors inventory)');
+    GameLogger.info(
+      '[EquipmentManager] Initialized (selection mirrors inventory)',
+    );
 
     // Keep UI in sync when slots change (consumption/move/clear)
     InventoryManager.instance.slotsNotifier.addListener(
@@ -59,7 +60,9 @@ final class EquipmentManager {
 
     // Update overlays with current item (can be null if slot empty)
     EquipmentState.instance.updateEquippedItem(slot.item);
-    GameLogger.info('[EquipmentManager] Selected slot $index (${slot.item?.name ?? 'empty'})');
+    GameLogger.info(
+      '[EquipmentManager] Selected slot $index (${slot.item?.name ?? 'empty'})',
+    );
     return true;
   }
 
@@ -104,9 +107,7 @@ final class EquipmentManager {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'selectedSlotIndex': _currentMainHandSlotIndex,
-    };
+    return {'selectedSlotIndex': _currentMainHandSlotIndex};
   }
 
   void fromJson(
@@ -126,7 +127,9 @@ final class EquipmentManager {
         ?.item;
     EquipmentState.instance.updateEquippedItem(item);
 
-    GameLogger.info('[EquipmentManager] Loaded selected slot $_currentMainHandSlotIndex');
+    GameLogger.info(
+      '[EquipmentManager] Loaded selected slot $_currentMainHandSlotIndex',
+    );
   }
 
   void reset() {

@@ -25,7 +25,7 @@ class InventoryOverlay extends StatelessWidget with ResponsiveOverlayMixin {
       valueListenable: InventoryState.instance.isVisible,
       builder: (context, isVisible, child) {
         if (!isVisible) return const SizedBox.shrink();
-        
+
         // LayoutBuilder para reagir a mudanças de tamanho em tempo real
         return LayoutBuilder(
           builder: (context, constraints) {
@@ -33,7 +33,9 @@ class InventoryOverlay extends StatelessWidget with ResponsiveOverlayMixin {
             final padding = OverlayResponsiveConfig.getPadding(screenSize);
             final spacing = OverlayResponsiveConfig.getSpacing(screenSize);
             final slotSize = OverlayResponsiveConfig.getSlotSize(screenSize);
-            final baseFontSize = OverlayResponsiveConfig.getBaseFontSize(screenSize);
+            final baseFontSize = OverlayResponsiveConfig.getBaseFontSize(
+              screenSize,
+            );
 
             return Material(
               color: Colors.transparent,
@@ -217,12 +219,12 @@ class InventoryOverlay extends StatelessWidget with ResponsiveOverlayMixin {
               // Item icon or abbreviation
               Center(
                 child: Padding(
-                        padding: EdgeInsets.all(spacing),
-                        child: ItemSpriteWidget(
-                          iconData: item.iconData,
-                          size: slotSize - (spacing * 2),
-                        ),
-                      ),
+                  padding: EdgeInsets.all(spacing),
+                  child: ItemSpriteWidget(
+                    iconData: item.iconData,
+                    size: slotSize - (spacing * 2),
+                  ),
+                ),
               ),
               // Quantity indicator
               if (quantity != null && quantity > 1)
@@ -275,15 +277,21 @@ class InventoryOverlay extends StatelessWidget with ResponsiveOverlayMixin {
       }
 
       final item = slot.item!;
-        final player = MarketState.instance.activePlayer.value ??
+      final player =
+          MarketState.instance.activePlayer.value ??
           PlayerStateManager.instance.lastPlayerModel;
       if (player == null) {
         OverlayMessageService.instance.showError('Player não disponível.');
         return;
       }
 
-      if (!MarketManager.instance.canSellItem(item.id, getIt<InventoryManager>())) {
-        OverlayMessageService.instance.showError('Item não vendável no market.');
+      if (!MarketManager.instance.canSellItem(
+        item.id,
+        getIt<InventoryManager>(),
+      )) {
+        OverlayMessageService.instance.showError(
+          'Item não vendável no market.',
+        );
         return;
       }
 

@@ -33,7 +33,9 @@ final class AudioManager {
       try {
         await FlameAudio.audioCache.load(asset);
       } catch (e) {
-        GameLogger.warning('[AudioManager] Skipping missing/invalid asset: $asset -> $e');
+        GameLogger.warning(
+          '[AudioManager] Skipping missing/invalid asset: $asset -> $e',
+        );
       }
     }
     GameLogger.debug('[AudioManager] Initialized successfully');
@@ -81,15 +83,21 @@ final class AudioManager {
 
   /// Background Music
   Future<void> stopBackgroundMusic() async {
-    GameLogger.debug('[AudioManager] Stopping music. Current: $_currentBackgroundTrack');
+    GameLogger.debug(
+      '[AudioManager] Stopping music. Current: $_currentBackgroundTrack',
+    );
     await FlameAudio.bgm.stop();
     _isBackgroundMusicPlaying = false;
     _currentBackgroundTrack = null;
   }
 
   Future<void> playBackgroundMusic(String musicTrack) async {
-    GameLogger.debug('[AudioManager] playBackgroundMusic called with: $musicTrack');
-    GameLogger.debug('[AudioManager] Current state - playing: $_isBackgroundMusicPlaying, track: $_currentBackgroundTrack');
+    GameLogger.debug(
+      '[AudioManager] playBackgroundMusic called with: $musicTrack',
+    );
+    GameLogger.debug(
+      '[AudioManager] Current state - playing: $_isBackgroundMusicPlaying, track: $_currentBackgroundTrack',
+    );
 
     // Verifica se deve tocar música
     if (!_isBackgroundMusicEnabled) {
@@ -98,7 +106,9 @@ final class AudioManager {
     }
 
     if (!AppEnvironment.kPlayBackgroundMusic) {
-      GameLogger.info('[AudioManager] AppEnvironment.kPlayBackgroundMusic is false, skipping');
+      GameLogger.info(
+        '[AudioManager] AppEnvironment.kPlayBackgroundMusic is false, skipping',
+      );
       return;
     }
 
@@ -110,7 +120,9 @@ final class AudioManager {
     }
 
     try {
-      GameLogger.debug('[AudioManager] Starting to play: $musicTrack with volume: $musicVolume');
+      GameLogger.debug(
+        '[AudioManager] Starting to play: $musicTrack with volume: $musicVolume',
+      );
 
       // CORREÇÃO: Passar o volume diretamente no play()
       await FlameAudio.bgm.play(musicTrack, volume: musicVolume);
@@ -118,7 +130,9 @@ final class AudioManager {
       _isBackgroundMusicPlaying = true;
       _currentBackgroundTrack = musicTrack;
 
-      GameLogger.debug('[AudioManager] Successfully started playing: $musicTrack');
+      GameLogger.debug(
+        '[AudioManager] Successfully started playing: $musicTrack',
+      );
     } catch (e) {
       GameLogger.error('[AudioManager] ERROR playing music: $e');
       _isBackgroundMusicPlaying = false;

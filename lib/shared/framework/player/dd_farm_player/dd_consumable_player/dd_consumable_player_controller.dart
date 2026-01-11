@@ -48,14 +48,17 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
     required JoystickActionEvent event,
   }) {
     final bool isInteraction = _isConsumeAction(event.id);
-    final bool isConsumeVegetable = event.event == ActionEvent.DOWN && isInteraction;
+    final bool isConsumeVegetable =
+        event.event == ActionEvent.DOWN && isInteraction;
 
     if (!isConsumeVegetable) {
       return false;
     }
 
     final consumed = _tryConsumeSelectedItem(player);
-    GameLogger.info('[ConsumableController] Consumo via interação: success=$consumed');
+    GameLogger.info(
+      '[ConsumableController] Consumo via interação: success=$consumed',
+    );
     return consumed;
   }
 
@@ -83,7 +86,9 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
     final selectedIndex = EquipmentManager.instance.currentMainHandSlotIndex;
     final slot = InventoryManager.instance.getSlotByIndex(selectedIndex);
     if (slot == null || slot.isEmpty) {
-      GameLogger.warning('[ConsumableController] Consumo falhou: slot vazio ($selectedIndex)');
+      GameLogger.warning(
+        '[ConsumableController] Consumo falhou: slot vazio ($selectedIndex)',
+      );
       return false;
     }
 
@@ -94,14 +99,18 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
 
     final item = slot.item;
     if (item == null) {
-      GameLogger.warning('[ConsumableController] Consumo falhou: item nulo ($selectedIndex)');
+      GameLogger.warning(
+        '[ConsumableController] Consumo falhou: item nulo ($selectedIndex)',
+      );
       return false;
     }
 
     int staminaGain = 0;
     double healthGain = 0;
 
-    GameLogger.info('[ConsumableController] Consumo tentativa: slot=$selectedIndex item=${item.runtimeType} qty=${slot.quantity}');
+    GameLogger.info(
+      '[ConsumableController] Consumo tentativa: slot=$selectedIndex item=${item.runtimeType} qty=${slot.quantity}',
+    );
 
     if (item is HarvestLootItem) {
       if (!item.isEdible) return false;
@@ -114,13 +123,15 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
       return false;
     }
 
-    unawaited(_confirmConsumeItem(
-      player: player,
-      slotIndex: selectedIndex,
-      itemName: item.name,
-      staminaGain: staminaGain,
-      healthGain: healthGain,
-    ));
+    unawaited(
+      _confirmConsumeItem(
+        player: player,
+        slotIndex: selectedIndex,
+        itemName: item.name,
+        staminaGain: staminaGain,
+        healthGain: healthGain,
+      ),
+    );
 
     // Diálogo é assíncrono; retornamos true para bloquear outras ações enquanto a escolha é feita.
     return true;
@@ -158,6 +169,8 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
     }
 
     InventoryManager.instance.consumeFromSlot(slotIndex, 1);
-    GameLogger.info('[ConsumableController] Consumo aplicado: hp=+$healthGain, stamina=+$staminaGain, slot=$slotIndex');
+    GameLogger.info(
+      '[ConsumableController] Consumo aplicado: hp=+$healthGain, stamina=+$staminaGain, slot=$slotIndex',
+    );
   }
 }

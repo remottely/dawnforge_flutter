@@ -17,7 +17,9 @@ class MarketDecoration extends DDContactDecoration
 
   /// Clear cached spawn registry (e.g., when rebuilding the game after death/restart).
   static void clearSpawnRegistry() {
-    GameLogger.debug('[MarketDecoration] Clearing spawn registry (${_spawnedPositions.length} entries)');
+    GameLogger.debug(
+      '[MarketDecoration] Clearing spawn registry (${_spawnedPositions.length} entries)',
+    );
     _spawnedPositions.clear();
   }
 
@@ -59,7 +61,9 @@ class MarketDecoration extends DDContactDecoration
     _currentPlayer = component is DDBasePlayerView ? component : _currentPlayer;
     _registerToPlayerController();
 
-    GameLogger.debug('[MarketDecoration] onContact -> waiting interaction at $_spawnKey');
+    GameLogger.debug(
+      '[MarketDecoration] onContact -> waiting interaction at $_spawnKey',
+    );
   }
 
   @override
@@ -69,7 +73,9 @@ class MarketDecoration extends DDContactDecoration
     _dialogOpen = false;
     _currentPlayer = null;
     _unregisterFromPlayerController();
-    GameLogger.debug('[MarketDecoration] onContactExit -> unlock at $_spawnKey');
+    GameLogger.debug(
+      '[MarketDecoration] onContactExit -> unlock at $_spawnKey',
+    );
     _closeMarket();
   }
 
@@ -79,7 +85,9 @@ class MarketDecoration extends DDContactDecoration
     MarketState.instance.isOpen.addListener(_syncDialogState);
     final key = _spawnKey;
     if (_spawnedPositions.contains(key)) {
-      GameLogger.warning('[MarketDecoration] Duplicate instance detected at $key; removing extra copy.');
+      GameLogger.warning(
+        '[MarketDecoration] Duplicate instance detected at $key; removing extra copy.',
+      );
       scheduleMicrotask(removeFromParent);
       return;
     }
@@ -95,7 +103,9 @@ class MarketDecoration extends DDContactDecoration
     if (_registered) {
       _spawnedPositions.remove(_spawnKey);
     }
-    GameLogger.debug('[MarketDecoration] removed at $_spawnKey (registered=$_registered)');
+    GameLogger.debug(
+      '[MarketDecoration] removed at $_spawnKey (registered=$_registered)',
+    );
     super.onRemove();
   }
 
@@ -122,7 +132,9 @@ class MarketDecoration extends DDContactDecoration
         : null;
 
     if (model != null) {
-      GameLogger.debug('[MarketDecoration] opening via MarketState.openWithPlayer');
+      GameLogger.debug(
+        '[MarketDecoration] opening via MarketState.openWithPlayer',
+      );
       MarketState.instance.openWithPlayer(model);
       return;
     }
@@ -134,13 +146,17 @@ class MarketDecoration extends DDContactDecoration
     if (event.event != ActionEvent.DOWN) return;
     if (!InputDef.isInteractionAction(event.id)) return;
     if (_dialogOpen) {
-      GameLogger.debug('[MarketDecoration] interaction ignored, dialog already open at $_spawnKey');
+      GameLogger.debug(
+        '[MarketDecoration] interaction ignored, dialog already open at $_spawnKey',
+      );
       return;
     }
 
     final player = _currentPlayer;
     if (player == null) {
-      GameLogger.debug('[MarketDecoration] interaction ignored, no player reference at $_spawnKey');
+      GameLogger.debug(
+        '[MarketDecoration] interaction ignored, no player reference at $_spawnKey',
+      );
       return;
     }
 
@@ -152,7 +168,9 @@ class MarketDecoration extends DDContactDecoration
   void onJoystickChangeDirectional(JoystickDirectionalEvent event) {
     if (!_dialogOpen) return;
     if (event.directional == JoystickMoveDirectional.IDLE) return;
-    GameLogger.debug('[MarketDecoration] movement detected -> closing market at $_spawnKey');
+    GameLogger.debug(
+      '[MarketDecoration] movement detected -> closing market at $_spawnKey',
+    );
     _closeMarket();
   }
 

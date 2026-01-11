@@ -7,8 +7,10 @@ import 'package:dawnforge/shared/utils/sprite_animation_config_helper.dart';
 final class BossEnemyDef {
   BossEnemyDef._();
 
-  static final double fixedLifeBarWidth = CharacterConstants.fixedLifeBarWidthLarge;
-  static final Vector2 fixedLifeBarOffset = CharacterConstants.fixedLifeBarOffsetNone;
+  static final double fixedLifeBarWidth =
+      CharacterConstants.fixedLifeBarWidthLarge;
+  static final Vector2 fixedLifeBarOffset =
+      CharacterConstants.fixedLifeBarOffsetNone;
 
   static const double kPrimaryAttackVisionRadius =
       CharacterConstants.kVisionRadiusSuperLarge;

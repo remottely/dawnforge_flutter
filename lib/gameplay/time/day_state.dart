@@ -44,13 +44,13 @@ class DayState {
   }
 
   Map<String, dynamic> toJson() => {
-        'dayNumber': dayNumber,
-        'requiredSeason': requiredSeason.toJson(),
-        'weather': weather.toJson(),
-        'weekdayIndex': weekdayIndex,
-        'isFestival': isFestival,
-        'festivalId': festivalId,
-      };
+    'dayNumber': dayNumber,
+    'requiredSeason': requiredSeason.toJson(),
+    'weather': weather.toJson(),
+    'weekdayIndex': weekdayIndex,
+    'isFestival': isFestival,
+    'festivalId': festivalId,
+  };
 
   static DayState fromJson(Map<String, dynamic> json) {
     return DayState(
@@ -65,21 +65,22 @@ class DayState {
 
   /// Creates the default day-one state.
   factory DayState.dayOne() => DayState(
-        dayNumber: 1,
-        requiredSeason: SeasonType.spring,
-        weather: WeatherType.sunny,
-        weekdayIndex: 0,
-      );
+    dayNumber: 1,
+    requiredSeason: SeasonType.spring,
+    weather: WeatherType.sunny,
+    weekdayIndex: 0,
+  );
 
   /// Compute the next day state, wrapping seasons every 28 days.
   DayState nextDay({WeatherType Function(SeasonType, int)? weatherRng}) {
     final nextDayNumber = dayNumber % TimeConstants.kDaysPerSeason + 1;
-    final nextSeason =
-        nextDayNumber == 1 ? requiredSeason.next() : requiredSeason;
+    final nextSeason = nextDayNumber == 1
+        ? requiredSeason.next()
+        : requiredSeason;
     final nextWeekday = (weekdayIndex + 1) % 7;
     final nextWeather = weatherRng != null
-      ? weatherRng(nextSeason, nextDayNumber)
-      : DayState.defaultWeatherRng(nextSeason, nextDayNumber);
+        ? weatherRng(nextSeason, nextDayNumber)
+        : DayState.defaultWeatherRng(nextSeason, nextDayNumber);
 
     return copyWith(
       dayNumber: nextDayNumber,
@@ -95,7 +96,10 @@ class DayState {
   /// - Summer: higher storm and rain chance.
   /// - Winter: snow common, storms rare.
   /// - Spring/Fall: moderate rain, occasional storm.
-  static WeatherType defaultWeatherRng(SeasonType requiredSeason, int dayNumber) {
+  static WeatherType defaultWeatherRng(
+    SeasonType requiredSeason,
+    int dayNumber,
+  ) {
     final roll = _rng.nextDouble();
     switch (requiredSeason) {
       case SeasonType.winter:

@@ -33,7 +33,9 @@ final class SaveRepositoryWeb implements SaveRepository {
     final currentSize = _calculateStorageSize();
     if (currentSize > _warningThresholdBytes) {
       final sizeMB = (currentSize / (1024 * 1024)).toStringAsFixed(2);
-      GameLogger.warning('[SaveRepositoryWeb] WARNING: Storage usage is $sizeMB MB (approaching 5MB limit)');
+      GameLogger.warning(
+        '[SaveRepositoryWeb] WARNING: Storage usage is $sizeMB MB (approaching 5MB limit)',
+      );
     }
   }
 
@@ -63,7 +65,9 @@ final class SaveRepositoryWeb implements SaveRepository {
       final jsonString = _localStorage.getItem(prefixedKey);
 
       if (jsonString == null) {
-        GameLogger.warning('[SaveRepositoryWeb] No data found for key: $prefixedKey');
+        GameLogger.warning(
+          '[SaveRepositoryWeb] No data found for key: $prefixedKey',
+        );
         return null;
       }
 
@@ -110,7 +114,9 @@ final class SaveRepositoryWeb implements SaveRepository {
         _localStorage.removeItem(key);
       }
 
-      GameLogger.info('[SaveRepositoryWeb] Cleared ${gameKeys.length} game keys');
+      GameLogger.info(
+        '[SaveRepositoryWeb] Cleared ${gameKeys.length} game keys',
+      );
 
       return true;
     } catch (e) {
@@ -126,7 +132,9 @@ final class SaveRepositoryWeb implements SaveRepository {
       final value = _localStorage.getItem(prefixedKey);
       return value != null;
     } catch (e) {
-      GameLogger.warning('[SaveRepositoryWeb] Error checking existence for key: $key');
+      GameLogger.warning(
+        '[SaveRepositoryWeb] Error checking existence for key: $key',
+      );
       return false;
     }
   }
@@ -144,7 +152,9 @@ final class SaveRepositoryWeb implements SaveRepository {
         }
       }
 
-      GameLogger.info('[SaveRepositoryWeb] Found ${gameKeys.length} game save keys');
+      GameLogger.info(
+        '[SaveRepositoryWeb] Found ${gameKeys.length} game save keys',
+      );
 
       return gameKeys;
     } catch (e) {

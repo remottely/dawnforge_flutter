@@ -7,24 +7,24 @@ class CharacterConfig {
   final Vector2 size;
   final RectangleHitbox hitbox;
   final LightingConfig lighting;
-  
+
   // Stats base
   final double maxLife;
   final double baseSpeed;
   final double maxStamina;
   final int maxEnergy;
-  
+
   // Regeneração
   final double staminaRegenRate; // stamina/segundo
   final Duration staminaRegenDebounce;
-  
+
   // Detecção
   final double visionRadius;
   final double longVisionRadius;
-  
+
   // Death
   final GameDecoration Function(Vector2 position)? getDeathMarker;
-  
+
   const CharacterConfig({
     required this.size,
     required this.hitbox,
@@ -39,7 +39,7 @@ class CharacterConfig {
     required this.longVisionRadius,
     this.getDeathMarker,
   });
-  
+
   // Factory para criar config padrão
   factory CharacterConfig.player({
     required Vector2 size,

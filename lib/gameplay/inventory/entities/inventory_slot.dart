@@ -42,11 +42,7 @@ final class InventorySlot extends Equatable {
 
   /// Serialization (D2)
   Map<String, dynamic> toJson() {
-    return {
-      'index': index,
-      'itemId': item?.id.name,
-      'quantity': quantity,
-    };
+    return {'index': index, 'itemId': item?.id.name, 'quantity': quantity};
   }
 
   /// Deserialization with item resolver

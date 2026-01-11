@@ -5,8 +5,7 @@ import 'package:dawnforge/gameplay/core/modules/game/player_state_manager.dart';
 import 'package:dawnforge/gameplay/core/modules/save/save_data_model.dart';
 import 'package:dawnforge/gameplay/core/modules/save/save_manager.dart';
 import 'package:dawnforge/gameplay/core/modules/world/world_state_manager.dart';
-import 'package:dawnforge/gameplay/farm/farm_service_locator.dart'
-    as farm_di;
+import 'package:dawnforge/gameplay/farm/farm_service_locator.dart' as farm_di;
 import 'package:dawnforge/gameplay/farm/managers/farm_manager.dart';
 import 'package:dawnforge/gameplay/farm/usecases/load_farm_use_case.dart';
 import 'package:dawnforge/gameplay/farm/usecases/save_farm_use_case.dart';
@@ -202,7 +201,6 @@ final class GameSaveController {
       // );
 
       final tilePos = PositionHelper.toMVPPosition(); // TODO(Kevin): remove it
-
 
       // Salva em tiles na propriedade do modelo
       if (playerState.lastPlayerModel is DDBasePlayerModel) {

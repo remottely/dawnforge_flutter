@@ -9,7 +9,7 @@ import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_p
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_model.dart';
 
 abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
-  extends DDConsumablePlayerController<M> {
+    extends DDConsumablePlayerController<M> {
   final bool Function() onExecuteDig;
   final bool Function() onExecuteWateringCan;
   final bool Function() onExecuteSeed;
@@ -61,7 +61,9 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
     required DDBasePlayerView player,
     required JoystickActionEvent event,
   }) {
-    GameLogger.info('[FarmController] Verificando ação: ${event.id} | equipment: ${player.controller.model.equipment} | evento: ${event.event}');
+    GameLogger.info(
+      '[FarmController] Verificando ação: ${event.id} | equipment: ${player.controller.model.equipment} | evento: ${event.event}',
+    );
 
     if (handleConsumableInput(player: player, event: event)) {
       return;
@@ -86,7 +88,9 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
       GameLogger.info('[FarmController] ✓ É harvest action');
       _handleExecuteHarvest();
     } else {
-      GameLogger.info('[FarmController] ✗ Não é ação de farm, passando para super');
+      GameLogger.info(
+        '[FarmController] ✗ Não é ação de farm, passando para super',
+      );
     }
 
     // Encaminha para a cadeia de combate base (sem reprocessar consumo).
@@ -94,7 +98,9 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
   }
 
   void _handleExecuteDig() {
-    GameLogger.info('[FarmController] _handleExecuteDig: stamina=${model.stamina}, canExecute=${model.canExecuteDig}');
+    GameLogger.info(
+      '[FarmController] _handleExecuteDig: stamina=${model.stamina}, canExecute=${model.canExecuteDig}',
+    );
 
     if (!model.canExecuteDig) {
       GameLogger.warning('[FarmController] ✗ Não pode executar dig');
@@ -122,7 +128,9 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
   }
 
   void _handleExecuteWateringCan() {
-    GameLogger.info('[FarmController] _handleExecuteWateringCan: stamina=${model.stamina}, canExecute=${model.canExecuteWateringCan}');
+    GameLogger.info(
+      '[FarmController] _handleExecuteWateringCan: stamina=${model.stamina}, canExecute=${model.canExecuteWateringCan}',
+    );
 
     if (!model.canExecuteWateringCan) {
       GameLogger.warning('[FarmController] ✗ Não pode executar watering can');
@@ -150,7 +158,9 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
   }
 
   void _handleExecuteSeed() {
-    GameLogger.info('[FarmController] _handleExecuteSeed: stamina=${model.stamina}, canExecute=${model.canExecuteSeed}');
+    GameLogger.info(
+      '[FarmController] _handleExecuteSeed: stamina=${model.stamina}, canExecute=${model.canExecuteSeed}',
+    );
 
     if (!model.canExecuteSeed) {
       GameLogger.warning('[FarmController] ✗ Não pode executar seed');
@@ -178,7 +188,9 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
   }
 
   void _handleExecuteHarvest() {
-    GameLogger.info('[FarmController] _handleExecuteHarvest: stamina=${model.stamina}, canExecute=${model.canExecuteHarvest}');
+    GameLogger.info(
+      '[FarmController] _handleExecuteHarvest: stamina=${model.stamina}, canExecute=${model.canExecuteHarvest}',
+    );
 
     if (!model.canExecuteHarvest) {
       GameLogger.warning('[FarmController] ✗ Não pode executar harvest');

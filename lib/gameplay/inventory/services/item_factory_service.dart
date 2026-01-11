@@ -1,4 +1,3 @@
-
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
 import 'package:dawnforge/gameplay/inventory/items/consumable_item.dart';
@@ -59,18 +58,24 @@ class ItemFactoryService {
           _materials.length +
           _seeds.length;
 
-      GameLogger.info('[ItemFactoryService] Loaded $totalItems items from typed constants');
+      GameLogger.info(
+        '[ItemFactoryService] Loaded $totalItems items from typed constants',
+      );
 
       isInitialized = true;
     } catch (e, stackTrace) {
-      GameLogger.error('[ItemFactoryService] ERROR loading database: $e\n$stackTrace');
+      GameLogger.error(
+        '[ItemFactoryService] ERROR loading database: $e\n$stackTrace',
+      );
       rethrow;
     }
   }
 
   HandItem? createItem(HandItemId itemId) {
     if (!isInitialized) {
-      GameLogger.error('[ItemFactoryService] ERROR: Not initialized! Call initialize() first');
+      GameLogger.error(
+        '[ItemFactoryService] ERROR: Not initialized! Call initialize() first',
+      );
       return null;
     }
 
@@ -103,7 +108,9 @@ class ItemFactoryService {
       GameLogger.warning('[ItemFactoryService] Item not found: $itemId');
       return null;
     } catch (e, stackTrace) {
-      GameLogger.error('[ItemFactoryService] ERROR creating item $itemId: $e\n$stackTrace');
+      GameLogger.error(
+        '[ItemFactoryService] ERROR creating item $itemId: $e\n$stackTrace',
+      );
       return null;
     }
   }

@@ -24,19 +24,20 @@ class TimeManager {
     DayState.dayOne(),
   );
 
-  final async.StreamController<GameTime> _tickStream = async.StreamController.broadcast();
+  final async.StreamController<GameTime> _tickStream =
+      async.StreamController.broadcast();
   Stream<GameTime> get tickStream => _tickStream.stream;
 
   final TimeScheduler scheduler = TimeScheduler();
 
   final List<void Function(DayState previous, DayState current)>
-      _dayChangeListeners = [];
+  _dayChangeListeners = [];
 
   async.Timer? _timer;
   bool _isRunning = false;
   double _accumulator = 0;
   bool _isPaused = false;
-  
+
   BonfireGameInterface? _game;
 
   bool get isRunning => _isRunning;
@@ -149,10 +150,10 @@ class TimeManager {
   void advanceToNextDay() {
     final previousDay = dayStateNotifier.value;
     final nextDay = _nextDayState();
-    
+
     timeNotifier.value = GameTime(hour: TimeConstants.kStartHour, minute: 0);
     dayStateNotifier.value = nextDay;
-    
+
     _teleportPlayerToHome();
     _notifyDayChange(previousDay, nextDay);
   }
@@ -165,7 +166,7 @@ class TimeManager {
         playerPosition: Vector2(5, 5), // Posição inicial em tiles
         playerDirection: Direction.down,
       );
-      
+
       GameLogger.info('[TimeManager] Solicitada transição para Home');
     } catch (e, stack) {
       GameLogger.error('[TimeManager] Erro ao solicitar transição: $e\n$stack');
@@ -214,7 +215,7 @@ class TimeManager {
       }
     }
   }
-  
+
   void dispose() {
     _timer?.cancel();
     _tickStream.close();

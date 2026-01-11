@@ -1,4 +1,3 @@
-
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
 import 'package:dawnforge/gameplay/inventory/config/inventory_def.dart';
@@ -28,7 +27,9 @@ final class ItemPriceService {
     _hasArtisanProfession = artisan;
     _hasAnglerProfession = angler;
 
-    GameLogger.info('[ItemPriceService] Professions set: Tiller=$tiller, Rancher=$rancher, Artisan=$artisan, Angler=$angler');
+    GameLogger.info(
+      '[ItemPriceService] Professions set: Tiller=$tiller, Rancher=$rancher, Artisan=$artisan, Angler=$angler',
+    );
   }
 
   int calculateSellPrice(
@@ -52,7 +53,9 @@ final class ItemPriceService {
 
     final finalPrice = price.round();
 
-    GameLogger.info('[ItemPriceService] Price for ${item.name}: base=${item.baseValue}, final=$finalPrice (quality=${item is HarvestLootItem ? item.quality.name : "N/A"}, profession=${(professionBonus * 100).toStringAsFixed(0)}%, location=${isShippingBin ? "shipping" : "shop"})');
+    GameLogger.info(
+      '[ItemPriceService] Price for ${item.name}: base=${item.baseValue}, final=$finalPrice (quality=${item is HarvestLootItem ? item.quality.name : "N/A"}, profession=${(professionBonus * 100).toStringAsFixed(0)}%, location=${isShippingBin ? "shipping" : "shop"})',
+    );
 
     return finalPrice;
   }
@@ -73,8 +76,7 @@ final class ItemPriceService {
         return InventoryDef.kTillerProfessionBonus;
       }
 
-      if (_hasRancherProfession &&
-          item.type == LootCategory.animalProduct) {
+      if (_hasRancherProfession && item.type == LootCategory.animalProduct) {
         return InventoryDef.kRancherProfessionBonus;
       }
 
@@ -103,8 +105,7 @@ final class ItemPriceService {
     final goldChance = (effectiveLevel >= 5)
         ? (effectiveLevel - 5) * InventoryDef.kQualityChancePerLevel
         : 0.0;
-    final silverChance =
-        effectiveLevel * InventoryDef.kQualityChancePerLevel;
+    final silverChance = effectiveLevel * InventoryDef.kQualityChancePerLevel;
 
     if (randomValue < iridiumChance) {
       return HandItemQuality.iridium;

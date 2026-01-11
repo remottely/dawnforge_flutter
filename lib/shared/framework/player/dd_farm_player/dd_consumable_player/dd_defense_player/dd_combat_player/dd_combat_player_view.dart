@@ -138,7 +138,7 @@ abstract class DDCombatPlayerView<
 
     final DDAnimationDirectional comboAnimation =
         _comboAttackAnimations[_comboStep];
-    
+
     // Captura o valor atual do combo para evitar que o closure capture a referência
     final currentComboStep = _comboStep;
 
@@ -211,10 +211,7 @@ abstract class DDCombatPlayerView<
     return executionInfo != null;
   }
 
-  void _executePrimaryAttack({
-    required double damage,
-    required int comboStep,
-  }) {
+  void _executePrimaryAttack({required double damage, required int comboStep}) {
     final attackOffset = OffsetHelper.getCenterOffset(
       comboStep == 2 ? Vector2(4, 0) : Vector2(-4, 0),
       lastDirection,

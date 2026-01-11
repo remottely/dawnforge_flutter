@@ -109,7 +109,9 @@ abstract class DDFarmPlayerView<
     final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
       AttackType.melee,
       () {
-        GameLogger.info('[FarmPlayerView] _onExecuteDig: Executando animação de dig');
+        GameLogger.info(
+          '[FarmPlayerView] _onExecuteDig: Executando animação de dig',
+        );
         DDCharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
           animationRight: animationDigDirectional.right,
           animationLeft: animationDigDirectional.left,
@@ -130,7 +132,9 @@ abstract class DDFarmPlayerView<
     );
 
     final wasExecuted = executionInfo != null;
-    GameLogger.info('[FarmPlayerView] _onExecuteDig resultado: $wasExecuted (executionInfo=$executionInfo)');
+    GameLogger.info(
+      '[FarmPlayerView] _onExecuteDig resultado: $wasExecuted (executionInfo=$executionInfo)',
+    );
 
     return wasExecuted;
   }
@@ -150,7 +154,9 @@ abstract class DDFarmPlayerView<
           animationLeftDown: animationWateringCanDirectional.leftDown,
           currentAnimation: animation,
           target: this,
-          executionStartFrame: AppEnvironment.kIsDevToolsMode ? 0 : 8, // TODO(Kevin): inject this value dynamically
+          executionStartFrame: AppEnvironment.kIsDevToolsMode
+              ? 0
+              : 8, // TODO(Kevin): inject this value dynamically
           onActionStart: lockAction,
           onActionEnd: unlockAction,
           onExecutionFrames: () => FarmToolActionDef.execute(player: this),
@@ -167,7 +173,9 @@ abstract class DDFarmPlayerView<
     final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
       AttackType.melee,
       () {
-        GameLogger.info('[FarmPlayerView] _onExecuteSeed: Executando animação de seed');
+        GameLogger.info(
+          '[FarmPlayerView] _onExecuteSeed: Executando animação de seed',
+        );
         DDCharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
           animationRight: animationPlaceSeedDirectional.right,
           animationLeft: animationPlaceSeedDirectional.left,
@@ -188,7 +196,9 @@ abstract class DDFarmPlayerView<
     );
 
     final wasExecuted = executionInfo != null;
-    GameLogger.info('[FarmPlayerView] _onExecuteSeed resultado: $wasExecuted (executionInfo=$executionInfo)');
+    GameLogger.info(
+      '[FarmPlayerView] _onExecuteSeed resultado: $wasExecuted (executionInfo=$executionInfo)',
+    );
 
     return wasExecuted;
   }

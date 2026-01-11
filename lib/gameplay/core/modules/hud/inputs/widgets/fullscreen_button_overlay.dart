@@ -8,10 +8,7 @@ import 'fullscreen_helper_stub.dart'
 class FullscreenButtonOverlay extends StatelessWidget {
   final double? size;
 
-  const FullscreenButtonOverlay({
-    super.key,
-    this.size,
-  });
+  const FullscreenButtonOverlay({super.key, this.size});
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +26,7 @@ class FullscreenButtonOverlay extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.black.withOpacity(0.7),
           borderRadius: BorderRadius.circular(buttonSize * 0.2),
-          border: Border.all(
-            color: Colors.white.withOpacity(0.3),
-            width: 2,
-          ),
+          border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.3),

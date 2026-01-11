@@ -16,19 +16,12 @@ final class WeaponItem extends HandItem {
     required super.iconData,
     required super.quality,
     required this.damage,
-  }) : super(
-         maxStackSize: 1,
-         isTradeable: false,
-         type: HandItemType.weapon,
-       );
+  }) : super(maxStackSize: 1, isTradeable: false, type: HandItemType.weapon);
 
   @override
   Map<String, dynamic> toJson() {
     final baseData = super.toJson();
-    return {
-      ...baseData,
-      'damage': damage,
-    };
+    return {...baseData, 'damage': damage};
   }
 
   @protected

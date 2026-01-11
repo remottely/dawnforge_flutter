@@ -132,20 +132,26 @@ abstract class DDMobilePlayerView<
 
   void lockAction() {
     _activeActionLockCount += 1;
-    GameLogger.info('[MobilePlayerView] 🔒 Action LOCKED (count: $_activeActionLockCount)');
+    GameLogger.info(
+      '[MobilePlayerView] 🔒 Action LOCKED (count: $_activeActionLockCount)',
+    );
   }
 
   void unlockAction() {
     if (_activeActionLockCount > 0) {
       _activeActionLockCount -= 1;
-      GameLogger.info('[MobilePlayerView] 🔓 Action UNLOCKED (count: $_activeActionLockCount)');
+      GameLogger.info(
+        '[MobilePlayerView] 🔓 Action UNLOCKED (count: $_activeActionLockCount)',
+      );
 
       if (_activeActionLockCount == 0) {
         GameLogger.info('[MobilePlayerView] ✅ Action FULLY UNLOCKED');
         onActionFullyUnlocked();
       }
     } else {
-      GameLogger.warning('[MobilePlayerView] ⚠️ Tentativa de unlock quando já estava unlocked!');
+      GameLogger.warning(
+        '[MobilePlayerView] ⚠️ Tentativa de unlock quando já estava unlocked!',
+      );
     }
   }
 

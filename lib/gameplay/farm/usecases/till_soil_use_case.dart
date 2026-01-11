@@ -1,4 +1,3 @@
-
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
 import 'package:dawnforge/gameplay/world/entities/world_entities.dart';
@@ -48,15 +47,18 @@ class TillSoilUseCase {
     final existingFarmObject = existingTile?.object as FarmObject?;
 
     // Check if already tilled
-    if (existingFarmObject != null && existingFarmObject.soilState != SoilState.untilled) {
+    if (existingFarmObject != null &&
+        existingFarmObject.soilState != SoilState.untilled) {
       GameLogger.warning('[FarmManager] Soil already tilled');
       return false;
     }
 
     // Create or update tile
-    final farmObject = existingFarmObject ?? FarmObject(objectId: 'farm_${x}_$y');
+    final farmObject =
+        existingFarmObject ?? FarmObject(objectId: 'farm_${x}_$y');
     final tilledFarmObject = farmObject.till();
-    final tilledTile = existingTile?.placeObject(tilledFarmObject) ?? 
+    final tilledTile =
+        existingTile?.placeObject(tilledFarmObject) ??
         GridTile(x: x, y: y, object: tilledFarmObject);
 
     _manager.setTile(tilledTile);

@@ -32,9 +32,11 @@ final class SaveRepositoryNative implements SaveRepository {
         final compressed = gzip.encode(utf8.encode(jsonString));
         dataToSave = base64.encode(compressed);
         await prefs.setBool('${prefixedKey}_compressed', true);
-        GameLogger.info('[SaveRepositoryNative] Compressed save data: '
+        GameLogger.info(
+          '[SaveRepositoryNative] Compressed save data: '
           '${jsonString.length} bytes → ${dataToSave.length} bytes '
-          '(${((1 - dataToSave.length / jsonString.length) * 100).toStringAsFixed(1)}% reduction)');
+          '(${((1 - dataToSave.length / jsonString.length) * 100).toStringAsFixed(1)}% reduction)',
+        );
       } else {
         dataToSave = jsonString;
         await prefs.remove('${prefixedKey}_compressed');
@@ -43,15 +45,21 @@ final class SaveRepositoryNative implements SaveRepository {
       final success = await prefs.setString(prefixedKey, dataToSave);
 
       if (success) {
-        GameLogger.info('[SaveRepositoryNative] Saved data for key: $prefixedKey '
-          '(${dataToSave.length} bytes${shouldCompress ? ', compressed' : ''})');
+        GameLogger.info(
+          '[SaveRepositoryNative] Saved data for key: $prefixedKey '
+          '(${dataToSave.length} bytes${shouldCompress ? ', compressed' : ''})',
+        );
       } else {
-        GameLogger.warning('[SaveRepositoryNative] Failed to save data for key: $prefixedKey');
+        GameLogger.warning(
+          '[SaveRepositoryNative] Failed to save data for key: $prefixedKey',
+        );
       }
 
       return success;
     } catch (e) {
-      GameLogger.error('[SaveRepositoryNative] Error saving data for key: $key');
+      GameLogger.error(
+        '[SaveRepositoryNative] Error saving data for key: $key',
+      );
       return false;
     }
   }
@@ -64,7 +72,9 @@ final class SaveRepositoryNative implements SaveRepository {
       final dataString = prefs.getString(prefixedKey);
 
       if (dataString == null) {
-        GameLogger.warning('[SaveRepositoryNative] No data found for key: $prefixedKey');
+        GameLogger.warning(
+          '[SaveRepositoryNative] No data found for key: $prefixedKey',
+        );
         return null;
       }
 
@@ -76,10 +86,14 @@ final class SaveRepositoryNative implements SaveRepository {
           final compressed = base64.decode(dataString);
           final decompressed = gzip.decode(compressed);
           jsonString = utf8.decode(decompressed);
-          GameLogger.info('[SaveRepositoryNative] Decompressed data: '
-            '${dataString.length} bytes → ${jsonString.length} bytes');
+          GameLogger.info(
+            '[SaveRepositoryNative] Decompressed data: '
+            '${dataString.length} bytes → ${jsonString.length} bytes',
+          );
         } catch (e) {
-          GameLogger.warning('[SaveRepositoryNative] Decompression failed, trying raw data');
+          GameLogger.warning(
+            '[SaveRepositoryNative] Decompression failed, trying raw data',
+          );
           jsonString = dataString;
         }
       } else {
@@ -88,12 +102,16 @@ final class SaveRepositoryNative implements SaveRepository {
 
       final data = jsonDecode(jsonString) as Map<String, dynamic>;
 
-      GameLogger.info('[SaveRepositoryNative] Loaded data for key: $prefixedKey '
-        '(${jsonString.length} bytes${isCompressed ? ', decompressed' : ''})');
+      GameLogger.info(
+        '[SaveRepositoryNative] Loaded data for key: $prefixedKey '
+        '(${jsonString.length} bytes${isCompressed ? ', decompressed' : ''})',
+      );
 
       return data;
     } catch (e) {
-      GameLogger.error('[SaveRepositoryNative] Error loading data for key: $key');
+      GameLogger.error(
+        '[SaveRepositoryNative] Error loading data for key: $key',
+      );
       return null;
     }
   }
@@ -107,12 +125,16 @@ final class SaveRepositoryNative implements SaveRepository {
       final success = await prefs.remove(prefixedKey);
 
       if (success) {
-        GameLogger.info('[SaveRepositoryNative] Deleted data for key: $prefixedKey');
+        GameLogger.info(
+          '[SaveRepositoryNative] Deleted data for key: $prefixedKey',
+        );
       }
 
       return success;
     } catch (e) {
-      GameLogger.error('[SaveRepositoryNative] Error deleting data for key: $key');
+      GameLogger.error(
+        '[SaveRepositoryNative] Error deleting data for key: $key',
+      );
       return false;
     }
   }
@@ -132,7 +154,9 @@ final class SaveRepositoryNative implements SaveRepository {
         final success = await prefs.remove(key);
         if (!success) {
           allSuccess = false;
-          GameLogger.warning('[SaveRepositoryNative] Failed to remove key: $key');
+          GameLogger.warning(
+            '[SaveRepositoryNative] Failed to remove key: $key',
+          );
         } else {
           removedCount++;
         }
@@ -154,7 +178,9 @@ final class SaveRepositoryNative implements SaveRepository {
       final prefixedKey = '$_keyPrefix$key';
       return prefs.containsKey(prefixedKey);
     } catch (e) {
-      GameLogger.warning('[SaveRepositoryNative] Error checking existence for key: $key');
+      GameLogger.warning(
+        '[SaveRepositoryNative] Error checking existence for key: $key',
+      );
       return false;
     }
   }
@@ -170,7 +196,9 @@ final class SaveRepositoryNative implements SaveRepository {
           .map((key) => key.substring(_keyPrefix.length))
           .toList();
 
-      GameLogger.info('[SaveRepositoryNative] Found ${gameKeys.length} game save keys');
+      GameLogger.info(
+        '[SaveRepositoryNative] Found ${gameKeys.length} game save keys',
+      );
 
       return gameKeys;
     } catch (e) {

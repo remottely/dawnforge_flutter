@@ -24,18 +24,19 @@ class GameplayScreen extends StatefulWidget {
 class _GameplayScreenState extends GameplayScreenViewmodel {
   String? _lastRequestedMusic;
   StreamSubscription<MapTransitionRequest>? _transitionSubscription;
-  
+
   // Usamos BuildContext do MapNavigator para navegação
   BuildContext? _mapNavigatorContext;
 
   @override
   void initState() {
     super.initState();
-    
+
     // Escuta solicitações de transição de mapa
-    _transitionSubscription = MapTransitionController.instance.onTransitionRequested.listen(
-      _handleMapTransition,
-    );
+    _transitionSubscription = MapTransitionController
+        .instance
+        .onTransitionRequested
+        .listen(_handleMapTransition);
   }
 
   @override
@@ -73,7 +74,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
       builder: (context, arguments, mapItem) {
         // Salva o contexto do MapNavigator
         _mapNavigatorContext = context;
-        
+
         final mapLightingColor = ColorHelper.fromHex(
           mapItem.properties[MapDef.kLightingColorPropertyKey]?.toString(),
         );
