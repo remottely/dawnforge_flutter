@@ -1,10 +1,10 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_def.dart';
-import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_model.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_manager.dart';
+import 'package:dawnforge/gameplay/characters/npcs/wizard/wizard_npc_controller.dart';
+import 'package:dawnforge/gameplay/characters/npcs/wizard/wizard_npc_def.dart';
+import 'package:dawnforge/gameplay/characters/npcs/wizard/wizard_npc_model.dart';
+import 'package:dawnforge/gameplay/core/modules/audio/audio_manager.dart';
+import 'package:dawnforge/gameplay/core/modules/input_actions/input_def.dart';
+import 'package:dawnforge/gameplay/core/modules/ui/ui_state_manager.dart';
 
 class WizardNpcView extends SimpleNpc with PlayerControllerListener {
   bool _playerIsNearby = false;

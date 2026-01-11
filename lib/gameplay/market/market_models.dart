@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
+import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
 
 /// Tipo de transação do market (compra ou venda).
 enum MarketTransactionType { buy, sell }

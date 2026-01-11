@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
+import 'package:dawnforge/gameplay/core/modules/game/tile_constants.dart';
 import 'package:flutter/widgets.dart';
 
 final class CameraCalculations {

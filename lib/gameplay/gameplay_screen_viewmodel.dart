@@ -1,34 +1,34 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_def.dart';
+import 'package:dawnforge/gameplay/characters/player/cute/cute_player_controller.dart';
+import 'package:dawnforge/gameplay/characters/player/cute/cute_player_def.dart';
 
-import 'package:darkness_dungeon/gameplay/characters/player/cute/cute_player_view.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/demo/demo_player_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/demo/demo_player_def.dart';
+import 'package:dawnforge/gameplay/characters/player/cute/cute_player_view.dart';
+import 'package:dawnforge/gameplay/characters/player/demo/demo_player_controller.dart';
+import 'package:dawnforge/gameplay/characters/player/demo/demo_player_def.dart';
 
-import 'package:darkness_dungeon/gameplay/characters/player/demo/demo_player_view.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_def.dart';
+import 'package:dawnforge/gameplay/characters/player/demo/demo_player_view.dart';
+import 'package:dawnforge/gameplay/characters/player/farmer/farmer_player_controller.dart';
+import 'package:dawnforge/gameplay/characters/player/farmer/farmer_player_def.dart';
 
-import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_view.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_def.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_view.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/shield_defense_input_handler.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/game_state_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/inventory_input_handler.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/gameplay/gameplay_hud_view.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/save/game_save_controller.dart';
-import 'package:darkness_dungeon/gameplay/farm/handlers/farm_input_handler.dart';
-import 'package:darkness_dungeon/gameplay/gameplay_screen.dart';
-import 'package:darkness_dungeon/gameplay/gameplay_screen_def.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/save/domain/models/player_save_data.dart';
-import 'package:darkness_dungeon/gameplay/market/market_decoration.dart';
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_model.dart';
-import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_def.dart';
+import 'package:dawnforge/gameplay/characters/player/farmer/farmer_player_view.dart';
+import 'package:dawnforge/gameplay/characters/player/sunny/sunny_player_controller.dart';
+import 'package:dawnforge/gameplay/characters/player/sunny/sunny_player_def.dart';
+import 'package:dawnforge/gameplay/characters/player/sunny/sunny_player_view.dart';
+import 'package:dawnforge/gameplay/core/modules/combat/shield_defense_input_handler.dart';
+import 'package:dawnforge/gameplay/core/modules/game/game_state_manager.dart';
+import 'package:dawnforge/gameplay/core/modules/game/inventory_input_handler.dart';
+import 'package:dawnforge/gameplay/core/modules/game/player_state_manager.dart';
+import 'package:dawnforge/gameplay/core/modules/hud/gameplay/gameplay_hud_view.dart';
+import 'package:dawnforge/gameplay/core/modules/save/game_save_controller.dart';
+import 'package:dawnforge/gameplay/farm/handlers/farm_input_handler.dart';
+import 'package:dawnforge/gameplay/gameplay_screen.dart';
+import 'package:dawnforge/gameplay/gameplay_screen_def.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
+import 'package:dawnforge/gameplay/core/modules/save/domain/models/player_save_data.dart';
+import 'package:dawnforge/gameplay/market/market_decoration.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_model.dart';
+import 'package:dawnforge/shared/utils/ui_sprite_animations_def.dart';
 import 'package:flutter/material.dart';
 
 abstract class GameplayScreenViewmodel extends State<GameplayScreen>

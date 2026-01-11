@@ -1,5 +1,5 @@
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/season.dart';
+import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
+import 'package:dawnforge/gameplay/inventory/entities/enums/season.dart';
 
 import '../../world/entities/objects/farm/crop_regrow_data.dart';
 import '../../world/entities/objects/farm/crop_entity.dart';

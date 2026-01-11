@@ -1,9 +1,9 @@
 import 'dart:async' as async;
 
-import 'package:darkness_dungeon/app/screens/menu_screen.dart';
-import 'package:darkness_dungeon/app/screens/menu_screen_def.dart';
-import 'package:darkness_dungeon/gameplay/gameplay_screen.dart';
-import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
+import 'package:dawnforge/app/screens/menu_screen.dart';
+import 'package:dawnforge/app/screens/menu_screen_def.dart';
+import 'package:dawnforge/gameplay/gameplay_screen.dart';
+import 'package:dawnforge/shared/managers/settings_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 

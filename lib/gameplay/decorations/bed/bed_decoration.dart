@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/save/game_save_controller.dart';
-// import 'package:darkness_dungeon/gameplay/core/modules/time/time_manager.dart' as new_time;
-import 'package:darkness_dungeon/gameplay/time/time_manager.dart' as new_time;
-import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_manager.dart';
-import 'package:darkness_dungeon/gameplay/decorations/bed/bed_decoration_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/ui/dialog/binary_choice_dialog.dart';
+import 'package:dawnforge/gameplay/core/modules/save/game_save_controller.dart';
+// import 'package:dawnforge/gameplay/core/modules/time/time_manager.dart' as new_time;
+import 'package:dawnforge/gameplay/time/time_manager.dart' as new_time;
+import 'package:dawnforge/gameplay/core/modules/ui/ui_state_manager.dart';
+import 'package:dawnforge/gameplay/decorations/bed/bed_decoration_config.dart';
+import 'package:dawnforge/gameplay/core/modules/ui/dialog/binary_choice_dialog.dart';
 
 class BedDecorationView extends GameDecoration {
   bool _isUsed = false;

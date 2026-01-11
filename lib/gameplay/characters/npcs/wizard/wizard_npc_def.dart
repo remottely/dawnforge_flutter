@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/character_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/ui/conversation_def.dart';
-import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
+import 'package:dawnforge/gameplay/characters/character_constants.dart';
+import 'package:dawnforge/gameplay/core/modules/ui/conversation_def.dart';
+import 'package:dawnforge/shared/utils/sprite_animation_config_helper.dart';
 
 final class WizardNpcDef {
   WizardNpcDef._();

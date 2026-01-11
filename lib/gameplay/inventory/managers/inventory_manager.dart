@@ -1,7 +1,7 @@
 
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
+import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:flutter/foundation.dart';
 
 import '../config/inventory_def.dart';

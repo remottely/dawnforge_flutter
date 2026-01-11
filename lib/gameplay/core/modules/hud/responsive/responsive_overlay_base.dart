@@ -1,5 +1,5 @@
-import 'package:darkness_dungeon/gameplay/core/modules/hud/responsive/overlay_responsive_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/responsive/responsive_overlay_mixin.dart';
+import 'package:dawnforge/gameplay/core/modules/hud/responsive/overlay_responsive_config.dart';
+import 'package:dawnforge/gameplay/core/modules/hud/responsive/responsive_overlay_mixin.dart';
 import 'package:flutter/widgets.dart';
 
 /// Interface base para todos os overlays responsivos

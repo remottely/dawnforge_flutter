@@ -1,14 +1,14 @@
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/tutorial_inputs/tutorial_inputs_state.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
-import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/state/inventory_state.dart';
-import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
-import 'package:darkness_dungeon/gameplay/inventory/usecases/add_item_use_case.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
+import 'package:dawnforge/gameplay/core/modules/hud/tutorial_inputs/tutorial_inputs_state.dart';
+import 'package:dawnforge/gameplay/core/modules/input_actions/input_def.dart';
+import 'package:dawnforge/gameplay/core/utils/app_environment.dart';
+import 'package:dawnforge/gameplay/inventory/managers/equipment_manager.dart';
+import 'package:dawnforge/gameplay/inventory/managers/inventory_manager.dart';
+import 'package:dawnforge/gameplay/inventory/state/inventory_state.dart';
+import 'package:dawnforge/gameplay/inventory/config/inventory_service_locator.dart';
+import 'package:dawnforge/gameplay/inventory/usecases/add_item_use_case.dart';
+import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
 
 /// Handles inventory and equipment inputs from both keyboard and joystick/mobile
 class InventoryInputHandler extends GameComponent

@@ -1,9 +1,9 @@
 import 'dart:async' as async;
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
-// import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/map/map_def.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/map/map_transition_controller.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
+// import 'package:dawnforge/gameplay/core/modules/game/player_state_manager.dart';
+import 'package:dawnforge/gameplay/core/modules/map/map_def.dart';
+import 'package:dawnforge/gameplay/core/modules/map/map_transition_controller.dart';
 import 'package:flutter/foundation.dart';
 
 import 'day_state.dart';

@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/save/game_save_controller.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_manager.dart';
-import 'package:darkness_dungeon/gameplay/gameplay_screen.dart';
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/gameplay/core/modules/save/game_save_controller.dart';
+import 'package:dawnforge/gameplay/core/modules/ui/ui_state_manager.dart';
+import 'package:dawnforge/gameplay/gameplay_screen.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
 import 'package:flutter/material.dart';
 
 class GameStateManager extends GameComponent {

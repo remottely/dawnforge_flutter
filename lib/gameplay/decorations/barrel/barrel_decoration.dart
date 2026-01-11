@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/decorations/barrel/barrel_decoration_def.dart';
-import 'package:darkness_dungeon/shared/framework/decorations/dd_pushable_decoration.dart';
+import 'package:dawnforge/gameplay/decorations/barrel/barrel_decoration_def.dart';
+import 'package:dawnforge/shared/framework/decorations/dd_pushable_decoration.dart';
 
 class BarrelDecorationView extends DDPushableDecoration with Attackable {
   BarrelDecorationView({required super.position})

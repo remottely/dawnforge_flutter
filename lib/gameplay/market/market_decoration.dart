@@ -1,14 +1,14 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
-// import 'package:darkness_dungeon/gameplay/market/market_decoration_def.dart';
-import 'package:darkness_dungeon/gameplay/market/market_state.dart';
-import 'package:darkness_dungeon/shared/framework/decorations/dd_contact_decoration.dart';
-// import 'package:darkness_dungeon/shared/framework/interaction/dd_contact_interaction.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/gameplay/core/modules/input_actions/input_def.dart';
+// import 'package:dawnforge/gameplay/market/market_decoration_def.dart';
+import 'package:dawnforge/gameplay/market/market_state.dart';
+import 'package:dawnforge/shared/framework/decorations/dd_contact_decoration.dart';
+// import 'package:dawnforge/shared/framework/interaction/dd_contact_interaction.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
 /// Decoração interativa do market. Ao encostar, aguarda o input de interação para abrir o painel.
 class MarketDecoration extends DDContactDecoration

@@ -1,16 +1,16 @@
 
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
 import 'dart:ui';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
-import 'package:darkness_dungeon/gameplay/world/entities/world_entities.dart';
-import 'package:darkness_dungeon/gameplay/farm/farm_service_locator.dart';
-import 'package:darkness_dungeon/gameplay/farm/managers/farm_manager.dart';
-import 'package:darkness_dungeon/gameplay/farm/models/soil_sprite_config.dart';
-import 'package:darkness_dungeon/gameplay/farm/usecases/till_soil_use_case.dart';
-import 'package:darkness_dungeon/shared/framework/interaction/dd_tool_interactable_mixin.dart';
-import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
+import 'package:dawnforge/gameplay/core/modules/game/tile_constants.dart';
+import 'package:dawnforge/gameplay/world/entities/world_entities.dart';
+import 'package:dawnforge/gameplay/farm/farm_service_locator.dart';
+import 'package:dawnforge/gameplay/farm/managers/farm_manager.dart';
+import 'package:dawnforge/gameplay/farm/models/soil_sprite_config.dart';
+import 'package:dawnforge/gameplay/farm/usecases/till_soil_use_case.dart';
+import 'package:dawnforge/shared/framework/interaction/dd_tool_interactable_mixin.dart';
+import 'package:dawnforge/shared/utils/sprite_animation_config_helper.dart';
 
 class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   // Toggle verbose tile logs to avoid flooding output each frame.

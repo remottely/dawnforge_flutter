@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
 import 'package:web/web.dart' as web;
 

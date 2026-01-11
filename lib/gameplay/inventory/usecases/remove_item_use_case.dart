@@ -1,5 +1,5 @@
 
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
 import 'dart:math';
 
 import '../managers/inventory_manager.dart';

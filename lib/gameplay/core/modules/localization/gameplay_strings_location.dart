@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_localizations.dart';
+import 'package:dawnforge/gameplay/core/modules/localization/gameplay_localizations.dart';
 
 final class GameplayStringsLocation {
   GameplayStringsLocation._();

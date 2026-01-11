@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/decorations/spike_trap/spike_trap_decoration_config.dart';
-import 'package:darkness_dungeon/shared/framework/decorations/dd_contact_decoration.dart';
+import 'package:dawnforge/gameplay/decorations/spike_trap/spike_trap_decoration_config.dart';
+import 'package:dawnforge/shared/framework/decorations/dd_contact_decoration.dart';
 
 class SpikeTrapDecorationView extends DDContactDecoration {
   final double _damageAmount;

@@ -1,9 +1,9 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/character_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/lightning_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
-import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
+import 'package:dawnforge/gameplay/characters/character_constants.dart';
+import 'package:dawnforge/gameplay/core/modules/game/lightning_constants.dart';
+import 'package:dawnforge/gameplay/core/modules/game/tile_constants.dart';
+import 'package:dawnforge/gameplay/core/modules/localization/gameplay_strings_location.dart';
+import 'package:dawnforge/shared/utils/sprite_animation_config_helper.dart';
 
 final class TorchDecorationDef {
   TorchDecorationDef._();

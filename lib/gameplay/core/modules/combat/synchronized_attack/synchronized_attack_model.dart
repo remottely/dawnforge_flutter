@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
+import 'package:dawnforge/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 
 class SynchronizedAttackModel {
   SynchronizedAttackModel({

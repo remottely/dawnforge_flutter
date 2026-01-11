@@ -1,10 +1,10 @@
 import 'dart:async' as async;
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
 import 'dart:math' as math;
 
-import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_model.dart';
+import 'package:dawnforge/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_config.dart';
+import 'package:dawnforge/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
+import 'package:dawnforge/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_model.dart';
 
 class SynchronizedAttackController {
   SynchronizedAttackController({required SynchronizedAttackConfig config})

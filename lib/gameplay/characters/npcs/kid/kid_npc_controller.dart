@@ -1,10 +1,10 @@
 import 'package:bonfire/player/player.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_view.dart';
-import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_def.dart';
-import 'package:darkness_dungeon/gameplay/characters/npcs/kid/kid_npc_view.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_def.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_manager.dart';
+import 'package:dawnforge/gameplay/characters/enemies/boss/boss_enemy_view.dart';
+import 'package:dawnforge/gameplay/characters/npcs/kid/kid_npc_def.dart';
+import 'package:dawnforge/gameplay/characters/npcs/kid/kid_npc_view.dart';
+import 'package:dawnforge/gameplay/core/modules/audio/audio_def.dart';
+import 'package:dawnforge/gameplay/core/modules/audio/audio_manager.dart';
+import 'package:dawnforge/gameplay/core/modules/ui/ui_state_manager.dart';
 
 class KidNpcController {
   bool _hasStartedConversationWithHero = false;

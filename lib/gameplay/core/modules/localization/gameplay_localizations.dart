@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
+import 'package:dawnforge/gameplay/core/modules/localization/gameplay_strings_location.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

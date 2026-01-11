@@ -1,8 +1,8 @@
-import 'package:darkness_dungeon/gameplay/inventory/items/material_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_quality.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/material_type.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/data/item_icon_data.dart';
+import 'package:dawnforge/gameplay/inventory/items/material_item.dart';
+import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
+import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_quality.dart';
+import 'package:dawnforge/gameplay/inventory/entities/enums/material_type.dart';
+import 'package:dawnforge/gameplay/inventory/entities/data/item_icon_data.dart';
 
 final class ModernFarmMaterialItemDatabaseDef {
   static const Map<HandItemId, MaterialItem> materialItemList = {

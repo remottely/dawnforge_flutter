@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_def.dart';
+import 'package:dawnforge/shared/utils/ui_sprite_animations_def.dart';
 
 class MenuScreenDef {
   MenuScreenDef._();

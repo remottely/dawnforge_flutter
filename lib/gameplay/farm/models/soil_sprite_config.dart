@@ -1,8 +1,8 @@
 
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
-import 'package:darkness_dungeon/gameplay/database/modern_farm/modern_farm_soil_state_sprite_database_def.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/data/item_icon_data.dart';
+import 'package:dawnforge/gameplay/database/modern_farm/modern_farm_soil_state_sprite_database_def.dart';
+import 'package:dawnforge/gameplay/inventory/entities/data/item_icon_data.dart';
 
 class SoilSpriteConfig {
   final Map<String, ItemIconData> soilStates;

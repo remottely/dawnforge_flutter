@@ -1,16 +1,16 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/offset_helper.dart';
-import 'package:darkness_dungeon/gameplay/farm/components/farm_tile_view.dart';
-import 'package:darkness_dungeon/gameplay/farm/constants/farm_feedback_config.dart';
-import 'package:darkness_dungeon/gameplay/farm/farm_service_locator.dart'
+import 'package:dawnforge/gameplay/core/utils/offset_helper.dart';
+import 'package:dawnforge/gameplay/farm/components/farm_tile_view.dart';
+import 'package:dawnforge/gameplay/farm/constants/farm_feedback_config.dart';
+import 'package:dawnforge/gameplay/farm/farm_service_locator.dart'
     as farm_di;
-import 'package:darkness_dungeon/gameplay/farm/services/farm_action_service.dart';
-import 'package:darkness_dungeon/gameplay/farm/services/farm_feedback_service.dart';
-import 'package:darkness_dungeon/gameplay/farm/usecases/plant_seed_use_case.dart';
-import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
+import 'package:dawnforge/gameplay/farm/services/farm_action_service.dart';
+import 'package:dawnforge/gameplay/farm/services/farm_feedback_service.dart';
+import 'package:dawnforge/gameplay/farm/usecases/plant_seed_use_case.dart';
+import 'package:dawnforge/gameplay/inventory/managers/equipment_manager.dart';
+import 'package:dawnforge/gameplay/inventory/config/inventory_service_locator.dart';
+import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 
 final class FarmToolActionDef {
   static final FarmActionService _actionService = FarmActionService.instance;

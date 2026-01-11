@@ -1,9 +1,9 @@
-// import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+// import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
-// import 'package:darkness_dungeon/gameplay/core/modules/time/time_constants.dart';
-// import 'package:darkness_dungeon/gameplay/core/modules/time/time_helper.dart';
-// import 'package:darkness_dungeon/gameplay/core/modules/time/time_of_day.dart';
-// import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
+// import 'package:dawnforge/gameplay/core/modules/time/time_constants.dart';
+// import 'package:dawnforge/gameplay/core/modules/time/time_helper.dart';
+// import 'package:dawnforge/gameplay/core/modules/time/time_of_day.dart';
+// import 'package:dawnforge/gameplay/core/modules/world/world_state_manager.dart';
 
 // final class TimeManager {
 //   TimeManager._();

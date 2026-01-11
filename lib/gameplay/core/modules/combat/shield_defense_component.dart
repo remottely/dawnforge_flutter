@@ -1,8 +1,8 @@
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
-import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
+import 'package:dawnforge/gameplay/core/modules/game/tile_constants.dart';
+import 'package:dawnforge/shared/utils/sprite_animation_config_helper.dart';
 
 class ShieldDefenseComponent extends GameComponent {
   final SimplePlayer _player;

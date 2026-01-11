@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/season.dart';
+import 'package:dawnforge/gameplay/inventory/entities/enums/season.dart';
 
 import 'weather_type.dart';
 import 'time_constants.dart';

@@ -1,9 +1,9 @@
-import 'package:darkness_dungeon/app/screens/menu_screen.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/tutorial_inputs/tutorial_inputs_hud_def.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/tutorial_inputs/tutorial_inputs_state.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/responsive/responsive_overlay_base.dart';
-import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
+import 'package:dawnforge/app/screens/menu_screen.dart';
+import 'package:dawnforge/gameplay/core/modules/audio/audio_manager.dart';
+import 'package:dawnforge/gameplay/core/modules/hud/tutorial_inputs/tutorial_inputs_hud_def.dart';
+import 'package:dawnforge/gameplay/core/modules/hud/tutorial_inputs/tutorial_inputs_state.dart';
+import 'package:dawnforge/gameplay/core/modules/hud/responsive/responsive_overlay_base.dart';
+import 'package:dawnforge/shared/managers/settings_manager.dart';
 import 'package:flutter/material.dart';
 
 class TutorialInputsOverlay extends ResponsiveOverlayBase {

@@ -1,9 +1,9 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
-import 'package:darkness_dungeon/shared/framework/widgets/dd_sprite_animation_widget.dart';
-import 'package:darkness_dungeon/shared/utils/sprite_animation_constants.dart';
-import 'package:darkness_dungeon/shared/utils/ui_sprite_animations_def.dart';
+import 'package:dawnforge/gameplay/core/modules/game/player_state_manager.dart';
+import 'package:dawnforge/gameplay/core/modules/localization/gameplay_strings_location.dart';
+import 'package:dawnforge/shared/framework/widgets/dd_sprite_animation_widget.dart';
+import 'package:dawnforge/shared/utils/sprite_animation_constants.dart';
+import 'package:dawnforge/shared/utils/ui_sprite_animations_def.dart';
 import 'package:flutter/painting.dart';
 
 final class ConversationDef {

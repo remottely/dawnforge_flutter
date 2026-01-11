@@ -1,7 +1,7 @@
 
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
-import 'package:darkness_dungeon/gameplay/database/modern_farm/modern_farm_crop_entity_database_def.dart';
+import 'package:dawnforge/gameplay/database/modern_farm/modern_farm_crop_entity_database_def.dart';
 
 import '../../inventory/entities/enums/hand_item_id.dart';
 import '../../world/entities/objects/farm/crop_entity.dart';

@@ -1,5 +1,5 @@
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
-import 'package:darkness_dungeon/gameplay/world/entities/objects/farm/farm_object.dart';
+import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
+import 'package:dawnforge/gameplay/world/entities/objects/farm/farm_object.dart';
 import 'package:flutter/foundation.dart';
 import 'package:equatable/equatable.dart';
 

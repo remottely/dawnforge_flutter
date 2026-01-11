@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_service.dart';
+import 'package:dawnforge/gameplay/core/modules/overlay/overlay_message_service.dart';
 import 'package:flutter/material.dart';
 
 final class OverlayMessageDef {

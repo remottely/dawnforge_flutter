@@ -1,20 +1,20 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
-import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/save/save_data_model.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/save/save_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
-import 'package:darkness_dungeon/gameplay/farm/farm_service_locator.dart'
+import 'package:dawnforge/gameplay/core/modules/game/player_state_manager.dart';
+import 'package:dawnforge/gameplay/core/modules/save/save_data_model.dart';
+import 'package:dawnforge/gameplay/core/modules/save/save_manager.dart';
+import 'package:dawnforge/gameplay/core/modules/world/world_state_manager.dart';
+import 'package:dawnforge/gameplay/farm/farm_service_locator.dart'
     as farm_di;
-import 'package:darkness_dungeon/gameplay/farm/managers/farm_manager.dart';
-import 'package:darkness_dungeon/gameplay/farm/usecases/load_farm_use_case.dart';
-import 'package:darkness_dungeon/gameplay/farm/usecases/save_farm_use_case.dart';
-import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
-import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/services/item_factory_service.dart';
-import 'package:darkness_dungeon/gameplay/time/time_manager.dart' as new_time;
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
+import 'package:dawnforge/gameplay/farm/managers/farm_manager.dart';
+import 'package:dawnforge/gameplay/farm/usecases/load_farm_use_case.dart';
+import 'package:dawnforge/gameplay/farm/usecases/save_farm_use_case.dart';
+import 'package:dawnforge/gameplay/inventory/config/inventory_service_locator.dart';
+import 'package:dawnforge/gameplay/inventory/managers/inventory_manager.dart';
+import 'package:dawnforge/gameplay/inventory/services/item_factory_service.dart';
+import 'package:dawnforge/gameplay/time/time_manager.dart' as new_time;
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
 
 /// Helper para conversão de coordenadas pixel → tile
 /// Segue o padrão de jogos 2D grid-based

@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/shared/framework/decorations/dd_input_receiver/dd_input_receiver_decoration_model.dart';
+import 'package:dawnforge/shared/framework/decorations/dd_input_receiver/dd_input_receiver_decoration_model.dart';
 
 class TorchDecorationModel implements DDInputReceiverDecorationModel {
   bool _isDetectPlayer;

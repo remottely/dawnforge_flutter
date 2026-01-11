@@ -1,22 +1,22 @@
 import 'dart:math' as math;
 
-import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_service.dart';
-import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/services/item_factory_service.dart';
-import 'package:darkness_dungeon/gameplay/inventory/widgets/item_sprite_widget.dart';
-import 'package:darkness_dungeon/gameplay/market/market_manager.dart';
-import 'package:darkness_dungeon/gameplay/market/market_models.dart';
-import 'package:darkness_dungeon/gameplay/market/market_state.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
+import 'package:dawnforge/gameplay/core/modules/game/player_state_manager.dart';
+import 'package:dawnforge/gameplay/core/modules/input_actions/keyboard_setup.dart';
+import 'package:dawnforge/gameplay/core/modules/overlay/overlay_message_service.dart';
+import 'package:dawnforge/gameplay/inventory/config/inventory_service_locator.dart';
+import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
+import 'package:dawnforge/gameplay/inventory/entities/hand_item.dart';
+import 'package:dawnforge/gameplay/inventory/managers/equipment_manager.dart';
+import 'package:dawnforge/gameplay/inventory/managers/inventory_manager.dart';
+import 'package:dawnforge/gameplay/inventory/services/item_factory_service.dart';
+import 'package:dawnforge/gameplay/inventory/widgets/item_sprite_widget.dart';
+import 'package:dawnforge/gameplay/market/market_manager.dart';
+import 'package:dawnforge/gameplay/market/market_models.dart';
+import 'package:dawnforge/gameplay/market/market_state.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
 /// Painel do market exibido dentro do grid da HUD (Quadrante 5).
 class MarketPanel extends StatefulWidget {

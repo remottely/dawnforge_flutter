@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
+import 'package:dawnforge/shared/framework/utils/dd_animation_directional.dart';
 
 final class DDCharacterActionSpriteAnimationHelper {
   DDCharacterActionSpriteAnimationHelper._();

@@ -5,15 +5,15 @@
 // // 3. Execute os testes em um ambiente sem problemas de compatibilidade
 
 // // ignore_for_file: dead_code, unused_import
-// import 'package:darkness_dungeon/gameplay/characters/player/sunny/sunny_player_model.dart';
-// import 'package:darkness_dungeon/gameplay/core/modules/save/player_progress_manager.dart';
-// import 'package:darkness_dungeon/gameplay/core/modules/save/player_save_adapter.dart';
-// import 'package:darkness_dungeon/gameplay/core/modules/save/save_manager.dart';
-// import 'package:darkness_dungeon/gameplay/core/modules/time/time_config.dart';
-// import 'package:darkness_dungeon/gameplay/core/modules/time/time_manager.dart';
-// import 'package:darkness_dungeon/gameplay/core/modules/world/map_state_model.dart';
-// import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
-// import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_config.dart';
+// import 'package:dawnforge/gameplay/characters/player/sunny/sunny_player_model.dart';
+// import 'package:dawnforge/gameplay/core/modules/save/player_progress_manager.dart';
+// import 'package:dawnforge/gameplay/core/modules/save/player_save_adapter.dart';
+// import 'package:dawnforge/gameplay/core/modules/save/save_manager.dart';
+// import 'package:dawnforge/gameplay/core/modules/time/time_config.dart';
+// import 'package:dawnforge/gameplay/core/modules/time/time_manager.dart';
+// import 'package:dawnforge/gameplay/core/modules/world/map_state_model.dart';
+// import 'package:dawnforge/gameplay/core/modules/world/world_state_manager.dart';
+// import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_config.dart';
 // import 'package:flutter_test/flutter_test.dart';
 
 // void main() {

@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/shared/utils/sprite_animation_constants.dart';
+import 'package:dawnforge/shared/utils/sprite_animation_constants.dart';
 
 final class SpriteAnimationConfigHelper {
   SpriteAnimationConfigHelper._();

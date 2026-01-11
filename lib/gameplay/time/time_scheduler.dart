@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/season.dart';
+import 'package:dawnforge/gameplay/inventory/entities/enums/season.dart';
 
 import 'day_state.dart';
 import 'game_time.dart';

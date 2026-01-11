@@ -1,9 +1,9 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_def.dart';
-import 'package:darkness_dungeon/gameplay/characters/player/farmer/farmer_player_controller.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_model.dart';
+import 'package:dawnforge/gameplay/characters/player/farmer/farmer_player_def.dart';
+import 'package:dawnforge/gameplay/characters/player/farmer/farmer_player_controller.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_model.dart';
 
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_view.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_view.dart';
 
 class FarmerPlayerView<
   C extends FarmerPlayerController<M>,

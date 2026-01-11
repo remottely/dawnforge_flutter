@@ -1,5 +1,5 @@
-import 'package:darkness_dungeon/gameplay/characters/enemies/mini_boss/mini_boss_enemy_def.dart';
-import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_model.dart';
+import 'package:dawnforge/gameplay/characters/enemies/mini_boss/mini_boss_enemy_def.dart';
+import 'package:dawnforge/shared/framework/enemies/dd_base_enemy/dd_base_enemy_model.dart';
 
 class MiniBossEnemyModel extends DDBaseEnemyModel {
   final double longVisionRadius;

@@ -1,20 +1,20 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_widget.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/tutorial_inputs/widgets/tutorial_inputs_overlay.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/responsive/responsive_overlay_mixin.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
-import 'package:darkness_dungeon/gameplay/inventory/widgets/equipment_overlay.dart';
-import 'package:darkness_dungeon/gameplay/inventory/widgets/inventory_overlay.dart';
-import 'package:darkness_dungeon/gameplay/market/market_state.dart';
-import 'package:darkness_dungeon/gameplay/market/widgets/market_panel.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/player_vital_stats/player_vital_stats_overlay.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/debug/debug_overlay.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/widgets/mobile_inputs_overlay.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/widgets/joystick_actions_overlay.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/inputs/widgets/fullscreen_button_overlay.dart';
-import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
-import 'package:darkness_dungeon/gameplay/time/time_manager.dart' as new_time;
-import 'package:darkness_dungeon/gameplay/time/widgets/time_hud_panel.dart';
+import 'package:dawnforge/gameplay/core/modules/overlay/overlay_message_widget.dart';
+import 'package:dawnforge/gameplay/core/modules/hud/tutorial_inputs/widgets/tutorial_inputs_overlay.dart';
+import 'package:dawnforge/gameplay/core/modules/hud/responsive/responsive_overlay_mixin.dart';
+import 'package:dawnforge/gameplay/core/utils/app_environment.dart';
+import 'package:dawnforge/gameplay/inventory/widgets/equipment_overlay.dart';
+import 'package:dawnforge/gameplay/inventory/widgets/inventory_overlay.dart';
+import 'package:dawnforge/gameplay/market/market_state.dart';
+import 'package:dawnforge/gameplay/market/widgets/market_panel.dart';
+import 'package:dawnforge/gameplay/core/modules/hud/player_vital_stats/player_vital_stats_overlay.dart';
+import 'package:dawnforge/gameplay/core/modules/hud/debug/debug_overlay.dart';
+import 'package:dawnforge/gameplay/core/modules/hud/inputs/widgets/mobile_inputs_overlay.dart';
+import 'package:dawnforge/gameplay/core/modules/hud/inputs/widgets/joystick_actions_overlay.dart';
+import 'package:dawnforge/gameplay/core/modules/hud/inputs/widgets/fullscreen_button_overlay.dart';
+import 'package:dawnforge/shared/managers/settings_manager.dart';
+import 'package:dawnforge/gameplay/time/time_manager.dart' as new_time;
+import 'package:dawnforge/gameplay/time/widgets/time_hud_panel.dart';
 import 'package:flutter/material.dart';
 
 /// Overlay unificado que organiza todos os componentes da HUD em um grid 3x3

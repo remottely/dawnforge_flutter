@@ -1,16 +1,16 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/map/map_def.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/map/map_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/map/map_transition_controller.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/color_helper.dart';
-import 'package:darkness_dungeon/gameplay/decorations/map_transition_sensor.dart';
-import 'package:darkness_dungeon/gameplay/farm/handlers/farm_input_handler.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/unified_game_overlay.dart';
-import 'package:darkness_dungeon/gameplay/gameplay_screen_viewmodel.dart';
-import 'package:darkness_dungeon/gameplay/time/time_manager.dart' as new_time;
+import 'package:dawnforge/gameplay/core/modules/audio/audio_manager.dart';
+import 'package:dawnforge/gameplay/core/modules/game/tile_constants.dart';
+import 'package:dawnforge/gameplay/core/modules/map/map_def.dart';
+import 'package:dawnforge/gameplay/core/modules/map/map_manager.dart';
+import 'package:dawnforge/gameplay/core/modules/map/map_transition_controller.dart';
+import 'package:dawnforge/gameplay/core/utils/app_environment.dart';
+import 'package:dawnforge/gameplay/core/utils/color_helper.dart';
+import 'package:dawnforge/gameplay/decorations/map_transition_sensor.dart';
+import 'package:dawnforge/gameplay/farm/handlers/farm_input_handler.dart';
+import 'package:dawnforge/gameplay/core/modules/hud/unified_game_overlay.dart';
+import 'package:dawnforge/gameplay/gameplay_screen_viewmodel.dart';
+import 'package:dawnforge/gameplay/time/time_manager.dart' as new_time;
 import 'package:flutter/material.dart';
 import 'dart:async';
 

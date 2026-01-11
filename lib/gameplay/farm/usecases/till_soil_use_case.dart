@@ -1,7 +1,7 @@
 
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
-import 'package:darkness_dungeon/gameplay/world/entities/world_entities.dart';
+import 'package:dawnforge/gameplay/world/entities/world_entities.dart';
 
 import '../managers/farm_manager.dart';
 

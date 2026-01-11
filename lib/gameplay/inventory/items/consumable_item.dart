@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_type.dart';
+import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_type.dart';
 
 import '../entities/hand_item.dart';
 import '../entities/enums/hand_item_id.dart';

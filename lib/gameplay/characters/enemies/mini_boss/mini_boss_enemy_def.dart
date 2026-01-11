@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/character_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
-import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
+import 'package:dawnforge/gameplay/characters/character_constants.dart';
+import 'package:dawnforge/gameplay/core/modules/game/tile_constants.dart';
+import 'package:dawnforge/gameplay/core/utils/hitbox_utils.dart';
+import 'package:dawnforge/shared/utils/sprite_animation_config_helper.dart';
 
 final class MiniBossEnemyDef {
   MiniBossEnemyDef._();

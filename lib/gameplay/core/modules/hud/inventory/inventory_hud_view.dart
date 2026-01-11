@@ -1,13 +1,13 @@
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/inventory/inventory_hud_def.dart';
-import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/data/item_icon_data.dart';
-import 'package:darkness_dungeon/shared/utils/sprite_animation_config_helper.dart';
+import 'package:dawnforge/gameplay/core/modules/hud/inventory/inventory_hud_def.dart';
+import 'package:dawnforge/gameplay/inventory/managers/equipment_manager.dart';
+import 'package:dawnforge/gameplay/inventory/managers/inventory_manager.dart';
+import 'package:dawnforge/gameplay/inventory/config/inventory_service_locator.dart';
+import 'package:dawnforge/gameplay/inventory/entities/hand_item.dart';
+import 'package:dawnforge/gameplay/inventory/entities/data/item_icon_data.dart';
+import 'package:dawnforge/shared/utils/sprite_animation_config_helper.dart';
 import 'package:flutter/material.dart';
 
 class InventoryHUDView extends InterfaceComponent {

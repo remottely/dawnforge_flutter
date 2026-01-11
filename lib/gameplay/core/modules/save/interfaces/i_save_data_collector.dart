@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/gameplay/core/modules/save/save_data_model.dart';
+import 'package:dawnforge/gameplay/core/modules/save/save_data_model.dart';
 
 abstract interface class ISaveDataCollector {
   SaveData collectGameState();

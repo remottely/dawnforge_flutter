@@ -1,19 +1,19 @@
-// import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+// import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
-// import 'package:darkness_dungeon/gameplay/core/modules/save/player_progress_manager.dart';
-// import 'package:darkness_dungeon/gameplay/core/modules/save/save_data_model.dart';
-// import 'package:darkness_dungeon/gameplay/core/modules/world/world_state_manager.dart';
-// import 'package:darkness_dungeon/gameplay/farm/farm_service_locator.dart'
+// import 'package:dawnforge/gameplay/core/modules/save/player_progress_manager.dart';
+// import 'package:dawnforge/gameplay/core/modules/save/save_data_model.dart';
+// import 'package:dawnforge/gameplay/core/modules/world/world_state_manager.dart';
+// import 'package:dawnforge/gameplay/farm/farm_service_locator.dart'
 //     as farm_di;
-// import 'package:darkness_dungeon/gameplay/farm/usecases/load_farm_use_case.dart';
-// import 'package:darkness_dungeon/gameplay/farm/usecases/save_farm_use_case.dart';
-// import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart'
+// import 'package:dawnforge/gameplay/farm/usecases/load_farm_use_case.dart';
+// import 'package:dawnforge/gameplay/farm/usecases/save_farm_use_case.dart';
+// import 'package:dawnforge/gameplay/inventory/config/inventory_service_locator.dart'
 //     as inv_di;
-// import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
-// import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
-// import 'package:darkness_dungeon/gameplay/inventory/services/item_factory_service.dart';
-// import 'package:darkness_dungeon/gameplay/time/time_constants.dart';
-// import 'package:darkness_dungeon/gameplay/time/time_manager.dart' as new_time;
+// import 'package:dawnforge/gameplay/inventory/managers/equipment_manager.dart';
+// import 'package:dawnforge/gameplay/inventory/managers/inventory_manager.dart';
+// import 'package:dawnforge/gameplay/inventory/services/item_factory_service.dart';
+// import 'package:dawnforge/gameplay/time/time_constants.dart';
+// import 'package:dawnforge/gameplay/time/time_manager.dart' as new_time;
 
 // final class GameStateCollector {
 //   GameStateCollector._();

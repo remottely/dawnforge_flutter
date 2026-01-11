@@ -1,11 +1,11 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/app/screens/menu_screen_def.dart';
-import 'package:darkness_dungeon/app/screens/menu_screen_viewmodel.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
-import 'package:darkness_dungeon/shared/design_system/dd_design_system.dart';
-import 'package:darkness_dungeon/shared/design_system/widgets/atoms/dd_radio_button.dart';
-import 'package:darkness_dungeon/shared/framework/widgets/dd_sprite_animation_widget.dart';
-import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
+import 'package:dawnforge/app/screens/menu_screen_def.dart';
+import 'package:dawnforge/app/screens/menu_screen_viewmodel.dart';
+import 'package:dawnforge/gameplay/core/modules/localization/gameplay_strings_location.dart';
+import 'package:dawnforge/shared/design_system/dd_design_system.dart';
+import 'package:dawnforge/shared/design_system/widgets/atoms/dd_radio_button.dart';
+import 'package:dawnforge/shared/framework/widgets/dd_sprite_animation_widget.dart';
+import 'package:dawnforge/shared/managers/settings_manager.dart';
 import 'package:flame_splash_screen/flame_splash_screen.dart';
 import 'package:flutter/material.dart';
 

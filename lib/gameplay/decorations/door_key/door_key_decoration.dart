@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/decorations/door_key/door_key_decoration_config.dart';
-import 'package:darkness_dungeon/shared/framework/decorations/dd_contact_decoration.dart';
-import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
-import 'package:darkness_dungeon/gameplay/inventory/usecases/add_item_use_case.dart';
+import 'package:dawnforge/gameplay/decorations/door_key/door_key_decoration_config.dart';
+import 'package:dawnforge/shared/framework/decorations/dd_contact_decoration.dart';
+import 'package:dawnforge/gameplay/inventory/config/inventory_service_locator.dart';
+import 'package:dawnforge/gameplay/inventory/usecases/add_item_use_case.dart';
 
 class DoorKeyDecorationView extends DDContactDecoration {
   bool _hasBeenCollected = false;

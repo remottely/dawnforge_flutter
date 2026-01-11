@@ -1,7 +1,7 @@
 
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
-import 'package:darkness_dungeon/gameplay/inventory/usecases/add_item_use_case.dart';
+import 'package:dawnforge/gameplay/inventory/usecases/add_item_use_case.dart';
 
 import '../entities/inventory_slot.dart';
 import '../managers/equipment_manager.dart';

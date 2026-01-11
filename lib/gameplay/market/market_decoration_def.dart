@@ -1,8 +1,8 @@
 // import 'dart:async';
 
 // import 'package:bonfire/bonfire.dart';
-// import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
-// import 'package:darkness_dungeon/gameplay/core/utils/hitbox_utils.dart';
+// import 'package:dawnforge/gameplay/core/modules/game/tile_constants.dart';
+// import 'package:dawnforge/gameplay/core/utils/hitbox_utils.dart';
 
 // final class MarketDecorationDef {
 //   MarketDecorationDef._();

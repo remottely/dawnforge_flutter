@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
 import 'dart:io' show gzip;
 
 import 'package:shared_preferences/shared_preferences.dart';

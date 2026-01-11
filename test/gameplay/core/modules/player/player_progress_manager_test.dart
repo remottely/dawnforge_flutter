@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:darkness_dungeon/gameplay/core/modules/save/player_progress_manager.dart';
+import 'package:dawnforge/gameplay/core/modules/save/player_progress_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

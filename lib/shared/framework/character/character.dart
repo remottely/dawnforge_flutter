@@ -1,12 +1,12 @@
 // lib/shared/framework/character/character.dart
 import 'dart:async' as async;
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/ui/emote_manager.dart';
-import 'package:darkness_dungeon/gameplay/market/market_state.dart';
-import 'package:darkness_dungeon/shared/framework/character/behavior/character_behavior.dart';
-import 'package:darkness_dungeon/shared/framework/character/character_config.dart';
-import 'package:darkness_dungeon/shared/framework/character/character_data.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/gameplay/core/modules/ui/emote_manager.dart';
+import 'package:dawnforge/gameplay/market/market_state.dart';
+import 'package:dawnforge/shared/framework/character/behavior/character_behavior.dart';
+import 'package:dawnforge/shared/framework/character/character_config.dart';
+import 'package:dawnforge/shared/framework/character/character_data.dart';
 import 'package:flutter/foundation.dart';
 
 /// Entidade base para todos os personagens (Player, NPC, Enemy)

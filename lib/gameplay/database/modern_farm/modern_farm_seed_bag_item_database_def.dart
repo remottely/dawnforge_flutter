@@ -1,8 +1,8 @@
-import 'package:darkness_dungeon/gameplay/inventory/items/seed_bag_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_quality.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/season.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/data/item_icon_data.dart';
+import 'package:dawnforge/gameplay/inventory/items/seed_bag_item.dart';
+import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
+import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_quality.dart';
+import 'package:dawnforge/gameplay/inventory/entities/enums/season.dart';
+import 'package:dawnforge/gameplay/inventory/entities/data/item_icon_data.dart';
 
 final class ModernFarmSeedBagItemDatabaseDef {
   static const Map<HandItemId, SeedBagItem> seedBagList = {

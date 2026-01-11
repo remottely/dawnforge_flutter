@@ -1,8 +1,8 @@
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
-import 'package:darkness_dungeon/gameplay/core/modules/time/time_of_day.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/world/map_state_model.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/world/season.dart';
+import 'package:dawnforge/gameplay/core/modules/time/time_of_day.dart';
+import 'package:dawnforge/gameplay/core/modules/world/map_state_model.dart';
+import 'package:dawnforge/gameplay/core/modules/world/season.dart';
 
 final class WorldStateManager {
   WorldStateManager._();

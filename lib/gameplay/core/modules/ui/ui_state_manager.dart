@@ -1,14 +1,14 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/app/screens/menu_screen.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/game_state_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/input_actions/keyboard_setup.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_strings_location.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_def.dart';
-import 'package:darkness_dungeon/shared/design_system/dd_design_system.dart';
-import 'package:darkness_dungeon/shared/design_system/widgets/atoms/dd_button.dart';
-import 'package:darkness_dungeon/shared/design_system/widgets/atoms/dd_dialog_widget.dart';
-import 'package:darkness_dungeon/shared/design_system/widgets/atoms/dd_text.dart';
+import 'package:dawnforge/app/screens/menu_screen.dart';
+import 'package:dawnforge/gameplay/core/modules/audio/audio_manager.dart';
+import 'package:dawnforge/gameplay/core/modules/game/game_state_manager.dart';
+import 'package:dawnforge/gameplay/core/modules/input_actions/keyboard_setup.dart';
+import 'package:dawnforge/gameplay/core/modules/localization/gameplay_strings_location.dart';
+import 'package:dawnforge/gameplay/core/modules/ui/ui_state_def.dart';
+import 'package:dawnforge/shared/design_system/dd_design_system.dart';
+import 'package:dawnforge/shared/design_system/widgets/atoms/dd_button.dart';
+import 'package:dawnforge/shared/design_system/widgets/atoms/dd_dialog_widget.dart';
+import 'package:dawnforge/shared/design_system/widgets/atoms/dd_text.dart';
 import 'package:flutter/material.dart';
 
 final class UIStateManager {

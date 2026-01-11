@@ -1,11 +1,11 @@
 
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
-import 'package:darkness_dungeon/gameplay/inventory/config/inventory_def.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_quality.dart';
-import 'package:darkness_dungeon/gameplay/inventory/items/harvest_loot_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/loot_category.dart';
+import 'package:dawnforge/gameplay/inventory/config/inventory_def.dart';
+import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_quality.dart';
+import 'package:dawnforge/gameplay/inventory/items/harvest_loot_item.dart';
+import 'package:dawnforge/gameplay/inventory/entities/hand_item.dart';
+import 'package:dawnforge/gameplay/inventory/entities/enums/loot_category.dart';
 
 final class ItemPriceService {
   ItemPriceService._();

@@ -1,10 +1,10 @@
 
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
-import 'package:darkness_dungeon/gameplay/inventory/items/consumable_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/items/material_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/items/tool_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
+import 'package:dawnforge/gameplay/inventory/items/consumable_item.dart';
+import 'package:dawnforge/gameplay/inventory/items/material_item.dart';
+import 'package:dawnforge/gameplay/inventory/items/tool_item.dart';
+import 'package:dawnforge/gameplay/inventory/items/weapon_item.dart';
 
 import '../entities/hand_item.dart';
 import '../items/seed_bag_item.dart';

@@ -5,7 +5,7 @@
 /// ## Como Usar
 /// 
 /// ```dart
-/// import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_def.dart';
+/// import 'package:dawnforge/gameplay/core/modules/overlay/overlay_message_def.dart';
 /// 
 /// // Mostrar mensagem de aviso (laranja)
 /// OverlayMessageDef.showNoStamina();
@@ -50,7 +50,7 @@
 /// Basta importar o service e chamar o método apropriado quando necessário:
 /// 
 /// ```dart
-/// import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_def.dart';
+/// import 'package:dawnforge/gameplay/core/modules/overlay/overlay_message_def.dart';
 /// 
 /// void tentarAbrirPorta() {
 ///   if (!playerTemChave) {

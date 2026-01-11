@@ -1,14 +1,14 @@
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
-import 'package:darkness_dungeon/gameplay/farm/services/farm_tool_action_config.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_view.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_mine_player/dd_mine_player_config.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_mine_player/dd_mine_player_controller.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_mine_player/dd_mine_player_model.dart';
-import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
-import 'package:darkness_dungeon/shared/framework/utils/dd_character_action_sprite_animation_helper.dart';
+import 'package:dawnforge/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
+import 'package:dawnforge/gameplay/farm/services/farm_tool_action_config.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_view.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_mine_player/dd_mine_player_config.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_mine_player/dd_mine_player_controller.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_mine_player/dd_mine_player_model.dart';
+import 'package:dawnforge/shared/framework/utils/dd_animation_directional.dart';
+import 'package:dawnforge/shared/framework/utils/dd_character_action_sprite_animation_helper.dart';
 import 'package:flutter/foundation.dart';
 
 abstract class DDMinePlayerView<

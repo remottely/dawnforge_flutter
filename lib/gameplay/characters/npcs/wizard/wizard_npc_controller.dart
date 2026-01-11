@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_model.dart';
-import 'package:darkness_dungeon/gameplay/characters/npcs/wizard/wizard_npc_view.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/ui/emote_manager.dart';
+import 'package:dawnforge/gameplay/characters/npcs/wizard/wizard_npc_model.dart';
+import 'package:dawnforge/gameplay/characters/npcs/wizard/wizard_npc_view.dart';
+import 'package:dawnforge/gameplay/core/modules/audio/audio_manager.dart';
+import 'package:dawnforge/gameplay/core/modules/ui/emote_manager.dart';
 
 class WizardNpcController {
   final WizardNpcModel model;

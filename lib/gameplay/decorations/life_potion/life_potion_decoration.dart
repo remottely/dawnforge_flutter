@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/decorations/life_potion/life_potion_decoration_config.dart';
-import 'package:darkness_dungeon/shared/framework/decorations/dd_contact_decoration.dart';
+import 'package:dawnforge/gameplay/decorations/life_potion/life_potion_decoration_config.dart';
+import 'package:dawnforge/shared/framework/decorations/dd_contact_decoration.dart';
 
 class LifePotionDecorationView extends DDContactDecoration {
   final double _healAmount;

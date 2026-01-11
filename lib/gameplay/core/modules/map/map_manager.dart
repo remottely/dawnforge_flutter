@@ -1,10 +1,10 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:bonfire/map/tiled/builder/tiled_world_builder.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/map/map_def.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/map/map_data.dart';
-import 'package:darkness_dungeon/gameplay/decorations/map_transition_sensor.dart';
-import 'package:darkness_dungeon/shared/framework/interaction/dd_collision_interaction.dart';
+import 'package:dawnforge/gameplay/core/modules/game/tile_constants.dart';
+import 'package:dawnforge/gameplay/core/modules/map/map_def.dart';
+import 'package:dawnforge/gameplay/core/modules/map/map_data.dart';
+import 'package:dawnforge/gameplay/decorations/map_transition_sensor.dart';
+import 'package:dawnforge/shared/framework/interaction/dd_collision_interaction.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 

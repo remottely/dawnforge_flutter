@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/gameplay/core/modules/map/map_def.dart';
+import 'package:dawnforge/gameplay/core/modules/map/map_def.dart';
 
 class MapData {
   final String id;

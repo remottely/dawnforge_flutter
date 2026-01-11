@@ -1,12 +1,12 @@
 
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
-import 'package:darkness_dungeon/gameplay/world/entities/objects/farm/crop_entity.dart';
-import 'package:darkness_dungeon/gameplay/farm/managers/farm_manager.dart';
-import 'package:darkness_dungeon/gameplay/farm/usecases/till_soil_use_case.dart';
-import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
-import 'package:darkness_dungeon/gameplay/inventory/services/item_factory_service.dart';
-import 'package:darkness_dungeon/gameplay/inventory/usecases/add_item_use_case.dart';
+import 'package:dawnforge/gameplay/world/entities/objects/farm/crop_entity.dart';
+import 'package:dawnforge/gameplay/farm/managers/farm_manager.dart';
+import 'package:dawnforge/gameplay/farm/usecases/till_soil_use_case.dart';
+import 'package:dawnforge/gameplay/inventory/config/inventory_service_locator.dart';
+import 'package:dawnforge/gameplay/inventory/services/item_factory_service.dart';
+import 'package:dawnforge/gameplay/inventory/usecases/add_item_use_case.dart';
 
 final class FarmActionService {
   FarmActionService._();

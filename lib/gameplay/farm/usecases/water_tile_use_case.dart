@@ -1,7 +1,7 @@
 
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
-import 'package:darkness_dungeon/gameplay/world/entities/objects/farm/farm_object.dart';
+import 'package:dawnforge/gameplay/world/entities/objects/farm/farm_object.dart';
 
 import '../../world/entities/objects/farm/soil_state.dart';
 import '../managers/farm_manager.dart';

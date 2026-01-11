@@ -1,6 +1,6 @@
-import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
+import 'package:dawnforge/gameplay/core/utils/app_environment.dart';
 import 'package:flame_audio/flame_audio.dart';
-import 'package:darkness_dungeon/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
 import 'audio_def.dart';
 

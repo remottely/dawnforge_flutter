@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_calculations.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
+import 'package:dawnforge/gameplay/core/modules/camera/camera_calculations.dart';
+import 'package:dawnforge/gameplay/core/modules/game/tile_constants.dart';
+import 'package:dawnforge/gameplay/core/modules/input_actions/input_def.dart';
 
 import 'package:flutter/widgets.dart';
 

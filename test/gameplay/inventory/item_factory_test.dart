@@ -1,10 +1,10 @@
-// import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
-// import 'package:darkness_dungeon/gameplay/inventory/items/consumable_item.dart';
-// import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
-// import 'package:darkness_dungeon/gameplay/inventory/items/material_item.dart';
-// import 'package:darkness_dungeon/gameplay/inventory/items/seed_bag_item.dart';
-// import 'package:darkness_dungeon/gameplay/inventory/items/tool_item.dart';
-// import 'package:darkness_dungeon/gameplay/inventory/services/item_factory_service.dart';
+// import 'package:dawnforge/gameplay/inventory/config/inventory_service_locator.dart';
+// import 'package:dawnforge/gameplay/inventory/items/consumable_item.dart';
+// import 'package:dawnforge/gameplay/inventory/items/weapon_item.dart';
+// import 'package:dawnforge/gameplay/inventory/items/material_item.dart';
+// import 'package:dawnforge/gameplay/inventory/items/seed_bag_item.dart';
+// import 'package:dawnforge/gameplay/inventory/items/tool_item.dart';
+// import 'package:dawnforge/gameplay/inventory/services/item_factory_service.dart';
 // import 'package:flutter_test/flutter_test.dart';
 
 // void main() {

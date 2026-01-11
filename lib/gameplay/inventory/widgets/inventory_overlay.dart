@@ -1,18 +1,18 @@
-import 'package:darkness_dungeon/gameplay/core/modules/hud/responsive/responsive_overlay_mixin.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/hud/responsive/overlay_responsive_config.dart';
-import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/state/equipment_state.dart';
-import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/state/inventory_state.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/inventory_slot.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/widgets/item_sprite_widget.dart';
-import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
+import 'package:dawnforge/gameplay/core/modules/hud/responsive/responsive_overlay_mixin.dart';
+import 'package:dawnforge/gameplay/core/modules/hud/responsive/overlay_responsive_config.dart';
+import 'package:dawnforge/gameplay/inventory/managers/equipment_manager.dart';
+import 'package:dawnforge/gameplay/inventory/state/equipment_state.dart';
+import 'package:dawnforge/gameplay/inventory/managers/inventory_manager.dart';
+import 'package:dawnforge/gameplay/inventory/state/inventory_state.dart';
+import 'package:dawnforge/gameplay/inventory/entities/inventory_slot.dart';
+import 'package:dawnforge/gameplay/inventory/entities/hand_item.dart';
+import 'package:dawnforge/gameplay/inventory/widgets/item_sprite_widget.dart';
+import 'package:dawnforge/gameplay/inventory/config/inventory_service_locator.dart';
 import 'package:flutter/material.dart';
-import 'package:darkness_dungeon/gameplay/market/market_state.dart';
-import 'package:darkness_dungeon/gameplay/market/market_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/player_state_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_service.dart';
+import 'package:dawnforge/gameplay/market/market_state.dart';
+import 'package:dawnforge/gameplay/market/market_manager.dart';
+import 'package:dawnforge/gameplay/core/modules/game/player_state_manager.dart';
+import 'package:dawnforge/gameplay/core/modules/overlay/overlay_message_service.dart';
 
 class InventoryOverlay extends StatelessWidget with ResponsiveOverlayMixin {
   const InventoryOverlay({super.key});

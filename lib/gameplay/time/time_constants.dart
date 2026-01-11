@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
+import 'package:dawnforge/gameplay/core/utils/app_environment.dart';
 
 /// Constants for the in-game clock and calendar.
 final class TimeConstants {

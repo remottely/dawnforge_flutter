@@ -1,19 +1,19 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_controller.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_def.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/boss/boss_enemy_model.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_Def.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/imp/imp_enemy_view.dart';
-import 'package:darkness_dungeon/gameplay/characters/enemies/mini_boss/mini_boss_enemy_view.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_def.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_calculations.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/death/character_fx_sprite_animations_def.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/game/tile_constants.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_manager.dart';
-import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_view.dart';
+import 'package:dawnforge/gameplay/characters/enemies/boss/boss_enemy_controller.dart';
+import 'package:dawnforge/gameplay/characters/enemies/boss/boss_enemy_def.dart';
+import 'package:dawnforge/gameplay/characters/enemies/boss/boss_enemy_model.dart';
+import 'package:dawnforge/gameplay/characters/enemies/imp/imp_enemy_Def.dart';
+import 'package:dawnforge/gameplay/characters/enemies/imp/imp_enemy_view.dart';
+import 'package:dawnforge/gameplay/characters/enemies/mini_boss/mini_boss_enemy_view.dart';
+import 'package:dawnforge/gameplay/core/modules/audio/audio_def.dart';
+import 'package:dawnforge/gameplay/core/modules/audio/audio_manager.dart';
+import 'package:dawnforge/gameplay/core/modules/camera/camera_calculations.dart';
+import 'package:dawnforge/gameplay/core/modules/combat/death/character_fx_sprite_animations_def.dart';
+import 'package:dawnforge/gameplay/core/modules/game/tile_constants.dart';
+import 'package:dawnforge/gameplay/core/modules/ui/ui_state_manager.dart';
+import 'package:dawnforge/shared/framework/enemies/dd_base_enemy/dd_base_enemy_view.dart';
 import 'package:flutter/material.dart';
 
 class BossEnemyView

@@ -1,4 +1,4 @@
-import 'package:darkness_dungeon/gameplay/core/modules/hud/responsive/overlay_responsive_config.dart';
+import 'package:dawnforge/gameplay/core/modules/hud/responsive/overlay_responsive_config.dart';
 import 'package:flutter/widgets.dart';
 
 /// Mixin que fornece funcionalidades responsivas para overlays

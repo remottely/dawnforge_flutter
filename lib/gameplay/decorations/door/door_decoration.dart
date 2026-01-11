@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/ui/ui_state_manager.dart';
-import 'package:darkness_dungeon/gameplay/decorations/door/door_decoration_config.dart';
-import 'package:darkness_dungeon/gameplay/decorations/door_key/door_key_decoration_config.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/ui/dialog/binary_choice_dialog.dart';
-import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
-import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
+import 'package:dawnforge/gameplay/core/modules/ui/ui_state_manager.dart';
+import 'package:dawnforge/gameplay/decorations/door/door_decoration_config.dart';
+import 'package:dawnforge/gameplay/decorations/door_key/door_key_decoration_config.dart';
+import 'package:dawnforge/gameplay/core/modules/ui/dialog/binary_choice_dialog.dart';
+import 'package:dawnforge/gameplay/inventory/config/inventory_service_locator.dart';
+import 'package:dawnforge/gameplay/inventory/managers/equipment_manager.dart';
+import 'package:dawnforge/gameplay/inventory/managers/inventory_manager.dart';
 
 class DoorDecorationView extends GameDecoration {
   bool _isOpen = false;
