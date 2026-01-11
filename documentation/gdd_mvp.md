@@ -591,6 +591,7 @@ MVP focado no **loop essencial de farming**: **plantar → regar → colher → 
 
 # Questões pré MVP:
 - substituir spike animation
+- a partir de 22:00 o texto da data e hora devem ficar amarelos e 00:00 vermelhos
 
 # Questões pós MVP:
 - marketing

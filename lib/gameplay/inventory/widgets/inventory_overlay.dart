@@ -216,22 +216,12 @@ class InventoryOverlay extends StatelessWidget with ResponsiveOverlayMixin {
             if (item != null) ...[
               // Item icon or abbreviation
               Center(
-                child: item.iconData != null
-                    ? Padding(
+                child: Padding(
                         padding: EdgeInsets.all(spacing),
                         child: ItemSpriteWidget(
                           iconData: item.iconData,
                           size: slotSize - (spacing * 2),
                         ),
-                      )
-                    : Text(
-                        _abbreviateItemName(item.name),
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: baseFontSize - 2,
-                          fontFamily: 'Normal',
-                        ),
-                        textAlign: TextAlign.center,
                       ),
               ),
               // Quantity indicator

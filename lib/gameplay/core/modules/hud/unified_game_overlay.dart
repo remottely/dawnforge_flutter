@@ -3,7 +3,6 @@ import 'package:dawnforge/gameplay/core/modules/overlay/overlay_message_widget.d
 import 'package:dawnforge/gameplay/core/modules/hud/tutorial_inputs/widgets/tutorial_inputs_overlay.dart';
 import 'package:dawnforge/gameplay/core/modules/hud/responsive/responsive_overlay_mixin.dart';
 import 'package:dawnforge/gameplay/core/utils/app_environment.dart';
-import 'package:dawnforge/gameplay/inventory/widgets/equipment_overlay.dart';
 import 'package:dawnforge/gameplay/inventory/widgets/inventory_overlay.dart';
 import 'package:dawnforge/gameplay/market/market_state.dart';
 import 'package:dawnforge/gameplay/market/widgets/market_panel.dart';

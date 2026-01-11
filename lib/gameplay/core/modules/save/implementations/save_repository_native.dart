@@ -50,7 +50,7 @@ final class SaveRepositoryNative implements SaveRepository {
       }
 
       return success;
-    } catch (e, stackTrace) {
+    } catch (e) {
       GameLogger.error('[SaveRepositoryNative] Error saving data for key: $key');
       return false;
     }
@@ -92,7 +92,7 @@ final class SaveRepositoryNative implements SaveRepository {
         '(${jsonString.length} bytes${isCompressed ? ', decompressed' : ''})');
 
       return data;
-    } catch (e, stackTrace) {
+    } catch (e) {
       GameLogger.error('[SaveRepositoryNative] Error loading data for key: $key');
       return null;
     }
@@ -111,7 +111,7 @@ final class SaveRepositoryNative implements SaveRepository {
       }
 
       return success;
-    } catch (e, stackTrace) {
+    } catch (e) {
       GameLogger.error('[SaveRepositoryNative] Error deleting data for key: $key');
       return false;
     }
@@ -141,7 +141,7 @@ final class SaveRepositoryNative implements SaveRepository {
       GameLogger.info('[SaveRepositoryNative] Cleared $removedCount game keys');
 
       return allSuccess;
-    } catch (e, stackTrace) {
+    } catch (e) {
       GameLogger.error('[SaveRepositoryNative] Error clearing game data');
       return false;
     }
@@ -173,7 +173,7 @@ final class SaveRepositoryNative implements SaveRepository {
       GameLogger.info('[SaveRepositoryNative] Found ${gameKeys.length} game save keys');
 
       return gameKeys;
-    } catch (e, stackTrace) {
+    } catch (e) {
       GameLogger.error('[SaveRepositoryNative] Error listing keys');
       return [];
     }

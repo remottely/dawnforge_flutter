@@ -6,7 +6,6 @@ import 'package:dawnforge/gameplay/core/modules/map/map_data.dart';
 import 'package:dawnforge/gameplay/decorations/map_transition_sensor.dart';
 import 'package:dawnforge/shared/framework/interaction/dd_collision_interaction.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter/foundation.dart';
 
 class MapManager {
   static MapTransitionSensorView _createMapSensor(

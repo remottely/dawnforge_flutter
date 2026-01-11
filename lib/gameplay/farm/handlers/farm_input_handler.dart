@@ -1,16 +1,12 @@
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/gameplay/core/modules/game/player_state_manager.dart';
 import 'package:dawnforge/gameplay/core/modules/input_actions/input_def.dart';
 import 'package:dawnforge/gameplay/core/modules/save/game_save_controller.dart';
-import 'package:dawnforge/gameplay/core/modules/world/world_state_manager.dart';
 import 'package:dawnforge/gameplay/farm/constants/farm_feedback_config.dart';
 import 'package:dawnforge/gameplay/farm/farm_service_locator.dart';
-import 'package:dawnforge/gameplay/farm/managers/farm_manager.dart';
 import 'package:dawnforge/gameplay/farm/services/farm_feedback_service.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
-import 'package:dawnforge/gameplay/time/time_manager.dart' as new_time;
 
 /// Handles farm-specific debug inputs from both keyboard and joystick.
 /// Uses PlayerControllerListener to receive unified input events.

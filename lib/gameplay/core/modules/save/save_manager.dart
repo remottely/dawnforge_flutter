@@ -44,7 +44,7 @@ final class SaveManager {
       }
 
       return success;
-    } catch (e, stackTrace) {
+    } catch (e) {
       GameLogger.error('[SaveManager] Error during save');
       return false;
     }
@@ -74,7 +74,7 @@ final class SaveManager {
       GameLogger.info('[SaveManager] Load successful (version ${saveData.version})');
 
       return saveData;
-    } catch (e, stackTrace) {
+    } catch (e) {
       GameLogger.error('[SaveManager] Error during load');
 
       return null;
@@ -102,7 +102,7 @@ final class SaveManager {
       GameLogger.info('[SaveManager] Save deleted');
 
       return mainDeleted && metaDeleted;
-    } catch (e, stackTrace) {
+    } catch (e) {
       GameLogger.error('[SaveManager] Error deleting save');
       return false;
     }

@@ -139,31 +139,21 @@ class InventoryHUDView extends InterfaceComponent {
     if (item != null) {
       final iconData = item.iconData;
 
-      if (iconData != null) {
-        final cacheKey =
-            '${iconData.spritesheetPath}_${iconData.spriteRowIndex}_${iconData.spriteColumnIndex}';
-        final cachedSprite = _spriteCache[cacheKey];
+      final cacheKey =
+          '${iconData.spritesheetPath}_${iconData.spriteRowIndex}_${iconData.spriteColumnIndex}';
+      final cachedSprite = _spriteCache[cacheKey];
 
-        if (cachedSprite != null) {
-          cachedSprite.render(
-            canvas,
-            position: Vector2(position.dx + 4, position.dy + 4),
-            size: Vector2(
-              InventoryHUDDef.kSlotSize - 8,
-              InventoryHUDDef.kSlotSize - 8,
-            ),
-          );
-        } else {
-          _loadAndCacheSprite(cacheKey, iconData);
-          final abbreviation = _abbreviateItemName(item.name);
-          _drawText(
-            canvas,
-            abbreviation,
-            Offset(position.dx + 4, position.dy + 8),
-            fontSize: 10,
-          );
-        }
+      if (cachedSprite != null) {
+        cachedSprite.render(
+          canvas,
+          position: Vector2(position.dx + 4, position.dy + 4),
+          size: Vector2(
+            InventoryHUDDef.kSlotSize - 8,
+            InventoryHUDDef.kSlotSize - 8,
+          ),
+        );
       } else {
+        _loadAndCacheSprite(cacheKey, iconData);
         final abbreviation = _abbreviateItemName(item.name);
         _drawText(
           canvas,
@@ -172,7 +162,7 @@ class InventoryHUDView extends InterfaceComponent {
           fontSize: 10,
         );
       }
-
+    
       if (quantity != null && quantity > 1) {
         _drawText(
           canvas,

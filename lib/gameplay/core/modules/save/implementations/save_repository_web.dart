@@ -50,7 +50,7 @@ final class SaveRepositoryWeb implements SaveRepository {
       _checkStorageSize();
 
       return true;
-    } catch (e, stackTrace) {
+    } catch (e) {
       GameLogger.error('[SaveRepositoryWeb] Error saving data for key: $key');
       return false;
     }
@@ -72,7 +72,7 @@ final class SaveRepositoryWeb implements SaveRepository {
       GameLogger.info('[SaveRepositoryWeb] Loaded data for key: $prefixedKey');
 
       return data;
-    } catch (e, stackTrace) {
+    } catch (e) {
       GameLogger.error('[SaveRepositoryWeb] Error loading data for key: $key');
       return null;
     }
@@ -87,7 +87,7 @@ final class SaveRepositoryWeb implements SaveRepository {
       GameLogger.info('[SaveRepositoryWeb] Deleted data for key: $prefixedKey');
 
       return true;
-    } catch (e, stackTrace) {
+    } catch (e) {
       GameLogger.error('[SaveRepositoryWeb] Error deleting data for key: $key');
       return false;
     }
@@ -113,7 +113,7 @@ final class SaveRepositoryWeb implements SaveRepository {
       GameLogger.info('[SaveRepositoryWeb] Cleared ${gameKeys.length} game keys');
 
       return true;
-    } catch (e, stackTrace) {
+    } catch (e) {
       GameLogger.error('[SaveRepositoryWeb] Error clearing game data');
       return false;
     }
@@ -147,7 +147,7 @@ final class SaveRepositoryWeb implements SaveRepository {
       GameLogger.info('[SaveRepositoryWeb] Found ${gameKeys.length} game save keys');
 
       return gameKeys;
-    } catch (e, stackTrace) {
+    } catch (e) {
       GameLogger.error('[SaveRepositoryWeb] Error listing keys');
       return [];
     }

@@ -1,6 +1,5 @@
 // lib/shared/framework/character/character_data.dart
 import 'package:bonfire/bonfire.dart';
-import 'package:flutter/foundation.dart';
 
 /// Estado puro do personagem (serializável para network/save)
 class CharacterData {

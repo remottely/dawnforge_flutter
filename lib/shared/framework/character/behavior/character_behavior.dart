@@ -1,7 +1,6 @@
 // lib/shared/framework/character/behavior/character_behavior.dart
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/shared/framework/character/character.dart';
-import 'package:dawnforge/shared/framework/character/character.dart';
 
 /// Comportamento modular anexável a qualquer Character
 abstract class CharacterBehavior {
