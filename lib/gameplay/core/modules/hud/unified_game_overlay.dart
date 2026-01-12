@@ -11,6 +11,7 @@ import 'package:dawnforge/gameplay/core/modules/hud/debug/debug_overlay.dart';
 import 'package:dawnforge/gameplay/core/modules/hud/inputs/widgets/mobile_inputs_overlay.dart';
 import 'package:dawnforge/gameplay/core/modules/hud/inputs/widgets/joystick_actions_overlay.dart';
 import 'package:dawnforge/gameplay/core/modules/hud/inputs/widgets/fullscreen_button_overlay.dart';
+import 'package:dawnforge/shared/framework/character/character.dart';
 import 'package:dawnforge/shared/managers/settings_manager.dart';
 import 'package:dawnforge/gameplay/time/time_manager.dart' as new_time;
 import 'package:dawnforge/gameplay/time/widgets/time_hud_panel.dart';
@@ -20,7 +21,7 @@ import 'package:flutter/material.dart';
 /// Grid com proporções: coluna 1 (flex 1), coluna 2 (flex 2), coluna 3 (flex 1)
 /// Linha 1 (flex 1), Linha 2 (flex 2), Linha 3 (flex 1)
 class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
-  final dynamic player;
+  final Character player;
   final PlayerController? playerController;
 
   const UnifiedGameOverlay({
