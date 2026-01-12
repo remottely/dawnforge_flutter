@@ -12,7 +12,7 @@ class PlayerStateManager {
 
   Future<SpriteAnimation>? currentPlayerAnimation;
   DDBasePlayerView? lastPlayerView;
-  DDBasePlayerModel? lastPlayerModel;
+  CharacterData? lastPlayerModel;
   bool _respawnWithFullLife = false;
 
   Map<String, dynamic> toJson() {
@@ -66,7 +66,7 @@ class PlayerStateManager {
     _respawnWithFullLife = false;
   }
 
-  void setLastPlayerModel(DDBasePlayerModel model) {
+  void setLastPlayerModel(CharacterData model) {
     lastPlayerModel = model;
   }
 

@@ -9,11 +9,11 @@ class MarketState {
   static final MarketState instance = MarketState._();
 
   final isOpen = ValueNotifier<bool>(false);
-  final activePlayer = ValueNotifier<DDBasePlayerModel?>(null);
+  final activePlayer = ValueNotifier<CharacterData?>(null);
 
   void open() => isOpen.value = true;
 
-  void openWithPlayer(DDBasePlayerModel player) {
+  void openWithPlayer(CharacterData player) {
     activePlayer.value = player;
     isOpen.value = true;
     PlayerStateManager.instance.setLastPlayerModel(player);

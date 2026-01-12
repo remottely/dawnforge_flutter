@@ -12,7 +12,7 @@ import 'package:dawnforge/gameplay/market/market_state.dart';
 
 abstract class DDBasePlayerView<
   C extends DDBasePlayerController<M>,
-  M extends DDBasePlayerModel
+  M extends CharacterData
 >
     extends SimplePlayer
     with Lighting, BlockMovementCollision {

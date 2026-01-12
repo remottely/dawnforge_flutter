@@ -14,7 +14,7 @@ class PlayerCoinsOverlay extends StatefulWidget {
 }
 
 class _PlayerCoinsOverlayState extends State<PlayerCoinsOverlay> {
-  DDBasePlayerModel? _model;
+  CharacterData? _model;
   VoidCallback? _listener;
 
   @override

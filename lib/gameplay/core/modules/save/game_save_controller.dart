@@ -203,8 +203,8 @@ final class GameSaveController {
       final tilePos = PositionHelper.toMVPPosition(); // TODO(Kevin): remove it
 
       // Salva em tiles na propriedade do modelo
-      if (playerState.lastPlayerModel is DDBasePlayerModel) {
-        (playerState.lastPlayerModel as DDBasePlayerModel).setPosition(tilePos);
+      if (playerState.lastPlayerModel is CharacterData) {
+        (playerState.lastPlayerModel as CharacterData).setPosition(tilePos);
       } else {
         // fallback para modelos customizados
         try {

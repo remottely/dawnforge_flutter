@@ -20,7 +20,7 @@ import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
 /// Painel do market exibido dentro do grid da HUD (Quadrante 5).
 class MarketPanel extends StatefulWidget {
-  final DDBasePlayerModel player;
+  final CharacterData player;
 
   const MarketPanel({super.key, required this.player});
 

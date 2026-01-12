@@ -3,7 +3,7 @@ import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_p
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_config.dart';
 import 'package:flutter/foundation.dart';
 
-class DDMobilePlayerModel extends DDBasePlayerModel {
+class DDMobilePlayerModel extends CharacterData {
   @override
   final DDMobilePlayerModelConfig config;
 

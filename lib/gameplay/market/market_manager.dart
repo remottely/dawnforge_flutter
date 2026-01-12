@@ -48,7 +48,7 @@ class MarketManager {
 
   List<MarketItem> getMarketCatalog() => MarketCatalog.seeds;
 
-  bool canBuyItem(HandItemId itemId, DDBasePlayerModel player) {
+  bool canBuyItem(HandItemId itemId, CharacterData player) {
     final entry = MarketCatalog.byId[itemId];
     if (entry == null || !entry.isAvailable) return false;
     return player.canAfford(entry.buyPrice);
@@ -62,7 +62,7 @@ class MarketManager {
 
   MarketTransactionResult buyItem(
     HandItemId itemId,
-    DDBasePlayerModel player,
+    CharacterData player,
     InventoryManager inventory,
   ) {
     final entry = MarketCatalog.byId[itemId];
@@ -121,7 +121,7 @@ class MarketManager {
   MarketTransactionResult sellItem(
     HandItemId itemId,
     int quantity,
-    DDBasePlayerModel player,
+    CharacterData player,
     InventoryManager inventory,
   ) {
     if (quantity <= 0) {

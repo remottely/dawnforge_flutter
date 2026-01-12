@@ -128,7 +128,7 @@ class MarketDecoration extends DDContactDecoration
 
     // Fallback: abre via estado global para ser renderizado no HUD central.
     final model = (component is DDBasePlayerView)
-        ? component.controller.model as DDBasePlayerModel?
+        ? component.controller.model as CharacterData?
         : null;
 
     if (model != null) {

@@ -7,7 +7,7 @@ import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_config.dart';
 import 'package:flutter/foundation.dart';
 
-class DDBasePlayerModel {
+class CharacterData {
   final DDBasePlayerModelConfig config;
   final DDBasePlayerSaveData _saveData;
   final ValueNotifier<int> coinsNotifier;
@@ -15,7 +15,7 @@ class DDBasePlayerModel {
   bool _isObservingEnemy;
 
   @protected
-  DDBasePlayerModel.internal({
+  CharacterData.internal({
     required this.config,
     required DDBasePlayerSaveData saveData,
   }) : _saveData = saveData,
@@ -96,11 +96,11 @@ class DDBasePlayerModel {
   Map<String, dynamic> toJson() => _saveData.toJson();
 
   @protected
-  factory DDBasePlayerModel.fromJson(
+  factory CharacterData.fromJson(
     Map<String, dynamic> json,
     DDBasePlayerModelConfig config,
   ) {
-    return DDBasePlayerModel.internal(
+    return CharacterData.internal(
       config: config,
       saveData: DDBasePlayerSaveData.fromJson(json, config),
     );
