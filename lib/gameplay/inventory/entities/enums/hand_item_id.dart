@@ -51,7 +51,7 @@ enum HandItemId {
   pineapple_seed_bag,
   watermelon_seed_bag,
 
-  harvestBasket,
+  harvestBasket, // hoe
 
   /// Tools
   shovel,
@@ -64,6 +64,7 @@ enum HandItemId {
   /// Weapons
   ironSword,
   staff,
+  shield,
 
   /// Inventory tools/items
   iron_pickaxe,

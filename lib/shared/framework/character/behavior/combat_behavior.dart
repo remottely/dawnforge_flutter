@@ -163,7 +163,8 @@ class CombatBehavior extends CharacterBehavior {
           onActionStart: () {
             _isAttackPlaying = true;
             _comboResetTimer?.cancel();
-            character.lockAction();
+            character.lockAction(); // error: The method 'lockAction' isn't defined for the type 'Character'.
+// Try correcting the name to the name of an existing method, or defining a method named 'lockAction'.
             character.beginStaminaConsumingAction();
           },
           onActionEnd: () => _handleAttackEnd(consumeStamina),
@@ -207,7 +208,8 @@ class CombatBehavior extends CharacterBehavior {
   }
   
   void _handleAttackEnd(bool consumeStamina) {
-    character.unlockAction();
+    character.unlockAction(); // error: The method 'unlockAction' isn't defined for the type 'Character'.
+// Try correcting the name to the name of an existing method, or defining a method named 'unlockAction'.
     character.endStaminaConsumingAction();
     _isAttackPlaying = false;
     

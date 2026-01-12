@@ -85,4 +85,9 @@ final class InputDef {
   static bool isCraftingAction(dynamic actionId) {
     return actionId == KeyboardSetup.kCraftingKey;
   }
+
+  static bool isConsumeAction(dynamic actionId) => isPrimaryAction(actionId);
+  static bool isDefenseAction(dynamic actionId) => isInteractionAction(actionId);
+
+  
 }
