@@ -93,7 +93,6 @@ class ConsumableBehavior extends CharacterBehavior {
 
     final newLife = (character.life + config.healthPotionRestoreAmount)
         .clamp(0, character.config.maxLife).toDouble();
-
     character.updateLife(newLife);
     character.data.updateLife(newLife);
 

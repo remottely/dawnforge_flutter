@@ -90,11 +90,11 @@ class CombatBehavior extends CharacterBehavior {
     if (InputDef.isPrimaryAction(event.id)) {
       final equipment = character.data.equippedItemId;
       
-      if (equipment == HandItemId.ironSword.name) {
+      if (equipment == HandItemId.ironSword) {
         return _executePrimaryAttack();
       }
       
-      if (equipment == HandItemId.staff.name) {
+      if (equipment == HandItemId.staff) {
         return _executeRangedAttack();
       }
     }
@@ -130,7 +130,7 @@ class CombatBehavior extends CharacterBehavior {
   bool _canExecutePrimaryAttack() {
     return !_isAttackPlaying &&
            character.data.stamina >= config.primaryAttackStaminaCost &&
-           character.data.equippedItemId == HandItemId.ironSword.name;
+           character.data.equippedItemId == HandItemId.ironSword;
   }
   
   bool _startComboAttack({bool consumeStamina = false}) {
@@ -265,7 +265,7 @@ class CombatBehavior extends CharacterBehavior {
   
   bool _canExecuteRangedAttack() {
     return character.data.stamina >= config.rangedAttackStaminaCost &&
-           character.data.equippedItemId == HandItemId.staff.name;
+           character.data.equippedItemId == HandItemId.staff;
   }
   
   void _executeFireballAttack() {

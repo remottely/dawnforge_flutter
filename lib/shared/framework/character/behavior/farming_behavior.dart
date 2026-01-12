@@ -79,25 +79,25 @@ class FarmingBehavior extends CharacterBehavior {
     // ✅ CORREÇÃO: Verifica com HandItemId enum
     if (InputDef.isPrimaryAction(event.id)) {
       // Dig
-      if (equipment == HandItemId.shovel.name) {
+      if (equipment == HandItemId.shovel) {
         return _executeDig();
       }
-      
+
       // Water
-      if (equipment == HandItemId.wateringCan.name) {
+      if (equipment == HandItemId.wateringCan) {
         return _executeWatering();
       }
-      
+
       // Plant Seed (verifica se é seed pelo enum)
       final equipmentEnum = HandItemId.values
-          .where((e) => e.name == equipment)
+          .where((e) => e == equipment)
           .firstOrNull;
       if (equipmentEnum?.isSeed ?? false) {
         return _executePlantSeed();
       }
-      
+
       // Harvest
-      if (equipment == HandItemId.harvestBasket.name) {
+      if (equipment == HandItemId.harvestBasket) {
         return _executeHarvest();
       }
     }

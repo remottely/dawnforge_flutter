@@ -4,6 +4,7 @@ import 'package:dawnforge/gameplay/characters/character_constants.dart';
 import 'package:dawnforge/gameplay/core/modules/game/lightning_constants.dart';
 import 'package:dawnforge/gameplay/core/modules/game/tile_constants.dart';
 import 'package:dawnforge/gameplay/core/utils/hitbox_utils.dart';
+import 'package:dawnforge/shared/framework/character/behavior/mining_behavior.dart';
 import 'package:dawnforge/shared/framework/character/character_config.dart';
 import 'package:dawnforge/shared/framework/character/behavior/combat_behavior.dart';
 import 'package:dawnforge/shared/framework/character/behavior/farming_behavior.dart';
@@ -17,20 +18,21 @@ final class DemoPlayerDef {
   // ============================================================================
   // STATS
   // ============================================================================
-  
+
   static const double _kMaxLife = CharacterConstants.kLifeExtraLarge;
   static const double _kBaseSpeed = CharacterConstants.kSpeedFast;
   static const double _kMaxStamina = 100.0;
   static const int _kMaxEnergy = 100;
   static const double _kStaminaRegenRate = 1.0; // por segundo
   static const Duration _kStaminaRegenDebounce = Duration(milliseconds: 150);
-  static const double _kLongVisionRadius = CharacterConstants.kVisionRadiusSuperLarge;
+  static const double _kLongVisionRadius =
+      CharacterConstants.kVisionRadiusSuperLarge;
   static const double _kRunSpeedMultiplier = 1.4;
 
   // ============================================================================
   // COMBAT STATS
   // ============================================================================
-  
+
   static const double _kPrimaryAttackDamage = 25.0;
   static const double _kPrimaryAttackStaminaCost = 1.0;
   static const double _kRangedAttackDamage = 10.0;
@@ -39,7 +41,7 @@ final class DemoPlayerDef {
   // ============================================================================
   // FARMING STATS
   // ============================================================================
-  
+
   static const double _kDigStaminaCost = 5.0;
   static const double _kWateringCanStaminaCost = 5.0;
   static const double _kSeedStaminaCost = 5.0;
@@ -48,7 +50,7 @@ final class DemoPlayerDef {
   // ============================================================================
   // VISUALS
   // ============================================================================
-  
+
   static final Vector2 textureSize = TileConstants.tileSizeDemo;
   static final Vector2 _componentSize = textureSize;
 
@@ -69,7 +71,7 @@ final class DemoPlayerDef {
   // ============================================================================
   // ASSET PATHS
   // ============================================================================
-  
+
   static const String _idleAssetPath =
       'tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/idle/character_body/character_idle_body_light_2.png';
   static const String _walkAssetPath =
@@ -94,13 +96,13 @@ final class DemoPlayerDef {
   // ============================================================================
   // ANIMATION CONSTANTS
   // ============================================================================
-  
+
   static const int _x2 = 2;
   static const int _x4 = 4;
   static const int _x6 = 6;
   static const int _x7 = 7;
   static const int _x10 = 10;
-  
+
   static const double _frameRightY = 0;
   static const double _frameLeftY = TileConstants.kCharacterDimensionDemo * 1;
   static const double _frameDownY = TileConstants.kCharacterDimensionDemo * 2;
@@ -109,7 +111,7 @@ final class DemoPlayerDef {
   // ============================================================================
   // ANIMATIONS - IDLE
   // ============================================================================
-  
+
   static final Future<SpriteAnimation> _loadAnimationIdleRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: _idleAssetPath,
@@ -153,7 +155,7 @@ final class DemoPlayerDef {
   // ============================================================================
   // ANIMATIONS - WALK
   // ============================================================================
-  
+
   static final Future<SpriteAnimation> _loadAnimationWalkRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: _walkAssetPath,
@@ -205,7 +207,7 @@ final class DemoPlayerDef {
   // ============================================================================
   // ANIMATIONS - RUN
   // ============================================================================
-  
+
   static final Future<SpriteAnimation> _loadAnimationRunRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: _runAssetPath,
@@ -257,7 +259,7 @@ final class DemoPlayerDef {
   // ============================================================================
   // ANIMATIONS - ATTACKS
   // ============================================================================
-  
+
   static Future<SpriteAnimation> _loadAnimationAttack1Right =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: _attack1AssetPath,
@@ -405,7 +407,7 @@ final class DemoPlayerDef {
   // ============================================================================
   // ANIMATIONS - FARMING
   // ============================================================================
-  
+
   static final Future<SpriteAnimation> _loadAnimationDigRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: _digAssetPath,
@@ -584,12 +586,11 @@ final class DemoPlayerDef {
   // ============================================================================
   // DEATH MARKER
   // ============================================================================
-  
+
   static final Vector2 _cryptComponentSize = TileConstants.tileSizeStandard;
 
-  static Future<Sprite> _loadSpriteCrypt() => Sprite.load(
-    'gameplay/characters/player/player_crypt_1.png',
-  );
+  static Future<Sprite> _loadSpriteCrypt() =>
+      Sprite.load('gameplay/characters/player/player_crypt_1.png');
 
   static GameDecoration _createDeathMarker(Vector2 position) =>
       GameDecoration.withSprite(
@@ -601,7 +602,7 @@ final class DemoPlayerDef {
   // ============================================================================
   // PUBLIC CONFIGS
   // ============================================================================
-  
+
   /// Configuração principal do character
   static final CharacterConfig config = CharacterConfig.player(
     size: _componentSize,
@@ -644,6 +645,73 @@ final class DemoPlayerDef {
   );
 
   /// Animações de movimento (para compatibilidade com Bonfire)
-  static SimpleDirectionAnimation get walkAnimation => _animationWalkDirectional;
+  static SimpleDirectionAnimation get walkAnimation =>
+      _animationWalkDirectional;
   static SimpleDirectionAnimation get runAnimation => _animationRunDirectional;
+
+  // lib/gameplay/characters/player/demo/demo_player_def.dart (ADICIONAR)
+
+  // Adicione essas constantes no DemoPlayerDef:
+
+  static const double _kMiningStaminaCost = 5.0;
+  static const double _kPickaxeDamageToRock = 10.0;
+
+  // Adicione esse asset path:
+  static const String _miningAssetPath =
+      'tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/tools_pickaxe/character_body/character_tools_pickaxe_body_light_6.png';
+
+  // Adicione essas animações:
+  static final Future<SpriteAnimation> _loadAnimationMiningRight =
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: _miningAssetPath,
+        textureSize: textureSize,
+        totalFrames: _x6,
+        framePositionX: 0,
+        framePositionY: _frameRightY,
+      );
+
+  static final Future<SpriteAnimation> _loadAnimationMiningLeft =
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: _miningAssetPath,
+        textureSize: textureSize,
+        totalFrames: _x6,
+        framePositionX: 0,
+        framePositionY: _frameLeftY,
+      );
+
+  static final Future<SpriteAnimation> _loadAnimationMiningUp =
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: _miningAssetPath,
+        textureSize: textureSize,
+        totalFrames: _x6,
+        framePositionX: 0,
+        framePositionY: _frameUpY,
+      );
+
+  static final Future<SpriteAnimation> _loadAnimationMiningDown =
+      SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
+        assetPath: _miningAssetPath,
+        textureSize: textureSize,
+        totalFrames: _x6,
+        framePositionX: 0,
+        framePositionY: _frameDownY,
+      );
+
+  static final _animationMiningDirectionalFactory =
+      DDAnimationDirectionalFactory(
+        loadRight: _loadAnimationMiningRight,
+        loadLeft: _loadAnimationMiningLeft,
+        loadUp: _loadAnimationMiningUp,
+        loadDown: _loadAnimationMiningDown,
+      );
+
+  // Adicione no final do arquivo:
+  static const double runSpeedMultiplier = 1.4;
+
+  /// Configuração de mining
+  static final MiningConfig miningConfig = MiningConfig(
+    pickaxeStaminaCost: _kMiningStaminaCost,
+    pickaxeDamageToRock: _kPickaxeDamageToRock,
+    pickaxeAnimationFactory: _animationMiningDirectionalFactory,
+  );
 }

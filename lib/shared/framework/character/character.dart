@@ -1,4 +1,4 @@
-// lib/shared/framework/character/character.dart (VERSÃO OTIMIZADA)
+// lib/shared/framework/character/character.dart (CORRIGIDO PARA BONFIRE 3.16.1)
 import 'dart:async' as async;
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
@@ -42,10 +42,7 @@ abstract class Character extends SimplePlayer
          size: config.size,
          life: config.maxLife,
          speed: config.baseSpeed,
-         animation: null,
-       ) {
-    anchor = Anchor.center;
-  }
+       );
 
   bool get isActionLocked => _activeActionLockCount > 0;
 
@@ -54,6 +51,8 @@ abstract class Character extends SimplePlayer
   @override
   Future<void> onLoad() async {
     await super.onLoad();
+
+    anchor = Anchor.center;
 
     _setupVisuals();
     _restoreLifeFromData();
@@ -75,6 +74,7 @@ abstract class Character extends SimplePlayer
     // Bloqueia movimento se market aberto
     if (MarketState.instance.isOpen.value) {
       stopMove();
+      // ✅ CORREÇÃO: velocity é nullable no Bonfire 3.16.1
       velocity = Vector2.zero();
       return;
     }
@@ -89,12 +89,11 @@ abstract class Character extends SimplePlayer
     _cachedFarmingBehavior?.update(dt);
 
     // 🚀 OTIMIZAÇÃO 2: Behaviors com update condicional
-    // Outros behaviors (menos críticos)
     for (final behavior in _behaviors) {
       if (behavior == _cachedMovementBehavior ||
           behavior == _cachedCombatBehavior ||
           behavior == _cachedFarmingBehavior) {
-        continue; // Já foi chamado acima
+        continue;
       }
 
       if (behavior.needsUpdate) {
@@ -121,17 +120,16 @@ abstract class Character extends SimplePlayer
   void addBehavior(CharacterBehavior behavior) {
     _behaviors.add(behavior);
 
-    // Se já está loaded, anexa imediatamente
     if (isMounted) {
       behavior.attach(this);
-      _cacheFrequentlyUsedBehaviors(); // Re-cache
+      _cacheFrequentlyUsedBehaviors();
     }
   }
 
   void removeBehavior(CharacterBehavior behavior) {
     behavior.dispose();
     _behaviors.remove(behavior);
-    _cacheFrequentlyUsedBehaviors(); // Re-cache
+    _cacheFrequentlyUsedBehaviors();
   }
 
   T? getBehavior<T extends CharacterBehavior>() {
@@ -162,13 +160,9 @@ abstract class Character extends SimplePlayer
       return;
     }
 
-    // Buffer input para restaurar após unlock
     _bufferedDirectionalInput = event;
-
-    // Atualiza facing sempre
     _updateFacingDirection(event);
 
-    // Se locked, não processa movimento
     if (isActionLocked) return;
 
     super.onJoystickChangeDirectional(event);
@@ -213,24 +207,22 @@ abstract class Character extends SimplePlayer
     if (_cachedFarmingBehavior?.onInput(event) ?? false) return;
     if (_cachedMovementBehavior?.onInput(event) ?? false) return;
 
-    // Propaga para outros behaviors
     for (final behavior in _behaviors) {
       if (behavior == _cachedCombatBehavior ||
           behavior == _cachedFarmingBehavior ||
           behavior == _cachedMovementBehavior) {
-        continue; // Já foi tentado
+        continue;
       }
 
       if (behavior.onInput(event)) {
-        return; // Behavior consumiu
+        return;
       }
     }
 
-    // Se nenhum behavior consumiu, passa para Bonfire
     super.onJoystickAction(event);
   }
 
-  // --- Action Locking (para animações) ---
+  // --- Action Locking ---
 
   void lockAction() {
     _activeActionLockCount++;
@@ -269,7 +261,6 @@ abstract class Character extends SimplePlayer
 
     _displayDamageEffects(damage);
 
-    // Notifica behaviors
     for (final behavior in _behaviors) {
       behavior.onReceiveDamage(damage);
     }
@@ -282,7 +273,6 @@ abstract class Character extends SimplePlayer
   void onDie() {
     _displayDeathEffects();
 
-    // Notifica behaviors
     for (final behavior in _behaviors) {
       behavior.onDie();
     }
@@ -373,18 +363,15 @@ abstract class Character extends SimplePlayer
   }
 
   void _syncDataToEntity() {
-    // Life
     if (data.life != life) {
       data.updateLife(life);
     }
 
-    // Position
     data.position = position;
 
-    // Velocity
-    data.velocity = velocity;
+    // ✅ CORREÇÃO: velocity pode ser null no Bonfire 3.16.1
+    data.velocity = velocity ?? Vector2.zero();
 
-    // Direction
     data.direction = _directionToString(lastDirection);
   }
 
@@ -404,13 +391,15 @@ abstract class Character extends SimplePlayer
   }
 
   void _displayDamageEffects(double damage) {
-    // Pode ser sobrescrito por subclasses
-    // showDamage(damage, config: ...);
+    // Pode ser sobrescrito
   }
 
   void _displayDeathEffects() {
     if (config.getDeathMarker != null) {
-      gameRef.add(config.getDeathMarker!(position));
+      // ✅ CORREÇÃO: Usa hasGameRef antes de acessar
+      if (hasGameRef) {
+        gameRef.add(config.getDeathMarker!(position));
+      }
     }
   }
 }

@@ -1,5 +1,6 @@
-// lib/shared/framework/character/character_data.dart
+// lib/shared/framework/character/character_data.dart (REFATORADO)
 import 'package:bonfire/bonfire.dart';
+import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
 
 /// Estado puro do personagem (serializável para network/save)
 class CharacterData {
@@ -21,8 +22,8 @@ class CharacterData {
   bool isObservingEnemy;
   int lastActionTimestamp;
 
-  // Equipamento (ID do item equipado)
-  String? equippedItemId;
+  // ✅ MUDANÇA: Equipamento agora é HandItemId? (type-safe)
+  HandItemId? equippedItemId;
 
   // Snapshot para rollback (multiplayer)
   CharacterData? _previousSnapshot;
@@ -93,7 +94,8 @@ class CharacterData {
     return true;
   }
 
-  void setEquipment(String? itemId) {
+  // ✅ MUDANÇA: Aceita HandItemId diretamente
+  void setEquipment(HandItemId? itemId) {
     equippedItemId = itemId;
   }
 
@@ -147,7 +149,8 @@ class CharacterData {
     'direction': direction,
     'isObservingEnemy': isObservingEnemy,
     'lastActionTimestamp': lastActionTimestamp,
-    'equippedItemId': equippedItemId,
+    // ✅ MUDANÇA: Converte HandItemId → String apenas na serialização
+    'equippedItemId': equippedItemId?.name,
   };
 
   factory CharacterData.fromJson(Map<String, dynamic> json) {
@@ -174,7 +177,10 @@ class CharacterData {
       direction: json['direction'] as String? ?? 'down',
       isObservingEnemy: json['isObservingEnemy'] as bool? ?? false,
       lastActionTimestamp: json['lastActionTimestamp'] as int? ?? 0,
-      equippedItemId: json['equippedItemId'] as String?,
+      // ✅ MUDANÇA: Converte String → HandItemId apenas na deserialização
+      equippedItemId: json['equippedItemId'] != null
+          ? HandItemId.fromString(json['equippedItemId'] as String)
+          : null,
     );
   }
 

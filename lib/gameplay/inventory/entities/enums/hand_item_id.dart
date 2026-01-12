@@ -156,6 +156,8 @@ enum HandItemId {
       // this == axe || // TODO(Kevin): define axe isCombatWeapon?
       this == staff;
 
+  bool get isPickaxe => this == iron_pickaxe || this == steel_pickaxe;
+
   bool get canDefense => this == ironSword;
 
   bool get isEquippable => isSeed || isFarmTool || isCombatWeapon;

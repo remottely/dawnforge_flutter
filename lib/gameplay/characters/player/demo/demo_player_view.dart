@@ -1,12 +1,19 @@
 // lib/gameplay/characters/player/demo/demo_player.dart
 import 'package:bonfire/bonfire.dart';
+import 'package:dawnforge/gameplay/characters/player/demo/demo_player_def.dart';
+import 'package:dawnforge/gameplay/inventory/config/inventory_service_locator.dart';
+import 'package:dawnforge/gameplay/inventory/managers/equipment_manager.dart';
 import 'package:dawnforge/shared/framework/character/character.dart';
+import 'package:dawnforge/shared/framework/character/character_config.dart';
 import 'package:dawnforge/shared/framework/character/character_data.dart';
 import 'package:dawnforge/shared/framework/character/behavior/movement_behavior.dart';
 import 'package:dawnforge/shared/framework/character/behavior/combat_behavior.dart';
 import 'package:dawnforge/shared/framework/character/behavior/farming_behavior.dart';
+import 'package:dawnforge/shared/framework/character/behavior/consumable_behavior.dart';
+import 'package:dawnforge/shared/framework/character/behavior/defense_behavior.dart';
+import 'package:dawnforge/shared/framework/character/behavior/mining_behavior.dart';
 import 'package:dawnforge/shared/framework/character/behavior/enemy_detection_behavior.dart';
-import 'package:dawnforge/gameplay/characters/player/demo/demo_player_def.dart';
+import 'package:dawnforge/shared/framework/character/behavior/equipment_sync_behavior.dart';
 
 class DemoPlayer extends Character {
   DemoPlayer({
@@ -23,22 +30,41 @@ class DemoPlayer extends Character {
   }
   
   void _setupBehaviors() {
-    // Movement
+    // Movement (com Run)
     addBehavior(MovementBehavior(
       MovementConfig(
-        runSpeedMultiplier: 1.4,
+        runSpeedMultiplier: DemoPlayerDef.runSpeedMultiplier,
         walkSpeed: DemoPlayerDef.config.baseSpeed,
+        walkAnimation: DemoPlayerDef.walkAnimation,
+        runAnimation: DemoPlayerDef.runAnimation,
       ),
     ));
     
     // Combat
-    addBehavior(CombatBehavior(
-      DemoPlayerDef.combatConfig, // Você criará isso no próximo passo
-    ));
+    addBehavior(CombatBehavior(DemoPlayerDef.combatConfig));
     
     // Farming
-    addBehavior(FarmingBehavior(
-      DemoPlayerDef.farmingConfig, // Você criará isso no próximo passo
+    addBehavior(FarmingBehavior(DemoPlayerDef.farmingConfig));
+    
+    // Mining
+    addBehavior(MiningBehavior(DemoPlayerDef.miningConfig));
+    
+    // Consumable
+    addBehavior(ConsumableBehavior(
+      const ConsumableConfig(
+        healthPotionRestoreAmount: 50.0,
+        staminaPotionRestoreAmount: 50.0,
+      ),
+    ));
+    
+    // Defense (Shield)
+    addBehavior(DefenseBehavior(
+      const DefenseConfig(
+        blockDamageReduction: 0.5,
+        blockStaminaCostPerHit: 5.0,
+        parryWindowMs: 200.0,
+        parryDamageReflection: 0.3,
+      ),
     ));
     
     // Enemy Detection
@@ -47,6 +73,9 @@ class DemoPlayer extends Character {
         longVisionRadius: DemoPlayerDef.config.longVisionRadius,
       ),
     ));
+    
+    // Equipment Sync (mantém CharacterData.equippedItemId atualizado)
+    addBehavior(EquipmentSyncBehavior());
   }
   
   // Factory para criar do save
@@ -60,7 +89,7 @@ class DemoPlayer extends Character {
     );
   }
   
-  // Factory para criar novo
+  // Factory para criar novo jogo
   factory DemoPlayer.newGame(Vector2 spawnPosition) {
     final data = CharacterData.defaultPlayer(
       maxStamina: DemoPlayerDef.config.maxStamina,
