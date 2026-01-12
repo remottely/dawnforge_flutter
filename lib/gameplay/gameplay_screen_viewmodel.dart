@@ -1,7 +1,7 @@
 // lib/gameplay/gameplay_screen_viewmodel.dart (REFATORADO)
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/gameplay/characters/player/demo/demo_player_def.dart';
-import 'package:dawnforge/gameplay/characters/player/demo/demo_player_view.dart';
+import 'package:dawnforge/gameplay/characters/player/demo/demo_player.dart';
 import 'package:dawnforge/gameplay/core/modules/combat/shield_defense_input_handler.dart';
 import 'package:dawnforge/gameplay/core/modules/game/game_state_manager.dart';
 import 'package:dawnforge/gameplay/core/modules/game/inventory_input_handler.dart';
