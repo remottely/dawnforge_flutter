@@ -12,15 +12,15 @@ class PlayerStateManager {
 
   Future<SpriteAnimation>? currentPlayerAnimation;
   DemoPlayer? lastPlayerView;
-  CharacterData? lastPlayerModel;
+  CharacterData? lastPlayerData;
   bool _respawnWithFullLife = false;
 
   Map<String, dynamic> toJson() {
-    final json = {'playerModel': lastPlayerModel?.toJson()};
-    final life = lastPlayerModel?.life;
-    final stamina = lastPlayerModel?.stamina;
-    final coins = lastPlayerModel?.coins;
-    final position = lastPlayerModel?.position;
+    final json = {'playerData': lastPlayerData?.toJson()};
+    final life = lastPlayerData?.life;
+    final stamina = lastPlayerData?.stamina;
+    final coins = lastPlayerData?.coins;
+    final position = lastPlayerData?.position;
 
     GameLogger.info(
       '[PlayerStateManager] toJson life=$life, stamina=$stamina, coins=$coins, position=$position, json=$json',
@@ -29,10 +29,10 @@ class PlayerStateManager {
   }
 
   void fromJson(Map<String, dynamic> json) {
-    final data = json['playerModel'] as Map<String, dynamic>?;
+    final data = json['playerData'] as Map<String, dynamic>?;
 
     if (data == null) {
-      lastPlayerModel = null;
+      lastPlayerData = null;
       return;
     }
 
@@ -40,34 +40,34 @@ class PlayerStateManager {
 
     // switch (playerType) {
     //   case 'farmer':
-    //     lastPlayerModel = DDFarmPlayerModel.fromJson(data);
+    //     lastPlayerData = CharacterData.fromJson(data);
     //     break;
     //   case 'cute':
-    //     lastPlayerModel = DDFarmPlayerModel.fromJson(data);
+    //     lastPlayerData = CharacterData.fromJson(data);
     //     break;
     //   case 'sunny':
-    //     lastPlayerModel = DDFarmPlayerModel.fromJson(data);
+    //     lastPlayerData = CharacterData.fromJson(data);
     //     break;
     //   case 'demo':
-    //     lastPlayerModel = DDFarmPlayerModel.fromJson(data);
+    //     lastPlayerData = CharacterData.fromJson(data);
     //     break;
     //   default:
-    //     lastPlayerModel = DDFarmPlayerModel.fromJson(data);
+    //     lastPlayerData = CharacterData.fromJson(data);
     //     break;
     // }
 
     GameLogger.info(
-      '[PlayerStateManager] fromJson restored type=$playerType, life=${lastPlayerModel?.life}, stamina=${lastPlayerModel?.stamina}, coins=${lastPlayerModel?.coins}, raw=$data',
+      '[PlayerStateManager] fromJson restored type=$playerType, life=${lastPlayerData?.life}, stamina=${lastPlayerData?.stamina}, coins=${lastPlayerData?.coins}, raw=$data',
     );
   }
 
   void reset() {
-    lastPlayerModel = null;
+    lastPlayerData = null;
     _respawnWithFullLife = false;
   }
 
-  void setLastPlayerModel(CharacterData model) {
-    lastPlayerModel = model;
+  void setLastPlayerData(CharacterData model) {
+    lastPlayerData = model;
   }
 
   void setLastPlayerView(DemoPlayer view) {

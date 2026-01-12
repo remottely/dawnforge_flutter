@@ -47,7 +47,7 @@ class _MarketPanelState extends State<MarketPanel> {
     _itemCache = {};
     _focusNode = FocusNode(debugLabel: 'MarketPanelFocus');
     // Garante player de referência para operações de compra/venda.
-    PlayerStateManager.instance.setLastPlayerModel(widget.player);
+    PlayerStateManager.instance.setLastPlayerData(widget.player);
     if (MarketState.instance.activePlayer.value == null) {
       MarketState.instance.activePlayer.value = widget.player;
     }
@@ -492,7 +492,7 @@ class _MarketPanelState extends State<MarketPanel> {
       return;
     }
 
-    final player = PlayerStateManager.instance.lastPlayerModel;
+    final player = PlayerStateManager.instance.lastPlayerData;
     if (player == null) {
       OverlayMessageService.instance.showError('Player não disponível.');
       return;

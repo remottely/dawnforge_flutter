@@ -80,7 +80,7 @@ final class GameSaveController {
       GameLogger.info('[GameSaveController] Starting game save...');
 
       final playerData = _collectPlayerData();
-      final life = (playerData['playerModel'] as Map?)?['life'];
+      final life = (playerData['playerData'] as Map?)?['life'];
       if (life == null || (life is num && life <= 0)) {
         GameLogger.warning(
           '[GameSaveController] ❌ Aborting save: player life is null/<=0 (life=$life). Avoid overwriting good saves after death.',
@@ -186,7 +186,7 @@ final class GameSaveController {
 
     // Save current player position before serializing
     if (playerState.lastPlayerView != null &&
-        playerState.lastPlayerModel != null) {
+        playerState.lastPlayerData != null) {
       // final pixelPos = playerState.lastPlayerView!.position; // TODO(Kevin): put it back
 
       // // Converte pixels → tile usando floor (padrão de mercado)
@@ -203,12 +203,12 @@ final class GameSaveController {
       final tilePos = PositionHelper.toMVPPosition(); // TODO(Kevin): remove it
 
       // Salva em tiles na propriedade do modelo
-      if (playerState.lastPlayerModel is CharacterData) {
-        (playerState.lastPlayerModel as CharacterData).setPosition(tilePos);
+      if (playerState.lastPlayerData is CharacterData) {
+        (playerState.lastPlayerData as CharacterData).setPosition(tilePos);
       } else {
         // fallback para modelos customizados
         try {
-          (playerState.lastPlayerModel as dynamic).position = [
+          (playerState.lastPlayerData as dynamic).position = [
             tilePos.x,
             tilePos.y,
           ];
@@ -217,25 +217,25 @@ final class GameSaveController {
     }
 
     final playerData = playerState.toJson();
-    final playerModelJson = (playerData['playerModel'] as Map?) ?? const {};
-    final coins = playerModelJson['coins'];
-    final life = playerModelJson['life'];
-    final stamina = playerModelJson['stamina'];
-    final position = playerModelJson['position'];
+    final playerDataJson = (playerData['playerData'] as Map?) ?? const {};
+    final coins = playerDataJson['coins'];
+    final life = playerDataJson['life'];
+    final stamina = playerDataJson['stamina'];
+    final position = playerDataJson['position'];
 
     GameLogger.info(
-      '[GameSaveController] Collecting player data: model=${playerState.lastPlayerModel != null ? playerState.lastPlayerModel.runtimeType : "null"}, stamina=$stamina, life=$life, coins=$coins, position=$position',
+      '[GameSaveController] Collecting player data: model=${playerState.lastPlayerData != null ? playerState.lastPlayerData.runtimeType : "null"}, stamina=$stamina, life=$life, coins=$coins, position=$position',
     );
 
     if (life == null || (life is num && life <= 0)) {
       GameLogger.warning(
-        '[GameSaveController] ⚠️ Player life is null/<=0 during save, skipping validation? raw=$playerModelJson',
+        '[GameSaveController] ⚠️ Player life is null/<=0 during save, skipping validation? raw=$playerDataJson',
       );
     }
 
     if (coins is num && coins < 0) {
       GameLogger.warning(
-        '[GameSaveController] ⚠️ Player coins negative during save, raw=$playerModelJson',
+        '[GameSaveController] ⚠️ Player coins negative during save, raw=$playerDataJson',
       );
     }
 
@@ -260,24 +260,24 @@ final class GameSaveController {
   void _restorePlayerData(Map<String, dynamic> data) {
     try {
       GameLogger.info(
-        '[GameSaveController] Restoring player data: ${data.keys.toList()}, coinsField=${(data['playerModel'] as Map?)?['coins']}',
+        '[GameSaveController] Restoring player data: ${data.keys.toList()}, coinsField=${(data['playerData'] as Map?)?['coins']}',
       );
       final playerState = PlayerStateManager.instance;
       playerState.fromJson(data);
       GameLogger.info(
-        '[GameSaveController] ✅ Player state restored: model=${playerState.lastPlayerModel != null ? playerState.lastPlayerModel.runtimeType : "null"}, stamina=${playerState.lastPlayerModel?.stamina}, life=${playerState.lastPlayerModel?.life}, coins=${playerState.lastPlayerModel?.coins}',
+        '[GameSaveController] ✅ Player state restored: model=${playerState.lastPlayerData != null ? playerState.lastPlayerData.runtimeType : "null"}, stamina=${playerState.lastPlayerData?.stamina}, life=${playerState.lastPlayerData?.life}, coins=${playerState.lastPlayerData?.coins}',
       );
 
-      final restoredLife = playerState.lastPlayerModel?.life;
+      final restoredLife = playerState.lastPlayerData?.life;
       if (restoredLife == null || restoredLife <= 0) {
         GameLogger.warning(
-          '[GameSaveController] ⚠️ Restored player life is null/<=0. payload=${data['playerModel']}',
+          '[GameSaveController] ⚠️ Restored player life is null/<=0. payload=${data['playerData']}',
         );
       }
 
       // Restore player position if available
-      final playerModelJson = data['playerModel'] as Map?;
-      final positionRaw = playerModelJson?['position'];
+      final playerDataJson = data['playerData'] as Map?;
+      final positionRaw = playerDataJson?['position'];
       if (positionRaw is List && positionRaw.length == 2) {
         final tileX = (positionRaw[0] as num).toDouble();
         final tileY = (positionRaw[1] as num).toDouble();

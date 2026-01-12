@@ -279,7 +279,7 @@ class InventoryOverlay extends StatelessWidget with ResponsiveOverlayMixin {
       final item = slot.item!;
       final player =
           MarketState.instance.activePlayer.value ??
-          PlayerStateManager.instance.lastPlayerModel;
+          PlayerStateManager.instance.lastPlayerData;
       if (player == null) {
         OverlayMessageService.instance.showError('Player não disponível.');
         return;
