@@ -1,10 +1,8 @@
-// lib/gameplay/gameplay_screen.dart (REFATORADO)
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/gameplay/core/modules/audio/audio_manager.dart';
 import 'package:dawnforge/gameplay/core/modules/game/tile_constants.dart';
 import 'package:dawnforge/gameplay/core/modules/map/map_def.dart';
 import 'package:dawnforge/gameplay/core/modules/map/map_manager.dart';
-import 'package:dawnforge/gameplay/core/modules/map/map_transition_controller.dart';
 import 'package:dawnforge/gameplay/core/utils/app_environment.dart';
 import 'package:dawnforge/gameplay/core/utils/color_helper.dart';
 import 'package:dawnforge/gameplay/decorations/map_transition_sensor.dart';
@@ -12,9 +10,7 @@ import 'package:dawnforge/gameplay/farm/handlers/farm_input_handler.dart';
 import 'package:dawnforge/gameplay/core/modules/hud/unified_game_overlay.dart';
 import 'package:dawnforge/gameplay/gameplay_screen_viewmodel.dart';
 import 'package:dawnforge/gameplay/time/time_manager.dart' as new_time;
-import 'package:dawnforge/shared/framework/save/player_save_manager.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
 
 class GameplayScreen extends StatefulWidget {
   const GameplayScreen({super.key});
@@ -25,36 +21,6 @@ class GameplayScreen extends StatefulWidget {
 
 class _GameplayScreenState extends GameplayScreenViewmodel {
   String? _lastRequestedMusic;
-  StreamSubscription<MapTransitionRequest>? _transitionSubscription;
-  BuildContext? _mapNavigatorContext;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _transitionSubscription = MapTransitionController
-        .instance
-        .onTransitionRequested
-        .listen(_handleMapTransition);
-  }
-
-  @override
-  void dispose() {
-    _transitionSubscription?.cancel();
-    super.dispose();
-  }
-
-  void _handleMapTransition(MapTransitionRequest request) {
-    if (_mapNavigatorContext != null) {
-      MapNavigator.of(_mapNavigatorContext!).toNamed(
-        request.mapId,
-        arguments: MapArguments(
-          playerPosition: request.playerPosition,
-          playerDirection: request.playerDirection ?? Direction.down,
-        ),
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext gameplayContext) {
@@ -67,24 +33,35 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
 
     return MapNavigator(
       maps: MapManager.allMaps,
-      initialMap: MapDef.kHomeMapId,
+      // initialMap: MapConfig.kFarmId,
+      initialMap: MapDef.kFarmMapId,
+      // initialMap: MapDef.kSVTownId,
+      // initialMap: MapDef.kF1Id,
       builder: (context, arguments, mapItem) {
-        _mapNavigatorContext = context;
-
-        // Extrai propriedades do mapa
         final mapLightingColor = ColorHelper.fromHex(
           mapItem.properties[MapDef.kLightingColorPropertyKey]?.toString(),
         );
-
+        final mapBackgroundColor = ColorHelper.fromHex(
+          mapItem.properties[MapDef.kBackgroundColorPropertyKey]?.toString(),
+        );
         final mapBackgroundMusic = mapItem
             .properties[MapDef.kBackgroundMusicPropertyKey]
             ?.toString();
-
         final mapInitialPlayerPosition = mapItem
             .properties[MapDef.kInitialPlayerPositionPropertyKey]
             ?.toString();
+        final mapTimeOverride = mapItem.properties['timeOverride'];
 
-        // Toca música do mapa
+        Vector2? _tryParsePosition(String? raw) {
+          if (raw == null || raw.isEmpty) return null;
+          final parts = raw.split(',');
+          if (parts.length != 2) return null;
+          final x = double.tryParse(parts[0].trim());
+          final y = double.tryParse(parts[1].trim());
+          if (x == null || y == null) return null;
+          return Vector2(x, y);
+        }
+
         if (mapBackgroundMusic != null &&
             mapBackgroundMusic.isNotEmpty &&
             _lastRequestedMusic != mapBackgroundMusic) {
@@ -94,32 +71,36 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
           });
         }
 
-        // Inicia time manager
-        if (!new_time.TimeManager.instance.isRunning) {
-          new_time.TimeManager.instance.start();
-        }
-
-        // Recria dependências se mudou de mapa
-        if (lastMapId != mapItem.id) {
-          recreatePerMapDependencies(mapId: mapItem.id);
-        }
-
-        // Calcula posição do player
         final mapArguments = arguments as MapArguments?;
         final initialPlayerPosition = _tryParsePosition(
           mapInitialPlayerPosition,
         );
 
-        final playerPosition = _calculatePlayerPosition(
-          mapId: mapItem.id,
-          mapArguments: mapArguments,
-          initialPlayerPosition: initialPlayerPosition,
-        );
+        // Keep current time; start ticking if not already running. Ignore time
+        // overrides unless explicitly handled elsewhere.
+        if (!new_time.TimeManager.instance.isRunning) {
+          new_time.TimeManager.instance.start();
+        }
 
-        // Cria player
+        if (mapTimeOverride != null && mapTimeOverride.toString().isNotEmpty) {
+          // Placeholder: map time overrides are intentionally ignored for now.
+        }
+
+        // Recreate per-map dependencies when map changes to avoid stale gameRef
+        // references after navigation.
+        if (lastMapId != mapItem.id) {
+          recreatePerMapDependencies(mapId: mapItem.id);
+        }
+
+        final playerPosition =
+            (mapArguments?.playerPosition ?? initialPlayerPosition ?? Vector2(7, 7)) *
+                TileConstants.kTileDimensionStandard;
+
+        // final player = buildSunnyPlayer(playerPosition);
+        // final player = buildCutePlayer(playerPosition);
+        // final player = buildFarmerPlayer(playerPosition);
         final player = buildDemoPlayer(playerPosition);
 
-        // Cria farm input handler
         farmInputHandler = FarmInputHandler(
           player: player,
           playerController: playerInput,
@@ -129,10 +110,6 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
           children: [
             BonfireWidget(
               key: ValueKey(mapItem.id),
-              onReady: (game) {
-                new_time.TimeManager.instance.setGame(game);
-                new_time.TimeManager.instance.start();
-              },
               playerControllers: [playerInput],
               player: player,
               map: mapItem.map,
@@ -145,65 +122,19 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
               hudComponents: const [],
               interface: gameplayHUD,
               lightingColorGame: mapLightingColor,
+              // backgroundColor: mapBackgroundColor, // TODO(Kevin): put it back?
               overlayBuilderMap: const {},
               backgroundColor: const Color(0xFF000000),
               cameraConfig: getCameraConfig(gameplayContext),
               debugMode: AppEnvironment.kIsDebugMode,
               showCollisionArea: AppEnvironment.kShowCollisionArea,
-              onDispose: () {
-                // Auto-save ao sair
-                PlayerSaveManager.savePlayer(player.data);
-              },
             ),
 
+            // Unified Game Overlay - all HUD components organized in a grid
             UnifiedGameOverlay(player: player, playerController: playerInput),
           ],
         );
       },
     );
-  }
-
-  /// Calcula posição final do player baseado em prioridades
-  Vector2 _calculatePlayerPosition({
-    required String mapId,
-    required MapArguments? mapArguments,
-    required Vector2? initialPlayerPosition,
-  }) {
-    Vector2 position;
-
-    // Prioridade 1: Posição de transição de mapa
-    if (mapArguments?.playerPosition != null) {
-      position = mapArguments!.playerPosition!;
-    }
-    // Prioridade 2: Posição do save (apenas no mapa home)
-    else if (mapId == MapDef.kHomeMapId && loadedPlayerData != null) {
-      position = loadedPlayerData!.position;
-    }
-    // Prioridade 3: Posição inicial do mapa (definida no Tiled)
-    else if (initialPlayerPosition != null) {
-      position = initialPlayerPosition;
-    }
-    // Fallback: Posição padrão
-    else {
-      position = Vector2(7, 7);
-    }
-
-    // Converte tiles para pixels
-    return position * TileConstants.kTileDimensionStandard;
-  }
-
-  /// Tenta parsear posição do formato "x,y"
-  Vector2? _tryParsePosition(String? raw) {
-    if (raw == null || raw.isEmpty) return null;
-
-    final parts = raw.split(',');
-    if (parts.length != 2) return null;
-
-    final x = double.tryParse(parts[0].trim());
-    final y = double.tryParse(parts[1].trim());
-
-    if (x == null || y == null) return null;
-
-    return Vector2(x, y);
   }
 }

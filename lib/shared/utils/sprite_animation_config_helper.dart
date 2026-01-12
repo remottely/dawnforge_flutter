@@ -1,5 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/shared/utils/sprite_animation_constants.dart';
+import 'package:flutter/foundation.dart';
 
 final class SpriteAnimationConfigHelper {
   SpriteAnimationConfigHelper._();
@@ -99,18 +100,26 @@ final class SpriteAnimationConfigHelper {
       'totalFrames=$totalFrames, skipFirstFrames=$skipFirstFrames',
     );
 
-    return SpriteAnimation.load(
-      assetPath,
-      createCustomData(
-        stepTime: stepTime,
-        amount: usedFrames,
-        textureSize: textureSize,
-        texturePosition: Vector2(
-          framePositionXPadding +
-              (framePositionX + skipFirstFrames) * textureSize.x,
-          framePositionYPadding + (framePositionY),
+    try {
+      debugPrint('[SpriteAnimationConfigHelper] Carregando asset: $assetPath');
+      return SpriteAnimation.load(
+        assetPath,
+        createCustomData(
+          stepTime: stepTime,
+          amount: usedFrames,
+          textureSize: textureSize,
+          texturePosition: Vector2(
+            framePositionXPadding +
+                (framePositionX + skipFirstFrames) * textureSize.x,
+            framePositionYPadding + (framePositionY),
+          ),
         ),
-      ),
-    );
+      );
+    } catch (e, stack) {
+      debugPrint('[SpriteAnimationConfigHelper] ERRO ao carregar asset: $assetPath');
+      debugPrint('Erro: $e');
+      debugPrint('Stack: $stack');
+      rethrow;
+    }
   }
 }

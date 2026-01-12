@@ -7,6 +7,7 @@ import 'package:dawnforge/shared/design_system/widgets/atoms/dd_radio_button.dar
 import 'package:dawnforge/shared/framework/widgets/dd_sprite_animation_widget.dart';
 import 'package:dawnforge/shared/managers/settings_manager.dart';
 import 'package:flame_splash_screen/flame_splash_screen.dart';
+import 'package:dawnforge/shared/widgets/safe_flame_splash_screen.dart';
 import 'package:flutter/material.dart';
 
 class MenuScreen extends StatefulWidget {
@@ -61,9 +62,9 @@ class _MenuScreenState extends MenuScreenViewModel {
   }
 
   Widget _createSplashScreen() {
-    return FlameSplashScreen(
+    return SafeFlameSplashScreen(
       theme: FlameSplashTheme.dark,
-      onFinish: onSplashScreenCompleted,
+      onFinish: (ctx) => onSplashScreenCompleted(ctx),
     );
   }
 }

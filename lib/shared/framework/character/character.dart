@@ -1,4 +1,4 @@
-// lib/shared/framework/character/character.dart (CORRIGIDO PARA BONFIRE 3.16.1)
+// lib/shared/framework/character/character.dart (CORREÇÃO)
 import 'dart:async' as async;
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
@@ -9,40 +9,37 @@ import 'package:dawnforge/shared/framework/character/character_config.dart';
 import 'package:dawnforge/shared/framework/character/character_data.dart';
 import 'package:flutter/foundation.dart';
 
-/// Entidade base para todos os personagens (Player, NPC, Enemy)
-abstract class Character extends SimplePlayer
-    with Lighting, BlockMovementCollision {
+abstract class Character extends SimplePlayer with Lighting, BlockMovementCollision {
   final String id;
   final CharacterData data;
   final CharacterConfig config;
-
+  
   final List<CharacterBehavior> _behaviors = [];
-
-  // 🚀 OTIMIZAÇÃO 1: Cache de behaviors críticos
+  
   CharacterBehavior? _cachedMovementBehavior;
   CharacterBehavior? _cachedCombatBehavior;
   CharacterBehavior? _cachedFarmingBehavior;
-
-  // Regeneração de stamina
+  
   async.Timer? _staminaRegenTimer;
   bool _isStaminaRegenPaused = false;
   int _activeStaminaActions = 0;
-
-  // Action locking (para animações)
+  
   int _activeActionLockCount = 0;
   JoystickDirectionalEvent? _bufferedDirectionalInput;
-
+  
   Character({
     required this.id,
     required this.data,
     required this.config,
     required Vector2 position,
+    SimpleDirectionAnimation? animation, // ✅ NOVO: Aceita animação opcional
   }) : super(
-         position: position,
-         size: config.size,
-         life: config.maxLife,
-         speed: config.baseSpeed,
-       );
+    position: position,
+    size: config.size,
+    life: config.maxLife,
+    speed: config.baseSpeed,
+    animation: animation, // ✅ PASSA para SimplePlayer
+  );
 
   bool get isActionLocked => _activeActionLockCount > 0;
 

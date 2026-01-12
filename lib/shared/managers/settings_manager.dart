@@ -1,3 +1,4 @@
+import 'package:dawnforge/gameplay/core/utils/app_environment.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -12,7 +13,9 @@ final class SettingsManager {
       // kIsWeb
       //     ? InputActionsType.keyboard
       //     :
-      InputActionsType.joystick;
+      AppEnvironment.kIsDevToolsMode
+      ? InputActionsType.keyboard
+      : InputActionsType.joystick;
 
   InputActionsType get inputSelected => _inputSelected;
 

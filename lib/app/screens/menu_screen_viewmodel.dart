@@ -39,6 +39,7 @@ abstract class MenuScreenViewModel extends State<MenuScreen> {
   }
 
   void onSplashScreenCompleted(BuildContext context) {
+    if (!mounted) return;
     setState(() {
       isSplashScreenVisible = false;
     });

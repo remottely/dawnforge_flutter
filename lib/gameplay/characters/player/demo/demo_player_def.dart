@@ -658,7 +658,7 @@ final class DemoPlayerDef {
 
   // Adicione esse asset path:
   static const String _miningAssetPath =
-      'tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/tools_pickaxe/character_body/character_tools_pickaxe_body_light_6.png';
+      'tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/tools_pickaxe/character_body/character_tools_pickaxe_body_light_7.png';
 
   // Adicione essas animações:
   static final Future<SpriteAnimation> _loadAnimationMiningRight =
