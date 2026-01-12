@@ -592,6 +592,8 @@ MVP focado no **loop essencial de farming**: **plantar → regar → colher → 
 # Questões pré MVP:
 - substituir spike animation
 - a partir de 22:00 o texto da data e hora devem ficar amarelos e 00:00 vermelhos
+- quando rego agua no farm_tile esta bugado ou posicionamento da acao esta errada
+- quando passa o dia, por mais q estejam molhados os tiles 2, 3, 4. cresce as plantacoes de 1, 2, 3? corrigir
 
 # Questões pós MVP:
 - marketing
