@@ -4,7 +4,7 @@ import 'package:dawnforge/gameplay/inventory/services/item_factory_service.dart'
 import 'package:dawnforge/gameplay/inventory/usecases/add_item_use_case.dart';
 import 'package:dawnforge/gameplay/inventory/usecases/remove_item_use_case.dart';
 import 'package:dawnforge/gameplay/market/market_models.dart';
-import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
+import 'package:dawnforge/shared/framework/character/character_data.dart';
 import 'package:dawnforge/gameplay/inventory/config/inventory_service_locator.dart';
 
 class MarketTransactionResult {

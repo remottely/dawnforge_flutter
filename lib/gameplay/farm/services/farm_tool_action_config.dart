@@ -9,7 +9,7 @@ import 'package:dawnforge/gameplay/farm/usecases/plant_seed_use_case.dart';
 import 'package:dawnforge/gameplay/inventory/managers/equipment_manager.dart';
 import 'package:dawnforge/gameplay/inventory/config/inventory_service_locator.dart';
 import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
-import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
+import 'package:dawnforge/gameplay/characters/player/demo/demo_player.dart';
 
 final class FarmToolActionDef {
   static final FarmActionService _actionService = FarmActionService.instance;

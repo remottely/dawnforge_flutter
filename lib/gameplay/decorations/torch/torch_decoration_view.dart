@@ -5,7 +5,7 @@ import 'package:dawnforge/gameplay/decorations/torch/torch_decoration_config.dar
 import 'package:dawnforge/gameplay/decorations/torch/torch_decoration_controller.dart';
 import 'package:dawnforge/gameplay/decorations/torch/torch_decoration_model.dart';
 import 'package:dawnforge/shared/framework/decorations/dd_input_receiver/dd_input_receiver_decoration_view.dart';
-import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
+import 'package:dawnforge/gameplay/characters/player/demo/demo_player.dart';
 
 class TorchDecorationView extends DDInputReceiverDecorationView {
   late final TorchDecorationController _controller;
