@@ -1,3 +1,4 @@
+// lib/gameplay/decorations/torch/torch_decoration_view.dart (ATUALIZADO)
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/gameplay/core/modules/input_actions/input_def.dart';
 import 'package:dawnforge/gameplay/core/modules/ui/emote_manager.dart';
@@ -39,6 +40,7 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
       onDisplayExclamationEmote: _onDisplayExclamationEmote,
       onToggleTorchState: _onToggleTorchState,
       onDetectPlayerInCloseVisionRadius: _onDetectPlayerInCloseVisionRadius,
+      onResetPlayerTorchRegen: _onResetPlayerTorchRegen, // ✅ Adiciona callback
     );
   }
 
@@ -47,10 +49,11 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
     setupLighting(TorchDecorationDef.lighting);
     _interactionPromptTextPaint = TorchDecorationDef.createTextConfig(width);
 
-    if (model.isOn)
+    if (model.isOn) {
       lightingEnabled = true;
-    else
+    } else {
       lightingEnabled = false;
+    }
 
     return super.onLoad();
   }
@@ -75,15 +78,6 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
       _renderInteractionPrompt(canvas);
     }
   }
-
-  // @override
-  // bool onKeyboard(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-  //   if (_isValidInteractionAttempt(event)) {
-  //     _controller.toggleTorchState();
-  //     return true;
-  //   }
-  //   return false;
-  // }
 
   @override
   void onJoystickAction(JoystickActionEvent event) {
@@ -145,5 +139,12 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
         notObserved();
       },
     );
+  }
+
+  // ✅ NOVO: Implementação do callback de reset
+  void _onResetPlayerTorchRegen() {
+    // Pega o player atual e reseta regeneração
+    final player = gameRef.player as DemoPlayer?;
+    player?.resetTorchRegeneration();
   }
 }

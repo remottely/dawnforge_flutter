@@ -1,6 +1,7 @@
-// lib/shared/framework/character/character_data.dart (REFATORADO)
+// lib/shared/framework/character/character_data.dart (ADICIONAR MÉTODOS)
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
+import 'package:flutter/foundation.dart';
 
 /// Estado puro do personagem (serializável para network/save)
 class CharacterData {
@@ -16,17 +17,20 @@ class CharacterData {
   // Posição e movimento
   Vector2 position;
   Vector2 velocity;
-  String direction; // 'up', 'down', 'left', 'right'
+  String direction;
 
   // Estado
   bool isObservingEnemy;
   int lastActionTimestamp;
 
-  // ✅ MUDANÇA: Equipamento agora é HandItemId? (type-safe)
+  // Equipamento
   HandItemId? equippedItemId;
 
-  // Snapshot para rollback (multiplayer)
+  // Snapshot
   CharacterData? _previousSnapshot;
+
+  // ValueNotifier para UI reativa
+  final ValueNotifier<int> coinsNotifier = ValueNotifier(0);
 
   CharacterData({
     required this.stamina,
@@ -42,7 +46,9 @@ class CharacterData {
     this.isObservingEnemy = false,
     this.lastActionTimestamp = 0,
     this.equippedItemId,
-  });
+  }) {
+    coinsNotifier.value = coins;
+  }
 
   // --- Validações ---
 
@@ -50,8 +56,8 @@ class CharacterData {
   bool get isAlive => life != null && life! > 0;
 
   bool canConsumeStamina(double amount) => stamina >= amount;
-
   bool canAffordCoins(int amount) => coins >= amount;
+
 
   // --- Mutações ---
 
@@ -59,6 +65,10 @@ class CharacterData {
     if (!canConsumeStamina(amount)) return false;
     stamina = (stamina - amount).clamp(0, maxStamina);
     return true;
+  }
+
+  void consumeStamina(double amount) {
+    stamina = (stamina - amount).clamp(0, maxStamina);
   }
 
   void restoreStamina(double amount) {
@@ -86,20 +96,30 @@ class CharacterData {
   void addCoins(int amount) {
     if (amount <= 0) return;
     coins += amount;
+    coinsNotifier.value = coins;
   }
 
   bool tryRemoveCoins(int amount) {
     if (!canAffordCoins(amount)) return false;
     coins -= amount;
+    coinsNotifier.value = coins;
     return true;
   }
+  
+  // ✅ NOVO: removeCoins (retorna bool)
+  bool removeCoins(int amount) {
+    return tryRemoveCoins(amount);
+  }
 
-  // ✅ MUDANÇA: Aceita HandItemId diretamente
   void setEquipment(HandItemId? itemId) {
     equippedItemId = itemId;
   }
 
-  // --- Snapshot (para client prediction rollback) ---
+  void setPosition(Vector2 newPosition) {
+    position = newPosition;
+  }
+
+  // --- Snapshot ---
 
   void saveSnapshot() {
     _previousSnapshot = CharacterData(
@@ -126,6 +146,7 @@ class CharacterData {
     energy = _previousSnapshot!.energy;
     life = _previousSnapshot!.life;
     coins = _previousSnapshot!.coins;
+    coinsNotifier.value = coins;
     position = _previousSnapshot!.position.clone();
     velocity = _previousSnapshot!.velocity.clone();
     direction = _previousSnapshot!.direction;
@@ -134,7 +155,7 @@ class CharacterData {
     equippedItemId = _previousSnapshot!.equippedItemId;
   }
 
-  // --- Serialização (para save game e network) ---
+  // --- Serialização ---
 
   Map<String, dynamic> toJson() => {
     'stamina': stamina,
@@ -149,7 +170,6 @@ class CharacterData {
     'direction': direction,
     'isObservingEnemy': isObservingEnemy,
     'lastActionTimestamp': lastActionTimestamp,
-    // ✅ MUDANÇA: Converte HandItemId → String apenas na serialização
     'equippedItemId': equippedItemId?.name,
   };
 
@@ -177,14 +197,12 @@ class CharacterData {
       direction: json['direction'] as String? ?? 'down',
       isObservingEnemy: json['isObservingEnemy'] as bool? ?? false,
       lastActionTimestamp: json['lastActionTimestamp'] as int? ?? 0,
-      // ✅ MUDANÇA: Converte String → HandItemId apenas na deserialização
       equippedItemId: json['equippedItemId'] != null
           ? HandItemId.fromString(json['equippedItemId'] as String)
           : null,
     );
   }
 
-  // Factory para criar dados padrão
   factory CharacterData.defaultPlayer({
     double maxStamina = 100.0,
     int maxEnergy = 100,
@@ -220,5 +238,9 @@ class CharacterData {
       lastActionTimestamp: lastActionTimestamp,
       equippedItemId: equippedItemId,
     );
+  }
+
+  void dispose() {
+    coinsNotifier.dispose();
   }
 }

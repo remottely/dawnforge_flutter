@@ -1,5 +1,5 @@
+// lib/gameplay/core/modules/combat/shield_defense_input_handler.dart (CORRIGIDO)
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
-
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/gameplay/characters/player/demo/demo_player.dart';
 import 'package:dawnforge/gameplay/core/modules/input_actions/input_def.dart';
@@ -46,8 +46,8 @@ class ShieldDefenseInputHandler extends GameComponent
       if (_staminaAccumulator >= 1.0) {
         final intStaminaToConsume = _staminaAccumulator.floor();
         if (intStaminaToConsume > 0) {
-          player.data.consumeStamina(intStaminaToConsume); // error: The method 'consumeStamina' isn't defined for the type 'CharacterData'.
-// Try correcting the name to the name of an existing method, or defining a method named 'consumeStamina'.
+          // ✅ CORREÇÃO: Usa consumeStamina
+          player.data.consumeStamina(intStaminaToConsume.toDouble());
           _staminaAccumulator -= intStaminaToConsume;
         }
       }
@@ -56,8 +56,8 @@ class ShieldDefenseInputHandler extends GameComponent
         GameLogger.warning(
           '[ShieldDefenseInput] ✗ Stamina esgotada, parando defesa',
         );
-        player.stopShieldDefense(); // error: The method 'stopShieldDefense' isn't defined for the type 'DemoPlayer'.
-// Try correcting the name to the name of an existing method, or defining a method named 'stopShieldDefense'.
+        // ✅ CORREÇÃO: Usa stopShieldDefense
+        player.stopShieldDefense();
         _isDefending = false;
         _defenseTime = 0.0;
         _staminaAccumulator = 0.0;
@@ -66,22 +66,6 @@ class ShieldDefenseInputHandler extends GameComponent
       }
     }
   }
-
-  // @override
-  // bool onKeyboard(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-  //   final player = _getCurrentPlayer();
-  //   if (player == null) return false;
-
-  //   if (InputDef.isInteractionAction(event.logicalKey)) {
-  //     if (event is KeyDownEvent) {
-  //       return _handleDefenseStart(player);
-  //     } else if (event is KeyUpEvent) {
-  //       return _handleDefenseEnd(player);
-  //     }
-  //   }
-
-  //   return false;
-  // }
 
   @override
   void onJoystickAction(JoystickActionEvent event) {
@@ -104,8 +88,8 @@ class ShieldDefenseInputHandler extends GameComponent
         return false;
       }
 
-      final success = player.startShieldDefense(); // error: The method 'startShieldDefense' isn't defined for the type 'DemoPlayer'.
-// Try correcting the name to the name of an existing method, or defining a method named 'startShieldDefense'.
+      // ✅ CORREÇÃO: Usa startShieldDefense
+      final success = player.startShieldDefense();
       if (success) {
         _isDefending = true;
         _defenseTime = 0.0;
@@ -123,8 +107,8 @@ class ShieldDefenseInputHandler extends GameComponent
 
   bool _handleDefenseEnd(DemoPlayer player) {
     if (_isDefending) {
-      player.stopShieldDefense(); // error: The method 'stopShieldDefense' isn't defined for the type 'DemoPlayer'.
-// Try correcting the name to the name of an existing method, or defining a method named 'stopShieldDefense'.
+      // ✅ CORREÇÃO: Usa stopShieldDefense
+      player.stopShieldDefense();
       _isDefending = false;
       _defenseTime = 0.0;
       _staminaAccumulator = 0.0;

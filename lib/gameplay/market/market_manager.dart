@@ -51,7 +51,7 @@ class MarketManager {
   bool canBuyItem(HandItemId itemId, CharacterData player) {
     final entry = MarketCatalog.byId[itemId];
     if (entry == null || !entry.isAvailable) return false;
-    return player.canAfford(entry.buyPrice);
+    return player.canAffordCoins(entry.buyPrice);
   }
 
   bool canSellItem(HandItemId itemId, InventoryManager inventory) {
@@ -81,8 +81,8 @@ class MarketManager {
       );
     }
 
-    if (!player.canAfford(entry.buyPrice)) { // error: The method 'canAfford' isn't defined for the type 'CharacterData'.
-// Try correcting the name to the name of an existing method, or defining a method named 'canAfford'.
+    if (!player.canAffordCoins(entry.buyPrice)) { // error: The method 'canAffordCoins' isn't defined for the type 'CharacterData'.
+// Try correcting the name to the name of an existing method, or defining a method named 'canAffordCoins'.
       return MarketTransactionResult.failure(
         MarketTransactionError.insufficientFunds,
         'Moedas insuficientes.',
