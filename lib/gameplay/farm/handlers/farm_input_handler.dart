@@ -11,7 +11,7 @@ import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_p
 /// Handles farm-specific debug inputs from both keyboard and joystick.
 /// Uses PlayerControllerListener to receive unified input events.
 class FarmInputHandler extends GameComponent with PlayerControllerListener {
-  final DDBasePlayerView player;
+  final DemoPlayer player;
   final PlayerController playerController;
   late final FarmFeedbackService _feedbackService;
 

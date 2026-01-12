@@ -50,7 +50,7 @@ class ChestDecorationView extends DDInputReceiverDecorationView {
       ChestDecorationConfig.kVisionCheckInterval,
       dt,
     )) {
-      _controller.update(dt, gameRef.player as DDBasePlayerView?);
+      _controller.update(dt, gameRef.player as DemoPlayer?);
     }
     super.update(dt);
   }
@@ -135,8 +135,8 @@ class ChestDecorationView extends DDInputReceiverDecorationView {
   }
 
   void _onDetectPlayerInCloseVisionRadius({
-    required DDBasePlayerView player,
-    required void Function(DDBasePlayerView) observed,
+    required DemoPlayer player,
+    required void Function(DemoPlayer) observed,
     required void Function() notObserved,
     required double closeVisionRadius,
   }) {
@@ -144,7 +144,7 @@ class ChestDecorationView extends DDInputReceiverDecorationView {
       player as GameComponent,
       radiusVision: closeVisionRadius,
       observed: (GameComponent comp) {
-        final playerView = comp as DDBasePlayerView;
+        final playerView = comp as DemoPlayer;
         // Register to receive player controller events when player is nearby
         final playerController = gameRef.playerControllers?.firstOrNull;
         if (playerController != null) {

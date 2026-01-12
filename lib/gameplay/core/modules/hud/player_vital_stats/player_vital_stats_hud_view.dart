@@ -34,9 +34,9 @@
 //       _vCurrentLife = gameRef.player!.life;
 //       _vMaxLife = gameRef.player!.maxLife;
 
-//       if (gameRef.player is DDBasePlayerView) {
+//       if (gameRef.player is DemoPlayer) {
 //         _vCurrentStamina =
-//             (gameRef.player as DDBasePlayerView).controller.model.stamina;
+//             (gameRef.player as DemoPlayer).controller.model.stamina;
 //       }
 //     }
 //   }

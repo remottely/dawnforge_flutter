@@ -14,7 +14,7 @@ import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_p
 final class FarmToolActionDef {
   static final FarmActionService _actionService = FarmActionService.instance;
 
-  static void execute({required DDBasePlayerView player}) {
+  static void execute({required DemoPlayer player}) {
     final attackOffset = OffsetHelper.getCenterOffset(
       Vector2(12, 0),
       player.lastDirection,

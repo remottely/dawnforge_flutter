@@ -30,7 +30,7 @@ abstract class DDMinePlayerController<M extends DDMinePlayerModel>
       id == HandItemId.iron_pickaxe || id == HandItemId.steel_pickaxe;
 
   bool isMineAction({
-    required DDBasePlayerView player,
+    required DemoPlayer player,
     required dynamic actionId,
   }) {
     return InputDef.isPrimaryAction(actionId) &&
@@ -39,7 +39,7 @@ abstract class DDMinePlayerController<M extends DDMinePlayerModel>
 
   @override
   void handleInputAction({
-    required DDBasePlayerView player,
+    required DemoPlayer player,
     required JoystickActionEvent event,
   }) {
     GameLogger.info(

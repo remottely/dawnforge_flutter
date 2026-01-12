@@ -27,7 +27,7 @@
 //   bool _registered = false;
 //   bool _hasActiveContact = false;
 //   PlayerController? _registeredController;
-//   DDBasePlayerView? _currentPlayer;
+//   DemoPlayer? _currentPlayer;
 
 //   MarketDecoration({
 //     required super.position,
@@ -53,7 +53,7 @@
 //     super.onContact(component);
 //     if (_hasActiveContact) return;
 //     _hasActiveContact = true;
-//     _currentPlayer = component is DDBasePlayerView ? component : _currentPlayer;
+//     _currentPlayer = component is DemoPlayer ? component : _currentPlayer;
 //     _registerToPlayerController();
 
 //     debugPrint(
@@ -94,7 +94,7 @@
 //   void _onPlayerContact(SimplePlayer component) {
 //     if (_hasActiveContact) return;
 //     _hasActiveContact = true;
-//     _currentPlayer = component is DDBasePlayerView ? component : _currentPlayer;
+//     _currentPlayer = component is DemoPlayer ? component : _currentPlayer;
 //     _registerToPlayerController();
 
 //     debugPrint(
@@ -159,7 +159,7 @@
 //     }
 
 //     // Fallback: abre via estado global para ser renderizado no HUD central.
-//     final model = (component is DDBasePlayerView)
+//     final model = (component is DemoPlayer)
 //         ? component.controller.model as CharacterData?
 //         : null;
 

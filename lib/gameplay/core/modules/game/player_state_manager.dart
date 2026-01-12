@@ -11,7 +11,7 @@ class PlayerStateManager {
   static final instance = PlayerStateManager._();
 
   Future<SpriteAnimation>? currentPlayerAnimation;
-  DDBasePlayerView? lastPlayerView;
+  DemoPlayer? lastPlayerView;
   CharacterData? lastPlayerModel;
   bool _respawnWithFullLife = false;
 
@@ -70,7 +70,7 @@ class PlayerStateManager {
     lastPlayerModel = model;
   }
 
-  void setLastPlayerView(DDBasePlayerView view) {
+  void setLastPlayerView(DemoPlayer view) {
     lastPlayerView = view;
   }
 }

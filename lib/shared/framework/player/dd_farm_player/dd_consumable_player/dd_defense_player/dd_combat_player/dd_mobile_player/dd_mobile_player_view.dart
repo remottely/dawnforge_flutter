@@ -13,7 +13,7 @@ abstract class DDMobilePlayerView<
   C extends DDMobilePlayerController<M>,
   M extends DDMobilePlayerModel
 >
-    extends DDBasePlayerView<C, M> {
+    extends DemoPlayer<C, M> {
   @protected
   final DDMobilePlayerViewConfig config;
   final double _baseSpeed;

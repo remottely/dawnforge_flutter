@@ -29,28 +29,28 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
   });
 
   bool isDigAction({
-    required DDBasePlayerView player,
+    required DemoPlayer player,
     required dynamic actionId,
   }) =>
       InputDef.isPrimaryAction(actionId) &&
       player.controller.model.equipment == HandItemId.shovel;
 
   bool isWateringCanAction({
-    required DDBasePlayerView player,
+    required DemoPlayer player,
     required dynamic actionId,
   }) =>
       InputDef.isPrimaryAction(actionId) &&
       player.controller.model.equipment == HandItemId.wateringCan;
 
   bool isSeedAction({
-    required DDBasePlayerView player,
+    required DemoPlayer player,
     required dynamic actionId,
   }) =>
       InputDef.isPrimaryAction(actionId) &&
       (player.controller.model.equipment?.isSeed ?? false);
 
   bool isHarvestAction({
-    required DDBasePlayerView player,
+    required DemoPlayer player,
     required dynamic actionId,
   }) =>
       InputDef.isPrimaryAction(actionId) &&
@@ -58,7 +58,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
 
   @override
   void handleInputAction({
-    required DDBasePlayerView player,
+    required DemoPlayer player,
     required JoystickActionEvent event,
   }) {
     GameLogger.info(

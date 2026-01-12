@@ -8,8 +8,8 @@ class ChestDecorationController {
   final void Function() onOpenChest;
   final void Function() onDisplayExclamationEmote;
   final void Function({
-    required DDBasePlayerView player,
-    required void Function(DDBasePlayerView) observed,
+    required DemoPlayer player,
+    required void Function(DemoPlayer) observed,
     required void Function() notObserved,
     required double closeVisionRadius,
   })
@@ -22,7 +22,7 @@ class ChestDecorationController {
     required this.onDetectPlayerInCloseVisionRadius,
   });
 
-  void update(double dt, DDBasePlayerView? player) {
+  void update(double dt, DemoPlayer? player) {
     if (player == null || model.isOpened) return;
     _handleDetectPlayerInCloseVisionRadius(player);
   }
@@ -35,7 +35,7 @@ class ChestDecorationController {
     onOpenChest();
   }
 
-  void _handleDetectPlayerInCloseVisionRadius(DDBasePlayerView player) {
+  void _handleDetectPlayerInCloseVisionRadius(DemoPlayer player) {
     onDetectPlayerInCloseVisionRadius.call(
       player: player,
       closeVisionRadius: ChestDecorationConfig.kCloseVisionRadius,

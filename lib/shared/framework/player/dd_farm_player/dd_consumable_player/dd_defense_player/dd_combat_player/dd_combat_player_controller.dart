@@ -24,14 +24,14 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
   });
 
   bool _isPrimaryAttackAction({
-    required DDBasePlayerView player,
+    required DemoPlayer player,
     required dynamic actionId,
   }) =>
       InputDef.isPrimaryAction(actionId) &&
       player.controller.model.equipment == HandItemId.ironSword;
 
   bool _isRangedAttackAction({
-    required DDBasePlayerView player,
+    required DemoPlayer player,
     required dynamic actionId,
   }) =>
       InputDef.isPrimaryAction(actionId) &&
@@ -111,7 +111,7 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
 
   @override
   void handleInputAction({
-    required DDBasePlayerView player,
+    required DemoPlayer player,
     required JoystickActionEvent event,
   }) {
     GameLogger.info(

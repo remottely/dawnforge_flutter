@@ -10,7 +10,7 @@ import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_p
 import 'package:flutter/foundation.dart';
 import 'package:dawnforge/gameplay/market/market_state.dart';
 
-abstract class DDBasePlayerView<
+abstract class DemoPlayer<
   C extends DDBasePlayerController<M>,
   M extends CharacterData
 >
@@ -20,7 +20,7 @@ abstract class DDBasePlayerView<
   @protected
   final DDBasePlayerViewConfig config;
 
-  DDBasePlayerView({
+  DemoPlayer({
     required this.config,
     required super.position,
     required M model,

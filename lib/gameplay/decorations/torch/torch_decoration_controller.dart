@@ -11,8 +11,8 @@ class TorchDecorationController {
   final void Function() onToggleTorchState;
 
   final void Function({
-    required DDBasePlayerView player,
-    required void Function(DDBasePlayerView) observed,
+    required DemoPlayer player,
+    required void Function(DemoPlayer) observed,
     required void Function() notObserved,
     required double closeVisionRadius,
   })
@@ -31,13 +31,13 @@ class TorchDecorationController {
     required this.onDetectPlayerInCloseVisionRadius,
   });
 
-  void update(double dt, DDBasePlayerView? player) {
+  void update(double dt, DemoPlayer? player) {
     if (player == null) return;
     _handleDetectPlayerInCloseVisionRadius(player);
     _updateStaminaRegeneration(dt, player);
   }
 
-  void _updateStaminaRegeneration(double dt, DDBasePlayerView player) {
+  void _updateStaminaRegeneration(double dt, DemoPlayer player) {
     if (model.isDetectPlayer && model.isOn)
       player.controller.processStaminaRegeneration();
   }
@@ -51,7 +51,7 @@ class TorchDecorationController {
     onToggleTorchState();
   }
 
-  void _handleDetectPlayerInCloseVisionRadius(DDBasePlayerView player) {
+  void _handleDetectPlayerInCloseVisionRadius(DemoPlayer player) {
     onDetectPlayerInCloseVisionRadius.call(
       player: player,
       closeVisionRadius: TorchDecorationDef.kCloseVisionRadius,

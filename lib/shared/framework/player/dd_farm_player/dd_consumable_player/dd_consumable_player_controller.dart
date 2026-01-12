@@ -30,7 +30,7 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
 
   @override
   void handleInputAction({
-    required DDBasePlayerView player,
+    required DemoPlayer player,
     required JoystickActionEvent event,
   }) {
     if (handleConsumableInput(player: player, event: event)) {
@@ -44,7 +44,7 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
   /// Allows subclasses to reuse the consumable handling early in their overrides.
   @protected
   bool handleConsumableInput({
-    required DDBasePlayerView player,
+    required DemoPlayer player,
     required JoystickActionEvent event,
   }) {
     final bool isInteraction = _isConsumeAction(event.id);
@@ -65,7 +65,7 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
   /// Call the original combat chain (skipping consumable re-processing).
   @protected
   void handleBaseCombatInputAction({
-    required DDBasePlayerView player,
+    required DemoPlayer player,
     required JoystickActionEvent event,
   }) {
     super.handleInputAction(player: player, event: event);
@@ -82,7 +82,7 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
     return false;
   }
 
-  bool _tryConsumeSelectedItem(DDBasePlayerView player) {
+  bool _tryConsumeSelectedItem(DemoPlayer player) {
     final selectedIndex = EquipmentManager.instance.currentMainHandSlotIndex;
     final slot = InventoryManager.instance.getSlotByIndex(selectedIndex);
     if (slot == null || slot.isEmpty) {
@@ -138,7 +138,7 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
   }
 
   Future<void> _confirmConsumeItem({
-    required DDBasePlayerView player,
+    required DemoPlayer player,
     required int slotIndex,
     required String itemName,
     required int staminaGain,

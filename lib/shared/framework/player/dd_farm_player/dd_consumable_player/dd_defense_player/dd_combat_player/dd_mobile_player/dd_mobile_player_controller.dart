@@ -16,13 +16,13 @@ abstract class DDMobilePlayerController<M extends DDMobilePlayerModel>
   });
 
   bool isRunAction({
-    required DDBasePlayerView player,
+    required DemoPlayer player,
     required dynamic actionId,
   }) => InputDef.isRunAction(actionId);
 
   @override
   void handleInputAction({
-    required DDBasePlayerView player,
+    required DemoPlayer player,
     required JoystickActionEvent event,
   }) {
     if (isRunAction(player: player, actionId: event.id)) {

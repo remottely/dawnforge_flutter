@@ -29,7 +29,7 @@ abstract class DDBasePlayerController<M extends CharacterData> {
   int _activeStaminaConsumingActions = 0;
 
   void handleInputAction({
-    required DDBasePlayerView player,
+    required DemoPlayer player,
     required JoystickActionEvent event,
   }) {
     GameLogger.info('[BaseController] handleInputAction chamado: ${event.id}');

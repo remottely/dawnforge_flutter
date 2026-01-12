@@ -39,7 +39,7 @@ class _PlayerCoinsOverlayState extends State<PlayerCoinsOverlay> {
   }
 
   void _bindToPlayer(dynamic player) {
-    if (player is DDBasePlayerView && player.hasGameRef) {
+    if (player is DemoPlayer && player.hasGameRef) {
       final model = player.controller.model;
       _model = model;
       _listener = () {

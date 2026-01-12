@@ -13,7 +13,7 @@ class PlayerVitalStatsOverlay extends StatefulWidget {
 }
 
 class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
-  DDBasePlayerView? _cachedPlayer;
+  DemoPlayer? _cachedPlayer;
 
   @override
   void initState() {
@@ -37,7 +37,7 @@ class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
 
   void _updateCachedPlayer() {
     final player = widget.player;
-    if (player is DDBasePlayerView && player.hasGameRef) {
+    if (player is DemoPlayer && player.hasGameRef) {
       _cachedPlayer = player;
     }
   }
