@@ -54,7 +54,7 @@ class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
     final player = _cachedPlayer;
     if (player != null) {
       try {
-        return player.controller.model.stamina;
+        return player.data.stamina;
       } catch (e) {
         // Silenciosamente retorna 0 se houver erro
       }

@@ -12,6 +12,7 @@ import 'package:dawnforge/gameplay/farm/handlers/farm_input_handler.dart';
 import 'package:dawnforge/gameplay/core/modules/hud/unified_game_overlay.dart';
 import 'package:dawnforge/gameplay/gameplay_screen_viewmodel.dart';
 import 'package:dawnforge/gameplay/time/time_manager.dart' as new_time;
+import 'package:dawnforge/shared/framework/save/player_save_manager.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -74,11 +75,11 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
         final mapLightingColor = ColorHelper.fromHex(
           mapItem.properties[MapDef.kLightingColorPropertyKey]?.toString(),
         );
-        
+
         final mapBackgroundMusic = mapItem
             .properties[MapDef.kBackgroundMusicPropertyKey]
             ?.toString();
-        
+
         final mapInitialPlayerPosition = mapItem
             .properties[MapDef.kInitialPlayerPositionPropertyKey]
             ?.toString();
@@ -105,8 +106,10 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
 
         // Calcula posição do player
         final mapArguments = arguments as MapArguments?;
-        final initialPlayerPosition = _tryParsePosition(mapInitialPlayerPosition);
-        
+        final initialPlayerPosition = _tryParsePosition(
+          mapInitialPlayerPosition,
+        );
+
         final playerPosition = _calculatePlayerPosition(
           mapId: mapItem.id,
           mapArguments: mapArguments,
@@ -147,6 +150,10 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
               cameraConfig: getCameraConfig(gameplayContext),
               debugMode: AppEnvironment.kIsDebugMode,
               showCollisionArea: AppEnvironment.kShowCollisionArea,
+              onDispose: () {
+                // Auto-save ao sair
+                PlayerSaveManager.savePlayer(player.data);
+              },
             ),
 
             UnifiedGameOverlay(player: player, playerController: playerInput),
@@ -188,15 +195,15 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
   /// Tenta parsear posição do formato "x,y"
   Vector2? _tryParsePosition(String? raw) {
     if (raw == null || raw.isEmpty) return null;
-    
+
     final parts = raw.split(',');
     if (parts.length != 2) return null;
-    
+
     final x = double.tryParse(parts[0].trim());
     final y = double.tryParse(parts[1].trim());
-    
+
     if (x == null || y == null) return null;
-    
+
     return Vector2(x, y);
   }
 }

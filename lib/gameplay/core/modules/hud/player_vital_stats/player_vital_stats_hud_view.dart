@@ -36,7 +36,7 @@
 
 //       if (gameRef.player is DemoPlayer) {
 //         _vCurrentStamina =
-//             (gameRef.player as DemoPlayer).controller.model.stamina;
+//             (gameRef.player as DemoPlayer).data.stamina;
 //       }
 //     }
 //   }

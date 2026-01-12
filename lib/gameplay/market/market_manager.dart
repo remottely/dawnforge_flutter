@@ -81,7 +81,8 @@ class MarketManager {
       );
     }
 
-    if (!player.canAfford(entry.buyPrice)) {
+    if (!player.canAfford(entry.buyPrice)) { // error: The method 'canAfford' isn't defined for the type 'CharacterData'.
+// Try correcting the name to the name of an existing method, or defining a method named 'canAfford'.
       return MarketTransactionResult.failure(
         MarketTransactionError.insufficientFunds,
         'Moedas insuficientes.',
@@ -103,7 +104,8 @@ class MarketManager {
       );
     }
 
-    final removed = player.removeCoins(entry.buyPrice);
+    final removed = player.removeCoins(entry.buyPrice); // error: The method 'removeCoins' isn't defined for the type 'CharacterData'.
+// Try correcting the name to the name of an existing method, or defining a method named 'removeCoins'.
     if (!removed) {
       // rollback simples: remover o item recém-adicionado
       _removeItemUseCase(itemId, 1);

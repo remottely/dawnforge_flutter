@@ -39,7 +39,8 @@ class TorchDecorationController {
 
   void _updateStaminaRegeneration(double dt, DemoPlayer player) {
     if (model.isDetectPlayer && model.isOn)
-      player.controller.processStaminaRegeneration();
+      player.processStaminaRegeneration(); // error: The method 'processStaminaRegeneration' isn't defined for the type 'DemoPlayer'.
+// Try correcting the name to the name of an existing method, or defining a method named 'processStaminaRegeneration'.
   }
 
   void dispose() {}

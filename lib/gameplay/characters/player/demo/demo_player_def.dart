@@ -142,7 +142,7 @@ final class DemoPlayerDef {
         framePositionY: _frameUpY,
       );
 
-  static final Future<SpriteAnimation> _loadAnimationIdleDown =
+  static final Future<SpriteAnimation> loadAnimationIdleDown =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: _idleAssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeSlow,
@@ -197,7 +197,7 @@ final class DemoPlayerDef {
         idleLeft: _loadAnimationIdleLeft,
         idleRight: _loadAnimationIdleRight,
         idleUp: _loadAnimationIdleUp,
-        idleDown: _loadAnimationIdleDown,
+        idleDown: loadAnimationIdleDown,
         runLeft: _loadAnimationWalkLeft,
         runRight: _loadAnimationWalkRight,
         runUp: _loadAnimationWalkUp,
@@ -249,7 +249,7 @@ final class DemoPlayerDef {
         idleLeft: _loadAnimationIdleLeft,
         idleRight: _loadAnimationIdleRight,
         idleUp: _loadAnimationIdleUp,
-        idleDown: _loadAnimationIdleDown,
+        idleDown: loadAnimationIdleDown,
         runLeft: _loadAnimationRunLeft,
         runRight: _loadAnimationRunRight,
         runUp: _loadAnimationRunUp,

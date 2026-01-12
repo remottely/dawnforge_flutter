@@ -40,12 +40,13 @@ class _PlayerCoinsOverlayState extends State<PlayerCoinsOverlay> {
 
   void _bindToPlayer(dynamic player) {
     if (player is DemoPlayer && player.hasGameRef) {
-      final model = player.controller.model;
+      final model = player.data;
       _model = model;
       _listener = () {
         if (mounted) setState(() {});
       };
-      model.coinsNotifier.addListener(_listener!);
+      model.coinsNotifier.addListener(_listener!); // error: The getter 'coinsNotifier' isn't defined for the type 'CharacterData'.
+// Try importing the library that defines 'coinsNotifier', correcting the name to the name of an existing getter, or defining a getter or field named 'coinsNotifier'.
       // Força primeira renderização com valor atual.
       setState(() {});
     }

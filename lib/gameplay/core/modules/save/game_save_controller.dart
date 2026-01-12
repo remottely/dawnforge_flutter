@@ -204,7 +204,8 @@ final class GameSaveController {
 
       // Salva em tiles na propriedade do modelo
       if (playerState.lastPlayerData is CharacterData) {
-        (playerState.lastPlayerData as CharacterData).setPosition(tilePos);
+        (playerState.lastPlayerData as CharacterData).setPosition(tilePos); // error: The method 'setPosition' isn't defined for the type 'CharacterData'.
+// Try correcting the name to the name of an existing method, or defining a method named 'setPosition'.
       } else {
         // fallback para modelos customizados
         try {

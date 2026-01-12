@@ -11,10 +11,7 @@ class MenuScreenDef {
   static const Duration kCharacterAnimationInterval = Duration(seconds: 2);
 
   static final List<Future<SpriteAnimation>> characterSpriteAnimations = [
-    UISpriteAnimationsDef.loadAnimationFarmerPlayerIdleDown,
-    UISpriteAnimationsDef.loadAnimationCutePlayerIdleRight,
-    UISpriteAnimationsDef.loadAnimationSunnyPlayerIdleRight,
-    UISpriteAnimationsDef.loadAnimationKnightPlayerIdleRight,
+    UISpriteAnimationsDef.loadAnimationDemoPlayerIdleDown,
     UISpriteAnimationsDef.loadAnimationWizardNpcIdleLeft(),
     UISpriteAnimationsDef.loadAnimationKidNpcIdleLeft(),
     UISpriteAnimationsDef.loadAnimationGoblinEnemyIdleRight(),

@@ -9,12 +9,12 @@ import 'package:dawnforge/gameplay/farm/usecases/plant_seed_use_case.dart';
 import 'package:dawnforge/gameplay/inventory/managers/equipment_manager.dart';
 import 'package:dawnforge/gameplay/inventory/config/inventory_service_locator.dart';
 import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
-import 'package:dawnforge/gameplay/characters/player/demo/demo_player.dart';
+import 'package:dawnforge/shared/framework/character/character.dart';
 
 final class FarmToolActionDef {
   static final FarmActionService _actionService = FarmActionService.instance;
 
-  static void execute({required DemoPlayer player}) {
+  static void execute({required Character player}) {
     final attackOffset = OffsetHelper.getCenterOffset(
       Vector2(12, 0),
       player.lastDirection,
@@ -48,7 +48,7 @@ final class FarmToolActionDef {
     }
 
     if (bestTarget != null) {
-      final HandItemId? equipment = player.controller.model.equipment;
+      final HandItemId? equipment = player.data.equippedItemId;
 
       switch (equipment) {
         case HandItemId.shovel:
