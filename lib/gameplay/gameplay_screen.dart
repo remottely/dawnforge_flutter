@@ -3,6 +3,7 @@ import 'package:dawnforge/gameplay/core/modules/audio/audio_manager.dart';
 import 'package:dawnforge/gameplay/core/modules/game/tile_constants.dart';
 import 'package:dawnforge/gameplay/core/modules/map/map_def.dart';
 import 'package:dawnforge/gameplay/core/modules/map/map_manager.dart';
+import 'package:dawnforge/gameplay/core/modules/map/map_transition_controller.dart';
 import 'package:dawnforge/gameplay/core/utils/app_environment.dart';
 import 'package:dawnforge/gameplay/core/utils/color_helper.dart';
 import 'package:dawnforge/gameplay/decorations/map_transition_sensor.dart';
@@ -11,6 +12,7 @@ import 'package:dawnforge/gameplay/core/modules/hud/unified_game_overlay.dart';
 import 'package:dawnforge/gameplay/gameplay_screen_viewmodel.dart';
 import 'package:dawnforge/gameplay/time/time_manager.dart' as new_time;
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 class GameplayScreen extends StatefulWidget {
   const GameplayScreen({super.key});
@@ -21,6 +23,41 @@ class GameplayScreen extends StatefulWidget {
 
 class _GameplayScreenState extends GameplayScreenViewmodel {
   String? _lastRequestedMusic;
+  StreamSubscription<MapTransitionRequest>? _transitionSubscription;
+
+  // Usamos BuildContext do MapNavigator para navegação
+  BuildContext? _mapNavigatorContext;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Escuta solicitações de transição de mapa
+    _transitionSubscription = MapTransitionController
+        .instance
+        .onTransitionRequested
+        .listen(_handleMapTransition);
+  }
+
+  @override
+  void dispose() {
+    _transitionSubscription?.cancel();
+    super.dispose();
+  }
+
+  // Handler para transição de mapa
+  void _handleMapTransition(MapTransitionRequest request) {
+    if (_mapNavigatorContext != null) {
+      // Usa o contexto do MapNavigator para navegar
+      MapNavigator.of(_mapNavigatorContext!).toNamed(
+        request.mapId,
+        arguments: MapArguments(
+          playerPosition: request.playerPosition,
+          playerDirection: request.playerDirection ?? Direction.down,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext gameplayContext) {
@@ -33,11 +70,11 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
 
     return MapNavigator(
       maps: MapManager.allMaps,
-      // initialMap: MapConfig.kFarmId,
       initialMap: MapDef.kHomeMapId,
-      // initialMap: MapDef.kSVTownId,
-      // initialMap: MapDef.kF1Id,
       builder: (context, arguments, mapItem) {
+        // Salva o contexto do MapNavigator
+        _mapNavigatorContext = context;
+
         final mapLightingColor = ColorHelper.fromHex(
           mapItem.properties[MapDef.kLightingColorPropertyKey]?.toString(),
         );
@@ -76,8 +113,6 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
           mapInitialPlayerPosition,
         );
 
-        // Keep current time; start ticking if not already running. Ignore time
-        // overrides unless explicitly handled elsewhere.
         if (!new_time.TimeManager.instance.isRunning) {
           new_time.TimeManager.instance.start();
         }
@@ -86,20 +121,19 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
           // Placeholder: map time overrides are intentionally ignored for now.
         }
 
-        // Recreate per-map dependencies when map changes to avoid stale gameRef
-        // references after navigation.
         if (lastMapId != mapItem.id) {
           recreatePerMapDependencies(mapId: mapItem.id);
         }
 
         final playerPosition =
-            (mapArguments?.playerPosition ?? initialPlayerPosition ?? Vector2(7, 7)) *
-                TileConstants.kTileDimensionStandard;
+            (mapItem.id == MapDef.kHomeMapId
+                ? loadedPlayerPosition ?? Vector2(5, 5)
+                : (mapArguments?.playerPosition ??
+                      initialPlayerPosition ??
+                      Vector2(7, 7))) *
+            TileConstants.kTileDimensionStandard;
 
-        // final player = buildSunnyPlayer(playerPosition);
-        // final player = buildCutePlayer(playerPosition);
-        // final player = buildFarmerPlayer(playerPosition);
-        final player = buildDemoPlayer(playerPosition);
+        final player = buildFarmerPlayer(playerPosition);
 
         farmInputHandler = FarmInputHandler(
           player: player,
@@ -110,6 +144,10 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
           children: [
             BonfireWidget(
               key: ValueKey(mapItem.id),
+              onReady: (game) {
+                new_time.TimeManager.instance.setGame(game);
+                new_time.TimeManager.instance.start();
+              },
               playerControllers: [playerInput],
               player: player,
               map: mapItem.map,
@@ -122,7 +160,6 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
               hudComponents: const [],
               interface: gameplayHUD,
               lightingColorGame: mapLightingColor,
-              // backgroundColor: mapBackgroundColor, // TODO(Kevin): put it back?
               overlayBuilderMap: const {},
               backgroundColor: const Color(0xFF000000),
               cameraConfig: getCameraConfig(gameplayContext),
@@ -130,7 +167,6 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
               showCollisionArea: AppEnvironment.kShowCollisionArea,
             ),
 
-            // Unified Game Overlay - all HUD components organized in a grid
             UnifiedGameOverlay(player: player, playerController: playerInput),
           ],
         );
