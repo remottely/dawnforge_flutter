@@ -70,15 +70,13 @@ class MapManager {
     return builders;
   }
 
-  // lib/gameplay/core/modules/map/map_manager.dart (CORREÇÃO)
   static WorldMapByTiled _buildMapByTiled({
     required String mapAsset,
     required List<String> sensorIds,
   }) {
     return WorldMapByTiled(
       WorldMapReader.fromAsset(mapAsset),
-      // ✅ USA tile size CORRETO (16)
-      forceTileSize: TileConstants.tileSizeStandard, // Vector2.all(16)
+      forceTileSize: TileConstants.tileSizeStandard,
       objectsBuilder: _createObjectBuilder(sensorIds: sensorIds),
     );
   }
