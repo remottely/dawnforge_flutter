@@ -597,6 +597,7 @@ MVP focado no **loop essencial de farming**: **plantar → regar → colher → 
 - quando der 2h da manha o estado do jogo deve resetar, fechar qualquer dialogo aberto etc. criar state machine q controle o estado global do jogo.
 
 # Questões pós MVP:
+- animação do player tomando dano
 - marketing
 - reter usuario (mobile)
 - mobile: microtransacoes?

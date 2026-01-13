@@ -25,4 +25,4 @@ audios:
 - fantasy: trailler music
 - fourth one instrument: não é para esse jogo
 - close: missão importante!
-- dan5: caverna nivel hard?
+- dan5: caverna nivel hard!
