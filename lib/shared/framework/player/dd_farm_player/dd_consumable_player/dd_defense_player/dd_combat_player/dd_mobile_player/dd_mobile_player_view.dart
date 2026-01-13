@@ -161,7 +161,7 @@ abstract class DDMobilePlayerView<
   }
 
   void _restoreBufferedMovementInput() {
-    final JoystickDirectionalEvent? bufferedEvent = _bufferedDirectionalInput;
+    final bufferedEvent = _bufferedDirectionalInput;
     if (bufferedEvent != null &&
         bufferedEvent.directional != JoystickMoveDirectional.IDLE) {
       super.onJoystickChangeDirectional(bufferedEvent);

@@ -1,4 +1,4 @@
-// lib/shared/framework/character/behavior/combat_behavior.dart (COMPLETO COM LOGS)
+// lib/shared/framework/character/behavior/combat_behavior.dart (COM LOGS DE MOVIMENTO)
 import 'dart:async' as async;
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
@@ -44,13 +44,13 @@ class CombatBehavior extends CharacterBehavior {
   bool _isAttackPlaying = false;
   bool _comboQueued = false;
   async.Timer? _comboResetTimer;
-  async.Timer? _attackTimeoutTimer; // ✅ NOVO: Timeout de segurança
+  async.Timer? _attackTimeoutTimer;
   
   late final SynchronizedAttackController meleeAttackController;
   late final SynchronizedAttackController rangedAttackController;
   
   static const Duration _kComboResetDelay = Duration(milliseconds: 450);
-  static const Duration _kAttackTimeout = Duration(seconds: 2); // ✅ NOVO
+  static const Duration _kAttackTimeout = Duration(seconds: 2);
   
   CombatBehavior(this.config);
   
@@ -95,7 +95,7 @@ class CombatBehavior extends CharacterBehavior {
     if (InputDef.isPrimaryAction(event.id)) {
       final equipment = character.data.equippedItemId;
       
-      GameLogger.info('[CombatBehavior] 🎮 Input received (equipment: $equipment)');
+      GameLogger.info('[CombatBehavior] 🎮 Input received (equipment: $equipment, isActionLocked: ${character.isActionLocked})');
       
       if (equipment == HandItemId.ironSword) {
         return _executePrimaryAttack();
@@ -116,13 +116,16 @@ class CombatBehavior extends CharacterBehavior {
       '[CombatBehavior] 🗡️ Primary attack request: '
       'stamina=${character.data.stamina}, '
       'isPlaying=$_isAttackPlaying, '
+      'isActionLocked=${character.isActionLocked}, '
+      'speed=${character.speed}, '
+      'velocity=${character.velocity}, '
       'canExecute=${_canExecutePrimaryAttack()}',
     );
     
     if (_isAttackPlaying) {
       _comboQueued = true;
       GameLogger.info('[CombatBehavior] 🔄 Attack queued for combo');
-      return false; // Não cobra stamina em cliques extras
+      return false;
     }
     
     if (!_canExecutePrimaryAttack()) {
@@ -146,7 +149,7 @@ class CombatBehavior extends CharacterBehavior {
   bool _startComboAttack({bool consumeStamina = false}) {
     GameLogger.info(
       '[CombatBehavior] 🗡️ _startComboAttack START '
-      '(step: $_comboStep, consuming: $consumeStamina)',
+      '(step: $_comboStep, consuming: $consumeStamina, speed: ${character.speed}, velocity: ${character.velocity})',
     );
     
     if (consumeStamina) {
@@ -182,14 +185,24 @@ class CombatBehavior extends CharacterBehavior {
           target: character,
           executionStartFrame: 1,
           onActionStart: () {
-            GameLogger.info('[CombatBehavior] ✅ onActionStart CALLED');
+            GameLogger.info(
+              '[CombatBehavior] ✅ onActionStart CALLED '
+              '(speed BEFORE: ${character.speed}, velocity BEFORE: ${character.velocity})',
+            );
             _isAttackPlaying = true;
             _comboResetTimer?.cancel();
             
             character.lockAction();
             character.beginStaminaConsumingAction();
             
-            // ✅ TIMEOUT DE SEGURANÇA
+            // ✅ PARAR MOVIMENTO
+            character.stopMove();
+            
+            GameLogger.info(
+              '[CombatBehavior] 🔒 Action locked + stamina consuming started + MOVEMENT STOPPED '
+              '(speed AFTER: ${character.speed}, velocity AFTER: ${character.velocity})',
+            );
+            
             _attackTimeoutTimer?.cancel();
             _attackTimeoutTimer = async.Timer(_kAttackTimeout, () {
               GameLogger.warning(
@@ -198,16 +211,20 @@ class CombatBehavior extends CharacterBehavior {
               );
               _forceEndAttack();
             });
-            
-            GameLogger.info('[CombatBehavior] 🔒 Action locked + stamina consuming started');
           },
           onActionEnd: () {
-            GameLogger.info('[CombatBehavior] ✅ onActionEnd CALLED (step: $currentComboStep)');
+            GameLogger.info(
+              '[CombatBehavior] ✅ onActionEnd CALLED '
+              '(step: $currentComboStep, speed: ${character.speed}, velocity: ${character.velocity})',
+            );
             _attackTimeoutTimer?.cancel();
             _handleAttackEnd(consumeStamina);
           },
           onExecutionFrames: () {
-            GameLogger.info('[CombatBehavior] ⚔️ onExecutionFrames CALLED (hitbox)');
+            GameLogger.info(
+              '[CombatBehavior] ⚔️ onExecutionFrames CALLED (hitbox) '
+              '(speed: ${character.speed}, velocity: ${character.velocity})',
+            );
             _executePrimaryAttackHitbox(comboStep: currentComboStep);
           },
         );
@@ -252,7 +269,6 @@ class CombatBehavior extends CharacterBehavior {
     GameLogger.info('[CombatBehavior] 💥 Hitbox executed (step: $comboStep, damage: ${config.primaryAttackDamage})');
   }
   
-  // ✅ NOVO: Método para forçar fim do ataque
   void _forceEndAttack() {
     GameLogger.warning('[CombatBehavior] 🔥 Force ending attack!');
     character.unlockAction();
@@ -265,7 +281,7 @@ class CombatBehavior extends CharacterBehavior {
   void _handleAttackEnd(bool consumeStamina) {
     GameLogger.info(
       '[CombatBehavior] 🏁 _handleAttackEnd '
-      '(consumeStamina: $consumeStamina, queued: $_comboQueued)',
+      '(consumeStamina: $consumeStamina, queued: $_comboQueued, speed: ${character.speed}, velocity: ${character.velocity})',
     );
     
     character.unlockAction();

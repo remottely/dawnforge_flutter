@@ -223,11 +223,18 @@ abstract class Character extends SimplePlayer
 
   void lockAction() {
     _activeActionLockCount++;
+
+    // ✅ PARAR MOVIMENTO QUANDO TRAVAR AÇÃO
+    if (_activeActionLockCount == 1) {
+      stopMove(); // ← ADICIONE AQUI!
+      GameLogger.info('[Character] 🛑 Movement STOPPED (action locked)');
+    }
+
     GameLogger.info(
       '[Character] 🔒 Action LOCKED (count: $_activeActionLockCount)',
     );
 
-    // ✅ SEGURANÇA: Auto-unlock após 3 segundos
+    // Timeout de segurança
     _actionLockTimeout?.cancel();
     _actionLockTimeout = async.Timer(const Duration(seconds: 3), () {
       if (_activeActionLockCount > 0) {
@@ -249,7 +256,7 @@ abstract class Character extends SimplePlayer
       );
 
       if (_activeActionLockCount == 0) {
-        _actionLockTimeout?.cancel(); // ✅ Cancela timeout
+        _actionLockTimeout?.cancel();
         GameLogger.info('[Character] ✅ Action FULLY UNLOCKED');
         _restoreBufferedMovementInput();
       }
@@ -261,11 +268,11 @@ abstract class Character extends SimplePlayer
   }
 
   void _restoreBufferedMovementInput() {
-    final buffered = _bufferedDirectionalInput;
-    if (buffered != null &&
-        buffered.directional != JoystickMoveDirectional.IDLE) {
+    final bufferedEvent = _bufferedDirectionalInput;
+    if (bufferedEvent != null &&
+        bufferedEvent.directional != JoystickMoveDirectional.IDLE) {
       GameLogger.info('[Character] 🔄 Restoring buffered movement input');
-      super.onJoystickChangeDirectional(buffered);
+      super.onJoystickChangeDirectional(bufferedEvent);
     }
   }
 

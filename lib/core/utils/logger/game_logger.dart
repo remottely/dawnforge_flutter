@@ -1,16 +1,17 @@
+import 'dart:developer' as developer;
+
+import 'package:dawnforge/gameplay/core/utils/app_environment.dart';
+
 /// GameLogger: Logger condicional para debug e produção
 /// Ativa logs apenas em builds de debug, ignora em release.
 
 class GameLogger {
-  static const bool _enableLogs = bool.fromEnvironment(
-    'DEBUG_MODE',
-    defaultValue: false,
-  );
-
+  static const bool _enableLogs = AppEnvironment.kIsDevToolsMode;
+  
   static void log(String message, {String? tag}) {
     if (_enableLogs) {
       // ignore: avoid_print
-      print('[${tag ?? 'GAME'}] $message');
+      developer.log('[${tag ?? 'GAME'}] $message');
     }
   }
 
