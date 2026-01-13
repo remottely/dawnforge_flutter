@@ -23,16 +23,16 @@ final class SkeletonEnemyDef {
   static const double kLife = CharacterConstants.kLifeMedium;
   static const double kSpeed = CharacterConstants.kSpeedSlow;
 
-  static final Vector2 textureSize = TileConstants.tileSizeDemo;
+  static final Vector2 textureSize = TileConstants.tileSizeSmallburg;
   static final Vector2 componentSize = textureSize;
 
   static const int _attackFrameCount = 6;
   static const double _attackFrameRightY = 0;
-  static const double _attackFrameLeftY = TileConstants.kCharacterDimensionDemo;
+  static const double _attackFrameLeftY = TileConstants.kCharacterDimensionSmallburg;
   static const double _attackFrameUpY =
-      TileConstants.kCharacterDimensionDemo * 2;
+      TileConstants.kCharacterDimensionSmallburg * 2;
   static const double _attackFrameDownY =
-      TileConstants.kCharacterDimensionDemo * 3;
+      TileConstants.kCharacterDimensionSmallburg * 3;
 
   static const String idleAssetPath =
       'tiled/Smallburg_dungeon_pack_v2.13/assets/enemies/skeletons/skeleton/idle/skeleton_idle_2.png';
@@ -47,9 +47,9 @@ final class SkeletonEnemyDef {
   static const int _x7 = 7;
   static const int _x10 = 10;
   static const double _frameRightY = 0;
-  static const double _frameLeftY = TileConstants.kCharacterDimensionDemo * 1;
-  static const double _frameDownY = TileConstants.kCharacterDimensionDemo * 2;
-  static const double _frameUpY = TileConstants.kCharacterDimensionDemo * 3;
+  static const double _frameLeftY = TileConstants.kCharacterDimensionSmallburg * 1;
+  static const double _frameDownY = TileConstants.kCharacterDimensionSmallburg * 2;
+  static const double _frameUpY = TileConstants.kCharacterDimensionSmallburg * 3;
 
   static const int _x9 = 9;
   static const double _frameRightX9 = _x9 * 0;
@@ -169,7 +169,7 @@ final class SkeletonEnemyDef {
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attack1AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
-        textureSize: TileConstants.tileSizeDemo,
+        textureSize: TileConstants.tileSizeSmallburg,
         totalFrames: _attackFrameCount,
         framePositionX: 0,
         framePositionY: _attackFrameRightY,
@@ -179,7 +179,7 @@ final class SkeletonEnemyDef {
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attack1AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
-        textureSize: TileConstants.tileSizeDemo,
+        textureSize: TileConstants.tileSizeSmallburg,
         totalFrames: _attackFrameCount,
         framePositionX: 0,
         framePositionY: _attackFrameLeftY,
@@ -189,7 +189,7 @@ final class SkeletonEnemyDef {
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attack1AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
-        textureSize: TileConstants.tileSizeDemo,
+        textureSize: TileConstants.tileSizeSmallburg,
         totalFrames: _attackFrameCount,
         framePositionX: 0,
         framePositionY: _attackFrameUpY,
@@ -199,7 +199,7 @@ final class SkeletonEnemyDef {
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attack1AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
-        textureSize: TileConstants.tileSizeDemo,
+        textureSize: TileConstants.tileSizeSmallburg,
         totalFrames: _attackFrameCount,
         framePositionX: 0,
         framePositionY: _attackFrameDownY,

@@ -1,9 +1,9 @@
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_controller.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_model.dart';
 
-class DemoPlayerController<M extends DDFarmPlayerModel>
+class SmallburgPlayerController<M extends DDFarmPlayerModel>
     extends DDFarmPlayerController<M> {
-  DemoPlayerController({
+  SmallburgPlayerController({
     required super.model,
     required super.onChangeRunState,
     required super.onExecuteDig,

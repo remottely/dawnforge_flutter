@@ -133,7 +133,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
                       Vector2(7, 7))) *
             TileConstants.kTileDimensionStandard;
 
-        final player = buildFarmerPlayer(playerPosition);
+        final player = buildSmallburgPlayer(playerPosition);
 
         farmInputHandler = FarmInputHandler(
           player: player,

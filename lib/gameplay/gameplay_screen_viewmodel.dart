@@ -3,7 +3,6 @@ import 'package:dawnforge/gameplay/characters/player/cute/cute_player_controller
 import 'package:dawnforge/gameplay/characters/player/cute/cute_player_def.dart';
 
 import 'package:dawnforge/gameplay/characters/player/cute/cute_player_view.dart';
-import 'package:dawnforge/gameplay/characters/player/demo/demo_player_controller.dart';
 import 'package:dawnforge/gameplay/characters/player/demo/demo_player_def.dart';
 
 import 'package:dawnforge/gameplay/characters/player/demo/demo_player.dart';
@@ -11,6 +10,9 @@ import 'package:dawnforge/gameplay/characters/player/farmer/farmer_player_contro
 import 'package:dawnforge/gameplay/characters/player/farmer/farmer_player_def.dart';
 
 import 'package:dawnforge/gameplay/characters/player/farmer/farmer_player_view.dart';
+import 'package:dawnforge/gameplay/characters/player/smallburg/smallburg_player_controller.dart';
+import 'package:dawnforge/gameplay/characters/player/smallburg/smallburg_player_def.dart';
+import 'package:dawnforge/gameplay/characters/player/smallburg/smallburg_player_view.dart';
 import 'package:dawnforge/gameplay/characters/player/sunny/sunny_player_controller.dart';
 import 'package:dawnforge/gameplay/characters/player/sunny/sunny_player_def.dart';
 import 'package:dawnforge/gameplay/characters/player/sunny/sunny_player_view.dart';
@@ -230,6 +232,36 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
       model: lastPlayerModel,
     );
   }
+
+DDBasePlayerView buildSmallburgPlayer(Vector2 position) {
+    GameLogger.debug(
+      '[GameplayViewModel] Building farmer player at position: $position',
+    );
+
+    var lastPlayerModel = playerStateManager.lastPlayerModel;
+    final lastPlayerJson = lastPlayerModel?.toJson() ?? {'coins': 500};
+    //  ?? PlayerSaveData.initial(playerType: 'demo').toJson();
+
+    if (lastPlayerModel is! DDFarmPlayerModel) {
+      lastPlayerModel = DDFarmPlayerModel.fromJson(
+        lastPlayerJson,
+        SmallburgPlayerDef.modelConfig,
+      );
+      playerStateManager.lastPlayerModel = lastPlayerModel;
+    }
+
+    playerStateManager.currentPlayerAnimation =
+        SmallburgPlayerDef.loadAnimationIdleDown;
+    final player = SmallburgPlayerView<SmallburgPlayerController, DDFarmPlayerModel>(
+      position: position,
+      model: lastPlayerModel,
+    );
+
+    PlayerStateManager.instance.setLastPlayerView(player);
+
+    return player;
+  }
+
 
   // DemoPlayer buildDemoPlayer(Vector2 position) {
   //   print('[GameplayViewModel] Building demo player at position: $position');

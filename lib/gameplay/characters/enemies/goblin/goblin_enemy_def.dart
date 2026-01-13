@@ -26,12 +26,11 @@ final class GoblinEnemyDef {
 
   static const int _attackFrameCount = 6;
   static const double _attackFrameRightY = 0;
-  static const double _attackFrameLeftY = TileConstants.kCharacterDimensionDemo;
+  static const double _attackFrameLeftY = TileConstants.kCharacterDimensionSmallburg;
   static const double _attackFrameUpY =
-      TileConstants.kCharacterDimensionDemo * 2;
+      TileConstants.kCharacterDimensionSmallburg * 2;
   static const double _attackFrameDownY =
-      TileConstants.kCharacterDimensionDemo * 3;
-
+      TileConstants.kCharacterDimensionSmallburg * 3;
   static Future<SpriteAnimation> loadAnimationIdleRight() =>
       SpriteAnimation.load(
         'gameplay/characters/enemies/goblin/goblin_enemy_idle_right_6.png',
