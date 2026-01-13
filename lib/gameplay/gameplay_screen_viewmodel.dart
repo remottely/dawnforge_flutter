@@ -81,8 +81,8 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
       } else {
         GameLogger.info('[GameplayViewModel] ✅ Save loaded successfully!');
         // Try to extract position from loaded player model
-        final lastPlayerModel = playerStateManager.lastPlayerModel;
-        final positionList = (lastPlayerModel?.toJson()['position'] as List?)
+        final lastPlayerData = playerStateManager.lastPlayerData;
+        final positionList = (lastPlayerData?.toJson()['position'] as List?)
             ?.map((e) => (e as num).toDouble())
             .toList();
         if (positionList != null && positionList.length == 2) {
@@ -112,12 +112,12 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
   }
 
   void _resetPlayerLifeOnNewGame() {
-    final lastPlayerModel = playerStateManager.lastPlayerModel;
+    final lastPlayerData = playerStateManager.lastPlayerData;
 
-    if (lastPlayerModel == null) return;
+    if (lastPlayerData == null) return;
 
-    final currentLife = lastPlayerModel.life ?? 0;
-    if (currentLife <= 0) lastPlayerModel.updateLife(200);
+    final currentLife = lastPlayerData.life ?? 0;
+    if (currentLife <= 0) lastPlayerData.updateLife(200);
   }
 
   @override
@@ -146,20 +146,20 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
   //   //     position: position,
   //   //     model: CharacterData.fromJson({}),
   //   //   );
-  //   var lastPlayerModel = playerStateManager.lastPlayerModel;
+  //   var lastPlayerData = playerStateManager.lastPlayerData;
 
-  //   if (lastPlayerModel is! CharacterData) {
+  //   if (lastPlayerData is! CharacterData) {
   //     GameLogger.info(
   //       '[GameplayViewModel] Creating NEW Sunny model (no saved model found)',
   //     );
-  //     lastPlayerModel = CharacterData.fromJson(
+  //     lastPlayerData = CharacterData.fromJson(
   //       {},
   //       SunnyPlayerDef.modelConfig,
   //     );
-  //     playerStateManager.lastPlayerModel = lastPlayerModel;
+  //     playerStateManager.lastPlayerData = lastPlayerData;
   //   } else {
   //     GameLogger.info(
-  //       '[GameplayViewModel] Using EXISTING Sunny model: stamina=${lastPlayerModel.stamina}, life=${lastPlayerModel.life}',
+  //       '[GameplayViewModel] Using EXISTING Sunny model: stamina=${lastPlayerData.stamina}, life=${lastPlayerData.life}',
   //     );
   //   }
 
@@ -169,7 +169,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
   //   return DemoPlayer(
   //     position: position,
   //     id: '',
-  //     data: lastPlayerModel,
+  //     data: lastPlayerData,
   //   );
   // }
 
@@ -179,16 +179,16 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
   //   //     position: position,
   //   //     model: CharacterData.fromJson({}),
   //   //   );
-  //   var lastPlayerModel = playerStateManager.lastPlayerModel;
-  //   final lastPlayerJson = lastPlayerModel?.toJson() ?? {'coins': 500};
+  //   var lastPlayerData = playerStateManager.lastPlayerData;
+  //   final lastPlayerJson = lastPlayerData?.toJson() ?? {'coins': 500};
   //   //  ?? PlayerSaveData.initial(playerType: 'cute').toJson();
 
-  //   if (lastPlayerModel is! CharacterData) {
-  //     lastPlayerModel = CharacterData.fromJson(
+  //   if (lastPlayerData is! CharacterData) {
+  //     lastPlayerData = CharacterData.fromJson(
   //       lastPlayerJson,
   //       CutePlayerDef.modelConfig,
   //     );
-  //     playerStateManager.lastPlayerModel = lastPlayerModel;
+  //     playerStateManager.lastPlayerData = lastPlayerData;
   //   }
 
   //   playerStateManager.currentPlayerAnimation =
@@ -196,7 +196,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
 
   //   return CutePlayerView<CutePlayerController, CharacterData>(
   //     position: position,
-  //     model: lastPlayerModel,
+  //     model: lastPlayerData,
   //   );
   // }
 
@@ -205,16 +205,16 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
   //     '[GameplayViewModel] Building farmer player at position: $position',
   //   );
 
-  //   var lastPlayerModel = playerStateManager.lastPlayerModel;
-  //   final lastPlayerJson = lastPlayerModel?.toJson() ?? {'coins': 500};
+  //   var lastPlayerData = playerStateManager.lastPlayerData;
+  //   final lastPlayerJson = lastPlayerData?.toJson() ?? {'coins': 500};
   //   //  ?? PlayerSaveData.initial(playerType: 'farmer').toJson();
 
-  //   if (lastPlayerModel is! CharacterData) {
-  //     lastPlayerModel = CharacterData.fromJson(
+  //   if (lastPlayerData is! CharacterData) {
+  //     lastPlayerData = CharacterData.fromJson(
   //       lastPlayerJson,
   //       FarmerPlayerDef.modelConfig,
   //     );
-  //     playerStateManager.lastPlayerModel = lastPlayerModel;
+  //     playerStateManager.lastPlayerData = lastPlayerData;
   //   }
 
   //   playerStateManager.currentPlayerAnimation =
@@ -222,35 +222,39 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
 
   //   return FarmerPlayerView<FarmerPlayerController, CharacterData>(
   //     position: position,
-  //     model: lastPlayerModel,
+  //     model: lastPlayerData,
   //   );
   // }
 
-  Character buildDemoPlayer(Vector2 position) {
-    GameLogger.debug(
-      '[GameplayViewModel] Building farmer player at position: $position',
-    );
+  DemoPlayer buildDemoPlayer(Vector2 position) {
+    print('[GameplayViewModel] Building demo player at position: $position');
 
-    var lastPlayerModel = playerStateManager.lastPlayerModel;
-    final lastPlayerJson = lastPlayerModel?.toJson() ?? {'coins': 500};
-    //  ?? PlayerSaveData.initial(playerType: 'demo').toJson();
+    var lastPlayerData = playerStateManager.lastPlayerData;
 
-    if (lastPlayerModel is! CharacterData) {
-      lastPlayerModel = CharacterData.fromJson(lastPlayerJson);
-      playerStateManager.lastPlayerModel = lastPlayerModel;
+    // ✅ CORREÇÃO: Cria novo player se não existe save
+    if (lastPlayerData == null) {
+      print('[GameplayViewModel] No save data found, creating new player');
+
+      // Cria CharacterData padrão
+      lastPlayerData = CharacterData.defaultPlayer(
+        maxStamina: DemoPlayerDef.config.maxStamina,
+        maxEnergy: DemoPlayerDef.config.maxEnergy,
+        maxLife: DemoPlayerDef.config.maxLife,
+        position: position,
+      );
+
+      // Salva no state manager
+      playerStateManager.lastPlayerData = lastPlayerData;
     }
 
     playerStateManager.currentPlayerAnimation =
         DemoPlayerDef.loadAnimationIdleDown;
-    final player = DemoPlayer(
+
+    return DemoPlayer(
       position: position,
-      data: lastPlayerModel,
-      id: 'adad',
+      id: 'player_demo',
+      data: lastPlayerData, // ✅ Agora sempre tem valor
     );
-
-    PlayerStateManager.instance.setLastPlayerView(player);
-
-    return player;
   }
 
   void recreatePerMapDependencies({required String? mapId}) {

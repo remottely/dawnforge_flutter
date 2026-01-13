@@ -1,5 +1,5 @@
 import 'package:dawnforge/shared/framework/character/character_data.dart';
-import 'package:dawnforge/shared/framework/character/character.dart';
+import 'package:dawnforge/gameplay/characters/player/demo/demo_player.dart';
 import 'package:flutter/material.dart';
 
 /// Overlay simples para mostrar moedas do jogador.
@@ -39,7 +39,7 @@ class _PlayerCoinsOverlayState extends State<PlayerCoinsOverlay> {
   }
 
   void _bindToPlayer(dynamic player) {
-    if (player is Character && player.hasGameRef) {
+    if (player is DemoPlayer && player.hasGameRef) {
       final model = player.data;
       _model = model;
       _listener = () {

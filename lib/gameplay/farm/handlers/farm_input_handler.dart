@@ -6,12 +6,12 @@ import 'package:dawnforge/gameplay/core/modules/save/game_save_controller.dart';
 import 'package:dawnforge/gameplay/farm/constants/farm_feedback_config.dart';
 import 'package:dawnforge/gameplay/farm/farm_service_locator.dart';
 import 'package:dawnforge/gameplay/farm/services/farm_feedback_service.dart';
-import 'package:dawnforge/shared/framework/character/character.dart';
+import 'package:dawnforge/gameplay/characters/player/demo/demo_player.dart';
 
 /// Handles farm-specific debug inputs from both keyboard and joystick.
 /// Uses PlayerControllerListener to receive unified input events.
 class FarmInputHandler extends GameComponent with PlayerControllerListener {
-  final Character player;
+  final DemoPlayer player;
   final PlayerController playerController;
   late final FarmFeedbackService _feedbackService;
 

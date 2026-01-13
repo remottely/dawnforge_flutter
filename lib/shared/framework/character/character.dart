@@ -1,4 +1,4 @@
-// lib/shared/framework/character/character.dart (CORREÇÃO FINAL)
+// lib/shared/framework/character/character.dart (CORREÇÃO)
 import 'dart:async' as async;
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
@@ -9,41 +9,37 @@ import 'package:dawnforge/shared/framework/character/character_config.dart';
 import 'package:dawnforge/shared/framework/character/character_data.dart';
 import 'package:flutter/foundation.dart';
 
-abstract class Character extends SimplePlayer
-    with Lighting, BlockMovementCollision {
+abstract class Character extends SimplePlayer with Lighting, BlockMovementCollision {
   final String id;
   final CharacterData data;
   final CharacterConfig config;
-
+  
   final List<CharacterBehavior> _behaviors = [];
-
+  
   CharacterBehavior? _cachedMovementBehavior;
   CharacterBehavior? _cachedCombatBehavior;
   CharacterBehavior? _cachedFarmingBehavior;
-
+  
   async.Timer? _staminaRegenTimer;
   bool _isStaminaRegenPaused = false;
   int _activeStaminaActions = 0;
-
+  
   int _activeActionLockCount = 0;
   JoystickDirectionalEvent? _bufferedDirectionalInput;
-
+  
   Character({
     required this.id,
     required this.data,
     required this.config,
     required Vector2 position,
-    SimpleDirectionAnimation? animation,
+    SimpleDirectionAnimation? animation, // ✅ NOVO: Aceita animação opcional
   }) : super(
-         position: position,
-         size: config.size,
-         life: config.maxLife,
-         speed: config.baseSpeed,
-         animation: animation,
-       ) {
-    // ✅ CRÍTICO: Seta anchor NO CONSTRUTOR, não no onLoad!
-    anchor = Anchor.center;
-  }
+    position: position,
+    size: config.size,
+    life: config.maxLife,
+    speed: config.baseSpeed,
+    animation: animation, // ✅ PASSA para SimplePlayer
+  );
 
   bool get isActionLocked => _activeActionLockCount > 0;
 
@@ -53,8 +49,7 @@ abstract class Character extends SimplePlayer
   Future<void> onLoad() async {
     await super.onLoad();
 
-    // ❌ REMOVIDO: anchor = Anchor.center;
-    // ✅ JÁ FOI SETADO NO CONSTRUTOR!
+    anchor = Anchor.center;
 
     _setupVisuals();
     _restoreLifeFromData();
@@ -65,6 +60,7 @@ abstract class Character extends SimplePlayer
       behavior.attach(this);
     }
 
+    // 🚀 OTIMIZAÇÃO 1: Cache behaviors críticos após attach
     _cacheFrequentlyUsedBehaviors();
 
     add(config.hitbox);
@@ -72,8 +68,10 @@ abstract class Character extends SimplePlayer
 
   @override
   void update(double dt) {
+    // Bloqueia movimento se market aberto
     if (MarketState.instance.isOpen.value) {
       stopMove();
+      // ✅ CORREÇÃO: velocity é nullable no Bonfire 3.16.1
       velocity = Vector2.zero();
       return;
     }
@@ -82,10 +80,12 @@ abstract class Character extends SimplePlayer
 
     _syncDataToEntity();
 
+    // 🚀 OTIMIZAÇÃO 1: Chama behaviors cached primeiro (mais críticos)
     _cachedMovementBehavior?.update(dt);
     _cachedCombatBehavior?.update(dt);
     _cachedFarmingBehavior?.update(dt);
 
+    // 🚀 OTIMIZAÇÃO 2: Behaviors com update condicional
     for (final behavior in _behaviors) {
       if (behavior == _cachedMovementBehavior ||
           behavior == _cachedCombatBehavior ||
@@ -133,6 +133,7 @@ abstract class Character extends SimplePlayer
     return _behaviors.whereType<T>().firstOrNull;
   }
 
+  // 🚀 OTIMIZAÇÃO 1: Cache behaviors críticos
   void _cacheFrequentlyUsedBehaviors() {
     _cachedMovementBehavior = _behaviors
         .where((b) => b.runtimeType.toString().contains('Movement'))
@@ -198,6 +199,7 @@ abstract class Character extends SimplePlayer
       '[Character] 🎮 Input: ${event.id} | event: ${event.event} | equipped: ${data.equippedItemId}',
     );
 
+    // 🚀 OTIMIZAÇÃO 1: Chama cached behaviors primeiro
     if (_cachedCombatBehavior?.onInput(event) ?? false) return;
     if (_cachedFarmingBehavior?.onInput(event) ?? false) return;
     if (_cachedMovementBehavior?.onInput(event) ?? false) return;
@@ -363,7 +365,10 @@ abstract class Character extends SimplePlayer
     }
 
     data.position = position;
+
+    // ✅ CORREÇÃO: velocity pode ser null no Bonfire 3.16.1
     data.velocity = velocity ?? Vector2.zero();
+
     data.direction = _directionToString(lastDirection);
   }
 
@@ -388,6 +393,7 @@ abstract class Character extends SimplePlayer
 
   void _displayDeathEffects() {
     if (config.getDeathMarker != null) {
+      // ✅ CORREÇÃO: Usa hasGameRef antes de acessar
       if (hasGameRef) {
         gameRef.add(config.getDeathMarker!(position));
       }

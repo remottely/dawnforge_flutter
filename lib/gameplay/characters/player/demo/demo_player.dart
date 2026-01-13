@@ -1,5 +1,6 @@
-// lib/gameplay/characters/player/demo/demo_player.dart (CORREÇÃO DEFINITIVA)
+// lib/gameplay/characters/player/demo/demo_player.dart (CORREÇÃO FINAL)
 import 'dart:ui';
+
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
 import 'package:dawnforge/gameplay/characters/player/demo/demo_player_def.dart';
@@ -32,29 +33,38 @@ class DemoPlayer extends Character {
          data: data,
          config: DemoPlayerDef.config,
          position: position,
-         // ✅ SOLUÇÃO: Passa a animação NO CONSTRUTOR
-         animation: DemoPlayerDef.walkAnimation,
+         animation: null,
        ) {
-    debugPrint('[DemoPlayer] 🎮 Construtor - position: $position');
+    anchor = Anchor.center;
+    debugPrint('[DemoPlayer] 🎮 Construtor chamado - position: $position');
     _setupBehaviors();
   }
 
   @override
   Future<void> onLoad() async {
     debugPrint('[DemoPlayer] 📦 onLoad START');
-    
-    // ✅ APENAS chama super.onLoad
-    // A animação já foi passada no construtor!
+
+    // ✅ CORREÇÃO: Aguarda super.onLoad PRIMEIRO
     await super.onLoad();
+
+    // ✅ CRÍTICO: Aguarda replaceAnimation carregar as animações
+    debugPrint('[DemoPlayer] 🎨 Carregando walkAnimation...');
+    // await replaceAnimation(DemoPlayerDef.walkAnimation);
+    debugPrint('[DemoPlayer] ✅ walkAnimation carregada!');
 
     debugPrint('[DemoPlayer] 📦 onLoad END');
     debugPrint('[DemoPlayer] 📦 animation: $animation');
+    debugPrint('[DemoPlayer] 📦 isMounted: $isMounted');
   }
 
   @override
   void onMount() {
     debugPrint('[DemoPlayer] 🔗 onMount START');
+    debugPrint('[DemoPlayer] 🔗 isMounted: $isMounted');
+    debugPrint('[DemoPlayer] 🔗 animation: $animation');
+
     super.onMount();
+
     debugPrint('[DemoPlayer] 🔗 onMount END');
   }
 
@@ -156,11 +166,7 @@ class DemoPlayer extends Character {
   factory DemoPlayer.fromSave(Map<String, dynamic> saveData) {
     final data = CharacterData.fromJson(saveData);
 
-    return DemoPlayer(
-      id: 'player_demo',
-      data: data,
-      position: data.position,
-    );
+    return DemoPlayer(id: 'player_demo', data: data, position: data.position);
   }
 
   factory DemoPlayer.newGame(Vector2 spawnPosition) {
@@ -171,10 +177,6 @@ class DemoPlayer extends Character {
       position: spawnPosition,
     );
 
-    return DemoPlayer(
-      id: 'player_demo',
-      data: data,
-      position: spawnPosition,
-    );
+    return DemoPlayer(id: 'player_demo', data: data, position: spawnPosition);
   }
 }

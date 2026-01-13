@@ -12,10 +12,6 @@ class MenuScreenDef {
 
   static final List<Future<SpriteAnimation>> characterSpriteAnimations = [
     UISpriteAnimationsDef.loadAnimationDemoPlayerIdleDown,
-    UISpriteAnimationsDef.loadAnimationFarmerPlayerIdleDown,
-    UISpriteAnimationsDef.loadAnimationCutePlayerIdleRight,
-    UISpriteAnimationsDef.loadAnimationSunnyPlayerIdleRight,
-    UISpriteAnimationsDef.loadAnimationKnightPlayerIdleRight,
     UISpriteAnimationsDef.loadAnimationWizardNpcIdleLeft(),
     UISpriteAnimationsDef.loadAnimationKidNpcIdleLeft(),
     UISpriteAnimationsDef.loadAnimationGoblinEnemyIdleRight(),

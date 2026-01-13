@@ -1,8 +1,8 @@
+// lib/gameplay/core/modules/combat/shield_defense_input_handler.dart (CORRIGIDO)
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
-
 import 'package:bonfire/bonfire.dart';
+import 'package:dawnforge/gameplay/characters/player/demo/demo_player.dart';
 import 'package:dawnforge/gameplay/core/modules/input_actions/input_def.dart';
-import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_defense_player_view.dart';
 
 class ShieldDefenseInputHandler extends GameComponent
     with PlayerControllerListener {
@@ -26,8 +26,8 @@ class ShieldDefenseInputHandler extends GameComponent
     }
   }
 
-  DDDefensePlayerView? _getCurrentPlayer() {
-    final players = gameRef.query<DDDefensePlayerView>();
+  DemoPlayer? _getCurrentPlayer() {
+    final players = gameRef.query<DemoPlayer>();
     return players.isNotEmpty ? players.first : null;
   }
 
@@ -46,40 +46,26 @@ class ShieldDefenseInputHandler extends GameComponent
       if (_staminaAccumulator >= 1.0) {
         final intStaminaToConsume = _staminaAccumulator.floor();
         if (intStaminaToConsume > 0) {
-          player.controller.model.consumeStamina(intStaminaToConsume);
+          // ✅ CORREÇÃO: Usa consumeStamina
+          player.data.consumeStamina(intStaminaToConsume.toDouble());
           _staminaAccumulator -= intStaminaToConsume;
         }
       }
 
-      if (player.controller.model.stamina <= 0) {
+      if (player.data.stamina <= 0) {
         GameLogger.warning(
           '[ShieldDefenseInput] ✗ Stamina esgotada, parando defesa',
         );
+        // ✅ CORREÇÃO: Usa stopShieldDefense
         player.stopShieldDefense();
         _isDefending = false;
         _defenseTime = 0.0;
         _staminaAccumulator = 0.0;
 
-        player.controller.endStaminaConsumingAction();
+        player.endStaminaConsumingAction();
       }
     }
   }
-
-  // @override
-  // bool onKeyboard(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-  //   final player = _getCurrentPlayer();
-  //   if (player == null) return false;
-
-  //   if (InputDef.isInteractionAction(event.logicalKey)) {
-  //     if (event is KeyDownEvent) {
-  //       return _handleDefenseStart(player);
-  //     } else if (event is KeyUpEvent) {
-  //       return _handleDefenseEnd(player);
-  //     }
-  //   }
-
-  //   return false;
-  // }
 
   @override
   void onJoystickAction(JoystickActionEvent event) {
@@ -95,20 +81,21 @@ class ShieldDefenseInputHandler extends GameComponent
     }
   }
 
-  bool _handleDefenseStart(DDDefensePlayerView player) {
+  bool _handleDefenseStart(DemoPlayer player) {
     if (!_isDefending) {
-      if (player.controller.model.stamina <= 0) {
+      if (player.data.stamina <= 0) {
         GameLogger.warning('[ShieldDefenseInput] ✗ Sem stamina para defender');
         return false;
       }
 
+      // ✅ CORREÇÃO: Usa startShieldDefense
       final success = player.startShieldDefense();
       if (success) {
         _isDefending = true;
         _defenseTime = 0.0;
         _staminaAccumulator = 0.0;
 
-        player.controller.beginStaminaConsumingAction();
+        player.beginStaminaConsumingAction();
         GameLogger.info(
           '[ShieldDefenseInput] ✓ Defesa iniciada - regeneração pausada',
         );
@@ -118,14 +105,15 @@ class ShieldDefenseInputHandler extends GameComponent
     return false;
   }
 
-  bool _handleDefenseEnd(DDDefensePlayerView player) {
+  bool _handleDefenseEnd(DemoPlayer player) {
     if (_isDefending) {
+      // ✅ CORREÇÃO: Usa stopShieldDefense
       player.stopShieldDefense();
       _isDefending = false;
       _defenseTime = 0.0;
       _staminaAccumulator = 0.0;
 
-      player.controller.endStaminaConsumingAction();
+      player.endStaminaConsumingAction();
       GameLogger.info(
         '[ShieldDefenseInput] ✓ Defesa finalizada (tempo: ${_defenseTime.toStringAsFixed(2)}s) - regeneração retomada',
       );
@@ -143,7 +131,7 @@ class ShieldDefenseInputHandler extends GameComponent
       final player = _getCurrentPlayer();
       if (player != null) {
         player.stopShieldDefense();
-        player.controller.endStaminaConsumingAction();
+        player.endStaminaConsumingAction();
       }
       _isDefending = false;
     }

@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
+import 'package:dawnforge/gameplay/characters/player/demo/demo_player.dart';
 import 'package:dawnforge/gameplay/core/modules/input_actions/input_def.dart';
 // import 'package:dawnforge/gameplay/market/market_decoration_def.dart';
 import 'package:dawnforge/gameplay/market/market_state.dart';
 import 'package:dawnforge/shared/framework/decorations/dd_contact_decoration.dart';
 // import 'package:dawnforge/shared/framework/interaction/dd_contact_interaction.dart';
 import 'package:dawnforge/shared/framework/character/character_data.dart';
-import 'package:dawnforge/shared/framework/character/character.dart';
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
 /// Decoração interativa do market. Ao encostar, aguarda o input de interação para abrir o painel.
@@ -30,7 +30,7 @@ class MarketDecoration extends DDContactDecoration
   bool _registered = false;
   bool _hasActiveContact = false;
   PlayerController? _registeredController;
-  Character? _currentPlayer;
+  DemoPlayer? _currentPlayer;
 
   MarketDecoration({
     required super.position,
@@ -58,7 +58,7 @@ class MarketDecoration extends DDContactDecoration
     super.onContact(component);
     if (_hasActiveContact) return;
     _hasActiveContact = true;
-    _currentPlayer = component is Character ? component : _currentPlayer;
+    _currentPlayer = component is DemoPlayer ? component : _currentPlayer;
     _registerToPlayerController();
 
     GameLogger.debug(
@@ -127,7 +127,7 @@ class MarketDecoration extends DDContactDecoration
     }
 
     // Fallback: abre via estado global para ser renderizado no HUD central.
-    final model = (component is Character)
+    final model = (component is DemoPlayer)
         ? component.data as CharacterData?
         : null;
 

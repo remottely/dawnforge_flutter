@@ -5,27 +5,11 @@ import 'package:dawnforge/gameplay/characters/enemies/imp/imp_enemy_Def.dart';
 import 'package:dawnforge/gameplay/characters/enemies/mini_boss/mini_boss_enemy_def.dart';
 import 'package:dawnforge/gameplay/characters/npcs/kid/kid_npc_def.dart';
 import 'package:dawnforge/gameplay/characters/npcs/wizard/wizard_npc_def.dart';
-import 'package:dawnforge/gameplay/characters/player/cute/cute_player_def.dart';
 import 'package:dawnforge/gameplay/characters/player/demo/demo_player_def.dart';
-import 'package:dawnforge/gameplay/characters/player/farmer/farmer_player_def.dart';
-import 'package:dawnforge/gameplay/characters/player/knight/knight_player_def.dart';
-import 'package:dawnforge/gameplay/characters/player/sunny/sunny_player_def.dart';
 
 class UISpriteAnimationsDef {
   static final Future<SpriteAnimation> loadAnimationDemoPlayerIdleDown =
       DemoPlayerDef.loadAnimationIdleDown;
-
-  static final Future<SpriteAnimation> loadAnimationFarmerPlayerIdleDown =
-      FarmerPlayerDef.loadAnimationIdleDown;
-
-  static final Future<SpriteAnimation> loadAnimationKnightPlayerIdleRight =
-      KnightPlayerDef.loadAnimationIdleRight;
-
-  static final Future<SpriteAnimation> loadAnimationCutePlayerIdleRight =
-      CutePlayerDef.loadAnimationIdleRight;
-
-  static final Future<SpriteAnimation> loadAnimationSunnyPlayerIdleRight =
-      SunnyPlayerDef.loadAnimationIdleRight;
 
   static Future<SpriteAnimation> loadAnimationWizardNpcIdleLeft() =>
       WizardNpcDef.loadAnimationIdleLeft();

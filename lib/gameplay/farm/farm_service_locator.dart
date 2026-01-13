@@ -120,7 +120,7 @@ void _onDayChanged(DayState previous, DayState current) {
   getIt<FarmManager>().advanceDay();
 
   // Reset stamina/energy daily if available.
-  PlayerStateManager.instance.lastPlayerModel?.restoreStaminaFully();
+  PlayerStateManager.instance.lastPlayerData?.restoreStaminaFully();
 
   // Persist state after any day change (auto cutoff at 2 AM or manual advance).
   // Fire and forget to avoid blocking the tick loop.

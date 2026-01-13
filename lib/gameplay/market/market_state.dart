@@ -16,7 +16,7 @@ class MarketState {
   void openWithPlayer(CharacterData player) {
     activePlayer.value = player;
     isOpen.value = true;
-    PlayerStateManager.instance.setLastPlayerModel(player);
+    PlayerStateManager.instance.setLastPlayerData(player);
   }
 
   void close() {
