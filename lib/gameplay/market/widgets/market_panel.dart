@@ -13,14 +13,14 @@ import 'package:dawnforge/gameplay/inventory/widgets/item_sprite_widget.dart';
 import 'package:dawnforge/gameplay/market/market_manager.dart';
 import 'package:dawnforge/gameplay/market/market_models.dart';
 import 'package:dawnforge/gameplay/market/market_state.dart';
-import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
+import 'package:dawnforge/shared/framework/character/character_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
 /// Painel do market exibido dentro do grid da HUD (Quadrante 5).
 class MarketPanel extends StatefulWidget {
-  final DDBasePlayerModel player;
+  final CharacterData player;
 
   const MarketPanel({super.key, required this.player});
 

@@ -2,8 +2,8 @@ import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
 
-import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
-import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
+import 'package:dawnforge/shared/framework/character/character_data.dart';
+import 'package:dawnforge/shared/framework/character/character.dart';
 
 class PlayerStateManager {
   PlayerStateManager._();
@@ -11,8 +11,8 @@ class PlayerStateManager {
   static final instance = PlayerStateManager._();
 
   Future<SpriteAnimation>? currentPlayerAnimation;
-  DDBasePlayerView? lastPlayerView;
-  DDBasePlayerModel? lastPlayerModel;
+  Character? lastPlayerView;
+  CharacterData? lastPlayerModel;
   bool _respawnWithFullLife = false;
 
   Map<String, dynamic> toJson() {
@@ -40,19 +40,19 @@ class PlayerStateManager {
 
     // switch (playerType) {
     //   case 'farmer':
-    //     lastPlayerModel = DDFarmPlayerModel.fromJson(data);
+    //     lastPlayerModel = CharacterData.fromJson(data);
     //     break;
     //   case 'cute':
-    //     lastPlayerModel = DDFarmPlayerModel.fromJson(data);
+    //     lastPlayerModel = CharacterData.fromJson(data);
     //     break;
     //   case 'sunny':
-    //     lastPlayerModel = DDFarmPlayerModel.fromJson(data);
+    //     lastPlayerModel = CharacterData.fromJson(data);
     //     break;
     //   case 'demo':
-    //     lastPlayerModel = DDFarmPlayerModel.fromJson(data);
+    //     lastPlayerModel = CharacterData.fromJson(data);
     //     break;
     //   default:
-    //     lastPlayerModel = DDFarmPlayerModel.fromJson(data);
+    //     lastPlayerModel = CharacterData.fromJson(data);
     //     break;
     // }
 
@@ -66,11 +66,11 @@ class PlayerStateManager {
     _respawnWithFullLife = false;
   }
 
-  void setLastPlayerModel(DDBasePlayerModel model) {
+  void setLastPlayerModel(CharacterData model) {
     lastPlayerModel = model;
   }
 
-  void setLastPlayerView(DDBasePlayerView view) {
+  void setLastPlayerView(Character view) {
     lastPlayerView = view;
   }
 }

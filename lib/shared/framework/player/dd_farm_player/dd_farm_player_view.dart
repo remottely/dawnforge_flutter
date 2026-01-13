@@ -126,7 +126,8 @@ abstract class DDFarmPlayerView<
           executionStartFrame: 5, // TODO(Kevin): inject this value
           onActionStart: lockAction,
           onActionEnd: unlockAction,
-          onExecutionFrames: () => FarmToolActionDef.execute(player: this),
+          // onExecutionFrames: () => FarmToolActionDef.execute(player: this),
+          onExecutionFrames: () {}, // TODO(Kevin): remove it
         );
       },
     );
@@ -159,7 +160,8 @@ abstract class DDFarmPlayerView<
               : 8, // TODO(Kevin): inject this value dynamically
           onActionStart: lockAction,
           onActionEnd: unlockAction,
-          onExecutionFrames: () => FarmToolActionDef.execute(player: this),
+          // onExecutionFrames: () => FarmToolActionDef.execute(player: this),
+          onExecutionFrames: () {}, // TODO(Kevin): remove it
         );
       },
     );
@@ -190,7 +192,8 @@ abstract class DDFarmPlayerView<
           executionStartFrame: 4, // TODO(Kevin): inject this value
           onActionStart: lockAction,
           onActionEnd: unlockAction,
-          onExecutionFrames: () => FarmToolActionDef.execute(player: this),
+          // onExecutionFrames: () => FarmToolActionDef.execute(player: this),
+          onExecutionFrames: () {}, // TODO(Kevin): remove it
         );
       },
     );
@@ -218,7 +221,8 @@ abstract class DDFarmPlayerView<
           executionStartFrame: 4, // TODO(Kevin): inject this value
           onActionStart: lockAction,
           onActionEnd: unlockAction,
-          onExecutionFrames: () => FarmToolActionDef.execute(player: this),
+          // onExecutionFrames: () => FarmToolActionDef.execute(player: this),
+          onExecutionFrames: () {}, // TODO(Kevin): remove it
         );
       },
     );

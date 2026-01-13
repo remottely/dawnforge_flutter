@@ -1,6 +1,6 @@
 import 'package:dawnforge/gameplay/decorations/chest/chest_decoration_def.dart';
 import 'package:dawnforge/gameplay/decorations/chest/chest_decoration_model.dart';
-import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
+import 'package:dawnforge/shared/framework/character/character.dart';
 
 class ChestDecorationController {
   final ChestDecorationModel model;
@@ -8,8 +8,8 @@ class ChestDecorationController {
   final void Function() onOpenChest;
   final void Function() onDisplayExclamationEmote;
   final void Function({
-    required DDBasePlayerView player,
-    required void Function(DDBasePlayerView) observed,
+    required Character player,
+    required void Function(Character) observed,
     required void Function() notObserved,
     required double closeVisionRadius,
   })
@@ -22,7 +22,7 @@ class ChestDecorationController {
     required this.onDetectPlayerInCloseVisionRadius,
   });
 
-  void update(double dt, DDBasePlayerView? player) {
+  void update(double dt, Character? player) {
     if (player == null || model.isOpened) return;
     _handleDetectPlayerInCloseVisionRadius(player);
   }
@@ -35,7 +35,7 @@ class ChestDecorationController {
     onOpenChest();
   }
 
-  void _handleDetectPlayerInCloseVisionRadius(DDBasePlayerView player) {
+  void _handleDetectPlayerInCloseVisionRadius(Character player) {
     onDetectPlayerInCloseVisionRadius.call(
       player: player,
       closeVisionRadius: ChestDecorationConfig.kCloseVisionRadius,

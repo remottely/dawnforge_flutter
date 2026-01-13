@@ -1,5 +1,5 @@
-import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
-import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
+import 'package:dawnforge/shared/framework/character/character_data.dart';
+import 'package:dawnforge/shared/framework/character/character.dart';
 import 'package:flutter/material.dart';
 
 /// Overlay simples para mostrar moedas do jogador.
@@ -14,7 +14,7 @@ class PlayerCoinsOverlay extends StatefulWidget {
 }
 
 class _PlayerCoinsOverlayState extends State<PlayerCoinsOverlay> {
-  DDBasePlayerModel? _model;
+  CharacterData? _model;
   VoidCallback? _listener;
 
   @override
@@ -39,8 +39,8 @@ class _PlayerCoinsOverlayState extends State<PlayerCoinsOverlay> {
   }
 
   void _bindToPlayer(dynamic player) {
-    if (player is DDBasePlayerView && player.hasGameRef) {
-      final model = player.controller.model;
+    if (player is Character && player.hasGameRef) {
+      final model = player.data;
       _model = model;
       _listener = () {
         if (mounted) setState(() {});

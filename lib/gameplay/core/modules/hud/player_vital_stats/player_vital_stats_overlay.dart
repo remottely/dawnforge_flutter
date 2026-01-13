@@ -1,5 +1,5 @@
 import 'package:dawnforge/gameplay/core/modules/hud/player_vital_stats/player_vital_stats_state.dart';
-import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
+import 'package:dawnforge/shared/framework/character/character.dart';
 import 'package:flutter/material.dart';
 
 class PlayerVitalStatsOverlay extends StatefulWidget {
@@ -13,7 +13,7 @@ class PlayerVitalStatsOverlay extends StatefulWidget {
 }
 
 class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
-  DDBasePlayerView? _cachedPlayer;
+  Character? _cachedPlayer;
 
   @override
   void initState() {
@@ -37,7 +37,7 @@ class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
 
   void _updateCachedPlayer() {
     final player = widget.player;
-    if (player is DDBasePlayerView && player.hasGameRef) {
+    if (player is Character && player.hasGameRef) {
       _cachedPlayer = player;
     }
   }
@@ -54,7 +54,7 @@ class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
     final player = _cachedPlayer;
     if (player != null) {
       try {
-        return player.controller.model.stamina;
+        return player.data.stamina;
       } catch (e) {
         // Silenciosamente retorna 0 se houver erro
       }

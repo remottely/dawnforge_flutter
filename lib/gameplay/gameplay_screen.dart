@@ -1,4 +1,5 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:dawnforge/gameplay/characters/player/demo/demo_player.dart';
 import 'package:dawnforge/gameplay/core/modules/audio/audio_manager.dart';
 import 'package:dawnforge/gameplay/core/modules/game/tile_constants.dart';
 import 'package:dawnforge/gameplay/core/modules/map/map_def.dart';
@@ -11,6 +12,7 @@ import 'package:dawnforge/gameplay/farm/handlers/farm_input_handler.dart';
 import 'package:dawnforge/gameplay/core/modules/hud/unified_game_overlay.dart';
 import 'package:dawnforge/gameplay/gameplay_screen_viewmodel.dart';
 import 'package:dawnforge/gameplay/time/time_manager.dart' as new_time;
+import 'package:dawnforge/shared/framework/save/player_save_manager.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -27,10 +29,26 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
 
   // Usamos BuildContext do MapNavigator para navegação
   BuildContext? _mapNavigatorContext;
+  DemoPlayer? _player;
+  bool _isLoading = true;
+
+  Future<void> _initializePlayer() async {
+    final savedData = await PlayerSaveManager.loadPlayer();
+
+    setState(() {
+      // if (savedData != null) {
+      //   _player = DemoPlayer.fromSave(savedData.toJson());
+      // } else {
+        _player = DemoPlayer.newGame(Vector2(5, 5));
+      // }
+      _isLoading = false;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    _initializePlayer();
 
     // Escuta solicitações de transição de mapa
     _transitionSubscription = MapTransitionController
@@ -133,7 +151,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
                       Vector2(7, 7))) *
             TileConstants.kTileDimensionStandard;
 
-        final player = buildFarmerPlayer(playerPosition);
+        final player = buildDemoPlayer(playerPosition);
 
         farmInputHandler = FarmInputHandler(
           player: player,
@@ -149,7 +167,8 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
                 new_time.TimeManager.instance.start();
               },
               playerControllers: [playerInput],
-              player: player,
+              // player: player,
+              player: _player,
               map: mapItem.map,
               components: [
                 gameplayGameStateManager,

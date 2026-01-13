@@ -1,6 +1,5 @@
-// lib/gameplay/characters/player/demo/demo_player.dart (CORREÇÃO FINAL)
+// lib/gameplay/characters/player/demo/demo_player.dart (CORREÇÃO DEFINITIVA)
 import 'dart:ui';
-
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
 import 'package:dawnforge/gameplay/characters/player/demo/demo_player_def.dart';
@@ -33,37 +32,29 @@ class DemoPlayer extends Character {
          data: data,
          config: DemoPlayerDef.config,
          position: position,
-         animation: null,
+         // ✅ SOLUÇÃO: Passa a animação NO CONSTRUTOR
+         animation: DemoPlayerDef.walkAnimation,
        ) {
-    debugPrint('[DemoPlayer] 🎮 Construtor chamado - position: $position');
+    debugPrint('[DemoPlayer] 🎮 Construtor - position: $position');
     _setupBehaviors();
   }
 
   @override
   Future<void> onLoad() async {
     debugPrint('[DemoPlayer] 📦 onLoad START');
-
-    // ✅ CORREÇÃO: Aguarda super.onLoad PRIMEIRO
+    
+    // ✅ APENAS chama super.onLoad
+    // A animação já foi passada no construtor!
     await super.onLoad();
-
-    // ✅ CRÍTICO: Aguarda replaceAnimation carregar as animações
-    debugPrint('[DemoPlayer] 🎨 Carregando walkAnimation...');
-    await replaceAnimation(DemoPlayerDef.walkAnimation);
-    debugPrint('[DemoPlayer] ✅ walkAnimation carregada!');
 
     debugPrint('[DemoPlayer] 📦 onLoad END');
     debugPrint('[DemoPlayer] 📦 animation: $animation');
-    debugPrint('[DemoPlayer] 📦 isMounted: $isMounted');
   }
 
   @override
   void onMount() {
     debugPrint('[DemoPlayer] 🔗 onMount START');
-    debugPrint('[DemoPlayer] 🔗 isMounted: $isMounted');
-    debugPrint('[DemoPlayer] 🔗 animation: $animation');
-
     super.onMount();
-
     debugPrint('[DemoPlayer] 🔗 onMount END');
   }
 
@@ -165,7 +156,11 @@ class DemoPlayer extends Character {
   factory DemoPlayer.fromSave(Map<String, dynamic> saveData) {
     final data = CharacterData.fromJson(saveData);
 
-    return DemoPlayer(id: 'player_demo', data: data, position: data.position);
+    return DemoPlayer(
+      id: 'player_demo',
+      data: data,
+      position: data.position,
+    );
   }
 
   factory DemoPlayer.newGame(Vector2 spawnPosition) {
@@ -176,26 +171,10 @@ class DemoPlayer extends Character {
       position: spawnPosition,
     );
 
-    return DemoPlayer(id: 'player_demo', data: data, position: spawnPosition);
-  }
-
-  // No DemoPlayer
-  @override
-  void render(Canvas canvas) {
-    debugPrint(
-      '[DemoPlayer] 🎨 render() - position: $position, visible: ${isVisible}',
+    return DemoPlayer(
+      id: 'player_demo',
+      data: data,
+      position: spawnPosition,
     );
-    super.render(canvas);
-  }
-
-  @override
-  void renderDebugMode(Canvas canvas) {
-    // Desenha um círculo vermelho no player (debug)
-    canvas.drawCircle(
-      Offset.zero,
-      32,
-      Paint()..color = const Color(0xFFFF0000),
-    );
-    super.renderDebugMode(canvas);
   }
 }

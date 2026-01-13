@@ -115,9 +115,10 @@ abstract class DDMinePlayerView<
           executionStartFrame: 5, // TODO(Kevin): inject this value
           onActionStart: lockAction,
           onActionEnd: unlockAction,
-          onExecutionFrames: () => FarmToolActionDef.execute(
-            player: this,
-          ), // TODO(kevin): change this to MineToolActionDef
+          onExecutionFrames: () {}, // TODO(Kevin): remove it
+          // onExecutionFrames: () => FarmToolActionDef.execute(
+          //   player: this,
+          // ), // TODO(kevin): change this to MineToolActionDef
         );
       },
     );

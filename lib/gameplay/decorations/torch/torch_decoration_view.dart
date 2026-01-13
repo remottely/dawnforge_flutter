@@ -5,7 +5,7 @@ import 'package:dawnforge/gameplay/decorations/torch/torch_decoration_config.dar
 import 'package:dawnforge/gameplay/decorations/torch/torch_decoration_controller.dart';
 import 'package:dawnforge/gameplay/decorations/torch/torch_decoration_model.dart';
 import 'package:dawnforge/shared/framework/decorations/dd_input_receiver/dd_input_receiver_decoration_view.dart';
-import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
+import 'package:dawnforge/shared/framework/character/character.dart';
 
 class TorchDecorationView extends DDInputReceiverDecorationView {
   late final TorchDecorationController _controller;
@@ -62,7 +62,7 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
       TorchDecorationDef.kVisionCheckInterval,
       dt,
     )) {
-      _controller.update(dt, gameRef.player as DDBasePlayerView?);
+      _controller.update(dt, gameRef.player as Character?);
     }
     super.update(dt);
   }
@@ -122,8 +122,8 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
   }
 
   void _onDetectPlayerInCloseVisionRadius({
-    required DDBasePlayerView player,
-    required void Function(DDBasePlayerView) observed,
+    required Character player,
+    required void Function(Character) observed,
     required void Function() notObserved,
     required double closeVisionRadius,
   }) {
@@ -131,7 +131,7 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
       player as GameComponent,
       radiusVision: closeVisionRadius,
       observed: (GameComponent comp) {
-        final playerView = comp as DDBasePlayerView;
+        final playerView = comp as Character;
         // Register to receive player controller events when player is nearby
         final playerController = gameRef.playerControllers?.firstOrNull;
         if (playerController != null) {

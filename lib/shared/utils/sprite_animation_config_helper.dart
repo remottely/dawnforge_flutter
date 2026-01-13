@@ -101,7 +101,7 @@ final class SpriteAnimationConfigHelper {
     );
 
     try {
-      debugPrint('[SpriteAnimationConfigHelper] Carregando asset: $assetPath');
+      // debugPrint('[SpriteAnimationConfigHelper] Carregando asset: $assetPath');
       return SpriteAnimation.load(
         assetPath,
         createCustomData(
