@@ -1,4 +1,4 @@
-// lib/shared/framework/character/character.dart (CORREÇÃO)
+// lib/shared/framework/character/character.dart (CORREÇÃO FINAL)
 import 'dart:async' as async;
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
@@ -9,37 +9,42 @@ import 'package:dawnforge/shared/framework/character/character_config.dart';
 import 'package:dawnforge/shared/framework/character/character_data.dart';
 import 'package:flutter/foundation.dart';
 
-abstract class Character extends SimplePlayer with Lighting, BlockMovementCollision {
+abstract class Character extends SimplePlayer
+    with Lighting, BlockMovementCollision {
   final String id;
   final CharacterData data;
   final CharacterConfig config;
-  
+
   final List<CharacterBehavior> _behaviors = [];
-  
+
   CharacterBehavior? _cachedMovementBehavior;
   CharacterBehavior? _cachedCombatBehavior;
   CharacterBehavior? _cachedFarmingBehavior;
-  
+
   async.Timer? _staminaRegenTimer;
   bool _isStaminaRegenPaused = false;
   int _activeStaminaActions = 0;
-  
+
   int _activeActionLockCount = 0;
   JoystickDirectionalEvent? _bufferedDirectionalInput;
-  
+  async.Timer? _actionLockTimeout; // ✅ NOVO: Timeout de segurança
+
   Character({
     required this.id,
     required this.data,
     required this.config,
     required Vector2 position,
-    SimpleDirectionAnimation? animation, // ✅ NOVO: Aceita animação opcional
+    SimpleDirectionAnimation? animation,
   }) : super(
-    position: position,
-    size: config.size,
-    life: config.maxLife,
-    speed: config.baseSpeed,
-    animation: animation, // ✅ PASSA para SimplePlayer
-  );
+         position: position,
+         size: config.size,
+         life: config.maxLife,
+         speed: config.baseSpeed,
+         animation: animation,
+       ) {
+    // ✅ CRÍTICO: Seta anchor NO CONSTRUTOR!
+    anchor = Anchor.center;
+  }
 
   bool get isActionLocked => _activeActionLockCount > 0;
 
@@ -49,29 +54,24 @@ abstract class Character extends SimplePlayer with Lighting, BlockMovementCollis
   Future<void> onLoad() async {
     await super.onLoad();
 
-    anchor = Anchor.center;
+    // ❌ REMOVIDO: anchor = Anchor.center; (já setado no construtor)
 
     _setupVisuals();
     _restoreLifeFromData();
     _startStaminaRegeneration();
 
-    // Anexa todos os behaviors
     for (final behavior in _behaviors) {
       behavior.attach(this);
     }
 
-    // 🚀 OTIMIZAÇÃO 1: Cache behaviors críticos após attach
     _cacheFrequentlyUsedBehaviors();
-
     add(config.hitbox);
   }
 
   @override
   void update(double dt) {
-    // Bloqueia movimento se market aberto
     if (MarketState.instance.isOpen.value) {
       stopMove();
-      // ✅ CORREÇÃO: velocity é nullable no Bonfire 3.16.1
       velocity = Vector2.zero();
       return;
     }
@@ -80,12 +80,10 @@ abstract class Character extends SimplePlayer with Lighting, BlockMovementCollis
 
     _syncDataToEntity();
 
-    // 🚀 OTIMIZAÇÃO 1: Chama behaviors cached primeiro (mais críticos)
     _cachedMovementBehavior?.update(dt);
     _cachedCombatBehavior?.update(dt);
     _cachedFarmingBehavior?.update(dt);
 
-    // 🚀 OTIMIZAÇÃO 2: Behaviors com update condicional
     for (final behavior in _behaviors) {
       if (behavior == _cachedMovementBehavior ||
           behavior == _cachedCombatBehavior ||
@@ -104,6 +102,7 @@ abstract class Character extends SimplePlayer with Lighting, BlockMovementCollis
   @override
   void onRemove() {
     _staminaRegenTimer?.cancel();
+    _actionLockTimeout?.cancel(); // ✅ NOVO
 
     for (final behavior in _behaviors) {
       behavior.dispose();
@@ -133,7 +132,6 @@ abstract class Character extends SimplePlayer with Lighting, BlockMovementCollis
     return _behaviors.whereType<T>().firstOrNull;
   }
 
-  // 🚀 OTIMIZAÇÃO 1: Cache behaviors críticos
   void _cacheFrequentlyUsedBehaviors() {
     _cachedMovementBehavior = _behaviors
         .where((b) => b.runtimeType.toString().contains('Movement'))
@@ -160,7 +158,10 @@ abstract class Character extends SimplePlayer with Lighting, BlockMovementCollis
     _bufferedDirectionalInput = event;
     _updateFacingDirection(event);
 
-    if (isActionLocked) return;
+    if (isActionLocked) {
+      GameLogger.info('[Character] ⚠️ Movement blocked: action locked');
+      return;
+    }
 
     super.onJoystickChangeDirectional(event);
   }
@@ -199,7 +200,6 @@ abstract class Character extends SimplePlayer with Lighting, BlockMovementCollis
       '[Character] 🎮 Input: ${event.id} | event: ${event.event} | equipped: ${data.equippedItemId}',
     );
 
-    // 🚀 OTIMIZAÇÃO 1: Chama cached behaviors primeiro
     if (_cachedCombatBehavior?.onInput(event) ?? false) return;
     if (_cachedFarmingBehavior?.onInput(event) ?? false) return;
     if (_cachedMovementBehavior?.onInput(event) ?? false) return;
@@ -226,6 +226,19 @@ abstract class Character extends SimplePlayer with Lighting, BlockMovementCollis
     GameLogger.info(
       '[Character] 🔒 Action LOCKED (count: $_activeActionLockCount)',
     );
+
+    // ✅ SEGURANÇA: Auto-unlock após 3 segundos
+    _actionLockTimeout?.cancel();
+    _actionLockTimeout = async.Timer(const Duration(seconds: 3), () {
+      if (_activeActionLockCount > 0) {
+        GameLogger.warning(
+          '[Character] ⚠️ Action lock TIMEOUT! Force unlocking... '
+          '(count was: $_activeActionLockCount)',
+        );
+        _activeActionLockCount = 0;
+        _restoreBufferedMovementInput();
+      }
+    });
   }
 
   void unlockAction() {
@@ -236,9 +249,14 @@ abstract class Character extends SimplePlayer with Lighting, BlockMovementCollis
       );
 
       if (_activeActionLockCount == 0) {
+        _actionLockTimeout?.cancel(); // ✅ Cancela timeout
         GameLogger.info('[Character] ✅ Action FULLY UNLOCKED');
         _restoreBufferedMovementInput();
       }
+    } else {
+      GameLogger.warning(
+        '[Character] ⚠️ unlockAction() called but count already 0!',
+      );
     }
   }
 
@@ -246,6 +264,7 @@ abstract class Character extends SimplePlayer with Lighting, BlockMovementCollis
     final buffered = _bufferedDirectionalInput;
     if (buffered != null &&
         buffered.directional != JoystickMoveDirectional.IDLE) {
+      GameLogger.info('[Character] 🔄 Restoring buffered movement input');
       super.onJoystickChangeDirectional(buffered);
     }
   }
@@ -365,10 +384,7 @@ abstract class Character extends SimplePlayer with Lighting, BlockMovementCollis
     }
 
     data.position = position;
-
-    // ✅ CORREÇÃO: velocity pode ser null no Bonfire 3.16.1
     data.velocity = velocity ?? Vector2.zero();
-
     data.direction = _directionToString(lastDirection);
   }
 
@@ -393,7 +409,6 @@ abstract class Character extends SimplePlayer with Lighting, BlockMovementCollis
 
   void _displayDeathEffects() {
     if (config.getDeathMarker != null) {
-      // ✅ CORREÇÃO: Usa hasGameRef antes de acessar
       if (hasGameRef) {
         gameRef.add(config.getDeathMarker!(position));
       }

@@ -185,7 +185,7 @@ final class GameSaveController {
     final playerState = PlayerStateManager.instance;
 
     // Save current player position before serializing
-    if (playerState.lastPlayerView != null &&
+    if (playerState.lastPlayer != null &&
         playerState.lastPlayerData != null) {
       // final pixelPos = playerState.lastPlayerView!.position; // TODO(Kevin): put it back
 
@@ -292,8 +292,8 @@ final class GameSaveController {
           '[GameSaveController] 📍 Converting position: tile($tileX, $tileY) → pixels(${pixelPos.x.toStringAsFixed(2)}, ${pixelPos.y.toStringAsFixed(2)})',
         );
 
-        if (playerState.lastPlayerView != null) {
-          playerState.lastPlayerView!.position = pixelPos;
+        if (playerState.lastPlayer != null) {
+          playerState.lastPlayer!.position = pixelPos;
           GameLogger.info(
             '[GameSaveController] ✅ Player position restored to tile($tileX, $tileY) / pixels(${pixelPos.x}, ${pixelPos.y})',
           );

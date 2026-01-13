@@ -207,6 +207,7 @@ class CharacterData {
     double maxStamina = 100.0,
     int maxEnergy = 100,
     double maxLife = 100.0,
+    int coins = 500,
     Vector2? position,
   }) {
     return CharacterData(
@@ -216,7 +217,7 @@ class CharacterData {
       maxEnergy: maxEnergy,
       life: maxLife,
       maxLife: maxLife,
-      coins: 0,
+      coins: coins,
       velocity: Vector2.zero(),
       position: position ?? Vector2.zero(),
     );

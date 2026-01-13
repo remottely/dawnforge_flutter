@@ -1,12 +1,12 @@
-// lib/shared/framework/character/behavior/character_behavior.dart (VERSÃO OTIMIZADA)
+// lib/shared/framework/character/behavior/character_behavior.dart (CORRIGIDO)
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/shared/framework/character/character.dart';
+import 'package:dawnforge/shared/framework/character/character.dart'; // ✅ Import explícito
 
 /// Comportamento modular anexável a qualquer Character
 abstract class CharacterBehavior {
+  // ✅ TIPO EXPLÍCITO: Character (não dynamic ou late)
   late Character character;
   
-  // 🚀 OTIMIZAÇÃO 2: Flag para desabilitar update temporariamente
   bool needsUpdate = true;
   
   /// Anexa o behavior ao character (chamado automaticamente)
@@ -18,10 +18,10 @@ abstract class CharacterBehavior {
   /// Callback quando o behavior é anexado
   void onAttach() {}
   
-  /// Atualização por frame (será chamado apenas se needsUpdate == true)
+  /// Atualização por frame
   void update(double dt) {}
   
-  /// Processa input do jogador (retorna true se consumiu o input)
+  /// Processa input do jogador
   bool onInput(JoystickActionEvent event) => false;
   
   /// Callback quando o character toma dano

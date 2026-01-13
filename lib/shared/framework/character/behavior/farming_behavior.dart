@@ -1,4 +1,5 @@
-// lib/shared/framework/character/behavior/farming_behavior.dart (CORRIGIDO)
+// lib/shared/framework/character/behavior/farming_behavior.dart (COMPLETO COM LOGS)
+import 'dart:async' as async;
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
 import 'package:dawnforge/gameplay/core/modules/input_actions/input_def.dart';
@@ -42,12 +43,16 @@ class FarmingBehavior extends CharacterBehavior {
   late DDAnimationDirectional _harvestAnimation;
 
   bool _isActionPlaying = false;
+  async.Timer? _actionTimeoutTimer; // ✅ NOVO
+
+  static const Duration _kActionTimeout = Duration(seconds: 2); // ✅ NOVO
 
   FarmingBehavior(this.config);
 
   @override
   void onAttach() {
     super.onAttach();
+    GameLogger.info('[FarmingBehavior] 🔗 onAttach');
     _loadAnimations();
   }
 
@@ -68,6 +73,7 @@ class FarmingBehavior extends CharacterBehavior {
         await DDCharacterActionSpriteAnimationHelper.loadAnimationDirectionalFromFactory(
           config.harvestAnimationFactory,
         );
+    GameLogger.info('[FarmingBehavior] ✅ All farming animations loaded');
   }
 
   @override
@@ -75,8 +81,9 @@ class FarmingBehavior extends CharacterBehavior {
     if (event.event != ActionEvent.DOWN) return false;
 
     final equipment = character.data.equippedItemId;
+    
+    GameLogger.info('[FarmingBehavior] 🎮 Input received (equipment: $equipment)');
 
-    // ✅ CORREÇÃO: Verifica com HandItemId enum
     if (InputDef.isPrimaryAction(event.id)) {
       // Dig
       if (equipment == HandItemId.shovel) {
@@ -88,7 +95,7 @@ class FarmingBehavior extends CharacterBehavior {
         return _executeWatering();
       }
 
-      // Plant Seed (verifica se é seed pelo enum)
+      // Plant Seed
       final equipmentEnum = HandItemId.values
           .where((e) => e == equipment)
           .firstOrNull;
@@ -106,14 +113,19 @@ class FarmingBehavior extends CharacterBehavior {
   }
 
   bool _executeDig() {
-    GameLogger.info('[FarmingBehavior] Executing dig');
+    GameLogger.info('[FarmingBehavior] 🪝 Executing dig (isPlaying: $_isActionPlaying)');
 
-    if (_isActionPlaying) return false;
+    if (_isActionPlaying) {
+      GameLogger.warning('[FarmingBehavior] ⚠️ Action already playing, ignoring input');
+      return false;
+    }
 
     if (!character.data.tryConsumeStamina(config.digStaminaCost)) {
       OverlayMessageDef.showNoStamina();
       return false;
     }
+
+    GameLogger.info('[FarmingBehavior] ✅ Stamina consumed (${config.digStaminaCost})');
 
     character.beginStaminaConsumingAction();
 
@@ -130,35 +142,52 @@ class FarmingBehavior extends CharacterBehavior {
       target: character,
       executionStartFrame: 5,
       onActionStart: () {
+        GameLogger.info('[FarmingBehavior] ✅ DIG onActionStart');
         _isActionPlaying = true;
         character.lockAction();
+        
+        // ✅ TIMEOUT
+        _actionTimeoutTimer?.cancel();
+        _actionTimeoutTimer = async.Timer(_kActionTimeout, () {
+          GameLogger.warning('[FarmingBehavior] ⚠️ DIG TIMEOUT! Force ending...');
+          _forceEndAction();
+        });
       },
       onActionEnd: () {
+        GameLogger.info('[FarmingBehavior] ✅ DIG onActionEnd');
+        _actionTimeoutTimer?.cancel();
         _isActionPlaying = false;
         character.unlockAction();
         character.endStaminaConsumingAction();
       },
-      onExecutionFrames: () => _performDigAction(),
+      onExecutionFrames: () {
+        GameLogger.info('[FarmingBehavior] ⚔️ DIG onExecutionFrames');
+        _performDigAction();
+      },
     );
 
     return true;
   }
 
   void _performDigAction() {
-    // ✅ Usa o sistema de farm existente
     FarmToolActionDef.execute(player: character);
-    GameLogger.info('[FarmingBehavior] Dig action executed');
+    GameLogger.info('[FarmingBehavior] 💥 Dig action executed');
   }
 
   bool _executeWatering() {
-    GameLogger.info('[FarmingBehavior] Executing watering');
+    GameLogger.info('[FarmingBehavior] 💧 Executing watering (isPlaying: $_isActionPlaying)');
 
-    if (_isActionPlaying) return false;
+    if (_isActionPlaying) {
+      GameLogger.warning('[FarmingBehavior] ⚠️ Action already playing, ignoring input');
+      return false;
+    }
 
     if (!character.data.tryConsumeStamina(config.wateringCanStaminaCost)) {
       OverlayMessageDef.showNoStamina();
       return false;
     }
+
+    GameLogger.info('[FarmingBehavior] ✅ Stamina consumed (${config.wateringCanStaminaCost})');
 
     character.beginStaminaConsumingAction();
 
@@ -175,15 +204,27 @@ class FarmingBehavior extends CharacterBehavior {
       target: character,
       executionStartFrame: AppEnvironment.kIsDevToolsMode ? 0 : 8,
       onActionStart: () {
+        GameLogger.info('[FarmingBehavior] ✅ WATERING onActionStart');
         _isActionPlaying = true;
         character.lockAction();
+        
+        _actionTimeoutTimer?.cancel();
+        _actionTimeoutTimer = async.Timer(_kActionTimeout, () {
+          GameLogger.warning('[FarmingBehavior] ⚠️ WATERING TIMEOUT! Force ending...');
+          _forceEndAction();
+        });
       },
       onActionEnd: () {
+        GameLogger.info('[FarmingBehavior] ✅ WATERING onActionEnd');
+        _actionTimeoutTimer?.cancel();
         _isActionPlaying = false;
         character.unlockAction();
         character.endStaminaConsumingAction();
       },
-      onExecutionFrames: () => _performWateringAction(),
+      onExecutionFrames: () {
+        GameLogger.info('[FarmingBehavior] ⚔️ WATERING onExecutionFrames');
+        _performWateringAction();
+      },
     );
 
     return true;
@@ -191,18 +232,23 @@ class FarmingBehavior extends CharacterBehavior {
 
   void _performWateringAction() {
     FarmToolActionDef.execute(player: character);
-    GameLogger.info('[FarmingBehavior] Watering action executed');
+    GameLogger.info('[FarmingBehavior] 💥 Watering action executed');
   }
 
   bool _executePlantSeed() {
-    GameLogger.info('[FarmingBehavior] Executing plant seed');
+    GameLogger.info('[FarmingBehavior] 🌱 Executing plant seed (isPlaying: $_isActionPlaying)');
 
-    if (_isActionPlaying) return false;
+    if (_isActionPlaying) {
+      GameLogger.warning('[FarmingBehavior] ⚠️ Action already playing, ignoring input');
+      return false;
+    }
 
     if (!character.data.tryConsumeStamina(config.seedStaminaCost)) {
       OverlayMessageDef.showNoStamina();
       return false;
     }
+
+    GameLogger.info('[FarmingBehavior] ✅ Stamina consumed (${config.seedStaminaCost})');
 
     character.beginStaminaConsumingAction();
 
@@ -219,15 +265,27 @@ class FarmingBehavior extends CharacterBehavior {
       target: character,
       executionStartFrame: 4,
       onActionStart: () {
+        GameLogger.info('[FarmingBehavior] ✅ SEED onActionStart');
         _isActionPlaying = true;
         character.lockAction();
+        
+        _actionTimeoutTimer?.cancel();
+        _actionTimeoutTimer = async.Timer(_kActionTimeout, () {
+          GameLogger.warning('[FarmingBehavior] ⚠️ SEED TIMEOUT! Force ending...');
+          _forceEndAction();
+        });
       },
       onActionEnd: () {
+        GameLogger.info('[FarmingBehavior] ✅ SEED onActionEnd');
+        _actionTimeoutTimer?.cancel();
         _isActionPlaying = false;
         character.unlockAction();
         character.endStaminaConsumingAction();
       },
-      onExecutionFrames: () => _performPlantSeedAction(),
+      onExecutionFrames: () {
+        GameLogger.info('[FarmingBehavior] ⚔️ SEED onExecutionFrames');
+        _performPlantSeedAction();
+      },
     );
 
     return true;
@@ -235,18 +293,23 @@ class FarmingBehavior extends CharacterBehavior {
 
   void _performPlantSeedAction() {
     FarmToolActionDef.execute(player: character);
-    GameLogger.info('[FarmingBehavior] Plant seed action executed');
+    GameLogger.info('[FarmingBehavior] 💥 Plant seed action executed');
   }
 
   bool _executeHarvest() {
-    GameLogger.info('[FarmingBehavior] Executing harvest');
+    GameLogger.info('[FarmingBehavior] 🌾 Executing harvest (isPlaying: $_isActionPlaying)');
 
-    if (_isActionPlaying) return false;
+    if (_isActionPlaying) {
+      GameLogger.warning('[FarmingBehavior] ⚠️ Action already playing, ignoring input');
+      return false;
+    }
 
     if (!character.data.tryConsumeStamina(config.harvestStaminaCost)) {
       OverlayMessageDef.showNoStamina();
       return false;
     }
+
+    GameLogger.info('[FarmingBehavior] ✅ Stamina consumed (${config.harvestStaminaCost})');
 
     character.beginStaminaConsumingAction();
 
@@ -263,15 +326,27 @@ class FarmingBehavior extends CharacterBehavior {
       target: character,
       executionStartFrame: 4,
       onActionStart: () {
+        GameLogger.info('[FarmingBehavior] ✅ HARVEST onActionStart');
         _isActionPlaying = true;
         character.lockAction();
+        
+        _actionTimeoutTimer?.cancel();
+        _actionTimeoutTimer = async.Timer(_kActionTimeout, () {
+          GameLogger.warning('[FarmingBehavior] ⚠️ HARVEST TIMEOUT! Force ending...');
+          _forceEndAction();
+        });
       },
       onActionEnd: () {
+        GameLogger.info('[FarmingBehavior] ✅ HARVEST onActionEnd');
+        _actionTimeoutTimer?.cancel();
         _isActionPlaying = false;
         character.unlockAction();
         character.endStaminaConsumingAction();
       },
-      onExecutionFrames: () => _performHarvestAction(),
+      onExecutionFrames: () {
+        GameLogger.info('[FarmingBehavior] ⚔️ HARVEST onExecutionFrames');
+        _performHarvestAction();
+      },
     );
 
     return true;
@@ -279,6 +354,21 @@ class FarmingBehavior extends CharacterBehavior {
 
   void _performHarvestAction() {
     FarmToolActionDef.execute(player: character);
-    GameLogger.info('[FarmingBehavior] Harvest action executed');
+    GameLogger.info('[FarmingBehavior] 💥 Harvest action executed');
+  }
+
+  // ✅ NOVO: Force end
+  void _forceEndAction() {
+    GameLogger.warning('[FarmingBehavior] 🔥 Force ending action!');
+    _isActionPlaying = false;
+    character.unlockAction();
+    character.endStaminaConsumingAction();
+  }
+
+  @override
+  void dispose() {
+    GameLogger.info('[FarmingBehavior] 🗑️ Disposing...');
+    _actionTimeoutTimer?.cancel();
+    super.dispose();
   }
 }
