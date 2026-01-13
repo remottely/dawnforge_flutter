@@ -32,23 +32,23 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
   DemoPlayer? _player;
   bool _isLoading = true;
 
-  Future<void> _initializePlayer() async {
-    final savedData = await PlayerSaveManager.loadPlayer();
+  // Future<void> _initializePlayer() async {
+  //   final savedData = await PlayerSaveManager.loadPlayer();
 
-    setState(() {
-      // if (savedData != null) {
-      //   _player = DemoPlayer.fromSave(savedData.toJson());
-      // } else {
-        _player = DemoPlayer.newGame(Vector2(5, 5));
-      // }
-      _isLoading = false;
-    });
-  }
+  //   setState(() {
+  //     // if (savedData != null) {
+  //     //   _player = DemoPlayer.fromSave(savedData.toJson());
+  //     // } else {
+  //       _player = DemoPlayer.newGame(Vector2(5, 5));
+  //     // }
+  //     _isLoading = false;
+  //   });
+  // }
 
   @override
   void initState() {
     super.initState();
-    _initializePlayer();
+    // _initializePlayer();
 
     // Escuta solicitações de transição de mapa
     _transitionSubscription = MapTransitionController
@@ -167,8 +167,8 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
                 new_time.TimeManager.instance.start();
               },
               playerControllers: [playerInput],
-              // player: player,
-              player: _player,
+              player: player,
+              // player: _player,
               map: mapItem.map,
               components: [
                 gameplayGameStateManager,
