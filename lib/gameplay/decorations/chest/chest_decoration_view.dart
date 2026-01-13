@@ -9,7 +9,7 @@ import 'package:dawnforge/gameplay/decorations/chest/chest_decoration_controller
 import 'package:dawnforge/gameplay/decorations/chest/chest_decoration_model.dart';
 import 'package:dawnforge/gameplay/decorations/life_potion/life_potion_decoration.dart';
 import 'package:dawnforge/shared/framework/decorations/dd_input_receiver/dd_input_receiver_decoration_view.dart';
-import 'package:dawnforge/gameplay/characters/player/demo/demo_player.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 
 class ChestDecorationView extends DDInputReceiverDecorationView {
   late final ChestDecorationController _controller;
@@ -50,7 +50,7 @@ class ChestDecorationView extends DDInputReceiverDecorationView {
       ChestDecorationConfig.kVisionCheckInterval,
       dt,
     )) {
-      _controller.update(dt, gameRef.player as DemoPlayer?);
+      _controller.update(dt, gameRef.player as DDBasePlayerView?);
     }
     super.update(dt);
   }
@@ -135,8 +135,8 @@ class ChestDecorationView extends DDInputReceiverDecorationView {
   }
 
   void _onDetectPlayerInCloseVisionRadius({
-    required DemoPlayer player,
-    required void Function(DemoPlayer) observed,
+    required DDBasePlayerView player,
+    required void Function(DDBasePlayerView) observed,
     required void Function() notObserved,
     required double closeVisionRadius,
   }) {
@@ -144,7 +144,7 @@ class ChestDecorationView extends DDInputReceiverDecorationView {
       player as GameComponent,
       radiusVision: closeVisionRadius,
       observed: (GameComponent comp) {
-        final playerView = comp as DemoPlayer;
+        final playerView = comp as DDBasePlayerView;
         // Register to receive player controller events when player is nearby
         final playerController = gameRef.playerControllers?.firstOrNull;
         if (playerController != null) {

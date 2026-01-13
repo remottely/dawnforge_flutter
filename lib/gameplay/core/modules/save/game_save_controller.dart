@@ -13,7 +13,7 @@ import 'package:dawnforge/gameplay/inventory/config/inventory_service_locator.da
 import 'package:dawnforge/gameplay/inventory/managers/inventory_manager.dart';
 import 'package:dawnforge/gameplay/inventory/services/item_factory_service.dart';
 import 'package:dawnforge/gameplay/time/time_manager.dart' as new_time;
-import 'package:dawnforge/shared/framework/character/character_data.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
 
 /// Helper para conversão de coordenadas pixel → tile
 /// Segue o padrão de jogos 2D grid-based
@@ -80,7 +80,7 @@ final class GameSaveController {
       GameLogger.info('[GameSaveController] Starting game save...');
 
       final playerData = _collectPlayerData();
-      final life = (playerData['playerData'] as Map?)?['life'];
+      final life = (playerData['playerModel'] as Map?)?['life'];
       if (life == null || (life is num && life <= 0)) {
         GameLogger.warning(
           '[GameSaveController] ❌ Aborting save: player life is null/<=0 (life=$life). Avoid overwriting good saves after death.',
@@ -185,8 +185,8 @@ final class GameSaveController {
     final playerState = PlayerStateManager.instance;
 
     // Save current player position before serializing
-    if (playerState.lastPlayer != null &&
-        playerState.lastPlayerData != null) {
+    if (playerState.lastPlayerView != null &&
+        playerState.lastPlayerModel != null) {
       // final pixelPos = playerState.lastPlayerView!.position; // TODO(Kevin): put it back
 
       // // Converte pixels → tile usando floor (padrão de mercado)
@@ -203,13 +203,12 @@ final class GameSaveController {
       final tilePos = PositionHelper.toMVPPosition(); // TODO(Kevin): remove it
 
       // Salva em tiles na propriedade do modelo
-      if (playerState.lastPlayerData is CharacterData) {
-        (playerState.lastPlayerData as CharacterData).setPosition(tilePos); // error: The method 'setPosition' isn't defined for the type 'CharacterData'.
-// Try correcting the name to the name of an existing method, or defining a method named 'setPosition'.
+      if (playerState.lastPlayerModel is DDBasePlayerModel) {
+        (playerState.lastPlayerModel as DDBasePlayerModel).setPosition(tilePos);
       } else {
         // fallback para modelos customizados
         try {
-          (playerState.lastPlayerData as dynamic).position = [
+          (playerState.lastPlayerModel as dynamic).position = [
             tilePos.x,
             tilePos.y,
           ];
@@ -218,25 +217,25 @@ final class GameSaveController {
     }
 
     final playerData = playerState.toJson();
-    final playerDataJson = (playerData['playerData'] as Map?) ?? const {};
-    final coins = playerDataJson['coins'];
-    final life = playerDataJson['life'];
-    final stamina = playerDataJson['stamina'];
-    final position = playerDataJson['position'];
+    final playerModelJson = (playerData['playerModel'] as Map?) ?? const {};
+    final coins = playerModelJson['coins'];
+    final life = playerModelJson['life'];
+    final stamina = playerModelJson['stamina'];
+    final position = playerModelJson['position'];
 
     GameLogger.info(
-      '[GameSaveController] Collecting player data: model=${playerState.lastPlayerData != null ? playerState.lastPlayerData.runtimeType : "null"}, stamina=$stamina, life=$life, coins=$coins, position=$position',
+      '[GameSaveController] Collecting player data: model=${playerState.lastPlayerModel != null ? playerState.lastPlayerModel.runtimeType : "null"}, stamina=$stamina, life=$life, coins=$coins, position=$position',
     );
 
     if (life == null || (life is num && life <= 0)) {
       GameLogger.warning(
-        '[GameSaveController] ⚠️ Player life is null/<=0 during save, skipping validation? raw=$playerDataJson',
+        '[GameSaveController] ⚠️ Player life is null/<=0 during save, skipping validation? raw=$playerModelJson',
       );
     }
 
     if (coins is num && coins < 0) {
       GameLogger.warning(
-        '[GameSaveController] ⚠️ Player coins negative during save, raw=$playerDataJson',
+        '[GameSaveController] ⚠️ Player coins negative during save, raw=$playerModelJson',
       );
     }
 
@@ -261,24 +260,24 @@ final class GameSaveController {
   void _restorePlayerData(Map<String, dynamic> data) {
     try {
       GameLogger.info(
-        '[GameSaveController] Restoring player data: ${data.keys.toList()}, coinsField=${(data['playerData'] as Map?)?['coins']}',
+        '[GameSaveController] Restoring player data: ${data.keys.toList()}, coinsField=${(data['playerModel'] as Map?)?['coins']}',
       );
       final playerState = PlayerStateManager.instance;
       playerState.fromJson(data);
       GameLogger.info(
-        '[GameSaveController] ✅ Player state restored: model=${playerState.lastPlayerData != null ? playerState.lastPlayerData.runtimeType : "null"}, stamina=${playerState.lastPlayerData?.stamina}, life=${playerState.lastPlayerData?.life}, coins=${playerState.lastPlayerData?.coins}',
+        '[GameSaveController] ✅ Player state restored: model=${playerState.lastPlayerModel != null ? playerState.lastPlayerModel.runtimeType : "null"}, stamina=${playerState.lastPlayerModel?.stamina}, life=${playerState.lastPlayerModel?.life}, coins=${playerState.lastPlayerModel?.coins}',
       );
 
-      final restoredLife = playerState.lastPlayerData?.life;
+      final restoredLife = playerState.lastPlayerModel?.life;
       if (restoredLife == null || restoredLife <= 0) {
         GameLogger.warning(
-          '[GameSaveController] ⚠️ Restored player life is null/<=0. payload=${data['playerData']}',
+          '[GameSaveController] ⚠️ Restored player life is null/<=0. payload=${data['playerModel']}',
         );
       }
 
       // Restore player position if available
-      final playerDataJson = data['playerData'] as Map?;
-      final positionRaw = playerDataJson?['position'];
+      final playerModelJson = data['playerModel'] as Map?;
+      final positionRaw = playerModelJson?['position'];
       if (positionRaw is List && positionRaw.length == 2) {
         final tileX = (positionRaw[0] as num).toDouble();
         final tileY = (positionRaw[1] as num).toDouble();
@@ -292,8 +291,8 @@ final class GameSaveController {
           '[GameSaveController] 📍 Converting position: tile($tileX, $tileY) → pixels(${pixelPos.x.toStringAsFixed(2)}, ${pixelPos.y.toStringAsFixed(2)})',
         );
 
-        if (playerState.lastPlayer != null) {
-          playerState.lastPlayer!.position = pixelPos;
+        if (playerState.lastPlayerView != null) {
+          playerState.lastPlayerView!.position = pixelPos;
           GameLogger.info(
             '[GameSaveController] ✅ Player position restored to tile($tileX, $tileY) / pixels(${pixelPos.x}, ${pixelPos.y})',
           );

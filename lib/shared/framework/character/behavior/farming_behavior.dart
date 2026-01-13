@@ -170,7 +170,7 @@ class FarmingBehavior extends CharacterBehavior {
   }
 
   void _performDigAction() {
-    FarmToolActionDef.execute(player: character);
+    // FarmToolActionDef.execute(player: character); // TODO(kevin): put it back?
     GameLogger.info('[FarmingBehavior] 💥 Dig action executed');
   }
 
@@ -231,7 +231,7 @@ class FarmingBehavior extends CharacterBehavior {
   }
 
   void _performWateringAction() {
-    FarmToolActionDef.execute(player: character);
+    // FarmToolActionDef.execute(player: character); // TODO(kevin): put it back?
     GameLogger.info('[FarmingBehavior] 💥 Watering action executed');
   }
 
@@ -292,7 +292,7 @@ class FarmingBehavior extends CharacterBehavior {
   }
 
   void _performPlantSeedAction() {
-    FarmToolActionDef.execute(player: character);
+    // FarmToolActionDef.execute(player: character); // TODO(kevin): put it back?
     GameLogger.info('[FarmingBehavior] 💥 Plant seed action executed');
   }
 
@@ -353,7 +353,7 @@ class FarmingBehavior extends CharacterBehavior {
   }
 
   void _performHarvestAction() {
-    FarmToolActionDef.execute(player: character);
+    // FarmToolActionDef.execute(player: character); // TODO(kevin): put it back?
     GameLogger.info('[FarmingBehavior] 💥 Harvest action executed');
   }
 

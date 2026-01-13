@@ -1,12 +1,19 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:dawnforge/gameplay/characters/player/cute/cute_player_controller.dart';
 import 'package:dawnforge/gameplay/characters/player/cute/cute_player_def.dart';
 
+import 'package:dawnforge/gameplay/characters/player/cute/cute_player_view.dart';
+import 'package:dawnforge/gameplay/characters/player/demo/demo_player_controller.dart';
 import 'package:dawnforge/gameplay/characters/player/demo/demo_player_def.dart';
 
 import 'package:dawnforge/gameplay/characters/player/demo/demo_player.dart';
+import 'package:dawnforge/gameplay/characters/player/farmer/farmer_player_controller.dart';
 import 'package:dawnforge/gameplay/characters/player/farmer/farmer_player_def.dart';
 
+import 'package:dawnforge/gameplay/characters/player/farmer/farmer_player_view.dart';
+import 'package:dawnforge/gameplay/characters/player/sunny/sunny_player_controller.dart';
 import 'package:dawnforge/gameplay/characters/player/sunny/sunny_player_def.dart';
+import 'package:dawnforge/gameplay/characters/player/sunny/sunny_player_view.dart';
 import 'package:dawnforge/gameplay/core/modules/combat/shield_defense_input_handler.dart';
 import 'package:dawnforge/gameplay/core/modules/game/game_state_manager.dart';
 import 'package:dawnforge/gameplay/core/modules/game/inventory_input_handler.dart';
@@ -16,11 +23,10 @@ import 'package:dawnforge/gameplay/core/modules/save/game_save_controller.dart';
 import 'package:dawnforge/gameplay/farm/handlers/farm_input_handler.dart';
 import 'package:dawnforge/gameplay/gameplay_screen.dart';
 import 'package:dawnforge/gameplay/gameplay_screen_def.dart';
-import 'package:dawnforge/shared/framework/character/character.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:dawnforge/gameplay/market/market_decoration.dart';
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
-
-import 'package:dawnforge/shared/framework/character/character_data.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_model.dart';
 import 'package:dawnforge/shared/utils/ui_sprite_animations_def.dart';
 import 'package:flutter/material.dart';
 
@@ -81,8 +87,8 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
       } else {
         GameLogger.info('[GameplayViewModel] ✅ Save loaded successfully!');
         // Try to extract position from loaded player model
-        final lastPlayerData = playerStateManager.lastPlayerData;
-        final positionList = (lastPlayerData?.toJson()['position'] as List?)
+        final lastPlayerModel = playerStateManager.lastPlayerModel;
+        final positionList = (lastPlayerModel?.toJson()['position'] as List?)
             ?.map((e) => (e as num).toDouble())
             .toList();
         if (positionList != null && positionList.length == 2) {
@@ -112,12 +118,12 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
   }
 
   void _resetPlayerLifeOnNewGame() {
-    final lastPlayerData = playerStateManager.lastPlayerData;
+    final lastPlayerModel = playerStateManager.lastPlayerModel;
 
-    if (lastPlayerData == null) return;
+    if (lastPlayerModel == null) return;
 
-    final currentLife = lastPlayerData.life ?? 0;
-    if (currentLife <= 0) lastPlayerData.updateLife(200);
+    final currentLife = lastPlayerModel.life ?? 0;
+    if (currentLife <= 0) lastPlayerModel.updateLife(200);
   }
 
   @override
@@ -140,122 +146,121 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
     return newConfig;
   }
 
-  // Character buildSunnyPlayer(Vector2 position) {
-  //   // if (isLoadingSave)
-  //   //   return SunnyPlayerView<SunnyPlayerController, CharacterData>(
-  //   //     position: position,
-  //   //     model: CharacterData.fromJson({}),
-  //   //   );
-  //   var lastPlayerData = playerStateManager.lastPlayerData;
+  DDBasePlayerView buildSunnyPlayer(Vector2 position) {
+    // if (isLoadingSave)
+    //   return SunnyPlayerView<SunnyPlayerController, DDFarmPlayerModel>(
+    //     position: position,
+    //     model: DDFarmPlayerModel.fromJson({}),
+    //   );
+    var lastPlayerModel = playerStateManager.lastPlayerModel;
 
-  //   if (lastPlayerData is! CharacterData) {
-  //     GameLogger.info(
-  //       '[GameplayViewModel] Creating NEW Sunny model (no saved model found)',
-  //     );
-  //     lastPlayerData = CharacterData.fromJson(
-  //       {},
-  //       SunnyPlayerDef.modelConfig,
-  //     );
-  //     playerStateManager.lastPlayerData = lastPlayerData;
-  //   } else {
-  //     GameLogger.info(
-  //       '[GameplayViewModel] Using EXISTING Sunny model: stamina=${lastPlayerData.stamina}, life=${lastPlayerData.life}',
-  //     );
-  //   }
-
-  //   playerStateManager.currentPlayerAnimation =
-  //       UISpriteAnimationsDef.loadAnimationSunnyPlayerIdleRight;
-
-  //   return DemoPlayer(
-  //     position: position,
-  //     id: '',
-  //     data: lastPlayerData,
-  //   );
-  // }
-
-  // Character buildCutePlayer(Vector2 position) {
-  //   // if (isLoadingSave)
-  //   //   return CutePlayerView<CutePlayerController, CharacterData>(
-  //   //     position: position,
-  //   //     model: CharacterData.fromJson({}),
-  //   //   );
-  //   var lastPlayerData = playerStateManager.lastPlayerData;
-  //   final lastPlayerJson = lastPlayerData?.toJson() ?? {'coins': 500};
-  //   //  ?? PlayerSaveData.initial(playerType: 'cute').toJson();
-
-  //   if (lastPlayerData is! CharacterData) {
-  //     lastPlayerData = CharacterData.fromJson(
-  //       lastPlayerJson,
-  //       CutePlayerDef.modelConfig,
-  //     );
-  //     playerStateManager.lastPlayerData = lastPlayerData;
-  //   }
-
-  //   playerStateManager.currentPlayerAnimation =
-  //       UISpriteAnimationsDef.loadAnimationCutePlayerIdleRight;
-
-  //   return CutePlayerView<CutePlayerController, CharacterData>(
-  //     position: position,
-  //     model: lastPlayerData,
-  //   );
-  // }
-
-  // Character buildFarmerPlayer(Vector2 position) {
-  //   GameLogger.debug(
-  //     '[GameplayViewModel] Building farmer player at position: $position',
-  //   );
-
-  //   var lastPlayerData = playerStateManager.lastPlayerData;
-  //   final lastPlayerJson = lastPlayerData?.toJson() ?? {'coins': 500};
-  //   //  ?? PlayerSaveData.initial(playerType: 'farmer').toJson();
-
-  //   if (lastPlayerData is! CharacterData) {
-  //     lastPlayerData = CharacterData.fromJson(
-  //       lastPlayerJson,
-  //       FarmerPlayerDef.modelConfig,
-  //     );
-  //     playerStateManager.lastPlayerData = lastPlayerData;
-  //   }
-
-  //   playerStateManager.currentPlayerAnimation =
-  //       FarmerPlayerDef.loadAnimationIdleDown;
-
-  //   return FarmerPlayerView<FarmerPlayerController, CharacterData>(
-  //     position: position,
-  //     model: lastPlayerData,
-  //   );
-  // }
-
-  DemoPlayer buildDemoPlayer(Vector2 position) {
-    print('[GameplayViewModel] Building demo player at position: $position');
-
-    var lastPlayerData = playerStateManager.lastPlayerData;
-
-    // ✅ CORREÇÃO: Cria novo player se não existe save
-    if (lastPlayerData == null) {
-      print('[GameplayViewModel] No save data found, creating new player');
-
-      // Cria CharacterData padrão
-      lastPlayerData = CharacterData.defaultPlayer(
-        maxStamina: DemoPlayerDef.config.maxStamina,
-        maxEnergy: DemoPlayerDef.config.maxEnergy,
-        maxLife: DemoPlayerDef.config.maxLife,
-        position: position,
+    if (lastPlayerModel is! DDFarmPlayerModel) {
+      GameLogger.info(
+        '[GameplayViewModel] Creating NEW Sunny model (no saved model found)',
       );
-
-      // Salva no state manager
-      playerStateManager.lastPlayerData = lastPlayerData;
+      lastPlayerModel = DDFarmPlayerModel.fromJson(
+        {},
+        SunnyPlayerDef.modelConfig,
+      );
+      playerStateManager.lastPlayerModel = lastPlayerModel;
+    } else {
+      GameLogger.info(
+        '[GameplayViewModel] Using EXISTING Sunny model: stamina=${lastPlayerModel.stamina}, life=${lastPlayerModel.life}',
+      );
     }
 
     playerStateManager.currentPlayerAnimation =
-        DemoPlayerDef.loadAnimationIdleDown;
+        UISpriteAnimationsDef.loadAnimationSunnyPlayerIdleRight;
 
-    return DemoPlayer(
+    return SunnyPlayerView<SunnyPlayerController, DDFarmPlayerModel>(
       position: position,
-      id: 'player_demo',
-      data: lastPlayerData, // ✅ Agora sempre tem valor
+      model: lastPlayerModel,
     );
   }
+
+  DDBasePlayerView buildCutePlayer(Vector2 position) {
+    // if (isLoadingSave)
+    //   return CutePlayerView<CutePlayerController, DDFarmPlayerModel>(
+    //     position: position,
+    //     model: DDFarmPlayerModel.fromJson({}),
+    //   );
+    var lastPlayerModel = playerStateManager.lastPlayerModel;
+    final lastPlayerJson = lastPlayerModel?.toJson() ?? {'coins': 500};
+    //  ?? PlayerSaveData.initial(playerType: 'cute').toJson();
+
+    if (lastPlayerModel is! DDFarmPlayerModel) {
+      lastPlayerModel = DDFarmPlayerModel.fromJson(
+        lastPlayerJson,
+        CutePlayerDef.modelConfig,
+      );
+      playerStateManager.lastPlayerModel = lastPlayerModel;
+    }
+
+    playerStateManager.currentPlayerAnimation =
+        UISpriteAnimationsDef.loadAnimationCutePlayerIdleRight;
+
+    return CutePlayerView<CutePlayerController, DDFarmPlayerModel>(
+      position: position,
+      model: lastPlayerModel,
+    );
+  }
+
+  DDBasePlayerView buildFarmerPlayer(Vector2 position) {
+    GameLogger.debug(
+      '[GameplayViewModel] Building farmer player at position: $position',
+    );
+
+    var lastPlayerModel = playerStateManager.lastPlayerModel;
+    final lastPlayerJson = lastPlayerModel?.toJson() ?? {'coins': 500};
+    //  ?? PlayerSaveData.initial(playerType: 'farmer').toJson();
+
+    if (lastPlayerModel is! DDFarmPlayerModel) {
+      lastPlayerModel = DDFarmPlayerModel.fromJson(
+        lastPlayerJson,
+        FarmerPlayerDef.modelConfig,
+      );
+      playerStateManager.lastPlayerModel = lastPlayerModel;
+    }
+
+    playerStateManager.currentPlayerAnimation =
+        FarmerPlayerDef.loadAnimationIdleDown;
+
+    return FarmerPlayerView<FarmerPlayerController, DDFarmPlayerModel>(
+      position: position,
+      model: lastPlayerModel,
+    );
+  }
+
+  // DemoPlayer buildDemoPlayer(Vector2 position) {
+  //   print('[GameplayViewModel] Building demo player at position: $position');
+
+  //   var lastPlayerData = playerStateManager.lastPlayerData;
+
+  //   // ✅ CORREÇÃO: Cria novo player se não existe save
+  //   if (lastPlayerData == null) {
+  //     print('[GameplayViewModel] No save data found, creating new player');
+
+  //     // Cria CharacterData padrão
+  //     lastPlayerData = CharacterData.defaultPlayer(
+  //       maxStamina: DemoPlayerDef.config.maxStamina,
+  //       maxEnergy: DemoPlayerDef.config.maxEnergy,
+  //       maxLife: DemoPlayerDef.config.maxLife,
+  //       position: position,
+  //     );
+
+  //     // Salva no state manager
+  //     playerStateManager.lastPlayerData = lastPlayerData;
+  //   }
+
+  //   playerStateManager.currentPlayerAnimation =
+  //       DemoPlayerDef.loadAnimationIdleDown;
+
+  //   return DemoPlayer(
+  //     position: position,
+  //     id: 'player_demo',
+  //     data: lastPlayerData, // ✅ Agora sempre tem valor
+  //   );
+  // }
 
   void recreatePerMapDependencies({required String? mapId}) {
     playerInput = GameplayScreenDef.createPlayerInput();

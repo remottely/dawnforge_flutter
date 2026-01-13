@@ -85,13 +85,13 @@ class DDBasePlayerModel {
 
   bool removeCoins(int amount) {
     if (amount <= 0) return true;
-    if (!canAfford(amount)) return false;
+    if (!canAffordCoins(amount)) return false;
     _saveData.coins -= amount;
     coinsNotifier.value = _saveData.coins;
     return true;
   }
 
-  bool canAfford(int amount) => amount <= _saveData.coins;
+  bool canAffordCoins(int amount) => amount <= _saveData.coins;
 
   Map<String, dynamic> toJson() => _saveData.toJson();
 
