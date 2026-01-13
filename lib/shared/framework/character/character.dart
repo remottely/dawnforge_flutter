@@ -200,23 +200,16 @@ abstract class Character extends SimplePlayer
       '[Character] 🎮 Input: ${event.id} | event: ${event.event} | equipped: ${data.equippedItemId}',
     );
 
-    if (_cachedCombatBehavior?.onInput(event) ?? false) return;
-    if (_cachedFarmingBehavior?.onInput(event) ?? false) return;
-    if (_cachedMovementBehavior?.onInput(event) ?? false) return;
+    // Prioridade: Combat > Farming > Movement > Outros
+    final handled = (_cachedCombatBehavior?.onInput(event) ?? false)
+        || (_cachedFarmingBehavior?.onInput(event) ?? false)
+        || (_cachedMovementBehavior?.onInput(event) ?? false)
+        || _behaviors.where((b) => b != _cachedCombatBehavior && b != _cachedFarmingBehavior && b != _cachedMovementBehavior)
+            .any((b) => b.onInput(event));
 
-    for (final behavior in _behaviors) {
-      if (behavior == _cachedCombatBehavior ||
-          behavior == _cachedFarmingBehavior ||
-          behavior == _cachedMovementBehavior) {
-        continue;
-      }
-
-      if (behavior.onInput(event)) {
-        return;
-      }
+    if (!handled) {
+      super.onJoystickAction(event);
     }
-
-    super.onJoystickAction(event);
   }
 
   // --- Action Locking ---
