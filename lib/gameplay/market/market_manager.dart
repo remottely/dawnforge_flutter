@@ -4,7 +4,7 @@ import 'package:dawnforge/gameplay/inventory/services/item_factory_service.dart'
 import 'package:dawnforge/gameplay/inventory/usecases/add_item_use_case.dart';
 import 'package:dawnforge/gameplay/inventory/usecases/remove_item_use_case.dart';
 import 'package:dawnforge/gameplay/market/market_models.dart';
-import 'package:dawnforge/shared/framework/character/character_data.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
 import 'package:dawnforge/gameplay/inventory/config/inventory_service_locator.dart';
 
 class MarketTransactionResult {
@@ -48,10 +48,10 @@ class MarketManager {
 
   List<MarketItem> getMarketCatalog() => MarketCatalog.seeds;
 
-  bool canBuyItem(HandItemId itemId, CharacterData player) {
+  bool canBuyItem(HandItemId itemId, DDBasePlayerModel player) {
     final entry = MarketCatalog.byId[itemId];
     if (entry == null || !entry.isAvailable) return false;
-    return player.canAffordCoins(entry.buyPrice);
+    return player.canAfford(entry.buyPrice);
   }
 
   bool canSellItem(HandItemId itemId, InventoryManager inventory) {
@@ -62,7 +62,7 @@ class MarketManager {
 
   MarketTransactionResult buyItem(
     HandItemId itemId,
-    CharacterData player,
+    DDBasePlayerModel player,
     InventoryManager inventory,
   ) {
     final entry = MarketCatalog.byId[itemId];
@@ -81,8 +81,7 @@ class MarketManager {
       );
     }
 
-    if (!player.canAffordCoins(entry.buyPrice)) { // error: The method 'canAffordCoins' isn't defined for the type 'CharacterData'.
-// Try correcting the name to the name of an existing method, or defining a method named 'canAffordCoins'.
+    if (!player.canAfford(entry.buyPrice)) {
       return MarketTransactionResult.failure(
         MarketTransactionError.insufficientFunds,
         'Moedas insuficientes.',
@@ -104,8 +103,7 @@ class MarketManager {
       );
     }
 
-    final removed = player.removeCoins(entry.buyPrice); // error: The method 'removeCoins' isn't defined for the type 'CharacterData'.
-// Try correcting the name to the name of an existing method, or defining a method named 'removeCoins'.
+    final removed = player.removeCoins(entry.buyPrice);
     if (!removed) {
       // rollback simples: remover o item recém-adicionado
       _removeItemUseCase(itemId, 1);
@@ -123,7 +121,7 @@ class MarketManager {
   MarketTransactionResult sellItem(
     HandItemId itemId,
     int quantity,
-    CharacterData player,
+    DDBasePlayerModel player,
     InventoryManager inventory,
   ) {
     if (quantity <= 0) {

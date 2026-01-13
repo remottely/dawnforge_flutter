@@ -1,4 +1,3 @@
-// lib/gameplay/decorations/torch/torch_decoration_view.dart (ATUALIZADO)
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/gameplay/core/modules/input_actions/input_def.dart';
 import 'package:dawnforge/gameplay/core/modules/ui/emote_manager.dart';
@@ -6,7 +5,7 @@ import 'package:dawnforge/gameplay/decorations/torch/torch_decoration_config.dar
 import 'package:dawnforge/gameplay/decorations/torch/torch_decoration_controller.dart';
 import 'package:dawnforge/gameplay/decorations/torch/torch_decoration_model.dart';
 import 'package:dawnforge/shared/framework/decorations/dd_input_receiver/dd_input_receiver_decoration_view.dart';
-import 'package:dawnforge/gameplay/characters/player/demo/demo_player.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 
 class TorchDecorationView extends DDInputReceiverDecorationView {
   late final TorchDecorationController _controller;
@@ -40,7 +39,6 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
       onDisplayExclamationEmote: _onDisplayExclamationEmote,
       onToggleTorchState: _onToggleTorchState,
       onDetectPlayerInCloseVisionRadius: _onDetectPlayerInCloseVisionRadius,
-      onResetPlayerTorchRegen: _onResetPlayerTorchRegen, // ✅ Adiciona callback
     );
   }
 
@@ -49,11 +47,10 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
     setupLighting(TorchDecorationDef.lighting);
     _interactionPromptTextPaint = TorchDecorationDef.createTextConfig(width);
 
-    if (model.isOn) {
+    if (model.isOn)
       lightingEnabled = true;
-    } else {
+    else
       lightingEnabled = false;
-    }
 
     return super.onLoad();
   }
@@ -65,7 +62,7 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
       TorchDecorationDef.kVisionCheckInterval,
       dt,
     )) {
-      _controller.update(dt, gameRef.player as DemoPlayer?);
+      _controller.update(dt, gameRef.player as DDBasePlayerView?);
     }
     super.update(dt);
   }
@@ -78,6 +75,15 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
       _renderInteractionPrompt(canvas);
     }
   }
+
+  // @override
+  // bool onKeyboard(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+  //   if (_isValidInteractionAttempt(event)) {
+  //     _controller.toggleTorchState();
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
   @override
   void onJoystickAction(JoystickActionEvent event) {
@@ -116,8 +122,8 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
   }
 
   void _onDetectPlayerInCloseVisionRadius({
-    required DemoPlayer player,
-    required void Function(DemoPlayer) observed,
+    required DDBasePlayerView player,
+    required void Function(DDBasePlayerView) observed,
     required void Function() notObserved,
     required double closeVisionRadius,
   }) {
@@ -125,7 +131,7 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
       player as GameComponent,
       radiusVision: closeVisionRadius,
       observed: (GameComponent comp) {
-        final playerView = comp as DemoPlayer;
+        final playerView = comp as DDBasePlayerView;
         // Register to receive player controller events when player is nearby
         final playerController = gameRef.playerControllers?.firstOrNull;
         if (playerController != null) {
@@ -139,12 +145,5 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
         notObserved();
       },
     );
-  }
-
-  // ✅ NOVO: Implementação do callback de reset
-  void _onResetPlayerTorchRegen() {
-    // Pega o player atual e reseta regeneração
-    final player = gameRef.player as DemoPlayer?;
-    player?.resetTorchRegeneration();
   }
 }

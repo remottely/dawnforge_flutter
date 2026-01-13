@@ -1,59 +1,48 @@
-// lib/gameplay/decorations/torch/torch_decoration_controller.dart (COMPLETO)
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/gameplay/decorations/torch/torch_decoration_config.dart';
 import 'package:dawnforge/gameplay/decorations/torch/torch_decoration_model.dart';
-import 'package:dawnforge/gameplay/characters/player/demo/demo_player.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 
 class TorchDecorationController {
   final TorchDecorationModel model;
 
   final void Function() onDisplayExclamationEmote;
+
   final void Function() onToggleTorchState;
-  
-  // ✅ NOVO: Callback para resetar torch regen
-  final void Function() onResetPlayerTorchRegen;
 
   final void Function({
-    required DemoPlayer player,
-    required void Function(DemoPlayer) observed,
+    required DDBasePlayerView player,
+    required void Function(DDBasePlayerView) observed,
     required void Function() notObserved,
     required double closeVisionRadius,
   })
   onDetectPlayerInCloseVisionRadius;
 
-  // ✅ Cache do player para evitar queries repetidas
-  DemoPlayer? _cachedPlayer;
+  // Stamina regeneration system for torches
+  // bool _isPlayerInRange = false;
+  // double _staminaRegenTimer = 0.0;
+  // static const double kStaminaRegenInterval = 2.0; // seconds
+  // static const int kStaminaRegenAmount = 5; // stamina points per interval
 
   TorchDecorationController({
     required this.model,
     required this.onDisplayExclamationEmote,
     required this.onToggleTorchState,
     required this.onDetectPlayerInCloseVisionRadius,
-    required this.onResetPlayerTorchRegen, // ✅ Adiciona callback
   });
 
-  void update(double dt, DemoPlayer? player) {
+  void update(double dt, DDBasePlayerView? player) {
     if (player == null) return;
-    
-    // ✅ Atualiza cache do player
-    _cachedPlayer = player;
-    
     _handleDetectPlayerInCloseVisionRadius(player);
     _updateStaminaRegeneration(dt, player);
   }
 
-  void _updateStaminaRegeneration(double dt, DemoPlayer player) {
-    // ✅ Regenera stamina APENAS se:
-    // - Player está no range (isDetectPlayer)
-    // - Tocha está acesa (isOn)
-    if (model.isDetectPlayer && model.isOn) {
-      player.processStaminaRegeneration();
-    }
+  void _updateStaminaRegeneration(double dt, DDBasePlayerView player) {
+    if (model.isDetectPlayer && model.isOn)
+      player.controller.processStaminaRegeneration();
   }
 
-  void dispose() {
-    _cachedPlayer = null;
-  }
+  void dispose() {}
 
   void toggleTorchState() {
     if (!model.canInteract) return;
@@ -62,7 +51,7 @@ class TorchDecorationController {
     onToggleTorchState();
   }
 
-  void _handleDetectPlayerInCloseVisionRadius(DemoPlayer player) {
+  void _handleDetectPlayerInCloseVisionRadius(DDBasePlayerView player) {
     onDetectPlayerInCloseVisionRadius.call(
       player: player,
       closeVisionRadius: TorchDecorationDef.kCloseVisionRadius,
@@ -71,7 +60,7 @@ class TorchDecorationController {
     );
   }
 
-  void _handlePlayerEntersRange(GameComponent player) {
+  void _handlePlayerEntersRange(GameComponent _) {
     if (!model.isDetectPlayer) {
       model.setIsDetectPlayer(true);
       onDisplayExclamationEmote();
@@ -81,21 +70,6 @@ class TorchDecorationController {
   void _handlePlayerExitsRange() {
     if (model.isDetectPlayer) {
       model.setIsDetectPlayer(false);
-      
-      // ✅ Reseta a regeneração quando player sai do range
-      _resetPlayerTorchRegen();
     }
-  }
-  
-  /// ✅ IMPLEMENTADO: Usa player cacheado ou callback
-  void _resetPlayerTorchRegen() {
-    // Estratégia 1: Usa player cacheado (mais eficiente)
-    if (_cachedPlayer != null) {
-      _cachedPlayer!.resetTorchRegeneration();
-      return;
-    }
-    
-    // Estratégia 2: Fallback - chama callback da view
-    onResetPlayerTorchRegen();
   }
 }

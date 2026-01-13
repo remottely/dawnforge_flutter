@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/gameplay/characters/player/demo/demo_player.dart';
 import 'package:dawnforge/gameplay/core/modules/input_actions/input_def.dart';
 // import 'package:dawnforge/gameplay/market/market_decoration_def.dart';
 import 'package:dawnforge/gameplay/market/market_state.dart';
 import 'package:dawnforge/shared/framework/decorations/dd_contact_decoration.dart';
 // import 'package:dawnforge/shared/framework/interaction/dd_contact_interaction.dart';
-import 'package:dawnforge/shared/framework/character/character_data.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
 /// Decoração interativa do market. Ao encostar, aguarda o input de interação para abrir o painel.
@@ -30,7 +30,7 @@ class MarketDecoration extends DDContactDecoration
   bool _registered = false;
   bool _hasActiveContact = false;
   PlayerController? _registeredController;
-  DemoPlayer? _currentPlayer;
+  DDBasePlayerView? _currentPlayer;
 
   MarketDecoration({
     required super.position,
@@ -58,7 +58,7 @@ class MarketDecoration extends DDContactDecoration
     super.onContact(component);
     if (_hasActiveContact) return;
     _hasActiveContact = true;
-    _currentPlayer = component is DemoPlayer ? component : _currentPlayer;
+    _currentPlayer = component is DDBasePlayerView ? component : _currentPlayer;
     _registerToPlayerController();
 
     GameLogger.debug(
@@ -127,8 +127,8 @@ class MarketDecoration extends DDContactDecoration
     }
 
     // Fallback: abre via estado global para ser renderizado no HUD central.
-    final model = (component is DemoPlayer)
-        ? component.data as CharacterData?
+    final model = (component is DDBasePlayerView)
+        ? component.controller.model as DDBasePlayerModel?
         : null;
 
     if (model != null) {

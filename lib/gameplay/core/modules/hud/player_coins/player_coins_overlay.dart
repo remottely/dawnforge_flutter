@@ -1,5 +1,5 @@
-import 'package:dawnforge/shared/framework/character/character_data.dart';
-import 'package:dawnforge/gameplay/characters/player/demo/demo_player.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:flutter/material.dart';
 
 /// Overlay simples para mostrar moedas do jogador.
@@ -14,7 +14,7 @@ class PlayerCoinsOverlay extends StatefulWidget {
 }
 
 class _PlayerCoinsOverlayState extends State<PlayerCoinsOverlay> {
-  CharacterData? _model;
+  DDBasePlayerModel? _model;
   VoidCallback? _listener;
 
   @override
@@ -39,14 +39,13 @@ class _PlayerCoinsOverlayState extends State<PlayerCoinsOverlay> {
   }
 
   void _bindToPlayer(dynamic player) {
-    if (player is DemoPlayer && player.hasGameRef) {
-      final model = player.data;
+    if (player is DDBasePlayerView && player.hasGameRef) {
+      final model = player.controller.model;
       _model = model;
       _listener = () {
         if (mounted) setState(() {});
       };
-      model.coinsNotifier.addListener(_listener!); // error: The getter 'coinsNotifier' isn't defined for the type 'CharacterData'.
-// Try importing the library that defines 'coinsNotifier', correcting the name to the name of an existing getter, or defining a getter or field named 'coinsNotifier'.
+      model.coinsNotifier.addListener(_listener!);
       // Força primeira renderização com valor atual.
       setState(() {});
     }
