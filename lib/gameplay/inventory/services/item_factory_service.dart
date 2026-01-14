@@ -9,7 +9,7 @@ import 'package:dawnforge/gameplay/inventory/items/weapon_item.dart';
 import '../entities/hand_item.dart';
 import '../items/seed_bag_item.dart';
 import '../entities/enums/hand_item_id.dart';
-import '../../database/modern_farm/modern_farm_weapon_item_database_def.dart';
+import '../../database/smallburg/smallburg_weapon_item_database_def.dart';
 import '../../database/modern_farm/modern_farm_tool_item_database_def.dart';
 import '../../database/modern_farm/modern_farm_material_item_database_def.dart';
 import '../../database/modern_farm/modern_farm_seed_bag_item_database_def.dart';
@@ -33,7 +33,7 @@ class ItemFactoryService {
     try {
       _weapons
         ..clear()
-        ..addAll(ModernFarmWeaponItemDatabaseDef.weapons);
+        ..addAll(SmallBurgWeaponItemDatabaseDef.weapons);
 
       _tools
         ..clear()
