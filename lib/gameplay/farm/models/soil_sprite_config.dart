@@ -1,6 +1,6 @@
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
-import 'package:dawnforge/gameplay/database/modern_farm/modern_farm_soil_state_sprite_database_def.dart';
+import 'package:dawnforge/gameplay/database/smallburg/smallburg_soil_state_sprite_database_def.dart';
 import 'package:dawnforge/gameplay/inventory/entities/data/item_icon_data.dart';
 
 class SoilSpriteConfig {
@@ -13,7 +13,7 @@ class SoilSpriteConfig {
 
     final config = SoilSpriteConfig(
       soilStates: Map<String, ItemIconData>.from(
-        ModernFarmSoilStateSpriteDatabaseDef.soilStateSpriteList,
+        SmallBurgSoilStateSpriteDatabaseDef.soilStateSpriteList,
       ),
     );
 
