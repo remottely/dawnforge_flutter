@@ -5,6 +5,11 @@ import '../../world/entities/objects/farm/crop_regrow_data.dart';
 import '../../world/entities/objects/farm/crop_entity.dart';
 import '../../world/entities/objects/farm/crop_stage_type.dart';
 
+const radishSpriteRowIndex = 2;
+const strawberrySpriteRowIndex = 22;
+const tomatoSpriteRowIndex = 24;
+const appleSpriteRowIndex = 27;
+
 final class SmallBurgCropEntityDatabaseDef {
   SmallBurgCropEntityDatabaseDef._();
 
@@ -26,7 +31,7 @@ final class SmallBurgCropEntityDatabaseDef {
       spriteRowIndex: 2,
       framesCount: 5,
       skipFirstFrames: 0,
-      ySortingFromStage: null,
+      ySortingFromStage: CropStageType.budding,
       ySortingOffset: -4.0,
     ),
     HandItemId.strawberry: CropEntity(
@@ -50,7 +55,7 @@ final class SmallBurgCropEntityDatabaseDef {
       spritesheetPath: 'tiled/SmallBurg/texture_atlas_grid_tiles.png',
       spriteWidth: 16,
       spriteHeight: 32,
-      spriteRowIndex: 22,
+      spriteRowIndex: strawberrySpriteRowIndex,
       framesCount: 5,
       skipFirstFrames: 0,
       ySortingFromStage: CropStageType.budding,
@@ -70,7 +75,7 @@ final class SmallBurgCropEntityDatabaseDef {
       spritesheetPath: 'tiled/SmallBurg/texture_atlas_grid_tiles.png',
       spriteWidth: 16,
       spriteHeight: 32,
-      spriteRowIndex: 24,
+      spriteRowIndex: tomatoSpriteRowIndex,
       framesCount: 5,
       skipFirstFrames: 0,
       ySortingFromStage: CropStageType.seedling,
@@ -97,7 +102,7 @@ final class SmallBurgCropEntityDatabaseDef {
       spritesheetPath: 'tiled/SmallBurg/texture_atlas_grid_tiles.png',
       spriteWidth: 16,
       spriteHeight: 32,
-      spriteRowIndex: 27,
+      spriteRowIndex: appleSpriteRowIndex,
       framesCount: 7,
       skipFirstFrames: 0,
       ySortingFromStage: CropStageType.planted,

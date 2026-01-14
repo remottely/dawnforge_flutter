@@ -1,4 +1,5 @@
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/gameplay/database/smallburg/smallburg_farm_consumable_item_database_def.dart';
 
 import 'package:dawnforge/gameplay/inventory/items/consumable_item.dart';
 import 'package:dawnforge/gameplay/inventory/items/material_item.dart';
@@ -10,7 +11,6 @@ import '../items/seed_bag_item.dart';
 import '../entities/enums/hand_item_id.dart';
 import '../../database/modern_farm/modern_farm_weapon_item_database_def.dart';
 import '../../database/modern_farm/modern_farm_tool_item_database_def.dart';
-import '../../database/modern_farm/modern_farm_consumable_item_database_def.dart';
 import '../../database/modern_farm/modern_farm_material_item_database_def.dart';
 import '../../database/modern_farm/modern_farm_seed_bag_item_database_def.dart';
 
@@ -41,7 +41,7 @@ class ItemFactoryService {
 
       _consumables
         ..clear()
-        ..addAll(ModernFarmHarvestLootItemDatabaseDef.harvestLootItemList);
+        ..addAll(SmallBurgHarvestLootItemDatabaseDef.harvestLootItemList);
 
       _materials
         ..clear()

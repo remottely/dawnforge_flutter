@@ -45,7 +45,7 @@ final class CropEntity extends Equatable {
     required this.skipFirstFrames,
     required this.ySortingFromStage,
     required this.ySortingOffset,
-    this.isTree = false,
+    required this.isTree,
     this.regrowData = const CropRegrowData(
       isRegrow: false,
       regrowStageRollback: 0,
