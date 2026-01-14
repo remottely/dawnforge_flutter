@@ -10,6 +10,8 @@ import 'package:dawnforge/gameplay/farm/models/soil_sprite_config.dart';
 import 'package:dawnforge/gameplay/farm/usecases/till_soil_use_case.dart';
 import 'package:dawnforge/shared/framework/interaction/dd_tool_interactable_mixin.dart';
 import 'package:dawnforge/shared/utils/sprite_animation_config_helper.dart';
+import 'package:flutter/rendering.dart';
+
 class CropDecorationWithCustomYSort extends GameDecoration {
   final double ySortOffset;
   final bool isTree;
@@ -20,65 +22,61 @@ class CropDecorationWithCustomYSort extends GameDecoration {
     required Vector2 size,
     this.ySortOffset = 0,
     this.isTree = false,
-  }) : super.withSprite(sprite: sprite, position: position, size: size) {
-    // Configura colisão no construtor se for árvore
+  }) : super.withSprite(sprite: sprite, position: position, size: size);
+
+  @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+
     if (isTree) {
       _setupTreeCollision();
     }
   }
 
   void _setupTreeCollision() {
-    // Cria uma hitbox no centro inferior da árvore
-    // Tamanho da hitbox: 50% da largura, 25% da altura (ajustável)
-    final hitboxWidth = size.x * 0.5;
-    final hitboxHeight = size.y * 0.25;
-    
-    // Posiciona no centro-inferior do sprite
-    final hitboxOffsetX = (size.x - hitboxWidth) / 2;
-    final hitboxOffsetY = size.y - hitboxHeight;
+    final hitboxWidth = size.x * 0.25;
+    final hitboxHeight = size.y * 0.125;
 
-    // Usa o método correto do Bonfire para GameDecoration
-    add(
-      RectangleHitbox(
+    final hitboxOffsetX = (size.x - hitboxWidth) / 2;
+    final hitboxOffsetY = size.y - (hitboxHeight * 2);
+
+    try {
+      final hitbox = RectangleHitbox(
         position: Vector2(hitboxOffsetX, hitboxOffsetY),
         size: Vector2(hitboxWidth, hitboxHeight),
         isSolid: true,
-      ),
-    );
+      );
 
-    GameLogger.info(
-      '[CropYSort] 🌳 Tree collision setup: '
-      'hitbox size (${hitboxWidth.toStringAsFixed(1)}x${hitboxHeight.toStringAsFixed(1)}), '
-      'offset (${hitboxOffsetX.toStringAsFixed(1)}, ${hitboxOffsetY.toStringAsFixed(1)})',
-    );
+      add(hitbox);
+
+      // GameLogger.info(
+      //   '[CropYSort] 🌳 Tree collision ADDED successfully: '
+      //   'hitbox size (${hitboxWidth.toStringAsFixed(1)}x${hitboxHeight.toStringAsFixed(1)}), '
+      //   'offset (${hitboxOffsetX.toStringAsFixed(1)}, ${hitboxOffsetY.toStringAsFixed(1)})',
+      // );
+    } catch (e) {
+      GameLogger.error('[CropYSort] ❌ Failed to add tree collision: $e');
+    }
   }
 
   @override
   void onMount() {
     super.onMount();
 
-    // Ajusta a posição Y após montar para afetar o Y-sorting
     final originalY = position.y;
     position.y = originalY + ySortOffset;
 
-    GameLogger.info(
-      '[CropYSort] Mounted with offset: $ySortOffset, isTree: $isTree, '
-      'position adjusted from $originalY to ${position.y}',
-    );
+    // GameLogger.info(
+    //   '[CropYSort] Mounted with offset: $ySortOffset, isTree: $isTree, '
+    //   'position adjusted from $originalY to ${position.y}',
+    // );
   }
 
   @override
   void render(Canvas canvas) {
-    // Salva o estado atual
     canvas.save();
-
-    // Compensa o offset de Y-sorting na renderização para manter a posição visual
     canvas.translate(0, -ySortOffset);
-
-    // Renderiza o sprite na posição visual correta
     super.render(canvas);
-
-    // Restaura o estado
     canvas.restore();
   }
 }
