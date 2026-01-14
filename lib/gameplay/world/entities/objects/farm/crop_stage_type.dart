@@ -31,8 +31,8 @@ enum CropStageType {
   /// Check if crop can be harvested at this stage
   bool get canHarvest => this == CropStageType.harvestable;
 
-  // /// Check if crop is dead
-  // bool get isDead => this == CropStageType.dead;
+  /// Check if crop is dead
+  bool get isDead => false; // this == CropStageType.dead;
 
   /// Check if this is the initial stage
   bool get isPlanted => this == CropStageType.planted;

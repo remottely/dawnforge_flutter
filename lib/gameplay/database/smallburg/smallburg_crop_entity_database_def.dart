@@ -27,6 +27,7 @@ final class SmallBurgCropEntityDatabaseDef {
       framesCount: 5,
       skipFirstFrames: 0,
       ySortingFromStage: null,
+      ySortingOffset: -4.0,
     ),
     HandItemId.strawberry: CropEntity(
       isTree: false,
@@ -53,6 +54,7 @@ final class SmallBurgCropEntityDatabaseDef {
       framesCount: 5,
       skipFirstFrames: 0,
       ySortingFromStage: CropStageType.budding,
+      ySortingOffset: -4.0,
     ),
     HandItemId.tomato: CropEntity(
       isTree: false,
@@ -72,6 +74,7 @@ final class SmallBurgCropEntityDatabaseDef {
       framesCount: 5,
       skipFirstFrames: 0,
       ySortingFromStage: CropStageType.seedling,
+      ySortingOffset: -4.0,
     ),
     HandItemId.apple: CropEntity(
       isTree: true,
@@ -97,7 +100,8 @@ final class SmallBurgCropEntityDatabaseDef {
       spriteRowIndex: 27,
       framesCount: 7,
       skipFirstFrames: 0,
-      ySortingFromStage: CropStageType.budding,
+      ySortingFromStage: CropStageType.planted,
+      ySortingOffset: -4.0,
     ),
   };
 }

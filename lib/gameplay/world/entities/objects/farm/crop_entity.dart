@@ -23,6 +23,7 @@ final class CropEntity extends Equatable {
   final int framesCount;
   final int skipFirstFrames;
   final CropStageType? ySortingFromStage;
+  final double ySortingOffset;
   final bool isTree;
   final CropRegrowData regrowData;
 
@@ -43,6 +44,7 @@ final class CropEntity extends Equatable {
     required this.framesCount,
     required this.skipFirstFrames,
     required this.ySortingFromStage,
+    required this.ySortingOffset,
     this.isTree = false,
     this.regrowData = const CropRegrowData(
       isRegrow: false,
@@ -127,6 +129,7 @@ final class CropEntity extends Equatable {
       'framesCount': framesCount,
       'skipFirstFrames': skipFirstFrames,
       'ySortingFromStage': ySortingFromStage?.toJson(),
+      'ySortingOffset': ySortingOffset,
       'isTree': isTree,
       'regrowData': regrowData.toJson(),
     };
@@ -153,6 +156,7 @@ final class CropEntity extends Equatable {
       ySortingFromStage: CropStageType.fromJsonNullable(
         json['ySortingFromStage'] as String?,
       ),
+      ySortingOffset: (json['ySortingOffset'] as num).toDouble(),
       isTree: json['isTree'] as bool? ?? false,
       regrowData: CropRegrowData.fromJson(
         json['regrowData'] as Map<String, dynamic>,
@@ -178,6 +182,7 @@ final class CropEntity extends Equatable {
     int? framesCount,
     int? skipFirstFrames,
     CropStageType? ySortingFromStage,
+    double? ySortingOffset,
     bool? isTree,
     CropRegrowData? regrowData,
   }) {
@@ -198,6 +203,7 @@ final class CropEntity extends Equatable {
       framesCount: framesCount ?? this.framesCount,
       skipFirstFrames: skipFirstFrames ?? this.skipFirstFrames,
       ySortingFromStage: ySortingFromStage ?? this.ySortingFromStage,
+      ySortingOffset: ySortingOffset ?? this.ySortingOffset,
       isTree: isTree ?? this.isTree,
       regrowData: regrowData ?? this.regrowData,
     );
@@ -246,6 +252,7 @@ final class CropEntity extends Equatable {
     framesCount,
     skipFirstFrames,
     ySortingFromStage,
+    ySortingOffset,
     isTree,
     regrowData,
   ];

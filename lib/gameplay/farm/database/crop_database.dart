@@ -53,6 +53,7 @@ final class CropDatabase {
       ySortingFromStage: template.ySortingFromStage ?? template.stage,
       isTree: template.isTree,
       regrowData: template.regrowData.resetState(),
+      ySortingOffset: template.ySortingOffset,
     );
   }
 

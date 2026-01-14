@@ -10,6 +10,78 @@ import 'package:dawnforge/gameplay/farm/models/soil_sprite_config.dart';
 import 'package:dawnforge/gameplay/farm/usecases/till_soil_use_case.dart';
 import 'package:dawnforge/shared/framework/interaction/dd_tool_interactable_mixin.dart';
 import 'package:dawnforge/shared/utils/sprite_animation_config_helper.dart';
+class CropDecorationWithCustomYSort extends GameDecoration {
+  final double ySortOffset;
+  final bool isTree;
+
+  CropDecorationWithCustomYSort({
+    required Sprite sprite,
+    required Vector2 position,
+    required Vector2 size,
+    this.ySortOffset = 0,
+    this.isTree = false,
+  }) : super.withSprite(sprite: sprite, position: position, size: size) {
+    // Configura colisão no construtor se for árvore
+    if (isTree) {
+      _setupTreeCollision();
+    }
+  }
+
+  void _setupTreeCollision() {
+    // Cria uma hitbox no centro inferior da árvore
+    // Tamanho da hitbox: 50% da largura, 25% da altura (ajustável)
+    final hitboxWidth = size.x * 0.5;
+    final hitboxHeight = size.y * 0.25;
+    
+    // Posiciona no centro-inferior do sprite
+    final hitboxOffsetX = (size.x - hitboxWidth) / 2;
+    final hitboxOffsetY = size.y - hitboxHeight;
+
+    // Usa o método correto do Bonfire para GameDecoration
+    add(
+      RectangleHitbox(
+        position: Vector2(hitboxOffsetX, hitboxOffsetY),
+        size: Vector2(hitboxWidth, hitboxHeight),
+        isSolid: true,
+      ),
+    );
+
+    GameLogger.info(
+      '[CropYSort] 🌳 Tree collision setup: '
+      'hitbox size (${hitboxWidth.toStringAsFixed(1)}x${hitboxHeight.toStringAsFixed(1)}), '
+      'offset (${hitboxOffsetX.toStringAsFixed(1)}, ${hitboxOffsetY.toStringAsFixed(1)})',
+    );
+  }
+
+  @override
+  void onMount() {
+    super.onMount();
+
+    // Ajusta a posição Y após montar para afetar o Y-sorting
+    final originalY = position.y;
+    position.y = originalY + ySortOffset;
+
+    GameLogger.info(
+      '[CropYSort] Mounted with offset: $ySortOffset, isTree: $isTree, '
+      'position adjusted from $originalY to ${position.y}',
+    );
+  }
+
+  @override
+  void render(Canvas canvas) {
+    // Salva o estado atual
+    canvas.save();
+
+    // Compensa o offset de Y-sorting na renderização para manter a posição visual
+    canvas.translate(0, -ySortOffset);
+
+    // Renderiza o sprite na posição visual correta
+    super.render(canvas);
+
+    // Restaura o estado
+    canvas.restore();
+  }
+}
 
 class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   // Toggle verbose tile logs to avoid flooding output each frame.
@@ -132,25 +204,28 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
         position.y + size.y - cropSize.y,
       );
 
-      _cropDecoration = GameDecoration.withSprite(
+      _cropDecoration = CropDecorationWithCustomYSort(
         sprite: cropSprite,
         position: cropPosition,
         size: cropSize,
+        ySortOffset: crop.ySortingOffset,
+        isTree: crop.isTree, // ⬅️ ADICIONE ESTA LINHA
       );
+
       _cropDecoration!.paint = Paint()
         ..filterQuality = FilterQuality.none
-        ..isAntiAlias = false
-      // ..isDither = false
-      ;
+        // ..isDither = false
+        ..isAntiAlias = false;
 
-      // if (crop.stage == CropStageType.dead) {
-      //   _cropDecoration!.opacity = 0.5;
-      // }
+      if (crop.stage.isDead) {
+        _cropDecoration!.opacity = 0.5;
+      }
 
       gameRef.add(_cropDecoration!);
 
       GameLogger.info(
-        '[FarmTileView] 🌱 Crop with Y-sorting: ${crop.id} at ($cropPosition) with size ($cropSize)',
+        '[FarmTileView] 🌱 Crop with Y-sorting: ${crop.id} at ($cropPosition) '
+        'with size ($cropSize), isTree: ${crop.isTree}',
       );
     } else {
       // Estágio inicial: renderiza no chão (sempre abaixo do player)
@@ -166,9 +241,9 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
         // ..isDither = false,
       );
 
-      // if (crop.stage == CropStageType.isDead) {
-      //   _cropSpriteGround!.opacity = 0.5;
-      // }
+      if (crop.stage.isDead) {
+        _cropSpriteGround!.opacity = 0.5;
+      }
 
       add(_cropSpriteGround!);
 
