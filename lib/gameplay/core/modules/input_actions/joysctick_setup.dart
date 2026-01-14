@@ -44,7 +44,7 @@ final class JoystickSetup {
   static const String kToggleTutorialInputsId = 'toggleTutorialInputsId';
 
   /// Testing Identifiers
-  // static const String kAdvanceDayId = 'advanceDayId';
+  static const String kAdvanceDayId = 'advanceDayId';
   static const String kClearSaveId = 'clearSaveId';
   static const String kAddTestItemsId = 'addTestItemsId';
 

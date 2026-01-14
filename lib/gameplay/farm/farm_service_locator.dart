@@ -112,7 +112,7 @@ void _registerDayChangeListener() {
   time.addDayChangeListener(_onDayChanged);
 }
 
-void _onDayChanged(DayState previous, DayState current) {
+void _onDayChanged(DayState previous, DayState current) { // TODO(Kevin): verify this method
   // Keep world calendar in sync.
   WorldStateManager.instance.advanceDay();
 

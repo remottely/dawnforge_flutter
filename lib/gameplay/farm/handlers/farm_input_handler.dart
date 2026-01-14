@@ -3,9 +3,12 @@ import 'package:dawnforge/core/utils/logger/game_logger.dart';
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/gameplay/core/modules/input_actions/input_def.dart';
 import 'package:dawnforge/gameplay/core/modules/save/game_save_controller.dart';
+import 'package:dawnforge/gameplay/core/modules/world/world_state_manager.dart';
+import 'package:dawnforge/gameplay/core/utils/app_environment.dart';
 import 'package:dawnforge/gameplay/farm/constants/farm_feedback_config.dart';
 import 'package:dawnforge/gameplay/farm/farm_service_locator.dart';
 import 'package:dawnforge/gameplay/farm/services/farm_feedback_service.dart';
+import 'package:dawnforge/gameplay/time/time_manager.dart' as new_time;
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 
 /// Handles farm-specific debug inputs from both keyboard and joystick.
@@ -34,21 +37,21 @@ class FarmInputHandler extends GameComponent with PlayerControllerListener {
   void onJoystickAction(JoystickActionEvent event) {
     if (event.event != ActionEvent.DOWN) return;
 
-    // if (InputDef.isAdvanceDayAction(event.id)) {
-    //   _handleAdvanceDayAndSaveGame();
-    // } else
-    if (InputDef.isClearSaveAction(event.id)) {
+    if (InputDef.isAdvanceDayAction(event.id) &&
+        AppEnvironment.kIsDevToolsMode) {
+      _handleAdvanceDayAndSaveGame();
+    } else if (InputDef.isClearSaveAction(event.id)) {
       _handleClearSave();
     }
   }
 
-  // void _handleAdvanceDayAndSaveGame() {
-  //   new_time.TimeManager.instance.advanceToNextDay();
-  //   final currentDay = WorldStateManager.instance.currentDay;
-  //   GameLogger.info('[FarmInput] Advanced to day $currentDay');
-
-  //   // GameSaveController.instance.saveGame();
-  // }
+  void _handleAdvanceDayAndSaveGame() {
+    new_time.TimeManager.instance.advanceToNextDay();
+    GameSaveController.instance.saveGame();
+    
+    final currentDay = WorldStateManager.instance.currentDay;
+    GameLogger.info('[FarmInput] Advanced to day $currentDay');
+  }
 
   void _handleClearSave() {
     GameLogger.info('[FarmInput] Clearing game and save...');
