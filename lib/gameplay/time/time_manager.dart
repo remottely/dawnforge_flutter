@@ -4,6 +4,7 @@ import 'package:dawnforge/core/utils/logger/game_logger.dart';
 // import 'package:dawnforge/gameplay/core/modules/game/player_state_manager.dart';
 import 'package:dawnforge/gameplay/core/modules/map/map_def.dart';
 import 'package:dawnforge/gameplay/core/modules/map/map_transition_controller.dart';
+import 'package:dawnforge/gameplay/core/utils/app_environment.dart';
 import 'package:flutter/foundation.dart';
 
 import 'day_state.dart';
@@ -154,7 +155,10 @@ class TimeManager {
     timeNotifier.value = GameTime(hour: TimeConstants.kStartHour, minute: 0);
     dayStateNotifier.value = nextDay;
 
-    _teleportPlayerToHome();
+    if (!AppEnvironment.kIsDevToolsMode) {
+      _teleportPlayerToHome();
+    }
+
     _notifyDayChange(previousDay, nextDay);
   }
 

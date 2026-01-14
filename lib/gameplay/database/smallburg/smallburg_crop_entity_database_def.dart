@@ -1,0 +1,103 @@
+import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
+import 'package:dawnforge/gameplay/inventory/entities/enums/season.dart';
+
+import '../../world/entities/objects/farm/crop_regrow_data.dart';
+import '../../world/entities/objects/farm/crop_entity.dart';
+import '../../world/entities/objects/farm/crop_stage_type.dart';
+
+final class SmallBurgCropEntityDatabaseDef {
+  SmallBurgCropEntityDatabaseDef._();
+
+  static const Map<HandItemId, CropEntity> cropEntityList = {
+    HandItemId.radish: CropEntity(
+      isTree: false,
+      id: HandItemId.radish,
+      name: 'Radish',
+      description: 'A nutritious root vegetable',
+      stage: CropStageType.planted,
+      daysPlanted: 0,
+      daysToMature: 5,
+      yieldAmount: 5,
+      harvestItemId: HandItemId.radish_loot_item,
+      requiredSeason: SeasonType.any,
+      spritesheetPath: 'tiled/SmallBurg/texture_atlas_grid_tiles.png',
+      spriteWidth: 16,
+      spriteHeight: 32,
+      spriteRowIndex: 2,
+      framesCount: 5,
+      skipFirstFrames: 0,
+      ySortingFromStage: null,
+    ),
+    HandItemId.strawberry: CropEntity(
+      isTree: false,
+      regrowData: const CropRegrowData(
+        isRegrow: true,
+        regrowStageRollback: 2,
+        regrowStepDays: 2,
+        isRegrowing: false,
+        daysInStage: 0,
+      ),
+      id: HandItemId.strawberry,
+      name: 'Strawberry',
+      description: 'A nutritious root vegetable',
+      stage: CropStageType.planted,
+      daysPlanted: 0,
+      daysToMature: 5,
+      yieldAmount: 5,
+      harvestItemId: HandItemId.strawberry_loot_item,
+      requiredSeason: SeasonType.any,
+      spritesheetPath: 'tiled/SmallBurg/texture_atlas_grid_tiles.png',
+      spriteWidth: 16,
+      spriteHeight: 32,
+      spriteRowIndex: 22,
+      framesCount: 5,
+      skipFirstFrames: 0,
+      ySortingFromStage: CropStageType.budding,
+    ),
+    HandItemId.tomato: CropEntity(
+      isTree: false,
+      id: HandItemId.tomato,
+      name: 'Tomato',
+      description: 'Juicy red fruit, perfect for salads',
+      stage: CropStageType.seedling,
+      daysPlanted: 0,
+      daysToMature: 5,
+      yieldAmount: 5,
+      harvestItemId: HandItemId.tomato_loot_item,
+      requiredSeason: SeasonType.summer,
+      spritesheetPath: 'tiled/SmallBurg/texture_atlas_grid_tiles.png',
+      spriteWidth: 16,
+      spriteHeight: 32,
+      spriteRowIndex: 24,
+      framesCount: 5,
+      skipFirstFrames: 0,
+      ySortingFromStage: CropStageType.seedling,
+    ),
+    HandItemId.apple: CropEntity(
+      isTree: true,
+      regrowData: const CropRegrowData(
+        isRegrow: true,
+        regrowStageRollback: 2,
+        regrowStepDays: 2,
+        isRegrowing: false,
+        daysInStage: 0,
+      ),
+      id: HandItemId.apple,
+      name: 'Apple',
+      description: 'Crisp red apple',
+      stage: CropStageType.seedling,
+      daysPlanted: 0,
+      daysToMature: 7,
+      yieldAmount: 4,
+      harvestItemId: HandItemId.apple_loot_item,
+      requiredSeason: SeasonType.any,
+      spritesheetPath: 'tiled/SmallBurg/texture_atlas_grid_tiles.png',
+      spriteWidth: 16,
+      spriteHeight: 32,
+      spriteRowIndex: 27,
+      framesCount: 7,
+      skipFirstFrames: 0,
+      ySortingFromStage: CropStageType.budding,
+    ),
+  };
+}

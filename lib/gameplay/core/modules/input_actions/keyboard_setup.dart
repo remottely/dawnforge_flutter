@@ -88,7 +88,7 @@ final class KeyboardSetup {
     kCraftingKey,
     kToggleInputsKey,
 
-    // kAdvanceDayKey,
+    kAdvanceDayKey,
     kClearSaveKey,
     kAddTestItemsKey,
   ];

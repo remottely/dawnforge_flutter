@@ -143,9 +143,9 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
       // ..isDither = false
       ;
 
-      if (crop.stage == CropStageType.dead) {
-        _cropDecoration!.opacity = 0.5;
-      }
+      // if (crop.stage == CropStageType.dead) {
+      //   _cropDecoration!.opacity = 0.5;
+      // }
 
       gameRef.add(_cropDecoration!);
 
@@ -166,9 +166,9 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
         // ..isDither = false,
       );
 
-      if (crop.stage == CropStageType.dead) {
-        _cropSpriteGround!.opacity = 0.5;
-      }
+      // if (crop.stage == CropStageType.isDead) {
+      //   _cropSpriteGround!.opacity = 0.5;
+      // }
 
       add(_cropSpriteGround!);
 
@@ -326,11 +326,12 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   /// - flowering(4), fruiting(5) → frame 2
   /// - harvestable(6), dead(7) → frame 3
   int _getFrameIndexForStage(CropStageType stage, int availableFrames) {
-    const totalStages = 8; // Total de estágios possíveis em CropStage
+    final totalStages = CropStageType.values.length;
     final stageIndex = stage.index;
 
-    // Mapeia proporcionalmente o índice do estágio para os frames disponíveis
-    final frameIndex = (stageIndex * availableFrames) ~/ totalStages;
+    // Corrigido: mapeia proporcionalmente o índice do estágio para os frames disponíveis
+    // usando (availableFrames - 1) e (totalStages - 1) para garantir que o último estágio vá ao último frame
+    final frameIndex = (stageIndex * (availableFrames)) ~/ (totalStages);
 
     // Garante que não ultrapassa o número de frames disponíveis
     return frameIndex.clamp(0, availableFrames - 1);

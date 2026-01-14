@@ -6,8 +6,8 @@ enum CropStageType {
   budding, // Começando a brotar (substitui "growing1")
   flowering, // Florescendo (substitui "growing2")
   fruiting, // Frutificando (substitui "growing3")
-  harvestable, // Pronto para colher (substitui "mature")
-  dead; // Morto (substitui "withered")
+  harvestable; // Pronto para colher (substitui "mature")
+  // dead; // Morto (substitui "withered") // TODO(Kevin): create dead logic
 
   /// Serialization (D2)
   String toJson() => name;
@@ -31,8 +31,8 @@ enum CropStageType {
   /// Check if crop can be harvested at this stage
   bool get canHarvest => this == CropStageType.harvestable;
 
-  /// Check if crop is dead
-  bool get isDead => this == CropStageType.dead;
+  // /// Check if crop is dead
+  // bool get isDead => this == CropStageType.dead;
 
   /// Check if this is the initial stage
   bool get isPlanted => this == CropStageType.planted;
@@ -62,8 +62,8 @@ enum CropStageType {
         return 'Fruiting';
       case CropStageType.harvestable:
         return 'Harvestable';
-      case CropStageType.dead:
-        return 'Dead';
+      // case CropStageType.dead:
+      //   return 'Dead';
     }
   }
 
@@ -84,14 +84,14 @@ enum CropStageType {
         return 5;
       case CropStageType.harvestable:
         return 6;
-      case CropStageType.dead:
-        return 7;
+      // case CropStageType.dead:
+      //   return 7;
     }
   }
 
   /// Get the next stage (or same if already at dead)
   CropStageType? get nextStage {
-    if (this == CropStageType.dead) return null;
+    // if (this == CropStageType.dead) return null;
     final nextIndex = index + 1;
     return nextIndex < values.length ? values[nextIndex] : null;
   }

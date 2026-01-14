@@ -1,6 +1,6 @@
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
 
-import 'package:dawnforge/gameplay/database/modern_farm/modern_farm_crop_entity_database_def.dart';
+import 'package:dawnforge/gameplay/database/smallburg/smallburg_crop_entity_database_def.dart';
 
 import '../../inventory/entities/enums/hand_item_id.dart';
 import '../../world/entities/objects/farm/crop_entity.dart';
@@ -19,7 +19,7 @@ class CropFactoryService {
 
     _database
       ..clear()
-      ..addAll(ModernFarmCropEntityDatabaseDef.cropEntityList);
+      ..addAll(SmallBurgCropEntityDatabaseDef.cropEntityList);
 
     _isInitialized = true;
     GameLogger.info(
