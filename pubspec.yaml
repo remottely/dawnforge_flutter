@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.104.37+1
+version: 1.104.38+1
 
 environment:
   sdk: ^3.12.0-14.0.dev
@@ -366,6 +366,9 @@ flutter:
     - assets/audio/maps/beach/bgm/Pixverses - A Lost Soul.ogg
     - assets/audio/maps/cave/bgm/Pixverses - A Midnight Bat.ogg
     - assets/images/tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/tools_pickaxe/character_body/character_tools_pickaxe_body_light_7.png
+    # - assets/asesprite/texture_atlas_decorations.aseprite
+    # - assets/asesprite/texture_atlas_grid_tiles.aseprite
+    # - assets/asesprite/texture_atlas_terrain.aseprite
 
   fonts:
     - family: Normal
