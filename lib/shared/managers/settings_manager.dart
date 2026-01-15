@@ -1,4 +1,4 @@
-import 'package:dawnforge/gameplay/core/utils/app_environment.dart';
+import 'package:dawnforge/game/core/utils/app_environment.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 

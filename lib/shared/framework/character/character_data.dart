@@ -1,6 +1,6 @@
 // lib/shared/framework/character/character_data.dart (ADICIONAR MÉTODOS)
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
+import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.dart';
 import 'package:flutter/foundation.dart';
 
 /// Estado puro do personagem (serializável para network/save)

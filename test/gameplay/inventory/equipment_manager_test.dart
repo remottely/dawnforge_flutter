@@ -1,9 +1,9 @@
-// import 'package:dawnforge/gameplay/inventory/entities/equipment_slot.dart';
-// import 'package:dawnforge/gameplay/inventory/managers/equipment_manager.dart';
-// import 'package:dawnforge/gameplay/inventory/managers/inventory_manager.dart';
-// import 'package:dawnforge/gameplay/inventory/config/inventory_service_locator.dart';
-// import 'package:dawnforge/gameplay/inventory/items/main_hand_item.dart';
-// import 'package:dawnforge/gameplay/inventory/services/item_factory_service.dart';
+// import 'package:dawnforge/features/inventory/entities/equipment_slot.dart';
+// import 'package:dawnforge/features/inventory/managers/equipment_manager.dart';
+// import 'package:dawnforge/features/inventory/managers/inventory_manager.dart';
+// import 'package:dawnforge/features/inventory/config/inventory_service_locator.dart';
+// import 'package:dawnforge/features/inventory/items/main_hand_item.dart';
+// import 'package:dawnforge/features/inventory/services/item_factory_service.dart';
 // import 'package:flutter_test/flutter_test.dart';
 
 // void main() {

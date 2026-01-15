@@ -590,8 +590,35 @@ MVP focado no **loop essencial de farming**: **plantar → regar → colher → 
 ---
 
 # Questões pré MVP:
+estou clonando stardew valley, essa arquitetura faz sentido? me sugira arquiteturas robustas porem boas para se manter como dev solo o jogo inteiro nos proximos 2 anos!
+app
+- main.dart
+- pre_game/
+  - menu_screen.dart
+- game/
+  - world/
+    - grid_tile.dart
+    - crop_entity.dart
+  - features/
+    - characters
+    - decorations
+    - farm
+    - time
+    - map
+  - core/
+  - overlay/
+    - hud/
+      - inventory_hud.dart
+      - market_hud.dart
+    - paused/
+      - dialog_overlay.dart(conversation_overlay.dart)
+      - menu_overlay.dart
+        - map_panel.dart
+        - config_panel.dart
+
+
+UI/HUD/Overlay, me explique a diferenca dessas camadas em um jogo. pois preciso definir o nome das camadas de UI q sao pre jogo, e durante o jogo a diferenca daquilo q seria o HUD vs o jogo pausado(ocupando toda a tela e nao somente partes dela e com o jogo pausado):
 - definir layers da UI(stacks) e como cada layer se comporta:
-  - UI/HUD/Overlay
   - App
     - AppMenu
   - Gameplay

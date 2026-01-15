@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:dawnforge/gameplay/core/modules/world/world_state_manager.dart';
-import 'package:dawnforge/gameplay/core/modules/world/map_state_model.dart';
-import 'package:dawnforge/gameplay/core/modules/world/season.dart';
+import 'package:dawnforge/game/core/modules/world/world_state_manager.dart';
+import 'package:dawnforge/game/core/modules/world/map_state_model.dart';
+import 'package:dawnforge/game/core/modules/world/season.dart';
 
 void main() {
   late WorldStateManager manager;

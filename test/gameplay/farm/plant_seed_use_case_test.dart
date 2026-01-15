@@ -1,14 +1,14 @@
 // import 'package:flutter_test/flutter_test.dart';
 // import 'package:mocktail/mocktail.dart';
 
-// import 'package:dawnforge/gameplay/farm/entities/crop.dart';
-// import 'package:dawnforge/gameplay/farm/entities/crop_stage.dart';
-// import 'package:dawnforge/gameplay/farm/entities/farm_tile.dart';
-// import 'package:dawnforge/gameplay/farm/entities/soil_state.dart';
-// import 'package:dawnforge/gameplay/farm/managers/farm_manager.dart';
-// import 'package:dawnforge/gameplay/farm/services/crop_factory_service.dart';
-// import 'package:dawnforge/gameplay/farm/usecases/plant_seed_use_case.dart';
-// import 'package:dawnforge/gameplay/inventory/managers/inventory_manager.dart';
+// import 'package:dawnforge/features/farm/entities/crop.dart';
+// import 'package:dawnforge/features/farm/entities/crop_stage.dart';
+// import 'package:dawnforge/features/farm/entities/farm_tile.dart';
+// import 'package:dawnforge/features/farm/entities/soil_state.dart';
+// import 'package:dawnforge/features/farm/managers/farm_manager.dart';
+// import 'package:dawnforge/features/farm/services/crop_factory_service.dart';
+// import 'package:dawnforge/features/farm/usecases/plant_seed_use_case.dart';
+// import 'package:dawnforge/features/inventory/managers/inventory_manager.dart';
 
 // class MockFarmManager extends Mock implements FarmManager {}
 

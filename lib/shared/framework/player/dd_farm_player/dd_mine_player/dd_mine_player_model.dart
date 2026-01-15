@@ -1,4 +1,4 @@
-import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
+import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_config.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_model.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_mine_player/dd_mine_player_config.dart';

@@ -1,10 +1,10 @@
-// import 'package:dawnforge/gameplay/inventory/config/inventory_service_locator.dart';
-// import 'package:dawnforge/gameplay/inventory/items/consumable_item.dart';
-// import 'package:dawnforge/gameplay/inventory/items/weapon_item.dart';
-// import 'package:dawnforge/gameplay/inventory/items/material_item.dart';
-// import 'package:dawnforge/gameplay/inventory/items/seed_bag_item.dart';
-// import 'package:dawnforge/gameplay/inventory/items/tool_item.dart';
-// import 'package:dawnforge/gameplay/inventory/services/item_factory_service.dart';
+// import 'package:dawnforge/features/inventory/config/inventory_service_locator.dart';
+// import 'package:dawnforge/features/inventory/items/consumable_item.dart';
+// import 'package:dawnforge/features/inventory/items/weapon_item.dart';
+// import 'package:dawnforge/features/inventory/items/material_item.dart';
+// import 'package:dawnforge/features/inventory/items/seed_bag_item.dart';
+// import 'package:dawnforge/features/inventory/items/tool_item.dart';
+// import 'package:dawnforge/features/inventory/services/item_factory_service.dart';
 // import 'package:flutter_test/flutter_test.dart';
 
 // void main() {

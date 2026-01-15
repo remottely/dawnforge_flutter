@@ -1,8 +1,8 @@
 import 'package:dawnforge/core/utils/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
-import 'package:dawnforge/gameplay/farm/services/farm_tool_action_config.dart';
+import 'package:dawnforge/game/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
+import 'package:dawnforge/game/features/farm/services/farm_tool_action_config.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_view.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_mine_player/dd_mine_player_config.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_mine_player/dd_mine_player_controller.dart';

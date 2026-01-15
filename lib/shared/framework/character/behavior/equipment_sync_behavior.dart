@@ -1,6 +1,6 @@
 // lib/shared/framework/character/behavior/equipment_sync_behavior.dart
-import 'package:dawnforge/gameplay/inventory/config/inventory_service_locator.dart';
-import 'package:dawnforge/gameplay/inventory/managers/equipment_manager.dart';
+import 'package:dawnforge/game/features/inventory/config/inventory_service_locator.dart';
+import 'package:dawnforge/game/features/inventory/managers/equipment_manager.dart';
 import 'package:dawnforge/shared/framework/character/behavior/character_behavior.dart';
 
 /// Behavior que sincroniza CharacterData.equippedItemId com EquipmentManager

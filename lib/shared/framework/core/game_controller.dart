@@ -1,7 +1,7 @@
 // import 'dart:async' as async;
 // // lib/gameplay/core/game_controller.dart (exemplo de uso)
 // import 'package:bonfire/bonfire.dart';
-// import 'package:dawnforge/gameplay/characters/player/demo/demo_player_view.dart';
+// import 'package:dawnforge/features/characters/player/demo/demo_player_view.dart';
 // import 'package:dawnforge/shared/framework/character/character_data.dart';
 // import 'package:dawnforge/shared/framework/save/player_save_manager.dart';
 

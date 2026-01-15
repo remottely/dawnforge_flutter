@@ -1,7 +1,7 @@
-// import 'package:dawnforge/gameplay/core/modules/time/time_constants.dart';
-// import 'package:dawnforge/gameplay/core/modules/time/time_manager.dart';
-// import 'package:dawnforge/gameplay/core/modules/time/time_of_day.dart';
-// import 'package:dawnforge/gameplay/core/modules/world/world_state_manager.dart';
+// import 'package:dawnforge/features/core/modules/time/time_constants.dart';
+// import 'package:dawnforge/features/core/modules/time/time_manager.dart';
+// import 'package:dawnforge/features/core/modules/time/time_of_day.dart';
+// import 'package:dawnforge/features/core/modules/world/world_state_manager.dart';
 // import 'package:flutter_test/flutter_test.dart';
 
 // void main() {

@@ -2,20 +2,20 @@ me gere ambos os codigos completos prontos para copiar e colar:
 /// **InventoryOverlay - Composite Pattern + MVVM**
 /// Sistema de inventário responsivo com suporte a venda no market
 /// Utiliza composition pattern para separar responsabilidades
-import 'package:dawnforge/gameplay/core/modules/hud/responsive/responsive_overlay_mixin.dart';
-import 'package:dawnforge/gameplay/core/modules/hud/responsive/overlay_responsive_config.dart';
-import 'package:dawnforge/gameplay/inventory/managers/equipment_manager.dart';
-import 'package:dawnforge/gameplay/inventory/managers/inventory_manager.dart';
-import 'package:dawnforge/gameplay/inventory/state/equipment_state.dart';
-import 'package:dawnforge/gameplay/inventory/state/inventory_state.dart';
-import 'package:dawnforge/gameplay/inventory/entities/inventory_slot.dart';
-import 'package:dawnforge/gameplay/inventory/entities/hand_item.dart';
-import 'package:dawnforge/gameplay/inventory/widgets/item_sprite_widget.dart';
-import 'package:dawnforge/gameplay/inventory/config/inventory_service_locator.dart';
-import 'package:dawnforge/gameplay/market/market_state.dart';
-import 'package:dawnforge/gameplay/market/market_manager.dart';
-import 'package:dawnforge/gameplay/core/modules/game/player_state_manager.dart';
-import 'package:dawnforge/gameplay/overlay/overlay_message_service.dart';
+import 'package:dawnforge/features/core/modules/hud/responsive/responsive_overlay_mixin.dart';
+import 'package:dawnforge/features/core/modules/hud/responsive/overlay_responsive_config.dart';
+import 'package:dawnforge/features/inventory/managers/equipment_manager.dart';
+import 'package:dawnforge/features/inventory/managers/inventory_manager.dart';
+import 'package:dawnforge/features/inventory/state/equipment_state.dart';
+import 'package:dawnforge/features/inventory/state/inventory_state.dart';
+import 'package:dawnforge/features/inventory/entities/inventory_slot.dart';
+import 'package:dawnforge/features/inventory/entities/hand_item.dart';
+import 'package:dawnforge/features/inventory/widgets/item_sprite_widget.dart';
+import 'package:dawnforge/features/inventory/config/inventory_service_locator.dart';
+import 'package:dawnforge/features/market/market_state.dart';
+import 'package:dawnforge/features/market/market_manager.dart';
+import 'package:dawnforge/features/core/modules/game/player_state_manager.dart';
+import 'package:dawnforge/features/overlay/overlay_message_service.dart';
 import 'package:flutter/material.dart';
 
 /// **COMPOSITION CORE:** Entry Point - Gerencia visibilidade e responsividade
@@ -373,21 +373,21 @@ class _ResponsiveConfig {
   }
 }
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/gameplay/overlay/overlay_message_widget.dart';
-import 'package:dawnforge/gameplay/core/modules/hud/tutorial_inputs/widgets/tutorial_inputs_overlay.dart';
-import 'package:dawnforge/gameplay/core/modules/hud/responsive/responsive_overlay_mixin.dart';
-import 'package:dawnforge/gameplay/overlay/inventory_overlay.dart';
-import 'package:dawnforge/gameplay/market/market_state.dart';
-import 'package:dawnforge/gameplay/market/widgets/market_panel.dart';
-import 'package:dawnforge/gameplay/core/modules/hud/player_vital_stats/player_vital_stats_overlay.dart';
-import 'package:dawnforge/gameplay/core/modules/hud/debug/debug_overlay.dart';
-import 'package:dawnforge/gameplay/overlay/mobile_inputs_overlay.dart';
-import 'package:dawnforge/gameplay/core/modules/hud/inputs/widgets/joystick_actions_overlay.dart';
-import 'package:dawnforge/gameplay/core/modules/hud/inputs/widgets/fullscreen_button_overlay.dart';
+import 'package:dawnforge/features/overlay/overlay_message_widget.dart';
+import 'package:dawnforge/features/core/modules/hud/tutorial_inputs/widgets/tutorial_inputs_overlay.dart';
+import 'package:dawnforge/features/core/modules/hud/responsive/responsive_overlay_mixin.dart';
+import 'package:dawnforge/features/overlay/inventory_overlay.dart';
+import 'package:dawnforge/features/market/market_state.dart';
+import 'package:dawnforge/features/market/widgets/market_panel.dart';
+import 'package:dawnforge/features/core/modules/hud/player_vital_stats/player_vital_stats_overlay.dart';
+import 'package:dawnforge/features/core/modules/hud/debug/debug_overlay.dart';
+import 'package:dawnforge/features/overlay/mobile_inputs_overlay.dart';
+import 'package:dawnforge/features/core/modules/hud/inputs/widgets/joystick_actions_overlay.dart';
+import 'package:dawnforge/features/core/modules/hud/inputs/widgets/fullscreen_button_overlay.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:dawnforge/shared/managers/settings_manager.dart';
-import 'package:dawnforge/gameplay/time/time_manager.dart' as new_time;
-import 'package:dawnforge/gameplay/time/widgets/time_hud_panel.dart';
+import 'package:dawnforge/features/time/time_manager.dart' as new_time;
+import 'package:dawnforge/features/time/widgets/time_hud_panel.dart';
 import 'package:dawnforge/core/utils/debug_helpers.dart';
 import 'package:flutter/material.dart';
 

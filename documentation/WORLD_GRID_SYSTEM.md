@@ -198,7 +198,7 @@ Planned object types that can now be easily implemented:
 
 ```dart
 // Import everything from world entities
-import 'package:dawnforge/gameplay/world/entities/world_entities.dart';
+import 'package:dawnforge/features/world/entities/world_entities.dart';
 
 // Now you have access to:
 // - GridTile

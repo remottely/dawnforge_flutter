@@ -2,13 +2,13 @@ import 'dart:async';
 import 'package:dawnforge/core/utils/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/gameplay/core/modules/ui/emote_manager.dart';
+import 'package:dawnforge/game/core/modules/ui/emote_manager.dart';
 import 'package:dawnforge/shared/framework/enemies/dd_base_enemy/dd_base_enemy_view.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_config.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_controller.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
 import 'package:flutter/foundation.dart';
-import 'package:dawnforge/gameplay/market/market_state.dart';
+import 'package:dawnforge/game/features/market/market_state.dart';
 
 abstract class DDBasePlayerView<
   C extends DDBasePlayerController<M>,

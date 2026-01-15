@@ -1,8 +1,8 @@
 // import 'package:flutter_test/flutter_test.dart';
 // import 'package:mocktail/mocktail.dart';
 
-// import 'package:dawnforge/gameplay/farm/managers/farm_manager.dart';
-// import 'package:dawnforge/gameplay/farm/usecases/till_soil_use_case.dart';
+// import 'package:dawnforge/features/farm/managers/farm_manager.dart';
+// import 'package:dawnforge/features/farm/usecases/till_soil_use_case.dart';
 
 // class MockFarmManager extends Mock implements FarmManager {}
 

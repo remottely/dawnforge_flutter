@@ -1,7 +1,7 @@
 // // lib/main.dart ou seu game screen
 // import 'package:bonfire/bonfire.dart';
-// import 'package:dawnforge/gameplay/characters/player/demo/demo_player.dart';
-// import 'package:dawnforge/gameplay/characters/player/demo/demo_player_def.dart';
+// import 'package:dawnforge/features/characters/player/demo/demo_player.dart';
+// import 'package:dawnforge/features/characters/player/demo/demo_player_def.dart';
 // import 'package:dawnforge/shared/framework/save/player_save_manager.dart';
 // import 'package:flutter/material.dart';
 // import 'package:flutter/widgets.dart';
