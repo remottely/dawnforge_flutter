@@ -1,6 +1,6 @@
 import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/gameplay/core/modules/hud/tutorial_inputs/tutorial_inputs_state.dart';
+import 'package:dawnforge/gameplay/overlay/tutorial_inputs/tutorial_inputs_state.dart';
 import 'package:dawnforge/gameplay/core/modules/input_actions/input_def.dart';
 import 'package:dawnforge/gameplay/core/utils/app_environment.dart';
 import 'package:dawnforge/gameplay/inventory/managers/equipment_manager.dart';

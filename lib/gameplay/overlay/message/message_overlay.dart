@@ -1,19 +1,19 @@
 import 'dart:async';
 
-import 'package:dawnforge/gameplay/overlay/overlay_message_service.dart';
+import 'package:dawnforge/gameplay/overlay/message/message_overlay_service.dart';
 import 'package:flutter/material.dart';
 
-class OverlayMessageWidget extends StatefulWidget {
-  const OverlayMessageWidget({super.key});
+class MessageOverlay extends StatefulWidget {
+  const MessageOverlay({super.key});
 
   @override
-  State<OverlayMessageWidget> createState() => _OverlayMessageWidgetState();
+  State<MessageOverlay> createState() => _MessageOverlayState();
 }
 
-class _OverlayMessageWidgetState extends State<OverlayMessageWidget>
+class _MessageOverlayState extends State<MessageOverlay>
     with SingleTickerProviderStateMixin {
-  StreamSubscription<OverlayMessage>? _subscription;
-  OverlayMessage? _currentMessage;
+  StreamSubscription<MessageOverlayData>? _subscription;
+  MessageOverlayData? _currentMessage;
   Timer? _hideTimer;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -40,12 +40,12 @@ class _OverlayMessageWidgetState extends State<OverlayMessageWidget>
           ),
         );
 
-    _subscription = OverlayMessageService.instance.messageStream.listen(
+    _subscription = MessageOverlayService.instance.messageStream.listen(
       _handleNewMessage,
     );
   }
 
-  void _handleNewMessage(OverlayMessage message) {
+  void _handleNewMessage(MessageOverlayData message) {
     _hideTimer?.cancel();
 
     setState(() {

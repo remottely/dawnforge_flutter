@@ -14,7 +14,7 @@ import 'package:dawnforge/gameplay/inventory/config/inventory_service_locator.da
 import 'package:dawnforge/gameplay/market/market_state.dart';
 import 'package:dawnforge/gameplay/market/market_manager.dart';
 import 'package:dawnforge/gameplay/core/modules/game/player_state_manager.dart';
-import 'package:dawnforge/gameplay/overlay/overlay_message_service.dart';
+import 'package:dawnforge/gameplay/overlay/message/message_overlay_service.dart';
 import 'package:flutter/material.dart';
 
 /// **COMPOSITION CORE:** Entry Point - Gerencia visibilidade e responsividade
@@ -125,7 +125,7 @@ class _InventoryGrid extends StatelessWidget {
   }
 
   void _handleMarketSale(InventorySlot slot) {
-    final messageService = OverlayMessageService.instance;
+    final messageService = MessageOverlayService.instance;
 
     if (slot.isEmpty || slot.item == null) {
       messageService.showError('Slot vazio.');

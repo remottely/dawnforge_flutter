@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/gameplay/core/modules/hud/inputs/mobile_inputs_state.dart';
+import 'package:dawnforge/gameplay/overlay/inputs/mobile_inputs_state.dart';
 import 'package:dawnforge/gameplay/core/modules/input_actions/joysctick_setup.dart';
 import 'package:dawnforge/gameplay/inventory/entities/hand_item.dart';
 import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';

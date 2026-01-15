@@ -2,7 +2,7 @@ import 'package:dawnforge/core/utils/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/gameplay/core/modules/input_actions/input_def.dart';
-import 'package:dawnforge/gameplay/overlay/overlay_message_def.dart';
+import 'package:dawnforge/gameplay/overlay/message/message_overlay_def.dart';
 import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_consumable_player_controller.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
@@ -106,7 +106,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
       GameLogger.warning('[FarmController] ✗ Não pode executar dig');
       // Só mostra "Sem Stamina" se realmente for problema de stamina
       if (model.stamina < model.config.digStaminaCost) {
-        OverlayMessageDef.showNoStamina();
+        MessageOverlayDef.showNoStamina();
       }
       return;
     }
@@ -136,7 +136,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
       GameLogger.warning('[FarmController] ✗ Não pode executar watering can');
       // Só mostra "Sem Stamina" se realmente for problema de stamina
       if (model.stamina < model.config.wateringCanStaminaCost) {
-        OverlayMessageDef.showNoStamina();
+        MessageOverlayDef.showNoStamina();
       }
       return;
     }
@@ -166,7 +166,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
       GameLogger.warning('[FarmController] ✗ Não pode executar seed');
       // Só mostra "Sem Stamina" se realmente for problema de stamina
       if (model.stamina < model.config.seedStaminaCost) {
-        OverlayMessageDef.showNoStamina();
+        MessageOverlayDef.showNoStamina();
       }
       return;
     }
@@ -196,7 +196,7 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
       GameLogger.warning('[FarmController] ✗ Não pode executar harvest');
       // Só mostra "Sem Stamina" se realmente for problema de stamina
       if (model.stamina < model.config.harvestStaminaCost) {
-        OverlayMessageDef.showNoStamina();
+        MessageOverlayDef.showNoStamina();
       }
       return;
     }

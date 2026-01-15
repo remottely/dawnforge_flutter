@@ -3,8 +3,8 @@
 /// • Remove ResponsiveOverlayData e métodos do mixin
 import 'package:dawnforge/app/screens/menu_screen.dart';
 import 'package:dawnforge/gameplay/core/modules/audio/audio_manager.dart';
-import 'package:dawnforge/gameplay/core/modules/hud/tutorial_inputs/tutorial_inputs_hud_def.dart';
-import 'package:dawnforge/gameplay/core/modules/hud/tutorial_inputs/tutorial_inputs_state.dart';
+import 'package:dawnforge/gameplay/overlay/tutorial_inputs/tutorial_inputs_hud_def.dart';
+import 'package:dawnforge/gameplay/overlay/tutorial_inputs/tutorial_inputs_state.dart';
 
 import 'package:dawnforge/gameplay/overlay/design_system/overlay_design_system_extension.dart';
 import 'package:dawnforge/gameplay/overlay/design_system/overlay_tokens.dart';

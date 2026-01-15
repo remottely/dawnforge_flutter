@@ -2,7 +2,7 @@ import 'package:dawnforge/core/utils/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/gameplay/core/modules/input_actions/input_def.dart';
-import 'package:dawnforge/gameplay/overlay/overlay_message_def.dart';
+import 'package:dawnforge/gameplay/overlay/message/message_overlay_def.dart';
 import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_controller.dart';
@@ -78,7 +78,7 @@ abstract class DDMinePlayerController<M extends DDMinePlayerModel>
       GameLogger.warning('[MineController] ✗ Não pode executar mine');
       // Só mostra "Sem Stamina" se realmente for problema de stamina
       if (model.stamina < model.config.mineStaminaCost) {
-        OverlayMessageDef.showNoStamina();
+        MessageOverlayDef.showNoStamina();
       }
       return;
     }

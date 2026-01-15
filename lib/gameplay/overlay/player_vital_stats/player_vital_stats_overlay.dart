@@ -1,4 +1,4 @@
-import 'package:dawnforge/gameplay/core/modules/hud/player_vital_stats/player_vital_stats_state.dart';
+import 'package:dawnforge/gameplay/overlay/player_vital_stats/player_vital_stats_state.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:flutter/material.dart';
 

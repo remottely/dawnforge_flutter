@@ -2,7 +2,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:dawnforge/gameplay/core/modules/input_actions/input_def.dart';
-import 'package:dawnforge/gameplay/overlay/overlay_message_def.dart';
+import 'package:dawnforge/gameplay/overlay/message/message_overlay_def.dart';
 import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:dawnforge/shared/framework/character/behavior/character_behavior.dart';
 import 'package:dawnforge/shared/framework/utils/dd_animation_directional.dart';
@@ -64,7 +64,7 @@ class MiningBehavior extends CharacterBehavior {
     if (_isActionPlaying) return false;
 
     if (!character.data.tryConsumeStamina(config.pickaxeStaminaCost)) {
-      OverlayMessageDef.showNoStamina();
+      MessageOverlayDef.showNoStamina();
       return false;
     }
 

@@ -3,7 +3,7 @@ import 'dart:async' as async;
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:dawnforge/gameplay/core/modules/input_actions/input_def.dart';
-import 'package:dawnforge/gameplay/overlay/overlay_message_def.dart';
+import 'package:dawnforge/gameplay/overlay/message/message_overlay_def.dart';
 import 'package:dawnforge/gameplay/core/utils/app_environment.dart';
 import 'package:dawnforge/gameplay/farm/services/farm_tool_action_config.dart';
 import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
@@ -121,7 +121,7 @@ class FarmingBehavior extends CharacterBehavior {
     }
 
     if (!character.data.tryConsumeStamina(config.digStaminaCost)) {
-      OverlayMessageDef.showNoStamina();
+      MessageOverlayDef.showNoStamina();
       return false;
     }
 
@@ -183,7 +183,7 @@ class FarmingBehavior extends CharacterBehavior {
     }
 
     if (!character.data.tryConsumeStamina(config.wateringCanStaminaCost)) {
-      OverlayMessageDef.showNoStamina();
+      MessageOverlayDef.showNoStamina();
       return false;
     }
 
@@ -244,7 +244,7 @@ class FarmingBehavior extends CharacterBehavior {
     }
 
     if (!character.data.tryConsumeStamina(config.seedStaminaCost)) {
-      OverlayMessageDef.showNoStamina();
+      MessageOverlayDef.showNoStamina();
       return false;
     }
 
@@ -305,7 +305,7 @@ class FarmingBehavior extends CharacterBehavior {
     }
 
     if (!character.data.tryConsumeStamina(config.harvestStaminaCost)) {
-      OverlayMessageDef.showNoStamina();
+      MessageOverlayDef.showNoStamina();
       return false;
     }
 

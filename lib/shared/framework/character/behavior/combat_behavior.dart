@@ -10,7 +10,7 @@ import 'package:dawnforge/gameplay/core/modules/combat/synchronized_attack/synch
 import 'package:dawnforge/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_def.dart';
 import 'package:dawnforge/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:dawnforge/gameplay/core/modules/input_actions/input_def.dart';
-import 'package:dawnforge/gameplay/overlay/overlay_message_def.dart';
+import 'package:dawnforge/gameplay/overlay/message/message_overlay_def.dart';
 import 'package:dawnforge/gameplay/core/utils/offset_helper.dart';
 import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:dawnforge/shared/framework/character/behavior/character_behavior.dart';
@@ -132,7 +132,7 @@ class CombatBehavior extends CharacterBehavior {
       GameLogger.warning('[CombatBehavior] ✗ Cannot execute primary attack');
       
       if (character.data.stamina < config.primaryAttackStaminaCost) {
-        OverlayMessageDef.showNoStamina();
+        MessageOverlayDef.showNoStamina();
       }
       return false;
     }
@@ -323,7 +323,7 @@ class CombatBehavior extends CharacterBehavior {
       GameLogger.warning('[CombatBehavior] ✗ Cannot execute ranged attack');
       
       if (character.data.stamina < config.rangedAttackStaminaCost) {
-        OverlayMessageDef.showNoStamina();
+        MessageOverlayDef.showNoStamina();
       }
       return false;
     }

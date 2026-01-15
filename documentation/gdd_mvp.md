@@ -590,14 +590,15 @@ MVP focado no **loop essencial de farming**: **plantar → regar → colher → 
 ---
 
 # Questões pré MVP:
-- definir layers da UI(stacks) e como cada layer se comporta!
+- definir layers da UI(stacks) e como cada layer se comporta:
+  - UI/HUD/Overlay
   - App
     - AppMenu
   - Gameplay
     - GameplayOverlay
       - MarketOverlay
       - InventoryOverlay
-      - 
+      - ...
     - PausedOverlay
       - GameplayMenu
       - ConversationOverlay

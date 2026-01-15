@@ -1,8 +1,8 @@
-import 'package:dawnforge/gameplay/overlay/overlay_message_service.dart';
+import 'package:dawnforge/gameplay/overlay/message/message_overlay_service.dart';
 import 'package:flutter/material.dart';
 
-final class OverlayMessageDef {
-  OverlayMessageDef._();
+final class MessageOverlayDef {
+  MessageOverlayDef._();
 
   /// Message durations
   static const Duration kDefaultWarningDuration = Duration(milliseconds: 1500);
@@ -27,42 +27,42 @@ final class OverlayMessageDef {
 
   /// Message display methods
   static void showNoStamina() {
-    OverlayMessageService.instance.showWarning(
+    MessageOverlayService.instance.showWarning(
       kNoStaminaMessage,
       duration: kDefaultWarningDuration,
     );
   }
 
   static void showNoKeys() {
-    OverlayMessageService.instance.showWarning(
+    MessageOverlayService.instance.showWarning(
       kNoKeysMessage,
       duration: kDefaultWarningDuration,
     );
   }
 
   static void showCannotDig() {
-    OverlayMessageService.instance.showWarning(
+    MessageOverlayService.instance.showWarning(
       kCannotDigMessage,
       duration: kDefaultWarningDuration,
     );
   }
 
   static void showCannotWater() {
-    OverlayMessageService.instance.showWarning(
+    MessageOverlayService.instance.showWarning(
       kCannotWaterMessage,
       duration: kDefaultWarningDuration,
     );
   }
 
   static void showCannotPlant() {
-    OverlayMessageService.instance.showWarning(
+    MessageOverlayService.instance.showWarning(
       kCannotPlantMessage,
       duration: kDefaultWarningDuration,
     );
   }
 
   static void showCannotHarvest() {
-    OverlayMessageService.instance.showWarning(
+    MessageOverlayService.instance.showWarning(
       kCannotHarvestMessage,
       duration: kDefaultWarningDuration,
     );

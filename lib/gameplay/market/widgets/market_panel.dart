@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:dawnforge/gameplay/core/modules/game/player_state_manager.dart';
 import 'package:dawnforge/gameplay/core/modules/input_actions/keyboard_setup.dart';
-import 'package:dawnforge/gameplay/overlay/overlay_message_service.dart';
+import 'package:dawnforge/gameplay/overlay/message/message_overlay_service.dart';
 import 'package:dawnforge/gameplay/inventory/config/inventory_service_locator.dart';
 import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:dawnforge/gameplay/inventory/entities/hand_item.dart';
@@ -360,9 +360,9 @@ class _MarketPanelState extends State<MarketPanel> {
 
     // Feedback via overlay e snackbar curto.
     if (result.success) {
-      OverlayMessageService.instance.showSuccess(result.message);
+      MessageOverlayService.instance.showSuccess(result.message);
     } else {
-      OverlayMessageService.instance.showError(result.message);
+      MessageOverlayService.instance.showError(result.message);
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -482,24 +482,24 @@ class _MarketPanelState extends State<MarketPanel> {
   void _sellSelectedFromInventory() {
     final slots = _inventory.slotsNotifier.value;
     if (slots.isEmpty) {
-      OverlayMessageService.instance.showError('Inventário vazio.');
+      MessageOverlayService.instance.showError('Inventário vazio.');
       return;
     }
 
     final slot = slots[_selectedInventoryIndex.clamp(0, slots.length - 1)];
     if (slot.isEmpty || slot.item == null) {
-      OverlayMessageService.instance.showError('Slot vazio.');
+      MessageOverlayService.instance.showError('Slot vazio.');
       return;
     }
 
     final player = PlayerStateManager.instance.lastPlayerModel;
     if (player == null) {
-      OverlayMessageService.instance.showError('Player não disponível.');
+      MessageOverlayService.instance.showError('Player não disponível.');
       return;
     }
 
     if (!MarketManager.instance.canSellItem(slot.item!.id, _inventory)) {
-      OverlayMessageService.instance.showError('Item não vendável no market.');
+      MessageOverlayService.instance.showError('Item não vendável no market.');
       return;
     }
 
@@ -511,9 +511,9 @@ class _MarketPanelState extends State<MarketPanel> {
     );
 
     if (result.success) {
-      OverlayMessageService.instance.showSuccess(result.message);
+      MessageOverlayService.instance.showSuccess(result.message);
     } else {
-      OverlayMessageService.instance.showError(result.message);
+      MessageOverlayService.instance.showError(result.message);
     }
   }
 
