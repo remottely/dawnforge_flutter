@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 /// Enumeração de breakpoints para diferentes tamanhos de tela
-enum ScreenSize {
+enum ScreenSizeType {
   mobile, // Mobile (portrait and landscape)
   tablet, // Tablet
   desktop, // Desktop/Large screens
@@ -17,59 +17,59 @@ class OverlayResponsiveConfig {
   static const double kTabletBreakpoint = 1280; // 768-1280px = tablet
 
   // Margins e paddings responsivos
-  static const Map<ScreenSize, double> kMargins = {
-    ScreenSize.mobile: 8.0,
-    ScreenSize.tablet: 16.0,
-    ScreenSize.desktop: 24.0,
+  static const Map<ScreenSizeType, double> kMargins = {
+    ScreenSizeType.mobile: 8.0,
+    ScreenSizeType.tablet: 16.0,
+    ScreenSizeType.desktop: 24.0,
   };
 
-  static const Map<ScreenSize, double> kPaddings = {
-    ScreenSize.mobile: 4.0,
-    ScreenSize.tablet: 6.0,
-    ScreenSize.desktop: 8.0,
+  static const Map<ScreenSizeType, double> kPaddings = {
+    ScreenSizeType.mobile: 4.0,
+    ScreenSizeType.tablet: 6.0,
+    ScreenSizeType.desktop: 8.0,
   };
 
   // Font sizes responsivos
-  static const Map<ScreenSize, double> kBaseFontSize = {
-    ScreenSize.mobile: 10.0,
-    ScreenSize.tablet: 11.0,
-    ScreenSize.desktop: 12.0,
+  static const Map<ScreenSizeType, double> kBaseFontSize = {
+    ScreenSizeType.mobile: 10.0,
+    ScreenSizeType.tablet: 11.0,
+    ScreenSizeType.desktop: 12.0,
   };
 
-  static const Map<ScreenSize, double> kTitleFontSize = {
-    ScreenSize.mobile: 14.0,
-    ScreenSize.tablet: 16.0,
-    ScreenSize.desktop: 18.0,
+  static const Map<ScreenSizeType, double> kTitleFontSize = {
+    ScreenSizeType.mobile: 14.0,
+    ScreenSizeType.tablet: 16.0,
+    ScreenSizeType.desktop: 18.0,
   };
 
   // Icon/slot sizes responsivos
-  static const Map<ScreenSize, double> kSlotSize = {
-    ScreenSize.mobile: 52.0,
-    ScreenSize.tablet: 64.0,
-    ScreenSize.desktop: 64.0,
+  static const Map<ScreenSizeType, double> kSlotSize = {
+    ScreenSizeType.mobile: 52.0,
+    ScreenSizeType.tablet: 64.0,
+    ScreenSizeType.desktop: 64.0,
   };
 
   // Equipment slot sizes (menores que inventory slots)
-  static const Map<ScreenSize, double> kEquipmentSlotSize = {
-    ScreenSize.mobile: 12.0,
-    ScreenSize.tablet: 18.0,
-    ScreenSize.desktop: 24.0,
+  static const Map<ScreenSizeType, double> kEquipmentSlotSize = {
+    ScreenSizeType.mobile: 12.0,
+    ScreenSizeType.tablet: 18.0,
+    ScreenSizeType.desktop: 24.0,
   };
 
-  static const Map<ScreenSize, double> kSpacing = {
-    ScreenSize.mobile: 4.0,
-    ScreenSize.tablet: 6.0,
-    ScreenSize.desktop: 8.0,
+  static const Map<ScreenSizeType, double> kSpacing = {
+    ScreenSizeType.mobile: 4.0,
+    ScreenSizeType.tablet: 6.0,
+    ScreenSizeType.desktop: 8.0,
   };
 
   /// Determina o tamanho da tela baseado na largura
-  static ScreenSize getScreenSize(double width) {
+  static ScreenSizeType getScreenSizeType(double width) {
     if (width < kMobileBreakpoint) {
-      return ScreenSize.mobile;
+      return ScreenSizeType.mobile;
     } else if (width < kTabletBreakpoint) {
-      return ScreenSize.tablet;
+      return ScreenSizeType.tablet;
     }
-    return ScreenSize.desktop;
+    return ScreenSizeType.desktop;
   }
 
   /// Determina a orientação da tela
@@ -80,39 +80,32 @@ class OverlayResponsiveConfig {
   }
 
   /// Obtém a margem responsiva
-  static double getMargin(ScreenSize size) {
-    return kMargins[size] ?? kMargins[ScreenSize.tablet]!;
-  }
+  static double getMargin(ScreenSizeType size) =>
+      kMargins[size] ?? kMargins[ScreenSizeType.tablet]!;
 
   /// Obtém o padding responsivo
-  static double getPadding(ScreenSize size) {
-    return kPaddings[size] ?? kPaddings[ScreenSize.tablet]!;
-  }
+  static double getPadding(ScreenSizeType size) =>
+      kPaddings[size] ?? kPaddings[ScreenSizeType.tablet]!;
 
   /// Obtém o tamanho de fonte base responsivo
-  static double getBaseFontSize(ScreenSize size) {
-    return kBaseFontSize[size] ?? kBaseFontSize[ScreenSize.tablet]!;
-  }
+  static double getBaseFontSize(ScreenSizeType size) =>
+      kBaseFontSize[size] ?? kBaseFontSize[ScreenSizeType.tablet]!;
 
   /// Obtém o tamanho de fonte de título responsivo
-  static double getTitleFontSize(ScreenSize size) {
-    return kTitleFontSize[size] ?? kTitleFontSize[ScreenSize.tablet]!;
-  }
+  static double getTitleFontSize(ScreenSizeType size) =>
+      kTitleFontSize[size] ?? kTitleFontSize[ScreenSizeType.tablet]!;
 
   /// Obtém o tamanho de slot responsivo
-  static double getSlotSize(ScreenSize size) {
-    return kSlotSize[size] ?? kSlotSize[ScreenSize.tablet]!;
-  }
+  static double getSlotSize(ScreenSizeType size) =>
+      kSlotSize[size] ?? kSlotSize[ScreenSizeType.tablet]!;
 
   /// Obtém o tamanho de slot de equipamento responsivo (menor)
-  static double getEquipmentSlotSize(ScreenSize size) {
-    return kEquipmentSlotSize[size] ?? kEquipmentSlotSize[ScreenSize.tablet]!;
-  }
+  static double getEquipmentSlotSize(ScreenSizeType size) =>
+      kEquipmentSlotSize[size] ?? kEquipmentSlotSize[ScreenSizeType.tablet]!;
 
   /// Obtém o espaçamento responsivo
-  static double getSpacing(ScreenSize size) {
-    return kSpacing[size] ?? kSpacing[ScreenSize.tablet]!;
-  }
+  static double getSpacing(ScreenSizeType size) =>
+      kSpacing[size] ?? kSpacing[ScreenSizeType.tablet]!;
 
   /// Calcula escala baseada na largura da tela
   static double getScale(double width) {
@@ -146,14 +139,14 @@ class OverlayResponsiveConfig {
   /// Obtém constraints para um overlay específico
   static BoxConstraints getOverlayConstraints(
     String overlayId, {
-    ScreenSize? screenSize,
+    ScreenSizeType? screenSize,
   }) {
     final baseConstraints =
         kOverlayConstraints[overlayId] ??
         const BoxConstraints(minWidth: 200, maxWidth: 400);
 
     // Ajusta constraints para mobile (reduz 15%)
-    if (screenSize == ScreenSize.mobile) {
+    if (screenSize == ScreenSizeType.mobile) {
       return BoxConstraints(
         minWidth: baseConstraints.minWidth * 0.85,
         maxWidth: baseConstraints.maxWidth * 0.85,

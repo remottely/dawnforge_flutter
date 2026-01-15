@@ -5,10 +5,10 @@ import 'package:dawnforge/gameplay/core/modules/game/game_state_manager.dart';
 import 'package:dawnforge/gameplay/core/modules/input_actions/keyboard_setup.dart';
 import 'package:dawnforge/gameplay/core/modules/localization/gameplay_strings_location.dart';
 import 'package:dawnforge/gameplay/core/modules/ui/ui_state_def.dart';
-import 'package:dawnforge/shared/design_system/dd_design_system.dart';
-import 'package:dawnforge/shared/design_system/widgets/atoms/dd_button.dart';
-import 'package:dawnforge/shared/design_system/widgets/atoms/dd_dialog_widget.dart';
-import 'package:dawnforge/shared/design_system/widgets/atoms/dd_text.dart';
+import 'package:dawnforge/shared/design_system_old/dd_design_system.dart';
+import 'package:dawnforge/shared/design_system_old/widgets/atoms/dd_button.dart';
+import 'package:dawnforge/shared/design_system_old/widgets/atoms/dd_dialog_widget.dart';
+import 'package:dawnforge/shared/design_system_old/widgets/atoms/dd_text.dart';
 import 'package:flutter/material.dart';
 
 final class UIStateManager {

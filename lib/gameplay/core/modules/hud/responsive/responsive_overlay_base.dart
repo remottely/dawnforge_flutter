@@ -36,7 +36,7 @@ abstract class ResponsiveOverlayBase extends StatelessWidget
           final overlayConstraints =
               OverlayResponsiveConfig.getOverlayConstraints(
                 overlayId,
-                screenSize: getScreenSize(context),
+                screenSize: getScreenSizeType(context),
               );
 
           Widget content = buildOverlayContent(context, data);

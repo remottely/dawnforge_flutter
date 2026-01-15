@@ -3,105 +3,106 @@ import 'package:flutter/widgets.dart';
 
 /// Mixin que fornece funcionalidades responsivas para overlays
 mixin ResponsiveOverlayMixin {
+  /// Obtém o tamanho da tela
+  MediaQueryData _getMediaQuery(BuildContext context) => MediaQuery.of(context);
+
+  /// Obtém o tamanho da tela
+  Size getScreenDimensions(BuildContext context) =>
+      _getMediaQuery(context).size;
+
+  /// Obtém safe area insets
+  EdgeInsets getSafeAreaInsets(BuildContext context) =>
+      _getMediaQuery(context).padding;
+
   /// Obtém o tamanho da tela atual
-  ScreenSize getScreenSize(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    return OverlayResponsiveConfig.getScreenSize(width);
+  ScreenSizeType getScreenSizeType(BuildContext context) {
+    final width = getScreenDimensions(context).width;
+    return OverlayResponsiveConfig.getScreenSizeType(width);
   }
 
   /// Obtém a orientação da tela atual
   ScreenOrientation getOrientation(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = getScreenDimensions(context);
     return OverlayResponsiveConfig.getOrientation(size);
   }
 
-  /// Obtém o tamanho da tela
-  Size getScreenDimensions(BuildContext context) {
-    return MediaQuery.of(context).size;
-  }
-
   /// Verifica se está em modo portrait
-  bool isPortrait(BuildContext context) {
-    return getOrientation(context) == ScreenOrientation.portrait;
-  }
+  bool isPortrait(BuildContext context) =>
+      getOrientation(context) == ScreenOrientation.portrait;
 
   /// Verifica se está em modo landscape
-  bool isLandscape(BuildContext context) {
-    return getOrientation(context) == ScreenOrientation.landscape;
-  }
+  bool isLandscape(BuildContext context) =>
+      getOrientation(context) == ScreenOrientation.landscape;
 
   /// Verifica se é uma tela pequena (mobile)
-  bool isMobileScreen(BuildContext context) {
-    return getScreenSize(context) == ScreenSize.mobile;
-  }
+  bool isMobileScreen(BuildContext context) =>
+      getScreenSizeType(context) == ScreenSizeType.mobile;
 
   /// Verifica se é uma tela média (tablet)
-  bool isTabletScreen(BuildContext context) {
-    return getScreenSize(context) == ScreenSize.tablet;
-  }
+  bool isTabletScreen(BuildContext context) =>
+      getScreenSizeType(context) == ScreenSizeType.tablet;
 
   /// Verifica se é uma tela grande (desktop)
-  bool isDesktopScreen(BuildContext context) {
-    return getScreenSize(context) == ScreenSize.desktop;
-  }
+  bool isDesktopScreen(BuildContext context) =>
+      getScreenSizeType(context) == ScreenSizeType.desktop;
 
   /// Obtém margem responsiva
   double getResponsiveMargin(BuildContext context) {
-    final screenSize = getScreenSize(context);
+    final screenSize = getScreenSizeType(context);
     return OverlayResponsiveConfig.getMargin(screenSize);
   }
 
   /// Obtém padding responsivo
   double getResponsivePadding(BuildContext context) {
-    final screenSize = getScreenSize(context);
+    final screenSize = getScreenSizeType(context);
     return OverlayResponsiveConfig.getPadding(screenSize);
   }
 
   /// Obtém tamanho de fonte base responsivo
   double getResponsiveBaseFontSize(BuildContext context) {
-    final screenSize = getScreenSize(context);
+    final screenSize = getScreenSizeType(context);
     return OverlayResponsiveConfig.getBaseFontSize(screenSize);
   }
 
   /// Obtém tamanho de fonte de título responsivo
   double getResponsiveTitleFontSize(BuildContext context) {
-    final screenSize = getScreenSize(context);
+    final screenSize = getScreenSizeType(context);
     return OverlayResponsiveConfig.getTitleFontSize(screenSize);
   }
 
   /// Obtém tamanho de slot responsivo
   double getResponsiveSlotSize(BuildContext context) {
-    final screenSize = getScreenSize(context);
+    final screenSize = getScreenSizeType(context);
     return OverlayResponsiveConfig.getSlotSize(screenSize);
   }
 
   /// Obtém tamanho de slot de equipamento responsivo
   double getResponsiveEquipmentSlotSize(BuildContext context) {
-    final screenSize = getScreenSize(context);
+    final screenSize = getScreenSizeType(context);
     return OverlayResponsiveConfig.getEquipmentSlotSize(screenSize);
   }
 
   /// Obtém espaçamento responsivo
   double getResponsiveSpacing(BuildContext context) {
-    final screenSize = getScreenSize(context);
+    final screenSize = getScreenSizeType(context);
     return OverlayResponsiveConfig.getSpacing(screenSize);
   }
 
   /// Obtém escala responsiva
   double getResponsiveScale(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+    final width = getScreenDimensions(context).width;
     return OverlayResponsiveConfig.getScale(width);
   }
 
   /// Calcula largura responsiva baseada em percentual da tela
   double getResponsiveWidth(BuildContext context, double percentage) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = getScreenDimensions(context).width;
     return screenWidth * percentage;
   }
 
   /// Calcula altura responsiva baseada em percentual da tela
   double getResponsiveHeight(BuildContext context, double percentage) {
-    final screenHeight = MediaQuery.of(context).size.height;
+    final screenHeight = getScreenDimensions(context).height;
     return screenHeight * percentage;
   }
 
@@ -121,20 +122,15 @@ mixin ResponsiveOverlayMixin {
     T? tablet,
     T? desktop,
   }) {
-    final screenSize = getScreenSize(context);
+    final screenSize = getScreenSizeType(context);
     switch (screenSize) {
-      case ScreenSize.mobile:
+      case ScreenSizeType.mobile:
         return mobile;
-      case ScreenSize.tablet:
+      case ScreenSizeType.tablet:
         return tablet ?? mobile;
-      case ScreenSize.desktop:
+      case ScreenSizeType.desktop:
         return desktop ?? tablet ?? mobile;
     }
-  }
-
-  /// Obtém safe area insets
-  EdgeInsets getSafeAreaInsets(BuildContext context) {
-    return MediaQuery.of(context).padding;
   }
 
   /// Calcula posicionamento responsivo

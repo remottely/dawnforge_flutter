@@ -33,7 +33,7 @@ class InventoryOverlay extends StatelessWidget with ResponsiveOverlayMixin {
 
         return LayoutBuilder(
           builder: (context, constraints) =>
-              _InventoryContainer(screenSize: getScreenSize(context)),
+              _InventoryContainer(screenSize: getScreenSizeType(context)),
         );
       },
     );
@@ -42,7 +42,7 @@ class InventoryOverlay extends StatelessWidget with ResponsiveOverlayMixin {
 
 /// **Container:** Gerencia decoração e layout responsivo
 class _InventoryContainer extends StatelessWidget {
-  final ScreenSize screenSize;
+  final ScreenSizeType screenSize;
 
   const _InventoryContainer({required this.screenSize});
 
@@ -99,7 +99,7 @@ class _InventoryGrid extends StatelessWidget {
     int selectedIndex,
     HandItem? equippedItem,
   ) {
-    final isDesktop = config.screenSize == ScreenSize.desktop;
+    final isDesktop = config.screenSize == ScreenSizeType.desktop;
 
     return SingleChildScrollView(
       scrollDirection: isDesktop ? Axis.horizontal : Axis.vertical,
@@ -329,7 +329,7 @@ class _SlotQuantityIndicator extends StatelessWidget {
 
 /// **Config Responsivo:** Centraliza valores de padding, spacing, tamanhos, etc.
 class _ResponsiveConfig {
-  final ScreenSize screenSize;
+  final ScreenSizeType screenSize;
 
   late final double padding;
   late final double spacing;
@@ -349,7 +349,7 @@ class _ResponsiveConfig {
     const borderColor = Color(0xff68280d);
     final borderWidth = _getBorderWidth();
 
-    return screenSize == ScreenSize.desktop
+    return screenSize == ScreenSizeType.desktop
         ? Border(
             left: BorderSide(color: borderColor, width: borderWidth),
             top: BorderSide(color: borderColor, width: borderWidth),
@@ -362,11 +362,11 @@ class _ResponsiveConfig {
 
   double _getBorderWidth() {
     switch (screenSize) {
-      case ScreenSize.mobile:
+      case ScreenSizeType.mobile:
         return 3.0;
-      case ScreenSize.tablet:
+      case ScreenSizeType.tablet:
         return 5.0;
-      case ScreenSize.desktop:
+      case ScreenSizeType.desktop:
         return 6.0;
     }
   }

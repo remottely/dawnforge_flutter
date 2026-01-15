@@ -1,6 +1,6 @@
 import 'package:dawnforge/gameplay/core/modules/input_actions/keyboard_setup.dart';
-import 'package:dawnforge/shared/design_system/widgets/atoms/dd_dialog_widget.dart';
-import 'package:dawnforge/shared/design_system/widgets/atoms/dd_text.dart';
+import 'package:dawnforge/shared/design_system_old/widgets/atoms/dd_dialog_widget.dart';
+import 'package:dawnforge/shared/design_system_old/widgets/atoms/dd_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
