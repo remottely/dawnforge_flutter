@@ -16,7 +16,7 @@ final class FarmActionService {
     GameLogger.info('[FarmActionService] Attempting to till soil at ($x, $y)');
 
     final success = getIt<TillSoilUseCase>().call(x, y);
-    // final success = getIt<FarmManager>().tillSoil(x, y);
+    // final success = FarmManager.instance.tillSoil(x, y);
 
     if (success) {
       GameLogger.info('[FarmActionService] ✅ Soil tilled successfully');
@@ -30,7 +30,7 @@ final class FarmActionService {
   FarmActionResult waterTile(int x, int y) {
     GameLogger.info('[FarmActionService] Attempting to water tile at ($x, $y)');
 
-    final success = getIt<FarmManager>().waterTile(x, y);
+    final success = FarmManager.instance.waterTile(x, y);
 
     if (success) {
       GameLogger.info('[FarmActionService] ✅ Tile watered successfully');
@@ -47,7 +47,7 @@ final class FarmActionService {
       '[FarmActionService] Attempting to plant ${crop.id} at ($x, $y)',
     );
 
-    final success = getIt<FarmManager>().plantSeed(x, y, crop);
+    final success = FarmManager.instance.plantSeed(x, y, crop);
 
     if (success) {
       GameLogger.info('[FarmActionService] ✅ Seed planted successfully');
@@ -61,7 +61,7 @@ final class FarmActionService {
   HarvestResult harvestCrop(int x, int y) {
     GameLogger.info('[FarmActionService] Attempting to harvest at ($x, $y)');
 
-    final crop = getIt<FarmManager>().harvestCrop(x, y);
+    final crop = FarmManager.instance.harvestCrop(x, y);
 
     if (crop == null) {
       GameLogger.warning('[FarmActionService] ❌ Nothing to harvest');

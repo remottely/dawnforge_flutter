@@ -108,9 +108,15 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   FarmObject get _farmObject => farmTile.object as FarmObject;
 
   FarmTileView({required Vector2 position})
-    : tileX = (position.x / TileConstants.kTileDimensionStandard).floor(),
-      tileY = (position.y / TileConstants.kTileDimensionStandard).floor(),
-      super(position: position, size: TileConstants.tileSizeStandard) {
+      : tileX = (position.x / TileConstants.kTileDimensionStandard).floor(),
+        tileY = (position.y / TileConstants.kTileDimensionStandard).floor(),
+        super(position: position, size: TileConstants.tileSizeStandard) {
+    final key = _makeKey(tileX, tileY);
+    if (_instances.containsKey(key)) {
+      // Já existe uma instância para este tile, não cria outra
+      GameLogger.warning('[FarmTileView] 🚫 tentativa de criar instância duplicada para ($tileX,$tileY), ignorando.');
+      return;
+    }
     anchor = Anchor.topLeft;
     // Garante que o tile existe no manager
     final existingTile = FarmManager.instance.getTile(tileX, tileY);
@@ -123,6 +129,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
       );
       FarmManager.instance.setTile(newTile);
     }
+    _instances[key] = this;
   }
 
   @override
@@ -152,7 +159,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
     // Carrega a configuração de sprites de solo apenas uma vez
     _soilConfig ??= await SoilSpriteConfig.load();
 
-    farmTile = getIt<FarmManager>().getTile(tileX, tileY)!;
+    farmTile = FarmManager.instance.getTile(tileX, tileY)!;
 
     final soilSprite = await _loadSoilSpriteFromSheet();
     _soilSprite = SpriteComponent(
@@ -263,7 +270,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   void update(double dt) {
     super.update(dt);
 
-    final currentTile = getIt<FarmManager>().getTile(tileX, tileY);
+    final currentTile = FarmManager.instance.getTile(tileX, tileY);
     if (currentTile != null) {
       final currentFarmObject = currentTile.object as FarmObject?;
       final currentCropKey = currentFarmObject != null
@@ -468,7 +475,7 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
     final success = tillSoilUseCase.call(farmTile.x, farmTile.y);
 
     if (success) {
-      final updated = getIt<FarmManager>().getTile(farmTile.x, farmTile.y);
+      final updated = FarmManager.instance.getTile(farmTile.x, farmTile.y);
       if (updated != null) updateTile(updated);
     }
   }

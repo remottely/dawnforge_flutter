@@ -161,7 +161,7 @@ final class GameSaveController {
 
       PlayerStateManager.instance.reset();
       InventoryManager.instance.clear();
-      getIt<FarmManager>().reset();
+      FarmManager.instance.reset();
       WorldStateManager.instance.reset();
 
       GameLogger.info('[GameSaveController] ✅ All managers reset');
