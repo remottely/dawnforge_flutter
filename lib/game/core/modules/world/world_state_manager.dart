@@ -1,6 +1,5 @@
 import 'package:dawnforge/core/utils/game_logger.dart';
 
-import 'package:dawnforge/game/core/modules/time/time_of_day.dart';
 import 'package:dawnforge/game/core/modules/world/map_state_model.dart';
 import 'package:dawnforge/game/core/modules/world/season.dart';
 
@@ -13,8 +12,6 @@ final class WorldStateManager {
 
   Season _currentSeason = Season.spring;
 
-  TimeOfDay _timeOfDay = TimeOfDay.morning;
-
   String? _currentMapId;
 
   final Map<String, MapState> _activeMapStates = {};
@@ -23,8 +20,6 @@ final class WorldStateManager {
 
   Season get currentSeason => _currentSeason;
 
-  TimeOfDay get timeOfDay => _timeOfDay;
-
   String? get currentMapId => _currentMapId;
 
   int get activeMapCount => _activeMapStates.length;
@@ -32,15 +27,6 @@ final class WorldStateManager {
   void setCurrentMap(String mapId) {
     GameLogger.info('[WorldStateManager] Setting current map: $mapId');
     _currentMapId = mapId;
-  }
-
-  void setTimeOfDay(TimeOfDay time) {
-    if (_timeOfDay != time) {
-      GameLogger.info(
-        '[WorldStateManager] Time of day changed: $_timeOfDay -> $time',
-      );
-      _timeOfDay = time;
-    }
   }
 
   void advanceDay() {
@@ -95,7 +81,6 @@ final class WorldStateManager {
     return {
       'currentDay': _currentDay,
       'currentSeason': _currentSeason.toJson(),
-      'timeOfDay': _timeOfDay.toJson(),
       'currentMapId': _currentMapId,
       'mapStates': _activeMapStates.map(
         (mapId, state) => MapEntry(mapId, state.toJson()),
@@ -110,7 +95,6 @@ final class WorldStateManager {
     _currentSeason = Season.fromJson(
       json['currentSeason'] as String? ?? 'spring',
     );
-    _timeOfDay = TimeOfDay.fromJson(json['timeOfDay'] as String? ?? 'morning');
     _currentMapId = json['currentMapId'] as String?;
 
     _activeMapStates.clear();
@@ -132,13 +116,11 @@ final class WorldStateManager {
     GameLogger.info('[WorldStateManager] Resetting world state');
     _currentDay = 1;
     _currentSeason = Season.spring;
-    _timeOfDay = TimeOfDay.morning;
     _currentMapId = null;
     _activeMapStates.clear();
   }
 
   @override
   String toString() =>
-      'WorldState(Day: $_currentDay, Season: $_currentSeason, '
-      'Time: $_timeOfDay, Map: $_currentMapId)';
+      'WorldState(Day: $_currentDay, Season: $_currentSeason, Map: $_currentMapId)';
 }
