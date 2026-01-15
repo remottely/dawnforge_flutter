@@ -3,13 +3,12 @@ import 'package:flutter/material.dart';
 final class DDDesignSystem {
   DDDesignSystem._();
 
-  static const String kTypographyPrimaryFontFamily = 'Normal';
-  static const double kTypographyTinyFontSize = 12.0;
-  static const double kTypographySmallFontSize = 14.0;
-  static const double kTypographyCaptionFontSize = 16.0;
-  static const double kTypographyBodyFontSize = 20.0;
-  static const double kTypographyHeadlineFontSize = 24.0;
-  static const double kTypographyDisplayFontSize = 32.0;
+  static const double kTypographyFontSizeTiny = 12.0;
+  static const double kTypographyFontSizeSmall = 14.0;
+  static const double kTypographyFontSizeCaption = 16.0;
+  static const double kTypographyFontSizeBody = 20.0;
+  // static const double kTypographyFontSizeHeadline = 24.0;
+  static const double kTypographyFontSizeDisplay = 32.0;
 
   static const double kSpacingSuperSmall = 4.0;
   static const double kSpacingExtraSmall = 8.0;
@@ -28,7 +27,6 @@ final class DDDesignSystem {
   // static const double kElevationMedium = 4.0;
   // static const double kElevationLarge = 8.0;
 
-  static const Color kTextColor = Colors.white;
   static const Color kPrimaryBackgroundColor = Color.fromARGB(255, 118, 82, 78);
 
   static const Color kBorderColor = Colors.white;

@@ -12,14 +12,14 @@ class DDButton extends StatelessWidget {
     required this.onPressed,
     super.key,
   }) : backgroundColor = DDDesignSystem.kDialogBackgroundColor,
-       fontSize = DDDesignSystem.kTypographyBodyFontSize;
+       fontSize = DDDesignSystem.kTypographyFontSizeBody;
 
   const DDButton.elevated({
     required this.labelText,
     required this.onPressed,
     super.key,
   }) : backgroundColor = DDDesignSystem.kPrimaryBackgroundColor,
-       fontSize = DDDesignSystem.kTypographyCaptionFontSize;
+       fontSize = DDDesignSystem.kTypographyFontSizeCaption;
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +40,6 @@ class DDButton extends StatelessWidget {
       child: Text(
         labelText,
         style: TextStyle(
-          color: DDDesignSystem.kTextColor,
-          fontFamily: DDDesignSystem.kTypographyPrimaryFontFamily,
           fontSize: fontSize,
         ),
       ),

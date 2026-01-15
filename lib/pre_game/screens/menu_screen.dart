@@ -77,8 +77,8 @@ class _Title extends StatelessWidget {
       'Greenleaf Valley',
       style: TextStyle(
         color: Colors.white,
-        fontFamily: DDDesignSystem.kTypographyPrimaryFontFamily,
-        fontSize: DDDesignSystem.kTypographyDisplayFontSize,
+        
+        fontSize: DDDesignSystem.kTypographyFontSizeDisplay,
       ),
     );
   }
@@ -122,8 +122,8 @@ class _StartButton extends StatelessWidget {
             GameplayStringsLocation.instance.getString('play_cap'),
             style: const TextStyle(
               color: Colors.white,
-              fontFamily: DDDesignSystem.kTypographyPrimaryFontFamily,
-              fontSize: DDDesignSystem.kTypographyCaptionFontSize,
+              
+              fontSize: DDDesignSystem.kTypographyFontSizeCaption,
             ),
           ),
         ),
@@ -192,8 +192,7 @@ class _Footer extends StatelessWidget {
                     GameplayStringsLocation.instance.getString('powered_by'),
                     style: const TextStyle(
                       color: Colors.white,
-                      fontFamily: DDDesignSystem.kTypographyPrimaryFontFamily,
-                      fontSize: DDDesignSystem.kTypographyTinyFontSize,
+                      fontSize: DDDesignSystem.kTypographyFontSizeTiny,
                     ),
                   ),
                   InkWell(
@@ -205,8 +204,7 @@ class _Footer extends StatelessWidget {
                       style: TextStyle(
                         decoration: TextDecoration.underline,
                         color: Colors.blue,
-                        fontFamily: DDDesignSystem.kTypographyPrimaryFontFamily,
-                        fontSize: DDDesignSystem.kTypographyTinyFontSize,
+                        fontSize: DDDesignSystem.kTypographyFontSizeTiny,
                       ),
                     ),
                   ),
@@ -221,8 +219,7 @@ class _Footer extends StatelessWidget {
                     GameplayStringsLocation.instance.getString('built_with'),
                     style: const TextStyle(
                       color: Colors.white,
-                      fontFamily: DDDesignSystem.kTypographyPrimaryFontFamily,
-                      fontSize: DDDesignSystem.kTypographyTinyFontSize,
+                      fontSize: DDDesignSystem.kTypographyFontSizeTiny,
                     ),
                   ),
                   InkWell(
@@ -234,8 +231,7 @@ class _Footer extends StatelessWidget {
                       style: TextStyle(
                         decoration: TextDecoration.underline,
                         color: Colors.blue,
-                        fontFamily: DDDesignSystem.kTypographyPrimaryFontFamily,
-                        fontSize: DDDesignSystem.kTypographyTinyFontSize,
+                        fontSize: DDDesignSystem.kTypographyFontSizeTiny,
                       ),
                     ),
                   ),

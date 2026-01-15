@@ -590,6 +590,7 @@ MVP focado no **loop essencial de farming**: **plantar → regar → colher → 
 ---
 
 # Questões pré MVP:
+- corrigir joystick nao funcionando ao inicializar jogo, singleton initialize??
 estou clonando stardew valley, essa arquitetura faz sentido? me sugira arquiteturas robustas porem boas para se manter como dev solo o jogo inteiro nos proximos 2 anos!
 app
 - main.dart

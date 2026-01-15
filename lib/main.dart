@@ -44,7 +44,9 @@ final class AppRoot extends StatelessWidget {
       debugIsOn: AppEnvironment.kIsDevToolsMode ? false : false,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(fontFamily: 'Normal'),
+        // theme: ThemeData(fontFamily: 'Pixel'),
+        themeMode: ThemeMode.dark,
+        darkTheme: ThemeData(fontFamily: 'Pixel'),
         home: MenuScreen(),
         supportedLocales: GameplayLocalizationsDelegate.supportedLocales(),
         localizationsDelegates: [

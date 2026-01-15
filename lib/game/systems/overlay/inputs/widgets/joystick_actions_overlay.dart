@@ -35,7 +35,7 @@ class JoystickActionsOverlay extends ResponsiveOverlayBase {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              // Secondary attack button - only visible with ironSword
+              // Secondary attack button - only visible with ironSword // TODO(Kevin): NOW NOW - remove it
               if (hasIronSword) ...[
                 _buildActionButton(
                   context: context,

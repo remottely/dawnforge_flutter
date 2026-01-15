@@ -54,9 +54,6 @@ class DDRadioButton<T> extends StatelessWidget {
   }
 
   Widget _buildLabel() {
-    return Text(
-      label!,
-      style: const TextStyle(color: DDDesignSystem.kTextColor),
-    );
+    return Text(label!, style: TextStyle(color: Colors.white));
   }
 }
