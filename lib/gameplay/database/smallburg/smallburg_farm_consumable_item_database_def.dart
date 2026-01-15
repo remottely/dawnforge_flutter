@@ -1,4 +1,5 @@
 import 'package:dawnforge/gameplay/database/smallburg/smallburg_crop_entity_database_def.dart';
+import 'package:dawnforge/gameplay/database/smallburg/smallburg_database_def.dart';
 import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_quality.dart';
 import 'package:dawnforge/gameplay/inventory/entities/enums/loot_category.dart';
@@ -6,8 +7,8 @@ import 'package:dawnforge/gameplay/inventory/entities/enums/season.dart';
 import 'package:dawnforge/gameplay/inventory/entities/data/item_icon_data.dart';
 import 'package:dawnforge/gameplay/inventory/items/harvest_loot_item.dart';
 
-const vegetableColumn = 7;
-const treeColumn = 13;
+const _vegetableColumn = 7;
+const _treeColumn = 13;
 
 // int _getSpriteRowIndex(int rowIndex) {
 //   return (rowIndex * 2) + 1;
@@ -26,11 +27,11 @@ final class SmallBurgHarvestLootItemDatabaseDef {
       healthRestore: 8,
       staminaRestore: 8,
       iconData: ItemIconData(
-        spritesheetPath: 'tiled/SmallBurg/texture_atlas_grid_tiles.png',
+        spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
         spriteWidth: 16,
         spriteHeight: 16,
         spriteRowIndex: (radishSpriteRowIndex * 2) + 1,
-        spriteColumnIndex: vegetableColumn,
+        spriteColumnIndex: _vegetableColumn,
       ),
       category: LootCategory.vegetable,
       regrowthDays: 0,
@@ -45,11 +46,11 @@ final class SmallBurgHarvestLootItemDatabaseDef {
       healthRestore: 10,
       staminaRestore: 10,
       iconData: ItemIconData(
-        spritesheetPath: 'tiled/SmallBurg/texture_atlas_grid_tiles.png',
+        spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
         spriteWidth: 16,
         spriteHeight: 16,
         spriteRowIndex: (strawberrySpriteRowIndex * 2) + 1,
-        spriteColumnIndex: vegetableColumn,
+        spriteColumnIndex: _vegetableColumn,
       ),
       category: LootCategory.vegetable,
       regrowthDays: 0,
@@ -64,11 +65,11 @@ final class SmallBurgHarvestLootItemDatabaseDef {
       healthRestore: 12,
       staminaRestore: 12,
       iconData: ItemIconData(
-        spritesheetPath: 'tiled/SmallBurg/texture_atlas_grid_tiles.png',
+        spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
         spriteWidth: 16,
         spriteHeight: 16,
         spriteRowIndex: (tomatoSpriteRowIndex * 2) + 1,
-        spriteColumnIndex: vegetableColumn,
+        spriteColumnIndex: _vegetableColumn,
       ),
       category: LootCategory.vegetable,
       regrowthDays: 0,
@@ -83,11 +84,11 @@ final class SmallBurgHarvestLootItemDatabaseDef {
       healthRestore: 8,
       staminaRestore: 8,
       iconData: ItemIconData(
-        spritesheetPath: 'tiled/SmallBurg/texture_atlas_grid_tiles.png',
+        spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
         spriteWidth: 16,
         spriteHeight: 16,
         spriteRowIndex: (appleSpriteRowIndex * 2) + 1,
-        spriteColumnIndex: treeColumn,
+        spriteColumnIndex: _treeColumn,
       ),
       category: LootCategory.vegetable,
       regrowthDays: 0,
@@ -102,7 +103,7 @@ final class SmallBurgHarvestLootItemDatabaseDef {
     //   healthRestore: 8,
     //   staminaRestore: 8,
     //   iconData: ItemIconData(
-    //     spritesheetPath: 'tiled/SmallBurg/texture_atlas_grid_tiles.png',
+    //     spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
     //     spriteWidth: 16,
     //     spriteHeight: 16,
     //     spriteRowIndex: appleSpriteRowIndex * 2,
@@ -121,7 +122,7 @@ final class SmallBurgHarvestLootItemDatabaseDef {
     //   healthRestore: 10,
     //   staminaRestore: 10,
     //   iconData: ItemIconData(
-    //     spritesheetPath: 'tiled/SmallBurg/texture_atlas_grid_tiles.png',
+    //     spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
     //     spriteWidth: 16,
     //     spriteHeight: 16,
     //     spriteRowIndex: strawberrySpriteRowIndex * 2,
@@ -140,7 +141,7 @@ final class SmallBurgHarvestLootItemDatabaseDef {
     //   healthRestore: 12,
     //   staminaRestore: 12,
     //   iconData: ItemIconData(
-    //     spritesheetPath: 'tiled/SmallBurg/texture_atlas_grid_tiles.png',
+    //     spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
     //     spriteWidth: 16,
     //     spriteHeight: 16,
     //     spriteRowIndex: tomatoSpriteRowIndex * 2,

@@ -1,3 +1,4 @@
+import 'package:dawnforge/gameplay/database/smallburg/smallburg_database_def.dart';
 import 'package:dawnforge/gameplay/inventory/entities/data/item_icon_data.dart';
 
 final class SmallBurgSoilStateSpriteDatabaseDef {
@@ -5,28 +6,28 @@ final class SmallBurgSoilStateSpriteDatabaseDef {
 
   static const Map<String, ItemIconData> soilStateSpriteList = {
     'untilled': ItemIconData(
-      spritesheetPath: 'tiled/SmallBurg/texture_atlas_grid_tiles.png',
+      spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
       spriteWidth: 16,
       spriteHeight: 16,
       spriteRowIndex: 109,
       spriteColumnIndex: 7,
     ),
     'tilled': ItemIconData(
-      spritesheetPath: 'tiled/SmallBurg/texture_atlas_grid_tiles.png',
+      spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
       spriteWidth: 16,
       spriteHeight: 16,
       spriteRowIndex: 104,
       spriteColumnIndex: 14,
     ),
     'watered': ItemIconData(
-      spritesheetPath: 'tiled/SmallBurg/texture_atlas_grid_tiles.png',
+      spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
       spriteWidth: 16,
       spriteHeight: 16,
       spriteRowIndex: 104,
       spriteColumnIndex: 15,
     ),
     'fertilized': ItemIconData(
-      spritesheetPath: 'tiled/SmallBurg/texture_atlas_grid_tiles.png',
+      spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
       spriteWidth: 16,
       spriteHeight: 16,
       spriteRowIndex: 2,

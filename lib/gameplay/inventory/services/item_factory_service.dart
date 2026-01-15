@@ -10,9 +10,9 @@ import '../entities/hand_item.dart';
 import '../items/seed_bag_item.dart';
 import '../entities/enums/hand_item_id.dart';
 import '../../database/smallburg/smallburg_weapon_item_database_def.dart';
-import '../../database/modern_farm/modern_farm_tool_item_database_def.dart';
-import '../../database/modern_farm/modern_farm_material_item_database_def.dart';
-import '../../database/modern_farm/modern_farm_seed_bag_item_database_def.dart';
+import '../../database/smallburg/smallburg_tool_item_database_def.dart';
+import '../../database/smallburg/smallburg_material_item_database_def.dart';
+import '../../database/smallburg/smallburg_seed_bag_item_database_def.dart';
 
 /// Service for creating items from JSON database (L2: Factory with JSON database, I2: Service = External)
 class ItemFactoryService {
@@ -33,11 +33,11 @@ class ItemFactoryService {
     try {
       _weapons
         ..clear()
-        ..addAll(SmallBurgWeaponItemDatabaseDef.weapons);
+        ..addAll(SmallBurgWeaponItemDatabaseDef.weaponsItemList);
 
       _tools
         ..clear()
-        ..addAll(ModernFarmToolItemDatabaseDef.toolItemList);
+        ..addAll(SmallBurgToolItemDatabaseDef.toolItemList);
 
       _consumables
         ..clear()
@@ -45,11 +45,11 @@ class ItemFactoryService {
 
       _materials
         ..clear()
-        ..addAll(ModernFarmMaterialItemDatabaseDef.materialItemList);
+        ..addAll(SmallBurgMaterialItemDatabaseDef.materialItemList);
 
       _seeds
         ..clear()
-        ..addAll(ModernFarmSeedBagItemDatabaseDef.seedBagList);
+        ..addAll(SmallBurgSeedBagItemDatabaseDef.seedBagList);
 
       final totalItems =
           _weapons.length +

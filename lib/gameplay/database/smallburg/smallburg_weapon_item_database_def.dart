@@ -1,3 +1,4 @@
+import 'package:dawnforge/gameplay/database/smallburg/smallburg_database_def.dart';
 import 'package:dawnforge/gameplay/inventory/items/weapon_item.dart';
 import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_quality.dart';
@@ -15,7 +16,7 @@ final class SmallBurgWeaponItemDatabaseDef {
       baseValue: 100,
       damage: 15,
       iconData: ItemIconData(
-        spritesheetPath: 'tiled/SmallBurg/texture_atlas_grid_tiles.png',
+        spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
         spriteWidth: 16,
         spriteHeight: 16,
         spriteRowIndex: 149,
@@ -30,7 +31,7 @@ final class SmallBurgWeaponItemDatabaseDef {
       baseValue: 100,
       damage: 15,
       iconData: ItemIconData(
-        spritesheetPath: 'tiled/SmallBurg/texture_atlas_grid_tiles.png',
+        spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
         spriteWidth: 16,
         spriteHeight: 16,
         spriteRowIndex: 149,
@@ -39,8 +40,8 @@ final class SmallBurgWeaponItemDatabaseDef {
     ),
   };
 
-  /// Enum-keyed view mirroring weaponsByHandType for consumers expecting a mutable map.
-  static final Map<HandItemId, WeaponItem> weapons = {
-    for (final entry in weaponsItemList.entries) entry.key: entry.value,
-  };
+  // /// Enum-keyed view mirroring weaponsByHandType for consumers expecting a mutable map.
+  // static final Map<HandItemId, WeaponItem> weapons = {
+  //   for (final entry in weaponsItemList.entries) entry.key: entry.value,
+  // };
 }

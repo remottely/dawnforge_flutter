@@ -1,10 +1,11 @@
+import 'package:dawnforge/gameplay/database/smallburg/smallburg_database_def.dart';
 import 'package:dawnforge/gameplay/inventory/items/material_item.dart';
 import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_quality.dart';
 import 'package:dawnforge/gameplay/inventory/entities/enums/material_type.dart';
 import 'package:dawnforge/gameplay/inventory/entities/data/item_icon_data.dart';
 
-final class ModernFarmMaterialItemDatabaseDef {
+final class SmallBurgMaterialItemDatabaseDef {
   static const Map<HandItemId, MaterialItem> materialItemList = {
     // HandItemId.wood: MaterialItem(
     //   id: HandItemId.wood,
@@ -54,11 +55,11 @@ final class ModernFarmMaterialItemDatabaseDef {
       baseValue: 0,
       materialType: MaterialType.key,
       iconData: ItemIconData(
-        spritesheetPath: 'tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png',
+        spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
         spriteWidth: 16,
         spriteHeight: 16,
-        spriteRowIndex: 6,
-        spriteColumnIndex: 6,
+        spriteRowIndex: 154,
+        spriteColumnIndex: 12,
       ),
     ),
     // HandItemId.wheat_item: MaterialItem(

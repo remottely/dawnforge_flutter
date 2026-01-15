@@ -1,3 +1,4 @@
+import 'package:dawnforge/gameplay/database/smallburg/smallburg_database_def.dart';
 import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:dawnforge/gameplay/inventory/entities/enums/season.dart';
 
@@ -25,10 +26,10 @@ final class SmallBurgCropEntityDatabaseDef {
       yieldAmount: 5,
       harvestItemId: HandItemId.radish_loot_item,
       requiredSeason: SeasonType.any,
-      spritesheetPath: 'tiled/SmallBurg/texture_atlas_grid_tiles.png',
+      spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
       spriteWidth: 16,
       spriteHeight: 32,
-      spriteRowIndex: 2,
+      spriteRowIndex: radishSpriteRowIndex,
       framesCount: 5,
       skipFirstFrames: 0,
       ySortingFromStage: CropStageType.budding,
@@ -52,7 +53,7 @@ final class SmallBurgCropEntityDatabaseDef {
       yieldAmount: 5,
       harvestItemId: HandItemId.strawberry_loot_item,
       requiredSeason: SeasonType.any,
-      spritesheetPath: 'tiled/SmallBurg/texture_atlas_grid_tiles.png',
+      spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
       spriteWidth: 16,
       spriteHeight: 32,
       spriteRowIndex: strawberrySpriteRowIndex,
@@ -72,7 +73,7 @@ final class SmallBurgCropEntityDatabaseDef {
       yieldAmount: 5,
       harvestItemId: HandItemId.tomato_loot_item,
       requiredSeason: SeasonType.summer,
-      spritesheetPath: 'tiled/SmallBurg/texture_atlas_grid_tiles.png',
+      spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
       spriteWidth: 16,
       spriteHeight: 32,
       spriteRowIndex: tomatoSpriteRowIndex,
@@ -99,7 +100,7 @@ final class SmallBurgCropEntityDatabaseDef {
       yieldAmount: 4,
       harvestItemId: HandItemId.apple_loot_item,
       requiredSeason: SeasonType.any,
-      spritesheetPath: 'tiled/SmallBurg/texture_atlas_grid_tiles.png',
+      spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
       spriteWidth: 16,
       spriteHeight: 32,
       spriteRowIndex: appleSpriteRowIndex,
