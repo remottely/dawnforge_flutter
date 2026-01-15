@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/core/systems/game/tile_constants.dart';
-import 'package:dawnforge/game/core/systems/ui/conversation_def.dart';
-import 'package:dawnforge/game/core/utils/hitbox_utils.dart';
+import 'package:dawnforge/game/systems/game/tile_constants.dart';
+import 'package:dawnforge/game/systems/ui/conversation_def.dart';
+import 'package:dawnforge/game/utils/hitbox_utils.dart';
 import 'package:dawnforge/shared/utils/sprite_animation_config_helper.dart';
 
 final class DoorDecorationDef {

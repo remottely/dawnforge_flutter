@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/core/systems/input_actions/input_def.dart';
-import 'package:dawnforge/game/core/systems/ui/emote_manager.dart';
+import 'package:dawnforge/game/systems/input_actions/input_def.dart';
+import 'package:dawnforge/game/systems/ui/emote_manager.dart';
 import 'package:dawnforge/game/features/game_world/decorations/torch/torch_decoration_config.dart';
 import 'package:dawnforge/game/features/game_world/decorations/torch/torch_decoration_controller.dart';
 import 'package:dawnforge/game/features/game_world/decorations/torch/torch_decoration_model.dart';

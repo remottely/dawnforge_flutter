@@ -7,12 +7,12 @@ import 'package:dawnforge/game/features/game_world/characters/enemies/boss/boss_
 import 'package:dawnforge/game/features/game_world/characters/enemies/imp/imp_enemy_def.dart';
 import 'package:dawnforge/game/features/game_world/characters/enemies/imp/imp_enemy_view.dart';
 import 'package:dawnforge/game/features/game_world/characters/enemies/mini_boss/mini_boss_enemy_view.dart';
-import 'package:dawnforge/game/core/systems/audio/audio_def.dart';
-import 'package:dawnforge/game/core/systems/audio/audio_manager.dart';
-import 'package:dawnforge/game/core/systems/camera/camera_calculations.dart';
-import 'package:dawnforge/game/core/systems/combat/death/character_fx_sprite_animations_def.dart';
-import 'package:dawnforge/game/core/systems/game/tile_constants.dart';
-import 'package:dawnforge/game/core/systems/ui/ui_state_manager.dart';
+import 'package:dawnforge/game/systems/audio/audio_def.dart';
+import 'package:dawnforge/game/systems/audio/audio_manager.dart';
+import 'package:dawnforge/game/systems/camera/camera_calculations.dart';
+import 'package:dawnforge/game/systems/combat/death/character_fx_sprite_animations_def.dart';
+import 'package:dawnforge/game/systems/game/tile_constants.dart';
+import 'package:dawnforge/game/systems/ui/ui_state_manager.dart';
 import 'package:dawnforge/shared/framework/enemies/dd_base_enemy/dd_base_enemy_view.dart';
 import 'package:flutter/material.dart';
 

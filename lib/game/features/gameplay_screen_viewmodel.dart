@@ -16,11 +16,11 @@ import 'package:dawnforge/game/features/game_world/characters/player/smallburg/s
 import 'package:dawnforge/game/features/game_world/characters/player/sunny/sunny_player_controller.dart';
 import 'package:dawnforge/game/features/game_world/characters/player/sunny/sunny_player_def.dart';
 import 'package:dawnforge/game/features/game_world/characters/player/sunny/sunny_player_view.dart';
-import 'package:dawnforge/game/core/systems/combat/shield_defense_input_handler.dart';
-import 'package:dawnforge/game/core/systems/game/game_state_manager.dart';
-import 'package:dawnforge/game/core/systems/game/inventory_input_handler.dart';
-import 'package:dawnforge/game/core/systems/game/player_state_manager.dart';
-import 'package:dawnforge/game/core/systems/save/game_save_controller.dart';
+import 'package:dawnforge/game/systems/combat/shield_defense_input_handler.dart';
+import 'package:dawnforge/game/systems/game/game_state_manager.dart';
+import 'package:dawnforge/game/systems/game/inventory_input_handler.dart';
+import 'package:dawnforge/game/systems/game/player_state_manager.dart';
+import 'package:dawnforge/game/systems/save/game_save_controller.dart';
 import 'package:dawnforge/game/features/farm/handlers/farm_input_handler.dart';
 import 'package:dawnforge/game/features/gameplay_screen.dart';
 import 'package:dawnforge/game/features/gameplay_screen_def.dart';

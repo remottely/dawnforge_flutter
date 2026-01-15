@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/game/features/game_world/characters/character_constants.dart';
-import 'package:dawnforge/game/core/systems/game/tile_constants.dart';
-import 'package:dawnforge/game/core/systems/localization/gameplay_strings_location.dart';
-import 'package:dawnforge/game/core/utils/hitbox_utils.dart';
+import 'package:dawnforge/game/systems/game/tile_constants.dart';
+import 'package:dawnforge/game/systems/localization/gameplay_strings_location.dart';
+import 'package:dawnforge/game/utils/hitbox_utils.dart';
 import 'package:dawnforge/shared/utils/sprite_animation_config_helper.dart';
 
 final class ChestDecorationConfig {

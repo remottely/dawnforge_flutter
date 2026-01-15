@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/core/systems/ui/ui_state_manager.dart';
+import 'package:dawnforge/game/systems/ui/ui_state_manager.dart';
 import 'package:dawnforge/game/features/game_world/decorations/door/door_decoration_config.dart';
 import 'package:dawnforge/game/features/game_world/decorations/door_key/door_key_decoration_config.dart';
-import 'package:dawnforge/game/core/systems/ui/dialog/binary_choice_dialog.dart';
+import 'package:dawnforge/game/systems/ui/dialog/binary_choice_dialog.dart';
 import 'package:dawnforge/game/features/inventory/config/inventory_service_locator.dart';
 import 'package:dawnforge/game/features/inventory/managers/equipment_manager.dart';
 import 'package:dawnforge/game/features/inventory/managers/inventory_manager.dart';

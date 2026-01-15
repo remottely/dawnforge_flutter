@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/core/systems/game/tile_constants.dart';
+import 'package:dawnforge/game/systems/game/tile_constants.dart';
 import 'package:dawnforge/game/features/game_world/decorations/decoration_constants.dart';
 import 'package:dawnforge/shared/utils/sprite_animation_config_helper.dart';
 

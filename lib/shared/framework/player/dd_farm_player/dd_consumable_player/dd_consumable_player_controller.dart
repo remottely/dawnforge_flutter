@@ -2,8 +2,8 @@ import 'dart:async' show unawaited;
 import 'package:dawnforge/core/utils/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/core/systems/input_actions/input_def.dart';
-import 'package:dawnforge/game/core/systems/ui/dialog/binary_choice_dialog.dart';
+import 'package:dawnforge/game/systems/input_actions/input_def.dart';
+import 'package:dawnforge/game/systems/ui/dialog/binary_choice_dialog.dart';
 import 'package:dawnforge/game/features/farm/farm_service_locator.dart';
 import 'package:dawnforge/game/features/inventory/items/consumable_item.dart';
 import 'package:dawnforge/game/features/inventory/items/harvest_loot_item.dart';

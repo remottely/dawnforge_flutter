@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/game/features/game_world/characters/npcs/wizard/wizard_npc_model.dart';
 import 'package:dawnforge/game/features/game_world/characters/npcs/wizard/wizard_npc_view.dart';
-import 'package:dawnforge/game/core/systems/audio/audio_manager.dart';
-import 'package:dawnforge/game/core/systems/ui/emote_manager.dart';
+import 'package:dawnforge/game/systems/audio/audio_manager.dart';
+import 'package:dawnforge/game/systems/ui/emote_manager.dart';
 
 class WizardNpcController {
   final WizardNpcModel model;

@@ -629,7 +629,7 @@ UI/HUD/Overlay, me explique a diferenca dessas camadas em um jogo. pois preciso 
     - PausedOverlay
       - GameplayMenu
       - ConversationOverlay
-
+- SettingsManager deve ser o mesmo manager de "pre_game" e "game/"
 - 🟢 Icons_16x16
 - 🟢 1_Terrains_16x16
 - 149
@@ -661,3 +661,4 @@ UI/HUD/Overlay, me explique a diferenca dessas camadas em um jogo. pois preciso 
 - passo a passo tutoriais.
 - botao de pino de mapa para levar o player automaticamente ate o proximo passo do tutorial.
 - recompensas por logar diariamente.
+- classe de progressão de achievements do player

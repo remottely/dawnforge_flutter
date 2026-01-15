@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/pre_game/screens/menu_screen_def.dart';
 import 'package:dawnforge/pre_game/screens/menu_screen_viewmodel.dart';
-import 'package:dawnforge/game/core/systems/localization/gameplay_strings_location.dart';
+import 'package:dawnforge/game/systems/localization/gameplay_strings_location.dart';
 import 'package:dawnforge/shared/design_system_old/dd_design_system.dart';
 import 'package:dawnforge/shared/design_system_old/widgets/atoms/dd_radio_button.dart';
 import 'package:dawnforge/shared/framework/widgets/dd_sprite_animation_widget.dart';

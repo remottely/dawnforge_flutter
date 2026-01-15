@@ -2,7 +2,7 @@ import 'package:dawnforge/core/utils/game_logger.dart';
 import 'dart:ui';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/core/systems/game/tile_constants.dart';
+import 'package:dawnforge/game/systems/game/tile_constants.dart';
 import 'package:dawnforge/game/features/game_world/world/entities/world_entities.dart';
 import 'package:dawnforge/game/features/farm/farm_service_locator.dart';
 import 'package:dawnforge/game/features/farm/managers/farm_manager.dart';

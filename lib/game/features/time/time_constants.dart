@@ -1,4 +1,4 @@
-import 'package:dawnforge/game/core/utils/app_environment.dart';
+import 'package:dawnforge/game/utils/app_environment.dart';
 
 /// Constants for the in-game clock and calendar.
 final class TimeConstants {

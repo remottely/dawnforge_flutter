@@ -1,6 +1,6 @@
 import 'dart:developer' as developer;
 
-import 'package:dawnforge/game/core/utils/app_environment.dart';
+import 'package:dawnforge/game/utils/app_environment.dart';
 
 /// GameLogger: Logger condicional para debug e produção
 /// Ativa logs apenas em builds de debug, ignora em release.

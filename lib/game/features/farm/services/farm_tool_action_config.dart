@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/core/utils/offset_helper.dart';
+import 'package:dawnforge/game/utils/offset_helper.dart';
 import 'package:dawnforge/game/features/farm/components/farm_tile_view.dart';
 import 'package:dawnforge/game/features/farm/constants/farm_feedback_config.dart';
 import 'package:dawnforge/game/features/farm/farm_service_locator.dart' as farm_di;

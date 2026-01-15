@@ -1,7 +1,7 @@
 import 'package:get_it/get_it.dart';
-import 'package:dawnforge/game/core/systems/world/world_state_manager.dart';
-import 'package:dawnforge/game/core/systems/game/player_state_manager.dart';
-import 'package:dawnforge/game/core/systems/save/game_save_controller.dart';
+import 'package:dawnforge/game/systems/world/world_state_manager.dart';
+import 'package:dawnforge/game/systems/game/player_state_manager.dart';
+import 'package:dawnforge/game/systems/save/game_save_controller.dart';
 import 'package:dawnforge/game/features/time/day_state.dart';
 import 'package:dawnforge/game/features/time/time_manager.dart' as new_time;
 

@@ -2,10 +2,10 @@ import 'dart:math';
 import 'package:dawnforge/core/utils/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/core/systems/audio/audio_manager.dart';
-import 'package:dawnforge/game/core/systems/combat/attacks/enemy_primary_attack_def.dart';
-import 'package:dawnforge/game/core/systems/combat/attacks/character_fx_particles_animations_def.dart';
-import 'package:dawnforge/game/core/systems/combat/death/character_fx_sprite_animations_def.dart';
+import 'package:dawnforge/game/systems/audio/audio_manager.dart';
+import 'package:dawnforge/game/systems/combat/attacks/enemy_primary_attack_def.dart';
+import 'package:dawnforge/game/systems/combat/attacks/character_fx_particles_animations_def.dart';
+import 'package:dawnforge/game/systems/combat/death/character_fx_sprite_animations_def.dart';
 import 'package:dawnforge/shared/framework/enemies/dd_base_enemy/dd_base_enemy_controller.dart';
 import 'package:dawnforge/shared/framework/enemies/dd_base_enemy/dd_base_enemy_model.dart';
 import 'package:dawnforge/shared/framework/utils/dd_animation_directional.dart';
