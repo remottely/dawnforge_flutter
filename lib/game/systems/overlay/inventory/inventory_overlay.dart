@@ -13,7 +13,7 @@ import 'package:dawnforge/game/features/market/market_state.dart';
 import 'package:dawnforge/game/features/market/market_manager.dart';
 import 'package:dawnforge/game/systems/game/player_state_manager.dart';
 import 'package:dawnforge/game/systems/overlay/message/message_overlay_service.dart';
-import 'package:dawnforge/shared/overlay_design_system/overlay_design_system_extension.dart';
+import 'package:dawnforge/shared/design_system/theme/app_design_system_extension.dart';
 import 'package:flutter/material.dart';
 
 /// **COMPOSITION CORE:** Entry Point - Gerencia visibilidade e responsividade
@@ -92,7 +92,7 @@ class _InventoryGrid extends StatelessWidget {
     int selectedIndex,
     HandItem? equippedItem,
   ) {
-    final isDesktop = context.overlayDs.screenSize.isDesktop;
+    final isDesktop = context.ds.screenSize.isDesktop;
 
     return SingleChildScrollView(
       scrollDirection: isDesktop ? Axis.horizontal : Axis.vertical,
@@ -333,11 +333,11 @@ class _ResponsiveConfig {
 
   _ResponsiveConfig(this.context) {
     // 🔥 Acessa tokens via extension
-    screenType = context.overlayDs.screenSize.type;
-    padding = context.overlayDs.spacing.padding;
-    spacing = context.overlayDs.spacing.spacing;
-    slotSize = context.overlayDs.sizes.slotSize;
-    baseFontSize = context.overlayDs.typography.baseFontSize;
+    screenType = context.ds.screenSize.type;
+    padding = context.ds.overlaySpacing.padding;
+    spacing = context.ds.overlaySpacing.spacing;
+    slotSize = context.ds.overlaySizes.slotSize;
+    baseFontSize = context.ds.overlayTypography.baseFontSize;
     border = _buildBorder();
   }
 

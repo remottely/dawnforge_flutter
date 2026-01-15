@@ -20,11 +20,8 @@ extension AppDesignSystemExtension on BuildContext {
   bool get isPortrait => screenSize.isPortrait;
   bool get isLandscape => screenSize.isLandscape;
 
-  T responsive<T>({
-    required T mobile,
-    required T tablet,
-    required T desktop,
-  }) {
+
+  T responsive<T>({required T mobile, required T tablet, required T desktop}) {
     final value = ScreenSizeValue<T>(
       mobile: mobile,
       tablet: tablet,
@@ -33,15 +30,63 @@ extension AppDesignSystemExtension on BuildContext {
     return value.get(screenType);
   }
 
-  T responsiveOr<T>({
-    required T mobile,
-    T? tablet,
-    T? desktop,
-  }) {
+  T responsiveOr<T>({required T mobile, T? tablet, T? desktop}) {
     return responsive(
       mobile: mobile,
       tablet: tablet ?? mobile,
       desktop: desktop ?? tablet ?? mobile,
     );
+  }
+
+  OverlayConstraints get overlayConstraints => ds.overlayConstraints;
+
+  EdgeInsets get overlaySafeArea => MediaQuery.of(this).padding;
+  Size get overlayScreenDimensions => MediaQuery.of(this).size;
+
+  double overlayWidth(double percentage) {
+    return overlayScreenDimensions.width * percentage;
+  }
+
+  double overlayHeight(double percentage) {
+    return overlayScreenDimensions.height * percentage;
+  }
+
+  T overlayValueByOrientation<T>({required T portrait, required T landscape}) {
+    return ds.screenSize.isPortrait ? portrait : landscape;
+  }
+
+  T overlayValueByScreenSize<T>({required T mobile, T? tablet, T? desktop}) {
+    return switch (ds.screenSize.type) {
+      ScreenSizeType.mobile => mobile,
+      ScreenSizeType.tablet => tablet ?? mobile,
+      ScreenSizeType.desktop => desktop ?? tablet ?? mobile,
+    };
+  }
+
+  Offset overlayPosition({
+    double? left,
+    double? top,
+    double? right,
+    double? bottom,
+  }) {
+    final size = overlayScreenDimensions;
+    final safeArea = overlaySafeArea;
+
+    double x = 0;
+    double y = 0;
+
+    if (left != null) {
+      x = left + safeArea.left;
+    } else if (right != null) {
+      x = size.width - right - safeArea.right;
+    }
+
+    if (top != null) {
+      y = top + safeArea.top;
+    } else if (bottom != null) {
+      y = size.height - bottom - safeArea.bottom;
+    }
+
+    return Offset(x, y);
   }
 }

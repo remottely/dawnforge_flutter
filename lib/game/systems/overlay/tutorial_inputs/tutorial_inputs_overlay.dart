@@ -5,9 +5,10 @@ import 'package:dawnforge/pre_game/screens/menu_screen.dart';
 import 'package:dawnforge/game/systems/audio/audio_manager.dart';
 import 'package:dawnforge/game/systems/overlay/tutorial_inputs/tutorial_inputs_hud_def.dart';
 import 'package:dawnforge/game/systems/overlay/tutorial_inputs/tutorial_inputs_state.dart';
+import 'package:dawnforge/shared/design_system/theme/app_design_system_extension.dart';
 
-import 'package:dawnforge/shared/overlay_design_system/overlay_design_system_extension.dart';
-import 'package:dawnforge/shared/overlay_design_system/overlay_tokens.dart';
+import 'package:dawnforge/shared/design_system/theme/app_design_system_extension.dart';
+import 'package:dawnforge/shared/design_system/theme/app_tokens.dart';
 import 'package:dawnforge/shared/overlay_design_system/responsive_overlay_base.dart';
 import 'package:dawnforge/shared/design_system/theme/screen_size_info.dart';
 import 'package:dawnforge/core/managers/settings_manager.dart';
@@ -26,9 +27,9 @@ final class TutorialInputsOverlay extends ResponsiveOverlayBase {
   @override
   Widget buildOverlayContent(BuildContext context) {
     // 🔥 Acessa tokens uma única vez
-    final spacing = context.overlayDs.spacing;
-    final typography = context.overlayDs.typography;
-    final screenSize = context.overlayDs.screenSize;
+    final spacing = context.ds.overlaySpacing;
+    final typography = context.ds.overlayTypography;
+    final screenSize = context.ds.screenSize;
 
     final keyBoxWidth = context.overlayValueByScreenSize(
       mobile: 80.0,

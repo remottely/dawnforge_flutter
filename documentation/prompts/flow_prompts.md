@@ -1,824 +1,638 @@
-me gere ambos os codigos completos prontos para copiar e colar:
-/// **InventoryOverlay - Composite Pattern + MVVM**
-/// Sistema de inventário responsivo com suporte a venda no market
-/// Utiliza composition pattern para separar responsabilidades
-import 'package:dawnforge/features/core/modules/hud/responsive/responsive_overlay_mixin.dart';
-import 'package:dawnforge/features/core/modules/hud/responsive/overlay_responsive_config.dart';
-import 'package:dawnforge/features/inventory/managers/equipment_manager.dart';
-import 'package:dawnforge/features/inventory/managers/inventory_manager.dart';
-import 'package:dawnforge/features/inventory/state/equipment_state.dart';
-import 'package:dawnforge/features/inventory/state/inventory_state.dart';
-import 'package:dawnforge/features/inventory/entities/inventory_slot.dart';
-import 'package:dawnforge/features/inventory/entities/hand_item.dart';
-import 'package:dawnforge/features/inventory/widgets/item_sprite_widget.dart';
-import 'package:dawnforge/features/inventory/config/inventory_service_locator.dart';
-import 'package:dawnforge/features/market/market_state.dart';
-import 'package:dawnforge/features/market/market_manager.dart';
-import 'package:dawnforge/features/core/modules/game/player_state_manager.dart';
-import 'package:dawnforge/features/overlay/overlay_message_service.dart';
+hj eu possuo AppDesignSystemProvider e OverlayDesignSystemProvider, porém deveria ser 1 provider só, o AppDesignSystemProvider. O mesmo ocorre para overlay_tokens.dart q deveriam fazer parte de app_tokens.dart. o mesmo vale para AppDesignSystem e OverlayDesignSystem q deveriam estar tudo em AppDesignSystem. unifique para mim o codigo abaixo:
+import 'package:flutter/widgets.dart';
+import 'package:dawnforge/shared/design_system/theme/screen_size_info.dart';
 import 'package:flutter/material.dart';
 
-/// **COMPOSITION CORE:** Entry Point - Gerencia visibilidade e responsividade
-class InventoryOverlay extends StatelessWidget with ResponsiveOverlayMixin {
-  const InventoryOverlay({super.key});
 
-  // @override
-  // String get overlayId => 'inventory';
+@immutable
+final class AppSpacing {
+final ScreenSizeType _screenType;
+const AppSpacing(this._screenType);
 
-  @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder<bool>(
-      valueListenable: InventoryState.instance.isVisible,
-      builder: (context, isVisible, _) {
-        if (!isVisible) return const SizedBox.shrink();
 
-        return LayoutBuilder(
-          builder: (context, constraints) =>
-              _InventoryContainer(screenSize: getScreenSizeType(context)),
-        );
-      },
-    );
-  }
+static const double _superSmall = 2.0;
+static const double _extraSmall = 4.0;
+static const double _small = 8.0;
+static const double _medium = 16.0;
+static const double _large = 24.0;
+static const double _extraLarge = 32.0;
+static const double _superLarge = 48.0;
+
+
+static const _logoValue = ScreenSizeValue<double>(
+mobile: _large,
+tablet: _extraLarge,
+desktop: _superLarge,
+);
+static const _contentValue = ScreenSizeValue<double>(
+mobile: _medium,
+tablet: _large,
+desktop: _extraLarge,
+);
+static const _screenValue = ScreenSizeValue<double>(
+mobile: _medium,
+tablet: _large,
+desktop: _extraLarge,
+);
+static const _textFormFieldValue = ScreenSizeValue<double>(
+mobile: _extraSmall,
+tablet: _small,
+desktop: _small,
+);
+static const _authFormContentValue = ScreenSizeValue<double>(
+mobile: _large,
+tablet: _extraLarge,
+desktop: _superLarge,
+);
+static const _authFormFieldsValue = ScreenSizeValue<double>(
+mobile: _small,
+tablet: _medium,
+desktop: _medium,
+);
+
+
+double get logo => _logoValue.get(_screenType);
+double get content => _contentValue.get(_screenType);
+double get screen => _screenValue.get(_screenType);
+double get textFormField => _textFormFieldValue.get(_screenType);
+double get authFormContent => _authFormContentValue.get(_screenType);
+double get authFormFields => _authFormFieldsValue.get(_screenType);
 }
 
-/// **Container:** Gerencia decoração e layout responsivo
-class _InventoryContainer extends StatelessWidget {
-  final ScreenSizeType screenSize;
 
-  const _InventoryContainer({required this.screenSize});
+@immutable
+final class AppRadius {
+final ScreenSizeType _screenType;
+const AppRadius(this._screenType);
 
-  @override
-  Widget build(BuildContext context) {
-    final config = _ResponsiveConfig(screenSize);
 
-    return Material(
-      child: Container(
-        decoration: BoxDecoration(
-          color: const Color(0xfffebc6e),
-          border: config.border,
-        ),
-        child: _InventoryGrid(config: config),
-      ),
-    );
-  }
+static const double _small = 4.0;
+static const double _medium = 8.0;
+static const double _large = 16.0;
+
+
+static const _textFormFieldValue = ScreenSizeValue<double>(
+mobile: _small,
+tablet: _medium,
+desktop: _medium,
+);
+static const _buttonValue = ScreenSizeValue<double>(
+mobile: _small,
+tablet: _medium,
+desktop: _medium,
+);
+
+
+double get textFormField => _textFormFieldValue.get(_screenType);
+double get button => _buttonValue.get(_screenType);
 }
 
-/// **Grid:** Lista de slots com orientação responsiva
-class _InventoryGrid extends StatelessWidget {
-  final _ResponsiveConfig config;
 
-  const _InventoryGrid({required this.config});
+@immutable
+final class AppSizes {
+final ScreenSizeType _screenType;
+const AppSizes(this._screenType);
 
-  @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder<int>(
-      valueListenable: getIt<EquipmentManager>().selectedSlotIndexNotifier,
-      builder: (context, selectedIndex, _) {
-        return ValueListenableBuilder<List<InventorySlot>>(
-          valueListenable: getIt<InventoryManager>().slotsNotifier,
-          builder: (context, slots, _) {
-            return ValueListenableBuilder<HandItem?>(
-              valueListenable: EquipmentState.instance.equippedItem,
-              builder: (context, equippedItem, _) {
-                return _buildAdaptiveLayout(
-                  context,
-                  slots,
-                  selectedIndex,
-                  equippedItem,
-                );
-              },
-            );
-          },
-        );
-      },
-    );
-  }
 
-  Widget _buildAdaptiveLayout(
-    BuildContext context,
-    List<InventorySlot> slots,
-    int selectedIndex,
-    HandItem? equippedItem,
-  ) {
-    final isDesktop = config.screenSize == ScreenSizeType.desktop;
+static const _iconSmallValue = ScreenSizeValue<double>(
+mobile: 12.0,
+tablet: 16.0,
+desktop: 24.0,
+);
+static const _iconMediumValue = ScreenSizeValue<double>(
+mobile: 16.0,
+tablet: 24.0,
+desktop: 32.0,
+);
+static const _iconLargeValue = ScreenSizeValue<double>(
+mobile: 24.0,
+tablet: 32.0,
+desktop: 40.0,
+);
 
-    return SingleChildScrollView(
-      scrollDirection: isDesktop ? Axis.horizontal : Axis.vertical,
-      child: Flex(
-        direction: isDesktop ? Axis.horizontal : Axis.vertical,
-        mainAxisSize: MainAxisSize.min,
-        children: slots.map((slot) {
-          return _InventorySlotWidget(
-            slot: slot,
-            config: config,
-            isSelected: selectedIndex == slot.index,
-            equippedItem: equippedItem,
-            onTap: () => _handleSlotTap(slot),
-          );
-        }).toList(),
-      ),
-    );
-  }
 
-  void _handleSlotTap(InventorySlot slot) {
-    // Modo venda: Market aberto
-    if (MarketState.instance.isOpen.value) {
-      _handleMarketSale(slot);
-      return;
-    }
+double get minTouchTarget => 44.0;
+double get buttonHeight => 48.0;
 
-    // Modo normal: Seleção de slot
-    getIt<EquipmentManager>().selectSlotIndex(slot.index);
-  }
 
-  void _handleMarketSale(InventorySlot slot) {
-    final messageService = OverlayMessageService.instance;
+double get avatarSmall => 40.0;
+double get avatarMedium => 56.0;
 
-    if (slot.isEmpty || slot.item == null) {
-      messageService.showError('Slot vazio.');
-      return;
-    }
 
-    final player =
-        MarketState.instance.activePlayer.value ??
-        PlayerStateManager.instance.lastPlayerModel;
-
-    if (player == null) {
-      messageService.showError('Player não disponível.');
-      return;
-    }
-
-    final inventoryManager = getIt<InventoryManager>();
-    final marketManager = MarketManager.instance;
-
-    if (!marketManager.canSellItem(slot.item!.id, inventoryManager)) {
-      messageService.showError('Item não vendável no market.');
-      return;
-    }
-
-    final result = marketManager.sellItem(
-      slot.item!.id,
-      1,
-      player,
-      inventoryManager,
-    );
-
-    if (result.success) {
-      messageService.showSuccess(result.message);
-    } else {
-      messageService.showError(result.message);
-    }
-  }
+double get iconSmall => _iconSmallValue.get(_screenType);
+double get iconMedium => _iconMediumValue.get(_screenType);
+double get iconLarge => _iconLargeValue.get(_screenType);
 }
-
-/// **Slot Widget:** Renderiza um slot individual com item e indicadores
-class _InventorySlotWidget extends StatelessWidget {
-  final InventorySlot slot;
-  final _ResponsiveConfig config;
-  final bool isSelected;
-  final HandItem? equippedItem;
-  final VoidCallback onTap;
-
-  const _InventorySlotWidget({
-    required this.slot,
-    required this.config,
-    required this.isSelected,
-    required this.equippedItem,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final slotColor = _getSlotColor();
-
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: config.slotSize * 1.2,
-        height: config.slotSize,
-        decoration: BoxDecoration(color: isSelected ? Colors.white : slotColor),
-        child: Stack(
-          children: [
-            _SlotNumberIndicator(index: slot.index, config: config),
-            if (slot.item != null) ...[
-              _SlotItemIcon(item: slot.item!, config: config),
-              if (slot.quantity > 1)
-                _SlotQuantityIndicator(quantity: slot.quantity, config: config),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  Color _getSlotColor() {
-    final item = slot.item;
-
-    // Item equipado: vermelho
-    if (item != null && equippedItem != null && equippedItem!.id == item.id) {
-      return Colors.red.withValues(alpha: 0.5);
-    }
-
-    // Alternância de cores por índice
-    return slot.index % 2 == 0
-        ? const Color(0xfffebc6e)
-        : const Color(0xfff5aa66);
-  }
-}
-
-/// **Indicador de Número:** Atalho de teclado (1-9, 0, -, +)
-class _SlotNumberIndicator extends StatelessWidget {
-  final int index;
-  final _ResponsiveConfig config;
-
-  const _SlotNumberIndicator({required this.index, required this.config});
-
-  @override
-  Widget build(BuildContext context) {
-    final label = _getSlotLabel();
-
-    if (label == null) return const SizedBox.shrink();
-
-    return Positioned(
-      top: 1,
-      left: 2,
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: config.spacing / 2,
-          vertical: 1,
-        ),
-        decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.7),
-          borderRadius: BorderRadius.circular(2),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: Colors.white.withOpacity(0.9),
-            fontSize: config.baseFontSize - 4,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Normal',
-          ),
-        ),
-      ),
-    );
-  }
-
-  String? _getSlotLabel() {
-    if (index < 9) return '${index + 1}';
-    if (index == 9) return '0';
-    if (index == 10) return '-';
-    if (index == 11) return '+';
-    return null;
-  }
-}
-
-/// **Ícone do Item:** Sprite centralizado
-class _SlotItemIcon extends StatelessWidget {
-  final HandItem item;
-  final _ResponsiveConfig config;
-
-  const _SlotItemIcon({required this.item, required this.config});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(config.spacing),
-        child: ItemSpriteWidget(
-          iconData: item.iconData,
-          size: config.slotSize - (config.spacing * 2),
-        ),
-      ),
-    );
-  }
-}
-
-/// **Indicador de Quantidade:** Badge amarelo com contador
-class _SlotQuantityIndicator extends StatelessWidget {
-  final int quantity;
-  final _ResponsiveConfig config;
-
-  const _SlotQuantityIndicator({required this.quantity, required this.config});
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      bottom: 2,
-      left: 2,
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: config.spacing / 2,
-          vertical: 1,
-        ),
-        decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.7),
-          borderRadius: BorderRadius.circular(2),
-        ),
-        child: Text(
-          'x$quantity',
-          style: TextStyle(
-            color: Colors.yellow,
-            fontSize: config.baseFontSize - 4,
-            fontFamily: 'Normal',
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// **Config Responsivo:** Centraliza valores de padding, spacing, tamanhos, etc.
-class _ResponsiveConfig {
-  final ScreenSizeType screenSize;
-
-  late final double padding;
-  late final double spacing;
-  late final double slotSize;
-  late final double baseFontSize;
-  late final Border border;
-
-  _ResponsiveConfig(this.screenSize) {
-    padding = OverlayResponsiveConfig.getPadding(screenSize);
-    spacing = OverlayResponsiveConfig.getSpacing(screenSize);
-    slotSize = OverlayResponsiveConfig.getSlotSize(screenSize);
-    baseFontSize = OverlayResponsiveConfig.getBaseFontSize(screenSize);
-    border = _buildBorder();
-  }
-
-  Border _buildBorder() {
-    const borderColor = Color(0xff68280d);
-    final borderWidth = _getBorderWidth();
-
-    return screenSize == ScreenSizeType.desktop
-        ? Border(
-            left: BorderSide(color: borderColor, width: borderWidth),
-            top: BorderSide(color: borderColor, width: borderWidth),
-            right: BorderSide(color: borderColor, width: borderWidth),
-          )
-        : Border(
-            right: BorderSide(color: borderColor, width: borderWidth),
-          );
-  }
-
-  double _getBorderWidth() {
-    switch (screenSize) {
-      case ScreenSizeType.mobile:
-        return 3.0;
-      case ScreenSizeType.tablet:
-        return 5.0;
-      case ScreenSizeType.desktop:
-        return 6.0;
-    }
-  }
-}
-import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/features/overlay/overlay_message_widget.dart';
-import 'package:dawnforge/features/core/modules/hud/tutorial_inputs/widgets/tutorial_inputs_overlay.dart';
-import 'package:dawnforge/features/core/modules/hud/responsive/responsive_overlay_mixin.dart';
-import 'package:dawnforge/features/overlay/inventory_overlay.dart';
-import 'package:dawnforge/features/market/market_state.dart';
-import 'package:dawnforge/features/market/widgets/market_panel.dart';
-import 'package:dawnforge/features/core/modules/hud/player_vital_stats/player_vital_stats_overlay.dart';
-import 'package:dawnforge/features/core/modules/hud/debug/debug_overlay.dart';
-import 'package:dawnforge/features/overlay/mobile_inputs_overlay.dart';
-import 'package:dawnforge/features/core/modules/hud/inputs/widgets/joystick_actions_overlay.dart';
-import 'package:dawnforge/features/core/modules/hud/inputs/widgets/fullscreen_button_overlay.dart';
-import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
-import 'package:dawnforge/shared/managers/settings_manager.dart';
-import 'package:dawnforge/features/time/time_manager.dart' as new_time;
-import 'package:dawnforge/features/time/widgets/time_hud_panel.dart';
-import 'package:dawnforge/core/utils/debug_helpers.dart';
+import 'package:dawnforge/shared/design_system/theme/app_tokens.dart';
+import 'package:dawnforge/shared/design_system/theme/screen_size_info.dart';
 import 'package:flutter/material.dart';
 
-/// Overlay unificado que organiza todos os componentes da HUD em um grid 3x3
-/// Grid com proporções: coluna 1 (flex 1), coluna 2 (flex 2), coluna 3 (flex 1)
-/// Linha 1 (flex 1), Linha 2 (flex 2), Linha 3 (flex 1)
-final class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
-  final DDBasePlayerView player;
-  final PlayerController? playerController;
 
-  const UnifiedGameOverlay({
-    super.key,
-    required this.player,
-    this.playerController,
-  });
+final class AppDesignSystem extends InheritedWidget {
+final ScreenSizeInfo screenSize;
+final AppSpacing spacing;
+final AppRadius radius;
+final AppSizes sizes;
+final bool debugIsOn;
 
-  @override
-  Widget build(BuildContext context) {
-    final isDesktop = isDesktopScreen(context);
-    
-    const flexA = 1;
-    const flexB = 6;
-    const flexC = flexA + flexB;
 
-    return IgnorePointer(
-      ignoring: false,
-      child: Row(
-        children: [
-          _LeftArea(
-            flex: flexA,
-            isDesktop: isDesktop,
-          ),
-          _MainArea(
-            flex: flexC,
-            flexA: flexA,
-            flexB: flexB,
-            isDesktop: isDesktop,
-            player: player,
-            playerController: playerController,
-          ),
-        ],
-      ),
-    );
-  }
+const AppDesignSystem({
+super.key,
+required super.child,
+required this.screenSize,
+required this.spacing,
+required this.radius,
+required this.sizes,
+this.debugIsOn = false,
+});
+
+
+static AppDesignSystem of(BuildContext context) {
+final AppDesignSystem? result = context
+.dependOnInheritedWidgetOfExactType<AppDesignSystem>();
+assert(result != null, 'No AppDesignSystem found in context');
+return result!;
 }
 
-/// Área lateral esquerda - Inventário mobile
-final class _LeftArea extends StatelessWidget {
-  final int flex;
-  final bool isDesktop;
 
-  const _LeftArea({
-    required this.flex,
-    required this.isDesktop,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      flex: flex,
-      child: DebugContainer(
-        color: DebugColors.gameplayOverlayLeftArea,
-        child: Container(
-          alignment: Alignment.centerLeft,
-          child: !isDesktop
-              ? const InventoryOverlay()
-              : const SizedBox.shrink(),
-        ),
-      ),
-    );
-  }
+static ScreenSizeInfo screenSizeOf(BuildContext context) {
+return of(context).screenSize;
 }
 
-/// Área principal que contém as 3 linhas (top, middle, bottom)
-final class _MainArea extends StatelessWidget {
-  final int flex;
-  final int flexA;
-  final int flexB;
-  final bool isDesktop;
-  final DDBasePlayerView player;
-  final PlayerController? playerController;
 
-  const _MainArea({
-    required this.flex,
-    required this.flexA,
-    required this.flexB,
-    required this.isDesktop,
-    required this.player,
-    this.playerController,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      flex: flex,
-      child: Column(
-        children: [
-          _TopRow(
-            flexA: flexA,
-            flexB: flexB,
-            player: player,
-          ),
-          _MiddleRow(
-            flexA: flexA,
-            flexB: flexB,
-            playerController: playerController,
-          ),
-          _BottomRow(
-            flexA: flexA,
-            flexB: flexB,
-            isDesktop: isDesktop,
-            player: player,
-            playerController: playerController,
-          ),
-        ],
-      ),
-    );
-  }
+@override
+bool updateShouldNotify(AppDesignSystem oldWidget) {
+return screenSize != oldWidget.screenSize ||
+spacing != oldWidget.spacing ||
+radius != oldWidget.radius ||
+sizes != oldWidget.sizes ||
+debugIsOn != oldWidget.debugIsOn;
+}
 }
 
-/// Linha superior (Top Row)
-final class _TopRow extends StatelessWidget {
-  final int flexA;
-  final int flexB;
-  final DDBasePlayerView player;
 
-  const _TopRow({
-    required this.flexA,
-    required this.flexB,
-    required this.player,
-  });
+final class AppDesignSystemProvider extends StatelessWidget {
+final Widget child;
+final bool debugIsOn;
 
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      flex: flexA,
-      child: Row(
-        children: [
-          _TopCenterArea(
-            flex: flexB,
-            player: player,
-          ),
-          _TopRightArea(flex: flexA),
-        ],
-      ),
+
+const AppDesignSystemProvider({
+super.key,
+required this.child,
+this.debugIsOn = false,
+});
+
+
+@override
+Widget build(BuildContext context) {
+return LayoutBuilder(
+builder: (context, constraints) {
+final mediaQuery = MediaQuery.of(context);
+
+
+    final screenSize = ScreenSizeInfo.fromSize(
+      mediaQuery.size,
+      mediaQuery.orientation,
     );
-  }
+
+    final screenType = screenSize.type;
+    final spacing = AppSpacing(screenType);
+    final radius = AppRadius(screenType);
+    final sizes = AppSizes(screenType);
+
+    return AppDesignSystem(
+      screenSize: screenSize,
+      spacing: spacing,
+      radius: radius,
+      sizes: sizes,
+      debugIsOn: debugIsOn,
+      child: child,
+    );
+  },
+);
+
+}
 }
 
-/// Área central superior - Debug e Mensagens
-final class _TopCenterArea extends StatelessWidget {
-  final int flex;
-  final DDBasePlayerView player;
 
-  const _TopCenterArea({
-    required this.flex,
-    required this.player,
-  });
+final darkTheme = ThemeData(
+useMaterial3: false,
+scaffoldBackgroundColor: Colors.black,
+colorScheme: ColorScheme.dark(primary: Color(0xffef6f3b)),
+);
+import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
+import 'package:flutter/widgets.dart';
+import 'package:dawnforge/shared/design_system/theme/app_tokens.dart';
+import 'package:dawnforge/shared/design_system/theme/screen_size_info.dart';
+import 'package:flutter/material.dart';
 
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      flex: flex,
-      child: DebugContainer(
-        color: DebugColors.gameplayOverlayTopCenterArea,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(width: 8),
-            DebugOverlay(player: player),
-            const SizedBox(width: 8),
-            const OverlayMessageWidget(),
-          ],
-        ),
-      ),
-    );
-  }
+
+extension AppDesignSystemExtension on BuildContext {
+AppDesignSystem get ds => AppDesignSystem.of(this);
+
+
+AppSpacing get spacing => ds.spacing;
+AppRadius get radius => ds.radius;
+AppSizes get sizes => ds.sizes;
+
+
+ScreenSizeInfo get screenSize => ds.screenSize;
+ScreenSizeType get screenType => ds.screenSize.type;
+
+
+bool get isMobile => screenSize.isMobile;
+bool get isTablet => screenSize.isTablet;
+bool get isDesktop => screenSize.isDesktop;
+bool get isPortrait => screenSize.isPortrait;
+bool get isLandscape => screenSize.isLandscape;
+
+
+T responsive<T>({
+required T mobile,
+required T tablet,
+required T desktop,
+}) {
+final value = ScreenSizeValue<T>(
+mobile: mobile,
+tablet: tablet,
+desktop: desktop,
+);
+return value.get(screenType);
 }
 
-/// Área direita superior - Tempo e Fullscreen
-final class _TopRightArea extends StatelessWidget {
-  final int flex;
 
-  const _TopRightArea({required this.flex});
+T responsiveOr<T>({
+required T mobile,
+T? tablet,
+T? desktop,
+}) {
+return responsive(
+mobile: mobile,
+tablet: tablet ?? mobile,
+desktop: desktop ?? tablet ?? mobile,
+);
+}
+}
+/// OverlayTokens - Design Tokens para Overlays de Gameplay
+/// • Valores responsivos otimizados para overlays do jogo
+/// • Segue o padrão do novo AppDesignSystem
+import 'package:flutter/widgets.dart';
+import 'package:dawnforge/shared/design_system/theme/screen_size_info.dart';
 
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      flex: flex,
-      child: DebugContainer(
-        color: DebugColors.gameplayOverlayTopRightArea,
-        child: Container(
-          alignment: Alignment.topRight,
-          child: Stack(
-            children: [
-              TimeHudPanel(
-                timeManager: new_time.TimeManager.instance,
-              ),
-              const Align(
-                alignment: Alignment.topRight,
-                child: FullscreenButtonOverlay(),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+
+@immutable
+final class OverlaySpacing {
+final ScreenSizeType _screenType;
+const OverlaySpacing(this._screenType);
+
+
+static const double _tiny = 2.0;
+static const double _small = 4.0;
+static const double _medium = 8.0;
+static const double _large = 16.0;
+static const double _extraLarge = 24.0;
+
+
+static const _marginValue = ScreenSizeValue<double>(
+mobile: _medium,
+tablet: _large,
+desktop: _extraLarge,
+);
+
+
+static const _paddingValue = ScreenSizeValue<double>(
+mobile: _small,
+tablet: _medium,
+desktop: _medium,
+);
+
+
+static const _spacingValue = ScreenSizeValue<double>(
+mobile: _small,
+tablet: _medium,
+desktop: _medium,
+);
+
+
+double get margin => _marginValue.get(_screenType);
+double get padding => _paddingValue.get(_screenType);
+double get spacing => _spacingValue.get(_screenType);
 }
 
-/// Linha do meio (Middle Row)
-final class _MiddleRow extends StatelessWidget {
-  final int flexA;
-  final int flexB;
-  final PlayerController? playerController;
 
-  const _MiddleRow({
-    required this.flexA,
-    required this.flexB,
-    this.playerController,
-  });
+@immutable
+final class OverlaySizes {
+final ScreenSizeType _screenType;
+const OverlaySizes(this._screenType);
 
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      flex: flexB,
-      child: Row(
-        children: [
-          _CenterArea(flex: flexB),
-          _CenterRightArea(
-            flex: flexA,
-            playerController: playerController,
-          ),
-        ],
-      ),
-    );
-  }
+
+static const _slotSizeValue = ScreenSizeValue<double>(
+mobile: 52.0,
+tablet: 64.0,
+desktop: 64.0,
+);
+
+
+static const _equipmentSlotSizeValue = ScreenSizeValue<double>(
+mobile: 12.0,
+tablet: 18.0,
+desktop: 24.0,
+);
+
+
+static const _actionButtonValue = ScreenSizeValue<double>(
+mobile: 50.0,
+tablet: 60.0,
+desktop: 60.0,
+);
+
+
+static const _utilityButtonValue = ScreenSizeValue<double>(
+mobile: 40.0,
+tablet: 50.0,
+desktop: 50.0,
+);
+
+
+double get slotSize => _slotSizeValue.get(_screenType);
+double get equipmentSlotSize => _equipmentSlotSizeValue.get(_screenType);
+double get actionButton => _actionButtonValue.get(_screenType);
+double get utilityButton => _utilityButtonValue.get(_screenType);
 }
 
-/// Área central - Tutorial e Market
-final class _CenterArea extends StatelessWidget {
-  final int flex;
 
-  const _CenterArea({required this.flex});
+@immutable
+final class OverlayTypography {
+final ScreenSizeType _screenType;
+const OverlayTypography(this._screenType);
 
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      flex: flex,
-      child: DebugContainer(
-        color: DebugColors.gameplayOverlayCenterArea,
-        child: Container(
-          alignment: Alignment.center,
-          child: Stack(
-            children: [
-              const TutorialInputsOverlay(), // TODO(kevin)
-              _MarketPanelArea(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+
+static const _baseFontSizeValue = ScreenSizeValue<double>(
+mobile: 10.0,
+tablet: 11.0,
+desktop: 12.0,
+);
+
+
+static const _titleFontSizeValue = ScreenSizeValue<double>(
+mobile: 14.0,
+tablet: 16.0,
+desktop: 18.0,
+);
+
+
+double get baseFontSize => _baseFontSizeValue.get(_screenType);
+double get titleFontSize => _titleFontSizeValue.get(_screenType);
 }
 
-/// Área do painel de mercado (Market)
-final class _MarketPanelArea extends StatelessWidget {
-  const _MarketPanelArea();
 
-  @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder<bool>(
-      valueListenable: MarketState.instance.isOpen,
-      builder: (context, isOpen, _) {
-        if (!isOpen) return const SizedBox.shrink();
-        
-        return ValueListenableBuilder(
-          valueListenable: MarketState.instance.activePlayer,
-          builder: (context, player, __) {
-            if (player == null) {
-              return const SizedBox.shrink();
-            }
-            return Align(
-              alignment: Alignment.center,
-              child: MarketPanel(player: player),
-            );
-          },
-        );
-      },
-    );
-  }
+@immutable
+final class OverlayScale {
+final ScreenSizeType _screenType;
+const OverlayScale(this._screenType);
+
+
+static const _scaleValue = ScreenSizeValue<double>(
+mobile: 0.85,
+tablet: 1.0,
+desktop: 1.15,
+);
+
+
+double get scale => _scaleValue.get(_screenType);
 }
 
-/// Área direita central - Mobile Inputs
-final class _CenterRightArea extends StatelessWidget {
-  final int flex;
-  final PlayerController? playerController;
 
-  const _CenterRightArea({
-    required this.flex,
-    this.playerController,
-  });
+@immutable
+final class OverlayConstraints {
+final ScreenSizeType _screenType;
+const OverlayConstraints(this._screenType);
 
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      flex: flex,
-      child: DebugContainer(
-        color: DebugColors.gameplayOverlayCenterRightArea,
-        child: SettingsManager.instance.inputSelected ==
-                InputActionsType.joystick
-            ? MobileInputsOverlay(
-                playerController: playerController,
-              ) // TODO(Kevin)
-            : const SizedBox(
-                width: double.infinity,
-                height: double.infinity,
-              ),
-      ),
-    );
-  }
+
+static const Map<String, BoxConstraints> _baseConstraints = {
+'tutorial_inputs': BoxConstraints(minWidth: 300, maxWidth: 500),
+'mobile_inputs': BoxConstraints(
+minWidth: double.infinity,
+maxWidth: double.infinity,
+),
+'joystick_actions': BoxConstraints(
+minWidth: double.infinity,
+maxWidth: double.infinity,
+),
+};
+
+
+BoxConstraints forOverlay(String overlayId) {
+final base = _baseConstraints[overlayId] ??
+const BoxConstraints(minWidth: 200, maxWidth: 400);
+
+
+// Mobile reduz 15%
+if (_screenType == ScreenSizeType.mobile) {
+  return BoxConstraints(
+    minWidth: base.minWidth == double.infinity 
+        ? double.infinity 
+        : base.minWidth * 0.85,
+    maxWidth: base.maxWidth == double.infinity 
+        ? double.infinity 
+        : base.maxWidth * 0.85,
+    minHeight: base.minHeight,
+    maxHeight: base.maxHeight,
+  );
 }
 
-/// Linha inferior (Bottom Row)
-final class _BottomRow extends StatelessWidget {
-  final int flexA;
-  final int flexB;
-  final bool isDesktop;
-  final DDBasePlayerView player;
-  final PlayerController? playerController;
+return base;
 
-  const _BottomRow({
-    required this.flexA,
-    required this.flexB,
-    required this.isDesktop,
-    required this.player,
-    this.playerController,
-  });
+}
+}
+/// OverlayDesignSystem - Sistema de Design para Overlays de Gameplay
+import 'package:dawnforge/shared/overlay_design_system/overlay_tokens.dart';
+import 'package:dawnforge/shared/design_system/theme/screen_size_info.dart';
+import 'package:flutter/material.dart';
 
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      flex: flexA + 1,
-      child: Row(
-        children: [
-          if (isDesktop)
-            _BottomCenterArea(flex: flexB),
-          _BottomRightArea(
-            flex: flexA,
-            player: player,
-            playerController: playerController,
-          ),
-        ],
-      ),
-    );
-  }
+
+final class OverlayDesignSystem extends InheritedWidget {
+final ScreenSizeInfo screenSize;
+final OverlaySpacing spacing;
+final OverlaySizes sizes;
+final OverlayTypography typography;
+final OverlayScale scale;
+final OverlayConstraints constraints;
+
+
+const OverlayDesignSystem({
+super.key,
+required super.child,
+required this.screenSize,
+required this.spacing,
+required this.sizes,
+required this.typography,
+required this.scale,
+required this.constraints,
+});
+
+
+static OverlayDesignSystem of(BuildContext context) {
+final result = context.dependOnInheritedWidgetOfExactType<OverlayDesignSystem>();
+assert(result != null, 'No OverlayDesignSystem found in context');
+return result!;
 }
 
-/// Área central inferior - Inventário desktop
-final class _BottomCenterArea extends StatelessWidget {
-  final int flex;
 
-  const _BottomCenterArea({required this.flex});
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      flex: flex,
-      child: DebugContainer(
-        color: DebugColors.gameplayOverlayBottomCenterArea,
-        child: Container(
-          alignment: Alignment.bottomCenter,
-          child: const InventoryOverlay(),
-        ),
-      ),
-    );
-  }
+static ScreenSizeInfo screenSizeOf(BuildContext context) {
+return of(context).screenSize;
 }
 
-/// Área direita inferior - Joystick Actions e Vital Stats
-final class _BottomRightArea extends StatelessWidget {
-  final int flex;
-  final DDBasePlayerView player;
-  final PlayerController? playerController;
 
-  const _BottomRightArea({
-    required this.flex,
-    required this.player,
-    this.playerController,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      flex: flex,
-      child: DebugContainer(
-        color: DebugColors.gameplayOverlayBottomRightArea,
-        child: Align(
-          alignment: Alignment.bottomRight,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _JoystickArea(playerController: playerController),
-              PlayerVitalStatsOverlay(player: player),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+@override
+bool updateShouldNotify(OverlayDesignSystem oldWidget) {
+return screenSize != oldWidget.screenSize ||
+spacing != oldWidget.spacing ||
+sizes != oldWidget.sizes ||
+typography != oldWidget.typography ||
+scale != oldWidget.scale ||
+constraints != oldWidget.constraints;
+}
 }
 
-/// Área do Joystick Actions
-final class _JoystickArea extends StatelessWidget {
-  final PlayerController? playerController;
 
-  const _JoystickArea({this.playerController});
+final class OverlayDesignSystemProvider extends StatelessWidget {
+final Widget child;
 
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: SettingsManager.instance.inputSelected ==
-              InputActionsType.joystick
-          ? JoystickActionsOverlay(
-              playerController: playerController,
-            )
-          : const SizedBox(
-              width: double.infinity,
-              height: double.infinity,
-            ),
-    );
-  }
+
+const OverlayDesignSystemProvider({
+super.key,
+required this.child,
+});
+
+
+@override
+Widget build(BuildContext context) {
+final mediaQuery = MediaQuery.of(context);
+
+
+final screenSize = ScreenSizeInfo.fromSize(
+  mediaQuery.size,
+  mediaQuery.orientation,
+);
+
+final screenType = screenSize.type;
+
+return OverlayDesignSystem(
+  screenSize: screenSize,
+  spacing: OverlaySpacing(screenType),
+  sizes: OverlaySizes(screenType),
+  typography: OverlayTypography(screenType),
+  scale: OverlayScale(screenType),
+  constraints: OverlayConstraints(screenType),
+  child: child,
+);
+
+}
+}
+/// Extension para acesso fácil ao OverlayDesignSystem
+import 'package:dawnforge/shared/overlay_design_system/overlay_design_system.dart';
+import 'package:dawnforge/shared/design_system/theme/screen_size_info.dart';
+import 'package:flutter/widgets.dart';
+
+
+extension OverlayDesignSystemExtension on BuildContext {
+OverlayDesignSystem get overlayDesignSystem => OverlayDesignSystem.of(this);
+
+
+EdgeInsets get overlaySafeArea => MediaQuery.of(this).padding;
+Size get overlayScreenDimensions => MediaQuery.of(this).size;
+
+
+double overlayWidth(double percentage) {
+return overlayScreenDimensions.width * percentage;
+}
+
+
+double overlayHeight(double percentage) {
+return overlayScreenDimensions.height * percentage;
+}
+
+
+T overlayValueByOrientation<T>({required T portrait, required T landscape}) {
+return overlayDesignSystem.screenSize.isPortrait ? portrait : landscape;
+}
+
+
+T overlayValueByScreenSize<T>({required T mobile, T? tablet, T? desktop}) {
+return switch (overlayDesignSystem.screenSize.type) {
+ScreenSizeType.mobile => mobile,
+ScreenSizeType.tablet => tablet ?? mobile,
+ScreenSizeType.desktop => desktop ?? tablet ?? mobile,
+};
+}
+
+
+Offset overlayPosition({
+double? left,
+double? top,
+double? right,
+double? bottom,
+}) {
+final size = overlayScreenDimensions;
+final safeArea = overlaySafeArea;
+
+
+double x = 0;
+double y = 0;
+
+if (left != null) {
+  x = left + safeArea.left;
+} else if (right != null) {
+  x = size.width - right - safeArea.right;
+}
+
+if (top != null) {
+  y = top + safeArea.top;
+} else if (bottom != null) {
+  y = size.height - bottom - safeArea.bottom;
+}
+
+return Offset(x, y);
+
+}
+}
+/// ResponsiveOverlayBase - Base para overlays responsivos
+import 'package:dawnforge/shared/overlay_design_system/overlay_design_system_extension.dart';
+import 'package:flutter/widgets.dart';
+
+
+abstract class ResponsiveOverlayBase extends StatelessWidget {
+const ResponsiveOverlayBase({super.key});
+
+
+ValueNotifier<bool> get visibilityNotifier;
+Widget buildOverlayContent(BuildContext context);
+String get overlayId;
+
+
+@override
+Widget build(BuildContext context) {
+return ValueListenableBuilder<bool>(
+valueListenable: visibilityNotifier,
+builder: (context, isVisible, child) {
+if (!isVisible) return const SizedBox.shrink();
+return child!;
+},
+child: _buildOverlay(context),
+);
+}
+
+
+Widget _buildOverlay(BuildContext context) {
+final constraints = context.overlayDesignSystem.constraints.forOverlay(overlayId);
+
+
+Widget content = buildOverlayContent(context);
+
+content = ConstrainedBox(constraints: constraints, child: content);
+
+return SafeArea(child: content);
+
+}
 }

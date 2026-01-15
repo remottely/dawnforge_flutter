@@ -2,12 +2,23 @@ import 'package:dawnforge/shared/design_system/theme/app_tokens.dart';
 import 'package:dawnforge/shared/design_system/theme/screen_size_info.dart';
 import 'package:flutter/material.dart';
 
+/// **AppDesignSystem Unificado**
+/// Contém tokens gerais (App) e tokens de overlays (Overlay)
 final class AppDesignSystem extends InheritedWidget {
   final ScreenSizeInfo screenSize;
+  final bool debugIsOn;
+
+  // 🔥 Tokens Gerais
   final AppSpacing spacing;
   final AppRadius radius;
   final AppSizes sizes;
-  final bool debugIsOn;
+
+  // 🔥 Tokens de Overlays
+  final OverlaySpacing overlaySpacing;
+  final OverlaySizes overlaySizes;
+  final OverlayTypography overlayTypography;
+  final OverlayScale overlayScale;
+  final OverlayConstraints overlayConstraints;
 
   const AppDesignSystem({
     super.key,
@@ -16,12 +27,17 @@ final class AppDesignSystem extends InheritedWidget {
     required this.spacing,
     required this.radius,
     required this.sizes,
+    required this.overlaySpacing,
+    required this.overlaySizes,
+    required this.overlayTypography,
+    required this.overlayScale,
+    required this.overlayConstraints,
     this.debugIsOn = false,
   });
 
   static AppDesignSystem of(BuildContext context) {
-    final AppDesignSystem? result = context
-        .dependOnInheritedWidgetOfExactType<AppDesignSystem>();
+    final AppDesignSystem? result =
+        context.dependOnInheritedWidgetOfExactType<AppDesignSystem>();
     assert(result != null, 'No AppDesignSystem found in context');
     return result!;
   }
@@ -36,10 +52,16 @@ final class AppDesignSystem extends InheritedWidget {
         spacing != oldWidget.spacing ||
         radius != oldWidget.radius ||
         sizes != oldWidget.sizes ||
+        overlaySpacing != oldWidget.overlaySpacing ||
+        overlaySizes != oldWidget.overlaySizes ||
+        overlayTypography != oldWidget.overlayTypography ||
+        overlayScale != oldWidget.overlayScale ||
+        overlayConstraints != oldWidget.overlayConstraints ||
         debugIsOn != oldWidget.debugIsOn;
   }
 }
 
+/// **Provider Unificado**
 final class AppDesignSystemProvider extends StatelessWidget {
   final Widget child;
   final bool debugIsOn;
@@ -62,15 +84,19 @@ final class AppDesignSystemProvider extends StatelessWidget {
         );
 
         final screenType = screenSize.type;
-        final spacing = AppSpacing(screenType);
-        final radius = AppRadius(screenType);
-        final sizes = AppSizes(screenType);
 
         return AppDesignSystem(
           screenSize: screenSize,
-          spacing: spacing,
-          radius: radius,
-          sizes: sizes,
+          // Tokens Gerais
+          spacing: AppSpacing(screenType),
+          radius: AppRadius(screenType),
+          sizes: AppSizes(screenType),
+          // Tokens de Overlays
+          overlaySpacing: OverlaySpacing(screenType),
+          overlaySizes: OverlaySizes(screenType),
+          overlayTypography: OverlayTypography(screenType),
+          overlayScale: OverlayScale(screenType),
+          overlayConstraints: OverlayConstraints(screenType),
           debugIsOn: debugIsOn,
           child: child,
         );
