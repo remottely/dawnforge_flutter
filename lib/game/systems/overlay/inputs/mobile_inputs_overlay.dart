@@ -25,11 +25,6 @@ final class MobileInputsOverlay extends ResponsiveOverlayBase {
       MobileInputsState.instance.isVisible;
 
   @override
-  OverlayPosition getOverlayPosition(BuildContext context) {
-    return OverlayPosition.bottomRight(safeAreaPadding: EdgeInsets.zero);
-  }
-
-  @override
   Widget buildOverlayContent(BuildContext context) {
     // 🔥 Acessa tokens uma única vez
     final sizes = context.overlayDs.sizes;
@@ -41,7 +36,8 @@ final class MobileInputsOverlay extends ResponsiveOverlayBase {
 
     // Estima altura necessária (2 action buttons + utility buttons)
     final utilityButtonsCount = _countUtilityButtons();
-    final estimatedHeight = (buttonSize * 2) + // Action buttons (apenas 2)
+    final estimatedHeight =
+        (buttonSize * 2) + // Action buttons (apenas 2)
         spacing.spacing + // Spacing entre action buttons
         (utilityButtonSize * utilityButtonsCount) + // Utility buttons
         (spacing.spacing * (utilityButtonsCount - 1)) + // Spacing entre utility
@@ -171,10 +167,7 @@ final class MobileInputsOverlay extends ResponsiveOverlayBase {
         decoration: BoxDecoration(
           color: color.withOpacity(0.7),
           borderRadius: BorderRadius.circular(size * 0.2),
-          border: Border.all(
-            color: Colors.white.withOpacity(0.3),
-            width: 2,
-          ),
+          border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.3),

@@ -22,21 +22,13 @@ class JoystickActionsOverlay extends ResponsiveOverlayBase {
       MobileInputsState.instance.isVisible;
 
   @override
-  OverlayPosition getOverlayPosition(BuildContext context) {
-    return OverlayPosition.custom(
-      alignment: Alignment.bottomRight,
-      safeAreaPadding: EdgeInsets.zero,
-    );
-  }
-
-  @override
   Widget buildOverlayContent(BuildContext context) {
     return ValueListenableBuilder<HandItem?>(
       valueListenable: EquipmentState.instance.equippedItem,
       builder: (context, equippedItem, _) {
         final hasIronSword = equippedItem?.id == HandItemId.ironSword;
         final spacing = context.overlayDs.spacing; // 🔥 Extension
-        
+
         return Align(
           alignment: Alignment.bottomRight,
           child: Row(

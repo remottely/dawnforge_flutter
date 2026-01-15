@@ -24,13 +24,6 @@ final class TutorialInputsOverlay extends ResponsiveOverlayBase {
       TutorialInputsState.instance.isVisible;
 
   @override
-  OverlayPosition getOverlayPosition(BuildContext context) {
-    return OverlayPosition.bottomLeft(
-      safeAreaPadding: EdgeInsets.all(context.overlayDs.spacing.margin / 2),
-    );
-  }
-
-  @override
   Widget buildOverlayContent(BuildContext context) {
     // 🔥 Acessa tokens uma única vez
     final spacing = context.overlayDs.spacing;
