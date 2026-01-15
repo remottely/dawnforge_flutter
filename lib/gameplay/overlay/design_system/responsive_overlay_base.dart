@@ -1,5 +1,5 @@
 /// **ResponsiveOverlayBase - Base para overlays responsivos**
-import 'package:dawnforge/overlay_design_system_extension.dart';
+import 'package:dawnforge/gameplay/overlay/design_system/overlay_design_system_extension.dart';
 import 'package:flutter/widgets.dart';
 
 abstract class ResponsiveOverlayBase extends StatelessWidget {

@@ -1,6 +1,6 @@
 // lib/shared/framework/character/behavior/defense_behavior.dart (CORRIGIDO FINAL)
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:dawnforge/gameplay/core/modules/input_actions/input_def.dart';
 import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:dawnforge/shared/framework/character/behavior/character_behavior.dart';

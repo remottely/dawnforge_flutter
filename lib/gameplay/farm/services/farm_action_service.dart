@@ -1,4 +1,4 @@
-import 'package:dawnforge/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 
 import 'package:dawnforge/gameplay/world/entities/objects/farm/crop_entity.dart';
 import 'package:dawnforge/gameplay/farm/managers/farm_manager.dart';

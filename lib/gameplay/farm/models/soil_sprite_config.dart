@@ -1,4 +1,4 @@
-import 'package:dawnforge/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 
 import 'package:dawnforge/gameplay/database/smallburg/smallburg_soil_state_sprite_database_def.dart';
 import 'package:dawnforge/gameplay/inventory/entities/data/item_icon_data.dart';

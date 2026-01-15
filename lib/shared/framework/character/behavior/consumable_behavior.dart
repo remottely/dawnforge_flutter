@@ -1,6 +1,6 @@
 // lib/shared/framework/character/behavior/consumable_behavior.dart (CORRIGIDO)
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:dawnforge/gameplay/core/modules/input_actions/input_def.dart';
 import 'package:dawnforge/gameplay/inventory/config/inventory_service_locator.dart';
 import 'package:dawnforge/gameplay/inventory/managers/inventory_manager.dart';

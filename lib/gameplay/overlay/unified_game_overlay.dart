@@ -1,26 +1,26 @@
+/// **UnifiedGameOverlay - MIGRADO PARA NOVA ARQUITETURA**
+/// Overlay unificado que organiza todos os componentes da HUD em um grid 3x3
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/gameplay/core/modules/overlay/overlay_message_widget.dart';
+import 'package:dawnforge/gameplay/overlay/design_system/overlay_design_system_extension.dart';
+import 'package:dawnforge/gameplay/overlay/overlay_message_widget.dart';
 import 'package:dawnforge/gameplay/core/modules/hud/tutorial_inputs/widgets/tutorial_inputs_overlay.dart';
-import 'package:dawnforge/gameplay/core/modules/hud/responsive/responsive_overlay_mixin.dart';
-import 'package:dawnforge/gameplay/inventory/widgets/inventory_overlay.dart';
+import 'package:dawnforge/gameplay/overlay/inventory_overlay.dart';
 import 'package:dawnforge/gameplay/market/market_state.dart';
 import 'package:dawnforge/gameplay/market/widgets/market_panel.dart';
 import 'package:dawnforge/gameplay/core/modules/hud/player_vital_stats/player_vital_stats_overlay.dart';
 import 'package:dawnforge/gameplay/core/modules/hud/debug/debug_overlay.dart';
-import 'package:dawnforge/gameplay/core/modules/hud/inputs/widgets/mobile_inputs_overlay.dart';
+import 'package:dawnforge/gameplay/overlay/mobile_inputs_overlay.dart';
 import 'package:dawnforge/gameplay/core/modules/hud/inputs/widgets/joystick_actions_overlay.dart';
 import 'package:dawnforge/gameplay/core/modules/hud/inputs/widgets/fullscreen_button_overlay.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:dawnforge/shared/managers/settings_manager.dart';
 import 'package:dawnforge/gameplay/time/time_manager.dart' as new_time;
 import 'package:dawnforge/gameplay/time/widgets/time_hud_panel.dart';
-import 'package:dawnforge/shared/utils/debug_helpers.dart';
+import 'package:dawnforge/core/utils/debug_helpers.dart';
 import 'package:flutter/material.dart';
 
 /// Overlay unificado que organiza todos os componentes da HUD em um grid 3x3
-/// Grid com proporções: coluna 1 (flex 1), coluna 2 (flex 2), coluna 3 (flex 1)
-/// Linha 1 (flex 1), Linha 2 (flex 2), Linha 3 (flex 1)
-final class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
+final class UnifiedGameOverlay extends StatelessWidget {
   final DDBasePlayerView player;
   final PlayerController? playerController;
 
@@ -32,8 +32,9 @@ final class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMix
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = isDesktopScreen(context);
-    
+    // 🔥 Usa extension para verificar se é desktop
+    final isDesktop = context.isOverlayDesktop;
+
     const flexA = 1;
     const flexB = 6;
     const flexC = flexA + flexB;
@@ -270,7 +271,7 @@ final class _CenterArea extends StatelessWidget {
           alignment: Alignment.center,
           child: Stack(
             children: [
-              const TutorialInputsOverlay(), // TODO(kevin)
+              const TutorialInputsOverlay(),
               _MarketPanelArea(),
             ],
           ),
@@ -290,7 +291,7 @@ final class _MarketPanelArea extends StatelessWidget {
       valueListenable: MarketState.instance.isOpen,
       builder: (context, isOpen, _) {
         if (!isOpen) return const SizedBox.shrink();
-        
+
         return ValueListenableBuilder(
           valueListenable: MarketState.instance.activePlayer,
           builder: (context, player, __) {
@@ -328,7 +329,7 @@ final class _CenterRightArea extends StatelessWidget {
                 InputActionsType.joystick
             ? MobileInputsOverlay(
                 playerController: playerController,
-              ) // TODO(Kevin)
+              )
             : const SizedBox(
                 width: double.infinity,
                 height: double.infinity,
@@ -360,8 +361,7 @@ final class _BottomRow extends StatelessWidget {
       flex: flexA + 1,
       child: Row(
         children: [
-          if (isDesktop)
-            _BottomCenterArea(flex: flexB),
+          if (isDesktop) _BottomCenterArea(flex: flexB),
           _BottomRightArea(
             flex: flexA,
             player: player,

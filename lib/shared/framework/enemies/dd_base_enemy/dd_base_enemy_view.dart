@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:dawnforge/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/gameplay/core/modules/audio/audio_manager.dart';

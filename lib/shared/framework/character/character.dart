@@ -1,7 +1,7 @@
 // lib/shared/framework/character/character.dart (CORREÇÃO FINAL)
 import 'dart:async' as async;
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:dawnforge/gameplay/core/modules/ui/emote_manager.dart';
 import 'package:dawnforge/gameplay/market/market_state.dart';
 import 'package:dawnforge/shared/framework/character/behavior/character_behavior.dart';

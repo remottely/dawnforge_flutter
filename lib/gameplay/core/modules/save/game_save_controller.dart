@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 
 import 'package:dawnforge/gameplay/core/modules/game/player_state_manager.dart';
 import 'package:dawnforge/gameplay/core/modules/save/save_data_model.dart';

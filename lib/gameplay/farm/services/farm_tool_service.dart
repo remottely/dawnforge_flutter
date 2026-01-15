@@ -1,4 +1,4 @@
-import 'package:dawnforge/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 
 import '../../inventory/entities/hand_item.dart';
 import '../../inventory/items/seed_bag_item.dart';

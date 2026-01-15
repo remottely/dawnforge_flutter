@@ -1,6 +1,6 @@
 /// **Extension para acesso fácil ao OverlayDesignSystem**
-import 'package:dawnforge/overlay_design_system.dart';
-import 'package:dawnforge/overlay_tokens.dart';
+import 'package:dawnforge/gameplay/overlay/design_system/overlay_design_system.dart';
+import 'package:dawnforge/gameplay/overlay/design_system/overlay_tokens.dart';
 import 'package:dawnforge/shared/design_system/theme/screen_size_info.dart';
 import 'package:flutter/widgets.dart';
 

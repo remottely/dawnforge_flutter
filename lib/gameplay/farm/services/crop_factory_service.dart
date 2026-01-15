@@ -1,4 +1,4 @@
-import 'package:dawnforge/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 
 import 'package:dawnforge/gameplay/database/smallburg/smallburg_crop_entity_database_def.dart';
 

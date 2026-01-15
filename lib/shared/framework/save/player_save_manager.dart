@@ -1,6 +1,6 @@
 // lib/shared/framework/save/player_save_manager.dart (SIMPLIFICADO)
 import 'dart:convert';
-import 'package:dawnforge/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:dawnforge/shared/framework/character/character_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

@@ -1,7 +1,7 @@
 // lib/shared/framework/character/behavior/combat_behavior.dart (COM LOGS DE MOVIMENTO)
 import 'dart:async' as async;
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:dawnforge/gameplay/core/modules/audio/audio_manager.dart';
 import 'package:dawnforge/gameplay/core/modules/camera/camera_fx.dart';
 import 'package:dawnforge/gameplay/core/modules/combat/attacks/character_fireball_attack_def.dart';
@@ -10,7 +10,7 @@ import 'package:dawnforge/gameplay/core/modules/combat/synchronized_attack/synch
 import 'package:dawnforge/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_def.dart';
 import 'package:dawnforge/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:dawnforge/gameplay/core/modules/input_actions/input_def.dart';
-import 'package:dawnforge/gameplay/core/modules/overlay/overlay_message_def.dart';
+import 'package:dawnforge/gameplay/overlay/overlay_message_def.dart';
 import 'package:dawnforge/gameplay/core/utils/offset_helper.dart';
 import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:dawnforge/shared/framework/character/behavior/character_behavior.dart';

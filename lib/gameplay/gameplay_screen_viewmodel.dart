@@ -20,14 +20,13 @@ import 'package:dawnforge/gameplay/core/modules/combat/shield_defense_input_hand
 import 'package:dawnforge/gameplay/core/modules/game/game_state_manager.dart';
 import 'package:dawnforge/gameplay/core/modules/game/inventory_input_handler.dart';
 import 'package:dawnforge/gameplay/core/modules/game/player_state_manager.dart';
-import 'package:dawnforge/gameplay/core/modules/hud/gameplay/gameplay_hud_view.dart';
 import 'package:dawnforge/gameplay/core/modules/save/game_save_controller.dart';
 import 'package:dawnforge/gameplay/farm/handlers/farm_input_handler.dart';
 import 'package:dawnforge/gameplay/gameplay_screen.dart';
 import 'package:dawnforge/gameplay/gameplay_screen_def.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:dawnforge/gameplay/market/market_decoration.dart';
-import 'package:dawnforge/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_model.dart';
 import 'package:dawnforge/shared/utils/ui_sprite_animations_def.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +35,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
     with WidgetsBindingObserver {
   final PlayerStateManager playerStateManager = PlayerStateManager.instance;
 
-  GameplayHUDView gameplayHUD = GameplayHUDView();
+  // GameplayHUDView gameplayHUD = GameplayHUDView();
 
   bool isLoadingSave = true;
 
@@ -303,7 +302,7 @@ DDBasePlayerView buildSmallburgPlayer(Vector2 position) {
       playerController: playerInput,
     );
     gameplayGameStateManager = GameStateManager();
-    gameplayHUD = GameplayHUDView();
+    // gameplayHUD = GameplayHUDView();
     lastMapId = mapId;
   }
 }

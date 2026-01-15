@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:dawnforge/gameplay/core/modules/game/player_state_manager.dart';
 import 'package:dawnforge/gameplay/core/modules/input_actions/keyboard_setup.dart';
-import 'package:dawnforge/gameplay/core/modules/overlay/overlay_message_service.dart';
+import 'package:dawnforge/gameplay/overlay/overlay_message_service.dart';
 import 'package:dawnforge/gameplay/inventory/config/inventory_service_locator.dart';
 import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:dawnforge/gameplay/inventory/entities/hand_item.dart';
@@ -16,7 +16,7 @@ import 'package:dawnforge/gameplay/market/market_state.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:dawnforge/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 
 /// Painel do market exibido dentro do grid da HUD (Quadrante 5).
 class MarketPanel extends StatefulWidget {

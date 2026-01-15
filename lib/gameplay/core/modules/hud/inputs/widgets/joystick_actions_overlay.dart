@@ -1,12 +1,11 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/gameplay/core/modules/hud/inputs/mobile_inputs_state.dart';
-import 'package:dawnforge/trash/responsive_overlay_base.dart';
 import 'package:dawnforge/gameplay/core/modules/input_actions/joysctick_setup.dart';
 import 'package:dawnforge/gameplay/inventory/entities/hand_item.dart';
 import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:dawnforge/gameplay/inventory/state/equipment_state.dart';
-import 'package:dawnforge/overlay_design_system_extension.dart';
-import 'package:dawnforge/responsive_overlay_base.dart';
+import 'package:dawnforge/gameplay/overlay/design_system/overlay_design_system_extension.dart';
+import 'package:dawnforge/gameplay/overlay/design_system/responsive_overlay_base.dart';
 import 'package:flutter/material.dart';
 
 /// Overlay for joystick action buttons (primary and secondary attacks)

@@ -1,4 +1,4 @@
-import 'package:dawnforge/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 
 import 'package:dawnforge/gameplay/inventory/usecases/add_item_use_case.dart';
 

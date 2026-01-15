@@ -1,8 +1,8 @@
-/// **InventoryOverlay - Composite Pattern + MVVM**
+/// **InventoryOverlay - MIGRADO PARA NOVA ARQUITETURA**
 /// Sistema de inventário responsivo com suporte a venda no market
 /// Utiliza composition pattern para separar responsabilidades
-import 'package:dawnforge/gameplay/core/modules/hud/responsive/responsive_overlay_mixin.dart';
-import 'package:dawnforge/gameplay/core/modules/hud/responsive/overlay_responsive_config.dart';
+import 'package:dawnforge/gameplay/overlay/design_system/overlay_design_system_extension.dart';
+import 'package:dawnforge/shared/design_system/theme/screen_size_info.dart';
 import 'package:dawnforge/gameplay/inventory/managers/equipment_manager.dart';
 import 'package:dawnforge/gameplay/inventory/managers/inventory_manager.dart';
 import 'package:dawnforge/gameplay/inventory/state/equipment_state.dart';
@@ -14,15 +14,12 @@ import 'package:dawnforge/gameplay/inventory/config/inventory_service_locator.da
 import 'package:dawnforge/gameplay/market/market_state.dart';
 import 'package:dawnforge/gameplay/market/market_manager.dart';
 import 'package:dawnforge/gameplay/core/modules/game/player_state_manager.dart';
-import 'package:dawnforge/gameplay/core/modules/overlay/overlay_message_service.dart';
+import 'package:dawnforge/gameplay/overlay/overlay_message_service.dart';
 import 'package:flutter/material.dart';
 
 /// **COMPOSITION CORE:** Entry Point - Gerencia visibilidade e responsividade
-class InventoryOverlay extends StatelessWidget with ResponsiveOverlayMixin {
+class InventoryOverlay extends StatelessWidget {
   const InventoryOverlay({super.key});
-
-  // @override
-  // String get overlayId => 'inventory';
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +29,7 @@ class InventoryOverlay extends StatelessWidget with ResponsiveOverlayMixin {
         if (!isVisible) return const SizedBox.shrink();
 
         return LayoutBuilder(
-          builder: (context, constraints) =>
-              _InventoryContainer(screenSize: getScreenSizeType(context)),
+          builder: (context, constraints) => const _InventoryContainer(),
         );
       },
     );
@@ -42,13 +38,11 @@ class InventoryOverlay extends StatelessWidget with ResponsiveOverlayMixin {
 
 /// **Container:** Gerencia decoração e layout responsivo
 class _InventoryContainer extends StatelessWidget {
-  final ScreenSizeType screenSize;
-
-  const _InventoryContainer({required this.screenSize});
+  const _InventoryContainer();
 
   @override
   Widget build(BuildContext context) {
-    final config = _ResponsiveConfig(screenSize);
+    final config = _ResponsiveConfig(context);
 
     return Material(
       child: Container(
@@ -99,7 +93,7 @@ class _InventoryGrid extends StatelessWidget {
     int selectedIndex,
     HandItem? equippedItem,
   ) {
-    final isDesktop = config.screenSize == ScreenSizeType.desktop;
+    final isDesktop = context.isOverlayDesktop;
 
     return SingleChildScrollView(
       scrollDirection: isDesktop ? Axis.horizontal : Axis.vertical,
@@ -329,19 +323,26 @@ class _SlotQuantityIndicator extends StatelessWidget {
 
 /// **Config Responsivo:** Centraliza valores de padding, spacing, tamanhos, etc.
 class _ResponsiveConfig {
-  final ScreenSizeType screenSize;
+  final BuildContext context;
 
   late final double padding;
   late final double spacing;
   late final double slotSize;
   late final double baseFontSize;
   late final Border border;
+  late final ScreenSizeType screenType;
 
-  _ResponsiveConfig(this.screenSize) {
-    padding = OverlayResponsiveConfig.getPadding(screenSize);
-    spacing = OverlayResponsiveConfig.getSpacing(screenSize);
-    slotSize = OverlayResponsiveConfig.getSlotSize(screenSize);
-    baseFontSize = OverlayResponsiveConfig.getBaseFontSize(screenSize);
+  _ResponsiveConfig(this.context) {
+    // 🔥 Acessa tokens via extension
+    final overlaySpacing = context.overlaySpacing;
+    final overlaySizes = context.overlaySizes;
+    final overlayTypography = context.overlayTypography;
+
+    screenType = context.overlayScreenSize.type;
+    padding = overlaySpacing.padding;
+    spacing = overlaySpacing.spacing;
+    slotSize = overlaySizes.slotSize;
+    baseFontSize = overlayTypography.baseFontSize;
     border = _buildBorder();
   }
 
@@ -349,7 +350,7 @@ class _ResponsiveConfig {
     const borderColor = Color(0xff68280d);
     final borderWidth = _getBorderWidth();
 
-    return screenSize == ScreenSizeType.desktop
+    return screenType == ScreenSizeType.desktop
         ? Border(
             left: BorderSide(color: borderColor, width: borderWidth),
             top: BorderSide(color: borderColor, width: borderWidth),
@@ -361,13 +362,10 @@ class _ResponsiveConfig {
   }
 
   double _getBorderWidth() {
-    switch (screenSize) {
-      case ScreenSizeType.mobile:
-        return 3.0;
-      case ScreenSizeType.tablet:
-        return 5.0;
-      case ScreenSizeType.desktop:
-        return 6.0;
-    }
+    return switch (screenType) {
+      ScreenSizeType.mobile => 3.0,
+      ScreenSizeType.tablet => 5.0,
+      ScreenSizeType.desktop => 6.0,
+    };
   }
 }

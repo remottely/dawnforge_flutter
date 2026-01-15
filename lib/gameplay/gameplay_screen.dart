@@ -8,7 +8,7 @@ import 'package:dawnforge/gameplay/core/utils/app_environment.dart';
 import 'package:dawnforge/gameplay/core/utils/color_helper.dart';
 import 'package:dawnforge/gameplay/decorations/map_transition_sensor.dart';
 import 'package:dawnforge/gameplay/farm/handlers/farm_input_handler.dart';
-import 'package:dawnforge/gameplay/core/modules/hud/unified_game_overlay.dart';
+import 'package:dawnforge/gameplay/overlay/unified_game_overlay.dart';
 import 'package:dawnforge/gameplay/gameplay_screen_viewmodel.dart';
 import 'package:dawnforge/gameplay/time/time_manager.dart' as new_time;
 import 'package:flutter/material.dart';
@@ -158,7 +158,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
                 farmInputHandler,
               ],
               hudComponents: const [],
-              interface: gameplayHUD,
+              // interface: gameplayHUD,
               lightingColorGame: mapLightingColor,
               overlayBuilderMap: const {},
               backgroundColor: const Color(0xFF000000),

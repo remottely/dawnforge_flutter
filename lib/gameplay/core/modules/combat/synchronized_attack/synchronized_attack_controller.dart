@@ -1,5 +1,5 @@
 import 'dart:async' as async;
-import 'package:dawnforge/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 import 'dart:math' as math;
 
 import 'package:dawnforge/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_config.dart';

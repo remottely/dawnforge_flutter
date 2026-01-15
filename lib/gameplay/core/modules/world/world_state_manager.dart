@@ -1,4 +1,4 @@
-import 'package:dawnforge/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 
 import 'package:dawnforge/gameplay/core/modules/time/time_of_day.dart';
 import 'package:dawnforge/gameplay/core/modules/world/map_state_model.dart';

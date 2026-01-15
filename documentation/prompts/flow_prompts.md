@@ -1,564 +1,394 @@
-faça a migracao dessas classes para utilizar a nova base de codigo:
-import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/gameplay/core/modules/hud/inputs/mobile_inputs_state.dart';
-import 'package:dawnforge/gameplay/core/modules/hud/responsive/responsive_overlay_base.dart';
-import 'package:dawnforge/gameplay/core/modules/input_actions/joysctick_setup.dart';
-import 'package:dawnforge/gameplay/inventory/entities/hand_item.dart';
-import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
+me gere ambos os codigos completos prontos para copiar e colar:
+/// **InventoryOverlay - Composite Pattern + MVVM**
+/// Sistema de inventário responsivo com suporte a venda no market
+/// Utiliza composition pattern para separar responsabilidades
+import 'package:dawnforge/gameplay/core/modules/hud/responsive/responsive_overlay_mixin.dart';
+import 'package:dawnforge/gameplay/core/modules/hud/responsive/overlay_responsive_config.dart';
+import 'package:dawnforge/gameplay/inventory/managers/equipment_manager.dart';
+import 'package:dawnforge/gameplay/inventory/managers/inventory_manager.dart';
 import 'package:dawnforge/gameplay/inventory/state/equipment_state.dart';
+import 'package:dawnforge/gameplay/inventory/state/inventory_state.dart';
+import 'package:dawnforge/gameplay/inventory/entities/inventory_slot.dart';
+import 'package:dawnforge/gameplay/inventory/entities/hand_item.dart';
+import 'package:dawnforge/gameplay/inventory/widgets/item_sprite_widget.dart';
+import 'package:dawnforge/gameplay/inventory/config/inventory_service_locator.dart';
+import 'package:dawnforge/gameplay/market/market_state.dart';
+import 'package:dawnforge/gameplay/market/market_manager.dart';
+import 'package:dawnforge/gameplay/core/modules/game/player_state_manager.dart';
+import 'package:dawnforge/gameplay/overlay/overlay_message_service.dart';
 import 'package:flutter/material.dart';
 
-/// Overlay for joystick action buttons (primary and secondary attacks)
-class JoystickActionsOverlay extends ResponsiveOverlayBase {
-  final PlayerController? playerController;
+/// **COMPOSITION CORE:** Entry Point - Gerencia visibilidade e responsividade
+class InventoryOverlay extends StatelessWidget with ResponsiveOverlayMixin {
+  const InventoryOverlay({super.key});
 
-  const JoystickActionsOverlay({super.key, this.playerController});
-
-  @override
-  String get overlayId => 'joystick_actions';
+  // @override
+  // String get overlayId => 'inventory';
 
   @override
-  ValueNotifier<bool> get visibilityNotifier =>
-      MobileInputsState.instance.isVisible;
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: InventoryState.instance.isVisible,
+      builder: (context, isVisible, _) {
+        if (!isVisible) return const SizedBox.shrink();
 
-  @override
-  OverlayPosition getOverlayPosition(BuildContext context) {
-    return OverlayPosition.custom(
-      alignment: Alignment.bottomRight,
-      safeAreaPadding: EdgeInsets.zero,
+        return LayoutBuilder(
+          builder: (context, constraints) =>
+              _InventoryContainer(screenSize: getScreenSizeType(context)),
+        );
+      },
     );
   }
+}
+
+/// **Container:** Gerencia decoração e layout responsivo
+class _InventoryContainer extends StatelessWidget {
+  final ScreenSizeType screenSize;
+
+  const _InventoryContainer({required this.screenSize});
 
   @override
-  Widget buildOverlayContent(BuildContext context, ResponsiveOverlayData data) {
-    return ValueListenableBuilder<HandItem?>(
-      valueListenable: EquipmentState.instance.equippedItem,
-      builder: (context, equippedItem, _) {
-        final hasIronSword = equippedItem?.id == HandItemId.ironSword;
+  Widget build(BuildContext context) {
+    final config = _ResponsiveConfig(screenSize);
 
-        return Align(
-          alignment: Alignment.bottomRight,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              // Secondary attack button - only visible with ironSword
-              if (hasIronSword) ...[
-                _buildActionButton(
-                  context: context,
-                  actionId: JoystickSetup.kInteractionId,
-                  assetPath:
-                      'assets/images/joystick/joystick_ranged_attack_default.png',
-                  assetPathPressed:
-                      'assets/images/joystick/joystick_ranged_attack_pressed.png',
-                  size: JoystickSetup.kActionButtonSize,
-                  marginBottom: JoystickSetup.kActionButtonMarginBottom,
-                ),
-                SizedBox(width: data.spacing),
-              ],
-              // Primary attack button - always visible
-              _buildActionButton(
-                context: context,
-                actionId: JoystickSetup.kPrimaryActionId,
-                assetPath:
-                    'assets/images/joystick/joystick_melee_attack_default.png',
-                assetPathPressed:
-                    'assets/images/joystick/joystick_melee_attack_pressed.png',
-                size: JoystickSetup.kActionButtonSize,
-                marginBottom: JoystickSetup.kActionButtonMarginBottom,
-              ),
-            ],
-          ),
+    return Material(
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xfffebc6e),
+          border: config.border,
+        ),
+        child: _InventoryGrid(config: config),
+      ),
+    );
+  }
+}
+
+/// **Grid:** Lista de slots com orientação responsiva
+class _InventoryGrid extends StatelessWidget {
+  final _ResponsiveConfig config;
+
+  const _InventoryGrid({required this.config});
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<int>(
+      valueListenable: getIt<EquipmentManager>().selectedSlotIndexNotifier,
+      builder: (context, selectedIndex, _) {
+        return ValueListenableBuilder<List<InventorySlot>>(
+          valueListenable: getIt<InventoryManager>().slotsNotifier,
+          builder: (context, slots, _) {
+            return ValueListenableBuilder<HandItem?>(
+              valueListenable: EquipmentState.instance.equippedItem,
+              builder: (context, equippedItem, _) {
+                return _buildAdaptiveLayout(
+                  context,
+                  slots,
+                  selectedIndex,
+                  equippedItem,
+                );
+              },
+            );
+          },
         );
       },
     );
   }
 
-  Widget _buildActionButton({
-    required BuildContext context,
-    required String actionId,
-    required String assetPath,
-    required String assetPathPressed,
-    required double size,
-    required double marginBottom,
-  }) {
-    return GestureDetector(
-      onTapDown: (_) => _sendAction(actionId, ActionEvent.DOWN),
-      onTapUp: (_) => _sendAction(actionId, ActionEvent.UP),
-      onTapCancel: () => _sendAction(actionId, ActionEvent.UP),
-      child: Image.asset(
-        assetPath,
-        width: size,
-        height: size,
-        fit: BoxFit.contain,
+  Widget _buildAdaptiveLayout(
+    BuildContext context,
+    List<InventorySlot> slots,
+    int selectedIndex,
+    HandItem? equippedItem,
+  ) {
+    final isDesktop = config.screenSize == ScreenSizeType.desktop;
+
+    return SingleChildScrollView(
+      scrollDirection: isDesktop ? Axis.horizontal : Axis.vertical,
+      child: Flex(
+        direction: isDesktop ? Axis.horizontal : Axis.vertical,
+        mainAxisSize: MainAxisSize.min,
+        children: slots.map((slot) {
+          return _InventorySlotWidget(
+            slot: slot,
+            config: config,
+            isSelected: selectedIndex == slot.index,
+            equippedItem: equippedItem,
+            onTap: () => _handleSlotTap(slot),
+          );
+        }).toList(),
       ),
     );
   }
 
-  void _sendAction(String actionId, ActionEvent event) {
-    if (playerController == null) return;
-
-    playerController!.onJoystickAction(
-      JoystickActionEvent(id: actionId, event: event),
-    );
-  }
-}
-import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/gameplay/core/modules/hud/inputs/mobile_inputs_state.dart';
-import 'package:dawnforge/gameplay/core/modules/hud/responsive/responsive_overlay_base.dart';
-import 'package:dawnforge/gameplay/core/modules/input_actions/joysctick_setup.dart';
-import 'package:dawnforge/gameplay/core/utils/app_environment.dart';
-import 'package:dawnforge/overlay_design_system_extension.dart';
-import 'package:flutter/material.dart';
-
-/// Mobile touch inputs overlay with buttons for all game actions
-final class MobileInputsOverlay extends ResponsiveOverlayBase {
-  final PlayerController? playerController;
-
-  const MobileInputsOverlay({super.key, this.playerController});
-
-  @override
-  String get overlayId => 'mobile_inputs';
-
-  @override
-  ValueNotifier<bool> get visibilityNotifier =>
-      MobileInputsState.instance.isVisible;
-
-  @override
-  OverlayPosition getOverlayPosition(BuildContext context) {
-    return OverlayPosition.bottomRight(safeAreaPadding: EdgeInsets.zero);
-  }
-
-  @override
-  Widget buildOverlayContent(BuildContext context, ResponsiveOverlayData data) {
-    // 🔥 Acessa tokens uma única vez
-    final sizes = context.overlaySizes;
-    final spacing = context.overlaySpacing;
-    final screenHeight = context.overlayScreenDimensions.height;
-
-    final buttonSize = sizes.actionButton;
-    final utilityButtonSize = sizes.utilityButton;
-
-    // // Calcula a altura total necessária para os botões
-    // final buttonSize = data.isMobileScreen ? 50.0 : 60.0;
-    // final utilityButtonSize = data.isMobileScreen ? 40.0 : 50.0;
-    // final spacing = data.spacing;
-
-    // Estima altura necessária (3 action buttons + utility buttons)
-    final utilityButtonsCount = _countUtilityButtons();
-    final estimatedHeight =
-        (buttonSize * 3) + // Action buttons
-        (spacing.spacing * 2) + // Spacing entre action buttons
-        (utilityButtonSize * utilityButtonsCount) + // Utility buttons
-        (spacing.spacing /
-            2 *
-            (utilityButtonsCount - 1)) + // Spacing entre utility buttons
-        (data.margin * 2); // Margens
-
-    // final screenHeight = MediaQuery.of(context).size.height;
-    final needsScroll = estimatedHeight > screenHeight * 0.8;
-
-    // Botões alinhados à direita (sem Stack/Positioned)
-    return Padding(
-      padding: EdgeInsets.all(data.margin),
-      child: needsScroll
-          ? ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: screenHeight * 0.8),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ..._buildUtilityButtons(context, data),
-                    ..._buildActionButtons(context, data),
-                  ],
-                ),
-              ),
-            )
-          : Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ..._buildUtilityButtons(context, data),
-                ..._buildActionButtons(context, data),
-              ],
-            ),
-    );
-  }
-
-  int _countUtilityButtons() {
-    int count = 1; // Esc button sempre visível
-    if (AppEnvironment.kIsDebugMode) count++; // Inv button
-    count++; // Next Day button
-    if (AppEnvironment.kIsDebugMode) {
-      count++; // Items button
-      count++; // Clear button
+  void _handleSlotTap(InventorySlot slot) {
+    // Modo venda: Market aberto
+    if (MarketState.instance.isOpen.value) {
+      _handleMarketSale(slot);
+      return;
     }
-    return count;
+
+    // Modo normal: Seleção de slot
+    getIt<EquipmentManager>().selectSlotIndex(slot.index);
   }
 
-  List<Widget> _buildActionButtons(
-    BuildContext context,
-    ResponsiveOverlayData data,
-  ) {
-    final buttonSize = data.isMobileScreen ? 50.0 : 60.0;
-    final spacing = data.spacing;
+  void _handleMarketSale(InventorySlot slot) {
+    final messageService = OverlayMessageService.instance;
 
-    return [
-      _buildActionButton(
-        context: context,
-        label: 'Interact',
-        icon: Icons.touch_app,
-        size: buttonSize,
-        actionId: JoystickSetup.kInteractionId,
-        color: Colors.green,
-      ),
-      SizedBox(height: spacing),
-      // _buildActionButton(
-      //   context: context,
-      //   label: 'Defense', // 'Secondary'
-      //   icon: Icons.auto_awesome,
-      //   size: buttonSize,
-      //   actionId: JoystickSetup.kSecondaryActionId,
-      //   color: Colors.purple,
-      // ),
-      // SizedBox(height: spacing),
-      _buildActionButton(
-        context: context,
-        label: 'Run',
-        icon: Icons.directions_run,
-        size: buttonSize,
-        actionId: JoystickSetup.kRunId,
-        color: Colors.blue,
-      ),
-    ];
+    if (slot.isEmpty || slot.item == null) {
+      messageService.showError('Slot vazio.');
+      return;
+    }
+
+    final player =
+        MarketState.instance.activePlayer.value ??
+        PlayerStateManager.instance.lastPlayerModel;
+
+    if (player == null) {
+      messageService.showError('Player não disponível.');
+      return;
+    }
+
+    final inventoryManager = getIt<InventoryManager>();
+    final marketManager = MarketManager.instance;
+
+    if (!marketManager.canSellItem(slot.item!.id, inventoryManager)) {
+      messageService.showError('Item não vendável no market.');
+      return;
+    }
+
+    final result = marketManager.sellItem(
+      slot.item!.id,
+      1,
+      player,
+      inventoryManager,
+    );
+
+    if (result.success) {
+      messageService.showSuccess(result.message);
+    } else {
+      messageService.showError(result.message);
+    }
   }
+}
 
-  // Widget _buildEquipmentButtons(
-  //   BuildContext context,
-  //   ResponsiveOverlayData data,
-  // ) {
-  //   final buttonSize = data.isMobileScreen ? 45.0 : 55.0;
-  //   final spacing = data.spacing;
+/// **Slot Widget:** Renderiza um slot individual com item e indicadores
+class _InventorySlotWidget extends StatelessWidget {
+  final InventorySlot slot;
+  final _ResponsiveConfig config;
+  final bool isSelected;
+  final HandItem? equippedItem;
+  final VoidCallback onTap;
 
-  //   return
-  //   // Column(
-  //   //   mainAxisSize: MainAxisSize.min,
-  //   //   crossAxisAlignment: CrossAxisAlignment.start,
-  //   //   children: [
-  //   Row(
-  //     children: [
-  //       _buildActionButton(
-  //         context: context,
-  //         label: 'Prev',
-  //         icon: Icons.arrow_back_ios,
-  //         size: buttonSize,
-  //         actionId: JoystickSetup.kEquipMainHandReverseId,
-  //         color: Colors.orange,
-  //       ),
-  //       SizedBox(width: spacing / 2),
-  //       _buildActionButton(
-  //         context: context,
-  //         label: 'Next',
-  //         icon: Icons.arrow_forward_ios,
-  //         size: buttonSize,
-  //         actionId: JoystickSetup.kEquipMainHandId,
-  //         color: Colors.orange,
-  //       ),
-  //     ],
-  //     // ),
-  //     // SizedBox(height: spacing / 2),
-  //     // _buildActionButton(
-  //     //   context: context,
-  //     //   label: 'Unequip',
-  //     //   icon: Icons.close,
-  //     //   size: buttonSize,
-  //     //   actionId: JoystickSetup.kUnequipMainHandId,
-  //     //   color: Colors.red.shade300,
-  //     // ),
-  //     // ],
-  //   );
-  // }
+  const _InventorySlotWidget({
+    required this.slot,
+    required this.config,
+    required this.isSelected,
+    required this.equippedItem,
+    required this.onTap,
+  });
 
-  List<Widget> _buildUtilityButtons(
-    BuildContext context,
-    ResponsiveOverlayData data,
-  ) {
-    final buttonSize = data.isMobileScreen ? 40.0 : 50.0;
-    final spacing = data.spacing;
+  @override
+  Widget build(BuildContext context) {
+    final slotColor = _getSlotColor();
 
-    return [
-      _buildActionButton(
-        context: context,
-        label: 'Esc',
-        icon: Icons.settings,
-        size: buttonSize,
-        actionId: JoystickSetup.kToggleTutorialInputsId,
-        color: Colors.brown,
-      ),
-      AppEnvironment.kIsDebugMode
-          ? _buildActionButton(
-              context: context,
-              label: 'Inv',
-              icon: Icons.backpack,
-              size: buttonSize,
-              actionId: JoystickSetup.kToggleInventoryId,
-              color: Colors.brown,
-            )
-          : SizedBox.shrink(),
-      // SizedBox(height: spacing / 2),
-      // _buildActionButton(
-      //   context: context,
-      //   label: 'Next Day',
-      //   icon: Icons.wb_sunny,
-      //   size: buttonSize,
-      //   actionId: JoystickSetup.kAdvanceDayId,
-      //   color: Colors.amber,
-      // ),
-      SizedBox(height: spacing / 2),
-      if (AppEnvironment.kIsDebugMode) ...[
-        _buildActionButton(
-          context: context,
-          label: 'Items',
-          icon: Icons.add_box,
-          size: buttonSize,
-          actionId: JoystickSetup.kAddTestItemsId,
-          color: Colors.teal,
-        ),
-        SizedBox(height: spacing / 2),
-      ],
-      AppEnvironment.kIsDebugMode
-          ? _buildActionButton(
-              context: context,
-              label: 'Clear',
-              icon: Icons.delete_forever,
-              size: buttonSize,
-              actionId: JoystickSetup.kClearSaveId,
-              color: Colors.red,
-            )
-          : SizedBox.shrink(),
-    ];
-  }
-
-  Widget _buildActionButton({
-    required BuildContext context,
-    required String label,
-    required IconData icon,
-    required double size,
-    required String actionId,
-    required Color color,
-  }) {
     return GestureDetector(
-      onTapDown: (_) => _sendAction(actionId, ActionEvent.DOWN),
-      onTapUp: (_) => _sendAction(actionId, ActionEvent.UP),
-      onTapCancel: () => _sendAction(actionId, ActionEvent.UP),
+      onTap: onTap,
       child: Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.7),
-          borderRadius: BorderRadius.circular(size * 0.2),
-          border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.3),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        width: config.slotSize * 1.2,
+        height: config.slotSize,
+        decoration: BoxDecoration(color: isSelected ? Colors.white : slotColor),
+        child: Stack(
           children: [
-            Icon(icon, size: size * 0.4, color: Colors.white),
-            if (label.isNotEmpty && size > 45)
-              Padding(
-                padding: const EdgeInsets.only(top: 2),
-                child: Text(
-                  label,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: size * 0.18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+            _SlotNumberIndicator(index: slot.index, config: config),
+            if (slot.item != null) ...[
+              _SlotItemIcon(item: slot.item!, config: config),
+              if (slot.quantity > 1)
+                _SlotQuantityIndicator(quantity: slot.quantity, config: config),
+            ],
           ],
         ),
       ),
     );
   }
 
-  void _sendAction(String actionId, ActionEvent event) {
-    if (playerController == null) return;
+  Color _getSlotColor() {
+    final item = slot.item;
 
-    playerController!.onJoystickAction(
-      JoystickActionEvent(id: actionId, event: event),
+    // Item equipado: vermelho
+    if (item != null && equippedItem != null && equippedItem!.id == item.id) {
+      return Colors.red.withValues(alpha: 0.5);
+    }
+
+    // Alternância de cores por índice
+    return slot.index % 2 == 0
+        ? const Color(0xfffebc6e)
+        : const Color(0xfff5aa66);
+  }
+}
+
+/// **Indicador de Número:** Atalho de teclado (1-9, 0, -, +)
+class _SlotNumberIndicator extends StatelessWidget {
+  final int index;
+  final _ResponsiveConfig config;
+
+  const _SlotNumberIndicator({required this.index, required this.config});
+
+  @override
+  Widget build(BuildContext context) {
+    final label = _getSlotLabel();
+
+    if (label == null) return const SizedBox.shrink();
+
+    return Positioned(
+      top: 1,
+      left: 2,
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: config.spacing / 2,
+          vertical: 1,
+        ),
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.7),
+          borderRadius: BorderRadius.circular(2),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: Colors.white.withOpacity(0.9),
+            fontSize: config.baseFontSize - 4,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Normal',
+          ),
+        ),
+      ),
+    );
+  }
+
+  String? _getSlotLabel() {
+    if (index < 9) return '${index + 1}';
+    if (index == 9) return '0';
+    if (index == 10) return '-';
+    if (index == 11) return '+';
+    return null;
+  }
+}
+
+/// **Ícone do Item:** Sprite centralizado
+class _SlotItemIcon extends StatelessWidget {
+  final HandItem item;
+  final _ResponsiveConfig config;
+
+  const _SlotItemIcon({required this.item, required this.config});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.all(config.spacing),
+        child: ItemSpriteWidget(
+          iconData: item.iconData,
+          size: config.slotSize - (config.spacing * 2),
+        ),
+      ),
     );
   }
 }
-import 'package:dawnforge/app/screens/menu_screen.dart';
-import 'package:dawnforge/gameplay/core/modules/audio/audio_manager.dart';
-import 'package:dawnforge/gameplay/core/modules/hud/tutorial_inputs/tutorial_inputs_hud_def.dart';
-import 'package:dawnforge/gameplay/core/modules/hud/tutorial_inputs/tutorial_inputs_state.dart';
-import 'package:dawnforge/gameplay/core/modules/hud/responsive/responsive_overlay_base.dart';
-import 'package:dawnforge/shared/managers/settings_manager.dart';
-import 'package:flutter/material.dart';
 
-class TutorialInputsOverlay extends ResponsiveOverlayBase {
-  const TutorialInputsOverlay({super.key});
+/// **Indicador de Quantidade:** Badge amarelo com contador
+class _SlotQuantityIndicator extends StatelessWidget {
+  final int quantity;
+  final _ResponsiveConfig config;
+
+  const _SlotQuantityIndicator({required this.quantity, required this.config});
 
   @override
-  String get overlayId => 'tutorial_inputs';
-
-  @override
-  ValueNotifier<bool> get visibilityNotifier =>
-      TutorialInputsState.instance.isVisible;
-
-  @override
-  OverlayPosition getOverlayPosition(BuildContext context) {
-    final margin = getResponsiveMargin(context);
-    return OverlayPosition.bottomLeft(
-      margin: margin,
-      safeAreaPadding: EdgeInsets.all(margin / 2),
-    );
-  }
-
-  @override
-  Widget buildOverlayContent(BuildContext context, ResponsiveOverlayData data) {
-    final keyBoxWidth = valueByScreenSize(
-      context,
-      mobile: 80.0,
-      tablet: 96.0,
-      desktop: 120.0,
-    );
-
-    final isKeyboardMode =
-        SettingsManager.instance.inputSelected == InputActionsType.keyboard;
-
-    return Material(
-      color: Colors.transparent,
-      child: IntrinsicWidth(
-        child: Container(
-          padding: EdgeInsets.all(data.padding),
-          decoration: BoxDecoration(
-            color: const Color(0xAA222222),
-            borderRadius: BorderRadius.circular(data.isMobileScreen ? 6 : 8),
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ElevatedButton(
-                  onPressed: () => _navigateToMainMenu(context),
-                  child: const Text('Sair para Menu Principal'),
-                ),
-                if (isKeyboardMode)
-                  ...List.generate(
-                    TutorialInputsHUDDef.inputGuide.length,
-                    (index) => _buildInputRow(
-                      context,
-                      data,
-                      TutorialInputsHUDDef.inputGuide[index]['key']!,
-                      TutorialInputsHUDDef.inputGuide[index]['desc']!,
-                      keyBoxWidth,
-                    ),
-                  ),
-              ],
-            ),
+  Widget build(BuildContext context) {
+    return Positioned(
+      bottom: 2,
+      left: 2,
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: config.spacing / 2,
+          vertical: 1,
+        ),
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.7),
+          borderRadius: BorderRadius.circular(2),
+        ),
+        child: Text(
+          'x$quantity',
+          style: TextStyle(
+            color: Colors.yellow,
+            fontSize: config.baseFontSize - 4,
+            fontFamily: 'Normal',
           ),
         ),
       ),
     );
   }
+}
 
-  Widget _buildInputRow(
-    BuildContext context,
-    ResponsiveOverlayData data,
-    String key,
-    String description,
-    double keyBoxWidth,
-  ) {
-    final rowHeight = valueByScreenSize(
-      context,
-      mobile: 20.0,
-      tablet: 22.0,
-      desktop: 26.0,
-    );
+/// **Config Responsivo:** Centraliza valores de padding, spacing, tamanhos, etc.
+class _ResponsiveConfig {
+  final ScreenSizeType screenSize;
 
-    final keyBoxHeight = valueByScreenSize(
-      context,
-      mobile: 18.0,
-      tablet: 20.0,
-      desktop: 24.0,
-    );
+  late final double padding;
+  late final double spacing;
+  late final double slotSize;
+  late final double baseFontSize;
+  late final Border border;
 
-    return Container(
-      height: rowHeight,
-      margin: EdgeInsets.only(bottom: data.spacing / 2),
-      child: Row(
-        children: [
-          Container(
-            width: keyBoxWidth,
-            height: keyBoxHeight,
-            decoration: BoxDecoration(
-              color: const Color(0xFF444444),
-              borderRadius: BorderRadius.circular(data.isMobileScreen ? 3 : 4),
-            ),
-            padding: EdgeInsets.symmetric(horizontal: data.spacing),
-            alignment: Alignment.centerLeft,
-            child: Text(
-              key,
-              style: TextStyle(
-                color: const Color(0xFF00FFAA),
-                fontWeight: FontWeight.bold,
-                fontSize: data.baseFontSize - 1,
-                fontFamily: 'Normal',
-              ),
-            ),
-          ),
-          SizedBox(width: data.spacing * 1.5),
-          Expanded(
-            child: Text(
-              description,
-              style: TextStyle(
-                color: const Color(0xFFFFFFFF),
-                fontSize: data.baseFontSize,
-                fontFamily: 'Normal',
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
-    );
+  _ResponsiveConfig(this.screenSize) {
+    padding = OverlayResponsiveConfig.getPadding(screenSize);
+    spacing = OverlayResponsiveConfig.getSpacing(screenSize);
+    slotSize = OverlayResponsiveConfig.getSlotSize(screenSize);
+    baseFontSize = OverlayResponsiveConfig.getBaseFontSize(screenSize);
+    border = _buildBorder();
   }
 
-  void _navigateToMainMenu(BuildContext context) {
-    AudioManager.instance.stopBackgroundMusic();
+  Border _buildBorder() {
+    const borderColor = Color(0xff68280d);
+    final borderWidth = _getBorderWidth();
 
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => const MenuScreen()),
-      (Route<dynamic> route) => false,
-    );
+    return screenSize == ScreenSizeType.desktop
+        ? Border(
+            left: BorderSide(color: borderColor, width: borderWidth),
+            top: BorderSide(color: borderColor, width: borderWidth),
+            right: BorderSide(color: borderColor, width: borderWidth),
+          )
+        : Border(
+            right: BorderSide(color: borderColor, width: borderWidth),
+          );
+  }
+
+  double _getBorderWidth() {
+    switch (screenSize) {
+      case ScreenSizeType.mobile:
+        return 3.0;
+      case ScreenSizeType.tablet:
+        return 5.0;
+      case ScreenSizeType.desktop:
+        return 6.0;
+    }
   }
 }
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/gameplay/core/modules/overlay/overlay_message_widget.dart';
+import 'package:dawnforge/gameplay/overlay/overlay_message_widget.dart';
 import 'package:dawnforge/gameplay/core/modules/hud/tutorial_inputs/widgets/tutorial_inputs_overlay.dart';
 import 'package:dawnforge/gameplay/core/modules/hud/responsive/responsive_overlay_mixin.dart';
-import 'package:dawnforge/gameplay/inventory/widgets/inventory_overlay.dart';
+import 'package:dawnforge/gameplay/overlay/inventory_overlay.dart';
 import 'package:dawnforge/gameplay/market/market_state.dart';
 import 'package:dawnforge/gameplay/market/widgets/market_panel.dart';
 import 'package:dawnforge/gameplay/core/modules/hud/player_vital_stats/player_vital_stats_overlay.dart';
 import 'package:dawnforge/gameplay/core/modules/hud/debug/debug_overlay.dart';
-import 'package:dawnforge/gameplay/core/modules/hud/inputs/widgets/mobile_inputs_overlay.dart';
+import 'package:dawnforge/gameplay/overlay/mobile_inputs_overlay.dart';
 import 'package:dawnforge/gameplay/core/modules/hud/inputs/widgets/joystick_actions_overlay.dart';
 import 'package:dawnforge/gameplay/core/modules/hud/inputs/widgets/fullscreen_button_overlay.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:dawnforge/shared/managers/settings_manager.dart';
 import 'package:dawnforge/gameplay/time/time_manager.dart' as new_time;
 import 'package:dawnforge/gameplay/time/widgets/time_hud_panel.dart';
-import 'package:dawnforge/shared/utils/debug_helpers.dart';
+import 'package:dawnforge/core/utils/debug_helpers.dart';
 import 'package:flutter/material.dart';
 
 /// Overlay unificado que organiza todos os componentes da HUD em um grid 3x3

@@ -1,4 +1,4 @@
-import 'package:dawnforge/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:dawnforge/gameplay/farm/farm_service_locator.dart';
 
 import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';

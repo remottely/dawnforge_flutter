@@ -5,10 +5,10 @@ import 'package:dawnforge/app/screens/menu_screen.dart';
 import 'package:dawnforge/gameplay/core/modules/audio/audio_manager.dart';
 import 'package:dawnforge/gameplay/core/modules/hud/tutorial_inputs/tutorial_inputs_hud_def.dart';
 import 'package:dawnforge/gameplay/core/modules/hud/tutorial_inputs/tutorial_inputs_state.dart';
-import 'package:dawnforge/trash/responsive_overlay_base.dart';
-import 'package:dawnforge/overlay_design_system_extension.dart';
-import 'package:dawnforge/overlay_tokens.dart';
-import 'package:dawnforge/responsive_overlay_base.dart';
+
+import 'package:dawnforge/gameplay/overlay/design_system/overlay_design_system_extension.dart';
+import 'package:dawnforge/gameplay/overlay/design_system/overlay_tokens.dart';
+import 'package:dawnforge/gameplay/overlay/design_system/responsive_overlay_base.dart';
 import 'package:dawnforge/shared/design_system/theme/screen_size_info.dart';
 import 'package:dawnforge/shared/managers/settings_manager.dart';
 import 'package:flutter/material.dart';

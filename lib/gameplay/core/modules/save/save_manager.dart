@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:dawnforge/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 
 import 'save_data_model.dart';
 import 'save_repository.dart';

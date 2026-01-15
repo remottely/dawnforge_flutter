@@ -1,6 +1,6 @@
 import 'dart:async' as async;
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 // import 'package:dawnforge/gameplay/core/modules/game/player_state_manager.dart';
 import 'package:dawnforge/gameplay/core/modules/map/map_def.dart';
 import 'package:dawnforge/gameplay/core/modules/map/map_transition_controller.dart';

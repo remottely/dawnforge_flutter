@@ -1,7 +1,7 @@
 // lib/gameplay/characters/player/demo/demo_player.dart (CORRIGIDO)
 import 'dart:ui';
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:dawnforge/gameplay/characters/player/demo/demo_player_def.dart';
 import 'package:dawnforge/shared/framework/character/character.dart';
 import 'package:dawnforge/shared/framework/character/character_data.dart';

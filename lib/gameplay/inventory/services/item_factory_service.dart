@@ -1,4 +1,4 @@
-import 'package:dawnforge/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:dawnforge/gameplay/database/smallburg/smallburg_farm_consumable_item_database_def.dart';
 
 import 'package:dawnforge/gameplay/inventory/items/consumable_item.dart';
