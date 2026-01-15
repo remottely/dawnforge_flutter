@@ -30,7 +30,6 @@ bool _timeListenersRegistered = false;
 /// 3. UseCases (stateless) - Registrados como Factory (nova instância a cada chamada)
 /// 4. ViewModels - Registrados como Factory
 ///
-/// IMPORTANTE: Chamar este método após setupInventoryDependencies() em main.dart
 Future<void> setupFarmDependencies() async {
   // ==================== Services (stateless, Singleton) ====================
 

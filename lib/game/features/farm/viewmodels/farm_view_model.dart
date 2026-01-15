@@ -5,10 +5,6 @@ import 'package:equatable/equatable.dart';
 
 import '../../game_world/world/entities/objects/farm/soil_state.dart';
 import '../managers/farm_manager.dart';
-// import '../usecases/harvest_crop_use_case.dart';
-// import '../usecases/plant_seed_use_case.dart';
-// import '../usecases/till_soil_use_case.dart';
-// import '../usecases/water_tile_use_case.dart';
 
 /// DTO (Data Transfer Object) for UI representation of a farm tile (F2: ViewModel pattern)
 class FarmTileUI extends Equatable {
