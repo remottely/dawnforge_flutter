@@ -5,6 +5,7 @@ import 'package:dawnforge/gameplay/farm/database/crop_database.dart';
 import 'package:dawnforge/gameplay/farm/farm_service_locator.dart';
 import 'package:dawnforge/gameplay/inventory/config/inventory_service_locator.dart';
 import 'package:dawnforge/gameplay/time/time_service_locator.dart';
+import 'package:dawnforge/overlay_design_system.dart';
 import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
 import 'package:dawnforge/shared/managers/settings_manager.dart';
 import 'package:flame/flame.dart';
@@ -43,18 +44,20 @@ final class AppRoot extends StatelessWidget {
         const GameplayLocalizationsDelegate();
 
     return AppDesignSystemProvider(
-      debugIsOn: AppEnvironment.kIsDevToolsMode ? false : false,
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(fontFamily: 'Normal'),
-        home: MenuScreen(),
-        supportedLocales: GameplayLocalizationsDelegate.supportedLocales(),
-        localizationsDelegates: [
-          location,
-          DefaultCupertinoLocalizations.delegate,
-          ...GlobalMaterialLocalizations.delegates,
-        ],
-        localeResolutionCallback: location.resolution,
+      debugIsOn: AppEnvironment.kIsDevToolsMode ? true : false,
+      child: OverlayDesignSystemProvider(
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(fontFamily: 'Normal'),
+          home: MenuScreen(),
+          supportedLocales: GameplayLocalizationsDelegate.supportedLocales(),
+          localizationsDelegates: [
+            location,
+            DefaultCupertinoLocalizations.delegate,
+            ...GlobalMaterialLocalizations.delegates,
+          ],
+          localeResolutionCallback: location.resolution,
+        ),
       ),
     );
   }

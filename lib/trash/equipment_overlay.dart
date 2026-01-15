@@ -24,7 +24,7 @@
 //   }
 
 //   @override
-//   Widget buildOverlayContent(BuildContext context, ResponsiveOverlayData data) {
+//   Widget buildOverlayContent(BuildContext context, OverlaySpacing data) {
 //     return Material(
 //       color: Colors.transparent,
 //       child: Container(
@@ -54,7 +54,7 @@
 
 //   Widget _buildSlotRow(
 //     BuildContext context,
-//     ResponsiveOverlayData data,
+//     OverlaySpacing data,
 //     Item? equippedItem,
 //     Color slotColor,
 //   ) {

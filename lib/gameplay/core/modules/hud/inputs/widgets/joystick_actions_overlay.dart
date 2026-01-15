@@ -1,10 +1,12 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/gameplay/core/modules/hud/inputs/mobile_inputs_state.dart';
-import 'package:dawnforge/gameplay/core/modules/hud/responsive/responsive_overlay_base.dart';
+import 'package:dawnforge/trash/responsive_overlay_base.dart';
 import 'package:dawnforge/gameplay/core/modules/input_actions/joysctick_setup.dart';
 import 'package:dawnforge/gameplay/inventory/entities/hand_item.dart';
 import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:dawnforge/gameplay/inventory/state/equipment_state.dart';
+import 'package:dawnforge/overlay_design_system_extension.dart';
+import 'package:dawnforge/responsive_overlay_base.dart';
 import 'package:flutter/material.dart';
 
 /// Overlay for joystick action buttons (primary and secondary attacks)
@@ -29,12 +31,13 @@ class JoystickActionsOverlay extends ResponsiveOverlayBase {
   }
 
   @override
-  Widget buildOverlayContent(BuildContext context, ResponsiveOverlayData data) {
+  Widget buildOverlayContent(BuildContext context) {
     return ValueListenableBuilder<HandItem?>(
       valueListenable: EquipmentState.instance.equippedItem,
       builder: (context, equippedItem, _) {
         final hasIronSword = equippedItem?.id == HandItemId.ironSword;
-
+        final spacing = context.overlaySpacing; // 🔥 Extension
+        
         return Align(
           alignment: Alignment.bottomRight,
           child: Row(
@@ -53,7 +56,7 @@ class JoystickActionsOverlay extends ResponsiveOverlayBase {
                   size: JoystickSetup.kActionButtonSize,
                   marginBottom: JoystickSetup.kActionButtonMarginBottom,
                 ),
-                SizedBox(width: data.spacing),
+                SizedBox(width: spacing.spacing),
               ],
               // Primary attack button - always visible
               _buildActionButton(

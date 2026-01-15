@@ -2,7 +2,6 @@ import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/gameplay/core/modules/overlay/overlay_message_widget.dart';
 import 'package:dawnforge/gameplay/core/modules/hud/tutorial_inputs/widgets/tutorial_inputs_overlay.dart';
 import 'package:dawnforge/gameplay/core/modules/hud/responsive/responsive_overlay_mixin.dart';
-import 'package:dawnforge/gameplay/core/utils/app_environment.dart';
 import 'package:dawnforge/gameplay/inventory/widgets/inventory_overlay.dart';
 import 'package:dawnforge/gameplay/market/market_state.dart';
 import 'package:dawnforge/gameplay/market/widgets/market_panel.dart';
@@ -15,12 +14,13 @@ import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_p
 import 'package:dawnforge/shared/managers/settings_manager.dart';
 import 'package:dawnforge/gameplay/time/time_manager.dart' as new_time;
 import 'package:dawnforge/gameplay/time/widgets/time_hud_panel.dart';
+import 'package:dawnforge/shared/utils/debug_helpers.dart';
 import 'package:flutter/material.dart';
 
 /// Overlay unificado que organiza todos os componentes da HUD em um grid 3x3
 /// Grid com proporções: coluna 1 (flex 1), coluna 2 (flex 2), coluna 3 (flex 1)
 /// Linha 1 (flex 1), Linha 2 (flex 2), Linha 3 (flex 1)
-class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
+final class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
   final DDBasePlayerView player;
   final PlayerController? playerController;
 
@@ -32,262 +32,419 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
 
   @override
   Widget build(BuildContext context) {
-    final flexA = 1;
-    final flexB = 6;
-    final flexC = flexA + flexB;
+    final isDesktop = isDesktopScreen(context);
+    
+    const flexA = 1;
+    const flexB = 6;
+    const flexC = flexA + flexB;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isDesktop = isDesktopScreen(context);
+    return IgnorePointer(
+      ignoring: false,
+      child: Row(
+        children: [
+          _LeftArea(
+            flex: flexA,
+            isDesktop: isDesktop,
+          ),
+          _MainArea(
+            flex: flexC,
+            flexA: flexA,
+            flexB: flexB,
+            isDesktop: isDesktop,
+            player: player,
+            playerController: playerController,
+          ),
+        ],
+      ),
+    );
+  }
+}
 
-        return IgnorePointer(
-          ignoring: false,
-          child: Row(
+/// Área lateral esquerda - Inventário mobile
+final class _LeftArea extends StatelessWidget {
+  final int flex;
+  final bool isDesktop;
+
+  const _LeftArea({
+    required this.flex,
+    required this.isDesktop,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: flex,
+      child: DebugContainer(
+        color: DebugColors.gameplayOverlayLeftArea,
+        child: Container(
+          alignment: Alignment.centerLeft,
+          child: !isDesktop
+              ? const InventoryOverlay()
+              : const SizedBox.shrink(),
+        ),
+      ),
+    );
+  }
+}
+
+/// Área principal que contém as 3 linhas (top, middle, bottom)
+final class _MainArea extends StatelessWidget {
+  final int flex;
+  final int flexA;
+  final int flexB;
+  final bool isDesktop;
+  final DDBasePlayerView player;
+  final PlayerController? playerController;
+
+  const _MainArea({
+    required this.flex,
+    required this.flexA,
+    required this.flexB,
+    required this.isDesktop,
+    required this.player,
+    this.playerController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: flex,
+      child: Column(
+        children: [
+          _TopRow(
+            flexA: flexA,
+            flexB: flexB,
+            player: player,
+          ),
+          _MiddleRow(
+            flexA: flexA,
+            flexB: flexB,
+            playerController: playerController,
+          ),
+          _BottomRow(
+            flexA: flexA,
+            flexB: flexB,
+            isDesktop: isDesktop,
+            player: player,
+            playerController: playerController,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Linha superior (Top Row)
+final class _TopRow extends StatelessWidget {
+  final int flexA;
+  final int flexB;
+  final DDBasePlayerView player;
+
+  const _TopRow({
+    required this.flexA,
+    required this.flexB,
+    required this.player,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: flexA,
+      child: Row(
+        children: [
+          _TopCenterArea(
+            flex: flexB,
+            player: player,
+          ),
+          _TopRightArea(flex: flexA),
+        ],
+      ),
+    );
+  }
+}
+
+/// Área central superior - Debug e Mensagens
+final class _TopCenterArea extends StatelessWidget {
+  final int flex;
+  final DDBasePlayerView player;
+
+  const _TopCenterArea({
+    required this.flex,
+    required this.player,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: flex,
+      child: DebugContainer(
+        color: DebugColors.gameplayOverlayTopCenterArea,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(width: 8),
+            DebugOverlay(player: player),
+            const SizedBox(width: 8),
+            const OverlayMessageWidget(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Área direita superior - Tempo e Fullscreen
+final class _TopRightArea extends StatelessWidget {
+  final int flex;
+
+  const _TopRightArea({required this.flex});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: flex,
+      child: DebugContainer(
+        color: DebugColors.gameplayOverlayTopRightArea,
+        child: Container(
+          alignment: Alignment.topRight,
+          child: Stack(
             children: [
-              Expanded(
-                flex: flexA,
-                child: Container(
-                  color: AppEnvironment.kIsDebugMode
-                      ? Colors.purple.withOpacity(0.5)
-                      : null,
-                  alignment: Alignment.centerLeft,
-                  child: !isDesktop
-                      ? const InventoryOverlay()
-                      : const SizedBox.shrink(),
-                ),
+              TimeHudPanel(
+                timeManager: new_time.TimeManager.instance,
               ),
-              Expanded(
-                flex: flexC,
-                child: Column(
-                  children: [
-                    // Linha 1 (Top) - flex 1
-                    Expanded(
-                      flex: flexA,
-                      child: Row(
-                        children: [
-                          // // Quadrante 1 (Top Left) - flex 1
-                          // Expanded(
-                          //   flex: flexA,
-                          //   child: Container(
-                          //     color: AppEnvironment.kIsDebugMode
-                          //         ? Colors.red.withOpacity(0.5)
-                          //         : null,
-                          //     alignment: Alignment.topLeft,
-                          //     // child: PlayerVitalStatsOverlay(player: player),
-                          //   ),
-                          // ),
-                          // Quadrante 2 (Top Center) - flex 2
-                          Expanded(
-                            flex: flexB,
-                            child: Container(
-                              color: AppEnvironment.kIsDebugMode
-                                  ? Colors.blue.withOpacity(0.5)
-                                  : null,
-                              // alignment: Alignment.center,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(width: 8),
-                                  DebugOverlay(
-                                    player: player,
-                                    // showFps: AppEnvironment.kIsDevToolsMode,
-                                    // showPosition: AppEnvironment.kIsDevToolsMode,
-                                    // showEntities: AppEnvironment.kIsDevToolsMode,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  const OverlayMessageWidget(),
-                                ],
-                              ),
-                            ),
-                          ),
-                          // Quadrante 3 (Top Right) - flex 1
-                          Expanded(
-                            flex: flexA,
-                            child: Container(
-                              color: AppEnvironment.kIsDebugMode
-                                  ? Colors.green.withOpacity(0.5)
-                                  : null,
-                              alignment: Alignment.topRight,
-                              child: Stack(
-                                children: [
-                                  // if (AppEnvironment.kIsDebugMode)
-                                  // const Align(
-                                  //   alignment: Alignment.topRight,
-                                  //   child: EquipmentOverlay(),
-                                  // ),
-                                  TimeHudPanel(
-                                    timeManager: new_time.TimeManager.instance,
-                                  ),
-                                  const Align(
-                                    alignment: Alignment.topRight,
-                                    child: FullscreenButtonOverlay(),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // Linha 2 (Middle) - flex 2
-                    Expanded(
-                      flex: flexB,
-                      child: Row(
-                        children: [
-                          // // Quadrante 4 (Middle Left) - flex 1
-                          // // Mobile/Tablet: InventoryOverlay aqui
-                          // Expanded(
-                          //   flex: flexA,
-                          //   child: Container(
-                          //     color: AppEnvironment.kIsDebugMode
-                          //         ? Colors.pink.withOpacity(0.5)
-                          //         : null,
-                          //     alignment: Alignment.centerLeft,
-                          //     child: !isDesktop
-                          //         ? const InventoryOverlay()
-                          //         : const SizedBox.shrink(),
-                          //   ),
-                          // ),
-                          // Quadrante 5 (Center) - flex 2
-                          Expanded(
-                            flex: flexB,
-                            child: Container(
-                              color: AppEnvironment.kIsDebugMode
-                                  ? Colors.yellow.withOpacity(0.5)
-                                  : null,
-                              alignment: Alignment.center,
-                              child: Stack(
-                                children: [
-                                  const TutorialInputsOverlay(),
-                                  ValueListenableBuilder<bool>(
-                                    valueListenable:
-                                        MarketState.instance.isOpen,
-                                    builder: (context, isOpen, _) {
-                                      if (!isOpen)
-                                        return const SizedBox.shrink();
-                                      return ValueListenableBuilder(
-                                        valueListenable:
-                                            MarketState.instance.activePlayer,
-                                        builder: (context, player, __) {
-                                          if (player == null) {
-                                            return const SizedBox.shrink();
-                                          }
-                                          return Align(
-                                            alignment: Alignment.center,
-                                            child: MarketPanel(player: player),
-                                          );
-                                        },
-                                      );
-                                    },
-                                  ),
-                                  // if (SettingsManager.instance.inputSelected ==
-                                  //     InputActionsType.joystick)
-                                  //   MobileInputsOverlay(
-                                  //     playerController: playerController,
-                                  //   ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          // Quadrante 6 (Middle Right) - flex 1
-                          Expanded(
-                            flex: flexA,
-                            child: Container(
-                              color: AppEnvironment.kIsDebugMode
-                                  ? Colors.brown.withOpacity(0.5)
-                                  : null,
-                              child:
-                                  SettingsManager.instance.inputSelected ==
-                                      InputActionsType.joystick
-                                  ? MobileInputsOverlay(
-                                      playerController: playerController,
-                                    )
-                                  : const SizedBox(
-                                      width: double.infinity,
-                                      height: double.infinity,
-                                    ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // Linha 3 (Bottom) - flex 1
-                    Expanded(
-                      flex: flexA + 1,
-                      child: Row(
-                        children: [
-                          // // Quadrante 7 (Bottom Left) - flex 1
-                          // Expanded(
-                          //   flex: flexA,
-                          //   child: Container(
-                          //     color: AppEnvironment.kIsDebugMode
-                          //         ? Colors.purple.withOpacity(0.5)
-                          //         : null,
-                          //     child: const SizedBox(
-                          //       width: double.infinity,
-                          //       height: double.infinity,
-                          //     ),
-                          //   ),
-                          // ),
-                          // Quadrante 8 (Bottom Center) - flex 2
-                          // Desktop: InventoryOverlay aqui
-                          // Mobile: não existe (removido)
-                          if (isDesktop)
-                            Expanded(
-                              flex: flexB,
-                              child: Container(
-                                color: AppEnvironment.kIsDebugMode
-                                    ? Colors.orange.withOpacity(0.5)
-                                    : null,
-                                alignment: Alignment.bottomCenter,
-                                child: const InventoryOverlay(),
-                              ),
-                            ),
-                          // Quadrante 9 (Bottom Right) - flex 1
-                          // JoystickActionsOverlay sempre no último quadrante
-                          Expanded(
-                            flex: flexA,
-                            child: Container(
-                              color: AppEnvironment.kIsDebugMode
-                                  ? Colors.grey.withOpacity(0.5)
-                                  : null,
-                              child: Align(
-                                alignment: Alignment.bottomRight,
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Expanded(
-                                      child:
-                                          SettingsManager
-                                                  .instance
-                                                  .inputSelected ==
-                                              InputActionsType.joystick
-                                          ? JoystickActionsOverlay(
-                                              playerController:
-                                                  playerController,
-                                            )
-                                          : const SizedBox(
-                                              width: double.infinity,
-                                              height: double.infinity,
-                                            ),
-                                    ),
-                                    PlayerVitalStatsOverlay(player: player),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+              const Align(
+                alignment: Alignment.topRight,
+                child: FullscreenButtonOverlay(),
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Linha do meio (Middle Row)
+final class _MiddleRow extends StatelessWidget {
+  final int flexA;
+  final int flexB;
+  final PlayerController? playerController;
+
+  const _MiddleRow({
+    required this.flexA,
+    required this.flexB,
+    this.playerController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: flexB,
+      child: Row(
+        children: [
+          _CenterArea(flex: flexB),
+          _CenterRightArea(
+            flex: flexA,
+            playerController: playerController,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Área central - Tutorial e Market
+final class _CenterArea extends StatelessWidget {
+  final int flex;
+
+  const _CenterArea({required this.flex});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: flex,
+      child: DebugContainer(
+        color: DebugColors.gameplayOverlayCenterArea,
+        child: Container(
+          alignment: Alignment.center,
+          child: Stack(
+            children: [
+              const TutorialInputsOverlay(), // TODO(kevin)
+              _MarketPanelArea(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Área do painel de mercado (Market)
+final class _MarketPanelArea extends StatelessWidget {
+  const _MarketPanelArea();
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: MarketState.instance.isOpen,
+      builder: (context, isOpen, _) {
+        if (!isOpen) return const SizedBox.shrink();
+        
+        return ValueListenableBuilder(
+          valueListenable: MarketState.instance.activePlayer,
+          builder: (context, player, __) {
+            if (player == null) {
+              return const SizedBox.shrink();
+            }
+            return Align(
+              alignment: Alignment.center,
+              child: MarketPanel(player: player),
+            );
+          },
         );
       },
+    );
+  }
+}
+
+/// Área direita central - Mobile Inputs
+final class _CenterRightArea extends StatelessWidget {
+  final int flex;
+  final PlayerController? playerController;
+
+  const _CenterRightArea({
+    required this.flex,
+    this.playerController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: flex,
+      child: DebugContainer(
+        color: DebugColors.gameplayOverlayCenterRightArea,
+        child: SettingsManager.instance.inputSelected ==
+                InputActionsType.joystick
+            ? MobileInputsOverlay(
+                playerController: playerController,
+              ) // TODO(Kevin)
+            : const SizedBox(
+                width: double.infinity,
+                height: double.infinity,
+              ),
+      ),
+    );
+  }
+}
+
+/// Linha inferior (Bottom Row)
+final class _BottomRow extends StatelessWidget {
+  final int flexA;
+  final int flexB;
+  final bool isDesktop;
+  final DDBasePlayerView player;
+  final PlayerController? playerController;
+
+  const _BottomRow({
+    required this.flexA,
+    required this.flexB,
+    required this.isDesktop,
+    required this.player,
+    this.playerController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: flexA + 1,
+      child: Row(
+        children: [
+          if (isDesktop)
+            _BottomCenterArea(flex: flexB),
+          _BottomRightArea(
+            flex: flexA,
+            player: player,
+            playerController: playerController,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Área central inferior - Inventário desktop
+final class _BottomCenterArea extends StatelessWidget {
+  final int flex;
+
+  const _BottomCenterArea({required this.flex});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: flex,
+      child: DebugContainer(
+        color: DebugColors.gameplayOverlayBottomCenterArea,
+        child: Container(
+          alignment: Alignment.bottomCenter,
+          child: const InventoryOverlay(),
+        ),
+      ),
+    );
+  }
+}
+
+/// Área direita inferior - Joystick Actions e Vital Stats
+final class _BottomRightArea extends StatelessWidget {
+  final int flex;
+  final DDBasePlayerView player;
+  final PlayerController? playerController;
+
+  const _BottomRightArea({
+    required this.flex,
+    required this.player,
+    this.playerController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: flex,
+      child: DebugContainer(
+        color: DebugColors.gameplayOverlayBottomRightArea,
+        child: Align(
+          alignment: Alignment.bottomRight,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _JoystickArea(playerController: playerController),
+              PlayerVitalStatsOverlay(player: player),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Área do Joystick Actions
+final class _JoystickArea extends StatelessWidget {
+  final PlayerController? playerController;
+
+  const _JoystickArea({this.playerController});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: SettingsManager.instance.inputSelected ==
+              InputActionsType.joystick
+          ? JoystickActionsOverlay(
+              playerController: playerController,
+            )
+          : const SizedBox(
+              width: double.infinity,
+              height: double.infinity,
+            ),
     );
   }
 }

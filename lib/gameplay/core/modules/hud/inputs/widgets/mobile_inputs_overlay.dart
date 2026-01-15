@@ -1,12 +1,18 @@
+/// **MobileInputsOverlay - COMPLETO E MIGRADO**
+/// • Usa o novo OverlayDesignSystem
+/// • Remove ResponsiveOverlayData
+/// • Corrige erro de isMobileScreen
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/gameplay/core/modules/hud/inputs/mobile_inputs_state.dart';
-import 'package:dawnforge/gameplay/core/modules/hud/responsive/responsive_overlay_base.dart';
+import 'package:dawnforge/trash/responsive_overlay_base.dart';
 import 'package:dawnforge/gameplay/core/modules/input_actions/joysctick_setup.dart';
 import 'package:dawnforge/gameplay/core/utils/app_environment.dart';
+import 'package:dawnforge/overlay_design_system_extension.dart';
+import 'package:dawnforge/responsive_overlay_base.dart';
 import 'package:flutter/material.dart';
 
 /// Mobile touch inputs overlay with buttons for all game actions
-class MobileInputsOverlay extends ResponsiveOverlayBase {
+final class MobileInputsOverlay extends ResponsiveOverlayBase {
   final PlayerController? playerController;
 
   const MobileInputsOverlay({super.key, this.playerController});
@@ -20,36 +26,32 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
 
   @override
   OverlayPosition getOverlayPosition(BuildContext context) {
-    return OverlayPosition.custom(
-      alignment: Alignment.bottomRight,
-      safeAreaPadding: EdgeInsets.zero,
-    );
+    return OverlayPosition.bottomRight(safeAreaPadding: EdgeInsets.zero);
   }
 
   @override
-  Widget buildOverlayContent(BuildContext context, ResponsiveOverlayData data) {
-    // Calcula a altura total necessária para os botões
-    final buttonSize = data.isMobileScreen ? 50.0 : 60.0;
-    final utilityButtonSize = data.isMobileScreen ? 40.0 : 50.0;
-    final spacing = data.spacing;
+  Widget buildOverlayContent(BuildContext context) {
+    // 🔥 Acessa tokens uma única vez
+    final sizes = context.overlaySizes;
+    final spacing = context.overlaySpacing;
+    final screenHeight = context.overlayScreenDimensions.height;
 
-    // Estima altura necessária (3 action buttons + utility buttons)
+    final buttonSize = sizes.actionButton;
+    final utilityButtonSize = sizes.utilityButton;
+
+    // Estima altura necessária (2 action buttons + utility buttons)
     final utilityButtonsCount = _countUtilityButtons();
-    final estimatedHeight =
-        (buttonSize * 3) + // Action buttons
-        (spacing * 2) + // Spacing entre action buttons
+    final estimatedHeight = (buttonSize * 2) + // Action buttons (apenas 2)
+        spacing.spacing + // Spacing entre action buttons
         (utilityButtonSize * utilityButtonsCount) + // Utility buttons
-        (spacing /
-            2 *
-            (utilityButtonsCount - 1)) + // Spacing entre utility buttons
-        (data.margin * 2); // Margens
+        (spacing.spacing * (utilityButtonsCount - 1)) + // Spacing entre utility
+        (spacing.margin * 2); // Margens
 
-    final screenHeight = MediaQuery.of(context).size.height;
     final needsScroll = estimatedHeight > screenHeight * 0.8;
 
     // Botões alinhados à direita (sem Stack/Positioned)
     return Padding(
-      padding: EdgeInsets.all(data.margin),
+      padding: EdgeInsets.all(spacing.margin),
       child: needsScroll
           ? ConstrainedBox(
               constraints: BoxConstraints(maxHeight: screenHeight * 0.8),
@@ -57,8 +59,8 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    ..._buildUtilityButtons(context, data),
-                    ..._buildActionButtons(context, data),
+                    ..._buildUtilityButtons(context),
+                    ..._buildActionButtons(context),
                   ],
                 ),
               ),
@@ -66,164 +68,88 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
           : Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ..._buildUtilityButtons(context, data),
-                ..._buildActionButtons(context, data),
+                ..._buildUtilityButtons(context),
+                ..._buildActionButtons(context),
               ],
             ),
     );
   }
 
   int _countUtilityButtons() {
-    int count = 1; // Esc button sempre visível
-    if (AppEnvironment.kIsDebugMode) count++; // Inv button
-    count++; // Next Day button
+    int count = 1; // Esc button
     if (AppEnvironment.kIsDebugMode) {
-      count++; // Items button
-      count++; // Clear button
+      count += 3; // Inv + Items + Clear
     }
     return count;
   }
 
-  List<Widget> _buildActionButtons(
-    BuildContext context,
-    ResponsiveOverlayData data,
-  ) {
-    final buttonSize = data.isMobileScreen ? 50.0 : 60.0;
-    final spacing = data.spacing;
+  List<Widget> _buildActionButtons(BuildContext context) {
+    final sizes = context.overlaySizes;
+    final spacing = context.overlaySpacing;
 
     return [
       _buildActionButton(
         context: context,
         label: 'Interact',
         icon: Icons.touch_app,
-        size: buttonSize,
+        size: sizes.actionButton,
         actionId: JoystickSetup.kInteractionId,
         color: Colors.green,
       ),
-      SizedBox(height: spacing),
-      // _buildActionButton(
-      //   context: context,
-      //   label: 'Defense', // 'Secondary'
-      //   icon: Icons.auto_awesome,
-      //   size: buttonSize,
-      //   actionId: JoystickSetup.kSecondaryActionId,
-      //   color: Colors.purple,
-      // ),
-      // SizedBox(height: spacing),
+      SizedBox(height: spacing.spacing),
       _buildActionButton(
         context: context,
         label: 'Run',
         icon: Icons.directions_run,
-        size: buttonSize,
+        size: sizes.actionButton,
         actionId: JoystickSetup.kRunId,
         color: Colors.blue,
       ),
     ];
   }
 
-  // Widget _buildEquipmentButtons(
-  //   BuildContext context,
-  //   ResponsiveOverlayData data,
-  // ) {
-  //   final buttonSize = data.isMobileScreen ? 45.0 : 55.0;
-  //   final spacing = data.spacing;
-
-  //   return
-  //   // Column(
-  //   //   mainAxisSize: MainAxisSize.min,
-  //   //   crossAxisAlignment: CrossAxisAlignment.start,
-  //   //   children: [
-  //   Row(
-  //     children: [
-  //       _buildActionButton(
-  //         context: context,
-  //         label: 'Prev',
-  //         icon: Icons.arrow_back_ios,
-  //         size: buttonSize,
-  //         actionId: JoystickSetup.kEquipMainHandReverseId,
-  //         color: Colors.orange,
-  //       ),
-  //       SizedBox(width: spacing / 2),
-  //       _buildActionButton(
-  //         context: context,
-  //         label: 'Next',
-  //         icon: Icons.arrow_forward_ios,
-  //         size: buttonSize,
-  //         actionId: JoystickSetup.kEquipMainHandId,
-  //         color: Colors.orange,
-  //       ),
-  //     ],
-  //     // ),
-  //     // SizedBox(height: spacing / 2),
-  //     // _buildActionButton(
-  //     //   context: context,
-  //     //   label: 'Unequip',
-  //     //   icon: Icons.close,
-  //     //   size: buttonSize,
-  //     //   actionId: JoystickSetup.kUnequipMainHandId,
-  //     //   color: Colors.red.shade300,
-  //     // ),
-  //     // ],
-  //   );
-  // }
-
-  List<Widget> _buildUtilityButtons(
-    BuildContext context,
-    ResponsiveOverlayData data,
-  ) {
-    final buttonSize = data.isMobileScreen ? 40.0 : 50.0;
-    final spacing = data.spacing;
+  List<Widget> _buildUtilityButtons(BuildContext context) {
+    final sizes = context.overlaySizes;
+    final spacing = context.overlaySpacing;
 
     return [
       _buildActionButton(
         context: context,
         label: 'Esc',
         icon: Icons.settings,
-        size: buttonSize,
+        size: sizes.utilityButton,
         actionId: JoystickSetup.kToggleTutorialInputsId,
         color: Colors.brown,
       ),
-      AppEnvironment.kIsDebugMode
-          ? _buildActionButton(
-              context: context,
-              label: 'Inv',
-              icon: Icons.backpack,
-              size: buttonSize,
-              actionId: JoystickSetup.kToggleInventoryId,
-              color: Colors.brown,
-            )
-          : SizedBox.shrink(),
-      // SizedBox(height: spacing / 2),
-      // _buildActionButton(
-      //   context: context,
-      //   label: 'Next Day',
-      //   icon: Icons.wb_sunny,
-      //   size: buttonSize,
-      //   actionId: JoystickSetup.kAdvanceDayId,
-      //   color: Colors.amber,
-      // ),
-      SizedBox(height: spacing / 2),
       if (AppEnvironment.kIsDebugMode) ...[
+        SizedBox(height: spacing.spacing / 2),
+        _buildActionButton(
+          context: context,
+          label: 'Inv',
+          icon: Icons.backpack,
+          size: sizes.utilityButton,
+          actionId: JoystickSetup.kToggleInventoryId,
+          color: Colors.brown,
+        ),
+        SizedBox(height: spacing.spacing / 2),
         _buildActionButton(
           context: context,
           label: 'Items',
           icon: Icons.add_box,
-          size: buttonSize,
+          size: sizes.utilityButton,
           actionId: JoystickSetup.kAddTestItemsId,
           color: Colors.teal,
         ),
-        SizedBox(height: spacing / 2),
+        SizedBox(height: spacing.spacing / 2),
+        _buildActionButton(
+          context: context,
+          label: 'Clear',
+          icon: Icons.delete_forever,
+          size: sizes.utilityButton,
+          actionId: JoystickSetup.kClearSaveId,
+          color: Colors.red,
+        ),
       ],
-      AppEnvironment.kIsDebugMode
-          ? _buildActionButton(
-              context: context,
-              label: 'Clear',
-              icon: Icons.delete_forever,
-              size: buttonSize,
-              actionId: JoystickSetup.kClearSaveId,
-              color: Colors.red,
-            )
-          : SizedBox.shrink(),
     ];
   }
 
@@ -245,7 +171,10 @@ class MobileInputsOverlay extends ResponsiveOverlayBase {
         decoration: BoxDecoration(
           color: color.withOpacity(0.7),
           borderRadius: BorderRadius.circular(size * 0.2),
-          border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
+          border: Border.all(
+            color: Colors.white.withOpacity(0.3),
+            width: 2,
+          ),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.3),

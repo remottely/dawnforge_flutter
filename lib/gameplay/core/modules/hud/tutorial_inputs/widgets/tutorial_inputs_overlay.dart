@@ -1,12 +1,19 @@
+/// **TutorialInputsOverlay - COMPLETO E MIGRADO**
+/// • Usa o novo OverlayDesignSystem
+/// • Remove ResponsiveOverlayData e métodos do mixin
 import 'package:dawnforge/app/screens/menu_screen.dart';
 import 'package:dawnforge/gameplay/core/modules/audio/audio_manager.dart';
 import 'package:dawnforge/gameplay/core/modules/hud/tutorial_inputs/tutorial_inputs_hud_def.dart';
 import 'package:dawnforge/gameplay/core/modules/hud/tutorial_inputs/tutorial_inputs_state.dart';
-import 'package:dawnforge/gameplay/core/modules/hud/responsive/responsive_overlay_base.dart';
+import 'package:dawnforge/trash/responsive_overlay_base.dart';
+import 'package:dawnforge/overlay_design_system_extension.dart';
+import 'package:dawnforge/overlay_tokens.dart';
+import 'package:dawnforge/responsive_overlay_base.dart';
+import 'package:dawnforge/shared/design_system/theme/screen_size_info.dart';
 import 'package:dawnforge/shared/managers/settings_manager.dart';
 import 'package:flutter/material.dart';
 
-class TutorialInputsOverlay extends ResponsiveOverlayBase {
+final class TutorialInputsOverlay extends ResponsiveOverlayBase {
   const TutorialInputsOverlay({super.key});
 
   @override
@@ -18,17 +25,19 @@ class TutorialInputsOverlay extends ResponsiveOverlayBase {
 
   @override
   OverlayPosition getOverlayPosition(BuildContext context) {
-    final margin = getResponsiveMargin(context);
     return OverlayPosition.bottomLeft(
-      margin: margin,
-      safeAreaPadding: EdgeInsets.all(margin / 2),
+      safeAreaPadding: EdgeInsets.all(context.overlaySpacing.margin / 2),
     );
   }
 
   @override
-  Widget buildOverlayContent(BuildContext context, ResponsiveOverlayData data) {
-    final keyBoxWidth = valueByScreenSize(
-      context,
+  Widget buildOverlayContent(BuildContext context) {
+    // 🔥 Acessa tokens uma única vez
+    final spacing = context.overlaySpacing;
+    final typography = context.overlayTypography;
+    final screenSize = context.overlayScreenSize;
+
+    final keyBoxWidth = context.overlayValueByScreenSize(
       mobile: 80.0,
       tablet: 96.0,
       desktop: 120.0,
@@ -41,10 +50,10 @@ class TutorialInputsOverlay extends ResponsiveOverlayBase {
       color: Colors.transparent,
       child: IntrinsicWidth(
         child: Container(
-          padding: EdgeInsets.all(data.padding),
+          padding: EdgeInsets.all(spacing.padding),
           decoration: BoxDecoration(
             color: const Color(0xAA222222),
-            borderRadius: BorderRadius.circular(data.isMobileScreen ? 6 : 8),
+            borderRadius: BorderRadius.circular(screenSize.isMobile ? 6 : 8),
           ),
           child: SingleChildScrollView(
             child: Column(
@@ -60,10 +69,12 @@ class TutorialInputsOverlay extends ResponsiveOverlayBase {
                     TutorialInputsHUDDef.inputGuide.length,
                     (index) => _buildInputRow(
                       context,
-                      data,
                       TutorialInputsHUDDef.inputGuide[index]['key']!,
                       TutorialInputsHUDDef.inputGuide[index]['desc']!,
                       keyBoxWidth,
+                      spacing,
+                      typography,
+                      screenSize,
                     ),
                   ),
               ],
@@ -76,20 +87,20 @@ class TutorialInputsOverlay extends ResponsiveOverlayBase {
 
   Widget _buildInputRow(
     BuildContext context,
-    ResponsiveOverlayData data,
     String key,
     String description,
     double keyBoxWidth,
+    OverlaySpacing spacing,
+    OverlayTypography typography,
+    ScreenSizeInfo screenSize,
   ) {
-    final rowHeight = valueByScreenSize(
-      context,
+    final rowHeight = context.overlayValueByScreenSize(
       mobile: 20.0,
       tablet: 22.0,
       desktop: 26.0,
     );
 
-    final keyBoxHeight = valueByScreenSize(
-      context,
+    final keyBoxHeight = context.overlayValueByScreenSize(
       mobile: 18.0,
       tablet: 20.0,
       desktop: 24.0,
@@ -97,7 +108,7 @@ class TutorialInputsOverlay extends ResponsiveOverlayBase {
 
     return Container(
       height: rowHeight,
-      margin: EdgeInsets.only(bottom: data.spacing / 2),
+      margin: EdgeInsets.only(bottom: spacing.spacing / 2),
       child: Row(
         children: [
           Container(
@@ -105,27 +116,27 @@ class TutorialInputsOverlay extends ResponsiveOverlayBase {
             height: keyBoxHeight,
             decoration: BoxDecoration(
               color: const Color(0xFF444444),
-              borderRadius: BorderRadius.circular(data.isMobileScreen ? 3 : 4),
+              borderRadius: BorderRadius.circular(screenSize.isMobile ? 3 : 4),
             ),
-            padding: EdgeInsets.symmetric(horizontal: data.spacing),
+            padding: EdgeInsets.symmetric(horizontal: spacing.spacing),
             alignment: Alignment.centerLeft,
             child: Text(
               key,
               style: TextStyle(
                 color: const Color(0xFF00FFAA),
                 fontWeight: FontWeight.bold,
-                fontSize: data.baseFontSize - 1,
+                fontSize: typography.baseFontSize - 1,
                 fontFamily: 'Normal',
               ),
             ),
           ),
-          SizedBox(width: data.spacing * 1.5),
+          SizedBox(width: spacing.spacing * 1.5),
           Expanded(
             child: Text(
               description,
               style: TextStyle(
                 color: const Color(0xFFFFFFFF),
-                fontSize: data.baseFontSize,
+                fontSize: typography.baseFontSize,
                 fontFamily: 'Normal',
               ),
               overflow: TextOverflow.ellipsis,
