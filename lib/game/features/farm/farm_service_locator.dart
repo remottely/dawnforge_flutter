@@ -33,22 +33,7 @@ bool _timeListenersRegistered = false;
 Future<void> setupFarmDependencies() async {
   // ==================== Services (stateless, Singleton) ====================
 
-  // CropFactoryService: Precisa ser inicializado antes de registrar
-  // porque carrega o database JSON de crops
-  final cropFactory = CropFactoryService();
-  await cropFactory.initialize();
-  getIt.registerSingleton<CropFactoryService>(cropFactory);
-
-  // FarmFeedbackService: Feedback para UI (sons, mensagens, HUD)
-  getIt.registerSingleton<FarmFeedbackService>(FarmFeedbackService());
-
-  // FarmToolService: Validação de ferramentas
-  getIt.registerSingleton<FarmToolService>(FarmToolService());
-
   // ==================== Managers (stateful, Singleton) ====================
-
-  // FarmManager: Core do módulo, gerencia estado de todos os tiles
-  getIt.registerSingleton<FarmManager>(FarmManager.instance);
 
   _registerDayChangeListener();
 
@@ -56,37 +41,37 @@ Future<void> setupFarmDependencies() async {
 
   // TillSoilUseCase: Arar solo
   getIt.registerFactory<TillSoilUseCase>(
-    () => TillSoilUseCase(getIt<FarmManager>()),
+    () => TillSoilUseCase(FarmManager.instance),
   );
 
   // PlantSeedUseCase: Plantar semente (cross-module: Inventory + Farm)
   getIt.registerFactory<PlantSeedUseCase>(
     () => PlantSeedUseCase(
-      getIt<FarmManager>(),
+      FarmManager.instance,
       getIt<RemoveItemUseCase>(),
       getIt<AddItemUseCase>(),
-      getIt<CropFactoryService>(),
+      CropFactoryService.instance,
     ),
   );
 
   // WaterTileUseCase: Regar tile
   getIt.registerFactory<WaterTileUseCase>(
-    () => WaterTileUseCase(getIt<FarmManager>()),
+    () => WaterTileUseCase(FarmManager.instance),
   );
 
   // HarvestCropUseCase: Colher plantação (cross-module: Farm + Inventory)
   getIt.registerFactory<HarvestCropUseCase>(
-    () => HarvestCropUseCase(getIt<FarmManager>(), getIt<AddItemUseCase>()),
+    () => HarvestCropUseCase(FarmManager.instance, getIt<AddItemUseCase>()),
   );
 
   // SaveFarmUseCase: Salvar estado da fazenda (E2)
   getIt.registerFactory<SaveFarmUseCase>(
-    () => SaveFarmUseCase(getIt<FarmManager>()),
+    () => SaveFarmUseCase(FarmManager.instance),
   );
 
   // LoadFarmUseCase: Carregar estado da fazenda (E2)
   getIt.registerFactory<LoadFarmUseCase>(
-    () => LoadFarmUseCase(getIt<FarmManager>(), getIt<CropFactoryService>()),
+    () => LoadFarmUseCase(FarmManager.instance, CropFactoryService.instance),
   );
 
   // ==================== ViewModels (Factory) ====================
@@ -94,7 +79,7 @@ Future<void> setupFarmDependencies() async {
   // FarmViewModel: ViewModel intermediário para UI (F2)
   getIt.registerFactory<FarmViewModel>(
     () => FarmViewModel(
-      getIt<FarmManager>(),
+      FarmManager.instance,
       // getIt<TillSoilUseCase>(), // TODO(Kevin): put it back? use this implementation?
       // getIt<PlantSeedUseCase>(), // TODO(Kevin): put it back? use this implementation?
       // getIt<WaterTileUseCase>(), // TODO(Kevin): put it back? use this implementation?
@@ -111,12 +96,13 @@ void _registerDayChangeListener() {
   time.addDayChangeListener(_onDayChanged);
 }
 
-void _onDayChanged(DayState previous, DayState current) { // TODO(Kevin): verify this method
+void _onDayChanged(DayState previous, DayState current) {
+  // TODO(Kevin): verify this method
   // Keep world calendar in sync.
   WorldStateManager.instance.advanceDay();
 
   // Advance crops and soil hydration.
-  getIt<FarmManager>().advanceDay();
+  FarmManager.instance.advanceDay();
 
   // Reset stamina/energy daily if available.
   PlayerStateManager.instance.lastPlayerModel?.restoreStaminaFully();

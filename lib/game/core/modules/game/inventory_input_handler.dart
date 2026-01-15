@@ -25,7 +25,7 @@ class InventoryInputHandler extends GameComponent
     if (playerController != null) {
       playerController!.addObserver(this);
     }
-    getIt<EquipmentManager>().selectedSlotIndexNotifier.addListener(
+    EquipmentManager.instance.selectedSlotIndexNotifier.addListener(
       _handleSelectedSlotChanged,
     );
   }
@@ -35,7 +35,7 @@ class InventoryInputHandler extends GameComponent
     if (playerController != null) {
       playerController!.removeObserver(this);
     }
-    getIt<EquipmentManager>().selectedSlotIndexNotifier.removeListener(
+    EquipmentManager.instance.selectedSlotIndexNotifier.removeListener(
       _handleSelectedSlotChanged,
     );
     super.onRemove();
@@ -112,7 +112,7 @@ class InventoryInputHandler extends GameComponent
     _isInitialized = true;
 
     // Se já tem itens (carregados de save), não adicionar itens de teste
-    final inventoryManager = getIt<InventoryManager>();
+    final inventoryManager = InventoryManager.instance;
     if (inventoryManager.usedSlots > 0) {
       GameLogger.info(
         '[InventoryInput] ✓ Inventário já possui ${inventoryManager.usedSlots} itens (carregado de save), pulando itens de teste',
@@ -138,7 +138,7 @@ class InventoryInputHandler extends GameComponent
     _addItems(testItems);
 
     GameLogger.info(
-      '[InventoryInput] Itens de teste adicionados! ${getIt<InventoryManager>().usedSlots} slots usados',
+      '[InventoryInput] Itens de teste adicionados! ${InventoryManager.instance.usedSlots} slots usados',
     );
 
     // Ensure first non-empty slot is selected
@@ -146,9 +146,9 @@ class InventoryInputHandler extends GameComponent
   }
 
   void _ensureInitialSlotSelection() {
-    final equipmentManager = getIt<EquipmentManager>();
+    final equipmentManager = EquipmentManager.instance;
     final currentSlotIndex = equipmentManager.currentMainHandSlotIndex;
-    final currentSlot = getIt<InventoryManager>().getSlotByIndex(
+    final currentSlot = InventoryManager.instance.getSlotByIndex(
       currentSlotIndex,
     );
 
@@ -162,7 +162,7 @@ class InventoryInputHandler extends GameComponent
     }
 
     // Find first non-empty slot and select it
-    final result = getIt<InventoryManager>().findItem((_) => true);
+    final result = InventoryManager.instance.findItem((_) => true);
 
     if (result != null) {
       equipmentManager.selectSlotIndex(result.index);
@@ -177,7 +177,7 @@ class InventoryInputHandler extends GameComponent
   }
 
   void _debugInsertItem(HandItemId itemKey) {
-    if (getIt<InventoryManager>().getItemQuantity(itemKey.name) == 0) {
+    if (InventoryManager.instance.getItemQuantity(itemKey.name) == 0) {
       getIt<AddItemUseCase>()(itemKey, 1);
     }
   }
@@ -210,8 +210,8 @@ class InventoryInputHandler extends GameComponent
       '[InventoryInput] Procurando próximo item no inventário para selecionar...',
     );
 
-    final inventoryManager = getIt<InventoryManager>();
-    final equipmentManager = getIt<EquipmentManager>();
+    final inventoryManager = InventoryManager.instance;
+    final equipmentManager = EquipmentManager.instance;
 
     if (inventoryManager.maxSlots == 0) {
       GameLogger.warning(
@@ -243,8 +243,8 @@ class InventoryInputHandler extends GameComponent
       '[InventoryInput] Procurando item anterior no inventário para selecionar...',
     );
 
-    final inventoryManager = getIt<InventoryManager>();
-    final equipmentManager = getIt<EquipmentManager>();
+    final inventoryManager = InventoryManager.instance;
+    final equipmentManager = EquipmentManager.instance;
 
     if (inventoryManager.maxSlots == 0) {
       GameLogger.warning(
@@ -282,14 +282,14 @@ class InventoryInputHandler extends GameComponent
   }
 
   void _handleSelectedSlotChanged() {
-    final selectedItem = getIt<EquipmentManager>().getEquippedItem();
+    final selectedItem = EquipmentManager.instance.getEquippedItem();
     _notifyEquipmentChanged(selectedItem?.id);
   }
 
   // ========== SV STYLE SLOT SELECTION ==========
   void _selectSlotByNumber(int slotIndex) {
-    final inventoryManager = getIt<InventoryManager>();
-    final equipmentManager = getIt<EquipmentManager>();
+    final inventoryManager = InventoryManager.instance;
+    final equipmentManager = EquipmentManager.instance;
 
     // Check if slot exists
     if (slotIndex >= inventoryManager.maxSlots) {

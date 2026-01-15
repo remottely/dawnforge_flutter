@@ -46,8 +46,8 @@ class ConsumableBehavior extends CharacterBehavior {
     }
 
     // ✅ CORREÇÃO: Usa EquipmentManager + InventoryManager
-    final equipmentManager = getIt<EquipmentManager>();
-    final inventoryManager = getIt<InventoryManager>();
+    final equipmentManager = EquipmentManager.instance;
+    final inventoryManager = InventoryManager.instance;
     
     final selectedItem = equipmentManager.getEquippedItem();
     

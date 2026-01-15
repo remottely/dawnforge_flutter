@@ -13,42 +13,36 @@ final getIt = GetIt.instance;
 
 Future<void> setupInventoryDependencies() async {
   // Services (stateless helpers) - Initialize first!
-  final itemFactory = ItemFactoryService();
-  await itemFactory.initialize();
-  getIt.registerSingleton<ItemFactoryService>(itemFactory);
-
   // Managers (singleton state)
-  getIt.registerSingleton<InventoryManager>(InventoryManager.instance);
-  getIt.registerSingleton<EquipmentManager>(EquipmentManager.instance);
 
   // UseCases (operations)
   getIt.registerFactory<AddItemUseCase>(
     () =>
-        AddItemUseCase(getIt<InventoryManager>(), getIt<ItemFactoryService>()),
+        AddItemUseCase(InventoryManager.instance, ItemFactoryService.instance),
   );
 
   getIt.registerFactory<RemoveItemUseCase>(
-    () => RemoveItemUseCase(getIt<InventoryManager>()),
+    () => RemoveItemUseCase(InventoryManager.instance),
   );
 
   getIt.registerFactory<EquipItemUseCase>(
     () =>
-        EquipItemUseCase(getIt<EquipmentManager>(), getIt<InventoryManager>()),
+        EquipItemUseCase(EquipmentManager.instance, InventoryManager.instance),
   );
 
   getIt.registerFactory<SaveInventoryUseCase>(
     () => SaveInventoryUseCase(
-      getIt<InventoryManager>(),
-      getIt<EquipmentManager>(),
+      InventoryManager.instance,
+      EquipmentManager.instance,
     ),
   );
 
   getIt.registerFactory<LoadInventoryUseCase>(
     () => LoadInventoryUseCase(
       getIt<AddItemUseCase>(),
-      getIt<InventoryManager>(),
-      getIt<EquipmentManager>(),
-      getIt<ItemFactoryService>(),
+      InventoryManager.instance,
+      EquipmentManager.instance,
+      ItemFactoryService.instance,
     ),
   );
 }

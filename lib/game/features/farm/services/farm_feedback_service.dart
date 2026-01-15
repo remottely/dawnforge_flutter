@@ -3,7 +3,13 @@ import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:bonfire/bonfire.dart';
 
 /// Service for providing user feedback during farm actions (I2: Service = stateless)
-class FarmFeedbackService {
+final class FarmFeedbackService {
+  FarmFeedbackService._() {
+    GameLogger.info('[FarmFeedbackService] Initialized');
+  }
+
+  static final instance = FarmFeedbackService._();
+
   /// Show a floating text message to the user
   void showFloatingText(String message) {
     GameLogger.info('[FarmFeedback] 💬 $message');

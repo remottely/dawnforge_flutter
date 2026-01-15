@@ -45,8 +45,8 @@ class DoorDecorationView extends GameDecoration {
   }
 
   int? _getSelectedKeySlotIndex() {
-    final selectedIndex = getIt<EquipmentManager>().currentMainHandSlotIndex;
-    final slot = getIt<InventoryManager>().getSlotByIndex(selectedIndex);
+    final selectedIndex = EquipmentManager.instance.currentMainHandSlotIndex;
+    final slot = InventoryManager.instance.getSlotByIndex(selectedIndex);
 
     if (slot == null || slot.item == null) return null;
 
@@ -56,11 +56,11 @@ class DoorDecorationView extends GameDecoration {
   }
 
   void _consumeKey(int slotIndex) {
-    getIt<InventoryManager>().consumeFromSlot(slotIndex, 1);
+    InventoryManager.instance.consumeFromSlot(slotIndex, 1);
   }
 
   void _showKeyFlow(Player player, int slotIndex) {
-    final slot = getIt<InventoryManager>().getSlotByIndex(slotIndex);
+    final slot = InventoryManager.instance.getSlotByIndex(slotIndex);
     final itemName = slot?.item?.name ?? 'dungeon_key';
 
     UIStateManager.instance.isShowingConversation = true;

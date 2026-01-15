@@ -85,7 +85,7 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
 
   bool _tryConsumeSelectedItem(DDBasePlayerView player) {
     final selectedIndex = EquipmentManager.instance.currentMainHandSlotIndex;
-    final slot = getIt<InventoryManager>().getSlotByIndex(selectedIndex);
+    final slot = InventoryManager.instance.getSlotByIndex(selectedIndex);
     if (slot == null || slot.isEmpty) {
       GameLogger.warning(
         '[ConsumableController] Consumo falhou: slot vazio ($selectedIndex)',
@@ -169,7 +169,7 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
       model.restoreStamina(staminaGain);
     }
 
-    getIt<InventoryManager>().consumeFromSlot(slotIndex, 1);
+    InventoryManager.instance.consumeFromSlot(slotIndex, 1);
     GameLogger.info(
       '[ConsumableController] Consumo aplicado: hp=+$healthGain, stamina=+$staminaGain, slot=$slotIndex',
     );

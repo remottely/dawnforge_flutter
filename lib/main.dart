@@ -4,7 +4,6 @@ import 'package:dawnforge/game/core/utils/app_environment.dart';
 import 'package:dawnforge/game/features/farm/database/crop_database.dart';
 import 'package:dawnforge/game/features/farm/farm_service_locator.dart';
 import 'package:dawnforge/game/features/inventory/config/inventory_service_locator.dart';
-import 'package:dawnforge/game/features/time/time_service_locator.dart';
 import 'package:dawnforge/game/core/modules/overlay/design_system/overlay_design_system.dart';
 import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
 import 'package:dawnforge/shared/managers/settings_manager.dart';
@@ -28,7 +27,6 @@ void main() async {
   await AudioManager.instance.initialize();
   await CropDatabase.initialize();
 
-  await setupTimeDependencies();
   await setupInventoryDependencies();
   await setupFarmDependencies();
 

@@ -65,10 +65,10 @@ class _InventoryGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<int>(
-      valueListenable: getIt<EquipmentManager>().selectedSlotIndexNotifier,
+      valueListenable: EquipmentManager.instance.selectedSlotIndexNotifier,
       builder: (context, selectedIndex, _) {
         return ValueListenableBuilder<List<InventorySlot>>(
-          valueListenable: getIt<InventoryManager>().slotsNotifier,
+          valueListenable: InventoryManager.instance.slotsNotifier,
           builder: (context, slots, _) {
             return ValueListenableBuilder<HandItem?>(
               valueListenable: EquipmentState.instance.equippedItem,
@@ -121,7 +121,7 @@ class _InventoryGrid extends StatelessWidget {
     }
 
     // Modo normal: Seleção de slot
-    getIt<EquipmentManager>().selectSlotIndex(slot.index);
+    EquipmentManager.instance.selectSlotIndex(slot.index);
   }
 
   void _handleMarketSale(InventorySlot slot) {
@@ -141,7 +141,7 @@ class _InventoryGrid extends StatelessWidget {
       return;
     }
 
-    final inventoryManager = getIt<InventoryManager>();
+    final inventoryManager = InventoryManager.instance;
     final marketManager = MarketManager.instance;
 
     if (!marketManager.canSellItem(slot.item!.id, inventoryManager)) {

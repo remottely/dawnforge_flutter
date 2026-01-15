@@ -10,7 +10,7 @@ class EquipmentSyncBehavior extends CharacterBehavior {
   @override
   void onAttach() {
     super.onAttach();
-    _equipmentManager = getIt<EquipmentManager>();
+    _equipmentManager = EquipmentManager.instance;
 
     // Escuta mudanças no equipamento
     _equipmentManager.selectedSlotIndexNotifier.addListener(

@@ -39,7 +39,7 @@ class MarketManager {
   static final MarketManager instance = MarketManager._(
     getIt<AddItemUseCase>(),
     getIt<RemoveItemUseCase>(),
-    getIt<ItemFactoryService>(),
+    ItemFactoryService.instance,
   );
 
   final AddItemUseCase _addItemUseCase;

@@ -23,7 +23,7 @@ class FarmInputHandler extends GameComponent with PlayerControllerListener {
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    _feedbackService = getIt<FarmFeedbackService>();
+    _feedbackService = FarmFeedbackService.instance;
     playerController.addObserver(this);
   }
 

@@ -6,7 +6,7 @@ import '../../../core/modules/world/world_state_manager.dart';
 import '../../game_world/world/entities/world_entities.dart';
 
 /// Manager for farm state (C1: Singleton + ValueNotifier, I2: Manager = Singleton State)
-class FarmManager {
+final class FarmManager {
   FarmManager._() {
     _initializeTiles();
     GameLogger.info('[FarmManager] Initialized');

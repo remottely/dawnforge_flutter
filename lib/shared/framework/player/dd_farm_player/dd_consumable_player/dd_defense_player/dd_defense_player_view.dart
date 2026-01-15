@@ -58,7 +58,7 @@ abstract class DDDefensePlayerView<
     if (_isDefending) return true;
 
     // Check if player has a shield equipped in the main hand
-    final mainHandItem = getIt<EquipmentManager>().getEquippedItem();
+    final mainHandItem = EquipmentManager.instance.getEquippedItem();
 
     if (mainHandItem == null || mainHandItem is! WeaponItem) {
       return false;

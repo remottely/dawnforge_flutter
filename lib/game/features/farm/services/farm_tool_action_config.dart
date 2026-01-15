@@ -62,10 +62,10 @@ final class FarmToolActionDef {
           return;
         default:
           if (equipment?.isSeed ?? false) {
-            final equippedItem = getIt<EquipmentManager>().getEquippedItem();
+            final equippedItem = EquipmentManager.instance.getEquippedItem();
             final seedItemId = equippedItem?.id;
             if (seedItemId == null) {
-              farm_di.getIt<FarmFeedbackService>().showFloatingText(
+              FarmFeedbackService.instance.showFloatingText(
                 FarmFeedbackDef.kCannotPlant,
               );
               return;
@@ -83,7 +83,7 @@ final class FarmToolActionDef {
   }
 
   static bool _handleTillSoil(int x, int y) {
-    final _feedbackService = farm_di.getIt<FarmFeedbackService>();
+    final _feedbackService = FarmFeedbackService.instance;
     final result = _actionService.tillSoil(x, y);
     if (result.success) {
       _feedbackService.showFloatingText(FarmFeedbackDef.kSoilTilled);
@@ -92,7 +92,7 @@ final class FarmToolActionDef {
   }
 
   static bool _handleWater(int x, int y) {
-    final _feedbackService = farm_di.getIt<FarmFeedbackService>();
+    final _feedbackService = FarmFeedbackService.instance;
     final result = _actionService.waterTile(x, y);
     if (result.success) {
       _feedbackService.showFloatingText(FarmFeedbackDef.kCropWatered);
@@ -105,7 +105,7 @@ final class FarmToolActionDef {
     required int x,
     required int y,
   }) {
-    final _feedbackService = farm_di.getIt<FarmFeedbackService>();
+    final _feedbackService = FarmFeedbackService.instance;
 
     final planted = farm_di.getIt<PlantSeedUseCase>().call(x, y, seedItemId);
 
@@ -118,7 +118,7 @@ final class FarmToolActionDef {
   }
 
   static bool _handleHarvest(BonfireGameInterface gameRef, int x, int y) {
-    final _feedbackService = farm_di.getIt<FarmFeedbackService>();
+    final _feedbackService = FarmFeedbackService.instance;
     final result = _actionService.harvestCrop(x, y);
 
     if (result.success && result.crop != null) {

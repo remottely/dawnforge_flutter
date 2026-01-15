@@ -7,6 +7,13 @@ import '../../game_world/world/entities/objects/farm/crop_entity.dart';
 
 /// Service for creating crops from JSON database (L2: Factory with JSON database, I2: Service = stateless)
 class CropFactoryService {
+    CropFactoryService._() {
+    initialize();
+    GameLogger.info('[CropFactoryService] Initialized');
+  }
+
+  static final instance = CropFactoryService._();
+
   final Map<HandItemId, CropEntity> _database = {};
   bool _isInitialized = false;
 

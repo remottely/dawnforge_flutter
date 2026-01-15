@@ -7,7 +7,13 @@ import '../../inventory/entities/enums/hand_item_id.dart';
 import '../../game_world/world/entities/world_entities.dart';
 
 /// Service for validating farm tool usage (I2: Service = stateless)
-class FarmToolService {
+final class FarmToolService {
+    FarmToolService._() {
+    GameLogger.info('[FarmToolService] Initialized');
+  }
+
+  static final instance = FarmToolService._();
+
   /// Check if a tool can be used on a specific tile
   bool canUseTool(HandItem tool, GridTile tile) {
     final farmObject = tile.object as FarmObject?;

@@ -17,7 +17,7 @@ final class EquipmentManager {
     );
 
     // Keep UI in sync when slots change (consumption/move/clear)
-    getIt<InventoryManager>().slotsNotifier.addListener(
+    InventoryManager.instance.slotsNotifier.addListener(
       _handleInventorySlotsChanged,
     );
   }
@@ -41,7 +41,7 @@ final class EquipmentManager {
   //   }
 
   //   // Otherwise, find the first slot containing this item id.
-  //   final slot = getIt<InventoryManager>().findSlotByItemId(item.id);
+  //   final slot = InventoryManager.instance.findSlotByItemId(item.id);
   //   if (slot == null) {
   //     GameLogger.warning('[EquipmentManager] Item not in inventory');
   //     return false;
@@ -50,7 +50,7 @@ final class EquipmentManager {
   // }
 
   bool selectSlotIndex(int index) {
-    final slot = getIt<InventoryManager>().getSlotByIndex(index);
+    final slot = InventoryManager.instance.getSlotByIndex(index);
     if (slot == null) {
       GameLogger.warning('[EquipmentManager] Slot $index not found');
       return false;
@@ -72,7 +72,7 @@ final class EquipmentManager {
   }
 
   HandItem? getEquippedItem() =>
-      getIt<InventoryManager>().getSlotByIndex(_currentMainHandSlotIndex)?.item;
+      InventoryManager.instance.getSlotByIndex(_currentMainHandSlotIndex)?.item;
 
   bool hasEquippedItem() => getEquippedItem() != null;
 
@@ -117,13 +117,13 @@ final class EquipmentManager {
   ) {
     _currentMainHandSlotIndex = json['selectedSlotIndex'] as int? ?? 0;
     // Clamp to available slots
-    if (_currentMainHandSlotIndex >= getIt<InventoryManager>().maxSlots) {
+    if (_currentMainHandSlotIndex >= InventoryManager.instance.maxSlots) {
       _currentMainHandSlotIndex = 0;
     }
     selectedSlotIndexNotifier.value = _currentMainHandSlotIndex;
 
     // Update UI with current item
-    final item = getIt<InventoryManager>()
+    final item = InventoryManager.instance
         .getSlotByIndex(_currentMainHandSlotIndex)
         ?.item;
     EquipmentState.instance.updateEquippedItem(item);
@@ -139,7 +139,7 @@ final class EquipmentManager {
 
     // Notify Flutter overlays
     EquipmentState.instance.updateEquippedItem(
-      getIt<InventoryManager>().getSlotByIndex(0)?.item,
+      InventoryManager.instance.getSlotByIndex(0)?.item,
     );
 
     GameLogger.info('[EquipmentManager] Equipment reset');
@@ -147,7 +147,7 @@ final class EquipmentManager {
 
   void _handleInventorySlotsChanged() {
     final selectedIndex = _currentMainHandSlotIndex;
-    final slot = getIt<InventoryManager>().getSlotByIndex(selectedIndex);
+    final slot = InventoryManager.instance.getSlotByIndex(selectedIndex);
     if (slot == null) return;
 
     // Keep overlay synced with whatever is in the selected slot

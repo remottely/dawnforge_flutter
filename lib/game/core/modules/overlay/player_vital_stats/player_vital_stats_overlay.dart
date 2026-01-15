@@ -63,12 +63,12 @@ class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
   }
 
   // bool get _hasAnyKey =>
-  //     getIt<InventoryManager>().hasItem(DoorKeyDecorationDef.kItemId);
+  //     InventoryManager.instance.hasItem(DoorKeyDecorationDef.kItemId);
 
   // bool get _hasKeySelected {
   //   final selectedIndex =
-  //       getIt<EquipmentManager>().currentMainHandSlotIndex;
-  //   final slot = getIt<InventoryManager>().getSlotByIndex(selectedIndex);
+  //       EquipmentManager.instance.currentMainHandSlotIndex;
+  //   final slot = InventoryManager.instance.getSlotByIndex(selectedIndex);
   //   if (slot == null || slot.item == null) return false;
   //   return slot.item!.id == DoorKeyDecorationDef.kItemId && slot.quantity > 0;
   // }

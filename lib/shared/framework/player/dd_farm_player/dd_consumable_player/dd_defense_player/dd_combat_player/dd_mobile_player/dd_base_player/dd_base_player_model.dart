@@ -35,8 +35,8 @@ class DDBasePlayerModel {
   /// If the slot is empty, equipment will be null
   HandItemId? get equipment {
     final selectedSlotIndex =
-        getIt<EquipmentManager>().currentMainHandSlotIndex;
-    final slot = getIt<InventoryManager>().getSlotByIndex(selectedSlotIndex);
+        EquipmentManager.instance.currentMainHandSlotIndex;
+    final slot = InventoryManager.instance.getSlotByIndex(selectedSlotIndex);
     final item = slot?.item;
 
     if (item is WeaponItem) {

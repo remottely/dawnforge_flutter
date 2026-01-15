@@ -42,8 +42,8 @@ class _MarketPanelState extends State<MarketPanel> {
   @override
   void initState() {
     super.initState();
-    _inventory = getIt<InventoryManager>();
-    _itemFactory = getIt<ItemFactoryService>();
+    _inventory = InventoryManager.instance;
+    _itemFactory = ItemFactoryService.instance;
     _itemCache = {};
     _focusNode = FocusNode(debugLabel: 'MarketPanelFocus');
     // Garante player de referência para operações de compra/venda.
@@ -464,7 +464,7 @@ class _MarketPanelState extends State<MarketPanel> {
     if (newIndex < 0) newIndex = slots.length - 1;
 
     setState(() => _selectedInventoryIndex = newIndex);
-    getIt<EquipmentManager>().selectSlotIndex(newIndex);
+    EquipmentManager.instance.selectSlotIndex(newIndex);
   }
 
   void _buySelected() {
