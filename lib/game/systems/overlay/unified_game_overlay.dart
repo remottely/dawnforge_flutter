@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/systems/overlay/design_system/overlay_design_system_extension.dart';
+import 'package:dawnforge/shared/overlay_design_system/overlay_design_system_extension.dart';
 import 'package:dawnforge/game/systems/overlay/message/message_overlay.dart';
 import 'package:dawnforge/game/systems/overlay/tutorial_inputs/tutorial_inputs_overlay.dart';
 import 'package:dawnforge/game/systems/overlay/inventory/inventory_overlay.dart';
@@ -29,7 +29,7 @@ final class UnifiedGameOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = context.isOverlayDesktop;
+    final isDesktop = context.overlayDs.screenSize.isDesktop;
 
     const flexA = 1;
     const flexB = 6;

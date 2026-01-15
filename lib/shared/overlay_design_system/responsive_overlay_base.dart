@@ -1,5 +1,5 @@
 /// **ResponsiveOverlayBase - Base para overlays responsivos**
-import 'package:dawnforge/game/systems/overlay/design_system/overlay_design_system_extension.dart';
+import 'package:dawnforge/shared/overlay_design_system/overlay_design_system_extension.dart';
 import 'package:flutter/widgets.dart';
 
 abstract class ResponsiveOverlayBase extends StatelessWidget {
@@ -24,7 +24,7 @@ abstract class ResponsiveOverlayBase extends StatelessWidget {
 
   Widget _buildPositionedOverlay(BuildContext context) {
     final position = getOverlayPosition(context);
-    final constraints = context.overlayConstraints.forOverlay(overlayId);
+    final constraints = context.overlayDs.constraints.forOverlay(overlayId);
 
     Widget content = buildOverlayContent(context);
 

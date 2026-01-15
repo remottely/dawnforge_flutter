@@ -7,8 +7,8 @@ import 'package:dawnforge/game/systems/overlay/inputs/mobile_inputs_state.dart';
 
 import 'package:dawnforge/game/systems/input_actions/joysctick_setup.dart';
 import 'package:dawnforge/game/utils/app_environment.dart';
-import 'package:dawnforge/game/systems/overlay/design_system/overlay_design_system_extension.dart';
-import 'package:dawnforge/game/systems/overlay/design_system/responsive_overlay_base.dart';
+import 'package:dawnforge/shared/overlay_design_system/overlay_design_system_extension.dart';
+import 'package:dawnforge/shared/overlay_design_system/responsive_overlay_base.dart';
 import 'package:flutter/material.dart';
 
 /// Mobile touch inputs overlay with buttons for all game actions
@@ -32,8 +32,8 @@ final class MobileInputsOverlay extends ResponsiveOverlayBase {
   @override
   Widget buildOverlayContent(BuildContext context) {
     // 🔥 Acessa tokens uma única vez
-    final sizes = context.overlaySizes;
-    final spacing = context.overlaySpacing;
+    final sizes = context.overlayDs.sizes;
+    final spacing = context.overlayDs.spacing;
     final screenHeight = context.overlayScreenDimensions.height;
 
     final buttonSize = sizes.actionButton;
@@ -84,8 +84,8 @@ final class MobileInputsOverlay extends ResponsiveOverlayBase {
   }
 
   List<Widget> _buildActionButtons(BuildContext context) {
-    final sizes = context.overlaySizes;
-    final spacing = context.overlaySpacing;
+    final sizes = context.overlayDs.sizes;
+    final spacing = context.overlayDs.spacing;
 
     return [
       _buildActionButton(
@@ -109,8 +109,8 @@ final class MobileInputsOverlay extends ResponsiveOverlayBase {
   }
 
   List<Widget> _buildUtilityButtons(BuildContext context) {
-    final sizes = context.overlaySizes;
-    final spacing = context.overlaySpacing;
+    final sizes = context.overlayDs.sizes;
+    final spacing = context.overlayDs.spacing;
 
     return [
       _buildActionButton(

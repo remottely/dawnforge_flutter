@@ -6,9 +6,9 @@ import 'package:dawnforge/game/systems/audio/audio_manager.dart';
 import 'package:dawnforge/game/systems/overlay/tutorial_inputs/tutorial_inputs_hud_def.dart';
 import 'package:dawnforge/game/systems/overlay/tutorial_inputs/tutorial_inputs_state.dart';
 
-import 'package:dawnforge/game/systems/overlay/design_system/overlay_design_system_extension.dart';
-import 'package:dawnforge/game/systems/overlay/design_system/overlay_tokens.dart';
-import 'package:dawnforge/game/systems/overlay/design_system/responsive_overlay_base.dart';
+import 'package:dawnforge/shared/overlay_design_system/overlay_design_system_extension.dart';
+import 'package:dawnforge/shared/overlay_design_system/overlay_tokens.dart';
+import 'package:dawnforge/shared/overlay_design_system/responsive_overlay_base.dart';
 import 'package:dawnforge/shared/design_system/theme/screen_size_info.dart';
 import 'package:dawnforge/core/managers/settings_manager.dart';
 import 'package:flutter/material.dart';
@@ -26,16 +26,16 @@ final class TutorialInputsOverlay extends ResponsiveOverlayBase {
   @override
   OverlayPosition getOverlayPosition(BuildContext context) {
     return OverlayPosition.bottomLeft(
-      safeAreaPadding: EdgeInsets.all(context.overlaySpacing.margin / 2),
+      safeAreaPadding: EdgeInsets.all(context.overlayDs.spacing.margin / 2),
     );
   }
 
   @override
   Widget buildOverlayContent(BuildContext context) {
     // 🔥 Acessa tokens uma única vez
-    final spacing = context.overlaySpacing;
-    final typography = context.overlayTypography;
-    final screenSize = context.overlayScreenSize;
+    final spacing = context.overlayDs.spacing;
+    final typography = context.overlayDs.typography;
+    final screenSize = context.overlayDs.screenSize;
 
     final keyBoxWidth = context.overlayValueByScreenSize(
       mobile: 80.0,

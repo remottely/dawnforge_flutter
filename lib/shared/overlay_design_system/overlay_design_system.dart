@@ -1,5 +1,5 @@
 /// **OverlayDesignSystem - Sistema de Design para Overlays de Gameplay**
-import 'package:dawnforge/game/systems/overlay/design_system/overlay_tokens.dart';
+import 'package:dawnforge/shared/overlay_design_system/overlay_tokens.dart';
 import 'package:dawnforge/shared/design_system/theme/screen_size_info.dart';
 import 'package:flutter/material.dart';
 
