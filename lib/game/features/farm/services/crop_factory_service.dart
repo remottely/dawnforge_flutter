@@ -9,7 +9,6 @@ import '../../game_world/world/entities/objects/farm/crop_entity.dart';
 class CropFactoryService {
     CropFactoryService._() {
     initialize();
-    GameLogger.info('[CropFactoryService] Initialized');
   }
 
   static final instance = CropFactoryService._();

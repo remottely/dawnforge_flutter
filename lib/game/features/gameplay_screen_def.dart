@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/core/modules/camera/camera_calculations.dart';
-import 'package:dawnforge/game/core/modules/game/tile_constants.dart';
-import 'package:dawnforge/game/core/modules/input_actions/input_def.dart';
+import 'package:dawnforge/game/core/systems/camera/camera_calculations.dart';
+import 'package:dawnforge/game/core/systems/game/tile_constants.dart';
+import 'package:dawnforge/game/core/systems/input_actions/input_def.dart';
 
 import 'package:flutter/widgets.dart';
 

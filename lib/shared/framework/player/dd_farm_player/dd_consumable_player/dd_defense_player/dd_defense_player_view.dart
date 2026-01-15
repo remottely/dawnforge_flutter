@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/core/modules/combat/shield_defense_component.dart';
+import 'package:dawnforge/game/core/systems/combat/shield_defense_component.dart';
 import 'package:dawnforge/game/features/inventory/managers/equipment_manager.dart';
 import 'package:dawnforge/game/features/inventory/config/inventory_service_locator.dart';
 import 'package:dawnforge/game/features/inventory/items/weapon_item.dart';

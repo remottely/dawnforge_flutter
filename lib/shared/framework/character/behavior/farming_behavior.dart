@@ -2,8 +2,8 @@
 import 'dart:async' as async;
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/core/utils/game_logger.dart';
-import 'package:dawnforge/game/core/modules/input_actions/input_def.dart';
-import 'package:dawnforge/game/core/modules/overlay/message/message_overlay_def.dart';
+import 'package:dawnforge/game/core/systems/input_actions/input_def.dart';
+import 'package:dawnforge/game/core/systems/overlay/message/message_overlay_def.dart';
 import 'package:dawnforge/game/core/utils/app_environment.dart';
 import 'package:dawnforge/game/features/farm/services/farm_tool_action_config.dart';
 import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.dart';

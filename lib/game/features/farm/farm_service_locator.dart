@@ -1,7 +1,7 @@
 import 'package:get_it/get_it.dart';
-import 'package:dawnforge/game/core/modules/world/world_state_manager.dart';
-import 'package:dawnforge/game/core/modules/game/player_state_manager.dart';
-import 'package:dawnforge/game/core/modules/save/game_save_controller.dart';
+import 'package:dawnforge/game/core/systems/world/world_state_manager.dart';
+import 'package:dawnforge/game/core/systems/game/player_state_manager.dart';
+import 'package:dawnforge/game/core/systems/save/game_save_controller.dart';
 import 'package:dawnforge/game/features/time/day_state.dart';
 import 'package:dawnforge/game/features/time/time_manager.dart' as new_time;
 
@@ -9,8 +9,6 @@ import '../inventory/usecases/add_item_use_case.dart';
 import '../inventory/usecases/remove_item_use_case.dart';
 import 'managers/farm_manager.dart';
 import 'services/crop_factory_service.dart';
-import 'services/farm_feedback_service.dart';
-import 'services/farm_tool_service.dart';
 import 'usecases/harvest_crop_use_case.dart';
 import 'usecases/load_farm_use_case.dart';
 import 'usecases/plant_seed_use_case.dart';

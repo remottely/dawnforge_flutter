@@ -1,8 +1,8 @@
 import 'dart:math' as math;
 
-import 'package:dawnforge/game/core/modules/game/player_state_manager.dart';
-import 'package:dawnforge/game/core/modules/input_actions/keyboard_setup.dart';
-import 'package:dawnforge/game/core/modules/overlay/message/message_overlay_service.dart';
+import 'package:dawnforge/game/core/systems/game/player_state_manager.dart';
+import 'package:dawnforge/game/core/systems/input_actions/keyboard_setup.dart';
+import 'package:dawnforge/game/core/systems/overlay/message/message_overlay_service.dart';
 import 'package:dawnforge/game/features/inventory/config/inventory_service_locator.dart';
 import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.dart';
 import 'package:dawnforge/game/features/inventory/entities/hand_item.dart';

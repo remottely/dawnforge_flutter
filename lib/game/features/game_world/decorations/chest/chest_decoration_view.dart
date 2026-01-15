@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/core/modules/combat/death/character_fx_sprite_animations_def.dart';
-import 'package:dawnforge/game/core/modules/input_actions/input_def.dart';
-import 'package:dawnforge/game/core/modules/ui/emote_manager.dart';
+import 'package:dawnforge/game/core/systems/combat/death/character_fx_sprite_animations_def.dart';
+import 'package:dawnforge/game/core/systems/input_actions/input_def.dart';
+import 'package:dawnforge/game/core/systems/ui/emote_manager.dart';
 import 'package:dawnforge/game/features/game_world/decorations/chest/chest_decoration_def.dart';
 import 'package:dawnforge/game/features/game_world/decorations/chest/chest_decoration_controller.dart';
 import 'package:dawnforge/game/features/game_world/decorations/chest/chest_decoration_model.dart';

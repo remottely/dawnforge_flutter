@@ -2,14 +2,13 @@ import 'package:dawnforge/core/utils/game_logger.dart';
 
 import 'package:flutter/foundation.dart';
 
-import '../../../core/modules/world/world_state_manager.dart';
+import '../../../core/systems/world/world_state_manager.dart';
 import '../../game_world/world/entities/world_entities.dart';
 
 /// Manager for farm state (C1: Singleton + ValueNotifier, I2: Manager = Singleton State)
 final class FarmManager {
   FarmManager._() {
     _initializeTiles();
-    GameLogger.info('[FarmManager] Initialized');
   }
 
   static final instance = FarmManager._();

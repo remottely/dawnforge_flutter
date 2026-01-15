@@ -1,9 +1,9 @@
 import 'package:dawnforge/core/utils/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/core/modules/input_actions/input_def.dart';
-import 'package:dawnforge/game/core/modules/save/game_save_controller.dart';
-import 'package:dawnforge/game/core/modules/world/world_state_manager.dart';
+import 'package:dawnforge/game/core/systems/input_actions/input_def.dart';
+import 'package:dawnforge/game/core/systems/save/game_save_controller.dart';
+import 'package:dawnforge/game/core/systems/world/world_state_manager.dart';
 import 'package:dawnforge/game/core/utils/app_environment.dart';
 import 'package:dawnforge/game/features/farm/constants/farm_feedback_config.dart';
 import 'package:dawnforge/game/features/farm/farm_service_locator.dart';

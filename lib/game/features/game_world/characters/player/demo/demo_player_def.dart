@@ -1,8 +1,8 @@
 // lib/gameplay/characters/player/demo/demo_player_def.dart
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/game/features/game_world/characters/character_constants.dart';
-import 'package:dawnforge/game/core/modules/game/lightning_constants.dart';
-import 'package:dawnforge/game/core/modules/game/tile_constants.dart';
+import 'package:dawnforge/game/core/systems/game/lightning_constants.dart';
+import 'package:dawnforge/game/core/systems/game/tile_constants.dart';
 import 'package:dawnforge/game/core/utils/hitbox_utils.dart';
 import 'package:dawnforge/shared/framework/character/behavior/mining_behavior.dart';
 import 'package:dawnforge/shared/framework/character/character_config.dart';

@@ -1,4 +1,4 @@
-import 'package:dawnforge/game/core/modules/map/map_manager.dart';
+import 'package:dawnforge/game/core/systems/map/map_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

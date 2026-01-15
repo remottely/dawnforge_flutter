@@ -1,5 +1,4 @@
 import 'package:dawnforge/core/utils/game_logger.dart';
-import 'package:dawnforge/game/features/farm/farm_service_locator.dart';
 
 import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.dart';
 import 'package:flutter/foundation.dart';
@@ -12,11 +11,6 @@ import 'package:dawnforge/game/features/inventory/state/equipment_state.dart';
 /// Manager for equipment state (C1: Singleton + ValueNotifier, I2: Manager = Singleton State)
 final class EquipmentManager {
   EquipmentManager._() {
-    GameLogger.info(
-      '[EquipmentManager] Initialized (selection mirrors inventory)',
-    );
-
-    // Keep UI in sync when slots change (consumption/move/clear)
     InventoryManager.instance.slotsNotifier.addListener(
       _handleInventorySlotsChanged,
     );

@@ -18,10 +18,10 @@ import '../../game_world/database/smallburg/smallburg_seed_bag_item_database_def
 final class ItemFactoryService {
   ItemFactoryService._() {
     initialize();
-    GameLogger.info('[ItemFactoryService] Initialized');
   }
 
   static final instance = ItemFactoryService._();
+  
   final Map<HandItemId, WeaponItem> _weapons = {};
   final Map<HandItemId, ToolItem> _tools = {};
   final Map<HandItemId, ConsumableItem> _consumables = {};

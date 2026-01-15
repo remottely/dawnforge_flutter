@@ -1,15 +1,15 @@
 import 'dart:async' as async;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/core/modules/combat/attacks/character_fireball_attack_def.dart';
-import 'package:dawnforge/game/core/modules/combat/attacks/character_fx_particles_animations_def.dart';
+import 'package:dawnforge/game/core/systems/combat/attacks/character_fireball_attack_def.dart';
+import 'package:dawnforge/game/core/systems/combat/attacks/character_fx_particles_animations_def.dart';
 import 'package:dawnforge/game/core/utils/offset_helper.dart';
-import 'package:dawnforge/game/core/modules/audio/audio_manager.dart';
-import 'package:dawnforge/game/core/modules/camera/camera_fx.dart';
-import 'package:dawnforge/game/core/modules/combat/attacks/player_primary_attack_def.dart';
-import 'package:dawnforge/game/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
-import 'package:dawnforge/game/core/modules/combat/synchronized_attack/synchronized_attack_def.dart';
-import 'package:dawnforge/game/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
+import 'package:dawnforge/game/core/systems/audio/audio_manager.dart';
+import 'package:dawnforge/game/core/systems/camera/camera_fx.dart';
+import 'package:dawnforge/game/core/systems/combat/attacks/player_primary_attack_def.dart';
+import 'package:dawnforge/game/core/systems/combat/synchronized_attack/synchronized_attack_controller.dart';
+import 'package:dawnforge/game/core/systems/combat/synchronized_attack/synchronized_attack_def.dart';
+import 'package:dawnforge/game/core/systems/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_config.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_controller.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';

@@ -1,19 +1,19 @@
 import 'package:dawnforge/pre_game/screens/menu_screen.dart';
-import 'package:dawnforge/game/core/modules/localization/gameplay_localizations_delegate.dart';
+import 'package:dawnforge/game/core/systems/localization/gameplay_localizations_delegate.dart';
 import 'package:dawnforge/game/core/utils/app_environment.dart';
 import 'package:dawnforge/game/features/farm/database/crop_database.dart';
 import 'package:dawnforge/game/features/farm/farm_service_locator.dart';
 import 'package:dawnforge/game/features/inventory/config/inventory_service_locator.dart';
-import 'package:dawnforge/game/core/modules/overlay/design_system/overlay_design_system.dart';
+import 'package:dawnforge/game/core/systems/overlay/design_system/overlay_design_system.dart';
 import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
-import 'package:dawnforge/shared/managers/settings_manager.dart';
+import 'package:dawnforge/core/managers/settings_manager.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'game/core/modules/audio/audio_manager.dart';
+import 'game/core/systems/audio/audio_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

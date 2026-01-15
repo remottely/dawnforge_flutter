@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/game/features/game_world/characters/character_constants.dart';
-import 'package:dawnforge/game/core/modules/ui/conversation_def.dart';
+import 'package:dawnforge/game/core/systems/ui/conversation_def.dart';
 import 'package:dawnforge/game/core/utils/hitbox_utils.dart';
 import 'package:dawnforge/shared/utils/sprite_animation_config_helper.dart';
 

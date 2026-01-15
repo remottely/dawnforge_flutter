@@ -4,9 +4,7 @@ import 'package:bonfire/bonfire.dart';
 
 /// Service for providing user feedback during farm actions (I2: Service = stateless)
 final class FarmFeedbackService {
-  FarmFeedbackService._() {
-    GameLogger.info('[FarmFeedbackService] Initialized');
-  }
+  FarmFeedbackService._();
 
   static final instance = FarmFeedbackService._();
 

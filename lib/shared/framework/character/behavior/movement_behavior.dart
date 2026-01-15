@@ -1,7 +1,7 @@
 // lib/shared/framework/character/behavior/movement_behavior.dart
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/core/utils/game_logger.dart';
-import 'package:dawnforge/game/core/modules/input_actions/input_def.dart';
+import 'package:dawnforge/game/core/systems/input_actions/input_def.dart';
 import 'package:dawnforge/shared/framework/character/behavior/character_behavior.dart';
 
 class MovementConfig {

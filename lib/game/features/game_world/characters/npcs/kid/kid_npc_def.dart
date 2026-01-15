@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/core/modules/ui/conversation_def.dart';
+import 'package:dawnforge/game/core/systems/ui/conversation_def.dart';
 import 'package:dawnforge/shared/utils/sprite_animation_config_helper.dart';
 
 final class KidNpcDef {

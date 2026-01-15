@@ -1,8 +1,8 @@
 import 'dart:async' as async;
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/core/utils/game_logger.dart';
-import 'package:dawnforge/game/core/modules/map/map_def.dart';
-import 'package:dawnforge/game/core/modules/map/map_transition_controller.dart';
+import 'package:dawnforge/game/core/systems/map/map_def.dart';
+import 'package:dawnforge/game/core/systems/map/map_transition_controller.dart';
 import 'package:dawnforge/game/core/utils/app_environment.dart';
 import 'package:flutter/foundation.dart';
 

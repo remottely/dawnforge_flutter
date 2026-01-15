@@ -1,8 +1,8 @@
 // lib/shared/framework/character/behavior/mining_behavior.dart
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/core/utils/game_logger.dart';
-import 'package:dawnforge/game/core/modules/input_actions/input_def.dart';
-import 'package:dawnforge/game/core/modules/overlay/message/message_overlay_def.dart';
+import 'package:dawnforge/game/core/systems/input_actions/input_def.dart';
+import 'package:dawnforge/game/core/systems/overlay/message/message_overlay_def.dart';
 import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.dart';
 import 'package:dawnforge/shared/framework/character/behavior/character_behavior.dart';
 import 'package:dawnforge/shared/framework/utils/dd_animation_directional.dart';

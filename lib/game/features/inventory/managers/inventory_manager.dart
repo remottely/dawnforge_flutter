@@ -11,9 +11,6 @@ import '../entities/hand_item.dart';
 class InventoryManager {
   InventoryManager._() {
     _initializeSlots(_currentMaxSlots);
-    GameLogger.info(
-      '[InventoryManager] Initialized with $_currentMaxSlots slots',
-    );
   }
 
   static final instance = InventoryManager._();

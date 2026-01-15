@@ -2,9 +2,9 @@ import 'package:bonfire/player/player.dart';
 import 'package:dawnforge/game/features/game_world/characters/enemies/boss/boss_enemy_view.dart';
 import 'package:dawnforge/game/features/game_world/characters/npcs/kid/kid_npc_def.dart';
 import 'package:dawnforge/game/features/game_world/characters/npcs/kid/kid_npc_view.dart';
-import 'package:dawnforge/game/core/modules/audio/audio_def.dart';
-import 'package:dawnforge/game/core/modules/audio/audio_manager.dart';
-import 'package:dawnforge/game/core/modules/ui/ui_state_manager.dart';
+import 'package:dawnforge/game/core/systems/audio/audio_def.dart';
+import 'package:dawnforge/game/core/systems/audio/audio_manager.dart';
+import 'package:dawnforge/game/core/systems/ui/ui_state_manager.dart';
 
 class KidNpcController {
   bool _hasStartedConversationWithHero = false;
