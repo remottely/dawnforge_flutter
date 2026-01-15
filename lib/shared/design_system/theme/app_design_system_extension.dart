@@ -7,9 +7,7 @@ import 'package:flutter/material.dart';
 extension AppDesignSystemExtension on BuildContext {
   AppDesignSystem get ds => AppDesignSystem.of(this);
 
-  AppSpacing get spacing => ds.spacing;
   AppRadius get radius => ds.radius;
-  AppSizes get sizes => ds.sizes;
 
   ScreenSizeInfo get screenSize => ds.screenSize;
   ScreenSizeType get screenType => ds.screenSize.type;
@@ -38,7 +36,7 @@ extension AppDesignSystemExtension on BuildContext {
     );
   }
 
-  OverlayConstraints get overlayConstraints => ds.overlayConstraints;
+  AppConstraints get constraints => ds.constraints;
 
   EdgeInsets get overlaySafeArea => MediaQuery.of(this).padding;
   Size get overlayScreenDimensions => MediaQuery.of(this).size;

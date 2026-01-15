@@ -27,8 +27,8 @@ final class TutorialInputsOverlay extends ResponsiveOverlayBase {
   @override
   Widget buildOverlayContent(BuildContext context) {
     // 🔥 Acessa tokens uma única vez
-    final spacing = context.ds.overlaySpacing;
-    final typography = context.ds.overlayTypography;
+    final spacing = context.ds.spacing;
+    final typography = context.ds.typography;
     final screenSize = context.ds.screenSize;
 
     final keyBoxWidth = context.overlayValueByScreenSize(
@@ -84,8 +84,8 @@ final class TutorialInputsOverlay extends ResponsiveOverlayBase {
     String key,
     String description,
     double keyBoxWidth,
-    OverlaySpacing spacing,
-    OverlayTypography typography,
+    AppSpacing spacing,
+    AppTypography typography,
     ScreenSizeInfo screenSize,
   ) {
     final rowHeight = context.overlayValueByScreenSize(

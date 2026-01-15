@@ -334,10 +334,10 @@ class _ResponsiveConfig {
   _ResponsiveConfig(this.context) {
     // 🔥 Acessa tokens via extension
     screenType = context.ds.screenSize.type;
-    padding = context.ds.overlaySpacing.padding;
-    spacing = context.ds.overlaySpacing.spacing;
-    slotSize = context.ds.overlaySizes.slotSize;
-    baseFontSize = context.ds.overlayTypography.baseFontSize;
+    padding = context.ds.spacing.padding;
+    spacing = context.ds.spacing.spacing;
+    slotSize = context.ds.sizes.slotSize;
+    baseFontSize = context.ds.typography.baseFontSize;
     border = _buildBorder();
   }
 

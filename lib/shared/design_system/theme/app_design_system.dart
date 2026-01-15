@@ -5,39 +5,31 @@ import 'package:flutter/material.dart';
 /// **AppDesignSystem Unificado**
 /// Contém tokens gerais (App) e tokens de overlays (Overlay)
 final class AppDesignSystem extends InheritedWidget {
-  final ScreenSizeInfo screenSize;
   final bool debugIsOn;
-
-  // 🔥 Tokens Gerais
-  final AppSpacing spacing;
+  final ScreenSizeInfo screenSize;
   final AppRadius radius;
+  final AppSpacing spacing;
   final AppSizes sizes;
-
-  // 🔥 Tokens de Overlays
-  final OverlaySpacing overlaySpacing;
-  final OverlaySizes overlaySizes;
-  final OverlayTypography overlayTypography;
-  final OverlayScale overlayScale;
-  final OverlayConstraints overlayConstraints;
+  final AppTypography typography;
+  final AppScale scale;
+  final AppConstraints constraints;
 
   const AppDesignSystem({
     super.key,
     required super.child,
+    required this.debugIsOn,
     required this.screenSize,
-    required this.spacing,
     required this.radius,
+    required this.spacing,
     required this.sizes,
-    required this.overlaySpacing,
-    required this.overlaySizes,
-    required this.overlayTypography,
-    required this.overlayScale,
-    required this.overlayConstraints,
-    this.debugIsOn = false,
+    required this.typography,
+    required this.scale,
+    required this.constraints,
   });
 
   static AppDesignSystem of(BuildContext context) {
-    final AppDesignSystem? result =
-        context.dependOnInheritedWidgetOfExactType<AppDesignSystem>();
+    final AppDesignSystem? result = context
+        .dependOnInheritedWidgetOfExactType<AppDesignSystem>();
     assert(result != null, 'No AppDesignSystem found in context');
     return result!;
   }
@@ -49,14 +41,12 @@ final class AppDesignSystem extends InheritedWidget {
   @override
   bool updateShouldNotify(AppDesignSystem oldWidget) {
     return screenSize != oldWidget.screenSize ||
-        spacing != oldWidget.spacing ||
         radius != oldWidget.radius ||
+        spacing != oldWidget.spacing ||
         sizes != oldWidget.sizes ||
-        overlaySpacing != oldWidget.overlaySpacing ||
-        overlaySizes != oldWidget.overlaySizes ||
-        overlayTypography != oldWidget.overlayTypography ||
-        overlayScale != oldWidget.overlayScale ||
-        overlayConstraints != oldWidget.overlayConstraints ||
+        typography != oldWidget.typography ||
+        scale != oldWidget.scale ||
+        constraints != oldWidget.constraints ||
         debugIsOn != oldWidget.debugIsOn;
   }
 }
@@ -88,15 +78,13 @@ final class AppDesignSystemProvider extends StatelessWidget {
         return AppDesignSystem(
           screenSize: screenSize,
           // Tokens Gerais
-          spacing: AppSpacing(screenType),
           radius: AppRadius(screenType),
-          sizes: AppSizes(screenType),
           // Tokens de Overlays
-          overlaySpacing: OverlaySpacing(screenType),
-          overlaySizes: OverlaySizes(screenType),
-          overlayTypography: OverlayTypography(screenType),
-          overlayScale: OverlayScale(screenType),
-          overlayConstraints: OverlayConstraints(screenType),
+          spacing: AppSpacing(screenType),
+          sizes: AppSizes(screenType),
+          typography: AppTypography(screenType),
+          scale: AppScale(screenType),
+          constraints: AppConstraints(screenType),
           debugIsOn: debugIsOn,
           child: child,
         );

@@ -27,8 +27,8 @@ final class MobileInputsOverlay extends ResponsiveOverlayBase {
   @override
   Widget buildOverlayContent(BuildContext context) {
     // 🔥 Acessa tokens uma única vez
-    final sizes = context.ds.overlaySizes;
-    final spacing = context.ds.overlaySpacing;
+    final sizes = context.ds.sizes;
+    final spacing = context.ds.spacing;
     final screenHeight = context.overlayScreenDimensions.height;
 
     final buttonSize = sizes.actionButton;
@@ -80,8 +80,8 @@ final class MobileInputsOverlay extends ResponsiveOverlayBase {
   }
 
   List<Widget> _buildActionButtons(BuildContext context) {
-    final sizes = context.ds.overlaySizes;
-    final spacing = context.ds.overlaySpacing;
+    final sizes = context.ds.sizes;
+    final spacing = context.ds.spacing;
 
     return [
       _buildActionButton(
@@ -105,8 +105,8 @@ final class MobileInputsOverlay extends ResponsiveOverlayBase {
   }
 
   List<Widget> _buildUtilityButtons(BuildContext context) {
-    final sizes = context.ds.overlaySizes;
-    final spacing = context.ds.overlaySpacing;
+    final sizes = context.ds.sizes;
+    final spacing = context.ds.spacing;
 
     return [
       _buildActionButton(

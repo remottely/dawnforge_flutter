@@ -22,7 +22,7 @@ abstract class ResponsiveOverlayBase extends StatelessWidget {
   }
 
   Widget _buildOverlay(BuildContext context) {
-    final constraints = context.overlayConstraints.forOverlay(overlayId);
+    final constraints = context.constraints.forOverlay(overlayId);
 
     Widget content = buildOverlayContent(context);
 

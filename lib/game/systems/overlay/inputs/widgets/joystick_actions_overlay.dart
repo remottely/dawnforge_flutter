@@ -27,7 +27,7 @@ class JoystickActionsOverlay extends ResponsiveOverlayBase {
       valueListenable: EquipmentState.instance.equippedItem,
       builder: (context, equippedItem, _) {
         final hasIronSword = equippedItem?.id == HandItemId.ironSword;
-        final spacing = context.ds.overlaySpacing; // 🔥 Extension
+        final spacing = context.ds.spacing; // 🔥 Extension
 
         return Align(
           alignment: Alignment.bottomRight,
