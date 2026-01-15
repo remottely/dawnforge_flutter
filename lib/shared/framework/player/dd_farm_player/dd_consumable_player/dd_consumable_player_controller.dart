@@ -4,6 +4,7 @@ import 'package:dawnforge/core/utils/logger/game_logger.dart';
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/gameplay/core/modules/input_actions/input_def.dart';
 import 'package:dawnforge/gameplay/core/modules/ui/dialog/binary_choice_dialog.dart';
+import 'package:dawnforge/gameplay/farm/farm_service_locator.dart';
 import 'package:dawnforge/gameplay/inventory/items/consumable_item.dart';
 import 'package:dawnforge/gameplay/inventory/items/harvest_loot_item.dart';
 import 'package:dawnforge/gameplay/inventory/managers/equipment_manager.dart';
@@ -84,7 +85,7 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
 
   bool _tryConsumeSelectedItem(DDBasePlayerView player) {
     final selectedIndex = EquipmentManager.instance.currentMainHandSlotIndex;
-    final slot = InventoryManager.instance.getSlotByIndex(selectedIndex);
+    final slot = getIt<InventoryManager>().getSlotByIndex(selectedIndex);
     if (slot == null || slot.isEmpty) {
       GameLogger.warning(
         '[ConsumableController] Consumo falhou: slot vazio ($selectedIndex)',
@@ -168,7 +169,7 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
       model.restoreStamina(staminaGain);
     }
 
-    InventoryManager.instance.consumeFromSlot(slotIndex, 1);
+    getIt<InventoryManager>().consumeFromSlot(slotIndex, 1);
     GameLogger.info(
       '[ConsumableController] Consumo aplicado: hp=+$healthGain, stamina=+$staminaGain, slot=$slotIndex',
     );

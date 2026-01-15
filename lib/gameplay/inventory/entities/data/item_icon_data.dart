@@ -18,7 +18,7 @@ class ItemIconData {
       'spritesheetPath': spritesheetPath,
       'spriteWidth': spriteWidth,
       'spriteHeight': spriteHeight,
-      'rowIndex': spriteRowIndex,
+      'spriteRowIndex': spriteRowIndex,
       'columnIndex': spriteColumnIndex,
     };
   }
@@ -28,7 +28,7 @@ class ItemIconData {
       spritesheetPath: json['spritesheetPath'] as String,
       spriteWidth: json['spriteWidth'] as int,
       spriteHeight: json['spriteHeight'] as int,
-      spriteRowIndex: json['rowIndex'] as int,
+      spriteRowIndex: json['spriteRowIndex'] as int,
       spriteColumnIndex: json['columnIndex'] as int,
     );
   }

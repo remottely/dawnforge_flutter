@@ -1,4 +1,5 @@
 import 'package:dawnforge/core/utils/logger/game_logger.dart';
+import 'package:dawnforge/gameplay/farm/farm_service_locator.dart';
 
 import 'package:dawnforge/gameplay/inventory/entities/enums/hand_item_id.dart';
 import 'package:flutter/foundation.dart';
@@ -16,7 +17,7 @@ final class EquipmentManager {
     );
 
     // Keep UI in sync when slots change (consumption/move/clear)
-    InventoryManager.instance.slotsNotifier.addListener(
+    getIt<InventoryManager>().slotsNotifier.addListener(
       _handleInventorySlotsChanged,
     );
   }
@@ -40,7 +41,7 @@ final class EquipmentManager {
   //   }
 
   //   // Otherwise, find the first slot containing this item id.
-  //   final slot = InventoryManager.instance.findSlotByItemId(item.id);
+  //   final slot = getIt<InventoryManager>().findSlotByItemId(item.id);
   //   if (slot == null) {
   //     GameLogger.warning('[EquipmentManager] Item not in inventory');
   //     return false;
@@ -49,7 +50,7 @@ final class EquipmentManager {
   // }
 
   bool selectSlotIndex(int index) {
-    final slot = InventoryManager.instance.getSlotByIndex(index);
+    final slot = getIt<InventoryManager>().getSlotByIndex(index);
     if (slot == null) {
       GameLogger.warning('[EquipmentManager] Slot $index not found');
       return false;
@@ -71,7 +72,7 @@ final class EquipmentManager {
   }
 
   HandItem? getEquippedItem() =>
-      InventoryManager.instance.getSlotByIndex(_currentMainHandSlotIndex)?.item;
+      getIt<InventoryManager>().getSlotByIndex(_currentMainHandSlotIndex)?.item;
 
   bool hasEquippedItem() => getEquippedItem() != null;
 
@@ -116,13 +117,13 @@ final class EquipmentManager {
   ) {
     _currentMainHandSlotIndex = json['selectedSlotIndex'] as int? ?? 0;
     // Clamp to available slots
-    if (_currentMainHandSlotIndex >= InventoryManager.instance.maxSlots) {
+    if (_currentMainHandSlotIndex >= getIt<InventoryManager>().maxSlots) {
       _currentMainHandSlotIndex = 0;
     }
     selectedSlotIndexNotifier.value = _currentMainHandSlotIndex;
 
     // Update UI with current item
-    final item = InventoryManager.instance
+    final item = getIt<InventoryManager>()
         .getSlotByIndex(_currentMainHandSlotIndex)
         ?.item;
     EquipmentState.instance.updateEquippedItem(item);
@@ -138,7 +139,7 @@ final class EquipmentManager {
 
     // Notify Flutter overlays
     EquipmentState.instance.updateEquippedItem(
-      InventoryManager.instance.getSlotByIndex(0)?.item,
+      getIt<InventoryManager>().getSlotByIndex(0)?.item,
     );
 
     GameLogger.info('[EquipmentManager] Equipment reset');
@@ -146,7 +147,7 @@ final class EquipmentManager {
 
   void _handleInventorySlotsChanged() {
     final selectedIndex = _currentMainHandSlotIndex;
-    final slot = InventoryManager.instance.getSlotByIndex(selectedIndex);
+    final slot = getIt<InventoryManager>().getSlotByIndex(selectedIndex);
     if (slot == null) return;
 
     // Keep overlay synced with whatever is in the selected slot

@@ -160,7 +160,7 @@ final class GameSaveController {
       GameLogger.info('[GameSaveController] 🗑️ Clearing game and save...');
 
       PlayerStateManager.instance.reset();
-      InventoryManager.instance.clear();
+      getIt<InventoryManager>().clear();
       getIt<FarmManager>().reset();
       WorldStateManager.instance.reset();
 
@@ -248,7 +248,7 @@ final class GameSaveController {
   }
 
   Map<String, dynamic> _collectInventoryData() {
-    final inventory = InventoryManager.instance;
+    final inventory = getIt<InventoryManager>();
     return inventory.toJson();
   }
 
@@ -341,7 +341,7 @@ final class GameSaveController {
       GameLogger.info(
         '[GameSaveController] Restoring inventory data: ${data.keys.toList()}',
       );
-      final inventory = InventoryManager.instance;
+      final inventory = getIt<InventoryManager>();
       inventory.fromJson(data, getIt<ItemFactoryService>().createItem);
       GameLogger.info('[GameSaveController] ✅ Inventory restored');
     } catch (e) {

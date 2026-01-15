@@ -24,7 +24,7 @@
 //     final worldState = WorldStateManager.instance.toJson();
 //     final timeState = new_time.TimeManager.instance.toJson();
 //     final progressState = PlayerProgressManager.instance.toJson();
-//     final inventoryState = InventoryManager.instance.toJson();
+//     final inventoryState = getIt<InventoryManager>().toJson();
 //     final equipmentState = EquipmentManager.instance.toJson();
 
 //     // Farm state using SaveFarmUseCase (E2)
@@ -56,7 +56,7 @@
 //       'Day ${WorldStateManager.instance.currentDay}, '
 //       'Time ${new_time.TimeManager.instance.currentHour}:${new_time.TimeManager.instance.currentMinute}, '
 //       '${PlayerProgressManager.instance.getAllFlags().length} flags, '
-//       'Items: ${InventoryManager.instance.usedSlots}, '
+//       'Items: ${getIt<InventoryManager>().usedSlots}, '
 //       'Equipment: ${EquipmentManager.instance.getAllEquippedItems().length}',
 //     );
 
@@ -103,7 +103,7 @@
 //       final inventoryState =
 //           inventoryData['inventory'] as Map<String, dynamic>?;
 //       if (inventoryState != null) {
-//         InventoryManager.instance.fromJson(
+//         getIt<InventoryManager>().fromJson(
 //           inventoryState,
 //           inv_di.getIt<ItemFactoryService>().createItem,
 //         );
@@ -137,7 +137,7 @@
 //         'Day ${WorldStateManager.instance.currentDay}, '
 //         'Time ${new_time.TimeManager.instance.currentHour}:${new_time.TimeManager.instance.currentMinute}, '
 //         '${PlayerProgressManager.instance.getAllFlags().length} flags, '
-//         'Items: ${InventoryManager.instance.usedSlots}, '
+//         'Items: ${getIt<InventoryManager>().usedSlots}, '
 //         'Equipment: ${EquipmentManager.instance.getAllEquippedItems().length}',
 //       );
 
@@ -155,7 +155,7 @@
 //     WorldStateManager.instance.reset();
 //     new_time.TimeManager.instance.reset();
 //     PlayerProgressManager.instance.reset();
-//     InventoryManager.instance.reset();
+//     getIt<InventoryManager>().reset();
 //     EquipmentManager.instance.reset();
 
 //     GameLogger.info('[GameStateCollector] All managers reset complete');
@@ -189,7 +189,7 @@
 //     final world = WorldStateManager.instance;
 //     final time = new_time.TimeManager.instance;
 //     final progress = PlayerProgressManager.instance;
-//     final inventory = InventoryManager.instance;
+//     final inventory = getIt<InventoryManager>();
 //     final equipment = EquipmentManager.instance;
 
 //     return '''
