@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 class MarketState {
   MarketState._();
 
-  static final MarketState instance = MarketState._();
+  static final instance = MarketState._();
 
   final isOpen = ValueNotifier<bool>(false);
   final activePlayer = ValueNotifier<DDBasePlayerModel?>(null);

@@ -7,9 +7,10 @@ import '../../game_world/world/entities/world_entities.dart';
 
 /// Manager for farm state (C1: Singleton + ValueNotifier, I2: Manager = Singleton State)
 final class FarmManager {
-  FarmManager._() {
-    _initializeTiles();
-  }
+  FarmManager._();
+  //  {
+  //   initializeTiles();
+  // }
 
   static final instance = FarmManager._();
 
@@ -22,7 +23,7 @@ final class FarmManager {
   final ValueNotifier<GridTile?> lastTilledNotifier = ValueNotifier(null);
   final ValueNotifier<CropEntity?> lastHarvestedNotifier = ValueNotifier(null);
 
-  void _initializeTiles() {
+  void initializeTiles() {
     // Initialize with empty tiles if needed
     // For now, tiles are created on-demand
     tilesNotifier = ValueNotifier(Map.unmodifiable(_tiles));

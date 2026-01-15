@@ -36,7 +36,7 @@ class MarketManager {
     this._itemFactory,
   );
 
-  static final MarketManager instance = MarketManager._(
+  static final instance = MarketManager._(
     getIt<AddItemUseCase>(),
     getIt<RemoveItemUseCase>(),
     ItemFactoryService.instance,

@@ -1,77 +1,81 @@
-import 'package:dawnforge/core/utils/game_logger.dart';
+// import 'package:dawnforge/core/utils/game_logger.dart';
 
-import 'package:dawnforge/game/features/game_world/database/smallburg/smallburg_crop_entity_database_def.dart';
+// import 'package:dawnforge/game/features/game_world/database/smallburg/smallburg_crop_entity_database_def.dart';
 
-import '../../inventory/entities/enums/hand_item_id.dart';
-import '../../game_world/world/entities/objects/farm/crop_entity.dart';
+// import '../../inventory/entities/enums/hand_item_id.dart';
+// import '../../game_world/world/entities/objects/farm/crop_entity.dart';
 
-final class CropDatabase {
-  CropDatabase._();
+// final class CropDatabase {
+//   CropDatabase._() {
+//     initialize();
+//   }
 
-  static final Map<HandItemId, CropEntity> _cropDatabase = {};
-  static bool _isInitialized = false;
+//   static final  instance = CropDatabase._();
 
-  static Future<void> initialize() async {
-    if (_isInitialized) return;
+//   static final Map<HandItemId, CropEntity> _cropDatabase = {};
+//   static bool _isInitialized = false;
 
-    _cropDatabase
-      ..clear()
-      ..addAll(SmallBurgCropEntityDatabaseDef.cropEntityList);
+//   static Future<void> initialize() async {
+//     if (_isInitialized) return;
 
-    _isInitialized = true;
-    GameLogger.info('[CropDatabase] Loaded ${_cropDatabase.length} crops');
-  }
+//     _cropDatabase
+//       ..clear()
+//       ..addAll(SmallBurgCropEntityDatabaseDef.cropEntityList);
 
-  static CropEntity? createCrop(HandItemId cropId) {
-    if (!_isInitialized) {
-      GameLogger.error('[CropDatabase] ERROR: Not initialized!');
-      return null;
-    }
+//     _isInitialized = true;
+//     GameLogger.info('[CropDatabase] Loaded ${_cropDatabase.length} crops');
+//   }
 
-    final template = _cropDatabase[cropId];
-    if (template == null) {
-      GameLogger.warning('[CropDatabase] Crop not found: $cropId');
-      return null;
-    }
+//   static CropEntity? createCrop(HandItemId cropId) {
+//     if (!_isInitialized) {
+//       GameLogger.error('[CropDatabase] ERROR: Not initialized!');
+//       return null;
+//     }
 
-    return CropEntity(
-      id: cropId,
-      name: template.name,
-      description: template.description,
-      stage: template.stage,
-      daysPlanted: 0,
-      daysToMature: template.daysToMature,
-      yieldAmount: template.yieldAmount,
-      harvestItemId: template.harvestItemId,
-      requiredSeason: template.requiredSeason,
-      spritesheetPath: template.spritesheetPath,
-      spriteWidth: template.spriteWidth,
-      spriteHeight: template.spriteHeight,
-      spriteRowIndex: template.spriteRowIndex,
-      framesCount: template.framesCount,
-      skipFirstFrames: template.skipFirstFrames,
-      ySortingFromStage: template.ySortingFromStage ?? template.stage,
-      isTree: template.isTree,
-      regrowData: template.regrowData.resetState(),
-      ySortingOffset: template.ySortingOffset,
-    );
-  }
+//     final template = _cropDatabase[cropId];
+//     if (template == null) {
+//       GameLogger.warning('[CropDatabase] Crop not found: $cropId');
+//       return null;
+//     }
 
-  static List<HandItemId> getAllCropIds() => _cropDatabase.keys.toList();
+//     return CropEntity(
+//       id: cropId,
+//       name: template.name,
+//       description: template.description,
+//       stage: template.stage,
+//       daysPlanted: 0,
+//       daysToMature: template.daysToMature,
+//       yieldAmount: template.yieldAmount,
+//       harvestItemId: template.harvestItemId,
+//       requiredSeason: template.requiredSeason,
+//       spritesheetPath: template.spritesheetPath,
+//       spriteWidth: template.spriteWidth,
+//       spriteHeight: template.spriteHeight,
+//       spriteRowIndex: template.spriteRowIndex,
+//       framesCount: template.framesCount,
+//       skipFirstFrames: template.skipFirstFrames,
+//       ySortingFromStage: template.ySortingFromStage ?? template.stage,
+//       isTree: template.isTree,
+//       regrowData: template.regrowData.resetState(),
+//       ySortingOffset: template.ySortingOffset,
+//     );
+//   }
 
-  static List<HandItemId> getCropsBySeason(String season) {
-    return _cropDatabase.entries
-        .where((e) {
-          final requiredSeason = e.value.requiredSeason;
-          return requiredSeason == 'any' || requiredSeason == season;
-        })
-        .map((e) => e.key)
-        .toList();
-  }
+//   static List<HandItemId> getAllCropIds() => _cropDatabase.keys.toList();
 
-  static CropEntity? getCropData(HandItemId cropId) {
-    return _cropDatabase[cropId];
-  }
+//   static List<HandItemId> getCropsBySeason(String season) {
+//     return _cropDatabase.entries
+//         .where((e) {
+//           final requiredSeason = e.value.requiredSeason;
+//           return requiredSeason == 'any' || requiredSeason == season;
+//         })
+//         .map((e) => e.key)
+//         .toList();
+//   }
 
-  static bool get isInitialized => _isInitialized;
-}
+//   static CropEntity? getCropData(HandItemId cropId) {
+//     return _cropDatabase[cropId];
+//   }
+
+//   static bool get isInitialized => _isInitialized;
+// }

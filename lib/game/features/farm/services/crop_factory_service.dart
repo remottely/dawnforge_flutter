@@ -7,7 +7,7 @@ import '../../game_world/world/entities/objects/farm/crop_entity.dart';
 
 /// Service for creating crops from JSON database (L2: Factory with JSON database, I2: Service = stateless)
 class CropFactoryService {
-    CropFactoryService._() {
+  CropFactoryService._() {
     initialize();
   }
 

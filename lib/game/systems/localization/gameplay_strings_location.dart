@@ -3,7 +3,7 @@ import 'package:dawnforge/game/systems/localization/gameplay_localizations.dart'
 final class GameplayStringsLocation {
   GameplayStringsLocation._();
 
-  static final GameplayStringsLocation instance = GameplayStringsLocation._();
+  static final instance = GameplayStringsLocation._();
 
   late final GameplayLocalizations _localizations;
 

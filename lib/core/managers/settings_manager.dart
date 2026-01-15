@@ -7,7 +7,7 @@ enum InputActionsType { keyboard, joystick }
 final class SettingsManager {
   SettingsManager._();
 
-  static final SettingsManager instance = SettingsManager._();
+  static final instance = SettingsManager._();
 
   InputActionsType _inputSelected =
       // kIsWeb

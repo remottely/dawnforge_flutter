@@ -1,3 +1,6 @@
+import 'package:dawnforge/game/features/farm/managers/farm_manager.dart';
+import 'package:dawnforge/game/features/farm/services/crop_factory_service.dart';
+import 'package:dawnforge/game/features/inventory/services/item_factory_service.dart';
 import 'package:dawnforge/pre_game/screens/menu_screen.dart';
 import 'package:dawnforge/game/systems/localization/gameplay_localizations_delegate.dart';
 import 'package:dawnforge/game/utils/app_environment.dart';
@@ -24,7 +27,13 @@ void main() async {
   }
 
   await AudioManager.instance.initialize();
-  await CropDatabase.initialize();
+
+  /// NEW
+  await CropFactoryService.instance.initialize();
+  await ItemFactoryService.instance.initialize();
+  FarmManager.instance.initializeTiles();
+
+  // await CropDatabase.initialize();
 
   await setupInventoryDependencies();
   await setupFarmDependencies();
