@@ -7,7 +7,7 @@ import 'package:dawnforge/gameplay/inventory/entities/enums/season.dart';
 import 'package:dawnforge/gameplay/inventory/entities/data/item_icon_data.dart';
 
 const _vegetableColumn = 9;
-const _treeColumn = 16;
+const _treeColumn = 15;
 
 final class SmallBurgSeedBagItemDatabaseDef {
   static const Map<HandItemId, SeedBagItem> seedBagList = {

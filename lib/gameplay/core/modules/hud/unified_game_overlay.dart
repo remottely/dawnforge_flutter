@@ -48,7 +48,7 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                 flex: flexA,
                 child: Container(
                   color: AppEnvironment.kIsDebugMode
-                      ? Colors.purple.withOpacity(0.05)
+                      ? Colors.purple.withOpacity(0.5)
                       : null,
                   alignment: Alignment.centerLeft,
                   child: !isDesktop
@@ -70,7 +70,7 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                           //   flex: flexA,
                           //   child: Container(
                           //     color: AppEnvironment.kIsDebugMode
-                          //         ? Colors.red.withOpacity(0.05)
+                          //         ? Colors.red.withOpacity(0.5)
                           //         : null,
                           //     alignment: Alignment.topLeft,
                           //     // child: PlayerVitalStatsOverlay(player: player),
@@ -81,7 +81,7 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                             flex: flexB,
                             child: Container(
                               color: AppEnvironment.kIsDebugMode
-                                  ? Colors.blue.withOpacity(0.05)
+                                  ? Colors.blue.withOpacity(0.5)
                                   : null,
                               // alignment: Alignment.center,
                               child: Row(
@@ -106,7 +106,7 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                             flex: flexA,
                             child: Container(
                               color: AppEnvironment.kIsDebugMode
-                                  ? Colors.green.withOpacity(0.05)
+                                  ? Colors.green.withOpacity(0.5)
                                   : null,
                               alignment: Alignment.topRight,
                               child: Stack(
@@ -141,7 +141,7 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                           //   flex: flexA,
                           //   child: Container(
                           //     color: AppEnvironment.kIsDebugMode
-                          //         ? Colors.pink.withOpacity(0.05)
+                          //         ? Colors.pink.withOpacity(0.5)
                           //         : null,
                           //     alignment: Alignment.centerLeft,
                           //     child: !isDesktop
@@ -154,7 +154,7 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                             flex: flexB,
                             child: Container(
                               color: AppEnvironment.kIsDebugMode
-                                  ? Colors.yellow.withOpacity(0.05)
+                                  ? Colors.yellow.withOpacity(0.5)
                                   : null,
                               alignment: Alignment.center,
                               child: Stack(
@@ -195,7 +195,7 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                             flex: flexA,
                             child: Container(
                               color: AppEnvironment.kIsDebugMode
-                                  ? Colors.brown.withOpacity(0.05)
+                                  ? Colors.brown.withOpacity(0.5)
                                   : null,
                               child:
                                   SettingsManager.instance.inputSelected ==
@@ -222,7 +222,7 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                           //   flex: flexA,
                           //   child: Container(
                           //     color: AppEnvironment.kIsDebugMode
-                          //         ? Colors.purple.withOpacity(0.05)
+                          //         ? Colors.purple.withOpacity(0.5)
                           //         : null,
                           //     child: const SizedBox(
                           //       width: double.infinity,
@@ -238,7 +238,7 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                               flex: flexB,
                               child: Container(
                                 color: AppEnvironment.kIsDebugMode
-                                    ? Colors.orange.withOpacity(0.05)
+                                    ? Colors.orange.withOpacity(0.5)
                                     : null,
                                 alignment: Alignment.bottomCenter,
                                 child: const InventoryOverlay(),
@@ -250,7 +250,7 @@ class UnifiedGameOverlay extends StatelessWidget with ResponsiveOverlayMixin {
                             flex: flexA,
                             child: Container(
                               color: AppEnvironment.kIsDebugMode
-                                  ? Colors.grey.withOpacity(0.05)
+                                  ? Colors.grey.withOpacity(0.5)
                                   : null,
                               child: Align(
                                 alignment: Alignment.bottomRight,

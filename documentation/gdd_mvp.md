@@ -601,6 +601,7 @@ MVP focado no **loop essencial de farming**: **plantar → regar → colher → 
 - quando der 2h da manha o estado do jogo deve resetar, fechar qualquer dialogo aberto etc. criar state machine q controle o estado global do jogo.
 
 # Questões pós MVP:
+- se o jogo for de graça possuir propagandas para forçar o player a pagar $3 para jogar sem propaganda?sa
 - animação do player tomando dano
 - marketing
 - reter usuario (mobile)
@@ -616,3 +617,7 @@ MVP focado no **loop essencial de farming**: **plantar → regar → colher → 
 - reestruturar toda a arquitetura do jogo, criar uma arquitetura onde todos os modulos de comunicarao da mesma maneira, atraves de listeners de stream??? de valuenotifier??? qual é mais leve e performatico e facil de gerenciar, faz sentido utilizar bloc ja q ele faz o dispose automatico etc???
 - mesmo estando no mapa home_map ele deve teleportar(mudar posicao) para perto da cama ou manter onde o player esta e animar ele dormindo e acordando no chao mesmo e com 70% da energia??
 - sombra das nuvens passando sobre o mapa
+- dicas na tela inicial durante o loading
+- passo a passo tutoriais.
+- botao de pino de mapa para levar o player automaticamente ate o proximo passo do tutorial.
+- recompensas por logar diariamente.

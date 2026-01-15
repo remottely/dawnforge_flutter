@@ -44,8 +44,8 @@ class OverlayResponsiveConfig {
 
   // Icon/slot sizes responsivos
   static const Map<ScreenSize, double> kSlotSize = {
-    ScreenSize.mobile: 40.0,
-    ScreenSize.tablet: 52.0,
+    ScreenSize.mobile: 52.0,
+    ScreenSize.tablet: 64.0,
     ScreenSize.desktop: 64.0,
   };
 
