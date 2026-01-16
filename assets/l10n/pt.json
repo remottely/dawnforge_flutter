@@ -20,5 +20,6 @@
   "door_without_key": "Acho que preciso de uma chave para passar por aqui!",
   "door_with_key": "Estou com a chave equipada. Uso agora?",
   "chest_decoration_open": "Abrir",
-  "torch_decoration_light_up": "Acender"
+  "torch_decoration_light_up": "Acender",
+  "bed_rest_message": "Está muito cedo para dormir!"
 }

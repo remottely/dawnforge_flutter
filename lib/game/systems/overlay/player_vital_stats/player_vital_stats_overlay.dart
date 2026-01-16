@@ -134,7 +134,7 @@ class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          'HP',
+          'H',
           style: TextStyle(
             color: Colors.white,
             fontSize: 12,
@@ -175,7 +175,7 @@ class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          'ST',
+          'E',
           style: TextStyle(
             color: Colors.white,
             fontSize: 12,

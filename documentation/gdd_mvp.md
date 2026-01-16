@@ -590,6 +590,23 @@ MVP focado no **loop essencial de farming**: **plantar → regar → colher → 
 ---
 
 # Questões pré MVP:
+- adotar o padrão command para behaviors do jogo como "_handleExecuteDig" com "class DigCommand extends GameCommand".
+- utilizar o prefixo "rx" para todos os ValueNotifier<> do meu jogo.
+estou querendo gerenciar melhor o meu jogo com uma arquitetura q faca sentido para um clone de stardew valley pois hj esta tudo muito bagunçado!! pensei em algo assim, mas me sugira opcoes melhores:
+- state machine:
+  - game state machine
+    - playing
+    - paused (all components) bonfire ou flame fazem isso??
+      - conversation
+      - dialog choices
+      - missions panel
+      - menu (map, friendship, missions)
+  - ui state machine
+    - hud
+    - paused ui
+      - conversation
+      - dialog choices
+
 - os grid_tiles nao podem nascer arvores onde se fz buraco com dig ou estados de farm, uma vez ocupado ele deve se tornar o tipo de classe diferente naquele tile, exemplo, tree_tile, decoration_tile, etc??
 - corrigir joystick nao funcionando ao inicializar jogo, singleton initialize??
 estou clonando stardew valley, essa arquitetura faz sentido? me sugira arquiteturas robustas porem boas para se manter como dev solo o jogo inteiro nos proximos 2 anos!

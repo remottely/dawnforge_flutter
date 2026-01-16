@@ -2,6 +2,7 @@
 import 'dart:async' as async;
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/core/utils/game_logger.dart';
+import 'package:dawnforge/game/state/game_state_machine.dart';
 import 'package:dawnforge/game/systems/ui/emote_manager.dart';
 import 'package:dawnforge/game/features/market/market_state.dart';
 import 'package:dawnforge/shared/framework/character/behavior/character_behavior.dart';
@@ -150,6 +151,10 @@ abstract class Character extends SimplePlayer
 
   @override
   void onJoystickChangeDirectional(JoystickDirectionalEvent event) {
+    if (!GameStateMachine.instance.canPlayerMove) {
+      stopMove();
+      return;
+    }
     if (MarketState.instance.isOpen.value) {
       stopMove();
       return;
@@ -201,10 +206,17 @@ abstract class Character extends SimplePlayer
     );
 
     // Prioridade: Combat > Farming > Movement > Outros
-    final handled = (_cachedCombatBehavior?.onInput(event) ?? false)
-        || (_cachedFarmingBehavior?.onInput(event) ?? false)
-        || (_cachedMovementBehavior?.onInput(event) ?? false)
-        || _behaviors.where((b) => b != _cachedCombatBehavior && b != _cachedFarmingBehavior && b != _cachedMovementBehavior)
+    final handled =
+        (_cachedCombatBehavior?.onInput(event) ?? false) ||
+        (_cachedFarmingBehavior?.onInput(event) ?? false) ||
+        (_cachedMovementBehavior?.onInput(event) ?? false) ||
+        _behaviors
+            .where(
+              (b) =>
+                  b != _cachedCombatBehavior &&
+                  b != _cachedFarmingBehavior &&
+                  b != _cachedMovementBehavior,
+            )
             .any((b) => b.onInput(event));
 
     if (!handled) {
