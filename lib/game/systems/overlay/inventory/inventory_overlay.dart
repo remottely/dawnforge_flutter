@@ -1,6 +1,7 @@
 /// **InventoryOverlay - MIGRADO PARA NOVA ARQUITETURA**
 /// Sistema de inventário responsivo com suporte a venda no market
 /// Utiliza composition pattern para separar responsabilidades
+import 'package:dawnforge/game/state/game_state_machine.dart';
 import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
 import 'package:dawnforge/shared/design_system/theme/screen_size_info.dart';
 import 'package:dawnforge/game/features/inventory/managers/equipment_manager.dart';
@@ -114,8 +115,7 @@ class _InventoryGrid extends StatelessWidget {
   }
 
   void _handleSlotTap(InventorySlot slot) {
-    // Modo venda: Market aberto
-    if (MarketState.instance.isOpen.value) {
+    if (GameStateMachine.instance.isUiOverlayMarket) {
       _handleMarketSale(slot);
       return;
     }

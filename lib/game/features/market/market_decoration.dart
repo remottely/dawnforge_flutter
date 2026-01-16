@@ -1,6 +1,8 @@
+// lib/game/features/market/decorations/market_decoration.dart (ATUALIZADO)
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
+import 'package:dawnforge/game/state/game_state_machine.dart';
 import 'package:dawnforge/game/systems/input_actions/input_def.dart';
 import 'package:dawnforge/game/features/market/market_state.dart';
 import 'package:dawnforge/shared/framework/decorations/dd_contact_decoration.dart';
@@ -8,8 +10,7 @@ import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_p
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:dawnforge/core/utils/game_logger.dart';
 
-class MarketDecoration extends DDContactDecoration
-    with PlayerControllerListener {
+class MarketDecoration extends DDContactDecoration with PlayerControllerListener {
   static final Set<String> _spawnedPositions = <String>{};
 
   /// Clear cached spawn registry (e.g., when rebuilding the game after death/restart).
@@ -23,9 +24,11 @@ class MarketDecoration extends DDContactDecoration
   final String? overlayId;
   final FutureOr<void> Function()? onOpenMarket;
   final Sprite? interactionIcon;
+  
   bool _dialogOpen = false;
   bool _registered = false;
   bool _hasActiveContact = false;
+  
   PlayerController? _registeredController;
   DDBasePlayerView? _currentPlayer;
 
@@ -36,24 +39,12 @@ class MarketDecoration extends DDContactDecoration
     this.onOpenMarket,
     this.interactionIcon,
   });
-  // : super.withSprite(
-  //        sprite: MarketDecorationDef.loadSprite(),
-  //       //  size: MarketDecorationDef.componentSize,
-  //      )
-  // {
-  //   anchor = Anchor.bottomLeft;
-  // }
-
-  // @override
-  // Future<void> onLoad() {
-  //   add(MarketDecorationDef.createHitbox());
-  //   return super.onLoad();
-  // }
 
   @override
   void onContact(SimplePlayer component) {
     super.onContact(component);
     if (_hasActiveContact) return;
+    
     _hasActiveContact = true;
     _currentPlayer = component is DDBasePlayerView ? component : _currentPlayer;
     _registerToPlayerController();
@@ -66,20 +57,27 @@ class MarketDecoration extends DDContactDecoration
   @override
   void onContactExit(SimplePlayer component) {
     super.onContactExit(component);
+    
     _hasActiveContact = false;
     _dialogOpen = false;
     _currentPlayer = null;
+    
     _unregisterFromPlayerController();
+    
     GameLogger.debug(
       '[MarketDecoration] onContactExit -> unlock at $_spawnKey',
     );
+    
     _closeMarket();
   }
 
   @override
   void onMount() {
     super.onMount();
-    MarketState.instance.isOpen.addListener(_syncDialogState);
+    
+    // ✅ ESCUTA GAMESTATE em vez de MarketState.isOpen
+    GameStateMachine.instance.getRxCurrentState().addListener(_syncDialogState);
+    
     final key = _spawnKey;
     if (_spawnedPositions.contains(key)) {
       GameLogger.warning(
@@ -95,14 +93,19 @@ class MarketDecoration extends DDContactDecoration
 
   @override
   void onRemove() {
-    MarketState.instance.isOpen.removeListener(_syncDialogState);
+    // ✅ REMOVE LISTENER do GameStateMachine
+    GameStateMachine.instance.getRxCurrentState().removeListener(_syncDialogState);
+    
     _unregisterFromPlayerController();
+    
     if (_registered) {
       _spawnedPositions.remove(_spawnKey);
     }
+    
     GameLogger.debug(
       '[MarketDecoration] removed at $_spawnKey (registered=$_registered)',
     );
+    
     super.onRemove();
   }
 
@@ -123,16 +126,16 @@ class MarketDecoration extends DDContactDecoration
       return;
     }
 
-    // Fallback: abre via estado global para ser renderizado no HUD central.
+    // ✅ ATUALIZADO: usa MarketState.openAndSetPlayerModel
     final model = (component is DDBasePlayerView)
         ? component.controller.model as DDBasePlayerModel?
         : null;
 
     if (model != null) {
       GameLogger.debug(
-        '[MarketDecoration] opening via MarketState.openWithPlayer',
+        '[MarketDecoration] opening via MarketState.openAndSetPlayerModel',
       );
-      MarketState.instance.openWithPlayer(model);
+      MarketState.instance.openAndSetPlayerModel(model);
       return;
     }
   }
@@ -142,6 +145,7 @@ class MarketDecoration extends DDContactDecoration
     if (!_hasActiveContact) return;
     if (event.event != ActionEvent.DOWN) return;
     if (!InputDef.isInteractionAction(event.id)) return;
+    
     if (_dialogOpen) {
       GameLogger.debug(
         '[MarketDecoration] interaction ignored, dialog already open at $_spawnKey',
@@ -165,19 +169,23 @@ class MarketDecoration extends DDContactDecoration
   void onJoystickChangeDirectional(JoystickDirectionalEvent event) {
     if (!_dialogOpen) return;
     if (event.directional == JoystickMoveDirectional.IDLE) return;
+    
     GameLogger.debug(
       '[MarketDecoration] movement detected -> closing market at $_spawnKey',
     );
+    
     _closeMarket();
   }
 
   void _closeMarket() {
-    MarketState.instance.close();
+    MarketState.instance.close(); // Já chama GameStateMachine.closeMarket()
     _dialogOpen = false;
   }
 
+  // ✅ ATUALIZADO: sincroniza com GameState.uiOverlayMarket
   void _syncDialogState() {
-    _dialogOpen = MarketState.instance.isOpen.value;
+    // _dialogOpen = GameStateMachine.instance.rxCurrentState.value == GameState.trading;
+    _dialogOpen = GameStateMachine.instance.isUiOverlayMarket;
   }
 
   void _registerToPlayerController() {

@@ -590,6 +590,10 @@ MVP focado no **loop essencial de farming**: **plantar → regar → colher → 
 ---
 
 # Questões pré MVP:
+- regras de game state:
+  - game: global, apenas uma camada de render aparecendo em todo o app
+  - uiMenu: menu igual do SV, apenas o menu sobre a tela, porem com abas para navegar entre outras abas do tipo menu
+  - uiOverlay: unica interface ocupando a camda de toda UI
 - adotar o padrão command para behaviors do jogo como "_handleExecuteDig" com "class DigCommand extends GameCommand".
 - utilizar o prefixo "rx" para todos os ValueNotifier<> do meu jogo.
 estou querendo gerenciar melhor o meu jogo com uma arquitetura q faca sentido para um clone de stardew valley pois hj esta tudo muito bagunçado!! pensei em algo assim, mas me sugira opcoes melhores:

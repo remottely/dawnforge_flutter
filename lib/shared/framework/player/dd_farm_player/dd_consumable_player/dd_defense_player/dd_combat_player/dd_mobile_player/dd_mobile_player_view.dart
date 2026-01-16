@@ -72,11 +72,7 @@ abstract class DDMobilePlayerView<
 
   @override
   void onJoystickChangeDirectional(JoystickDirectionalEvent event) {
-    if (!GameStateMachine.instance.canPlayerMove) {
-      stopMove();
-      return;
-    }
-    if (MarketState.instance.isOpen.value) {
+    if (GameStateMachine.instance.isTimePaused) {
       stopMove();
       return;
     }

@@ -38,18 +38,12 @@ class TimeManager {
   double _accumulator = 0;
   bool _isPaused = false;
 
-  BonfireGameInterface? _game;
-
   bool get isRunning => _isRunning;
   bool get isPaused => _isPaused;
   GameTime get currentTime => timeNotifier.value;
   DayState get currentDayState => dayStateNotifier.value;
   int get currentHour => timeNotifier.value.hour;
   int get currentMinute => timeNotifier.value.minute;
-
-  void setGame(BonfireGameInterface game) {
-    _game = game;
-  }
 
   void addDayChangeListener(
     void Function(DayState previous, DayState current) listener,
@@ -222,6 +216,5 @@ class TimeManager {
   void dispose() {
     _timer?.cancel();
     _tickStream.close();
-    _game = null;
   }
 }

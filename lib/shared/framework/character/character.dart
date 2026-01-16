@@ -71,7 +71,7 @@ abstract class Character extends SimplePlayer
 
   @override
   void update(double dt) {
-    if (MarketState.instance.isOpen.value) {
+    if (GameStateMachine.instance.isTimePaused) {
       stopMove();
       velocity = Vector2.zero();
       return;
@@ -151,11 +151,7 @@ abstract class Character extends SimplePlayer
 
   @override
   void onJoystickChangeDirectional(JoystickDirectionalEvent event) {
-    if (!GameStateMachine.instance.canPlayerMove) {
-      stopMove();
-      return;
-    }
-    if (MarketState.instance.isOpen.value) {
+    if (GameStateMachine.instance.isTimePaused) {
       stopMove();
       return;
     }
@@ -191,8 +187,8 @@ abstract class Character extends SimplePlayer
 
   @override
   void onJoystickAction(JoystickActionEvent event) {
-    if (MarketState.instance.isOpen.value) {
-      GameLogger.info('[Character] Input ignored: market open');
+    if (GameStateMachine.instance.isTimePaused) {
+      GameLogger.info('[Character] Input ignored: time paused');
       return;
     }
 

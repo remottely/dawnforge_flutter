@@ -17,6 +17,8 @@ import 'package:dawnforge/game/systems/overlay/inputs/widgets/fullscreen_button_
 // import 'package:dawnforge/game/systems/overlay/map/map_overlay.dart';
 // import 'package:dawnforge/game/systems/overlay/settings/settings_overlay.dart';
 import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_controller.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:dawnforge/core/managers/settings_manager.dart';
 import 'package:dawnforge/game/features/time/time_manager.dart';
@@ -43,31 +45,19 @@ final class UnifiedGameOverlay extends StatelessWidget {
     const flexC = flexA + flexB;
 
     return ValueListenableBuilder<GameState>(
-      valueListenable: GameStateMachine.instance.rxCurrentState,
+      valueListenable: GameStateMachine.instance.getRxCurrentState(),
       builder: (context, gameState, _) {
         return Stack(
           children: [
             // ✅ BASE UI (sempre visível ou condicionalmente)
-            IgnorePointer(
-              ignoring: false,
-              child: Row(
-                children: [
-                  _LeftArea(
-                    flex: flexA,
-                    isDesktop: isDesktop,
-                    gameState: gameState,
-                  ),
-                  _MainArea(
-                    flex: flexC,
-                    flexA: flexA,
-                    flexB: flexB,
-                    isDesktop: isDesktop,
-                    player: player,
-                    playerController: playerController,
-                    gameState: gameState,
-                  ),
-                ],
-              ),
+            _Hud(
+              flexA: flexA,
+              isDesktop: isDesktop,
+              flexC: flexC,
+              flexB: flexB,
+              player: player,
+              playerController: playerController,
+              gameState: gameState,
             ),
 
             // // ✅ STATE-BASED OVERLAYS (sobrepõe a UI base)
@@ -76,7 +66,7 @@ final class UnifiedGameOverlay extends StatelessWidget {
 
             // if (gameState == GameState.dialogue)
             //   const DialogueOverlay(),
-            if (gameState == GameState.trading)
+            if (gameState == GameState.uiOverlayMarket)
               _MarketPanelOverlay(player: player),
 
             // if (gameState == GameState.questLog)
@@ -89,10 +79,55 @@ final class UnifiedGameOverlay extends StatelessWidget {
             //   const SettingsOverlay(),
 
             // ✅ LOADING (overlay completo)
-            if (gameState == GameState.loading) const _LoadingOverlay(),
+            if (gameState == GameState.gameLoading) const _LoadingOverlay(),
           ],
         );
       },
+    );
+  }
+}
+
+class _Hud extends StatelessWidget {
+  const _Hud({
+    required this.flexA,
+    required this.isDesktop,
+    required this.flexC,
+    required this.flexB,
+    required this.player,
+    required this.playerController,
+    required this.gameState,
+  });
+
+  final int flexA;
+  final bool isDesktop;
+  final int flexC;
+  final int flexB;
+  final DDBasePlayerView<
+    DDBasePlayerController<DDBasePlayerModel>,
+    DDBasePlayerModel
+  >
+  player;
+  final PlayerController? playerController;
+  final GameState gameState;
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      ignoring: false,
+      child: Row(
+        children: [
+          _LeftArea(flex: flexA, isDesktop: isDesktop, gameState: gameState),
+          _MainArea(
+            flex: flexC,
+            flexA: flexA,
+            flexB: flexB,
+            isDesktop: isDesktop,
+            player: player,
+            playerController: playerController,
+            gameState: gameState,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -116,7 +151,8 @@ final class _LeftArea extends StatelessWidget {
   Widget build(BuildContext context) {
     // ✅ Esconde inventário em certos estados
     final showInventory =
-        gameState == GameState.playing || gameState == GameState.paused;
+        gameState == GameState.gamePlaying ||
+        gameState == GameState.pausedInGamePlaying;
 
     return Expanded(
       flex: flex,
@@ -233,7 +269,7 @@ final class _TopCenterArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // ✅ Esconde em alguns estados
-    final showDebug = gameState == GameState.playing;
+    final showDebug = gameState == GameState.gamePlaying;
 
     return Expanded(
       flex: flex,
@@ -330,7 +366,7 @@ final class _CenterArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // ✅ Tutorial só em playing
-    final showTutorial = gameState == GameState.playing;
+    final showTutorial = gameState == GameState.gamePlaying;
 
     return Expanded(
       flex: flex,
@@ -361,7 +397,7 @@ final class _CenterRightArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // ✅ Esconde joystick mobile em certos estados
-    final showJoystick = gameState == GameState.playing;
+    final showJoystick = gameState == GameState.gamePlaying;
 
     return Expanded(
       flex: flex,
@@ -428,7 +464,8 @@ final class _BottomCenterArea extends StatelessWidget {
   Widget build(BuildContext context) {
     // ✅ Mostra inventário apenas em certos estados
     final showInventory =
-        gameState == GameState.playing || gameState == GameState.paused;
+        gameState == GameState.gamePlaying ||
+        gameState == GameState.pausedInGamePlaying;
 
     return Expanded(
       flex: flex,
@@ -493,7 +530,7 @@ final class _JoystickArea extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final showJoystick = gameState == GameState.playing;
+    final showJoystick = gameState == GameState.gamePlaying;
 
     return Expanded(
       child:

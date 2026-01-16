@@ -1,4 +1,5 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:dawnforge/game/state/game_state_machine.dart';
 import 'package:dawnforge/game/systems/audio/audio_manager.dart';
 import 'package:dawnforge/game/systems/game/tile_constants.dart';
 import 'package:dawnforge/game/systems/map/map_def.dart';
@@ -144,10 +145,14 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
           children: [
             BonfireWidget(
               key: ValueKey(mapItem.id),
-              onReady: (game) {
-                TimeManager.instance.setGame(game);
+              onReady: (gameRef) {
+                GameStateMachine.instance.initialize(gameRef);
                 TimeManager.instance.start();
               },
+              // onDispose: () {
+              //   GameStateMachine.instance.dispose();
+              //   TimeManager.instance.stop();
+              // },
               playerControllers: [playerInput],
               player: player,
               map: mapItem.map,
