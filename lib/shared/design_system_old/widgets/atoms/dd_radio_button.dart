@@ -1,3 +1,4 @@
+import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
 import 'package:dawnforge/shared/design_system_old/dd_design_system.dart';
 import 'package:flutter/material.dart';
 
@@ -17,16 +18,16 @@ class DDRadioButton<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final spacing = AppDesignSystem.of(context).spacing;
+
     return InkWell(
-      onTap: () {
-        onChange?.call(value);
-      },
+      onTap: () => onChange?.call(value),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildIndicator(),
+          _buildIndicator(context),
           if (label != null) ...[
-            const SizedBox(width: DDDesignSystem.kSpacingExtraSmall),
+            SizedBox(width: spacing.kSpacingExtraSmall),
             _buildLabel(),
           ],
         ],
@@ -34,7 +35,7 @@ class DDRadioButton<T> extends StatelessWidget {
     );
   }
 
-  Widget _buildIndicator() {
+  Widget _buildIndicator(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
@@ -45,7 +46,9 @@ class DDRadioButton<T> extends StatelessWidget {
       child: Container(
         width: DDDesignSystem.kRadioButtonDimension,
         height: DDDesignSystem.kRadioButtonDimension,
-        margin: const EdgeInsets.all(DDDesignSystem.kSpacingSuperSmall),
+        margin: EdgeInsets.all(
+          AppDesignSystem.of(context).spacing.kSpacingSuperSmall,
+        ),
         color: value == group
             ? DDDesignSystem.kBorderColor
             : Colors.transparent,

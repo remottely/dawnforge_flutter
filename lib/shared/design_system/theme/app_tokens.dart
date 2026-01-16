@@ -61,6 +61,15 @@ final class AppSpacing {
     desktop: _small,
   );
 
+  double get kSpacingSuperSmall => 4.0;
+  double get kSpacingExtraSmall => 8.0;
+  //  double get kSpacingSmall => 12.0;
+  //  double get kSpacingMedium => 16.0;
+  //  double get kSpacingMediumLarge => 20.0;
+  double get kSpacingLarge => 24.0;
+  double get kSpacingExtraLarge => 32.0;
+  //  double get kSpacingSuperLarge => 48.0;
+
   double get margin => _marginValue.get(_screenType);
   double get padding => _paddingValue.get(_screenType);
   double get spacing => _spacingValue.get(_screenType);

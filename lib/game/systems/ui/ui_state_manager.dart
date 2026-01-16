@@ -5,6 +5,7 @@ import 'package:dawnforge/game/systems/game/game_state_manager.dart';
 import 'package:dawnforge/game/systems/input_actions/keyboard_setup.dart';
 import 'package:dawnforge/game/systems/localization/gameplay_strings_location.dart';
 import 'package:dawnforge/game/systems/ui/ui_state_def.dart';
+import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
 import 'package:dawnforge/shared/design_system_old/dd_design_system.dart';
 import 'package:dawnforge/shared/design_system_old/widgets/atoms/dd_button.dart';
 import 'package:dawnforge/shared/design_system_old/widgets/atoms/dd_dialog_widget.dart';
@@ -22,6 +23,8 @@ final class UIStateManager {
     BuildContext context,
     Function(BuildContext) onRetryPressed,
   ) {
+    final spacing = AppDesignSystem.of(context).spacing;
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -32,7 +35,7 @@ final class UIStateManager {
               UIStateDef.kGameOverAsset,
               height: UIStateDef.kGameOverImageHeight,
             ),
-            const SizedBox(height: DDDesignSystem.kSpacingExtraSmall),
+            SizedBox(height: spacing.kSpacingExtraSmall),
             DDButton.text(
               labelText: GameplayStringsLocation.instance.getString(
                 'play_again_cap',
@@ -46,6 +49,8 @@ final class UIStateManager {
   }
 
   void displayVictoryDialog(BuildContext context) {
+    final spacing = AppDesignSystem.of(context).spacing;
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -57,7 +62,7 @@ final class UIStateManager {
                 'congratulations',
               ),
             ),
-            const SizedBox(height: DDDesignSystem.kSpacingExtraSmall),
+            SizedBox(height: spacing.kSpacingExtraSmall),
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: UIStateDef.kHorizontalSpacing,
@@ -67,7 +72,7 @@ final class UIStateManager {
                 textAlign: TextAlign.center,
               ),
             ),
-            const SizedBox(height: DDDesignSystem.kSpacingExtraLarge),
+            SizedBox(height: spacing.kSpacingExtraLarge),
             DDButton.elevated(
               labelText: 'OK',
               onPressed: () => _navigateToMainMenu(context),

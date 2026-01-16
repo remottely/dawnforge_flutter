@@ -1,8 +1,8 @@
+import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/pre_game/screens/menu_screen_def.dart';
 import 'package:dawnforge/pre_game/screens/menu_screen_viewmodel.dart';
 import 'package:dawnforge/game/systems/localization/gameplay_strings_location.dart';
-import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
 import 'package:dawnforge/shared/design_system_old/dd_design_system.dart';
 import 'package:dawnforge/shared/design_system_old/widgets/atoms/dd_radio_button.dart';
 import 'package:dawnforge/shared/framework/widgets/dd_sprite_animation_widget.dart';
@@ -27,6 +27,8 @@ class _MenuScreenState extends MenuScreenViewModel {
   }
 
   Widget _createMainMenu() {
+    final spacing = AppDesignSystem.of(context).spacing;
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Center(
@@ -34,8 +36,8 @@ class _MenuScreenState extends MenuScreenViewModel {
           child: Wrap(
             alignment: WrapAlignment.center,
             crossAxisAlignment: WrapCrossAlignment.center,
-            spacing: DDDesignSystem.kSpacingLarge,
-            runSpacing: DDDesignSystem.kSpacingLarge,
+            spacing: spacing.kSpacingLarge,
+            runSpacing: spacing.kSpacingLarge,
             children: <Widget>[
               const _Title(),
               if (MenuScreenDef.characterSpriteAnimations.isNotEmpty) ...[
@@ -78,9 +80,7 @@ class _Title extends StatelessWidget {
       'Greenleaf Valley',
       style: TextStyle(
         color: Colors.white,
-        fontSize: AppDesignSystem.of(
-          context,
-        ).typography.fontSizeDisplay,
+        fontSize: AppDesignSystem.of(context).typography.fontSizeDisplay,
       ),
     );
   }
@@ -125,9 +125,7 @@ class _StartButton extends StatelessWidget {
             style: TextStyle(
               color: Colors.white,
 
-              fontSize: AppDesignSystem.of(
-                context,
-              ).typography.fontSizeCaption,
+              fontSize: AppDesignSystem.of(context).typography.fontSizeCaption,
             ),
           ),
         ),
@@ -143,9 +141,11 @@ class _Controls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final spacing = AppDesignSystem.of(context).spacing;
+    
     return Column(
       mainAxisSize: MainAxisSize.min,
-      spacing: DDDesignSystem.kSpacingExtraSmall,
+      spacing: spacing.kSpacingExtraSmall,
       children: [
         DDRadioButton<InputActionsType>(
           value: InputActionsType.keyboard,
