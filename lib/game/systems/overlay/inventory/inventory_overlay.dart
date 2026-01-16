@@ -1,6 +1,3 @@
-/// **InventoryOverlay - MIGRADO PARA NOVA ARQUITETURA**
-/// Sistema de inventário responsivo com suporte a venda no market
-/// Utiliza composition pattern para separar responsabilidades
 import 'package:dawnforge/game/state/game_state_machine.dart';
 import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
 import 'package:dawnforge/shared/design_system/theme/screen_size_info.dart';
@@ -11,11 +8,9 @@ import 'package:dawnforge/game/features/inventory/state/inventory_state.dart';
 import 'package:dawnforge/game/features/inventory/entities/inventory_slot.dart';
 import 'package:dawnforge/game/features/inventory/entities/hand_item.dart';
 import 'package:dawnforge/game/features/inventory/widgets/item_sprite_widget.dart';
-import 'package:dawnforge/game/features/market/market_state.dart';
 import 'package:dawnforge/game/features/market/market_manager.dart';
 import 'package:dawnforge/game/systems/game/player_state_manager.dart';
 import 'package:dawnforge/game/systems/overlay/message/message_overlay_service.dart';
-import 'package:dawnforge/shared/design_system/theme/app_design_system_extension.dart';
 import 'package:flutter/material.dart';
 
 /// **COMPOSITION CORE:** Entry Point - Gerencia visibilidade e responsividade

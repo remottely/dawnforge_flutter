@@ -189,12 +189,12 @@ class MarketDecoration extends DDContactDecoration with PlayerControllerListener
   }
 
   void _registerToPlayerController() {
-    final controller = gameRef.playerControllers?.firstOrNull;
-    if (controller == null || _registeredController == controller) return;
+    final PlayerController? playerInput = gameRef.playerControllers?.firstOrNull;
+    if (playerInput == null || _registeredController == playerInput) return;
 
     _registeredController?.removeObserver(this);
-    controller.addObserver(this);
-    _registeredController = controller;
+    playerInput.addObserver(this);
+    _registeredController = playerInput;
   }
 
   void _unregisterFromPlayerController() {

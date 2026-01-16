@@ -15,21 +15,21 @@ import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_p
 /// Uses PlayerControllerListener to receive unified input events.
 class FarmInputHandler extends GameComponent with PlayerControllerListener {
   final DDBasePlayerView player;
-  final PlayerController playerController;
+  final PlayerController playerInput;
   late final FarmFeedbackService _feedbackService;
 
-  FarmInputHandler({required this.player, required this.playerController});
+  FarmInputHandler({required this.player, required this.playerInput});
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
     _feedbackService = FarmFeedbackService.instance;
-    playerController.addObserver(this);
+    playerInput.addObserver(this);
   }
 
   @override
   void onRemove() {
-    playerController.removeObserver(this);
+    playerInput.removeObserver(this);
     super.onRemove();
   }
 

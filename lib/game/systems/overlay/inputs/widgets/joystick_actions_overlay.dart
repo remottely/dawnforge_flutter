@@ -5,15 +5,14 @@ import 'package:dawnforge/game/features/inventory/entities/hand_item.dart';
 import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.dart';
 import 'package:dawnforge/game/features/inventory/state/equipment_state.dart';
 import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
-import 'package:dawnforge/shared/design_system/theme/app_design_system_extension.dart';
 import 'package:dawnforge/shared/overlay_design_system/responsive_overlay_base.dart';
 import 'package:flutter/material.dart';
 
 /// Overlay for joystick action buttons (primary and secondary attacks)
 class JoystickActionsOverlay extends ResponsiveOverlayBase {
-  final PlayerController? playerController;
+  final PlayerController? playerInput;
 
-  const JoystickActionsOverlay({super.key, this.playerController});
+  const JoystickActionsOverlay({super.key, this.playerInput});
 
   @override
   String get overlayId => 'joystick_actions';
@@ -90,9 +89,9 @@ class JoystickActionsOverlay extends ResponsiveOverlayBase {
   }
 
   void _sendAction(String actionId, ActionEvent event) {
-    if (playerController == null) return;
+    if (playerInput == null) return;
 
-    playerController!.onJoystickAction(
+    playerInput!.onJoystickAction(
       JoystickActionEvent(id: actionId, event: event),
     );
   }

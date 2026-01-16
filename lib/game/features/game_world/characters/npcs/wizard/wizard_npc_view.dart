@@ -43,12 +43,12 @@ class WizardNpcView extends SimpleNpc with PlayerControllerListener {
             _playerIsNearby = true;
 
             // Register to receive player controller events
-            final playerController = gameRef.playerControllers?.firstOrNull;
-            if (playerController != null &&
-                _registeredController != playerController) {
+            final PlayerController? playerInput = gameRef.playerControllers?.firstOrNull;
+            if (playerInput != null &&
+                _registeredController != playerInput) {
               _registeredController?.removeObserver(this);
-              _registeredController = playerController;
-              playerController.addObserver(this);
+              _registeredController = playerInput;
+              playerInput.addObserver(this);
             }
 
             _controller.onPlayerDetected(

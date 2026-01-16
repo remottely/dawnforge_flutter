@@ -8,12 +8,12 @@ import 'package:flutter/material.dart';
 
 final class UnifiedGameOverlay extends StatelessWidget {
   final DDBasePlayerView player;
-  final PlayerController? playerController;
+  final PlayerController? playerInput;
 
   const UnifiedGameOverlay({
     super.key,
     required this.player,
-    this.playerController,
+    this.playerInput,
   });
 
   @override
@@ -41,7 +41,7 @@ final class UnifiedGameOverlay extends StatelessWidget {
             flexC: flexC,
             flexB: flexB,
             player: player,
-            playerController: playerController,
+            playerInput: playerInput,
             gameState: gameState,
           ),
 
@@ -64,7 +64,7 @@ final class UnifiedGameOverlay extends StatelessWidget {
                 flexC: flexC,
                 flexB: flexB,
                 player: player,
-                playerController: playerController,
+                playerInput: playerInput,
                 gameState: gameState,
               ),
               const UIMinigameFishingHud(), // TODO: Criar

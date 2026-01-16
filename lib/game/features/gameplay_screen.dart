@@ -138,7 +138,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
 
         farmInputHandler = FarmInputHandler(
           player: player,
-          playerController: playerInput,
+          playerInput: playerInput,
         );
 
         return Stack(
@@ -172,7 +172,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
               showCollisionArea: AppEnvironment.kShowCollisionArea,
             ),
 
-            UnifiedGameOverlay(player: player, playerController: playerInput),
+            UnifiedGameOverlay(player: player, playerInput: playerInput),
           ],
         );
       },

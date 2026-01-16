@@ -133,9 +133,9 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
       observed: (GameComponent comp) {
         final playerView = comp as DDBasePlayerView;
         // Register to receive player controller events when player is nearby
-        final playerController = gameRef.playerControllers?.firstOrNull;
-        if (playerController != null) {
-          registerToPlayerController(playerController);
+        final PlayerController? playerInput = gameRef.playerControllers?.firstOrNull;
+        if (playerInput != null) {
+          registerToPlayerController(playerInput);
         }
         observed(playerView);
       },

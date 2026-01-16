@@ -296,10 +296,10 @@ DDBasePlayerView buildSmallburgPlayer(Vector2 position) {
   void recreatePerMapDependencies({required String? mapId}) {
     playerInput = GameplayScreenDef.createPlayerInput();
     inventoryInputHandler = InventoryInputHandler(
-      playerController: playerInput,
+      playerInput: playerInput,
     );
     shieldDefenseInputHandler = ShieldDefenseInputHandler(
-      playerController: playerInput,
+      playerInput: playerInput,
     );
     gameplayGameStateManager = GameStateManager();
     // gameplayHUD = GameplayHUDView();

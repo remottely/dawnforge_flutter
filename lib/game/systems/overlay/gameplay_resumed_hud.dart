@@ -26,7 +26,7 @@ class GameplayResumedHud extends StatelessWidget {
     required this.flexC,
     required this.flexB,
     required this.player,
-    required this.playerController,
+    required this.playerInput,
     required this.gameState,
   });
 
@@ -39,7 +39,7 @@ class GameplayResumedHud extends StatelessWidget {
     DDBasePlayerModel
   >
   player;
-  final PlayerController? playerController;
+  final PlayerController? playerInput;
   final GameState gameState;
 
   @override
@@ -55,7 +55,7 @@ class GameplayResumedHud extends StatelessWidget {
             flexB: flexB,
             isDesktop: isDesktop,
             player: player,
-            playerController: playerController,
+            playerInput: playerInput,
             gameState: gameState,
           ),
         ],
@@ -111,7 +111,7 @@ final class _MainArea extends StatelessWidget {
   final int flexB;
   final bool isDesktop;
   final DDBasePlayerView player;
-  final PlayerController? playerController;
+  final PlayerController? playerInput;
   final GameState gameState;
 
   const _MainArea({
@@ -120,7 +120,7 @@ final class _MainArea extends StatelessWidget {
     required this.flexB,
     required this.isDesktop,
     required this.player,
-    this.playerController,
+    this.playerInput,
     required this.gameState,
   });
 
@@ -139,7 +139,7 @@ final class _MainArea extends StatelessWidget {
           _MiddleRow(
             flexA: flexA,
             flexB: flexB,
-            playerController: playerController,
+            playerInput: playerInput,
             gameState: gameState,
           ),
           _BottomRow(
@@ -147,7 +147,7 @@ final class _MainArea extends StatelessWidget {
             flexB: flexB,
             isDesktop: isDesktop,
             player: player,
-            playerController: playerController,
+            playerInput: playerInput,
             gameState: gameState,
           ),
         ],
@@ -261,13 +261,13 @@ final class _TopRightArea extends StatelessWidget {
 final class _MiddleRow extends StatelessWidget {
   final int flexA;
   final int flexB;
-  final PlayerController? playerController;
+  final PlayerController? playerInput;
   final GameState gameState;
 
   const _MiddleRow({
     required this.flexA,
     required this.flexB,
-    this.playerController,
+    this.playerInput,
     required this.gameState,
   });
 
@@ -280,7 +280,7 @@ final class _MiddleRow extends StatelessWidget {
           _CenterArea(flex: flexB, gameState: gameState),
           _CenterRightArea(
             flex: flexA,
-            playerController: playerController,
+            playerInput: playerInput,
             gameState: gameState,
           ),
         ],
@@ -317,12 +317,12 @@ final class _CenterArea extends StatelessWidget {
 
 final class _CenterRightArea extends StatelessWidget {
   final int flex;
-  final PlayerController? playerController;
+  final PlayerController? playerInput;
   final GameState gameState;
 
   const _CenterRightArea({
     required this.flex,
-    this.playerController,
+    this.playerInput,
     required this.gameState,
   });
 
@@ -339,7 +339,7 @@ final class _CenterRightArea extends StatelessWidget {
             SettingsManager.instance.inputSelected ==
                     InputActionsType.joystick &&
                 showJoystick
-            ? MobileInputsOverlay(playerController: playerController)
+            ? MobileInputsOverlay(playerInput: playerInput)
             : const SizedBox(width: double.infinity, height: double.infinity),
       ),
     );
@@ -355,7 +355,7 @@ final class _BottomRow extends StatelessWidget {
   final int flexB;
   final bool isDesktop;
   final DDBasePlayerView player;
-  final PlayerController? playerController;
+  final PlayerController? playerInput;
   final GameState gameState;
 
   const _BottomRow({
@@ -363,7 +363,7 @@ final class _BottomRow extends StatelessWidget {
     required this.flexB,
     required this.isDesktop,
     required this.player,
-    this.playerController,
+    this.playerInput,
     required this.gameState,
   });
 
@@ -377,7 +377,7 @@ final class _BottomRow extends StatelessWidget {
           _BottomRightArea(
             flex: flexA,
             player: player,
-            playerController: playerController,
+            playerInput: playerInput,
             gameState: gameState,
           ),
         ],
@@ -417,13 +417,13 @@ final class _BottomCenterArea extends StatelessWidget {
 final class _BottomRightArea extends StatelessWidget {
   final int flex;
   final DDBasePlayerView player;
-  final PlayerController? playerController;
+  final PlayerController? playerInput;
   final GameState gameState;
 
   const _BottomRightArea({
     required this.flex,
     required this.player,
-    this.playerController,
+    this.playerInput,
     required this.gameState,
   });
 
@@ -442,7 +442,7 @@ final class _BottomRightArea extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               _JoystickArea(
-                playerController: playerController,
+                playerInput: playerInput,
                 gameState: gameState,
               ),
               if (showStats) PlayerVitalStatsOverlay(player: player),
@@ -455,10 +455,10 @@ final class _BottomRightArea extends StatelessWidget {
 }
 
 final class _JoystickArea extends StatelessWidget {
-  final PlayerController? playerController;
+  final PlayerController? playerInput;
   final GameState gameState;
 
-  const _JoystickArea({this.playerController, required this.gameState});
+  const _JoystickArea({this.playerInput, required this.gameState});
 
   @override
   Widget build(BuildContext context) {
@@ -468,7 +468,7 @@ final class _JoystickArea extends StatelessWidget {
       child:
           SettingsManager.instance.inputSelected == InputActionsType.joystick &&
               showJoystick
-          ? JoystickActionsOverlay(playerController: playerController)
+          ? JoystickActionsOverlay(playerInput: playerInput)
           : const SizedBox(width: double.infinity, height: double.infinity),
     );
   }
