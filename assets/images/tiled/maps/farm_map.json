@@ -44632,6 +44632,17 @@
                  "width":10.4632158539531,
                  "x":637.147783293071,
                  "y":364.487188976101
+                }, 
+                {
+                 "height":16,
+                 "id":4784,
+                 "name":"goblin_enemy",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":672,
+                 "y":272
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -44795,7 +44806,7 @@
          "y":0
         }],
  "nextlayerid":30,
- "nextobjectid":4784,
+ "nextobjectid":4785,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

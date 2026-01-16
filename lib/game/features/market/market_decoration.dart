@@ -37,7 +37,6 @@ class MarketDecoration extends DDContactDecoration
     this.overlayId,
     this.interactionIcon,
   });
-  // lib/game/features/market/market_decoration.dart
   @override
   void onContact(SimplePlayer component) {
     super.onContact(component);
@@ -45,7 +44,8 @@ class MarketDecoration extends DDContactDecoration
 
     _hasActiveContact = true;
 
-    GlobalInputHandler.instance.register(
+    // ✅ MÉTODO ESTÁTICO
+    GlobalInputHandler.register(
       id: 'market_$_spawnKey',
       type: InteractionType.market,
       onExecute: () {
@@ -60,9 +60,8 @@ class MarketDecoration extends DDContactDecoration
     super.onContactExit(component);
     _hasActiveContact = false;
 
-    // ✅ DESREGISTRA
-    GlobalInputHandler.instance.unregister('market_$_spawnKey');
-
+    // ✅ MÉTODO ESTÁTICO
+    GlobalInputHandler.unregister('market_$_spawnKey');
     GameLogger.debug('[MarketDecoration] Unregistered at $_spawnKey');
     onCloseMarket.call();
   }
@@ -95,7 +94,10 @@ class MarketDecoration extends DDContactDecoration
     // Try correcting the name to the name of an existing method, or defining a method named 'unregisterInteractable'.
 
     // ✅ DESREGISTRA
-    GlobalInputHandler.instance.unregister('market_$_spawnKey');
+    if (_hasActiveContact) {
+      // ✅ MÉTODO ESTÁTICO
+      GlobalInputHandler.unregister('market_$_spawnKey');
+    }
 
     if (_registered) {
       _spawnedPositions.remove(_spawnKey);

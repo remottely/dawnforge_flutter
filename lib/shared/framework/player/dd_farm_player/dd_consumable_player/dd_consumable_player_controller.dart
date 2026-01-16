@@ -39,7 +39,7 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
 
     if (hasConsumable && !_isRegistered) {
       // ✅ REGISTRA COM CALLBACK
-      GlobalInputHandler.instance.register(
+      GlobalInputHandler.register(
         id: 'consumable_${player.hashCode}',
         type: InteractionType.consumable,
         onExecute: () async {
@@ -60,7 +60,7 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
       }
     } else if (!hasConsumable && _isRegistered) {
       // ✅ DESREGISTRA
-      GlobalInputHandler.instance.unregister('consumable_${player.hashCode}');
+      GlobalInputHandler.unregister('consumable_${player.hashCode}');
       _isRegistered = false;
 
       if (kDebugMode) {
@@ -212,7 +212,7 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
   void dispose() {
     // ✅ DESREGISTRA AO DESTRUIR
     if (_isRegistered && _player != null) {
-      GlobalInputHandler.instance.unregister('consumable_${_player.hashCode}');
+      GlobalInputHandler.unregister('consumable_${_player.hashCode}');
       _isRegistered = false;
     }
     super.dispose();

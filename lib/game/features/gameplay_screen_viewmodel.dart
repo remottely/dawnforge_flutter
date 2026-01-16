@@ -309,16 +309,23 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
   //   );
   // }
 
+  // lib/game/features/gameplay_screen_viewmodel.dart
   void recreatePerMapDependencies({required String? mapId}) {
+    print('🔥 [ViewModel] recreatePerMapDependencies START');
+
     _playerInput = GameplayScreenDef.createPlayerInput();
+
+    // ✅ CRIA NOVA INSTÂNCIA (não mais singleton)
+    globalInputHandler = GlobalInputHandler(playerInput: _playerInput);
+
     inventoryInputHandler = InventoryInputHandler(playerInput: _playerInput);
     shieldDefenseInputHandler = ShieldDefenseInputHandler(
       playerInput: _playerInput,
     );
     gameplayGameStateManager = GameStateManager();
-    GlobalInputHandler.instance.setPlayerInput(_playerInput);
-    globalInputHandler = GlobalInputHandler.instance;
-    // gameplayHUD = GameplayHUDView();
+
     lastMapId = mapId;
+
+    print('🔥 [ViewModel] recreatePerMapDependencies END');
   }
 }

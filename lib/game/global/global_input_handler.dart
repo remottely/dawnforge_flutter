@@ -5,10 +5,8 @@ import 'package:dawnforge/game/systems/input_actions/input_def.dart';
 import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:flutter/foundation.dart';
 
-/// Callback para executar ação de interação
 typedef InteractionCallback = void Function();
 
-/// Dados de um interactable registrado
 class InteractableData {
   final InteractionType type;
   final InteractionCallback onExecute;
@@ -16,52 +14,54 @@ class InteractableData {
   InteractableData({required this.type, required this.onExecute});
 }
 
+/// ✅ AGORA É UM FACTORY NORMAL (não mais singleton)
 class GlobalInputHandler extends GameComponent with PlayerControllerListener {
-  GlobalInputHandler._();
+  final PlayerController playerInput;
 
-  static final GlobalInputHandler instance = GlobalInputHandler._();
+  // ✅ ESTADO COMPARTILHADO (singleton separado)
+  static final _SharedState _state = _SharedState();
 
-  PlayerController? playerInput;
-  void setPlayerInput(PlayerController? newPlayerInput) => playerInput = newPlayerInput;
-
-  // ✅ MAPA COM CALLBACKS
-  final Map<String, InteractableData> _registeredInteractables = {};
+  GlobalInputHandler({required this.playerInput});
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    playerInput?.addObserver(this);
-
-    print('🔥 [GlobalInput] onLoad chamado');
-    print('🔥 [GlobalInput] playerInput: $playerInput');
-    print('🔥 [GlobalInput] playerInput.hashCode: ${playerInput.hashCode}');
-
-    print('🔥 [GlobalInput] addObserver chamado');
-    print('🔥 [GlobalInput] Observers: ${playerInput}');
-
+    
+    print('🔥🔥🔥 [GlobalInput] onLoad START');
+    print('🔥 playerInput.hashCode: ${playerInput.hashCode}');
+    
+    playerInput.addObserver(this);
+    
+    print('🔥 ✅ Observer REGISTRADO');
+    print('🔥🔥🔥 [GlobalInput] onLoad END');
+    
     GameLogger.debug('[GlobalInput] 🎮 Handler loaded and ready');
   }
 
   @override
   void onRemove() {
-    playerInput?.removeObserver(this);
-
-    // ❌ NÃO RESETAR instance (causa erro no MarketDecoration.onRemove)
-    // instance = null;
-
-    // ✅ APENAS LIMPA INTERACTABLES
-    _registeredInteractables.clear();
-
+    print('🔥🔥🔥 [GlobalInput] onRemove START');
+    print('🔥 playerInput.hashCode: ${playerInput.hashCode}');
+    print('🔥 Interactables compartilhados ANTES de limpar: ${_state._registeredInteractables.length}');
+    
+    playerInput.removeObserver(this);
+    
+    // ✅ LIMPA TODO O ESTADO COMPARTILHADO
+    _state.dispose();
+    
+    print('🔥 ✅ Observer REMOVIDO');
+    print('🔥 ✅ SharedState LIMPO (dispose)');
+    print('🔥 Interactables compartilhados DEPOIS de limpar: ${_state._registeredInteractables.length}');
+    print('🔥🔥🔥 [GlobalInput] onRemove END');
+    
     super.onRemove();
-    GameLogger.debug('[GlobalInput] Handler removed (instance kept alive)');
+    GameLogger.debug('[GlobalInput] Handler removed and state cleared');
   }
 
   @override
   void onJoystickAction(JoystickActionEvent event) {
     if (kDebugMode) {
-      GameLogger.debug(
-        '[GlobalInput] 🎮 Input received: ${event.id} | ${event.event}',
-      );
+      GameLogger.debug('[GlobalInput] 🎮 Input received: ${event.id} | ${event.event}');
     }
 
     if (event.event != ActionEvent.DOWN) return;
@@ -71,29 +71,22 @@ class GlobalInputHandler extends GameComponent with PlayerControllerListener {
       return;
     }
 
-    // ✅ HIERARQUIA
-
-    // 1. UI Overlays
     if (_handleUIOverlays(event)) {
       if (kDebugMode) GameLogger.debug('[GlobalInput] ✅ UI handled');
       return;
     }
 
-    // 2. World Interactions (com callbacks)
     if (_handleWorldInteractions(event)) {
-      if (kDebugMode)
-        GameLogger.debug('[GlobalInput] ✅ World interaction handled');
+      if (kDebugMode) GameLogger.debug('[GlobalInput] ✅ World interaction handled');
       return;
     }
 
-    // 3. Global Hotkeys
     if (_handleGlobalHotkeys(event)) {
       if (kDebugMode) GameLogger.debug('[GlobalInput] ✅ Global hotkey handled');
       return;
     }
 
-    if (kDebugMode)
-      GameLogger.debug('[GlobalInput] ⚠️ No handler consumed input');
+    if (kDebugMode) GameLogger.debug('[GlobalInput] ⚠️ No handler consumed input');
   }
 
   bool _canProcessInput() {
@@ -200,35 +193,20 @@ class GlobalInputHandler extends GameComponent with PlayerControllerListener {
     return false;
   }
 
-  // ✅ WORLD INTERACTIONS COM CALLBACKS
   bool _handleWorldInteractions(JoystickActionEvent event) {
     if (!InputDef.isInteractionAction(event.id)) {
-      if (kDebugMode) {
-        GameLogger.debug(
-          '[GlobalInput] Not an interaction action: ${event.id}',
-        );
-      }
       return false;
     }
 
     if (kDebugMode) {
       GameLogger.debug(
-        '[GlobalInput] 🔍 Checking interactables... Total registered: ${_registeredInteractables.length}',
+        '[GlobalInput] 🔍 Checking interactables... Total: ${_state._registeredInteractables.length}',
       );
-      for (final entry in _registeredInteractables.entries) {
-        GameLogger.debug(
-          '[GlobalInput]   - ${entry.key}: ${entry.value.type.name} (priority: ${entry.value.type.priority})',
-        );
-      }
     }
 
-    // Pega o de maior prioridade
-    final highestPriority = _getHighestPriorityInteractable();
+    final highestPriority = _state._getHighestPriorityInteractable();
 
     if (highestPriority == null) {
-      if (kDebugMode) {
-        GameLogger.debug('[GlobalInput] ⚠️ No interactables found');
-      }
       return false;
     }
 
@@ -236,50 +214,16 @@ class GlobalInputHandler extends GameComponent with PlayerControllerListener {
     final data = highestPriority.$2;
 
     if (kDebugMode) {
-      GameLogger.debug(
-        '[GlobalInput] 🎯 Executing: $id '
-        '(priority: ${data.type.priority} - ${data.type.name})',
-      );
-
-      if (_registeredInteractables.length > 1) {
-        final ignored = _registeredInteractables.entries
-            .where((e) => e.key != id)
-            .map((e) => '${e.key}(${e.value.type.name})')
-            .join(', ');
-        GameLogger.debug('[GlobalInput] 🚫 Ignored: $ignored');
-      }
+      GameLogger.debug('[GlobalInput] 🎯 Executing: $id (priority: ${data.type.priority})');
     }
 
-    // ✅ EXECUTA O CALLBACK
     try {
       data.onExecute();
-      if (kDebugMode) {
-        GameLogger.debug('[GlobalInput] ✅ Callback executed successfully');
-      }
     } catch (e) {
       GameLogger.error('[GlobalInput] ❌ Error executing callback: $e');
     }
 
     return true;
-  }
-
-  (String, InteractableData)? _getHighestPriorityInteractable() {
-    if (_registeredInteractables.isEmpty) return null;
-
-    String? bestId;
-    InteractableData? bestData;
-
-    for (final entry in _registeredInteractables.entries) {
-      final id = entry.key;
-      final data = entry.value;
-
-      if (bestData == null || data.type.priority < bestData.type.priority) {
-        bestId = id;
-        bestData = data;
-      }
-    }
-
-    return bestId != null && bestData != null ? (bestId, bestData) : null;
   }
 
   bool _handleGlobalHotkeys(JoystickActionEvent event) {
@@ -299,19 +243,16 @@ class GlobalInputHandler extends GameComponent with PlayerControllerListener {
 
     final slotNumber = InputDef.getToolbarSlotNumber(event.id);
     if (slotNumber != null) {
-      // TODO: EquipmentManager.instance.selectSlotIndex(slotNumber);
       GameLogger.debug('[GlobalInput] 🎯 Selecting slot: $slotNumber');
       return true;
     }
 
     if (InputDef.isEquipMainHandAction(event.id)) {
-      // TODO: EquipmentManager.instance.selectNextSlot();
       GameLogger.debug('[GlobalInput] ➡️ Next slot');
       return true;
     }
 
     if (InputDef.isEquipMainHandReverseAction(event.id)) {
-      // TODO: EquipmentManager.instance.selectPreviousSlot();
       GameLogger.debug('[GlobalInput] ⬅️ Previous slot');
       return true;
     }
@@ -336,40 +277,83 @@ class GlobalInputHandler extends GameComponent with PlayerControllerListener {
     return false;
   }
 
-  // ✅ REGISTRO COM CALLBACK
+  // ✅ MÉTODOS ESTÁTICOS para acessar estado compartilhado
+  static void register({
+    required String id,
+    required InteractionType type,
+    required InteractionCallback onExecute,
+  }) {
+    _state.register(id: id, type: type, onExecute: onExecute);
+  }
+
+  static void unregister(String id) {
+    _state.unregister(id);
+  }
+
+  static void reset() {
+    _state.reset();
+  }
+}
+
+/// ✅ ESTADO COMPARTILHADO (Singleton separado)
+class _SharedState {
+  static final _SharedState _instance = _SharedState._();
+  factory _SharedState() => _instance;
+  _SharedState._();
+
+  final Map<String, InteractableData> _registeredInteractables = {};
+
   void register({
     required String id,
     required InteractionType type,
     required InteractionCallback onExecute,
   }) {
-    _registeredInteractables[id] = InteractableData(
-      type: type,
-      onExecute: onExecute,
-    );
-
+    _registeredInteractables[id] = InteractableData(type: type, onExecute: onExecute);
+    
     if (kDebugMode) {
       GameLogger.debug(
-        '[GlobalInput] ➕ Registered: $id '
-        '(priority: ${type.priority} - ${type.name}) '
-        'Total: ${_registeredInteractables.length}',
+        '[GlobalInput] ➕ Registered: $id (priority: ${type.priority}) Total: ${_registeredInteractables.length}',
       );
     }
   }
 
   void unregister(String id) {
     final removed = _registeredInteractables.remove(id);
-
+    
     if (removed != null && kDebugMode) {
-      GameLogger.debug(
-        '[GlobalInput] ➖ Unregistered: $id '
-        'Remaining: ${_registeredInteractables.length}',
-      );
+      GameLogger.debug('[GlobalInput] ➖ Unregistered: $id Remaining: ${_registeredInteractables.length}');
     }
   }
 
   void reset() {
     _registeredInteractables.clear();
     if (kDebugMode) GameLogger.debug('[GlobalInput] 🔄 Reset complete');
+  }
+
+  // ✅ MÉTODO DISPOSE para limpar completamente
+  void dispose() {
+    print('🔥 [SharedState] dispose() chamado - Limpando ${_registeredInteractables.length} interactables');
+    _registeredInteractables.clear();
+    if (kDebugMode) GameLogger.debug('[GlobalInput] 🗑️ SharedState disposed');
+  }
+
+  (String, InteractableData)? _getHighestPriorityInteractable() {
+    if (_registeredInteractables.isEmpty) return null;
+
+    String? bestId;
+    InteractableData? bestData;
+
+    for (final entry in _registeredInteractables.entries) {
+      final id = entry.key;
+      final data = entry.value;
+
+      if (bestData == null || data.type.priority < bestData.type.priority) {
+        bestId = id;
+        bestData = data;
+      }
+    }
+
+    return bestId != null && bestData != null ? (bestId, bestData) : null;
   }
 }
 
