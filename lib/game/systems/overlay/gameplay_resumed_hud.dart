@@ -1,10 +1,9 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/features/market/market_state.dart';
+
 import 'package:dawnforge/game/state/game_state_machine.dart';
 import 'package:dawnforge/game/systems/overlay/message/message_overlay.dart';
 import 'package:dawnforge/game/systems/overlay/tutorial_inputs/tutorial_inputs_overlay.dart';
 import 'package:dawnforge/game/systems/overlay/inventory/inventory_overlay.dart';
-import 'package:dawnforge/game/features/market/widgets/market_panel.dart';
 import 'package:dawnforge/game/systems/overlay/player_vital_stats/player_vital_stats_overlay.dart';
 import 'package:dawnforge/game/systems/overlay/debug/debug_overlay.dart';
 import 'package:dawnforge/game/systems/overlay/inputs/mobile_inputs_overlay.dart';

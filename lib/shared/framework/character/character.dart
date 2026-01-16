@@ -4,7 +4,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:dawnforge/game/state/game_state_machine.dart';
 import 'package:dawnforge/game/systems/ui/emote_manager.dart';
-import 'package:dawnforge/game/features/market/market_state.dart';
+
 import 'package:dawnforge/shared/framework/character/behavior/character_behavior.dart';
 import 'package:dawnforge/shared/framework/character/character_config.dart';
 import 'package:dawnforge/shared/framework/character/character_data.dart';

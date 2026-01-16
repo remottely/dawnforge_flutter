@@ -590,6 +590,7 @@ MVP focado no **loop essencial de farming**: **plantar → regar → colher → 
 ---
 
 # Questões pré MVP:
+- corrigir questao de prioridade no input do player, exemplo: com o slot de loot selecionado e ao mesmo tempo dentro da area de interacao com market, deve haver uma prioridade de qual dos dois deve ser executado anulando o outro, criar hierarquia, state machine??
 - regras de game state:
   - game: global, apenas uma camada de render aparecendo em todo o app
   - uiMenu: menu igual do SV, apenas o menu sobre a tela, porem com abas para navegar entre outras abas do tipo menu

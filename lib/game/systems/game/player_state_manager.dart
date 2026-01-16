@@ -11,16 +11,22 @@ class PlayerStateManager {
   static final PlayerStateManager instance = PlayerStateManager._();
 
   Future<SpriteAnimation>? currentPlayerAnimation;
-  DDBasePlayerView? lastPlayerView;
-  DDBasePlayerModel? lastPlayerModel;
+  DDBasePlayerView? _lastPlayerView;
+  DDBasePlayerView? get lastPlayerView => _lastPlayerView;
+  void setLastPlayerView(DDBasePlayerView view) => _lastPlayerView = view;
+
+  DDBasePlayerModel? _lastPlayerModel;
+  DDBasePlayerModel? get lastPlayerModel => _lastPlayerModel;
+  void setLastPlayerModel(DDBasePlayerModel model) => _lastPlayerModel = model;
+
   bool _respawnWithFullLife = false;
 
   Map<String, dynamic> toJson() {
-    final json = {'playerModel': lastPlayerModel?.toJson()};
-    final life = lastPlayerModel?.life;
-    final stamina = lastPlayerModel?.stamina;
-    final coins = lastPlayerModel?.coins;
-    final position = lastPlayerModel?.position;
+    final json = {'playerModel': _lastPlayerModel?.toJson()};
+    final life = _lastPlayerModel?.life;
+    final stamina = _lastPlayerModel?.stamina;
+    final coins = _lastPlayerModel?.coins;
+    final position = _lastPlayerModel?.position;
 
     GameLogger.info(
       '[PlayerStateManager] toJson life=$life, stamina=$stamina, coins=$coins, position=$position, json=$json',
@@ -32,45 +38,37 @@ class PlayerStateManager {
     final data = json['playerModel'] as Map<String, dynamic>?;
 
     if (data == null) {
-      lastPlayerModel = null;
+      _lastPlayerModel = null;
       return;
     }
 
-    final playerType = data['playerType'] as String?;
+    // final playerType = data['playerType'] as String?;
 
-    // switch (playerType) {
-    //   case 'farmer':
-    //     lastPlayerModel = DDFarmPlayerModel.fromJson(data);
-    //     break;
-    //   case 'cute':
-    //     lastPlayerModel = DDFarmPlayerModel.fromJson(data);
-    //     break;
-    //   case 'sunny':
-    //     lastPlayerModel = DDFarmPlayerModel.fromJson(data);
-    //     break;
-    //   case 'demo':
-    //     lastPlayerModel = DDFarmPlayerModel.fromJson(data);
-    //     break;
-    //   default:
-    //     lastPlayerModel = DDFarmPlayerModel.fromJson(data);
-    //     break;
-    // }
+    // // switch (playerType) {
+    // //   case 'farmer':
+    // //     _lastPlayerModel = DDFarmPlayerModel.fromJson(data);
+    // //     break;
+    // //   case 'cute':
+    // //     _lastPlayerModel = DDFarmPlayerModel.fromJson(data);
+    // //     break;
+    // //   case 'sunny':
+    // //     _lastPlayerModel = DDFarmPlayerModel.fromJson(data);
+    // //     break;
+    // //   case 'demo':
+    // //     _lastPlayerModel = DDFarmPlayerModel.fromJson(data);
+    // //     break;
+    // //   default:
+    // //     _lastPlayerModel = DDFarmPlayerModel.fromJson(data);
+    // //     break;
+    // // }
 
-    GameLogger.info(
-      '[PlayerStateManager] fromJson restored type=$playerType, life=${lastPlayerModel?.life}, stamina=${lastPlayerModel?.stamina}, coins=${lastPlayerModel?.coins}, raw=$data',
-    );
+    // GameLogger.info(
+    //   '[PlayerStateManager] fromJson restored type=$playerType, life=${_lastPlayerModel?.life}, stamina=${_lastPlayerModel?.stamina}, coins=${_lastPlayerModel?.coins}, raw=$data',
+    // );
   }
 
   void reset() {
-    lastPlayerModel = null;
+    _lastPlayerModel = null;
     _respawnWithFullLife = false;
-  }
-
-  void setLastPlayerModel(DDBasePlayerModel model) {
-    lastPlayerModel = model;
-  }
-
-  void setLastPlayerView(DDBasePlayerView view) {
-    lastPlayerView = view;
   }
 }

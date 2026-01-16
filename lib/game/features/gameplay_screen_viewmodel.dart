@@ -163,7 +163,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
         {},
         SunnyPlayerDef.modelConfig,
       );
-      playerStateManager.lastPlayerModel = lastPlayerModel;
+      playerStateManager.setLastPlayerModel(lastPlayerModel);
     } else {
       GameLogger.info(
         '[GameplayViewModel] Using EXISTING Sunny model: stamina=${lastPlayerModel.stamina}, life=${lastPlayerModel.life}',
@@ -173,10 +173,14 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
     playerStateManager.currentPlayerAnimation =
         UISpriteAnimationsDef.loadAnimationSunnyPlayerIdleRight;
 
-    return SunnyPlayerView<SunnyPlayerController, DDFarmPlayerModel>(
+    final player = SunnyPlayerView<SunnyPlayerController, DDFarmPlayerModel>(
       position: position,
       model: lastPlayerModel,
     );
+
+    PlayerStateManager.instance.setLastPlayerView(player);
+
+    return player;
   }
 
   DDBasePlayerView buildCutePlayer(Vector2 position) {
@@ -194,16 +198,20 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
         lastPlayerJson,
         CutePlayerDef.modelConfig,
       );
-      playerStateManager.lastPlayerModel = lastPlayerModel;
+      playerStateManager.setLastPlayerModel(lastPlayerModel);
     }
 
     playerStateManager.currentPlayerAnimation =
         UISpriteAnimationsDef.loadAnimationCutePlayerIdleRight;
 
-    return CutePlayerView<CutePlayerController, DDFarmPlayerModel>(
+    final player = CutePlayerView<CutePlayerController, DDFarmPlayerModel>(
       position: position,
       model: lastPlayerModel,
     );
+
+    PlayerStateManager.instance.setLastPlayerView(player);
+
+    return player;
   }
 
   DDBasePlayerView buildFarmerPlayer(Vector2 position) {
@@ -220,19 +228,23 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
         lastPlayerJson,
         FarmerPlayerDef.modelConfig,
       );
-      playerStateManager.lastPlayerModel = lastPlayerModel;
+      playerStateManager.setLastPlayerModel(lastPlayerModel);
     }
 
     playerStateManager.currentPlayerAnimation =
         FarmerPlayerDef.loadAnimationIdleDown;
 
-    return FarmerPlayerView<FarmerPlayerController, DDFarmPlayerModel>(
+    final player = FarmerPlayerView<FarmerPlayerController, DDFarmPlayerModel>(
       position: position,
       model: lastPlayerModel,
     );
+
+    PlayerStateManager.instance.setLastPlayerView(player);
+
+    return player;
   }
 
-DDBasePlayerView buildSmallburgPlayer(Vector2 position) {
+  DDBasePlayerView buildSmallburgPlayer(Vector2 position) {
     GameLogger.debug(
       '[GameplayViewModel] Building farmer player at position: $position',
     );
@@ -246,21 +258,21 @@ DDBasePlayerView buildSmallburgPlayer(Vector2 position) {
         lastPlayerJson,
         SmallburgPlayerDef.modelConfig,
       );
-      playerStateManager.lastPlayerModel = lastPlayerModel;
+      playerStateManager.setLastPlayerModel(lastPlayerModel);
     }
 
     playerStateManager.currentPlayerAnimation =
         SmallburgPlayerDef.loadAnimationIdleDown;
-    final player = SmallburgPlayerView<SmallburgPlayerController, DDFarmPlayerModel>(
-      position: position,
-      model: lastPlayerModel,
-    );
+    final player =
+        SmallburgPlayerView<SmallburgPlayerController, DDFarmPlayerModel>(
+          position: position,
+          model: lastPlayerModel,
+        );
 
     PlayerStateManager.instance.setLastPlayerView(player);
 
     return player;
   }
-
 
   // DemoPlayer buildDemoPlayer(Vector2 position) {
   //   print('[GameplayViewModel] Building demo player at position: $position');
@@ -295,9 +307,7 @@ DDBasePlayerView buildSmallburgPlayer(Vector2 position) {
 
   void recreatePerMapDependencies({required String? mapId}) {
     playerInput = GameplayScreenDef.createPlayerInput();
-    inventoryInputHandler = InventoryInputHandler(
-      playerInput: playerInput,
-    );
+    inventoryInputHandler = InventoryInputHandler(playerInput: playerInput);
     shieldDefenseInputHandler = ShieldDefenseInputHandler(
       playerInput: playerInput,
     );

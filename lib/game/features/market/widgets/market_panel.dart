@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:dawnforge/game/state/game_state_machine.dart';
 import 'package:dawnforge/game/systems/game/player_state_manager.dart';
 import 'package:dawnforge/game/systems/input_actions/keyboard_setup.dart';
 import 'package:dawnforge/game/systems/overlay/message/message_overlay_service.dart';
@@ -11,7 +12,7 @@ import 'package:dawnforge/game/features/inventory/services/item_factory_service.
 import 'package:dawnforge/game/features/inventory/widgets/item_sprite_widget.dart';
 import 'package:dawnforge/game/features/market/market_manager.dart';
 import 'package:dawnforge/game/features/market/market_models.dart';
-import 'package:dawnforge/game/features/market/market_state.dart';
+
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -156,7 +157,7 @@ class _UIOverlayMarketPanelState extends State<UIOverlayMarketPanel> {
         IconButton(
           onPressed: () {
             GameLogger.debug('[MarketPanel] close button tapped');
-            MarketState.instance.close();
+            GameStateMachine.instance.closeMarket();
           },
           icon: const Icon(Icons.close, color: Colors.white70),
         ),
@@ -383,7 +384,7 @@ class _UIOverlayMarketPanelState extends State<UIOverlayMarketPanel> {
 
     // Fechar market com ESC
     if (key == LogicalKeyboardKey.escape) {
-      MarketState.instance.close();
+      GameStateMachine.instance.closeMarket();
       return KeyEventResult.handled;
     }
 

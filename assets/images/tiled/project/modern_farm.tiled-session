@@ -221,17 +221,17 @@
         },
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/farm_map.json": {
             "expandedObjectLayers": [
+                5,
                 16,
                 18,
                 6,
-                15,
-                5
+                15
             ],
             "scale": 2.1655,
-            "selectedLayer": 12,
+            "selectedLayer": 9,
             "viewCenter": {
-                "x": 314.0152389748326,
-                "y": 478.87323943661966
+                "x": 668.4368506118678,
+                "y": 243.59270376356494
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/florest.json": {
@@ -255,15 +255,15 @@
         },
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/forest_map.json": {
             "expandedObjectLayers": [
-                6,
                 7,
+                6,
                 8
             ],
             "scale": 4.962,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 384.1193067311568,
-                "y": 384.1193067311568
+                "x": 383.91777509068925,
+                "y": 384.0185409109231
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/home_map.json": {
@@ -274,7 +274,7 @@
             "scale": 5.81,
             "selectedLayer": 11,
             "viewCenter": {
-                "x": 77.71084337349397,
+                "x": 77.62478485370053,
                 "y": 90.61962134251291
             }
         },
@@ -291,9 +291,9 @@
         },
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/lake_map.json": {
             "expandedObjectLayers": [
-                6,
+                7,
                 5,
-                7
+                6
             ],
             "scale": 7.4607,
             "selectedLayer": 4,
