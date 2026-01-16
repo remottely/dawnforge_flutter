@@ -9,7 +9,7 @@ import '../../game_world/world/entities/objects/farm/crop_entity.dart';
 class CropFactoryService {
   CropFactoryService._();
 
-  static final instance = CropFactoryService._();
+  static final CropFactoryService instance = CropFactoryService._();
 
   final Map<HandItemId, CropEntity> _database = {};
   bool _isInitialized = false;

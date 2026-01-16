@@ -125,13 +125,13 @@ final class CutePlayerDef {
         ),
       );
 
-  static final _animationAttackDirectionalFactory =
-      DDAnimationDirectionalFactory(
-        loadRight: _loadAnimationAttackRight,
-        loadLeft: _loadAnimationAttackLeft,
-        loadUp: _loadAnimationAttackUp,
-        loadDown: _loadAnimationAttackDown,
-      );
+  static final DDAnimationDirectionalFactory
+  _animationAttackDirectionalFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationAttackRight,
+    loadLeft: _loadAnimationAttackLeft,
+    loadUp: _loadAnimationAttackUp,
+    loadDown: _loadAnimationAttackDown,
+  );
 
   static final Future<SpriteAnimation> _loadAnimationDigRight =
       SpriteAnimation.load(
@@ -173,12 +173,13 @@ final class CutePlayerDef {
         ),
       );
 
-  static final _animationDigDirectionalFactory = DDAnimationDirectionalFactory(
-    loadRight: _loadAnimationDigRight,
-    loadLeft: _loadAnimationDigLeft,
-    loadUp: _loadAnimationDigUp,
-    loadDown: _loadAnimationDigDown,
-  );
+  static final DDAnimationDirectionalFactory _animationDigDirectionalFactory =
+      DDAnimationDirectionalFactory(
+        loadRight: _loadAnimationDigRight,
+        loadLeft: _loadAnimationDigLeft,
+        loadUp: _loadAnimationDigUp,
+        loadDown: _loadAnimationDigDown,
+      );
 
   static final Future<SpriteAnimation> _loadAnimationWateringCanRight =
       SpriteAnimation.load(
@@ -220,12 +221,13 @@ final class CutePlayerDef {
         ),
       );
 
-  static final _animationWateringCanFactory = DDAnimationDirectionalFactory(
-    loadRight: _loadAnimationWateringCanRight,
-    loadLeft: _loadAnimationWateringCanLeft,
-    loadUp: _loadAnimationWateringCanUp,
-    loadDown: _loadAnimationWateringCanDown,
-  );
+  static final DDAnimationDirectionalFactory _animationWateringCanFactory =
+      DDAnimationDirectionalFactory(
+        loadRight: _loadAnimationWateringCanRight,
+        loadLeft: _loadAnimationWateringCanLeft,
+        loadUp: _loadAnimationWateringCanUp,
+        loadDown: _loadAnimationWateringCanDown,
+      );
 
   static final Future<SpriteAnimation>
   _loadAnimationPlaceSeedRight = SpriteAnimation.load(
@@ -255,12 +257,13 @@ final class CutePlayerDef {
       // TODO(Kevin): create dedicated down animation
       _loadAnimationPlaceSeedLeft;
 
-  static final _animationPlaceSeedFactory = DDAnimationDirectionalFactory(
-    loadRight: _loadAnimationPlaceSeedRight,
-    loadLeft: _loadAnimationPlaceSeedLeft,
-    loadUp: _loadAnimationPlaceSeedUp,
-    loadDown: _loadAnimationPlaceSeedDown,
-  );
+  static final DDAnimationDirectionalFactory _animationPlaceSeedFactory =
+      DDAnimationDirectionalFactory(
+        loadRight: _loadAnimationPlaceSeedRight,
+        loadLeft: _loadAnimationPlaceSeedLeft,
+        loadUp: _loadAnimationPlaceSeedUp,
+        loadDown: _loadAnimationPlaceSeedDown,
+      );
 
   static final Future<SpriteAnimation>
   _loadAnimationHarvestRight = SpriteAnimation.load(
@@ -290,12 +293,13 @@ final class CutePlayerDef {
       // TODO(Kevin): create dedicated down animation
       _loadAnimationHarvestLeft;
 
-  static final _animationHarvestFactory = DDAnimationDirectionalFactory(
-    loadRight: _loadAnimationHarvestRight,
-    loadLeft: _loadAnimationHarvestLeft,
-    loadUp: _loadAnimationHarvestUp,
-    loadDown: _loadAnimationHarvestDown,
-  );
+  static final DDAnimationDirectionalFactory _animationHarvestFactory =
+      DDAnimationDirectionalFactory(
+        loadRight: _loadAnimationHarvestRight,
+        loadLeft: _loadAnimationHarvestLeft,
+        loadUp: _loadAnimationHarvestUp,
+        loadDown: _loadAnimationHarvestDown,
+      );
 
   static final Future<SpriteAnimation> loadAnimationIdleRight =
       SpriteAnimation.load(
@@ -398,7 +402,7 @@ final class CutePlayerDef {
         size: _cryptComponentSize,
       );
 
-  static final viewConfig = DDFarmPlayerViewConfig(
+  static final DDFarmPlayerViewConfig viewConfig = DDFarmPlayerViewConfig(
     size: componentSize,
     life: _kLife,
     baseSpeed: _kBaseSpeed,

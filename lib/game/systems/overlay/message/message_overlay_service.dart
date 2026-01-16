@@ -17,7 +17,7 @@ class MessageOverlayData {
 class MessageOverlayService {
   MessageOverlayService._();
 
-  static final instance = MessageOverlayService._();
+  static final MessageOverlayService instance = MessageOverlayService._();
 
   final StreamController<MessageOverlayData> _messageController =
       StreamController<MessageOverlayData>.broadcast();

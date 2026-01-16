@@ -103,9 +103,12 @@ final class DemoPlayerDef {
   static const int _x10 = 10;
 
   static const double _kFrameRightY = 0;
-  static const double _kFrameLeftY = TileConstants.kCharacterDimensionSmallburg * 1;
-  static const double _kFrameDownY = TileConstants.kCharacterDimensionSmallburg * 2;
-  static const double _kFrameUpY = TileConstants.kCharacterDimensionSmallburg * 3;
+  static const double _kFrameLeftY =
+      TileConstants.kCharacterDimensionSmallburg * 1;
+  static const double _kFrameDownY =
+      TileConstants.kCharacterDimensionSmallburg * 2;
+  static const double _kFrameUpY =
+      TileConstants.kCharacterDimensionSmallburg * 3;
 
   // ============================================================================
   // ANIMATIONS - IDLE
@@ -299,13 +302,13 @@ final class DemoPlayerDef {
         framePositionY: _kFrameDownY,
       );
 
-  static final _animationAttack1DirectionalFactory =
-      DDAnimationDirectionalFactory(
-        loadRight: _loadAnimationAttack1Right,
-        loadLeft: _loadAnimationAttack1Left,
-        loadUp: _loadAnimationAttack1Up,
-        loadDown: _loadAnimationAttack1Down,
-      );
+  static final DDAnimationDirectionalFactory
+  _animationAttack1DirectionalFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationAttack1Right,
+    loadLeft: _loadAnimationAttack1Left,
+    loadUp: _loadAnimationAttack1Up,
+    loadDown: _loadAnimationAttack1Down,
+  );
 
   static Future<SpriteAnimation> _loadAnimationAttack2Right =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
@@ -347,7 +350,7 @@ final class DemoPlayerDef {
         framePositionY: _kFrameDownY,
       );
 
-  static final _animationAttack2DirectionalFactory =
+  static final DDAnimationDirectionalFactory _animationAttack2DirectionalFactory =
       DDAnimationDirectionalFactory(
         loadRight: _loadAnimationAttack2Right,
         loadLeft: _loadAnimationAttack2Left,
@@ -395,7 +398,7 @@ final class DemoPlayerDef {
         framePositionY: _kFrameDownY,
       );
 
-  static final _animationAttack3DirectionalFactory =
+  static final DDAnimationDirectionalFactory _animationAttack3DirectionalFactory =
       DDAnimationDirectionalFactory(
         loadRight: _loadAnimationAttack3Right,
         loadLeft: _loadAnimationAttack3Left,
@@ -443,7 +446,7 @@ final class DemoPlayerDef {
         framePositionY: _kFrameDownY,
       );
 
-  static final _animationDigDirectionalFactory = DDAnimationDirectionalFactory(
+  static final DDAnimationDirectionalFactory _animationDigDirectionalFactory = DDAnimationDirectionalFactory(
     loadRight: _loadAnimationDigRight,
     loadLeft: _loadAnimationDigLeft,
     loadUp: _loadAnimationDigUp,
@@ -486,7 +489,7 @@ final class DemoPlayerDef {
         framePositionY: _kFrameDownY,
       );
 
-  static final _animationWateringDirectionalFactory =
+  static final DDAnimationDirectionalFactory _animationWateringDirectionalFactory =
       DDAnimationDirectionalFactory(
         loadRight: _loadAnimationWateringRight,
         loadLeft: _loadAnimationWateringLeft,
@@ -530,7 +533,7 @@ final class DemoPlayerDef {
         framePositionY: _kFrameDownY,
       );
 
-  static final _animationPlaceSeedDirectionalFactory =
+  static final DDAnimationDirectionalFactory _animationPlaceSeedDirectionalFactory =
       DDAnimationDirectionalFactory(
         loadRight: _loadAnimationPlaceSeedRight,
         loadLeft: _loadAnimationPlaceSeedLeft,
@@ -574,7 +577,7 @@ final class DemoPlayerDef {
         framePositionY: _kFrameDownY,
       );
 
-  static final _animationHarvestDirectionalFactory =
+  static final DDAnimationDirectionalFactory _animationHarvestDirectionalFactory =
       DDAnimationDirectionalFactory(
         loadRight: _loadAnimationHarvestRight,
         loadLeft: _loadAnimationHarvestLeft,
@@ -696,7 +699,7 @@ final class DemoPlayerDef {
         framePositionY: _kFrameDownY,
       );
 
-  static final _animationMiningDirectionalFactory =
+  static final DDAnimationDirectionalFactory _animationMiningDirectionalFactory =
       DDAnimationDirectionalFactory(
         loadRight: _loadAnimationMiningRight,
         loadLeft: _loadAnimationMiningLeft,

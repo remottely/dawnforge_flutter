@@ -274,7 +274,7 @@ final class FarmerPlayerDef {
         framePositionYPadding: -1,
       );
 
-  static final _animationHarvestDirectionalFactory =
+  static final DDAnimationDirectionalFactory _animationHarvestDirectionalFactory =
       DDAnimationDirectionalFactory(
         loadRight: _loadAnimationHarvestRight,
         loadLeft: _loadAnimationHarvestLeft,
@@ -326,7 +326,7 @@ final class FarmerPlayerDef {
         framePositionYPadding: -8,
       );
 
-  static final _animationChoppingDirectionalFactory =
+  static final DDAnimationDirectionalFactory _animationChoppingDirectionalFactory =
       DDAnimationDirectionalFactory(
         loadRight: _loadAnimationChoppingRight,
         loadLeft: _loadAnimationChoppingLeft,
@@ -382,7 +382,7 @@ final class FarmerPlayerDef {
         framePositionYPadding: -8,
       );
 
-  static final _animationAttackDirectionalFactory =
+  static final DDAnimationDirectionalFactory _animationAttackDirectionalFactory =
       DDAnimationDirectionalFactory(
         loadRight: _loadAnimationAttackRight,
         loadLeft: _loadAnimationAttackLeft,
@@ -432,7 +432,7 @@ final class FarmerPlayerDef {
         framePositionYPadding: -7,
       );
 
-  static final _animationDigDirectionalFactory = DDAnimationDirectionalFactory(
+  static final DDAnimationDirectionalFactory _animationDigDirectionalFactory = DDAnimationDirectionalFactory(
     // executionStartFrame: 4,
     loadRight: _loadAnimationDigRight,
     loadLeft: _loadAnimationDigLeft,
@@ -503,7 +503,7 @@ final class FarmerPlayerDef {
         framePositionYPadding: -17,
       );
 
-  static final _animationWateringDirectionalFactory =
+  static final DDAnimationDirectionalFactory _animationWateringDirectionalFactory =
       DDAnimationDirectionalFactory(
         // executionStartFrame: 14,
         // TODO(Kevin): change all waterincan names to watering
@@ -559,7 +559,7 @@ final class FarmerPlayerDef {
         framePositionYPadding: -1,
       );
 
-  static final _animationPlaceSeedDirectionalFactory =
+  static final DDAnimationDirectionalFactory _animationPlaceSeedDirectionalFactory =
       DDAnimationDirectionalFactory(
         loadRight: _loadAnimationPlaceSeedRight,
         loadLeft: _loadAnimationPlaceSeedLeft,
@@ -586,7 +586,7 @@ final class FarmerPlayerDef {
         size: _cryptComponentSize,
       );
 
-  static final viewConfig = DDFarmPlayerViewConfig(
+  static final DDFarmPlayerViewConfig viewConfig = DDFarmPlayerViewConfig(
     size: _componentSize,
     life: _kLife,
     baseSpeed: _kBaseSpeed,

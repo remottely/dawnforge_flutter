@@ -15,7 +15,7 @@ import 'time_scheduler.dart';
 class TimeManager {
   TimeManager._();
 
-  static final instance = TimeManager._();
+  static final TimeManager instance = TimeManager._();
 
   final ValueNotifier<GameTime> timeNotifier = ValueNotifier<GameTime>(
     GameTime(hour: TimeConstants.kStartHour, minute: 0),

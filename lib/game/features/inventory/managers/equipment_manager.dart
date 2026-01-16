@@ -12,7 +12,7 @@ import 'package:dawnforge/game/features/inventory/state/equipment_state.dart';
 final class EquipmentManager {
   EquipmentManager._();
 
-  static final instance = EquipmentManager._();
+  static final EquipmentManager instance = EquipmentManager._();
 
   void initialize() {
     InventoryManager.instance.slotsNotifier.addListener(

@@ -8,7 +8,7 @@ import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_p
 class PlayerStateManager {
   PlayerStateManager._();
 
-  static final instance = PlayerStateManager._();
+  static final PlayerStateManager instance = PlayerStateManager._();
 
   Future<SpriteAnimation>? currentPlayerAnimation;
   DDBasePlayerView? lastPlayerView;

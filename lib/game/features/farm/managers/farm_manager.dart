@@ -12,7 +12,7 @@ final class FarmManager {
   //   initializeTiles();
   // }
 
-  static final instance = FarmManager._();
+  static final FarmManager instance = FarmManager._();
 
   final Map<String, GridTile> _tiles = {}; // key: "x,y"
 

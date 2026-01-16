@@ -87,11 +87,11 @@ final class SunnyPlayerDef {
     ),
   );
 
-  static final _animationAttackDirectionalFactory =
-      DDAnimationDirectionalFactory(
-        loadRight: _loadAnimationAttackRight,
-        loadLeft: _loadAnimationAttackLeft,
-      );
+  static final DDAnimationDirectionalFactory
+  _animationAttackDirectionalFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationAttackRight,
+    loadLeft: _loadAnimationAttackLeft,
+  );
 
   static final Future<SpriteAnimation>
   _loadAnimationDigRight = SpriteAnimation.load(
@@ -111,10 +111,11 @@ final class SunnyPlayerDef {
     ),
   );
 
-  static final _animationDigDirectionalFactory = DDAnimationDirectionalFactory(
-    loadRight: _loadAnimationDigRight,
-    loadLeft: _loadAnimationDigLeft,
-  );
+  static final DDAnimationDirectionalFactory _animationDigDirectionalFactory =
+      DDAnimationDirectionalFactory(
+        loadRight: _loadAnimationDigRight,
+        loadLeft: _loadAnimationDigLeft,
+      );
 
   static final Future<SpriteAnimation>
   _loadAnimationWateringCanRight = SpriteAnimation.load(
@@ -134,10 +135,11 @@ final class SunnyPlayerDef {
     ),
   );
 
-  static final _animationWateringCanFactory = DDAnimationDirectionalFactory(
-    loadRight: _loadAnimationWateringCanRight,
-    loadLeft: _loadAnimationWateringCanLeft,
-  );
+  static final DDAnimationDirectionalFactory _animationWateringCanFactory =
+      DDAnimationDirectionalFactory(
+        loadRight: _loadAnimationWateringCanRight,
+        loadLeft: _loadAnimationWateringCanLeft,
+      );
 
   static final Future<SpriteAnimation>
   _loadAnimationPlaceSeedRight = SpriteAnimation.load(
@@ -157,10 +159,11 @@ final class SunnyPlayerDef {
     ),
   );
 
-  static final _animationPlaceSeedFactory = DDAnimationDirectionalFactory(
-    loadRight: _loadAnimationPlaceSeedRight,
-    loadLeft: _loadAnimationPlaceSeedLeft,
-  );
+  static final DDAnimationDirectionalFactory _animationPlaceSeedFactory =
+      DDAnimationDirectionalFactory(
+        loadRight: _loadAnimationPlaceSeedRight,
+        loadLeft: _loadAnimationPlaceSeedLeft,
+      );
 
   static final Future<SpriteAnimation>
   _loadAnimationHarvestRight = SpriteAnimation.load(
@@ -180,10 +183,11 @@ final class SunnyPlayerDef {
     ),
   );
 
-  static final _animationHarvestFactory = DDAnimationDirectionalFactory(
-    loadRight: _loadAnimationHarvestRight,
-    loadLeft: _loadAnimationHarvestLeft,
-  );
+  static final DDAnimationDirectionalFactory _animationHarvestFactory =
+      DDAnimationDirectionalFactory(
+        loadRight: _loadAnimationHarvestRight,
+        loadLeft: _loadAnimationHarvestLeft,
+      );
 
   static final Future<SpriteAnimation>
   loadAnimationIdleRight = SpriteAnimation.load(
@@ -252,7 +256,7 @@ final class SunnyPlayerDef {
         size: _cryptComponentSize,
       );
 
-  static final viewConfig = DDFarmPlayerViewConfig(
+  static final DDFarmPlayerViewConfig viewConfig = DDFarmPlayerViewConfig(
     size: _componentSize,
     life: _kLife,
     baseSpeed: _kBaseSpeed,

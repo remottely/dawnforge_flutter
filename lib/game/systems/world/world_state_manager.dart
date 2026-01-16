@@ -6,7 +6,7 @@ import 'package:dawnforge/game/systems/world/season.dart';
 final class WorldStateManager {
   WorldStateManager._();
 
-  static final instance = WorldStateManager._();
+  static final WorldStateManager instance = WorldStateManager._();
 
   int _currentDay = 1;
 

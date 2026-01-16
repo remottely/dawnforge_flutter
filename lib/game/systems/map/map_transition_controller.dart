@@ -17,7 +17,7 @@ class MapTransitionRequest {
 class MapTransitionController {
   MapTransitionController._();
 
-  static final instance = MapTransitionController._();
+  static final MapTransitionController instance = MapTransitionController._();
 
   final _transitionController =
       StreamController<MapTransitionRequest>.broadcast();

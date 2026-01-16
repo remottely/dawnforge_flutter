@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 class EquipmentState {
   EquipmentState._();
 
-  static final instance = EquipmentState._();
+  static final EquipmentState instance = EquipmentState._();
 
   // Controls equipment overlay visibility
   final isVisible = ValueNotifier<bool>(true);

@@ -108,9 +108,12 @@ final class SmallburgPlayerDef {
   static const int _x7 = 7;
   static const int _x10 = 10;
   static const double _kFrameRightY = 0;
-  static const double _kFrameLeftY = TileConstants.kCharacterDimensionSmallburg * 1;
-  static const double _kFrameDownY = TileConstants.kCharacterDimensionSmallburg * 2;
-  static const double _kFrameUpY = TileConstants.kCharacterDimensionSmallburg * 3;
+  static const double _kFrameLeftY =
+      TileConstants.kCharacterDimensionSmallburg * 1;
+  static const double _kFrameDownY =
+      TileConstants.kCharacterDimensionSmallburg * 2;
+  static const double _kFrameUpY =
+      TileConstants.kCharacterDimensionSmallburg * 3;
 
   static const double _kFrameRightX10 = _x10 * 0;
   static const double _kFrameUpX10 = _x10 * 1;
@@ -298,13 +301,13 @@ final class SmallburgPlayerDef {
         framePositionY: _kFrameDownY,
       );
 
-  static final _animationHarvestDirectionalFactory =
-      DDAnimationDirectionalFactory(
-        loadRight: _loadAnimationHarvestRight,
-        loadLeft: _loadAnimationHarvestLeft,
-        loadUp: _loadAnimationHarvestUp,
-        loadDown: _loadAnimationHarvestDown,
-      );
+  static final DDAnimationDirectionalFactory
+  _animationHarvestDirectionalFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationHarvestRight,
+    loadLeft: _loadAnimationHarvestLeft,
+    loadUp: _loadAnimationHarvestUp,
+    loadDown: _loadAnimationHarvestDown,
+  );
 
   static final Future<SpriteAnimation> _loadAnimationChoppingRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
@@ -350,13 +353,13 @@ final class SmallburgPlayerDef {
         framePositionYPadding: -8,
       );
 
-  static final _animationChoppingDirectionalFactory =
-      DDAnimationDirectionalFactory(
-        loadRight: _loadAnimationChoppingRight,
-        loadLeft: _loadAnimationChoppingLeft,
-        loadUp: _loadAnimationChoppingUp,
-        loadDown: _loadAnimationChoppingDown,
-      );
+  static final DDAnimationDirectionalFactory
+  _animationChoppingDirectionalFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationChoppingRight,
+    loadLeft: _loadAnimationChoppingLeft,
+    loadUp: _loadAnimationChoppingUp,
+    loadDown: _loadAnimationChoppingDown,
+  );
   static Future<SpriteAnimation> _loadAnimationAttack1Right =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attac1kAssetPath,
@@ -397,13 +400,13 @@ final class SmallburgPlayerDef {
         framePositionY: _kFrameDownY,
       );
 
-  static final _animationAttack1DirectionalFactory =
-      DDAnimationDirectionalFactory(
-        loadRight: _loadAnimationAttack1Right,
-        loadLeft: _loadAnimationAttack1Left,
-        loadUp: _loadAnimationAttack1Up,
-        loadDown: _loadAnimationAttack1Down,
-      );
+  static final DDAnimationDirectionalFactory
+  _animationAttack1DirectionalFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationAttack1Right,
+    loadLeft: _loadAnimationAttack1Left,
+    loadUp: _loadAnimationAttack1Up,
+    loadDown: _loadAnimationAttack1Down,
+  );
 
   static Future<SpriteAnimation> _loadAnimationAttack2Right =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
@@ -445,13 +448,13 @@ final class SmallburgPlayerDef {
         framePositionY: _kFrameDownY,
       );
 
-  static final _animationAttack2DirectionalFactory =
-      DDAnimationDirectionalFactory(
-        loadRight: _loadAnimationAttack2Right,
-        loadLeft: _loadAnimationAttack2Left,
-        loadUp: _loadAnimationAttack2Up,
-        loadDown: _loadAnimationAttack2Down,
-      );
+  static final DDAnimationDirectionalFactory
+  _animationAttack2DirectionalFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationAttack2Right,
+    loadLeft: _loadAnimationAttack2Left,
+    loadUp: _loadAnimationAttack2Up,
+    loadDown: _loadAnimationAttack2Down,
+  );
 
   static Future<SpriteAnimation> _loadAnimationAttack3Right =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
@@ -493,13 +496,13 @@ final class SmallburgPlayerDef {
         framePositionY: _kFrameDownY,
       );
 
-  static final _animationAttack3DirectionalFactory =
-      DDAnimationDirectionalFactory(
-        loadRight: _loadAnimationAttack3Right,
-        loadLeft: _loadAnimationAttack3Left,
-        loadUp: _loadAnimationAttack3Up,
-        loadDown: _loadAnimationAttack3Down,
-      );
+  static final DDAnimationDirectionalFactory
+  _animationAttack3DirectionalFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationAttack3Right,
+    loadLeft: _loadAnimationAttack3Left,
+    loadUp: _loadAnimationAttack3Up,
+    loadDown: _loadAnimationAttack3Down,
+  );
 
   static final Future<SpriteAnimation> _loadAnimationDigRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
@@ -537,13 +540,14 @@ final class SmallburgPlayerDef {
         framePositionY: _kFrameDownY,
       );
 
-  static final _animationDigDirectionalFactory = DDAnimationDirectionalFactory(
-    // executionStartFrame: 4,
-    loadRight: _loadAnimationDigRight,
-    loadLeft: _loadAnimationDigLeft,
-    loadUp: _loadAnimationDigUp,
-    loadDown: _loadAnimationDigDown,
-  );
+  static final DDAnimationDirectionalFactory _animationDigDirectionalFactory =
+      DDAnimationDirectionalFactory(
+        // executionStartFrame: 4,
+        loadRight: _loadAnimationDigRight,
+        loadLeft: _loadAnimationDigLeft,
+        loadUp: _loadAnimationDigUp,
+        loadDown: _loadAnimationDigDown,
+      );
 
   static final Future<SpriteAnimation> _loadAnimationWateringRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
@@ -581,15 +585,15 @@ final class SmallburgPlayerDef {
         framePositionY: _kFrameDownY,
       );
 
-  static final _animationWateringDirectionalFactory =
-      DDAnimationDirectionalFactory(
-        // executionStartFrame: 14,
-        // TODO(Kevin): change all waterincan names to watering
-        loadRight: _loadAnimationWateringRight,
-        loadLeft: _loadAnimationWateringLeft,
-        loadUp: _loadAnimationWateringUp,
-        loadDown: _loadAnimationWateringDown,
-      );
+  static final DDAnimationDirectionalFactory
+  _animationWateringDirectionalFactory = DDAnimationDirectionalFactory(
+    // executionStartFrame: 14,
+    // TODO(Kevin): change all waterincan names to watering
+    loadRight: _loadAnimationWateringRight,
+    loadLeft: _loadAnimationWateringLeft,
+    loadUp: _loadAnimationWateringUp,
+    loadDown: _loadAnimationWateringDown,
+  );
 
   static final Future<SpriteAnimation> _loadAnimationPlaceSeedRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
@@ -627,13 +631,13 @@ final class SmallburgPlayerDef {
         framePositionY: _kFrameDownY,
       );
 
-  static final _animationPlaceSeedDirectionalFactory =
-      DDAnimationDirectionalFactory(
-        loadRight: _loadAnimationPlaceSeedRight,
-        loadLeft: _loadAnimationPlaceSeedLeft,
-        loadUp: _loadAnimationPlaceSeedUp,
-        loadDown: _loadAnimationPlaceSeedDown,
-      );
+  static final DDAnimationDirectionalFactory
+  _animationPlaceSeedDirectionalFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationPlaceSeedRight,
+    loadLeft: _loadAnimationPlaceSeedLeft,
+    loadUp: _loadAnimationPlaceSeedUp,
+    loadDown: _loadAnimationPlaceSeedDown,
+  );
 
   static final LightingConfig _lighting = LightingConfig(
     radius: TileConstants.kTileDimensionLarge,
@@ -654,7 +658,7 @@ final class SmallburgPlayerDef {
         size: _cryptComponentSize,
       );
 
-  static final viewConfig = DDFarmPlayerViewConfig(
+  static final DDFarmPlayerViewConfig viewConfig = DDFarmPlayerViewConfig(
     size: _componentSize,
     life: _kLife,
     baseSpeed: _kBaseSpeed,

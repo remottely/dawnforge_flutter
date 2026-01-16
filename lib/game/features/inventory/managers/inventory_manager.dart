@@ -11,7 +11,7 @@ import '../entities/hand_item.dart';
 class InventoryManager {
   InventoryManager._();
 
-  static final instance = InventoryManager._();
+  static final InventoryManager instance = InventoryManager._();
 
   static int _currentMaxSlots = InventoryDef.kSizeInventoryDefault;
 

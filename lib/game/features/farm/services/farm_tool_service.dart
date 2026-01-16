@@ -10,7 +10,7 @@ import '../../game_world/world/entities/world_entities.dart';
 final class FarmToolService {
     FarmToolService._();
 
-  static final instance = FarmToolService._();
+  static final FarmToolService instance = FarmToolService._();
 
   /// Check if a tool can be used on a specific tile
   bool canUseTool(HandItem tool, GridTile tile) {

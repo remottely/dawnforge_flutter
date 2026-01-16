@@ -7,7 +7,7 @@ import 'save_repository.dart';
 final class SaveManager {
   SaveManager._();
 
-  static final instance = SaveManager._();
+  static final SaveManager instance = SaveManager._();
 
   static const String _kSaveKey = 'main_save';
 

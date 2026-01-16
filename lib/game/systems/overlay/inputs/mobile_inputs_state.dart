@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 class MobileInputsState {
   MobileInputsState._();
 
-  static final instance = MobileInputsState._();
+  static final MobileInputsState instance = MobileInputsState._();
 
   // Controls inputs overlay visibility
   final isVisible = ValueNotifier<bool>(true);

@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 class InventoryState {
   InventoryState._();
 
-  static final instance = InventoryState._();
+  static final InventoryState instance = InventoryState._();
 
   // Controls inventory overlay visibility
   final isVisible = ValueNotifier<bool>(true);

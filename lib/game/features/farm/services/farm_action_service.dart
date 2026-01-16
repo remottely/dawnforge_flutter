@@ -10,7 +10,7 @@ import 'package:dawnforge/game/features/inventory/usecases/add_item_use_case.dar
 final class FarmActionService {
   FarmActionService._();
 
-  static final instance = FarmActionService._();
+  static final FarmActionService instance = FarmActionService._();
 
   FarmActionResult tillSoil(int x, int y) {
     GameLogger.info('[FarmActionService] Attempting to till soil at ($x, $y)');

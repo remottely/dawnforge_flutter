@@ -6,7 +6,7 @@ import 'package:bonfire/bonfire.dart';
 final class FarmFeedbackService {
   FarmFeedbackService._();
 
-  static final instance = FarmFeedbackService._();
+  static final FarmFeedbackService instance = FarmFeedbackService._();
 
   /// Show a floating text message to the user
   void showFloatingText(String message) {

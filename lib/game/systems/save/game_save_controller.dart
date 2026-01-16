@@ -72,7 +72,7 @@ class PositionHelper {
 final class GameSaveController {
   GameSaveController._();
 
-  static final instance = GameSaveController._();
+  static final GameSaveController instance = GameSaveController._();
 
   Future<bool> saveGame() async {
     try {

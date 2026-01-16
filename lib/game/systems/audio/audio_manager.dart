@@ -7,7 +7,7 @@ import 'audio_def.dart';
 final class AudioManager {
   AudioManager._();
 
-  static final instance = AudioManager._();
+  static final AudioManager instance = AudioManager._();
 
   bool _isBackgroundMusicEnabled = true;
   bool _isBackgroundMusicPlaying = false;
