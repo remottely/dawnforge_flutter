@@ -17,32 +17,20 @@ class InteractableData {
 }
 
 class GlobalInputHandler extends GameComponent with PlayerControllerListener {
-  static GlobalInputHandler? _instance;
-  static GlobalInputHandler get instance {
-    if (_instance == null) {
-      throw Exception(
-        '[GlobalInputHandler] Not initialized! Add to BonfireWidget components first.',
-      );
-    }
-    return _instance!;
-  }
+  GlobalInputHandler._();
 
-  PlayerController playerInput;
+  static final GlobalInputHandler instance = GlobalInputHandler._();
+
+  PlayerController? playerInput;
+  void setPlayerInput(PlayerController? newPlayerInput) => playerInput = newPlayerInput;
 
   // ✅ MAPA COM CALLBACKS
   final Map<String, InteractableData> _registeredInteractables = {};
 
-  GlobalInputHandler._({required this.playerInput});
-
-  factory GlobalInputHandler({required PlayerController playerInput}) {
-    _instance ??= GlobalInputHandler._(playerInput: playerInput);
-    return _instance!;
-  }
-
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    playerInput.addObserver(this);
+    playerInput?.addObserver(this);
 
     print('🔥 [GlobalInput] onLoad chamado');
     print('🔥 [GlobalInput] playerInput: $playerInput');
@@ -56,10 +44,10 @@ class GlobalInputHandler extends GameComponent with PlayerControllerListener {
 
   @override
   void onRemove() {
-    playerInput.removeObserver(this);
+    playerInput?.removeObserver(this);
 
-    // ❌ NÃO RESETAR _instance (causa erro no MarketDecoration.onRemove)
-    // _instance = null;
+    // ❌ NÃO RESETAR instance (causa erro no MarketDecoration.onRemove)
+    // instance = null;
 
     // ✅ APENAS LIMPA INTERACTABLES
     _registeredInteractables.clear();

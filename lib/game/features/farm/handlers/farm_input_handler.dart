@@ -6,7 +6,6 @@ import 'package:dawnforge/game/systems/save/game_save_controller.dart';
 import 'package:dawnforge/game/systems/world/world_state_manager.dart';
 import 'package:dawnforge/core/utils/app_environment.dart';
 import 'package:dawnforge/game/features/farm/constants/farm_feedback_config.dart';
-import 'package:dawnforge/game/features/farm/farm_service_locator.dart';
 import 'package:dawnforge/game/features/farm/services/farm_feedback_service.dart';
 import 'package:dawnforge/game/features/time/time_manager.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
