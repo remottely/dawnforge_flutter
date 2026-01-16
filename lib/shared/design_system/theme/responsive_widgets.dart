@@ -1,9 +1,7 @@
 import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter/widgets.dart';
 import 'package:dawnforge/shared/design_system/theme/screen_size_info.dart';
-import 'package:flutter/material.dart';
 
 final class ResponsiveBuilder extends StatelessWidget {
   final Widget Function(BuildContext context, ScreenSizeInfo info)? builder;

@@ -1,6 +1,7 @@
 /// **InventoryOverlay - MIGRADO PARA NOVA ARQUITETURA**
 /// Sistema de inventário responsivo com suporte a venda no market
 /// Utiliza composition pattern para separar responsabilidades
+import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
 import 'package:dawnforge/shared/design_system/theme/screen_size_info.dart';
 import 'package:dawnforge/game/features/inventory/managers/equipment_manager.dart';
 import 'package:dawnforge/game/features/inventory/managers/inventory_manager.dart';
@@ -92,7 +93,7 @@ class _InventoryGrid extends StatelessWidget {
     int selectedIndex,
     HandItem? equippedItem,
   ) {
-    final isDesktop = context.ds.screenSize.isDesktop;
+    final isDesktop = AppDesignSystem.of(context).screenSize.isDesktop;
 
     return SingleChildScrollView(
       scrollDirection: isDesktop ? Axis.horizontal : Axis.vertical,
@@ -332,12 +333,12 @@ class _ResponsiveConfig {
   late final ScreenSizeType screenType;
 
   _ResponsiveConfig(this.context) {
-    // 🔥 Acessa tokens via extension
-    screenType = context.ds.screenSize.type;
-    padding = context.ds.spacing.padding;
-    spacing = context.ds.spacing.spacing;
-    slotSize = context.ds.sizes.slotSize;
-    baseFontSize = context.ds.typography.baseFontSize;
+    final ds = AppDesignSystem.of(context);
+    screenType = ds.screenSize.type;
+    padding = ds.spacing.padding;
+    spacing = ds.spacing.spacing;
+    slotSize = ds.sizes.slotSize;
+    baseFontSize = ds.typography.baseFontSize;
     border = _buildBorder();
   }
 

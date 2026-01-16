@@ -1,5 +1,10 @@
-import 'package:dawnforge/shared/design_system/theme/app_tokens.dart';
+import 'package:dawnforge/shared/design_system/theme/tokens/app_constraints.dart';
+import 'package:dawnforge/shared/design_system/theme/tokens/app_radius.dart';
+import 'package:dawnforge/shared/design_system/theme/tokens/app_scale.dart';
+import 'package:dawnforge/shared/design_system/theme/tokens/app_sizes.dart';
 import 'package:dawnforge/shared/design_system/theme/screen_size_info.dart';
+import 'package:dawnforge/shared/design_system/theme/tokens/app_spacing.dart';
+import 'package:dawnforge/shared/design_system/theme/tokens/app_typography.dart';
 import 'package:flutter/material.dart';
 
 /// **AppDesignSystem Unificado**

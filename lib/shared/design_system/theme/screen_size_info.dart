@@ -1,10 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-enum ScreenSizeType {
-  mobile,
-  tablet,
-  desktop,
-}
+enum ScreenSizeType { mobile, tablet, desktop }
 
 @immutable
 final class ScreenSizeValue<T> {

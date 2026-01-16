@@ -36,19 +36,20 @@ class DDRadioButton<T> extends StatelessWidget {
   }
 
   Widget _buildIndicator(BuildContext context) {
+    final spacing = AppDesignSystem.of(context).spacing;
+    final radius = AppDesignSystem.of(context).radius;
+    
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
           color: DDDesignSystem.kBorderColor,
-          width: DDDesignSystem.kButtonBorderRadius,
+          width: radius.kButtonBorderRadius,
         ),
       ),
       child: Container(
         width: DDDesignSystem.kRadioButtonDimension,
         height: DDDesignSystem.kRadioButtonDimension,
-        margin: EdgeInsets.all(
-          AppDesignSystem.of(context).spacing.kSpacingSuperSmall,
-        ),
+        margin: EdgeInsets.all(spacing.kSpacingSuperSmall),
         color: value == group
             ? DDDesignSystem.kBorderColor
             : Colors.transparent,

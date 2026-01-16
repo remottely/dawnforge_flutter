@@ -9,6 +9,7 @@ import 'package:dawnforge/game/systems/overlay/debug/debug_overlay.dart';
 import 'package:dawnforge/game/systems/overlay/inputs/mobile_inputs_overlay.dart';
 import 'package:dawnforge/game/systems/overlay/inputs/widgets/joystick_actions_overlay.dart';
 import 'package:dawnforge/game/systems/overlay/inputs/widgets/fullscreen_button_overlay.dart';
+import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
 import 'package:dawnforge/shared/design_system/theme/app_design_system_extension.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:dawnforge/core/managers/settings_manager.dart';
@@ -29,7 +30,7 @@ final class UnifiedGameOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = context.ds.screenSize.isDesktop;
+    final isDesktop = AppDesignSystem.of(context).screenSize.isDesktop;
 
     const flexA = 1;
     const flexB = 6;

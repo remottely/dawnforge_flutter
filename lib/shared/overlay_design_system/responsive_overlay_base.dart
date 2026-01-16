@@ -1,4 +1,5 @@
 /// **ResponsiveOverlayBase - Base para overlays responsivos**
+import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
 import 'package:dawnforge/shared/design_system/theme/app_design_system_extension.dart';
 import 'package:flutter/widgets.dart';
 
@@ -22,7 +23,9 @@ abstract class ResponsiveOverlayBase extends StatelessWidget {
   }
 
   Widget _buildOverlay(BuildContext context) {
-    final constraints = context.constraints.forOverlay(overlayId);
+    final constraints = AppDesignSystem.of(
+      context,
+    ).constraints.forOverlay(overlayId);
 
     Widget content = buildOverlayContent(context);
 

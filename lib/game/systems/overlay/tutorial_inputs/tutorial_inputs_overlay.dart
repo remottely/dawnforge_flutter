@@ -5,10 +5,13 @@ import 'package:dawnforge/pre_game/screens/menu_screen.dart';
 import 'package:dawnforge/game/systems/audio/audio_manager.dart';
 import 'package:dawnforge/game/systems/overlay/tutorial_inputs/tutorial_inputs_hud_def.dart';
 import 'package:dawnforge/game/systems/overlay/tutorial_inputs/tutorial_inputs_state.dart';
+import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
 import 'package:dawnforge/shared/design_system/theme/app_design_system_extension.dart';
 
 import 'package:dawnforge/shared/design_system/theme/app_design_system_extension.dart';
-import 'package:dawnforge/shared/design_system/theme/app_tokens.dart';
+import 'package:dawnforge/shared/design_system/theme/tokens/app_sizes.dart';
+import 'package:dawnforge/shared/design_system/theme/tokens/app_spacing.dart';
+import 'package:dawnforge/shared/design_system/theme/tokens/app_typography.dart';
 import 'package:dawnforge/shared/overlay_design_system/responsive_overlay_base.dart';
 import 'package:dawnforge/shared/design_system/theme/screen_size_info.dart';
 import 'package:dawnforge/core/managers/settings_manager.dart';
@@ -26,10 +29,8 @@ final class TutorialInputsOverlay extends ResponsiveOverlayBase {
 
   @override
   Widget buildOverlayContent(BuildContext context) {
-    // 🔥 Acessa tokens uma única vez
-    final spacing = context.ds.spacing;
-    final typography = context.ds.typography;
-    final screenSize = context.ds.screenSize;
+    final spacing = AppDesignSystem.of(context).spacing;
+    final screenSize = AppDesignSystem.of(context).screenSize;
 
     final keyBoxWidth = context.overlayValueByScreenSize(
       mobile: 80.0,
@@ -66,8 +67,6 @@ final class TutorialInputsOverlay extends ResponsiveOverlayBase {
                       TutorialInputsHUDDef.inputGuide[index]['key']!,
                       TutorialInputsHUDDef.inputGuide[index]['desc']!,
                       keyBoxWidth,
-                      spacing,
-                      typography,
                       screenSize,
                     ),
                   ),
@@ -84,10 +83,12 @@ final class TutorialInputsOverlay extends ResponsiveOverlayBase {
     String key,
     String description,
     double keyBoxWidth,
-    AppSpacing spacing,
-    AppTypography typography,
     ScreenSizeInfo screenSize,
   ) {
+    final ds = AppDesignSystem.of(context);
+    final spacing = ds.spacing;
+    final typography = ds.typography;
+
     final rowHeight = context.overlayValueByScreenSize(
       mobile: 20.0,
       tablet: 22.0,
