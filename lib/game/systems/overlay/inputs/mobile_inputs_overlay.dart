@@ -14,9 +14,9 @@ import 'package:flutter/material.dart';
 
 /// Mobile touch inputs overlay with buttons for all game actions
 final class MobileInputsOverlay extends ResponsiveOverlayBase {
-  final PlayerController? playerInput;
+  final PlayerController playerInput;
 
-  const MobileInputsOverlay({super.key, this.playerInput});
+  const MobileInputsOverlay({super.key, required this.playerInput});
 
   @override
   String get overlayId => 'mobile_inputs';

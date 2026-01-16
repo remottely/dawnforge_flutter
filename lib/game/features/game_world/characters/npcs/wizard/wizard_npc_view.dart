@@ -8,7 +8,7 @@ import 'package:dawnforge/game/systems/ui/ui_state_manager.dart';
 
 class WizardNpcView extends SimpleNpc with PlayerControllerListener {
   bool _playerIsNearby = false;
-  PlayerController? _registeredController;
+  PlayerController? _playerInput;
 
   final WizardNpcController _controller = WizardNpcController(
     model: WizardNpcModel(),
@@ -45,9 +45,9 @@ class WizardNpcView extends SimpleNpc with PlayerControllerListener {
             // Register to receive player controller events
             final PlayerController? playerInput = gameRef.playerControllers?.firstOrNull;
             if (playerInput != null &&
-                _registeredController != playerInput) {
-              _registeredController?.removeObserver(this);
-              _registeredController = playerInput;
+                _playerInput != playerInput) {
+              _playerInput?.removeObserver(this);
+              _playerInput = playerInput;
               playerInput.addObserver(this);
             }
 
@@ -60,9 +60,9 @@ class WizardNpcView extends SimpleNpc with PlayerControllerListener {
         notObserved: () {
           _playerIsNearby = false;
           // Unregister when player leaves
-          if (_registeredController != null) {
-            _registeredController!.removeObserver(this);
-            _registeredController = null;
+          if (_playerInput != null) {
+            _playerInput!.removeObserver(this);
+            _playerInput = null;
           }
         },
       );
@@ -105,9 +105,9 @@ class WizardNpcView extends SimpleNpc with PlayerControllerListener {
 
   @override
   void onRemove() {
-    if (_registeredController != null) {
-      _registeredController!.removeObserver(this);
-      _registeredController = null;
+    if (_playerInput != null) {
+      _playerInput!.removeObserver(this);
+      _playerInput = null;
     }
     super.onRemove();
   }

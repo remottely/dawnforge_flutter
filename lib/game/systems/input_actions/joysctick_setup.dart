@@ -57,7 +57,7 @@ final class JoystickSetup {
   static const double kPrimaryActionMarginRight = 4.0;
   static const double kSecondaryActionMarginRight = 100.0;
 
-  static PlayerController createJoystickInput() => Joystick(
+  static PlayerController createInput() => Joystick(
     directional: JoystickDirectional(
       spriteBackgroundDirectional: _loadBackground,
       spriteKnobDirectional: _loadKnob,

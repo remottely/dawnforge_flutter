@@ -13,18 +13,16 @@ import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.da
 /// Handles inventory and equipment inputs from both keyboard and joystick/mobile
 class InventoryInputHandler extends GameComponent
     with KeyboardEventListener, PlayerControllerListener {
-  final PlayerController? playerInput;
+  final PlayerController playerInput;
 
   bool _isInitialized = false;
 
-  InventoryInputHandler({this.playerInput});
+  InventoryInputHandler({required this.playerInput});
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    if (playerInput != null) {
-      playerInput!.addObserver(this);
-    }
+    playerInput.addObserver(this);
     EquipmentManager.instance.selectedSlotIndexNotifier.addListener(
       _handleSelectedSlotChanged,
     );
@@ -32,9 +30,7 @@ class InventoryInputHandler extends GameComponent
 
   @override
   void onRemove() {
-    if (playerInput != null) {
-      playerInput!.removeObserver(this);
-    }
+    playerInput.removeObserver(this);
     EquipmentManager.instance.selectedSlotIndexNotifier.removeListener(
       _handleSelectedSlotChanged,
     );

@@ -93,7 +93,7 @@ final class KeyboardSetup {
     kAddTestItemsKey,
   ];
 
-  static PlayerController createKeyboardInput() => Keyboard(
+  static PlayerController createInput() => Keyboard(
     config: KeyboardConfig(
       directionalKeys: keyboardDirectionalKeys(),
       acceptedKeys: keyboardAcceptedKeys(),

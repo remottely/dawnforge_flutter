@@ -46,7 +46,8 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
 
   late InventoryInputHandler inventoryInputHandler;
   late ShieldDefenseInputHandler shieldDefenseInputHandler;
-  late PlayerController playerInput;
+  late PlayerController _playerInput;
+   PlayerController get playerInput => _playerInput;
   late FarmInputHandler farmInputHandler;
 
   String? lastMapId;
@@ -306,10 +307,10 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
   // }
 
   void recreatePerMapDependencies({required String? mapId}) {
-    playerInput = GameplayScreenDef.createPlayerInput();
-    inventoryInputHandler = InventoryInputHandler(playerInput: playerInput);
+    _playerInput = GameplayScreenDef.createPlayerInput();
+    inventoryInputHandler = InventoryInputHandler(playerInput: _playerInput);
     shieldDefenseInputHandler = ShieldDefenseInputHandler(
-      playerInput: playerInput,
+      playerInput: _playerInput,
     );
     gameplayGameStateManager = GameStateManager();
     // gameplayHUD = GameplayHUDView();

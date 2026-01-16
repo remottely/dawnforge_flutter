@@ -6,7 +6,7 @@ import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_p
 
 class ShieldDefenseInputHandler extends GameComponent
     with PlayerControllerListener {
-  final PlayerController? playerInput;
+  final PlayerController playerInput;
 
   bool _isDefending = false;
   double _defenseTime = 0.0;
@@ -14,16 +14,14 @@ class ShieldDefenseInputHandler extends GameComponent
 
   static const double kStaminaPerSecond = 10.0;
 
-  ShieldDefenseInputHandler({this.playerInput});
+  ShieldDefenseInputHandler({required this.playerInput});
 
   bool get isDefending => _isDefending;
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    if (playerInput != null) {
-      playerInput!.addObserver(this);
-    }
+    playerInput.addObserver(this);
   }
 
   DDDefensePlayerView? _getCurrentPlayer() {

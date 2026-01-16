@@ -10,9 +10,9 @@ import 'package:flutter/material.dart';
 
 /// Overlay for joystick action buttons (primary and secondary attacks)
 class JoystickActionsOverlay extends ResponsiveOverlayBase {
-  final PlayerController? playerInput;
+  final PlayerController playerInput;
 
-  const JoystickActionsOverlay({super.key, this.playerInput});
+  const JoystickActionsOverlay({super.key, required this.playerInput});
 
   @override
   String get overlayId => 'joystick_actions';
