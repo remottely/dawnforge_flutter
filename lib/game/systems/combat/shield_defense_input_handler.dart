@@ -63,22 +63,6 @@ class ShieldDefenseInputHandler extends GameComponent
     }
   }
 
-  // @override
-  // bool onKeyboard(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-  //   final player = _getCurrentPlayer();
-  //   if (player == null) return false;
-
-  //   if (InputDef.isInteractionAction(event.logicalKey)) {
-  //     if (event is KeyDownEvent) {
-  //       return _handleDefenseStart(player);
-  //     } else if (event is KeyUpEvent) {
-  //       return _handleDefenseEnd(player);
-  //     }
-  //   }
-
-  //   return false;
-  // }
-
   @override
   void onJoystickAction(JoystickActionEvent event) {
     final player = _getCurrentPlayer();

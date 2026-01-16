@@ -76,15 +76,6 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
     }
   }
 
-  // @override
-  // bool onKeyboard(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-  //   if (_isValidInteractionAttempt(event)) {
-  //     _controller.toggleTorchState();
-  //     return true;
-  //   }
-  //   return false;
-  // }
-
   @override
   void onJoystickAction(JoystickActionEvent event) {
     if (_controller.model.canInteract &&
@@ -133,7 +124,8 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
       observed: (GameComponent comp) {
         final playerView = comp as DDBasePlayerView;
         // Register to receive player controller events when player is nearby
-        final PlayerController? playerInput = gameRef.playerControllers?.firstOrNull;
+        final PlayerController? playerInput =
+            gameRef.playerControllers?.firstOrNull;
         if (playerInput != null) {
           registerToPlayerController(playerInput);
         }

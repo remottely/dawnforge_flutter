@@ -43,9 +43,9 @@ class WizardNpcView extends SimpleNpc with PlayerControllerListener {
             _playerIsNearby = true;
 
             // Register to receive player controller events
-            final PlayerController? playerInput = gameRef.playerControllers?.firstOrNull;
-            if (playerInput != null &&
-                _playerInput != playerInput) {
+            final PlayerController? playerInput =
+                gameRef.playerControllers?.firstOrNull;
+            if (playerInput != null && _playerInput != playerInput) {
               _playerInput?.removeObserver(this);
               _playerInput = playerInput;
               playerInput.addObserver(this);
@@ -68,19 +68,6 @@ class WizardNpcView extends SimpleNpc with PlayerControllerListener {
       );
     }
   }
-
-  // @override
-  // bool onKeyboard(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-  //   if (_playerIsNearby &&
-  //       event is KeyDownEvent &&
-  //       event.logicalKey == KeyboardSetup.kInteractionKey) {
-  //     _controller.onPlayerDetected(gameRef.player!, interactionRequested: true);
-
-  //     return true;
-  //   }
-
-  //   return false;
-  // }
 
   @override
   void onJoystickAction(JoystickActionEvent event) {

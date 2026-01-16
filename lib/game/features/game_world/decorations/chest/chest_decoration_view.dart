@@ -68,17 +68,6 @@ class ChestDecorationView extends DDInputReceiverDecorationView {
     }
   }
 
-  // @override
-  // bool onKeyboard(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-  //   if (_controller.model.canInteract &&
-  //       event is KeyDownEvent &&
-  //       event.logicalKey == KeyboardSetup.kInteractionKey) {
-  //     _controller.openChest();
-  //     return true;
-  //   }
-  //   return false;
-  // }
-
   @override
   void onJoystickAction(JoystickActionEvent event) {
     if (_controller.model.canInteract &&
