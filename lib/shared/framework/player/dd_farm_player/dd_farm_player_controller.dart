@@ -65,9 +65,9 @@ abstract class DDFarmPlayerController<M extends DDFarmPlayerModel>
       '[FarmController] Verificando ação: ${event.id} | equipment: ${player.controller.model.equipment} | evento: ${event.event}',
     );
 
-    if (handleConsumableInput(player: player, event: event)) {
-      return;
-    }
+    // if (handleConsumableInput(player: player, event: event)) {
+    //   return;
+    // }
 
     // Só processa ações no DOWN, não no UP
     if (event.event != ActionEvent.DOWN) {

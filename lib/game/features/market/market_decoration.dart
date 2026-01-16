@@ -1,6 +1,7 @@
+// lib/game/features/market/market_decoration.dart
 import 'dart:async';
-
 import 'package:bonfire/bonfire.dart';
+import 'package:dawnforge/game/global/global_input_handler.dart';
 import 'package:dawnforge/game/systems/input_actions/input_def.dart';
 import 'package:dawnforge/shared/framework/decorations/dd_contact_decoration.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
@@ -36,36 +37,37 @@ class MarketDecoration extends DDContactDecoration
     this.overlayId,
     this.interactionIcon,
   });
-
+  // lib/game/features/market/market_decoration.dart
   @override
   void onContact(SimplePlayer component) {
     super.onContact(component);
     if (_hasActiveContact) return;
 
     _hasActiveContact = true;
-    _currentPlayer = component is DDBasePlayerView ? component : _currentPlayer;
-    _registerToPlayerController();
 
-    GameLogger.debug(
-      '[MarketDecoration] onContact -> waiting interaction at $_spawnKey',
+    GlobalInputHandler.instance.register(
+      id: 'market_$_spawnKey',
+      type: InteractionType.market,
+      onExecute: () {
+        GameLogger.debug('[MarketDecoration] 🛒 Opening market');
+        onOpenMarket.call();
+      },
     );
   }
 
   @override
   void onContactExit(SimplePlayer component) {
     super.onContactExit(component);
-
     _hasActiveContact = false;
-    _currentPlayer = null;
 
-    _unregisterFromPlayerController();
+    // ✅ DESREGISTRA
+    GlobalInputHandler.instance.unregister('market_$_spawnKey');
 
-    GameLogger.debug(
-      '[MarketDecoration] onContactExit -> unlock at $_spawnKey',
-    );
-
+    GameLogger.debug('[MarketDecoration] Unregistered at $_spawnKey');
     onCloseMarket.call();
   }
+
+  // ❌ REMOVE onJoystickAction (não precisa mais)
 
   @override
   void onMount() {
@@ -88,6 +90,13 @@ class MarketDecoration extends DDContactDecoration
   void onRemove() {
     _unregisterFromPlayerController();
 
+    // ✅ REMOVE DO GlobalInputHandler (segurança)
+    // GlobalInputHandler.instance.unregisterInteractable(this); // error: The method 'unregisterInteractable' isn't defined for the type 'GlobalInputHandler'.
+    // Try correcting the name to the name of an existing method, or defining a method named 'unregisterInteractable'.
+
+    // ✅ DESREGISTRA
+    GlobalInputHandler.instance.unregister('market_$_spawnKey');
+
     if (_registered) {
       _spawnedPositions.remove(_spawnKey);
     }
@@ -99,32 +108,27 @@ class MarketDecoration extends DDContactDecoration
     super.onRemove();
   }
 
-  @override
-  void onJoystickAction(JoystickActionEvent event) {
-    if (!_hasActiveContact) return;
-    if (event.event != ActionEvent.DOWN) return;
-    if (!InputDef.isInteractionAction(event.id)) return;
-
-    final player = _currentPlayer;
-    if (player == null) {
-      GameLogger.debug(
-        '[MarketDecoration] interaction ignored, no player reference at $_spawnKey',
-      );
-      return;
-    }
-
-    onOpenMarket.call();
-  }
-
   // @override
-  // void onJoystickChangeDirectional(JoystickDirectionalEvent event) {
-  //   if (event.directional == JoystickMoveDirectional.IDLE) return;
+  // void onJoystickAction(JoystickActionEvent event) {
+  //   if (!_hasActiveContact) return;
+  //   if (event.event != ActionEvent.DOWN) return;
+  //   if (!InputDef.isInteractionAction(event.id)) return;
 
-  //   GameLogger.debug(
-  //     '[MarketDecoration] movement detected -> closing market at $_spawnKey',
-  //   );
+  //   final player = _currentPlayer;
+  //   if (player == null) {
+  //     GameLogger.debug(
+  //       '[MarketDecoration] interaction ignored, no player reference at $_spawnKey',
+  //     );
+  //     return;
+  //   }
 
-  //   _closeMarket();
+  //   // ✅ EXECUTA A AÇÃO
+  //   GameLogger.debug('[MarketDecoration] 🛒 Opening market at $_spawnKey');
+  //   onOpenMarket.call();
+
+  //   // ✅ GlobalInputHandler JÁ CONSUMIU o input, então:
+  //   // - DDConsumablePlayerController NÃO vai executar _tryConsumeSelectedItem
+  //   // - FarmingBehavior NÃO vai executar ações de farming
   // }
 
   void _registerToPlayerController() {
@@ -149,7 +153,6 @@ class MarketDecoration extends DDContactDecoration
   }
 
   void _renderHint(Canvas canvas) {
-    // Desenha um pequeno ícone de interação acima do market para guiar o jogador.
     if (interactionIcon == null) return;
 
     final hintOffset = Offset(size.x / 2 - 8, -18);

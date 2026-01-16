@@ -150,7 +150,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
                 TimeManager.instance.start();
               },
               // onDispose: () {
-              //   GameStateMachine.instance.dispose();
+              //   GlobalStateMachine.instance.dispose();
               //   TimeManager.instance.stop();
               // },
               playerControllers: [playerInput],
@@ -161,6 +161,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
                 inventoryInputHandler,
                 shieldDefenseInputHandler,
                 farmInputHandler,
+                globalInputHandler,
               ],
               hudComponents: const [],
               // interface: gameplayHUD,

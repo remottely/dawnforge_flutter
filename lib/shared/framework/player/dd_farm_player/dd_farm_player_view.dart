@@ -5,7 +5,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/game/systems/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:dawnforge/core/utils/app_environment.dart';
 import 'package:dawnforge/game/features/farm/services/farm_tool_action_config.dart';
-import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_defense_player_view.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_consumable_player_view.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_config.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_controller.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_model.dart';
@@ -17,7 +17,7 @@ abstract class DDFarmPlayerView<
   C extends DDFarmPlayerController<M>,
   M extends DDFarmPlayerModel
 >
-    extends DDDefensePlayerView<C, M> {
+    extends DDConsumablePlayerView<C, M> {
   @protected
   final DDFarmPlayerViewConfig config;
 
@@ -58,7 +58,7 @@ abstract class DDFarmPlayerView<
   }
 
   @override
-  C createCombatController({
+  C createConsumableController({
     required M model,
     required void Function() onDisplayExclamationEmote,
     required void Function({

@@ -1,14 +1,10 @@
+// lib/game/features/gameplay_screen_viewmodel.dart
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/game/features/game_world/characters/player/cute/cute_player_controller.dart';
 import 'package:dawnforge/game/features/game_world/characters/player/cute/cute_player_def.dart';
-
 import 'package:dawnforge/game/features/game_world/characters/player/cute/cute_player_view.dart';
-import 'package:dawnforge/game/features/game_world/characters/player/demo/demo_player_def.dart';
-
-import 'package:dawnforge/game/features/game_world/characters/player/demo/demo_player.dart';
 import 'package:dawnforge/game/features/game_world/characters/player/farmer/farmer_player_controller.dart';
 import 'package:dawnforge/game/features/game_world/characters/player/farmer/farmer_player_def.dart';
-
 import 'package:dawnforge/game/features/game_world/characters/player/farmer/farmer_player_view.dart';
 import 'package:dawnforge/game/features/game_world/characters/player/smallburg/smallburg_player_controller.dart';
 import 'package:dawnforge/game/features/game_world/characters/player/smallburg/smallburg_player_def.dart';
@@ -16,6 +12,7 @@ import 'package:dawnforge/game/features/game_world/characters/player/smallburg/s
 import 'package:dawnforge/game/features/game_world/characters/player/sunny/sunny_player_controller.dart';
 import 'package:dawnforge/game/features/game_world/characters/player/sunny/sunny_player_def.dart';
 import 'package:dawnforge/game/features/game_world/characters/player/sunny/sunny_player_view.dart';
+import 'package:dawnforge/game/global/global_input_handler.dart';
 import 'package:dawnforge/game/systems/combat/shield_defense_input_handler.dart';
 import 'package:dawnforge/game/systems/game/game_state_manager.dart';
 import 'package:dawnforge/game/systems/game/inventory_input_handler.dart';
@@ -35,19 +32,19 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
     with WidgetsBindingObserver {
   final PlayerStateManager playerStateManager = PlayerStateManager.instance;
 
-  // GameplayHUDView gameplayHUD = GameplayHUDView();
-
   bool isLoadingSave = true;
-
-  /// Holds the loaded player position from save, if available
   Vector2? loadedPlayerPosition;
 
   GameStateManager gameplayGameStateManager = GameStateManager();
 
   late InventoryInputHandler inventoryInputHandler;
   late ShieldDefenseInputHandler shieldDefenseInputHandler;
-  late PlayerController _playerInput;
-   PlayerController get playerInput => _playerInput;
+  late GlobalInputHandler globalInputHandler;
+  
+  // ✅ PlayerInput ÚNICO (criado uma vez no initState)
+  late final PlayerController _playerInput;
+  PlayerController get playerInput => _playerInput;
+  
   late FarmInputHandler farmInputHandler;
 
   String? lastMapId;
@@ -55,40 +52,39 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
   @override
   void initState() {
     super.initState();
-    // Reset market spawn registry to allow re-adding decoration after reloads.
     MarketDecoration.clearSpawnRegistry();
     WidgetsBinding.instance.addObserver(this);
-    GameLogger.debug(
-      '[GameplayViewModel] initState - Creating new player input',
-    );
+    
+    // ✅ CRIA PlayerInput UMA VEZ
+    _playerInput = GameplayScreenDef.createPlayerInput();
+    
+    GameLogger.debug('[GameplayViewModel] initState - PlayerInput created');
+    
     recreatePerMapDependencies(mapId: null);
     _loadGameOrResetLife();
   }
 
   @override
   void dispose() {
+    // ✅ LIMPA OBSERVERS ANTES DE DESTRUIR
+    _cleanupObservers();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   Future<void> _loadGameOrResetLife() async {
     try {
-      GameLogger.debug(
-        '[GameplayViewModel] _loadGameOrResetLife - Starting...',
-      );
+      GameLogger.debug('[GameplayViewModel] _loadGameOrResetLife - Starting...');
       final success = await GameSaveController.instance.loadGame();
 
       GameLogger.debug('[GameplayViewModel] Load game result: $success');
 
       if (!success) {
-        GameLogger.info(
-          '[GameplayViewModel] No save found, resetting player life',
-        );
+        GameLogger.info('[GameplayViewModel] No save found, resetting player life');
         _resetPlayerLifeOnNewGame();
         loadedPlayerPosition = null;
       } else {
         GameLogger.info('[GameplayViewModel] ✅ Save loaded successfully!');
-        // Try to extract position from loaded player model
         final lastPlayerModel = playerStateManager.lastPlayerModel;
         final positionList = (lastPlayerModel?.toJson()['position'] as List?)
             ?.map((e) => (e as num).toDouble())
@@ -112,9 +108,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
         setState(() {
           isLoadingSave = false;
         });
-        GameLogger.debug(
-          '[GameplayViewModel] Loading complete, isLoadingSave = false',
-        );
+        GameLogger.debug('[GameplayViewModel] Loading complete, isLoadingSave = false');
       }
     }
   }
@@ -133,12 +127,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
     super.didChangeDependencies();
   }
 
-  /// Retorna a configuração da câmera, recalculando dinamicamente
-  /// baseado no tamanho atual da tela sem forçar rebuilds do BonfireWidget
   CameraConfig getCameraConfig(BuildContext context) {
-    // Sempre recalcula baseado no MediaQuery atual
-    // Isso permite que a câmera se ajuste em fullscreen e orientação
-    // sem precisar reconstruir o BonfireWidget (que resetaria o player)
     final newConfig = GameplayScreenDef.createCameraConfig(context);
 
     GameLogger.debug(
@@ -149,17 +138,10 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
   }
 
   DDBasePlayerView buildSunnyPlayer(Vector2 position) {
-    // if (isLoadingSave)
-    //   return SunnyPlayerView<SunnyPlayerController, DDFarmPlayerModel>(
-    //     position: position,
-    //     model: DDFarmPlayerModel.fromJson({}),
-    //   );
     var lastPlayerModel = playerStateManager.lastPlayerModel;
 
     if (lastPlayerModel is! DDFarmPlayerModel) {
-      GameLogger.info(
-        '[GameplayViewModel] Creating NEW Sunny model (no saved model found)',
-      );
+      GameLogger.info('[GameplayViewModel] Creating NEW Sunny model');
       lastPlayerModel = DDFarmPlayerModel.fromJson(
         {},
         SunnyPlayerDef.modelConfig,
@@ -185,14 +167,8 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
   }
 
   DDBasePlayerView buildCutePlayer(Vector2 position) {
-    // if (isLoadingSave)
-    //   return CutePlayerView<CutePlayerController, DDFarmPlayerModel>(
-    //     position: position,
-    //     model: DDFarmPlayerModel.fromJson({}),
-    //   );
     var lastPlayerModel = playerStateManager.lastPlayerModel;
     final lastPlayerJson = lastPlayerModel?.toJson() ?? {'coins': 500};
-    //  ?? PlayerSaveData.initial(playerType: 'cute').toJson();
 
     if (lastPlayerModel is! DDFarmPlayerModel) {
       lastPlayerModel = DDFarmPlayerModel.fromJson(
@@ -216,13 +192,10 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
   }
 
   DDBasePlayerView buildFarmerPlayer(Vector2 position) {
-    GameLogger.debug(
-      '[GameplayViewModel] Building farmer player at position: $position',
-    );
+    GameLogger.debug('[GameplayViewModel] Building farmer player at position: $position');
 
     var lastPlayerModel = playerStateManager.lastPlayerModel;
     final lastPlayerJson = lastPlayerModel?.toJson() ?? {'coins': 500};
-    //  ?? PlayerSaveData.initial(playerType: 'farmer').toJson();
 
     if (lastPlayerModel is! DDFarmPlayerModel) {
       lastPlayerModel = DDFarmPlayerModel.fromJson(
@@ -232,8 +205,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
       playerStateManager.setLastPlayerModel(lastPlayerModel);
     }
 
-    playerStateManager.currentPlayerAnimation =
-        FarmerPlayerDef.loadAnimationIdleDown;
+    playerStateManager.currentPlayerAnimation = FarmerPlayerDef.loadAnimationIdleDown;
 
     final player = FarmerPlayerView<FarmerPlayerController, DDFarmPlayerModel>(
       position: position,
@@ -246,13 +218,10 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
   }
 
   DDBasePlayerView buildSmallburgPlayer(Vector2 position) {
-    GameLogger.debug(
-      '[GameplayViewModel] Building farmer player at position: $position',
-    );
+    GameLogger.debug('[GameplayViewModel] Building smallburg player at position: $position');
 
     var lastPlayerModel = playerStateManager.lastPlayerModel;
     final lastPlayerJson = lastPlayerModel?.toJson() ?? {'coins': 500};
-    //  ?? PlayerSaveData.initial(playerType: 'demo').toJson();
 
     if (lastPlayerModel is! DDFarmPlayerModel) {
       lastPlayerModel = DDFarmPlayerModel.fromJson(
@@ -262,58 +231,51 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
       playerStateManager.setLastPlayerModel(lastPlayerModel);
     }
 
-    playerStateManager.currentPlayerAnimation =
-        SmallburgPlayerDef.loadAnimationIdleDown;
-    final player =
-        SmallburgPlayerView<SmallburgPlayerController, DDFarmPlayerModel>(
-          position: position,
-          model: lastPlayerModel,
-        );
+    playerStateManager.currentPlayerAnimation = SmallburgPlayerDef.loadAnimationIdleDown;
+    
+    final player = SmallburgPlayerView<SmallburgPlayerController, DDFarmPlayerModel>(
+      position: position,
+      model: lastPlayerModel,
+    );
 
     PlayerStateManager.instance.setLastPlayerView(player);
 
     return player;
   }
 
-  // DemoPlayer buildDemoPlayer(Vector2 position) {
-  //   print('[GameplayViewModel] Building demo player at position: $position');
+  /// ✅ LIMPA OBSERVERS ANTIGOS ANTES DE RECRIAR
+  void _cleanupObservers() {
+    GameLogger.debug('[GameplayViewModel] Cleaning up observers for map transition');
+    
+    // Remove observers antigos (se existirem)
+    if (lastMapId != null) {
+      try {
+        _playerInput.removeObserver(inventoryInputHandler);
+        _playerInput.removeObserver(shieldDefenseInputHandler);
+        _playerInput.removeObserver(globalInputHandler);
+        _playerInput.removeObserver(farmInputHandler);
+      } catch (e) {
+        GameLogger.warning('[GameplayViewModel] Error removing observers: $e');
+      }
+    }
+  }
 
-  //   var lastPlayerData = playerStateManager.lastPlayerData;
-
-  //   // ✅ CORREÇÃO: Cria novo player se não existe save
-  //   if (lastPlayerData == null) {
-  //     print('[GameplayViewModel] No save data found, creating new player');
-
-  //     // Cria CharacterData padrão
-  //     lastPlayerData = CharacterData.defaultPlayer(
-  //       maxStamina: DemoPlayerDef.config.maxStamina,
-  //       maxEnergy: DemoPlayerDef.config.maxEnergy,
-  //       maxLife: DemoPlayerDef.config.maxLife,
-  //       position: position,
-  //     );
-
-  //     // Salva no state manager
-  //     playerStateManager.lastPlayerData = lastPlayerData;
-  //   }
-
-  //   playerStateManager.currentPlayerAnimation =
-  //       DemoPlayerDef.loadAnimationIdleDown;
-
-  //   return DemoPlayer(
-  //     position: position,
-  //     id: 'player_demo',
-  //     data: lastPlayerData, // ✅ Agora sempre tem valor
-  //   );
-  // }
-
+  /// ✅ RECRIA OBSERVERS (SEM RECRIAR PlayerInput)
   void recreatePerMapDependencies({required String? mapId}) {
-    _playerInput = GameplayScreenDef.createPlayerInput();
+    GameLogger.debug('[GameplayViewModel] Recreating dependencies for map: $mapId');
+    
+    // ✅ LIMPA OBSERVERS ANTIGOS
+    _cleanupObservers();
+    
+    globalInputHandler = GlobalInputHandler(playerInput: _playerInput);
+    
+    // ✅ RECRIA HANDLERS (mas usa o MESMO _playerInput)
     inventoryInputHandler = InventoryInputHandler(playerInput: _playerInput);
-    shieldDefenseInputHandler = ShieldDefenseInputHandler(
-      playerInput: _playerInput,
-    );
+    shieldDefenseInputHandler = ShieldDefenseInputHandler(playerInput: _playerInput);
     gameplayGameStateManager = GameStateManager();
-    // gameplayHUD = GameplayHUDView();
+    
     lastMapId = mapId;
+    
+    GameLogger.debug('[GameplayViewModel] Dependencies recreated for map: $mapId');
   }
 }

@@ -1,10 +1,9 @@
+// lib/shared/framework/player/dd_farm_player/dd_consumable_player/dd_consumable_player_controller.dart
 import 'dart:async' show unawaited;
 import 'package:dawnforge/core/utils/game_logger.dart';
-
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/systems/input_actions/input_def.dart';
+import 'package:dawnforge/game/global/global_input_handler.dart';
 import 'package:dawnforge/game/systems/ui/dialog/binary_choice_dialog.dart';
-import 'package:dawnforge/game/features/farm/farm_service_locator.dart';
 import 'package:dawnforge/game/features/inventory/items/consumable_item.dart';
 import 'package:dawnforge/game/features/inventory/items/harvest_loot_item.dart';
 import 'package:dawnforge/game/features/inventory/managers/equipment_manager.dart';
@@ -13,12 +12,14 @@ import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_p
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 
 /// Handles consumable usage (vegetables/consumables) independent from farm actions.
+/// ✅ SEM PlayerControllerListener - Usa callbacks no GlobalInputHandler
 abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
     extends DDCombatPlayerController<M> {
   bool _isShowingConsumeDialog = false;
+  bool _isRegistered = false;
+  DDBasePlayerView? _player;
 
   DDConsumablePlayerController({
     required super.model,
@@ -29,38 +30,45 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
     required super.onExecuteRangedAttack,
   });
 
-  @override
-  void handleInputAction({
-    required DDBasePlayerView player,
-    required JoystickActionEvent event,
-  }) {
-    if (handleConsumableInput(player: player, event: event)) {
-      return;
+  /// ✅ Atualiza registro no GlobalInputHandler
+  /// Chame isso no update() do player ou quando equipamento mudar
+  void updateConsumableRegistration(DDBasePlayerView player) {
+    _player = player;
+
+    final hasConsumable = _hasConsumableEquipped();
+
+    if (hasConsumable && !_isRegistered) {
+      // ✅ REGISTRA COM CALLBACK
+      GlobalInputHandler.instance.register(
+        id: 'consumable_${player.hashCode}',
+        type: InteractionType.consumable,
+        onExecute: () async {
+          if (kDebugMode) {
+            GameLogger.debug(
+              '[ConsumableController] 🍎 Executing consume action',
+            );
+          }
+          await _tryConsumeSelectedItem(player);
+        },
+      );
+      _isRegistered = true;
+
+      if (kDebugMode) {
+        GameLogger.debug(
+          '[ConsumableController] ✅ Registered in GlobalInputHandler',
+        );
+      }
+    } else if (!hasConsumable && _isRegistered) {
+      // ✅ DESREGISTRA
+      GlobalInputHandler.instance.unregister('consumable_${player.hashCode}');
+      _isRegistered = false;
+
+      if (kDebugMode) {
+        GameLogger.debug(
+          '[ConsumableController] ➖ Unregistered from GlobalInputHandler',
+        );
+      }
     }
-
-    // Forward to combat chain if nothing to consume.
-    handleBaseCombatInputAction(player: player, event: event);
-  }
-
-  /// Allows subclasses to reuse the consumable handling early in their overrides.
-  @protected
-  bool handleConsumableInput({
-    required DDBasePlayerView player,
-    required JoystickActionEvent event,
-  }) {
-    final bool isInteraction = _isConsumeAction(event.id);
-    final bool isConsumeVegetable =
-        event.event == ActionEvent.DOWN && isInteraction;
-
-    if (!isConsumeVegetable) {
-      return false;
-    }
-
-    final consumed = _tryConsumeSelectedItem(player);
-    GameLogger.info(
-      '[ConsumableController] Consumo via interação: success=$consumed',
-    );
-    return consumed;
   }
 
   /// Call the original combat chain (skipping consumable re-processing).
@@ -72,73 +80,94 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
     super.handleInputAction(player: player, event: event);
   }
 
-  bool _isConsumeAction(dynamic actionId) {
-    if (InputDef.isInteractionAction(actionId)) return true;
+  /// Verifica se tem consumível equipado
+  bool _hasConsumableEquipped() {
+    final selectedIndex = EquipmentManager.instance.currentMainHandSlotIndex;
+    final slot = InventoryManager.instance.getSlotByIndex(selectedIndex);
 
-    // Fallback para garantir que X seja reconhecido mesmo se vier como instância diferente.
-    if (actionId is LogicalKeyboardKey) {
-      if (actionId.keyId == LogicalKeyboardKey.keyX.keyId) return true;
-    }
+    if (slot == null || slot.isEmpty) return false;
+
+    final item = slot.item;
+    if (item == null) return false;
+
+    if (item is HarvestLootItem && item.isEdible) return true;
+    if (item is ConsumableItem) return true;
 
     return false;
   }
 
-  bool _tryConsumeSelectedItem(DDBasePlayerView player) {
+  /// Tenta consumir o item selecionado
+  Future<void> _tryConsumeSelectedItem(DDBasePlayerView player) async {
     final selectedIndex = EquipmentManager.instance.currentMainHandSlotIndex;
     final slot = InventoryManager.instance.getSlotByIndex(selectedIndex);
+
     if (slot == null || slot.isEmpty) {
-      GameLogger.warning(
-        '[ConsumableController] Consumo falhou: slot vazio ($selectedIndex)',
-      );
-      return false;
+      if (kDebugMode) {
+        GameLogger.debug('[ConsumableController] Consumo falhou: slot vazio');
+      }
+      return;
     }
 
     if (_isShowingConsumeDialog) {
-      GameLogger.warning('[ConsumableController] Consumo já em progresso');
-      return true;
+      if (kDebugMode) {
+        GameLogger.debug('[ConsumableController] Consumo já em progresso');
+      }
+      return;
     }
 
     final item = slot.item;
     if (item == null) {
-      GameLogger.warning(
-        '[ConsumableController] Consumo falhou: item nulo ($selectedIndex)',
-      );
-      return false;
+      if (kDebugMode) {
+        GameLogger.debug('[ConsumableController] Consumo falhou: item nulo');
+      }
+      return;
     }
 
     int staminaGain = 0;
     double healthGain = 0;
 
-    GameLogger.info(
-      '[ConsumableController] Consumo tentativa: slot=$selectedIndex item=${item.runtimeType} qty=${slot.quantity}',
-    );
+    if (kDebugMode) {
+      GameLogger.info(
+        '[ConsumableController] Consumo tentativa: slot=$selectedIndex '
+        'item=${item.runtimeType} qty=${slot.quantity}',
+      );
+    }
 
     if (item is HarvestLootItem) {
-      if (!item.isEdible) return false;
+      if (!item.isEdible) {
+        if (kDebugMode) {
+          GameLogger.debug(
+            '[ConsumableController] Item não é comestível: ${item.name}',
+          );
+        }
+        return;
+      }
       staminaGain = item.staminaRestore;
       healthGain = item.staminaRestore.toDouble();
     } else if (item is ConsumableItem) {
       staminaGain = item.staminaRestore;
       healthGain = item.healthRestore.toDouble();
     } else {
-      return false;
+      if (kDebugMode) {
+        GameLogger.debug(
+          '[ConsumableController] Item não é consumível: ${item.runtimeType}',
+        );
+      }
+      return;
     }
 
-    unawaited(
-      _confirmConsumeItem(
-        player: player,
-        slotIndex: selectedIndex,
-        itemName: item.name,
-        staminaGain: staminaGain,
-        healthGain: healthGain,
-      ),
+    // ✅ MOSTRA DIÁLOGO DE CONFIRMAÇÃO
+    await _confirmAndConsumeItem(
+      player: player,
+      slotIndex: selectedIndex,
+      itemName: item.name,
+      staminaGain: staminaGain,
+      healthGain: healthGain,
     );
-
-    // Diálogo é assíncrono; retornamos true para bloquear outras ações enquanto a escolha é feita.
-    return true;
   }
 
-  Future<void> _confirmConsumeItem({
+  /// Confirma e consome o item
+  Future<void> _confirmAndConsumeItem({
     required DDBasePlayerView player,
     required int slotIndex,
     required String itemName,
@@ -157,10 +186,11 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
     _isShowingConsumeDialog = false;
 
     if (result != true) {
-      GameLogger.info('[ConsumableController] Consumo cancelado');
+      GameLogger.info('[ConsumableController] Consumo cancelado pelo usuário');
       return;
     }
 
+    // ✅ APLICA EFEITOS
     if (healthGain > 0) {
       player.addLife(healthGain);
     }
@@ -169,9 +199,22 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
       model.restoreStamina(staminaGain);
     }
 
+    // ✅ CONSOME 1 UNIDADE DO ITEM
     InventoryManager.instance.consumeFromSlot(slotIndex, 1);
+
     GameLogger.info(
-      '[ConsumableController] Consumo aplicado: hp=+$healthGain, stamina=+$staminaGain, slot=$slotIndex',
+      '[ConsumableController] ✅ Consumo aplicado: '
+      'hp=+$healthGain, stamina=+$staminaGain, slot=$slotIndex',
     );
+  }
+
+  @override
+  void dispose() {
+    // ✅ DESREGISTRA AO DESTRUIR
+    if (_isRegistered && _player != null) {
+      GlobalInputHandler.instance.unregister('consumable_${_player.hashCode}');
+      _isRegistered = false;
+    }
+    super.dispose();
   }
 }

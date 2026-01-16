@@ -26,7 +26,7 @@ class GameplayResumedHud extends StatelessWidget {
     required this.flexB,
     required this.player,
     required this.playerInput,
-    required this.gameState,
+    required this.globalState,
   });
 
   final int flexA;
@@ -39,7 +39,7 @@ class GameplayResumedHud extends StatelessWidget {
   >
   player;
   final PlayerController playerInput;
-  final GameState gameState;
+  final GlobalState globalState;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +47,7 @@ class GameplayResumedHud extends StatelessWidget {
       ignoring: false,
       child: Row(
         children: [
-          _LeftArea(flex: flexA, isDesktop: isDesktop, gameState: gameState),
+          _LeftArea(flex: flexA, isDesktop: isDesktop, globalState: globalState),
           _MainArea(
             flex: flexC,
             flexA: flexA,
@@ -55,7 +55,7 @@ class GameplayResumedHud extends StatelessWidget {
             isDesktop: isDesktop,
             player: player,
             playerInput: playerInput,
-            gameState: gameState,
+            globalState: globalState,
           ),
         ],
       ),
@@ -70,20 +70,20 @@ class GameplayResumedHud extends StatelessWidget {
 final class _LeftArea extends StatelessWidget {
   final int flex;
   final bool isDesktop;
-  final GameState gameState;
+  final GlobalState globalState;
 
   const _LeftArea({
     required this.flex,
     required this.isDesktop,
-    required this.gameState,
+    required this.globalState,
   });
 
   @override
   Widget build(BuildContext context) {
     // ✅ Esconde inventário em certos estados
     final showInventory =
-        gameState == GameState.gameplayResumed ||
-        gameState == GameState.gameplayPaused;
+        globalState == GlobalState.gameplayResumed ||
+        globalState == GlobalState.gameplayPaused;
 
     return Expanded(
       flex: flex,
@@ -111,7 +111,7 @@ final class _MainArea extends StatelessWidget {
   final bool isDesktop;
   final DDBasePlayerView player;
   final PlayerController playerInput;
-  final GameState gameState;
+  final GlobalState globalState;
 
   const _MainArea({
     required this.flex,
@@ -120,7 +120,7 @@ final class _MainArea extends StatelessWidget {
     required this.isDesktop,
     required this.player,
     required this.playerInput,
-    required this.gameState,
+    required this.globalState,
   });
 
   @override
@@ -133,13 +133,13 @@ final class _MainArea extends StatelessWidget {
             flexA: flexA,
             flexB: flexB,
             player: player,
-            gameState: gameState,
+            globalState: globalState,
           ),
           _MiddleRow(
             flexA: flexA,
             flexB: flexB,
             playerInput: playerInput,
-            gameState: gameState,
+            globalState: globalState,
           ),
           _BottomRow(
             flexA: flexA,
@@ -147,7 +147,7 @@ final class _MainArea extends StatelessWidget {
             isDesktop: isDesktop,
             player: player,
             playerInput: playerInput,
-            gameState: gameState,
+            globalState: globalState,
           ),
         ],
       ),
@@ -163,13 +163,13 @@ final class _TopRow extends StatelessWidget {
   final int flexA;
   final int flexB;
   final DDBasePlayerView player;
-  final GameState gameState;
+  final GlobalState globalState;
 
   const _TopRow({
     required this.flexA,
     required this.flexB,
     required this.player,
-    required this.gameState,
+    required this.globalState,
   });
 
   @override
@@ -178,8 +178,8 @@ final class _TopRow extends StatelessWidget {
       flex: flexA,
       child: Row(
         children: [
-          _TopCenterArea(flex: flexB, player: player, gameState: gameState),
-          _TopRightArea(flex: flexA, gameState: gameState),
+          _TopCenterArea(flex: flexB, player: player, globalState: globalState),
+          _TopRightArea(flex: flexA, globalState: globalState),
         ],
       ),
     );
@@ -189,18 +189,18 @@ final class _TopRow extends StatelessWidget {
 final class _TopCenterArea extends StatelessWidget {
   final int flex;
   final DDBasePlayerView player;
-  final GameState gameState;
+  final GlobalState globalState;
 
   const _TopCenterArea({
     required this.flex,
     required this.player,
-    required this.gameState,
+    required this.globalState,
   });
 
   @override
   Widget build(BuildContext context) {
     // ✅ Esconde em alguns estados
-    final showDebug = gameState == GameState.gameplayResumed;
+    final showDebug = globalState == GlobalState.gameplayResumed;
 
     return Expanded(
       flex: flex,
@@ -223,9 +223,9 @@ final class _TopCenterArea extends StatelessWidget {
 
 final class _TopRightArea extends StatelessWidget {
   final int flex;
-  final GameState gameState;
+  final GlobalState globalState;
 
-  const _TopRightArea({required this.flex, required this.gameState});
+  const _TopRightArea({required this.flex, required this.globalState});
 
   @override
   Widget build(BuildContext context) {
@@ -261,13 +261,13 @@ final class _MiddleRow extends StatelessWidget {
   final int flexA;
   final int flexB;
   final PlayerController playerInput;
-  final GameState gameState;
+  final GlobalState globalState;
 
   const _MiddleRow({
     required this.flexA,
     required this.flexB,
     required this.playerInput,
-    required this.gameState,
+    required this.globalState,
   });
 
   @override
@@ -276,11 +276,11 @@ final class _MiddleRow extends StatelessWidget {
       flex: flexB,
       child: Row(
         children: [
-          _CenterArea(flex: flexB, gameState: gameState),
+          _CenterArea(flex: flexB, globalState: globalState),
           _CenterRightArea(
             flex: flexA,
             playerInput: playerInput,
-            gameState: gameState,
+            globalState: globalState,
           ),
         ],
       ),
@@ -290,14 +290,14 @@ final class _MiddleRow extends StatelessWidget {
 
 final class _CenterArea extends StatelessWidget {
   final int flex;
-  final GameState gameState;
+  final GlobalState globalState;
 
-  const _CenterArea({required this.flex, required this.gameState});
+  const _CenterArea({required this.flex, required this.globalState});
 
   @override
   Widget build(BuildContext context) {
     // ✅ Tutorial só em playing
-    final showTutorial = gameState == GameState.gameplayResumed;
+    final showTutorial = globalState == GlobalState.gameplayResumed;
 
     return Expanded(
       flex: flex,
@@ -317,18 +317,18 @@ final class _CenterArea extends StatelessWidget {
 final class _CenterRightArea extends StatelessWidget {
   final int flex;
   final PlayerController playerInput;
-  final GameState gameState;
+  final GlobalState globalState;
 
   const _CenterRightArea({
     required this.flex,
     required this.playerInput,
-    required this.gameState,
+    required this.globalState,
   });
 
   @override
   Widget build(BuildContext context) {
     // ✅ Esconde joystick mobile em certos estados
-    final showJoystick = gameState == GameState.gameplayResumed;
+    final showJoystick = globalState == GlobalState.gameplayResumed;
 
     return Expanded(
       flex: flex,
@@ -355,7 +355,7 @@ final class _BottomRow extends StatelessWidget {
   final bool isDesktop;
   final DDBasePlayerView player;
   final PlayerController playerInput;
-  final GameState gameState;
+  final GlobalState globalState;
 
   const _BottomRow({
     required this.flexA,
@@ -363,7 +363,7 @@ final class _BottomRow extends StatelessWidget {
     required this.isDesktop,
     required this.player,
     required this.playerInput,
-    required this.gameState,
+    required this.globalState,
   });
 
   @override
@@ -372,12 +372,12 @@ final class _BottomRow extends StatelessWidget {
       flex: flexA + 1,
       child: Row(
         children: [
-          if (isDesktop) _BottomCenterArea(flex: flexB, gameState: gameState),
+          if (isDesktop) _BottomCenterArea(flex: flexB, globalState: globalState),
           _BottomRightArea(
             flex: flexA,
             player: player,
             playerInput: playerInput,
-            gameState: gameState,
+            globalState: globalState,
           ),
         ],
       ),
@@ -387,16 +387,16 @@ final class _BottomRow extends StatelessWidget {
 
 final class _BottomCenterArea extends StatelessWidget {
   final int flex;
-  final GameState gameState;
+  final GlobalState globalState;
 
-  const _BottomCenterArea({required this.flex, required this.gameState});
+  const _BottomCenterArea({required this.flex, required this.globalState});
 
   @override
   Widget build(BuildContext context) {
     // ✅ Mostra inventário apenas em certos estados
     final showInventory =
-        gameState == GameState.gameplayResumed ||
-        gameState == GameState.gameplayPaused;
+        globalState == GlobalState.gameplayResumed ||
+        globalState == GlobalState.gameplayPaused;
 
     return Expanded(
       flex: flex,
@@ -417,13 +417,13 @@ final class _BottomRightArea extends StatelessWidget {
   final int flex;
   final DDBasePlayerView player;
   final PlayerController playerInput;
-  final GameState gameState;
+  final GlobalState globalState;
 
   const _BottomRightArea({
     required this.flex,
     required this.player,
     required this.playerInput,
-    required this.gameState,
+    required this.globalState,
   });
 
   @override
@@ -440,7 +440,7 @@ final class _BottomRightArea extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _JoystickArea(playerInput: playerInput, gameState: gameState),
+              _JoystickArea(playerInput: playerInput, globalState: globalState),
               if (showStats) PlayerVitalStatsOverlay(player: player),
             ],
           ),
@@ -452,13 +452,13 @@ final class _BottomRightArea extends StatelessWidget {
 
 final class _JoystickArea extends StatelessWidget {
   final PlayerController playerInput;
-  final GameState gameState;
+  final GlobalState globalState;
 
-  const _JoystickArea({required this.playerInput, required this.gameState});
+  const _JoystickArea({required this.playerInput, required this.globalState});
 
   @override
   Widget build(BuildContext context) {
-    final showJoystick = gameState == GameState.gameplayResumed;
+    final showJoystick = globalState == GlobalState.gameplayResumed;
 
     return Expanded(
       child:

@@ -23,9 +23,9 @@
 //       debugPrint('[InputHelper] 🎮 Input: ${event.id} | ${event.event}');
 //     }
 
-//     // ✅ 1. VERIFICA SE PODE PROCESSAR (baseado no GameState)
+//     // ✅ 1. VERIFICA SE PODE PROCESSAR (baseado no GlobalState)
 //     if (!_canProcessInput()) {
-//       if (kDebugMode) debugPrint('[InputHelper] ❌ Blocked by GameState');
+//       if (kDebugMode) debugPrint('[InputHelper] ❌ Blocked by GlobalState');
 //       return true; // Bloqueia input
 //     }
 
@@ -61,14 +61,14 @@
 
 //   /// 1️⃣ UI OVERLAYS (Market, Dialogue, Crafting, Menus)
 //   bool _handleUIOverlays(JoystickActionEvent event) {
-//     final state = GameStateMachine.instance.getRxCurrentState().value;
+//     final state = GlobalStateMachine.instance.getRxCurrentState().value;
 
 //     // ========== MARKET ABERTO ==========
-//     if (state == GameState.uiOverlayMarket) {
+//     if (state == GlobalState.uiOverlayMarket) {
 //       // ESC fecha o market
 //       if (InputDef.isInteractionAction(event.id) &&
 //           event.event == ActionEvent.DOWN) {
-//         GameStateMachine.instance.closeMarket();
+//         GlobalStateMachine.instance.closeMarket();
 //         return true;
 //       }
 //       // Consome TODOS os inputs enquanto market aberto (bloqueia movimento)
@@ -76,7 +76,7 @@
 //     }
 
 //     // ========== DIALOGUE/CONVERSATION ABERTO ==========
-//     if (state == GameState.uiOverlayConversation) {
+//     if (state == GlobalState.uiOverlayConversation) {
 //       // INTERACT avança diálogo
 //       if (InputDef.isInteractionAction(event.id) &&
 //           event.event == ActionEvent.DOWN) {
@@ -87,7 +87,7 @@
       
 //       // ESC fecha diálogo (emergência)
 //       if (event.event == ActionEvent.DOWN) {
-//         GameStateMachine.instance.endConversation();
+//         GlobalStateMachine.instance.endConversation();
 //         return true;
 //       }
       
@@ -96,7 +96,7 @@
 //     }
 
 //     // ========== CHOICE DIALOG ABERTO ==========
-//     if (state == GameState.uiOverlayChoiceDialog) {
+//     if (state == GlobalState.uiOverlayChoiceDialog) {
 //       // INTERACT confirma escolha selecionada
 //       if (InputDef.isInteractionAction(event.id) &&
 //           event.event == ActionEvent.DOWN) {
@@ -111,12 +111,12 @@
 //     }
 
 //     // ========== CRAFTING ABERTO ==========
-//     if (state == GameState.uiOverlayCrafting) {
+//     if (state == GlobalState.uiOverlayCrafting) {
 //       // ESC ou K fecha crafting
 //       if ((InputDef.isInteractionAction(event.id) ||
 //               InputDef.isCraftingAction(event.id)) &&
 //           event.event == ActionEvent.DOWN) {
-//         GameStateMachine.instance.closeCrafting();
+//         GlobalStateMachine.instance.closeCrafting();
 //         return true;
 //       }
       
@@ -131,11 +131,11 @@
 //     }
 
 //     // ========== COOKING ABERTO ==========
-//     if (state == GameState.uiOverlayCooking) {
+//     if (state == GlobalState.uiOverlayCooking) {
 //       // ESC fecha cooking
 //       if (InputDef.isInteractionAction(event.id) &&
 //           event.event == ActionEvent.DOWN) {
-//         GameStateMachine.instance.closeCooking();
+//         GlobalStateMachine.instance.closeCooking();
 //         return true;
 //       }
       
@@ -150,12 +150,12 @@
 //     }
 
 //     // ========== INVENTORY MENU ABERTO ==========
-//     if (state == GameState.uiMenuInventory) {
+//     if (state == GlobalState.uiMenuInventory) {
 //       // ESC ou TAB fecha inventory
 //       if ((InputDef.isInteractionAction(event.id) ||
 //               InputDef.isToggleInventoryAction(event.id)) &&
 //           event.event == ActionEvent.DOWN) {
-//         GameStateMachine.instance.closeInventory();
+//         GlobalStateMachine.instance.closeInventory();
 //         return true;
 //       }
       
@@ -170,40 +170,40 @@
 //     }
 
 //     // ========== MAP MENU ABERTO ==========
-//     if (state == GameState.uiMenuMap) {
+//     if (state == GlobalState.uiMenuMap) {
 //       // ESC fecha map
 //       if (InputDef.isInteractionAction(event.id) &&
 //           event.event == ActionEvent.DOWN) {
-//         GameStateMachine.instance.closeMap();
+//         GlobalStateMachine.instance.closeMap();
 //         return true;
 //       }
 //       return true;
 //     }
 
 //     // ========== QUEST LOG ABERTO ==========
-//     if (state == GameState.uiMenuQuest) {
+//     if (state == GlobalState.uiMenuQuest) {
 //       // ESC fecha quest log
 //       if (InputDef.isInteractionAction(event.id) &&
 //           event.event == ActionEvent.DOWN) {
-//         GameStateMachine.instance.closeQuest();
+//         GlobalStateMachine.instance.closeQuest();
 //         return true;
 //       }
 //       return true;
 //     }
 
 //     // ========== SETTINGS MENU ABERTO ==========
-//     if (state == GameState.uiMenuSettings) {
+//     if (state == GlobalState.uiMenuSettings) {
 //       // ESC fecha settings (volta para estado anterior)
 //       if (InputDef.isInteractionAction(event.id) &&
 //           event.event == ActionEvent.DOWN) {
-//         GameStateMachine.instance.closeSettings();
+//         GlobalStateMachine.instance.closeSettings();
 //         return true;
 //       }
 //       return true;
 //     }
 
 //     // ========== FISHING MINIGAME ==========
-//     if (state == GameState.uiOverlayMinigameFishing) {
+//     if (state == GlobalState.uiOverlayMinigameFishing) {
 //       // PRIMARY ACTION puxa vara
 //       if (InputDef.isPrimaryAction(event.id)) {
 //         // TODO: FishingMinigame.instance.pullRod()
@@ -216,7 +216,7 @@
 //           event.event == ActionEvent.DOWN) {
 //         // TODO: FishingMinigame.instance.cancel()
 //         debugPrint('[InputHelper] Canceling fishing...');
-//         GameStateMachine.instance._changeState(GameState.gameplayResumed);
+//         GlobalStateMachine.instance._changeState(GlobalState.gameplayResumed);
 //         return true;
 //       }
       
@@ -224,11 +224,11 @@
 //     }
 
 //     // ========== GAME PAUSED ==========
-//     if (state == GameState.gameplayPaused) {
+//     if (state == GlobalState.gameplayPaused) {
 //       // ESC resume
 //       if (InputDef.isInteractionAction(event.id) &&
 //           event.event == ActionEvent.DOWN) {
-//         GameStateMachine.instance.resumeGame();
+//         GlobalStateMachine.instance.resumeGame();
 //         return true;
 //       }
 //       return true;
@@ -264,13 +264,13 @@
 //     //
 //     // MarketDecoration.onJoystickAction:
 //     //   - Chama onOpenMarket()
-//     //   - GameStateMachine.openMarket()
+//     //   - GlobalStateMachine.openMarket()
 //     //   - MarketState.openAndSetPlayerModel()
 //     //
 //     // WizardNpcView.onJoystickAction:
 //     //   - WizardNpcController.onPlayerDetected(interactionRequested: true)
 //     //   - UIStateManager.showConversation()
-//     //   - GameStateMachine.startDialogue()
+//     //   - GlobalStateMachine.startDialogue()
 //     //
 //     // ChestDecorationView.onJoystickAction:
 //     //   - ChestDecorationController.openChest()
@@ -302,22 +302,22 @@
 //       return false;
 //     }
 
-//     final currentState = GameStateMachine.instance.getRxCurrentState().value;
+//     final currentState = GlobalStateMachine.instance.getRxCurrentState().value;
 
 //     // Só processa hotkeys em gameplay ativo
-//     if (currentState != GameState.gameplayResumed) {
+//     if (currentState != GlobalState.gameplayResumed) {
 //       return false;
 //     }
 
 //     // ========== INVENTORY (TAB/I) ==========
 //     if (InputDef.isToggleInventoryAction(event.id)) {
-//       GameStateMachine.instance.openInventory();
+//       GlobalStateMachine.instance.openInventory();
 //       return true;
 //     }
 
 //     // ========== CRAFTING (K) ==========
 //     if (InputDef.isCraftingAction(event.id)) {
-//       GameStateMachine.instance.openCrafting();
+//       GlobalStateMachine.instance.openCrafting();
 //       return true;
 //     }
 
@@ -379,15 +379,15 @@
 //   // VERIFICAÇÕES
 //   // ====================================================================
 
-//   /// Verifica se pode processar input baseado no GameState
+//   /// Verifica se pode processar input baseado no GlobalState
 //   bool _canProcessInput() {
-//     final state = GameStateMachine.instance.getRxCurrentState().value;
+//     final state = GlobalStateMachine.instance.getRxCurrentState().value;
 
 //     // Estados que bloqueiam input completamente
-//     if (state == GameState.gameLoading ||
-//         state == GameState.gameTransitioning ||
-//         state == GameState.gameCutscene ||
-//         state == GameState.uiOverlayGameover) {
+//     if (state == GlobalState.gameLoading ||
+//         state == GlobalState.gameTransitioning ||
+//         state == GlobalState.gameCutscene ||
+//         state == GlobalState.uiOverlayGameover) {
 //       return false;
 //     }
 

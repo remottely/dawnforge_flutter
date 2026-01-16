@@ -26,39 +26,39 @@ final class UnifiedGameOverlay extends StatelessWidget {
     const flexB = 6;
     const flexC = flexA + flexB;
 
-    return ValueListenableBuilder<GameState>(
+    return ValueListenableBuilder<GlobalState>(
       valueListenable: GlobalStateMachine.instance.getRxCurrentState(),
-      builder: (context, gameState, _) {
-        return switch (gameState) {
-          GameState.gameLoading => const GameLoadingScreen(),
+      builder: (context, globalState, _) {
+        return switch (globalState) {
+          GlobalState.gameLoading => const GameLoadingScreen(),
 
-          GameState.gameCutscene => const GameCutsceneScreen(), // TODO: Criar
+          GlobalState.gameCutscene => const GameCutsceneScreen(), // TODO: Criar
 
-          GameState.gameTransitioning =>
+          GlobalState.gameTransitioning =>
             const GameTransitioningScreen(), // TODO: Criar
 
-          GameState.gameplayResumed => GameplayResumedHud(
+          GlobalState.gameplayResumed => GameplayResumedHud(
             flexA: flexA,
             isDesktop: isDesktop,
             flexC: flexC,
             flexB: flexB,
             player: player,
             playerInput: playerInput,
-            gameState: gameState,
+            globalState: globalState,
           ),
 
-          GameState.gameplayPaused => SizedBox.shrink(),
+          GlobalState.gameplayPaused => SizedBox.shrink(),
 
-          GameState.uiMenuInventory =>
+          GlobalState.uiMenuInventory =>
             const UIMenuInventoryPage(), // TODO: Criar
 
-          GameState.uiMenuQuest => const UIMenuQuestPage(), // TODO: Criar
+          GlobalState.uiMenuQuest => const UIMenuQuestPage(), // TODO: Criar
 
-          GameState.uiMenuMap => const UIMenuMapPage(), // TODO: Criar
+          GlobalState.uiMenuMap => const UIMenuMapPage(), // TODO: Criar
 
-          GameState.uiMenuSettings => const UIMenuSettingsPage(), // TODO: Criar
+          GlobalState.uiMenuSettings => const UIMenuSettingsPage(), // TODO: Criar
 
-          GameState.uiOverlayMinigameFishing => Stack(
+          GlobalState.uiOverlayMinigameFishing => Stack(
             children: [
               GameplayResumedHud(
                 flexA: flexA,
@@ -67,27 +67,27 @@ final class UnifiedGameOverlay extends StatelessWidget {
                 flexB: flexB,
                 player: player,
                 playerInput: playerInput,
-                gameState: gameState,
+                globalState: globalState,
               ),
               const UIMinigameFishingHud(), // TODO: Criar
             ],
           ),
 
-          GameState.uiOverlayCrafting => Column(
+          GlobalState.uiOverlayCrafting => Column(
             children: [
               const UIOverlayCraftingPanel(), // TODO: Criar
               // TODO(Kevin): show inventory
             ],
           ),
 
-          GameState.uiOverlayCooking => Column(
+          GlobalState.uiOverlayCooking => Column(
             children: [
               const UIOverlayCookingPanel(), // TODO: Criar
               // TODO(Kevin): show inventory
             ],
           ),
 
-          GameState.uiOverlayMarket => Center(
+          GlobalState.uiOverlayMarket => Center(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -99,13 +99,13 @@ final class UnifiedGameOverlay extends StatelessWidget {
             ),
           ),
 
-          GameState.uiOverlayChoiceDialog =>
+          GlobalState.uiOverlayChoiceDialog =>
             const UIOverlayChoiceDialogPage(), // TODO: Criar
 
-          GameState.uiOverlayConversation =>
+          GlobalState.uiOverlayConversation =>
             const UIOverlayConversationPage(), // TODO: Criar
 
-          GameState.uiOverlayGameover =>
+          GlobalState.uiOverlayGameover =>
             const UIOverlayGameoverPage(), // TODO: Criar
         };
       },

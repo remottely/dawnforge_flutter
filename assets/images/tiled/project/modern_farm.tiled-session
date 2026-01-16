@@ -272,10 +272,10 @@
                 8
             ],
             "scale": 5.81,
-            "selectedLayer": 11,
+            "selectedLayer": 10,
             "viewCenter": {
-                "x": 77.62478485370053,
-                "y": 90.61962134251291
+                "x": 94.40619621342515,
+                "y": 93.2013769363167
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/lake.json": {
