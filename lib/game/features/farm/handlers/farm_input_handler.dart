@@ -4,7 +4,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/game/systems/input_actions/input_def.dart';
 import 'package:dawnforge/game/systems/save/game_save_controller.dart';
 import 'package:dawnforge/game/systems/world/world_state_manager.dart';
-import 'package:dawnforge/game/utils/app_environment.dart';
+import 'package:dawnforge/core/utils/app_environment.dart';
 import 'package:dawnforge/game/features/farm/constants/farm_feedback_config.dart';
 import 'package:dawnforge/game/features/farm/farm_service_locator.dart';
 import 'package:dawnforge/game/features/farm/services/farm_feedback_service.dart';

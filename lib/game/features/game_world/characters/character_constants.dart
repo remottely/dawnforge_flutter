@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/utils/app_environment.dart';
+import 'package:dawnforge/core/utils/app_environment.dart';
 
 final class CharacterConstants {
   CharacterConstants._();

@@ -3,7 +3,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:dawnforge/game/systems/map/map_def.dart';
 import 'package:dawnforge/game/systems/map/map_transition_controller.dart';
-import 'package:dawnforge/game/utils/app_environment.dart';
+import 'package:dawnforge/core/utils/app_environment.dart';
 import 'package:flutter/foundation.dart';
 
 import 'day_state.dart';

@@ -2,7 +2,7 @@ import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/game/systems/overlay/tutorial_inputs/tutorial_inputs_state.dart';
 import 'package:dawnforge/game/systems/input_actions/input_def.dart';
-import 'package:dawnforge/game/utils/app_environment.dart';
+import 'package:dawnforge/core/utils/app_environment.dart';
 import 'package:dawnforge/game/features/inventory/managers/equipment_manager.dart';
 import 'package:dawnforge/game/features/inventory/managers/inventory_manager.dart';
 import 'package:dawnforge/game/features/inventory/state/inventory_state.dart';
