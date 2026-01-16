@@ -15,7 +15,7 @@ class MiniBossEnemyView
       );
 
   @override
-  double get fixedLifeBarWidth => MiniBossEnemyDef.fixedLifeBarWidth;
+  double get fixedLifeBarWidth => MiniBossEnemyDef.kFixedLifeBarWidth;
 
   @override
   Vector2 get fixedLifeBarOffset => MiniBossEnemyDef.fixedLifeBarOffset;

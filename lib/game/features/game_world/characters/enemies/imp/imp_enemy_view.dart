@@ -14,7 +14,7 @@ class ImpEnemyView extends DDBaseEnemyView<ImpEnemyController, ImpEnemyModel> {
       );
 
   @override
-  double get fixedLifeBarWidth => ImpEnemyDef.fixedLifeBarWidth;
+  double get fixedLifeBarWidth => ImpEnemyDef.kFixedLifeBarWidth;
 
   @override
   Vector2 get fixedLifeBarOffset => ImpEnemyDef.fixedLifeBarOffset;

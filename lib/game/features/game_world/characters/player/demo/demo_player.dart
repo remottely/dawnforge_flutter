@@ -63,7 +63,7 @@ class DemoPlayer extends Character {
     addBehavior(
       MovementBehavior(
         MovementConfig(
-          runSpeedMultiplier: DemoPlayerDef.runSpeedMultiplier,
+          runSpeedMultiplier: DemoPlayerDef.kRunSpeedMultiplier,
           walkSpeed: DemoPlayerDef.config.baseSpeed,
           walkAnimation: DemoPlayerDef.walkAnimation,
           runAnimation: DemoPlayerDef.runAnimation,

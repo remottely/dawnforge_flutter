@@ -9,8 +9,8 @@ import 'package:dawnforge/shared/utils/sprite_animation_config_helper.dart';
 final class SkeletonEnemyDef {
   SkeletonEnemyDef._();
 
-  static const double fixedLifeBarWidth =
-      CharacterConstants.fixedLifeBarWidthMedium;
+  static const double kFixedLifeBarWidth =
+      CharacterConstants.kFixedLifeBarWidthMedium;
   static final Vector2 fixedLifeBarOffset =
       CharacterConstants.fixedLifeBarOffsetLarge;
 
@@ -27,122 +27,105 @@ final class SkeletonEnemyDef {
   static final Vector2 componentSize = textureSize;
 
   static const int _attackFrameCount = 6;
-  static const double _attackFrameRightY = 0;
-  static const double _attackFrameLeftY = TileConstants.kCharacterDimensionSmallburg;
-  static const double _attackFrameUpY =
+  static const double _kAttackFrameRightY = 0;
+  static const double _kAttackFrameLeftY =
+      TileConstants.kCharacterDimensionSmallburg;
+  static const double _kAttackFrameUpY =
       TileConstants.kCharacterDimensionSmallburg * 2;
-  static const double _attackFrameDownY =
+  static const double _kAttackFrameDownY =
       TileConstants.kCharacterDimensionSmallburg * 3;
 
-  static const String idleAssetPath =
+  static const String kIdleAssetPath =
       'tiled/Smallburg_dungeon_pack_v2.13/assets/enemies/skeletons/skeleton/idle/skeleton_idle_2.png';
-  static const String walkAssetPath =
+  static const String kWalkAssetPath =
       'tiled/Smallburg_dungeon_pack_v2.13/assets/enemies/skeletons/skeleton/walk/skeleton_walk_4.png';
-  static const String attack1AssetPath =
+  static const String kAttack1AssetPath =
       'tiled/Smallburg_dungeon_pack_v2.13/assets/enemies/skeletons/skeleton/attack/skeleton_attack.png';
 
   static const int _x2 = 2;
   static const int _x4 = 4;
-  static const int _x6 = 6;
-  static const int _x7 = 7;
-  static const int _x10 = 10;
-  static const double _frameRightY = 0;
-  static const double _frameLeftY = TileConstants.kCharacterDimensionSmallburg * 1;
-  static const double _frameDownY = TileConstants.kCharacterDimensionSmallburg * 2;
-  static const double _frameUpY = TileConstants.kCharacterDimensionSmallburg * 3;
-
-  static const int _x9 = 9;
-  static const double _frameRightX9 = _x9 * 0;
-  static const double _frameUpX9 = _x9 * 1;
-  static const double _frameLeftX9 = _x9 * 2;
-  static const double _frameDownX9 = _x9 * 3;
-
-  static const double _frameRightX10 = _x10 * 0;
-  static const double _frameUpX10 = _x10 * 1;
-  static const double _frameLeftX10 = _x10 * 2;
-  static const double _frameDownX10 = _x10 * 3;
-
-  static const double _frameHarvestY = 6;
-  static const double _framePlaceSeedY = _frameHarvestY;
-  static const double _frameChoppingY = 18;
-  static const double _frameAttackY = _frameChoppingY;
-
-  static const int _skipFirstFramesX6 = 6;
+  static const double _kFrameRightY = 0;
+  static const double _kFrameLeftY =
+      TileConstants.kCharacterDimensionSmallburg * 1;
+  static const double _kFrameDownY =
+      TileConstants.kCharacterDimensionSmallburg * 2;
+  static const double _kFrameUpY =
+      TileConstants.kCharacterDimensionSmallburg * 3;
 
   static final Future<SpriteAnimation> _loadAnimationIdleRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: idleAssetPath,
+        assetPath: kIdleAssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeSlow,
         textureSize: textureSize,
         totalFrames: _x2,
         framePositionX: 0,
-        framePositionY: _frameRightY,
+        framePositionY: _kFrameRightY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationIdleLeft =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: idleAssetPath,
+        assetPath: kIdleAssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeSlow,
         textureSize: textureSize,
         totalFrames: _x2,
         framePositionX: 0,
-        framePositionY: _frameLeftY,
+        framePositionY: _kFrameLeftY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationIdleUp =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: idleAssetPath,
+        assetPath: kIdleAssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeSlow,
         textureSize: textureSize,
         totalFrames: _x2,
         framePositionX: 0,
-        framePositionY: _frameUpY,
+        framePositionY: _kFrameUpY,
       );
 
   static final Future<SpriteAnimation> loadAnimationIdleDown =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: idleAssetPath,
+        assetPath: kIdleAssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeSlow,
         textureSize: textureSize,
         totalFrames: _x2,
         framePositionX: 0,
-        framePositionY: _frameDownY,
+        framePositionY: _kFrameDownY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWalkRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: walkAssetPath,
+        assetPath: kWalkAssetPath,
         textureSize: textureSize,
         totalFrames: _x4,
         framePositionX: 0,
-        framePositionY: _frameRightY,
+        framePositionY: _kFrameRightY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWalkLeft =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: walkAssetPath,
+        assetPath: kWalkAssetPath,
         textureSize: textureSize,
         totalFrames: _x4,
         framePositionX: 0,
-        framePositionY: _frameLeftY,
+        framePositionY: _kFrameLeftY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWalkUp =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: walkAssetPath,
+        assetPath: kWalkAssetPath,
         textureSize: textureSize,
         totalFrames: _x4,
         framePositionX: 0,
-        framePositionY: _frameUpY,
+        framePositionY: _kFrameUpY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWalkDown =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: walkAssetPath,
+        assetPath: kWalkAssetPath,
         textureSize: textureSize,
         totalFrames: _x4,
         framePositionX: 0,
-        framePositionY: _frameDownY,
+        framePositionY: _kFrameDownY,
       );
 
   static SimpleDirectionAnimation createAnimationWalkDirectional() =>
@@ -167,42 +150,42 @@ final class SkeletonEnemyDef {
 
   static Future<SpriteAnimation> _loadAnimationAttackRight() =>
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: attack1AssetPath,
+        assetPath: kAttack1AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
         textureSize: TileConstants.tileSizeSmallburg,
         totalFrames: _attackFrameCount,
         framePositionX: 0,
-        framePositionY: _attackFrameRightY,
+        framePositionY: _kAttackFrameRightY,
       );
 
   static Future<SpriteAnimation> _loadAnimationAttackLeft() =>
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: attack1AssetPath,
+        assetPath: kAttack1AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
         textureSize: TileConstants.tileSizeSmallburg,
         totalFrames: _attackFrameCount,
         framePositionX: 0,
-        framePositionY: _attackFrameLeftY,
+        framePositionY: _kAttackFrameLeftY,
       );
 
   static Future<SpriteAnimation> _loadAnimationAttackUp() =>
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: attack1AssetPath,
+        assetPath: kAttack1AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
         textureSize: TileConstants.tileSizeSmallburg,
         totalFrames: _attackFrameCount,
         framePositionX: 0,
-        framePositionY: _attackFrameUpY,
+        framePositionY: _kAttackFrameUpY,
       );
 
   static Future<SpriteAnimation> _loadAnimationAttackDown() =>
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: attack1AssetPath,
+        assetPath: kAttack1AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
         textureSize: TileConstants.tileSizeSmallburg,
         totalFrames: _attackFrameCount,
         framePositionX: 0,
-        framePositionY: _attackFrameDownY,
+        framePositionY: _kAttackFrameDownY,
       );
   static animationAttack1DirectionalFactory() => DDAnimationDirectionalFactory(
     loadRight: _loadAnimationAttackRight(),

@@ -7,8 +7,8 @@ import 'package:dawnforge/shared/utils/sprite_animation_config_helper.dart';
 final class MiniBossEnemyDef {
   MiniBossEnemyDef._();
 
-  static const double fixedLifeBarWidth =
-      CharacterConstants.fixedLifeBarWidthMedium;
+  static const double kFixedLifeBarWidth =
+      CharacterConstants.kFixedLifeBarWidthMedium;
   static final Vector2 fixedLifeBarOffset =
       CharacterConstants.fixedLifeBarOffsetNone;
 

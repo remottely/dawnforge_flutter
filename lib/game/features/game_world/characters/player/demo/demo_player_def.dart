@@ -24,10 +24,9 @@ final class DemoPlayerDef {
   static const double _kMaxStamina = 100.0;
   static const int _kMaxEnergy = 100;
   static const double _kStaminaRegenRate = 1.0; // por segundo
-  static const Duration _kStaminaRegenDebounce = Duration(milliseconds: 150);
+  // static const Duration _kStaminaRegenDebounce = Duration(milliseconds: 150);
   static const double _kLongVisionRadius =
       CharacterConstants.kVisionRadiusSuperLarge;
-  static const double _kRunSpeedMultiplier = 1.4;
 
   // ============================================================================
   // COMBAT STATS
@@ -72,25 +71,25 @@ final class DemoPlayerDef {
   // ASSET PATHS
   // ============================================================================
 
-  static const String _idleAssetPath =
+  static const String _kIdleAssetPath =
       'tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/idle/character_body/character_idle_body_light_2.png';
-  static const String _walkAssetPath =
+  static const String _kWalkAssetPath =
       'tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/walk/character_body/character_walk_body_light_6.png';
-  static const String _runAssetPath =
+  static const String _kRunAssetPath =
       'tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/run/character_body/character_run_body_light_with_dust_specs_4.png';
-  static const String _digAssetPath =
+  static const String _kDigAssetPath =
       'tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/tools_shovel/character_body/character_tools_shovel_body_light_6.png';
-  static const String _wateringAssetPath =
+  static const String _kWateringAssetPath =
       'tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/tools_watercan/character_body/character_tools_watercan_body_light_10.png';
-  static const String _placeSeedAssetPath =
+  static const String _kPlaceSeedAssetPath =
       'tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/place_seed/character_body/character_place_seed_body_light_6.png';
-  static const String _harvestAssetPath =
+  static const String _kHarvestAssetPath =
       'tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/tools_hoe/character_body/character_tools_hoe_body_light_7.png';
-  static const String _attack1AssetPath =
+  static const String _kAttack1AssetPath =
       'tiled/Smallburg_dungeon_pack_v2.13/edited_assets/characters/slash_1/character_demo/character_slash_1_light_full_6.png';
-  static const String _attack2AssetPath =
+  static const String _kAttack2AssetPath =
       'tiled/Smallburg_dungeon_pack_v2.13/edited_assets/characters/slash_2/character_demo/character_slash_2_light_full_6.png';
-  static const String _attack3AssetPath =
+  static const String _kAttack3AssetPath =
       'tiled/Smallburg_dungeon_pack_v2.13/edited_assets/characters/super_slash/character_demo/character_super_slash_light_full_6.png';
 
   // ============================================================================
@@ -103,10 +102,10 @@ final class DemoPlayerDef {
   static const int _x7 = 7;
   static const int _x10 = 10;
 
-  static const double _frameRightY = 0;
-  static const double _frameLeftY = TileConstants.kCharacterDimensionSmallburg * 1;
-  static const double _frameDownY = TileConstants.kCharacterDimensionSmallburg * 2;
-  static const double _frameUpY = TileConstants.kCharacterDimensionSmallburg * 3;
+  static const double _kFrameRightY = 0;
+  static const double _kFrameLeftY = TileConstants.kCharacterDimensionSmallburg * 1;
+  static const double _kFrameDownY = TileConstants.kCharacterDimensionSmallburg * 2;
+  static const double _kFrameUpY = TileConstants.kCharacterDimensionSmallburg * 3;
 
   // ============================================================================
   // ANIMATIONS - IDLE
@@ -114,42 +113,42 @@ final class DemoPlayerDef {
 
   static final Future<SpriteAnimation> _loadAnimationIdleRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _idleAssetPath,
+        assetPath: _kIdleAssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeSlow,
         textureSize: textureSize,
         totalFrames: _x2,
         framePositionX: 0,
-        framePositionY: _frameRightY,
+        framePositionY: _kFrameRightY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationIdleLeft =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _idleAssetPath,
+        assetPath: _kIdleAssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeSlow,
         textureSize: textureSize,
         totalFrames: _x2,
         framePositionX: 0,
-        framePositionY: _frameLeftY,
+        framePositionY: _kFrameLeftY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationIdleUp =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _idleAssetPath,
+        assetPath: _kIdleAssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeSlow,
         textureSize: textureSize,
         totalFrames: _x2,
         framePositionX: 0,
-        framePositionY: _frameUpY,
+        framePositionY: _kFrameUpY,
       );
 
   static final Future<SpriteAnimation> loadAnimationIdleDown =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _idleAssetPath,
+        assetPath: _kIdleAssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeSlow,
         textureSize: textureSize,
         totalFrames: _x2,
         framePositionX: 0,
-        framePositionY: _frameDownY,
+        framePositionY: _kFrameDownY,
       );
 
   // ============================================================================
@@ -158,38 +157,38 @@ final class DemoPlayerDef {
 
   static final Future<SpriteAnimation> _loadAnimationWalkRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _walkAssetPath,
+        assetPath: _kWalkAssetPath,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameRightY,
+        framePositionY: _kFrameRightY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWalkLeft =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _walkAssetPath,
+        assetPath: _kWalkAssetPath,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameLeftY,
+        framePositionY: _kFrameLeftY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWalkUp =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _walkAssetPath,
+        assetPath: _kWalkAssetPath,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameUpY,
+        framePositionY: _kFrameUpY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWalkDown =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _walkAssetPath,
+        assetPath: _kWalkAssetPath,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameDownY,
+        framePositionY: _kFrameDownY,
       );
 
   static final SimpleDirectionAnimation _animationWalkDirectional =
@@ -210,38 +209,38 @@ final class DemoPlayerDef {
 
   static final Future<SpriteAnimation> _loadAnimationRunRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _runAssetPath,
+        assetPath: _kRunAssetPath,
         textureSize: textureSize,
         totalFrames: _x4,
         framePositionX: 0,
-        framePositionY: _frameRightY,
+        framePositionY: _kFrameRightY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationRunLeft =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _runAssetPath,
+        assetPath: _kRunAssetPath,
         textureSize: textureSize,
         totalFrames: _x4,
         framePositionX: 0,
-        framePositionY: _frameLeftY,
+        framePositionY: _kFrameLeftY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationRunUp =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _runAssetPath,
+        assetPath: _kRunAssetPath,
         textureSize: textureSize,
         totalFrames: _x4,
         framePositionX: 0,
-        framePositionY: _frameUpY,
+        framePositionY: _kFrameUpY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationRunDown =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _runAssetPath,
+        assetPath: _kRunAssetPath,
         textureSize: textureSize,
         totalFrames: _x4,
         framePositionX: 0,
-        framePositionY: _frameDownY,
+        framePositionY: _kFrameDownY,
       );
 
   static final SimpleDirectionAnimation _animationRunDirectional =
@@ -262,42 +261,42 @@ final class DemoPlayerDef {
 
   static Future<SpriteAnimation> _loadAnimationAttack1Right =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _attack1AssetPath,
+        assetPath: _kAttack1AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameRightY,
+        framePositionY: _kFrameRightY,
       );
 
   static Future<SpriteAnimation> _loadAnimationAttack1Left =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _attack1AssetPath,
+        assetPath: _kAttack1AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameLeftY,
+        framePositionY: _kFrameLeftY,
       );
 
   static Future<SpriteAnimation> _loadAnimationAttack1Up =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _attack1AssetPath,
+        assetPath: _kAttack1AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameUpY,
+        framePositionY: _kFrameUpY,
       );
 
   static Future<SpriteAnimation> _loadAnimationAttack1Down =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _attack1AssetPath,
+        assetPath: _kAttack1AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameDownY,
+        framePositionY: _kFrameDownY,
       );
 
   static final _animationAttack1DirectionalFactory =
@@ -310,42 +309,42 @@ final class DemoPlayerDef {
 
   static Future<SpriteAnimation> _loadAnimationAttack2Right =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _attack2AssetPath,
+        assetPath: _kAttack2AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameRightY,
+        framePositionY: _kFrameRightY,
       );
 
   static Future<SpriteAnimation> _loadAnimationAttack2Left =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _attack2AssetPath,
+        assetPath: _kAttack2AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameLeftY,
+        framePositionY: _kFrameLeftY,
       );
 
   static Future<SpriteAnimation> _loadAnimationAttack2Up =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _attack2AssetPath,
+        assetPath: _kAttack2AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameUpY,
+        framePositionY: _kFrameUpY,
       );
 
   static Future<SpriteAnimation> _loadAnimationAttack2Down =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _attack2AssetPath,
+        assetPath: _kAttack2AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameDownY,
+        framePositionY: _kFrameDownY,
       );
 
   static final _animationAttack2DirectionalFactory =
@@ -358,42 +357,42 @@ final class DemoPlayerDef {
 
   static Future<SpriteAnimation> _loadAnimationAttack3Right =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _attack3AssetPath,
+        assetPath: _kAttack3AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameRightY,
+        framePositionY: _kFrameRightY,
       );
 
   static Future<SpriteAnimation> _loadAnimationAttack3Left =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _attack3AssetPath,
+        assetPath: _kAttack3AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameLeftY,
+        framePositionY: _kFrameLeftY,
       );
 
   static Future<SpriteAnimation> _loadAnimationAttack3Up =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _attack3AssetPath,
+        assetPath: _kAttack3AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameUpY,
+        framePositionY: _kFrameUpY,
       );
 
   static Future<SpriteAnimation> _loadAnimationAttack3Down =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _attack3AssetPath,
+        assetPath: _kAttack3AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameDownY,
+        framePositionY: _kFrameDownY,
       );
 
   static final _animationAttack3DirectionalFactory =
@@ -410,38 +409,38 @@ final class DemoPlayerDef {
 
   static final Future<SpriteAnimation> _loadAnimationDigRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _digAssetPath,
+        assetPath: _kDigAssetPath,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameRightY,
+        framePositionY: _kFrameRightY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationDigLeft =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _digAssetPath,
+        assetPath: _kDigAssetPath,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameLeftY,
+        framePositionY: _kFrameLeftY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationDigUp =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _digAssetPath,
+        assetPath: _kDigAssetPath,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameUpY,
+        framePositionY: _kFrameUpY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationDigDown =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _digAssetPath,
+        assetPath: _kDigAssetPath,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameDownY,
+        framePositionY: _kFrameDownY,
       );
 
   static final _animationDigDirectionalFactory = DDAnimationDirectionalFactory(
@@ -453,38 +452,38 @@ final class DemoPlayerDef {
 
   static final Future<SpriteAnimation> _loadAnimationWateringRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _wateringAssetPath,
+        assetPath: _kWateringAssetPath,
         textureSize: textureSize,
         totalFrames: _x10,
         framePositionX: 0,
-        framePositionY: _frameRightY,
+        framePositionY: _kFrameRightY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWateringLeft =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _wateringAssetPath,
+        assetPath: _kWateringAssetPath,
         textureSize: textureSize,
         totalFrames: _x10,
         framePositionX: 0,
-        framePositionY: _frameLeftY,
+        framePositionY: _kFrameLeftY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWateringUp =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _wateringAssetPath,
+        assetPath: _kWateringAssetPath,
         textureSize: textureSize,
         totalFrames: _x10,
         framePositionX: 0,
-        framePositionY: _frameUpY,
+        framePositionY: _kFrameUpY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWateringDown =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _wateringAssetPath,
+        assetPath: _kWateringAssetPath,
         textureSize: textureSize,
         totalFrames: _x10,
         framePositionX: 0,
-        framePositionY: _frameDownY,
+        framePositionY: _kFrameDownY,
       );
 
   static final _animationWateringDirectionalFactory =
@@ -497,38 +496,38 @@ final class DemoPlayerDef {
 
   static final Future<SpriteAnimation> _loadAnimationPlaceSeedRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _placeSeedAssetPath,
+        assetPath: _kPlaceSeedAssetPath,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameRightY,
+        framePositionY: _kFrameRightY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationPlaceSeedLeft =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _placeSeedAssetPath,
+        assetPath: _kPlaceSeedAssetPath,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameLeftY,
+        framePositionY: _kFrameLeftY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationPlaceSeedUp =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _placeSeedAssetPath,
+        assetPath: _kPlaceSeedAssetPath,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameUpY,
+        framePositionY: _kFrameUpY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationPlaceSeedDown =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _placeSeedAssetPath,
+        assetPath: _kPlaceSeedAssetPath,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameDownY,
+        framePositionY: _kFrameDownY,
       );
 
   static final _animationPlaceSeedDirectionalFactory =
@@ -541,38 +540,38 @@ final class DemoPlayerDef {
 
   static final Future<SpriteAnimation> _loadAnimationHarvestRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _harvestAssetPath,
+        assetPath: _kHarvestAssetPath,
         textureSize: textureSize,
         totalFrames: _x7,
         framePositionX: 0,
-        framePositionY: _frameRightY,
+        framePositionY: _kFrameRightY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationHarvestLeft =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _harvestAssetPath,
+        assetPath: _kHarvestAssetPath,
         textureSize: textureSize,
         totalFrames: _x7,
         framePositionX: 0,
-        framePositionY: _frameLeftY,
+        framePositionY: _kFrameLeftY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationHarvestUp =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _harvestAssetPath,
+        assetPath: _kHarvestAssetPath,
         textureSize: textureSize,
         totalFrames: _x7,
         framePositionX: 0,
-        framePositionY: _frameUpY,
+        framePositionY: _kFrameUpY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationHarvestDown =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _harvestAssetPath,
+        assetPath: _kHarvestAssetPath,
         textureSize: textureSize,
         totalFrames: _x7,
         framePositionX: 0,
-        framePositionY: _frameDownY,
+        framePositionY: _kFrameDownY,
       );
 
   static final _animationHarvestDirectionalFactory =
@@ -657,44 +656,44 @@ final class DemoPlayerDef {
   static const double _kPickaxeDamageToRock = 10.0;
 
   // Adicione esse asset path:
-  static const String _miningAssetPath =
+  static const String _kMiningAssetPath =
       'tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/tools_pickaxe/character_body/character_tools_pickaxe_body_light_7.png';
 
   // Adicione essas animações:
   static final Future<SpriteAnimation> _loadAnimationMiningRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _miningAssetPath,
+        assetPath: _kMiningAssetPath,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameRightY,
+        framePositionY: _kFrameRightY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationMiningLeft =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _miningAssetPath,
+        assetPath: _kMiningAssetPath,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameLeftY,
+        framePositionY: _kFrameLeftY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationMiningUp =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _miningAssetPath,
+        assetPath: _kMiningAssetPath,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameUpY,
+        framePositionY: _kFrameUpY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationMiningDown =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
-        assetPath: _miningAssetPath,
+        assetPath: _kMiningAssetPath,
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameDownY,
+        framePositionY: _kFrameDownY,
       );
 
   static final _animationMiningDirectionalFactory =
@@ -706,7 +705,7 @@ final class DemoPlayerDef {
       );
 
   // Adicione no final do arquivo:
-  static const double runSpeedMultiplier = 1.4;
+  static const double kRunSpeedMultiplier = 1.4;
 
   /// Configuração de mining
   static final MiningConfig miningConfig = MiningConfig(

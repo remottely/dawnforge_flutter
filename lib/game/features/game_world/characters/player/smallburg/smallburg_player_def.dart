@@ -107,28 +107,19 @@ final class SmallburgPlayerDef {
   static const int _x6 = 6;
   static const int _x7 = 7;
   static const int _x10 = 10;
-  static const double _frameRightY = 0;
-  static const double _frameLeftY = TileConstants.kCharacterDimensionSmallburg * 1;
-  static const double _frameDownY = TileConstants.kCharacterDimensionSmallburg * 2;
-  static const double _frameUpY = TileConstants.kCharacterDimensionSmallburg * 3;
+  static const double _kFrameRightY = 0;
+  static const double _kFrameLeftY = TileConstants.kCharacterDimensionSmallburg * 1;
+  static const double _kFrameDownY = TileConstants.kCharacterDimensionSmallburg * 2;
+  static const double _kFrameUpY = TileConstants.kCharacterDimensionSmallburg * 3;
 
-  static const int _x9 = 9;
-  static const double _frameRightX9 = _x9 * 0;
-  static const double _frameUpX9 = _x9 * 1;
-  static const double _frameLeftX9 = _x9 * 2;
-  static const double _frameDownX9 = _x9 * 3;
+  static const double _kFrameRightX10 = _x10 * 0;
+  static const double _kFrameUpX10 = _x10 * 1;
+  static const double _kFrameLeftX10 = _x10 * 2;
+  static const double _kFrameDownX10 = _x10 * 3;
 
-  static const double _frameRightX10 = _x10 * 0;
-  static const double _frameUpX10 = _x10 * 1;
-  static const double _frameLeftX10 = _x10 * 2;
-  static const double _frameDownX10 = _x10 * 3;
+  static const double _kFrameChoppingY = 18;
 
-  static const double _frameHarvestY = 6;
-  static const double _framePlaceSeedY = _frameHarvestY;
-  static const double _frameChoppingY = 18;
-  static const double _frameAttackY = _frameChoppingY;
-
-  static const int _skipFirstFramesX6 = 6;
+  static const int _kSkipFirstFramesX6 = 6;
 
   static final Future<SpriteAnimation> _loadAnimationIdleRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
@@ -137,7 +128,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x2,
         framePositionX: 0,
-        framePositionY: _frameRightY,
+        framePositionY: _kFrameRightY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationIdleLeft =
@@ -147,7 +138,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x2,
         framePositionX: 0,
-        framePositionY: _frameLeftY,
+        framePositionY: _kFrameLeftY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationIdleUp =
@@ -157,7 +148,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x2,
         framePositionX: 0,
-        framePositionY: _frameUpY,
+        framePositionY: _kFrameUpY,
       );
 
   static final Future<SpriteAnimation> loadAnimationIdleDown =
@@ -167,7 +158,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x2,
         framePositionX: 0,
-        framePositionY: _frameDownY,
+        framePositionY: _kFrameDownY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWalkRight =
@@ -176,7 +167,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameRightY,
+        framePositionY: _kFrameRightY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWalkLeft =
@@ -185,7 +176,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameLeftY,
+        framePositionY: _kFrameLeftY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWalkUp =
@@ -194,7 +185,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameUpY,
+        framePositionY: _kFrameUpY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWalkDown =
@@ -203,7 +194,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameDownY,
+        framePositionY: _kFrameDownY,
       );
 
   static final SimpleDirectionAnimation _animationWalkDirectional =
@@ -224,7 +215,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x4,
         framePositionX: 0,
-        framePositionY: _frameRightY,
+        framePositionY: _kFrameRightY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationRunLeft =
@@ -233,7 +224,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x4,
         framePositionX: 0,
-        framePositionY: _frameLeftY,
+        framePositionY: _kFrameLeftY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationRunUp =
@@ -242,7 +233,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x4,
         framePositionX: 0,
-        framePositionY: _frameUpY,
+        framePositionY: _kFrameUpY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationRunDown =
@@ -251,7 +242,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x4,
         framePositionX: 0,
-        framePositionY: _frameDownY,
+        framePositionY: _kFrameDownY,
       );
 
   static final SimpleDirectionAnimation _animationRunDirectional =
@@ -277,7 +268,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x7,
         framePositionX: 0,
-        framePositionY: _frameRightY,
+        framePositionY: _kFrameRightY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationHarvestLeft =
@@ -286,7 +277,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x7,
         framePositionX: 0,
-        framePositionY: _frameLeftY,
+        framePositionY: _kFrameLeftY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationHarvestUp =
@@ -295,7 +286,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x7,
         framePositionX: 0,
-        framePositionY: _frameUpY,
+        framePositionY: _kFrameUpY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationHarvestDown =
@@ -304,7 +295,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x7,
         framePositionX: 0,
-        framePositionY: _frameDownY,
+        framePositionY: _kFrameDownY,
       );
 
   static final _animationHarvestDirectionalFactory =
@@ -320,8 +311,8 @@ final class SmallburgPlayerDef {
         assetPath: idleAssetPath,
         textureSize: textureSize,
         totalFrames: _x10,
-        framePositionX: _frameRightX10,
-        framePositionY: _frameChoppingY,
+        framePositionX: _kFrameRightX10,
+        framePositionY: _kFrameChoppingY,
         framePositionXPadding: -8,
         framePositionYPadding: -6,
       );
@@ -331,8 +322,8 @@ final class SmallburgPlayerDef {
         assetPath: idleAssetPath,
         textureSize: textureSize,
         totalFrames: _x10,
-        framePositionX: _frameLeftX10,
-        framePositionY: _frameChoppingY,
+        framePositionX: _kFrameLeftX10,
+        framePositionY: _kFrameChoppingY,
         framePositionXPadding: -8,
         framePositionYPadding: -6,
       );
@@ -342,8 +333,8 @@ final class SmallburgPlayerDef {
         assetPath: idleAssetPath,
         textureSize: textureSize,
         totalFrames: _x10,
-        framePositionX: _frameUpX10,
-        framePositionY: _frameChoppingY,
+        framePositionX: _kFrameUpX10,
+        framePositionY: _kFrameChoppingY,
         framePositionXPadding: -8,
         framePositionYPadding: -4,
       );
@@ -353,8 +344,8 @@ final class SmallburgPlayerDef {
         assetPath: idleAssetPath,
         textureSize: textureSize,
         totalFrames: _x10,
-        framePositionX: _frameDownX10,
-        framePositionY: _frameChoppingY,
+        framePositionX: _kFrameDownX10,
+        framePositionY: _kFrameChoppingY,
         framePositionXPadding: -8,
         framePositionYPadding: -8,
       );
@@ -373,7 +364,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameRightY,
+        framePositionY: _kFrameRightY,
       );
 
   static Future<SpriteAnimation> _loadAnimationAttack1Left =
@@ -383,7 +374,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameLeftY,
+        framePositionY: _kFrameLeftY,
       );
 
   static Future<SpriteAnimation> _loadAnimationAttack1Up =
@@ -393,7 +384,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameUpY,
+        framePositionY: _kFrameUpY,
       );
 
   static Future<SpriteAnimation> _loadAnimationAttack1Down =
@@ -403,7 +394,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameDownY,
+        framePositionY: _kFrameDownY,
       );
 
   static final _animationAttack1DirectionalFactory =
@@ -421,7 +412,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameRightY,
+        framePositionY: _kFrameRightY,
       );
 
   static Future<SpriteAnimation> _loadAnimationAttack2Left =
@@ -431,7 +422,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameLeftY,
+        framePositionY: _kFrameLeftY,
       );
 
   static Future<SpriteAnimation> _loadAnimationAttack2Up =
@@ -441,7 +432,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameUpY,
+        framePositionY: _kFrameUpY,
       );
 
   static Future<SpriteAnimation> _loadAnimationAttack2Down =
@@ -451,7 +442,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameDownY,
+        framePositionY: _kFrameDownY,
       );
 
   static final _animationAttack2DirectionalFactory =
@@ -469,7 +460,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameRightY,
+        framePositionY: _kFrameRightY,
       );
 
   static Future<SpriteAnimation> _loadAnimationAttack3Left =
@@ -479,7 +470,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameLeftY,
+        framePositionY: _kFrameLeftY,
       );
 
   static Future<SpriteAnimation> _loadAnimationAttack3Up =
@@ -489,7 +480,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameUpY,
+        framePositionY: _kFrameUpY,
       );
 
   static Future<SpriteAnimation> _loadAnimationAttack3Down =
@@ -499,7 +490,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameDownY,
+        framePositionY: _kFrameDownY,
       );
 
   static final _animationAttack3DirectionalFactory =
@@ -516,7 +507,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameRightY,
+        framePositionY: _kFrameRightY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationDigLeft =
@@ -525,7 +516,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameLeftY,
+        framePositionY: _kFrameLeftY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationDigUp =
@@ -534,7 +525,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameUpY,
+        framePositionY: _kFrameUpY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationDigDown =
@@ -543,7 +534,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameDownY,
+        framePositionY: _kFrameDownY,
       );
 
   static final _animationDigDirectionalFactory = DDAnimationDirectionalFactory(
@@ -560,7 +551,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: AppEnvironment.kIsDevToolsMode ? 1 : _x10,
         framePositionX: 0,
-        framePositionY: _frameRightY,
+        framePositionY: _kFrameRightY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWateringLeft =
@@ -569,7 +560,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: AppEnvironment.kIsDevToolsMode ? 1 : _x10,
         framePositionX: 0,
-        framePositionY: _frameLeftY,
+        framePositionY: _kFrameLeftY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWateringUp =
@@ -578,7 +569,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: AppEnvironment.kIsDevToolsMode ? 1 : _x10,
         framePositionX: 0,
-        framePositionY: _frameUpY,
+        framePositionY: _kFrameUpY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWateringDown =
@@ -587,7 +578,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: AppEnvironment.kIsDevToolsMode ? 1 : _x10,
         framePositionX: 0,
-        framePositionY: _frameDownY,
+        framePositionY: _kFrameDownY,
       );
 
   static final _animationWateringDirectionalFactory =
@@ -606,7 +597,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameRightY,
+        framePositionY: _kFrameRightY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationPlaceSeedLeft =
@@ -615,7 +606,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameLeftY,
+        framePositionY: _kFrameLeftY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationPlaceSeedUp =
@@ -624,7 +615,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameUpY,
+        framePositionY: _kFrameUpY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationPlaceSeedDown =
@@ -633,7 +624,7 @@ final class SmallburgPlayerDef {
         textureSize: textureSize,
         totalFrames: _x6,
         framePositionX: 0,
-        framePositionY: _frameDownY,
+        framePositionY: _kFrameDownY,
       );
 
   static final _animationPlaceSeedDirectionalFactory =

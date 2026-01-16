@@ -16,7 +16,7 @@ class SkeletonEnemyView
       );
 
   @override
-  double get fixedLifeBarWidth => SkeletonEnemyDef.fixedLifeBarWidth;
+  double get fixedLifeBarWidth => SkeletonEnemyDef.kFixedLifeBarWidth;
 
   @override
   Vector2 get fixedLifeBarOffset => SkeletonEnemyDef.fixedLifeBarOffset;

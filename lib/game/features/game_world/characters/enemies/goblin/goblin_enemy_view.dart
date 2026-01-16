@@ -15,7 +15,7 @@ class GoblinEnemyView
       );
 
   @override
-  double get fixedLifeBarWidth => GoblinEnemyDef.fixedLifeBarWidth;
+  double get fixedLifeBarWidth => GoblinEnemyDef.kFixedLifeBarWidth;
 
   @override
   Vector2 get fixedLifeBarOffset => GoblinEnemyDef.fixedLifeBarOffset;

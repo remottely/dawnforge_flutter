@@ -10,9 +10,9 @@ final class CharacterConstants {
   static const double kLifeExtraLarge = 200;
   static const double kLifeBoss = 2000;
 
-  static const double fixedLifeBarWidthSmall = 12;
-  static const double fixedLifeBarWidthMedium = 15;
-  static const double fixedLifeBarWidthLarge = 20;
+  static const double kFixedLifeBarWidthSmall = 12;
+  static const double kFixedLifeBarWidthMedium = 15;
+  static const double kFixedLifeBarWidthLarge = 20;
 
   static final Vector2 fixedLifeBarOffsetNone = Vector2(0, 0);
   static final Vector2 fixedLifeBarOffsetSmall = Vector2(0, 1);

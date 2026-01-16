@@ -7,8 +7,8 @@ import 'package:dawnforge/shared/utils/sprite_animation_config_helper.dart';
 final class ImpEnemyDef {
   ImpEnemyDef._();
 
-  static const double fixedLifeBarWidth =
-      CharacterConstants.fixedLifeBarWidthSmall;
+  static const double kFixedLifeBarWidth =
+      CharacterConstants.kFixedLifeBarWidthSmall;
   static final Vector2 fixedLifeBarOffset =
       CharacterConstants.fixedLifeBarOffsetSmall;
 
@@ -24,13 +24,6 @@ final class ImpEnemyDef {
   static final Vector2 textureSize = TileConstants.tileSizeStandard;
   static final Vector2 componentSize = textureSize;
 
-  static const int _attackFrameCount = 6;
-  static const double _attackFrameRightY = 0;
-  static const double _attackFrameLeftY = TileConstants.kCharacterDimensionSmallburg;
-  static const double _attackFrameUpY =
-      TileConstants.kCharacterDimensionSmallburg * 2;
-  static const double _attackFrameDownY =
-      TileConstants.kCharacterDimensionSmallburg * 3;
   static Future<SpriteAnimation> loadAnimationIdleRight() =>
       SpriteAnimation.load(
         'gameplay/characters/enemies/imp/imp_enemy_idle_right_4.png',

@@ -65,47 +65,47 @@ final class FarmerPlayerDef {
       'tiled/Modern_Farm_v1.2/Characters/Farmer_1_16x16.png';
 
   static const int _x6 = 6;
-  static const double _frameRightX6 = _x6 * 0;
-  static const double _frameUpX6 = _x6 * 1;
-  static const double _frameLeftX6 = _x6 * 2;
-  static const double _frameDownX6 = _x6 * 3;
+  static const double _kFrameRightX6 = _x6 * 0;
+  static const double _kFrameUpX6 = _x6 * 1;
+  static const double _kFrameLeftX6 = _x6 * 2;
+  static const double _kFrameDownX6 = _x6 * 3;
 
   static const int _x9 = 9;
-  static const double _frameRightX9 = _x9 * 0;
-  static const double _frameUpX9 = _x9 * 1;
-  static const double _frameLeftX9 = _x9 * 2;
-  static const double _frameDownX9 = _x9 * 3;
+  static const double _kFrameRightX9 = _x9 * 0;
+  static const double _kFrameUpX9 = _x9 * 1;
+  static const double _kFrameLeftX9 = _x9 * 2;
+  static const double _kFrameDownX9 = _x9 * 3;
 
   static const int _x10 = 10;
-  static const double _frameRightX10 = _x10 * 0;
-  static const double _frameUpX10 = _x10 * 1;
-  static const double _frameLeftX10 = _x10 * 2;
-  static const double _frameDownX10 = _x10 * 3;
+  static const double _kFrameRightX10 = _x10 * 0;
+  static const double _kFrameUpX10 = _x10 * 1;
+  static const double _kFrameLeftX10 = _x10 * 2;
+  static const double _kFrameDownX10 = _x10 * 3;
 
   static const int _x14 = 14;
-  static const double _frameRightX14 = _x14 * 0;
-  static const double _frameUpX14 = _x14 * 1;
-  static const double _frameLeftX14 = _x14 * 2;
-  static const double _frameDownX14 = _x14 * 3;
+  static const double _kFrameRightX14 = _x14 * 0;
+  static const double _kFrameUpX14 = _x14 * 1;
+  static const double _kFrameLeftX14 = _x14 * 2;
+  static const double _kFrameDownX14 = _x14 * 3;
 
-  static const double _frameIdleY = 2;
-  static const double _frameWalkY = 4;
-  static const double _frameHarvestY = 6;
-  static const double _framePlaceSeedY = _frameHarvestY;
-  static const double _frameDigY = 10;
-  static const double _frameWateringY = 14;
-  static const double _frameChoppingY = 18;
-  static const double _frameAttackY = _frameChoppingY;
+  static const double _kFrameIdleY = 2;
+  static const double _kFrameWalkY = 4;
+  static const double _kFrameHarvestY = 6;
+  static const double _kFramePlaceSeedY = _kFrameHarvestY;
+  static const double _kFrameDigY = 10;
+  static const double _kFrameWateringY = 14;
+  static const double _kFrameChoppingY = 18;
+  static const double _kFrameAttackY = _kFrameChoppingY;
 
-  static const int _skipFirstFramesX6 = 6;
+  static const int _kSkipFirstFramesX6 = 6;
 
   static final Future<SpriteAnimation> _loadAnimationIdleRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x6,
-        framePositionX: _frameRightX6,
-        framePositionY: _frameIdleY,
+        framePositionX: _kFrameRightX6,
+        framePositionY: _kFrameIdleY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationIdleLeft =
@@ -113,8 +113,8 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x6,
-        framePositionX: _frameLeftX6,
-        framePositionY: _frameIdleY,
+        framePositionX: _kFrameLeftX6,
+        framePositionY: _kFrameIdleY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationIdleUp =
@@ -122,8 +122,8 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x6,
-        framePositionX: _frameUpX6,
-        framePositionY: _frameIdleY,
+        framePositionX: _kFrameUpX6,
+        framePositionY: _kFrameIdleY,
       );
 
   static final Future<SpriteAnimation> loadAnimationIdleDown =
@@ -131,8 +131,8 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x6,
-        framePositionX: _frameDownX6,
-        framePositionY: _frameIdleY,
+        framePositionX: _kFrameDownX6,
+        framePositionY: _kFrameIdleY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWalkLeft =
@@ -140,8 +140,8 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x6,
-        framePositionX: _frameLeftX6,
-        framePositionY: _frameWalkY,
+        framePositionX: _kFrameLeftX6,
+        framePositionY: _kFrameWalkY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWalkRight =
@@ -149,8 +149,8 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x6,
-        framePositionX: _frameRightX6,
-        framePositionY: _frameWalkY,
+        framePositionX: _kFrameRightX6,
+        framePositionY: _kFrameWalkY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWalkUp =
@@ -158,8 +158,8 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x6,
-        framePositionX: _frameUpX6,
-        framePositionY: _frameWalkY,
+        framePositionX: _kFrameUpX6,
+        framePositionY: _kFrameWalkY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWalkDown =
@@ -167,8 +167,8 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x6,
-        framePositionX: _frameDownX6,
-        framePositionY: _frameWalkY,
+        framePositionX: _kFrameDownX6,
+        framePositionY: _kFrameWalkY,
       );
 
   static final SimpleDirectionAnimation _animationWalkDirectional =
@@ -189,8 +189,8 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x6,
-        framePositionX: _frameLeftX6,
-        framePositionY: _frameWalkY,
+        framePositionX: _kFrameLeftX6,
+        framePositionY: _kFrameWalkY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationRunRight =
@@ -198,8 +198,8 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x6,
-        framePositionX: _frameRightX6,
-        framePositionY: _frameWalkY,
+        framePositionX: _kFrameRightX6,
+        framePositionY: _kFrameWalkY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationRunUp =
@@ -207,8 +207,8 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x6,
-        framePositionX: _frameUpX6,
-        framePositionY: _frameWalkY,
+        framePositionX: _kFrameUpX6,
+        framePositionY: _kFrameWalkY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationRunDown =
@@ -216,8 +216,8 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: 6,
-        framePositionX: _frameDownX6,
-        framePositionY: _frameWalkY,
+        framePositionX: _kFrameDownX6,
+        framePositionY: _kFrameWalkY,
       );
 
   static final SimpleDirectionAnimation _animationRunDirectional =
@@ -242,8 +242,8 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x9,
-        framePositionX: _frameRightX9,
-        framePositionY: _frameHarvestY,
+        framePositionX: _kFrameRightX9,
+        framePositionY: _kFrameHarvestY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationHarvestLeft =
@@ -251,8 +251,8 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x9,
-        framePositionX: _frameLeftX9,
-        framePositionY: _frameHarvestY,
+        framePositionX: _kFrameLeftX9,
+        framePositionY: _kFrameHarvestY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationHarvestUp =
@@ -260,8 +260,8 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x9,
-        framePositionX: _frameUpX9,
-        framePositionY: _frameHarvestY,
+        framePositionX: _kFrameUpX9,
+        framePositionY: _kFrameHarvestY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationHarvestDown =
@@ -269,8 +269,8 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x9,
-        framePositionX: _frameDownX9,
-        framePositionY: _frameHarvestY,
+        framePositionX: _kFrameDownX9,
+        framePositionY: _kFrameHarvestY,
         framePositionYPadding: -1,
       );
 
@@ -287,8 +287,8 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x10,
-        framePositionX: _frameRightX10,
-        framePositionY: _frameChoppingY,
+        framePositionX: _kFrameRightX10,
+        framePositionY: _kFrameChoppingY,
         framePositionXPadding: -8,
         framePositionYPadding: -6,
       );
@@ -298,8 +298,8 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x10,
-        framePositionX: _frameLeftX10,
-        framePositionY: _frameChoppingY,
+        framePositionX: _kFrameLeftX10,
+        framePositionY: _kFrameChoppingY,
         framePositionXPadding: -8,
         framePositionYPadding: -6,
       );
@@ -309,8 +309,8 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x10,
-        framePositionX: _frameUpX10,
-        framePositionY: _frameChoppingY,
+        framePositionX: _kFrameUpX10,
+        framePositionY: _kFrameChoppingY,
         framePositionXPadding: -8,
         framePositionYPadding: -4,
       );
@@ -320,8 +320,8 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x10,
-        framePositionX: _frameDownX10,
-        framePositionY: _frameChoppingY,
+        framePositionX: _kFrameDownX10,
+        framePositionY: _kFrameChoppingY,
         framePositionXPadding: -8,
         framePositionYPadding: -8,
       );
@@ -339,9 +339,9 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x10,
-        skipFirstFrames: _skipFirstFramesX6,
-        framePositionX: _frameRightX10,
-        framePositionY: _frameAttackY,
+        skipFirstFrames: _kSkipFirstFramesX6,
+        framePositionX: _kFrameRightX10,
+        framePositionY: _kFrameAttackY,
         framePositionXPadding: -8,
         framePositionYPadding: -6,
       );
@@ -351,9 +351,9 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x10,
-        skipFirstFrames: _skipFirstFramesX6,
-        framePositionX: _frameLeftX10,
-        framePositionY: _frameAttackY,
+        skipFirstFrames: _kSkipFirstFramesX6,
+        framePositionX: _kFrameLeftX10,
+        framePositionY: _kFrameAttackY,
         framePositionXPadding: -8,
         framePositionYPadding: -6,
       );
@@ -363,9 +363,9 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x10,
-        skipFirstFrames: _skipFirstFramesX6,
-        framePositionX: _frameUpX10,
-        framePositionY: _frameAttackY,
+        skipFirstFrames: _kSkipFirstFramesX6,
+        framePositionX: _kFrameUpX10,
+        framePositionY: _kFrameAttackY,
         framePositionXPadding: -8,
         framePositionYPadding: -4,
       );
@@ -375,9 +375,9 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x10,
-        skipFirstFrames: _skipFirstFramesX6,
-        framePositionX: _frameDownX10,
-        framePositionY: _frameAttackY,
+        skipFirstFrames: _kSkipFirstFramesX6,
+        framePositionX: _kFrameDownX10,
+        framePositionY: _kFrameAttackY,
         framePositionXPadding: -8,
         framePositionYPadding: -8,
       );
@@ -395,8 +395,8 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x9,
-        framePositionX: _frameRightX9,
-        framePositionY: _frameDigY,
+        framePositionX: _kFrameRightX9,
+        framePositionY: _kFrameDigY,
         framePositionXPadding: -8,
       );
 
@@ -405,8 +405,8 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x9,
-        framePositionX: _frameLeftX9,
-        framePositionY: _frameDigY,
+        framePositionX: _kFrameLeftX9,
+        framePositionY: _kFrameDigY,
         framePositionXPadding: -8,
       );
 
@@ -415,8 +415,8 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x9,
-        framePositionX: _frameUpX9,
-        framePositionY: _frameDigY,
+        framePositionX: _kFrameUpX9,
+        framePositionY: _kFrameDigY,
         framePositionXPadding: -8,
         framePositionYPadding: -2,
       );
@@ -426,8 +426,8 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: _x9,
-        framePositionX: _frameDownX9,
-        framePositionY: _frameDigY,
+        framePositionX: _kFrameDownX9,
+        framePositionY: _kFrameDigY,
         framePositionXPadding: -8,
         framePositionYPadding: -7,
       );
@@ -445,8 +445,8 @@ final class FarmerPlayerDef {
   //       assetPath: assetPath,
   //       textureSize: textureSize + Vector2(4, 0),
   //       totalFrames: AppEnvironment.kIsDevToolsMode ? 2 : _x14,
-  //       framePositionX: _frameRightX14 +4 ,
-  //       framePositionY: _frameWateringY,
+  //       framePositionX: _kFrameRightX14 +4 ,
+  //       framePositionY: _kFrameWateringY,
   //       framePositionXPadding: -8 - 4,
   //       framePositionYPadding: -1,
   //     );
@@ -456,8 +456,8 @@ final class FarmerPlayerDef {
   //       assetPath: assetPath,
   //       textureSize: textureSize + Vector2(4, 0),
   //       totalFrames: AppEnvironment.kIsDevToolsMode ? 2 : _x14,
-  //       framePositionX: _frameLeftX14 + 4,
-  //       framePositionY: _frameWateringY,
+  //       framePositionX: _kFrameLeftX14 + 4,
+  //       framePositionY: _kFrameWateringY,
   //       framePositionXPadding: 8 - 4,
   //       framePositionYPadding: -1,
   //     );
@@ -467,8 +467,8 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: AppEnvironment.kIsDevToolsMode ? 2 : _x14,
-        framePositionX: _frameRightX14,
-        framePositionY: _frameWateringY,
+        framePositionX: _kFrameRightX14,
+        framePositionY: _kFrameWateringY,
         framePositionXPadding: -8,
         framePositionYPadding: -1,
       );
@@ -478,8 +478,8 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: AppEnvironment.kIsDevToolsMode ? 2 : _x14,
-        framePositionX: _frameLeftX14,
-        framePositionY: _frameWateringY,
+        framePositionX: _kFrameLeftX14,
+        framePositionY: _kFrameWateringY,
         framePositionXPadding: 8,
         framePositionYPadding: -1,
       );
@@ -489,8 +489,8 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: AppEnvironment.kIsDevToolsMode ? 2 : _x14,
-        framePositionX: _frameUpX14,
-        framePositionY: _frameWateringY,
+        framePositionX: _kFrameUpX14,
+        framePositionY: _kFrameWateringY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationWateringDown =
@@ -498,8 +498,8 @@ final class FarmerPlayerDef {
         assetPath: assetPath,
         textureSize: textureSize,
         totalFrames: AppEnvironment.kIsDevToolsMode ? 2 : _x14,
-        framePositionX: _frameDownX14,
-        framePositionY: _frameWateringY,
+        framePositionX: _kFrameDownX14,
+        framePositionY: _kFrameWateringY,
         framePositionYPadding: -17,
       );
 
@@ -521,8 +521,8 @@ final class FarmerPlayerDef {
         totalFrames: AppEnvironment.kIsDevToolsMode
             ? 2
             : 5, // TODO(Kevin): change the real value
-        framePositionX: _frameRightX9,
-        framePositionY: _framePlaceSeedY,
+        framePositionX: _kFrameRightX9,
+        framePositionY: _kFramePlaceSeedY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationPlaceSeedLeft =
@@ -532,8 +532,8 @@ final class FarmerPlayerDef {
         totalFrames: AppEnvironment.kIsDevToolsMode
             ? 2
             : 5, // TODO(Kevin): change the real value
-        framePositionX: _frameLeftX9,
-        framePositionY: _framePlaceSeedY,
+        framePositionX: _kFrameLeftX9,
+        framePositionY: _kFramePlaceSeedY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationPlaceSeedUp =
@@ -543,8 +543,8 @@ final class FarmerPlayerDef {
         totalFrames: AppEnvironment.kIsDevToolsMode
             ? 2
             : 5, // TODO(Kevin): change the real value
-        framePositionX: _frameUpX9,
-        framePositionY: _framePlaceSeedY,
+        framePositionX: _kFrameUpX9,
+        framePositionY: _kFramePlaceSeedY,
       );
 
   static final Future<SpriteAnimation> _loadAnimationPlaceSeedDown =
@@ -554,8 +554,8 @@ final class FarmerPlayerDef {
         totalFrames: AppEnvironment.kIsDevToolsMode
             ? 2
             : 5, // TODO(Kevin): change the real value
-        framePositionX: _frameDownX9,
-        framePositionY: _framePlaceSeedY,
+        framePositionX: _kFrameDownX9,
+        framePositionY: _kFramePlaceSeedY,
         framePositionYPadding: -1,
       );
 

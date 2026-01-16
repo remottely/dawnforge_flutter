@@ -7,22 +7,22 @@ final class AppRadius {
   final ScreenSizeType _screenType;
   const AppRadius(this._screenType);
 
-  static const double _small = 4.0;
-  static const double _medium = 8.0;
-  static const double _large = 12.0;
+  static const double _kSmall = 4.0;
+  static const double _kMedium = 8.0;
+  static const double _kLarge = 12.0;
 
   static const _textFormFieldValue = ScreenSizeValue<double>(
-    mobile: _small,
-    tablet: _medium,
-    desktop: _medium,
+    mobile: _kSmall,
+    tablet: _kMedium,
+    desktop: _kMedium,
   );
   static const _buttonValue = ScreenSizeValue<double>(
-    mobile: _small,
-    tablet: _small,
-    desktop: _medium,
+    mobile: _kSmall,
+    tablet: _kSmall,
+    desktop: _kMedium,
   );
 
-  double get kButtonBorderRadius => _small;
+  double get kButtonBorderRadius => _kSmall;
 
   double get textFormField => _textFormFieldValue.get(_screenType);
   double get button => _buttonValue.get(_screenType);

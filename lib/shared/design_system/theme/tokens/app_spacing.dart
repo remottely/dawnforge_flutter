@@ -7,30 +7,30 @@ final class AppSpacing {
   final ScreenSizeType _screenType;
   const AppSpacing(this._screenType);
 
-  static const double _superSmall = 2.0;
-  static const double _extraSmall = 4.0;
-  static const double _small = 8.0;
-  static const double _medium = 16.0;
-  static const double _large = 24.0;
-  static const double _extraLarge = 32.0;
-  static const double _superLarge = 48.0;
+  static const double _kSuperSmall = 2.0;
+  static const double _kExtraSmall = 4.0;
+  static const double _kSmall = 8.0;
+  static const double _kMedium = 16.0;
+  static const double _kLarge = 24.0;
+  static const double _kExtraLarge = 32.0;
+  static const double _kSuperLarge = 48.0;
 
   static const _marginValue = ScreenSizeValue<double>(
-    mobile: _small,
-    tablet: _medium,
-    desktop: _large,
+    mobile: _kSmall,
+    tablet: _kMedium,
+    desktop: _kLarge,
   );
 
   static const _paddingValue = ScreenSizeValue<double>(
-    mobile: _extraSmall,
-    tablet: _small,
-    desktop: _small,
+    mobile: _kExtraSmall,
+    tablet: _kSmall,
+    desktop: _kSmall,
   );
 
   static const _spacingValue = ScreenSizeValue<double>(
-    mobile: _extraSmall,
-    tablet: _small,
-    desktop: _small,
+    mobile: _kExtraSmall,
+    tablet: _kSmall,
+    desktop: _kSmall,
   );
 
   double get kSpacingSuperSmall => 4.0;

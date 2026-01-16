@@ -7,8 +7,8 @@ import 'package:dawnforge/shared/utils/sprite_animation_config_helper.dart';
 final class GoblinEnemyDef {
   GoblinEnemyDef._();
 
-  static const double fixedLifeBarWidth =
-      CharacterConstants.fixedLifeBarWidthMedium;
+  static const double kFixedLifeBarWidth =
+      CharacterConstants.kFixedLifeBarWidthMedium;
   static final Vector2 fixedLifeBarOffset =
       CharacterConstants.fixedLifeBarOffsetNone;
 
@@ -24,13 +24,6 @@ final class GoblinEnemyDef {
   static final Vector2 textureSize = TileConstants.tileSizeStandard;
   static final Vector2 componentSize = textureSize;
 
-  static const int _attackFrameCount = 6;
-  static const double _attackFrameRightY = 0;
-  static const double _attackFrameLeftY = TileConstants.kCharacterDimensionSmallburg;
-  static const double _attackFrameUpY =
-      TileConstants.kCharacterDimensionSmallburg * 2;
-  static const double _attackFrameDownY =
-      TileConstants.kCharacterDimensionSmallburg * 3;
   static Future<SpriteAnimation> loadAnimationIdleRight() =>
       SpriteAnimation.load(
         'gameplay/characters/enemies/goblin/goblin_enemy_idle_right_6.png',
