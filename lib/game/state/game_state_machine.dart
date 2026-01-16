@@ -6,18 +6,18 @@ enum GameState {
   gameLoading,
   gameCutscene,
   gameTransitioning,
-  gamePlaying,
-  pausedInGamePlaying,
+  gameplayResumed,
+  gameplayPaused,
   uiMenuInventory,
   uiMenuQuest,
   uiMenuMap,
   uiMenuSettings,
+  uiOverlayMinigameFishing,
   uiOverlayCrafting,
   uiOverlayCooking,
+  uiOverlayMarket,
   uiOverlayChoiceDialog,
   uiOverlayConversation,
-  uiOverlayMarket,
-  uiOverlayFishing,
   uiOverlayGameover,
 }
 
@@ -28,7 +28,7 @@ class GameStateMachine {
   // ✅ ÚNICA FONTE DA VERDADE
   final ValueNotifier<GameState> _rxCurrentState = ValueNotifier(
     // GameState.loading, // TODO(Kevin): NOW NOW - put it back
-    GameState.gamePlaying, // TODO(Kevin): NOW NOW - remove it
+    GameState.gameplayResumed, // TODO(Kevin): NOW NOW - remove it
   );
   ValueNotifier<GameState> getRxCurrentState() => _rxCurrentState;
 
@@ -41,9 +41,9 @@ class GameStateMachine {
   bool get isGameCutscene => _rxCurrentState.value == GameState.gameCutscene;
   bool get isGameTransitioning =>
       _rxCurrentState.value == GameState.gameTransitioning;
-  bool get isGamePlaying => _rxCurrentState.value == GameState.gamePlaying;
+  bool get isGamePlaying => _rxCurrentState.value == GameState.gameplayResumed;
   bool get isPausedInGamePlaying =>
-      _rxCurrentState.value == GameState.pausedInGamePlaying;
+      _rxCurrentState.value == GameState.gameplayPaused;
   bool get isUiMenuInventory =>
       _rxCurrentState.value == GameState.uiMenuInventory;
   bool get isUiMenuQuest => _rxCurrentState.value == GameState.uiMenuQuest;
@@ -61,17 +61,17 @@ class GameStateMachine {
   bool get isUiOverlayMarket =>
       _rxCurrentState.value == GameState.uiOverlayMarket;
   bool get isUiOverlayFishing =>
-      _rxCurrentState.value == GameState.uiOverlayFishing;
+      _rxCurrentState.value == GameState.uiOverlayMinigameFishing;
   bool get isUiOverlayGameover =>
       _rxCurrentState.value == GameState.uiOverlayGameover;
 
-  bool get isTimePlaying => _rxCurrentState.value == GameState.gamePlaying;
+  bool get isTimePlaying => _rxCurrentState.value == GameState.gameplayResumed;
 
   bool get isTimePaused =>
       _rxCurrentState.value == GameState.gameLoading ||
       _rxCurrentState.value == GameState.gameCutscene ||
       _rxCurrentState.value == GameState.gameTransitioning ||
-      _rxCurrentState.value == GameState.pausedInGamePlaying ||
+      _rxCurrentState.value == GameState.gameplayPaused ||
       _rxCurrentState.value == GameState.uiMenuInventory ||
       _rxCurrentState.value == GameState.uiMenuQuest ||
       _rxCurrentState.value == GameState.uiMenuMap ||
@@ -81,7 +81,7 @@ class GameStateMachine {
       _rxCurrentState.value == GameState.uiOverlayChoiceDialog ||
       _rxCurrentState.value == GameState.uiOverlayConversation ||
       _rxCurrentState.value == GameState.uiOverlayMarket ||
-      _rxCurrentState.value == GameState.uiOverlayFishing ||
+      _rxCurrentState.value == GameState.uiOverlayMinigameFishing ||
       _rxCurrentState.value == GameState.uiOverlayGameover;
 
   // bool get canPlayerMove => isTimePlaying;
@@ -135,13 +135,13 @@ class GameStateMachine {
     if (_previousState != null) {
       _changeState(_previousState!);
     } else {
-      _changeState(GameState.gamePlaying);
+      _changeState(GameState.gameplayResumed);
     }
   }
 
   void _onStateExit(GameState state) {
     switch (state) {
-      case GameState.pausedInGamePlaying:
+      case GameState.gameplayPaused:
       case GameState.uiMenuInventory:
       case GameState.uiOverlayMarket:
       case GameState.uiMenuMap:
@@ -155,11 +155,11 @@ class GameStateMachine {
 
   void _onStateEnter(GameState state) {
     switch (state) {
-      case GameState.gamePlaying:
+      case GameState.gameplayResumed:
         _resumeEngine();
         break;
 
-      case GameState.pausedInGamePlaying:
+      case GameState.gameplayPaused:
       case GameState.uiMenuInventory:
       case GameState.uiOverlayMarket:
       case GameState.uiMenuMap:
@@ -201,22 +201,22 @@ class GameStateMachine {
 
   // Helpers para transições comuns
   void openInventory() => _changeState(GameState.uiMenuInventory);
-  void closeInventory() => _changeState(GameState.gamePlaying);
+  void closeInventory() => _changeState(GameState.gameplayResumed);
 
   void openMarket() => _changeState(GameState.uiOverlayMarket);
-  void closeMarket() => _changeState(GameState.gamePlaying);
+  void closeMarket() => _changeState(GameState.gameplayResumed);
 
   void startDialogue() => _changeState(GameState.uiOverlayConversation);
-  void endDialogue() => _changeState(GameState.gamePlaying);
+  void endDialogue() => _changeState(GameState.gameplayResumed);
 
-  void pauseGame() => _changeState(GameState.pausedInGamePlaying);
-  void resumeGame() => _changeState(GameState.gamePlaying);
+  void pauseGame() => _changeState(GameState.gameplayPaused);
+  void resumeGame() => _changeState(GameState.gameplayResumed);
 
-  void openQuestLog() => _changeState(GameState.uiMenuQuest);
-  void closeQuestLog() => _changeState(GameState.gamePlaying);
+  void openQuest() => _changeState(GameState.uiMenuQuest);
+  void closeQuest() => _changeState(GameState.gameplayResumed);
 
   void openMap() => _changeState(GameState.uiMenuMap);
-  void closeMap() => _changeState(GameState.gamePlaying);
+  void closeMap() => _changeState(GameState.gameplayResumed);
 
   void openSettings() => _changeState(GameState.uiMenuSettings);
   void closeSettings() => _returnToPreviousState();

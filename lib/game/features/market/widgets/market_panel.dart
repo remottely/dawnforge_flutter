@@ -3,7 +3,6 @@ import 'dart:math' as math;
 import 'package:dawnforge/game/systems/game/player_state_manager.dart';
 import 'package:dawnforge/game/systems/input_actions/keyboard_setup.dart';
 import 'package:dawnforge/game/systems/overlay/message/message_overlay_service.dart';
-import 'package:dawnforge/game/features/inventory/config/inventory_service_locator.dart';
 import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.dart';
 import 'package:dawnforge/game/features/inventory/entities/hand_item.dart';
 import 'package:dawnforge/game/features/inventory/managers/equipment_manager.dart';
@@ -19,16 +18,16 @@ import 'package:flutter/services.dart';
 import 'package:dawnforge/core/utils/game_logger.dart';
 
 /// Painel do market exibido dentro do grid da HUD (Quadrante 5).
-class MarketPanel extends StatefulWidget {
-  final DDBasePlayerModel player;
+class UIOverlayMarketPanel extends StatefulWidget {
+  final DDBasePlayerModel playerModel;
 
-  const MarketPanel({super.key, required this.player});
+  const UIOverlayMarketPanel({super.key, required this.playerModel});
 
   @override
-  State<MarketPanel> createState() => _MarketPanelState();
+  State<UIOverlayMarketPanel> createState() => _UIOverlayMarketPanelState();
 }
 
-class _MarketPanelState extends State<MarketPanel> {
+class _UIOverlayMarketPanelState extends State<UIOverlayMarketPanel> {
   final _catalog = MarketManager.instance.getMarketCatalog();
   late final InventoryManager _inventory;
   late final ItemFactoryService _itemFactory;
@@ -47,10 +46,10 @@ class _MarketPanelState extends State<MarketPanel> {
     _itemCache = {};
     _focusNode = FocusNode(debugLabel: 'MarketPanelFocus');
     // Garante player de referência para operações de compra/venda.
-    PlayerStateManager.instance.setLastPlayerModel(widget.player);
-    if (MarketState.instance.activePlayer.value == null) {
-      MarketState.instance.activePlayer.value = widget.player;
-    }
+    // PlayerStateManager.instance.setLastPlayerModel(widget.playerModel);
+    // if (MarketState.instance.activePlayer.value == null) {
+    //   MarketState.instance.activePlayer.value = widget.playerModel;
+    // }
     for (final entry in _catalog) {
       final item = _itemFactory.createItem(entry.itemId);
       if (item != null) {
@@ -167,7 +166,7 @@ class _MarketPanelState extends State<MarketPanel> {
 
   Widget _buildCoinsRow() {
     return ValueListenableBuilder<int>(
-      valueListenable: widget.player.coinsNotifier,
+      valueListenable: widget.playerModel.coinsNotifier,
       builder: (context, coins, _) {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -199,7 +198,7 @@ class _MarketPanelState extends State<MarketPanel> {
 
   Widget _buildCard(MarketItem entry, HandItem item, bool isSelected) {
     return ValueListenableBuilder<int>(
-      valueListenable: widget.player.coinsNotifier,
+      valueListenable: widget.playerModel.coinsNotifier,
       builder: (context, coins, _) {
         final canBuy = coins >= entry.buyPrice;
         final borderColor = isSelected
@@ -354,7 +353,7 @@ class _MarketPanelState extends State<MarketPanel> {
 
     final result = MarketManager.instance.buyItem(
       entry.itemId,
-      widget.player,
+      widget.playerModel,
       _inventory,
     );
 

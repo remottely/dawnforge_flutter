@@ -132,9 +132,7 @@ class _InventoryGrid extends StatelessWidget {
       return;
     }
 
-    final player =
-        MarketState.instance.activePlayer.value ??
-        PlayerStateManager.instance.lastPlayerModel;
+    final player = PlayerStateManager.instance.lastPlayerModel;
 
     if (player == null) {
       messageService.showError('Player não disponível.');

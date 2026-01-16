@@ -1,29 +1,9 @@
-// lib/game/systems/overlay/unified_game_overlay.dart
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/features/market/market_state.dart';
-import 'package:dawnforge/game/state/game_state_machine.dart';
-import 'package:dawnforge/game/systems/overlay/message/message_overlay.dart';
-import 'package:dawnforge/game/systems/overlay/tutorial_inputs/tutorial_inputs_overlay.dart';
-import 'package:dawnforge/game/systems/overlay/inventory/inventory_overlay.dart';
 import 'package:dawnforge/game/features/market/widgets/market_panel.dart';
-import 'package:dawnforge/game/systems/overlay/player_vital_stats/player_vital_stats_overlay.dart';
-import 'package:dawnforge/game/systems/overlay/debug/debug_overlay.dart';
-import 'package:dawnforge/game/systems/overlay/inputs/mobile_inputs_overlay.dart';
-import 'package:dawnforge/game/systems/overlay/inputs/widgets/joystick_actions_overlay.dart';
-import 'package:dawnforge/game/systems/overlay/inputs/widgets/fullscreen_button_overlay.dart';
-// import 'package:dawnforge/game/systems/overlay/pause_menu/pause_menu_overlay.dart';
-// import 'package:dawnforge/game/systems/overlay/dialogue/dialogue_overlay.dart';
-// import 'package:dawnforge/game/systems/overlay/quest_log/quest_log_overlay.dart';
-// import 'package:dawnforge/game/systems/overlay/map/map_overlay.dart';
-// import 'package:dawnforge/game/systems/overlay/settings/settings_overlay.dart';
+import 'package:dawnforge/game/state/game_state_machine.dart';
+import 'package:dawnforge/game/systems/overlay/gameplay_resumed_hud.dart';
 import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
-import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_controller.dart';
-import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
-import 'package:dawnforge/core/managers/settings_manager.dart';
-import 'package:dawnforge/game/features/time/time_manager.dart';
-import 'package:dawnforge/game/features/time/widgets/time_hud_panel.dart';
-import 'package:dawnforge/core/utils/debug_helpers.dart';
 import 'package:flutter/material.dart';
 
 final class UnifiedGameOverlay extends StatelessWidget {
@@ -47,529 +27,94 @@ final class UnifiedGameOverlay extends StatelessWidget {
     return ValueListenableBuilder<GameState>(
       valueListenable: GameStateMachine.instance.getRxCurrentState(),
       builder: (context, gameState, _) {
-        return Stack(
-          children: [
-            // ✅ BASE UI (sempre visível ou condicionalmente)
-            _Hud(
-              flexA: flexA,
-              isDesktop: isDesktop,
-              flexC: flexC,
-              flexB: flexB,
-              player: player,
-              playerController: playerController,
-              gameState: gameState,
-            ),
+        return switch (gameState) {
+          GameState.gameLoading => const GameLoadingScreen(),
 
-            // // ✅ STATE-BASED OVERLAYS (sobrepõe a UI base)
-            // if (gameState == GameState.paused)
-            //   const PauseMenuOverlay(),
+          GameState.gameCutscene => const GameCutsceneScreen(), // TODO: Criar
 
-            // if (gameState == GameState.dialogue)
-            //   const DialogueOverlay(),
-            if (gameState == GameState.uiOverlayMarket)
-              _MarketPanelOverlay(player: player),
+          GameState.gameTransitioning =>
+            const GameTransitioningScreen(), // TODO: Criar
 
-            // if (gameState == GameState.questLog)
-            //   const QuestLogOverlay(),
-
-            // if (gameState == GameState.map)
-            //   const MapOverlay(),
-
-            // if (gameState == GameState.settings)
-            //   const SettingsOverlay(),
-
-            // ✅ LOADING (overlay completo)
-            if (gameState == GameState.gameLoading) const _LoadingOverlay(),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class _Hud extends StatelessWidget {
-  const _Hud({
-    required this.flexA,
-    required this.isDesktop,
-    required this.flexC,
-    required this.flexB,
-    required this.player,
-    required this.playerController,
-    required this.gameState,
-  });
-
-  final int flexA;
-  final bool isDesktop;
-  final int flexC;
-  final int flexB;
-  final DDBasePlayerView<
-    DDBasePlayerController<DDBasePlayerModel>,
-    DDBasePlayerModel
-  >
-  player;
-  final PlayerController? playerController;
-  final GameState gameState;
-
-  @override
-  Widget build(BuildContext context) {
-    return IgnorePointer(
-      ignoring: false,
-      child: Row(
-        children: [
-          _LeftArea(flex: flexA, isDesktop: isDesktop, gameState: gameState),
-          _MainArea(
-            flex: flexC,
+          GameState.gameplayResumed => GameplayResumedHud(
             flexA: flexA,
-            flexB: flexB,
             isDesktop: isDesktop,
+            flexC: flexC,
+            flexB: flexB,
             player: player,
             playerController: playerController,
             gameState: gameState,
           ),
-        ],
-      ),
-    );
-  }
-}
 
-// ====================================================================
-// LEFT AREA
-// ====================================================================
+          GameState.gameplayPaused => SizedBox.shrink(),
 
-final class _LeftArea extends StatelessWidget {
-  final int flex;
-  final bool isDesktop;
-  final GameState gameState;
+          GameState.uiMenuInventory =>
+            const UIMenuInventoryPage(), // TODO: Criar
 
-  const _LeftArea({
-    required this.flex,
-    required this.isDesktop,
-    required this.gameState,
-  });
+          GameState.uiMenuQuest => const UIMenuQuestPage(), // TODO: Criar
 
-  @override
-  Widget build(BuildContext context) {
-    // ✅ Esconde inventário em certos estados
-    final showInventory =
-        gameState == GameState.gamePlaying ||
-        gameState == GameState.pausedInGamePlaying;
+          GameState.uiMenuMap => const UIMenuMapPage(), // TODO: Criar
 
-    return Expanded(
-      flex: flex,
-      child: DebugContainer(
-        color: DebugColors.gameplayOverlayLeftArea,
-        child: Container(
-          alignment: Alignment.centerLeft,
-          child: !isDesktop && showInventory
-              ? const InventoryOverlay()
-              : const SizedBox.shrink(),
-        ),
-      ),
-    );
-  }
-}
+          GameState.uiMenuSettings => const UIMenuSettingsPage(), // TODO: Criar
 
-// ====================================================================
-// MAIN AREA
-// ====================================================================
-
-final class _MainArea extends StatelessWidget {
-  final int flex;
-  final int flexA;
-  final int flexB;
-  final bool isDesktop;
-  final DDBasePlayerView player;
-  final PlayerController? playerController;
-  final GameState gameState;
-
-  const _MainArea({
-    required this.flex,
-    required this.flexA,
-    required this.flexB,
-    required this.isDesktop,
-    required this.player,
-    this.playerController,
-    required this.gameState,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      flex: flex,
-      child: Column(
-        children: [
-          _TopRow(
-            flexA: flexA,
-            flexB: flexB,
-            player: player,
-            gameState: gameState,
-          ),
-          _MiddleRow(
-            flexA: flexA,
-            flexB: flexB,
-            playerController: playerController,
-            gameState: gameState,
-          ),
-          _BottomRow(
-            flexA: flexA,
-            flexB: flexB,
-            isDesktop: isDesktop,
-            player: player,
-            playerController: playerController,
-            gameState: gameState,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ====================================================================
-// TOP ROW
-// ====================================================================
-
-final class _TopRow extends StatelessWidget {
-  final int flexA;
-  final int flexB;
-  final DDBasePlayerView player;
-  final GameState gameState;
-
-  const _TopRow({
-    required this.flexA,
-    required this.flexB,
-    required this.player,
-    required this.gameState,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      flex: flexA,
-      child: Row(
-        children: [
-          _TopCenterArea(flex: flexB, player: player, gameState: gameState),
-          _TopRightArea(flex: flexA, gameState: gameState),
-        ],
-      ),
-    );
-  }
-}
-
-final class _TopCenterArea extends StatelessWidget {
-  final int flex;
-  final DDBasePlayerView player;
-  final GameState gameState;
-
-  const _TopCenterArea({
-    required this.flex,
-    required this.player,
-    required this.gameState,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    // ✅ Esconde em alguns estados
-    final showDebug = gameState == GameState.gamePlaying;
-
-    return Expanded(
-      flex: flex,
-      child: DebugContainer(
-        color: DebugColors.gameplayOverlayTopCenterArea,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(width: 8),
-            if (showDebug) DebugOverlay(player: player),
-            const SizedBox(width: 8),
-            const MessageOverlay(), // Sempre visível
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-final class _TopRightArea extends StatelessWidget {
-  final int flex;
-  final GameState gameState;
-
-  const _TopRightArea({required this.flex, required this.gameState});
-
-  @override
-  Widget build(BuildContext context) {
-    // ✅ Esconde HUD de tempo em certos estados
-    final showTimeHUD = GameStateMachine.instance.shouldShowHUD;
-
-    return Expanded(
-      flex: flex,
-      child: DebugContainer(
-        color: DebugColors.gameplayOverlayTopRightArea,
-        child: Container(
-          alignment: Alignment.topRight,
-          child: Stack(
+          GameState.uiOverlayMinigameFishing => Stack(
             children: [
-              if (showTimeHUD) TimeHudPanel(timeManager: TimeManager.instance),
-              const Align(
-                alignment: Alignment.topRight,
-                child: FullscreenButtonOverlay(), // Sempre visível
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ====================================================================
-// MIDDLE ROW
-// ====================================================================
-
-final class _MiddleRow extends StatelessWidget {
-  final int flexA;
-  final int flexB;
-  final PlayerController? playerController;
-  final GameState gameState;
-
-  const _MiddleRow({
-    required this.flexA,
-    required this.flexB,
-    this.playerController,
-    required this.gameState,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      flex: flexB,
-      child: Row(
-        children: [
-          _CenterArea(flex: flexB, gameState: gameState),
-          _CenterRightArea(
-            flex: flexA,
-            playerController: playerController,
-            gameState: gameState,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-final class _CenterArea extends StatelessWidget {
-  final int flex;
-  final GameState gameState;
-
-  const _CenterArea({required this.flex, required this.gameState});
-
-  @override
-  Widget build(BuildContext context) {
-    // ✅ Tutorial só em playing
-    final showTutorial = gameState == GameState.gamePlaying;
-
-    return Expanded(
-      flex: flex,
-      child: DebugContainer(
-        color: DebugColors.gameplayOverlayCenterArea,
-        child: Container(
-          alignment: Alignment.center,
-          child: showTutorial
-              ? const TutorialInputsOverlay()
-              : const SizedBox.shrink(),
-        ),
-      ),
-    );
-  }
-}
-
-final class _CenterRightArea extends StatelessWidget {
-  final int flex;
-  final PlayerController? playerController;
-  final GameState gameState;
-
-  const _CenterRightArea({
-    required this.flex,
-    this.playerController,
-    required this.gameState,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    // ✅ Esconde joystick mobile em certos estados
-    final showJoystick = gameState == GameState.gamePlaying;
-
-    return Expanded(
-      flex: flex,
-      child: DebugContainer(
-        color: DebugColors.gameplayOverlayCenterRightArea,
-        child:
-            SettingsManager.instance.inputSelected ==
-                    InputActionsType.joystick &&
-                showJoystick
-            ? MobileInputsOverlay(playerController: playerController)
-            : const SizedBox(width: double.infinity, height: double.infinity),
-      ),
-    );
-  }
-}
-
-// ====================================================================
-// BOTTOM ROW
-// ====================================================================
-
-final class _BottomRow extends StatelessWidget {
-  final int flexA;
-  final int flexB;
-  final bool isDesktop;
-  final DDBasePlayerView player;
-  final PlayerController? playerController;
-  final GameState gameState;
-
-  const _BottomRow({
-    required this.flexA,
-    required this.flexB,
-    required this.isDesktop,
-    required this.player,
-    this.playerController,
-    required this.gameState,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      flex: flexA + 1,
-      child: Row(
-        children: [
-          if (isDesktop) _BottomCenterArea(flex: flexB, gameState: gameState),
-          _BottomRightArea(
-            flex: flexA,
-            player: player,
-            playerController: playerController,
-            gameState: gameState,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-final class _BottomCenterArea extends StatelessWidget {
-  final int flex;
-  final GameState gameState;
-
-  const _BottomCenterArea({required this.flex, required this.gameState});
-
-  @override
-  Widget build(BuildContext context) {
-    // ✅ Mostra inventário apenas em certos estados
-    final showInventory =
-        gameState == GameState.gamePlaying ||
-        gameState == GameState.pausedInGamePlaying;
-
-    return Expanded(
-      flex: flex,
-      child: DebugContainer(
-        color: DebugColors.gameplayOverlayBottomCenterArea,
-        child: Container(
-          alignment: Alignment.bottomCenter,
-          child: showInventory
-              ? const InventoryOverlay()
-              : const SizedBox.shrink(),
-        ),
-      ),
-    );
-  }
-}
-
-final class _BottomRightArea extends StatelessWidget {
-  final int flex;
-  final DDBasePlayerView player;
-  final PlayerController? playerController;
-  final GameState gameState;
-
-  const _BottomRightArea({
-    required this.flex,
-    required this.player,
-    this.playerController,
-    required this.gameState,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    // ✅ Sempre mostra stats (mas pode esconder em cutscenes)
-    final showStats = GameStateMachine.instance.shouldShowHUD;
-
-    return Expanded(
-      flex: flex,
-      child: DebugContainer(
-        color: DebugColors.gameplayOverlayBottomRightArea,
-        child: Align(
-          alignment: Alignment.bottomRight,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _JoystickArea(
+              GameplayResumedHud(
+                flexA: flexA,
+                isDesktop: isDesktop,
+                flexC: flexC,
+                flexB: flexB,
+                player: player,
                 playerController: playerController,
                 gameState: gameState,
               ),
-              if (showStats) PlayerVitalStatsOverlay(player: player),
+              const UIMinigameFishingHud(), // TODO: Criar
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
 
-final class _JoystickArea extends StatelessWidget {
-  final PlayerController? playerController;
-  final GameState gameState;
+          GameState.uiOverlayCrafting => Column(
+            children: [
+              const UIOverlayCraftingPanel(), // TODO: Criar
+              // TODO(Kevin): show inventory
+            ],
+          ),
 
-  const _JoystickArea({this.playerController, required this.gameState});
+          GameState.uiOverlayCooking => Column(
+            children: [
+              const UIOverlayCookingPanel(), // TODO: Criar
+              // TODO(Kevin): show inventory
+            ],
+          ),
 
-  @override
-  Widget build(BuildContext context) {
-    final showJoystick = gameState == GameState.gamePlaying;
+          GameState.uiOverlayMarket => Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                UIOverlayMarketPanel(playerModel: player.controller.model),
+                // TODO(Kevin): show inventory
+              ],
+            ),
+          ),
 
-    return Expanded(
-      child:
-          SettingsManager.instance.inputSelected == InputActionsType.joystick &&
-              showJoystick
-          ? JoystickActionsOverlay(playerController: playerController)
-          : const SizedBox(width: double.infinity, height: double.infinity),
-    );
-  }
-}
+          GameState.uiOverlayChoiceDialog =>
+            const UIOverlayChoiceDialogPage(), // TODO: Criar
 
-// ====================================================================
-// OVERLAYS FULLSCREEN
-// ====================================================================
+          GameState.uiOverlayConversation =>
+            const UIOverlayConversationPage(), // TODO: Criar
 
-final class _MarketPanelOverlay extends StatelessWidget {
-  final DDBasePlayerView player;
-
-  const _MarketPanelOverlay({required this.player});
-
-  @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: MarketState.instance.activePlayer,
-      builder: (context, player, __) {
-        if (player == null) {
-          return const SizedBox.shrink();
-        }
-        return Align(
-          alignment: Alignment.center,
-          child: MarketPanel(player: player),
-        );
+          GameState.uiOverlayGameover =>
+            const UIOverlayGameoverPage(), // TODO: Criar
+        };
       },
     );
   }
 }
 
-final class _LoadingOverlay extends StatelessWidget {
-  const _LoadingOverlay();
+// ====================================================================
+// PLACEHOLDER OVERLAYS (criar depois)
+// ====================================================================
+
+class GameLoadingScreen extends StatelessWidget {
+  const GameLoadingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -578,4 +123,83 @@ final class _LoadingOverlay extends StatelessWidget {
       child: const Center(child: CircularProgressIndicator()),
     );
   }
+}
+
+// TODO: Criar os overlays faltantes:
+class GameCutsceneScreen extends StatelessWidget {
+  const GameCutsceneScreen({super.key});
+  @override
+  Widget build(BuildContext context) => const Placeholder();
+}
+
+class GameTransitioningScreen extends StatelessWidget {
+  const GameTransitioningScreen({super.key});
+  @override
+  Widget build(BuildContext context) => const Placeholder();
+}
+
+class PauseMenuOverlay extends StatelessWidget {
+  const PauseMenuOverlay({super.key});
+  @override
+  Widget build(BuildContext context) => const Placeholder();
+}
+
+class UIMenuInventoryPage extends StatelessWidget {
+  const UIMenuInventoryPage({super.key});
+  @override
+  Widget build(BuildContext context) => const Placeholder();
+}
+
+class UIMenuQuestPage extends StatelessWidget {
+  const UIMenuQuestPage({super.key});
+  @override
+  Widget build(BuildContext context) => const Placeholder();
+}
+
+class UIMenuMapPage extends StatelessWidget {
+  const UIMenuMapPage({super.key});
+  @override
+  Widget build(BuildContext context) => const Placeholder();
+}
+
+class UIMenuSettingsPage extends StatelessWidget {
+  const UIMenuSettingsPage({super.key});
+  @override
+  Widget build(BuildContext context) => const Placeholder();
+}
+
+class UIOverlayCraftingPanel extends StatelessWidget {
+  const UIOverlayCraftingPanel({super.key});
+  @override
+  Widget build(BuildContext context) => const Placeholder();
+}
+
+class UIOverlayCookingPanel extends StatelessWidget {
+  const UIOverlayCookingPanel({super.key});
+  @override
+  Widget build(BuildContext context) => const Placeholder();
+}
+
+class UIOverlayChoiceDialogPage extends StatelessWidget {
+  const UIOverlayChoiceDialogPage({super.key});
+  @override
+  Widget build(BuildContext context) => const Placeholder();
+}
+
+class UIOverlayConversationPage extends StatelessWidget {
+  const UIOverlayConversationPage({super.key});
+  @override
+  Widget build(BuildContext context) => const Placeholder();
+}
+
+class UIMinigameFishingHud extends StatelessWidget {
+  const UIMinigameFishingHud({super.key});
+  @override
+  Widget build(BuildContext context) => const Placeholder();
+}
+
+class UIOverlayGameoverPage extends StatelessWidget {
+  const UIOverlayGameoverPage({super.key});
+  @override
+  Widget build(BuildContext context) => const Placeholder();
 }
