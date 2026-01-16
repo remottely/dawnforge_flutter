@@ -34,26 +34,26 @@ final class AudioDef {
   //     // 'music/music_boss_battle_background.mp3'; // TODO(Kevin): put it back, or change the music
   //     'music/music_ro1_letters_background.mp3';
 
-  // static const backgroundMusic1 = 'music/Keys Of Moon - Enchanted.mp3';
+  // static const String backgroundMusic1 = 'music/Keys Of Moon - Enchanted.mp3';
 
-  // static const bgMusicFarm = 'bg/music/farm - PhaseShift.mp3';
-  // static const bgMusicForest = 'bg/music/forest - Savfk - Rounding.mp3';
-  // static const bgMusicTown = 'bg/music/town - Scott Buckley - Clarion.mp3';
-  // static const bgMusicLake =
+  // static const String bgMusicFarm = 'bg/music/farm - PhaseShift.mp3';
+  // static const String bgMusicForest = 'bg/music/forest - Savfk - Rounding.mp3';
+  // static const String bgMusicTown = 'bg/music/town - Scott Buckley - Clarion.mp3';
+  // static const String bgMusicLake =
   //     'bg/music/lake - Justin Allan Arnold - Antigone.mp3';
-  // static const bgMusicBeach = 'bg/music/beach - Glitch - Prehistory.mp3';
-  static const bgMusicCaveBoss = 'bg/music/cave_boss - RitesOfPassage.mp3';
-  static const bgMusicGameOverSuccess =
+  // static const String bgMusicBeach = 'bg/music/beach - Glitch - Prehistory.mp3';
+  static const String bgMusicCaveBoss = 'bg/music/cave_boss - RitesOfPassage.mp3';
+  static const String bgMusicGameOverSuccess =
       'bg/music/game_over_success - Scott Buckley - Clarion.ogg';
 
-  static const bgMusicFarm = 'maps/farm/bgm/Pixverses - Big Helmet.ogg';
-  static const bgMusicForest = 'maps/forest/bgm/Pixverses - A Green Pig.ogg';
-  static const bgMusicTown =
+  static const String bgMusicFarm = 'maps/farm/bgm/Pixverses - Big Helmet.ogg';
+  static const String bgMusicForest = 'maps/forest/bgm/Pixverses - A Green Pig.ogg';
+  static const String bgMusicTown =
       'maps/town/bgm/Pixverses - A Lonely Cherry Tree.ogg';
-  static const bgMusicLake =
+  static const String bgMusicLake =
       'maps/lake/bgm/Pixverses - The Most Powerful Chicken.ogg';
-  static const bgMusicBeach = 'maps/beach/bgm/Pixverses - A Lost Soul.ogg';
-  static const bgMusicCave = 'maps/cave/bgm/Pixverses - A Midnight Bat.ogg';
+  static const String bgMusicBeach = 'maps/beach/bgm/Pixverses - A Lost Soul.ogg';
+  static const String bgMusicCave = 'maps/cave/bgm/Pixverses - A Midnight Bat.ogg';
 
   static const List<String> kPreloadAudioFiles = [
     // kSfxPlayerAttackAsset,

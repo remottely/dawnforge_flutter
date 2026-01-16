@@ -16,7 +16,7 @@ final class SmallBurgToolItemDatabaseDef {
       baseValue: 100,
       toolType: ToolType.harvest,
       iconData: ItemIconData(
-        spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
+        spritesheetPath: SmallburgDatabaseDef.kGridTilesTextureAtlasPath,
         spriteWidth: 16,
         spriteHeight: 16,
         spriteRowIndex: 154,
@@ -31,7 +31,7 @@ final class SmallBurgToolItemDatabaseDef {
       baseValue: 100,
       toolType: ToolType.shovel,
       iconData: ItemIconData(
-        spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
+        spritesheetPath: SmallburgDatabaseDef.kGridTilesTextureAtlasPath,
         spriteWidth: 16,
         spriteHeight: 16,
         spriteRowIndex: 154,
@@ -46,7 +46,7 @@ final class SmallBurgToolItemDatabaseDef {
       baseValue: 100,
       toolType: ToolType.watering_can,
       iconData: ItemIconData(
-        spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
+        spritesheetPath: SmallburgDatabaseDef.kGridTilesTextureAtlasPath,
         spriteWidth: 16,
         spriteHeight: 16,
         spriteRowIndex: 154,

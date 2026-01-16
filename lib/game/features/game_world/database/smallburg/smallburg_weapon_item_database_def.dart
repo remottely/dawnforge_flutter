@@ -16,7 +16,7 @@ final class SmallBurgWeaponItemDatabaseDef {
       baseValue: 100,
       damage: 15,
       iconData: ItemIconData(
-        spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
+        spritesheetPath: SmallburgDatabaseDef.kGridTilesTextureAtlasPath,
         spriteWidth: 16,
         spriteHeight: 16,
         spriteRowIndex: 149,
@@ -31,7 +31,7 @@ final class SmallBurgWeaponItemDatabaseDef {
       baseValue: 100,
       damage: 15,
       iconData: ItemIconData(
-        spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
+        spritesheetPath: SmallburgDatabaseDef.kGridTilesTextureAtlasPath,
         spriteWidth: 16,
         spriteHeight: 16,
         spriteRowIndex: 149,

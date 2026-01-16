@@ -55,7 +55,7 @@ final class SmallBurgMaterialItemDatabaseDef {
       baseValue: 0,
       materialType: MaterialType.key,
       iconData: ItemIconData(
-        spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
+        spritesheetPath: SmallburgDatabaseDef.kGridTilesTextureAtlasPath,
         spriteWidth: 16,
         spriteHeight: 16,
         spriteRowIndex: 154,

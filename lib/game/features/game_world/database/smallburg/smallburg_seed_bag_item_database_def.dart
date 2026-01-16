@@ -22,7 +22,7 @@ final class SmallBurgSeedBagItemDatabaseDef {
       yield: 6,
       requiredSeason: SeasonType.any,
       iconData: ItemIconData(
-        spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
+        spritesheetPath: SmallburgDatabaseDef.kGridTilesTextureAtlasPath,
         spriteWidth: 16,
         spriteHeight: 16,
         spriteRowIndex: (radishSpriteRowIndex * 2) + 1,
@@ -40,7 +40,7 @@ final class SmallBurgSeedBagItemDatabaseDef {
       yield: 3,
       requiredSeason: SeasonType.any,
       iconData: ItemIconData(
-        spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
+        spritesheetPath: SmallburgDatabaseDef.kGridTilesTextureAtlasPath,
         spriteWidth: 16,
         spriteHeight: 16,
         spriteRowIndex: (strawberrySpriteRowIndex * 2) + 1,
@@ -58,7 +58,7 @@ final class SmallBurgSeedBagItemDatabaseDef {
       yield: 3,
       requiredSeason: SeasonType.summer,
       iconData: ItemIconData(
-        spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
+        spritesheetPath: SmallburgDatabaseDef.kGridTilesTextureAtlasPath,
         spriteWidth: 16,
         spriteHeight: 16,
         spriteRowIndex: (tomatoSpriteRowIndex * 2) + 1,
@@ -76,7 +76,7 @@ final class SmallBurgSeedBagItemDatabaseDef {
       yield: 3,
       requiredSeason: SeasonType.any,
       iconData: ItemIconData(
-        spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
+        spritesheetPath: SmallburgDatabaseDef.kGridTilesTextureAtlasPath,
         spriteWidth: 16,
         spriteHeight: 16,
         spriteRowIndex: (appleSpriteRowIndex * 2) + 1,

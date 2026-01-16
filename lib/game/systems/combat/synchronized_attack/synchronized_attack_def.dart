@@ -4,7 +4,7 @@ import 'package:dawnforge/game/systems/combat/synchronized_attack/synchronized_a
 final class SynchronizedAttackDef {
   SynchronizedAttackDef._();
 
-  static const standard = SynchronizedAttackConfig(
+  static const SynchronizedAttackConfig standard = SynchronizedAttackConfig(
     baseAttackSpeedMs: 800,
     speedBonusPerLevel: 0.05,
     attackTypeMultipliers: {

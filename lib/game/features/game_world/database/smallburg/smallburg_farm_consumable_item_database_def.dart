@@ -27,7 +27,7 @@ final class SmallBurgHarvestLootItemDatabaseDef {
       healthRestore: 8,
       staminaRestore: 8,
       iconData: ItemIconData(
-        spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
+        spritesheetPath: SmallburgDatabaseDef.kGridTilesTextureAtlasPath,
         spriteWidth: 16,
         spriteHeight: 16,
         spriteRowIndex: (radishSpriteRowIndex * 2) + 1,
@@ -46,7 +46,7 @@ final class SmallBurgHarvestLootItemDatabaseDef {
       healthRestore: 10,
       staminaRestore: 10,
       iconData: ItemIconData(
-        spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
+        spritesheetPath: SmallburgDatabaseDef.kGridTilesTextureAtlasPath,
         spriteWidth: 16,
         spriteHeight: 16,
         spriteRowIndex: (strawberrySpriteRowIndex * 2) + 1,
@@ -65,7 +65,7 @@ final class SmallBurgHarvestLootItemDatabaseDef {
       healthRestore: 12,
       staminaRestore: 12,
       iconData: ItemIconData(
-        spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
+        spritesheetPath: SmallburgDatabaseDef.kGridTilesTextureAtlasPath,
         spriteWidth: 16,
         spriteHeight: 16,
         spriteRowIndex: (tomatoSpriteRowIndex * 2) + 1,
@@ -84,7 +84,7 @@ final class SmallBurgHarvestLootItemDatabaseDef {
       healthRestore: 8,
       staminaRestore: 8,
       iconData: ItemIconData(
-        spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
+        spritesheetPath: SmallburgDatabaseDef.kGridTilesTextureAtlasPath,
         spriteWidth: 16,
         spriteHeight: 16,
         spriteRowIndex: (appleSpriteRowIndex * 2) + 1,

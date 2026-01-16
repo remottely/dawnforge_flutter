@@ -11,12 +11,12 @@ final class AppRadius {
   static const double _kMedium = 8.0;
   static const double _kLarge = 12.0;
 
-  static const _textFormFieldValue = ScreenSizeValue<double>(
+  static const ScreenSizeValue<double> _textFormFieldValue = ScreenSizeValue<double>(
     mobile: _kSmall,
     tablet: _kMedium,
     desktop: _kMedium,
   );
-  static const _buttonValue = ScreenSizeValue<double>(
+  static const ScreenSizeValue<double> _buttonValue = ScreenSizeValue<double>(
     mobile: _kSmall,
     tablet: _kSmall,
     desktop: _kMedium,

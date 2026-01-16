@@ -15,19 +15,19 @@ final class AppSpacing {
   static const double _kExtraLarge = 32.0;
   static const double _kSuperLarge = 48.0;
 
-  static const _marginValue = ScreenSizeValue<double>(
+  static const ScreenSizeValue<double> _marginValue = ScreenSizeValue<double>(
     mobile: _kSmall,
     tablet: _kMedium,
     desktop: _kLarge,
   );
 
-  static const _paddingValue = ScreenSizeValue<double>(
+  static const ScreenSizeValue<double> _paddingValue = ScreenSizeValue<double>(
     mobile: _kExtraSmall,
     tablet: _kSmall,
     desktop: _kSmall,
   );
 
-  static const _spacingValue = ScreenSizeValue<double>(
+  static const ScreenSizeValue<double> _spacingValue = ScreenSizeValue<double>(
     mobile: _kExtraSmall,
     tablet: _kSmall,
     desktop: _kSmall,

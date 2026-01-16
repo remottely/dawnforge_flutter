@@ -33,7 +33,7 @@ final class SmallburgPlayerDef {
   static const int _kSeedStaminaCost = 5;
   static const int _kHarvestStaminaCost = 5;
 
-  static const modelConfig = DDFarmPlayerModelConfig(
+  static const DDFarmPlayerModelConfig modelConfig = DDFarmPlayerModelConfig(
     maxStamina: _kMaxStamina,
     maxEnergy: _kMaxEnergy,
     staminaRegenIncrement: _kStaminaIncrement,

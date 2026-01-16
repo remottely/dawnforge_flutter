@@ -6,28 +6,28 @@ final class SmallBurgSoilStateSpriteDatabaseDef {
 
   static const Map<String, ItemIconData> soilStateSpriteList = {
     'untilled': ItemIconData(
-      spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
+      spritesheetPath: SmallburgDatabaseDef.kGridTilesTextureAtlasPath,
       spriteWidth: 16,
       spriteHeight: 16,
       spriteRowIndex: 109,
       spriteColumnIndex: 7,
     ),
     'tilled': ItemIconData(
-      spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
+      spritesheetPath: SmallburgDatabaseDef.kGridTilesTextureAtlasPath,
       spriteWidth: 16,
       spriteHeight: 16,
       spriteRowIndex: 104,
       spriteColumnIndex: 14,
     ),
     'watered': ItemIconData(
-      spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
+      spritesheetPath: SmallburgDatabaseDef.kGridTilesTextureAtlasPath,
       spriteWidth: 16,
       spriteHeight: 16,
       spriteRowIndex: 104,
       spriteColumnIndex: 15,
     ),
     'fertilized': ItemIconData(
-      spritesheetPath: SmallburgDatabaseDef.gridTilesTextureAtlasPath,
+      spritesheetPath: SmallburgDatabaseDef.kGridTilesTextureAtlasPath,
       spriteWidth: 16,
       spriteHeight: 16,
       spriteRowIndex: 2,
