@@ -61,7 +61,7 @@ final class CutePlayerDef {
     bottom: 16,
   );
 
-  static Future<SpriteAnimation> _loadAnimationIdleLeft() =>
+  static final Future<SpriteAnimation> _loadAnimationIdleLeft =
       SpriteAnimation.load(
         'new/Player/idle/player_idle_left_48x48_6.png',
         SpriteAnimationConfigHelper.createStandardData(
@@ -70,7 +70,7 @@ final class CutePlayerDef {
         ),
       );
 
-  static Future<SpriteAnimation> _loadAnimationIdleUp() => SpriteAnimation.load(
+  static final Future<SpriteAnimation> _loadAnimationIdleUp = SpriteAnimation.load(
     'new/Player/idle/player_idle_up_48x48_6.png',
     SpriteAnimationConfigHelper.createStandardData(
       amount: 6,
@@ -78,7 +78,7 @@ final class CutePlayerDef {
     ),
   );
 
-  static Future<SpriteAnimation> _loadAnimationIdleDown() =>
+  static final Future<SpriteAnimation> _loadAnimationIdleDown =
       SpriteAnimation.load(
         'new/Player/idle/player_idle_down_48x48_6.png',
         SpriteAnimationConfigHelper.createStandardData(
@@ -312,10 +312,10 @@ final class CutePlayerDef {
 
   static final SimpleDirectionAnimation _animationWalkDirectional =
       SimpleDirectionAnimation(
-        idleLeft: _loadAnimationIdleLeft(),
+        idleLeft: _loadAnimationIdleLeft,
         idleRight: loadAnimationIdleRight,
-        idleUp: _loadAnimationIdleUp(),
-        idleDown: _loadAnimationIdleDown(),
+        idleUp: _loadAnimationIdleUp,
+        idleDown: _loadAnimationIdleDown,
         runLeft: SpriteAnimation.load(
           'new/Player/walk/player_walk_left_48x48_6.png',
           SpriteAnimationConfigHelper.createStandardData(
@@ -348,10 +348,10 @@ final class CutePlayerDef {
 
   static final SimpleDirectionAnimation
   _animationRunDirectional = SimpleDirectionAnimation(
-    idleLeft: _loadAnimationIdleLeft(),
+    idleLeft: _loadAnimationIdleLeft,
     idleRight: loadAnimationIdleRight,
-    idleUp: _loadAnimationIdleUp(),
-    idleDown: _loadAnimationIdleDown(),
+    idleUp: _loadAnimationIdleUp,
+    idleDown: _loadAnimationIdleDown,
     // TODO(Kevin): NOW - create run animations
     runLeft: SpriteAnimation.load(
       'new/Player/walk/player_walk_left_48x48_6.png', // TODO(Kevin): change to run animation

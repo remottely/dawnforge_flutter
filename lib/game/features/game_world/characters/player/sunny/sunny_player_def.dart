@@ -60,8 +60,8 @@ final class SunnyPlayerDef {
     bottom: 25.0,
   );
 
-  static Future<SpriteAnimation>
-  _loadAnimationIdleLeft() => SpriteAnimation.load(
+  static final Future<SpriteAnimation>
+  _loadAnimationIdleLeft = SpriteAnimation.load(
     'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_idle_left_strip9.png',
     SpriteAnimationConfigHelper.createStandardData(
       amount: 9,
@@ -200,7 +200,7 @@ final class SunnyPlayerDef {
 
   static final SimpleDirectionAnimation
   _animationWalkDirectional = SimpleDirectionAnimation(
-    idleLeft: _loadAnimationIdleLeft(),
+    idleLeft: _loadAnimationIdleLeft,
     idleRight: loadAnimationIdleRight,
     runLeft: SpriteAnimation.load(
       'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_walking_left_strip8.png',
@@ -220,7 +220,7 @@ final class SunnyPlayerDef {
 
   static final SimpleDirectionAnimation
   _animationRunDirectional = SimpleDirectionAnimation(
-    idleLeft: _loadAnimationIdleLeft(),
+    idleLeft: _loadAnimationIdleLeft,
     idleRight: loadAnimationIdleRight,
     runLeft: SpriteAnimation.load(
       'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_run_left_strip8.png',

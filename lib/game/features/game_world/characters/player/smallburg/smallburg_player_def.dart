@@ -360,7 +360,7 @@ final class SmallburgPlayerDef {
     loadUp: _loadAnimationChoppingUp,
     loadDown: _loadAnimationChoppingDown,
   );
-  static Future<SpriteAnimation> _loadAnimationAttack1Right =
+  static final Future<SpriteAnimation> _loadAnimationAttack1Right =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attac1kAssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
@@ -370,7 +370,7 @@ final class SmallburgPlayerDef {
         framePositionY: _kFrameRightY,
       );
 
-  static Future<SpriteAnimation> _loadAnimationAttack1Left =
+  static final Future<SpriteAnimation> _loadAnimationAttack1Left =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attac1kAssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
@@ -380,7 +380,7 @@ final class SmallburgPlayerDef {
         framePositionY: _kFrameLeftY,
       );
 
-  static Future<SpriteAnimation> _loadAnimationAttack1Up =
+  static final Future<SpriteAnimation> _loadAnimationAttack1Up =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attac1kAssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
@@ -390,7 +390,7 @@ final class SmallburgPlayerDef {
         framePositionY: _kFrameUpY,
       );
 
-  static Future<SpriteAnimation> _loadAnimationAttack1Down =
+  static final Future<SpriteAnimation> _loadAnimationAttack1Down =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attac1kAssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
@@ -408,7 +408,7 @@ final class SmallburgPlayerDef {
     loadDown: _loadAnimationAttack1Down,
   );
 
-  static Future<SpriteAnimation> _loadAnimationAttack2Right =
+  static final Future<SpriteAnimation> _loadAnimationAttack2Right =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attack2AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
@@ -418,7 +418,7 @@ final class SmallburgPlayerDef {
         framePositionY: _kFrameRightY,
       );
 
-  static Future<SpriteAnimation> _loadAnimationAttack2Left =
+  static final Future<SpriteAnimation> _loadAnimationAttack2Left =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attack2AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
@@ -428,7 +428,7 @@ final class SmallburgPlayerDef {
         framePositionY: _kFrameLeftY,
       );
 
-  static Future<SpriteAnimation> _loadAnimationAttack2Up =
+  static final Future<SpriteAnimation> _loadAnimationAttack2Up =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attack2AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
@@ -438,7 +438,7 @@ final class SmallburgPlayerDef {
         framePositionY: _kFrameUpY,
       );
 
-  static Future<SpriteAnimation> _loadAnimationAttack2Down =
+  static final Future<SpriteAnimation> _loadAnimationAttack2Down =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attack2AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
@@ -456,7 +456,7 @@ final class SmallburgPlayerDef {
     loadDown: _loadAnimationAttack2Down,
   );
 
-  static Future<SpriteAnimation> _loadAnimationAttack3Right =
+  static final Future<SpriteAnimation> _loadAnimationAttack3Right =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attack3AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
@@ -466,7 +466,7 @@ final class SmallburgPlayerDef {
         framePositionY: _kFrameRightY,
       );
 
-  static Future<SpriteAnimation> _loadAnimationAttack3Left =
+  static final Future<SpriteAnimation> _loadAnimationAttack3Left =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attack3AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
@@ -476,7 +476,7 @@ final class SmallburgPlayerDef {
         framePositionY: _kFrameLeftY,
       );
 
-  static Future<SpriteAnimation> _loadAnimationAttack3Up =
+  static final Future<SpriteAnimation> _loadAnimationAttack3Up =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attack3AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
@@ -486,7 +486,7 @@ final class SmallburgPlayerDef {
         framePositionY: _kFrameUpY,
       );
 
-  static Future<SpriteAnimation> _loadAnimationAttack3Down =
+  static final Future<SpriteAnimation> _loadAnimationAttack3Down =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: attack3AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,

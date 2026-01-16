@@ -262,7 +262,7 @@ final class DemoPlayerDef {
   // ANIMATIONS - ATTACKS
   // ============================================================================
 
-  static Future<SpriteAnimation> _loadAnimationAttack1Right =
+  static final Future<SpriteAnimation> _loadAnimationAttack1Right =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: _kAttack1AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
@@ -272,7 +272,7 @@ final class DemoPlayerDef {
         framePositionY: _kFrameRightY,
       );
 
-  static Future<SpriteAnimation> _loadAnimationAttack1Left =
+  static final Future<SpriteAnimation> _loadAnimationAttack1Left =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: _kAttack1AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
@@ -282,7 +282,7 @@ final class DemoPlayerDef {
         framePositionY: _kFrameLeftY,
       );
 
-  static Future<SpriteAnimation> _loadAnimationAttack1Up =
+  static final Future<SpriteAnimation> _loadAnimationAttack1Up =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: _kAttack1AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
@@ -292,7 +292,7 @@ final class DemoPlayerDef {
         framePositionY: _kFrameUpY,
       );
 
-  static Future<SpriteAnimation> _loadAnimationAttack1Down =
+  static final Future<SpriteAnimation> _loadAnimationAttack1Down =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: _kAttack1AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
@@ -310,7 +310,7 @@ final class DemoPlayerDef {
     loadDown: _loadAnimationAttack1Down,
   );
 
-  static Future<SpriteAnimation> _loadAnimationAttack2Right =
+  static final Future<SpriteAnimation> _loadAnimationAttack2Right =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: _kAttack2AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
@@ -320,7 +320,7 @@ final class DemoPlayerDef {
         framePositionY: _kFrameRightY,
       );
 
-  static Future<SpriteAnimation> _loadAnimationAttack2Left =
+  static final Future<SpriteAnimation> _loadAnimationAttack2Left =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: _kAttack2AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
@@ -330,7 +330,7 @@ final class DemoPlayerDef {
         framePositionY: _kFrameLeftY,
       );
 
-  static Future<SpriteAnimation> _loadAnimationAttack2Up =
+  static final Future<SpriteAnimation> _loadAnimationAttack2Up =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: _kAttack2AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
@@ -340,7 +340,7 @@ final class DemoPlayerDef {
         framePositionY: _kFrameUpY,
       );
 
-  static Future<SpriteAnimation> _loadAnimationAttack2Down =
+  static final Future<SpriteAnimation> _loadAnimationAttack2Down =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: _kAttack2AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
@@ -350,15 +350,15 @@ final class DemoPlayerDef {
         framePositionY: _kFrameDownY,
       );
 
-  static final DDAnimationDirectionalFactory _animationAttack2DirectionalFactory =
-      DDAnimationDirectionalFactory(
-        loadRight: _loadAnimationAttack2Right,
-        loadLeft: _loadAnimationAttack2Left,
-        loadUp: _loadAnimationAttack2Up,
-        loadDown: _loadAnimationAttack2Down,
-      );
+  static final DDAnimationDirectionalFactory
+  _animationAttack2DirectionalFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationAttack2Right,
+    loadLeft: _loadAnimationAttack2Left,
+    loadUp: _loadAnimationAttack2Up,
+    loadDown: _loadAnimationAttack2Down,
+  );
 
-  static Future<SpriteAnimation> _loadAnimationAttack3Right =
+  static final Future<SpriteAnimation> _loadAnimationAttack3Right =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: _kAttack3AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
@@ -368,7 +368,7 @@ final class DemoPlayerDef {
         framePositionY: _kFrameRightY,
       );
 
-  static Future<SpriteAnimation> _loadAnimationAttack3Left =
+  static final Future<SpriteAnimation> _loadAnimationAttack3Left =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: _kAttack3AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
@@ -378,7 +378,7 @@ final class DemoPlayerDef {
         framePositionY: _kFrameLeftY,
       );
 
-  static Future<SpriteAnimation> _loadAnimationAttack3Up =
+  static final Future<SpriteAnimation> _loadAnimationAttack3Up =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: _kAttack3AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
@@ -388,7 +388,7 @@ final class DemoPlayerDef {
         framePositionY: _kFrameUpY,
       );
 
-  static Future<SpriteAnimation> _loadAnimationAttack3Down =
+  static final Future<SpriteAnimation> _loadAnimationAttack3Down =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
         assetPath: _kAttack3AssetPath,
         stepTime: SpriteAnimationConstants.kStepTimeFast,
@@ -398,13 +398,13 @@ final class DemoPlayerDef {
         framePositionY: _kFrameDownY,
       );
 
-  static final DDAnimationDirectionalFactory _animationAttack3DirectionalFactory =
-      DDAnimationDirectionalFactory(
-        loadRight: _loadAnimationAttack3Right,
-        loadLeft: _loadAnimationAttack3Left,
-        loadUp: _loadAnimationAttack3Up,
-        loadDown: _loadAnimationAttack3Down,
-      );
+  static final DDAnimationDirectionalFactory
+  _animationAttack3DirectionalFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationAttack3Right,
+    loadLeft: _loadAnimationAttack3Left,
+    loadUp: _loadAnimationAttack3Up,
+    loadDown: _loadAnimationAttack3Down,
+  );
 
   // ============================================================================
   // ANIMATIONS - FARMING
@@ -446,12 +446,13 @@ final class DemoPlayerDef {
         framePositionY: _kFrameDownY,
       );
 
-  static final DDAnimationDirectionalFactory _animationDigDirectionalFactory = DDAnimationDirectionalFactory(
-    loadRight: _loadAnimationDigRight,
-    loadLeft: _loadAnimationDigLeft,
-    loadUp: _loadAnimationDigUp,
-    loadDown: _loadAnimationDigDown,
-  );
+  static final DDAnimationDirectionalFactory _animationDigDirectionalFactory =
+      DDAnimationDirectionalFactory(
+        loadRight: _loadAnimationDigRight,
+        loadLeft: _loadAnimationDigLeft,
+        loadUp: _loadAnimationDigUp,
+        loadDown: _loadAnimationDigDown,
+      );
 
   static final Future<SpriteAnimation> _loadAnimationWateringRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
@@ -489,13 +490,13 @@ final class DemoPlayerDef {
         framePositionY: _kFrameDownY,
       );
 
-  static final DDAnimationDirectionalFactory _animationWateringDirectionalFactory =
-      DDAnimationDirectionalFactory(
-        loadRight: _loadAnimationWateringRight,
-        loadLeft: _loadAnimationWateringLeft,
-        loadUp: _loadAnimationWateringUp,
-        loadDown: _loadAnimationWateringDown,
-      );
+  static final DDAnimationDirectionalFactory
+  _animationWateringDirectionalFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationWateringRight,
+    loadLeft: _loadAnimationWateringLeft,
+    loadUp: _loadAnimationWateringUp,
+    loadDown: _loadAnimationWateringDown,
+  );
 
   static final Future<SpriteAnimation> _loadAnimationPlaceSeedRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
@@ -533,13 +534,13 @@ final class DemoPlayerDef {
         framePositionY: _kFrameDownY,
       );
 
-  static final DDAnimationDirectionalFactory _animationPlaceSeedDirectionalFactory =
-      DDAnimationDirectionalFactory(
-        loadRight: _loadAnimationPlaceSeedRight,
-        loadLeft: _loadAnimationPlaceSeedLeft,
-        loadUp: _loadAnimationPlaceSeedUp,
-        loadDown: _loadAnimationPlaceSeedDown,
-      );
+  static final DDAnimationDirectionalFactory
+  _animationPlaceSeedDirectionalFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationPlaceSeedRight,
+    loadLeft: _loadAnimationPlaceSeedLeft,
+    loadUp: _loadAnimationPlaceSeedUp,
+    loadDown: _loadAnimationPlaceSeedDown,
+  );
 
   static final Future<SpriteAnimation> _loadAnimationHarvestRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasSmallBurg(
@@ -577,13 +578,13 @@ final class DemoPlayerDef {
         framePositionY: _kFrameDownY,
       );
 
-  static final DDAnimationDirectionalFactory _animationHarvestDirectionalFactory =
-      DDAnimationDirectionalFactory(
-        loadRight: _loadAnimationHarvestRight,
-        loadLeft: _loadAnimationHarvestLeft,
-        loadUp: _loadAnimationHarvestUp,
-        loadDown: _loadAnimationHarvestDown,
-      );
+  static final DDAnimationDirectionalFactory
+  _animationHarvestDirectionalFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationHarvestRight,
+    loadLeft: _loadAnimationHarvestLeft,
+    loadUp: _loadAnimationHarvestUp,
+    loadDown: _loadAnimationHarvestDown,
+  );
 
   // ============================================================================
   // DEATH MARKER
@@ -699,13 +700,13 @@ final class DemoPlayerDef {
         framePositionY: _kFrameDownY,
       );
 
-  static final DDAnimationDirectionalFactory _animationMiningDirectionalFactory =
-      DDAnimationDirectionalFactory(
-        loadRight: _loadAnimationMiningRight,
-        loadLeft: _loadAnimationMiningLeft,
-        loadUp: _loadAnimationMiningUp,
-        loadDown: _loadAnimationMiningDown,
-      );
+  static final DDAnimationDirectionalFactory
+  _animationMiningDirectionalFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationMiningRight,
+    loadLeft: _loadAnimationMiningLeft,
+    loadUp: _loadAnimationMiningUp,
+    loadDown: _loadAnimationMiningDown,
+  );
 
   // Adicione no final do arquivo:
   static const double kRunSpeedMultiplier = 1.4;
