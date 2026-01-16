@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "remottely-com"
+  },
+  "targets": {
+    "remottely-com": {
+      "hosting": {
+        "dawnforge": [
+          "dawnforge"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
