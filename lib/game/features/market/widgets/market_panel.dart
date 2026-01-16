@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-import 'package:dawnforge/game/state/game_state_machine.dart';
+import 'package:dawnforge/game/global/global_state_machine.dart';
 import 'package:dawnforge/game/systems/game/player_state_manager.dart';
 import 'package:dawnforge/game/systems/input_actions/keyboard_setup.dart';
 import 'package:dawnforge/game/systems/overlay/message/message_overlay_service.dart';
@@ -157,7 +157,7 @@ class _UIOverlayMarketPanelState extends State<UIOverlayMarketPanel> {
         IconButton(
           onPressed: () {
             GameLogger.debug('[MarketPanel] close button tapped');
-            GameStateMachine.instance.closeMarket();
+            GlobalStateMachine.instance.closeMarket();
           },
           icon: const Icon(Icons.close, color: Colors.white70),
         ),
@@ -384,7 +384,7 @@ class _UIOverlayMarketPanelState extends State<UIOverlayMarketPanel> {
 
     // Fechar market com ESC
     if (key == LogicalKeyboardKey.escape) {
-      GameStateMachine.instance.closeMarket();
+      GlobalStateMachine.instance.closeMarket();
       return KeyEventResult.handled;
     }
 

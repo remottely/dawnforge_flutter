@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:dawnforge/core/utils/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/state/game_state_machine.dart';
+import 'package:dawnforge/game/global/global_state_machine.dart';
 import 'package:dawnforge/game/systems/ui/emote_manager.dart';
 import 'package:dawnforge/shared/framework/enemies/dd_base_enemy/dd_base_enemy_view.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_config.dart';
@@ -76,7 +76,7 @@ abstract class DDBasePlayerView<
 
   @override
   void update(double dt) {
-    if (GameStateMachine.instance.isTimePaused) {
+    if (GlobalStateMachine.instance.isTimePaused) {
       // Bloqueia qualquer movimento enquanto o market está aberto.
       stopMove();
       velocity = Vector2.zero();
@@ -98,7 +98,7 @@ abstract class DDBasePlayerView<
 
   @override
   void onJoystickAction(JoystickActionEvent event) {
-    if (GameStateMachine.instance.isTimePaused) {
+    if (GlobalStateMachine.instance.isTimePaused) {
       GameLogger.info('[PlayerInput] input ignored: market open');
       return;
     }

@@ -6,7 +6,7 @@ import 'package:dawnforge/game/features/game_world/characters/enemies/mini_boss/
 import 'package:dawnforge/game/features/game_world/characters/enemies/skeleton/skeleton_enemy_view.dart';
 import 'package:dawnforge/game/features/game_world/characters/npcs/kid/kid_npc_view.dart';
 import 'package:dawnforge/game/features/game_world/characters/npcs/wizard/wizard_npc_view.dart';
-import 'package:dawnforge/game/state/game_state_machine.dart';
+import 'package:dawnforge/game/global/global_state_machine.dart';
 import 'package:dawnforge/game/systems/audio/audio_def.dart';
 import 'package:dawnforge/game/systems/map/map_data.dart';
 import 'package:dawnforge/game/features/game_world/decorations/barrel/barrel_decoration.dart';
@@ -50,8 +50,8 @@ final class MapDef {
         'market': (p) => MarketDecoration(
           position: p.position,
           size: p.size,
-          onOpenMarket: GameStateMachine.instance.openMarket,
-          onCloseMarket: GameStateMachine.instance.closeMarket,
+          onOpenMarket: GlobalStateMachine.instance.openMarket,
+          onCloseMarket: GlobalStateMachine.instance.closeMarket,
         ),
         'boss_enemy': (p) => BossEnemyView(position: p.position),
         'mini_boss_enemy': (p) => MiniBossEnemyView(position: p.position),

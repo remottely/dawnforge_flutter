@@ -21,9 +21,9 @@ enum GameState {
   uiOverlayGameover,
 }
 
-class GameStateMachine {
-  static final GameStateMachine instance = GameStateMachine._();
-  GameStateMachine._();
+class GlobalStateMachine {
+  static final GlobalStateMachine instance = GlobalStateMachine._();
+  GlobalStateMachine._();
 
   // ✅ ÚNICA FONTE DA VERDADE
   final ValueNotifier<GameState> _rxCurrentState = ValueNotifier(

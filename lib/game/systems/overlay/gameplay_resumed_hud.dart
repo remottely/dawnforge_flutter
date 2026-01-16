@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 
-import 'package:dawnforge/game/state/game_state_machine.dart';
+import 'package:dawnforge/game/global/global_state_machine.dart';
 import 'package:dawnforge/game/systems/overlay/message/message_overlay.dart';
 import 'package:dawnforge/game/systems/overlay/tutorial_inputs/tutorial_inputs_overlay.dart';
 import 'package:dawnforge/game/systems/overlay/inventory/inventory_overlay.dart';
@@ -230,7 +230,7 @@ final class _TopRightArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // ✅ Esconde HUD de tempo em certos estados
-    final showTimeHUD = GameStateMachine.instance.shouldShowHUD;
+    final showTimeHUD = GlobalStateMachine.instance.shouldShowHUD;
 
     return Expanded(
       flex: flex,
@@ -429,7 +429,7 @@ final class _BottomRightArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // ✅ Sempre mostra stats (mas pode esconder em cutscenes)
-    final showStats = GameStateMachine.instance.shouldShowHUD;
+    final showStats = GlobalStateMachine.instance.shouldShowHUD;
 
     return Expanded(
       flex: flex,

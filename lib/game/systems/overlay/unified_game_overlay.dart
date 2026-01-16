@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/game/features/market/widgets/market_panel.dart';
-import 'package:dawnforge/game/state/game_state_machine.dart';
+import 'package:dawnforge/game/global/global_state_machine.dart';
 import 'package:dawnforge/game/systems/game/player_state_manager.dart';
 import 'package:dawnforge/game/systems/overlay/gameplay_resumed_hud.dart';
 import 'package:dawnforge/game/systems/overlay/unified_game_overlay_others.dart';
@@ -27,7 +27,7 @@ final class UnifiedGameOverlay extends StatelessWidget {
     const flexC = flexA + flexB;
 
     return ValueListenableBuilder<GameState>(
-      valueListenable: GameStateMachine.instance.getRxCurrentState(),
+      valueListenable: GlobalStateMachine.instance.getRxCurrentState(),
       builder: (context, gameState, _) {
         return switch (gameState) {
           GameState.gameLoading => const GameLoadingScreen(),

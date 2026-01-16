@@ -2,7 +2,7 @@
 import 'dart:async' as async;
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/core/utils/game_logger.dart';
-import 'package:dawnforge/game/state/game_state_machine.dart';
+import 'package:dawnforge/game/global/global_state_machine.dart';
 import 'package:dawnforge/game/systems/ui/emote_manager.dart';
 
 import 'package:dawnforge/shared/framework/character/behavior/character_behavior.dart';
@@ -71,7 +71,7 @@ abstract class Character extends SimplePlayer
 
   @override
   void update(double dt) {
-    if (GameStateMachine.instance.isTimePaused) {
+    if (GlobalStateMachine.instance.isTimePaused) {
       stopMove();
       velocity = Vector2.zero();
       return;
@@ -151,7 +151,7 @@ abstract class Character extends SimplePlayer
 
   @override
   void onJoystickChangeDirectional(JoystickDirectionalEvent event) {
-    if (GameStateMachine.instance.isTimePaused) {
+    if (GlobalStateMachine.instance.isTimePaused) {
       stopMove();
       return;
     }
@@ -187,7 +187,7 @@ abstract class Character extends SimplePlayer
 
   @override
   void onJoystickAction(JoystickActionEvent event) {
-    if (GameStateMachine.instance.isTimePaused) {
+    if (GlobalStateMachine.instance.isTimePaused) {
       GameLogger.info('[Character] Input ignored: time paused');
       return;
     }
