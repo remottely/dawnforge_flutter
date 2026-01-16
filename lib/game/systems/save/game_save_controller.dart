@@ -9,10 +9,9 @@ import 'package:dawnforge/game/features/farm/farm_service_locator.dart' as farm_
 import 'package:dawnforge/game/features/farm/managers/farm_manager.dart';
 import 'package:dawnforge/game/features/farm/usecases/load_farm_use_case.dart';
 import 'package:dawnforge/game/features/farm/usecases/save_farm_use_case.dart';
-import 'package:dawnforge/game/features/inventory/config/inventory_service_locator.dart';
 import 'package:dawnforge/game/features/inventory/managers/inventory_manager.dart';
 import 'package:dawnforge/game/features/inventory/services/item_factory_service.dart';
-import 'package:dawnforge/game/features/time/time_manager.dart' as new_time;
+import 'package:dawnforge/game/features/time/time_manager.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
 
 /// Helper para conversão de coordenadas pixel → tile
@@ -91,7 +90,7 @@ final class GameSaveController {
       final inventoryData = _collectInventoryData();
       final farmData = _collectFarmData();
 
-      worldData['time'] = new_time.TimeManager.instance.toJson();
+      worldData['time'] = TimeManager.instance.toJson();
 
       worldData['farmData'] = farmData;
 
@@ -329,7 +328,7 @@ final class GameSaveController {
         return;
       }
 
-      new_time.TimeManager.instance.fromJson(data);
+      TimeManager.instance.fromJson(data);
       GameLogger.info('[GameSaveController] ✅ Time state restored');
     } catch (e) {
       GameLogger.error('[GameSaveController] ❌ Error restoring time state: $e');

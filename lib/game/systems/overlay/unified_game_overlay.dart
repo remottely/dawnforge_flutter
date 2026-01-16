@@ -12,7 +12,7 @@ import 'package:dawnforge/game/systems/overlay/inputs/widgets/fullscreen_button_
 import 'package:dawnforge/shared/design_system/theme/app_design_system_extension.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:dawnforge/core/managers/settings_manager.dart';
-import 'package:dawnforge/game/features/time/time_manager.dart' as new_time;
+import 'package:dawnforge/game/features/time/time_manager.dart';
 import 'package:dawnforge/game/features/time/widgets/time_hud_panel.dart';
 import 'package:dawnforge/core/utils/debug_helpers.dart';
 import 'package:flutter/material.dart';
@@ -186,7 +186,7 @@ final class _TopRightArea extends StatelessWidget {
           alignment: Alignment.topRight,
           child: Stack(
             children: [
-              TimeHudPanel(timeManager: new_time.TimeManager.instance),
+              TimeHudPanel(timeManager: TimeManager.instance),
               const Align(
                 alignment: Alignment.topRight,
                 child: FullscreenButtonOverlay(),

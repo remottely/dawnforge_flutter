@@ -10,7 +10,7 @@ import 'package:dawnforge/game/features/game_world/decorations/map_transition_se
 import 'package:dawnforge/game/features/farm/handlers/farm_input_handler.dart';
 import 'package:dawnforge/game/systems/overlay/unified_game_overlay.dart';
 import 'package:dawnforge/game/features/gameplay_screen_viewmodel.dart';
-import 'package:dawnforge/game/features/time/time_manager.dart' as new_time;
+import 'package:dawnforge/game/features/time/time_manager.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -113,8 +113,8 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
           mapInitialPlayerPosition,
         );
 
-        if (!new_time.TimeManager.instance.isRunning) {
-          new_time.TimeManager.instance.start();
+        if (!TimeManager.instance.isRunning) {
+          TimeManager.instance.start();
         }
 
         if (mapTimeOverride != null && mapTimeOverride.toString().isNotEmpty) {
@@ -145,8 +145,8 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
             BonfireWidget(
               key: ValueKey(mapItem.id),
               onReady: (game) {
-                new_time.TimeManager.instance.setGame(game);
-                new_time.TimeManager.instance.start();
+                TimeManager.instance.setGame(game);
+                TimeManager.instance.start();
               },
               playerControllers: [playerInput],
               player: player,

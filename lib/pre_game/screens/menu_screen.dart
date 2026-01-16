@@ -2,6 +2,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/pre_game/screens/menu_screen_def.dart';
 import 'package:dawnforge/pre_game/screens/menu_screen_viewmodel.dart';
 import 'package:dawnforge/game/systems/localization/gameplay_strings_location.dart';
+import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
 import 'package:dawnforge/shared/design_system_old/dd_design_system.dart';
 import 'package:dawnforge/shared/design_system_old/widgets/atoms/dd_radio_button.dart';
 import 'package:dawnforge/shared/framework/widgets/dd_sprite_animation_widget.dart';
@@ -73,12 +74,13 @@ class _Title extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Text(
+    return Text(
       'Greenleaf Valley',
       style: TextStyle(
         color: Colors.white,
-        
-        fontSize: DDDesignSystem.kTypographyFontSizeDisplay,
+        fontSize: AppDesignSystem.of(
+          context,
+        ).typography.fontSizeDisplay,
       ),
     );
   }
@@ -120,10 +122,12 @@ class _StartButton extends StatelessWidget {
           onPressed: onPressed,
           child: Text(
             GameplayStringsLocation.instance.getString('play_cap'),
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
-              
-              fontSize: DDDesignSystem.kTypographyFontSizeCaption,
+
+              fontSize: AppDesignSystem.of(
+                context,
+              ).typography.fontSizeCaption,
             ),
           ),
         ),
@@ -190,21 +194,25 @@ class _Footer extends StatelessWidget {
                 children: <Widget>[
                   Text(
                     GameplayStringsLocation.instance.getString('powered_by'),
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
-                      fontSize: DDDesignSystem.kTypographyFontSizeTiny,
+                      fontSize: AppDesignSystem.of(
+                        context,
+                      ).typography.fontSizeTiny,
                     ),
                   ),
                   InkWell(
                     onTap: () {
                       onOpenURL(MenuScreenDef.kKevinKoboriUrl);
                     },
-                    child: const Text(
+                    child: Text(
                       'kevinkobori',
                       style: TextStyle(
                         decoration: TextDecoration.underline,
                         color: Colors.blue,
-                        fontSize: DDDesignSystem.kTypographyFontSizeTiny,
+                        fontSize: AppDesignSystem.of(
+                          context,
+                        ).typography.fontSizeTiny,
                       ),
                     ),
                   ),
@@ -217,21 +225,25 @@ class _Footer extends StatelessWidget {
                 children: <Widget>[
                   Text(
                     GameplayStringsLocation.instance.getString('built_with'),
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
-                      fontSize: DDDesignSystem.kTypographyFontSizeTiny,
+                      fontSize: AppDesignSystem.of(
+                        context,
+                      ).typography.fontSizeTiny,
                     ),
                   ),
                   InkWell(
                     onTap: () {
                       onOpenURL(MenuScreenDef.kBonfireUrl);
                     },
-                    child: const Text(
+                    child: Text(
                       'Bonfire',
                       style: TextStyle(
                         decoration: TextDecoration.underline,
                         color: Colors.blue,
-                        fontSize: DDDesignSystem.kTypographyFontSizeTiny,
+                        fontSize: AppDesignSystem.of(
+                          context,
+                        ).typography.fontSizeTiny,
                       ),
                     ),
                   ),

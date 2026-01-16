@@ -10,13 +10,15 @@ import 'package:dawnforge/game/features/inventory/state/equipment_state.dart';
 
 /// Manager for equipment state (C1: Singleton + ValueNotifier, I2: Manager = Singleton State)
 final class EquipmentManager {
-  EquipmentManager._() {
+  EquipmentManager._();
+
+  static final instance = EquipmentManager._();
+
+  void initialize() {
     InventoryManager.instance.slotsNotifier.addListener(
       _handleInventorySlotsChanged,
     );
   }
-
-  static final instance = EquipmentManager._();
 
   /// J3: ValueNotifier for cross-module communication
   final ValueNotifier<int> selectedSlotIndexNotifier = ValueNotifier(0);

@@ -8,7 +8,7 @@ import 'package:dawnforge/game/utils/app_environment.dart';
 import 'package:dawnforge/game/features/farm/constants/farm_feedback_config.dart';
 import 'package:dawnforge/game/features/farm/farm_service_locator.dart';
 import 'package:dawnforge/game/features/farm/services/farm_feedback_service.dart';
-import 'package:dawnforge/game/features/time/time_manager.dart' as new_time;
+import 'package:dawnforge/game/features/time/time_manager.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 
 /// Handles farm-specific debug inputs from both keyboard and joystick.
@@ -46,7 +46,7 @@ class FarmInputHandler extends GameComponent with PlayerControllerListener {
   }
 
   void _handleAdvanceDayAndSaveGame() {
-    new_time.TimeManager.instance.advanceToNextDay();
+    TimeManager.instance.advanceToNextDay();
     GameSaveController.instance.saveGame();
     
     final currentDay = WorldStateManager.instance.currentDay;

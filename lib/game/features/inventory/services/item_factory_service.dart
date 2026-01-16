@@ -16,12 +16,10 @@ import '../../game_world/database/smallburg/smallburg_seed_bag_item_database_def
 
 /// Service for creating items from JSON database (L2: Factory with JSON database, I2: Service = External)
 final class ItemFactoryService {
-  ItemFactoryService._() {
-    initialize();
-  }
+  ItemFactoryService._();
 
   static final instance = ItemFactoryService._();
-  
+
   final Map<HandItemId, WeaponItem> _weapons = {};
   final Map<HandItemId, ToolItem> _tools = {};
   final Map<HandItemId, ConsumableItem> _consumables = {};

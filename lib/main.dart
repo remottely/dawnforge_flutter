@@ -1,10 +1,11 @@
 import 'package:dawnforge/game/features/farm/managers/farm_manager.dart';
 import 'package:dawnforge/game/features/farm/services/crop_factory_service.dart';
+import 'package:dawnforge/game/features/inventory/managers/equipment_manager.dart';
+import 'package:dawnforge/game/features/inventory/managers/inventory_manager.dart';
 import 'package:dawnforge/game/features/inventory/services/item_factory_service.dart';
 import 'package:dawnforge/pre_game/screens/menu_screen.dart';
 import 'package:dawnforge/game/systems/localization/gameplay_localizations_delegate.dart';
 import 'package:dawnforge/game/utils/app_environment.dart';
-import 'package:dawnforge/game/features/farm/database/crop_database.dart';
 import 'package:dawnforge/game/features/farm/farm_service_locator.dart';
 import 'package:dawnforge/game/features/inventory/config/inventory_service_locator.dart';
 import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
@@ -17,23 +18,24 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'game/systems/audio/audio_manager.dart';
 
+Future<void> _initializeSingletons() async {
+  await SettingsManager.instance.initializeOrientation();
+  await AudioManager.instance.initialize();
+  await CropFactoryService.instance.initialize();
+  await ItemFactoryService.instance.initialize();
+  FarmManager.instance.initializeTiles();
+  InventoryManager.instance.initializeSlots();
+  EquipmentManager.instance.initialize();
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  await SettingsManager.instance.initializeOrientation();
 
   if (!kIsWeb) {
     await Flame.device.fullScreen();
   }
 
-  await AudioManager.instance.initialize();
-
-  /// NEW
-  await CropFactoryService.instance.initialize();
-  await ItemFactoryService.instance.initialize();
-  FarmManager.instance.initializeTiles();
-
-  // await CropDatabase.initialize();
+  await _initializeSingletons();
 
   await setupInventoryDependencies();
   await setupFarmDependencies();

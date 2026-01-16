@@ -9,13 +9,11 @@ import '../entities/hand_item.dart';
 
 /// Manager for inventory state (C1: Singleton + ValueNotifier, I2: Manager = Singleton State)
 class InventoryManager {
-  InventoryManager._() {
-    _initializeSlots(_currentMaxSlots);
-  }
+  InventoryManager._();
 
   static final instance = InventoryManager._();
 
-  int _currentMaxSlots = InventoryDef.kSizeInventoryDefault;
+  static int _currentMaxSlots = InventoryDef.kSizeInventoryDefault;
 
   late List<InventorySlot> _slots;
 
@@ -78,8 +76,11 @@ class InventoryManager {
     return true;
   }
 
-  void _initializeSlots(int count) {
-    _slots = List.generate(count, (index) => InventorySlot(index: index));
+  void initializeSlots() {
+    _slots = List.generate(
+      _currentMaxSlots,
+      (index) => InventorySlot(index: index),
+    );
     slotsNotifier = ValueNotifier(List.unmodifiable(_slots));
   }
 
