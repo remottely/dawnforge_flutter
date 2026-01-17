@@ -248,7 +248,7 @@ abstract class GameplayScreenViewmodel extends State<GameplayScreen>
     );
 
     var lastPlayerModel = playerStateManager.lastPlayerModel;
-    final lastPlayerJson = lastPlayerModel?.toJson() ?? {'coins': 500};
+    final lastPlayerJson = lastPlayerModel?.toJson() ?? {'coins': 520};
     //  ?? PlayerSaveData.initial(playerType: 'demo').toJson();
 
     if (lastPlayerModel is! DDFarmPlayerModel) {
