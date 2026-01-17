@@ -1,36 +1,135 @@
-// lib/core/state/game_state_machine.dart (VERSÃO LIMPA)
+import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:bonfire/bonfire.dart';
+
+/// UI:
+///    - HUD
+///    - GUI
+///    -
+///    -
+///    -
+enum InterfaceType {
+  // Camadas Base
+  HUD, // Head-Up Display /// [ALL SCREEN]
+  GUI, // Graphical User Interface /// [ALL SCREEN]
+  UI, // User Interface /// [ANY SCREEN]
+  // Tipos de Tela
+  Menu, // Menu System
+  Screen, // Full Screen UI /// [FULL SCREEN]
+  Panel, // UI Panel /// [ANY SIZE]
+  Window, // Window/Dialog /// [CENTER]
+  Modal, // Modal Dialog /// [BOTTOM CENTER]
+  Popup, // Popup Window /// [CENTER]
+  // Overlays
+  Overlay, // UI Overlay /// [ANY SIZE / ALL SCREEN]
+  InGameOverlay, // In-Game Overlay /// [ANY SIZE / ALL SCREEN]
+  SystemOverlay, // System Overlay /// [ANY SIZE / ALL SCREEN]
+  DebugOverlay, // Debug Overlay /// [ANY SIZE / ALL SCREEN]
+  // Widgets/Componentes
+  Widget, // UI Widget /// [ANY SIZE]
+  Element, // UI Element /// [ANY SIZE]
+  Component, // UI Component /// [ANY SIZE]
+  // Control, // UI Control
+  // Feedback Visual
+  // VFX, // Visual Effects
+  // SFX, // Sound Effects (interface de áudio)
+  Indicator, // Visual Indicator /// [ANY SIZE]
+  Marker, // World Marker /// [ANY SIZE]
+  // Reticle, // Crosshair/Reticle
+  // Cursor, // Mouse Cursor
+  // Informação
+  Tooltip, // Tooltip
+  // Label, // Text Label
+  // Caption, // Caption
+  // Subtitle, // Subtitle
+  Notification, // Notification /// [TOP CENTER]
+  Alert, // Alert Message /// [TOP CENTER]
+  Banner, // Banner /// [TOP CENTER]
+  // Navegação
+  Navigator, // Navigation System /// [ANY LOCATION]
+  Tab, // Tab Interface /// [ANY LOCATION?]
+  Sidebar, // Sidebar /// [LEFT / RIGHT LOCATION]
+  Toolbar, // Toolbar /// [TOP / BOTTOM LOCATION?]
+  ActionBar, // Action Bar
+  QuickBar, // Quick Access Bar
+  Hotbar, // Hotbar (MMO)
+  Radial, // Radial Menu
+  // Específicos de Jogo
+  Minimap, // Mini Map /// [TOP RIGHT / BOTTOM RIGHT]
+  // Worldmap, // World Map
+  // Compass, // Compass
+  // Crosshair, // Crosshair
+  // HealthBar, // Health Bar
+  // Stamina, // Stamina Bar
+  // Mana, // Mana Bar
+  // XPBar, // Experience Bar
+  // QuestTracker, // Quest Tracker
+  // Inventory, // Inventory
+  // Crafting, // Crafting Interface
+  // Journal, // Journal/Log
+  // Bestiary, // Bestiary
+  // Codex, // Codex/Encyclopedia
+  // Diálogos e Interação
+  Dialog, // Dialog Box /// [CENTER]
+  // Dialogue, // Conversation Dialog (UK spelling)
+  Conversation, // Conversation System /// [BOTTOM CENTER]
+  ChoiceDialog, // Choice Dialog /// [CENTER]
+  Cutscene, // Cutscene UI /// [ALL SCREEN]
+  Cinematic, // Cinematic UI /// [ALL SCREEN]
+  // Sistema
+  // Pause, // Pause Menu
+  // Settings, // Settings Menu
+  // Options, // Options Menu
+  // SaveLoad, // Save/Load Screen
+  MainMenu, // Main Menu /// [PRE GAME]
+  // TitleScreen, // Title Screen
+  LoadingScreen, // Loading Screen /// [FULL SCREEN]
+  SplashScreen, // Splash Screen /// [FULL SCREEN]
+  Credits, // Credits Screen /// [FULL SIZE]
+  // // Feedback
+  // DamageNumber, // Damage Number
+  FloatingText, // Floating Text /// [ANY LOCATION]
+  // CombatLog, // Combat Log
+  ChatBox, // Chat Box /// [BOTTOM LEFT]
+  // Console, // Debug Console
+  // // Temporal
+  Transition, // Transition Effect /// [FULL SCREEN]
+  // Fade, // Fade Effect
+  // Vignette, // Vignette Effect
+  // ChromaticAberration, // Screen Effect
+}
 
 enum GlobalState {
   gameLoading,
   gameCutscene,
   gameTransitioning,
   gameplayResumed,
+  gameplayResumedFishing,
   gameplayPaused,
   uiMenuInventory,
   uiMenuQuest,
   uiMenuMap,
   uiMenuSettings,
-  uiOverlayMinigameFishing,
   uiOverlayCrafting,
   uiOverlayCooking,
   uiOverlayMarket,
-  uiOverlayChoiceDialog,
+  uiOverlayChoice,
   uiOverlayConversation,
   uiOverlayGameover,
 }
 
-class GlobalStateMachine {
-  static final GlobalStateMachine instance = GlobalStateMachine._();
+final class GlobalStateMachine {
   GlobalStateMachine._();
+  static final GlobalStateMachine instance = GlobalStateMachine._();
 
   // ✅ ÚNICA FONTE DA VERDADE
   final ValueNotifier<GlobalState> _rxCurrentState = ValueNotifier(
     // GlobalState.loading, // TODO(Kevin): NOW NOW - put it back
     GlobalState.gameplayResumed, // TODO(Kevin): NOW NOW - remove it
   );
+
   ValueNotifier<GlobalState> getRxCurrentState() => _rxCurrentState;
+  GlobalState getCurrentState() => _rxCurrentState.value;
 
   GlobalState? _previousState;
   final List<GlobalState> _stateHistory = [];
@@ -39,16 +138,20 @@ class GlobalStateMachine {
 
   void initialize(BonfireGameInterface gameRef) {
     _gameRef = gameRef;
-    debugPrint('[GlobalState] Initialized');
+    GameLogger.info('[GlobalState] Initialized');
+  }
+
+  void dispose() {
+    _rxCurrentState.dispose();
   }
 
   void _changeState(GlobalState newState) {
     if (_rxCurrentState.value == newState) {
-      debugPrint('[GlobalState] Already in ${newState.name}');
+      GameLogger.info('[GlobalState] Already in ${newState.name}');
       return;
     }
 
-    debugPrint(
+    GameLogger.info(
       '[GlobalState] ${_rxCurrentState.value.name} → ${newState.name}',
     );
 
@@ -57,7 +160,6 @@ class GlobalStateMachine {
 
     _onStateExit(_rxCurrentState.value);
 
-    // ✅ ÚNICA MUDANÇA DE ESTADO
     _rxCurrentState.value = newState;
 
     _onStateEnter(newState);
@@ -71,73 +173,52 @@ class GlobalStateMachine {
     }
   }
 
-  void _onStateExit(GlobalState state) {
-    switch (state) {
-      case GlobalState.gameplayPaused:
-      case GlobalState.uiMenuInventory:
-      case GlobalState.uiOverlayMarket:
-      case GlobalState.uiMenuMap:
-      case GlobalState.uiMenuSettings:
-        _resumeEngine();
-        break;
-      default:
-        break;
-    }
-  }
-
   void _onStateEnter(GlobalState state) {
     switch (state) {
       case GlobalState.gameplayResumed:
+      case GlobalState.gameplayResumedFishing:
         _resumeEngine();
         break;
-
-      case GlobalState.gameplayPaused:
-      case GlobalState.uiMenuInventory:
-      case GlobalState.uiOverlayMarket:
-      case GlobalState.uiMenuMap:
-      case GlobalState.uiMenuSettings:
-        _pauseEngine();
-        break;
-
-      case GlobalState.uiOverlayConversation:
-        _stopPlayerMovement();
-        break;
-
-      case GlobalState.gameCutscene:
-        _pauseEngine();
-        _stopPlayerMovement();
-        break;
-
       default:
+        _pauseEngine();
         break;
     }
   }
 
-  void _pauseEngine() {
-    if (_gameRef != null) {
-      _gameRef!.pauseEngine();
-      debugPrint('[GlobalState] ⏸️ Engine paused');
+  void _onStateExit(GlobalState state) {
+    switch (state) {
+      case GlobalState.gameplayResumed:
+      case GlobalState.gameplayResumedFishing:
+        break;
+      default:
+        _resumeEngine();
+        break;
     }
   }
 
   void _resumeEngine() {
     if (_gameRef != null) {
       _gameRef!.resumeEngine();
-      debugPrint('[GlobalState] ▶️ Engine resumed');
+      GameLogger.info('[GlobalState] ▶️ Engine resumed');
     }
   }
 
-  void _stopPlayerMovement() {
-    debugPrint('[GlobalState] 🛑 Player movement stopped');
+  void _pauseEngine() {
+    if (_gameRef != null) {
+      _gameRef!.pauseEngine();
+      GameLogger.info('[GlobalState] ⏸️ Engine paused');
+    }
   }
 
   bool get isGameLoading => _rxCurrentState.value == GlobalState.gameLoading;
   bool get isGameCutscene => _rxCurrentState.value == GlobalState.gameCutscene;
   bool get isGameTransitioning =>
       _rxCurrentState.value == GlobalState.gameTransitioning;
-  bool get isGamePlaying =>
+  bool get isGameplayResumed =>
       _rxCurrentState.value == GlobalState.gameplayResumed;
-  bool get isPausedInGamePlaying =>
+  bool get isGameplayResumedFishing =>
+      _rxCurrentState.value == GlobalState.gameplayResumedFishing;
+  bool get isGameplayPaused =>
       _rxCurrentState.value == GlobalState.gameplayPaused;
   bool get isUiMenuInventory =>
       _rxCurrentState.value == GlobalState.uiMenuInventory;
@@ -149,36 +230,20 @@ class GlobalStateMachine {
       _rxCurrentState.value == GlobalState.uiOverlayCrafting;
   bool get isUiOverlayCooking =>
       _rxCurrentState.value == GlobalState.uiOverlayCooking;
-  bool get isUiOverlayChoiceDialog =>
-      _rxCurrentState.value == GlobalState.uiOverlayChoiceDialog;
+  bool get isUiOverlayChoice =>
+      _rxCurrentState.value == GlobalState.uiOverlayChoice;
   bool get isUiOverlayConversation =>
       _rxCurrentState.value == GlobalState.uiOverlayConversation;
   bool get isUiOverlayMarket =>
       _rxCurrentState.value == GlobalState.uiOverlayMarket;
-  bool get isUiOverlayFishing =>
-      _rxCurrentState.value == GlobalState.uiOverlayMinigameFishing;
   bool get isUiOverlayGameover =>
       _rxCurrentState.value == GlobalState.uiOverlayGameover;
 
   bool get isTimePlaying =>
       _rxCurrentState.value == GlobalState.gameplayResumed;
-
   bool get isTimePaused =>
-      _rxCurrentState.value == GlobalState.gameLoading ||
-      _rxCurrentState.value == GlobalState.gameCutscene ||
-      _rxCurrentState.value == GlobalState.gameTransitioning ||
-      _rxCurrentState.value == GlobalState.gameplayPaused ||
-      _rxCurrentState.value == GlobalState.uiMenuInventory ||
-      _rxCurrentState.value == GlobalState.uiMenuQuest ||
-      _rxCurrentState.value == GlobalState.uiMenuMap ||
-      _rxCurrentState.value == GlobalState.uiMenuSettings ||
-      _rxCurrentState.value == GlobalState.uiOverlayCrafting ||
-      _rxCurrentState.value == GlobalState.uiOverlayCooking ||
-      _rxCurrentState.value == GlobalState.uiOverlayChoiceDialog ||
-      _rxCurrentState.value == GlobalState.uiOverlayConversation ||
-      _rxCurrentState.value == GlobalState.uiOverlayMarket ||
-      _rxCurrentState.value == GlobalState.uiOverlayMinigameFishing ||
-      _rxCurrentState.value == GlobalState.uiOverlayGameover;
+      !(_rxCurrentState.value == GlobalState.gameplayResumed) &&
+      !(_rxCurrentState.value == GlobalState.gameplayResumedFishing);
 
   // bool get canPlayerMove => isTimePlaying;
 
@@ -203,7 +268,6 @@ class GlobalStateMachine {
 
   // bool shouldShowOverlay(GlobalState state) => rxCurrentState.value == state;
 
-  // Helpers para transições comuns
   void openInventory() => _changeState(GlobalState.uiMenuInventory);
   void closeInventory() => _changeState(GlobalState.gameplayResumed);
 
@@ -213,8 +277,8 @@ class GlobalStateMachine {
   void startConversation() => _changeState(GlobalState.uiOverlayConversation);
   void endConversation() => _changeState(GlobalState.gameplayResumed);
 
-  void pauseGame() => _changeState(GlobalState.gameplayPaused);
-  void resumeGame() => _changeState(GlobalState.gameplayResumed);
+  void pauseGameplay() => _changeState(GlobalState.gameplayPaused);
+  void resumeGameplay() => _changeState(GlobalState.gameplayResumed);
 
   void openQuest() => _changeState(GlobalState.uiMenuQuest);
   void closeQuest() => _changeState(GlobalState.gameplayResumed);
@@ -231,14 +295,9 @@ class GlobalStateMachine {
   void openCooking() => _changeState(GlobalState.uiOverlayCooking);
   void closeCooking() => _changeState(GlobalState.gameplayResumed);
 
-  // Debug
   void printStateHistory() {
-    debugPrint(
+    GameLogger.info(
       '[GlobalState] History: ${_stateHistory.map((s) => s.name).join(" → ")}',
     );
-  }
-
-  void dispose() {
-    _rxCurrentState.dispose();
   }
 }

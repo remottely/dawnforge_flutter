@@ -8,11 +8,11 @@ import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:flutter/material.dart';
 
-final class UnifiedGameOverlay extends StatelessWidget {
+final class GlobalStateOverlay extends StatelessWidget {
   final DDBasePlayerView player;
   final PlayerController playerInput;
 
-  const UnifiedGameOverlay({
+  const GlobalStateOverlay({
     super.key,
     required this.player,
     required this.playerInput,
@@ -47,19 +47,7 @@ final class UnifiedGameOverlay extends StatelessWidget {
             globalState: globalState,
           ),
 
-          GlobalState.gameplayPaused => SizedBox.shrink(),
-
-          GlobalState.uiMenuInventory =>
-            const UIMenuInventoryPage(), // TODO: Criar
-
-          GlobalState.uiMenuQuest => const UIMenuQuestPage(), // TODO: Criar
-
-          GlobalState.uiMenuMap => const UIMenuMapPage(), // TODO: Criar
-
-          GlobalState.uiMenuSettings =>
-            const UIMenuSettingsPage(), // TODO: Criar
-
-          GlobalState.uiOverlayMinigameFishing => Stack(
+          GlobalState.gameplayResumedFishing => Stack(
             children: [
               GameplayResumedHud(
                 flexA: flexA,
@@ -70,20 +58,32 @@ final class UnifiedGameOverlay extends StatelessWidget {
                 playerInput: playerInput,
                 globalState: globalState,
               ),
-              const UIMinigameFishingHud(), // TODO: Criar
+              const GameplayResumedFishingHud(), // TODO: Criar
             ],
           ),
 
+          GlobalState.gameplayPaused => SizedBox.shrink(),
+
+          GlobalState.uiMenuInventory =>
+            const UiMenuInventoryPage(), // TODO: Criar
+
+          GlobalState.uiMenuQuest => const UiMenuQuestPage(), // TODO: Criar
+
+          GlobalState.uiMenuMap => const UiMenuMapPage(), // TODO: Criar
+
+          GlobalState.uiMenuSettings =>
+            const UiMenuSettingsPage(), // TODO: Criar
+
           GlobalState.uiOverlayCrafting => Column(
             children: [
-              const UIOverlayCraftingPanel(), // TODO: Criar
+              const UiOverlayCraftingPanel(), // TODO: Criar
               // TODO(Kevin): show inventory
             ],
           ),
 
           GlobalState.uiOverlayCooking => Column(
             children: [
-              const UIOverlayCookingPanel(), // TODO: Criar
+              const UiOverlayCookingPanel(), // TODO: Criar
               // TODO(Kevin): show inventory
             ],
           ),
@@ -92,7 +92,7 @@ final class UnifiedGameOverlay extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                UIOverlayMarketPanel(
+                UiOverlayMarketPanel(
                   playerModel: PlayerStateManager.instance.lastPlayerModel!,
                 ),
                 // TODO(Kevin): show inventory
@@ -100,14 +100,14 @@ final class UnifiedGameOverlay extends StatelessWidget {
             ),
           ),
 
-          GlobalState.uiOverlayChoiceDialog =>
-            const UIOverlayChoiceDialogPage(), // TODO: Criar
+          GlobalState.uiOverlayChoice =>
+            const UiOverlayChoiceDialog(), // TODO: Criar
 
           GlobalState.uiOverlayConversation =>
-            const UIOverlayConversationPage(), // TODO: Criar
+            const UiOverlayConversationDialog(), // TODO: Criar
 
           GlobalState.uiOverlayGameover =>
-            const UIOverlayGameoverPage(), // TODO: Criar
+            const UiOverlayGameoverDialog(), // TODO: Criar
         };
       },
     );

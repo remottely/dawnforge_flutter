@@ -1,4 +1,5 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:dawnforge/shared/utils/sprite_animation_constants.dart';
 import 'package:flutter/foundation.dart';
 
@@ -101,7 +102,7 @@ final class SpriteAnimationConfigHelper {
     );
 
     try {
-      // debugPrint('[SpriteAnimationConfigHelper] Carregando asset: $assetPath');
+      // GameLogger.info('[SpriteAnimationConfigHelper] Carregando asset: $assetPath');
       return SpriteAnimation.load(
         assetPath,
         createCustomData(
@@ -116,11 +117,9 @@ final class SpriteAnimationConfigHelper {
         ),
       );
     } catch (e, stack) {
-      debugPrint(
-        '[SpriteAnimationConfigHelper] ERRO ao carregar asset: $assetPath',
+      GameLogger.error(
+        '[SpriteAnimationConfigHelper] ERRO ao carregar asset: $assetPath.\nErro: $e.\nStack: $stack',
       );
-      debugPrint('Erro: $e');
-      debugPrint('Stack: $stack');
       rethrow;
     }
   }

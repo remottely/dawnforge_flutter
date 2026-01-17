@@ -35,62 +35,62 @@ class PauseMenuOverlay extends StatelessWidget {
   Widget build(BuildContext context) => const Placeholder();
 }
 
-class UIMenuInventoryPage extends StatelessWidget {
-  const UIMenuInventoryPage({super.key});
+class UiMenuInventoryPage extends StatelessWidget {
+  const UiMenuInventoryPage({super.key});
   @override
   Widget build(BuildContext context) => const Placeholder();
 }
 
-class UIMenuQuestPage extends StatelessWidget {
-  const UIMenuQuestPage({super.key});
+class UiMenuQuestPage extends StatelessWidget {
+  const UiMenuQuestPage({super.key});
   @override
   Widget build(BuildContext context) => const Placeholder();
 }
 
-class UIMenuMapPage extends StatelessWidget {
-  const UIMenuMapPage({super.key});
+class UiMenuMapPage extends StatelessWidget {
+  const UiMenuMapPage({super.key});
   @override
   Widget build(BuildContext context) => const Placeholder();
 }
 
-class UIMenuSettingsPage extends StatelessWidget {
-  const UIMenuSettingsPage({super.key});
+class UiMenuSettingsPage extends StatelessWidget {
+  const UiMenuSettingsPage({super.key});
   @override
   Widget build(BuildContext context) => const Placeholder();
 }
 
-class UIOverlayCraftingPanel extends StatelessWidget {
-  const UIOverlayCraftingPanel({super.key});
+class UiOverlayCraftingPanel extends StatelessWidget {
+  const UiOverlayCraftingPanel({super.key});
   @override
   Widget build(BuildContext context) => const Placeholder();
 }
 
-class UIOverlayCookingPanel extends StatelessWidget {
-  const UIOverlayCookingPanel({super.key});
+class UiOverlayCookingPanel extends StatelessWidget {
+  const UiOverlayCookingPanel({super.key});
   @override
   Widget build(BuildContext context) => const Placeholder();
 }
 
-class UIOverlayChoiceDialogPage extends StatelessWidget {
-  const UIOverlayChoiceDialogPage({super.key});
+class UiOverlayChoiceDialog extends StatelessWidget {
+  const UiOverlayChoiceDialog({super.key});
   @override
   Widget build(BuildContext context) => const Placeholder();
 }
 
-class UIOverlayConversationPage extends StatelessWidget {
-  const UIOverlayConversationPage({super.key});
+class UiOverlayConversationDialog extends StatelessWidget {
+  const UiOverlayConversationDialog({super.key});
   @override
   Widget build(BuildContext context) => const Placeholder();
 }
 
-class UIMinigameFishingHud extends StatelessWidget {
-  const UIMinigameFishingHud({super.key});
+class GameplayResumedFishingHud extends StatelessWidget {
+  const GameplayResumedFishingHud({super.key});
   @override
   Widget build(BuildContext context) => const Placeholder();
 }
 
-class UIOverlayGameoverPage extends StatelessWidget {
-  const UIOverlayGameoverPage({super.key});
+class UiOverlayGameoverDialog extends StatelessWidget {
+  const UiOverlayGameoverDialog({super.key});
   @override
   Widget build(BuildContext context) => const Placeholder();
 }

@@ -35,30 +35,30 @@ class DemoPlayer extends Character {
          // ✅ PASSA a animação NO CONSTRUTOR (não null!)
          animation: DemoPlayerDef.walkAnimation,
        ) {
-    debugPrint('[DemoPlayer] 🎮 Construtor - position: $position');
+    GameLogger.info('[DemoPlayer] 🎮 Construtor - position: $position');
     _setupBehaviors();
   }
 
   @override
   Future<void> onLoad() async {
-    debugPrint('[DemoPlayer] 📦 onLoad START');
+    GameLogger.info('[DemoPlayer] 📦 onLoad START');
 
     // ✅ Apenas chama super.onLoad (animação já foi passada no construtor)
     await super.onLoad();
 
-    debugPrint('[DemoPlayer] 📦 onLoad END');
-    debugPrint('[DemoPlayer] 📦 animation: $animation');
+    GameLogger.info('[DemoPlayer] 📦 onLoad END');
+    GameLogger.info('[DemoPlayer] 📦 animation: $animation');
   }
 
   @override
   void onMount() {
-    debugPrint('[DemoPlayer] 🔗 onMount START');
+    GameLogger.info('[DemoPlayer] 🔗 onMount START');
     super.onMount();
-    debugPrint('[DemoPlayer] 🔗 onMount END');
+    GameLogger.info('[DemoPlayer] 🔗 onMount END');
   }
 
   void _setupBehaviors() {
-    debugPrint('[DemoPlayer] ⚙️ _setupBehaviors START');
+    GameLogger.info('[DemoPlayer] ⚙️ _setupBehaviors START');
 
     addBehavior(
       MovementBehavior(
@@ -105,7 +105,7 @@ class DemoPlayer extends Character {
 
     addBehavior(EquipmentSyncBehavior());
 
-    debugPrint('[DemoPlayer] ⚙️ _setupBehaviors END');
+    GameLogger.info('[DemoPlayer] ⚙️ _setupBehaviors END');
   }
 
   @override

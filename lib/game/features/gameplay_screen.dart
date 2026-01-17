@@ -9,7 +9,7 @@ import 'package:dawnforge/core/utils/app_environment.dart';
 import 'package:dawnforge/game/utils/color_helper.dart';
 import 'package:dawnforge/game/features/game_world/decorations/map_transition_sensor.dart';
 import 'package:dawnforge/game/features/farm/handlers/farm_input_handler.dart';
-import 'package:dawnforge/game/systems/overlay/unified_game_overlay.dart';
+import 'package:dawnforge/game/global/global_state_overlay.dart';
 import 'package:dawnforge/game/features/gameplay_screen_viewmodel.dart';
 import 'package:dawnforge/game/features/time/time_manager.dart';
 import 'package:flutter/material.dart';
@@ -173,7 +173,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
               showCollisionArea: AppEnvironment.kShowCollisionArea,
             ),
 
-            UnifiedGameOverlay(player: player, playerInput: playerInput),
+            GlobalStateOverlay(player: player, playerInput: playerInput),
           ],
         );
       },

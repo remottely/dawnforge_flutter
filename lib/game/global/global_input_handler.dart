@@ -15,11 +15,12 @@ class InteractableData {
 }
 
 /// ✅ AGORA É UM FACTORY NORMAL (não mais singleton)
-class GlobalInputHandler extends GameComponent with PlayerControllerListener {
+final class GlobalInputHandler extends GameComponent
+    with PlayerControllerListener {
   final PlayerController playerInput;
 
   // ✅ ESTADO COMPARTILHADO (singleton separado)
-  static final _SharedState _state = _SharedState();
+  static final _SharedState _state = _SharedState.instance;
 
   GlobalInputHandler({required this.playerInput});
 
@@ -98,7 +99,7 @@ class GlobalInputHandler extends GameComponent with PlayerControllerListener {
   }
 
   bool _canProcessInput() {
-    final state = GlobalStateMachine.instance.getRxCurrentState().value;
+    final state = GlobalStateMachine.instance.getCurrentState();
     return state != GlobalState.gameLoading &&
         state != GlobalState.gameTransitioning &&
         state != GlobalState.gameCutscene &&
@@ -106,7 +107,7 @@ class GlobalInputHandler extends GameComponent with PlayerControllerListener {
   }
 
   bool _handleUIOverlays(JoystickActionEvent event) {
-    final state = GlobalStateMachine.instance.getRxCurrentState().value;
+    final state = GlobalStateMachine.instance.getCurrentState();
 
     if (state == GlobalState.uiOverlayMarket) {
       if (InputDef.isInteractionAction(event.id)) {
@@ -124,7 +125,7 @@ class GlobalInputHandler extends GameComponent with PlayerControllerListener {
       return true;
     }
 
-    if (state == GlobalState.uiOverlayChoiceDialog) {
+    if (state == GlobalState.uiOverlayChoice) {
       if (InputDef.isInteractionAction(event.id)) {
         GameLogger.debug('[GlobalInput] Confirming choice');
         return true;
@@ -182,7 +183,7 @@ class GlobalInputHandler extends GameComponent with PlayerControllerListener {
       return true;
     }
 
-    if (state == GlobalState.uiOverlayMinigameFishing) {
+    if (state == GlobalState.gameplayResumedFishing) {
       if (InputDef.isPrimaryAction(event.id)) {
         GameLogger.debug('[GlobalInput] Fishing action');
         return true;
@@ -192,7 +193,7 @@ class GlobalInputHandler extends GameComponent with PlayerControllerListener {
 
     if (state == GlobalState.gameplayPaused) {
       if (InputDef.isInteractionAction(event.id)) {
-        GlobalStateMachine.instance.resumeGame();
+        GlobalStateMachine.instance.resumeGameplay();
         return true;
       }
       return true;
@@ -237,7 +238,7 @@ class GlobalInputHandler extends GameComponent with PlayerControllerListener {
   }
 
   bool _handleGlobalHotkeys(JoystickActionEvent event) {
-    final state = GlobalStateMachine.instance.getRxCurrentState().value;
+    final state = GlobalStateMachine.instance.getCurrentState();
 
     if (state != GlobalState.gameplayResumed) return false;
 
@@ -306,10 +307,9 @@ class GlobalInputHandler extends GameComponent with PlayerControllerListener {
 }
 
 /// ✅ ESTADO COMPARTILHADO (Singleton separado)
-class _SharedState {
-  static final _SharedState _instance = _SharedState._();
-  factory _SharedState() => _instance;
+final class _SharedState {
   _SharedState._();
+  static final _SharedState instance = _SharedState._();
 
   final Map<String, InteractableData> _registeredInteractables = {};
 

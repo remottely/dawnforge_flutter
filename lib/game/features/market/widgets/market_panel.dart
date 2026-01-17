@@ -19,16 +19,16 @@ import 'package:flutter/services.dart';
 import 'package:dawnforge/core/utils/game_logger.dart';
 
 /// Painel do market exibido dentro do grid da HUD (Quadrante 5).
-class UIOverlayMarketPanel extends StatefulWidget {
+class UiOverlayMarketPanel extends StatefulWidget {
   final DDBasePlayerModel playerModel;
 
-  const UIOverlayMarketPanel({super.key, required this.playerModel});
+  const UiOverlayMarketPanel({super.key, required this.playerModel});
 
   @override
-  State<UIOverlayMarketPanel> createState() => _UIOverlayMarketPanelState();
+  State<UiOverlayMarketPanel> createState() => _UiOverlayMarketPanelState();
 }
 
-class _UIOverlayMarketPanelState extends State<UIOverlayMarketPanel> {
+class _UiOverlayMarketPanelState extends State<UiOverlayMarketPanel> {
   final _catalog = MarketManager.instance.getMarketCatalog();
   late final InventoryManager _inventory;
   late final ItemFactoryService _itemFactory;
