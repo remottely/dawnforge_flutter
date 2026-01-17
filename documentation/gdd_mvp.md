@@ -590,6 +590,8 @@ MVP focado no **loop essencial de farming**: **plantar → regar → colher → 
 ---
 
 # Questões pré MVP:
+- os inputs devem ser 100% migrados e nao devem se sobrescrever nunca
+- melhorar market sell behavior, add mouse segurado vender em massa assim como ocorre quando segurado o "keyC"
 - corrigir questao de prioridade no input do player, exemplo: com o slot de loot selecionado e ao mesmo tempo dentro da area de interacao com market, deve haver uma prioridade de qual dos dois deve ser executado anulando o outro, criar hierarquia, state machine??
 - regras de game state:
   - game: global, apenas uma camada de render aparecendo em todo o app

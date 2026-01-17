@@ -13,7 +13,6 @@ import 'package:dawnforge/game/systems/game/player_state_manager.dart';
 import 'package:dawnforge/game/systems/overlay/message/message_overlay_service.dart';
 import 'package:flutter/material.dart';
 
-/// **COMPOSITION CORE:** Entry Point - Gerencia visibilidade e responsividade
 class InventoryOverlay extends StatelessWidget {
   const InventoryOverlay({super.key});
 
@@ -32,7 +31,6 @@ class InventoryOverlay extends StatelessWidget {
   }
 }
 
-/// **Container:** Gerencia decoração e layout responsivo
 class _InventoryContainer extends StatelessWidget {
   const _InventoryContainer();
 

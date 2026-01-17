@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/home_map.json",
+    "activeFile": "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/farm_map.json",
     "expandedProjectPaths": [
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps",
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/Modern_Farm_v1.2/tilesets"
@@ -228,10 +228,10 @@
                 15
             ],
             "scale": 2.1655,
-            "selectedLayer": 9,
+            "selectedLayer": 12,
             "viewCenter": {
-                "x": 668.4368506118678,
-                "y": 243.59270376356494
+                "x": 548.1413068575387,
+                "y": 280.0738859385823
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/florest.json": {
@@ -268,8 +268,10 @@
         },
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/home_map.json": {
             "expandedObjectLayers": [
+                13,
                 9,
-                8
+                8,
+                15
             ],
             "scale": 5.81,
             "selectedLayer": 10,
@@ -382,7 +384,7 @@
             "scaleInDock": 1
         },
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/texture_atlas.json": {
-            "scaleInDock": 3,
+            "scaleInDock": 2,
             "scaleInEditor": 1.5
         },
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/tileSet.json": {
@@ -427,14 +429,14 @@
     "project": "modern_farm.tiled-project",
     "property.type": "string",
     "recentFiles": [
-        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/farm_map.json",
-        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/forest_map.json",
-        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/town_map.json",
-        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/lake_map.json",
-        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/beach_map.json",
-        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/cave_map.json",
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/texture_atlas.json",
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/home_map.json",
+        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/cave_map.json",
+        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/beach_map.json",
+        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/lake_map.json",
+        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/town_map.json",
+        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/forest_map.json",
+        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/farm_map.json",
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/f/maps/f_1.json",
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/sv/maps/sv_farm.json",
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/farm.json",

@@ -44,7 +44,6 @@ final class GlobalStateOverlay extends StatelessWidget {
             flexB: flexB,
             player: player,
             playerInput: playerInput,
-            globalState: globalState,
           ),
 
           GlobalState.gameplayResumedFishing => Stack(
@@ -56,7 +55,6 @@ final class GlobalStateOverlay extends StatelessWidget {
                 flexB: flexB,
                 player: player,
                 playerInput: playerInput,
-                globalState: globalState,
               ),
               const GameplayResumedFishingHud(), // TODO: Criar
             ],
@@ -89,9 +87,18 @@ final class GlobalStateOverlay extends StatelessWidget {
           ),
 
           GlobalState.uiOverlayMarket => Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+            child: Stack(
+              // crossAxisAlignment: CrossAxisAlignment.center,
+              // mainAxisSize: MainAxisSize.min,
               children: [
+                GameplayResumedHud(
+                  flexA: flexA,
+                  isDesktop: isDesktop,
+                  flexC: flexC,
+                  flexB: flexB,
+                  player: player,
+                  playerInput: playerInput,
+                ),
                 UiOverlayMarketPanel(
                   playerModel: PlayerStateManager.instance.lastPlayerModel!,
                 ),

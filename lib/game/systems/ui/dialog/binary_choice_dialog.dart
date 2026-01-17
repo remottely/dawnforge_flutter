@@ -39,29 +39,29 @@ class BinaryChoiceDialog {
             return Focus(
               focusNode: focusNode,
               autofocus: true,
-              onKey: (node, event) {
-                if (event is! RawKeyDownEvent) {
+              onKeyEvent: (node, keyEvent) {
+                if (keyEvent is! KeyDownEvent) {
                   return KeyEventResult.ignored;
                 }
 
-                if (event.logicalKey == upKey ||
-                    event.logicalKey == LogicalKeyboardKey.arrowUp) {
+                if (keyEvent.logicalKey == upKey ||
+                    keyEvent.logicalKey == LogicalKeyboardKey.arrowUp) {
                   setState(() => selectedIndex = 0);
                   return KeyEventResult.handled;
                 }
 
-                if (event.logicalKey == downKey ||
-                    event.logicalKey == LogicalKeyboardKey.arrowDown) {
+                if (keyEvent.logicalKey == downKey ||
+                    keyEvent.logicalKey == LogicalKeyboardKey.arrowDown) {
                   setState(() => selectedIndex = 1);
                   return KeyEventResult.handled;
                 }
 
-                if (event.logicalKey == confirmKey) {
+                if (keyEvent.logicalKey == confirmKey) {
                   Navigator.of(dialogContext).pop(selectedIndex == 0);
                   return KeyEventResult.handled;
                 }
 
-                if (event.logicalKey == cancelKey) {
+                if (keyEvent.logicalKey == cancelKey) {
                   Navigator.of(dialogContext).pop(false);
                   return KeyEventResult.handled;
                 }
