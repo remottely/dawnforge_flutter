@@ -232,13 +232,13 @@ class _SlotNumberIndicator extends StatelessWidget {
           vertical: 1,
         ),
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.7),
+          color: Colors.black.withValues(alpha: 0.7),
           borderRadius: BorderRadius.circular(2),
         ),
         child: Text(
           label,
           style: TextStyle(
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             fontSize: config.baseFontSize - 4,
             fontWeight: FontWeight.bold,
             fontFamily: 'Normal',
@@ -296,7 +296,7 @@ class _SlotQuantityIndicator extends StatelessWidget {
           vertical: 1,
         ),
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.7),
+          color: Colors.black.withValues(alpha: 0.7),
           borderRadius: BorderRadius.circular(2),
         ),
         child: Text(

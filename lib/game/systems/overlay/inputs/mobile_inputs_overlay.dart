@@ -166,12 +166,12 @@ final class MobileInputsOverlay extends ResponsiveOverlayBase {
         width: size,
         height: size,
         decoration: BoxDecoration(
-          color: color.withOpacity(0.7),
+          color: color.withValues(alpha: 0.7),
           borderRadius: BorderRadius.circular(size * 0.2),
-          border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.3), width: 2),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.3),
+              color: Colors.black.withValues(alpha: 0.3),
               blurRadius: 4,
               offset: const Offset(0, 2),
             ),

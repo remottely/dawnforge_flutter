@@ -33,7 +33,7 @@ class _TimeHudPanelState extends State<TimeHudPanel> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.45),
+        color: Colors.black.withValues(alpha: 0.45),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: Colors.white24, width: 1),
       ),

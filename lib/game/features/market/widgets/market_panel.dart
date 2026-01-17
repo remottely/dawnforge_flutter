@@ -105,9 +105,9 @@ class _UiOverlayMarketPanelState extends State<UiOverlayMarketPanel> {
         margin: const EdgeInsets.all(12),
         padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.82),
+          color: Colors.black.withValues(alpha: 0.82),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white.withOpacity(0.5)),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.5)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -172,9 +172,9 @@ class _UiOverlayMarketPanelState extends State<UiOverlayMarketPanel> {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.5),
+            color: Colors.black.withValues(alpha: 0.5),
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.white.withOpacity(0.3)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -205,7 +205,7 @@ class _UiOverlayMarketPanelState extends State<UiOverlayMarketPanel> {
         final borderColor = isSelected
             ? Colors.orangeAccent
             : canBuy
-            ? Colors.greenAccent.withOpacity(0.7)
+            ? Colors.greenAccent.withValues(alpha: 0.7)
             : Colors.white24;
         return Material(
           color: Colors.transparent,
@@ -223,15 +223,15 @@ class _UiOverlayMarketPanelState extends State<UiOverlayMarketPanel> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Colors.white.withOpacity(isSelected ? 0.12 : 0.06),
-                    Colors.black.withOpacity(0.2),
+                    Colors.white.withValues(alpha: isSelected ? 0.12 : 0.06),
+                    Colors.black.withValues(alpha: 0.2),
                   ],
                 ),
                 boxShadow: [
                   BoxShadow(
                     color: isSelected
-                        ? Colors.orangeAccent.withOpacity(0.18)
-                        : Colors.black.withOpacity(0.25),
+                        ? Colors.orangeAccent.withValues(alpha: 0.18)
+                        : Colors.black.withValues(alpha: 0.25),
                     blurRadius: 8,
                     offset: const Offset(0, 3),
                   ),
@@ -250,7 +250,7 @@ class _UiOverlayMarketPanelState extends State<UiOverlayMarketPanel> {
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.08),
+                            color: Colors.white.withValues(alpha: 0.08),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(

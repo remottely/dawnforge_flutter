@@ -104,8 +104,8 @@ class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
         child: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.8),
-            border: Border.all(color: Colors.white.withOpacity(0.5), width: 2),
+            color: Colors.black.withValues(alpha: 0.8),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.5), width: 2),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
@@ -147,7 +147,7 @@ class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
           height: 80,
           decoration: BoxDecoration(
             color: const Color(0xFF455A64),
-            border: Border.all(color: Colors.white.withOpacity(0.5)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.5)),
             borderRadius: BorderRadius.circular(3),
           ),
           child: ClipRRect(
@@ -188,7 +188,7 @@ class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
           height: 80,
           decoration: BoxDecoration(
             color: const Color(0xFF455A64),
-            border: Border.all(color: Colors.white.withOpacity(0.5)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.5)),
             borderRadius: BorderRadius.circular(3),
           ),
           child: ClipRRect(

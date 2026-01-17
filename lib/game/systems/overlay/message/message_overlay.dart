@@ -76,13 +76,13 @@ class _MessageOverlayState extends State<MessageOverlay>
   Color _getBackgroundColor(OverlayMessageType type) {
     switch (type) {
       case OverlayMessageType.warning:
-        return Colors.orange.withOpacity(0.95);
+        return Colors.orange.withValues(alpha: 0.95);
       case OverlayMessageType.error:
-        return Colors.red.withOpacity(0.95);
+        return Colors.red.withValues(alpha: 0.95);
       case OverlayMessageType.info:
-        return Colors.blue.withOpacity(0.95);
+        return Colors.blue.withValues(alpha: 0.95);
       case OverlayMessageType.success:
-        return Colors.green.withOpacity(0.95);
+        return Colors.green.withValues(alpha: 0.95);
     }
   }
 
@@ -124,13 +124,13 @@ class _MessageOverlayState extends State<MessageOverlay>
                   borderRadius: BorderRadius.circular(8),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
+                      color: Colors.black.withValues(alpha: 0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),
                   ],
                   border: Border.all(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withValues(alpha: 0.2),
                     width: 1,
                   ),
                 ),

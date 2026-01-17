@@ -152,7 +152,7 @@ class _DialogOption extends StatelessWidget {
           width: isSelected ? 2 : 1,
         ),
         color: isSelected
-            ? const Color(0xFFFFE28A).withOpacity(0.18)
+            ? const Color(0xFFFFE28A).withValues(alpha: 0.18)
             : const Color(0xFF13202E),
         boxShadow: isSelected
             ? const [
