@@ -274,13 +274,13 @@ final class FarmerPlayerDef {
         framePositionYPadding: -1,
       );
 
-  static final DDAnimationDirectionalFactory _animationHarvestDirectionalFactory =
-      DDAnimationDirectionalFactory(
-        loadRight: _loadAnimationHarvestRight,
-        loadLeft: _loadAnimationHarvestLeft,
-        loadUp: _loadAnimationHarvestUp,
-        loadDown: _loadAnimationHarvestDown,
-      );
+  static final DDAnimationDirectionalFactory
+  _animationHarvestDirectionalFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationHarvestRight,
+    loadLeft: _loadAnimationHarvestLeft,
+    loadUp: _loadAnimationHarvestUp,
+    loadDown: _loadAnimationHarvestDown,
+  );
 
   static final Future<SpriteAnimation> _loadAnimationChoppingRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
@@ -326,13 +326,13 @@ final class FarmerPlayerDef {
         framePositionYPadding: -8,
       );
 
-  static final DDAnimationDirectionalFactory _animationChoppingDirectionalFactory =
-      DDAnimationDirectionalFactory(
-        loadRight: _loadAnimationChoppingRight,
-        loadLeft: _loadAnimationChoppingLeft,
-        loadUp: _loadAnimationChoppingUp,
-        loadDown: _loadAnimationChoppingDown,
-      );
+  static final DDAnimationDirectionalFactory
+  _animationChoppingDirectionalFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationChoppingRight,
+    loadLeft: _loadAnimationChoppingLeft,
+    loadUp: _loadAnimationChoppingUp,
+    loadDown: _loadAnimationChoppingDown,
+  );
 
   static final Future<SpriteAnimation> _loadAnimationAttackRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
@@ -382,13 +382,13 @@ final class FarmerPlayerDef {
         framePositionYPadding: -8,
       );
 
-  static final DDAnimationDirectionalFactory _animationAttackDirectionalFactory =
-      DDAnimationDirectionalFactory(
-        loadRight: _loadAnimationAttackRight,
-        loadLeft: _loadAnimationAttackLeft,
-        loadUp: _loadAnimationAttackUp,
-        loadDown: _loadAnimationAttackDown,
-      );
+  static final DDAnimationDirectionalFactory
+  _animationAttackDirectionalFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationAttackRight,
+    loadLeft: _loadAnimationAttackLeft,
+    loadUp: _loadAnimationAttackUp,
+    loadDown: _loadAnimationAttackDown,
+  );
 
   static final Future<SpriteAnimation> _loadAnimationDigRight =
       SpriteAnimationConfigHelper.loadAnimationFromTextureAtlasModernFarm(
@@ -432,13 +432,14 @@ final class FarmerPlayerDef {
         framePositionYPadding: -7,
       );
 
-  static final DDAnimationDirectionalFactory _animationDigDirectionalFactory = DDAnimationDirectionalFactory(
-    // executionStartFrame: 4,
-    loadRight: _loadAnimationDigRight,
-    loadLeft: _loadAnimationDigLeft,
-    loadUp: _loadAnimationDigUp,
-    loadDown: _loadAnimationDigDown,
-  );
+  static final DDAnimationDirectionalFactory _animationDigDirectionalFactory =
+      DDAnimationDirectionalFactory(
+        // executionStartFrame: 4,
+        loadRight: _loadAnimationDigRight,
+        loadLeft: _loadAnimationDigLeft,
+        loadUp: _loadAnimationDigUp,
+        loadDown: _loadAnimationDigDown,
+      );
 
   // static final Future<SpriteAnimation> _loadAnimationWateringRight =
   //     SpriteAnimationConfigHelper.loadAnimationFromTextureAtlas(
@@ -503,15 +504,15 @@ final class FarmerPlayerDef {
         framePositionYPadding: -17,
       );
 
-  static final DDAnimationDirectionalFactory _animationWateringDirectionalFactory =
-      DDAnimationDirectionalFactory(
-        // executionStartFrame: 14,
-        // TODO(Kevin): change all waterincan names to watering
-        loadRight: _loadAnimationWateringRight,
-        loadLeft: _loadAnimationWateringLeft,
-        loadUp: _loadAnimationWateringUp,
-        loadDown: _loadAnimationWateringDown,
-      );
+  static final DDAnimationDirectionalFactory
+  _animationWateringDirectionalFactory = DDAnimationDirectionalFactory(
+    // executionStartFrame: 14,
+    // TODO(Kevin): change all waterincan names to watering
+    loadRight: _loadAnimationWateringRight,
+    loadLeft: _loadAnimationWateringLeft,
+    loadUp: _loadAnimationWateringUp,
+    loadDown: _loadAnimationWateringDown,
+  );
 
   /// TODO(Kevin): remove this test animations
   static final Future<SpriteAnimation> _loadAnimationPlaceSeedRight =
@@ -559,13 +560,13 @@ final class FarmerPlayerDef {
         framePositionYPadding: -1,
       );
 
-  static final DDAnimationDirectionalFactory _animationPlaceSeedDirectionalFactory =
-      DDAnimationDirectionalFactory(
-        loadRight: _loadAnimationPlaceSeedRight,
-        loadLeft: _loadAnimationPlaceSeedLeft,
-        loadUp: _loadAnimationPlaceSeedUp,
-        loadDown: _loadAnimationPlaceSeedDown,
-      );
+  static final DDAnimationDirectionalFactory
+  _animationPlaceSeedDirectionalFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationPlaceSeedRight,
+    loadLeft: _loadAnimationPlaceSeedLeft,
+    loadUp: _loadAnimationPlaceSeedUp,
+    loadDown: _loadAnimationPlaceSeedDown,
+  );
 
   static final LightingConfig _lighting = LightingConfig(
     radius: TileConstants.kTileDimensionLarge,

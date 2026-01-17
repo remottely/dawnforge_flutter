@@ -26,15 +26,15 @@ class GlobalInputHandler extends GameComponent with PlayerControllerListener {
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    
+
     print('🔥🔥🔥 [GlobalInput] onLoad START');
     print('🔥 playerInput.hashCode: ${playerInput.hashCode}');
-    
+
     playerInput.addObserver(this);
-    
+
     print('🔥 ✅ Observer REGISTRADO');
     print('🔥🔥🔥 [GlobalInput] onLoad END');
-    
+
     GameLogger.debug('[GlobalInput] 🎮 Handler loaded and ready');
   }
 
@@ -42,18 +42,22 @@ class GlobalInputHandler extends GameComponent with PlayerControllerListener {
   void onRemove() {
     print('🔥🔥🔥 [GlobalInput] onRemove START');
     print('🔥 playerInput.hashCode: ${playerInput.hashCode}');
-    print('🔥 Interactables compartilhados ANTES de limpar: ${_state._registeredInteractables.length}');
-    
+    print(
+      '🔥 Interactables compartilhados ANTES de limpar: ${_state._registeredInteractables.length}',
+    );
+
     playerInput.removeObserver(this);
-    
+
     // ✅ LIMPA TODO O ESTADO COMPARTILHADO
     _state.dispose();
-    
+
     print('🔥 ✅ Observer REMOVIDO');
     print('🔥 ✅ SharedState LIMPO (dispose)');
-    print('🔥 Interactables compartilhados DEPOIS de limpar: ${_state._registeredInteractables.length}');
+    print(
+      '🔥 Interactables compartilhados DEPOIS de limpar: ${_state._registeredInteractables.length}',
+    );
     print('🔥🔥🔥 [GlobalInput] onRemove END');
-    
+
     super.onRemove();
     GameLogger.debug('[GlobalInput] Handler removed and state cleared');
   }
@@ -61,7 +65,9 @@ class GlobalInputHandler extends GameComponent with PlayerControllerListener {
   @override
   void onJoystickAction(JoystickActionEvent event) {
     if (kDebugMode) {
-      GameLogger.debug('[GlobalInput] 🎮 Input received: ${event.id} | ${event.event}');
+      GameLogger.debug(
+        '[GlobalInput] 🎮 Input received: ${event.id} | ${event.event}',
+      );
     }
 
     if (event.event != ActionEvent.DOWN) return;
@@ -77,7 +83,8 @@ class GlobalInputHandler extends GameComponent with PlayerControllerListener {
     }
 
     if (_handleWorldInteractions(event)) {
-      if (kDebugMode) GameLogger.debug('[GlobalInput] ✅ World interaction handled');
+      if (kDebugMode)
+        GameLogger.debug('[GlobalInput] ✅ World interaction handled');
       return;
     }
 
@@ -86,7 +93,8 @@ class GlobalInputHandler extends GameComponent with PlayerControllerListener {
       return;
     }
 
-    if (kDebugMode) GameLogger.debug('[GlobalInput] ⚠️ No handler consumed input');
+    if (kDebugMode)
+      GameLogger.debug('[GlobalInput] ⚠️ No handler consumed input');
   }
 
   bool _canProcessInput() {
@@ -214,7 +222,9 @@ class GlobalInputHandler extends GameComponent with PlayerControllerListener {
     final data = highestPriority.$2;
 
     if (kDebugMode) {
-      GameLogger.debug('[GlobalInput] 🎯 Executing: $id (priority: ${data.type.priority})');
+      GameLogger.debug(
+        '[GlobalInput] 🎯 Executing: $id (priority: ${data.type.priority})',
+      );
     }
 
     try {
@@ -308,8 +318,11 @@ class _SharedState {
     required InteractionType type,
     required InteractionCallback onExecute,
   }) {
-    _registeredInteractables[id] = InteractableData(type: type, onExecute: onExecute);
-    
+    _registeredInteractables[id] = InteractableData(
+      type: type,
+      onExecute: onExecute,
+    );
+
     if (kDebugMode) {
       GameLogger.debug(
         '[GlobalInput] ➕ Registered: $id (priority: ${type.priority}) Total: ${_registeredInteractables.length}',
@@ -319,9 +332,11 @@ class _SharedState {
 
   void unregister(String id) {
     final removed = _registeredInteractables.remove(id);
-    
+
     if (removed != null && kDebugMode) {
-      GameLogger.debug('[GlobalInput] ➖ Unregistered: $id Remaining: ${_registeredInteractables.length}');
+      GameLogger.debug(
+        '[GlobalInput] ➖ Unregistered: $id Remaining: ${_registeredInteractables.length}',
+      );
     }
   }
 
@@ -332,7 +347,9 @@ class _SharedState {
 
   // ✅ MÉTODO DISPOSE para limpar completamente
   void dispose() {
-    print('🔥 [SharedState] dispose() chamado - Limpando ${_registeredInteractables.length} interactables');
+    print(
+      '🔥 [SharedState] dispose() chamado - Limpando ${_registeredInteractables.length} interactables',
+    );
     _registeredInteractables.clear();
     if (kDebugMode) GameLogger.debug('[GlobalInput] 🗑️ SharedState disposed');
   }

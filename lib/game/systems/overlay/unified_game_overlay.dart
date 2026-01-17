@@ -56,7 +56,8 @@ final class UnifiedGameOverlay extends StatelessWidget {
 
           GlobalState.uiMenuMap => const UIMenuMapPage(), // TODO: Criar
 
-          GlobalState.uiMenuSettings => const UIMenuSettingsPage(), // TODO: Criar
+          GlobalState.uiMenuSettings =>
+            const UIMenuSettingsPage(), // TODO: Criar
 
           GlobalState.uiOverlayMinigameFishing => Stack(
             children: [

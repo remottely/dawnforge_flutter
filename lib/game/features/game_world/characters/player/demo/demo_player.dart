@@ -42,7 +42,7 @@ class DemoPlayer extends Character {
   @override
   Future<void> onLoad() async {
     debugPrint('[DemoPlayer] 📦 onLoad START');
-    
+
     // ✅ Apenas chama super.onLoad (animação já foi passada no construtor)
     await super.onLoad();
 
@@ -155,11 +155,7 @@ class DemoPlayer extends Character {
   factory DemoPlayer.fromSave(Map<String, dynamic> saveData) {
     final data = CharacterData.fromJson(saveData);
 
-    return DemoPlayer(
-      id: 'player_demo',
-      data: data,
-      position: data.position,
-    );
+    return DemoPlayer(id: 'player_demo', data: data, position: data.position);
   }
 
   factory DemoPlayer.newGame(Vector2 spawnPosition) {
@@ -170,10 +166,6 @@ class DemoPlayer extends Character {
       position: spawnPosition,
     );
 
-    return DemoPlayer(
-      id: 'player_demo',
-      data: data,
-      position: spawnPosition,
-    );
+    return DemoPlayer(id: 'player_demo', data: data, position: spawnPosition);
   }
 }

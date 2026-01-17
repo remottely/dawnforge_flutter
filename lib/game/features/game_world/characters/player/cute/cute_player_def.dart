@@ -70,13 +70,14 @@ final class CutePlayerDef {
         ),
       );
 
-  static final Future<SpriteAnimation> _loadAnimationIdleUp = SpriteAnimation.load(
-    'new/Player/idle/player_idle_up_48x48_6.png',
-    SpriteAnimationConfigHelper.createStandardData(
-      amount: 6,
-      textureSize: textureSize,
-    ),
-  );
+  static final Future<SpriteAnimation> _loadAnimationIdleUp =
+      SpriteAnimation.load(
+        'new/Player/idle/player_idle_up_48x48_6.png',
+        SpriteAnimationConfigHelper.createStandardData(
+          amount: 6,
+          textureSize: textureSize,
+        ),
+      );
 
   static final Future<SpriteAnimation> _loadAnimationIdleDown =
       SpriteAnimation.load(

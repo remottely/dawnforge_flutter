@@ -116,7 +116,9 @@ final class SpriteAnimationConfigHelper {
         ),
       );
     } catch (e, stack) {
-      debugPrint('[SpriteAnimationConfigHelper] ERRO ao carregar asset: $assetPath');
+      debugPrint(
+        '[SpriteAnimationConfigHelper] ERRO ao carregar asset: $assetPath',
+      );
       debugPrint('Erro: $e');
       debugPrint('Stack: $stack');
       rethrow;

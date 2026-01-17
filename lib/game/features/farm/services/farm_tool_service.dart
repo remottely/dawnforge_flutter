@@ -8,7 +8,7 @@ import '../../game_world/world/entities/world_entities.dart';
 
 /// Service for validating farm tool usage (I2: Service = stateless)
 final class FarmToolService {
-    FarmToolService._();
+  FarmToolService._();
 
   static final FarmToolService instance = FarmToolService._();
 

@@ -48,7 +48,9 @@ class GlobalStateMachine {
       return;
     }
 
-    debugPrint('[GlobalState] ${_rxCurrentState.value.name} → ${newState.name}');
+    debugPrint(
+      '[GlobalState] ${_rxCurrentState.value.name} → ${newState.name}',
+    );
 
     _previousState = _rxCurrentState.value;
     _stateHistory.add(_rxCurrentState.value);
@@ -133,7 +135,8 @@ class GlobalStateMachine {
   bool get isGameCutscene => _rxCurrentState.value == GlobalState.gameCutscene;
   bool get isGameTransitioning =>
       _rxCurrentState.value == GlobalState.gameTransitioning;
-  bool get isGamePlaying => _rxCurrentState.value == GlobalState.gameplayResumed;
+  bool get isGamePlaying =>
+      _rxCurrentState.value == GlobalState.gameplayResumed;
   bool get isPausedInGamePlaying =>
       _rxCurrentState.value == GlobalState.gameplayPaused;
   bool get isUiMenuInventory =>
@@ -157,7 +160,8 @@ class GlobalStateMachine {
   bool get isUiOverlayGameover =>
       _rxCurrentState.value == GlobalState.uiOverlayGameover;
 
-  bool get isTimePlaying => _rxCurrentState.value == GlobalState.gameplayResumed;
+  bool get isTimePlaying =>
+      _rxCurrentState.value == GlobalState.gameplayResumed;
 
   bool get isTimePaused =>
       _rxCurrentState.value == GlobalState.gameLoading ||

@@ -38,7 +38,7 @@ class DDRadioButton<T> extends StatelessWidget {
   Widget _buildIndicator(BuildContext context) {
     final spacing = AppDesignSystem.of(context).spacing;
     final radius = AppDesignSystem.of(context).radius;
-    
+
     return Container(
       decoration: BoxDecoration(
         border: Border.all(

@@ -48,9 +48,9 @@ class ConsumableBehavior extends CharacterBehavior {
     // ✅ CORREÇÃO: Usa EquipmentManager + InventoryManager
     final equipmentManager = EquipmentManager.instance;
     final inventoryManager = InventoryManager.instance;
-    
+
     final selectedItem = equipmentManager.getEquippedItem();
-    
+
     if (selectedItem == null) {
       GameLogger.info('[ConsumableBehavior] No item selected');
       return false;
@@ -67,8 +67,8 @@ class ConsumableBehavior extends CharacterBehavior {
       consumed = _consumeStaminaPotion();
     }
     // Food items
-    else if (selectedItem.id.name.contains('food') || 
-             selectedItem.id.name.contains('loot_item')) {
+    else if (selectedItem.id.name.contains('food') ||
+        selectedItem.id.name.contains('loot_item')) {
       consumed = _consumeFood(selectedItem);
     }
 
@@ -78,8 +78,10 @@ class ConsumableBehavior extends CharacterBehavior {
       // ✅ CORREÇÃO: Remove do slot equipado
       final slotIndex = equipmentManager.currentMainHandSlotIndex;
       inventoryManager.consumeFromSlot(slotIndex, 1);
-      
-      GameLogger.info('[ConsumableBehavior] ✓ Consumed ${selectedItem.id.name}');
+
+      GameLogger.info(
+        '[ConsumableBehavior] ✓ Consumed ${selectedItem.id.name}',
+      );
     }
 
     return consumed;
@@ -92,7 +94,8 @@ class ConsumableBehavior extends CharacterBehavior {
     }
 
     final newLife = (character.life + config.healthPotionRestoreAmount)
-        .clamp(0, character.config.maxLife).toDouble();
+        .clamp(0, character.config.maxLife)
+        .toDouble();
     character.updateLife(newLife);
     character.data.updateLife(newLife);
 
@@ -118,7 +121,9 @@ class ConsumableBehavior extends CharacterBehavior {
     bool restoredSomething = false;
 
     if (character.life < character.config.maxLife) {
-      final newLife = (character.life + 20).clamp(0, character.config.maxLife).toDouble();
+      final newLife = (character.life + 20)
+          .clamp(0, character.config.maxLife)
+          .toDouble();
       character.updateLife(newLife);
       character.data.updateLife(newLife);
       restoredSomething = true;

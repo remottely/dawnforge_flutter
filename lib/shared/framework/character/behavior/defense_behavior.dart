@@ -32,8 +32,7 @@ class DefenseBehavior extends CharacterBehavior {
     final equipment = character.data.equippedItemId;
 
     // Shield block
-    if (InputDef.isDefenseAction(event.id) &&
-        equipment == HandItemId.shield) {
+    if (InputDef.isDefenseAction(event.id) && equipment == HandItemId.shield) {
       if (event.event == ActionEvent.DOWN) {
         _startBlocking();
         return true;

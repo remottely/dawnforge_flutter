@@ -7,7 +7,7 @@ import 'package:dawnforge/core/utils/app_environment.dart';
 
 class GameLogger {
   static const bool _enableLogs = AppEnvironment.kIsDevToolsMode;
-  
+
   static void log(String message, {String? tag}) {
     if (_enableLogs) {
       // ignore: avoid_print

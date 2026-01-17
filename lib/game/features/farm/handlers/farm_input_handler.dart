@@ -47,7 +47,7 @@ class FarmInputHandler extends GameComponent with PlayerControllerListener {
   void _handleAdvanceDayAndSaveGame() {
     TimeManager.instance.advanceToNextDay();
     GameSaveController.instance.saveGame();
-    
+
     final currentDay = WorldStateManager.instance.currentDay;
     GameLogger.info('[FarmInput] Advanced to day $currentDay');
   }

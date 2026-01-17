@@ -58,7 +58,6 @@ class CharacterData {
   bool canConsumeStamina(double amount) => stamina >= amount;
   bool canAffordCoins(int amount) => coins >= amount;
 
-
   // --- Mutações ---
 
   bool tryConsumeStamina(double amount) {
@@ -105,7 +104,7 @@ class CharacterData {
     coinsNotifier.value = coins;
     return true;
   }
-  
+
   // ✅ NOVO: removeCoins (retorna bool)
   bool removeCoins(int amount) {
     return tryRemoveCoins(amount);

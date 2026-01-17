@@ -19,11 +19,8 @@ final class AppSizes {
   static const ScreenSizeValue<double> _actionButtonValue =
       ScreenSizeValue<double>(mobile: 50.0, tablet: 60.0, desktop: 60.0);
 
-  static const ScreenSizeValue<double> _utilityButtonValue = ScreenSizeValue<double>(
-    mobile: 40.0,
-    tablet: 50.0,
-    desktop: 50.0,
-  );
+  static const ScreenSizeValue<double> _utilityButtonValue =
+      ScreenSizeValue<double>(mobile: 40.0, tablet: 50.0, desktop: 50.0);
 
   double get slotSize => _slotSizeValue.get(_screenType);
   double get equipmentSlotSize => _equipmentSlotSizeValue.get(_screenType);

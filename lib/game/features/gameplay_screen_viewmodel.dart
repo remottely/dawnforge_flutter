@@ -1,14 +1,9 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/game/features/game_world/characters/player/cute/cute_player_controller.dart';
 import 'package:dawnforge/game/features/game_world/characters/player/cute/cute_player_def.dart';
-
 import 'package:dawnforge/game/features/game_world/characters/player/cute/cute_player_view.dart';
-import 'package:dawnforge/game/features/game_world/characters/player/demo/demo_player_def.dart';
-
-import 'package:dawnforge/game/features/game_world/characters/player/demo/demo_player.dart';
 import 'package:dawnforge/game/features/game_world/characters/player/farmer/farmer_player_controller.dart';
 import 'package:dawnforge/game/features/game_world/characters/player/farmer/farmer_player_def.dart';
-
 import 'package:dawnforge/game/features/game_world/characters/player/farmer/farmer_player_view.dart';
 import 'package:dawnforge/game/features/game_world/characters/player/smallburg/smallburg_player_controller.dart';
 import 'package:dawnforge/game/features/game_world/characters/player/smallburg/smallburg_player_def.dart';
@@ -16,7 +11,6 @@ import 'package:dawnforge/game/features/game_world/characters/player/smallburg/s
 import 'package:dawnforge/game/features/game_world/characters/player/sunny/sunny_player_controller.dart';
 import 'package:dawnforge/game/features/game_world/characters/player/sunny/sunny_player_def.dart';
 import 'package:dawnforge/game/features/game_world/characters/player/sunny/sunny_player_view.dart';
-import 'package:dawnforge/game/global/global_input_handler%20copy%20last.dart';
 import 'package:dawnforge/game/global/global_input_handler.dart';
 import 'package:dawnforge/game/systems/combat/shield_defense_input_handler.dart';
 import 'package:dawnforge/game/systems/game/game_state_manager.dart';

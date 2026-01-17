@@ -81,8 +81,10 @@ class FarmingBehavior extends CharacterBehavior {
     if (event.event != ActionEvent.DOWN) return false;
 
     final equipment = character.data.equippedItemId;
-    
-    GameLogger.info('[FarmingBehavior] 🎮 Input received (equipment: $equipment)');
+
+    GameLogger.info(
+      '[FarmingBehavior] 🎮 Input received (equipment: $equipment)',
+    );
 
     if (InputDef.isPrimaryAction(event.id)) {
       // Dig
@@ -113,10 +115,14 @@ class FarmingBehavior extends CharacterBehavior {
   }
 
   bool _executeDig() {
-    GameLogger.info('[FarmingBehavior] 🪝 Executing dig (isPlaying: $_isActionPlaying)');
+    GameLogger.info(
+      '[FarmingBehavior] 🪝 Executing dig (isPlaying: $_isActionPlaying)',
+    );
 
     if (_isActionPlaying) {
-      GameLogger.warning('[FarmingBehavior] ⚠️ Action already playing, ignoring input');
+      GameLogger.warning(
+        '[FarmingBehavior] ⚠️ Action already playing, ignoring input',
+      );
       return false;
     }
 
@@ -125,7 +131,9 @@ class FarmingBehavior extends CharacterBehavior {
       return false;
     }
 
-    GameLogger.info('[FarmingBehavior] ✅ Stamina consumed (${config.digStaminaCost})');
+    GameLogger.info(
+      '[FarmingBehavior] ✅ Stamina consumed (${config.digStaminaCost})',
+    );
 
     character.beginStaminaConsumingAction();
 
@@ -145,11 +153,13 @@ class FarmingBehavior extends CharacterBehavior {
         GameLogger.info('[FarmingBehavior] ✅ DIG onActionStart');
         _isActionPlaying = true;
         character.lockAction();
-        
+
         // ✅ TIMEOUT
         _actionTimeoutTimer?.cancel();
         _actionTimeoutTimer = async.Timer(_kActionTimeout, () {
-          GameLogger.warning('[FarmingBehavior] ⚠️ DIG TIMEOUT! Force ending...');
+          GameLogger.warning(
+            '[FarmingBehavior] ⚠️ DIG TIMEOUT! Force ending...',
+          );
           _forceEndAction();
         });
       },
@@ -175,10 +185,14 @@ class FarmingBehavior extends CharacterBehavior {
   }
 
   bool _executeWatering() {
-    GameLogger.info('[FarmingBehavior] 💧 Executing watering (isPlaying: $_isActionPlaying)');
+    GameLogger.info(
+      '[FarmingBehavior] 💧 Executing watering (isPlaying: $_isActionPlaying)',
+    );
 
     if (_isActionPlaying) {
-      GameLogger.warning('[FarmingBehavior] ⚠️ Action already playing, ignoring input');
+      GameLogger.warning(
+        '[FarmingBehavior] ⚠️ Action already playing, ignoring input',
+      );
       return false;
     }
 
@@ -187,7 +201,9 @@ class FarmingBehavior extends CharacterBehavior {
       return false;
     }
 
-    GameLogger.info('[FarmingBehavior] ✅ Stamina consumed (${config.wateringCanStaminaCost})');
+    GameLogger.info(
+      '[FarmingBehavior] ✅ Stamina consumed (${config.wateringCanStaminaCost})',
+    );
 
     character.beginStaminaConsumingAction();
 
@@ -207,10 +223,12 @@ class FarmingBehavior extends CharacterBehavior {
         GameLogger.info('[FarmingBehavior] ✅ WATERING onActionStart');
         _isActionPlaying = true;
         character.lockAction();
-        
+
         _actionTimeoutTimer?.cancel();
         _actionTimeoutTimer = async.Timer(_kActionTimeout, () {
-          GameLogger.warning('[FarmingBehavior] ⚠️ WATERING TIMEOUT! Force ending...');
+          GameLogger.warning(
+            '[FarmingBehavior] ⚠️ WATERING TIMEOUT! Force ending...',
+          );
           _forceEndAction();
         });
       },
@@ -236,10 +254,14 @@ class FarmingBehavior extends CharacterBehavior {
   }
 
   bool _executePlantSeed() {
-    GameLogger.info('[FarmingBehavior] 🌱 Executing plant seed (isPlaying: $_isActionPlaying)');
+    GameLogger.info(
+      '[FarmingBehavior] 🌱 Executing plant seed (isPlaying: $_isActionPlaying)',
+    );
 
     if (_isActionPlaying) {
-      GameLogger.warning('[FarmingBehavior] ⚠️ Action already playing, ignoring input');
+      GameLogger.warning(
+        '[FarmingBehavior] ⚠️ Action already playing, ignoring input',
+      );
       return false;
     }
 
@@ -248,7 +270,9 @@ class FarmingBehavior extends CharacterBehavior {
       return false;
     }
 
-    GameLogger.info('[FarmingBehavior] ✅ Stamina consumed (${config.seedStaminaCost})');
+    GameLogger.info(
+      '[FarmingBehavior] ✅ Stamina consumed (${config.seedStaminaCost})',
+    );
 
     character.beginStaminaConsumingAction();
 
@@ -268,10 +292,12 @@ class FarmingBehavior extends CharacterBehavior {
         GameLogger.info('[FarmingBehavior] ✅ SEED onActionStart');
         _isActionPlaying = true;
         character.lockAction();
-        
+
         _actionTimeoutTimer?.cancel();
         _actionTimeoutTimer = async.Timer(_kActionTimeout, () {
-          GameLogger.warning('[FarmingBehavior] ⚠️ SEED TIMEOUT! Force ending...');
+          GameLogger.warning(
+            '[FarmingBehavior] ⚠️ SEED TIMEOUT! Force ending...',
+          );
           _forceEndAction();
         });
       },
@@ -297,10 +323,14 @@ class FarmingBehavior extends CharacterBehavior {
   }
 
   bool _executeHarvest() {
-    GameLogger.info('[FarmingBehavior] 🌾 Executing harvest (isPlaying: $_isActionPlaying)');
+    GameLogger.info(
+      '[FarmingBehavior] 🌾 Executing harvest (isPlaying: $_isActionPlaying)',
+    );
 
     if (_isActionPlaying) {
-      GameLogger.warning('[FarmingBehavior] ⚠️ Action already playing, ignoring input');
+      GameLogger.warning(
+        '[FarmingBehavior] ⚠️ Action already playing, ignoring input',
+      );
       return false;
     }
 
@@ -309,7 +339,9 @@ class FarmingBehavior extends CharacterBehavior {
       return false;
     }
 
-    GameLogger.info('[FarmingBehavior] ✅ Stamina consumed (${config.harvestStaminaCost})');
+    GameLogger.info(
+      '[FarmingBehavior] ✅ Stamina consumed (${config.harvestStaminaCost})',
+    );
 
     character.beginStaminaConsumingAction();
 
@@ -329,10 +361,12 @@ class FarmingBehavior extends CharacterBehavior {
         GameLogger.info('[FarmingBehavior] ✅ HARVEST onActionStart');
         _isActionPlaying = true;
         character.lockAction();
-        
+
         _actionTimeoutTimer?.cancel();
         _actionTimeoutTimer = async.Timer(_kActionTimeout, () {
-          GameLogger.warning('[FarmingBehavior] ⚠️ HARVEST TIMEOUT! Force ending...');
+          GameLogger.warning(
+            '[FarmingBehavior] ⚠️ HARVEST TIMEOUT! Force ending...',
+          );
           _forceEndAction();
         });
       },

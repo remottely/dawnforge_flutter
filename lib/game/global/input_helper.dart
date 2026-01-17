@@ -84,13 +84,13 @@
 //         debugPrint('[InputHelper] Advancing conversation...');
 //         return true;
 //       }
-      
+
 //       // ESC fecha diálogo (emergência)
 //       if (event.event == ActionEvent.DOWN) {
 //         GlobalStateMachine.instance.endConversation();
 //         return true;
 //       }
-      
+
 //       // Bloqueia outros inputs
 //       return true;
 //     }
@@ -104,7 +104,7 @@
 //         debugPrint('[InputHelper] Confirming choice...');
 //         return true;
 //       }
-      
+
 //       // Direcionais navegam entre opções
 //       // (já processado pelo UI, só consome para não interferir)
 //       return true;
@@ -119,14 +119,14 @@
 //         GlobalStateMachine.instance.closeCrafting();
 //         return true;
 //       }
-      
+
 //       // PRIMARY ACTION crafta item selecionado
 //       if (InputDef.isPrimaryAction(event.id) && event.event == ActionEvent.DOWN) {
 //         // TODO: CraftingManager.instance.craftSelectedItem()
 //         debugPrint('[InputHelper] Crafting selected item...');
 //         return true;
 //       }
-      
+
 //       return true;
 //     }
 
@@ -138,14 +138,14 @@
 //         GlobalStateMachine.instance.closeCooking();
 //         return true;
 //       }
-      
+
 //       // PRIMARY ACTION cozinha item selecionado
 //       if (InputDef.isPrimaryAction(event.id) && event.event == ActionEvent.DOWN) {
 //         // TODO: CookingManager.instance.cookSelectedItem()
 //         debugPrint('[InputHelper] Cooking selected item...');
 //         return true;
 //       }
-      
+
 //       return true;
 //     }
 
@@ -158,14 +158,14 @@
 //         GlobalStateMachine.instance.closeInventory();
 //         return true;
 //       }
-      
+
 //       // PRIMARY ACTION usa/equipa item selecionado
 //       if (InputDef.isPrimaryAction(event.id) && event.event == ActionEvent.DOWN) {
 //         // TODO: InventoryManager.instance.useSelectedItem()
 //         debugPrint('[InputHelper] Using selected item from inventory...');
 //         return true;
 //       }
-      
+
 //       return true;
 //     }
 
@@ -210,7 +210,7 @@
 //         debugPrint('[InputHelper] Fishing: pulling rod...');
 //         return true;
 //       }
-      
+
 //       // ESC cancela fishing
 //       if (InputDef.isInteractionAction(event.id) &&
 //           event.event == ActionEvent.DOWN) {
@@ -219,7 +219,7 @@
 //         GlobalStateMachine.instance._changeState(GlobalState.gameplayResumed);
 //         return true;
 //       }
-      
+
 //       return true;
 //     }
 

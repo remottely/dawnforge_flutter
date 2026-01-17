@@ -5,41 +5,41 @@ import 'package:dawnforge/shared/framework/character/character.dart';
 /// Comportamento modular anexável a qualquer Character
 abstract class CharacterBehavior {
   late Character character;
-  
+
   // 🚀 OTIMIZAÇÃO 2: Flag para desabilitar update temporariamente
   bool needsUpdate = true;
-  
+
   /// Anexa o behavior ao character (chamado automaticamente)
   void attach(Character char) {
     character = char;
     onAttach();
   }
-  
+
   /// Callback quando o behavior é anexado
   void onAttach() {}
-  
+
   /// Atualização por frame (será chamado apenas se needsUpdate == true)
   void update(double dt) {}
-  
+
   /// Processa input do jogador (retorna true se consumiu o input)
   bool onInput(JoystickActionEvent event) => false;
-  
+
   /// Callback quando o character toma dano
   void onReceiveDamage(double damage) {}
-  
+
   /// Callback quando o character morre
   void onDie() {}
-  
+
   /// Desabilita temporariamente o update deste behavior
   void pauseUpdate() {
     needsUpdate = false;
   }
-  
+
   /// Reabilita o update deste behavior
   void resumeUpdate() {
     needsUpdate = true;
   }
-  
+
   /// Cleanup
   void dispose() {}
 }

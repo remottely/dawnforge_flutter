@@ -5,7 +5,7 @@ import 'package:dawnforge/shared/framework/character/behavior/character_behavior
 class EnemyDetectionConfig {
   final double longVisionRadius;
   final Duration detectionCooldown;
-  
+
   const EnemyDetectionConfig({
     required this.longVisionRadius,
     this.detectionCooldown = const Duration(milliseconds: 500),
@@ -14,24 +14,24 @@ class EnemyDetectionConfig {
 
 class EnemyDetectionBehavior extends CharacterBehavior {
   final EnemyDetectionConfig config;
-  
+
   int _lastDetectionTime = 0;
-  
+
   EnemyDetectionBehavior(this.config);
-  
+
   @override
   void update(double dt) {
     super.update(dt);
-    
+
     final now = DateTime.now().millisecondsSinceEpoch;
     if (now - _lastDetectionTime < config.detectionCooldown.inMilliseconds) {
       return;
     }
-    
+
     _processEnemyDetection();
     _lastDetectionTime = now;
   }
-  
+
   void _processEnemyDetection() {
     character.detectEnemies(
       radius: config.longVisionRadius,

@@ -42,18 +42,22 @@ final class AudioDef {
   // static const String bgMusicLake =
   //     'bg/music/lake - Justin Allan Arnold - Antigone.mp3';
   // static const String bgMusicBeach = 'bg/music/beach - Glitch - Prehistory.mp3';
-  static const String bgMusicCaveBoss = 'bg/music/cave_boss - RitesOfPassage.mp3';
+  static const String bgMusicCaveBoss =
+      'bg/music/cave_boss - RitesOfPassage.mp3';
   static const String bgMusicGameOverSuccess =
       'bg/music/game_over_success - Scott Buckley - Clarion.ogg';
 
   static const String bgMusicFarm = 'maps/farm/bgm/Pixverses - Big Helmet.ogg';
-  static const String bgMusicForest = 'maps/forest/bgm/Pixverses - A Green Pig.ogg';
+  static const String bgMusicForest =
+      'maps/forest/bgm/Pixverses - A Green Pig.ogg';
   static const String bgMusicTown =
       'maps/town/bgm/Pixverses - A Lonely Cherry Tree.ogg';
   static const String bgMusicLake =
       'maps/lake/bgm/Pixverses - The Most Powerful Chicken.ogg';
-  static const String bgMusicBeach = 'maps/beach/bgm/Pixverses - A Lost Soul.ogg';
-  static const String bgMusicCave = 'maps/cave/bgm/Pixverses - A Midnight Bat.ogg';
+  static const String bgMusicBeach =
+      'maps/beach/bgm/Pixverses - A Lost Soul.ogg';
+  static const String bgMusicCave =
+      'maps/cave/bgm/Pixverses - A Midnight Bat.ogg';
 
   static const List<String> kPreloadAudioFiles = [
     // kSfxPlayerAttackAsset,

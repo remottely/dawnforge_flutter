@@ -87,7 +87,6 @@ final class InputDef {
   }
 
   static bool isConsumeAction(dynamic actionId) => isPrimaryAction(actionId);
-  static bool isDefenseAction(dynamic actionId) => isInteractionAction(actionId);
-
-  
+  static bool isDefenseAction(dynamic actionId) =>
+      isInteractionAction(actionId);
 }

@@ -143,7 +143,7 @@ class _Controls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final spacing = AppDesignSystem.of(context).spacing;
-    
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       spacing: spacing.kSpacingExtraSmall,

@@ -108,13 +108,15 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   FarmObject get _farmObject => farmTile.object as FarmObject;
 
   FarmTileView({required Vector2 position})
-      : tileX = (position.x / TileConstants.kTileDimensionStandard).floor(),
-        tileY = (position.y / TileConstants.kTileDimensionStandard).floor(),
-        super(position: position, size: TileConstants.tileSizeStandard) {
+    : tileX = (position.x / TileConstants.kTileDimensionStandard).floor(),
+      tileY = (position.y / TileConstants.kTileDimensionStandard).floor(),
+      super(position: position, size: TileConstants.tileSizeStandard) {
     final key = _makeKey(tileX, tileY);
     if (_instances.containsKey(key)) {
       // Já existe uma instância para este tile, não cria outra
-      GameLogger.warning('[FarmTileView] 🚫 tentativa de criar instância duplicada para ($tileX,$tileY), ignorando.');
+      GameLogger.warning(
+        '[FarmTileView] 🚫 tentativa de criar instância duplicada para ($tileX,$tileY), ignorando.',
+      );
       return;
     }
     anchor = Anchor.topLeft;

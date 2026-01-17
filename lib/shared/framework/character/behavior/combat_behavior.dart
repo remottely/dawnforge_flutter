@@ -22,10 +22,10 @@ class CombatConfig {
   final double primaryAttackStaminaCost;
   final double rangedAttackDamage;
   final double rangedAttackStaminaCost;
-  
+
   final DDAnimationDirectionalFactory attackAnimationFactory;
   final List<DDAnimationDirectionalFactory> comboAttackAnimationFactories;
-  
+
   const CombatConfig({
     required this.primaryAttackDamage,
     required this.primaryAttackStaminaCost,
@@ -38,22 +38,22 @@ class CombatConfig {
 
 class CombatBehavior extends CharacterBehavior {
   final CombatConfig config;
-  
+
   late final List<DDAnimationDirectional> _comboAttackAnimations;
   int _comboStep = 0;
   bool _isAttackPlaying = false;
   bool _comboQueued = false;
   async.Timer? _comboResetTimer;
   async.Timer? _attackTimeoutTimer;
-  
+
   late final SynchronizedAttackController meleeAttackController;
   late final SynchronizedAttackController rangedAttackController;
-  
+
   static const Duration _kComboResetDelay = Duration(milliseconds: 450);
   static const Duration _kAttackTimeout = Duration(seconds: 2);
-  
+
   CombatBehavior(this.config);
-  
+
   @override
   void onAttach() {
     super.onAttach();
@@ -61,7 +61,7 @@ class CombatBehavior extends CharacterBehavior {
     _initializeCombatSystems();
     _loadAnimations();
   }
-  
+
   void _initializeCombatSystems() {
     meleeAttackController = SynchronizedAttackController(
       config: SynchronizedAttackDef.standard,
@@ -71,46 +71,51 @@ class CombatBehavior extends CharacterBehavior {
     );
     GameLogger.info('[CombatBehavior] ✅ Combat systems initialized');
   }
-  
+
   Future<void> _loadAnimations() async {
     final factories = config.comboAttackAnimationFactories.isNotEmpty
         ? config.comboAttackAnimationFactories
         : [config.attackAnimationFactory];
-    
+
     final animations = await Future.wait(
       factories.map(
-        DDCharacterActionSpriteAnimationHelper.loadAnimationDirectionalFromFactory,
+        DDCharacterActionSpriteAnimationHelper
+            .loadAnimationDirectionalFromFactory,
       ),
     );
-    
+
     _comboAttackAnimations = animations;
-    GameLogger.info('[CombatBehavior] ✅ Loaded ${_comboAttackAnimations.length} combo animations');
+    GameLogger.info(
+      '[CombatBehavior] ✅ Loaded ${_comboAttackAnimations.length} combo animations',
+    );
   }
-  
+
   @override
   bool onInput(JoystickActionEvent event) {
     if (event.event != ActionEvent.DOWN) return false;
-    
+
     // Primary Attack (Melee)
     if (InputDef.isPrimaryAction(event.id)) {
       final equipment = character.data.equippedItemId;
-      
-      GameLogger.info('[CombatBehavior] 🎮 Input received (equipment: $equipment, isActionLocked: ${character.isActionLocked})');
-      
+
+      GameLogger.info(
+        '[CombatBehavior] 🎮 Input received (equipment: $equipment, isActionLocked: ${character.isActionLocked})',
+      );
+
       if (equipment == HandItemId.ironSword) {
         return _executePrimaryAttack();
       }
-      
+
       if (equipment == HandItemId.staff) {
         return _executeRangedAttack();
       }
     }
-    
+
     return false;
   }
-  
+
   // --- Primary Attack (Melee) ---
-  
+
   bool _executePrimaryAttack() {
     GameLogger.info(
       '[CombatBehavior] 🗡️ Primary attack request: '
@@ -121,37 +126,37 @@ class CombatBehavior extends CharacterBehavior {
       'velocity=${character.velocity}, '
       'canExecute=${_canExecutePrimaryAttack()}',
     );
-    
+
     if (_isAttackPlaying) {
       _comboQueued = true;
       GameLogger.info('[CombatBehavior] 🔄 Attack queued for combo');
       return false;
     }
-    
+
     if (!_canExecutePrimaryAttack()) {
       GameLogger.warning('[CombatBehavior] ✗ Cannot execute primary attack');
-      
+
       if (character.data.stamina < config.primaryAttackStaminaCost) {
         MessageOverlayDef.showNoStamina();
       }
       return false;
     }
-    
+
     return _startComboAttack(consumeStamina: true);
   }
-  
+
   bool _canExecutePrimaryAttack() {
     return !_isAttackPlaying &&
-           character.data.stamina >= config.primaryAttackStaminaCost &&
-           character.data.equippedItemId == HandItemId.ironSword;
+        character.data.stamina >= config.primaryAttackStaminaCost &&
+        character.data.equippedItemId == HandItemId.ironSword;
   }
-  
+
   bool _startComboAttack({bool consumeStamina = false}) {
     GameLogger.info(
       '[CombatBehavior] 🗡️ _startComboAttack START '
       '(step: $_comboStep, consuming: $consumeStamina, speed: ${character.speed}, velocity: ${character.velocity})',
     );
-    
+
     if (consumeStamina) {
       if (!character.data.tryConsumeStamina(config.primaryAttackStaminaCost)) {
         _comboQueued = false;
@@ -159,105 +164,111 @@ class CombatBehavior extends CharacterBehavior {
         GameLogger.warning('[CombatBehavior] ❌ Failed to consume stamina');
         return false;
       }
-      GameLogger.info('[CombatBehavior] ✅ Stamina consumed (${config.primaryAttackStaminaCost})');
+      GameLogger.info(
+        '[CombatBehavior] ✅ Stamina consumed (${config.primaryAttackStaminaCost})',
+      );
     }
-    
-    final DDAnimationDirectional comboAnimation = _comboAttackAnimations[_comboStep];
+
+    final DDAnimationDirectional comboAnimation =
+        _comboAttackAnimations[_comboStep];
     final currentComboStep = _comboStep;
-    
-    GameLogger.info('[CombatBehavior] 🎬 Starting attack animation (step: $currentComboStep)');
-    
-    final executionInfo = meleeAttackController.execute(
-      AttackType.melee,
-      () {
-        GameLogger.info('[CombatBehavior] 📹 Animation execution callback START');
-        
-        DDCharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
-          animationRight: comboAnimation.right,
-          animationLeft: comboAnimation.left,
-          animationUp: comboAnimation.up,
-          animationDown: comboAnimation.down,
-          animationRightUp: comboAnimation.rightUp,
-          animationRightDown: comboAnimation.rightDown,
-          animationLeftUp: comboAnimation.leftUp,
-          animationLeftDown: comboAnimation.leftDown,
-          currentAnimation: character.animation,
-          target: character,
-          executionStartFrame: 1,
-          onActionStart: () {
-            GameLogger.info(
-              '[CombatBehavior] ✅ onActionStart CALLED '
-              '(speed BEFORE: ${character.speed}, velocity BEFORE: ${character.velocity})',
-            );
-            _isAttackPlaying = true;
-            _comboResetTimer?.cancel();
-            
-            character.lockAction();
-            character.beginStaminaConsumingAction();
-            
-            // ✅ PARAR MOVIMENTO
-            character.stopMove();
-            
-            GameLogger.info(
-              '[CombatBehavior] 🔒 Action locked + stamina consuming started + MOVEMENT STOPPED '
-              '(speed AFTER: ${character.speed}, velocity AFTER: ${character.velocity})',
-            );
-            
-            _attackTimeoutTimer?.cancel();
-            _attackTimeoutTimer = async.Timer(_kAttackTimeout, () {
-              GameLogger.warning(
-                '[CombatBehavior] ⚠️ ATTACK TIMEOUT! Force ending... '
-                '(step: $currentComboStep)',
-              );
-              _forceEndAttack();
-            });
-          },
-          onActionEnd: () {
-            GameLogger.info(
-              '[CombatBehavior] ✅ onActionEnd CALLED '
-              '(step: $currentComboStep, speed: ${character.speed}, velocity: ${character.velocity})',
-            );
-            _attackTimeoutTimer?.cancel();
-            _handleAttackEnd(consumeStamina);
-          },
-          onExecutionFrames: () {
-            GameLogger.info(
-              '[CombatBehavior] ⚔️ onExecutionFrames CALLED (hitbox) '
-              '(speed: ${character.speed}, velocity: ${character.velocity})',
-            );
-            _executePrimaryAttackHitbox(comboStep: currentComboStep);
-          },
-        );
-        
-        GameLogger.info('[CombatBehavior] 📹 Animation execution callback END');
-      },
+
+    GameLogger.info(
+      '[CombatBehavior] 🎬 Starting attack animation (step: $currentComboStep)',
     );
-    
+
+    final executionInfo = meleeAttackController.execute(AttackType.melee, () {
+      GameLogger.info('[CombatBehavior] 📹 Animation execution callback START');
+
+      DDCharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
+        animationRight: comboAnimation.right,
+        animationLeft: comboAnimation.left,
+        animationUp: comboAnimation.up,
+        animationDown: comboAnimation.down,
+        animationRightUp: comboAnimation.rightUp,
+        animationRightDown: comboAnimation.rightDown,
+        animationLeftUp: comboAnimation.leftUp,
+        animationLeftDown: comboAnimation.leftDown,
+        currentAnimation: character.animation,
+        target: character,
+        executionStartFrame: 1,
+        onActionStart: () {
+          GameLogger.info(
+            '[CombatBehavior] ✅ onActionStart CALLED '
+            '(speed BEFORE: ${character.speed}, velocity BEFORE: ${character.velocity})',
+          );
+          _isAttackPlaying = true;
+          _comboResetTimer?.cancel();
+
+          character.lockAction();
+          character.beginStaminaConsumingAction();
+
+          // ✅ PARAR MOVIMENTO
+          character.stopMove();
+
+          GameLogger.info(
+            '[CombatBehavior] 🔒 Action locked + stamina consuming started + MOVEMENT STOPPED '
+            '(speed AFTER: ${character.speed}, velocity AFTER: ${character.velocity})',
+          );
+
+          _attackTimeoutTimer?.cancel();
+          _attackTimeoutTimer = async.Timer(_kAttackTimeout, () {
+            GameLogger.warning(
+              '[CombatBehavior] ⚠️ ATTACK TIMEOUT! Force ending... '
+              '(step: $currentComboStep)',
+            );
+            _forceEndAttack();
+          });
+        },
+        onActionEnd: () {
+          GameLogger.info(
+            '[CombatBehavior] ✅ onActionEnd CALLED '
+            '(step: $currentComboStep, speed: ${character.speed}, velocity: ${character.velocity})',
+          );
+          _attackTimeoutTimer?.cancel();
+          _handleAttackEnd(consumeStamina);
+        },
+        onExecutionFrames: () {
+          GameLogger.info(
+            '[CombatBehavior] ⚔️ onExecutionFrames CALLED (hitbox) '
+            '(speed: ${character.speed}, velocity: ${character.velocity})',
+          );
+          _executePrimaryAttackHitbox(comboStep: currentComboStep);
+        },
+      );
+
+      GameLogger.info('[CombatBehavior] 📹 Animation execution callback END');
+    });
+
     if (executionInfo == null) {
-      GameLogger.warning('[CombatBehavior] ❌ executionInfo is NULL! Attack cancelled.');
+      GameLogger.warning(
+        '[CombatBehavior] ❌ executionInfo is NULL! Attack cancelled.',
+      );
       _isAttackPlaying = false;
       _comboQueued = false;
       return false;
     }
-    
+
     _comboStep = (_comboStep + 1) % _comboAttackAnimations.length;
-    GameLogger.info('[CombatBehavior] ✅ Attack started successfully (next step: $_comboStep)');
+    GameLogger.info(
+      '[CombatBehavior] ✅ Attack started successfully (next step: $_comboStep)',
+    );
     return true;
   }
-  
+
   void _executePrimaryAttackHitbox({required int comboStep}) {
     final attackOffset = OffsetHelper.getCenterOffset(
       comboStep == 2 ? Vector2(4, 0) : Vector2(-4, 0),
       character.lastDirection,
     );
-    
+
     CameraFx.executePrimaryAttackShake(character.gameRef);
     AudioManager.instance.playPlayerPrimaryAttackSfx(comboStep);
-    
+
     final attackSize = comboStep == 2
         ? PlayerPrimaryAttackDef.componentSizeLarge
         : PlayerPrimaryAttackDef.componentSizeStandard;
-    
+
     character.simpleAttackMeleeByDirection(
       direction: character.lastDirection,
       damage: config.primaryAttackDamage,
@@ -265,10 +276,12 @@ class CombatBehavior extends CharacterBehavior {
       centerOffset: attackOffset,
       attackFrom: AttackOriginEnum.PLAYER_OR_ALLY,
     );
-    
-    GameLogger.info('[CombatBehavior] 💥 Hitbox executed (step: $comboStep, damage: ${config.primaryAttackDamage})');
+
+    GameLogger.info(
+      '[CombatBehavior] 💥 Hitbox executed (step: $comboStep, damage: ${config.primaryAttackDamage})',
+    );
   }
-  
+
   void _forceEndAttack() {
     GameLogger.warning('[CombatBehavior] 🔥 Force ending attack!');
     character.unlockAction();
@@ -277,89 +290,93 @@ class CombatBehavior extends CharacterBehavior {
     _comboQueued = false;
     _comboStep = 0;
   }
-  
+
   void _handleAttackEnd(bool consumeStamina) {
     GameLogger.info(
       '[CombatBehavior] 🏁 _handleAttackEnd '
       '(consumeStamina: $consumeStamina, queued: $_comboQueued, speed: ${character.speed}, velocity: ${character.velocity})',
     );
-    
+
     character.unlockAction();
     character.endStaminaConsumingAction();
     _isAttackPlaying = false;
-    
-    GameLogger.info('[CombatBehavior] 🔓 Action unlocked + stamina consuming ended');
-    
+
+    GameLogger.info(
+      '[CombatBehavior] 🔓 Action unlocked + stamina consuming ended',
+    );
+
     if (_comboQueued) {
       _comboQueued = false;
-      
+
       GameLogger.info('[CombatBehavior] 🔄 Executing queued combo attack');
-      
+
       if (!meleeAttackController.canPerformAttack) {
         meleeAttackController.forceReadyForCombo();
       }
-      
+
       _startComboAttack(consumeStamina: true);
       return;
     }
-    
+
     _comboResetTimer?.cancel();
     _comboResetTimer = async.Timer(_kComboResetDelay, () {
       GameLogger.info('[CombatBehavior] 🔄 Combo reset (back to step 0)');
       _comboStep = 0;
     });
   }
-  
+
   // --- Ranged Attack (Fireball) ---
-  
+
   bool _executeRangedAttack() {
     GameLogger.info(
       '[CombatBehavior] 🔥 Ranged attack: '
       'stamina=${character.data.stamina}, '
       'canExecute=${_canExecuteRangedAttack()}',
     );
-    
+
     if (!_canExecuteRangedAttack()) {
       GameLogger.warning('[CombatBehavior] ✗ Cannot execute ranged attack');
-      
+
       if (character.data.stamina < config.rangedAttackStaminaCost) {
         MessageOverlayDef.showNoStamina();
       }
       return false;
     }
-    
+
     if (!character.data.tryConsumeStamina(config.rangedAttackStaminaCost)) {
       return false;
     }
-    
+
     character.beginStaminaConsumingAction();
-    
+
     final executionInfo = rangedAttackController.execute(
       AttackType.ranged,
       () => _executeFireballAttack(),
     );
-    
+
     character.endStaminaConsumingAction();
-    
+
     final success = executionInfo != null;
-    GameLogger.info('[CombatBehavior] 🔥 Ranged attack ${success ? "SUCCESS" : "FAILED"}');
-    
+    GameLogger.info(
+      '[CombatBehavior] 🔥 Ranged attack ${success ? "SUCCESS" : "FAILED"}',
+    );
+
     return success;
   }
-  
+
   bool _canExecuteRangedAttack() {
     return character.data.stamina >= config.rangedAttackStaminaCost &&
-           character.data.equippedItemId == HandItemId.staff;
+        character.data.equippedItemId == HandItemId.staff;
   }
-  
+
   void _executeFireballAttack() {
     final projectileOffset = OffsetHelper.getCenterOffset(
       Vector2(-16, 0),
       character.lastDirection,
     );
-    
+
     CharacterFireballAttackDef.playAudioExecution();
-    
+
     character.simpleAttackRangeByDirection(
       size: CharacterFireballAttackDef.componentSize,
       speed: CharacterFireballAttackDef.kSpeed,
@@ -373,10 +390,10 @@ class CombatBehavior extends CharacterBehavior {
       centerOffset: projectileOffset,
       attackFrom: AttackOriginEnum.PLAYER_OR_ALLY,
     );
-    
+
     GameLogger.info('[CombatBehavior] 🔥 Fireball spawned');
   }
-  
+
   @override
   void dispose() {
     GameLogger.info('[CombatBehavior] 🗑️ Disposing...');

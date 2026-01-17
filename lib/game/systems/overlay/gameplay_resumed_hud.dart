@@ -47,7 +47,11 @@ class GameplayResumedHud extends StatelessWidget {
       ignoring: false,
       child: Row(
         children: [
-          _LeftArea(flex: flexA, isDesktop: isDesktop, globalState: globalState),
+          _LeftArea(
+            flex: flexA,
+            isDesktop: isDesktop,
+            globalState: globalState,
+          ),
           _MainArea(
             flex: flexC,
             flexA: flexA,
@@ -372,7 +376,8 @@ final class _BottomRow extends StatelessWidget {
       flex: flexA + 1,
       child: Row(
         children: [
-          if (isDesktop) _BottomCenterArea(flex: flexB, globalState: globalState),
+          if (isDesktop)
+            _BottomCenterArea(flex: flexB, globalState: globalState),
           _BottomRightArea(
             flex: flexA,
             player: player,
