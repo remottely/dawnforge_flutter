@@ -62,6 +62,9 @@
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/texture_atlas_terrain.json": {
             "scaleInDock": 1
         },
+        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/texture_atlas.json": {
+            "scaleInDock": 1
+        },
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/texture_atlas_terrain.json": {
             "scaleInDock": 1,
             "scaleInEditor": 1
