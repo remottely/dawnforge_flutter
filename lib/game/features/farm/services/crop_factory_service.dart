@@ -1,9 +1,9 @@
 import 'package:dawnforge/core/utils/game_logger.dart';
 
-import 'package:dawnforge/game/features/game_world/database/smallburg/smallburg_crop_entity_database_def.dart';
+import 'package:dawnforge/game/database/smallburg/smallburg_crop_entity_database_def.dart';
 
 import '../../inventory/entities/enums/hand_item_id.dart';
-import '../../game_world/world/entities/objects/farm/crop_entity.dart';
+import '../../world/entities/objects/farm/crop_entity.dart';
 
 /// Service for creating crops from JSON database (L2: Factory with JSON database, I2: Service = stateless)
 class CropFactoryService {

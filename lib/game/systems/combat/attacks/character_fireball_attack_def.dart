@@ -1,5 +1,5 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/features/game_world/characters/character_constants.dart';
+import 'package:dawnforge/game/modules/characters/character_constants.dart';
 import 'package:dawnforge/game/systems/audio/audio_manager.dart';
 import 'package:dawnforge/game/systems/camera/camera_fx.dart';
 import 'package:dawnforge/game/systems/game/lightning_constants.dart';

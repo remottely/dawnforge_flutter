@@ -1,9 +1,9 @@
 import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.dart';
-import 'package:dawnforge/game/features/game_world/world/entities/objects/farm/farm_object.dart';
+import 'package:dawnforge/game/features/world/entities/objects/farm/farm_object.dart';
 import 'package:flutter/foundation.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../game_world/world/entities/objects/farm/soil_state.dart';
+import '../../world/entities/objects/farm/soil_state.dart';
 import '../managers/farm_manager.dart';
 
 /// DTO (Data Transfer Object) for UI representation of a farm tile (F2: ViewModel pattern)

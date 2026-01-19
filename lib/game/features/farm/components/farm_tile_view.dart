@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/game/systems/game/tile_constants.dart';
-import 'package:dawnforge/game/features/game_world/world/entities/world_entities.dart';
+import 'package:dawnforge/game/features/world/entities/world_entities.dart';
 import 'package:dawnforge/game/features/farm/farm_service_locator.dart';
 import 'package:dawnforge/game/features/farm/managers/farm_manager.dart';
 import 'package:dawnforge/game/features/farm/models/soil_sprite_config.dart';

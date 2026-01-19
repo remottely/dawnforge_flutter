@@ -1,6 +1,6 @@
 import 'package:dawnforge/core/utils/game_logger.dart';
 
-import 'package:dawnforge/game/features/game_world/world/entities/objects/farm/crop_entity.dart';
+import 'package:dawnforge/game/features/world/entities/objects/farm/crop_entity.dart';
 import 'package:dawnforge/game/features/farm/managers/farm_manager.dart';
 import 'package:dawnforge/game/features/farm/usecases/till_soil_use_case.dart';
 import 'package:dawnforge/game/features/inventory/config/inventory_service_locator.dart';
