@@ -110,6 +110,7 @@ enum GlobalState {
   uiMenuQuest,
   uiMenuMap,
   uiMenuSettings,
+  uiMenuTutorial,
   uiOverlayCrafting,
   uiOverlayCooking,
   uiOverlayMarket,
@@ -226,6 +227,8 @@ final class GlobalStateMachine {
   bool get isUiMenuMap => _rxCurrentState.value == GlobalState.uiMenuMap;
   bool get isUiMenuSettings =>
       _rxCurrentState.value == GlobalState.uiMenuSettings;
+  bool get isUiMenuTutorial =>
+      _rxCurrentState.value == GlobalState.uiMenuTutorial;
   bool get isUiOverlayCrafting =>
       _rxCurrentState.value == GlobalState.uiOverlayCrafting;
   bool get isUiOverlayCooking =>
@@ -268,8 +271,8 @@ final class GlobalStateMachine {
 
   // bool shouldShowOverlay(GlobalState state) => rxCurrentState.value == state;
 
-  void openInventory() => _changeState(GlobalState.uiMenuInventory);
-  void closeInventory() => _changeState(GlobalState.gameplayResumed);
+  void openUiMenuInventory() => _changeState(GlobalState.uiMenuInventory);
+  void closeUiMenuInventory() => _changeState(GlobalState.gameplayResumed);
 
   void openMarket() => _changeState(GlobalState.uiOverlayMarket);
   void closeMarket() => _changeState(GlobalState.gameplayResumed);
@@ -288,6 +291,9 @@ final class GlobalStateMachine {
 
   void openSettings() => _changeState(GlobalState.uiMenuSettings);
   void closeSettings() => _returnToPreviousState();
+
+  void openUiMenuTutorial() => _changeState(GlobalState.uiMenuTutorial);
+  void closeUiMenuTutorial() => _changeState(GlobalState.gameplayResumed);
 
   void openCrafting() => _changeState(GlobalState.uiOverlayCrafting);
   void closeCrafting() => _changeState(GlobalState.gameplayResumed);

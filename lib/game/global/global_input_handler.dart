@@ -152,8 +152,8 @@ final class GlobalInputHandler extends GameComponent
 
     if (state == GlobalState.uiMenuInventory) {
       if (InputDef.isInteractionAction(event.id) ||
-          InputDef.isToggleInventoryAction(event.id)) {
-        GlobalStateMachine.instance.closeInventory();
+          InputDef.isToggleUiMenuInventoryAction(event.id)) {
+        GlobalStateMachine.instance.closeUiMenuInventory();
         return true;
       }
       return true;
@@ -242,8 +242,8 @@ final class GlobalInputHandler extends GameComponent
 
     if (state != GlobalState.gameplayResumed) return false;
 
-    if (InputDef.isToggleInventoryAction(event.id)) {
-      GlobalStateMachine.instance.openInventory();
+    if (InputDef.isToggleUiMenuInventoryAction(event.id)) {
+      GlobalStateMachine.instance.openUiMenuInventory();
       return true;
     }
 

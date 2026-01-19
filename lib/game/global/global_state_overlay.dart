@@ -3,6 +3,7 @@ import 'package:dawnforge/game/features/market/widgets/market_panel.dart';
 import 'package:dawnforge/game/global/global_state_machine.dart';
 import 'package:dawnforge/game/systems/game/player_state_manager.dart';
 import 'package:dawnforge/game/systems/overlay/gameplay_resumed_hud.dart';
+import 'package:dawnforge/game/systems/overlay/tutorial_inputs/tutorial_inputs_overlay.dart';
 import 'package:dawnforge/game/systems/overlay/unified_game_overlay_others.dart';
 import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
@@ -71,6 +72,9 @@ final class GlobalStateOverlay extends StatelessWidget {
 
           GlobalState.uiMenuSettings =>
             const UiMenuSettingsPage(), // TODO: Criar
+
+          GlobalState.uiMenuTutorial =>
+            const TutorialInputsOverlay(), // TODO: Criar
 
           GlobalState.uiOverlayCrafting => Column(
             children: [

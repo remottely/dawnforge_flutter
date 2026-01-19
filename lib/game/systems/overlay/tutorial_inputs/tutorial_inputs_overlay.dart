@@ -1,17 +1,8 @@
-/// **TutorialInputsOverlay - COMPLETO E MIGRADO**
-/// • Usa o novo OverlayDesignSystem
-/// • Remove ResponsiveOverlayData e métodos do mixin
 import 'package:dawnforge/pre_game/screens/menu_screen.dart';
 import 'package:dawnforge/game/systems/audio/audio_manager.dart';
 import 'package:dawnforge/game/systems/overlay/tutorial_inputs/tutorial_inputs_hud_def.dart';
-import 'package:dawnforge/game/systems/overlay/tutorial_inputs/tutorial_inputs_state.dart';
 import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
 import 'package:dawnforge/shared/design_system/theme/app_design_system_extension.dart';
-
-import 'package:dawnforge/shared/design_system/theme/app_design_system_extension.dart';
-import 'package:dawnforge/shared/design_system/theme/tokens/app_sizes.dart';
-import 'package:dawnforge/shared/design_system/theme/tokens/app_spacing.dart';
-import 'package:dawnforge/shared/design_system/theme/tokens/app_typography.dart';
 import 'package:dawnforge/shared/overlay_design_system/responsive_overlay_base.dart';
 import 'package:dawnforge/shared/design_system/theme/screen_size_info.dart';
 import 'package:dawnforge/core/managers/settings_manager.dart';
@@ -22,10 +13,6 @@ final class TutorialInputsOverlay extends ResponsiveOverlayBase {
 
   @override
   String get overlayId => 'tutorial_inputs';
-
-  @override
-  ValueNotifier<bool> get visibilityNotifier =>
-      TutorialInputsState.instance.isVisible;
 
   @override
   Widget buildOverlayContent(BuildContext context) {

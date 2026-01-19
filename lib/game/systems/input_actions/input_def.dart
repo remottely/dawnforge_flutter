@@ -40,12 +40,12 @@ final class InputDef {
         actionId == KeyboardSetup.kClearSaveKey;
   }
 
-  static bool isToggleInventoryAction(dynamic actionId) {
+  static bool isToggleUiMenuInventoryAction(dynamic actionId) {
     return actionId == JoystickSetup.kToggleInventoryId ||
         actionId == KeyboardSetup.kToggleInventoryKey;
   }
 
-  static bool isToggleTutorialInputsAction(dynamic actionId) {
+  static bool isToggleUiMenuTutorialInputsAction(dynamic actionId) {
     return actionId == JoystickSetup.kToggleTutorialInputsId ||
         actionId == KeyboardSetup.kToggleInputsKey;
   }
