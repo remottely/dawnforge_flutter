@@ -27,7 +27,7 @@ class MarketDecoration extends DDContactDecoration
   bool _hasActiveContact = false;
 
   PlayerController? _playerInput;
-  DDBasePlayerView? _currentPlayer;
+  // DDBasePlayerView? _currentPlayer;
 
   MarketDecoration({
     required super.position,

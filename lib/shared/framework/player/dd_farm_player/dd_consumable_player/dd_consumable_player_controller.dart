@@ -15,6 +15,7 @@ import 'package:flutter/foundation.dart';
 
 /// Handles consumable usage (vegetables/consumables) independent from farm actions.
 /// ✅ SEM PlayerControllerListener - Usa callbacks no GlobalInputHandler
+/// ✅ OTIMIZADO - Só registra quando equipamento muda
 abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
     extends DDCombatPlayerController<M> {
   bool _isShowingConsumeDialog = false;
@@ -30,17 +31,43 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
     required super.onExecuteRangedAttack,
   });
 
-  /// ✅ Atualiza registro no GlobalInputHandler
-  /// Chame isso no update() do player ou quando equipamento mudar
-  void updateConsumableRegistration(DDBasePlayerView player) {
+  /// ✅ INICIALIZA LISTENER (chame no onLoad do player)
+  void initializeConsumableListener(DDBasePlayerView player) {
     _player = player;
+
+    // ✅ ESCUTA MUDANÇAS DE SLOT SELECIONADO
+    EquipmentManager.instance.selectedSlotIndexNotifier.addListener(
+      _onEquipmentChanged,
+    );
+
+    // ✅ REGISTRA INICIAL (se já tiver consumível equipado)
+    _updateConsumableRegistration();
+
+    if (kDebugMode) {
+      GameLogger.debug('[ConsumableController] 🎧 Listener initialized');
+    }
+  }
+
+  /// ✅ CALLBACK CHAMADO QUANDO EQUIPAMENTO MUDA
+  void _onEquipmentChanged() {
+    if (kDebugMode) {
+      GameLogger.debug(
+        '[ConsumableController] 🔄 Equipment changed, updating registration',
+      );
+    }
+    _updateConsumableRegistration();
+  }
+
+  /// ✅ Atualiza registro no GlobalInputHandler
+  void _updateConsumableRegistration() {
+    if (_player == null) return;
 
     final hasConsumable = _hasConsumableEquipped();
 
     if (hasConsumable && !_isRegistered) {
       // ✅ REGISTRA COM CALLBACK
       GlobalInputHandler.register(
-        id: 'consumable_${player.hashCode}',
+        id: 'consumable_${_player.hashCode}',
         type: InteractionType.consumable,
         onExecute: () async {
           if (kDebugMode) {
@@ -48,7 +75,7 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
               '[ConsumableController] 🍎 Executing consume action',
             );
           }
-          await _tryConsumeSelectedItem(player);
+          await _tryConsumeSelectedItem(_player!);
         },
       );
       _isRegistered = true;
@@ -60,7 +87,7 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
       }
     } else if (!hasConsumable && _isRegistered) {
       // ✅ DESREGISTRA
-      GlobalInputHandler.unregister('consumable_${player.hashCode}');
+      GlobalInputHandler.unregister('consumable_${_player.hashCode}');
       _isRegistered = false;
 
       if (kDebugMode) {
@@ -206,15 +233,24 @@ abstract class DDConsumablePlayerController<M extends DDCombatPlayerModel>
       '[ConsumableController] ✅ Consumo aplicado: '
       'hp=+$healthGain, stamina=+$staminaGain, slot=$slotIndex',
     );
+
+    // ✅ ATUALIZA REGISTRO (pode ter ficado sem items)
+    _updateConsumableRegistration();
   }
 
   @override
   void dispose() {
-    // ✅ DESREGISTRA AO DESTRUIR
+    // ✅ REMOVE LISTENER
+    EquipmentManager.instance.selectedSlotIndexNotifier.removeListener(
+      _onEquipmentChanged,
+    );
+
+    // ✅ DESREGISTRA DO GlobalInputHandler
     if (_isRegistered && _player != null) {
       GlobalInputHandler.unregister('consumable_${_player.hashCode}');
       _isRegistered = false;
     }
+
     super.dispose();
   }
 }
