@@ -1,12 +1,12 @@
-import 'dart:developer' as developer;
+import 'package:dawnforge/core/utils/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_def.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_controller.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_mine_player/dd_mine_player_model.dart';
+import 'package:dawnforge/game/systems/input_actions/input_def.dart';
+import 'package:dawnforge/game/systems/overlay/message/message_overlay_def.dart';
+import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_controller.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_mine_player/dd_mine_player_model.dart';
 
 abstract class DDMinePlayerController<M extends DDMinePlayerModel>
     extends DDFarmPlayerController<M> {
@@ -42,13 +42,13 @@ abstract class DDMinePlayerController<M extends DDMinePlayerModel>
     required DDBasePlayerView player,
     required JoystickActionEvent event,
   }) {
-    developer.log(
+    GameLogger.info(
       '[MineController] Verificando ação: ${event.id} | equipment: ${player.controller.model.equipment} | evento: ${event.event}',
     );
 
-    if (handleConsumableInput(player: player, event: event)) {
-      return;
-    }
+    // if (handleConsumableInput(player: player, event: event)) {
+    //   return;
+    // }
 
     // Só processa ações no DOWN, não no UP
     if (event.event != ActionEvent.DOWN) {
@@ -57,10 +57,10 @@ abstract class DDMinePlayerController<M extends DDMinePlayerModel>
     }
 
     if (isMineAction(player: player, actionId: event.id)) {
-      developer.log('[MineController] ✓ É mine action (pickaxe)');
+      GameLogger.info('[MineController] ✓ É mine action (pickaxe)');
       _handleExecuteMine();
     } else {
-      developer.log(
+      GameLogger.info(
         '[MineController] ✗ Não é ação de mine, passando para super',
       );
     }
@@ -70,15 +70,15 @@ abstract class DDMinePlayerController<M extends DDMinePlayerModel>
   }
 
   void _handleExecuteMine() {
-    developer.log(
+    GameLogger.info(
       '[MineController] _handleExecuteMine: stamina=${model.stamina}, canExecute=${model.canExecuteMine}',
     );
 
     if (!model.canExecuteMine) {
-      developer.log('[MineController] ✗ Não pode executar mine');
+      GameLogger.warning('[MineController] ✗ Não pode executar mine');
       // Só mostra "Sem Stamina" se realmente for problema de stamina
       if (model.stamina < model.config.mineStaminaCost) {
-        OverlayMessageDef.showNoStamina();
+        MessageOverlayDef.showNoStamina();
       }
       return;
     }
@@ -87,7 +87,7 @@ abstract class DDMinePlayerController<M extends DDMinePlayerModel>
 
     final bool wasExecuted = onExecuteMine.call();
 
-    developer.log('[MineController] Mine wasExecuted: $wasExecuted');
+    GameLogger.info('[MineController] Mine wasExecuted: $wasExecuted');
 
     if (!wasExecuted) {
       endStaminaConsumingAction();

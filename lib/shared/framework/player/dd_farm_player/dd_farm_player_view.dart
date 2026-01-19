@@ -1,23 +1,23 @@
 import 'dart:async';
-import 'dart:developer' as developer;
+import 'package:dawnforge/core/utils/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/app_environment.dart';
-import 'package:darkness_dungeon/gameplay/farm/services/farm_tool_action_config.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_defense_player_view.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_config.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_controller.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_model.dart';
-import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
-import 'package:darkness_dungeon/shared/framework/utils/dd_character_action_sprite_animation_helper.dart';
+import 'package:dawnforge/game/systems/combat/synchronized_attack/synchronized_attack_entities.dart';
+import 'package:dawnforge/core/utils/app_environment.dart';
+import 'package:dawnforge/game/features/farm/services/farm_tool_action_config.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_consumable_player_view.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_config.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_controller.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_model.dart';
+import 'package:dawnforge/shared/framework/utils/dd_animation_directional.dart';
+import 'package:dawnforge/shared/framework/utils/dd_character_action_sprite_animation_helper.dart';
 import 'package:flutter/foundation.dart';
 
 abstract class DDFarmPlayerView<
   C extends DDFarmPlayerController<M>,
   M extends DDFarmPlayerModel
 >
-    extends DDDefensePlayerView<C, M> {
+    extends DDConsumablePlayerView<C, M> {
   @protected
   final DDFarmPlayerViewConfig config;
 
@@ -58,7 +58,7 @@ abstract class DDFarmPlayerView<
   }
 
   @override
-  C createCombatController({
+  C createConsumableController({
     required M model,
     required void Function() onDisplayExclamationEmote,
     required void Function({
@@ -104,12 +104,12 @@ abstract class DDFarmPlayerView<
   });
 
   bool _onExecuteDig() {
-    developer.log('[FarmPlayerView] _onExecuteDig chamado');
+    GameLogger.info('[FarmPlayerView] _onExecuteDig chamado');
 
     final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
       AttackType.melee,
       () {
-        developer.log(
+        GameLogger.info(
           '[FarmPlayerView] _onExecuteDig: Executando animação de dig',
         );
         DDCharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
@@ -132,7 +132,7 @@ abstract class DDFarmPlayerView<
     );
 
     final wasExecuted = executionInfo != null;
-    developer.log(
+    GameLogger.info(
       '[FarmPlayerView] _onExecuteDig resultado: $wasExecuted (executionInfo=$executionInfo)',
     );
 
@@ -154,7 +154,9 @@ abstract class DDFarmPlayerView<
           animationLeftDown: animationWateringCanDirectional.leftDown,
           currentAnimation: animation,
           target: this,
-          executionStartFrame: AppEnvironment.kIsDevToolsMode ? 0 : 8, // TODO(Kevin): inject this value dynamically
+          executionStartFrame: AppEnvironment.kIsDevToolsMode
+              ? 0
+              : 8, // TODO(Kevin): inject this value dynamically
           onActionStart: lockAction,
           onActionEnd: unlockAction,
           onExecutionFrames: () => FarmToolActionDef.execute(player: this),
@@ -166,12 +168,12 @@ abstract class DDFarmPlayerView<
   }
 
   bool _onExecuteSeed() {
-    developer.log('[FarmPlayerView] _onExecuteSeed chamado');
+    GameLogger.info('[FarmPlayerView] _onExecuteSeed chamado');
 
     final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
       AttackType.melee,
       () {
-        developer.log(
+        GameLogger.info(
           '[FarmPlayerView] _onExecuteSeed: Executando animação de seed',
         );
         DDCharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
@@ -194,7 +196,7 @@ abstract class DDFarmPlayerView<
     );
 
     final wasExecuted = executionInfo != null;
-    developer.log(
+    GameLogger.info(
       '[FarmPlayerView] _onExecuteSeed resultado: $wasExecuted (executionInfo=$executionInfo)',
     );
 

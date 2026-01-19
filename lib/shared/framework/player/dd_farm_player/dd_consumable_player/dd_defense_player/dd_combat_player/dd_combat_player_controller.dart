@@ -1,12 +1,12 @@
-import 'dart:developer' as developer;
+import 'package:dawnforge/core/utils/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/input_actions/input_def.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/overlay/overlay_message_def.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_controller.dart';
+import 'package:dawnforge/game/systems/input_actions/input_def.dart';
+import 'package:dawnforge/game/systems/overlay/message/message_overlay_def.dart';
+import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_controller.dart';
 
 abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
     extends DDMobilePlayerController<M> {
@@ -38,15 +38,17 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
       player.controller.model.equipment == HandItemId.staff;
 
   void _handleExecutePrimaryAttack() {
-    developer.log(
+    GameLogger.info(
       '[CombatController] _handleExecutePrimaryAttack: stamina=${model.stamina}, canExecute=${model.canExecutePrimaryAttack}',
     );
 
     if (!model.canExecutePrimaryAttack) {
-      developer.log('[CombatController] ✗ Não pode executar primary attack');
+      GameLogger.warning(
+        '[CombatController] ✗ Não pode executar primary attack',
+      );
       // Só mostra "Sem Stamina" se realmente for problema de stamina
       if (model.stamina < model.config.primaryAttackStaminaCost) {
-        OverlayMessageDef.showNoStamina();
+        MessageOverlayDef.showNoStamina();
       }
       return;
     }
@@ -57,7 +59,7 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
       model.config.primaryAttackDamage,
     );
 
-    developer.log(
+    GameLogger.info(
       '[CombatController] Primary attack wasExecuted: $wasExecuted',
     );
 
@@ -72,15 +74,17 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
   }
 
   void _handleExecuteRangedAttack() {
-    developer.log(
+    GameLogger.info(
       '[CombatController] _handleExecuteRangedAttack: stamina=${model.stamina}, canExecute=${model.canExecuteRangedAttack}',
     );
 
     if (!model.canExecuteRangedAttack) {
-      developer.log('[CombatController] ✗ Não pode executar ranged attack');
+      GameLogger.warning(
+        '[CombatController] ✗ Não pode executar ranged attack',
+      );
       // Só mostra "Sem Stamina" se realmente for problema de stamina
       if (model.stamina < model.config.rangedAttackStaminaCost) {
-        OverlayMessageDef.showNoStamina();
+        MessageOverlayDef.showNoStamina();
       }
       return;
     }
@@ -91,7 +95,9 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
       model.config.rangedAttackDamage,
     );
 
-    developer.log('[CombatController] Ranged attack wasExecuted: $wasExecuted');
+    GameLogger.info(
+      '[CombatController] Ranged attack wasExecuted: $wasExecuted',
+    );
 
     if (!wasExecuted) {
       endStaminaConsumingAction();
@@ -108,7 +114,7 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
     required DDBasePlayerView player,
     required JoystickActionEvent event,
   }) {
-    developer.log(
+    GameLogger.info(
       '[CombatController] Verificando ação: ${event.id} | equipment: ${player.controller.model.equipment} | evento: ${event.event}',
     );
 
@@ -118,15 +124,15 @@ abstract class DDCombatPlayerController<M extends DDCombatPlayerModel>
       return;
     } else {
       if (_isPrimaryAttackAction(player: player, actionId: event.id)) {
-        developer.log(
+        GameLogger.info(
           '[CombatController] ✓ É primary attack action (iron sword)',
         );
         _handleExecutePrimaryAttack();
       } else if (_isRangedAttackAction(player: player, actionId: event.id)) {
-        developer.log('[CombatController] ✓ É ranged attack action (staff)');
+        GameLogger.info('[CombatController] ✓ É ranged attack action (staff)');
         _handleExecuteRangedAttack();
       } else {
-        developer.log(
+        GameLogger.info(
           '[CombatController] ✗ Não é ação de combate, passando para super',
         );
       }

@@ -86,35 +86,35 @@ lib/gameplay/inventory/
 
 ### ANTES (old structure):
 ```dart
-import 'package:darkness_dungeon/gameplay/inventory/entities/item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/models/inventory_slot.dart';
-import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/item_factory.dart';
+import 'package:dawnforge/features/inventory/entities/item.dart';
+import 'package:dawnforge/features/inventory/models/inventory_slot.dart';
+import 'package:dawnforge/features/inventory/managers/inventory_manager.dart';
+import 'package:dawnforge/features/inventory/managers/equipment_manager.dart';
+import 'package:dawnforge/features/inventory/item_factory.dart';
 ```
 
 ### DEPOIS (new structure):
 ```dart
 // Entities
-import 'package:darkness_dungeon/gameplay/inventory/entities/item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/inventory_slot.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/equipment_slot.dart';
+import 'package:dawnforge/features/inventory/entities/item.dart';
+import 'package:dawnforge/features/inventory/entities/inventory_slot.dart';
+import 'package:dawnforge/features/inventory/entities/equipment_slot.dart';
 
 // Managers
-import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
+import 'package:dawnforge/features/inventory/managers/inventory_manager.dart';
+import 'package:dawnforge/features/inventory/managers/equipment_manager.dart';
 
 // Services
-import 'package:darkness_dungeon/gameplay/inventory/services/item_factory_service.dart';
+import 'package:dawnforge/features/inventory/services/item_factory_service.dart';
 
 // UseCases
-import 'package:darkness_dungeon/gameplay/inventory/usecases/add_item_use_case.dart';
+import 'package:dawnforge/features/inventory/usecases/add_item_use_case.dart';
 
 // ViewModels (para widgets)
-import 'package:darkness_dungeon/gameplay/inventory/viewmodels/inventory_view_model.dart';
+import 'package:dawnforge/features/inventory/viewmodels/inventory_view_model.dart';
 
 // Service Locator
-import 'package:darkness_dungeon/gameplay/inventory/inventory_service_locator.dart';
+import 'package:dawnforge/features/inventory/inventory_service_locator.dart';
 ```
 
 ---
@@ -124,8 +124,8 @@ import 'package:darkness_dungeon/gameplay/inventory/inventory_service_locator.da
 ### No `main.dart` (ou no setup da sua app):
 
 ```dart
-import 'package:darkness_dungeon/gameplay/inventory/inventory_service_locator.dart';
-import 'package:darkness_dungeon/gameplay/inventory/services/item_factory_service.dart';
+import 'package:dawnforge/features/inventory/inventory_service_locator.dart';
+import 'package:dawnforge/features/inventory/services/item_factory_service.dart';
 import 'package:get_it/get_it.dart';
 
 final getIt = GetIt.instance;
@@ -161,7 +161,7 @@ if (item != null) {
 **DEPOIS (com UseCase):**
 ```dart
 import 'package:get_it/get_it.dart';
-import 'package:darkness_dungeon/gameplay/inventory/usecases/add_item_use_case.dart';
+import 'package:dawnforge/features/inventory/usecases/add_item_use_case.dart';
 
 final addItemUseCase = GetIt.instance<AddItemUseCase>();
 final success = addItemUseCase('sword', 1);
@@ -208,7 +208,7 @@ loadUseCase(saveDataJson);
 
 ```dart
 import 'package:get_it/get_it.dart';
-import 'package:darkness_dungeon/gameplay/inventory/viewmodels/inventory_view_model.dart';
+import 'package:dawnforge/features/inventory/viewmodels/inventory_view_model.dart';
 
 class InventoryOverlay extends StatefulWidget {
   @override
@@ -261,7 +261,7 @@ class _InventoryOverlayState extends State<InventoryOverlay> {
 ### Widget Direto com Manager (Alternativa):
 
 ```dart
-import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
+import 'package:dawnforge/features/inventory/managers/inventory_manager.dart';
 
 class InventoryOverlay extends StatelessWidget {
   @override
@@ -296,9 +296,9 @@ class InventoryOverlay extends StatelessWidget {
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/services/item_factory_service.dart';
-import 'package:darkness_dungeon/gameplay/inventory/usecases/add_item_use_case.dart';
+import 'package:dawnforge/features/inventory/managers/inventory_manager.dart';
+import 'package:dawnforge/features/inventory/services/item_factory_service.dart';
+import 'package:dawnforge/features/inventory/usecases/add_item_use_case.dart';
 
 class MockInventoryManager extends Mock implements InventoryManager {}
 class MockItemFactoryService extends Mock implements ItemFactoryService {}
@@ -358,32 +358,32 @@ final item = itemFactory.createItem('sword');
 
 **Erro:**
 ```
-Error: Not found: 'package:darkness_dungeon/gameplay/inventory/models/item.dart'
+Error: Not found: 'package:dawnforge/gameplay/inventory/models/item.dart'
 ```
 
 **Solução:**
 ```dart
 // ANTES
-import 'package:darkness_dungeon/gameplay/inventory/entities/item.dart';
+import 'package:dawnforge/features/inventory/entities/item.dart';
 
 // DEPOIS
-import 'package:darkness_dungeon/gameplay/inventory/entities/item.dart';
+import 'package:dawnforge/features/inventory/entities/item.dart';
 ```
 
 ### 3. **InventoryManager/EquipmentManager mudaram para managers/**
 
 **Erro:**
 ```
-Error: Not found: 'package:darkness_dungeon/gameplay/inventory/inventory_manager.dart'
+Error: Not found: 'package:dawnforge/gameplay/inventory/inventory_manager.dart'
 ```
 
 **Solução:**
 ```dart
 // ANTES
-import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
+import 'package:dawnforge/features/inventory/managers/inventory_manager.dart';
 
 // DEPOIS
-import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
+import 'package:dawnforge/features/inventory/managers/inventory_manager.dart';
 ```
 
 ### 4. **Lógica de negócio dispersa → UseCase**

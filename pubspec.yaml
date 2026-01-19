@@ -1,13 +1,12 @@
-name: darkness_dungeon
+name: dawnforge
 description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.96.5+1
+version: 1.110.13+1
 
 environment:
-  sdk: ^3.8.1
-  flutter: ^3.32.5
+  sdk: ^3.12.0-14.0.dev
 
 dependencies:
   flutter:
@@ -36,11 +35,11 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  test: any
+  test: ^1.28.0
 
   # Linting
-  flutter_lints: ^5.0.0
-  very_good_analysis: ^9.0.0
+  flutter_lints: ^6.0.0
+  very_good_analysis: ^10.0.0
 
   # Testing
   mocktail: ^1.0.4
@@ -220,8 +219,8 @@ flutter:
     - assets/images/tiled/temple_1.json
 
     # === TILED - Maps (Folder - Loaded Dynamically) ===
-    - assets/images/tiled/maps/ #TODO(Kevin): put manually all maps here
-    - assets/images/tiled/small_burg/maps/
+    # - assets/images/tiled/maps/ #TODO(Kevin): put manually all maps here
+    # - assets/images/tiled/small_burg/maps/
 
     # === TILED - Icons ===
     - assets/images/tiled/Modern_Farm_v1.2/Icons/Icons_16x16.png
@@ -246,52 +245,63 @@ flutter:
     # - assets/audio/music/music_ro1_death_hex_background.mp3 # TODO(Kevin): remove it
     # - assets/audio/music/music_ro1_letters_background.mp3 # TODO(Kevin): remove it
 
-    # Credits:
-    # 'Phase Shift' by Scott Buckley - released under CC-BY 4.0. www.scottbuckley.com.au
-    - assets/audio/bg/music/farm - PhaseShift.mp3
+    # # Credits:
+    # # 'Phase Shift' by Scott Buckley - released under CC-BY 4.0. www.scottbuckley.com.au
+    # - assets/audio/bg/music/farm - PhaseShift.mp3
 
-    # Credits:
-    # Song: Clarion
-    # Composer: Scott Buckley
-    # Website: https://youtube.com/user/musicbyscottb
-    # License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
-    # Music powered by BreakingCopyright: https://breakingcopyright.com
-    - assets/audio/bg/music/town - Scott Buckley - Clarion.mp3
+    # # Credits:
+    # # Song: Rounding
+    # # Composer: Savfk
+    # # Website: https://youtube.com/savfkmusic
+    # # License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
+    # # Music powered by BreakingCopyright: https://breakingcopyright.com
+    # - assets/audio/bg/music/forest - Savfk - Rounding.mp3
 
-    # Credits:
-    # Song: Rounding
-    # Composer: Savfk
-    # Website: https://youtube.com/savfkmusic
-    # License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
-    # Music powered by BreakingCopyright: https://breakingcopyright.com
-    - assets/audio/bg/music/forest - Savfk - Rounding.mp3
+    # # Credits:
+    # # Song: Clarion
+    # # Composer: Scott Buckley
+    # # Website: https://youtube.com/user/musicbyscottb
+    # # License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
+    # # Music powered by BreakingCopyright: https://breakingcopyright.com
+    # - assets/audio/bg/music/town - Scott Buckley - Clarion.mp3
 
-    # Credits:
-    # Song: Antigone
-    # Composer: Justin Allan Arnold
-    # Website: https://soundcloud.com/justin-allan-arnold
-    # License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
-    # Music powered by BreakingCopyright: https://breakingcopyright.com
-    - assets/audio/bg/music/lake - Justin Allan Arnold - Antigone.mp3
+    # # Credits:
+    # # Song: Antigone
+    # # Composer: Justin Allan Arnold
+    # # Website: https://soundcloud.com/justin-allan-arnold
+    # # License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
+    # # Music powered by BreakingCopyright: https://breakingcopyright.com
+    # - assets/audio/bg/music/lake - Justin Allan Arnold - Antigone.mp3
 
-    # Credits:
-    # Song: Prehistory
-    # Composer: Glitch
-    # Website: https://www.youtube.com/playlist
-    # License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
-    # Music powered by BreakingCopyright: https://breakingcopyright.com
-    - assets/audio/bg/music/beach - Glitch - Prehistory.mp3
+    # # Credits:
+    # # Song: Prehistory
+    # # Composer: Glitch
+    # # Website: https://www.youtube.com/playlist
+    # # License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
+    # # Music powered by BreakingCopyright: https://breakingcopyright.com
+    # - assets/audio/bg/music/beach - Glitch - Prehistory.mp3
 
-    # Credits:
-    # 'Rites of Passage' by Scott Buckley - released under CC-BY 4.0. www.scottbuckley.com.au
+    # # Credits:
+    # # 'Rites of Passage' by Scott Buckley - released under CC-BY 4.0. www.scottbuckley.com.au
     - assets/audio/bg/music/cave_boss - RitesOfPassage.mp3
+
+    # # Credits:
+    # # Song: Clarion
+    # # Composer: Scott Buckley
+    # # Website: https://youtube.com/user/musicbyscottb
+    # # License: Creative Commons (BY 3.0) https://creativecommons.org/licenses/by/3.0/
+    # # Music powered by BreakingCopyright: https://breakingcopyright.com
+    - assets/audio/bg/music/game_over_success - Scott Buckley - Clarion.ogg
 
     # === AUDIO - SFX ===
     - assets/audio/sfx/sfx_character_fireball_attack.wav
     - assets/audio/sfx/sfx_character_fireball_explosion.wav
     - assets/audio/sfx/sfx_conversation_interaction.wav
     - assets/audio/sfx/sfx_enemy_attack.mp3
-    - assets/audio/sfx/sfx_player_attack.mp3
+    # - assets/audio/sfx/sfx_player_attack.mp3
+    - assets/audio/sfx/combat/primary_attack_1.wav
+    - assets/audio/sfx/combat/primary_attack_2.wav
+    - assets/audio/sfx/combat/primary_attack_3.wav
 
     # TODO
     - assets/images/ui/game_over.png
@@ -303,18 +313,24 @@ flutter:
     # SmallBurg Assets
     # === TILED - SmallBurg Tileset JSON Definitions ===
     # - assets/images/tiled/smallburg_winter_terrain.json
-    - assets/images/tiled/treesn_bushes_seasons.json
-    - assets/images/tiled/SmallBurg_outside_assets.json
-    - assets/images/tiled/smallburg_terrain_spring.json
+    # - assets/images/tiled/treesn_bushes_seasons.json
+    # - assets/images/tiled/SmallBurg_outside_assets.json
+    # - assets/images/tiled/smallburg_terrain_spring.json
 
     # === TILED - SmallBurg Tileset (used by small_burg maps) ===
     # - assets/images/tiled/SmallBurg_village_pack_v3.18.1_commercial/assets/tileset_v2/terrain/smallburg_winter_terrain.png
-    - assets/images/tiled/SmallBurg_village_pack_v3.18.1_commercial/assets/tileset_v2/terrain/smallburg_terrain_spring.png
-    - assets/images/tiled/SmallBurg_village_pack_v3.18.1_commercial/assets/tileset_v2/treesn_bushes_seasons.png
-    - assets/images/tiled/SmallBurg_village_pack_v3.18.1_commercial/assets/tileset_v2/SmallBurg_outside_assets.png
+    # - assets/images/tiled/SmallBurg_village_pack_v3.18.1_commercial/assets/tileset_v2/terrain/smallburg_terrain_spring.png
+    # - assets/images/tiled/SmallBurg_village_pack_v3.18.1_commercial/assets/tileset_v2/treesn_bushes_seasons.png
+    # - assets/images/tiled/SmallBurg_village_pack_v3.18.1_commercial/assets/tileset_v2/SmallBurg_outside_assets.png
 
-    - assets/images/tiled/small_burg/maps/sb_farm.json # TODO(Kevin): remove it from all project
+    # - assets/images/tiled/small_burg/maps/sb_farm.json # TODO(Kevin): remove it from all project
     - assets/images/tiled/maps/farm_map.json
+    - assets/images/tiled/maps/forest_map.json
+    - assets/images/tiled/maps/town_map.json
+    - assets/images/tiled/maps/lake_map.json
+    - assets/images/tiled/maps/beach_map.json
+    - assets/images/tiled/maps/cave_map.json
+    - assets/images/tiled/maps/home_map.json
     - assets/images/tiled/small_burg/texture_atlas_1.png
     - assets/images/tiled/texture_atlas.json
 
@@ -339,12 +355,24 @@ flutter:
     - assets/images/tiled/Smallburg_dungeon_pack_v2.13/edited_assets/characters/slash_1/character_demo/character_slash_1_light_full_6.png
     - assets/images/tiled/Smallburg_dungeon_pack_v2.13/edited_assets/characters/slash_2/character_demo/character_slash_2_light_full_6.png
     - assets/images/tiled/Smallburg_dungeon_pack_v2.13/edited_assets/characters/super_slash/character_demo/character_super_slash_light_full_6.png
-    - assets/images/tiled/Smallburg_dungeon_pack_v2.13/assets/enemies/slimes/red/attack/slime_red_attack.png 
+    - assets/images/tiled/Smallburg_dungeon_pack_v2.13/assets/enemies/slimes/red/attack/slime_red_attack.png
     - assets/images/tiled/Smallburg_dungeon_pack_v2.13/assets/enemies/skeletons/skeleton/idle/skeleton_idle_2.png
     - assets/images/tiled/Smallburg_dungeon_pack_v2.13/assets/enemies/skeletons/skeleton/walk/skeleton_walk_4.png
     - assets/images/tiled/Smallburg_dungeon_pack_v2.13/assets/enemies/skeletons/skeleton/attack/skeleton_attack.png
+    - assets/audio/maps/farm/bgm/Pixverses - Big Helmet.ogg
+    - assets/audio/maps/forest/bgm/Pixverses - A Green Pig.ogg
+    - assets/audio/maps/town/bgm/Pixverses - A Lonely Cherry Tree.ogg
+    - assets/audio/maps/lake/bgm/Pixverses - The Most Powerful Chicken.ogg
+    - assets/audio/maps/beach/bgm/Pixverses - A Lost Soul.ogg
+    - assets/audio/maps/cave/bgm/Pixverses - A Midnight Bat.ogg
+    - assets/images/tiled/SmallBurg_farm_pack_v3.18/edited_assets/character/tools_pickaxe/character_body/character_tools_pickaxe_body_light_7.png
+    - assets/images/tiled/SmallBurg/texture_atlas_decorations.png
+    - assets/images/tiled/SmallBurg/texture_atlas_grid_tiles.png
+    - assets/images/tiled/SmallBurg/texture_atlas_terrain.png
+    - assets/images/tiled/maps/map_test.json
+    - assets/images/tiled/texture_atlas_terrain.json
 
   fonts:
-    - family: Normal
+    - family: Pixel
       fonts:
         - asset: assets/fonts/font_pixel.ttf

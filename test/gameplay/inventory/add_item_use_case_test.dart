@@ -1,10 +1,10 @@
-// import 'package:darkness_dungeon/gameplay/inventory/entities/inventory_slot.dart';
-// import 'package:darkness_dungeon/gameplay/inventory/entities/hand_item.dart';
-// import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
-// import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
-// import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
-// import 'package:darkness_dungeon/gameplay/inventory/services/item_factory_service.dart';
-// import 'package:darkness_dungeon/gameplay/inventory/usecases/add_item_use_case.dart';
+// import 'package:dawnforge/features/inventory/entities/inventory_slot.dart';
+// import 'package:dawnforge/features/inventory/entities/hand_item.dart';
+// import 'package:dawnforge/features/inventory/items/weapon_item.dart';
+// import 'package:dawnforge/features/inventory/managers/inventory_manager.dart';
+// import 'package:dawnforge/features/inventory/entities/enums/hand_item_id.dart';
+// import 'package:dawnforge/features/inventory/services/item_factory_service.dart';
+// import 'package:dawnforge/features/inventory/usecases/add_item_use_case.dart';
 // import 'package:flutter_test/flutter_test.dart';
 // import 'package:mocktail/mocktail.dart';
 

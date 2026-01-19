@@ -1,15 +1,14 @@
 import 'dart:async';
-import 'dart:developer' as developer;
+import 'package:dawnforge/core/utils/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fx_particles_animations_def.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/ui/emote_manager.dart';
-import 'package:darkness_dungeon/shared/framework/enemies/dd_base_enemy/dd_base_enemy_view.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_config.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_controller.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
+import 'package:dawnforge/game/global/global_state_machine.dart';
+import 'package:dawnforge/game/systems/ui/emote_manager.dart';
+import 'package:dawnforge/shared/framework/enemies/dd_base_enemy/dd_base_enemy_view.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_config.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_controller.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
 import 'package:flutter/foundation.dart';
-import 'package:darkness_dungeon/gameplay/market/market_state.dart';
 
 abstract class DDBasePlayerView<
   C extends DDBasePlayerController<M>,
@@ -76,7 +75,7 @@ abstract class DDBasePlayerView<
 
   @override
   void update(double dt) {
-    if (MarketState.instance.isOpen.value) {
+    if (GlobalStateMachine.instance.isTimePaused) {
       // Bloqueia qualquer movimento enquanto o market está aberto.
       stopMove();
       velocity = Vector2.zero();
@@ -98,16 +97,16 @@ abstract class DDBasePlayerView<
 
   @override
   void onJoystickAction(JoystickActionEvent event) {
-    if (MarketState.instance.isOpen.value) {
-      developer.log('[PlayerInput] input ignored: market open');
+    if (GlobalStateMachine.instance.isTimePaused) {
+      GameLogger.info('[PlayerInput] input ignored: market open');
       return;
     }
-    developer.log(
+    GameLogger.info(
       '[PlayerInput] 🎮 Input recebido: ${event.id} | evento: ${event.event} | equipamento: ${_model.equipment}',
     );
 
     if (isDead) {
-      developer.log('[PlayerInput] ✗ Input ignorado: player está morto');
+      GameLogger.info('[PlayerInput] ✗ Input ignorado: player está morto');
       return;
     }
 
@@ -136,14 +135,15 @@ abstract class DDBasePlayerView<
     setupMovementByJoystick(intensityEnabled: true);
   }
 
+  @override
   void displayDamageVisualEffects(double damage) {
-    showDamage(
-      damage,
-      config: CharacterFxParticlesAnimationsDef.kPlayerShowDamageTextStyle,
-      gravity: CharacterFxParticlesAnimationsDef.kShowDamageGravity,
-      initVelocityVertical:
-          CharacterFxParticlesAnimationsDef.kShowDamageInitVelocityVertical,
-    );
+    // showDamage(
+    //   damage,
+    //   config: CharacterFxParticlesAnimationsDef.kPlayerShowDamageTextStyle,
+    //   gravity: CharacterFxParticlesAnimationsDef.kShowDamageGravity,
+    //   initVelocityVertical:
+    //       CharacterFxParticlesAnimationsDef.kShowDamageInitVelocityVertical,
+    // );
   }
 
   void displayDeathVisualEffects() {

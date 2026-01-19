@@ -1,14 +1,14 @@
-import 'dart:developer' as developer;
+import 'package:dawnforge/core/utils/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
-import 'package:darkness_dungeon/gameplay/farm/services/farm_tool_action_config.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_view.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_mine_player/dd_mine_player_config.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_mine_player/dd_mine_player_controller.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_mine_player/dd_mine_player_model.dart';
-import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
-import 'package:darkness_dungeon/shared/framework/utils/dd_character_action_sprite_animation_helper.dart';
+import 'package:dawnforge/game/systems/combat/synchronized_attack/synchronized_attack_entities.dart';
+import 'package:dawnforge/game/features/farm/services/farm_tool_action_config.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_view.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_mine_player/dd_mine_player_config.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_mine_player/dd_mine_player_controller.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_mine_player/dd_mine_player_model.dart';
+import 'package:dawnforge/shared/framework/utils/dd_animation_directional.dart';
+import 'package:dawnforge/shared/framework/utils/dd_character_action_sprite_animation_helper.dart';
 import 'package:flutter/foundation.dart';
 
 abstract class DDMinePlayerView<
@@ -93,12 +93,12 @@ abstract class DDMinePlayerView<
   });
 
   bool _onExecuteMine() {
-    developer.log('[FarmPlayerView] _onExecuteDig chamado');
+    GameLogger.info('[FarmPlayerView] _onExecuteDig chamado');
 
     final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
       AttackType.melee,
       () {
-        developer.log(
+        GameLogger.info(
           '[FarmPlayerView] _onExecuteDig: Executando animação de dig',
         );
         DDCharacterActionSpriteAnimationHelper.playOnceExecutionEquipment(
@@ -115,13 +115,15 @@ abstract class DDMinePlayerView<
           executionStartFrame: 5, // TODO(Kevin): inject this value
           onActionStart: lockAction,
           onActionEnd: unlockAction,
-          onExecutionFrames: () => FarmToolActionDef.execute(player: this), // TODO(kevin): change this to MineToolActionDef
+          onExecutionFrames: () => FarmToolActionDef.execute(
+            player: this,
+          ), // TODO(kevin): change this to MineToolActionDef
         );
       },
     );
 
     final wasExecuted = executionInfo != null;
-    developer.log(
+    GameLogger.info(
       '[FarmPlayerView] _onExecuteDig resultado: $wasExecuted (executionInfo=$executionInfo)',
     );
 

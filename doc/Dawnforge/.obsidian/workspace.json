@@ -1,0 +1,304 @@
+{
+  "main": {
+    "id": "b385734788af7334",
+    "type": "split",
+    "children": [
+      {
+        "id": "be1be22746ca6255",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "2521253773e28ea8",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Features/Inventory/Inventory Menu/Inventory Menu.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Inventory Menu"
+            }
+          },
+          {
+            "id": "eb057b4380dcb181",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Architectures/Actual Architecture.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Actual Architecture"
+            }
+          },
+          {
+            "id": "bc60a7d3903a6884",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Architectures/Forager Architecture.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Forager Architecture"
+            }
+          },
+          {
+            "id": "24d6be97037391d6",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Architectures/Actual Architecture.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Actual Architecture"
+            }
+          },
+          {
+            "id": "f37a8235b1e848b1",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Architectures/Forager Architecture.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Forager Architecture"
+            }
+          },
+          {
+            "id": "1568f78dbba59ffa",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Architectures/Actual Architecture.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Actual Architecture"
+            }
+          }
+        ],
+        "currentTab": 5
+      },
+      {
+        "id": "28a8d71a8ce3e8dc",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "0b6cd91fe31a8c04",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "44a92617a3f766d1",
+    "type": "split",
+    "children": [
+      {
+        "id": "2b8af219a3fa05b4",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "2919b82c7b50f774",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "65a001a7c181a440",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "1a4f026ca07a20e6",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "6b155aa8f954c345",
+    "type": "split",
+    "children": [
+      {
+        "id": "74b551fcae1268c2",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "6c18b1db4f1a7bd6",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Architectures/Actual Architecture.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Actual Architecture"
+            }
+          },
+          {
+            "id": "e793fdbc30a6a408",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Architectures/Actual Architecture.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Actual Architecture"
+            }
+          },
+          {
+            "id": "c7bf41d860a0c367",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "28fd50beeacd2bc7",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "3a7973a45dd9abe1",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Architectures/Actual Architecture.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Actual Architecture"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "1568f78dbba59ffa",
+  "lastOpenFiles": [
+    "Arch old.md",
+    "Architectures/Actual Architecture.md",
+    "Architectures/Actual to Forager Arch Migration.md",
+    "Architectures/Forager Architecture.md",
+    "Features/Inventory/Inventory Menu/Inventory Menu.md",
+    "Architectures",
+    "Features/Inventory/Inventory Menu",
+    "Features/Inventory/Inventory Arch.md",
+    "Features/Inventory/Inventory Hotbar/Inventory Hotbar.md",
+    "Features/Inventory/Inventory Hotbar/Inventory Hotbar 2.md",
+    "Features/Inventory/Inventory Hotbar.md",
+    "Features/Inventory/Inv Menu.md",
+    "Features/Inventory/Inventory Hotbar",
+    "Features/Inventory/Inv Hotbar.md",
+    "Features/Inventory/Inv Arch.md",
+    "Features/Inventory",
+    "Features/Inv/Inv Menu.md",
+    "Features/Inv/Inv Hotbar.md",
+    "Features/Inv/Inv Arch.md",
+    "Features/Inv",
+    "Systems",
+    "Untitled/Untitled.md",
+    "Features/Untitled.md",
+    "Features",
+    "Untitled 1",
+    "Welcomee.md",
+    "Inventory.md",
+    "Welcome.md"
+  ]
+}

@@ -1,5 +1,4 @@
-import 'dart:developer' as developer;
-
+import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:bonfire/bonfire.dart';
 
 class DDBasePlayerViewConfig {
@@ -42,12 +41,14 @@ class DDBasePlayerSaveData {
   int energy;
   double? life;
   int coins;
+  Vector2 position;
 
   DDBasePlayerSaveData({
     required this.stamina,
     required this.energy,
     this.life,
     required this.coins,
+    required this.position,
   });
 
   Map<String, dynamic> toJson() => {
@@ -55,6 +56,7 @@ class DDBasePlayerSaveData {
     'energy': energy,
     'life': life,
     'coins': coins,
+    'position': [position.x, position.y],
   };
 
   factory DDBasePlayerSaveData.fromJson(
@@ -65,25 +67,23 @@ class DDBasePlayerSaveData {
     final energy = (json['energy'] as num?)?.toInt() ?? config.maxEnergy;
     final life = (json['life'] as num?)?.toDouble();
     final coins = _readCoins(json);
+    final positionRaw = json['position'];
 
-    developer.log(
-      '[DDBasePlayerSaveData] fromJson stamina=$stamina, life=$life, energy=$energy, coins=$coins, raw=$json',
-    );
-    if (life == null || life <= 0) {
-      developer.log(
-        '[DDBasePlayerSaveData] ⚠️ life is null/<=0 during load; check death flow or save timing',
-        level: 900,
+    // ✨ Converte List para Vector2
+    Vector2 position = Vector2.zero();
+    if (positionRaw != null && positionRaw is List && positionRaw.length >= 2) {
+      position = Vector2(
+        (positionRaw[0] as num).toDouble(),
+        (positionRaw[1] as num).toDouble(),
       );
     }
 
-    developer.log(
-      '[DDBasePlayerSaveData] fromJson stamina=$stamina, life=$life, energy=$energy, coins=$coins, raw=$json',
+    GameLogger.info(
+      '[DDBasePlayerSaveData] fromJson stamina=$stamina, life=$life, energy=$energy, coins=$coins, position=$position, raw=$json',
     );
-
     if (life == null || life <= 0) {
-      developer.log(
+      GameLogger.warning(
         '[DDBasePlayerSaveData] ⚠️ life is null/<=0 during load; check death flow or save timing',
-        level: 900,
       );
     }
 
@@ -92,12 +92,15 @@ class DDBasePlayerSaveData {
       energy: energy,
       life: life,
       coins: coins,
+      position: position,
     );
   }
 
   static int _readCoins(Map<String, dynamic> json) {
     final coinsValue = json['coins'];
     if (coinsValue is num) return coinsValue.toInt();
-    throw ArgumentError('DDBasePlayerSaveData.fromJson: missing coins in payload');
+    throw ArgumentError(
+      'DDBasePlayerSaveData.fromJson: missing coins in payload',
+    );
   }
 }

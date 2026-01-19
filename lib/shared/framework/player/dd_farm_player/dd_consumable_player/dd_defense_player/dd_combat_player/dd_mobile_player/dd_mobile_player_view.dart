@@ -1,13 +1,13 @@
 import 'dart:async';
-import 'dart:developer' as developer;
+import 'package:dawnforge/core/utils/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_config.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_controller.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_model.dart';
+import 'package:dawnforge/game/global/global_state_machine.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_config.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_controller.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_model.dart';
 import 'package:flutter/foundation.dart';
-import 'package:darkness_dungeon/gameplay/market/market_state.dart';
 
 abstract class DDMobilePlayerView<
   C extends DDMobilePlayerController<M>,
@@ -71,7 +71,7 @@ abstract class DDMobilePlayerView<
 
   @override
   void onJoystickChangeDirectional(JoystickDirectionalEvent event) {
-    if (MarketState.instance.isOpen.value) {
+    if (GlobalStateMachine.instance.isTimePaused) {
       stopMove();
       return;
     }
@@ -132,7 +132,7 @@ abstract class DDMobilePlayerView<
 
   void lockAction() {
     _activeActionLockCount += 1;
-    developer.log(
+    GameLogger.info(
       '[MobilePlayerView] 🔒 Action LOCKED (count: $_activeActionLockCount)',
     );
   }
@@ -140,16 +140,16 @@ abstract class DDMobilePlayerView<
   void unlockAction() {
     if (_activeActionLockCount > 0) {
       _activeActionLockCount -= 1;
-      developer.log(
+      GameLogger.info(
         '[MobilePlayerView] 🔓 Action UNLOCKED (count: $_activeActionLockCount)',
       );
 
       if (_activeActionLockCount == 0) {
-        developer.log('[MobilePlayerView] ✅ Action FULLY UNLOCKED');
+        GameLogger.info('[MobilePlayerView] ✅ Action FULLY UNLOCKED');
         onActionFullyUnlocked();
       }
     } else {
-      developer.log(
+      GameLogger.warning(
         '[MobilePlayerView] ⚠️ Tentativa de unlock quando já estava unlocked!',
       );
     }
@@ -161,7 +161,7 @@ abstract class DDMobilePlayerView<
   }
 
   void _restoreBufferedMovementInput() {
-    final JoystickDirectionalEvent? bufferedEvent = _bufferedDirectionalInput;
+    final bufferedEvent = _bufferedDirectionalInput;
     if (bufferedEvent != null &&
         bufferedEvent.directional != JoystickMoveDirectional.IDLE) {
       super.onJoystickChangeDirectional(bufferedEvent);

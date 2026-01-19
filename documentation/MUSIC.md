@@ -1,6 +1,13 @@
 # Musics:
 
 ## DECISÃO FINAL:
+- farm: Pixverses - Big Helmet.ogg
+- forest: Pixverses - A Green Pig.ogg
+- town: Pixverses - A Lonely Cherry Tree.ogg
+- lake: Pixverses - The Most Powerful Chicken.ogg
+- beach: Pixverses - A Lost Soul.ogg
+- cave: Pixverses - A Midnight Bat.ogg
+
 - Trailler: 🍃 Free Uplifting Music (For Videos) - "Clarion" by @ScottBuckley 🇦🇺
 - https://www.youtube.com/watch?v=eZ_r1H9vHkI&list=PLu42KRC4K0uOvrv5rXUZ11BTWGN-Oc5De&index=1 - town
 

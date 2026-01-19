@@ -1,21 +1,21 @@
 import 'dart:async' as async;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fireball_attack_def.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/character_fx_particles_animations_def.dart';
-import 'package:darkness_dungeon/gameplay/core/utils/offset_helper.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/audio/audio_manager.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/camera/camera_fx.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/attacks/player_primary_attack_def.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_controller.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_def.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/synchronized_attack/synchronized_attack_entities.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_config.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_controller.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_view.dart';
-import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
-import 'package:darkness_dungeon/shared/framework/utils/dd_character_action_sprite_animation_helper.dart';
+import 'package:dawnforge/game/systems/combat/attacks/character_fireball_attack_def.dart';
+import 'package:dawnforge/game/systems/combat/attacks/character_fx_particles_animations_def.dart';
+import 'package:dawnforge/game/utils/offset_helper.dart';
+import 'package:dawnforge/game/systems/audio/audio_manager.dart';
+import 'package:dawnforge/game/systems/camera/camera_fx.dart';
+import 'package:dawnforge/game/systems/combat/attacks/player_primary_attack_def.dart';
+import 'package:dawnforge/game/systems/combat/synchronized_attack/synchronized_attack_controller.dart';
+import 'package:dawnforge/game/systems/combat/synchronized_attack/synchronized_attack_def.dart';
+import 'package:dawnforge/game/systems/combat/synchronized_attack/synchronized_attack_entities.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_config.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_controller.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_mobile_player_view.dart';
+import 'package:dawnforge/shared/framework/utils/dd_animation_directional.dart';
+import 'package:dawnforge/shared/framework/utils/dd_character_action_sprite_animation_helper.dart';
 import 'package:flutter/foundation.dart';
 
 abstract class DDCombatPlayerView<
@@ -139,6 +139,9 @@ abstract class DDCombatPlayerView<
     final DDAnimationDirectional comboAnimation =
         _comboAttackAnimations[_comboStep];
 
+    // Captura o valor atual do combo para evitar que o closure capture a referência
+    final currentComboStep = _comboStep;
+
     final AttackExecutionInfo? executionInfo = meleeAttackController.execute(
       AttackType.melee,
       () {
@@ -160,7 +163,10 @@ abstract class DDCombatPlayerView<
             lockAction();
           },
           onActionEnd: () => _handleAttackEnd(damage),
-          onExecutionFrames: () => _executePrimaryAttack(damage: damage),
+          onExecutionFrames: () => _executePrimaryAttack(
+            damage: damage,
+            comboStep: currentComboStep,
+          ),
         );
       },
     );
@@ -205,22 +211,27 @@ abstract class DDCombatPlayerView<
     return executionInfo != null;
   }
 
-  void _executePrimaryAttack({required double damage}) {
+  void _executePrimaryAttack({required double damage, required int comboStep}) {
     final attackOffset = OffsetHelper.getCenterOffset(
-      Vector2(-4, 0),
+      comboStep == 2 ? Vector2(4, 0) : Vector2(-4, 0),
       lastDirection,
     );
 
     CameraFx.executePrimaryAttackShake(gameRef);
 
-    AudioManager.instance.playPlayerPrimaryAttackSfx();
+    AudioManager.instance.playPlayerPrimaryAttackSfx(comboStep);
+
+    // Terceiro ataque do combo (índice 2) usa tamanho maior
+    final attackSize = comboStep == 2
+        ? PlayerPrimaryAttackDef.componentSizeLarge
+        : PlayerPrimaryAttackDef.componentSizeStandard;
 
     simpleAttackMeleeByDirection(
       direction: lastDirection,
       damage: damage,
-      size: PlayerPrimaryAttackDef.componentSize,
+      size: attackSize,
       centerOffset: attackOffset,
-      animationRight: PlayerPrimaryAttackDef.loadAnimationFxRight(),
+      // animationRight: PlayerPrimaryAttackDef.loadAnimationFxRight(),
       attackFrom: AttackOriginEnum.PLAYER_OR_ALLY,
       onDamage: (_) => addParticle(
         CharacterFxParticlesAnimationsDef.createPrimaryAttackParticles(),

@@ -1,5 +1,5 @@
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_farm_player_config.dart';
-import 'package:darkness_dungeon/shared/framework/utils/dd_animation_directional.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_config.dart';
+import 'package:dawnforge/shared/framework/utils/dd_animation_directional.dart';
 
 class DDMinePlayerViewConfig extends DDFarmPlayerViewConfig {
   final DDAnimationDirectionalFactory animationMineFactory;

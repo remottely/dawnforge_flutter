@@ -1,51 +1,73 @@
-import 'package:darkness_dungeon/app/screens/menu_screen.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/localization/gameplay_localizations_delegate.dart';
-import 'package:darkness_dungeon/gameplay/farm/database/crop_database.dart';
-import 'package:darkness_dungeon/gameplay/farm/farm_service_locator.dart';
-import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
-import 'package:darkness_dungeon/gameplay/time/time_service_locator.dart';
-import 'package:darkness_dungeon/shared/managers/settings_manager.dart';
+import 'package:dawnforge/game/features/farm/managers/farm_manager.dart';
+import 'package:dawnforge/game/features/farm/services/crop_factory_service.dart';
+import 'package:dawnforge/game/features/inventory/managers/equipment_manager.dart';
+import 'package:dawnforge/game/features/inventory/managers/inventory_manager.dart';
+import 'package:dawnforge/game/features/inventory/services/item_factory_service.dart';
+import 'package:dawnforge/game/global/global_state_machine.dart';
+import 'package:dawnforge/pre_game/screens/menu_screen.dart';
+import 'package:dawnforge/game/systems/localization/gameplay_localizations_delegate.dart';
+import 'package:dawnforge/core/utils/app_environment.dart';
+import 'package:dawnforge/game/features/farm/farm_service_locator.dart';
+import 'package:dawnforge/game/features/inventory/config/inventory_service_locator.dart';
+import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
+import 'package:dawnforge/core/managers/settings_manager.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'gameplay/core/modules/audio/audio_manager.dart';
+import 'game/systems/audio/audio_manager.dart';
+
+Future<void> _initializeSingletons() async {
+  await SettingsManager.instance.initializeOrientation();
+  await AudioManager.instance.initialize();
+  await CropFactoryService.instance.initialize();
+  await ItemFactoryService.instance.initialize();
+  FarmManager.instance.initializeTiles();
+  InventoryManager.instance.initializeSlots();
+  EquipmentManager.instance.initialize();
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Initialize orientation based on input mode (joystick = landscape, keyboard = all orientations)
-  await SettingsManager.instance.initializeOrientation();
 
   if (!kIsWeb) {
     await Flame.device.fullScreen();
   }
 
-  await AudioManager.instance.initialize();
-  await CropDatabase.initialize();
+  await _initializeSingletons();
 
-  // Setup dependency injection
-  await setupTimeDependencies();
   await setupInventoryDependencies();
   await setupFarmDependencies();
 
-  GameplayLocalizationsDelegate location =
-      const GameplayLocalizationsDelegate();
+  runApp(const AppRoot());
+}
 
-  runApp(
-    MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(fontFamily: 'Normal'),
-      home: MenuScreen(),
-      supportedLocales: GameplayLocalizationsDelegate.supportedLocales(),
-      localizationsDelegates: [
-        location,
-        DefaultCupertinoLocalizations.delegate,
-        ...GlobalMaterialLocalizations.delegates,
-      ],
-      localeResolutionCallback: location.resolution,
-    ),
-  );
+final class AppRoot extends StatelessWidget {
+  const AppRoot({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    GameplayLocalizationsDelegate location =
+        const GameplayLocalizationsDelegate();
+
+    return AppDesignSystemProvider(
+      debugIsOn: AppEnvironment.kIsDevToolsMode ? false : false,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        // theme: ThemeData(fontFamily: 'Pixel'),
+        themeMode: ThemeMode.dark,
+        darkTheme: ThemeData(fontFamily: 'Pixel'),
+        home: MenuScreen(),
+        supportedLocales: GameplayLocalizationsDelegate.supportedLocales(),
+        localizationsDelegates: [
+          location,
+          DefaultCupertinoLocalizations.delegate,
+          ...GlobalMaterialLocalizations.delegates,
+        ],
+        localeResolutionCallback: location.resolution,
+      ),
+    );
+  }
 }

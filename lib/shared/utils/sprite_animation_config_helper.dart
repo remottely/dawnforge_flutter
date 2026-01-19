@@ -1,5 +1,7 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/shared/utils/sprite_animation_constants.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
+import 'package:dawnforge/shared/utils/sprite_animation_constants.dart';
+import 'package:flutter/foundation.dart';
 
 final class SpriteAnimationConfigHelper {
   SpriteAnimationConfigHelper._();
@@ -99,18 +101,26 @@ final class SpriteAnimationConfigHelper {
       'totalFrames=$totalFrames, skipFirstFrames=$skipFirstFrames',
     );
 
-    return SpriteAnimation.load(
-      assetPath,
-      createCustomData(
-        stepTime: stepTime,
-        amount: usedFrames,
-        textureSize: textureSize,
-        texturePosition: Vector2(
-          framePositionXPadding +
-              (framePositionX + skipFirstFrames) * textureSize.x,
-          framePositionYPadding + (framePositionY),
+    try {
+      // GameLogger.info('[SpriteAnimationConfigHelper] Carregando asset: $assetPath');
+      return SpriteAnimation.load(
+        assetPath,
+        createCustomData(
+          stepTime: stepTime,
+          amount: usedFrames,
+          textureSize: textureSize,
+          texturePosition: Vector2(
+            framePositionXPadding +
+                (framePositionX + skipFirstFrames) * textureSize.x,
+            framePositionYPadding + (framePositionY),
+          ),
         ),
-      ),
-    );
+      );
+    } catch (e, stack) {
+      GameLogger.error(
+        '[SpriteAnimationConfigHelper] ERRO ao carregar asset: $assetPath.\nErro: $e.\nStack: $stack',
+      );
+      rethrow;
+    }
   }
 }

@@ -1,0 +1,167 @@
+enum HandItemId {
+  /// todo
+  empty_seed_bag,
+  cabbage,
+  tomato,
+  pumpkin,
+  radish,
+  wheat,
+  corn,
+  watermelon,
+  onion,
+  grape,
+  pineapple,
+  carrot,
+  pepper,
+  zuchini,
+  strawberry,
+  apple,
+  prickly_pear,
+  cauliflower,
+  turnip,
+  cotton,
+  coffee,
+
+  /// Seeds
+  apple_seed_bag,
+  cabbage_seed_bag,
+  radish_seed_bag,
+  carrot_seed_bag,
+  strawberry_seed_bag,
+  wheat_seed_bag,
+  pepper_seed_bag,
+  turnip_seed_bag,
+  cotton_seed_bag,
+  onion_seed_bag,
+  cauliflower_seed_bag,
+  corn_seed_bag,
+
+  /// Inventory seed items (non-equip variants)
+  carrot_seeds,
+  wheat_seeds,
+  tomato_seeds,
+  pumpkin_seeds,
+  ancient_seeds,
+  tomato_seed_bag,
+  grape_seed_bag,
+  prickly_pear_seed_bag,
+  coffee_seed_bag,
+  zuchini_seed_bag,
+  pumpkin_seed_bag,
+  pineapple_seed_bag,
+  watermelon_seed_bag,
+
+  harvestBasket, // hoe
+
+  /// Tools
+  shovel,
+  wateringCan,
+  axe,
+  staff_fire,
+  sword,
+  wand,
+
+  /// Weapons
+  ironSword,
+  staff,
+  shield,
+
+  /// Inventory tools/items
+  iron_pickaxe,
+  steel_pickaxe,
+  wooden_axe,
+  basic_hoe,
+
+  /// Consumables
+  // health_potion,
+  // stamina_potion,
+  // super_health_potion,
+  // cooked_meat,
+  // strength_elixir,
+  cabbage_loot_item,
+  pepper_loot_item,
+  turnip_loot_item,
+  cotton_loot_item,
+  onion_loot_item,
+  cauliflower_loot_item,
+  corn_loot_item,
+  tomato_loot_item,
+  grape_loot_item,
+  prickly_pear_loot_item,
+  coffee_loot_item,
+  zuchini_loot_item,
+  pumpkin_loot_item,
+  pineapple_loot_item,
+  watermelon_loot_item,
+  carrot_loot_item,
+  strawberry_loot_item,
+  potato_loot_item,
+  radish_loot_item,
+  apple_loot_item,
+
+  // /// Materials
+  wood,
+  stone,
+  iron_ore,
+  // gold_ore,
+  // fiber,
+  dungeon_key,
+  wheat_item,
+  unknown;
+
+  static HandItemId fromString(String json) {
+    return HandItemId.values.firstWhere(
+      (type) => type.name == json,
+      orElse: () => HandItemId.unknown,
+    );
+  }
+
+  String toJson() => name;
+
+  static HandItemId fromJson(String json) => fromString(json);
+
+  bool get isSeed =>
+      this == apple_seed_bag ||
+      this == cabbage_seed_bag ||
+      this == radish_seed_bag ||
+      this == carrot_seed_bag ||
+      this == strawberry_seed_bag ||
+      this == wheat_seed_bag ||
+      this == pepper_seed_bag ||
+      this == turnip_seed_bag ||
+      this == cotton_seed_bag ||
+      this == onion_seed_bag ||
+      this == cauliflower_seed_bag ||
+      this == corn_seed_bag ||
+      this == tomato_seed_bag ||
+      this == grape_seed_bag ||
+      this == prickly_pear_seed_bag ||
+      this == coffee_seed_bag ||
+      this == zuchini_seed_bag ||
+      this == pumpkin_seed_bag ||
+      this == pineapple_seed_bag ||
+      this == watermelon_seed_bag;
+
+  bool get isFarmTool =>
+      this == shovel ||
+      this == wateringCan ||
+      this == harvestBasket ||
+      this == axe; // TODO(Kevin): define axe isFarmTool?
+
+  bool get isCombatWeapon =>
+      this == ironSword ||
+      this == sword ||
+      this == wand ||
+      this == staff_fire ||
+      // this == axe || // TODO(Kevin): define axe isCombatWeapon?
+      this == staff;
+
+  bool get isPickaxe => this == iron_pickaxe || this == steel_pickaxe;
+
+  bool get canDefense => this == ironSword;
+
+  bool get isEquippable => isSeed || isFarmTool || isCombatWeapon;
+
+  bool get canBeEquippedInMainHandSlot =>
+      isSeed || isFarmTool || isCombatWeapon;
+}

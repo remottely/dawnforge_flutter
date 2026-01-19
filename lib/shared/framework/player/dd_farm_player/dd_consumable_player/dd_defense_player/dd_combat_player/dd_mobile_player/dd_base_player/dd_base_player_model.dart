@@ -1,9 +1,10 @@
-import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/managers/inventory_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
-import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
-import 'package:darkness_dungeon/gameplay/inventory/entities/enums/hand_item_id.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_config.dart';
+import 'package:bonfire/bonfire.dart';
+import 'package:dawnforge/game/features/inventory/managers/equipment_manager.dart';
+import 'package:dawnforge/game/features/inventory/managers/inventory_manager.dart';
+import 'package:dawnforge/game/features/inventory/config/inventory_service_locator.dart';
+import 'package:dawnforge/game/features/inventory/items/weapon_item.dart';
+import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_config.dart';
 import 'package:flutter/foundation.dart';
 
 class DDBasePlayerModel {
@@ -26,14 +27,16 @@ class DDBasePlayerModel {
   double? get life => _saveData.life;
   int get coins => _saveData.coins;
   bool get hasStamina => _saveData.stamina > 0;
+  Vector2 get position => _saveData.position;
+  void setPosition(Vector2 value) => _saveData.position = value;
 
   /// Equipment always points to the currently selected inventory slot
   /// This is never null - it always represents the selected slot
   /// If the slot is empty, equipment will be null
   HandItemId? get equipment {
     final selectedSlotIndex =
-        getIt<EquipmentManager>().currentMainHandSlotIndex;
-    final slot = getIt<InventoryManager>().getSlotByIndex(selectedSlotIndex);
+        EquipmentManager.instance.currentMainHandSlotIndex;
+    final slot = InventoryManager.instance.getSlotByIndex(selectedSlotIndex);
     final item = slot?.item;
 
     if (item is WeaponItem) {
@@ -82,13 +85,13 @@ class DDBasePlayerModel {
 
   bool removeCoins(int amount) {
     if (amount <= 0) return true;
-    if (!canAfford(amount)) return false;
+    if (!canAffordCoins(amount)) return false;
     _saveData.coins -= amount;
     coinsNotifier.value = _saveData.coins;
     return true;
   }
 
-  bool canAfford(int amount) => amount <= _saveData.coins;
+  bool canAffordCoins(int amount) => amount <= _saveData.coins;
 
   Map<String, dynamic> toJson() => _saveData.toJson();
 

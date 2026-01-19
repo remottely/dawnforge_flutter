@@ -20,5 +20,6 @@
   "door_without_key": "I think I need a key to get through here!",
   "door_with_key": "I have the key equipped. Should I use it?",
   "chest_decoration_open": "Open",
-  "torch_decoration_light_up": "Light up"
+  "torch_decoration_light_up": "Light up",
+  "bed_rest_message": "It's too early to go to sleep!"
 }

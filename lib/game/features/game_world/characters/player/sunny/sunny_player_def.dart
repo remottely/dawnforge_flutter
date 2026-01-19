@@ -1,0 +1,274 @@
+import 'package:bonfire/bonfire.dart';
+import 'package:dawnforge/game/features/game_world/characters/character_constants.dart';
+import 'package:dawnforge/game/systems/game/lightning_constants.dart';
+import 'package:dawnforge/game/systems/game/tile_constants.dart';
+import 'package:dawnforge/game/utils/hitbox_utils.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_config.dart';
+import 'package:dawnforge/shared/framework/utils/dd_animation_directional.dart';
+import 'package:dawnforge/shared/utils/sprite_animation_config_helper.dart';
+
+final class SunnyPlayerDef {
+  SunnyPlayerDef._();
+
+  static const double _kMaxStamina = 100.0;
+  static const int _kMaxEnergy = 100;
+  static const int _kStaminaIncrement = 1;
+  static const double _kLongVisionRadius =
+      CharacterConstants.kVisionRadiusSuperLarge;
+  static const Duration _kStaminaRegenDebounce = Duration(milliseconds: 150);
+
+  static const double _kRunSpeedMultiplier = 1.4;
+
+  static const int _kPrimaryAttackStaminaCost = 1;
+  static const int _kFireballAttackStaminaCost = 2;
+  static const double _kPrimaryAttackDamage = 25.0;
+  static const double _kFireballAttackDamage = 10.0;
+
+  static const int _kDigStaminaCost = 5;
+  static const int _kWateringCanStaminaCost = 5;
+  static const int _kSeedStaminaCost = 5;
+  static const int _kHarvestStaminaCost = 5;
+
+  static const DDFarmPlayerModelConfig modelConfig = DDFarmPlayerModelConfig(
+    maxStamina: _kMaxStamina,
+    maxEnergy: _kMaxEnergy,
+    staminaRegenIncrement: _kStaminaIncrement,
+    longVisionRadius: _kLongVisionRadius,
+    staminaRegenDebounce: _kStaminaRegenDebounce,
+    runSpeedMultiplier: _kRunSpeedMultiplier,
+    primaryAttackStaminaCost: _kPrimaryAttackStaminaCost,
+    rangedAttackStaminaCost: _kFireballAttackStaminaCost,
+    primaryAttackDamage: _kPrimaryAttackDamage,
+    rangedAttackDamage: _kFireballAttackDamage,
+    digStaminaCost: _kDigStaminaCost,
+    wateringCanStaminaCost: _kWateringCanStaminaCost,
+    seedStaminaCost: _kSeedStaminaCost,
+    harvestStaminaCost: _kHarvestStaminaCost,
+  );
+
+  static const double _kLife = CharacterConstants.kLifeExtraLarge;
+  static double _kBaseSpeed = CharacterConstants.kSpeedFast;
+
+  static final Vector2 textureSize = TileConstants.tileSizeSunny;
+  static final Vector2 _componentSize = textureSize;
+
+  static final RectangleHitbox _hitbox = HitboxUtils.createCustomHitbox(
+    componentSize: _componentSize,
+    left: 44.0,
+    top: 28.0,
+    right: 44.0,
+    bottom: 25.0,
+  );
+
+  static final Future<SpriteAnimation>
+  _loadAnimationIdleLeft = SpriteAnimation.load(
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_idle_left_strip9.png',
+    SpriteAnimationConfigHelper.createStandardData(
+      amount: 9,
+      textureSize: textureSize,
+    ),
+  );
+
+  static final Future<SpriteAnimation>
+  _loadAnimationAttackRight = SpriteAnimation.load(
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_sword_strip10.png',
+    SpriteAnimationConfigHelper.createStandardData(
+      amount: 10,
+      textureSize: textureSize,
+    ),
+  );
+
+  static final Future<SpriteAnimation>
+  _loadAnimationAttackLeft = SpriteAnimation.load(
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_sword_left_strip10.png',
+    SpriteAnimationConfigHelper.createStandardData(
+      amount: 10,
+      textureSize: textureSize,
+    ),
+  );
+
+  static final DDAnimationDirectionalFactory
+  _animationAttackDirectionalFactory = DDAnimationDirectionalFactory(
+    loadRight: _loadAnimationAttackRight,
+    loadLeft: _loadAnimationAttackLeft,
+  );
+
+  static final Future<SpriteAnimation>
+  _loadAnimationDigRight = SpriteAnimation.load(
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_strip13.png',
+    SpriteAnimationConfigHelper.createStandardData(
+      amount: 10,
+      textureSize: textureSize,
+    ),
+  );
+
+  static final Future<SpriteAnimation>
+  _loadAnimationDigLeft = SpriteAnimation.load(
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_dig_left_strip13.png',
+    SpriteAnimationConfigHelper.createStandardData(
+      amount: 10,
+      textureSize: textureSize,
+    ),
+  );
+
+  static final DDAnimationDirectionalFactory _animationDigDirectionalFactory =
+      DDAnimationDirectionalFactory(
+        loadRight: _loadAnimationDigRight,
+        loadLeft: _loadAnimationDigLeft,
+      );
+
+  static final Future<SpriteAnimation>
+  _loadAnimationWateringCanRight = SpriteAnimation.load(
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_watering_strip5.png',
+    SpriteAnimationConfigHelper.createStandardData(
+      amount: 5,
+      textureSize: textureSize,
+    ),
+  );
+
+  static final Future<SpriteAnimation>
+  _loadAnimationWateringCanLeft = SpriteAnimation.load(
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_watering_left_strip5.png',
+    SpriteAnimationConfigHelper.createStandardData(
+      amount: 5,
+      textureSize: textureSize,
+    ),
+  );
+
+  static final DDAnimationDirectionalFactory _animationWateringCanFactory =
+      DDAnimationDirectionalFactory(
+        loadRight: _loadAnimationWateringCanRight,
+        loadLeft: _loadAnimationWateringCanLeft,
+      );
+
+  static final Future<SpriteAnimation>
+  _loadAnimationPlaceSeedRight = SpriteAnimation.load(
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_strip8.png',
+    SpriteAnimationConfigHelper.createStandardData(
+      amount: 8,
+      textureSize: textureSize,
+    ),
+  );
+
+  static final Future<SpriteAnimation>
+  _loadAnimationPlaceSeedLeft = SpriteAnimation.load(
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_seed_left_strip8.png',
+    SpriteAnimationConfigHelper.createStandardData(
+      amount: 8,
+      textureSize: textureSize,
+    ),
+  );
+
+  static final DDAnimationDirectionalFactory _animationPlaceSeedFactory =
+      DDAnimationDirectionalFactory(
+        loadRight: _loadAnimationPlaceSeedRight,
+        loadLeft: _loadAnimationPlaceSeedLeft,
+      );
+
+  static final Future<SpriteAnimation>
+  _loadAnimationHarvestRight = SpriteAnimation.load(
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_strip8.png',
+    SpriteAnimationConfigHelper.createStandardData(
+      amount: 8,
+      textureSize: textureSize,
+    ),
+  );
+
+  static final Future<SpriteAnimation>
+  _loadAnimationHarvestLeft = SpriteAnimation.load(
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_doing_left_strip8.png',
+    SpriteAnimationConfigHelper.createStandardData(
+      amount: 8,
+      textureSize: textureSize,
+    ),
+  );
+
+  static final DDAnimationDirectionalFactory _animationHarvestFactory =
+      DDAnimationDirectionalFactory(
+        loadRight: _loadAnimationHarvestRight,
+        loadLeft: _loadAnimationHarvestLeft,
+      );
+
+  static final Future<SpriteAnimation>
+  loadAnimationIdleRight = SpriteAnimation.load(
+    'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_idle_strip9.png',
+    SpriteAnimationConfigHelper.createStandardData(
+      amount: 9,
+      textureSize: textureSize,
+    ),
+  );
+
+  static final SimpleDirectionAnimation
+  _animationWalkDirectional = SimpleDirectionAnimation(
+    idleLeft: _loadAnimationIdleLeft,
+    idleRight: loadAnimationIdleRight,
+    runLeft: SpriteAnimation.load(
+      'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_walking_left_strip8.png',
+      SpriteAnimationConfigHelper.createStandardData(
+        amount: 8,
+        textureSize: textureSize,
+      ),
+    ),
+    runRight: SpriteAnimation.load(
+      'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_walking_strip8.png',
+      SpriteAnimationConfigHelper.createStandardData(
+        amount: 8,
+        textureSize: textureSize,
+      ),
+    ),
+  );
+
+  static final SimpleDirectionAnimation
+  _animationRunDirectional = SimpleDirectionAnimation(
+    idleLeft: _loadAnimationIdleLeft,
+    idleRight: loadAnimationIdleRight,
+    runLeft: SpriteAnimation.load(
+      'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_run_left_strip8.png',
+      SpriteAnimationConfigHelper.createStandardData(
+        amount: 8,
+        textureSize: textureSize,
+      ),
+    ),
+    runRight: SpriteAnimation.load(
+      'SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE CHARACTER/PNG/WITH_FX/spr_run_strip8.png',
+      SpriteAnimationConfigHelper.createStandardData(
+        amount: 8,
+        textureSize: textureSize,
+      ),
+    ),
+  );
+
+  static final LightingConfig _lighting = LightingConfig(
+    radius: TileConstants.kTileDimensionLarge,
+    blurBorder: TileConstants.kTileDimensionStandard,
+    color: LightingConstants.playerLighting,
+  );
+
+  static final Vector2 _cryptComponentSize = TileConstants.tileSizeStandard;
+
+  static Future<Sprite> _loadCryptSprite() =>
+      Sprite.load('gameplay/characters/player/player_crypt_1.png');
+
+  static GameDecoration _createDeathMarker(Vector2 position) =>
+      GameDecoration.withSprite(
+        sprite: _loadCryptSprite(),
+        position: Vector2(position.x, position.y),
+        size: _cryptComponentSize,
+      );
+
+  static final DDFarmPlayerViewConfig viewConfig = DDFarmPlayerViewConfig(
+    size: _componentSize,
+    life: _kLife,
+    baseSpeed: _kBaseSpeed,
+    hitbox: _hitbox,
+    lighting: _lighting,
+    getDeathMarker: (position) => _createDeathMarker(position),
+    animationWalkDirectional: _animationWalkDirectional,
+    animationRunDirectional: _animationRunDirectional,
+    animationAttackDirectionalFactory: _animationAttackDirectionalFactory,
+    animationDigFactory: _animationDigDirectionalFactory,
+    animationWateringCanFactory: _animationWateringCanFactory,
+    animationPlaceSeedFactory: _animationPlaceSeedFactory,
+    animationHarvestFactory: _animationHarvestFactory,
+  );
+}

@@ -1,11 +1,11 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:darkness_dungeon/gameplay/core/modules/combat/shield_defense_component.dart';
-import 'package:darkness_dungeon/gameplay/inventory/managers/equipment_manager.dart';
-import 'package:darkness_dungeon/gameplay/inventory/config/inventory_service_locator.dart';
-import 'package:darkness_dungeon/gameplay/inventory/items/weapon_item.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_controller.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';
-import 'package:darkness_dungeon/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_view.dart';
+import 'package:dawnforge/game/systems/combat/shield_defense_component.dart';
+import 'package:dawnforge/game/features/inventory/managers/equipment_manager.dart';
+import 'package:dawnforge/game/features/inventory/config/inventory_service_locator.dart';
+import 'package:dawnforge/game/features/inventory/items/weapon_item.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_controller.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_view.dart';
 
 abstract class DDDefensePlayerView<
   C extends DDCombatPlayerController<M>,
@@ -58,7 +58,7 @@ abstract class DDDefensePlayerView<
     if (_isDefending) return true;
 
     // Check if player has a shield equipped in the main hand
-    final mainHandItem = getIt<EquipmentManager>().getEquippedItem();
+    final mainHandItem = EquipmentManager.instance.getEquippedItem();
 
     if (mainHandItem == null || mainHandItem is! WeaponItem) {
       return false;
