@@ -1,4 +1,3 @@
-import 'package:dawnforge/game/systems/overlay/player_vital_stats/player_vital_stats_state.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:flutter/material.dart';
 
@@ -86,14 +85,7 @@ class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
       }
     });
 
-    return ValueListenableBuilder<bool>(
-      valueListenable: PlayerVitalStatsState.instance.isVisible,
-      builder: (context, isVisible, child) {
-        if (!isVisible) return const SizedBox.shrink();
-        return child!;
-      },
-      child: _buildContent(),
-    );
+    return _buildContent();
   }
 
   Widget _buildContent() {
@@ -105,7 +97,10 @@ class _PlayerVitalStatsOverlayState extends State<PlayerVitalStatsOverlay> {
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: Colors.black.withValues(alpha: 0.8),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.5), width: 2),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.5),
+              width: 2,
+            ),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
