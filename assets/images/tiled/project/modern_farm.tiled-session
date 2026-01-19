@@ -3,10 +3,10 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/farm_map.json",
+    "activeFile": "",
     "expandedProjectPaths": [
-        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps",
-        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/Modern_Farm_v1.2/tilesets"
+        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/Modern_Farm_v1.2/tilesets",
+        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps"
     ],
     "file.lastUsedOpenFilter": "Todos os Ficheiros (*)",
     "fileStates": {
@@ -222,10 +222,10 @@
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/farm_map.json": {
             "expandedObjectLayers": [
                 5,
-                16,
-                18,
                 6,
-                15
+                18,
+                15,
+                16
             ],
             "scale": 2.1655,
             "selectedLayer": 12,
@@ -255,9 +255,9 @@
         },
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/forest_map.json": {
             "expandedObjectLayers": [
-                7,
+                8,
                 6,
-                8
+                7
             ],
             "scale": 4.962,
             "selectedLayer": 4,
@@ -268,16 +268,16 @@
         },
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/home_map.json": {
             "expandedObjectLayers": [
-                13,
-                9,
                 8,
-                15
+                9,
+                15,
+                13
             ],
             "scale": 5.81,
             "selectedLayer": 10,
             "viewCenter": {
-                "x": 94.40619621342515,
-                "y": 93.2013769363167
+                "x": 111.2736660929432,
+                "y": 95.7831325301205
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/lake.json": {
@@ -293,9 +293,9 @@
         },
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/lake_map.json": {
             "expandedObjectLayers": [
-                7,
                 5,
-                6
+                6,
+                7
             ],
             "scale": 7.4607,
             "selectedLayer": 4,
@@ -317,9 +317,9 @@
         },
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/town_map.json": {
             "expandedObjectLayers": [
-                13,
+                12,
                 9,
-                12
+                13
             ],
             "scale": 7.1083,
             "selectedLayer": 8,
@@ -417,14 +417,6 @@
     "map.tileWidth": 16,
     "map.width": 10,
     "openFiles": [
-        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/farm_map.json",
-        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/forest_map.json",
-        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/town_map.json",
-        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/lake_map.json",
-        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/beach_map.json",
-        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/cave_map.json",
-        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/home_map.json",
-        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/texture_atlas.json"
     ],
     "project": "modern_farm.tiled-project",
     "property.type": "string",

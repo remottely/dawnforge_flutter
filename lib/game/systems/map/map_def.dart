@@ -91,14 +91,17 @@ final class MapDef {
         'farm_tile': (p) => FarmTileView(position: p.position),
       };
 
-  /// Official Maps
-  static const String kFarmMapId = 'farm_map';
-  static const String kTownMapId = 'town_map';
-  static const String kForestMapId = 'forest_map';
-  static const String kLakeMapId = 'lake_map';
-  static const String kBeachMapId = 'beach_map';
-  static const String kCaveMapId = 'cave_map';
-  static const String kHomeMapId = 'home_map';
+  /// Test Maps
+  static const String kMapTestId = 'map_test';
+
+  /// Old Official Maps
+  // static const String kFarmMapId = 'farm_map';
+  // static const String kTownMapId = 'town_map';
+  // static const String kForestMapId = 'forest_map';
+  // static const String kLakeMapId = 'lake_map';
+  // static const String kBeachMapId = 'beach_map';
+  // static const String kCaveMapId = 'cave_map';
+  // static const String kHomeMapId = 'home_map';
 
   // /// F Maps
   // static const String kF1Id = 'f_1';
@@ -133,290 +136,299 @@ final class MapDef {
   // static const String kTemple1Id = 'temple_1';
 
   static const List<MapData> kAllMaps = [
-    // /// TEST MAP
-    // MapData(
-    //   id: kF1Id,
-    //   asset: 'tiled/f/maps/$kF1Id.json',
-    //   sensorIds: [
-    //     'sensor_$kSVForestId',
-    //     'sensor_$kSVTownId',
-    //     'sensor_$kSVLakeId',
-    //   ],
-    //   backgroundMusic: AudioDef.bGMusicFarm,
-    //   lightingColor: _kDarknessLightingColor,
-    //   backgroundColor: _kLakeBackgroundColor,
-    //   initialPlayerPosition: '10,10',
-    // ),
-
-    /// Official Maps
+    /// TEST MAP
     MapData(
-      id: kFarmMapId,
-      asset: 'tiled/maps/$kFarmMapId.json',
-      sensorIds: [
-        'sensor_$kForestMapId',
-        'sensor_$kTownMapId',
-        'sensor_$kLakeMapId',
-        'sensor_$kHomeMapId',
-      ],
+      id: kMapTestId,
+      asset: 'tiled/maps/$kMapTestId.json',
+      sensorIds: [],
       backgroundMusic: AudioDef.bgMusicFarm,
       lightingColor: _kNoneLightingColor,
-      backgroundColor: _kLakeBackgroundColor,
-      initialPlayerPosition: '40,22',
+      backgroundColor: _kForestBackgroundColor,
+      initialPlayerPosition: '4,4',
     ),
+    // // MapData(
+    // //   id: kF1Id,
+    // //   asset: 'tiled/f/maps/$kF1Id.json',
+    // //   sensorIds: [
+    // //     'sensor_$kSVForestId',
+    // //     'sensor_$kSVTownId',
+    // //     'sensor_$kSVLakeId',
+    // //   ],
+    // //   backgroundMusic: AudioDef.bgMusicFarm,
+    // //   lightingColor: _kDarknessLightingColor,
+    // //   backgroundColor: _kLakeBackgroundColor,
+    // //   initialPlayerPosition: '10,10',
+    // // ),
 
-    MapData(
-      id: kForestMapId,
-      asset: 'tiled/maps/$kForestMapId.json',
-      sensorIds: ['sensor_$kFarmMapId', 'sensor_$kCaveMapId'],
-      backgroundMusic: AudioDef.bgMusicForest,
-      lightingColor: _kCloudyLightingColor,
-      backgroundColor: _kLakeBackgroundColor,
-      initialPlayerPosition: '40,22',
-    ),
-
-    MapData(
-      id: kTownMapId,
-      asset: 'tiled/maps/$kTownMapId.json',
-      sensorIds: [
-        'sensor_$kFarmMapId',
-        'sensor_$kCaveMapId',
-        'sensor_$kBeachMapId',
-      ],
-      backgroundMusic: AudioDef.bgMusicTown,
-      lightingColor: _kNoneLightingColor,
-      backgroundColor: _kLakeBackgroundColor,
-      initialPlayerPosition: '40,22',
-    ),
-
-    MapData(
-      id: kLakeMapId,
-      asset: 'tiled/maps/$kLakeMapId.json',
-      sensorIds: ['sensor_$kFarmMapId', 'sensor_$kBeachMapId'],
-      backgroundMusic: AudioDef.bgMusicLake,
-      lightingColor: _kCloudyLightingColor,
-      backgroundColor: _kLakeBackgroundColor,
-      initialPlayerPosition: '40,22',
-    ),
-
-    MapData(
-      id: kBeachMapId,
-      asset: 'tiled/maps/$kBeachMapId.json',
-      sensorIds: ['sensor_$kTownMapId', 'sensor_$kLakeMapId'],
-      backgroundMusic: AudioDef.bgMusicBeach,
-      lightingColor: _kNoneLightingColor,
-      backgroundColor: _kLakeBackgroundColor,
-      initialPlayerPosition: '40,22',
-    ),
-
-    MapData(
-      id: kCaveMapId,
-      asset: 'tiled/maps/$kCaveMapId.json',
-      sensorIds: ['sensor_$kForestMapId', 'sensor_$kTownMapId'],
-      backgroundMusic: AudioDef.bgMusicCave,
-      lightingColor: _kDarknessLightingColor,
-      backgroundColor: _kLakeBackgroundColor,
-      initialPlayerPosition: '40,22',
-    ),
-
-    MapData(
-      id: kHomeMapId,
-      asset: 'tiled/maps/$kHomeMapId.json',
-      sensorIds: ['sensor_$kFarmMapId'],
-      backgroundMusic: AudioDef.bgMusicFarm,
-      lightingColor: _kNoneLightingColor,
-      backgroundColor: _kLakeBackgroundColor,
-      initialPlayerPosition: '5,5',
-    ),
-
-    // /// SV MAPS
+    // /// Old Official Maps
     // MapData(
-    //   id: kSVFarmId,
-    //   asset: 'tiled/sv/maps/$kSVFarmId.json',
+    //   id: kFarmMapId,
+    //   asset: 'tiled/maps/$kFarmMapId.json',
     //   sensorIds: [
-    //     'sensor_$kSVForestId',
-    //     'sensor_$kSVTownId',
-    //     'sensor_$kSVLakeId',
+    //     'sensor_$kForestMapId',
+    //     'sensor_$kTownMapId',
+    //     'sensor_$kLakeMapId',
+    //     'sensor_$kHomeMapId',
     //   ],
-    //   backgroundMusic: AudioDef.bGMusicFarm,
+    //   backgroundMusic: AudioDef.bgMusicFarm,
     //   lightingColor: _kNoneLightingColor,
     //   backgroundColor: _kLakeBackgroundColor,
-    //   initialPlayerPosition: '52,20',
+    //   initialPlayerPosition: '40,22',
     // ),
 
     // MapData(
-    //   id: kSVTownId,
-    //   asset: 'tiled/sv/maps/$kSVTownId.json',
-    //   sensorIds: [
-    //     'sensor_$kSVFarmId',
-    //     'sensor_$kSVForestId',
-    //     'sensor_$kSVBeachId',
-    //   ],
-    //   backgroundMusic: AudioDef.bGMusicTown,
+    //   id: kForestMapId,
+    //   asset: 'tiled/maps/$kForestMapId.json',
+    //   sensorIds: ['sensor_$kFarmMapId', 'sensor_$kCaveMapId'],
+    //   backgroundMusic: AudioDef.bgMusicForest,
     //   lightingColor: _kCloudyLightingColor,
     //   backgroundColor: _kLakeBackgroundColor,
-    //   initialPlayerPosition: '10,10',
+    //   initialPlayerPosition: '40,22',
     // ),
 
-    // /// NEW MAPS
-    // const MapData(
-    //   id: kFarmId,
-    //   asset: 'tiled/maps/$kFarmId.json',
+    // MapData(
+    //   id: kTownMapId,
+    //   asset: 'tiled/maps/$kTownMapId.json',
     //   sensorIds: [
-    //     'sensor_$kForestId',
-    //     'sensor_$kTownId',
-    //     'sensor_$kLakeId',
-    //     'sensor_$kDungeon1Id',
-    //     'sensor_$kForest1Id',
-    //     'sensor_$kLake1Id',
+    //     'sensor_$kFarmMapId',
+    //     'sensor_$kCaveMapId',
+    //     'sensor_$kBeachMapId',
     //   ],
-    //   backgroundMusic: AudioDef.bGMusicFarm,
+    //   backgroundMusic: AudioDef.bgMusicTown,
     //   lightingColor: _kNoneLightingColor,
     //   backgroundColor: _kLakeBackgroundColor,
-    //   initialPlayerPosition: '10,10',
+    //   initialPlayerPosition: '40,22',
     // ),
 
-    // const MapData(
-    //   id: kForestId,
-    //   asset: 'tiled/maps/$kForestId.json',
-    //   sensorIds: ['sensor_$kCaveId', 'sensor_$kTownId', 'sensor_$kFarmId'],
-    //   backgroundMusic: AudioDef.bGMusicFarm,
-    //   lightingColor: _kNoneLightingColor,
-    //   backgroundColor: _kLakeBackgroundColor,
-    //   initialPlayerPosition: '10,10',
-    // ),
-
-    // const MapData(
-    //   id: kTownId,
-    //   asset: 'tiled/maps/$kTownId.json',
-    //   sensorIds: [
-    //     'sensor_$kFarmId',
-    //     'sensor_$kForestId',
-    //     'sensor_$kBeachId',
-    //     'sensor_$kLakeId',
-    //   ],
-    //   backgroundMusic: AudioDef.bGMusicFarm,
-    //   lightingColor: _kNoneLightingColor,
-    //   backgroundColor: _kLakeBackgroundColor,
-    //   initialPlayerPosition: '10,10',
-    // ),
-
-    // const MapData(
-    //   id: kLakeId,
-    //   asset: 'tiled/maps/$kLakeId.json',
-    //   sensorIds: ['sensor_$kFarmId', 'sensor_$kTownId'],
-    //   backgroundMusic: AudioDef.bGMusicFarm,
-    //   lightingColor: _kNoneLightingColor,
-    //   backgroundColor: _kLakeBackgroundColor,
-    //   initialPlayerPosition: '10,10',
-    // ),
-
-    // const MapData(
-    //   id: kBeachId,
-    //   asset: 'tiled/maps/$kBeachId.json',
-    //   sensorIds: ['sensor_$kTownId'],
-    //   backgroundMusic: AudioDef.bGMusicFarm,
-    //   lightingColor: _kNoneLightingColor,
-    //   backgroundColor: _kLakeBackgroundColor,
-    //   initialPlayerPosition: '10,10',
-    // ),
-
-    // const MapData(
-    //   id: kCaveId,
-    //   asset: 'tiled/maps/$kCaveId.json',
-    //   sensorIds: ['sensor_$kForestId'],
-    //   backgroundMusic: AudioDef.bGMusicFarm,
-    //   lightingColor: _kNoneLightingColor,
-    //   backgroundColor: _kLakeBackgroundColor,
-    //   initialPlayerPosition: '10,10',
-    // ),
-
-    // /// OLD MAPS FOR TESTING
-    // const MapData(
-    //   id: kFarmTestId,
-    //   asset: 'tiled/$kFarmTestId.json',
-    //   sensorIds: [
-    //     'sensor_$kBossTestId',
-    //     'sensor_$kConversationTestId',
-    //     'sensor_$kLake1Id',
-    //   ],
-    //   backgroundMusic: AudioDef.bGMusicFarm,
-    //   lightingColor: _kNoneLightingColor,
-    //   backgroundColor: _kLakeBackgroundColor,
-    //   initialPlayerPosition: '10,10',
-    // ),
-
-    // const MapData(
-    //   id: kConversationTestId,
-    //   asset: 'tiled/$kConversationTestId.json',
-    //   sensorIds: ['sensor_$kFarmTestId', 'sensor_$kCombatTestId'],
-    //   backgroundMusic: AudioDef.bGMusicFarm,
+    // MapData(
+    //   id: kLakeMapId,
+    //   asset: 'tiled/maps/$kLakeMapId.json',
+    //   sensorIds: ['sensor_$kFarmMapId', 'sensor_$kBeachMapId'],
+    //   backgroundMusic: AudioDef.bgMusicLake,
     //   lightingColor: _kCloudyLightingColor,
     //   backgroundColor: _kLakeBackgroundColor,
-    //   initialPlayerPosition: '10,10',
+    //   initialPlayerPosition: '40,22',
     // ),
 
-    // const MapData(
-    //   id: kCombatTestId,
-    //   asset: 'tiled/$kCombatTestId.json',
-    //   sensorIds: ['sensor_$kConversationTestId', 'sensor_$kBossTestId'],
-    //   backgroundMusic: AudioDef.bGMusicFarm,
+    // MapData(
+    //   id: kBeachMapId,
+    //   asset: 'tiled/maps/$kBeachMapId.json',
+    //   sensorIds: ['sensor_$kTownMapId', 'sensor_$kLakeMapId'],
+    //   backgroundMusic: AudioDef.bgMusicBeach,
+    //   lightingColor: _kNoneLightingColor,
+    //   backgroundColor: _kLakeBackgroundColor,
+    //   initialPlayerPosition: '40,22',
+    // ),
+
+    // MapData(
+    //   id: kCaveMapId,
+    //   asset: 'tiled/maps/$kCaveMapId.json',
+    //   sensorIds: ['sensor_$kForestMapId', 'sensor_$kTownMapId'],
+    //   backgroundMusic: AudioDef.bgMusicCave,
     //   lightingColor: _kDarknessLightingColor,
     //   backgroundColor: _kLakeBackgroundColor,
-    //   initialPlayerPosition: '10,10',
+    //   initialPlayerPosition: '40,22',
     // ),
 
-    // const MapData(
-    //   id: kBossTestId,
-    //   asset: 'tiled/$kBossTestId.json',
-    //   sensorIds: ['sensor_$kCombatTestId', 'sensor_$kFarmTestId'],
-    //   backgroundMusic: AudioDef.bGMusicFarm,
-    //   lightingColor: _kDarknessLightingColor,
+    // MapData(
+    //   id: kHomeMapId,
+    //   asset: 'tiled/maps/$kHomeMapId.json',
+    //   sensorIds: ['sensor_$kFarmMapId'],
+    //   backgroundMusic: AudioDef.bgMusicFarm,
+    //   lightingColor: _kNoneLightingColor,
     //   backgroundColor: _kLakeBackgroundColor,
-    //   initialPlayerPosition: '10,10',
+    //   initialPlayerPosition: '5,5',
     // ),
 
-    // const MapData(
-    //   id: kLake1Id,
-    //   asset: 'tiled/$kLake1Id.json',
-    //   sensorIds: [
-    //     'sensor_$kForest1Id',
-    //     'sensor_$kDungeon1Id',
-    //     'sensor_$kFarmTestId',
-    //   ],
-    //   backgroundMusic: AudioDef.bGMusicFarm,
-    //   lightingColor: _kDarknessLightingColor,
-    //   backgroundColor: _kLakeBackgroundColor,
-    //   initialPlayerPosition: '10,10',
-    // ),
+    // // /// SV MAPS
+    // // MapData(
+    // //   id: kSVFarmId,
+    // //   asset: 'tiled/sv/maps/$kSVFarmId.json',
+    // //   sensorIds: [
+    // //     'sensor_$kSVForestId',
+    // //     'sensor_$kSVTownId',
+    // //     'sensor_$kSVLakeId',
+    // //   ],
+    // //   backgroundMusic: AudioDef.bgMusicFarm,
+    // //   lightingColor: _kNoneLightingColor,
+    // //   backgroundColor: _kLakeBackgroundColor,
+    // //   initialPlayerPosition: '52,20',
+    // // ),
 
-    // const MapData(
-    //   id: kForest1Id,
-    //   asset: 'tiled/$kForest1Id.json',
-    //   sensorIds: ['sensor_$kDungeon1Id'],
-    //   backgroundMusic: AudioDef.bGMusicFarm,
-    //   lightingColor: _kCloudyLightingColor,
-    //   backgroundColor: _kForestBackgroundColor,
-    //   initialPlayerPosition: '10,10',
-    // ),
+    // // MapData(
+    // //   id: kSVTownId,
+    // //   asset: 'tiled/sv/maps/$kSVTownId.json',
+    // //   sensorIds: [
+    // //     'sensor_$kSVFarmId',
+    // //     'sensor_$kSVForestId',
+    // //     'sensor_$kSVBeachId',
+    // //   ],
+    // //   backgroundMusic: AudioDef.bGMusicTown,
+    // //   lightingColor: _kCloudyLightingColor,
+    // //   backgroundColor: _kLakeBackgroundColor,
+    // //   initialPlayerPosition: '10,10',
+    // // ),
 
-    // const MapData(
-    //   id: kDungeon1Id,
-    //   asset: 'tiled/$kDungeon1Id.json',
-    //   sensorIds: ['sensor_$kForest1Id', 'sensor_$kTemple1Id'],
-    //   backgroundMusic: AudioDef.bGMusicFarm,
-    //   lightingColor: _kDarknessLightingColor,
-    //   backgroundColor: _kDungeonBackgroundColor,
-    //   initialPlayerPosition: '10,10',
-    // ),
+    // // /// NEW MAPS
+    // // const MapData(
+    // //   id: kFarmId,
+    // //   asset: 'tiled/maps/$kFarmId.json',
+    // //   sensorIds: [
+    // //     'sensor_$kForestId',
+    // //     'sensor_$kTownId',
+    // //     'sensor_$kLakeId',
+    // //     'sensor_$kDungeon1Id',
+    // //     'sensor_$kForest1Id',
+    // //     'sensor_$kLake1Id',
+    // //   ],
+    // //   backgroundMusic: AudioDef.bgMusicFarm,
+    // //   lightingColor: _kNoneLightingColor,
+    // //   backgroundColor: _kLakeBackgroundColor,
+    // //   initialPlayerPosition: '10,10',
+    // // ),
 
-    // const MapData(
-    //   id: kTemple1Id,
-    //   asset: 'tiled/$kTemple1Id.json',
-    //   sensorIds: ['sensor_$kLake1Id'],
-    //   backgroundMusic: AudioDef.bGMusicFarm, // TODO(Kevin): Change music
-    //   lightingColor: _kNoneLightingColor, // TODO(Kevin): Change color
-    //   backgroundColor: _kTempleBackgroundColor, // TODO(Kevin): Change color
-    //   initialPlayerPosition: '10,10',
-    // ),
+    // // const MapData(
+    // //   id: kForestId,
+    // //   asset: 'tiled/maps/$kForestId.json',
+    // //   sensorIds: ['sensor_$kCaveId', 'sensor_$kTownId', 'sensor_$kFarmId'],
+    // //   backgroundMusic: AudioDef.bgMusicFarm,
+    // //   lightingColor: _kNoneLightingColor,
+    // //   backgroundColor: _kLakeBackgroundColor,
+    // //   initialPlayerPosition: '10,10',
+    // // ),
+
+    // // const MapData(
+    // //   id: kTownId,
+    // //   asset: 'tiled/maps/$kTownId.json',
+    // //   sensorIds: [
+    // //     'sensor_$kFarmId',
+    // //     'sensor_$kForestId',
+    // //     'sensor_$kBeachId',
+    // //     'sensor_$kLakeId',
+    // //   ],
+    // //   backgroundMusic: AudioDef.bgMusicFarm,
+    // //   lightingColor: _kNoneLightingColor,
+    // //   backgroundColor: _kLakeBackgroundColor,
+    // //   initialPlayerPosition: '10,10',
+    // // ),
+
+    // // const MapData(
+    // //   id: kLakeId,
+    // //   asset: 'tiled/maps/$kLakeId.json',
+    // //   sensorIds: ['sensor_$kFarmId', 'sensor_$kTownId'],
+    // //   backgroundMusic: AudioDef.bgMusicFarm,
+    // //   lightingColor: _kNoneLightingColor,
+    // //   backgroundColor: _kLakeBackgroundColor,
+    // //   initialPlayerPosition: '10,10',
+    // // ),
+
+    // // const MapData(
+    // //   id: kBeachId,
+    // //   asset: 'tiled/maps/$kBeachId.json',
+    // //   sensorIds: ['sensor_$kTownId'],
+    // //   backgroundMusic: AudioDef.bgMusicFarm,
+    // //   lightingColor: _kNoneLightingColor,
+    // //   backgroundColor: _kLakeBackgroundColor,
+    // //   initialPlayerPosition: '10,10',
+    // // ),
+
+    // // const MapData(
+    // //   id: kCaveId,
+    // //   asset: 'tiled/maps/$kCaveId.json',
+    // //   sensorIds: ['sensor_$kForestId'],
+    // //   backgroundMusic: AudioDef.bgMusicFarm,
+    // //   lightingColor: _kNoneLightingColor,
+    // //   backgroundColor: _kLakeBackgroundColor,
+    // //   initialPlayerPosition: '10,10',
+    // // ),
+
+    // // /// OLD MAPS FOR TESTING
+    // // const MapData(
+    // //   id: kFarmTestId,
+    // //   asset: 'tiled/$kFarmTestId.json',
+    // //   sensorIds: [
+    // //     'sensor_$kBossTestId',
+    // //     'sensor_$kConversationTestId',
+    // //     'sensor_$kLake1Id',
+    // //   ],
+    // //   backgroundMusic: AudioDef.bgMusicFarm,
+    // //   lightingColor: _kNoneLightingColor,
+    // //   backgroundColor: _kLakeBackgroundColor,
+    // //   initialPlayerPosition: '10,10',
+    // // ),
+
+    // // const MapData(
+    // //   id: kConversationTestId,
+    // //   asset: 'tiled/$kConversationTestId.json',
+    // //   sensorIds: ['sensor_$kFarmTestId', 'sensor_$kCombatTestId'],
+    // //   backgroundMusic: AudioDef.bgMusicFarm,
+    // //   lightingColor: _kCloudyLightingColor,
+    // //   backgroundColor: _kLakeBackgroundColor,
+    // //   initialPlayerPosition: '10,10',
+    // // ),
+
+    // // const MapData(
+    // //   id: kCombatTestId,
+    // //   asset: 'tiled/$kCombatTestId.json',
+    // //   sensorIds: ['sensor_$kConversationTestId', 'sensor_$kBossTestId'],
+    // //   backgroundMusic: AudioDef.bgMusicFarm,
+    // //   lightingColor: _kDarknessLightingColor,
+    // //   backgroundColor: _kLakeBackgroundColor,
+    // //   initialPlayerPosition: '10,10',
+    // // ),
+
+    // // const MapData(
+    // //   id: kBossTestId,
+    // //   asset: 'tiled/$kBossTestId.json',
+    // //   sensorIds: ['sensor_$kCombatTestId', 'sensor_$kFarmTestId'],
+    // //   backgroundMusic: AudioDef.bgMusicFarm,
+    // //   lightingColor: _kDarknessLightingColor,
+    // //   backgroundColor: _kLakeBackgroundColor,
+    // //   initialPlayerPosition: '10,10',
+    // // ),
+
+    // // const MapData(
+    // //   id: kLake1Id,
+    // //   asset: 'tiled/$kLake1Id.json',
+    // //   sensorIds: [
+    // //     'sensor_$kForest1Id',
+    // //     'sensor_$kDungeon1Id',
+    // //     'sensor_$kFarmTestId',
+    // //   ],
+    // //   backgroundMusic: AudioDef.bgMusicFarm,
+    // //   lightingColor: _kDarknessLightingColor,
+    // //   backgroundColor: _kLakeBackgroundColor,
+    // //   initialPlayerPosition: '10,10',
+    // // ),
+
+    // // const MapData(
+    // //   id: kForest1Id,
+    // //   asset: 'tiled/$kForest1Id.json',
+    // //   sensorIds: ['sensor_$kDungeon1Id'],
+    // //   backgroundMusic: AudioDef.bgMusicFarm,
+    // //   lightingColor: _kCloudyLightingColor,
+    // //   backgroundColor: _kForestBackgroundColor,
+    // //   initialPlayerPosition: '10,10',
+    // // ),
+
+    // // const MapData(
+    // //   id: kDungeon1Id,
+    // //   asset: 'tiled/$kDungeon1Id.json',
+    // //   sensorIds: ['sensor_$kForest1Id', 'sensor_$kTemple1Id'],
+    // //   backgroundMusic: AudioDef.bgMusicFarm,
+    // //   lightingColor: _kDarknessLightingColor,
+    // //   backgroundColor: _kDungeonBackgroundColor,
+    // //   initialPlayerPosition: '10,10',
+    // // ),
+
+    // // const MapData(
+    // //   id: kTemple1Id,
+    // //   asset: 'tiled/$kTemple1Id.json',
+    // //   sensorIds: ['sensor_$kLake1Id'],
+    // //   backgroundMusic: AudioDef.bgMusicFarm, // TODO(Kevin): Change music
+    // //   lightingColor: _kNoneLightingColor, // TODO(Kevin): Change color
+    // //   backgroundColor: _kTempleBackgroundColor, // TODO(Kevin): Change color
+    // //   initialPlayerPosition: '10,10',
+    // // ),
   ];
 }

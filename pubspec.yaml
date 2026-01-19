@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.110.7+1
+version: 1.110.8+1
 
 environment:
   sdk: ^3.12.0-14.0.dev
@@ -369,6 +369,8 @@ flutter:
     - assets/images/tiled/SmallBurg/texture_atlas_decorations.png
     - assets/images/tiled/SmallBurg/texture_atlas_grid_tiles.png
     - assets/images/tiled/SmallBurg/texture_atlas_terrain.png
+    - assets/images/tiled/maps/map_test.json
+    - assets/images/tiled/texture_atlas_terrain.json
 
   fonts:
     - family: Pixel

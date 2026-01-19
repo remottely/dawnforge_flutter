@@ -158,11 +158,11 @@ class TimeManager {
   void _teleportPlayerToHome() {
     try {
       // Solicita transição de mapa via controller
-      MapTransitionController.instance.requestTransition(
-        mapId: MapDef.kHomeMapId,
-        playerPosition: Vector2(5, 5), // Posição inicial em tiles
-        playerDirection: Direction.down,
-      );
+      // MapTransitionController.instance.requestTransition( // TODO(Kevin): NOW NOW - critical put it back if its a SV clone
+      //   mapId: MapDef.kHomeMapId,
+      //   playerPosition: Vector2(5, 5), // Posição inicial em tiles
+      //   playerDirection: Direction.down,
+      // );
 
       GameLogger.info('[TimeManager] Solicitada transição para Home');
     } catch (e, stack) {

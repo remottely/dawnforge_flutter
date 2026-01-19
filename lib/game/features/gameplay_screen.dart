@@ -71,7 +71,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
 
     return MapNavigator(
       maps: MapManager.allMaps,
-      initialMap: MapDef.kHomeMapId,
+      initialMap: MapDef.kMapTestId,
       builder: (context, arguments, mapItem) {
         // Salva o contexto do MapNavigator
         _mapNavigatorContext = context;
@@ -126,12 +126,17 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
           recreatePerMapDependencies(mapId: mapItem.id);
         }
 
+        // final playerPosition =
+        //     (mapItem.id == MapDef.kHomeMapId
+        //         ? loadedPlayerPosition ?? Vector2(5, 5)
+        //         : (mapArguments?.playerPosition ??
+        //               initialPlayerPosition ??
+        //               Vector2(7, 7))) *
+        //     TileConstants.kTileDimensionStandard;
         final playerPosition =
-            (mapItem.id == MapDef.kHomeMapId
-                ? loadedPlayerPosition ?? Vector2(5, 5)
-                : (mapArguments?.playerPosition ??
-                      initialPlayerPosition ??
-                      Vector2(7, 7))) *
+            ((mapArguments?.playerPosition ??
+                initialPlayerPosition ??
+                Vector2(7, 7))) *
             TileConstants.kTileDimensionStandard;
 
         final player = buildSmallburgPlayer(playerPosition);
