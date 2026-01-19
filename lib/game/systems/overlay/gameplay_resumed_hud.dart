@@ -1,7 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 
 import 'package:dawnforge/game/systems/overlay/message/message_overlay.dart';
-import 'package:dawnforge/game/systems/overlay/tutorial_inputs/tutorial_inputs_overlay.dart';
 import 'package:dawnforge/game/systems/overlay/inventory/inventory_overlay.dart';
 import 'package:dawnforge/game/systems/overlay/player_vital_stats/player_vital_stats_overlay.dart';
 import 'package:dawnforge/game/systems/overlay/debug/debug_overlay.dart';
@@ -246,10 +245,7 @@ final class _CenterArea extends StatelessWidget {
       flex: flex,
       child: DebugContainer(
         color: DebugColors.gameplayOverlayCenterArea,
-        child: Container(
-          alignment: Alignment.center,
-          child: const TutorialInputsOverlay(),
-        ),
+        child: Container(alignment: Alignment.center),
       ),
     );
   }

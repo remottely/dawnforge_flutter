@@ -1,11 +1,9 @@
 import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/systems/overlay/tutorial_inputs/tutorial_inputs_state.dart';
+import 'package:dawnforge/game/global/global_state_machine.dart';
 import 'package:dawnforge/game/systems/input_actions/input_def.dart';
-import 'package:dawnforge/core/utils/app_environment.dart';
 import 'package:dawnforge/game/features/inventory/managers/equipment_manager.dart';
 import 'package:dawnforge/game/features/inventory/managers/inventory_manager.dart';
-import 'package:dawnforge/game/features/inventory/state/inventory_state.dart';
 import 'package:dawnforge/game/features/inventory/config/inventory_service_locator.dart';
 import 'package:dawnforge/game/features/inventory/usecases/add_item_use_case.dart';
 import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.dart';
@@ -60,15 +58,23 @@ class InventoryInputHandler extends GameComponent
       return true;
     }
 
-    if (InputDef.isToggleInventoryAction(actionId)) {
-      if (AppEnvironment.kIsDebugMode) {
-        _toggleInventory(); // TODO(kevin): remove it?
+    if (InputDef.isToggleUiMenuInventoryAction(actionId)) {
+      if (!GlobalStateMachine.instance.isUiMenuInventory) {
+        GlobalStateMachine.instance.openUiMenuInventory();
+      } else {
+        GlobalStateMachine.instance.closeUiMenuInventory();
       }
+
       return true;
     }
 
-    if (InputDef.isToggleTutorialInputsAction(actionId)) {
-      _toggleInputs();
+    if (InputDef.isToggleUiMenuTutorialInputsAction(actionId)) {
+      if (!GlobalStateMachine.instance.isUiMenuTutorial) {
+        GlobalStateMachine.instance.openUiMenuTutorial();
+      } else {
+        GlobalStateMachine.instance.closeUiMenuTutorial();
+      }
+
       return true;
     }
 
@@ -93,14 +99,6 @@ class InventoryInputHandler extends GameComponent
     }
 
     return false;
-  }
-
-  void _toggleInventory() {
-    InventoryState.instance.toggle();
-  }
-
-  void _toggleInputs() {
-    TutorialInputsState.instance.toggle();
   }
 
   void _initializeTestItems() {

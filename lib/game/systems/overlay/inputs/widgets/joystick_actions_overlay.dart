@@ -1,5 +1,4 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/systems/overlay/inputs/mobile_inputs_state.dart';
 import 'package:dawnforge/game/systems/input_actions/joysctick_setup.dart';
 import 'package:dawnforge/game/features/inventory/entities/hand_item.dart';
 import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.dart';
@@ -16,10 +15,6 @@ class JoystickActionsOverlay extends ResponsiveOverlayBase {
 
   @override
   String get overlayId => 'joystick_actions';
-
-  @override
-  ValueNotifier<bool> get visibilityNotifier =>
-      MobileInputsState.instance.isVisible;
 
   @override
   Widget buildOverlayContent(BuildContext context) {

@@ -3,8 +3,6 @@
 /// • Remove ResponsiveOverlayData
 /// • Corrige erro de isMobileScreen
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/systems/overlay/inputs/mobile_inputs_state.dart';
-
 import 'package:dawnforge/game/systems/input_actions/joysctick_setup.dart';
 import 'package:dawnforge/core/utils/app_environment.dart';
 import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
@@ -20,10 +18,6 @@ final class MobileInputsOverlay extends ResponsiveOverlayBase {
 
   @override
   String get overlayId => 'mobile_inputs';
-
-  @override
-  ValueNotifier<bool> get visibilityNotifier =>
-      MobileInputsState.instance.isVisible;
 
   @override
   Widget buildOverlayContent(BuildContext context) {
@@ -168,7 +162,10 @@ final class MobileInputsOverlay extends ResponsiveOverlayBase {
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.7),
           borderRadius: BorderRadius.circular(size * 0.2),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.3), width: 2),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.3),
+            width: 2,
+          ),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.3),

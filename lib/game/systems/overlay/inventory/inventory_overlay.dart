@@ -4,7 +4,6 @@ import 'package:dawnforge/shared/design_system/theme/screen_size_info.dart';
 import 'package:dawnforge/game/features/inventory/managers/equipment_manager.dart';
 import 'package:dawnforge/game/features/inventory/managers/inventory_manager.dart';
 import 'package:dawnforge/game/features/inventory/state/equipment_state.dart';
-import 'package:dawnforge/game/features/inventory/state/inventory_state.dart';
 import 'package:dawnforge/game/features/inventory/entities/inventory_slot.dart';
 import 'package:dawnforge/game/features/inventory/entities/hand_item.dart';
 import 'package:dawnforge/game/features/inventory/widgets/item_sprite_widget.dart';
@@ -18,15 +17,8 @@ class InventoryOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<bool>(
-      valueListenable: InventoryState.instance.isVisible,
-      builder: (context, isVisible, _) {
-        if (!isVisible) return const SizedBox.shrink();
-
-        return LayoutBuilder(
-          builder: (context, constraints) => const _InventoryContainer(),
-        );
-      },
+    return LayoutBuilder(
+      builder: (context, constraints) => const _InventoryContainer(),
     );
   }
 }

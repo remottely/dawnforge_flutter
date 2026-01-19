@@ -9,9 +9,6 @@ class EquipmentState {
 
   static final EquipmentState instance = EquipmentState._();
 
-  // Controls equipment overlay visibility
-  final isVisible = ValueNotifier<bool>(true);
-
   // Single equipped item (no slot distinction)
   final equippedItem = ValueNotifier<HandItem?>(null);
 
@@ -32,12 +29,7 @@ class EquipmentState {
     return equippedItem.value;
   }
 
-  void show() => isVisible.value = true;
-  void hide() => isVisible.value = false;
-  void toggle() => isVisible.value = !isVisible.value;
-
   void dispose() {
     equippedItem.dispose();
-    isVisible.dispose();
   }
 }
