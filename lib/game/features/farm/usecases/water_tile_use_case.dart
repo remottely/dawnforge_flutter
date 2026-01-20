@@ -1,8 +1,8 @@
 import 'package:dawnforge/core/utils/game_logger.dart';
 
-import 'package:dawnforge/game/features/game_world/world/entities/objects/farm/farm_object.dart';
+import 'package:dawnforge/game/features/world/entities/objects/farm/farm_object.dart';
 
-import '../../game_world/world/entities/objects/farm/soil_state.dart';
+import '../../world/entities/objects/farm/soil_state.dart';
 import '../managers/farm_manager.dart';
 
 /// UseCase para regar um tile da fazenda.

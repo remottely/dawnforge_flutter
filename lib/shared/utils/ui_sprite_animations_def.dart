@@ -1,15 +1,15 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/features/game_world/characters/enemies/boss/boss_enemy_def.dart';
-import 'package:dawnforge/game/features/game_world/characters/enemies/goblin/goblin_enemy_def.dart';
-import 'package:dawnforge/game/features/game_world/characters/enemies/imp/imp_enemy_def.dart';
-import 'package:dawnforge/game/features/game_world/characters/enemies/mini_boss/mini_boss_enemy_def.dart';
-import 'package:dawnforge/game/features/game_world/characters/npcs/kid/kid_npc_def.dart';
-import 'package:dawnforge/game/features/game_world/characters/npcs/wizard/wizard_npc_def.dart';
-import 'package:dawnforge/game/features/game_world/characters/player/cute/cute_player_def.dart';
-import 'package:dawnforge/game/features/game_world/characters/player/demo/demo_player_def.dart';
-import 'package:dawnforge/game/features/game_world/characters/player/farmer/farmer_player_def.dart';
-import 'package:dawnforge/game/features/game_world/characters/player/knight/knight_player_def.dart';
-import 'package:dawnforge/game/features/game_world/characters/player/sunny/sunny_player_def.dart';
+import 'package:dawnforge/game/modules/characters/enemies/boss/boss_enemy_def.dart';
+import 'package:dawnforge/game/modules/characters/enemies/goblin/goblin_enemy_def.dart';
+import 'package:dawnforge/game/modules/characters/enemies/imp/imp_enemy_def.dart';
+import 'package:dawnforge/game/modules/characters/enemies/mini_boss/mini_boss_enemy_def.dart';
+import 'package:dawnforge/game/modules/characters/npcs/kid/kid_npc_def.dart';
+import 'package:dawnforge/game/modules/characters/npcs/wizard/wizard_npc_def.dart';
+import 'package:dawnforge/game/modules/characters/player/cute/cute_player_def.dart';
+import 'package:dawnforge/game/modules/characters/player/demo/demo_player_def.dart';
+import 'package:dawnforge/game/modules/characters/player/farmer/farmer_player_def.dart';
+import 'package:dawnforge/game/modules/characters/player/knight/knight_player_def.dart';
+import 'package:dawnforge/game/modules/characters/player/sunny/sunny_player_def.dart';
 
 class UISpriteAnimationsDef {
   static final Future<SpriteAnimation> loadAnimationDemoPlayerIdleDown =

@@ -1,6 +1,6 @@
 import 'package:dawnforge/core/utils/game_logger.dart';
 
-import 'package:dawnforge/game/features/game_world/database/smallburg/smallburg_soil_state_sprite_database_def.dart';
+import 'package:dawnforge/game/database/smallburg/smallburg_soil_state_sprite_database_def.dart';
 import 'package:dawnforge/game/features/inventory/entities/data/item_icon_data.dart';
 
 class SoilSpriteConfig {

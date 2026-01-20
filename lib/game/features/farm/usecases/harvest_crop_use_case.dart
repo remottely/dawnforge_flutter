@@ -1,6 +1,6 @@
 import 'package:dawnforge/core/utils/game_logger.dart';
 
-import 'package:dawnforge/game/features/game_world/world/entities/objects/farm/farm_object.dart';
+import 'package:dawnforge/game/features/world/entities/objects/farm/farm_object.dart';
 
 import '../../inventory/usecases/add_item_use_case.dart';
 import '../managers/farm_manager.dart';

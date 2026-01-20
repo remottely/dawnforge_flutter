@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/map_test.json",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "Todos os Ficheiros (*)",
@@ -31,6 +31,7 @@
         },
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/map_test.json": {
             "expandedObjectLayers": [
+                8,
                 3,
                 5,
                 6,
@@ -39,8 +40,8 @@
             "scale": 2.7628,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 120.71087302736353,
-                "y": 105.50890401042423
+                "x": 120.16794556247285,
+                "y": 99.3557260749964
             }
         },
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/map_test.json.tmj": {
@@ -66,7 +67,7 @@
             "scaleInDock": 1
         },
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/texture_atlas_terrain.json": {
-            "scaleInDock": 1,
+            "scaleInDock": 1.0231,
             "scaleInEditor": 1
         },
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/texture_atlas_terrain.json.tsx": {
@@ -82,11 +83,16 @@
     "map.tileWidth": 16,
     "map.width": 16,
     "openFiles": [
+        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/texture_atlas_terrain.json",
+        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/map_test.json",
+        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/farm_map.json"
     ],
     "project": "dawnforge.tiled-project",
     "recentFiles": [
-        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/map_test.json",
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/texture_atlas_terrain.json",
+        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/farm_map.json",
+        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/map_test.json",
+        "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/map_test.json",
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/map_test.json.tmj",
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/maps/map_test.json.tmx",
         "/Users/kevinkobori/Documents/flutter/remottely/dawnforge/assets/images/tiled/texture_atlas_terrain.json.tsx"

@@ -4,7 +4,7 @@ import '../../inventory/entities/hand_item.dart';
 import '../../inventory/items/seed_bag_item.dart';
 import '../../inventory/items/tool_item.dart';
 import '../../inventory/entities/enums/hand_item_id.dart';
-import '../../game_world/world/entities/world_entities.dart';
+import '../../world/entities/world_entities.dart';
 
 /// Service for validating farm tool usage (I2: Service = stateless)
 final class FarmToolService {
