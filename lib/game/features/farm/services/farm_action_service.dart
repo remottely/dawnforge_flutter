@@ -1,11 +1,10 @@
 import 'package:dawnforge/core/utils/game_logger.dart';
-
-import 'package:dawnforge/game/features/world/entities/objects/farm/crop_entity.dart';
 import 'package:dawnforge/game/features/farm/managers/farm_manager.dart';
 import 'package:dawnforge/game/features/farm/usecases/till_soil_use_case.dart';
 import 'package:dawnforge/game/features/inventory/config/inventory_service_locator.dart';
 import 'package:dawnforge/game/features/inventory/services/item_factory_service.dart';
 import 'package:dawnforge/game/features/inventory/usecases/add_item_use_case.dart';
+import 'package:dawnforge/game/features/world/entities/objects/farm/crop_entity.dart';
 
 final class FarmActionService {
   FarmActionService._();

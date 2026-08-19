@@ -1,7 +1,7 @@
 import 'package:bonfire/input/player_controller.dart';
+import 'package:dawnforge/core/managers/settings_manager.dart';
 import 'package:dawnforge/game/systems/input_actions/joysctick_setup.dart';
 import 'package:dawnforge/game/systems/input_actions/keyboard_setup.dart';
-import 'package:dawnforge/core/managers/settings_manager.dart';
 
 final class InputDef {
   const InputDef._();

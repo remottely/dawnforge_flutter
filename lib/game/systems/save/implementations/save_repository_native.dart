@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:dawnforge/core/utils/game_logger.dart';
 import 'dart:io' show gzip;
 
+import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../save_repository.dart';

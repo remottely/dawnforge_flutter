@@ -21,9 +21,6 @@ class DDMobilePlayerModel extends DDBasePlayerModel {
     return true;
   }
 
-  @override
-  Map<String, dynamic> toJson() => super.toJson();
-
   @protected
   factory DDMobilePlayerModel.fromJson(
     Map<String, dynamic> json,

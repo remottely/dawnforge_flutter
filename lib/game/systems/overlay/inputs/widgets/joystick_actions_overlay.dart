@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/systems/input_actions/joysctick_setup.dart';
-import 'package:dawnforge/game/features/inventory/entities/hand_item.dart';
 import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.dart';
+import 'package:dawnforge/game/features/inventory/entities/hand_item.dart';
 import 'package:dawnforge/game/features/inventory/state/equipment_state.dart';
+import 'package:dawnforge/game/systems/input_actions/joysctick_setup.dart';
 import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
 import 'package:dawnforge/shared/overlay_design_system/responsive_overlay_base.dart';
 import 'package:flutter/material.dart';

@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:dawnforge/core/utils/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:dawnforge/game/global/global_state_machine.dart';
 import 'package:dawnforge/game/systems/ui/emote_manager.dart';
 import 'package:dawnforge/shared/framework/enemies/dd_base_enemy/dd_base_enemy_view.dart';
@@ -23,9 +23,8 @@ abstract class DDBasePlayerView<
   DDBasePlayerView({
     required this.config,
     required super.position,
-    required M model,
-  }) : _model = model,
-       super(
+    required this._model,
+  }) : super(
          animation: null,
          size: config.size,
          life: config.life,

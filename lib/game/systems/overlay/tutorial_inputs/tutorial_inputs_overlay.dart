@@ -1,11 +1,11 @@
-import 'package:dawnforge/pre_game/screens/menu_screen.dart';
+import 'package:dawnforge/core/managers/settings_manager.dart';
 import 'package:dawnforge/game/systems/audio/audio_manager.dart';
 import 'package:dawnforge/game/systems/overlay/tutorial_inputs/tutorial_inputs_hud_def.dart';
+import 'package:dawnforge/pre_game/screens/menu_screen.dart';
 import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
 import 'package:dawnforge/shared/design_system/theme/app_design_system_extension.dart';
-import 'package:dawnforge/shared/overlay_design_system/responsive_overlay_base.dart';
 import 'package:dawnforge/shared/design_system/theme/screen_size_info.dart';
-import 'package:dawnforge/core/managers/settings_manager.dart';
+import 'package:dawnforge/shared/overlay_design_system/responsive_overlay_base.dart';
 import 'package:flutter/material.dart';
 
 final class TutorialInputsOverlay extends ResponsiveOverlayBase {

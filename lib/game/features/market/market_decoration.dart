@@ -1,11 +1,10 @@
 // lib/game/features/market/market_decoration.dart
 import 'dart:async';
+
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/global/global_input_handler.dart';
-import 'package:dawnforge/game/systems/input_actions/input_def.dart';
-import 'package:dawnforge/shared/framework/decorations/dd_contact_decoration.dart';
-import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:dawnforge/core/utils/game_logger.dart';
+import 'package:dawnforge/game/global/global_input_handler.dart';
+import 'package:dawnforge/shared/framework/decorations/dd_contact_decoration.dart';
 
 class MarketDecoration extends DDContactDecoration
     with PlayerControllerListener {

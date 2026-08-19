@@ -1,6 +1,5 @@
-import 'package:dawnforge/core/utils/game_logger.dart';
-
 import 'package:bonfire/bonfire.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:dawnforge/game/systems/input_actions/input_def.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_defense_player_view.dart';
 

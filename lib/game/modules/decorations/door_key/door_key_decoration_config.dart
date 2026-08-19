@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.dart';
 import 'package:dawnforge/game/systems/game/tile_constants.dart';
 import 'package:dawnforge/game/utils/hitbox_utils.dart';
-import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.dart';
 
 final class DoorKeyDecorationDef {
   DoorKeyDecorationDef._();

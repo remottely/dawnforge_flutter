@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:dawnforge/core/utils/app_environment.dart';
 import 'package:dawnforge/game/modules/characters/character_constants.dart';
 import 'package:dawnforge/game/systems/game/lightning_constants.dart';
 import 'package:dawnforge/game/systems/game/tile_constants.dart';
-import 'package:dawnforge/core/utils/app_environment.dart';
 import 'package:dawnforge/game/utils/hitbox_utils.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_config.dart';
 import 'package:dawnforge/shared/framework/utils/dd_animation_directional.dart';
@@ -48,7 +48,7 @@ final class FarmerPlayerDef {
   );
 
   static const double _kLife = CharacterConstants.kLifeExtraLarge;
-  static double _kBaseSpeed = CharacterConstants.kSpeedFast;
+  static final double _kBaseSpeed = CharacterConstants.kSpeedFast;
 
   static final Vector2 textureSize = TileConstants.tileSizeFarmer;
   static final Vector2 _componentSize = textureSize;

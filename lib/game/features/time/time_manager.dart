@@ -1,9 +1,7 @@
 import 'dart:async' as async;
-import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/core/utils/game_logger.dart';
-import 'package:dawnforge/game/systems/map/map_def.dart';
-import 'package:dawnforge/game/systems/map/map_transition_controller.dart';
+
 import 'package:dawnforge/core/utils/app_environment.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:flutter/foundation.dart';
 
 import 'day_state.dart';
@@ -123,15 +121,15 @@ class TimeManager {
             TimeConstants.kHoursPerDay) *
         60;
 
-    int _elapsedSinceStart(GameTime t) {
+    int elapsedSinceStart(GameTime t) {
       return (t.totalMinutes -
               TimeConstants.startOffset +
               TimeConstants.totalMinutesPerDay) %
           TimeConstants.totalMinutesPerDay;
     }
 
-    final previousElapsed = _elapsedSinceStart(currentTime);
-    final newElapsed = _elapsedSinceStart(newTime);
+    final previousElapsed = elapsedSinceStart(currentTime);
+    final newElapsed = elapsedSinceStart(newTime);
 
     final crossedCutoff =
         previousElapsed < playableMinutes && newElapsed >= playableMinutes;

@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/modules/characters/player/sunny/sunny_player_def.dart';
 import 'package:dawnforge/game/modules/characters/player/sunny/sunny_player_controller.dart';
+import 'package:dawnforge/game/modules/characters/player/sunny/sunny_player_def.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_model.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_farm_player_view.dart';
 

@@ -1,9 +1,9 @@
 import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_type.dart';
 
-import '../entities/hand_item.dart';
-import '../entities/enums/hand_item_id.dart';
 import '../entities/data/item_icon_data.dart';
+import '../entities/enums/hand_item_id.dart';
 import '../entities/enums/hand_item_quality.dart';
+import '../entities/hand_item.dart';
 
 class ConsumableItem extends HandItem {
   final int healthRestore; // TODO(Kevin): criar enum

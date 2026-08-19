@@ -1,8 +1,8 @@
 // lib/game/global/global_input_handler.dart
 import 'package:bonfire/bonfire.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:dawnforge/game/global/global_state_machine.dart';
 import 'package:dawnforge/game/systems/input_actions/input_def.dart';
-import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:flutter/foundation.dart';
 
 typedef InteractionCallback = void Function();
@@ -84,8 +84,9 @@ final class GlobalInputHandler extends GameComponent
     }
 
     if (_handleWorldInteractions(event)) {
-      if (kDebugMode)
+      if (kDebugMode) {
         GameLogger.debug('[GlobalInput] ✅ World interaction handled');
+      }
       return;
     }
 
@@ -94,8 +95,9 @@ final class GlobalInputHandler extends GameComponent
       return;
     }
 
-    if (kDebugMode)
+    if (kDebugMode) {
       GameLogger.debug('[GlobalInput] ⚠️ No handler consumed input');
+    }
   }
 
   bool _canProcessInput() {

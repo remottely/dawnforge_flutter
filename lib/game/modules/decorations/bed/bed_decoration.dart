@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/systems/save/game_save_controller.dart';
 import 'package:dawnforge/game/features/time/time_manager.dart';
-import 'package:dawnforge/game/systems/ui/ui_state_manager.dart';
 import 'package:dawnforge/game/modules/decorations/bed/bed_decoration_config.dart';
+import 'package:dawnforge/game/systems/save/game_save_controller.dart';
 import 'package:dawnforge/game/systems/ui/dialog/binary_choice_dialog.dart';
+import 'package:dawnforge/game/systems/ui/ui_state_manager.dart';
 
 class BedDecorationView extends GameDecoration {
   bool _isUsed = false;

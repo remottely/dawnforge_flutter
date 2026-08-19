@@ -43,7 +43,7 @@ class _TimeHudPanelState extends State<TimeHudPanel> {
         children: [
           ValueListenableBuilder<String>(
             valueListenable: _adapter.timeLabel,
-            builder: (_, value, __) {
+            builder: (_, value, _) {
               return Text(
                 value,
                 style: const TextStyle(
@@ -57,7 +57,7 @@ class _TimeHudPanelState extends State<TimeHudPanel> {
           const SizedBox(height: 2),
           ValueListenableBuilder<String>(
             valueListenable: _adapter.dayLabel,
-            builder: (_, value, __) {
+            builder: (_, value, _) {
               return Text(
                 value,
                 style: const TextStyle(
@@ -74,7 +74,7 @@ class _TimeHudPanelState extends State<TimeHudPanel> {
             children: [
               ValueListenableBuilder<String>(
                 valueListenable: _adapter.seasonLabel,
-                builder: (_, value, __) {
+                builder: (_, value, _) {
                   return Text(
                     value,
                     style: const TextStyle(
@@ -88,7 +88,7 @@ class _TimeHudPanelState extends State<TimeHudPanel> {
               const SizedBox(width: 6),
               ValueListenableBuilder<String>(
                 valueListenable: _adapter.weatherLabel,
-                builder: (_, value, __) {
+                builder: (_, value, _) {
                   return Text(
                     value,
                     style: const TextStyle(

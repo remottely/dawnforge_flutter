@@ -1,13 +1,12 @@
 // lib/shared/framework/player/dd_farm_player/dd_consumable_player/dd_consumable_player_controller.dart
-import 'dart:async' show unawaited;
-import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/global/global_input_handler.dart';
-import 'package:dawnforge/game/systems/ui/dialog/binary_choice_dialog.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:dawnforge/game/features/inventory/items/consumable_item.dart';
 import 'package:dawnforge/game/features/inventory/items/harvest_loot_item.dart';
 import 'package:dawnforge/game/features/inventory/managers/equipment_manager.dart';
 import 'package:dawnforge/game/features/inventory/managers/inventory_manager.dart';
+import 'package:dawnforge/game/global/global_input_handler.dart';
+import 'package:dawnforge/game/systems/ui/dialog/binary_choice_dialog.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_controller.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';

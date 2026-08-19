@@ -1,4 +1,6 @@
 /// **ResponsiveOverlayBase - Base para overlays responsivos**
+library;
+
 import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
 import 'package:flutter/widgets.dart';
 

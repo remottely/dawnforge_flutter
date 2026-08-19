@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../entities/hand_item.dart';
 import '../entities/data/item_icon_data.dart';
 import '../entities/enums/hand_item_quality.dart';
 import '../entities/enums/hand_item_type.dart';
+import '../entities/hand_item.dart';
 
 final class WeaponItem extends HandItem {
   final int damage;
@@ -48,7 +48,7 @@ final class WeaponItem extends HandItem {
     int? damage,
   }) {
     return WeaponItem(
-      id: this.id,
+      id: id,
       name: name ?? this.name,
       description: description ?? this.description,
       baseValue: baseValue ?? this.baseValue,

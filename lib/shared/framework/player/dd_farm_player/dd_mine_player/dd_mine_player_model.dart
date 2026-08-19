@@ -19,9 +19,6 @@ class DDMinePlayerModel extends DDFarmPlayerModel {
       equipment == HandItemId.iron_pickaxe ||
       equipment == HandItemId.steel_pickaxe;
 
-  @override
-  Map<String, dynamic> toJson() => super.toJson();
-
   @protected
   factory DDMinePlayerModel.fromJson(
     Map<String, dynamic> json,

@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:dawnforge/game/features/inventory/entities/enums/season.dart';
 
-import 'weather_type.dart';
 import 'time_constants.dart';
+import 'weather_type.dart';
 
 /// Captures calendar state (day, season, weather) for the current day.
 class DayState {

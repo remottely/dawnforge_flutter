@@ -18,7 +18,7 @@ class GameplayLocalizationsDelegate
 
   @override
   Future<GameplayLocalizations> load(Locale locale) async {
-    GameplayLocalizations localizations = new GameplayLocalizations(locale);
+    final GameplayLocalizations localizations = GameplayLocalizations(locale);
 
     await localizations.load();
 

@@ -1,12 +1,12 @@
-import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/global/global_state_machine.dart';
-import 'package:dawnforge/game/systems/input_actions/input_def.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
+import 'package:dawnforge/game/features/inventory/config/inventory_service_locator.dart';
+import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.dart';
 import 'package:dawnforge/game/features/inventory/managers/equipment_manager.dart';
 import 'package:dawnforge/game/features/inventory/managers/inventory_manager.dart';
-import 'package:dawnforge/game/features/inventory/config/inventory_service_locator.dart';
 import 'package:dawnforge/game/features/inventory/usecases/add_item_use_case.dart';
-import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.dart';
+import 'package:dawnforge/game/global/global_state_machine.dart';
+import 'package:dawnforge/game/systems/input_actions/input_def.dart';
 
 /// Handles inventory and equipment inputs from both keyboard and joystick/mobile
 class InventoryInputHandler extends GameComponent

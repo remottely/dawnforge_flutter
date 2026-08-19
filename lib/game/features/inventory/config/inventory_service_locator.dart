@@ -1,13 +1,13 @@
 import 'package:get_it/get_it.dart';
 
-import '../managers/inventory_manager.dart';
 import '../managers/equipment_manager.dart';
+import '../managers/inventory_manager.dart';
 import '../services/item_factory_service.dart';
 import '../usecases/add_item_use_case.dart';
-import '../usecases/remove_item_use_case.dart';
 import '../usecases/equip_item_use_case.dart';
-import '../usecases/save_inventory_use_case.dart';
 import '../usecases/load_inventory_use_case.dart';
+import '../usecases/remove_item_use_case.dart';
+import '../usecases/save_inventory_use_case.dart';
 
 final getIt = GetIt.instance;
 

@@ -1,5 +1,5 @@
-import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:bonfire/bonfire.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 
 class DDBasePlayerViewConfig {
   final Vector2 size;

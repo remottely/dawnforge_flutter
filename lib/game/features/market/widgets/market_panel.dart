@@ -1,9 +1,6 @@
 import 'dart:math' as math;
 
-import 'package:dawnforge/game/global/global_state_machine.dart';
-import 'package:dawnforge/game/systems/game/player_state_manager.dart';
-import 'package:dawnforge/game/systems/input_actions/keyboard_setup.dart';
-import 'package:dawnforge/game/systems/overlay/message/message_overlay_service.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.dart';
 import 'package:dawnforge/game/features/inventory/entities/hand_item.dart';
 import 'package:dawnforge/game/features/inventory/managers/equipment_manager.dart';
@@ -12,11 +9,13 @@ import 'package:dawnforge/game/features/inventory/services/item_factory_service.
 import 'package:dawnforge/game/features/inventory/widgets/item_sprite_widget.dart';
 import 'package:dawnforge/game/features/market/market_manager.dart';
 import 'package:dawnforge/game/features/market/market_models.dart';
-
+import 'package:dawnforge/game/global/global_state_machine.dart';
+import 'package:dawnforge/game/systems/game/player_state_manager.dart';
+import 'package:dawnforge/game/systems/input_actions/keyboard_setup.dart';
+import 'package:dawnforge/game/systems/overlay/message/message_overlay_service.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:dawnforge/core/utils/game_logger.dart';
 
 /// Painel do market exibido dentro do grid da HUD (Quadrante 5).
 class UiOverlayMarketPanel extends StatefulWidget {

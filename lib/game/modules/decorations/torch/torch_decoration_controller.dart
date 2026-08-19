@@ -38,8 +38,9 @@ class TorchDecorationController {
   }
 
   void _updateStaminaRegeneration(double dt, DDBasePlayerView player) {
-    if (model.isDetectPlayer && model.isOn)
+    if (model.isDetectPlayer && model.isOn) {
       player.controller.processStaminaRegeneration();
+    }
   }
 
   void dispose() {}

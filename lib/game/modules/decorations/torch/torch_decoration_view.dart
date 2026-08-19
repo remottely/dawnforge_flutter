@@ -1,9 +1,9 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/systems/input_actions/input_def.dart';
-import 'package:dawnforge/game/systems/ui/emote_manager.dart';
 import 'package:dawnforge/game/modules/decorations/torch/torch_decoration_config.dart';
 import 'package:dawnforge/game/modules/decorations/torch/torch_decoration_controller.dart';
 import 'package:dawnforge/game/modules/decorations/torch/torch_decoration_model.dart';
+import 'package:dawnforge/game/systems/input_actions/input_def.dart';
+import 'package:dawnforge/game/systems/ui/emote_manager.dart';
 import 'package:dawnforge/shared/framework/decorations/dd_input_receiver/dd_input_receiver_decoration_view.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 
@@ -47,10 +47,11 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
     setupLighting(TorchDecorationDef.lighting);
     _interactionPromptTextPaint = TorchDecorationDef.createTextConfig(width);
 
-    if (model.isOn)
+    if (model.isOn) {
       lightingEnabled = true;
-    else
+    } else {
       lightingEnabled = false;
+    }
 
     return super.onLoad();
   }

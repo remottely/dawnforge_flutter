@@ -85,7 +85,7 @@ final class CropEntity extends Equatable {
     var nextRegrowData = regrowData.copyWith(
       daysInStage: regrowData.daysInStage + 1,
     );
-    var nextDaysPlanted = daysPlanted + 1;
+    final nextDaysPlanted = daysPlanted + 1;
 
     if (stage != CropStageType.harvestable &&
         nextRegrowData.daysInStage >= stepDays) {

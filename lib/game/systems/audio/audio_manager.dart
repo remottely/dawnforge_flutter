@@ -1,6 +1,6 @@
 import 'package:dawnforge/core/utils/app_environment.dart';
-import 'package:flame_audio/flame_audio.dart';
 import 'package:dawnforge/core/utils/game_logger.dart';
+import 'package:flame_audio/flame_audio.dart';
 
 import 'audio_def.dart';
 
@@ -112,8 +112,9 @@ final class AudioManager {
       return;
     }
 
-    if (_isBackgroundMusicPlaying && _currentBackgroundTrack == musicTrack)
+    if (_isBackgroundMusicPlaying && _currentBackgroundTrack == musicTrack) {
       return;
+    }
 
     if (_isBackgroundMusicPlaying) {
       await stopBackgroundMusic();

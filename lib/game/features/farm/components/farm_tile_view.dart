@@ -1,13 +1,13 @@
-import 'package:dawnforge/core/utils/game_logger.dart';
 import 'dart:ui';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/systems/game/tile_constants.dart';
-import 'package:dawnforge/game/features/world/entities/world_entities.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:dawnforge/game/features/farm/farm_service_locator.dart';
 import 'package:dawnforge/game/features/farm/managers/farm_manager.dart';
 import 'package:dawnforge/game/features/farm/models/soil_sprite_config.dart';
 import 'package:dawnforge/game/features/farm/usecases/till_soil_use_case.dart';
+import 'package:dawnforge/game/features/world/entities/world_entities.dart';
+import 'package:dawnforge/game/systems/game/tile_constants.dart';
 import 'package:dawnforge/shared/framework/interaction/dd_tool_interactable_mixin.dart';
 import 'package:dawnforge/shared/utils/sprite_animation_config_helper.dart';
 import 'package:flutter/rendering.dart';
@@ -17,12 +17,12 @@ class CropDecorationWithCustomYSort extends GameDecoration {
   final bool isTree;
 
   CropDecorationWithCustomYSort({
-    required Sprite sprite,
-    required Vector2 position,
-    required Vector2 size,
+    required Sprite super.sprite,
+    required super.position,
+    required super.size,
     this.ySortOffset = 0,
     this.isTree = false,
-  }) : super.withSprite(sprite: sprite, position: position, size: size);
+  }) : super.withSprite();
 
   @override
   Future<void> onLoad() async {
@@ -107,10 +107,10 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   /// Helper to get FarmObject from GridTile
   FarmObject get _farmObject => farmTile.object as FarmObject;
 
-  FarmTileView({required Vector2 position})
+  FarmTileView({required super.position})
     : tileX = (position.x / TileConstants.kTileDimensionStandard).floor(),
       tileY = (position.y / TileConstants.kTileDimensionStandard).floor(),
-      super(position: position, size: TileConstants.tileSizeStandard) {
+      super(size: TileConstants.tileSizeStandard) {
     final key = _makeKey(tileX, tileY);
     if (_instances.containsKey(key)) {
       // Já existe uma instância para este tile, não cria outra

@@ -1,9 +1,9 @@
+import '../entities/data/item_icon_data.dart';
 import '../entities/enums/hand_item_id.dart';
 import '../entities/enums/hand_item_quality.dart';
 import '../entities/enums/hand_item_type.dart';
 import '../entities/enums/material_type.dart';
 import '../entities/hand_item.dart';
-import '../entities/data/item_icon_data.dart';
 
 final class MaterialItem extends HandItem {
   final MaterialType materialType;

@@ -1,10 +1,9 @@
 // lib/shared/framework/character/behavior/consumable_behavior.dart (CORRIGIDO)
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/core/utils/game_logger.dart';
-import 'package:dawnforge/game/systems/input_actions/input_def.dart';
-import 'package:dawnforge/game/features/inventory/config/inventory_service_locator.dart';
-import 'package:dawnforge/game/features/inventory/managers/inventory_manager.dart';
 import 'package:dawnforge/game/features/inventory/managers/equipment_manager.dart';
+import 'package:dawnforge/game/features/inventory/managers/inventory_manager.dart';
+import 'package:dawnforge/game/systems/input_actions/input_def.dart';
 import 'package:dawnforge/shared/framework/character/behavior/character_behavior.dart';
 
 class ConsumableConfig {
