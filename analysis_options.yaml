@@ -51,6 +51,13 @@ linter:
     # → permanente.
     public_member_api_docs: false
 
+    # CONFLITA com a ordem de classe do CLAUDE.md §3.3, que põe os campos
+    # antes do construtor — padrão de todo o codebase. Rodar
+    # `dart fix --code=sort_constructors_first` reescreve 140 arquivos contra
+    # a convenção documentada. Convenção do projeto vence a default do lint.
+    # → permanente, a menos que o CLAUDE.md §3.3 mude antes.
+    sort_constructors_first: false
+
     # ---------------------------------------------------------------------
     # ATIVADAS ALÉM DO flutter_lints — reforçam convenções do CLAUDE.md
     # ---------------------------------------------------------------------
@@ -66,7 +73,6 @@ linter:
     prefer_final_locals: true
     prefer_single_quotes: true
     require_trailing_commas: true
-    sort_constructors_first: true
     test_types_in_equals: true
     throw_in_finally: true
     unawaited_futures: true
