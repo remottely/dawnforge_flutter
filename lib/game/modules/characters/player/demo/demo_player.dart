@@ -1,5 +1,4 @@
 // lib/gameplay/characters/player/demo/demo_player.dart (CORRIGIDO)
-import 'dart:ui';
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:dawnforge/game/modules/characters/player/demo/demo_player_def.dart';
@@ -14,7 +13,6 @@ import 'package:dawnforge/shared/framework/character/behavior/mining_behavior.da
 import 'package:dawnforge/shared/framework/character/behavior/enemy_detection_behavior.dart';
 import 'package:dawnforge/shared/framework/character/behavior/equipment_sync_behavior.dart';
 import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.dart';
-import 'package:flutter/foundation.dart';
 
 class DemoPlayer extends Character {
   double _torchStaminaRegenAccumulator = 0.0;

@@ -1,7 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:dawnforge/shared/utils/sprite_animation_constants.dart';
-import 'package:flutter/foundation.dart';
 
 final class SpriteAnimationConfigHelper {
   SpriteAnimationConfigHelper._();

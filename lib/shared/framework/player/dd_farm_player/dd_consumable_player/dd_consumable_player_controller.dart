@@ -1,5 +1,4 @@
 // lib/shared/framework/player/dd_farm_player/dd_consumable_player/dd_consumable_player_controller.dart
-import 'dart:async' show unawaited;
 import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/game/global/global_input_handler.dart';

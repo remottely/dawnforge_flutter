@@ -6,7 +6,6 @@ import 'package:dawnforge/game/systems/input_actions/keyboard_setup.dart';
 import 'package:dawnforge/game/systems/localization/gameplay_strings_location.dart';
 import 'package:dawnforge/game/systems/ui/ui_state_def.dart';
 import 'package:dawnforge/shared/design_system/theme/app_design_system.dart';
-import 'package:dawnforge/shared/design_system_old/dd_design_system.dart';
 import 'package:dawnforge/shared/design_system_old/widgets/atoms/dd_button.dart';
 import 'package:dawnforge/shared/design_system_old/widgets/atoms/dd_dialog_widget.dart';
 import 'package:dawnforge/shared/design_system_old/widgets/atoms/dd_text.dart';

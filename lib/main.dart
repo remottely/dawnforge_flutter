@@ -3,7 +3,6 @@ import 'package:dawnforge/game/features/farm/services/crop_factory_service.dart'
 import 'package:dawnforge/game/features/inventory/managers/equipment_manager.dart';
 import 'package:dawnforge/game/features/inventory/managers/inventory_manager.dart';
 import 'package:dawnforge/game/features/inventory/services/item_factory_service.dart';
-import 'package:dawnforge/game/global/global_state_machine.dart';
 import 'package:dawnforge/pre_game/screens/menu_screen.dart';
 import 'package:dawnforge/game/systems/localization/gameplay_localizations_delegate.dart';
 import 'package:dawnforge/core/utils/app_environment.dart';

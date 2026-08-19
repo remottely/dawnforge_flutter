@@ -1,7 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/game/systems/combat/shield_defense_component.dart';
 import 'package:dawnforge/game/features/inventory/managers/equipment_manager.dart';
-import 'package:dawnforge/game/features/inventory/config/inventory_service_locator.dart';
 import 'package:dawnforge/game/features/inventory/items/weapon_item.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_controller.dart';
 import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_combat_player_model.dart';
