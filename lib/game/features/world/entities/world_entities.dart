@@ -8,5 +8,6 @@ export 'tile_object_type.dart';
 // Farm objects
 export 'objects/farm/farm_object.dart';
 export 'objects/farm/crop_entity.dart';
+export 'objects/farm/crop_regrow_data.dart';
 export 'objects/farm/crop_stage_type.dart';
 export 'objects/farm/soil_state.dart';
