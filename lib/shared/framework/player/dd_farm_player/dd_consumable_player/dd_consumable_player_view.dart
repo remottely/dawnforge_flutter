@@ -26,7 +26,7 @@ abstract class DDConsumablePlayerView<
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    
+
     // ✅ TENTA INICIALIZAR (se falhar, será tentado no update)
     _tryInitializeConsumableListener();
   }
@@ -48,18 +48,24 @@ abstract class DDConsumablePlayerView<
     if (_consumableListenerInitialized) return;
 
     try {
-      controller.initializeConsumableListener(this); // error: The method 'initializeConsumableListener' isn't defined for the type '<unknown>'.
-// Try correcting the name to the name of an existing method, or defining a method named 'initializeConsumableListener'.
+      controller.initializeConsumableListener(
+        this,
+      ); // error: The method 'initializeConsumableListener' isn't defined for the type '<unknown>'.
+      // Try correcting the name to the name of an existing method, or defining a method named 'initializeConsumableListener'.
       _consumableListenerInitialized = true;
-      
+
       if (kDebugMode) {
-        GameLogger.debug('[DDConsumablePlayerView] ✅ Consumable listener initialized');
+        GameLogger.debug(
+          '[DDConsumablePlayerView] ✅ Consumable listener initialized',
+        );
       }
     } catch (e) {
       // Silenciosamente falha se EquipmentManager ainda não estiver pronto
       // Será tentado novamente no próximo update
       if (kDebugMode) {
-        GameLogger.debug('[DDConsumablePlayerView] ⏳ Waiting for initialization: $e');
+        GameLogger.debug(
+          '[DDConsumablePlayerView] ⏳ Waiting for initialization: $e',
+        );
       }
     }
   }

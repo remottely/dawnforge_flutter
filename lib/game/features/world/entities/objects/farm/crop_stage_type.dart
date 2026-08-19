@@ -7,6 +7,7 @@ enum CropStageType {
   flowering, // Florescendo (substitui "growing2")
   fruiting, // Frutificando (substitui "growing3")
   harvestable; // Pronto para colher (substitui "mature")
+
   // dead; // Morto (substitui "withered") // TODO(Kevin): create dead logic
 
   /// Serialization (D2)

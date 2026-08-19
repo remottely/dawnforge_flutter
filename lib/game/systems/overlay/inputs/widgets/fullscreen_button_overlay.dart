@@ -26,7 +26,10 @@ class FullscreenButtonOverlay extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.black.withValues(alpha: 0.7),
           borderRadius: BorderRadius.circular(buttonSize * 0.2),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.3), width: 2),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.3),
+            width: 2,
+          ),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.3),
