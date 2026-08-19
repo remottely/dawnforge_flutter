@@ -37,24 +37,48 @@ test/
 
 ---
 
-## 1.2 — Higiene mecânica
+## 1.2 — Higiene mecânica ✅
 
-Cada item vai em **commit próprio**, sem nenhuma mudança semântica junto.
+Cada item foi em **commit próprio**, sem nenhuma mudança semântica junto.
 
-- [ ] `dart fix --apply --code=unused_import` (22)
-  `chore: remove unused imports`
-- [ ] `dart fix --apply --code=directives_ordering` (180)
-  `chore: sort import directives`
-- [ ] `dart fix --apply --code=sort_constructors_first` (258)
-  `chore: move constructors before members`
-- [ ] `dart fix --apply` para o restante auto-fixável, revisando o diff
-  `chore: apply remaining automated dart fixes`
-- [ ] `dart format .`
-  `chore: dart format .`
+- [x] `dart fix --apply --code=unused_import` — 22 fixes / 18 arquivos
+- [x] `dart fix --apply --code=directives_ordering` — 106 fixes / 106 arquivos
+- [x] ~~`sort_constructors_first`~~ — **revertido**, ver §1.2.1
+- [x] `dart fix --apply` para o restante auto-fixável — 69 fixes / 50 arquivos, ver §1.2.2
+- [x] `dart format .`
 
-**Verificação obrigatória após cada um:** `flutter analyze && flutter test`.
+**Resultado: 594 → 66 avisos.** `flutter analyze test` em zero. Suíte verde após cada passo.
 
-⚠️ Revise manualmente `systems/save/save_repository.dart` após `directives_ordering` — o arquivo usa *conditional import*, e reordenação de diretivas nesse caso merece conferência.
+✅ `systems/save/save_repository.dart` verificado após `directives_ordering`: o *conditional import* (`if (dart.library.html)`) sobreviveu intacto.
+
+### 1.2.1 `sort_constructors_first` conflita com a convenção do projeto
+
+A regra reescreveu **140 arquivos** movendo o construtor para antes dos campos — exatamente o contrário do que o [CLAUDE.md §3.3](../../CLAUDE.md#33-ordem-dentro-de-uma-classe) documenta e do que todo o codebase pratica:
+
+```
+1. Constantes  →  2. Campos finais  →  3. Estado privado  →  4. Construtores
+```
+
+Foi revertida e desligada no `analysis_options.yaml`, com o motivo registrado ali. **Convenção do projeto vence a default do lint** (CLAUDE.md §6.8).
+
+Se um dia se decidir adotar a ordem do *Effective Dart* (construtor primeiro), o caminho é: mudar o CLAUDE.md §3.3 **antes**, e só então reativar a regra.
+
+### 1.2.2 ⚠️ `dart fix` corrompeu código com duas regras
+
+`--code=always_declare_return_types` e `--code=strict_top_level_inference` produziram código que **não compila**, duplicando o tipo de retorno:
+
+```dart
+// gerado por dart fix — inválido
+static DDAnimationDirectionalFactory DDAnimationDirectionalFactory dynamic dynamic
+    dynamic dynamic dynamic dynamic animationAttack1DirectionalFactory() => …
+double double getFontSizeByType(DFFontSizeType type) { … }
+```
+
+Detectado porque a suíte passou a não carregar. Revertido com `git checkout -- lib` e reaplicado sem essas duas regras.
+
+**Lição:** `dart fix --apply` em massa **exige** `flutter analyze && flutter test` logo depois, sempre. Não confie na ferramenta em cima de um codebase grande com tipagem parcial.
+
+Ambas as regras seguem ativas no `analysis_options.yaml` (as 0 ocorrências restantes de `always_declare_return_types` foram corrigidas à mão pelos outros fixes); apenas **não use o auto-fix delas**.
 
 ---
 
@@ -97,7 +121,21 @@ grep -rl "$(basename $f)" lib test --include='*.dart' | grep -v "^$f$"
 
 ## 1.4 — Correções de risco real apontadas pelo linter
 
-Estas **não** são cosméticas. Cada uma precisa de teste antes.
+Estas **não** são cosméticas. Cada uma precisa de teste antes. Depois da higiene mecânica sobraram **66 avisos**, todos exigindo julgamento humano:
+
+| Regra | Qtd | Natureza |
+|---|---:|---|
+| `unused_field` | 10 | limpeza — verificar `git blame` antes de remover |
+| `overridden_fields` | 9 | **risco real** — sombreamento na cadeia `DD*Player` |
+| `avoid_renaming_method_parameters` | 8 | legibilidade de override |
+| `deprecated_member_use` | 4 | migrar API Flutter/Bonfire |
+| `dead_code` + `dead_null_aware_expression` | 8 | **risco real** |
+| `unnecessary_null_comparison` + `unnecessary_non_null_assertion` | 6 | **risco real** — nulidade mal modelada |
+| `unnecessary_getters_setters` | 3 | remover indireção |
+| `unawaited_futures` | 3 | **risco real** — future ignorado |
+| `unrelated_type_equality_checks` | 2 | **bug provável** |
+| `always_declare_return_types` + `strict_top_level_inference` | 4 | corrigir **à mão** — ver §1.2.2 |
+| outros (11 regras) | 9 | caso a caso |
 
 - [ ] `unrelated_type_equality_checks` (2) — comparação entre tipos não relacionados; quase certamente bug.
   Suspeito conhecido: `CropFactoryService.getCropsBySeason` compara `SeasonType` com `String`:

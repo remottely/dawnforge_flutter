@@ -18,7 +18,7 @@ Rastreamento vivo. Atualize ao concluir cada tarefa, no mesmo commit.
 | └ `inventory/usecases` | 0% | **95.0%** ✅ | 90% |
 | └ `systems/world` | 0% | **92.8%** ✅ | 85% |
 | └ `farm/usecases` | 0% | **90.9%** ✅ | 90% |
-| `flutter analyze` (lib) | 594 | 594 | 0 |
+| `flutter analyze` (lib) | 594 | **66** | 0 |
 | `flutter analyze` (test) | 3 | **0** ✅ | 0 |
 | Arquivos órfãos | 17 | 17 | 0 |
 | Modelos de save | 3 | 3 | 1 |
@@ -49,12 +49,17 @@ flutter analyze lib | tail -1
 - [x] Migrar `test/gameplay/**` → layout espelhando `lib/`
 - [x] Corrigir `gameplay_map_manager_test.dart`
 
-### 1.2 Higiene mecânica
-- [ ] `dart fix --apply --code=unused_import`
-- [ ] `dart fix --apply --code=directives_ordering`
-- [ ] `dart fix --apply --code=sort_constructors_first`
-- [ ] `dart fix --apply` restante
-- [ ] `dart format .`
+### 1.2 Higiene mecânica ✅
+- [x] `dart fix --apply --code=unused_import` — 22 fixes
+- [x] `dart fix --apply --code=directives_ordering` — 106 fixes
+- [x] ~~`sort_constructors_first`~~ — revertido: conflita com CLAUDE.md §3.3
+- [x] `dart fix --apply` restante (18 regras seguras) — 69 fixes
+- [x] `dart format .`
+
+**594 → 66 avisos.** Duas descobertas: `sort_constructors_first` contraria a
+convenção de ordem de classe do projeto, e `always_declare_return_types` /
+`strict_top_level_inference` **geraram código que não compila** via `dart fix`
+(ver [01-fase-1 §1.2.2](01-fase-1-fundacao-de-testes.md#122--dart-fix-corrompeu-código-com-duas-regras)).
 
 ### 1.3 Código morto
 - [ ] Remover área de save morta (~1.200 linhas)
@@ -126,6 +131,7 @@ flutter analyze lib | tail -1
 | 2026-08-19 | — | Diagnóstico inicial; `CLAUDE.md`, `ARCHITECTURE.md`, `TESTING.md` reescritos; `analysis_options.yaml` ativado (estava 100% comentado); plano de 4 fases e ADRs 0001–0004 criados |
 | 2026-08-19 | 1.1 | Estrutura de teste reconstruída espelhando `lib/`; helpers (builders, reset de singletons, mocks) e `tool/coverage.sh` criados; 14 arquivos de teste mortos removidos; 2 testes desatualizados substituídos por invariantes de mapa |
 | 2026-08-19 | 2 | 589 testes escritos: entidades de mundo, inventário, tempo, use cases de farm e inventário, managers, services, save e invariantes de catálogo. 7 defeitos reais encontrados (ver Descobertas) |
+| 2026-08-19 | 1.2 | Higiene mecânica: 594 → 66 avisos. `sort_constructors_first` revertida por conflitar com a convenção de ordem de classe; `dart fix` de `always_declare_return_types`/`strict_top_level_inference` gerou código não-compilável e foi descartado |
 
 ---
 
