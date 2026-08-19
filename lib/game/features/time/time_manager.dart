@@ -121,15 +121,15 @@ class TimeManager {
             TimeConstants.kHoursPerDay) *
         60;
 
-    int _elapsedSinceStart(GameTime t) {
+    int elapsedSinceStart(GameTime t) {
       return (t.totalMinutes -
               TimeConstants.startOffset +
               TimeConstants.totalMinutesPerDay) %
           TimeConstants.totalMinutesPerDay;
     }
 
-    final previousElapsed = _elapsedSinceStart(currentTime);
-    final newElapsed = _elapsedSinceStart(newTime);
+    final previousElapsed = elapsedSinceStart(currentTime);
+    final newElapsed = elapsedSinceStart(newTime);
 
     final crossedCutoff =
         previousElapsed < playableMinutes && newElapsed >= playableMinutes;

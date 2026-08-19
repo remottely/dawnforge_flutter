@@ -17,7 +17,7 @@ class FarmTileUI extends Equatable {
   final HandItemId? cropSpriteKey;
   final bool isReadyToHarvest;
 
-  FarmTileUI({
+  const FarmTileUI({
     required this.x,
     required this.y,
     required this.isTilled,

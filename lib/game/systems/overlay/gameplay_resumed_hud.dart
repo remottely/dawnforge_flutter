@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 
 class GameplayResumedHud extends StatelessWidget {
   const GameplayResumedHud({
+    super.key,
     required this.flexA,
     required this.isDesktop,
     required this.flexC,
@@ -376,7 +377,7 @@ final class _JoystickArea extends StatelessWidget {
 }
 
 final class LoadingOverlay extends StatelessWidget {
-  const LoadingOverlay();
+  const LoadingOverlay({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -9,11 +9,10 @@ class DDSpriteAnimationWidget extends StatelessWidget {
 
   const DDSpriteAnimationWidget({
     required this.animation,
-    required double width,
-    required double height,
+    required this._width,
+    required this._height,
     super.key,
-  }) : _width = width,
-       _height = height;
+  });
 
   const DDSpriteAnimationWidget.standard({required this.animation, super.key})
     : _width = SpriteAnimationConstants.kSizeStandard,

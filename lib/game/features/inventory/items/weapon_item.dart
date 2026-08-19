@@ -48,7 +48,7 @@ final class WeaponItem extends HandItem {
     int? damage,
   }) {
     return WeaponItem(
-      id: this.id,
+      id: id,
       name: name ?? this.name,
       description: description ?? this.description,
       baseValue: baseValue ?? this.baseValue,

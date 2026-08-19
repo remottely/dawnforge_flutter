@@ -91,7 +91,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
             ?.toString();
         final mapTimeOverride = mapItem.properties['timeOverride'];
 
-        Vector2? _tryParsePosition(String? raw) {
+        Vector2? tryParsePosition(String? raw) {
           if (raw == null || raw.isEmpty) return null;
           final parts = raw.split(',');
           if (parts.length != 2) return null;
@@ -111,7 +111,7 @@ class _GameplayScreenState extends GameplayScreenViewmodel {
         }
 
         final mapArguments = arguments as MapArguments?;
-        final initialPlayerPosition = _tryParsePosition(
+        final initialPlayerPosition = tryParsePosition(
           mapInitialPlayerPosition,
         );
 

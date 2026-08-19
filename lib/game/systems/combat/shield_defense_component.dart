@@ -9,7 +9,7 @@ class ShieldDefenseComponent extends GameComponent {
 
   bool _isActive = false;
 
-  ShieldDefenseComponent({required SimplePlayer player}) : _player = player;
+  ShieldDefenseComponent({required this._player});
 
   bool get isActive => _isActive;
 

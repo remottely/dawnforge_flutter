@@ -112,8 +112,9 @@ final class AudioManager {
       return;
     }
 
-    if (_isBackgroundMusicPlaying && _currentBackgroundTrack == musicTrack)
+    if (_isBackgroundMusicPlaying && _currentBackgroundTrack == musicTrack) {
       return;
+    }
 
     if (_isBackgroundMusicPlaying) {
       await stopBackgroundMusic();

@@ -2,6 +2,8 @@
 /// • Usa o novo OverlayDesignSystem
 /// • Remove ResponsiveOverlayData
 /// • Corrige erro de isMobileScreen
+library;
+
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/core/utils/app_environment.dart';
 import 'package:dawnforge/game/systems/input_actions/joysctick_setup.dart';

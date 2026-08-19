@@ -20,7 +20,7 @@ class DoorKeyDecorationView extends DDContactDecoration {
   }
 
   @override
-  void onContact(SimplePlayer _player) {
+  void onContact(SimplePlayer player) {
     if (!_hasBeenCollected) {
       if (_tryCollectKey()) {
         _hasBeenCollected = true;

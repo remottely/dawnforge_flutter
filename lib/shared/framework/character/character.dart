@@ -34,15 +34,9 @@ abstract class Character extends SimplePlayer
     required this.id,
     required this.data,
     required this.config,
-    required Vector2 position,
-    SimpleDirectionAnimation? animation,
-  }) : super(
-         position: position,
-         size: config.size,
-         life: config.maxLife,
-         speed: config.baseSpeed,
-         animation: animation,
-       ) {
+    required super.position,
+    super.animation,
+  }) : super(size: config.size, life: config.maxLife, speed: config.baseSpeed) {
     // ✅ CRÍTICO: Seta anchor NO CONSTRUTOR!
     anchor = Anchor.center;
   }

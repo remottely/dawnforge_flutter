@@ -8,7 +8,7 @@ class WizardNpcController {
   final WizardNpcModel model;
   late WizardNpcView _view;
 
-  WizardNpcController({required WizardNpcModel model}) : this.model = model;
+  WizardNpcController({required this.model});
 
   void attachView(WizardNpcView view) => _view = view;
 

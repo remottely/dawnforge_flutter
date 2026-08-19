@@ -47,10 +47,11 @@ class TorchDecorationView extends DDInputReceiverDecorationView {
     setupLighting(TorchDecorationDef.lighting);
     _interactionPromptTextPaint = TorchDecorationDef.createTextConfig(width);
 
-    if (model.isOn)
+    if (model.isOn) {
       lightingEnabled = true;
-    else
+    } else {
       lightingEnabled = false;
+    }
 
     return super.onLoad();
   }

@@ -39,7 +39,8 @@ class LifePotionDecorationView extends DDContactDecoration {
         LifePotionDef.kHealingDuration,
         onChange: (value) {
           if (healingProgress < _healAmount) {
-            double currentHealAmount = _healAmount * value - healingProgress;
+            final double currentHealAmount =
+                _healAmount * value - healingProgress;
             healingProgress += currentHealAmount;
             player.addLife(currentHealAmount);
           }

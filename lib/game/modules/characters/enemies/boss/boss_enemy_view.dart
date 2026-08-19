@@ -87,7 +87,7 @@ class BossEnemyView
     const double yPosition = 0;
     final double widthBar = (width - 10) / 3;
 
-    if (controller.model.spawnedEnemies.length < 1) {
+    if (controller.model.spawnedEnemies.isEmpty) {
       canvas.drawLine(
         const Offset(0, yPosition),
         Offset(widthBar, yPosition),

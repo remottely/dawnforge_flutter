@@ -83,19 +83,19 @@ final class FarmToolActionDef {
   }
 
   static bool _handleTillSoil(int x, int y) {
-    final _feedbackService = FarmFeedbackService.instance;
+    final feedbackService = FarmFeedbackService.instance;
     final result = _actionService.tillSoil(x, y);
     if (result.success) {
-      _feedbackService.showFloatingText(FarmFeedbackDef.kSoilTilled);
+      feedbackService.showFloatingText(FarmFeedbackDef.kSoilTilled);
     }
     return true;
   }
 
   static bool _handleWater(int x, int y) {
-    final _feedbackService = FarmFeedbackService.instance;
+    final feedbackService = FarmFeedbackService.instance;
     final result = _actionService.waterTile(x, y);
     if (result.success) {
-      _feedbackService.showFloatingText(FarmFeedbackDef.kCropWatered);
+      feedbackService.showFloatingText(FarmFeedbackDef.kCropWatered);
     }
     return true;
   }
@@ -105,20 +105,20 @@ final class FarmToolActionDef {
     required int x,
     required int y,
   }) {
-    final _feedbackService = FarmFeedbackService.instance;
+    final feedbackService = FarmFeedbackService.instance;
 
     final planted = farm_di.getIt<PlantSeedUseCase>().call(x, y, seedItemId);
 
     if (planted) {
-      _feedbackService.showFloatingText(FarmFeedbackDef.kSeedPlanted);
+      feedbackService.showFloatingText(FarmFeedbackDef.kSeedPlanted);
     } else {
-      _feedbackService.showFloatingText(FarmFeedbackDef.kCannotPlant);
+      feedbackService.showFloatingText(FarmFeedbackDef.kCannotPlant);
     }
     return planted;
   }
 
   static bool _handleHarvest(BonfireGameInterface gameRef, int x, int y) {
-    final _feedbackService = FarmFeedbackService.instance;
+    final feedbackService = FarmFeedbackService.instance;
     final result = _actionService.harvestCrop(x, y);
 
     if (result.success && result.crop != null) {
@@ -129,10 +129,10 @@ final class FarmToolActionDef {
             )
           : FarmFeedbackDef.kInventoryFull;
 
-      _feedbackService.showFloatingText(message);
+      feedbackService.showFloatingText(message);
 
       if (result.addedToInventory) {
-        _feedbackService.refreshInventoryHUD(gameRef);
+        feedbackService.refreshInventoryHUD(gameRef);
       }
     }
 

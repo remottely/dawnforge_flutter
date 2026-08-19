@@ -26,9 +26,6 @@ class DDFarmPlayerModel extends DDCombatPlayerModel {
       stamina >= config.harvestStaminaCost &&
       equipment == HandItemId.harvestBasket;
 
-  @override
-  Map<String, dynamic> toJson() => super.toJson();
-
   @protected
   factory DDFarmPlayerModel.fromJson(
     Map<String, dynamic> json,

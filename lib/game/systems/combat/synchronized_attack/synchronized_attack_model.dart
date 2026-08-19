@@ -2,12 +2,10 @@ import 'package:dawnforge/game/systems/combat/synchronized_attack/synchronized_a
 
 class SynchronizedAttackModel {
   SynchronizedAttackModel({
-    required int baseAttackSpeedMs,
+    required this._baseAttackSpeedMs,
     required Map<AttackType, double> attackTypeMultipliers,
-    required double speedBonusPerLevel,
-  }) : _baseAttackSpeedMs = baseAttackSpeedMs,
-       _attackTypeMultipliers = Map.of(attackTypeMultipliers),
-       _speedBonusPerLevel = speedBonusPerLevel;
+    required this._speedBonusPerLevel,
+  }) : _attackTypeMultipliers = Map.of(attackTypeMultipliers);
 
   int _baseAttackSpeedMs;
   Map<AttackType, double> _attackTypeMultipliers;

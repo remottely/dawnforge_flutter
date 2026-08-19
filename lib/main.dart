@@ -48,7 +48,7 @@ final class AppRoot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    GameplayLocalizationsDelegate location =
+    final GameplayLocalizationsDelegate location =
         const GameplayLocalizationsDelegate();
 
     return AppDesignSystemProvider(

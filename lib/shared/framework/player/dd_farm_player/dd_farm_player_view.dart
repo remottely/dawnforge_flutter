@@ -18,6 +18,7 @@ abstract class DDFarmPlayerView<
   M extends DDFarmPlayerModel
 >
     extends DDConsumablePlayerView<C, M> {
+  @override
   @protected
   final DDFarmPlayerViewConfig config;
 

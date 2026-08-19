@@ -84,8 +84,9 @@ final class GlobalInputHandler extends GameComponent
     }
 
     if (_handleWorldInteractions(event)) {
-      if (kDebugMode)
+      if (kDebugMode) {
         GameLogger.debug('[GlobalInput] ✅ World interaction handled');
+      }
       return;
     }
 
@@ -94,8 +95,9 @@ final class GlobalInputHandler extends GameComponent
       return;
     }
 
-    if (kDebugMode)
+    if (kDebugMode) {
       GameLogger.debug('[GlobalInput] ⚠️ No handler consumed input');
+    }
   }
 
   bool _canProcessInput() {

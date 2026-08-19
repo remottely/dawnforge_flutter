@@ -12,13 +12,13 @@ class MapManager {
     String sensorId,
     TiledObjectProperties properties,
   ) {
-    final List<String> _positionParts = properties
+    final List<String> positionParts = properties
         .others[MapDef.kPlayerPositionPropertyKey]
         .toString()
         .split(',');
-    final Vector2 _playerPosition = Vector2(
-      double.parse(_positionParts[0]),
-      double.parse(_positionParts[1]),
+    final Vector2 playerPosition = Vector2(
+      double.parse(positionParts[0]),
+      double.parse(positionParts[1]),
     );
 
     return MapTransitionSensorView(
@@ -26,7 +26,7 @@ class MapManager {
       position: properties.position,
       size: properties.size,
       targetMap: properties.others[MapDef.kNextMapPropertyKey].toString(),
-      playerPosition: _playerPosition,
+      playerPosition: playerPosition,
       playerDirection: Direction.fromName(
         properties.others[MapDef.kPlayerDirectionPropertyKey].toString(),
       ),

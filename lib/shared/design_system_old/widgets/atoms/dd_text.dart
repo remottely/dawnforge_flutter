@@ -25,7 +25,7 @@ class DDText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double fontSize = AppDesignSystem.of(
+    final double fontSize = AppDesignSystem.of(
       context,
     ).typography.getFontSizeByType(fontSizeType);
 

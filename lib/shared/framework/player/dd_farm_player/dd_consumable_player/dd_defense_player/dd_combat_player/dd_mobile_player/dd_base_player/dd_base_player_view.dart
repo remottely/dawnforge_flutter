@@ -23,9 +23,8 @@ abstract class DDBasePlayerView<
   DDBasePlayerView({
     required this.config,
     required super.position,
-    required M model,
-  }) : _model = model,
-       super(
+    required this._model,
+  }) : super(
          animation: null,
          size: config.size,
          life: config.life,

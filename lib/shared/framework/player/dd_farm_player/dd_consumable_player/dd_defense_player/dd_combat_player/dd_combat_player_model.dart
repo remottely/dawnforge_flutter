@@ -20,9 +20,6 @@ class DDCombatPlayerModel extends DDMobilePlayerModel {
       (stamina >= config.rangedAttackStaminaCost) &&
       (equipment == HandItemId.staff);
 
-  @override
-  Map<String, dynamic> toJson() => super.toJson();
-
   @protected
   factory DDCombatPlayerModel.fromJson(
     Map<String, dynamic> json,

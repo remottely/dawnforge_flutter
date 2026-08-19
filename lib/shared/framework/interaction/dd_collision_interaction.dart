@@ -3,8 +3,7 @@ import 'package:flutter/foundation.dart';
 
 class DDCollisionInteraction extends GameDecoration
     with Movement, BlockMovementCollision {
-  DDCollisionInteraction({required Vector2 position, required Vector2 size})
-    : super(position: position, size: size);
+  DDCollisionInteraction({required super.position, required super.size});
 
   @override
   Future<void> onLoad() async {

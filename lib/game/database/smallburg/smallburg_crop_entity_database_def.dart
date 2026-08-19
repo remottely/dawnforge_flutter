@@ -37,7 +37,7 @@ final class SmallBurgCropEntityDatabaseDef {
     ),
     HandItemId.strawberry: CropEntity(
       isTree: false,
-      regrowData: const CropRegrowData(
+      regrowData: CropRegrowData(
         isRegrow: true,
         regrowStageRollback: 2,
         regrowStepDays: 2,
@@ -84,7 +84,7 @@ final class SmallBurgCropEntityDatabaseDef {
     ),
     HandItemId.apple: CropEntity(
       isTree: true,
-      regrowData: const CropRegrowData(
+      regrowData: CropRegrowData(
         isRegrow: true,
         regrowStageRollback: 2,
         regrowStepDays: 2,

@@ -106,7 +106,7 @@ final class DDCharacterActionSpriteAnimationHelper {
     void Function()? onActionStart,
     void Function()? onActionEnd,
   }) async {
-    final attackAnimationOriginal = await _selectAnimationByDirection(
+    final attackAnimationOriginal = _selectAnimationByDirection(
       animationRight: animationRight,
       animationLeft: animationLeft,
       animationUp: animationUp,

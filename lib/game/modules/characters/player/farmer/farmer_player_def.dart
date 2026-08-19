@@ -48,7 +48,7 @@ final class FarmerPlayerDef {
   );
 
   static const double _kLife = CharacterConstants.kLifeExtraLarge;
-  static double _kBaseSpeed = CharacterConstants.kSpeedFast;
+  static final double _kBaseSpeed = CharacterConstants.kSpeedFast;
 
   static final Vector2 textureSize = TileConstants.tileSizeFarmer;
   static final Vector2 _componentSize = textureSize;

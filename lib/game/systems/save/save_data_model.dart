@@ -65,7 +65,7 @@ final class SaveData {
     int oldVersion,
     Map<String, dynamic> json,
   ) {
-    var data = Map<String, dynamic>.from(json);
+    final data = Map<String, dynamic>.from(json);
 
     if (oldVersion < 1) {
       data['worldData'] ??= {};

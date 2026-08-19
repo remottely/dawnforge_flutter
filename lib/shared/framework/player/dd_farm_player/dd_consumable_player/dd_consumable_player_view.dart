@@ -11,6 +11,7 @@ abstract class DDConsumablePlayerView<
   M extends DDCombatPlayerModel
 >
     extends DDDefensePlayerView<C, M> {
+  @override
   @protected
   final DDCombatPlayerViewConfig config;
 

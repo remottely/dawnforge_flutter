@@ -15,6 +15,7 @@ abstract class DDMinePlayerView<
   M extends DDMinePlayerModel
 >
     extends DDFarmPlayerView<C, M> {
+  @override
   @protected
   final DDMinePlayerViewConfig config;
 

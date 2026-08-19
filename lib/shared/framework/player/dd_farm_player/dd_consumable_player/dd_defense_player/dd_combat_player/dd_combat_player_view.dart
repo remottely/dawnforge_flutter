@@ -23,6 +23,7 @@ abstract class DDCombatPlayerView<
   M extends DDCombatPlayerModel
 >
     extends DDMobilePlayerView<C, M> {
+  @override
   @protected
   final DDCombatPlayerViewConfig config;
 

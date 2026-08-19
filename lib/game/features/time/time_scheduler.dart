@@ -20,19 +20,14 @@ class RepeatRule {
     this.weekdayIndices,
   });
 
-  const RepeatRule.daily({
-    Set<SeasonType>? seasons,
-    Set<int>? dayNumbers,
-    Set<int>? weekdayIndices,
-  }) : intervalDays = 1,
-       seasons = seasons,
-       dayNumbers = dayNumbers,
-       weekdayIndices = weekdayIndices;
+  const RepeatRule.daily({this.seasons, this.dayNumbers, this.weekdayIndices})
+    : intervalDays = 1;
 
   bool allows(_DayProjection day) {
     if (seasons != null && !seasons!.contains(day.requiredSeason)) return false;
-    if (dayNumbers != null && !dayNumbers!.contains(day.dayNumber))
+    if (dayNumbers != null && !dayNumbers!.contains(day.dayNumber)) {
       return false;
+    }
     if (weekdayIndices != null && !weekdayIndices!.contains(day.weekdayIndex)) {
       return false;
     }

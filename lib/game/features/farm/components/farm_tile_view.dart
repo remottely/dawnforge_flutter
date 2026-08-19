@@ -17,12 +17,12 @@ class CropDecorationWithCustomYSort extends GameDecoration {
   final bool isTree;
 
   CropDecorationWithCustomYSort({
-    required Sprite sprite,
-    required Vector2 position,
-    required Vector2 size,
+    required Sprite super.sprite,
+    required super.position,
+    required super.size,
     this.ySortOffset = 0,
     this.isTree = false,
-  }) : super.withSprite(sprite: sprite, position: position, size: size);
+  }) : super.withSprite();
 
   @override
   Future<void> onLoad() async {
@@ -107,10 +107,10 @@ class FarmTileView extends GameDecoration with DDToolInteractableMixin {
   /// Helper to get FarmObject from GridTile
   FarmObject get _farmObject => farmTile.object as FarmObject;
 
-  FarmTileView({required Vector2 position})
+  FarmTileView({required super.position})
     : tileX = (position.x / TileConstants.kTileDimensionStandard).floor(),
       tileY = (position.y / TileConstants.kTileDimensionStandard).floor(),
-      super(position: position, size: TileConstants.tileSizeStandard) {
+      super(size: TileConstants.tileSizeStandard) {
     final key = _makeKey(tileX, tileY);
     if (_instances.containsKey(key)) {
       // Já existe uma instância para este tile, não cria outra

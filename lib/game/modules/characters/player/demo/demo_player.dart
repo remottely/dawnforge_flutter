@@ -22,12 +22,10 @@ class DemoPlayer extends Character {
   double _lastDeltaTime = 0.0;
 
   DemoPlayer({
-    required String id,
-    required CharacterData data,
+    required super.id,
+    required super.data,
     required Vector2 position,
   }) : super(
-         id: id,
-         data: data,
          config: DemoPlayerDef.config,
          position: position,
          // ✅ PASSA a animação NO CONSTRUTOR (não null!)
@@ -126,7 +124,7 @@ class DemoPlayer extends Character {
       _torchStaminaRegenAccumulator -= _kTorchStaminaRegenInterval;
 
       GameLogger.info(
-        '[DemoPlayer] 🔥 Torch regen: +${_kTorchStaminaRegenAmount} stamina '
+        '[DemoPlayer] 🔥 Torch regen: +$_kTorchStaminaRegenAmount stamina '
         '(${data.stamina.toStringAsFixed(1)}/${data.maxStamina})',
       );
     }
