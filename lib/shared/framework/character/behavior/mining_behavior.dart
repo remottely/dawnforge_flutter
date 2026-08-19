@@ -6,7 +6,6 @@ import 'package:dawnforge/game/systems/overlay/message/message_overlay_def.dart'
 import 'package:dawnforge/shared/framework/character/behavior/character_behavior.dart';
 import 'package:dawnforge/shared/framework/utils/dd_animation_directional.dart';
 import 'package:dawnforge/shared/framework/utils/dd_character_action_sprite_animation_helper.dart';
-import 'dart:ui';
 
 class MiningConfig {
   final double pickaxeStaminaCost;

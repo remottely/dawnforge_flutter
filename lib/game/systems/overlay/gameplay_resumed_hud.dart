@@ -1,17 +1,16 @@
 import 'package:bonfire/bonfire.dart';
-
-import 'package:dawnforge/game/systems/overlay/message/message_overlay.dart';
-import 'package:dawnforge/game/systems/overlay/inventory/inventory_overlay.dart';
-import 'package:dawnforge/game/systems/overlay/player_vital_stats/player_vital_stats_overlay.dart';
-import 'package:dawnforge/game/systems/overlay/debug/debug_overlay.dart';
-import 'package:dawnforge/game/systems/overlay/inputs/mobile_inputs_overlay.dart';
-import 'package:dawnforge/game/systems/overlay/inputs/widgets/joystick_actions_overlay.dart';
-import 'package:dawnforge/game/systems/overlay/inputs/widgets/fullscreen_button_overlay.dart';
-import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:dawnforge/core/managers/settings_manager.dart';
+import 'package:dawnforge/core/utils/debug_helpers.dart';
 import 'package:dawnforge/game/features/time/time_manager.dart';
 import 'package:dawnforge/game/features/time/widgets/time_hud_panel.dart';
-import 'package:dawnforge/core/utils/debug_helpers.dart';
+import 'package:dawnforge/game/systems/overlay/debug/debug_overlay.dart';
+import 'package:dawnforge/game/systems/overlay/inputs/mobile_inputs_overlay.dart';
+import 'package:dawnforge/game/systems/overlay/inputs/widgets/fullscreen_button_overlay.dart';
+import 'package:dawnforge/game/systems/overlay/inputs/widgets/joystick_actions_overlay.dart';
+import 'package:dawnforge/game/systems/overlay/inventory/inventory_overlay.dart';
+import 'package:dawnforge/game/systems/overlay/message/message_overlay.dart';
+import 'package:dawnforge/game/systems/overlay/player_vital_stats/player_vital_stats_overlay.dart';
+import 'package:dawnforge/shared/framework/player/dd_farm_player/dd_consumable_player/dd_defense_player/dd_combat_player/dd_mobile_player/dd_base_player/dd_base_player_view.dart';
 import 'package:flutter/material.dart';
 
 class GameplayResumedHud extends StatelessWidget {

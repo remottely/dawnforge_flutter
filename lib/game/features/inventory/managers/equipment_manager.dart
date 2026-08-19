@@ -1,12 +1,11 @@
 import 'package:dawnforge/core/utils/game_logger.dart';
-
 import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.dart';
+import 'package:dawnforge/game/features/inventory/state/equipment_state.dart';
 import 'package:flutter/foundation.dart';
 
 import '../entities/hand_item.dart';
 import '../items/weapon_item.dart';
 import 'inventory_manager.dart';
-import 'package:dawnforge/game/features/inventory/state/equipment_state.dart';
 
 /// Manager for equipment state (C1: Singleton + ValueNotifier, I2: Manager = Singleton State)
 final class EquipmentManager {

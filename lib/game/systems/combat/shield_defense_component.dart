@@ -1,6 +1,5 @@
-import 'package:dawnforge/core/utils/game_logger.dart';
-
 import 'package:bonfire/bonfire.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:dawnforge/game/systems/game/tile_constants.dart';
 import 'package:dawnforge/shared/utils/sprite_animation_config_helper.dart';
 

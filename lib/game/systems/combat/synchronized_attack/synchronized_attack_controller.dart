@@ -1,7 +1,7 @@
 import 'dart:async' as async;
-import 'package:dawnforge/core/utils/game_logger.dart';
 import 'dart:math' as math;
 
+import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:dawnforge/game/systems/combat/synchronized_attack/synchronized_attack_config.dart';
 import 'package:dawnforge/game/systems/combat/synchronized_attack/synchronized_attack_entities.dart';
 import 'package:dawnforge/game/systems/combat/synchronized_attack/synchronized_attack_model.dart';

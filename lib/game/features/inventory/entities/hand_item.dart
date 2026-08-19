@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
-import 'enums/hand_item_id.dart';
 import 'data/item_icon_data.dart';
+import 'enums/hand_item_id.dart';
 import 'enums/hand_item_quality.dart';
 import 'enums/hand_item_type.dart';
 

@@ -1,6 +1,5 @@
-import 'package:dawnforge/core/utils/game_logger.dart';
-
 import 'package:bonfire/bonfire.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 
 /// Service for providing user feedback during farm actions (I2: Service = stateless)
 final class FarmFeedbackService {

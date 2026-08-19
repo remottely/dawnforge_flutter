@@ -1,9 +1,9 @@
 import 'package:dawnforge/game/database/smallburg/smallburg_database_def.dart';
-import 'package:dawnforge/game/features/inventory/items/tool_item.dart';
+import 'package:dawnforge/game/features/inventory/entities/data/item_icon_data.dart';
 import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.dart';
 import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_quality.dart';
 import 'package:dawnforge/game/features/inventory/entities/enums/tool_type.dart';
-import 'package:dawnforge/game/features/inventory/entities/data/item_icon_data.dart';
+import 'package:dawnforge/game/features/inventory/items/tool_item.dart';
 
 final class SmallBurgToolItemDatabaseDef {
   SmallBurgToolItemDatabaseDef._();

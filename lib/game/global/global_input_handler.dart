@@ -1,8 +1,8 @@
 // lib/game/global/global_input_handler.dart
 import 'package:bonfire/bonfire.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:dawnforge/game/global/global_state_machine.dart';
 import 'package:dawnforge/game/systems/input_actions/input_def.dart';
-import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:flutter/foundation.dart';
 
 typedef InteractionCallback = void Function();

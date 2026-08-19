@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/modules/characters/enemies/imp/imp_enemy_def.dart';
 import 'package:dawnforge/game/modules/characters/enemies/imp/imp_enemy_controller.dart';
+import 'package:dawnforge/game/modules/characters/enemies/imp/imp_enemy_def.dart';
 import 'package:dawnforge/game/modules/characters/enemies/imp/imp_enemy_model.dart';
 import 'package:dawnforge/shared/framework/enemies/dd_base_enemy/dd_base_enemy_view.dart';
 

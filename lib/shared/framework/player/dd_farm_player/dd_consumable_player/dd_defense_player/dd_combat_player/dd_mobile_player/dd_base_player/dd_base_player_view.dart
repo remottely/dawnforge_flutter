@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:dawnforge/core/utils/game_logger.dart';
 
 import 'package:bonfire/bonfire.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:dawnforge/game/global/global_state_machine.dart';
 import 'package:dawnforge/game/systems/ui/emote_manager.dart';
 import 'package:dawnforge/shared/framework/enemies/dd_base_enemy/dd_base_enemy_view.dart';

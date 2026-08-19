@@ -1,18 +1,18 @@
 // lib/gameplay/characters/player/demo/demo_player.dart (CORRIGIDO)
 import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/core/utils/game_logger.dart';
+import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.dart';
 import 'package:dawnforge/game/modules/characters/player/demo/demo_player_def.dart';
-import 'package:dawnforge/shared/framework/character/character.dart';
-import 'package:dawnforge/shared/framework/character/character_data.dart';
-import 'package:dawnforge/shared/framework/character/behavior/movement_behavior.dart';
 import 'package:dawnforge/shared/framework/character/behavior/combat_behavior.dart';
-import 'package:dawnforge/shared/framework/character/behavior/farming_behavior.dart';
 import 'package:dawnforge/shared/framework/character/behavior/consumable_behavior.dart';
 import 'package:dawnforge/shared/framework/character/behavior/defense_behavior.dart';
-import 'package:dawnforge/shared/framework/character/behavior/mining_behavior.dart';
 import 'package:dawnforge/shared/framework/character/behavior/enemy_detection_behavior.dart';
 import 'package:dawnforge/shared/framework/character/behavior/equipment_sync_behavior.dart';
-import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.dart';
+import 'package:dawnforge/shared/framework/character/behavior/farming_behavior.dart';
+import 'package:dawnforge/shared/framework/character/behavior/mining_behavior.dart';
+import 'package:dawnforge/shared/framework/character/behavior/movement_behavior.dart';
+import 'package:dawnforge/shared/framework/character/character.dart';
+import 'package:dawnforge/shared/framework/character/character_data.dart';
 
 class DemoPlayer extends Character {
   double _torchStaminaRegenAccumulator = 0.0;

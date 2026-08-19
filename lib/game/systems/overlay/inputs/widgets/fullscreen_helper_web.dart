@@ -1,5 +1,6 @@
-import 'package:dawnforge/core/utils/game_logger.dart';
 import 'dart:html' as html;
+
+import 'package:dawnforge/core/utils/game_logger.dart';
 
 void toggleFullscreen() {
   try {

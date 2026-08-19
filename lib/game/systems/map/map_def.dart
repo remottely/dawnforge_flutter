@@ -1,4 +1,7 @@
 import 'package:bonfire/map/tiled/builder/tiled_world_builder.dart';
+import 'package:dawnforge/game/features/farm/components/farm_tile_view.dart';
+import 'package:dawnforge/game/features/market/market_decoration.dart';
+import 'package:dawnforge/game/global/global_state_machine.dart';
 import 'package:dawnforge/game/modules/characters/enemies/boss/boss_enemy_view.dart';
 import 'package:dawnforge/game/modules/characters/enemies/goblin/goblin_enemy_view.dart';
 import 'package:dawnforge/game/modules/characters/enemies/imp/imp_enemy_view.dart';
@@ -6,9 +9,6 @@ import 'package:dawnforge/game/modules/characters/enemies/mini_boss/mini_boss_en
 import 'package:dawnforge/game/modules/characters/enemies/skeleton/skeleton_enemy_view.dart';
 import 'package:dawnforge/game/modules/characters/npcs/kid/kid_npc_view.dart';
 import 'package:dawnforge/game/modules/characters/npcs/wizard/wizard_npc_view.dart';
-import 'package:dawnforge/game/global/global_state_machine.dart';
-import 'package:dawnforge/game/systems/audio/audio_def.dart';
-import 'package:dawnforge/game/systems/map/map_data.dart';
 import 'package:dawnforge/game/modules/decorations/barrel/barrel_decoration.dart';
 import 'package:dawnforge/game/modules/decorations/bed/bed_decoration.dart';
 import 'package:dawnforge/game/modules/decorations/chest/chest_decoration_model.dart';
@@ -20,8 +20,8 @@ import 'package:dawnforge/game/modules/decorations/life_potion/life_potion_decor
 import 'package:dawnforge/game/modules/decorations/spike_trap/spike_trap_decoration.dart';
 import 'package:dawnforge/game/modules/decorations/torch/torch_decoration_model.dart';
 import 'package:dawnforge/game/modules/decorations/torch/torch_decoration_view.dart';
-import 'package:dawnforge/game/features/farm/components/farm_tile_view.dart';
-import 'package:dawnforge/game/features/market/market_decoration.dart';
+import 'package:dawnforge/game/systems/audio/audio_def.dart';
+import 'package:dawnforge/game/systems/map/map_data.dart';
 
 final class MapDef {
   MapDef._();

@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/systems/ui/ui_state_manager.dart';
+import 'package:dawnforge/game/features/inventory/managers/equipment_manager.dart';
+import 'package:dawnforge/game/features/inventory/managers/inventory_manager.dart';
 import 'package:dawnforge/game/modules/decorations/door/door_decoration_config.dart';
 import 'package:dawnforge/game/modules/decorations/door_key/door_key_decoration_config.dart';
 import 'package:dawnforge/game/systems/ui/dialog/binary_choice_dialog.dart';
-import 'package:dawnforge/game/features/inventory/managers/equipment_manager.dart';
-import 'package:dawnforge/game/features/inventory/managers/inventory_manager.dart';
+import 'package:dawnforge/game/systems/ui/ui_state_manager.dart';
 
 class DoorDecorationView extends GameDecoration {
   bool _isOpen = false;

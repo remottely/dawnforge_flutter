@@ -1,19 +1,20 @@
+import 'dart:async';
+
 import 'package:bonfire/bonfire.dart';
+import 'package:dawnforge/core/utils/app_environment.dart';
+import 'package:dawnforge/game/features/farm/handlers/farm_input_handler.dart';
+import 'package:dawnforge/game/features/gameplay_screen_viewmodel.dart';
+import 'package:dawnforge/game/features/time/time_manager.dart';
 import 'package:dawnforge/game/global/global_state_machine.dart';
+import 'package:dawnforge/game/global/global_state_overlay.dart';
+import 'package:dawnforge/game/modules/decorations/map_transition_sensor.dart';
 import 'package:dawnforge/game/systems/audio/audio_manager.dart';
 import 'package:dawnforge/game/systems/game/tile_constants.dart';
 import 'package:dawnforge/game/systems/map/map_def.dart';
 import 'package:dawnforge/game/systems/map/map_manager.dart';
 import 'package:dawnforge/game/systems/map/map_transition_controller.dart';
-import 'package:dawnforge/core/utils/app_environment.dart';
 import 'package:dawnforge/game/utils/color_helper.dart';
-import 'package:dawnforge/game/modules/decorations/map_transition_sensor.dart';
-import 'package:dawnforge/game/features/farm/handlers/farm_input_handler.dart';
-import 'package:dawnforge/game/global/global_state_overlay.dart';
-import 'package:dawnforge/game/features/gameplay_screen_viewmodel.dart';
-import 'package:dawnforge/game/features/time/time_manager.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
 
 class GameplayScreen extends StatefulWidget {
   const GameplayScreen({super.key});

@@ -1,9 +1,9 @@
 import 'dart:async' as async;
 
+import 'package:dawnforge/core/managers/settings_manager.dart';
+import 'package:dawnforge/game/features/gameplay_screen.dart';
 import 'package:dawnforge/pre_game/screens/menu_screen.dart';
 import 'package:dawnforge/pre_game/screens/menu_screen_def.dart';
-import 'package:dawnforge/game/features/gameplay_screen.dart';
-import 'package:dawnforge/core/managers/settings_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 

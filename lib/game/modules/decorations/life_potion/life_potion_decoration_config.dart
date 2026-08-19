@@ -1,7 +1,7 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:dawnforge/game/modules/decorations/decoration_constants.dart';
 import 'package:dawnforge/game/systems/game/tile_constants.dart';
 import 'package:dawnforge/game/utils/hitbox_utils.dart';
-import 'package:dawnforge/game/modules/decorations/decoration_constants.dart';
 
 final class LifePotionDef {
   LifePotionDef._();

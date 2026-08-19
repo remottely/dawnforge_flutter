@@ -1,9 +1,9 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:bonfire/map/tiled/builder/tiled_world_builder.dart';
-import 'package:dawnforge/game/systems/game/tile_constants.dart';
-import 'package:dawnforge/game/systems/map/map_def.dart';
-import 'package:dawnforge/game/systems/map/map_data.dart';
 import 'package:dawnforge/game/modules/decorations/map_transition_sensor.dart';
+import 'package:dawnforge/game/systems/game/tile_constants.dart';
+import 'package:dawnforge/game/systems/map/map_data.dart';
+import 'package:dawnforge/game/systems/map/map_def.dart';
 import 'package:dawnforge/shared/framework/interaction/dd_collision_interaction.dart';
 import 'package:flutter/widgets.dart';
 

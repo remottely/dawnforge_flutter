@@ -1,8 +1,8 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
+import 'package:dawnforge/game/features/gameplay_screen.dart';
 import 'package:dawnforge/game/systems/save/game_save_controller.dart';
 import 'package:dawnforge/game/systems/ui/ui_state_manager.dart';
-import 'package:dawnforge/game/features/gameplay_screen.dart';
-import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:flutter/material.dart';
 
 class GameStateManager extends GameComponent {

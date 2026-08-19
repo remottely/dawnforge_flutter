@@ -1,18 +1,17 @@
 import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:dawnforge/game/database/smallburg/smallburg_farm_consumable_item_database_def.dart';
-
 import 'package:dawnforge/game/features/inventory/items/consumable_item.dart';
 import 'package:dawnforge/game/features/inventory/items/material_item.dart';
 import 'package:dawnforge/game/features/inventory/items/tool_item.dart';
 import 'package:dawnforge/game/features/inventory/items/weapon_item.dart';
 
-import '../entities/hand_item.dart';
-import '../items/seed_bag_item.dart';
-import '../entities/enums/hand_item_id.dart';
-import '../../../database/smallburg/smallburg_weapon_item_database_def.dart';
-import '../../../database/smallburg/smallburg_tool_item_database_def.dart';
 import '../../../database/smallburg/smallburg_material_item_database_def.dart';
 import '../../../database/smallburg/smallburg_seed_bag_item_database_def.dart';
+import '../../../database/smallburg/smallburg_tool_item_database_def.dart';
+import '../../../database/smallburg/smallburg_weapon_item_database_def.dart';
+import '../entities/enums/hand_item_id.dart';
+import '../entities/hand_item.dart';
+import '../items/seed_bag_item.dart';
 
 /// Service for creating items from JSON database (L2: Factory with JSON database, I2: Service = External)
 final class ItemFactoryService {

@@ -1,8 +1,9 @@
-import 'package:dawnforge/core/utils/game_logger.dart';
 import 'dart:math';
 
-import '../managers/inventory_manager.dart';
+import 'package:dawnforge/core/utils/game_logger.dart';
+
 import '../entities/enums/hand_item_id.dart';
+import '../managers/inventory_manager.dart';
 
 /// UseCase for removing items from inventory (B1: Concrete UseCase)
 class RemoveItemUseCase {

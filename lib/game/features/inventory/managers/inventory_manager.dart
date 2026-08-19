@@ -1,11 +1,10 @@
 import 'package:dawnforge/core/utils/game_logger.dart';
-
 import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.dart';
 import 'package:flutter/foundation.dart';
 
 import '../config/inventory_def.dart';
-import '../entities/inventory_slot.dart';
 import '../entities/hand_item.dart';
+import '../entities/inventory_slot.dart';
 
 /// Manager for inventory state (C1: Singleton + ValueNotifier, I2: Manager = Singleton State)
 class InventoryManager {

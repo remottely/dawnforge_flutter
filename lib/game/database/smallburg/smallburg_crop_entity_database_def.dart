@@ -2,8 +2,8 @@ import 'package:dawnforge/game/database/smallburg/smallburg_database_def.dart';
 import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.dart';
 import 'package:dawnforge/game/features/inventory/entities/enums/season.dart';
 
-import '../../features/world/entities/objects/farm/crop_regrow_data.dart';
 import '../../features/world/entities/objects/farm/crop_entity.dart';
+import '../../features/world/entities/objects/farm/crop_regrow_data.dart';
 import '../../features/world/entities/objects/farm/crop_stage_type.dart';
 
 const radishSpriteRowIndex = 2;

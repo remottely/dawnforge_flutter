@@ -1,10 +1,10 @@
 import 'package:dawnforge/game/database/smallburg/smallburg_crop_entity_database_def.dart';
 import 'package:dawnforge/game/database/smallburg/smallburg_database_def.dart';
+import 'package:dawnforge/game/features/inventory/entities/data/item_icon_data.dart';
 import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_id.dart';
 import 'package:dawnforge/game/features/inventory/entities/enums/hand_item_quality.dart';
 import 'package:dawnforge/game/features/inventory/entities/enums/loot_category.dart';
 import 'package:dawnforge/game/features/inventory/entities/enums/season.dart';
-import 'package:dawnforge/game/features/inventory/entities/data/item_icon_data.dart';
 import 'package:dawnforge/game/features/inventory/items/harvest_loot_item.dart';
 
 const _vegetableColumn = 7;

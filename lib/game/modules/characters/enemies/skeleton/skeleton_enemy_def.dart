@@ -3,8 +3,8 @@ import 'package:dawnforge/game/modules/characters/character_constants.dart';
 import 'package:dawnforge/game/systems/game/tile_constants.dart';
 import 'package:dawnforge/game/utils/hitbox_utils.dart';
 import 'package:dawnforge/shared/framework/utils/dd_animation_directional.dart';
-import 'package:dawnforge/shared/utils/sprite_animation_constants.dart';
 import 'package:dawnforge/shared/utils/sprite_animation_config_helper.dart';
+import 'package:dawnforge/shared/utils/sprite_animation_constants.dart';
 
 final class SkeletonEnemyDef {
   SkeletonEnemyDef._();

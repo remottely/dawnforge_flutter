@@ -1,6 +1,6 @@
+import 'package:bonfire/bonfire.dart';
 import 'package:dawnforge/core/utils/game_logger.dart';
 import 'package:flutter/foundation.dart';
-import 'package:bonfire/bonfire.dart';
 
 /// UI:
 ///    - HUD

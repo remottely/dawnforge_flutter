@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:dawnforge/game/modules/characters/npcs/kid/kid_npc_def.dart';
 import 'package:dawnforge/game/modules/characters/npcs/kid/kid_npc_controller.dart';
+import 'package:dawnforge/game/modules/characters/npcs/kid/kid_npc_def.dart';
 
 class KidNpcView extends SimpleNpc {
   final KidNpcController _controller = KidNpcController();
