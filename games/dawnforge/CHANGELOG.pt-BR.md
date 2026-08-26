@@ -8,6 +8,15 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.17.0
+
+### 🧹 Internal
+
+- As mochilas existem agora, por dentro: um lugar com bolsos numerados onde
+  as coisas podem ser guardadas, empilhadas e contadas, com regras justas —
+  coisas iguais se juntam, bolso cheio diz não, e uma ferramenta sempre fica
+  num bolso só dela. Ainda não dá para ver; a parte da tela vem depois.
+
 ## 0.16.0
 
 ### 🧹 Internal

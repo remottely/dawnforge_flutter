@@ -4,5 +4,6 @@
 abstract final class ComponentKeys {
   static const String direction = 'DirectionComponent';
   static const String health = 'HealthComponent';
+  static const String inventory = 'InventoryComponent';
   static const String movement = 'MovementComponent';
 }

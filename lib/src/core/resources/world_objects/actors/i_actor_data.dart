@@ -1,4 +1,5 @@
 import 'package:dawnforge/src/core/resources/i_world_object_data.dart';
+import 'package:dawnforge/src/core/resources/inventory/inventory_data.dart';
 import 'package:dawnforge/src/core/resources/json_reader.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/engine_constants.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/enums.dart';
@@ -27,6 +28,8 @@ class IActorData extends IWorldObjectData {
     super.isProjectilePassable,
     super.baseMaxHealth,
     super.drops,
+    super.inventorySize,
+    InventoryData? inventory,
     super.currentHealth,
     this.heldItemId = '',
     this.baseActionSpeed = 1.0,
@@ -36,6 +39,7 @@ class IActorData extends IWorldObjectData {
     this.aiBehavior = AIBehavior.neutral,
     this.aiCombatStyle = AICombatStyle.meleePrimary,
   }) {
+    this.inventory = inventory ?? InventoryData(slotCount: inventorySize);
     _validate();
   }
 
@@ -58,6 +62,7 @@ class IActorData extends IWorldObjectData {
           AICombatStyle.meleePrimary,
         ),
         super.fromReader() {
+    inventory = InventoryData(slotCount: inventorySize);
     _validate();
   }
 
@@ -69,6 +74,12 @@ class IActorData extends IWorldObjectData {
     assert(moveSpeed >= 0, '[$runtimeType($id)] move_speed negative');
     assert(baseActionSpeed >= 0, '[$runtimeType($id)] base_action_speed negative');
   }
+
+  /// The actor's container STATE (rule 8) — sized by the authored
+  /// `inventory_size`, mutated only through `InventoryComponent`. `late` only
+  /// so the constructor BODY can size it from the inherited field; both
+  /// constructors assign it exactly once.
+  late final InventoryData inventory;
 
   final String heldItemId;
   final double baseActionSpeed;
@@ -100,6 +111,8 @@ class IActorData extends IWorldObjectData {
         isProjectilePassable: isProjectilePassable,
         baseMaxHealth: baseMaxHealth,
         drops: List<DropEntry>.of(drops),
+        inventorySize: inventorySize,
+        inventory: inventory.clone(),
         currentHealth: currentHealth,
         heldItemId: heldItemId,
         baseActionSpeed: baseActionSpeed,
@@ -109,4 +122,10 @@ class IActorData extends IWorldObjectData {
         aiBehavior: aiBehavior,
         aiCombatStyle: aiCombatStyle,
       );
+
+  @override
+  Map<String, Object?> serialize() => <String, Object?>{
+        ...super.serialize(),
+        if (inventory.hasAnyItem) 'inventory': inventory.serialize(),
+      };
 }

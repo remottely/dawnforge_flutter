@@ -8,6 +8,15 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.17.0
+
+### 🧹 Internal
+
+- Backpacks exist now, on the inside: a place with numbered pockets where
+  things can be kept, stacked and counted, with fair rules — same things
+  pile together, a full pocket says no, and a tool always keeps a pocket
+  to itself. You cannot see it yet; the screen part comes later.
+
 ## 0.16.0
 
 ### 🧹 Internal

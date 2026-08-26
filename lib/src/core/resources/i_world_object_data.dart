@@ -29,6 +29,7 @@ abstract class IWorldObjectData extends IVisualObjectData {
     this.isProjectilePassable = false,
     this.baseMaxHealth = EngineConstants.defaultMaxHealth,
     this.drops = const <DropEntry>[],
+    this.inventorySize = 30,
     double? currentHealth,
   }) : _currentHealth = currentHealth ?? baseMaxHealth {
     _validate();
@@ -49,6 +50,7 @@ abstract class IWorldObjectData extends IVisualObjectData {
           EngineConstants.defaultMaxHealth,
         ),
         drops = reader.objectListOr('drops').map(DropEntry.fromJson).toList(),
+        inventorySize = reader.intOr('inventory_size', 30),
         _currentHealth = 0,
         super.fromReader() {
     // Fresh content spawns at full health; a save overwrites via deserialize.
@@ -59,6 +61,7 @@ abstract class IWorldObjectData extends IVisualObjectData {
   void _validate() {
     assert(gridWidth > 0 && gridHeight > 0, '[$runtimeType($id)] grid_size');
     assert(baseMaxHealth > 0, '[$runtimeType($id)] base_max_health must be > 0');
+    assert(inventorySize >= 0, '[$runtimeType($id)] inventory_size negative');
   }
 
   /// Footprint in tiles.
@@ -79,6 +82,11 @@ abstract class IWorldObjectData extends IVisualObjectData {
   /// part of [serialize]. Empty is a legitimate authored answer: the object
   /// yields nothing.
   final List<DropEntry> drops;
+
+  /// Authored container capacity, in slots. The container STATE lives on
+  /// `IActorData.inventory` for now; this field sizes it (and will size
+  /// storage props when they arrive).
+  final int inventorySize;
 
   double _currentHealth;
   double get currentHealth => _currentHealth;
