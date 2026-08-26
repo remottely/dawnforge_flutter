@@ -8,6 +8,14 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.5.0
+
+### 🧹 Internal
+
+- The game can now speak three languages: the names and descriptions written
+  for the Godot version (English, Portuguese, Spanish) load here too — 228
+  lines of text, with a build check that catches any language missing a line.
+
 ## 0.4.0
 
 ### 🧹 Internal

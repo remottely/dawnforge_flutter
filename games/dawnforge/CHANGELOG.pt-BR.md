@@ -8,6 +8,15 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.5.0
+
+### 🧹 Internal
+
+- O jogo agora sabe falar três línguas: os nomes e descrições escritos para a
+  versão Godot (inglês, português, espanhol) carregam aqui também — 228 linhas
+  de texto, com uma checagem de build que pega qualquer língua com linha
+  faltando.
+
 ## 0.4.0
 
 ### 🧹 Internal

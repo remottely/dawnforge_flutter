@@ -31,10 +31,12 @@ sys.path.insert(0, str(ROOT / "scripts" / "lib"))
 # prefix is the execution order, and `full` walks this table top to bottom.
 STEP_MODULES: dict[str, str] = {
     "import": "04_import_almanac_to_json",
+    "translations": "05_build_translation_tables",
+    "component-keys": "10_generate_component_keys",
 }
 
 # Steps that can verify the generated files against their SSOT without writing.
-CHECKABLE: tuple[str, ...] = ("import",)
+CHECKABLE: tuple[str, ...] = ("import", "translations", "component-keys")
 
 
 def run_step(command: str, dry_run: bool, check: bool) -> int:
