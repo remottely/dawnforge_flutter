@@ -8,6 +8,15 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.14.0
+
+### 🧹 Internal
+
+- A little counter panel appeared in the top corner: it shows how fast the
+  game is drawing and how much work the world-building is doing each
+  moment. It is a builder's tool for now — it will hide behind a setting
+  later.
+
 ## 0.13.0
 
 ### ✨ New

@@ -4,6 +4,7 @@ import 'package:dawnforge/src/core/base/world_objects/actors/i_actor.dart';
 import 'package:dawnforge/src/core/base/world_objects/world_object.dart';
 import 'package:dawnforge/src/core/factories/actor_factory.dart';
 import 'package:dawnforge/src/core/factories/prop_factory.dart';
+import 'package:dawnforge/src/core/render/debug_overlay.dart';
 import 'package:dawnforge/src/core/render/ground_chunk_renderer.dart';
 import 'package:dawnforge/src/core/render/world_object_renderer.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/content_paths.dart';
@@ -46,6 +47,10 @@ final class DawnforgeGame extends FlameGame with KeyboardEvents {
   final List<WorldObject> simObjects = <WorldObject>[];
 
   late final IActor player;
+
+  /// The chunked ground layer — typed access for the debug overlay and the
+  /// gate test.
+  late final GroundChunkRenderer groundLayer;
 
   /// The endless sea: water is never painted per tile — the background IS
   /// the water, exactly as the Godot renderer treats it. The color is the
@@ -100,8 +105,12 @@ final class DawnforgeGame extends FlameGame with KeyboardEvents {
     locator<ProceduralWorldManager>()
         .initialize(ProceduralWorldManager.resolveNewWorldSeed(worldSeed));
     final spawnTile = locator<ProceduralWorldManager>().findSpawnTile();
-    await world.add(GroundChunkRenderer());
+    groundLayer = GroundChunkRenderer();
+    await world.add(groundLayer);
     locator<ChunkStreamingSystem>().initialize(spawnTile);
+
+    // The FP3.6 proof instrument, in screen space above everything.
+    await camera.viewport.add(DebugOverlay());
 
     // A handful of hand-placed props around the spawn — sim-object dressing
     // until procedural population (FP7) spawns the real thing.

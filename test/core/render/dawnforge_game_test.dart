@@ -1,5 +1,6 @@
 import 'package:dawnforge/src/core/registries/actor_registry.dart';
 import 'package:dawnforge/src/core/render/dawnforge_game.dart';
+import 'package:dawnforge/src/core/render/debug_overlay.dart';
 import 'package:dawnforge/src/core/render/ground_chunk_renderer.dart';
 import 'package:dawnforge/src/core/render/world_object_renderer.dart';
 import 'package:dawnforge/src/core/systems/boot.dart';
@@ -101,6 +102,16 @@ void main() {
     final groundLayer =
         game.world.children.whereType<GroundChunkRenderer>().single;
     expect(groundLayer.bakedChunkCount, greaterThan(0));
+
+    // The FP3.6 proof instrument publishes real numbers in screen space.
+    final overlay =
+        game.camera.viewport.children.whereType<DebugOverlay>().single;
+    expect(overlay.lines, hasLength(3));
+    expect(overlay.lines[0], startsWith('fps '));
+    expect(
+      overlay.lines[2],
+      contains('${groundLayer.bakedChunkCount} baked'),
+    );
 
     // Feed a "D held" state straight into the input SSOT (a raw key event
     // needs a focused widget tree; the helper is the contract, so it is the

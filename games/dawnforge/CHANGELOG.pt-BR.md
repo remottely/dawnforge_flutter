@@ -8,6 +8,15 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.14.0
+
+### 🧹 Internal
+
+- Um painelzinho de contadores apareceu no canto de cima: ele mostra a
+  velocidade com que o jogo desenha e quanto trabalho a construção do mundo
+  está fazendo a cada momento. Por enquanto é ferramenta de construtor —
+  mais tarde vai se esconder atrás de uma opção.
+
 ## 0.13.0
 
 ### ✨ New

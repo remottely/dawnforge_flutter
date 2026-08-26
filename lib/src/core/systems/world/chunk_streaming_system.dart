@@ -71,6 +71,11 @@ final class ChunkStreamingSystem {
   /// time budget; the flag clears itself the frame the window is whole.
   bool _initialWindowCompleted = false;
 
+  /// Wall-clock cost of the last [update] — what the FP3.6 overlay charts
+  /// against [EngineConstants.proceduralStreamFrameBudgetUsec], so a budget
+  /// regression shows as a number before it shows as a hitch.
+  int lastUpdateMicroseconds = 0;
+
   // ============================================
   // LIFECYCLE
   // ============================================
@@ -107,6 +112,7 @@ final class ChunkStreamingSystem {
     double visibleWorldHeight = 0,
   }) {
     assert(_isInitialized, '[ChunkStreamingSystem] update before initialize');
+    final updateStopwatch = Stopwatch()..start();
 
     final playerChunk = chunkOf(playerTile);
     if (playerChunk != _centerChunk) _centerChunk = playerChunk;
@@ -142,6 +148,7 @@ final class ChunkStreamingSystem {
       )) {
         _initialWindowCompleted = true;
       }
+      lastUpdateMicroseconds = updateStopwatch.elapsedMicroseconds;
       return;
     }
 
@@ -167,6 +174,7 @@ final class ChunkStreamingSystem {
       if (_unloadQueue.isNotEmpty && loadedColumns >= unloadedColumns) break;
       if (stopwatch.elapsedMicroseconds >= budgetUsec) break;
     }
+    lastUpdateMicroseconds = updateStopwatch.elapsedMicroseconds;
   }
 
   // ============================================
@@ -370,6 +378,11 @@ final class ChunkStreamingSystem {
   /// consumers throttle their own per-change reactions during a flood.
   bool get isStreamingBusy =>
       _loadQueue.isNotEmpty || _unloadQueue.isNotEmpty;
+
+  /// Queue depths, for the FP3.6 overlay: a backlog that only ever grows is
+  /// the streaming regression the budget alone cannot show.
+  int get loadQueueDepth => _loadQueue.length;
+  int get unloadQueueDepth => _unloadQueue.length;
 
   /// Chunks whose terrain is still registered. This is the number that must
   /// stay bounded — the debug overlay (FP3.6) surfaces it so a streaming
