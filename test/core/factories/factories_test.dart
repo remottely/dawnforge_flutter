@@ -60,6 +60,7 @@ void main() {
     test('takes a tile address and derives world position via GridManager', () {
       locator<GroundRegistry>().registerJson(<String, Object?>{
         'id': 't1_ground_grass',
+        'type': 'ground_buildable_data',
       });
 
       final ground = GroundFactory.create('t1_ground_grass', const GridPos(2, 3));

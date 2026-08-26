@@ -6,6 +6,7 @@ import 'package:dawnforge/src/core/registries/biome_registry.dart';
 import 'package:dawnforge/src/core/registries/ground_registry.dart';
 import 'package:dawnforge/src/core/registries/item_registry.dart';
 import 'package:dawnforge/src/core/registries/prop_registry.dart';
+import 'package:dawnforge/src/core/resources/world_objects/grounds/ground_empty_data.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/content_paths.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/enums.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/game_constants.dart';
@@ -59,6 +60,20 @@ void main() {
     expect(clover.hidesActors, isTrue);
     expect(clover.allowsActorOverlap, isTrue);
     expect(clover.currentHealth, clover.maxHealth);
+  });
+
+  test('empty grounds route to GroundEmptyData with their flags (FP3.4)', () {
+    const AlmanacLoader().loadFromManifest(readJson('manifest.json'), readJson);
+
+    final grounds = locator<GroundRegistry>();
+    expect(grounds.getGround('t1_ground_empty_water'), isA<GroundEmptyData>());
+    expect(grounds.getGround('t1_ground_empty_cliff'), isA<GroundEmptyData>());
+    final water = grounds.getGround('t1_ground_empty_water') as GroundEmptyData;
+    final cliff = grounds.getGround('t1_ground_empty_cliff') as GroundEmptyData;
+    expect(water.isWater, isTrue);
+    expect(water.isPassable, isFalse);
+    expect(cliff.isWater, isFalse);
+    expect(cliff.isPassable, isFalse);
   });
 
   test('the procedural terrain ground parses with its authored knobs (FP3.4)',

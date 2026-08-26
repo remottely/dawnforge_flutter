@@ -8,6 +8,15 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.10.0
+
+### 🧹 Internal
+
+- The game's map memory grew up: it now remembers which tile of ground sits
+  on every spot, and how tall each mountain step is — without spending any
+  extra memory on tiles nobody changed. Water and cliff learned to say what
+  they are. Third of five steps toward the endless world.
+
 ## 0.9.0
 
 ### 🧹 Internal

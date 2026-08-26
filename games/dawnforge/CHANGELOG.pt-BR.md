@@ -8,6 +8,15 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.10.0
+
+### 🧹 Internal
+
+- A memória de mapa do jogo cresceu: agora ela lembra qual tile de chão
+  está em cada lugar, e a altura de cada degrau de montanha — sem gastar
+  memória extra com tiles que ninguém mexeu. Água e penhasco aprenderam a
+  dizer o que são. Terceiro de cinco passos rumo ao mundo sem fim.
+
 ## 0.9.0
 
 ### 🧹 Internal
