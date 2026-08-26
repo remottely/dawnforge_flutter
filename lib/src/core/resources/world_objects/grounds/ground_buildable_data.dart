@@ -61,7 +61,7 @@ class GroundBuildableData extends IWorldObjectData {
       GroundBuildableData.fromReader(JsonReader(json, 'GroundBuildableData'));
 
   void _validate() {
-    assert(speedModifier > 0, '[$runtimeType($id)] speed_modifier must be > 0');
+    assert(speedModifier >= 0, '[$runtimeType($id)] speed_modifier negative');
     assert(
       farmPropId.isEmpty || farmTools.isNotEmpty,
       '[$runtimeType($id)] farm_prop_id set but farm_tools empty — '

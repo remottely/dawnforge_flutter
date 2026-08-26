@@ -12,9 +12,9 @@
 
 | Phase | State | Gate |
 |:---|:---|:---|
-| FP0 Reset & harness | in progress | harness scripts run; hooks wired; suite command green on empty project |
-| FP1 Core foundation | pending | `flutter test` green over events/registry/factory/component/FSM/grid with zero Flame imports |
-| FP2 Pipeline retarget | pending | `dawnforge.py full` emits JSON; registries boot from a real pack slice; `--check` clean |
+| FP0 Reset & harness | gate met 2026-08-25 (FP0.9 skills pending) | harness scripts run; hooks wired; suite command green on empty project |
+| FP1 Core foundation | gate met 2026-08-26 (FP1.5 component slice, FP1.9 domain rules pending) | `flutter test` green over events/registry/factory/component/FSM/grid with zero Flame imports |
+| FP2 Pipeline retarget | gate met 2026-08-26 (FP2.3 sprites, FP2.4 translations, FP2.5 component-keys pending) | `dawnforge.py full` emits JSON; registries boot from a real pack slice; `--check` clean |
 | FP3 World & rendering | pending | player walks a chunked world at 60fps with debug overlay proving frame budget |
 | FP4 Gameplay loop | pending | harvest → craft → place loop playable end to end |
 | FP5 Surfaces & UX | pending | HUD + inventory + menu with blocker stack, no pause anywhere |

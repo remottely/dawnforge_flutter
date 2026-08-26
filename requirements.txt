@@ -1,0 +1,4 @@
+# Content pipeline dependencies (scripts/pipeline/, run via .venv).
+# The AI harness (scripts/ai/, scripts/lib/knowledge_index.py) stays
+# stdlib-only on purpose — see docs/AI_HARNESS.md.
+PyYAML>=6.0

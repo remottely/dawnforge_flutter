@@ -63,8 +63,9 @@ class IActorData extends IWorldObjectData {
       IActorData.fromReader(JsonReader(json, 'IActorData'));
 
   void _validate() {
-    assert(moveSpeed > 0, '[$runtimeType($id)] move_speed must be > 0');
-    assert(baseActionSpeed > 0, '[$runtimeType($id)] base_action_speed');
+    // 0 is legal: a stationary actor simply never moves/acts.
+    assert(moveSpeed >= 0, '[$runtimeType($id)] move_speed negative');
+    assert(baseActionSpeed >= 0, '[$runtimeType($id)] base_action_speed negative');
   }
 
   final String heldItemId;

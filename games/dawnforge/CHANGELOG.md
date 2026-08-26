@@ -8,6 +8,14 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.3.0
+
+### 🧹 Internal
+
+- The game's content book started working: the same files that describe items,
+  crops and creatures in the Godot version are now read here too. The first 38
+  things — wheat, tomatoes, clover and friends — load correctly.
+
 ## 0.2.0
 
 ### 🧹 Internal

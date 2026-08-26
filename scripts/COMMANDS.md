@@ -19,10 +19,15 @@
 | `python3 scripts/project/check_test_suite_is_clean.py [--analyze-only\|--test-only]` | the suite: `flutter analyze --fatal-infos` + `flutter test`; exit 0 = green |
 | `python3 scripts/project/check_ledger_ids_are_unique.py [--check\|--next]` | refuse a LEDGER.md with duplicate IDs; hand out the next free one |
 
-## scripts/pipeline/ — the content build (FP2, not yet ported)
+## scripts/pipeline/ — the content build
 
-`dawnforge.py <step>` will wrap the ordered `.md` → JSON pipeline, same step numbering as
-the Godot repo.
+`dawnforge.py` (repo root) wraps the ordered `.md` → JSON pipeline; step numbering is
+shared with the Godot repo. Runs via the repo `.venv` (`requirements.txt`).
+
+| Command | What |
+|:---|:---|
+| `.venv/bin/python dawnforge.py import [--dry-run\|--check]` | step 04: almanac `.md` → `assets/generated/<game>/forge_almanac/**.json` + `manifest.json` |
+| `.venv/bin/python dawnforge.py full [--check]` | every ported step, in order |
 
 ## scripts/lib/ — shared modules (not commands)
 

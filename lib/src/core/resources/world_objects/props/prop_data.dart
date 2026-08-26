@@ -49,7 +49,8 @@ class PropData extends IWorldObjectData {
       PropData.fromReader(JsonReader(json, 'PropData'));
 
   void _validate() {
-    assert(weight > 0, '[$runtimeType($id)] weight must be > 0');
+    // 0 is legal: weightless props exist (crops).
+    assert(weight >= 0, '[$runtimeType($id)] weight negative');
     assert(heatRadius >= 0, '[$runtimeType($id)] heat_radius');
     assert(respawnTime >= 0, '[$runtimeType($id)] respawn_time');
   }

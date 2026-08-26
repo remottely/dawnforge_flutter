@@ -1,0 +1,70 @@
+{
+  "animation_speed": 0.15,
+  "backward_frames": 0,
+  "casts_shadow": true,
+  "craft_amount": 1,
+  "craft_time": 1.0,
+  "crafted_at": "NONE",
+  "description_key": "forge_almanac.03_farm.t2.t2_item_consumable_vegetable_tomato.description",
+  "display_name_key": "forge_almanac.03_farm.t2.t2_item_consumable_vegetable_tomato.display_name",
+  "energy_restoration": 5.0,
+  "frame_size": [
+    1,
+    1
+  ],
+  "glow_color": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "glow_origin_offset": 0.0,
+  "glow_radius": 0.0,
+  "glow_speed": 0.0,
+  "glow_type": "NONE",
+  "health_restoration": 1.0,
+  "id": "t2_item_consumable_vegetable_tomato",
+  "idle_frames": 0,
+  "invert_animation": false,
+  "lifetime": 300.0,
+  "magnet_speed": 12.5,
+  "material_type": "FABRIC",
+  "max_stack": 100,
+  "pickup_delay": 0.5,
+  "pivot_offset": [
+    0,
+    0
+  ],
+  "position_offset": [
+    0,
+    0
+  ],
+  "primary_action_animation": "",
+  "primary_action_frame_size": [
+    0,
+    0
+  ],
+  "rotation_offset": 0.0,
+  "secondary_action_animation": "",
+  "secondary_action_frame_size": [
+    0,
+    0
+  ],
+  "sell_value": 1,
+  "shadow_origin_offset": -0.0625,
+  "shadow_style_celestial": "SILHOUETTE",
+  "shadow_style_dynamic": "OCCLUDER_SPRITE_CAPPED",
+  "sound_equip": "",
+  "sound_pickup": "",
+  "sound_primary_action": "",
+  "sound_swing": "",
+  "sounds_volume": 1.0,
+  "sprite_alpha": 1.0,
+  "sprite_anchor": "BOTTOM_LEFT",
+  "sprite_scale": 0.5,
+  "spritesheet": "res://data/forge_almanac/03_farm/t2/sprites/t2_item_consumable_vegetable_tomato.png",
+  "spritesheet_icon": "",
+  "tier": 2,
+  "type": "item_consumable_data",
+  "walk_frames": 0
+}

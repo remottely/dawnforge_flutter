@@ -29,8 +29,19 @@ abstract class IVisualObjectData {
   IVisualObjectData.fromReader(JsonReader reader)
       : id = reader.requiredString('id'),
         spritesheetPath = reader.stringOr('spritesheet', ''),
-        frameWidth = reader.intOr('frame_width', GameConstants.tileDimension),
-        frameHeight = reader.intOr('frame_height', GameConstants.tileDimension),
+        // Authored as a [w, h] pair, like every vector in the pack.
+        frameWidth = reader
+            .intPairOr(
+              'frame_size',
+              (GameConstants.tileDimension, GameConstants.tileDimension),
+            )
+            .$1,
+        frameHeight = reader
+            .intPairOr(
+              'frame_size',
+              (GameConstants.tileDimension, GameConstants.tileDimension),
+            )
+            .$2,
         animationSpeed = reader.doubleOr('animation_speed', 0.15),
         idleFrames = reader.intOr('idle_frames', 0),
         walkFrames = reader.intOr('walk_frames', 0),
@@ -43,7 +54,8 @@ abstract class IVisualObjectData {
   void _validate() {
     assert(id.isNotEmpty, '[$runtimeType] id required');
     assert(frameWidth > 0 && frameHeight > 0, '[$runtimeType($id)] frame size');
-    assert(animationSpeed > 0, '[$runtimeType($id)] animation_speed must be > 0');
+    // 0 is legal: a static object simply never animates.
+    assert(animationSpeed >= 0, '[$runtimeType($id)] animation_speed negative');
   }
 
   /// The content id — always equals the source filename without extension.

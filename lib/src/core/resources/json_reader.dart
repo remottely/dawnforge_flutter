@@ -53,26 +53,53 @@ final class JsonReader {
     return value.toDouble();
   }
 
-  /// Enums travel as their int index — the same wire format `.tres` used.
+  /// Enums travel as the AUTHORED NAME (`WATERING_CAN`, as the `.md` pack
+  /// writes it), matched case-insensitively ignoring underscores; an int index
+  /// is also accepted (save-file compactness). Unknown name = invalid content.
   T enumOr<T extends Enum>(String key, List<T> values, T declaredDefault) {
     final value = _json[key];
     if (value == null) return declaredDefault;
-    if (value is! int || value < 0 || value >= values.length) {
-      _wrongType(key, 'an index into $T');
-    }
-    return values[value];
+    return _resolveEnum(key, value, values);
   }
 
   List<T> enumListOr<T extends Enum>(String key, List<T> values) {
     final value = _json[key];
     if (value == null) return <T>[];
-    if (value is! List) _wrongType(key, 'a list of $T indices');
-    return value.map((entry) {
-      if (entry is! int || entry < 0 || entry >= values.length) {
+    if (value is! List) _wrongType(key, 'a list of $T names');
+    return value.map((entry) => _resolveEnum(key, entry, values)).toList();
+  }
+
+  T _resolveEnum<T extends Enum>(String key, Object? value, List<T> values) {
+    if (value is int) {
+      if (value < 0 || value >= values.length) {
         _wrongType(key, 'an index into $T');
       }
-      return values[entry];
-    }).toList();
+      return values[value];
+    }
+    if (value is String) {
+      final wanted = _foldEnumName(value);
+      for (final candidate in values) {
+        if (_foldEnumName(candidate.name) == wanted) return candidate;
+      }
+      _wrongType(key, 'a $T name (got "$value")');
+    }
+    _wrongType(key, 'a $T name or index');
+  }
+
+  static String _foldEnumName(String name) =>
+      name.toLowerCase().replaceAll('_', '');
+
+  /// A `[w, h]`-style int pair, as the pack authors vectors.
+  (int, int) intPairOr(String key, (int, int) declaredDefault) {
+    final value = _json[key];
+    if (value == null) return declaredDefault;
+    if (value is! List || value.length != 2) {
+      _wrongType(key, 'an [int, int] pair');
+    }
+    final first = value[0];
+    final second = value[1];
+    if (first is! int || second is! int) _wrongType(key, 'an [int, int] pair');
+    return (first, second);
   }
 
   List<String> stringListOr(String key) {

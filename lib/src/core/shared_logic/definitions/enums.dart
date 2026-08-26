@@ -1,7 +1,9 @@
-/// Shared enums, ported from the Godot repo's `Enums.cs`. **Declaration order is
-/// the wire format**: content JSON stores the int index (same as `.tres` did), so
-/// a new member is appended, never inserted — reordering silently re-means every
-/// authored file.
+/// Shared enums, ported from the Godot repo's `Enums.cs` (and `ItemData.cs` for
+/// `MaterialType`). **The wire format is the AUTHORED NAME** — content JSON
+/// carries the SCREAMING_SNAKE name the `.md` pack writes (`HOE`,
+/// `WATERING_CAN`), matched case-insensitively ignoring underscores; an int
+/// index is also accepted for save-file compactness. Declaration order still
+/// mirrors the Godot int values, so a new member is appended, never inserted.
 library;
 
 /// Which tool kind an item acts as / a ground answers to (rule 33).
@@ -32,4 +34,15 @@ enum AIBehavior {
 enum AICombatStyle {
   meleePrimary, // 0 — prefers melee, ranged only when target is far
   rangedPrimary, // 1 — prefers ranged, melee only when target is too close
+}
+
+/// What an item is made of (repair costs, sounds, salvage).
+enum MaterialType {
+  stone, // 0
+  metal, // 1
+  wood, // 2
+  fabric, // 3
+  leather, // 4
+  crystal, // 5
+  none, // 6
 }

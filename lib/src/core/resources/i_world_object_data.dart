@@ -33,8 +33,9 @@ abstract class IWorldObjectData extends IVisualObjectData {
   }
 
   IWorldObjectData.fromReader(super.reader)
-      : gridWidth = reader.intOr('grid_width', 1),
-        gridHeight = reader.intOr('grid_height', 1),
+      // Authored as a [w, h] pair, like every vector in the pack.
+      : gridWidth = reader.intPairOr('grid_size', (1, 1)).$1,
+        gridHeight = reader.intPairOr('grid_size', (1, 1)).$2,
         isFlat = reader.boolOr('is_flat', declaredDefault: false),
         hasCollision = reader.boolOr('has_collision', declaredDefault: true),
         allowsActorOverlap =
