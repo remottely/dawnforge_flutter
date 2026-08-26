@@ -1,14 +1,21 @@
 import 'package:dawnforge/src/core/resources/json_reader.dart';
+import 'package:dawnforge/src/core/resources/world/biome_actor_entry.dart';
+import 'package:dawnforge/src/core/resources/world/biome_prop_entry.dart';
 
-/// One biome's identity and terrain shape — the FP3 slice of the Godot
-/// `BiomeData.cs` (islands mode, weather, audio and visuals arrive with their
-/// systems). Emitted by pipeline step 11 from
+/// One biome's identity, terrain shape and population — the FP3/FP4 slice of
+/// the Godot `BiomeData.cs` (islands mode, weather, audio and visuals arrive
+/// with their systems). Emitted by pipeline step 11 from
 /// `games/<game>/data/world/procedural/procedural_<biome>.md`.
 ///
 /// The four densities are SHARES OF THE WORLD, never noise values: the
 /// ProceduralWorldManager converts each share into a noise cut through its
 /// own quantile table at boot. Writing cuts directly is what this replaced —
 /// nobody could tell what fraction a hand-picked noise value produced.
+///
+/// The population half ([propEntries], [actorEntries], the per-chunk caps and
+/// the richness field) is this track's authored replacement for the Godot
+/// `island_spawns` table — same job, table-per-biome, but one-shot and
+/// seed-pure per chunk (FP4.1).
 final class BiomeData {
   BiomeData({
     required this.id,
@@ -17,6 +24,11 @@ final class BiomeData {
     required this.terrainWallShare,
     required this.terrainWallHeight2Share,
     required this.terrainWallHeight3Share,
+    required this.maxPropsPerChunk,
+    required this.maxActorsPerChunk,
+    required this.densityNoiseFrequency,
+    required this.propEntries,
+    required this.actorEntries,
   }) {
     _validate();
   }
@@ -29,7 +41,19 @@ final class BiomeData {
         terrainWallHeight2Share =
             reader.requiredDouble('terrain_wall_height2_share'),
         terrainWallHeight3Share =
-            reader.requiredDouble('terrain_wall_height3_share') {
+            reader.requiredDouble('terrain_wall_height3_share'),
+        maxPropsPerChunk = reader.requiredInt('max_props_per_chunk'),
+        maxActorsPerChunk = reader.requiredInt('max_actors_per_chunk'),
+        densityNoiseFrequency =
+            reader.requiredDouble('density_noise_frequency'),
+        propEntries = reader
+            .requiredObjectList('prop_entries')
+            .map(BiomePropEntry.fromJson)
+            .toList(),
+        actorEntries = reader
+            .requiredObjectList('actor_entries')
+            .map(BiomeActorEntry.fromJson)
+            .toList() {
     _validate();
   }
 
@@ -63,6 +87,25 @@ final class BiomeData {
       '$terrainWallHeight3Share must each be > 0 and sum to < 1, or a height '
       'would be unreachable',
     );
+    assert(
+      maxPropsPerChunk >= 0 && maxActorsPerChunk >= 0,
+      '[BiomeData($id)] per-chunk caps must be >= 0',
+    );
+    assert(
+      densityNoiseFrequency > 0,
+      '[BiomeData($id)] density_noise_frequency $densityNoiseFrequency '
+      'must be > 0',
+    );
+    assert(
+      propEntries.isEmpty || maxPropsPerChunk >= 1,
+      '[BiomeData($id)] prop_entries authored but max_props_per_chunk is 0 — '
+      'nothing could ever spawn',
+    );
+    assert(
+      actorEntries.isEmpty || maxActorsPerChunk >= 1,
+      '[BiomeData($id)] actor_entries authored but max_actors_per_chunk is 0 '
+      '— nothing could ever spawn',
+    );
   }
 
   final String id;
@@ -83,4 +126,18 @@ final class BiomeData {
   /// always the smaller number.
   final double terrainWallHeight2Share;
   final double terrainWallHeight3Share;
+
+  /// Hard caps the population roll respects per chunk, whatever the tables
+  /// would have produced — the knob that keeps a lucky chunk readable.
+  final int maxPropsPerChunk;
+  final int maxActorsPerChunk;
+
+  /// Scale of the biome's richness field: how WIDE a rich district is,
+  /// ~1/frequency tiles. How many species show the pattern is each prop
+  /// entry's own `densityInfluence`.
+  final double densityNoiseFrequency;
+
+  /// The one-shot, seed-pure population tables (empty = barren, authored so).
+  final List<BiomePropEntry> propEntries;
+  final List<BiomeActorEntry> actorEntries;
 }

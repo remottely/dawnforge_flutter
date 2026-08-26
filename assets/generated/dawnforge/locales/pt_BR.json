@@ -59,6 +59,8 @@
     "forge_almanac.01_biomes.t1.props.t1_prop_rock_moss.display_name": "Rocha de Musgo",
     "forge_almanac.01_biomes.t1.props.t1_prop_vein_copper.description": "Um veio de cobre atravessando a pedra. Quebre com a picareta e o minério é seu.",
     "forge_almanac.01_biomes.t1.props.t1_prop_vein_copper.display_name": "Veio de Cobre",
+    "forge_almanac.01_biomes.t2.items.t2_item_logs_willow.description": "Troncos de salgueiro recém-cortados, ainda cheirando a seiva. Vire pranchas na fundição.",
+    "forge_almanac.01_biomes.t2.items.t2_item_logs_willow.display_name": "Troncos de Salgueiro",
     "forge_almanac.02_workstations.01_smelter.t1.t1_ground_buildable_terrain.description": "O chão comum do lugar onde você está. Sirve para tapar um buraco ou aplainar um pedaço.",
     "forge_almanac.02_workstations.01_smelter.t1.t1_ground_buildable_terrain.display_name": "Chão Natural",
     "forge_almanac.03_farm.t1.t1_item_consumable_fruit_apple.description": "Uma maçã vermelha colhida direto do pé, ainda fria da sombra.\n\nAo usar:\n- Vida: +1\n- Energia: +5",

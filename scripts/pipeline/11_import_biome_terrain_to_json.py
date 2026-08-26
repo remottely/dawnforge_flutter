@@ -16,8 +16,11 @@ could not be generated.
 
 Scope: SURFACE biomes only (`procedural_<biome>.md`). The cave layer's
 `procedural_cave_<biome>.md` files carry the `cave_terrain_*` shares and join
-this step when the cave layer is ported. Spawn tables (`prop_entries`,
-`actor_entries`) are step 09's subject, unported (FP7).
+this step when the cave layer is ported. The population tables (`limits`,
+`density_noise`, `prop_entries`, `actor_entries`) — the Godot repo's step 09
+subject (`09_import_procedural_spawns_to_tres.py`) — are folded in here since
+FP4.1a, because this step already emits the biome resource whole: a second
+step patching the same JSON would give one file two owners under `--check`.
 
     .venv/bin/python dawnforge.py biome-terrain              # write
     .venv/bin/python dawnforge.py biome-terrain --dry-run    # list, write nothing
@@ -49,6 +52,115 @@ TERRAIN_FIELDS: tuple[tuple[str, str], ...] = (
     ("wall_height2", "terrain_wall_height2_share"),
     ("wall_height3", "terrain_wall_height3_share"),
 )
+
+# Population entry contracts: {key: (required, validator)}. Key sets are CLOSED —
+# an unrecognized key is a typo, and a typo'd optional key would otherwise
+# silently become its default (the exact silent fallback rule 5 exists to kill:
+# `densty_influence:` reading as "even spread" ships a wrong world, quietly).
+_PROP_ENTRY_KEYS: dict[str, tuple[bool, str]] = {
+    "prop_id": (True, "id"),
+    "attempts_per_chunk": (True, "count"),
+    "spawn_chance": (True, "chance"),
+    "cluster_min": (True, "count"),
+    "cluster_max": (True, "count"),
+    "cluster_radius": (True, "count"),
+    "density_influence": (False, "share"),
+}
+_ACTOR_ENTRY_KEYS: dict[str, tuple[bool, str]] = {
+    "actor_id": (True, "id"),
+    "pack_chance": (True, "chance"),
+    "pack_min": (True, "count"),
+    "pack_max": (True, "count"),
+    "pack_radius": (True, "count"),
+}
+
+
+def _checked_entry(source: Path, block: str, index: int, entry: object,
+                   keys: dict[str, tuple[bool, str]]) -> dict:
+    """One population entry, every key validated by its declared kind."""
+    where = f"[11] {source.name}: {block}[{index}]"
+    if not isinstance(entry, dict):
+        raise SystemExit(f"{where} is not a mapping")
+    for key in entry:
+        if key not in keys:
+            raise SystemExit(f"{where}: unknown key {key!r}")
+    checked: dict = {}
+    for key, (required, kind) in keys.items():
+        value = entry.get(key)
+        if value is None:
+            if required:
+                raise SystemExit(f"{where}: missing {key!r}")
+            checked[key] = 0.0  # density_influence: declared default, even spread
+            continue
+        if kind == "id":
+            if not isinstance(value, str) or not value:
+                raise SystemExit(f"{where}: {key} {value!r} is not a non-empty string")
+        elif kind == "count":
+            if not isinstance(value, int) or isinstance(value, bool) or value < 1:
+                raise SystemExit(f"{where}: {key} {value!r} is not an int >= 1")
+        elif kind == "chance":
+            if not isinstance(value, (int, float)) or isinstance(value, bool) \
+                    or not 0.0 < float(value) <= 1.0:
+                raise SystemExit(f"{where}: {key} {value!r} outside (0, 1]")
+            value = float(value)
+        else:  # share
+            if not isinstance(value, (int, float)) or isinstance(value, bool) \
+                    or not 0.0 <= float(value) <= 1.0:
+                raise SystemExit(f"{where}: {key} {value!r} outside [0, 1]")
+            value = float(value)
+        checked[key] = value
+    for lo, hi in (("cluster_min", "cluster_max"), ("pack_min", "pack_max")):
+        if lo in checked and checked[lo] > checked[hi]:
+            raise SystemExit(f"{where}: {lo} {checked[lo]} > {hi} {checked[hi]}")
+    return checked
+
+
+def _read_population(source: Path, doc: dict) -> dict:
+    """The population half of a biome: limits, richness field, spawn tables."""
+    limits = doc.get("limits")
+    if not isinstance(limits, dict) or set(limits) != {
+            "max_props_per_chunk", "max_actors_per_chunk"}:
+        raise SystemExit(
+            f"[11] {source.name}: `limits:` must carry exactly "
+            f"max_props_per_chunk and max_actors_per_chunk"
+        )
+    for key, value in limits.items():
+        if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+            raise SystemExit(f"[11] {source.name}: limits.{key} {value!r} "
+                             f"is not an int >= 0")
+
+    density_noise = doc.get("density_noise")
+    if not isinstance(density_noise, dict) or set(density_noise) != {"frequency"}:
+        raise SystemExit(
+            f"[11] {source.name}: `density_noise:` must carry exactly frequency")
+    frequency = density_noise["frequency"]
+    if not isinstance(frequency, (int, float)) or isinstance(frequency, bool) \
+            or float(frequency) <= 0.0:
+        raise SystemExit(f"[11] {source.name}: density_noise.frequency "
+                         f"{frequency!r} is not a number > 0")
+
+    population: dict = {
+        "max_props_per_chunk": limits["max_props_per_chunk"],
+        "max_actors_per_chunk": limits["max_actors_per_chunk"],
+        "density_noise_frequency": float(frequency),
+    }
+    for block, keys in (("prop_entries", _PROP_ENTRY_KEYS),
+                        ("actor_entries", _ACTOR_ENTRY_KEYS)):
+        entries = doc.get(block)
+        if not isinstance(entries, list):
+            raise SystemExit(f"[11] {source.name}: `{block}:` must be a list "
+                             f"(author [] for a barren biome, never omit)")
+        population[block] = [
+            _checked_entry(source, block, i, entry, keys)
+            for i, entry in enumerate(entries)
+        ]
+    cap_pairs = (("prop_entries", "max_props_per_chunk"),
+                 ("actor_entries", "max_actors_per_chunk"))
+    for block, cap in cap_pairs:
+        if population[block] and population[cap] < 1:
+            raise SystemExit(f"[11] {source.name}: {block} authored but "
+                             f"{cap} is 0 — nothing could ever spawn")
+    return population
 
 
 def _frontmatter(text: str, source: Path) -> dict:
@@ -114,6 +226,7 @@ def _read_biome(source: Path) -> dict:
             f"[11] {source.name}: wall height shares {height2} and {height3} "
             f"must each be > 0 and sum to < 1, or a height would be unreachable"
         )
+    biome.update(_read_population(source, doc))
     return biome
 
 

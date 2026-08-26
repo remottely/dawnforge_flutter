@@ -8,6 +8,15 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.15.0
+
+### 🧹 Internal
+
+- Os arquivos de dados do jogo agora dizem o que cada rocha, árvore e criatura
+  deixa para trás quando quebra — e como a floresta decide onde suas plantas,
+  minérios e bichos podem morar. O jogo já sabe ler tudo isso; fazer acontecer
+  na tela é o próximo passo.
+
 ## 0.14.1
 
 ### 🧹 Internal

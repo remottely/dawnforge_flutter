@@ -123,4 +123,30 @@ final class JsonReader {
       return entry;
     }).toList();
   }
+
+  /// A list of nested objects, absent meaning the declared default `[]`
+  /// (a loot table most content simply does not have).
+  List<Map<String, Object?>> objectListOr(String key) {
+    final value = _json[key];
+    if (value == null) return <Map<String, Object?>>[];
+    return _objectList(key, value);
+  }
+
+  /// A list of nested objects the emitter always writes — absence is drift
+  /// between the pipeline and this reader, never authored content.
+  List<Map<String, Object?>> requiredObjectList(String key) {
+    final value = _json[key];
+    if (value == null) _wrongType(key, 'a list of objects (emitter contract)');
+    return _objectList(key, value);
+  }
+
+  List<Map<String, Object?>> _objectList(String key, Object? value) {
+    if (value is! List) _wrongType(key, 'a list of objects');
+    return value.map((entry) {
+      if (entry is! Map<String, Object?>) {
+        _wrongType(key, 'a list of objects');
+      }
+      return entry;
+    }).toList();
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:dawnforge/src/core/resources/i_world_object_data.dart';
 import 'package:dawnforge/src/core/resources/json_reader.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/enums.dart';
+import 'package:dawnforge/src/core/systems/drop/drop_entry.dart';
 
 /// Data of every buildable terrain tile — port of `GroundBuildableData.cs`
 /// (faithful slice: terrain behavior + the rule-33 farming knobs; elevation
@@ -28,6 +29,7 @@ class GroundBuildableData extends IWorldObjectData {
     super.allowsActorOverlap,
     super.isProjectilePassable,
     super.baseMaxHealth,
+    super.drops,
     super.currentHealth,
     this.zIndexOffset = 0,
     this.isDenseTerrain = false,
@@ -103,6 +105,7 @@ class GroundBuildableData extends IWorldObjectData {
         allowsActorOverlap: allowsActorOverlap,
         isProjectilePassable: isProjectilePassable,
         baseMaxHealth: baseMaxHealth,
+        drops: List<DropEntry>.of(drops),
         currentHealth: currentHealth,
         zIndexOffset: zIndexOffset,
         isDenseTerrain: isDenseTerrain,

@@ -3,7 +3,9 @@ import 'dart:io';
 
 import 'package:dawnforge/src/core/registries/biome_registry.dart';
 import 'package:dawnforge/src/core/registries/ground_registry.dart';
+import 'package:dawnforge/src/core/resources/world/biome_actor_entry.dart';
 import 'package:dawnforge/src/core/resources/world/biome_data.dart';
+import 'package:dawnforge/src/core/resources/world/biome_prop_entry.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/content_paths.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/game_constants.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/spatial.dart';
@@ -32,6 +34,12 @@ void main() {
         terrainWallShare: 0.15,
         terrainWallHeight2Share: 0.25,
         terrainWallHeight3Share: 0.08,
+        // Terrain-only fixture: an explicitly barren population half.
+        maxPropsPerChunk: 0,
+        maxActorsPerChunk: 0,
+        densityNoiseFrequency: 0.005,
+        propEntries: const <BiomePropEntry>[],
+        actorEntries: const <BiomeActorEntry>[],
       ),
     );
   }
@@ -66,6 +74,11 @@ void main() {
         terrainWallShare: 0.1,
         terrainWallHeight2Share: 0.2,
         terrainWallHeight3Share: 0.1,
+        maxPropsPerChunk: 0,
+        maxActorsPerChunk: 0,
+        densityNoiseFrequency: 0.005,
+        propEntries: const <BiomePropEntry>[],
+        actorEntries: const <BiomeActorEntry>[],
       ),
     );
     expect(

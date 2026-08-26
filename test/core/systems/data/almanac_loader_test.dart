@@ -113,4 +113,102 @@ void main() {
     expect(forest.terrainWallHeight2Share, 0.25);
     expect(forest.terrainWallHeight3Share, 0.08);
   });
+
+  test('loot tables parse and survive the clone (FP4.1a)', () {
+    const AlmanacLoader().loadFromManifest(readJson('manifest.json'), readJson);
+
+    final rock = locator<PropRegistry>().getProp('t1_prop_rock_moss');
+    expect(rock.drops, hasLength(1));
+    expect(rock.drops.single.itemId, 't1_item_stone_moss');
+    expect(rock.drops.single.chance, 1.0);
+    expect(rock.drops.single.minAmount, 1);
+    expect(rock.drops.single.maxAmount, 1);
+
+    // The clone a factory injects carries the table too (rule 3).
+    expect(rock.clone().drops.single.itemId, 't1_item_stone_moss');
+  });
+
+  test('the biome population tables parse (FP4.1a, step 11)', () {
+    final biomesDir =
+        Directory(ContentPaths.worldBiomesRoot(GameConstants.gameName));
+    Map<String, Object?> readBiome(String relativePath) =>
+        jsonDecode(File('${biomesDir.path}/$relativePath').readAsStringSync())!
+            as Map<String, Object?>;
+    const AlmanacLoader().loadFromManifest(readBiome('manifest.json'),
+        readBiome);
+
+    final forest = locator<BiomeRegistry>().getBiome('biome_forest_data');
+    expect(forest.maxPropsPerChunk, 24);
+    expect(forest.maxActorsPerChunk, 1);
+    expect(forest.densityNoiseFrequency, 0.005);
+    expect(forest.propEntries, hasLength(10));
+    expect(forest.actorEntries, hasLength(3));
+
+    // Grass, as procedural_forest.md authors it.
+    final grass = forest.propEntries
+        .singleWhere((e) => e.propId == 't1_prop_grass_wild');
+    expect(grass.attemptsPerChunk, 4);
+    expect(grass.spawnChance, 0.6);
+    expect(grass.clusterMin, 3);
+    expect(grass.clusterMax, 8);
+    expect(grass.clusterRadius, 3);
+    expect(grass.densityInfluence, 0.0,
+        reason: 'omitted in the .md — the declared default is an even spread');
+
+    // Ore opts into the richness field; vegetation does not.
+    final coal = forest.propEntries
+        .singleWhere((e) => e.propId == 't1_prop_rock_coal');
+    expect(coal.densityInfluence, 0.5);
+
+    final boar = forest.actorEntries
+        .singleWhere((e) => e.actorId == 't1_actor_creature_boar');
+    expect(boar.packChance, 0.07);
+    expect(boar.packMin, 2);
+    expect(boar.packMax, 3);
+    expect(boar.packRadius, 2);
+  });
+
+  test('every population and loot id resolves in the real content (FP4.1a '
+      'seam)', () {
+    const AlmanacLoader().loadFromManifest(readJson('manifest.json'), readJson);
+    final biomesDir =
+        Directory(ContentPaths.worldBiomesRoot(GameConstants.gameName));
+    Map<String, Object?> readBiome(String relativePath) =>
+        jsonDecode(File('${biomesDir.path}/$relativePath').readAsStringSync())!
+            as Map<String, Object?>;
+    const AlmanacLoader().loadFromManifest(readBiome('manifest.json'),
+        readBiome);
+
+    final biomes = locator<BiomeRegistry>();
+    final props = locator<PropRegistry>();
+    final actors = locator<ActorRegistry>();
+    final items = locator<ItemRegistry>();
+
+    for (final biomeId in biomes.ids) {
+      final biome = biomes.getBiome(biomeId);
+      for (final entry in biome.propEntries) {
+        expect(() => props.getProp(entry.propId), returnsNormally,
+            reason: '$biomeId spawns ${entry.propId}');
+      }
+      for (final entry in biome.actorEntries) {
+        expect(() => actors.getActor(entry.actorId), returnsNormally,
+            reason: '$biomeId spawns ${entry.actorId}');
+      }
+    }
+
+    // Prop and actor loot only: a ground's table rolls on ground destruction,
+    // which is FP7's verb — its ids (buildable grounds) join the subset there.
+    for (final propId in props.ids) {
+      for (final entry in props.getProp(propId).drops) {
+        expect(() => items.getItem(entry.itemId), returnsNormally,
+            reason: '$propId drops ${entry.itemId}');
+      }
+    }
+    for (final actorId in actors.ids) {
+      for (final entry in actors.getActor(actorId).drops) {
+        expect(() => items.getItem(entry.itemId), returnsNormally,
+            reason: '$actorId drops ${entry.itemId}');
+      }
+    }
+  });
 }

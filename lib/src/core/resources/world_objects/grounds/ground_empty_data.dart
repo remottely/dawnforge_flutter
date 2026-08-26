@@ -1,6 +1,7 @@
 import 'package:dawnforge/src/core/resources/json_reader.dart';
 import 'package:dawnforge/src/core/resources/world_objects/grounds/ground_buildable_data.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/enums.dart';
+import 'package:dawnforge/src/core/systems/drop/drop_entry.dart';
 
 /// Data of the two EMPTY tiles — what remains where no buildable ground
 /// stands: water (the endless sea) and cliff (a hole enclosed by land).
@@ -28,6 +29,7 @@ class GroundEmptyData extends GroundBuildableData {
     super.allowsActorOverlap,
     super.isProjectilePassable,
     super.baseMaxHealth,
+    super.drops,
     super.currentHealth,
     super.zIndexOffset,
     super.isDenseTerrain,
@@ -74,6 +76,7 @@ class GroundEmptyData extends GroundBuildableData {
         allowsActorOverlap: allowsActorOverlap,
         isProjectilePassable: isProjectilePassable,
         baseMaxHealth: baseMaxHealth,
+        drops: List<DropEntry>.of(drops),
         currentHealth: currentHealth,
         zIndexOffset: zIndexOffset,
         isDenseTerrain: isDenseTerrain,

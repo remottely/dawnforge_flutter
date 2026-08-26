@@ -2,6 +2,7 @@ import 'package:dawnforge/src/core/resources/i_world_object_data.dart';
 import 'package:dawnforge/src/core/resources/json_reader.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/engine_constants.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/enums.dart';
+import 'package:dawnforge/src/core/systems/drop/drop_entry.dart';
 
 /// Data of every actor (player, creature, NPC) — port of `IActorData.cs`
 /// (faithful slice: movement + held item + AI disposition; equipment,
@@ -25,6 +26,7 @@ class IActorData extends IWorldObjectData {
     super.allowsActorOverlap,
     super.isProjectilePassable,
     super.baseMaxHealth,
+    super.drops,
     super.currentHealth,
     this.heldItemId = '',
     this.baseActionSpeed = 1.0,
@@ -97,6 +99,7 @@ class IActorData extends IWorldObjectData {
         allowsActorOverlap: allowsActorOverlap,
         isProjectilePassable: isProjectilePassable,
         baseMaxHealth: baseMaxHealth,
+        drops: List<DropEntry>.of(drops),
         currentHealth: currentHealth,
         heldItemId: heldItemId,
         baseActionSpeed: baseActionSpeed,

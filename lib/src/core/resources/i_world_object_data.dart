@@ -1,5 +1,6 @@
 import 'package:dawnforge/src/core/resources/i_visual_object_data.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/engine_constants.dart';
+import 'package:dawnforge/src/core/systems/drop/drop_entry.dart';
 
 /// Base of every placeable world object's data (Actor / Prop / Ground) — the
 /// Dart port of `IWorldObjectData.cs` (faithful slice; see
@@ -27,6 +28,7 @@ abstract class IWorldObjectData extends IVisualObjectData {
     this.allowsActorOverlap = true,
     this.isProjectilePassable = false,
     this.baseMaxHealth = EngineConstants.defaultMaxHealth,
+    this.drops = const <DropEntry>[],
     double? currentHealth,
   }) : _currentHealth = currentHealth ?? baseMaxHealth {
     _validate();
@@ -46,6 +48,7 @@ abstract class IWorldObjectData extends IVisualObjectData {
           'base_max_health',
           EngineConstants.defaultMaxHealth,
         ),
+        drops = reader.objectListOr('drops').map(DropEntry.fromJson).toList(),
         _currentHealth = 0,
         super.fromReader() {
     // Fresh content spawns at full health; a save overwrites via deserialize.
@@ -70,6 +73,12 @@ abstract class IWorldObjectData extends IVisualObjectData {
   final bool isProjectilePassable;
 
   final double baseMaxHealth;
+
+  /// The loot table rolled when this object dies or is harvested — immutable
+  /// definition data (`DropEntry` lines), never mutable state, so it is not
+  /// part of [serialize]. Empty is a legitimate authored answer: the object
+  /// yields nothing.
+  final List<DropEntry> drops;
 
   double _currentHealth;
   double get currentHealth => _currentHealth;

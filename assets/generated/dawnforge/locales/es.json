@@ -59,6 +59,8 @@
     "forge_almanac.01_biomes.t1.props.t1_prop_rock_moss.display_name": "Roca de Musgo",
     "forge_almanac.01_biomes.t1.props.t1_prop_vein_copper.description": "Una veta de cobre cruzando la piedra. Rómpela con el pico y el mineral es tuyo.",
     "forge_almanac.01_biomes.t1.props.t1_prop_vein_copper.display_name": "Veta de Cobre",
+    "forge_almanac.01_biomes.t2.items.t2_item_logs_willow.description": "Troncos de sauce recién cortados, aún oliendo a savia. Conviértelos en tablones en la fundición.",
+    "forge_almanac.01_biomes.t2.items.t2_item_logs_willow.display_name": "Troncos de Sauce",
     "forge_almanac.02_workstations.01_smelter.t1.t1_ground_buildable_terrain.description": "El suelo llano del lugar donde estás. Sirve para tapar un hoyo o aplanar un trozo.",
     "forge_almanac.02_workstations.01_smelter.t1.t1_ground_buildable_terrain.display_name": "Suelo Natural",
     "forge_almanac.03_farm.t1.t1_item_consumable_fruit_apple.description": "Una manzana roja recogida del árbol, todavía fría de la sombra.\n\nAl usarlo:\n- Vida: +1\n- Energía: +5",

@@ -8,6 +8,15 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.15.0
+
+### 🧹 Internal
+
+- The game's data files now say what every rock, tree and creature leaves
+  behind when it breaks — and how the forest decides where its plants, ores
+  and animals get to live. The game can read all of it now; making it happen
+  on screen is the next step.
+
 ## 0.14.1
 
 ### 🧹 Internal

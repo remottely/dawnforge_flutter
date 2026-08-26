@@ -1,5 +1,6 @@
 import 'package:dawnforge/src/core/resources/i_world_object_data.dart';
 import 'package:dawnforge/src/core/resources/json_reader.dart';
+import 'package:dawnforge/src/core/systems/drop/drop_entry.dart';
 
 /// Data of every prop (trees, rocks, furniture) — port of `PropData.cs`
 /// (faithful slice: physicality + ambience; workstations, drops and placement
@@ -23,6 +24,7 @@ class PropData extends IWorldObjectData {
     super.allowsActorOverlap,
     super.isProjectilePassable,
     super.baseMaxHealth,
+    super.drops,
     super.currentHealth,
     this.hasIdleSway = false,
     this.isPushable = false,
@@ -85,6 +87,7 @@ class PropData extends IWorldObjectData {
         allowsActorOverlap: allowsActorOverlap,
         isProjectilePassable: isProjectilePassable,
         baseMaxHealth: baseMaxHealth,
+        drops: List<DropEntry>.of(drops),
         currentHealth: currentHealth,
         hasIdleSway: hasIdleSway,
         isPushable: isPushable,
