@@ -1,21 +1,37 @@
-# include: package:very_good_analysis/analysis_options.yaml
+# The analyzer is half the rule set (CLAUDE.md rule 4): 100% strict typing is enforced
+# here, not by review. The suite runs `flutter analyze --fatal-infos` — an info is a
+# failure.
+include: package:very_good_analysis/analysis_options.yaml
 
-# analyzer:
-#   errors:
-#     public_member_api_docs: ignore
-#     prefer_int_literals: ignore
-# #     always_specify_types: error  # ERRO se não tipar
-# #     type_init_formals: error     # ERRO se não tipar no construtor
+analyzer:
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+  errors:
+    # Rule 5 — zero fallbacks: unhandled invalid state must crash, not lint away.
+    avoid_dynamic_calls: error
+  exclude:
+    - reference/**
+    - lib/src/generated/**
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
 
-# linter:
-#   rules:
-# #     # TIPAGEM OBRIGATÓRIA
-# #     always_specify_types: true
-# #     type_annotate_public_apis: true
-    
-#     prefer_int_literals: false
-    
-# #     prefer_const_constructors: true
-# #     prefer_const_declarations: true
-# #     prefer_final_fields: true
-# #     prefer_final_locals: true
+linter:
+  rules:
+    # Rule 8 — data-driven state: prefer immutable declarations everywhere.
+    prefer_final_locals: true
+    prefer_final_in_for_each: true
+    # Rule 21 — no commented-out code in lib/.
+    # (enforced by review; no reliable lint exists)
+    # Doc discipline: classes and non-obvious members are documented (CLAUDE.md),
+    # but a doc line on every trivial field is noise, not documentation.
+    public_member_api_docs: false
+    # Prose in comments regularly exceeds 80 columns; `dart format` already
+    # bounds code lines.
+    lines_longer_than_80_chars: false
