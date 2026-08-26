@@ -36,6 +36,13 @@ enum AICombatStyle {
   rangedPrimary, // 1 — prefers ranged, melee only when target is too close
 }
 
+/// Which way an actor faces — a 2-directional system (sprites flip, never
+/// rotate).
+enum ActorDirection {
+  right, // 0 — the default
+  left, // 1
+}
+
 /// What an item is made of (repair costs, sounds, salvage).
 enum MaterialType {
   stone, // 0

@@ -1,4 +1,5 @@
 import 'package:dawnforge/src/core/components/i_component.dart';
+import 'package:dawnforge/src/core/resources/i_world_object_data.dart';
 
 /// The single component container every world object owns (rule 15). Hosts
 /// forward `addComponent`/`getComponent`/... to their core; nothing else may
@@ -12,6 +13,24 @@ final class WorldObjectCore {
   final Map<String, IComponent> _components = <String, IComponent>{};
 
   IComponent? Function(String key)? _lazyMaterializer;
+
+  IWorldObjectData Function()? _dataProvider;
+
+  /// Wired by the host's `initialize()` so components reach the data soul
+  /// without the core knowing the host type (rule 8: state lives in data;
+  /// components read through here, never cache).
+  void setDataProvider(IWorldObjectData Function() provider) {
+    assert(_dataProvider == null, '[WorldObjectCore] data provider set twice');
+    _dataProvider = provider;
+  }
+
+  /// The host's data soul. Crash when unwired — a component reading data on a
+  /// host that never initialized is invalid state (rule 5).
+  IWorldObjectData get data {
+    final provider = _dataProvider;
+    assert(provider != null, '[WorldObjectCore] read data before initialize()');
+    return provider!();
+  }
 
   /// Registers a builder consulted before reporting any miss (see class doc).
   void setLazyMaterializer(IComponent? Function(String key) materializer) {

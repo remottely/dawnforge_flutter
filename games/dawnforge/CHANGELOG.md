@@ -8,6 +8,14 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.4.0
+
+### 🧹 Internal
+
+- Creatures learned to move, face left and right, get hurt, heal slowly and
+  die — the same rules the Godot version uses, working here now. Still nothing
+  on screen: the drawing part comes next.
+
 ## 0.3.0
 
 ### 🧹 Internal

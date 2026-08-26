@@ -1,4 +1,5 @@
 import 'package:dawnforge/src/core/components/world_object_core.dart';
+import 'package:dawnforge/src/core/resources/i_world_object_data.dart';
 
 /// Base of every behavior component (ECS-lite, Godot repo §4.5). World objects
 /// are containers; game logic lives in `IComponent` subclasses.
@@ -50,4 +51,8 @@ abstract class IComponent {
   /// legitimate answer; a component you require is asserted at the call site.
   T? getSiblingComponent<T extends IComponent>(String key) =>
       core.getComponent<T>(key);
+
+  /// The host's data soul — where ALL mutable game state lives (rule 8).
+  /// Components read through this on every access, never cache.
+  IWorldObjectData get data => core.data;
 }

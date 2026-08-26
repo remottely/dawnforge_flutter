@@ -32,10 +32,16 @@ final class GridPos {
   String toString() => 'GridPos($x, $y)';
 }
 
-/// A continuous world-space position, in world units.
+/// A continuous world-space position or 2D vector, in world units — the
+/// engine's `Vector2`. The Flame boundary (FP3) converts at the edge.
 @immutable
 final class WorldPos {
   const WorldPos(this.x, this.y);
+
+  static const zero = WorldPos(0, 0);
+
+  /// The default look vector (+X).
+  static const right = WorldPos(1, 0);
 
   final double x;
   final double y;
@@ -43,6 +49,27 @@ final class WorldPos {
   WorldPos operator +(WorldPos other) => WorldPos(x + other.x, y + other.y);
   WorldPos operator -(WorldPos other) => WorldPos(x - other.x, y - other.y);
   WorldPos operator *(double scalar) => WorldPos(x * scalar, y * scalar);
+
+  double dot(WorldPos other) => x * other.x + y * other.y;
+
+  double get lengthSquared => x * x + y * y;
+  double get length => math.sqrt(lengthSquared);
+
+  /// The unit vector, or [zero] for the zero vector (same contract as Godot's
+  /// `normalized()`).
+  WorldPos normalized() {
+    final len = length;
+    return len == 0 ? zero : WorldPos(x / len, y / len);
+  }
+
+  /// This vector stepped toward [target] by at most [maxDelta] — Godot's
+  /// `move_toward`, the primitive under acceleration and friction.
+  WorldPos moveToward(WorldPos target, double maxDelta) {
+    final delta = target - this;
+    final distance = delta.length;
+    if (distance <= maxDelta || distance == 0) return target;
+    return this + delta * (maxDelta / distance);
+  }
 
   double distanceTo(WorldPos other) {
     final dx = x - other.x;

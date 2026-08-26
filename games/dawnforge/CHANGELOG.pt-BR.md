@@ -8,6 +8,14 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.4.0
+
+### 🧹 Internal
+
+- As criaturas aprenderam a se mover, olhar para os lados, se machucar, curar
+  aos poucos e morrer — as mesmas regras da versão Godot, funcionando aqui
+  agora. Ainda nada na tela: a parte de desenhar vem em seguida.
+
 ## 0.3.0
 
 ### 🧹 Internal

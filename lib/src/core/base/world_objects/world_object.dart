@@ -25,13 +25,14 @@ abstract class WorldObject {
     return soul!;
   }
 
-  WorldPos position = const WorldPos(0, 0);
+  WorldPos position = WorldPos.zero;
 
   /// Injects the soul. Called by the factory, exactly once, with an instance
   /// the factory already cloned (rule 3).
   void initialize(IWorldObjectData initialData) {
     assert(_data == null, '[$runtimeType] already initialized');
     _data = initialData;
+    core.setDataProvider(() => data);
     setupComponents();
   }
 

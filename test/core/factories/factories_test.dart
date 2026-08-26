@@ -37,7 +37,7 @@ void main() {
 
     test('unknown id crashes at creation (rule 5)', () {
       expect(
-        () => ActorFactory.create('t9_actor_ghost', const WorldPos(0, 0)),
+        () => ActorFactory.create('t9_actor_ghost', WorldPos.zero),
         throwsStateError,
       );
     });
@@ -50,7 +50,7 @@ void main() {
         'has_idle_sway': true,
       });
 
-      final prop = PropFactory.create('t1_prop_bush', const WorldPos(0, 0));
+      final prop = PropFactory.create('t1_prop_bush', WorldPos.zero);
 
       expect(prop.propData.hasIdleSway, isTrue);
     });
