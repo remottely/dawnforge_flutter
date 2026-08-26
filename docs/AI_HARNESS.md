@@ -45,7 +45,7 @@ prohibitions that already exist in writing:
 
 | Hook | Event | Blocks / flags | Encodes |
 |:---|:---|:---|:---|
-| `scripts/ai/hooks/block_forbidden_git.py` | PreToolUse · Bash | `git rebase`, `git commit --amend`, `git commit` without ` -- ` pathspec, `git commit` naming `LEDGER.md` while an ID heads two entries | §Parallel sessions, ledger header |
+| `scripts/ai/hooks/block_forbidden_git.py` | PreToolUse · Bash | `git rebase`, `git commit --amend`, `git commit` without ` -- ` pathspec, `git commit` whose message (`-m`, `-F`, `--file=`) carries AI attribution, `git commit` naming `LEDGER.md` while an ID heads two entries | §Parallel sessions, §Commit message format, ledger header |
 | `scripts/ai/hooks/check_edited_file_rules.py` | PostToolUse · Edit/Write | `pauseEngine()`/`resumeEngine()`, `.paused =` writes, raw pointer reads (`.canvasPosition`/`.devicePosition`) outside `input_helper.dart` | rules 30, 11 |
 
 Contract: exit `2` + stderr = the reason, fed back to the model; exit `0` = silence. The

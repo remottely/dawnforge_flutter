@@ -196,6 +196,15 @@ Body: what and why. Plan step FP1.3. Breaking-save line when rule 32 fired.
 
 Prefix is the exact `pubspec.yaml` version; type ∈ `feat|fix|refactor|config|chore|docs|test|perf`.
 
+**No AI attribution, ever.** A commit message carries what changed and why —
+never a `Co-Authored-By:` naming a model, never a "Generated with" line, never a
+tool's badge or emoji signature. The commit history is the project's engineering
+record and its author is the person who ships it; a machine co-author line is
+noise in the log, and it leaks the tooling into a record that outlives it. This
+holds for every message the repo produces — commits, tags, PR bodies. The
+`block_forbidden_git.py` hook refuses a commit whose message carries one
+(`docs/AI_HARNESS.md` §3).
+
 ---
 
 ## 📋 Testing Policy

@@ -8,6 +8,14 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.14.1
+
+### 🧹 Internal
+
+- O diário de construção do projeto agora leva só os nomes de quem o constrói.
+  Toda anotação antiga foi reescrita para tirar a assinatura de uma ferramenta,
+  e entrou um guarda que se recusa a escrever outra.
+
 ## 0.14.0
 
 ### 🧹 Internal

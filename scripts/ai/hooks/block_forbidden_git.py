@@ -11,6 +11,10 @@ prohibition that already exists in prose, and the stderr message names where:
   `git update-ref`, which touches neither.
 - **`git commit` with no ` -- ` pathspec** — a bare commit sweeps in whatever the
   parallel session happens to have staged.
+- **`git commit` whose message carries AI attribution** — `CLAUDE.md` §Commit message
+  format, *"No AI attribution, ever"*. The message is read wherever it comes from
+  (`-m`, `-F <file>`, `--message=`), because the trailer is usually written into the
+  file long before the commit runs.
 - **`git commit` naming `LEDGER.md` while an ID heads two entries** — the ledger's own
   header, *"IDs are sequential and never reused"*. The session committing second holds
   both entries and is the one that can see it.
@@ -45,6 +49,20 @@ _LEDGER_PATH = "docs/refactoring/LEDGER.md"
 """Matched inside the commit's pathspec. Two sessions appending in the same window both
 read the same maximum ID — the session that commits second has BOTH entries in its tree,
 so it is the one that sees the duplicate and the one that should renumber."""
+
+_AI_ATTRIBUTION = re.compile(
+    r"^\s*(?:Co-Authored-By:\s*(?:Claude|.*<noreply@anthropic\.com>)"
+    r"|🤖\s*Generated with)",
+    re.IGNORECASE | re.MULTILINE,
+)
+"""AI attribution in a commit message, in every shape this tooling emits it. Anchored
+per line (MULTILINE) so a body SENTENCE about co-authorship is never a match — only a
+trailer line is. The history was stripped of 16 of these once; this is what keeps the
+17th from being written."""
+
+_MESSAGE_FLAGS = ("-m", "--message", "-F", "--file")
+"""Flags whose value is (or names) the commit message. Both the inline and the
+file-backed forms are inspected — the repo's own commit ritual uses `-F <msgfile>`."""
 
 
 def _segments(command: str) -> list[str]:
@@ -81,6 +99,37 @@ def _ledger_collision() -> str:
         )
     except Exception:
         return ""
+
+
+def _message_texts(tokens: list[str]) -> list[str]:
+    """Every commit message this argv carries: `-m` values verbatim, `-F` values read
+    off disk. An unreadable file yields nothing — fail-open, like everything here."""
+    texts: list[str] = []
+    index = 1
+    while index < len(tokens):
+        token = tokens[index]
+        value = ""
+        is_file = False
+        if token in _MESSAGE_FLAGS and index + 1 < len(tokens):
+            value = tokens[index + 1]
+            is_file = token in ("-F", "--file")
+            index += 1
+        elif "=" in token and token.split("=", 1)[0] in _MESSAGE_FLAGS:
+            flag, value = token.split("=", 1)
+            is_file = flag in ("-F", "--file")
+        if not value:
+            index += 1
+            continue
+        if is_file:
+            try:
+                from pathlib import Path
+                texts.append(Path(value).read_text(encoding="utf-8"))
+            except Exception:
+                pass  # unreadable — never stand between the model and its tool
+        else:
+            texts.append(value)
+        index += 1
+    return texts
 
 
 def _git_tokens(segment: str) -> list[str] | None:
@@ -133,6 +182,14 @@ def _refusal(command: str) -> str:
                     "sessions). A bare commit sweeps in whatever a parallel session has "
                     "staged. Name every file the task touched, plus pubspec.yaml and both "
                     "CHANGELOGs."
+                )
+            if any(_AI_ATTRIBUTION.search(text) for text in _message_texts(tokens)):
+                return (
+                    "This commit message carries AI attribution, which this repo forbids "
+                    "(CLAUDE.md §Commit message format: 'No AI attribution, ever'). Drop "
+                    "the Co-Authored-By / 'Generated with' line — the history's author is "
+                    "the person who ships it, and a model's name is noise in a record that "
+                    "outlives the tooling. Edit the message file and commit again."
                 )
             if any(_LEDGER_PATH in token for token in tokens):
                 collision = _ledger_collision()

@@ -8,6 +8,14 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.14.1
+
+### 🧹 Internal
+
+- The project's build diary now carries only the names of the people who build
+  it. Every past entry was rewritten to drop a tool's signature, and a guard
+  was added that refuses to write another one.
+
 ## 0.14.0
 
 ### 🧹 Internal
