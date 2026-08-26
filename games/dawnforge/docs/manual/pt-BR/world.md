@@ -12,9 +12,11 @@ uma semente nova, então todo mundo novo é uma surpresa.
 O que você vai ver:
 
 - **Grama** — o chão natural da floresta. Você começa nela.
-- **Água** — o mar. É o azul em volta de toda a terra.
+- **Água** — o mar. É o azul em volta de toda a terra. Não dá para nadar:
+  a beira da água te para.
 - **Montanhas** — chão escuro, em degraus. Elas sobem como escadas: um
-  degrau, dois degraus, três.
+  degrau, dois degraus, três. Elas bloqueiam o caminho — ainda não dá para
+  escalar.
 
 Você sempre começa num pedaço plano e seguro de grama, com espaço aberto
 em volta.

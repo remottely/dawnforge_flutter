@@ -8,6 +8,15 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.13.0
+
+### ✨ New
+
+- The world pushes back now: the sea's edge and mountain walls stop you
+  instead of letting you walk through. Slide along a wall and you keep
+  moving — only the blocked direction stops. (Manual page The World
+  updated.)
+
 ## 0.12.0
 
 ### ✨ New

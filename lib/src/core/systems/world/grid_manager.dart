@@ -1,4 +1,5 @@
 import 'package:dawnforge/src/core/resources/world_objects/grounds/ground_buildable_data.dart';
+import 'package:dawnforge/src/core/resources/world_objects/grounds/ground_empty_data.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/game_constants.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/spatial.dart';
 
@@ -109,4 +110,28 @@ final class GridManager {
 
   /// The wall height at [pos]; 0 means flat — a value, not an absence.
   int getElevationAt(GridPos pos) => _elevationMap[pos] ?? 0;
+
+  // ============================================
+  // BODY BLOCKING (FP3.5)
+  // ============================================
+
+  /// True when a REGISTERED tile blocks a moving body: an impassable empty
+  /// (water and cliff both author `is_passable: false`) or a mountain wall.
+  ///
+  /// An UNREGISTERED tile blocks nothing — the physics mirror of the Godot
+  /// side, where only materialized terrain creates colliders: the streaming
+  /// keeps the window loaded around every body, and the world edge is
+  /// `WorldBoundaryEnforcer`'s job (unported). The stricter "can a body
+  /// STAND here" question (A*'s `is_tile_walkable`, where the void is
+  /// unreachable) arrives with its consumers — pathfinding and placement.
+  ///
+  /// FP3.5 slice: the colliding-prop clause joins with prop occupancy
+  /// (FP4); slabs and mountain climbing with their systems (FP7) — until
+  /// then a wall blocks outright.
+  bool blocksBodyAt(GridPos tilePos) {
+    final groundData = getGroundDataAt(tilePos);
+    if (groundData == null) return false;
+    if (groundData is GroundEmptyData && !groundData.isPassable) return true;
+    return hasElevationAt(tilePos);
+  }
 }

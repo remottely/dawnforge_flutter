@@ -116,4 +116,43 @@ void main() {
       );
     });
   });
+
+  group('GridManager body blocking (FP3.5)', () {
+    test('only registered impassables and walls block; the void does not',
+        () {
+      final fresh = GridManager();
+      const water = GridPos(0, 0);
+      const cliffHole = GridPos(1, 0);
+      const terrain = GridPos(2, 0);
+      const wall = GridPos(3, 0);
+      const unregistered = GridPos(9, 9);
+
+      fresh
+        ..registerGroundData(
+          water,
+          GroundEmptyData(id: 't1_ground_empty_water', isWater: true),
+        )
+        ..registerGroundData(
+          cliffHole,
+          GroundEmptyData(id: 't1_ground_empty_cliff'),
+        )
+        ..registerGroundData(
+          terrain,
+          GroundBuildableData(id: 't1_ground_buildable_terrain'),
+        )
+        ..registerGroundData(
+          wall,
+          GroundBuildableData(id: 't1_ground_buildable_terrain'),
+        )
+        ..registerElevationTile(wall, 2);
+
+      expect(fresh.blocksBodyAt(water), isTrue);
+      expect(fresh.blocksBodyAt(cliffHole), isTrue);
+      expect(fresh.blocksBodyAt(terrain), isFalse);
+      expect(fresh.blocksBodyAt(wall), isTrue, reason: 'a wall is a collider');
+      // No collider exists where nothing materialized — the physics mirror
+      // of the Godot side; the world edge is WorldBoundaryEnforcer's job.
+      expect(fresh.blocksBodyAt(unregistered), isFalse);
+    });
+  });
 }

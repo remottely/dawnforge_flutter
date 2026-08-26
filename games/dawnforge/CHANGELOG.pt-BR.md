@@ -8,6 +8,15 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.13.0
+
+### ✨ New
+
+- Agora o mundo empurra de volta: a beira do mar e as paredes de montanha
+  te param, em vez de deixar atravessar. Deslize ao longo de uma parede e
+  você continua andando — só a direção bloqueada para. (Página O Mundo do
+  manual atualizada.)
+
 ## 0.12.0
 
 ### ✨ New

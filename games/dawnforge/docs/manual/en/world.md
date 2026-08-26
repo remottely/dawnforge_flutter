@@ -12,9 +12,10 @@ seed, so every new world is a surprise.
 What you will see:
 
 - **Grass** — the natural ground of the forest. You start on it.
-- **Water** — the sea. It is the blue all around the land.
+- **Water** — the sea. It is the blue all around the land. You cannot swim:
+  the water's edge stops you.
 - **Mountains** — dark, stepped ground. They rise like stairs: one step,
-  two steps, three.
+  two steps, three. They block your way — you cannot climb them yet.
 
 You always start on a flat, safe patch of grass, with open space all
 around you.

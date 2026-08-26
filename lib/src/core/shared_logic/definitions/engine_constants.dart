@@ -75,4 +75,10 @@ abstract final class EngineConstants {
   /// Godot map view spends on its block bakes: it buys a fast fill and pays
   /// for it in framerate only while the fill lasts.
   static const int groundBakeChunksPerFrame = 16;
+
+  /// Half-extent of an actor's collision body, in tiles (0.25 = an 8px-square
+  /// "feet" box at a 16px tile). Top-down bodies are smaller than a tile so a
+  /// one-tile gap is passable. Placeholder until the per-actor collision
+  /// shape fields (`collision_padding`, shape type) are ported with FP4.
+  static const double actorBodyHalfExtentTiles = 0.25;
 }
