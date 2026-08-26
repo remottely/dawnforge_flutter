@@ -17,9 +17,18 @@ abstract class IVisualObjectData {
     this.frameWidth = GameConstants.tileDimension,
     this.frameHeight = GameConstants.tileDimension,
     this.animationSpeed = 0.15,
+    this.juvenileIdleFrames = 0,
+    this.juvenileWalkFrames = 0,
+    this.juvenileBackwardFrames = 0,
     this.idleFrames = 0,
     this.walkFrames = 0,
     this.backwardFrames = 0,
+    this.voidJuvenileIdleFrames = 0,
+    this.voidJuvenileWalkFrames = 0,
+    this.voidJuvenileBackwardFrames = 0,
+    this.voidIdleFrames = 0,
+    this.voidWalkFrames = 0,
+    this.voidBackwardFrames = 0,
     this.soundsVolume = 1.0,
     this.groups = const <String>[],
   }) {
@@ -43,9 +52,19 @@ abstract class IVisualObjectData {
             )
             .$2,
         animationSpeed = reader.doubleOr('animation_speed', 0.15),
+        juvenileIdleFrames = reader.intOr('juvenile_idle_frames', 0),
+        juvenileWalkFrames = reader.intOr('juvenile_walk_frames', 0),
+        juvenileBackwardFrames = reader.intOr('juvenile_backward_frames', 0),
         idleFrames = reader.intOr('idle_frames', 0),
         walkFrames = reader.intOr('walk_frames', 0),
         backwardFrames = reader.intOr('backward_frames', 0),
+        voidJuvenileIdleFrames = reader.intOr('void_juvenile_idle_frames', 0),
+        voidJuvenileWalkFrames = reader.intOr('void_juvenile_walk_frames', 0),
+        voidJuvenileBackwardFrames =
+            reader.intOr('void_juvenile_backward_frames', 0),
+        voidIdleFrames = reader.intOr('void_idle_frames', 0),
+        voidWalkFrames = reader.intOr('void_walk_frames', 0),
+        voidBackwardFrames = reader.intOr('void_backward_frames', 0),
         soundsVolume = reader.doubleOr('sounds_volume', 1),
         groups = reader.stringListOr('groups') {
     _validate();
@@ -66,9 +85,23 @@ abstract class IVisualObjectData {
   final int frameWidth;
   final int frameHeight;
   final double animationSpeed;
+
+  // Animation frame counts per canonical sheet row (SpriteAtlasLayout): a row
+  // exists in the .png exactly when its count is above zero. Ground rows only
+  // in this slice — the flight rows are IActorData fields, all currently
+  // authored 0, and arrive with the flight system.
+  final int juvenileIdleFrames;
+  final int juvenileWalkFrames;
+  final int juvenileBackwardFrames;
   final int idleFrames;
   final int walkFrames;
   final int backwardFrames;
+  final int voidJuvenileIdleFrames;
+  final int voidJuvenileWalkFrames;
+  final int voidJuvenileBackwardFrames;
+  final int voidIdleFrames;
+  final int voidWalkFrames;
+  final int voidBackwardFrames;
 
   /// Multiplies every sound this object plays.
   final double soundsVolume;

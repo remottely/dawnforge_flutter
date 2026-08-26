@@ -5,7 +5,7 @@ publish_to: "none"
 
 # 0.MINOR.PATCH+BUILD — major locked at 0 (rule 14). Bumped from HEAD in the same
 # command as the commit (CLAUDE.md §Parallel sessions).
-version: 0.6.0+6
+version: 0.7.0+7
 
 environment:
   sdk: ^3.12.0-14.0.dev
@@ -34,3 +34,22 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  # Every folder the pipeline writes into (a Flutter asset dir includes only
+  # its DIRECT files, so each is listed). A new content folder joins this list
+  # in the same commit the pipeline first writes it — until step 08 grows a
+  # generator for this block.
+  assets:
+    - assets/generated/dawnforge/forge_almanac/
+    - assets/generated/dawnforge/forge_almanac/01_biomes/t1/actors/
+    - assets/generated/dawnforge/forge_almanac/01_biomes/t1/actors/sprites/
+    - assets/generated/dawnforge/forge_almanac/01_biomes/t1/ground/
+    - assets/generated/dawnforge/forge_almanac/01_biomes/t1/items/
+    - assets/generated/dawnforge/forge_almanac/01_biomes/t1/items/sprites/
+    - assets/generated/dawnforge/forge_almanac/01_biomes/t1/props/
+    - assets/generated/dawnforge/forge_almanac/01_biomes/t1/props/sprites/
+    - assets/generated/dawnforge/forge_almanac/03_farm/t1/
+    - assets/generated/dawnforge/forge_almanac/03_farm/t1/sprites/
+    - assets/generated/dawnforge/forge_almanac/03_farm/t2/
+    - assets/generated/dawnforge/forge_almanac/03_farm/t2/sprites/
+    - assets/generated/dawnforge/locales/

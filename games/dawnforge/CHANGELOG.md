@@ -8,6 +8,14 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.7.0
+
+### ✨ New
+
+- The game opened its eyes: a boar you can walk with the keyboard (WASD or
+  arrows), on a green field with a palm tree, rocks and plants around it. The
+  camera follows you. It is small, but it is the first thing you can PLAY.
+
 ## 0.6.0
 
 ### 🎨 Art & Audio

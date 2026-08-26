@@ -8,6 +8,14 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.7.0
+
+### ✨ New
+
+- O jogo abriu os olhos: um javali que você guia com o teclado (WASD ou
+  setas), num campo verde com uma palmeira, pedras e plantas em volta. A
+  câmera te acompanha. É pequeno, mas é a primeira coisa que dá para JOGAR.
+
 ## 0.6.0
 
 ### 🎨 Art & Audio

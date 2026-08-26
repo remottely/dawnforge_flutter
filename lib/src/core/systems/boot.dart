@@ -3,6 +3,7 @@ import 'package:dawnforge/src/core/registries/ground_registry.dart';
 import 'package:dawnforge/src/core/registries/item_registry.dart';
 import 'package:dawnforge/src/core/registries/prop_registry.dart';
 import 'package:dawnforge/src/core/systems/eventing/events.dart';
+import 'package:dawnforge/src/core/systems/input/input_helper.dart';
 import 'package:dawnforge/src/core/systems/localization/localization_system.dart';
 import 'package:dawnforge/src/core/systems/managers/game_input_manager.dart';
 import 'package:dawnforge/src/core/systems/timing/sim_clock.dart';
@@ -25,6 +26,7 @@ void registerCoreSystems() {
     ..registerSingleton<SimClock>(SimClock())
     ..registerSingleton<GridManager>(GridManager())
     ..registerSingleton<GameInputManager>(GameInputManager())
+    ..registerSingleton<InputHelper>(InputHelper())
     ..registerSingleton<LocalizationSystem>(LocalizationSystem())
     ..registerSingleton<ActorRegistry>(ActorRegistry())
     ..registerSingleton<PropRegistry>(PropRegistry())

@@ -1,9 +1,9 @@
+import 'package:dawnforge/src/core/render/dawnforge_game.dart';
 import 'package:dawnforge/src/core/systems/boot.dart';
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
-/// Tessera-Dart boot shell. FP3 replaces the placeholder body with the Flame
-/// `GameWidget`; until then the app proves exactly one thing — the core
-/// systems register and the tree builds.
+/// Tessera-Dart boot shell: core systems register, then the Flame game runs.
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   registerCoreSystems();
@@ -18,13 +18,8 @@ class DawnforgeApp extends StatelessWidget {
     return const MaterialApp(
       title: 'Dawnforge',
       home: Scaffold(
-        backgroundColor: Colors.black,
-        body: Center(
-          child: Text(
-            // Boot placeholder, not player-facing content — replaced in FP3.
-            'Tessera-Dart — FP1',
-            style: TextStyle(color: Colors.white),
-          ),
+        body: GameWidget<DawnforgeGame>.controlled(
+          gameFactory: DawnforgeGame.new,
         ),
       ),
     );

@@ -17,4 +17,20 @@ abstract final class ContentPaths {
 
   /// Generated translation tables of one game.
   static String localesRoot(String gameName) => '${gameRoot(gameName)}/locales';
+
+  /// The pack's internal URI scheme, shared verbatim with the Godot engine.
+  static const String resPrefix = 'res://data/';
+
+  /// Maps a `res://data/…` path the pack authors (spritesheets, audio) to the
+  /// bundled asset key this engine serves it from. THE one mapping (rule 29):
+  /// pipeline steps 02/03 write to the same place.
+  static String resolveRes(String gameName, String resPath) {
+    if (!resPath.startsWith(resPrefix)) {
+      throw StateError(
+        '[ContentPaths] not a pack resource path: $resPath '
+        '(expected $resPrefix…)',
+      );
+    }
+    return '${gameRoot(gameName)}/${resPath.substring(resPrefix.length)}';
+  }
 }
