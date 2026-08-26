@@ -8,6 +8,14 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.10.1
+
+### 🧹 Internal
+
+- Uma checagem interna que às vezes gritava alarme falso em computadores
+  ocupados aprendeu a esperar a vez dela: agora observa o jogo REALMENTE
+  terminar de acordar, em vez de contar um número fixo de piscadas.
+
 ## 0.10.0
 
 ### 🧹 Internal

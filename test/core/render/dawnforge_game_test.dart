@@ -23,7 +23,27 @@ void main() {
     // boot the game inside runAsync so sprite sheets actually load.
     await tester.runAsync(() async {
       await tester.pumpWidget(GameWidget<DawnforgeGame>(game: game));
-      for (var i = 0; i < 40 && game.simObjects.length < 6; i++) {
+      // Wait on the FULL render-ready condition, not just the sim objects:
+      // each renderer's sheet decodes after its host spawns, so a wait that
+      // stops at simObjects raced the sprite-child assertions below — and
+      // lost on a saturated machine (parallel test isolates, sibling
+      // sessions building). The ceiling is generous on purpose: a broken
+      // boot still fails, at the ceiling instead of by coin flip.
+      bool renderReady() {
+        final renderers =
+            game.world.children.whereType<WorldObjectRenderer>().toList();
+        return game.simObjects.length == 6 &&
+            renderers.length == 6 &&
+            renderers.every(
+              (renderer) =>
+                  renderer.children.whereType<SpriteComponent>().isNotEmpty ||
+                  renderer.children
+                      .whereType<SpriteAnimationGroupComponent<String>>()
+                      .isNotEmpty,
+            );
+      }
+
+      for (var i = 0; i < 400 && !renderReady(); i++) {
         await tester.pump(const Duration(milliseconds: 25));
         await Future<void>.delayed(const Duration(milliseconds: 5));
       }

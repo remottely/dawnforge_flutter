@@ -8,6 +8,14 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.10.1
+
+### 🧹 Internal
+
+- A self-check that sometimes cried wolf on busy computers learned to wait
+  its turn: it now watches for the game to REALLY finish waking up instead
+  of counting a fixed number of blinks.
+
 ## 0.10.0
 
 ### 🧹 Internal
