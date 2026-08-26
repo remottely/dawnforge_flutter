@@ -8,6 +8,16 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.11.0
+
+### 🧹 Internal
+
+- The world learned to build itself around you, piece by piece: as you
+  walk, the ground ahead quietly appears and the ground far behind is put
+  away — a little each frame, never all at once, so the game stays smooth.
+  Walking along an edge never makes it flicker. Fourth of five steps toward
+  the endless world; the last one puts it on screen.
+
 ## 0.10.1
 
 ### 🧹 Internal

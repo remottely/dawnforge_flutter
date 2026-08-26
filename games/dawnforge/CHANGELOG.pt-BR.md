@@ -8,6 +8,17 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.11.0
+
+### 🧹 Internal
+
+- O mundo aprendeu a se construir em volta de você, pedaço por pedaço:
+  enquanto você anda, o chão à frente vai aparecendo em silêncio e o chão
+  lá atrás é guardado — um pouquinho a cada quadro, nunca tudo de uma vez,
+  para o jogo continuar leve. Andar na beirada de um pedaço nunca faz ele
+  piscar. Quarto de cinco passos rumo ao mundo sem fim; o último o coloca
+  na tela.
+
 ## 0.10.1
 
 ### 🧹 Internal

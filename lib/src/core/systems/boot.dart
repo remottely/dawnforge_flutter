@@ -8,6 +8,7 @@ import 'package:dawnforge/src/core/systems/input/input_helper.dart';
 import 'package:dawnforge/src/core/systems/localization/localization_system.dart';
 import 'package:dawnforge/src/core/systems/managers/game_input_manager.dart';
 import 'package:dawnforge/src/core/systems/timing/sim_clock.dart';
+import 'package:dawnforge/src/core/systems/world/chunk_streaming_system.dart';
 import 'package:dawnforge/src/core/systems/world/grid_manager.dart';
 import 'package:dawnforge/src/core/systems/world/procedural_world_manager.dart';
 import 'package:get_it/get_it.dart';
@@ -37,7 +38,8 @@ void registerCoreSystems() {
     ..registerSingleton<BiomeRegistry>(BiomeRegistry())
     // Registered at boot, initialized when a world starts (after the content
     // registries above are loaded) — same split as the Godot autoload.
-    ..registerSingleton<ProceduralWorldManager>(ProceduralWorldManager());
+    ..registerSingleton<ProceduralWorldManager>(ProceduralWorldManager())
+    ..registerSingleton<ChunkStreamingSystem>(ChunkStreamingSystem());
 }
 
 /// Tears down every registration — tests only; the app never unboots.

@@ -45,4 +45,29 @@ abstract final class EngineConstants {
   /// not one neighborhood of it.
   static const int proceduralDensitySampleSide = 128;
   static const int proceduralDensitySampleStride = 13;
+
+  /// Chunk rings kept loaded around the player's chunk (2 = center chunk +
+  /// 24 neighbors, a 5x5 window — 40x40 tiles at chunk size 8).
+  static const int proceduralChunkLoadRadius = 2;
+
+  /// Chunk rings beyond which tracked chunks unload. Must exceed
+  /// [proceduralChunkLoadRadius] — the gap is hysteresis, so walking along a
+  /// chunk border never load/unload-thrashes.
+  static const int proceduralChunkUnloadRadius = 3;
+
+  /// Extra streaming reach past the visible screen, as a fraction of each
+  /// edge (0.2 = 20% beyond every border) — content must exist before the
+  /// camera can show it, at every zoom.
+  static const double proceduralStreamScreenMargin = 0.2;
+
+  /// Per-frame time budget (µs) for streaming column work during gameplay.
+  /// The unload and load loops share it: each always completes at least one
+  /// column (the window must advance every frame) and stops once the frame's
+  /// streaming time crosses this line. Budgeting by TIME bounds the worst
+  /// frame — a pure-water column is near-free, a coast column is not.
+  static const int proceduralStreamFrameBudgetUsec = 1200;
+
+  /// Chunk columns per frame while the initial window is still materializing
+  /// — the loading screen hides the burst, so boot fills fast.
+  static const int proceduralBootColumnsPerFrame = 32;
 }
