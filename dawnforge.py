@@ -12,10 +12,9 @@ Commands:
     import         Convert almanac .md into generated JSON (step 04)
     full           Run every ported step, in order
 
-Unported steps (numbers reserved, arriving with their systems): 02 sprites,
-03 placeholders, 05 translations, 06 islands, 07 biome-spawns,
-08 shared-logic (→ generates .dart here), 09 procedural, 10 component-keys,
-11 biome-terrain, 12 sfx-defaults.
+Unported steps (numbers reserved, arriving with their systems): 06 islands,
+07 biome-spawns, 08 shared-logic (→ generates .dart here), 09 procedural
+spawns, 12 sfx-defaults.
 """
 import argparse
 import importlib
@@ -35,10 +34,12 @@ STEP_MODULES: dict[str, str] = {
     "import": "04_import_almanac_to_json",
     "translations": "05_build_translation_tables",
     "component-keys": "10_generate_component_keys",
+    "biome-terrain": "11_import_biome_terrain_to_json",
 }
 
 # Steps that can verify the generated files against their SSOT without writing.
-CHECKABLE: tuple[str, ...] = ("import", "translations", "component-keys")
+CHECKABLE: tuple[str, ...] = (
+    "import", "translations", "component-keys", "biome-terrain")
 
 
 def run_step(command: str, dry_run: bool, check: bool) -> int:

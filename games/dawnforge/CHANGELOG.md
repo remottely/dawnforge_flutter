@@ -8,6 +8,15 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.8.0
+
+### 🧹 Internal
+
+- The world learned its first recipe for making ground: the forest's terrain
+  numbers (how much water, how much mountain) now travel from the pack into
+  the game, together with the natural-ground tile they will paint. Nothing
+  visible yet — first of five steps toward a world that goes on forever.
+
 ## 0.7.1
 
 ### 🐛 Fixed

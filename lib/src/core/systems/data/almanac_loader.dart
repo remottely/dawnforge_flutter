@@ -1,4 +1,5 @@
 import 'package:dawnforge/src/core/registries/actor_registry.dart';
+import 'package:dawnforge/src/core/registries/biome_registry.dart';
 import 'package:dawnforge/src/core/registries/ground_registry.dart';
 import 'package:dawnforge/src/core/registries/item_registry.dart';
 import 'package:dawnforge/src/core/registries/prop_registry.dart';
@@ -16,10 +17,14 @@ final class AlmanacLoader {
   const AlmanacLoader();
 
   /// Routes every manifest entry into its typed registry by type family
-  /// (`actor_*` / `prop_*` / `ground_*` / `item_*` — the pack's `type:` is the
-  /// snake_case concrete class name). An unknown family is invalid content:
-  /// crash, so the loader gains the new registry in the same commit that
-  /// introduces the family (rule 5).
+  /// (`actor_*` / `prop_*` / `ground_*` / `item_*` / `biome_*` — the pack's
+  /// `type:` is the snake_case concrete class name). An unknown family is
+  /// invalid content: crash, so the loader gains the new registry in the same
+  /// commit that introduces the family (rule 5).
+  ///
+  /// Manifest-driven and root-agnostic: the almanac manifest (step 04) and
+  /// the biome manifest (step 11) both route through here, each with a
+  /// `readEntry` rooted at its own tree.
   void loadFromManifest(
     Map<String, Object?> manifest,
     Map<String, Object?> Function(String relativePath) readEntry,
@@ -46,6 +51,8 @@ final class AlmanacLoader {
         locator<GroundRegistry>().registerJson(json);
       } else if (type.startsWith('item_')) {
         locator<ItemRegistry>().registerJson(json);
+      } else if (type.startsWith('biome_')) {
+        locator<BiomeRegistry>().registerJson(json);
       } else {
         throw StateError(
           '[AlmanacLoader] unknown type family "$type" ($path) — '

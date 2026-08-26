@@ -31,6 +31,7 @@ shared with the Godot repo. Runs via the repo `.venv` (`requirements.txt`).
 | `.venv/bin/python dawnforge.py import [--dry-run\|--check]` | step 04: almanac `.md` → `assets/generated/<game>/forge_almanac/**.json` + `manifest.json` |
 | `.venv/bin/python dawnforge.py translations [--dry-run\|--check]` | step 05: `translations:` blocks → `assets/generated/<game>/locales/<locale>.json`; `--check` also fails on cross-locale holes |
 | `.venv/bin/python dawnforge.py component-keys [--dry-run\|--check]` | step 10: component classes → `lib/src/generated/component_keys.dart` (rule 16) |
+| `.venv/bin/python dawnforge.py biome-terrain [--dry-run\|--check]` | step 11: `world/procedural/*.md` terrain densities → `assets/generated/<game>/world/biomes/**.json` + `manifest.json` |
 | `.venv/bin/python dawnforge.py full [--check]` | every ported step, in order |
 
 ## scripts/lib/ — shared modules (not commands)

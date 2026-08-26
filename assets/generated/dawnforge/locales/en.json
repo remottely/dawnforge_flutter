@@ -59,6 +59,8 @@
     "forge_almanac.01_biomes.t1.props.t1_prop_rock_moss.display_name": "Moss Rock",
     "forge_almanac.01_biomes.t1.props.t1_prop_vein_copper.description": "A vein of copper running through the stone. Break it with a pickaxe and the ore is yours.",
     "forge_almanac.01_biomes.t1.props.t1_prop_vein_copper.display_name": "Copper Vein",
+    "forge_almanac.02_workstations.01_smelter.t1.t1_ground_buildable_terrain.description": "The plain ground of wherever you are standing. Use it to fill a hole or flatten a patch.",
+    "forge_almanac.02_workstations.01_smelter.t1.t1_ground_buildable_terrain.display_name": "Natural Ground",
     "forge_almanac.03_farm.t1.t1_item_consumable_fruit_apple.description": "A red apple picked straight off the tree, still cold from the shade.\n\nWhen you use it:\n- Health: +1\n- Energy: +5",
     "forge_almanac.03_farm.t1.t1_item_consumable_fruit_apple.display_name": "Apple",
     "forge_almanac.03_farm.t1.t1_item_consumable_vegetable_wheat.description": "A handful of golden wheat. Grind it, bake it, and you have bread.\n\nWhen you use it:\n- Health: +1\n- Energy: +5",

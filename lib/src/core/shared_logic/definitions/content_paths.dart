@@ -18,6 +18,10 @@ abstract final class ContentPaths {
   /// Generated translation tables of one game.
   static String localesRoot(String gameName) => '${gameRoot(gameName)}/locales';
 
+  /// Generated biome terrain configs of one game (pipeline step 11).
+  static String worldBiomesRoot(String gameName) =>
+      '${gameRoot(gameName)}/world/biomes';
+
   /// The pack's internal URI scheme, shared verbatim with the Godot engine.
   static const String resPrefix = 'res://data/';
 

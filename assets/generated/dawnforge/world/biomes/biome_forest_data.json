@@ -1,0 +1,9 @@
+{
+  "id": "biome_forest_data",
+  "terrain_wall_height2_share": 0.25,
+  "terrain_wall_height3_share": 0.08,
+  "terrain_wall_share": 0.15,
+  "terrain_water_share": 0.08,
+  "tier": 1,
+  "type": "biome_data"
+}

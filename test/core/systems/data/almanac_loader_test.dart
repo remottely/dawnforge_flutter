@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dawnforge/src/core/registries/actor_registry.dart';
+import 'package:dawnforge/src/core/registries/biome_registry.dart';
 import 'package:dawnforge/src/core/registries/ground_registry.dart';
 import 'package:dawnforge/src/core/registries/item_registry.dart';
 import 'package:dawnforge/src/core/registries/prop_registry.dart';
@@ -58,5 +59,43 @@ void main() {
     expect(clover.hidesActors, isTrue);
     expect(clover.allowsActorOverlap, isTrue);
     expect(clover.currentHealth, clover.maxHealth);
+  });
+
+  test('the procedural terrain ground parses with its authored knobs (FP3.4)',
+      () {
+    const AlmanacLoader().loadFromManifest(readJson('manifest.json'), readJson);
+
+    final terrain =
+        locator<GroundRegistry>().getGround('t1_ground_buildable_terrain');
+    expect(terrain.isDenseTerrain, isTrue);
+    expect(terrain.farmPropId, 't1_prop_soil');
+    expect(terrain.farmTools, [ToolType.shovel]);
+    expect(terrain.allowsActorOverlap, isFalse);
+    expect(terrain.spritesheetPath, isNotEmpty,
+        reason: 'the chunk renderer bakes this tile from its sprite');
+  });
+
+  test('the biome manifest boots the BiomeRegistry (FP3.4, step 11)', () {
+    final biomesDir =
+        Directory(ContentPaths.worldBiomesRoot(GameConstants.gameName));
+    Map<String, Object?> readBiome(String relativePath) =>
+        jsonDecode(File('${biomesDir.path}/$relativePath').readAsStringSync())!
+            as Map<String, Object?>;
+
+    final manifest = readBiome('manifest.json');
+    const AlmanacLoader().loadFromManifest(manifest, readBiome);
+
+    final entries = (manifest['entries']! as List).cast<Map<String, Object?>>();
+    expect(locator<BiomeRegistry>().count, entries.length);
+    expect(entries, isNotEmpty);
+
+    // The forest's densities as procedural_forest.md authors them — shares of
+    // the world, converted to noise cuts by the ProceduralWorldManager.
+    final forest = locator<BiomeRegistry>().getBiome('biome_forest_data');
+    expect(forest.tier, 1);
+    expect(forest.terrainWaterShare, 0.08);
+    expect(forest.terrainWallShare, 0.15);
+    expect(forest.terrainWallHeight2Share, 0.25);
+    expect(forest.terrainWallHeight3Share, 0.08);
   });
 }

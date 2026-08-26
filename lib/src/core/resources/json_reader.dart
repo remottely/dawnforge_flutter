@@ -25,6 +25,18 @@ final class JsonReader {
     return value;
   }
 
+  int requiredInt(String key) {
+    final value = _json[key];
+    if (value is! int) _wrongType(key, 'an int');
+    return value;
+  }
+
+  double requiredDouble(String key) {
+    final value = _json[key];
+    if (value is! num) _wrongType(key, 'a number');
+    return value.toDouble();
+  }
+
   String stringOr(String key, String declaredDefault) {
     final value = _json[key];
     if (value == null) return declaredDefault;

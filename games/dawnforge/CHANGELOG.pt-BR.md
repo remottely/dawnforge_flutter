@@ -8,6 +8,15 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.8.0
+
+### 🧹 Internal
+
+- O mundo aprendeu sua primeira receita de fazer chão: os números de terreno
+  da floresta (quanta água, quanta montanha) agora viajam do pack para o
+  jogo, junto com o tile de chão natural que eles vão pintar. Nada visível
+  ainda — primeiro de cinco passos rumo a um mundo que não acaba.
+
 ## 0.7.1
 
 ### 🐛 Fixed

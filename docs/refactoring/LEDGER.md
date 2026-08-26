@@ -12,7 +12,12 @@
 
 ## Open
 
-*(no entries yet)*
+### L-003 · Cross-repo pointers name a Godot repo path that no longer exists
+
+- **Lens:** docs / harness
+- **Evidence:** `CLAUDE.md` (Project Overview, §Key File Locations) and `docs/AI_HARNESS.md:68` point at `~/Documents/godot/remottely/dawnforge_project`; at 0.7.1 the repo lives at `~/Documents/godot/remottely/tessera_project` (engine under `tessera/src/`, per-game constants moved to `games/<game>/`).
+- **Cost of leaving it:** every spec lookup driven by these docs fails silently (empty `find`/`ls`), and each new session re-discovers the rename by hand before any port work starts.
+- **Found while:** FP3.4a — locating `procedural_map_view.gd` and the chunk-streaming spec to port.
 
 ## Drained
 

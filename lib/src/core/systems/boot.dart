@@ -1,4 +1,5 @@
 import 'package:dawnforge/src/core/registries/actor_registry.dart';
+import 'package:dawnforge/src/core/registries/biome_registry.dart';
 import 'package:dawnforge/src/core/registries/ground_registry.dart';
 import 'package:dawnforge/src/core/registries/item_registry.dart';
 import 'package:dawnforge/src/core/registries/prop_registry.dart';
@@ -31,7 +32,8 @@ void registerCoreSystems() {
     ..registerSingleton<ActorRegistry>(ActorRegistry())
     ..registerSingleton<PropRegistry>(PropRegistry())
     ..registerSingleton<GroundRegistry>(GroundRegistry())
-    ..registerSingleton<ItemRegistry>(ItemRegistry());
+    ..registerSingleton<ItemRegistry>(ItemRegistry())
+    ..registerSingleton<BiomeRegistry>(BiomeRegistry());
 }
 
 /// Tears down every registration — tests only; the app never unboots.
