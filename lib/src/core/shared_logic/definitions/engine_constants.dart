@@ -20,4 +20,29 @@ abstract final class EngineConstants {
   /// Health regenerates in half-point steps: the hearts display draws half
   /// hearts, so a rule stated as "half a heart every hour" must be payable.
   static const double healthRegenStep = 0.5;
+
+  // ==== Procedural world (FP3.4) — values shared with the Godot spec ====
+
+  /// Highest mountain elevation the surface generator may emit (levels 2..4
+  /// map to heights 1..[mountainMaxHeight]).
+  static const int mountainMaxHeight = 3;
+
+  /// Debug pin: a non-zero value makes every fresh world identical. 0 rolls a
+  /// seed per world (`ProceduralWorldManager.resolveNewWorldSeed`).
+  static const int proceduralWorldSeed = 0;
+
+  /// Frequency of the surface height-noise field, in cycles per tile.
+  static const double proceduralNoiseFrequency = 0.03;
+
+  /// Ascending threshold count of the grayscale level scan — 5 levels: water,
+  /// terrain, and mountain heights 1..3.
+  static const int proceduralTerrainCutCount = 4;
+
+  /// The quantile table samples the height noise on a
+  /// [proceduralDensitySampleSide]² grid, [proceduralDensitySampleStride]
+  /// tiles apart — the stride sits past the noise's feature wavelength, so
+  /// consecutive samples are uncorrelated and the table describes the field,
+  /// not one neighborhood of it.
+  static const int proceduralDensitySampleSide = 128;
+  static const int proceduralDensitySampleStride = 13;
 }

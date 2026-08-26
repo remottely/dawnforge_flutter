@@ -7,6 +7,10 @@ abstract final class GameConstants {
   /// Side of one grid tile, in world units (pixels at scale 1).
   static const int tileDimension = 16;
 
+  /// Side of one streaming chunk, in TILES (same derivation as the Godot
+  /// `game_constants.gd`: half the tile dimension — 8 tiles at a 16px tile).
+  static const int proceduralChunkSize = tileDimension ~/ 2;
+
   /// Fixed simulation step, in seconds. The sim advances only in whole steps
   /// (SimClock accumulates variable frame dt) — study risk #5: the simulation is
   /// multiplayer-shaped, so it ticks on a deterministic clock from day one.

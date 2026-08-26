@@ -8,6 +8,16 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.9.0
+
+### 🧹 Internal
+
+- Nasceu o gerador de mundo: dê a ele um número-semente e ele decide, para
+  qualquer lugar que você perguntar, se ali tem água, grama ou montanha — e
+  sempre dá a mesma resposta para a mesma semente. Montanhas sobem em
+  degraus, como uma pirâmide, e o ponto de partida é sempre chão plano.
+  Ainda nada na tela — segundo de cinco passos rumo ao mundo sem fim.
+
 ## 0.8.0
 
 ### 🧹 Internal

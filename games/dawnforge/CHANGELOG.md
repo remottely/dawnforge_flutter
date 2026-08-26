@@ -8,6 +8,16 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.9.0
+
+### 🧹 Internal
+
+- The world generator was born: give it a seed number and it decides, for
+  any spot you ask, whether there is water, grass or mountain there — and it
+  always gives the same answer for the same seed. Mountains rise in steps,
+  like a pyramid, and the starting point is always flat ground. Still
+  nothing on screen — second of five steps toward the endless world.
+
 ## 0.8.0
 
 ### 🧹 Internal
