@@ -8,6 +8,14 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.19.1
+
+### 🧹 Internal
+
+- The endless world passed its speed test: walking without stopping, the
+  game stayed at 120 drawings a second — twice as smooth as the target it
+  had to hit. The world-building keeps up with you.
+
 ## 0.19.0
 
 ### ✨ New

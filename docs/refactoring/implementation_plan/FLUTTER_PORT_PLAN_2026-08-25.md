@@ -15,8 +15,8 @@
 | FP0 Reset & harness | gate met 2026-08-25 (FP0.9 skills pending) | harness scripts run; hooks wired; suite command green on empty project |
 | FP1 Core foundation | gate met 2026-08-26 (FP1.5 component slice, FP1.9 domain rules pending) | `flutter test` green over events/registry/factory/component/FSM/grid with zero Flame imports |
 | FP2 Pipeline retarget | gate met 2026-08-26 (FP2.3 sprites, FP2.4 translations, FP2.5 component-keys pending) | `dawnforge.py full` emits JSON; registries boot from a real pack slice; `--check` clean |
-| FP3 World & rendering | pending | player walks a chunked world at 60fps with debug overlay proving frame budget |
-| FP4 Gameplay loop | pending | harvest → craft → place loop playable end to end |
+| FP3 World & rendering | gate met 2026-08-26 (120fps hand-run, macOS) | player walks a chunked world at 60fps with debug overlay proving frame budget |
+| FP4 Gameplay loop | in progress (FP4.1 + FP4.2a done) | harvest → craft → place loop playable end to end |
 | FP5 Surfaces & UX | pending | HUD + inventory + menu with blocker stack, no pause anywhere |
 | FP6 Persistence | pending | save/load round-trip; reset_local_save.py works |
 | FP7 Breadth systems | pending | (per-system sub-gates: time, spawning, progression, quests, audio, i18n, minigames) |
@@ -105,10 +105,22 @@ sector model (`shared_logic/`, `domain/`, `resources/`, `registries/`, `factorie
 
 ## FP4 — First full gameplay loop
 
-- **FP4.1** Props (harvestable) + drops system + item pickups.
-- **FP4.2** Inventory + hotbar (domain rules + UI surface).
+- **FP4.1** Props (harvestable) + drops system + item pickups — **done 2026-08-26**, in
+  four slices: (a) loot tables + biome population parse, (b) `DropRules`, (c) physical
+  pickups (drop → landing → magnet → collect), (d) procedural prop scatter + grid prop
+  occupancy. *Plan edit (working agreement): the prop half of **spawning moved here from
+  FP7** — harvesting needs something authored to harvest, and the pack has carried the
+  population tables since FP3.4a. FP7's spawning entry now covers actor packs, respawn
+  and rehydration. "Harvestable" itself is FP4.3a's damage verb: FP4.1 built everything
+  a harvest produces, not the swing.*
+- **FP4.2** Inventory + hotbar (domain rules + UI surface) — **(a) domain done 2026-08-26**
+  (rules + slots in the data soul + component). (b) is the surface, and it pulls
+  `UIStateMachine` + the single back-press arbiter forward from FP5.1 (decision: FP4 ships
+  the definitive surface, not a throwaway).
 - **FP4.3** Tools in hand; the place/destroy/transform verb split (Godot rule 33) via
-  `ActorOccupancyHelper` + permission helper ports.
+  `ActorOccupancyHelper` + permission helper ports. *Scope edit: ground destruction
+  (digging a terrain tile + the empty-tile flood) is deferred to FP7 with bridges/cave
+  floor — the gate needs place / destroy-prop / transform-farm, and all three are here.*
 - **FP4.4** Farming transform chain (till/water/plant/grow via time system minimal core).
 - **FP4.5** Crafting at a workstation prop.
 - **Gate:** harvest → craft → place, playable, suite green.
@@ -130,7 +142,11 @@ sector model (`shared_logic/`, `domain/`, `resources/`, `registries/`, `factorie
 
 ## FP7 — Breadth systems (each independently parkable)
 
-Time system full · spawning/procedural rules · progression/XP/skill trees · quests +
+Time system full · spawning/procedural rules (**prop scatter landed early in FP4.1d** —
+what remains here is actor packs, respawn and rehydration) · the tier field
+(domain-warped Voronoi + per-cell tier rolls: the `ProceduralWorldManager.initialize`
+crash on a second biome is the port obligation waiting for it) · ground destruction +
+bridges/cave floor (deferred from FP4.3) · progression/XP/skill trees · quests +
 achievements · thermal · audio system + SFX defaults (step 12) · minigames frame +
 fishing · cosmetics. Order decided per study interest at the time — this is the
 "new genres" playground the track exists for.

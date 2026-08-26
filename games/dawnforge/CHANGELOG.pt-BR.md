@@ -8,6 +8,14 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.19.1
+
+### 🧹 Internal
+
+- O mundo sem fim passou no teste de velocidade: andando sem parar, o jogo
+  ficou em 120 desenhos por segundo — o dobro da meta que ele precisava
+  bater. A construção do mundo acompanha você.
+
 ## 0.19.0
 
 ### ✨ New
