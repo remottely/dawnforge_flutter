@@ -8,6 +8,15 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.16.0
+
+### 🧹 Internal
+
+- The game learned the math of loot: how a chance decides if something
+  drops, and how a "more loot" bonus always means MORE — even a small bonus
+  now pays out its fair share over time instead of quietly rounding away to
+  nothing.
+
 ## 0.15.0
 
 ### 🧹 Internal

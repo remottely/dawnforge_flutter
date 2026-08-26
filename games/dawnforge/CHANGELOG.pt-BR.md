@@ -8,6 +8,15 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.16.0
+
+### 🧹 Internal
+
+- O jogo aprendeu a matemática dos tesouros: como uma chance decide se algo
+  cai, e como um bônus de "mais itens" sempre significa MAIS — até um bônus
+  pequeno agora paga a parte justa dele com o tempo, em vez de arredondar
+  quieto para nada.
+
 ## 0.15.0
 
 ### 🧹 Internal
