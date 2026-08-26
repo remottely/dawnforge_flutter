@@ -8,6 +8,14 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.2.0
+
+### 🧹 Internal
+
+- O motor aprendeu a forma de cada coisa do mundo: atores, objetos, pisos e
+  itens agora existem como dados que o jogo sabe ler, e as fábricas que os
+  constroem com segurança. Ainda nada jogável — isto é trabalho de fundação.
+
 ## 0.1.0
 
 ### 🧹 Internal

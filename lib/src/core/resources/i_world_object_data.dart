@@ -1,23 +1,100 @@
-/// Base of every world-object data class — the Dart port of the self-validating
-/// Godot `Resource` layer (§4.4): *data that exists is valid data*. Subclasses
-/// assert their invariants in their constructors, so an instance you can hold
-/// is an instance you can trust.
+import 'package:dawnforge/src/core/resources/i_visual_object_data.dart';
+import 'package:dawnforge/src/core/shared_logic/definitions/engine_constants.dart';
+
+/// Base of every placeable world object's data (Actor / Prop / Ground) — the
+/// Dart port of `IWorldObjectData.cs` (faithful slice; see
+/// [IVisualObjectData]'s doc for the slice discipline).
 ///
-/// Mutable game state lives HERE and only here (rule 8); hosts and components
-/// read through their `data` reference and never cache into locals.
-abstract class IWorldObjectData {
-  IWorldObjectData({required this.id}) {
-    assert(id.isNotEmpty, '[$runtimeType] id required');
+/// Owns the health contract: `currentHealth` is MUTABLE STATE and lives here
+/// and only here (rule 8) — hosts and components read through `data`, never
+/// cache. It initializes to [maxHealth], and damage/heal clamp against it.
+abstract class IWorldObjectData extends IVisualObjectData {
+  IWorldObjectData({
+    required super.id,
+    super.spritesheetPath,
+    super.frameWidth,
+    super.frameHeight,
+    super.animationSpeed,
+    super.idleFrames,
+    super.walkFrames,
+    super.backwardFrames,
+    super.soundsVolume,
+    super.groups,
+    this.gridWidth = 1,
+    this.gridHeight = 1,
+    this.isFlat = false,
+    this.hasCollision = true,
+    this.allowsActorOverlap = true,
+    this.isProjectilePassable = false,
+    this.baseMaxHealth = EngineConstants.defaultMaxHealth,
+    double? currentHealth,
+  }) : _currentHealth = currentHealth ?? baseMaxHealth {
+    _validate();
   }
 
-  /// The content id — always equals the source filename without extension.
-  final String id;
+  IWorldObjectData.fromReader(super.reader)
+      : gridWidth = reader.intOr('grid_width', 1),
+        gridHeight = reader.intOr('grid_height', 1),
+        isFlat = reader.boolOr('is_flat', declaredDefault: false),
+        hasCollision = reader.boolOr('has_collision', declaredDefault: true),
+        allowsActorOverlap =
+            reader.boolOr('allows_actor_overlap', declaredDefault: true),
+        isProjectilePassable =
+            reader.boolOr('is_projectile_passable', declaredDefault: false),
+        baseMaxHealth = reader.doubleOr(
+          'base_max_health',
+          EngineConstants.defaultMaxHealth,
+        ),
+        _currentHealth = 0,
+        super.fromReader() {
+    // Fresh content spawns at full health; a save overwrites via deserialize.
+    _currentHealth = maxHealth;
+    _validate();
+  }
 
-  /// A deep copy. Every runtime instance owns its own state (rule 3):
-  /// factories inject `data.clone()`, never the registry's shared instance.
+  void _validate() {
+    assert(gridWidth > 0 && gridHeight > 0, '[$runtimeType($id)] grid_size');
+    assert(baseMaxHealth > 0, '[$runtimeType($id)] base_max_health must be > 0');
+  }
+
+  /// Footprint in tiles.
+  final int gridWidth;
+  final int gridHeight;
+  final bool isFlat;
+  final bool hasCollision;
+
+  /// Rule 33: asked on Place (of the object placed) and Destroy (of the object
+  /// destroyed) — and by no third verb.
+  final bool allowsActorOverlap;
+  final bool isProjectilePassable;
+
+  final double baseMaxHealth;
+
+  double _currentHealth;
+  double get currentHealth => _currentHealth;
+
+  /// Virtual so equipment/state can override the cap later (same contract as
+  /// the Godot `get_max_health()`).
+  double get maxHealth => baseMaxHealth;
+
+  bool get isDead => _currentHealth <= 0;
+
+  void takeDamage(double amount) {
+    assert(amount >= 0, '[$runtimeType($id)] negative damage: $amount');
+    _currentHealth = (_currentHealth - amount).clamp(0.0, maxHealth);
+  }
+
+  void heal(double amount) {
+    assert(amount >= 0, '[$runtimeType($id)] negative heal: $amount');
+    _currentHealth = (_currentHealth + amount).clamp(0.0, maxHealth);
+  }
+
+  @override
+  Map<String, Object?> serialize() => <String, Object?>{
+        ...super.serialize(),
+        'current_health': _currentHealth,
+      };
+
+  @override
   IWorldObjectData clone();
-
-  /// Mutable state only — never config the content pack already carries
-  /// (Godot repo §7). What this returns is what the save file stores.
-  Map<String, Object?> serialize();
 }
