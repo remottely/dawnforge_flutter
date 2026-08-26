@@ -8,6 +8,14 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.6.0
+
+### 🎨 Art & Audio
+
+- The pictures arrived: the game now cuts every sprite out of the same big
+  art sheet the Godot version uses — 22 real sprites, and a colored
+  placeholder for the 14 things that don't have final art yet.
+
 ## 0.5.0
 
 ### 🧹 Internal

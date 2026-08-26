@@ -30,6 +30,8 @@ sys.path.insert(0, str(ROOT / "scripts" / "lib"))
 # Maps each CLI command to the pipeline module that implements it. The numeric
 # prefix is the execution order, and `full` walks this table top to bottom.
 STEP_MODULES: dict[str, str] = {
+    "sprites": "02_extract_sprites_from_atlas",
+    "placeholders": "03_fill_missing_sprite_placeholders",
     "import": "04_import_almanac_to_json",
     "translations": "05_build_translation_tables",
     "component-keys": "10_generate_component_keys",

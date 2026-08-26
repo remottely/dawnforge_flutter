@@ -8,6 +8,14 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.6.0
+
+### 🎨 Art & Audio
+
+- As imagens chegaram: o jogo agora recorta cada sprite da mesma folha de arte
+  grande que a versão Godot usa — 22 sprites reais, e um quadrado colorido de
+  espera para as 14 coisas que ainda não têm arte final.
+
 ## 0.5.0
 
 ### 🧹 Internal
