@@ -81,4 +81,29 @@ abstract final class EngineConstants {
   /// one-tile gap is passable. Placeholder until the per-actor collision
   /// shape fields (`collision_padding`, shape type) are ported with FP4.
   static const double actorBodyHalfExtentTiles = 0.25;
+
+  // Drop scatter (FP4.1) — same names and values as the Godot
+  // engine_constants.gd. Distances in TILES unless noted.
+
+  /// How far off its source a rolled drop may land.
+  static const double dropDistanceMin = 0.75;
+  static const double dropDistanceMax = 1.5;
+
+  /// Actors drop further out so the pile never lands under their own feet.
+  static const double dropFromActorDistanceMin = 1.5;
+  static const double dropFromActorDistanceMax = 3;
+
+  /// Pixels of anchor offset per footprint tile beyond one (prop/ground
+  /// drops land toward their center, not their top-left anchor).
+  static const double dropGridOffsetMultiplier = 8;
+
+  /// Ring radius, in tiles, the landing search walks before answering the
+  /// origin (a sealed pocket is a legitimate shape — see WorldDropHelper).
+  static const int dropLandingSearchRadius = 8;
+
+  /// World px within which a pickup starts flying to an eligible collector.
+  static const double playerPickupRadius = 16;
+
+  /// A magnet flight closer than this, in tiles, IS the collection.
+  static const double pickupCollectThresholdTiles = 0.5;
 }

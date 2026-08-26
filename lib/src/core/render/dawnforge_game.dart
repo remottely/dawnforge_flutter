@@ -1,17 +1,21 @@
+import 'dart:async' show unawaited;
 import 'dart:convert';
 
 import 'package:dawnforge/src/core/base/world_objects/actors/i_actor.dart';
+import 'package:dawnforge/src/core/base/world_objects/items/item_world.dart';
 import 'package:dawnforge/src/core/base/world_objects/world_object.dart';
 import 'package:dawnforge/src/core/factories/actor_factory.dart';
 import 'package:dawnforge/src/core/factories/prop_factory.dart';
 import 'package:dawnforge/src/core/render/debug_overlay.dart';
 import 'package:dawnforge/src/core/render/ground_chunk_renderer.dart';
+import 'package:dawnforge/src/core/render/item_world_renderer.dart';
 import 'package:dawnforge/src/core/render/world_object_renderer.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/content_paths.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/game_constants.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/spatial.dart';
 import 'package:dawnforge/src/core/systems/boot.dart';
 import 'package:dawnforge/src/core/systems/data/almanac_loader.dart';
+import 'package:dawnforge/src/core/systems/eventing/events.dart';
 import 'package:dawnforge/src/core/systems/input/input_helper.dart';
 import 'package:dawnforge/src/core/systems/localization/localization_system.dart';
 import 'package:dawnforge/src/core/systems/managers/game_input_manager.dart';
@@ -45,6 +49,11 @@ final class DawnforgeGame extends FlameGame with KeyboardEvents {
 
   /// Every simulated host, ticked on the fixed step.
   final List<WorldObject> simObjects = <WorldObject>[];
+
+  /// Live pickups (FP4.1): ticked against the player each fixed step,
+  /// removed once collected. Every one is born through
+  /// `WorldDropHelper.spawnPickup` and arrives via `Events.pickupSpawned`.
+  final List<ItemWorld> pickups = <ItemWorld>[];
 
   late final IActor player;
 
@@ -133,6 +142,17 @@ final class DawnforgeGame extends FlameGame with KeyboardEvents {
 
     camera.viewfinder.zoom = 4;
     camera.follow(playerRenderer, snap: true);
+
+    // Every pickup the simulation produces gets its render binding here —
+    // the view listens to the sim, never the reverse (rule 18: the payload
+    // is the declared host type, cast and trusted).
+    locator<Events>().pickupSpawned.connect((Object payload) {
+      final pickup = payload as ItemWorld;
+      pickups.add(pickup);
+      // Fire-and-forget mount: Flame queues the child; the renderer draws
+      // on the frame its onLoad resolves.
+      unawaited(Future<void>.sync(() => world.add(ItemWorldRenderer(pickup))));
+    });
   }
 
   static GridPos _offsetFrom(GridPos origin, int dx, int dy) =>
@@ -180,6 +200,14 @@ final class DawnforgeGame extends FlameGame with KeyboardEvents {
     for (final host in simObjects) {
       host.update(stepDt);
     }
+    for (final pickup in pickups) {
+      pickup.tick(
+        stepDt,
+        collectorPosition: player.position,
+        collectorInventory: player.inventory,
+      );
+    }
+    pickups.removeWhere((pickup) => pickup.collected);
   }
 
   @override

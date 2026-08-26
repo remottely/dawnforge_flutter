@@ -8,6 +8,17 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.18.0
+
+### 🧹 Internal
+
+- As coisas derrubadas ficaram de verdade: um item agora pode deitar no
+  chão, balançar de leve, e voar para a sua mochila quando você chega
+  perto — e ele é esperto sobre onde cai, nunca dentro de uma parede nem
+  no mar, sempre em chão da sua própria altura. Se a mochila está cheia,
+  ele espera no chão. Nada no mundo derruba itens AINDA — as ferramentas
+  que quebram as coisas vêm em seguida.
+
 ## 0.17.0
 
 ### 🧹 Internal

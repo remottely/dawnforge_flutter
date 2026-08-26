@@ -8,6 +8,17 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.18.0
+
+### 🧹 Internal
+
+- Dropped things became real: an item can now lie on the ground, bob
+  gently, and fly into your backpack when you come close — and it is smart
+  about where it lands, never inside a wall or out at sea, always on
+  ground at your own height. If the backpack is full, it waits on the
+  ground. Nothing in the world drops items YET — the tools that break
+  things come next.
+
 ## 0.17.0
 
 ### 🧹 Internal

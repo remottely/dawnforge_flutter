@@ -34,9 +34,9 @@ void main() {
   ItemData item(String id) => locator<ItemRegistry>().getItem(id);
 
   (InventoryComponent, IActorData) buildInventory() {
+    // The factory-assembled component (FP4.1c: every actor is a collector).
     final actor = ActorFactory.create('t1_actor_probe', WorldPos.zero);
-    final component = actor.addComponent(InventoryComponent());
-    return (component, actor.data as IActorData);
+    return (actor.inventory, actor.data as IActorData);
   }
 
   test('adds stack-first, then empty slots, and returns what did not fit', () {

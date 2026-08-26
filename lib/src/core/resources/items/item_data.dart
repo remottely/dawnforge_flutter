@@ -21,6 +21,7 @@ class ItemData extends IVisualObjectData {
     this.materialType = MaterialType.stone,
     this.maxStack = 1000000000,
     this.spriteScale = 0.5,
+    this.magnetSpeed = 200,
   }) {
     _validate();
   }
@@ -33,6 +34,7 @@ class ItemData extends IVisualObjectData {
         ),
         maxStack = reader.intOr('max_stack', 1000000000),
         spriteScale = reader.doubleOr('sprite_scale', 0.5),
+        magnetSpeed = reader.doubleOr('magnet_speed', 200),
         super.fromReader() {
     _validate();
   }
@@ -43,6 +45,7 @@ class ItemData extends IVisualObjectData {
   void _validate() {
     assert(maxStack > 0, '[$runtimeType($id)] max_stack must be > 0');
     assert(spriteScale > 0, '[$runtimeType($id)] sprite_scale must be > 0');
+    assert(magnetSpeed > 0, '[$runtimeType($id)] magnet_speed must be > 0');
   }
 
   final MaterialType materialType;
@@ -50,6 +53,9 @@ class ItemData extends IVisualObjectData {
 
   /// Scale of the world-drop sprite relative to the tile.
   final double spriteScale;
+
+  /// Magnet flight speed of this item's pickup, in TILES per second.
+  final double magnetSpeed;
 
   @override
   ItemData clone() => ItemData(
@@ -66,5 +72,6 @@ class ItemData extends IVisualObjectData {
         materialType: materialType,
         maxStack: maxStack,
         spriteScale: spriteScale,
+        magnetSpeed: magnetSpeed,
       );
 }

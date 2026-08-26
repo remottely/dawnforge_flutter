@@ -1,6 +1,7 @@
 import 'package:dawnforge/src/core/base/world_objects/world_object.dart';
 import 'package:dawnforge/src/core/components/i_actor/direction_component.dart';
 import 'package:dawnforge/src/core/components/i_actor/movement_component.dart';
+import 'package:dawnforge/src/core/components/i_interactable/inventory_component.dart';
 import 'package:dawnforge/src/core/components/i_world_object/health_component.dart';
 import 'package:dawnforge/src/core/domain/movement/world_collision_rules.dart';
 import 'package:dawnforge/src/core/resources/world_objects/actors/i_actor_data.dart';
@@ -20,12 +21,16 @@ class IActor extends WorldObject {
   late final DirectionComponent direction;
   late final MovementComponent movement;
   late final HealthComponent health;
+  late final InventoryComponent inventory;
 
   @override
   void setupComponents() {
     direction = addComponent(DirectionComponent());
     movement = addComponent(MovementComponent(direction));
     health = addComponent(HealthComponent());
+    // Every actor is a collector — its slots live in the data soul
+    // (IActorData.inventory), sized by the authored inventory_size.
+    inventory = addComponent(InventoryComponent());
   }
 
   @override

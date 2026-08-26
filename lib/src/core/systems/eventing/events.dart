@@ -18,4 +18,9 @@ final class Events {
 
   /// A user-facing notification was queued (rule 33: a tool that refuses says so).
   final notificationAdded = EventSignal<String>();
+
+  /// A pickup entered the world (payload: the `ItemWorld` host — `Object` on
+  /// purpose, like [worldObjectSpawned]: the bus never imports host types).
+  /// The render layer listens and binds a renderer.
+  final pickupSpawned = EventSignal<Object>();
 }

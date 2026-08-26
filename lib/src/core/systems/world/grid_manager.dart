@@ -134,4 +134,24 @@ final class GridManager {
     if (groundData is GroundEmptyData && !groundData.isPassable) return true;
     return hasElevationAt(tilePos);
   }
+
+  /// The A*-side question [blocksBodyAt]'s doc promised (FP4.1): can
+  /// something STAND (or lie) on this tile? Here the VOID is unreachable —
+  /// an unregistered tile answers false, the opposite of the physics
+  /// question — and an impassable empty (water, cliff) answers false too.
+  ///
+  /// Elevation is deliberately NOT consulted: a mountain tile keeps the
+  /// perfectly good ground underneath it, so walkability is the ground
+  /// half of the answer and the caller judges heights against its own
+  /// reference (see `WorldDropHelper.resolveLandingPosition` for why that
+  /// split is what keeps drops out of cave walls).
+  ///
+  /// FP4.1 slice: the colliding-prop clause joins with prop occupancy
+  /// (FP4.1d).
+  bool isTileWalkable(GridPos tilePos) {
+    final groundData = getGroundDataAt(tilePos);
+    if (groundData == null) return false;
+    if (groundData is GroundEmptyData) return groundData.isPassable;
+    return true;
+  }
 }

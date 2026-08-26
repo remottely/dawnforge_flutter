@@ -153,6 +153,17 @@ void main() {
       // No collider exists where nothing materialized — the physics mirror
       // of the Godot side; the world edge is WorldBoundaryEnforcer's job.
       expect(fresh.blocksBodyAt(unregistered), isFalse);
+
+      // The A*-side question (FP4.1): here the VOID is unreachable — the
+      // exact opposite of the physics answer above — water and cliff refuse,
+      // and elevation is deliberately ignored (the wall keeps the good
+      // ground underneath; callers judge heights against their own
+      // reference).
+      expect(fresh.isTileWalkable(unregistered), isFalse);
+      expect(fresh.isTileWalkable(water), isFalse);
+      expect(fresh.isTileWalkable(cliffHole), isFalse);
+      expect(fresh.isTileWalkable(terrain), isTrue);
+      expect(fresh.isTileWalkable(wall), isTrue);
     });
   });
 }
