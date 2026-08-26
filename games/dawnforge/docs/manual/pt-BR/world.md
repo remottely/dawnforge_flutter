@@ -18,5 +18,13 @@ O que você vai ver:
   degrau, dois degraus, três. Elas bloqueiam o caminho — ainda não dá para
   escalar.
 
+A floresta é viva de coisas para achar. Grama selvagem, palmeiras,
+arbustos, flores e ervas crescem em grupinhos. Rochas e carvão ficam aqui
+e ali. O cobre é mais raro: ele se junta em bolsões ricos, então quando
+você achar um veio, olhe em volta — pode ter mais por perto. A semente
+decide onde tudo mora, então a mesma semente sempre faz crescer a mesma
+floresta. Coisas sólidas como árvores e rochas ficam no seu caminho —
+contorne elas.
+
 Você sempre começa num pedaço plano e seguro de grama, com espaço aberto
 em volta.

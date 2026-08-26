@@ -17,5 +17,12 @@ What you will see:
 - **Mountains** — dark, stepped ground. They rise like stairs: one step,
   two steps, three. They block your way — you cannot climb them yet.
 
+The forest is alive with things to find. Wild grass, palm trees, bushes,
+flowers and herbs grow in little groups. Rocks and coal sit here and
+there. Copper is rarer: it gathers in rich pockets, so when you find one
+vein, look around — there may be more nearby. The seed decides where
+everything lives, so the same seed always grows the same forest. Solid
+things like trees and rocks are in your way — walk around them.
+
 You always start on a flat, safe patch of grass, with open space all
 around you.

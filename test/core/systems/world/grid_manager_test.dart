@@ -1,7 +1,10 @@
+import 'package:dawnforge/src/core/factories/prop_factory.dart';
+import 'package:dawnforge/src/core/registries/prop_registry.dart';
 import 'package:dawnforge/src/core/resources/world_objects/grounds/ground_buildable_data.dart';
 import 'package:dawnforge/src/core/resources/world_objects/grounds/ground_empty_data.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/game_constants.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/spatial.dart';
+import 'package:dawnforge/src/core/systems/boot.dart';
 import 'package:dawnforge/src/core/systems/world/grid_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -164,6 +167,84 @@ void main() {
       expect(fresh.isTileWalkable(cliffHole), isFalse);
       expect(fresh.isTileWalkable(terrain), isTrue);
       expect(fresh.isTileWalkable(wall), isTrue);
+    });
+  });
+
+  group('GridManager prop occupancy (FP4.1d)', () {
+    setUp(() {
+      registerCoreSystems();
+      locator<PropRegistry>().registerJson(<String, Object?>{
+        'id': 't1_prop_rock_probe',
+        'has_collision': true,
+      });
+      locator<PropRegistry>().registerJson(<String, Object?>{
+        'id': 't1_prop_grass_probe',
+        'has_collision': false,
+      });
+      locator<PropRegistry>().registerJson(<String, Object?>{
+        'id': 't1_prop_wide_probe',
+        'grid_size': <int>[2, 1],
+      });
+    });
+    tearDown(resetCoreSystems);
+
+    test('occupy → query → free round trip, footprint-wide', () {
+      final fresh = GridManager();
+      final wide = PropFactory.create('t1_prop_wide_probe', WorldPos.zero);
+      const anchor = GridPos(4, 4);
+
+      expect(fresh.isPropSpaceAvailable(anchor, width: 2), isTrue);
+      fresh.occupyPropTiles(anchor, wide);
+      // A 2×1 prop claims BOTH tiles, and both map back to the same host.
+      expect(identical(fresh.getPropAt(anchor), wide), isTrue);
+      expect(identical(fresh.getPropAt(const GridPos(5, 4)), wide), isTrue);
+      expect(fresh.isPropSpaceAvailable(const GridPos(5, 4)), isFalse);
+
+      fresh.freePropTiles(anchor, wide);
+      expect(fresh.getPropAt(anchor), isNull);
+      expect(fresh.getPropAt(const GridPos(5, 4)), isNull);
+    });
+
+    test('a colliding prop blocks bodies and walkability; a ghost does not',
+        () {
+      final fresh = GridManager()
+        ..registerGroundData(
+          const GridPos(0, 0),
+          GroundBuildableData(id: 't1_ground_buildable_terrain'),
+        )
+        ..registerGroundData(
+          const GridPos(1, 0),
+          GroundBuildableData(id: 't1_ground_buildable_terrain'),
+        );
+      final rock = PropFactory.create('t1_prop_rock_probe', WorldPos.zero);
+      final grass = PropFactory.create('t1_prop_grass_probe', WorldPos.zero);
+
+      fresh
+        ..occupyPropTiles(const GridPos(0, 0), rock)
+        ..occupyPropTiles(const GridPos(1, 0), grass);
+
+      expect(fresh.blocksBodyAt(const GridPos(0, 0)), isTrue);
+      expect(fresh.isTileWalkable(const GridPos(0, 0)), isFalse);
+      // has_collision false: claims the tile but stops nobody, as authored.
+      expect(fresh.blocksBodyAt(const GridPos(1, 0)), isFalse);
+      expect(fresh.isTileWalkable(const GridPos(1, 0)), isTrue);
+    });
+
+    test('claiming a held footprint is a wiring bug — crash', () {
+      final fresh = GridManager();
+      final first = PropFactory.create('t1_prop_rock_probe', WorldPos.zero);
+      final second = PropFactory.create('t1_prop_rock_probe', WorldPos.zero);
+      fresh.occupyPropTiles(const GridPos(2, 2), first);
+
+      expect(
+        () => fresh.occupyPropTiles(const GridPos(2, 2), second),
+        throwsA(isA<AssertionError>()),
+      );
+      expect(
+        () => fresh.freePropTiles(const GridPos(2, 2), second),
+        throwsA(isA<AssertionError>()),
+        reason: 'freeing tiles held by somebody else',
+      );
     });
   });
 }

@@ -7,6 +7,7 @@ import 'package:dawnforge/src/core/systems/eventing/events.dart';
 import 'package:dawnforge/src/core/systems/input/input_helper.dart';
 import 'package:dawnforge/src/core/systems/localization/localization_system.dart';
 import 'package:dawnforge/src/core/systems/managers/game_input_manager.dart';
+import 'package:dawnforge/src/core/systems/spawning/procedural_spawn_system.dart';
 import 'package:dawnforge/src/core/systems/timing/sim_clock.dart';
 import 'package:dawnforge/src/core/systems/world/chunk_streaming_system.dart';
 import 'package:dawnforge/src/core/systems/world/grid_manager.dart';
@@ -39,7 +40,11 @@ void registerCoreSystems() {
     // Registered at boot, initialized when a world starts (after the content
     // registries above are loaded) — same split as the Godot autoload.
     ..registerSingleton<ProceduralWorldManager>(ProceduralWorldManager())
-    ..registerSingleton<ChunkStreamingSystem>(ChunkStreamingSystem());
+    ..registerSingleton<ChunkStreamingSystem>(ChunkStreamingSystem())
+    ..registerSingleton<ProceduralSpawnSystem>(
+      ProceduralSpawnSystem(),
+      dispose: (system) => system.dispose(),
+    );
 }
 
 /// Tears down every registration — tests only; the app never unboots.

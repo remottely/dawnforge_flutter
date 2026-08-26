@@ -1,3 +1,4 @@
+import 'package:dawnforge/src/core/base/world_objects/props/prop.dart';
 import 'package:dawnforge/src/core/resources/world_objects/grounds/ground_buildable_data.dart';
 import 'package:dawnforge/src/core/resources/world_objects/grounds/ground_empty_data.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/game_constants.dart';
@@ -129,6 +130,8 @@ final class GridManager {
   /// (FP4); slabs and mountain climbing with their systems (FP7) — until
   /// then a wall blocks outright.
   bool blocksBodyAt(GridPos tilePos) {
+    final prop = _occupiedPropTiles[tilePos];
+    if (prop != null && prop.data.hasCollision) return true;
     final groundData = getGroundDataAt(tilePos);
     if (groundData == null) return false;
     if (groundData is GroundEmptyData && !groundData.isPassable) return true;
@@ -149,9 +152,65 @@ final class GridManager {
   /// FP4.1 slice: the colliding-prop clause joins with prop occupancy
   /// (FP4.1d).
   bool isTileWalkable(GridPos tilePos) {
+    final prop = _occupiedPropTiles[tilePos];
+    if (prop != null && prop.data.hasCollision) return false;
     final groundData = getGroundDataAt(tilePos);
     if (groundData == null) return false;
     if (groundData is GroundEmptyData) return groundData.isPassable;
     return true;
   }
+
+  // -- Prop occupancy (FP4.1d) — the grid is the authority on which prop
+  // -- holds which tile; a multi-tile prop claims every tile of its
+  // -- footprint, and every claim maps back to the same host.
+
+  final Map<GridPos, Prop> _occupiedPropTiles = <GridPos, Prop>{};
+
+  /// Whether a footprint of [width]×[height] tiles anchored at [anchor] is
+  /// free of props. Terrain validity is the caller's own question — spawn,
+  /// placement and farming each ask a different combination.
+  bool isPropSpaceAvailable(GridPos anchor, {int width = 1, int height = 1}) {
+    for (var x = 0; x < width; x++) {
+      for (var y = 0; y < height; y++) {
+        if (_occupiedPropTiles.containsKey(GridPos(anchor.x + x, anchor.y + y))) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  /// Claims [prop]'s footprint. Claiming over a resident prop is a wiring
+  /// bug — the caller asks [isPropSpaceAvailable] first (crash, rule 5).
+  void occupyPropTiles(GridPos anchor, Prop prop) {
+    final width = prop.data.gridWidth;
+    final height = prop.data.gridHeight;
+    assert(
+      isPropSpaceAvailable(anchor, width: width, height: height),
+      '[GridManager] occupyPropTiles at $anchor — footprint already claimed',
+    );
+    for (var x = 0; x < width; x++) {
+      for (var y = 0; y < height; y++) {
+        _occupiedPropTiles[GridPos(anchor.x + x, anchor.y + y)] = prop;
+      }
+    }
+  }
+
+  /// Releases [prop]'s footprint anchored at [anchor]. Releasing tiles the
+  /// prop does not hold is a wiring bug (crash, rule 5).
+  void freePropTiles(GridPos anchor, Prop prop) {
+    for (var x = 0; x < prop.data.gridWidth; x++) {
+      for (var y = 0; y < prop.data.gridHeight; y++) {
+        final tile = GridPos(anchor.x + x, anchor.y + y);
+        assert(
+          identical(_occupiedPropTiles[tile], prop),
+          '[GridManager] freePropTiles at $tile — held by somebody else',
+        );
+        _occupiedPropTiles.remove(tile);
+      }
+    }
+  }
+
+  /// The prop holding [tilePos], or null — absence is a legitimate answer.
+  Prop? getPropAt(GridPos tilePos) => _occupiedPropTiles[tilePos];
 }

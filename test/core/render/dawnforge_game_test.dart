@@ -1,3 +1,4 @@
+import 'package:dawnforge/src/core/base/world_objects/props/prop.dart';
 import 'package:dawnforge/src/core/registries/actor_registry.dart';
 import 'package:dawnforge/src/core/render/dawnforge_game.dart';
 import 'package:dawnforge/src/core/render/debug_overlay.dart';
@@ -39,8 +40,11 @@ void main() {
             game.world.children.whereType<WorldObjectRenderer>().toList();
         final groundLayers =
             game.world.children.whereType<GroundChunkRenderer>().toList();
-        return game.simObjects.length == 6 &&
-            renderers.length == 6 &&
+        // The population is the seed's own (FP4.1d): the player plus
+        // whatever the boot window scattered — count equality between hosts
+        // and renderers is the readiness signal, not a hand-counted number.
+        return game.simObjects.length > 1 &&
+            renderers.length == game.simObjects.length &&
             renderers.every(
               (renderer) =>
                   renderer.children.whereType<SpriteComponent>().isNotEmpty ||
@@ -61,10 +65,12 @@ void main() {
       }
     });
 
-    // Content booted from the generated assets.
+    // Content booted from the generated assets; the boot window scattered
+    // procedural props around the player (FP4.1d).
     expect(locator<ActorRegistry>().count, greaterThan(0));
     expect(locator<LocalizationSystem>().isLoaded, isTrue);
-    expect(game.simObjects.length, 6); // 5 props + the player
+    expect(game.simObjects.length, greaterThan(1),
+        reason: 'the boot window scattered no props');
     expect(game.player.actorData.id, 't1_actor_creature_boar');
 
     // The render half of the gate: renderers must land inside `world` (the
@@ -73,8 +79,17 @@ void main() {
     // drawn: no exception, just a background-colored screen. This caught
     // exactly that regression once already.
     final worldRenderers = game.world.children.whereType<WorldObjectRenderer>();
-    expect(worldRenderers.length, 6);
+    expect(worldRenderers.length, game.simObjects.length);
     expect(game.children.whereType<WorldObjectRenderer>(), isEmpty);
+
+    // The scatter registered its occupancy: every scattered prop's anchor
+    // tile maps back to its own host (FP4.1d).
+    final gridForProps = locator<GridManager>();
+    for (final host in game.simObjects.whereType<Prop>()) {
+      final anchor = gridForProps.worldToGrid(host.position);
+      expect(identical(gridForProps.getPropAt(anchor), host), isTrue,
+          reason: '${host.data.id} at $anchor is not the grid occupant');
+    }
 
     // Each renderer actually finished loading its sheet and produced a
     // visible child — a silently-swallowed sprite-load failure would leave

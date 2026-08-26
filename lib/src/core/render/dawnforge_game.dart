@@ -5,7 +5,6 @@ import 'package:dawnforge/src/core/base/world_objects/actors/i_actor.dart';
 import 'package:dawnforge/src/core/base/world_objects/items/item_world.dart';
 import 'package:dawnforge/src/core/base/world_objects/world_object.dart';
 import 'package:dawnforge/src/core/factories/actor_factory.dart';
-import 'package:dawnforge/src/core/factories/prop_factory.dart';
 import 'package:dawnforge/src/core/render/debug_overlay.dart';
 import 'package:dawnforge/src/core/render/ground_chunk_renderer.dart';
 import 'package:dawnforge/src/core/render/item_world_renderer.dart';
@@ -19,6 +18,7 @@ import 'package:dawnforge/src/core/systems/eventing/events.dart';
 import 'package:dawnforge/src/core/systems/input/input_helper.dart';
 import 'package:dawnforge/src/core/systems/localization/localization_system.dart';
 import 'package:dawnforge/src/core/systems/managers/game_input_manager.dart';
+import 'package:dawnforge/src/core/systems/spawning/procedural_spawn_system.dart';
 import 'package:dawnforge/src/core/systems/timing/sim_clock.dart';
 import 'package:dawnforge/src/core/systems/world/chunk_streaming_system.dart';
 import 'package:dawnforge/src/core/systems/world/grid_manager.dart';
@@ -110,27 +110,43 @@ final class DawnforgeGame extends FlameGame with KeyboardEvents {
 
     // The procedural world (FP3.4): seed → generator → spawn → streaming.
     // The renderer mounts BEFORE streaming initializes so no chunkLoaded is
-    // missed (it also seeds from loadedChunks — belt and braces).
-    locator<ProceduralWorldManager>()
-        .initialize(ProceduralWorldManager.resolveNewWorldSeed(worldSeed));
-    final spawnTile = locator<ProceduralWorldManager>().findSpawnTile();
+    // missed (it also seeds from loadedChunks — belt and braces). The spawn
+    // system connects before it too, for the same reason: the boot window's
+    // own chunkLoaded signals are its population trigger (FP4.1d).
+    final worldManager = locator<ProceduralWorldManager>()
+      ..initialize(ProceduralWorldManager.resolveNewWorldSeed(worldSeed));
+    final spawnTile = worldManager.findSpawnTile();
     groundLayer = GroundChunkRenderer();
     await world.add(groundLayer);
+
+    // Scattered content: hosts arrive/leave via the bus; renderers bind here.
+    locator<Events>().worldObjectSpawned.connect((Object payload) {
+      final host = payload as WorldObject;
+      simObjects.add(host);
+      final renderer = WorldObjectRenderer(host);
+      _hostRenderers[host] = renderer;
+      unawaited(Future<void>.sync(() => world.add(renderer)));
+    });
+    locator<Events>().worldObjectDespawned.connect((Object payload) {
+      final host = payload as WorldObject;
+      simObjects.remove(host);
+      _hostRenderers.remove(host)?.removeFromParent();
+    });
+    locator<ProceduralSpawnSystem>().initialize(
+      worldSeed: worldManager.worldSeed,
+      biome: worldManager.activeBiome,
+      // The spawn patch stays prop-free — the interim stand-in for the
+      // actor-overlap clause until ActorOccupancyHelper (FP4.3a).
+      reservedTiles: <GridPos>[
+        for (var dx = -1; dx <= 1; dx++)
+          for (var dy = -1; dy <= 1; dy++)
+            GridPos(spawnTile.x + dx, spawnTile.y + dy),
+      ],
+    );
     locator<ChunkStreamingSystem>().initialize(spawnTile);
 
     // The FP3.6 proof instrument, in screen space above everything.
     await camera.viewport.add(DebugOverlay());
-
-    // A handful of hand-placed props around the spawn — sim-object dressing
-    // until procedural population (FP7) spawns the real thing.
-    await _spawnProp('t1_prop_crop_tree_palm', _offsetFrom(spawnTile, 2, 1));
-    await _spawnProp('t1_prop_rock_moss', _offsetFrom(spawnTile, -2, 2));
-    await _spawnProp('t1_prop_grass_wild', _offsetFrom(spawnTile, 1, 3));
-    await _spawnProp(
-      't1_prop_crop_bush_clover',
-      _offsetFrom(spawnTile, -1, -2),
-    );
-    await _spawnProp('t1_prop_vein_copper', _offsetFrom(spawnTile, 3, -1));
 
     player = ActorFactory.create(
       't1_actor_creature_boar',
@@ -155,23 +171,11 @@ final class DawnforgeGame extends FlameGame with KeyboardEvents {
     });
   }
 
-  static GridPos _offsetFrom(GridPos origin, int dx, int dy) =>
-      GridPos(origin.x + dx, origin.y + dy);
-
-  Future<void> _spawnProp(String id, GridPos gridPos) async {
-    final prop = PropFactory.create(
-      id,
-      locator<GridManager>().gridToWorld(gridPos),
-    );
-    simObjects.add(prop);
-    // Renderers go into `world`, never added to the game root directly — the
-    // CameraComponent only renders `world`'s subtree (Flame 1.32's default
-    // FlameGame wiring: camera.world = world; both are children of the game
-    // root, but only `world`'s content passes through the camera's viewport
-    // transform). Adding here instead left the world empty and rendered
-    // nothing but the background color.
-    await world.add(WorldObjectRenderer(prop));
-  }
+  /// Renderer of every scattered host, for unbind on despawn. Renderers go
+  /// into `world`, never the game root — the CameraComponent only renders
+  /// `world`'s subtree (Flame 1.32 default wiring).
+  final Map<WorldObject, WorldObjectRenderer> _hostRenderers =
+      <WorldObject, WorldObjectRenderer>{};
 
   @override
   void update(double dt) {

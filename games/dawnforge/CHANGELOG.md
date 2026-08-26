@@ -8,6 +8,17 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.19.0
+
+### ✨ New
+
+- The forest came alive: wild grass, palm trees, bushes, flowers, rocks,
+  coal and copper now grow across the whole world, in little natural
+  groups — and copper hides in rich pockets worth hunting for. Every
+  world grows its own forest from its seed, the same forest every time
+  you replant the same seed. Solid things are really solid: you walk
+  around a tree, not through it. (Manual page The World updated.)
+
 ## 0.18.0
 
 ### 🧹 Internal

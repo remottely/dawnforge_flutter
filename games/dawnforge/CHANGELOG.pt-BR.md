@@ -8,6 +8,18 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.19.0
+
+### ✨ New
+
+- A floresta ganhou vida: grama selvagem, palmeiras, arbustos, flores,
+  rochas, carvão e cobre agora crescem pelo mundo todo, em grupinhos
+  naturais — e o cobre se esconde em bolsões ricos que valem a caça. Cada
+  mundo faz crescer a própria floresta a partir da semente, a mesma
+  floresta toda vez que você replanta a mesma semente. Coisas sólidas são
+  sólidas de verdade: você contorna uma árvore, não atravessa. (Página O
+  Mundo do manual atualizada.)
+
 ## 0.18.0
 
 ### 🧹 Internal

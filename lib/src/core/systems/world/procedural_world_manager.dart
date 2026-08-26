@@ -96,6 +96,14 @@ final class ProceduralWorldManager {
     _cuts = _deriveCuts(_biome);
   }
 
+  /// The biome this world generates from (T1 scope: the single one) — the
+  /// population and tier consumers read it here rather than re-picking from
+  /// the registry.
+  BiomeData get activeBiome {
+    assert(_isInitialized, '[ProceduralWorldManager] read before initialize');
+    return _biome;
+  }
+
   int get worldSeed {
     assert(_isInitialized, '[ProceduralWorldManager] read before initialize');
     return _worldSeed;

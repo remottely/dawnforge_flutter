@@ -23,4 +23,8 @@ final class Events {
   /// purpose, like [worldObjectSpawned]: the bus never imports host types).
   /// The render layer listens and binds a renderer.
   final pickupSpawned = EventSignal<Object>();
+
+  /// A world object left the world (its chunk unloaded, it was destroyed).
+  /// The render layer listens and unbinds the renderer.
+  final worldObjectDespawned = EventSignal<Object>();
 }
