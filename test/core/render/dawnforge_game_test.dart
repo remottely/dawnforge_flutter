@@ -1,8 +1,10 @@
 import 'package:dawnforge/src/core/registries/actor_registry.dart';
 import 'package:dawnforge/src/core/render/dawnforge_game.dart';
+import 'package:dawnforge/src/core/render/world_object_renderer.dart';
 import 'package:dawnforge/src/core/systems/boot.dart';
 import 'package:dawnforge/src/core/systems/input/input_helper.dart';
 import 'package:dawnforge/src/core/systems/localization/localization_system.dart';
+import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -32,6 +34,29 @@ void main() {
     expect(locator<LocalizationSystem>().isLoaded, isTrue);
     expect(game.simObjects.length, 6); // 5 props + the player
     expect(game.player.actorData.id, 't1_actor_creature_boar');
+
+    // The render half of the gate: renderers must land inside `world` (the
+    // ONLY subtree the CameraComponent renders — Flame's default FlameGame
+    // wiring). A renderer added to the game root instead is silently never
+    // drawn: no exception, just a background-colored screen. This caught
+    // exactly that regression once already.
+    final worldRenderers = game.world.children.whereType<WorldObjectRenderer>();
+    expect(worldRenderers.length, 6);
+    expect(game.children.whereType<WorldObjectRenderer>(), isEmpty);
+
+    // Each renderer actually finished loading its sheet and produced a
+    // visible child — a silently-swallowed sprite-load failure would leave
+    // the renderer mounted but empty.
+    for (final renderer in worldRenderers) {
+      expect(
+        renderer.children.whereType<SpriteComponent>().isNotEmpty ||
+            renderer.children
+                .whereType<SpriteAnimationGroupComponent<String>>()
+                .isNotEmpty,
+        isTrue,
+        reason: '${renderer.host.data.id} has no visible sprite child',
+      );
+    }
 
     // Feed a "D held" state straight into the input SSOT (a raw key event
     // needs a focused widget tree; the helper is the contract, so it is the

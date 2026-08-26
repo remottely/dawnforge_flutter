@@ -8,6 +8,15 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.7.1
+
+### 🐛 Fixed
+
+- O jogo estava invisível — um campo verde sem nada nele. Dois defeitos,
+  ambos corrigidos: as coisas estavam sendo colocadas fora de onde a câmera
+  olha, e toda imagem animada estava sendo desenhada 16 vezes menor do que
+  deveria.
+
 ## 0.7.0
 
 ### ✨ New

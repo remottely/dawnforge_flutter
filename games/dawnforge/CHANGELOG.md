@@ -8,6 +8,14 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.7.1
+
+### 🐛 Fixed
+
+- The game was invisible — a green field with nothing on it. Two bugs, both
+  fixed: things were being placed outside where the camera looks, and every
+  animated picture was being drawn 16 times too small to see.
+
 ## 0.7.0
 
 ### ✨ New

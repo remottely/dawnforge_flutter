@@ -80,7 +80,7 @@ final class DawnforgeGame extends FlameGame with KeyboardEvents {
     player = ActorFactory.create('t1_actor_creature_boar', WorldPos.zero);
     final playerRenderer = ActorRenderer(player);
     simObjects.add(player);
-    await add(playerRenderer);
+    await world.add(playerRenderer);
 
     camera.viewfinder.zoom = 4;
     camera.follow(playerRenderer, snap: true);
@@ -92,7 +92,13 @@ final class DawnforgeGame extends FlameGame with KeyboardEvents {
       locator<GridManager>().gridToWorld(gridPos),
     );
     simObjects.add(prop);
-    await add(WorldObjectRenderer(prop));
+    // Renderers go into `world`, never added to the game root directly — the
+    // CameraComponent only renders `world`'s subtree (Flame 1.32's default
+    // FlameGame wiring: camera.world = world; both are children of the game
+    // root, but only `world`'s content passes through the camera's viewport
+    // transform). Adding here instead left the world empty and rendered
+    // nothing but the background color.
+    await world.add(WorldObjectRenderer(prop));
   }
 
   @override

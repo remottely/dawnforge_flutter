@@ -38,19 +38,18 @@ abstract class IVisualObjectData {
   IVisualObjectData.fromReader(JsonReader reader)
       : id = reader.requiredString('id'),
         spritesheetPath = reader.stringOr('spritesheet', ''),
-        // Authored as a [w, h] pair, like every vector in the pack.
+        // frame_size is authored in TILES (same convention pipeline step 02
+        // crops by: `w = frame_size[0] * TILE_DIMENSION * frames_grid[0]`),
+        // so the pixel size is derived, never the raw pair — a 2-tile-wide
+        // frame is 32px at a 16px tile, not "2px".
         frameWidth = reader
-            .intPairOr(
-              'frame_size',
-              (GameConstants.tileDimension, GameConstants.tileDimension),
-            )
-            .$1,
+                .intPairOr('frame_size', (1, 1))
+                .$1 *
+            GameConstants.tileDimension,
         frameHeight = reader
-            .intPairOr(
-              'frame_size',
-              (GameConstants.tileDimension, GameConstants.tileDimension),
-            )
-            .$2,
+                .intPairOr('frame_size', (1, 1))
+                .$2 *
+            GameConstants.tileDimension,
         animationSpeed = reader.doubleOr('animation_speed', 0.15),
         juvenileIdleFrames = reader.intOr('juvenile_idle_frames', 0),
         juvenileWalkFrames = reader.intOr('juvenile_walk_frames', 0),
