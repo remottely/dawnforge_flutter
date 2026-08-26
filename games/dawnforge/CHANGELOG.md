@@ -8,6 +8,16 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.12.0
+
+### ✨ New
+
+- The world does not end anymore. The little green field is gone — now
+  every new game builds a whole world from a seed number: grass, sea and
+  stepped mountains, different every time, the same every time you replant
+  the same seed. Walk as far as you like; the ground ahead appears as you
+  go. You start on a safe flat patch of grass. (New manual page: The World.)
+
 ## 0.11.0
 
 ### 🧹 Internal

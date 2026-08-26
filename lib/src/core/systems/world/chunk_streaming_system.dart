@@ -378,6 +378,13 @@ final class ChunkStreamingSystem {
 
   ChunkState? chunkStateOf(GridPos chunk) => _chunkStates[chunk];
 
+  /// Every fully materialized chunk — what a consumer that mounts AFTER the
+  /// initial fill (the chunk renderer) seeds itself from before listening to
+  /// [chunkLoaded].
+  Iterable<GridPos> get loadedChunks => _chunkStates.entries
+      .where((entry) => entry.value == ChunkState.loaded)
+      .map((entry) => entry.key);
+
   GridPos get centerChunk => _centerChunk;
 
   /// The chunk holding [tile] (floor division, so negative space chunks

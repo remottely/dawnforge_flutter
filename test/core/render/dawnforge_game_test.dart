@@ -1,24 +1,28 @@
 import 'package:dawnforge/src/core/registries/actor_registry.dart';
 import 'package:dawnforge/src/core/render/dawnforge_game.dart';
+import 'package:dawnforge/src/core/render/ground_chunk_renderer.dart';
 import 'package:dawnforge/src/core/render/world_object_renderer.dart';
 import 'package:dawnforge/src/core/systems/boot.dart';
 import 'package:dawnforge/src/core/systems/input/input_helper.dart';
 import 'package:dawnforge/src/core/systems/localization/localization_system.dart';
+import 'package:dawnforge/src/core/systems/world/chunk_streaming_system.dart';
+import 'package:dawnforge/src/core/systems/world/grid_manager.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// FP3 slice gate in test form: the game boots from the REAL bundled assets,
-/// spawns a player from the registry, and input moves it through the fixed
-/// step. (The visual half of the gate — 60fps on device — is a hand-run.)
+/// FP3 gate in test form: the game boots from the REAL bundled assets,
+/// generates a procedural world from a fixed seed, streams chunks around a
+/// spawned player, and input moves it through the fixed step. (The visual
+/// half of the gate — 60fps on device — is a hand-run, FP3.6.)
 void main() {
   setUp(registerCoreSystems);
   tearDown(resetCoreSystems);
 
   testWidgets('boots content, spawns the player, input moves it',
       (tester) async {
-    final game = DawnforgeGame();
+    final game = DawnforgeGame(worldSeed: 20260826);
     // Image decode is real async, which the fake-async test zone blocks —
     // boot the game inside runAsync so sprite sheets actually load.
     await tester.runAsync(() async {
@@ -32,6 +36,8 @@ void main() {
       bool renderReady() {
         final renderers =
             game.world.children.whereType<WorldObjectRenderer>().toList();
+        final groundLayers =
+            game.world.children.whereType<GroundChunkRenderer>().toList();
         return game.simObjects.length == 6 &&
             renderers.length == 6 &&
             renderers.every(
@@ -40,7 +46,12 @@ void main() {
                   renderer.children
                       .whereType<SpriteAnimationGroupComponent<String>>()
                       .isNotEmpty,
-            );
+            ) &&
+            groundLayers.length == 1 &&
+            groundLayers.single.bakedChunkCount > 0 &&
+            // The whole boot window, not just the first baked chunk — the
+            // spawn chunk bakes on frame one, the window takes a few more.
+            locator<ChunkStreamingSystem>().isWindowLoaded();
       }
 
       for (var i = 0; i < 400 && !renderReady(); i++) {
@@ -78,9 +89,23 @@ void main() {
       );
     }
 
+    // The procedural world exists around the player (FP3.4): the ground
+    // under its feet is registered, the streaming window is whole, and the
+    // ground layer holds baked chunks the camera can draw.
+    final grid = locator<GridManager>();
+    final playerTile = grid.worldToGrid(game.player.position);
+    expect(grid.hasGroundAt(playerTile), isTrue,
+        reason: 'the player stands on unregistered terrain');
+    expect(locator<ChunkStreamingSystem>().isWindowLoaded(), isTrue,
+        reason: 'the boot window never finished materializing');
+    final groundLayer =
+        game.world.children.whereType<GroundChunkRenderer>().single;
+    expect(groundLayer.bakedChunkCount, greaterThan(0));
+
     // Feed a "D held" state straight into the input SSOT (a raw key event
     // needs a focused widget tree; the helper is the contract, so it is the
     // seam) and run the sim for half a second of frames.
+    final startX = game.player.position.x;
     locator<InputHelper>().handleKeyEvent(
       const KeyDownEvent(
         physicalKey: PhysicalKeyboardKey.keyD,
@@ -92,7 +117,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 16));
     }
 
-    expect(game.player.position.x, greaterThan(0));
+    expect(game.player.position.x, greaterThan(startX));
     expect(game.player.movement.isMoving, isTrue);
   });
 }

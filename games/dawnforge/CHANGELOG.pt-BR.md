@@ -8,6 +8,17 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.12.0
+
+### ✨ New
+
+- O mundo não acaba mais. O campinho verde se foi — agora todo jogo novo
+  constrói um mundo inteiro a partir de uma semente: grama, mar e montanhas
+  em degraus, diferente a cada vez, igual toda vez que você replanta a
+  mesma semente. Ande o quanto quiser; o chão à frente aparece conforme
+  você vai. Você começa num pedaço plano e seguro de grama. (Página nova
+  do manual: O Mundo.)
+
 ## 0.11.0
 
 ### 🧹 Internal

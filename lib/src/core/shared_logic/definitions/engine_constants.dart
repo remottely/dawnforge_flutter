@@ -70,4 +70,9 @@ abstract final class EngineConstants {
   /// Chunk columns per frame while the initial window is still materializing
   /// — the loading screen hides the burst, so boot fills fast.
   static const int proceduralBootColumnsPerFrame = 32;
+
+  /// Ground-layer chunk bakes per render frame — the same per-frame cap the
+  /// Godot map view spends on its block bakes: it buys a fast fill and pays
+  /// for it in framerate only while the fill lasts.
+  static const int groundBakeChunksPerFrame = 16;
 }
