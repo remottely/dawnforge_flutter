@@ -1,5 +1,6 @@
 import 'package:dawnforge/src/core/render/dawnforge_game.dart';
 import 'package:dawnforge/src/core/systems/boot.dart';
+import 'package:dawnforge/src/core/ui/game_overlays.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
@@ -15,11 +16,15 @@ class DawnforgeApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Dawnforge',
       home: Scaffold(
         body: GameWidget<DawnforgeGame>.controlled(
           gameFactory: DawnforgeGame.new,
+          // The interface is Flutter over the game surface, never inside it
+          // (study §3.1). The game decides WHEN each overlay is on screen;
+          // this map only says what each name draws.
+          overlayBuilderMap: gameOverlays(),
         ),
       ),
     );

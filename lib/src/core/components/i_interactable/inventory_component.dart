@@ -43,6 +43,42 @@ final class InventoryComponent extends IComponent {
 
   int get maxSlots => container.slotCount;
 
+  // ============================================
+  // SELECTION (FP4.2b) — the slot in hand
+  // ============================================
+
+  /// Raised when the selection MOVED, and when the selected slot's CONTENTS
+  /// changed under it. Both are the same news to a listener: what the actor is
+  /// holding is now something else. Emitting only on movement is how the spec
+  /// once left a player holding an item that had already left the slot.
+  final selectionChanged = EventSignal<int>();
+
+  int get selectedSlot => container.selectedSlot;
+
+  /// The stack in hand — empty when the selected slot is.
+  ItemStack get selectedStack => slots[selectedSlot];
+
+  /// Points the container at [index]. Out of range is refused rather than
+  /// clamped: every caller derives the index from a page it just measured, so
+  /// an out-of-range one is a page-math bug and clamping would hide it.
+  void selectSlot(int index) {
+    assert(
+      index >= 0 && index < maxSlots,
+      '[InventoryComponent] select $index outside 0..${maxSlots - 1}',
+    );
+    if (index == container.selectedSlot) return;
+    container.selectedSlot = index;
+    selectionChanged.emit(index);
+  }
+
+  /// The one place a slot's change is announced. Every mutator goes through
+  /// it so that "the selected slot's contents moved" cannot be reported by
+  /// some paths and not others.
+  void _announceSlot(int index) {
+    slotChanged.emit(index);
+    if (index == container.selectedSlot) selectionChanged.emit(index);
+  }
+
   /// Adds [amount] of [item], stacking into matching slots first, then into
   /// empty ones (skipped under [onlyExistingStacks]). Returns what did NOT
   /// fit — 0 is complete success, and the caller owes the remainder to
@@ -64,7 +100,7 @@ final class InventoryComponent extends IComponent {
       if (transfer > 0) {
         stack.amount += transfer;
         remaining -= transfer;
-        slotChanged.emit(i);
+        _announceSlot(i);
       }
     }
 
@@ -78,7 +114,7 @@ final class InventoryComponent extends IComponent {
           ..itemId = item.id
           ..amount = transfer;
         remaining -= transfer;
-        slotChanged.emit(i);
+        _announceSlot(i);
       }
     }
 
@@ -106,7 +142,7 @@ final class InventoryComponent extends IComponent {
       stack.amount -= take;
       remaining -= take;
       if (stack.amount <= 0) stack.clear();
-      slotChanged.emit(i);
+      _announceSlot(i);
     }
 
     inventoryChanged.emit();
@@ -183,9 +219,8 @@ final class InventoryComponent extends IComponent {
     final stackA = slots[a];
     slots[a] = slots[b];
     slots[b] = stackA;
-    slotChanged
-      ..emit(a)
-      ..emit(b);
+    _announceSlot(a);
+    _announceSlot(b);
     inventoryChanged.emit();
   }
 
@@ -235,7 +270,7 @@ final class InventoryComponent extends IComponent {
     slots[index]
       ..itemId = item.id
       ..amount = amount;
-    slotChanged.emit(index);
+    _announceSlot(index);
     inventoryChanged.emit();
   }
 
@@ -243,7 +278,7 @@ final class InventoryComponent extends IComponent {
   void clearSlot(int index) {
     assert(_isSlot(index), '[InventoryComponent] clearSlot $index outside 0..$maxSlots');
     slots[index].clear();
-    slotChanged.emit(index);
+    _announceSlot(index);
     inventoryChanged.emit();
   }
 
@@ -266,7 +301,7 @@ final class InventoryComponent extends IComponent {
     final taken = InventoryRules.calculateTake(amount, stack.amount);
     stack.amount -= taken;
     if (stack.amount <= 0) stack.clear();
-    slotChanged.emit(index);
+    _announceSlot(index);
     inventoryChanged.emit();
     itemRemoved.emit((item, taken));
     return (itemId: itemId, amount: taken);
@@ -302,9 +337,8 @@ final class InventoryComponent extends IComponent {
     src.amount -= transfer;
     if (src.amount <= 0) src.clear();
 
-    slotChanged
-      ..emit(from)
-      ..emit(to);
+    _announceSlot(from);
+    _announceSlot(to);
     inventoryChanged.emit();
     return true;
   }

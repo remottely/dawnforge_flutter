@@ -11,18 +11,27 @@ import 'package:dawnforge/src/core/resources/inventory/item_stack.dart';
 final class InventoryData {
   InventoryData({required int slotCount})
       : assert(slotCount >= 0, '[InventoryData] negative slot count $slotCount'),
+        selectedSlot = 0,
         slots = List<ItemStack>.generate(
           slotCount,
           (_) => ItemStack.empty(),
           growable: false,
         );
 
-  InventoryData._(this.slots);
+  InventoryData._(this.slots, this.selectedSlot);
 
   factory InventoryData.deserialize(Map<String, Object?> json) {
     final rawSlots = json['slots'];
     if (rawSlots is! List) {
       throw StateError('[InventoryData] malformed slots: $json');
+    }
+    // Required, not defaulted: a container written without a cursor is a
+    // container written by an older shape of this class, and reading it as
+    // "slot zero, probably" is a default patched over missing data (rules 5
+    // and 6). Nothing has shipped, so the save is the bill (rule 32).
+    final selected = json['selected_slot'];
+    if (selected is! int || selected < 0 || selected >= rawSlots.length) {
+      throw StateError('[InventoryData] selected_slot out of range: $json');
     }
     return InventoryData._(
       List<ItemStack>.generate(
@@ -36,12 +45,23 @@ final class InventoryData {
         },
         growable: false,
       ),
+      selected,
     );
   }
 
   /// Fixed-length; capacity changes are a future verb (`grow_by`, on tier
   /// unlock) and arrive with their system.
   final List<ItemStack> slots;
+
+  /// Which slot the container's owner is currently pointing at — for an actor,
+  /// the one the hotbar highlights and the hand draws from.
+  ///
+  /// State, not view (rule 8): the spec keeps this counter inside `HotbarUI`,
+  /// but what a player is holding survives closing the bag and has to survive a
+  /// save, so it lives in the soul beside the slots it indexes — the same move
+  /// FP4.2a made for the slots themselves. Written only through
+  /// `InventoryComponent.selectSlot`, which is where the range is enforced.
+  int selectedSlot;
 
   int get slotCount => slots.length;
 
@@ -57,9 +77,10 @@ final class InventoryData {
   }
 
   /// Mutable state only: the slot list, empties included so indices survive
-  /// the round-trip (a hotbar is positional).
+  /// the round-trip (a hotbar is positional), and the cursor into it.
   Map<String, Object?> serialize() => <String, Object?>{
         'slots': slots.map((stack) => stack.serialize()).toList(),
+        'selected_slot': selectedSlot,
       };
 
   InventoryData clone() => InventoryData._(
@@ -68,5 +89,6 @@ final class InventoryData {
           (i) => slots[i].clone(),
           growable: false,
         ),
+        selectedSlot,
       );
 }

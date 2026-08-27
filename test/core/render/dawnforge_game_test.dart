@@ -10,6 +10,8 @@ import 'package:dawnforge/src/core/systems/input/input_helper.dart';
 import 'package:dawnforge/src/core/systems/localization/localization_system.dart';
 import 'package:dawnforge/src/core/systems/world/chunk_streaming_system.dart';
 import 'package:dawnforge/src/core/systems/world/grid_manager.dart';
+import 'package:dawnforge/src/core/ui/game_overlays.dart';
+import 'package:dawnforge/src/core/ui/interface/hotbar_view.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/services.dart';
@@ -29,7 +31,15 @@ void main() {
     // Image decode is real async, which the fake-async test zone blocks —
     // boot the game inside runAsync so sprite sheets actually load.
     await tester.runAsync(() async {
-      await tester.pumpWidget(GameWidget<DawnforgeGame>(game: game));
+      await tester.pumpWidget(
+        // The app's own overlay table, not a copy: the boot has to prove the
+        // interface reaches the screen, and Flame refuses an overlay name it
+        // has no builder for.
+        GameWidget<DawnforgeGame>(
+          game: game,
+          overlayBuilderMap: gameOverlays(),
+        ),
+      );
       // Wait on the FULL render-ready condition, not just the sim objects:
       // each renderer's sheet decodes after its host spawns, so a wait that
       // stops at simObjects raced the sprite-child assertions below — and
@@ -135,6 +145,13 @@ void main() {
       overlay.lines[2],
       contains('${groundLayer.bakedChunkCount} baked'),
     );
+
+    // The interface reached the screen (FP4.2b). It is a FLUTTER widget over
+    // the game surface, so it is found in the widget tree and not among the
+    // Flame children — which is exactly why the boot test mounts the app's own
+    // overlay table instead of a bare GameWidget.
+    expect(find.byType(HotbarView), findsOneWidget);
+    expect(game.overlays.isActive(DawnforgeGame.hotbarOverlay), isTrue);
 
     // Feed a "D held" state straight into the input SSOT (a raw key event
     // needs a focused widget tree; the helper is the contract, so it is the

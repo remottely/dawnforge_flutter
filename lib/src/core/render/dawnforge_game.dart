@@ -47,6 +47,13 @@ final class DawnforgeGame extends FlameGame with KeyboardEvents {
   /// Tests pass a fixed one.
   final int worldSeed;
 
+  /// Flame's name for the hotbar overlay. The interface is FLUTTER, not Flame
+  /// components (study §3.1: widgets are Flutter's strongest suit and the
+  /// spec's `Control` tree ports to them directly) — the overlay is the seam
+  /// that lets a widget sit over the game surface without either side owning
+  /// the other.
+  static const String hotbarOverlay = 'hotbar';
+
   /// Every simulated host, ticked on the fixed step.
   final List<WorldObject> simObjects = <WorldObject>[];
 
@@ -173,6 +180,9 @@ final class DawnforgeGame extends FlameGame with KeyboardEvents {
       // on the frame its onLoad resolves.
       unawaited(Future<void>.sync(() => world.add(ItemWorldRenderer(pickup))));
     });
+
+    // Last, because the overlay reads `player.inventory` the moment it builds.
+    overlays.add(hotbarOverlay);
   }
 
   /// Renderer of every scattered host, for unbind on despawn. Renderers go

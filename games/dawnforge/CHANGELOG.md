@@ -8,6 +8,19 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.24.0
+
+### ✨ New
+
+- Your backpack has a face now. A bar of ten pockets sits at the bottom of the
+  screen, and one of them always has a bright yellow edge — that is the pocket
+  you are holding from. Press a number key, press `Q` or `E`, or just tap a
+  pocket to choose a different one. Your backpack is thirty pockets deep, so
+  the bar shows ten at a time and **Page Up** / **Page Down** turn the page;
+  the dots underneath say which page you are on. Things you pick up show up in
+  it straight away, with a little number when you have more than one. (New
+  manual page: The Item Bar.)
+
 ## 0.23.0
 
 ### 🔧 Changed

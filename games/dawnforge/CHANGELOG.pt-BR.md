@@ -8,6 +8,19 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.24.0
+
+### ✨ New
+
+- A sua mochila ganhou um rosto. Uma barra de dez bolsos apareceu embaixo da
+  tela, e um deles está sempre com a borda amarela acesa — é o bolso de onde
+  você está segurando. Aperte uma tecla de número, aperte `Q` ou `E`, ou
+  simplesmente toque num bolso para escolher outro. A sua mochila tem trinta
+  bolsos, então a barra mostra dez por vez e **Page Up** / **Page Down** viram
+  a página; as bolinhas embaixo dizem em qual página você está. As coisas que
+  você pega aparecem nela na hora, com um numerinho quando você tem mais de
+  uma. (Página nova do manual: A Barra de Itens.)
+
 ## 0.23.0
 
 ### 🔧 Changed
