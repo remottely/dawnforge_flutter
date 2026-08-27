@@ -80,6 +80,7 @@
     "forge_almanac.03_farm.t2.t2_prop_crop_fruit_plum.description": "A tree heavy with plum. Knock the fruit down with an axe — more grows back on its own.",
     "forge_almanac.03_farm.t2.t2_prop_crop_fruit_plum.display_name": "Plum Tree",
     "forge_almanac.03_farm.t2.t2_prop_crop_vegetable_tomato.description": "Tomato growing in tilled soil. Water it, wait, then cut it with a sickle — and plant it again after.",
-    "forge_almanac.03_farm.t2.t2_prop_crop_vegetable_tomato.display_name": "Tomato Crop"
+    "forge_almanac.03_farm.t2.t2_prop_crop_vegetable_tomato.display_name": "Tomato Crop",
+    "ui.menu.tab.inventory": "Inventory"
   }
 }

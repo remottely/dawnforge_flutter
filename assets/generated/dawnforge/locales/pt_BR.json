@@ -80,6 +80,7 @@
     "forge_almanac.03_farm.t2.t2_prop_crop_fruit_plum.description": "Uma árvore carregada de ameixa. Derrube a fruta com o machado — nasce mais sozinha.",
     "forge_almanac.03_farm.t2.t2_prop_crop_fruit_plum.display_name": "Árvore de Ameixa",
     "forge_almanac.03_farm.t2.t2_prop_crop_vegetable_tomato.description": "Tomate crescendo em terra arada. Regue, espere e corte com a foice — e plante de novo depois.",
-    "forge_almanac.03_farm.t2.t2_prop_crop_vegetable_tomato.display_name": "Plantação de Tomate"
+    "forge_almanac.03_farm.t2.t2_prop_crop_vegetable_tomato.display_name": "Plantação de Tomate",
+    "ui.menu.tab.inventory": "Inventário"
   }
 }

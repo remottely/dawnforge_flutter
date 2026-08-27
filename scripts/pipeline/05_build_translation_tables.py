@@ -6,18 +6,33 @@ Godot rebuilt a CSV for its own importer; here each locale becomes one JSON map
 at `GENERATED_ROOT/locales/<locale>.json`, loaded by the Dart
 `LocalizationSystem` (rule 19: every user-facing string goes through `tr()`).
 
-Source of truth: the `translations:` block of every almanac `.md` —
+TWO sources, one table per locale:
 
-    display_name_key: forge_almanac.…​.display_name
-    translations:
-      display_name: {en: "…", pt_BR: "…", es: "…"}
-      description:  {en: "…", pt_BR: "…", es: "…"}
+1. What the CONTENT says — the `translations:` block of every almanac `.md`:
 
-For each translated field the key is the document's `<field>_key`, and every
-locale seen anywhere in the pack gets a table. A field translated in one locale
-but missing in another is a HOLE the check reports — a key that resolves in
-en and crashes in pt_BR is the worst kind of localization bug, found at build
-time here instead (rule 5 at the pipeline altitude).
+       display_name_key: forge_almanac.…​.display_name
+       translations:
+         display_name: {en: "…", pt_BR: "…", es: "…"}
+         description:  {en: "…", pt_BR: "…", es: "…"}
+
+   The key of a translated field is the document's own `<field>_key`, because
+   the field names repeat across hundreds of files and cannot name themselves.
+
+2. What the INTERFACE says — the `strings:` block under `UI_DATA_ROOT`, where
+   each entry names its own key:
+
+       strings:
+         ui.menu.tab.inventory: {en: "…", pt_BR: "…", es: "…"}
+
+   No authored world object owns the word on a button, so without this source
+   rule 19 has nowhere to put it. (The Godot repo keeps these in a hand-written
+   `translations_static.csv` inside its *generated* folder; here rules 17 and 31
+   put them in the pack instead — same keys, pack format. See `ui_strings.md`.)
+
+Every locale seen anywhere in either source gets a table, and a key translated
+in one locale but missing in another is a HOLE the check reports — a key that
+resolves in en and crashes in pt_BR is the worst kind of localization bug, found
+at build time here instead (rule 5 at the pipeline altitude).
 
     .venv/bin/python dawnforge.py translations [--dry-run|--check]
 """
@@ -32,7 +47,9 @@ import yaml
 sys.path.insert(0, str(next(
     p / "lib" for p in Path(__file__).resolve().parents
     if (p / "lib" / "project_paths.py").is_file())))
-from project_paths import ALMANAC_ROOT, LOCALES_ROOT, PROJECT_ROOT  # noqa: E402
+from project_paths import (  # noqa: E402
+    ALMANAC_ROOT, LOCALES_ROOT, PROJECT_ROOT, UI_DATA_ROOT,
+)
 
 GENERATED_BY = "scripts/pipeline/05_build_translation_tables.py"
 
@@ -48,10 +65,27 @@ def _frontmatter(text: str, source: Path) -> dict:
     return data
 
 
-def build_tables() -> tuple[dict[str, dict[str, str]], list[str]]:
-    """({locale: {key: text}}, holes) from every almanac file."""
-    tables: dict[str, dict[str, str]] = {}
-    holes: list[str] = []
+def _absorb(
+    tables: dict[str, dict[str, str]],
+    per_locale: object,
+    key: str,
+    source: Path,
+    where: str,
+) -> None:
+    """Writes one key's `{locale: text}` mapping into every locale's table."""
+    if not isinstance(per_locale, dict):
+        raise SystemExit(f"[05] {source}: {where} is not a mapping")
+    for locale, text in per_locale.items():
+        if not isinstance(text, str):
+            raise SystemExit(f"[05] {source}: {where}.{locale} is not a string")
+        table = tables.setdefault(str(locale), {})
+        if key in table and table[key] != text:
+            raise SystemExit(f"[05] {source}: key '{key}' translated twice ({locale})")
+        table[key] = text
+
+
+def _collect_content_strings(tables: dict[str, dict[str, str]]) -> None:
+    """Source 1: the `translations:` block of every almanac document."""
     sources = sorted(ALMANAC_ROOT.rglob("*.md"))
     if not sources:
         raise SystemExit(f"[05] no .md files under {ALMANAC_ROOT}")
@@ -70,15 +104,42 @@ def build_tables() -> tuple[dict[str, dict[str, str]], list[str]]:
                     f"[05] {source}: translated field '{field}' has no "
                     f"'{field}_key' — the key is how tr() reaches it"
                 )
-            if not isinstance(per_locale, dict):
-                raise SystemExit(f"[05] {source}: translations.{field} is not a mapping")
-            for locale, text in per_locale.items():
-                if not isinstance(text, str):
-                    raise SystemExit(f"[05] {source}: {field}.{locale} is not a string")
-                table = tables.setdefault(str(locale), {})
-                if key in table and table[key] != text:
-                    raise SystemExit(f"[05] {source}: key '{key}' translated twice ({locale})")
-                table[key] = text
+            _absorb(tables, per_locale, key, source, f"translations.{field}")
+
+
+def _collect_interface_strings(tables: dict[str, dict[str, str]]) -> None:
+    """Source 2: the `strings:` block of every document under `UI_DATA_ROOT`.
+
+    A pack with no `ui/` folder at all says nothing in its own interface yet —
+    a legitimate state of a young pack, not a recovery (rule 20). A folder that
+    exists and holds no document is the mistake, and says so.
+    """
+    if not UI_DATA_ROOT.is_dir():
+        return
+    sources = sorted(UI_DATA_ROOT.rglob("*.md"))
+    if not sources:
+        raise SystemExit(f"[05] {UI_DATA_ROOT} exists but holds no .md")
+
+    for source in sources:
+        doc = _frontmatter(source.read_text(encoding="utf-8"), source)
+        strings = doc.get("strings")
+        if not isinstance(strings, dict):
+            raise SystemExit(
+                f"[05] {source}: no 'strings' mapping — an interface document "
+                f"exists to carry one"
+            )
+        for key, per_locale in strings.items():
+            if not isinstance(key, str) or not key:
+                raise SystemExit(f"[05] {source}: '{key}' is not a usable key")
+            _absorb(tables, per_locale, key, source, f"strings.{key}")
+
+
+def build_tables() -> tuple[dict[str, dict[str, str]], list[str]]:
+    """({locale: {key: text}}, holes) from the pack's content and interface."""
+    tables: dict[str, dict[str, str]] = {}
+    holes: list[str] = []
+    _collect_content_strings(tables)
+    _collect_interface_strings(tables)
 
     all_keys = {key for table in tables.values() for key in table}
     for locale, table in sorted(tables.items()):

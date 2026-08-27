@@ -8,6 +8,17 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.20.0
+
+### 🧹 Internal
+
+- Agora dá para ensinar o jogo a falar sobre ele mesmo. Até hoje só os nomes das
+  coisas do mundo — um javali, uma ameixa, uma picareta — tinham palavras em cada
+  idioma. As palavras que a própria tela precisa, como o título em cima da sua
+  mochila, não tinham onde ser escritas. Agora têm, em inglês, português e
+  espanhol de uma vez, e uma palavra que falte em um idioma para a construção do
+  jogo em vez de te surpreender depois.
+
 ## 0.19.1
 
 ### 🧹 Internal

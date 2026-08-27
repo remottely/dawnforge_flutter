@@ -8,6 +8,17 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.20.0
+
+### 🧹 Internal
+
+- The game can now be taught how to say things about itself. Until today only
+  the names of things in the world — a boar, a plum, a pickaxe — had words in
+  every language. The words the screen itself needs, like the title over your
+  bag, had nowhere to be written. Now they do, in English, Portuguese and
+  Spanish at once, and a word missing from one language stops the build instead
+  of surprising you later.
+
 ## 0.19.1
 
 ### 🧹 Internal
