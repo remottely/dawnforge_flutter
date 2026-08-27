@@ -8,6 +8,19 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.22.0
+
+### 🧹 Internal
+
+- O jogo agora tem um lugar só que sabe o que está na sua tela. Só uma janela
+  grande pode ocupar a tela por vez, então abrir a mochila em cima do mapa
+  guarda o mapa sozinho, em vez de deixar duas coisas empilhadas uma sobre a
+  outra. As coisinhas do canto — a sua barra de itens, os seus corações —
+  voltam no instante em que a última janela fecha, sempre, porque uma regra só
+  decide isso em vez de cada janela ter que lembrar. E o botão Voltar agora vai
+  para um lugar exato: quem está por cima responde, então um aperto só nunca
+  consegue fechar uma coisa e abrir outra ao mesmo tempo.
+
 ## 0.21.0
 
 ### 🧹 Internal

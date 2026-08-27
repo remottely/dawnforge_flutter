@@ -8,6 +8,19 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.22.0
+
+### 🧹 Internal
+
+- The game now has one place that knows what is on your screen. Only one big
+  window can hold the screen at a time, so opening your bag over the map puts
+  the map away by itself instead of leaving two things stacked on top of each
+  other. The little corner things — your item bar, your hearts — come back the
+  moment the last window closes, always, because one rule decides it rather
+  than every window remembering to. And the Back button now goes to exactly
+  one place: whatever is on top answers it, so a single press can never close
+  one thing and open another at the same time.
+
 ## 0.21.0
 
 ### 🧹 Internal
