@@ -1,9 +1,11 @@
 import 'package:dawnforge/src/core/components/i_component.dart';
 import 'package:dawnforge/src/core/domain/inventory/inventory_rules.dart';
+import 'package:dawnforge/src/core/registries/item_registry.dart';
 import 'package:dawnforge/src/core/resources/inventory/inventory_data.dart';
 import 'package:dawnforge/src/core/resources/inventory/item_stack.dart';
 import 'package:dawnforge/src/core/resources/items/item_data.dart';
 import 'package:dawnforge/src/core/resources/world_objects/actors/i_actor_data.dart';
+import 'package:dawnforge/src/core/systems/boot.dart';
 import 'package:dawnforge/src/core/systems/eventing/event_signal.dart';
 
 /// Slot-based storage behavior — port of `inventory_component.gd` (logic
@@ -194,5 +196,178 @@ final class InventoryComponent extends IComponent {
       if (slots[i].isEmpty) return i;
     }
     return -1;
+  }
+
+  // ============================================
+  // SLOT-ADDRESSED VERBS (FP4.2b)
+  // ============================================
+  // `addItem` picks the slot itself. Everything the player does with a bag
+  // open picks it instead — this stack, onto that one — and before these
+  // existed the only way to say so was to reach into `slots` from outside.
+  // The Godot spec learned that the hard way: its drag path was mutating two
+  // containers by hand. Placement is the caller's decision; the bookkeeping
+  // and every announcement of it belong here.
+
+  /// A slot's item, resolved through the registry (rule 2 — the slot stores
+  /// the id, never the resource, so the container never holds a second copy
+  /// of authored data that could drift from the registry's).
+  ItemData _itemOf(ItemStack stack) {
+    assert(!stack.isEmpty, '[InventoryComponent] _itemOf on an empty slot');
+    return locator<ItemRegistry>().getItem(stack.itemId);
+  }
+
+  bool _isSlot(int index) => index >= 0 && index < maxSlots;
+
+  ItemStack itemAtSlot(int index) {
+    assert(_isSlot(index), '[InventoryComponent] slot $index outside 0..$maxSlots');
+    return slots[index];
+  }
+
+  /// Writes one slot outright and announces it.
+  ///
+  /// Returns nothing, unlike the spec's `set_slot`: there the bool reports a
+  /// refusal only a creative `infinite` catalogue can produce, and creative
+  /// mode is not ported. It comes back with `infinite`, not before — a bool
+  /// whose false arm is unreachable is a branch that lies to its callers.
+  void setSlot(int index, ItemData item, int amount) {
+    assert(_isSlot(index), '[InventoryComponent] setSlot $index outside 0..$maxSlots');
+    assert(amount > 0, '[InventoryComponent] setSlot amount $amount — use clearSlot');
+    slots[index]
+      ..itemId = item.id
+      ..amount = amount;
+    slotChanged.emit(index);
+    inventoryChanged.emit();
+  }
+
+  /// Empties one slot and announces it.
+  void clearSlot(int index) {
+    assert(_isSlot(index), '[InventoryComponent] clearSlot $index outside 0..$maxSlots');
+    slots[index].clear();
+    slotChanged.emit(index);
+    inventoryChanged.emit();
+  }
+
+  /// Takes up to [amount] out of one slot and hands back what actually left
+  /// it — the id, because the caller's next move is to give it somewhere
+  /// (a pickup spawned at the player's feet, a stack landing in a chest) and
+  /// an id is what a factory takes.
+  ///
+  /// Null when the slot holds nothing: a container the player is dragging
+  /// across has empty slots by definition, so "nothing to take here" is a
+  /// legitimate answer and not a failure (rule 20).
+  ({String itemId, int amount})? removeItemAtIndex(int index, int amount) {
+    assert(_isSlot(index), '[InventoryComponent] removeAt $index outside 0..$maxSlots');
+    assert(amount > 0, '[InventoryComponent] removeAt amount $amount');
+    final stack = slots[index];
+    if (stack.isEmpty) return null;
+
+    final itemId = stack.itemId;
+    final item = _itemOf(stack);
+    final taken = InventoryRules.calculateTake(amount, stack.amount);
+    stack.amount -= taken;
+    if (stack.amount <= 0) stack.clear();
+    slotChanged.emit(index);
+    inventoryChanged.emit();
+    itemRemoved.emit((item, taken));
+    return (itemId: itemId, amount: taken);
+  }
+
+  /// Folds [from] into [to] inside THIS container. An empty destination takes
+  /// the stack whole; a matching one absorbs what fits and leaves the
+  /// remainder behind; anything else refuses, because merging two different
+  /// items is not a thing that can happen and swapping them is `swapSlots`.
+  bool mergeStacks(int from, int to) {
+    assert(_isSlot(from) && _isSlot(to),
+        '[InventoryComponent] merge $from->$to outside 0..$maxSlots');
+    if (from == to) return false;
+
+    final src = slots[from];
+    if (src.isEmpty) return false;
+
+    final dst = slots[to];
+    if (dst.isEmpty) {
+      swapSlots(from, to);
+      return true;
+    }
+
+    if (!InventoryRules.areIdsEqual(dst.itemId, src.itemId)) return false;
+
+    final maxStack = _itemOf(dst).maxStack;
+    if (InventoryRules.spaceForMatchingStack(maxStack, dst.amount) <= 0) {
+      return false;
+    }
+    final transfer =
+        InventoryRules.calculateStackTransfer(src.amount, dst.amount, maxStack);
+    dst.amount += transfer;
+    src.amount -= transfer;
+    if (src.amount <= 0) src.clear();
+
+    slotChanged
+      ..emit(from)
+      ..emit(to);
+    inventoryChanged.emit();
+    return true;
+  }
+
+  /// Moves up to [amount] from this container's [fromSlot] into [target]'s
+  /// [toSlot], resolving the three outcomes a drag across two open panels can
+  /// have: an empty destination takes the stack, a matching one absorbs what
+  /// fits, and any other pairing trades the two slots whole. Returns whether
+  /// anything moved.
+  ///
+  /// Cross-container only. A move inside one container is `mergeStacks` or
+  /// `swapSlots`, which carry rules of their own. This is the seam the spec's
+  /// multiplayer layer replicates: one method, both containers, every mutation
+  /// announced by the container it happened in.
+  bool transferTo(
+    InventoryComponent target,
+    int fromSlot,
+    int toSlot,
+    int amount,
+  ) {
+    assert(!identical(target, this),
+        '[InventoryComponent] transferTo is cross-container; use mergeStacks/swapSlots within one');
+    assert(amount > 0, '[InventoryComponent] transferTo amount $amount');
+    assert(_isSlot(fromSlot), '[InventoryComponent] transfer from $fromSlot outside 0..$maxSlots');
+    assert(target._isSlot(toSlot),
+        '[InventoryComponent] transfer to $toSlot outside 0..${target.maxSlots}');
+
+    final source = slots[fromSlot];
+    if (source.isEmpty) return false;
+    final destination = target.slots[toSlot];
+    final sourceItem = _itemOf(source);
+
+    if (destination.isEmpty) {
+      final moved = InventoryRules.calculateTake(amount, source.amount);
+      removeItemAtIndex(fromSlot, moved);
+      target.setSlot(toSlot, sourceItem, moved);
+      return true;
+    }
+
+    if (InventoryRules.areIdsEqual(destination.itemId, source.itemId)) {
+      final space = InventoryRules.spaceForMatchingStack(
+        sourceItem.maxStack,
+        destination.amount,
+      );
+      if (space <= 0) return false;
+      final transfer = InventoryRules.calculateTake(
+        InventoryRules.calculateTake(amount, source.amount),
+        space,
+      );
+      target.setSlot(toSlot, sourceItem, destination.amount + transfer);
+      removeItemAtIndex(fromSlot, transfer);
+      return true;
+    }
+
+    // Different items: the two slots trade places whole and [amount] is
+    // ignored — half a swap would need a third slot to put the remainder in.
+    final destinationItem = target._itemOf(destination);
+    final destinationAmount = destination.amount;
+    final sourceAmount = source.amount;
+    setSlot(fromSlot, destinationItem, destinationAmount);
+    target.setSlot(toSlot, sourceItem, sourceAmount);
+    itemRemoved.emit((sourceItem, sourceAmount));
+    target.itemRemoved.emit((destinationItem, destinationAmount));
+    return true;
   }
 }

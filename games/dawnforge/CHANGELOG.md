@@ -8,6 +8,18 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.21.0
+
+### 🧹 Internal
+
+- Backpacks learned the moves your hands make. Until now the bag could only
+  decide for itself where a new thing went. Now a thing can be put in the
+  pocket you choose, taken out of the pocket you point at, poured into the
+  pocket next door until it is full, or handed over to a different bag
+  entirely — and when two different things meet, they simply trade pockets.
+  Nothing on screen yet: this is the machinery under the dragging that comes
+  next.
+
 ## 0.20.0
 
 ### 🧹 Internal
