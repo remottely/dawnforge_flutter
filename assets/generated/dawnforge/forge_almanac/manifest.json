@@ -2,6 +2,11 @@
   "generated_by": "scripts/pipeline/04_import_almanac_to_json.py",
   "entries": [
     {
+      "id": "actor_player",
+      "type": "i_actor_biological_data",
+      "path": "player/actor_player.json"
+    },
+    {
       "id": "t1_actor_creature_boar",
       "type": "actor_creature_data",
       "path": "01_biomes/t1/actors/t1_actor_creature_boar.json"

@@ -8,6 +8,19 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.23.0
+
+### 🔧 Changed
+
+- Você não é mais um javali. Até agora o personagem que você levava para
+  passear era literalmente um dos bichos da floresta, emprestado porque ninguém
+  tinha feito um jogador ainda — e javali não tem bolso, então cada coisinha
+  que o mundo derrubava batia em você e ficava na grama. Agora você é você, com
+  uma mochila de trinta bolsos. Dois avisos honestos: por enquanto você é
+  desenhado como um quadradinho colorido, porque a arte de uma pessoa ainda não
+  está no jogo, e você ainda não consegue abrir a mochila — a tela dela é a
+  próxima coisa.
+
 ## 0.22.0
 
 ### 🧹 Internal

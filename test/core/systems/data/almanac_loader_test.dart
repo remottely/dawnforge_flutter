@@ -33,14 +33,29 @@ void main() {
 
     // Every manifest entry landed in exactly one registry.
     final entries = (manifest['entries']! as List).cast<Map<String, Object?>>();
-    int countOf(String family) =>
-        entries.where((e) => (e['type']! as String).startsWith(family)).length;
+    int countOf(List<String> spellings) => entries
+        .where((e) => spellings.any((s) => (e['type']! as String).startsWith(s)))
+        .length;
 
-    expect(locator<ActorRegistry>().count, countOf('actor_'));
-    expect(locator<PropRegistry>().count, countOf('prop_'));
-    expect(locator<GroundRegistry>().count, countOf('ground_'));
-    expect(locator<ItemRegistry>().count, countOf('item_'));
+    // The actor family has two spellings: the pack authors a BASE class
+    // directly where the hierarchy has no leaf for it, and the player
+    // (`i_actor_biological_data`) is the case.
+    final actors = countOf(<String>['actor_', 'i_actor_']);
+    final props = countOf(<String>['prop_']);
+    final grounds = countOf(<String>['ground_']);
+    final items = countOf(<String>['item_']);
+
+    expect(locator<ActorRegistry>().count, actors);
+    expect(locator<PropRegistry>().count, props);
+    expect(locator<GroundRegistry>().count, grounds);
+    expect(locator<ItemRegistry>().count, items);
     expect(entries, isNotEmpty);
+
+    // The partition is the real invariant: an entry that reached NO registry
+    // would leave the per-family counts above agreeing with each other and the
+    // game short one object. A new family has to be routed, not absorbed.
+    expect(actors + props + grounds + items, entries.length,
+        reason: 'a manifest entry landed outside every registry');
   });
 
   test('a known item parses with its authored values', () {

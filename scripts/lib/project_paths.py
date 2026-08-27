@@ -114,6 +114,42 @@ def pack_root(game_name: str) -> Path:
 ALMANAC_ROOT: Path = DATA_ROOT / "forge_almanac"
 """The living `.md` content database."""
 
+PLAYER_DATA_ROOT: Path = DATA_ROOT / "player"
+"""The player's own document. Beside the almanac rather than inside it because
+the player belongs to no biome, no tier and no workstation — the same place the
+Godot pack keeps it."""
+
+OBJECT_DOCUMENT_ROOTS: tuple[tuple[Path, str], ...] = (
+    (ALMANAC_ROOT, ""),
+    (PLAYER_DATA_ROOT, "player"),
+)
+"""Every pack root holding WORLD-OBJECT documents, with the prefix each one's
+output takes under the generated almanac. Steps 02, 03 and 04 all walk this —
+a root added to one step and forgotten in another is a document that imports
+without a sprite, or gets a sprite nothing imports."""
+
+
+def object_documents() -> list[tuple[Path, Path]]:
+    """`(document, output directory)` for every world-object `.md` in the pack.
+
+    The output directory is relative to the generated almanac root, so a
+    document's JSON lands where the manifest says it does regardless of which
+    pack root it came from.
+
+    A root that does not exist contributes nothing: a pack without a `player/`
+    document has no player yet, which is a state of a young pack and not a
+    failure (rule 20). An EMPTY almanac is a different matter and its own
+    step's problem — that one has to be authored.
+    """
+    found: list[tuple[Path, Path]] = []
+    for root, prefix in OBJECT_DOCUMENT_ROOTS:
+        if not root.is_dir():
+            continue
+        for document in sorted(root.rglob("*.md")):
+            found.append((document, Path(prefix) / document.parent.relative_to(root)))
+    return found
+
+
 ATLAS_ROOT: Path = DATA_ROOT / "atlas"
 TEMPLATES_ROOT: Path = DATA_ROOT / "templates"
 WORLD_DATA_ROOT: Path = DATA_ROOT / "world"

@@ -43,7 +43,11 @@ final class AlmanacLoader {
         throw StateError('[AlmanacLoader] malformed manifest entry: $raw');
       }
       final json = readEntry(path);
-      if (type.startsWith('actor_')) {
+      // A `type:` is the snake_case name of the concrete class, and the pack
+      // authors a BASE class directly where the spec's hierarchy has no leaf
+      // for it — `i_actor_biological_data` is the player, who is not a
+      // creature, an enemy or an NPC. Both spellings name the same family.
+      if (type.startsWith('actor_') || type.startsWith('i_actor_')) {
         locator<ActorRegistry>().registerJson(json);
       } else if (type.startsWith('prop_')) {
         locator<PropRegistry>().registerJson(json);

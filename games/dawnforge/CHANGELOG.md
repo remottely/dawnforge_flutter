@@ -8,6 +8,19 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.23.0
+
+### 🔧 Changed
+
+- You are not a boar anymore. Until now the character you walked around was
+  literally one of the forest animals, borrowed because nobody had made a
+  player yet — and a boar has no pockets, so every single thing the world
+  dropped bounced off you and stayed on the grass. Now you are you, with a
+  backpack of thirty pockets. Two honest warnings: you are drawn as a plain
+  coloured square for the moment, because the art for a person is not in the
+  game yet, and you still cannot open the backpack — the screen for it is the
+  very next thing.
+
 ## 0.22.0
 
 ### 🧹 Internal

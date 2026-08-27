@@ -148,8 +148,12 @@ final class DawnforgeGame extends FlameGame with KeyboardEvents {
     // The FP3.6 proof instrument, in screen space above everything.
     await camera.viewport.add(DebugOverlay());
 
+    // The player is an authored actor of its own (FP4.2b) — imported from the
+    // spec's pack, where it is the one document that belongs to no biome. It
+    // stood in as a boar until now, and a boar authors `inventory_size: 0`,
+    // so nothing the world dropped could ever be picked up.
     player = ActorFactory.create(
-      't1_actor_creature_boar',
+      GameConstants.playerActorId,
       locator<GridManager>().gridToWorld(spawnTile),
     );
     final playerRenderer = ActorRenderer(player);

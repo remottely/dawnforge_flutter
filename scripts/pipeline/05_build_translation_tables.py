@@ -48,7 +48,7 @@ sys.path.insert(0, str(next(
     p / "lib" for p in Path(__file__).resolve().parents
     if (p / "lib" / "project_paths.py").is_file())))
 from project_paths import (  # noqa: E402
-    ALMANAC_ROOT, LOCALES_ROOT, PROJECT_ROOT, UI_DATA_ROOT,
+    ALMANAC_ROOT, LOCALES_ROOT, PROJECT_ROOT, UI_DATA_ROOT, object_documents,
 )
 
 GENERATED_BY = "scripts/pipeline/05_build_translation_tables.py"
@@ -85,12 +85,18 @@ def _absorb(
 
 
 def _collect_content_strings(tables: dict[str, dict[str, str]]) -> None:
-    """Source 1: the `translations:` block of every almanac document."""
-    sources = sorted(ALMANAC_ROOT.rglob("*.md"))
+    """Source 1: the `translations:` block of every world-object document.
+
+    Walks the same roots step 04 imports (`OBJECT_DOCUMENT_ROOTS`), not the
+    almanac alone: a document that becomes game data and a document that
+    carries game text are the same document, and a root known to one step and
+    not the other is an object whose name resolves nowhere.
+    """
+    sources = object_documents()
     if not sources:
         raise SystemExit(f"[05] no .md files under {ALMANAC_ROOT}")
 
-    for source in sources:
+    for source, _ in sources:
         doc = _frontmatter(source.read_text(encoding="utf-8"), source)
         translations = doc.get("translations")
         if translations is None:

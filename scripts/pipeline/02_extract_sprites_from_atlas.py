@@ -35,7 +35,7 @@ sys.path.insert(0, str(next(
     p / "lib" for p in Path(__file__).resolve().parents
     if (p / "lib" / "project_paths.py").is_file())))
 from project_paths import (  # noqa: E402
-    ALMANAC_ROOT,
+    object_documents,
     ATLAS_ROOT,
     GENERATED_ROOT,
     PROJECT_ROOT,
@@ -104,7 +104,7 @@ def run(dry_run: bool = False, check: bool = False) -> int:
 
     updated = 0
     skipped = 0
-    for md in sorted(ALMANAC_ROOT.rglob("*.md")):
+    for md, _ in object_documents():
         content = md.read_text(encoding="utf-8")
         pos_match = ATLAS_POSITION_RE.search(content)
         if not pos_match:

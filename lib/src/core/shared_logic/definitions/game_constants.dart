@@ -4,6 +4,15 @@ abstract final class GameConstants {
   /// The active game's identity. Read by the pipeline's runtime twin too.
   static const String gameName = 'dawnforge';
 
+  /// The actor the player IS. An id rather than a content path (rule 29): the
+  /// engine may name the entry it spawns, never the folder it was authored in.
+  static const String playerActorId = 'actor_player';
+
+  /// Slots in one row of any container's grid, and therefore one hotbar page's
+  /// width. The spec's `EngineConstants.SLOTS_PER_ROW`; the player's authored
+  /// `inventory_size` is a whole number of these.
+  static const int slotsPerRow = 5;
+
   /// Side of one grid tile, in world units (pixels at scale 1).
   static const int tileDimension = 16;
 

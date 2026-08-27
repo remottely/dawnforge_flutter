@@ -23,7 +23,9 @@ from pathlib import Path
 sys.path.insert(0, str(next(
     p / "lib" for p in Path(__file__).resolve().parents
     if (p / "lib" / "project_paths.py").is_file())))
-from project_paths import ALMANAC_ROOT, PROJECT_ROOT, TEMPLATES_ROOT  # noqa: E402
+from project_paths import (  # noqa: E402
+    PROJECT_ROOT, TEMPLATES_ROOT, object_documents,
+)
 
 step02 = __import__("02_extract_sprites_from_atlas")
 
@@ -58,7 +60,7 @@ def run(dry_run: bool = False, check: bool = False) -> int:
     del check  # not checkable: fills gaps, never owns the files it wrote
     created = 0
     present = 0
-    for md in sorted(ALMANAC_ROOT.rglob("*.md")):
+    for md, _ in object_documents():
         content = md.read_text(encoding="utf-8")
         sheet_match = step02.SPRITESHEET_RE.search(content)
         if not sheet_match:

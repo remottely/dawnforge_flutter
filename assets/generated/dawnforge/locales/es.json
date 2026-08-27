@@ -81,6 +81,8 @@
     "forge_almanac.03_farm.t2.t2_prop_crop_fruit_plum.display_name": "Árbol de Ciruela",
     "forge_almanac.03_farm.t2.t2_prop_crop_vegetable_tomato.description": "Tomate creciendo en tierra arada. Riégalo, espera y córtalo con la hoz — y vuelve a plantarlo después.",
     "forge_almanac.03_farm.t2.t2_prop_crop_vegetable_tomato.display_name": "Cultivo de Tomate",
+    "player.description": "Ese eres tú.",
+    "player.display_name": "Jugador",
     "ui.menu.tab.inventory": "Inventario"
   }
 }

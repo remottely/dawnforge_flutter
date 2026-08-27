@@ -4,6 +4,7 @@ import 'package:dawnforge/src/core/render/dawnforge_game.dart';
 import 'package:dawnforge/src/core/render/debug_overlay.dart';
 import 'package:dawnforge/src/core/render/ground_chunk_renderer.dart';
 import 'package:dawnforge/src/core/render/world_object_renderer.dart';
+import 'package:dawnforge/src/core/shared_logic/definitions/game_constants.dart';
 import 'package:dawnforge/src/core/systems/boot.dart';
 import 'package:dawnforge/src/core/systems/input/input_helper.dart';
 import 'package:dawnforge/src/core/systems/localization/localization_system.dart';
@@ -71,7 +72,14 @@ void main() {
     expect(locator<LocalizationSystem>().isLoaded, isTrue);
     expect(game.simObjects.length, greaterThan(1),
         reason: 'the boot window scattered no props');
-    expect(game.player.actorData.id, 't1_actor_creature_boar');
+    // The player is its own authored actor (FP4.2b), not the boar that stood
+    // in for one. The bag is the reason it had to stop being a boar: a boar
+    // authors `inventory_size: 0`, so every pickup in the running game was
+    // refused for want of a slot to land in.
+    expect(game.player.actorData.id, GameConstants.playerActorId);
+    expect(game.player.inventory.maxSlots, 30);
+    expect(game.player.inventory.maxSlots % GameConstants.slotsPerRow, 0,
+        reason: 'the bag must be a whole number of rows for the grid to page');
 
     // The render half of the gate: renderers must land inside `world` (the
     // ONLY subtree the CameraComponent renders — Flame's default FlameGame

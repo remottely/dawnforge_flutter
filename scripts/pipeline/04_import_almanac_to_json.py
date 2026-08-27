@@ -9,7 +9,7 @@ data class's `fromReader` constructor (`lib/src/core/resources/`), which is the
 single place a field's type and default are declared. This emitter therefore
 never restates a field list; it flattens and passes through.
 
-What it does per `.md` under `ALMANAC_ROOT`:
+What it does per world-object `.md` (every root in `OBJECT_DOCUMENT_ROOTS`):
 
 1. Parse the YAML frontmatter (everything between the opening `---` and the
    closing `---`, or the whole file when unclosed).
@@ -41,7 +41,9 @@ import yaml
 sys.path.insert(0, str(next(
     p / "lib" for p in Path(__file__).resolve().parents
     if (p / "lib" / "project_paths.py").is_file())))
-from project_paths import ALMANAC_ROOT, GENERATED_ROOT, PROJECT_ROOT  # noqa: E402
+from project_paths import (  # noqa: E402
+    ALMANAC_ROOT, GENERATED_ROOT, PROJECT_ROOT, object_documents,
+)
 
 OUTPUT_ROOT = GENERATED_ROOT / "forge_almanac"
 MANIFEST_NAME = "manifest.json"
@@ -103,15 +105,14 @@ def flatten_entry(doc: dict, source: Path) -> dict:
 
 def build_outputs() -> dict[str, str]:
     """Every output as {relative_path: file_content}, deterministic order."""
-    sources = sorted(ALMANAC_ROOT.rglob("*.md"))
+    sources = object_documents()
     if not sources:
         raise SystemExit(f"[04] no .md files under {ALMANAC_ROOT}")
 
     outputs: dict[str, str] = {}
     manifest_entries: list[dict] = []
-    for source in sources:
+    for source, relative_dir in sources:
         flat = flatten_entry(_frontmatter(source.read_text(encoding="utf-8"), source), source)
-        relative_dir = source.parent.relative_to(ALMANAC_ROOT)
         relative_path = str(relative_dir / f"{flat['id']}.json")
         outputs[relative_path] = json.dumps(flat, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
         manifest_entries.append(
