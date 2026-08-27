@@ -17,7 +17,7 @@
 | FP2 Pipeline retarget | gate met 2026-08-26 (FP2.3 sprites, FP2.4 translations, FP2.5 component-keys pending) | `dawnforge.py full` emits JSON; registries boot from a real pack slice; `--check` clean |
 | FP3 World & rendering | gate met 2026-08-26 (120fps hand-run, macOS) | player walks a chunked world at 60fps with debug overlay proving frame budget |
 | FP4 Gameplay loop | in progress (FP4.1 + FP4.2a done) | harvest → craft → place loop playable end to end |
-| FP5 Surfaces & UX | pending | HUD + inventory + menu with blocker stack, no pause anywhere |
+| FP5 Surfaces & UX | pending (FP5.1's `UIStateMachine` + back-press arbiter landed early, 0.22.0) | HUD + inventory + menu with blocker stack, no pause anywhere |
 | FP6 Persistence | pending | save/load round-trip; reset_local_save.py works |
 | FP7 Breadth systems | pending | (per-system sub-gates: time, spawning, progression, quests, audio, i18n, minigames) |
 
@@ -116,7 +116,15 @@ sector model (`shared_logic/`, `domain/`, `resources/`, `registries/`, `factorie
 - **FP4.2** Inventory + hotbar (domain rules + UI surface) — **(a) domain done 2026-08-26**
   (rules + slots in the data soul + component). (b) is the surface, and it pulls
   `UIStateMachine` + the single back-press arbiter forward from FP5.1 (decision: FP4 ships
-  the definitive surface, not a throwaway).
+  the definitive surface, not a throwaway). **(b) in progress 2026-08-27**, five slices
+  landed (0.20.0–0.24.0), the inventory panel remaining — `PENDING.md` #7 carries the
+  breakdown. *Plan edits the work forced:* interface strings needed a pack source of
+  their own before rule 19 was satisfiable at all (`data/ui/`, step 05's second source),
+  and the player had to **become an authored actor** here rather than in FP4.3a — the
+  boar standing in for one authors `inventory_size: 0`, so no surface bound to it could
+  show a slot. The `ActorPlayer` HOST is still FP4.3a's; only the document moved. Sorting
+  is deferred out of FP4.2b entirely: `InventorySortRules` ranks by item subtypes and a
+  tier field that arrive with FP4.3b and FP4.5.
 - **FP4.3** Tools in hand; the place/destroy/transform verb split (Godot rule 33) via
   `ActorOccupancyHelper` + permission helper ports. *Scope edit: ground destruction
   (digging a terrain tile + the empty-tile flood) is deferred to FP7 with bridges/cave
