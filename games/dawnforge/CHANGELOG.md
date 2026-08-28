@@ -8,6 +8,13 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.26.1
+
+### 🧹 Internal
+
+- The build diary wrote down the order the tool work has to happen in, and the
+  two traps hidden in it, while they were still fresh from reading.
+
 ## 0.26.0
 
 ### 🧹 Internal
