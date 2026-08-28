@@ -8,6 +8,19 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.26.0
+
+### 🧹 Internal
+
+- O jogo aprendeu a responder direito uma pergunta, antes de qualquer coisa
+  construir ou quebrar: **tem alguém aí?** Ele olha o espaço que os pés de uma
+  pessoa realmente ocupam, não o quadradinho mais perto dela, e olha todos os
+  quadradinhos que uma coisa ocuparia, não só o cantinho. E se uma coisa pode
+  aparecer ou sumir embaixo de você está escrito nos dados dela mesma — um
+  arbusto pode ser plantado no seu pé e quebrado ali; uma escada não, porque
+  tirar ela muda o chão onde você está. Nada usa essa resposta ainda; as
+  ferramentas que vão usar vêm em seguida.
+
 ## 0.25.1
 
 ### 🧹 Internal

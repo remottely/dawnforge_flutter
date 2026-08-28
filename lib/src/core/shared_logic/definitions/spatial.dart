@@ -87,3 +87,53 @@ final class WorldPos {
   @override
   String toString() => 'WorldPos($x, $y)';
 }
+
+/// An axis-aligned rectangle in WORLD units — the Dart twin of the `Rect2`
+/// the spec's occupancy rules are written in.
+///
+/// It exists because those rules are about AREAS, not tiles: an actor's
+/// collider straddles the neighbouring tile long before its position crosses
+/// into it, and a 3×2 prop appearing around somebody traps them just as well
+/// as one appearing on them. A tile-vs-tile comparison answers neither, and
+/// answering them tile-wise is precisely the shortcut the spec's header
+/// records as having sealed a player inside a mountain.
+final class WorldRect {
+  const WorldRect(this.left, this.top, this.width, this.height)
+      : assert(width > 0, '[WorldRect] width must be positive'),
+        assert(height > 0, '[WorldRect] height must be positive');
+
+  /// The square of side `2 * halfExtent` centred on [centre] — an actor's
+  /// body, built from the same half-extent the collision step resolves with,
+  /// so what stops you and what counts you as standing somewhere are one
+  /// footprint rather than two that drift.
+  factory WorldRect.centred(WorldPos centre, double halfExtent) => WorldRect(
+        centre.x - halfExtent,
+        centre.y - halfExtent,
+        halfExtent * 2,
+        halfExtent * 2,
+      );
+
+  final double left;
+  final double top;
+  final double width;
+  final double height;
+
+  double get right => left + width;
+  double get bottom => top + height;
+
+  /// Whether the two rectangles share any area. Touching edges do NOT
+  /// intersect: a prop whose footprint ends exactly where an actor's body
+  /// begins is beside it, not under it, and refusing that placement would
+  /// make the tile next to the player unbuildable.
+  bool intersects(WorldRect other) =>
+      left < other.right &&
+      other.left < right &&
+      top < other.bottom &&
+      other.top < bottom;
+
+  bool containsPoint(WorldPos point) =>
+      point.x >= left && point.x < right && point.y >= top && point.y < bottom;
+
+  @override
+  String toString() => 'WorldRect($left, $top, $width×$height)';
+}

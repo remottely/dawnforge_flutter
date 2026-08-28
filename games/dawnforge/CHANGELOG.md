@@ -8,6 +8,19 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.26.0
+
+### 🧹 Internal
+
+- The game learned to answer one question properly, before anything can build
+  or break: **is somebody standing there?** It checks the space a person's feet
+  actually cover, not the square they are nearest to, and it checks every
+  square a thing would cover, not just its corner. And whether a thing is even
+  allowed to appear or vanish under you is written in that thing's own data — a
+  bush may be planted at your feet and broken there; a staircase may not,
+  because taking it away changes the ground you are standing on. Nothing uses
+  the answer yet; the tools that will are next.
+
 ## 0.25.1
 
 ### 🧹 Internal

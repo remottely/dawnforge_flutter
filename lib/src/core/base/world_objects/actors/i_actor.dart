@@ -8,6 +8,7 @@ import 'package:dawnforge/src/core/resources/world_objects/actors/i_actor_data.d
 import 'package:dawnforge/src/core/shared_logic/definitions/engine_constants.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/game_constants.dart';
 import 'package:dawnforge/src/core/systems/boot.dart';
+import 'package:dawnforge/src/core/systems/world/actor_tracker.dart';
 import 'package:dawnforge/src/core/systems/world/grid_manager.dart';
 
 /// Host of every actor (player, creature, NPC). Created only by
@@ -31,7 +32,18 @@ class IActor extends WorldObject {
     // Every actor is a collector — its slots live in the data soul
     // (IActorData.inventory), sized by the authored inventory_size.
     inventory = addComponent(InventoryComponent());
+    // The world now knows this actor is in it (FP4.3a). The spec puts every
+    // actor in a `character` group so the occupancy rules can sweep them all;
+    // Dart has no tree to hold a group, so the membership is a system, and
+    // joining happens HERE — where a component set is assembled — because the
+    // factory is the only path that reaches it (rule 1).
+    locator<ActorTracker>().add(this);
   }
+
+  /// Leaves the world. Actors do not despawn yet — chunk unloading only
+  /// recycles props — so this exists for the paths that will (death, an
+  /// unloading chunk) and for tests that build a crowd and take it apart.
+  void leaveWorld() => locator<ActorTracker>().remove(this);
 
   @override
   void update(double dt) {

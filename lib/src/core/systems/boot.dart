@@ -10,6 +10,7 @@ import 'package:dawnforge/src/core/systems/managers/game_input_manager.dart';
 import 'package:dawnforge/src/core/systems/managers/ui_state_machine.dart';
 import 'package:dawnforge/src/core/systems/spawning/procedural_spawn_system.dart';
 import 'package:dawnforge/src/core/systems/timing/sim_clock.dart';
+import 'package:dawnforge/src/core/systems/world/actor_tracker.dart';
 import 'package:dawnforge/src/core/systems/world/chunk_streaming_system.dart';
 import 'package:dawnforge/src/core/systems/world/grid_manager.dart';
 import 'package:dawnforge/src/core/systems/world/procedural_world_manager.dart';
@@ -30,6 +31,7 @@ void registerCoreSystems() {
     ..registerSingleton<Events>(Events())
     ..registerSingleton<SimClock>(SimClock())
     ..registerSingleton<GridManager>(GridManager())
+    ..registerSingleton<ActorTracker>(ActorTracker())
     ..registerSingleton<GameInputManager>(GameInputManager())
     ..registerSingleton<UIStateMachine>(UIStateMachine())
     ..registerSingleton<InputHelper>(InputHelper())
