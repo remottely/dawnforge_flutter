@@ -8,6 +8,13 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.25.1
+
+### 🧹 Internal
+
+- The build diary marked the backpack work finished, and wrote down the two
+  things left out of it on purpose, so nobody starts them by accident.
+
 ## 0.25.0
 
 ### ✨ New
