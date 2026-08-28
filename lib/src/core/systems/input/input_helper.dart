@@ -34,6 +34,29 @@ final class InputHelper {
   /// The player asked to step the selection one slot along the current page.
   final hotbarStepped = EventSignal<int>();
 
+  /// The player asked to open or close the bag.
+  final inventoryToggled = EventSignal0();
+
+  /// The player pressed back/cancel. Exactly ONE thing may answer this, which
+  /// is why it leaves here as a bare fact and `UIStateMachine.requestCancel()`
+  /// decides who owns it (rule 25). Nothing else in the game may listen for
+  /// the escape key.
+  final cancelPressed = EventSignal0();
+
+  /// Whether the modifier that means "part of this, not all of it" is down —
+  /// a drag carrying half a stack instead of the whole one.
+  ///
+  /// A polled STATE rather than an intent, and the one thing here that is:
+  /// the question is only ever asked at the instant of a drop, about the
+  /// modifier held at that instant. Asking `HardwareKeyboard` from the widget
+  /// would answer the same, and would be the second place in the codebase
+  /// that reads a key (rule 11).
+  bool get isSplitModifierHeld => _any(const <LogicalKeyboardKey>[
+        LogicalKeyboardKey.shiftLeft,
+        LogicalKeyboardKey.shiftRight,
+        LogicalKeyboardKey.shift,
+      ]);
+
   static const _slotKeys = <LogicalKeyboardKey>[
     LogicalKeyboardKey.digit1,
     LogicalKeyboardKey.digit2,
@@ -83,6 +106,14 @@ final class InputHelper {
     }
     if (key == LogicalKeyboardKey.keyE) {
       hotbarStepped.emit(1);
+      return;
+    }
+    if (key == LogicalKeyboardKey.keyI || key == LogicalKeyboardKey.tab) {
+      inventoryToggled.emit();
+      return;
+    }
+    if (key == LogicalKeyboardKey.escape) {
+      cancelPressed.emit();
     }
   }
 

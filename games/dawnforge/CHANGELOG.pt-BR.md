@@ -8,6 +8,22 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.25.0
+
+### ✨ New
+
+- A sua mochila abre. Aperte **I** ou **Tab** e os trinta bolsos estão lá;
+  aperte **Esc** para fechar. Arraste uma coisa para cima de outro bolso e a
+  coisa certa acontece sozinha: bolso vazio recebe a pilha, bolso com a mesma
+  coisa junta as pilhas, e bolso com outra coisa troca as duas de lugar.
+  Segure **Shift** enquanto arrasta para levar só metade. Arraste uma coisa
+  para fora da mochila e solte no mundo para pousá-la no chão, no seu pé.
+
+  E olhe atrás dela enquanto está aberta: as árvores continuam lá, embaçadas, e
+  o mundo continua andando. **O jogo nunca para.** Você não consegue agir com a
+  mochila aberta, mas o tempo não te espera — então não é lugar de se esconder.
+  (Página nova do manual: A Mochila.)
+
 ## 0.24.2
 
 ### 🐛 Fixed

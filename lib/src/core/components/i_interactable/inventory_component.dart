@@ -307,21 +307,35 @@ final class InventoryComponent extends IComponent {
     return (itemId: itemId, amount: taken);
   }
 
-  /// Folds [from] into [to] inside THIS container. An empty destination takes
-  /// the stack whole; a matching one absorbs what fits and leaves the
-  /// remainder behind; anything else refuses, because merging two different
-  /// items is not a thing that can happen and swapping them is `swapSlots`.
-  bool mergeStacks(int from, int to) {
+  /// Moves up to [amount] from [from] to [to] inside THIS container. An empty
+  /// destination takes what was asked for; a matching one absorbs what fits
+  /// and leaves the remainder behind; anything else refuses, because splitting
+  /// a stack onto a different item has nowhere to put the item already there.
+  ///
+  /// This is where a half-split lands, and `mergeStacks` is this with
+  /// "everything" for an amount — one body, so a drag that carries half and a
+  /// drag that carries all cannot disagree about what happens at the far end.
+  bool moveWithin(int from, int to, int amount) {
     assert(_isSlot(from) && _isSlot(to),
-        '[InventoryComponent] merge $from->$to outside 0..$maxSlots');
+        '[InventoryComponent] move $from->$to outside 0..$maxSlots');
+    assert(amount > 0, '[InventoryComponent] move amount $amount');
     if (from == to) return false;
 
     final src = slots[from];
     if (src.isEmpty) return false;
+    final moving = InventoryRules.calculateTake(amount, src.amount);
 
     final dst = slots[to];
     if (dst.isEmpty) {
-      swapSlots(from, to);
+      final item = _itemOf(src);
+      src.amount -= moving;
+      if (src.amount <= 0) src.clear();
+      dst
+        ..itemId = item.id
+        ..amount = moving;
+      _announceSlot(from);
+      _announceSlot(to);
+      inventoryChanged.emit();
       return true;
     }
 
@@ -332,7 +346,7 @@ final class InventoryComponent extends IComponent {
       return false;
     }
     final transfer =
-        InventoryRules.calculateStackTransfer(src.amount, dst.amount, maxStack);
+        InventoryRules.calculateStackTransfer(moving, dst.amount, maxStack);
     dst.amount += transfer;
     src.amount -= transfer;
     if (src.amount <= 0) src.clear();
@@ -341,6 +355,15 @@ final class InventoryComponent extends IComponent {
     _announceSlot(to);
     inventoryChanged.emit();
     return true;
+  }
+
+  /// Folds all of [from] into [to] inside THIS container — [moveWithin] with
+  /// the whole stack.
+  bool mergeStacks(int from, int to) {
+    assert(_isSlot(from), '[InventoryComponent] merge from $from outside 0..$maxSlots');
+    final src = slots[from];
+    if (src.isEmpty) return false;
+    return moveWithin(from, to, src.amount);
   }
 
   /// Moves up to [amount] from this container's [fromSlot] into [target]'s

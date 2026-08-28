@@ -1,5 +1,6 @@
 import 'package:dawnforge/src/core/render/dawnforge_game.dart';
 import 'package:dawnforge/src/core/ui/interface/hotbar_view.dart';
+import 'package:dawnforge/src/core/ui/interface/inventory_panel_view.dart';
 import 'package:flutter/widgets.dart';
 
 /// What each of the game's overlay names draws — the ONE table, read by the app
@@ -13,4 +14,9 @@ Map<String, Widget Function(BuildContext, DawnforgeGame)> gameOverlays() =>
     <String, Widget Function(BuildContext, DawnforgeGame)>{
       DawnforgeGame.hotbarOverlay: (context, game) =>
           HotbarView(inventory: game.player.inventory),
+      DawnforgeGame.inventoryOverlay: (context, game) => InventoryPanelView(
+            inventory: game.player.inventory,
+            onClose: game.closeInventory,
+            onDropToWorld: game.dropSlotToWorld,
+          ),
     };

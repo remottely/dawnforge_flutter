@@ -8,10 +8,13 @@ import 'package:dawnforge/src/core/shared_logic/definitions/game_constants.dart'
 import 'package:dawnforge/src/core/systems/boot.dart';
 import 'package:dawnforge/src/core/systems/input/input_helper.dart';
 import 'package:dawnforge/src/core/systems/localization/localization_system.dart';
+import 'package:dawnforge/src/core/systems/managers/game_input_manager.dart';
+import 'package:dawnforge/src/core/systems/managers/ui_state_machine.dart';
 import 'package:dawnforge/src/core/systems/world/chunk_streaming_system.dart';
 import 'package:dawnforge/src/core/systems/world/grid_manager.dart';
 import 'package:dawnforge/src/core/ui/game_overlays.dart';
 import 'package:dawnforge/src/core/ui/interface/hotbar_view.dart';
+import 'package:dawnforge/src/core/ui/interface/inventory_panel_view.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/services.dart';
@@ -152,6 +155,33 @@ void main() {
     // overlay table instead of a bare GameWidget.
     expect(find.byType(HotbarView), findsOneWidget);
     expect(game.overlays.isActive(DawnforgeGame.hotbarOverlay), isTrue);
+
+    // The bag opens and closes for real (FP4.2b), through the whole chain the
+    // app uses: a key raises an intent, the shell mounts the overlay, the
+    // panel registers as a surface, and the back press reaches it only
+    // because the arbiter routed it there (rule 25).
+    locator<InputHelper>().handleKeyEvent(const KeyDownEvent(
+      physicalKey: PhysicalKeyboardKey.keyI,
+      logicalKey: LogicalKeyboardKey.keyI,
+      timeStamp: Duration.zero,
+    ));
+    await tester.pump();
+    expect(find.byType(InventoryPanelView), findsOneWidget);
+    expect(locator<UIStateMachine>().state, UIState.menu);
+    // Rule 30 at the level that matters: the player is stopped from acting and
+    // the game is not stopped. There is no pause in this codebase to call.
+    expect(locator<GameInputManager>().isGameplayEnabled, isFalse);
+
+    locator<InputHelper>().handleKeyEvent(const KeyDownEvent(
+      physicalKey: PhysicalKeyboardKey.escape,
+      logicalKey: LogicalKeyboardKey.escape,
+      timeStamp: Duration.zero,
+    ));
+    await tester.pump();
+    expect(find.byType(InventoryPanelView), findsNothing);
+    expect(locator<GameInputManager>().isGameplayEnabled, isTrue);
+    expect(find.byType(HotbarView), findsOneWidget,
+        reason: 'the bar comes back with the screen');
 
     // Feed a "D held" state straight into the input SSOT (a raw key event
     // needs a focused widget tree; the helper is the contract, so it is the

@@ -2,8 +2,8 @@ import 'dart:ui' as ui;
 
 import 'package:dawnforge/src/core/registries/ground_registry.dart';
 import 'package:dawnforge/src/core/render/dawnforge_game.dart';
+import 'package:dawnforge/src/core/render/sprite_loader.dart';
 import 'package:dawnforge/src/core/resources/world_objects/grounds/ground_buildable_data.dart';
-import 'package:dawnforge/src/core/shared_logic/definitions/content_paths.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/engine_constants.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/game_constants.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/spatial.dart';
@@ -11,7 +11,6 @@ import 'package:dawnforge/src/core/systems/boot.dart';
 import 'package:dawnforge/src/core/systems/world/chunk_streaming_system.dart';
 import 'package:dawnforge/src/core/systems/world/grid_manager.dart';
 import 'package:flame/components.dart';
-import 'package:flame/flame.dart';
 import 'package:flutter/painting.dart' show Color, Paint, Rect;
 
 /// The chunked ground layer — the Flame replacement for what Godot's
@@ -75,9 +74,7 @@ final class GroundChunkRenderer extends Component
     for (final id in grounds.ids) {
       final path = grounds.getGround(id).spritesheetPath;
       if (path.isEmpty) continue; // empties draw nothing — see class doc
-      _tileSheets[path] = await Flame.images.load(
-        ContentPaths.resolveRes(GameConstants.gameName, path),
-      );
+      _tileSheets[path] = await SpriteLoader.loadSheet(path);
     }
 
     final streaming = locator<ChunkStreamingSystem>();

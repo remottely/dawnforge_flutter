@@ -5,6 +5,7 @@ import 'package:dawnforge/src/core/base/world_objects/actors/i_actor.dart';
 import 'package:dawnforge/src/core/base/world_objects/items/item_world.dart';
 import 'package:dawnforge/src/core/base/world_objects/world_object.dart';
 import 'package:dawnforge/src/core/factories/actor_factory.dart';
+import 'package:dawnforge/src/core/registries/item_registry.dart';
 import 'package:dawnforge/src/core/render/debug_overlay.dart';
 import 'package:dawnforge/src/core/render/ground_chunk_renderer.dart';
 import 'package:dawnforge/src/core/render/item_world_renderer.dart';
@@ -14,10 +15,12 @@ import 'package:dawnforge/src/core/shared_logic/definitions/game_constants.dart'
 import 'package:dawnforge/src/core/shared_logic/definitions/spatial.dart';
 import 'package:dawnforge/src/core/systems/boot.dart';
 import 'package:dawnforge/src/core/systems/data/almanac_loader.dart';
+import 'package:dawnforge/src/core/systems/drop/world_drop_helper.dart';
 import 'package:dawnforge/src/core/systems/eventing/events.dart';
 import 'package:dawnforge/src/core/systems/input/input_helper.dart';
 import 'package:dawnforge/src/core/systems/localization/localization_system.dart';
 import 'package:dawnforge/src/core/systems/managers/game_input_manager.dart';
+import 'package:dawnforge/src/core/systems/managers/ui_state_machine.dart';
 import 'package:dawnforge/src/core/systems/spawning/procedural_spawn_system.dart';
 import 'package:dawnforge/src/core/systems/timing/sim_clock.dart';
 import 'package:dawnforge/src/core/systems/world/chunk_streaming_system.dart';
@@ -54,6 +57,9 @@ final class DawnforgeGame extends FlameGame with KeyboardEvents {
   /// the other.
   static const String hotbarOverlay = 'hotbar';
 
+  /// Flame's name for the inventory panel overlay.
+  static const String inventoryOverlay = 'inventory';
+
   /// Every simulated host, ticked on the fixed step.
   final List<WorldObject> simObjects = <WorldObject>[];
 
@@ -82,9 +88,6 @@ final class DawnforgeGame extends FlameGame with KeyboardEvents {
 
   @override
   Future<void> onLoad() async {
-    // Sprite keys are full asset paths — no implicit assets/images/ prefix.
-    images.prefix = '';
-
     const game = GameConstants.gameName;
 
     // Content boot: registries from the manifest, strings for the locale.
@@ -181,8 +184,55 @@ final class DawnforgeGame extends FlameGame with KeyboardEvents {
       unawaited(Future<void>.sync(() => world.add(ItemWorldRenderer(pickup))));
     });
 
+    // Which surfaces are ON SCREEN is the shell's job — a widget cannot mount
+    // itself. What each one DOES once mounted is entirely its own, which is
+    // why the panel closes itself through a callback rather than this class
+    // reaching into it.
+    final input = locator<InputHelper>();
+    input.inventoryToggled.connect(_toggleInventory);
+    // Rule 25: the press is routed ONCE, by the machine, to whatever owns the
+    // screen. This is the only listener of the key in the game, and it does
+    // not decide anything — it asks.
+    input.cancelPressed.connect(() {
+      locator<UIStateMachine>().requestCancel();
+    });
+
     // Last, because the overlay reads `player.inventory` the moment it builds.
     overlays.add(hotbarOverlay);
+  }
+
+  void _toggleInventory() {
+    if (overlays.isActive(inventoryOverlay)) {
+      closeInventory();
+    } else {
+      overlays.add(inventoryOverlay);
+    }
+  }
+
+  /// Takes the panel off screen. The panel itself calls this — through the
+  /// callback it was handed — when the routed back press reaches it.
+  void closeInventory() => overlays.remove(inventoryOverlay);
+
+  /// Puts the whole of one of the player's slots on the ground at its feet.
+  ///
+  /// The pickup's authored `pickup_delay` is what stops it flying straight
+  /// back into the bag it just left; without that field being read this would
+  /// be a no-op the player watches happen (0.24.2).
+  void dropSlotToWorld(int slotIndex) {
+    final taken = player.inventory.removeItemAtIndex(
+      slotIndex,
+      player.inventory.slots[slotIndex].amount,
+    );
+    if (taken == null) return;
+    // Landing resolution runs against the player's own tile as the origin, so
+    // a drop made while standing in a sealed pocket answers to where the
+    // player IS — the same honesty FP4.1c's landing rings were built on.
+    WorldDropHelper.spawnPickup(
+      locator<ItemRegistry>().getItem(taken.itemId),
+      taken.amount,
+      player.position,
+      player.position,
+    );
   }
 
   /// Renderer of every scattered host, for unbind on despawn. Renderers go

@@ -3,11 +3,9 @@ import 'dart:ui' as ui show Image;
 import 'package:dawnforge/src/core/base/world_objects/actors/i_actor.dart';
 import 'package:dawnforge/src/core/base/world_objects/world_object.dart';
 import 'package:dawnforge/src/core/render/animation_creator.dart';
-import 'package:dawnforge/src/core/shared_logic/definitions/content_paths.dart';
+import 'package:dawnforge/src/core/render/sprite_loader.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/enums.dart';
-import 'package:dawnforge/src/core/shared_logic/definitions/game_constants.dart';
 import 'package:flame/components.dart';
-import 'package:flame/flame.dart';
 
 /// The render binding of one world-object host — the "scene" the factories
 /// replaced (study §3.2): a Flame [PositionComponent] that draws the host's
@@ -33,9 +31,7 @@ base class WorldObjectRenderer extends PositionComponent {
       '[WorldObjectRenderer] ${data.id} has no spritesheet — step 03 '
       'guarantees one for every authored entry',
     );
-    final sheet = await Flame.images.load(
-      ContentPaths.resolveRes(GameConstants.gameName, data.spritesheetPath),
-    );
+    final sheet = await SpriteLoader.loadSheet(data.spritesheetPath);
     await addAll(await buildVisuals(sheet));
   }
 

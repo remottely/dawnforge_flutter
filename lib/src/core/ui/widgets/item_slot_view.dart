@@ -3,11 +3,10 @@ import 'dart:ui' as ui;
 
 import 'package:dawnforge/src/core/registries/item_registry.dart';
 import 'package:dawnforge/src/core/render/animation_creator.dart';
+import 'package:dawnforge/src/core/render/sprite_loader.dart';
 import 'package:dawnforge/src/core/resources/inventory/item_stack.dart';
-import 'package:dawnforge/src/core/shared_logic/definitions/content_paths.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/game_constants.dart';
 import 'package:dawnforge/src/core/systems/boot.dart';
-import 'package:flame/flame.dart';
 import 'package:flutter/widgets.dart';
 
 /// One inventory slot as it is DRAWN — the Dart port of the spec's
@@ -21,6 +20,7 @@ final class ItemSlotView extends StatelessWidget {
   const ItemSlotView({
     required this.stack,
     required this.isSelected,
+    this.isGhost = false,
     super.key,
   });
 
@@ -37,6 +37,11 @@ final class ItemSlotView extends StatelessWidget {
   final ItemStack stack;
   final bool isSelected;
 
+  /// Draw the frame but not what is in it — the hole a stack leaves in the
+  /// grid while it is under the player's finger. The slot keeps its place, so
+  /// nothing reflows mid-drag.
+  final bool isGhost;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -50,7 +55,7 @@ final class ItemSlotView extends StatelessWidget {
             width: isSelected ? 3 : 1,
           ),
         ),
-        child: stack.isEmpty
+        child: stack.isEmpty || isGhost
             ? null
             : Stack(
                 children: <Widget>[
@@ -125,11 +130,7 @@ final class _ItemIconState extends State<_ItemIcon> {
 
   Future<void> _load() async {
     final data = locator<ItemRegistry>().getItem(widget.itemId);
-    final path = ContentPaths.resolveRes(
-      GameConstants.gameName,
-      data.spritesheetPath,
-    );
-    final sheet = await Flame.images.load(path);
+    final sheet = await SpriteLoader.loadSheet(data.spritesheetPath);
     // The still is the same one the world pickup draws, taken from the same
     // helper — an icon that disagrees with the thing lying on the grass is a
     // bug the player sees before anyone else does.

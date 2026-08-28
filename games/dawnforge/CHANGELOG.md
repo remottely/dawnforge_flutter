@@ -8,6 +8,22 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.25.0
+
+### ✨ New
+
+- Your backpack opens. Press **I** or **Tab** and all thirty pockets are there;
+  press **Esc** to close it. Drag a thing onto another pocket and the right
+  thing happens by itself: an empty pocket takes the pile, a pocket with the
+  same thing joins the piles, and a pocket with something else swaps them.
+  Hold **Shift** while dragging to carry only half. Drag a thing out of the
+  backpack and drop it on the world to put it on the ground at your feet.
+
+  And look behind it while it is open: the trees are still there, blurred, and
+  the world is still moving. **The game never stops.** You cannot act while the
+  backpack is open, but time does not wait for you — so it is not a place to
+  hide. (New manual page: The Backpack.)
+
 ## 0.24.2
 
 ### 🐛 Fixed
