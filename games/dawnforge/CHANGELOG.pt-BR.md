@@ -8,6 +8,25 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.24.2
+
+### 🐛 Fixed
+
+- Uma coisa que você larga agora consegue ficar largada. Cada item já dizia, nos
+  dados dele, quanto tempo devia descansar no chão antes de alguém poder pegar —
+  meio segundo — e o jogo não estava lendo essa linha. Então qualquer coisa que
+  caísse no seu pé era puxada de volta para a mochila no instante seguinte, o
+  que tornaria impossível pousar qualquer coisa. Agora ela fica lá, espera o meio
+  segundo dela, e só então vem para você.
+
+## 0.24.1
+
+### 🧹 Internal
+
+- O índice do diário de construção do projeto se acertou com o trabalho: as
+  anotações que dizem o que está pronto e o que vem a seguir ainda descreviam as
+  telas da mochila como intocadas.
+
 ## 0.24.0
 
 ### ✨ New

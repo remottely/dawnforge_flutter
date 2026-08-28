@@ -8,6 +8,25 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.24.2
+
+### 🐛 Fixed
+
+- A thing you drop can now stay dropped. Every item already said, in its own
+  data, how long it should rest on the ground before anyone may scoop it up —
+  half a second — and the game was not reading that line. So anything landing
+  at your feet was yanked straight back into your backpack on the very next
+  moment, which would have made putting something down impossible. Now it lies
+  there, waits its half second, and only then comes to you.
+
+## 0.24.1
+
+### 🧹 Internal
+
+- The build diary's own index caught up with the work: the notes that say what
+  is done and what is next were still describing the backpack screens as
+  untouched.
+
 ## 0.24.0
 
 ### ✨ New

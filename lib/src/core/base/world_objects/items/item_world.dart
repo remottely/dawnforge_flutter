@@ -42,6 +42,10 @@ final class ItemWorld {
   bool _beingCollected = false;
   late InventoryComponent _reservationHolder;
 
+  /// Seconds this pickup has spent on the ground. A per-frame transient of the
+  /// host's own life, never serialized — a legitimate local under rule 8.
+  double _groundedFor = 0;
+
   /// True once the collector took the contents — the world side removes the
   /// host and its renderer on the next sweep.
   bool collected = false;
@@ -70,6 +74,18 @@ final class ItemWorld {
   }) {
     assert(isInitialized, '[ItemWorld] tick before initialize()');
     if (collected) return;
+
+    // The authored `pickup_delay` has to run down before anyone may reserve
+    // this. It is what makes putting something DOWN possible at all: a drop
+    // lands at the dropper's own feet, well inside the magnet radius, so
+    // without the wait it is reserved on the very next step and flies
+    // straight back. Counted here rather than in the drop path because the
+    // item authors it — a heavy thing may take longer to settle than a light
+    // one, and neither the dropper nor the loot table gets to decide.
+    if (_groundedFor < itemData.pickupDelay) {
+      _groundedFor += dt;
+      return;
+    }
 
     if (_beingCollected) {
       position = _moveToward(position, collectorPosition, _magnetSpeedPx * dt);
