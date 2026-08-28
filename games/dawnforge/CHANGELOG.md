@@ -8,6 +8,17 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.27.0
+
+### 🧹 Internal
+
+- Tools and the things they break can finally see each other. Every rock, tree
+  and crate in the game already said which tools may touch it and how good they
+  have to be; every tool already said which one it is and how good it is. The
+  game just was not reading any of it. Now it does, and it knows the two
+  questions apart: "you need an axe" is not the same as "you need a better
+  axe". Nothing swings yet — the swing is next.
+
 ## 0.26.1
 
 ### 🧹 Internal

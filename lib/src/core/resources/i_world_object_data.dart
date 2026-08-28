@@ -1,5 +1,6 @@
 import 'package:dawnforge/src/core/resources/i_visual_object_data.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/engine_constants.dart';
+import 'package:dawnforge/src/core/shared_logic/definitions/enums.dart';
 import 'package:dawnforge/src/core/systems/drop/drop_entry.dart';
 
 /// Base of every placeable world object's data (Actor / Prop / Ground) — the
@@ -20,12 +21,14 @@ abstract class IWorldObjectData extends IVisualObjectData {
     super.walkFrames,
     super.backwardFrames,
     super.soundsVolume,
+    super.tier,
     super.groups,
     this.gridWidth = 1,
     this.gridHeight = 1,
     this.isFlat = false,
     this.hasCollision = true,
     this.allowsActorOverlap = true,
+    this.allowedTools = const <ToolType>[],
     this.isProjectilePassable = false,
     this.baseMaxHealth = EngineConstants.defaultMaxHealth,
     this.drops = const <DropEntry>[],
@@ -41,6 +44,7 @@ abstract class IWorldObjectData extends IVisualObjectData {
         gridHeight = reader.intPairOr('grid_size', (1, 1)).$2,
         isFlat = reader.boolOr('is_flat', declaredDefault: false),
         hasCollision = reader.boolOr('has_collision', declaredDefault: true),
+        allowedTools = reader.enumListOr('allowed_tools', ToolType.values),
         allowsActorOverlap =
             reader.boolOr('allows_actor_overlap', declaredDefault: true),
         isProjectilePassable =
@@ -68,6 +72,13 @@ abstract class IWorldObjectData extends IVisualObjectData {
   final int gridWidth;
   final int gridHeight;
   final bool isFlat;
+  /// The tools that may act on this object. EMPTY means nothing may — an
+  /// authored refusal, not a missing value: a crate with no allowed tools is
+  /// a crate you cannot break, and the spec's `validate_tools` returns false
+  /// for an empty list precisely so that omitting the field cannot quietly
+  /// open an object up.
+  final List<ToolType> allowedTools;
+
   final bool hasCollision;
 
   /// Rule 33: asked on Place (of the object placed) and Destroy (of the object

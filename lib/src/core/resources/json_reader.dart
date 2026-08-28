@@ -74,6 +74,15 @@ final class JsonReader {
     return _resolveEnum(key, value, values);
   }
 
+  /// The enum at [key], or NULL when the pack does not author one. For fields
+  /// whose absence is a real state — an item that is not a tool — rather than
+  /// a value someone forgot (rule 6: no default patched over missing data).
+  T? enumOrNull<T extends Enum>(String key, List<T> values) {
+    final value = _json[key];
+    if (value == null) return null;
+    return _resolveEnum(key, value, values);
+  }
+
   List<T> enumListOr<T extends Enum>(String key, List<T> values) {
     final value = _json[key];
     if (value == null) return <T>[];

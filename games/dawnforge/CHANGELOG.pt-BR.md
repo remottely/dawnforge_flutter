@@ -8,6 +8,17 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.27.0
+
+### 🧹 Internal
+
+- As ferramentas e as coisas que elas quebram finalmente se enxergam. Toda
+  rocha, árvore e caixote do jogo já dizia quais ferramentas podem tocar nele e
+  quão boas elas precisam ser; toda ferramenta já dizia qual ela é e quão boa
+  ela é. O jogo é que não estava lendo nada disso. Agora lê, e sabe separar as
+  duas perguntas: "você precisa de um machado" não é a mesma coisa que "você
+  precisa de um machado melhor". Nada bate ainda — a batida é a próxima.
+
 ## 0.26.1
 
 ### 🧹 Internal

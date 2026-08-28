@@ -30,6 +30,7 @@ abstract class IVisualObjectData {
     this.voidWalkFrames = 0,
     this.voidBackwardFrames = 0,
     this.soundsVolume = 1.0,
+    this.tier = 1,
     this.groups = const <String>[],
   }) {
     _validate();
@@ -65,6 +66,7 @@ abstract class IVisualObjectData {
         voidWalkFrames = reader.intOr('void_walk_frames', 0),
         voidBackwardFrames = reader.intOr('void_backward_frames', 0),
         soundsVolume = reader.doubleOr('sounds_volume', 1),
+        tier = reader.intOr('tier', 1),
         groups = reader.stringListOr('groups') {
     _validate();
   }
@@ -104,6 +106,15 @@ abstract class IVisualObjectData {
 
   /// Multiplies every sound this object plays.
   final double soundsVolume;
+
+  /// How far up the progression ladder this thing sits. Authored on every
+  /// entry in the pack, items and world objects alike, which is why it lives
+  /// on the shared base rather than on either side of it.
+  ///
+  /// It is one half of every tool gate — a tool may only break what it is at
+  /// least as good as (`WorldObjectDeathRules.meetsTierRequirement`) — and it
+  /// is the axis the inventory's Sort waits on.
+  final int tier;
   final List<String> groups;
 
   /// A deep copy. Every runtime instance owns its own state (rule 3):

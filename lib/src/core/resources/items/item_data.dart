@@ -17,12 +17,14 @@ class ItemData extends IVisualObjectData {
     super.walkFrames,
     super.backwardFrames,
     super.soundsVolume,
+    super.tier,
     super.groups,
     this.materialType = MaterialType.stone,
     this.maxStack = 1000000000,
     this.spriteScale = 0.5,
     this.magnetSpeed = 200,
     this.pickupDelay = 0.5,
+    this.toolType,
   }) {
     _validate();
   }
@@ -37,6 +39,7 @@ class ItemData extends IVisualObjectData {
         spriteScale = reader.doubleOr('sprite_scale', 0.5),
         magnetSpeed = reader.doubleOr('magnet_speed', 200),
         pickupDelay = reader.doubleOr('pickup_delay', 0.5),
+        toolType = reader.enumOrNull('tool_type', ToolType.values),
         super.fromReader() {
     _validate();
   }
@@ -60,6 +63,14 @@ class ItemData extends IVisualObjectData {
   /// Magnet flight speed of this item's pickup, in TILES per second.
   final double magnetSpeed;
 
+  /// Which tool this item IS, or null when it is not one.
+  ///
+  /// Null is a real answer, not a missing value: a plank is not a tool, and
+  /// swinging it satisfies no object's `allowedTools`. The spec expresses the
+  /// same thing by putting `tool_type` on the tool SUBCLASSES only, which our
+  /// single `ItemData` cannot do until that hierarchy is ported.
+  final ToolType? toolType;
+
   /// Seconds after landing before this pickup may be collected.
   ///
   /// Small and easy to mistake for a nicety; it is the only thing that makes
@@ -79,11 +90,13 @@ class ItemData extends IVisualObjectData {
         walkFrames: walkFrames,
         backwardFrames: backwardFrames,
         soundsVolume: soundsVolume,
+        tier: tier,
         groups: List<String>.of(groups),
         materialType: materialType,
         maxStack: maxStack,
         spriteScale: spriteScale,
         magnetSpeed: magnetSpeed,
         pickupDelay: pickupDelay,
+        toolType: toolType,
       );
 }

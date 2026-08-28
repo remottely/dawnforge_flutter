@@ -1,5 +1,6 @@
 import 'package:dawnforge/src/core/resources/i_world_object_data.dart';
 import 'package:dawnforge/src/core/resources/json_reader.dart';
+import 'package:dawnforge/src/core/shared_logic/definitions/enums.dart';
 import 'package:dawnforge/src/core/systems/drop/drop_entry.dart';
 
 /// Data of every prop (trees, rocks, furniture) — port of `PropData.cs`
@@ -16,6 +17,8 @@ class PropData extends IWorldObjectData {
     super.walkFrames,
     super.backwardFrames,
     super.soundsVolume,
+    super.tier,
+    super.allowedTools,
     super.groups,
     super.gridWidth,
     super.gridHeight,
@@ -80,6 +83,8 @@ class PropData extends IWorldObjectData {
         walkFrames: walkFrames,
         backwardFrames: backwardFrames,
         soundsVolume: soundsVolume,
+        tier: tier,
+        allowedTools: List<ToolType>.of(allowedTools),
         groups: List<String>.of(groups),
         gridWidth: gridWidth,
         gridHeight: gridHeight,
