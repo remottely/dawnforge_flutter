@@ -8,6 +8,19 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.27.1
+
+### 🧹 Internal
+
+- The toolbox that turns this project into an Android app was getting old, and
+  it said so out loud every single time the game was launched: three warnings
+  about parts Flutter is about to stop supporting. All three parts are new now
+  — Gradle, the Android plugin, Kotlin — and the three warnings are gone. The
+  game itself was not touched; only the machine that packs it. One warning
+  stays and cannot leave yet: Kotlin still has to be fetched by hand, because
+  the copy that comes inside the new Android plugin is older than the one
+  Flutter insists on.
+
 ## 0.27.0
 
 ### 🧹 Internal

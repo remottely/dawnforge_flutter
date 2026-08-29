@@ -8,6 +8,19 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.27.1
+
+### 🧹 Internal
+
+- A caixa de ferramentas que transforma este projeto num aplicativo de Android
+  estava ficando velha, e avisava em voz alta toda vez que o jogo era aberto:
+  três alertas sobre peças que o Flutter está prestes a parar de aceitar. As
+  três peças agora são novas — o Gradle, o plugin do Android, o Kotlin — e os
+  três alertas sumiram. O jogo em si não foi mexido; só a máquina que o embala.
+  Um alerta fica e ainda não tem como sair: o Kotlin precisa continuar sendo
+  buscado à mão, porque a cópia que vem dentro do plugin novo do Android é mais
+  velha do que a que o Flutter exige.
+
 ## 0.27.0
 
 ### 🧹 Internal
