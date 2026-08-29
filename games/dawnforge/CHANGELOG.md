@@ -8,6 +8,22 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.36.0
+
+### 🧹 Internal
+
+- The game can now say whether a thing may be built on a particular square,
+  and — this is the part that matters — **which rule said no**. There are three
+  so far. Somebody is standing there and the thing would take their ground away
+  (a torch would not, so a torch is fine at your feet; a hole in the ground very
+  much would). Another thing is already on that square. Or there is nothing to
+  build on: the empty beyond the edge of the world, or water, which refuses
+  things itself rather than being refused by a rule about water.
+- Every one of those asks about **all** the squares a thing covers, not just
+  the one under your finger. A smelter is two squares wide, and a smelter built
+  around you traps you exactly as well as one built on top of you.
+- Nobody can build yet — this is the part that decides, not the part that does.
+
 ## 0.35.0
 
 ### 🧹 Internal

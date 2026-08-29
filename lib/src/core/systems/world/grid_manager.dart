@@ -211,6 +211,36 @@ final class GridManager {
     }
   }
 
+  /// Whether the GROUND under a [width]×[height] footprint anchored at
+  /// [anchor] accepts a prop: a tile exists there, and it does not refuse
+  /// props (FP4.3b).
+  ///
+  /// Two questions the occupancy one above cannot answer. The void refuses
+  /// because there is nothing to stand on — an unregistered tile is outside
+  /// the streamed window, which is the honest "no" for a footprint that runs
+  /// off the edge of what exists. And the tile's own `blocksProps` refuses
+  /// because the ground says so: water and cliff both author it true, which is
+  /// the whole reason nothing here has a water branch (rule 33 — the
+  /// permission is content, never an `if` at the call site).
+  ///
+  /// PORT DELTA: the spec asks a `GroundBuildable` NODE its `can_place_prop()`
+  /// and only reads the data when the tile has no node. Terrain is nodeless
+  /// here (FP3.4), so the two branches are one.
+  ///
+  /// Prop occupancy is deliberately NOT re-asked here, though the spec asks it
+  /// in this very loop: [isPropSpaceAvailable] already owns that question and
+  /// every caller asks it first. A second copy of one rule is how the two
+  /// eventually disagree.
+  bool canPlacePropAt(GridPos anchor, {int width = 1, int height = 1}) {
+    for (var x = 0; x < width; x++) {
+      for (var y = 0; y < height; y++) {
+        final data = getGroundDataAt(GridPos(anchor.x + x, anchor.y + y));
+        if (data == null || data.blocksProps) return false;
+      }
+    }
+    return true;
+  }
+
   /// The prop holding [tilePos], or null — absence is a legitimate answer.
   Prop? getPropAt(GridPos tilePos) => _occupiedPropTiles[tilePos];
 }

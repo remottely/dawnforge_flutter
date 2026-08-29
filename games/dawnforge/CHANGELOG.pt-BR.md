@@ -8,6 +8,23 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.36.0
+
+### 🧹 Internal
+
+- O jogo agora sabe dizer se uma coisa pode ser construída num quadradinho —
+  e, o que importa mais, **qual regra disse que não**. São três até agora. Tem
+  alguém em pé ali e a coisa tiraria o chão dessa pessoa (uma tocha não tira,
+  então tocha no seu pé pode; um buraco no chão tira, e muito). Já tem outra
+  coisa naquele quadradinho. Ou não tem em que construir: o vazio além da borda
+  do mundo, ou água — e a água recusa sozinha, não por causa de uma regra
+  escrita sobre água.
+- Cada uma dessas perguntas vale para **todos** os quadradinhos que a coisa
+  ocupa, não só o que está embaixo do seu dedo. Uma fundição tem dois
+  quadradinhos de largura, e uma fundição construída em volta de você te prende
+  exatamente igual a uma construída em cima de você.
+- Ninguém consegue construir ainda — esta é a parte que decide, não a que faz.
+
 ## 0.35.0
 
 ### 🧹 Internal
