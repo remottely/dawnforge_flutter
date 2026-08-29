@@ -1,5 +1,6 @@
 import 'package:dawnforge/src/core/base/world_objects/world_object.dart';
 import 'package:dawnforge/src/core/components/i_actor/direction_component.dart';
+import 'package:dawnforge/src/core/components/i_actor/held_item_component.dart';
 import 'package:dawnforge/src/core/components/i_actor/movement_component.dart';
 import 'package:dawnforge/src/core/components/i_interactable/inventory_component.dart';
 import 'package:dawnforge/src/core/components/i_world_object/health_component.dart';
@@ -23,6 +24,7 @@ class IActor extends WorldObject {
   late final MovementComponent movement;
   late final HealthComponent health;
   late final InventoryComponent inventory;
+  late final HeldItemComponent heldItem;
 
   @override
   void setupComponents() {
@@ -32,6 +34,11 @@ class IActor extends WorldObject {
     // Every actor is a collector — its slots live in the data soul
     // (IActorData.inventory), sized by the authored inventory_size.
     inventory = addComponent(InventoryComponent());
+    // Every actor has a hand, as in the spec (`IActor._setup_components`): a
+    // creature's is its authored weapon, a player's is whatever the hotbar
+    // points at. It goes in AFTER the bag it reads from (rule: dependency
+    // order is the host's responsibility).
+    heldItem = addComponent(HeldItemComponent(inventory));
     // The world now knows this actor is in it (FP4.3a). The spec puts every
     // actor in a `character` group so the occupancy rules can sweep them all;
     // Dart has no tree to hold a group, so the membership is a system, and

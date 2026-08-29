@@ -8,6 +8,19 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.28.0
+
+### 🧹 Internal
+
+- O jogo agora sabe o que você está segurando. O espaço marcado na sua barra é
+  a coisa que está na sua mão, e se o que está nesse espaço mudar enquanto ele
+  estiver marcado — você usa o último, ou você larga — a sua mão muda junto.
+  Espaço vazio não quer dizer mão vazia: você está segurando as suas próprias
+  duas mãos, e elas contam como uma ferramenta de verdade, então nunca existe
+  um momento em que você não consegue tocar no mundo. Os bichos seguram aquilo
+  com que nasceram — as presas do javali são a arma dele, e bolsa nenhuma muda
+  isso. Nada dá golpe ainda; o golpe é o próximo passo.
+
 ## 0.27.1
 
 ### 🧹 Internal

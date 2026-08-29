@@ -8,6 +8,19 @@ abstract final class GameConstants {
   /// engine may name the entry it spawns, never the folder it was authored in.
   static const String playerActorId = 'actor_player';
 
+  /// The group an actor authors to say a person is behind it — the pack
+  /// writes `groups: [player]`. The spec asks `is_in_group(&"player")`, which is
+  /// the same question against the same authored list — membership is content,
+  /// never a type check on the host (rule 33's spirit: what a thing is allowed
+  /// to be is authored, not coded).
+  static const String playerGroup = 'player';
+
+  /// The tool an empty player hand IS — `t{tier}_item_tool_melee_hand`, the
+  /// `INNATE` entry every tier of the pack carries. Bare hands are a real tool
+  /// with real reach, which is what makes a player who has crafted nothing yet
+  /// able to touch the world at all.
+  static String innateHandItemId(int tier) => 't${tier}_item_tool_melee_hand';
+
   /// Slots in one row of any container's grid, and therefore one hotbar page's
   /// width. The spec's `EngineConstants.SLOTS_PER_ROW`; the player's authored
   /// `inventory_size` is a whole number of these.

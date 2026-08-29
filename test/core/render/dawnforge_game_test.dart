@@ -93,6 +93,14 @@ void main() {
     expect(game.player.inventory.maxSlots, 30);
     expect(game.player.inventory.maxSlots % GameConstants.slotsPerRow, 0,
         reason: 'the bag must be a whole number of rows for the grid to page');
+    // And it boots holding something (FP4.3a): the bag starts empty, so the
+    // hand is the innate one the pack authors. Proven here rather than only
+    // against a probe, because this is the one test that resolves the id
+    // against the REAL item registry — a renamed hand item fails here.
+    expect(
+      game.player.heldItem.currentItem?.id,
+      GameConstants.innateHandItemId(game.player.actorData.tier),
+    );
 
     // The render half of the gate: renderers must land inside `world` (the
     // ONLY subtree the CameraComponent renders — Flame's default FlameGame

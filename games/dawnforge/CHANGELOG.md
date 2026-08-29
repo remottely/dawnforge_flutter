@@ -8,6 +8,19 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.28.0
+
+### 🧹 Internal
+
+- The game now knows what you are holding. The slot marked on your bar is the
+  thing in your hand, and if what is in that slot changes while it is marked —
+  you use the last one, or you drop it — your hand changes with it. An empty
+  slot does not mean empty hands: you are holding your own two hands, and those
+  count as a real tool, so there is never a moment when you cannot touch the
+  world at all. Animals hold what they were born with instead — a boar's tusks
+  are its weapon, and no bag of theirs can change that. Nothing swings yet; the
+  swing is next.
+
 ## 0.27.1
 
 ### 🧹 Internal
