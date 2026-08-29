@@ -8,6 +8,7 @@ import 'package:dawnforge/src/core/shared_logic/definitions/engine_constants.dar
 import 'package:dawnforge/src/core/shared_logic/definitions/game_constants.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/spatial.dart';
 import 'package:dawnforge/src/core/systems/boot.dart';
+import 'package:dawnforge/src/core/systems/eventing/events.dart';
 import 'package:dawnforge/src/core/systems/world/chunk_streaming_system.dart';
 import 'package:dawnforge/src/core/systems/world/grid_manager.dart';
 import 'package:flame/components.dart';
@@ -83,12 +84,29 @@ final class GroundChunkRenderer extends Component
     _bakeQueue.addAll(streaming.loadedChunks);
     _disconnects
       ..add(streaming.chunkLoaded.connect(_bakeQueue.add))
-      ..add(streaming.chunkUnloadStarted.connect(_dropChunk));
+      ..add(streaming.chunkUnloadStarted.connect(_dropChunk))
+      // A tile that BECAME something else (FP4.3b) needs the same treatment a
+      // freshly streamed chunk gets: the bake is a photograph of the registry,
+      // and the registry moved.
+      ..add(locator<Events>().groundTileChanged.connect(_requestRebake));
   }
 
   void _dropChunk(GridPos chunk) {
     _bakeQueue.remove(chunk);
     _bakedChunks.remove(chunk)?.dispose();
+  }
+
+  /// Redraws the chunk holding [tile], because its ground changed.
+  ///
+  /// A tile in a chunk with no baked image is skipped, and that is a branch
+  /// rather than a guard over a missing value (rule 20): the bake only ever
+  /// covers what is resident, and a chunk that has not baked yet will read the
+  /// changed tile when it does — either from the queue it is already in, or on
+  /// the load that first puts it there.
+  void _requestRebake(GridPos tile) {
+    final chunk = ChunkStreamingSystem.chunkOf(tile);
+    if (!_bakedChunks.containsKey(chunk)) return;
+    _bakeQueue.add(chunk);
   }
 
   @override

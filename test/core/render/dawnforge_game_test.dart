@@ -5,7 +5,9 @@ import 'package:dawnforge/src/core/render/debug_overlay.dart';
 import 'package:dawnforge/src/core/render/ground_chunk_renderer.dart';
 import 'package:dawnforge/src/core/render/world_object_renderer.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/game_constants.dart';
+import 'package:dawnforge/src/core/shared_logic/definitions/spatial.dart';
 import 'package:dawnforge/src/core/systems/boot.dart';
+import 'package:dawnforge/src/core/systems/eventing/events.dart';
 import 'package:dawnforge/src/core/systems/input/input_helper.dart';
 import 'package:dawnforge/src/core/systems/localization/localization_system.dart';
 import 'package:dawnforge/src/core/systems/managers/game_input_manager.dart';
@@ -148,6 +150,22 @@ void main() {
     final groundLayer =
         game.world.children.whereType<GroundChunkRenderer>().single;
     expect(groundLayer.bakedChunkCount, greaterThan(0));
+
+    // A tile that BECAME something else redraws its chunk (FP4.3b). The bake
+    // is a photograph of the tile registry, so a placed bridge that does not
+    // re-enter the queue is a bridge you can walk on and cannot see. Asserted
+    // here because this is the only place a real renderer exists — and both
+    // directions matter: the chunk the player stands in is baked and must
+    // requeue, while a tile far outside the window has no image to redraw and
+    // must NOT push a phantom chunk into a queue that then bakes empty.
+    final pendingBefore = groundLayer.pendingBakeCount;
+    locator<Events>().groundTileChanged.emit(playerTile);
+    expect(groundLayer.pendingBakeCount, pendingBefore + 1);
+
+    locator<Events>()
+        .groundTileChanged
+        .emit(GridPos(playerTile.x + 100000, playerTile.y + 100000));
+    expect(groundLayer.pendingBakeCount, pendingBefore + 1);
 
     // The FP3.6 proof instrument publishes real numbers in screen space.
     final overlay =

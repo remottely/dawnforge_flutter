@@ -4,9 +4,12 @@ import 'package:dawnforge/src/core/factories/prop_factory.dart';
 import 'package:dawnforge/src/core/registries/actor_registry.dart';
 import 'package:dawnforge/src/core/registries/ground_registry.dart';
 import 'package:dawnforge/src/core/registries/prop_registry.dart';
+import 'package:dawnforge/src/core/resources/world_objects/grounds/ground_buildable_data.dart';
 import 'package:dawnforge/src/core/resources/world_objects/props/prop_data.dart';
+import 'package:dawnforge/src/core/shared_logic/definitions/game_constants.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/spatial.dart';
 import 'package:dawnforge/src/core/systems/boot.dart';
+import 'package:dawnforge/src/core/systems/eventing/events.dart';
 import 'package:dawnforge/src/core/systems/world/grid_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -21,9 +24,20 @@ void main() {
     registerCoreSystems();
 
     locator<GroundRegistry>()
+      // Solid ground: it may not appear under anybody, as the real document
+      // authors it.
       ..registerJson(<String, Object?>{
         'type': 'ground_buildable_data',
         'id': 't1_ground_buildable_terrain',
+        'allows_actor_overlap': false,
+      })
+      // A bridge: a thing you walk ONTO, so it may appear under a foot already
+      // overhanging the water.
+      ..registerJson(<String, Object?>{
+        'type': 'ground_buildable_data',
+        'id': 't1_ground_buildable_bridge_palm',
+        'allows_actor_overlap': true,
+        'floats_on_water': true,
       })
       // Water and cliff refuse props THEMSELVES — the authored flag is the
       // whole reason no code here has a water branch (rule 33).
@@ -31,6 +45,12 @@ void main() {
         'type': 'ground_empty_data',
         'id': 't1_ground_empty_water',
         'is_water': true,
+        'is_passable': false,
+        'blocks_props': true,
+      })
+      ..registerJson(<String, Object?>{
+        'type': 'ground_empty_data',
+        'id': 't1_ground_empty_cliff',
         'is_passable': false,
         'blocks_props': true,
       });
@@ -60,6 +80,7 @@ void main() {
 
   tearDown(resetCoreSystems);
 
+  const tile = GameConstants.tileDimension;
   GridManager grid() => locator<GridManager>();
   PropData blueprint(String id) => locator<PropRegistry>().getProp(id);
 
@@ -250,6 +271,118 @@ void main() {
           const GridPos(2, 2),
         ),
         PlacementRefusal.actorInTheWay,
+      );
+    });
+  });
+
+  group('ground becomes ground', () {
+    GroundBuildableData ground(String id) =>
+        locator<GroundRegistry>().getGround(id);
+
+    void layEmpty(String id, GridPos at) =>
+        grid().registerGroundData(at, ground(id));
+
+    test('a bridge goes over water, and over a cliff', () {
+      layEmpty('t1_ground_empty_water', const GridPos(2, 2));
+      layEmpty('t1_ground_empty_cliff', const GridPos(3, 2));
+
+      final bridge = ground('t1_ground_buildable_bridge_palm');
+      expect(
+        WorldPlacementHelper.placeGroundRefusal(bridge, const GridPos(2, 2)),
+        PlacementRefusal.allowed,
+      );
+      expect(
+        WorldPlacementHelper.placeGroundRefusal(bridge, const GridPos(3, 2)),
+        PlacementRefusal.allowed,
+      );
+    });
+
+    test('real ground takes nothing on top of it — stacking is FP7', () {
+      layTerrain(const GridPos(2, 2), const GridPos(2, 2));
+
+      expect(
+        WorldPlacementHelper.placeGroundRefusal(
+          ground('t1_ground_buildable_bridge_palm'),
+          const GridPos(2, 2),
+        ),
+        PlacementRefusal.cannotStack,
+      );
+    });
+
+    test('an unregistered tile is the EDGE, not a hole to fill', () {
+      expect(
+        WorldPlacementHelper.placeGroundRefusal(
+          ground('t1_ground_buildable_bridge_palm'),
+          const GridPos(2, 2),
+        ),
+        PlacementRefusal.outsideWorld,
+      );
+    });
+
+    test('the order the spec insists on: an overhanging foot is asked BEFORE '
+        'the water is allowed', () {
+      // The body straddles from the land tile into the water beside it — the
+      // position is still inside (2,2), the quarter-tile body reaches into
+      // (3,2). Both ground blueprints are legal on water; only one of them is
+      // legal HERE, and that is the whole point of asking occupancy above the
+      // early-return: put it below and the water branch returns ALLOWED first,
+      // and solid terrain closes over the foot standing in it.
+      layEmpty('t1_ground_empty_water', const GridPos(3, 2));
+      final landCentre = grid().gridToWorld(const GridPos(2, 2));
+      ActorFactory.create(
+        't1_actor_probe',
+        WorldPos(landCentre.x + tile / 2 - 1, landCentre.y),
+      );
+
+      expect(
+        WorldPlacementHelper.placeGroundRefusal(
+          ground('t1_ground_buildable_terrain'),
+          const GridPos(3, 2),
+        ),
+        PlacementRefusal.actorInTheWay,
+      );
+      // Permission is CONTENT: the bridge says it may be walked onto.
+      expect(
+        WorldPlacementHelper.placeGroundRefusal(
+          ground('t1_ground_buildable_bridge_palm'),
+          const GridPos(3, 2),
+        ),
+        PlacementRefusal.allowed,
+      );
+    });
+
+    test('placing it swaps the tile, opens the water, and says so', () {
+      layEmpty('t1_ground_empty_water', const GridPos(2, 2));
+      expect(grid().isTileWalkable(const GridPos(2, 2)), isFalse);
+      expect(grid().blocksBodyAt(const GridPos(2, 2)), isTrue);
+
+      final announced = <GridPos>[];
+      locator<Events>().groundTileChanged.connect(announced.add);
+
+      final bridge = ground('t1_ground_buildable_bridge_palm');
+      WorldPlacementHelper.placeGround(bridge, const GridPos(2, 2));
+
+      expect(
+        identical(grid().getGroundDataAt(const GridPos(2, 2)), bridge),
+        isTrue,
+        reason: 'a nodeless tile IS the shared registry entry',
+      );
+      expect(grid().isTileWalkable(const GridPos(2, 2)), isTrue,
+          reason: 'the bridge is what you cross the water on');
+      expect(grid().blocksBodyAt(const GridPos(2, 2)), isFalse);
+      expect(announced, <GridPos>[const GridPos(2, 2)],
+          reason: 'the bake is a photograph of the registry, and it moved');
+    });
+
+    test('placing where the gate said no is a crash, not a silent no-op', () {
+      layTerrain(const GridPos(2, 2), const GridPos(2, 2));
+
+      expect(
+        () => WorldPlacementHelper.placeGround(
+          ground('t1_ground_buildable_bridge_palm'),
+          const GridPos(2, 2),
+        ),
+        throwsA(isA<AssertionError>()),
       );
     });
   });

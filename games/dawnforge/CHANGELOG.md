@@ -8,6 +8,27 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.37.0
+
+### 🧹 Internal
+
+- **Ground can become other ground.** Lay a bridge over water, or a floor over
+  a hole, and the square stops being water: you can walk on it, and the picture
+  on the screen redraws to show it. Both halves matter — the square changing and
+  the screen changing are two separate facts here, because the ground is
+  painted a whole chunk at a time, and this is the wire between them.
+- The same rule about people applies, and it is the ground's own choice.
+  A bridge is a thing you step **onto**, so it may appear under a foot already
+  hanging over the water's edge. Solid ground is not, so it may not — that
+  would be closing the ground over somebody standing in it.
+- Two honest limits. One square of ground does not go **on top of** another
+  yet; raising the land into hills is a much bigger job and comes later. And a
+  bridge you build and then walk far away from is gone when you come back: the
+  world forgets everything it is not currently showing, which is the same
+  bargain a chopped-down tree already makes. The game learning to remember is
+  its own step.
+- Nobody can build any of this yet — the button that spends the item is next.
+
 ## 0.36.0
 
 ### 🧹 Internal

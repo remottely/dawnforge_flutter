@@ -8,6 +8,27 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.37.0
+
+### 🧹 Internal
+
+- **Chão pode virar outro chão.** Deite uma ponte sobre a água, ou um piso
+  sobre um buraco, e o quadradinho deixa de ser água: dá para andar em cima, e
+  o desenho na tela se refaz para mostrar. As duas metades importam — o
+  quadradinho mudar e a tela mudar são dois fatos separados aqui, porque o chão
+  é pintado um pedação inteiro de cada vez, e isso é o fio entre eles.
+- A mesma regra sobre gente vale aqui, e quem escolhe é o próprio chão. Uma
+  ponte é uma coisa em que você **pisa**, então ela pode aparecer embaixo de um
+  pé que já está pendurado na beira da água. Chão maciço não é, então não pode
+  — isso seria fechar o chão em cima de alguém que está dentro dele.
+- Dois limites sinceros. Um quadradinho de chão ainda não vai **em cima** de
+  outro; levantar a terra em morros é um trabalho bem maior e vem depois. E uma
+  ponte que você constrói e depois se afasta some quando você volta: o mundo
+  esquece tudo que não está mostrando no momento, que é o mesmo acordo que uma
+  árvore derrubada já faz. O jogo aprender a lembrar é um passo próprio.
+- Ninguém consegue construir nada disso ainda — o botão que gasta o item é o
+  próximo.
+
 ## 0.36.0
 
 ### 🧹 Internal

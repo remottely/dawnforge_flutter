@@ -309,10 +309,18 @@ final class ChunkStreamingSystem {
     _advanceCursor(chunk, isLoading: true);
   }
 
-  /// Frees one column of a chunk. Every resident tile today is
-  /// procedural-pure by construction (no tool can modify terrain yet), so
-  /// the unload is an erase; the purity checks that preserve player work
-  /// arrive with FP4.
+  /// Frees one column of a chunk — an ERASE, including of player work.
+  ///
+  /// This used to say that every resident tile was procedural-pure by
+  /// construction and that the checks preserving player work would arrive with
+  /// FP4. Half of that expired at 0.37.0: a placed bridge is a tile the
+  /// generator did not write, and this loop takes it with the rest. What the
+  /// old note got wrong is WHICH phase owes the fix. Keeping a modified tile
+  /// resident forever is a leak that grows with every tile a player ever
+  /// touches, and the spec does not keep them either — it materializes a NODE
+  /// so the tile reaches the save. So the purity check is not something to add
+  /// here ahead of somewhere to put what it saves: it lands with FP6, and
+  /// until then terrain recycles, exactly as a harvested prop regrows.
   void _processUnloadColumn(GridPos chunk) {
     const chunkSize = GameConstants.proceduralChunkSize;
     final origin = GridPos(chunk.x * chunkSize, chunk.y * chunkSize);

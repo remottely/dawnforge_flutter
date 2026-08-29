@@ -1,7 +1,10 @@
 import 'package:dawnforge/src/core/base/world_objects/helpers/actor_occupancy_helper.dart';
+import 'package:dawnforge/src/core/resources/world_objects/grounds/ground_buildable_data.dart';
+import 'package:dawnforge/src/core/resources/world_objects/grounds/ground_empty_data.dart';
 import 'package:dawnforge/src/core/resources/world_objects/props/prop_data.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/spatial.dart';
 import 'package:dawnforge/src/core/systems/boot.dart';
+import 'package:dawnforge/src/core/systems/eventing/events.dart';
 import 'package:dawnforge/src/core/systems/world/grid_manager.dart';
 
 /// Why a blueprint may not be built somewhere — [allowed] when it may.
@@ -31,6 +34,17 @@ enum PlacementRefusal {
   /// There is no ground under some tile of the footprint, or the ground there
   /// refuses props — water and cliff say so themselves.
   needsGround,
+
+  /// The tile is beyond what exists. For a PROP that reads as
+  /// [needsGround] — there is nothing under it — but a ground blueprint is
+  /// asking to become the tile, and "there is no tile" is a different answer
+  /// from "the tile refuses you".
+  outsideWorld,
+
+  /// The tile already holds real ground, and one ground does not go on top of
+  /// another. See [WorldPlacementHelper.placeGroundRefusal] for why this is
+  /// currently every such tile.
+  cannotStack,
 }
 
 /// Placing world objects from a blueprint — the port of
@@ -116,5 +130,96 @@ abstract final class WorldPlacementHelper {
     }
 
     return PlacementRefusal.allowed;
+  }
+
+  /// Whether a ground blueprint may become the tile at [tile].
+  static bool canPlaceGround(GroundBuildableData data, GridPos tile) =>
+      placeGroundRefusal(data, tile) == PlacementRefusal.allowed;
+
+  /// Why a ground blueprint may not become the tile at [tile] —
+  /// [PlacementRefusal.allowed] when it may.
+  ///
+  /// Ground is one tile in this port (every `ground_*` document authors
+  /// `grid_size: [1, 1]`), so there is no footprint to walk — the loop the
+  /// prop half needs has nothing to iterate here.
+  ///
+  /// The reachable verb is REPLACEMENT AT THE SAME LEVEL: a bridge over water,
+  /// a floor over a cliff. The spec's other verb — stacking one more level of
+  /// elevation onto a tile that already has ground — is FP7, and it takes
+  /// four gates with it (`_covers_solid_rock`, the max height, the elevation
+  /// border, and the whole `_slab_margin_refusal`). So a tile already holding
+  /// real ground is refused outright rather than partly: the spec's own first
+  /// stacking gate is `allows_resource_spawning`, which the bridge authors
+  /// false and would be refused by anyway, and porting only that one would
+  /// leave a branch that answers yes to terrain and then has nowhere to go.
+  static PlacementRefusal placeGroundRefusal(
+    GroundBuildableData data,
+    GridPos tile,
+  ) {
+    // 1. NOBODY IS BUILT ON TOP OF — before every early-return below, which
+    // is the spec's emphasis and matters more here than on the prop path. The
+    // branches below RETURN ALLOWED, so an occupancy rule placed after them is
+    // an occupancy rule that never runs on the one verb that reaches them.
+    //
+    // Terrain authors `allowsActorOverlap: false` and a bridge authors true,
+    // and that is the whole difference: a bridge is a thing you walk onto, so
+    // it may appear under the foot already overhanging the water; solid
+    // terrain appearing there would be the actor sealed into what it becomes.
+    if (ActorOccupancyHelper.isPlacementBlocked(data, tile)) {
+      return PlacementRefusal.actorInTheWay;
+    }
+
+    final ground = locator<GridManager>().getGroundDataAt(tile);
+
+    // 2. THE VOID. In the spec an unregistered tile is a HOLE inside the
+    // world — ground somebody dug out — and filling it is what a blueprint is
+    // for. Here nothing digs yet (FP7) and the generator gives every tile in
+    // the streamed window a ground, so the only unregistered tile is one
+    // beyond the window: not a hole, the edge. That edge is what stands in for
+    // the spec's `WorldResolver` world bounds, which this world does not have.
+    if (ground == null) return PlacementRefusal.outsideWorld;
+
+    // 3. WATER AND CLIFF — the same-level replacement, and the reachable half
+    // of this verb. `GroundEmptyData` is exactly the pair the spec asks for by
+    // name (`is_water_at` or `is_cliff_at`): one type test instead of two
+    // questions, because here the two are one class and the class is what the
+    // generator writes.
+    if (ground is GroundEmptyData) return PlacementRefusal.allowed;
+
+    // 4. REAL GROUND. See the doc above: stacking is FP7.
+    return PlacementRefusal.cannotStack;
+  }
+
+  /// Makes [data] the ground at [tile]. Asks nothing — the caller has already
+  /// been told yes by [canPlaceGround], and asking twice is how the answer the
+  /// player was shown and the answer the world acted on come apart.
+  ///
+  /// PORT DELTA, and it is the shape of the whole terrain layer: the spec
+  /// creates a `GroundBuildable` NODE and adds it to the ground layer, because
+  /// only a node-backed tile survives an unload and reaches its SaveManager.
+  /// Terrain is nodeless here (FP3.4) — the tile IS its entry in the registry,
+  /// and everything that reads ground (the bake, body blocking, walkability)
+  /// reads that entry. A node would be an object nothing looks at. The
+  /// node-backed tile arrives with the save that needs it (FP6).
+  ///
+  /// Which means the honest consequence, stated rather than hidden: a bridge
+  /// laid down and then walked away from is gone when its chunk recycles, and
+  /// the water comes back. That is the same bargain a harvested prop already
+  /// makes, and the same commit closes both — FP6.
+  static void placeGround(GroundBuildableData data, GridPos tile) {
+    final grid = locator<GridManager>();
+    assert(
+      canPlaceGround(data, tile),
+      '[WorldPlacementHelper] placeGround at $tile was refused '
+      '(${placeGroundRefusal(data, tile)}) — the gate is asked BEFORE the '
+      'placement, never inside it',
+    );
+    // The registry entry is replaced, not mutated: nodeless tiles hold the
+    // SHARED authored resource (`GridManager`'s own contract), so writing
+    // through one would rewrite that ground everywhere it is used.
+    grid
+      ..unregisterGroundData(tile)
+      ..registerGroundData(tile, data);
+    locator<Events>().groundTileChanged.emit(tile);
   }
 }
