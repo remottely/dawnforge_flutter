@@ -1,5 +1,6 @@
 import 'package:dawnforge/src/core/shared_logic/definitions/spatial.dart';
 import 'package:dawnforge/src/core/systems/eventing/event_signal.dart';
+import 'package:flame/events.dart';
 import 'package:flutter/services.dart';
 
 /// The single source of truth for player input (rules 11 and 12): gameplay
@@ -36,6 +37,11 @@ final class InputHelper {
 
   /// The player asked to open or close the bag.
   final inventoryToggled = EventSignal0();
+
+  /// The player asked to use what is in their hand, at the cursor. One press,
+  /// one intent (rule 24): the swing is fired by whoever subscribes, never by
+  /// polling a button every frame.
+  final primaryActionPressed = EventSignal0();
 
   /// The player pressed back/cancel. Exactly ONE thing may answer this, which
   /// is why it leaves here as a bare fact and `UIStateMachine.requestCancel()`
@@ -115,6 +121,69 @@ final class InputHelper {
     if (key == LogicalKeyboardKey.escape) {
       cancelPressed.emit();
     }
+  }
+
+  // ============================================
+  // THE UNIFIED CURSOR (FP4.3a)
+  // ============================================
+  // Rule 11 in one field: gameplay asks WHERE THE PLAYER IS POINTING and gets
+  // one answer, whatever moved the pointer. Nothing here had needed it until
+  // the swing had to be aimed, so nothing had grown the seam.
+
+  /// Where the pointer is, in SCREEN space — the raw fact, and the only one
+  /// stored. Screen rather than world because that is what a pointer event
+  /// actually reports, and because of [getCursorWorldPos]'s own reason.
+  WorldPos _cursorScreenPos = WorldPos.zero;
+
+  /// How a screen point becomes a world point, set by the render layer at
+  /// boot with the camera's own projection. The sim never touches the camera;
+  /// this field is the single wire between the two, and a world that starts
+  /// after another one replaces it rather than adding a second.
+  WorldPos Function(WorldPos screenPos)? screenToWorld;
+
+  WorldPos getCursorScreenPos() => _cursorScreenPos;
+
+  /// Where the player is pointing, in the world.
+  ///
+  /// COMPUTED ON EVERY ASK, never stored: the camera moves under a cursor
+  /// that has not. A player walking with the mouse held still is aiming at a
+  /// new tile every frame, and a cached world position would have them
+  /// chopping the tree they walked away from.
+  WorldPos getCursorWorldPos() {
+    final project = screenToWorld;
+    assert(
+      project != null,
+      '[InputHelper] the cursor was asked for a world position before the '
+      'render layer set one (rule 5) — the binding happens at boot',
+    );
+    return project!(_cursorScreenPos);
+  }
+
+  /// The render layer forwards pointer motion here, event object and all, for
+  /// the same reason [handleKeyEvent] takes a raw `KeyEvent`: the read of a
+  /// raw pointer position happens in THIS file or nowhere (rule 11, and the
+  /// `check_edited_file_rules` tripwire that enforces it).
+  void handlePointerMove(PointerMoveEvent event) {
+    _cursorScreenPos = WorldPos(event.canvasPosition.x, event.canvasPosition.y);
+  }
+
+  /// A click or a tap: the cursor goes where the pointer went down, and the
+  /// primary action fires from there.
+  ///
+  /// This is what makes touch parity structural rather than a second code
+  /// path (rule 12) — a finger IS the cursor for the instant it is down, so
+  /// the tap both aims and acts. The mouse reaches the same two lines with
+  /// its motion already tracked.
+  ///
+  /// PORT DELTA: the spec's third mode, the GAMEPAD's virtual cursor, is not
+  /// here. It is a port of its own — the stick steers a cursor with its own
+  /// speed and snapping, `stick_is_cursor` decides which cursor answers, and
+  /// the OS pointer is warped onto it each frame with an echo guard so the
+  /// warp does not hand the cursor back to the mouse. Until it lands, rule 12
+  /// is broken in writing rather than in silence.
+  void handleTapDown(TapDownEvent event) {
+    _cursorScreenPos = WorldPos(event.canvasPosition.x, event.canvasPosition.y);
+    primaryActionPressed.emit();
   }
 
   bool _any(List<LogicalKeyboardKey> keys) => keys.any(_pressed.contains);

@@ -5,7 +5,7 @@ publish_to: "none"
 
 # 0.MINOR.PATCH+BUILD — major locked at 0 (rule 14). Bumped from HEAD in the same
 # command as the commit (CLAUDE.md §Parallel sessions).
-version: 0.31.1+43
+version: 0.32.0+44
 
 environment:
   sdk: ^3.12.0-14.0.dev

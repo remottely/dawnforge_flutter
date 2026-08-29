@@ -40,7 +40,8 @@ import 'package:flutter/widgets.dart' show KeyEventResult;
 /// Rule 30 lives here structurally: nothing ever calls a pause — a surface
 /// that must hold the player pushes a GameInputManager blocker and this loop
 /// keeps running.
-final class DawnforgeGame extends FlameGame with KeyboardEvents {
+final class DawnforgeGame extends FlameGame
+    with KeyboardEvents, PointerMoveCallbacks, TapCallbacks {
   DawnforgeGame({this.locale = 'pt_BR', this.worldSeed = 0});
 
   final String locale;
@@ -188,18 +189,41 @@ final class DawnforgeGame extends FlameGame with KeyboardEvents {
     // itself. What each one DOES once mounted is entirely its own, which is
     // why the panel closes itself through a callback rather than this class
     // reaching into it.
-    final input = locator<InputHelper>();
-    input.inventoryToggled.connect(_toggleInventory);
-    // Rule 25: the press is routed ONCE, by the machine, to whatever owns the
-    // screen. This is the only listener of the key in the game, and it does
-    // not decide anything — it asks.
-    input.cancelPressed.connect(() {
-      locator<UIStateMachine>().requestCancel();
-    });
+    locator<InputHelper>()
+      // The one wire between the camera and the cursor (rule 11): the sim
+      // asks `InputHelper` where the player is pointing and gets a WORLD
+      // position, without any part of it ever touching a camera. Set here
+      // rather than at boot because the camera it projects through only
+      // exists once the game has loaded.
+      ..screenToWorld = _cursorScreenToWorld
+      ..inventoryToggled.connect(_toggleInventory)
+      // Rule 25: the press is routed ONCE, by the machine, to whatever owns
+      // the screen. This is the only listener of the key in the game, and it
+      // does not decide anything — it asks.
+      ..cancelPressed.connect(locator<UIStateMachine>().requestCancel);
 
     // Last, because the overlay reads `player.inventory` the moment it builds.
     overlays.add(hotbarOverlay);
   }
+
+  /// The camera's own screen→world projection, handed to `InputHelper` at
+  /// load. A method rather than a closure so the wiring above reads as one
+  /// list of connections.
+  WorldPos _cursorScreenToWorld(WorldPos screenPos) {
+    final worldPos = camera.globalToLocal(Vector2(screenPos.x, screenPos.y));
+    return WorldPos(worldPos.x, worldPos.y);
+  }
+
+  @override
+  void onPointerMove(PointerMoveEvent event) =>
+      locator<InputHelper>().handlePointerMove(event);
+
+  /// A click or a tap. It goes to `InputHelper` and no further: what the press
+  /// MEANS is decided by whoever subscribes to the intent it raises, which is
+  /// how one press stays one action (rules 11 and 24).
+  @override
+  void onTapDown(TapDownEvent event) =>
+      locator<InputHelper>().handleTapDown(event);
 
   void _toggleInventory() {
     if (overlays.isActive(inventoryOverlay)) {

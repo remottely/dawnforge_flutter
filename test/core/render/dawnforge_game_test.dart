@@ -16,7 +16,9 @@ import 'package:dawnforge/src/core/ui/game_overlays.dart';
 import 'package:dawnforge/src/core/ui/interface/hotbar_view.dart';
 import 'package:dawnforge/src/core/ui/interface/inventory_panel_view.dart';
 import 'package:flame/components.dart';
+import 'package:flame/events.dart';
 import 'package:flame/game.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -208,5 +210,33 @@ void main() {
 
     expect(game.player.position.x, greaterThan(startX));
     expect(game.player.movement.isMoving, isTrue);
+
+    // THE CURSOR (FP4.3a). A tap aims and acts in one press: the cursor goes
+    // where the pointer went down, and the intent fires from there. A finger
+    // and a mouse reach the same two lines, which is what makes touch parity
+    // structural rather than a second path (rule 12).
+    var actions = 0;
+    locator<InputHelper>().primaryActionPressed.connect(() => actions++);
+    game.onTapDown(
+      TapDownEvent(
+        1,
+        game,
+        TapDownDetails(
+          globalPosition: const Offset(120, 90),
+          kind: PointerDeviceKind.touch,
+        ),
+      ),
+    );
+    expect(actions, 1, reason: 'one press, one intent (rule 24)');
+
+    // And the world position is COMPUTED, not remembered: the camera moves
+    // under a cursor that has not, so a player walking with the mouse held
+    // still is aiming somewhere new every frame.
+    final aimedBefore = locator<InputHelper>().getCursorWorldPos();
+    game.camera.viewfinder.position += Vector2(64, 0);
+    final aimedAfter = locator<InputHelper>().getCursorWorldPos();
+    expect(aimedAfter.x, greaterThan(aimedBefore.x));
+    expect(locator<InputHelper>().getCursorScreenPos().x, 120,
+        reason: 'the pointer itself did not move');
   });
 }

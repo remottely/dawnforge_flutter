@@ -8,6 +8,17 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.32.0
+
+### 🧹 Internal
+
+- The game knows where you are pointing now. It is one answer for everybody:
+  a mouse moving across the window and a finger touching the screen set the
+  same cursor, and anything that needs to know asks that one place. The answer
+  is worked out fresh every time it is asked, because you can walk while your
+  mouse sits still — and then the square you are pointing at changes even
+  though your hand did not. Nothing aims with it yet; that is the next step.
+
 ## 0.31.1
 
 ### 🧹 Internal

@@ -8,6 +8,17 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.32.0
+
+### 🧹 Internal
+
+- O jogo agora sabe para onde você está apontando. É uma resposta só para
+  todo mundo: o mouse andando pela janela e o dedo tocando a tela movem o
+  mesmo cursor, e quem precisa saber pergunta nesse único lugar. A resposta é
+  calculada de novo toda vez que alguém pergunta, porque dá para andar com o
+  mouse parado — e aí o quadradinho para onde você aponta muda mesmo sem a sua
+  mão mexer. Nada mira com isso ainda; esse é o próximo passo.
+
 ## 0.31.1
 
 ### 🧹 Internal
