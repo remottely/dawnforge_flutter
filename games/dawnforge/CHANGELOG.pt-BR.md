@@ -8,6 +8,14 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.31.1
+
+### 🧹 Internal
+
+- O diário de construção se acertou com o golpe, e anotou o que o último passo
+  precisa antes de alguém começar: o jogo ainda não faz ideia de onde o seu
+  mouse está apontando, e existe exatamente um lugar que tem permissão de saber.
+
 ## 0.31.0
 
 ### 🧹 Internal

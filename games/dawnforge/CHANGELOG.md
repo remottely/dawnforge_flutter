@@ -8,6 +8,14 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.31.1
+
+### 🧹 Internal
+
+- The build diary caught up with the swing, and wrote down what the last step
+  needs before anyone starts it: the game still has no idea where your mouse
+  is pointing, and there is exactly one place that is allowed to know.
+
 ## 0.31.0
 
 ### 🧹 Internal
