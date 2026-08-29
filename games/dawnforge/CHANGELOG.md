@@ -8,6 +8,17 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.33.0
+
+### 🧹 Internal
+
+- An action now remembers what it was aimed at, measured once, at the moment
+  the button went down. It sounds like nothing, but it is the difference
+  between an arrow going where you pointed and an arrow going backwards: if the
+  game works out the direction later, after you have walked past the thing you
+  aimed at, the direction comes out reversed. So the aim is taken once and
+  carried whole.
+
 ## 0.32.0
 
 ### 🧹 Internal

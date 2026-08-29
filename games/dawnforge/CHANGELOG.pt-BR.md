@@ -8,6 +8,16 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.33.0
+
+### 🧹 Internal
+
+- Uma ação agora guarda para onde ela foi mirada, medida uma vez só, no
+  instante em que o botão desceu. Parece pouco, mas é a diferença entre uma
+  flecha ir para onde você apontou e uma flecha ir para trás: se o jogo for
+  calcular a direção depois, quando você já andou e passou do lugar que mirou,
+  a direção sai invertida. Então a mira é tirada uma vez e carregada inteira.
+
 ## 0.32.0
 
 ### 🧹 Internal
