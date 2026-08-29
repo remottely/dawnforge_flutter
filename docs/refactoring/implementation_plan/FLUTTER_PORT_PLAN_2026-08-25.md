@@ -128,6 +128,15 @@ sector model (`shared_logic/`, `domain/`, `resources/`, `registries/`, `factorie
   `ActorOccupancyHelper` + permission helper ports. *Scope edit: ground destruction
   (digging a terrain tile + the empty-tile flood) is deferred to FP7 with bridges/cave
   floor — the gate needs place / destroy-prop / transform-farm, and all three are here.*
+  **(a) done 2026-08-29** in nine commits (0.26.0–0.34.0) — occupancy, the tool gate, the
+  hand, the ordered permission gate, prop death and drops, the swing, the unified cursor,
+  the aim, and `ActorPlayer`. `PENDING.md` #8 carries the breakdown and the four things
+  left out on purpose. *Plan edit reality forced:* the CURSOR had to be built here.
+  Rule 11 had no subject until an action needed aiming, so `InputHelper` grew pointer
+  state (mouse + touch; the gamepad's virtual cursor is its own port) — which is also
+  what FP4.2b's deferred mouse-wheel hotbar was waiting on. **(b) is placement**:
+  `ItemBuildableData` + `WorldPlacementHelper`, which inherits `isWithinRange` and the
+  occupancy build-side check already standing.
 - **FP4.4** Farming transform chain (till/water/plant/grow via time system minimal core).
 - **FP4.5** Crafting at a workstation prop.
 - **Gate:** harvest → craft → place, playable, suite green.

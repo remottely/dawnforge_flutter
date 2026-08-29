@@ -8,6 +8,15 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.34.1
+
+### 🧹 Internal
+
+- The build diary closed the tool work: nine steps, from "is somebody standing
+  there" all the way to a tree that falls when you click it. It also wrote down
+  the four things left out on purpose, so nobody has to guess whether they were
+  forgotten.
+
 ## 0.34.0
 
 ### ✨ New
