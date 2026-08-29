@@ -8,6 +8,27 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.34.0
+
+### ✨ New
+
+- **You can gather.** Point at a tree with an axe in your hand and click — or
+  tap it with your finger — and it takes the hit. Keep going and it falls
+  apart, and what it was made of lands on the ground where it stood and comes
+  to you when you walk near. This is the first thing in the game that is
+  properly a game: you do something, and the world is different afterwards.
+
+  Four things worth knowing. You hit **exactly what you point at**, never the
+  square beside it. Each thing says what may break it — a watering can does
+  nothing to a tree, and a weak axe does nothing to a strong rock, which are
+  two different problems. **Empty hands still count**: your own two hands are
+  a real tool, weak and slow and enough for grass and weeds, so you are never
+  unable to touch the world. And you must be close — your reach is your
+  tool's, about one square for most of them.
+
+  Your hand does not swing on the screen yet; the tree takes the hit and
+  falls, but nobody has drawn the motion. (New manual page: Gathering.)
+
 ## 0.33.0
 
 ### 🧹 Internal

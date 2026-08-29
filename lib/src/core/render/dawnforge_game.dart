@@ -1,7 +1,7 @@
 import 'dart:async' show unawaited;
 import 'dart:convert';
 
-import 'package:dawnforge/src/core/base/world_objects/actors/i_actor.dart';
+import 'package:dawnforge/src/core/base/world_objects/actors/player/actor_player.dart';
 import 'package:dawnforge/src/core/base/world_objects/items/item_world.dart';
 import 'package:dawnforge/src/core/base/world_objects/world_object.dart';
 import 'package:dawnforge/src/core/factories/actor_factory.dart';
@@ -69,7 +69,7 @@ final class DawnforgeGame extends FlameGame
   /// `WorldDropHelper.spawnPickup` and arrives via `Events.pickupSpawned`.
   final List<ItemWorld> pickups = <ItemWorld>[];
 
-  late final IActor player;
+  late final ActorPlayer player;
 
   /// The chunked ground layer — typed access for the debug overlay and the
   /// gate test.
@@ -163,7 +163,7 @@ final class DawnforgeGame extends FlameGame
     // spec's pack, where it is the one document that belongs to no biome. It
     // stood in as a boar until now, and a boar authors `inventory_size: 0`,
     // so nothing the world dropped could ever be picked up.
-    player = ActorFactory.create(
+    player = ActorFactory.createPlayer(
       GameConstants.playerActorId,
       locator<GridManager>().gridToWorld(spawnTile),
     );
@@ -196,6 +196,9 @@ final class DawnforgeGame extends FlameGame
       // rather than at boot because the camera it projects through only
       // exists once the game has loaded.
       ..screenToWorld = _cursorScreenToWorld
+      // The press reaches the player and stops there: WHAT it means is the
+      // player's own decision (aim, reach, cooldown), not this shell's.
+      ..primaryActionPressed.connect(player.performPrimaryAction)
       ..inventoryToggled.connect(_toggleInventory)
       // Rule 25: the press is routed ONCE, by the machine, to whatever owns
       // the screen. This is the only listener of the key in the game, and it

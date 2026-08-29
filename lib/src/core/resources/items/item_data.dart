@@ -1,5 +1,6 @@
 import 'package:dawnforge/src/core/resources/i_visual_object_data.dart';
 import 'package:dawnforge/src/core/resources/json_reader.dart';
+import 'package:dawnforge/src/core/shared_logic/definitions/engine_constants.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/enums.dart';
 
 /// Data of every item — port of `ItemData.cs` (faithful slice: identity,
@@ -26,6 +27,7 @@ class ItemData extends IVisualObjectData {
     this.pickupDelay = 0.5,
     this.toolType,
     this.attackDamage = 0,
+    this.actionRange = EngineConstants.interactionRange,
   }) {
     _validate();
   }
@@ -42,6 +44,10 @@ class ItemData extends IVisualObjectData {
         pickupDelay = reader.doubleOr('pickup_delay', 0.5),
         toolType = reader.enumOrNull('tool_type', ToolType.values),
         attackDamage = reader.doubleOr('attack_damage', 0),
+        actionRange = reader.doubleOr(
+          'action_range',
+          EngineConstants.interactionRange,
+        ),
         super.fromReader() {
     _validate();
   }
@@ -86,6 +92,11 @@ class ItemData extends IVisualObjectData {
   /// spec declares it on are not ported yet.
   final double attackDamage;
 
+  /// How far this item reaches, in TILES — bare hands one tile, a spear more.
+  /// The declared default is the spec's `EngineConstants.InteractionRange`,
+  /// which is what an item that names no reach of its own is worth.
+  final double actionRange;
+
   /// Seconds after landing before this pickup may be collected.
   ///
   /// Small and easy to mistake for a nicety; it is the only thing that makes
@@ -114,5 +125,6 @@ class ItemData extends IVisualObjectData {
         pickupDelay: pickupDelay,
         toolType: toolType,
         attackDamage: attackDamage,
+        actionRange: actionRange,
       );
 }

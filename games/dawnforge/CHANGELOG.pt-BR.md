@@ -8,6 +8,28 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.34.0
+
+### ✨ New
+
+- **Dá para colher.** Aponte para uma árvore com um machado na mão e clique —
+  ou toque com o dedo — e ela leva a batida. Continue e ela se desfaz, e aquilo
+  de que ela era feita cai no chão onde ela estava e vem para você quando você
+  passa perto. Essa é a primeira coisa do jogo que é de verdade um jogo: você
+  faz alguma coisa, e o mundo fica diferente depois.
+
+  Quatro coisas que vale saber. Você bate **exatamente onde aponta**, nunca no
+  quadradinho do lado. Cada coisa diz o que pode quebrá-la — um regador não faz
+  nada numa árvore, e um machado fraco não faz nada numa pedra forte, e esses
+  são dois problemas diferentes. **Mão vazia também conta**: as suas duas mãos
+  são uma ferramenta de verdade, fracas e lentas e suficientes para mato e
+  ervas, então você nunca fica sem poder tocar no mundo. E você precisa estar
+  perto — o seu alcance é o da sua ferramenta, mais ou menos um quadradinho na
+  maioria delas.
+
+  A sua mão ainda não dá o golpe na tela; a árvore leva a batida e cai, mas
+  ninguém desenhou o movimento ainda. (Página nova do manual: Colhendo.)
+
 ## 0.33.0
 
 ### 🧹 Internal

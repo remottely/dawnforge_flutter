@@ -101,6 +101,11 @@ abstract final class EngineConstants {
   /// origin (a sealed pocket is a legitimate shape — see WorldDropHelper).
   static const int dropLandingSearchRadius = 8;
 
+  /// How far an actor reaches for an item that names no reach of its own, in
+  /// TILES — the declared default of `ItemData.actionRange` (the spec's
+  /// `EngineConstants.InteractionRange`).
+  static const double interactionRange = 2;
+
   /// World px within which a pickup starts flying to an eligible collector.
   static const double playerPickupRadius = 16;
 

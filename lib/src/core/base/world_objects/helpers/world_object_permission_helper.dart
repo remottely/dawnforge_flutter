@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:dawnforge/src/core/base/world_objects/actors/i_actor.dart';
 import 'package:dawnforge/src/core/base/world_objects/grounds/ground_buildable.dart';
 import 'package:dawnforge/src/core/base/world_objects/helpers/actor_occupancy_helper.dart';
@@ -65,8 +67,10 @@ final class GroundTarget extends DamageTarget {
 ///   - player-vs-player under `DifficultySystem` (singleplayer, decision D4);
 ///   - the waterable/tillable bypass, which belongs at the marked seam above
 ///     the occupancy rule (FP4.4's farming components);
-///   - `can_build_on_target` (needs `ItemBuildableData` — FP4.3b) and with it
-///     `is_within_range`, which needs `ActorPlayer`'s action range (slice 6);
+///   - `can_build_on_target` (needs `ItemBuildableData` — FP4.3b). Its reach
+///     check does exist here: [isWithinRange] landed with the swing that needed
+///     it, so placement inherits the same measurement rather than inventing a
+///     second one;
 ///   - the elevation split of `allowed_tools`, where a tile with a rock on it
 ///     answers to the ROCK's tools (FP7, with ground destruction);
 ///   - `show_feedback` → `WorldObjectFeedback` (FP5.1's notification queue);
@@ -186,6 +190,45 @@ abstract final class WorldObjectPermissionHelper {
       WorldObjectToolHelper.tierOf(source),
       data.tier,
     );
+  }
+
+  /// Whether [target] is close enough for [source] to reach, given a reach of
+  /// [rangePixels].
+  ///
+  /// EDGE TO EDGE, not centre to centre: the actor's BODY rect against the
+  /// target's AREA rect — the same two rects `ActorOccupancyHelper` already
+  /// defines, so what counts as "standing on" and what counts as "close
+  /// enough" are measured off one geometry. Centre-to-centre would make a
+  /// one-tile reach mean "your centre within 16px of its centre", which is
+  /// almost nowhere: a three-tile tree would be unreachable from every tile
+  /// that is not its anchor.
+  ///
+  /// PORT DELTA: the spec measures against a published INTERACTION rect, which
+  /// a hover component and four other classes resolve per target type. It has
+  /// no equivalent here; the area rect is the honest stand-in, and it is the
+  /// rect that actually holds the ground.
+  static bool isWithinRange(
+    IActor source,
+    DamageTarget target,
+    double rangePixels,
+  ) {
+    final body = ActorOccupancyHelper.bodyRectOf(source);
+    final area = switch (target) {
+      ObjectTarget(:final object) => ActorOccupancyHelper.areaRect(
+          locator<GridManager>().worldToGrid(object.position),
+          width: object.data.gridWidth,
+          height: object.data.gridHeight,
+        ),
+      GroundTarget(:final tile) => ActorOccupancyHelper.areaRect(tile),
+    };
+    return _gapBetween(body, area) <= rangePixels;
+  }
+
+  /// The shortest distance between two rects — zero when they overlap.
+  static double _gapBetween(WorldRect a, WorldRect b) {
+    final dx = math.max(0, math.max(a.left - b.right, b.left - a.right));
+    final dy = math.max(0, math.max(a.top - b.bottom, b.top - a.bottom));
+    return math.sqrt(dx * dx + dy * dy);
   }
 
   /// The soul behind a target, whichever shape it arrived in.
