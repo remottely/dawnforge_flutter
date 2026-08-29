@@ -1,3 +1,5 @@
+import 'package:dawnforge/src/core/base/world_objects/helpers/world_object_permission_helper.dart';
+import 'package:dawnforge/src/core/base/world_objects/props/prop.dart';
 import 'package:dawnforge/src/core/base/world_objects/world_object.dart';
 import 'package:dawnforge/src/core/components/i_actor/direction_component.dart';
 import 'package:dawnforge/src/core/components/i_actor/held_item_component.dart';
@@ -45,6 +47,39 @@ class IActor extends WorldObject {
     // joining happens HERE — where a component set is assembled — because the
     // factory is the only path that reaches it (rule 1).
     locator<ActorTracker>().add(this);
+  }
+
+  /// Swings what is in this actor's hand at [target], and answers whether the
+  /// blow LANDED — the port of `IActor.use_held_item_primary_action`.
+  ///
+  /// One line of it is the whole FP4 loop: the gate decides, the item says how
+  /// hard, the prop takes it, and its death is what puts the loot on the
+  /// ground. Everything the gate needs was measured before this was called.
+  ///
+  /// The parameter is a [Prop] and not the gate's own [DamageTarget] on
+  /// purpose. A prop is the only thing in this port with a death to reach: an
+  /// actor has no corpse, no loot and no respawn yet, and a tile has no
+  /// destruction until FP4.4 transforms it and FP7 removes it. Widening the
+  /// parameter before those exist would let the cursor promise a blow the
+  /// world cannot deliver, which is the exact mismatch
+  /// `WorldObjectPermissionHelper` exists to prevent — so instead the verb
+  /// simply has no entry point for them yet.
+  ///
+  /// PORT DELTAS: the spec also paces the swing (`_reset_action_cooldown` off
+  /// the authored `base_action_speed`) and pays for it (energy, mana, combo
+  /// points). Pacing belongs with the input that presses the button (slice 6);
+  /// the costs belong with `HeldItemComponent`'s unported half.
+  bool usePrimaryActionOn(Prop target) {
+    if (!health.isAlive) return false;
+    final item = heldItem.currentItem;
+    if (item == null) return false;
+    if (!WorldObjectPermissionHelper.canDamageTarget(
+      ObjectTarget(target),
+      this,
+    )) {
+      return false;
+    }
+    return target.takeDamage(item.attackDamage, this);
   }
 
   /// Leaves the world. Actors do not despawn yet — chunk unloading only

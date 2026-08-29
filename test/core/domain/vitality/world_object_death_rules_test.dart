@@ -81,17 +81,30 @@ void main() {
       );
     });
 
-    test('tier and allowed_tools survive the clone every instance gets', () {
+    test('the tool fields survive the clone every instance gets', () {
       locator<PropRegistry>().registerJson(<String, Object?>{
         'id': 't1_prop_probe_rock',
         'allowed_tools': <String>['PICKAXE'],
         'tier': 3,
+      });
+      locator<ItemRegistry>().registerJson(<String, Object?>{
+        'id': 't1_item_probe_pickaxe',
+        'tool_type': 'PICKAXE',
+        'tier': 3,
+        'attack_damage': 1.5,
       });
       // Rule 3: a host is initialized with a CLONE, so a field the clone drops
       // is a field the running game does not have — invisible in the registry.
       final cloned = locator<PropRegistry>().getProp('t1_prop_probe_rock').clone();
       expect(cloned.tier, 3);
       expect(cloned.allowedTools, <ToolType>[ToolType.pickaxe]);
+
+      final clonedTool =
+          locator<ItemRegistry>().getItem('t1_item_probe_pickaxe').clone();
+      expect(clonedTool.toolType, ToolType.pickaxe);
+      expect(clonedTool.attackDamage, 1.5,
+          reason: 'a swing that lost its damage on the way to the world '
+              'would still look correct in the registry');
     });
   });
 }

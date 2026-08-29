@@ -8,6 +8,19 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.31.0
+
+### 🧹 Internal
+
+- The swing exists. Point at a tree with an axe in your hand and it takes two
+  hits and falls, and the logs land where it stood — the first time in this
+  project that anything a player does changes the world. How hard a hit is
+  comes from the tool itself, written in its own data: bare hands take a
+  breath, an axe takes a bite. The hoe still does nothing to a tree, and a
+  hand that holds nothing is never empty, so there is always something to
+  swing. Nothing has connected this to your mouse yet — that is the last step
+  of this piece of work.
+
 ## 0.30.0
 
 ### 🧹 Internal

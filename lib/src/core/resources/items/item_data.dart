@@ -25,6 +25,7 @@ class ItemData extends IVisualObjectData {
     this.magnetSpeed = 200,
     this.pickupDelay = 0.5,
     this.toolType,
+    this.attackDamage = 0,
   }) {
     _validate();
   }
@@ -40,6 +41,7 @@ class ItemData extends IVisualObjectData {
         magnetSpeed = reader.doubleOr('magnet_speed', 200),
         pickupDelay = reader.doubleOr('pickup_delay', 0.5),
         toolType = reader.enumOrNull('tool_type', ToolType.values),
+        attackDamage = reader.doubleOr('attack_damage', 0),
         super.fromReader() {
     _validate();
   }
@@ -71,6 +73,19 @@ class ItemData extends IVisualObjectData {
   /// single `ItemData` cannot do until that hierarchy is ported.
   final ToolType? toolType;
 
+  /// What one blow with this item takes off its target.
+  ///
+  /// Zero for everything that is not a weapon or a tool, and zero is a real
+  /// number here rather than a missing one: a swing that deals nothing is
+  /// still a swing. It never becomes a way to break something for free —
+  /// [toolType] decides whether the blow is allowed at all, and a plank
+  /// carries neither.
+  ///
+  /// Authored under `IItemToolData` in the pack, like [toolType], and lifted
+  /// onto `ItemData` for the same reason (0.27.0): the tool subclasses the
+  /// spec declares it on are not ported yet.
+  final double attackDamage;
+
   /// Seconds after landing before this pickup may be collected.
   ///
   /// Small and easy to mistake for a nicety; it is the only thing that makes
@@ -98,5 +113,6 @@ class ItemData extends IVisualObjectData {
         magnetSpeed: magnetSpeed,
         pickupDelay: pickupDelay,
         toolType: toolType,
+        attackDamage: attackDamage,
       );
 }

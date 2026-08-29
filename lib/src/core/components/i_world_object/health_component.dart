@@ -28,6 +28,10 @@ final class HealthComponent extends IComponentVital {
   EventSignal<(double current, double maximum)> get changedSignal =>
       healthChanged;
 
+  /// Whether this object still stands — the question every blow asks before
+  /// it is thrown and after it lands (the spec's `is_alive`).
+  bool get isAlive => !HealthRules.isDead(current);
+
   /// Applies [amount] of damage. Returns whether the hit landed (an
   /// invulnerable or already-dead target refuses it — a refusal, not a
   /// fallback: the caller reads the answer).

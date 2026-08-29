@@ -8,6 +8,18 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.31.0
+
+### 🧹 Internal
+
+- O golpe existe. Aponte para uma árvore com um machado na mão e ela leva duas
+  machadadas e cai, e as toras aparecem onde ela estava — a primeira vez neste
+  projeto que uma coisa que o jogador faz muda o mundo. A força da batida vem
+  da própria ferramenta, escrita nos dados dela: mão nua dá um cutucão, machado
+  dá uma mordida. A enxada continua não fazendo nada numa árvore, e uma mão que
+  não segura nada nunca está vazia, então sempre tem o que golpear. Nada disso
+  está ligado ao seu mouse ainda — esse é o último passo deste trabalho.
+
 ## 0.30.0
 
 ### 🧹 Internal
