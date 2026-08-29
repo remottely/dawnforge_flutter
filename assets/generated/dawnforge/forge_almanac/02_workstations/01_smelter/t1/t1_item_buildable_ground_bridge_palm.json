@@ -1,0 +1,82 @@
+{
+  "action_effect_radius": 0.0,
+  "action_range": 1.0,
+  "animation_speed": 0.15,
+  "backward_frames": 0,
+  "blueprint_id": "t1_ground_buildable_bridge_palm",
+  "casts_shadow": true,
+  "craft_amount": 1,
+  "craft_time": 5.0,
+  "crafted_at": "SMELTER",
+  "description_key": "forge_almanac.02_workstations.01_smelter.t1.t1_item_buildable_ground_bridge_palm.description",
+  "display_name_key": "forge_almanac.02_workstations.01_smelter.t1.t1_item_buildable_ground_bridge_palm.display_name",
+  "drop_multiplier": 1.0,
+  "frame_size": [
+    1,
+    1
+  ],
+  "glow_color": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "glow_origin_offset": 0.0,
+  "glow_radius": 0.0,
+  "glow_speed": 0.0,
+  "glow_type": "NONE",
+  "id": "t1_item_buildable_ground_bridge_palm",
+  "idle_frames": 0,
+  "ingredients": [
+    {
+      "amount": 5,
+      "id": "t1_item_craftable_planks_palm"
+    },
+    {
+      "amount": 1,
+      "id": "t1_item_coal"
+    }
+  ],
+  "invert_animation": false,
+  "lifetime": 300.0,
+  "magnet_speed": 12.5,
+  "material_type": "WOOD",
+  "max_stack": 100,
+  "pickup_delay": 0.5,
+  "pivot_offset": [
+    0,
+    0
+  ],
+  "position_offset": [
+    0,
+    0
+  ],
+  "primary_action_animation": "",
+  "primary_action_frame_size": [
+    0,
+    0
+  ],
+  "rotation_offset": 0.0,
+  "secondary_action_animation": "",
+  "secondary_action_frame_size": [
+    0,
+    0
+  ],
+  "sell_value": 5,
+  "shadow_origin_offset": -0.0625,
+  "shadow_style_celestial": "SILHOUETTE",
+  "shadow_style_dynamic": "OCCLUDER_SPRITE_CAPPED",
+  "sound_equip": "",
+  "sound_pickup": "",
+  "sound_primary_action": "",
+  "sound_swing": "",
+  "sounds_volume": 1.0,
+  "sprite_alpha": 1.0,
+  "sprite_anchor": "BOTTOM_LEFT",
+  "sprite_scale": 0.5,
+  "spritesheet": "res://data/forge_almanac/02_workstations/01_smelter/t1/sprites/t1_item_buildable_ground_bridge_palm.png",
+  "spritesheet_icon": "",
+  "tier": 1,
+  "type": "item_buildable_data",
+  "walk_frames": 0
+}

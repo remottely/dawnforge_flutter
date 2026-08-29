@@ -8,6 +8,20 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.35.0
+
+### 🧹 Internal
+
+- Alguns itens agora são **plantas de construção**: em vez de serem uma coisa
+  que você segura, são uma coisa que você põe no chão. Um item desses carrega o
+  nome do que ele constrói, e o jogo procura esse nome do mesmo jeito que
+  procura todo o resto — então uma planta que nomeia algo que ninguém desenhou
+  é pega na hora em que é lida, e não na hora em que você tenta construir.
+- As quatro primeiras vieram do pacote de design: uma fundição de cobre (a
+  oficina onde se derrete pedra), uma ponte de palmeira e dois tipos de chão.
+  Nada põe essas coisas na sua mochila ainda e nada as coloca no mundo ainda —
+  isso são os próximos passos. Este aqui é o item saber o que ele é.
+
 ## 0.34.1
 
 ### 🧹 Internal

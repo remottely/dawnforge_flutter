@@ -6,6 +6,8 @@ import 'package:dawnforge/src/core/registries/biome_registry.dart';
 import 'package:dawnforge/src/core/registries/ground_registry.dart';
 import 'package:dawnforge/src/core/registries/item_registry.dart';
 import 'package:dawnforge/src/core/registries/prop_registry.dart';
+import 'package:dawnforge/src/core/resources/items/item_buildable_data.dart';
+import 'package:dawnforge/src/core/resources/world_objects/grounds/ground_buildable_data.dart';
 import 'package:dawnforge/src/core/resources/world_objects/grounds/ground_empty_data.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/content_paths.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/enums.dart';
@@ -105,6 +107,48 @@ void main() {
         reason: 'the chunk renderer bakes this tile from its sprite');
   });
 
+  test('buildable items route to their class and resolve their blueprints '
+      '(FP4.3b)', () {
+    const AlmanacLoader().loadFromManifest(readJson('manifest.json'), readJson);
+
+    final items = locator<ItemRegistry>();
+    final buildables = items.ids
+        .map(items.getItem)
+        .whereType<ItemBuildableData>()
+        .toList();
+    expect(buildables, isNotEmpty,
+        reason: 'the pack authors item_buildable_data documents');
+
+    // Every blueprint in the real pack points at something authored. This is
+    // the whole seam of the slice: the id crosses from an ITEM document to a
+    // world-object one, and nothing but this check reads both ends.
+    for (final item in buildables) {
+      expect(() => item.blueprint, returnsNormally,
+          reason: '${item.id} builds ${item.blueprintId}');
+      expect(item.isPropBlueprint ^ item.isGroundBlueprint, isTrue,
+          reason: '${item.id} builds exactly one kind of world object');
+    }
+
+    // The two kinds, each by name, so the routing cannot quietly collapse into
+    // one of them.
+    final smelter =
+        items.getItem('t1_item_buildable_workstation_smelter')
+            as ItemBuildableData;
+    expect(smelter.isPropBlueprint, isTrue);
+    expect(smelter.blueprint.gridWidth, 2, reason: 'the smelter is 2x1');
+    expect(smelter.maxStack, 1, reason: 'a workstation does not stack');
+
+    final bridge = items.getItem('t1_item_buildable_ground_bridge_palm')
+        as ItemBuildableData;
+    expect(bridge.isGroundBlueprint, isTrue);
+    expect(
+      (bridge.blueprint as GroundBuildableData).floatsOnWater,
+      isTrue,
+      reason: 'a bridge is the ground that goes over water',
+    );
+    expect(bridge.actionRange, 1.0);
+  });
+
   test('the biome manifest boots the BiomeRegistry (FP3.4, step 11)', () {
     final biomesDir =
         Directory(ContentPaths.worldBiomesRoot(GameConstants.gameName));
@@ -198,6 +242,7 @@ void main() {
     final props = locator<PropRegistry>();
     final actors = locator<ActorRegistry>();
     final items = locator<ItemRegistry>();
+    final grounds = locator<GroundRegistry>();
 
     for (final biomeId in biomes.ids) {
       final biome = biomes.getBiome(biomeId);
@@ -211,8 +256,19 @@ void main() {
       }
     }
 
-    // Prop and actor loot only: a ground's table rolls on ground destruction,
-    // which is FP7's verb — its ids (buildable grounds) join the subset there.
+    // GROUND tables joined the subset at FP4.3b. Their ids are the buildable
+    // ITEMS a destroyed tile hands back, and until the blueprints were imported
+    // none of them existed to resolve — so the loop that guards every other
+    // loot table had to skip the one family whose entries were dangling. What
+    // rolls those tables is still FP7's verb; what makes them checkable is the
+    // blueprint import, and an id going missing should fail here rather than in
+    // the commit that finally rolls them.
+    for (final groundId in grounds.ids) {
+      for (final entry in grounds.getGround(groundId).drops) {
+        expect(() => items.getItem(entry.itemId), returnsNormally,
+            reason: '$groundId drops ${entry.itemId}');
+      }
+    }
     for (final propId in props.ids) {
       for (final entry in props.getProp(propId).drops) {
         expect(() => items.getItem(entry.itemId), returnsNormally,

@@ -27,6 +27,11 @@
       "path": "01_biomes/t1/actors/t1_actor_npc_thornwick.json"
     },
     {
+      "id": "t1_ground_buildable_bridge_palm",
+      "type": "ground_buildable_data",
+      "path": "02_workstations/01_smelter/t1/t1_ground_buildable_bridge_palm.json"
+    },
+    {
       "id": "t1_ground_buildable_terrain",
       "type": "ground_buildable_data",
       "path": "02_workstations/01_smelter/t1/t1_ground_buildable_terrain.json"
@@ -40,6 +45,21 @@
       "id": "t1_ground_empty_water",
       "type": "ground_empty_data",
       "path": "01_biomes/t1/ground/t1_ground_empty_water.json"
+    },
+    {
+      "id": "t1_item_buildable_ground_bridge_palm",
+      "type": "item_buildable_data",
+      "path": "02_workstations/01_smelter/t1/t1_item_buildable_ground_bridge_palm.json"
+    },
+    {
+      "id": "t1_item_buildable_ground_grass",
+      "type": "item_buildable_data",
+      "path": "02_workstations/01_smelter/t1/t1_item_buildable_ground_grass.json"
+    },
+    {
+      "id": "t1_item_buildable_workstation_smelter",
+      "type": "item_buildable_data",
+      "path": "02_workstations/01_smelter/t1/t1_item_buildable_workstation_smelter.json"
     },
     {
       "id": "t1_item_coal",
@@ -180,6 +200,11 @@
       "id": "t1_prop_vein_copper",
       "type": "prop_data",
       "path": "01_biomes/t1/props/t1_prop_vein_copper.json"
+    },
+    {
+      "id": "t1_prop_workstation_smelter",
+      "type": "prop_workstation_data",
+      "path": "02_workstations/01_smelter/t1/t1_prop_workstation_smelter.json"
     },
     {
       "id": "t2_item_consumable_fruit_plum",

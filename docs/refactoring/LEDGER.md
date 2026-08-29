@@ -33,6 +33,13 @@
 - **Cost of leaving it:** the waste is per-prop and the props are the most numerous hosts in the world, so it scales with exactly the thing the streaming budget already guards (FP3.4's 1200µs). It is also a correctness smell before it is a cost one: a prop with no loot table still answers `drop`, and a decoration still answers `health`, so "can this be broken" reads as yes everywhere and only the authored `allowedTools` says otherwise.
 - **Found while:** FP4.3a slice 5 — giving props the death path harvest needs.
 
+### L-006 · Nothing notices when an imported pack document drifts from the spec's
+
+- **Lens:** content pipeline / cross-repo contract
+- **Evidence:** `games/dawnforge/data/forge_almanac/02_workstations/01_smelter/t1/t1_ground_buildable_terrain.md:115-128` at 0.35.0 still carries a `cave_elevation_drops` entry for `t1_item_ore_copper` and the comment that justified it; the same document in `tessera_project` dropped that entry and rewrote the comment ("the cave wall is the deposit" → "what a cut wall pays when it held nothing visible"). Every pack document here is a hand-copied SNAPSHOT — `scripts/` has no step that compares the two trees, and the knowledge index covers only this repo, so a `.md` that changed over there is invisible from this side until somebody diffs it by hand.
+- **Cost of leaving it:** the pack format is a SHARED contract that must never fork (study §4, risk register #3), and the fork this allows is the quiet kind: not a parse failure but two engines rolling different loot from the same authored tile. The gap widens per import — the pack is imported one slice at a time, so every slice pins its own snapshot date, and no two documents here are guaranteed to be from the same version of over there. A `--check` step that diffs the imported subset costs one script and is the only thing that would have surfaced this.
+- **Found while:** FP4.3b slice 1 — copying the five blueprint documents in, and diffing an already-imported one first to learn the delta convention.
+
 ## Drained
 
 | ID | Title | Drained into |

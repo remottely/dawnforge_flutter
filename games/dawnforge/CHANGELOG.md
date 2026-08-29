@@ -8,6 +8,20 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.35.0
+
+### 🧹 Internal
+
+- Some items are now **blueprints**: instead of being a thing you hold, they
+  are a thing you put down. An item like that carries the name of what it
+  builds, and the game looks that up the same way it looks up everything else,
+  so a blueprint naming something nobody drew is caught the moment it is read
+  instead of the moment you try to build it.
+- The first four of them came in from the design pack: a copper smelter (the
+  workshop you melt rock in), a palm bridge and two kinds of ground. Nothing
+  puts them in your bag yet and nothing places them yet — that is the next
+  couple of steps. This one is the item knowing what it is.
+
 ## 0.34.1
 
 ### 🧹 Internal
