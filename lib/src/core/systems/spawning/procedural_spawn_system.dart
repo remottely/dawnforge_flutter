@@ -53,6 +53,7 @@ final class ProceduralSpawnSystem {
 
   void Function()? _disconnectLoaded;
   void Function()? _disconnectUnload;
+  void Function()? _disconnectDied;
 
   /// Wires the population to the streaming. Call BEFORE
   /// `ChunkStreamingSystem.initialize` so the boot window's own chunkLoaded
@@ -80,12 +81,15 @@ final class ProceduralSpawnSystem {
     _disconnectLoaded = streaming.chunkLoaded.connect(_onChunkLoaded);
     _disconnectUnload =
         streaming.chunkUnloadStarted.connect(_onChunkUnloadStarted);
+    _disconnectDied =
+        locator<Events>().worldObjectDied.connect(_onWorldObjectDied);
   }
 
   /// Teardown path (the one legitimate unregistration, rule 28).
   void dispose() {
     _disconnectLoaded?.call();
     _disconnectUnload?.call();
+    _disconnectDied?.call();
   }
 
   /// Props this entry produces per chunk on average, ignoring the cap —
@@ -120,6 +124,25 @@ final class ProceduralSpawnSystem {
     for (final (tile, prop) in content) {
       locator<GridManager>().freePropTiles(tile, prop);
       locator<Events>().worldObjectDespawned.emit(prop);
+    }
+  }
+
+  /// Forgets a prop that died (FP4.3a). Bookkeeping ONLY: the prop hands its
+  /// own tiles back and announces its own despawn, because a prop can die
+  /// wherever it was placed — this system placed most of them, but not the
+  /// ones a player will build (FP4.3b). What this system still owes is to
+  /// stop listing a corpse as live content, or the chunk's unload would free
+  /// tiles somebody else has since been given.
+  ///
+  /// An actor's death arrives here too and is not this system's business —
+  /// a legitimate branch, not a fallback.
+  void _onWorldObjectDied(Object payload) {
+    if (payload is! Prop) return;
+    for (final content in _chunkContent.values) {
+      final index = content.indexWhere((entry) => identical(entry.$2, payload));
+      if (index < 0) continue;
+      content.removeAt(index);
+      return;
     }
   }
 

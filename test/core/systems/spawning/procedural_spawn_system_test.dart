@@ -133,6 +133,41 @@ void main() {
         reason: 'the roll is a pure function of (seed, chunk)');
   });
 
+  test('a prop felled mid-chunk is forgotten, so unload frees nothing twice',
+      () {
+    // FP4.3a: a harvested prop hands its own tiles back and announces its own
+    // despawn. What this system still owes is to stop LISTING it as live
+    // content — a corpse left on the list has its tiles freed a second time
+    // when the chunk recycles, long after the grid handed them to somebody
+    // else. `freePropTiles` asserts on exactly that, so the double release is
+    // a crash rather than a quiet corruption.
+    const chunk = GridPos(3, 4);
+    materializeChunkTerrain(chunk);
+    final spawned = <Prop>[];
+    var despawns = 0;
+    locator<Events>().worldObjectSpawned.connect((p) => spawned.add(p as Prop));
+    locator<Events>().worldObjectDespawned.connect((_) => despawns++);
+
+    locator<ProceduralSpawnSystem>()
+        .initialize(worldSeed: 20260826, biome: fixtureBiome());
+    final streaming = locator<ChunkStreamingSystem>();
+    streaming.chunkLoaded.emit(chunk);
+    expect(spawned, isNotEmpty);
+
+    final felled = spawned.first;
+    final felledTile = locator<GridManager>().worldToGrid(felled.position);
+    felled.health.takeDamage(felled.health.maximum);
+    expect(despawns, 1, reason: 'the corpse left the world when it died');
+    expect(locator<GridManager>().getPropAt(felledTile), isNull);
+
+    // The rest of the chunk unloads normally, and the corpse is not released
+    // a second time.
+    streaming.chunkUnloadStarted.emit(chunk);
+    expect(despawns, spawned.length,
+        reason: 'every prop left exactly once — the dead one at its death, '
+            'the living ones with their chunk');
+  });
+
   test('spawnability: water, elevation and reserved tiles stay clear', () {
     const chunk = GridPos(0, 0);
     // Only ONE tile of the chunk is terrain; everything else is void.

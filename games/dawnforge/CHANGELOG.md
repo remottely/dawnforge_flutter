@@ -8,6 +8,18 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.30.0
+
+### 🧹 Internal
+
+- Things in the world can be broken now, and breaking one is what leaves its
+  loot on the ground. A tree with four points of life takes two hits from an
+  axe and falls; the logs it was authored to give land where it stood, because
+  the stump lets go of its square the moment it dies instead of standing in the
+  way of its own logs. The wrong tool still does nothing at all, and neither
+  does the right tool on something a person is standing on. Nobody can swing
+  yet — that is the last piece.
+
 ## 0.29.1
 
 ### 🧹 Internal

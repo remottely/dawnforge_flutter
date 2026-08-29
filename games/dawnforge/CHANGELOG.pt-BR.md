@@ -8,6 +8,18 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.30.0
+
+### 🧹 Internal
+
+- As coisas do mundo agora podem ser quebradas, e quebrar uma é o que deixa o
+  que ela guarda no chão. Uma árvore com quatro pontos de vida leva duas
+  machadadas e cai; as toras que ela foi escrita para dar aparecem onde ela
+  estava, porque o toco solta o quadradinho dele na hora em que morre, em vez
+  de ficar na frente das próprias toras. A ferramenta errada continua não
+  fazendo nada, e a certa também não faz nada em cima de uma coisa onde tem
+  alguém em pé. Ninguém consegue dar o golpe ainda — essa é a última peça.
+
 ## 0.29.1
 
 ### 🧹 Internal

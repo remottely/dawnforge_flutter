@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:dawnforge/src/core/base/world_objects/items/item_world.dart';
-import 'package:dawnforge/src/core/components/i_world_object/drop_component.dart';
 import 'package:dawnforge/src/core/factories/prop_factory.dart';
 import 'package:dawnforge/src/core/registries/item_registry.dart';
 import 'package:dawnforge/src/core/registries/prop_registry.dart';
@@ -50,8 +49,13 @@ void main() {
   tearDown(resetCoreSystems);
 
   test('rolls the authored table and spawns pickups on walkable ground', () {
-    final prop = PropFactory.create('t1_prop_rock_probe', WorldPos.zero);
-    final drop = prop.addComponent(DropComponent(Random(20260826)));
+    // The prop mounts its own DropComponent (FP4.3a) — the seed rides in
+    // through the factory rather than a second component being bolted on.
+    final drop = PropFactory.create(
+      't1_prop_rock_probe',
+      WorldPos.zero,
+      random: Random(20260826),
+    ).drop;
 
     final spawned = <ItemWorld>[];
     locator<Events>().pickupSpawned.connect((p) => spawned.add(p as ItemWorld));
@@ -79,9 +83,11 @@ void main() {
       final unsub = locator<Events>()
           .pickupSpawned
           .connect((p) => positions.add((p as ItemWorld).position));
-      PropFactory.create('t1_prop_rock_probe', WorldPos.zero)
-          .addComponent(DropComponent(Random(7)))
-          .dropItems(center);
+      PropFactory.create(
+        't1_prop_rock_probe',
+        WorldPos.zero,
+        random: Random(7),
+      ).drop.dropItems(center);
       unsub();
       return positions;
     }
@@ -90,8 +96,11 @@ void main() {
   });
 
   test('an empty authored table drops nothing and emits nothing', () {
-    final prop = PropFactory.create('t1_prop_bare_probe', WorldPos.zero);
-    final drop = prop.addComponent(DropComponent(Random(1)));
+    final drop = PropFactory.create(
+      't1_prop_bare_probe',
+      WorldPos.zero,
+      random: Random(1),
+    ).drop;
 
     var spawns = 0;
     locator<Events>().pickupSpawned.connect((_) => spawns++);
