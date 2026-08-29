@@ -8,6 +8,19 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.29.0
+
+### 🧹 Internal
+
+- Um lugar só do jogo agora decide se você tem permissão de bater em alguma
+  coisa, e decide numa ordem só. Ele pergunta se a sua ferramenta é do tipo
+  certo e boa o bastante, e não deixa nada ser tirado de baixo de uma pessoa
+  que está em cima — a não ser que a coisa diga que não se importa, o que um
+  arbusto diz e uma escada não. A plantação passa de propósito na frente:
+  cavar com a enxada, regar e plantar não tiram o chão de ninguém, então você
+  continua podendo trabalhar o quadradinho em que está pisando. Nada dá golpe
+  ainda; o golpe é o próximo, e vai perguntar isso aqui.
+
 ## 0.28.1
 
 ### 🧹 Internal

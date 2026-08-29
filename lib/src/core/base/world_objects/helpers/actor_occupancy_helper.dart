@@ -114,6 +114,20 @@ abstract final class ActorOccupancyHelper {
     return _isObjectAreaOccupied(target);
   }
 
+  /// The GROUND-shaped twin of [isDestructionBlocked], for a tile that has no
+  /// host to be handed in.
+  ///
+  /// Terrain is nodeless in this port (FP3.4): a streamed tile is a [GridPos]
+  /// and its data, never an object, so the question has to be askable of a
+  /// tile. It comes out identical to [isPlacementBlocked] — one tile's area,
+  /// one data's permission — and that is not a coincidence worth hiding: for a
+  /// tile, "may this appear under somebody" and "may this vanish from under
+  /// them" are the same question read in two directions, which is why this
+  /// delegates instead of restating the loop. Restating it is exactly how the
+  /// two sides drifted apart in the spec's history.
+  static bool isGroundDestructionBlocked(IWorldObjectData data, GridPos tile) =>
+      isPlacementBlocked(data, tile);
+
   /// The area a world object holds.
   ///
   /// Returns false for a target that occupies no ground at all — an actor, a

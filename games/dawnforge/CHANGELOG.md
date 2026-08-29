@@ -8,6 +8,19 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.29.0
+
+### 🧹 Internal
+
+- One place in the game now decides whether you are allowed to hit something,
+  and it decides in one order. It asks whether your tool is the right kind and
+  good enough, and it refuses to let anything be taken out from under a person
+  standing on it — unless that thing says it does not mind, which a bush does
+  and a staircase does not. Farming is deliberately let through first: hoeing,
+  watering and planting do not take the ground away from anyone, so you can
+  still work the square you are standing on. Nothing swings yet; the swing is
+  next, and it will ask this.
+
 ## 0.28.1
 
 ### 🧹 Internal
