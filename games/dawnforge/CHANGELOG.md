@@ -8,6 +8,14 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.29.1
+
+### 🧹 Internal
+
+- The build diary's index caught up again: the gate that decides whether a
+  swing is allowed is built and tested, so the notes no longer list it as the
+  next thing to do.
+
 ## 0.29.0
 
 ### 🧹 Internal
