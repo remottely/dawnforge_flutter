@@ -1,6 +1,8 @@
 import 'package:dawnforge/src/core/registries/ground_registry.dart';
 import 'package:dawnforge/src/core/registries/prop_registry.dart';
 import 'package:dawnforge/src/core/resources/i_world_object_data.dart';
+import 'package:dawnforge/src/core/resources/items/item_amount.dart';
+import 'package:dawnforge/src/core/resources/items/item_craftable_data.dart';
 import 'package:dawnforge/src/core/resources/items/item_data.dart';
 import 'package:dawnforge/src/core/resources/json_reader.dart';
 import 'package:dawnforge/src/core/resources/world_objects/grounds/ground_buildable_data.dart';
@@ -15,18 +17,23 @@ import 'package:dawnforge/src/core/systems/boot.dart';
 /// the same questions are asked of a blueprint the player holds and of one the
 /// world grows on its own.
 ///
-/// PORT DELTA — the hierarchy above it. The spec reads
-/// `ItemBuildableData : IItemActionData : ItemCraftableData : ItemData`, and
-/// the two middle links have no class here yet: `IItemActionData`'s reach was
-/// lifted onto [ItemData] at 0.27.0 (`action_range`) for the same reason
-/// `tool_type` was, and `ItemCraftableData`'s recipe fields arrive with
-/// crafting (FP4.5). So this extends [ItemData] directly, and FP4.5 inserts
-/// the missing link — the pack already authors all three blocks, unread until
-/// then (nothing has shipped, rule 32: a re-parented class costs nothing).
-class ItemBuildableData extends ItemData {
+/// PORT DELTA — the hierarchy above it, now one link shorter. The spec reads
+/// `ItemBuildableData : IItemActionData : ItemCraftableData : ItemData`. At
+/// 0.35.0 both middle links were missing and this extended [ItemData]
+/// directly; FP4.5 inserted [ItemCraftableData], so a blueprint carries its
+/// own recipe — which is what the smelter's has authored all along (5 logs,
+/// 5 copper ore, 5 coal, made by hand). `IItemActionData` remains collapsed:
+/// its reach was lifted onto [ItemData] at 0.27.0 (`action_range`) for the
+/// same reason `tool_type` was, and there is nothing else on it to give a
+/// class of its own to.
+class ItemBuildableData extends ItemCraftableData {
   ItemBuildableData({
     required super.id,
     required this.blueprintId,
+    super.ingredients,
+    super.craftedAt,
+    super.craftTime,
+    super.craftAmount,
     super.spritesheetPath,
     super.frameWidth,
     super.frameHeight,
@@ -105,6 +112,10 @@ class ItemBuildableData extends ItemData {
   ItemBuildableData clone() => ItemBuildableData(
         id: id,
         blueprintId: blueprintId,
+        ingredients: List<ItemAmount>.of(ingredients),
+        craftedAt: craftedAt,
+        craftTime: craftTime,
+        craftAmount: craftAmount,
         spritesheetPath: spritesheetPath,
         frameWidth: frameWidth,
         frameHeight: frameHeight,

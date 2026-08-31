@@ -77,6 +77,36 @@
       "path": "03_farm/t1/t1_item_consumable_vegetable_wheat.json"
     },
     {
+      "id": "t1_item_craftable_bar_copper",
+      "type": "item_craftable_data",
+      "path": "02_workstations/01_smelter/t1/t1_item_craftable_bar_copper.json"
+    },
+    {
+      "id": "t1_item_craftable_block_moss",
+      "type": "item_craftable_data",
+      "path": "02_workstations/01_smelter/t1/t1_item_craftable_block_moss.json"
+    },
+    {
+      "id": "t1_item_craftable_cloth_vine",
+      "type": "item_craftable_data",
+      "path": "02_workstations/01_smelter/t1/t1_item_craftable_cloth_vine.json"
+    },
+    {
+      "id": "t1_item_craftable_coin_copper",
+      "type": "item_craftable_data",
+      "path": "02_workstations/01_smelter/t1/t1_item_craftable_coin_copper.json"
+    },
+    {
+      "id": "t1_item_craftable_leather_boar",
+      "type": "item_craftable_data",
+      "path": "02_workstations/01_smelter/t1/t1_item_craftable_leather_boar.json"
+    },
+    {
+      "id": "t1_item_craftable_planks_palm",
+      "type": "item_craftable_data",
+      "path": "02_workstations/01_smelter/t1/t1_item_craftable_planks_palm.json"
+    },
+    {
       "id": "t1_item_essence_forest",
       "type": "item_data",
       "path": "01_biomes/t1/items/t1_item_essence_forest.json"

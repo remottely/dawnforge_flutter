@@ -8,6 +8,25 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.45.0
+
+### 🧹 Internal
+
+- **Itens agora podem ter receita.** Uma coisa que é feita diz o que ela custa,
+  onde ela é feita, quanto tempo leva uma e quantas saem de cada vez. Os quatro
+  já estavam escritos no pacote de design e simplesmente nunca tinham sido
+  lidos.
+- Seis coisas novas vieram desse pacote, todas feitas numa fundição: barra de
+  cobre, bloco de musgo, pano de trepadeira, moeda de cobre, couro de javali e
+  pranchas de palmeira. Por enquanto são desenhadas como quadradinhos em
+  branco.
+- Uma planta de construção agora é uma coisa que dá para fazer, e não só uma
+  coisa que dá para pousar no chão. Isso estava escrito como promessa no código
+  há meses e enfim é verdade — a planta da fundição sempre carregou o preço
+  dela (5 toras, 5 minérios de cobre, 5 carvões, feita nas suas próprias mãos),
+  e agora tem quem leia.
+- Ainda não dá para fazer nada: a bancada, o botão e o fogo vêm a seguir.
+
 ## 0.44.0
 
 ### 🧹 Internal

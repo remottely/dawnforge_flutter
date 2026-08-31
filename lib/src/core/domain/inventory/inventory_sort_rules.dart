@@ -61,8 +61,11 @@ abstract final class InventorySortRules {
     if (item.toolType != null) return categoryTool;
     if (item is ItemBuildableData) return categoryBuildable;
 
-    // Plain ItemData — ore, planks, fibre. This is the honest bottom of the
-    // hierarchy, not a fallback: an item that is none of the above is a
+    // Plain ItemData and BARE ItemCraftableData — ore, planks, fibre. A copper
+    // bar is made rather than found and is still a material: being craftable
+    // is not a category, which is why the spec's ladder tests the subclasses
+    // and lets their parent fall through here. This is the honest bottom of
+    // the hierarchy, not a fallback: an item that is none of the above is a
     // material by definition.
     return categoryMaterial;
   }

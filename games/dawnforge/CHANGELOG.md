@@ -8,6 +8,22 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.45.0
+
+### 🧹 Internal
+
+- **Items can have a recipe now.** A thing that is made says what it costs,
+  where it is made, how long one takes and how many come out. All four of those
+  were already written down in the design pack and had simply never been read.
+- Six new things came in from that pack, all of them made at a smelter: a
+  copper bar, a moss block, vine cloth, a copper coin, boar leather and palm
+  planks. They are drawn as blank placeholders for now.
+- A blueprint is now a thing you can make, not just a thing you can put down.
+  That was written as a promise in the code months ago and is finally true — the
+  smelter blueprint has always carried its price (5 logs, 5 copper ore, 5 coal,
+  made in your own hands), and something can read it at last.
+- Nothing can be made yet: the bench, the button and the fire come next.
+
 ## 0.44.0
 
 ### 🧹 Internal

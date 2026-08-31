@@ -43,6 +43,19 @@ enum ActorDirection {
   left, // 1
 }
 
+/// Where a recipe is made. `none` is the authored answer for something made
+/// by HAND rather than at a station — it is a real value and not a missing
+/// one, which is why it heads the list exactly as the spec's does.
+enum WorkstationType {
+  none, // 0
+  workshop, // 1 — tools and weapons
+  smelter, // 2 — raw resources into processed materials
+  forge, // 3 — armour and protective equipment
+  seedStation, // 4 — plants into seeds
+  kitchen, // 5 — cooking
+  forgeAlmanac, // 6
+}
+
 /// What an item is made of (repair costs, sounds, salvage).
 enum MaterialType {
   stone, // 0
