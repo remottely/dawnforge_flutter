@@ -8,6 +8,28 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.45.2
+
+### 🧹 Internal
+
+- O diário de construção sobre fabricar coisas foi corrigido antes de qualquer
+  parte dele ser construída. Ele dizia que fabricar seria o que enfim deixaria
+  você pousar uma fundição; acontece que as receitas do próprio jogo não te
+  levam do zero até lá.
+
+## 0.45.1
+
+### 🧹 Internal
+
+- Uma anotação do diário de construção sobre como fabricar e construir se ligam
+  estava errada, e foi conferir o pacote de design que descobriu. Para fazer uma
+  fundição você precisa de cobre e carvão; para cavar cobre e carvão você precisa
+  de picareta; para fazer picareta você precisa de fundição. Nada no jogo te dá
+  a primeira.
+- A saída já está escrita: você vai começar o jogo segurando alguma coisa. Qual
+  coisa, e o menuzinho de fazer coisas com as próprias mãos, são os próximos
+  trabalhos.
+
 ## 0.45.0
 
 ### 🧹 Internal

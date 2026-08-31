@@ -8,6 +8,26 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.45.2
+
+### 🧹 Internal
+
+- The build diary for making things was corrected before any of it was built.
+  It had said that crafting would be what finally lets you place a smelter; it
+  turns out the game's own recipes cannot get you there from nothing.
+
+## 0.45.1
+
+### 🧹 Internal
+
+- A note in the build diary about how crafting and building connect was wrong,
+  and checking the design pack is what found it. To make a smelter you need
+  copper and coal; to dig copper and coal you need a pickaxe; to make a pickaxe
+  you need a smelter. Nothing in the game hands you the first one.
+- The way out is written down now: you will begin the game holding something.
+  Which thing, and the small menu for making things in your own hands, are the
+  next pieces of work.
+
 ## 0.45.0
 
 ### 🧹 Internal
