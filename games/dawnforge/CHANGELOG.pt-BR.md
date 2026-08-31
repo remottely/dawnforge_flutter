@@ -8,6 +8,22 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.44.0
+
+### 🧹 Internal
+
+- O diário de construção fechou o trabalho de colocar coisas no mundo: seis
+  passos, do item saber o que ele constrói até a cópia transparente que mostra
+  onde a coisa cairia. Ele também anotou o passo que estava planejado e
+  deliberadamente NÃO foi escrito, e por que escrevê-lo seria código que nada
+  conseguiria alcançar.
+- Duas dívidas agora estão no papel em vez de na cabeça de alguém: nada no jogo
+  consegue pôr uma planta de construção na sua mochila ainda, então a página do
+  manual sobre construir espera a bancada que vai te dar uma; e empilhar chão em
+  cima de chão é recusado inteiro, em vez de respondido pela metade.
+- Uma anotação dentro do código que tinha ficado velha foi corrigida — ela dava
+  o motivo errado para um pedaço do projeto ainda estar faltando.
+
 ## 0.43.0
 
 ### ✨ New

@@ -16,7 +16,7 @@
 | FP1 Core foundation | gate met 2026-08-26 (FP1.5 component slice, FP1.9 domain rules pending) | `flutter test` green over events/registry/factory/component/FSM/grid with zero Flame imports |
 | FP2 Pipeline retarget | gate met 2026-08-26 (FP2.3 sprites, FP2.4 translations, FP2.5 component-keys pending) | `dawnforge.py full` emits JSON; registries boot from a real pack slice; `--check` clean |
 | FP3 World & rendering | gate met 2026-08-26 (120fps hand-run, macOS) | player walks a chunked world at 60fps with debug overlay proving frame budget |
-| FP4 Gameplay loop | in progress (FP4.1, FP4.2 done) | harvest → craft → place loop playable end to end |
+| FP4 Gameplay loop | in progress (FP4.1–FP4.3 done; FP4.2's deferred Sort button paid 2026-08-31) | harvest → craft → place loop playable end to end |
 | FP5 Surfaces & UX | pending (FP5.1's `UIStateMachine` + back-press arbiter landed early, 0.22.0) | HUD + inventory + menu with blocker stack, no pause anywhere |
 | FP6 Persistence | pending | save/load round-trip; reset_local_save.py works |
 | FP7 Breadth systems | pending | (per-system sub-gates: time, spawning, progression, quests, audio, i18n, minigames) |
@@ -122,8 +122,13 @@ sector model (`shared_logic/`, `domain/`, `resources/`, `registries/`, `factorie
   and the player had to **become an authored actor** here rather than in FP4.3a — the
   boar standing in for one authors `inventory_size: 0`, so no surface bound to it could
   show a slot. The `ActorPlayer` HOST is still FP4.3a's; only the document moved. Sorting
-  is deferred out of FP4.2b entirely: `InventorySortRules` ranks by item subtypes and a
-  tier field that arrive with FP4.3b and FP4.5.
+  was deferred out of FP4.2b entirely, because `InventorySortRules` ranks by item
+  subtypes and a tier field that did not exist yet — **paid 2026-08-31** (0.41.0–0.43.0)
+  once both had arrived, `tier` with FP4.3a and `ItemBuildableData` with FP4.3b. The
+  ladder's four unported families keep their numbers so nothing renumbers when they
+  land, and the sort's fourth axis (the localized display name) is skipped for want of
+  a data class that reads `display_name_key` — it arrives with the first surface that
+  shows an item's name.
 - **FP4.3** Tools in hand; the place/destroy/transform verb split (Godot rule 33) via
   `ActorOccupancyHelper` + permission helper ports. *Scope edit: ground destruction
   (digging a terrain tile + the empty-tile flood) is deferred to FP7 with bridges/cave
@@ -134,11 +139,30 @@ sector model (`shared_logic/`, `domain/`, `resources/`, `registries/`, `factorie
   left out on purpose. *Plan edit reality forced:* the CURSOR had to be built here.
   Rule 11 had no subject until an action needed aiming, so `InputHelper` grew pointer
   state (mouse + touch; the gamepad's virtual cursor is its own port) — which is also
-  what FP4.2b's deferred mouse-wheel hotbar was waiting on. **(b) is placement**:
-  `ItemBuildableData` + `WorldPlacementHelper`, which inherits `isWithinRange` and the
-  occupancy build-side check already standing.
+  what FP4.2b's deferred mouse-wheel hotbar was waiting on. **(b) done 2026-08-30** in
+  six commits (0.35.0–0.40.0) — the blueprint, the named refusal, the ground half, the
+  hand refactor, the verb, and the ghost. `PENDING.md` #9 carries the breakdown, the
+  seventh slice that was investigated and refused, and the two debts. *Plan edits
+  reality forced:* a seventh slice (`canBuildOnTarget`) was planned and is NOT written,
+  because its blocker turned out to be the missing second consumer — the cursor
+  indicator, FP5.1 — rather than the missing data class, so porting it now would be
+  unreachable code (rule 5). And 0.38.0 was a refactor nobody planned: the deed had to
+  move out of `ActorPlayer` and into the item holding it (`ItemHand` + subclasses)
+  before place and strike could be two verbs instead of two settings of one.
+  **The verb is finished and NOT REACHABLE:** no path in the game puts a blueprint in
+  the player's bag, so FP4.5 is what opens it, and `building.md` waits for that commit
+  rather than documenting a deed the player cannot perform.
 - **FP4.4** Farming transform chain (till/water/plant/grow via time system minimal core).
-- **FP4.5** Crafting at a workstation prop.
+- **FP4.5** Crafting at a workstation prop. It carries three obligations the phases
+  before it created: the **content is not imported yet** (`t1_item_craftable_*.md` —
+  bar_copper, block_moss, cloth_vine, coin_copper, leather_boar, planks_palm — live in
+  `tessera_project`'s `forge_almanac/02_workstations/01_smelter/t1/`; the smelter prop
+  and its buildable item came in with 0.35.0); it is what makes **FP4.3b reachable**,
+  since the smelter authors `crafted_at: NONE` and is therefore made in the player's own
+  menu, which is the first path by which any blueprint enters a bag; and it therefore
+  owes the **`building.md` manual page in both languages**, deferred here on purpose
+  from FP4.3b (rule 34 is satisfied by the commit that makes a deed reachable, not by
+  the one that makes it work).
 - **Gate:** harvest → craft → place, playable, suite green.
 
 ## FP5 — Surfaces & UX

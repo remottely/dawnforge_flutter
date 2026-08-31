@@ -8,6 +8,21 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.44.0
+
+### 🧹 Internal
+
+- The build diary closed the placing work: six steps, from an item knowing what
+  it builds to a see-through copy showing you where it would land. It also
+  wrote down the step that was planned and then deliberately NOT written, and
+  why writing it would have been code nothing could reach.
+- Two debts are on the page now instead of in somebody's head: nothing in the
+  game can put a blueprint in your bag yet, so the manual page about building
+  waits for the workbench that will hand you one; and stacking ground on top of
+  ground is refused whole rather than half-answered.
+- A note inside the code that had gone stale was corrected — it named the wrong
+  reason a piece of the design is still missing.
+
 ## 0.43.0
 
 ### ✨ New

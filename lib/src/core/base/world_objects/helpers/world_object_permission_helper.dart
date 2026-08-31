@@ -67,10 +67,19 @@ final class GroundTarget extends DamageTarget {
 ///   - player-vs-player under `DifficultySystem` (singleplayer, decision D4);
 ///   - the waterable/tillable bypass, which belongs at the marked seam above
 ///     the occupancy rule (FP4.4's farming components);
-///   - `can_build_on_target` (needs `ItemBuildableData` — FP4.3b). Its reach
-///     check does exist here: [isWithinRange] landed with the swing that needed
-///     it, so placement inherits the same measurement rather than inventing a
-///     second one;
+///   - `can_build_on_target` — and its subject is NOT the data class any more.
+///     `ItemBuildableData` has existed since 0.35.0; what is missing is the
+///     SECOND CONSUMER. [canDamageTarget]'s only caller in this port is
+///     `ItemHandTool.primaryAction`, and `HeldItemComponent._rebuildHand`
+///     routes every `ItemBuildableData` to the BUILD hand before the tool arm
+///     is reached — so the source can never be holding a blueprint when this
+///     gate is asked, and the branch would be unreachable code the day it was
+///     written. In the spec it is reachable because `interaction_indicator.gd`
+///     asks the same question about whatever the cursor is over, blueprint in
+///     hand or not. That indicator is FP5.1, and it is what brings this arm
+///     with it. The reach check does already exist here: [isWithinRange]
+///     landed with the swing that needed it, so placement inherited the same
+///     measurement rather than inventing a second one;
 ///   - the elevation split of `allowed_tools`, where a tile with a rock on it
 ///     answers to the ROCK's tools (FP7, with ground destruction);
 ///   - `show_feedback` → `WorldObjectFeedback` (FP5.1's notification queue);
