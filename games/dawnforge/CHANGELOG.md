@@ -8,6 +8,24 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.43.0
+
+### ✨ New
+
+- **The Sort button is here.** It sits at the top right of your backpack, and
+  one press puts everything where it belongs: tools first, then the things you
+  build, then everything else, with the empty pockets gathered at the back.
+- Piles of the same thing join up when you press it. Four sticks and three
+  sticks become seven, and a pile too big for one pocket spills into the next
+  one rather than being left in bits all over the bag.
+- Two of the same kind of tool come out best-first, so your good axe is never
+  hiding behind your old one.
+- Watch your hand after pressing: the item bar is the same pockets, so what you
+  are holding usually changes. The manual page says so too.
+- Food and arrows still sort in with the rest — the game does not know them as
+  their own kind yet. Their places in the row are already saved, so nothing you
+  sort today jumps somewhere strange when they arrive.
+
 ## 0.42.0
 
 ### 🧹 Internal

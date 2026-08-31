@@ -8,6 +8,26 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.43.0
+
+### ✨ New
+
+- **O botão Organizar chegou.** Ele fica em cima à direita da sua mochila, e um
+  aperto põe tudo no lugar: ferramentas primeiro, depois as coisas que você
+  constrói, depois todo o resto, com os bolsos vazios juntinhos lá atrás.
+- Pilhas da mesma coisa se juntam quando você aperta. Quatro gravetos e três
+  gravetos viram sete, e uma pilha grande demais para um bolso transborda para
+  o próximo em vez de ficar em pedacinhos espalhados pela mochila.
+- Duas ferramentas do mesmo tipo saem com a melhor na frente, então o seu
+  machado bom nunca fica escondido atrás do velho.
+- Olhe a sua mão depois de apertar: a barra de itens são os mesmos bolsos,
+  então o que você está segurando quase sempre muda. A página do manual também
+  avisa isso.
+- Comida e flecha ainda são organizadas junto com o resto — o jogo ainda não
+  conhece essas coisas como um tipo próprio. Os lugares delas na fila já estão
+  guardados, então nada do que você organizar hoje pula para um lugar estranho
+  quando elas chegarem.
+
 ## 0.42.0
 
 ### 🧹 Internal

@@ -1,6 +1,10 @@
 ---
 type: ui_strings
 strings:
+  ui.inventory.sort:
+    en: Sort
+    pt_BR: Organizar
+    es: Ordenar
   ui.menu.tab.inventory:
     en: Inventory
     pt_BR: Inventário

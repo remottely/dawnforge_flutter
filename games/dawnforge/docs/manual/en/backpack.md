@@ -37,8 +37,32 @@ It will not jump straight back to you. Anything dropped rests for half a second
 before it can be picked up again, so you have time to walk away. After that, if
 you come close, it flies back to you like anything else on the ground.
 
+## Tidying up
+
+Press **Sort**, at the top right of the backpack, and everything goes where it
+belongs.
+
+Two things happen at once:
+
+- **Piles join up.** Four sticks in one pocket and three in another become
+  seven in one pocket. When a pile gets too big for a single pocket, the rest
+  starts the next one, and the fuller pile goes first.
+- **Everything moves to the front,** in this order: **tools** first, then
+  **things you build**, then everything else. Empty pockets end up at the back,
+  all together, which is where you want them when you pick something up.
+
+Inside the tools, the ones you work with come before the ones you fight with —
+axe, pickaxe, shovel, hoe, and so on, then sword, bow, staff. And when you have
+two of the same kind, **the better one goes first**. Your good axe is never
+hiding behind your old one.
+
+**Watch your hand.** The item bar is the same pockets, so sorting moves things
+under it too. What you were holding before you pressed Sort is probably not
+what you are holding after — look down before you swing.
+
 ## Not yet
 
-The **Sort** button is not here. It is being kept out on purpose until the game
-knows how to rank tools against food against building blocks — a Sort button
-that puts things in an order that changes later is worse than no button.
+Food and arrows do not have a shelf of their own yet, so Sort leaves them with
+the rest. They get their own place in the row when the game learns what they
+are. Nothing you sort today will jump somewhere strange when that happens: the
+places are already saved for them.

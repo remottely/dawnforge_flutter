@@ -37,9 +37,34 @@ Ela não volta voando na hora. Tudo que você larga descansa meio segundo antes
 de poder ser pego de novo, então dá tempo de você se afastar. Depois disso, se
 você chegar perto, ela voa de volta para você como qualquer coisa no chão.
 
+## Arrumando a mochila
+
+Aperte **Organizar**, lá em cima à direita da mochila, e tudo vai para o lugar
+onde deve ficar.
+
+Duas coisas acontecem ao mesmo tempo:
+
+- **As pilhas se juntam.** Quatro gravetos num bolso e três em outro viram sete
+  num bolso só. Quando a pilha fica grande demais para um bolso, o resto começa
+  o próximo, e a pilha mais cheia vem primeiro.
+- **Tudo vai para a frente,** nesta ordem: **ferramentas** primeiro, depois as
+  **coisas que você constrói**, depois todo o resto. Os bolsos vazios ficam
+  para trás, todos juntinhos, que é onde você quer eles quando pega uma coisa
+  nova.
+
+Dentro das ferramentas, as de trabalhar vêm antes das de lutar — machado,
+picareta, pá, enxada, e por aí vai, depois espada, arco, cajado. E quando você
+tem duas do mesmo tipo, **a melhor vem primeiro**. O seu machado bom nunca fica
+escondido atrás do velho.
+
+**Olhe a sua mão.** A barra de itens são os mesmos bolsos, então organizar mexe
+no que está embaixo dela também. O que você estava segurando antes de apertar
+Organizar provavelmente não é o que você está segurando depois — dê uma olhada
+antes de dar o golpe.
+
 ## Ainda não
 
-O botão **Organizar** não está aqui. Ele está de fora de propósito, até o jogo
-saber pôr em ordem uma ferramenta, uma comida e um bloco de construção — um
-botão Organizar que deixa as coisas numa ordem que vai mudar depois é pior do
-que botão nenhum.
+Comida e flecha ainda não têm uma prateleira só delas, então Organizar deixa
+essas coisas junto com o resto. Elas ganham o lugar delas na fila quando o jogo
+aprender o que elas são. Nada do que você organizar hoje vai pular para um
+lugar estranho quando isso acontecer: os lugares já estão guardados.

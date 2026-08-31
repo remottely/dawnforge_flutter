@@ -47,12 +47,17 @@ final class InventoryPanelView extends StatefulWidget {
   State<InventoryPanelView> createState() => InventoryPanelViewState();
 }
 
+const _panel = Color(0xE61B1712);
+const _panelBorder = Color(0xFF4A3B2A);
+const _title = Color(0xFFF6EDE0);
+
+/// How wide the slot grid draws, and therefore how wide the toolbar above it
+/// has to be for its button to sit at the grid's right edge rather than at the
+/// title's. Derived from the two numbers that decide it, never guessed.
+const double _gridWidth = GameConstants.slotsPerRow * ItemSlotView.size;
+
 final class InventoryPanelViewState extends State<InventoryPanelView> {
   final List<void Function()> _subscriptions = <void Function()>[];
-
-  static const _panel = Color(0xE61B1712);
-  static const _panelBorder = Color(0xFF4A3B2A);
-  static const _title = Color(0xFFF6EDE0);
 
   /// The slot a drag is currently lifted from, or -1. View-only: it says which
   /// slot to draw hollow while its contents are under the player's finger.
@@ -199,13 +204,29 @@ final class InventoryPanelViewState extends State<InventoryPanelView> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Text(
-                    // Rule 19: no user-facing literal, ever.
-                    tr('ui.menu.tab.inventory'),
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: _title,
+                  SizedBox(
+                    width: _gridWidth,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: <Widget>[
+                        Text(
+                          // Rule 19: no user-facing literal, ever.
+                          tr('ui.menu.tab.inventory'),
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: _title,
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          // The container reorders itself; the button only
+                          // asks. Which pocket a thing lands in is decided
+                          // once, for every inventory in the game, and a
+                          // widget is the wrong place to know any of it.
+                          child: _SortButton(onPressed: inventory.sortItems),
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -233,4 +254,63 @@ final class InventoryPanelViewState extends State<InventoryPanelView> {
   /// The slot a drag is lifted from, or -1 — read by the tests, which is the
   /// only thing outside this class that has any business knowing.
   int get draggingFrom => _draggingFrom;
+}
+
+/// The toolbar's one button — the port of `inventory_ui.gd`'s `SortButton`.
+///
+/// Private to this file on purpose: it is the first button this port has, and
+/// one button is not a button system. It moves to `ui/widgets/` when a second
+/// surface needs the same thing, which is the point at which what they share
+/// is known rather than guessed.
+///
+/// A click and a tap are one press here (rule 12) — `onTap` answers both, and
+/// the panel is already a `GameInputManager` blocker, so neither reaches the
+/// world behind it. The GAMEPAD is still the gap FP4.3a opened in writing:
+/// there is no focus ring to move onto this, and there will not be one until
+/// the virtual cursor is ported.
+/// It is stateful for one reason: it holds whether it is being pressed. A
+/// button that gives nothing back under a finger reads as broken on a phone
+/// long before it reads as plain.
+final class _SortButton extends StatefulWidget {
+  const _SortButton({required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  State<_SortButton> createState() => _SortButtonState();
+}
+
+final class _SortButtonState extends State<_SortButton> {
+  static const _fill = Color(0xFF2C2318);
+  static const _pressedFill = Color(0xFF4A3B2A);
+
+  bool _isPressed = false;
+
+  void _setPressed({required bool value}) {
+    if (_isPressed == value) return;
+    setState(() => _isPressed = value);
+  }
+
+  @override
+  Widget build(BuildContext context) => GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTapDown: (_) => _setPressed(value: true),
+        onTapUp: (_) => _setPressed(value: false),
+        onTapCancel: () => _setPressed(value: false),
+        onTap: widget.onPressed,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: _isPressed ? _pressedFill : _fill,
+            border: Border.all(color: _panelBorder),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            child: Text(
+              // Rule 19 again: the label is a key, in all three locales.
+              tr('ui.inventory.sort'),
+              style: const TextStyle(fontSize: 13, color: _title),
+            ),
+          ),
+        ),
+      );
 }

@@ -45,9 +45,13 @@ void main() {
       'max_stack': 1,
       'spritesheet': sheet,
     });
-    // Rule 19: the panel's title goes through tr(), so a locale must exist.
+    // Rule 19: every word the panel says goes through tr(), so a locale must
+    // exist. A key missing from it CRASHES rather than drawing its own name.
     locator<LocalizationSystem>().loadLocale('en', <String, Object?>{
-      'strings': <String, Object?>{'ui.menu.tab.inventory': 'Inventory'},
+      'strings': <String, Object?>{
+        'ui.menu.tab.inventory': 'Inventory',
+        'ui.inventory.sort': 'Sort',
+      },
     });
   });
   tearDown(resetCoreSystems);
@@ -264,6 +268,55 @@ void main() {
       // request DOES is the shell's, which is what keeps this widget usable
       // over a chest that drops somewhere else entirely.
       expect(droppedToWorld, <int>[2]);
+    });
+  });
+
+  group('the Sort button', () {
+    testWidgets("says its word in the player's language, not a literal",
+        (tester) async {
+      await pump(tester, bag());
+      // The label came out of the locale table. A literal would draw the same
+      // word here and the wrong one in pt-BR, which is the whole of rule 19.
+      expect(find.text('Sort'), findsOneWidget);
+    });
+
+    testWidgets('a press asks the CONTAINER to reorder itself',
+        (tester) async {
+      final inventory = bag()
+        ..setSlot(3, locator<ItemRegistry>().getItem('t1_item_pebble'), 2);
+      await pump(tester, inventory);
+
+      await tester.tap(find.text('Sort'));
+      await tester.pump();
+
+      // Which pocket it lands in is `sortItems`' answer, proven where that
+      // lives. What this asserts is only that the button reaches it — the
+      // panel decides nothing about order, so a chest sorts the same way.
+      expect(inventory.slots[0].itemId, 't1_item_pebble');
+      expect(inventory.slots[3].isEmpty, isTrue);
+    });
+
+    testWidgets('the grid redraws under it without being told twice',
+        (tester) async {
+      final inventory = bag()
+        ..setSlot(4, locator<ItemRegistry>().getItem('t1_item_pebble'), 2);
+      await pump(tester, inventory);
+
+      expect(
+        tester.widget<ItemSlotView>(find.byType(ItemSlotView).at(0)).stack.isEmpty,
+        isTrue,
+      );
+
+      await tester.tap(find.text('Sort'));
+      await tester.pump();
+
+      // The panel is subscribed to the container, not to its own button: the
+      // press mutates state and the redraw arrives as news, the same way a
+      // pickup landing in the bag while the panel is open does.
+      expect(
+        tester.widget<ItemSlotView>(find.byType(ItemSlotView).at(0)).stack.itemId,
+        't1_item_pebble',
+      );
     });
   });
 }
