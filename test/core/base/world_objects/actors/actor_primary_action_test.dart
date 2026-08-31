@@ -2,6 +2,9 @@ import 'dart:math';
 
 import 'package:dawnforge/src/core/base/world_objects/actors/i_actor.dart';
 import 'package:dawnforge/src/core/base/world_objects/items/item_world.dart';
+import 'package:dawnforge/src/core/base/world_objects/items_hand/aim_snapshot.dart';
+import 'package:dawnforge/src/core/base/world_objects/items_hand/item_hand.dart';
+import 'package:dawnforge/src/core/base/world_objects/items_hand/item_hand_tool.dart';
 import 'package:dawnforge/src/core/base/world_objects/props/prop.dart';
 import 'package:dawnforge/src/core/factories/actor_factory.dart';
 import 'package:dawnforge/src/core/factories/prop_factory.dart';
@@ -18,6 +21,11 @@ import 'package:flutter_test/flutter_test.dart';
 /// FP4.3a slice 5: THE SWING. The whole FP4 harvest in one call — the gate
 /// decides, the item says how hard, the prop takes it, and its death is what
 /// puts the loot on the ground.
+///
+/// FP4.3b slice 4 moved the deed into `ItemHandTool`, so these go in through
+/// the aim the hand resolves rather than by handing it a prop. The subject is
+/// unchanged; what is new is that the answer distinguishes a press that cost
+/// nothing from one that cost the cadence and achieved nothing.
 void main() {
   setUp(() {
     registerCoreSystems();
@@ -101,13 +109,29 @@ void main() {
 
   GridManager grid() => locator<GridManager>();
 
+  /// A player standing on the tile NEXT to (5,5), where every target below
+  /// goes — the reach is the axe's authored default and this is well inside
+  /// it. FP4.3a handed the prop straight in; the hand resolves it from the aim
+  /// now, so the distance between the two is real and has to be honest.
   IActor player({String? holding}) {
-    final actor = ActorFactory.create('t1_actor_probe_player', WorldPos.zero);
+    final actor = ActorFactory.create(
+      't1_actor_probe_player',
+      grid().gridToWorld(const GridPos(4, 5)),
+    );
     if (holding != null) {
       actor.inventory.setSlot(0, locator<ItemRegistry>().getItem(holding), 1);
     }
     return actor;
   }
+
+  /// The aim [actor] would have taken with the cursor over [at]. Built here
+  /// rather than through `InputHelper` because this file is about the DEED —
+  /// where the aim comes from is `actor_player_test`'s subject.
+  AimSnapshot aimFrom(IActor actor, GridPos at) => AimSnapshot.fromPoint(
+        actor.position,
+        grid().gridToWorld(at),
+        actor.direction.lookDirection,
+      );
 
   Prop propAt(String id, GridPos at) {
     final prop = PropFactory.create(
@@ -128,25 +152,32 @@ void main() {
   test('two swings of an axe fell a tree and put its logs on the ground', () {
     final chopper = player(holding: 't1_item_tool_axe');
     final tree = propAt('t1_prop_probe_tree', const GridPos(5, 5));
+    final aim = aimFrom(chopper, const GridPos(5, 5));
     final spawned = watchPickups();
 
     // Four health, two damage a swing — the number comes off the authored
     // item, not off the caller.
-    expect(chopper.usePrimaryActionOn(tree), isTrue);
+    expect(chopper.usePrimaryAction(aim), ActionOutcome.landed);
     expect(tree.health.current, 2);
     expect(spawned, isEmpty);
 
-    expect(chopper.usePrimaryActionOn(tree), isTrue);
+    expect(chopper.usePrimaryAction(aim), ActionOutcome.landed);
     expect(tree.health.isAlive, isFalse);
     expect(spawned.single.itemData.id, 't1_item_logs_probe');
     expect(spawned.single.amount, 3);
   });
 
-  test('a swing with the wrong tool lands nothing at all', () {
+  test('a swing with the wrong tool lands nothing — and is still a swing', () {
     final farmer = player(holding: 't1_item_tool_hoe');
     final tree = propAt('t1_prop_probe_tree', const GridPos(5, 5));
 
-    expect(farmer.usePrimaryActionOn(tree), isFalse);
+    // SPENT, not none: the hoe reached the tree and was refused there. The
+    // press became an action that achieved nothing, which is the case the
+    // cadence is supposed to charge for.
+    expect(
+      farmer.usePrimaryAction(aimFrom(farmer, const GridPos(5, 5))),
+      ActionOutcome.spent,
+    );
     expect(tree.health.current, 4);
   });
 
@@ -154,10 +185,13 @@ void main() {
     // The slice-3 join, end to end: nothing equipped, so the hand holds the
     // INNATE item, and the weeds accept exactly that.
     final barehanded = player();
-    final weeds = propAt('t1_prop_probe_weeds', const GridPos(5, 5));
+    propAt('t1_prop_probe_weeds', const GridPos(5, 5));
     final spawned = watchPickups();
 
-    expect(barehanded.usePrimaryActionOn(weeds), isTrue);
+    expect(
+      barehanded.usePrimaryAction(aimFrom(barehanded, const GridPos(5, 5))),
+      ActionOutcome.landed,
+    );
     expect(spawned.single.itemData.id, 't1_item_logs_probe');
   });
 
@@ -168,7 +202,49 @@ void main() {
     chopper.health.takeDamage(chopper.health.maximum);
     expect(chopper.health.isAlive, isFalse);
 
-    expect(chopper.usePrimaryActionOn(tree), isFalse);
+    expect(
+      chopper.usePrimaryAction(aimFrom(chopper, const GridPos(5, 5))),
+      ActionOutcome.none,
+    );
+    expect(tree.health.current, 4);
+  });
+
+  test('an aim at bare ground is no action at all', () {
+    final chopper = player(holding: 't1_item_tool_axe');
+    propAt('t1_prop_probe_tree', const GridPos(5, 5));
+
+    expect(
+      chopper.usePrimaryAction(aimFrom(chopper, const GridPos(5, 4))),
+      ActionOutcome.none,
+      reason: 'nothing was aimed at, so nothing was done and nothing is owed',
+    );
+  });
+
+  test('a tree out of reach is not something the hand did', () {
+    // The reach is the ITEM's, asked inside the hand — the actor holding it
+    // has no opinion. Six tiles away with a two-tile axe.
+    final chopper = player(holding: 't1_item_tool_axe');
+    final far = propAt('t1_prop_probe_tree', const GridPos(-3, 5));
+
+    expect(
+      chopper.usePrimaryAction(aimFrom(chopper, const GridPos(-3, 5))),
+      ActionOutcome.none,
+    );
+    expect(far.health.current, 4);
+  });
+
+  test('a log in hand is a hand that does nothing, not a swing that fails', () {
+    // The base hand's whole subject: most items in this game are materials,
+    // and pressing with one is no action. It never reaches the gate, so it
+    // never costs the cadence either.
+    final carrier = player(holding: 't1_item_logs_probe');
+    final tree = propAt('t1_prop_probe_tree', const GridPos(5, 5));
+
+    expect(carrier.heldItem.hand, isNot(isA<ItemHandTool>()));
+    expect(
+      carrier.usePrimaryAction(aimFrom(carrier, const GridPos(5, 5))),
+      ActionOutcome.none,
+    );
     expect(tree.health.current, 4);
   });
 }

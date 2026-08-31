@@ -1,3 +1,6 @@
+import 'package:dawnforge/src/core/base/world_objects/actors/i_actor.dart';
+import 'package:dawnforge/src/core/base/world_objects/items_hand/item_hand.dart';
+import 'package:dawnforge/src/core/base/world_objects/items_hand/item_hand_tool.dart';
 import 'package:dawnforge/src/core/components/i_component.dart';
 import 'package:dawnforge/src/core/components/i_interactable/inventory_component.dart';
 import 'package:dawnforge/src/core/registries/item_registry.dart';
@@ -25,11 +28,29 @@ import 'package:dawnforge/src/core/systems/eventing/event_signal.dart';
 /// the only thing this component remembers is what it last ANNOUNCED, which
 /// is the memory a change signal cannot do without.
 final class HeldItemComponent extends IComponent {
-  HeldItemComponent(this._inventory);
+  HeldItemComponent(this._inventory, this._user);
 
   /// The bag the hand draws from. Constructor DI in dependency order, the same
   /// way `MovementComponent` takes its `DirectionComponent` (Godot repo §4.6).
   final InventoryComponent _inventory;
+
+  /// Whose hand this is — the spec's `current_user`, handed in because the
+  /// core deliberately does not know its host's type (`WorldObjectCore`'s own
+  /// contract), and every [ItemHand] needs a source to name.
+  final IActor _user;
+
+  /// What the held item DOES when pressed, or null for an empty hand.
+  ///
+  /// This is the one thing here that is BUILT rather than derived, and the
+  /// distinction is worth stating because the class doc above insists on the
+  /// opposite for [currentItem]. The item is a fact about the bag and is read
+  /// fresh every time. The hand is an OBJECT FOR that fact — the spec gives it
+  /// per-instance state (durability, and the ghost preview a buildable keeps
+  /// between frames), so it has to outlive the read that created it. It is
+  /// rebuilt exactly where the change is already known: beside the
+  /// announcement, off the same id, so the hand and [_announcedItemId] cannot
+  /// disagree about which item this is.
+  ItemHand? hand;
 
   /// The spec's `held_item_changed`. Carries null for an empty hand — an
   /// actor holding nothing is a real answer, not a missing one.
@@ -85,6 +106,7 @@ final class HeldItemComponent extends IComponent {
     // Seeded, not announced: the component is being assembled by the factory,
     // so nobody is listening yet and there is no previous hand to have left.
     _announcedItemId = _heldId();
+    _rebuildHand();
   }
 
   @override
@@ -97,7 +119,28 @@ final class HeldItemComponent extends IComponent {
     final next = _heldId();
     if (next == _announcedItemId) return;
     _announcedItemId = next;
+    _rebuildHand();
     currentItemChanged.emit(_itemOf(next));
+  }
+
+  /// Builds the hand for whatever is held now.
+  ///
+  /// The choice is the spec's, said in this port's spelling. There, an item's
+  /// CLASS picks its `ItemHand` subclass; here two of those classes exist, so
+  /// the tool arm asks `toolType != null` — which is what `is IItemToolData`
+  /// means once `tool_type` has been lifted onto [ItemData] (0.27.0, and
+  /// `item_data.dart` records why it had to be).
+  ///
+  /// The `_` arm is the base hand and not a fallback (rule 5): an item that
+  /// does nothing when you press it is most of this game's items, and the spec
+  /// answers those with the base class too.
+  void _rebuildHand() {
+    final item = currentItem;
+    hand = switch (item) {
+      null => null,
+      final held when held.toolType != null => ItemHandTool(held, _user),
+      final held => ItemHand(held, _user),
+    };
   }
 
   /// The spec's `set_held_item` resolution order, collapsed into the question

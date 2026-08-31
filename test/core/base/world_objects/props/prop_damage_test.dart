@@ -36,6 +36,16 @@ void main() {
         'id': 't1_item_tool_hoe',
         'tool_type': 'HOE',
         'tier': 1,
+      })
+      // Bare hands. A player-grouped actor resolves this id the moment its
+      // components are assembled (0.28.0 puts it in an empty slot), and since
+      // FP4.3b slice 4 the hand is BUILT there rather than only named — so a
+      // probe player in a registry without it now crashes at creation, which
+      // is rule 5 catching a fixture that was quietly incomplete.
+      ..registerJson(<String, Object?>{
+        'id': 't1_item_tool_melee_hand',
+        'tool_type': 'INNATE',
+        'tier': 1,
       });
 
     locator<ActorRegistry>().registerJson(<String, Object?>{

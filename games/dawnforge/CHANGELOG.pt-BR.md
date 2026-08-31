@@ -8,6 +8,28 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.38.0
+
+### 🔧 Changed
+
+- Clicar com uma coisa que não é ferramenta — uma tora, um pedaço de minério —
+  não custa mais um golpe. Nunca ia acontecer nada, e mesmo assim você tinha que
+  esperar os dois segundos inteiros. Apertar com uma tora na mão não é um golpe
+  que falhou; é golpe nenhum, e agora o jogo concorda.
+
+### 🧹 Internal
+
+- O que um item FAZ quando você aperta agora é assunto do próprio item, e não do
+  jogador. Dar um golpe com uma ferramenta e pousar uma coisa no chão não são
+  dois ajustes de uma ação só — procuram alvos diferentes, fazem perguntas
+  diferentes e gastam coisas diferentes — então cada tipo de item ganha o seu
+  pedacinho de código que conhece o próprio feito. Nada do que dá para ver mudou
+  além da linha acima; essa é a forma de que o próximo passo precisa para
+  existir.
+- Um aperto agora volta com três respostas em vez de duas: não aconteceu nada,
+  aconteceu e não deu em nada, aconteceu e acertou. Só a do meio te custa a
+  espera, e só o item sabe diferenciar.
+
 ## 0.37.0
 
 ### 🧹 Internal

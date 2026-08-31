@@ -1,5 +1,5 @@
-import 'package:dawnforge/src/core/base/world_objects/helpers/world_object_permission_helper.dart';
-import 'package:dawnforge/src/core/base/world_objects/props/prop.dart';
+import 'package:dawnforge/src/core/base/world_objects/items_hand/aim_snapshot.dart';
+import 'package:dawnforge/src/core/base/world_objects/items_hand/item_hand.dart';
 import 'package:dawnforge/src/core/base/world_objects/world_object.dart';
 import 'package:dawnforge/src/core/components/i_actor/direction_component.dart';
 import 'package:dawnforge/src/core/components/i_actor/held_item_component.dart';
@@ -40,7 +40,7 @@ class IActor extends WorldObject {
     // creature's is its authored weapon, a player's is whatever the hotbar
     // points at. It goes in AFTER the bag it reads from (rule: dependency
     // order is the host's responsibility).
-    heldItem = addComponent(HeldItemComponent(inventory));
+    heldItem = addComponent(HeldItemComponent(inventory, this));
     // The world now knows this actor is in it (FP4.3a). The spec puts every
     // actor in a `character` group so the occupancy rules can sweep them all;
     // Dart has no tree to hold a group, so the membership is a system, and
@@ -49,37 +49,27 @@ class IActor extends WorldObject {
     locator<ActorTracker>().add(this);
   }
 
-  /// Swings what is in this actor's hand at [target], and answers whether the
-  /// blow LANDED — the port of `IActor.use_held_item_primary_action`.
+  /// Uses what is in this actor's hand, at [aim] — the port of
+  /// `IActor.use_held_item_primary_action`.
   ///
-  /// One line of it is the whole FP4 loop: the gate decides, the item says how
-  /// hard, the prop takes it, and its death is what puts the loot on the
-  /// ground. Everything the gate needs was measured before this was called.
+  /// The actor owns two of the three questions a press asks: is this actor in
+  /// a state to act, and is there a hand to act with. The third — what the
+  /// deed IS — belongs to the hand, because a swing and a build are not two
+  /// settings of one function (see [ItemHand]).
   ///
-  /// The parameter is a [Prop] and not the gate's own [DamageTarget] on
-  /// purpose. A prop is the only thing in this port with a death to reach: an
-  /// actor has no corpse, no loot and no respawn yet, and a tile has no
-  /// destruction until FP4.4 transforms it and FP7 removes it. Widening the
-  /// parameter before those exist would let the cursor promise a blow the
-  /// world cannot deliver, which is the exact mismatch
-  /// `WorldObjectPermissionHelper` exists to prevent — so instead the verb
-  /// simply has no entry point for them yet.
+  /// An actor with an empty hand answers [ActionOutcome.none]. That is a real
+  /// state for a creature authored without a weapon; a PLAYER never reaches it
+  /// (an empty slot is bare hands, 0.28.0).
   ///
-  /// PORT DELTAS: the spec also paces the swing (`_reset_action_cooldown` off
-  /// the authored `base_action_speed`) and pays for it (energy, mana, combo
-  /// points). Pacing belongs with the input that presses the button (slice 6);
-  /// the costs belong with `HeldItemComponent`'s unported half.
-  bool usePrimaryActionOn(Prop target) {
-    if (!health.isAlive) return false;
-    final item = heldItem.currentItem;
-    if (item == null) return false;
-    if (!WorldObjectPermissionHelper.canDamageTarget(
-      ObjectTarget(target),
-      this,
-    )) {
-      return false;
-    }
-    return target.takeDamage(item.attackDamage, this);
+  /// PORT DELTAS: the spec also paces the swing here (`_reset_action_cooldown`
+  /// off the authored `base_action_speed`) and pays for it (energy, mana,
+  /// combo points). Pacing lives with the press that spends it (`ActorPlayer`,
+  /// 0.34.0); the costs belong with `HeldItemComponent`'s unported half.
+  ActionOutcome usePrimaryAction(AimSnapshot aim) {
+    if (!health.isAlive) return ActionOutcome.none;
+    final hand = heldItem.hand;
+    if (hand == null) return ActionOutcome.none;
+    return hand.primaryAction(aim);
   }
 
   /// Leaves the world. Actors do not despawn yet — chunk unloading only

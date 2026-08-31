@@ -33,6 +33,15 @@ void main() {
         'attack_damage': 2,
         // One tile of reach, measured edge to edge.
         'action_range': 1.0,
+      })
+      // Bare hands: what this player holds between being created and being
+      // handed the axe. Named here since FP4.3b slice 4, which BUILDS the hand
+      // when the components are assembled instead of only remembering its id —
+      // so the empty starting slot resolves for real, at creation.
+      ..registerJson(<String, Object?>{
+        'id': 't1_item_tool_melee_hand',
+        'tool_type': 'INNATE',
+        'tier': 1,
       });
 
     locator<ActorRegistry>().registerJson(<String, Object?>{

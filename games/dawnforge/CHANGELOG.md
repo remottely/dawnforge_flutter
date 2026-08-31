@@ -8,6 +8,27 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.38.0
+
+### 🔧 Changed
+
+- Clicking with something that is not a tool — a log, a lump of ore — no longer
+  costs you a swing. It was never going to do anything, and you had to wait the
+  full two seconds anyway. Pressing with a log in your hand is not a failed
+  swing; it is no swing, and now the game agrees.
+
+### 🧹 Internal
+
+- What an item DOES when you press is now the item's own business instead of
+  the player's. Swinging a tool and putting a thing down are not two settings
+  of one action — they look for different targets, ask different questions, and
+  spend different things — so each kind of item gets its own small piece of code
+  that knows its own deed. Nothing you can see changed except the line above;
+  this is the shape the next step needs to exist at all.
+- A press now comes back with three answers rather than two: nothing happened,
+  something happened and achieved nothing, something happened and landed. Only
+  the middle one costs you the wait, and only the item can tell them apart.
+
 ## 0.37.0
 
 ### 🧹 Internal
