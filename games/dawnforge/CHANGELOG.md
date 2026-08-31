@@ -30,6 +30,21 @@
   was safe the whole time. Now both are on the same page, in order, and the
   book stops pretending something went missing.
 
+## 0.46.0
+
+### 🧹 Internal
+
+- The game can now work out whether you can afford a recipe, and how many you
+  could make in one go. The scarcest ingredient decides: ore enough for five
+  bars and coal enough for one makes one bar.
+- One order stops at a hundred, however full your bag is — that ceiling comes
+  straight from the design and is a number a player can actually reach.
+- Two answers are written down on purpose because the obvious code gets them
+  backwards. A thing with NO recipe cannot be made out of nothing, and it
+  cannot be made a hundred times either. Both would have been the accidental
+  answer, and both would have been silly rather than loud.
+- Nothing asks these questions yet. The bench that will ask them is next.
+
 ## 0.45.2
 
 ### 🧹 Internal

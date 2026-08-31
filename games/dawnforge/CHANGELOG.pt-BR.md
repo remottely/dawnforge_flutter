@@ -30,6 +30,21 @@
   inteiro. Agora as duas estão na mesma página, em ordem, e o livro para de
   fingir que sumiu alguma coisa.
 
+## 0.46.0
+
+### 🧹 Internal
+
+- O jogo agora sabe dizer se você tem com que pagar uma receita, e quantas dá
+  para fazer de uma vez. Quem decide é o ingrediente mais escasso: minério para
+  cinco barras e carvão para uma dá uma barra.
+- Um pedido para em cem, por mais cheia que esteja a sua mochila — esse teto vem
+  direto do projeto e é um número que dá para o jogador alcançar de verdade.
+- Duas respostas foram escritas de propósito porque o código óbvio erra as duas.
+  Uma coisa SEM receita não pode ser feita do nada, e também não pode ser feita
+  cem vezes. As duas seriam a resposta acidental, e as duas seriam bobas em vez
+  de barulhentas.
+- Nada faz essas perguntas ainda. A bancada que vai fazê-las é a próxima.
+
 ## 0.45.2
 
 ### 🧹 Internal
