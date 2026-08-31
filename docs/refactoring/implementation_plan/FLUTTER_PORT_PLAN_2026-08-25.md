@@ -153,16 +153,44 @@ sector model (`shared_logic/`, `domain/`, `resources/`, `registries/`, `factorie
   the player's bag, so FP4.5 is what opens it, and `building.md` waits for that commit
   rather than documenting a deed the player cannot perform.
 - **FP4.4** Farming transform chain (till/water/plant/grow via time system minimal core).
-- **FP4.5** Crafting at a workstation prop. It carries three obligations the phases
-  before it created: the **content is not imported yet** (`t1_item_craftable_*.md` —
-  bar_copper, block_moss, cloth_vine, coin_copper, leather_boar, planks_palm — live in
-  `tessera_project`'s `forge_almanac/02_workstations/01_smelter/t1/`; the smelter prop
-  and its buildable item came in with 0.35.0); it is what makes **FP4.3b reachable**,
-  since the smelter authors `crafted_at: NONE` and is therefore made in the player's own
-  menu, which is the first path by which any blueprint enters a bag; and it therefore
-  owes the **`building.md` manual page in both languages**, deferred here on purpose
-  from FP4.3b (rule 34 is satisfied by the commit that makes a deed reachable, not by
-  the one that makes it work).
+- **FP4.5** Crafting. Content imported 2026-08-31 (0.45.0); recipe data read for the
+  first time in the same commit. It owes the **`building.md` and `crafting.md` manual
+  pages in both languages**, `building.md` deferred here on purpose from FP4.3b (rule 34
+  is satisfied by the commit that makes a deed reachable, not by the one that makes it
+  work). Seven slices: recipe data · `CraftingRules` · `PropWorkstationData` + recipe
+  discovery · `WorkstationComponent` (the production queue) · the **interact verb**,
+  which does not exist in this port at all and is pulled forward from FP5.1 the way
+  FP4.2b pulled `UIStateMachine` (`E` is taken by the hotbar step here, so the binding is
+  its own decision) · the two surfaces · the bootstrap.
+
+  **CORRECTION, 2026-08-31 — the claim this bullet carried at 0.44.0 was wrong, and it
+  was mine.** It said FP4.5 makes FP4.3b reachable "since the smelter authors
+  `crafted_at: NONE` and is therefore made in the player's own menu". Verified against
+  the spec at HEAD, both halves fail. **(1) No hand-craft menu exists, there either.**
+  `ItemCraftableData.cs:19` promises one in a comment ("If NONE, it can be hand-crafted
+  in player inventory"), but `workstation_ui.gd` is the only recipe surface in the spec
+  and it populates from `PropWorkstationData.get_valid_recipes()`, which filters
+  `crafted_at == workstation_type` — a NONE recipe appears at no station. **(2) Even
+  with that menu the smelter stays unmakeable:** it costs 5 copper ore + 5 coal, and
+  `t1_prop_vein_copper` / `t1_prop_rock_coal` author `allowed_tools: [PICKAXE]`; the
+  copper pickaxe is `crafted_at: WORKSHOP` from 5 planks + 1 copper bar, both SMELTER
+  outputs. That is a **cold-start deadlock in the authored content**, and it holds on the
+  delivery track too — the only thing that opens it there is the COMMENTED-OUT debug dict
+  in `actor_player.gd:140-220`, which is where `"t1_item_buildable_workstation_smelter":
+  1` sits. The pack authors no starting inventory (`actor_player.md` has only
+  `inventory_size: 30`), and no biome population table can scatter a smelter.
+
+  **Consequence: a faithful port of FP4.5 does not close the FP4 gate** — craft and place
+  both stay unreachable. **Decision taken 2026-08-31 (developer's call, the fork was put
+  to them):** the bootstrap is an **authored starting inventory** — the player document
+  gains `starting_inventory: [{id, amount}]`, read by `IActorData` and granted by the
+  factory, which is the use `ItemAmount.cs`'s own comment already names. Starting with a
+  copper pickaxe closes the loop: mine → chop → hand-craft the smelter → place it →
+  produce at it. Two things follow from it and are owed by the bootstrap slice: the
+  **hand-craft surface** for `crafted_at: NONE` has to exist (otherwise the loop is a
+  one-off), and the new pack field is an **additive fork of the shared contract** until
+  the Godot side reads it too — study §4 and risk register #3, and `L-006` is the entry
+  that already says nothing here notices pack drift.
 - **Gate:** harvest → craft → place, playable, suite green.
 
 ## FP5 — Surfaces & UX
