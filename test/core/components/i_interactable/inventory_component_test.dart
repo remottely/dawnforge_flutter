@@ -284,4 +284,199 @@ void main() {
       throwsA(isA<AssertionError>()),
     );
   });
+
+  // ============================================
+  // SORT (FP4.2b's deferred half)
+  // ============================================
+
+  group('sortItems', () {
+    setUp(() {
+      locator<ActorRegistry>().registerJson(<String, Object?>{
+        'id': 't1_actor_hoarder',
+        'inventory_size': 8,
+      });
+      locator<ItemRegistry>().registerJson(<String, Object?>{
+        'id': 't1_item_tool_axe_copper',
+        'max_stack': 1,
+        'tool_type': 'AXE',
+      });
+      locator<ItemRegistry>().registerJson(<String, Object?>{
+        'id': 't2_item_tool_axe_iron',
+        'max_stack': 1,
+        'tool_type': 'AXE',
+        'tier': 2,
+      });
+      locator<ItemRegistry>().registerJson(<String, Object?>{
+        'id': 't1_item_tool_sword_copper',
+        'max_stack': 1,
+        'tool_type': 'SWORD',
+      });
+      locator<ItemRegistry>().registerJson(<String, Object?>{
+        'id': 't1_item_buildable_torch',
+        'type': 'item_buildable_data',
+        'blueprint_id': 't1_prop_torch',
+        'max_stack': 10,
+      });
+    });
+
+    InventoryComponent buildHoarder() =>
+        ActorFactory.create('t1_actor_hoarder', WorldPos.zero).inventory;
+
+    /// A hoarder holding exactly this, slot by slot — the arrangement half of
+    /// every case below, so the act half is one line and nothing reads as a
+    /// cascade of setup and verb together.
+    InventoryComponent hoarderHolding(Map<int, (String, int)> contents) {
+      final inventory = buildHoarder();
+      contents.forEach((slot, entry) {
+        inventory.setSlot(slot, item(entry.$1), entry.$2);
+      });
+      return inventory;
+    }
+
+    List<String> idsOf(InventoryComponent inventory) =>
+        inventory.slots.map((stack) => stack.itemId).toList();
+
+    test('the drawers come out in the order the player reads them', () {
+      final inventory = hoarderHolding(<int, (String, int)>{
+        0: ('t1_item_pebble', 3),
+        1: ('t1_item_buildable_torch', 2),
+        2: ('t1_item_tool_sword_copper', 1),
+        3: ('t1_item_tool_axe_copper', 1),
+      })
+        ..sortItems();
+
+      // Tools first, and inside the tools the axe leads the sword — the shelf
+      // order is the table's, not the alphabet's and not the enum's.
+      expect(idsOf(inventory).take(4), <String>[
+        't1_item_tool_axe_copper',
+        't1_item_tool_sword_copper',
+        't1_item_buildable_torch',
+        't1_item_pebble',
+      ]);
+    });
+
+    test('the better tool of a kind sits on top of the worse one', () {
+      final inventory = hoarderHolding(<int, (String, int)>{
+        0: ('t1_item_tool_axe_copper', 1),
+        1: ('t2_item_tool_axe_iron', 1),
+      })
+        ..sortItems();
+
+      expect(idsOf(inventory).take(2), <String>[
+        't2_item_tool_axe_iron',
+        't1_item_tool_axe_copper',
+      ]);
+    });
+
+    test('partial stacks fold together and the empties go to the back', () {
+      final inventory = hoarderHolding(<int, (String, int)>{
+        1: ('t1_item_pebble', 4),
+        5: ('t1_item_pebble', 3),
+      })
+        ..sortItems();
+
+      expect(inventory.slots[0].itemId, 't1_item_pebble');
+      expect(inventory.slots[0].amount, 7,
+          reason: 'compacting is half of what the button is pressed for');
+      for (var i = 1; i < inventory.maxSlots; i++) {
+        expect(inventory.slots[i].isEmpty, isTrue);
+      }
+      expect(inventory.countOf('t1_item_pebble'), 7,
+          reason: 'a sort moves things; it never creates or eats them');
+    });
+
+    test('a fold past max_stack is cut back into legal stacks, fullest first',
+        () {
+      // Pebbles cap at 10. Three partial stacks make 15, which is one full
+      // stack and a remainder — and the full one comes first.
+      final inventory = hoarderHolding(<int, (String, int)>{
+        0: ('t1_item_pebble', 8),
+        3: ('t1_item_pebble', 4),
+        7: ('t1_item_pebble', 3),
+      })
+        ..sortItems();
+
+      expect(inventory.slots[0].amount, 10);
+      expect(inventory.slots[1].amount, 5);
+      expect(inventory.slots[2].isEmpty, isTrue);
+      expect(inventory.countOf('t1_item_pebble'), 15);
+    });
+
+    test('two uniques of one kind stay two — folding them is the split back',
+        () {
+      final inventory = hoarderHolding(<int, (String, int)>{
+        0: ('t1_item_tool_axe_copper', 1),
+        4: ('t1_item_tool_axe_copper', 1),
+      })
+        ..sortItems();
+
+      expect(inventory.slots[0].amount, 1);
+      expect(inventory.slots[1].amount, 1);
+      expect(inventory.countOf('t1_item_tool_axe_copper'), 2);
+    });
+
+    test('only the slots that CHANGED are announced', () {
+      final inventory = hoarderHolding(<int, (String, int)>{
+        0: ('t1_item_tool_axe_copper', 1),
+        3: ('t1_item_pebble', 2),
+      });
+      final announced = <int>[];
+      var containerAnnouncements = 0;
+
+      inventory
+        ..slotChanged.connect(announced.add)
+        ..inventoryChanged.connect(() => containerAnnouncements++)
+        ..sortItems();
+
+      // Slot 0 already held the axe and is left alone; the pebbles move from
+      // 3 to 1. A press must not fan out over every slot of every open panel.
+      expect(announced, <int>[1, 3]);
+      expect(containerAnnouncements, 1);
+    });
+
+    test('a sort that changes nothing announces no slot at all', () {
+      final inventory = hoarderHolding(<int, (String, int)>{
+        0: ('t1_item_tool_axe_copper', 1),
+        1: ('t1_item_pebble', 2),
+      });
+      final announced = <int>[];
+
+      inventory
+        ..slotChanged.connect(announced.add)
+        ..sortItems();
+
+      expect(announced, isEmpty);
+    });
+
+    test('the hand is told when what it holds was moved under it', () {
+      final inventory = hoarderHolding(<int, (String, int)>{
+        2: ('t1_item_pebble', 2),
+      })
+        ..selectSlot(0);
+      final selections = <int>[];
+
+      inventory
+        ..selectionChanged.connect(selections.add)
+        ..sortItems();
+
+      // The cursor did not move — the pebbles arrived under it. Both are the
+      // same news to whoever draws the hand: what you are holding is now
+      // something else.
+      expect(inventory.selectedSlot, 0);
+      expect(selections, <int>[0]);
+      expect(inventory.selectedStack.itemId, 't1_item_pebble');
+    });
+
+    test('an empty container sorts to an empty container', () {
+      final inventory = buildHoarder();
+      final announced = <int>[];
+
+      inventory
+        ..slotChanged.connect(announced.add)
+        ..sortItems();
+
+      expect(announced, isEmpty);
+      expect(inventory.container.hasAnyItem, isFalse);
+    });
+  });
 }

@@ -8,6 +8,23 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.42.0
+
+### 🧹 Internal
+
+- The backpack can now put itself in order. Everything with a place in the
+  drawers goes to the front in that order, and the empty pockets end up at the
+  back — where empty pockets belong.
+- Piles of the same thing join up on the way. Four berries in one pocket and
+  three in another become seven in a single pocket; if seven is more than a
+  pocket holds, what is left starts the next one, and the fuller pile comes
+  first. Tidying is half of what a Sort button is for.
+- It only tells the screen about the pockets that actually moved. A pocket that
+  was already holding the right thing is left alone, so one press does not
+  redraw all thirty. And if the thing in your hand was moved under you, the
+  game says so — otherwise you would be holding one thing and swinging another.
+- The button that presses it is next.
+
 ## 0.41.0
 
 ### 🧹 Internal

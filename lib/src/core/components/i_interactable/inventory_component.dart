@@ -1,5 +1,6 @@
 import 'package:dawnforge/src/core/components/i_component.dart';
 import 'package:dawnforge/src/core/domain/inventory/inventory_rules.dart';
+import 'package:dawnforge/src/core/domain/inventory/inventory_sort_rules.dart';
 import 'package:dawnforge/src/core/registries/item_registry.dart';
 import 'package:dawnforge/src/core/resources/inventory/inventory_data.dart';
 import 'package:dawnforge/src/core/resources/inventory/item_stack.dart';
@@ -364,6 +365,134 @@ final class InventoryComponent extends IComponent {
     final src = slots[from];
     if (src.isEmpty) return false;
     return moveWithin(from, to, src.amount);
+  }
+
+  // ============================================
+  // SORT (FP4.2b's deferred half)
+  // ============================================
+
+  /// Reorders the whole container: category, then subcategory, then tier
+  /// (best first), then the item id. Partial stacks of the same item are
+  /// merged on the way through, because compacting is half of what a player
+  /// presses the button for; empty slots end up at the back.
+  ///
+  /// Lives on the component rather than on any one interface so that every
+  /// inventory sorts the same way — an actor's, a chest's, anything that owns
+  /// one of these.
+  void sortItems() {
+    final ordered = _collectMergedStacks()..sort(compareStacks);
+
+    for (var i = 0; i < maxSlots; i++) {
+      final stack = slots[i];
+      final previousId = stack.itemId;
+      final previousAmount = stack.amount;
+
+      if (i < ordered.length) {
+        stack
+          ..itemId = ordered[i].itemId
+          ..amount = ordered[i].amount;
+      } else {
+        stack.clear();
+      }
+
+      // A sort leaves most slots holding exactly what they held; announcing
+      // those anyway would fan a single button press out over every slot in
+      // every open panel.
+      if (stack.itemId != previousId || stack.amount != previousAmount) {
+        _announceSlot(i);
+      }
+    }
+
+    inventoryChanged.emit();
+  }
+
+  /// Every non-empty stack, with same-item stacks folded together and re-split
+  /// at `max_stack`.
+  ///
+  /// PORT DELTA — the spec's unique-instance arm is NOT here. There,
+  /// `add_item` gives every `max_stack == 1` item a resource of its own so it
+  /// can carry its own durability and identity, and folding two of them would
+  /// erase one axe's wear into the other's. An [ItemStack] here is an id and a
+  /// count, so folding two uniques and re-splitting them gives back exactly
+  /// the two stacks of one it started with — the arm would guard nothing. It
+  /// returns with its subject, when instance state does (rule 5: a branch that
+  /// cannot matter yet is a lie about what the game does).
+  List<ItemStack> _collectMergedStacks() {
+    final merged = <ItemStack>[];
+    final stackableById = <String, ItemStack>{};
+
+    for (final stack in slots) {
+      if (stack.isEmpty) continue;
+      final existing = stackableById[stack.itemId];
+      if (existing == null) {
+        final fresh = ItemStack.of(stack.itemId, stack.amount);
+        stackableById[stack.itemId] = fresh;
+        merged.add(fresh);
+      } else {
+        existing.amount += stack.amount;
+      }
+    }
+
+    return _splitOverflowingStacks(merged);
+  }
+
+  /// Cuts any stack that grew past its `max_stack` while merging back into
+  /// legal stacks.
+  List<ItemStack> _splitOverflowingStacks(List<ItemStack> merged) {
+    final result = <ItemStack>[];
+    for (final stack in merged) {
+      final maxStack = _itemOf(stack).maxStack;
+      while (stack.amount > maxStack) {
+        result.add(ItemStack.of(stack.itemId, maxStack));
+        stack.amount -= maxStack;
+      }
+      result.add(stack);
+    }
+    return result;
+  }
+
+  /// The order items are shown in. [InventorySortRules] owns the first three
+  /// axes; what follows them is decided here, where the caller with the locale
+  /// is.
+  ///
+  /// Public because it is *the* order, not just the order [sortItems] leaves
+  /// behind — any interface listing a subset of an inventory reads it from
+  /// here so it cannot drift from what the grid shows.
+  ///
+  /// PORT DELTA — the shape: a Dart [Comparator] returns an ordering, not the
+  /// spec's `a sorts before b` bool, because that is what `List.sort` takes.
+  ///
+  /// PORT DELTA — the fourth axis, the item's DISPLAYED NAME, has no subject
+  /// in this port and is skipped. The pack authors a `display_name_key` and
+  /// the pipeline emits it into every item's JSON and every locale table, but
+  /// no data class reads it yet: nothing has needed an item's name on screen
+  /// (a slot draws an icon and a count). So the order falls through to the
+  /// spec's own NEXT axis, the id, which is already here and is stable in
+  /// every locale. The name axis arrives with the first surface that shows one
+  /// — a tooltip, FP5 — and lands between tier and id without moving anything
+  /// else.
+  static int compareStacks(ItemStack a, ItemStack b) {
+    final registry = locator<ItemRegistry>();
+    final itemA = registry.getItem(a.itemId);
+    final itemB = registry.getItem(b.itemId);
+
+    final category = InventorySortRules.categoryRank(itemA)
+        .compareTo(InventorySortRules.categoryRank(itemB));
+    if (category != 0) return category;
+
+    final subcategory = InventorySortRules.subcategoryRank(itemA)
+        .compareTo(InventorySortRules.subcategoryRank(itemB));
+    if (subcategory != 0) return subcategory;
+
+    final tier = InventorySortRules.tierRank(itemA)
+        .compareTo(InventorySortRules.tierRank(itemB));
+    if (tier != 0) return tier;
+
+    // One item can hold several stacks — a split overflow, or two uniques.
+    // Both are broken here so the order is the same on every press.
+    final id = itemA.id.compareTo(itemB.id);
+    if (id != 0) return id;
+    return b.amount.compareTo(a.amount);
   }
 
   /// Moves up to [amount] from this container's [fromSlot] into [target]'s

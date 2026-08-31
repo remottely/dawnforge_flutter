@@ -8,6 +8,23 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.42.0
+
+### 🧹 Internal
+
+- A mochila agora sabe se arrumar sozinha. Tudo que tem um lugar nas gavetas vai
+  para a frente nessa ordem, e os bolsos vazios ficam para trás — que é onde
+  bolso vazio fica bem.
+- Pilhas da mesma coisa se juntam no caminho. Quatro frutinhas num bolso e três
+  em outro viram sete num bolso só; se sete for mais do que cabe num bolso, o
+  que sobra começa o próximo, e a pilha mais cheia vem primeiro. Arrumar é
+  metade do que um botão Organizar serve para fazer.
+- Ela só avisa a tela sobre os bolsos que se mexeram mesmo. Um bolso que já
+  estava com a coisa certa fica quieto, então um aperto não redesenha os trinta.
+  E se a coisa que está na sua mão foi trocada debaixo de você, o jogo avisa —
+  senão você estaria segurando uma coisa e dando golpe com outra.
+- O botão que aperta isso é o próximo.
+
 ## 0.41.0
 
 ### 🧹 Internal
