@@ -8,6 +8,17 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.45.3
+
+### 🧹 Internal
+
+- Nothing in the game changed. This is tidying in the book where the project
+  writes down everything it has ever done. The old version of the game and the
+  one being built now were on two separate pages, so the new one looked like it
+  was missing the last things the old one learned. It never was: all of that
+  was safe the whole time. Now both are on the same page, in order, and the
+  book stops pretending something went missing.
+
 ## 0.45.2
 
 ### 🧹 Internal

@@ -8,6 +8,17 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.45.3
+
+### 🧹 Internal
+
+- Nada mudou no jogo. Isto é arrumação no livro onde o projeto anota tudo o que
+  já fez. A versão antiga do jogo e a que está sendo feita agora estavam em duas
+  páginas separadas, então parecia que a nova tinha perdido as últimas coisas
+  que a antiga aprendeu. Nunca perdeu: tudo aquilo esteve guardado o tempo
+  inteiro. Agora as duas estão na mesma página, em ordem, e o livro para de
+  fingir que sumiu alguma coisa.
+
 ## 0.45.2
 
 ### 🧹 Internal
