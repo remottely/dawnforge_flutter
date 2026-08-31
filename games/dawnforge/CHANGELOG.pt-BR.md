@@ -30,6 +30,27 @@
   inteiro. Agora as duas estão na mesma página, em ordem, e o livro para de
   fingir que sumiu alguma coisa.
 
+## 0.47.0
+
+### 🧹 Internal
+
+- **Uma fundição sabe que é uma fundição.** O pacote de design diz isso desde o
+  dia em que foi importado, e o jogo estava lendo ela como um móvel qualquer e
+  jogando essa palavra fora. Ninguém tinha percebido, porque ninguém tinha
+  perguntado ainda.
+- Uma bancada não guarda lista nenhuma do que ela faz. Ela pergunta quais
+  receitas citam o nome dela, então acrescentar uma receita depois é escrever um
+  arquivo e não mexer em mais nada.
+- Uma bancada melhor continua fazendo as coisas humildes: uma fundição de nível
+  2 derrete barras de nível 1 tão bem quanto as de nível 2. E a lista que você
+  veria é montada exatamente com a mesma regra que autoriza o trabalho — lista e
+  permissão que discordam é como se acaba fabricando uma coisa que nunca te
+  ofereceram.
+- Duas coisas que uma bancada não pode ser: uma que responda por "feito à mão",
+  que ofereceria justamente a lista que ela não pode ter, e uma que trabalhe
+  infinitamente rápido. As duas agora param o jogo na hora em que o projeto é
+  lido, e não muito depois.
+
 ## 0.46.0
 
 ### 🧹 Internal

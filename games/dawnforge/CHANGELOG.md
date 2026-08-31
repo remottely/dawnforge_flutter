@@ -30,6 +30,24 @@
   was safe the whole time. Now both are on the same page, in order, and the
   book stops pretending something went missing.
 
+## 0.47.0
+
+### 🧹 Internal
+
+- **A smelter knows it is a smelter.** The design pack has said so since the
+  day it was imported, and the game had been reading it as an ordinary lump of
+  furniture and throwing that word away. Nothing had noticed, because nothing
+  had asked yet.
+- A bench keeps no list of what it makes. It asks which recipes name it, so
+  adding a recipe later means writing one file and touching nothing else.
+- A better bench still makes the humble things: a tier 2 smelter melts tier 1
+  bars as well as tier 2 ones. And the list you would be shown is built from
+  exactly the same rule that allows the work — a list and a permission that
+  disagree is how you end up making something you were never offered.
+- Two things a bench cannot be: one that answers to "made by hand", which would
+  offer the one list it must never own, and one that works infinitely fast. Both
+  now stop the game at the moment the design is read rather than much later.
+
 ## 0.46.0
 
 ### 🧹 Internal
