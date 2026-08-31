@@ -8,6 +8,17 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.45.4
+
+### 🧹 Internal
+
+- Nothing in the game changed. A snag in the project's own tools was written
+  down: the safety catch that checks how finished work gets filed into the
+  history book cannot see one particular way of filing, and the side door that
+  gets around it goes right past the catch. Writing a snag down is not the same
+  as fixing it — it means the next person meets it on a page instead of by
+  surprise.
+
 ## 0.45.3
 
 ### 🧹 Internal

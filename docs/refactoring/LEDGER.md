@@ -47,6 +47,13 @@
 - **Cost of leaving it:** the residency list is the thing that frees grid tiles, and every future way a prop can enter the world (FP4.4's crops from a transform, FP4.5's craft output, FP7's respawn and rehydration) has to know to register with a system whose name says it is about procedural scatter. A path that forgets does not fail loudly: the prop simply stays drawn, ticked and holding its tiles at a place the player has left. The fix is a rename and a move, not a redesign — the bookkeeping is already correct, it is only filed under the wrong owner.
 - **Found while:** FP4.3b slice 5 — giving the built prop the same exit every other prop has.
 
+### L-008 · The commit guard makes a merge commit unreachable, and the way around it skips the guard
+
+- **Lens:** harness / git guard
+- **Evidence:** `scripts/ai/hooks/block_forbidden_git.py:179` refuses any `git commit` without `-- <pathspec>`, mirroring the flow `CLAUDE.md:177` documents; git itself refuses a pathspec commit while `MERGE_HEAD` exists ("cannot do a partial commit during a merge"). At 0.45.3 the two rules are jointly unsatisfiable: a commit with two parents cannot be made through the documented command. The escape used was `GIT_EDITOR=true git merge --continue` with `.git/MERGE_MSG` pre-written — `merge` is not the `commit` subcommand (`:171`), so the hook never sees it.
+- **Cost of leaving it:** the hook exists to stop a bare commit sweeping in a parallel session's staged work, and the only route to a merge commit is precisely a bare commit of the whole index — so the one case the guard cannot inspect is the case that commits the most. The bypass is silent and undocumented: nothing in `CLAUDE.md` or the hook names it, so the next session either abandons the merge or finds `merge --continue` on its own and commits the index unchecked, having read no warning that it must verify it by hand first. Both outcomes are worse than a hook that recognised `merge` and asked for the same proof.
+- **Found while:** 0.45.3 — recording the legacy `main` lineage on `dev` with `git merge -s ours`, after the hook refused the commit that would have carried it.
+
 ## Drained
 
 | ID | Title | Drained into |

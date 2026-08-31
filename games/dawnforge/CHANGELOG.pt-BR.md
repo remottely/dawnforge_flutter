@@ -8,6 +8,17 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.45.4
+
+### 🧹 Internal
+
+- Nada mudou no jogo. Foi anotado um problema nas ferramentas do próprio
+  projeto: a trava que confere como o trabalho pronto é arquivado no livro de
+  histórico não enxerga um jeito específico de arquivar, e a porta lateral que
+  contorna isso passa longe da trava. Anotar um problema não é o mesmo que
+  consertá-lo — é fazer com que a próxima pessoa o encontre numa página, e não
+  de surpresa.
+
 ## 0.45.3
 
 ### 🧹 Internal
