@@ -211,18 +211,39 @@ abstract final class WorldObjectPermissionHelper {
     IActor source,
     DamageTarget target,
     double rangePixels,
-  ) {
-    final body = ActorOccupancyHelper.bodyRectOf(source);
-    final area = switch (target) {
-      ObjectTarget(:final object) => ActorOccupancyHelper.areaRect(
-          locator<GridManager>().worldToGrid(object.position),
-          width: object.data.gridWidth,
-          height: object.data.gridHeight,
-        ),
-      GroundTarget(:final tile) => ActorOccupancyHelper.areaRect(tile),
-    };
-    return _gapBetween(body, area) <= rangePixels;
-  }
+  ) =>
+      switch (target) {
+        ObjectTarget(:final object) => isAreaWithinRange(
+            source,
+            locator<GridManager>().worldToGrid(object.position),
+            rangePixels,
+            width: object.data.gridWidth,
+            height: object.data.gridHeight,
+          ),
+        GroundTarget(:final tile) =>
+          isAreaWithinRange(source, tile, rangePixels),
+      };
+
+  /// The same reach, measured against a FOOTPRINT rather than a thing.
+  ///
+  /// Building needs it and destroying does not: what a blueprint reaches for
+  /// has no host yet, so there is nothing to hand [isWithinRange] — only a
+  /// corner and a size. Splitting it out is what keeps the two verbs on ONE
+  /// geometry (FP4.3b's obligation): a smelter you may build is a smelter you
+  /// could have broken from the same spot, and the day that stops being true
+  /// is the day a player is refused a build they can see is in range.
+  static bool isAreaWithinRange(
+    IActor source,
+    GridPos anchor,
+    double rangePixels, {
+    int width = 1,
+    int height = 1,
+  }) =>
+      _gapBetween(
+        ActorOccupancyHelper.bodyRectOf(source),
+        ActorOccupancyHelper.areaRect(anchor, width: width, height: height),
+      ) <=
+      rangePixels;
 
   /// The shortest distance between two rects — zero when they overlap.
   static double _gapBetween(WorldRect a, WorldRect b) {

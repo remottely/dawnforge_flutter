@@ -8,6 +8,30 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.39.0
+
+### 🧹 Internal
+
+- **Building works.** With a blueprint in your hand, a press puts the thing
+  into the world: a smelter lands on the two squares it covers, a bridge turns
+  the water you pointed at into planks you can walk on, and one blueprint
+  leaves your bag. It is the mirror of chopping a tree down, and the second
+  half of the loop this whole phase is about.
+- Four things happen in one order, and the order is the promise. The game works
+  out which squares the thing would cover; it asks whether it may go there; it
+  takes one from your bag; it puts it down. Ask after taking and a refused
+  build would cost you the smelter. Put it down before taking and you would end
+  up with two.
+- A thing you point at is placed where it LOOKS like it is: you aim at the
+  square it stands on, and a tall thing reaches up from there rather than down
+  from it. And something you build is now the world's, properly — when you walk
+  far enough away that the game forgets that part of the world, your smelter
+  goes with it instead of hanging around invisibly on ground nobody can use.
+- Still nothing puts a blueprint in your bag: the only ones the game knows are
+  made at a workbench, and workbenches are the next piece of work. So this
+  entry is Internal, not New — the deed is finished and waiting for a way to
+  reach it. The manual page comes with the step that makes it reachable.
+
 ## 0.38.0
 
 ### 🔧 Changed

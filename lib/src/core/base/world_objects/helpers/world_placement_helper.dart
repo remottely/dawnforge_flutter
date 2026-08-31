@@ -1,10 +1,16 @@
+import 'dart:math';
+
 import 'package:dawnforge/src/core/base/world_objects/helpers/actor_occupancy_helper.dart';
+import 'package:dawnforge/src/core/base/world_objects/props/prop.dart';
+import 'package:dawnforge/src/core/factories/prop_factory.dart';
 import 'package:dawnforge/src/core/resources/world_objects/grounds/ground_buildable_data.dart';
 import 'package:dawnforge/src/core/resources/world_objects/grounds/ground_empty_data.dart';
 import 'package:dawnforge/src/core/resources/world_objects/props/prop_data.dart';
+import 'package:dawnforge/src/core/shared_logic/definitions/game_constants.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/spatial.dart';
 import 'package:dawnforge/src/core/systems/boot.dart';
 import 'package:dawnforge/src/core/systems/eventing/events.dart';
+import 'package:dawnforge/src/core/systems/spawning/procedural_spawn_system.dart';
 import 'package:dawnforge/src/core/systems/world/grid_manager.dart';
 
 /// Why a blueprint may not be built somewhere — [allowed] when it may.
@@ -130,6 +136,69 @@ abstract final class WorldPlacementHelper {
     }
 
     return PlacementRefusal.allowed;
+  }
+
+  /// The TOP-LEFT tile of the footprint a blueprint anchored under [cursorTile]
+  /// would take.
+  ///
+  /// A prop stands on the BOTTOM row of its own footprint — that is where the
+  /// player is pointing and where the thing looks like it is — so the anchor is
+  /// as many tiles above as the blueprint is tall. One line, and it lives here
+  /// rather than at its callers because there are two of them and they must
+  /// never disagree: the press that builds and the preview that promised it.
+  /// (The spec writes this line twice for exactly that pair, and its own
+  /// comment notices.)
+  static GridPos anchorForCursorTile(PropData data, GridPos cursorTile) =>
+      GridPos(cursorTile.x, cursorTile.y - (data.gridHeight - 1));
+
+  /// The world position a prop of this footprint is created at: the geometric
+  /// CENTRE of the tiles it covers — the port of `PlacementRules.PropWorldPosition`.
+  ///
+  /// Props are positioned by their centre everywhere in this engine (the
+  /// scatter creates them at `gridToWorld`, a tile centre, which is this same
+  /// answer for a 1x1). A multi-tile blueprint is the case that makes the rule
+  /// visible rather than the case that introduces it.
+  static WorldPos propWorldPosition(PropData data, GridPos anchor) {
+    const dimension = GameConstants.tileDimension;
+    final corner = locator<GridManager>().gridToWorldCorner(anchor);
+    return WorldPos(
+      corner.x + data.gridWidth * dimension / 2,
+      corner.y + data.gridHeight * dimension / 2,
+    );
+  }
+
+  /// Puts a prop into the world at [anchor]. Asks nothing — the caller has
+  /// already been told yes by [canPlaceProp] (see [placeGround] for why the
+  /// gate is never asked twice).
+  ///
+  /// The three steps are the ones `ProceduralSpawnSystem` takes to scatter one,
+  /// in the same order and for the same reasons: the factory is the only way to
+  /// build a prop (rule 1), the grid is told which tiles are spoken for, and
+  /// the bus is what binds a renderer to it. [random] is the roll stream its
+  /// loot will come out of, handed in for the same seam reason the factory
+  /// takes it.
+  ///
+  /// The prop is then ADOPTED by the spawn system, which is the part that is
+  /// easy to leave out and expensive to: without it a built prop is resident in
+  /// a chunk that does not know it, so the unload never frees its tiles and
+  /// never despawns it — a prop drawn forever at a place the player has left,
+  /// on ground nothing may ever use again.
+  static Prop placeProp(PropData data, GridPos anchor, {Random? random}) {
+    assert(
+      canPlaceProp(data, anchor),
+      '[WorldPlacementHelper] placeProp at $anchor was refused '
+      '(${placePropRefusal(data, anchor)}) — the gate is asked BEFORE the '
+      'placement, never inside it',
+    );
+    final prop = PropFactory.create(
+      data.id,
+      propWorldPosition(data, anchor),
+      random: random,
+    );
+    locator<GridManager>().occupyPropTiles(anchor, prop);
+    locator<ProceduralSpawnSystem>().adoptPlacedProp(anchor, prop);
+    locator<Events>().worldObjectSpawned.emit(prop);
+    return prop;
   }
 
   /// Whether a ground blueprint may become the tile at [tile].

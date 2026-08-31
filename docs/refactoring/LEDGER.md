@@ -40,6 +40,13 @@
 - **Cost of leaving it:** the pack format is a SHARED contract that must never fork (study §4, risk register #3), and the fork this allows is the quiet kind: not a parse failure but two engines rolling different loot from the same authored tile. The gap widens per import — the pack is imported one slice at a time, so every slice pins its own snapshot date, and no two documents here are guaranteed to be from the same version of over there. A `--check` step that diffs the imported subset costs one script and is the only thing that would have surfaced this.
 - **Found while:** FP4.3b slice 1 — copying the five blueprint documents in, and diffing an already-imported one first to learn the delta convention.
 
+### L-007 · Which props are resident in a chunk is owned by the system named for ONE way they get there
+
+- **Lens:** systems / ownership
+- **Evidence:** `lib/src/core/systems/spawning/procedural_spawn_system.dart:51-66` at 0.39.0 holds `_chunkContent`, the map of every prop resident in every chunk, and the unload that releases them. Since FP4.3b props also arrive by hand, so `WorldPlacementHelper.placeProp` has to call `adoptPlacedProp` on a *spawn* system to have a built smelter released, and the system needed a second field (`_populatedChunks`) to keep "has been scattered" apart from "lives here" — two facts that were one only while the scatter was the sole author.
+- **Cost of leaving it:** the residency list is the thing that frees grid tiles, and every future way a prop can enter the world (FP4.4's crops from a transform, FP4.5's craft output, FP7's respawn and rehydration) has to know to register with a system whose name says it is about procedural scatter. A path that forgets does not fail loudly: the prop simply stays drawn, ticked and holding its tiles at a place the player has left. The fix is a rename and a move, not a redesign — the bookkeeping is already correct, it is only filed under the wrong owner.
+- **Found while:** FP4.3b slice 5 — giving the built prop the same exit every other prop has.
+
 ## Drained
 
 | ID | Title | Drained into |

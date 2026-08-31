@@ -1,3 +1,4 @@
+import 'package:dawnforge/src/core/base/world_objects/helpers/world_placement_helper.dart';
 import 'package:dawnforge/src/core/base/world_objects/props/prop.dart';
 import 'package:dawnforge/src/core/registries/prop_registry.dart';
 import 'package:dawnforge/src/core/resources/world/biome_actor_entry.dart';
@@ -166,6 +167,87 @@ void main() {
     expect(despawns, spawned.length,
         reason: 'every prop left exactly once — the dead one at its death, '
             'the living ones with their chunk');
+  });
+
+  test('a prop the PLAYER built leaves with its chunk too (FP4.3b)', () {
+    // The scatter is one of two ways a prop comes to exist now, but there is
+    // still only one way for a prop to leave. A built prop that never joined
+    // this system's list would hold its ground after the chunk was gone —
+    // drawn and ticked forever at a place the player has left, on tiles
+    // nothing may ever use again.
+    const chunk = GridPos(2, 2);
+    materializeChunkTerrain(chunk);
+    // Reserved so the scatter cannot take the tile out from under the test;
+    // everything else in the chunk populates normally, which is the point —
+    // the built prop has to leave WITH that company, not instead of it.
+    const builtAt = GridPos(2 * chunkSize + 1, 2 * chunkSize + 1);
+    final scattered = <Prop>[];
+    var despawns = 0;
+    locator<Events>()
+        .worldObjectSpawned
+        .connect((p) => scattered.add(p as Prop));
+    locator<Events>().worldObjectDespawned.connect((_) => despawns++);
+
+    locator<ProceduralSpawnSystem>().initialize(
+      worldSeed: 20260826,
+      biome: fixtureBiome(),
+      reservedTiles: const <GridPos>[builtAt],
+    );
+    final streaming = locator<ChunkStreamingSystem>()..chunkLoaded.emit(chunk);
+    final scatterCount = scattered.length;
+    expect(scatterCount, greaterThan(0));
+
+    final grid = locator<GridManager>();
+    final built = WorldPlacementHelper.placeProp(
+      locator<PropRegistry>().getProp('t1_prop_grass_probe'),
+      builtAt,
+    );
+    expect(identical(grid.getPropAt(builtAt), built), isTrue);
+
+    streaming.chunkUnloadStarted.emit(chunk);
+    expect(grid.getPropAt(builtAt), isNull,
+        reason: 'the built prop handed its tile back with the chunk');
+    expect(despawns, scatterCount + 1,
+        reason: 'everything resident left exactly once, the built one included');
+  });
+
+  test('a prop built BEFORE the chunk was populated is not stranded by the '
+      'scatter (FP4.3b)', () {
+    // Ground is registered column by column and `chunkLoaded` fires when the
+    // last one lands, so a chunk can hold a built prop before it is
+    // scattered. Residency and "has been scattered" stopped being the same
+    // fact the moment that became possible — an entry in the content map must
+    // not read as "already populated", and the roll must not overwrite what
+    // is already there.
+    const chunk = GridPos(1, 1);
+    materializeChunkTerrain(chunk);
+    const builtAt = GridPos(chunkSize + 2, chunkSize + 2);
+    final spawned = <Prop>[];
+    var despawns = 0;
+    locator<Events>().worldObjectSpawned.connect((p) => spawned.add(p as Prop));
+    locator<Events>().worldObjectDespawned.connect((_) => despawns++);
+
+    locator<ProceduralSpawnSystem>().initialize(
+      worldSeed: 20260826,
+      biome: fixtureBiome(),
+      reservedTiles: const <GridPos>[builtAt],
+    );
+
+    final grid = locator<GridManager>();
+    final built = WorldPlacementHelper.placeProp(
+      locator<PropRegistry>().getProp('t1_prop_grass_probe'),
+      builtAt,
+    );
+
+    final streaming = locator<ChunkStreamingSystem>()..chunkLoaded.emit(chunk);
+    expect(identical(grid.getPropAt(builtAt), built), isTrue,
+        reason: 'the scatter did not replace what was already resident');
+
+    streaming.chunkUnloadStarted.emit(chunk);
+    expect(grid.getPropAt(builtAt), isNull);
+    expect(despawns, spawned.length,
+        reason: 'the built prop was on the list the scatter later added to, '
+            'not replaced by it');
   });
 
   test('spawnability: water, elevation and reserved tiles stay clear', () {

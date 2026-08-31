@@ -1,9 +1,11 @@
 import 'package:dawnforge/src/core/base/world_objects/actors/i_actor.dart';
 import 'package:dawnforge/src/core/base/world_objects/items_hand/item_hand.dart';
+import 'package:dawnforge/src/core/base/world_objects/items_hand/item_hand_buildable.dart';
 import 'package:dawnforge/src/core/base/world_objects/items_hand/item_hand_tool.dart';
 import 'package:dawnforge/src/core/components/i_component.dart';
 import 'package:dawnforge/src/core/components/i_interactable/inventory_component.dart';
 import 'package:dawnforge/src/core/registries/item_registry.dart';
+import 'package:dawnforge/src/core/resources/items/item_buildable_data.dart';
 import 'package:dawnforge/src/core/resources/items/item_data.dart';
 import 'package:dawnforge/src/core/resources/world_objects/actors/i_actor_data.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/game_constants.dart';
@@ -138,6 +140,7 @@ final class HeldItemComponent extends IComponent {
     final item = currentItem;
     hand = switch (item) {
       null => null,
+      final ItemBuildableData held => ItemHandBuildable(held, _user),
       final held when held.toolType != null => ItemHandTool(held, _user),
       final held => ItemHand(held, _user),
     };

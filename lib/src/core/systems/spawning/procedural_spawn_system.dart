@@ -48,8 +48,22 @@ final class ProceduralSpawnSystem {
   final Set<GridPos> _reservedTiles = <GridPos>{};
 
   /// Live content per chunk, for release on unload.
+  ///
+  /// Since FP4.3b this is not only what the SCATTER produced: a prop the
+  /// player builds is resident in a chunk too, and is adopted here
+  /// ([adoptPlacedProp]) so it leaves the world the same way everything else
+  /// does.
   final Map<GridPos, List<(GridPos, Prop)>> _chunkContent =
       <GridPos, List<(GridPos, Prop)>>{};
+
+  /// Which chunks have had their scatter rolled.
+  ///
+  /// Separate from [_chunkContent] because the two facts stopped being the
+  /// same one when placement arrived: a chunk can hold content before it is
+  /// populated (a prop built on a tile whose column has loaded, in a chunk
+  /// whose last column has not), and "is there an entry in the map" would
+  /// then read as "already scattered" and skip the roll.
+  final Set<GridPos> _populatedChunks = <GridPos>{};
 
   void Function()? _disconnectLoaded;
   void Function()? _disconnectUnload;
@@ -102,10 +116,14 @@ final class ProceduralSpawnSystem {
 
   void _onChunkLoaded(GridPos chunk) {
     assert(
-      !_chunkContent.containsKey(chunk),
+      !_populatedChunks.contains(chunk),
       '[ProceduralSpawnSystem] chunk $chunk populated twice',
     );
-    final content = <(GridPos, Prop)>[];
+    _populatedChunks.add(chunk);
+    // Added to whatever is already resident rather than replacing it: a prop
+    // the player built here while the chunk was still streaming is content
+    // this list owes an unload to, and overwriting would strand it.
+    final content = _chunkContent.putIfAbsent(chunk, () => <(GridPos, Prop)>[]);
     for (final (tile, propId) in _rollChunkPopulation(chunk)) {
       final prop = PropFactory.create(
         propId,
@@ -115,10 +133,27 @@ final class ProceduralSpawnSystem {
       content.add((tile, prop));
       locator<Events>().worldObjectSpawned.emit(prop);
     }
-    _chunkContent[chunk] = content;
+  }
+
+  /// Takes responsibility for a prop somebody else put in the world — the
+  /// player, through `WorldPlacementHelper.placeProp` (FP4.3b).
+  ///
+  /// The scatter is one of two ways a prop comes to exist now, but there is
+  /// still only one way for a prop to LEAVE: its chunk unloads and hands the
+  /// tiles back. A built prop that never joined this list would hold its
+  /// ground after the chunk was gone and keep being drawn and ticked at a
+  /// place the player has left.
+  void adoptPlacedProp(GridPos anchor, Prop prop) {
+    _chunkContent
+        .putIfAbsent(
+          ChunkStreamingSystem.chunkOf(anchor),
+          () => <(GridPos, Prop)>[],
+        )
+        .add((anchor, prop));
   }
 
   void _onChunkUnloadStarted(GridPos chunk) {
+    _populatedChunks.remove(chunk);
     final content = _chunkContent.remove(chunk);
     if (content == null) return; // a chunk beyond where population began
     for (final (tile, prop) in content) {

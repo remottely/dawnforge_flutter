@@ -8,6 +8,30 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.39.0
+
+### 🧹 Internal
+
+- **Construir funciona.** Com uma planta de construção na mão, um aperto põe a
+  coisa no mundo: uma fundição pousa nos dois quadradinhos que ela ocupa, uma
+  ponte transforma a água para onde você apontou em pranchas onde dá para
+  andar, e uma planta sai da sua mochila. É o espelho de derrubar uma árvore, e
+  a segunda metade do ciclo de que esta fase inteira trata.
+- Quatro coisas acontecem numa ordem, e a ordem é a promessa. O jogo descobre
+  quais quadradinhos a coisa ocuparia; pergunta se ela pode ir ali; tira uma da
+  sua mochila; põe no chão. Perguntar depois de tirar faria uma construção
+  recusada te custar a fundição. Pôr no chão antes de tirar te daria duas.
+- Uma coisa que você aponta é colocada onde ela **parece** estar: você mira no
+  quadradinho em que ela se apoia, e uma coisa alta sobe a partir dali em vez
+  de descer. E o que você constrói agora é do mundo de verdade — quando você se
+  afasta o bastante para o jogo esquecer aquele pedaço, a sua fundição vai
+  junto, em vez de ficar por lá invisível ocupando um chão que ninguém mais
+  pode usar.
+- Ainda não tem nada que ponha uma planta na sua mochila: as únicas que o jogo
+  conhece são feitas numa bancada, e bancada é o próximo trabalho. Por isso
+  esta entrada é Internal, e não New — o feito está pronto esperando um caminho
+  até ele. A página do manual vem com o passo que torna isso alcançável.
+
 ## 0.38.0
 
 ### 🔧 Changed
