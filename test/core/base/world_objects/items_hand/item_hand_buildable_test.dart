@@ -1,4 +1,5 @@
 import 'package:dawnforge/src/core/base/world_objects/actors/i_actor.dart';
+import 'package:dawnforge/src/core/base/world_objects/helpers/world_placement_helper.dart';
 import 'package:dawnforge/src/core/base/world_objects/items_hand/aim_snapshot.dart';
 import 'package:dawnforge/src/core/base/world_objects/items_hand/item_hand.dart';
 import 'package:dawnforge/src/core/base/world_objects/items_hand/item_hand_buildable.dart';
@@ -253,6 +254,94 @@ void main() {
       builder.inventory.countOf('t1_item_buildable_ground_bridge_palm'),
       1,
     );
+  });
+
+  group('the preview and the press read the same resolution', () {
+    ItemHandBuildable handOf(IActor actor) =>
+        actor.heldItem.hand! as ItemHandBuildable;
+
+    test('a free tile in reach is allowed, and says where the thing would go',
+        () {
+      layTerrain(const GridPos(0, 0), const GridPos(9, 9));
+      final builder = builderAt(
+        const GridPos(5, 5),
+        't1_item_buildable_workstation_smelter',
+      );
+
+      final preview = handOf(builder).previewAt(const GridPos(6, 5));
+
+      expect(preview.refusal, PlacementRefusal.allowed);
+      expect(preview.isAllowed, isTrue);
+      expect(preview.anchor, const GridPos(6, 5));
+      // Where the ghost is drawn is where the prop is created — one answer.
+      expect(
+        preview.centre,
+        WorldPlacementHelper.propWorldPosition(
+          locator<PropRegistry>().getProp('t1_prop_probe_smelter'),
+          const GridPos(6, 5),
+        ),
+      );
+    });
+
+    test('out of reach is its OWN refusal, not a tile problem', () {
+      // The player can see perfectly well that the ground over there is empty.
+      // Telling them the tile is the problem would send them looking for one.
+      layTerrain(const GridPos(0, 0), const GridPos(9, 9));
+      final builder = builderAt(
+        const GridPos(5, 5),
+        't1_item_buildable_workstation_smelter',
+      );
+
+      expect(
+        handOf(builder).previewAt(const GridPos(9, 5)).refusal,
+        PlacementRefusal.outOfRange,
+      );
+    });
+
+    test('the tile the press would refuse is the tile the ghost paints red',
+        () {
+      layTerrain(const GridPos(0, 0), const GridPos(9, 9));
+      final builder = builderAt(
+        const GridPos(5, 5),
+        't1_item_buildable_workstation_smelter',
+      );
+      grid().occupyPropTiles(
+        const GridPos(6, 5),
+        PropFactory.create(
+          't1_prop_probe_smelter',
+          grid().gridToWorld(const GridPos(6, 5)),
+        ),
+      );
+
+      expect(
+        handOf(builder).previewAt(const GridPos(6, 5)).refusal,
+        PlacementRefusal.tileOccupied,
+      );
+      expect(
+        builder.usePrimaryAction(aimFrom(builder, const GridPos(6, 5))),
+        ActionOutcome.spent,
+        reason: 'the press did not compute its own verdict — it read that one',
+      );
+    });
+
+    test('the anchor the preview names is the anchor the press builds at', () {
+      layTerrain(const GridPos(0, 0), const GridPos(9, 9));
+      final builder = builderAt(const GridPos(5, 5), 't1_item_buildable_post');
+      final spawned = <Prop>[];
+      locator<Events>()
+          .worldObjectSpawned
+          .connect((p) => spawned.add(p as Prop));
+
+      final preview = handOf(builder).previewAt(const GridPos(6, 5));
+      expect(preview.anchor, const GridPos(6, 4));
+
+      builder.usePrimaryAction(aimFrom(builder, const GridPos(6, 5)));
+      expect(
+        identical(grid().getPropAt(preview.anchor), spawned.single),
+        isTrue,
+      );
+      expect(spawned.single.position, preview.centre);
+    });
   });
 
   test('a blueprint you no longer have builds nothing', () {

@@ -2,6 +2,7 @@ import 'package:dawnforge/src/core/base/world_objects/helpers/world_object_permi
 import 'package:dawnforge/src/core/base/world_objects/helpers/world_placement_helper.dart';
 import 'package:dawnforge/src/core/base/world_objects/items_hand/aim_snapshot.dart';
 import 'package:dawnforge/src/core/base/world_objects/items_hand/item_hand.dart';
+import 'package:dawnforge/src/core/resources/i_world_object_data.dart';
 import 'package:dawnforge/src/core/resources/items/item_buildable_data.dart';
 import 'package:dawnforge/src/core/resources/world_objects/grounds/ground_buildable_data.dart';
 import 'package:dawnforge/src/core/resources/world_objects/props/prop_data.dart';
@@ -9,7 +10,32 @@ import 'package:dawnforge/src/core/shared_logic/definitions/spatial.dart';
 import 'package:dawnforge/src/core/systems/boot.dart';
 import 'package:dawnforge/src/core/systems/world/grid_manager.dart';
 
-/// The hand that BUILDS — the port of `item_hand_buildable.gd`'s building half.
+/// What a build at one tile WOULD be — everything the press and the preview
+/// both need, worked out once.
+///
+/// The two callers reaching the same answer is the whole invariant: a ghost
+/// painted green where the press would be refused is the bug this type makes
+/// unstateable, because the press does not compute its own verdict — it reads
+/// this one.
+final class BuildPreview {
+  const BuildPreview({
+    required this.anchor,
+    required this.centre,
+    required this.refusal,
+  });
+
+  /// Top-left tile of the footprint the blueprint would take.
+  final GridPos anchor;
+
+  /// Where the thing would be drawn: the centre of that footprint.
+  final WorldPos centre;
+
+  final PlacementRefusal refusal;
+
+  bool get isAllowed => refusal == PlacementRefusal.allowed;
+}
+
+/// The hand that BUILDS — the port of `item_hand_buildable.gd`.
 ///
 /// The deed is four steps and the order of them is the point: work out which
 /// tiles the blueprint would take, ask the gate, spend the item, put it there.
@@ -18,11 +44,12 @@ import 'package:dawnforge/src/core/systems/world/grid_manager.dart';
 /// they get two.
 ///
 /// PORT DELTAS:
-///   - the GHOST PREVIEW, which is the other half of this class in the spec and
-///     most of its lines. It is the same question this asks, asked every frame
-///     for the tile under the cursor and answered in colour instead of in a
-///     refusal — it lands next, and it is why the hand is an object with a life
-///     rather than a function (`HeldItemComponent.hand` says so);
+///   - the ghost is DRAWN elsewhere. In the spec this class is a `Node2D` and
+///     owns its preview sprite; here the sim never draws, so it answers
+///     [previewAt] and `BuildGhostRenderer` paints the answer. The cache the
+///     spec keeps in this class (`_last_preview_grid_pos`) went with the
+///     drawing, because what it saves is a per-FRAME cost and the frame belongs
+///     to the renderer;
 ///   - the player-facing SENTENCE for a refusal (`_notify_refusal`, and rule
 ///     33's "a tool that refuses says so"). The reason is named and returned;
 ///     turning it into `notification.placement.<reason>` needs FP5.1's
@@ -30,82 +57,101 @@ import 'package:dawnforge/src/core/systems/world/grid_manager.dart';
 ///   - the two priorities of the spec's range gate. It asks the hovered object
 ///     first and falls back to rect math; there is no hover component here, and
 ///     the rect math IS the measurement — [WorldObjectPermissionHelper.isAreaWithinRange],
-///     which is the same geometry the swing reaches by;
-///   - the staircase's built FACE and the cave shaft's twin, both of which the
-///     spec assigns right after placing. Neither prop is ported (FP7).
+///     the same geometry the swing reaches by;
+///   - directional frames (a staircase choosing which mountain face it faces
+///     from where inside the tile the cursor sits), the staircase's built FACE
+///     and the cave shaft's twin. All of them FP7's props.
 final class ItemHandBuildable extends ItemHand {
-  ItemHandBuildable(ItemBuildableData super.data, super.user);
+  ItemHandBuildable(ItemBuildableData super.data, super.user)
+      : blueprint = data.blueprint {
+    assert(
+      blueprint is PropData || blueprint is GroundBuildableData,
+      '[ItemHandBuildable] ${data.id} builds ${blueprint.id}, which is neither '
+      'a prop nor a ground',
+    );
+  }
+
+  /// What this hand builds, resolved ONCE. The item in the hand never changes
+  /// — a different item is a different hand — so neither does what it builds,
+  /// and the per-frame preview reads a field instead of a registry.
+  final IWorldObjectData blueprint;
 
   /// The typed view over what this hand holds. The constructor takes the
   /// subtype, so this cast cannot fail (rule 18: cast to the declared type).
   ItemBuildableData get buildable => data as ItemBuildableData;
 
-  @override
-  ActionOutcome primaryAction(AimSnapshot aim) {
-    final cursorTile = locator<GridManager>().worldToGrid(aim.point);
-    final blueprint = buildable.blueprint;
+  /// What a build aimed at [cursorTile] would be — the ONE resolution, read by
+  /// the press below and by the ghost every time the cursor changes tile.
+  BuildPreview previewAt(GridPos cursorTile) {
+    final grid = locator<GridManager>();
+    final bp = blueprint;
 
-    // The two verbs differ in exactly one thing before the gate: where the
-    // footprint starts. A prop stands on the bottom row of its own, so the
-    // tile under the cursor is that row; a ground tile IS the tile.
-    return switch (blueprint) {
-      final PropData prop => _build(
-          WorldPlacementHelper.anchorForCursorTile(prop, cursorTile),
-          width: prop.gridWidth,
-          height: prop.gridHeight,
-          refusal: (anchor) => WorldPlacementHelper.placePropRefusal(prop, anchor),
-          place: (anchor) => WorldPlacementHelper.placeProp(prop, anchor),
-        ),
-      final GroundBuildableData ground => _build(
-          cursorTile,
-          refusal: (tile) => WorldPlacementHelper.placeGroundRefusal(ground, tile),
-          place: (tile) => WorldPlacementHelper.placeGround(ground, tile),
-        ),
-      // `ItemBuildableData.blueprint` answers with a prop or a ground and
-      // crashes on anything else, so this arm is the type system asking for a
-      // total switch rather than a state the game can be in.
-      _ => throw StateError(
-          '[ItemHandBuildable] ${buildable.id} builds ${blueprint.id}, which is '
-          'neither a prop nor a ground',
-        ),
-    };
-  }
+    // The two verbs differ in exactly one thing: where the footprint starts. A
+    // prop stands on the BOTTOM row of its own, so the tile under the cursor is
+    // that row; a ground tile IS the tile.
+    final anchor = bp is PropData
+        ? WorldPlacementHelper.anchorForCursorTile(bp, cursorTile)
+        : cursorTile;
+    final centre = bp is PropData
+        ? WorldPlacementHelper.propWorldPosition(bp, anchor)
+        : grid.gridToWorld(anchor);
 
-  /// The four steps, shared by both verbs because only their geometry differs.
-  ActionOutcome _build(
-    GridPos anchor, {
-    required PlacementRefusal Function(GridPos) refusal,
-    required void Function(GridPos) place,
-    int width = 1,
-    int height = 1,
-  }) {
-    // 1. REACH, which is this hand's own gate and not the helper's — the spec
-    // draws the line in the same place, because how far you can reach is a
-    // fact about the actor and the item, while everything else is a fact about
-    // the tile. Out of reach is [ActionOutcome.none]: you did not build, and
-    // you were not standing close enough to have tried.
+    BuildPreview verdict(PlacementRefusal refusal) =>
+        BuildPreview(anchor: anchor, centre: centre, refusal: refusal);
+
+    // 1. REACH, this hand's own gate — see the class doc. Asked first because
+    // it is the only one that is about the actor rather than the tile, and
+    // because a player out of reach should see the ghost go red for the reason
+    // they can actually fix by walking.
     if (!WorldObjectPermissionHelper.isAreaWithinRange(
       user,
       anchor,
       reachPixels,
-      width: width,
-      height: height,
+      width: bp.gridWidth,
+      height: bp.gridHeight,
     )) {
-      return ActionOutcome.none;
+      return verdict(PlacementRefusal.outOfRange);
     }
 
-    // 2. THE GATE. Refused is [ActionOutcome.spent]: the press reached a tile
-    // and was turned down there, which is the case that costs the cadence.
-    if (refusal(anchor) != PlacementRefusal.allowed) return ActionOutcome.spent;
+    // 2. THE TILE ITSELF, which is the helper's whole subject.
+    return verdict(
+      bp is PropData
+          ? WorldPlacementHelper.placePropRefusal(bp, anchor)
+          : WorldPlacementHelper.placeGroundRefusal(
+              bp as GroundBuildableData,
+              anchor,
+            ),
+    );
+  }
 
-    // 3. SPEND IT. The bag is asked LAST of the things that can say no, so a
-    // build refused by the world never costs an item — and `removeItem`
-    // answering false is the honest end of a press by somebody who no longer
-    // has what they were holding.
+  @override
+  ActionOutcome primaryAction(AimSnapshot aim) {
+    final preview =
+        previewAt(locator<GridManager>().worldToGrid(aim.point));
+
+    // Out of reach is no action: you did not build, and you were not standing
+    // close enough to have tried. Every other refusal IS an action — the press
+    // reached a tile and was turned down there, which is what costs the cadence.
+    if (preview.refusal == PlacementRefusal.outOfRange) return ActionOutcome.none;
+    if (!preview.isAllowed) return ActionOutcome.spent;
+
+    // The bag is asked LAST of the things that can say no, so a build refused
+    // by the world never costs an item — and `removeItem` answering false is
+    // the honest end of a press by somebody who no longer has what they held.
     if (!user.inventory.removeItem(data, 1)) return ActionOutcome.spent;
 
-    // 4. PUT IT THERE.
-    place(anchor);
+    _place(preview.anchor);
     return ActionOutcome.landed;
+  }
+
+  /// Puts it there. The constructor already asserted which of the two kinds
+  /// this blueprint is, so the cast below is the declared type (rule 18).
+  void _place(GridPos anchor) {
+    final bp = blueprint;
+    if (bp is PropData) {
+      WorldPlacementHelper.placeProp(bp, anchor);
+      return;
+    }
+    WorldPlacementHelper.placeGround(bp as GroundBuildableData, anchor);
   }
 }

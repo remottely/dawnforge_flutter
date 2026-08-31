@@ -8,6 +8,24 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.40.0
+
+### 🧹 Internal
+
+- **You can see where it would go.** Hold a blueprint and a see-through copy of
+  the thing follows your cursor, sitting exactly on the squares it would take —
+  **green** where it may go, **red** where it may not. Until the game learns to
+  say a refusal out loud, that colour is the whole explanation, which is what
+  turns building from a thing that works into a thing you can use.
+- The preview cannot lie about the press, because it does not work anything out
+  for itself: both ask the same question in the same place and get the same
+  answer. A ghost painted green over a square the press would refuse is the one
+  bug that would make the whole feature worse than nothing, and it is now the
+  kind of bug you would have to delete code to create.
+- It goes quiet when it should: nothing in hand that builds, or a panel open in
+  front of you, and there is nothing drawn. The world behind that panel keeps
+  moving, as it always does — the game still never pauses.
+
 ## 0.39.0
 
 ### 🧹 Internal

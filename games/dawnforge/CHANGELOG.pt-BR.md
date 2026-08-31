@@ -8,6 +8,25 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.40.0
+
+### 🧹 Internal
+
+- **Dá para ver onde a coisa vai ficar.** Segure uma planta de construção e uma
+  cópia transparente dela acompanha o seu cursor, pousada exatamente nos
+  quadradinhos que ela ocuparia — **verde** onde pode, **vermelho** onde não
+  pode. Até o jogo aprender a dizer a recusa em voz alta, essa cor é a
+  explicação inteira, e é ela que transforma construir de uma coisa que
+  funciona numa coisa que dá para usar.
+- A prévia não tem como mentir sobre o aperto, porque ela não calcula nada por
+  conta própria: os dois fazem a mesma pergunta no mesmo lugar e recebem a
+  mesma resposta. Um fantasma verde em cima de um quadradinho que o aperto
+  recusaria é o único erro que deixaria isso pior do que nada, e agora seria
+  preciso apagar código para criá-lo.
+- Ela some quando deve: nada na mão que construa, ou um painel aberto na
+  frente, e não há nada desenhado. O mundo atrás desse painel continua se
+  mexendo, como sempre — o jogo continua nunca pausando.
+
 ## 0.39.0
 
 ### 🧹 Internal

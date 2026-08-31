@@ -1,5 +1,6 @@
 import 'package:dawnforge/src/core/base/world_objects/props/prop.dart';
 import 'package:dawnforge/src/core/registries/actor_registry.dart';
+import 'package:dawnforge/src/core/registries/item_registry.dart';
 import 'package:dawnforge/src/core/render/dawnforge_game.dart';
 import 'package:dawnforge/src/core/render/debug_overlay.dart';
 import 'package:dawnforge/src/core/render/ground_chunk_renderer.dart';
@@ -176,6 +177,48 @@ void main() {
       overlay.lines[2],
       contains('${groundLayer.bakedChunkCount} baked'),
     );
+
+    // The build preview (FP4.3b). It is bound to the player's hand, so with
+    // bare hands there is nothing to show — and the moment a blueprint is in
+    // the selected slot it appears under the cursor. Asserted here because
+    // this is the only place a real renderer, a real cursor and the real
+    // content meet: the smelter's sheet is the one the pipeline cut.
+    expect(game.buildGhost.isShowing, isFalse,
+        reason: 'bare hands preview nothing');
+
+    // Inside runAsync for the reason the boot above is: the ghost decodes the
+    // blueprint's sheet, and image decode is real async that the fake-async
+    // test zone never lets finish.
+    final buildTile = GridPos(playerTile.x + 1, playerTile.y);
+    // The camera's own projection, put back below: the cursor section further
+    // down proves that the world position is COMPUTED from the camera, and a
+    // stub that answers with a fixed tile would make that assertion pass for
+    // the wrong reason — or, as it did, fail for one.
+    final cameraProjection = locator<InputHelper>().screenToWorld;
+    await tester.runAsync(() async {
+      game.player.inventory.setSlot(
+        0,
+        locator<ItemRegistry>()
+            .getItem('t1_item_buildable_workstation_smelter'),
+        1,
+      );
+      locator<InputHelper>().screenToWorld =
+          (_) => locator<GridManager>().gridToWorld(buildTile);
+      for (var i = 0; i < 40 && !game.buildGhost.isShowing; i++) {
+        await tester.pump(const Duration(milliseconds: 25));
+        await Future<void>.delayed(const Duration(milliseconds: 5));
+      }
+    });
+    expect(game.buildGhost.isShowing, isTrue,
+        reason: 'a blueprint in hand draws where it would land');
+
+    // Emptied again before the panel opens below. The bag is not incidental
+    // there: this test's widget tree is a bare GameWidget with no Overlay
+    // ancestor, and the panel's slots build a `Draggable` for every slot that
+    // HOLDS something — which needs one. An item left here fails the panel
+    // section with "No Overlay widget found" and nothing to do with the item.
+    game.player.inventory.clearSlot(0);
+    locator<InputHelper>().screenToWorld = cameraProjection;
 
     // The interface reached the screen (FP4.2b). It is a FLUTTER widget over
     // the game surface, so it is found in the widget tree and not among the

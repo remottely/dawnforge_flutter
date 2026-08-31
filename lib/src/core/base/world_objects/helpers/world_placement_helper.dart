@@ -30,6 +30,12 @@ enum PlacementRefusal {
   /// No gate refused — build it.
   allowed,
 
+  /// Too far away. The one refusal the HAND owns rather than this helper: how
+  /// far you can reach is a fact about the actor and the item, while every
+  /// other gate here is a fact about the tile. It lives in the vocabulary all
+  /// the same, because the thing that shows a player why is one list.
+  outOfRange,
+
   /// Somebody is standing on the ground this would take, and the thing being
   /// placed is not allowed to share a tile with them.
   actorInTheWay,

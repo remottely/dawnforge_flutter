@@ -6,6 +6,7 @@ import 'package:dawnforge/src/core/base/world_objects/items/item_world.dart';
 import 'package:dawnforge/src/core/base/world_objects/world_object.dart';
 import 'package:dawnforge/src/core/factories/actor_factory.dart';
 import 'package:dawnforge/src/core/registries/item_registry.dart';
+import 'package:dawnforge/src/core/render/build_ghost_renderer.dart';
 import 'package:dawnforge/src/core/render/debug_overlay.dart';
 import 'package:dawnforge/src/core/render/ground_chunk_renderer.dart';
 import 'package:dawnforge/src/core/render/item_world_renderer.dart';
@@ -74,6 +75,10 @@ final class DawnforgeGame extends FlameGame
   /// The chunked ground layer — typed access for the debug overlay and the
   /// gate test.
   late final GroundChunkRenderer groundLayer;
+
+  /// The build preview under the cursor (FP4.3b) — typed access for the gate
+  /// test, which is the only place a real one can exist.
+  late final BuildGhostRenderer buildGhost;
 
   /// The endless sea: water is never painted per tile — the background IS
   /// the water, exactly as the Godot renderer treats it. The color is the
@@ -170,6 +175,13 @@ final class DawnforgeGame extends FlameGame
     final playerRenderer = ActorRenderer(player);
     simObjects.add(player);
     await world.add(playerRenderer);
+
+    // The blueprint under the cursor, drawn where it would land (FP4.3b).
+    // Mounted after the player because it reads that player's hand every
+    // frame, and into `world` because it lives in world space like the thing
+    // it is previewing.
+    buildGhost = BuildGhostRenderer(player);
+    await world.add(buildGhost);
 
     camera.viewfinder.zoom = 4;
     camera.follow(playerRenderer, snap: true);
