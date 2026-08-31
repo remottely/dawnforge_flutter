@@ -1,22 +1,20 @@
-# Análise estática — Dawnforge
-#
-# Estratégia: `flutter_lints` como base, com um conjunto pequeno de regras
-# desligadas *temporariamente* enquanto a dívida correspondente é paga.
-#
-# Cada `false` abaixo tem um dono e uma fase no plano de refatoração
-# (documentation/refactoring/). Ao zerar as ocorrências de uma regra, apague a
-# linha — o objetivo é este arquivo ficar só com o `include`.
-#
-# Regra de ouro: `flutter analyze` não deve ganhar avisos NOVOS em nenhum commit.
-
-include: package:flutter_lints/flutter.yaml
+# The analyzer is half the rule set (CLAUDE.md rule 4): 100% strict typing is enforced
+# here, not by review. The suite runs `flutter analyze --fatal-infos` — an info is a
+# failure.
+include: package:very_good_analysis/analysis_options.yaml
 
 analyzer:
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+  errors:
+    # Rule 5 — zero fallbacks: unhandled invalid state must crash, not lint away.
+    avoid_dynamic_calls: error
   exclude:
-    - "**/*.g.dart"
-    - "**/*.freezed.dart"
-    - "build/**"
-    - "assets/analyze_assets.dart"
+    - reference/**
+    - lib/src/generated/**
+    - build/**
     - android/**
     - ios/**
     - web/**
@@ -24,57 +22,16 @@ analyzer:
     - macos/**
     - linux/**
 
-  errors:
-    # Erros de verdade — não deixe passar.
-    unused_import: warning
-    dead_code: warning
-    unrelated_type_equality_checks: error
-    invalid_override: error
-
 linter:
   rules:
-    # ---------------------------------------------------------------------
-    # DESLIGADAS TEMPORARIAMENTE — dívida mapeada, ver refactoring/
-    # ---------------------------------------------------------------------
-
-    # ~99 ocorrências. Enums legadas em snake_case (HandItemId.empty_seed_bag)
-    # e em UPPER (InterfaceType.HUD). Renomear é breaking em saves.
-    # → Fase 4 (exige migração de save).
-    constant_identifier_names: false
-
-    # ~43 ocorrências. Trocar por GameLogger.
-    # → Fase 1.
-    avoid_print: false
-
-    # Convenção do projeto: campos `k`/`_k` em classes de config são const
-    # públicos por design.
-    # → permanente.
-    public_member_api_docs: false
-
-    # CONFLITA com a ordem de classe do CLAUDE.md §3.3, que põe os campos
-    # antes do construtor — padrão de todo o codebase. Rodar
-    # `dart fix --code=sort_constructors_first` reescreve 140 arquivos contra
-    # a convenção documentada. Convenção do projeto vence a default do lint.
-    # → permanente, a menos que o CLAUDE.md §3.3 mude antes.
-    sort_constructors_first: false
-
-    # ---------------------------------------------------------------------
-    # ATIVADAS ALÉM DO flutter_lints — reforçam convenções do CLAUDE.md
-    # ---------------------------------------------------------------------
-    always_declare_return_types: true
-    avoid_empty_else: true
-    avoid_relative_lib_imports: true
-    avoid_returning_null_for_void: true
-    avoid_slow_async_io: true
-    cancel_subscriptions: true
-    close_sinks: true
-    directives_ordering: true
-    empty_catches: true
+    # Rule 8 — data-driven state: prefer immutable declarations everywhere.
     prefer_final_locals: true
-    prefer_single_quotes: true
-    require_trailing_commas: true
-    test_types_in_equals: true
-    throw_in_finally: true
-    unawaited_futures: true
-    unnecessary_statements: true
-    use_string_buffers: true
+    prefer_final_in_for_each: true
+    # Rule 21 — no commented-out code in lib/.
+    # (enforced by review; no reliable lint exists)
+    # Doc discipline: classes and non-obvious members are documented (CLAUDE.md),
+    # but a doc line on every trivial field is noise, not documentation.
+    public_member_api_docs: false
+    # Prose in comments regularly exceeds 80 columns; `dart format` already
+    # bounds code lines.
+    lines_longer_than_80_chars: false

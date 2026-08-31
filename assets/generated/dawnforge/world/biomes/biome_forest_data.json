@@ -1,0 +1,127 @@
+{
+  "actor_entries": [
+    {
+      "actor_id": "t1_actor_creature_boar",
+      "pack_chance": 0.07,
+      "pack_max": 3,
+      "pack_min": 2,
+      "pack_radius": 2
+    },
+    {
+      "actor_id": "t1_actor_enemy_melee_forest_guardian",
+      "pack_chance": 0.05,
+      "pack_max": 2,
+      "pack_min": 1,
+      "pack_radius": 2
+    },
+    {
+      "actor_id": "t1_actor_enemy_ranged_forest_guardian",
+      "pack_chance": 0.04,
+      "pack_max": 1,
+      "pack_min": 1,
+      "pack_radius": 2
+    }
+  ],
+  "density_noise_frequency": 0.005,
+  "id": "biome_forest_data",
+  "max_actors_per_chunk": 1,
+  "max_props_per_chunk": 24,
+  "prop_entries": [
+    {
+      "attempts_per_chunk": 4,
+      "cluster_max": 8,
+      "cluster_min": 3,
+      "cluster_radius": 3,
+      "density_influence": 0.0,
+      "prop_id": "t1_prop_grass_wild",
+      "spawn_chance": 0.6
+    },
+    {
+      "attempts_per_chunk": 3,
+      "cluster_max": 5,
+      "cluster_min": 2,
+      "cluster_radius": 2,
+      "density_influence": 0.0,
+      "prop_id": "t1_prop_crop_tree_palm",
+      "spawn_chance": 0.4
+    },
+    {
+      "attempts_per_chunk": 2,
+      "cluster_max": 3,
+      "cluster_min": 1,
+      "cluster_radius": 2,
+      "density_influence": 0.0,
+      "prop_id": "t1_prop_rock_moss",
+      "spawn_chance": 0.3
+    },
+    {
+      "attempts_per_chunk": 1,
+      "cluster_max": 2,
+      "cluster_min": 1,
+      "cluster_radius": 1,
+      "density_influence": 0.5,
+      "prop_id": "t1_prop_rock_coal",
+      "spawn_chance": 0.015
+    },
+    {
+      "attempts_per_chunk": 1,
+      "cluster_max": 3,
+      "cluster_min": 1,
+      "cluster_radius": 1,
+      "density_influence": 0.5,
+      "prop_id": "t1_prop_vein_copper",
+      "spawn_chance": 0.02
+    },
+    {
+      "attempts_per_chunk": 2,
+      "cluster_max": 3,
+      "cluster_min": 1,
+      "cluster_radius": 2,
+      "density_influence": 0.0,
+      "prop_id": "t1_prop_crop_bush_clover",
+      "spawn_chance": 0.25
+    },
+    {
+      "attempts_per_chunk": 1,
+      "cluster_max": 4,
+      "cluster_min": 2,
+      "cluster_radius": 2,
+      "density_influence": 0.0,
+      "prop_id": "t1_prop_crop_flower_clover",
+      "spawn_chance": 0.25
+    },
+    {
+      "attempts_per_chunk": 1,
+      "cluster_max": 2,
+      "cluster_min": 1,
+      "cluster_radius": 2,
+      "density_influence": 0.0,
+      "prop_id": "t1_prop_crop_herb_green_leaf",
+      "spawn_chance": 0.2
+    },
+    {
+      "attempts_per_chunk": 1,
+      "cluster_max": 2,
+      "cluster_min": 1,
+      "cluster_radius": 2,
+      "density_influence": 0.0,
+      "prop_id": "t1_prop_crop_plant_vine",
+      "spawn_chance": 0.2
+    },
+    {
+      "attempts_per_chunk": 1,
+      "cluster_max": 1,
+      "cluster_min": 1,
+      "cluster_radius": 1,
+      "density_influence": 0.0,
+      "prop_id": "t1_prop_box_copper",
+      "spawn_chance": 0.04
+    }
+  ],
+  "terrain_wall_height2_share": 0.25,
+  "terrain_wall_height3_share": 0.08,
+  "terrain_wall_share": 0.15,
+  "terrain_water_share": 0.08,
+  "tier": 1,
+  "type": "biome_data"
+}

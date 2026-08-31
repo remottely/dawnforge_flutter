@@ -1,371 +1,233 @@
-# CLAUDE.md — Dawnforge
+# Dawnforge Flutter (Tessera-Dart) — Developer & AI Instructions
 
-Contexto canônico para agentes de IA e para o dev. **Este arquivo descreve o projeto como ele é hoje**, não como gostaríamos que fosse. Quando houver divergência entre este arquivo e o código, o código vence e este arquivo deve ser corrigido no mesmo commit.
+> **IMPORTANT:** This file contains non-negotiable coding and workflow rules for the
+> Tessera-Dart study track. It is the sibling of the Godot repo's `CLAUDE.md`
+> (`~/Documents/godot/remottely/dawnforge_project`): **same rule numbers, same spirit,
+> Dart/Flame bodies.** Rules that cannot apply in Dart are marked *N/A* — the number is
+> reserved so cross-repo references stay valid.
+>
+> Founding study: `docs/study/GODOT_TO_FLUTTER_PORT_STUDY.md` (decisions D1–D7).
+> Executable plan: `docs/refactoring/implementation_plan/FLUTTER_PORT_PLAN_2026-08-25.md`.
+> Harness machinery: `docs/AI_HARNESS.md`.
 
-> **Dev solo.** Toda decisão aqui é otimizada para *um* mantenedor: robusto onde erra caro (domínio, save, regras de jogo), simples onde erra barato (UI, glue de engine). DRY/KISS/YAGNI têm precedência sobre pureza arquitetural.
+## Project Overview
+Flutter · Dart · Flame (direct — **no Bonfire**, decision D2) · 2D TopDown survival/crafting
+· Português Brasileiro (Chat) / English (Code & Git) · **Singleplayer-first, multiplayer-shaped**
+This is the **study track**: it reproduces the Tessera content-engine architecture in Dart
+to explore new genres inside Flutter. The Godot repo is the delivery track. They share
+architecture, the content-pack format, and this harness — never code.
 
----
+**Target audience: players aged 7 and up.** Every player-facing text must be readable by a
+7-year-old: short sentences, concrete words, numbers explained by their effect. Content and
+tone only — it never simplifies mechanics.
 
-## 1. O que é o projeto
-
-Jogo 2D top-down estilo *Stardew Valley / Forager*, em Flutter + [Bonfire](https://pub.dev/packages/bonfire) (que roda sobre Flame). Single-player, offline, persistência local.
-
-| | |
-|---|---|
-| Package | `dawnforge` |
-| Dart SDK | `^3.12.0-14.0.dev` (Dart 3.13 / Flutter 3.47) |
-| Engine | `bonfire ^3.16.1`, `flame_audio`, `flame_splash_screen` |
-| DI | `get_it ^9.2.0` (Service Locator) + singletons nativos |
-| Persistência | `shared_preferences` (native) / `web` localStorage |
-| Testes | `flutter_test` + `mocktail ^1.0.4` |
-| Plataformas | Android, iOS, macOS, Linux, Windows, Web (Firebase Hosting) |
-| Escala | ~30k linhas Dart, ~317 arquivos |
-
----
-
-## 2. Arquitetura
-
-Referência completa e mapa de pastas: **[documentation/ARCHITECTURE.md](documentation/ARCHITECTURE.md)**.
-Resumo operacional abaixo — é o que você precisa para escrever código correto.
-
-### 2.1 Camadas de topo (`lib/`)
-
-```
-lib/
-├── main.dart          # Bootstrap: singletons → service locators → runApp
-├── core/              # Utilitários sem dependência de jogo (logger, env, settings)
-├── shared/            # Framework reutilizável: design system + base classes Bonfire
-├── pre_game/          # Telas fora do gameplay (menu)
-└── game/              # Todo o jogo
-    ├── features/      # Domínio por funcionalidade (farm, inventory, time, market, world)
-    ├── systems/       # Serviços transversais do jogo (save, audio, map, combat, overlay, ui, input)
-    ├── modules/       # Entidades concretas de mundo (players, enemies, npcs, decorations)
-    ├── database/      # Catálogos estáticos tipados (`*_database_def.dart`)
-    ├── global/        # Estado/input globais do gameplay (state machine, input handler)
-    └── utils/         # Helpers ligados ao gameplay
-```
-
-**Regra de dependência** (o que pode importar o quê):
-
-```
-modules ──▶ features ──▶ core
-   │           │
-   ├──▶ systems ──▶ core
-   └──▶ shared ────▶ core
-```
-
-- `core/` **não importa nada** de `game/` ou `shared/`.
-- `features/<x>/` pode importar `features/<y>/` **apenas** via UseCase ou `ValueNotifier` público — nunca detalhes internos.
-- `shared/framework/` não conhece features específicas (exceto o acoplamento legado já existente com `inventory`, que está no backlog de refatoração).
-- Nada importa `pre_game/` além de `main.dart`.
-
-### 2.2 Anatomia de uma feature (`game/features/<feature>/`)
-
-Estrutura **plana por responsabilidade** (não `domain/data/presentation`):
-
-```
-features/farm/
-├── entities/    # (em world/entities) objetos puros, imutáveis, com toJson/fromJson
-├── models/      # value objects de apoio / config visual
-├── managers/    # ESTADO singleton + ValueNotifier. Sem regra de negócio complexa.
-├── usecases/    # OPERAÇÕES. Uma classe, um `call()`. Recebe deps no construtor.
-├── services/    # Stateless: factories, cálculos, integração externa
-├── viewmodels/  # Adaptação Manager → UI
-├── handlers/    # Ponte input do jogo → usecases
-├── components/  # Componentes Bonfire da feature
-├── constants/   # `k`-constantes locais à feature
-└── <feature>_service_locator.dart  # registro GetIt da feature
-```
-
-### 2.3 Papéis — decore isto
-
-| Papel | Guarda estado? | Responsabilidade | Como testar |
-|---|---|---|---|
-| **Entity** | não (imutável) | Regra de negócio pura + serialização | teste unitário direto, sem mock |
-| **Manager** | **sim** (singleton) | Ser a fonte da verdade + notificar via `ValueNotifier` | `reset()` no `setUp`, asserta estado |
-| **UseCase** | não | Orquestrar uma operação, validar, coordenar managers | injeta fakes/mocks das deps |
-| **Service** | não (ou cache) | Factory, cálculo, IO | teste direto |
-| **ViewModel** | derivado | Traduzir manager → UI | teste direto |
-| **Def / Constants** | não | Constantes e catálogos estáticos | teste de invariantes do catálogo |
-| **Controller/View/Model** | — | Trio MVC de entidades Bonfire (`modules/`) | teste apenas o Model/Controller |
-
-> ⚠️ **Managers não devem crescer com lógica de negócio.** Se um método de manager começa a validar/decidir, isso pertence a um UseCase. `FarmManager.plantSeed` e `waterTile` hoje violam isso — está mapeado no backlog.
-
-### 2.4 Decisões arquiteturais vigentes
-
-Estas são as escolhas já feitas (referenciadas no código como "A2", "C1", "E2"...). Elas seguem valendo:
-
-| Tópico | Escolha | Nota |
-|---|---|---|
-| Estrutura | Flat por responsabilidade | não criar `domain/data/presentation` |
-| UseCases | Classes concretas, sem interface base | `call()` como método principal |
-| Estado | Singleton + `ValueNotifier` | `Manager.instance` |
-| Entidades | Entity com `toJson`/`fromJson` embutido | sem camada `Model` separada |
-| Save/Load | UseCase dedicado (`SaveXUseCase` / `LoadXUseCase`) | versionado |
-| UI | ViewModel intermediário quando há lógica; `ValueNotifier` direto quando é só exibir | |
-| Testes | `mocktail` para dobras; integração real quando barato | |
-| DI | GetIt para UseCases/ViewModels; `.instance` para Managers/Services | ver §2.5 |
-| Nomenclatura | Manager = estado, UseCase = operação, Service = stateless | |
-| Eventos cross-módulo | `ValueNotifier` público no manager de origem | |
-| Constantes | Locais à feature, arquivo `*_def.dart` ou `*_constants.dart` | |
-| Catálogo de conteúdo | Constantes Dart tipadas em `game/database/` | migrado de JSON — **não voltar para JSON** |
-
-### 2.5 Regra de DI (importante — tem inconsistência histórica)
-
-- **Managers e Services**: acesse por `XManager.instance`. Não registre no GetIt.
-- **UseCases e ViewModels**: registre como `registerFactory` no `*_service_locator.dart` da feature e resolva com `getIt<X>()`.
-- **Nunca** misture: `getIt<FarmManager>()` já quebrou o jogo em produção (commit `1.106.15+1`).
-- Em teste, construa o UseCase manualmente (`TillSoilUseCase(fakeManager)`) em vez de mexer no GetIt global.
-
-### 2.6 Bootstrap (`main.dart`)
-
-Ordem obrigatória — quebrar isso causa `LateInitializationError`:
-
-```
-WidgetsFlutterBinding.ensureInitialized()
-  → Flame.device.fullScreen() (não-web)
-  → _initializeSingletons()      # Settings, Audio, CropFactory, ItemFactory,
-                                 # FarmManager.initializeTiles, InventoryManager.initializeSlots,
-                                 # EquipmentManager.initialize
-  → setupInventoryDependencies() # inventory antes de farm: farm depende de Add/RemoveItemUseCase
-  → setupFarmDependencies()
-  → runApp(AppRoot)
-```
+**`reference/legacy_flutter/` is the archived pre-port codebase — read-only reference.
+Never import from it, never resurrect a pattern from it without passing these rules.**
 
 ---
 
-## 3. Convenções de código
+## ✅ Non-Negotiable Technical Rules
 
-### 3.1 Nomenclatura
-
-| Elemento | Padrão | Exemplo |
-|---|---|---|
-| Arquivo | `snake_case.dart` | `farm_manager.dart` |
-| Classe | `PascalCase` | `TillSoilUseCase` |
-| Método/variável | `camelCase` | `advanceDay()` |
-| Privado | `_camelCase` | `_notifyChange()`, `_tiles` |
-| Constante pública | `kPascalCase` após o `k` | `kTileSize`, `kDaysPerSeason` |
-| Constante privada | `_kPascalCase` | `_kSaveKey` |
-| Enum | `PascalCase`, valores `lowerCamelCase` | `SoilState.untilled` |
-| Interface | `IPascalCase` | `ISaveable` |
-| Base do framework | prefixo `DD` | `DDBasePlayerView` |
-
-> Valores de enum em `snake_case` (`empty_seed_bag`) e em `UPPER` (`InterfaceType.HUD`) são **legado**. Não crie novos; a migração está no backlog (afeta ~99 avisos do linter).
-
-### 3.2 Sufixos de arquivo — significado fixo
-
-| Sufixo | Significa |
-|---|---|
-| `*_def.dart` | Constantes + factories estáticas de configuração de uma entidade |
-| `*_config.dart` | Objeto de configuração injetável |
-| `*_constants.dart` | Constantes puras de um módulo |
-| `*_model.dart` | Estado mutável de uma entidade Bonfire (parte do MVC) |
-| `*_view.dart` | Componente Bonfire renderizável |
-| `*_controller.dart` | Lógica de uma entidade Bonfire, sem tocar em render |
-| `*_manager.dart` | Singleton de estado |
-| `*_use_case.dart` | Operação única |
-| `*_service.dart` | Stateless |
-| `*_database_def.dart` | Catálogo estático de conteúdo |
-
-### 3.3 Ordem dentro de uma classe
-
-```dart
-class Example {
-  // 1. Constantes (públicas, depois privadas)
-  static const double kSize = 32.0;
-  static const String _kKey = 'example';
-
-  // 2. Campos finais / injetados
-  final FarmManager _manager;
-
-  // 3. Estado mutável privado
-  bool _isReady = false;
-
-  // 4. Construtores (principal, depois named/factory)
-  Example(this._manager);
-
-  // 5. Getters computados
-  bool get isReady => _isReady;
-
-  // 6. API pública (ordem de fluxo, não alfabética)
-  void start() { }
-
-  // 7. Privados, agrupados por funcionalidade
-  void _process() { }
-
-  // 8. Serialização
-  Map<String, dynamic> toJson() => {};
-}
-```
-
-### 3.4 Regras práticas
-
-- **Sem valores mágicos.** Número ou string repetida vira constante `k` no `*_def.dart`/`*_constants.dart` da feature.
-- **Um método, uma responsabilidade.** Se precisa de comentário explicando "agora fazemos X", extraia método.
-- **Entidades são imutáveis.** Mutação retorna nova instância (`copyWith`, `till()`, `water()`). Use `Equatable` em entidades.
-- **Logging** via `GameLogger` (`.info/.warning/.error`), nunca `print`. Formato: `'[NomeDaClasse] mensagem'`. `GameLogger` já é no-op em release.
-- **Documentação**: `///` em toda classe pública e em métodos cuja intenção não é óbvia pelo nome. Escreva *por que*, não *o que*.
-- **Idioma**: código, nomes e mensagens de log em **inglês**. Documentação (`.md`) e comentários explicativos podem ser em **português**.
-- **TODOs**: sempre `// TODO(Kevin): descrição acionável`. TODO sem dono é proibido.
-- **Código morto**: apague. Não comente blocos "para depois" — o git guarda. Existe muito código comentado no repo; ao tocar num arquivo, limpe o que estiver no caminho.
-- **`ValueNotifier`**: quem cria, faz `dispose`. Managers singleton são exceção (vivem o app inteiro).
+1. **Factory.create()** — a world object (Actor / Prop / Ground / Item) is constructed
+   only by its factory (`lib/src/core/factories/`). Nothing else assembles a world-object
+   host, its core, or its components. UI widgets are ordinary Flutter and need no factory.
+2. **Registry.get(id)** — never read or parse content JSON directly in gameplay code; all
+   game data comes from a registry (`lib/src/core/registries/`).
+3. **initialize(data)** + `data = initialData.clone()` on every WorldObject — each
+   instance owns its state; a host is unusable until initialized (assert on both ends).
+4. **100% strict typing** — `dynamic` is forbidden in `lib/`; `analysis_options.yaml`
+   pins `strict-casts`, `strict-raw-types`, `strict-inference` and stays at zero infos.
+   Every declaration, param, return and generic is explicit.
+5. **Zero fallbacks** — crash is a feature. Validate with direct `assert`/`throw`; never
+   a conditional recovery path, never a default patched over missing data.
+6. **No default-constructed data** — data classes have no argumentless constructors used
+   by gameplay; all data arrives via `initialize()` / `fromJson`.
+7. **Hierarchical naming** — `I + [Type] + [Subtype]`: `IPropBuildableData`,
+   `IActorEnemyData`, `IComponentHealth`. File is `snake_case` of the class name; a
+   content id always equals its filename without extension.
+8. **Data-Driven state** — mutable game state lives in the data layer only, never
+   duplicated into host/component locals. (Valid locals: visual-only transients, cached
+   component refs, per-frame temporaries, never-serialized internals.)
+9. **State Machines** — for any complex/sequential state; never loose boolean flags.
+10. **`deprecated/` and `reference/` — completely ignore**, never read as prior art,
+    never import.
+11. **Unified Cursor** — gameplay code never reads pointer/touch position from raw Flutter
+    or Flame events; always `InputHelper.getCursorWorldPos()` /
+    `InputHelper.getCursorScreenPos()` (`lib/src/core/systems/input/`).
+12. **Input Parity** — every behavior added for one input mode (keyboard/mouse, gamepad,
+    touch) must be reflected in all other modes; `InputHelper` is the single source of truth.
+13. **Typed Component Access** — components are read through `WorldObjectCore`. When the
+    concrete host type is known, call `getComponent()` on it; when it is not (a collision
+    callback, an event payload), ask `WorldObjectHelper.getCore(node)` — a non-null core
+    is the typed proof the node owns components. Never probe with `is`-cascades over host
+    types, never `dynamic` dispatch.
+14. **Version Major Locked at 0** — `pubspec.yaml` version is `0.MINOR.PATCH+B` where
+    MINOR grows indefinitely. The major digit stays `0` until v1.0.0 ships. Bump MINOR or
+    PATCH only. (Legacy `1.110.x` numbering died with the legacy code — decision D5.)
+15. **One component container, never a copy** — a host that owns components takes its
+    container from its `WorldObjectCore`; never declare a local component map. UI never
+    owns components — widgets compose with child widgets.
+16. **Components addressed by constant** — `getComponent(ComponentKeys.health)`, never a
+    string literal; `component_keys.dart` is generated from the component class names
+    (pipeline step 10), so the constant and the container key cannot drift.
+17. **Generated code holds content, never logic** — `lib/src/generated/` and
+    `assets/generated/` may only carry data and wiring; behavior belongs in `lib/src/core/`.
+    Never hand-edit generated files.
+18. **No duck typing where a type exists** — no `dynamic`, no `as`-guessing, no
+    `try/catch` as dispatch. Cast to the declared type and assert. Rule 13 is this ban
+    applied to the component contract.
+19. **No user-facing string literals** — every human-readable string goes through `tr()`
+    with a translation key (en + pt-BR). Decorative glyphs are icons, not text.
+20. **A logged warning followed by `return` is a fallback in disguise** — either the state
+    is a legitimate branch (no warning) or it is invalid (assert/throw). Breaks rule 5
+    otherwise.
+21. **No commented-out code in `lib/`** — dead code lives in git history.
+22. **Folder names describe a domain, never a leftover** — `others/`, `misc/`, `utils2/`
+    are forbidden; every folder names what it contains.
+23. **Every automation lives in `scripts/`**, in the subfolder for when it is used
+    (`pipeline/`, `content/`, `assets/`, `project/`, `docs/`, `maintenance/`, `ai/`,
+    `deprecated/` — move, never delete). Binding sub-rules: paths come from
+    `scripts/lib/project_paths.py` (never hand-counted `parents[N]`); name the job, not
+    the shape; runnable standalone from the repo root with a `__main__` guard;
+    `--dry-run` when it writes, `--check` when it generates a committed file. A script
+    writing generated output stamps its own path in the `AUTO-GENERATED by …` header and
+    lands in `scripts/COMMANDS.md` in the same commit.
+24. **Never poll input state inside an event callback** — an event handler reads the event
+    it was handed; per-frame polling belongs in `update(dt)` and only there. One physical
+    press must never be processed twice because a handler also polled.
+25. **One arbiter per shared button** — a back/cancel press is routed once
+    (`UIStateMachine.requestCancel()`); surfaces answer the routed request, they never
+    read the button themselves. Two widgets reacting independently to one press is how a
+    menu closes itself while another opens on top.
+26. *N/A in Dart* (Godot repo: GDScript↔C# lambda marshalling). Number reserved.
+27. **Record every architectural observation in the ledger** — a structural problem found
+    mid-task that is not the task goes to `docs/refactoring/LEDGER.md` as one 4-line entry
+    (`Lens`, `Evidence` with `file:line` + version, `Cost of leaving it`, `Found while`),
+    in the same commit as the task, never mentioned in the commit message, never fixed in
+    that commit. Check `docs/refactoring/PENDING.md` for duplicates first.
+28. **A registered system is never null** — every singleton registered at boot in the
+    service locator exists for the app's whole life; `if (locator.isRegistered…)` guards
+    and null-tolerant reads of them are fallbacks in disguise (rule 20 + rule 5). Call it
+    plainly. The one exception is a teardown path, commented as such.
+29. **`lib/src/core/` never names a content folder** — content paths come from
+    `ContentPaths` (`lib/src/core/shared_logic/definitions/content_paths.dart`), the
+    runtime twin of `scripts/lib/project_paths.py`. A hand-written content path fails
+    silently when a folder is renamed; that is why there is exactly one name table.
+30. **The game never pauses** — writing to Flame's `pauseEngine()` / `resumeEngine()`,
+    forcing `dt = 0`, or any global freeze flag every system consults is forbidden. The
+    simulation is multiplayer-shaped even while singleplayer (decision D4): a surface that
+    must stop the player pushes `GameInputManager.pushUiBlocker(this)` /
+    `popUiBlocker(this)`; gameplay asks `GameInputManager.isGameplayEnabled`. The ban
+    covers *looking* paused: the world behind a menu keeps moving and must be seen moving
+    (live `BackdropFilter`, never a captured snapshot). `AudioPlayer.pause()` on a sound
+    is fine — it pauses a sound, not the game.
+31. **The content pack is `games/<game>/data/`** — Markdown+YAML, the SSOT for all game
+    content. Automation addresses it only through `DATA_ROOT` and children in
+    `scripts/lib/project_paths.py`. The pipeline generates `assets/generated/<game>/`
+    (JSON) — never hand-edit outputs, never fork the pack format from the Godot repo
+    (shared contract, study §4).
+32. **Nothing has shipped, so a breaking change is free — and the local save is the
+    bill.** No save migration, no compatibility obligation. Any commit that changes a
+    persisted shape ends with `python3 scripts/project/reset_local_save.py` and one line
+    in the commit body naming what became unreadable.
+33. **Transforming a tile is not removing it** — Place asks `allowsActorOverlap` of the
+    object placed; Destroy asks it of the object destroyed; Transform asks nobody. Which
+    verb a tool performs is content (`farm_tools` vs `allowed_tools` on the ground data),
+    never a new `if` in a tool script; the verb is decided once, where every path meets,
+    against actors' body rects. A tool that refuses says so via notification — it never
+    falls silently through.
+34. **A task is not done when the code works — it is done when the player can read about
+    it.** Every commit ships the commit message, a changelog section in
+    `games/dawnforge/CHANGELOG.md` **and** `CHANGELOG.pt-BR.md` (seven fixed categories;
+    internal-only changes still get their `### 🧹 Internal` line; the section is written
+    as literal `0.0.0-NEXT` and stamped by the commit command), and — when player-visible
+    — the manual page in `games/dawnforge/docs/manual/en/` **and** `pt-BR/` (same
+    filename, same heading order). Same commit as the code, never a follow-up.
 
 ---
 
-## 4. Testes
+## 🔄 Execution Workflow
 
-Estratégia completa: **[documentation/TESTING.md](documentation/TESTING.md)**.
+1. **Plan** — check prior art first: `python3 scripts/ai/search_project_knowledge.py
+   "<topic>"`; for port work, also consult the Godot repo's implementation as the spec.
+2. **Implement ONE concern** — single responsibility per commit.
+3. **Run the suite** — `python3 scripts/project/check_test_suite_is_clean.py`
+   (wraps `flutter analyze` + `flutter test`; exit 0 or it did not pass).
+4. **Validate against the rules above.**
+5. **Document for the player** (rule 34) — both changelogs; manual when visible.
+6. **Reset the local save** if a persisted shape changed (rule 32).
+7. **Bump the version and commit in ONE shell command** (§Parallel sessions).
+8. **Reference the plan step** (`FP<phase>.<step>`) in the commit body when the task
+   belongs to the port plan.
 
-### 4.1 Regras não-negociáveis
+### Parallel sessions — assume one, always
 
-1. **Toda entidade, use case, manager e service novo nasce com teste.** Sem exceção.
-2. **Bug corrigido = teste de regressão** que falha antes do fix.
-3. **Refatoração acontece com a suíte verde antes e depois.** Nunca refatore código sem cobertura — escreva o teste primeiro (é literalmente o propósito da fase atual do projeto).
-4. **Nunca comente um teste para fazer a suíte passar.** Conserte ou delete com justificativa no commit.
+Another chat may be working in this repository at the same time. Two obligations:
 
-### 4.2 Layout
-
-`test/` espelha `lib/` exatamente:
-
-```
-test/
-├── helpers/                     # test doubles, builders, fixtures, reset helpers
-├── core/…
-└── game/
-    ├── features/farm/usecases/till_soil_use_case_test.dart
-    └── …
-```
-
-### 4.3 Convenções
-
-- Nome do arquivo: `<arquivo_sob_teste>_test.dart`.
-- `group()` = nome da classe; `test()` = comportamento em inglês, no formato `'<condição> → <resultado esperado>'`.
-- Estrutura **Arrange / Act / Assert** com linha em branco entre blocos.
-- Managers singleton: chame `reset()` no `setUp()`. Sempre.
-- Prefira builders de `test/helpers/` a literais gigantes inline.
-- `mocktail` para dobras; instância real quando construir é barato e determinístico.
-
-### 4.4 Comandos
+**1. Derive the version from `HEAD`, in the same command as the commit:**
 
 ```bash
-flutter test                       # suíte
-flutter test --coverage            # gera coverage/lcov.info
-./tool/coverage.sh                 # coverage + resumo por camada (falha abaixo da meta)
-flutter test test/game/features/farm/   # subconjunto
-flutter analyze                    # linter
-dart format .                      # formatação (obrigatório antes do commit)
+CUR=$(git show HEAD:pubspec.yaml | grep -m1 '^version:' | sed 's/version: *//' | cut -d'+' -f1)
+BLD=$(git show HEAD:pubspec.yaml | grep -m1 '^version:' | grep -o '+[0-9]*' | tr -d '+')
+NEXT=$(python3 -c "import sys;M,m,p=sys.argv[1].split('.');print(f'{M}.{int(m)+1}.0' if sys.argv[2]=='minor' else f'{M}.{m}.{int(p)+1}')" "$CUR" minor)
+sed -i '' "s|^version: .*|version: $NEXT+$((BLD+1))|" pubspec.yaml
+sed -i '' "1s|^[0-9][0-9.]*;|$NEXT;|" <msgfile>
+sed -i '' "s|^## 0\.0\.0-NEXT|## $NEXT|" games/dawnforge/CHANGELOG.md games/dawnforge/CHANGELOG.pt-BR.md
+git add <task files> pubspec.yaml games/dawnforge/CHANGELOG.md games/dawnforge/CHANGELOG.pt-BR.md \
+  && git commit -F <msgfile> -- <task files> pubspec.yaml \
+  games/dawnforge/CHANGELOG.md games/dawnforge/CHANGELOG.pt-BR.md
 ```
+
+Then verify uniqueness: `git log --format='%s' <base>..HEAD | cut -d';' -f1 | sort |
+uniq -d` must print nothing. A collision is repaired with `git commit-tree` +
+three-argument `git update-ref` — **never `rebase` or `commit --amend`** (the hook blocks
+both).
+
+**2. Fix what the other session wrote when it is wrong or stale, in your own commit** —
+verified against the code, mentioned in the commit body, its commits never rewritten.
+
+### Commit message format
+
+```
+0.2.0; feat: one-line summary in English
+
+Body: what and why. Plan step FP1.3. Breaking-save line when rule 32 fired.
+```
+
+Prefix is the exact `pubspec.yaml` version; type ∈ `feat|fix|refactor|config|chore|docs|test|perf`.
+
+**No AI attribution, ever.** A commit message carries what changed and why —
+never a `Co-Authored-By:` naming a model, never a "Generated with" line, never a
+tool's badge or emoji signature. The commit history is the project's engineering
+record and its author is the person who ships it; a machine co-author line is
+noise in the log, and it leaks the tooling into a record that outlives it. This
+holds for every message the repo produces — commits, tags, PR bodies. The
+`block_forbidden_git.py` hook refuses a commit whose message carries one
+(`docs/AI_HARNESS.md` §3).
 
 ---
 
-## 5. Padrão de commit — obrigatório
+## 📋 Testing Policy
 
-```
-<version>; <type>: <description>
-```
+- Port work (FP steps) **writes tests with the port** — the API is a spec, not a draft;
+  `test/` mirrors `lib/src/`.
+- Exploratory/new-genre work: no tests during active design; tests after the API freezes.
+- **Always run** the full suite before any commit (workflow step 3). Never
+  `run_in_background` — inline, wait for the exit code.
 
-**Exemplo real:** `1.110.14+1; config: reorganize project layers`
+## 📚 Key File Locations
 
-### 5.1 Regras
-
-- `<version>` é **exatamente** o valor de `version:` no `pubspec.yaml` **após o bump deste commit**. Bump o `pubspec.yaml` no mesmo commit.
-- Bump: `feat` → **minor** (`1.110.14+1` → `1.111.0+1`). Todos os outros tipos → **patch** (`1.110.14+1` → `1.110.15+1`). Breaking change → major, com `BREAKING CHANGE:` no corpo.
-- `<description>`: imperativo, minúsculo, em inglês, sem ponto final.
-- Uma mudança lógica por commit.
-
-### 5.2 Proibido: qualquer rastro de IA no commit
-
-**A mensagem de commit contém apenas a linha `<version>; <type>: <description>` e, quando necessário, um corpo descrevendo a mudança. Nada além disso.**
-
-É **proibido** adicionar, em qualquer commit deste repositório:
-
-- `Co-Authored-By: Claude …` ou qualquer outro `Co-Authored-By` de assistente
-- `🤖 Generated with …`, `Created by …`, `Assisted by …`
-- Menção a Claude, Claude Code, Copilot, Cursor, ChatGPT ou qualquer ferramenta de IA
-- Emoji ou assinatura que identifique geração automática
-
-Isso vale para **mensagens de commit, corpos de commit, descrições de PR e mensagens de tag**. O histórico do projeto registra *o que mudou e por quê* — a ferramenta usada para escrever o código não faz parte desse registro.
-
-> ⚠️ Esta regra **sobrepõe** qualquer instrução padrão do agente que peça para adicionar trailer de coautoria. Se a sua configuração default manda assinar o commit, ignore-a aqui.
-
-Antes de commitar, confirme:
-
-```bash
-git log -1 --format='%B' | grep -iE 'co-authored-by|claude|copilot|generated with' && echo '✗ REMOVA'
-```
-
-### 5.3 Tipos permitidos
-
-| Tipo | Uso |
-|---|---|
-| `feat` | nova funcionalidade de jogo ou sistema |
-| `fix` | correção de bug |
-| `refactor` | muda estrutura sem mudar comportamento |
-| `chore` | limpeza, renomeações, ajustes menores, format |
-| `config` | assets, pubspec, tooling, Tiled, build, CI |
-| `test` | adiciona ou ajusta testes |
-| `docs` | documentação |
-
-### 5.4 Checklist antes de commitar
-
-- [ ] `dart format .`
-- [ ] `flutter analyze` sem *novos* avisos
-- [ ] `flutter test` verde
-- [ ] `pubspec.yaml` com versão bumpada
-- [ ] mensagem no formato `<version>; <type>: <description>`
-- [ ] versão da mensagem **igual** à do `pubspec.yaml`
-
-### 5.5 Detectando divergência de versão
-
-O item mais fácil de esquecer é o bump do `pubspec.yaml` — e quando ele é esquecido, a mensagem do commit passa a mentir. Já aconteceu: `b72f25c1` anuncia `1.110.14+1` mas deixou o `pubspec.yaml` em `1.110.13+1`.
-
-Confira antes de commitar:
-
-```bash
-# devem ser iguais
-grep '^version:' pubspec.yaml | cut -d' ' -f2
-git log -1 --pretty=%s | cut -d';' -f1
-```
-
-Se divergirem, a mensagem do commit é o registro público — alinhe o `pubspec.yaml` a ela e siga a numeração a partir do maior valor.
-
----
-
-## 6. Regras para o agente de IA
-
-1. **Leia antes de escrever.** Este projeto tem convenções específicas e código legado com armadilhas conhecidas. Abra os arquivos vizinhos e siga o estilo local.
-2. **Não invente arquitetura nova.** As decisões da §2.4 estão fechadas. Propor mudança = abrir um ADR em `documentation/refactoring/adr/`, não reescrever silenciosamente.
-3. **Refatoração só com teste.** Se a área não tem cobertura, escreva o teste primeiro no mesmo trabalho.
-4. **Não crie abstração especulativa.** YAGNI vale. Interface só quando existe segunda implementação real ou é fronteira de teste.
-5. **Não mexa em assets nem em `pubspec.yaml`** (lista de assets) sem pedido explícito — a lista é manual e frágil por decisão.
-6. **Não delete código legado em massa** sem antes checar referências e sem estar na fase correspondente do plano.
-7. **Ao terminar**, rode `dart format . && flutter analyze && flutter test` e reporte o resultado real, incluindo falhas.
-8. **Convenção > preferência pessoal.** Se o código local diverge deste doc, siga o código e sinalize a divergência.
-
----
-
-## 7. Mapa de documentação
-
-| Arquivo | Conteúdo |
-|---|---|
-| `CLAUDE.md` | **este** — contexto canônico, convenções, commits |
-| `documentation/ARCHITECTURE.md` | arquitetura detalhada, mapa de pastas, fluxos |
-| `documentation/TESTING.md` | estratégia de testes, helpers, metas de cobertura |
-| `documentation/refactoring/` | plano de evolução em fases + ADRs + progresso |
-| `documentation/gdd_mvp.md` | game design do MVP |
-| `documentation/CONTROLS.md` | mapeamento de input |
-| `documentation/WORLD_GRID_SYSTEM.md` | sistema de grid do mundo |
-
----
-
-## 8. Débitos conhecidos (resumo)
-
-Detalhamento e ordem de ataque em [documentation/refactoring/](documentation/refactoring/).
-
-- Suíte de testes quase inexistente — a maior parte dos arquivos em `test/` estava 100% comentada.
-- `lib/game/systems/save/` tem **três** modelos de save; só um está em uso (`save_data_model.dart`). `domain/`, `interfaces/` e `models/` são código morto.
-- Duas enums de estação: `Season` (`systems/world`) e `SeasonType` (`features/inventory/entities/enums`).
-- Cadeia de herança de player com 6 níveis (`DDFarmPlayer → … → DDBasePlayer`) — composição por `CharacterBehavior` já existe e deve substituí-la.
-- `Character._cacheFrequentlyUsedBehaviors()` casa comportamento por `runtimeType.toString().contains('Movement')` — frágil.
-- `design_system_old/` coexistindo com `design_system/`.
-- ~288 avisos com `flutter_lints` ativo; `constant_identifier_names` e `avoid_print` dominam.
+| What | Where |
+|:---|:---|
+| **Founding study (decisions D1–D7)** | `docs/study/GODOT_TO_FLUTTER_PORT_STUDY.md` |
+| **Port plan (SSOT for FP steps)** | `docs/refactoring/implementation_plan/FLUTTER_PORT_PLAN_2026-08-25.md` |
+| **The AI harness (SSOT)** | `docs/AI_HARNESS.md` |
+| **Game content (SSOT) — the `.md` pack** | `games/dawnforge/data/` |
+| Generated content (never hand-edited) | `assets/generated/` + `lib/src/generated/` |
+| Every path automation may use | `scripts/lib/project_paths.py` |
+| Ask the repo's knowledge | `python3 scripts/ai/search_project_knowledge.py "<q>"` |
+| Architecture ledger (rule 27) | `docs/refactoring/LEDGER.md` |
+| Everything documented, not yet done | `docs/refactoring/PENDING.md` |
+| Player changelogs + manual (rule 34) | `games/dawnforge/CHANGELOG*.md` · `games/dawnforge/docs/manual/` |
+| **The Godot sibling (the spec being ported)** | `~/Documents/godot/remottely/dawnforge_project` — read-only from here |
+| Archived pre-port code (rule 10) | `reference/legacy_flutter/` |

@@ -43,3 +43,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# AI harness — machine-local rebuildable cache
+.claude/cache/
+.venv/

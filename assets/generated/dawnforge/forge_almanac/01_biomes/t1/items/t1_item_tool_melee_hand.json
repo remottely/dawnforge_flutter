@@ -1,0 +1,78 @@
+{
+  "action_cost": 0.25,
+  "action_effect_radius": 0.5,
+  "action_range": 1.0,
+  "animation_speed": 0.15,
+  "attack_damage": 0.25,
+  "backward_frames": 0,
+  "casts_shadow": true,
+  "cost_type": "ENEGY_DEFERRED",
+  "craft_amount": 1,
+  "craft_time": 1.0,
+  "crafted_at": "NONE",
+  "description_key": "forge_almanac.01_biomes.t1.items.t1_item_tool_melee_hand.description",
+  "display_name_key": "forge_almanac.01_biomes.t1.items.t1_item_tool_melee_hand.display_name",
+  "drop_multiplier": 1.0,
+  "durability_cost": 0,
+  "frame_size": [
+    1,
+    1
+  ],
+  "glow_color": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "glow_origin_offset": 0.0,
+  "glow_radius": 0.0,
+  "glow_speed": 0.0,
+  "glow_type": "NONE",
+  "id": "t1_item_tool_melee_hand",
+  "idle_frames": 0,
+  "invert_animation": true,
+  "lifetime": 300.0,
+  "magnet_speed": 12.5,
+  "material_type": "STONE",
+  "max_durability": 0,
+  "max_stack": 2,
+  "melee_secondary_action": "NONE",
+  "pickup_delay": 0.5,
+  "pivot_offset": [
+    -0.125,
+    0.125
+  ],
+  "position_offset": [
+    -0.5,
+    -0.0625
+  ],
+  "primary_action_animation": "",
+  "primary_action_frame_size": [
+    0,
+    0
+  ],
+  "rotation_offset": 0.0,
+  "secondary_action_animation": "",
+  "secondary_action_frame_size": [
+    0,
+    0
+  ],
+  "sell_value": 0,
+  "shadow_origin_offset": -0.0625,
+  "shadow_style_celestial": "SILHOUETTE",
+  "shadow_style_dynamic": "OCCLUDER_SPRITE_CAPPED",
+  "sound_equip": "",
+  "sound_pickup": "",
+  "sound_primary_action": "",
+  "sound_swing": "",
+  "sounds_volume": 1.0,
+  "sprite_alpha": 1.0,
+  "sprite_anchor": "BOTTOM_LEFT",
+  "sprite_scale": 1.0,
+  "spritesheet": "res://data/forge_almanac/01_biomes/t1/items/sprites/t1_item_tool_melee_hand.png",
+  "spritesheet_icon": "",
+  "tier": 1,
+  "tool_type": "INNATE",
+  "type": "item_tool_melee_data",
+  "walk_frames": 0
+}

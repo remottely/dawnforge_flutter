@@ -1,0 +1,210 @@
+{
+  "acceleration": 18.75,
+  "ai_behavior": "NEUTRAL",
+  "ai_combat_style": "MELEE_PRIMARY",
+  "allowed_tools": [
+    "INNATE",
+    "SWORD",
+    "BOW",
+    "STAFF"
+  ],
+  "allows_actor_overlap": true,
+  "animation_speed": 0.15,
+  "backward_frames": 6,
+  "bar_offset_y": 8.0,
+  "base_action_speed": 0.5,
+  "base_max_energy": 50.0,
+  "base_max_health": 5.0,
+  "base_max_mana": 5.0,
+  "base_max_stamina": 10.0,
+  "base_temperature": 37.0,
+  "casts_shadow": true,
+  "collision_padding": [
+    5,
+    9,
+    5,
+    0
+  ],
+  "collision_shape_type": "CIRCLE",
+  "cosmetic_accessories_id": "",
+  "cosmetic_hair_id": "",
+  "cosmetic_head_id": "",
+  "cosmetic_legs_id": "",
+  "cosmetic_shoes_id": "",
+  "cosmetic_vest_id": "",
+  "default_label_text": "player name test",
+  "description_key": "player.description",
+  "display_name_key": "player.display_name",
+  "dodge_chance": 0.0,
+  "dodge_cooldown": 1.0,
+  "dodge_duration": 0.36,
+  "dodge_impulse": 7.5,
+  "dodge_roll_enabled": false,
+  "dodge_stamina_cost": 3.0,
+  "enemy_actor_ids": [],
+  "energy_bar_always_visible": false,
+  "energy_bar_height": 2.0,
+  "energy_bar_vertical_spacing": 2.0,
+  "energy_bar_width": 24.0,
+  "equipped_feet_id": "",
+  "equipped_head_id": "",
+  "equipped_legs_id": "",
+  "equipped_vest_id": "",
+  "fly_backward_frames": 0,
+  "fly_idle_frames": 0,
+  "fly_walk_frames": 0,
+  "footstep_interval": 0.4,
+  "force_flight_in_battle": false,
+  "frame_size": [
+    2,
+    2
+  ],
+  "friction": 30.0,
+  "gestation_days": 28,
+  "gift_items": [],
+  "glow_color": [
+    1.0,
+    1.0,
+    1.0,
+    0.85
+  ],
+  "glow_origin_offset": 0.0,
+  "glow_radius": 2.0,
+  "glow_speed": 1.0,
+  "glow_type": "NIGHT_AURA",
+  "grid_size": [
+    1,
+    1
+  ],
+  "groups": [
+    "player"
+  ],
+  "has_collision": true,
+  "has_label_component": true,
+  "health_bar_always_visible": true,
+  "health_bar_height": 0.1875,
+  "health_bar_width": 1.5,
+  "held_item_id": "",
+  "hide_bar_when_full": true,
+  "id": "actor_player",
+  "idle_frames": 3,
+  "initial_state_key": "state_input_idle",
+  "inventory_size": 30,
+  "is_flat": false,
+  "is_label_editable": true,
+  "is_projectile_passable": false,
+  "is_void_mode": false,
+  "juvenile_backward_frames": 6,
+  "juvenile_fly_backward_frames": 0,
+  "juvenile_fly_idle_frames": 0,
+  "juvenile_fly_walk_frames": 0,
+  "juvenile_idle_frames": 3,
+  "juvenile_landing_frames": 0,
+  "juvenile_take_off_frames": 0,
+  "juvenile_walk_frames": 4,
+  "landing_frames": 0,
+  "locomotion_mode": "GROUND",
+  "mana_bar_always_visible": false,
+  "mana_bar_height": 0.125,
+  "mana_bar_width": 1.5,
+  "mating_maturity_days": 28,
+  "mating_range": 16.0,
+  "mating_stop_range": 1.5,
+  "maturation_days": 28,
+  "move_speed": 3.0,
+  "occlusion_padding": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "occlusion_target": "ALL",
+  "occlusion_y_offset": 0.0,
+  "position_offset": [
+    0,
+    0
+  ],
+  "shadow_origin_offset": -0.5625,
+  "shadow_style_celestial": "SILHOUETTE",
+  "shadow_style_dynamic": "OCCLUDER_SPRITE_CAPPED",
+  "sound_die": "res://data/audio/sfx/destroy/Generic Hit 2_5.wav",
+  "sound_footstep": {
+    "default": [
+      "res://data/audio/sfx/footstep/forest/Grass Run 1_1.wav"
+    ],
+    "desert": [
+      "res://data/audio/sfx/footstep/desert/Sand Run 1_1.wav",
+      "res://data/audio/sfx/footstep/desert/Sand Run 1_2.wav",
+      "res://data/audio/sfx/footstep/desert/Sand Run 1_4.wav",
+      "res://data/audio/sfx/footstep/desert/Sand Run 1_5.wav"
+    ],
+    "forest": [
+      "res://data/audio/sfx/footstep/forest/Grass Run 1_1.wav",
+      "res://data/audio/sfx/footstep/forest/Grass Run 1_2.wav",
+      "res://data/audio/sfx/footstep/forest/Grass Run 1_3.wav",
+      "res://data/audio/sfx/footstep/forest/Grass Run 1_5.wav"
+    ],
+    "lava": [
+      "res://data/audio/sfx/footstep/lava/Dirt Walk 1-2.wav",
+      "res://data/audio/sfx/footstep/lava/Dirt Walk 1-5.wav",
+      "res://data/audio/sfx/footstep/lava/Dirt Walk 1-6.wav",
+      "res://data/audio/sfx/footstep/lava/Dirt Walk 1-10.wav"
+    ],
+    "snow": [
+      "res://data/audio/sfx/footstep/snow/Snow Run 1_3.wav",
+      "res://data/audio/sfx/footstep/snow/Snow Run 1_9.wav",
+      "res://data/audio/sfx/footstep/snow/Snow Run 1_11.wav",
+      "res://data/audio/sfx/footstep/snow/Snow Run 1_12.wav"
+    ],
+    "swamp": [
+      "res://data/audio/sfx/footstep/swamp/Water Run 1_1.wav",
+      "res://data/audio/sfx/footstep/swamp/Water Run 1_2.wav",
+      "res://data/audio/sfx/footstep/swamp/Water Run 1_3.wav",
+      "res://data/audio/sfx/footstep/swamp/Water Run 1_4.wav"
+    ]
+  },
+  "sound_receive_damage": "res://data/audio/sfx/hit/Generic Hit 1_3.wav",
+  "sounds_volume": 1.0,
+  "spawn_as_mature": true,
+  "spawn_sex_random": true,
+  "sprite_anchor": "BOTTOM_LEFT",
+  "sprite_variants": 0,
+  "spritesheet": "res://data/cosmetics/03_skin/vampire/sprites/cosmetic_skin_vampire_white.png",
+  "squad_cohesion_range": 4.0,
+  "squad_dispersion_range": 8.0,
+  "states": [
+    {
+      "key": "state_input_idle"
+    },
+    {
+      "key": "state_input_move"
+    },
+    {
+      "key": "state_input_dodge"
+    }
+  ],
+  "take_off_frames": 0,
+  "thermal_tolerance": 30.0,
+  "tier": 1,
+  "type": "i_actor_biological_data",
+  "void_backward_frames": 6,
+  "void_fly_backward_frames": 0,
+  "void_fly_idle_frames": 0,
+  "void_fly_walk_frames": 0,
+  "void_idle_frames": 3,
+  "void_juvenile_backward_frames": 6,
+  "void_juvenile_fly_backward_frames": 0,
+  "void_juvenile_fly_idle_frames": 0,
+  "void_juvenile_fly_walk_frames": 0,
+  "void_juvenile_idle_frames": 3,
+  "void_juvenile_landing_frames": 0,
+  "void_juvenile_take_off_frames": 0,
+  "void_juvenile_walk_frames": 4,
+  "void_landing_frames": 0,
+  "void_move_speed_multiplier": 1,
+  "void_take_off_frames": 0,
+  "void_walk_frames": 4,
+  "walk_frames": 4,
+  "wander_interval_max": 5.0,
+  "xp_reward": 0
+}

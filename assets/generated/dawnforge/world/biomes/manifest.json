@@ -1,0 +1,10 @@
+{
+  "generated_by": "scripts/pipeline/11_import_biome_terrain_to_json.py",
+  "entries": [
+    {
+      "id": "biome_forest_data",
+      "type": "biome_data",
+      "path": "biome_forest_data.json"
+    }
+  ]
+}

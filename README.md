@@ -1,82 +1,138 @@
 # Dawnforge
 
-Jogo 2D top-down estilo *Stardew Valley / Forager*, feito em Flutter + [Bonfire](https://pub.dev/packages/bonfire).
+## 🏗️ Architecture
 
-Single-player, offline, com persistência local. Roda em Android, iOS, macOS, Linux, Windows e Web.
+This project follows a clean architecture pattern with clear separation of concerns:
 
----
+- **`/lib/gameplay/`** - Game logic, entities, managers, and core game systems
+- **`/lib/presentation/`** - UI components, screens, and design system
+- **`/documentation/`** - Architecture documentation and development guides
 
-## Rodando
+For detailed architecture information, see [ARCHITECTURE.md](documentation/ARCHITECTURE.md).
 
-```bash
-flutter pub get
+## 📋 Code Standards
 
-# desenvolvimento (logs ativos, hitboxes visíveis, dia começa 1h)
-flutter run --dart-define=GAME_ENVIRONMENT=DEVELOPMENT
+This project follows the **CLAUDE.md** coding standards for consistency and maintainability:
 
-# produção
-flutter run --release
+### Naming Conventions
+
+- **Constants**: Use `k` prefix (e.g., `kDefaultSize`, `kAnimationDuration`)
+- **Private methods**: Use `_` prefix (e.g., `_initializeComponents()`)
+- **Private variables**: Use `_` prefix (e.g., `_isGameActive`)
+- **Classes**: PascalCase (e.g., `GameplayStateManager`)
+- **Files**: snake_case (e.g., `gameplay_state_manager.dart`)
+
+### Class Structure
+
+```dart
+class ExampleClass extends StatelessWidget {
+  // 1. Constants (grouped by type)
+  static const double kDefaultSize = 24.0;
+  static const Color kDefaultColor = Colors.white;
+
+  // 2. Properties
+  final String title;
+  final VoidCallback? onPressed;
+
+  // 3. Constructor
+  const ExampleClass({super.key, required this.title, this.onPressed});
+
+  // 4. Factory constructors (if applicable)
+  const ExampleClass.large({...});
+
+  // 5. Build method
+  @override
+  Widget build(BuildContext context) { }
+
+  // 6. Private helper methods
+  Widget _createStyledWidget() { }
+}
 ```
 
-`GAME_ENVIRONMENT` aceita `DEVELOPMENT`, `STAGING` ou `PRODUCTION` (padrão). As flags derivadas ficam em [`lib/core/utils/app_environment.dart`](lib/core/utils/app_environment.dart) e são `const` — o compilador elimina o código de debug em release.
+### Documentation Standards
 
-## Testes
+- All public classes have comprehensive documentation
+- Complex methods include inline comments
+- Factory methods are documented with usage examples
+- Code follows Flutter/Dart documentation conventions
 
-```bash
-flutter test                # suíte
-./tool/coverage.sh          # cobertura + gate por camada
-flutter analyze             # linter
-dart format .               # formatação
-```
+## 🤝 Contributing
 
----
+When contributing to this project, please follow these guidelines:
 
-## Estrutura
+1. **Follow CLAUDE.md standards** - Ensure your code adheres to the established patterns
+2. **Maintain consistency** - Use the same naming conventions and class structures
+3. **Document your code** - Add clear comments and documentation for new features
+4. **Test thoroughly** - Run `flutter test` before submitting changes
+5. **Update documentation** - Keep ARCHITECTURE.md updated when adding new systems
 
-```
-lib/
-├── main.dart      # bootstrap
-├── core/          # utilitários sem dependência de jogo
-├── shared/        # design system + classes-base de entidades Bonfire
-├── pre_game/      # menu
-└── game/
-    ├── features/  # domínio: farm, inventory, time, market, world
-    ├── systems/   # save, audio, map, combat, overlay, input, localization
-    ├── modules/   # players, enemies, npcs, decorations
-    ├── database/  # catálogo de conteúdo (constantes tipadas)
-    └── global/    # state machine e input globais
-```
+### Code Review Checklist
 
-## Documentação
+- [ ] Constants use `k` prefix
+- [ ] Private methods/variables use `_` prefix
+- [ ] Classes follow established structure pattern
+- [ ] Public methods are documented
+- [ ] Tests pass without errors
+- [ ] No breaking changes to existing functionality
 
-| Arquivo | Conteúdo |
-|---|---|
-| [CLAUDE.md](CLAUDE.md) | **comece aqui** — convenções, padrão de commit, regras de contribuição |
-| [documentation/ARCHITECTURE.md](documentation/ARCHITECTURE.md) | arquitetura detalhada, fluxos, regras de domínio |
-| [documentation/TESTING.md](documentation/TESTING.md) | estratégia de testes e metas de cobertura |
-| [documentation/refactoring/](documentation/refactoring/) | plano de evolução em fases + ADRs |
-| [documentation/gdd_mvp.md](documentation/gdd_mvp.md) | game design do MVP |
+## Used packages:
 
-## Commits
+bonfire - [![pub package](https://img.shields.io/pub/v/bonfire.svg)](https://pub.dev/packages/bonfire)
 
-```
-<version>; <type>: <description>
-```
+flame_audio - [![pub package](https://img.shields.io/pub/v/flame_audio.svg)](https://pub.dev/packages/flame_audio)
 
-Exemplo: `1.110.14+1; feat: add seed bag stacking`
+flame_splash_screen - [![pub package](https://img.shields.io/pub/v/flame_splash_screen.svg)](https://pub.dev/packages/flame_splash_screen)
 
-`<version>` é o valor de `version:` no `pubspec.yaml` após o bump deste commit. Tipos: `feat`, `fix`, `refactor`, `chore`, `config`, `test`, `docs`. Detalhes em [CLAUDE.md §5](CLAUDE.md#5-padrão-de-commit--obrigatório).
+url_launcher - [![pub package](https://img.shields.io/pub/v/url_launcher.svg)](https://pub.dev/packages/url_launcher)
 
----
+## Used sprites:
 
-## Créditos
+[Dungeontileset](https://0x72.itch.io/dungeontileset-ii)
 
-**Packages:** [bonfire](https://pub.dev/packages/bonfire) · [flame_audio](https://pub.dev/packages/flame_audio) · [flame_splash_screen](https://pub.dev/packages/flame_splash_screen) · [get_it](https://pub.dev/packages/get_it) · [url_launcher](https://pub.dev/packages/url_launcher)
+[Simple Dungeon Crawler](https://o-lobster.itch.io/simple-dungeon-crawler-16x16-pixel-pack)
 
-**Sprites:** [Dungeontileset II](https://0x72.itch.io/dungeontileset-ii) · [Simple Dungeon Crawler](https://o-lobster.itch.io/simple-dungeon-crawler-16x16-pixel-pack) · SmallBurg Village/Farm/Dungeon Packs · SunnysideWorld · Modern Farm
+cd assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE\ CHARACTER/PNG/WITH_FX
+magick spr_doing_till_strip8.png -crop 96x64 +repage -flop +append spr_doing_till_left_strip8.png
 
-**Música:** Scott Buckley (CC-BY 4.0) · Savfk (CC-BY 3.0) · Justin Allan Arnold (CC-BY 3.0) · Glitch (CC-BY 3.0) · Pixverses
+cd assets/images/new/Player
+magick Player*Actions.png -crop 96x48 +repage -scene 1 Player_Actions_row*%d.png
 
-## Licença
+eu possuo um arquivo chamado Player.png q contem todas as sprites do meu player. porem eu preciso transformar todos os frames em arquivos separados. o meu arquivo esta assim hoje:
+cada frame ocupa 48x48. o arquivo é 192 x 320 e esta configurado assim:
+seriam 10 rows e 6 colunas de 48x48. só que as 6 primeiras rows possuem os totais 6 frames, porem as ultimas 4 rows possuem apenas 4 frames cada. entao preciso cortar todo o arquivo em 10 novos arquivos, 6 primeiras rows em arquivos de 6 frames e as 4 ultimas em 4 frames. tudo utilizando um unico comando no temrinal utilizando magick no mac q ja possuo instalado.
 
-MIT — ver [LICENSE](LICENSE).
+magick Player.png -crop 32x32 +repage frame\_%03d.png && rm frame_006.png frame_007.png frame_013.png frame_014.png frame_015.png frame_020.png frame_021.png frame_022.png frame_023.png frame_027.png frame_028.png frame_029.png frame_030.png frame_031.png frame_034.png frame_035.png frame_036.png frame_037.png frame_038.png frame_039.png
+
+magick Player.png -crop 192x32 +repage +adjoin row\_%02d.png
+
+magick row_06.png -crop 128x32+0+0 +repage row_06.png && magick row_07.png -crop 128x32+0+0 +repage row_07.png && magick row_08.png -crop 128x32+0+0 +repage row_08.png && magick row_09.png -crop 128x32+0+0 +repage row_09.png
+magick player_attack_east_4.png -crop 32x32 +repage -flop +append player_attack_west_4.png
+
+magick player_walk_south_6.png -crop 32x32 \
+ -gravity center -background transparent -extent 48x48 \
+ +append player_walk_south_48x48_6.png
+
+\_48x48
+
+animations type:
+
+- Directional
+- right
+- left
+- up
+- down
+- right Up
+- right Down
+- left Up
+- left Down
+
+// TODO: put all maps background color to be the same as map ground
+
+
+dicas:
+- importar apenas arquivos diretamente, nada de importar pastas do pubspec
+- 
+
+cd assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE\ CHARACTER/PNG/WITH_FX/
+
+magick spr_sword_strip10.png -crop 96x64 +repage -flop +append spr_sword_left_strip10.png

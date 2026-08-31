@@ -1,0 +1,108 @@
+{
+  "allowed_tools": [
+    "INNATE",
+    "SICKLE"
+  ],
+  "allows_actor_overlap": true,
+  "animation_speed": 0.15,
+  "bar_offset_y": 0.0,
+  "base_max_energy": 50.0,
+  "base_max_health": 1.0,
+  "base_max_mana": 5.0,
+  "base_temperature": 22.0,
+  "biome_spawn_weight": 1.5,
+  "casts_shadow": true,
+  "collision_padding": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "collision_shape_type": "QUADRILATERAL",
+  "default_label_text": "",
+  "description_key": "forge_almanac.01_biomes.t1.props.t1_prop_grass_wild.description",
+  "display_name_key": "forge_almanac.01_biomes.t1.props.t1_prop_grass_wild.display_name",
+  "drops": [
+    {
+      "chance": 0.5,
+      "item_id": "t1_item_hay_wild",
+      "max_amount": 1,
+      "min_amount": 1
+    }
+  ],
+  "energy_bar_always_visible": false,
+  "energy_bar_height": 2.0,
+  "energy_bar_vertical_spacing": 2.0,
+  "energy_bar_width": 24.0,
+  "energy_restoration": 3.0,
+  "frame_size": [
+    1,
+    1
+  ],
+  "glow_color": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "glow_origin_offset": 0.0,
+  "glow_radius": 0.0,
+  "glow_speed": 0.0,
+  "glow_type": "NONE",
+  "graze_duration": 1.5,
+  "grid_size": [
+    1,
+    1
+  ],
+  "has_collision": false,
+  "has_idle_sway": true,
+  "has_label_component": true,
+  "health_bar_always_visible": false,
+  "health_bar_height": 0.1875,
+  "health_bar_width": 1.5,
+  "health_restoration": 3.0,
+  "heat_radius": 0.0,
+  "hide_bar_when_full": true,
+  "hides_actors": false,
+  "id": "t1_prop_grass_wild",
+  "idle_sway_amplitude": 1.5,
+  "idle_sway_speed": 0.9,
+  "inventory_size": 30,
+  "is_flat": false,
+  "is_label_editable": true,
+  "is_projectile_passable": true,
+  "is_pushable": false,
+  "mana_bar_always_visible": false,
+  "mana_bar_height": 0.125,
+  "mana_bar_width": 1.5,
+  "occlusion_padding": [
+    4,
+    8,
+    4,
+    7
+  ],
+  "occlusion_target": "ACTOR",
+  "occlusion_y_offset": -0.125,
+  "position_offset": [
+    0,
+    0
+  ],
+  "respawn_time": 0.0,
+  "shadow_origin_offset": -0.25,
+  "shadow_style_celestial": "SILHOUETTE",
+  "shadow_style_dynamic": "OCCLUDER_SPRITE_CAPPED",
+  "sound_die": "res://data/audio/sfx/destroy/Foliage Foley 3-8.wav",
+  "sound_receive_damage": "res://data/audio/sfx/hit/Foliage Foley 2-5.wav",
+  "sounds_volume": 1.0,
+  "sprite_anchor": "BOTTOM_LEFT",
+  "sprite_variants": 0,
+  "spritesheet": "res://data/forge_almanac/01_biomes/t1/props/sprites/t1_prop_grass_wild.png",
+  "sway_on_contact": true,
+  "thermal_tolerance": 100.0,
+  "tier": 1,
+  "tier_placement_rule": "SAME_TIER",
+  "type": "prop_forage_data",
+  "wall_face_placement": "FORBIDDEN",
+  "weight": 0.0,
+  "xp_reward": 1
+}

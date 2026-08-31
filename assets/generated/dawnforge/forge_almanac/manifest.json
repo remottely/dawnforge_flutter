@@ -1,0 +1,265 @@
+{
+  "generated_by": "scripts/pipeline/04_import_almanac_to_json.py",
+  "entries": [
+    {
+      "id": "actor_player",
+      "type": "i_actor_biological_data",
+      "path": "player/actor_player.json"
+    },
+    {
+      "id": "t1_actor_creature_boar",
+      "type": "actor_creature_data",
+      "path": "01_biomes/t1/actors/t1_actor_creature_boar.json"
+    },
+    {
+      "id": "t1_actor_enemy_melee_forest_guardian",
+      "type": "actor_humanoid_data",
+      "path": "01_biomes/t1/actors/t1_actor_enemy_melee_forest_guardian.json"
+    },
+    {
+      "id": "t1_actor_enemy_ranged_forest_guardian",
+      "type": "actor_humanoid_data",
+      "path": "01_biomes/t1/actors/t1_actor_enemy_ranged_forest_guardian.json"
+    },
+    {
+      "id": "t1_actor_npc_thornwick",
+      "type": "actor_npc_data",
+      "path": "01_biomes/t1/actors/t1_actor_npc_thornwick.json"
+    },
+    {
+      "id": "t1_ground_buildable_bridge_palm",
+      "type": "ground_buildable_data",
+      "path": "02_workstations/01_smelter/t1/t1_ground_buildable_bridge_palm.json"
+    },
+    {
+      "id": "t1_ground_buildable_terrain",
+      "type": "ground_buildable_data",
+      "path": "02_workstations/01_smelter/t1/t1_ground_buildable_terrain.json"
+    },
+    {
+      "id": "t1_ground_empty_cliff",
+      "type": "ground_empty_data",
+      "path": "01_biomes/t1/ground/t1_ground_empty_cliff.json"
+    },
+    {
+      "id": "t1_ground_empty_water",
+      "type": "ground_empty_data",
+      "path": "01_biomes/t1/ground/t1_ground_empty_water.json"
+    },
+    {
+      "id": "t1_item_buildable_ground_bridge_palm",
+      "type": "item_buildable_data",
+      "path": "02_workstations/01_smelter/t1/t1_item_buildable_ground_bridge_palm.json"
+    },
+    {
+      "id": "t1_item_buildable_ground_grass",
+      "type": "item_buildable_data",
+      "path": "02_workstations/01_smelter/t1/t1_item_buildable_ground_grass.json"
+    },
+    {
+      "id": "t1_item_buildable_workstation_smelter",
+      "type": "item_buildable_data",
+      "path": "02_workstations/01_smelter/t1/t1_item_buildable_workstation_smelter.json"
+    },
+    {
+      "id": "t1_item_coal",
+      "type": "item_data",
+      "path": "01_biomes/t1/items/t1_item_coal.json"
+    },
+    {
+      "id": "t1_item_consumable_fruit_apple",
+      "type": "item_consumable_data",
+      "path": "03_farm/t1/t1_item_consumable_fruit_apple.json"
+    },
+    {
+      "id": "t1_item_consumable_vegetable_wheat",
+      "type": "item_consumable_data",
+      "path": "03_farm/t1/t1_item_consumable_vegetable_wheat.json"
+    },
+    {
+      "id": "t1_item_craftable_bar_copper",
+      "type": "item_craftable_data",
+      "path": "02_workstations/01_smelter/t1/t1_item_craftable_bar_copper.json"
+    },
+    {
+      "id": "t1_item_craftable_block_moss",
+      "type": "item_craftable_data",
+      "path": "02_workstations/01_smelter/t1/t1_item_craftable_block_moss.json"
+    },
+    {
+      "id": "t1_item_craftable_cloth_vine",
+      "type": "item_craftable_data",
+      "path": "02_workstations/01_smelter/t1/t1_item_craftable_cloth_vine.json"
+    },
+    {
+      "id": "t1_item_craftable_coin_copper",
+      "type": "item_craftable_data",
+      "path": "02_workstations/01_smelter/t1/t1_item_craftable_coin_copper.json"
+    },
+    {
+      "id": "t1_item_craftable_leather_boar",
+      "type": "item_craftable_data",
+      "path": "02_workstations/01_smelter/t1/t1_item_craftable_leather_boar.json"
+    },
+    {
+      "id": "t1_item_craftable_planks_palm",
+      "type": "item_craftable_data",
+      "path": "02_workstations/01_smelter/t1/t1_item_craftable_planks_palm.json"
+    },
+    {
+      "id": "t1_item_essence_forest",
+      "type": "item_data",
+      "path": "01_biomes/t1/items/t1_item_essence_forest.json"
+    },
+    {
+      "id": "t1_item_fiber_vine",
+      "type": "item_data",
+      "path": "01_biomes/t1/items/t1_item_fiber_vine.json"
+    },
+    {
+      "id": "t1_item_flower_clover",
+      "type": "item_data",
+      "path": "01_biomes/t1/items/t1_item_flower_clover.json"
+    },
+    {
+      "id": "t1_item_hay_wild",
+      "type": "item_data",
+      "path": "01_biomes/t1/items/t1_item_hay_wild.json"
+    },
+    {
+      "id": "t1_item_herb_green_leaf",
+      "type": "item_data",
+      "path": "01_biomes/t1/items/t1_item_herb_green_leaf.json"
+    },
+    {
+      "id": "t1_item_hide_boar",
+      "type": "item_data",
+      "path": "01_biomes/t1/items/t1_item_hide_boar.json"
+    },
+    {
+      "id": "t1_item_logs_palm",
+      "type": "item_data",
+      "path": "01_biomes/t1/items/t1_item_logs_palm.json"
+    },
+    {
+      "id": "t1_item_ore_copper",
+      "type": "item_data",
+      "path": "01_biomes/t1/items/t1_item_ore_copper.json"
+    },
+    {
+      "id": "t1_item_projectile_spell_vinewhip",
+      "type": "item_projectile_data",
+      "path": "01_biomes/t1/items/t1_item_projectile_spell_vinewhip.json"
+    },
+    {
+      "id": "t1_item_stone_moss",
+      "type": "item_data",
+      "path": "01_biomes/t1/items/t1_item_stone_moss.json"
+    },
+    {
+      "id": "t1_item_tool_melee_boar",
+      "type": "item_tool_melee_data",
+      "path": "01_biomes/t1/items/t1_item_tool_melee_boar.json"
+    },
+    {
+      "id": "t1_item_tool_melee_hand",
+      "type": "item_tool_melee_data",
+      "path": "01_biomes/t1/items/t1_item_tool_melee_hand.json"
+    },
+    {
+      "id": "t1_prop_box_copper",
+      "type": "prop_data",
+      "path": "01_biomes/t1/props/t1_prop_box_copper.json"
+    },
+    {
+      "id": "t1_prop_crop_bush_clover",
+      "type": "prop_crop_data",
+      "path": "01_biomes/t1/props/t1_prop_crop_bush_clover.json"
+    },
+    {
+      "id": "t1_prop_crop_flower_clover",
+      "type": "prop_crop_data",
+      "path": "01_biomes/t1/props/t1_prop_crop_flower_clover.json"
+    },
+    {
+      "id": "t1_prop_crop_fruit_apple",
+      "type": "prop_crop_data",
+      "path": "03_farm/t1/t1_prop_crop_fruit_apple.json"
+    },
+    {
+      "id": "t1_prop_crop_herb_green_leaf",
+      "type": "prop_crop_data",
+      "path": "01_biomes/t1/props/t1_prop_crop_herb_green_leaf.json"
+    },
+    {
+      "id": "t1_prop_crop_plant_vine",
+      "type": "prop_crop_data",
+      "path": "01_biomes/t1/props/t1_prop_crop_plant_vine.json"
+    },
+    {
+      "id": "t1_prop_crop_tree_palm",
+      "type": "prop_crop_data",
+      "path": "01_biomes/t1/props/t1_prop_crop_tree_palm.json"
+    },
+    {
+      "id": "t1_prop_crop_vegetable_wheat",
+      "type": "prop_crop_data",
+      "path": "03_farm/t1/t1_prop_crop_vegetable_wheat.json"
+    },
+    {
+      "id": "t1_prop_grass_wild",
+      "type": "prop_forage_data",
+      "path": "01_biomes/t1/props/t1_prop_grass_wild.json"
+    },
+    {
+      "id": "t1_prop_rock_coal",
+      "type": "prop_data",
+      "path": "01_biomes/t1/props/t1_prop_rock_coal.json"
+    },
+    {
+      "id": "t1_prop_rock_moss",
+      "type": "prop_data",
+      "path": "01_biomes/t1/props/t1_prop_rock_moss.json"
+    },
+    {
+      "id": "t1_prop_soil",
+      "type": "prop_soil_data",
+      "path": "03_farm/t1/t1_prop_soil.json"
+    },
+    {
+      "id": "t1_prop_vein_copper",
+      "type": "prop_data",
+      "path": "01_biomes/t1/props/t1_prop_vein_copper.json"
+    },
+    {
+      "id": "t1_prop_workstation_smelter",
+      "type": "prop_workstation_data",
+      "path": "02_workstations/01_smelter/t1/t1_prop_workstation_smelter.json"
+    },
+    {
+      "id": "t2_item_consumable_fruit_plum",
+      "type": "item_consumable_data",
+      "path": "03_farm/t2/t2_item_consumable_fruit_plum.json"
+    },
+    {
+      "id": "t2_item_consumable_vegetable_tomato",
+      "type": "item_consumable_data",
+      "path": "03_farm/t2/t2_item_consumable_vegetable_tomato.json"
+    },
+    {
+      "id": "t2_item_logs_willow",
+      "type": "item_data",
+      "path": "01_biomes/t2/items/t2_item_logs_willow.json"
+    },
+    {
+      "id": "t2_prop_crop_fruit_plum",
+      "type": "prop_crop_data",
+      "path": "03_farm/t2/t2_prop_crop_fruit_plum.json"
+    },
+    {
+      "id": "t2_prop_crop_vegetable_tomato",
+      "type": "prop_crop_data",
+      "path": "03_farm/t2/t2_prop_crop_vegetable_tomato.json"
+    }
+  ]
+}

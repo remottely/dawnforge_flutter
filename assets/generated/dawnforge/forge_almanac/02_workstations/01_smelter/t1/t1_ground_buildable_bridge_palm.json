@@ -1,0 +1,111 @@
+{
+  "allowed_tools": [
+    "SLEDGEHAMMER"
+  ],
+  "allows_actor_overlap": true,
+  "allows_resource_spawning": false,
+  "animation_speed": 0.15,
+  "bar_offset_y": 8.0,
+  "base_max_energy": 50.0,
+  "base_max_health": 5.0,
+  "base_max_mana": 5.0,
+  "base_temperature": 22.0,
+  "blocks_props": false,
+  "casts_shadow": true,
+  "collision_padding": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "collision_shape_type": "QUADRILATERAL",
+  "default_label_text": "",
+  "description_key": "forge_almanac.02_workstations.01_smelter.t1.t1_ground_buildable_bridge_palm.description",
+  "display_name_key": "forge_almanac.02_workstations.01_smelter.t1.t1_ground_buildable_bridge_palm.display_name",
+  "drops": [
+    {
+      "chance": 1.0,
+      "item_id": "t1_item_buildable_ground_bridge_palm",
+      "max_amount": 1,
+      "min_amount": 1
+    }
+  ],
+  "energy_bar_always_visible": false,
+  "energy_bar_height": 2.0,
+  "energy_bar_vertical_spacing": 2.0,
+  "energy_bar_width": 24.0,
+  "farm_prop_id": "",
+  "farm_tools": [],
+  "floats_on_water": true,
+  "frame_size": [
+    1,
+    1
+  ],
+  "glow_color": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "glow_origin_offset": 0.0,
+  "glow_radius": 0.0,
+  "glow_speed": 0.0,
+  "glow_type": "NONE",
+  "grid_size": [
+    1,
+    1
+  ],
+  "has_collision": false,
+  "has_label_component": false,
+  "health_bar_always_visible": false,
+  "health_bar_height": 0.1875,
+  "health_bar_width": 1.5,
+  "hide_bar_when_full": true,
+  "id": "t1_ground_buildable_bridge_palm",
+  "inventory_size": 30,
+  "is_dense_terrain": false,
+  "is_flat": false,
+  "is_label_editable": false,
+  "is_projectile_passable": true,
+  "mana_bar_always_visible": false,
+  "mana_bar_height": 0.125,
+  "mana_bar_width": 1.5,
+  "occlusion_padding": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "occlusion_target": "ALL",
+  "occlusion_y_offset": 0.0,
+  "position_offset": [
+    0,
+    0
+  ],
+  "shadow_origin_offset": -0.0625,
+  "shadow_style_celestial": "SILHOUETTE",
+  "shadow_style_dynamic": "OCCLUDER_SPRITE_CAPPED",
+  "sound_die": "",
+  "sound_receive_damage": "",
+  "sounds_volume": 1.0,
+  "speed_modifier": 1.0,
+  "sprite_anchor": "BOTTOM_LEFT",
+  "sprite_variants": 0,
+  "spritesheet": "res://data/forge_almanac/02_workstations/01_smelter/t1/sprites/t1_ground_buildable_bridge_palm.png",
+  "target_layer_name": "TerrainLayer",
+  "terrain": -1,
+  "terrain_set": -1,
+  "thermal_tolerance": 208.0,
+  "tier": 1,
+  "tier_placement_rule": "SAME_TIER_OR_BELOW",
+  "tile_atlas_coords": [
+    0,
+    0
+  ],
+  "tile_source_id": 0,
+  "type": "ground_buildable_data",
+  "use_biome_terrain": false,
+  "use_tilemap_layer": false,
+  "xp_reward": 0,
+  "z_index_offset": 0
+}

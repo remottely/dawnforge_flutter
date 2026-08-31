@@ -1,0 +1,110 @@
+{
+  "allowed_tools": [
+    "FISHING_ROD"
+  ],
+  "allows_actor_overlap": true,
+  "allows_resource_spawning": false,
+  "animation_speed": 0.0,
+  "bar_offset_y": 0.0,
+  "base_max_energy": 0.0,
+  "base_max_health": 9999.0,
+  "base_max_mana": 0.0,
+  "base_temperature": 22.0,
+  "blocks_props": true,
+  "casts_shadow": true,
+  "collision_padding": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "collision_shape_type": "QUADRILATERAL",
+  "default_label_text": "",
+  "description_key": "forge_almanac.01_biomes.t1.ground.t1_ground_empty_water.description",
+  "display_name_key": "forge_almanac.01_biomes.t1.ground.t1_ground_empty_water.display_name",
+  "drops": [],
+  "energy_bar_always_visible": false,
+  "energy_bar_height": 0.0,
+  "energy_bar_vertical_spacing": 0.0,
+  "energy_bar_width": 0.0,
+  "farm_prop_id": "",
+  "farm_tools": [],
+  "floats_on_water": false,
+  "frame_size": [
+    1,
+    1
+  ],
+  "glow_color": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "glow_origin_offset": 0.0,
+  "glow_radius": 0.0,
+  "glow_speed": 0.0,
+  "glow_type": "NONE",
+  "grid_size": [
+    1,
+    1
+  ],
+  "has_collision": false,
+  "has_label_component": false,
+  "health_bar_always_visible": false,
+  "health_bar_height": 0.0,
+  "health_bar_width": 0.0,
+  "hide_bar_when_full": true,
+  "id": "t1_ground_empty_water",
+  "inventory_size": 0,
+  "is_dense_terrain": false,
+  "is_flat": true,
+  "is_label_editable": false,
+  "is_passable": false,
+  "is_projectile_passable": true,
+  "is_water": true,
+  "mana_bar_always_visible": false,
+  "mana_bar_height": 0.0,
+  "mana_bar_width": 0.0,
+  "minigame_reward_ids": [
+    "t1_item_craftable_coin_copper",
+    "t1_item_craftable_planks_palm",
+    "t1_item_craftable_leather_boar"
+  ],
+  "occlusion_padding": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "occlusion_target": "ALL",
+  "occlusion_y_offset": 0.0,
+  "position_offset": [
+    0,
+    0
+  ],
+  "shadow_origin_offset": -0.0625,
+  "shadow_style_celestial": "SILHOUETTE",
+  "shadow_style_dynamic": "OCCLUDER_SPRITE_CAPPED",
+  "sound_die": "",
+  "sound_receive_damage": "",
+  "sounds_volume": 1.0,
+  "speed_modifier": 1.0,
+  "sprite_anchor": "BOTTOM_LEFT",
+  "sprite_variants": 0,
+  "spritesheet": "",
+  "target_layer_name": "",
+  "terrain": -1,
+  "terrain_set": -1,
+  "thermal_tolerance": 9999.0,
+  "tier": 1,
+  "tile_atlas_coords": [
+    0,
+    0
+  ],
+  "tile_source_id": 0,
+  "type": "ground_empty_data",
+  "use_biome_terrain": false,
+  "use_tilemap_layer": false,
+  "xp_reward": 0,
+  "z_index_offset": 0
+}
