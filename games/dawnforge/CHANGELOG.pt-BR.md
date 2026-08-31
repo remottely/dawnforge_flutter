@@ -8,6 +8,21 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.41.0
+
+### 🧹 Internal
+
+- O jogo agora sabe pôr uma coisa em ordem em relação a outra: em qual gaveta
+  ela fica (uma ferramenta, uma coisa que se constrói, um material), em qual
+  prateleira dentro dessa gaveta, e o quanto ela é boa. Nada aperta o botão
+  ainda — isto é a tabela que o botão vai ler.
+- São sete gavetas escritas, mas só três têm o que guardar hoje. Comida,
+  armadura, roupa e flecha ficam com o lugar delas na fila, vazio, para que
+  nada mude de posição quando elas chegarem — uma ordem que muda debaixo do
+  jogador depois é pior do que uma ordem que espera.
+- Todo tipo de ferramenta tem um lugar na prateleira dele, e um tipo que não
+  tiver para o jogo em vez de se pôr caladinho na frente de todos.
+
 ## 0.40.0
 
 ### 🧹 Internal

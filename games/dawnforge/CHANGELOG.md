@@ -8,6 +8,21 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.41.0
+
+### 🧹 Internal
+
+- The game now knows how to rank one thing against another: which drawer it
+  belongs in (a tool, a thing you build, a material), which shelf inside that
+  drawer, and how good it is. Nothing presses the button yet — this is the
+  table the button will read.
+- Seven drawers are written down, though only three have anything to put in
+  them today. Food, armour, clothes and arrows keep their places in the row,
+  empty, so that nothing shuffles when they arrive — an order that changes
+  under the player later is worse than an order that waits.
+- Every kind of tool has a place on its shelf, and a kind that does not have
+  one stops the game rather than quietly sorting itself to the front.
+
 ## 0.40.0
 
 ### 🧹 Internal
