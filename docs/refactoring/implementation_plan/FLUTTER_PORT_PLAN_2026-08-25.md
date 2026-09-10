@@ -17,7 +17,7 @@
 
 | Phase | State | Gate |
 |:---|:---|:---|
-| FP0 Reset & harness | gate met 2026-08-25 (FP0.9 skills pending; FP0.10–FP0.18 harness debt opened 2026-09-10) | harness scripts run; hooks wired; suite command green on empty project |
+| FP0 Reset & harness | gate met 2026-08-25 (FP0.9 skills pending, sliced (a)–(f) 2026-09-10 — 21 over there, 0 here; FP0.10–FP0.18 harness debt opened 2026-09-10, draining) | harness scripts run; hooks wired; suite command green on empty project |
 | FP1 Core foundation | gate met 2026-08-26 (FP1.5 component slice, FP1.9 domain rules pending) | `flutter test` green over events/registry/factory/component/FSM/grid with zero Flame imports |
 | FP2 Pipeline retarget | gate met 2026-08-26 (FP2.3 sprites, FP2.4 translations, FP2.5 component-keys pending; the step-by-step map against the spec's 27 is `AUTOMATION_DEBT_2026-09-10.md` §1.1 — steps 02/03 owe `--check`, step 99 is unported, our step 11 folds the spec's 09 and 25) | `dawnforge.py full` emits JSON; registries boot from a real pack slice; `--check` clean |
 | FP3 World & rendering | gate met 2026-08-26 (120fps hand-run, macOS) | player walks a chunked world at 60fps with debug overlay proving frame budget |
@@ -51,6 +51,55 @@
 - **FP0.9** Skills: port `onboard`, `recall`, `ledger`, `ship`, `plan-doc`, `suite` first;
   `scaffold-worldobject` re-templated in FP1; `sweep`, `player-docs`, `ui-text` after
   their subjects exist; new `flutter-run` know-how skill replaces `godot-run`.
+
+  **Sliced 2026-09-10 (0.60.0), and the list above was short.** `.claude/skills/` does not
+  exist in this repo — the folder FP0.4 points the knowledge index at has never had a
+  subject. The spec carries **21**: 18 authored by that repo and 3 generic ones it
+  installed (`skill-creator`, `systematic-debugging`, `verification-before-completion`),
+  which are nobody's port — they install themselves. Of the 18, the bullet above names 10
+  and **omits 5 that apply here**: `decision`, `pipeline`, `rule-audit`, `metrics`,
+  `grill-me`. Each slice below is one commit; a skill lands with its trigger written down
+  and a `COMMANDS.md`-style row is *not* owed (a skill is not a script — rule 23 does not
+  reach it, and `docs/AI_HARNESS.md` §1 is where it is announced).
+  - **(a) start correctly** — `onboard` (what the repo is, which plan is LIVE per
+    `docs/refactoring/README.md`, what `PENDING.md` says, what HEAD is; the spec's version
+    also reads its lane board, which is `D-8` and does not cross), `recall`
+    (`search_project_knowledge.py` with the query shapes that work), `suite`
+    (`check_test_suite_is_clean.py` + how to triage a Dart failure, which is a different
+    triage from GUT's).
+  - **(b) record correctly** — `ledger` (rule 27's four fields, `--next` for the ID, the
+    duplicate check first), `decision` (the register machinery: prefix + next free ID,
+    what a fork must carry, where a settled one moves to — this is the skill whose absence
+    let two ID spaces open one hyphen apart, `AUTOMATION_DEBT_2026-09-10.md` AD2.2),
+    `plan-doc` (the skeleton `docs/refactoring/README.md` already states, so this skill is
+    mostly a pointer at a document that exists).
+  - **(c) finish correctly** — `player-docs` (rule 34: both changelogs in seven-year-old
+    prose, the manual pair, the `0.0.0-NEXT` section), `rule-audit` (the diff against the
+    34 rules; the mechanical subset is what `check_edited_file_rules.py` already greps, so
+    the skill is the reading the hook cannot do), `ship` (the version-from-HEAD ritual —
+    and **not** the spec's ten-lane machinery, `D-8`; here it is one recipe with one
+    pathspec, and `AUTOMATION_DEBT_2026-09-10.md` AD3.1/AD3.2 is the script half of the
+    same job, so this slice waits for those two or it teaches a recipe that is about to
+    change).
+  - **(d) this track's own** — `flutter-run` (run the macOS app outside the suite: which
+    device, hot reload versus restart, where the frame-budget overlay lives — the FP3 gate
+    was hand-run and nothing writes down how), `pipeline` (`dawnforge.py`: which step an
+    edit needs, `--check` versus `--dry-run`, and the step map of
+    `AUTOMATION_DEBT_2026-09-10.md` §1.1), `ui-text` (rule 19's three steps end to end,
+    now that FP0.17's guard makes a missing key a red suite instead of a crash),
+    `scaffold-worldobject` (re-templated: factory, data class, registry arm, component
+    keys, the test — the five files rule 1 and rule 3 make mandatory).
+  - **(e) periodic** — `sweep` (the ledger-draining ritual `docs/refactoring/README.md`
+    describes and nothing has run yet), `metrics` (the counts a sweep needs; here they are
+    the numbers the three side-lane documents already measure, so the skill is a runner,
+    not a new measurement).
+  - **(f) `grill-me`** — the interview that makes a developer close a fork. It is the one
+    skill whose subject is the human, and this repo has 11 open forks across three
+    registers, so it has more to work with than most. It needs nothing built first.
+  - **N/A:** `csharp-interop` (rule 26 is reserved N/A in Dart), `world3d` (one ground),
+    and the three installed generics.
+  - **Gate:** a fresh session runs `/onboard` and can name the live plan, the open forks
+    and the next executable step without reading a plan end to end.
 
 **Harness debt, opened 2026-09-10 (0.48.1).** Each item is a script or a document the
 rules already assume exists. None needs a decision; each names the ledger entry or the
@@ -100,13 +149,19 @@ here is restated there.
   the Godot repo's `L-306` lesson (`check_pipeline_check_coverage.py`). NOT in the suite:
   it needs a repo the suite cannot assume. First green run: 28 forked documents, 67
   forked keys, `L-006`'s own `cave_elevation_drops` among them; `L-014` opened.
-- **FP0.12** the merge-commit path `L-008` found: `block_forbidden_git.py` learns
-  `git merge --continue` and refuses it, pointing at a new
-  `scripts/project/commit_merge.py` that (1) asserts the index holds exactly the paths the
-  merge itself touches (`git diff --name-only $(git merge-base HEAD MERGE_HEAD)
-  MERGE_HEAD` vs `git diff --cached --name-only`), (2) runs the attribution check on the
-  message, (3) commits. The one case the guard could not inspect becomes the one case a
-  script inspects for it. `docs/AI_HARNESS.md` §3 gains the row.
+- **FP0.12** — **done 0.59.0.** The merge-commit path `L-008` found: `block_forbidden_git.py`
+  learns `git merge --continue` and refuses it, pointing at a new
+  `scripts/project/commit_merge.py` that (1) refuses a merge still holding a conflicted
+  path, (2) asserts every STAGED path is one the merge itself brought (`git diff
+  --name-only <merge-base> MERGE_HEAD` ⊇ `git diff --cached --name-only`; the subset
+  direction is the meaningful one — a file both branches changed identically is staged by
+  neither, and a `-s ours` merge stages nothing), (3) runs the attribution check on the
+  message, reading the hook's own pattern rather than a second copy of it, (4) commits.
+  **A second hole was found and closed while the first was being closed:** the guard read
+  the command word from token 0, so a leading `VAR=value` — `GIT_EDITOR=true git …`,
+  exactly what `L-008` records being used — walked past EVERY rule in the file, `rebase`
+  and the bare-commit rule included. Environment assignments are now stripped first.
+  `docs/AI_HARNESS.md` §3 carries both. `L-008` drained.
 - **FP0.13** — **done 0.53.0.** The cross-repo path sweep `L-003` asked for:
   `dawnforge_project` → `tessera_project` in `CLAUDE.md` (Project Overview, §Key File
   Locations), `docs/AI_HARNESS.md` §5 and the study's §1 table (the study's dated prose

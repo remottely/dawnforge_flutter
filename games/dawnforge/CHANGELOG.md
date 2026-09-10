@@ -8,6 +8,17 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.60.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. The bigger version of this game keeps a set of
+  written routines that tell a helper how to do each recurring job properly —
+  how to start a work session, how to write down a decision, how to finish and
+  file everything. There are 21 of them over there and none here, and the note
+  that promised to bring them over listed ten and forgot five. The full list is
+  now written down in six batches, in the order that makes each one useful.
+
 ## 0.59.0
 
 ### 🧹 Internal
@@ -19,6 +30,19 @@
   were missing. Now there is a list, grouped so each batch of pages arrives
   with the part of the game that needs it. It turned up one surprise: the
   workbench has 115 pages and we copied one of them.
+
+## 0.60.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. When two lines of work are joined back together,
+  the note that records the joining could only be written by a command nobody
+  was allowed to check — so the one moment that saves the most work at once was
+  the one moment nobody was watching. There is now a command that looks first:
+  it makes sure nothing has been slipped in that the joining did not bring, and
+  only then writes the note. While building it we found that putting a setting
+  in front of a command made the whole guard look the other way. That is fixed
+  too.
 
 ## 0.58.0
 
