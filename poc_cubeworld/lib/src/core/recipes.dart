@@ -36,6 +36,9 @@ class Recipes {
     r('wooden_shovel', 1, {'oak_planks': 1, 'stick': 2});
     r('wooden_sword', 1, {'oak_planks': 2, 'stick': 1});
     r('ladder', 3, {'stick': 7});
+    r('oak_slab', 6, {'oak_planks': 3});
+    r('stone_slab', 6, {'stone': 3});
+    r('cobblestone_slab', 6, {'cobblestone': 3});
     r('mushroom_stew', 1, {'mushroom': 2, 'wooden_shovel': 0});
     // Table
     r('stone_pickaxe', 1, {'cobblestone': 3, 'stick': 2}, 'crafting_table');
@@ -75,6 +78,9 @@ class Recipes {
     r('tnt', 1, {'gunpowder': 5, 'sand': 4}, 'crafting_table');
     r('bed', 1, {'wool': 3, 'oak_planks': 3}, 'crafting_table');
     r('door', 1, {'oak_planks': 6}, 'crafting_table');
+    r('oak_fence', 3, {'stick': 4, 'oak_planks': 2}, 'crafting_table');
+    r('oak_stairs', 4, {'oak_planks': 6}, 'crafting_table');
+    r('stone_stairs', 4, {'stone_bricks': 6}, 'crafting_table');
     r('boat', 1, {'oak_planks': 5}, 'crafting_table');
     r('enchanting_table', 1, {'diamond': 1, 'magic_dust': 4, 'stone_bricks': 4}, 'crafting_table');
     r('wooden_hoe', 1, {'oak_planks': 2, 'stick': 2});

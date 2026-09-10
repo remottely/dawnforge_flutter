@@ -3,7 +3,22 @@ import 'dart:typed_data';
 /// The block table. INDEX IS THE SAVE CONTRACT: a chunk stores bytes and a save
 /// file stores those bytes, so entries are appended, never reordered or removed.
 /// Byte-for-byte the same order as the Godot POC (`src/core/blocks.gd`).
-enum BlockShape { cube, cross, liquid, torch, flower, panelZ, panelX, wallTorch }
+enum BlockShape {
+  cube,
+  cross,
+  liquid,
+  torch,
+  flower,
+  panelZ,
+  panelX,
+  wallTorch,
+  slab,
+  fence,
+  stairsN,
+  stairsE,
+  stairsS,
+  stairsW,
+}
 
 enum ToolType { none, pickaxe, axe, shovel, sword, hoe }
 
@@ -117,6 +132,18 @@ class Blocks {
     BlockDef('enchanting_table', 'Enchanting Table', 0.38, 0.18, 0.55, hardness: 3.0, tool: ToolType.pickaxe, tier: 1, light: 7),
     BlockDef('brewing_stand', 'Brewing Stand', 0.30, 0.22, 0.30, hardness: 2.0, tool: ToolType.pickaxe, light: 3),
     BlockDef('waypoint', 'Waypoint', 0.35, 0.75, 0.95, hardness: 3.0, tool: ToolType.pickaxe, tier: 1, light: 10),
+    BlockDef('oak_slab', 'Oak Slab', 0.72, 0.56, 0.33, shape: BlockShape.slab, opaque: false, hardness: 2.0, tool: ToolType.axe),
+    BlockDef('stone_slab', 'Stone Slab', 0.50, 0.50, 0.52, shape: BlockShape.slab, opaque: false, hardness: 2.0, tool: ToolType.pickaxe, tier: 1),
+    BlockDef('cobblestone_slab', 'Cobblestone Slab', 0.44, 0.44, 0.45, shape: BlockShape.slab, opaque: false, hardness: 2.0, tool: ToolType.pickaxe, tier: 1),
+    BlockDef('oak_fence', 'Oak Fence', 0.43, 0.30, 0.17, shape: BlockShape.fence, opaque: false, hardness: 2.0, tool: ToolType.axe),
+    BlockDef('oak_stairs_n', 'Oak Stairs', 0.72, 0.56, 0.33, shape: BlockShape.stairsN, opaque: false, hardness: 2.0, tool: ToolType.axe, drop: 'oak_stairs'),
+    BlockDef('oak_stairs_e', 'Oak Stairs', 0.72, 0.56, 0.33, shape: BlockShape.stairsE, opaque: false, hardness: 2.0, tool: ToolType.axe, drop: 'oak_stairs'),
+    BlockDef('oak_stairs_s', 'Oak Stairs', 0.72, 0.56, 0.33, shape: BlockShape.stairsS, opaque: false, hardness: 2.0, tool: ToolType.axe, drop: 'oak_stairs'),
+    BlockDef('oak_stairs_w', 'Oak Stairs', 0.72, 0.56, 0.33, shape: BlockShape.stairsW, opaque: false, hardness: 2.0, tool: ToolType.axe, drop: 'oak_stairs'),
+    BlockDef('stone_stairs_n', 'Stone Stairs', 0.50, 0.50, 0.52, shape: BlockShape.stairsN, opaque: false, hardness: 2.0, tool: ToolType.pickaxe, tier: 1, drop: 'stone_stairs'),
+    BlockDef('stone_stairs_e', 'Stone Stairs', 0.50, 0.50, 0.52, shape: BlockShape.stairsE, opaque: false, hardness: 2.0, tool: ToolType.pickaxe, tier: 1, drop: 'stone_stairs'),
+    BlockDef('stone_stairs_s', 'Stone Stairs', 0.50, 0.50, 0.52, shape: BlockShape.stairsS, opaque: false, hardness: 2.0, tool: ToolType.pickaxe, tier: 1, drop: 'stone_stairs'),
+    BlockDef('stone_stairs_w', 'Stone Stairs', 0.50, 0.50, 0.52, shape: BlockShape.stairsW, opaque: false, hardness: 2.0, tool: ToolType.pickaxe, tier: 1, drop: 'stone_stairs'),
   ];
 
   static final Map<String, int> _indexById = {
@@ -161,6 +188,27 @@ class Blocks {
   }
 
   static int lightOf(int index) => defs[index].light;
+
+  static bool isStairs(int index) {
+    final sh = defs[index].shape;
+    return sh.index >= BlockShape.stairsN.index && sh.index <= BlockShape.stairsW.index;
+  }
+
+  /// The orientation of a stairs block whose HIGH step sits at the back, along
+  /// [forwardX]/[forwardZ] (the direction the placer looks). [index] is any of
+  /// the four orientations of one stairs.
+  static int stairsFacing(int index, double forwardX, double forwardZ) {
+    if (!isStairs(index)) throw ArgumentError('not a stairs block: ${idOf(index)}');
+    final id = idOf(index);
+    final base = id.substring(0, id.length - 2);
+    final String suffix;
+    if (forwardX.abs() > forwardZ.abs()) {
+      suffix = forwardX > 0 ? '_e' : '_w';
+    } else {
+      suffix = forwardZ > 0 ? '_s' : '_n';
+    }
+    return indexOf(base + suffix);
+  }
 
   // --- tables handed to the mesher isolate ------------------------------------
 

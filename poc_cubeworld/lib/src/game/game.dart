@@ -1139,6 +1139,35 @@ class Game extends ChangeNotifier {
       world.setBlock(b + const IVec3(3, 0, 0), Blocks.indexOf('enchanting_table'));
       spawnBoat(b.toVector3() + Vector3(-3.5, 0.6, 2.5), 0.4);
     }
+    // --stage19: a row of slabs, three fences in a line, and two stairs three
+    // blocks ahead.
+    final stage19FacesBefore = world.facesEmitted;
+    var stage19Placed = 0;
+    if (_hasArg('--stage19')) {
+      // The player looks north (-Z); the row sits one block below eye level,
+      // shifted right so the block on the left of the spawn does not hide it.
+      final b = IVec3.floor(player.position) + const IVec3(3, -1, -3);
+      final stairs = Blocks.stairsFacing(Blocks.indexOf('oak_stairs_n'), 0, -1);
+      final stoneStairs = Blocks.stairsFacing(Blocks.indexOf('stone_stairs_n'), 0, -1);
+      final row = [
+        b + const IVec3(-3, 0, 0), b + const IVec3(-2, 0, 0), b + const IVec3(-1, 0, 0), b,
+        b + const IVec3(1, 0, 0), b + const IVec3(2, 0, 0), b + const IVec3(3, 0, 0),
+      ];
+      final ids = [
+        Blocks.indexOf('oak_slab'), Blocks.indexOf('stone_slab'), Blocks.indexOf('oak_fence'),
+        Blocks.indexOf('oak_fence'), Blocks.indexOf('oak_fence'), stairs, stoneStairs,
+      ];
+      for (var i = 0; i < row.length; i++) {
+        for (var dz = -1; dz < 3; dz++) {
+          for (var dy = 0; dy < 4; dy++) {
+            world.setBlock(row[i] + IVec3(0, dy, dz), Blocks.air); // clear the view
+          }
+        }
+        // Contrasts with every block in the row.
+        world.setBlock(row[i] + IVec3.down, Blocks.indexOf('dark_stone'));
+        if (world.setBlock(row[i], ids[i])) stage19Placed += 1;
+      }
+    }
     Mob? dummy;
     if (_hasArg('--strike') && !net.isClient) {
       dummy = Mob();
@@ -1162,6 +1191,10 @@ class Game extends ChangeNotifier {
       }
     }
     if (dummy != null) debugPrint('[probe] strike: zombie hp ${dummy.hp.toStringAsFixed(1)} after');
+    if (_hasArg('--stage19')) {
+      debugPrint('[probe] stage19: placed $stage19Placed blocks, faces before/after '
+          '$stage19FacesBefore/${world.facesEmitted}');
+    }
     if (elite != null) {
       final ach = Achievements.instance;
       debugPrint('[probe] stage18: effects ${player.effects.rows.keys.toList()}');

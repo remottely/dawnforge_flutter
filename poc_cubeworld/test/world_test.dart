@@ -71,4 +71,50 @@ void main() {
     // top faces + the four open sides (neighbours are air when the ring is missing)
     expect(r.solid.faceCount, 16 * 16 + 4 * 16 * 40);
   });
+
+  test('slab, fence and stairs mesh as sub-block boxes', () {
+    int facesOf(void Function(Uint8List c) place) {
+      final c = Uint8List(16 * 16 * 128);
+      place(c);
+      final mesher = ChunkMesher(
+          palette: Blocks.palette(), shape: Blocks.shapes(), opaque: Blocks.opaqueTable(), emission: Blocks.emission());
+      return mesher.build(0, 0, c, null, null, null, null, null, null, null, null).solid.faceCount;
+    }
+
+    int at(int x, int y, int z) => x + 16 * (z + 16 * y);
+
+    // A slab floating in air: six boxes faces, none culled.
+    expect(facesOf((c) => c[at(8, 40, 8)] = Blocks.indexOf('oak_slab')), 6);
+    // A fence with no neighbour is a bare post: six faces, no rails.
+    expect(facesOf((c) => c[at(8, 40, 8)] = Blocks.indexOf('oak_fence')), 6);
+    // Two fences side by side: each is a post (6) plus two rails reaching the
+    // neighbour. A rail's far face is flush with the block boundary and meets
+    // the same block id, so it is culled: 5 faces per rail.
+    expect(facesOf((c) {
+      c[at(8, 40, 8)] = Blocks.indexOf('oak_fence');
+      c[at(9, 40, 8)] = Blocks.indexOf('oak_fence');
+    }), (6 + 5 * 2) * 2);
+    // Stairs: the bottom slab's six faces plus the step's five (its bottom face
+    // is inside the block and skipped).
+    expect(facesOf((c) => c[at(8, 40, 8)] = Blocks.indexOf('oak_stairs_n')), 11);
+    // A slab sitting on stone loses its bottom face to the opaque neighbour;
+    // the stone keeps all six, because a slab does not occlude.
+    expect(facesOf((c) {
+      c[at(8, 39, 8)] = Blocks.indexOf('stone');
+      c[at(8, 40, 8)] = Blocks.indexOf('oak_slab');
+    }), 5 + 6);
+  });
+
+  test('stairs orientation follows the placer', () {
+    final n = Blocks.indexOf('oak_stairs_n');
+    expect(Blocks.isStairs(n), isTrue);
+    expect(Blocks.stairsFacing(n, 0, -1), Blocks.indexOf('oak_stairs_n'));
+    expect(Blocks.stairsFacing(n, 0, 1), Blocks.indexOf('oak_stairs_s'));
+    expect(Blocks.stairsFacing(n, 1, 0), Blocks.indexOf('oak_stairs_e'));
+    expect(Blocks.stairsFacing(n, -1, 0), Blocks.indexOf('oak_stairs_w'));
+    // The four orientations are one item.
+    expect(Items.has('oak_stairs'), isTrue);
+    expect(Items.has('oak_stairs_n'), isFalse);
+    expect(Items.blockOf('oak_stairs'), Blocks.indexOf('oak_stairs_n'));
+  });
 }

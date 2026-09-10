@@ -91,7 +91,8 @@ class _Surface {
 
 /// Face-culling mesher with baked ambient occlusion, sky + block light,
 /// per-voxel colour noise, liquids (lowered surface, own transparent surface),
-/// cross plants and torches. Works on a volume padded by one block on every
+/// cross plants, torches, and the sub-block solids (slab, fence, stairs) built
+/// from axis-aligned boxes lit like cube faces. Works on a volume padded by one block on every
 /// horizontal side, filled from the eight neighbour chunks, so a border face
 /// and its AO corners never guess.
 class ChunkMesher {
@@ -116,7 +117,13 @@ class ChunkMesher {
       shapeFlower = 4,
       shapePanelZ = 5,
       shapePanelX = 6,
-      shapeWallTorch = 7;
+      shapeWallTorch = 7,
+      shapeSlab = 8,
+      shapeFence = 9,
+      shapeStairsN = 10,
+      shapeStairsE = 11,
+      shapeStairsS = 12,
+      shapeStairsW = 13;
 
   /// 4 floats per block (rgba, linear).
   final Float32List palette;
@@ -291,6 +298,78 @@ class ChunkMesher {
     }
   }
 
+  /// One box of a sub-block shape, in block-local [0,1] space. A face flush
+  /// with the block boundary is culled and lit exactly like a cube face
+  /// (neighbour cell, AO corners); an inner face is lit from the cell itself
+  /// with no AO.
+  void _subBox(_Surface s, int x, int y, int z, int id, bool cullSame, List<int> aos,
+      double lox, double loy, double loz, double hix, double hiy, double hiz,
+      double br, double bg, double bb, {int skipMask = 0}) {
+    for (var f = 0; f < 6; f++) {
+      if ((skipMask & (1 << f)) != 0) continue;
+      final oxf = _faceOffsets[f * 3], oyf = _faceOffsets[f * 3 + 1], ozf = _faceOffsets[f * 3 + 2];
+      final positive = oxf + oyf + ozf > 0;
+      final double edge;
+      if (oxf != 0) {
+        edge = positive ? hix : lox;
+      } else if (oyf != 0) {
+        edge = positive ? hiy : loy;
+      } else {
+        edge = positive ? hiz : loz;
+      }
+      final flush = edge == (positive ? 1.0 : 0.0);
+      var ax = x, ay = y, az = z;
+      if (flush) {
+        ax += oxf;
+        ay += oyf;
+        az += ozf;
+        if (ay < 0) continue;
+        final n = _at(ax, ay, az);
+        if (n != _air) {
+          if (_opaque[n]) continue;
+          if (cullSame && n == id) continue;
+        }
+      }
+      final tint = _faceTint[f] * _lightFactor(ax, ay, az);
+      final k = f * 12;
+      var flip = false;
+      if (flush) {
+        for (var i = 0; i < 4; i++) {
+          final sx = _faceVerts[k + i * 3] == 0 ? -1 : 1;
+          final sy = _faceVerts[k + i * 3 + 1] == 0 ? -1 : 1;
+          final sz = _faceVerts[k + i * 3 + 2] == 0 ? -1 : 1;
+          int s1, s2, cr;
+          if (oyf != 0) {
+            s1 = _opaqueAt(ax + sx, ay, az) ? 1 : 0;
+            s2 = _opaqueAt(ax, ay, az + sz) ? 1 : 0;
+            cr = _opaqueAt(ax + sx, ay, az + sz) ? 1 : 0;
+          } else if (oxf != 0) {
+            s1 = _opaqueAt(ax, ay + sy, az) ? 1 : 0;
+            s2 = _opaqueAt(ax, ay, az + sz) ? 1 : 0;
+            cr = _opaqueAt(ax, ay + sy, az + sz) ? 1 : 0;
+          } else {
+            s1 = _opaqueAt(ax + sx, ay, az) ? 1 : 0;
+            s2 = _opaqueAt(ax, ay + sy, az) ? 1 : 0;
+            cr = _opaqueAt(ax + sx, ay + sy, az) ? 1 : 0;
+          }
+          aos[i] = _ao(s1, s2, cr);
+        }
+        flip = aos[0] + aos[2] < aos[1] + aos[3];
+      } else {
+        aos[0] = aos[1] = aos[2] = aos[3] = 3;
+      }
+      final first = s.vertexCount;
+      for (var i = 0; i < 4; i++) {
+        final t = tint * _aoFactor[aos[i]];
+        final vx = x + (_faceVerts[k + i * 3] == 0 ? lox : hix);
+        final vy = y + (_faceVerts[k + i * 3 + 1] == 0 ? loy : hiy);
+        final vz = z + (_faceVerts[k + i * 3 + 2] == 0 ? loz : hiz);
+        s.vertex(vx, vy, vz, oxf.toDouble(), oyf.toDouble(), ozf.toDouble(), br * t, bg * t, bb * t, 1.0);
+      }
+      s.quadIndices(first, flip);
+    }
+  }
+
   void _quad(_Surface s, List<double> a, List<double> b, List<double> c, List<double> d, double nx, double ny, double nz,
       double r1, double g1, double b1, double r2, double g2, double b2) {
     final first = s.vertexCount;
@@ -386,6 +465,51 @@ class ChunkMesher {
               } else {
                 _box(solid, ox - 0.04, oy + 0.45, oz + 0.78, ox + t + 0.04, oy + 0.57, oz + 0.9, kr, kg, kb, kr, kg, kb);
               }
+            }
+            continue;
+          }
+
+          if (sh >= shapeSlab && sh <= shapeStairsW) {
+            // Stairs never cull against their own kind: a step's face may sit
+            // against a neighbour's empty half.
+            final cullSame = sh == shapeSlab || sh == shapeFence;
+            if (sh == shapeSlab) {
+              _subBox(solid, x, y, z, id, cullSame, aos, 0, 0, 0, 1, 0.5, 1, br, bg, bb);
+            } else if (sh == shapeFence) {
+              // Centre post, then two rails toward every horizontal neighbour
+              // that is a fence or an opaque block. _at reads the padded
+              // volume, so a neighbour across the chunk border connects too.
+              const p0 = 0.375, p1 = 0.625, r0 = 0.4375, r1 = 0.5625;
+              _subBox(solid, x, y, z, id, cullSame, aos, p0, 0, p0, p1, 1, p1, br, bg, bb);
+              bool joins(int dx, int dz) {
+                final n = _at(x + dx, y, z + dz);
+                return n != _air && (_opaque[n] || shape[n] == shapeFence);
+              }
+
+              void rails(double lx, double lz, double hx, double hz) {
+                _subBox(solid, x, y, z, id, cullSame, aos, lx, 0.375, lz, hx, 0.5, hz, br, bg, bb);
+                _subBox(solid, x, y, z, id, cullSame, aos, lx, 0.75, lz, hx, 0.875, hz, br, bg, bb);
+              }
+
+              if (joins(1, 0)) rails(p1, r0, 1.0, r1);
+              if (joins(-1, 0)) rails(0.0, r0, p0, r1);
+              if (joins(0, 1)) rails(r0, p1, r1, 1.0);
+              if (joins(0, -1)) rails(r0, 0.0, r1, p0);
+            } else {
+              // Bottom slab plus a top-half back step; the step's bottom face
+              // is inside the block.
+              _subBox(solid, x, y, z, id, cullSame, aos, 0, 0, 0, 1, 0.5, 1, br, bg, bb);
+              double slx, sly, slz, shx, shy, shz;
+              if (sh == shapeStairsN) {
+                slx = 0; sly = 0.5; slz = 0; shx = 1; shy = 1; shz = 0.5;
+              } else if (sh == shapeStairsS) {
+                slx = 0; sly = 0.5; slz = 0.5; shx = 1; shy = 1; shz = 1;
+              } else if (sh == shapeStairsE) {
+                slx = 0.5; sly = 0.5; slz = 0; shx = 1; shy = 1; shz = 1;
+              } else {
+                slx = 0; sly = 0.5; slz = 0; shx = 0.5; shy = 1; shz = 1;
+              }
+              _subBox(solid, x, y, z, id, cullSame, aos, slx, sly, slz, shx, shy, shz, br, bg, bb, skipMask: 1 << 1);
             }
             continue;
           }

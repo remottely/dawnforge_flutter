@@ -228,7 +228,11 @@ class Player extends VoxelBody implements Target {
 
   Vector3 get forward => Vector3(-math.sin(yaw) * math.cos(pitch), math.sin(pitch), -math.cos(yaw) * math.cos(pitch));
   Vector3 get flatForward => Vector3(-math.sin(yaw), 0, -math.cos(yaw));
-  Vector3 get rightVec => Vector3(math.cos(yaw), 0, -math.sin(yaw));
+  // flutter_scene builds its view basis as `up x forward`, so its screen-right
+  // is the mirror of the right-handed right vector the Godot POC uses: at yaw 0
+  // world +X projects to the left half of the view. Every lateral quantity here
+  // is that mirrored basis, or strafing and the shoulder offset come out flipped.
+  Vector3 get rightVec => Vector3(-math.cos(yaw), 0, math.sin(yaw));
   Vector3 get upVec => Vector3(math.sin(pitch) * math.sin(yaw), math.cos(pitch), math.sin(pitch) * math.cos(yaw));
   Vector3 get backVec => -forward;
 
@@ -338,7 +342,7 @@ class Player extends VoxelBody implements Target {
     if (!gameplay) return;
     final look = input.takeLookDelta();
     if (look != Offset.zero) {
-      yaw -= look.dx * mouseSensitivity * sensitivityScale;
+      yaw += look.dx * mouseSensitivity * sensitivityScale;
       pitch = (pitch - look.dy * mouseSensitivity * sensitivityScale).clamp(-1.45, 1.45);
     }
     final wheel = input.takeWheel();
@@ -774,7 +778,7 @@ class Player extends VoxelBody implements Target {
       riding = null;
       b.driver = null;
       b.throttle = 0.0;
-      position = b.position + Vector3(-math.sin(yaw + math.pi * 0.5), 0.6, -math.cos(yaw + math.pi * 0.5)) * 1.2;
+      position = b.position - rightVec * 1.2 + Vector3(0, 0.6, 0);
       velocity = Vector3.zero();
       return;
     }
@@ -1093,6 +1097,10 @@ class Player extends VoxelBody implements Target {
           _useCooldown = 0.3;
         }
         return;
+      }
+      if (Blocks.isStairs(bid)) {
+        final f = flatForward;
+        bid = Blocks.stairsFacing(bid, f.x, f.z);
       }
       if (Blocks.isSolid(bid) && overlapsBlock(target)) return;
       for (final mob in main.mobs) {

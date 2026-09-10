@@ -89,8 +89,20 @@ class Items {
       if (i == Blocks.air) continue;
       final d = Blocks.def(i);
       if (d.hardness < 0 && d.id != 'bedrock') continue; // water/lava are not items
-      if (const ['door_x', 'door_z_open', 'door_x_open', 'wall_torch'].contains(d.id)) continue;
-      final itemId = d.id == 'door_z' ? 'door' : d.id;
+      // Orientations of one item.
+      if (const [
+        'door_x', 'door_z_open', 'door_x_open', 'wall_torch',
+        'oak_stairs_e', 'oak_stairs_s', 'oak_stairs_w',
+        'stone_stairs_e', 'stone_stairs_s', 'stone_stairs_w',
+      ].contains(d.id)) {
+        continue;
+      }
+      var itemId = d.id;
+      if (itemId == 'door_z') {
+        itemId = 'door';
+      } else if (itemId.endsWith('_stairs_n')) {
+        itemId = itemId.substring(0, itemId.length - 2); // oak_stairs_n -> oak_stairs
+      }
       add(ItemDef(id: itemId, name: d.name, kind: ItemKind.block, block: i, r: d.r, g: d.g, b: d.b));
     }
     add(const ItemDef(id: 'boat', name: 'Boat', kind: ItemKind.equipment, stack: 1, r: 0.55, g: 0.38, b: 0.20));
