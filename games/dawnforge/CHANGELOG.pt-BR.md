@@ -8,6 +8,25 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.68.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. O jogo irmão maior conhece **51 apertos de botão
+  diferentes** — andar, bater, alcançar, abrir a mochila, jogar uma coisa fora,
+  virar a página do cinto. Este jogo menor responde a **22** deles. Alguém
+  sentou e listou cada um: quais estão aqui, quais faltam e quais nunca vão vir
+  (alguns são do jogo de blocos, e aqui ninguém pula). Três são diferentes de
+  propósito: `Tab` abre a mochila aqui e vira o cinto lá, e é muito mais fácil
+  escolher um agora do que depois que uma página de ajuda contar a coisa errada
+  para quem joga.
+- Duas surpresas saíram da lista. O jogo irmão maior pode ser jogado com
+  **controle** e nunca com o dedo. Este jogo pode ser jogado com o **dedo** e
+  não com controle nenhum. E, com a mochila aberta, apertar um número ainda
+  troca a ferramenta da mão, porque o jogo decide "isso pode agora?" em cinco
+  lugares diferentes em vez de um só. Os dois ficaram anotados com o conserto ao
+  lado.
+
 ## 0.67.0
 
 ### 🧹 Internal

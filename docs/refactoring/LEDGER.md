@@ -89,6 +89,20 @@
 - **Cost of leaving it:** an index costs less than the thing it indexes or it is not an index. Reading `PENDING.md` now costs more than reading the port plan's progress table, which is the artifact it derives from, so the cheap first read a fresh session is promised does not exist and the expensive one is disguised as it. Most of the prose is also duplicated — the plan's own step carries it — so the drift is the second cost: two copies of one story, one of them not maintained by whoever edits the step. The repair is a MOVE, not a delete: rows 7, 8 and 9 carry breakdowns of finished work that no plan holds, and those belong in an `archive/` document rather than in an index or in a bin.
 - **Found while:** 2026-09-10 — appending the fourth row of the day while writing the side-lane documents.
 
+### L-020 · What a press is allowed to mean is decided by whoever listens for it
+
+- **Lens:** input / rule 25's shape
+- **Evidence:** `lib/src/core/systems/input/input_helper.dart:95-124` (0.67.0) raises every discrete intent unconditionally — a hotbar digit, the page flip, the bag toggle and cancel all leave the source with no idea what is on screen. Whether the press may act is then re-decided at four unrelated places (`dawnforge_game.dart:321`, `actor_player.dart:60`, `actor_player.dart:80`, `build_ghost_renderer.dart:71`) and at a fifth that does not ask at all (`hotbar_view.dart:70-72`), so pressing `3` with the bag open still changes what is in the player's hand. The spec answers this centrally: `InputActionCatalog.CONTEXTS` declares the contexts each of its 51 actions may fire in and `is_active(action)` is asked once, at the source, with a build failure for any action nobody classified.
+- **Cost of leaving it:** it grows by one forgotten guard per new subscriber, and the forgetting is silent — the press does something reasonable in the wrong context rather than crashing, which is rule 5 inverted. It also blocks `TEXT_ENTRY`: `dawnforge_game.dart:339-345` returns `KeyEventResult.handled` for every key, so the first text field FP6.4 needs cannot be typed into, and the reason will look like a Flutter focus problem rather than a missing context table.
+- **Found while:** 2026-09-10 — measuring rule 12's parity across the two repos for `INPUT_PARITY_2026-09-10.md`.
+
+### L-021 · The one string the player reads that no translation guard can see
+
+- **Lens:** content / rule 19 at the pack boundary
+- **Evidence:** `interaction_prompt` is authored as finished English in the pack — 11 documents at 0.67.0, seven of them non-empty (`"Harvest [E]"` ×6, `"Interact [E]"` ×1, `games/dawnforge/data/forge_almanac/`). It reaches the player through `InteractableComponent.prompt` (`lib/src/core/components/i_interactable/interactable_component.dart`, 0.67.0) and the hover indicator FP5.1(e) will draw it verbatim. `scripts/project/check_translation_keys.py` (FP0.17) only reads `tr()` calls under `lib/`, so a display string living in a CONTENT field is invisible to it, in both repos: the spec's `i_prop_interactable.gd:42` assigns it raw too, and its own `ui_strings` never carries a key for it.
+- **Cost of leaving it:** the first locale switch (FP5.3) leaves every prompt in English while every other word on screen turns, and nothing fails — the guard is green because the string was never a key. It is also the key's shape that is wrong, not just its absence: `[E]` bakes a keyboard binding into content, so `D-1`'s rebinding to `E` was correct only by accident and a gamepad reads a keyboard key off a bush. The repair is one pack field (`interaction_prompt_key`) plus the binding resolved at draw time, and it is cheapest before the indicator exists.
+- **Found while:** 2026-09-10 — porting FP4.5(e), reading the two interaction fields across the pack.
+
 ## Drained
 
 | ID | Title | Drained into |

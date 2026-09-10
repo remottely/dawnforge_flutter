@@ -8,6 +8,25 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.68.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. The big brother game knows **51 different button
+  presses** — walk, swing, reach, open the bag, throw a thing away, turn the
+  page of your belt. This smaller game answers **22** of them. Somebody sat down
+  and listed every single one: which ones are here, which ones are missing, and
+  which ones will never come (a few belong to the block-world game and there is
+  no jumping here). Three of them are on purpose different: `Tab` opens your bag
+  here and flips your belt over there, and it is much easier to pick one now
+  than after a help page has told players the wrong thing.
+- Two surprises came out of the list. The big brother game can be played with a
+  **controller** and never with a finger. This game can be played with a
+  **finger** and not at all with a controller. And when your bag is open,
+  pressing a number key still swaps the tool in your hand, because the game
+  decides "is this allowed right now?" in five different places instead of one.
+  Both are written down with the fix beside them.
+
 ## 0.67.0
 
 ### 🧹 Internal

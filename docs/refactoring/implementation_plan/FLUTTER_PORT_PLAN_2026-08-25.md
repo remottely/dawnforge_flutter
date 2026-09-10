@@ -498,6 +498,11 @@ inventory panel (0.25.0), the workstation panel (FP4.5f). **Gate:** HUD + tabbed
 settings + main menu, every surface through the blocker stack, nothing pauses, the world
 visibly moving behind every `BackdropFilter`.
 
+Every surface below reads input, and what a press is allowed to MEAN while that surface
+is up is not this phase's to invent: `INPUT_PARITY_2026-09-10.md` §4 holds the context
+table and `IP2`/`IP3` are the two items that must land before a surface can be typed
+into or safely stand over the hotbar.
+
 - **FP5.1 HUD** (`shared/ui/interface/hud.gd`, `i_hud_surface.gd`).
   - (a) `NotificationQueue` (`NotificationQueue.cs`): `Events.notificationAdded(text,
     type)` → queued display + a 50-deep history (`notificationHistoryUpdated`) + the
@@ -682,7 +687,11 @@ FP6 ─► everything that persists a new section (7.1, 7.2, 7.5, 7.6, 7.12)
   `AimSnapshot` was built to survive); (ii) actors hittable — `usePrimaryAction` over an
   actor, a corpse, loot and the death path (`WorldObjectDeathRules` is ported);
   (iii) the gamepad's virtual cursor (`gamepad_cursor.gd`, `player_cursor_component.gd`
-  — rule 12 broken in writing since 0.32.0; also unblocks the mouse-wheel hotbar of
+  — rule 12 broken in writing since 0.32.0; measured 2026-09-10 in
+  `INPUT_PARITY_2026-09-10.md`, which puts a number on it: the spec binds 36 of its 51
+  actions to a pad and this port answers none of them, and HOW a pad reaches Flutter at
+  all is `IP-D1`, a fork that wants answering before FP5.1 designs a surface for a
+  pointer only; also unblocks the mouse-wheel hotbar of
   PENDING #7); (iv) action costs (`action_cost_purse.gd`, `combo_tracker.gd`,
   `EnergyRules`/`StaminaRules`/`ManaRules` + their components and bars). Then the AI:
   `ActorCreature`/`IActorEnemy` hosts, `StateMachineBuilder` from `state_config` data over
