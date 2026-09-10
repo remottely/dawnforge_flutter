@@ -45,6 +45,11 @@ Quando a coisa finalmente quebra, aquilo de que ela era feita cai no chão onde
 ela estava, e vem para você quando você passa perto. O que cada coisa dá é
 dela — uma palmeira dá toras, um arbusto dá fibra.
 
+As plantas têm idade, e a idade decide. Uma palmeira crescida dá toras e às
+vezes uma semente; uma nova dá no máximo uma semente, e nada de madeira. Dá
+para ver a diferença olhando: um broto é pequeno e uma árvore crescida é alta.
+Se você precisa de madeira, procure as altas.
+
 ## Cuidado com o que segura você
 
 Algumas coisas não podem ser quebradas enquanto você está em cima delas. Um

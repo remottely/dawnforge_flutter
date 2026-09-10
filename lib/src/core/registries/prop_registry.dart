@@ -1,4 +1,5 @@
 import 'package:dawnforge/src/core/registries/registry_base.dart';
+import 'package:dawnforge/src/core/resources/world_objects/props/prop_crop_data.dart';
 import 'package:dawnforge/src/core/resources/world_objects/props/prop_data.dart';
 import 'package:dawnforge/src/core/resources/world_objects/props/prop_workstation_data.dart';
 
@@ -10,8 +11,7 @@ final class PropRegistry extends RegistryBase<PropData> {
   ///
   /// The `_` arm is the same shape `ItemRegistry`'s is, and for the same
   /// reason: the pack authors more prop families than have classes here
-  /// (`prop_crop_data`, `prop_storage_data`, `prop_sleepable_data` and the
-  /// rest), and every one of them reads as a plain [PropData] until the system
+  /// (`prop_storage_data`, `prop_sleepable_data` and the rest), and every one of them reads as a plain [PropData] until the system
   /// that needs its extra fields is ported. That is the honest answer for a
   /// family whose extras nothing reads, not a fallback over missing data
   /// (rule 5).
@@ -22,6 +22,7 @@ final class PropRegistry extends RegistryBase<PropData> {
   /// because nothing had asked yet.
   void registerJson(Map<String, Object?> json) {
     final data = switch (json['type']) {
+      'prop_crop_data' => PropCropData.fromJson(json),
       'prop_workstation_data' => PropWorkstationData.fromJson(json),
       _ => PropData.fromJson(json),
     };

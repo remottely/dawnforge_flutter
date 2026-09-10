@@ -23,7 +23,7 @@ import 'package:dawnforge/src/core/systems/eventing/event_signal.dart';
 /// decides WHICH table ([activeDropEntries]), the lesson the spec's
 /// CropDropComponent drift bought.
 class DropComponent extends IComponent {
-  DropComponent(this._random);
+  DropComponent(Random random) : _random = random;
 
   final Random _random;
 

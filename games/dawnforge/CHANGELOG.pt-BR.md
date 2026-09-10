@@ -8,6 +8,37 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.49.0
+
+### ✨ New
+
+- **Palmeiras dão toras.** Uma palmeira crescida agora deixa toras quando cai,
+  e uma nova dá sementes em vez disso. Até agora nenhuma árvore do mundo dava
+  madeira nenhuma — as toras estavam escritas no projeto em "o que uma palmeira
+  crescida dá", e o jogo nunca lia essa página.
+- **Florestas têm árvores novas e velhas.** Toda planta selvagem agora entra no
+  mundo em algum ponto da vida, de um broto recém-nascido até crescida por
+  inteiro, então uma floresta não tem mais tudo da mesma idade. As crescidas
+  dão mais.
+- Sementes existem: sementes de palmeira, folha-verde, trevo, trigo, maçã,
+  tomate e ameixa vieram do pacote de design, porque as plantas podem
+  soltá-las. Você ainda não consegue plantar — isso é o capítulo da lavoura.
+
+### 🐛 Fixed
+
+- Toda palmeira era desenhada como uma muda, fosse qual fosse a idade. Uma
+  planta agora mostra a figura da idade que ela tem de verdade.
+
+### 🧹 Internal
+
+- As plantas aprenderam a própria vida no papel: qual idade é crescida, se
+  podem morrer de abandono, se uma mão pode colhê-las e o que cada idade dá. Só
+  a parte "o que ela dá" é usada por enquanto; crescer ao longo dos dias, regar
+  e colher com a mão esperam o capítulo da lavoura.
+- O que uma planta solta são duas listas que SOMAM — o que ela dá em qualquer
+  idade, e o que esta idade dá por cima. Uma rola depois da outra, nunca a
+  mesma lista duas vezes.
+
 ## 0.48.2
 
 ### 🧹 Internal

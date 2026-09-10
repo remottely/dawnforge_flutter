@@ -45,6 +45,11 @@ When a thing finally breaks, what it was made of lands on the ground where it
 stood, and comes to you when you walk near. What each thing gives is its own —
 a palm tree gives logs, a bush gives fibre.
 
+Plants have an age, and the age decides. A grown palm gives logs and sometimes
+a seed; a young one gives a seed at most, and no wood. You can tell them apart
+by looking: a sprout is small and a grown tree is tall. If you need wood, look
+for the tall ones.
+
 ## Careful with what holds you up
 
 Some things cannot be broken while you are standing on them. A bush at your

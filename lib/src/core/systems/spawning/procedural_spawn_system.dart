@@ -1,8 +1,11 @@
 import 'package:dawnforge/src/core/base/world_objects/props/prop.dart';
+import 'package:dawnforge/src/core/base/world_objects/props/prop_crop.dart';
 import 'package:dawnforge/src/core/factories/prop_factory.dart';
 import 'package:dawnforge/src/core/registries/prop_registry.dart';
 import 'package:dawnforge/src/core/resources/world/biome_data.dart';
 import 'package:dawnforge/src/core/resources/world/biome_prop_entry.dart';
+import 'package:dawnforge/src/core/resources/world_objects/props/prop_crop_data.dart';
+import 'package:dawnforge/src/core/shared_logic/definitions/enums.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/game_constants.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/spatial.dart';
 import 'package:dawnforge/src/core/systems/boot.dart';
@@ -124,11 +127,16 @@ final class ProceduralSpawnSystem {
     // the player built here while the chunk was still streaming is content
     // this list owes an unload to, and overwriting would strand it.
     final content = _chunkContent.putIfAbsent(chunk, () => <(GridPos, Prop)>[]);
-    for (final (tile, propId) in _rollChunkPopulation(chunk)) {
+    for (final (tile, propId, stage) in _rollChunkPopulation(chunk)) {
       final prop = PropFactory.create(
         propId,
         locator<GridManager>().gridToWorld(tile),
       );
+      if (stage != null) {
+        // The command carries a stage exactly when the registry said the
+        // prop is a crop, so the host the factory built IS a crop.
+        (prop as PropCrop).setGrowthStage(stage);
+      }
       locator<GridManager>().occupyPropTiles(tile, prop);
       content.add((tile, prop));
       locator<Events>().worldObjectSpawned.emit(prop);
@@ -184,7 +192,13 @@ final class ProceduralSpawnSystem {
   /// Rolls the chunk's prop content, deterministically from the world seed +
   /// chunk coords. Runs on chunkLoaded — terrain is materialized, so anchors
   /// land only on tiles that are actually spawnable.
-  List<(GridPos, String)> _rollChunkPopulation(GridPos chunk) {
+  ///
+  /// A CROP surfaces at a stage — anywhere between PLANTED and its
+  /// `peak_stage`, rolled here from the same stream — so a forest is not all
+  /// saplings and not all giants (the spec's `_make_prop_command`). The roll
+  /// happens per command, after the anchor or member tile is known, which is
+  /// the spec's order too; a stage-less prop takes nothing from the stream.
+  List<(GridPos, String, CropStage?)> _rollChunkPopulation(GridPos chunk) {
     const chunkSize = GameConstants.proceduralChunkSize;
     final rng = Splitmix32(Splitmix32.combine(_worldSeed, chunk.x, chunk.y));
     final center = GridPos(
@@ -193,7 +207,7 @@ final class ProceduralSpawnSystem {
     );
     final richness = _richnessAt(center);
 
-    final commands = <(GridPos, String)>[];
+    final commands = <(GridPos, String, CropStage?)>[];
     final taken = <GridPos>{};
     var propBudget = _biome.maxPropsPerChunk;
 
@@ -201,6 +215,8 @@ final class ProceduralSpawnSystem {
       if (propBudget <= 0) break;
       final entry = _biome.propEntries[entryIndex];
       final footprint = locator<PropRegistry>().getProp(entry.propId);
+      final peakStage =
+          footprint is PropCropData ? footprint.peakStage : null;
       // Each species decides how much of the richness field it feels: ore
       // rides it (rich districts worth prospecting), vegetation ignores it.
       final density = 1.0 -
@@ -223,7 +239,7 @@ final class ProceduralSpawnSystem {
         }
         final clusterSize =
             rng.nextIntInRange(entry.clusterMin, entry.clusterMax);
-        commands.add((anchor, entry.propId));
+        commands.add((anchor, entry.propId, _rollStage(peakStage, rng)));
         taken.add(anchor);
         propBudget--;
         for (var member = 0; member < clusterSize - 1; member++) {
@@ -238,7 +254,7 @@ final class ProceduralSpawnSystem {
             footprint.gridHeight,
           );
           if (memberTile == anchor) continue; // no free spot found
-          commands.add((memberTile, entry.propId));
+          commands.add((memberTile, entry.propId, _rollStage(peakStage, rng)));
           taken.add(memberTile);
           propBudget--;
         }
@@ -247,6 +263,13 @@ final class ProceduralSpawnSystem {
     // Actor packs: parsed and budgeted, but spawning arrives with their AI —
     // the roll stream is unaffected because props roll first.
     return commands;
+  }
+
+  /// The stage a wild crop surfaces at, or null for a prop without a life.
+  static CropStage? _rollStage(CropStage? peakStage, Splitmix32 rng) {
+    if (peakStage == null) return null;
+    return CropStage.values[
+        rng.nextIntInRange(CropStage.planted.index, peakStage.index)];
   }
 
   /// The biome's richness field at the chunk center, in [0, 1] — sampled

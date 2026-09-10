@@ -1,0 +1,95 @@
+{
+  "action_effect_radius": 0.0,
+  "action_range": 1.0,
+  "animation_speed": 0.15,
+  "backward_frames": 0,
+  "blueprint_id": "t2_prop_crop_fruit_plum",
+  "casts_shadow": true,
+  "craft_amount": 1,
+  "craft_time": 10.0,
+  "crafted_at": "SEED_STATION",
+  "description_key": "forge_almanac.02_workstations.04_seed_station.t2.t2_item_buildable_seed_fruit_plum.description",
+  "display_name_key": "forge_almanac.02_workstations.04_seed_station.t2.t2_item_buildable_seed_fruit_plum.display_name",
+  "drop_multiplier": 1.0,
+  "frame_size": [
+    1,
+    1
+  ],
+  "glow_color": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "glow_origin_offset": 0.0,
+  "glow_radius": 0.0,
+  "glow_speed": 0.0,
+  "glow_type": "NONE",
+  "ground_line_offset": -0.0625,
+  "id": "t2_item_buildable_seed_fruit_plum",
+  "idle_frames": 0,
+  "ingredients": [
+    {
+      "amount": 1,
+      "id": "t2_item_consumable_fruit_plum"
+    }
+  ],
+  "invert_animation": false,
+  "juvenile_backward_frames": 0,
+  "juvenile_idle_frames": 0,
+  "juvenile_walk_frames": 0,
+  "lifetime": 300.0,
+  "magnet_speed": 12.5,
+  "material_type": "STONE",
+  "max_stack": 100,
+  "motion_reach_scale": 1.0,
+  "motion_speed_scale": 1.0,
+  "pickup_delay": 0.5,
+  "pivot_offset": [
+    0,
+    0
+  ],
+  "position_offset": [
+    0,
+    0
+  ],
+  "primary_action_animation": "",
+  "primary_action_frame_size": [
+    0,
+    0
+  ],
+  "primary_impact_delay": -1.0,
+  "primary_motion": "AUTO",
+  "rotation_offset": 0.0,
+  "secondary_action_animation": "",
+  "secondary_action_frame_size": [
+    0,
+    0
+  ],
+  "secondary_impact_delay": -1.0,
+  "secondary_motion": "AUTO",
+  "sell_value": 5,
+  "shadow_style_celestial": "SILHOUETTE",
+  "shadow_style_dynamic": "OCCLUDER_SPRITE_CAPPED",
+  "sound_equip": "",
+  "sound_pickup": "",
+  "sound_primary_action": "",
+  "sound_swing": "",
+  "sounds_volume": 1.0,
+  "sprite_alpha": 1.0,
+  "sprite_anchor": "BOTTOM_LEFT",
+  "sprite_scale": 0.5,
+  "spritesheet": "res://data/forge_almanac/02_workstations/04_seed_station/t2/sprites/t2_item_buildable_seed_fruit_plum.png",
+  "spritesheet_icon": "",
+  "tactical_type": "NONE",
+  "tier": 2,
+  "type": "item_buildable_data",
+  "void_backward_frames": 0,
+  "void_idle_frames": 0,
+  "void_juvenile_backward_frames": 0,
+  "void_juvenile_idle_frames": 0,
+  "void_juvenile_walk_frames": 0,
+  "void_walk_frames": 0,
+  "walk_frames": 0,
+  "world3d_form": "ITEM_ONLY"
+}

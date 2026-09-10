@@ -1,8 +1,10 @@
 import 'dart:math';
 
 import 'package:dawnforge/src/core/base/world_objects/props/prop.dart';
+import 'package:dawnforge/src/core/base/world_objects/props/prop_crop.dart';
 import 'package:dawnforge/src/core/base/world_objects/props/prop_workstation.dart';
 import 'package:dawnforge/src/core/registries/prop_registry.dart';
+import 'package:dawnforge/src/core/resources/world_objects/props/prop_crop_data.dart';
 import 'package:dawnforge/src/core/resources/world_objects/props/prop_data.dart';
 import 'package:dawnforge/src/core/resources/world_objects/props/prop_workstation_data.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/spatial.dart';
@@ -31,6 +33,7 @@ abstract final class PropFactory {
   /// component here yet (`PropRegistry.registerJson` says the same of the
   /// data side).
   static Prop _hostFor(PropData data, Random random) => switch (data) {
+        PropCropData() => PropCrop(random),
         PropWorkstationData() => PropWorkstation(random),
         _ => Prop(random),
       };

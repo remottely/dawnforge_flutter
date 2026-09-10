@@ -223,6 +223,17 @@ sector model (`shared_logic/`, `domain/`, `resources/`, `registries/`, `factorie
   workshop is FP4.5's hand-craft (see the chain under FP4.5(g)); before that commit the
   chain is unreachable and rule 34 forbids documenting it. Sliced from the spec at
   `tessera 0.432.1`; file:line must be re-grepped before each slice.
+  **CORRECTION, 2026-09-10 — the re-order could not hold whole, and part of (b), (c),
+  (e) and (g) landed FIRST (0.49.0).** The FP4.5(g) chain says "the palm falls to bare
+  hands → logs", and that was false at 0.48.2: `t1_prop_crop_tree_palm` authors no
+  `drops`, its logs live ONLY in `stage_drop_configs.BUDDING`, and nothing read that
+  table — a felled palm gave nothing, so no smelter could ever be paid for. The crop
+  half of (b) (`PropCropData`, without `PropSoilData`), (c) `CropRules`, the scatter
+  obligation in (e) (a wild crop surfaces at a stage rolled in `[PLANTED, peak]`, the
+  spec's `_make_prop_command`, not "at peak"), `CropDropComponent`, `PropCrop` (stage
+  and the two loot halves only — no growth) and the seven seed documents the local
+  stage tables name (rule 5: a rolled id must resolve) are in. Growth on `dayChanged`,
+  soil, the ground verb, planting and `farming.md` remain here, after FP4.5.
   - **(a) `TimeSystem`, the minimal core** (`shared/systems/timing/TimeSystem.cs`):
     `timeProgress` in [0,1) advanced by `stepDt / dayLength` on the **fixed step**, never
     wall time; day boundary at 0.25 (06:00) fires `Events.dayChanged(dayCount)` exactly

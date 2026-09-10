@@ -7,6 +7,7 @@ import 'package:dawnforge/src/core/base/world_objects/world_object.dart';
 import 'package:dawnforge/src/core/components/i_world_object/drop_component.dart';
 import 'package:dawnforge/src/core/components/i_world_object/health_component.dart';
 import 'package:dawnforge/src/core/resources/world_objects/props/prop_data.dart';
+import 'package:dawnforge/src/core/shared_logic/definitions/spatial.dart';
 import 'package:dawnforge/src/core/systems/boot.dart';
 import 'package:dawnforge/src/core/systems/drop/world_drop_helper.dart';
 import 'package:dawnforge/src/core/systems/eventing/events.dart';
@@ -81,11 +82,22 @@ class Prop extends WorldObject {
   void onDied(Object? source) {
     _releaseGridTiles();
     locator<Events>().worldObjectDied.emit(this);
-    drop.dropItems(WorldDropHelper.calculateDropPosition(this, random));
+    dropLoot(WorldDropHelper.calculateDropPosition(this, random));
     // "It left the world" is a second fact from "it died", and it is the one
     // the render and sim layers act on — the same signal a recycled chunk
     // sends for a prop that simply went out of range.
     locator<Events>().worldObjectDespawned.emit(this);
+  }
+
+  /// Rolls what this prop leaves behind, around [center]. The plain table is
+  /// every prop's; a host with a second half (a crop's stage table) adds it
+  /// here, AFTER this one, because the pack authors them as two halves that
+  /// ADD — a fruit tree's `drops` is its logs and its stage table is its
+  /// fruit — and rolling one list twice is the drift the spec's `L-217` names.
+  @protected
+  @mustCallSuper
+  void dropLoot(WorldPos center) {
+    drop.dropItems(center);
   }
 
   /// Hands this prop's footprint back to the grid, when the grid is holding

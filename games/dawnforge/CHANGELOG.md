@@ -8,6 +8,36 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.49.0
+
+### ✨ New
+
+- **Palm trees give logs.** A grown palm now leaves logs behind when it falls,
+  and a young one gives seeds instead. Until now no tree in the world gave any
+  wood at all — the logs were written in the design under "what a grown palm
+  gives", and the game never read that page.
+- **Forests have young and old trees.** Every wild plant now comes into the
+  world at some point in its life, from a fresh sprout to fully grown, so a
+  forest is no longer all the same age. Grown ones give the most.
+- Seeds exist: palm, green-leaf, clover, wheat, apple, tomato and plum seeds
+  came in from the design pack, because plants can drop them. You cannot plant
+  them yet — that is the farming chapter.
+
+### 🐛 Fixed
+
+- Every palm drew as a seedling, whatever age it was. A plant now shows the
+  picture for the age it actually is.
+
+### 🧹 Internal
+
+- Plants learned their life on paper: which age is grown, whether they can die
+  of neglect, whether a hand may pick them, and what each age gives. Only the
+  "what does it give" part is used so far; growing over days, watering and
+  picking by hand wait for the farming chapter.
+- A plant's loot is two lists that ADD — what it gives at any age, and what
+  this age gives on top. They roll one after the other, never the same list
+  twice.
+
 ## 0.48.2
 
 ### 🧹 Internal

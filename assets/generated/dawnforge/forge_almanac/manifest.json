@@ -57,6 +57,31 @@
       "path": "02_workstations/01_smelter/t1/t1_item_buildable_ground_grass.json"
     },
     {
+      "id": "t1_item_buildable_seed_bush_clover",
+      "type": "item_buildable_data",
+      "path": "02_workstations/04_seed_station/t1/t1_item_buildable_seed_bush_clover.json"
+    },
+    {
+      "id": "t1_item_buildable_seed_fruit_apple",
+      "type": "item_buildable_data",
+      "path": "02_workstations/04_seed_station/t1/t1_item_buildable_seed_fruit_apple.json"
+    },
+    {
+      "id": "t1_item_buildable_seed_herb_green_leaf",
+      "type": "item_data",
+      "path": "02_workstations/04_seed_station/t1/t1_item_buildable_seed_herb_green_leaf.json"
+    },
+    {
+      "id": "t1_item_buildable_seed_tree_palm",
+      "type": "item_buildable_data",
+      "path": "02_workstations/04_seed_station/t1/t1_item_buildable_seed_tree_palm.json"
+    },
+    {
+      "id": "t1_item_buildable_seed_vegetable_wheat",
+      "type": "item_buildable_data",
+      "path": "02_workstations/04_seed_station/t1/t1_item_buildable_seed_vegetable_wheat.json"
+    },
+    {
       "id": "t1_item_buildable_workstation_smelter",
       "type": "item_buildable_data",
       "path": "02_workstations/01_smelter/t1/t1_item_buildable_workstation_smelter.json"
@@ -235,6 +260,16 @@
       "id": "t1_prop_workstation_smelter",
       "type": "prop_workstation_data",
       "path": "02_workstations/01_smelter/t1/t1_prop_workstation_smelter.json"
+    },
+    {
+      "id": "t2_item_buildable_seed_fruit_plum",
+      "type": "item_buildable_data",
+      "path": "02_workstations/04_seed_station/t2/t2_item_buildable_seed_fruit_plum.json"
+    },
+    {
+      "id": "t2_item_buildable_seed_vegetable_tomato",
+      "type": "item_buildable_data",
+      "path": "02_workstations/04_seed_station/t2/t2_item_buildable_seed_vegetable_tomato.json"
     },
     {
       "id": "t2_item_consumable_fruit_plum",

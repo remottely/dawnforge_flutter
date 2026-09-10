@@ -23,6 +23,20 @@ enum ToolType {
   scanner, // 12
 }
 
+/// Where a crop is in its life — the Dart port of `PropCropData.cs`'s six
+/// `CROP_STAGE_*` readonly ints (a nested C# enum is unreachable from
+/// GDScript, which is why the spec spells them as fields). The pack authors
+/// the NAME (`peak_stage: BUDDING`); the int is the growth order, so a stage
+/// compares with `<` and the next stage is `index + 1`.
+enum CropStage {
+  planted, // 0
+  sprout, // 1
+  budding, // 2
+  flowering, // 3
+  harvestable, // 4
+  dead, // 5
+}
+
 /// How an actor's AI relates to players.
 enum AIBehavior {
   offensive, // 0 — proactively attacks players

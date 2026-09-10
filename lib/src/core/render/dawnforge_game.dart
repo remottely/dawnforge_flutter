@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:dawnforge/src/core/base/world_objects/actors/player/actor_player.dart';
 import 'package:dawnforge/src/core/base/world_objects/items/item_world.dart';
+import 'package:dawnforge/src/core/base/world_objects/props/prop_crop.dart';
 import 'package:dawnforge/src/core/base/world_objects/world_object.dart';
 import 'package:dawnforge/src/core/factories/actor_factory.dart';
 import 'package:dawnforge/src/core/registries/item_registry.dart';
@@ -139,7 +140,8 @@ final class DawnforgeGame extends FlameGame
     locator<Events>().worldObjectSpawned.connect((Object payload) {
       final host = payload as WorldObject;
       simObjects.add(host);
-      final renderer = WorldObjectRenderer(host);
+      final renderer =
+          host is PropCrop ? CropRenderer(host) : WorldObjectRenderer(host);
       _hostRenderers[host] = renderer;
       unawaited(Future<void>.sync(() => world.add(renderer)));
     });
