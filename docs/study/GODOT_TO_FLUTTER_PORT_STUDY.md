@@ -14,7 +14,7 @@
 
 | Track | Repo | Role |
 |:---|:---|:---|
-| **Godot / Tessera** | `~/Documents/godot/remottely/dawnforge_project` | Consolidated delivery track. First Tessera game (Dawnforge) is near v1.0. Ships to Steam, multiplayer co-op. |
+| **Godot / Tessera** | `~/Documents/godot/remottely/tessera_project` (`SPEC_REPO_ROOT`; the folder was named `dawnforge_project` when this study was written) | Consolidated delivery track. First Tessera game (Dawnforge) is near v1.0. Ships to Steam, multiplayer co-op. |
 | **Flutter / Tessera-Dart** | this repo | Study track: reproduce the Tessera architecture in Flutter/Dart to explore new genres inside Flutter, with the same engineering discipline. **Singleplayer-first.** |
 
 The two tracks share *architecture, content format, and the AI harness* — not code. A

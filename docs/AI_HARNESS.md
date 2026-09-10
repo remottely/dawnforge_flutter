@@ -65,7 +65,9 @@ typing lives in `analysis_options.yaml`), so an info is a failure.
 
 ## 5. Cross-repo contract
 
-The Godot repo (`~/Documents/godot/remottely/dawnforge_project`) is the **spec** for port
+The Godot repo (`~/Documents/godot/remottely/tessera_project` — written once as
+`SPEC_REPO_ROOT` in `scripts/lib/project_paths.py`, overridable by `TESSERA_SPEC_ROOT`)
+is the **spec** for port
 work and is read-only from here. Its knowledge index answers questions this repo cannot:
 run its `search_project_knowledge.py` from its own root. The pack format is shared and
 never forks (study §4).

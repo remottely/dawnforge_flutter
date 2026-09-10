@@ -8,6 +8,16 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.53.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. The folder holding the older, bigger version of
+  this game was renamed a while ago, and our notes still pointed at the old
+  name — so anyone looking something up there found an empty shelf and had to
+  find the new one by hand. The address is now written down in exactly one
+  place, and every note points at that place instead of spelling it out again.
+
 ## 0.52.1
 
 ### 🧹 Internal

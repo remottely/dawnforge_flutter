@@ -80,11 +80,12 @@ guard, `--dry-run`/`--check`, a `COMMANDS.md` row in the same commit).
   MERGE_HEAD` vs `git diff --cached --name-only`), (2) runs the attribution check on the
   message, (3) commits. The one case the guard could not inspect becomes the one case a
   script inspects for it. `docs/AI_HARNESS.md` §3 gains the row.
-- **FP0.13** the cross-repo path sweep `L-003` asks for: `dawnforge_project` →
-  `tessera_project` in `CLAUDE.md` (Project Overview, §Key File Locations),
-  `docs/AI_HARNESS.md` §5 and the study's §1/§8 tables (the study's dated prose stays —
-  it says where the repo WAS). The path is written once, as `SPEC_REPO_ROOT` in
-  `project_paths.py` (FP0.11 reads it); every doc cites the constant.
+- **FP0.13** — **done 0.53.0.** The cross-repo path sweep `L-003` asked for:
+  `dawnforge_project` → `tessera_project` in `CLAUDE.md` (Project Overview, §Key File
+  Locations), `docs/AI_HARNESS.md` §5 and the study's §1 table (the study's dated prose
+  stays — it says where the repo WAS; §8 holds no path). The path is written once, as
+  `SPEC_REPO_ROOT` in `project_paths.py` (FP0.11 reads it) beside `spec_repo_available()`
+  and `spec_pack_root()`; every doc cites the constant. `L-003` drained.
 - **FP0.14** the tripwires FP0.5 promised and `check_edited_file_rules.py` does not
   carry (`L-009`): `\bdynamic\b` on a non-comment line under `lib/src/core/` (rule 4;
   the analyzer's `avoid_dynamic_calls` catches CALLS on it, not the declaration). The

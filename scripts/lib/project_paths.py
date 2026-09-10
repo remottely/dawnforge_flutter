@@ -165,9 +165,10 @@ GENERATED_ROOT: Path = ASSETS_ROOT / "generated" / ACTIVE_GAME
 Never hand-edited (rule 17). Registries boot from here via the asset bundle."""
 
 LOCALES_ROOT: Path = GENERATED_ROOT / "locales"
+"""Generated translation tables — the pack's own text."""
+
 PROGRESSION_GENERATED_ROOT: Path = GENERATED_ROOT / "progression"
 """Generated loadouts + manifest (step 26). `ContentPaths.progressionRoot` is the Dart twin."""
-"""Generated translation tables — the pack's own text."""
 
 SCRIPTS_ROOT: Path = PROJECT_ROOT / "scripts"
 DOCS_ROOT: Path = PROJECT_ROOT / "docs"
@@ -175,6 +176,37 @@ TESTS_ROOT: Path = PROJECT_ROOT / "test"
 
 REFERENCE_ROOT: Path = PROJECT_ROOT / "reference"
 """Archived material (legacy_flutter/). Never indexed, never read as prior art (rule 10)."""
+
+_SPEC_ENV = "TESSERA_SPEC_ROOT"
+
+SPEC_REPO_ROOT: Path = Path(
+    os.environ.get(_SPEC_ENV) or Path.home() / "Documents/godot/remottely/tessera_project"
+).expanduser()
+"""The Godot/Tessera repo — the SPEC this track ports from, read-only from here.
+
+Written ONCE, here. `CLAUDE.md`, `docs/AI_HARNESS.md` §5 and the study's §1 table cite
+this constant instead of retyping the path: the repo was renamed `dawnforge_project` →
+`tessera_project` when the engine split out of the game, every document kept the old
+name, and each session re-discovered the rename by hand before any port work (`L-003`).
+Override with `TESSERA_SPEC_ROOT` on a machine that keeps the sibling elsewhere.
+
+It may be ABSENT — a checkout of this repo alone is a legitimate machine. So this is a
+path, never a validated one: nothing raises at import. A script that needs the sibling
+asks `spec_repo_available()` and reports *not applicable*, which is not a pass."""
+
+
+def spec_repo_available() -> bool:
+    """Whether this machine has the sibling checked out at `SPEC_REPO_ROOT`."""
+    return (SPEC_REPO_ROOT / "games").is_dir()
+
+
+def spec_pack_root(game_name: str) -> Path:
+    """The SPEC's content pack for `<game_name>` — the twin of `pack_root()` over there.
+
+    The two repos share the pack format and must never fork it (study §4), so the
+    layout is the same on both sides: `games/<game>/data/`.
+    """
+    return SPEC_REPO_ROOT / "games" / game_name / "data"
 
 CLAUDE_DIR: Path = PROJECT_ROOT / ".claude"
 SKILLS_ROOT: Path = CLAUDE_DIR / "skills"

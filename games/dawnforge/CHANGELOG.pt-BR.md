@@ -8,6 +8,16 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.53.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. A pasta que guarda a versão mais antiga e maior deste
+  jogo foi renomeada faz um tempo, e nossas anotações ainda apontavam para o
+  nome antigo — então quem fosse procurar algo lá encontrava uma prateleira
+  vazia e tinha que achar a nova na mão. O endereço agora está escrito em um
+  lugar só, e toda anotação aponta para esse lugar em vez de repeti-lo.
+
 ## 0.52.1
 
 ### 🧹 Internal
