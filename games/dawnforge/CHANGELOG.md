@@ -8,6 +8,14 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.48.2
+
+### 🧹 Internal
+
+- Nothing in the game changed. The folder where the project keeps its plans got
+  its front page: which plan is the one being worked on, what the drawers are
+  for, and what a new plan must contain before it counts as one.
+
 ## 0.48.1
 
 ### 🧹 Internal

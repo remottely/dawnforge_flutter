@@ -8,6 +8,14 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.48.2
+
+### 🧹 Internal
+
+- Nada no jogo mudou. A pasta onde o projeto guarda seus planos ganhou a sua
+  página inicial: qual plano é o que está sendo trabalhado, para que serve cada
+  gaveta e o que um plano novo precisa ter antes de contar como um.
+
 ## 0.48.1
 
 ### 🧹 Internal
