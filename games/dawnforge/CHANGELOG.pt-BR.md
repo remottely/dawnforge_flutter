@@ -8,6 +8,19 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.72.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. Agora existe uma página que anota como o jogo é feito
+  por dentro: para que serve cada pasta, o que acontece e em que ordem quando
+  o jogo liga, como funciona o relógio que faz o mundo andar e como um menu
+  impede você de agir sem nunca congelar o mundo atrás dele. A página só pode
+  dizer coisas que já são verdade, e cada parte dela avisa em qual versão foi
+  conferida — assim ninguém lê uma promessa velha e acredita nela. Conferir
+  cada linha antes de anotar encontrou uma regra que aponta para um pedaço do
+  jogo que nunca foi construído.
+
 ## 0.71.0
 
 ### 🐛 Fixed

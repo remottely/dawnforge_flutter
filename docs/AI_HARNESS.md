@@ -19,7 +19,7 @@ Ship → Observe → Evolve. The skills that instrument each stage are ported in
 | Orient | `git log`/`git status` + `docs/refactoring/PENDING.md` | — |
 | Recall | `python3 scripts/ai/search_project_knowledge.py "<q>"` | §2 |
 | Specify | plans in `docs/refactoring/implementation_plan/` | port plan |
-| Implement | `CLAUDE.md` rules 1–34 + the Godot repo as the spec | — |
+| Implement | `docs/ARCHITECTURE.md` (what the code is) + `CLAUDE.md` rules 1–34 + the Godot repo as the spec | — |
 | Verify | `python3 scripts/project/check_test_suite_is_clean.py` | — |
 | Document | rule 34 (both changelogs; manual when player-visible) | `CLAUDE.md` |
 | Ship | one-command bump-from-HEAD commit | `CLAUDE.md` §Parallel sessions |

@@ -17,7 +17,7 @@
 
 | Phase | State | Gate |
 |:---|:---|:---|
-| FP0 Reset & harness | gate met 2026-08-25 (FP0.9 skills pending, sliced (a)–(f) 2026-09-10 — 21 over there, 0 here; FP0.10–FP0.18 harness debt opened 2026-09-10, draining) | harness scripts run; hooks wired; suite command green on empty project |
+| FP0 Reset & harness | gate met 2026-08-25 (FP0.9 skills pending, sliced (a)–(f) 2026-09-10 — 21 over there, 0 here; FP0.10–FP0.18 harness debt opened 2026-09-10 — **all drained by 0.72.0 except FP0.15's section map, which waits on `D-4`**) | harness scripts run; hooks wired; suite command green on empty project |
 | FP1 Core foundation | gate met 2026-08-26 (FP1.5 component slice, FP1.9 domain rules pending) | `flutter test` green over events/registry/factory/component/FSM/grid with zero Flame imports |
 | FP2 Pipeline retarget | gate met 2026-08-26 (FP2.3 sprites, FP2.4 translations, FP2.5 component-keys pending; the step-by-step map against the spec's 27 is `AUTOMATION_DEBT_2026-09-10.md` §1.1 — steps 02/03 owe `--check`, step 99 is unported, our step 11 folds the spec's 09 and 25) | `dawnforge.py full` emits JSON; registries boot from a real pack slice; `--check` clean |
 | FP3 World & rendering | gate met 2026-08-26 (120fps hand-run, macOS) | player walks a chunked world at 60fps with debug overlay proving frame budget |
@@ -197,13 +197,19 @@ here is restated there.
   (`assets/generated/<game>/locales/*.json`); the count of non-literal calls is printed,
   never swallowed. Here a missing key CRASHES at render (rule 5), which is later than a
   red suite.
-- **FP0.18** `docs/ARCHITECTURE.md` — the working agreement below says it is written as
-  phases close; FP1, FP2 and FP3 have closed and the file does not exist. Seed it with
-  what is TRUE at HEAD only: the sector tree, the boot order (`boot.dart`'s
-  registrations), the fixed-step loop (`SimClock`), the world-object envelope
-  (`WorldObject.serializeEnvelope`), the hand family (`ItemHand`, `ActionOutcome`), the
-  surface stack (`UIStateMachine` + blocker), residency ownership (cite `L-007`). Never
-  an intention.
+- **FP0.18** — **done 0.72.0.** `docs/ARCHITECTURE.md`, twelve sections, every one stamped
+  with the version it was verified against (0.70.0) — the sector tree with a file count per
+  sector, the boot order (17 singletons in three groups, and why the order BETWEEN the
+  groups is the contract), the fixed step with its catch-up cap and what deliberately ticks
+  on the RENDER frame instead, the world-object envelope, components, factories and
+  registries, the hand family, the surface stack, residency with `L-007` cited where the
+  ownership is wrong rather than described as if it were right, and §11 "what is not here
+  yet" written as facts of absence with their ledger IDs. §12 carries the discipline that
+  keeps it true. One drafted claim did not survive verification and is the step's real
+  yield: rule 13's `WorldObjectHelper.getCore` names a class `lib/` has never contained
+  (`L-022`) — the same absence FP4.5(e)'s landed notes record from the other side. The
+  periodic re-audit sweep behind the file stays unported (spec's
+  `ARCHITECTURE_EVOLUTION.md`).
 
 ## FP1 — Core foundation (pure Dart, zero Flame imports)
 

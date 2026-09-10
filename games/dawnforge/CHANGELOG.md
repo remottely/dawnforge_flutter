@@ -8,6 +8,19 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.72.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. The game now has one page that writes down how
+  it is built on the inside: what each folder is for, what happens in order
+  when the game starts, how the clock that runs the world works, and how a
+  menu stops you from acting without ever freezing the world behind it. The
+  page is only allowed to say things that are already true, and each part of
+  it says which version it was checked against — so nobody reads an old
+  promise and believes it. Checking every line before writing it down found
+  one rule that points at a piece of the game nobody ever built.
+
 ## 0.71.0
 
 ### 🐛 Fixed

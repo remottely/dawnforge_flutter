@@ -223,6 +223,7 @@ holds for every message the repo produces — commits, tags, PR bodies. The
 | **Founding study (decisions D1–D7)** | `docs/study/GODOT_TO_FLUTTER_PORT_STUDY.md` |
 | **Port plan (SSOT for FP steps)** | `docs/refactoring/implementation_plan/FLUTTER_PORT_PLAN_2026-08-25.md` |
 | **The AI harness (SSOT)** | `docs/AI_HARNESS.md` |
+| **What the code IS (verified, never intended)** | `docs/ARCHITECTURE.md` |
 | **Game content (SSOT) — the `.md` pack** | `games/dawnforge/data/` |
 | Generated content (never hand-edited) | `assets/generated/` + `lib/src/generated/` |
 | Every path automation may use | `scripts/lib/project_paths.py` |
