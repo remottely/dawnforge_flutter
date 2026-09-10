@@ -54,6 +54,20 @@
 - **Cost of leaving it:** the hook exists to stop a bare commit sweeping in a parallel session's staged work, and the only route to a merge commit is precisely a bare commit of the whole index — so the one case the guard cannot inspect is the case that commits the most. The bypass is silent and undocumented: nothing in `CLAUDE.md` or the hook names it, so the next session either abandons the merge or finds `merge --continue` on its own and commits the index unchecked, having read no warning that it must verify it by hand first. Both outcomes are worse than a hook that recognised `merge` and asked for the same proof.
 - **Found while:** 0.45.3 — recording the legacy `main` lineage on `dev` with `git merge -s ours`, after the hook refused the commit that would have carried it.
 
+### L-009 · The edit tripwire carries three of the five patterns FP0.5 promised
+
+- **Lens:** harness / hook guard
+- **Evidence:** `scripts/ai/hooks/check_edited_file_rules.py:68-88` at 0.48.0 holds three rules — `pauseEngine|resumeEngine(`, `.paused =`, `.canvasPosition|.devicePosition` — and `docs/AI_HARNESS.md` §3 lists exactly those. `FLUTTER_PORT_PLAN_2026-08-25.md` FP0.5 promised two more: `timeScale` writes and "`dynamic` in `lib/src/core/`". `analysis_options.yaml:13` sets `avoid_dynamic_calls: error`, which flags a CALL through a dynamic receiver and says nothing about a `dynamic` declaration, parameter or generic — the thing rule 4 forbids by name. `grep -rn '\bdynamic\b' lib/src/core` is clean today, so the gap has cost nothing yet.
+- **Cost of leaving it:** rule 4 is enforced by a reading, and a reading is the guard that fails on the commit nobody reviews closely. The `timeScale` half has no zero-false-positive shape in Dart (Flame has no global time scale; a hand-rolled `dt *= f` is indistinguishable from a legitimate one by regex) and should be dropped from the promise in writing rather than left as a line that says the hook does something it cannot — the same fallback-in-disguise rule 20 names, applied to a document.
+- **Found while:** 2026-09-10 re-slicing the port plan — auditing FP0's own gate line against the hook's source.
+
+### L-010 · The player manual has no section map, and its page names already diverge from the sibling's
+
+- **Lens:** docs / rule 34
+- **Evidence:** `games/dawnforge/docs/manual/{en,pt-BR}/` at 0.48.0 hold four pages each (`backpack.md`, `gathering.md`, `item-bar.md`, `world.md`) and no `README.md`; the spec's `games/dawnforge/docs/manual/README.md` carries a fifteen-page section map ("a sixteenth page needs a line in this table first") plus `TEMPLATE.md`, and its pages for the same ground are `interface.md` and `gathering-and-farming.md`. Nothing here checks that `en/` and `pt-BR/` hold the same filenames with the same heading order — the spec's `tessera/scripts/docs/check_manual_mirrors.py` does, and `CLAUDE.md` rule 34 states the mirror obligation without a guard.
+- **Cost of leaving it:** the failure is silent in the way that matters — a page that exists only in English is noticed by a Brazilian seven-year-old, who is not in this repository — and the divergence in names is quiet cross-track drift of exactly the kind `L-006` records for the pack: two manuals for one game whose "how does the forge work" lives under two different filenames. FP4.4 and FP4.5 owe three new pages between them; without a map each is named on the spot.
+- **Found while:** 2026-09-10 re-slicing the port plan — naming the manual page each FP4/FP5 slice owes.
+
 ## Drained
 
 | ID | Title | Drained into |

@@ -8,6 +8,19 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.48.1
+
+### 🧹 Internal
+
+- Nothing in the game changed. The project's to-do book got a lot longer and a lot
+  more exact: every next step of the port — farming, the door to the bench, the
+  screens, saving your world, and the big list of things after that — is now
+  written as small numbered jobs, each with the page of the original game it
+  copies and the test that proves it. One earlier note was wrong and is fixed:
+  the original game already has a "what you start with" list, so this game will
+  read that list instead of inventing a new one. The questions only the developer
+  can answer are collected in one table, each with a suggested answer.
+
 ## 0.48.0
 
 ### 🧹 Internal

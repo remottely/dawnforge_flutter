@@ -8,6 +8,20 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.48.1
+
+### 🧹 Internal
+
+- Nada no jogo mudou. O livro de tarefas do projeto ficou bem mais comprido e bem
+  mais exato: cada próximo passo da portagem — plantar, a porta da bancada, as
+  telas, salvar o seu mundo, e a lista grande do que vem depois — agora está
+  escrito como pequenos trabalhos numerados, cada um com a página do jogo original
+  que ele copia e o teste que prova que funciona. Uma anotação antiga estava errada
+  e foi corrigida: o jogo original já tem uma lista de "com o que você começa",
+  então este jogo vai ler essa lista em vez de inventar uma nova. As perguntas que
+  só quem desenvolve pode responder estão reunidas em uma tabela, cada uma com uma
+  resposta sugerida.
+
 ## 0.48.0
 
 ### 🧹 Internal
