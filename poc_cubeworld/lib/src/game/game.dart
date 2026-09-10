@@ -20,6 +20,7 @@ import '../entities/remote_player.dart';
 import '../entities/spawner.dart';
 import '../entities/target.dart';
 import '../player/player.dart';
+import '../world/terrain_generator.dart';
 import '../world/voxel_world.dart';
 import 'achievements.dart';
 import 'game_state.dart';
@@ -69,6 +70,12 @@ class _Tnt {
   final UnlitMaterial mat;
   final IVec3 at;
   double age = 0.0;
+}
+
+class _Stage21a {
+  _Stage21a(this.at, this.kind);
+  final Vector3 at;
+  final int kind;
 }
 
 class _Stage20 {
@@ -640,6 +647,14 @@ class Game extends ChangeNotifier {
     return inv;
   }
 
+  /// Kinds 5..8 of `structuresNear` (ruin, well, mine, temple), announced once each.
+  static const Map<int, String> minorStructureFound = {
+    5: 'You found an old ruin!',
+    6: 'You found a well!',
+    7: 'You found an abandoned mine!',
+    8: 'You found a desert temple!',
+  };
+
   void _checkStructures() {
     final here = VoxelWorld.chunkOf(IVec3.floor(player.position));
     for (final s in world.structuresNear(here)) {
@@ -654,6 +669,14 @@ class Game extends ChangeNotifier {
             addMob(v);
           }
           notify('You found a village! Trade with F (gold for goods)');
+        }
+        continue;
+      }
+      final found = minorStructureFound[s.type];
+      if (found != null) {
+        if (!_bossesSpawned.contains(key) && key.distanceTo(player.position) < 24.0) {
+          _bossesSpawned.add(key);
+          notify(found);
         }
         continue;
       }
@@ -862,9 +885,19 @@ class Game extends ChangeNotifier {
   void _tickSpawners() {
     final here = VoxelWorld.chunkOf(IVec3.floor(player.position));
     for (final s in world.structuresNear(here)) {
-      if (s.type != 1) continue;
-      for (var room = 0; room < 2; room++) {
-        final pos = IVec3(s.x + room * 12, s.y + 1, s.z + 2);
+      final candidates = <IVec3>[];
+      if (s.type == 1) {
+        for (var room = 0; room < 2; room++) {
+          candidates.add(IVec3(s.x + room * 12, s.y + 1, s.z + 2));
+        }
+      } else if (s.type == TerrainGenerator.structMine) {
+        // The mine corridor runs +x from the shaft, 20-30 long; the spawner
+        // sits on its centre line.
+        for (var x = s.x + 17; x < s.x + 31; x++) {
+          candidates.add(IVec3(x, TerrainGenerator.mineFloorY + 1, s.z));
+        }
+      }
+      for (final pos in candidates) {
         final id = world.getBlock(pos);
         if (id == Blocks.air || Blocks.idOf(id) != 'spawner') continue;
         if (pos.distanceTo(player.position) > 13.0) continue;
@@ -1116,6 +1149,7 @@ class Game extends ChangeNotifier {
   // --- the screenshot probe --------------------------------------------------------------
 
   Future<void> _runScreenshot(String path, int frames) async {
+    final stage21a = _hasArg('--stage21a') ? _probeStage21aTeleport() : null;
     final t0 = DateTime.now();
     for (var i = 0; i < frames; i++) {
       await nextFrame();
@@ -1129,6 +1163,36 @@ class Game extends ChangeNotifier {
     if (net.mode != NetMode.solo) debugPrint('[probe] net mode ${net.mode} puppets ${net.puppetPositions()}');
     debugPrint('[probe] camera at ${player.cameraPosition} distance ${player.camDistance.toStringAsFixed(2)} yaw ${player.yaw.toStringAsFixed(2)} pitch ${player.pitch.toStringAsFixed(2)}');
     debugPrint('[probe] player at ${player.position} structures near: ${world.structuresNear(VoxelWorld.chunkOf(IVec3.floor(player.position)))}');
+    if (stage21a != null) {
+      // The chunks are in now: stand exactly where the probe chose, with a
+      // pocket of air behind the player for the orbit camera (the mine's
+      // corridor is its own pocket).
+      final at = stage21a.at;
+      if (stage21a.kind != TerrainGenerator.structMine) {
+        for (var dx = -2; dx < 3; dx++) {
+          for (var dz = -3; dz < 8; dz++) {
+            for (var dy = 0; dy < 6; dy++) {
+              world.setBlock(IVec3(at.x.floor() + dx, at.y.floor() + dy, at.z.floor() + dz), Blocks.air);
+            }
+          }
+        }
+      }
+      player.position = at.clone();
+      player.velocity = Vector3.zero();
+      player.syncNode();
+    }
+    if (_hasArg('--stage21a')) {
+      final counts = <int, int>{};
+      final seen = <IVec3>{};
+      for (final pos in world.chunks.keys) {
+        for (final st in world.structuresNear(pos)) {
+          final key = IVec3(st.x, st.y, st.z);
+          if (!seen.add(key)) continue;
+          counts[st.type] = (counts[st.type] ?? 0) + 1;
+        }
+      }
+      debugPrint('[probe] stage21a: structures by kind $counts');
+    }
     if (_hasArg('--map')) mapVisible = true;
     if (_arg('--journal=', '') != '') openJournal(int.tryParse(_arg('--journal=', '')) ?? 0);
     if (_hasArg('--open-inventory')) openStation('crafting_table', IVec3.zero);
@@ -1276,6 +1340,56 @@ class Game extends ChangeNotifier {
       debugPrint('[probe] no screenshotter, nothing captured');
     }
     exit(0);
+  }
+
+  /// --stage21a: stand at the nearest ruin / well / mine / temple (`--kind=5..8`
+  /// picks one kind) so the capture shows it. The mine puts the player inside
+  /// the corridor, the temple outside its south entrance; `--fp` switches to
+  /// first person for the tight corridor.
+  _Stage21a? _probeStage21aTeleport() {
+    final want = int.tryParse(_arg('--kind=', '')) ?? 0;
+    final wantBiome = int.tryParse(_arg('--biome=', '')) ?? -1;
+    final here = VoxelWorld.chunkOf(IVec3.floor(player.position));
+    StructureAt? best;
+    var bestD = double.infinity;
+    for (var dz = -24; dz <= 24; dz += 4) {
+      for (var dx = -24; dx <= 24; dx += 4) {
+        for (final st in world.structuresNear((x: here.x + dx, z: here.z + dz))) {
+          if (st.type < 5 || (want != 0 && st.type != want)) continue;
+          if (wantBiome >= 0 && world.biomeAt(st.x, st.z) != wantBiome) continue;
+          final d = math.sqrt(math.pow(st.x - player.position.x, 2) + math.pow(st.z - player.position.z, 2));
+          if (d < bestD) {
+            bestD = d;
+            best = st;
+          }
+        }
+      }
+    }
+    if (best == null) {
+      debugPrint('[probe] stage21a: no ruin / well / mine / temple within 24 chunks');
+      return null;
+    }
+    var at = Vector3(best.x + 0.5, best.y + 1.1, best.z + 0.5);
+    switch (best.type) {
+      case TerrainGenerator.structRuin:
+        at += Vector3(0, 0, 8);
+      case TerrainGenerator.structWell:
+        at += Vector3(0, 0, 5);
+      case TerrainGenerator.structMine:
+        // The lit beam is at +10.
+        at = Vector3(best.x + 7.5, TerrainGenerator.mineFloorY + 1.1, best.z + 0.5);
+      case TerrainGenerator.structTemple:
+        at += Vector3(0, 0, 9);
+    }
+    player.position = at.clone();
+    player.velocity = Vector3.zero();
+    player.spawnPoint = at.clone();
+    player.setFirstPerson(_hasArg('--fp'));
+    player.syncNode();
+    world.updateAround(at);
+    debugPrint('[probe] stage21a: teleported to kind ${best.type} at (${best.x}, ${best.y}, ${best.z}), '
+        'standing at $at (${bestD.round()} m from spawn)');
+    return _Stage21a(at, best.type);
   }
 
   /// --stage20: a tamed horse is mounted and left, a sheep is sheared, a line

@@ -241,7 +241,7 @@ class Blocks {
           'gold_ore', 'diamond_ore', 'bedrock', 'tall_grass', 'flower_red', 'flower_yellow', 'lava',
           'clay', 'dead_bush', 'mushroom', 'ice', 'dark_stone', 'mossy_stone_bricks', 'stone_bricks',
           'chest', 'lamp', 'bone_block', 'oak_planks', 'ladder', 'spawner', 'glass',
-          'crafting_table', 'furnace',
+          'crafting_table', 'furnace', 'torch', 'oak_fence', 'tnt', 'cobblestone',
         ])
           id: indexOf(id),
       };
