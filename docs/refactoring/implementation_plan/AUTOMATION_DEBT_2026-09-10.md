@@ -33,6 +33,7 @@
 | **AD2.5** | `check_python_scripts_compile_without_warnings.py` | the cheapest guard in the tree; clean today | pending |
 | **AD2.6** | `check_no_debug_probe_markers.py` | zero markers today, which is the moment to fix it in place | pending |
 | **AD2.7** | the suite refuses a run that is green but noisy | ours reads the exit code only | pending |
+| **AD2.8** | every generated folder is declared in `pubspec.yaml` | Flutter bundles only what is declared; 27 of 27 correct today | pending |
 | **AD3.1** | `stamp_changelog_section.py` | the `sed` in `CLAUDE.md` has already been paid for once here | pending |
 | **AD3.2** | `commit_task_files.py` | the ritual is a shell recipe a human retypes each commit | pending (`AD-D3`) |
 | **AD4.1** | `check_harness_machinery.py` | four guards and no test over any of them | pending |
@@ -191,6 +192,22 @@ passes anyway is how a broken path survives for weeks. The Dart shape: `flutter 
 carrying an uncaught async error, a `print` from `lib/` (never legitimate — logging goes
 through the project's own channel), or a Flame assertion that a test swallowed. Fail on any
 of them, name the line, and keep `--test-only` as the loose loop for iteration.
+
+### AD2.8 · Every generated folder is declared in `pubspec.yaml`
+
+Flutter bundles only the assets a `pubspec.yaml` entry names, and a folder entry does not
+recurse. So `assets/generated/<game>/**` is a hand-written list — **27 entries at 0.65.0,
+one per generated folder that holds a file, and all 27 correct.** Nothing checks it, and
+the failure mode is the worst kind: the pipeline succeeds, the file is on disk, git tracks
+it, the suite is green, and the asset is simply absent at runtime — which under rule 5 is a
+crash in front of a player rather than a red build.
+
+This guard matters more the day after it lands than the day of. `PACK_IMPORT_MAP_2026-09-10.md`
+schedules nine content batches, and **every batch that creates a folder owes a line here**;
+that obligation is written into that document's §4 and this is the thing that enforces it.
+The check is fifteen lines — walk `GENERATED_ROOT` for directories holding at least one
+file, compare with the declared set, fail naming both directions (an undeclared folder and
+a declared folder that no longer exists). It runs from the suite.
 
 ### 2.1 Not owed, with the reason
 

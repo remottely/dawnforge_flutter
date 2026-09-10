@@ -8,6 +8,18 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.67.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. Quando desenhos ou dados novos entram, o jogo também
+  precisa ser AVISADO para empacotá-los no aplicativo — e se ninguém escrever
+  essa linha, parece tudo certo até a hora em que o jogo procura o desenho e
+  não acha nada. Hoje as 27 linhas estão certas. Agora está anotado que todo
+  lote futuro de conteúdo novo deve uma linha, e que um conferidor pequeno
+  deveria vigiar isso, para a sequência boa ser mantida por uma máquina e não
+  pela memória.
+
 ## 0.66.0
 
 ### 🧹 Internal

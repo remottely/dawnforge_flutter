@@ -8,6 +8,18 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.67.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. When new pictures or data are added, the game
+  also has to be TOLD to pack them into the app — and if nobody writes that
+  line, everything looks fine right up until the game reaches for the picture
+  and finds nothing. All 27 of those lines are correct today. A note now says
+  that every future batch of new content owes one, and that a small checker
+  should watch it, so the good streak is kept by a machine instead of by
+  memory.
+
 ## 0.66.0
 
 ### 🧹 Internal

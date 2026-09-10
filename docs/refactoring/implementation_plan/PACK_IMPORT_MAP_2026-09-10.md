@@ -247,7 +247,12 @@ Every batch, without exception:
    a batch that is out of order;
 4. the pipeline re-run and `--check` green, then **the drift check** (FP0.11), which is the
    half that says whether what crossed is current;
-5. rule 34: content the player meets gets its changelog line, in both languages.
+5. **a `pubspec.yaml` asset line for every folder the batch creates** — Flutter bundles
+   only declared assets and a folder entry does not recurse, so a missing line is not a
+   build error: the pipeline succeeds, git tracks the file, the suite is green, and the
+   asset is absent at runtime. 27 folders are declared today and all 27 are correct; the
+   guard that keeps it that way is `AUTOMATION_DEBT_2026-09-10.md` AD2.8;
+6. rule 34: content the player meets gets its changelog line, in both languages.
 
 ---
 
