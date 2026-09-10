@@ -12,13 +12,6 @@
 
 ## Open
 
-### L-004 · Rule 32's ritual names a script this repo does not have
-
-- **Lens:** harness / persistence
-- **Evidence:** `CLAUDE.md` rule 32 and §Execution Workflow step 6 both end a shape-changing commit with `python3 scripts/project/reset_local_save.py`; at 0.24.0 `scripts/project/` holds only `check_ledger_ids_are_unique.py` and `check_test_suite_is_clean.py`. `FLUTTER_PORT_PLAN_2026-08-25.md` FP0.6 lists the port ("`reset_local_save.py` port") and FP6.3 lists proving it, and `PENDING.md` #1 records only FP0.9 as the open FP0 item — so the gap is invisible from the index.
-- **Cost of leaving it:** every commit that changes a persisted shape performs a ritual whose command fails, and the failure is silent in the sense that matters — the commit is correct today only because FP6 has not landed, so nothing persists. The first save written before this script exists will be the one nobody can clear, and the rule that was supposed to make that cheap will have been unenforceable for however many commits.
-- **Found while:** FP4.2b slice 4 — `InventoryData.serialize` gained `selected_slot`, which is exactly the rule-32 trigger.
-
 ### L-005 · Every prop carries health and drops, authored or not
 
 - **Lens:** components / streaming cost
@@ -86,6 +79,7 @@
 
 | ID | Title | Drained into |
 |:---|:---|:---|
+| L-004 | Rule 32's ritual names a script this repo does not have | FP0.10 (0.58.0) — `scripts/project/reset_local_save.py`, landed before FP6.1 writes the first save; FP6.3 still owes the proof against a real one |
 | L-009 | The edit tripwire carries three of the five patterns FP0.5 promised | FP0.14 (0.57.0) — the fourth added (`\bdynamic\b` under `lib/`), the fifth (`timeScale`) dropped in writing in the hook header and `docs/AI_HARNESS.md` §3 |
 | L-006 | Nothing notices when an imported pack document drifts from the spec's | FP0.11 (0.56.0) — `scripts/content/check_pack_snapshot_matches_spec.py`; its first green run recorded 28 forked documents and 67 forked keys, `cave_elevation_drops` among them, and opened `L-014` |
 | L-003 | Cross-repo pointers name a Godot repo path that no longer exists | FP0.13 (0.53.0) — `SPEC_REPO_ROOT` in `scripts/lib/project_paths.py`, cited by `CLAUDE.md`, `docs/AI_HARNESS.md` §5 and the study's §1 table |

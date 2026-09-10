@@ -8,6 +8,18 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.58.0
+
+### 🧹 Internal
+
+- Nothing in the game changed yet, but something the rules have been promising
+  finally exists. When we change the way a saved world is written down, the old
+  one on this computer stops making sense, and the rule says to throw it away in
+  the same breath. The command that does the throwing away had never been
+  written. Now it has — and it works out the game's own name from the app itself
+  instead of being told, so it keeps working after a rename. Your settings stay
+  put unless you ask for them to go too.
+
 ## 0.57.0
 
 ### 🧹 Internal

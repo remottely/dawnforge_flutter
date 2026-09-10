@@ -65,14 +65,22 @@ commands over there against 7 and 4 here, each row either owed with an `AD` id, 
 `FP` step, or not applicable with the reason. Nothing there is restated here and nothing
 here is restated there.
 
-- **FP0.10** `scripts/project/reset_local_save.py` — the port `L-004` says is missing.
+- **FP0.10** — **done 0.58.0.** `scripts/project/reset_local_save.py` — the port `L-004`
+  said was missing.
   The spec is `tessera/scripts/project/reset_local_save.py`; the Dart delta is the
   location: the save dir is `path_provider`'s application-support folder keyed by the
   bundle id, so the script reads `PRODUCT_BUNDLE_IDENTIFIER` from
   `macos/Runner/Configs/AppInfo.xcconfig` (and the Linux/Windows twins) rather than
   typing `com.remottely.dawnforge` by hand, and sweeps `saves/` under it on every
   platform folder that exists. Settings (`shared_preferences`) survive by default;
-  `--all` takes them. Lands **before FP6.1's first write**; FP6.3 proves it.
+  `--all` takes them. **Two things the commission did not ask for and the shape did:**
+  the four platform identities are compared and a DISAGREEMENT is refused rather than
+  resolved — each identity is a separate application-support folder, so sweeping one
+  leaves a world in the other; and BOTH macOS shapes are swept, the sandboxed container
+  and the plain folder, because a build made without the entitlement writes to the one
+  nobody would think to check. Landed **before FP6.1's first write**, so today it sweeps
+  a synthetic save (`saves/slot_0.json`, created by hand, removed, and left alone under
+  `--dry-run`); FP6.3 proves it against a real one. `L-004` drained.
 - **FP0.11** — **done 0.56.0.** `scripts/content/check_pack_snapshot_matches_spec.py
   [--check|--report <path>|--accept <path>]` — the drift guard `L-006` asked for. Two
   deltas from the commission, each because the pack said so: documents pair by **`id`,

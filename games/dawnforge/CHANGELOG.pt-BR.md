@@ -8,6 +8,18 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.58.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo ainda, mas algo que as regras vinham prometendo enfim
+  existe. Quando mudamos o jeito de anotar um mundo salvo, o mundo antigo que
+  está neste computador deixa de fazer sentido, e a regra manda jogá-lo fora na
+  mesma hora. O comando que joga fora nunca tinha sido escrito. Agora foi — e
+  ele descobre o nome do próprio jogo pelo aplicativo em vez de ser avisado,
+  então continua funcionando depois de uma renomeação. Suas preferências ficam
+  onde estão, a não ser que você peça para irem junto.
+
 ## 0.57.0
 
 ### 🧹 Internal
