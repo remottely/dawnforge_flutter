@@ -1,0 +1,53 @@
+# Roadmap — stages and status (Flutter port)
+
+One stage = one commit or a few. A stage is DONE only when it was seen running (screenshot
+probe or interactive run). Status: ☐ todo · ◐ in progress · ✅ done. The stage numbers are
+the Godot POC's, so the two roadmaps line up.
+
+## Design decisions (settled, do not re-litigate)
+
+- **Look**: Cube World — flat vertex colours, per-voxel ±5% colour noise, baked AO (4-level),
+  sky + block light in the vertex colour, PBR material with roughness 1 lit by one sun with
+  cascaded shadows and a constant-diffuse ambient. No textures. Sun scale 0.6, ambient 0.6,
+  ACES; fog 0.003 blended to the sky.
+- **World**: dense chunks 16×128×16 (`Uint8List`, byte = block index), sea level 46, radius 8
+  streamed, 3×3 neighbour ring generated before a chunk meshes. Generation + meshing on a
+  pool of 3 isolates; one `Node` per chunk with up to three mesh children (solid, cutout,
+  liquid), `shadowStatic`, replaced whole on remesh.
+- **Block table is code** (`lib/src/core/blocks.dart`), index order is the save contract —
+  append only, identical to the Godot table.
+- **Player / RPG / Survival / Save**: as the Godot POC (see its ROADMAP). Save bytes and JSON
+  keys are the same, so a `worlds/<name>` folder is interchangeable between the two.
+- **Verification without a screen**: `--screenshot=<png> --frames=N` renders and quits; the
+  PNG is read back. Never screencapture the desktop.
+
+## Stages
+
+| # | Stage | Status | Notes |
+|:--|:---|:---|:---|
+| 0 | Worktree + project skeleton (`flutter create`, `flutter_scene`, Flutter GPU on, args forwarded) | ✅ | |
+| 1 | Block/item/recipe/species tables | ✅ | `lib/src/core/`, unit-tested |
+| 2 | `TerrainGenerator` + `ChunkMesher` in pure Dart on isolates | ✅ | `lib/src/world/`, unit-tested |
+| 3 | Streaming world + delta save + screenshot probe; first screenshot | ✅ | 225 chunks in ~1 s |
+| 4 | Player: body, third-person camera, voxel model, mine/place, highlight, swim/climb/glide/ladders | ✅ | `lib/src/player/` |
+| 5 | HUD, hotbar, inventory + crafting UI, drops and pickups, chests with loot | ✅ | `--open-inventory` seen |
+| 6 | Mobs (17 species), AI, melee/bow/staff combat, abilities, XP, levels, classes, boss troll | ✅ | `--strike`: zombie 18 → 8 hp |
+| 7 | Day/night, spawn manager, hunger, fall/lava/drowning damage, death + respawn | ✅ | `--time=0.9` seen |
+| 8 | Main menu (new world: seed + class, continue), pause menu, save/load (autosave 60 s) | ✅ | Flutter widgets |
+| 9 | Dungeons, towers, camps with loot chests; boss in the dungeon | ✅ | generator port |
+| 10 | Armor from inventory; glider; ranged classes | ✅ | |
+| 11 | Quests, minimap, wolf companions, villages + traders, procedural SFX (SoLoud), debris, mob levels | ✅ | `--map` seen |
+| 12 | Rivers, falling sand, beds, farming, fly mode F5, boss bar, F2 screenshot, footsteps, pause settings | ✅ | `--fly` aerial probe |
+| 13 | **Play it by hand** — mining feel, combat feel, inventory clicks, trading, sleeping, farming | ☐ | needs a human at the keyboard; pointer lock only verified by code |
+| 14 | Weapon rarity + random bonuses, spawner blocks, TNT chains, the Boomer, roaming bosses | ✅ | |
+| 13b | Ranged combat, Cube World style: simulation-owned projectiles, staff spray / arc, bow / fan, 8-way volley | ✅ | `--fire=secondary` with `--class=mage` seen |
+| 16 | Doors, wall torches, boats, enchanting table, sleeping animation | ✅ | `--stage16` seen |
+| 15 | **Multiplayer probe** (TCP + JSON lines on 7777, host-authoritative, puppets, replicas, host clock) | ✅ | two processes: the host captured peer 2's puppet beside it, the client got `hello` (seed + 20 edit bytes), 6 mob puppets, the host clock and the host's puppet; a zombie spawned beside the puppet hit the client (HP 26/30) through `hurt` |
+
+## Session log
+
+- **2026-09-10 s1** — worktree `poc_cubeworld` created from `dev`; the Godot POC read whole;
+  every file ported; first screenshot through the probe; look tuned against the Godot frames
+  (fog toward sky, sun 0.6 / ambient 0.6); shadows confirmed with a low sun; stages 13b, 16
+  and 15 seen through `--fire`, `--stage16`, `--strike` and the two-process `--wait-peer` run.
+  Stage 13 (playing it by hand) is the one thing a probe cannot do.
