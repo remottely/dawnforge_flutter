@@ -23,6 +23,7 @@ import 'package:dawnforge/src/core/systems/input/input_helper.dart';
 import 'package:dawnforge/src/core/systems/localization/localization_system.dart';
 import 'package:dawnforge/src/core/systems/managers/game_input_manager.dart';
 import 'package:dawnforge/src/core/systems/managers/ui_state_machine.dart';
+import 'package:dawnforge/src/core/systems/progression/starting_loadout_rules.dart';
 import 'package:dawnforge/src/core/systems/spawning/procedural_spawn_system.dart';
 import 'package:dawnforge/src/core/systems/timing/sim_clock.dart';
 import 'package:dawnforge/src/core/systems/world/chunk_streaming_system.dart';
@@ -120,6 +121,18 @@ final class DawnforgeGame extends FlameGame
     const AlmanacLoader()
         .loadFromManifest(biomeManifest, (path) => biomeEntries[path]!);
 
+    // The progression manifest (pipeline step 26): what a new world grants.
+    final progressionRoot = ContentPaths.progressionRoot(game);
+    final loadoutManifest = await _loadJson('$progressionRoot/manifest.json');
+    final loadoutEntries = <String, Map<String, Object?>>{};
+    for (final raw
+        in (loadoutManifest['entries']! as List).cast<Map<String, Object?>>()) {
+      final path = raw['path']! as String;
+      loadoutEntries[path] = await _loadJson('$progressionRoot/$path');
+    }
+    const AlmanacLoader()
+        .loadFromManifest(loadoutManifest, (path) => loadoutEntries[path]!);
+
     locator<LocalizationSystem>().loadLocale(
       locale,
       await _loadJson('${ContentPaths.localesRoot(game)}/$locale.json'),
@@ -174,6 +187,9 @@ final class DawnforgeGame extends FlameGame
       GameConstants.playerActorId,
       locator<GridManager>().gridToWorld(spawnTile),
     );
+    // Every boot is a NEW world until FP6 saves one, so every boot grants
+    // the loadout; a loaded world will skip this the day one exists.
+    StartingLoadoutRules.apply(player);
     final playerRenderer = ActorRenderer(player);
     simObjects.add(player);
     await world.add(playerRenderer);

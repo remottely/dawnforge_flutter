@@ -96,16 +96,29 @@ void main() {
     // refused for want of a slot to land in.
     expect(game.player.actorData.id, GameConstants.playerActorId);
     expect(game.player.inventory.maxSlots, 30);
+    // A new world grants the pack's loadout (FP4.5(g)): the copper pickaxe,
+    // the one item that opens the cold-start deadlock.
+    expect(
+      game.player.inventory.countOf('t1_item_tool_melee_pickaxe_copper'),
+      1,
+    );
     expect(game.player.inventory.maxSlots % GameConstants.slotsPerRow, 0,
         reason: 'the bag must be a whole number of rows for the grid to page');
-    // And it boots holding something (FP4.3a): the bag starts empty, so the
-    // hand is the innate one the pack authors. Proven here rather than only
-    // against a probe, because this is the one test that resolves the id
-    // against the REAL item registry — a renamed hand item fails here.
+    // And it boots HOLDING the pickaxe (FP4.3a + FP4.5(g)): the loadout lands
+    // in slot 0 and slot 0 is the hand, so a new world starts ready to mine.
+    // Proven here rather than only against a probe, because this is the one
+    // test that resolves the id against the REAL item registry.
+    expect(
+      game.player.heldItem.currentItem?.id,
+      't1_item_tool_melee_pickaxe_copper',
+    );
+    // The innate hand is still what an EMPTY slot resolves to.
+    game.player.inventory.selectSlot(1);
     expect(
       game.player.heldItem.currentItem?.id,
       GameConstants.innateHandItemId(game.player.actorData.tier),
     );
+    game.player.inventory.selectSlot(0);
 
     // The render half of the gate: renderers must land inside `world` (the
     // ONLY subtree the CameraComponent renders — Flame's default FlameGame

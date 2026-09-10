@@ -85,6 +85,8 @@
     "forge_almanac.02_workstations.01_smelter.t1.t1_item_craftable_planks_palm.display_name": "Palm Planks",
     "forge_almanac.02_workstations.01_smelter.t1.t1_prop_workstation_smelter.description": "Melts rock and ore into bars, planks, cloth and coins. The copper one is where every builder starts.",
     "forge_almanac.02_workstations.01_smelter.t1.t1_prop_workstation_smelter.display_name": "Copper Smelter",
+    "forge_almanac.02_workstations.02_workshop.t1.t1_item_tool_melee_pickaxe_copper.description": "Copper is soft, but it is the first metal you can shape.\n\nTool: Pickaxe\nGood for: breaking rocks and ore\nDamage: 1\nEnergy per use: 1\nDurability: 100 uses",
+    "forge_almanac.02_workstations.02_workshop.t1.t1_item_tool_melee_pickaxe_copper.display_name": "Copper Pickaxe",
     "forge_almanac.02_workstations.04_seed_station.t1.t1_item_buildable_seed_bush_clover.description": "Seeds of the clover plant. Put them in tilled soil and they grow.\n\nPlace it in the world to use it.",
     "forge_almanac.02_workstations.04_seed_station.t1.t1_item_buildable_seed_bush_clover.display_name": "Clover Bush Seeds",
     "forge_almanac.02_workstations.04_seed_station.t1.t1_item_buildable_seed_fruit_apple.description": "Seeds of the apple plant. Put them in tilled soil and they grow.\n\nPlace it in the world to use it.",

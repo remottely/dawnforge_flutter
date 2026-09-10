@@ -369,7 +369,10 @@ sector model (`shared_logic/`, `domain/`, `resources/`, `registries/`, `factorie
     `ui.workstation.*` labels). This is the first surface that SHOWS an item's name, so it
     pays PENDING #7's port delta: a data class reads `display_name_key`, and
     `InventorySortRules`' fourth axis goes live in the same commit.
-  - **(g) the bootstrap — CORRECTED 2026-09-10.** The 2026-08-31 decision assumed the
+  - **(g) the bootstrap — CORRECTED 2026-09-10; landed 0.50.0** (step 26 twin with its
+    own item-id check, `IStartingLoadoutData`, `LoadoutRegistry` routed by the loader,
+    `StartingLoadoutRules.apply(player)` at boot, XP refused until FP7.5 rather than
+    dropped, the pickaxe document imported into `02_workshop/t1/`). The 2026-08-31 decision assumed the
     shared contract had no starting inventory and proposed `starting_inventory:` on the
     player document as an additive fork. **The spec has authored one since `tessera
     0.334.0` (2026-09-05):** `games/dawnforge/data/progression/starting_loadout_default.md`

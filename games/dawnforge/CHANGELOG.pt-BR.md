@@ -8,6 +8,27 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.50.0
+
+### ✨ New
+
+- **Você começa com uma picareta de cobre.** Ela fica no primeiro bolso da
+  mochila e já está na sua mão quando um mundo novo começa. Ela quebra pedras
+  e minério, que são as primeiras coisas de que tudo o mais é feito. Até
+  agora você começava sem nada, e nada no mundo podia ser minerado.
+- A picareta de cobre em si veio do pacote de design. Você ainda não consegue
+  fazer uma — isso precisa da oficina — mas tem uma.
+
+### 🧹 Internal
+
+- O que um jogador novo tem ao começar é uma página do pacote de design, lida
+  pelas ferramentas do jogo do mesmo jeito que o jogo original lê a dele,
+  então uma segunda página ao lado seria um segundo jeito de começar. A página
+  do original não dá nada; a nossa dá a picareta, e a diferença está escrita
+  na própria página.
+- Uma página de início que cita um item que o pacote não tem para as
+  ferramentas antes de conseguir parar o jogo.
+
 ## 0.49.0
 
 ### ✨ New

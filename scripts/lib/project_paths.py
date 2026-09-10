@@ -155,6 +155,8 @@ TEMPLATES_ROOT: Path = DATA_ROOT / "templates"
 WORLD_DATA_ROOT: Path = DATA_ROOT / "world"
 AUDIO_ROOT: Path = DATA_ROOT / "audio"
 UI_DATA_ROOT: Path = DATA_ROOT / "ui"
+PROGRESSION_DATA_ROOT: Path = DATA_ROOT / "progression"
+"""The pack's progression documents — the starting loadout(s). Step 26's source."""
 
 ASSETS_ROOT: Path = PROJECT_ROOT / "assets"
 
@@ -163,6 +165,8 @@ GENERATED_ROOT: Path = ASSETS_ROOT / "generated" / ACTIVE_GAME
 Never hand-edited (rule 17). Registries boot from here via the asset bundle."""
 
 LOCALES_ROOT: Path = GENERATED_ROOT / "locales"
+PROGRESSION_GENERATED_ROOT: Path = GENERATED_ROOT / "progression"
+"""Generated loadouts + manifest (step 26). `ContentPaths.progressionRoot` is the Dart twin."""
 """Generated translation tables — the pack's own text."""
 
 SCRIPTS_ROOT: Path = PROJECT_ROOT / "scripts"

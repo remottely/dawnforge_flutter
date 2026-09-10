@@ -8,6 +8,12 @@ abstract final class GameConstants {
   /// engine may name the entry it spawns, never the folder it was authored in.
   static const String playerActorId = 'actor_player';
 
+  /// The loadout a new world grants — an engine contract on a pack ENTRY,
+  /// the way the fists are (rule 29 bans folders, not entries). A second
+  /// document beside it is a second loadout; this names the one the boot
+  /// asks for.
+  static const String startingLoadoutId = 'starting_loadout_default';
+
   /// The group an actor authors to say a person is behind it — the pack
   /// writes `groups: [player]`. The spec asks `is_in_group(&"player")`, which is
   /// the same question against the same authored list — membership is content,

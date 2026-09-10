@@ -8,6 +8,27 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.50.0
+
+### ✨ New
+
+- **You start with a copper pickaxe.** It sits in the first pocket of your bag
+  and is already in your hand when a new world begins. It breaks rocks and
+  ore, which are the first things everything else is made from. Until now you
+  started with nothing, and nothing in the world could be mined at all.
+- The copper pickaxe itself came in from the design pack. You cannot make one
+  yet — that needs the workshop — but you own one.
+
+### 🧹 Internal
+
+- What a new player starts with is a page in the design pack, read by the
+  game's tools the same way the original game reads its own, so a second
+  page beside it would be a second way to start. The original's page grants
+  nothing; ours grants the pickaxe, and the difference is written down on the
+  page itself.
+- A start page that names an item the pack does not have stops the tools
+  before it can stop the game.
+
 ## 0.49.0
 
 ### ✨ New

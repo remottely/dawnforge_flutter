@@ -85,6 +85,8 @@
     "forge_almanac.02_workstations.01_smelter.t1.t1_item_craftable_planks_palm.display_name": "Tablones de Palma",
     "forge_almanac.02_workstations.01_smelter.t1.t1_prop_workstation_smelter.description": "Funde piedra y mineral y los vuelve barras, tablones, tela y monedas. La de cobre es donde empieza todo constructor.",
     "forge_almanac.02_workstations.01_smelter.t1.t1_prop_workstation_smelter.display_name": "Fundición de Cobre",
+    "forge_almanac.02_workstations.02_workshop.t1.t1_item_tool_melee_pickaxe_copper.description": "El cobre es blando, pero es el primer metal que puedes moldear.\n\nHerramienta: Pico\nSirve para: romper rocas y minerales\nDaño: 1\nEnergía por uso: 1\nDurabilidad: 100 usos",
+    "forge_almanac.02_workstations.02_workshop.t1.t1_item_tool_melee_pickaxe_copper.display_name": "Pico de Cobre",
     "forge_almanac.02_workstations.04_seed_station.t1.t1_item_buildable_seed_bush_clover.description": "Semillas de la planta de trébol. Ponlas en tierra arada y crecen.\n\nSe coloca en el mundo para usarse.",
     "forge_almanac.02_workstations.04_seed_station.t1.t1_item_buildable_seed_bush_clover.display_name": "Semillas de Arbusto de Trébol",
     "forge_almanac.02_workstations.04_seed_station.t1.t1_item_buildable_seed_fruit_apple.description": "Semillas de la planta de manzana. Ponlas en tierra arada y crecen.\n\nSe coloca en el mundo para usarse.",

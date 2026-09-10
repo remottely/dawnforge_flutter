@@ -85,6 +85,8 @@
     "forge_almanac.02_workstations.01_smelter.t1.t1_item_craftable_planks_palm.display_name": "Pranchas de Palmeira",
     "forge_almanac.02_workstations.01_smelter.t1.t1_prop_workstation_smelter.description": "Derrete pedra e minério e transforma em barras, pranchas, tecido e moedas. A de cobre é onde todo construtor começa.",
     "forge_almanac.02_workstations.01_smelter.t1.t1_prop_workstation_smelter.display_name": "Fundição de Cobre",
+    "forge_almanac.02_workstations.02_workshop.t1.t1_item_tool_melee_pickaxe_copper.description": "O cobre é mole, mas é o primeiro metal que você consegue moldar.\n\nFerramenta: Picareta\nServe para: quebrar pedras e minérios\nDano: 1\nEnergia por uso: 1\nDurabilidade: 100 usos",
+    "forge_almanac.02_workstations.02_workshop.t1.t1_item_tool_melee_pickaxe_copper.display_name": "Picareta de Cobre",
     "forge_almanac.02_workstations.04_seed_station.t1.t1_item_buildable_seed_bush_clover.description": "Sementes da planta de trevo. Ponha em terra arada e elas crescem.\n\nColoque no mundo para usar.",
     "forge_almanac.02_workstations.04_seed_station.t1.t1_item_buildable_seed_bush_clover.display_name": "Sementes de Arbusto de Trevo",
     "forge_almanac.02_workstations.04_seed_station.t1.t1_item_buildable_seed_fruit_apple.description": "Sementes da planta de maçã. Ponha em terra arada e elas crescem.\n\nColoque no mundo para usar.",
