@@ -8,6 +8,24 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.69.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. Alguém contou a máquina. O jogo irmão maior é feito de
+  **560 peças de código**; este jogo menor tem **112** delas, uma em cada cinco.
+  A contagem foi feita um tipo de peça por vez, então agora existe uma lista do
+  que falta e de qual trabalho futuro traz cada coisa. A surpresa: as peças que
+  decidem **como as coisas são feitas** estão quase todas aqui, e as peças que
+  fazem **telas e menus** estão quase todas faltando — 4 de 87. É um dos motivos
+  de o jogo ainda parecer tão simples.
+- Duas observações saíram da contagem. Existe aqui uma pasta de código de
+  desenho que o jogo irmão maior não precisa, porque naquele motor a coisa se
+  desenha sozinha e neste alguém precisa desenhar. E o jogo maior tem **uma
+  única exceção** à regra "nunca adivinhe, pare na hora", usada só ao carregar
+  um save antigo. Este jogo ainda não precisa dessa exceção, porque aqui os
+  saves antigos são simplesmente jogados fora.
+
 ## 0.68.0
 
 ### 🧹 Internal

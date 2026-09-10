@@ -1,4 +1,5 @@
 import 'package:dawnforge/src/core/base/world_objects/props/prop.dart';
+import 'package:dawnforge/src/core/components/i_interactable/interactable_component.dart';
 import 'package:dawnforge/src/core/components/i_interactable/workstation_component.dart';
 import 'package:dawnforge/src/core/resources/items/item_data.dart';
 import 'package:dawnforge/src/core/resources/world_objects/props/prop_workstation_data.dart';
@@ -13,8 +14,7 @@ import 'package:dawnforge/src/core/systems/drop/world_drop_helper.dart';
 /// "a pickup lands in front of it", and a death that gives the half-made
 /// batch back before the corpse drops its own loot.
 ///
-/// PORT DELTAS: `InteractableComponent` and `_on_interacted` are the interact
-/// verb, FP4.5's next slice; `WorkstationEffectsComponent` and the
+/// PORT DELTAS: `WorkstationEffectsComponent` and the
 /// `working`/`idle` animation are render-side (`WorldObjectRenderer` reads the
 /// signals when it learns to); `Events.workstation_interaction` lands with
 /// the surface that answers it.
@@ -26,11 +26,24 @@ final class PropWorkstation extends Prop {
 
   late final WorkstationComponent workstation;
 
+  /// The half of the interact verb this object owns: it answers a reach.
+  /// Mounted HERE and not on `Prop`, because a rock answers no reach and a
+  /// component on every prop is a component whose data does not exist
+  /// (`L-005`).
+  ///
+  /// Nothing is connected to its signal YET, and that is the honest shape of
+  /// this slice: the bench SURFACE is FP4.5(f), and it is the listener. A
+  /// handler written here now would be an empty method dressed as a feature
+  /// (rule 5), and the wire it stands in for is one line in the commit that
+  /// has something to open.
+  late final InteractableComponent interactable;
+
   @override
   void setupComponents() {
     super.setupComponents();
     workstation = addComponent(WorkstationComponent());
     workstation.itemsSpilled.connect(_onItemsSpilled);
+    interactable = addComponent(InteractableComponent());
   }
 
   /// Puts a spilled item into the world at this station's face — the one

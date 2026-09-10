@@ -8,6 +8,24 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.69.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. Somebody counted the machine. The big brother
+  game is built out of **560 pieces of code**; this smaller game has **112** of
+  them, which is one in five. The count was done one kind of piece at a time, so
+  now there is a list of exactly what is missing and which future job brings it.
+  The surprise: the pieces that decide **how things are made** are almost all
+  here, and the pieces that make **screens and menus** are almost all missing —
+  4 out of 87. That is one reason the game still looks so plain.
+- Two notes came out of the counting. There is one folder of drawing code here
+  that the big brother game does not need at all, because in that engine a thing
+  draws itself and in this one somebody has to draw it. And the big game is
+  allowed **one single exception** to its "never guess, just stop" rule, used
+  only when loading an old save. This game does not need that exception yet,
+  because old saves here are simply thrown away.
+
 ## 0.68.0
 
 ### 🧹 Internal

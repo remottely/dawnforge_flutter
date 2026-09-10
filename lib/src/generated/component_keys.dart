@@ -7,6 +7,7 @@ abstract final class ComponentKeys {
   static const String drop = 'DropComponent';
   static const String health = 'HealthComponent';
   static const String heldItem = 'HeldItemComponent';
+  static const String interactable = 'InteractableComponent';
   static const String inventory = 'InventoryComponent';
   static const String movement = 'MovementComponent';
   static const String workstation = 'WorkstationComponent';

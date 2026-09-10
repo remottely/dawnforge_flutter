@@ -4,12 +4,16 @@ import 'package:dawnforge/src/core/registries/item_registry.dart';
 import 'package:dawnforge/src/core/resources/items/item_craftable_data.dart';
 import 'package:dawnforge/src/core/resources/json_reader.dart';
 import 'package:dawnforge/src/core/resources/world_objects/props/allocated_material.dart';
-import 'package:dawnforge/src/core/resources/world_objects/props/prop_data.dart';
+import 'package:dawnforge/src/core/resources/world_objects/props/prop_interactable_data.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/enums.dart';
 import 'package:dawnforge/src/core/systems/boot.dart';
 import 'package:dawnforge/src/core/systems/drop/drop_entry.dart';
 
 /// A prop you make things at — the Dart port of `PropWorkstationData.cs`.
+///
+/// It is an INTERACTABLE prop first (FP4.5e): the pack authors
+/// `interaction_range` and `interaction_prompt` on every station document,
+/// and `PropInteractableData` is where those two live.
 ///
 /// Recipe discovery is **item-centric**, which is the design worth keeping:
 /// a station holds no recipe list of its own. It asks the item registry which
@@ -21,11 +25,13 @@ import 'package:dawnforge/src/core/systems/drop/drop_entry.dart';
 /// progress — lives here too, below the authored half, because it is MUTABLE
 /// GAME STATE and rule 8 gives that exactly one home. `WorkstationComponent`
 /// is the behaviour over it and keeps nothing of its own.
-class PropWorkstationData extends PropData {
+class PropWorkstationData extends PropInteractableData {
   PropWorkstationData({
     required super.id,
     required this.workstationType,
     this.productionSpeedMultiplier = 1.0,
+    super.interactionRange,
+    super.interactionPrompt,
     super.spritesheetPath,
     super.frameWidth,
     super.frameHeight,
@@ -285,6 +291,8 @@ class PropWorkstationData extends PropData {
         id: id,
         workstationType: workstationType,
         productionSpeedMultiplier: productionSpeedMultiplier,
+        interactionRange: interactionRange,
+        interactionPrompt: interactionPrompt,
         spritesheetPath: spritesheetPath,
         frameWidth: frameWidth,
         frameHeight: frameHeight,

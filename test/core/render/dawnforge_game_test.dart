@@ -286,11 +286,18 @@ void main() {
     expect(game.player.movement.isMoving, isTrue);
 
     // THE CURSOR (FP4.3a). A tap aims and acts in one press: the cursor goes
-    // where the pointer went down, and the intent fires from there. A finger
-    // and a mouse reach the same two lines, which is what makes touch parity
-    // structural rather than a second path (rule 12).
+    // where the pointer went down, and the intent fires from there.
+    //
+    // WHICH intent depends on the device, and that is rule 12 rather than a
+    // second path (FP4.5e): a finger has one button and the game has two
+    // verbs, so a touch raises the CONTEXTUAL intent and the player picks the
+    // verb from what is under the aim. A mouse keeps its click meaning one
+    // thing, because the keyboard beside it owns the reach on its own key.
     var actions = 0;
-    locator<InputHelper>().primaryActionPressed.connect(() => actions++);
+    var contextual = 0;
+    locator<InputHelper>()
+      ..primaryActionPressed.connect(() => actions++)
+      ..contextualActionPressed.connect(() => contextual++);
     game.onTapDown(
       TapDownEvent(
         1,
@@ -301,7 +308,20 @@ void main() {
         ),
       ),
     );
-    expect(actions, 1, reason: 'one press, one intent (rule 24)');
+    expect(contextual, 1, reason: 'one press, one intent (rule 24)');
+    expect(actions, 0, reason: 'a finger does not fire the swing directly');
+
+    game.onTapDown(
+      TapDownEvent(
+        2,
+        game,
+        TapDownDetails(
+          globalPosition: const Offset(120, 90),
+          kind: PointerDeviceKind.mouse,
+        ),
+      ),
+    );
+    expect(actions, 1, reason: 'a click is the swing, as it always was');
 
     // And the world position is COMPUTED, not remembered: the camera moves
     // under a cursor that has not, so a player walking with the mouse held

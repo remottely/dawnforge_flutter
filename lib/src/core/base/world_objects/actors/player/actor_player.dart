@@ -68,6 +68,31 @@ final class ActorPlayer extends IActor {
     return outcome == ActionOutcome.landed;
   }
 
+  /// The reach — the press `D-1` binds to `E`.
+  ///
+  /// It costs no cadence and takes none: reaching for a bench is not a swing,
+  /// and the spec paces neither. What it does share with the swing is the
+  /// blocker gate (rule 30): a press made while a surface holds the player is
+  /// not the world's press.
+  ///
+  /// Returns whether anything answered, which the touch path below reads.
+  bool performInteract() {
+    if (!locator<GameInputManager>().isGameplayEnabled) return false;
+    return tryInteract(aimAtCursor());
+  }
+
+  /// A FINGER went down here — one press that has to mean both verbs,
+  /// because a touch screen has no second key to put the other on (rule 12).
+  ///
+  /// The order is what the plan's sentence says and what a player expects: if
+  /// the tap is on something that answers a reach, and it is close enough, it
+  /// reaches; otherwise it swings. A mouse never arrives here — it has the
+  /// `E` key — so the click keeps meaning exactly one thing on a desktop.
+  bool performContextualAction() {
+    if (performInteract()) return true;
+    return performPrimaryAction();
+  }
+
   @override
   void update(double dt) {
     super.update(dt);

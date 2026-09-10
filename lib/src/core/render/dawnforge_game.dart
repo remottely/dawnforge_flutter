@@ -229,6 +229,11 @@ final class DawnforgeGame extends FlameGame
       // The press reaches the player and stops there: WHAT it means is the
       // player's own decision (aim, reach, cooldown), not this shell's.
       ..primaryActionPressed.connect(player.performPrimaryAction)
+      // The reach, and the tap that has to choose between the two verbs. Both
+      // stop at the player for the same reason the swing does: what a press
+      // MEANS is the player's decision, not this shell's.
+      ..interactPressed.connect(player.performInteract)
+      ..contextualActionPressed.connect(player.performContextualAction)
       ..inventoryToggled.connect(_toggleInventory)
       // Rule 25: the press is routed ONCE, by the machine, to whatever owns
       // the screen. This is the only listener of the key in the game, and it
