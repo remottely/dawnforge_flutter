@@ -8,6 +8,17 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.57.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. There is a little watchman that reads every file
+  right after it is written and complains if it spots one of the shapes we have
+  promised never to use. It knew three of them. It now knows a fourth: a value
+  whose type nobody wrote down. A fifth one we had promised is written off on
+  purpose, with the reason in the watchman's own notes, because no way of
+  spotting it could tell a real mistake from ordinary honest code.
+
 ## 0.56.0
 
 ### 🧹 Internal

@@ -46,7 +46,13 @@ prohibitions that already exist in writing:
 | Hook | Event | Blocks / flags | Encodes |
 |:---|:---|:---|:---|
 | `scripts/ai/hooks/block_forbidden_git.py` | PreToolUse · Bash | `git rebase`, `git commit --amend`, `git commit` without ` -- ` pathspec, `git commit` whose message (`-m`, `-F`, `--file=`) carries AI attribution, `git commit` naming `LEDGER.md` while an ID heads two entries | §Parallel sessions, §Commit message format, ledger header |
-| `scripts/ai/hooks/check_edited_file_rules.py` | PostToolUse · Edit/Write | `pauseEngine()`/`resumeEngine()`, `.paused =` writes, raw pointer reads (`.canvasPosition`/`.devicePosition`) outside `input_helper.dart` | rules 30, 11 |
+| `scripts/ai/hooks/check_edited_file_rules.py` | PostToolUse · Edit/Write | `pauseEngine()`/`resumeEngine()`, `.paused =` writes, raw pointer reads (`.canvasPosition`/`.devicePosition`) outside `input_helper.dart`, the word `dynamic` on a non-comment line under `lib/` | rules 30, 11, 4 |
+
+FP0.5 promised a fifth pattern, writes to a `timeScale`, and this hook will not carry
+it: Flame has no global time scale, and a hand-rolled `dt *= factor` is
+indistinguishable by regex from legitimate per-entity easing. A tripwire with false
+positives is trained away within a day. Rule 30's time half stays a reading; the hook
+header carries the same paragraph so the reason is found where the gap is (`L-009`).
 
 Contract: exit `2` + stderr = the reason, fed back to the model; exit `0` = silence. The
 PostToolUse guard is a **tripwire, not a gate**. Only mechanically-checkable,

@@ -40,13 +40,6 @@
 - **Cost of leaving it:** the hook exists to stop a bare commit sweeping in a parallel session's staged work, and the only route to a merge commit is precisely a bare commit of the whole index — so the one case the guard cannot inspect is the case that commits the most. The bypass is silent and undocumented: nothing in `CLAUDE.md` or the hook names it, so the next session either abandons the merge or finds `merge --continue` on its own and commits the index unchecked, having read no warning that it must verify it by hand first. Both outcomes are worse than a hook that recognised `merge` and asked for the same proof.
 - **Found while:** 0.45.3 — recording the legacy `main` lineage on `dev` with `git merge -s ours`, after the hook refused the commit that would have carried it.
 
-### L-009 · The edit tripwire carries three of the five patterns FP0.5 promised
-
-- **Lens:** harness / hook guard
-- **Evidence:** `scripts/ai/hooks/check_edited_file_rules.py:68-88` at 0.48.0 holds three rules — `pauseEngine|resumeEngine(`, `.paused =`, `.canvasPosition|.devicePosition` — and `docs/AI_HARNESS.md` §3 lists exactly those. `FLUTTER_PORT_PLAN_2026-08-25.md` FP0.5 promised two more: `timeScale` writes and "`dynamic` in `lib/src/core/`". `analysis_options.yaml:13` sets `avoid_dynamic_calls: error`, which flags a CALL through a dynamic receiver and says nothing about a `dynamic` declaration, parameter or generic — the thing rule 4 forbids by name. `grep -rn '\bdynamic\b' lib/src/core` is clean today, so the gap has cost nothing yet.
-- **Cost of leaving it:** rule 4 is enforced by a reading, and a reading is the guard that fails on the commit nobody reviews closely. The `timeScale` half has no zero-false-positive shape in Dart (Flame has no global time scale; a hand-rolled `dt *= f` is indistinguishable from a legitimate one by regex) and should be dropped from the promise in writing rather than left as a line that says the hook does something it cannot — the same fallback-in-disguise rule 20 names, applied to a document.
-- **Found while:** 2026-09-10 re-slicing the port plan — auditing FP0's own gate line against the hook's source.
-
 ### L-010 · The player manual has no section map, and its page names already diverge from the sibling's
 
 - **Lens:** docs / rule 34
@@ -93,6 +86,7 @@
 
 | ID | Title | Drained into |
 |:---|:---|:---|
+| L-009 | The edit tripwire carries three of the five patterns FP0.5 promised | FP0.14 (0.57.0) — the fourth added (`\bdynamic\b` under `lib/`), the fifth (`timeScale`) dropped in writing in the hook header and `docs/AI_HARNESS.md` §3 |
 | L-006 | Nothing notices when an imported pack document drifts from the spec's | FP0.11 (0.56.0) — `scripts/content/check_pack_snapshot_matches_spec.py`; its first green run recorded 28 forked documents and 67 forked keys, `cave_elevation_drops` among them, and opened `L-014` |
 | L-003 | Cross-repo pointers name a Godot repo path that no longer exists | FP0.13 (0.53.0) — `SPEC_REPO_ROOT` in `scripts/lib/project_paths.py`, cited by `CLAUDE.md`, `docs/AI_HARNESS.md` §5 and the study's §1 table |
 

@@ -105,12 +105,16 @@ here is restated there.
   stays — it says where the repo WAS; §8 holds no path). The path is written once, as
   `SPEC_REPO_ROOT` in `project_paths.py` (FP0.11 reads it) beside `spec_repo_available()`
   and `spec_pack_root()`; every doc cites the constant. `L-003` drained.
-- **FP0.14** the tripwires FP0.5 promised and `check_edited_file_rules.py` does not
-  carry (`L-009`): `\bdynamic\b` on a non-comment line under `lib/src/core/` (rule 4;
-  the analyzer's `avoid_dynamic_calls` catches CALLS on it, not the declaration). The
-  `timeScale` tripwire FP0.5 also listed is **dropped, with the reason written in the
-  hook header**: Flame has no global time scale, and a hand-rolled `dt *= factor` has no
-  zero-false-positive regex — it stays a rule 30 reading, not a hook.
+- **FP0.14** — **done 0.57.0.** The tripwires FP0.5 promised and `check_edited_file_rules.py`
+  did not carry (`L-009`): `\bdynamic\b` on a non-comment line, scoped to all of `lib/`
+  rather than `lib/src/core/` — rule 4 says `lib/`, the hook already judges only `lib/`,
+  and generated files are included on purpose because rule 17 forbids hand-editing them
+  at all. Zero occurrences in `lib/` and `test/` when it was written, so it needed no
+  whitelist. The `timeScale` tripwire FP0.5 also listed is **dropped, with the reason
+  written in the hook header and in `docs/AI_HARNESS.md` §3**: Flame has no global time
+  scale, and a hand-rolled `dt *= factor` has no zero-false-positive regex — a tripwire
+  with false positives is trained away within a day. It stays a rule 30 reading, not a
+  hook. `L-009` drained.
 - **FP0.15** the manual's section map (`L-010`): `games/dawnforge/docs/manual/README.md`
   (the fifteen-page table as the spec's, adapted to this track's page names) +
   `TEMPLATE.md`, and `scripts/docs/check_manual_mirrors.py --check` (same filenames in

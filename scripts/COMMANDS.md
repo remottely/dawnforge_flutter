@@ -10,7 +10,7 @@
 | `python3 scripts/ai/index_project_knowledge.py [--dry-run\|--stats]` | build the knowledge index (docs + pack + skills + changelogs + full git history) |
 | `python3 scripts/ai/search_project_knowledge.py "<q>" [--k N] [--sources docs,git,…] [--json]` | BM25 search over everything the repo knows; auto-rebuilds a stale index |
 | `scripts/ai/hooks/block_forbidden_git.py` | PreToolUse Bash guard (see `docs/AI_HARNESS.md` §3) |
-| `scripts/ai/hooks/check_edited_file_rules.py` | PostToolUse Edit/Write tripwire (rules 30, 11) |
+| `scripts/ai/hooks/check_edited_file_rules.py` | PostToolUse Edit/Write tripwire (rules 30, 11, 4) |
 
 ## scripts/project/ — whole-project operations
 

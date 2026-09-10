@@ -8,6 +8,17 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.57.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. Existe um vigia que lê cada arquivo logo depois de ele ser
+  escrito e reclama se encontra uma das formas que prometemos nunca usar. Ele
+  conhecia três. Agora conhece uma quarta: um valor cujo tipo ninguém escreveu.
+  Uma quinta que tínhamos prometido foi cancelada de propósito, com o motivo
+  anotado no caderno do próprio vigia, porque nenhum jeito de encontrá-la
+  conseguia separar um erro de verdade de um código honesto comum.
+
 ## 0.56.0
 
 ### 🧹 Internal
