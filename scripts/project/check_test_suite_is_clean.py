@@ -6,6 +6,8 @@ The one command every task runs before its commit (CLAUDE.md §Execution Workflo
 
 - **the changelog pair** in shape (`check_changelog_is_ordered.py`, FP0.16) — newest
   first, mirrored in both languages, categories in their fixed order.
+- **the translation keys** (`check_translation_keys.py`, FP0.17) — every literal
+  `tr('key')` in `lib/` exists in every emitted locale table.
 
 - **`flutter analyze`** at zero issues — the analyzer *is* half the rule set here
   (rule 4's strict typing lives in `analysis_options.yaml`), so an info-level lint is a
@@ -51,6 +53,10 @@ def main() -> int:
     # `0.0.0-NEXT` is allowed here because the suite runs BEFORE the stamp.
     codes.append(_run("changelog", [
         sys.executable, "scripts/project/check_changelog_is_ordered.py"]))
+    # Every literal `tr('key')` in lib/ exists in every locale (FP0.17): a
+    # missing key crashes at render, which is later than here.
+    codes.append(_run("translations", [
+        sys.executable, "scripts/project/check_translation_keys.py"]))
     if not args.test_only:
         # --fatal-infos: an info is a failure — the analyzer is half the rule set (rule 4).
         codes.append(_run("analyze", ["flutter", "analyze", "--fatal-infos"]))

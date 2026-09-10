@@ -100,7 +100,7 @@ guard, `--dry-run`/`--check`, a `COMMANDS.md` row in the same commit).
   order, no surviving `0.0.0-NEXT`, en/pt-BR section and category parity, no version
   twice. Evidence it is owed: at 0.47.0 both changelogs carried `0.45.4` and `0.45.3`
   ABOVE `0.47.0`, and 0.48.0 repaired it by hand. Runs from the suite script.
-- **FP0.17** `scripts/project/check_translation_keys.py --check` — every string-literal
+- **FP0.17** — **done 0.52.0.** `scripts/project/check_translation_keys.py --check` — every string-literal
   key passed to `tr(` in `lib/` exists in every emitted locale table
   (`assets/generated/<game>/locales/*.json`); the count of non-literal calls is printed,
   never swallowed. Here a missing key CRASHES at render (rule 5), which is later than a

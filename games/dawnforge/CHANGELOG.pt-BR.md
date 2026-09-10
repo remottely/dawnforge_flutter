@@ -8,6 +8,15 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.52.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. Toda palavra que a tela pede pelo nome agora é conferida
+  contra as três tabelas de idioma antes de qualquer trabalho ser arquivado.
+  Até agora uma palavra que ninguém tinha traduzido só seria encontrada quando
+  um jogador abrisse a tela que precisava dela, e o jogo pararia ali.
+
 ## 0.51.0
 
 ### 🧹 Internal

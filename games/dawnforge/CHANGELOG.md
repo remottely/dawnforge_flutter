@@ -8,6 +8,15 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.52.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. Every word the screen asks for by name is now
+  checked against all three language tables before any work is filed. Until
+  now a word nobody had translated would only be found when a player opened
+  the screen that needed it, and the game would stop there.
+
 ## 0.51.0
 
 ### 🧹 Internal
