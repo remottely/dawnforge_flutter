@@ -5,6 +5,7 @@ import 'package:flutter_scene/scene.dart' as fs show Spawner;
 import 'package:vector_math/vector_math.dart';
 
 import '../world/voxel_world.dart';
+import 'net.dart';
 import 'sfx.dart';
 
 enum WeatherKind { clear, rain, storm, snow }
@@ -60,6 +61,11 @@ class Weather {
   /// stops rolling on its own.
   bool forced = false;
 
+  /// Stage 21b: the host tells clients what it rolled; every 10 s and on change.
+  double _syncTimer = 0.0;
+  WeatherKind? _sentKind;
+  double _sentTarget = -1.0;
+
   late final ParticleEmitterComponent _rain;
   late final ParticleEmitterComponent _snow;
   late final double _rainRate;
@@ -108,6 +114,14 @@ class Weather {
 
   double get target => _target;
 
+  /// Client: follow the host's roll. [forced] stops the local timer from rolling
+  /// on its own.
+  void follow(WeatherKind newKind, double newTarget) {
+    forced = true;
+    kind = newKind;
+    _target = newTarget;
+  }
+
   static const List<String> labels = ['Clear', 'Rain', 'Storm', 'Snow'];
 
   String get label => labels[kind.index];
@@ -134,6 +148,15 @@ class Weather {
     if (!forced) {
       _timer -= dt;
       if (_timer <= 0.0) _roll();
+    }
+    if (Net.instance.isHost) {
+      _syncTimer -= dt;
+      if (_syncTimer <= 0.0 || _sentKind != kind || _sentTarget != _target) {
+        _syncTimer = 10.0;
+        _sentKind = kind;
+        _sentTarget = _target;
+        Net.instance.broadcastWeather(kind, _target);
+      }
     }
     // Snow and rain swap with the biome, so a walk into the mountains turns
     // the rain white.

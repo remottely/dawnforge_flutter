@@ -21,6 +21,7 @@ import '../game/game.dart';
 
 import '../game/input.dart';
 import '../game/inventory.dart';
+import '../game/net.dart';
 import '../game/sfx.dart';
 import '../game/talents.dart';
 import '../world/voxel_world.dart';
@@ -1205,6 +1206,10 @@ class Player extends VoxelBody implements Target {
     main.spawnDrop(position + Vector3(0, 1.4, 0) + dir * 0.6, stack.id, stack.count, dir * 6.0 + Vector3(0, 2, 0), 1.5);
   }
 
+  /// The local player is never a peer's puppet.
+  @override
+  int get peerId => 0;
+
   @override
   void takeDamage(double amount, String source, [Vector3? from]) {
     if (isDead || amount <= 0.0) return;
@@ -1370,8 +1375,11 @@ class Player extends VoxelBody implements Target {
     if (mount != null || riding != null) return;
     mount = h;
     h.ridden = true;
+    h.riddenBy = 1;
     h.rideInput = Vector3.zero();
     velocity = Vector3.zero();
+    // The host's horse carries the rider (stage 21b).
+    if (Net.instance.isClient) Net.instance.requestMount(h.netId);
     _resetMining();
     notify('Riding. [F] to get off');
     Achievements.instance.unlock('rider');
@@ -1382,8 +1390,10 @@ class Player extends VoxelBody implements Target {
     if (h == null) return;
     mount = null;
     h.ridden = false;
+    h.riddenBy = 0;
     h.rideInput = Vector3.zero();
     h.rideSprint = false;
+    if (Net.instance.isClient) Net.instance.requestDismount();
     if (!h.removed) {
       position = h.position + Vector3(-math.sin(yaw + math.pi * 0.5), 0.3, -math.cos(yaw + math.pi * 0.5)) * 1.2;
     }

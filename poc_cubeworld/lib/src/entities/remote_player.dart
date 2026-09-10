@@ -2,6 +2,7 @@ import 'package:flutter_scene/scene.dart';
 import 'package:vector_math/vector_math.dart';
 
 import '../game/net.dart';
+import 'mob.dart';
 import '../player/player.dart';
 import 'player_model.dart';
 import 'target.dart';
@@ -17,7 +18,12 @@ class RemotePlayer implements Target {
   Vector3 _target = Vector3.zero();
   double _yaw = 0.0;
   String title = '';
+  @override
   int peerId = 0;
+
+  /// Stage 21b: the horse this peer rides (the host's own Mob, or a mob puppet
+  /// on a client).
+  Mob? mountedOn;
   @override
   bool isDead = false;
   bool removed = false;
@@ -39,6 +45,9 @@ class RemotePlayer implements Target {
     Net.instance.hurtPeer(peerId, amount, source, from);
   }
 
+  /// The host decided a mob's effect landed; the peer's own player wears it.
+  void applyEffect(String id, double seconds) => Net.instance.effectPeer(peerId, id, seconds);
+
   void setPose(Vector3 pos, double yaw, String held) {
     if ((position - pos).length > 8.0) position = pos.clone();
     _target = pos.clone();
@@ -48,6 +57,11 @@ class RemotePlayer implements Target {
 
   void update(double dt) {
     final before = position.clone();
+    final h = mountedOn;
+    if (h != null && !h.removed) {
+      _target = h.centre() + Player.saddleOffset;
+      _yaw = h.modelYaw();
+    }
     position = position + (_target - position) * (dt * 12.0).clamp(0.0, 1.0);
     final speed = (position - before).length / (dt > 0.001 ? dt : 0.001);
     model.yaw = lerpAngle(model.yaw, _yaw, dt * 10.0);

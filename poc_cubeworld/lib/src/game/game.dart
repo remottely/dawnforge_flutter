@@ -133,6 +133,7 @@ class Game extends ChangeNotifier {
   ScreenKind screen = ScreenKind.none;
   String station = '';
   Inventory? chest;
+  IVec3 chestPos = IVec3.zero;
   bool debugVisible = true;
   bool mapVisible = false;
   final ValueNotifier<int> frame = ValueNotifier<int>(0);
@@ -146,6 +147,10 @@ class Game extends ChangeNotifier {
   bool started = false;
   bool ready = false;
   Future<void> Function(String path)? screenshotter;
+
+  /// Where the probe wants the camera on the captured frame, when it must not
+  /// drift (a body is swept out of terrain every tick).
+  Vector3 Function()? _pinCameraTo;
   final List<Completer<void>> _frameWaiters = [];
 
   /// Look tuning (also settable with --sun= --amb= --tm=).
@@ -545,6 +550,9 @@ class Game extends ChangeNotifier {
 
     pruneList<Mob>(mobs, (m) => m.removed, (m) => m.node);
     pruneList<Mob>(pets, (m) => m.removed, (m) => m.node);
+    for (final d in drops) {
+      if (d.removed) Net.instance.onDropGone(d);
+    }
     pruneList<ItemDrop>(drops, (d) => d.removed, (d) => d.node);
     pruneList<Projectile>(projectiles, (p) => p.removed, (p) => p.node);
     pruneList<Boat>(boats, (b) => b.removed, (b) => b.node);
@@ -557,7 +565,8 @@ class Game extends ChangeNotifier {
 
   void openStation(String st, IVec3 at) {
     station = st;
-    chest = st == 'chest' ? chestInventory(at) : null;
+    chestPos = at;
+    chest = st != 'chest' ? null : (Net.instance.isClient ? Net.instance.openChest(at) : chestInventory(at));
     openScreen(ScreenKind.inventory);
   }
 
@@ -710,6 +719,11 @@ class Game extends ChangeNotifier {
   }
 
   void spawnDrop(Vector3 at, String id, int count, [Vector3? vel, double delay = 0.6]) {
+    // The host owns drops (stage 21b); a client asks for one instead.
+    if (Net.instance.isClient) {
+      Net.instance.requestDrop(at, id, count, vel ?? Vector3.zero());
+      return;
+    }
     final drop = ItemDrop();
     drop.setupDrop(world, id, count, player, delay);
     drop.position = at.clone();
@@ -717,6 +731,7 @@ class Game extends ChangeNotifier {
     drop.syncNode();
     drops.add(drop);
     entities.add(drop.node);
+    Net.instance.onDropSpawned(drop);
   }
 
   void spawnLootDrop(Vector3 at, ItemStack stack) {
@@ -728,6 +743,7 @@ class Game extends ChangeNotifier {
     drop.syncNode();
     drops.add(drop);
     entities.add(drop.node);
+    Net.instance.onDropSpawned(drop);
   }
 
   bool _hasOpaqueSide(IVec3 b) {
@@ -1327,11 +1343,114 @@ class Game extends ChangeNotifier {
       }
       debugPrint('[probe] net mode ${net.mode} puppets ${net.puppetPositions()}, mobs hunting a puppet: $hunting');
     }
+    // --stage21b (with --wait-peer): drops, chests, weather and mounts across the
+    // wire. The host pre-fills a chest, forces a storm, mounts a horse and drops
+    // an item beside the client's puppet; the client reports what reached it and
+    // reads the host's chest.
+    const chestAt = IVec3(7, 77, 7);
+    if (_hasArg('--stage21b') && net.isHost && net.puppetPositions().isNotEmpty) {
+      final chestInv = chestInventory(chestAt);
+      chestInv.fromJson(const []);
+      chestInv.add('apple', 3);
+      weather.force('storm');
+      // A flat 7x7 stone pad 4 m east so the horse stands where the client's
+      // camera can see it.
+      final pad = IVec3.floor(player.position + Vector3(4.0, 0.0, 0.0));
+      for (var dx = -3; dx < 4; dx++) {
+        for (var dz = -3; dz < 4; dz++) {
+          world.setBlock(pad + IVec3(dx, -1, dz), Blocks.indexOf('stone'));
+          for (var dy = 0; dy < 6; dy++) {
+            world.setBlock(pad + IVec3(dx, dy, dz), Blocks.air);
+          }
+        }
+      }
+      final horse = Mob();
+      horse.setupMob(world, this, player, Species.def('horse'));
+      horse.position = pad.toVector3() + Vector3(0.5, 0.5, 0.5);
+      addMob(horse);
+      horse.tame(player);
+      player.mountHorse(horse);
+      debugPrint('[probe] stage21b: host forced weather ${weather.label}, chest $chestAt holds '
+          '${chestInv.toJson().first}, riding ${player.isMounted()} (riddenBy ${horse.riddenBy})');
+      // One metre east of the puppet, on a block laid there so the drop cannot
+      // fall into a hole.
+      final ppos = net.puppetPositions().first.$2;
+      final under = IVec3(ppos.x.floor() + 1, ppos.y.floor() - 1, ppos.z.floor());
+      world.setBlock(under, Blocks.indexOf('stone'));
+      world.setBlock(under + IVec3.up, Blocks.air);
+      spawnDrop(ppos + Vector3(1.0, 0.4, 0.0), 'iron_ingot', 2, Vector3(0, 0.5, 0));
+      // A spider bites the puppet once through the simulation: the poison must
+      // reach the peer.
+      final spider = Mob();
+      spider.setupMob(world, this, player, Species.def('spider'));
+      spider.position = ppos + Vector3(-2.0, 0.5, 0.0);
+      addMob(spider);
+      spider.hurtTarget(net.puppetBodies().first, 1.0);
+      debugPrint('[probe] stage21b: spider bit the puppet (effect ${spider.species.effect})');
+      final t2 = DateTime.now();
+      while (net.lastGive == null && DateTime.now().difference(t2).inMilliseconds < 15000) {
+        await nextFrame();
+      }
+      final give = net.lastGive;
+      debugPrint('[probe] stage21b: client picked up ${give == null ? 'nothing' : '${give.$2} x${give.$3}'}');
+      final t3 = DateTime.now();
+      while (net.puppetPositions().isNotEmpty && DateTime.now().difference(t3).inMilliseconds < 12000) {
+        await nextFrame();
+      }
+      debugPrint('[probe] stage21b: host rider at ${player.position}, horse at ${horse.position} '
+          '(ridden ${horse.ridden} by ${horse.riddenBy})');
+    }
+    if (_hasArg('--stage21b') && net.isClient) {
+      final t2 = DateTime.now();
+      while (DateTime.now().difference(t2).inMilliseconds < 3000) {
+        await nextFrame();
+      }
+      debugPrint('[probe] stage21b: client weather ${weather.label} (forced ${weather.forced}), '
+          'iron_ingot in bag ${player.inventory.countOf('iron_ingot')}, drop replicas '
+          '${net.dropReplicas.length}, effects ${player.effects.rows.keys.toList()}');
+      final view = net.openChest(chestAt);
+      final t3 = DateTime.now();
+      while (view.countOf('apple') == 0 && DateTime.now().difference(t3).inMilliseconds < 5000) {
+        await nextFrame();
+      }
+      debugPrint('[probe] stage21b: chest $chestAt from the host holds ${view.toJson().take(2).toList()}');
+      net.closeChest(chestAt);
+      var mounted = 0;
+      for (final b in net.puppetBodies()) {
+        if (b.mountedOn != null) mounted++;
+      }
+      debugPrint('[probe] stage21b: host puppets riding a horse puppet: $mounted');
+      // Frame the host puppet for the capture: hover 3.5 m south of it in first
+      // person, looking north.
+      if (net.puppetBodies().isNotEmpty) {
+        flyMode = true;
+        player.setFirstPerson(true);
+        player.setLook(0.0, -0.3);
+        for (var i = 0; i < 20; i++) {
+          player.position = net.puppetBodies().first.position + Vector3(0, 0.8, 3.5);
+          player.velocity = Vector3.zero();
+          player.syncNode();
+          await nextFrame();
+        }
+        debugPrint('[probe] stage21b: capture from ${player.position}, '
+            'host puppet at ${net.puppetBodies().first.position}');
+        // The body keeps being swept out of whatever it stands in, so pin the
+        // camera again on the frame that is actually captured.
+        _pinCameraTo = () => net.puppetBodies().first.position + Vector3(0, 0.8, 3.5);
+      }
+    }
     await nextFrame();
     await nextFrame();
     debugPrint('[probe] fps ${fps.toStringAsFixed(0)} mobs ${mobs.length} drops ${drops.length} projectiles ${projectiles.length}');
     final view = WidgetsBinding.instance.platformDispatcher.views.first;
     debugPrint('[probe] view ${view.physicalSize.width / view.devicePixelRatio}x${view.physicalSize.height / view.devicePixelRatio} logical @${view.devicePixelRatio}x');
+    final pin = _pinCameraTo;
+    if (pin != null) {
+      player.position = pin();
+      player.velocity = Vector3.zero();
+      player.syncNode();
+      await nextFrame();
+    }
     final shot = screenshotter;
     if (shot != null) {
       await shot(path);

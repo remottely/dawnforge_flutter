@@ -9,6 +9,7 @@ import '../game/achievements.dart';
 import '../game/game.dart';
 import '../game/game_state.dart';
 import '../game/inventory.dart';
+import '../game/net.dart';
 import '../game/sfx.dart';
 import 'hud.dart';
 
@@ -41,6 +42,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
   void dispose() {
     final c = _cursor;
     if (c != null) game.player.inventory.add(c.id, c.count);
+    if (game.chest != null) Net.instance.closeChest(game.chestPos);
     super.dispose();
   }
 
@@ -56,6 +58,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
       for (var i = 0; i < _chestRects.length; i++) {
         if (_chestRects[i].contains(mp)) {
           _clickSlot(chest, i, right);
+          // Stage 21b: either side sends the whole grid; last writer wins.
+          Net.instance.chestChanged(game.chestPos, chest.toJson());
           return;
         }
       }

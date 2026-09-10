@@ -51,6 +51,12 @@ class Mob extends VoxelBody {
   /// Stage 20: a mount carries its rider's input instead of thinking; a sheep
   /// regrows its wool.
   bool ridden = false;
+
+  /// Peer id of the rider (stage 21b), 0 when free.
+  int riddenBy = 0;
+
+  /// On a puppet: the host's instance id of this mob.
+  int netId = 0;
   Vector3 rideInput = Vector3.zero();
   bool rideSprint = false;
   bool rideJump = false;
@@ -205,7 +211,25 @@ class Mob extends VoxelBody {
     var eff = affixes[affix]?.effect ?? '';
     if (eff == '') eff = species.effect;
     if (eff == '') return;
-    if (t is Player) t.applyEffect(eff, 6.0);
+    if (t is Player) {
+      t.applyEffect(eff, 6.0);
+    } else if (t is RemotePlayer) {
+      // A puppet forwards both to its peer (stage 21b: the effect too).
+      t.applyEffect(eff, 6.0);
+    }
+  }
+
+  /// Puppet: what the host says about taming and riding, so a client can find a
+  /// tamed mount and sit the rider's puppet on it.
+  void setPuppetFlags(bool isTamed, int rider) {
+    riddenBy = rider;
+    ridden = rider != 0;
+    if (isTamed && !tamed) {
+      tamed = true;
+      main.mobs.remove(this);
+      if (!main.pets.contains(this)) main.pets.add(this);
+      barVisible = true;
+    }
   }
 
   Part _part(Map<IVec3, Vector3> voxels, Vector3 at, double s) {

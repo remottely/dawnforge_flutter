@@ -48,7 +48,19 @@ the Godot POC's, so the two roadmaps line up.
 | 21a | **Four more world structures** in the generator, on a second 4x4-chunk grid with its own hash; a candidate is dropped within 48 blocks of any primary structure so the two layers never overwrite each other. **5 ruin** (broken stone/mossy-brick walls 2-4 high around a cracked cobblestone floor, a chest half the time), **6 well** (3x3 cobblestone ring, water 4 deep, two fence posts, plank roof), **7 abandoned mine** (fenced head frame, ladder shaft to y 24, a 3x3 corridor 20-30 long with log-and-plank beams every 4 and torches on every second, iron/gold veins in the walls, a chest at the end, a spawner a third of the time), **8 desert temple** (sandstone step pyramid 9x9, a hollow chamber with two chests and a lamp, TNT under its floor, a south entrance). Probe `--stage21a` (`--kind=5..8`, `--biome=N`, `--fp`). | ✅ | seed 42 has a ruin 29 m from spawn, the same as the Godot POC; the temple and the mine corridor (beams, torch glow, a gold vein, the spawner at the end) both captured |
 | 15 | **Multiplayer probe** (TCP + JSON lines on 7777, host-authoritative, puppets, replicas, host clock) | ✅ | two processes: the host captured peer 2's puppet beside it, the client got `hello` (seed + 20 edit bytes), 6 mob puppets, the host clock and the host's puppet; a zombie spawned beside the puppet hit the client (HP 26/30) through `hurt` |
 
+| 21b | **Replicate what stage 15 left local.** Drops: the host owns every `ItemDrop`, a client's spawn becomes a request, a client draws replicas that only fall and spin, and a drop pulled to a peer's puppet is handed over into that peer's own bag. Chests: the inventory lives on the host, a client opens a view and every grid click travels as the whole grid (last writer wins). Weather: the host broadcasts its roll on change and every 10 s. Mounts: mob rows carry `tamed` and `riddenBy`, a puppet copies both, a rider's puppet sits on that horse's puppet, and a client's ride input travels inside its pose. Effects: a mob's species or affix effect on a puppet reaches the peer's own player. Probe `--stage21b` (with `--wait-peer`). | ✅ | two processes: the host gave peer 2 iron_ingot x2 and reported it picked up; the client's capture shows the host puppet riding its horse puppet on the stone pad in a storm, poisoned, with the two ingots in its bag and the host's chest read as 3 apples |
+
 ## Session log
+
+- **2026-09-10 s6** — stage 21b, the network half of `5817cae3f`, as 11 new JSON message
+  types. One real bug fell out of it: the client used to build its world before the host's
+  `hello` arrived, so the spawn search ran on the default seed and the client started hundreds
+  of metres from the host on terrain that was then replaced. The launcher now waits up to 8 s
+  for `connected` before entering the game, and both peers spawn together. Two smaller notes:
+  `ItemDrop` reaches a peer's puppet through the `Target` interface rather than naming
+  `RemotePlayer` (the same import cycle Godot dodged by duck-typing), and the captured frame
+  needed the camera pinned one more time right before the shot, because a body is swept out of
+  whatever it stands in on every tick.
 
 - **2026-09-10 s5** — stage 21a, the generator half of `5817cae3f`. A straight port: the same
   hash, the same 4x4 grid, the same 48-block clearance from a primary structure, so seed 42

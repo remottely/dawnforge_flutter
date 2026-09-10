@@ -7,10 +7,14 @@ import 'package:vector_math/vector_math.dart';
 
 import '../core/ivec3.dart';
 import '../core/species.dart';
+import '../entities/item_drop.dart';
 import '../entities/mob.dart';
 import '../entities/remote_player.dart';
 import 'game.dart';
+import '../ui/hud.dart';
 import 'game_state.dart';
+import 'inventory.dart';
+import 'weather.dart';
 
 enum NetMode { solo, host, client }
 
@@ -25,7 +29,8 @@ class _Peer {
 /// ENet. The host runs the whole simulation: mobs, projectile hits, block
 /// edits. A client sends requests (block edit, shot) and receives what to
 /// draw: player poses, mob puppets, projectile replicas that never damage, and
-/// the host's clock.
+/// the host's clock. Stage 21b adds drops, chests, weather, mounts and status
+/// effects on the same terms.
 class Net {
   Net._();
   static final Net instance = Net._();
@@ -48,6 +53,21 @@ class Net {
   final Map<int, _Peer> _peers = {};
   int _nextPeer = 2;
   final StringBuffer _clientBuf = StringBuffer();
+
+  /// Stage 21b: the drops the host owns, and the replicas a client draws.
+  final Map<int, ItemDrop> _drops = {};
+  final Map<int, ItemDrop> dropReplicas = {};
+  int _nextDropId = 1;
+
+  /// Chest views a client has open, and the peers watching each chest on the host.
+  final Map<IVec3, Inventory> _chestViews = {};
+  final Map<IVec3, Set<int>> _chestWatchers = {};
+
+  /// Mounts ridden by a peer's puppet on the host.
+  final Map<int, Mob> _mounts = {};
+
+  /// The last item handed to a peer, read by the probe: (peer, item, count).
+  (int, String, int)? lastGive;
 
   /// Set by a hello that arrives before the world exists.
   void Function()? onHelloBeforeWorld;
@@ -142,13 +162,23 @@ class Net {
     if (m == null) return;
     m.saveGame();
     final bytes = m.world.editsToBytes();
-    _sendTo(_peers[id]!.socket, {'t': 'hello', 'seed': m.world.seedValue, 'time': m.timeOfDay, 'edits': base64Encode(bytes)});
+    final socket = _peers[id]!.socket;
+    _sendTo(socket, {'t': 'hello', 'seed': m.world.seedValue, 'time': m.timeOfDay, 'edits': base64Encode(bytes)});
+    for (final e in _drops.entries) {
+      final d = e.value;
+      _sendTo(socket, {'t': 'drop', 'id': e.key, 'item': d.itemId, 'n': d.count, 'pos': _v(d.position), 'vel': _v(d.velocity)});
+    }
+    _sendTo(socket, {'t': 'weather', 'kind': m.weather.kind.index, 'target': m.weather.target});
   }
 
   void _onPeerLeft(int id) {
     _peers.remove(id);
     final p = _puppets.remove(id);
     if (p != null) p.removed = true;
+    _releaseMount(id);
+    for (final w in _chestWatchers.values) {
+      w.remove(id);
+    }
   }
 
   void _onHostMessage(int sender, Map<String, dynamic> msg) {
@@ -166,6 +196,22 @@ class Net {
       case 'melee':
         final attacker = _puppets[sender] ?? m.player;
         m.meleeStrike(_vec(msg['dir']), (msg['dmg'] as num).toDouble(), (msg['follow'] as num).toDouble(), attacker);
+      case 'drop_req':
+        m.spawnDrop(_vec(msg['pos']), msg['item'] as String, msg['n'] as int, _vec(msg['vel']), 1.5);
+      case 'chest_open':
+        final at = IVec3.parse(msg['at'] as String)!;
+        _chestWatchers.putIfAbsent(at, () => <int>{}).add(sender);
+        _sendTo(_peers[sender]!.socket, {'t': 'chest_state', 'at': at.key, 'data': m.chestInventory(at).toJson()});
+      case 'chest_close':
+        _chestWatchers[IVec3.parse(msg['at'] as String)!]?.remove(sender);
+      case 'chest_set':
+        final at = IVec3.parse(msg['at'] as String)!;
+        m.chestInventory(at).fromJson(msg['data'] as List<dynamic>);
+        _sendChestState(at, msg['data'] as List<dynamic>);
+      case 'mount_req':
+        _onMountRequest(sender, msg['net'] as int);
+      case 'dismount_req':
+        _releaseMount(sender);
     }
   }
 
@@ -212,6 +258,27 @@ class Net {
             msg['from'] == null ? null : _vec(msg['from']));
       case 'dmg':
         main?.spawnDamageNumber(_vec(msg['at']), (msg['amount'] as num).toDouble(), _vec(msg['color']));
+      case 'drop':
+        _onDropSpawn(msg);
+      case 'drop_free':
+        dropReplicas.remove(msg['id'] as int)?.removed = true;
+      case 'give':
+        final m = main;
+        if (m == null) return;
+        final bonus = msg['bonus'] as int;
+        if (bonus > 0) {
+          m.player.inventory.addStack(ItemStack(msg['item'] as String, msg['n'] as int, bonus: bonus));
+          m.player.notify('+ ${Hud.itemLabel(msg['item'] as String, bonus)}');
+        } else {
+          m.player.pickUp(msg['item'] as String, msg['n'] as int);
+        }
+      case 'chest_state':
+        final at = IVec3.parse(msg['at'] as String)!;
+        _chestViews[at]?.fromJson(msg['data'] as List<dynamic>);
+      case 'weather':
+        main?.weather.follow(WeatherKind.values[msg['kind'] as int], (msg['target'] as num).toDouble());
+      case 'effect':
+        main?.player.applyEffect(msg['id'] as String, (msg['seconds'] as num).toDouble());
     }
   }
 
@@ -244,7 +311,20 @@ class Net {
     if (_poseTimer >= 0.05) {
       _poseTimer = 0.0;
       final p = m.player;
-      final pose = {'t': 'pose', 'pos': _v(p.position), 'yaw': p.model.yaw, 'held': p.heldItem(), 'cls': p.playerClass};
+      final h = p.mount;
+      final riding = h != null && h.puppet;
+      final pose = {
+        't': 'pose',
+        'pos': _v(p.position),
+        'yaw': p.model.yaw,
+        'held': p.heldItem(),
+        'cls': p.playerClass,
+        if (riding) 'ride': _v(h.rideInput),
+        if (riding) 'sprint': h.rideSprint,
+        if (riding && h.rideJump) 'jump': true,
+      };
+      // A puppet never consumes the jump; the host's horse does.
+      if (riding) h.rideJump = false;
       if (mode == NetMode.host) {
         _broadcast(pose);
       } else {
@@ -276,6 +356,12 @@ class Net {
       m.addPuppet(puppet);
     }
     puppet.setPose(_vec(msg['pos']), (msg['yaw'] as num).toDouble(), msg['held'] as String);
+    final h = _mounts[id];
+    if (h != null && !h.removed && h.ridden) {
+      h.rideInput = msg['ride'] == null ? Vector3.zero() : _vec(msg['ride']);
+      h.rideSprint = msg['sprint'] == true;
+      h.rideJump = h.rideJump || msg['jump'] == true;
+    }
   }
 
   // --- mobs: host simulates, clients draw puppets -----------------------------------
@@ -283,9 +369,10 @@ class Net {
   void _broadcastMobs() {
     final m = main!;
     final rows = <List<Object>>[];
-    for (final mob in m.mobs) {
+    for (final mob in [...m.mobs, ...m.pets]) {
       if (mob.puppet || mob.state == MobState.dead) continue;
-      rows.add([mob.instanceId, mob.species.id, mob.position.x, mob.position.y, mob.position.z, mob.modelYaw(), mob.hp, mob.maxHp, mob.mobLevel]);
+      rows.add([mob.instanceId, mob.species.id, mob.position.x, mob.position.y, mob.position.z, mob.modelYaw(),
+        mob.hp, mob.maxHp, mob.mobLevel, mob.tamed, mob.riddenBy]);
     }
     _broadcast({'t': 'mobs', 'time': m.timeOfDay, 'rows': rows});
   }
@@ -311,14 +398,23 @@ class Net {
         mob.puppet = true;
         mob.position = Vector3((row[2] as num).toDouble(), (row[3] as num).toDouble(), (row[4] as num).toDouble());
         mob.scaleToLevel((row[8] as num).toInt());
+        mob.netId = key;
         _mobPuppets[key] = mob;
         m.addMob(mob);
       }
       mob.setPuppetState(Vector3((row[2] as num).toDouble(), (row[3] as num).toDouble(), (row[4] as num).toDouble()),
           (row[5] as num).toDouble(), (row[6] as num).toDouble(), (row[7] as num).toDouble());
+      mob.setPuppetFlags(row[9] == true, (row[10] as num).toInt());
     }
     for (final key in _mobPuppets.keys.toList()) {
       if (!seen.contains(key)) _mobPuppets.remove(key)!.removed = true;
+    }
+    // A puppet whose peer rides a horse sits on that horse's puppet.
+    for (final p in _puppets.values) {
+      p.mountedOn = null;
+    }
+    for (final h in _mobPuppets.values) {
+      if (h.riddenBy != 0) _puppets[h.riddenBy]?.mountedOn = h;
     }
   }
 
@@ -347,6 +443,137 @@ class Net {
 
   void broadcastDamageNumber(Vector3 at, double amount, Vector3 color) {
     if (mode == NetMode.host) _broadcast({'t': 'dmg', 'at': _v(at), 'amount': amount, 'color': _v(color)});
+  }
+
+  // --- drops: the host owns every drop, a client draws replicas and is handed
+  // what it picks up ------------------------------------------------------------
+
+  void requestDrop(Vector3 at, String id, int count, Vector3 vel) =>
+      _toHost({'t': 'drop_req', 'pos': _v(at), 'item': id, 'n': count, 'vel': _v(vel)});
+
+  /// Host: a drop was created; give it a net id and tell every client to draw it.
+  void onDropSpawned(ItemDrop drop) {
+    if (mode != NetMode.host) return;
+    drop.netId = _nextDropId++;
+    _drops[drop.netId] = drop;
+    _broadcast({'t': 'drop', 'id': drop.netId, 'item': drop.itemId, 'n': drop.count,
+      'pos': _v(drop.position), 'vel': _v(drop.velocity)});
+  }
+
+  /// Host: a drop left the world (picked up or aged out); clients free the replica.
+  void onDropGone(ItemDrop drop) {
+    if (mode != NetMode.host || drop.netId == 0) return;
+    if (_drops.remove(drop.netId) == null) return;
+    _broadcast({'t': 'drop_free', 'id': drop.netId});
+  }
+
+  void _onDropSpawn(Map<String, dynamic> msg) {
+    final m = main;
+    final id = msg['id'] as int;
+    if (m == null || dropReplicas.containsKey(id)) return;
+    final drop = ItemDrop()..replica = true;
+    drop.setupDrop(m.world, msg['item'] as String, msg['n'] as int, m.player, 0.0);
+    drop.position = _vec(msg['pos']);
+    drop.velocity = _vec(msg['vel']);
+    drop.netId = id;
+    dropReplicas[id] = drop;
+    m.drops.add(drop);
+    m.entities.add(drop.node);
+  }
+
+  /// Host: a puppet reached a drop; the peer's own inventory receives it.
+  void givePeer(int id, String item, int count, int bonus) {
+    final p = _peers[id];
+    if (mode != NetMode.host || p == null) return;
+    lastGive = (id, item, count);
+    debugPrint('[net] gave peer $id $item x$count');
+    _sendTo(p.socket, {'t': 'give', 'item': item, 'n': count, 'bonus': bonus});
+  }
+
+  // --- chests: the inventory lives on the host, a client sees a copy and sends
+  // its edits ------------------------------------------------------------------
+
+  /// Client: the view of a chest, filled once the host answers.
+  Inventory openChest(IVec3 at) {
+    final view = _chestViews.putIfAbsent(at, Inventory.new);
+    _toHost({'t': 'chest_open', 'at': at.key});
+    return view;
+  }
+
+  void closeChest(IVec3 at) {
+    if (mode != NetMode.client) return;
+    _chestViews.remove(at);
+    _toHost({'t': 'chest_close', 'at': at.key});
+  }
+
+  /// Either side changed a chest grid: a client sends the whole grid, the host
+  /// re-broadcasts it to whoever else has it open.
+  void chestChanged(IVec3 at, List<Object?> data) {
+    if (mode == NetMode.client) {
+      _toHost({'t': 'chest_set', 'at': at.key, 'data': data});
+    } else if (mode == NetMode.host) {
+      _sendChestState(at, data);
+    }
+  }
+
+  void _sendChestState(IVec3 at, List<Object?> data) {
+    for (final id in _chestWatchers[at] ?? const <int>{}) {
+      final p = _peers[id];
+      if (p != null) _sendTo(p.socket, {'t': 'chest_state', 'at': at.key, 'data': data});
+    }
+  }
+
+  // --- weather: the host rolls, clients follow ---------------------------------
+
+  void broadcastWeather(WeatherKind kind, double target) {
+    if (mode == NetMode.host) _broadcast({'t': 'weather', 'kind': kind.index, 'target': target});
+  }
+
+  // --- mounts: a client rides a horse the host owns ----------------------------
+
+  void requestMount(int netId) => _toHost({'t': 'mount_req', 'net': netId});
+
+  void requestDismount() => _toHost({'t': 'dismount_req'});
+
+  void _onMountRequest(int sender, int netId) {
+    final m = main;
+    if (m == null) return;
+    Mob? horse;
+    for (final mob in [...m.mobs, ...m.pets]) {
+      if (mob.instanceId == netId) horse = mob;
+    }
+    if (horse == null || !horse.tamed || !horse.isMount || horse.ridden || horse.isDead) {
+      debugPrint('[net] peer $sender asked to mount $netId: refused');
+      return;
+    }
+    _releaseMount(sender);
+    horse.ridden = true;
+    horse.riddenBy = sender;
+    horse.rideInput = Vector3.zero();
+    _mounts[sender] = horse;
+    _puppets[sender]?.mountedOn = horse;
+    debugPrint('[net] peer $sender mounted ${horse.species.id} $netId');
+  }
+
+  void _releaseMount(int id) {
+    final h = _mounts.remove(id);
+    if (h == null) return;
+    if (!h.removed) {
+      h.ridden = false;
+      h.riddenBy = 0;
+      h.rideInput = Vector3.zero();
+      h.rideSprint = false;
+    }
+    _puppets[id]?.mountedOn = null;
+  }
+
+  // --- status effects: the host decides, the peer's own body wears it ----------
+
+  void effectPeer(int id, String effect, double seconds) {
+    final p = _peers[id];
+    if (mode == NetMode.host && p != null) {
+      _sendTo(p.socket, {'t': 'effect', 'id': effect, 'seconds': seconds});
+    }
   }
 
   List<RemotePlayer> puppetBodies() => _puppets.values.toList();

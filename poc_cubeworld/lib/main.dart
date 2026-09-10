@@ -82,7 +82,15 @@ class _LauncherState extends State<_Launcher> {
     }
     if (args.containsKey('--join=')) {
       if (args.containsKey('--seed=')) gs.seedValue = int.parse(args['--seed=']!);
-      if (await Net.instance.join(args['--join=']!)) _enter();
+      if (!await Net.instance.join(args['--join=']!)) return;
+      // Wait for the host's hello before building anything: it carries the seed,
+      // and a world built on the wrong seed would put the spawn search on
+      // terrain that is about to be replaced.
+      final until = DateTime.now().add(const Duration(seconds: 8));
+      while (!Net.instance.connected && DateTime.now().isBefore(until)) {
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+      }
+      _enter();
       return;
     }
     if (args.containsKey('--screenshot=') || args.containsKey('--new') || args.containsKey('--continue') || args.containsKey('--seed=')) {
