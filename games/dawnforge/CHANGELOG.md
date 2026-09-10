@@ -8,6 +8,18 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.59.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. All the words and numbers that describe this
+  game — every plant, every tool, every recipe — live in a big pile of written
+  pages, and this version of the game copied only a small corner of that pile:
+  64 pages out of 930. Nobody had ever counted, so nobody knew which corners
+  were missing. Now there is a list, grouped so each batch of pages arrives
+  with the part of the game that needs it. It turned up one surprise: the
+  workbench has 115 pages and we copied one of them.
+
 ## 0.58.0
 
 ### 🧹 Internal

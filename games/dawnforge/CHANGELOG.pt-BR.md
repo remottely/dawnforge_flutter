@@ -8,6 +8,18 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.59.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. Todas as palavras e números que descrevem este jogo —
+  cada planta, cada ferramenta, cada receita — moram numa pilha grande de
+  páginas escritas, e esta versão do jogo copiou só um cantinho dessa pilha:
+  64 páginas de 930. Ninguém tinha contado, então ninguém sabia quais cantos
+  faltavam. Agora existe uma lista, agrupada para que cada lote de páginas
+  chegue junto com a parte do jogo que precisa dele. Apareceu uma surpresa: a
+  bancada tem 115 páginas e a gente copiou uma.
+
 ## 0.58.0
 
 ### 🧹 Internal
