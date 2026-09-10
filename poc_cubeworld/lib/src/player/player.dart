@@ -9,6 +9,7 @@ import '../core/blocks.dart';
 import '../core/items.dart';
 import '../core/ivec3.dart';
 import '../entities/boat.dart';
+import '../entities/bobber.dart';
 import '../entities/mob.dart';
 import '../entities/player_model.dart';
 import '../entities/target.dart';
@@ -88,6 +89,8 @@ class Player extends VoxelBody implements Target {
   bool climbing = false;
   Vector3 spawnPoint = Vector3.zero();
   Boat? riding;
+  Mob? mount;
+  Bobber? bobber;
   double sleeping = 0.0;
   final StatusEffects effects = StatusEffects();
   int talentPoints = 0;
@@ -361,7 +364,7 @@ class Player extends VoxelBody implements Target {
       if (m != null && m.species.trader) {
         main.trade(m);
       } else {
-        _toggleBoat();
+        _interactPressed();
       }
     }
   }
@@ -380,8 +383,14 @@ class Player extends VoxelBody implements Target {
     }
     model.tiltX = lerpd(model.tiltX, 0.0, dt * 8.0);
     model.posY = lerpd(model.posY, 0.0, dt * 8.0);
+    _tendBobber();
+    bobber?.update(dt);
     if (riding != null) {
       _rideTick(dt, input, gameplay);
+      return;
+    }
+    if (mount != null) {
+      _mountTick(dt, input, gameplay);
       return;
     }
 
@@ -526,7 +535,7 @@ class Player extends VoxelBody implements Target {
     } else {
       _resetMining();
     }
-    if (gameplay && input.down(GameAction.use) && _useCooldown <= 0.0) _usePressed();
+    if (gameplay && input.down(GameAction.use) && _useCooldown <= 0.0 && _useRepeats()) _usePressed();
     damageFlash = math.max(damageFlash - dt * 3.0, 0.0);
     world.updateAround(position);
   }
@@ -978,6 +987,7 @@ class Player extends VoxelBody implements Target {
     if (Blocks.idOf(id) == 'tall_grass') {
       drop = rng.nextDouble() < 0.35 ? 'wheat_seeds' : (rng.nextDouble() < 0.15 ? 'string' : '');
     }
+    if (Items.isLeaves(id) && held != '' && Items.toolOf(held) == ToolType.shears) drop = Blocks.idOf(id);
     if (drop != '') main.spawnDrop(b.toVector3() + Vector3(0.5, 0.3, 0.5), drop, 1);
     main.onBlockBroken(b, id);
     // Plants above a removed block fall off.
@@ -992,16 +1002,60 @@ class Player extends VoxelBody implements Target {
       _rangedFire(item, style, true);
       return;
     }
-    final mob = aimedMob;
-    if (mob != null && item == 'bone' && mob.species.id == 'wolf' && !mob.tamed) {
-      inventory.takeFromSlot(selectedSlot, 1);
-      if (main.random.nextDouble() < 0.5) {
-        mob.tame(this);
-        main.spawnEffect(mob.centre(), Vector3(1, 0.7, 0.9), 1.5);
-      } else {
-        notify('The wolf sniffs the bone...');
+    if (item == 'fishing_rod') {
+      _useCooldown = 0.4;
+      final b = bobber;
+      if (b != null) {
+        if (b.isBiting) {
+          catchFish();
+        } else {
+          reelIn(true);
+        }
+        return;
       }
-      _useCooldown = 0.5;
+      final water = liquidRaycast(aimOrigin(), aimDirection(), fishingReach);
+      if (water == null) {
+        notify('Cast at water');
+      } else {
+        castFishing(water);
+      }
+      return;
+    }
+    final mob = aimedMob;
+    if (mob != null && item != '') {
+      if (!mob.tamed && mob.species.tameWith.contains(item)) {
+        inventory.takeFromSlot(selectedSlot, 1);
+        if (main.random.nextDouble() < mob.species.tameChance) {
+          mob.tame(this);
+          main.spawnEffect(mob.centre(), Vector3(1, 0.7, 0.9), 1.5);
+        } else {
+          notify('The ${mob.species.name.toLowerCase()} sniffs the ${Items.displayName(item).toLowerCase()}...');
+        }
+        _useCooldown = 0.5;
+        return;
+      }
+      if (item == 'shears' && mob.species.id == 'sheep' && !mob.sheared) {
+        shearMob(mob);
+        _useCooldown = 0.4;
+        return;
+      }
+      if (item == 'bucket' && mob.species.id == 'cow') {
+        inventory.setSlot(selectedSlot, ItemStack('milk_bucket', 1));
+        notify('Milked the cow');
+        Sfx.play('splash', -12.0, 1.3);
+        _useCooldown = 0.5;
+        return;
+      }
+    }
+    if (item == 'bucket') {
+      final cell = liquidRaycast(aimOrigin(), aimDirection(), reach);
+      if (cell != null && scoopLiquid(cell)) {
+        _useCooldown = 0.4;
+        return;
+      }
+    }
+    if (item != '' && Items.liquidOf(item) != '' && isAiming) {
+      if (pourLiquid(aimedBlock + aimedNormal)) _useCooldown = 0.4;
       return;
     }
     if (isAiming) {
@@ -1123,6 +1177,10 @@ class Player extends VoxelBody implements Target {
     if (d.effect != '') {
       inventory.takeFromSlot(selectedSlot, 1);
       drink(d.effect, d.seconds);
+      if (d.heal > 0.0) hp = (hp + d.heal).clamp(1.0, maxHp);
+      if (d.container != '' && inventory.add(d.container, 1) > 0) {
+        main.spawnDrop(centre(), d.container, 1);
+      }
       notify('Drank ${d.name}');
       Sfx.play('eat', -6.0);
       Achievements.instance.unlock('brewer');
@@ -1199,6 +1257,7 @@ class Player extends VoxelBody implements Target {
 
   void respawn() {
     isDead = false;
+    if (mount != null) dismount();
     hp = maxHp;
     hunger = 20.0;
     stamina = maxStamina;
@@ -1260,6 +1319,262 @@ class Player extends VoxelBody implements Target {
     syncNode();
   }
 
+  // --- stage 20: mounts, fishing, shears, buckets -----------------------------------
+
+  static const double fishingReach = 8.0;
+  static const double mountReach = 3.5;
+  static final Vector3 saddleOffset = Vector3(0, 0.6, 0);
+
+  /// F: leave what is ridden, else mount the tamed horse in front, else board
+  /// or leave a boat.
+  void _interactPressed() {
+    if (mount != null) {
+      dismount();
+      return;
+    }
+    if (riding != null) {
+      _toggleBoat();
+      return;
+    }
+    final horse = _findMount();
+    if (horse != null) {
+      mountHorse(horse);
+      return;
+    }
+    final m = aimedMob;
+    if (m != null && m.isMount && !m.tamed) {
+      notify('This ${m.species.name.toLowerCase()} is wild. Tame it with wheat or an apple');
+      return;
+    }
+    _toggleBoat();
+  }
+
+  /// The nearest tamed, unridden mount the camera ray touches within
+  /// [mountReach].
+  Mob? _findMount() {
+    Mob? best;
+    var bestD = mountReach;
+    for (final m in main.pets) {
+      if (!m.isMount || !m.tamed || m.ridden || m.isDead) continue;
+      final d = (m.position - position).length;
+      if (d < bestD && m.rayDistance(aimOrigin(), aimDirection(), 0.4) >= 0.0) {
+        best = m;
+        bestD = d;
+      }
+    }
+    return best;
+  }
+
+  void mountHorse(Mob h) {
+    if (!h.tamed || !h.isMount) throw StateError('only a tamed mount can be ridden');
+    if (mount != null || riding != null) return;
+    mount = h;
+    h.ridden = true;
+    h.rideInput = Vector3.zero();
+    velocity = Vector3.zero();
+    _resetMining();
+    notify('Riding. [F] to get off');
+    Achievements.instance.unlock('rider');
+  }
+
+  void dismount() {
+    final h = mount;
+    if (h == null) return;
+    mount = null;
+    h.ridden = false;
+    h.rideInput = Vector3.zero();
+    h.rideSprint = false;
+    if (!h.removed) {
+      position = h.position + Vector3(-math.sin(yaw + math.pi * 0.5), 0.3, -math.cos(yaw + math.pi * 0.5)) * 1.2;
+    }
+    velocity = Vector3.zero();
+    _fallStartY = position.y;
+  }
+
+  bool isMounted() => mount != null;
+
+  /// Mounted: the rider's wish goes to the horse, the rider sits on its back
+  /// and the camera follows.
+  void _mountTick(double dt, GameInput input, bool gameplay) {
+    final h = mount!;
+    if (h.removed || h.isDead) {
+      dismount();
+      return;
+    }
+    var inputX = 0.0, inputY = 0.0;
+    if (gameplay) {
+      if (input.down(GameAction.moveLeft)) inputX -= 1;
+      if (input.down(GameAction.moveRight)) inputX += 1;
+      if (input.down(GameAction.moveForward)) inputY -= 1;
+      if (input.down(GameAction.moveBack)) inputY += 1;
+    }
+    var wish = flatForward * -inputY + rightVec * inputX;
+    if (wish.length > 1.0) wish = wish.normalized();
+    h.rideInput = wish;
+    h.rideSprint = gameplay && input.down(GameAction.sprint) && inputY < 0.0;
+    if (gameplay && input.down(GameAction.jump)) h.rideJump = true;
+    position = h.centre() + saddleOffset;
+    velocity = h.velocity.clone();
+    _fallStartY = position.y;
+    model.animate(dt, 0.0, true, false, false);
+    model.yaw = lerpAngle(model.yaw, h.modelYaw(), dt * 8.0);
+    model.setHeld(heldItem());
+    fov = lerpd(fov, baseFov + (h.rideSprint ? 8.0 : 0.0), dt * 6.0);
+    syncNode();
+    _updateCamera(dt);
+    _updateAim();
+    if (gameplay && input.down(GameAction.attack) && _attackCooldown <= 0.0) _attackPressed();
+    if (gameplay && input.down(GameAction.use) && _useCooldown <= 0.0 && _useRepeats()) _usePressed();
+    damageFlash = math.max(damageFlash - dt * 3.0, 0.0);
+    world.updateAround(position);
+  }
+
+  /// Holding the use button repeats a placement; the rod and the buckets act
+  /// once per press.
+  bool _useRepeats() {
+    final item = heldItem();
+    return item != 'fishing_rod' && item != 'bucket' && (item == '' || Items.liquidOf(item) == '');
+  }
+
+  /// The first liquid cell along a ray, stopping at the first solid; null when
+  /// there is none.
+  IVec3? liquidRaycast(Vector3 origin, Vector3 direction, double reachDist) {
+    var block = IVec3.floor(origin);
+    final stepX = direction.x > 0 ? 1 : -1, stepY = direction.y > 0 ? 1 : -1, stepZ = direction.z > 0 ? 1 : -1;
+    final tdx = direction.x == 0 ? double.infinity : (1.0 / direction.x).abs();
+    final tdy = direction.y == 0 ? double.infinity : (1.0 / direction.y).abs();
+    final tdz = direction.z == 0 ? double.infinity : (1.0 / direction.z).abs();
+    var tmx = _distToBoundary(origin.x, direction.x, block.x);
+    var tmy = _distToBoundary(origin.y, direction.y, block.y);
+    var tmz = _distToBoundary(origin.z, direction.z, block.z);
+    var travelled = 0.0;
+    while (travelled <= reachDist) {
+      final id = world.getBlock(block);
+      if (Blocks.isLiquid(id)) return block;
+      if (id != Blocks.air && Blocks.isSolid(id)) return null;
+      if (tmx < tmy && tmx < tmz) {
+        block = block + IVec3(stepX, 0, 0);
+        travelled = tmx;
+        tmx += tdx;
+      } else if (tmy < tmz) {
+        block = block + IVec3(0, stepY, 0);
+        travelled = tmy;
+        tmy += tdy;
+      } else {
+        block = block + IVec3(0, 0, stepZ);
+        travelled = tmz;
+        tmz += tdz;
+      }
+    }
+    return null;
+  }
+
+  /// Cast the line at a water cell: the bobber flies there and waits for a bite.
+  void castFishing(IVec3 cell) {
+    if (!world.isLiquid(cell)) throw ArgumentError('a line is cast at water');
+    if (bobber != null) reelIn(false);
+    final b = Bobber(world, this, model.handWorldPosition(), cell);
+    bobber = b;
+    main.entities.add(b.node);
+    main.entities.add(b.lineNode);
+    model.swing();
+    Sfx.play('swing', -12.0, 1.3);
+  }
+
+  void reelIn(bool say) {
+    final b = bobber;
+    if (b == null) return;
+    main.entities.remove(b.node);
+    main.entities.remove(b.lineNode);
+    bobber = null;
+    if (say) notify('Reeled in');
+  }
+
+  /// The line is dropped when the rod leaves the hand or the bobber is left
+  /// too far behind.
+  void _tendBobber() {
+    final b = bobber;
+    if (b == null) return;
+    if (heldItem() != 'fishing_rod' || (b.position - position).length > fishingReach * 2.0) {
+      reelIn(false);
+    }
+  }
+
+  /// A bite answered in time: 70% fish, 10% salmon, 15% junk, 5% treasure.
+  /// Returns the item id.
+  String catchFish() {
+    final b = bobber;
+    if (b == null || !b.isBiting) throw StateError('catchFish needs a biting bobber');
+    final rng = main.random;
+    final roll = rng.nextDouble();
+    String got;
+    Loot? loot;
+    if (roll < 0.70) {
+      got = 'raw_fish';
+    } else if (roll < 0.80) {
+      got = 'raw_salmon';
+    } else if (roll < 0.95) {
+      got = const ['stick', 'bone', 'leather'][rng.nextInt(3)];
+    } else {
+      final treasure = rng.nextDouble();
+      if (treasure < 0.4) {
+        got = 'magic_dust';
+      } else if (treasure < 0.8) {
+        got = 'gem_shard';
+      } else {
+        loot = main.randomLootWeapon(rng, 2);
+        got = loot.id;
+      }
+      notify('Treasure!');
+    }
+    if (loot == null) {
+      if (pickUp(got, 1) > 0) main.spawnDrop(centre(), got, 1);
+    } else if (!inventory.addStack(ItemStack(loot.id, 1, bonus: loot.bonus))) {
+      main.spawnDrop(centre(), got, 1);
+    }
+    main.spawnEffect(b.position, Vector3(0.5, 0.75, 1.0), 1.0);
+    Sfx.play('splash', -6.0, 1.2);
+    model.swing();
+    gainXp(2);
+    Achievements.instance.unlock('fisher');
+    reelIn(false);
+    return got;
+  }
+
+  /// Shears on a sheep: 1..3 wool drops beside it. Returns the number dropped.
+  int shearMob(Mob m) {
+    final n = m.shear();
+    main.spawnDrop(m.centre(), 'wool', n, Vector3.zero(), 0.0);
+    Sfx.play('dig', -6.0);
+    model.swing();
+    return n;
+  }
+
+  /// An empty bucket over a liquid cell: the cell empties and the bucket fills
+  /// with it. Liquids are static in this POC: the neighbours do not flow into
+  /// the hole.
+  bool scoopLiquid(IVec3 cell) {
+    final id = world.getBlock(cell);
+    if (!Blocks.isLiquid(id) || heldItem() != 'bucket') return false;
+    if (!world.setBlock(cell, Blocks.air)) return false;
+    inventory.setSlot(selectedSlot, ItemStack('${Blocks.idOf(id)}_bucket', 1));
+    Sfx.play('splash', -10.0);
+    model.swing();
+    return true;
+  }
+
+  /// A filled bucket at a replaceable cell: the liquid goes there and the empty
+  /// bucket comes back.
+  bool pourLiquid(IVec3 target) {
+    final liquid = Items.liquidOf(heldItem());
+    if (liquid == '' || !Blocks.isReplaceable(world.getBlock(target))) return false;
+    if (!world.setBlock(target, Blocks.indexOf(liquid))) return false;
+    inventory.setSlot(selectedSlot, ItemStack('bucket', 1));
+    Sfx.play('splash', -10.0, 0.8);
+    model.swing();
+    return true;
+  }
+
   // --- stage 18: effects, talents, dodge -------------------------------------------
 
   static const double dodgeTime = 0.4;
@@ -1304,7 +1619,7 @@ class Player extends VoxelBody implements Target {
 
   void _dodgePressed() {
     final cost = math.max(15.0 - 5.0 * talentRank('shadowstep'), 0.0);
-    if (_dodge > 0.0 || _dodgeCd > 0.0 || stamina < cost || riding != null || sleeping > 0.0 || inWater) {
+    if (_dodge > 0.0 || _dodgeCd > 0.0 || stamina < cost || riding != null || mount != null || sleeping > 0.0 || inWater) {
       return;
     }
     stamina -= cost;

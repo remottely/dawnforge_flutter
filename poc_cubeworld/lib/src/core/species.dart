@@ -29,6 +29,9 @@ class SpeciesDef {
     this.trader = false,
     this.cave = false,
     this.effect = '',
+    this.mount = false,
+    this.tameWith = const [],
+    this.tameChance = 0.0,
   });
 
   final String id;
@@ -47,6 +50,13 @@ class SpeciesDef {
 
   /// The status effect this species inflicts on a hit ("" for none).
   final String effect;
+
+  /// Whether this creature can be ridden once tamed.
+  final bool mount;
+
+  /// The items that tame it, and the chance one attempt works.
+  final List<String> tameWith;
+  final double tameChance;
   final int xp;
   final String body;
   final double halfWidth;
@@ -84,7 +94,11 @@ class Species {
         drops: {'raw_chicken': [1, 1], 'feather': [1, 3]}, biomes: [2, 3, 7], day: true, weight: 18));
     s(SpeciesDef(id: 'wolf', name: 'Wolf', hp: 14, damage: 4, speed: 5.2, hostile: false, neutral: true, xp: 8, body: 'quadruped',
         halfWidth: 0.4, height: 0.95, colors: [_c(0.55, 0.55, 0.58), _c(0.35, 0.35, 0.38)],
-        drops: {'bone': [0, 1]}, biomes: [3, 5, 6], day: true, weight: 8));
+        drops: {'bone': [0, 1]}, biomes: [3, 5, 6], day: true, weight: 8, tameWith: ['bone'], tameChance: 0.5));
+    s(SpeciesDef(id: 'horse', name: 'Horse', hp: 20, damage: 0, speed: 8.5, hostile: false, xp: 5, body: 'quadruped',
+        halfWidth: 0.5, height: 1.6, colors: [_c(0.45, 0.28, 0.15), _c(0.15, 0.12, 0.10)],
+        drops: {'leather': [1, 2]}, biomes: [2, 3], day: true, weight: 10, mount: true,
+        tameWith: ['wheat', 'apple'], tameChance: 0.6));
     s(SpeciesDef(id: 'zombie', name: 'Zombie', hp: 18, damage: 4, speed: 2.6, hostile: true, xp: 12, body: 'humanoid',
         halfWidth: 0.3, height: 1.8, colors: [_c(0.40, 0.65, 0.40), _c(0.25, 0.45, 0.65), _c(0.25, 0.30, 0.35)],
         drops: {'rotten_flesh': [0, 2], 'magic_dust': [0, 1]}, biomes: [1, 2, 3, 4, 5, 6, 7], day: false, weight: 30));

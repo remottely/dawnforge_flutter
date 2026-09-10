@@ -129,6 +129,18 @@ class GameInput {
 
   void releaseKeys() => _held.clear();
 
+  /// Probe hook: hold or release an action's first key as if it were typed, so
+  /// a screenshot run can drive the simulation without a keyboard.
+  void probeHold(GameAction a, bool down) {
+    final key = _keys[a]!.first;
+    if (down) {
+      _held.add(key);
+      _pressed.add(key);
+    } else {
+      _held.remove(key);
+    }
+  }
+
   void onPointerDown(PointerDownEvent e) {
     if (e.buttons & kPrimaryMouseButton != 0) {
       _leftDown = true;

@@ -71,6 +71,12 @@ class _Tnt {
   double age = 0.0;
 }
 
+class _Stage20 {
+  _Stage20(this.horse, this.wool);
+  final Mob horse;
+  final int wool;
+}
+
 class Loot {
   Loot(this.id, this.bonus);
   final String id;
@@ -1177,9 +1183,24 @@ class Game extends ChangeNotifier {
       addMob(dummy);
     }
     final elite = _hasArg('--stage18') ? _probeStage18() : null;
+    final stage20 = _hasArg('--stage20') ? _probeStage20() : null;
+    var rideFrom = Vector3.zero();
     final settle = int.tryParse(_arg('--settle=', '')) ?? 30;
     for (var i = 0; i < settle; i++) {
       await nextFrame();
+      // --ride (with --stage20): hold W and sprint for ten frames and measure
+      // how far the horse went.
+      if (stage20 != null && _hasArg('--ride') && i == 3) {
+        rideFrom = stage20.horse.position.clone();
+        input.probeHold(GameAction.moveForward, true);
+        input.probeHold(GameAction.sprint, true);
+      }
+      if (stage20 != null && _hasArg('--ride') && i == 13) {
+        input.probeHold(GameAction.moveForward, false);
+        input.probeHold(GameAction.sprint, false);
+        debugPrint('[probe] stage20: rode ${(stage20.horse.position - rideFrom).length.toStringAsFixed(2)} m in ten '
+            'frames, horse velocity ${stage20.horse.velocity}, rider at ${player.position}');
+      }
       if (elite != null && i == 5) player.probeDodge();
       if (elite != null && i == 6) {
         debugPrint('[probe] stage18: dodging ${player.isDodging()}, invulnerable ${player.invulnerable}, from ${player.position}');
@@ -1194,6 +1215,12 @@ class Game extends ChangeNotifier {
     if (_hasArg('--stage19')) {
       debugPrint('[probe] stage19: placed $stage19Placed blocks, faces before/after '
           '$stage19FacesBefore/${world.facesEmitted}');
+    }
+    if (stage20 != null) {
+      debugPrint('[probe] stage20: wool in inventory ${player.inventory.countOf('wool')} (dropped ${stage20.wool})');
+      debugPrint('[probe] stage20: capture mounted ${player.isMounted()} at ${player.position} '
+          '(horse at ${stage20.horse.position}), bobber out ${player.bobber != null} '
+          'landed ${player.bobber?.landed ?? false}');
     }
     if (elite != null) {
       final ach = Achievements.instance;
@@ -1249,6 +1276,66 @@ class Game extends ChangeNotifier {
       debugPrint('[probe] no screenshotter, nothing captured');
     }
     exit(0);
+  }
+
+  /// --stage20: a tamed horse is mounted and left, a sheep is sheared, a line
+  /// is cast at a fresh water block and the bite forced, a bucket scoops the
+  /// water and pours it back. The player is left on the horse with the line out
+  /// so the capture shows both.
+  _Stage20 _probeStage20() {
+    final ahead = player.aimDirection().clone()..y = 0;
+    ahead.normalize();
+    final right = ahead.cross(Vector3(0, 1, 0));
+    // A flat grass stage around the player so the camera, the horse and the
+    // water are all in view.
+    final base = IVec3.floor(player.position);
+    final floorY = base.y - 1;
+    for (var dx = -7; dx < 8; dx++) {
+      for (var dz = -9; dz < 8; dz++) {
+        world.setBlock(IVec3(base.x + dx, floorY, base.z + dz), Blocks.indexOf('grass'));
+        for (var dy = 1; dy < 7; dy++) {
+          world.setBlock(IVec3(base.x + dx, floorY + dy, base.z + dz), Blocks.air);
+        }
+      }
+    }
+    final horse = Mob();
+    horse.setupMob(world, this, player, Species.def('horse'));
+    horse.position = player.position + ahead * 3.0;
+    addMob(horse);
+    horse.tame(player);
+    player.mountHorse(horse);
+    debugPrint('[probe] stage20: riding horse ${player.isMounted()} (tamed ${horse.tamed}, ridden ${horse.ridden})');
+    player.dismount();
+    debugPrint('[probe] stage20: dismounted, riding ${player.isMounted()}, horse ridden ${horse.ridden}');
+    final sheep = Mob();
+    sheep.setupMob(world, this, player, Species.def('sheep'));
+    sheep.position = player.position + ahead * 2.0 - right * 2.0;
+    addMob(sheep);
+    final wool = player.shearMob(sheep);
+    debugPrint('[probe] stage20: sheared the sheep, $wool wool dropped, sheared ${sheep.sheared}');
+    final wc = IVec3.floor(player.position + ahead * 2.0 + right * 2.0) + IVec3.down;
+    world.setBlock(wc + IVec3.up, Blocks.air);
+    world.setBlock(wc, Blocks.indexOf('water'));
+    player.inventory.add('fishing_rod', 1);
+    player.selectedSlot = player.inventory.find('fishing_rod');
+    player.castFishing(wc);
+    player.bobber!.forceBite();
+    final got = player.catchFish();
+    debugPrint('[probe] stage20: cast at $wc, bite forced, caught $got '
+        '(now ${player.inventory.countOf(got)} in the bag), xp ${player.xp}, '
+        'achievements ${Achievements.instance.unlocked.toList()}');
+    player.inventory.add('bucket', 1);
+    player.selectedSlot = player.inventory.find('bucket');
+    final scooped = player.scoopLiquid(wc);
+    debugPrint('[probe] stage20: scooped $scooped, held ${player.heldItem()}, '
+        'block there ${Blocks.idOf(world.getBlock(wc))}');
+    final poured = player.pourLiquid(wc);
+    debugPrint('[probe] stage20: poured $poured, held ${player.heldItem()}, '
+        'block there ${Blocks.idOf(world.getBlock(wc))}');
+    player.selectedSlot = player.inventory.find('fishing_rod');
+    player.castFishing(wc);
+    player.mountHorse(horse);
+    return _Stage20(horse, wool);
   }
 
   /// --stage18: poison plus a potion, an elite spider, a talent, two waypoints

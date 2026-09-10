@@ -44,6 +44,9 @@ class PlayerModel {
   double tiltX = 0.0;
   double posY = 0.0;
 
+  /// Where the held item sits in world space (the fishing line starts there).
+  Vector3 handWorldPosition() => hand.globalTransform.getTranslation();
+
   bool get visible => root.visible;
   set visible(bool v) => root.visible = v;
 

@@ -88,6 +88,9 @@ class Recipes {
     r('brewing_stand', 1, {'cobblestone': 3, 'glass': 1, 'magic_dust': 1}, 'crafting_table');
     r('glass_bottle', 3, {'glass': 1}, 'crafting_table');
     r('waypoint', 1, {'stone_bricks': 4, 'magic_dust': 2}, 'crafting_table');
+    r('fishing_rod', 1, {'stick': 3, 'string': 2}, 'crafting_table');
+    r('shears', 1, {'iron_ingot': 2}, 'crafting_table');
+    r('bucket', 1, {'iron_ingot': 3}, 'crafting_table');
     // Brewing stand
     r('speed_potion', 1, {'glass_bottle': 1, 'wheat': 1, 'feather': 1}, 'brewing_stand');
     r('regen_potion', 1, {'glass_bottle': 1, 'apple': 1, 'magic_dust': 1}, 'brewing_stand');
@@ -105,6 +108,8 @@ class Recipes {
     r('cooked_pork', 1, {'raw_pork': 1, 'coal': 1}, 'furnace');
     r('cooked_mutton', 1, {'raw_mutton': 1, 'coal': 1}, 'furnace');
     r('cooked_chicken', 1, {'raw_chicken': 1, 'coal': 1}, 'furnace');
+    r('cooked_fish', 1, {'raw_fish': 1, 'coal': 1}, 'furnace');
+    r('cooked_salmon', 1, {'raw_salmon': 1, 'coal': 1}, 'furnace');
     return out;
   }
 

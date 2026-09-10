@@ -20,7 +20,7 @@ enum BlockShape {
   stairsW,
 }
 
-enum ToolType { none, pickaxe, axe, shovel, sword, hoe }
+enum ToolType { none, pickaxe, axe, shovel, sword, hoe, shears }
 
 class BlockDef {
   const BlockDef(

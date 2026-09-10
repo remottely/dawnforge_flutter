@@ -48,6 +48,14 @@ class Mob extends VoxelBody {
   double _fuse = 0.0;
   String affix = '';
   double affixScale = 1.0;
+  /// Stage 20: a mount carries its rider's input instead of thinking; a sheep
+  /// regrows its wool.
+  bool ridden = false;
+  Vector3 rideInput = Vector3.zero();
+  bool rideSprint = false;
+  bool rideJump = false;
+  bool sheared = false;
+  double _regrow = 0.0;
   double speedMult = 1.0;
   double damageMult = 1.0;
   double _modelYaw = 0.0;
@@ -70,6 +78,7 @@ class Mob extends VoxelBody {
   };
 
   bool get isBoss => species.boss;
+  bool get isMount => species.mount;
   bool get isDead => state == MobState.dead;
 
   void scaleToLevel(int lvl) {
@@ -88,11 +97,25 @@ class Mob extends VoxelBody {
     maxHp += 10.0;
     hp = maxHp;
     barVisible = true;
-    by.notify('${species.name} is now your companion!');
-    Achievements.instance.unlock('tamer');
+    if (isMount) {
+      by.notify('${species.name} is tamed! [F] to ride it');
+    } else {
+      by.notify('${species.name} is now your companion!');
+      Achievements.instance.unlock('tamer');
+    }
   }
 
   void _petThink(double dt, double dist, Vector3 toPlayer) {
+    // A mount never fights: it trots after its owner while they are near, and
+    // waits otherwise.
+    if (isMount) {
+      if (dist > 20.0 || dist < 2.5) {
+        _dir = Vector3.zero();
+      } else if (dist > 4.0) {
+        _dir = toPlayer.normalized();
+      }
+      return;
+    }
     // Fight what the player fights, otherwise heel.
     final pt = _petTarget;
     if (pt != null && (pt.removed || pt.state == MobState.dead)) _petTarget = null;
@@ -371,6 +394,19 @@ class Mob extends VoxelBody {
     _hopCd = math.max(_hopCd - dt, 0.0);
     hurt = math.max(hurt - dt, 0.0);
     _timer -= dt;
+    if (sheared) {
+      _regrow -= dt;
+      if (_regrow <= 0.0) {
+        sheared = false;
+        _parts['body']?..sx = 1.0
+          ..sy = 1.0
+          ..sz = 1.0;
+      }
+    }
+    if (ridden) {
+      _rideTick(dt);
+      return;
+    }
     _target = _nearestTarget();
     final target = _target!;
     final dist = (position - target.position).length;
@@ -387,6 +423,37 @@ class Mob extends VoxelBody {
     }
     if (state == MobState.dead || removed) return;
     _moveAndAnimate(dt);
+  }
+
+  /// Ridden: the rider's wish drives the body at the species speed, sprint
+  /// x1.4, jump on the floor.
+  void _rideTick(double dt) {
+    final speed = species.speed * (rideSprint ? 1.4 : 1.0);
+    if (inWater && rideInput.length > 0.1) velocity.y = 3.0;
+    applyGravity(dt);
+    if (rideJump && onFloor) velocity.y = 9.0;
+    rideJump = false;
+    velocity.x = lerpd(velocity.x, rideInput.x * speed, dt * 8.0);
+    velocity.z = lerpd(velocity.z, rideInput.z * speed, dt * 8.0);
+    move(dt);
+    if (hitWall && onFloor && rideInput.length > 0.1) tryStepUp();
+    _dir = rideInput;
+    _face(rideInput);
+    _animate(dt);
+    syncNode();
+  }
+
+  /// Shears take 1..3 wool; the body shrinks until it regrows two minutes later.
+  int shear() {
+    if (species.id != 'sheep' || sheared) {
+      throw StateError('only an unsheared sheep can be sheared');
+    }
+    sheared = true;
+    _regrow = 120.0;
+    _parts['body']?..sx = 0.85
+      ..sy = 0.7
+      ..sz = 0.85;
+    return 1 + main.random.nextInt(3);
   }
 
   Target _nearestTarget() {

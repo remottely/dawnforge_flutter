@@ -26,7 +26,7 @@ void main() {
         expect(Items.has(k), isTrue, reason: k);
       }
     }
-    expect(Species.defs.length, 17);
+    expect(Species.defs.length, 18);
   });
 
   test('the generator fills a chunk with a surface and the mesher emits faces', () {

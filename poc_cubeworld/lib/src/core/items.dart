@@ -25,6 +25,7 @@ class ItemDef {
     this.effect = '',
     this.seconds = 0.0,
     this.container = '',
+    this.liquid = '',
   });
 
   final String id;
@@ -50,6 +51,9 @@ class ItemDef {
 
   /// The item handed back when this one is consumed (an empty bucket).
   final String container;
+
+  /// The block a filled bucket pours ("" for anything that is not one).
+  final String liquid;
 }
 
 class Items {
@@ -106,6 +110,12 @@ class Items {
       add(ItemDef(id: itemId, name: d.name, kind: ItemKind.block, block: i, r: d.r, g: d.g, b: d.b));
     }
     add(const ItemDef(id: 'boat', name: 'Boat', kind: ItemKind.equipment, stack: 1, r: 0.55, g: 0.38, b: 0.20));
+    // Stage 20: the rod and the buckets are equipment (a tool with ToolType.none
+    // would mine at wood speed).
+    add(const ItemDef(id: 'fishing_rod', name: 'Fishing Rod', kind: ItemKind.equipment, stack: 1, r: 0.62, g: 0.45, b: 0.25));
+    add(const ItemDef(id: 'bucket', name: 'Bucket', kind: ItemKind.equipment, stack: 1, r: 0.80, g: 0.80, b: 0.83));
+    add(const ItemDef(id: 'water_bucket', name: 'Water Bucket', kind: ItemKind.equipment, stack: 1, r: 0.25, g: 0.45, b: 0.80, liquid: 'water'));
+    add(const ItemDef(id: 'lava_bucket', name: 'Lava Bucket', kind: ItemKind.equipment, stack: 1, r: 0.95, g: 0.45, b: 0.12, liquid: 'lava'));
 
     mat('stick', 'Stick', 0.60, 0.45, 0.25);
     mat('coal', 'Coal', 0.15, 0.15, 0.16);
@@ -139,6 +149,14 @@ class Items {
     food('bread', 'Bread', 0.80, 0.60, 0.30, 5, 4.0);
     food('rotten_flesh', 'Rotten Flesh', 0.45, 0.35, 0.25, 1, -2.0);
     food('mushroom_stew', 'Mushroom Stew', 0.75, 0.55, 0.40, 6, 8.0);
+    food('raw_fish', 'Raw Fish', 0.60, 0.70, 0.75, 2, 0.0);
+    food('cooked_fish', 'Cooked Fish', 0.80, 0.65, 0.45, 5, 5.0);
+    food('raw_salmon', 'Raw Salmon', 0.90, 0.45, 0.40, 3, 0.0);
+    food('cooked_salmon', 'Cooked Salmon', 0.85, 0.50, 0.35, 6, 6.0);
+    // Milk: a bucket of it heals a little and cures every bad effect; the
+    // bucket comes back.
+    add(const ItemDef(id: 'milk_bucket', name: 'Milk Bucket', kind: ItemKind.food, stack: 1,
+        r: 0.96, g: 0.96, b: 0.94, heal: 2.0, effect: 'cure', container: 'bucket'));
     food('health_potion', 'Health Potion', 0.95, 0.20, 0.35, 0, 30.0);
     mat('glass_bottle', 'Glass Bottle', 0.80, 0.90, 0.95);
     potion('speed_potion', 'Swiftness Potion', 0.45, 0.85, 0.95, 'speed', 60.0);
@@ -163,6 +181,7 @@ class Items {
     weapon('staff', 'Apprentice Staff', 0.55, 0.35, 0.75, 7, 'staff', 1);
     weapon('crystal_staff', 'Crystal Staff', 0.65, 0.45, 0.95, 12, 'staff', 3);
     tool('wooden_hoe', 'Wooden Hoe', tierColors[1], ToolType.hoe, 1, 1);
+    tool('shears', 'Shears', const [0.78, 0.78, 0.82], ToolType.shears, 3, 1);
     add(const ItemDef(id: 'arrow', name: 'Arrow', kind: ItemKind.material, r: 0.75, g: 0.70, b: 0.60));
     add(const ItemDef(id: 'glider', name: 'Hang Glider', kind: ItemKind.equipment, stack: 1, r: 0.90, g: 0.35, b: 0.25));
     add(const ItemDef(id: 'leather_armor', name: 'Leather Armor', kind: ItemKind.equipment, stack: 1, r: 0.65, g: 0.42, b: 0.25, armor: 2));
@@ -189,12 +208,18 @@ class Items {
   static int damageOf(String id) => def(id).damage;
   static String styleOf(String id) => def(id).style;
 
+  /// The block a filled bucket pours ("" for anything that is not one).
+  static String liquidOf(String id) => def(id).liquid;
+
+  static bool isLeaves(int block) => Blocks.idOf(block).endsWith('_leaves');
+
   /// Time in seconds to break `block` holding `itemId` ("" for the bare hand).
   /// -1 = never.
   static double mineTime(String itemId, int block) {
     final hardness = Blocks.hardness(block);
     if (hardness < 0.0) return -1.0;
     if (hardness == 0.0) return 0.05;
+    if (itemId != '' && toolOf(itemId) == ToolType.shears && isLeaves(block)) return 0.05;
     final neededTool = Blocks.toolOf(block);
     final neededTier = Blocks.minTier(block);
     final tool = itemId == '' ? ToolType.none : toolOf(itemId);
