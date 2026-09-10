@@ -62,12 +62,15 @@
   `grill-me`. Each slice below is one commit; a skill lands with its trigger written down
   and a `COMMANDS.md`-style row is *not* owed (a skill is not a script — rule 23 does not
   reach it, and `docs/AI_HARNESS.md` §1 is where it is announced).
-  - **(a) start correctly** — `onboard` (what the repo is, which plan is LIVE per
-    `docs/refactoring/README.md`, what `PENDING.md` says, what HEAD is; the spec's version
-    also reads its lane board, which is `D-8` and does not cross), `recall`
-    (`search_project_knowledge.py` with the query shapes that work), `suite`
-    (`check_test_suite_is_clean.py` + how to triage a Dart failure, which is a different
-    triage from GUT's).
+  - **(a) start correctly** — **done 0.73.0.** `.claude/skills/` exists for the first
+    time, with three: `onboard` (seven probes, then a six-answer briefing — HEAD, who else
+    is in the tree, the front, the lanes, the open forks, the next executable step; the
+    spec's lane board is `D-8` and did not cross), `recall` (the query shapes that work
+    here, and the two things the index does NOT cover — `lib/` source and the sibling
+    checkout), `suite` (the five checks by name, the Dart triage order, and `L-024`'s
+    load-dependent flake written down so the next session does not lose an afternoon to
+    it). Every probe was run before it was written down. The three are announced in
+    `docs/AI_HARNESS.md` §1, which is a skill's `COMMANDS.md`.
   - **(b) record correctly** — `ledger` (rule 27's four fields, `--next` for the ID, the
     duplicate check first), `decision` (the register machinery: prefix + next free ID,
     what a fork must carry, where a settled one moves to — this is the skill whose absence

@@ -12,15 +12,17 @@ Baseline at writing: FP0, 2026-08-25.
 
 Same loop as the Godot repo: Orient → Recall → Specify → Implement → Verify → Document →
 Ship → Observe → Evolve. The skills that instrument each stage are ported incrementally
-(plan step FP0.9); until a skill exists here, follow its SSOT directly:
+(plan step FP0.9); until a skill exists here, follow its SSOT directly. **A skill is not a
+script** — rule 23 does not reach it and it owes no `scripts/COMMANDS.md` row; this table
+is where it is announced.
 
 | Stage | Instrument today | SSOT |
 |:---|:---|:---|
-| Orient | `git log`/`git status` + `docs/refactoring/PENDING.md` | — |
-| Recall | `python3 scripts/ai/search_project_knowledge.py "<q>"` | §2 |
+| Orient | **`/onboard`** — the probes, and the six-answer briefing they feed | `.claude/skills/onboard/` |
+| Recall | **`/recall`** over `python3 scripts/ai/search_project_knowledge.py "<q>"` | §2 · `.claude/skills/recall/` |
 | Specify | plans in `docs/refactoring/implementation_plan/` | port plan |
 | Implement | `docs/ARCHITECTURE.md` (what the code is) + `CLAUDE.md` rules 1–34 + the Godot repo as the spec | — |
-| Verify | `python3 scripts/project/check_test_suite_is_clean.py` | — |
+| Verify | **`/suite`** over `python3 scripts/project/check_test_suite_is_clean.py` — the five checks, the Dart triage order, the known load-dependent flake | `.claude/skills/suite/` |
 | Document | rule 34 (both changelogs; manual when player-visible) | `CLAUDE.md` |
 | Ship | one-command bump-from-HEAD commit | `CLAUDE.md` §Parallel sessions |
 | Observe | `docs/refactoring/LEDGER.md` (rule 27) | ledger header |
