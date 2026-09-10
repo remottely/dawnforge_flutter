@@ -8,6 +8,18 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.65.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. The plan promised that three things would be
+  built in a way that leaves room for playing together over the internet one
+  day. Two of them are being kept. The third — where a button press becomes a
+  little written order that the game then carries out, instead of the game
+  reaching over and reading the keyboard itself — was never started, and every
+  new action makes it a bit more work to add later. That is now written down as
+  a question for the developer, with the reasons on both sides.
+
 ## 0.64.0
 
 ### 🧹 Internal

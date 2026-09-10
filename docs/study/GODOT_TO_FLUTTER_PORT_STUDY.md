@@ -152,6 +152,11 @@ are replaced by a sprite/animation manifest JSON consumed by the Dart `Animation
 | **GUT/GdUnit4 dual suite** | One language → one suite | `flutter test` + the same "suite is green before commit" policy |
 | **Godot editor tools** (`tessera/tools/*.gd`) | No editor | Pipeline `--check` modes + debug overlays |
 
+**Status note, 2026-09-10 (0.65.0).** Of the multiplayer row's three door-keepers, two are
+real — rule 30 is enforced by a hook, and FP6.1 plans a save whose sections are owned by
+their systems. The third, *input as intents*, has no subject in the code and no step in the
+plan (`LEDGER.md` `L-018`); it is registered as `D-9` in the port plan's decision register.
+
 Everything else is in scope: world objects, components, FSM, registries, factories,
 domain rules, grid, events, time system, spawning, drops, inventory, farming, progression,
 quests, achievements, skill trees, thermal, save, localization, audio, UI surfaces,

@@ -75,6 +75,13 @@
 - **Cost of leaving it:** every shared document is exposed — `LEDGER.md`, `PENDING.md`, both changelogs, the plans — and the exposure grows with the number of sessions, which is the direction this repo is going. The failure has two shapes and only one of them is loud: the ID collision is caught by a hook, while a commit that quietly sweeps another session's in-flight edit to the same file is caught by nobody. The repair is manual, undocumented, and was invented twice today.
 - **Found while:** 2026-09-10 — writing the automation, test and pack-import documents while another session drained FP0.10–FP0.15.
 
+### L-018 · The third thing D4 keeps open has no subject in the code
+
+- **Lens:** simulation shape / study decision
+- **Evidence:** study §5 and `D4` name three things that keep the multiplayer door open — no pause, **input as intents**, and systems owning their serialized sections. Two are real: rule 30 is enforced by a hook and FP6.1 plans the sections. The third is nowhere. At 0.64.0 the fixed step reads the device directly (`lib/src/core/render/dawnforge_game.dart:320-324`: `InputHelper.getMovementVector()` applied straight to `player.movement`), and the verb does the same (`lib/src/core/base/world_objects/actors/player/actor_player.dart:63`: `usePrimaryAction(aimAtCursor())`). `grep -rn 'Intent' lib/src` returns nothing, and no `FP` step plans one.
+- **Cost of leaving it:** a door that is written down as open and is closed by construction is worse than one nobody claimed — the study's own §5 table is the thing a future session would read before assuming the shape is there. The cost also grows monotonically: today three call sites turn a device reading into a simulation change, and FP4.5(e)'s interact, FP4.4(g)'s planting and every FP7.7 verb each add one. The same layer is what a deterministic replay would consume, which is the assertion `Splitmix32` currently has no way to make (`TEST_TRACEABILITY_2026-09-10.md` TT1). Note what this is NOT: rule 24 is satisfied — the polling happens in `update(dt)`, exactly where that rule puts it.
+- **Found while:** 2026-09-10 — reading the study's scope cuts while writing §7.1's status pass.
+
 ## Drained
 
 | ID | Title | Drained into |
