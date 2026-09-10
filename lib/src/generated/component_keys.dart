@@ -8,4 +8,5 @@ abstract final class ComponentKeys {
   static const String heldItem = 'HeldItemComponent';
   static const String inventory = 'InventoryComponent';
   static const String movement = 'MovementComponent';
+  static const String workstation = 'WorkstationComponent';
 }

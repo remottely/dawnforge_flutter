@@ -89,6 +89,11 @@ abstract final class EngineConstants {
   static const double dropDistanceMin = 0.75;
   static const double dropDistanceMax = 1.5;
 
+  /// How far off its front face a workstation's produce may land, in world
+  /// units. The spec writes the literal `8.0` at the call site; it is half
+  /// a tile, and it is named here so the drop helper reads a word.
+  static const double workstationDropJitter = 8;
+
   /// Actors drop further out so the pile never lands under their own feet.
   static const double dropFromActorDistanceMin = 1.5;
   static const double dropFromActorDistanceMax = 3;

@@ -8,27 +8,31 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
-## 0.45.4
+## 0.48.0
 
 ### 🧹 Internal
 
-- Nada mudou no jogo. Foi anotado um problema nas ferramentas do próprio
-  projeto: a trava que confere como o trabalho pronto é arquivado no livro de
-  histórico não enxerga um jeito específico de arquivar, e a porta lateral que
-  contorna isso passa longe da trava. Anotar um problema não é o mesmo que
-  consertá-lo — é fazer com que a próxima pessoa o encontre numa página, e não
-  de surpresa.
-
-## 0.45.3
-
-### 🧹 Internal
-
-- Nada mudou no jogo. Isto é arrumação no livro onde o projeto anota tudo o que
-  já fez. A versão antiga do jogo e a que está sendo feita agora estavam em duas
-  páginas separadas, então parecia que a nova tinha perdido as últimas coisas
-  que a antiga aprendeu. Nunca perdeu: tudo aquilo esteve guardado o tempo
-  inteiro. Agora as duas estão na mesma página, em ordem, e o livro para de
-  fingir que sumiu alguma coisa.
+- **Uma bancada agora consegue trabalhar.** Dê a uma fundição uma receita e o
+  minério e o carvão que ela pede, e ela pega tudo de uma vez, faz o lote uma
+  barra por vez e coloca cada barra pronta no chão, na frente dela — nunca em
+  cima dela. Ninguém consegue pedir isso a uma bancada ainda: o jeito de falar
+  com uma (chegar perto e apertar uma tecla) não existe nesta versão. O motor
+  está pronto; a porta é o próximo passo.
+- Você paga o lote inteiro adiantado, e a bancada guarda o que ainda não usou.
+  Pare no meio e tudo o que ela não queimou volta para o chão. Quebre uma
+  bancada trabalhando e acontece o mesmo, antes de as peças dela caírem.
+- Uma bancada recusa duas coisas, e em silêncio: uma receita que ela não faz e
+  um lote que você não consegue pagar. Nenhuma das duas tira um item da sua
+  mochila.
+- Consertado um erro copiado direto do projeto: ao fazer cinco barras, o projeto
+  contava "barra 1 de 1" cinco vezes, porque nunca anotava quantas foram
+  pedidas. Este jogo anota, então a contagem lê 1 de 5, 2 de 5, e assim por
+  diante.
+- Se a bancada está ocupada deixou de ser uma anotação separada que podia
+  discordar do que está em cima dela — a bancada está ocupada exatamente quando
+  segura uma receita.
+- O livro de histórico tinha duas páginas fora de ordem (0.45.4 e 0.45.3 estavam
+  acima de 0.47.0); voltaram para o lugar.
 
 ## 0.47.0
 
@@ -65,6 +69,28 @@
   cem vezes. As duas seriam a resposta acidental, e as duas seriam bobas em vez
   de barulhentas.
 - Nada faz essas perguntas ainda. A bancada que vai fazê-las é a próxima.
+
+## 0.45.4
+
+### 🧹 Internal
+
+- Nada mudou no jogo. Foi anotado um problema nas ferramentas do próprio
+  projeto: a trava que confere como o trabalho pronto é arquivado no livro de
+  histórico não enxerga um jeito específico de arquivar, e a porta lateral que
+  contorna isso passa longe da trava. Anotar um problema não é o mesmo que
+  consertá-lo — é fazer com que a próxima pessoa o encontre numa página, e não
+  de surpresa.
+
+## 0.45.3
+
+### 🧹 Internal
+
+- Nada mudou no jogo. Isto é arrumação no livro onde o projeto anota tudo o que
+  já fez. A versão antiga do jogo e a que está sendo feita agora estavam em duas
+  páginas separadas, então parecia que a nova tinha perdido as últimas coisas
+  que a antiga aprendeu. Nunca perdeu: tudo aquilo esteve guardado o tempo
+  inteiro. Agora as duas estão na mesma página, em ordem, e o livro para de
+  fingir que sumiu alguma coisa.
 
 ## 0.45.2
 

@@ -11,10 +11,11 @@ import 'package:dawnforge/src/core/systems/boot.dart';
 import 'package:dawnforge/src/core/systems/drop/world_drop_helper.dart';
 import 'package:dawnforge/src/core/systems/eventing/events.dart';
 import 'package:dawnforge/src/core/systems/world/grid_manager.dart';
+import 'package:meta/meta.dart';
 
 /// Host of every prop. Created only by `PropFactory.create()` (rule 1).
 class Prop extends WorldObject {
-  Prop(this._random);
+  Prop(this.random);
 
   /// Typed view over the injected soul.
   PropData get propData => data as PropData;
@@ -22,8 +23,11 @@ class Prop extends WorldObject {
   /// The roll stream this prop's loot and scatter come out of, handed in by
   /// the factory (rule 1). A never-serialized internal (rule 8). One per prop
   /// rather than one stream shared by all of them, because the ORDER props
-  /// happen to die in must not decide what each of them yields.
-  final Random _random;
+  /// happen to die in must not decide what each of them yields. Protected
+  /// so a subclass with more to put on the ground (`PropWorkstation`) rolls
+  /// where from the same stream.
+  @protected
+  final Random random;
 
   late final HealthComponent health;
   late final DropComponent drop;
@@ -31,8 +35,8 @@ class Prop extends WorldObject {
   @override
   void setupComponents() {
     health = addComponent(HealthComponent());
-    drop = addComponent(DropComponent(_random));
-    health.died.connect(_onDied);
+    drop = addComponent(DropComponent(random));
+    health.died.connect(onDied);
   }
 
   /// Takes [amount] of damage from [source]. Returns whether the hit LANDED —
@@ -66,10 +70,18 @@ class Prop extends WorldObject {
   /// `IItemActionData` field, unported — so the multiplier stays 1.0 here),
   /// and pools plain props instead of freeing them (`PropPool`, FP7). What
   /// remains is what harvest actually needs.
-  void _onDied(Object? source) {
+  ///
+  /// Protected, not private, so a host with more to do at death does it
+  /// BEFORE this — `PropWorkstation` spills its half-made batch back first,
+  /// because a corpse can hold no allocation and its leftovers are the
+  /// player's. The order is the subclass's responsibility, and the spec's
+  /// `_on_died` override is the same shape.
+  @protected
+  @mustCallSuper
+  void onDied(Object? source) {
     _releaseGridTiles();
     locator<Events>().worldObjectDied.emit(this);
-    drop.dropItems(WorldDropHelper.calculateDropPosition(this, _random));
+    drop.dropItems(WorldDropHelper.calculateDropPosition(this, random));
     // "It left the world" is a second fact from "it died", and it is the one
     // the render and sim layers act on — the same signal a recycled chunk
     // sends for a prop that simply went out of range.

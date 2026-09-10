@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:dawnforge/src/core/base/world_objects/actors/i_actor.dart';
 import 'package:dawnforge/src/core/base/world_objects/items/item_world.dart';
+import 'package:dawnforge/src/core/base/world_objects/props/prop_workstation.dart';
 import 'package:dawnforge/src/core/base/world_objects/world_object.dart';
 import 'package:dawnforge/src/core/domain/production/drop_rules.dart';
 import 'package:dawnforge/src/core/factories/item_factory.dart';
@@ -14,8 +15,7 @@ import 'package:dawnforge/src/core/systems/eventing/events.dart';
 import 'package:dawnforge/src/core/systems/world/grid_manager.dart';
 
 /// Centralized item-drop spawning — port of `world_drop_helper.gd` (logic
-/// slice: the workstation front-face branch joins with `PropWorkstation` in
-/// FP4.5; the network authority gate returns with the network layer — every
+/// slice: the network authority gate returns with the network layer — every
 /// caller here IS the simulating machine, singleplayer by decision D4).
 abstract final class WorldDropHelper {
   /// Where a pickup aimed at [desired] may actually come to rest, given that
@@ -88,12 +88,24 @@ abstract final class WorldDropHelper {
     return pickup;
   }
 
-  /// The drop anchor for a source host. Actors scatter their pile a random
+  /// The drop anchor for a source host. A workstation puts its produce at
+  /// its FRONT FACE, jittered up to half a tile, so a bar never appears on
+  /// top of the smelter that made it; actors scatter their pile a random
   /// distance out so it never lands under their own feet; props and grounds
-  /// offset toward their footprint's center. The workstation front-face
-  /// branch joins with `PropWorkstation` (FP4.5).
+  /// offset toward their footprint's center.
   static WorldPos calculateDropPosition(WorldObject source, Random random) {
     final basePos = source.position;
+    if (source is PropWorkstation) {
+      final data = source.workstationData;
+      return DropRules.workstationDropPosition(
+        basePos,
+        data.gridWidth,
+        data.gridHeight,
+        GameConstants.tileDimension.toDouble(),
+        random.nextDouble() * 2 * pi,
+        random.nextDouble() * EngineConstants.workstationDropJitter,
+      );
+    }
     if (source is IActor) {
       final angle = random.nextDouble() * 2 * pi;
       final distance = _range(

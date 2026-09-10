@@ -1,7 +1,9 @@
 import 'package:dawnforge/src/core/domain/production/crafting_rules.dart';
+import 'package:dawnforge/src/core/domain/production/production_rules.dart';
 import 'package:dawnforge/src/core/registries/item_registry.dart';
 import 'package:dawnforge/src/core/resources/items/item_craftable_data.dart';
 import 'package:dawnforge/src/core/resources/json_reader.dart';
+import 'package:dawnforge/src/core/resources/world_objects/props/allocated_material.dart';
 import 'package:dawnforge/src/core/resources/world_objects/props/prop_data.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/enums.dart';
 import 'package:dawnforge/src/core/systems/boot.dart';
@@ -16,8 +18,9 @@ import 'package:dawnforge/src/core/systems/drop/drop_entry.dart';
 /// SMELTER` since it was imported; this is the first class to read it.
 ///
 /// What a station is DOING — the running batch, its allocated materials, its
-/// progress — is not here yet. That state and the component that drives it are
-/// the next slice; this one is what a station IS.
+/// progress — lives here too, below the authored half, because it is MUTABLE
+/// GAME STATE and rule 8 gives that exactly one home. `WorkstationComponent`
+/// is the behaviour over it and keeps nothing of its own.
 class PropWorkstationData extends PropData {
   PropWorkstationData({
     required super.id,
@@ -145,8 +148,140 @@ class PropWorkstationData extends PropData {
       CraftingRules.totalTime(recipe.craftTime, quantity) /
       productionSpeedMultiplier;
 
+  // ---------------------------------------------------------------------------
+  // PRODUCTION STATE — what the station is DOING (rule 8: it lives here).
+  // ---------------------------------------------------------------------------
+
+  ItemCraftableData? _currentRecipe;
+  int _initialQuantity = 0;
+  int _remainingQuantity = 0;
+  double _currentProgress = 0;
+  final List<AllocatedMaterial> _allocatedMaterials = <AllocatedMaterial>[];
+
+  /// The recipe on the bench, or null when the station is idle.
+  ItemCraftableData? get currentRecipe => _currentRecipe;
+
+  /// Whether a batch is running.
+  ///
+  /// PORT DELTA — DERIVED, never stored. The spec keeps `is_producing` as a
+  /// fourth field beside the recipe, and the two are written separately in
+  /// three places; a flag that can disagree with the fact it stands for is
+  /// the loose boolean rule 9 forbids. A station is producing exactly when it
+  /// holds a recipe, so that is the whole definition.
+  bool get isProducing => _currentRecipe != null;
+
+  /// How many units the running batch was ordered with. Zero when idle.
+  ///
+  /// PORT DELTA — the spec does not store this, and its `_get_initial_quantity`
+  /// says so in a comment and then returns the REMAINING count, so the
+  /// progress signal there announces "item 1 of N" for every unit of the
+  /// batch. Stored at start here, which is the fix the comment asked for.
+  int get initialQuantity => _initialQuantity;
+
+  /// How many units are still to be made. Zero when idle.
+  int get remainingQuantity => _remainingQuantity;
+
+  /// Progress of the unit on the bench, in `[0, 1)`. Zero when idle.
+  double get currentProgress => _currentProgress;
+
+  /// What the running batch took from the player and has not used up yet —
+  /// what a cancellation gives back. Read-only from outside; the component
+  /// reduces the lines through [allocatedMaterials]' own setters.
+  List<AllocatedMaterial> get allocatedMaterials =>
+      List<AllocatedMaterial>.unmodifiable(_allocatedMaterials);
+
+  /// Opens a batch: [quantity] units of [recipe], with every ingredient line
+  /// multiplied out into an allocation the station now holds.
+  ///
+  /// Asserts the station is idle. The spec overwrites silently; here the
+  /// component cancels first, and a call that skips that step would drop the
+  /// allocated materials on the floor — a refund that never happens.
+  void storeMaterials(ItemCraftableData recipe, int quantity) {
+    assert(!isProducing, '[$runtimeType($id)] storeMaterials while producing');
+    assert(quantity > 0, '[$runtimeType($id)] a batch of $quantity');
+    assert(recipe.isCraftable, '[$runtimeType($id)] ${recipe.id} has no recipe');
+    _currentRecipe = recipe;
+    _initialQuantity = quantity;
+    _remainingQuantity = quantity;
+    _currentProgress = 0;
+    _allocatedMaterials
+      ..clear()
+      ..addAll(
+        recipe.ingredients.map(
+          (line) => AllocatedMaterial(
+            itemId: line.itemId,
+            amount: line.amount * quantity,
+          ),
+        ),
+      );
+  }
+
+  /// Advances the unit on the bench by [increment].
+  void advanceProgress(double increment) {
+    assert(isProducing, '[$runtimeType($id)] advanceProgress while idle');
+    assert(increment >= 0, '[$runtimeType($id)] negative progress $increment');
+    _currentProgress += increment;
+  }
+
+  /// Closes one unit: one fewer to make, the bench cleared for the next, and
+  /// every allocated line reduced by what one unit costs.
+  void completeUnit() {
+    final recipe = _currentRecipe;
+    assert(recipe != null, '[$runtimeType($id)] completeUnit while idle');
+    assert(_remainingQuantity > 0, '[$runtimeType($id)] completeUnit past zero');
+    _remainingQuantity -= 1;
+    _currentProgress = 0;
+    // Lines and ingredients were written from the same list in the same
+    // order by [storeMaterials], so index i of one IS index i of the other.
+    for (var i = 0; i < _allocatedMaterials.length; i++) {
+      final line = _allocatedMaterials[i];
+      line.amount = ProductionRules.reduceAllocatedAmount(
+        line.amount,
+        recipe!.ingredients[i].amount,
+      );
+    }
+  }
+
+  /// Returns the station to idle. What was allocated is the caller's to
+  /// refund BEFORE this call — after it, the list is gone.
+  void clearProduction() {
+    _currentRecipe = null;
+    _initialQuantity = 0;
+    _remainingQuantity = 0;
+    _currentProgress = 0;
+    _allocatedMaterials.clear();
+  }
+
   @override
-  PropWorkstationData clone() => PropWorkstationData(
+  Map<String, Object?> serialize() => <String, Object?>{
+        ...super.serialize(),
+        'current_recipe_id': _currentRecipe?.id,
+        'initial_quantity': _initialQuantity,
+        'remaining_quantity': _remainingQuantity,
+        'current_progress': _currentProgress,
+        'allocated_materials': _allocatedMaterials
+            .map((line) => line.serialize())
+            .toList(),
+      };
+
+  /// Copies every field, the production state included: a clone is a full
+  /// copy, the same bargain `currentHealth` makes one class up. The registry
+  /// template is never producing, so the factory's clone starts idle; a save
+  /// restoring a mid-batch station is FP6's, and lands on these same fields.
+  @override
+  PropWorkstationData clone() => _cloneAuthored().._adoptProductionFrom(this);
+
+  void _adoptProductionFrom(PropWorkstationData other) {
+    _currentRecipe = other._currentRecipe;
+    _initialQuantity = other._initialQuantity;
+    _remainingQuantity = other._remainingQuantity;
+    _currentProgress = other._currentProgress;
+    _allocatedMaterials
+      ..clear()
+      ..addAll(other._allocatedMaterials.map((line) => line.clone()));
+  }
+
+  PropWorkstationData _cloneAuthored() => PropWorkstationData(
         id: id,
         workstationType: workstationType,
         productionSpeedMultiplier: productionSpeedMultiplier,

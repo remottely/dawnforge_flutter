@@ -8,27 +8,30 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
-## 0.45.4
+## 0.48.0
 
 ### 🧹 Internal
 
-- Nothing in the game changed. A snag in the project's own tools was written
-  down: the safety catch that checks how finished work gets filed into the
-  history book cannot see one particular way of filing, and the side door that
-  gets around it goes right past the catch. Writing a snag down is not the same
-  as fixing it — it means the next person meets it on a page instead of by
-  surprise.
-
-## 0.45.3
-
-### 🧹 Internal
-
-- Nothing in the game changed. This is tidying in the book where the project
-  writes down everything it has ever done. The old version of the game and the
-  one being built now were on two separate pages, so the new one looked like it
-  was missing the last things the old one learned. It never was: all of that
-  was safe the whole time. Now both are on the same page, in order, and the
-  book stops pretending something went missing.
+- **A bench can now work.** Give a smelter a recipe and the ore and coal it
+  asks for, and it takes them all at once, works through the batch one bar at
+  a time, and puts each finished bar on the ground in front of itself — never on
+  top of itself. Nobody can ask a bench to do this yet: the way you talk to one
+  (walking up and pressing a key) does not exist in this build. The engine is
+  ready for it; the door is the next step.
+- You pay for the whole batch up front, and the bench keeps what it has not used
+  yet. Stop it halfway and everything it had not burned comes back onto the
+  ground. Break a working bench and the same happens, before its own pieces
+  fall.
+- A bench refuses two things and quietly: a recipe it does not make, and a
+  batch you cannot afford. Neither takes a single item from your bag.
+- Fixed a mistake copied straight from the design: while making five bars the
+  design counted "bar 1 of 1" five times, because it never wrote down how many
+  were ordered. This game writes it down, so the count reads 1 of 5, 2 of 5, and
+  so on.
+- Whether a bench is busy is no longer a separate note that could disagree with
+  what is on the bench — a bench is busy exactly when it holds a recipe.
+- The history book had two pages out of order (0.45.4 and 0.45.3 sat above
+  0.47.0); they are back in place.
 
 ## 0.47.0
 
@@ -62,6 +65,28 @@
   cannot be made a hundred times either. Both would have been the accidental
   answer, and both would have been silly rather than loud.
 - Nothing asks these questions yet. The bench that will ask them is next.
+
+## 0.45.4
+
+### 🧹 Internal
+
+- Nothing in the game changed. A snag in the project's own tools was written
+  down: the safety catch that checks how finished work gets filed into the
+  history book cannot see one particular way of filing, and the side door that
+  gets around it goes right past the catch. Writing a snag down is not the same
+  as fixing it — it means the next person meets it on a page instead of by
+  surprise.
+
+## 0.45.3
+
+### 🧹 Internal
+
+- Nothing in the game changed. This is tidying in the book where the project
+  writes down everything it has ever done. The old version of the game and the
+  one being built now were on two separate pages, so the new one looked like it
+  was missing the last things the old one learned. It never was: all of that
+  was safe the whole time. Now both are on the same page, in order, and the
+  book stops pretending something went missing.
 
 ## 0.45.2
 
