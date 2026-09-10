@@ -8,6 +8,31 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.55.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. Cada parte do jogo deveria vir com um programinha que a
+  cutuca e confere se ela continua se comportando — é assim que a gente
+  percebe quando algo que já foi consertado quebra de novo depois. Alguém
+  contou pela primeira vez: de 109 partes, 88 são cutucadas por alguma coisa e
+  21 nunca são tocadas. A lista dessas 21 está anotada agora, na ordem que
+  mais importa, com o que cada conferência precisa provar. Quatro delas
+  seguram quase todo o resto, incluindo a que faz o mesmo mundo voltar quando
+  você usa a mesma semente.
+
+## 0.55.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. Cada página do livro de receitas deste jogo foi copiada à
+  mão da versão maior do jogo, uma por vez, e ninguém nunca voltou para ver se
+  alguma página tinha sido reescrita de lá para cá. Agora um conferente compara
+  as sessenta e uma páginas de uma vez. Tudo que os dois livros discordam
+  precisa estar anotado com um motivo, para que uma diferença que ninguém
+  escolheu nunca mais fique ali quietinha. A primeira conferência achou
+  sessenta e sete delas, incluindo uma que já tinha sido notada e esquecida.
+
 ## 0.54.0
 
 ### 🧹 Internal

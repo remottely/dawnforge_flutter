@@ -8,6 +8,31 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.55.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. Every part of the game is supposed to come with
+  a little program that pokes it and checks it still behaves — that is how we
+  notice when something we fixed breaks again later. Somebody counted for the
+  first time: out of 109 parts, 88 are poked by something and 21 are never
+  touched at all. The list of those 21 is now written down, in the order that
+  matters most, with what each check has to prove. Four of them hold up almost
+  everything else, including the one that makes the same world come back when
+  you use the same seed.
+
+## 0.55.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. Every page of this game's recipe book was copied
+  by hand from the bigger version of the game, one page at a time, and nobody
+  ever went back to see whether a page had been rewritten over there afterwards.
+  Now a checker compares all sixty-one pages at once. Anything the two books
+  disagree about has to be written down with a reason, so a difference nobody
+  chose can never sit there quietly again. The first run found sixty-seven of
+  them, including one that had been noticed once and never followed up.
+
 ## 0.54.0
 
 ### 🧹 Internal

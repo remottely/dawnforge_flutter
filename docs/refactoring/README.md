@@ -30,6 +30,7 @@ a finished one.
 | **The founding study — decisions D1–D7, scope cuts, risk register** | `../study/GODOT_TO_FLUTTER_PORT_STUDY.md` | reference, not a plan |
 | **The port plan — every `FP<phase>.<step>`, gates, the decision register `D-1`…`D-8`** | `implementation_plan/FLUTTER_PORT_PLAN_2026-08-25.md` | **LIVE FRONT** (FP4 in progress; FP4.4, FP5–FP7 sliced 2026-09-10) |
 | **The automation debt — the spec's 27 pipeline steps and 40 project commands mapped against this repo's 7 and 4** | `implementation_plan/AUTOMATION_DEBT_2026-09-10.md` | **LIVE, side lane** (opened 2026-09-10) — every item is executable and none blocks an `FP` step, so it is what a session picks up when the front is held by another lane |
+| **Test traceability — the 21 classes no test has ever named, and what each missing test must fix** | `implementation_plan/TEST_TRACEABILITY_2026-09-10.md` | **LIVE, side lane** (opened 2026-09-10) — measured, not estimated; the one fork is whether its guard refuses or ratchets |
 
 ## What a new document must carry
 
