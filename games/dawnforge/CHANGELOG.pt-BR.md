@@ -8,6 +8,20 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.54.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. A versão maior deste jogo tem uma caixa de ferramentas
+  cheia de programinhas que conferem os arquivos do próprio jogo atrás de
+  erros — um pergunta se um desenho existe mesmo, outro pergunta se duas
+  anotações sobre a mesma coisa ainda combinam. Aqui temos bem menos, e
+  ninguém tinha parado para comparar as duas caixas. Agora alguém parou: cada
+  ferramenta de lá está anotada aqui como "precisamos desta", "já temos" ou
+  "nunca vamos precisar, e o motivo é este". Três coisas que a gente não
+  conseguia conferir entraram na lista, e cada uma já achou um problema de
+  verdade enquanto era anotada.
+
 ## 0.53.0
 
 ### 🧹 Internal

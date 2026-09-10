@@ -19,7 +19,7 @@
 |:---|:---|:---|
 | FP0 Reset & harness | gate met 2026-08-25 (FP0.9 skills pending; FP0.10–FP0.18 harness debt opened 2026-09-10) | harness scripts run; hooks wired; suite command green on empty project |
 | FP1 Core foundation | gate met 2026-08-26 (FP1.5 component slice, FP1.9 domain rules pending) | `flutter test` green over events/registry/factory/component/FSM/grid with zero Flame imports |
-| FP2 Pipeline retarget | gate met 2026-08-26 (FP2.3 sprites, FP2.4 translations, FP2.5 component-keys pending) | `dawnforge.py full` emits JSON; registries boot from a real pack slice; `--check` clean |
+| FP2 Pipeline retarget | gate met 2026-08-26 (FP2.3 sprites, FP2.4 translations, FP2.5 component-keys pending; the step-by-step map against the spec's 27 is `AUTOMATION_DEBT_2026-09-10.md` §1.1 — steps 02/03 owe `--check`, step 99 is unported, our step 11 folds the spec's 09 and 25) | `dawnforge.py full` emits JSON; registries boot from a real pack slice; `--check` clean |
 | FP3 World & rendering | gate met 2026-08-26 (120fps hand-run, macOS) | player walks a chunked world at 60fps with debug overlay proving frame budget |
 | FP4 Gameplay loop | in progress (FP4.1–FP4.3 done; FP4.2's Sort paid 2026-08-31; FP4.5 slices (a)–(d) landed 0.45.0–0.48.0, (e)–(h) sliced 2026-09-10; FP4.4 re-ordered after FP4.5 and sliced (a)–(h)) | harvest → craft → place loop playable end to end |
 | FP5 Surfaces & UX | pending, sliced 2026-09-10 (FP5.1's `UIStateMachine` + back-press arbiter landed early, 0.22.0) | HUD + inventory + menu with blocker stack, no pause anywhere |
@@ -57,6 +57,14 @@ rules already assume exists. None needs a decision; each names the ledger entry 
 rule that is its evidence. Every script obeys rule 23 (`project_paths.py`, `__main__`
 guard, `--dry-run`/`--check`, a `COMMANDS.md` row in the same commit).
 
+**The wider inventory is its own document.** FP0.10–FP0.18 are the scripts *this repo's own
+rules* already assume exist. The question "what else does the delivery track run that we do
+not" was measured on 2026-09-10 into
+`implementation_plan/AUTOMATION_DEBT_2026-09-10.md` — 27 pipeline steps and 40 project
+commands over there against 7 and 4 here, each row either owed with an `AD` id, owned by an
+`FP` step, or not applicable with the reason. Nothing there is restated here and nothing
+here is restated there.
+
 - **FP0.10** `scripts/project/reset_local_save.py` — the port `L-004` says is missing.
   The spec is `tessera/scripts/project/reset_local_save.py`; the Dart delta is the
   location: the save dir is `path_provider`'s application-support folder keyed by the
@@ -65,14 +73,25 @@ guard, `--dry-run`/`--check`, a `COMMANDS.md` row in the same commit).
   typing `com.remottely.dawnforge` by hand, and sweeps `saves/` under it on every
   platform folder that exists. Settings (`shared_preferences`) survive by default;
   `--all` takes them. Lands **before FP6.1's first write**; FP6.3 proves it.
-- **FP0.11** `scripts/content/check_pack_snapshot_matches_spec.py [--check|--accept
-  <path>]` — the drift guard `L-006` asks for. For every `.md` under `DATA_ROOT`, diff
-  the frontmatter against the same relative path under `SPEC_REPO_ROOT` (a new
-  `project_paths.py` constant, overridable by `TESSERA_SPEC_ROOT`), report added, removed
-  and changed keys, exit 1 on drift. Documents that exist only here (`data/ui/
-  ui_strings.md`) are declared in ONE allowlist in the script header, each with its
+- **FP0.11** — **done VERSION_TBD.** `scripts/content/check_pack_snapshot_matches_spec.py
+  [--check|--report <path>|--accept <path>]` — the drift guard `L-006` asked for. Two
+  deltas from the commission, each because the pack said so: documents pair by **`id`,
+  not path** (the port files two `t1_ground_buildable_*` snapshots under the smelter and
+  the spec under the biome — a path match calls a moved document a missing one, and the
+  move is REPORTED because the folder is part of a translation key); and the three kinds
+  of difference are not one verdict. A key only the SPEC authors is the port's BACKLOG,
+  never a failure — 1023 of them across 52 documents, because a field whose Dart data
+  class does not exist cannot be authored here (rule 6). A key both sides author with
+  different values, or a key only this pack authors, is the FORK, and fails `--check`
+  unless recorded with a written reason in `pack_snapshot_deltas.yaml` (`--accept` writes
+  one document at a time, never in bulk; `--report` prints one diff). Two repo-wide
+  deltas live in the script header instead: the `spritesheet` path rewrite, and
+  `shadow_origin_offset`, which 51 documents here author and the spec has dropped.
+  Documents with no twin at all are the header's `ONLY_HERE` allowlist, each with its
   reason. A machine without the sibling repo reports **not applicable**, never a pass —
-  the Godot repo's `L-306` lesson (`check_pipeline_check_coverage.py`).
+  the Godot repo's `L-306` lesson (`check_pipeline_check_coverage.py`). NOT in the suite:
+  it needs a repo the suite cannot assume. First green run: 28 forked documents, 67
+  forked keys, `L-006`'s own `cave_elevation_drops` among them; `L-014` opened.
 - **FP0.12** the merge-commit path `L-008` found: `block_forbidden_git.py` learns
   `git merge --continue` and refuses it, pointing at a new
   `scripts/project/commit_merge.py` that (1) asserts the index holds exactly the paths the

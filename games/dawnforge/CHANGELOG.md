@@ -8,6 +8,20 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.54.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. The bigger version of this game has a whole
+  toolbox of little helper programs that check the game's own files for
+  mistakes — one asks whether a picture really exists, another asks whether
+  two notes about the same thing still agree. We have far fewer of those, and
+  nobody had ever sat down and compared the two toolboxes. Now somebody has:
+  every tool over there is written down here as either "we need this one",
+  "we already have it" or "we will never need it, and here is why". Three
+  things we could not check before are on the list, and each one already
+  found a real problem while it was being written down.
+
 ## 0.53.0
 
 ### 🧹 Internal

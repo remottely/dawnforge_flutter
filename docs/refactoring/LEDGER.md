@@ -61,6 +61,27 @@
 - **Cost of leaving it:** the failure is silent in the way that matters — a page that exists only in English is noticed by a Brazilian seven-year-old, who is not in this repository — and the divergence in names is quiet cross-track drift of exactly the kind `L-006` records for the pack: two manuals for one game whose "how does the forge work" lives under two different filenames. FP4.4 and FP4.5 owe three new pages between them; without a map each is named on the spot.
 - **Found while:** 2026-09-10 re-slicing the port plan — naming the manual page each FP4/FP5 slice owes.
 
+### L-012 · The two steps that write the most bytes are the two the suite cannot check
+
+- **Lens:** pipeline / rule 23
+- **Evidence:** `scripts/pipeline/02_extract_sprites_from_atlas.py` and `03_fill_missing_sprite_placeholders.py` at 0.53.0 carry `--dry-run` and no `--check`; every other step (04, 05, 10, 11, 26) carries both. `CLAUDE.md` rule 23 requires `--check` "when it generates a committed file", and `assets/generated/` is tracked — 126 files, 58 of them PNGs these two steps cut. `scripts/COMMANDS.md` lists the two commands without the mode, so the omission reads as intended.
+- **Cost of leaving it:** the suite can prove that every JSON document on disk is what the pipeline would emit today, and cannot prove it for a single pixel. An atlas edited over there, a `atlas_position` moved, a sprite re-cut by hand — each survives every green suite until somebody looks at the game. It is also the gap that hides the next one: with no `--check` there is no declaration of what a step wrote, and without that declaration the unclaimed-output sweep (step 99, never ported) cannot be written at all.
+- **Found while:** 2026-09-10 — mapping the spec's 27 pipeline steps against this repo's 7 for `AUTOMATION_DEBT_2026-09-10.md`.
+
+### L-013 · Two decision ID spaces, one hyphen apart, both called decisions
+
+- **Lens:** docs / traceability
+- **Evidence:** `docs/study/GODOT_TO_FLUTTER_PORT_STUDY.md:206-212` registers `D1`–`D7` (settled, historical, cited by `CLAUDE.md`'s header and by FP steps as "decision D2"); `FLUTTER_PORT_PLAN_2026-08-25.md`'s decision register holds `D-1`–`D-8` (open, each blocking a step), added 2026-09-10 at 0.48.1. Nothing declares that they are different spaces, and `scripts/project/` has no twin of the spec's `check_decision_ids_are_unique.py`, which exists over there for exactly this.
+- **Cost of leaving it:** "D-4" and "D4" are one keystroke apart and name unrelated things — a manual page name and the no-pause sim shape. The failure is not a crash but a misread: a session that follows the wrong one implements against a decision nobody took. The ledger already solved this problem for `L-nnn` (never reused, a script hands out the next free one) and the register was written without inheriting the solution.
+- **Found while:** 2026-09-10 — inventorying the spec's 40 project commands against this repo's 4.
+
+### L-015 · Two fifths of the pack references the generated JSON carries resolve to nothing
+
+- **Lens:** content pipeline / assets
+- **Evidence:** at 0.53.0 the emitted JSON under `assets/generated/dawnforge/` holds **95** `res://data/…` references. `ContentPaths.resolveRes` (`lib/src/core/shared_logic/definitions/content_paths.dart:31-45`) maps each to a bundled asset key; 58 (every spritesheet) resolve to a committed file and **37 do not** — all of them `.wav` paths under `data/audio/`, a pack family that has never crossed into `assets/`. Nothing reports this: no step validates that an emitted reference resolves, and the analyzer cannot see inside a JSON string.
+- **Cost of leaving it:** today the unresolved 37 are harmless because nothing plays a sound, and that is precisely what makes the hole invisible when a **new** one appears. The next family imported with a dangling reference joins 37 others and reads as normal. Rule 5 says the crash is the feature, but the crash lands at render — naming a null texture — instead of in the pipeline, which would name the document and the field.
+- **Found while:** 2026-09-10 — probing what the spec's `check_referenced_assets_are_committed.py` would report here.
+
 ## Drained
 
 | ID | Title | Drained into |
