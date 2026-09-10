@@ -82,6 +82,13 @@
 - **Cost of leaving it:** a door that is written down as open and is closed by construction is worse than one nobody claimed — the study's own §5 table is the thing a future session would read before assuming the shape is there. The cost also grows monotonically: today three call sites turn a device reading into a simulation change, and FP4.5(e)'s interact, FP4.4(g)'s planting and every FP7.7 verb each add one. The same layer is what a deterministic replay would consume, which is the assertion `Splitmix32` currently has no way to make (`TEST_TRACEABILITY_2026-09-10.md` TT1). Note what this is NOT: rule 24 is satisfied — the polling happens in `update(dt)`, exactly where that rule puts it.
 - **Found while:** 2026-09-10 — reading the study's scope cuts while writing §7.1's status pass.
 
+### L-019 · The index you are told to read first is 3,400 words long
+
+- **Lens:** docs / onboarding cost
+- **Evidence:** `docs/refactoring/PENDING.md` at 0.65.0 is 16 rows, **3,400 words, 22 KB**, in a five-column table whose longest single row is **525 words on one line**. Its own header says "Read this first when onboarding", and `docs/refactoring/README.md` calls it "the derived index". Four of the longest rows were written on 2026-09-10, so this is a recent and accelerating shape, not an old one.
+- **Cost of leaving it:** an index costs less than the thing it indexes or it is not an index. Reading `PENDING.md` now costs more than reading the port plan's progress table, which is the artifact it derives from, so the cheap first read a fresh session is promised does not exist and the expensive one is disguised as it. Most of the prose is also duplicated — the plan's own step carries it — so the drift is the second cost: two copies of one story, one of them not maintained by whoever edits the step. The repair is a MOVE, not a delete: rows 7, 8 and 9 carry breakdowns of finished work that no plan holds, and those belong in an `archive/` document rather than in an index or in a bin.
+- **Found while:** 2026-09-10 — appending the fourth row of the day while writing the side-lane documents.
+
 ## Drained
 
 | ID | Title | Drained into |

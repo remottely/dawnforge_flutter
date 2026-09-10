@@ -269,3 +269,15 @@ Not v1.0 of a game. The study track is successful when:
    → verify → document → ship → observe → evolve).
 5. New-genre experiments can be started as new packs under `games/` without touching
    `src/core/` — the actual point of the study.
+
+### 9.1 Status at 0.66.0 (2026-09-10)
+
+| Clause | Where it stands |
+|:---|:---|
+| 1 · the sector model, rules enforced | **true.** FP1's gate was met 2026-08-26 and the enforcement has since stopped being only a reading: the analyzer carries rule 4, hooks carry rules 30, 11 and (since FP0.14) 4's declaration half, and the suite carries the changelog pair, the `tr()` keys and the manual mirrors. |
+| 2 · the pipeline emits JSON and the engine boots from it | **true.** FP2's gate was met 2026-08-26. Seven of the spec's 27 steps, which is the applicable subset — the map is `AUTOMATION_DEBT_2026-09-10.md` §1.1. |
+| 3 · one full loop, harvest → craft → place | **the live front.** Harvest has been playable since 0.34.0 and place works and is not yet reachable; craft is FP4.5, with the interact verb, the two surfaces and the manual pages left. This clause IS the FP4 gate. |
+| 4 · the harness with the same lifecycle | **partly.** Observe (the ledger), plan (four documents under `docs/refactoring/`), verify (a suite with four checks), document (rule 34, now with a mirror guard) and ship (the recipe) all exist. **Skills are zero** — `.claude/skills/` has never existed (FP0.9, sliced 0.60.0) — and the *sweep* half of observe → evolve has never run once. |
+| 5 · a new pack without touching the core | **never probed, and it is the point of the track.** Measured for the first time on 2026-09-10: the Dart side names its game in exactly one place (`game_constants.dart:5`), which is the good news; the hand-written asset list in `pubspec.yaml` is the per-game surface that is not one place. The probe is now a step of its own — **FP8.1** in the port plan — and it depends on no phase, so it can be run at any time. |
+
+

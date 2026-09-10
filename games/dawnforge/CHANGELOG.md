@@ -8,6 +8,18 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.66.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. The whole reason this smaller version of the
+  game exists is to find out whether a brand-new game can be built on top of it
+  just by writing new pages — without changing the machine underneath. Nobody
+  had ever tried. It is now a real task with a clear finish line: make a tiny
+  pretend game of two pages, start it, and check that not a single line of the
+  machine had to move. A first look says the machine writes its own game's name
+  in exactly one spot, which is a very good sign.
+
 ## 0.65.0
 
 ### 🧹 Internal

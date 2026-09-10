@@ -25,6 +25,7 @@
 | FP5 Surfaces & UX | pending, sliced 2026-09-10 (FP5.1's `UIStateMachine` + back-press arbiter landed early, 0.22.0) | HUD + inventory + menu with blocker stack, no pause anywhere |
 | FP6 Persistence | pending, sliced 2026-09-10 (FP6.1–FP6.4) | save/load round-trip; reset_local_save.py works |
 | FP7 Breadth systems | pending, mapped 2026-09-10 (FP7.1–FP7.15 with sub-gates and a dependency map) | (per-system sub-gates: time, spawning, progression, quests, audio, i18n, minigames) |
+| FP8 The study's own gate | opened 2026-09-10 (0.66.0) — one step, and it can be run at ANY time | a second pack boots without one edit under `lib/src/core/` |
 
 ---
 
@@ -738,6 +739,36 @@ FP6 ─► everything that persists a new section (7.1, 7.2, 7.5, 7.6, 7.12)
   `hit_animation_component.gd`, `footstep_component.gd`, `action_animation.gd`,
   `impact_visuals_flat.gd` (`ImpactDebrisRules` is pure), `pixel_perfect_viewport.gd`,
   `CameraZoom.cs`. Pick by what the eye misses most.
+
+
+## FP8 — The study's own gate
+
+Study §9 clause 5 is *the actual point of the study*: "new-genre experiments can be started
+as new packs under `games/` without touching `src/core/`". **It has never been probed**, and
+unlike every phase above it, it does not depend on any of them — it can be run today, and
+it gets cheaper to fix the earlier it fails.
+
+- **FP8.1 The second-pack probe.** Author the smallest possible pack under `games/<probe>/
+  data/`: one biome document with one terrain share and one prop, one prop document, one
+  item it drops, and the `player/` and `progression/` documents every boot reads. Run the
+  pipeline at it, point `GameConstants.gameName` at it, boot. **The gate is the diff:** the
+  probe passes when nothing under `lib/src/core/` changed to make it work. Every file the
+  probe forced open is a place the engine knows its game's name, and each is either fixed
+  in the same commit or written down with the reason it cannot be.
+  - What is already known, measured 2026-09-10 at 0.65.0. **The Dart side names its game
+    exactly once** — `lib/src/core/shared_logic/definitions/game_constants.dart:5`
+    (`gameName = 'dawnforge'`); everything else asks `ContentPaths` (rule 29). Both
+    automation twins are already parameterised (`TESSERA_GAME` in `project_paths.py`).
+  - **The per-game surface that is NOT one place is `pubspec.yaml`.** Flutter bundles only
+    DECLARED assets, so `assets/generated/<game>/**` is 27 hand-written folder lines today
+    — one per generated folder, all 27 correct at 0.65.0 — and a second game is a second
+    block of them. This is the probe's most likely finding and it is not a `lib/` problem.
+  - Deliberately NOT in it: a second *game*, art, or a genre. The probe answers one
+    question — does the engine bend — and a pack with two documents answers it as well as a
+    pack with two hundred.
+  - **Gate:** the probe pack boots to a walkable world and `git diff --stat lib/src/core/`
+    is empty. Then the probe pack is deleted or parked under `games/`, with its result
+    written into this step.
 
 ---
 

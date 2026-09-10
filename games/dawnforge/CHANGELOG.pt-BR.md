@@ -8,6 +8,18 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.66.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. O motivo de existir esta versão menor do jogo é
+  descobrir se dá para construir um jogo novo em cima dela só escrevendo
+  páginas novas — sem mexer na máquina de baixo. Ninguém tinha testado. Agora
+  virou uma tarefa de verdade, com linha de chegada clara: fazer um joguinho
+  de faz de conta com duas páginas, ligar, e conferir que nenhuma linha da
+  máquina precisou mudar. Uma primeira olhada diz que a máquina escreve o nome
+  do próprio jogo em um lugar só, o que é um ótimo sinal.
+
 ## 0.65.0
 
 ### 🧹 Internal
