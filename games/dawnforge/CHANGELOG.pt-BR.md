@@ -8,7 +8,16 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
-## 0.69.0
+## 0.71.0
+
+### 🐛 Fixed
+
+- A lista de mudanças tinha duas anotações no lugar errado. Faltava a anotação
+  sobre a tecla nova de "alcançar a coisa", e a anotação sobre contar a máquina
+  estava arquivada com o número errado. As duas voltaram para o lugar certo.
+  Nada estava errado no jogo em si — só no diário dele.
+
+## 0.70.0
 
 ### 🧹 Internal
 
@@ -25,6 +34,26 @@
   única exceção** à regra "nunca adivinhe, pare na hora", usada só ao carregar
   um save antigo. Este jogo ainda não precisa dessa exceção, porque aqui os
   saves antigos são simplesmente jogados fora.
+
+## 0.69.0
+
+### 🔧 Changed
+
+- As teclas que andam com a borda amarela pela sua barra de itens mudaram.
+  Antes eram `Q` e `E`; agora são `[` e `]`, as duas teclas logo à direita do
+  `P`. O `E` precisava ficar livre, porque a partir de agora ele é a tecla que
+  quer dizer "usar a coisa para onde estou apontando".
+
+### 🧹 Internal
+
+- O jogo aprendeu a ideia de alcançar uma coisa em vez de bater nela. Aponte
+  para uma bancada, aperte `E`, e a bancada agora escuta você — de tão longe
+  quanto aquele tipo de bancada disser que pode ser usada, o que o jogo lê da
+  própria bancada em vez de chutar. No celular ou no tablet não existe tecla
+  `E`, então um toque faz as duas coisas: toque em algo que dá para usar e
+  você usa, toque em qualquer outra coisa e você bate nela como antes. Ainda
+  não abre nada na tela — a janela que a bancada vai mostrar é o próximo
+  pedaço de trabalho.
 
 ## 0.68.0
 

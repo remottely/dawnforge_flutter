@@ -21,7 +21,7 @@
 | FP1 Core foundation | gate met 2026-08-26 (FP1.5 component slice, FP1.9 domain rules pending) | `flutter test` green over events/registry/factory/component/FSM/grid with zero Flame imports |
 | FP2 Pipeline retarget | gate met 2026-08-26 (FP2.3 sprites, FP2.4 translations, FP2.5 component-keys pending; the step-by-step map against the spec's 27 is `AUTOMATION_DEBT_2026-09-10.md` §1.1 — steps 02/03 owe `--check`, step 99 is unported, our step 11 folds the spec's 09 and 25) | `dawnforge.py full` emits JSON; registries boot from a real pack slice; `--check` clean |
 | FP3 World & rendering | gate met 2026-08-26 (120fps hand-run, macOS) | player walks a chunked world at 60fps with debug overlay proving frame budget |
-| FP4 Gameplay loop | in progress (FP4.1–FP4.3 done; FP4.2's Sort paid 2026-08-31; FP4.5 slices (a)–(d) landed 0.45.0–0.48.0, (e)–(h) sliced 2026-09-10; FP4.4 re-ordered after FP4.5 and sliced (a)–(h)) | harvest → craft → place loop playable end to end |
+| FP4 Gameplay loop | in progress (FP4.1–FP4.3 done; FP4.2's Sort paid 2026-08-31; FP4.5 slices (a)–(e) landed 0.45.0–0.48.0, 0.50.0 and 0.69.0, (f)–(h) open; FP4.4 re-ordered after FP4.5 and sliced (a)–(h), part of (b)/(c)/(e)/(g) landed 0.49.0) | harvest → craft → place loop playable end to end |
 | FP5 Surfaces & UX | pending, sliced 2026-09-10 (FP5.1's `UIStateMachine` + back-press arbiter landed early, 0.22.0) | HUD + inventory + menu with blocker stack, no pause anywhere |
 | FP6 Persistence | pending, sliced 2026-09-10 (FP6.1–FP6.4) | save/load round-trip; reset_local_save.py works |
 | FP7 Breadth systems | pending, mapped 2026-09-10 (FP7.1–FP7.15 with sub-gates and a dependency map) | (per-system sub-gates: time, spawning, progression, quests, audio, i18n, minigames) |
@@ -435,7 +435,7 @@ sector model (`shared_logic/`, `domain/`, `resources/`, `registries/`, `factorie
   allocated materials, refund on cancel and on death, quiet refusals for a foreign recipe
   and an unaffordable batch, `is_producing` derived from `current_recipe`, the "1 of 5"
   count the spec never wrote down). Four remain:
-  - **(e) the interact verb** — `InteractableComponent` (`interactable_component.gd`:
+  - **(e) the interact verb — landed 0.69.0.** `InteractableComponent` (`interactable_component.gd`:
     `interact(interactor)`, `interacted` signal, `interaction_prompt` and
     `interaction_range` read from the data — both authored on every document, both unread
     today) mounted by `PropWorkstation.setupComponents` only (the `L-005` lesson: a
@@ -448,6 +448,23 @@ sector model (`shared_logic/`, `domain/`, `resources/`, `registries/`, `factorie
     interacts (rule 12). Gamepad: waits with the virtual cursor (FP4.3a omission, still
     open). The key is `D-1` in the decision register — the code binds an ACTION
     (`interact`), so the slice does not wait for the letter.
+
+    **As landed, three notes the slice above did not predict.** (1) The two authored
+    fields went onto a NEW class, `PropInteractableData`, with `PropWorkstationData`
+    re-parented under it: the pack already draws that line — a rock authors neither
+    field, every station, soil and crop authors both — so the promise has a type
+    (rule 7) instead of two more fields on every prop. (2) `WorldObjectHelper.getCore`
+    was not needed: `GridManager.getPropAt` hands back a typed `Prop`, so
+    `tryInteract` asks it for the component directly and the spec's helper has no
+    subject here. (3) Touch parity is a SECOND INTENT rather than a second reading of
+    the same one — `contextualActionPressed`, raised only for `touch`/`stylus` — so
+    the device stays known inside `InputHelper` (rule 11) and the choice of verb is
+    made in the simulation, where the world can be read. `can_interact`,
+    `display_indicator` and `_on_interact` are left out with their reasons in the two
+    new files. Nothing listens to `interacted` yet: (f) is the listener, and a handler
+    written now would be an empty method dressed as a feature (rule 5). `D-1`'s
+    rebinding is in: `E` is interact, the hotbar steps on `[`/`]`, and `L-021` records
+    that the authored prompt bakes a keyboard letter into content.
   - **(f) the two surfaces** — `WorkstationPanelView` (a Flutter widget, `UIStateMachine`
     MENU kind + `pushUiBlocker`, live `BackdropFilter`): recipe grid (`RecipeSlotView`
     with the spec's six panel states), details (each ingredient as have/need,

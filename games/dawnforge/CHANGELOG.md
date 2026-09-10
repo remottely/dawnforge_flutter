@@ -8,7 +8,16 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
-## 0.69.0
+## 0.71.0
+
+### 🐛 Fixed
+
+- The list of changes had two entries in the wrong place. The note about the
+  new "reach for it" key was missing, and the note about counting the machine
+  was filed under the wrong number. Both are back where they belong. Nothing in
+  the game itself was wrong — only the diary of it.
+
+## 0.70.0
 
 ### 🧹 Internal
 
@@ -25,6 +34,25 @@
   allowed **one single exception** to its "never guess, just stop" rule, used
   only when loading an old save. This game does not need that exception yet,
   because old saves here are simply thrown away.
+
+## 0.69.0
+
+### 🔧 Changed
+
+- The keys that slide the yellow edge along your item bar moved. They used to
+  be `Q` and `E`; now they are `[` and `]`, the two keys just right of `P`.
+  `E` had to be free, because from now on it is the key that means "use the
+  thing I am pointing at".
+
+### 🧹 Internal
+
+- The game learned the idea of reaching for something instead of hitting it.
+  Point at a workbench, press `E`, and the bench now hears you — from as far
+  away as that kind of bench says it can be used from, which the game reads
+  from the bench itself rather than guessing. On a phone or a tablet there is
+  no `E` key, so one tap does both: tap something you can use and you use it,
+  tap anything else and you swing at it as before. Nothing opens on screen
+  yet — the window the bench will show you is the next piece of work.
 
 ## 0.68.0
 
