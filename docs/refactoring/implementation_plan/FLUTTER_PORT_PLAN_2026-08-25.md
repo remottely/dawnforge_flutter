@@ -752,6 +752,13 @@ FP6 ─► everything that persists a new section (7.1, 7.2, 7.5, 7.6, 7.12)
 
 ## FP8 — The study's own gate
 
+**Before running it, read `ENGINE_SURFACE_2026-09-10.md` §6 and `L-023`.** The gate's
+path contains `lib/src/core/render/`, 8 files and 1,081 lines with no counterpart anywhere
+in the spec's 560-file engine, because decision D2 means something here must draw what a
+Godot node draws for itself. A diff there answers a question about Flame, not about
+content-driven architecture, so whether the gate excludes it is `ES-D2` and wants deciding
+before the probe runs rather than after it goes red.
+
 Study §9 clause 5 is *the actual point of the study*: "new-genre experiments can be started
 as new packs under `games/` without touching `src/core/`". **It has never been probed**, and
 unlike every phase above it, it does not depend on any of them — it can be run today, and

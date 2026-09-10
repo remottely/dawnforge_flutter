@@ -103,6 +103,13 @@
 - **Cost of leaving it:** the first locale switch (FP5.3) leaves every prompt in English while every other word on screen turns, and nothing fails — the guard is green because the string was never a key. It is also the key's shape that is wrong, not just its absence: `[E]` bakes a keyboard binding into content, so `D-1`'s rebinding to `E` was correct only by accident and a gamepad reads a keyboard key off a bush. The repair is one pack field (`interaction_prompt_key`) plus the binding resolved at draw time, and it is cheapest before the indicator exists.
 - **Found while:** 2026-09-10 — porting FP4.5(e), reading the two interaction fields across the pack.
 
+### L-023 · The gate the study exists to pass runs over a folder the study did not predict
+
+- **Lens:** architecture / the study's own criterion
+- **Evidence:** FP8.1's gate is `git diff --stat lib/src/core/` printing nothing after a second content pack boots (`FLUTTER_PORT_PLAN_2026-08-25.md` FP8). Inside that path sits `lib/src/core/render/` — 8 files, 1,081 lines at 0.68.0 (`git ls-files lib/src/core/render | xargs wc -l`) — which has **no counterpart anywhere in the spec's 560-file engine**: in Godot a node draws itself, and decision D2 (Flame direct, no Bonfire) means something here must draw it. Every FP7.15 item lands in that folder, and a pack whose sprites are laid out differently plausibly does too (`sprite_loader.dart`, `world_object_renderer.dart`, `animation_creator.dart` all read sheet geometry).
+- **Cost of leaving it:** the probe can fail for a reason that is not the thing being probed. Study §9 clause 5 asks whether a NEW GAME can be built by writing content alone; a diff in `render/` answers "Flame needed a drawing call the first game did not", which is a true fact about the framework and no evidence at all about content-driven architecture. Left alone, the first run of the only experiment this track exists for produces a result nobody can interpret, and the cheapest moment to split the gate is before it is run, not after it goes red.
+- **Found while:** 2026-09-10 — counting the engine family by family against the spec for `ENGINE_SURFACE_2026-09-10.md`.
+
 ## Drained
 
 | ID | Title | Drained into |
