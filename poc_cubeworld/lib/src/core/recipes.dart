@@ -79,6 +79,17 @@ class Recipes {
     r('enchanting_table', 1, {'diamond': 1, 'magic_dust': 4, 'stone_bricks': 4}, 'crafting_table');
     r('wooden_hoe', 1, {'oak_planks': 2, 'stick': 2});
     r('health_potion', 1, {'apple': 2, 'magic_dust': 1, 'glass': 1}, 'crafting_table');
+    r('brewing_stand', 1, {'cobblestone': 3, 'glass': 1, 'magic_dust': 1}, 'crafting_table');
+    r('glass_bottle', 3, {'glass': 1}, 'crafting_table');
+    r('waypoint', 1, {'stone_bricks': 4, 'magic_dust': 2}, 'crafting_table');
+    // Brewing stand
+    r('speed_potion', 1, {'glass_bottle': 1, 'wheat': 1, 'feather': 1}, 'brewing_stand');
+    r('regen_potion', 1, {'glass_bottle': 1, 'apple': 1, 'magic_dust': 1}, 'brewing_stand');
+    r('strength_potion', 1, {'glass_bottle': 1, 'spider_eye': 1, 'gunpowder': 1}, 'brewing_stand');
+    r('resistance_potion', 1, {'glass_bottle': 1, 'iron_ingot': 1, 'slime_ball': 1}, 'brewing_stand');
+    r('haste_potion', 1, {'glass_bottle': 1, 'coal': 2, 'gem_shard': 1}, 'brewing_stand');
+    r('antidote', 1, {'glass_bottle': 1, 'mushroom': 1, 'bone': 1}, 'brewing_stand');
+    r('health_potion', 1, {'glass_bottle': 1, 'apple': 1, 'magic_dust': 1}, 'brewing_stand');
     // Furnace (each needs 1 coal)
     r('iron_ingot', 1, {'raw_iron': 1, 'coal': 1}, 'furnace');
     r('gold_ingot', 1, {'raw_gold': 1, 'coal': 1}, 'furnace');

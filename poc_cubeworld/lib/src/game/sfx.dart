@@ -42,6 +42,7 @@ class Sfx {
     await make('splash', 0.3, (t, p) => (_rng.nextDouble() * 2.0 - 1.0) * math.sin(p * math.pi) * 0.35);
     await make('eat', 0.2, (t, p) => (_rng.nextDouble() * 2.0 - 1.0) * ((p * 6.0).toInt() % 2 == 0 ? 1.0 : 0.2) * 0.3 * (1.0 - p));
     await make('quest', 0.5, (t, p) => math.sin(t * (p < 0.5 ? 523.0 : 784.0) * math.pi * 2) * (1.0 - p) * 0.4);
+    await make('thunder', 1.6, (t, p) => (_rng.nextDouble() * 2.0 - 1.0) * math.pow(1.0 - p, 1.5) * (0.5 + 0.5 * math.sin(t * 9.0 * math.pi * 2)) * 0.7);
     await make('click', 0.04, (t, p) => math.sin(t * 1200.0 * math.pi * 2) * (1.0 - p) * 0.3);
     _ready = true;
   }

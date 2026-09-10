@@ -84,7 +84,13 @@ class Spawner {
       final mob = Mob();
       mob.setupMob(world, main, player, chosen);
       mob.position = Vector3(x + 0.5 + rng.nextDouble() * 3.0 - 1.5, y + 0.1, z + 0.5 + rng.nextDouble() * 3.0 - 1.5);
-      if (chosen.hostile) mob.scaleToLevel(player.level + rng.nextInt(3) - 1 + (cave ? 2 : 0));
+      if (chosen.hostile) {
+        mob.scaleToLevel(player.level + rng.nextInt(3) - 1 + (cave ? 2 : 0));
+        if (!chosen.boss && rng.nextDouble() < 0.08) {
+          final names = Mob.affixes.keys.toList();
+          mob.setAffix(names[rng.nextInt(names.length)]);
+        }
+      }
       main.addMob(mob);
     }
   }

@@ -5,6 +5,7 @@ import 'package:vector_math/vector_math.dart' as vm;
 import '../core/blocks.dart';
 import '../core/items.dart';
 import '../core/recipes.dart';
+import '../game/achievements.dart';
 import '../game/game.dart';
 import '../game/game_state.dart';
 import '../game/inventory.dart';
@@ -66,6 +67,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
           if (Recipes.craft(pair.$2, game.player.inventory)) {
             game.notify('Crafted ${Items.displayName(pair.$2.result)}');
             game.quests.onCraft(pair.$2.result, pair.$2.count);
+            Achievements.instance.onCrafted();
           }
           return;
         }
@@ -175,7 +177,7 @@ class _InventoryPainter extends CustomPainter {
     final panel = const Rect.fromLTWH(0, 0, 1120, 600);
     canvas.drawRect(panel, Paint()..color = const Color.fromRGBO(31, 31, 38, 0.96));
     canvas.drawRect(panel, Paint()..color = const Color.fromRGBO(153, 153, 166, 1)..style = PaintingStyle.stroke..strokeWidth = 2);
-    final title = const {'': 'Inventory', 'crafting_table': 'Crafting Table', 'furnace': 'Furnace', 'chest': 'Chest'}[game.station]!;
+    final title = const {'': 'Inventory', 'crafting_table': 'Crafting Table', 'furnace': 'Furnace', 'chest': 'Chest', 'brewing_stand': 'Brewing Stand'}[game.station]!;
     Hud.text(canvas, title, panel.topLeft + const Offset(20, 34), size: 24);
     Hud.text(canvas, 'Click: pick / place   Right click: one   Esc / E: close', panel.topLeft + const Offset(20, 58), size: 13, color: const Color.fromRGBO(179, 179, 179, 1));
 

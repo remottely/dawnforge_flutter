@@ -1,9 +1,11 @@
 import 'dart:math' as math;
 
+import 'package:flutter_scene/scene.dart' hide Spawner;
 import 'package:vector_math/vector_math.dart';
 
 import '../core/ivec3.dart';
 import '../core/species.dart';
+import '../game/achievements.dart';
 import '../game/game.dart';
 import '../game/game_state.dart';
 import '../game/inventory.dart';
@@ -44,6 +46,10 @@ class Mob extends VoxelBody {
   Target? _target;
   int mobLevel = 1;
   double _fuse = 0.0;
+  String affix = '';
+  double affixScale = 1.0;
+  double speedMult = 1.0;
+  double damageMult = 1.0;
   double _modelYaw = 0.0;
   double _modelScale = 1.0;
   double _squash = 1.0;
@@ -51,6 +57,17 @@ class Mob extends VoxelBody {
   double _deathTimer = -1.0;
   final int instanceId = _nextId++;
   static int _nextId = 1;
+
+  /// Elite affixes (stage 18): a prefix on the name, a coloured aura, and one
+  /// twist each.
+  static const Map<String, AffixDef> affixes = {
+    'Swift': AffixDef(speed: 1.5, r: 0.45, g: 0.85, b: 0.95),
+    'Sturdy': AffixDef(hp: 2.0, r: 0.70, g: 0.70, b: 0.75),
+    'Venomous': AffixDef(effect: 'poison', r: 0.35, g: 0.80, b: 0.30),
+    'Burning': AffixDef(effect: 'burning', r: 1.00, g: 0.55, b: 0.15),
+    'Chilling': AffixDef(effect: 'slow', r: 0.50, g: 0.60, b: 0.95),
+    'Giant': AffixDef(scale: 1.4, hp: 1.6, damage: 1.3, r: 0.95, g: 0.80, b: 0.30),
+  };
 
   bool get isBoss => species.boss;
   bool get isDead => state == MobState.dead;
@@ -72,6 +89,7 @@ class Mob extends VoxelBody {
     hp = maxHp;
     barVisible = true;
     by.notify('${species.name} is now your companion!');
+    Achievements.instance.unlock('tamer');
   }
 
   void _petThink(double dt, double dist, Vector3 toPlayer) {
@@ -122,12 +140,50 @@ class Mob extends VoxelBody {
     player = p;
     maxHp = sp.hp;
     hp = maxHp;
+    GameState.instance.seen.add(sp.id);
     _buildModel();
   }
 
-  String displayName() => species.hostile ? '${species.name} Lv $mobLevel' : species.name;
+  /// Turn this mob into an elite: the affix scales it, tints its bar and hangs
+  /// an aura light on it.
+  void setAffix(String name) {
+    final a = affixes[name];
+    if (a == null) throw ArgumentError('unknown affix $name');
+    affix = name;
+    speedMult = a.speed;
+    damageMult = a.damage;
+    maxHp *= a.hp;
+    hp = maxHp;
+    affixScale = a.scale;
+    final aura = PointLight(color: a.color, intensity: 6.0, range: 4.0);
+    final auraNode = Node(name: 'Aura')..position = Vector3(0, height * 0.5, 0);
+    auraNode.addComponent(PointLightComponent(aura));
+    node.add(auraNode);
+    barVisible = true;
+  }
 
-  double damageDealt() => species.damage * (1.0 + (mobLevel - 1) * 0.12);
+  /// The bar colour: blue for a pet, the affix colour for an elite, red else.
+  Vector3 barColor() {
+    if (tamed) return Vector3(0.3, 0.6, 1.0);
+    final a = affixes[affix];
+    return a != null ? a.color : Vector3(0.85, 0.25, 0.25);
+  }
+
+  String displayName() {
+    final base = species.hostile ? '${species.name} Lv $mobLevel' : species.name;
+    return affix != '' ? '$affix $base' : base;
+  }
+
+  double damageDealt() => species.damage * (1.0 + (mobLevel - 1) * 0.12) * damageMult;
+
+  /// Damage a body and pass on whatever the affix or the species inflicts.
+  void hurtTarget(Target t, double amount) {
+    t.takeDamage(amount, species.id, position);
+    var eff = affixes[affix]?.effect ?? '';
+    if (eff == '') eff = species.effect;
+    if (eff == '') return;
+    if (t is Player) t.applyEffect(eff, 6.0);
+  }
 
   Part _part(Map<IVec3, Vector3> voxels, Vector3 at, double s) {
     final pivot = VoxelMeshBuilder.meshNode({}, 1.0);
@@ -267,8 +323,21 @@ class Mob extends VoxelBody {
 
   void _die() {
     state = MobState.dead;
-    GameState.instance.mobsKilled += 1;
-    player.gainXp((species.xp * (1.0 + (mobLevel - 1) * 0.15)).toInt());
+    final st = GameState.instance;
+    st.mobsKilled += 1;
+    st.kills[species.id] = (st.kills[species.id] ?? 0) + 1;
+    final ach = Achievements.instance;
+    if (species.hostile) {
+      ach.unlock('first_kill');
+      if (st.mobsKilled >= 50) ach.unlock('slayer');
+    }
+    if (isBoss) ach.unlock('boss');
+    if (affix != '') {
+      ach.unlock('elite');
+      main.spawnDrop(centre(), 'gem_shard', 1 + main.random.nextInt(2));
+      main.spawnDrop(centre(), 'magic_dust', 1);
+    }
+    player.gainXp((species.xp * (1.0 + (mobLevel - 1) * 0.15) * (affix != '' ? 2.5 : 1.0)).toInt());
     main.quests.onKill(species.id);
     for (final e in species.drops.entries) {
       final n = e.value[0] + main.random.nextInt(e.value[1] - e.value[0] + 1);
@@ -393,7 +462,7 @@ class Mob extends VoxelBody {
         } else if (_attackCd <= 0.0) {
           _attackCd = 1.3;
           _parts['arm0']?.rx = -2.4;
-          target.takeDamage(damageDealt(), species.id, position);
+          hurtTarget(target, damageDealt());
           Sfx.play('hit', -4.0);
         }
       case MobState.flee:
@@ -405,7 +474,7 @@ class Mob extends VoxelBody {
   }
 
   void _moveAndAnimate(double dt) {
-    var speed = species.speed;
+    var speed = species.speed * speedMult;
     if (state == MobState.wander) speed *= 0.5;
     final hops = species.hops;
     if (inWater) {
@@ -471,7 +540,8 @@ class Mob extends VoxelBody {
     }
     final sq = species.body == 'blob' ? _squash : 1.0;
     node.rotation = Quaternion.axisAngle(Vector3(0, 1, 0), _modelYaw);
-    node.scale = Vector3(_modelScale / math.sqrt(sq), _modelScale * sq, _modelScale / math.sqrt(sq));
+    final ms = _modelScale * affixScale;
+    node.scale = Vector3(ms / math.sqrt(sq), ms * sq, ms / math.sqrt(sq));
     node.position = position + Vector3(_shakeX, 0, 0);
   }
 
@@ -487,4 +557,28 @@ class Mob extends VoxelBody {
     hp = newHp;
     maxHp = newMax;
   }
+}
+
+
+/// One elite affix: what it multiplies, the effect it inflicts and its colour.
+class AffixDef {
+  const AffixDef({
+    this.speed = 1.0,
+    this.hp = 1.0,
+    this.damage = 1.0,
+    this.scale = 1.0,
+    this.effect = '',
+    required this.r,
+    required this.g,
+    required this.b,
+  });
+
+  final double speed;
+  final double hp;
+  final double damage;
+  final double scale;
+  final String effect;
+  final double r, g, b;
+
+  Vector3 get color => Vector3(r, g, b);
 }

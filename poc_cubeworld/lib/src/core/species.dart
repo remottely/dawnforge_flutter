@@ -28,6 +28,7 @@ class SpeciesDef {
     this.boss = false,
     this.trader = false,
     this.cave = false,
+    this.effect = '',
   });
 
   final String id;
@@ -43,6 +44,9 @@ class SpeciesDef {
   final bool boss;
   final bool trader;
   final bool cave;
+
+  /// The status effect this species inflicts on a hit ("" for none).
+  final String effect;
   final int xp;
   final String body;
   final double halfWidth;
@@ -89,7 +93,7 @@ class Species {
         drops: {'bone': [1, 3], 'arrow': [0, 4], 'gunpowder': [0, 1]}, biomes: [1, 2, 3, 4, 5, 6, 7], day: false, weight: 22));
     s(SpeciesDef(id: 'spider', name: 'Spider', hp: 12, damage: 3, speed: 4.6, hostile: true, xp: 10, body: 'spider',
         halfWidth: 0.6, height: 0.7, colors: [_c(0.20, 0.18, 0.20), _c(0.75, 0.15, 0.15)],
-        drops: {'string': [1, 3], 'spider_eye': [0, 1]}, biomes: [2, 3, 4, 7], day: false, weight: 18));
+        drops: {'string': [1, 3], 'spider_eye': [0, 1]}, biomes: [2, 3, 4, 7], day: false, weight: 18, effect: 'poison'));
     s(SpeciesDef(id: 'slime', name: 'Slime', hp: 10, damage: 2, speed: 3.0, hostile: true, hops: true, xp: 6, body: 'blob',
         halfWidth: 0.5, height: 1.0, colors: [_c(0.45, 0.85, 0.40)], drops: {'slime_ball': [1, 3]},
         biomes: [2, 3, 7], day: false, weight: 14));
@@ -110,13 +114,13 @@ class Species {
         drops: {'magic_dust': [2, 4], 'diamond': [1, 2], 'gem_shard': [2, 4]}, biomes: [5, 6], day: false, weight: 2));
     s(SpeciesDef(id: 'scorpion_king', name: 'Scorpion King', hp: 80, damage: 9, speed: 4.6, hostile: true, xp: 110, body: 'spider', boss: true,
         halfWidth: 1.0, height: 1.2, colors: [_c(0.55, 0.35, 0.15), _c(0.95, 0.25, 0.10)],
-        drops: {'gold_ingot': [2, 4], 'gem_shard': [2, 5], 'diamond': [0, 2]}, biomes: [4], day: false, weight: 2));
+        drops: {'gold_ingot': [2, 4], 'gem_shard': [2, 5], 'diamond': [0, 2]}, biomes: [4], day: false, weight: 2, effect: 'poison'));
     s(SpeciesDef(id: 'villager', name: 'Villager', hp: 20, damage: 0, speed: 1.8, hostile: false, xp: 0, body: 'humanoid',
         halfWidth: 0.3, height: 1.75, colors: [_c(0.92, 0.75, 0.62), _c(0.55, 0.40, 0.65), _c(0.35, 0.30, 0.25)],
         drops: {}, biomes: [], day: true, weight: 0, trader: true));
     s(SpeciesDef(id: 'scorpion', name: 'Scorpion', hp: 14, damage: 5, speed: 4.0, hostile: true, xp: 12, body: 'spider',
         halfWidth: 0.5, height: 0.6, colors: [_c(0.65, 0.45, 0.20), _c(0.35, 0.20, 0.10)],
-        drops: {'gem_shard': [0, 1], 'string': [0, 2]}, biomes: [4], day: true, weight: 10));
+        drops: {'gem_shard': [0, 1], 'string': [0, 2]}, biomes: [4], day: true, weight: 10, effect: 'poison'));
     return out;
   }
 

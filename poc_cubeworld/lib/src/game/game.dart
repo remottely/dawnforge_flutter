@@ -21,14 +21,16 @@ import '../entities/spawner.dart';
 import '../entities/target.dart';
 import '../player/player.dart';
 import '../world/voxel_world.dart';
+import 'achievements.dart';
 import 'game_state.dart';
 import 'input.dart';
 import 'inventory.dart';
 import 'net.dart';
 import 'quests.dart';
 import 'sfx.dart';
+import 'weather.dart';
 
-enum ScreenKind { none, inventory, pause, death }
+enum ScreenKind { none, inventory, pause, death, journal }
 
 class Note {
   Note(this.text, this.t);
@@ -99,6 +101,9 @@ class Game extends ChangeNotifier {
   Mob? boss;
   final Map<IVec3, Inventory> chests = {};
   final Map<IVec3, double> crops = {};
+  final Map<IVec3, String> waypoints = {};
+  late final Weather weather;
+  int journalTab = 0;
   final List<Mob> mobs = [];
   final List<Mob> pets = [];
   final List<ItemDrop> drops = [];
@@ -174,6 +179,7 @@ class Game extends ChangeNotifier {
     entities.add(player.highlight);
     entities.add(player.crack);
     quests.player = player;
+    Achievements.instance.notify = notify;
 
     final loaded = await _loadGame();
     if (!loaded) {
@@ -198,6 +204,10 @@ class Game extends ChangeNotifier {
     }
     player.syncNode();
     world.updateAround(player.position);
+
+    weather = Weather(() => player.position, world);
+    scene.add(weather.node);
+    if (_arg('--weather=', '') != '') weather.force(_arg('--weather=', ''));
 
     final net = Net.instance;
     net.main = this;
@@ -267,20 +277,28 @@ class Game extends ChangeNotifier {
     final day = (elevation * 3.0 + 0.15).clamp(0.0, 1.0);
     final dusk = (1.0 - elevation.abs() * 5.0).clamp(0.0, 1.0);
     final sunColor = _mix(Vector3(1.0, 0.95, 0.85), Vector3(1.0, 0.55, 0.3), dusk);
+    final dark = ready ? weather.darken() : 0.0;
+    final bolt = ready ? weather.flash : 0.0;
+    final overcast = Vector3(0.45, 0.48, 0.55);
     final topDay = Vector3(0.20, 0.42, 0.85);
     final horDay = Vector3(0.62, 0.78, 0.92);
     final topNight = Vector3(0.02, 0.03, 0.08);
     final horNight = Vector3(0.06, 0.08, 0.15);
     final horDusk = Vector3(0.95, 0.55, 0.30);
-    final top = _mix(topNight, topDay, day);
-    final hor = _mix(_mix(horNight, horDay, day), horDusk, dusk * 0.8);
+    var top = _mix(topNight, topDay, day);
+    var hor = _mix(_mix(horNight, horDay, day), horDusk, dusk * 0.8);
+    if (dark > 0.0 || bolt > 0.0) {
+      final grey = overcast * (0.15 + 0.85 * day);
+      top = _mix(_mix(top, grey, dark), Vector3(1, 1, 1), bolt * 0.8);
+      hor = _mix(_mix(hor, overcast * (0.2 + 0.8 * day), dark), Vector3(1, 1, 1), bolt * 0.8);
+    }
     sky.zenithColor = top;
     sky.horizonColor = hor;
     sky.groundColor = hor * 0.9;
     if (elevation > 0.0) {
       sky.sunDirection = sunDir;
       sun.color = sunColor;
-      sun.intensity = (3.0 * 0.85 * day + 0.02) * sunScale;
+      sun.intensity = (3.0 * 0.85 * day * (1.0 - dark) + 0.02 + bolt * 1.5) * sunScale;
       sky.sunColor = sunColor * (2.5 * day + 0.4);
     } else {
       sky.sunDirection = -sunDir;
@@ -288,7 +306,7 @@ class Game extends ChangeNotifier {
       sun.intensity = (3.0 * 0.18 * (1.0 - day) + 0.02) * sunScale;
       sky.sunColor = Vector3(0.5, 0.6, 0.9) * 0.9;
     }
-    final ambientEnergy = 0.10 + 0.30 * day;
+    final ambientEnergy = (0.10 + 0.30 * day) * (1.0 - dark * 0.5) + bolt * 0.6;
     final ambientColor = _mix(Vector3(0.35, 0.40, 0.60), Vector3(0.80, 0.84, 0.92), day);
     final radiance = ambientColor * (ambientEnergy * 1.25 * ambientScale);
     if ((radiance - _ambient).length > 0.02 && _ambientTimer > 0.5) {
@@ -297,6 +315,7 @@ class Game extends ChangeNotifier {
       scene.environment = EnvironmentMap.constantDiffuse(radiance);
     }
     scene.fog.color = hor;
+    if (ready) scene.fog.density = 0.003 + 0.012 * dark;
   }
 
   String timeLabel() {
@@ -304,7 +323,8 @@ class Game extends ChangeNotifier {
     final m = ((timeOfDay * 24.0) % 1.0 * 60.0).toInt();
     const biomeNames = ['Ocean', 'Beach', 'Plains', 'Forest', 'Desert', 'Snow', 'Mountains', 'Swamp'];
     final b = world.biomeAt(player.position.x.toInt(), player.position.z.toInt());
-    return '${h.toString().padLeft(2, '0')}:${m.toString().padLeft(2, '0')}   ${biomeNames[b]}${isNight ? '   (night)' : ''}';
+    final clock = '${h.toString().padLeft(2, '0')}:${m.toString().padLeft(2, '0')}   ${biomeNames[b]}${isNight ? '   (night)' : ''}';
+    return weather.kind == WeatherKind.clear ? clock : '$clock   ${weather.label}';
   }
 
   bool get isNight => timeOfDay < 0.22 || timeOfDay > 0.78;
@@ -376,6 +396,12 @@ class Game extends ChangeNotifier {
       } else {
         openScreen(ScreenKind.pause);
       }
+    } else if (input.justPressed(GameAction.journal) && !player.isDead) {
+      if (screen != ScreenKind.none) {
+        closeScreen();
+      } else {
+        openJournal(0);
+      }
     } else if (input.justPressed(GameAction.inventory) && !player.isDead) {
       if (screen != ScreenKind.none) {
         closeScreen();
@@ -423,6 +449,7 @@ class Game extends ChangeNotifier {
     for (final p in puppets) {
       p.update(dt);
     }
+    weather.process(dt);
     _tickVisuals(dt);
     spawner?.update(dt);
     Net.instance.process(dt);
@@ -440,6 +467,14 @@ class Game extends ChangeNotifier {
       _growCrops();
       _tickSpawners();
       _trackBoss();
+      if (weather.isWet) {
+        _growCrops();
+        final surface = world.surfaceHeight(player.position.x.toInt(), player.position.z.toInt());
+        if (player.effects.has('burning') && player.position.y >= surface - 1) {
+          player.effects.clear('burning');
+        }
+      }
+      if (player.position.y < 20.0) Achievements.instance.unlock('deep');
       final b = boss;
       if (b != null && (b.removed || b.state == MobState.dead)) boss = null;
     }
@@ -528,6 +563,46 @@ class Game extends ChangeNotifier {
   }
 
   void onPlayerDied() => openScreen(ScreenKind.death);
+
+  void openJournal(int tab) {
+    journalTab = tab;
+    openScreen(ScreenKind.journal);
+  }
+
+  /// Waypoints sorted by label, as the journal lists them.
+  List<MapEntry<IVec3, String>> waypointList() {
+    final out = waypoints.entries.toList();
+    out.sort((a, b) => a.value.compareTo(b.value));
+    return out;
+  }
+
+  /// Travel to a waypoint block: free when standing beside any waypoint, 10
+  /// mana from anywhere.
+  bool travelToWaypoint(IVec3 to) {
+    final label = waypoints[to];
+    if (label == null) return false;
+    var near = false;
+    for (final k in waypoints.keys) {
+      if ((k.toVector3() - player.position).length < 6.0) near = true;
+    }
+    if (!near) {
+      if (player.mana < 10.0) {
+        notify('Need 10 mana to travel from afar');
+        return false;
+      }
+      player.mana -= 10.0;
+    }
+    spawnEffect(player.centre(), Vector3(0.35, 0.75, 0.95), 1.5);
+    player.position = to.toVector3() + Vector3(0.5, 1.05, 0.5);
+    player.velocity = Vector3.zero();
+    player.syncNode();
+    world.updateAround(player.position);
+    spawnEffect(player.centre(), Vector3(0.35, 0.75, 0.95), 1.5);
+    Sfx.play('quest', -6.0, 1.4);
+    notify('Travelled to $label');
+    Achievements.instance.unlock('traveler');
+    return true;
+  }
 
   /// A chest's contents, created on first open. A chest that came with a
   /// structure is filled with loot decided by its position, so it is the same
@@ -927,6 +1002,7 @@ class Game extends ChangeNotifier {
       _sleepTo = timeOfDay > 0.5 ? 1.26 : 0.26;
       _sleepT = 0.0;
       notify('You sleep until morning. Spawn point set.');
+      Achievements.instance.unlock('sleeper');
       for (final m in mobs) {
         if (m.species.hostile && (m.position - player.position).length < 30.0) m.removed = true;
       }
@@ -937,6 +1013,8 @@ class Game extends ChangeNotifier {
   }
 
   void onBlockBroken(IVec3 b, int id) {
+    Achievements.instance.unlock('first_block');
+    if (Blocks.idOf(id) == 'waypoint') waypoints.remove(b);
     GameState.instance.blocksMined += 1;
     _settleFalling(b + IVec3.up);
     for (final side in IVec3.sides) {
@@ -964,6 +1042,11 @@ class Game extends ChangeNotifier {
   }
 
   void onBlockPlaced(IVec3 b, int id) {
+    if (GameState.instance.blocksPlaced >= 99) Achievements.instance.unlock('builder');
+    if (Blocks.idOf(id) == 'waypoint') {
+      waypoints[b] = 'Waypoint ${waypoints.length + 1}';
+      notify('${waypoints[b]} set. Right click it to travel (J lists them)');
+    }
     GameState.instance.blocksPlaced += 1;
     Sfx.play('place', -8.0);
     if (Blocks.idOf(id) == 'chest') GameState.instance.placedChests.add(b.key);
@@ -984,6 +1067,7 @@ class Game extends ChangeNotifier {
         'chests': {for (final e in chests.entries) e.key.key: e.value.toJson()},
         'bosses': [for (final k in _bossesSpawned) k.key],
         'quests': quests.toJson(),
+        'waypoints': {for (final e in waypoints.entries) e.key.key: e.value},
       };
       await File('$saveDir/player.json').writeAsString(jsonEncode(data), flush: true);
     } catch (e) {
@@ -1012,6 +1096,10 @@ class Game extends ChangeNotifier {
       inv.fromJson(e.value as List<dynamic>);
       chests[k] = inv;
     }
+    for (final e in ((data['waypoints'] as Map<String, dynamic>?) ?? {}).entries) {
+      final k = IVec3.parse(e.key);
+      if (k != null) waypoints[k] = e.value.toString();
+    }
     for (final k in (data['bosses'] as List<dynamic>? ?? const [])) {
       final p = IVec3.parse(k.toString());
       if (p != null) _bossesSpawned.add(p);
@@ -1036,6 +1124,7 @@ class Game extends ChangeNotifier {
     debugPrint('[probe] camera at ${player.cameraPosition} distance ${player.camDistance.toStringAsFixed(2)} yaw ${player.yaw.toStringAsFixed(2)} pitch ${player.pitch.toStringAsFixed(2)}');
     debugPrint('[probe] player at ${player.position} structures near: ${world.structuresNear(VoxelWorld.chunkOf(IVec3.floor(player.position)))}');
     if (_hasArg('--map')) mapVisible = true;
+    if (_arg('--journal=', '') != '') openJournal(int.tryParse(_arg('--journal=', '')) ?? 0);
     if (_hasArg('--open-inventory')) openStation('crafting_table', IVec3.zero);
     final fire = _arg('--fire=', '');
     if (_hasArg('--stage16')) {
@@ -1058,9 +1147,14 @@ class Game extends ChangeNotifier {
       dummy.position = player.position + ahead.normalized() * 2.2;
       addMob(dummy);
     }
+    final elite = _hasArg('--stage18') ? _probeStage18() : null;
     final settle = int.tryParse(_arg('--settle=', '')) ?? 30;
     for (var i = 0; i < settle; i++) {
       await nextFrame();
+      if (elite != null && i == 5) player.probeDodge();
+      if (elite != null && i == 6) {
+        debugPrint('[probe] stage18: dodging ${player.isDodging()}, invulnerable ${player.invulnerable}, from ${player.position}');
+      }
       if (fire != '' && i % 6 == 0 && i >= 6) player.probeFire(fire == 'secondary');
       if (dummy != null && i == 12) {
         debugPrint('[probe] strike: zombie hp ${dummy.hp.toStringAsFixed(1)} before, ray ${dummy.rayDistance(player.centre(), player.aimDirection(), 0.15).toStringAsFixed(2)} m from the player\'s centre');
@@ -1068,6 +1162,16 @@ class Game extends ChangeNotifier {
       }
     }
     if (dummy != null) debugPrint('[probe] strike: zombie hp ${dummy.hp.toStringAsFixed(1)} after');
+    if (elite != null) {
+      final ach = Achievements.instance;
+      debugPrint('[probe] stage18: effects ${player.effects.rows.keys.toList()}');
+      debugPrint('[probe] stage18: elite \'${elite.displayName()}\' hp ${elite.maxHp.toStringAsFixed(0)} '
+          'speed x${elite.speedMult.toStringAsFixed(1)}, talents ${player.talents}, points left ${player.talentPoints}');
+      debugPrint('[probe] stage18: weather ${weather.label} intensity ${weather.intensity.toStringAsFixed(2)} '
+          'darken ${weather.darken().toStringAsFixed(2)}');
+      debugPrint('[probe] stage18: waypoints ${waypoints.length}, player at ${player.position}, '
+          'achievements ${ach.count}: ${ach.unlocked.toList()}');
+    }
     if (_hasArg('--wait-peer')) {
       final t1 = DateTime.now();
       while (net.puppetPositions().isEmpty && DateTime.now().difference(t1).inMilliseconds < 40000) {
@@ -1112,6 +1216,31 @@ class Game extends ChangeNotifier {
       debugPrint('[probe] no screenshotter, nothing captured');
     }
     exit(0);
+  }
+
+  /// --stage18: poison plus a potion, an elite spider, a talent, two waypoints
+  /// and a hop between them.
+  Mob _probeStage18() {
+    player.applyEffect('poison', 8.0);
+    player.drink('speed', 30.0);
+    final ahead = player.aimDirection().clone()..y = 0;
+    final elite = Mob();
+    elite.setupMob(world, this, player, Species.def('spider'));
+    elite.position = player.position + ahead.normalized() * 3.0;
+    elite.scaleToLevel(3);
+    elite.setAffix('Venomous');
+    addMob(elite);
+    player.talentPoints = 2;
+    player.learnTalent('might');
+    final base = IVec3.floor(player.position);
+    final a = base + const IVec3(3, 0, 0);
+    final b = base + const IVec3(0, 0, 6);
+    for (final w in [a, b]) {
+      world.setBlock(w, Blocks.indexOf('waypoint'));
+      onBlockPlaced(w, Blocks.indexOf('waypoint'));
+    }
+    travelToWaypoint(b);
+    return elite;
   }
 
   void shutdown() {

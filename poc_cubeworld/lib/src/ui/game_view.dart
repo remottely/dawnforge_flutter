@@ -8,6 +8,7 @@ import 'package:flutter_scene/scene.dart' hide Material;
 import '../game/game.dart';
 import 'hud.dart';
 import 'inventory_screen.dart';
+import 'journal_screen.dart';
 import 'menus.dart';
 
 /// The play session: the 3D view, the HUD painted over it, and whichever
@@ -89,6 +90,8 @@ class _GameViewState extends State<GameView> {
         overlay = PauseMenu(game: game);
       case ScreenKind.death:
         overlay = DeathScreen(game: game);
+      case ScreenKind.journal:
+        overlay = JournalScreen(game: game);
       case ScreenKind.none:
         overlay = null;
     }

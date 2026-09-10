@@ -42,9 +42,20 @@ the Godot POC's, so the two roadmaps line up.
 | 14 | Weapon rarity + random bonuses, spawner blocks, TNT chains, the Boomer, roaming bosses | ✅ | |
 | 13b | Ranged combat, Cube World style: simulation-owned projectiles, staff spray / arc, bow / fan, 8-way volley | ✅ | `--fire=secondary` with `--class=mage` seen |
 | 16 | Doors, wall torches, boats, enchanting table, sleeping animation | ✅ | `--stage16` seen |
+| 18 | **RPG depth + weather.** Status effects (poison, burning, slow, regen, speed, strength, resistance, haste, well fed; chips on the HUD, ticks as coloured damage numbers), potions brewed at the brewing stand, talents (six shared + one signature per class, three ranks) spent in the journal (J), elite mobs (8% of hostiles: Swift / Sturdy / Venomous / Burning / Chilling / Giant, an aura light, ×2.5 XP), dodge roll (Left Alt, 0.4 s invulnerable), 20 achievements, waypoint blocks that teleport, a bestiary, and weather (rain / storm / snow on `flutter_scene`'s `ParticleEmitterComponent`, overcast sky, lightning flash + thunder). Probe flags `--stage18`, `--weather=`, `--journal=`. | ✅ | seen: storm with rain streaks, effect chips, the journal's talent tab; headless: 2 effects, Venomous elite spider, a talent spent, 2 waypoints + travel, dodge invulnerable |
 | 15 | **Multiplayer probe** (TCP + JSON lines on 7777, host-authoritative, puppets, replicas, host clock) | ✅ | two processes: the host captured peer 2's puppet beside it, the client got `hello` (seed + 20 edit bytes), 6 mob puppets, the host clock and the host's puppet; a zombie spawned beside the puppet hit the client (HP 26/30) through `hurt` |
 
 ## Session log
+
+- **2026-09-10 s2** — stage 18 ported from the Godot POC's `c07fd0f20`: `effects.dart`,
+  `talents.dart`, `achievements.dart`, `weather.dart` and `journal_screen.dart` are new; the
+  block table grew by `brewing_stand` and `waypoint` (appended, so the save bytes still match
+  Godot's). Two engine differences: Godot's `GPUParticles3D` became a
+  `ParticleEmitterComponent` with a `BoxEmitterShape` (rain uses `BillboardFacing.velocityStretched`
+  so a drop stretches along its own velocity, which is what the Godot `BILLBOARD_FIXED_Y` quad
+  did by hand), and the rate is `amount / lifetime` scaled by intensity rather than Godot's
+  `amount_ratio`. The mob health bar is painted by the HUD here, so the affix colour arrives
+  through `Mob.barColor()` instead of a bar mesh material.
 
 - **2026-09-10 s1** — worktree `poc_cubeworld` created from `dev`; the Godot POC read whole;
   every file ported; first screenshot through the probe; look tuned against the Godot frames

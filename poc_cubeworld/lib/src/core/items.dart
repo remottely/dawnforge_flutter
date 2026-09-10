@@ -22,6 +22,9 @@ class ItemDef {
     this.hunger = 0,
     this.heal = 0.0,
     this.armor = 0,
+    this.effect = '',
+    this.seconds = 0.0,
+    this.container = '',
   });
 
   final String id;
@@ -38,6 +41,15 @@ class ItemDef {
   final int hunger;
   final double heal;
   final int armor;
+
+  /// A potion's effect id, or "cure" to clear every bad effect ("" otherwise).
+  final String effect;
+
+  /// How long the potion's effect lasts.
+  final double seconds;
+
+  /// The item handed back when this one is consumed (an empty bucket).
+  final String container;
 }
 
 class Items {
@@ -65,6 +77,10 @@ class Items {
     void tool(String id, String name, List<double> c, ToolType tool, int tier, int damage) => add(ItemDef(
         id: id, name: name, kind: ItemKind.tool, r: c[0], g: c[1], b: c[2], stack: 1,
         tool: tool, tier: tier, damage: damage, durability: 60 * tier * tier));
+    // A potion is food with an effect: drunk with H or the right button, no
+    // hunger, no heal.
+    void potion(String id, String name, double r, double g, double b, String effect, double seconds) =>
+        add(ItemDef(id: id, name: name, kind: ItemKind.food, r: r, g: g, b: b, stack: 16, effect: effect, seconds: seconds));
     void weapon(String id, String name, double r, double g, double b, int damage, String style, int tier) => add(ItemDef(
         id: id, name: name, kind: ItemKind.weapon, r: r, g: g, b: b, stack: 1,
         damage: damage, style: style, tier: tier, tool: ToolType.sword));
@@ -112,6 +128,13 @@ class Items {
     food('rotten_flesh', 'Rotten Flesh', 0.45, 0.35, 0.25, 1, -2.0);
     food('mushroom_stew', 'Mushroom Stew', 0.75, 0.55, 0.40, 6, 8.0);
     food('health_potion', 'Health Potion', 0.95, 0.20, 0.35, 0, 30.0);
+    mat('glass_bottle', 'Glass Bottle', 0.80, 0.90, 0.95);
+    potion('speed_potion', 'Swiftness Potion', 0.45, 0.85, 0.95, 'speed', 60.0);
+    potion('regen_potion', 'Regeneration Potion', 0.95, 0.40, 0.60, 'regen', 30.0);
+    potion('strength_potion', 'Strength Potion', 0.90, 0.30, 0.25, 'strength', 60.0);
+    potion('resistance_potion', 'Resistance Potion', 0.70, 0.70, 0.75, 'resistance', 60.0);
+    potion('haste_potion', 'Haste Potion', 0.95, 0.85, 0.35, 'haste', 60.0);
+    potion('antidote', 'Antidote', 0.60, 0.90, 0.60, 'cure', 0.0);
 
     for (var tier = 1; tier < 5; tier++) {
       final t = tierNames[tier].toLowerCase();

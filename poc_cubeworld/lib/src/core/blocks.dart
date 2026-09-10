@@ -115,6 +115,8 @@ class Blocks {
     BlockDef('door_x_open', 'Open Door', 0.62, 0.45, 0.25, shape: BlockShape.panelZ, solid: false, opaque: false, hardness: 1.0, tool: ToolType.axe, drop: 'door'),
     BlockDef('wall_torch', 'Wall Torch', 0.98, 0.78, 0.35, shape: BlockShape.wallTorch, solid: false, opaque: false, hardness: 0.0, drop: 'torch', light: 13),
     BlockDef('enchanting_table', 'Enchanting Table', 0.38, 0.18, 0.55, hardness: 3.0, tool: ToolType.pickaxe, tier: 1, light: 7),
+    BlockDef('brewing_stand', 'Brewing Stand', 0.30, 0.22, 0.30, hardness: 2.0, tool: ToolType.pickaxe, light: 3),
+    BlockDef('waypoint', 'Waypoint', 0.35, 0.75, 0.95, hardness: 3.0, tool: ToolType.pickaxe, tier: 1, light: 10),
   ];
 
   static final Map<String, int> _indexById = {

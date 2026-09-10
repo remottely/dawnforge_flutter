@@ -29,6 +29,8 @@ enum GameAction {
   debugHud,
   screenshot,
   fly,
+  dodge,
+  journal,
 }
 
 /// Held keys, one-shot presses, mouse buttons, wheel and the captured mouse
@@ -66,6 +68,8 @@ class GameInput {
     GameAction.debugHud: [PhysicalKeyboardKey.f1],
     GameAction.screenshot: [PhysicalKeyboardKey.f2],
     GameAction.fly: [PhysicalKeyboardKey.f5],
+    GameAction.dodge: [PhysicalKeyboardKey.altLeft, PhysicalKeyboardKey.altRight],
+    GameAction.journal: [PhysicalKeyboardKey.keyJ],
   };
 
   static const List<PhysicalKeyboardKey> _digits = [

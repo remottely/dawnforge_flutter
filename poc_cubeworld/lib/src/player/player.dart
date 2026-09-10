@@ -14,10 +14,14 @@ import '../entities/player_model.dart';
 import '../entities/target.dart';
 import '../entities/voxel_body.dart';
 import '../entities/voxel_mesh_builder.dart';
+import '../game/achievements.dart';
+import '../game/effects.dart';
 import '../game/game.dart';
+
 import '../game/input.dart';
 import '../game/inventory.dart';
 import '../game/sfx.dart';
+import '../game/talents.dart';
 import '../world/voxel_world.dart';
 
 class PlayerClass {
@@ -85,6 +89,13 @@ class Player extends VoxelBody implements Target {
   Vector3 spawnPoint = Vector3.zero();
   Boat? riding;
   double sleeping = 0.0;
+  final StatusEffects effects = StatusEffects();
+  int talentPoints = 0;
+  final Map<String, int> talents = {};
+  double _invulnerable = 0.0;
+  double _dodge = 0.0;
+  Vector3 _dodgeDir = Vector3(0, 0, -1);
+  double _dodgeCd = 0.0;
 
   final PlayerModel model = PlayerModel();
   late Game main;
@@ -208,6 +219,7 @@ class Player extends VoxelBody implements Target {
       notify('+${n - left} ${Items.displayName(id)}');
       Sfx.play('pickup', -8.0);
       main.quests.onPickup(id, n - left);
+      if (id == 'diamond') Achievements.instance.unlock('diamonds');
     }
     return left;
   }
@@ -339,6 +351,7 @@ class Player extends VoxelBody implements Target {
     if (input.justPressed(GameAction.attack)) _attackPressed();
     if (input.justPressed(GameAction.use)) _usePressed();
     if (input.justPressed(GameAction.ability)) _useAbility();
+    if (input.justPressed(GameAction.dodge)) _dodgePressed();
     if (input.justPressed(GameAction.interact)) {
       final m = aimedMob;
       if (m != null && m.species.trader) {
@@ -383,6 +396,7 @@ class Player extends VoxelBody implements Target {
     final sneaking = gameplay && input.down(GameAction.sneak);
     var speed = sprinting ? sprintSpeed : (sneaking ? sneakSpeed : walkSpeed);
     if (inWater) speed = swimSpeed;
+    speed *= effects.speedMultiplier() * (1.0 + 0.05 * talentRank('swiftness'));
     if (sprinting) stamina = math.max(stamina - 6.0 * dt, 0.0);
 
     final jumpHeld = gameplay && input.down(GameAction.jump);
@@ -427,12 +441,20 @@ class Player extends VoxelBody implements Target {
     gliding = false;
     if (gameplay && input.down(GameAction.glide) && !onFloor && !inWater && velocity.y < 0.0 && inventory.countOf('glider') > 0) {
       gliding = true;
+      Achievements.instance.unlock('glider');
       velocity.y = math.max(velocity.y, -1.6);
       wish = wish.length < 0.1 ? fwd : wish;
       speed = 11.0;
     }
 
-    final accel = onFloor ? 14.0 : (gliding ? 3.0 : 6.0);
+    // Dodge roll: a short burst with invulnerability, the model tumbles forward.
+    if (_dodge > 0.0) {
+      _dodge -= dt;
+      wish = _dodgeDir;
+      speed = 13.0;
+      model.tiltX = -math.pi * 2.0 * (1.0 - _dodge / dodgeTime).clamp(0.0, 1.0);
+    }
+    final accel = _dodge > 0.0 ? 40.0 : (onFloor ? 14.0 : (gliding ? 3.0 : 6.0));
     velocity.x = lerpd(velocity.x, wish.x * speed, dt * accel);
     velocity.z = lerpd(velocity.z, wish.z * speed, dt * accel);
 
@@ -450,6 +472,7 @@ class Player extends VoxelBody implements Target {
       _fallStartY = math.max(_fallStartY, position.y);
     }
     if (inLava) {
+      effects.apply('burning', 3.0);
       _lavaTimer += dt;
       if (_lavaTimer > 0.4) {
         _lavaTimer = 0.0;
@@ -538,8 +561,21 @@ class Player extends VoxelBody implements Target {
         hp = math.min(hp + 1.0, maxHp);
       }
     }
-    if (!_sprintHeld && !climbing) stamina = math.min(stamina + 14.0 * dt, maxStamina);
-    mana = math.min(mana + 2.5 * dt, maxMana);
+    if (!_sprintHeld && !climbing) {
+      stamina = math.min(stamina + 14.0 * (1.0 + 0.25 * talentRank('endurance')) * dt, maxStamina);
+    }
+    mana = math.min(mana + 2.5 * (1.0 + 0.25 * talentRank('arcana')) * dt, maxMana);
+    _invulnerable = math.max(_invulnerable - dt, 0.0);
+    _dodgeCd = math.max(_dodgeCd - dt, 0.0);
+    if (inWater && effects.has('burning')) effects.clear('burning');
+    for (final ev in effects.tick(dt)) {
+      if (ev.damage > 0.0) {
+        takeDamage(ev.damage, ev.id);
+      } else if (hp < maxHp) {
+        hp = math.min(hp + ev.heal, maxHp);
+        main.spawnDamageNumber(centre() + Vector3(0, 0.6, 0), ev.heal, StatusEffects.def(ev.id).color);
+      }
+    }
   }
 
   // --- actions ----------------------------------------------------------------------
@@ -598,7 +634,7 @@ class Player extends VoxelBody implements Target {
       if (k == ItemKind.weapon || k == ItemKind.tool) base = Items.damageOf(item).toDouble();
     }
     base += inventory.bonusAt(selectedSlot);
-    return (base * classDef.damageMult * (1.0 + (level - 1) * 0.08)).roundToDouble();
+    return (base * classDef.damageMult * (1.0 + (level - 1) * 0.08) * damageMultiplier()).roundToDouble();
   }
 
   static const double staffBoltMana = 4.0;
@@ -607,7 +643,7 @@ class Player extends VoxelBody implements Target {
   static const double bowFanStamina = 14.0;
 
   double _rangedDamage(String item, double mult) =>
-      ((Items.damageOf(item) + inventory.bonusAt(selectedSlot)) * mult * classDef.damageMult * (1.0 + (level - 1) * 0.08))
+      ((Items.damageOf(item) + inventory.bonusAt(selectedSlot)) * mult * classDef.damageMult * (1.0 + (level - 1) * 0.08) * damageMultiplier() * (1.0 + 0.12 * talentRank('eagle_eye')))
           .roundToDouble();
 
   Vector3 _rotated(Vector3 v, Vector3 axis, double angle) => Quaternion.axisAngle(axis, angle).rotated(v);
@@ -683,12 +719,12 @@ class Player extends VoxelBody implements Target {
 
   /// Staff spray (hold the attack button): a fast stream of thick bolts, cheap on mana.
   void _castBolt(String staff) {
-    if (mana < staffBoltMana) {
+    if (mana < manaCost(staffBoltMana)) {
       notify('Not enough mana');
       _attackCooldown = 0.3;
       return;
     }
-    mana -= staffBoltMana;
+    mana -= manaCost(staffBoltMana);
     Sfx.play('bolt', -9.0);
     model.swing();
     _attackCooldown = Items.tierOf(staff) < 3 ? 0.22 : 0.17;
@@ -700,12 +736,12 @@ class Player extends VoxelBody implements Target {
 
   /// Arc (right button with a staff): Cube World's cone, as five bolts across 50°.
   void _castArc(String staff) {
-    if (mana < staffArcMana) {
+    if (mana < manaCost(staffArcMana)) {
       notify('Not enough mana');
       _useCooldown = 0.3;
       return;
     }
-    mana -= staffArcMana;
+    mana -= manaCost(staffArcMana);
     Sfx.play('bolt', -3.0);
     model.swing();
     _attackCooldown = 0.6;
@@ -753,6 +789,7 @@ class Player extends VoxelBody implements Target {
     }
     if (best != null) {
       riding = best;
+      Achievements.instance.unlock('sailor');
       best.driver = this;
       notify('Rowing. [F] to get off');
     }
@@ -838,7 +875,7 @@ class Player extends VoxelBody implements Target {
           }
         }
         main.spawnEffect(centre(), Vector3(1, 0.6, 0.2), 4.0);
-        abilityCooldown = 8.0;
+        abilityCooldown = 8.0 * (1.0 - 0.2 * talentRank('rage'));
       case 'ranger':
         if (inventory.countOf('arrow') < 8) {
           notify('Need 8 arrows');
@@ -899,7 +936,8 @@ class Player extends VoxelBody implements Target {
       mineProgress = 0.0;
     }
     final id = world.getBlock(aimedBlock);
-    final t = Items.mineTime(heldItem(), id);
+    var t = Items.mineTime(heldItem(), id);
+    if (t > 0.0) t /= effects.mineMultiplier();
     if (t < 0.0) {
       crack.visible = false;
       return;
@@ -1007,7 +1045,12 @@ class Player extends VoxelBody implements Target {
         _useCooldown = 0.3;
         return;
       }
-      if (tid == 'crafting_table' || tid == 'furnace' || tid == 'chest') {
+      if (tid == 'waypoint') {
+        main.openJournal(3);
+        _useCooldown = 0.5;
+        return;
+      }
+      if (tid == 'crafting_table' || tid == 'furnace' || tid == 'chest' || tid == 'brewing_stand') {
         main.openStation(tid, aimedBlock);
         _useCooldown = 0.4;
         return;
@@ -1069,6 +1112,14 @@ class Player extends VoxelBody implements Target {
     final item = heldItem();
     if (item == '' || Items.kind(item) != ItemKind.food) return;
     final d = Items.def(item);
+    if (d.effect != '') {
+      inventory.takeFromSlot(selectedSlot, 1);
+      drink(d.effect, d.seconds);
+      notify('Drank ${d.name}');
+      Sfx.play('eat', -6.0);
+      Achievements.instance.unlock('brewer');
+      return;
+    }
     if (hunger >= 20.0 && d.heal <= 0.0) {
       notify('Not hungry');
       return;
@@ -1076,6 +1127,7 @@ class Player extends VoxelBody implements Target {
     inventory.takeFromSlot(selectedSlot, 1);
     hunger = math.min(hunger + d.hunger, 20.0);
     hp = (hp + d.heal).clamp(1.0, maxHp);
+    if (d.hunger >= 5) effects.apply('well_fed', 20.0);
     Sfx.play('eat', -6.0);
     notify('Ate ${d.name}');
   }
@@ -1090,11 +1142,16 @@ class Player extends VoxelBody implements Target {
   @override
   void takeDamage(double amount, String source, [Vector3? from]) {
     if (isDead || amount <= 0.0) return;
-    final reduced = math.max(amount - armor * 0.4, amount * 0.35);
+    // An effect's own tick always lands: dodging out of poison would be free.
+    final isTick = StatusEffects.defs.containsKey(source);
+    if (_invulnerable > 0.0 && !isTick && source != 'starving') return;
+    final totalArmor = armor + effects.armorBonus() + talentRank('toughness');
+    final reduced = isTick ? amount : math.max(amount - totalArmor * 0.4, amount * 0.35);
     hp -= reduced;
     damageFlash = 1.0;
     Sfx.play('hurt', -3.0);
-    main.spawnDamageNumber(centre() + Vector3(0, 0.6, 0), reduced, Vector3(1, 0.3, 0.3));
+    main.spawnDamageNumber(centre() + Vector3(0, 0.6, 0), reduced,
+        isTick ? StatusEffects.def(source).color : Vector3(1, 0.3, 0.3));
     if (from != null) {
       final push = position - from;
       push.y = 0.0;
@@ -1118,7 +1175,11 @@ class Player extends VoxelBody implements Target {
       hp = maxHp;
       maxStamina += 5.0;
       maxMana += 5.0;
-      notify('Level $level!');
+      talentPoints += 1;
+      notify('Level $level! Talent point earned (J)');
+      final ach = Achievements.instance;
+      if (level >= 5) ach.unlock('level_5');
+      if (level >= 10) ach.unlock('level_10');
       Sfx.play('levelup');
       main.quests.onLevel(level);
       main.spawnEffect(centre(), Vector3(1, 0.9, 0.3), 3.0);
@@ -1134,6 +1195,7 @@ class Player extends VoxelBody implements Target {
     hunger = 20.0;
     stamina = maxStamina;
     mana = maxMana;
+    effects.rows.clear();
     velocity = Vector3.zero();
     position = spawnPoint.clone();
     syncNode();
@@ -1157,6 +1219,9 @@ class Player extends VoxelBody implements Target {
         'slot': selectedSlot,
         'first_person': firstPerson,
         'spawn': [spawnPoint.x, spawnPoint.y, spawnPoint.z],
+        'effects': effects.toJson(),
+        'talent_points': talentPoints,
+        'talents': talents,
       };
 
   void fromJson(Map<String, dynamic> d) {
@@ -1178,6 +1243,73 @@ class Player extends VoxelBody implements Target {
     setFirstPerson(d['first_person'] == true);
     final s = (d['spawn'] as List<dynamic>?)?.map((e) => (e as num).toDouble()).toList() ?? p;
     spawnPoint = Vector3(s[0], s[1], s[2]);
+    effects.fromJson(d['effects'] as Map<String, dynamic>? ?? const {});
+    talentPoints = (d['talent_points'] as num?)?.toInt() ?? 0;
+    talents.clear();
+    for (final e in (d['talents'] as Map<String, dynamic>? ?? const {}).entries) {
+      talents[e.key] = (e.value as num).toInt();
+    }
     syncNode();
   }
+
+  // --- stage 18: effects, talents, dodge -------------------------------------------
+
+  static const double dodgeTime = 0.4;
+
+  int talentRank(String id) => talents[id] ?? 0;
+
+  bool learnTalent(String id) {
+    if (talentPoints <= 0 || talentRank(id) >= Talents.maxRank) return false;
+    talentPoints -= 1;
+    talents[id] = talentRank(id) + 1;
+    if (id == 'vitality') {
+      maxHp += 4.0;
+      hp += 4.0;
+    }
+    notify('Learned ${id[0].toUpperCase()}${id.substring(1)} ${talents[id]}');
+    Achievements.instance.unlock('talent');
+    return true;
+  }
+
+  double damageMultiplier() => effects.damageMultiplier() * (1.0 + 0.08 * talentRank('might'));
+
+  double manaCost(double base) => base * (1.0 - 0.15 * talentRank('focus'));
+
+  /// Drink a potion effect: "cure" clears every bad effect, anything else
+  /// applies for [seconds].
+  void drink(String effect, double seconds) {
+    if (effect == 'cure') {
+      final n = effects.clearBad();
+      notify('Cured $n ailment${n == 1 ? '' : 's'}');
+      return;
+    }
+    effects.apply(effect, seconds);
+    main.spawnEffect(centre(), StatusEffects.def(effect).color, 1.2);
+  }
+
+  void applyEffect(String id, double seconds, [double power = 1.0]) {
+    if (isDead) return;
+    final fresh = !effects.has(id);
+    effects.apply(id, seconds, power);
+    if (fresh) notify('${StatusEffects.def(id).name}!');
+  }
+
+  void _dodgePressed() {
+    final cost = math.max(15.0 - 5.0 * talentRank('shadowstep'), 0.0);
+    if (_dodge > 0.0 || _dodgeCd > 0.0 || stamina < cost || riding != null || sleeping > 0.0 || inWater) {
+      return;
+    }
+    stamina -= cost;
+    _dodge = dodgeTime;
+    _dodgeCd = 0.9;
+    _invulnerable = dodgeTime;
+    _dodgeDir = _lastMoveDir.length > 0.1 ? _lastMoveDir.normalized() : flatForward;
+    Sfx.play('swing', -8.0, 0.7);
+  }
+
+  void probeDodge() => _dodgePressed();
+
+  bool isDodging() => _dodge > 0.0;
+
+  bool get invulnerable => _invulnerable > 0.0;
 }

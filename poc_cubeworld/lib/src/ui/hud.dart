@@ -8,6 +8,7 @@ import 'package:vector_math/vector_math.dart' as vm;
 
 import '../core/blocks.dart';
 import '../core/items.dart';
+import '../game/effects.dart';
 import '../game/game.dart';
 import '../world/voxel_world.dart';
 
@@ -233,7 +234,10 @@ class HudPainter extends CustomPainter {
       final h = w * 0.12;
       canvas.drawRect(Rect.fromCenter(center: p, width: w, height: h), Paint()..color = const Color.fromRGBO(0, 0, 0, 0.7));
       final ratio = (mob.hp / mob.maxHp).clamp(0.0, 1.0);
-      final fill = mob.tamed ? const Color.fromRGBO(77, 153, 255, 1) : (mob.species.hostile ? const Color.fromRGBO(230, 51, 51, 1) : const Color.fromRGBO(77, 217, 77, 1));
+      final bc = mob.barColor();
+      final fill = mob.species.hostile || mob.tamed || mob.affix != ''
+          ? Color.fromRGBO((bc.x * 255).round(), (bc.y * 255).round(), (bc.z * 255).round(), 1)
+          : const Color.fromRGBO(77, 217, 77, 1);
       canvas.drawRect(Rect.fromLTWH(p.dx - w * 0.48, p.dy - h * 0.33, w * 0.96 * ratio, h * 0.66), Paint()..color = fill);
     }
     for (final n in game.damageNumbers) {
@@ -279,6 +283,23 @@ class HudPainter extends CustomPainter {
     canvas.drawRect(Rect.fromLTWH(x + 270, y + 100, 150, 18), Paint()..color = const Color.fromRGBO(0, 0, 0, 0.55));
     Hud.text(canvas, '[R] $ab${ready ? '' : ' (${player.abilityCooldown.round()}s)'}', Offset(x + 276, y + 114),
         size: 14, color: ready ? const Color.fromRGBO(255, 255, 153, 1) : const Color.fromRGBO(179, 179, 179, 1));
+
+    if (player.talentPoints > 0) {
+      Hud.text(canvas, '[J] ${player.talentPoints} talent point${player.talentPoints == 1 ? '' : 's'}',
+          Offset(x + 270, y + 94), size: 14, color: const Color.fromRGBO(255, 230, 128, 1));
+    }
+    // Status effects, stacked above the bars.
+    var ey = y - 30.0;
+    for (final id in player.effects.rows.keys) {
+      final d = StatusEffects.def(id);
+      final left = player.effects.timeLeft(id);
+      final col = Color.fromRGBO((d.r * 255).round(), (d.g * 255).round(), (d.b * 255).round(), 1);
+      canvas.drawRect(Rect.fromLTWH(x, ey, 200, 22), Paint()..color = const Color.fromRGBO(0, 0, 0, 0.55));
+      canvas.drawRect(Rect.fromLTWH(x, ey, 6, 22), Paint()..color = col);
+      Hud.text(canvas, '${d.name}  ${left.ceil()}s', Offset(x + 12, ey + 16),
+          size: 13, color: d.bad ? col : Colors.white);
+      ey -= 26.0;
+    }
 
     // Hotbar (bottom centre)
     const slot = 54.0;
