@@ -8,6 +8,15 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.52.1
+
+### 🧹 Internal
+
+- Nothing in the game changed. The word-checker from the previous version was
+  counting the two places that DEFINE the word-lookup as if they were words
+  it could not check, and the previous version's note said the count was
+  zero when it was two. Both are fixed: the count is now truly zero.
+
 ## 0.52.0
 
 ### 🧹 Internal

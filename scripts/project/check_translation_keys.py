@@ -32,8 +32,10 @@ sys.path.insert(0, str(next(
     if (p / "lib" / "project_paths.py").is_file())))
 from project_paths import LIB_ROOT, LOCALES_ROOT, PROJECT_ROOT  # noqa: E402
 
-TR_CALL = re.compile(r"(?<![\w.])tr\(\s*([^)]*?)\s*\)", re.S)
-"""Every `tr(...)` call that is not a method on something (`foo.tr(` is not ours)."""
+TR_CALL = re.compile(r"(?<![\w.])(?<!String )tr\(\s*([^)]*?)\s*\)", re.S)
+"""Every `tr(...)` CALL: not a method on something (`foo.tr(` is not ours) and
+not a declaration (`String tr(String key)` — the function and the method that
+define it were counted as two uncheckable calls at 0.52.0)."""
 LITERAL = re.compile(r"^(['\"])([^'\"$]+)\1$")
 """A plain single- or double-quoted literal with no interpolation."""
 

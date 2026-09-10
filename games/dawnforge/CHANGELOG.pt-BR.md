@@ -8,6 +8,16 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.52.1
+
+### 🧹 Internal
+
+- Nada mudou no jogo. O conferente de palavras da versão anterior contava os
+  dois lugares que DEFINEM a busca de palavras como se fossem palavras que ele
+  não conseguia conferir, e a nota da versão anterior dizia que a contagem
+  era zero quando era dois. Os dois estão corrigidos: a contagem agora é zero
+  de verdade.
+
 ## 0.52.0
 
 ### 🧹 Internal
