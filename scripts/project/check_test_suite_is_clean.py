@@ -8,6 +8,9 @@ The one command every task runs before its commit (CLAUDE.md §Execution Workflo
   first, mirrored in both languages, categories in their fixed order.
 - **the translation keys** (`check_translation_keys.py`, FP0.17) — every literal
   `tr('key')` in `lib/` exists in every emitted locale table.
+- **the manual's two halves** (`scripts/docs/check_manual_mirrors.py`, FP0.15) — `en/`
+  and `pt-BR/` hold the same filenames with the same heading structure. A page that
+  exists in one language only is noticed by a player, not by a reviewer.
 
 - **`flutter analyze`** at zero issues — the analyzer *is* half the rule set here
   (rule 4's strict typing lives in `analysis_options.yaml`), so an info-level lint is a
@@ -57,6 +60,10 @@ def main() -> int:
     # missing key crashes at render, which is later than here.
     codes.append(_run("translations", [
         sys.executable, "scripts/project/check_translation_keys.py"]))
+    # The manual mirrors in both languages (FP0.15): a page that exists only in
+    # English is found by a Brazilian seven-year-old, who is not in this repo.
+    codes.append(_run("manual", [
+        sys.executable, "scripts/docs/check_manual_mirrors.py", "--check"]))
     if not args.test_only:
         # --fatal-infos: an info is a failure — the analyzer is half the rule set (rule 4).
         codes.append(_run("analyze", ["flutter", "analyze", "--fatal-infos"]))

@@ -178,11 +178,15 @@ here is restated there.
   scale, and a hand-rolled `dt *= factor` has no zero-false-positive regex — a tripwire
   with false positives is trained away within a day. It stays a rule 30 reading, not a
   hook. `L-009` drained.
-- **FP0.15** the manual's section map (`L-010`): `games/dawnforge/docs/manual/README.md`
-  (the fifteen-page table as the spec's, adapted to this track's page names) +
-  `TEMPLATE.md`, and `scripts/docs/check_manual_mirrors.py --check` (same filenames in
-  `en/` and `pt-BR/`, same heading levels in the same order, every existing page listed
-  in the map). Runs from the suite script.
+- **FP0.15** — **half done 0.63.0**, and the half that is done is the half that needs no
+  decision. `scripts/docs/check_manual_mirrors.py --check` is ported and **runs from the
+  suite**: same filenames in `en/` and `pt-BR/`, same heading levels in the same order.
+  Proved both ways — a demoted `##` in one language and a deleted page were each refused
+  by name; the four pages mirror cleanly today. **Still owed:** `manual/README.md` (the
+  section map) + `TEMPLATE.md`, because writing a section map means naming the pages and
+  the names are `D-4`. The checker already carries the map assertion and reports it as
+  **NOT CHECKED**, in words, naming the decision it waits on — the moment `README.md`
+  exists it runs with no further edit. `L-010` stays open on the map half.
 - **FP0.16** — **done 0.51.0.** `scripts/project/check_changelog_is_ordered.py --check` — newest-first
   order, no surviving `0.0.0-NEXT`, en/pt-BR section and category parity, no version
   twice. Evidence it is owed: at 0.47.0 both changelogs carried `0.45.4` and `0.45.3`

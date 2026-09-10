@@ -8,6 +8,18 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.63.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. O livrinho que explica como jogar é escrito duas vezes,
+  uma em inglês e outra em português, e as duas cópias deveriam ter as mesmas
+  páginas com as mesmas partes na mesma ordem. Ninguém estava conferindo. Uma
+  página que sumisse em um idioma só seria notada por uma criança lendo aquele
+  idioma, o que é tarde demais. Agora a conferência acontece antes de qualquer
+  trabalho ser arquivado. Um pedaço dela ainda espera uma decisão, e ele avisa
+  isso em voz alta em vez de fingir que conferiu tudo.
+
 ## 0.62.0
 
 ### 🧹 Internal

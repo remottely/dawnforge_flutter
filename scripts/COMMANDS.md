@@ -23,6 +23,12 @@
 | `python3 scripts/project/check_changelog_is_ordered.py [--check]` | both changelogs newest-first, no version twice, categories in the fixed order, en/pt-BR mirrored; `--check` also refuses a surviving `0.0.0-NEXT` (runs from the suite without it) |
 | `python3 scripts/project/check_translation_keys.py [--check]` | every literal `tr('key')` under `lib/` exists in every `assets/generated/<game>/locales/*.json`; non-literal calls are counted and printed (runs from the suite) |
 
+## scripts/docs/ — the documents the player reads
+
+| Command | What |
+|:---|:---|
+| `python3 scripts/docs/check_manual_mirrors.py [--check]` | `games/<game>/docs/manual/en/` and `pt-BR/` hold the same filenames with the same heading levels in the same order (rule 34; runs from the suite). The section-map half prints **NOT CHECKED** until `manual/README.md` exists — it waits on `D-4` |
+
 ## scripts/content/ — the pack, against its source
 
 | Command | What |

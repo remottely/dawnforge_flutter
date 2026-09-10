@@ -8,6 +8,18 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.63.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. The little book that explains how to play is
+  written twice, once in English and once in Portuguese, and the two copies are
+  supposed to have the same pages with the same parts in the same order. Nobody
+  was checking. A page that went missing in one language would only be noticed
+  by a child reading that language, which is far too late. Now the check runs
+  before any work is filed. One piece of it still waits on a decision, and it
+  says so out loud instead of pretending everything was checked.
+
 ## 0.62.0
 
 ### 🧹 Internal
