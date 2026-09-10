@@ -110,6 +110,13 @@
 - **Cost of leaving it:** the probe can fail for a reason that is not the thing being probed. Study §9 clause 5 asks whether a NEW GAME can be built by writing content alone; a diff in `render/` answers "Flame needed a drawing call the first game did not", which is a true fact about the framework and no evidence at all about content-driven architecture. Left alone, the first run of the only experiment this track exists for produces a result nobody can interpret, and the cheapest moment to split the gate is before it is run, not after it goes red.
 - **Found while:** 2026-09-10 — counting the engine family by family against the spec for `ENGINE_SURFACE_2026-09-10.md`.
 
+### L-025 · One test's verdict depends on how busy the machine is
+
+- **Lens:** tests / reproducibility
+- **Evidence:** `test/core/systems/world/chunk_streaming_system_test.dart:161-178` (0.70.0) asserts that after a 20-chunk jump the unload side of ONE frame already freed the old centre chunk, and that the load backlog survived the frame. Both halves are claims about a wall-clock budget — `ChunkStreamingSystem` consults a 1,200µs slice (`engine_constants.dart`, FP3.4) — so the verdict is a function of machine load, not of the code. Three consecutive runs of the SAME tree, with nothing in `lib/` changing between them, disagreed: a 9-minute run failed with *"the unload side of the frame never ran"*, a 51-second run failed the same way, and a 10-second run passed all 391. The long runs were long because a second session was running its own `flutter test` — the condition `CLAUDE.md` §Parallel sessions says to assume.
+- **Cost of leaving it:** the failure is indistinguishable from a real regression at the moment it appears, and the cheap response — re-run until green — is exactly the habit that lets a genuine red through. It also makes the suite unusable as a gate on a loaded machine, which is the normal condition in this repo: `CLAUDE.md` §Parallel sessions assumes a second session is always running, and a second session means a second `flutter test`. The fix is to assert the ORDER the budget produces rather than the amount of work one real millisecond buys — an injected clock, or a budget expressed in columns for the test.
+- **Found while:** 2026-09-10 — running the suite before the commit that repaired two misfiled changelog sections.
+
 ## Drained
 
 | ID | Title | Drained into |
