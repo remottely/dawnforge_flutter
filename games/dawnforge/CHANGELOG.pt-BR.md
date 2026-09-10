@@ -8,6 +8,18 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.56.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. Cada página do livro de receitas deste jogo foi copiada à
+  mão da versão maior do jogo, uma por vez, e ninguém nunca voltou para ver se
+  alguma página tinha sido reescrita de lá para cá. Agora um conferente compara
+  as sessenta e uma páginas de uma vez. Tudo que os dois livros discordam
+  precisa estar anotado com um motivo, para que uma diferença que ninguém
+  escolheu nunca mais fique ali quietinha. A primeira conferência achou
+  sessenta e sete delas, incluindo uma que já tinha sido notada e esquecida.
+
 ## 0.55.0
 
 ### 🧹 Internal
@@ -20,18 +32,6 @@
   mais importa, com o que cada conferência precisa provar. Quatro delas
   seguram quase todo o resto, incluindo a que faz o mesmo mundo voltar quando
   você usa a mesma semente.
-
-## 0.55.0
-
-### 🧹 Internal
-
-- Nada mudou no jogo. Cada página do livro de receitas deste jogo foi copiada à
-  mão da versão maior do jogo, uma por vez, e ninguém nunca voltou para ver se
-  alguma página tinha sido reescrita de lá para cá. Agora um conferente compara
-  as sessenta e uma páginas de uma vez. Tudo que os dois livros discordam
-  precisa estar anotado com um motivo, para que uma diferença que ninguém
-  escolheu nunca mais fique ali quietinha. A primeira conferência achou
-  sessenta e sete delas, incluindo uma que já tinha sido notada e esquecida.
 
 ## 0.54.0
 

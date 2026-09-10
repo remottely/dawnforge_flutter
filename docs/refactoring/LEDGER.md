@@ -26,13 +26,6 @@
 - **Cost of leaving it:** the waste is per-prop and the props are the most numerous hosts in the world, so it scales with exactly the thing the streaming budget already guards (FP3.4's 1200µs). It is also a correctness smell before it is a cost one: a prop with no loot table still answers `drop`, and a decoration still answers `health`, so "can this be broken" reads as yes everywhere and only the authored `allowedTools` says otherwise.
 - **Found while:** FP4.3a slice 5 — giving props the death path harvest needs.
 
-### L-006 · Nothing notices when an imported pack document drifts from the spec's
-
-- **Lens:** content pipeline / cross-repo contract
-- **Evidence:** `games/dawnforge/data/forge_almanac/02_workstations/01_smelter/t1/t1_ground_buildable_terrain.md:115-128` at 0.35.0 still carries a `cave_elevation_drops` entry for `t1_item_ore_copper` and the comment that justified it; the same document in `tessera_project` dropped that entry and rewrote the comment ("the cave wall is the deposit" → "what a cut wall pays when it held nothing visible"). Every pack document here is a hand-copied SNAPSHOT — `scripts/` has no step that compares the two trees, and the knowledge index covers only this repo, so a `.md` that changed over there is invisible from this side until somebody diffs it by hand.
-- **Cost of leaving it:** the pack format is a SHARED contract that must never fork (study §4, risk register #3), and the fork this allows is the quiet kind: not a parse failure but two engines rolling different loot from the same authored tile. The gap widens per import — the pack is imported one slice at a time, so every slice pins its own snapshot date, and no two documents here are guaranteed to be from the same version of over there. A `--check` step that diffs the imported subset costs one script and is the only thing that would have surfaced this.
-- **Found while:** FP4.3b slice 1 — copying the five blueprint documents in, and diffing an already-imported one first to learn the delta convention.
-
 ### L-007 · Which props are resident in a chunk is owned by the system named for ONE way they get there
 
 - **Lens:** systems / ownership
@@ -75,6 +68,13 @@
 - **Cost of leaving it:** "D-4" and "D4" are one keystroke apart and name unrelated things — a manual page name and the no-pause sim shape. The failure is not a crash but a misread: a session that follows the wrong one implements against a decision nobody took. The ledger already solved this problem for `L-nnn` (never reused, a script hands out the next free one) and the register was written without inheriting the solution.
 - **Found while:** 2026-09-10 — inventorying the spec's 40 project commands against this repo's 4.
 
+### L-014 · Nineteen things that hold nothing declare a thirty-slot bag
+
+- **Lens:** content / data defaults
+- **Evidence:** `lib/src/core/resources/i_world_object_data.dart:35,57` defaults `inventorySize` to `30` (constructor and `reader.intOr('inventory_size', 30)`), and at 0.56.0 nineteen pack documents author exactly that: `t1_prop_rock_moss`, `t1_prop_rock_coal`, `t1_prop_vein_copper`, `t1_prop_grass_wild`, every `*_prop_crop_*`, `t1_prop_soil`, `t1_ground_buildable_terrain` and `t1_ground_buildable_bridge_palm` among them. The same documents in the spec author `0`; the spec reserves a non-zero size for things that are containers. Nothing here reads the field yet, which is why a plank bridge with thirty slots has cost nothing so far.
+- **Cost of leaving it:** the default is the fallback rule 5 forbids wearing a data class's clothes — `intOr(..., 30)` answers "how big is this object's bag" for a document that never said, and every snapshot taken since has been normalised to that answer rather than to the object. The bill arrives with the first thing that opens a container: FP4.5(f)'s workstation panel asks a prop for its inventory, and every rock in the world will say thirty. The repair is two edits and a sweep — author `0` where nothing is held, and make the field required rather than defaulted — but only while the field is still inert.
+- **Found while:** FP0.11 — building the pack-drift guard, whose first green run listed the nineteen as the largest single fork between the two packs.
+
 ### L-015 · Two fifths of the pack references the generated JSON carries resolve to nothing
 
 - **Lens:** content pipeline / assets
@@ -82,10 +82,18 @@
 - **Cost of leaving it:** today the unresolved 37 are harmless because nothing plays a sound, and that is precisely what makes the hole invisible when a **new** one appears. The next family imported with a dangling reference joins 37 others and reads as normal. Rule 5 says the crash is the feature, but the crash lands at render — naming a null texture — instead of in the pipeline, which would name the document and the field.
 - **Found while:** 2026-09-10 — probing what the spec's `check_referenced_assets_are_committed.py` would report here.
 
+### L-016 · The commit ritual's pathspec protects the index, not the file
+
+- **Lens:** harness / parallel sessions
+- **Evidence:** `CLAUDE.md` §Parallel sessions commits with `git commit -F <msg> -- <task files>`, and `scripts/ai/hooks/block_forbidden_git.py:179` refuses a `git commit` without a pathspec — the pair exists so one session cannot sweep another's staged work into its commit. On 2026-09-10 two sessions worked in this one worktree and it happened three times anyway, in both directions: `3ab7a9ab` (0.54.0) carried another session's unfinished `LEDGER.md`, `PENDING.md` and port-plan edits, placeholders included; `afa5c72c` (0.55.0) carried that session's `## 0.0.0-NEXT` changelog section and stamped it, leaving `games/dawnforge/CHANGELOG.md` with `## 0.55.0` twice at HEAD until the next commit repaired it. A pathspec names a FILE; git commits the file's whole working-tree content, and both sessions edit the same six shared documents (both changelogs, `LEDGER.md`, `PENDING.md`, the plan, `COMMANDS.md`) on every single commit.
+- **Cost of leaving it:** the shared documents are exactly the ones the rules make mandatory per commit (rule 27, rule 34), so the collision is not occasional — it is once per commit per session, and it lands silently: the sweeping commit is green, its message describes half of what it contains, and the swept session finds its own text already committed under someone else's version number. The changelog case is the loud one only because `check_changelog_is_ordered.py` (0.51.0) now catches it; the ledger case is silent, and a renumbered or dropped entry there is the thing plans cite by ID forever. Two shapes would each close it: a commit script that refuses a listed file whose diff contains hunks the session did not write, or one worktree per session (`git worktree add`), which is what the delivery track's ten lanes do.
+- **Found while:** FP0.11 — committing the pack-drift guard, whose ledger entry was renumbered twice and dropped once by another session's commits in the same hour.
+
 ## Drained
 
 | ID | Title | Drained into |
 |:---|:---|:---|
+| L-006 | Nothing notices when an imported pack document drifts from the spec's | FP0.11 (0.56.0) — `scripts/content/check_pack_snapshot_matches_spec.py`; its first green run recorded 28 forked documents and 67 forked keys, `cave_elevation_drops` among them, and opened `L-014` |
 | L-003 | Cross-repo pointers name a Godot repo path that no longer exists | FP0.13 (0.53.0) — `SPEC_REPO_ROOT` in `scripts/lib/project_paths.py`, cited by `CLAUDE.md`, `docs/AI_HARNESS.md` §5 and the study's §1 table |
 
 ## Struck

@@ -73,7 +73,7 @@ here is restated there.
   typing `com.remottely.dawnforge` by hand, and sweeps `saves/` under it on every
   platform folder that exists. Settings (`shared_preferences`) survive by default;
   `--all` takes them. Lands **before FP6.1's first write**; FP6.3 proves it.
-- **FP0.11** — **done VERSION_TBD.** `scripts/content/check_pack_snapshot_matches_spec.py
+- **FP0.11** — **done 0.56.0.** `scripts/content/check_pack_snapshot_matches_spec.py
   [--check|--report <path>|--accept <path>]` — the drift guard `L-006` asked for. Two
   deltas from the commission, each because the pack said so: documents pair by **`id`,
   not path** (the port files two `t1_ground_buildable_*` snapshots under the smelter and

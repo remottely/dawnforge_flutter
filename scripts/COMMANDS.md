@@ -21,6 +21,12 @@
 | `python3 scripts/project/check_changelog_is_ordered.py [--check]` | both changelogs newest-first, no version twice, categories in the fixed order, en/pt-BR mirrored; `--check` also refuses a surviving `0.0.0-NEXT` (runs from the suite without it) |
 | `python3 scripts/project/check_translation_keys.py [--check]` | every literal `tr('key')` under `lib/` exists in every `assets/generated/<game>/locales/*.json`; non-literal calls are counted and printed (runs from the suite) |
 
+## scripts/content/ — the pack, against its source
+
+| Command | What |
+|:---|:---|
+| `python3 scripts/content/check_pack_snapshot_matches_spec.py [--check\|--report PATH\|--accept PATH]` | every pack document's frontmatter against its twin in `SPEC_REPO_ROOT` (paired by `id`): a key both sides author with different values, or a key only this pack authors, fails unless recorded with a reason in `pack_snapshot_deltas.yaml`; keys only the SPEC authors are the port's backlog and never fail. No sibling repo = **not applicable**, never a pass |
+
 ## scripts/pipeline/ — the content build
 
 `dawnforge.py` (repo root) wraps the ordered `.md` → JSON pipeline; step numbering is
