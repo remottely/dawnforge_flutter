@@ -68,6 +68,13 @@
 - **Cost of leaving it:** the shared documents are exactly the ones the rules make mandatory per commit (rule 27, rule 34), so the collision is not occasional — it is once per commit per session, and it lands silently: the sweeping commit is green, its message describes half of what it contains, and the swept session finds its own text already committed under someone else's version number. The changelog case is the loud one only because `check_changelog_is_ordered.py` (0.51.0) now catches it; the ledger case is silent, and a renumbered or dropped entry there is the thing plans cite by ID forever. Two shapes would each close it: a commit script that refuses a listed file whose diff contains hunks the session did not write, or one worktree per session (`git worktree add`), which is what the delivery track's ten lanes do.
 - **Found while:** FP0.11 — committing the pack-drift guard, whose ledger entry was renumbered twice and dropped once by another session's commits in the same hour.
 
+### L-017 · Two sessions cannot both append to a shared document, and the ID handout races
+
+- **Lens:** harness / parallel sessions
+- **Evidence:** on 2026-09-10 two sessions took `L-011` within minutes of each other (`check_ledger_ids_are_unique.py --next` is a read of the file, and both read it before either wrote), the commit hook refused the collision, both renumbered, and both landed on `L-014`. `CLAUDE.md` §Parallel sessions answers the *version* collision — derive from `HEAD` in the same command as the commit — and says nothing about this one. The documented commit is `git add <files> && git commit -F msg -- <files>`, which commits the file's staged content whoever staged it, so the only way out was to rebuild `LEDGER.md` from `HEAD` plus one session's own entries by hand, commit that, and restore the other session's work afterwards.
+- **Cost of leaving it:** every shared document is exposed — `LEDGER.md`, `PENDING.md`, both changelogs, the plans — and the exposure grows with the number of sessions, which is the direction this repo is going. The failure has two shapes and only one of them is loud: the ID collision is caught by a hook, while a commit that quietly sweeps another session's in-flight edit to the same file is caught by nobody. The repair is manual, undocumented, and was invented twice today.
+- **Found while:** 2026-09-10 — writing the automation, test and pack-import documents while another session drained FP0.10–FP0.15.
+
 ## Drained
 
 | ID | Title | Drained into |

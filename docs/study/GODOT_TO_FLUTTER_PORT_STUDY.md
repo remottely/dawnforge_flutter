@@ -197,6 +197,44 @@ Markdown, git history as corpus). Ported pieces and their deltas:
    server clock (multiplayer heritage). Flame's `update(dt)` is variable-step. Adopt a
    fixed-step accumulator in the sim layer from the start; cheap now, painful later.
 
+
+### 7.1 Status at 0.64.0 (2026-09-10) — measured, not remembered
+
+The five above are the risks as they were **written on 2026-08-25**, and that prose stays:
+it records what was feared, which is worth keeping. This is what became of each, with the
+evidence, seventeen days and sixty-two versions later.
+
+| # | Risk | What happened |
+|:---|:---|:---|
+| 1 | renderer performance | **Held, and the mitigation is the reason.** The chunk renderer was built before any gameplay depended on it and the FP3 gate was hand-run at 120fps on macOS — the display's ceiling — walking continuously, which is the load pattern that stresses streaming hardest. **Exposure that remains and is nobody's step yet:** that measurement predates every per-frame cost FP4 added, and nothing re-runs it. See below. |
+| 2 | solo-dev bandwidth | **Held.** The study track has not blocked the delivery track once; the two repos version independently (`0.64.0` here, `tessera 0.440.4` there) and each phase has stayed parkable. |
+| 3 | pack-format drift | **It happened, and the guard this register named was the wrong guard.** "The pipeline's `--check` discipline" verifies that the JSON on disk is what *this* pipeline would emit from *this* pack — it can say nothing about whether this pack still matches the spec's, which is the actual fork. The guard that was needed is a cross-repo diff, opened as `L-006` on 2026-08-30 and landed as FP0.11 at 0.56.0; **its first run found 28 forked documents and 67 forked keys** among the 61 that had crossed. The register's other clause held: the pack contract doc is shared, and it lives over there. |
+| 4 | legacy regression | **Struck.** D6 held without argument; `reference/legacy_flutter/` has been read by nothing (rule 10) and no obligation to it ever appeared. |
+| 5 | fixed-step determinism | **Mitigated as planned, with one hole.** `SimClock` arrived at FP1.8 and every system ticks on it; rule 30's ban on a global pause is the same discipline seen from the other end. The hole: `Splitmix32`, which is *why* a seed reproduces a world, is named in no test (`TEST_TRACEABILITY_2026-09-10.md` TT1) — so the determinism this risk is about is asserted nowhere. |
+
+**Two risks this register did not name, both visible now:**
+
+6. **The content dimension is the long pole, not the emitter.** D3 sized the pipeline
+   retarget as "1,438 resources reused for the cost of one emitter", and the emitter was
+   indeed cheap — steps 04, 05, 10, 11 and 26 all landed. What no one sized is the
+   *import*: 930 authored documents there, 64 here, and 932 authored keys pruned out of the
+   ones that did cross (`PACK_IMPORT_MAP_2026-09-10.md`). The reuse is real; it is paid one
+   slice at a time and it will be paid for the length of the port.
+7. **Two AI sessions on one branch is the normal case, not the exception.** `CLAUDE.md`
+   §Parallel sessions assumes it and answers the version collision; it does not answer two
+   sessions appending to one shared document, which happened twice in a single afternoon
+   on `LEDGER.md` (`L-017`). The answer is already written down —
+   `AUTOMATION_DEBT_2026-09-10.md` AD3.2, a commit that takes the file CONTENTS it is given
+   rather than whatever the working tree holds.
+
+**The step risk 1 leaves behind, which no plan owns:** the FP3 gate must be re-proven
+after the fixed step gains work, and it has gained plenty — prop scatter per chunk, actor
+tracking, the aim snapshot, the production queue, and next the day boundary and crop growth
+of FP4.4. Nothing schedules that. The cheapest honest answer is a rule rather than a step:
+**a phase gate that was proven by hand is re-proven by hand at the next phase gate**, with
+the number written into the plan's progress table beside the old one. FP5's gate is the
+next one due, and the overlay FP3.6 built is still there to read it from.
+
 ---
 
 ## 8. Decision register

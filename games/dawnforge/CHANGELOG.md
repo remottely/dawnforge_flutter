@@ -8,6 +8,19 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.64.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. When this version of the game was first planned,
+  somebody wrote down five things that could go wrong. Seventeen days later
+  nobody had gone back to see which ones did. Now they have: three went the way
+  the plan hoped, one was struck, and one actually happened — the written pages
+  this game shares with its bigger sibling had quietly drifted apart, and the
+  safety net named in the plan was never the kind of net that could catch it.
+  The real net exists now. Two problems nobody had thought of are written down
+  too.
+
 ## 0.63.0
 
 ### 🧹 Internal

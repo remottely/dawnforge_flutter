@@ -8,6 +8,19 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.64.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. Quando esta versão do jogo foi planejada, alguém anotou
+  cinco coisas que podiam dar errado. Dezessete dias depois, ninguém tinha
+  voltado para ver quais deram. Agora voltaram: três seguiram como o plano
+  esperava, uma foi riscada e uma aconteceu de verdade — as páginas escritas
+  que este jogo divide com o irmão maior tinham se afastado em silêncio, e a
+  rede de segurança citada no plano nunca foi do tipo que pega isso. A rede de
+  verdade já existe. Dois problemas que ninguém tinha imaginado também estão
+  anotados.
+
 ## 0.63.0
 
 ### 🧹 Internal
