@@ -96,7 +96,7 @@ guard, `--dry-run`/`--check`, a `COMMANDS.md` row in the same commit).
   `TEMPLATE.md`, and `scripts/docs/check_manual_mirrors.py --check` (same filenames in
   `en/` and `pt-BR/`, same heading levels in the same order, every existing page listed
   in the map). Runs from the suite script.
-- **FP0.16** `scripts/project/check_changelog_is_ordered.py --check` — newest-first
+- **FP0.16** — **done 0.51.0.** `scripts/project/check_changelog_is_ordered.py --check` — newest-first
   order, no surviving `0.0.0-NEXT`, en/pt-BR section and category parity, no version
   twice. Evidence it is owed: at 0.47.0 both changelogs carried `0.45.4` and `0.45.3`
   ABOVE `0.47.0`, and 0.48.0 repaired it by hand. Runs from the suite script.

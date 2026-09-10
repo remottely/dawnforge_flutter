@@ -2,7 +2,10 @@
 """Run the whole verification suite: `flutter analyze` then `flutter test`. Exit 0 = green.
 
 The one command every task runs before its commit (CLAUDE.md §Execution Workflow step 3).
-"The suite is green" means BOTH halves passed:
+"The suite is green" means every half passed:
+
+- **the changelog pair** in shape (`check_changelog_is_ordered.py`, FP0.16) — newest
+  first, mirrored in both languages, categories in their fixed order.
 
 - **`flutter analyze`** at zero issues — the analyzer *is* half the rule set here
   (rule 4's strict typing lives in `analysis_options.yaml`), so an info-level lint is a
@@ -43,6 +46,11 @@ def main() -> int:
     args = parser.parse_args()
 
     codes: list[int] = []
+    # The changelog pair first (FP0.16): cheapest half, and a broken record is
+    # a failed task under rule 34 whatever the code does. The pending
+    # `0.0.0-NEXT` is allowed here because the suite runs BEFORE the stamp.
+    codes.append(_run("changelog", [
+        sys.executable, "scripts/project/check_changelog_is_ordered.py"]))
     if not args.test_only:
         # --fatal-infos: an info is a failure — the analyzer is half the rule set (rule 4).
         codes.append(_run("analyze", ["flutter", "analyze", "--fatal-infos"]))

@@ -8,6 +8,17 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.51.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. O livro de histórico agora confere a própria forma antes
+  de qualquer trabalho ser arquivado: página mais nova primeiro, nenhuma
+  página duas vezes, os sete títulos na ordem fixa, e os livros em inglês e em
+  português contando as mesmas páginas com os mesmos títulos. Duas páginas
+  ficaram fora de ordem por três versões antes de alguém perceber; daqui em
+  diante o conferente percebe primeiro.
+
 ## 0.50.0
 
 ### ✨ New

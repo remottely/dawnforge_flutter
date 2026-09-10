@@ -8,6 +8,16 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.51.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. The history book now checks its own shape
+  before any work is filed: newest page first, no page twice, the seven
+  headings in their fixed order, and the English and Portuguese books telling
+  the same pages with the same headings. Two pages sat out of order for three
+  versions before a person noticed; from now on the checker notices first.
+
 ## 0.50.0
 
 ### ✨ New

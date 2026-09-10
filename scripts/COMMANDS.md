@@ -18,6 +18,7 @@
 |:---|:---|
 | `python3 scripts/project/check_test_suite_is_clean.py [--analyze-only\|--test-only]` | the suite: `flutter analyze --fatal-infos` + `flutter test`; exit 0 = green |
 | `python3 scripts/project/check_ledger_ids_are_unique.py [--check\|--next]` | refuse a LEDGER.md with duplicate IDs; hand out the next free one |
+| `python3 scripts/project/check_changelog_is_ordered.py [--check]` | both changelogs newest-first, no version twice, categories in the fixed order, en/pt-BR mirrored; `--check` also refuses a surviving `0.0.0-NEXT` (runs from the suite without it) |
 
 ## scripts/pipeline/ — the content build
 
