@@ -11,7 +11,9 @@
 > thing works, only which documents must exist before it can.
 >
 > **Measured 2026-09-10 at `0.53.0`** against the spec's pack at `tessera 0.440.4`:
-> **930 Markdown documents there, 64 here.** Re-measure before acting.
+> **930 Markdown documents there, 64 here** — and inside the 59 that pair with a twin,
+> **932 authored keys this port's data classes do not declare** (§2b). Re-measure before
+> acting.
 >
 > **A caution this map cannot fix.** FP0.11's drift check — landing the same day — reported
 > on its first run that **28 of the imported documents and 67 keys have already forked**
@@ -32,6 +34,7 @@
 | **PI7** | the five caves | 5 | FP7.4 | pending |
 | **PI8** | `ui_anim_config.md` | 1 | FP5.1 | pending |
 | **PI9** | tiers 3, 4 and 5 | ~319 | FP7.5 | pending |
+| **PI10** | the field backlog inside the documents that did cross — §2b | 932 keys | FP7.7 · FP7.2 · FP7.11 · FP7.15 | pending, and it is a data-class job, not an import |
 
 ---
 
@@ -156,6 +159,56 @@ declare with its reason.
 
 ~319 documents, mechanical, and last for the reason §1 gives: a tier the player cannot
 reach is content the game must still load, scatter and offer.
+
+---
+
+## 2b. The other backlog: the fields inside the documents that DID cross
+
+Counting documents is half the measurement. The 59 paired documents here are **pruned
+copies** — rule 6 says a field with no data class cannot be authored, so an import carries
+only what this engine can read. FP0.11's check reports the rest as *behind the spec*: 1023
+authored keys across 52 documents, "the port's backlog, not a fork".
+
+Measured a second way for this map — walking one level into each authored class block —
+**932 keys across eight blocks**:
+
+| Authored block | Keys behind | The heaviest, with how many documents author them |
+|:---|---:|:---|
+| `IVisualObjectData` | 525 | `juvenile_*_frames` and `void_juvenile_*_frames` (×46 each), `ground_line_offset` (×51) |
+| `ItemData` | 182 | `primary_motion`, `secondary_motion`, `motion_speed_scale`, `motion_reach_scale`, `primary_impact_delay`, `secondary_impact_delay` (×26 each) |
+| `IWorldObjectData` | 82 | `base_max_stamina` (×24), `minigame_reward_ids` (×24), `interaction_prompt` (×14), `interaction_range` (×13), `tier_placement_rule` (×7) |
+| `ActorCreatureData` | 64 | the juvenile action-frame sets (×4 each) |
+| `PropData` | 38 | `requires_rock_body_placement` (×16), `has_directional_frames` (×16), `sway_on_contact` (×6) |
+| `IBlockData` | 20 | voxel — never crosses |
+| `IActorData` | 18 | `held_item_offset_y`, `sex` (×5), `dodge_stamina_cost` (×4), the wander fields |
+| `GroundBuildableData` | 3 | `elevation_allowed_tools` |
+
+*(The two counts differ because the two walks go different depths. Neither is wrong; use
+the check's number when reporting drift and this one when planning a data class.)*
+
+**This table is the FP7 backlog in field form**, and it lands each field on a step the plan
+already owns:
+
+- `ItemData`'s six motion fields are **FP7.7 (i)** — the swing that has no motion on screen,
+  the omission FP4.3a wrote down. 26 items author it and nothing reads it.
+- `base_max_stamina` is **FP7.7 (iv)**, the action costs; `minigame_reward_ids` is
+  **FP7.10**; `interaction_prompt` and `interaction_range` are **FP4.5(e)**, which the plan
+  already says are "authored on every document, both unread today" — this is that claim
+  measured: 14 and 13 documents.
+- `tier_placement_rule` is **FP7.3**, `requires_rock_body_placement` and
+  `elevation_allowed_tools` are **FP7.4**, `has_directional_frames` and `sway_on_contact`
+  are **FP7.15**.
+- The juvenile and void frame sets — 525 keys, by far the largest block — belong to
+  **FP7.2's breeding and FP7.11's cosmetics**: a young animal and a void variant are two
+  more rows in a sprite sheet, and neither has a renderer here. That single fact is why
+  `IVisualObjectData` looks alarming and is not: one field family, authored on nearly every
+  document, waiting on one renderer.
+
+**One caveat the method cannot remove:** *behind* does not distinguish a field this port
+pruned on import from a field the spec added afterwards. Both mean the same thing for
+planning — the port does not carry it — but only the first is a deliberate choice. The
+`shadow_origin_offset` case is the mirror image and is already recorded: the spec **dropped**
+a field that 51 documents here still author.
 
 ---
 

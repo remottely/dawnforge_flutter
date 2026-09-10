@@ -8,6 +8,18 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.62.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. A contagem de ontem das páginas escritas que faltam
+  ganhou uma segunda metade: até as páginas que a gente copiou foram aparadas
+  na entrada, porque uma página só pode falar de coisas que o jogo já sabe
+  ler. Alguém contou as linhas aparadas — 932 delas — e separou por para que
+  servem. A maioria é sobre desenhar filhotes e variantes sombrias, o que pede
+  uma rotina de desenho nova, não 500 decisões. Vinte e seis ferramentas já
+  dizem como o golpe delas deveria aparecer, e nada lê isso ainda.
+
 ## 0.61.0
 
 ### 🧹 Internal

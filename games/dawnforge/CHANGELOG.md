@@ -8,6 +8,18 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.62.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. Yesterday's count of missing written pages got
+  a second half: even the pages we DID copy were trimmed on the way in, because
+  a page can only mention things the game already knows how to read. Somebody
+  counted the trimmed-off lines — 932 of them — and sorted them by what they
+  are for. Most are about drawing baby animals and shadow variants, which needs
+  one new drawing routine, not 500 decisions. Twenty-six tools already say how
+  their swing should look, and nothing reads it yet.
+
 ## 0.61.0
 
 ### 🧹 Internal
