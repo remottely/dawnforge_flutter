@@ -8,6 +8,25 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.73.1
+
+### 🐛 Fixed
+
+- Uma versão do jogo entrou no diário sem página nenhuma. A página está
+  escrita logo abaixo, sob o número a que ela pertence.
+
+## 0.73.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. Quem constrói o jogo agora tem três rotinas escritas.
+  Uma diz onde tudo está quando alguém senta para trabalhar, para ninguém
+  precisar adivinhar. Uma procura tudo o que o projeto já anotou, para a mesma
+  pergunta não ser resolvida duas vezes. Uma roda as cinco conferências e
+  explica o que significa uma delas ficar vermelha — inclusive uma que pode
+  ficar vermelha só porque o computador estava ocupado com outra coisa, o que
+  antes custava uma tarde inteira toda vez que alguém esbarrava nela.
+
 ## 0.72.0
 
 ### 🧹 Internal

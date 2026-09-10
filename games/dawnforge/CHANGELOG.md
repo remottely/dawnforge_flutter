@@ -8,6 +8,25 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.73.1
+
+### 🐛 Fixed
+
+- One version of the game went into the diary with no page of its own. The
+  page is written below, under the number it belongs to.
+
+## 0.73.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. The helpers who build the game now have three
+  written routines. One says where everything stands when somebody sits down
+  to work, so nobody has to guess. One searches everything the project has
+  already written down, so the same question is not worked out twice. One runs
+  all five checks and explains what a red one means — including a check that
+  can go red just because the computer was busy with something else, which
+  used to cost a whole afternoon every time somebody ran into it.
+
 ## 0.72.0
 
 ### 🧹 Internal
