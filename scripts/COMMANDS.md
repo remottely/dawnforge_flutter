@@ -17,6 +17,7 @@
 | Command | What |
 |:---|:---|
 | `python3 scripts/project/check_test_suite_is_clean.py [--analyze-only\|--test-only]` | the suite: `flutter analyze --fatal-infos` + `flutter test`; exit 0 = green |
+| `python3 scripts/project/commit_merge.py -F <msgfile> [--dry-run]` | the only route to a commit with two parents: proves the merge is finished, that every staged path is one the merge itself brought, and that the message carries no AI attribution — then commits. `git merge --continue` is refused by the hook and points here (`L-008`) |
 | `python3 scripts/project/reset_local_save.py [--dry-run\|--all]` | rule 32's ritual: wipe this machine's world state so the next launch starts fresh. The app's identity is READ from the four platform files (macOS bundle id, Linux application id, Windows company+product) and a disagreement between them is refused, never guessed; settings survive unless `--all` |
 | `python3 scripts/project/check_ledger_ids_are_unique.py [--check\|--next]` | refuse a LEDGER.md with duplicate IDs; hand out the next free one |
 | `python3 scripts/project/check_changelog_is_ordered.py [--check]` | both changelogs newest-first, no version twice, categories in the fixed order, en/pt-BR mirrored; `--check` also refuses a surviving `0.0.0-NEXT` (runs from the suite without it) |

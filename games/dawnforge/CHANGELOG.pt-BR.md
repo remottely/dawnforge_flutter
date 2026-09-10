@@ -8,6 +8,19 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.61.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. Quando duas linhas de trabalho são juntadas de volta, a
+  anotação que registra a junção só podia ser escrita por um comando que
+  ninguém tinha permissão de conferir — então o único momento que guarda mais
+  trabalho de uma vez era justamente o momento em que ninguém estava olhando.
+  Agora existe um comando que olha antes: ele confere que nada foi enfiado ali
+  que a junção não trouxe, e só então escreve a anotação. Enquanto o
+  construíamos, descobrimos que colocar uma configuração na frente de um comando
+  fazia o guarda inteiro olhar para o outro lado. Isso também está corrigido.
+
 ## 0.60.0
 
 ### 🧹 Internal
@@ -30,19 +43,6 @@
   faltavam. Agora existe uma lista, agrupada para que cada lote de páginas
   chegue junto com a parte do jogo que precisa dele. Apareceu uma surpresa: a
   bancada tem 115 páginas e a gente copiou uma.
-
-## 0.60.0
-
-### 🧹 Internal
-
-- Nada mudou no jogo. Quando duas linhas de trabalho são juntadas de volta, a
-  anotação que registra a junção só podia ser escrita por um comando que
-  ninguém tinha permissão de conferir — então o único momento que guarda mais
-  trabalho de uma vez era justamente o momento em que ninguém estava olhando.
-  Agora existe um comando que olha antes: ele confere que nada foi enfiado ali
-  que a junção não trouxe, e só então escreve a anotação. Enquanto o
-  construíamos, descobrimos que colocar uma configuração na frente de um comando
-  fazia o guarda inteiro olhar para o outro lado. Isso também está corrigido.
 
 ## 0.58.0
 

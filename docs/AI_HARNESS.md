@@ -45,7 +45,16 @@ prohibitions that already exist in writing:
 
 | Hook | Event | Blocks / flags | Encodes |
 |:---|:---|:---|:---|
-| `scripts/ai/hooks/block_forbidden_git.py` | PreToolUse · Bash | `git rebase`, `git commit --amend`, `git commit` without ` -- ` pathspec, `git commit` whose message (`-m`, `-F`, `--file=`) carries AI attribution, `git commit` naming `LEDGER.md` while an ID heads two entries | §Parallel sessions, §Commit message format, ledger header |
+| `scripts/ai/hooks/block_forbidden_git.py` | PreToolUse · Bash | `git rebase`, `git commit --amend`, `git commit` without ` -- ` pathspec, `git commit` whose message (`-m`, `-F`, `--file=`) carries AI attribution, `git commit` naming `LEDGER.md` while an ID heads two entries, `git merge --continue` | §Parallel sessions, §Commit message format, ledger header, `L-008` |
+
+A leading environment assignment is stripped before the command word is read, so
+`GIT_EDITOR=true git rebase` is judged as `git rebase`. Without that, one `VAR=value`
+in front of any git invocation walked past every rule in the file — which is how the
+merge commit `L-008` records was made in the first place.
+
+`git merge --continue` is refused rather than inspected, because git allows no
+pathspec while `MERGE_HEAD` exists: the refusal names `scripts/project/commit_merge.py`,
+which proves the index holds nothing the merge did not bring and then commits.
 | `scripts/ai/hooks/check_edited_file_rules.py` | PostToolUse · Edit/Write | `pauseEngine()`/`resumeEngine()`, `.paused =` writes, raw pointer reads (`.canvasPosition`/`.devicePosition`) outside `input_helper.dart`, the word `dynamic` on a non-comment line under `lib/` | rules 30, 11, 4 |
 
 FP0.5 promised a fifth pattern, writes to a `timeScale`, and this hook will not carry

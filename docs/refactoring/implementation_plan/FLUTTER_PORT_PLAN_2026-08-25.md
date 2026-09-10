@@ -149,7 +149,7 @@ here is restated there.
   the Godot repo's `L-306` lesson (`check_pipeline_check_coverage.py`). NOT in the suite:
   it needs a repo the suite cannot assume. First green run: 28 forked documents, 67
   forked keys, `L-006`'s own `cave_elevation_drops` among them; `L-014` opened.
-- **FP0.12** — **done 0.59.0.** The merge-commit path `L-008` found: `block_forbidden_git.py`
+- **FP0.12** — **done 0.61.0.** The merge-commit path `L-008` found: `block_forbidden_git.py`
   learns `git merge --continue` and refuses it, pointing at a new
   `scripts/project/commit_merge.py` that (1) refuses a merge still holding a conflicted
   path, (2) asserts every STAGED path is one the merge itself brought (`git diff
