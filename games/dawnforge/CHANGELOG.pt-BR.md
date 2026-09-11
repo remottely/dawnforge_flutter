@@ -8,6 +8,20 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.74.0
+
+### 🔧 Changed
+
+- Quando você aperta Organizar e duas coisas são igualmente boas, agora elas
+  ficam na ordem dos nomes, como as palavras numa lista. Antes elas ficavam na
+  ordem de um código que o jogo usa só por dentro, que ninguém consegue ler.
+
+### 🧹 Internal
+
+- Toda coisa do jogo sempre carregou o nome que ela mostra para você, no seu
+  idioma, e nada no jogo tinha lido esse nome até hoje. Agora o jogo sabe ler.
+  É disso que a bancada precisa para dizer o que ela vai fazer.
+
 ## 0.73.1
 
 ### 🐛 Fixed

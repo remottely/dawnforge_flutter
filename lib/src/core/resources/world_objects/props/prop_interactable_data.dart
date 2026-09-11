@@ -22,6 +22,8 @@ import 'package:dawnforge/src/core/systems/drop/drop_entry.dart';
 class PropInteractableData extends PropData {
   PropInteractableData({
     required super.id,
+    super.displayNameKey,
+    super.descriptionKey,
     this.interactionRange = EngineConstants.interactionRange,
     this.interactionPrompt = '',
     super.spritesheetPath,
@@ -96,6 +98,8 @@ class PropInteractableData extends PropData {
   @override
   PropInteractableData clone() => PropInteractableData(
         id: id,
+        displayNameKey: displayNameKey,
+        descriptionKey: descriptionKey,
         interactionRange: interactionRange,
         interactionPrompt: interactionPrompt,
         spritesheetPath: spritesheetPath,

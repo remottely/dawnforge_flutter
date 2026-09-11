@@ -25,6 +25,8 @@ import 'package:dawnforge/src/core/systems/drop/drop_entry.dart';
 class PropCropData extends PropData {
   PropCropData({
     required super.id,
+    super.displayNameKey,
+    super.descriptionKey,
     this.groundStage = CropStage.planted,
     this.hasGroundStage = true,
     this.isWaterable = true,
@@ -222,6 +224,8 @@ class PropCropData extends PropData {
   @override
   PropCropData clone() => PropCropData(
         id: id,
+        displayNameKey: displayNameKey,
+        descriptionKey: descriptionKey,
         groundStage: groundStage,
         hasGroundStage: hasGroundStage,
         isWaterable: isWaterable,

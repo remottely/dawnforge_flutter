@@ -13,6 +13,8 @@ import 'package:dawnforge/src/core/systems/drop/drop_entry.dart';
 abstract class IWorldObjectData extends IVisualObjectData {
   IWorldObjectData({
     required super.id,
+    super.displayNameKey,
+    super.descriptionKey,
     super.spritesheetPath,
     super.frameWidth,
     super.frameHeight,

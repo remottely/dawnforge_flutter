@@ -29,6 +29,8 @@ class PropWorkstationData extends PropInteractableData {
   PropWorkstationData({
     required super.id,
     required this.workstationType,
+    super.displayNameKey,
+    super.descriptionKey,
     this.productionSpeedMultiplier = 1.0,
     super.interactionRange,
     super.interactionPrompt,
@@ -289,6 +291,8 @@ class PropWorkstationData extends PropInteractableData {
 
   PropWorkstationData _cloneAuthored() => PropWorkstationData(
         id: id,
+        displayNameKey: displayNameKey,
+        descriptionKey: descriptionKey,
         workstationType: workstationType,
         productionSpeedMultiplier: productionSpeedMultiplier,
         interactionRange: interactionRange,

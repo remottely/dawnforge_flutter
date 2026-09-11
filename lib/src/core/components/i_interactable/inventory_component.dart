@@ -462,15 +462,18 @@ final class InventoryComponent extends IComponent {
   /// PORT DELTA — the shape: a Dart [Comparator] returns an ordering, not the
   /// spec's `a sorts before b` bool, because that is what `List.sort` takes.
   ///
-  /// PORT DELTA — the fourth axis, the item's DISPLAYED NAME, has no subject
-  /// in this port and is skipped. The pack authors a `display_name_key` and
-  /// the pipeline emits it into every item's JSON and every locale table, but
-  /// no data class reads it yet: nothing has needed an item's name on screen
-  /// (a slot draws an icon and a count). So the order falls through to the
-  /// spec's own NEXT axis, the id, which is already here and is stable in
-  /// every locale. The name axis arrives with the first surface that shows one
-  /// — a tooltip, FP5 — and lands between tier and id without moving anything
-  /// else.
+  /// The fourth axis is the item's DISPLAYED NAME, and it is LIVE since
+  /// 0.74.0 — `ILocalizedData` reads the `display_name_key` the pipeline has
+  /// always emitted, so the axis finally has a subject. It sits between tier
+  /// and id exactly where the spec puts it, and it is the reason this
+  /// comparator lives here rather than in `InventorySortRules`: a name is
+  /// localized, so the alphabet that applies to it is the player's, and only
+  /// a caller that has already loaded a locale can ask for it.
+  ///
+  /// Two axes below it stay: the id breaks a tie between two items whose
+  /// names collide in one language and not another, and the amount breaks the
+  /// tie between two stacks of one item. Both are stable in every locale,
+  /// which is what keeps a sort from re-ordering itself on a language change.
   static int compareStacks(ItemStack a, ItemStack b) {
     final registry = locator<ItemRegistry>();
     final itemA = registry.getItem(a.itemId);
@@ -487,6 +490,9 @@ final class InventoryComponent extends IComponent {
     final tier = InventorySortRules.tierRank(itemA)
         .compareTo(InventorySortRules.tierRank(itemB));
     if (tier != 0) return tier;
+
+    final name = itemA.displayName.compareTo(itemB.displayName);
+    if (name != 0) return name;
 
     // One item can hold several stacks — a split overflow, or two uniques.
     // Both are broken here so the order is the same on every press.

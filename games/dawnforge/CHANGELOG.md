@@ -8,6 +8,20 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.74.0
+
+### 🔧 Changed
+
+- When you press Sort and two things are just as good as each other, they now
+  line up by their names, the way words line up in a list. Before, they lined
+  up by a code the game only uses inside itself, which nobody can read.
+
+### 🧹 Internal
+
+- Every thing in the game has always carried the name it shows you, in your
+  language, and nothing in the game had ever read it. Now the game can read it.
+  That is what the crafting bench needs to say what it is about to make.
+
 ## 0.73.1
 
 ### 🐛 Fixed

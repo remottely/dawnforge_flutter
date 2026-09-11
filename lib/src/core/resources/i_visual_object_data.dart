@@ -1,4 +1,4 @@
-import 'package:dawnforge/src/core/resources/json_reader.dart';
+import 'package:dawnforge/src/core/resources/i_localized_data.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/game_constants.dart';
 
 /// Base of every data class with visual properties — the Dart port of
@@ -10,9 +10,11 @@ import 'package:dawnforge/src/core/shared_logic/definitions/game_constants.dart'
 /// Each hierarchy level reads its own JSON slice in a `fromReader` constructor
 /// and chains to `super.fromReader` — one reader walks the whole chain, so a
 /// field is read exactly where it is declared.
-abstract class IVisualObjectData {
+abstract class IVisualObjectData extends ILocalizedData {
   IVisualObjectData({
-    required this.id,
+    required super.id,
+    super.displayNameKey,
+    super.descriptionKey,
     this.spritesheetPath = '',
     this.frameWidth = GameConstants.tileDimension,
     this.frameHeight = GameConstants.tileDimension,
@@ -36,9 +38,8 @@ abstract class IVisualObjectData {
     _validate();
   }
 
-  IVisualObjectData.fromReader(JsonReader reader)
-      : id = reader.requiredString('id'),
-        spritesheetPath = reader.stringOr('spritesheet', ''),
+  IVisualObjectData.fromReader(super.reader)
+      : spritesheetPath = reader.stringOr('spritesheet', ''),
         // frame_size is authored in TILES (same convention pipeline step 02
         // crops by: `w = frame_size[0] * TILE_DIMENSION * frames_grid[0]`),
         // so the pixel size is derived, never the raw pair — a 2-tile-wide
@@ -67,19 +68,16 @@ abstract class IVisualObjectData {
         voidBackwardFrames = reader.intOr('void_backward_frames', 0),
         soundsVolume = reader.doubleOr('sounds_volume', 1),
         tier = reader.intOr('tier', 1),
-        groups = reader.stringListOr('groups') {
+        groups = reader.stringListOr('groups'),
+        super.fromReader() {
     _validate();
   }
 
   void _validate() {
-    assert(id.isNotEmpty, '[$runtimeType] id required');
     assert(frameWidth > 0 && frameHeight > 0, '[$runtimeType($id)] frame size');
     // 0 is legal: a static object simply never animates.
     assert(animationSpeed >= 0, '[$runtimeType($id)] animation_speed negative');
   }
-
-  /// The content id — always equals the source filename without extension.
-  final String id;
 
   /// Bundled asset key of the spritesheet ('' = not yet authored).
   final String spritesheetPath;
