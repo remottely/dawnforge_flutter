@@ -8,6 +8,29 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.77.0
+
+### ✨ New
+
+- **You can make things now.** Open your backpack and press Make: a window
+  shows everything your own two hands can build. You start with a copper
+  pickaxe, and that one tool opens the whole chain — mine ore and coal, punch a
+  palm for logs, make a smelter and a workshop with your hands, and those two
+  make everything else.
+- **You can put them down.** A smelter or a workshop you made goes into the
+  world: hold it, point, and a see-through copy shows you where it lands. Green
+  means yes, red means no. This worked inside the game before today and nobody
+  could reach it, because nothing gave you the first one.
+- **Walk up to a bench and press E, or tap it,** and the same window opens for
+  that bench. A bench only makes its own things, and makes them faster than
+  your hands do.
+- Picking a recipe tells you what it needs — how many you have next to how many
+  you need — what comes out, and how long it takes. Ask for more than one with
+  plus, minus and All. While the bar fills, **the world keeps going**, and you
+  can close the window and come back. Press Stop and everything the batch had
+  not used up yet comes back to you.
+- Two new pages in the guide: **Making things** and **Putting things down**.
+
 ## 0.76.0
 
 ### 🧹 Internal

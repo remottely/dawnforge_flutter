@@ -68,6 +68,10 @@ final class DawnforgeGame extends FlameGame
   /// Flame's name for the workstation panel overlay.
   static const String workstationOverlay = 'workstation';
 
+  /// Flame's name for the hand-craft panel overlay — the same widget as the
+  /// bench, bound to the player's own two hands (`D-2`).
+  static const String handCraftOverlay = 'handCraft';
+
   /// The station whose panel is on screen, or null when none is. Set the
   /// moment the bus says a station was reached for and cleared when the panel
   /// leaves, so the overlay builder and the panel can never disagree about
@@ -293,6 +297,13 @@ final class DawnforgeGame extends FlameGame
   /// Takes the panel off screen. The panel itself calls this — through the
   /// callback it was handed — when the routed back press reaches it.
   void closeInventory() => overlays.remove(inventoryOverlay);
+
+  /// Opens what the player can make with no bench at all. The inventory panel
+  /// asks for this; the machine evicts the bag as it opens, which is the
+  /// arbiter doing its job rather than either panel knowing about the other.
+  void openHandCraft() => overlays.add(handCraftOverlay);
+
+  void closeHandCraft() => overlays.remove(handCraftOverlay);
 
   /// The same, for the bench. The station is released with the screen: an
   /// `openStation` outliving its panel is a reference to a prop whose chunk

@@ -32,6 +32,7 @@ final class InventoryPanelView extends StatefulWidget {
     required this.inventory,
     required this.onClose,
     required this.onDropToWorld,
+    required this.onOpenCrafting,
     super.key,
   });
 
@@ -43,6 +44,12 @@ final class InventoryPanelView extends StatefulWidget {
 
   /// Puts the whole of one slot on the ground at the holder's feet.
   final void Function(int slotIndex) onDropToWorld;
+
+  /// Opens what the player can make with their own two hands (`D-2`). The bag
+  /// is where it belongs: the hand-craft has no bench in the world to walk up
+  /// to, so the only place it can be reached from is the thing the player is
+  /// already carrying.
+  final VoidCallback onOpenCrafting;
 
   @override
   State<InventoryPanelView> createState() => InventoryPanelViewState();
@@ -217,6 +224,13 @@ final class InventoryPanelViewState extends State<InventoryPanelView> {
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: _title,
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: PanelButton(
+                            label: tr('ui.inventory.craft'),
+                            onPressed: widget.onOpenCrafting,
                           ),
                         ),
                         Align(

@@ -10,6 +10,7 @@ import 'package:dawnforge/src/core/systems/managers/game_input_manager.dart';
 import 'package:dawnforge/src/core/systems/managers/ui_state_machine.dart';
 import 'package:dawnforge/src/core/ui/interface/inventory_panel_view.dart';
 import 'package:dawnforge/src/core/ui/widgets/item_slot_view.dart';
+import 'package:dawnforge/src/core/ui/widgets/panel_button.dart';
 import 'package:flutter/gestures.dart' show kLongPressTimeout;
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -51,6 +52,7 @@ void main() {
       'strings': <String, Object?>{
         'ui.menu.tab.inventory': 'Inventory',
         'ui.inventory.sort': 'Sort',
+        'ui.inventory.craft': 'Make',
       },
     });
   });
@@ -60,10 +62,12 @@ void main() {
       ActorFactory.create('t1_actor_probe_player', WorldPos.zero).inventory;
 
   var closed = 0;
+  var craftingOpened = 0;
   final droppedToWorld = <int>[];
 
   Future<void> pump(WidgetTester tester, InventoryComponent inventory) async {
     closed = 0;
+    craftingOpened = 0;
     droppedToWorld.clear();
     await tester.pumpWidget(
       Directionality(
@@ -79,6 +83,7 @@ void main() {
                 inventory: inventory,
                 onClose: () => closed++,
                 onDropToWorld: droppedToWorld.add,
+                onOpenCrafting: () => craftingOpened++,
               ),
             ),
           ],
@@ -318,5 +323,20 @@ void main() {
         't1_item_pebble',
       );
     });
+  });
+
+  testWidgets('the Make button asks its owner to open the hand-craft',
+      (tester) async {
+    await pump(tester, bag());
+
+    // The bag is where the hand-craft is reached from, because it has no bench
+    // in the world to walk up to (`D-2`). The panel ASKS — which surface
+    // opens, and what happens to this one, is the arbiter's business.
+    await tester.tap(
+      find.ancestor(of: find.text('Make'), matching: find.byType(PanelButton)),
+    );
+    await tester.pump();
+
+    expect(craftingOpened, 1);
   });
 }

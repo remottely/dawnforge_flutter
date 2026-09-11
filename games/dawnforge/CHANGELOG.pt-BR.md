@@ -8,6 +8,30 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.77.0
+
+### ✨ New
+
+- **Agora dá para fazer coisas.** Abra a mochila e aperte Fazer: uma janela
+  mostra tudo o que as suas duas mãos conseguem construir. Você começa com uma
+  picareta de cobre, e essa ferramenta sozinha abre a corrente inteira — pique
+  minério e carvão, dê socos numa palmeira para tirar tronco, faça uma fundição
+  e uma oficina com as mãos, e essas duas fazem todo o resto.
+- **E dá para colocar elas no chão.** A fundição ou a oficina que você fez vai
+  para o mundo: segure, aponte, e uma cópia transparente mostra onde ela cai.
+  Verde quer dizer que pode, vermelho quer dizer que não. Isso já funcionava por
+  dentro antes de hoje e ninguém conseguia chegar lá, porque nada te dava a
+  primeira.
+- **Chegue perto de uma bancada e aperte E, ou toque nela,** e a mesma janela
+  abre para aquela bancada. Uma bancada só faz as coisas dela, e faz mais rápido
+  que as suas mãos.
+- Escolher uma receita conta do que ela precisa — quantos você tem do lado de
+  quantos você precisa — o que sai e quanto tempo leva. Peça mais de uma com
+  mais, menos e Tudo. Enquanto a barrinha enche, **o mundo continua andando**, e
+  você pode fechar a janela e voltar depois. Aperte Parar e tudo o que a fornada
+  ainda não gastou volta para você.
+- Duas páginas novas no guia: **Fazendo coisas** e **Colocando coisas no chão**.
+
 ## 0.76.0
 
 ### 🧹 Internal

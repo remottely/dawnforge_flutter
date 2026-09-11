@@ -9,6 +9,14 @@ strings:
     en: Inventory
     pt_BR: Inventário
     es: Inventario
+  ui.inventory.craft:
+    en: Make
+    pt_BR: Fazer
+    es: Hacer
+  ui.workstation.hand_craft_title:
+    en: Your own two hands
+    pt_BR: Suas duas mãos
+    es: Tus propias manos
   ui.workstation.select_recipe:
     en: Pick something to make
     pt_BR: Escolha uma coisa para fazer
