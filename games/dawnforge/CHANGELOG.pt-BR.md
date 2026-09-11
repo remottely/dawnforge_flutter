@@ -8,6 +8,22 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.75.0
+
+### 🧹 Internal
+
+- A bancada tem uma tela agora. Ela mostra tudo o que essa bancada sabe fazer, e
+  escolher uma coisa mostra quanto ela custa — quantos você tem de cada coisa do
+  lado de quantos você precisa — o que sai e quanto tempo leva nessa bancada.
+  Você diz quantas quer, aperta Fazer, e uma barra vai enchendo enquanto o mundo
+  lá fora continua andando. Dá para parar e receber de volta tudo o que ainda
+  não foi usado. **Você ainda não consegue chegar em uma**, porque nada no mundo
+  te dá uma bancada ainda, então isso fica escrito aqui e não no guia. A página
+  do guia vem junto com a mudança que coloca uma bancada na sua mão.
+- Todo botão do jogo agora é o mesmo botão por dentro, então todos respondem
+  igual ao dedo e ao mouse, e um botão que você não pode usar fica com cara de
+  desligado em vez de sumir.
+
 ## 0.74.0
 
 ### 🔧 Changed

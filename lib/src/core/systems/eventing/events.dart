@@ -29,6 +29,16 @@ final class Events {
   /// The render layer listens and unbinds the renderer.
   final worldObjectDespawned = EventSignal<Object>();
 
+  /// A workstation was reached for, and by whom — the port of the spec's
+  /// `Events.workstation_interaction`.
+  ///
+  /// It exists because the two halves of opening a bench live on opposite
+  /// sides of the game: the station knows it was touched, and only the shell
+  /// can put a widget on screen. Payloads are `Object` like every host payload
+  /// on this bus — the station is a `PropWorkstation` and the interactor an
+  /// `IActor`, and naming either here would make the bus import the world.
+  final workstationInteracted = EventSignal<(Object station, Object by)>();
+
   /// The GROUND at a tile became something else (FP4.3b: a bridge laid over
   /// water). Typed, unlike the host payloads above — a [GridPos] is a
   /// definition, not a host, so naming it costs the bus nothing.

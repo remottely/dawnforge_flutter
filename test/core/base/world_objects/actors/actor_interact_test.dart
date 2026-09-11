@@ -12,6 +12,7 @@ import 'package:dawnforge/src/core/registries/prop_registry.dart';
 import 'package:dawnforge/src/core/resources/world_objects/grounds/ground_buildable_data.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/spatial.dart';
 import 'package:dawnforge/src/core/systems/boot.dart';
+import 'package:dawnforge/src/core/systems/eventing/events.dart';
 import 'package:dawnforge/src/core/systems/world/grid_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -112,6 +113,23 @@ void main() {
 
     expect(actor.tryInteract(aimFrom(actor, const GridPos(5, 5))), isTrue);
     expect(heard, same(actor), reason: 'the signal carries the interactor');
+  });
+
+  test('a reach on a bench is announced on the bus, with both parties', () {
+    // The station knows it was touched and only the shell can put a widget on
+    // screen, so the two halves meet here (FP4.5f). A `Prop` that imported a
+    // screen would be a simulation that cannot run without one.
+    final actor = playerAt(const GridPos(4, 5));
+    final bench = propAt('t1_prop_probe_bench', const GridPos(5, 5))
+        as PropWorkstation;
+    final announced = <(Object, Object)>[];
+    locator<Events>().workstationInteracted.connect(announced.add);
+
+    expect(actor.tryInteract(aimFrom(actor, const GridPos(5, 5))), isTrue);
+
+    expect(announced, hasLength(1));
+    expect(announced.single.$1, same(bench));
+    expect(announced.single.$2, same(actor));
   });
 
   test('open ground answers nothing, and it is not an error', () {

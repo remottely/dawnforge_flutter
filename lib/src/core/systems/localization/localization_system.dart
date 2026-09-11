@@ -41,8 +41,42 @@ final class LocalizationSystem {
     return text;
   }
 
+  /// [tr] with the holes filled — the port of the spec's `tr(key) % [...]`.
+  ///
+  /// PORT DELTA — the placeholders are NAMED (`{item}`), not positional
+  /// (`%s`). The spec's own tables are the argument: `ui.workstation.
+  /// producing_progress` reads `Producing %s: %d/%d` in English and
+  /// `Produzindo %s: %d/%d` in Portuguese only because the two languages
+  /// happen to agree on the order this time. A translator who needs the count
+  /// before the name has no way to say so with `%s`, and gets a sentence with
+  /// the pieces in the wrong holes. A name survives being moved.
+  ///
+  /// Every hole must be filled and every value must be used, both asserted
+  /// (rule 5): a leftover `{item}` on screen and a value that reaches no hole
+  /// are the same wiring bug seen from its two ends.
+  String trFormat(String key, Map<String, Object> values) {
+    var text = tr(key);
+    for (final entry in values.entries) {
+      final hole = '{${entry.key}}';
+      assert(
+        text.contains(hole),
+        '[LocalizationSystem] $key has no $hole to fill',
+      );
+      text = text.replaceAll(hole, '${entry.value}');
+    }
+    assert(
+      !text.contains('{'),
+      '[LocalizationSystem] $key still has a hole after filling: $text',
+    );
+    return text;
+  }
+
   int get stringCount => _strings.length;
 }
 
 /// The project-wide `tr()` (rule 19).
 String tr(String key) => locator<LocalizationSystem>().tr(key);
+
+/// The project-wide `tr()` for a string with holes in it (rule 19).
+String trFormat(String key, Map<String, Object> values) =>
+    locator<LocalizationSystem>().trFormat(key, values);

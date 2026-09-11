@@ -122,6 +122,17 @@
     "player.description": "That is you.",
     "player.display_name": "Player",
     "ui.inventory.sort": "Sort",
-    "ui.menu.tab.inventory": "Inventory"
+    "ui.menu.tab.inventory": "Inventory",
+    "ui.workstation.cancel": "Stop",
+    "ui.workstation.ingredient_have_need": "{have} of {need} {item}",
+    "ui.workstation.max": "All",
+    "ui.workstation.output_format": "Makes {amount} {item}",
+    "ui.workstation.producing": "Making {item}",
+    "ui.workstation.producing_progress": "Making {item}: {current} of {total}",
+    "ui.workstation.quantity": "How many:",
+    "ui.workstation.requires": "You need:",
+    "ui.workstation.select_recipe": "Pick something to make",
+    "ui.workstation.start_production": "Make it",
+    "ui.workstation.time_seconds": "Takes {seconds} seconds"
   }
 }

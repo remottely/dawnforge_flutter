@@ -1,9 +1,12 @@
+import 'package:dawnforge/src/core/base/world_objects/actors/i_actor.dart';
 import 'package:dawnforge/src/core/base/world_objects/props/prop.dart';
 import 'package:dawnforge/src/core/components/i_interactable/interactable_component.dart';
 import 'package:dawnforge/src/core/components/i_interactable/workstation_component.dart';
 import 'package:dawnforge/src/core/resources/items/item_data.dart';
 import 'package:dawnforge/src/core/resources/world_objects/props/prop_workstation_data.dart';
+import 'package:dawnforge/src/core/systems/boot.dart';
 import 'package:dawnforge/src/core/systems/drop/world_drop_helper.dart';
+import 'package:dawnforge/src/core/systems/eventing/events.dart';
 
 /// A prop you make things at — the host half of `prop_workstation.gd`.
 /// Created only by `PropFactory.create()` (rule 1), which routes here when
@@ -16,8 +19,7 @@ import 'package:dawnforge/src/core/systems/drop/world_drop_helper.dart';
 ///
 /// PORT DELTAS: `WorkstationEffectsComponent` and the
 /// `working`/`idle` animation are render-side (`WorldObjectRenderer` reads the
-/// signals when it learns to); `Events.workstation_interaction` lands with
-/// the surface that answers it.
+/// signals when it learns to).
 final class PropWorkstation extends Prop {
   PropWorkstation(super.random);
 
@@ -31,11 +33,9 @@ final class PropWorkstation extends Prop {
   /// component on every prop is a component whose data does not exist
   /// (`L-005`).
   ///
-  /// Nothing is connected to its signal YET, and that is the honest shape of
-  /// this slice: the bench SURFACE is FP4.5(f), and it is the listener. A
-  /// handler written here now would be an empty method dressed as a feature
-  /// (rule 5), and the wire it stands in for is one line in the commit that
-  /// has something to open.
+  /// Since 0.75.0 its signal has a listener, which is what FP4.5(e) said it
+  /// was waiting for: a reach is announced on the bus and the shell answers by
+  /// putting the bench on screen.
   late final InteractableComponent interactable;
 
   @override
@@ -43,8 +43,18 @@ final class PropWorkstation extends Prop {
     super.setupComponents();
     workstation = addComponent(WorkstationComponent());
     workstation.itemsSpilled.connect(_onItemsSpilled);
-    interactable = addComponent(InteractableComponent());
+    interactable = addComponent(InteractableComponent())
+      ..interacted.connect(_onInteracted);
   }
+
+  /// Says on the bus that this station was reached for, and by whom.
+  ///
+  /// It announces and does not open, for the reason the spill above announces
+  /// and does not drop: a widget is the shell's dimension, not a prop's, and
+  /// a `Prop` that imported a screen would be a simulation that cannot run
+  /// without one.
+  void _onInteracted(IActor interactor) =>
+      locator<Events>().workstationInteracted.emit((this, interactor));
 
   /// Puts a spilled item into the world at this station's face — the one
   /// part of a drop the component cannot answer, because it is geometry.

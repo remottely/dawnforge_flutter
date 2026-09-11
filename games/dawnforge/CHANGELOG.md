@@ -8,6 +8,22 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.75.0
+
+### 🧹 Internal
+
+- The bench has a screen now. It lists what this bench can make, and picking
+  one shows you what it costs — how many you have of each thing next to how
+  many you need — what comes out, and how long it takes at this bench. You say
+  how many you want, press Make it, and a bar fills while the world outside
+  keeps going. You can stop a batch and get back everything it had not used
+  yet. **You still cannot reach one**, because nothing in the world gives you a
+  bench yet, so this is written down here and not in the guide. The guide page
+  comes with the commit that puts a bench in your hands.
+- Every button in the game is now the same button underneath, so they all
+  answer a finger and a mouse the same way and a button you cannot use looks
+  the part instead of disappearing.
+
 ## 0.74.0
 
 ### 🔧 Changed

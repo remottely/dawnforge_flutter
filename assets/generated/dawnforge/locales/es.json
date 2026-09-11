@@ -122,6 +122,17 @@
     "player.description": "Ese eres tú.",
     "player.display_name": "Jugador",
     "ui.inventory.sort": "Ordenar",
-    "ui.menu.tab.inventory": "Inventario"
+    "ui.menu.tab.inventory": "Inventario",
+    "ui.workstation.cancel": "Parar",
+    "ui.workstation.ingredient_have_need": "{have} de {need} {item}",
+    "ui.workstation.max": "Todo",
+    "ui.workstation.output_format": "Hace {amount} {item}",
+    "ui.workstation.producing": "Haciendo {item}",
+    "ui.workstation.producing_progress": "Haciendo {item}: {current} de {total}",
+    "ui.workstation.quantity": "Cuántas:",
+    "ui.workstation.requires": "Necesitas:",
+    "ui.workstation.select_recipe": "Elige algo para hacer",
+    "ui.workstation.start_production": "Hacer",
+    "ui.workstation.time_seconds": "Tarda {seconds} segundos"
   }
 }

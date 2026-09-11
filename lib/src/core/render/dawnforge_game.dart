@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:dawnforge/src/core/base/world_objects/actors/player/actor_player.dart';
 import 'package:dawnforge/src/core/base/world_objects/items/item_world.dart';
 import 'package:dawnforge/src/core/base/world_objects/props/prop_crop.dart';
+import 'package:dawnforge/src/core/base/world_objects/props/prop_workstation.dart';
 import 'package:dawnforge/src/core/base/world_objects/world_object.dart';
 import 'package:dawnforge/src/core/factories/actor_factory.dart';
 import 'package:dawnforge/src/core/registries/item_registry.dart';
@@ -63,6 +64,15 @@ final class DawnforgeGame extends FlameGame
 
   /// Flame's name for the inventory panel overlay.
   static const String inventoryOverlay = 'inventory';
+
+  /// Flame's name for the workstation panel overlay.
+  static const String workstationOverlay = 'workstation';
+
+  /// The station whose panel is on screen, or null when none is. Set the
+  /// moment the bus says a station was reached for and cleared when the panel
+  /// leaves, so the overlay builder and the panel can never disagree about
+  /// which bench is open.
+  PropWorkstation? openStation;
 
   /// Every simulated host, ticked on the fixed step.
   final List<WorldObject> simObjects = <WorldObject>[];
@@ -215,6 +225,15 @@ final class DawnforgeGame extends FlameGame
       unawaited(Future<void>.sync(() => world.add(ItemWorldRenderer(pickup))));
     });
 
+    // A bench was reached for. The shell is the only thing that can put a
+    // widget on screen, and this is the whole of what it decides — WHICH
+    // bench was touched is the simulation's answer, carried on the bus.
+    locator<Events>().workstationInteracted.connect((payload) {
+      final (station, _) = payload;
+      openStation = station as PropWorkstation;
+      overlays.add(workstationOverlay);
+    });
+
     // Which surfaces are ON SCREEN is the shell's job — a widget cannot mount
     // itself. What each one DOES once mounted is entirely its own, which is
     // why the panel closes itself through a callback rather than this class
@@ -274,6 +293,14 @@ final class DawnforgeGame extends FlameGame
   /// Takes the panel off screen. The panel itself calls this — through the
   /// callback it was handed — when the routed back press reaches it.
   void closeInventory() => overlays.remove(inventoryOverlay);
+
+  /// The same, for the bench. The station is released with the screen: an
+  /// `openStation` outliving its panel is a reference to a prop whose chunk
+  /// may have recycled under it.
+  void closeWorkstation() {
+    overlays.remove(workstationOverlay);
+    openStation = null;
+  }
 
   /// Puts the whole of one of the player's slots on the ground at its feet.
   ///
