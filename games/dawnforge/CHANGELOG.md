@@ -8,6 +8,16 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.76.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. The part that knows how to make things was
+  sitting inside the workbench, and the player's own two hands are about to
+  need the same part. It moved out into one place that both can use, so the
+  hands and the bench can never end up disagreeing about what making something
+  means.
+
 ## 0.75.0
 
 ### 🧹 Internal

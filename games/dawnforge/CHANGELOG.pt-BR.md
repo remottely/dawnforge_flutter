@@ -8,6 +8,15 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.76.0
+
+### 🧹 Internal
+
+- Nada no jogo mudou. A parte que sabe fazer coisas estava dentro da bancada, e
+  as duas mãos do jogador vão precisar da mesma parte. Ela saiu para um lugar só,
+  que os dois usam, então a mão e a bancada nunca vão discordar sobre o que é
+  fazer uma coisa.
+
 ## 0.75.0
 
 ### 🧹 Internal

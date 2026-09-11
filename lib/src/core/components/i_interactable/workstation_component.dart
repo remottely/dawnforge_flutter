@@ -5,8 +5,8 @@ import 'package:dawnforge/src/core/domain/production/production_rules.dart';
 import 'package:dawnforge/src/core/registries/item_registry.dart';
 import 'package:dawnforge/src/core/resources/items/item_craftable_data.dart';
 import 'package:dawnforge/src/core/resources/items/item_data.dart';
-import 'package:dawnforge/src/core/resources/world_objects/props/allocated_material.dart';
-import 'package:dawnforge/src/core/resources/world_objects/props/prop_workstation_data.dart';
+import 'package:dawnforge/src/core/resources/production/allocated_material.dart';
+import 'package:dawnforge/src/core/resources/production/i_producer_data.dart';
 import 'package:dawnforge/src/core/systems/boot.dart';
 import 'package:dawnforge/src/core/systems/eventing/event_signal.dart';
 
@@ -19,7 +19,7 @@ import 'package:dawnforge/src/core/systems/eventing/event_signal.dart';
 /// dimension, not the component's. [itemsSpilled] is the wire; `PropWorkstation`
 /// connects it to `WorldDropHelper`. Nothing here imports a world.
 ///
-/// Every number it reads lives on the data soul ([PropWorkstationData], rule 8).
+/// Every number it reads lives on the data soul ([IProducerData], rule 8).
 /// The component owns the SEQUENCE and nothing else: which order consume,
 /// allocate, tick, spill and clear happen in, and which signal each step
 /// fires. The arithmetic is `ProductionRules`; the affordability is
@@ -55,16 +55,22 @@ final class WorkstationComponent extends IComponent {
   /// unit, or a cancelled batch's leftovers. The host answers with a pickup.
   final itemsSpilled = EventSignal<(ItemData item, int amount)>();
 
-  /// Typed view over the soul. Asserted at attach, not on every read: a
-  /// station whose data is not workstation data was assembled by the wrong
-  /// factory, and that is a wiring bug (rule 5), not a state.
-  PropWorkstationData get workstationData => data as PropWorkstationData;
+  /// Typed view over the soul. Asserted at attach, not on every read: a host
+  /// whose data cannot make things was assembled by the wrong factory, and
+  /// that is a wiring bug (rule 5), not a state.
+  ///
+  /// It is [IProducerData] and not `PropWorkstationData` since 0.76.0, which
+  /// is the whole of what made the hand-craft possible: a player's soul is a
+  /// bench of type NONE at speed 1.0, so the SAME component, the same
+  /// sequence and the same signals serve both. `D-2` asked for one code path
+  /// and one behaviour to learn; this is where that is true.
+  IProducerData get workstationData => data as IProducerData;
 
   @override
   void onAttach() {
     assert(
-      data is PropWorkstationData,
-      '[WorkstationComponent] requires PropWorkstationData, got '
+      data is IProducerData,
+      '[WorkstationComponent] requires IProducerData, got '
       '${data.runtimeType}',
     );
   }
