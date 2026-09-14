@@ -6,6 +6,7 @@ import 'package:vector_math/vector_math.dart';
 import '../core/ivec3.dart';
 import '../game/sfx.dart';
 import '../player/player.dart';
+import '../world/godot_camera.dart';
 import '../world/voxel_world.dart';
 
 /// A fishing bobber: flies from the rod hand to the water cell it was cast at,
@@ -40,20 +41,18 @@ class Bobber {
   }
 
   void _buildBody() {
-    final float = Node(
-      mesh: Mesh(SphereGeometry(radius: 0.11),
-          UnlitMaterial()..baseColorFactor = Vector4(0.90, 0.20, 0.15, 1)),
+    final float = GodotCamera.primitiveNode(
+      Mesh(SphereGeometry(radius: 0.11), UnlitMaterial()..baseColorFactor = Vector4(0.90, 0.20, 0.15, 1)),
     );
-    final cap = Node(
-      mesh: Mesh(SphereGeometry(radius: 0.06),
-          UnlitMaterial()..baseColorFactor = Vector4(0.95, 0.95, 0.92, 1)),
+    final cap = GodotCamera.primitiveNode(
+      Mesh(SphereGeometry(radius: 0.06), UnlitMaterial()..baseColorFactor = Vector4(0.95, 0.95, 0.92, 1)),
     )..position = Vector3(0, 0.12, 0);
     node.add(float);
     node.add(cap);
-    _line = Node(
-      mesh: Mesh(CuboidGeometry(Vector3(0.012, 0.012, 1.0)),
-          UnlitMaterial()..baseColorFactor = Vector4(0.12, 0.12, 0.12, 1)),
-    )..castsShadows = false;
+    _line = GodotCamera.primitiveNode(
+      Mesh(CuboidGeometry(Vector3(0.012, 0.012, 1.0)), UnlitMaterial()..baseColorFactor = Vector4(0.12, 0.12, 0.12, 1)),
+      castsShadows: false,
+    );
     node.position = position;
   }
 

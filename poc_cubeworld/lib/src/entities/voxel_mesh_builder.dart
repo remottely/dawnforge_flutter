@@ -71,13 +71,14 @@ class VoxelMeshBuilder {
           colors[v * 4 + 3] = 1.0;
           v++;
         }
-        // Counter-clockwise front faces (flutter_scene), mirrored from Godot.
+        // Godot's winding (clockwise seen from the normal side), drawn front
+        // facing through `GodotCamera`.
         indices[ii++] = first;
-        indices[ii++] = first + 2;
         indices[ii++] = first + 1;
-        indices[ii++] = first;
-        indices[ii++] = first + 3;
         indices[ii++] = first + 2;
+        indices[ii++] = first;
+        indices[ii++] = first + 2;
+        indices[ii++] = first + 3;
       }
     }
     return MeshGeometry.fromArrays(positions: positions, normals: normals, colors: colors, indices: indices);

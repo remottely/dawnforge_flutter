@@ -22,6 +22,7 @@ import '../entities/spawner.dart';
 import '../entities/target.dart';
 import '../entities/voxel_body.dart';
 import '../player/player.dart';
+import '../world/godot_camera.dart';
 import '../world/terrain_generator.dart';
 import '../world/terrain_material.dart';
 import '../world/voxel_world.dart';
@@ -430,7 +431,10 @@ class Game extends ChangeNotifier {
       shadowSoftness: 0.04,
       shadowDepthBias: 0.02,
       shadowNormalBias: 0.06,
-      shadowCasterFaces: _arg('--casterfaces=', 'back') == 'front' ? ShadowCasterFaces.front : ShadowCasterFaces.back,
+      // The terrain and the voxel models wind like Godot, which the unmirrored
+      // shadow pass reads as the engine's back faces: `front` here draws the
+      // real back faces into the map (what `back` did before `GodotCamera`).
+      shadowCasterFaces: _arg('--casterfaces=', 'back') == 'front' ? ShadowCasterFaces.back : ShadowCasterFaces.front,
       shadowAmbientStrength: 0.0,
     );
     scene.sunLight = sun;
@@ -1400,9 +1404,7 @@ class Game extends ChangeNotifier {
     final mat = UnlitMaterial()
       ..baseColorFactor = Vector4(color.x, color.y, color.z, 0.55)
       ..alphaMode = AlphaMode.blend;
-    final node = Node(mesh: Mesh(SphereGeometry(radius: 0.5), mat))
-      ..position = at.clone()
-      ..castsShadows = false;
+    final node = GodotCamera.primitiveNode(Mesh(SphereGeometry(radius: 0.5), mat), castsShadows: false)..position = at.clone();
     entities.add(node);
     _effects.add(_Effect(node, mat, radius, color));
   }
@@ -1421,10 +1423,9 @@ class Game extends ChangeNotifier {
         ..baseColorFactor = Vector4(color.x * f, color.y * f, color.z * f, 1)
         ..roughnessFactor = 1.0
         ..metallicFactor = 0.0;
-      final node = Node(mesh: Mesh(cube, mat))
+      final node = GodotCamera.primitiveNode(Mesh(cube, mat), castsShadows: false)
         ..position = at + Vector3(random.nextDouble() * 0.6 - 0.3, random.nextDouble() * 0.6 - 0.2, random.nextDouble() * 0.6 - 0.3)
-        ..scale = Vector3(size, size, size)
-        ..castsShadows = false;
+        ..scale = Vector3(size, size, size);
       entities.add(node);
       _debris.add(_Debris(node, Vector3(random.nextDouble() * 4 - 2, 2 + random.nextDouble() * 2, random.nextDouble() * 4 - 2) * speed, size));
     }
@@ -1558,7 +1559,7 @@ class Game extends ChangeNotifier {
     world.setBlock(at, Blocks.air);
     final c = Blocks.def(Blocks.indexOf('tnt'));
     final mat = UnlitMaterial()..baseColorFactor = Vector4(c.r, c.g, c.b, 1);
-    final node = Node(mesh: Mesh(CuboidGeometry(Vector3(1, 1, 1)), mat))..position = at.centre;
+    final node = GodotCamera.primitiveNode(Mesh(CuboidGeometry(Vector3(1, 1, 1)), mat))..position = at.centre;
     entities.add(node);
     _tnts.add(_Tnt(node, mat, at));
     Sfx.play('dig', -6.0, 1.5);

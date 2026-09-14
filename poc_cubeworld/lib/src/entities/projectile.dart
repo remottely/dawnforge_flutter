@@ -6,6 +6,7 @@ import 'package:vector_math/vector_math.dart';
 import '../core/ivec3.dart';
 import '../game/game.dart';
 import '../player/player.dart';
+import '../world/godot_camera.dart';
 import '../world/voxel_world.dart';
 import 'mob.dart';
 import 'voxel_body.dart';
@@ -56,8 +57,8 @@ class Projectile {
       node.add(VoxelMeshBuilder.meshNode(v, 0.09, Vector3(0.5, 0.5, 0.5)));
       _light = PointLight(color: col, intensity: 6.0, range: 4.0);
       node.addComponent(PointLightComponent(_light!));
-      final trail = Node(
-        mesh: Mesh(
+      final trail = GodotCamera.primitiveNode(
+        Mesh(
           CuboidGeometry(Vector3(radius * 0.8, radius * 0.8, 1.6)),
           UnlitMaterial()
             ..baseColorFactor = Vector4(col.x, col.y, col.z, 0.45)
@@ -94,7 +95,9 @@ class Projectile {
     final dist = dir.length;
     if (dist > 0.0) {
       dir.scale(1.0 / dist);
-      node.lookAtFrom(from, to, up: dir.y.abs() < 0.99 ? Vector3(0, 1, 0) : Vector3(1, 0, 0));
+      // Godot's `look_at` turns local -Z toward the target; flutter_scene's
+      // `lookAtFrom` turns +Z, so aim it at the point behind.
+      node.lookAtFrom(from, from - dir, up: dir.y.abs() < 0.99 ? Vector3(0, 1, 0) : Vector3(1, 0, 0));
     }
     // Bodies (mobs, and the player for hostile shots), nearest first along the
     // segment. A replica never resolves a hit: only the simulation that owns

@@ -66,6 +66,35 @@ the Godot POC's, so the two roadmaps line up.
 
 ## Session log
 
+- **2026-09-14** — the render was mirrored left-right against Godot since the first port commit. flutter_scene's
+  `PerspectiveCamera` builds `right = up x forward` and projects +forward into the screen, a left-handed view; the port
+  fed it Godot's right-handed world unchanged, so world +X landed on screen-LEFT at yaw 0. `--stage22` and `--stage27`
+  prove it: the same camera pose as Godot put +X on the opposite side. The port had compensated piece by piece instead
+  of fixing it: a mirrored `rightVec`, `yaw += look.dx` against Godot's `_yaw -= relative.x`, quads wound the other
+  way in both mesh builders, and the boat steering and roll signs flipped.
+  - **One conversion, at the camera.** `GodotCamera` (`lib/src/world/godot_camera.dart`) is a `PerspectiveCamera`
+    whose lens negates clip-space x, used by the player and the title vista. The world, the lights, raycasts and
+    `worldToScreen` stay in Godot's coordinates. Everything compensated went back to Godot's form: `rightVec =
+    (cos, 0, -sin)`, the mouse sign, the mesher's and `VoxelMeshBuilder`'s winding (Godot's `Quad` index for index),
+    the boat's `steer * -1.7` and `-steer` roll, and the boat dismount offset.
+  - **What the mirror costs.** Screen winding reverses. The engine's own `CuboidGeometry` and `SphereGeometry` (the
+    crack box, debris, effects, TNT, bobber, fireball trail) sit in a child scaled (-1, 1, 1): they are symmetric,
+    and flutter_scene re-winds a mirrored transform. The shadow pass is not mirrored, so the caster-faces default is
+    now `front`, which draws the same real back faces `back` drew before. The engine-derived `cameraRight` used by
+    SSAO, SSR, GI and contact shadows would disagree with the view, but the game enables none of them.
+  - **A second convention bug of the same family.** flutter_scene's `lookAtFrom` turns local +Z toward the target,
+    while Godot's `look_at` turns -Z. Arrows and bolt trails flew backwards; the projectile now aims at the point
+    behind.
+  - Verified: `handedness_test.dart` (+X at yaw 0 projects to NDC x > 0, while the plain camera gives < 0; strafe
+    and forward are Godot's; a mouse move to the right turns right; stairs ids from yaw match Godot's `facing_suffix`),
+    and the stage 31 winding test now expects clockwise. Captures: `--stage22` looking south shows the slab (west)
+    right and the fence post and lava (east) left; `--stage27` looking north puts the lever end x0 of every row on the
+    left; `--stage19` reads oak slab, stone slab, fences, stairs from left to right; the plain boot shows the ocean to
+    the west on the left, and the `--map` minimap has the same ocean to the north-west, north up. `--stage31` (sky
+    1 / block 10, sky 7, 4107 AO vertices, 28 cells in 9.7 s, 7.2 m), `--stage32` (seam 8/6, 1.62 m, vignette 0.90,
+    crack alpha 0.48, 12 steps, 0.72 s, `+6 Apple`, damage numbers on the zombie) and `--title-probe` (81 vista
+    chunks, 5 buttons) are unchanged. No face is inside out, and the shadows fall as before.
+
 - **2026-09-14** — stage 32, the port of `82ff6b52e9`. Every `--stage32` line printed Godot's figures: the seam cell
   at 8 and the third at 6, the zombie shoved 1.62 m, vignette 0.90, crack alpha 0.48, 12 steps over 5.3 m, the sun /
   roof / pool zombies, the death clock and the merged `+6 Apple`. `--stage31`, `--stage29`, `--strike` and the title

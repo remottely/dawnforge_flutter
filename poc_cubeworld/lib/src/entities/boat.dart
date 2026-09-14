@@ -76,7 +76,7 @@ class Boat extends VoxelBody {
       applyGravity(dt);
     }
     if (driver != null) {
-      yaw += steer * 1.7 * dt;
+      yaw += steer * -1.7 * dt; // Godot: D (steer +1) turns toward +X, clockwise from above
       final fwd = Vector3(-math.sin(yaw), 0, -math.cos(yaw));
       final target = fwd * throttle * (inWater ? 6.5 : 1.5);
       velocity.x = lerpd(velocity.x, target.x, dt * 2.5);
@@ -87,7 +87,7 @@ class Boat extends VoxelBody {
     }
     move(dt);
     syncNode();
-    _roll = lerpd(_roll, steer * 0.12 * throttle, dt * 4.0);
+    _roll = lerpd(_roll, -steer * 0.12 * throttle, dt * 4.0);
     _hull.rotation = eulerYXZ(0, yaw, _roll);
     _hull.position = Vector3(0, inWater ? math.sin(_time * 2.0 + position.x) * 0.03 : 0.0, 0);
   }

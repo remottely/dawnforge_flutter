@@ -109,7 +109,7 @@ void main() {
     expect(bright, 24); // the six faces of the torch box
   });
 
-  test('AO: the diagonal never runs through the darker corner, and quads wind counter-clockwise', () {
+  test("AO: the diagonal never runs through the darker corner, and quads wind clockwise (Godot's winding)", () {
     final c = floorChunk();
     put(c, 5, floorY, 5, 'stone'); // darkens one corner of the floor top at (6, 9, 6)
     final r = build(c);
@@ -120,11 +120,11 @@ void main() {
     for (var q = 0; q < s.faceCount; q++) {
       final tri = [for (var k = 0; k < 6; k++) s.indices[q * 6 + k]];
       final first = tri.reduce(math.min);
-      // CCW seen from the face's normal side.
+      // Clockwise seen from the face's normal side (Godot's `Quad`).
       final n = Vector3(s.normals[first * 3], s.normals[first * 3 + 1], s.normals[first * 3 + 2]);
       for (var t = 0; t < 2; t++) {
         final a = pos(tri[t * 3]), b = pos(tri[t * 3 + 1]), cc = pos(tri[t * 3 + 2]);
-        expect((b - a).cross(cc - a).dot(n), greaterThan(0), reason: 'quad $q triangle $t');
+        expect((b - a).cross(cc - a).dot(n), lessThan(0), reason: 'quad $q triangle $t');
       }
       final p0 = pos(first);
       if (n.y == 1.0 && p0.y == floorY.toDouble() && p0.x == 6.0 && p0.z == 6.0) {

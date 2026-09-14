@@ -99,17 +99,18 @@ class _Surface {
     l.add(block);
   }
 
-  /// Two triangles for the quad a-b-c-d, wound counter-clockwise (flutter_scene
-  /// front faces) — the Godot POC wound clockwise, so the diagonals are mirrored.
-  /// Unflipped the shared diagonal is 0-2, flipped it is 1-3 (Godot's choice for
-  /// an anisotropic AO: `flip = ao0 + ao2 < ao1 + ao3`).
+  /// Two triangles for the quad a-b-c-d, Godot's `Quad` index for index
+  /// (clockwise seen from the normal side; `GodotCamera` renders Godot's
+  /// handedness, so its winding is the front). Unflipped the shared diagonal is
+  /// 0-2, flipped it is 1-3 (Godot's choice for an anisotropic AO:
+  /// `flip = ao0 + ao2 < ao1 + ao3`).
   void quadIndices(int f, bool flip) {
     if (!flip) {
-      i.add(f); i.add(f + 2); i.add(f + 1);
-      i.add(f); i.add(f + 3); i.add(f + 2);
+      i.add(f); i.add(f + 1); i.add(f + 2);
+      i.add(f); i.add(f + 2); i.add(f + 3);
     } else {
-      i.add(f + 1); i.add(f + 3); i.add(f + 2);
-      i.add(f + 1); i.add(f); i.add(f + 3);
+      i.add(f + 1); i.add(f + 2); i.add(f + 3);
+      i.add(f + 1); i.add(f + 3); i.add(f);
     }
   }
 

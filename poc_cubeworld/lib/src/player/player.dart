@@ -29,6 +29,7 @@ import '../game/net.dart';
 import '../game/rails.dart';
 import '../game/sfx.dart';
 import '../game/talents.dart';
+import '../world/godot_camera.dart';
 import '../world/voxel_world.dart';
 
 class PlayerClass {
@@ -210,9 +211,8 @@ class Player extends VoxelBody implements Target {
     _crackMat = UnlitMaterial()
       ..baseColorFactor = Vector4(0, 0, 0, 0)
       ..alphaMode = AlphaMode.blend;
-    crack = Node(mesh: Mesh(CuboidGeometry(Vector3(1.01, 1.01, 1.01)), _crackMat))
-      ..visible = false
-      ..castsShadows = false;
+    crack = GodotCamera.primitiveNode(Mesh(CuboidGeometry(Vector3(1.01, 1.01, 1.01)), _crackMat), castsShadows: false)
+      ..visible = false;
     _buildCrackStages();
 
     torchLight = PointLight(color: Vector3(1.0, 0.8, 0.5), intensity: 0.0, range: 9.0);
@@ -278,14 +278,20 @@ class Player extends VoxelBody implements Target {
   // --- camera -----------------------------------------------------------------
 
   Vector3 get forward => Vector3(-math.sin(yaw) * math.cos(pitch), math.sin(pitch), -math.cos(yaw) * math.cos(pitch));
-  Vector3 get flatForward => Vector3(-math.sin(yaw), 0, -math.cos(yaw));
-  // flutter_scene builds its view basis as `up x forward`, so its screen-right
-  // is the mirror of the right-handed right vector the Godot POC uses: at yaw 0
-  // world +X projects to the left half of the view. Every lateral quantity here
-  // is that mirrored basis, or strafing and the shoulder offset come out flipped.
-  Vector3 get rightVec => Vector3(-math.cos(yaw), 0, math.sin(yaw));
+  Vector3 get flatForward => flatForwardFor(yaw);
+  // Godot's right-handed basis (`player.gd`: `right := Vector3(cos(_yaw), 0,
+  // -sin(_yaw))`); `GodotCamera` renders that handedness, so +X is screen-right
+  // at yaw 0 and D strafes toward it.
+  Vector3 get rightVec => rightFor(yaw);
   Vector3 get upVec => Vector3(math.sin(pitch) * math.sin(yaw), math.cos(pitch), math.sin(pitch) * math.cos(yaw));
   Vector3 get backVec => -forward;
+
+  static Vector3 flatForwardFor(double yaw) => Vector3(-math.sin(yaw), 0, -math.cos(yaw));
+  static Vector3 rightFor(double yaw) => Vector3(math.cos(yaw), 0, -math.sin(yaw));
+
+  /// The yaw after a mouse motion of [dx] logical pixels (Godot: `_yaw -=
+  /// relative.x * ...`, so moving the mouse right turns right).
+  static double yawAfterMouse(double yaw, double dx, double scale) => yaw - dx * scale;
 
   Vector3 get pivotPosition => position + Vector3(0, firstPerson ? eyeHeight : 1.5, 0);
 
@@ -294,7 +300,7 @@ class Player extends VoxelBody implements Target {
     return pivotPosition + rightVec * 0.55 + upVec * 0.15 + backVec * _camDistance;
   }
 
-  PerspectiveCamera camera() => PerspectiveCamera(
+  PerspectiveCamera camera() => GodotCamera(
         position: cameraPosition + _shake,
         target: cameraPosition + _shake + forward,
         up: upVec,
@@ -408,7 +414,7 @@ class Player extends VoxelBody implements Target {
     final look = input.takeLookDelta();
     if (look != Offset.zero) {
       Tutorial.instance.event('look');
-      yaw += look.dx * mouseSensitivity * sensitivityScale;
+      yaw = yawAfterMouse(yaw, look.dx, mouseSensitivity * sensitivityScale);
       pitch = (pitch - look.dy * mouseSensitivity * sensitivityScale).clamp(-1.45, 1.45);
     }
     final wheel = input.takeWheel();
@@ -929,7 +935,7 @@ class Player extends VoxelBody implements Target {
     }
     b.throttle = 0.0;
     b.steer = 0.0;
-    position = b.position - rightVec * 1.2 + Vector3(0, 0.6, 0);
+    position = b.position + Vector3(-math.sin(yaw + math.pi * 0.5), 0.6, -math.cos(yaw + math.pi * 0.5)) * 1.2; // Godot's offset, to the left
     velocity = Vector3.zero();
   }
 

@@ -16,6 +16,7 @@ import '../game/settings.dart';
 import '../game/sfx.dart';
 import '../game/worlds.dart';
 import '../player/player.dart';
+import '../world/godot_camera.dart';
 import '../world/terrain_material.dart';
 import '../world/voxel_world.dart';
 import 'credits_screen.dart';
@@ -160,7 +161,7 @@ class _TitleScreenState extends State<TitleScreen> {
 
   Camera _camera() {
     final pos = _centre + vm.Vector3(math.cos(_angle) * TitleScreen.orbitRadius, TitleScreen.orbitHeight, math.sin(_angle) * TitleScreen.orbitRadius);
-    return PerspectiveCamera(position: pos, target: _centre, up: vm.Vector3(0, 1, 0), fovRadiansY: 65.0 * math.pi / 180.0, fovNear: 0.1, fovFar: 500.0);
+    return GodotCamera(position: pos, target: _centre, up: vm.Vector3(0, 1, 0), fovRadiansY: 65.0 * math.pi / 180.0, fovNear: 0.1, fovFar: 500.0);
   }
 
   @override
