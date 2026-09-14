@@ -5,12 +5,13 @@ import '../core/ivec3.dart';
 import '../game/achievements.dart';
 import '../game/game.dart';
 import '../game/game_state.dart';
+import '../game/quests.dart';
 import '../game/sfx.dart';
 import '../game/talents.dart';
 import 'hud.dart';
 
-/// The journal (J): talents to spend, the bestiary, achievements and waypoints,
-/// one tab each. Drawn by hand like the inventory screen; clicks are resolved
+/// The journal (J): talents to spend, the bestiary, achievements, waypoints and
+/// the quest chain (stage 24), one tab each. Drawn by hand like the inventory screen; clicks are resolved
 /// against the rects the painter recorded.
 class JournalScreen extends StatefulWidget {
   const JournalScreen({super.key, required this.game});
@@ -21,7 +22,7 @@ class JournalScreen extends StatefulWidget {
 }
 
 class _JournalScreenState extends State<JournalScreen> {
-  static const List<String> tabs = ['Talents', 'Bestiary', 'Achievements', 'Waypoints'];
+  static const List<String> tabs = JournalTabs.names;
 
   final List<Rect> _tabRects = [];
   final List<(Rect, String)> _talentRects = [];
@@ -100,7 +101,7 @@ class _JournalPainter extends CustomPainter {
 
     s._tabRects.clear();
     for (var i = 0; i < _JournalScreenState.tabs.length; i++) {
-      final r = Rect.fromLTWH(200 + i * 170, 16, 160, 34);
+      final r = Rect.fromLTWH(190 + i * 150, 16, 142, 34);
       s._tabRects.add(r);
       canvas.drawRect(r, _fill(i == s.tab ? const Color.fromRGBO(64, 64, 82, 1) : const Color.fromRGBO(41, 41, 51, 1)));
       Hud.text(canvas, _JournalScreenState.tabs[i], r.topLeft + const Offset(12, 23),
@@ -114,8 +115,10 @@ class _JournalPainter extends CustomPainter {
         _bestiary(canvas, body);
       case 2:
         _achievements(canvas, body);
-      default:
+      case 3:
         _waypoints(canvas, body);
+      default:
+        _quests(canvas, body);
     }
     canvas.restore();
   }
@@ -207,6 +210,50 @@ class _JournalPainter extends CustomPainter {
           r.topLeft + const Offset(12, 26), size: 16);
       s._waypointRects.add((r, e.key));
       y += 46;
+    }
+  }
+
+  /// Stage 24: the quest chain in order.
+  void _quests(Canvas canvas, Rect body) {
+    final game = s.game;
+    final entries = JournalTabs.questEntries(game.quests);
+    final done = game.quests.index;
+    Hud.text(canvas, '${done.clamp(0, entries.length)} / ${entries.length} quests done',
+        body.topLeft + const Offset(0, 18), size: 16, color: _gold);
+    var y = body.top + 30;
+    const rowH = 40.0;
+    for (final e in entries) {
+      final r = Rect.fromLTWH(body.left, y, body.width, rowH - 4);
+      final active = e.state == 'active';
+      final finished = e.state == 'done';
+      canvas.drawRect(r, _fill(active ? const Color.fromRGBO(71, 82, 51, 1) : const Color.fromRGBO(38, 38, 46, 1)));
+      if (active) {
+        canvas.drawRect(r, Paint()
+          ..color = _gold
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2);
+      }
+      final titleCol = finished
+          ? const Color.fromRGBO(128, 128, 140, 1)
+          : (active ? const Color.fromRGBO(255, 242, 179, 1) : const Color.fromRGBO(179, 179, 191, 1));
+      final prefix = finished ? '✓ ' : (active ? '▶ ' : '   ');
+      Hud.text(canvas, '$prefix${e.title}', r.topLeft + const Offset(12, 24), size: 16, color: titleCol);
+      Hud.text(canvas, '${e.text}   ${e.progress}/${e.n}   ${e.xp} XP', r.topLeft + const Offset(300, 24),
+          size: 13,
+          color: finished
+              ? const Color.fromRGBO(115, 115, 128, 1)
+              : (active ? Colors.white : const Color.fromRGBO(153, 153, 166, 1)));
+      if (active) {
+        final bar = Rect.fromLTWH(r.right - 160, r.top + 12, 140, 12);
+        canvas.drawRect(bar, _fill(const Color.fromRGBO(0, 0, 0, 0.6)));
+        canvas.drawRect(Rect.fromLTWH(bar.left, bar.top, bar.width * (e.progress / e.n).clamp(0.0, 1.0), bar.height),
+            _fill(const Color.fromRGBO(102, 217, 102, 1)));
+      }
+      y += rowH;
+    }
+    if (done >= entries.length) {
+      Hud.text(canvas, 'Every quest is done. You are the Hero of Dawnforge!', Offset(body.left, y + 20),
+          size: 15, color: _gold);
     }
   }
 

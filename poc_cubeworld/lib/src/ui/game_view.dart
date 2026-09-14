@@ -13,6 +13,11 @@ import 'menus.dart';
 
 /// The play session: the 3D view, the HUD painted over it, and whichever
 /// screen is open (inventory, pause, death). Keyboard focus lives here.
+///
+/// Stage 24: a session can ask to be thrown away and rebuilt with the same
+/// arguments (`Game.reloader`, Godot's `reload_current_scene`): the session
+/// widget is keyed by a generation, so a new key disposes the old `Game` and
+/// builds a fresh one.
 class GameView extends StatefulWidget {
   const GameView({super.key, required this.args, required this.saveDir});
   final Map<String, String> args;
@@ -23,10 +28,35 @@ class GameView extends StatefulWidget {
 }
 
 class _GameViewState extends State<GameView> {
+  int _generation = 0;
+
+  @override
+  Widget build(BuildContext context) => _GameSession(
+        key: ValueKey<int>(_generation),
+        args: widget.args,
+        saveDir: widget.saveDir,
+        onReload: () {
+          if (mounted) setState(() => _generation++);
+        },
+      );
+}
+
+class _GameSession extends StatefulWidget {
+  const _GameSession({super.key, required this.args, required this.saveDir, required this.onReload});
+  final Map<String, String> args;
+  final String saveDir;
+  final VoidCallback onReload;
+
+  @override
+  State<_GameSession> createState() => _GameSessionState();
+}
+
+class _GameSessionState extends State<_GameSession> {
   late final Game game;
   final FocusNode _focus = FocusNode(debugLabel: 'game');
   final GlobalKey _boundary = GlobalKey();
   final Minimap _minimap = Minimap();
+  final WorldMap _worldMap = WorldMap();
   Camera? _camera;
   String? _error;
 
@@ -35,6 +65,7 @@ class _GameViewState extends State<GameView> {
     super.initState();
     game = Game(args: widget.args, saveDir: widget.saveDir);
     game.screenshotter = _screenshot;
+    game.reloader = widget.onReload;
     game.addListener(_onGameChanged);
     game.init().then((_) {
       if (mounted) setState(() {});
@@ -129,9 +160,10 @@ class _GameViewState extends State<GameView> {
                       onTick: (elapsed, dt) {
                         game.onFrame(dt);
                         _minimap.update(dt, game);
+                        _worldMap.update(dt, game);
                       },
                     ),
-                    CustomPaint(painter: HudPainter(game, _camera, _minimap, repaint: game.frame)),
+                    CustomPaint(painter: HudPainter(game, _camera, _minimap, _worldMap, repaint: game.frame)),
                     ?overlay,
                   ],
                 ),

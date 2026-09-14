@@ -67,6 +67,8 @@ class ItemDrop extends VoxelBody {
   }
 
   void update(double dt) {
+    // Stage 24: a restored drop waits for its chunk (unloaded reads as air).
+    if (!world.isLoaded(IVec3.floor(position))) return;
     _age += dt;
     if (_age > 300.0) {
       removed = true;
@@ -95,6 +97,14 @@ class ItemDrop extends VoxelBody {
     _visual.rotation = Quaternion.axisAngle(Vector3(0, 1, 0), _age * 2.0);
     _visual.position = Vector3(0, 0.2 + math.sin(_age * 3.0) * 0.06, 0);
   }
+
+  /// Stage 24: what the save keeps of a drop.
+  Map<String, Object> toJson() => {
+        'item': itemId,
+        'count': count,
+        'bonus': bonus,
+        'pos': [position.x, position.y, position.z],
+      };
 
   void _pickUpBy(Target body) {
     if (identical(body, _player)) {

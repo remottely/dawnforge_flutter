@@ -4,6 +4,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'src/game/game_state.dart';
 import 'src/game/net.dart';
+import 'src/game/settings.dart';
 import 'src/game/sfx.dart';
 import 'src/ui/game_view.dart';
 import 'src/ui/main_menu.dart';
@@ -27,6 +28,10 @@ Future<void> main(List<String> rawArgs) async {
   final args = parseArgs(rawArgs);
   final support = await getApplicationSupportDirectory();
   final saveRoot = '${support.path}/dawnforge_cubeworld_poc';
+  // Stage 24: the settings file sits beside worlds/ (Godot's user://settings.cfg).
+  Settings.instance.path = '$saveRoot/settings.cfg';
+  Settings.instance.loadFile();
+  Settings.instance.applyGlobals();
   await Scene.initializeStaticResources();
   // Audio comes up in the background; the game plays silently until it does.
   Sfx.init();

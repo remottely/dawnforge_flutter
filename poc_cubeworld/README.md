@@ -30,7 +30,7 @@ flutter test                                           # tables, generator, mesh
 Probe flags (same as the Godot POC, plus a few for tuning): `--screenshot=<png> --frames=N
 --seed=N --radius=N --class=warrior|ranger|mage|rogue --time=0..1 --fly --fp --tp=x,y,z
 --look=yaw,pitch --settle=N --map --open-inventory --fire=primary|secondary --stage16
---strike --stage18 --stage19 --stage20 --ride --stage21a --kind=5..8 --biome=N --stage21b --stage22 --stage23 --weather=clear|rain|storm|snow --journal=0..3 --host --join=<ip> --wait-peer --trace`, and for the look: `--sun=k --amb=k
+--strike --stage18 --stage19 --stage20 --ride --stage21a --kind=5..8 --biome=N --stage21b --stage22 --stage23 --stage24 --slot=<name> --open-map --open-settings --weather=clear|rain|storm|snow --journal=0..4 --host --join=<ip> --wait-peer --trace`, and for the look: `--sun=k --amb=k
 --tm=aces|agx|neutral|linear --fogd=density --noshadow --shadowcache=0|1
 --casterfaces=front|back`. The debug app forwards the process arguments to Dart
 (`MainFlutterWindow.swift`), so no `--` separator is needed.
@@ -48,7 +48,10 @@ screenshot next to them.
 | 1-9, wheel | hotbar |
 | E / Tab | inventory + crafting |
 | Q / H / F / V / G / R | drop · eat · interact · first/third person · glider · class ability |
-| F1 / F2 / F5 / M / Esc | debug text · screenshot · fly mode · minimap · pause |
+| F1 / F2 / F5 | debug text · screenshot · fly mode |
+| M | minimap, again: world map with markers (waypoints, structures, mounts, spawn), again: off |
+| J | journal: talents, bestiary, achievements, waypoints, quests |
+| Esc | menu: render distance, mouse, FOV, volume, weather, FPS overlay (saved in `settings.cfg` beside `worlds/`), save & quit — the world keeps running behind it |
 
 ## What the port taught (the case study for `dev`)
 

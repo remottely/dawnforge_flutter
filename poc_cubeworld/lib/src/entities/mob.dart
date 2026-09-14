@@ -476,6 +476,9 @@ class Mob extends VoxelBody {
       _applyModel();
       return;
     }
+    // Stage 24: a restored mob waits for its chunk; an unloaded chunk reads as
+    // air and it would fall.
+    if (!world.isLoaded(IVec3.floor(position))) return;
     _age += dt;
     _attackCd = math.max(_attackCd - dt, 0.0);
     _hopCd = math.max(_hopCd - dt, 0.0);
@@ -748,6 +751,45 @@ class Mob extends VoxelBody {
   }
 
   double modelYaw() => _modelYaw;
+
+  // --- stage 24: a tamed mob rides the save ------------------------------------------
+
+  Map<String, Object> toJson() => {
+        'species': species.id,
+        'pos': [position.x, position.y, position.z],
+        'hp': hp,
+        'max_hp': maxHp,
+        'level': mobLevel,
+        'affix': affix,
+        'tamed': tamed,
+        'name': displayName(),
+        'yaw': modelYaw(),
+      };
+
+  /// Rebuilds a saved mob: `setupMob` was already called by the loader, then
+  /// level, affix, health and the tame state without the taming notice.
+  void fromJson(Map<String, dynamic> d) {
+    final p = (d['pos'] as List<dynamic>).map((e) => (e as num).toDouble()).toList();
+    position = Vector3(p[0], p[1], p[2]);
+    mobLevel = (d['level'] as num?)?.toInt() ?? 1;
+    final a = d['affix']?.toString() ?? '';
+    if (a != '') setAffix(a);
+    maxHp = (d['max_hp'] as num?)?.toDouble() ?? maxHp;
+    hp = (d['hp'] as num?)?.toDouble() ?? maxHp;
+    if (d['tamed'] == true) restoreTamed();
+    final yaw = (d['yaw'] as num?)?.toDouble() ?? 0.0;
+    _face(Vector3(-math.sin(yaw), 0, -math.cos(yaw)));
+    syncNode();
+  }
+
+  /// `tame` minus the reward: the bonus HP is already in the saved `max_hp`.
+  /// The loader puts the mob in `Game.pets` (Godot's "pets" group).
+  void restoreTamed() {
+    tamed = true;
+    _angry = false;
+    state = MobState.idle;
+    barVisible = true;
+  }
 
   void setPuppetState(Vector3 pos, double yaw, double newHp, double newMax) {
     position = (position - pos).length < 4.0 ? position + (pos - position) * 0.5 : pos;

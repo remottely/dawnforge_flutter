@@ -117,6 +117,22 @@ class VoxelWorld {
 
   void refresh() => _center = (x: 999999, z: 999999);
 
+  /// Chunks with a mesh in the scene: the window `loadRadius` fills ([chunks]
+  /// also holds the generated ring around it).
+  int get meshCount => _nodes.length;
+
+  /// Stage 24: a smaller render distance takes effect at once — everything
+  /// past [loadRadius] goes now instead of waiting for the player to walk out
+  /// of the unload band.
+  void trimWindow() {
+    for (final pos in _nodes.keys.toList()) {
+      if ((pos.x - _center.x).abs() > loadRadius || (pos.z - _center.z).abs() > loadRadius) _unload(pos);
+    }
+    for (final pos in chunks.keys.toList()) {
+      if ((pos.x - _center.x).abs() > loadRadius + 1 || (pos.z - _center.z).abs() > loadRadius + 1) chunks.remove(pos);
+    }
+  }
+
   void _refreshWindow() {
     _pending.clear();
     for (var dz = -loadRadius; dz <= loadRadius; dz++) {

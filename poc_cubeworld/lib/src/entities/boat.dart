@@ -42,6 +42,8 @@ class Boat extends VoxelBody {
   }
 
   void update(double dt) {
+    // Stage 24: a restored boat waits for its chunk (unloaded reads as air).
+    if (!world.isLoaded(IVec3.floor(position))) return;
     _time += dt;
     final feet = IVec3(position.x.floor(), (position.y + 0.15).floor(), position.z.floor());
     if (world.isLiquid(feet)) {
@@ -67,6 +69,12 @@ class Boat extends VoxelBody {
     _hull.rotation = eulerYXZ(0, yaw, _roll);
     _hull.position = Vector3(0, inWater ? math.sin(_time * 2.0 + position.x) * 0.03 : 0.0, 0);
   }
+
+  /// Stage 24: what the save keeps of a boat.
+  Map<String, Object> toJson() => {
+        'pos': [position.x, position.y, position.z],
+        'yaw': yaw,
+      };
 
   Vector3 seat() => position + Vector3(0, 0.35, 0);
 }

@@ -31,6 +31,7 @@ import 'loot.dart';
 import 'net.dart';
 import 'quests.dart';
 import 'sfx.dart';
+import 'settings.dart';
 import 'weather.dart';
 
 enum ScreenKind { none, inventory, pause, death, journal }
@@ -98,13 +99,35 @@ class Loot {
 /// save/load. Args: `--screenshot=<png>` --frames=N --seed=N --radius=N
 /// --class=warrior|ranger|mage|rogue --time=0..1 --fly --fire=primary|secondary
 class Game extends ChangeNotifier {
-  Game({required this.args, required this.saveDir});
+  Game({required this.args, required String saveDir})
+      : saveRoot = Directory(saveDir).parent.parent.path,
+        saveDir = args.containsKey('--slot=') ? '${Directory(saveDir).parent.path}/${args['--slot=']}' : saveDir;
 
   static const double dayLength = 600.0;
   static const double fixedStep = 1.0 / 60.0;
 
   final Map<String, String> args;
+
+  /// `worlds/<name>`, or `worlds/<slot>` with `--slot=` (stage 24).
   final String saveDir;
+
+  /// Godot's `user://`: the folder holding `worlds/`, `settings.cfg` and the
+  /// stage 24 probe flag.
+  final String saveRoot;
+
+  /// Stage 24: every chunk the player ever stood in (the world map's explored
+  /// area, saved), the structures the player came close to (kind per origin,
+  /// the map's icons), and the verify half of the `--stage24` probe, signalled
+  /// across the reload by `probe24.flag`.
+  final Set<ChunkPos> visitedChunks = {};
+  final Map<IVec3, int> discoveredStructures = {};
+  bool _stage24Verify = false;
+  String get _probe24Flag => '$saveRoot/probe24.flag';
+
+  /// Set by the view: throws this session away and builds a fresh one with the
+  /// same arguments (Godot's `reload_current_scene`).
+  void Function()? reloader;
+  bool worldMapVisible = false;
   final Scene scene = Scene();
   late VoxelWorld world;
   late Player player;
@@ -192,10 +215,15 @@ class Game extends ChangeNotifier {
         scene.toneMapping = ToneMappingMode.linear;
     }
     scene.add(entities);
+    final flag = File(_probe24Flag);
+    _stage24Verify = flag.existsSync();
+    if (_stage24Verify) flag.deleteSync(); // one verify boot, whatever happens next
 
     world = VoxelWorld(
       seedValue: int.tryParse(_arg('--seed=', '')) ?? GameState.instance.seedValue,
-      loadRadius: int.tryParse(_arg('--radius=', '')) ?? 8,
+      // A probe run keeps radius 8 so its chunk counts never depend on this
+      // machine's settings.cfg.
+      loadRadius: int.tryParse(_arg('--radius=', '')) ?? (_arg('--screenshot=', '') != '' ? 8 : Settings.instance.renderRadius),
     );
     scene.add(world.root);
     await world.start();
@@ -235,6 +263,7 @@ class Game extends ChangeNotifier {
 
     weather = Weather(() => player.position, world);
     scene.add(weather.node);
+    weather.setEnabled(Settings.instance.weather);
     if (_arg('--weather=', '') != '') weather.force(_arg('--weather=', ''));
 
     final net = Net.instance;
@@ -408,7 +437,7 @@ class Game extends ChangeNotifier {
 
   void _handleGlobalKeys() {
     if (input.justPressed(GameAction.debugHud)) debugVisible = !debugVisible;
-    if (input.justPressed(GameAction.map)) mapVisible = !mapVisible;
+    if (input.justPressed(GameAction.map)) cycleMap(); // stage 24: minimap, then the world map, then off
     if (input.justPressed(GameAction.screenshot)) {
       final dir = Directory('$saveDir/../../screenshots');
       dir.createSync(recursive: true);
@@ -505,6 +534,7 @@ class Game extends ChangeNotifier {
     _structTimer += dt;
     if (_structTimer > 1.0) {
       _structTimer = 0.0;
+      visitedChunks.add(VoxelWorld.chunkOf(IVec3.floor(player.position)));
       _checkStructures();
       _growCrops();
       _tickSpawners();
@@ -686,6 +716,11 @@ class Game extends ChangeNotifier {
     final here = VoxelWorld.chunkOf(IVec3.floor(player.position));
     for (final s in world.structuresNear(here)) {
       final key = IVec3(s.x, s.y, s.z);
+      // Stage 24: any structure within 48 m is discovered (the map draws it
+      // from now on).
+      if (s.type >= 1 && s.type <= 8 && !discoveredStructures.containsKey(key) && key.distanceTo(player.position) < 48.0) {
+        discoveredStructures[key] = s.type;
+      }
       if (s.type == 4) {
         if (!_bossesSpawned.contains(key) && key.distanceTo(player.position) < 40.0) {
           _bossesSpawned.add(key);
@@ -1227,6 +1262,9 @@ class Game extends ChangeNotifier {
         'bosses': [for (final k in _bossesSpawned) k.key],
         'quests': quests.toJson(),
         'waypoints': {for (final e in waypoints.entries) e.key.key: e.value},
+        // Stage 24: boats, tamed mobs (the mount by its index), dropped items,
+        // the explored map.
+        ...entityData(),
       };
       await File('$saveDir/player.json').writeAsString(jsonEncode(data), flush: true);
     } catch (e) {
@@ -1234,11 +1272,60 @@ class Game extends ChangeNotifier {
     }
   }
 
+  /// Stage 24: the save keys Godot added — `boats`, `pets`, `mount`, `drops`,
+  /// `visited`, `structures`.
+  Map<String, Object> entityData() {
+    final petData = <Map<String, Object>>[];
+    var mountIndex = -1;
+    for (final m in pets) {
+      if (m.puppet || !m.tamed || m.isDead || m.removed) continue;
+      if (identical(m, player.mount)) mountIndex = petData.length;
+      petData.add(m.toJson());
+    }
+    return {
+      'boats': [for (final b in boats) if (!b.removed) b.toJson()],
+      'pets': petData,
+      'mount': mountIndex,
+      'drops': [for (final d in drops) if (!d.replica && !d.removed) d.toJson()],
+      'visited': encodeVisited(visitedChunks),
+      'structures': encodeStructures(discoveredStructures),
+    };
+  }
+
+  static List<String> encodeVisited(Set<ChunkPos> chunks) => [for (final c in chunks) '${c.x},${c.z}'];
+
+  static Set<ChunkPos> decodeVisited(List<dynamic> keys) {
+    final out = <ChunkPos>{};
+    for (final k in keys) {
+      final parts = k.toString().split(',');
+      out.add((x: int.parse(parts[0]), z: int.parse(parts[1])));
+    }
+    return out;
+  }
+
+  static Map<String, int> encodeStructures(Map<IVec3, int> found) => {for (final e in found.entries) e.key.key: e.value};
+
+  static Map<IVec3, int> decodeStructures(Map<String, dynamic> data) {
+    final out = <IVec3, int>{};
+    for (final e in data.entries) {
+      final k = IVec3.parse(e.key);
+      if (k != null) out[k] = (e.value as num).toInt();
+    }
+    return out;
+  }
+
   Future<bool> _loadGame() async {
     final f = File('$saveDir/player.json');
-    if (_hasArg('--new') || GameState.instance.freshWorld || !await f.exists()) return false;
+    if ((_hasArg('--new') || GameState.instance.freshWorld) && !_stage24Verify) return false;
+    if (!await f.exists()) return false;
     final data = jsonDecode(await f.readAsString());
     if (data is! Map<String, dynamic>) return false;
+    // The seed is the world: a save made under another seed wins over the
+    // menu's default (an explicit --seed= still overrides, for the probes).
+    final savedSeed = (data['seed'] as num?)?.toInt();
+    if (_arg('--seed=', '') == '' && savedSeed != null && savedSeed != world.seedValue) {
+      await world.setWorldSeed(savedSeed);
+    }
     await world.loadEdits('$saveDir/blocks.bin');
     timeOfDay = (data['time'] as num?)?.toDouble() ?? 0.3;
     GameState.instance.fromJson((data['stats'] as Map<String, dynamic>?) ?? {});
@@ -1262,6 +1349,45 @@ class Game extends ChangeNotifier {
     for (final k in (data['bosses'] as List<dynamic>? ?? const [])) {
       final p = IVec3.parse(k.toString());
       if (p != null) _bossesSpawned.add(p);
+    }
+    // Stage 24: the entities and the explored map.
+    visitedChunks.addAll(decodeVisited(data['visited'] as List<dynamic>? ?? const []));
+    discoveredStructures.addAll(decodeStructures(data['structures'] as Map<String, dynamic>? ?? const {}));
+    for (final b in (data['boats'] as List<dynamic>? ?? const [])) {
+      final bd = b as Map<String, dynamic>;
+      final p = (bd['pos'] as List<dynamic>).map((e) => (e as num).toDouble()).toList();
+      spawnBoat(Vector3(p[0], p[1], p[2]), (bd['yaw'] as num?)?.toDouble() ?? 0.0);
+    }
+    final restored = <Mob>[];
+    for (final pd in (data['pets'] as List<dynamic>? ?? const [])) {
+      final d = pd as Map<String, dynamic>;
+      if (!Species.defs.containsKey(d['species'].toString())) continue;
+      final m = Mob();
+      m.setupMob(world, this, player, Species.def(d['species'].toString()));
+      m.fromJson(d);
+      if (m.tamed) {
+        pets.add(m);
+        entities.add(m.node);
+      } else {
+        addMob(m);
+      }
+      restored.add(m);
+    }
+    final mountIndex = (data['mount'] as num?)?.toInt() ?? -1;
+    if (mountIndex >= 0 && mountIndex < restored.length && restored[mountIndex].isMount && restored[mountIndex].tamed) {
+      player.mountHorse(restored[mountIndex]);
+    }
+    for (final dd in (data['drops'] as List<dynamic>? ?? const [])) {
+      final d = dd as Map<String, dynamic>;
+      final p = (d['pos'] as List<dynamic>).map((e) => (e as num).toDouble()).toList();
+      final drop = ItemDrop();
+      drop.setupDrop(world, d['item'].toString(), (d['count'] as num?)?.toInt() ?? 1, player);
+      drop.position = Vector3(p[0], p[1], p[2]);
+      drop.bonus = (d['bonus'] as num?)?.toInt() ?? 0;
+      drop.syncNode();
+      drops.add(drop);
+      entities.add(drop.node);
+      Net.instance.onDropSpawned(drop);
     }
     return true;
   }
@@ -1317,6 +1443,11 @@ class Game extends ChangeNotifier {
       debugPrint('[probe] stage21a: structures by kind $counts');
     }
     if (_hasArg('--map')) mapVisible = true;
+    if (_hasArg('--open-map')) {
+      mapVisible = true;
+      worldMapVisible = true;
+    }
+    if (_hasArg('--open-settings')) openScreen(ScreenKind.pause);
     if (_arg('--journal=', '') != '') openJournal(int.tryParse(_arg('--journal=', '')) ?? 0);
     if (_hasArg('--open-inventory')) openStation('crafting_table', IVec3.zero);
     final fire = _arg('--fire=', '');
@@ -1548,6 +1679,11 @@ class Game extends ChangeNotifier {
     }
     if (_hasArg('--stage22')) await _probeStage22();
     if (_hasArg('--stage23')) await _probeStage23(stage21a);
+    if (_hasArg('--stage24')) {
+      // The setup half saved and asked for a fresh session; the verify half
+      // prints the rest and captures.
+      if (await _probeStage24()) return;
+    }
     await nextFrame();
     await nextFrame();
     debugPrint('[probe] fps ${fps.toStringAsFixed(0)} mobs ${mobs.length} drops ${drops.length} projectiles ${projectiles.length}');
@@ -2075,6 +2211,173 @@ class Game extends ChangeNotifier {
     }
     travelToWaypoint(b);
     return elite;
+  }
+
+  // --- stage 24: persistence of entities, map markers, quests tab, settings, bed respawn ---
+
+  /// M: the minimap, then the world map on top of it, then both off.
+  void cycleMap() {
+    if (worldMapVisible) {
+      worldMapVisible = false;
+      mapVisible = false;
+    } else if (mapVisible) {
+      worldMapVisible = true;
+    } else {
+      mapVisible = true;
+    }
+  }
+
+  /// The settings screen's live hook: the streaming window follows the slider
+  /// at once.
+  void applyRenderDistance(int radius) {
+    radius = radius.clamp(4, 10);
+    Settings.instance.renderRadius = radius;
+    world.loadRadius = radius;
+    world.unloadRadius = radius + 2;
+    world.refresh();
+    world.updateAround(player.position);
+    world.trimWindow();
+  }
+
+  /// The tamed mounts alive right now (brown dots on both maps).
+  List<Mob> tamedMounts() => [for (final m in pets) if (m.tamed && m.isMount && !m.isDead && !m.removed) m];
+
+  /// What the maps draw, for the probe: waypoints, discovered structures, tamed
+  /// mounts.
+  ({int waypoints, int structures, int mounts}) markerCounts() =>
+      (waypoints: waypoints.length, structures: discoveredStructures.length, mounts: tamedMounts().length);
+
+  String _stage24Line(String tag) {
+    final tamed = pets.where((m) => m.tamed && !m.isDead && !m.removed).length;
+    final dropCount = drops.where((d) => !d.removed).length;
+    return '[probe] stage24 $tag: boats=${boats.length} tamed=$tamed drops=$dropCount mounted=${player.isMounted()} '
+        'waypoints=${waypoints.length} visited=${visitedChunks.length}';
+  }
+
+  /// --stage24, first boot: a boat, a ridden horse, a tamed wolf, two drops, a
+  /// waypoint and three visited chunks, saved to the slot, then the session is
+  /// rebuilt with `probe24.flag` set so the second boot loads that save and
+  /// verifies it. Returns true when the reload was requested.
+  Future<bool> _probeStage24() async {
+    if (_stage24Verify) {
+      await _probeStage24Verify();
+      return false;
+    }
+    final ahead = player.aimDirection().clone()..y = 0;
+    ahead.normalize();
+    final right = ahead.cross(Vector3(0, 1, 0));
+    // A flat stone pad so nothing restored falls into a hole before its chunk is in.
+    final floorY = player.position.y.floor() - 1;
+    final base = IVec3.floor(player.position);
+    for (var dx = -8; dx < 9; dx++) {
+      for (var dz = -8; dz < 9; dz++) {
+        world.setBlock(IVec3(base.x + dx, floorY, base.z + dz), Blocks.indexOf('stone'));
+        for (var dy = 1; dy < 7; dy++) {
+          world.setBlock(IVec3(base.x + dx, floorY + dy, base.z + dz), Blocks.air);
+        }
+      }
+    }
+    player.velocity = Vector3.zero();
+    spawnBoat(player.position + ahead * 4.0 + Vector3(0, 0.1, 0), 0.4);
+    final horse = Mob();
+    horse.setupMob(world, this, player, Species.def('horse'));
+    horse.position = player.position + right * 2.0;
+    addMob(horse);
+    horse.tame(player);
+    player.mountHorse(horse);
+    final wolf = Mob();
+    wolf.setupMob(world, this, player, Species.def('wolf'));
+    wolf.position = player.position - right * 3.0;
+    addMob(wolf);
+    wolf.tame(player);
+    // Two drops 5 m out, past the 3 m pull, with a delay so nothing picks them
+    // up before the save.
+    spawnDrop(player.position + ahead * 5.0 + right * 3.0 + Vector3(0, 0.4, 0), 'apple', 3, Vector3(0, 0.1, 0), 600.0);
+    spawnDrop(player.position - ahead * 5.0 - right * 3.0 + Vector3(0, 0.4, 0), 'coal', 2, Vector3(0, 0.1, 0), 600.0);
+    // The waypoint 14 blocks off the pad, on the ground there, so its label
+    // clears the others on the map.
+    final wp = IVec3(base.x - 14, world.groundHeight(base.x - 14, base.z + 14), base.z + 14);
+    world.setBlock(wp, Blocks.indexOf('waypoint'));
+    onBlockPlaced(wp, Blocks.indexOf('waypoint'));
+    final here = VoxelWorld.chunkOf(base);
+    visitedChunks.addAll([here, (x: here.x + 1, z: here.z), (x: here.x, z: here.z + 1)]);
+    _checkStructures(); // the once-a-second discovery pass, run now so the save carries the ruin nearby
+    await _ticks(5); // the drops land, the horse settles under the rider
+    debugPrint(_stage24Line('pre-save'));
+    await saveGame();
+    File(_probe24Flag).writeAsStringSync('verify');
+    debugPrint('[probe] stage24 saved to $saveDir, reloading the scene');
+    reloader!();
+    return true;
+  }
+
+  /// --stage24, second boot (`probe24.flag` was set): the save was loaded by
+  /// [init]; this half counts what came back, then walks the map markers, the
+  /// quests tab, the settings and the bed.
+  Future<void> _probeStage24Verify() async {
+    // The restored bodies wait for their chunks; give the physics a few ticks
+    // once the window is in.
+    await _ticks(8);
+    debugPrint(_stage24Line('post-load'));
+    final saved = jsonDecode(File('$saveDir/player.json').readAsStringSync()) as Map<String, dynamic>;
+    Vector3? savedHorse;
+    for (final pd in (saved['pets'] as List<dynamic>? ?? const [])) {
+      final d = pd as Map<String, dynamic>;
+      if (d['species'] == 'horse') {
+        final p = (d['pos'] as List<dynamic>).map((e) => (e as num).toDouble()).toList();
+        savedHorse = Vector3(p[0], p[1], p[2]);
+      }
+    }
+    final horseNow = player.mount?.position;
+    final delta = savedHorse != null && horseNow != null ? (savedHorse - horseNow).length : double.infinity;
+    debugPrint('[probe] stage24 horse pos delta=${delta.toStringAsFixed(2)}');
+    // Markers: what the maps draw (the discovery pass runs once a second in play).
+    _checkStructures();
+    mapVisible = true;
+    worldMapVisible = true;
+    final mc = markerCounts();
+    debugPrint('[probe] stage24 markers: waypoints=${mc.waypoints} structures=${mc.structures} mounts=${mc.mounts}');
+    // The quests tab.
+    openJournal(JournalTabs.quests);
+    await nextFrame();
+    debugPrint('[probe] stage24 quests tab entries=${JournalTabs.questEntries(quests).length} '
+        'active=${quests.current?.title ?? 'none'} (tab ${JournalTabs.names[journalTab]})');
+    closeScreen();
+    // Settings: render distance 8 -> 6 (meshed chunks), weather off, and the file.
+    final before = world.meshCount;
+    applyRenderDistance(6);
+    for (var i = 0; i < 200; i++) {
+      await nextFrame();
+      if (i > 5 && world.isIdle) break;
+    }
+    debugPrint('[probe] stage24 settings: radius 8->6 chunks loaded before=$before after=${world.meshCount}');
+    weather.force('storm');
+    Settings.instance.weather = false;
+    weather.setEnabled(false);
+    await nextFrame();
+    debugPrint('[probe] stage24 settings: weather off -> ${weather.label}');
+    Settings.instance.path = '$saveRoot/settings_probe24.cfg'; // never this machine's own settings.cfg
+    final written = Settings.instance.save() && File(Settings.instance.path).existsSync();
+    debugPrint('[probe] stage24 settings: settings.cfg written=$written (${Settings.instance.path})');
+    Settings.instance.weather = true;
+    weather.setEnabled(true);
+    // Bed respawn: sleep sets the spawn point (daytime: only that), death sends
+    // the player back to it.
+    if (player.mount != null) player.dismount();
+    final bed = IVec3.floor(player.position) + const IVec3(4, 0, 0);
+    world.setBlock(bed, Blocks.indexOf('bed'));
+    sleepInBed(bed);
+    final spawn = player.spawnPoint.clone();
+    player.position = player.position + Vector3(0, 0, -6.0);
+    player.velocity = Vector3.zero();
+    player.takeDamage(9999.0, 'fall');
+    await nextFrame();
+    final died = player.isDead;
+    player.respawn();
+    closeScreen();
+    String v3(Vector3 v) => '(${v.x.toStringAsFixed(1)},${v.y.toStringAsFixed(1)},${v.z.toStringAsFixed(1)})';
+    debugPrint('[probe] stage24 respawn at bed: spawn=${v3(spawn)} died=$died -> pos=${v3(player.position)} '
+        'delta=${(spawn - player.position).length.toStringAsFixed(2)}');
   }
 
   void shutdown() {

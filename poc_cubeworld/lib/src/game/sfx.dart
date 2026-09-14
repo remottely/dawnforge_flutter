@@ -14,6 +14,19 @@ class Sfx {
   static bool _ready = false;
   static bool muted = false;
 
+  /// Stage 24: the settings' master volume (Godot's bus 0), linear 0..1.
+  static double _volume = 1.0;
+
+  static void setVolume(double v) {
+    _volume = v;
+    if (!_ready) return;
+    try {
+      SoLoud.instance.setGlobalVolume(v);
+    } catch (e) {
+      debugPrint('[sfx] $e');
+    }
+  }
+
   static Future<void> init() async {
     if (_ready) return;
     try {
@@ -45,6 +58,7 @@ class Sfx {
     await make('thunder', 1.6, (t, p) => (_rng.nextDouble() * 2.0 - 1.0) * math.pow(1.0 - p, 1.5) * (0.5 + 0.5 * math.sin(t * 9.0 * math.pi * 2)) * 0.7);
     await make('click', 0.04, (t, p) => math.sin(t * 1200.0 * math.pi * 2) * (1.0 - p) * 0.3);
     _ready = true;
+    setVolume(_volume);
   }
 
   static Uint8List _wav(double seconds, double Function(double, double) fn) {

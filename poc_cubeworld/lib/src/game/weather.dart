@@ -61,6 +61,21 @@ class Weather {
   /// stops rolling on its own.
   bool forced = false;
 
+  /// Stage 24: the settings switch. Off forces clear and holds it until
+  /// switched back on.
+  bool enabled = true;
+
+  void setEnabled(bool on) {
+    enabled = on;
+    if (!on) {
+      kind = WeatherKind.clear;
+      _target = 0.0;
+      intensity = 0.0;
+    } else if (!forced) {
+      _timer = math.min(_timer, 30.0);
+    }
+  }
+
   /// Stage 21b: the host tells clients what it rolled; every 10 s and on change.
   double _syncTimer = 0.0;
   WeatherKind? _sentKind;
@@ -145,7 +160,11 @@ class Weather {
   }
 
   void process(double dt) {
-    if (!forced) {
+    if (!enabled) {
+      kind = WeatherKind.clear;
+      _target = 0.0;
+      intensity = 0.0;
+    } else if (!forced) {
       _timer -= dt;
       if (_timer <= 0.0) _roll();
     }

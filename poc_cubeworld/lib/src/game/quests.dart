@@ -15,6 +15,31 @@ class Quest {
   final Map<String, int> items;
 }
 
+/// Stage 24: one row of the journal's Quests tab.
+typedef QuestEntry = ({String title, String text, int n, int xp, String state, int progress});
+
+/// The journal's tab list (Godot's `JournalScreen.TABS` / `TAB_QUESTS`), kept
+/// here so the game and its probe can name a tab without importing the UI.
+class JournalTabs {
+  JournalTabs._();
+  static const List<String> names = ['Talents', 'Bestiary', 'Achievements', 'Waypoints', 'Quests'];
+  static const int quests = 4;
+
+  /// The chain in order — done ones greyed with a tick, the active one lit with
+  /// its progress, the ones ahead dim. What the tab lists (the probe counts it).
+  static List<QuestEntry> questEntries(QuestLog log) => [
+        for (var i = 0; i < QuestLog.chain.length; i++)
+          (
+            title: QuestLog.chain[i].title,
+            text: QuestLog.chain[i].text,
+            n: QuestLog.chain[i].n,
+            xp: QuestLog.chain[i].xp,
+            state: i < log.index ? 'done' : (i == log.index ? 'active' : 'locked'),
+            progress: i < log.index ? QuestLog.chain[i].n : (i == log.index ? log.progress : 0),
+          ),
+      ];
+}
+
 class QuestLog {
   static const List<Quest> chain = [
     Quest('wood', 'Gather wood', 'Punch or chop 8 logs', 'collect', ['oak_log', 'spruce_log'], 8, 20, {'apple': 2}),
