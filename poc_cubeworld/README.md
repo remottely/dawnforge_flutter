@@ -30,7 +30,7 @@ flutter test                                           # tables, generator, mesh
 Probe flags (same as the Godot POC, plus a few for tuning): `--screenshot=<png> --frames=N
 --seed=N --radius=N --class=warrior|ranger|mage|rogue --time=0..1 --fly --fp --tp=x,y,z
 --look=yaw,pitch --settle=N --map --open-inventory --fire=primary|secondary --stage16
---strike --stage18 --stage19 --stage20 --ride --stage21a --kind=5..8 --biome=N --stage21b --stage22 --stage23 --stage24 --slot=<name> --open-map --open-settings --stage25 --reject-one --weather=clear|rain|storm|snow --journal=0..4 --host --join=<ip> --wait-peer --trace`, and for the look: `--sun=k --amb=k
+--strike --stage18 --stage19 --stage20 --ride --stage21a --kind=5..8 --biome=N --stage21b --stage22 --stage23 --stage24 --slot=<name> --open-map --open-settings --stage25 --reject-one --stage26 --shot=biome|village|trade --kind=4 --weather=clear|rain|storm|snow --journal=0..4 --host --join=<ip> --wait-peer --trace`, and for the look: `--sun=k --amb=k
 --tm=aces|agx|neutral|linear --fogd=density --noshadow --shadowcache=0|1
 --casterfaces=front|back`. The debug app forwards the process arguments to Dart
 (`MainFlutterWindow.swift`), so no `--` separator is needed.
@@ -43,7 +43,7 @@ screenshot next to them.
 |:---|:---|
 | WASD / Space / Shift / Ctrl | move / jump / sprint / sneak |
 | Menu | **Host** opens port 7777 on your world; type an address and **Join** to play in someone's world |
-| F | board or leave a boat (place one with the Boat item on water); talk to a villager |
+| F | board or leave a boat (place one with the Boat item on water); on a villager: the trade screen (three offers, click a row; gold ingots are the coin, sell wheat or melon slices to earn them; Esc / F closes) |
 | Mouse | look (third person orbit; the pointer is locked with `pointer_lock`, Esc opens the pause menu and releases it) · LMB attack or mine (hold to keep firing a bow or staff) · RMB place or use · RMB with a bow = fan shot, with a staff = arc |
 | 1-9, wheel | hotbar |
 | E / Tab | inventory + crafting |
