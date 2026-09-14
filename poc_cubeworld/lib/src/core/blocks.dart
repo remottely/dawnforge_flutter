@@ -171,6 +171,15 @@ class Blocks {
     // whose feet enter its cell lights the TNT the generator buried underneath
     // (`Game._checkPlateUnder`).
     BlockDef('pressure_plate', 'Pressure Plate', 0.24, 0.20, 0.18, shape: BlockShape.slab, opaque: false, hardness: 1.0, tool: ToolType.pickaxe),
+    // Stage 26: the swamp (mud patches, reeds on the pool edges) and the jungle
+    // (tall jungle logs, vines hanging under the canopy, ferns, melons that drop
+    // slices).
+    BlockDef('mud', 'Mud', 0.36, 0.26, 0.18, hardness: 0.8, tool: ToolType.shovel),
+    BlockDef('reeds', 'Reeds', 0.55, 0.72, 0.38, shape: BlockShape.cross, solid: false, opaque: false, hardness: 0.0),
+    BlockDef('jungle_log', 'Jungle Log', 0.42, 0.30, 0.16, hardness: 2.0, tool: ToolType.axe),
+    BlockDef('vines', 'Vines', 0.22, 0.48, 0.20, shape: BlockShape.cross, solid: false, opaque: false, hardness: 0.0, drop: '-'),
+    BlockDef('fern', 'Fern', 0.30, 0.60, 0.26, shape: BlockShape.cross, solid: false, opaque: false, hardness: 0.0, drop: '-'),
+    BlockDef('melon', 'Melon', 0.45, 0.68, 0.25, hardness: 1.0, tool: ToolType.axe, drop: 'melon_slice'),
   ];
 
   static final Map<String, int> _indexById = {
@@ -312,6 +321,7 @@ class Blocks {
           'clay', 'dead_bush', 'mushroom', 'ice', 'dark_stone', 'mossy_stone_bricks', 'stone_bricks',
           'chest', 'lamp', 'bone_block', 'oak_planks', 'ladder', 'spawner', 'glass',
           'crafting_table', 'furnace', 'torch', 'oak_fence', 'tnt', 'cobblestone', 'pressure_plate',
+          'mud', 'reeds', 'jungle_log', 'vines', 'fern', 'melon', 'bed', 'farmland', 'wheat_2', 'oak_slab',
         ])
           id: indexOf(id),
       };

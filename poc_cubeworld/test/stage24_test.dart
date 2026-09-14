@@ -47,7 +47,7 @@ void main() {
       ..hp = 21
       ..tamed = true;
     final saved = viaJson(wolf.toJson());
-    expect(saved.keys, unorderedEquals(['species', 'pos', 'hp', 'max_hp', 'level', 'affix', 'tamed', 'name', 'yaw']));
+    expect(saved.keys, unorderedEquals(['species', 'pos', 'hp', 'max_hp', 'level', 'affix', 'tamed', 'name', 'yaw', 'trades', 'home']));
     expect(saved['species'], 'wolf');
     expect(saved['name'], Species.def('wolf').name);
     final back = Mob()..species = Species.def('wolf');

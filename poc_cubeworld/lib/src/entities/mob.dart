@@ -80,6 +80,69 @@ class Mob extends VoxelBody {
   final int instanceId = _nextId++;
   static int _nextId = 1;
 
+  /// Stage 26: a trader's three offers and the spot it wanders around (a
+  /// villager keeps to its village); null home for everything else.
+  List<TradeOffer> trades = [];
+  Vector3? home;
+
+  static const List<TradeOffer> tradePool = [
+    TradeOffer('wheat', 3, 'gold_ingot', 1), TradeOffer('gold_ingot', 1, 'bread', 4),
+    TradeOffer('gold_ingot', 1, 'iron_ingot', 3), TradeOffer('gold_ingot', 1, 'arrow', 12),
+    TradeOffer('gold_ingot', 2, 'magic_dust', 3), TradeOffer('gold_ingot', 2, 'health_potion', 1),
+    TradeOffer('gold_ingot', 5, 'iron_pickaxe', 1), TradeOffer('raw_gold', 2, 'gold_ingot', 1),
+    TradeOffer('leather', 4, 'leather_armor', 1), TradeOffer('wool', 6, 'glider', 1),
+    TradeOffer('diamond', 1, 'crystal_staff', 1), TradeOffer('gem_shard', 3, 'diamond', 1),
+    TradeOffer('gold_ingot', 2, 'speed_potion', 1), TradeOffer('melon_slice', 6, 'gold_ingot', 1),
+    TradeOffer('gold_ingot', 3, 'shears', 1),
+  ];
+  static const double homeRadius = 16.0;
+
+  /// Stage 26: Godot's `setup_mob` sets `home` and rolls the offers for a
+  /// trader; here the position arrives after `setupMob`, so the spawner calls
+  /// this once the mob stands at [bornAt]. The offers are decided by that spot
+  /// and the world seed (Dart's Random, so not Godot's three for the same spot).
+  void makeTrader(Vector3 bornAt) {
+    home = bornAt.clone();
+    trades = rollTrades(math.Random(traderSeed(IVec3.floor(bornAt), world.seedValue)));
+  }
+
+  /// A spatial hash that is the same in every process (`IVec3.hashCode` is
+  /// Dart's per-run seeded `Object.hash`, so the same villager would roll
+  /// other offers after a restart or on another peer).
+  static int traderSeed(IVec3 at, int seed) =>
+      ((at.x * 73856093) ^ (at.y * 19349663) ^ (at.z * 83492791) ^ seed) & 0x7FFFFFFF;
+
+  /// Three distinct offers from the pool.
+  static List<TradeOffer> rollTrades(math.Random rng) {
+    final pool = List<TradeOffer>.of(tradePool);
+    return [for (var i = 0; i < 3; i++) pool.removeAt(rng.nextInt(pool.length))];
+  }
+
+  /// Stage 26: the trade at row [i] of [trades], when [bag] holds what it asks
+  /// and has room for what it gives. True when the items changed hands.
+  /// The two children of a split, beside where this mob fell.
+  List<Mob> spawnSplit() {
+    final sp = main.spawner!;
+    final at = centre();
+    return [
+      for (var i = 0; i < 2; i++)
+        sp.forceSpawn(species.splits, at + Vector3(i == 0 ? 0.6 : -0.6, 0.2, 0))
+          ..velocity = Vector3(i == 0 ? 3.0 : -3.0, 5.0, main.random.nextDouble() * 4.0 - 2.0)
+          ..mobLevel = mobLevel,
+    ];
+  }
+
+  bool tradeWith(Inventory bag, int i) {
+    if (i < 0 || i >= trades.length) throw RangeError.index(i, trades, 'offer');
+    final o = trades[i];
+    if (bag.countOf(o.take) < o.takeCount) return false;
+    if (bag.roomFor(o.give, o.giveCount) < o.giveCount) return false;
+    bag.remove(o.take, o.takeCount);
+    bag.add(o.give, o.giveCount);
+    Sfx.play('pickup');
+    return true;
+  }
+
   /// Elite affixes (stage 18): a prefix on the name, a coloured aura, and one
   /// twist each.
   static const Map<String, AffixDef> affixes = {
@@ -458,6 +521,12 @@ class Mob extends VoxelBody {
       final loot = main.randomLootWeapon(main.random, 4);
       main.spawnLootDrop(centre(), ItemStack(loot.id, 1, bonus: loot.bonus));
     }
+    // Stage 26: a slime that dies leaves two small slimes hopping away from
+    // where it fell.
+    // Godot adds them at once; here a death usually happens inside a loop over
+    // `Game.mobs`, so the children wait in `Game.pendingSplits` for the end of
+    // the tick.
+    if (species.splits != '' && main.spawner != null) main.pendingSplits.add(this);
     main.spawnEffect(centre(), Vector3(0.9, 0.3, 0.3), 1.0);
     _deathTimer = 0.0;
   }
@@ -589,6 +658,13 @@ class Mob extends VoxelBody {
           state = MobState.idle;
           _timer = 1.0 + rng.nextDouble() * 4.0;
         }
+        final h = home;
+        if (h != null) {
+          final away = position - h;
+          away.y = 0.0;
+          // Stage 26: a villager turns back to its village.
+          if (away.length > homeRadius) _dir = -away.normalized();
+        }
         if ((species.hostile || _angry) && dist < aggro && !targetDead) state = MobState.chase;
       case MobState.chase:
         if (targetDead || dist > aggro * 2.2) {
@@ -685,6 +761,10 @@ class Mob extends VoxelBody {
     if (state == MobState.chase && target != null) {
       final to = target.centre() - centre();
       _dir = to.length2 > 0 ? to.normalized() : Vector3.zero();
+    } else if (tamed) {
+      // Stage 26: a tamed parrot hovers over its owner's shoulder.
+      final toPerch = player.centre() + Vector3(0, 1.2, 0) - centre();
+      _dir = toPerch.length > 1.2 ? toPerch.normalized() : Vector3.zero();
     } else if (state == MobState.wander || state == MobState.idle) {
       if (_flap <= 0.0) {
         final rng = main.random;
@@ -764,6 +844,9 @@ class Mob extends VoxelBody {
         'tamed': tamed,
         'name': displayName(),
         'yaw': modelYaw(),
+        // Stage 26: a villager keeps its offers and its village across the save.
+        'trades': [for (final t in trades) t.toJson()],
+        'home': home == null ? <double>[] : [home!.x, home!.y, home!.z],
       };
 
   /// Rebuilds a saved mob: `setupMob` was already called by the loader, then
@@ -777,6 +860,10 @@ class Mob extends VoxelBody {
     maxHp = (d['max_hp'] as num?)?.toDouble() ?? maxHp;
     hp = (d['hp'] as num?)?.toDouble() ?? maxHp;
     if (d['tamed'] == true) restoreTamed();
+    final hm = (d['home'] as List<dynamic>? ?? const []).map((e) => (e as num).toDouble()).toList();
+    if (hm.length == 3) home = Vector3(hm[0], hm[1], hm[2]);
+    final tr = d['trades'] as List<dynamic>? ?? const [];
+    if (tr.isNotEmpty) trades = [for (final t in tr) TradeOffer.fromJson(t as List<dynamic>)];
     final yaw = (d['yaw'] as num?)?.toDouble() ?? 0.0;
     _face(Vector3(-math.sin(yaw), 0, -math.cos(yaw)));
     syncNode();
@@ -803,6 +890,23 @@ class Mob extends VoxelBody {
   }
 }
 
+/// Stage 26: one villager offer, `take x takeCount -> give x giveCount`; saved
+/// as Godot's four-element array.
+class TradeOffer {
+  const TradeOffer(this.take, this.takeCount, this.give, this.giveCount);
+  final String take;
+  final int takeCount;
+  final String give;
+  final int giveCount;
+
+  List<Object> toJson() => [take, takeCount, give, giveCount];
+
+  static TradeOffer fromJson(List<dynamic> a) =>
+      TradeOffer(a[0].toString(), (a[1] as num).toInt(), a[2].toString(), (a[3] as num).toInt());
+
+  @override
+  String toString() => '$take x$takeCount -> $give x$giveCount';
+}
 
 /// One elite affix: what it multiplies, the effect it inflicts and its colour.
 class AffixDef {

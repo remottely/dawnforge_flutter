@@ -638,6 +638,13 @@ class Player extends VoxelBody implements Target {
     _wearHeld();
   }
 
+  /// Stage 26: a right click on whatever is aimed (the parrot probe feeds seeds
+  /// through the real use path).
+  void probeUse() {
+    _useCooldown = 0.0;
+    _usePressed();
+  }
+
   void probeStrike() {
     _attackCooldown = 0.0;
     _attackPressed();
@@ -1156,7 +1163,8 @@ class Player extends VoxelBody implements Target {
       drop = rng.nextDouble() < 0.35 ? 'wheat_seeds' : (rng.nextDouble() < 0.15 ? 'string' : '');
     }
     if (Items.isLeaves(id) && held != '' && Items.toolOf(held) == ToolType.shears) drop = Blocks.idOf(id);
-    if (drop != '') main.spawnDrop(b.toVector3() + Vector3(0.5, 0.3, 0.5), drop, 1);
+    // Stage 26: a melon breaks into several slices.
+    if (drop != '') main.spawnDrop(b.toVector3() + Vector3(0.5, 0.3, 0.5), drop, drop == 'melon_slice' ? 3 + rng.nextInt(3) : 1);
     main.onBlockBroken(b, id);
     if (held != '' && Items.kind(held) == ItemKind.tool && Blocks.hardness(id) > 0.0) _wearHeld();
     // Plants above a removed block fall off.

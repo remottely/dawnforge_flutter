@@ -61,6 +61,38 @@ class Sfx {
     setVolume(_volume);
   }
 
+  static bool get ready => _ready;
+
+  /// Stage 26: a mono 16-bit WAV of [samples] (-1..1) at [sampleRate], for the
+  /// music loops.
+  static Uint8List wav16(Float32List samples, int sampleRate) {
+    final n = samples.length;
+    final bytes = ByteData(44 + n * 2);
+    void str(int o, String s) {
+      for (var i = 0; i < s.length; i++) {
+        bytes.setUint8(o + i, s.codeUnitAt(i));
+      }
+    }
+
+    str(0, 'RIFF');
+    bytes.setUint32(4, 36 + n * 2, Endian.little);
+    str(8, 'WAVE');
+    str(12, 'fmt ');
+    bytes.setUint32(16, 16, Endian.little);
+    bytes.setUint16(20, 1, Endian.little);
+    bytes.setUint16(22, 1, Endian.little);
+    bytes.setUint32(24, sampleRate, Endian.little);
+    bytes.setUint32(28, sampleRate * 2, Endian.little);
+    bytes.setUint16(32, 2, Endian.little);
+    bytes.setUint16(34, 16, Endian.little);
+    str(36, 'data');
+    bytes.setUint32(40, n * 2, Endian.little);
+    for (var i = 0; i < n; i++) {
+      bytes.setInt16(44 + i * 2, (samples[i].clamp(-1.0, 1.0) * 32000).toInt(), Endian.little);
+    }
+    return bytes.buffer.asUint8List();
+  }
+
   static Uint8List _wav(double seconds, double Function(double, double) fn) {
     final n = (seconds * rate).toInt();
     final bytes = ByteData(44 + n * 2);

@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:flutter_scene/noise.dart';
@@ -51,6 +52,16 @@ class TerrainGenerator {
     _tnt = ids['tnt']!;
     _cobblestone = ids['cobblestone']!;
     _pressurePlate = ids['pressure_plate']!;
+    _mud = ids['mud']!;
+    _reeds = ids['reeds']!;
+    _jungleLog = ids['jungle_log']!;
+    _vines = ids['vines']!;
+    _fern = ids['fern']!;
+    _melon = ids['melon']!;
+    _bed = ids['bed']!;
+    _farmland = ids['farmland']!;
+    _wheat = ids['wheat_2']!;
+    _slab = ids['oak_slab']!;
     setSeed(seed);
   }
 
@@ -67,7 +78,8 @@ class TerrainGenerator {
       biomeDesert = 4,
       biomeSnow = 5,
       biomeMountain = 6,
-      biomeSwamp = 7;
+      biomeSwamp = 7,
+      biomeJungle = 8;
 
   static const int structNone = 0, structDungeon = 1, structTower = 2, structCamp = 3, structVillage = 4;
   static const int structRuin = 5, structWell = 6, structMine = 7, structTemple = 8;
@@ -78,11 +90,14 @@ class TerrainGenerator {
       _spruceLog, _spruceLeaves, _cactus, _coalOre, _ironOre, _goldOre, _diamondOre, _bedrock,
       _tallGrass, _flowerRed, _flowerYellow, _lava, _clay, _deadBush, _mushroom, _ice, _darkStone,
       _mossyBricks, _stoneBricks, _chest, _lamp, _boneBlock, _planks, _ladderId, _spawnerId,
-      _glassId, _craftingTable, _furnace, _torch, _fence, _tnt, _cobblestone, _pressurePlate;
+      _glassId, _craftingTable, _furnace, _torch, _fence, _tnt, _cobblestone, _pressurePlate,
+      // Stage 26: the swamp's mud and reeds, the jungle's logs, vines, ferns and
+      // melons, and what a village hut holds (bed, farmland + ripe wheat, the slab roof).
+      _mud, _reeds, _jungleLog, _vines, _fern, _melon, _bed, _farmland, _wheat, _slab;
 
   int _seed = 0;
   int get seed => _seed;
-  late FastNoiseLite _continental, _hills, _mountainMask, _ridge, _temperature, _humidity, _cave, _cavern, _river;
+  late FastNoiseLite _continental, _hills, _mountainMask, _ridge, _temperature, _humidity, _cave, _cavern, _detail, _river;
 
   static FastNoiseLite _make(int seed, double freq, int octaves, [FractalType fractal = FractalType.fbm]) =>
       FastNoiseLite(seed: seed)
@@ -101,6 +116,7 @@ class TerrainGenerator {
     _humidity = _make(seed ^ 0x56789AB, 0.0024, 2);
     _cave = _make(seed ^ 0x6789ABC, 0.050, 2);
     _cavern = _make(seed ^ 0x789ABCD, 0.020, 2);
+    _detail = _make(seed ^ 0x89ABCDE, 0.06, 1); // stage 26: the swamp pools
     _river = _make(seed ^ 0x9ABCDEF, 0.0030, 2);
   }
 
@@ -131,8 +147,24 @@ class TerrainGenerator {
       final bed = seaLevel - 3 + t * t * 2.0;
       h = _lerp(bed, h, t * t * t);
     }
+    // Stage 26: a swamp is low and flat. Where the climate says swamp and the land
+    // sits just above the sea, the hills are pressed down to a plain two blocks
+    // over sea level.
+    if (h >= seaLevel + 1 && h < seaLevel + 9 && _isSwampClimate(x, z)) {
+      h = seaLevel + 2 + (h - seaLevel - 2) * 0.3;
+    }
     return h.toInt().clamp(6, sizeY - 6);
   }
+
+  bool _isSwampClimate(int x, int z) {
+    final t = _temperature.getNoise2(x.toDouble(), z.toDouble());
+    final hum = _humidity.getNoise2(x.toDouble(), z.toDouble());
+    return hum > 0.42 && t > 0.1 && !(t > 0.30 && hum < 0.05);
+  }
+
+  /// A swamp column whose surface block is a one-deep pool (water over mud).
+  bool _swampPool(int wx, int wz, int h, int biome) =>
+      biome == biomeSwamp && h > seaLevel && _detail.getNoise2(wx * 1.5, wz * 1.5) > 0.28;
 
   int biomeAt(int x, int z) => _biomeFor(x, z, surfaceHeight(x, z));
 
@@ -145,6 +177,7 @@ class TerrainGenerator {
     if (t < -0.35) return biomeSnow;
     if (t > 0.30 && hum < 0.05) return biomeDesert;
     if (hum > 0.42 && t > 0.1 && h < seaLevel + 6) return biomeSwamp;
+    if (t > 0.22 && hum > 0.28) return biomeJungle; // stage 26: hot and wet
     if (hum > 0.22) return biomeForest;
     return biomePlains;
   }
@@ -176,6 +209,7 @@ class TerrainGenerator {
             id = y < 22 ? _darkStone : _stone;
           } else if (y < h - 1) {
             id = biome == biomeDesert || biome == biomeBeach ? _sandstone : (biome == biomeMountain ? _stone : _dirt);
+            if (y == h - 2 && biome == biomeSwamp && _swampPool(wx, wz, h, biome)) id = _mud; // the pool's bed
           } else if (y == h - 1) {
             switch (biome) {
               case biomeOcean:
@@ -188,7 +222,11 @@ class TerrainGenerator {
               case biomeMountain:
                 id = h > 100 ? _snow : (hash(wx, 2, wz) % 4 == 0 ? _gravel : _stone);
               case biomeSwamp:
-                id = hash(wx, 3, wz) % 3 == 0 ? _clay : _grass;
+                if (_swampPool(wx, wz, h, biome)) {
+                  id = _water;
+                } else {
+                  id = hash(wx >> 1, 3, wz >> 1) % 5 < 2 ? _mud : (hash(wx, 3, wz) % 7 == 0 ? _clay : _grass);
+                }
               default:
                 id = _grass;
             }
@@ -251,6 +289,7 @@ class TerrainGenerator {
         final y = h;
         final inside = x >= 0 && x < sizeX && z >= 0 && z < sizeZ;
         if (inside && blocks[index(x, top, z)] == _air) continue;
+        if (biome == biomeSwamp && _swampPool(wx, wz, h, biome)) continue; // nothing grows in a pool
         switch (biome) {
           case biomeForest:
             if (roll < 55) {
@@ -275,12 +314,26 @@ class TerrainGenerator {
               _setIfInside(blocks, x, y, z, _flowerRed);
             }
           case biomeSwamp:
-            if (roll < 25) {
-              _placeOak(blocks, x, y, z, 3 + ((hsh >> 10) % 2));
+            // Godot tests PoolEdge first; the roll goes first here (same result,
+            // four fewer height samples on most columns).
+            if (roll < 550 && _poolEdge(wx, wz)) {
+              _setIfInside(blocks, x, y, z, _reeds);
+            } else if (roll < 22) {
+              _placeWillow(blocks, x, y, z, 4 + ((hsh >> 10) % 2));
             } else if (roll < 300) {
               _setIfInside(blocks, x, y, z, _tallGrass);
             } else if (roll < 340) {
               _setIfInside(blocks, x, y, z, _mushroom);
+            }
+          case biomeJungle:
+            if (roll < 38) {
+              _placeJungleTree(blocks, x, y, z, 8 + ((hsh >> 10) % 7), hsh);
+            } else if (roll < 330) {
+              _setIfInside(blocks, x, y, z, _fern);
+            } else if (roll < 420) {
+              _setIfInside(blocks, x, y, z, _tallGrass);
+            } else if (roll < 432) {
+              _placeMelons(blocks, x, y, z, hsh);
             }
           case biomeSnow:
             if (roll < 30) _placeSpruce(blocks, x, y, z, 6 + ((hsh >> 10) % 4));
@@ -363,6 +416,82 @@ class TerrainGenerator {
     }
   }
 
+  /// A swamp column beside a pool (any of the four neighbours is one).
+  bool _poolEdge(int wx, int wz) {
+    for (var i = 0; i < 4; i++) {
+      final nx = wx + (i == 0 ? 1 : (i == 1 ? -1 : 0));
+      final nz = wz + (i == 2 ? 1 : (i == 3 ? -1 : 0));
+      final nh = surfaceHeight(nx, nz);
+      if (_swampPool(nx, nz, nh, _biomeFor(nx, nz, nh))) return true;
+    }
+    return false;
+  }
+
+  /// Stage 26, the swamp willow: an oak trunk under a wide two-level canopy
+  /// (radius 3) whose rim droops two blocks down in hanging leaf columns.
+  void _placeWillow(Uint8List b, int x, int y, int z, int trunk) {
+    final top = y + trunk;
+    for (var layer = 0; layer < 2; layer++) {
+      final ly = top - layer;
+      for (var dz = -3; dz <= 3; dz++) {
+        for (var dx = -3; dx <= 3; dx++) {
+          if (dx * dx + dz * dz > 10) continue;
+          _setIfInside(b, x + dx, ly, z + dz, _oakLeaves);
+        }
+      }
+    }
+    for (var dz = -3; dz <= 3; dz++) {
+      for (var dx = -3; dx <= 3; dx++) {
+        final d2 = dx * dx + dz * dz;
+        if (d2 < 7 || d2 > 10 || hash(x + dx, 5, z + dz) % 3 == 0) continue;
+        for (var i = 1; i <= 2 + (hash(x + dx, 6, z + dz) % 2); i++) {
+          _setIfInside(b, x + dx, top - 1 - i, z + dz, _oakLeaves);
+        }
+      }
+    }
+    _setIfInside(b, x, top + 1, z, _oakLeaves);
+    for (var i = 0; i < trunk; i++) {
+      _setIfInside(b, x, y + i, z, _oakLog);
+    }
+  }
+
+  /// Stage 26, the jungle tree: an 8-14 tall jungle-log trunk, a radius-3 canopy
+  /// three levels deep, and vines hanging 2-5 blocks under the canopy rim.
+  void _placeJungleTree(Uint8List b, int x, int y, int z, int trunk, int hsh) {
+    final top = y + trunk;
+    for (var dy = -2; dy <= 1; dy++) {
+      final r = dy == 1 ? 1 : (dy == -2 ? 2 : 3);
+      for (var dz = -r; dz <= r; dz++) {
+        for (var dx = -r; dx <= r; dx++) {
+          if (dx * dx + dz * dz > r * r + 1) continue;
+          _setIfInside(b, x + dx, top + dy, z + dz, _oakLeaves);
+        }
+      }
+    }
+    for (var dz = -3; dz <= 3; dz++) {
+      for (var dx = -3; dx <= 3; dx++) {
+        final d2 = dx * dx + dz * dz;
+        if (d2 < 7 || d2 > 10) continue;
+        final vh = hash(x + dx, 8, z + dz) ^ hsh;
+        if (vh % 5 < 2) continue;
+        final len = 2 + ((vh >> 4) % 4);
+        for (var i = 1; i <= len; i++) {
+          _setIfInside(b, x + dx, top - 1 - i, z + dz, _vines);
+        }
+      }
+    }
+    for (var i = 0; i < trunk; i++) {
+      _setIfInside(b, x, y + i, z, _jungleLog);
+    }
+  }
+
+  /// A melon patch: the block itself and up to two neighbours on the ground.
+  void _placeMelons(Uint8List b, int x, int y, int z, int hsh) {
+    _setIfInside(b, x, y, z, _melon);
+    if ((hsh >> 14) % 2 == 0) _setIfInside(b, x + 1, y, z, _melon);
+    if ((hsh >> 15) % 2 == 0) _setIfInside(b, x, y, z + 1, _melon);
+  }
+
   bool _isLeaf(int id) => id == _oakLeaves || id == _spruceLeaves;
 
   void _setIfInside(Uint8List b, int x, int y, int z, int id) {
@@ -398,7 +527,7 @@ class TerrainGenerator {
       return (x: sx, y: surface, z: sz, type: structTower);
     } else if (roll < 82) {
       return (x: sx, y: surface, z: sz, type: structCamp);
-    } else if (biome != biomeMountain && biome != biomeSwamp) {
+    } else if (biome == biomePlains || biome == biomeForest) {
       return (x: sx, y: surface, z: sz, type: structVillage);
     }
     return null;
@@ -545,18 +674,65 @@ class TerrainGenerator {
     _put(b, ox, oz, cx - 1, cy + h - 1, cz - 1, _air);
   }
 
-  /// Five houses around a well, each levelled onto its own ground height.
-  void _village(Uint8List b, int ox, int oz, int cx, int cy, int cz) {
-    const dx = [-9, 9, 0, -9, 9], dz = [-9, -9, 10, 9, 9];
-    for (var i = 0; i < 5; i++) {
-      final hx = cx + dx[i], hz = cz + dz[i];
-      final hy = surfaceHeight(hx, hz);
-      _house(b, ox, oz, hx, hy, hz, i);
+  /// Stage 26: 4-7 huts on a ring around a central well, each levelled onto its
+  /// own ground, joined to the well by gravel paths, plus a fenced wheat plot.
+  /// `_hutCount` / `_hutAt` are the layout every chunk (and the probe) agrees on.
+  static const int _villageRing = 11;
+
+  int villageHutCount(int cx, int cz) => _hutCount(cx, cz);
+
+  int _hutCount(int cx, int cz) => 4 + (hash(cx, 51, cz) % 4);
+
+  /// Godot's `Mathf.RoundToInt` rounds half to even and Dart's `round` half away
+  /// from zero; a cosine times the ring radius never lands on a half.
+  ({int x, int z}) _hutAt(int cx, int cz, int i) {
+    final n = _hutCount(cx, cz);
+    final a = i * math.pi * 2 / n + (hash(cx, 52, cz) % 100) / 100.0;
+    final r = _villageRing + (hash(cx, 53 + i, cz) % 3);
+    return (x: cx + (math.cos(a) * r).round(), z: cz + (math.sin(a) * r).round());
+  }
+
+  /// World (x, z) of every hut centre, for the probe.
+  List<({int x, int z})> villageHuts(int cx, int cz) => [for (var i = 0; i < _hutCount(cx, cz); i++) _hutAt(cx, cz, i)];
+
+  static const int _villageClearRadius = 19;
+
+  /// Fells every tree (logs, leaves, vines) standing within the village's
+  /// footprint, so a forest village is a clearing and not huts under a canopy.
+  /// Runs before the huts.
+  void _clearTrees(Uint8List b, int ox, int oz, int cx, int cz) {
+    for (var z = -_villageClearRadius; z <= _villageClearRadius; z++) {
+      for (var x = -_villageClearRadius; x <= _villageClearRadius; x++) {
+        if (x * x + z * z > _villageClearRadius * _villageClearRadius) continue;
+        final wx = cx + x, wz = cz + z;
+        if (wx < ox || wx >= ox + sizeX || wz < oz || wz >= oz + sizeZ) continue;
+        final ground = surfaceHeight(wx, wz);
+        for (var y = ground; y < ground + 18 && y < sizeY; y++) {
+          final cur = _get(b, ox, oz, wx, y, wz);
+          if (cur == null) continue;
+          if (cur == _oakLog || cur == _spruceLog || cur == _jungleLog || _isLeaf(cur) || cur == _vines) {
+            _put(b, ox, oz, wx, y, wz, _air);
+          }
+        }
+      }
     }
+  }
+
+  void _village(Uint8List b, int ox, int oz, int cx, int cy, int cz) {
+    _clearTrees(b, ox, oz, cx, cz);
+    final n = _hutCount(cx, cz);
     final wy = surfaceHeight(cx, cz);
+    for (var i = 0; i < n; i++) {
+      final hut = _hutAt(cx, cz, i);
+      final hy = surfaceHeight(hut.x, hut.z);
+      _hut(b, ox, oz, hut.x, hy, hut.z, i);
+      _path(b, ox, oz, hut.x, hut.z, cx, cz);
+    }
+    // Well
     for (var x = -1; x <= 1; x++) {
       for (var z = -1; z <= 1; z++) {
         final rim = x.abs() == 1 || z.abs() == 1;
+        _levelColumn(b, ox, oz, cx + x, cz + z, wy - 1, wy + 5, _cobblestone);
         _put(b, ox, oz, cx + x, wy, cz + z, rim ? _stoneBricks : _water);
         _put(b, ox, oz, cx + x, wy - 1, cz + z, rim ? _stoneBricks : _water);
         for (var y = 1; y < 4; y++) {
@@ -567,39 +743,87 @@ class TerrainGenerator {
     }
     _put(b, ox, oz, cx + 3, wy, cz, _lamp);
     _put(b, ox, oz, cx - 3, wy, cz, _lamp);
+    // Farm plot: 9x7 fenced, two rows of ripe wheat on farmland either side of a
+    // water channel.
+    final fx = cx + 5, fz = cz - _villageRing - 6;
+    final fy = surfaceHeight(fx, fz);
+    for (var z = -3; z <= 3; z++) {
+      for (var x = -4; x <= 4; x++) {
+        final wx = fx + x, wz = fz + z;
+        final edge = x.abs() == 4 || z.abs() == 3;
+        _levelColumn(b, ox, oz, wx, wz, fy - 1, fy + 3, _dirt);
+        if (edge) {
+          _put(b, ox, oz, wx, fy - 1, wz, _grass);
+          _put(b, ox, oz, wx, fy, wz, _fence);
+        } else if (z == 0) {
+          _put(b, ox, oz, wx, fy - 1, wz, _water);
+        } else {
+          _put(b, ox, oz, wx, fy - 1, wz, _farmland);
+          _put(b, ox, oz, wx, fy, wz, _wheat);
+        }
+      }
+    }
+    _put(b, ox, oz, fx, fy, fz + 3, _air); // the gate
+    _put(b, ox, oz, fx + 4, fy + 1, fz + 3, _torch);
   }
 
-  void _house(Uint8List b, int ox, int oz, int cx, int cy, int cz, int variant) {
-    final w = 3 + variant % 2;
-    const d = 3, h = 4;
+  /// A gravel path along x then along z, one block wide, laid on each column's
+  /// own ground.
+  void _path(Uint8List b, int ox, int oz, int fromX, int fromZ, int toX, int toZ) {
+    final stepX = toX > fromX ? 1 : -1, stepZ = toZ > fromZ ? 1 : -1;
+    for (var x = fromX; x != toX; x += stepX) {
+      if ((x - toX).abs() <= 2 && (fromZ - toZ).abs() <= 2) break;
+      final y = surfaceHeight(x, fromZ);
+      _put(b, ox, oz, x, y - 1, fromZ, _gravel);
+      _put(b, ox, oz, x, y, fromZ, _air);
+    }
+    for (var z = fromZ; z != toZ; z += stepZ) {
+      if ((z - toZ).abs() <= 2) break;
+      final y = surfaceHeight(toX, z);
+      _put(b, ox, oz, toX, y - 1, z, _gravel);
+      _put(b, ox, oz, toX, y, z, _air);
+    }
+  }
+
+  /// A 5x5 hut: cobblestone floor, plank walls with log corners, a door gap
+  /// facing the well side, a glass window, a plank ceiling ringed with slabs,
+  /// and inside a torch, a bed and a chest (`LootTables.tables['village']`).
+  void _hut(Uint8List b, int ox, int oz, int cx, int cy, int cz, int variant) {
+    const w = 2, d = 2, h = 4;
+    final doorZ = variant % 2 == 0 ? d : -d;
     for (var x = -w; x <= w; x++) {
       for (var z = -d; z <= d; z++) {
+        _levelColumn(b, ox, oz, cx + x, cz + z, cy - 1, cy + h + 2, _cobblestone);
         for (var y = -2; y <= h + 1; y++) {
           var id = _air;
           final wall = x.abs() == w || z.abs() == d;
           final corner = x.abs() == w && z.abs() == d;
           if (y < 0) {
-            id = _stoneBricks;
+            id = _cobblestone; // foundation
           } else if (y == 0) {
-            id = _planks;
+            id = _cobblestone; // floor
           } else if (y == h) {
-            id = _planks;
+            id = _planks; // ceiling
           } else if (y == h + 1) {
-            id = (x.abs() < w && z.abs() < d) ? _spruceLog : _air;
+            id = wall ? _slab : (x == 0 && z == 0 ? _slab : _air); // slab roof rim + cap
           } else if (corner) {
             id = _oakLog;
           } else if (wall) {
-            final door = z == d && x == 0 && y <= 2;
-            final window = y == 2 && (x % 2 == 0) && !door;
+            final door = z == doorZ && x == 0 && y <= 2;
+            final window = y == 2 && (x == 0 && z == -doorZ);
             id = door ? _air : (window ? _glassId : _planks);
           }
           _put(b, ox, oz, cx + x, cy + y, cz + z, id);
         }
       }
     }
-    _put(b, ox, oz, cx - w + 1, cy + 1, cz - d + 1, variant == 0 ? _chest : _lamp);
-    if (variant == 2) _put(b, ox, oz, cx + w - 1, cy + 1, cz - d + 1, _craftingTable);
-    if (variant == 3) _put(b, ox, oz, cx + w - 1, cy + 1, cz - d + 1, _furnace);
+    final back = -doorZ + (doorZ > 0 ? 1 : -1);
+    final front = doorZ - (doorZ > 0 ? 1 : -1);
+    _put(b, ox, oz, cx - w + 1, cy + 1, cz + back, _chest);
+    _put(b, ox, oz, cx + w - 1, cy + 1, cz + back, _bed);
+    _put(b, ox, oz, cx, cy + 3, cz, _torch);
+    if (variant == 2) _put(b, ox, oz, cx + w - 1, cy + 1, cz + front, _craftingTable);
+    if (variant == 3) _put(b, ox, oz, cx - w + 1, cy + 1, cz + front, _furnace);
   }
 
   void _camp(Uint8List b, int ox, int oz, int cx, int cy, int cz) {

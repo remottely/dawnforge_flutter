@@ -28,13 +28,14 @@ import 'game_state.dart';
 import 'input.dart';
 import 'inventory.dart';
 import 'loot.dart';
+import 'music.dart';
 import 'net.dart';
 import 'quests.dart';
 import 'sfx.dart';
 import 'settings.dart';
 import 'weather.dart';
 
-enum ScreenKind { none, inventory, pause, death, journal }
+enum ScreenKind { none, inventory, pause, death, journal, trade }
 
 class Note {
   Note(this.text, this.t);
@@ -156,6 +157,14 @@ class Game extends ChangeNotifier {
   final List<_Tnt> _tnts = [];
   final Set<IVec3> _bossesSpawned = {};
 
+  /// Stage 26: the villager whose trade screen is open, the rows flashing green
+  /// (true) or red after a click with the seconds left, and the slimes that
+  /// died this tick and split at its end.
+  Mob? tradeVillager;
+  final Map<int, bool> tradeFlash = {};
+  final Map<int, double> _tradeFlashT = {};
+  final List<Mob> pendingSplits = [];
+
   /// Stage 23: plates pressed and not yet left, so one press lights one fuse.
   final Set<IVec3> _platesFired = {};
   Spawner? spawner;
@@ -274,6 +283,10 @@ class Game extends ChangeNotifier {
     world.flowEnabled = !net.isClient;
     if (!net.isClient) spawner = Spawner(world, player, this);
     if (net.mode != NetMode.solo) notify(net.isHost ? 'Hosting on port ${Net.port}' : 'Joined the host');
+    // Stage 26: the ambient music follows the biome, the night and the depth; a
+    // change is a HUD hint.
+    Music.instance.onMoodChanged = (mood) => notify('\u266A $mood');
+    _updateMusic();
 
     started = true;
     ready = true;
@@ -380,13 +393,22 @@ class Game extends ChangeNotifier {
   String timeLabel() {
     final h = (timeOfDay * 24.0).toInt();
     final m = ((timeOfDay * 24.0) % 1.0 * 60.0).toInt();
-    const biomeNames = ['Ocean', 'Beach', 'Plains', 'Forest', 'Desert', 'Snow', 'Mountains', 'Swamp'];
+    const biomeNames = ['Ocean', 'Beach', 'Plains', 'Forest', 'Desert', 'Snow', 'Mountains', 'Swamp', 'Jungle'];
     final b = world.biomeAt(player.position.x.toInt(), player.position.z.toInt());
     final clock = '${h.toString().padLeft(2, '0')}:${m.toString().padLeft(2, '0')}   ${biomeNames[b]}${isNight ? '   (night)' : ''}';
     return weather.kind == WeatherKind.clear ? clock : '$clock   ${weather.label}';
   }
 
   bool get isNight => timeOfDay < 0.22 || timeOfDay > 0.78;
+
+  /// Stage 26: the music's mood for where the player stands (underground =
+  /// below y 40).
+  static const double musicUndergroundY = 40.0;
+
+  void _updateMusic() {
+    final biome = world.biomeAt(player.position.x.toInt(), player.position.z.toInt());
+    Music.instance.setContext(biome, isNight, player.position.y < musicUndergroundY);
+  }
 
   String debugText() =>
       'FPS ${fps.round()}  chunks ${world.loadedChunkCount}  queue ${world.pendingCount}  faces ${world.facesEmitted}  mobs ${mobs.length}\n'
@@ -455,6 +477,8 @@ class Game extends ChangeNotifier {
       } else {
         openScreen(ScreenKind.pause);
       }
+    } else if (input.justPressed(GameAction.interact) && screen == ScreenKind.trade) {
+      closeScreen(); // stage 26: F closes the trade screen it opened
     } else if (input.justPressed(GameAction.journal) && !player.isDead) {
       if (screen != ScreenKind.none) {
         closeScreen();
@@ -528,6 +552,20 @@ class Game extends ChangeNotifier {
     Net.instance.endBlockBatch();
     _probeTick?.call();
     Net.instance.process(dt);
+    if (pendingSplits.isNotEmpty) {
+      final dead = List.of(pendingSplits);
+      pendingSplits.clear();
+      for (final m in dead) {
+        m.spawnSplit();
+      }
+    }
+    for (final k in List.of(_tradeFlashT.keys)) {
+      _tradeFlashT[k] = _tradeFlashT[k]! - dt;
+      if (_tradeFlashT[k]! <= 0.0) {
+        _tradeFlashT.remove(k);
+        tradeFlash.remove(k);
+      }
+    }
     _prune();
 
     for (final n in notes) {
@@ -540,6 +578,7 @@ class Game extends ChangeNotifier {
       _structTimer = 0.0;
       visitedChunks.add(VoxelWorld.chunkOf(IVec3.floor(player.position)));
       _checkStructures();
+      _updateMusic();
       // Stage 25: growth is a host block edit; it reaches clients as one.
       if (!Net.instance.isClient) _growCrops();
       _tickSpawners();
@@ -643,6 +682,9 @@ class Game extends ChangeNotifier {
   void closeScreen() {
     screen = ScreenKind.none;
     chest = null;
+    tradeVillager = null;
+    tradeFlash.clear();
+    _tradeFlashT.clear();
     if (!player.isDead) unawaited(input.capture());
     notifyListeners();
   }
@@ -732,13 +774,20 @@ class Game extends ChangeNotifier {
       if (s.type == 4) {
         if (!_bossesSpawned.contains(key) && key.distanceTo(player.position) < 40.0) {
           _bossesSpawned.add(key);
-          for (var i = 0; i < 4; i++) {
+          // Stage 26: 3-5 villagers, born beside the well and kept to the
+          // village by `home`.
+          final count = 3 + random.nextInt(3);
+          for (var i = 0; i < count; i++) {
+            final ang = i * math.pi * 2 / 5.0;
+            final vx = s.x + math.cos(ang) * 4.0, vz = s.z + math.sin(ang) * 4.0;
             final v = Mob();
             v.setupMob(world, this, player, Species.def('villager'));
-            v.position = Vector3(s.x + random.nextDouble() * 12 - 6, world.groundHeight(s.x, s.z) + 0.5, s.z + random.nextDouble() * 12 - 6);
+            v.position = Vector3(vx, world.groundHeight(vx.toInt(), vz.toInt()) + 0.5, vz);
+            v.makeTrader(v.position);
+            v.home = Vector3(s.x.toDouble(), s.y.toDouble(), s.z.toDouble());
             addMob(v);
           }
-          notify('You found a village! Trade with F (gold for goods)');
+          notify('A village! F on a villager to trade');
         }
         continue;
       }
@@ -1019,23 +1068,32 @@ class Game extends ChangeNotifier {
     }
   }
 
+  /// Stage 26: F on a villager opens its three offers (`TradeScreen`); F or
+  /// Escape closes them.
   void trade(Mob villager) {
-    const offers = [
-      ['gold_ingot', 1, 'iron_ingot', 3], ['gold_ingot', 1, 'arrow', 12], ['gold_ingot', 1, 'bread', 4],
-      ['gold_ingot', 2, 'magic_dust', 3], ['gold_ingot', 3, 'health_potion', 1], ['raw_gold', 2, 'gold_ingot', 1],
-      ['leather', 4, 'leather_armor', 1], ['wool', 6, 'glider', 1], ['diamond', 1, 'crystal_staff', 1], ['gem_shard', 3, 'diamond', 1],
-    ];
-    final rng = math.Random(IVec3.floor(villager.position).hashCode ^ world.seedValue);
-    final offer = offers[rng.nextInt(offers.length)];
-    final give = offer[0] as String, giveN = offer[1] as int, get = offer[2] as String, getN = offer[3] as int;
-    if (player.inventory.countOf(give) >= giveN) {
-      player.inventory.remove(give, giveN);
-      player.inventory.add(get, getN);
-      notify('Traded $giveN ${Items.displayName(give)} for $getN ${Items.displayName(get)}');
-      Sfx.play('pickup');
-    } else {
-      notify('Villager wants $giveN ${Items.displayName(give)} for $getN ${Items.displayName(get)}');
+    if (screen != ScreenKind.none) {
+      closeScreen();
+      return;
     }
+    tradeVillager = villager;
+    openScreen(ScreenKind.trade);
+  }
+
+  /// The trade at row [i] of the open villager: a green flash and a notice on
+  /// success, a red flash when the bag lacks it.
+  bool tradeRow(int i) {
+    final v = tradeVillager;
+    if (v == null || v.removed || i < 0 || i >= v.trades.length) return false;
+    final o = v.trades[i];
+    final ok = v.tradeWith(player.inventory, i);
+    tradeFlash[i] = ok;
+    _tradeFlashT[i] = 0.5;
+    if (ok) {
+      notify('Traded ${o.takeCount} ${Items.displayName(o.take)} for ${o.giveCount} ${Items.displayName(o.give)}');
+    } else {
+      notify('Villager wants ${o.takeCount} ${Items.displayName(o.take)}');
+    }
+    return ok;
   }
 
   void _tickSpawners() {
@@ -1297,6 +1355,11 @@ class Game extends ChangeNotifier {
       if (identical(m, player.mount)) mountIndex = petData.length;
       petData.add(m.toJson());
     }
+    // Stage 26: a villager is not tamed but never despawns, so it rides the save
+    // like a pet.
+    for (final m in mobs) {
+      if (!m.puppet && m.species.persistent && !m.isDead && !m.removed) petData.add(m.toJson());
+    }
     return {
       'boats': [for (final b in boats) if (!b.removed && !b.replica) b.toJson()],
       'pets': petData,
@@ -1414,6 +1477,8 @@ class Game extends ChangeNotifier {
         ? _probeStage21aTeleport()
         // The temple: seed 42's nearest is past 24 chunks.
         : (_hasArg('--stage23') ? _probeStage21aTeleport(48) : null);
+    final shot26 = _hasArg('--stage26') ? _arg('--shot=', '') : '';
+    if (shot26 != '') _stage26ShotPrepare(shot26);
     final t0 = DateTime.now();
     for (var i = 0; i < frames; i++) {
       await nextFrame();
@@ -1457,6 +1522,7 @@ class Game extends ChangeNotifier {
       }
       debugPrint('[probe] stage21a: structures by kind $counts');
     }
+    if (shot26 != '') await _stage26ShotFinish(shot26);
     if (_hasArg('--map')) mapVisible = true;
     if (_hasArg('--open-map')) {
       mapVisible = true;
@@ -1696,6 +1762,7 @@ class Game extends ChangeNotifier {
     if (_hasArg('--stage25') && net.isClient) await _probeStage25Client();
     if (_hasArg('--stage22')) await _probeStage22();
     if (_hasArg('--stage23')) await _probeStage23(stage21a);
+    if (_hasArg('--stage26') && shot26 == '') await _probeStage26();
     if (_hasArg('--stage24')) {
       // The setup half saved and asked for a fresh session; the verify half
       // prints the rest and captures.
@@ -2268,6 +2335,276 @@ class Game extends ChangeNotifier {
         '(${gone ? 'gone' : 'alive'}, hp ${theBoss.hp.toStringAsFixed(0)})');
   }
 
+  // --- stage 26: swamp + jungle, villages with traders, ambient music ----------------
+
+  static const Map<int, String> _stage26BiomeNames = {7: 'swamp', 8: 'jungle'};
+
+  /// The nearest chunk (by chunk distance, in rings) whose centre column is
+  /// [biome], scanning [radius] chunks around [around] with [gen]; null when none.
+  static ChunkPos? _stage26FindBiome(TerrainGenerator gen, ChunkPos around, int biome, int radius) {
+    for (var ring = 0; ring <= radius; ring++) {
+      for (var dz = -ring; dz <= ring; dz++) {
+        for (var dx = -ring; dx <= ring; dx++) {
+          if (math.max(dx.abs(), dz.abs()) != ring) continue;
+          final c = (x: around.x + dx, z: around.z + dz);
+          if (gen.biomeAt(c.x * VoxelWorld.sizeX + 8, c.z * VoxelWorld.sizeZ + 8) == biome) return c;
+        }
+      }
+    }
+    return null;
+  }
+
+  /// Stands the player at the centre of chunk [c] (on its ground) and waits for
+  /// the window.
+  Future<Vector3> _stage26Go(ChunkPos c) async {
+    final x = c.x * VoxelWorld.sizeX + 8;
+    final z = c.z * VoxelWorld.sizeZ + 8;
+    final at = Vector3(x + 0.5, world.surfaceHeight(x, z) + 1.2, z + 0.5);
+    _probePlace(at);
+    player.spawnPoint = at.clone();
+    world.updateAround(at);
+    for (var i = 0; i < 600; i++) {
+      await nextFrame();
+      if (i > 5 && world.isIdle) break;
+    }
+    at.y = world.groundHeight(x, z) + 1.2;
+    _probePlace(at);
+    return at;
+  }
+
+  /// Block counts of the 3x3 chunks around [c] for the ids asked. "pool" counts
+  /// water cells lying on mud (a swamp pool, never the sea).
+  Map<String, int> _stage26Count(ChunkPos c, List<String> ids) {
+    final out = {for (final id in ids) id: 0};
+    final want = <int, String>{for (final id in ids) if (id != 'pool') Blocks.indexOf(id): id};
+    final water = Blocks.indexOf('water');
+    final mud = Blocks.indexOf('mud');
+    for (var wz = (c.z - 1) * VoxelWorld.sizeZ; wz < (c.z + 2) * VoxelWorld.sizeZ; wz++) {
+      for (var wx = (c.x - 1) * VoxelWorld.sizeX; wx < (c.x + 2) * VoxelWorld.sizeX; wx++) {
+        for (var y = 43; y < 110; y++) {
+          final id = world.getBlockXYZ(wx, y, wz);
+          if (id == Blocks.air) continue;
+          final name = want[id];
+          if (name != null) out[name] = out[name]! + 1;
+          if (out.containsKey('pool') && id == water && world.getBlockXYZ(wx, y - 1, wz) == mud) out['pool'] = out['pool']! + 1;
+        }
+      }
+    }
+    return out;
+  }
+
+  /// The nearest village (kind 4) within [radius] chunks, or null.
+  StructureAt? _stage26FindVillage(int radius) {
+    final here = VoxelWorld.chunkOf(IVec3.floor(player.position));
+    StructureAt? best;
+    var bestD = double.infinity;
+    for (var dz = -radius; dz <= radius; dz += 6) {
+      for (var dx = -radius; dx <= radius; dx += 6) {
+        for (final s in world.structuresNear((x: here.x + dx, z: here.z + dz))) {
+          if (s.type != TerrainGenerator.structVillage) continue;
+          final d = math.sqrt(math.pow(s.x - player.position.x, 2) + math.pow(s.z - player.position.z, 2));
+          if (d < bestD) {
+            bestD = d;
+            best = s;
+          }
+        }
+      }
+    }
+    return best;
+  }
+
+  List<Mob> _stage26Villagers() => [for (final m in mobs) if (m.species.trader && !m.isDead && !m.removed) m];
+
+  /// Teleports to the village and wakes its villagers; the counts of the probe line.
+  Future<({int x, int z, int huts, int villagers, int chests, int beds})?> _stage26Village(int radius) async {
+    final v = _stage26FindVillage(radius);
+    if (v == null) return null;
+    await _stage26Go(VoxelWorld.chunkOf(IVec3(v.x, 0, v.z)));
+    final at = Vector3(v.x + 0.5, world.groundHeight(v.x, v.z + 5) + 1.2, v.z + 5.5);
+    _probePlace(at);
+    player.spawnPoint = at.clone();
+    _checkStructures();
+    var chests = 0, beds = 0;
+    final chestId = Blocks.indexOf('chest'), bedId = Blocks.indexOf('bed');
+    for (var wz = v.z - 20; wz < v.z + 21; wz++) {
+      for (var wx = v.x - 20; wx < v.x + 21; wx++) {
+        for (var y = v.y - 10; y < v.y + 14; y++) {
+          final id = world.getBlockXYZ(wx, y, wz);
+          if (id == chestId) {
+            chests++;
+          } else if (id == bedId) {
+            beds++;
+          }
+        }
+      }
+    }
+    return (x: v.x, z: v.z, huts: world.generator.villageHutCount(v.x, v.z), villagers: _stage26Villagers().length, chests: chests, beds: beds);
+  }
+
+  /// --stage26: the two biomes and their blocks, a village with its traders, one
+  /// trade through the screen, the slime split, a tamed parrot, the ocelot's
+  /// pace, and the music moods with the rendered frame count.
+  Future<void> _probeStage26() async {
+    final gen = world.generator;
+    final here = VoxelWorld.chunkOf(IVec3.floor(player.position));
+    final found = {7: 0, 8: 0};
+    for (final c in world.chunks.keys) {
+      final b = gen.biomeAt(c.x * VoxelWorld.sizeX + 8, c.z * VoxelWorld.sizeZ + 8);
+      if (found.containsKey(b)) found[b] = found[b]! + 1;
+    }
+    debugPrint('[probe] stage26 biomes over window: swamp=${found[7]} jungle=${found[8]}');
+    if (found[7] == 0 || found[8] == 0) {
+      // Which seeds show both from spawn at radius 6, for the captures.
+      final probeGen = TerrainGenerator(ids: Blocks.generatorIds(), seed: 1);
+      var reported = 0;
+      for (var seedN = 1; seedN < 61 && reported < 3; seedN++) {
+        probeGen.setSeed(seedN);
+        final sw = _stage26FindBiome(probeGen, (x: 0, z: 0), 7, 6);
+        final jg = _stage26FindBiome(probeGen, (x: 0, z: 0), 8, 6);
+        if (sw != null && jg != null) {
+          debugPrint('[probe] stage26 seed $seedN has swamp at (${sw.x * 16 + 8},${sw.z * 16 + 8}) / jungle at (${jg.x * 16 + 8},${jg.z * 16 + 8})');
+          reported++;
+        }
+      }
+    }
+    for (final biome in const [7, 8]) {
+      final c = _stage26FindBiome(gen, here, biome, 80);
+      if (c == null) {
+        debugPrint('[probe] stage26 ${_stage26BiomeNames[biome]}: none within 80 chunks of spawn');
+        continue;
+      }
+      final at = await _stage26Go(c);
+      final tp = '--tp=${at.x.toInt()},${at.y.toInt()},${at.z.toInt()}';
+      if (biome == 7) {
+        final n = _stage26Count(c, const ['mud', 'pool', 'reeds']);
+        debugPrint('[probe] stage26 swamp blocks: mud=${n['mud']} water pools=${n['pool']} reeds=${n['reeds']} (3x3 chunks at (${c.x}, ${c.z}), $tp)');
+      } else {
+        final n = _stage26Count(c, const ['jungle_log', 'vines', 'fern', 'melon']);
+        debugPrint('[probe] stage26 jungle blocks: jungle_log=${n['jungle_log']} vines=${n['vines']} fern=${n['fern']} melon=${n['melon']} (3x3 chunks at (${c.x}, ${c.z}), $tp)');
+      }
+    }
+    // Village
+    final village = await _stage26Village(48);
+    if (village == null) {
+      debugPrint('[probe] stage26 village: none within 48 chunks (seed ${world.seedValue}); pick another seed');
+    } else {
+      debugPrint('[probe] stage26 village at (${village.x},${village.z}): huts=${village.huts} villagers=${village.villagers} '
+          'chests=${village.chests} beds=${village.beds} (seed ${world.seedValue})');
+    }
+    // Trade
+    final traders = _stage26Villagers();
+    if (traders.isEmpty) {
+      traders.add(spawner!.forceSpawn('villager', player.position + Vector3(2, 0.2, 0)));
+      debugPrint('[probe] stage26 trade: no village villager in reach, one spawned beside the player');
+    }
+    final trader = traders[0];
+    final offer = trader.trades[0];
+    player.inventory.add(offer.take, offer.takeCount);
+    String bag() => '${offer.take} x${player.inventory.countOf(offer.take)} / ${offer.give} x${player.inventory.countOf(offer.give)}';
+    final before = bag();
+    trade(trader);
+    final traded = tradeRow(0);
+    await nextFrame();
+    debugPrint('[probe] stage26 trade: villager=${trader.displayName()} offers=${trader.trades.length} screen=${screen.name}; '
+        'traded $offer: $traded: bag before/after=$before / ${bag()}');
+    closeScreen();
+    // Slime split (the children are added at the end of the tick).
+    final slime = spawner!.forceSpawn('slime', player.position + Vector3(3, 0.5, 0));
+    slime.takeDamage(999.0, player.position, 0.0, player);
+    await _ticks(1);
+    final small = mobs.where((m) => m.species.id == 'slime_small' && !m.removed).length;
+    debugPrint('[probe] stage26 slime split: parent dead=${slime.isDead} -> children=$small');
+    // Parrot tamed with seeds through the player's own use path.
+    final parrot = spawner!.forceSpawn('parrot', player.position + Vector3(0, 1.5, 2));
+    player.inventory.setSlot(8, ItemStack('wheat_seeds', 16));
+    player.selectedSlot = 8;
+    var tries = 0;
+    while (!parrot.tamed && tries < 16) {
+      player.aimedMob = parrot;
+      player.probeUse();
+      tries++;
+    }
+    debugPrint('[probe] stage26 parrot tamed=${parrot.tamed} (after $tries seeds)');
+    debugPrint('[probe] stage26 ocelot speed=${Species.def('ocelot').speed.toStringAsFixed(1)} (player walk ${Player.walkSpeed.toStringAsFixed(1)})');
+    // Music
+    final music = Music.instance;
+    final filledBefore = music.framesFilled;
+    music.setContext(2, false, false);
+    final mDay = music.currentMood;
+    music.setContext(2, true, false);
+    final mNight = music.currentMood;
+    music.setContext(8, false, false);
+    final mJungle = music.currentMood;
+    music.setContext(2, false, true);
+    final mDeep = music.currentMood;
+    for (var i = 0; i < 20; i++) {
+      await nextFrame();
+    }
+    debugPrint('[probe] stage26 music: plains day=$mDay -> night=$mNight -> jungle=$mJungle -> underground=$mDeep');
+    debugPrint('[probe] stage26 music frames filled=${music.framesFilled} (this probe ${music.framesFilled - filledBefore}), '
+        'loops started=${music.handlesPlayed}, playing=${music.isPlaying}, audio device=${Sfx.ready}');
+  }
+
+  /// --stage26 --shot=biome|village|trade: stand where the capture wants before
+  /// the window fills.
+  void _stage26ShotPrepare(String shot) {
+    if (shot == 'biome') {
+      if (_arg('--tp=', '') != '') return; // the caller chose the spot
+      final here = VoxelWorld.chunkOf(IVec3.floor(player.position));
+      final biome = int.tryParse(_arg('--biome=', '8')) ?? 8;
+      final c = _stage26FindBiome(world.generator, here, biome, 80);
+      if (c == null) {
+        debugPrint('[probe] stage26 shot: no biome $biome within 80 chunks');
+        return;
+      }
+      final x = c.x * VoxelWorld.sizeX + 8, z = c.z * VoxelWorld.sizeZ + 8;
+      final at = Vector3(x + 0.5, world.surfaceHeight(x, z) + 1.2, z + 0.5);
+      _probePlace(at);
+      player.spawnPoint = at.clone();
+      world.updateAround(at);
+      debugPrint('[probe] stage26 shot: biome $biome at $at');
+    } else if (shot == 'village' || shot == 'trade') {
+      final v = _stage26FindVillage(48);
+      if (v == null) {
+        debugPrint('[probe] stage26 shot: no village within 48 chunks');
+        return;
+      }
+      // Hovering (fly mode) 8 m up and 20 m south of the well, looking north
+      // and down (`--look=0,-22`): the well, the ring of huts and the villagers
+      // all fit the frame.
+      final at = Vector3(v.x + 0.5, world.surfaceHeight(v.x, v.z) + 9.0, v.z + 20.5);
+      flyMode = true;
+      _probePlace(at);
+      player.spawnPoint = at.clone();
+      world.updateAround(at);
+      debugPrint('[probe] stage26 shot: village at (${v.x}, ${v.y}, ${v.z}), standing at $at');
+    }
+  }
+
+  /// After the window filled: settle on the ground, wake the villagers, open
+  /// the trade screen.
+  Future<void> _stage26ShotFinish(String shot) async {
+    final p = player.position.clone();
+    if (_arg('--tp=', '') == '' && !flyMode) {
+      p.y = world.groundHeight(p.x.toInt(), p.z.toInt()) + 1.2;
+      _probePlace(p);
+    }
+    if (flyMode) _pinCameraTo = () => p.clone(); // a hover drifts with nobody at the keys
+    if (shot == 'village' || shot == 'trade') {
+      _checkStructures();
+      for (var i = 0; i < 5; i++) {
+        await nextFrame();
+      }
+      final traders = _stage26Villagers();
+      debugPrint('[probe] stage26 shot: villagers=${traders.length}');
+      if (shot == 'trade' && traders.isNotEmpty) {
+        final t = traders[0];
+        player.inventory.add(t.trades[0].take, t.trades[0].takeCount);
+        trade(t);
+      }
+    }
+  }
+
   /// --stage21a: stand at the nearest ruin / well / mine / temple (`--kind=5..8`
   /// picks one kind) so the capture shows it. The mine puts the player inside
   /// the corridor, the temple outside its south entrance; `--fp` switches to
@@ -2281,7 +2618,8 @@ class Game extends ChangeNotifier {
     for (var dz = -radius; dz <= radius; dz += 4) {
       for (var dx = -radius; dx <= radius; dx += 4) {
         for (final st in world.structuresNear((x: here.x + dx, z: here.z + dz))) {
-          if (st.type < 5 || (want != 0 && st.type != want)) continue;
+          // Kinds 5..8 by default; `--kind=4` (stage 26) reaches a village.
+          if ((st.type < 5 && want != st.type) || (want != 0 && st.type != want)) continue;
           if (wantBiome >= 0 && world.biomeAt(st.x, st.z) != wantBiome) continue;
           final d = math.sqrt(math.pow(st.x - player.position.x, 2) + math.pow(st.z - player.position.z, 2));
           if (d < bestD) {
@@ -2297,6 +2635,8 @@ class Game extends ChangeNotifier {
     }
     var at = Vector3(best.x + 0.5, best.y + 1.1, best.z + 0.5);
     switch (best.type) {
+      case TerrainGenerator.structVillage:
+        at += Vector3(0, 0, 6);
       case TerrainGenerator.structRuin:
         at += Vector3(0, 0, 8);
       case TerrainGenerator.structWell:

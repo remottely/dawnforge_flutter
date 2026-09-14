@@ -1,138 +1,78 @@
-# Dawnforge
+# Dawnforge Cubeworld POC (Flutter) — the Cube World + Minecraft clone, ported to `flutter_scene`
 
-## 🏗️ Architecture
+**What this is.** A self-contained Flutter project on branch `poc_cubeworld` of the
+Dawnforge Flutter repo, in the worktree `../dawnforge_cubeworld_poc/`. It is the Flutter twin
+of the Godot POC at `~/Documents/godot/remottely/dawnforge_cubeworld_poc/poc_cubeworld/`
+(branch `poc_cubeworld` of `tessera_project`): same game, same block table, same save
+format, same probe flags, ported file by file onto
+[`flutter_scene`](https://pub.dev/packages/flutter_scene) (Flutter GPU / Impeller).
+It shares NOTHING with `lib/src/core` of the study track on purpose: the brief is the same
+as the Godot one — *"não foque em arquitetura, foque em entregar o clone do jogo
+funcionando"*. Nothing here is merged as-is.
 
-This project follows a clean architecture pattern with clear separation of concerns:
+**Lineage.** Every file in `lib/src/` is a port of its Godot sibling (`src/**.gd` and
+`csharp/*.cs`). The C# `TerrainGenerator` and `ChunkMesher` became pure-Dart classes that
+run on a pool of isolates (`chunk_worker.dart`); the GDScript autoloads became static
+tables; Godot's `CanvasItem` HUD became a `CustomPainter`; ENet became TCP + JSON lines.
+`ROADMAP.md` is the stage list and the live status of the port.
 
-- **`/lib/gameplay/`** - Game logic, entities, managers, and core game systems
-- **`/lib/presentation/`** - UI components, screens, and design system
-- **`/documentation/`** - Architecture documentation and development guides
+## Running
 
-For detailed architecture information, see [ARCHITECTURE.md](documentation/ARCHITECTURE.md).
-
-## 📋 Code Standards
-
-This project follows the **CLAUDE.md** coding standards for consistency and maintainability:
-
-### Naming Conventions
-
-- **Constants**: Use `k` prefix (e.g., `kDefaultSize`, `kAnimationDuration`)
-- **Private methods**: Use `_` prefix (e.g., `_initializeComponents()`)
-- **Private variables**: Use `_` prefix (e.g., `_isGameActive`)
-- **Classes**: PascalCase (e.g., `GameplayStateManager`)
-- **Files**: snake_case (e.g., `gameplay_state_manager.dart`)
-
-### Class Structure
-
-```dart
-class ExampleClass extends StatelessWidget {
-  // 1. Constants (grouped by type)
-  static const double kDefaultSize = 24.0;
-  static const Color kDefaultColor = Colors.white;
-
-  // 2. Properties
-  final String title;
-  final VoidCallback? onPressed;
-
-  // 3. Constructor
-  const ExampleClass({super.key, required this.title, this.onPressed});
-
-  // 4. Factory constructors (if applicable)
-  const ExampleClass.large({...});
-
-  // 5. Build method
-  @override
-  Widget build(BuildContext context) { }
-
-  // 6. Private helper methods
-  Widget _createStyledWidget() { }
-}
+```bash
+cd poc_cubeworld
+flutter run -d macos                                   # Flutter GPU is enabled in Info.plist
+flutter build macos --debug                            # then:
+build/macos/Build/Products/Debug/cubeworld_poc.app/Contents/MacOS/cubeworld_poc \
+  --screenshot=/tmp/shot.png --frames=300 --seed=1337 --new    # self-report, exits when captured
+flutter test                                           # tables, generator, mesher (pure Dart)
 ```
 
-### Documentation Standards
+Probe flags (same as the Godot POC, plus a few for tuning): `--screenshot=<png> --frames=N
+--seed=N --radius=N --class=warrior|ranger|mage|rogue --time=0..1 --fly --fp --tp=x,y,z
+--look=yaw,pitch --settle=N --map --open-inventory --fire=primary|secondary --stage16
+--strike --stage18 --stage19 --stage20 --ride --stage21a --kind=5..8 --biome=N --stage21b --stage22 --stage23 --stage24 --slot=<name> --open-map --open-settings --stage25 --reject-one --stage26 --shot=biome|village|trade --kind=4 --weather=clear|rain|storm|snow --journal=0..4 --host --join=<ip> --wait-peer --trace`, and for the look: `--sun=k --amb=k
+--tm=aces|agx|neutral|linear --fogd=density --noshadow --shadowcache=0|1
+--casterfaces=front|back`. The debug app forwards the process arguments to Dart
+(`MainFlutterWindow.swift`), so no `--` separator is needed.
 
-- All public classes have comprehensive documentation
-- Complex methods include inline comments
-- Factory methods are documented with usage examples
-- Code follows Flutter/Dart documentation conventions
+Saves live in `~/Library/Application Support/cubeworld_poc/dawnforge_cubeworld_poc/worlds/<name>/`
+(`blocks.bin` edit delta + `player.json`, the same bytes as the Godot POC). F2 writes a
+screenshot next to them.
 
-## 🤝 Contributing
+| Key | |
+|:---|:---|
+| WASD / Space / Shift / Ctrl | move / jump / sprint / sneak |
+| Menu | **Host** opens port 7777 on your world; type an address and **Join** to play in someone's world |
+| F | board or leave a boat (place one with the Boat item on water); on a villager: the trade screen (three offers, click a row; gold ingots are the coin, sell wheat or melon slices to earn them; Esc / F closes) |
+| Mouse | look (third person orbit; the pointer is locked with `pointer_lock`, Esc opens the pause menu and releases it) · LMB attack or mine (hold to keep firing a bow or staff) · RMB place or use · RMB with a bow = fan shot, with a staff = arc |
+| 1-9, wheel | hotbar |
+| E / Tab | inventory + crafting |
+| Q / H / F / V / G / R | drop · eat · interact · first/third person · glider · class ability |
+| F1 / F2 / F5 | debug text · screenshot · fly mode |
+| M | minimap, again: world map with markers (waypoints, structures, mounts, spawn), again: off |
+| J | journal: talents, bestiary, achievements, waypoints, quests |
+| Esc | menu: render distance, mouse, FOV, volume, weather, FPS overlay (saved in `settings.cfg` beside `worlds/`), save & quit — the world keeps running behind it |
 
-When contributing to this project, please follow these guidelines:
+## What the port taught (the case study for `dev`)
 
-1. **Follow CLAUDE.md standards** - Ensure your code adheres to the established patterns
-2. **Maintain consistency** - Use the same naming conventions and class structures
-3. **Document your code** - Add clear comments and documentation for new features
-4. **Test thoroughly** - Run `flutter test` before submitting changes
-5. **Update documentation** - Keep ARCHITECTURE.md updated when adding new systems
-
-### Code Review Checklist
-
-- [ ] Constants use `k` prefix
-- [ ] Private methods/variables use `_` prefix
-- [ ] Classes follow established structure pattern
-- [ ] Public methods are documented
-- [ ] Tests pass without errors
-- [ ] No breaking changes to existing functionality
-
-## Used packages:
-
-bonfire - [![pub package](https://img.shields.io/pub/v/bonfire.svg)](https://pub.dev/packages/bonfire)
-
-flame_audio - [![pub package](https://img.shields.io/pub/v/flame_audio.svg)](https://pub.dev/packages/flame_audio)
-
-flame_splash_screen - [![pub package](https://img.shields.io/pub/v/flame_splash_screen.svg)](https://pub.dev/packages/flame_splash_screen)
-
-url_launcher - [![pub package](https://img.shields.io/pub/v/url_launcher.svg)](https://pub.dev/packages/url_launcher)
-
-## Used sprites:
-
-[Dungeontileset](https://0x72.itch.io/dungeontileset-ii)
-
-[Simple Dungeon Crawler](https://o-lobster.itch.io/simple-dungeon-crawler-16x16-pixel-pack)
-
-cd assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE\ CHARACTER/PNG/WITH_FX
-magick spr_doing_till_strip8.png -crop 96x64 +repage -flop +append spr_doing_till_left_strip8.png
-
-cd assets/images/new/Player
-magick Player*Actions.png -crop 96x48 +repage -scene 1 Player_Actions_row*%d.png
-
-eu possuo um arquivo chamado Player.png q contem todas as sprites do meu player. porem eu preciso transformar todos os frames em arquivos separados. o meu arquivo esta assim hoje:
-cada frame ocupa 48x48. o arquivo é 192 x 320 e esta configurado assim:
-seriam 10 rows e 6 colunas de 48x48. só que as 6 primeiras rows possuem os totais 6 frames, porem as ultimas 4 rows possuem apenas 4 frames cada. entao preciso cortar todo o arquivo em 10 novos arquivos, 6 primeiras rows em arquivos de 6 frames e as 4 ultimas em 4 frames. tudo utilizando um unico comando no temrinal utilizando magick no mac q ja possuo instalado.
-
-magick Player.png -crop 32x32 +repage frame\_%03d.png && rm frame_006.png frame_007.png frame_013.png frame_014.png frame_015.png frame_020.png frame_021.png frame_022.png frame_023.png frame_027.png frame_028.png frame_029.png frame_030.png frame_031.png frame_034.png frame_035.png frame_036.png frame_037.png frame_038.png frame_039.png
-
-magick Player.png -crop 192x32 +repage +adjoin row\_%02d.png
-
-magick row_06.png -crop 128x32+0+0 +repage row_06.png && magick row_07.png -crop 128x32+0+0 +repage row_07.png && magick row_08.png -crop 128x32+0+0 +repage row_08.png && magick row_09.png -crop 128x32+0+0 +repage row_09.png
-magick player_attack_east_4.png -crop 32x32 +repage -flop +append player_attack_west_4.png
-
-magick player_walk_south_6.png -crop 32x32 \
- -gravity center -background transparent -extent 48x48 \
- +append player_walk_south_48x48_6.png
-
-\_48x48
-
-animations type:
-
-- Directional
-- right
-- left
-- up
-- down
-- right Up
-- right Down
-- left Up
-- left Down
-
-// TODO: put all maps background color to be the same as map ground
-
-
-dicas:
-- importar apenas arquivos diretamente, nada de importar pastas do pubspec
-- 
-
-cd assets/images/SunnysideWorld/Sprites/CHARACTERS/ANIMATION/BASE\ CHARACTER/PNG/WITH_FX/
-
-magick spr_sword_strip10.png -crop 96x64 +repage -flop +append spr_sword_left_strip10.png
+- **`flutter_scene` carries the whole rendering stack** the Godot POC leaned on: vertex
+  colours through `MeshGeometry.fromArrays`, a `GradientSkySource` that doubles as the
+  `SunLight` with cascaded shadows, exponential fog blended toward the sky, ACES tone
+  mapping, `PointLightComponent` for the held torch. 225 chunks / ~300k faces render at 60
+  fps on an M-series Mac in a debug build.
+- **Isolates replace `WorkerThreadPool`.** Generation and meshing are pure Dart on three
+  isolates; results cross as `TransferableTypedData`. The first 13×13 window fills in about
+  1 s. `FastNoiseLite` from `flutter_scene/noise.dart` is the same algorithm family as
+  Godot's (OpenSimplex2S, fBm, ridged), so the biome recipe ported unchanged.
+- **Front faces wind counter-clockwise** in `flutter_scene` (glTF), clockwise in Godot: every
+  quad's diagonals are mirrored in the mesher and the voxel builder.
+- **Flutter has no pointer lock**; `pointer_lock` (macOS) supplies relative deltas drained
+  once per fixed step, which is exactly the shape `InputHelper` would want.
+- **The camera collision ray works the same**, but the model must hide when the orbit
+  camera is pulled inside it (`camDistance < 1.1`).
+- **The Flutter tool's build-hook runner rejects symlinks** under the package root
+  (`hooks_runner` `wrapLink` → `UnimplementedError`) and the macOS SwiftPM plugin links
+  live there, so this project has no app-level `hook/build.dart`: `flutter_scene` compiles
+  its own shaders with its own hook, and the game has no asset pipeline to run.
+- **Screenshots come from a `RepaintBoundary`** around the `SceneView` + HUD + overlays,
+  captured after `endOfFrame` (capturing inside the tick trips `debugNeedsPaint`).

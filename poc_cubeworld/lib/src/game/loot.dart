@@ -61,6 +61,16 @@ class LootTables {
       LootEntry('gem_shard', 1, 2, 0.4),
       LootEntry('glider', 1, 1, 0.15),
     ],
+    // Stage 26: what a village hut's chest holds.
+    'village': [
+      LootEntry('bread', 2, 5, 1.0),
+      LootEntry('wheat', 3, 8, 0.8),
+      LootEntry('wheat_seeds', 2, 6, 0.7),
+      LootEntry('gold_ingot', 1, 2, 0.5),
+      LootEntry('leather', 1, 3, 0.5),
+      LootEntry('torch', 2, 6, 0.6),
+      LootEntry('iron_ingot', 1, 2, 0.3),
+    ],
     'camp': [
       LootEntry('apple', 1, 4, 0.9),
       LootEntry('bread', 1, 3, 0.7),
@@ -71,9 +81,9 @@ class LootTables {
     ],
   };
 
-  /// Structure kind (`TerrainGenerator.struct*`) -> table. Kind 4 (village) has
-  /// no chest.
-  static const Map<int, String> tableByKind = {1: 'dungeon', 2: 'dungeon', 3: 'camp', 5: 'ruin', 6: 'well', 7: 'mine', 8: 'temple'};
+  /// Structure kind (`TerrainGenerator.struct*`) -> table. Kind 4 (village) has a
+  /// chest per hut since stage 26.
+  static const Map<int, String> tableByKind = {1: 'dungeon', 2: 'dungeon', 3: 'camp', 4: 'village', 5: 'ruin', 6: 'well', 7: 'mine', 8: 'temple'};
 
   /// The stacks a chest of [table] holds, in table order.
   static List<({String id, int count})> roll(String table, math.Random rng) {

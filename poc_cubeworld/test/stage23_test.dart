@@ -17,7 +17,7 @@ import 'package:vector_math/vector_math.dart';
 void main() {
   test('the pressure plate is appended last, a solid slab the generator knows', () {
     final i = Blocks.indexOf('pressure_plate');
-    expect(i, Blocks.count - 1);
+    expect(i, Blocks.indexOf('lava_flow') + 1); // stage 26 appended six more after it
     expect(Blocks.indexOf('lava_flow'), i - 1);
     expect(Blocks.shapeOf(i), BlockShape.slab);
     expect(Blocks.isSolid(i), isTrue);

@@ -10,6 +10,7 @@ import 'hud.dart';
 import 'inventory_screen.dart';
 import 'journal_screen.dart';
 import 'menus.dart';
+import 'trade_screen.dart';
 
 /// The play session: the 3D view, the HUD painted over it, and whichever
 /// screen is open (inventory, pause, death). Keyboard focus lives here.
@@ -123,6 +124,8 @@ class _GameSessionState extends State<_GameSession> {
         overlay = DeathScreen(game: game);
       case ScreenKind.journal:
         overlay = JournalScreen(game: game);
+      case ScreenKind.trade:
+        overlay = TradeScreen(game: game);
       case ScreenKind.none:
         overlay = null;
     }

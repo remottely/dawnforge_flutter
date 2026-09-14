@@ -28,6 +28,7 @@ class Spawner {
     if (_timer > 0.0) return;
     _timer = 1.2;
     for (final m in main.mobs) {
+      if (m.species.persistent) continue; // stage 26: a villager never despawns
       if ((m.position - player.position).length > 96.0) m.removed = true;
     }
     if (main.mobs.length >= cap) return;
@@ -68,12 +69,12 @@ class Spawner {
     if (candidates.isEmpty) return;
     var total = 0.0;
     for (final c in candidates) {
-      total += c.weight;
+      total += Species.weightIn(c, biome);
     }
     var pick = rng.nextDouble() * total;
     var chosen = candidates[0];
     for (final c in candidates) {
-      pick -= c.weight;
+      pick -= Species.weightIn(c, biome);
       if (pick <= 0.0) {
         chosen = c;
         break;
@@ -103,6 +104,7 @@ class Spawner {
     mob.setupMob(world, main, player, d);
     mob.position = at.clone();
     if (d.hostile && !d.boss) mob.scaleToLevel(player.level);
+    if (d.trader) mob.makeTrader(at);
     main.addMob(mob);
     return mob;
   }

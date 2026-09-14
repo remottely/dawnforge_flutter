@@ -35,7 +35,21 @@ class SpeciesDef {
     this.flying = false,
     this.ghost = false,
     this.maxY = 9999,
+    this.biomeWeight = const {},
+    this.splits = '',
+    this.persistent = false,
   });
+
+  /// Stage 26: a multiplier on [weight] per biome (a swamp night crawls with
+  /// spiders and slimes).
+  final Map<int, double> biomeWeight;
+
+  /// Stage 26: the species this one splits into (two of them) the first time it
+  /// dies ("" for none).
+  final String splits;
+
+  /// Stage 26: never despawns and rides the save (a villager).
+  final bool persistent;
 
   final String id;
   final String name;
@@ -119,10 +133,15 @@ class Species {
         drops: {'bone': [1, 3], 'arrow': [0, 4], 'gunpowder': [0, 1]}, biomes: [1, 2, 3, 4, 5, 6, 7], day: false, weight: 22));
     s(SpeciesDef(id: 'spider', name: 'Spider', hp: 12, damage: 3, speed: 4.6, hostile: true, xp: 10, body: 'spider',
         halfWidth: 0.6, height: 0.7, colors: [_c(0.20, 0.18, 0.20), _c(0.75, 0.15, 0.15)],
-        drops: {'string': [1, 3], 'spider_eye': [0, 1]}, biomes: [2, 3, 4, 7], day: false, weight: 18, effect: 'poison'));
-    s(SpeciesDef(id: 'slime', name: 'Slime', hp: 10, damage: 2, speed: 3.0, hostile: true, hops: true, xp: 6, body: 'blob',
+        drops: {'string': [1, 3], 'spider_eye': [0, 1]}, biomes: [2, 3, 4, 7, 8], day: false, weight: 18, effect: 'poison',
+        biomeWeight: {7: 2.5})); // stage 26: a swamp night crawls with them
+    // Stage 26: the slime splits into two small slimes the first time it dies.
+    s(SpeciesDef(id: 'slime', name: 'Slime', hp: 12, damage: 2, speed: 3.0, hostile: true, hops: true, xp: 6, body: 'blob',
         halfWidth: 0.5, height: 1.0, colors: [_c(0.45, 0.85, 0.40)], drops: {'slime_ball': [1, 3]},
-        biomes: [2, 3, 7], day: false, weight: 14));
+        biomes: [2, 3, 7], day: false, weight: 14, biomeWeight: {7: 2.5}, splits: 'slime_small'));
+    s(SpeciesDef(id: 'slime_small', name: 'Small Slime', hp: 4, damage: 1, speed: 3.4, hostile: true, hops: true, xp: 2, body: 'blob',
+        halfWidth: 0.28, height: 0.55, colors: [_c(0.55, 0.92, 0.48)], drops: {'slime_ball': [0, 1]},
+        biomes: [], day: false, weight: 0));
     s(SpeciesDef(id: 'cave_slime', name: 'Cave Slime', hp: 16, damage: 3, speed: 3.2, hostile: true, hops: true, xp: 9, body: 'blob',
         halfWidth: 0.55, height: 1.1, colors: [_c(0.35, 0.55, 0.85)], drops: {'slime_ball': [1, 3], 'gem_shard': [0, 1]},
         biomes: [], cave: true, day: true, weight: 20));
@@ -143,7 +162,15 @@ class Species {
         drops: {'gold_ingot': [2, 4], 'gem_shard': [2, 5], 'diamond': [0, 2]}, biomes: [4], day: false, weight: 2, effect: 'poison'));
     s(SpeciesDef(id: 'villager', name: 'Villager', hp: 20, damage: 0, speed: 1.8, hostile: false, xp: 0, body: 'humanoid',
         halfWidth: 0.3, height: 1.75, colors: [_c(0.92, 0.75, 0.62), _c(0.55, 0.40, 0.65), _c(0.35, 0.30, 0.25)],
-        drops: {}, biomes: [], day: true, weight: 0, trader: true));
+        drops: {}, biomes: [], day: true, weight: 0, trader: true, persistent: true));
+    // Stage 26: the jungle's parrot (passive flier, tamed with seeds) and ocelot
+    // (neutral, fast).
+    s(SpeciesDef(id: 'parrot', name: 'Parrot', hp: 6, damage: 0, speed: 4.0, hostile: false, xp: 2, body: 'bird', flying: true,
+        halfWidth: 0.2, height: 0.45, colors: [_c(0.90, 0.20, 0.25), _c(0.25, 0.55, 0.95)],
+        drops: {'feather': [1, 2]}, biomes: [8], day: true, weight: 14, tameWith: ['wheat_seeds'], tameChance: 0.5));
+    s(SpeciesDef(id: 'ocelot', name: 'Ocelot', hp: 10, damage: 3, speed: 6.8, hostile: false, neutral: true, xp: 6, body: 'quadruped',
+        halfWidth: 0.3, height: 0.7, colors: [_c(0.85, 0.65, 0.30), _c(0.35, 0.25, 0.15)],
+        drops: {'string': [0, 1]}, biomes: [8], day: true, weight: 8));
     // Stage 23: the desert temple boss (spawned by `Game._checkStructures`, never
     // by the spawner), a cave bat, a forest bear and a ruin ghost.
     s(SpeciesDef(id: 'mummy_king', name: 'Mummy King', hp: 120, damage: 7, speed: 1.8, hostile: true, xp: 48, body: 'humanoid', boss: true,
@@ -165,6 +192,10 @@ class Species {
   }
 
   static SpeciesDef def(String id) => defs[id]!;
+
+  /// Stage 26: a species' spawn weight in [biome] (`biomeWeight` multiplies the
+  /// base per biome).
+  static double weightIn(SpeciesDef d, int biome) => d.weight * (d.biomeWeight[biome] ?? 1.0);
 
   /// Species that may spawn in `biome` at `night` (or in a cave at height `y`),
   /// with weights. Weight 0 marks a creature only a structure places (villager,

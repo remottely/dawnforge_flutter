@@ -121,6 +121,46 @@ class Hud {
     }
   }
 
+  /// Stage 26: the maps tint a biome's ground so a swamp reads murky and a
+  /// jungle deep green (biome id -> tint); every other biome keeps its block
+  /// colours.
+  static const Map<int, (double, double, double)> biomeTint = {7: (0.30, 0.34, 0.18), 8: (0.10, 0.42, 0.12)};
+  static const double biomeTintWeight = 0.45;
+
+  /// One map pixel of a LOADED column: the top block shaded by height, a liquid
+  /// over it wins, and the biome tint on top. The biome is sampled once per 4x4
+  /// cell ([cache], keyed by the cell, cleared per rebuild): the generator's
+  /// noise is too slow per pixel.
+  static (double, double, double) mapPixel(VoxelWorld world, int wx, int wz, Map<int, int> cache) {
+    final y = world.groundHeight(wx, wz) - 1;
+    final id = world.getBlockXYZ(wx, y, wz);
+    var r = 0.05, g = 0.05, b = 0.08;
+    if (id != Blocks.air) {
+      final d = Blocks.def(id);
+      final shade = (0.55 + (y - 40) / 80.0).clamp(0.4, 1.2);
+      r = d.r * shade;
+      g = d.g * shade;
+      b = d.b * shade;
+    }
+    final above = world.getBlockXYZ(wx, y + 1, wz);
+    if (above != Blocks.air && Blocks.isLiquid(above)) {
+      final d = Blocks.def(above);
+      r = d.r;
+      g = d.g;
+      b = d.b;
+    }
+    final cx = wx >> 2, cz = wz >> 2;
+    final key = (cx & 0xFFFFFF) | ((cz & 0xFFFFFF) << 24);
+    final biome = cache[key] ??= world.biomeAt(cx << 2, cz << 2);
+    final tint = biomeTint[biome];
+    if (tint != null) {
+      r += (tint.$1 - r) * biomeTintWeight;
+      g += (tint.$2 - g) * biomeTintWeight;
+      b += (tint.$3 - b) * biomeTintWeight;
+    }
+    return (r, g, b);
+  }
+
   static Color _scale(Color c, double f) => Color.fromRGBO((c.r * 255 * f).round(), (c.g * 255 * f).round(), (c.b * 255 * f).round(), c.a);
 
   static void text(Canvas canvas, String s, Offset at, {double size = 14, Color color = Colors.white, TextAlign align = TextAlign.left, double? width, FontWeight weight = FontWeight.normal, bool shadow = true}) {
@@ -158,28 +198,14 @@ class Minimap {
     final px = game.player.position.x.toInt();
     final pz = game.player.position.z.toInt();
     final world = game.world;
+    final biomes = <int, int>{};
     for (var iz = 0; iz < n; iz++) {
       for (var ix = 0; ix < n; ix++) {
         final wx = px - radius + ix;
         final wz = pz - radius + iz;
         var r = 0.05, g = 0.05, b = 0.08;
         if (world.chunks.containsKey(VoxelWorld.chunkOfXZ(wx, wz))) {
-          final y = world.groundHeight(wx, wz) - 1;
-          final id = world.getBlockXYZ(wx, y, wz);
-          if (id != Blocks.air) {
-            final d = Blocks.def(id);
-            final shade = (0.55 + (y - 40) / 80.0).clamp(0.4, 1.2);
-            r = d.r * shade;
-            g = d.g * shade;
-            b = d.b * shade;
-          }
-          final above = world.getBlockXYZ(wx, y + 1, wz);
-          if (above != Blocks.air && Blocks.isLiquid(above)) {
-            final d = Blocks.def(above);
-            r = d.r;
-            g = d.g;
-            b = d.b;
-          }
+          (r, g, b) = Hud.mapPixel(world, wx, wz, biomes);
         }
         final o = (iz * n + ix) * 4;
         pixels[o] = (r * 255).round().clamp(0, 255);
@@ -257,6 +283,7 @@ class WorldMap {
     final ox = loX * VoxelWorld.sizeX;
     final oz = loZ * VoxelWorld.sizeZ;
     final pixels = Uint8List(w * h * 4); // transparent where nothing was seen
+    final biomes = <int, int>{};
     for (final c in all) {
       if (c.x < loX || c.x > hiX || c.z < loZ || c.z > hiZ) continue;
       final loaded = world.chunks.containsKey(c);
@@ -265,27 +292,7 @@ class WorldMap {
           final wx = c.x * VoxelWorld.sizeX + ix;
           final wz = c.z * VoxelWorld.sizeZ + iz;
           var r = 0.22, g = 0.22, b = 0.26; // visited, out of the window
-          if (loaded) {
-            final y = world.groundHeight(wx, wz) - 1;
-            final id = world.getBlockXYZ(wx, y, wz);
-            r = 0.05;
-            g = 0.05;
-            b = 0.08;
-            if (id != Blocks.air) {
-              final d = Blocks.def(id);
-              final shade = (0.55 + (y - 40) / 80.0).clamp(0.4, 1.2);
-              r = d.r * shade;
-              g = d.g * shade;
-              b = d.b * shade;
-            }
-            final above = world.getBlockXYZ(wx, y + 1, wz);
-            if (above != Blocks.air && Blocks.isLiquid(above)) {
-              final d = Blocks.def(above);
-              r = d.r;
-              g = d.g;
-              b = d.b;
-            }
-          }
+          if (loaded) (r, g, b) = Hud.mapPixel(world, wx, wz, biomes);
           final o = ((wz - oz) * w + (wx - ox)) * 4;
           pixels[o] = (r * 255).round().clamp(0, 255);
           pixels[o + 1] = (g * 255).round().clamp(0, 255);

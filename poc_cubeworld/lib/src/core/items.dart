@@ -153,6 +153,7 @@ class Items {
     food('cooked_fish', 'Cooked Fish', 0.80, 0.65, 0.45, 5, 5.0);
     food('raw_salmon', 'Raw Salmon', 0.90, 0.45, 0.40, 3, 0.0);
     food('cooked_salmon', 'Cooked Salmon', 0.85, 0.50, 0.35, 6, 6.0);
+    food('melon_slice', 'Melon Slice', 0.90, 0.35, 0.40, 2, 1.0); // stage 26: a jungle melon gives 3-5
     // Milk: a bucket of it heals a little and cures every bad effect; the
     // bucket comes back.
     add(const ItemDef(id: 'milk_bucket', name: 'Milk Bucket', kind: ItemKind.food, stack: 1,
