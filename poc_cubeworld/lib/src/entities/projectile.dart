@@ -127,8 +127,10 @@ class Projectile {
       } else if (best is Mob) {
         final owner = ownerNode;
         final ownerPos = owner is VoxelBody ? owner.position : (owner is Player ? owner.position : from);
+        final crit = kind == 'arrow' && main.rollCrit(); // stage 32: arrows crit like swings
+        if (crit) damage = (damage * Game.critMult).roundToDouble();
         best.takeDamage(damage, ownerPos, knockback, owner);
-        main.spawnDamageNumber(best.centre(), damage, kind == 'arrow' ? Vector3(1, 0.9, 0.5) : colour());
+        main.spawnDamageNumber(best.centre(), damage, kind == 'arrow' ? Vector3(1, 0.9, 0.5) : colour(), crit);
       }
       _impact();
       return;

@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_scene/scene.dart' show Camera;
 import 'package:vector_math/vector_math.dart' as vm;
 
 import '../core/blocks.dart';
@@ -314,10 +313,9 @@ class WorldMap {
 }
 
 class HudPainter extends CustomPainter {
-  HudPainter(this.game, this.camera, this.minimap, this.worldMap, {required Listenable repaint}) : super(repaint: repaint);
+  HudPainter(this.game, this.minimap, this.worldMap, {required Listenable repaint}) : super(repaint: repaint);
 
   final Game game;
-  final Camera? camera;
   final Minimap minimap;
   final WorldMap worldMap;
 
@@ -450,7 +448,10 @@ class HudPainter extends CustomPainter {
     canvas.restore();
   }
 
-  Offset? _project(vm.Vector3 world, Size size) => camera?.worldToScreen(world, size);
+  /// Stage 32 fix: the camera of THIS frame. The painter used to keep the one
+  /// handed over when the widget was built, so mob bars and damage numbers were
+  /// projected from wherever the player stood at that build.
+  Offset? _project(vm.Vector3 world, Size size) => game.player.camera().worldToScreen(world, size);
 
   void _bar(Canvas c, double x, double y, double w, double h, double ratio, Color color, String label) {
     c.drawRect(Rect.fromLTWH(x, y, w, h), Paint()..color = const Color.fromRGBO(0, 0, 0, 0.55));
@@ -463,10 +464,22 @@ class HudPainter extends CustomPainter {
     if (!game.ready) return;
     final player = game.player;
     final c = Offset(size.width * 0.5, size.height * 0.5);
-    // Damage flash
-    if (player.hp < player.maxHp * 0.25) {
-      final t = DateTime.now().millisecondsSinceEpoch / 200.0;
-      canvas.drawRect(Offset.zero & size, Paint()..color = Color.fromRGBO(153, 0, 0, 0.12 + 0.08 * math.sin(t)));
+    // Stage 32: the red vignette (Godot's radial GradientTexture2D stretched over
+    // the screen: clear to 45% of the half-height, 0.85 red at the edge and past
+    // it) — a hit fades it over 0.4 s, low health keeps it pulsing.
+    final va = game.hud.vignetteAlpha();
+    if (va > 0.0) {
+      final a = va.clamp(0.0, 1.0);
+      final h = size.height;
+      canvas.save();
+      canvas.translate(size.width * 0.5, h * 0.5);
+      canvas.scale(size.width / h, 1.0);
+      canvas.drawRect(
+          Rect.fromCenter(center: Offset.zero, width: h, height: h),
+          Paint()
+            ..shader = ui.Gradient.radial(Offset.zero, h * 0.5,
+                [const Color.fromRGBO(204, 0, 0, 0.0), Color.fromRGBO(204, 0, 0, 0.85 * a)], const [0.45, 1.0]));
+      canvas.restore();
     }
     if (player.damageFlash > 0) {
       canvas.drawRect(Offset.zero & size, Paint()..color = Color.fromRGBO(200, 0, 0, 0.25 * player.damageFlash));
@@ -489,11 +502,13 @@ class HudPainter extends CustomPainter {
       canvas.drawRect(Rect.fromLTWH(p.dx - w * 0.48, p.dy - h * 0.33, w * 0.96 * ratio, h * 0.66), Paint()..color = fill);
     }
     for (final n in game.damageNumbers) {
-      final t = (n.age / 0.9).clamp(0.0, 1.0);
-      final rise = 1.4 * (1 - math.pow(1 - t, 2));
+      // Stage 32: 1 m over 0.8 s, fading from 0.2 s to 1.0 s.
+      final t = (n.age / DamageNumber.riseSeconds).clamp(0.0, 1.0);
+      final rise = DamageNumber.rise * (1 - math.pow(1 - t, 2));
       final p = _project(n.pos + vm.Vector3(0, rise, 0), size);
       if (p == null) continue;
-      final alpha = n.age < 0.3 ? 1.0 : (1.0 - (n.age - 0.3) / 0.6).clamp(0.0, 1.0);
+      final fadeFor = DamageNumber.lifetime - DamageNumber.fadeDelay;
+      final alpha = n.age < DamageNumber.fadeDelay ? 1.0 : (1.0 - (n.age - DamageNumber.fadeDelay) / fadeFor).clamp(0.0, 1.0);
       final dist = (n.pos - player.position).length;
       final fs = (26.0 * (6.0 / math.max(dist, 3.0))).clamp(12.0, 34.0);
       Hud.text(canvas, n.text, Offset(p.dx - fs * 0.3 * n.text.length, p.dy), size: fs, color: Hud._c(n.color.x, n.color.y, n.color.z, alpha), weight: FontWeight.bold);
@@ -522,8 +537,8 @@ class HudPainter extends CustomPainter {
     _bar(canvas, x, y + 28, 260, 20, player.stamina / player.maxStamina, const Color.fromRGBO(64, 191, 64, 1), 'Stamina');
     _bar(canvas, x, y + 52, 260, 20, player.mana / player.maxMana, const Color.fromRGBO(77, 115, 242, 1), 'Mana ${player.mana.toInt()}');
     _bar(canvas, x, y + 76, 260, 20, player.hunger / 20.0, const Color.fromRGBO(217, 140, 51, 1), 'Food');
-    final xpRatio = player.xp / player.xpToNext();
-    _bar(canvas, x, y + 100, 260, 18, xpRatio, const Color.fromRGBO(191, 153, 242, 1),
+    // Stage 32: the XP fill tweens.
+    _bar(canvas, x, y + 100, 260, 18, game.hud.xpShown(game), const Color.fromRGBO(191, 153, 242, 1),
         'Lv ${player.level}  ${player.classDef.name}   XP ${player.xp}/${player.xpToNext()}');
     // Ability
     final ab = player.classDef.ability;
@@ -560,7 +575,12 @@ class HudPainter extends CustomPainter {
     final hx = c.dx - slot * 4.5;
     final hy = size.height - 70.0;
     for (var i = 0; i < 9; i++) {
-      final r = Rect.fromLTWH(hx + i * slot, hy, slot - 4, slot - 4);
+      var r = Rect.fromLTWH(hx + i * slot, hy, slot - 4, slot - 4);
+      if (i == player.selectedSlot) {
+        // Stage 32: the selection tween.
+        final k = game.hud.slotScale;
+        r = Rect.fromCenter(center: r.center, width: r.width * k, height: r.height * k);
+      }
       canvas.drawRect(r, Paint()..color = const Color.fromRGBO(0, 0, 0, 0.55));
       if (i == player.selectedSlot) {
         canvas.drawRect(r, Paint()..color = const Color.fromRGBO(255, 255, 255, 0.9)..style = PaintingStyle.stroke..strokeWidth = 3);
@@ -608,12 +628,26 @@ class HudPainter extends CustomPainter {
           size: 16, align: TextAlign.center, width: 300, color: const Color.fromRGBO(255, 204, 204, 1));
     }
 
-    // Boss bar
+    // Boss bar (stage 32: a portrait block in the species' colour, and it shakes on a hit)
     final boss = game.boss;
     if (boss != null && !boss.removed) {
       const bw = 500.0;
-      _bar(canvas, c.dx - bw * 0.5, 44, bw, 22, boss.hp / boss.maxHp, const Color.fromRGBO(179, 26, 128, 1),
+      final bx = c.dx - bw * 0.5 + game.hud.shakeJitter(6.0);
+      final by = 44.0 + game.hud.shakeJitter(3.0);
+      final pc = boss.species.colors[0];
+      canvas.drawRect(Rect.fromLTWH(bx - 30, by - 4, 30, 30), Paint()..color = const Color.fromRGBO(0, 0, 0, 0.7));
+      canvas.drawRect(Rect.fromLTWH(bx - 27, by - 1, 24, 24), Paint()..color = Hud._c(pc.x, pc.y, pc.z));
+      _bar(canvas, bx, by, bw, 22, boss.hp / boss.maxHp, const Color.fromRGBO(179, 26, 128, 1),
           '${boss.displayName()}   ${boss.hp.ceil()} / ${boss.maxHp.toInt()}');
+    }
+    // Stage 32: pickup toasts, bottom-right, newest at the bottom.
+    var ty = size.height - 90.0;
+    for (var i = game.hud.toasts.length - 1; i >= 0; i--) {
+      final t = game.hud.toasts[i];
+      final a = t.t.clamp(0.0, 1.0);
+      canvas.drawRect(Rect.fromLTWH(size.width - 230, ty - 18, 210, 24), Paint()..color = Color.fromRGBO(0, 0, 0, 0.5 * a));
+      Hud.text(canvas, '+${t.n} ${Items.displayName(t.id)}', Offset(size.width - 224, ty + 2), size: 16, color: Color.fromRGBO(255, 255, 191, a));
+      ty -= 28.0;
     }
     // Quest (top right)
     final q = game.quests.current;

@@ -350,6 +350,30 @@ class Blocks {
   /// Stage 29: how a block under a walker's feet scales its speed (soul sand: 0.5).
   static double speedMult(int index) => defs[index].speedMult;
 
+  /// Stage 32: the material family a block sounds like: "stone", "wood",
+  /// "earth", "metal", "glass", "plant" or "liquid" (`Sfx` has a break / place /
+  /// step voice for each), read from the id, first match in this order.
+  /// Anything not named is stone.
+  static const List<String> familyMetal = ['iron_', 'gold_block', 'diamond_block', 'rail', 'piston', 'furnace', 'brewing_stand', 'spawner', 'wire', 'redstone_lamp'];
+  static const List<String> familyGlass = ['glass', 'ice', 'glowstone', 'portal', 'enchanting_table', 'lamp'];
+  static const List<String> familyStone = ['stone', 'brick', 'ore', 'obsidian', 'bedrock', 'bone_block', 'fortress_core'];
+  static const List<String> familyPlant = ['leaves', 'tall_grass', 'flower_', 'cactus', 'reeds', 'vines', 'fern', 'melon', 'wheat_', 'mushroom', 'dead_bush', 'wool', 'torch'];
+  static const List<String> familyWood = ['log', 'planks', 'fence', 'oak_stairs', 'oak_slab', 'door_', 'chest', 'crafting_table', 'ladder', 'bed', 'waypoint', 'lever', 'button', 'pressure_plate'];
+  static const List<String> familyEarth = ['dirt', 'grass', 'sand', 'gravel', 'snow', 'clay', 'mud', 'farmland'];
+  static const List<List<String>> familyOrder = [familyMetal, familyGlass, familyStone, familyPlant, familyWood, familyEarth];
+  static const List<String> familyNames = ['metal', 'glass', 'stone', 'plant', 'wood', 'earth'];
+
+  static String materialFamily(int index) {
+    if (isLiquid(index)) return 'liquid';
+    final id = idOf(index);
+    for (var f = 0; f < familyOrder.length; f++) {
+      for (final k in familyOrder[f]) {
+        if (id.contains(k)) return familyNames[f];
+      }
+    }
+    return 'stone';
+  }
+
   static bool isStairs(int index) {
     final sh = defs[index].shape;
     return sh.index >= BlockShape.stairsN.index && sh.index <= BlockShape.stairsW.index;

@@ -138,6 +138,17 @@ class GameInput {
   /// Probe hook: hold or release an action's first key as if it were typed, so
   /// a screenshot run can drive the simulation without a keyboard.
   void probeHold(GameAction a, bool down) {
+    // Stage 32: attack and use are the mouse buttons, held the same way.
+    if (a == GameAction.attack) {
+      _leftDown = down;
+      if (down) _leftPressed = true;
+      return;
+    }
+    if (a == GameAction.use) {
+      _rightDown = down;
+      if (down) _rightPressed = true;
+      return;
+    }
     final key = _keys[a]!.first;
     if (down) {
       _held.add(key);

@@ -411,7 +411,7 @@ class Net {
         main?.player.takeDamage((msg['amount'] as num).toDouble(), msg['source'] as String,
             msg['from'] == null ? null : _vec(msg['from']));
       case 'dmg':
-        main?.spawnDamageNumber(_vec(msg['at']), (msg['amount'] as num).toDouble(), _vec(msg['color']));
+        main?.spawnDamageNumber(_vec(msg['at']), (msg['amount'] as num).toDouble(), _vec(msg['color']), msg['crit'] == true);
       case 'drop':
         _onDropSpawn(msg);
       case 'drop_poses':
@@ -762,8 +762,9 @@ class Net {
     }
   }
 
-  void broadcastDamageNumber(Vector3 at, double amount, Vector3 color) {
-    if (mode == NetMode.host) _broadcast({'t': 'dmg', 'at': _v(at), 'amount': amount, 'color': _v(color)});
+  /// Stage 32: the crit rides the damage-number message as one extra bool.
+  void broadcastDamageNumber(Vector3 at, double amount, Vector3 color, [bool crit = false]) {
+    if (mode == NetMode.host) _broadcast({'t': 'dmg', 'at': _v(at), 'amount': amount, 'color': _v(color), 'crit': crit});
   }
 
   // --- drops: the host owns every drop, a client draws replicas and is handed

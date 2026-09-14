@@ -101,6 +101,7 @@ class Spawner {
         }
       }
       main.addMob(mob);
+      main.spawnPoof(mob.centre()); // stage 32
     }
   }
 
@@ -121,6 +122,7 @@ class Spawner {
     if (d.hostile && !d.boss) mob.scaleToLevel(player.level);
     if (d.trader) mob.makeTrader(at);
     main.addMob(mob);
+    main.spawnPoof(mob.centre()); // stage 32
     return mob;
   }
 }

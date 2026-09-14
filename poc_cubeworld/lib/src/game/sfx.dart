@@ -59,6 +59,43 @@ class Sfx {
     await make('click', 0.04, (t, p) => math.sin(t * 1200.0 * math.pi * 2) * (1.0 - p) * 0.3);
     // Stage 27: a door swinging on its hinge, a low creak that drops in pitch.
     await make('door', 0.22, (t, p) => (math.sin(t * (140.0 - p * 60.0) * math.pi * 2) * 0.6 + (_rng.nextDouble() - 0.5) * 0.3) * math.sin(p * math.pi) * 0.5);
+    // Stage 32: one break / place / step voice per material family
+    // (`Blocks.materialFamily`), a hurt voice per species group, and the
+    // low-health heartbeat.
+    const tau = math.pi * 2;
+    double rnd() => _rng.nextDouble() * 2.0 - 1.0;
+    double half() => _rng.nextDouble() - 0.5;
+    double pw(double b, double e) => math.pow(b, e).toDouble();
+    double sn(double v) => math.sin(v);
+    await make('break_stone', 0.20, (t, p) => (rnd() * 0.7 + sn(t * 160.0 * tau) * 0.3) * pw(1.0 - p, 2.0) * 0.8);
+    await make('break_wood', 0.22, (t, p) => (sn(t * 110.0 * tau) * 0.5 + rnd() * 0.4) * pw(1.0 - p, 1.5) * ((p * 9.0).toInt() % 2 == 0 ? 1.0 : 0.4) * 0.7);
+    await make('break_earth', 0.24, (t, p) => rnd() * pw(1.0 - p, 3.0) * 0.55 * (0.6 + 0.4 * sn(t * 40.0 * tau)));
+    await make('break_metal', 0.30, (t, p) => (sn(t * 880.0 * tau) * 0.5 + sn(t * 1320.0 * tau) * 0.3 + half() * 0.2) * pw(1.0 - p, 2.5) * 0.6);
+    await make('break_glass', 0.28, (t, p) => (sn(t * (2400.0 + sn(t * 90.0) * 800.0) * tau) * 0.5 + rnd() * 0.5) * pw(1.0 - p, 1.2) * 0.5);
+    await make('break_plant', 0.16, (t, p) => rnd() * sn(p * math.pi) * ((p * 14.0).toInt() % 3 != 0 ? 1.0 : 0.3) * 0.35);
+    await make('break_liquid', 0.26, (t, p) => rnd() * sn(p * math.pi) * (0.5 + 0.5 * sn(t * 25.0 * tau)) * 0.4);
+    await make('place_stone', 0.10, (t, p) => (sn(t * 150.0 * tau) * 0.7 + half() * 0.3) * pw(1.0 - p, 3.0) * 0.6);
+    await make('place_wood', 0.12, (t, p) => (sn(t * 220.0 * tau) * 0.6 + sn(t * 95.0 * tau) * 0.4) * pw(1.0 - p, 3.0) * 0.6);
+    await make('place_earth', 0.12, (t, p) => rnd() * pw(1.0 - p, 4.0) * 0.45);
+    await make('place_metal', 0.16, (t, p) => (sn(t * 660.0 * tau) * 0.6 + sn(t * 990.0 * tau) * 0.3) * pw(1.0 - p, 3.0) * 0.5);
+    await make('place_glass', 0.12, (t, p) => sn(t * 1800.0 * tau) * pw(1.0 - p, 3.0) * 0.4);
+    await make('place_plant', 0.10, (t, p) => rnd() * sn(p * math.pi) * 0.25);
+    await make('place_liquid', 0.20, (t, p) => rnd() * sn(p * math.pi) * (0.6 + 0.4 * sn(t * 18.0 * tau)) * 0.35);
+    await make('step_stone', 0.06, (t, p) => (rnd() * 0.6 + sn(t * 140.0 * tau) * 0.4) * pw(1.0 - p, 2.0) * 0.5);
+    await make('step_wood', 0.07, (t, p) => (sn(t * 120.0 * tau) * 0.6 + half() * 0.4) * pw(1.0 - p, 2.0) * 0.5);
+    await make('step_earth', 0.07, (t, p) => rnd() * pw(1.0 - p, 3.0) * 0.4);
+    await make('step_metal', 0.08, (t, p) => (sn(t * 700.0 * tau) * 0.5 + half() * 0.3) * pw(1.0 - p, 2.5) * 0.4);
+    await make('step_glass', 0.06, (t, p) => sn(t * 1500.0 * tau) * pw(1.0 - p, 3.0) * 0.3);
+    await make('step_plant', 0.08, (t, p) => rnd() * sn(p * math.pi) * 0.25);
+    await make('step_liquid', 0.12, (t, p) => rnd() * sn(p * math.pi) * (0.5 + 0.5 * sn(t * 30.0 * tau)) * 0.3);
+    await make('hurt_small', 0.14, (t, p) => sn(t * (700.0 + p * 300.0) * tau) * (1.0 - p) * 0.4);
+    await make('hurt_large', 0.35, (t, p) => (sn(t * (140.0 - p * 60.0) * tau) * 0.7 + half() * 0.3) * (1.0 - p) * 0.6);
+    await make('hurt_undead', 0.30, (t, p) => (sn(t * (180.0 - p * 90.0) * tau) * sn(t * 13.0 * tau) + half() * 0.4) * (1.0 - p) * 0.55);
+    await make('hurt_flying', 0.12, (t, p) => sn(t * (1400.0 - p * 500.0) * tau) * ((p * 8.0).toInt() % 2 == 0 ? 1.0 : 0.3) * (1.0 - p) * 0.35);
+    await make('heartbeat', 0.32, (t, p) {
+      final beat = pw(math.max(1.0 - p * 4.0, 0.0), 2.0) + 0.7 * pw(math.max(1.0 - (p - 0.45).abs() * 5.0, 0.0), 2.0);
+      return sn(t * 55.0 * tau) * beat * 0.7;
+    });
     _ready = true;
     setVolume(_volume);
   }

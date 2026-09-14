@@ -1,6 +1,8 @@
 import 'dart:math' as math;
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart' show visibleForTesting;
+
 /// One vertex-coloured triangle list, ready for `MeshGeometry.fromArrays`.
 /// Stage 31: [light] is the second texture coordinate set (Godot's UV2), two
 /// floats per vertex: sky / 15 and block / 15 of the cell the face is lit from.
@@ -117,17 +119,18 @@ class _Surface {
 /// Face-culling mesher with baked ambient occlusion, sky + block light,
 /// per-voxel colour noise, liquids (lowered surface, own transparent surface),
 /// cross plants, torches, and the sub-block solids (slab, fence, stairs) built
-/// from axis-aligned boxes lit like cube faces. Works on a volume padded by one block on every
+/// from axis-aligned boxes lit like cube faces. Works on a volume padded on every
 /// horizontal side, filled from the eight neighbour chunks, so a border face
 /// and its AO corners never guess.
 ///
 /// Stage 31: the light is no longer baked into the vertex colour. The colour
 /// carries block tint x face tint x AO; the second UV set carries (sky / 15,
 /// block / 15) so the terrain shader can scale the sky half by the time of day.
-/// The two light volumes (chunk-sized) ride the result for `lightAt`. The light
-/// BFS lives inside the padded volume: a torch more than one cell past a chunk
-/// border does not reach the neighbour chunk's mesh (the accepted seam, fixed by
-/// Godot's stage 32).
+/// The two light volumes (chunk-sized) ride the result for `lightAt`.
+///
+/// Stage 32: the pad is the whole 3x3 ring ([pad] = 16, 48x48x128), so the light
+/// BFS sees every emitter within reach of this chunk and a torch beside a border
+/// lights both sides alike (no seam).
 class ChunkMesher {
   ChunkMesher({
     required this.palette,
@@ -138,7 +141,14 @@ class ChunkMesher {
   }) : _opaque = List<bool>.generate(opaque.length, (i) => opaque[i] != 0);
 
   static const int sizeX = 16, sizeZ = 16, sizeY = 128;
-  static const int _px = sizeX + 2, _pz = sizeZ + 2;
+
+  /// Stage 32: the padded volume holds the whole 3x3 ring (16 cells a side), so
+  /// a torch up to 15 cells past a border still reaches this chunk's faces and
+  /// the light BFS is seam-free. The mesh loop and the AO reads are unchanged;
+  /// only the fill and the two BFS grew, and their buffers are per isolate
+  /// (static, Godot's `[ThreadStatic]`) rather than per mesher.
+  static const int pad = 16;
+  static const int _px = sizeX + 2 * pad, _pz = sizeZ + 2 * pad;
   static const int _padVolume = _px * _pz * sizeY;
   static const int _chunkVolume = sizeX * sizeZ * sizeY;
   static const int _air = 0;
@@ -183,11 +193,27 @@ class ChunkMesher {
   /// probe's cost comparison.
   final bool lighting;
 
-  final Uint8List _blocks = Uint8List(_padVolume);
-  final Uint8List _sky = Uint8List(_padVolume);
-  final Uint8List _glow = Uint8List(_padVolume);
-  final Int32List _queue = Int32List(_padVolume);
+  /// Stage 32: one 48x48x128 set per isolate (a worker isolate reuses it for
+  /// every job; Dart statics are per isolate like C#'s `[ThreadStatic]`).
+  static Uint8List? _tBlocks, _tSky, _tGlow;
+  static Int32List? _tQueue;
+  Uint8List _blocks = Uint8List(0);
+  Uint8List _sky = Uint8List(0);
+  Uint8List _glow = Uint8List(0);
+  Int32List _queue = Int32List(0);
   final List<int> _emitters = [];
+
+  /// Stage 32, tests only: seed the sky BFS from every lit cell (stage 31's
+  /// rule) instead of only the cells with a darker side neighbour.
+  @visibleForTesting
+  static bool fullSkySeed = false;
+
+  void _bindBuffers() {
+    _blocks = _tBlocks ??= Uint8List(_padVolume);
+    _sky = _tSky ??= Uint8List(_padVolume);
+    _glow = _tGlow ??= Uint8List(_padVolume);
+    _queue = _tQueue ??= Int32List(_padVolume * 2);
+  }
   int _aoVerts = 0;
 
   // The light of the cell last read by [_lightUv]: sky / 15, block / 15.
@@ -206,41 +232,47 @@ class ChunkMesher {
   static const List<double> _faceTint = [1.0, 0.55, 0.82, 0.82, 0.70, 0.70];
   static const List<double> _aoFactor = [0.50, 0.68, 0.84, 1.0];
 
-  static int _p(int x, int y, int z) => (x + 1) + _px * ((z + 1) + _pz * y);
+  static int _p(int x, int y, int z) => (x + pad) + _px * ((z + pad) + _pz * y);
   static int index(int x, int y, int z) => x + sizeX * (z + sizeZ * y);
+
+  static bool _outside(int x, int z) => x < -pad || x >= sizeX + pad || z < -pad || z >= sizeZ + pad;
 
   int _at(int x, int y, int z) {
     if (y < 0 || y >= sizeY) return _air;
-    if (x < -1 || x > sizeX || z < -1 || z > sizeZ) return _air;
+    if (_outside(x, z)) return _air;
     return _blocks[_p(x, y, z)];
   }
 
   bool _opaqueAt(int x, int y, int z) {
     if (y < 0) return true;
     if (y >= sizeY) return false;
-    if (x < -1 || x > sizeX || z < -1 || z > sizeZ) return false;
+    if (_outside(x, z)) return false;
     return _opaque[_blocks[_p(x, y, z)]];
   }
 
   void _fill(Uint8List c, Uint8List? nx, Uint8List? px, Uint8List? nz, Uint8List? pz,
       Uint8List? nxnz, Uint8List? pxnz, Uint8List? nxpz, Uint8List? pxpz) {
     _blocks.fillRange(0, _padVolume, 0);
+    _copyChunk(c, 0, 0);
+    _copyChunk(nx, -sizeX, 0);
+    _copyChunk(px, sizeX, 0);
+    _copyChunk(nz, 0, -sizeZ);
+    _copyChunk(pz, 0, sizeZ);
+    _copyChunk(nxnz, -sizeX, -sizeZ);
+    _copyChunk(pxnz, sizeX, -sizeZ);
+    _copyChunk(nxpz, -sizeX, sizeZ);
+    _copyChunk(pxpz, sizeX, sizeZ);
+  }
+
+  /// Stage 32: one whole chunk volume into the padded buffer at the given cell
+  /// offset (a missing neighbour stays air).
+  void _copyChunk(Uint8List? vol, int ox, int oz) {
+    if (vol == null || vol.length < _chunkVolume) return;
     for (var y = 0; y < sizeY; y++) {
       for (var z = 0; z < sizeZ; z++) {
-        final src = index(0, y, z);
-        final dst = _p(0, y, z);
-        _blocks.setRange(dst, dst + sizeX, c, src);
-        if (nx != null) _blocks[_p(-1, y, z)] = nx[index(sizeX - 1, y, z)];
-        if (px != null) _blocks[_p(sizeX, y, z)] = px[index(0, y, z)];
+        final dst = _p(ox, y, oz + z);
+        _blocks.setRange(dst, dst + sizeX, vol, index(0, y, z));
       }
-      for (var x = 0; x < sizeX; x++) {
-        if (nz != null) _blocks[_p(x, y, -1)] = nz[index(x, y, sizeZ - 1)];
-        if (pz != null) _blocks[_p(x, y, sizeZ)] = pz[index(x, y, 0)];
-      }
-      if (nxnz != null) _blocks[_p(-1, y, -1)] = nxnz[index(sizeX - 1, y, sizeZ - 1)];
-      if (pxnz != null) _blocks[_p(sizeX, y, -1)] = pxnz[index(0, y, sizeZ - 1)];
-      if (nxpz != null) _blocks[_p(-1, y, sizeZ)] = nxpz[index(sizeX - 1, y, 0)];
-      if (pxpz != null) _blocks[_p(sizeX, y, sizeZ)] = pxpz[index(0, y, 0)];
     }
   }
 
@@ -256,10 +288,31 @@ class ChunkMesher {
       return;
     }
     var tail = 0;
-    for (var z = -1; z <= sizeZ; z++) {
-      for (var x = -1; x <= sizeX; x++) {
+    // Flutter-side shortcut (the result is identical): every layer above the
+    // highest non-air cell of the 48x48 volume is open sky with open-sky
+    // neighbours, so it is filled with 15 at once and neither the column pass nor
+    // the seeding scan visits it (the test's full seeding still walks all 128).
+    const layer = _px * _pz;
+    var topY = sizeY - 1;
+    if (!fullSkySeed) {
+      while (topY >= 0) {
+        final start = topY * layer;
+        var any = false;
+        for (var i = start; i < start + layer; i++) {
+          if (_blocks[i] != _air) {
+            any = true;
+            break;
+          }
+        }
+        if (any) break;
+        topY--;
+      }
+      if (topY < sizeY - 1) _sky.fillRange((topY + 1) * layer, _padVolume, _maxLight);
+    }
+    for (var z = -pad; z < sizeZ + pad; z++) {
+      for (var x = -pad; x < sizeX + pad; x++) {
         var level = _maxLight;
-        for (var y = sizeY - 1; y >= 0; y--) {
+        for (var y = topY; y >= 0; y--) {
           final cell = _p(x, y, z);
           final id = _blocks[cell];
           if (id != _air) {
@@ -275,7 +328,28 @@ class ChunkMesher {
             if (shape[id] == shapeLiquid) level = math.max(0, level - 2);
           }
           _sky[cell] = level;
-          if (level > 1) _queue[tail++] = cell;
+          if (fullSkySeed && level > 1) _queue[tail++] = cell;
+        }
+      }
+    }
+    if (!fullSkySeed) {
+      // Stage 32: only a cell with a darker side neighbour can hand light
+      // sideways (the column pass already settled the vertical): full sky beside
+      // full sky is the common case over the 48x48 columns and would spread
+      // nothing, so it stays out of the queue.
+      const hi = sizeX + pad - 1, hiZ = sizeZ + pad - 1;
+      for (var y = 0; y <= topY; y++) {
+        for (var z = -pad; z <= hiZ; z++) {
+          var cell = _p(-pad, y, z);
+          for (var x = -pad; x <= hi; x++, cell++) {
+            final level = _sky[cell];
+            if (level <= 1) continue;
+            final need = level - 1;
+            if ((x > -pad && _sky[cell - 1] < need) || (x < hi && _sky[cell + 1] < need) ||
+                (z > -pad && _sky[cell - _px] < need) || (z < hiZ && _sky[cell + _px] < need)) {
+              _queue[tail++] = cell;
+            }
+          }
         }
       }
     }
@@ -296,11 +370,11 @@ class ChunkMesher {
       if (level <= 1) continue;
       final y = cell ~/ (_px * _pz);
       final rest = cell - y * _px * _pz;
-      final z = rest ~/ _px - 1;
-      final x = rest % _px - 1;
+      final z = rest ~/ _px - pad;
+      final x = rest % _px - pad;
       for (var f = 0; f < 6; f++) {
         final nx = x + _faceOffsets[f * 3], ny = y + _faceOffsets[f * 3 + 1], nz = z + _faceOffsets[f * 3 + 2];
-        if (ny < 0 || ny >= sizeY || nx < -1 || nx > sizeX || nz < -1 || nz > sizeZ) continue;
+        if (ny < 0 || ny >= sizeY || _outside(nx, nz)) continue;
         final n = _p(nx, ny, nz);
         final nid = _blocks[n];
         if (_opaque[nid]) continue;
@@ -454,6 +528,7 @@ class ChunkMesher {
   ChunkMeshResult build(int chunkX, int chunkZ, Uint8List c, Uint8List? nx, Uint8List? px, Uint8List? nz,
       Uint8List? pz, Uint8List? nxnz, Uint8List? pxnz, Uint8List? nxpz, Uint8List? pxpz) {
     final watch = Stopwatch()..start();
+    _bindBuffers();
     _aoVerts = 0;
     _fill(c, nx, px, nz, pz, nxnz, pxnz, nxpz, pxpz);
     _computeLight();

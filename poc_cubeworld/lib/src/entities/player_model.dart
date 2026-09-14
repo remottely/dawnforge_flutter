@@ -113,9 +113,79 @@ class PlayerModel {
     _held = held;
   }
 
-  void swing() => _swing = 1.0;
+  void swing() {
+    _swing = 1.0;
+    _handSwing = 1.0;
+  }
+
+  // Stage 32: the held item's own 60-degree pivot (120 ms), the hit-stop (the
+  // pose holds for 60 ms) and the white hit tint (100 ms).
+  double _handSwing = 0.0;
+  double _freeze = 0.0;
+  double _flash = 0.0;
+  static const double handSwingSeconds = 0.12;
+  static UnlitMaterial? _flashMaterial;
+  final Map<Object, Material> _saved = {};
+
+  /// Stage 32: the white every model turns for [flash]; one material for all
+  /// of them (Godot's unshaded, emissive `flash_material`).
+  static UnlitMaterial flashMaterial() => _flashMaterial ??= UnlitMaterial()
+    ..baseColorFactor = Vector4(1, 1, 1, 1)
+    ..vertexColorWeight = 0.0; // pure white, not the voxel colours unlit
+
+  /// Stage 32: hit-stop. The pose holds for [seconds] (the walk, the swing and
+  /// the bob all wait; the body still moves).
+  void freeze(double seconds) => _freeze = math.max(_freeze, seconds);
+  bool isFrozen() => _freeze > 0.0;
+
+  /// Stage 32: the whole model tints white for [seconds].
+  void flash(double seconds) {
+    _flash = math.max(_flash, seconds);
+    _applyFlash(true);
+  }
+
+  bool isFlashing() => _flash > 0.0;
+
+  void _applyFlash(bool on) {
+    void walk(Node n) {
+      final mesh = n.mesh;
+      if (mesh != null) {
+        for (final prim in mesh.primitives) {
+          if (on) {
+            _saved.putIfAbsent(prim, () => prim.material);
+            prim.material = flashMaterial();
+          } else {
+            final m = _saved[prim];
+            if (m != null) prim.material = m;
+          }
+        }
+        refreshMeshMaterials(n);
+      }
+      for (final c in n.children) {
+        walk(c);
+      }
+    }
+
+    walk(root);
+    if (!on) _saved.clear();
+  }
 
   void animate(double dt, double speed, bool onFloor, bool gliding, bool climbing) {
+    if (_flash > 0.0) {
+      _flash -= dt;
+      if (_flash <= 0.0) {
+        _flash = 0.0;
+        _applyFlash(false);
+      }
+    }
+    if (_freeze > 0.0) {
+      _freeze -= dt;
+      root.rotation = eulerYXZ(tiltX, yaw, 0);
+      root.position = Vector3(0, posY, 0);
+      return;
+    }
+    if (_handSwing > 0.0) _handSwing = math.max(_handSwing - dt / handSwingSeconds, 0.0);
+    hand.rotation = Quaternion.axisAngle(Vector3(1, 0, 0), -60.0 * math.pi / 180.0 * math.sin(_handSwing * math.pi));
     final moving = speed > 0.5;
     _walkPhase += dt * speed.clamp(0.0, 12.0) * 1.4;
     var a = moving ? math.sin(_walkPhase) * 0.65 : 0.0;

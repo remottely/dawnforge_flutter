@@ -147,6 +147,24 @@ class Player extends VoxelBody implements Target {
   bool _wasInWater = false;
   bool _sprintHeld = false;
 
+  // Stage 32: the hit is felt, footsteps have a voice, mining cracks the block.
+  double _shakeTime = 0.0; // camera shake left, seconds
+  double _shakeAmp = 0.0; // its amplitude in metres
+  Vector3 _shake = Vector3.zero(); // this frame's jolt, added to the camera only
+  double _stagger = 0.0; // knockback window, the input does not brake it
+  double _mineFxTimer = 0.0; // swing + chips + dig voice while mining
+  final List<Node> crackLines = []; // the four crack stages, six faces each (stage * 6 + face)
+  int stepsTaken = 0; // footsteps played (for the probe)
+  static const double stepDistance = 0.45;
+  static const double stepDistanceSprint = 0.3;
+  static const double shakeSeconds = 0.15;
+  static const double mineFxPeriod = 0.35;
+
+  /// Stage 32: the crack stage (0..3) mining [progress] (0..1) shows, and the
+  /// darkening box's alpha for it.
+  static int crackStage(double progress) => (progress * 4.0).toInt().clamp(0, 3);
+  static double crackAlphaFor(double progress) => 0.16 * (crackStage(progress) + 1);
+
   PlayerClass get classDef => classes[playerClass]!;
 
   void setupPlayer(VoxelWorld w, Game mainGame, String cls) {
@@ -195,6 +213,7 @@ class Player extends VoxelBody implements Target {
     crack = Node(mesh: Mesh(CuboidGeometry(Vector3(1.01, 1.01, 1.01)), _crackMat))
       ..visible = false
       ..castsShadows = false;
+    _buildCrackStages();
 
     torchLight = PointLight(color: Vector3(1.0, 0.8, 0.5), intensity: 0.0, range: 9.0);
     _torchNode.position = Vector3(0, 1.4, 0);
@@ -247,7 +266,7 @@ class Player extends VoxelBody implements Target {
   int pickUp(String id, int n) {
     final left = inventory.add(id, n);
     if (left < n) {
-      notify('+${n - left} ${Items.displayName(id)}');
+      main.hud.addPickup(id, n - left); // stage 32: a stacking toast instead of a note
       Sfx.play('pickup', -8.0);
       main.quests.onPickup(id, n - left);
       if (id == 'diamond') Achievements.instance.unlock('diamonds');
@@ -276,8 +295,8 @@ class Player extends VoxelBody implements Target {
   }
 
   PerspectiveCamera camera() => PerspectiveCamera(
-        position: cameraPosition,
-        target: cameraPosition + forward,
+        position: cameraPosition + _shake,
+        target: cameraPosition + _shake + forward,
         up: upVec,
         fovRadiansY: fov * math.pi / 180.0,
         fovNear: 0.05,
@@ -288,6 +307,7 @@ class Player extends VoxelBody implements Target {
   Vector3 aimDirection() => forward;
 
   void _updateCamera(double dt) {
+    _shake = _shakeOffset(dt);
     if (firstPerson) return;
     // Pull the camera in when a block sits between it and the head.
     final origin = pivotPosition;
@@ -298,6 +318,19 @@ class Player extends VoxelBody implements Target {
     _camDistance = lerpd(_camDistance, wanted, dt * (wanted < _camDistance ? 18.0 : 6.0));
     model.visible = _camDistance > 1.1;
   }
+
+  /// Stage 32: a random jolt in the camera plane that dies out over
+  /// [shakeSeconds], scaled by the damage taken (the aim never moves).
+  Vector3 _shakeOffset(double dt) {
+    if (_shakeTime <= 0.0) return Vector3.zero();
+    _shakeTime = math.max(_shakeTime - dt, 0.0);
+    final k = _shakeAmp * (_shakeTime / shakeSeconds);
+    final rng = main.random;
+    return rightVec * ((rng.nextDouble() * 2.0 - 1.0) * k) + upVec * ((rng.nextDouble() * 2.0 - 1.0) * k);
+  }
+
+  /// Stage 32: the camera is shaking (for the probe).
+  bool shakeActive() => _shakeTime > 0.0;
 
   double _rayToSolid(Vector3 origin, Vector3 direction, double maxDist) {
     final hit = voxelRaycast(origin, direction, maxDist);
@@ -465,8 +498,11 @@ class Player extends VoxelBody implements Target {
       velocity.y = (jumpHeld ? 12.0 : 0.0) - (sneaking ? 12.0 : 0.0);
       speed *= 2.5;
       final wishF = wish * speed;
-      velocity.x = lerpd(velocity.x, wishF.x, dt * 10.0);
-      velocity.z = lerpd(velocity.z, wishF.z, dt * 10.0);
+      if (_stagger <= 0.0) {
+        // stage 32: a shoved body carries for 0.3 s
+        velocity.x = lerpd(velocity.x, wishF.x, dt * 10.0);
+        velocity.z = lerpd(velocity.z, wishF.z, dt * 10.0);
+      }
       move(dt);
       _fallStartY = position.y;
       model.animate(dt, 0.0, false, true, false);
@@ -512,8 +548,11 @@ class Player extends VoxelBody implements Target {
       model.tiltX = -math.pi * 2.0 * (1.0 - _dodge / dodgeTime).clamp(0.0, 1.0);
     }
     final accel = _dodge > 0.0 ? 40.0 : (onFloor ? 14.0 : (gliding ? 3.0 : 6.0));
-    velocity.x = lerpd(velocity.x, wish.x * speed, dt * accel);
-    velocity.z = lerpd(velocity.z, wish.z * speed, dt * accel);
+    if (_stagger <= 0.0) {
+      // Stage 32: a shoved body carries for 0.3 s before the input steers it.
+      velocity.x = lerpd(velocity.x, wish.x * speed, dt * accel);
+      velocity.z = lerpd(velocity.z, wish.z * speed, dt * accel);
+    }
 
     final wasFloor = onFloor;
     final posBefore = position.clone();
@@ -563,8 +602,14 @@ class Player extends VoxelBody implements Target {
     if (onFloor && horizontalSpeed > 1.0) {
       _stepTimer -= dt * horizontalSpeed;
       if (_stepTimer <= 0.0) {
-        _stepTimer = 2.4;
-        Sfx.play('dig', -18.0, 0.7);
+        // Stage 32: a step every 0.45 m (0.3 m sprinting) in the voice of the
+        // block under the feet; sand and soul sand are softer.
+        _stepTimer = sprinting ? stepDistanceSprint : stepDistance;
+        final under = world.getBlockXYZ(position.x.floor(), (position.y - 0.05).floor(), position.z.floor());
+        final underId = Blocks.idOf(under);
+        final soft = underId == 'sand' || underId == 'soul_sand';
+        Sfx.play('step_${Blocks.materialFamily(under)}', soft ? -22.0 : -16.0, soft ? 0.8 : 1.0);
+        stepsTaken += 1;
       }
     }
     if (inWater && !_wasInWater) Sfx.play('splash', -8.0);
@@ -587,6 +632,7 @@ class Player extends VoxelBody implements Target {
     }
     if (gameplay && input.down(GameAction.use) && _useCooldown <= 0.0 && _useRepeats()) _usePressed();
     damageFlash = math.max(damageFlash - dt * 3.0, 0.0);
+    _stagger = math.max(_stagger - dt, 0.0);
     world.updateAround(position);
   }
 
@@ -1261,10 +1307,17 @@ class Player extends VoxelBody implements Target {
       return;
     }
     mineProgress += dt / t;
-    if ((mineProgress * 5.0) % 1.0 < dt / t * 5.0) Sfx.play('dig', -12.0);
-    crack.visible = true;
-    crack.position = aimedBlock.centre;
-    _crackMat.baseColorFactor = Vector4(0, 0, 0, (mineProgress * 0.6).clamp(0.0, 0.6));
+    // Stage 32: every 0.35 s of mining swings the held item, chips two cubes of
+    // the block's colour off it and plays the family's dig voice.
+    _mineFxTimer -= dt;
+    if (_mineFxTimer <= 0.0) {
+      _mineFxTimer = mineFxPeriod;
+      model.swing();
+      final c = Blocks.def(id);
+      main.spawnDebris(aimedBlock.centre, Vector3(c.r, c.g, c.b), 2, 0.7);
+      Sfx.play('step_${Blocks.materialFamily(id)}', -10.0, 0.8);
+    }
+    _updateCrack(aimedBlock, mineProgress);
     if (mineProgress >= 1.0) {
       _breakBlock(aimedBlock, id);
       _resetMining();
@@ -1275,7 +1328,87 @@ class Player extends VoxelBody implements Target {
   void _resetMining() {
     mineProgress = 0.0;
     _mineTarget = const IVec3(999999, 0, 0);
+    _mineFxTimer = 0.0;
     crack.visible = false;
+    for (final l in crackLines) {
+      l.visible = false;
+    }
+  }
+
+  /// Stage 32: four crack stages, each a jagged dark line set over the six faces
+  /// of a cube a hair larger than the block; stage k shows the lines of stages
+  /// 0..k and the box darkens in four steps. Built once (a line geometry uploads
+  /// at construction), then only shown, hidden and moved.
+  void _buildCrackStages() {
+    final rng = math.Random(32);
+    double range(double a, double b) => a + rng.nextDouble() * (b - a);
+    Vector3 facePoint(int axis, double side, double u, double v) =>
+        axis == 0 ? Vector3(side, u, v) : (axis == 1 ? Vector3(u, side, v) : Vector3(u, v, side));
+    final mat = UnlitMaterial()
+      ..baseColorFactor = Vector4(0.05, 0.05, 0.05, 0.9)
+      ..alphaMode = AlphaMode.blend;
+    for (var stage = 0; stage < 4; stage++) {
+      for (var face = 0; face < 6; face++) {
+        final segs = <double>[];
+        final axis = face ~/ 2;
+        final side = face % 2 == 0 ? -0.006 : 1.006;
+        // Two jagged polylines per face per stage, starting from a random point.
+        for (var k = 0; k < 2; k++) {
+          var u = rng.nextDouble();
+          var v = rng.nextDouble();
+          for (var seg = 0; seg < 4; seg++) {
+            final nu = (u + range(-0.3, 0.3)).clamp(0.0, 1.0);
+            final nv = (v + range(-0.3, 0.3)).clamp(0.0, 1.0);
+            final a = facePoint(axis, side, u, v), b = facePoint(axis, side, nu, nv);
+            segs.addAll([a.x, a.y, a.z, b.x, b.y, b.z]);
+            u = nu;
+            v = nv;
+          }
+        }
+        // One node per face: flutter_scene's lines draw over the terrain, so a
+        // face turned away from the camera is hidden rather than seen through
+        // the block (Godot's depth test does that for free).
+        crackLines.add(Node(mesh: Mesh(LineSegmentsGeometry(LineSegmentData(positions: Float32List.fromList(segs)), width: 0.025), mat))
+          ..visible = false
+          ..castsShadows = false);
+      }
+    }
+  }
+
+  /// Stage 32: the overlay for [progress] (0..1) on [cell]: the box darkens in
+  /// four steps and the crack lines of every reached stage show. Returns the box
+  /// alpha (the probe's proof).
+  double _updateCrack(IVec3 cell, double progress) {
+    final stage = crackStage(progress);
+    final alpha = crackAlphaFor(progress);
+    crack.visible = true;
+    crack.position = cell.centre;
+    _crackMat.baseColorFactor = Vector4(0, 0, 0, alpha);
+    final eye = cameraPosition;
+    final lo = [cell.x.toDouble(), cell.y.toDouble(), cell.z.toDouble()];
+    final at = [eye.x, eye.y, eye.z];
+    for (var i = 0; i < crackLines.length; i++) {
+      final face = i % 6, axis = face ~/ 2;
+      final facing = face % 2 == 0 ? at[axis] < lo[axis] : at[axis] > lo[axis] + 1.0;
+      crackLines[i].visible = i ~/ 6 <= stage && facing;
+      crackLines[i].position = cell.toVector3();
+    }
+    return alpha;
+  }
+
+  double crackAlpha() => crack.visible ? _crackMat.baseColorFactor.w : 0.0;
+
+  /// Probe: show the overlay at [progress] on [cell] without holding the button.
+  double probeCrack(IVec3 cell, double progress) {
+    mineProgress = progress;
+    _mineTarget = cell;
+    return _updateCrack(cell, progress);
+  }
+
+  /// Probe (stage 32): break [cell] the way a finished mine would.
+  void probeBreakAt(IVec3 cell) {
+    _breakBlock(cell, world.getBlock(cell));
+    _resetMining();
   }
 
   /// Stage 29: the probe breaks a block the way a finished mining swing does.
@@ -1593,11 +1726,21 @@ class Player extends VoxelBody implements Target {
     Sfx.play('hurt', -3.0);
     main.spawnDamageNumber(centre() + Vector3(0, 0.6, 0), reduced,
         isTick ? StatusEffects.def(source).color : Vector3(1, 0.3, 0.3));
+    if (!isTick) {
+      // Stage 32: the hit is felt: camera shake by damage, a 100 ms white flash,
+      // a 60 ms hold of the pose, and the HUD's red vignette.
+      _shakeTime = shakeSeconds;
+      _shakeAmp = math.min(reduced / 10.0, 0.3);
+      _stagger = Mob.staggerSeconds;
+      model.flash(0.1);
+      model.freeze(0.06);
+      main.hud.onPlayerHurt();
+    }
     if (from != null) {
       final push = position - from;
       push.y = 0.0;
       if (push.length2 > 0) push.normalize();
-      velocity += push * 5.0 + Vector3(0, 3.5, 0);
+      velocity += push * Mob.knockbackSpeed + Vector3(0, Mob.knockbackUp, 0);
     }
     if (hp <= 0.0) {
       hp = 0.0;

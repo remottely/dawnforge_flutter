@@ -30,7 +30,7 @@ flutter test                                           # tables, generator, mesh
 Probe flags (same as the Godot POC, plus a few for tuning): `--screenshot=<png> --frames=N
 --seed=N --radius=N --class=warrior|ranger|mage|rogue --time=0..1 --fly --fp --tp=x,y,z
 --look=yaw,pitch --settle=N --map --open-inventory --fire=primary|secondary --stage16
---strike --stage18 --stage19 --stage20 --ride --stage21a --kind=5..9 --biome=N --stage21b --stage22 --stage23 --stage24 --slot=<name> --open-map --open-settings --stage25 --reject-one --stage26 --shot=biome|village|trade|portal|fortress|cavern|tutorial --stage27 --stage28 --stage29 --kind=4 --stage30 --title-probe --stage31 --no-light --shot=room|cave --open-worlds --open-credits --credits-t=N --no-tutorial --weather=clear|rain|storm|snow --journal=0..4 --host --join=<ip> --wait-peer --trace`, and for the look: `--sun=k --amb=k
+--strike --stage18 --stage19 --stage20 --ride --stage21a --kind=5..9 --biome=N --stage21b --stage22 --stage23 --stage24 --slot=<name> --open-map --open-settings --stage25 --reject-one --stage26 --shot=biome|village|trade|portal|fortress|cavern|tutorial --stage27 --stage28 --stage29 --kind=4 --stage30 --title-probe --stage31 --no-light --shot=room|cave --stage32 --shot=combat|mining --open-worlds --open-credits --credits-t=N --no-tutorial --weather=clear|rain|storm|snow --journal=0..4 --host --join=<ip> --wait-peer --trace`, and for the look: `--sun=k --amb=k
 --tm=aces|agx|neutral|linear --fogd=density --noshadow --shadowcache=0|1
 --casterfaces=front|back`. The debug app forwards the process arguments to Dart
 (`MainFlutterWindow.swift`), so no `--` separator is needed.
@@ -52,6 +52,16 @@ is removed (the 3x3 ring remesh), the AO vertex count, the spawn gate dark / lit
 through the maze on A* against the straight-chase control, and the mesher's own clock (add
 `--no-light` to skip both light BFS for the cost comparison). Captures: `--shot=room --time=0.0`
 (inside the room at night) · `--shot=cave` (the pit's mouth by day).
+
+Stage 32 probe: `--new --seed=42 --frames=300 --settle=10 --stage32 --screenshot=<png>` builds a
+stone pad across the border between the spawn chunk's east neighbour and the chunk west of it,
+then prints a torch's block light on the far side of the seam (and the mesher's clock), the
+knockback / flash / hit-stop of a swing and the shake / vignette / flash of the player's hit, the
+crit count over 200 swings, the crack overlay at progress 0.5 and the break burst with its family
+voice, the footsteps over a 5 m walk, the daylight rule for a zombie in the sun, under a roof and
+in a pool, the topple-and-fade death clock, and two merged apple toasts with the low-HP pulse.
+Captures: `--shot=combat` (a zombie mid-knockback, the flashes, the numbers and the red vignette)
+· `--shot=mining` (cracks and chips on a raised stone block, first person).
 
 ### The terrain shader (stage 31)
 

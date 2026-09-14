@@ -205,6 +205,15 @@ class VoxelWorld {
   }
 
   void _refreshWindow() {
+    // Stage 32 fix: a remesh still queued for a chunk that has a mesh (an edit
+    // that has not been dispatched yet) survives the window moving. Clearing it
+    // left that chunk with its pre-edit mesh and light for good; the stage 31
+    // probe only passed when a dispatch frame happened to run before the tick
+    // that re-centred the window.
+    final remeshes = [
+      for (final p in _pending)
+        if (_nodes.containsKey(p) && (p.x - _center.x).abs() <= unloadRadius && (p.z - _center.z).abs() <= unloadRadius) p,
+    ];
     _pending.clear();
     for (var dz = -loadRadius; dz <= loadRadius; dz++) {
       for (var dx = -loadRadius; dx <= loadRadius; dx++) {
@@ -214,6 +223,7 @@ class VoxelWorld {
     }
     int d2(ChunkPos p) => (p.x - _center.x) * (p.x - _center.x) + (p.z - _center.z) * (p.z - _center.z);
     _pending.sort((a, b) => d2(a).compareTo(d2(b)));
+    _pending.insertAll(0, remeshes);
     for (final pos in _nodes.keys.toList()) {
       if ((pos.x - _center.x).abs() > unloadRadius || (pos.z - _center.z).abs() > unloadRadius) _unload(pos);
     }

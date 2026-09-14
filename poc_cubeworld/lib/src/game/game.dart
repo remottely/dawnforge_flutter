@@ -4,7 +4,7 @@ import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart' show WidgetsBinding;
+import 'package:flutter/widgets.dart' show Size, WidgetsBinding;
 import 'package:flutter_scene/scene.dart' hide Spawner;
 import 'package:vector_math/vector_math.dart';
 
@@ -43,6 +43,7 @@ import 'weather.dart';
 import 'worlds.dart';
 import '../core/recipes.dart';
 import '../ui/settings_panel.dart';
+import '../ui/hud_state.dart';
 
 enum ScreenKind { none, inventory, pause, death, journal, trade }
 
@@ -53,11 +54,18 @@ class Note {
 }
 
 class DamageNumber {
-  DamageNumber(this.pos, this.text, this.color);
+  DamageNumber(this.pos, this.text, this.color, [this.crit = false]);
   final Vector3 pos;
   final String text;
   final Vector3 color;
+  final bool crit; // stage 32
   double age = 0.0;
+
+  /// Stage 32: a number rises 1 m over 0.8 s and fades from 0.2 s to 1.0 s.
+  static const double riseSeconds = 0.8;
+  static const double rise = 1.0;
+  static const double fadeDelay = 0.2;
+  static const double lifetime = 1.0;
 }
 
 class _Effect {
@@ -70,9 +78,10 @@ class _Effect {
 }
 
 class _Debris {
-  _Debris(this.node, this.vel);
+  _Debris(this.node, this.vel, this.size);
   final Node node;
   final Vector3 vel;
+  final double size;
   double age = 0.0;
   double rx = 0, ry = 0, rz = 0;
 }
@@ -190,6 +199,16 @@ class Game extends ChangeNotifier {
   final List<_Debris> _debris = [];
   final List<_Tnt> _tnts = [];
   final Set<IVec3> _bossesSpawned = {};
+
+  /// Stage 32: the HUD's animated state, and the probe's counters.
+  final HudState hud = HudState();
+  int crits = 0;
+  int damageNumbersSpawned = 0;
+  int debrisSpawned = 0;
+  String lastBreakFamily = '';
+  static const double critChance = 0.1;
+  static const double critMult = 1.5;
+  static CuboidGeometry? _debrisCube;
 
   /// Stage 26: the villager whose trade screen is open, the rows flashing green
   /// (true) or red after a click with the seconds left, and the slimes that
@@ -314,6 +333,9 @@ class Game extends ChangeNotifier {
     entities.add(player.node);
     entities.add(player.highlight);
     entities.add(player.crack);
+    for (final l in player.crackLines) {
+      entities.add(l); // stage 32
+    }
     quests.player = player;
     Achievements.instance.notify = notify;
 
@@ -552,6 +574,7 @@ class Game extends ChangeNotifier {
     world.update();
     _ambientTimer += dt;
     _updateSky();
+    hud.update(dt, this); // stage 32: Godot's hud `_process`
     frame.value++;
     if (_frameWaiters.isNotEmpty) {
       final waiters = List.of(_frameWaiters);
@@ -758,6 +781,7 @@ class Game extends ChangeNotifier {
       d.ry += 0.13 * dt * 60;
       d.rz += 0.07 * dt * 60;
       d.node.rotation = Quaternion.euler(d.ry, d.rx, d.rz);
+      d.node.scale = Vector3(d.size, d.size, d.size);
     }
     for (final t in _tnts) {
       t.age += dt;
@@ -774,7 +798,7 @@ class Game extends ChangeNotifier {
     for (final n in damageNumbers) {
       n.age += dt;
     }
-    damageNumbers.removeWhere((n) => n.age >= 0.9);
+    damageNumbers.removeWhere((n) => n.age >= DamageNumber.lifetime);
   }
 
   void _prune() {
@@ -1327,13 +1351,29 @@ class Game extends ChangeNotifier {
     }
     if (best == null) return;
     Sfx.play('hit', -4.0);
-    best.takeDamage(dmg, attacker.position, 6.0, attacker);
-    spawnDamageNumber(best.centre(), dmg, Vector3(1, 0.95, 0.6));
+    // Stage 32: one melee hit in ten is a critical for x1.5, shown as "-N!" in yellow.
+    final crit = rollCrit();
+    if (crit) dmg = (dmg * critMult).roundToDouble();
+    best.takeDamage(dmg, attacker.position, Mob.knockbackSpeed, attacker);
+    spawnDamageNumber(best.centre(), dmg, Vector3(1, 0.95, 0.6), crit);
     if (followUp > 0.0) {
-      best.takeDamage(followUp, attacker.position, 2.0, attacker);
+      best.takeDamage(followUp, attacker.position, Mob.knockbackSpeed * 0.5, attacker);
       spawnDamageNumber(best.centre() + Vector3(0, 0.3, 0), followUp, Vector3(1, 0.6, 0.3));
     }
   }
+
+  /// Stage 32: the 10% critical roll every melee hit and arrow makes (counted
+  /// for the probe).
+  bool rollCrit() {
+    if (!rollCritWith(random)) return false;
+    crits += 1;
+    return true;
+  }
+
+  static bool rollCritWith(math.Random rng) => rng.nextDouble() < critChance;
+
+  /// Stage 32: the damage a hit deals after the roll.
+  static double critDamage(double dmg, bool crit) => crit ? (dmg * critMult).roundToDouble() : dmg;
 
   List<Target> targets() {
     final out = <Target>[player];
@@ -1348,10 +1388,12 @@ class Game extends ChangeNotifier {
     entities.add(p.node);
   }
 
-  void spawnDamageNumber(Vector3 at, double amount, Vector3 color) {
-    Net.instance.broadcastDamageNumber(at, amount, color);
-    damageNumbers.add(DamageNumber(
-        at + Vector3(random.nextDouble() * 0.6 - 0.3, 0.3, random.nextDouble() * 0.6 - 0.3), amount.round().toString(), color));
+  /// Stage 32: numbers read `-N`; a critical reads `-N!` in yellow.
+  void spawnDamageNumber(Vector3 at, double amount, Vector3 color, [bool crit = false]) {
+    Net.instance.broadcastDamageNumber(at, amount, color, crit);
+    damageNumbersSpawned += 1;
+    damageNumbers.add(DamageNumber(at + Vector3(random.nextDouble() * 0.6 - 0.3, 0.3, random.nextDouble() * 0.6 - 0.3),
+        '-${amount.round()}${crit ? '!' : ''}', crit ? Vector3(1.0, 0.9, 0.2) : color, crit));
   }
 
   void spawnEffect(Vector3 at, Vector3 color, double radius) {
@@ -1365,21 +1407,34 @@ class Game extends ChangeNotifier {
     _effects.add(_Effect(node, mat, radius, color));
   }
 
-  void spawnDebris(Vector3 at, Vector3 color) {
-    for (var i = 0; i < 6; i++) {
+  /// Stage 32: [count] small cubes of [color] burst out of [at] (12 for a broken
+  /// block, 2 per mining tick, 8 white ones for a spawn poof, 1 ember for a
+  /// burning mob); [speed] scales the burst. One shared unit cube geometry,
+  /// scaled per node (a geometry uploads at construction).
+  void spawnDebris(Vector3 at, Vector3 color, [int count = 12, double speed = 1.0]) {
+    debrisSpawned += count;
+    final cube = _debrisCube ??= CuboidGeometry(Vector3(1, 1, 1));
+    for (var i = 0; i < count; i++) {
       final size = 0.08 + random.nextDouble() * 0.08;
       final f = 0.8 + random.nextDouble() * 0.3;
       final mat = PhysicallyBasedMaterial()
         ..baseColorFactor = Vector4(color.x * f, color.y * f, color.z * f, 1)
         ..roughnessFactor = 1.0
         ..metallicFactor = 0.0;
-      final node = Node(mesh: Mesh(CuboidGeometry(Vector3(size, size, size)), mat))
+      final node = Node(mesh: Mesh(cube, mat))
         ..position = at + Vector3(random.nextDouble() * 0.6 - 0.3, random.nextDouble() * 0.6 - 0.2, random.nextDouble() * 0.6 - 0.3)
+        ..scale = Vector3(size, size, size)
         ..castsShadows = false;
       entities.add(node);
-      _debris.add(_Debris(node, Vector3(random.nextDouble() * 4 - 2, 2 + random.nextDouble() * 2, random.nextDouble() * 4 - 2)));
+      _debris.add(_Debris(node, Vector3(random.nextDouble() * 4 - 2, 2 + random.nextDouble() * 2, random.nextDouble() * 4 - 2) * speed, size));
     }
   }
+
+  /// Stage 32: the puff a mob appears in.
+  void spawnPoof(Vector3 at) => spawnDebris(at, Vector3(0.92, 0.92, 0.9), 8, 0.5);
+
+  /// Stage 32: debris cubes still in the air (the probe's count).
+  int get debrisAlive => _debris.length;
 
   /// Stage 26: F on a villager opens its three offers (`TradeScreen`); F or
   /// Escape closes them.
@@ -1617,8 +1672,9 @@ class Game extends ChangeNotifier {
       }
     }
     final c = Blocks.def(id);
-    spawnDebris(b.centre, Vector3(c.r, c.g, c.b));
-    Sfx.play('break', -6.0);
+    spawnDebris(b.centre, Vector3(c.r, c.g, c.b), 12);
+    lastBreakFamily = Blocks.materialFamily(id); // stage 32: the family's voice
+    Sfx.play('break_$lastBreakFamily', -6.0);
     if (Blocks.isRail(id)) Rails.removed(world, b); // stage 28: the neighbours no longer turn toward this cell
     if (Blocks.idOf(id) == 'chest' && chests.containsKey(b)) {
       final inv = chests.remove(b)!;
@@ -1636,7 +1692,7 @@ class Game extends ChangeNotifier {
       notify('${waypoints[b]} set. Right click it to travel (J lists them)');
     }
     GameState.instance.blocksPlaced += 1;
-    Sfx.play('place', -8.0);
+    Sfx.play('place_${Blocks.materialFamily(id)}', -8.0);
     if (Blocks.idOf(id) == 'chest') GameState.instance.placedChests.add(b.key);
   }
 
@@ -2124,6 +2180,7 @@ class Game extends ChangeNotifier {
       if (await _probeStage30()) return;
     }
     if (_hasArg('--stage31')) await _probeStage31();
+    if (_hasArg('--stage32')) await _probeStage32();
     await nextFrame();
     await nextFrame();
     debugPrint('[probe] fps ${fps.toStringAsFixed(0)} mobs ${mobs.length} drops ${drops.length} projectiles ${projectiles.length}');
@@ -2144,6 +2201,211 @@ class Game extends ChangeNotifier {
       debugPrint('[probe] no screenshotter, nothing captured');
     }
     exit(0);
+  }
+
+  // --- stage 32: polish -----------------------------------------------------------------
+
+  /// --stage32: the polish pass. A stone pad over the chunk east of spawn and the
+  /// eight columns west of it (so a border runs through the pad): a torch 4 cells
+  /// inside the east chunk must light the west chunk's cell 5 steps away (the
+  /// seam stage 31 left open), a stunned zombie takes a swing (knockback, flash,
+  /// the crit roll over 200 swings), a stone cell shows its cracks and breaks, a
+  /// 5 m walk counts its footsteps, three zombies stand in the noon sun / under a
+  /// roof / in a pool for the daylight rule, one dies for the fall-and-fade clock,
+  /// and the HUD merges two apple toasts. `--shot=combat|mining` stages the two
+  /// windowed captures. Waits count simulation ticks (gotcha 7).
+  Future<void> _probeStage32() async {
+    final sp = spawner!;
+    spawner = null; // Godot: spawner.set_process(false)
+    final here = VoxelWorld.chunkOf(IVec3.floor(player.position));
+    final cpos = (x: here.x + 1, z: here.z);
+    final sx = cpos.x * VoxelWorld.sizeX;
+    final sz = cpos.z * VoxelWorld.sizeZ;
+    var y0 = 0;
+    for (var x = sx - 8; x < sx + 16; x++) {
+      for (var z = sz; z < sz + 16; z++) {
+        y0 = math.max(y0, world.groundHeight(x, z));
+      }
+    }
+    final stone = Blocks.indexOf('stone');
+    _stage31Fill(IVec3(sx - 8, y0, sz), IVec3(sx + 15, y0, sz + 15), stone);
+    _stage31Fill(IVec3(sx - 8, y0 + 1, sz), IVec3(sx + 15, y0 + 14, sz + 15), Blocks.air);
+    final y = y0 + 1;
+    timeOfDay = 0.5; // noon, for the daylight rule and a lit capture
+    _updateSky();
+    GameState.instance.creative = false;
+    _probePlace(Vector3(sx + 8.5, y + 0.1, sz + 8.5));
+    player.setLook(0.0, 0.0);
+    debugPrint('[probe] stage32 site x=$sx y=$y0 z=$sz (chunk (${cpos.x}, ${cpos.z}), border at x=$sx)');
+    await _stage31Idle();
+    // 1. the seam: a torch (light 13) at local x 4 -> the west chunk's cell at x-1 is 5 steps away.
+    final built = world.chunksBuilt;
+    final msBefore = world.meshMsTotal;
+    final torch = IVec3(sx + 4, y, sz + 3);
+    world.setBlock(torch, Blocks.indexOf('torch'));
+    await _stage31Idle();
+    final seam = IVec3(sx - 1, y, sz + 3);
+    final deeper = IVec3(sx - 3, y, sz + 3);
+    final mirror = IVec3(sx + 9, y, sz + 3); // 5 steps the other way, inside the torch's chunk
+    debugPrint('[probe] stage32 seam light: torch at 5 cells from border -> neighbour chunk face block light=${world.lightAt(seam).block} (>=8); '
+        '2 cells further=${world.lightAt(deeper).block} (>=6); same 5 steps inside the chunk=${world.lightAt(mirror).block}; '
+        'chunk (${cpos.x - 1}, ${cpos.z}) remeshed with the ring');
+    final ring = world.chunksBuilt - built;
+    debugPrint('[probe] stage32 mesh time avg=${(world.meshMsTotal / math.max(world.chunksBuilt, 1)).toStringAsFixed(2)} ms over '
+        '${world.chunksBuilt} chunks (stage 31 was ~7-14); the torch\'s ring of $ring took '
+        '${((world.meshMsTotal - msBefore) / math.max(ring, 1)).toStringAsFixed(2)} ms each');
+    world.setBlock(torch, Blocks.air);
+    // 2. knockback and the player's hit
+    final ahead = (player.aimDirection().clone()..y = 0.0).normalized();
+    final zombie = sp.forceSpawn('zombie', player.position + ahead * 2.0);
+    zombie.stun(999.0, false);
+    zombie.hp = 1.0e9;
+    zombie.maxHp = 1.0e9;
+    await _ticks(1);
+    final z0 = zombie.position.clone();
+    player.probeStrike();
+    final rose = zombie.velocity.y > 0.0;
+    final flashed = zombie.isFlashing() && zombie.isFrozen();
+    await _ticks(45);
+    final moved = math.sqrt(math.pow(zombie.position.x - z0.x, 2) + math.pow(zombie.position.z - z0.z, 2));
+    player.takeDamage(4.0, 'zombie', zombie.position);
+    debugPrint('[probe] stage32 knockback: zombie moved ${moved.toStringAsFixed(2)} m away (>1.5) and rose (vy>0)=$rose '
+        'flash+hitstop=$flashed; player hit -> shake=${player.shakeActive()} vignette alpha=${hud.vignetteAlpha().toStringAsFixed(2)} (>0) '
+        'model flash=${player.model.isFlashing()}');
+    // 3. the crit roll over 200 swings (the zombie is put back in front before each)
+    final crits0 = crits;
+    final numbers0 = damageNumbersSpawned;
+    for (var i = 0; i < 200; i++) {
+      zombie.position = player.position + ahead * 2.0;
+      zombie.velocity = Vector3.zero();
+      player.probeStrike();
+    }
+    debugPrint('[probe] stage32 crit: over 200 swings crits=${crits - crits0} (10-40) damage numbers spawned=${damageNumbersSpawned - numbers0}');
+    zombie.removed = true;
+    // 4. cracks, then the break
+    final cell = IVec3(sx + 8, y0, sz + 5);
+    final alpha = player.probeCrack(cell, 0.5);
+    final linesShown = player.crackLines.where((l) => l.visible).length;
+    final debris0 = debrisSpawned;
+    player.probeBreakAt(cell);
+    debugPrint('[probe] stage32 cracks: progress 0.5 -> overlay alpha=${alpha.toStringAsFixed(2)} (>0), stage ${Player.crackStage(0.5)} '
+        'lines shown $linesShown before the break; break -> particles emitted=${debrisSpawned > debris0} '
+        '(${debrisSpawned - debris0} cubes), sfx family=$lastBreakFamily');
+    world.setBlock(cell, stone);
+    // 5. footsteps over 5 m
+    final steps0 = player.stepsTaken;
+    final walk = await _stage22Walk(Vector3(sx - 6.5, y + 0.1, sz + 12.5), sx - 1.5, 120, false);
+    debugPrint('[probe] stage32 footsteps: walked ${(walk.x - (sx - 6.5)).toStringAsFixed(1)} m -> steps=${player.stepsTaken - steps0} (9-13)');
+    // 6. the daylight rule: sun, roof, water
+    _stage31Fill(IVec3(sx + 11, y + 4, sz + 12), IVec3(sx + 13, y + 4, sz + 14), stone);
+    _stage31Fill(IVec3(sx + 6, y0 - 1, sz + 12), IVec3(sx + 8, y0 - 1, sz + 14), stone);
+    _stage31Fill(IVec3(sx + 6, y0, sz + 12), IVec3(sx + 8, y0, sz + 14), Blocks.indexOf('water'));
+    await _stage31Idle();
+    final sun = sp.forceSpawn('zombie', Vector3(sx + 2.5, y + 0.1, sz + 13.5));
+    final roof = sp.forceSpawn('zombie', Vector3(sx + 12.5, y + 0.1, sz + 13.5));
+    final pool = sp.forceSpawn('zombie', Vector3(sx + 7.5, y0 + 0.1, sz + 13.5));
+    for (final m in [sun, roof, pool]) {
+      m.stun(999.0, false);
+    }
+    await _stage28Settle(1.2);
+    int headSky(Mob m) => world.lightAt(IVec3.floor(m.position + Vector3(0, 1.5, 0))).sky;
+    debugPrint('[probe] stage32 daylight: zombie in sun burning=${sun.burning}, zombie under roof burning=${roof.burning}, '
+        'zombie in water burning=${pool.burning} (head sky ${headSky(sun)} / ${headSky(roof)} / ${headSky(pool)}, in_water=${pool.inWater}, '
+        'day factor ${dayFactor.toStringAsFixed(2)})');
+    roof.removed = true;
+    pool.removed = true;
+    // 7. the death clock: drops at t=0, freed after the fall (0.4 s) and the fade (0.3 s)
+    sun.probeDrops = const {'apple': [1, 1]};
+    final drops0 = drops.length;
+    sun.takeDamage(1.0e9, player.position, 0.0, player);
+    final dropsAtZero = drops.length > drops0;
+    var deathTicks = 0;
+    await _stage28Until(() {
+      deathTicks += 1;
+      return !mobs.contains(sun);
+    }, 3.0);
+    debugPrint('[probe] stage32 death anim: zombie killed -> freed after ${(deathTicks / 60.0).toStringAsFixed(2)} s (0.6-0.9), '
+        'drops spawned at t=0=$dropsAtZero');
+    // 8. the HUD: two apple toasts merge; a low HP pulses the vignette
+    hud.toasts.clear(); // a stray pickup from the walk must not merge into the probe's toast
+    hud.addPickup('apple', 3);
+    final first = hud.toastTexts();
+    hud.addPickup('apple', 3);
+    final merged = hud.toastTexts();
+    final hpWas = player.hp;
+    player.hp = player.maxHp * 0.1;
+    await nextFrame();
+    final pulsing = hud.lowHpPulsing();
+    player.hp = hpWas;
+    debugPrint("[probe] stage32 hud: pickup toast merged '${first.isEmpty ? '' : first[0]}' -> '${merged.isEmpty ? '' : merged[0]}'="
+        '${merged.length == 1 && merged[0] == '+6 Apple'}; low hp vignette pulsing=$pulsing');
+    // The captures.
+    final shot = _arg('--shot=', '');
+    if (shot == 'combat') {
+      player.setFirstPerson(false);
+      _probePlace(Vector3(sx + 8.5, y + 0.1, sz + 8.5));
+      player.setLook(0.0, -12.0 * math.pi / 180.0);
+      for (var i = 0; i < 20; i++) {
+        await nextFrame();
+      }
+      final target = sp.forceSpawn('zombie', player.position + ahead * 2.4);
+      target.stun(999.0, false);
+      target.hp = 1.0e9;
+      target.maxHp = 1.0e9;
+      await _ticks(1);
+      player.probeStrike();
+      player.takeDamage(3.0, 'zombie', target.position);
+      // After the hit: a side step so the two bodies do not line up.
+      player.position = player.position + Vector3(-ahead.z, 0, ahead.x) * -1.3;
+      // One tick, not Godot's six frames: the capture itself lands a few frames later and the flash is 100 ms.
+      await _ticks(1);
+      final cam = player.camera();
+      final view = WidgetsBinding.instance.platformDispatcher.views.first;
+      final vs = Size(view.physicalSize.width / view.devicePixelRatio, view.physicalSize.height / view.devicePixelRatio);
+      debugPrint("[probe] stage32 capture 'combat': zombie at ${target.position} vel ${target.velocity} (screen ${cam.worldToScreen(target.centre(), vs)}), "
+          'player screen ${cam.worldToScreen(player.centre(), vs)}, vignette ${hud.vignetteAlpha().toStringAsFixed(2)}, '
+          'player flash ${player.model.isFlashing()}, numbers ${[for (final n in damageNumbers) '${n.text} age ${n.age.toStringAsFixed(2)} at ${cam.worldToScreen(n.pos, vs)}']}');
+    } else if (shot == 'mining') {
+      player.setFirstPerson(true);
+      _probePlace(Vector3(sx + 8.5, y + 0.1, sz + 8.5));
+      player.setLook(0.0, -16.0 * math.pi / 180.0);
+      world.setBlock(IVec3(sx + 8, y, sz + 5), stone); // a raised block shows three faces of cracks
+      player.inventory.add('iron_pickaxe', 1);
+      for (var i = 0; i < 9; i++) {
+        if (player.inventory.idAt(i) == 'iron_pickaxe') player.selectedSlot = i;
+      }
+      for (var i = 0; i < 20; i++) {
+        await nextFrame();
+      }
+      await _stage31Idle();
+      input.probeHold(GameAction.attack, true);
+      // Godot holds 40 frames; here the hold ends once the crack reaches its third stage, so the few frames
+      // the capture still takes cannot finish the block (iron on stone is ${Items.mineTime('iron_pickaxe', stone)} s).
+      await _stage28Until(() => player.mineProgress >= 0.6, 3.0);
+      debugPrint("[probe] stage32 capture 'mining': aiming ${player.isAiming} at ${player.aimedBlock} progress "
+          '${player.mineProgress.toStringAsFixed(2)} crack alpha ${player.crackAlpha().toStringAsFixed(2)} chips in the air $debrisAlive');
+    } else if (shot == 'seam') {
+      // Flutter-only capture: the torch back at night, seen from above, its pool
+      // of light running across the border at x = sx (a seam would cut it at
+      // that column).
+      timeOfDay = 0.0;
+      _updateSky();
+      world.setBlock(torch, Blocks.indexOf('torch'));
+      flyMode = true;
+      player.setFirstPerson(true);
+      final eye = Vector3(sx + 0.5, y + 7.0, sz + 11.5);
+      final look = Vector3(sx + 0.5, y.toDouble(), sz + 3.5) - eye;
+      player.setLook(math.atan2(-look.x, -look.z), math.atan2(look.y, math.sqrt(look.x * look.x + look.z * look.z)));
+      await _stage31Idle();
+      for (var i = 0; i < 10; i++) {
+        _probePlace(eye);
+        await nextFrame();
+      }
+      _pinCameraTo = () => eye.clone();
+      final row = [for (var x = sx - 6; x <= sx + 12; x++) world.lightAt(IVec3(x, y, sz + 3)).block];
+      debugPrint("[probe] stage32 capture 'seam': block light along z=${sz + 3} from x=${sx - 6} to ${sx + 12} (border at $sx): $row");
+    }
+    spawner = sp;
   }
 
   // --- stage 31: voxel light + AO, light-gated spawns, A* for walkers -----------------

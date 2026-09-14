@@ -80,6 +80,58 @@ class Mob extends VoxelBody {
   double _flap = 0.0;
   PhysicallyBasedMaterial? _tint;
   final int instanceId = _nextId++;
+
+  // Stage 32: combat feel and the classic daylight rule.
+  double _freeze = 0.0; // hit-stop: the pose holds for 60 ms
+  double _flash = 0.0; // the white hit tint, 100 ms
+  double _burnTimer = 0.0;
+  double _stagger = 0.0; // knockback window: the steering lets the shove carry
+  bool burning = false; // a zombie / skeleton under the noon sky, out of water
+  double _breath = 1.0;
+  double _toppleX = 0.0; // the death: the body tips over on its local X
+  double _toppleY = 0.0;
+  PhysicallyBasedMaterial? _fade; // the death fade
+  static const double knockbackSpeed = 4.0;
+  static const double knockbackUp = 3.0;
+  static const double staggerSeconds = 0.3;
+  static const double hitStop = 0.06;
+  static const double hitFlash = 0.1;
+  static const List<String> burnsInDaylightIds = ['zombie', 'skeleton', 'dark_skeleton'];
+  static const double headTurnRange = 6.0;
+  static const double toppleSeconds = 0.4;
+  static const double fadeSeconds = 0.3;
+
+  /// Stage 32, probe only: drops rolled in place of the species' own (Godot's
+  /// probe duplicates the species dictionary; a Dart `SpeciesDef` is const).
+  Map<String, List<int>>? probeDrops;
+
+  /// Stage 32: what a melee hit adds to the victim's velocity: [knockback] away
+  /// from [from] on the ground plane (at least [knockbackSpeed]; a projectile's
+  /// or an explosion's extra is above that) and [knockbackUp] up.
+  static Vector3 knockbackVelocity(Vector3 victim, Vector3 from, double knockback) {
+    final push = victim - from;
+    push.y = 0.0;
+    if (push.length2 > 0) push.normalize();
+    return push * math.max(knockback, knockbackSpeed) + Vector3(0, knockbackUp, 0);
+  }
+
+  /// Stage 32: the daylight rule. A zombie, skeleton or wither skeleton whose
+  /// head cell reads full sky while the day factor is at least 0.9 burns, unless
+  /// it is in water or tamed (the underworld has no sky, so nothing burns there).
+  static bool burnsInDaylight(String speciesId, {required bool inWater, required bool tamed, required int headSky, required double dayFactor}) =>
+      burnsInDaylightIds.contains(speciesId) && !inWater && !tamed && headSky >= 15 && dayFactor >= 0.9;
+
+  /// Stage 32: which hurt voice a species uses: flying, undead, large (1.5 m or
+  /// a boss) or small.
+  String hurtGroup() {
+    if (species.flying) return 'flying';
+    if (burnsInDaylightIds.contains(species.id) || species.ghost || species.id == 'mummy_king') return 'undead';
+    if (height >= 1.5 || isBoss) return 'large';
+    return 'small';
+  }
+
+  bool isFrozen() => _freeze > 0.0;
+  bool isFlashing() => _flash > 0.0;
   static int _nextId = 1;
 
   /// Stage 26: a trader's three offers and the spot it wanders around (a
@@ -285,7 +337,10 @@ class Mob extends VoxelBody {
         ..alphaMode = AlphaMode.blend;
     }
     _tint?.baseColorFactor = color;
-    final Material material = _tint ?? VoxelMeshBuilder.material();
+    if (_flash <= 0.0) _applyOverride(_tint ?? VoxelMeshBuilder.material());
+  }
+
+  void _applyOverride(Material material) {
     for (final part in _parts.values) {
       for (final child in part.node.children) {
         final mesh = child.mesh;
@@ -293,6 +348,7 @@ class Mob extends VoxelBody {
         for (final prim in mesh.primitives) {
           prim.material = material;
         }
+        refreshMeshMaterials(child); // stage 32: a material swap reaches the render item only this way
       }
     }
   }
@@ -497,7 +553,15 @@ class Mob extends VoxelBody {
     final push = position - from;
     push.y = 0.0;
     if (push.length2 > 0) push.normalize();
-    velocity += push * knockback + Vector3(0, 4.0, 0);
+    // Stage 32: every hit shoves the victim 4 m/s away and 3 m/s up, holds its
+    // pose for 60 ms and tints it white for 100 ms; the hurt voice is the
+    // species group's.
+    velocity += knockbackVelocity(position, from, knockback);
+    _freeze = hitStop;
+    _flash = hitFlash;
+    _stagger = staggerSeconds;
+    _applyOverride(PlayerModel.flashMaterial());
+    Sfx.play('hurt_${hurtGroup()}', -8.0);
     if (species.trader) {
       hp = maxHp;
       return;
@@ -532,7 +596,7 @@ class Mob extends VoxelBody {
     }
     player.gainXp((species.xp * (1.0 + (mobLevel - 1) * 0.15) * (affix != '' ? 2.5 : 1.0)).toInt());
     main.quests.onKill(species.id);
-    for (final e in species.drops.entries) {
+    for (final e in (probeDrops ?? species.drops).entries) {
       final n = e.value[0] + main.random.nextInt(e.value[1] - e.value[0] + 1);
       if (n > 0) main.spawnDrop(centre(), e.key, n);
     }
@@ -548,20 +612,74 @@ class Mob extends VoxelBody {
     // the tick.
     if (species.splits != '' && main.spawner != null) main.pendingSplits.add(this);
     main.spawnEffect(centre(), Vector3(0.9, 0.3, 0.3), 1.0);
+    // Stage 32: the body topples 90 degrees over 0.4 s, fades over 0.3 s, then
+    // goes; the drops above already fell at t=0.
     _deathTimer = 0.0;
+    _flash = 0.0;
+    barVisible = false;
+    _fade = PhysicallyBasedMaterial()
+      ..roughnessFactor = 0.9
+      ..metallicFactor = 0.0
+      ..alphaMode = AlphaMode.blend
+      ..baseColorFactor = species.ghost ? ghostTint.clone() : Vector4(1, 1, 1, 1);
+    _applyOverride(_fade!);
+  }
+
+  /// Stage 32: the classic rule, checked twice a second from the cell at the
+  /// head: 0.5 HP per half second, orange, embers.
+  void _burnTick(double dt) {
+    _burnTimer -= dt;
+    if (_burnTimer > 0.0) return;
+    _burnTimer = 0.5;
+    final was = burning;
+    burning = false;
+    if (burnsInDaylightIds.contains(species.id) && !inWater && !tamed) {
+      final head = IVec3(position.x.floor(), (position.y + height - 0.15).floor(), position.z.floor());
+      burning = burnsInDaylight(species.id, inWater: inWater, tamed: tamed, headSky: world.lightAt(head).sky, dayFactor: main.dayFactor);
+    }
+    if (burning) {
+      if (!was) _setTint(Vector4(1.0, 0.55, 0.15, 0.85));
+      hp -= 0.5;
+      hurt = 0.25;
+      main.spawnDebris(centre() + Vector3(0, height * 0.3, 0), Vector3(1.0, 0.5, 0.1), 1, 0.6);
+      if (hp <= 0.0) _die();
+    } else if (was && stunned <= 0.0) {
+      _setTint(Vector4(1, 1, 1, 1));
+    }
+  }
+
+  /// Stage 32: the hit-stop, the stagger and the flash run down; the flash gives
+  /// the tint back when it ends.
+  void _tickFeel(double dt) {
+    _freeze = math.max(_freeze - dt, 0.0);
+    _stagger = math.max(_stagger - dt, 0.0);
+    if (_flash > 0.0) {
+      _flash -= dt;
+      if (_flash <= 0.0) {
+        _flash = 0.0;
+        _applyOverride(_tint ?? VoxelMeshBuilder.material());
+      }
+    }
   }
 
   void update(double dt) {
     if (state == MobState.dead) {
+      // Stage 32: topple (linear, Godot's EASE_IN on a linear transition), then fade.
       _deathTimer += dt;
-      final t = (_deathTimer / 0.3).clamp(0.0, 1.0);
-      node.scale = Vector3(lerpd(1.0, 1.2, t), lerpd(1.0, 0.05, t), lerpd(1.0, 1.2, t));
-      if (_deathTimer >= 0.3) removed = true;
+      final t = (_deathTimer / toppleSeconds).clamp(0.0, 1.0);
+      _toppleX = -math.pi / 2 * t;
+      _toppleY = height * 0.5 * t;
+      final f = ((_deathTimer - toppleSeconds) / fadeSeconds).clamp(0.0, 1.0);
+      final fade = _fade;
+      if (fade != null) fade.baseColorFactor = Vector4(fade.baseColorFactor.x, fade.baseColorFactor.y, fade.baseColorFactor.z, (species.ghost ? ghostTint.w : 1.0) * (1.0 - f));
+      _applyModel();
+      if (_deathTimer >= toppleSeconds + fadeSeconds) removed = true;
       return;
     }
     if (puppet) {
       _modelYaw = lerpAngle(_modelYaw, _puppetYaw, dt * 10.0);
       hurt = math.max(hurt - dt, 0.0);
+      _tickFeel(dt);
       _applyModel();
       return;
     }
@@ -572,6 +690,9 @@ class Mob extends VoxelBody {
     _attackCd = math.max(_attackCd - dt, 0.0);
     _hopCd = math.max(_hopCd - dt, 0.0);
     hurt = math.max(hurt - dt, 0.0);
+    _tickFeel(dt);
+    _burnTick(dt);
+    if (state == MobState.dead) return; // burnt to death this tick
     _timer -= dt;
     _pathTimer -= dt;
     if (sheared) {
@@ -806,7 +927,8 @@ class Mob extends VoxelBody {
       }
       velocity.x = lerpd(velocity.x, !onFloor ? _dir.x * speed : 0.0, dt * 3.0);
       velocity.z = lerpd(velocity.z, !onFloor ? _dir.z * speed : 0.0, dt * 3.0);
-    } else {
+    } else if (_stagger <= 0.0) {
+      // Stage 32: a shoved body carries for 0.3 s before it steers again.
       velocity.x = lerpd(velocity.x, _dir.x * speed, dt * 8.0);
       velocity.z = lerpd(velocity.z, _dir.z * speed, dt * 8.0);
     }
@@ -864,8 +986,26 @@ class Mob extends VoxelBody {
   }
 
   void _animate(double dt) {
+    if (_freeze > 0.0) {
+      _applyModel(); // stage 32: hit-stop, the pose holds (the body still moves)
+      return;
+    }
     final sp = math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
     _phase += dt * sp * 2.2;
+    // Stage 32: idle life. Every body breathes (2% on the height); a passive
+    // mob's head turns toward the player within 6 m.
+    if (species.body != 'blob' && !species.explodes) _breath = 1.0 + 0.02 * math.sin(_age * 2.4);
+    final head = _parts['head'];
+    if (head != null && !species.hostile) {
+      final to = player.centre() - centre();
+      var want = 0.0;
+      if (math.sqrt(to.x * to.x + to.z * to.z) < headTurnRange) {
+        want = math.atan2(-to.x, -to.z) - _modelYaw;
+        want = (want + math.pi) % (math.pi * 2) - math.pi;
+        want = want.clamp(-1.2, 1.2);
+      }
+      head.ry = lerpAngle(head.ry, want, dt * 5.0);
+    }
     final a = sp > 0.3 ? math.sin(_phase) * 0.7 : 0.0;
     for (var i = 0; i < 8; i++) {
       final p = _parts['leg$i'];
@@ -893,10 +1033,10 @@ class Mob extends VoxelBody {
       p.apply();
     }
     final sq = species.body == 'blob' ? _squash : 1.0;
-    node.rotation = Quaternion.axisAngle(Vector3(0, 1, 0), _modelYaw);
+    node.rotation = _toppleX == 0.0 ? Quaternion.axisAngle(Vector3(0, 1, 0), _modelYaw) : eulerYXZ(_toppleX, _modelYaw, 0);
     final ms = _modelScale * affixScale;
-    node.scale = Vector3(ms / math.sqrt(sq), ms * sq, ms / math.sqrt(sq));
-    node.position = position + Vector3(_shakeX, 0, 0);
+    node.scale = Vector3(ms / math.sqrt(sq), ms * sq * _breath, ms / math.sqrt(sq));
+    node.position = position + Vector3(_shakeX, _toppleY, 0);
   }
 
   double modelYaw() => _modelYaw;
@@ -953,6 +1093,11 @@ class Mob extends VoxelBody {
     if (newHp < hp) {
       hurt = 0.25;
       barVisible = true;
+      // Stage 32: a puppet feels the hit too; the knockback rides the host's pose.
+      _freeze = hitStop;
+      _flash = hitFlash;
+      _applyOverride(PlayerModel.flashMaterial());
+      Sfx.play('hurt_${hurtGroup()}', -8.0);
     }
     hp = newHp;
     maxHp = newMax;

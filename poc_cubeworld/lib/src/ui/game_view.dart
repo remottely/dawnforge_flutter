@@ -64,7 +64,6 @@ class _GameSessionState extends State<_GameSession> {
   final GlobalKey _boundary = GlobalKey();
   final Minimap _minimap = Minimap();
   final WorldMap _worldMap = WorldMap();
-  Camera? _camera;
   String? _error;
 
   @override
@@ -166,14 +165,14 @@ class _GameSessionState extends State<_GameSession> {
                   children: [
                     SceneView(
                       game.scene,
-                      cameraBuilder: (elapsed) => _camera = game.player.camera(),
+                      cameraBuilder: (elapsed) => game.player.camera(),
                       onTick: (elapsed, dt) {
                         game.onFrame(dt);
                         _minimap.update(dt, game);
                         _worldMap.update(dt, game);
                       },
                     ),
-                    CustomPaint(painter: HudPainter(game, _camera, _minimap, _worldMap, repaint: game.frame)),
+                    CustomPaint(painter: HudPainter(game, _minimap, _worldMap, repaint: game.frame)),
                     const TutorialCard(), // stage 30
                     ?overlay,
                   ],

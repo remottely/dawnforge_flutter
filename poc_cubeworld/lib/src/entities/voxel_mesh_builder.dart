@@ -185,3 +185,14 @@ double lerpAngle(double from, double to, double t) {
 }
 
 double lerpd(double a, double b, double t) => a + (b - a) * t;
+
+/// Stage 32: flutter_scene 0.23 copies a primitive's material into its render
+/// item when the mesh is assigned to the node, so writing `primitive.material`
+/// alone never reaches the screen. Re-assigning the same primitives as a new
+/// [Mesh] keeps the render items (same geometry) and refreshes their materials.
+/// Call after swapping the materials of [n]'s mesh.
+void refreshMeshMaterials(Node n) {
+  final mesh = n.mesh;
+  if (mesh == null) return;
+  n.mesh = Mesh.primitives(primitives: mesh.primitives);
+}
