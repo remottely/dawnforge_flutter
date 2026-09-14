@@ -66,6 +66,19 @@ the Godot POC's, so the two roadmaps line up.
 
 ## Session log
 
+- **2026-09-14** — probe determinism. Two probes drifted from their rows because of what stage 32 added around them.
+  - **`--stage29` counted a third blaze now and then.** The count takes every blaze in `mobs`, as Godot's does
+    (`main.gd` `_probe_stage29`). The fortress spawns exactly two, but the underworld spawner could add one more during
+    the probe's teleport waits. Nulling `spawner`, the port's usual stand-in for Godot's `set_process(false)`, would
+    have silenced the fortress too, because `_checkFortress` spawns its blazes through `forceSpawn`. So `Game` gained
+    `spawnerPaused`: natural spawns stop and `forceSpawn` keeps working. The probe pauses from the trip down to the
+    trip home. Two runs read `blazes=2`, and every other figure of the row came back (1557 bricks, the lord at 308 HP,
+    soul sand 2.30, edits 436 / 59). Godot's probe has the same latent flake; it was not touched.
+  - **`--strike` read 17.5 -> 7.5, and once 17.5 -> 2.5.** Since stage 32 a zombie under the morning sun burns
+    0.5 HP per half second before the swing, and one melee hit in ten is a x1.5 critical. The probe now runs at night
+    unless `--time=` is given, and sets `critsEnabled = false`. It reads 18 -> 8 at 2.01 m, as its row does. Godot's
+    `--strike` is the same code, so it carries both latent flakes.
+
 - **2026-09-14** — the render was mirrored left-right against Godot since the first port commit. flutter_scene's
   `PerspectiveCamera` builds `right = up x forward` and projects +forward into the screen, a left-handed view; the port
   fed it Godot's right-handed world unchanged, so world +X landed on screen-LEFT at yaw 0. `--stage22` and `--stage27`

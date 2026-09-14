@@ -209,6 +209,15 @@ class Game extends ChangeNotifier {
   String lastBreakFamily = '';
   static const double critChance = 0.1;
   static const double critMult = 1.5;
+
+  /// Off only for a probe that measures one exact hit (`--strike`): the 10%
+  /// roll would make its damage x1.5 one run in ten.
+  bool critsEnabled = true;
+
+  /// Godot's `spawner.set_process(false)`: no natural spawns while true, but
+  /// `forceSpawn` (the fortress blazes, a probe's own mobs) still works, which
+  /// nulling [spawner] would not allow.
+  bool spawnerPaused = false;
   static CuboidGeometry? _debrisCube;
 
   /// Stage 26: the villager whose trade screen is open, the rows flashing green
@@ -709,7 +718,7 @@ class Game extends ChangeNotifier {
     }
     weather.process(dt);
     _tickVisuals(dt);
-    spawner?.update(dt);
+    if (!spawnerPaused) spawner?.update(dt);
     // Stage 25: the tick's flow edits leave as one `blocks` message.
     Net.instance.beginBlockBatch();
     world.tickFlow(dt);
@@ -1369,7 +1378,7 @@ class Game extends ChangeNotifier {
   /// Stage 32: the 10% critical roll every melee hit and arrow makes (counted
   /// for the probe).
   bool rollCrit() {
-    if (!rollCritWith(random)) return false;
+    if (!critsEnabled || !rollCritWith(random)) return false;
     crits += 1;
     return true;
   }
@@ -1971,6 +1980,15 @@ class Game extends ChangeNotifier {
     }
     Mob? dummy;
     if (_hasArg('--strike') && !net.isClient) {
+      // The row reads 18 -> 8: one plain swing of 10. Since stage 32 a zombie
+      // burns in daylight (0.5 per half second before the swing) and one hit in
+      // ten is a critical, so the probe runs at night unless --time= is given
+      // and rolls no critical. Godot's probe has both latent flakes.
+      if (_arg('--time=', '') == '') {
+        timeOfDay = 0.0;
+        _updateSky();
+      }
+      critsEnabled = false;
       dummy = Mob();
       dummy.setupMob(world, this, player, Species.def('zombie'));
       final ahead = player.aimDirection().clone()..y = 0;
@@ -4486,6 +4504,12 @@ class Game extends ChangeNotifier {
       _pinCameraTo = () => eye.clone();
       return false;
     }
+    // No natural spawns from the trip down until the trip home: the count below
+    // must see the fortress's two blazes only, and the underworld spawner can add
+    // a third during the teleport waits (Godot's probe has the same latent flake).
+    // A capture that returns early keeps them off, which only keeps strays out of
+    // its frame.
+    spawnerPaused = true;
     // 3. Two seconds inside the portal: the trip, the arrival, the safe spot.
     final went = await _stage29StandInPortal(cell);
     final arrived = await _stage29Arrive(40.0);
@@ -4641,6 +4665,7 @@ class Game extends ChangeNotifier {
       player.effects.clear('burning');
       shooter.removed = true;
     }
+    spawnerPaused = false;
     // 9. Home through the return portal.
     if (back.y >= 0) {
       player.hp = player.maxHp;
