@@ -66,12 +66,24 @@ class VoxelWorld {
   late final UnlitMaterial matGlow;
 
   /// Stage 27: redstone-lite, host-only like the flow ([flowEnabled] gates both).
-  late final Circuits circuits;
+  /// Stage 29: rebuilt on a dimension switch, so not final.
+  late Circuits circuits;
+
+  /// Stage 29: the ONE dimension this world holds (0 overworld, 1 underworld).
+  /// A travel keeps the live edits under [_editsByDimension] for the dimension
+  /// left, drops every chunk and regenerates in the other one; results of jobs
+  /// started before the switch carry a stale [_genEpoch] and are dropped.
+  static const int dimOverworld = 0;
+  static const int dimUnderworld = 1;
+  static const int structFortress = 9;
+  int dimension = dimOverworld;
+  final Map<int, Map<ChunkPos, Map<int, int>>> _editsByDimension = {};
+  int _genEpoch = 0;
 
   final Set<ChunkPos> _genInflight = {};
   final Set<ChunkPos> _meshInflight = {};
   final Map<ChunkPos, ChunkMeshResult> _surfaceReady = {};
-  final Map<ChunkPos, Map<int, int>> _edits = {};
+  Map<ChunkPos, Map<int, int>> _edits = {};
 
   static const List<ChunkPos> ring = [
     (x: 0, z: 0), (x: -1, z: 0), (x: 1, z: 0), (x: 0, z: -1), (x: 0, z: 1),
@@ -107,6 +119,8 @@ class VoxelWorld {
 
   int surfaceHeight(int x, int z) => _generator.surfaceHeight(x, z);
   int biomeAt(int x, int z) => _generator.biomeAt(x, z);
+
+  static ChunkPos chunkOfVec(Vector3 v) => (x: (v.x / sizeX).floor(), z: (v.z / sizeZ).floor());
 
   static ChunkPos chunkOf(IVec3 b) => (x: (b.x / sizeX).floor(), z: (b.z / sizeZ).floor());
   static ChunkPos chunkOfXZ(int x, int z) => (x: (x / sizeX).floor(), z: (z / sizeZ).floor());
@@ -189,25 +203,29 @@ class VoxelWorld {
         ringReady = false;
         if (!_genInflight.contains(n)) {
           _genInflight.add(n);
-          pool.generate(n.x, n.z).then((blocks) {
+          final epoch = _genEpoch;
+          pool.generate(n.x, n.z, dimension).then((blocks) {
+            if (epoch != _genEpoch) return; // generated for the dimension we left (stage 29)
             _genInflight.remove(n);
             if (_pool != pool) return;
             _applyEdits(n, blocks);
             chunks[n] = blocks;
           }).catchError((Object e) {
-            _genInflight.remove(n);
+            if (epoch == _genEpoch) _genInflight.remove(n);
           });
         }
       }
       if (!ringReady) continue;
       _meshInflight.add(pos);
       final vols = [for (final o in ring) chunks[(x: pos.x + o.x, z: pos.z + o.z)]];
+      final epoch = _genEpoch;
       pool.mesh(pos.x, pos.z, vols).then((surface) {
+        if (epoch != _genEpoch) return;
         _meshInflight.remove(pos);
         if (_pool != pool) return;
         _surfaceReady[pos] = surface;
       }).catchError((Object e) {
-        _meshInflight.remove(pos);
+        if (epoch == _genEpoch) _meshInflight.remove(pos);
       });
     }
   }
@@ -498,31 +516,83 @@ class VoxelWorld {
     _center = (x: 999999, z: 999999);
   }
 
-  List<StructureAt> structuresNear(ChunkPos pos) => _generator.structuresNear(pos.x, pos.z);
+  List<StructureAt> structuresNear(ChunkPos pos) => _generator.structuresNearIn(pos.x, pos.z, dimension);
+
+  // --- stage 29: dimensions ---------------------------------------------------------
+
+  /// Leave every chunk of the current dimension behind (its edits kept under
+  /// its own key) and start generating [d]. Jobs in flight keep the old epoch
+  /// and are dropped when they land.
+  void switchDimension(int d) {
+    if (d == dimension) return;
+    _editsByDimension[dimension] = _edits;
+    _edits = _editsByDimension[d] ?? {};
+    _editsByDimension[d] = _edits;
+    dimension = d;
+    _generator.setDimension(d);
+    _genEpoch += 1;
+    _genInflight.clear();
+    _meshInflight.clear();
+    _flowQueue.clear();
+    _flowDist.clear();
+    final onTnt = circuits.onTntPowered;
+    circuits = Circuits(this)..onTntPowered = onTnt;
+    reset();
+  }
+
+  /// Edited cells of dimension [d] (the live one reads the live map).
+  int editCountIn(int d) {
+    final edits = d == dimension ? _edits : (_editsByDimension[d] ?? const {});
+    return edits.values.fold(0, (a, e) => a + e.length);
+  }
+
+  /// An edit for a dimension that is not loaded (a host broadcast while this
+  /// peer is elsewhere): it waits in that dimension's delta and lands when its
+  /// chunk generates.
+  void storeEdit(int d, IVec3 b, int id) {
+    if (d == dimension) {
+      setBlock(b, id);
+      return;
+    }
+    final edits = _editsByDimension[d] ??= {};
+    final pos = chunkOf(b);
+    (edits[pos] ??= {})[index(b.x - pos.x * sizeX, b.y, b.z - pos.z * sizeZ)] = id;
+  }
 
   // --- persistence (edit delta) ---------------------------------------------------
 
   static const int saveMagic = 0x4342574F; // "CBWO"
-  static const int saveVersion = 1;
+
+  /// Version 2 (stage 29): the edit delta of every dimension, one block per
+  /// dimension after the seed. Version 1 (one delta) still loads as dimension 0.
+  static const int saveVersion = 2;
+  static const int saveDimensions = 2;
 
   Uint8List editsToBytes() {
-    var size = 4 + 4 + 8 + 4;
-    for (final e in _edits.values) {
-      size += 8 + 8 + 4 + e.length * 5;
+    _editsByDimension[dimension] = _edits;
+    var size = 4 + 4 + 8;
+    for (var dim = 0; dim < saveDimensions; dim++) {
+      size += 4;
+      for (final e in (_editsByDimension[dim] ?? const <ChunkPos, Map<int, int>>{}).values) {
+        size += 8 + 8 + 4 + e.length * 5;
+      }
     }
     final d = ByteData(size);
     var o = 0;
     d.setUint32(o, saveMagic, Endian.little); o += 4;
     d.setUint32(o, saveVersion, Endian.little); o += 4;
     d.setInt64(o, seedValue, Endian.little); o += 8;
-    d.setUint32(o, _edits.length, Endian.little); o += 4;
-    for (final e in _edits.entries) {
-      d.setInt64(o, e.key.x, Endian.little); o += 8;
-      d.setInt64(o, e.key.z, Endian.little); o += 8;
-      d.setUint32(o, e.value.length, Endian.little); o += 4;
-      for (final b in e.value.entries) {
-        d.setUint32(o, b.key, Endian.little); o += 4;
-        d.setUint8(o, b.value); o += 1;
+    for (var dim = 0; dim < saveDimensions; dim++) {
+      final all = _editsByDimension[dim] ?? const <ChunkPos, Map<int, int>>{};
+      d.setUint32(o, all.length, Endian.little); o += 4;
+      for (final e in all.entries) {
+        d.setInt64(o, e.key.x, Endian.little); o += 8;
+        d.setInt64(o, e.key.z, Endian.little); o += 8;
+        d.setUint32(o, e.value.length, Endian.little); o += 4;
+        for (final b in e.value.entries) {
+          d.setUint32(o, b.key, Endian.little); o += 4;
+          d.setUint8(o, b.value); o += 1;
+        }
       }
     }
     return d.buffer.asUint8List();
@@ -535,22 +605,29 @@ class VoxelWorld {
     var o = 0;
     if (d.getUint32(o, Endian.little) != saveMagic) return null;
     o += 4;
-    if (d.getUint32(o, Endian.little) != saveVersion) return null;
+    final version = d.getUint32(o, Endian.little);
+    if (version != saveVersion && version != 1) return null;
     o += 4;
     final seed = d.getInt64(o, Endian.little); o += 8;
-    final n = d.getUint32(o, Endian.little); o += 4;
-    _edits.clear();
-    for (var c = 0; c < n; c++) {
-      final cx = d.getInt64(o, Endian.little); o += 8;
-      final cz = d.getInt64(o, Endian.little); o += 8;
-      final count = d.getUint32(o, Endian.little); o += 4;
-      final edits = <int, int>{};
-      for (var e = 0; e < count; e++) {
-        final i = d.getUint32(o, Endian.little); o += 4;
-        edits[i] = d.getUint8(o); o += 1;
+    _editsByDimension.clear();
+    for (var dim = 0; dim < (version >= 2 ? saveDimensions : 1); dim++) {
+      final all = <ChunkPos, Map<int, int>>{};
+      final n = d.getUint32(o, Endian.little); o += 4;
+      for (var c = 0; c < n; c++) {
+        final cx = d.getInt64(o, Endian.little); o += 8;
+        final cz = d.getInt64(o, Endian.little); o += 8;
+        final count = d.getUint32(o, Endian.little); o += 4;
+        final edits = <int, int>{};
+        for (var e = 0; e < count; e++) {
+          final i = d.getUint32(o, Endian.little); o += 4;
+          edits[i] = d.getUint8(o); o += 1;
+        }
+        all[(x: cx, z: cz)] = edits;
       }
-      _edits[(x: cx, z: cz)] = edits;
+      _editsByDimension[dim] = all;
     }
+    _edits = _editsByDimension[dimension] ?? {};
+    _editsByDimension[dimension] = _edits;
     return seed;
   }
 

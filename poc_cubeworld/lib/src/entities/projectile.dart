@@ -75,6 +75,8 @@ class Projectile {
         return Vector3(1.0, 0.45, 0.15);
       case 'frost':
         return Vector3(0.5, 0.8, 1.0);
+      case 'fire':
+        return Vector3(1.0, 0.35, 0.05); // stage 29: a blaze's fireball
     }
     return Vector3(0.5, 0.9, 0.4);
   }
@@ -121,6 +123,7 @@ class Projectile {
       position = from + dir * bestD;
       if (best is Player) {
         best.takeDamage(damage, kind, from);
+        if (kind == 'fire') best.applyEffect('burning', 4.0); // stage 29: a fireball sets its target alight
       } else if (best is Mob) {
         final owner = ownerNode;
         final ownerPos = owner is VoxelBody ? owner.position : (owner is Player ? owner.position : from);

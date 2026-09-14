@@ -133,6 +133,8 @@ class Items {
     add(const ItemDef(id: 'bucket', name: 'Bucket', kind: ItemKind.equipment, stack: 1, r: 0.80, g: 0.80, b: 0.83));
     add(const ItemDef(id: 'water_bucket', name: 'Water Bucket', kind: ItemKind.equipment, stack: 1, r: 0.25, g: 0.45, b: 0.80, liquid: 'water'));
     add(const ItemDef(id: 'lava_bucket', name: 'Lava Bucket', kind: ItemKind.equipment, stack: 1, r: 0.95, g: 0.45, b: 0.12, liquid: 'lava'));
+    // Stage 29: the flint and steel lights an obsidian frame into a portal.
+    add(const ItemDef(id: 'flint_and_steel', name: 'Flint and Steel', kind: ItemKind.equipment, stack: 1, r: 0.70, g: 0.70, b: 0.74));
 
     mat('stick', 'Stick', 0.60, 0.45, 0.25);
     mat('coal', 'Coal', 0.15, 0.15, 0.16);
@@ -154,6 +156,11 @@ class Items {
     mat('gem_shard', 'Gem Shard', 0.95, 0.35, 0.65);
     mat('wheat_seeds', 'Wheat Seeds', 0.55, 0.65, 0.30);
     mat('wheat', 'Wheat', 0.85, 0.72, 0.30);
+    // Stage 29: what the underworld yields.
+    mat('glowstone_dust', 'Glowstone Dust', 0.98, 0.88, 0.55);
+    mat('quartz', 'Quartz', 0.92, 0.90, 0.88);
+    mat('blaze_rod', 'Blaze Rod', 0.95, 0.65, 0.20);
+    mat('underworld_heart', 'Underworld Heart', 0.75, 0.15, 0.55);
 
     food('apple', 'Apple', 0.85, 0.20, 0.20, 3, 2.0);
     food('raw_beef', 'Raw Beef', 0.75, 0.30, 0.30, 2, 0.0);

@@ -42,6 +42,7 @@ class Music {
     'Frost': MoodDef([0, 2, 4, 7, 9], 58, 329.6, false, 0.35, false),
     'Marsh': MoodDef([0, 3, 5, 7, 10], 62, 174.6, false, 0.3, true),
     'Deep': MoodDef([0, 7], 50, 110.0, false, 0.0, true),
+    'Underworld': MoodDef([0, 1, 6], 40, 55.0, true, 0.15, true), // stage 29: a low tritone drone
   };
 
   /// The minor pentatonic on the same root.
@@ -66,9 +67,9 @@ class Music {
   String get currentMood => _mood;
 
   /// The mood name for where the player stands (pure; unit-tested).
-  static String moodFor(int biome, bool night, bool underground) {
-    var name = underground ? 'Deep' : (biomeMood[biome] ?? 'Meadow');
-    if (night && !underground) name += ' Night';
+  static String moodFor(int biome, bool night, bool underground, [bool underworld = false]) {
+    var name = underworld ? 'Underworld' : (underground ? 'Deep' : (biomeMood[biome] ?? 'Meadow'));
+    if (night && !underground && !underworld) name += ' Night';
     return name;
   }
 
@@ -81,8 +82,8 @@ class Music {
   }
 
   /// A change of mood starts a crossfade.
-  void setContext(int biome, bool night, bool underground) {
-    final name = moodFor(biome, night, underground);
+  void setContext(int biome, bool night, bool underground, [bool underworld = false]) {
+    final name = moodFor(biome, night, underground, underworld);
     if (name == _mood) return;
     _mood = name;
     onMoodChanged?.call(name);

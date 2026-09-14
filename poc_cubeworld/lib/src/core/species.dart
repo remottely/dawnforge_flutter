@@ -38,7 +38,15 @@ class SpeciesDef {
     this.biomeWeight = const {},
     this.splits = '',
     this.persistent = false,
+    this.projectile = '',
+    this.volley = 0,
   });
+
+  /// Stage 29: the kind of shot a ranged creature fires ("fire" sets the target
+  /// burning) and the bolts in a boss's volley. Data only, as in Godot: the
+  /// ranged AI still picks arrow / frost by body.
+  final String projectile;
+  final int volley;
 
   /// Stage 26: a multiplier on [weight] per biome (a swamp night crawls with
   /// spiders and slimes).
@@ -188,6 +196,24 @@ class Species {
     s(SpeciesDef(id: 'scorpion', name: 'Scorpion', hp: 14, damage: 5, speed: 4.0, hostile: true, xp: 12, body: 'spider',
         halfWidth: 0.5, height: 0.6, colors: [_c(0.65, 0.45, 0.20), _c(0.35, 0.20, 0.10)],
         drops: {'gem_shard': [0, 1], 'string': [0, 2]}, biomes: [4], day: true, weight: 10, effect: 'poison'));
+    // Stage 29: the underworld's three creatures (biome 9, spawned any hour) and
+    // its boss. The blaze and the Underworld Lord shoot `fire` projectiles that
+    // set the target burning; the lord's `volley` is five bolts every four
+    // seconds. The heart is not a drop: it comes from the fortress core once the
+    // lord is dead.
+    s(SpeciesDef(id: 'blaze', name: 'Blaze', hp: 20, damage: 3, speed: 3.6, hostile: true, ranged: true, flying: true, projectile: 'fire', xp: 18, body: 'blob',
+        halfWidth: 0.35, height: 0.9, colors: [_c(0.95, 0.65, 0.20)], drops: {'blaze_rod': [0, 2], 'glowstone_dust': [0, 1]},
+        biomes: [9], day: true, weight: 16, effect: 'burning'));
+    s(SpeciesDef(id: 'dark_skeleton', name: 'Wither Skeleton', hp: 30, damage: 5, speed: 3.0, hostile: true, xp: 22, body: 'humanoid',
+        halfWidth: 0.3, height: 2.0, colors: [_c(0.20, 0.18, 0.20), _c(0.15, 0.13, 0.15), _c(0.12, 0.10, 0.12)],
+        drops: {'bone': [1, 3], 'coal': [0, 2], 'quartz': [0, 1]}, biomes: [9], day: true, weight: 14, effect: 'wither'));
+    s(SpeciesDef(id: 'magma_cube', name: 'Magma Cube', hp: 16, damage: 3, speed: 3.0, hostile: true, hops: true, xp: 12, body: 'blob',
+        halfWidth: 0.5, height: 1.0, colors: [_c(0.55, 0.18, 0.10)], drops: {'blaze_rod': [0, 1], 'magic_dust': [0, 1]},
+        biomes: [9], day: true, weight: 14, effect: 'burning'));
+    s(SpeciesDef(id: 'underworld_lord', name: 'Underworld Lord', hp: 200, damage: 8, speed: 3.2, hostile: true, ranged: true, flying: true, projectile: 'fire', volley: 5,
+        xp: 300, body: 'humanoid', boss: true, halfWidth: 0.6, height: 3.2,
+        colors: [_c(0.30, 0.08, 0.12), _c(0.55, 0.12, 0.10), _c(0.20, 0.06, 0.08)],
+        drops: {'blaze_rod': [8, 8], 'ancient_blade': [1, 1]}, biomes: [], day: true, weight: 0, effect: 'burning'));
     return out;
   }
 

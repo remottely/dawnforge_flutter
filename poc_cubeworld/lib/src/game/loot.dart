@@ -71,6 +71,16 @@ class LootTables {
       LootEntry('torch', 2, 6, 0.6),
       LootEntry('iron_ingot', 1, 2, 0.3),
     ],
+    // Stage 29: the fortress side rooms.
+    'fortress': [
+      LootEntry('quartz', 3, 8, 1.0),
+      LootEntry('gold_ingot', 2, 5, 0.8),
+      LootEntry('health_potion', 1, 2, 0.7),
+      LootEntry('resistance_potion', 1, 1, 0.4),
+      LootEntry('blaze_rod', 1, 3, 0.6),
+      LootEntry('glowstone_dust', 2, 6, 0.5),
+      LootEntry('diamond', 1, 1, 0.25),
+    ],
     'camp': [
       LootEntry('apple', 1, 4, 0.9),
       LootEntry('bread', 1, 3, 0.7),
@@ -83,7 +93,7 @@ class LootTables {
 
   /// Structure kind (`TerrainGenerator.struct*`) -> table. Kind 4 (village) has a
   /// chest per hut since stage 26.
-  static const Map<int, String> tableByKind = {1: 'dungeon', 2: 'dungeon', 3: 'camp', 4: 'village', 5: 'ruin', 6: 'well', 7: 'mine', 8: 'temple'};
+  static const Map<int, String> tableByKind = {1: 'dungeon', 2: 'dungeon', 3: 'camp', 4: 'village', 5: 'ruin', 6: 'well', 7: 'mine', 8: 'temple', 9: 'fortress'};
 
   /// The stacks a chest of [table] holds, in table order.
   static List<({String id, int count})> roll(String table, math.Random rng) {

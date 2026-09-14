@@ -45,9 +45,12 @@ class Spawner {
     final surface = world.groundHeight(x, z);
     var cave = false;
     var y = surface;
-    // Underground spawn when the player is underground.
+    // Underground spawn when the player is underground; the underworld (stage
+    // 29) is all caverns, so it always searches a pocket of air over solid
+    // around the player's height.
     final playerSurface = world.surfaceHeight(player.position.x.toInt(), player.position.z.toInt());
-    if (player.position.y < playerSurface - 6 && rng.nextDouble() < 0.7) {
+    final underworld = world.dimension == VoxelWorld.dimUnderworld;
+    if (underworld || (player.position.y < playerSurface - 6 && rng.nextDouble() < 0.7)) {
       final py = player.position.y.toInt();
       for (var i = 0; i < 12; i++) {
         final ty = py + rng.nextInt(13) - 6;
@@ -60,6 +63,7 @@ class Spawner {
         }
       }
       if (!cave) return;
+      cave = !underworld; // the underworld picks from its own biome table, not the cave one
     }
     if (y >= VoxelWorld.sizeY - 3 || y <= 1) return;
     if (world.isLiquid(IVec3(x, y, z)) || world.isLiquid(IVec3(x, y - 1, z))) return;

@@ -103,6 +103,8 @@ class Recipes {
     r('fishing_rod', 1, {'stick': 3, 'string': 2}, 'crafting_table');
     r('shears', 1, {'iron_ingot': 2}, 'crafting_table');
     r('bucket', 1, {'iron_ingot': 3}, 'crafting_table');
+    r('flint_and_steel', 1, {'iron_ingot': 1, 'flint': 1}, 'crafting_table'); // stage 29
+    r('glowstone', 1, {'glowstone_dust': 4}, 'crafting_table');
     // Brewing stand
     r('speed_potion', 1, {'glass_bottle': 1, 'wheat': 1, 'feather': 1}, 'brewing_stand');
     r('regen_potion', 1, {'glass_bottle': 1, 'apple': 1, 'magic_dust': 1}, 'brewing_stand');

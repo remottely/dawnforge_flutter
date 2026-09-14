@@ -247,6 +247,7 @@ class Player extends VoxelBody implements Target {
       Sfx.play('pickup', -8.0);
       main.quests.onPickup(id, n - left);
       if (id == 'diamond') Achievements.instance.unlock('diamonds');
+      if (id == 'underworld_heart') Achievements.instance.unlock('heart'); // stage 29: the win token
     }
     return left;
   }
@@ -396,6 +397,13 @@ class Player extends VoxelBody implements Target {
 
   void physicsProcess(double dt, GameInput input, bool gameplay) {
     if (isDead) return;
+    // Stage 29: like a mob, the body waits for its chunk (a save in the
+    // underworld puts the player over a cavern; an unloaded chunk reads as air
+    // and the fall lands anywhere).
+    if (!world.isLoaded(IVec3.floor(position))) {
+      velocity = Vector3.zero();
+      return;
+    }
     _handleOneShots(input, gameplay);
     _sprintHeld = gameplay && input.down(GameAction.sprint);
     _tickStats(dt);
@@ -441,6 +449,8 @@ class Player extends VoxelBody implements Target {
     var speed = sprinting ? sprintSpeed : (sneaking ? sneakSpeed : walkSpeed);
     if (inWater) speed = swimSpeed;
     speed *= effects.speedMultiplier() * (1.0 + 0.05 * talentRank('swiftness'));
+    // Stage 29: soul sand under the feet.
+    if (onFloor) speed *= Blocks.speedMult(world.getBlockXYZ(position.x.floor(), (position.y - 0.05).floor(), position.z.floor()));
     if (sprinting) stamina = math.max(stamina - 6.0 * dt, 0.0);
 
     final jumpHeld = gameplay && input.down(GameAction.jump);
@@ -1259,7 +1269,18 @@ class Player extends VoxelBody implements Target {
     crack.visible = false;
   }
 
+  /// Stage 29: the probe breaks a block the way a finished mining swing does.
+  void probeBreak(IVec3 b, int id) => _breakBlock(b, id);
+
+  /// Stage 29: an arrival puts the body down; the fall starts there.
+  void resetFall() => _fallStartY = position.y;
+
   void _breakBlock(IVec3 b, int id) {
+    // Stage 29: the fortress core only gives way once the Underworld Lord of its fortress is dead.
+    if (Blocks.idOf(id) == 'fortress_core' && main.coreLocked(b)) {
+      notify('The core is sealed while the Underworld Lord lives');
+      return;
+    }
     if (!world.setBlock(b, Blocks.air)) return;
     var drop = Blocks.dropOf(id);
     final held = heldItem();
@@ -1274,8 +1295,16 @@ class Player extends VoxelBody implements Target {
       drop = rng.nextDouble() < 0.35 ? 'wheat_seeds' : (rng.nextDouble() < 0.15 ? 'string' : '');
     }
     if (Items.isLeaves(id) && held != '' && Items.toolOf(held) == ToolType.shears) drop = Blocks.idOf(id);
-    // Stage 26: a melon breaks into several slices.
-    if (drop != '') main.spawnDrop(b.toVector3() + Vector3(0.5, 0.3, 0.5), drop, drop == 'melon_slice' ? 3 + rng.nextInt(3) : 1);
+    // Stage 26: a melon breaks into several slices; stage 29: glowstone into 2-4 dust.
+    if (drop != '') {
+      var n = 1;
+      if (drop == 'melon_slice') {
+        n = 3 + rng.nextInt(3);
+      } else if (drop == 'glowstone_dust') {
+        n = 2 + rng.nextInt(3);
+      }
+      main.spawnDrop(b.toVector3() + Vector3(0.5, 0.3, 0.5), drop, n);
+    }
     main.onBlockBroken(b, id);
     if (held != '' && Items.kind(held) == ItemKind.tool && Blocks.hardness(id) > 0.0) _wearHeld();
     // Plants above a removed block fall off.
@@ -1341,6 +1370,18 @@ class Player extends VoxelBody implements Target {
         _useCooldown = 0.4;
         return;
       }
+    }
+    if (item == 'flint_and_steel' && isAiming) {
+      // Stage 29: lights the hollow of an obsidian frame into a portal (or nothing happens).
+      _useCooldown = 0.5;
+      final lit = main.tryLightPortal(aimedBlock + aimedNormal);
+      if (lit > 0) {
+        model.swing();
+        Sfx.play('bolt', -6.0, 1.4);
+      } else {
+        notify('Aim inside an obsidian frame (4 wide, 5 tall)');
+      }
+      return;
     }
     if (item != '' && Items.liquidOf(item) != '' && isAiming) {
       if (pourLiquid(aimedBlock + aimedNormal)) _useCooldown = 0.4;
@@ -1902,6 +1943,15 @@ class Player extends VoxelBody implements Target {
   bool pourLiquid(IVec3 target) {
     final liquid = Items.liquidOf(heldItem());
     if (liquid == '' || !Blocks.isReplaceable(world.getBlock(target))) return false;
+    if (liquid == 'water' && world.dimension == VoxelWorld.dimUnderworld) {
+      // Stage 29: there is no water in the underworld; the bucket empties into steam.
+      inventory.setSlot(selectedSlot, ItemStack('bucket', 1));
+      main.spawnEffect(target.toVector3() + Vector3(0.5, 0.5, 0.5), Vector3(0.8, 0.8, 0.85), 1.2);
+      Sfx.play('splash', -10.0, 1.6);
+      notify('The water hisses away');
+      model.swing();
+      return true;
+    }
     if (!world.setBlock(target, Blocks.indexOf(liquid))) return false;
     inventory.setSlot(selectedSlot, ItemStack('bucket', 1));
     Sfx.play('splash', -10.0, 0.8);

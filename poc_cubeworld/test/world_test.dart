@@ -26,7 +26,7 @@ void main() {
         expect(Items.has(k), isTrue, reason: k);
       }
     }
-    expect(Species.defs.length, 25); // stage 26: slime_small, parrot, ocelot
+    expect(Species.defs.length, 29); // stage 26: slime_small, parrot, ocelot; stage 29: blaze, dark_skeleton, magma_cube, underworld_lord
   });
 
   test('the generator fills a chunk with a surface and the mesher emits faces', () {

@@ -83,8 +83,11 @@ class ChunkWorkerPool {
     return c.future.then((v) => v as T);
   }
 
-  Future<Uint8List> generate(int cx, int cz) async {
-    final t = await _request<TransferableTypedData>(['gen', cx, cz]);
+  /// Stage 29: the job carries the dimension it was dispatched for, so a result
+  /// that lands after a travel still holds what it was asked for (the world
+  /// drops it by epoch).
+  Future<Uint8List> generate(int cx, int cz, [int dimension = 0]) async {
+    final t = await _request<TransferableTypedData>(['gen', cx, cz, dimension]);
     return t.materialize().asUint8List();
   }
 
@@ -135,7 +138,7 @@ void _workerMain(List<Object?> args) {
     final id = list[0] as int;
     final kind = list[1] as String;
     if (kind == 'gen') {
-      final blocks = generator.generate(list[2] as int, list[3] as int);
+      final blocks = generator.generateIn(list[2] as int, list[3] as int, list[4] as int);
       out.send([id, TransferableTypedData.fromList([blocks])]);
     } else if (kind == 'mesh') {
       final ring = (list[4] as List<Object?>).cast<Uint8List?>();

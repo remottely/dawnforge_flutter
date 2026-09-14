@@ -57,7 +57,7 @@ void main() {
       expect(Blocks.isRail(id(order[i])), isTrue);
       expect(Blocks.isSolid(id(order[i])), isFalse);
     }
-    expect(Blocks.count, last + 1 + order.length);
+    expect(Blocks.idOf(last + 1 + order.length), 'obsidian'); // stage 29 appends after the rails
     expect(Blocks.isRailSlope(id('rail_slope_e')), isTrue);
     expect(Blocks.isRailSlope(id('rail_ne')), isFalse);
     expect(Blocks.isPoweredRail(id('powered_rail_ew_on')), isTrue);

@@ -28,6 +28,11 @@ class RemotePlayer implements Target {
   bool isDead = false;
   bool removed = false;
 
+  /// Stage 29: the dimension the peer is in (from its pose). A puppet in another
+  /// dimension than this world's is hidden: everyone in one dimension sees each
+  /// other, nobody sees across.
+  int dimension = 0;
+
   void setupPuppet(String cls, String label) {
     final c = Player.classes[cls] ?? Player.classes['warrior']!;
     model.build(Vector3(0.87, 0.70, 0.55), c.shirt, Vector3(0.25, 0.30, 0.55), Vector3(0.25, 0.16, 0.10));
@@ -56,6 +61,8 @@ class RemotePlayer implements Target {
   }
 
   void update(double dt) {
+    final m = Net.instance.main;
+    node.visible = m == null || dimension == m.world.dimension;
     final before = position.clone();
     final h = mountedOn;
     if (h != null && !h.removed) {

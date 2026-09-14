@@ -65,6 +65,11 @@ class Weather {
   /// switched back on.
   bool enabled = true;
 
+  /// Stage 29: the underworld has no sky. While suppressed the weather is clear
+  /// and hidden, whatever the switch or the host says; back in the overworld the
+  /// timer rolls again.
+  bool suppressed = false;
+
   void setEnabled(bool on) {
     enabled = on;
     if (!on) {
@@ -160,7 +165,7 @@ class Weather {
   }
 
   void process(double dt) {
-    if (!enabled) {
+    if (!enabled || suppressed) {
       kind = WeatherKind.clear;
       _target = 0.0;
       intensity = 0.0;

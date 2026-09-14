@@ -20,6 +20,10 @@ class IVec3 {
   IVec3 operator +(IVec3 o) => IVec3(x + o.x, y + o.y, z + o.z);
   IVec3 operator -(IVec3 o) => IVec3(x - o.x, y - o.y, z - o.z);
 
+  /// Stage 29: Godot's `Vector3i * int` and `Vector3i.length()`.
+  IVec3 operator *(int k) => IVec3(x * k, y * k, z * k);
+  double get length => toVector3().length;
+
   Vector3 toVector3() => Vector3(x.toDouble(), y.toDouble(), z.toDouble());
   Vector3 get centre => Vector3(x + 0.5, y + 0.5, z + 0.5);
 

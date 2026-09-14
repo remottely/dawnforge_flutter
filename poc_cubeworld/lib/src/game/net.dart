@@ -164,6 +164,9 @@ class Net {
   /// Set by a hello that arrives before the world exists.
   void Function()? onHelloBeforeWorld;
 
+  /// Stage 29: the dimension this peer's world holds (0 before a world exists).
+  int get _dim => main?.world.dimension ?? 0;
+
   bool get isHost => mode == NetMode.host;
   bool get isClient => mode == NetMode.client;
 
@@ -351,6 +354,8 @@ class Net {
         _onBobberPose(sender, _vec(msg['pos']));
       case 'bobber_gone':
         _freeBobberReplica(sender);
+      case 'travel_req':
+        _onTravelRequest(sender, msg['d'] as int);
     }
   }
 
@@ -380,13 +385,18 @@ class Net {
         final m = main;
         if (m == null) return;
         final b = IVec3(msg['x'] as int, msg['y'] as int, msg['z'] as int);
+        final dim = (msg['dim'] as int?) ?? 0;
+        if (dim != m.world.dimension) {
+          m.world.storeEdit(dim, b, msg['id'] as int); // stage 29: waits in the other dimension's delta
+          return;
+        }
         if (m.world.getBlock(b) == msg['id']) return;
         if (prediction.owns(b)) return; // a prediction owns this cell until its ack lands
         _applying = true;
         m.world.setBlock(b, msg['id'] as int);
         _applying = false;
       case 'blocks':
-        _onBlocks(msg['cells'] as List<dynamic>);
+        _onBlocks(msg['cells'] as List<dynamic>, (msg['dim'] as int?) ?? 0);
       case 'block_ack':
         _onBlockAck(msg['seq'] as int, IVec3(msg['x'] as int, msg['y'] as int, msg['z'] as int), msg['id'] as int);
       case 'pose':
@@ -434,6 +444,8 @@ class Net {
         _onBobberPose(1, _vec(msg['pos']));
       case 'bobber_gone':
         _freeBobberReplica(1);
+      case 'set_dim':
+        main?.travelToDimension(msg['d'] as int);
     }
   }
 
@@ -454,13 +466,13 @@ class Net {
       if (_batching) {
         _batch.addAll([b.x, b.y, b.z, id]);
       } else {
-        _broadcast({'t': 'block', 'x': b.x, 'y': b.y, 'z': b.z, 'id': id});
+        _broadcast({'t': 'block', 'x': b.x, 'y': b.y, 'z': b.z, 'id': id, 'dim': _dim});
       }
     } else if (mode == NetMode.client) {
       // Stage 25: the edit is already applied locally (the prediction); the
       // host's ack confirms it or hands back the id that stands.
       final seq = prediction.predict(b, id);
-      _toHost({'t': 'block_req', 'seq': seq, 'x': b.x, 'y': b.y, 'z': b.z, 'id': id});
+      _toHost({'t': 'block_req', 'seq': seq, 'x': b.x, 'y': b.y, 'z': b.z, 'id': id, 'dim': _dim});
     }
   }
 
@@ -473,6 +485,15 @@ class Net {
       rejectOne = false;
       stats['rejected_seq'] = seq;
       debugPrint('[net] refused edit seq $seq from peer $sender at $b (probe)');
+    } else if (((msg['dim'] as int?) ?? 0) != m.world.dimension) {
+      // Stage 29: an edit in a dimension the host does not hold is kept in that
+      // dimension's delta (it lands when the host travels there) and passed on
+      // to the peers, unchecked.
+      final dim = msg['dim'] as int;
+      m.world.storeEdit(dim, b, id);
+      _broadcast({'t': 'block', 'x': b.x, 'y': b.y, 'z': b.z, 'id': id, 'dim': dim});
+      _toPeer(sender, {'t': 'block_ack', 'seq': seq, 'x': b.x, 'y': b.y, 'z': b.z, 'id': id});
+      return;
     } else {
       m.world.setBlock(b, id);
       // A client planted: the host grows it (stage 25).
@@ -509,23 +530,51 @@ class Net {
     final total = _batch.length ~/ 4;
     for (var start = 0; start < total; start += blocksPerPacket) {
       final stop = math.min(start + blocksPerPacket, total);
-      _broadcast({'t': 'blocks', 'cells': _batch.sublist(start * 4, stop * 4)});
+      _broadcast({'t': 'blocks', 'cells': _batch.sublist(start * 4, stop * 4), 'dim': _dim});
       _bump('flow_batch_rpcs');
     }
     _bump('flow_batch_cells', total);
     _batch.clear();
   }
 
-  void _onBlocks(List<dynamic> cells) {
+  void _onBlocks(List<dynamic> cells, int dim) {
     final m = main;
     if (m == null) return;
     _bump('flow_cells_seen', cells.length ~/ 4);
     _applying = true;
     for (var i = 0; i + 3 < cells.length; i += 4) {
       final b = IVec3(cells[i] as int, cells[i + 1] as int, cells[i + 2] as int);
-      if (!prediction.owns(b)) m.world.setBlock(b, cells[i + 3] as int);
+      if (dim != m.world.dimension) {
+        m.world.storeEdit(dim, b, cells[i + 3] as int);
+      } else if (!prediction.owns(b)) {
+        m.world.setBlock(b, cells[i + 3] as int);
+      }
     }
     _applying = false;
+  }
+
+  // --- stage 29: dimensions ------------------------------------------------------
+  // Travel is host-owned: a client that stood in a portal asks, the host answers
+  // with the dimension to load, and the client runs the same arrival as the host
+  // would (its own chunks, its own safe spot, its return portal as predicted
+  // edits). Mobs exist in the host's dimension only.
+
+  void requestTravel(int d) => _toHost({'t': 'travel_req', 'd': d});
+
+  void _onTravelRequest(int sender, int d) {
+    final m = main;
+    if (mode != NetMode.host || m == null) return;
+    var ok = true;
+    final puppet = _puppets[sender];
+    if (puppet != null && puppet.dimension == m.world.dimension) {
+      // In the host's own dimension the request is checked: the puppet's feet must be in a portal.
+      final at = puppet.position;
+      final feet = IVec3(at.x.floor(), (at.y + 0.3).floor(), at.z.floor());
+      final id = m.world.getBlock(feet);
+      ok = id != Blocks.air && Blocks.idOf(id) == 'portal';
+    }
+    debugPrint('[net] travel request from peer $sender to dimension $d: ${ok ? 'granted' : 'refused'}');
+    if (ok) _toPeer(sender, {'t': 'set_dim', 'd': d});
   }
 
 
@@ -550,6 +599,7 @@ class Net {
         'yaw': p.model.yaw,
         'held': p.heldItem(),
         'cls': p.playerClass,
+        'dim': m.world.dimension, // stage 29
         if (riding) 'ride': _v(h.rideInput),
         if (riding) 'sprint': h.rideSprint,
         if (riding && h.rideJump) 'jump': true,
@@ -614,6 +664,7 @@ class Net {
       m.addPuppet(puppet);
     }
     puppet.setPose(_vec(msg['pos']), (msg['yaw'] as num).toDouble(), msg['held'] as String);
+    puppet.dimension = (msg['dim'] as int?) ?? 0;
     final h = _mounts[id];
     final boat = boatDrivers[id];
     final cart = cartRiders[id];
@@ -637,11 +688,11 @@ class Net {
     final m = main!;
     final rows = <List<Object>>[];
     for (final mob in [...m.mobs, ...m.pets]) {
-      if (mob.puppet || mob.state == MobState.dead) continue;
+      if (mob.puppet || mob.state == MobState.dead || !m.isHere(mob)) continue;
       rows.add([mob.instanceId, mob.species.id, mob.position.x, mob.position.y, mob.position.z, mob.modelYaw(),
         mob.hp, mob.maxHp, mob.mobLevel, mob.tamed, mob.riddenBy]);
     }
-    _broadcast({'t': 'mobs', 'time': m.timeOfDay, 'rows': rows});
+    _broadcast({'t': 'mobs', 'time': m.timeOfDay, 'rows': rows, 'dim': m.world.dimension});
   }
 
   void _onMobs(Map<String, dynamic> msg) {
@@ -653,6 +704,8 @@ class Net {
       debugPrint('[net] first mob packet: ${rows.length} mobs, host time ${msg['time']}');
     }
     m.timeOfDay = (msg['time'] as num).toDouble();
+    // Stage 29: the host's mobs are hidden from another dimension.
+    final sameDim = ((msg['dim'] as int?) ?? 0) == m.world.dimension;
     final seen = <int>{};
     for (final r in rows) {
       final row = r as List<dynamic>;
@@ -672,6 +725,7 @@ class Net {
       mob.setPuppetState(Vector3((row[2] as num).toDouble(), (row[3] as num).toDouble(), (row[4] as num).toDouble()),
           (row[5] as num).toDouble(), (row[6] as num).toDouble(), (row[7] as num).toDouble());
       mob.setPuppetFlags(row[9] == true, (row[10] as num).toInt());
+      mob.node.visible = sameDim;
     }
     for (final key in _mobPuppets.keys.toList()) {
       if (!seen.contains(key)) _mobPuppets.remove(key)!.removed = true;

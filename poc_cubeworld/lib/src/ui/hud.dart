@@ -124,7 +124,7 @@ class Hud {
   /// Stage 26: the maps tint a biome's ground so a swamp reads murky and a
   /// jungle deep green (biome id -> tint); every other biome keeps its block
   /// colours.
-  static const Map<int, (double, double, double)> biomeTint = {7: (0.30, 0.34, 0.18), 8: (0.10, 0.42, 0.12)};
+  static const Map<int, (double, double, double)> biomeTint = {7: (0.30, 0.34, 0.18), 8: (0.10, 0.42, 0.12), 9: (0.45, 0.08, 0.08)}; // 9: the underworld (stage 29)
   static const double biomeTintWeight = 0.45;
 
   /// One map pixel of a LOADED column: the top block shaded by height, a liquid
@@ -229,11 +229,12 @@ class Minimap {
 class WorldMap {
   static const int maxChunks = 64; // the image never grows past 64x64 chunks (1024 px)
   static const Map<int, String> structureNames = {
-    1: 'Dungeon', 2: 'Tower', 3: 'Camp', 4: 'Village', 5: 'Ruin', 6: 'Well', 7: 'Mine', 8: 'Temple',
+    1: 'Dungeon', 2: 'Tower', 3: 'Camp', 4: 'Village', 5: 'Ruin', 6: 'Well', 7: 'Mine', 8: 'Temple', 9: 'Fortress',
   };
   static final Map<int, Color> structureColors = {
     1: Hud._c(0.85, 0.25, 0.25), 2: Hud._c(0.75, 0.75, 0.85), 3: Hud._c(0.95, 0.6, 0.2), 4: Hud._c(0.95, 0.9, 0.4),
     5: Hud._c(0.6, 0.55, 0.45), 6: Hud._c(0.35, 0.65, 0.95), 7: Hud._c(0.55, 0.4, 0.25), 8: Hud._c(0.95, 0.8, 0.5),
+    9: Hud._c(0.7, 0.2, 0.8), // stage 29: the fortress
   };
   static final Color waypointColor = Hud._c(0.3, 0.95, 1.0);
   static final Color mountColor = Hud._c(0.6, 0.38, 0.18);

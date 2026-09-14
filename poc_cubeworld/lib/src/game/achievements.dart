@@ -34,6 +34,8 @@ class Achievements {
     AchievementDef('glider', 'Wingsuit', 'Glide for the first time'),
     AchievementDef('fisher', 'Gone Fishing', 'Catch your first fish'),
     AchievementDef('rider', 'Saddle Up', 'Ride a horse'),
+    AchievementDef('underworld', 'Into the Fire', 'Find a fortress in the underworld'), // stage 29
+    AchievementDef('heart', 'Heart of the Underworld', 'Take the underworld heart'),
   ];
 
   final Set<String> unlocked = {};

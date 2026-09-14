@@ -3,6 +3,8 @@ import 'dart:typed_data';
 
 import 'package:flutter_scene/noise.dart';
 
+import '../core/ivec3.dart';
+
 /// Pure (seed, position) terrain: biomes from temperature/humidity/continental
 /// noise, a height field with hills and ridged mountains, 3D caves, ores by
 /// depth, lava in the deep, and decorations (trees, cacti, plants) that can
@@ -64,6 +66,12 @@ class TerrainGenerator {
     _slab = ids['oak_slab']!;
     _redstoneOre = ids['redstone_ore']!;
     _railEw = ids['rail_ew']!;
+    _hellstone = ids['hellstone']!;
+    _soulSand = ids['soul_sand']!;
+    _glowstone = ids['glowstone']!;
+    _quartzOre = ids['nether_quartz_ore']!;
+    _netherBrick = ids['nether_brick']!;
+    _fortressCore = ids['fortress_core']!;
     setSeed(seed);
   }
 
@@ -81,7 +89,14 @@ class TerrainGenerator {
       biomeSnow = 5,
       biomeMountain = 6,
       biomeSwamp = 7,
-      biomeJungle = 8;
+      biomeJungle = 8,
+      biomeUnderworld = 9; // stage 29: the whole second dimension is one biome
+
+  /// Stage 29: the dimension a chunk is generated for.
+  static const int dimOverworld = 0, dimUnderworld = 1;
+  int _dimension = dimOverworld;
+  void setDimension(int d) => _dimension = d;
+  int get dimension => _dimension;
 
   static const int structNone = 0, structDungeon = 1, structTower = 2, structCamp = 3, structVillage = 4;
   static const int structRuin = 5, structWell = 6, structMine = 7, structTemple = 8;
@@ -99,11 +114,13 @@ class TerrainGenerator {
       // Stage 27: redstone ore, veined below y 30.
       _redstoneOre,
       // Stage 28: the rail down an abandoned mine's corridor.
-      _railEw;
+      _railEw,
+      // Stage 29: the underworld's blocks and the fortress bricks.
+      _hellstone, _soulSand, _glowstone, _quartzOre, _netherBrick, _fortressCore;
 
   int _seed = 0;
   int get seed => _seed;
-  late FastNoiseLite _continental, _hills, _mountainMask, _ridge, _temperature, _humidity, _cave, _cavern, _detail, _river;
+  late FastNoiseLite _continental, _hills, _mountainMask, _ridge, _temperature, _humidity, _cave, _cavern, _detail, _river, _hell, _hellPatch;
 
   static FastNoiseLite _make(int seed, double freq, int octaves, [FractalType fractal = FractalType.fbm]) =>
       FastNoiseLite(seed: seed)
@@ -124,6 +141,8 @@ class TerrainGenerator {
     _cavern = _make(seed ^ 0x789ABCD, 0.020, 2);
     _detail = _make(seed ^ 0x89ABCDE, 0.06, 1); // stage 26: the swamp pools
     _river = _make(seed ^ 0x9ABCDEF, 0.0030, 2);
+    _hell = _make(seed ^ 0x0A1B2C3, 0.030, 2); // stage 29: the underworld's caverns
+    _hellPatch = _make(seed ^ 0x0B2C3D4, 0.070, 1); // soul sand patches on its floors
   }
 
   static int index(int x, int y, int z) => x + sizeX * (z + sizeZ * y);
@@ -172,7 +191,7 @@ class TerrainGenerator {
   bool _swampPool(int wx, int wz, int h, int biome) =>
       biome == biomeSwamp && h > seaLevel && _detail.getNoise2(wx * 1.5, wz * 1.5) > 0.28;
 
-  int biomeAt(int x, int z) => _biomeFor(x, z, surfaceHeight(x, z));
+  int biomeAt(int x, int z) => _dimension == dimUnderworld ? biomeUnderworld : _biomeFor(x, z, surfaceHeight(x, z));
 
   int _biomeFor(int x, int z, int h) {
     if (h < seaLevel - 2) return biomeOcean;
@@ -199,7 +218,14 @@ class TerrainGenerator {
     return h;
   }
 
-  Uint8List generate(int chunkX, int chunkZ) {
+  /// The chunk of the generator's current dimension ([setDimension]).
+  Uint8List generate(int chunkX, int chunkZ) => generateIn(chunkX, chunkZ, _dimension);
+
+  /// Stage 29: the chunk of an explicit dimension. The worker binds the
+  /// dimension at dispatch, so a job started before a switch still writes what
+  /// it was asked for.
+  Uint8List generateIn(int chunkX, int chunkZ, int dimension) {
+    if (dimension == dimUnderworld) return _generateUnderworld(chunkX, chunkZ);
     final blocks = Uint8List(volume);
     final ox = chunkX * sizeX, oz = chunkZ * sizeZ;
     for (var z = 0; z < sizeZ; z++) {
@@ -542,8 +568,20 @@ class TerrainGenerator {
   }
 
   /// Structures whose region touches the chunk: records of (x, y, z, type).
-  List<({int x, int y, int z, int type})> structuresNear(int chunkX, int chunkZ) {
+  List<({int x, int y, int z, int type})> structuresNear(int chunkX, int chunkZ) => structuresNearIn(chunkX, chunkZ, _dimension);
+
+  List<({int x, int y, int z, int type})> structuresNearIn(int chunkX, int chunkZ, int dimension) {
     final list = <({int x, int y, int z, int type})>[];
+    if (dimension == dimUnderworld) {
+      final fx = _floorDiv(chunkX, _fortressRegionChunks), fz = _floorDiv(chunkZ, _fortressRegionChunks);
+      for (var dz = -1; dz <= 1; dz++) {
+        for (var dx = -1; dx <= 1; dx++) {
+          final f = _fortressAt(fx + dx, fz + dz);
+          if (f != null) list.add(f);
+        }
+      }
+      return list;
+    }
     final rx = _floorDiv(chunkX, _regionChunks), rz = _floorDiv(chunkZ, _regionChunks);
     for (var dz = -1; dz <= 1; dz++) {
       for (var dx = -1; dx <= 1; dx++) {
@@ -1075,5 +1113,196 @@ class TerrainGenerator {
         _put(b, ox, oz, cx, cy + y, cz + z, _air);
       }
     }
+  }
+
+  // --- stage 29: the underworld -------------------------------------------------
+  // A cavernous slab between the bedrock floor (y 7) and roof (y 100): 3D noise
+  // opens about 40% of the volume, the rock is hellstone, a lava ocean fills
+  // every open cell at y <= 28, soul sand patches the floors, glowstone hangs
+  // from the ceilings, quartz veins the walls.
+  static const int hellFloorY = 7, hellRoofY = 100, lavaSeaY = 28;
+
+  bool _hellOpen(int wx, int y, int wz) {
+    final n = _hell.getNoise3(wx.toDouble(), y * 1.4, wz.toDouble());
+    // Solid bias near the floor and the roof so the slab has a floor to walk and a lid.
+    var edge = 0.0;
+    if (y < hellFloorY + 6) edge = (hellFloorY + 6 - y) / 6.0;
+    if (y > hellRoofY - 8) edge = math.max(edge, (y - (hellRoofY - 8)) / 8.0);
+    return n - edge * 0.6 > 0.08;
+  }
+
+  Uint8List _generateUnderworld(int chunkX, int chunkZ) {
+    final blocks = Uint8List(volume);
+    final ox = chunkX * sizeX, oz = chunkZ * sizeZ;
+    final open = List<bool>.filled(sizeY, false);
+    for (var z = 0; z < sizeZ; z++) {
+      for (var x = 0; x < sizeX; x++) {
+        final wx = ox + x, wz = oz + z;
+        for (var y = 0; y < sizeY; y++) {
+          open[y] = y > hellFloorY && y < hellRoofY && _hellOpen(wx, y, wz);
+        }
+        final patch = _hellPatch.getNoise2(wx.toDouble(), wz.toDouble()) > 0.38;
+        for (var y = 0; y <= hellRoofY; y++) {
+          int id;
+          if (y == 0 || y == hellFloorY || y == hellRoofY) {
+            id = _bedrock;
+          } else if (open[y]) {
+            id = y <= lavaSeaY ? _lava : _air;
+          } else {
+            id = _hellstone;
+            final floorTop = y + 1 < sizeY && open[y + 1] && y > lavaSeaY;
+            final ceiling = y > 0 && open[y - 1] && y > lavaSeaY + 2;
+            if (floorTop && patch) {
+              id = _soulSand;
+            } else if (ceiling && hash(wx >> 1, y, wz >> 1) % 23 == 0) {
+              id = _glowstone;
+              // A cluster hangs one or two cells into the cavern below.
+              final len = 1 + hash(wx, y, wz) % 2;
+              for (var k = 1; k <= len; k++) {
+                if (y - k > lavaSeaY && open[y - k]) blocks[index(x, y - k, z)] = _glowstone;
+              }
+            } else {
+              final cell = hash(wx >> 1, y >> 1, wz >> 1);
+              if (hash(wx, y, wz) % 100 < 55 && cell % 10000 < 650) id = _quartzOre;
+            }
+          }
+          final i = index(x, y, z);
+          if (blocks[i] == _air) blocks[i] = id; // a glowstone cluster written from above stays
+        }
+      }
+    }
+    _buildFortresses(blocks, chunkX, chunkZ);
+    return blocks;
+  }
+
+  /// The fortress: one candidate per 8x8-chunk region (60% of regions), a
+  /// nether-brick hall running +x from its origin. [_fortressAt] is what every
+  /// chunk and the game agree on.
+  static const int _fortressRegionChunks = 8;
+  static const int structFortress = 9;
+
+  ({int x, int y, int z, int type})? _fortressAt(int regionX, int regionZ) {
+    final h = hash(regionX * 7127, 29, regionZ * 15919);
+    const span = _fortressRegionChunks * sizeX;
+    final sx = regionX * span + 16 + h % (span - 96);
+    final sz = regionZ * span + 16 + (h >> 8) % (span - 32);
+    final sy = 60 - 10 + (h >> 20) % 21;
+    if ((h >> 16) % 10 >= 6) return null;
+    return (x: sx, y: sy, z: sz, type: structFortress);
+  }
+
+  int _fortressLength(int sx, int sz) => 40 + hash(sx, 30, sz) % 21;
+
+  /// The layout the probe and `Game` read: the hall's length and far end, the
+  /// throne room centre, the core block cell, the blaze spot (hall middle) and
+  /// the two side-room chests.
+  ({int length, IVec3 hallEnd, IVec3 throne, IVec3 core, IVec3 blaze, IVec3 chestA, IVec3 chestB}) fortressLayout(
+      int sx, int sy, int sz) {
+    final len = _fortressLength(sx, sz);
+    return (
+      length: len,
+      hallEnd: IVec3(sx + len, sy, sz),
+      throne: IVec3(sx + len + 5, sy, sz),
+      core: IVec3(sx + len + 5, sy, sz),
+      blaze: IVec3(sx + len ~/ 2, sy + 1, sz),
+      chestA: IVec3(sx + len ~/ 3, sy + 1, sz + 7),
+      chestB: IVec3(sx + len * 2 ~/ 3, sy + 1, sz - 7),
+    );
+  }
+
+  void _buildFortresses(Uint8List blocks, int chunkX, int chunkZ) {
+    final ox = chunkX * sizeX, oz = chunkZ * sizeZ;
+    final fx = _floorDiv(chunkX, _fortressRegionChunks), fz = _floorDiv(chunkZ, _fortressRegionChunks);
+    for (var dz = -1; dz <= 1; dz++) {
+      for (var dx = -1; dx <= 1; dx++) {
+        final f = _fortressAt(fx + dx, fz + dz);
+        if (f != null) _fortress(blocks, ox, oz, f.x, f.y, f.z);
+      }
+    }
+  }
+
+  /// A hall 5 wide x 5 tall (interior) and 40-60 long of nether brick, pillars
+  /// every 8 blocks down to the bedrock floor, arched windows on both sides,
+  /// glowstone in the ceiling every 8 blocks, two side rooms (one chest each)
+  /// off the hall, a blaze spot at the middle, and a throne room 9x9x7 at the
+  /// far end with lava channels along its walls and the fortress core in the
+  /// centre of its floor.
+  void _fortress(Uint8List b, int ox, int oz, int sx, int sy, int sz) {
+    final len = _fortressLength(sx, sz);
+    // Hall shell: walls z = +-3, floor y = sy, ceiling y = sy + 6, interior air.
+    for (var x = 0; x <= len; x++) {
+      final wx = sx + x;
+      if (wx < ox - 1 || wx > ox + sizeX) continue;
+      for (var z = -3; z <= 3; z++) {
+        for (var y = 0; y <= 6; y++) {
+          final wall = z.abs() == 3 || y == 0 || y == 6;
+          var id = wall ? _netherBrick : _air;
+          if (wall && z.abs() == 3 && y >= 2 && y <= 4 && x % 6 == 3 && x > 2 && x < len - 2) id = _air; // window
+          if (wall && z.abs() == 3 && y == 3 && x % 6 == 0) id = _glowstone; // a sconce between the windows
+          if (y == 6 && z == 0 && x % 8 == 4) id = _glowstone;
+          _put(b, ox, oz, wx, sy + y, sz + z, id);
+        }
+      }
+      // Pillars to the bedrock floor at both wall lines, every 8 blocks.
+      if (x % 8 == 0) {
+        for (var y = sy - 1; y > hellFloorY; y--) {
+          _put(b, ox, oz, wx, y, sz - 3, _netherBrick);
+          _put(b, ox, oz, wx, y, sz + 3, _netherBrick);
+        }
+      }
+    }
+    // Side rooms: 5x5 interior off the +z wall at a third, off the -z wall at two thirds.
+    _sideRoom(b, ox, oz, sx + len ~/ 3, sy, sz, 1);
+    _sideRoom(b, ox, oz, sx + len * 2 ~/ 3, sy, sz, -1);
+    // Throne room: 9x9 interior, 7 tall, centred 5 past the hall's end.
+    final cx = sx + len + 5, cz = sz;
+    for (var x = -5; x <= 5; x++) {
+      for (var z = -5; z <= 5; z++) {
+        final wx = cx + x, wz = cz + z;
+        if (wx < ox || wx >= ox + sizeX || wz < oz || wz >= oz + sizeZ) continue;
+        for (var y = 0; y <= 8; y++) {
+          final wall = x.abs() == 5 || z.abs() == 5 || y == 0 || y == 8;
+          var id = wall ? _netherBrick : _air;
+          if (x == -5 && z.abs() <= 1 && y >= 1 && y <= 4) id = _air; // the door from the hall
+          if (wall && y == 4 && x.abs() != 5 && z.abs() == 5 && x % 3 == 0) id = _glowstone; // sconces along both side walls
+          if (wall && y == 4 && x == 5 && z % 3 == 0) id = _glowstone; // and the back wall
+          if (y == 0 && (z.abs() == 4 || x.abs() == 4) && !(x == -4 && z.abs() <= 1)) id = _lava; // moat sunk in the floor ring
+          if (y == 8 && (x % 3 == 0) && (z % 3 == 0)) id = _glowstone;
+          if (y == 0 && x == 0 && z == 0) id = _fortressCore;
+          _put(b, ox, oz, wx, sy + y, wz, id);
+        }
+        // The room floor's underside and pillars so the moat has a bed.
+        _put(b, ox, oz, wx, sy - 1, wz, _netherBrick);
+        if (x.abs() == 5 && z.abs() == 5) {
+          for (var y = sy - 2; y > hellFloorY; y--) {
+            _put(b, ox, oz, wx, y, wz, _netherBrick);
+          }
+        }
+      }
+    }
+    // A glowstone-lit dais step at the far wall behind the core.
+    for (var z = -2; z <= 2; z++) {
+      _put(b, ox, oz, cx + 3, sy + 1, cz + z, _netherBrick);
+    }
+    _put(b, ox, oz, cx + 3, sy + 2, cz, _glowstone);
+  }
+
+  void _sideRoom(Uint8List b, int ox, int oz, int rx, int ry, int hz, int side) {
+    // Interior z from hz + side*4 .. hz + side*8 (5 cells), x rx-2..rx+2; the hall wall opens.
+    final zc = hz + side * 6;
+    for (var x = -3; x <= 3; x++) {
+      for (var z = -3; z <= 3; z++) {
+        final wx = rx + x, wz = zc + z;
+        if (wx < ox || wx >= ox + sizeX || wz < oz || wz >= oz + sizeZ) continue;
+        for (var y = 0; y <= 5; y++) {
+          final wall = x.abs() == 3 || z.abs() == 3 || y == 0 || y == 5;
+          var id = wall ? _netherBrick : _air;
+          if (wz == hz + side * 3 && x.abs() <= 1 && y >= 1 && y <= 3) id = _air; // doorway through the hall wall
+          _put(b, ox, oz, wx, ry + y, wz, id);
+        }
+      }
+    }
+    _put(b, ox, oz, rx, ry + 1, hz + side * 7, _chest);
+    _put(b, ox, oz, rx, ry + 4, zc, _glowstone);
   }
 }

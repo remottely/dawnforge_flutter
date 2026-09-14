@@ -69,6 +69,7 @@ class BlockDef {
     this.tier = 0,
     this.drop = '',
     this.light = 0,
+    this.speedMult = 1.0,
   });
 
   final String id;
@@ -94,6 +95,9 @@ class BlockDef {
 
   /// 0..15 emitted light.
   final int light;
+
+  /// Stage 29: how the block under a walker's feet scales its speed (soul sand 0.5).
+  final double speedMult;
 }
 
 class Blocks {
@@ -240,6 +244,21 @@ class Blocks {
     BlockDef('powered_rail_ew', 'Powered Rail', 0.70, 0.58, 0.28, shape: BlockShape.railEw, solid: false, opaque: false, hardness: 0.5, tool: ToolType.pickaxe, drop: 'powered_rail'),
     BlockDef('powered_rail_ns_on', 'Powered Rail', 1.00, 0.55, 0.25, shape: BlockShape.railNs, solid: false, opaque: false, hardness: 0.5, tool: ToolType.pickaxe, drop: 'powered_rail', light: 4),
     BlockDef('powered_rail_ew_on', 'Powered Rail', 1.00, 0.55, 0.25, shape: BlockShape.railEw, solid: false, opaque: false, hardness: 0.5, tool: ToolType.pickaxe, drop: 'powered_rail', light: 4),
+    // Stage 29: the underworld. Obsidian is what a lava SOURCE becomes under
+    // water (a diamond pickaxe mines it) and the portal frame; `portal` is the lit
+    // inside of that frame (non-solid, translucent, never an item); hellstone is
+    // the underworld's rock, soul sand halves a walker's speed (`speedMult`, read
+    // by the player and the mobs), glowstone lights the ceilings and drops dust,
+    // quartz ore veins the walls, nether brick is the fortress, and the fortress
+    // core holds the underworld heart (breakable once the Underworld Lord is dead).
+    BlockDef('obsidian', 'Obsidian', 0.10, 0.06, 0.16, hardness: 15.0, tool: ToolType.pickaxe, tier: 4),
+    BlockDef('portal', 'Portal', 0.55, 0.15, 0.95, a: 0.62, solid: false, opaque: false, hardness: -1, drop: '-', light: 11),
+    BlockDef('hellstone', 'Hellstone', 0.42, 0.14, 0.12, hardness: 0.4, tool: ToolType.pickaxe, tier: 1),
+    BlockDef('soul_sand', 'Soul Sand', 0.32, 0.24, 0.18, hardness: 0.5, tool: ToolType.shovel, speedMult: 0.5),
+    BlockDef('glowstone', 'Glowstone', 0.98, 0.85, 0.45, hardness: 0.3, drop: 'glowstone_dust', light: 15),
+    BlockDef('nether_quartz_ore', 'Quartz Ore', 0.62, 0.36, 0.34, hardness: 3.0, tool: ToolType.pickaxe, tier: 1, drop: 'quartz'),
+    BlockDef('nether_brick', 'Nether Brick', 0.20, 0.09, 0.11, hardness: 2.0, tool: ToolType.pickaxe, tier: 1),
+    BlockDef('fortress_core', 'Fortress Core', 0.45, 0.10, 0.70, hardness: 5.0, tool: ToolType.pickaxe, tier: 1, drop: 'underworld_heart', light: 8),
   ];
 
   static final Map<String, int> _indexById = {
@@ -327,6 +346,9 @@ class Blocks {
   }
 
   static int lightOf(int index) => defs[index].light;
+
+  /// Stage 29: how a block under a walker's feet scales its speed (soul sand: 0.5).
+  static double speedMult(int index) => defs[index].speedMult;
 
   static bool isStairs(int index) {
     final sh = defs[index].shape;
@@ -425,6 +447,7 @@ class Blocks {
           'crafting_table', 'furnace', 'torch', 'oak_fence', 'tnt', 'cobblestone', 'pressure_plate',
           'mud', 'reeds', 'jungle_log', 'vines', 'fern', 'melon', 'bed', 'farmland', 'wheat_2', 'oak_slab',
           'redstone_ore', 'rail_ew',
+          'hellstone', 'soul_sand', 'glowstone', 'nether_quartz_ore', 'nether_brick', 'fortress_core',
         ])
           id: indexOf(id),
       };

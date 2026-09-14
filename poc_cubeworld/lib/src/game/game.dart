@@ -31,6 +31,7 @@ import 'inventory.dart';
 import 'loot.dart';
 import 'music.dart';
 import 'net.dart';
+import 'portals.dart';
 import 'quests.dart';
 import 'rails.dart';
 import 'sfx.dart';
@@ -135,6 +136,11 @@ class Game extends ChangeNotifier {
   /// Stage 28: the same for the rails and carts.
   Map<String, int>? _stage28Site;
   String get _probe28Flag => '$saveRoot/probe28.flag';
+
+  /// Stage 29: the same for the underworld; the flag carries the return
+  /// portal's cells as JSON.
+  Map<String, dynamic>? _stage29Site;
+  String get _probe29Flag => '$saveRoot/probe29.flag';
 
   /// Set by the view: throws this session away and builds a fresh one with the
   /// same arguments (Godot's `reload_current_scene`).
@@ -251,6 +257,11 @@ class Game extends ChangeNotifier {
       _stage28Site = {'x0': cells[0], 'y': cells[1], 'z0': cells[2]};
       flag28.deleteSync();
     }
+    final flag29 = File(_probe29Flag);
+    if (flag29.existsSync()) {
+      _stage29Site = jsonDecode(flag29.readAsStringSync()) as Map<String, dynamic>;
+      flag29.deleteSync();
+    }
 
     world = VoxelWorld(
       seedValue: int.tryParse(_arg('--seed=', '')) ?? GameState.instance.seedValue,
@@ -297,6 +308,7 @@ class Game extends ChangeNotifier {
     weather = Weather(() => player.position, world);
     scene.add(weather.node);
     weather.setEnabled(Settings.instance.weather);
+    weather.suppressed = world.dimension == VoxelWorld.dimUnderworld; // stage 29: no sky down there
     if (_arg('--weather=', '') != '') weather.force(_arg('--weather=', ''));
 
     final net = Net.instance;
@@ -368,6 +380,25 @@ class Game extends ChangeNotifier {
   static Vector3 _mix(Vector3 a, Vector3 b, double t) => a + (b - a) * t;
 
   void _updateSky() {
+    if (ready && world.dimension == VoxelWorld.dimUnderworld) {
+      // Stage 29: no sun, no moon, a dark red haze. The chunks carry their own
+      // baked light (glowstone, lava); the ambient is a warm dim wash so the
+      // rock is not pitch black.
+      sun.intensity = 0.0;
+      sky.sunColor = Vector3.zero();
+      sky.zenithColor = Vector3(0.06, 0.01, 0.01);
+      sky.horizonColor = Vector3(0.28, 0.05, 0.03);
+      sky.groundColor = Vector3(0.12, 0.02, 0.02);
+      final radiance = Vector3(1.0, 0.55, 0.42) * (0.55 * 1.25 * ambientScale);
+      if ((radiance - _ambient).length > 0.02) {
+        _ambient = radiance;
+        _ambientTimer = 0.0;
+        scene.environment = EnvironmentMap.constantDiffuse(radiance);
+      }
+      scene.fog.density = 0.014;
+      scene.fog.color = Vector3(0.30, 0.06, 0.04);
+      return;
+    }
     final angle = (timeOfDay - 0.25) * math.pi * 2; // 0.25 = sunrise, 0.5 = noon
     final sunDir = Vector3(math.cos(angle) * 0.6, math.sin(angle), -0.5).normalized();
     final elevation = sunDir.y;
@@ -416,9 +447,10 @@ class Game extends ChangeNotifier {
   }
 
   String timeLabel() {
+    if (world.dimension == VoxelWorld.dimUnderworld) return 'Underworld'; // stage 29: no clock, no weather
     final h = (timeOfDay * 24.0).toInt();
     final m = ((timeOfDay * 24.0) % 1.0 * 60.0).toInt();
-    const biomeNames = ['Ocean', 'Beach', 'Plains', 'Forest', 'Desert', 'Snow', 'Mountains', 'Swamp', 'Jungle'];
+    const biomeNames = ['Ocean', 'Beach', 'Plains', 'Forest', 'Desert', 'Snow', 'Mountains', 'Swamp', 'Jungle', 'Underworld'];
     final b = world.biomeAt(player.position.x.toInt(), player.position.z.toInt());
     final clock = '${h.toString().padLeft(2, '0')}:${m.toString().padLeft(2, '0')}   ${biomeNames[b]}${isNight ? '   (night)' : ''}';
     return weather.kind == WeatherKind.clear ? clock : '$clock   ${weather.label}';
@@ -432,12 +464,12 @@ class Game extends ChangeNotifier {
 
   void _updateMusic() {
     final biome = world.biomeAt(player.position.x.toInt(), player.position.z.toInt());
-    Music.instance.setContext(biome, isNight, player.position.y < musicUndergroundY);
+    Music.instance.setContext(biome, isNight, player.position.y < musicUndergroundY, world.dimension == VoxelWorld.dimUnderworld);
   }
 
   String debugText() =>
       'FPS ${fps.round()}  chunks ${world.loadedChunkCount}  queue ${world.pendingCount}  faces ${world.facesEmitted}  mobs ${mobs.length}\n'
-      'pos ${player.position.x.toStringAsFixed(1)} ${player.position.y.toStringAsFixed(1)} ${player.position.z.toStringAsFixed(1)}  seed ${world.seedValue}   [F1] hide';
+      'pos ${player.position.x.toStringAsFixed(1)} ${player.position.y.toStringAsFixed(1)} ${player.position.z.toStringAsFixed(1)}  seed ${world.seedValue}  dim ${world.dimension}   [F1] hide';
 
   void notify(String text) {
     notes.add(Note(text, 3.0));
@@ -538,12 +570,16 @@ class Game extends ChangeNotifier {
     }
     GameState.instance.playTime += dt;
     final play = gameplay;
+    // Stage 29: the arrival holds the player until the other dimension's chunks
+    // are in; a body in a portal for two seconds travels.
+    _arriveTick();
+    _portalTick(dt);
     player.physicsProcess(dt, input, play);
     for (final m in mobs) {
-      m.update(dt);
+      if (isHere(m)) m.update(dt);
     }
     for (final m in pets) {
-      m.update(dt);
+      if (isHere(m)) m.update(dt);
     }
     // Stage 23: the pressure plates (Godot's `Main._physics_process`). Since
     // stage 27 a plate is a power SOURCE while pressed: the TNT under it ignites
@@ -570,16 +606,16 @@ class Game extends ChangeNotifier {
       world.circuits.setPressedPlates(pressed);
     }
     for (final d in drops) {
-      d.update(dt);
+      if (isHere(d)) d.update(dt);
     }
     for (final p in projectiles) {
       p.update(dt);
     }
     for (final b in boats) {
-      b.update(dt);
+      if (isHere(b)) b.update(dt);
     }
     for (final c in carts) {
-      c.update(dt);
+      if (isHere(c)) c.update(dt);
     }
     for (final p in puppets) {
       p.update(dt);
@@ -814,8 +850,12 @@ class Game extends ChangeNotifier {
       final key = IVec3(s.x, s.y, s.z);
       // Stage 24: any structure within 48 m is discovered (the map draws it
       // from now on).
-      if (s.type >= 1 && s.type <= 8 && !discoveredStructures.containsKey(key) && key.distanceTo(player.position) < 48.0) {
+      if (s.type >= 1 && s.type <= 9 && !discoveredStructures.containsKey(key) && key.distanceTo(player.position) < 48.0) {
         discoveredStructures[key] = s.type;
+      }
+      if (s.type == VoxelWorld.structFortress) {
+        _checkFortress(key);
+        continue;
       }
       if (s.type == 4) {
         if (!_bossesSpawned.contains(key) && key.distanceTo(player.position) < 40.0) {
@@ -894,6 +934,84 @@ class Game extends ChangeNotifier {
 
   static const int templeBossKeyY = 1000;
   static const int mineCartKeyY = 2000;
+
+  // --- stage 29: the fortress --------------------------------------------------------
+
+  static const int fortressBossKeyY = 3000;
+  static const int fortressDeadKeyY = 4000;
+  static const int fortressBlazeKeyY = 5000;
+
+  /// Announced once within 48 m (achievement `underworld`); two blazes wake at
+  /// the hall's middle the first time someone is within 20 m of it; the
+  /// Underworld Lord wakes in the throne room the first time someone is within
+  /// 14 m of the core. All three keys live in `_bossesSpawned` (lifted by their
+  /// own offsets) and so in the save.
+  void _checkFortress(IVec3 origin) {
+    final layout = world.generator.fortressLayout(origin.x, origin.y, origin.z);
+    if (!_bossesSpawned.contains(origin) && origin.distanceTo(player.position) < 48.0) {
+      _bossesSpawned.add(origin);
+      notify('A fortress looms in the dark!');
+      Achievements.instance.unlock('underworld');
+    }
+    final sp = spawner;
+    if (Net.instance.isClient || sp == null) return;
+    final blazeKey = origin + const IVec3(0, fortressBlazeKeyY, 0);
+    final blazeAt = layout.blaze.toVector3() + Vector3(0.5, 0.5, 0.5);
+    if (!_bossesSpawned.contains(blazeKey) && (player.position - blazeAt).length < 20.0 && world.isLoaded(layout.blaze)) {
+      _bossesSpawned.add(blazeKey);
+      for (var i = 0; i < 2; i++) {
+        final b = sp.forceSpawn('blaze', blazeAt + Vector3(i * 2.0 - 1.0, 1.0, 0.0));
+        spawnEffect(b.centre(), Vector3(1.0, 0.6, 0.2), 1.2);
+      }
+      notify('Blazes!');
+    }
+    final bossKey = origin + const IVec3(0, fortressBossKeyY, 0);
+    final core = layout.core;
+    if (!_bossesSpawned.contains(bossKey) && core.distanceTo(player.position) < 14.0 && world.isLoaded(core)) {
+      _bossesSpawned.add(bossKey);
+      spawnFortressBoss(core.toVector3() + Vector3(0.5, 1.0, 0.5));
+    }
+  }
+
+  Mob spawnFortressBoss(Vector3 throne) {
+    final mob = Mob();
+    mob.setupMob(world, this, player, Species.def('underworld_lord'));
+    mob.position = throne + Vector3(1.5, 0.6, 0.0);
+    mob.scaleToLevel(player.level + 3);
+    addMob(mob);
+    boss = mob;
+    notify('The Underworld Lord rises!');
+    Sfx.play('thunder', -6.0, 1.2);
+    return mob;
+  }
+
+  /// The fortress whose core block is [core] (kind 9 within the 3x3 regions
+  /// around it), or zero.
+  IVec3 _fortressOfCore(IVec3 core) {
+    for (final s in world.structuresNear(VoxelWorld.chunkOf(core))) {
+      if (s.type != VoxelWorld.structFortress) continue;
+      if (world.generator.fortressLayout(s.x, s.y, s.z).core == core) return IVec3(s.x, s.y, s.z);
+    }
+    return IVec3.zero;
+  }
+
+  /// A fortress core stays sealed until its lord is dead; a core with no fortress is free.
+  bool coreLocked(IVec3 core) {
+    final origin = _fortressOfCore(core);
+    if (origin == IVec3.zero) return false;
+    return !_bossesSpawned.contains(origin + const IVec3(0, fortressDeadKeyY, 0));
+  }
+
+  void onUnderworldLordDied(Vector3 at) {
+    for (final s in world.structuresNear(VoxelWorld.chunkOf(IVec3.floor(at)))) {
+      if (s.type != VoxelWorld.structFortress) continue;
+      final core = world.generator.fortressLayout(s.x, s.y, s.z).core;
+      if ((at - core.toVector3()).length < 40.0) {
+        _bossesSpawned.add(IVec3(s.x, s.y + fortressDeadKeyY, s.z));
+        notify('The fortress core is unsealed!');
+      }
+    }
+  }
 
   static int _cellHash(IVec3 c) =>
       ((c.x * 73856093) ^ (c.y * 19349663) ^ (c.z * 83492791)) & 0x7fffffff;
@@ -1391,6 +1509,10 @@ class Game extends ChangeNotifier {
   }
 
   void sleepInBed(IVec3 at) {
+    if (world.dimension == VoxelWorld.dimUnderworld) {
+      notify('You cannot sleep in the underworld'); // stage 29
+      return;
+    }
     player.spawnPoint = at.toVector3() + Vector3(0.5, 1.2, 0.5);
     if (isNight) {
       player.position = at.toVector3() + Vector3(0.5, 1.0, 0.5);
@@ -1460,6 +1582,7 @@ class Game extends ChangeNotifier {
         'player': player.toJson(),
         'time': timeOfDay,
         'seed': world.seedValue,
+        'dimension': world.dimension, // stage 29
         'crops': {for (final e in crops.entries) e.key.key: e.value},
         'stats': GameState.instance.toJson(),
         'chests': {for (final e in chests.entries) e.key.key: e.value.toJson()},
@@ -1484,19 +1607,19 @@ class Game extends ChangeNotifier {
     for (final m in pets) {
       if (m.puppet || !m.tamed || m.isDead || m.removed) continue;
       if (identical(m, player.mount)) mountIndex = petData.length;
-      petData.add(m.toJson());
+      petData.add(_withDim(m, m.toJson()));
     }
     // Stage 26: a villager is not tamed but never despawns, so it rides the save
     // like a pet.
     for (final m in mobs) {
-      if (!m.puppet && m.species.persistent && !m.isDead && !m.removed) petData.add(m.toJson());
+      if (!m.puppet && m.species.persistent && !m.isDead && !m.removed) petData.add(_withDim(m, m.toJson()));
     }
     return {
-      'boats': [for (final b in boats) if (!b.removed && !b.replica) b.toJson()],
-      'carts': [for (final c in carts) if (!c.removed && !c.replica) c.toJson()], // stage 28
+      'boats': [for (final b in boats) if (!b.removed && !b.replica) _withDim(b, b.toJson())],
+      'carts': [for (final c in carts) if (!c.removed && !c.replica) _withDim(c, c.toJson())], // stage 28
       'pets': petData,
       'mount': mountIndex,
-      'drops': [for (final d in drops) if (!d.replica && !d.removed) d.toJson()],
+      'drops': [for (final d in drops) if (!d.replica && !d.removed) _withDim(d, d.toJson())],
       'visited': encodeVisited(visitedChunks),
       'structures': encodeStructures(discoveredStructures),
     };
@@ -1526,7 +1649,7 @@ class Game extends ChangeNotifier {
 
   Future<bool> _loadGame() async {
     final f = File('$saveDir/player.json');
-    if ((_hasArg('--new') || GameState.instance.freshWorld) && !_stage24Verify && _stage27Site == null && _stage28Site == null) {
+    if ((_hasArg('--new') || GameState.instance.freshWorld) && !_stage24Verify && _stage27Site == null && _stage28Site == null && _stage29Site == null) {
       return false;
     }
     if (!await f.exists()) return false;
@@ -1538,6 +1661,9 @@ class Game extends ChangeNotifier {
     if (_arg('--seed=', '') == '' && savedSeed != null && savedSeed != world.seedValue) {
       await world.setWorldSeed(savedSeed);
     }
+    // Stage 29: the dimension comes first, so the live edit delta is the right one.
+    final savedDim = (data['dimension'] as num?)?.toInt() ?? 0;
+    if (savedDim != world.dimension) world.switchDimension(savedDim);
     await world.loadEdits('$saveDir/blocks.bin');
     timeOfDay = (data['time'] as num?)?.toDouble() ?? 0.3;
     GameState.instance.fromJson((data['stats'] as Map<String, dynamic>?) ?? {});
@@ -1569,6 +1695,7 @@ class Game extends ChangeNotifier {
       final bd = b as Map<String, dynamic>;
       final p = (bd['pos'] as List<dynamic>).map((e) => (e as num).toDouble()).toList();
       spawnBoat(Vector3(p[0], p[1], p[2]), (bd['yaw'] as num?)?.toDouble() ?? 0.0);
+      if (boats.isNotEmpty) _tagEntity(boats.last, (bd['dim'] as num?)?.toInt() ?? 0);
     }
     for (final cd in (data['carts'] as List<dynamic>? ?? const [])) {
       // Stage 28: the cart, its ends, `t`, speed and cargo.
@@ -1576,6 +1703,7 @@ class Game extends ChangeNotifier {
       final c = (d['cell'] as List<dynamic>).map((e) => (e as num).toInt()).toList();
       final cart = spawnMinecart(IVec3(c[0], c[1], c[2]), d['kind']?.toString() ?? 'minecart');
       cart?.fromJson(d);
+      if (cart != null) _tagEntity(cart, (d['dim'] as num?)?.toInt() ?? 0);
     }
     final restored = <Mob>[];
     for (final pd in (data['pets'] as List<dynamic>? ?? const [])) {
@@ -1584,6 +1712,7 @@ class Game extends ChangeNotifier {
       final m = Mob();
       m.setupMob(world, this, player, Species.def(d['species'].toString()));
       m.fromJson(d);
+      _tagEntity(m, (d['dim'] as num?)?.toInt() ?? 0);
       if (m.tamed) {
         pets.add(m);
         entities.add(m.node);
@@ -1604,6 +1733,7 @@ class Game extends ChangeNotifier {
       drop.position = Vector3(p[0], p[1], p[2]);
       drop.bonus = (d['bonus'] as num?)?.toInt() ?? 0;
       drop.syncNode();
+      _tagEntity(drop, (d['dim'] as num?)?.toInt() ?? 0);
       drops.add(drop);
       entities.add(drop.node);
       Net.instance.onDropSpawned(drop);
@@ -1916,6 +2046,10 @@ class Game extends ChangeNotifier {
     if (_hasArg('--stage28')) {
       // Two boots again: the track and the carts are saved, the reload reads them back.
       if (await _probeStage28()) return;
+    }
+    if (_hasArg('--stage29')) {
+      // Two boots: the second reads the underworld save back.
+      if (await _probeStage29()) return;
     }
     await nextFrame();
     await nextFrame();
@@ -2795,6 +2929,8 @@ class Game extends ChangeNotifier {
         at = Vector3(best.x + 7.5, TerrainGenerator.mineFloorY + 1.1, best.z + 0.5);
       case TerrainGenerator.structTemple:
         at += Vector3(0, 0, 9);
+      case TerrainGenerator.structFortress:
+        at += Vector3(2, 0, 0); // stage 29: two blocks into the fortress hall
     }
     player.position = at.clone();
     player.velocity = Vector3.zero();
@@ -3511,6 +3647,520 @@ class Game extends ChangeNotifier {
       await nextFrame();
     }
     debugPrint('[probe] stage28 capture riding at ${player.position} (cart ${ride?.cell})');
+  }
+
+  // --- stage 29: the underworld --------------------------------------------------------
+  // One dimension is loaded at a time. Everything that lives in the world (mobs,
+  // pets, drops, boats, carts) carries the dimension it is in: an entity in the
+  // other dimension is hidden and not stepped until the player comes back. Wild
+  // hostiles are simply freed on a travel (the spawner refills them). Puppets
+  // carry their peer's dimension in the pose.
+
+  /// Godot's `dim` meta. An entity never tagged belongs to the loaded dimension.
+  final Expando<int> _dimOf = Expando<int>('dim');
+  double _portalTime = 0.0;
+  bool _portalHold = false;
+  ({int x, int z, int d, Vector3 hold})? _arrival;
+  int travels = 0; // for the probe
+
+  int dimOf(Object e) => _dimOf[e] ?? world.dimension;
+  bool isHere(Object e) => dimOf(e) == world.dimension;
+
+  Map<String, Object> _withDim(Object e, Map<String, Object> d) => {...d, 'dim': dimOf(e)};
+
+  void _tagEntity(Object e, int d) {
+    _dimOf[e] = d;
+    _applyEntityDimension(e);
+  }
+
+  void _applyEntityDimension(Object e) {
+    final here = isHere(e);
+    switch (e) {
+      case Mob m:
+        m.node.visible = here;
+      case ItemDrop d:
+        d.node.visible = here;
+      case Boat b:
+        b.node.visible = here;
+      case Minecart c:
+        c.node.visible = here;
+    }
+  }
+
+  /// Every entity that belongs to a dimension: bodies, drops, boats, carts
+  /// (never a puppet, a projectile or a one-shot effect).
+  List<Object> _dimensionalEntities() => [
+        for (final m in mobs) if (!m.puppet) m,
+        ...pets,
+        for (final d in drops) if (!d.replica) d,
+        for (final b in boats) if (!b.replica) b,
+        for (final c in carts) if (!c.replica) c,
+      ];
+
+  /// Leave for dimension [d] from where the player stands: the current
+  /// dimension's entities are tagged and parked, the world switches, and the
+  /// arrival ([_arriveTick]) finishes the trip once the chunks around the
+  /// player's column are generated.
+  void travelToDimension(int d) {
+    if (d == world.dimension || _arrival != null) return;
+    final from = world.dimension;
+    for (final e in _dimensionalEntities()) {
+      _dimOf[e] ??= from;
+      // A wild mob does not wait for the player to come back.
+      if (e is Mob && !e.tamed && !e.species.persistent) e.removed = true;
+    }
+    if (player.mount != null) player.dismount();
+    if (player.riding != null) player.leaveBoat();
+    if (player.cart != null) player.leaveCart();
+    player.reelIn(false);
+    boss = null;
+    final pos = player.position.clone();
+    world.switchDimension(d);
+    for (final e in _dimensionalEntities()) {
+      _applyEntityDimension(e);
+    }
+    weather.suppressed = d == VoxelWorld.dimUnderworld;
+    final guessY = d == VoxelWorld.dimUnderworld ? 64.0 : world.surfaceHeight(pos.x.floor(), pos.z.floor()) + 1.0;
+    final hold = Vector3(pos.x, guessY, pos.z);
+    _probePlace(hold);
+    _portalHold = true;
+    _portalTime = 0.0;
+    _arrival = (x: pos.x.floor(), z: pos.z.floor(), d: d, hold: hold);
+    world.updateAround(hold);
+    _updateMusic();
+    travels += 1;
+    notify(d == VoxelWorld.dimUnderworld ? 'You step through the portal...' : 'Daylight again.');
+  }
+
+  bool get isArriving => _arrival != null;
+
+  void _arriveTick() {
+    final a = _arrival;
+    if (a == null) return;
+    _probePlace(a.hold);
+    final here = VoxelWorld.chunkOfXZ(a.x, a.z);
+    for (final o in VoxelWorld.ring) {
+      if (!world.chunks.containsKey((x: here.x + o.x, z: here.z + o.z))) return;
+    }
+    final y = Portals.findSafeY(world, a.x, a.z, a.d);
+    final stand = Vector3(a.x + 0.5, y + 0.05, a.z + 0.5);
+    _probePlace(stand);
+    player.resetFall();
+    final existing = Portals.near(world, stand, Portals.search);
+    if (existing.y < 0) Portals.buildAt(world, IVec3(a.x, y, a.z - 2));
+    _arrival = null;
+    world.updateAround(stand);
+  }
+
+  /// Flint and steel at [cell] (`Player._usePressed`): lights an obsidian
+  /// frame's hollow. Returns how many portal blocks were lit.
+  int tryLightPortal(IVec3 cell) {
+    final lit = Portals.light(world, cell);
+    if (lit > 0) notify('The portal opens!');
+    return lit;
+  }
+
+  /// A body standing in a portal block for [Portals.seconds] travels. The host
+  /// and a solo player go at once; a client asks the host
+  /// (`Net.requestTravel`) and waits for its `set_dim`.
+  void _portalTick(double dt) {
+    if (player.isDead || _arrival != null) return;
+    final feet = IVec3(player.position.x.floor(), (player.position.y + 0.3).floor(), player.position.z.floor());
+    if (!Portals.isPortal(world.getBlock(feet))) {
+      _portalTime = 0.0;
+      _portalHold = false;
+      return;
+    }
+    if (_portalHold) return;
+    _portalTime += dt;
+    if (_portalTime < Portals.seconds) return;
+    _portalTime = 0.0;
+    _portalHold = true;
+    final d = world.dimension == VoxelWorld.dimOverworld ? VoxelWorld.dimUnderworld : VoxelWorld.dimOverworld;
+    if (Net.instance.isClient) {
+      Net.instance.requestTravel(d);
+    } else {
+      travelToDimension(d);
+    }
+  }
+
+  double portalSecondsLeft() => Portals.seconds - _portalTime;
+
+  // --- stage 29: the underworld probe ----------------------------------------------------
+
+  /// Blocks of [id] over the 5x5 chunks around the player (the loaded core).
+  int _stage29Count(String id) {
+    final b = Blocks.indexOf(id);
+    final here = VoxelWorld.chunkOf(IVec3.floor(player.position));
+    var n = 0;
+    for (var dz = -2; dz < 3; dz++) {
+      for (var dx = -2; dx < 3; dx++) {
+        final blocks = world.chunks[(x: here.x + dx, z: here.z + dz)];
+        if (blocks == null) continue;
+        for (final v in blocks) {
+          if (v == b) n++;
+        }
+      }
+    }
+    return n;
+  }
+
+  /// Waits for the trip `travelToDimension` (or the portal) started: chunks in,
+  /// the player placed, the return portal built. False when it did not finish
+  /// in [seconds].
+  Future<bool> _stage29Arrive(double seconds) async {
+    final t0 = DateTime.now();
+    while (isArriving && DateTime.now().difference(t0).inMilliseconds < (seconds * 1000).round()) {
+      await nextFrame();
+    }
+    return !isArriving;
+  }
+
+  /// Stands the player in the portal at [cell] and waits (up to 8 s of ticks)
+  /// for the timer to fire the trip.
+  Future<bool> _stage29StandInPortal(IVec3 cell) async {
+    flyMode = false;
+    final before = travels;
+    final at = cell.toVector3() + Vector3(0.5, 0.05, 0.5);
+    _probePlace(at);
+    await _stage28Until(() {
+      if (travels != before || isArriving) return true;
+      _probePlace(at);
+      return false;
+    }, 8.0);
+    return travels != before;
+  }
+
+  Future<void> _stage29TeleportWait(Vector3 at) async {
+    flyMode = true;
+    _probePlace(at);
+    world.updateAround(at);
+    for (var i = 0; i < 20; i++) {
+      _probePlace(at);
+      await nextFrame();
+    }
+    for (var i = 0; !world.isIdle && i < 1200; i++) {
+      _probePlace(at);
+      await nextFrame();
+    }
+  }
+
+  /// Where the first boot and the shots start: a stone pad east of spawn with
+  /// the obsidian frame on it.
+  ({int x0, int y, int z0, Vector3 home, IVec3 cell}) _stage29Pad() {
+    final x0 = player.position.x.floor() + 3;
+    final z0 = player.position.z.floor();
+    var y0 = 0;
+    for (var x = x0 - 3; x < x0 + 18; x++) {
+      for (var z = z0 - 4; z < z0 + 14; z++) {
+        y0 = math.max(y0, world.groundHeight(x, z));
+      }
+    }
+    final stone = Blocks.indexOf('stone');
+    for (var x = x0 - 3; x < x0 + 18; x++) {
+      for (var z = z0 - 4; z < z0 + 14; z++) {
+        world.setBlock(IVec3(x, y0, z), stone);
+        for (var y = y0 + 1; y < y0 + 9; y++) {
+          world.setBlock(IVec3(x, y, z), Blocks.air);
+        }
+      }
+    }
+    final y = y0 + 1;
+    final home = Vector3(x0 + 8.5, y + 0.1, z0 + 9.5);
+    _probePlace(home);
+    // The frame: 4 wide x 5 tall in the x-y plane at z0 + 3, hollow 2 x 3.
+    final cell = IVec3(x0 + 8, y, z0 + 3);
+    final obsidian = Blocks.indexOf('obsidian');
+    for (var dx = -1; dx < 3; dx++) {
+      for (var dy = -1; dy < 4; dy++) {
+        final inside = dx >= 0 && dx <= 1 && dy >= 0 && dy <= 2;
+        world.setBlock(cell + IVec3(dx, dy, 0), inside ? Blocks.air : obsidian);
+      }
+    }
+    return (x0: x0, y: y, z0: z0, home: home, cell: cell);
+  }
+
+  /// --stage29, first boot: obsidian from lava + water, the frame lit, two
+  /// seconds in the portal, the underworld census and return portal, the
+  /// fortress (`--kind=9`), the sealed core and the heart, soul sand, a
+  /// fireball, home and down again, then a save in the underworld and a fresh
+  /// session (`probe29.flag`). Windowed: `--shot=portal` / `--shot=fortress`.
+  Future<bool> _probeStage29() async {
+    final site = _stage29Site;
+    if (site != null) {
+      await _probeStage29Verify(site);
+      return false;
+    }
+    final shot = _arg('--shot=', '');
+    final pad = _stage29Pad();
+    final x0 = pad.x0, y = pad.y, z0 = pad.z0;
+    final cell = pad.cell;
+    final stone = Blocks.indexOf('stone');
+    String idAt(IVec3 c) => Blocks.idOf(world.getBlock(c));
+    debugPrint('[probe] stage29 site x0=$x0 y=$y z0=$z0');
+    if (shot != 'portal') {
+      // 1. A lava source touched by water hardens to obsidian; a flowing lava
+      // cell to cobblestone. Two walled channels along +x on the pad's west
+      // edge (rows z0+1 and z0+5).
+      for (var i = 0; i < 6; i++) {
+        for (final dz in const [0, 2, 4, 6]) {
+          world.setBlock(IVec3(x0 + i, y, z0 + dz), stone);
+        }
+      }
+      world.setBlock(IVec3(x0 - 1, y, z0 + 1), stone);
+      world.setBlock(IVec3(x0 - 1, y, z0 + 5), stone);
+      final flowSrc = IVec3(x0, y, z0 + 1);
+      final src = IVec3(x0, y, z0 + 5);
+      world.setBlock(flowSrc, Blocks.indexOf('lava'));
+      await _stage28Settle(2.0);
+      final flowing = idAt(IVec3(x0 + 2, y, z0 + 1)) == 'lava_flow';
+      world.setBlock(IVec3(x0 + 3, y, z0 + 1), Blocks.indexOf('water'));
+      world.setBlock(src, Blocks.indexOf('lava'));
+      world.setBlock(IVec3(x0 + 1, y, z0 + 5), Blocks.indexOf('water'));
+      await _stage28Settle(2.5);
+      final obsidianOk = idAt(src) == 'obsidian';
+      final cobbleOk = idAt(IVec3(x0 + 2, y, z0 + 1)) == 'cobblestone';
+      debugPrint('[probe] stage29 obsidian: lava source + water -> obsidian=$obsidianOk, flowing lava -> cobblestone=$cobbleOk (flow cell was lava_flow=$flowing)');
+      world.setBlock(IVec3(x0 + 3, y, z0 + 1), Blocks.air);
+      world.setBlock(IVec3(x0 + 1, y, z0 + 5), Blocks.air);
+      world.setBlock(flowSrc, Blocks.air);
+      await _stage28Settle(1.0);
+    }
+    // 2. The frame lit by the flint and steel.
+    final lit = tryLightPortal(cell + IVec3.up);
+    final portalId = Blocks.indexOf('portal');
+    var portalBlocks = 0;
+    for (var dx = 0; dx < 2; dx++) {
+      for (var dy = 0; dy < 3; dy++) {
+        if (world.getBlock(cell + IVec3(dx, dy, 0)) == portalId) portalBlocks += 1;
+      }
+    }
+    debugPrint('[probe] stage29 portal built and lit: portal blocks=$portalBlocks (lit $lit)');
+    if (shot == 'portal') {
+      // The capture: first person five metres south of the frame, looking north at it.
+      final eye = Vector3(x0 + 8.5, y + 0.05, z0 + 11.5);
+      player.setFirstPerson(true);
+      player.setLook(0.0, 0.06);
+      // The pad's chunks remesh first, or the capture shows the terrain it replaced.
+      for (var i = 0; i < 30 || (!world.isIdle && i < 600); i++) {
+        _probePlace(eye);
+        await nextFrame();
+      }
+      _pinCameraTo = () => eye.clone();
+      return false;
+    }
+    // 3. Two seconds inside the portal: the trip, the arrival, the safe spot.
+    final went = await _stage29StandInPortal(cell);
+    final arrived = await _stage29Arrive(40.0);
+    final feet = IVec3(player.position.x.floor(), (player.position.y + 0.05).floor(), player.position.z.floor());
+    final under = world.getBlock(feet + IVec3.down);
+    final safe = world.getBlock(feet) == Blocks.air && world.getBlock(feet + IVec3.up) == Blocks.air && Blocks.isSolid(under);
+    final arrival = player.position.clone();
+    debugPrint('[probe] stage29 travelled: dimension=${world.dimension} pos=(${feet.x},${feet.y},${feet.z}) safe=$safe '
+        '(air over ${Blocks.idOf(under)}) [timer fired=$went arrived=$arrived]');
+    // 4. What the underworld is made of, over the loaded core.
+    for (var i = 0; i < 30 || (!world.isIdle && i < 1200); i++) {
+      await nextFrame();
+    }
+    debugPrint('[probe] stage29 underworld window: hellstone=${_stage29Count('hellstone')} lava=${_stage29Count('lava')} '
+        'glowstone=${_stage29Count('glowstone')} quartz=${_stage29Count('nether_quartz_ore')} soul_sand=${_stage29Count('soul_sand')}');
+    if (shot == 'cavern') {
+      // Flutter-only capture: the nearest open column over the lava sea (air at
+      // y 40, lava at the sea level below), hovered in fly mode looking down
+      // across it toward the glowstone-hung ceilings.
+      final c = IVec3.floor(arrival);
+      IVec3? best;
+      var bestD = 1 << 30;
+      for (var dz = -24; dz <= 24; dz++) {
+        for (var dx = -24; dx <= 24; dx++) {
+          final x = c.x + dx, z = c.z + dz;
+          if (world.getBlockXYZ(x, TerrainGenerator.lavaSeaY, z) != Blocks.indexOf('lava')) continue;
+          var open = true;
+          for (var yy = TerrainGenerator.lavaSeaY + 1; yy < 46 && open; yy++) {
+            if (world.getBlockXYZ(x, yy, z) != Blocks.air) open = false;
+          }
+          if (open && dx * dx + dz * dz < bestD) {
+            bestD = dx * dx + dz * dz;
+            best = IVec3(x, 40, z);
+          }
+        }
+      }
+      final eye = (best ?? c).toVector3() + Vector3(0.5, 0.0, 0.5);
+      flyMode = true;
+      player.setLook(_arg('--look=', '') == '' ? 0.0 : player.yaw, _arg('--look=', '') == '' ? -20.0 * math.pi / 180.0 : player.pitch);
+      for (var i = 0; i < 30 || (!world.isIdle && i < 600); i++) {
+        _probePlace(eye);
+        await nextFrame();
+      }
+      _pinCameraTo = () => eye.clone();
+      debugPrint('[probe] stage29 cavern capture from $eye (open column over the lava sea: ${best != null})');
+      return false;
+    }
+    // 5. The return portal.
+    final back = Portals.near(world, arrival, Portals.search);
+    debugPrint('[probe] stage29 return portal exists=${back.y >= 0} within ${Portals.search} blocks (at $back)');
+    // 6. The fortress, through the stage 21a helper (`--kind=9`), wide scan.
+    final found = _probeStage21aTeleport(48);
+    if (found == null) {
+      debugPrint('[probe] stage29 fortress: none within 48 chunks of seed ${world.seedValue}');
+    } else {
+      final origin = found.origin;
+      final layout = world.generator.fortressLayout(origin.x, origin.y, origin.z);
+      final core = layout.core;
+      final len = layout.length;
+      await _stage29TeleportWait(found.at);
+      _checkStructures();
+      var bricks = 0;
+      final brickId = Blocks.indexOf('nether_brick');
+      for (var x = origin.x; x < origin.x + len + 11; x++) {
+        for (var yy = origin.y; yy < origin.y + 9; yy++) {
+          for (var z = origin.z - 5; z < origin.z + 6; z++) {
+            if (world.getBlockXYZ(x, yy, z) == brickId) bricks += 1;
+          }
+        }
+      }
+      var chests = 0;
+      for (final c in [layout.chestA, layout.chestB]) {
+        if (idAt(c) == 'chest') chests += 1;
+      }
+      // The blazes wake at the hall's middle, the lord at the throne.
+      await _stage29TeleportWait(layout.blaze.toVector3() + Vector3(0.5, 0.1, 0.5));
+      _checkStructures();
+      await _stage29TeleportWait(core.toVector3() + Vector3(-3.5, 1.1, 0.5));
+      _checkStructures();
+      await _ticks(1);
+      var blazes = 0;
+      for (final m in mobs) {
+        if (m.species.id == 'blaze') {
+          blazes += 1;
+          m.stun(120.0, false);
+        }
+      }
+      final lord = boss;
+      lord?.stun(120.0, false);
+      debugPrint('[probe] stage29 fortress at (${origin.x},${origin.z}): bricks=$bricks chests=$chests blazes=$blazes '
+          'boss=${lord?.species.name ?? 'none'} hp=${lord?.maxHp.toInt() ?? 0} (origin $origin, length $len, core $core)');
+      if (shot == 'fortress') {
+        // The capture: first person in the throne room's door, the lord and the core ahead.
+        final door = core.toVector3() + Vector3(-4.5, 1.05, 0.5);
+        flyMode = false;
+        player.setFirstPerson(true);
+        player.setLook(-math.pi / 2.0, 0.04);
+        for (var i = 0; i < 30 || (!world.isIdle && i < 600); i++) {
+          _probePlace(door);
+          await nextFrame();
+        }
+        _pinCameraTo = () => door.clone();
+        debugPrint('[probe] stage29 capture from $door, boss at ${lord?.position}');
+        return false;
+      }
+      // 7. The core: sealed while the lord lives, then the heart.
+      player.inventory.add('iron_pickaxe', 1);
+      player.selectedSlot = player.inventory.find('iron_pickaxe');
+      final coreId = Blocks.indexOf('fortress_core');
+      player.probeBreak(core, coreId);
+      final refused = world.getBlock(core) == coreId;
+      if (lord != null) lord.takeDamage(lord.hp + 1.0, lord.position + Vector3(1, 0, 0), 0.0, player);
+      await _ticks(1);
+      player.probeBreak(core, coreId);
+      var hearts = 0;
+      for (final d in drops) {
+        if (d.itemId == 'underworld_heart' && !d.removed) {
+          hearts += d.count;
+          d.removed = true;
+        }
+      }
+      player.pickUp('underworld_heart', hearts);
+      final ach = Achievements.instance.unlocked;
+      debugPrint('[probe] stage29 core: break before boss dies=${refused ? 'refused' : 'BROKE'}, after kill=heart x$hearts, '
+          'achievement heart=${ach.contains('heart')} (underworld=${ach.contains('underworld')})');
+      // 8. Soul sand on the hall floor, and a blaze's fireball.
+      final soul = Blocks.indexOf('soul_sand');
+      for (var x = origin.x + 2; x < origin.x + 16; x++) {
+        world.setBlock(IVec3(x, origin.y, origin.z), soul);
+        world.setBlock(IVec3(x, origin.y, origin.z + 1), soul);
+      }
+      flyMode = false;
+      _probePlace(Vector3(origin.x + 3.5, origin.y + 1.05, origin.z + 0.5));
+      player.probeWalk(Vector3(1, 0, 0));
+      final speeds = <double>[];
+      var tick = 0;
+      await _stage28Until(() {
+        if (tick >= 40) speeds.add(math.sqrt(player.velocity.x * player.velocity.x + player.velocity.z * player.velocity.z));
+        tick += 1;
+        return tick >= 70;
+      }, 2.0);
+      player.probeWalk(Vector3.zero());
+      final v = speeds.isEmpty ? 0.0 : speeds.reduce((a, b) => a + b) / speeds.length;
+      final underNow = idAt(IVec3(player.position.x.floor(), (player.position.y - 0.05).floor(), player.position.z.floor()));
+      debugPrint('[probe] stage29 soul sand speed=${v.toStringAsFixed(2)} (< walk ${Player.walkSpeed}) on $underNow');
+      player.effects.clear('burning');
+      final shooter = spawner!.forceSpawn('blaze', player.centre() + Vector3(3.0, 0.6, 0.0)); // down the hall, not into its wall
+      shooter.stun(30.0, false);
+      spawnProjectile(shooter.centre(), (player.centre() - shooter.centre()).normalized() * 20.0, 2.0, shooter, 'fire', 0.25);
+      await _ticks(20);
+      debugPrint('[probe] stage29 blaze fireball applies burning=${player.effects.has('burning')} '
+          '(hp ${player.hp.toStringAsFixed(0)}/${player.maxHp.toStringAsFixed(0)})');
+      player.effects.clear('burning');
+      shooter.removed = true;
+    }
+    // 9. Home through the return portal.
+    if (back.y >= 0) {
+      player.hp = player.maxHp;
+      await _stage29TeleportWait(back.toVector3() + Vector3(0.5, 0.05, 0.5));
+      final wentBack = await _stage29StandInPortal(back);
+      final arrivedBack = await _stage29Arrive(40.0);
+      final f2 = IVec3(player.position.x.floor(), (player.position.y + 0.05).floor(), player.position.z.floor());
+      final surface = (world.groundHeight(f2.x, f2.z) - f2.y).abs() <= 1;
+      debugPrint('[probe] stage29 back home: dimension=${world.dimension} pos=(${f2.x},${f2.y},${f2.z}) surface=$surface '
+          '(ground ${world.groundHeight(f2.x, f2.z)}) [timer fired=$wentBack arrived=$arrivedBack, weather ${weather.label}, label ${timeLabel()}]');
+    }
+    // 10. Down again, save there, reload.
+    await _stage29TeleportWait(cell.toVector3() + Vector3(0.5, 0.05, 0.5));
+    await _stage29StandInPortal(cell);
+    await _stage29Arrive(40.0);
+    final down = Portals.near(world, player.position, Portals.search);
+    final cells = <List<int>>[];
+    if (down.y >= 0) {
+      // The six cells of that portal: walk the portal blocks around the one found.
+      for (var dx = -2; dx < 3; dx++) {
+        for (var dy = -3; dy < 4; dy++) {
+          for (var dz = -2; dz < 3; dz++) {
+            final b = down + IVec3(dx, dy, dz);
+            if (world.getBlock(b) == portalId) cells.add([b.x, b.y, b.z]);
+          }
+        }
+      }
+    }
+    flyMode = false;
+    await _stage28Settle(0.3);
+    await saveGame();
+    File(_probe29Flag).writeAsStringSync(jsonEncode({
+      'cells': cells,
+      'pos': [player.position.x, player.position.y, player.position.z],
+    }));
+    debugPrint('[probe] stage29 saved in dimension ${world.dimension} (edits_0=${world.editCountIn(0)} edits_1=${world.editCountIn(1)}, '
+        'portal cells ${cells.length}) to $saveDir, reloading the scene');
+    reloader!();
+    return true;
+  }
+
+  /// --stage29, second boot: the save puts the player back in the underworld,
+  /// both deltas come back, the return portal stands.
+  Future<void> _probeStage29Verify(Map<String, dynamic> site) async {
+    for (var i = 0; i < 30 || (!world.isIdle && i < 1200); i++) {
+      await nextFrame();
+    }
+    final portalId = Blocks.indexOf('portal');
+    final cells = site['cells'] as List<dynamic>;
+    var intact = 0;
+    for (final c in cells) {
+      final l = c as List<dynamic>;
+      if (world.getBlockXYZ(l[0] as int, l[1] as int, l[2] as int) == portalId) intact += 1;
+    }
+    debugPrint('[probe] stage29 after reload: dimension=${world.dimension} edits_0=${world.editCountIn(0)} edits_1=${world.editCountIn(1)} '
+        'portal intact=${intact == cells.length && intact > 0} ($intact/${cells.length} cells, player at ${player.position}, '
+        'label ${timeLabel()}, mood ${Music.instance.currentMood})');
   }
 
   void shutdown() {

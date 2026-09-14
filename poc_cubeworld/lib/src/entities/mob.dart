@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter_scene/scene.dart' hide Spawner;
 import 'package:vector_math/vector_math.dart';
 
+import '../core/blocks.dart';
 import '../core/ivec3.dart';
 import '../core/species.dart';
 import '../game/achievements.dart';
@@ -505,6 +506,7 @@ class Mob extends VoxelBody {
       if (st.mobsKilled >= 50) ach.unlock('slayer');
     }
     if (isBoss) ach.unlock('boss');
+    if (species.id == 'underworld_lord') main.onUnderworldLordDied(position); // stage 29: the fortress core opens
     if (affix != '') {
       ach.unlock('elite');
       main.spawnDrop(centre(), 'gem_shard', 1 + main.random.nextInt(2));
@@ -719,6 +721,8 @@ class Mob extends VoxelBody {
     var speed = species.speed * speedMult;
     if (state == MobState.wander) speed *= 0.5;
     if (slowed > 0.0) speed *= 0.5;
+    // Stage 29: soul sand under the feet.
+    if (onFloor) speed *= Blocks.speedMult(world.getBlockXYZ(position.x.floor(), (position.y - 0.05).floor(), position.z.floor()));
     if (species.flying) {
       _fly(dt, speed);
       return;
