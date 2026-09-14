@@ -5,15 +5,18 @@ import 'package:vector_math/vector_math.dart';
 
 import '../core/ivec3.dart';
 import '../game/game.dart';
-import '../player/player.dart';
 import '../world/voxel_world.dart';
 import 'voxel_body.dart';
 import 'voxel_mesh_builder.dart';
 
 /// A rowing boat: floats on liquid, driven by whoever sits in it (F to board /
-/// leave).
+/// leave). Stage 25: the host owns every boat. A [replica] (client side) never
+/// simulates — it lerps to the pose the host streams ([setNetPose]); a client
+/// that boards one sends its steer input inside its pose and the host's boat
+/// carries its puppet.
 class Boat extends VoxelBody {
-  Player? driver;
+  /// The local player or, on the host, a peer's puppet (stage 25).
+  Object? driver;
   double throttle = 0.0;
   double steer = 0.0;
   double yaw = 0.0;
@@ -21,6 +24,14 @@ class Boat extends VoxelBody {
   final Node _hull = Node();
   double _roll = 0.0;
   double _time = 0.0;
+  bool replica = false;
+  int netId = 0;
+
+  /// Host: the pose last streamed to clients.
+  Vector3? lastSent;
+  double lastSentYaw = double.infinity;
+  Vector3? _netTarget;
+  double _netYaw = 0.0;
 
   void setupBoat(VoxelWorld w, Game m, Vector3 at, double heading) {
     setup(w, 0.55, 0.5);
@@ -42,6 +53,17 @@ class Boat extends VoxelBody {
   }
 
   void update(double dt) {
+    if (replica) {
+      final t = _netTarget;
+      if (t != null) {
+        final k = (dt * 12.0).clamp(0.0, 1.0);
+        position = position + (t - position) * k;
+        yaw = lerpAngle(yaw, _netYaw, k);
+      }
+      syncNode();
+      _hull.rotation = eulerYXZ(0, yaw, 0);
+      return;
+    }
     // Stage 24: a restored boat waits for its chunk (unloaded reads as air).
     if (!world.isLoaded(IVec3.floor(position))) return;
     _time += dt;
@@ -68,6 +90,16 @@ class Boat extends VoxelBody {
     _roll = lerpd(_roll, steer * 0.12 * throttle, dt * 4.0);
     _hull.rotation = eulerYXZ(0, yaw, _roll);
     _hull.position = Vector3(0, inWater ? math.sin(_time * 2.0 + position.x) * 0.03 : 0.0, 0);
+  }
+
+  /// Replica: the host's latest pose; a jump beyond 8 m snaps, the rest is lerped.
+  void setNetPose(Vector3 pos, double heading) {
+    if (_netTarget == null || (position - pos).length > 8.0) {
+      position = pos.clone();
+      yaw = heading;
+    }
+    _netTarget = pos.clone();
+    _netYaw = heading;
   }
 
   /// Stage 24: what the save keeps of a boat.

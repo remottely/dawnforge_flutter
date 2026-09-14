@@ -195,7 +195,20 @@ class Player extends VoxelBody implements Target {
     _torchNode.addComponent(PointLightComponent(torchLight));
     node.add(_torchNode);
     inventory.listeners.add(_refreshArmor);
+    inventory.listeners.add(() => bagDirty = true);
     _giveStartingKit();
+  }
+
+  /// Stage 25: a client re-declares its bag to the host when set.
+  bool bagDirty = false;
+
+  /// Probe (stage 25): every slot full, except one that leaves room for exactly
+  /// one more [id].
+  void probeFillBag(String id) {
+    for (var i = 0; i < Inventory.size; i++) {
+      inventory.setSlot(i, ItemStack('stone', Items.stackSize('stone')));
+    }
+    inventory.setSlot(Inventory.size - 1, ItemStack(id, Items.stackSize(id) - 1));
   }
 
   void _giveStartingKit() {
@@ -796,13 +809,8 @@ class Player extends VoxelBody implements Target {
   }
 
   void _toggleBoat() {
-    final b = riding;
-    if (b != null) {
-      riding = null;
-      b.driver = null;
-      b.throttle = 0.0;
-      position = b.position - rightVec * 1.2 + Vector3(0, 0.6, 0);
-      velocity = Vector3.zero();
+    if (riding != null) {
+      leaveBoat();
       return;
     }
     Boat? best;
@@ -814,12 +822,36 @@ class Player extends VoxelBody implements Target {
         bestD = d;
       }
     }
-    if (best != null) {
-      riding = best;
-      Achievements.instance.unlock('sailor');
-      best.driver = this;
-      notify('Rowing. [F] to get off');
+    if (best != null) boardBoat(best);
+  }
+
+  /// Sit in [b]. A replica (stage 25) is the host's boat: the host is asked to
+  /// seat this peer's puppet and the steer input rides in the pose; the seat
+  /// follows the streamed pose.
+  void boardBoat(Boat b) {
+    riding = b;
+    Achievements.instance.unlock('sailor');
+    if (b.replica) {
+      Net.instance.requestBoard(b.netId);
+    } else {
+      b.driver = this;
     }
+    notify('Rowing. [F] to get off');
+  }
+
+  void leaveBoat() {
+    final b = riding;
+    if (b == null) return;
+    riding = null;
+    if (b.replica) {
+      Net.instance.requestUnboard();
+    } else {
+      b.driver = null;
+    }
+    b.throttle = 0.0;
+    b.steer = 0.0;
+    position = b.position - rightVec * 1.2 + Vector3(0, 0.6, 0);
+    velocity = Vector3.zero();
   }
 
   void _rideTick(double dt, GameInput input, bool gameplay) {
@@ -830,6 +862,11 @@ class Player extends VoxelBody implements Target {
       if (input.down(GameAction.moveRight)) inputX += 1;
       if (input.down(GameAction.moveForward)) inputY -= 1;
       if (input.down(GameAction.moveBack)) inputY += 1;
+    }
+    // A probe rows forward through probeWalk, as Godot's headless probe does.
+    if (_probeWalk.length2 > 0.0) {
+      inputX = 0.0;
+      inputY = -1.0;
     }
     boat.throttle = -inputY;
     boat.steer = inputX;
@@ -848,8 +885,13 @@ class Player extends VoxelBody implements Target {
   bool _tryBreakBoat() {
     for (final b in main.boats) {
       if (b.driver == null && b.rayDistance(aimOrigin(), aimDirection(), 0.2) >= 0.0 && (b.position - position).length < 4.0) {
-        main.spawnDrop(b.position + Vector3(0, 0.5, 0), 'boat', 1);
-        b.removed = true;
+        if (b.replica) {
+          // The host drops the item and frees it (stage 25).
+          Net.instance.requestBreakBoat(b.netId);
+        } else {
+          main.spawnDrop(b.position + Vector3(0, 0.5, 0), 'boat', 1);
+          b.removed = true;
+        }
         model.swing();
         Sfx.play('break', -6.0);
         _attackCooldown = 0.4;

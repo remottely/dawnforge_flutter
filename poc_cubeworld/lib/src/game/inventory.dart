@@ -94,6 +94,24 @@ class Inventory {
     return count;
   }
 
+  /// How many of [count] [id] would fit right now (stage 25: the host asks
+  /// before a pull).
+  int roomFor(String id, int count) {
+    final maxStack = Items.stackSize(id);
+    var room = 0;
+    for (final s in slots) {
+      if (s == null) {
+        room += maxStack;
+      } else if (s.id == id) {
+        room += maxStack - s.count;
+      }
+    }
+    return room < count ? room : count;
+  }
+
+  /// Whether any slot is empty (a bonus item needs one to itself).
+  bool get hasEmptySlot => slots.contains(null);
+
   /// Places a whole stack (with its bonus) in the first empty slot.
   bool addStack(ItemStack stack) {
     for (var i = 0; i < size; i++) {

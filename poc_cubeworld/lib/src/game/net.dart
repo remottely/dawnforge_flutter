@@ -1,12 +1,17 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 import 'package:vector_math/vector_math.dart';
 
+import '../core/blocks.dart';
+import '../core/items.dart';
 import '../core/ivec3.dart';
 import '../core/species.dart';
+import '../entities/boat.dart';
+import '../entities/bobber.dart';
 import '../entities/item_drop.dart';
 import '../entities/mob.dart';
 import '../entities/remote_player.dart';
@@ -25,12 +30,48 @@ class _Peer {
   final StringBuffer _buf = StringBuffer();
 }
 
+/// A client's predicted block edits waiting for the host's ack (stage 25): the
+/// bookkeeping only, so it is testable without a socket.
+class BlockPrediction {
+  int _seq = 0;
+
+  /// seq -> the cell and the id the client predicted.
+  final Map<int, (IVec3, int)> pending = {};
+
+  /// The cell each pending edit owns, so a host broadcast for it waits for the ack.
+  final Map<IVec3, int> _at = {};
+
+  /// Records a local edit and returns its sequence number.
+  int predict(IVec3 b, int id) {
+    _seq += 1;
+    pending[_seq] = (b, id);
+    _at[b] = _seq;
+    return _seq;
+  }
+
+  /// Whether a prediction owns [b] until its ack lands.
+  bool owns(IVec3 b) => _at.containsKey(b);
+
+  /// Settles edit [seq]; true when the id that stands differs from what the
+  /// world shows now (the caller rolls back to [finalId]).
+  bool ack(int seq, IVec3 b, int finalId, int current) {
+    pending.remove(seq);
+    if (_at[b] == seq) _at.remove(b);
+    return current != finalId;
+  }
+}
+
 /// Multiplayer probe (stage 15), on TCP newline-delimited JSON instead of
 /// ENet. The host runs the whole simulation: mobs, projectile hits, block
 /// edits. A client sends requests (block edit, shot) and receives what to
 /// draw: player poses, mob puppets, projectile replicas that never damage, and
 /// the host's clock. Stage 21b adds drops, chests, weather, mounts and status
-/// effects on the same terms.
+/// effects on the same terms. Stage 25: drop and boat poses stream from the
+/// host (replicas lerp, never simulate), a client's bag overflow comes back as
+/// a drop, chest edits are gated on "open on the host" and checked against the
+/// peer's declared bag, boats and bobbers are replicated, the flow tick sends
+/// one batched block message, and a client's block edit is predicted and
+/// rolled back on the host's ack.
 class Net {
   Net._();
   static final Net instance = Net._();
@@ -68,6 +109,50 @@ class Net {
 
   /// The last item handed to a peer, read by the probe: (peer, item, count).
   (int, String, int)? lastGive;
+
+  /// Stage 25 — drop poses stream at 10 Hz; boats and bobbers are host-owned
+  /// like drops.
+  double _dropTimer = 0.0;
+  double _bobberTimer = 0.0;
+  double _bagTimer = 0.0;
+  bool _bobberWasCast = false;
+  final Map<int, Boat> _boats = {};
+  final Map<int, Boat> _boatReplicas = {};
+  final Map<int, Boat> boatDrivers = {};
+  final Map<int, Bobber> _bobberReplicas = {};
+  int _nextBoatId = 1;
+
+  /// Host: each peer's bag as it last declared it, and the items a peer took
+  /// out of an open chest and has not put back (its cursor, in escrow).
+  final Map<int, Inventory> _peerBags = {};
+  final Map<int, Map<String, int>> _chestEscrow = {};
+
+  /// Client: predicted block edits waiting for the host's ack.
+  final BlockPrediction prediction = BlockPrediction();
+
+  /// Host: block edits collected during a flow tick, sent as one `blocks`
+  /// message (flat x, y, z, id quads).
+  final List<int> _batch = [];
+  bool _batching = false;
+
+  /// Probe: `--reject-one` makes the host refuse the first client edit it receives.
+  bool rejectOne = false;
+
+  /// Counters read by the `--stage25` probe on either side (Godot's names).
+  final Map<String, Object> stats = {
+    'drop_pose_rpcs': 0, 'give_rest_spawned': 0, 'chest_rejected': 0, 'chest_accepted': 0,
+    'flow_batch_rpcs': 0, 'flow_batch_cells': 0, 'rejected_seq': -1, 'flow_cells_seen': 0, 'bobber_seen': false,
+    'predicted': 0, 'rollbacks': 0, 'bag_got': 0, 'boat_replica_poses': 0, 'boat_boarded': false, 'chest_states': 0,
+  };
+
+  void _bump(String key, [int by = 1]) => stats[key] = (stats[key] as int) + by;
+
+  /// Rows per pose message. Godot keeps an unreliable ENet packet under the
+  /// MTU with 40; a TCP line has no MTU, the split is kept for the same counts.
+  static const int poseRowsPerPacket = 40;
+
+  /// Cells per `blocks` message (Godot's reliable packet size; same note).
+  static const int blocksPerPacket = 200;
 
   /// Set by a hello that arrives before the world exists.
   void Function()? onHelloBeforeWorld;
@@ -151,11 +236,18 @@ class Net {
     if (c != null) _sendTo(c, m);
   }
 
+  void _toPeer(int id, Map<String, Object?> m) {
+    final p = _peers[id];
+    if (p != null) _sendTo(p.socket, m);
+  }
+
   static List<double> _v(Vector3 v) => [v.x, v.y, v.z];
   static Vector3 _vec(dynamic l) {
     final a = (l as List<dynamic>).map((e) => (e as num).toDouble()).toList();
     return Vector3(a[0], a[1], a[2]);
   }
+
+  static Map<String, Object> _stackJson(ItemStack? s) => s?.toJson() ?? <String, Object>{};
 
   void _onPeerJoined(int id) {
     final m = main;
@@ -168,6 +260,9 @@ class Net {
       final d = e.value;
       _sendTo(socket, {'t': 'drop', 'id': e.key, 'item': d.itemId, 'n': d.count, 'pos': _v(d.position), 'vel': _v(d.velocity)});
     }
+    for (final e in _boats.entries) {
+      _sendTo(socket, {'t': 'boat', 'id': e.key, 'pos': _v(e.value.position), 'yaw': e.value.yaw});
+    }
     _sendTo(socket, {'t': 'weather', 'kind': m.weather.kind.index, 'target': m.weather.target});
   }
 
@@ -176,9 +271,13 @@ class Net {
     final p = _puppets.remove(id);
     if (p != null) p.removed = true;
     _releaseMount(id);
+    _releaseBoat(id);
+    _peerBags.remove(id);
+    _chestEscrow.remove(id);
     for (final w in _chestWatchers.values) {
       w.remove(id);
     }
+    _freeBobberReplica(id);
   }
 
   void _onHostMessage(int sender, Map<String, dynamic> msg) {
@@ -186,7 +285,7 @@ class Net {
     if (m == null) return;
     switch (msg['t']) {
       case 'block_req':
-        m.world.setBlock(IVec3(msg['x'] as int, msg['y'] as int, msg['z'] as int), msg['id'] as int);
+        _onBlockRequest(sender, msg);
       case 'pose':
         _onPose(sender, msg);
       case 'fire':
@@ -198,20 +297,39 @@ class Net {
         m.meleeStrike(_vec(msg['dir']), (msg['dmg'] as num).toDouble(), (msg['follow'] as num).toDouble(), attacker);
       case 'drop_req':
         m.spawnDrop(_vec(msg['pos']), msg['item'] as String, msg['n'] as int, _vec(msg['vel']), 1.5);
+      case 'give_rest':
+        _onGiveRest(sender, msg['item'] as String, msg['n'] as int, msg['bonus'] as int);
+      case 'bag':
+        (_peerBags[sender] ??= Inventory()).fromJson(msg['data'] as List<dynamic>);
       case 'chest_open':
         final at = IVec3.parse(msg['at'] as String)!;
         _chestWatchers.putIfAbsent(at, () => <int>{}).add(sender);
-        _sendTo(_peers[sender]!.socket, {'t': 'chest_state', 'at': at.key, 'data': m.chestInventory(at).toJson()});
+        _toPeer(sender, {'t': 'chest_state', 'at': at.key, 'data': m.chestInventory(at).toJson()});
       case 'chest_close':
         _chestWatchers[IVec3.parse(msg['at'] as String)!]?.remove(sender);
+        _chestEscrow.remove(sender); // the cursor went back to the peer's bag
       case 'chest_set':
-        final at = IVec3.parse(msg['at'] as String)!;
-        m.chestInventory(at).fromJson(msg['data'] as List<dynamic>);
-        _sendChestState(at, msg['data'] as List<dynamic>);
+        _onChestSet(sender, IVec3.parse(msg['at'] as String)!, msg['slot'] as int,
+            msg['stack'] as Map<String, dynamic>, msg['from_bag'] == true);
       case 'mount_req':
         _onMountRequest(sender, msg['net'] as int);
       case 'dismount_req':
         _releaseMount(sender);
+      case 'boat_req':
+        m.spawnBoat(_vec(msg['pos']), (msg['yaw'] as num).toDouble());
+      case 'board_req':
+        _onBoardRequest(sender, msg['net'] as int);
+      case 'unboard_req':
+        _releaseBoat(sender);
+      case 'break_boat_req':
+        final b = _boats[msg['net'] as int];
+        if (b == null || b.removed || b.driver != null) return;
+        m.spawnDrop(b.position + Vector3(0, 0.5, 0), 'boat', 1);
+        b.removed = true;
+      case 'bobber':
+        _onBobberPose(sender, _vec(msg['pos']));
+      case 'bobber_gone':
+        _freeBobberReplica(sender);
     }
   }
 
@@ -242,9 +360,14 @@ class Net {
         if (m == null) return;
         final b = IVec3(msg['x'] as int, msg['y'] as int, msg['z'] as int);
         if (m.world.getBlock(b) == msg['id']) return;
+        if (prediction.owns(b)) return; // a prediction owns this cell until its ack lands
         _applying = true;
         m.world.setBlock(b, msg['id'] as int);
         _applying = false;
+      case 'blocks':
+        _onBlocks(msg['cells'] as List<dynamic>);
+      case 'block_ack':
+        _onBlockAck(msg['seq'] as int, IVec3(msg['x'] as int, msg['y'] as int, msg['z'] as int), msg['id'] as int);
       case 'pose':
         _onPose(1, msg);
       case 'time':
@@ -260,25 +383,30 @@ class Net {
         main?.spawnDamageNumber(_vec(msg['at']), (msg['amount'] as num).toDouble(), _vec(msg['color']));
       case 'drop':
         _onDropSpawn(msg);
+      case 'drop_poses':
+        _onDropPoses(msg);
       case 'drop_free':
         dropReplicas.remove(msg['id'] as int)?.removed = true;
       case 'give':
-        final m = main;
-        if (m == null) return;
-        final bonus = msg['bonus'] as int;
-        if (bonus > 0) {
-          m.player.inventory.addStack(ItemStack(msg['item'] as String, msg['n'] as int, bonus: bonus));
-          m.player.notify('+ ${Hud.itemLabel(msg['item'] as String, bonus)}');
-        } else {
-          m.player.pickUp(msg['item'] as String, msg['n'] as int);
-        }
+        _onGive(msg['item'] as String, msg['n'] as int, msg['bonus'] as int);
       case 'chest_state':
+        _bump('chest_states');
         final at = IVec3.parse(msg['at'] as String)!;
         _chestViews[at]?.fromJson(msg['data'] as List<dynamic>);
       case 'weather':
         main?.weather.follow(WeatherKind.values[msg['kind'] as int], (msg['target'] as num).toDouble());
       case 'effect':
         main?.player.applyEffect(msg['id'] as String, (msg['seconds'] as num).toDouble());
+      case 'boat':
+        _onBoatSpawn(msg['id'] as int, _vec(msg['pos']), (msg['yaw'] as num).toDouble());
+      case 'boat_poses':
+        _onBoatPoses(msg);
+      case 'boat_free':
+        _onBoatFree(msg['id'] as int);
+      case 'bobber':
+        _onBobberPose(1, _vec(msg['pos']));
+      case 'bobber_gone':
+        _freeBobberReplica(1);
     }
   }
 
@@ -296,11 +424,83 @@ class Net {
   void onBlockChanged(IVec3 b, int old, int id) {
     if (_applying) return;
     if (mode == NetMode.host) {
-      _broadcast({'t': 'block', 'x': b.x, 'y': b.y, 'z': b.z, 'id': id});
+      if (_batching) {
+        _batch.addAll([b.x, b.y, b.z, id]);
+      } else {
+        _broadcast({'t': 'block', 'x': b.x, 'y': b.y, 'z': b.z, 'id': id});
+      }
     } else if (mode == NetMode.client) {
-      _toHost({'t': 'block_req', 'x': b.x, 'y': b.y, 'z': b.z, 'id': id});
+      // Stage 25: the edit is already applied locally (the prediction); the
+      // host's ack confirms it or hands back the id that stands.
+      final seq = prediction.predict(b, id);
+      _toHost({'t': 'block_req', 'seq': seq, 'x': b.x, 'y': b.y, 'z': b.z, 'id': id});
     }
   }
+
+  void _onBlockRequest(int sender, Map<String, dynamic> msg) {
+    final m = main!;
+    final seq = msg['seq'] as int;
+    final b = IVec3(msg['x'] as int, msg['y'] as int, msg['z'] as int);
+    final id = msg['id'] as int;
+    if (rejectOne) {
+      rejectOne = false;
+      stats['rejected_seq'] = seq;
+      debugPrint('[net] refused edit seq $seq from peer $sender at $b (probe)');
+    } else {
+      m.world.setBlock(b, id);
+      // A client planted: the host grows it (stage 25).
+      if (id != Blocks.air && Blocks.idOf(id) == 'wheat_0') m.plantCrop(b);
+    }
+    _toPeer(sender, {'t': 'block_ack', 'seq': seq, 'x': b.x, 'y': b.y, 'z': b.z, 'id': m.world.getBlock(b)});
+  }
+
+  /// Client: the id that stands at [b] after edit [seq] was handled.
+  void _onBlockAck(int seq, IVec3 b, int finalId) {
+    final m = main;
+    if (m == null) return;
+    if (!prediction.ack(seq, b, finalId, m.world.getBlock(b))) {
+      _bump('predicted');
+      return;
+    }
+    _bump('rollbacks');
+    debugPrint('[net] rollback seq $seq at $b -> $finalId');
+    _applying = true;
+    m.world.setBlock(b, finalId);
+    _applying = false;
+  }
+
+  /// Host: the flow tick's edits are collected between these two calls and
+  /// sent as one message.
+  void beginBlockBatch() {
+    if (mode == NetMode.host) _batching = true;
+  }
+
+  void endBlockBatch() {
+    if (!_batching) return;
+    _batching = false;
+    if (_batch.isEmpty) return;
+    final total = _batch.length ~/ 4;
+    for (var start = 0; start < total; start += blocksPerPacket) {
+      final stop = math.min(start + blocksPerPacket, total);
+      _broadcast({'t': 'blocks', 'cells': _batch.sublist(start * 4, stop * 4)});
+      _bump('flow_batch_rpcs');
+    }
+    _bump('flow_batch_cells', total);
+    _batch.clear();
+  }
+
+  void _onBlocks(List<dynamic> cells) {
+    final m = main;
+    if (m == null) return;
+    _bump('flow_cells_seen', cells.length ~/ 4);
+    _applying = true;
+    for (var i = 0; i + 3 < cells.length; i += 4) {
+      final b = IVec3(cells[i] as int, cells[i + 1] as int, cells[i + 2] as int);
+      if (!prediction.owns(b)) m.world.setBlock(b, cells[i + 3] as int);
+    }
+    _applying = false;
+  }
+
 
   // --- players -------------------------------------------------------------------
 
@@ -312,7 +512,9 @@ class Net {
       _poseTimer = 0.0;
       final p = m.player;
       final h = p.mount;
+      final boat = p.riding;
       final riding = h != null && h.puppet;
+      final rowing = boat != null && boat.replica;
       final pose = {
         't': 'pose',
         'pos': _v(p.position),
@@ -322,6 +524,8 @@ class Net {
         if (riding) 'ride': _v(h.rideInput),
         if (riding) 'sprint': h.rideSprint,
         if (riding && h.rideJump) 'jump': true,
+        // Stage 25: the host's boat rows (x = steer, z = throttle).
+        if (rowing) 'ride': [boat.steer, 0.0, boat.throttle],
       };
       // A puppet never consumes the jump; the host's horse does.
       if (riding) h.rideJump = false;
@@ -331,11 +535,33 @@ class Net {
         _toHost(pose);
       }
     }
+    _bobberTimer += dt;
+    if (_bobberTimer >= 0.2) {
+      _bobberTimer = 0.0;
+      _sendBobber();
+    }
+    for (final b in _bobberReplicas.values) {
+      b.update(dt);
+    }
+    if (mode == NetMode.client && m.player.bagDirty) {
+      _bagTimer += dt;
+      if (_bagTimer >= 0.2) {
+        _bagTimer = 0.0;
+        m.player.bagDirty = false;
+        sendBagSnapshot();
+      }
+    }
     if (mode == NetMode.host) {
       _mobTimer += dt;
       if (_mobTimer >= 0.1) {
         _mobTimer = 0.0;
         _broadcastMobs();
+      }
+      _dropTimer += dt;
+      if (_dropTimer >= 0.1) {
+        _dropTimer = 0.0;
+        _broadcastDropPoses();
+        _broadcastBoatPoses();
       }
       _timeTimer += dt;
       if (_timeTimer >= 2.0) {
@@ -357,10 +583,15 @@ class Net {
     }
     puppet.setPose(_vec(msg['pos']), (msg['yaw'] as num).toDouble(), msg['held'] as String);
     final h = _mounts[id];
+    final boat = boatDrivers[id];
     if (h != null && !h.removed && h.ridden) {
       h.rideInput = msg['ride'] == null ? Vector3.zero() : _vec(msg['ride']);
       h.rideSprint = msg['sprint'] == true;
       h.rideJump = h.rideJump || msg['jump'] == true;
+    } else if (boat != null && !boat.removed) {
+      final ride = msg['ride'] == null ? Vector3.zero() : _vec(msg['ride']);
+      boat.steer = ride.x;
+      boat.throttle = ride.z;
     }
   }
 
@@ -476,10 +707,41 @@ class Net {
     drop.position = _vec(msg['pos']);
     drop.velocity = _vec(msg['vel']);
     drop.netId = id;
+    drop.syncNode();
     dropReplicas[id] = drop;
     m.drops.add(drop);
     m.entities.add(drop.node);
   }
+
+  /// Host, 10 Hz: the drops that moved more than 5 cm since their last send.
+  void _broadcastDropPoses() {
+    final ids = <int>[];
+    final poses = <List<double>>[];
+    for (final e in _drops.entries) {
+      final d = e.value;
+      final last = d.lastSent;
+      if (d.removed || (last != null && (d.position - last).length <= 0.05)) continue;
+      d.lastSent = d.position.clone();
+      ids.add(e.key);
+      poses.add(_v(d.position));
+    }
+    for (var start = 0; start < ids.length; start += poseRowsPerPacket) {
+      final stop = math.min(start + poseRowsPerPacket, ids.length);
+      _broadcast({'t': 'drop_poses', 'ids': ids.sublist(start, stop), 'poses': poses.sublist(start, stop)});
+      _bump('drop_pose_rpcs');
+    }
+  }
+
+  void _onDropPoses(Map<String, dynamic> msg) {
+    final ids = msg['ids'] as List<dynamic>;
+    final poses = msg['poses'] as List<dynamic>;
+    for (var i = 0; i < ids.length; i++) {
+      final d = dropReplicas[ids[i] as int];
+      if (d != null && !d.removed) d.setNetPose(_vec(poses[i]));
+    }
+  }
+
+  List<ItemDrop> liveDropReplicas() => [for (final d in dropReplicas.values) if (!d.removed) d];
 
   /// Host: a puppet reached a drop; the peer's own inventory receives it.
   void givePeer(int id, String item, int count, int bonus) {
@@ -489,6 +751,56 @@ class Net {
     debugPrint('[net] gave peer $id $item x$count');
     _sendTo(p.socket, {'t': 'give', 'item': item, 'n': count, 'bonus': bonus});
   }
+
+  /// Client: the host handed an item over; what does not fit goes back.
+  void _onGive(String item, int count, int bonus) {
+    final m = main;
+    if (m == null) return;
+    if (bonus > 0) {
+      if (m.player.inventory.addStack(ItemStack(item, count, bonus: bonus))) {
+        m.player.notify('+ ${Hud.itemLabel(item, bonus)}');
+      } else {
+        _toHost({'t': 'give_rest', 'item': item, 'n': count, 'bonus': bonus});
+      }
+      return;
+    }
+    final left = m.player.pickUp(item, count);
+    _bump('bag_got', count - left);
+    // Stage 25: no room, the host drops the rest.
+    if (left > 0) _toHost({'t': 'give_rest', 'item': item, 'n': left, 'bonus': 0});
+  }
+
+  /// Host: what did not fit in the peer's bag lands at its puppet's feet.
+  void _onGiveRest(int sender, String item, int count, int bonus) {
+    final m = main!;
+    final puppet = _puppets[sender];
+    if (puppet == null) return;
+    final at = puppet.position + Vector3(0, 0.4, 0);
+    _bump('give_rest_spawned');
+    debugPrint('[net] peer $sender had no room for $item x$count: dropped at its feet');
+    final drop = m.spawnDrop(at, item, count, Vector3(0, 1.5, 0), 2.0);
+    if (drop != null && bonus > 0) drop.bonus = bonus;
+  }
+
+  /// Client: the bag as the host should know it (room checks before a pull,
+  /// chest validation).
+  void sendBagSnapshot() {
+    final m = main;
+    if (mode == NetMode.client && m != null) _toHost({'t': 'bag', 'data': m.player.inventory.toJson()});
+  }
+
+  /// Host: whether the peer's declared bag has room for any of [count] [item]
+  /// (a peer that never declared a bag is assumed to have room; a bonus item
+  /// needs an empty slot).
+  bool peerHasRoom(int id, String item, int count, int bonus) {
+    final bag = _peerBags[id];
+    if (bag == null) return true;
+    if (bonus > 0) return bag.hasEmptySlot;
+    return bag.roomFor(item, count) > 0;
+  }
+
+  /// Host (probe): the bag peer [id] last declared, if any.
+  Inventory? declaredBag(int id) => _peerBags[id];
 
   // --- chests: the inventory lives on the host, a client sees a copy and sends
   // its edits ------------------------------------------------------------------
@@ -506,21 +818,83 @@ class Net {
     _toHost({'t': 'chest_close', 'at': at.key});
   }
 
-  /// Either side changed a chest grid: a client sends the whole grid, the host
-  /// re-broadcasts it to whoever else has it open.
-  void chestChanged(IVec3 at, List<Object?> data) {
+  /// One slot of a chest changed. A client sends the slot plus where the
+  /// items came from and the host validates it (stage 25); the host
+  /// re-broadcasts its own edit to whoever has the chest open.
+  void chestSlotChanged(IVec3 at, int slot, ItemStack? stack, bool fromBag) {
     if (mode == NetMode.client) {
-      _toHost({'t': 'chest_set', 'at': at.key, 'data': data});
+      _toHost({'t': 'chest_set', 'at': at.key, 'slot': slot, 'stack': _stackJson(stack), 'from_bag': fromBag});
     } else if (mode == NetMode.host) {
-      _sendChestState(at, data);
+      _sendChestState(at, main!.chestInventory(at).toJson());
     }
   }
 
   void _sendChestState(IVec3 at, List<Object?> data) {
     for (final id in _chestWatchers[at] ?? const <int>{}) {
-      final p = _peers[id];
-      if (p != null) _sendTo(p.socket, {'t': 'chest_state', 'at': at.key, 'data': data});
+      _toPeer(id, {'t': 'chest_state', 'at': at.key, 'data': data});
     }
+  }
+
+  bool _chestOpenBy(IVec3 at, int id) => _chestWatchers[at]?.contains(id) ?? false;
+
+  /// Host: one slot of a chest changed by a peer. Accepted only when the peer
+  /// has that chest open here, and only when the items it adds are accounted
+  /// for: from its declared bag (debited from the snapshot so it cannot be
+  /// spent twice before the next one) or from what it took out of this chest
+  /// and still holds (the escrow). Anything else is refused and the peer is
+  /// sent the state that stands.
+  void _onChestSet(int id, IVec3 at, int slot, Map<String, dynamic> stack, bool fromBag) {
+    final chest = main!.chestInventory(at);
+    if (!_chestOpenBy(at, id) || slot < 0 || slot >= Inventory.size) {
+      _bump('chest_rejected');
+      debugPrint('[net] chest $at edit from peer $id refused: not open here');
+      _toPeer(id, {'t': 'chest_state', 'at': at.key, 'data': chest.toJson()});
+      return;
+    }
+    final verdict = chestEditVerdict(chest.slots[slot], stack, fromBag, _peerBags[id], _chestEscrow.putIfAbsent(id, () => {}));
+    if (!verdict) {
+      _bump('chest_rejected');
+      debugPrint('[net] chest $at edit from peer $id refused: ${stack['id']} not accounted for (from_bag $fromBag)');
+      _toPeer(id, {'t': 'chest_state', 'at': at.key, 'data': chest.toJson()});
+      return;
+    }
+    final item = (stack['id'] ?? '').toString();
+    chest.setSlot(slot, item == '' || !Items.has(item)
+        ? null
+        : ItemStack(item, (stack['count'] as num).toInt(),
+            bonus: stack['bonus'] == null ? 0 : (stack['bonus'] as num).toInt(),
+            dur: stack['dur'] == null ? -1 : (stack['dur'] as num).toInt()));
+    _bump('chest_accepted');
+    _sendChestState(at, chest.toJson());
+  }
+
+  /// The accounting half of a chest edit, pure so it is unit-tested: what
+  /// leaves the slot goes into the peer's escrow; what enters must be paid
+  /// from the declared [bag] (when [fromBag]) or from the [escrow]. Mutates
+  /// both on success; true when the edit is accepted.
+  static bool chestEditVerdict(ItemStack? before, Map<String, dynamic> stack, bool fromBag, Inventory? bag,
+      Map<String, int> escrow) {
+    final newItem = (stack['id'] ?? '').toString();
+    final newCount = newItem != '' ? (stack['count'] as num? ?? 0).toInt() : 0;
+    final oldItem = before?.id ?? '';
+    final oldCount = before?.count ?? 0;
+    final removed = oldCount - (newItem == oldItem ? newCount : 0);
+    final added = newCount - (newItem == oldItem ? oldCount : 0);
+    if (added > 0) {
+      var paid = false;
+      if (fromBag) {
+        if (bag != null && bag.countOf(newItem) >= added) {
+          bag.remove(newItem, added);
+          paid = true;
+        }
+      } else if ((escrow[newItem] ?? 0) >= added) {
+        escrow[newItem] = escrow[newItem]! - added;
+        paid = true;
+      }
+      if (!paid) return false;
+    }
+    if (removed > 0) escrow[oldItem] = (escrow[oldItem] ?? 0) + removed;
+    return true;
   }
 
   // --- weather: the host rolls, clients follow ---------------------------------
@@ -566,6 +940,158 @@ class Net {
     }
     _puppets[id]?.mountedOn = null;
   }
+
+  // --- boats: the host owns every boat; a client draws replicas and asks to
+  // row one (stage 25) -----------------------------------------------------------
+
+  void requestBoat(Vector3 at, double heading) => _toHost({'t': 'boat_req', 'pos': _v(at), 'yaw': heading});
+
+  void requestBoard(int netId) => _toHost({'t': 'board_req', 'net': netId});
+
+  void requestUnboard() => _toHost({'t': 'unboard_req'});
+
+  void requestBreakBoat(int netId) => _toHost({'t': 'break_boat_req', 'net': netId});
+
+  /// Host: a boat was created; give it a net id and tell every client to draw it.
+  void onBoatSpawned(Boat boat) {
+    if (mode != NetMode.host) return;
+    boat.netId = _nextBoatId++;
+    _boats[boat.netId] = boat;
+    _broadcast({'t': 'boat', 'id': boat.netId, 'pos': _v(boat.position), 'yaw': boat.yaw});
+  }
+
+  void onBoatGone(Boat boat) {
+    if (mode != NetMode.host || boat.netId == 0 || _boats.remove(boat.netId) == null) return;
+    boatDrivers.removeWhere((_, b) => identical(b, boat));
+    _broadcast({'t': 'boat_free', 'id': boat.netId});
+  }
+
+  void _onBoatSpawn(int id, Vector3 pos, double yaw) {
+    final m = main;
+    if (m == null || _boatReplicas.containsKey(id)) return;
+    final b = Boat()
+      ..replica = true
+      ..netId = id;
+    b.setupBoat(m.world, m, pos, yaw);
+    _boatReplicas[id] = b;
+    m.boats.add(b);
+    m.entities.add(b.node);
+  }
+
+  void _onBoatFree(int id) {
+    final b = _boatReplicas.remove(id);
+    if (b == null) return;
+    final m = main;
+    if (m != null && identical(m.player.riding, b)) m.player.leaveBoat();
+    b.removed = true;
+  }
+
+  void _broadcastBoatPoses() {
+    final ids = <int>[];
+    final poses = <List<double>>[];
+    final yaws = <double>[];
+    for (final e in _boats.entries) {
+      final b = e.value;
+      final last = b.lastSent;
+      if (b.removed || (last != null && (b.position - last).length <= 0.02 && (b.yaw - b.lastSentYaw).abs() <= 0.01)) {
+        continue;
+      }
+      b.lastSent = b.position.clone();
+      b.lastSentYaw = b.yaw;
+      ids.add(e.key);
+      poses.add(_v(b.position));
+      yaws.add(b.yaw);
+    }
+    if (ids.isNotEmpty) _broadcast({'t': 'boat_poses', 'ids': ids, 'poses': poses, 'yaws': yaws});
+  }
+
+  void _onBoatPoses(Map<String, dynamic> msg) {
+    final ids = msg['ids'] as List<dynamic>;
+    final poses = msg['poses'] as List<dynamic>;
+    final yaws = msg['yaws'] as List<dynamic>;
+    for (var i = 0; i < ids.length; i++) {
+      final b = _boatReplicas[ids[i] as int];
+      if (b == null || b.removed) continue;
+      b.setNetPose(_vec(poses[i]), (yaws[i] as num).toDouble());
+      _bump('boat_replica_poses');
+    }
+  }
+
+  void _onBoardRequest(int id, int netId) {
+    final b = _boats[netId];
+    final puppet = _puppets[id];
+    if (b == null || b.removed || b.driver != null || puppet == null) {
+      debugPrint('[net] peer $id asked to board boat $netId: refused');
+      return;
+    }
+    _releaseBoat(id);
+    b.driver = puppet;
+    b.steer = 0.0;
+    b.throttle = 0.0;
+    boatDrivers[id] = b;
+    stats['boat_boarded'] = true;
+    debugPrint('[net] peer $id boarded boat $netId');
+  }
+
+  void _releaseBoat(int id) {
+    final b = boatDrivers.remove(id);
+    if (b == null) return;
+    b.driver = null;
+    b.throttle = 0.0;
+    b.steer = 0.0;
+  }
+
+  List<Boat> boatReplicas() => [for (final b in _boatReplicas.values) if (!b.removed) b];
+
+  // --- bobbers: a cast line is drawn on every other peer at that peer's puppet
+  // (stage 25) -----------------------------------------------------------------
+
+  /// Every peer, 5 Hz: its own bobber's position while cast, one "gone" when
+  /// it is reeled in. A client only knows the host's puppet, so the host does
+  /// not relay one client's bobber to another.
+  void _sendBobber() {
+    final m = main!;
+    final b = m.player.bobber;
+    Map<String, Object?>? msg;
+    if (b != null) {
+      _bobberWasCast = true;
+      msg = {'t': 'bobber', 'pos': _v(b.position)};
+    } else if (_bobberWasCast) {
+      _bobberWasCast = false;
+      msg = {'t': 'bobber_gone'};
+    }
+    if (msg == null) return;
+    if (mode == NetMode.host) {
+      _broadcast(msg);
+    } else {
+      _toHost(msg);
+    }
+  }
+
+  void _onBobberPose(int id, Vector3 pos) {
+    final m = main;
+    final puppet = _puppets[id];
+    if (m == null || puppet == null) return;
+    var rep = _bobberReplicas[id];
+    if (rep == null) {
+      rep = Bobber.replica(m.world, puppet.model.handWorldPosition, pos);
+      m.entities.add(rep.node);
+      m.entities.add(rep.lineNode);
+      _bobberReplicas[id] = rep;
+      stats['bobber_seen'] = true;
+    }
+    rep.setNetPose(pos);
+  }
+
+  void _freeBobberReplica(int id) {
+    final rep = _bobberReplicas.remove(id);
+    final m = main;
+    if (rep == null || m == null) return;
+    m.entities.remove(rep.node);
+    m.entities.remove(rep.lineNode);
+  }
+
+  int bobberReplicaCount() => _bobberReplicas.length;
 
   // --- status effects: the host decides, the peer's own body wears it ----------
 

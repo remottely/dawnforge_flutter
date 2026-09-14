@@ -268,6 +268,7 @@ class Game extends ChangeNotifier {
 
     final net = Net.instance;
     net.main = this;
+    net.rejectOne = _hasArg('--reject-one') && net.isHost;
     if (net.isClient) net.applyPendingEdits();
     world.onBlockChanged = net.onBlockChanged;
     world.flowEnabled = !net.isClient;
@@ -521,7 +522,10 @@ class Game extends ChangeNotifier {
     weather.process(dt);
     _tickVisuals(dt);
     spawner?.update(dt);
+    // Stage 25: the tick's flow edits leave as one `blocks` message.
+    Net.instance.beginBlockBatch();
     world.tickFlow(dt);
+    Net.instance.endBlockBatch();
     _probeTick?.call();
     Net.instance.process(dt);
     _prune();
@@ -536,12 +540,13 @@ class Game extends ChangeNotifier {
       _structTimer = 0.0;
       visitedChunks.add(VoxelWorld.chunkOf(IVec3.floor(player.position)));
       _checkStructures();
-      _growCrops();
+      // Stage 25: growth is a host block edit; it reaches clients as one.
+      if (!Net.instance.isClient) _growCrops();
       _tickSpawners();
       _tickRuinGhosts();
       _trackBoss();
       if (weather.isWet) {
-        _growCrops();
+        if (!Net.instance.isClient) _growCrops();
         final surface = world.surfaceHeight(player.position.x.toInt(), player.position.z.toInt());
         if (player.effects.has('burning') && player.position.y >= surface - 1) {
           player.effects.clear('burning');
@@ -610,6 +615,9 @@ class Game extends ChangeNotifier {
     }
     pruneList<ItemDrop>(drops, (d) => d.removed, (d) => d.node);
     pruneList<Projectile>(projectiles, (p) => p.removed, (p) => p.node);
+    for (final b in boats) {
+      if (b.removed) Net.instance.onBoatGone(b);
+    }
     pruneList<Boat>(boats, (b) => b.removed, (b) => b.node);
     pruneList<RemotePlayer>(puppets, (p) => p.removed, (p) => p.node);
     pruneList<_Effect>(_effects, (e) => e.age >= 0.35, (e) => e.node);
@@ -843,11 +851,11 @@ class Game extends ChangeNotifier {
     entities.add(p.node);
   }
 
-  void spawnDrop(Vector3 at, String id, int count, [Vector3? vel, double delay = 0.6]) {
+  ItemDrop? spawnDrop(Vector3 at, String id, int count, [Vector3? vel, double delay = 0.6]) {
     // The host owns drops (stage 21b); a client asks for one instead.
     if (Net.instance.isClient) {
       Net.instance.requestDrop(at, id, count, vel ?? Vector3.zero());
-      return;
+      return null;
     }
     final drop = ItemDrop();
     drop.setupDrop(world, id, count, player, delay);
@@ -857,6 +865,7 @@ class Game extends ChangeNotifier {
     drops.add(drop);
     entities.add(drop.node);
     Net.instance.onDropSpawned(drop);
+    return drop;
   }
 
   void spawnLootDrop(Vector3 at, ItemStack stack) {
@@ -879,10 +888,16 @@ class Game extends ChangeNotifier {
   }
 
   void spawnBoat(Vector3 at, double heading) {
+    // The host owns boats (stage 25); a client asks for one instead.
+    if (Net.instance.isClient) {
+      Net.instance.requestBoat(at, heading);
+      return;
+    }
     final b = Boat();
     b.setupBoat(world, this, at, heading);
     boats.add(b);
     entities.add(b.node);
+    Net.instance.onBoatSpawned(b);
   }
 
   /// Enchanting: one level and two magic dust buy a random +1..+3 on the held weapon or tool.
@@ -1283,7 +1298,7 @@ class Game extends ChangeNotifier {
       petData.add(m.toJson());
     }
     return {
-      'boats': [for (final b in boats) if (!b.removed) b.toJson()],
+      'boats': [for (final b in boats) if (!b.removed && !b.replica) b.toJson()],
       'pets': petData,
       'mount': mountIndex,
       'drops': [for (final d in drops) if (!d.replica && !d.removed) d.toJson()],
@@ -1677,6 +1692,8 @@ class Game extends ChangeNotifier {
         _pinCameraTo = () => net.puppetBodies().first.position + Vector3(0, 0.8, 3.5);
       }
     }
+    if (_hasArg('--stage25') && net.isHost && net.puppetPositions().isNotEmpty) await _probeStage25Host();
+    if (_hasArg('--stage25') && net.isClient) await _probeStage25Client();
     if (_hasArg('--stage22')) await _probeStage22();
     if (_hasArg('--stage23')) await _probeStage23(stage21a);
     if (_hasArg('--stage24')) {
@@ -1859,6 +1876,179 @@ class Game extends ChangeNotifier {
       }
     }
     return (water: water, lava: lava, hard: hard, dist: dist);
+  }
+
+  // --- stage 25: host-owned drops, boats and bobbers, bag overflow, chest gating,
+  // batched flow, predicted block edits. Host + client twins with --wait-peer;
+  // the host takes --reject-one.
+
+  /// The probe site, in the same world cells as Godot's: a 7x7 stone pad (the
+  /// host fishes from its north-west corner), a walled 5x5 water basin north
+  /// of it (the boat) and an empty walled 5x5 pool 10 m east (one source in
+  /// its centre floods it: 24 flow cells, and nothing runs downhill).
+  ({IVec3 pad, IVec3 basin, IVec3 pool, IVec3 crop, IVec3 editA, IVec3 editB}) _stage25Site() {
+    final pad = IVec3.floor(Vector3(8.5, 50.0, 8.5) + Vector3(4.0, 0.0, 0.0));
+    return (
+      pad: pad,
+      basin: pad + const IVec3(0, 0, -8),
+      pool: pad + const IVec3(10, 0, 0),
+      crop: const IVec3(5, 50, 8),
+      editA: const IVec3(8, 45, 8),
+      editB: const IVec3(9, 45, 8),
+    );
+  }
+
+  Future<void> _waitMs(int ms, [bool Function()? until]) async {
+    final t = DateTime.now();
+    while (DateTime.now().difference(t).inMilliseconds < ms && !(until?.call() ?? false)) {
+      await nextFrame();
+    }
+  }
+
+  Future<void> _probeStage25Host() async {
+    final net = Net.instance;
+    final site = _stage25Site();
+    final stone = Blocks.indexOf('stone');
+    for (var dx = -3; dx < 4; dx++) {
+      for (var dz = -3; dz < 4; dz++) {
+        world.setBlock(site.pad + IVec3(dx, -1, dz), stone);
+        for (var dy = 0; dy < 6; dy++) {
+          world.setBlock(site.pad + IVec3(dx, dy, dz), Blocks.air);
+        }
+        final wall = dx.abs() == 3 || dz.abs() == 3;
+        for (final at in [site.basin, site.pool]) {
+          world.setBlock(at + IVec3(dx, -1, dz), stone);
+          world.setBlock(at + IVec3(dx, 0, dz),
+              wall ? stone : (at == site.basin ? Blocks.indexOf('water') : Blocks.air));
+          for (var dy = 1; dy < 5; dy++) {
+            world.setBlock(at + IVec3(dx, dy, dz), Blocks.air);
+          }
+        }
+      }
+    }
+    // The host fishes from the pad's north-west corner, rod in hand, at the basin's centre cell.
+    player.position = site.pad.toVector3() + Vector3(-2.0, 0.0, -2.0);
+    player.velocity = Vector3.zero();
+    player.syncNode();
+    player.inventory.setSlot(player.selectedSlot, ItemStack('fishing_rod', 1));
+    player.setLook(0.0, -0.4);
+    spawnBoat(site.basin.toVector3() + Vector3(0.5, 0.9, 0.5), 0.0);
+    // A crop planted long enough ago to grow on the next pass: growth is a host block edit.
+    world.setBlock(site.crop + IVec3.down, Blocks.indexOf('farmland'));
+    world.setBlock(site.crop, Blocks.indexOf('wheat_0'));
+    crops[site.crop] = GameState.instance.playTime - 200.0;
+    _growCrops();
+    debugPrint('[probe] stage25 host: crop at ${site.crop} grew to ${Blocks.idOf(world.getBlock(site.crop))} through setBlock');
+    // A water source in the empty pool's centre: the flow tick's cells leave batched.
+    world.setBlock(site.pool, Blocks.indexOf('water'));
+    player.castFishing(site.basin);
+    // A drop for the capture: on the basin's south wall, out of the host's pull
+    // range and in the client's camera frame.
+    spawnDrop(site.basin.toVector3() + Vector3(1.5, 1.5, 3.5), 'apple', 1, Vector3(0, 0.5, 0));
+    // The client fills its bag and declares it. Godot waits a flat 1.5 s; the
+    // Flutter client can still be filling its window then, so the host also
+    // waits (up to 15 s) for the declared bag to show room for exactly one.
+    final peer = net.puppetPositions().first.$1;
+    await _waitMs(1500);
+    await _waitMs(15000, () => net.declaredBag(peer)?.roomFor('iron_ingot', 3) == 1);
+    final ppos = net.puppetPositions().first.$2;
+    final under = IVec3(ppos.x.floor() + 1, ppos.y.floor() - 1, ppos.z.floor());
+    world.setBlock(under, stone);
+    world.setBlock(under + IVec3.up, Blocks.air);
+    spawnDrop(ppos + Vector3(1.0, 0.4, 0.0), 'iron_ingot', 3, Vector3(0, 0.5, 0));
+    final t1 = DateTime.now();
+    await _waitMs(22000, () =>
+        (net.stats['give_rest_spawned'] as int) > 0 &&
+        (net.stats['chest_accepted'] as int) > 0 &&
+        (net.stats['rejected_seq'] as int) >= 0 &&
+        net.stats['boat_boarded'] == true &&
+        net.boatDrivers.isEmpty &&
+        DateTime.now().difference(t1).inMilliseconds > 6000);
+    final boat = boats.firstWhere((b) => !b.replica);
+    final s = net.stats;
+    debugPrint('[probe] stage25 host: drop poses sent=${s['drop_pose_rpcs']}');
+    debugPrint('[probe] stage25 host: give rest spawned=${s['give_rest_spawned']}');
+    debugPrint('[probe] stage25 host: chest edit rejected(not open)=${s['chest_rejected']} accepted=${s['chest_accepted']}');
+    debugPrint('[probe] stage25 host: boat spawned net_id=${boat.netId} client aboard=${s['boat_boarded']}');
+    debugPrint('[probe] stage25 host: flow batch rpcs=${s['flow_batch_rpcs']} cells=${s['flow_batch_cells']}');
+    debugPrint('[probe] stage25 host: rejected client edit seq=${s['rejected_seq']}');
+    debugPrint('[probe] stage25 host: bobber out=${player.bobber != null} at ${player.bobber?.position}, boat at ${boat.position}');
+    await _waitMs(20000, () => net.puppetPositions().isEmpty);
+  }
+
+  Future<void> _probeStage25Client() async {
+    final net = Net.instance;
+    final site = _stage25Site();
+    player.probeFillBag('iron_ingot');
+    bool restSeen() => net.liveDropReplicas().any((d) => d.itemId == 'iron_ingot' && d.count == 2);
+    // The host's 3-stack is pulled in and split. Godot waits a flat 4.5 s; here
+    // at least that, and on until the rest shows (the host may start later).
+    final t0 = DateTime.now();
+    await _waitMs(12000, () => DateTime.now().difference(t0).inMilliseconds > 4500 && restSeen());
+    debugPrint('[probe] stage25 client: bag got=${net.stats['bag_got']} rest dropped seen=${restSeen()}');
+    // Chests: an edit without the chest open here is refused; the same edit after opening lands.
+    const chestAt = IVec3(7, 77, 7);
+    net.chestSlotChanged(chestAt, 1, ItemStack('stone', 1), true);
+    final view = net.openChest(chestAt);
+    await _waitMs(4000, () => (net.stats['chest_states'] as int) > 0);
+    net.chestSlotChanged(chestAt, 1, ItemStack('stone', 1), true);
+    await _waitMs(4000, () => view.countOf('stone') > 0);
+    var filled = 0;
+    for (var i = 0; i < Inventory.size; i++) {
+      if (!view.isEmptySlot(i)) filled++;
+    }
+    debugPrint('[probe] stage25 client: chest state slots=$filled (${view.toJson().take(2).toList()})');
+    net.closeChest(chestAt);
+    // Boats: board the host's replica, row forward for three seconds, measure how far it went.
+    await _waitMs(4000, () => net.boatReplicas().isNotEmpty);
+    if (net.boatReplicas().isNotEmpty) {
+      final b = net.boatReplicas().first;
+      player.boardBoat(b);
+      final from = b.position.clone();
+      player.probeWalk(Vector3(0, 0, -1));
+      await _waitMs(3000);
+      player.probeWalk(Vector3.zero());
+      final moved = (b.position - from).length;
+      debugPrint('[probe] stage25 client: aboard boat net_id=${b.netId} moved=${moved.toStringAsFixed(2)} (from $from to ${b.position})');
+      player.leaveBoat();
+    } else {
+      debugPrint('[probe] stage25 client: aboard boat net_id=0 moved=-1 (no replica arrived)');
+    }
+    // Predicted edits: the host refuses the first (--reject-one), so it rolls back; the second stands.
+    final wasA = world.getBlock(site.editA);
+    world.setBlock(site.editA, Blocks.indexOf('oak_planks'));
+    world.setBlock(site.editB, Blocks.indexOf('oak_planks'));
+    await _waitMs(5000, () => net.prediction.pending.isEmpty);
+    debugPrint('[probe] stage25 client: predicted=${net.stats['predicted']} rollbacks=${net.stats['rollbacks']} '
+        '(cell a back to ${Blocks.idOf(wasA)}: ${world.getBlock(site.editA) == wasA}, cell b ${Blocks.idOf(world.getBlock(site.editB))})');
+    var delta = 0.0;
+    final where = <String>[];
+    for (final d in net.liveDropReplicas()) {
+      delta = math.max(delta, d.netPoseDelta());
+      where.add('${d.itemId} x${d.count} at ${d.position}');
+    }
+    debugPrint('[probe] stage25 client: replica drop delta to host pose=${delta.toStringAsFixed(3)} '
+        '(replicas ${net.liveDropReplicas().length}: ${where.join(', ')})');
+    debugPrint('[probe] stage25 client: flow cells seen=${net.stats['flow_cells_seen']}');
+    debugPrint('[probe] stage25 client: bobber replica of host seen=${net.stats['bobber_seen']} (live ${net.bobberReplicaCount()})');
+    debugPrint('[probe] stage25 client: crop at ${site.crop} reads ${Blocks.idOf(world.getBlock(site.crop))}');
+    // Frame the host puppet fishing over the basin, the capture's drop in the foreground.
+    if (net.puppetBodies().isNotEmpty) {
+      flyMode = true;
+      player.setFirstPerson(true);
+      final hostAt = net.puppetBodies().first.position.clone();
+      final eye = hostAt + Vector3(3.5, 2.5, 2.5);
+      final to = (hostAt + Vector3(0.5, 0.8, -4.0)) - eye;
+      player.setLook(math.atan2(-to.x, -to.z), math.asin(to.y / to.length));
+      for (var i = 0; i < 20; i++) {
+        player.position = eye.clone();
+        player.velocity = Vector3.zero();
+        player.syncNode();
+        await nextFrame();
+      }
+      debugPrint('[probe] stage25 client: capture from ${player.position}, host puppet at $hostAt');
+      _pinCameraTo = () => eye.clone();
+    }
   }
 
   // --- stage 23: temple boss + trap, loot tables, second abilities, three mobs, durability ---

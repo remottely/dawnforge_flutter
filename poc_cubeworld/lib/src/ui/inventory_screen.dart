@@ -25,7 +25,18 @@ class InventoryScreen extends StatefulWidget {
 
 class _InventoryScreenState extends State<InventoryScreen> {
   ItemStack? _cursor;
+
+  /// Stage 25: whether the cursor stack was picked out of the chest grid (else
+  /// out of the bag), sent with every chest edit so the host can account for
+  /// the items that enter the chest.
+  bool _cursorFromChest = false;
   Offset _mouse = Offset.zero;
+
+  /// The cursor now holds a different item, or more of the same, than [had].
+  bool _cursorGrew(ItemStack? had) {
+    final c = _cursor;
+    return (c?.id ?? '') != (had?.id ?? '') || (c?.count ?? 0) > (had?.count ?? 0);
+  }
   int _scroll = 0;
   final List<Rect> _slotRects = [];
   final List<Rect> _chestRects = [];
@@ -49,7 +60,9 @@ class _InventoryScreenState extends State<InventoryScreen> {
   void _click(Offset mp, bool right) {
     for (var i = 0; i < _slotRects.length; i++) {
       if (_slotRects[i].contains(mp)) {
+        final had = _cursor?.copy();
         _clickSlot(game.player.inventory, i, right);
+        if (_cursorGrew(had)) _cursorFromChest = false;
         return;
       }
     }
@@ -57,9 +70,12 @@ class _InventoryScreenState extends State<InventoryScreen> {
     if (chest != null) {
       for (var i = 0; i < _chestRects.length; i++) {
         if (_chestRects[i].contains(mp)) {
+          final had = _cursor?.copy();
+          final fromBag = !_cursorFromChest;
           _clickSlot(chest, i, right);
-          // Stage 21b: either side sends the whole grid; last writer wins.
-          Net.instance.chestChanged(game.chestPos, chest.toJson());
+          if (_cursorGrew(had)) _cursorFromChest = true;
+          // Stage 25: one slot plus where the items came from; the host checks it.
+          Net.instance.chestSlotChanged(game.chestPos, i, chest.slots[i], fromBag);
           return;
         }
       }

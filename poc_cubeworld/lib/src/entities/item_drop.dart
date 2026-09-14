@@ -17,9 +17,11 @@ import 'voxel_body.dart';
 import 'voxel_mesh_builder.dart';
 
 /// An item lying in the world: bobs, spins, is pulled to a near player and
-/// picked up. Stage 21b: the host owns every drop. A [replica] (client side)
-/// only falls and spins; the host also pulls a drop to a peer's puppet and
-/// hands the item over through the network.
+/// picked up. Stage 21b: the host owns every drop; the host also pulls a drop
+/// to a peer's puppet and hands the item over through the network. Stage 25: a
+/// [replica] (client side) never simulates — it lerps to the pose the host
+/// streams ([setNetPose]) and only spins; a puppet is pulled only when its
+/// peer's declared bag has room.
 class ItemDrop extends VoxelBody {
   String itemId = '';
   int count = 1;
@@ -30,6 +32,24 @@ class ItemDrop extends VoxelBody {
   double _pickupDelay = 0.6;
   bool replica = false;
   int netId = 0;
+
+  /// Host: the position last streamed to clients. Replica: the host's latest
+  /// pose, lerped to.
+  Vector3? lastSent;
+  Vector3? _netTarget;
+
+  /// Replica: the host's latest pose (stage 25); a jump beyond 8 m snaps, the
+  /// rest is lerped.
+  void setNetPose(Vector3 pos) {
+    if (_netTarget == null || (position - pos).length > 8.0) position = pos.clone();
+    _netTarget = pos.clone();
+  }
+
+  /// Replica: how far the drawn body sits from the host's latest pose (probe).
+  double netPoseDelta() {
+    final t = _netTarget;
+    return t == null ? 0.0 : (position - t).length;
+  }
 
   void setupDrop(VoxelWorld w, String id, int n, Player player, [double delay = 0.6]) {
     setup(w, 0.15, 0.3);
@@ -57,7 +77,7 @@ class ItemDrop extends VoxelBody {
     if (Net.instance.isHost) {
       for (final b in Net.instance.puppetBodies()) {
         final d = (b.position - position).length;
-        if (d < bestD) {
+        if (d < bestD && Net.instance.peerHasRoom(b.peerId, itemId, count, bonus)) {
           bestD = d;
           best = b;
         }
@@ -67,6 +87,15 @@ class ItemDrop extends VoxelBody {
   }
 
   void update(double dt) {
+    if (replica) {
+      _age += dt;
+      final t = _netTarget;
+      if (t != null) position = position + (t - position) * (dt * 12.0).clamp(0.0, 1.0);
+      syncNode();
+      _visual.rotation = Quaternion.axisAngle(Vector3(0, 1, 0), _age * 2.0);
+      _visual.position = Vector3(0, 0.2 + math.sin(_age * 3.0) * 0.06, 0);
+      return;
+    }
     // Stage 24: a restored drop waits for its chunk (unloaded reads as air).
     if (!world.isLoaded(IVec3.floor(position))) return;
     _age += dt;
@@ -111,8 +140,8 @@ class ItemDrop extends VoxelBody {
       _pickUp();
       return;
     }
-    // A puppet: the peer's own inventory takes it (assumed to fit; the drop is
-    // gone either way).
+    // A puppet: the peer's own inventory takes it; what does not fit comes
+    // back as `give_rest` (stage 25).
     Net.instance.givePeer(body.peerId, itemId, count, bonus);
     removed = true;
   }
