@@ -9,6 +9,7 @@ import '../core/blocks.dart';
 import '../core/items.dart';
 import '../core/ivec3.dart';
 import '../entities/boat.dart';
+import '../entities/minecart.dart';
 import '../entities/bobber.dart';
 import '../entities/mob.dart';
 import '../entities/player_model.dart';
@@ -22,6 +23,7 @@ import '../game/game.dart';
 import '../game/input.dart';
 import '../game/inventory.dart';
 import '../game/net.dart';
+import '../game/rails.dart';
 import '../game/sfx.dart';
 import '../game/talents.dart';
 import '../world/voxel_world.dart';
@@ -98,6 +100,7 @@ class Player extends VoxelBody implements Target {
   Vector3 spawnPoint = Vector3.zero();
   Boat? riding;
   Mob? mount;
+  Minecart? cart; // stage 28: the minecart the player sits in
   Bobber? bobber;
   double sleeping = 0.0;
   final StatusEffects effects = StatusEffects();
@@ -416,6 +419,10 @@ class Player extends VoxelBody implements Target {
       _mountTick(dt, input, gameplay);
       return;
     }
+    if (cart != null) {
+      _cartTick(dt, input, gameplay);
+      return;
+    }
 
     var inputX = 0.0, inputY = 0.0;
     if (gameplay) {
@@ -625,7 +632,7 @@ class Player extends VoxelBody implements Target {
       _rangedFire(item, style, false);
       return;
     }
-    if (aimedMob == null && _tryBreakBoat()) return;
+    if (aimedMob == null && (_tryBreakBoat() || _tryBreakCart())) return;
     model.swing();
     Sfx.play('swing', -10.0);
     _attackCooldown = style == 'melee_fast' ? 0.28 : 0.5;
@@ -887,6 +894,109 @@ class Player extends VoxelBody implements Target {
     _updateAim();
     if (gameplay && input.down(GameAction.attack) && _attackCooldown <= 0.0) _attackPressed();
     world.updateAround(position);
+  }
+
+  // --- stage 28: minecarts --------------------------------------------------------
+
+  static const double cartReach = 2.0;
+
+  /// F near a cart: sit in a plain one, open a chest cart's slots. False when
+  /// none is in reach.
+  bool _toggleCart() {
+    Minecart? best;
+    var bestD = cartReach;
+    for (final c in main.carts) {
+      final d = (c.position - position).length;
+      if (!c.removed && c.rider == null && d < bestD) {
+        best = c;
+        bestD = d;
+      }
+    }
+    if (best == null) return false;
+    if (best.cargo != null) {
+      main.openCartCargo(best);
+    } else {
+      boardCart(best);
+    }
+    return true;
+  }
+
+  /// Sit in [c]. A replica is the host's cart: the host is asked to seat this
+  /// peer's puppet and the push rides in the pose; the seat follows the
+  /// streamed pose.
+  void boardCart(Minecart c) {
+    if (c.cargo != null || riding != null || mount != null) return;
+    cart = c;
+    if (c.replica) {
+      Net.instance.requestCartBoard(c.netId);
+    } else {
+      c.rider = this;
+    }
+    c.push = 0.0;
+    notify('Riding. [W]/[S] push, [F] to get off');
+  }
+
+  void leaveCart() {
+    final c = cart;
+    if (c == null) return;
+    cart = null;
+    if (c.replica) {
+      Net.instance.requestCartUnboard();
+    } else {
+      c.rider = null;
+    }
+    c.push = 0.0;
+    position = c.position + Vector3(-math.sin(yaw + math.pi * 0.5), 0.6, -math.cos(yaw + math.pi * 0.5)) * 1.2;
+    velocity = Vector3.zero();
+  }
+
+  void _cartTick(double dt, GameInput input, bool gameplay) {
+    final c = cart!;
+    if (c.removed) {
+      cart = null;
+      return;
+    }
+    var inputY = 0.0;
+    if (gameplay) {
+      if (input.down(GameAction.moveForward)) inputY -= 1;
+      if (input.down(GameAction.moveBack)) inputY += 1;
+    }
+    var push = -inputY;
+    if (_probeWalk.length2 > 0.0) {
+      // A headless probe pushes along or against the cart's own heading.
+      final h = c.heading();
+      final dot = _probeWalk.x * h.x + _probeWalk.z * h.z;
+      push = dot < 0.0 ? -1.0 : 1.0;
+    }
+    c.push = push.clamp(-1.0, 1.0);
+    position = c.seat();
+    velocity = Vector3.zero();
+    model.animate(dt, 0.0, true, false, false);
+    model.yaw = lerpAngle(model.yaw, c.yaw, dt * 8.0);
+    model.setHeld(heldItem());
+    syncNode();
+    _updateCamera(dt);
+    _updateAim();
+    if (gameplay && input.down(GameAction.attack) && _attackCooldown <= 0.0) _attackPressed();
+    world.updateAround(position);
+  }
+
+  /// A melee swing at an empty cart puts it back in the bag as its item.
+  bool _tryBreakCart() {
+    for (final c in main.carts) {
+      if (!c.removed && c.rider == null && (c.position - position).length < 4.0 && c.rayHits(aimOrigin(), aimDirection(), 4.0)) {
+        if (c.replica) {
+          Net.instance.requestBreakCart(c.netId);
+        } else {
+          main.breakMinecart(c);
+        }
+        model.swing();
+        Sfx.play('break', -6.0);
+        _attackCooldown = 0.4;
+        return true;
+      }
+    }
+    return false;
   }
 
   bool _tryBreakBoat() {
@@ -1304,6 +1414,17 @@ class Player extends VoxelBody implements Target {
       _useCooldown = 0.5;
       return;
     }
+    if (item == 'minecart' || item == 'chest_minecart') {
+      // Stage 28: a cart goes on the rail the player aims at.
+      _useCooldown = 0.5;
+      if (isAiming && Rails.isRailAt(world, aimedBlock)) {
+        main.spawnMinecart(aimedBlock, item);
+        inventory.takeFromSlot(selectedSlot, 1);
+        return;
+      }
+      notify('Minecarts go on rails');
+      return;
+    }
     if (item == 'boat') {
       _useCooldown = 0.5;
       final spot = aimOrigin() + aimDirection() * 3.0;
@@ -1347,7 +1468,18 @@ class Player extends VoxelBody implements Target {
       for (final mob in main.mobs) {
         if (Blocks.isSolid(bid) && mob.overlapsBlock(target)) return;
       }
-      if ((Blocks.isPlant(bid) || Blocks.isWire(bid)) && !Blocks.isSolid(world.getBlock(target + IVec3.down))) return;
+      if ((Blocks.isPlant(bid) || Blocks.isWire(bid) || Blocks.isRail(bid)) && !Blocks.isSolid(world.getBlock(target + IVec3.down))) {
+        return;
+      }
+      if (Blocks.isRail(bid)) {
+        // Stage 28: the rail takes its orientation from its neighbours and turns them to meet it.
+        bid = Rails.place(world, target, bid);
+        inventory.takeFromSlot(selectedSlot, 1);
+        model.swing();
+        main.onBlockPlaced(target, bid);
+        _useCooldown = 0.22;
+        return;
+      }
       if (world.setBlock(target, bid)) {
         inventory.takeFromSlot(selectedSlot, 1);
         model.swing();
@@ -1449,6 +1581,7 @@ class Player extends VoxelBody implements Target {
   void respawn() {
     isDead = false;
     if (mount != null) dismount();
+    if (cart != null) leaveCart();
     hp = maxHp;
     hunger = 20.0;
     stamina = maxStamina;
@@ -1527,6 +1660,10 @@ class Player extends VoxelBody implements Target {
       _toggleBoat();
       return;
     }
+    if (cart != null) {
+      leaveCart();
+      return;
+    }
     final horse = _findMount();
     if (horse != null) {
       mountHorse(horse);
@@ -1537,6 +1674,7 @@ class Player extends VoxelBody implements Target {
       notify('This ${m.species.name.toLowerCase()} is wild. Tame it with wheat or an apple');
       return;
     }
+    if (_toggleCart()) return;
     _toggleBoat();
   }
 
@@ -1815,7 +1953,7 @@ class Player extends VoxelBody implements Target {
 
   void _dodgePressed() {
     final cost = math.max(15.0 - 5.0 * talentRank('shadowstep'), 0.0);
-    if (_dodge > 0.0 || _dodgeCd > 0.0 || stamina < cost || riding != null || mount != null || sleeping > 0.0 || inWater) {
+    if (_dodge > 0.0 || _dodgeCd > 0.0 || stamina < cost || riding != null || mount != null || cart != null || sleeping > 0.0 || inWater) {
       return;
     }
     stamina -= cost;
@@ -1827,6 +1965,9 @@ class Player extends VoxelBody implements Target {
   }
 
   void probeDodge() => _dodgePressed();
+
+  /// Stage 28: the F key's action, for a probe.
+  void probeInteract() => _interactPressed();
 
   Vector3 _probeWalk = Vector3.zero();
 

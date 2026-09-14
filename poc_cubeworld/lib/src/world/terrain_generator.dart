@@ -63,6 +63,7 @@ class TerrainGenerator {
     _wheat = ids['wheat_2']!;
     _slab = ids['oak_slab']!;
     _redstoneOre = ids['redstone_ore']!;
+    _railEw = ids['rail_ew']!;
     setSeed(seed);
   }
 
@@ -96,7 +97,9 @@ class TerrainGenerator {
       // melons, and what a village hut holds (bed, farmland + ripe wheat, the slab roof).
       _mud, _reeds, _jungleLog, _vines, _fern, _melon, _bed, _farmland, _wheat, _slab,
       // Stage 27: redstone ore, veined below y 30.
-      _redstoneOre;
+      _redstoneOre,
+      // Stage 28: the rail down an abandoned mine's corridor.
+      _railEw;
 
   int _seed = 0;
   int get seed => _seed;
@@ -1026,6 +1029,10 @@ class TerrainGenerator {
         _put(b, ox, oz, wx, fy + 3, cz - 1, lit ? _torch : _planks);
         _put(b, ox, oz, wx, fy + 3, cz + 1, lit ? _torch : _planks);
       }
+    }
+    // Stage 28: a rail down the centre line, from the shaft to the chest.
+    for (var x = 1; x < len; x++) {
+      _put(b, ox, oz, cx + x, fy + 1, cz, _railEw);
     }
     _put(b, ox, oz, cx + len, fy + 1, cz, _chest);
     if ((h >> 8) % 3 == 0) _put(b, ox, oz, cx + len - 3, fy + 1, cz, _spawnerId);

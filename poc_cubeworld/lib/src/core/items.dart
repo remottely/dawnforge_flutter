@@ -101,6 +101,9 @@ class Items {
         // Stage 27: powered states and orientations of one item.
         'lever_on', 'button_on', 'wire_on', 'redstone_lamp_on', 'iron_door_x', 'iron_door_z_open', 'iron_door_x_open',
         'piston_e', 'piston_s', 'piston_w', 'piston_n_on', 'piston_e_on', 'piston_s_on', 'piston_w_on',
+        // Stage 28: rail orientations and powered states.
+        'rail_ew', 'rail_ne', 'rail_nw', 'rail_se', 'rail_sw', 'rail_slope_n', 'rail_slope_e', 'rail_slope_s', 'rail_slope_w',
+        'powered_rail_ew', 'powered_rail_ns_on', 'powered_rail_ew_on',
       ].contains(d.id)) {
         continue;
       }
@@ -113,12 +116,17 @@ class Items {
         itemId = itemId.substring(0, itemId.length - 4); // stage 27: the item is the unpowered block
       } else if (itemId == 'piston_n') {
         itemId = 'piston';
+      } else if (itemId == 'rail_ns' || itemId == 'powered_rail_ns') {
+        itemId = itemId.substring(0, itemId.length - 3); // stage 28: the item is the rail, the block its orientation
       } else if (itemId.endsWith('_stairs_n')) {
         itemId = itemId.substring(0, itemId.length - 2); // oak_stairs_n -> oak_stairs
       }
       add(ItemDef(id: itemId, name: d.name, kind: ItemKind.block, block: i, r: d.r, g: d.g, b: d.b));
     }
     add(const ItemDef(id: 'boat', name: 'Boat', kind: ItemKind.equipment, stack: 1, r: 0.55, g: 0.38, b: 0.20));
+    // Stage 28: carts are placed on a rail (RMB) and ridden or opened with F.
+    add(const ItemDef(id: 'minecart', name: 'Minecart', kind: ItemKind.equipment, stack: 1, r: 0.55, g: 0.55, b: 0.58));
+    add(const ItemDef(id: 'chest_minecart', name: 'Chest Minecart', kind: ItemKind.equipment, stack: 1, r: 0.58, g: 0.44, b: 0.28));
     // Stage 20: the rod and the buckets are equipment (a tool with ToolType.none
     // would mine at wood speed).
     add(const ItemDef(id: 'fishing_rod', name: 'Fishing Rod', kind: ItemKind.equipment, stack: 1, r: 0.62, g: 0.45, b: 0.25));

@@ -89,6 +89,11 @@ class Recipes {
     r('oak_stairs', 4, {'oak_planks': 6}, 'crafting_table');
     r('stone_stairs', 4, {'stone_bricks': 6}, 'crafting_table');
     r('boat', 1, {'oak_planks': 5}, 'crafting_table');
+    // Stage 28: rails and carts
+    r('rail', 16, {'iron_ingot': 6, 'stick': 1}, 'crafting_table');
+    r('powered_rail', 6, {'gold_ingot': 6, 'stick': 1, 'redstone_dust': 1}, 'crafting_table');
+    r('minecart', 1, {'iron_ingot': 5}, 'crafting_table');
+    r('chest_minecart', 1, {'minecart': 1, 'chest': 1}, 'crafting_table');
     r('enchanting_table', 1, {'diamond': 1, 'magic_dust': 4, 'stone_bricks': 4}, 'crafting_table');
     r('wooden_hoe', 1, {'oak_planks': 2, 'stick': 2});
     r('health_potion', 1, {'apple': 2, 'magic_dust': 1, 'glass': 1}, 'crafting_table');

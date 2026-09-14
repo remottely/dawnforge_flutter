@@ -21,6 +21,17 @@ enum BlockShape {
   stairsS,
   stairsW,
   wire,
+  // Stage 28: rails, one shape per orientation (the mesher draws bars over ties).
+  railNs,
+  railEw,
+  railNe,
+  railNw,
+  railSe,
+  railSw,
+  railSlopeN,
+  railSlopeE,
+  railSlopeS,
+  railSlopeW,
 }
 
 enum ToolType { none, pickaxe, axe, shovel, sword, hoe, shears }
@@ -210,6 +221,25 @@ class Blocks {
     BlockDef('piston_e_on', 'Piston', 0.50, 0.50, 0.53, hardness: 1.5, tool: ToolType.pickaxe, drop: 'piston'),
     BlockDef('piston_s_on', 'Piston', 0.50, 0.50, 0.53, hardness: 1.5, tool: ToolType.pickaxe, drop: 'piston'),
     BlockDef('piston_w_on', 'Piston', 0.50, 0.50, 0.53, hardness: 1.5, tool: ToolType.pickaxe, drop: 'piston'),
+    // Stage 28: rails. One block id per orientation (two straights, four curves,
+    // four slopes) behind one `rail` item; `Rails.orient` picks the id from the
+    // neighbours. A powered rail is straight only and has an `_on` twin the
+    // circuit tick flips. Every rail is a thin non-solid block that needs a
+    // solid below, like a wire.
+    BlockDef('rail_ns', 'Rail', 0.60, 0.60, 0.64, shape: BlockShape.railNs, solid: false, opaque: false, hardness: 0.5, tool: ToolType.pickaxe, drop: 'rail'),
+    BlockDef('rail_ew', 'Rail', 0.60, 0.60, 0.64, shape: BlockShape.railEw, solid: false, opaque: false, hardness: 0.5, tool: ToolType.pickaxe, drop: 'rail'),
+    BlockDef('rail_ne', 'Rail', 0.60, 0.60, 0.64, shape: BlockShape.railNe, solid: false, opaque: false, hardness: 0.5, tool: ToolType.pickaxe, drop: 'rail'),
+    BlockDef('rail_nw', 'Rail', 0.60, 0.60, 0.64, shape: BlockShape.railNw, solid: false, opaque: false, hardness: 0.5, tool: ToolType.pickaxe, drop: 'rail'),
+    BlockDef('rail_se', 'Rail', 0.60, 0.60, 0.64, shape: BlockShape.railSe, solid: false, opaque: false, hardness: 0.5, tool: ToolType.pickaxe, drop: 'rail'),
+    BlockDef('rail_sw', 'Rail', 0.60, 0.60, 0.64, shape: BlockShape.railSw, solid: false, opaque: false, hardness: 0.5, tool: ToolType.pickaxe, drop: 'rail'),
+    BlockDef('rail_slope_n', 'Rail', 0.60, 0.60, 0.64, shape: BlockShape.railSlopeN, solid: false, opaque: false, hardness: 0.5, tool: ToolType.pickaxe, drop: 'rail'),
+    BlockDef('rail_slope_e', 'Rail', 0.60, 0.60, 0.64, shape: BlockShape.railSlopeE, solid: false, opaque: false, hardness: 0.5, tool: ToolType.pickaxe, drop: 'rail'),
+    BlockDef('rail_slope_s', 'Rail', 0.60, 0.60, 0.64, shape: BlockShape.railSlopeS, solid: false, opaque: false, hardness: 0.5, tool: ToolType.pickaxe, drop: 'rail'),
+    BlockDef('rail_slope_w', 'Rail', 0.60, 0.60, 0.64, shape: BlockShape.railSlopeW, solid: false, opaque: false, hardness: 0.5, tool: ToolType.pickaxe, drop: 'rail'),
+    BlockDef('powered_rail_ns', 'Powered Rail', 0.70, 0.58, 0.28, shape: BlockShape.railNs, solid: false, opaque: false, hardness: 0.5, tool: ToolType.pickaxe, drop: 'powered_rail'),
+    BlockDef('powered_rail_ew', 'Powered Rail', 0.70, 0.58, 0.28, shape: BlockShape.railEw, solid: false, opaque: false, hardness: 0.5, tool: ToolType.pickaxe, drop: 'powered_rail'),
+    BlockDef('powered_rail_ns_on', 'Powered Rail', 1.00, 0.55, 0.25, shape: BlockShape.railNs, solid: false, opaque: false, hardness: 0.5, tool: ToolType.pickaxe, drop: 'powered_rail', light: 4),
+    BlockDef('powered_rail_ew_on', 'Powered Rail', 1.00, 0.55, 0.25, shape: BlockShape.railEw, solid: false, opaque: false, hardness: 0.5, tool: ToolType.pickaxe, drop: 'powered_rail', light: 4),
   ];
 
   static final Map<String, int> _indexById = {
@@ -347,6 +377,20 @@ class Blocks {
     return facingDir(id.substring(id.length - 2));
   }
 
+  // --- stage 28: rails ----------------------------------------------------------
+
+  static bool isRail(int index) {
+    final sh = defs[index].shape.index;
+    return sh >= BlockShape.railNs.index && sh <= BlockShape.railSlopeW.index;
+  }
+
+  static bool isPoweredRail(int index) => defs[index].id.startsWith('powered_rail_');
+
+  static bool isRailSlope(int index) {
+    final sh = defs[index].shape.index;
+    return sh >= BlockShape.railSlopeN.index && sh <= BlockShape.railSlopeW.index;
+  }
+
   // --- tables handed to the mesher isolate ------------------------------------
 
   static Float32List palette() {
@@ -380,7 +424,7 @@ class Blocks {
           'chest', 'lamp', 'bone_block', 'oak_planks', 'ladder', 'spawner', 'glass',
           'crafting_table', 'furnace', 'torch', 'oak_fence', 'tnt', 'cobblestone', 'pressure_plate',
           'mud', 'reeds', 'jungle_log', 'vines', 'fern', 'melon', 'bed', 'farmland', 'wheat_2', 'oak_slab',
-          'redstone_ore',
+          'redstone_ore', 'rail_ew',
         ])
           id: indexOf(id),
       };

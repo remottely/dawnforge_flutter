@@ -135,7 +135,8 @@ class Circuits {
   bool _isCircuit(int id) {
     if (id == Blocks.air) return false;
     return Blocks.isWire(id) || id == _leverOff || id == _leverOn || id == _button || id == _buttonOn ||
-        id == _lampOff || id == _lampOn || id == _plate || id == _tnt || Blocks.isIronDoor(id) || Blocks.isPiston(id);
+        id == _lampOff || id == _lampOn || id == _plate || id == _tnt || Blocks.isIronDoor(id) || Blocks.isPiston(id) ||
+        Blocks.isPoweredRail(id);
   }
 
   bool _isSource(IVec3 b) {
@@ -259,6 +260,57 @@ class Circuits {
       _reactDoor(c, id);
     } else if (Blocks.isPiston(id)) {
       _reactPiston(c, id);
+    } else if (Blocks.isPoweredRail(id)) {
+      _reactPoweredRails(c);
+    }
+  }
+
+  /// Stage 28: a powered rail is on when its own cell is powered or one within
+  /// eight cells along its run of powered rails is (a lever beside one cell
+  /// lights the whole segment). The run is flooded from [c] over the four
+  /// sides, capped at 64, and every cell written at once.
+  void _reactPoweredRails(IVec3 c) {
+    final run = <IVec3>[c];
+    final seen = <IVec3>{c};
+    var head = 0;
+    while (head < run.length && run.length < 64) {
+      final cur = run[head++];
+      for (final d in four) {
+        final n = cur + d;
+        if (seen.contains(n)) continue;
+        final nid = world.getBlock(n);
+        if (nid != Blocks.air && Blocks.isPoweredRail(nid)) {
+          seen.add(n);
+          run.add(n);
+        }
+      }
+    }
+    final dist = <IVec3, int>{};
+    final queue = <IVec3>[];
+    for (final cell in run) {
+      if (_isPowered(cell)) {
+        dist[cell] = 0;
+        queue.add(cell);
+      }
+    }
+    head = 0;
+    while (head < queue.length) {
+      final cur = queue[head++];
+      for (final d in four) {
+        final n = cur + d;
+        if (seen.contains(n) && !dist.containsKey(n)) {
+          dist[n] = dist[cur]! + 1;
+          queue.add(n);
+        }
+      }
+    }
+    for (final cell in run) {
+      final id = world.getBlock(cell);
+      var name = Blocks.idOf(id);
+      if (name.endsWith('_on')) name = name.substring(0, name.length - 3);
+      final on = (dist[cell] ?? 99) <= 8;
+      final want = Blocks.indexOf(on ? '${name}_on' : name);
+      if (id != want) world.setBlock(cell, want);
     }
   }
 

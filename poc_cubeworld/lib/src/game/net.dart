@@ -13,6 +13,7 @@ import '../core/species.dart';
 import '../entities/boat.dart';
 import '../entities/bobber.dart';
 import '../entities/item_drop.dart';
+import '../entities/minecart.dart';
 import '../entities/mob.dart';
 import '../entities/remote_player.dart';
 import 'game.dart';
@@ -121,6 +122,12 @@ class Net {
   final Map<int, Boat> boatDrivers = {};
   final Map<int, Bobber> _bobberReplicas = {};
   int _nextBoatId = 1;
+
+  /// Stage 28 — minecarts are host-owned like boats.
+  final Map<int, Minecart> _carts = {};
+  final Map<int, Minecart> _cartReplicas = {};
+  final Map<int, Minecart> cartRiders = {};
+  int _nextCartId = 1;
 
   /// Host: each peer's bag as it last declared it, and the items a peer took
   /// out of an open chest and has not put back (its cursor, in escrow).
@@ -263,6 +270,9 @@ class Net {
     for (final e in _boats.entries) {
       _sendTo(socket, {'t': 'boat', 'id': e.key, 'pos': _v(e.value.position), 'yaw': e.value.yaw});
     }
+    for (final c in _carts.values) {
+      _sendTo(socket, _cartSpawnMessage(c));
+    }
     _sendTo(socket, {'t': 'weather', 'kind': m.weather.kind.index, 'target': m.weather.target});
   }
 
@@ -272,6 +282,7 @@ class Net {
     if (p != null) p.removed = true;
     _releaseMount(id);
     _releaseBoat(id);
+    _releaseCart(id);
     _peerBags.remove(id);
     _chestEscrow.remove(id);
     for (final w in _chestWatchers.values) {
@@ -326,6 +337,16 @@ class Net {
         if (b == null || b.removed || b.driver != null) return;
         m.spawnDrop(b.position + Vector3(0, 0.5, 0), 'boat', 1);
         b.removed = true;
+      case 'cart_req':
+        m.spawnMinecart(IVec3.parse(msg['cell'] as String)!, msg['kind'] as String);
+      case 'cart_board_req':
+        _onCartBoardRequest(sender, msg['net'] as int);
+      case 'cart_unboard_req':
+        _releaseCart(sender);
+      case 'break_cart_req':
+        final c = _carts[msg['net'] as int];
+        if (c == null || c.removed || c.rider != null) return;
+        m.breakMinecart(c);
       case 'bobber':
         _onBobberPose(sender, _vec(msg['pos']));
       case 'bobber_gone':
@@ -403,6 +424,12 @@ class Net {
         _onBoatPoses(msg);
       case 'boat_free':
         _onBoatFree(msg['id'] as int);
+      case 'cart':
+        _onCartSpawn(msg);
+      case 'cart_poses':
+        _onCartPoses(msg);
+      case 'cart_free':
+        _onCartFree(msg['id'] as int);
       case 'bobber':
         _onBobberPose(1, _vec(msg['pos']));
       case 'bobber_gone':
@@ -515,6 +542,8 @@ class Net {
       final boat = p.riding;
       final riding = h != null && h.puppet;
       final rowing = boat != null && boat.replica;
+      final cart = p.cart;
+      final carting = cart != null && cart.replica;
       final pose = {
         't': 'pose',
         'pos': _v(p.position),
@@ -526,6 +555,8 @@ class Net {
         if (riding && h.rideJump) 'jump': true,
         // Stage 25: the host's boat rows (x = steer, z = throttle).
         if (rowing) 'ride': [boat.steer, 0.0, boat.throttle],
+        // Stage 28: the host drives the cart (z = push).
+        if (carting) 'ride': [0.0, 0.0, cart.push],
       };
       // A puppet never consumes the jump; the host's horse does.
       if (riding) h.rideJump = false;
@@ -562,6 +593,7 @@ class Net {
         _dropTimer = 0.0;
         _broadcastDropPoses();
         _broadcastBoatPoses();
+        _broadcastCartPoses();
       }
       _timeTimer += dt;
       if (_timeTimer >= 2.0) {
@@ -584,6 +616,7 @@ class Net {
     puppet.setPose(_vec(msg['pos']), (msg['yaw'] as num).toDouble(), msg['held'] as String);
     final h = _mounts[id];
     final boat = boatDrivers[id];
+    final cart = cartRiders[id];
     if (h != null && !h.removed && h.ridden) {
       h.rideInput = msg['ride'] == null ? Vector3.zero() : _vec(msg['ride']);
       h.rideSprint = msg['sprint'] == true;
@@ -592,6 +625,9 @@ class Net {
       final ride = msg['ride'] == null ? Vector3.zero() : _vec(msg['ride']);
       boat.steer = ride.x;
       boat.throttle = ride.z;
+    } else if (cart != null && !cart.removed) {
+      final ride = msg['ride'] == null ? Vector3.zero() : _vec(msg['ride']);
+      cart.push = ride.z.clamp(-1.0, 1.0);
     }
   }
 
@@ -1042,6 +1078,109 @@ class Net {
   }
 
   List<Boat> boatReplicas() => [for (final b in _boatReplicas.values) if (!b.removed) b];
+
+  // --- minecarts: host-owned like boats; a client asks for one, boards a
+  // replica, breaks one (stage 28) ----------------------------------------------
+
+  void requestCart(IVec3 cell, String kind) => _toHost({'t': 'cart_req', 'cell': cell.key, 'kind': kind});
+
+  void requestCartBoard(int netId) => _toHost({'t': 'cart_board_req', 'net': netId});
+
+  void requestCartUnboard() => _toHost({'t': 'cart_unboard_req'});
+
+  void requestBreakCart(int netId) => _toHost({'t': 'break_cart_req', 'net': netId});
+
+  Map<String, Object> _cartSpawnMessage(Minecart c) =>
+      {'t': 'cart', 'id': c.netId, 'kind': c.kind, 'cell': c.cell.key, 'pos': _v(c.position), 'yaw': c.yaw};
+
+  /// Host: a cart was created; give it a net id and tell every client to draw it.
+  void onCartSpawned(Minecart cart) {
+    if (mode != NetMode.host) return;
+    cart.netId = _nextCartId++;
+    _carts[cart.netId] = cart;
+    _broadcast(_cartSpawnMessage(cart));
+  }
+
+  void onCartGone(Minecart cart) {
+    if (mode != NetMode.host || cart.netId == 0 || _carts.remove(cart.netId) == null) return;
+    cartRiders.removeWhere((_, c) => identical(c, cart));
+    _broadcast({'t': 'cart_free', 'id': cart.netId});
+  }
+
+  void _onCartSpawn(Map<String, dynamic> msg) {
+    final m = main;
+    final id = msg['id'] as int;
+    if (m == null || _cartReplicas.containsKey(id)) return;
+    final c = Minecart()
+      ..replica = true
+      ..netId = id;
+    c.setupCart(m.world, IVec3.parse(msg['cell'] as String)!, msg['kind'] as String);
+    c.setNetPose(_vec(msg['pos']), (msg['yaw'] as num).toDouble());
+    _cartReplicas[id] = c;
+    m.carts.add(c);
+    m.entities.add(c.node);
+  }
+
+  void _onCartFree(int id) {
+    final c = _cartReplicas.remove(id);
+    if (c == null) return;
+    final m = main;
+    if (m != null && identical(m.player.cart, c)) m.player.leaveCart();
+    c.removed = true;
+  }
+
+  void _broadcastCartPoses() {
+    final ids = <int>[];
+    final poses = <List<double>>[];
+    final yaws = <double>[];
+    for (final e in _carts.entries) {
+      final c = e.value;
+      final last = c.lastSent;
+      if (c.removed || (last != null && (c.position - last).length <= 0.02 && (c.yaw - c.lastSentYaw).abs() <= 0.01)) {
+        continue;
+      }
+      c.lastSent = c.position.clone();
+      c.lastSentYaw = c.yaw;
+      ids.add(e.key);
+      poses.add(_v(c.position));
+      yaws.add(c.yaw);
+    }
+    if (ids.isNotEmpty) _broadcast({'t': 'cart_poses', 'ids': ids, 'poses': poses, 'yaws': yaws});
+  }
+
+  void _onCartPoses(Map<String, dynamic> msg) {
+    final ids = msg['ids'] as List<dynamic>;
+    final poses = msg['poses'] as List<dynamic>;
+    final yaws = msg['yaws'] as List<dynamic>;
+    for (var i = 0; i < ids.length; i++) {
+      final c = _cartReplicas[ids[i] as int];
+      if (c == null || c.removed) continue;
+      c.setNetPose(_vec(poses[i]), (yaws[i] as num).toDouble());
+    }
+  }
+
+  void _onCartBoardRequest(int id, int netId) {
+    final c = _carts[netId];
+    final puppet = _puppets[id];
+    if (c == null || c.removed || c.rider != null || c.cargo != null || puppet == null) {
+      debugPrint('[net] peer $id asked to board cart $netId: refused');
+      return;
+    }
+    _releaseCart(id);
+    c.rider = puppet;
+    c.push = 0.0;
+    cartRiders[id] = c;
+    debugPrint('[net] peer $id boarded cart $netId');
+  }
+
+  void _releaseCart(int id) {
+    final c = cartRiders.remove(id);
+    if (c == null) return;
+    c.rider = null;
+    c.push = 0.0;
+  }
+
+  List<Minecart> cartReplicas() => [for (final c in _cartReplicas.values) if (!c.removed) c];
 
   // --- bobbers: a cast line is drawn on every other peer at that peer's puppet
   // (stage 25) -----------------------------------------------------------------

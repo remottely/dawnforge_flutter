@@ -47,7 +47,7 @@ void main() {
     for (var i = 0; i < order.length; i++) {
       expect(id(order[i]), melon + 1 + i, reason: order[i]);
     }
-    expect(Blocks.count, melon + 1 + order.length);
+    expect(id('rail_ns'), melon + 1 + order.length); // stage 28 appends after the pistons
     expect(Blocks.count <= 256, isTrue);
     expect(Blocks.shapeOf(id('wire_on')), BlockShape.wire);
     expect(Blocks.isSolid(id('wire_off')), isFalse);

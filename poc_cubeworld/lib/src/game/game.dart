@@ -14,6 +14,7 @@ import '../core/ivec3.dart';
 import '../core/species.dart';
 import '../entities/boat.dart';
 import '../entities/item_drop.dart';
+import '../entities/minecart.dart';
 import '../entities/mob.dart';
 import '../entities/projectile.dart';
 import '../entities/remote_player.dart';
@@ -31,6 +32,7 @@ import 'loot.dart';
 import 'music.dart';
 import 'net.dart';
 import 'quests.dart';
+import 'rails.dart';
 import 'sfx.dart';
 import 'settings.dart';
 import 'weather.dart';
@@ -130,6 +132,10 @@ class Game extends ChangeNotifier {
   Map<String, int>? _stage27Site;
   String get _probe27Flag => '$saveRoot/probe27.flag';
 
+  /// Stage 28: the same for the rails and carts.
+  Map<String, int>? _stage28Site;
+  String get _probe28Flag => '$saveRoot/probe28.flag';
+
   /// Set by the view: throws this session away and builds a fresh one with the
   /// same arguments (Godot's `reload_current_scene`).
   void Function()? reloader;
@@ -154,6 +160,7 @@ class Game extends ChangeNotifier {
   final List<ItemDrop> drops = [];
   final List<Projectile> projectiles = [];
   final List<Boat> boats = [];
+  final List<Minecart> carts = []; // stage 28
   final List<RemotePlayer> puppets = [];
   final List<DamageNumber> damageNumbers = [];
   final List<Note> notes = [];
@@ -237,6 +244,12 @@ class Game extends ChangeNotifier {
       final cells = flag27.readAsStringSync().trim().split(',').map(int.parse).toList();
       _stage27Site = {'x0': cells[0], 'y': cells[1], 'z0': cells[2]};
       flag27.deleteSync(); // one verify boot, whatever happens next
+    }
+    final flag28 = File(_probe28Flag);
+    if (flag28.existsSync()) {
+      final cells = flag28.readAsStringSync().trim().split(',').map(int.parse).toList();
+      _stage28Site = {'x0': cells[0], 'y': cells[1], 'z0': cells[2]};
+      flag28.deleteSync();
     }
 
     world = VoxelWorld(
@@ -565,6 +578,9 @@ class Game extends ChangeNotifier {
     for (final b in boats) {
       b.update(dt);
     }
+    for (final c in carts) {
+      c.update(dt);
+    }
     for (final p in puppets) {
       p.update(dt);
     }
@@ -684,6 +700,10 @@ class Game extends ChangeNotifier {
       if (b.removed) Net.instance.onBoatGone(b);
     }
     pruneList<Boat>(boats, (b) => b.removed, (b) => b.node);
+    for (final c in carts) {
+      if (c.removed) Net.instance.onCartGone(c);
+    }
+    pruneList<Minecart>(carts, (c) => c.removed, (c) => c.node);
     pruneList<RemotePlayer>(puppets, (p) => p.removed, (p) => p.node);
     pruneList<_Effect>(_effects, (e) => e.age >= 0.35, (e) => e.node);
     pruneList<_Debris>(_debris, (d) => d.age >= 0.6, (d) => d.node);
@@ -835,6 +855,25 @@ class Game extends ChangeNotifier {
             spawnTempleBoss(chamber);
           }
         }
+        // Stage 28: the first visit to a mine leaves a chest cart with mine loot
+        // at the end of its rail. Its key is lifted like the temple boss's, and
+        // only set once the corridor's chunks are in (an unloaded cell reads as
+        // air, not as a rail).
+        if (s.type == TerrainGenerator.structMine && !Net.instance.isClient) {
+          final ckey = IVec3(s.x, s.y + mineCartKeyY, s.z);
+          if (!_bossesSpawned.contains(ckey) && key.distanceTo(player.position) < 48.0) {
+            final last = _mineRailEnd(key);
+            if (last != IVec3.zero) {
+              _bossesSpawned.add(ckey);
+              final cart = spawnMinecart(last, 'chest_minecart');
+              // An explicit integer hash: Dart's own hashCode is seeded per process.
+              final rng = math.Random(_cellHash(ckey) ^ world.seedValue);
+              for (final stack in LootTables.roll('mine', rng)) {
+                cart?.cargo?.add(stack.id, stack.count);
+              }
+            }
+          }
+        }
         continue;
       }
       if (s.type != 1) continue;
@@ -854,6 +893,40 @@ class Game extends ChangeNotifier {
   }
 
   static const int templeBossKeyY = 1000;
+  static const int mineCartKeyY = 2000;
+
+  static int _cellHash(IVec3 c) =>
+      ((c.x * 73856093) ^ (c.y * 19349663) ^ (c.z * 83492791)) & 0x7fffffff;
+
+  /// Stage 28: the last rail cell of the corridor of the mine at [origin] (it
+  /// runs +x from the shaft at mineFloorY + 1), or zero while its chunks are
+  /// not all loaded or it has no rail.
+  IVec3 _mineRailEnd(IVec3 origin) {
+    final fy = TerrainGenerator.mineFloorY + 1;
+    if (!world.isLoaded(IVec3(origin.x + 1, fy, origin.z)) || !world.isLoaded(IVec3(origin.x + 31, fy, origin.z))) {
+      return IVec3.zero;
+    }
+    var last = IVec3.zero;
+    for (var x = 1; x < 32; x++) {
+      final c = IVec3(origin.x + x, fy, origin.z);
+      if (Rails.isRailAt(world, c)) {
+        last = c;
+      } else if (last != IVec3.zero) {
+        break;
+      }
+    }
+    return last;
+  }
+
+  /// Rails of the mine at [origin], for the probe.
+  int mineRailCount(IVec3 origin) {
+    final fy = TerrainGenerator.mineFloorY + 1;
+    var n = 0;
+    for (var x = 1; x < 32; x++) {
+      if (Rails.isRailAt(world, IVec3(origin.x + x, fy, origin.z))) n += 1;
+    }
+    return n;
+  }
 
   /// Stage 23: the Mummy King, between the two chests at the back of the
   /// chamber whose floor centre is [chamber] (the cell above the pressure plate).
@@ -962,6 +1035,48 @@ class Game extends ChangeNotifier {
     boats.add(b);
     entities.add(b.node);
     Net.instance.onBoatSpawned(b);
+  }
+
+  /// Stage 28: a cart on the rail at [cell]. The host owns carts like boats; a
+  /// client asks and gets null.
+  Minecart? spawnMinecart(IVec3 cell, String kind) {
+    if (Net.instance.isClient) {
+      Net.instance.requestCart(cell, kind);
+      return null;
+    }
+    final c = Minecart();
+    c.setupCart(world, cell, kind);
+    carts.add(c);
+    entities.add(c.node);
+    Net.instance.onCartSpawned(c);
+    return c;
+  }
+
+  /// The cart goes back to being its item; a chest cart spills its slots.
+  void breakMinecart(Minecart c) {
+    final at = c.position + Vector3(0, 0.5, 0);
+    final cargo = c.cargo;
+    if (cargo != null) {
+      for (final s in cargo.slots) {
+        if (s != null) spawnDrop(at, s.id, s.count);
+      }
+    }
+    spawnDrop(at, c.kind, 1);
+    c.removed = true;
+  }
+
+  /// A chest cart's slots on the chest screen. The screen edits the inventory
+  /// in place, so solo and host see the cart's own slots; a client is told the
+  /// cart is the host's.
+  void openCartCargo(Minecart c) {
+    if (c.replica) {
+      notify("This cart's chest opens on the host only");
+      return;
+    }
+    station = 'chest';
+    chestPos = c.cell;
+    chest = c.cargo;
+    openScreen(ScreenKind.inventory);
   }
 
   /// Enchanting: one level and two magic dust buy a random +1..+3 on the held weapon or tool.
@@ -1315,6 +1430,7 @@ class Game extends ChangeNotifier {
     final c = Blocks.def(id);
     spawnDebris(b.centre, Vector3(c.r, c.g, c.b));
     Sfx.play('break', -6.0);
+    if (Blocks.isRail(id)) Rails.removed(world, b); // stage 28: the neighbours no longer turn toward this cell
     if (Blocks.idOf(id) == 'chest' && chests.containsKey(b)) {
       final inv = chests.remove(b)!;
       for (final s in inv.slots) {
@@ -1377,6 +1493,7 @@ class Game extends ChangeNotifier {
     }
     return {
       'boats': [for (final b in boats) if (!b.removed && !b.replica) b.toJson()],
+      'carts': [for (final c in carts) if (!c.removed && !c.replica) c.toJson()], // stage 28
       'pets': petData,
       'mount': mountIndex,
       'drops': [for (final d in drops) if (!d.replica && !d.removed) d.toJson()],
@@ -1409,7 +1526,9 @@ class Game extends ChangeNotifier {
 
   Future<bool> _loadGame() async {
     final f = File('$saveDir/player.json');
-    if ((_hasArg('--new') || GameState.instance.freshWorld) && !_stage24Verify && _stage27Site == null) return false;
+    if ((_hasArg('--new') || GameState.instance.freshWorld) && !_stage24Verify && _stage27Site == null && _stage28Site == null) {
+      return false;
+    }
     if (!await f.exists()) return false;
     final data = jsonDecode(await f.readAsString());
     if (data is! Map<String, dynamic>) return false;
@@ -1450,6 +1569,13 @@ class Game extends ChangeNotifier {
       final bd = b as Map<String, dynamic>;
       final p = (bd['pos'] as List<dynamic>).map((e) => (e as num).toDouble()).toList();
       spawnBoat(Vector3(p[0], p[1], p[2]), (bd['yaw'] as num?)?.toDouble() ?? 0.0);
+    }
+    for (final cd in (data['carts'] as List<dynamic>? ?? const [])) {
+      // Stage 28: the cart, its ends, `t`, speed and cargo.
+      final d = cd as Map<String, dynamic>;
+      final c = (d['cell'] as List<dynamic>).map((e) => (e as num).toInt()).toList();
+      final cart = spawnMinecart(IVec3(c[0], c[1], c[2]), d['kind']?.toString() ?? 'minecart');
+      cart?.fromJson(d);
     }
     final restored = <Mob>[];
     for (final pd in (data['pets'] as List<dynamic>? ?? const [])) {
@@ -1786,6 +1912,10 @@ class Game extends ChangeNotifier {
     if (_hasArg('--stage27')) {
       // Same two-boot shape: the circuit is built and saved, the reload reads it back.
       if (await _probeStage27()) return;
+    }
+    if (_hasArg('--stage28')) {
+      // Two boots again: the track and the carts are saved, the reload reads them back.
+      if (await _probeStage28()) return;
     }
     await nextFrame();
     await nextFrame();
@@ -3151,6 +3281,236 @@ class Game extends ChangeNotifier {
     }
     _pinCameraTo = () => eye.clone();
     debugPrint('[probe] stage27 capture from $eye');
+  }
+
+  // --- stage 28: rails and minecarts --------------------------------------------------
+
+  /// The track the probe lays on a stone pad east of spawn: 12 straight rails
+  /// east, a two-cell slope up onto a four-cell plateau, a corner south and six
+  /// rails down (three powered, fed by a lever on the east side).
+  List<IVec3> _stage28Track(int x0, int y, int z0) => [
+        for (var i = 0; i < 13; i++) IVec3(x0 + i, y, z0), // 12 straight + the first slope cell
+        IVec3(x0 + 13, y + 1, z0), // second slope cell
+        for (var i = 0; i < 4; i++) IVec3(x0 + 14 + i, y + 2, z0), // plateau, the last cell is the corner
+        for (var i = 0; i < 6; i++) IVec3(x0 + 17, y + 2, z0 + 1 + i), // south leg
+      ];
+
+  IVec3 _stage28Lever(int x0, int y, int z0) => IVec3(x0 + 18, y + 2, z0 + 2);
+
+  Map<String, int> _stage28Orientations(List<IVec3> cells) {
+    final out = {'ns': 0, 'ew': 0, 'curves': 0, 'slopes': 0, 'rails': 0};
+    for (final c in cells) {
+      if (!Rails.isRailAt(world, c)) continue;
+      out['rails'] = out['rails']! + 1;
+      final sfx = Rails.suffixOf(world.getBlock(c));
+      if (sfx == 'ns' || sfx == 'ew') {
+        out[sfx] = out[sfx]! + 1;
+      } else if (sfx.startsWith('slope')) {
+        out['slopes'] = out['slopes']! + 1;
+      } else {
+        out['curves'] = out['curves']! + 1;
+      }
+    }
+    return out;
+  }
+
+  /// Simulation ticks until [done] answers true or [seconds] of 60 Hz ticks
+  /// pass (Godot counts physics frames against the wall clock; gotcha 7).
+  Future<bool> _stage28Until(bool Function() done, double seconds) {
+    final c = Completer<bool>();
+    var left = (seconds * 60).round();
+    _probeTick = () {
+      left -= 1;
+      final ok = done();
+      if (ok || left <= 0) {
+        _probeTick = null;
+        c.complete(ok);
+      }
+    };
+    return c.future;
+  }
+
+  Future<void> _stage28Settle(double seconds) => _ticks((seconds * 60).round());
+
+  /// --stage28, first boot: the track, five cart runs, a rider, a chest cart,
+  /// the mine's rail and cart, then a save and a fresh session
+  /// (`probe28.flag`) so the second boot reads the carts and the rails back.
+  Future<bool> _probeStage28() async {
+    final site = _stage28Site;
+    if (site != null) {
+      await _probeStage28Verify(site);
+      return false;
+    }
+    final x0 = player.position.x.floor() + 3;
+    final z0 = player.position.z.floor();
+    var y0 = 0;
+    for (var x = x0 - 3; x < x0 + 24; x++) {
+      for (var z = z0 - 4; z < z0 + 11; z++) {
+        y0 = math.max(y0, world.groundHeight(x, z));
+      }
+    }
+    final stone = Blocks.indexOf('stone');
+    for (var x = x0 - 3; x < x0 + 24; x++) {
+      for (var z = z0 - 4; z < z0 + 11; z++) {
+        world.setBlock(IVec3(x, y0, z), stone);
+        for (var y = y0 + 1; y < y0 + 9; y++) {
+          world.setBlock(IVec3(x, y, z), Blocks.air);
+        }
+      }
+    }
+    final y = y0 + 1;
+    final home = Vector3(x0 + 6.5, y + 0.1, z0 + 6.5);
+    _probePlace(home);
+    String idAt(IVec3 c) => Blocks.idOf(world.getBlock(c));
+    debugPrint('[probe] stage28 site x0=$x0 y=$y z0=$z0');
+    // Supports: the slope's second step, the plateau and the south leg one and two blocks up.
+    world.setBlock(IVec3(x0 + 13, y, z0), stone);
+    for (var i = 0; i < 4; i++) {
+      world.setBlock(IVec3(x0 + 14 + i, y + 1, z0), stone);
+    }
+    for (var i = 0; i < 6; i++) {
+      world.setBlock(IVec3(x0 + 17, y + 1, z0 + 1 + i), stone);
+    }
+    world.setBlock(IVec3(x0 + 18, y + 1, z0 + 2), stone);
+    final lever = _stage28Lever(x0, y, z0);
+    world.setBlock(lever, Blocks.indexOf('lever_off'));
+    // 1. The track, laid rail by rail through the same call the player's RMB uses.
+    final cells = _stage28Track(x0, y, z0);
+    final rail = Blocks.indexOf('rail_ns');
+    final powered = Blocks.indexOf('powered_rail_ns');
+    for (final c in cells) {
+      Rails.place(world, c, c.x == x0 + 17 && c.z >= z0 + 1 && c.z <= z0 + 3 ? powered : rail);
+    }
+    await _stage28Settle(0.3);
+    final o = _stage28Orientations(cells);
+    debugPrint('[probe] stage28 placed ${o['rails']} rails: orientations ns=${o['ns']} ew=${o['ew']} '
+        'curves=${o['curves']} slopes=${o['slopes']}');
+    if (_hasArg('--trace')) {
+      for (final c in cells) {
+        debugPrint('[trace] rail $c = ${idAt(c)}');
+      }
+    }
+    String f2(double v) => v.toStringAsFixed(2);
+    // 2. Coasting: from the 12th rail west at 6 m/s; the line ends at x0 after 11 m.
+    final cart = spawnMinecart(IVec3(x0 + 11, y, z0), 'minecart')!;
+    cart.head(Rails.w);
+    cart.speed = 6.0;
+    await _stage28Settle(3.0);
+    debugPrint('[probe] stage28 cart coasts: v0=6 -> reached end at x=${f2(cart.position.x)} and stopped=${cart.stopped && cart.speed == 0.0} (cell ${cart.cell})');
+    // 3. The slope: east at 6 m/s from x0+8, read at the top; then from rest on the slope down.
+    cart.placeOn(IVec3(x0 + 8, y, z0));
+    cart.head(Rails.e);
+    cart.speed = 6.0;
+    final reachedTop = await _stage28Until(() => cart.cell.x >= x0 + 14, 5.0);
+    final vTop = cart.speed;
+    cart.placeOn(IVec3(x0 + 13, y + 1, z0));
+    cart.head(Rails.w);
+    await _stage28Settle(1.5);
+    debugPrint('[probe] stage28 slope: uphill v 6 -> ${f2(vTop)} at top (<6, reached=$reachedTop), downhill back v=${f2(cart.speed)} (>1) at x=${f2(cart.position.x)}');
+    // 4. The corner: east along the plateau, out heading south.
+    cart.placeOn(IVec3(x0 + 15, y + 2, z0));
+    cart.head(Rails.e);
+    cart.speed = 4.0;
+    final turned = await _stage28Until(() => cart.cell.z >= z0 + 1, 4.0);
+    debugPrint('[probe] stage28 curve: entered heading +x, left heading +z=${cart.heading() == Rails.s} (turned=$turned, heading ${cart.heading()}, cell ${cart.cell})');
+    // 5. The powered segment: the cart brakes on the dead rail, then the lever launches it.
+    await _stage28Settle(0.5);
+    final onDead = cart.stopped && cart.speed == 0.0 && Blocks.isPoweredRail(world.getBlock(cart.cell));
+    world.circuits.useBlock(lever);
+    var peak = 0.0;
+    await _stage28Until(() {
+      peak = math.max(peak, cart.speed);
+      return false;
+    }, 2.0);
+    debugPrint('[probe] stage28 powered rail: lever off -> cart stopped on it=$onDead; lever on -> cart peak speed within 2 s=${f2(peak)} (>4), '
+        'rails ${idAt(IVec3(x0 + 17, y + 2, z0 + 1))} / ${idAt(IVec3(x0 + 17, y + 2, z0 + 3))}');
+    // 6. A rider: F beside the cart boards it, W pushes it along, F leaves it.
+    cart.placeOn(IVec3(x0 + 1, y, z0));
+    cart.head(Rails.e);
+    _probePlace(Vector3(x0 + 2.5, y + 0.1, z0 + 0.5));
+    await _ticks(1);
+    player.probeInteract();
+    final boarded = identical(player.cart, cart) && identical(cart.rider, player);
+    final from = player.position.clone();
+    player.probeWalk(Vector3(1, 0, 0));
+    await _stage28Settle(1.5);
+    player.probeWalk(Vector3.zero());
+    final carried = (player.position - from).length;
+    player.probeInteract();
+    final left = player.cart == null && cart.rider == null;
+    debugPrint('[probe] stage28 rider: boarded=$boarded, cart carried player ${f2(carried)} m, left=$left');
+    _probePlace(home);
+    // 7. A chest cart holds three apples across an open / close of the chest screen.
+    final chestCart = spawnMinecart(IVec3(x0 + 10, y, z0), 'chest_minecart')!;
+    chestCart.cargo!.add('apple', 3);
+    openCartCargo(chestCart);
+    final opened = screen == ScreenKind.inventory && identical(chest, chestCart.cargo);
+    closeScreen();
+    debugPrint('[probe] stage28 chest cart: stored 3 apples, reopened count=${chestCart.cargo!.countOf('apple')} (screen showed the cart\'s slots=$opened)');
+    // 8. The mine's rail and its chest cart, found through the stage 21a teleport
+    // (`--kind=7`). Fly mode holds the player while the far chunks load.
+    flyMode = true;
+    final found = _probeStage21aTeleport(48);
+    if (found == null) {
+      debugPrint('[probe] stage28 mine rails at kind 7: no mine within 48 chunks of seed ${world.seedValue}');
+    } else {
+      final origin = found.origin;
+      for (var i = 0; i < 30 || (!world.isIdle && i < 1200); i++) {
+        await nextFrame();
+      }
+      _checkStructures();
+      await _ticks(1);
+      var mineCart = false;
+      for (final c in carts) {
+        if (c.cargo != null && c.cell.y == TerrainGenerator.mineFloorY + 1 && c.cell.z == origin.z) mineCart = true;
+      }
+      debugPrint('[probe] stage28 mine rails at kind 7: rails=${mineRailCount(origin)} (>10) cart=$mineCart (corridor from $origin)');
+    }
+    // 9. Back home the same way, then save with the lever on and rebuild the session.
+    _probePlace(home);
+    player.spawnPoint = home.clone();
+    world.updateAround(home);
+    for (var i = 0; i < 30 || (!world.isIdle && i < 1200); i++) {
+      _probePlace(home);
+      await nextFrame();
+    }
+    flyMode = false;
+    await _stage28Settle(0.3);
+    await saveGame();
+    File(_probe28Flag).writeAsStringSync('$x0,$y,$z0');
+    debugPrint('[probe] stage28 saved to $saveDir, reloading the scene');
+    reloader!();
+    return true;
+  }
+
+  /// --stage28, second boot: the carts and the track come back from the save;
+  /// then the player rides a cart along the straight for the capture (the
+  /// slope, the plateau and the lit powered leg ahead).
+  Future<void> _probeStage28Verify(Map<String, int> site) async {
+    final x0 = site['x0']!, y = site['y']!, z0 = site['z0']!;
+    await _ticks(8);
+    String idAt(IVec3 c) => Blocks.idOf(world.getBlock(c));
+    final o = _stage28Orientations(_stage28Track(x0, y, z0));
+    Minecart? ride;
+    for (final c in carts) {
+      if (c.cargo == null && c.cell.y == y) ride = c;
+    }
+    debugPrint('[probe] stage28 after reload: carts=${carts.length} rails intact=${o['rails']} (lever ${idAt(_stage28Lever(x0, y, z0))}, '
+        'powered leg ${idAt(IVec3(x0 + 17, y + 2, z0 + 2))}, player hp ${player.hp.toStringAsFixed(0)}/${player.maxHp.toStringAsFixed(0)})');
+    if (ride != null && _arg('--tp=', '') == '') {
+      ride.placeOn(IVec3(x0 + 5, y, z0));
+      ride.head(Rails.e);
+      player.boardCart(ride);
+      ride.speed = 1.5;
+    }
+    if (_arg('--look=', '') == '') player.setLook(-110.0 * math.pi / 180.0, -18.0 * math.pi / 180.0);
+    for (var i = 0; i < 30 || (!world.isIdle && i < 600); i++) {
+      await nextFrame();
+    }
+    for (var i = 0; i < 10; i++) {
+      await nextFrame();
+    }
+    debugPrint('[probe] stage28 capture riding at ${player.position} (cart ${ride?.cell})');
   }
 
   void shutdown() {
