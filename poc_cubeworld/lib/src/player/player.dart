@@ -28,13 +28,17 @@ import '../world/voxel_world.dart';
 
 class PlayerClass {
   const PlayerClass(this.name, this.hp, this.stamina, this.mana, this.shirtR, this.shirtG, this.shirtB, this.weapon,
-      this.damageMult, this.ability);
+      this.damageMult, this.ability, this.ability2, this.mana2);
   final String name;
   final double hp, stamina, mana;
   final double shirtR, shirtG, shirtB;
   final String weapon;
   final double damageMult;
   final String ability;
+
+  /// Stage 23: the Q ability and its mana price (through `manaCost`).
+  final String ability2;
+  final double mana2;
   Vector3 get shirt => Vector3(shirtR, shirtG, shirtB);
 }
 
@@ -63,10 +67,10 @@ class Player extends VoxelBody implements Target {
   static double baseFov = 72.0;
 
   static const Map<String, PlayerClass> classes = {
-    'warrior': PlayerClass('Warrior', 30, 100, 20, 0.72, 0.22, 0.20, 'stone_sword', 1.25, 'Whirlwind'),
-    'ranger': PlayerClass('Ranger', 22, 120, 30, 0.20, 0.55, 0.28, 'bow', 1.0, 'Arrow Volley'),
-    'mage': PlayerClass('Mage', 18, 80, 100, 0.35, 0.28, 0.75, 'staff', 1.0, 'Fire Nova'),
-    'rogue': PlayerClass('Rogue', 24, 140, 30, 0.25, 0.25, 0.30, 'dagger', 1.1, 'Shadow Dash'),
+    'warrior': PlayerClass('Warrior', 30, 100, 20, 0.72, 0.22, 0.20, 'stone_sword', 1.25, 'Whirlwind', 'Shield Bash', 10.0),
+    'ranger': PlayerClass('Ranger', 22, 120, 30, 0.20, 0.55, 0.28, 'bow', 1.0, 'Arrow Volley', 'Volley', 10.0),
+    'mage': PlayerClass('Mage', 18, 80, 100, 0.35, 0.28, 0.75, 'staff', 1.0, 'Fire Nova', 'Frost Nova', 25.0),
+    'rogue': PlayerClass('Rogue', 24, 140, 30, 0.25, 0.25, 0.30, 'dagger', 1.1, 'Shadow Dash', 'Smoke Bomb', 15.0),
   };
 
   final Inventory inventory = Inventory();
@@ -83,6 +87,9 @@ class Player extends VoxelBody implements Target {
   int level = 1;
   int armor = 0;
   double abilityCooldown = 0.0;
+
+  /// Stage 23: the Q ability.
+  double ability2Cooldown = 0.0;
   bool firstPerson = false;
   @override
   bool isDead = false;
@@ -359,6 +366,7 @@ class Player extends VoxelBody implements Target {
     if (input.justPressed(GameAction.attack)) _attackPressed();
     if (input.justPressed(GameAction.use)) _usePressed();
     if (input.justPressed(GameAction.ability)) _useAbility();
+    if (input.justPressed(GameAction.ability2)) _useAbility2();
     if (input.justPressed(GameAction.dodge)) _dodgePressed();
     if (input.justPressed(GameAction.interact)) {
       final m = aimedMob;
@@ -378,6 +386,7 @@ class Player extends VoxelBody implements Target {
     _attackCooldown = math.max(_attackCooldown - dt, 0.0);
     _useCooldown = math.max(_useCooldown - dt, 0.0);
     abilityCooldown = math.max(abilityCooldown - dt, 0.0);
+    ability2Cooldown = math.max(ability2Cooldown - dt, 0.0);
     if (sleeping > 0.0) {
       _sleepTick(dt);
       return;
@@ -613,6 +622,7 @@ class Player extends VoxelBody implements Target {
     final dmg = _meleeDamage(item);
     final followUp = style == 'melee_fast' && main.random.nextDouble() < 0.3 ? dmg * 0.5 : 0.0;
     main.meleeStrike(aimDirection(), dmg, followUp, this);
+    _wearHeld();
   }
 
   void probeStrike() {
@@ -707,6 +717,7 @@ class Player extends VoxelBody implements Target {
     _attackCooldown = Items.tierOf(bow) < 3 ? 0.5 : 0.4;
     final dir = _rotated(aimDirection(), Vector3(0, 1, 0), (main.random.nextDouble() - 0.5) * 0.02);
     main.spawnProjectile(_muzzle(), dir * 36.0, _rangedDamage(bow, 1.0), this, 'arrow', 0.05, 5.0);
+    _wearHeld();
   }
 
   /// Fan shot (right button with a bow): three arrows across a 24° fan.
@@ -730,6 +741,7 @@ class Player extends VoxelBody implements Target {
     for (var i = 0; i < 3; i++) {
       main.spawnProjectile(_muzzle(), _fanDirection(i, 3, 24.0 * math.pi / 180.0) * 34.0, _rangedDamage(bow, 0.85), this, 'arrow', 0.05, 5.0);
     }
+    _wearHeld();
   }
 
   /// Staff spray (hold the attack button): a fast stream of thick bolts, cheap on mana.
@@ -941,6 +953,118 @@ class Player extends VoxelBody implements Target {
     }
   }
 
+  /// Stage 23: one use off the held tool or weapon; at zero it breaks and the
+  /// slot empties.
+  void _wearHeld() {
+    final item = heldItem();
+    if (item == '' || Items.durabilityOf(item) <= 0) return;
+    if (inventory.wear(selectedSlot)) {
+      Sfx.play('break', -2.0, 0.6);
+      notify('Your ${Items.displayName(item)} broke!');
+    }
+  }
+
+  /// Stage 23: the Q ability, one per class, paid in mana (`mana2`, through
+  /// `manaCost`).
+  void _useAbility2() {
+    final c = classDef;
+    if (ability2Cooldown > 0.0) {
+      notify('${c.ability2} ready in ${ability2Cooldown.round()}s');
+      return;
+    }
+    final cost = manaCost(c.mana2);
+    if (mana < cost) {
+      notify('Not enough mana');
+      return;
+    }
+    var fwd = aimDirection().clone()..y = 0.0;
+    if (fwd.length < 0.1) {
+      fwd = Vector3(-math.sin(yaw), 0, -math.cos(yaw));
+    }
+    fwd.normalize();
+    switch (playerClass) {
+      case 'warrior':
+        // Shield Bash: a 3 m lunge; every mob in the 3.5 m half-space ahead is
+        // struck and stunned.
+        velocity += fwd * 12.0;
+        velocity.y = math.max(velocity.y, 2.0);
+        _lastMoveDir = fwd.clone();
+        model.swing();
+        final dmg = _meleeDamage(heldItem()) * 0.8;
+        for (final b in List.of(main.mobs)) {
+          final to = b.position - position;
+          if (to.length < 3.5 && to.normalized().dot(fwd) > 0.3) {
+            b.takeDamage(dmg, position, 6.0, this);
+            b.stun(2.0);
+            main.spawnDamageNumber(b.centre(), dmg, Vector3(1, 0.9, 0.4));
+          }
+        }
+        main.spawnEffect(centre() + fwd * 1.5, Vector3(1, 0.9, 0.4), 2.0);
+        Sfx.play('hit', -2.0, 0.8);
+        ability2Cooldown = 6.0;
+      case 'ranger':
+        // Volley: five arrows across a 40 degree fan.
+        if (inventory.countOf('arrow') < 5) {
+          notify('Need 5 arrows');
+          return;
+        }
+        inventory.remove('arrow', 5);
+        model.swing();
+        Sfx.play('shoot', -2.0);
+        final bow = weaponStyle() == 'bow' ? heldItem() : 'bow';
+        for (var i = 0; i < 5; i++) {
+          main.spawnProjectile(_muzzle(), _fanDirection(i, 5, 40.0 * math.pi / 180.0) * 34.0, _rangedDamage(bow, 0.9), this, 'arrow', 0.05, 5.0);
+        }
+        ability2Cooldown = 5.0;
+      case 'mage':
+        // Frost Nova: every mob within 5 m is slowed for 4 s and takes 4.
+        for (final b in List.of(main.mobs)) {
+          if ((b.position - position).length < 5.0) {
+            b.takeDamage(4.0, position, 3.0, this);
+            b.slow(4.0);
+            main.spawnDamageNumber(b.centre(), 4.0, Vector3(0.5, 0.7, 1.0));
+          }
+        }
+        main.spawnEffect(centre(), Vector3(0.5, 0.75, 1.0), 5.0);
+        Sfx.play('bolt', -4.0, 1.4);
+        ability2Cooldown = 9.0;
+      case 'rogue':
+        // Smoke Bomb: 3 s untouchable and swift; every mob within 12 m forgets
+        // the player.
+        _invulnerable = 3.0;
+        effects.apply('speed', 3.0);
+        for (final b in main.mobs) {
+          if ((b.position - position).length < 12.0) b.loseTarget(3.0);
+        }
+        main.spawnEffect(centre(), Vector3(0.3, 0.3, 0.35), 4.0);
+        Sfx.play('splash', -6.0, 0.6);
+        ability2Cooldown = 12.0;
+    }
+    mana -= cost;
+  }
+
+  /// Probes: fire the Q ability with its cooldown cleared.
+  void probeAbility2() {
+    ability2Cooldown = 0.0;
+    _useAbility2();
+  }
+
+  /// Probes: switch class in place (stats to the class maximums, its weapon in
+  /// hand).
+  void probeSetClass(String cls) {
+    final c = classes[cls];
+    if (c == null) throw ArgumentError('unknown class $cls');
+    playerClass = cls;
+    maxHp = c.hp;
+    hp = maxHp;
+    maxStamina = c.stamina;
+    stamina = maxStamina;
+    maxMana = c.mana;
+    mana = maxMana;
+    if (inventory.find(c.weapon) < 0) inventory.add(c.weapon, 1);
+    selectedSlot = inventory.find(c.weapon);
+  }
+
   void _mineTick(double dt) {
     if (!isAiming || aimedMob != null) {
       _resetMining();
@@ -992,6 +1116,7 @@ class Player extends VoxelBody implements Target {
     if (Items.isLeaves(id) && held != '' && Items.toolOf(held) == ToolType.shears) drop = Blocks.idOf(id);
     if (drop != '') main.spawnDrop(b.toVector3() + Vector3(0.5, 0.3, 0.5), drop, 1);
     main.onBlockBroken(b, id);
+    if (held != '' && Items.kind(held) == ItemKind.tool && Blocks.hardness(id) > 0.0) _wearHeld();
     // Plants above a removed block fall off.
     final above = world.getBlock(b + IVec3.up);
     if (above != Blocks.air && Blocks.isPlant(above)) world.setBlock(b + IVec3.up, Blocks.air);

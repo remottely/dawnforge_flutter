@@ -2,14 +2,18 @@ import '../core/items.dart';
 
 /// One stack: an item id, a count and (for loot weapons) a random bonus.
 class ItemStack {
-  ItemStack(this.id, this.count, {this.bonus = 0});
+  ItemStack(this.id, this.count, {this.bonus = 0, this.dur = -1});
   String id;
   int count;
   int bonus;
 
-  ItemStack copy() => ItemStack(id, count, bonus: bonus);
+  /// Stage 23: uses left on a tool or weapon; -1 when never worn (Godot's
+  /// absent `dur` key: full).
+  int dur;
 
-  Map<String, Object> toJson() => {'id': id, 'count': count, if (bonus > 0) 'bonus': bonus};
+  ItemStack copy() => ItemStack(id, count, bonus: bonus, dur: dur);
+
+  Map<String, Object> toJson() => {'id': id, 'count': count, if (bonus > 0) 'bonus': bonus, if (dur >= 0) 'dur': dur};
 }
 
 /// Slots of ItemStack?. Slot 0..8 is the hotbar.
@@ -32,6 +36,31 @@ class Inventory {
   String idAt(int i) => slots[i]?.id ?? '';
   int countAt(int i) => slots[i]?.count ?? 0;
   int bonusAt(int i) => slots[i]?.bonus ?? 0;
+
+  /// Stage 23: uses left on the tool or weapon in slot [i] (the item's maximum
+  /// when the stack was never worn), 0 for an item that never wears.
+  int durAt(int i) {
+    final s = slots[i];
+    if (s == null) return 0;
+    final maxDur = Items.durabilityOf(s.id);
+    if (maxDur <= 0) return 0;
+    return s.dur >= 0 ? s.dur : maxDur;
+  }
+
+  /// One use of the item in slot [i]; true when it broke (the slot is emptied).
+  bool wear(int i, [int uses = 1]) {
+    var left = durAt(i);
+    if (left <= 0) return false;
+    left -= uses;
+    if (left <= 0) {
+      slots[i] = null;
+      _changed();
+      return true;
+    }
+    slots[i]!.dur = left;
+    _changed();
+    return false;
+  }
 
   int countOf(String id) {
     var total = 0;
@@ -97,7 +126,7 @@ class Inventory {
     final s = slots[i];
     if (s == null) return null;
     final take = count < s.count ? count : s.count;
-    final out = ItemStack(s.id, take, bonus: s.bonus);
+    final out = ItemStack(s.id, take, bonus: s.bonus, dur: s.dur);
     s.count -= take;
     if (s.count <= 0) slots[i] = null;
     _changed();
@@ -131,7 +160,8 @@ class Inventory {
       slots[i] = null;
       if (s is Map && s['id'] != null && Items.has(s['id'].toString())) {
         slots[i] = ItemStack(s['id'].toString(), (s['count'] as num).toInt(),
-            bonus: s['bonus'] == null ? 0 : (s['bonus'] as num).toInt());
+            bonus: s['bonus'] == null ? 0 : (s['bonus'] as num).toInt(),
+            dur: s['dur'] == null ? -1 : (s['dur'] as num).toInt());
       }
     }
     _changed();

@@ -167,6 +167,10 @@ class Blocks {
     // no levels.
     BlockDef('water_flow', 'Water', 0.26, 0.48, 0.82, a: 0.58, shape: BlockShape.liquid, solid: false, opaque: false, hardness: -1, drop: '-'),
     BlockDef('lava_flow', 'Lava', 0.99, 0.55, 0.16, a: 0.92, shape: BlockShape.liquid, solid: false, opaque: false, hardness: -1, drop: '-', light: 13),
+    // Stage 23: the temple trap. A dark half-block on the chamber floor; a body
+    // whose feet enter its cell lights the TNT the generator buried underneath
+    // (`Game._checkPlateUnder`).
+    BlockDef('pressure_plate', 'Pressure Plate', 0.24, 0.20, 0.18, shape: BlockShape.slab, opaque: false, hardness: 1.0, tool: ToolType.pickaxe),
   ];
 
   static final Map<String, int> _indexById = {
@@ -307,7 +311,7 @@ class Blocks {
           'gold_ore', 'diamond_ore', 'bedrock', 'tall_grass', 'flower_red', 'flower_yellow', 'lava',
           'clay', 'dead_bush', 'mushroom', 'ice', 'dark_stone', 'mossy_stone_bricks', 'stone_bricks',
           'chest', 'lamp', 'bone_block', 'oak_planks', 'ladder', 'spawner', 'glass',
-          'crafting_table', 'furnace', 'torch', 'oak_fence', 'tnt', 'cobblestone',
+          'crafting_table', 'furnace', 'torch', 'oak_fence', 'tnt', 'cobblestone', 'pressure_plate',
         ])
           id: indexOf(id),
       };

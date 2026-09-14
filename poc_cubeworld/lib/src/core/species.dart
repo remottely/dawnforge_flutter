@@ -32,6 +32,9 @@ class SpeciesDef {
     this.mount = false,
     this.tameWith = const [],
     this.tameChance = 0.0,
+    this.flying = false,
+    this.ghost = false,
+    this.maxY = 9999,
   });
 
   final String id;
@@ -57,6 +60,15 @@ class SpeciesDef {
   /// The items that tame it, and the chance one attempt works.
   final List<String> tameWith;
   final double tameChance;
+
+  /// Stage 23: no gravity, a fluttering 3D heading (bat, ghost).
+  final bool flying;
+
+  /// Stage 23: passes through blocks and draws translucent.
+  final bool ghost;
+
+  /// Stage 23: a cave spawn only at or below this height.
+  final int maxY;
   final int xp;
   final String body;
   final double halfWidth;
@@ -132,6 +144,20 @@ class Species {
     s(SpeciesDef(id: 'villager', name: 'Villager', hp: 20, damage: 0, speed: 1.8, hostile: false, xp: 0, body: 'humanoid',
         halfWidth: 0.3, height: 1.75, colors: [_c(0.92, 0.75, 0.62), _c(0.55, 0.40, 0.65), _c(0.35, 0.30, 0.25)],
         drops: {}, biomes: [], day: true, weight: 0, trader: true));
+    // Stage 23: the desert temple boss (spawned by `Game._checkStructures`, never
+    // by the spawner), a cave bat, a forest bear and a ruin ghost.
+    s(SpeciesDef(id: 'mummy_king', name: 'Mummy King', hp: 120, damage: 7, speed: 1.8, hostile: true, xp: 48, body: 'humanoid', boss: true,
+        halfWidth: 0.4, height: 2.2, colors: [_c(0.85, 0.80, 0.65), _c(0.75, 0.70, 0.55), _c(0.60, 0.55, 0.40)],
+        drops: {'gold_ingot': [2, 5], 'ancient_blade': [1, 1]}, biomes: [], day: false, weight: 0, effect: 'slow'));
+    s(SpeciesDef(id: 'bat', name: 'Bat', hp: 4, damage: 1, speed: 4.2, hostile: true, xp: 3, body: 'bird', flying: true,
+        halfWidth: 0.2, height: 0.4, colors: [_c(0.20, 0.16, 0.22), _c(0.55, 0.20, 0.25)],
+        drops: {'leather': [0, 1]}, biomes: [], cave: true, maxY: 50, day: true, weight: 14));
+    s(SpeciesDef(id: 'bear', name: 'Bear', hp: 40, damage: 6, speed: 4.5, hostile: false, neutral: true, xp: 18, body: 'quadruped',
+        halfWidth: 0.55, height: 1.5, colors: [_c(0.38, 0.26, 0.16), _c(0.28, 0.18, 0.10)],
+        drops: {'leather': [1, 3], 'raw_beef': [1, 2]}, biomes: [3], day: true, weight: 5));
+    s(SpeciesDef(id: 'ghost', name: 'Ghost', hp: 15, damage: 3, speed: 2.4, hostile: true, xp: 14, body: 'humanoid', ghost: true, flying: true,
+        halfWidth: 0.3, height: 1.8, colors: [_c(0.80, 0.88, 0.95), _c(0.70, 0.80, 0.92), _c(0.60, 0.70, 0.85)],
+        drops: {'magic_dust': [1, 2]}, biomes: [], day: false, weight: 0, effect: 'slow'));
     s(SpeciesDef(id: 'scorpion', name: 'Scorpion', hp: 14, damage: 5, speed: 4.0, hostile: true, xp: 12, body: 'spider',
         halfWidth: 0.5, height: 0.6, colors: [_c(0.65, 0.45, 0.20), _c(0.35, 0.20, 0.10)],
         drops: {'gem_shard': [0, 1], 'string': [0, 2]}, biomes: [4], day: true, weight: 10, effect: 'poison'));
@@ -140,11 +166,15 @@ class Species {
 
   static SpeciesDef def(String id) => defs[id]!;
 
-  /// Species that may spawn in `biome` at `night` (or in a cave), with weights.
-  static List<SpeciesDef> candidates(int biome, bool night, bool cave, Random rng) {
+  /// Species that may spawn in `biome` at `night` (or in a cave at height `y`),
+  /// with weights. Weight 0 marks a creature only a structure places (villager,
+  /// bosses, the ghost).
+  static List<SpeciesDef> candidates(int biome, bool night, bool cave, Random rng, [int y = 0]) {
     final out = <SpeciesDef>[];
     for (final d in defs.values) {
+      if (d.weight <= 0) continue;
       if (cave) {
+        if (y > d.maxY) continue;
         if (d.cave || (d.hostile && !d.day)) out.add(d);
         continue;
       }

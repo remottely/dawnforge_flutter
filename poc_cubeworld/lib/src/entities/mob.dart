@@ -69,6 +69,14 @@ class Mob extends VoxelBody {
   double _squash = 1.0;
   double _shakeX = 0.0;
   double _deathTimer = -1.0;
+
+  /// Stage 23: crowd control from the second abilities, and the flying / ghost
+  /// behaviours.
+  double stunned = 0.0; // Shield Bash: no thinking, no walking
+  double slowed = 0.0; // Frost Nova: half speed
+  double blinded = 0.0; // Smoke Bomb: lost its target and cannot aggro
+  double _flap = 0.0;
+  PhysicallyBasedMaterial? _tint;
   final int instanceId = _nextId++;
   static int _nextId = 1;
 
@@ -171,6 +179,61 @@ class Mob extends VoxelBody {
     hp = maxHp;
     GameState.instance.seen.add(sp.id);
     _buildModel();
+    if (sp.ghost) {
+      noclip = true;
+      _setTint(ghostTint);
+    }
+  }
+
+  /// Stage 23: a tint over the whole model (a stun, a ghost's transparency);
+  /// alpha 1 clears it.
+  static final Vector4 ghostTint = Vector4(0.85, 0.92, 1.0, 0.45);
+
+  void _setTint(Vector4 color) {
+    if (color.a >= 1.0) {
+      if (!species.ghost) {
+        _tint = null;
+      } else {
+        color = ghostTint; // a ghost never turns solid
+      }
+    } else {
+      _tint ??= PhysicallyBasedMaterial()
+        ..roughnessFactor = 0.9
+        ..metallicFactor = 0.0
+        ..alphaMode = AlphaMode.blend;
+    }
+    _tint?.baseColorFactor = color;
+    final Material material = _tint ?? VoxelMeshBuilder.material();
+    for (final part in _parts.values) {
+      for (final child in part.node.children) {
+        final mesh = child.mesh;
+        if (mesh == null) continue;
+        for (final prim in mesh.primitives) {
+          prim.material = material;
+        }
+      }
+    }
+  }
+
+  /// Shield Bash: the mob stands frozen for [seconds], coloured yellow ([tint]
+  /// off for a probe hold).
+  void stun(double seconds, [bool tint = true]) {
+    stunned = math.max(stunned, seconds);
+    _dir = Vector3.zero();
+    if (tint) _setTint(Vector4(1.0, 0.9, 0.3, 0.8));
+  }
+
+  void slow(double seconds) => slowed = math.max(slowed, seconds);
+
+  /// Smoke Bomb: forgets its target and cannot pick one up for [seconds].
+  void loseTarget(double seconds) {
+    blinded = math.max(blinded, seconds);
+    _angry = false;
+    _target = null;
+    if (state == MobState.chase || state == MobState.attack) {
+      state = MobState.idle;
+      _timer = seconds;
+    }
   }
 
   /// Turn this mob into an elite: the affix scales it, tints its bar and hangs
@@ -431,12 +494,21 @@ class Mob extends VoxelBody {
       _rideTick(dt);
       return;
     }
+    slowed = math.max(slowed - dt, 0.0);
+    blinded = math.max(blinded - dt, 0.0);
+    if (stunned > 0.0) {
+      stunned -= dt;
+      if (stunned <= 0.0) _setTint(Vector4(1, 1, 1, 1));
+      _dir = Vector3.zero();
+      _moveAndAnimate(dt);
+      return;
+    }
     _target = _nearestTarget();
     final target = _target!;
     final dist = (position - target.position).length;
     final toPlayer = target.position - position;
-    toPlayer.y = 0.0;
-    final aggro = species.hostile ? 18.0 : 0.0;
+    if (!species.flying) toPlayer.y = 0.0;
+    final aggro = species.hostile && blinded <= 0.0 ? 18.0 : 0.0;
     final ranged = species.ranged;
     final reach = 1.9 + halfWidth;
 
@@ -567,6 +639,11 @@ class Mob extends VoxelBody {
   void _moveAndAnimate(double dt) {
     var speed = species.speed * speedMult;
     if (state == MobState.wander) speed *= 0.5;
+    if (slowed > 0.0) speed *= 0.5;
+    if (species.flying) {
+      _fly(dt, speed);
+      return;
+    }
     final hops = species.hops;
     if (inWater) {
       if (_dir.length > 0.1) velocity.y = 3.0;
@@ -590,6 +667,40 @@ class Mob extends VoxelBody {
       if (!tryStepUp()) velocity.y = 8.0;
     }
     if (_dir.length > 0.1) _face(_dir);
+    _animate(dt);
+    if (position.y < -5.0) removed = true;
+    syncNode();
+  }
+
+  /// Stage 23: a flier ignores gravity. Wandering it flutters on a random 3D
+  /// heading that changes every few tenths of a second (the bat's erratic
+  /// path); chasing it steers straight at the target's centre. A ghost is a slow
+  /// flier with `noclip`, so the walls are nothing to it.
+  void _fly(double dt, double speed) {
+    _flap -= dt;
+    final target = _target;
+    if (state == MobState.chase && target != null) {
+      final to = target.centre() - centre();
+      _dir = to.length2 > 0 ? to.normalized() : Vector3.zero();
+    } else if (state == MobState.wander || state == MobState.idle) {
+      if (_flap <= 0.0) {
+        final rng = main.random;
+        _flap = 0.2 + rng.nextDouble() * 0.4;
+        _dir = Vector3(rng.nextDouble() * 2 - 1, rng.nextDouble() * 1.2 - 0.6, rng.nextDouble() * 2 - 1).normalized();
+        // Stay near the ground it hunts over: a wanderer far above a solid cell
+        // dives back.
+        if (!world.isSolid(IVec3.floor(position + Vector3(0, -3, 0)))) _dir.y = -0.7;
+      }
+      if (_dir.length > 0.1) state = MobState.wander;
+    }
+    final bob = math.sin(_age * 9.0) * 0.8;
+    velocity.x = lerpd(velocity.x, _dir.x * speed, dt * 6.0);
+    velocity.z = lerpd(velocity.z, _dir.z * speed, dt * 6.0);
+    velocity.y = lerpd(velocity.y, _dir.y * speed + bob, dt * 6.0);
+    move(dt);
+    if (hitWall && _flap > 0.1) _flap = 0.0; // bounce off a wall into a new heading next tick
+    final flat = Vector3(_dir.x, 0, _dir.z);
+    if (flat.length > 0.1) _face(flat);
     _animate(dt);
     if (position.y < -5.0) removed = true;
     syncNode();

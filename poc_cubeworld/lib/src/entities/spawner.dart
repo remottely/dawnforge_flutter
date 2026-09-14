@@ -64,7 +64,7 @@ class Spawner {
     if (world.isLiquid(IVec3(x, y, z)) || world.isLiquid(IVec3(x, y - 1, z))) return;
     final biome = world.biomeAt(x, z);
     final night = main.isNight;
-    final candidates = Species.candidates(biome, night, cave, rng);
+    final candidates = Species.candidates(biome, night, cave, rng, y);
     if (candidates.isEmpty) return;
     var total = 0.0;
     for (final c in candidates) {
@@ -93,5 +93,17 @@ class Spawner {
       }
       main.addMob(mob);
     }
+  }
+
+  /// Stage 23: one creature of [speciesId] at [at], levelled to the player when
+  /// hostile. Used by the ruin ghosts (`Game._tickRuinGhosts`) and the probes.
+  Mob forceSpawn(String speciesId, Vector3 at) {
+    final d = Species.def(speciesId);
+    final mob = Mob();
+    mob.setupMob(world, main, player, d);
+    mob.position = at.clone();
+    if (d.hostile && !d.boss) mob.scaleToLevel(player.level);
+    main.addMob(mob);
+    return mob;
   }
 }

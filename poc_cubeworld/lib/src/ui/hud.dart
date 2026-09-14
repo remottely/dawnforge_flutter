@@ -283,6 +283,12 @@ class HudPainter extends CustomPainter {
     canvas.drawRect(Rect.fromLTWH(x + 270, y + 100, 150, 18), Paint()..color = const Color.fromRGBO(0, 0, 0, 0.55));
     Hud.text(canvas, '[R] $ab${ready ? '' : ' (${player.abilityCooldown.round()}s)'}', Offset(x + 276, y + 114),
         size: 14, color: ready ? const Color.fromRGBO(255, 255, 153, 1) : const Color.fromRGBO(179, 179, 179, 1));
+    // Stage 23: the second ability under the first.
+    final ab2 = player.classDef.ability2;
+    final ready2 = player.ability2Cooldown <= 0.0;
+    canvas.drawRect(Rect.fromLTWH(x + 270, y + 122, 150, 18), Paint()..color = const Color.fromRGBO(0, 0, 0, 0.55));
+    Hud.text(canvas, '[Q] $ab2${ready2 ? '' : ' (${player.ability2Cooldown.round()}s)'}', Offset(x + 276, y + 136),
+        size: 14, color: ready2 ? const Color.fromRGBO(179, 230, 255, 1) : const Color.fromRGBO(179, 179, 179, 1));
 
     if (player.talentPoints > 0) {
       Hud.text(canvas, '[J] ${player.talentPoints} talent point${player.talentPoints == 1 ? '' : 's'}',
@@ -318,6 +324,15 @@ class HudPainter extends CustomPainter {
         if (n > 1) Hud.text(canvas, '$n', Offset(r.left + 4, r.bottom - 6), size: 14);
         if (player.inventory.bonusAt(i) > 0) {
           canvas.drawRect(r, Paint()..color = Hud.rarityColor(player.inventory.bonusAt(i))..style = PaintingStyle.stroke..strokeWidth = 2);
+        }
+        // Stage 23: a worn tool shows what is left of it under the icon.
+        final maxDur = Items.durabilityOf(id);
+        final dur = player.inventory.durAt(i);
+        if (maxDur > 0 && dur < maxDur) {
+          final ratio = dur / maxDur;
+          canvas.drawRect(Rect.fromLTWH(r.left + 5, r.bottom - 7, r.width - 10, 4), Paint()..color = const Color.fromRGBO(0, 0, 0, 0.8));
+          canvas.drawRect(Rect.fromLTWH(r.left + 5, r.bottom - 7, (r.width - 10) * ratio, 4),
+              Paint()..color = Color.fromRGBO(((1.0 - ratio) * 255).round(), (ratio * 255).round(), 38, 1));
         }
       }
     }

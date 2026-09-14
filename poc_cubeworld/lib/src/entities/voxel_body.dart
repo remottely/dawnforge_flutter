@@ -27,6 +27,9 @@ class VoxelBody {
   late VoxelWorld world;
   bool removed = false;
 
+  /// Stage 23: a ghost passes through every block.
+  bool noclip = false;
+
   /// The horizontal direction the last move was stopped in.
   Vector3 _blocked = Vector3.zero();
 
@@ -72,6 +75,12 @@ class VoxelBody {
     final next = position.clone();
     hitWall = false;
     _blocked = Vector3.zero();
+    if (noclip) {
+      position = next + velocity * dt;
+      onFloor = false;
+      _senseFluids();
+      return;
+    }
     next.x += velocity.x * dt;
     var hit = _solidBoxesAt(next);
     if (hit.isNotEmpty) {

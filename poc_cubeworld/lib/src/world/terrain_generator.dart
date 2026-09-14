@@ -50,6 +50,7 @@ class TerrainGenerator {
     _fence = ids['oak_fence']!;
     _tnt = ids['tnt']!;
     _cobblestone = ids['cobblestone']!;
+    _pressurePlate = ids['pressure_plate']!;
     setSeed(seed);
   }
 
@@ -77,7 +78,7 @@ class TerrainGenerator {
       _spruceLog, _spruceLeaves, _cactus, _coalOre, _ironOre, _goldOre, _diamondOre, _bedrock,
       _tallGrass, _flowerRed, _flowerYellow, _lava, _clay, _deadBush, _mushroom, _ice, _darkStone,
       _mossyBricks, _stoneBricks, _chest, _lamp, _boneBlock, _planks, _ladderId, _spawnerId,
-      _glassId, _craftingTable, _furnace, _torch, _fence, _tnt, _cobblestone;
+      _glassId, _craftingTable, _furnace, _torch, _fence, _tnt, _cobblestone, _pressurePlate;
 
   int _seed = 0;
   int get seed => _seed;
@@ -802,8 +803,9 @@ class TerrainGenerator {
   }
 
   /// A sandstone step pyramid, 9x9 at the base and five levels of two blocks each,
-  /// with a hollow 3x3x3 chamber at the base holding two chests and a lamp, TNT under
-  /// the chamber floor centre, and an entrance corridor on the south (+z) side.
+  /// with a hollow 3x3x3 chamber at the base holding two chests and a lamp, a pressure
+  /// plate in the chamber floor centre with TNT under it, and an entrance corridor on
+  /// the south (+z) side.
   void _temple(Uint8List b, int ox, int oz, int cx, int cy, int cz) {
     for (var z = -4; z <= 4; z++) {
       for (var x = -4; x <= 4; x++) {
@@ -828,6 +830,7 @@ class TerrainGenerator {
       }
     }
     _put(b, ox, oz, cx, cy - 1, cz, _tnt);
+    _put(b, ox, oz, cx, cy, cz, _pressurePlate); // stage 23: the trap that lights it
     _put(b, ox, oz, cx - 1, cy + 1, cz - 1, _chest);
     _put(b, ox, oz, cx + 1, cy + 1, cz - 1, _chest);
     _put(b, ox, oz, cx, cy + 4, cz, _lamp);

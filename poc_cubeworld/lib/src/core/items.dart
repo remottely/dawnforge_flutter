@@ -87,7 +87,7 @@ class Items {
         add(ItemDef(id: id, name: name, kind: ItemKind.food, r: r, g: g, b: b, stack: 16, effect: effect, seconds: seconds));
     void weapon(String id, String name, double r, double g, double b, int damage, String style, int tier) => add(ItemDef(
         id: id, name: name, kind: ItemKind.weapon, r: r, g: g, b: b, stack: 1,
-        damage: damage, style: style, tier: tier, tool: ToolType.sword));
+        damage: damage, style: style, tier: tier, tool: ToolType.sword, durability: 40 + 50 * tier));
 
     for (var i = 0; i < Blocks.count; i++) {
       if (i == Blocks.air) continue;
@@ -180,6 +180,8 @@ class Items {
     weapon('longbow', 'Longbow', 0.50, 0.32, 0.15, 10, 'bow', 3);
     weapon('staff', 'Apprentice Staff', 0.55, 0.35, 0.75, 7, 'staff', 1);
     weapon('crystal_staff', 'Crystal Staff', 0.65, 0.45, 0.95, 12, 'staff', 3);
+    // Stage 23: the Mummy King's guaranteed drop, also 10% of a temple chest.
+    weapon('ancient_blade', 'Ancient Blade', 0.80, 0.70, 0.35, 14, 'melee', 4);
     tool('wooden_hoe', 'Wooden Hoe', tierColors[1], ToolType.hoe, 1, 1);
     tool('shears', 'Shears', const [0.78, 0.78, 0.82], ToolType.shears, 3, 1);
     add(const ItemDef(id: 'arrow', name: 'Arrow', kind: ItemKind.material, r: 0.75, g: 0.70, b: 0.60));
@@ -207,6 +209,11 @@ class Items {
   static int tierOf(String id) => def(id).tier;
   static int damageOf(String id) => def(id).damage;
   static String styleOf(String id) => def(id).style;
+
+  /// Stage 23: swings, shots and broken blocks a tool or weapon survives; 0 for
+  /// anything that never wears. The live count sits on the inventory slot
+  /// (`ItemStack.dur`), this is the maximum.
+  static int durabilityOf(String id) => def(id).durability;
 
   /// The block a filled bucket pours ("" for anything that is not one).
   static String liquidOf(String id) => def(id).liquid;

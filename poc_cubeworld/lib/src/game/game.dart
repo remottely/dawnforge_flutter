@@ -19,6 +19,7 @@ import '../entities/projectile.dart';
 import '../entities/remote_player.dart';
 import '../entities/spawner.dart';
 import '../entities/target.dart';
+import '../entities/voxel_body.dart';
 import '../player/player.dart';
 import '../world/terrain_generator.dart';
 import '../world/voxel_world.dart';
@@ -26,6 +27,7 @@ import 'achievements.dart';
 import 'game_state.dart';
 import 'input.dart';
 import 'inventory.dart';
+import 'loot.dart';
 import 'net.dart';
 import 'quests.dart';
 import 'sfx.dart';
@@ -73,9 +75,10 @@ class _Tnt {
 }
 
 class _Stage21a {
-  _Stage21a(this.at, this.kind);
+  _Stage21a(this.at, this.kind, this.origin);
   final Vector3 at;
   final int kind;
+  final IVec3 origin;
 }
 
 class _Stage20 {
@@ -129,6 +132,9 @@ class Game extends ChangeNotifier {
   final List<_Debris> _debris = [];
   final List<_Tnt> _tnts = [];
   final Set<IVec3> _bossesSpawned = {};
+
+  /// Stage 23: plates pressed and not yet left, so one press lights one fuse.
+  final Set<IVec3> _platesFired = {};
   Spawner? spawner;
   ScreenKind screen = ScreenKind.none;
   String station = '';
@@ -460,6 +466,17 @@ class Game extends ChangeNotifier {
     for (final m in pets) {
       m.update(dt);
     }
+    // Stage 23: the pressure plates (Godot's `Main._physics_process`). Host / solo
+    // only: a client sees the `igniteTnt` block edit arrive.
+    if (!Net.instance.isClient) {
+      _checkPlateUnder(player);
+      for (final m in List.of(mobs)) {
+        _checkPlateUnder(m);
+      }
+      for (final m in List.of(pets)) {
+        _checkPlateUnder(m);
+      }
+    }
     for (final d in drops) {
       d.update(dt);
     }
@@ -491,6 +508,7 @@ class Game extends ChangeNotifier {
       _checkStructures();
       _growCrops();
       _tickSpawners();
+      _tickRuinGhosts();
       _trackBoss();
       if (weather.isWet) {
         _growCrops();
@@ -642,20 +660,13 @@ class Game extends ChangeNotifier {
     final inv = Inventory();
     chests[at] = inv;
     if (!GameState.instance.placedChests.contains(at.key)) {
+      // Stage 23: the table of the structure the chest belongs to (`LootTables`).
       final rng = math.Random(at.hashCode ^ world.seedValue);
-      const loot = [
-        ['iron_ingot', 1, 4], ['coal', 3, 8], ['arrow', 4, 12], ['apple', 1, 4], ['magic_dust', 1, 3],
-        ['gold_ingot', 0, 2], ['diamond', 0, 1], ['string', 1, 4], ['health_potion', 0, 1], ['bread', 1, 3],
-        ['gem_shard', 0, 2], ['leather', 1, 3], ['torch', 2, 6], ['glider', 0, 1],
-      ];
-      final picks = 3 + rng.nextInt(4);
-      for (var i = 0; i < picks; i++) {
-        final pick = loot[rng.nextInt(loot.length)];
-        final lo = pick[1] as int, hi = pick[2] as int;
-        final n = lo + rng.nextInt(hi - lo + 1);
-        if (n > 0) inv.add(pick[0] as String, n);
+      final table = LootTables.tableNear(world, at);
+      for (final stack in LootTables.roll(table, rng)) {
+        inv.add(stack.id, stack.count);
       }
-      if (rng.nextDouble() < 0.45) {
+      if ((table == 'dungeon' || table == 'temple') && rng.nextDouble() < 0.45) {
         final w = randomLootWeapon(rng);
         inv.addStack(ItemStack(w.id, 1, bonus: w.bonus));
       }
@@ -694,6 +705,18 @@ class Game extends ChangeNotifier {
           _bossesSpawned.add(key);
           notify(found);
         }
+        // Stage 23: the Mummy King wakes the first time someone steps into the
+        // temple chamber. Its own key is the chamber's, lifted by
+        // templeBossKeyY so it never collides with the announcement key above
+        // (both live in `_bossesSpawned` and the save).
+        if (s.type == TerrainGenerator.structTemple) {
+          final bkey = IVec3(s.x, s.y + templeBossKeyY, s.z);
+          final chamber = Vector3(s.x + 0.5, s.y + 1.0, s.z + 0.5);
+          if (!_bossesSpawned.contains(bkey) && (player.position - chamber).length < 6.0) {
+            _bossesSpawned.add(bkey);
+            spawnTempleBoss(chamber);
+          }
+        }
         continue;
       }
       if (s.type != 1) continue;
@@ -709,6 +732,66 @@ class Game extends ChangeNotifier {
         boss = mob;
         notify('A Cave Troll guards the treasure!');
       }
+    }
+  }
+
+  static const int templeBossKeyY = 1000;
+
+  /// Stage 23: the Mummy King, between the two chests at the back of the
+  /// chamber whose floor centre is [chamber] (the cell above the pressure plate).
+  Mob spawnTempleBoss(Vector3 chamber) {
+    final mob = Mob();
+    mob.setupMob(world, this, player, Species.def('mummy_king'));
+    mob.position = chamber + Vector3(0, 0.05, -1.0);
+    mob.scaleToLevel(player.level + 2);
+    addMob(mob);
+    boss = mob;
+    notify('The Mummy King stirs!');
+    Sfx.play('thunder', -8.0, 1.6);
+    return mob;
+  }
+
+  /// Stage 23: a pressure plate fires when any body's feet are in its cell. It
+  /// lights the TNT right under it (the temple trap); a plate over nothing just
+  /// clicks.
+  void _checkPlateUnder(VoxelBody body) {
+    final cell = IVec3(body.position.x.floor(), (body.position.y + 0.05).floor(), body.position.z.floor());
+    final id = world.getBlock(cell);
+    if (id == Blocks.air || Blocks.idOf(id) != 'pressure_plate') {
+      _platesFired.remove(cell); // the body left (or the plate is gone): it may fire again
+      return;
+    }
+    if (_platesFired.contains(cell) || !body.overlapsBlock(cell)) return;
+    _platesFired.add(cell);
+    Sfx.play('click', 0.0, 0.6);
+    final below = world.getBlock(cell + IVec3.down);
+    if (below != Blocks.air && Blocks.idOf(below) == 'tnt') {
+      igniteTnt(cell + IVec3.down);
+      notify('Click... the floor rumbles!');
+    }
+  }
+
+  int platesFired() => _platesFired.length;
+
+  /// Stage 23: ghosts haunt ruins at night — up to two per ruin within 40 m, one
+  /// every few seconds.
+  void _tickRuinGhosts() {
+    final sp = spawner;
+    if (!isNight || Net.instance.isClient || sp == null) return;
+    final here = VoxelWorld.chunkOf(IVec3.floor(player.position));
+    for (final s in world.structuresNear(here)) {
+      if (s.type != TerrainGenerator.structRuin) continue;
+      final at = Vector3(s.x.toDouble(), s.y.toDouble(), s.z.toDouble());
+      if ((player.position - at).length > 40.0 || random.nextDouble() > 0.35) continue;
+      var near = 0;
+      for (final m in mobs) {
+        if (m.species.id == 'ghost' && (m.position - at).length < 24.0) near += 1;
+      }
+      if (near >= 2) continue;
+      final x = s.x + random.nextInt(9) - 4;
+      final z = s.z + random.nextInt(9) - 4;
+      final ghost = sp.forceSpawn('ghost', Vector3(x + 0.5, world.groundHeight(x, z) + 0.5, z + 0.5));
+      spawnEffect(ghost.centre(), Vector3(0.7, 0.8, 1.0), 1.5);
     }
   }
 
@@ -1005,6 +1088,20 @@ class Game extends ChangeNotifier {
     Sfx.play('dig', -6.0, 1.5);
   }
 
+  /// Stage 23: TNT blocks lit and not yet exploded.
+  int litTntCount() => _tnts.length;
+
+  /// Probes only: put every lit TNT back unexploded, so a trap can be shown
+  /// after it fired.
+  void probeDefuseTnt() {
+    for (final t in _tnts) {
+      entities.remove(t.node);
+      world.setBlock(t.at, Blocks.indexOf('tnt'));
+    }
+    _tnts.clear();
+    _platesFired.clear();
+  }
+
   /// A weapon with a random bonus (Cube World style loot): rarity from the bonus size.
   Loot randomLootWeapon(math.Random rng, [int minBonus = 1]) {
     const pool = ['stone_sword', 'iron_sword', 'iron_dagger', 'bow', 'longbow', 'staff', 'diamond_sword', 'crystal_staff'];
@@ -1172,7 +1269,10 @@ class Game extends ChangeNotifier {
   // --- the screenshot probe --------------------------------------------------------------
 
   Future<void> _runScreenshot(String path, int frames) async {
-    final stage21a = _hasArg('--stage21a') ? _probeStage21aTeleport() : null;
+    final stage21a = _hasArg('--stage21a')
+        ? _probeStage21aTeleport()
+        // The temple: seed 42's nearest is past 24 chunks.
+        : (_hasArg('--stage23') ? _probeStage21aTeleport(48) : null);
     final t0 = DateTime.now();
     for (var i = 0; i < frames; i++) {
       await nextFrame();
@@ -1447,6 +1547,7 @@ class Game extends ChangeNotifier {
       }
     }
     if (_hasArg('--stage22')) await _probeStage22();
+    if (_hasArg('--stage23')) await _probeStage23(stage21a);
     await nextFrame();
     await nextFrame();
     debugPrint('[probe] fps ${fps.toStringAsFixed(0)} mobs ${mobs.length} drops ${drops.length} projectiles ${projectiles.length}');
@@ -1624,18 +1725,235 @@ class Game extends ChangeNotifier {
     return (water: water, lava: lava, hard: hard, dist: dist);
   }
 
+  // --- stage 23: temple boss + trap, loot tables, second abilities, three mobs, durability ---
+
+  /// Waits [n] simulation ticks (Godot's `await physics_frame` n times).
+  Future<void> _ticks(int n) {
+    final done = Completer<void>();
+    var left = n;
+    _probeTick = () {
+      left -= 1;
+      if (left <= 0) {
+        _probeTick = null;
+        done.complete();
+      }
+    };
+    return done.future;
+  }
+
+  /// The chamber floor centre (the pressure plate cell) of the temple found by
+  /// `_probeStage21aTeleport`, or of a 5x5x3 sandstone chamber built beside the
+  /// player when no temple was in reach.
+  ({IVec3 plate, String path}) _stage23Chamber(_Stage21a? found) {
+    if (found != null && found.kind == TerrainGenerator.structTemple) {
+      final o = found.origin;
+      // The generator's chamber floor is at the structure's y; confirm by
+      // finding the plate.
+      for (var dy = -2; dy < 4; dy++) {
+        final cell = IVec3(o.x, o.y + dy, o.z);
+        final id = world.getBlock(cell);
+        if (id != Blocks.air && Blocks.idOf(id) == 'pressure_plate') return (plate: cell, path: 'temple');
+      }
+      debugPrint('[probe] stage23 temple at $o has no plate in its floor column');
+    }
+    final base = IVec3.floor(player.position) + const IVec3(6, 0, 0);
+    final y0 = world.groundHeight(base.x, base.z);
+    final sand = Blocks.indexOf('sandstone');
+    for (var dx = -2; dx < 3; dx++) {
+      for (var dz = -2; dz < 3; dz++) {
+        for (var dy = -1; dy < 5; dy++) {
+          final edge = dx.abs() == 2 || dz.abs() == 2 || dy == -1 || dy == 4;
+          world.setBlock(IVec3(base.x + dx, y0 + dy, base.z + dz), edge ? sand : Blocks.air);
+        }
+      }
+    }
+    final plate = IVec3(base.x, y0, base.z);
+    world.setBlock(plate, Blocks.indexOf('pressure_plate'));
+    world.setBlock(plate + IVec3.down, Blocks.indexOf('tnt'));
+    world.setBlock(plate + const IVec3(0, 4, 0), Blocks.indexOf('lamp'));
+    world.setBlock(plate + const IVec3(-1, 1, -1), Blocks.indexOf('chest'));
+    world.setBlock(plate + const IVec3(1, 1, -1), Blocks.indexOf('chest'));
+    world.setBlock(plate + const IVec3(0, 1, 2), Blocks.air); // the south doorway
+    world.setBlock(plate + const IVec3(0, 2, 2), Blocks.air);
+    return (plate: plate, path: 'built');
+  }
+
+  void _probePlace(Vector3 at) {
+    player.position = at.clone();
+    player.velocity = Vector3.zero();
+    player.syncNode();
+  }
+
+  Future<void> _probeStage23(_Stage21a? found) async {
+    final chamber = _stage23Chamber(found);
+    final plate = chamber.plate;
+    var path = chamber.path;
+    final stand = Vector3(plate.x + 0.5, plate.y + 1.05, plate.z + 1.5);
+    // 1. The boss wakes when the player enters the chamber: the same check the
+    // game runs each second.
+    flyMode = false;
+    _probePlace(stand);
+    player.setLook(0.0, -0.05);
+    world.updateAround(stand);
+    boss = null;
+    if (path == 'temple') _checkStructures();
+    var b = boss;
+    if (b == null) {
+      b = spawnTempleBoss(plate.toVector3() + Vector3(0.5, 1.0, 0.5));
+      path += '+direct';
+    }
+    final theBoss = b;
+    theBoss.stun(120.0, false); // held still for the capture: it would step on its own plate otherwise
+    debugPrint('[probe] stage23 temple boss=${theBoss.displayName()} hp=${theBoss.maxHp.toInt()} '
+        '(path $path, plate $plate, player ${player.position})');
+    // 2. The trap: the player on the plate lights the TNT under it (one tick).
+    _probePlace(plate.toVector3() + Vector3(0.5, 0.55, 0.5));
+    await _ticks(3);
+    final below = world.getBlock(plate + IVec3.down);
+    debugPrint('[probe] stage23 plate trap: tnt lit=${litTntCount() > 0} (plates fired ${platesFired()}, '
+        'block under the plate now ${below != Blocks.air ? Blocks.idOf(below) : 'air'})');
+    probeDefuseTnt(); // keep the chamber whole for the capture
+    _probePlace(stand);
+    // 3. Loot tables, seeded so the line is stable.
+    for (final table in const ['temple', 'mine', 'ruin', 'well']) {
+      final parts = [for (final st in LootTables.roll(table, math.Random(23))) '${st.id} x${st.count}'];
+      debugPrint('[probe] stage23 loot $table=${parts.join(', ')}');
+    }
+    // 4..6 happen on a flat pad 12 m east of the chamber, out of the boss's reach.
+    final pad = IVec3(plate.x + 12, 0, plate.z);
+    var py = 0;
+    for (var dx = -6; dx < 7; dx++) {
+      for (var dz = -6; dz < 7; dz++) {
+        py = math.max(py, world.groundHeight(pad.x + dx, pad.z + dz));
+      }
+    }
+    for (var dx = -6; dx < 7; dx++) {
+      for (var dz = -6; dz < 7; dz++) {
+        world.setBlock(IVec3(pad.x + dx, py, pad.z + dz), Blocks.indexOf('stone'));
+        for (var dy = 1; dy < 6; dy++) {
+          world.setBlock(IVec3(pad.x + dx, py + dy, pad.z + dz), Blocks.air);
+        }
+      }
+    }
+    final padStand = Vector3(pad.x + 0.5, py + 1.05, pad.z + 0.5);
+    _probePlace(padStand);
+    player.setLook(0.0, 0.0); // north (-z)
+    player.inventory.add('arrow', 64);
+    for (final cls in const ['warrior', 'ranger', 'mage', 'rogue']) {
+      player.probeSetClass(cls);
+      _probePlace(padStand);
+      final zs = <Mob>[];
+      for (var i = 0; i < 3; i++) {
+        final z = Mob();
+        z.setupMob(world, this, player, Species.def('zombie'));
+        z.position = padStand + Vector3(i - 1.0, 0.0, -2.0);
+        addMob(z);
+        zs.add(z);
+      }
+      await _ticks(1);
+      final before = player.mana;
+      player.probeAbility2();
+      final after = player.mana;
+      await _ticks(20);
+      var hits = 0;
+      for (final z in zs) {
+        if (z.removed || z.isDead) {
+          hits += 1;
+          continue;
+        }
+        final hit = switch (cls) {
+          'warrior' => z.stunned > 0.0,
+          'ranger' => z.hp < z.maxHp,
+          'mage' => z.slowed > 0.0,
+          _ => z.blinded > 0.0 && z.state != MobState.chase && z.state != MobState.attack,
+        };
+        if (hit) hits += 1;
+      }
+      debugPrint('[probe] stage23 ability2 $cls=${player.classDef.ability2} mana ${before.round()}->${after.round()} hits=$hits');
+      for (final z in zs) {
+        z.removed = true;
+      }
+      await _ticks(1);
+    }
+    // 5. The three new mobs, force-spawned; the ghost starts inside a stone block.
+    final sp = spawner!;
+    final bat = sp.forceSpawn('bat', padStand + Vector3(-3, 1.5, -3));
+    final bear = sp.forceSpawn('bear', padStand + Vector3(3, 0, -3));
+    final wall = IVec3(pad.x + 4, py + 1, pad.z + 3);
+    for (var dx = -1; dx < 2; dx++) {
+      for (var dy = 0; dy < 3; dy++) {
+        for (var dz = -1; dz < 2; dz++) {
+          world.setBlock(wall + IVec3(dx, dy, dz), Blocks.indexOf('stone'));
+        }
+      }
+    }
+    final ghost = sp.forceSpawn('ghost', wall.toVector3() + Vector3(0.5, 0.2, 0.5));
+    final ghostFrom = ghost.position.clone();
+    await _ticks(60);
+    int alive(Mob m) => !m.removed && !m.isDead ? 1 : 0;
+    final moved = ghost.removed ? 0.0 : (ghost.position - ghostFrom).length;
+    debugPrint('[probe] stage23 spawned bat=${alive(bat)} bear=${alive(bear)} ghost=${alive(ghost)}; '
+        'ghost passes blocks=${moved > 0.3} (moved ${moved.toStringAsFixed(2)} m from inside stone, noclip ${!ghost.removed && ghost.noclip})');
+    for (final m in [bat, bear, ghost]) {
+      m.removed = true;
+    }
+    // 6. Durability: an iron sword swung five times at a zombie, then forced to
+    // its last use.
+    player.probeSetClass('warrior');
+    _probePlace(padStand);
+    player.inventory.add('iron_sword', 1);
+    player.selectedSlot = player.inventory.find('iron_sword');
+    final dummy = Mob();
+    dummy.setupMob(world, this, player, Species.def('zombie'));
+    dummy.position = padStand + Vector3(0, 0, -2.0);
+    dummy.scaleToLevel(30); // outlives six iron-sword swings
+    addMob(dummy);
+    dummy.stun(30.0, false);
+    await _ticks(1);
+    final maxDur = Items.durabilityOf('iron_sword');
+    for (var i = 0; i < 5; i++) {
+      player.probeStrike();
+      await _ticks(1);
+    }
+    final worn = player.inventory.durAt(player.selectedSlot);
+    final broke = player.heldItem() != 'iron_sword';
+    player.inventory.slots[player.selectedSlot]!.dur = 1;
+    player.probeStrike();
+    await _ticks(1);
+    final forced = player.heldItem() == '';
+    debugPrint('[probe] stage23 durability: sword $maxDur->$worn broke=$broke; forced break=$forced '
+        '(zombie hp ${dummy.hp.toStringAsFixed(0)}/${dummy.maxHp.toStringAsFixed(0)})');
+    dummy.removed = true;
+    // The capture: first person in the south corridor, the Mummy King three
+    // metres ahead.
+    final door = Vector3(plate.x + 0.5, plate.y + 1.05, plate.z + 2.5);
+    player.probeSetClass('warrior');
+    _probePlace(door);
+    player.setFirstPerson(true);
+    player.setLook(0.0, 0.05);
+    world.updateAround(door);
+    for (var i = 0; i < 20; i++) {
+      _probePlace(door);
+      await nextFrame();
+    }
+    _pinCameraTo = () => door.clone();
+    final gone = theBoss.removed || theBoss.isDead;
+    debugPrint('[probe] stage23 capture from ${player.position}, boss at ${theBoss.position} '
+        '(${gone ? 'gone' : 'alive'}, hp ${theBoss.hp.toStringAsFixed(0)})');
+  }
+
   /// --stage21a: stand at the nearest ruin / well / mine / temple (`--kind=5..8`
   /// picks one kind) so the capture shows it. The mine puts the player inside
   /// the corridor, the temple outside its south entrance; `--fp` switches to
   /// first person for the tight corridor.
-  _Stage21a? _probeStage21aTeleport() {
+  _Stage21a? _probeStage21aTeleport([int radius = 24]) {
     final want = int.tryParse(_arg('--kind=', '')) ?? 0;
     final wantBiome = int.tryParse(_arg('--biome=', '')) ?? -1;
     final here = VoxelWorld.chunkOf(IVec3.floor(player.position));
     StructureAt? best;
     var bestD = double.infinity;
-    for (var dz = -24; dz <= 24; dz += 4) {
-      for (var dx = -24; dx <= 24; dx += 4) {
+    for (var dz = -radius; dz <= radius; dz += 4) {
+      for (var dx = -radius; dx <= radius; dx += 4) {
         for (final st in world.structuresNear((x: here.x + dx, z: here.z + dz))) {
           if (st.type < 5 || (want != 0 && st.type != want)) continue;
           if (wantBiome >= 0 && world.biomeAt(st.x, st.z) != wantBiome) continue;
@@ -1648,7 +1966,7 @@ class Game extends ChangeNotifier {
       }
     }
     if (best == null) {
-      debugPrint('[probe] stage21a: no ruin / well / mine / temple within 24 chunks');
+      debugPrint('[probe] stage21a: no ruin / well / mine / temple within $radius chunks');
       return null;
     }
     var at = Vector3(best.x + 0.5, best.y + 1.1, best.z + 0.5);
@@ -1671,7 +1989,7 @@ class Game extends ChangeNotifier {
     world.updateAround(at);
     debugPrint('[probe] stage21a: teleported to kind ${best.type} at (${best.x}, ${best.y}, ${best.z}), '
         'standing at $at (${bestD.round()} m from spawn)');
-    return _Stage21a(at, best.type);
+    return _Stage21a(at, best.type, IVec3(best.x, best.y, best.z));
   }
 
   /// --stage20: a tamed horse is mounted and left, a sheep is sheared, a line

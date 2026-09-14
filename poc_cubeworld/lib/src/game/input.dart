@@ -21,6 +21,7 @@ enum GameAction {
   dropItem,
   toggleView,
   ability,
+  ability2,
   glide,
   interact,
   pause,
@@ -60,6 +61,9 @@ class GameInput {
     GameAction.dropItem: [PhysicalKeyboardKey.keyQ],
     GameAction.toggleView: [PhysicalKeyboardKey.keyV],
     GameAction.ability: [PhysicalKeyboardKey.keyR],
+    // Stage 23: Q, the same physical key Godot binds to both drop_item and
+    // ability2 (a press does both there too).
+    GameAction.ability2: [PhysicalKeyboardKey.keyQ],
     GameAction.glide: [PhysicalKeyboardKey.keyG],
     GameAction.interact: [PhysicalKeyboardKey.keyF],
     GameAction.pause: [PhysicalKeyboardKey.escape],
