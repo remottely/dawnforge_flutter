@@ -8,6 +8,16 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.78.0
+
+### 🧹 Internal
+
+- Nada no jogo mudou. Quem faz o jogo escreveu uma decisão: a versão 2D deste
+  jogo em Flutter para aqui, na 0.77.0, e a próxima coisa construída deste lado é
+  o mundo de blocos — o jogo de cubos que já roda como teste. Os motivos, as
+  quatro perguntas feitas e a ordem do que vem depois estão no documento de
+  estudo (decisões D8–D10). Nada foi apagado.
+
 ## 0.77.0
 
 ### ✨ New

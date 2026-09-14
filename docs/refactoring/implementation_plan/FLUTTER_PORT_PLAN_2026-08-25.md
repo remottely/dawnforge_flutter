@@ -13,6 +13,12 @@
 > FP0.18), and the open forks moved out of prose into the **Decision register** at the end.
 > Every `file:line` cited there was true at that version and must be re-grepped before use.
 
+> **FROZEN 2026-09-14 at 0.77.0 — study decision D8.** The 2D port is set aside and the
+> Flutter track becomes the 3D voxel game grown out of the cubeworld POC (study §10, D8–D10).
+> No FP step below is executed until D8 is reversed; the progress table is left as it stood
+> at 0.77.0 and every open fork in the Decision register stays open. What replaces this plan
+> is `PENDING.md` #18 until the 3D plan exists — the study's `D8` is unrelated to `D-8` below.
+
 ## Progress
 
 | Phase | State | Gate |

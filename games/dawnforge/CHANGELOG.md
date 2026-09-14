@@ -8,6 +8,16 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.78.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. The people making it wrote down a decision: the
+  flat 2D version of this game on Flutter stops here, at 0.77.0, and the next
+  thing built on this side is the block world — the cube game that already runs
+  as a test. The reasons, the four questions asked and the order of what comes
+  next are in the study document (decisions D8–D10). Nothing was deleted.
+
 ## 0.77.0
 
 ### ✨ New
