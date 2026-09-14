@@ -405,6 +405,7 @@ class Player extends VoxelBody implements Target {
     final fwd = flatForward;
     final right = rightVec;
     var wish = fwd * -inputY + right * inputX;
+    if (_probeWalk.length2 > 0.0) wish = _probeWalk.clone();
     if (wish.length > 1.0) wish = wish.normalized();
     final sprinting = gameplay && input.down(GameAction.sprint) && stamina > 1.0 && inputY < 0.0 && !inWater;
     final sneaking = gameplay && input.down(GameAction.sneak);
@@ -1560,21 +1561,21 @@ class Player extends VoxelBody implements Target {
     return n;
   }
 
-  /// An empty bucket over a liquid cell: the cell empties and the bucket fills
-  /// with it. Liquids are static in this POC: the neighbours do not flow into
-  /// the hole.
+  /// An empty bucket over a liquid SOURCE: the cell empties and the bucket
+  /// fills with it. A flowing cell gives nothing; the puddle it belonged to
+  /// drains once its source is gone.
   bool scoopLiquid(IVec3 cell) {
     final id = world.getBlock(cell);
-    if (!Blocks.isLiquid(id) || heldItem() != 'bucket') return false;
+    if (!Blocks.isLiquidSource(id) || heldItem() != 'bucket') return false;
     if (!world.setBlock(cell, Blocks.air)) return false;
-    inventory.setSlot(selectedSlot, ItemStack('${Blocks.idOf(id)}_bucket', 1));
+    inventory.setSlot(selectedSlot, ItemStack('${Blocks.liquidKind(id)}_bucket', 1));
     Sfx.play('splash', -10.0);
     model.swing();
     return true;
   }
 
-  /// A filled bucket at a replaceable cell: the liquid goes there and the empty
-  /// bucket comes back.
+  /// A filled bucket at a replaceable cell: a source goes there (the world's
+  /// flow spreads it) and the empty bucket comes back.
   bool pourLiquid(IVec3 target) {
     final liquid = Items.liquidOf(heldItem());
     if (liquid == '' || !Blocks.isReplaceable(world.getBlock(target))) return false;
@@ -1641,6 +1642,11 @@ class Player extends VoxelBody implements Target {
   }
 
   void probeDodge() => _dodgePressed();
+
+  Vector3 _probeWalk = Vector3.zero();
+
+  /// A probe's walk input: a world-space direction held until zero is handed back.
+  void probeWalk(Vector3 dir) => _probeWalk = dir.clone();
 
   bool isDodging() => _dodge > 0.0;
 

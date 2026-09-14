@@ -22,6 +22,23 @@ enum BlockShape {
 
 enum ToolType { none, pickaxe, axe, shovel, sword, hoe, shears }
 
+/// An axis-aligned box as min / max corners (Godot's AABB is position + size;
+/// min / max reads the same faces without a subtraction per test).
+class CollisionBox {
+  const CollisionBox(this.x0, this.y0, this.z0, this.x1, this.y1, this.z1);
+
+  final double x0, y0, z0, x1, y1, z1;
+
+  double min(int axis) => axis == 0 ? x0 : (axis == 1 ? y0 : z0);
+  double max(int axis) => axis == 0 ? x1 : (axis == 1 ? y1 : z1);
+
+  CollisionBox shifted(int dx, int dy, int dz) =>
+      CollisionBox(x0 + dx, y0 + dy, z0 + dz, x1 + dx, y1 + dy, z1 + dz);
+
+  @override
+  String toString() => 'Box($x0, $y0, $z0 .. $x1, $y1, $z1)';
+}
+
 class BlockDef {
   const BlockDef(
     this.id,
@@ -144,11 +161,60 @@ class Blocks {
     BlockDef('stone_stairs_e', 'Stone Stairs', 0.50, 0.50, 0.52, shape: BlockShape.stairsE, opaque: false, hardness: 2.0, tool: ToolType.pickaxe, tier: 1, drop: 'stone_stairs'),
     BlockDef('stone_stairs_s', 'Stone Stairs', 0.50, 0.50, 0.52, shape: BlockShape.stairsS, opaque: false, hardness: 2.0, tool: ToolType.pickaxe, tier: 1, drop: 'stone_stairs'),
     BlockDef('stone_stairs_w', 'Stone Stairs', 0.50, 0.50, 0.52, shape: BlockShape.stairsW, opaque: false, hardness: 2.0, tool: ToolType.pickaxe, tier: 1, drop: 'stone_stairs'),
+    // Stage 22: the FLOWING form of each liquid. `water` / `lava` stay the
+    // infinite sources a bucket scoops; a `*_flow` cell is what the source
+    // spreads into and drains when its feeder goes. One flowing id per liquid,
+    // no levels.
+    BlockDef('water_flow', 'Water', 0.26, 0.48, 0.82, a: 0.58, shape: BlockShape.liquid, solid: false, opaque: false, hardness: -1, drop: '-'),
+    BlockDef('lava_flow', 'Lava', 0.99, 0.55, 0.16, a: 0.92, shape: BlockShape.liquid, solid: false, opaque: false, hardness: -1, drop: '-', light: 13),
   ];
 
   static final Map<String, int> _indexById = {
     for (var i = 0; i < defs.length; i++) defs[i].id: i,
   };
+
+  static const CollisionBox fullBox = CollisionBox(0, 0, 0, 1, 1, 1);
+
+  /// The post; rails stop no body.
+  static const CollisionBox fenceBox = CollisionBox(0.375, 0, 0.375, 0.625, 1.5, 0.625);
+
+  static final List<List<CollisionBox>> _boxes = [
+    for (var i = 0; i < defs.length; i++) _buildBoxes(i),
+  ];
+
+  /// The boxes a body collides with, in the block's own 0..1 space. Empty for
+  /// anything that stops no body. Stairs: the bottom slab plus the high step at
+  /// the back, the same halves the mesher draws (N = high step at z 0..0.5,
+  /// E = at x 0.5..1).
+  static List<CollisionBox> _buildBoxes(int index) {
+    if (!defs[index].solid) return const [];
+    const half = CollisionBox(0, 0, 0, 1, 0.5, 1);
+    return switch (defs[index].shape) {
+      BlockShape.slab => const [half],
+      BlockShape.fence => const [fenceBox],
+      BlockShape.stairsN => const [half, CollisionBox(0, 0.5, 0, 1, 1, 0.5)],
+      BlockShape.stairsS => const [half, CollisionBox(0, 0.5, 0.5, 1, 1, 1)],
+      BlockShape.stairsE => const [half, CollisionBox(0.5, 0.5, 0, 1, 1, 1)],
+      BlockShape.stairsW => const [half, CollisionBox(0, 0.5, 0, 0.5, 1, 1)],
+      _ => const [fullBox],
+    };
+  }
+
+  /// Shared, never mutate.
+  static List<CollisionBox> collisionBoxes(int index) => _boxes[index];
+
+  /// "water" / "lava" for a source OR its flowing form, "" for anything else.
+  static String liquidKind(int index) {
+    final d = defs[index];
+    if (d.shape != BlockShape.liquid) return '';
+    return d.id.endsWith('_flow') ? d.id.substring(0, d.id.length - 5) : d.id;
+  }
+
+  static bool isLiquidSource(int index) =>
+      defs[index].shape == BlockShape.liquid && !defs[index].id.endsWith('_flow');
+
+  /// The flowing form of a liquid kind ("water" -> water_flow).
+  static int flowOf(String kind) => indexOf('${kind}_flow');
 
   static int get count => defs.length;
 

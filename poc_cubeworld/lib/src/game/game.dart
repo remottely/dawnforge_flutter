@@ -151,6 +151,10 @@ class Game extends ChangeNotifier {
   /// Where the probe wants the camera on the captured frame, when it must not
   /// drift (a body is swept out of terrain every tick).
   Vector3 Function()? _pinCameraTo;
+
+  /// A probe's per-tick hook, called right after the simulation step (Godot's
+  /// `await physics_frame`, which a per-frame await here would undercount).
+  void Function()? _probeTick;
   final List<Completer<void>> _frameWaiters = [];
 
   /// Look tuning (also settable with --sun= --amb= --tm=).
@@ -231,6 +235,7 @@ class Game extends ChangeNotifier {
     net.main = this;
     if (net.isClient) net.applyPendingEdits();
     world.onBlockChanged = net.onBlockChanged;
+    world.flowEnabled = !net.isClient;
     if (!net.isClient) spawner = Spawner(world, player, this);
     if (net.mode != NetMode.solo) notify(net.isHost ? 'Hosting on port ${Net.port}' : 'Joined the host');
 
@@ -470,6 +475,8 @@ class Game extends ChangeNotifier {
     weather.process(dt);
     _tickVisuals(dt);
     spawner?.update(dt);
+    world.tickFlow(dt);
+    _probeTick?.call();
     Net.instance.process(dt);
     _prune();
 
@@ -1439,6 +1446,7 @@ class Game extends ChangeNotifier {
         _pinCameraTo = () => net.puppetBodies().first.position + Vector3(0, 0.8, 3.5);
       }
     }
+    if (_hasArg('--stage22')) await _probeStage22();
     await nextFrame();
     await nextFrame();
     debugPrint('[probe] fps ${fps.toStringAsFixed(0)} mobs ${mobs.length} drops ${drops.length} projectiles ${projectiles.length}');
@@ -1459,6 +1467,161 @@ class Game extends ChangeNotifier {
       debugPrint('[probe] no screenshotter, nothing captured');
     }
     exit(0);
+  }
+
+  /// --stage22: sub-block collision and liquid flow on a stone pad beside
+  /// spawn. Three walks along +x (onto a slab, up a stairs onto a block, into a
+  /// fence with a jump), then a water source that spreads and drains, then lava
+  /// meeting water. The camera ends above the pad.
+  Future<void> _probeStage22() async {
+    final x0 = player.position.x.floor() + 3;
+    final z0 = player.position.z.floor();
+    // The pad's stone row sits at the HIGHEST ground of its footprint, so no
+    // lake or river can share its level (Godot's first draft exposed a shore
+    // and flooded the walks); the walk floor is y0 + 1. The footprint is
+    // 16 x 20: every puddle the probe pours stays on the pad.
+    var y0 = 0;
+    for (var x = x0 - 3; x < x0 + 13; x++) {
+      for (var z = z0 - 4; z < z0 + 16; z++) {
+        y0 = math.max(y0, world.groundHeight(x, z));
+      }
+    }
+    final lo = IVec3(x0 - 3, y0 + 1, z0 - 4);
+    final hi = IVec3(x0 + 12, y0 + 4, z0 + 15); // the counted volume: the pad footprint, 4 high
+    final stone = Blocks.indexOf('stone');
+    for (var x = lo.x; x <= hi.x; x++) {
+      for (var z = lo.z; z <= hi.z; z++) {
+        world.setBlock(IVec3(x, y0, z), stone);
+        for (var y = y0 + 1; y < y0 + 7; y++) {
+          world.setBlock(IVec3(x, y, z), Blocks.air);
+        }
+      }
+    }
+    final stairs = Blocks.stairsFacing(Blocks.indexOf('oak_stairs_n'), 1, 0);
+    world.setBlock(IVec3(x0 + 2, y0 + 1, z0), Blocks.indexOf('oak_slab'));
+    world.setBlock(IVec3(x0 + 5, y0 + 1, z0), stairs);
+    world.setBlock(IVec3(x0 + 6, y0 + 1, z0), Blocks.indexOf('oak_planks'));
+    world.setBlock(IVec3(x0 + 9, y0 + 1, z0), Blocks.indexOf('oak_fence'));
+    final start = Vector3(x0 + 0.5, y0 + 1.1, z0 + 0.5);
+    debugPrint('[probe] stage22 site x0=$x0 y0=$y0 z0=$z0 (walk floor y=${y0 + 1})');
+    final slab = await _stage22Walk(start, x0 + 2.2, 90, false);
+    debugPrint('[probe] stage22 slab top y=${slab.y.toStringAsFixed(3)} (expect ${(y0 + 1.5).toStringAsFixed(1)}) '
+        'at x=${slab.x.toStringAsFixed(2)} on_floor=${slab.floor}');
+    final stair = await _stage22Walk(start, x0 + 6.3, 150, false);
+    debugPrint('[probe] stage22 stairs top y=${stair.y.toStringAsFixed(3)} (expect ${y0 + 2}) '
+        'at x=${stair.x.toStringAsFixed(2)} max_vy=${stair.maxVy.toStringAsFixed(2)}');
+    final fence = await _stage22Walk(start, x0 + 20.0, 220, true, x0 + 8.5);
+    debugPrint('[probe] stage22 fence blocked x=${fence.x.toStringAsFixed(3)} (post face ${(x0 + 9.375).toStringAsFixed(3)}) '
+        'max y=${fence.maxY.toStringAsFixed(3)} fence cleared=${fence.maxX > x0 + 9.7}');
+    player.probeWalk(Vector3.zero());
+    player.position = Vector3(x0 - 2.5, y0 + 1.1, z0 - 3.5);
+    player.velocity = Vector3.zero();
+    player.syncNode();
+    // Liquids: a source in mid-air spreads over the pad, drains when scooped,
+    // then lava meets water.
+    final source = IVec3(x0 + 2, y0 + 3, z0 + 6);
+    world.setBlock(source, Blocks.indexOf('water'));
+    await _stage22Settle(2.0);
+    final water = _stage22Count(lo, hi);
+    debugPrint('[probe] stage22 water cells=${water.water} (expect >20 and <=60) max dist=${water.dist} '
+        'flow updates=${world.flowUpdates}');
+    world.setBlock(source, Blocks.air);
+    await _stage22Settle(3.0);
+    final drained = _stage22Count(lo, hi);
+    debugPrint('[probe] stage22 water after drain=${drained.water} (expect 0) queue=${world.flowPending}');
+    world.setBlock(IVec3(x0 + 8, y0 + 2, z0 + 8), Blocks.indexOf('lava'));
+    world.setBlock(IVec3(x0 + 8, y0 + 2, z0 + 10), Blocks.indexOf('water'));
+    await _stage22Settle(3.0);
+    final mixed = _stage22Count(lo, hi);
+    debugPrint('[probe] stage22 lava cells=${mixed.lava} water cells=${mixed.water}');
+    debugPrint('[probe] stage22 obsidian/cobblestone=${mixed.hard} (expect >=1)');
+    // A second water source keeps a puddle for the capture, then the camera
+    // hovers over the pad.
+    world.setBlock(source, Blocks.indexOf('water'));
+    await _stage22Settle(1.5);
+    flyMode = true;
+    player.setFirstPerson(true);
+    final eye = Vector3(x0 + 5.0, y0 + 8.0, z0 - 6.0);
+    final target = Vector3(x0 + 4.5, y0 + 1.0, z0 + 5.0);
+    final dir = target - eye;
+    player.setLook(math.atan2(-dir.x, -dir.z), math.atan2(dir.y, math.sqrt(dir.x * dir.x + dir.z * dir.z)));
+    for (var i = 0; i < 30; i++) {
+      player.position = eye.clone();
+      player.velocity = Vector3.zero();
+      player.syncNode();
+      await nextFrame();
+    }
+    _pinCameraTo = () => eye.clone();
+    debugPrint('[probe] stage22 capture from $eye toward $target');
+  }
+
+  /// Walk +x from [start] until [stopX], for [ticks] simulation ticks; with
+  /// [jump] the player jumps once, the moment a wall past [jumpAfterX] stops
+  /// it. Reports where it ended and the highest it got.
+  Future<({double x, double y, bool floor, double maxX, double maxY, double maxVy})> _stage22Walk(
+      Vector3 start, double stopX, int ticks, bool jump, [double jumpAfterX = 0.0]) {
+    player.position = start.clone();
+    player.velocity = Vector3.zero();
+    player.probeWalk(Vector3(1, 0, 0));
+    var maxY = start.y, maxX = start.x, maxVy = 0.0;
+    var jumped = false;
+    var i = 0;
+    final done = Completer<({double x, double y, bool floor, double maxX, double maxY, double maxVy})>();
+    _probeTick = () {
+      final p = player.position;
+      maxY = math.max(maxY, p.y);
+      maxX = math.max(maxX, p.x);
+      maxVy = math.max(maxVy, player.velocity.y);
+      if (_hasArg('--trace') && i % 5 == 0) {
+        debugPrint('[trace] walk f$i pos $p vel ${player.velocity} floor ${player.onFloor} wall ${player.hitWall} water ${player.inWater}');
+      }
+      if (p.x >= stopX) player.probeWalk(Vector3.zero());
+      if (jump && !jumped && player.hitWall && player.onFloor && p.x > jumpAfterX) {
+        jumped = true;
+        player.velocity.y = Player.jumpVelocity;
+      }
+      i += 1;
+      if (i >= ticks) {
+        _probeTick = null;
+        player.probeWalk(Vector3.zero());
+        done.complete((x: p.x, y: p.y, floor: player.onFloor, maxX: maxX, maxY: maxY, maxVy: maxVy));
+      }
+    };
+    return done.future;
+  }
+
+  Future<void> _stage22Settle(double seconds) async {
+    final t0 = DateTime.now();
+    while (DateTime.now().difference(t0).inMilliseconds < (seconds * 1000).round()) {
+      await nextFrame();
+    }
+  }
+
+  /// Liquid and hardened cells inside the volume, and the farthest flow
+  /// distance seen.
+  ({int water, int lava, int hard, int dist}) _stage22Count(IVec3 lo, IVec3 hi) {
+    var water = 0, lava = 0, hard = 0, dist = 0;
+    final cobble = Blocks.indexOf('cobblestone');
+    for (var x = lo.x; x <= hi.x; x++) {
+      for (var y = lo.y; y <= hi.y; y++) {
+        for (var z = lo.z; z <= hi.z; z++) {
+          final b = IVec3(x, y, z);
+          final id = world.getBlock(b);
+          final kind = Blocks.liquidKind(id);
+          if (kind != '') {
+            if (kind == 'water') {
+              water += 1;
+            } else {
+              lava += 1;
+            }
+            dist = math.max(dist, world.flowDistOf(b));
+          } else if (id == cobble || (Blocks.has('obsidian') && id == Blocks.indexOf('obsidian'))) {
+            hard += 1;
+          }
+        }
+      }
+    }
+    return (water: water, lava: lava, hard: hard, dist: dist);
   }
 
   /// --stage21a: stand at the nearest ruin / well / mine / temple (`--kind=5..8`
