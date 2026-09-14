@@ -98,7 +98,7 @@ class ChunkWorkerPool {
       return MeshSurface(p, n, c, i);
     }
 
-    return ChunkMeshResult(surface(0), surface(4), surface(8));
+    return ChunkMeshResult(surface(0), surface(4), surface(8), surface(12));
   }
 
   int get inflight => _waiting.length;
@@ -147,7 +147,7 @@ void _workerMain(List<Object?> args) {
             TransferableTypedData.fromList([s.colors]),
             TransferableTypedData.fromList([s.indices]),
           ];
-      out.send([id, [...pack(r.solid), ...pack(r.liquid), ...pack(r.cutout)]]);
+      out.send([id, [...pack(r.solid), ...pack(r.liquid), ...pack(r.cutout), ...pack(r.glow)]]);
     }
   });
 }

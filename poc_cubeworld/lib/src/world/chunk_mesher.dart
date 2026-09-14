@@ -14,11 +14,15 @@ class MeshSurface {
 }
 
 class ChunkMeshResult {
-  ChunkMeshResult(this.solid, this.liquid, this.cutout);
+  ChunkMeshResult(this.solid, this.liquid, this.cutout, this.glow);
   final MeshSurface solid;
   final MeshSurface liquid;
   final MeshSurface cutout;
-  int get faces => solid.faceCount + liquid.faceCount + cutout.faceCount;
+
+  /// Stage 27: strong emitters (light >= [ChunkMesher.glowThreshold]), drawn
+  /// unlit so a lamp reads at night.
+  final MeshSurface glow;
+  int get faces => solid.faceCount + liquid.faceCount + cutout.faceCount + glow.faceCount;
 }
 
 class _F32 {
@@ -123,7 +127,11 @@ class ChunkMesher {
       shapeStairsN = 10,
       shapeStairsE = 11,
       shapeStairsS = 12,
-      shapeStairsW = 13;
+      shapeStairsW = 13,
+      shapeWire = 14;
+
+  /// Emission at or above this draws on the unlit glow surface (stage 27).
+  static const int glowThreshold = 10;
 
   /// 4 floats per block (rgba, linear).
   final Float32List palette;
@@ -388,6 +396,7 @@ class ChunkMesher {
     final solid = _Surface();
     final liquid = _Surface();
     final cutout = _Surface();
+    final glow = _Surface(); // stage 27: strong emitters, drawn unlit so a lamp glows at night
     final aos = List<int>.filled(4, 0);
 
     for (var y = 0; y < sizeY; y++) {
@@ -469,12 +478,15 @@ class ChunkMesher {
             continue;
           }
 
-          if (sh >= shapeSlab && sh <= shapeStairsW) {
+          if ((sh >= shapeSlab && sh <= shapeStairsW) || sh == shapeWire) {
             // Stairs never cull against their own kind: a step's face may sit
             // against a neighbour's empty half.
             final cullSame = sh == shapeSlab || sh == shapeFence;
             if (sh == shapeSlab) {
               _subBox(solid, x, y, z, id, cullSame, aos, 0, 0, 0, 1, 0.5, 1, br, bg, bb);
+            } else if (sh == shapeWire) {
+              // Stage 27: redstone wire, an eighth of a block lying on the floor.
+              _subBox(solid, x, y, z, id, cullSame, aos, 0, 0, 0, 1, 0.125, 1, br, bg, bb);
             } else if (sh == shapeFence) {
               // Centre post, then two rails toward every horizontal neighbour
               // that is a fence or an opaque block. _at reads the padded
@@ -517,7 +529,8 @@ class ChunkMesher {
           final isLiquid = sh == shapeLiquid;
           final above = _at(x, y + 1, z);
           final top = isLiquid && above != id ? 0.875 : 1.0;
-          final target = isLiquid || ba < 0.99 ? liquid : solid;
+          final glows = !isLiquid && id < emission.length && emission[id] >= glowThreshold;
+          final target = isLiquid || ba < 0.99 ? liquid : (glows ? glow : solid);
 
           for (var f = 0; f < 6; f++) {
             final oxf = _faceOffsets[f * 3], oyf = _faceOffsets[f * 3 + 1], ozf = _faceOffsets[f * 3 + 2];
@@ -570,6 +583,6 @@ class ChunkMesher {
         }
       }
     }
-    return ChunkMeshResult(solid.toSurface(), liquid.toSurface(), cutout.toSurface());
+    return ChunkMeshResult(solid.toSurface(), liquid.toSurface(), cutout.toSurface(), glow.toSurface());
   }
 }

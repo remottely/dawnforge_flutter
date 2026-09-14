@@ -40,6 +40,10 @@ class Recipes {
     r('stone_slab', 6, {'stone': 3});
     r('cobblestone_slab', 6, {'cobblestone': 3});
     r('mushroom_stew', 1, {'mushroom': 2, 'wooden_shovel': 0});
+    // Stage 27: redstone-lite
+    r('lever', 1, {'stick': 1, 'cobblestone': 1});
+    r('button', 1, {'stone': 1});
+    r('wire', 4, {'redstone_dust': 1});
     // Table
     r('stone_pickaxe', 1, {'cobblestone': 3, 'stick': 2}, 'crafting_table');
     r('stone_axe', 1, {'cobblestone': 3, 'stick': 2}, 'crafting_table');
@@ -78,6 +82,9 @@ class Recipes {
     r('tnt', 1, {'gunpowder': 5, 'sand': 4}, 'crafting_table');
     r('bed', 1, {'wool': 3, 'oak_planks': 3}, 'crafting_table');
     r('door', 1, {'oak_planks': 6}, 'crafting_table');
+    r('iron_door', 1, {'iron_ingot': 6}, 'crafting_table');
+    r('redstone_lamp', 1, {'redstone_dust': 4, 'torch': 1}, 'crafting_table');
+    r('piston', 1, {'oak_planks': 3, 'cobblestone': 4, 'iron_ingot': 1, 'redstone_dust': 1}, 'crafting_table');
     r('oak_fence', 3, {'stick': 4, 'oak_planks': 2}, 'crafting_table');
     r('oak_stairs', 4, {'oak_planks': 6}, 'crafting_table');
     r('stone_stairs', 4, {'stone_bricks': 6}, 'crafting_table');

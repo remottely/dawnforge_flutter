@@ -125,6 +125,11 @@ class Game extends ChangeNotifier {
   bool _stage24Verify = false;
   String get _probe24Flag => '$saveRoot/probe24.flag';
 
+  /// Stage 27: the same two-boot trick for the circuit save round trip; the
+  /// flag carries the site's cells, read (and removed) at init.
+  Map<String, int>? _stage27Site;
+  String get _probe27Flag => '$saveRoot/probe27.flag';
+
   /// Set by the view: throws this session away and builds a fresh one with the
   /// same arguments (Godot's `reload_current_scene`).
   void Function()? reloader;
@@ -227,6 +232,12 @@ class Game extends ChangeNotifier {
     final flag = File(_probe24Flag);
     _stage24Verify = flag.existsSync();
     if (_stage24Verify) flag.deleteSync(); // one verify boot, whatever happens next
+    final flag27 = File(_probe27Flag);
+    if (flag27.existsSync()) {
+      final cells = flag27.readAsStringSync().trim().split(',').map(int.parse).toList();
+      _stage27Site = {'x0': cells[0], 'y': cells[1], 'z0': cells[2]};
+      flag27.deleteSync(); // one verify boot, whatever happens next
+    }
 
     world = VoxelWorld(
       seedValue: int.tryParse(_arg('--seed=', '')) ?? GameState.instance.seedValue,
@@ -281,6 +292,7 @@ class Game extends ChangeNotifier {
     if (net.isClient) net.applyPendingEdits();
     world.onBlockChanged = net.onBlockChanged;
     world.flowEnabled = !net.isClient;
+    world.circuits.onTntPowered = igniteTnt; // stage 27: TNT beside a live wire or a pressed plate
     if (!net.isClient) spawner = Spawner(world, player, this);
     if (net.mode != NetMode.solo) notify(net.isHost ? 'Hosting on port ${Net.port}' : 'Joined the host');
     // Stage 26: the ambient music follows the biome, the night and the depth; a
@@ -520,16 +532,29 @@ class Game extends ChangeNotifier {
     for (final m in pets) {
       m.update(dt);
     }
-    // Stage 23: the pressure plates (Godot's `Main._physics_process`). Host / solo
-    // only: a client sees the `igniteTnt` block edit arrive.
+    // Stage 23: the pressure plates (Godot's `Main._physics_process`). Since
+    // stage 27 a plate is a power SOURCE while pressed: the TNT under it ignites
+    // through the circuit tick, and so does anything else the plate touches.
+    // Host / solo only: a client sees the block edits arrive.
     if (!Net.instance.isClient) {
-      _checkPlateUnder(player);
-      for (final m in List.of(mobs)) {
-        _checkPlateUnder(m);
+      final pressed = <IVec3>{};
+      _checkPlateUnder(player, pressed);
+      for (final m in mobs) {
+        _checkPlateUnder(m, pressed);
       }
-      for (final m in List.of(pets)) {
-        _checkPlateUnder(m);
+      for (final m in pets) {
+        _checkPlateUnder(m, pressed);
       }
+      for (final cell in pressed) {
+        if (_platesFired.contains(cell)) continue;
+        Sfx.play('click', 0.0, 0.6);
+        final below = world.getBlock(cell + IVec3.down);
+        if (below != Blocks.air && Blocks.idOf(below) == 'tnt') notify('Click... the floor rumbles!');
+      }
+      _platesFired
+        ..clear()
+        ..addAll(pressed);
+      world.circuits.setPressedPlates(pressed);
     }
     for (final d in drops) {
       d.update(dt);
@@ -549,6 +574,7 @@ class Game extends ChangeNotifier {
     // Stage 25: the tick's flow edits leave as one `blocks` message.
     Net.instance.beginBlockBatch();
     world.tickFlow(dt);
+    if (world.flowEnabled) world.circuits.tick(dt); // stage 27: host-only, in the same batch
     Net.instance.endBlockBatch();
     _probeTick?.call();
     Net.instance.process(dt);
@@ -843,24 +869,13 @@ class Game extends ChangeNotifier {
     return mob;
   }
 
-  /// Stage 23: a pressure plate fires when any body's feet are in its cell. It
-  /// lights the TNT right under it (the temple trap); a plate over nothing just
-  /// clicks.
-  void _checkPlateUnder(VoxelBody body) {
+  /// Stage 23: a pressure plate is pressed while any body's feet are in its
+  /// cell (stage 27: the pressed set feeds `Circuits.setPressedPlates`).
+  void _checkPlateUnder(VoxelBody body, Set<IVec3> pressed) {
     final cell = IVec3(body.position.x.floor(), (body.position.y + 0.05).floor(), body.position.z.floor());
     final id = world.getBlock(cell);
-    if (id == Blocks.air || Blocks.idOf(id) != 'pressure_plate') {
-      _platesFired.remove(cell); // the body left (or the plate is gone): it may fire again
-      return;
-    }
-    if (_platesFired.contains(cell) || !body.overlapsBlock(cell)) return;
-    _platesFired.add(cell);
-    Sfx.play('click', 0.0, 0.6);
-    final below = world.getBlock(cell + IVec3.down);
-    if (below != Blocks.air && Blocks.idOf(below) == 'tnt') {
-      igniteTnt(cell + IVec3.down);
-      notify('Click... the floor rumbles!');
-    }
+    if (id == Blocks.air || Blocks.idOf(id) != 'pressure_plate') return;
+    if (body.overlapsBlock(cell)) pressed.add(cell);
   }
 
   int platesFired() => _platesFired.length;
@@ -1394,7 +1409,7 @@ class Game extends ChangeNotifier {
 
   Future<bool> _loadGame() async {
     final f = File('$saveDir/player.json');
-    if ((_hasArg('--new') || GameState.instance.freshWorld) && !_stage24Verify) return false;
+    if ((_hasArg('--new') || GameState.instance.freshWorld) && !_stage24Verify && _stage27Site == null) return false;
     if (!await f.exists()) return false;
     final data = jsonDecode(await f.readAsString());
     if (data is! Map<String, dynamic>) return false;
@@ -1767,6 +1782,10 @@ class Game extends ChangeNotifier {
       // The setup half saved and asked for a fresh session; the verify half
       // prints the rest and captures.
       if (await _probeStage24()) return;
+    }
+    if (_hasArg('--stage27')) {
+      // Same two-boot shape: the circuit is built and saved, the reload reads it back.
+      if (await _probeStage27()) return;
     }
     await nextFrame();
     await nextFrame();
@@ -2908,6 +2927,230 @@ class Game extends ChangeNotifier {
     String v3(Vector3 v) => '(${v.x.toStringAsFixed(1)},${v.y.toStringAsFixed(1)},${v.z.toStringAsFixed(1)})';
     debugPrint('[probe] stage24 respawn at bed: spawn=${v3(spawn)} died=$died -> pos=${v3(player.position)} '
         'delta=${(spawn - player.position).length.toStringAsFixed(2)}');
+  }
+
+  /// --stage27: redstone-lite on a stone pad beside spawn. Eight rows, two
+  /// cells apart so no two touch: lever -> 5 wires -> lamp; button -> lamp;
+  /// plate -> lamp; lever -> iron door (walked through); a wooden door used by
+  /// hand; a 16-wire run for the range; a lever over TNT; a lever behind a
+  /// piston with a cobblestone in front. Then the site is saved and the session
+  /// rebuilt (`probe27.flag`) so the second boot reads the lamp and a wire back.
+  /// Every wait counts simulation ticks (Godot's 0.3 s settle = 18 ticks).
+  Future<bool> _probeStage27() async {
+    final site = _stage27Site;
+    if (site != null) {
+      await _probeStage27Verify(site);
+      return false;
+    }
+    final x0 = player.position.x.floor() + 3;
+    final z0 = player.position.z.floor();
+    var y0 = 0;
+    for (var x = x0 - 3; x < x0 + 21; x++) {
+      for (var z = z0 - 4; z < z0 + 17; z++) {
+        y0 = math.max(y0, world.groundHeight(x, z));
+      }
+    }
+    final stone = Blocks.indexOf('stone');
+    for (var x = x0 - 3; x < x0 + 21; x++) {
+      for (var z = z0 - 4; z < z0 + 17; z++) {
+        world.setBlock(IVec3(x, y0, z), stone);
+        for (var y = y0 + 1; y < y0 + 7; y++) {
+          world.setBlock(IVec3(x, y, z), Blocks.air);
+        }
+      }
+    }
+    final y = y0 + 1;
+    final home = Vector3(x0 + 8.5, y + 0.1, z0 + 9.5);
+    _probePlace(home);
+    final circuits = world.circuits;
+    final wire = Blocks.indexOf('wire_off');
+    final lever = Blocks.indexOf('lever_off');
+    final lampOff = Blocks.indexOf('redstone_lamp_off');
+    final lampOn = Blocks.indexOf('redstone_lamp_on');
+    String idAt(IVec3 c) => Blocks.idOf(world.getBlock(c));
+    Future<void> settle() => _ticks(18);
+    debugPrint('[probe] stage27 site x0=$x0 y=$y z0=$z0');
+    // 1. lever -> wire x5 -> lamp
+    final leverA = IVec3(x0, y, z0);
+    final lampA = IVec3(x0 + 6, y, z0);
+    world.setBlock(leverA, lever);
+    for (var i = 1; i < 6; i++) {
+      world.setBlock(IVec3(x0 + i, y, z0), wire);
+    }
+    world.setBlock(lampA, lampOff);
+    await settle();
+    circuits.useBlock(leverA);
+    await settle();
+    final onA = world.getBlock(lampA) == lampOn;
+    final wireOnA = idAt(IVec3(x0 + 5, y, z0));
+    circuits.useBlock(leverA);
+    await settle();
+    debugPrint('[probe] stage27 lever -> wire x5 -> lamp: lamp on=$onA, lamp off=${world.getBlock(lampA) == lampOff} '
+        '(wire x5 $wireOnA while on, ${idAt(IVec3(x0 + 5, y, z0))} after)');
+    // 2. button -> wire x3 -> lamp, on for a second (timed in simulation ticks)
+    final buttonB = IVec3(x0, y, z0 + 2);
+    final lampB = IVec3(x0 + 4, y, z0 + 2);
+    world.setBlock(buttonB, Blocks.indexOf('button'));
+    for (var i = 1; i < 4; i++) {
+      world.setBlock(IVec3(x0 + i, y, z0 + 2), wire);
+    }
+    world.setBlock(lampB, lampOff);
+    await settle();
+    var tOn = -1.0, tOff = -1.0, n = 0;
+    final pressed = Completer<void>();
+    circuits.useBlock(buttonB);
+    _probeTick = () {
+      n += 1;
+      final t = n * fixedStep;
+      final lit = world.getBlock(lampB) == lampOn;
+      if (lit && tOn < 0.0) tOn = t;
+      final off = !lit && tOn >= 0.0;
+      if (off) tOff = t;
+      if (off || t >= 3.0) {
+        _probeTick = null;
+        pressed.complete();
+      }
+    };
+    await pressed.future;
+    debugPrint('[probe] stage27 button: lamp on at t=${tOn.toStringAsFixed(2)} off at t=${tOff.toStringAsFixed(2)} '
+        '(button now ${idAt(buttonB)})');
+    // 3. plate -> wire x3 -> lamp while a body stands on it
+    final plateC = IVec3(x0, y, z0 + 4);
+    final lampC = IVec3(x0 + 4, y, z0 + 4);
+    world.setBlock(plateC, Blocks.indexOf('pressure_plate'));
+    for (var i = 1; i < 4; i++) {
+      world.setBlock(IVec3(x0 + i, y, z0 + 4), wire);
+    }
+    world.setBlock(lampC, lampOff);
+    await settle();
+    _probePlace(plateC.toVector3() + Vector3(0.5, 0.55, 0.5));
+    await settle();
+    final standing = world.getBlock(lampC) == lampOn;
+    _probePlace(home);
+    await settle();
+    debugPrint('[probe] stage27 plate: lamp on while standing=$standing, off after leaving=${world.getBlock(lampC) == lampOff}');
+    // 4. lever -> wire x2 -> iron door (two tall, PANEL_X blocks a walk along +x)
+    final leverD = IVec3(x0, y, z0 + 6);
+    final doorD = IVec3(x0 + 3, y, z0 + 6);
+    world.setBlock(leverD, lever);
+    world.setBlock(IVec3(x0 + 1, y, z0 + 6), wire);
+    world.setBlock(IVec3(x0 + 2, y, z0 + 6), wire);
+    world.setBlock(doorD, Blocks.indexOf('iron_door_x'));
+    world.setBlock(doorD + IVec3.up, Blocks.indexOf('iron_door_x'));
+    await settle();
+    final closedSolid = Blocks.isSolid(world.getBlock(doorD)) && idAt(doorD) == 'iron_door_x';
+    circuits.useBlock(leverD);
+    await settle();
+    final opened = idAt(doorD) == 'iron_door_x_open' && !Blocks.isSolid(world.getBlock(doorD));
+    final walk = await _stage22Walk(Vector3(x0 + 1.5, y + 0.1, z0 + 6.5), x0 + 5.0, 120, false);
+    _probePlace(home);
+    debugPrint('[probe] stage27 iron door: closed solid=$closedSolid -> powered open=$opened, body passes=${walk.x > x0 + 4.0} '
+        '(x ${walk.x.toStringAsFixed(2)} past door cell ${doorD.x}, upper half ${idAt(doorD + IVec3.up)})');
+    // 5. wooden door: the use action's own toggle
+    final doorE = IVec3(x0 + 3, y, z0 + 8);
+    world.setBlock(doorE, Blocks.indexOf('door_x'));
+    world.setBlock(doorE + IVec3.up, Blocks.indexOf('door_x'));
+    player.toggleDoor(doorE);
+    debugPrint('[probe] stage27 wooden door: use toggles open=${idAt(doorE) == 'door_x_open'}');
+    // 6. range: a lever and sixteen wires
+    final leverF = IVec3(x0, y, z0 + 10);
+    world.setBlock(leverF, lever);
+    for (var i = 1; i < 17; i++) {
+      world.setBlock(IVec3(x0 + i, y, z0 + 10), wire);
+    }
+    await settle();
+    circuits.useBlock(leverF);
+    await settle();
+    final at15 = IVec3(x0 + 15, y, z0 + 10), at16 = IVec3(x0 + 16, y, z0 + 10);
+    debugPrint('[probe] stage27 wire range: strength at 15 cells=${circuits.strengthAt(at15)}, at 16=${circuits.strengthAt(at16)} '
+        '(${idAt(at15)} / ${idAt(at16)})');
+    // 7. TNT under the third wire of a lever's run
+    final leverG = IVec3(x0, y, z0 + 12);
+    final tntG = IVec3(x0 + 3, y0, z0 + 12);
+    world.setBlock(leverG, lever);
+    for (var i = 1; i < 4; i++) {
+      world.setBlock(IVec3(x0 + i, y, z0 + 12), wire);
+    }
+    world.setBlock(tntG, Blocks.indexOf('tnt'));
+    await settle();
+    circuits.useBlock(leverG);
+    await settle();
+    final litG = litTntCount() > 0 && world.getBlock(tntG) == Blocks.air;
+    circuits.useBlock(leverG); // off before the defuse puts the TNT back
+    await settle();
+    probeDefuseTnt();
+    await settle();
+    debugPrint('[probe] stage27 tnt under powered wire: lit=$litG (defused, block now ${idAt(tntG)})');
+    // 8. piston facing +x with a cobblestone in front, a lever behind it
+    final leverH = IVec3(x0 - 1, y, z0 + 14);
+    final pistonH = IVec3(x0, y, z0 + 14);
+    final cobble = Blocks.indexOf('cobblestone');
+    world.setBlock(leverH, lever);
+    world.setBlock(pistonH, Blocks.indexOf('piston_e'));
+    world.setBlock(pistonH + const IVec3(1, 0, 0), cobble);
+    await settle();
+    circuits.useBlock(leverH);
+    await settle();
+    final pushed = world.getBlock(pistonH + const IVec3(2, 0, 0)) == cobble && world.getBlock(pistonH + const IVec3(1, 0, 0)) == Blocks.air;
+    debugPrint('[probe] stage27 piston: pushed cobblestone from (${pistonH.x + 1}) to (${pistonH.x + 2})=$pushed '
+        '(piston now ${idAt(pistonH)})');
+    // 9. redstone ore in the loaded window, below y 30 (a 7x7-chunk core)
+    final ore = Blocks.indexOf('redstone_ore');
+    final here = VoxelWorld.chunkOf(IVec3.floor(player.position));
+    var ores = 0, scanned = 0;
+    for (var dz = -3; dz < 4; dz++) {
+      for (var dx = -3; dx < 4; dx++) {
+        final blocks = world.chunks[(x: here.x + dx, z: here.z + dz)];
+        if (blocks == null) continue;
+        scanned += 1;
+        for (var i = 0; i < 30 * VoxelWorld.sizeX * VoxelWorld.sizeZ; i++) {
+          if (blocks[i] == ore) ores += 1;
+        }
+      }
+    }
+    debugPrint('[probe] stage27 redstone ore below y30 in window=$ores ($scanned chunks)');
+    // 10. Leave the first circuit lit and the door open, save, rebuild the session.
+    circuits.useBlock(leverA);
+    await settle();
+    debugPrint('[probe] stage27 pre-save: lamp ${idAt(lampA)} wire ${idAt(IVec3(x0 + 3, y, z0))} recomputes=${circuits.recomputes}');
+    flyMode = false;
+    _probePlace(home);
+    await saveGame();
+    File(_probe27Flag).writeAsStringSync('$x0,$y,$z0');
+    debugPrint('[probe] stage27 saved to $saveDir, reloading the scene');
+    reloader!();
+    return true;
+  }
+
+  /// --stage27, second boot: the save was loaded by [init]; the lamp, its wire
+  /// and the door come back as block ids. Then the camera hovers south of the
+  /// pad looking north down the rows (`--tp=` / `--look=` override).
+  Future<void> _probeStage27Verify(Map<String, int> site) async {
+    final x0 = site['x0']!, y = site['y']!, z0 = site['z0']!;
+    await _ticks(8);
+    String idAt(IVec3 c) => Blocks.idOf(world.getBlock(c));
+    final lamp = idAt(IVec3(x0 + 6, y, z0));
+    final wire = idAt(IVec3(x0 + 3, y, z0));
+    debugPrint('[probe] stage27 after reload: lamp on=${lamp == 'redstone_lamp_on'} wire on=${wire == 'wire_on'} '
+        '(door ${idAt(IVec3(x0 + 3, y, z0 + 6))}, lever ${idAt(IVec3(x0, y, z0))})');
+    flyMode = true;
+    player.setFirstPerson(true);
+    final eye = _arg('--tp=', '') != '' ? player.position.clone() : Vector3(x0 + 7.0, y + 6.5, z0 + 20.0);
+    if (_arg('--look=', '') == '') {
+      final target = Vector3(x0 + 6.0, y.toDouble(), z0 + 8.0);
+      final dir = target - eye;
+      player.setLook(math.atan2(-dir.x, -dir.z), math.atan2(dir.y, math.sqrt(dir.x * dir.x + dir.z * dir.z)));
+    }
+    for (var i = 0; i < 30 || (!world.isIdle && i < 600); i++) {
+      _probePlace(eye);
+      await nextFrame();
+    }
+    for (var i = 0; i < 10; i++) {
+      _probePlace(eye);
+      await nextFrame();
+    }
+    _pinCameraTo = () => eye.clone();
+    debugPrint('[probe] stage27 capture from $eye');
   }
 
   void shutdown() {

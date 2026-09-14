@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'ivec3.dart';
+
 /// The block table. INDEX IS THE SAVE CONTRACT: a chunk stores bytes and a save
 /// file stores those bytes, so entries are appended, never reordered or removed.
 /// Byte-for-byte the same order as the Godot POC (`src/core/blocks.gd`).
@@ -18,6 +20,7 @@ enum BlockShape {
   stairsE,
   stairsS,
   stairsW,
+  wire,
 }
 
 enum ToolType { none, pickaxe, axe, shovel, sword, hoe, shears }
@@ -180,6 +183,33 @@ class Blocks {
     BlockDef('vines', 'Vines', 0.22, 0.48, 0.20, shape: BlockShape.cross, solid: false, opaque: false, hardness: 0.0, drop: '-'),
     BlockDef('fern', 'Fern', 0.30, 0.60, 0.26, shape: BlockShape.cross, solid: false, opaque: false, hardness: 0.0, drop: '-'),
     BlockDef('melon', 'Melon', 0.45, 0.68, 0.25, hardness: 1.0, tool: ToolType.axe, drop: 'melon_slice'),
+    // Stage 27: redstone-lite. Every powered / unpowered state is its own block
+    // id, so a flip is a plain `setBlock` (meshed, saved and replicated like any
+    // edit). The lever and the button borrow the torch geometry (top face = the
+    // block colour), the wire is a 1/8 slab, the iron door mirrors the wooden
+    // one (2 tall, `_z` / `_x` by facing, `_open` non-solid), the piston has
+    // four facings and an `_on` twin of each.
+    BlockDef('redstone_ore', 'Redstone Ore', 0.62, 0.30, 0.30, hardness: 4.0, tool: ToolType.pickaxe, tier: 2, drop: 'redstone_dust'),
+    BlockDef('lever_off', 'Lever', 0.55, 0.55, 0.57, shape: BlockShape.torch, solid: false, opaque: false, hardness: 0.3, drop: 'lever'),
+    BlockDef('lever_on', 'Lever', 0.95, 0.25, 0.20, shape: BlockShape.torch, solid: false, opaque: false, hardness: 0.3, drop: 'lever'),
+    BlockDef('button', 'Button', 0.66, 0.66, 0.68, shape: BlockShape.torch, solid: false, opaque: false, hardness: 0.3, drop: 'button'),
+    BlockDef('button_on', 'Button', 0.90, 0.90, 0.92, shape: BlockShape.torch, solid: false, opaque: false, hardness: 0.3, drop: 'button'),
+    BlockDef('wire_off', 'Redstone Wire', 0.45, 0.10, 0.10, shape: BlockShape.wire, solid: false, opaque: false, hardness: 0.0, drop: 'wire'),
+    BlockDef('wire_on', 'Redstone Wire', 1.00, 0.25, 0.20, shape: BlockShape.wire, solid: false, opaque: false, hardness: 0.0, drop: 'wire', light: 3),
+    BlockDef('redstone_lamp_off', 'Redstone Lamp', 0.45, 0.32, 0.22, hardness: 0.5, drop: 'redstone_lamp'),
+    BlockDef('redstone_lamp_on', 'Redstone Lamp', 1.00, 0.85, 0.45, hardness: 0.5, drop: 'redstone_lamp', light: 14),
+    BlockDef('iron_door_z', 'Iron Door', 0.80, 0.80, 0.83, shape: BlockShape.panelZ, opaque: false, hardness: 4.0, tool: ToolType.pickaxe, tier: 1, drop: 'iron_door'),
+    BlockDef('iron_door_x', 'Iron Door', 0.80, 0.80, 0.83, shape: BlockShape.panelX, opaque: false, hardness: 4.0, tool: ToolType.pickaxe, tier: 1, drop: 'iron_door'),
+    BlockDef('iron_door_z_open', 'Open Iron Door', 0.80, 0.80, 0.83, shape: BlockShape.panelX, solid: false, opaque: false, hardness: 4.0, tool: ToolType.pickaxe, tier: 1, drop: 'iron_door'),
+    BlockDef('iron_door_x_open', 'Open Iron Door', 0.80, 0.80, 0.83, shape: BlockShape.panelZ, solid: false, opaque: false, hardness: 4.0, tool: ToolType.pickaxe, tier: 1, drop: 'iron_door'),
+    BlockDef('piston_n', 'Piston', 0.62, 0.50, 0.34, hardness: 1.5, tool: ToolType.pickaxe, drop: 'piston'),
+    BlockDef('piston_e', 'Piston', 0.62, 0.50, 0.34, hardness: 1.5, tool: ToolType.pickaxe, drop: 'piston'),
+    BlockDef('piston_s', 'Piston', 0.62, 0.50, 0.34, hardness: 1.5, tool: ToolType.pickaxe, drop: 'piston'),
+    BlockDef('piston_w', 'Piston', 0.62, 0.50, 0.34, hardness: 1.5, tool: ToolType.pickaxe, drop: 'piston'),
+    BlockDef('piston_n_on', 'Piston', 0.50, 0.50, 0.53, hardness: 1.5, tool: ToolType.pickaxe, drop: 'piston'),
+    BlockDef('piston_e_on', 'Piston', 0.50, 0.50, 0.53, hardness: 1.5, tool: ToolType.pickaxe, drop: 'piston'),
+    BlockDef('piston_s_on', 'Piston', 0.50, 0.50, 0.53, hardness: 1.5, tool: ToolType.pickaxe, drop: 'piston'),
+    BlockDef('piston_w_on', 'Piston', 0.50, 0.50, 0.53, hardness: 1.5, tool: ToolType.pickaxe, drop: 'piston'),
   ];
 
   static final Map<String, int> _indexById = {
@@ -280,13 +310,41 @@ class Blocks {
     if (!isStairs(index)) throw ArgumentError('not a stairs block: ${idOf(index)}');
     final id = idOf(index);
     final base = id.substring(0, id.length - 2);
-    final String suffix;
-    if (forwardX.abs() > forwardZ.abs()) {
-      suffix = forwardX > 0 ? '_e' : '_w';
-    } else {
-      suffix = forwardZ > 0 ? '_s' : '_n';
-    }
-    return indexOf(base + suffix);
+    return indexOf(base + facingSuffix(forwardX, forwardZ));
+  }
+
+  /// "_n" / "_e" / "_s" / "_w": the compass side the forward vector points to
+  /// (the way the placer looks).
+  static String facingSuffix(double forwardX, double forwardZ) {
+    if (forwardX.abs() > forwardZ.abs()) return forwardX > 0 ? '_e' : '_w';
+    return forwardZ > 0 ? '_s' : '_n';
+  }
+
+  /// The unit step a compass suffix names.
+  static IVec3 facingDir(String suffix) => switch (suffix) {
+        '_n' => const IVec3(0, 0, -1),
+        '_s' => const IVec3(0, 0, 1),
+        '_e' => const IVec3(1, 0, 0),
+        _ => const IVec3(-1, 0, 0),
+      };
+
+  // --- stage 27: circuit blocks ------------------------------------------------
+
+  static bool isWire(int index) => defs[index].shape == BlockShape.wire;
+  static bool isPiston(int index) => defs[index].id.startsWith('piston_');
+  static bool isIronDoor(int index) => defs[index].id.startsWith('iron_door_');
+
+  /// The piston facing the forward vector (retracted).
+  static int pistonFacing(int index, double forwardX, double forwardZ) {
+    if (!isPiston(index)) throw ArgumentError('not a piston: ${idOf(index)}');
+    return indexOf('piston${facingSuffix(forwardX, forwardZ)}');
+  }
+
+  /// The direction a piston pushes: its `_n/_e/_s/_w` suffix, with or without `_on`.
+  static IVec3 pistonDir(int index) {
+    var id = idOf(index);
+    if (id.endsWith('_on')) id = id.substring(0, id.length - 3);
+    return facingDir(id.substring(id.length - 2));
   }
 
   // --- tables handed to the mesher isolate ------------------------------------
@@ -322,6 +380,7 @@ class Blocks {
           'chest', 'lamp', 'bone_block', 'oak_planks', 'ladder', 'spawner', 'glass',
           'crafting_table', 'furnace', 'torch', 'oak_fence', 'tnt', 'cobblestone', 'pressure_plate',
           'mud', 'reeds', 'jungle_log', 'vines', 'fern', 'melon', 'bed', 'farmland', 'wheat_2', 'oak_slab',
+          'redstone_ore',
         ])
           id: indexOf(id),
       };

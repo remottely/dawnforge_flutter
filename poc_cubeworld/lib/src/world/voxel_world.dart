@@ -7,6 +7,7 @@ import 'package:vector_math/vector_math.dart';
 
 import '../core/blocks.dart';
 import '../core/ivec3.dart';
+import '../game/circuits.dart';
 import 'chunk_mesher.dart';
 import 'chunk_worker.dart';
 import 'terrain_generator.dart';
@@ -32,6 +33,9 @@ class VoxelWorld {
       ..metallicFactor = 0.1
       ..alphaMode = AlphaMode.blend
       ..doubleSided = true;
+    // Stage 27: unlit, so a lamp's faces keep their colour at night.
+    matGlow = UnlitMaterial()..vertexColorWeight = 1.0;
+    circuits = Circuits(this);
   }
 
   static const int sizeX = 16;
@@ -59,6 +63,10 @@ class VoxelWorld {
   late final PhysicallyBasedMaterial matSolid;
   late final PhysicallyBasedMaterial matCutout;
   late final PhysicallyBasedMaterial matLiquid;
+  late final UnlitMaterial matGlow;
+
+  /// Stage 27: redstone-lite, host-only like the flow ([flowEnabled] gates both).
+  late final Circuits circuits;
 
   final Set<ChunkPos> _genInflight = {};
   final Set<ChunkPos> _meshInflight = {};
@@ -225,8 +233,10 @@ class VoxelWorld {
     final solid = _surfaceNode(surface.solid, matSolid);
     final cutout = _surfaceNode(surface.cutout, matCutout);
     final liquid = _surfaceNode(surface.liquid, matLiquid);
+    final glow = _surfaceNode(surface.glow, matGlow);
     if (solid != null) node.add(solid);
     if (cutout != null) node.add(cutout);
+    if (glow != null) node.add(glow);
     if (liquid != null) node.add(liquid);
     root.add(node);
     _nodes[pos] = node;
@@ -287,6 +297,7 @@ class VoxelWorld {
     if (dz != 0) _queueRemesh((x: pos.x, z: pos.z + dz));
     if (dx != 0 && dz != 0) _queueRemesh((x: pos.x + dx, z: pos.z + dz));
     _flowTouch(b, old, id);
+    if (flowEnabled) circuits.touch(b, old, id);
     onBlockChanged?.call(b, old, id);
     return true;
   }

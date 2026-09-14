@@ -908,7 +908,7 @@ class Player extends VoxelBody implements Target {
     return false;
   }
 
-  void _toggleDoor(IVec3 at) {
+  void toggleDoor(IVec3 at) {
     var lower = at;
     if (Blocks.idOf(world.getBlock(at + IVec3.down)).startsWith('door_')) lower = at + IVec3.down;
     final id = Blocks.idOf(world.getBlock(lower));
@@ -917,13 +917,14 @@ class Player extends VoxelBody implements Target {
     if (Blocks.isSolid(bid) && (overlapsBlock(lower) || overlapsBlock(lower + IVec3.up))) return;
     world.setBlock(lower, bid);
     world.setBlock(lower + IVec3.up, bid);
-    Sfx.play('place', -8.0);
+    Sfx.play('door', -6.0);
   }
 
-  bool _placeDoor(IVec3 target) {
+  /// [base] is "door" or "iron_door" (stage 27); the panel faces the placer.
+  bool _placeDoor(IVec3 target, [String base = 'door']) {
     if (!Blocks.isReplaceable(world.getBlock(target + IVec3.up)) || !Blocks.isSolid(world.getBlock(target + IVec3.down))) return false;
     final d = aimDirection();
-    final bid = Blocks.indexOf(d.x.abs() > d.z.abs() ? 'door_x' : 'door_z');
+    final bid = Blocks.indexOf(base + (d.x.abs() > d.z.abs() ? '_x' : '_z'));
     if (overlapsBlock(target) || overlapsBlock(target + IVec3.up)) return false;
     world.setBlock(target, bid);
     world.setBlock(target + IVec3.up, bid);
@@ -1249,7 +1250,13 @@ class Player extends VoxelBody implements Target {
         return;
       }
       if (tid.startsWith('door_')) {
-        _toggleDoor(aimedBlock);
+        toggleDoor(aimedBlock);
+        _useCooldown = 0.35;
+        return;
+      }
+      if (tid.startsWith('lever_') || tid.startsWith('button')) {
+        // Stage 27: the flip is a block edit; the host's circuit tick does the rest.
+        if (world.circuits.useBlock(aimedBlock)) Sfx.play('click', -4.0, 0.8);
         _useCooldown = 0.35;
         return;
       }
@@ -1320,8 +1327,8 @@ class Player extends VoxelBody implements Target {
       if (item == 'torch' && aimedNormal.y == 0 && !Blocks.isSolid(world.getBlock(target + IVec3.down))) {
         bid = Blocks.indexOf('wall_torch');
       }
-      if (item == 'door') {
-        if (_placeDoor(target)) {
+      if (item == 'door' || item == 'iron_door') {
+        if (_placeDoor(target, item)) {
           inventory.takeFromSlot(selectedSlot, 1);
           model.swing();
           Sfx.play('place', -10.0);
@@ -1332,12 +1339,15 @@ class Player extends VoxelBody implements Target {
       if (Blocks.isStairs(bid)) {
         final f = flatForward;
         bid = Blocks.stairsFacing(bid, f.x, f.z);
+      } else if (Blocks.isPiston(bid)) {
+        final f = flatForward;
+        bid = Blocks.pistonFacing(bid, f.x, f.z); // stage 27: pushes the way the placer looks
       }
       if (Blocks.isSolid(bid) && overlapsBlock(target)) return;
       for (final mob in main.mobs) {
         if (Blocks.isSolid(bid) && mob.overlapsBlock(target)) return;
       }
-      if (Blocks.isPlant(bid) && !Blocks.isSolid(world.getBlock(target + IVec3.down))) return;
+      if ((Blocks.isPlant(bid) || Blocks.isWire(bid)) && !Blocks.isSolid(world.getBlock(target + IVec3.down))) return;
       if (world.setBlock(target, bid)) {
         inventory.takeFromSlot(selectedSlot, 1);
         model.swing();

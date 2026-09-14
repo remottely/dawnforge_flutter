@@ -98,12 +98,21 @@ class Items {
         'door_x', 'door_z_open', 'door_x_open', 'wall_torch',
         'oak_stairs_e', 'oak_stairs_s', 'oak_stairs_w',
         'stone_stairs_e', 'stone_stairs_s', 'stone_stairs_w',
+        // Stage 27: powered states and orientations of one item.
+        'lever_on', 'button_on', 'wire_on', 'redstone_lamp_on', 'iron_door_x', 'iron_door_z_open', 'iron_door_x_open',
+        'piston_e', 'piston_s', 'piston_w', 'piston_n_on', 'piston_e_on', 'piston_s_on', 'piston_w_on',
       ].contains(d.id)) {
         continue;
       }
       var itemId = d.id;
       if (itemId == 'door_z') {
         itemId = 'door';
+      } else if (itemId == 'iron_door_z') {
+        itemId = 'iron_door';
+      } else if (itemId == 'lever_off' || itemId == 'wire_off' || itemId == 'redstone_lamp_off') {
+        itemId = itemId.substring(0, itemId.length - 4); // stage 27: the item is the unpowered block
+      } else if (itemId == 'piston_n') {
+        itemId = 'piston';
       } else if (itemId.endsWith('_stairs_n')) {
         itemId = itemId.substring(0, itemId.length - 2); // oak_stairs_n -> oak_stairs
       }
@@ -133,6 +142,7 @@ class Items {
     mat('spider_eye', 'Spider Eye', 0.55, 0.15, 0.20);
     mat('gunpowder', 'Gunpowder', 0.35, 0.35, 0.35);
     mat('magic_dust', 'Magic Dust', 0.65, 0.40, 0.95);
+    mat('redstone_dust', 'Redstone Dust', 0.85, 0.15, 0.12);
     mat('gem_shard', 'Gem Shard', 0.95, 0.35, 0.65);
     mat('wheat_seeds', 'Wheat Seeds', 0.55, 0.65, 0.30);
     mat('wheat', 'Wheat', 0.85, 0.72, 0.30);

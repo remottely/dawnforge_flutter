@@ -57,6 +57,8 @@ class Sfx {
     await make('quest', 0.5, (t, p) => math.sin(t * (p < 0.5 ? 523.0 : 784.0) * math.pi * 2) * (1.0 - p) * 0.4);
     await make('thunder', 1.6, (t, p) => (_rng.nextDouble() * 2.0 - 1.0) * math.pow(1.0 - p, 1.5) * (0.5 + 0.5 * math.sin(t * 9.0 * math.pi * 2)) * 0.7);
     await make('click', 0.04, (t, p) => math.sin(t * 1200.0 * math.pi * 2) * (1.0 - p) * 0.3);
+    // Stage 27: a door swinging on its hinge, a low creak that drops in pitch.
+    await make('door', 0.22, (t, p) => (math.sin(t * (140.0 - p * 60.0) * math.pi * 2) * 0.6 + (_rng.nextDouble() - 0.5) * 0.3) * math.sin(p * math.pi) * 0.5);
     _ready = true;
     setVolume(_volume);
   }

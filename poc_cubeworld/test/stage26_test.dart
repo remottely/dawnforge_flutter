@@ -23,7 +23,7 @@ void main() {
     for (var i = 0; i < newBlocks.length; i++) {
       expect(Blocks.indexOf(newBlocks[i]), plate + 1 + i);
     }
-    expect(Blocks.count, plate + 7);
+    expect(Blocks.indexOf('redstone_ore'), plate + 7); // stage 27 appends after the melon
     expect(Blocks.shapeOf(Blocks.indexOf('reeds')), BlockShape.cross);
     expect(Blocks.dropOf(Blocks.indexOf('melon')), 'melon_slice');
     expect(Blocks.dropOf(Blocks.indexOf('vines')), '');

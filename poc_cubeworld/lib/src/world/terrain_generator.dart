@@ -62,6 +62,7 @@ class TerrainGenerator {
     _farmland = ids['farmland']!;
     _wheat = ids['wheat_2']!;
     _slab = ids['oak_slab']!;
+    _redstoneOre = ids['redstone_ore']!;
     setSeed(seed);
   }
 
@@ -93,7 +94,9 @@ class TerrainGenerator {
       _glassId, _craftingTable, _furnace, _torch, _fence, _tnt, _cobblestone, _pressurePlate,
       // Stage 26: the swamp's mud and reeds, the jungle's logs, vines, ferns and
       // melons, and what a village hut holds (bed, farmland + ripe wheat, the slab roof).
-      _mud, _reeds, _jungleLog, _vines, _fern, _melon, _bed, _farmland, _wheat, _slab;
+      _mud, _reeds, _jungleLog, _vines, _fern, _melon, _bed, _farmland, _wheat, _slab,
+      // Stage 27: redstone ore, veined below y 30.
+      _redstoneOre;
 
   int _seed = 0;
   int get seed => _seed;
@@ -246,6 +249,8 @@ class TerrainGenerator {
                 id = _goldOre;
               } else if (y < 64 && r < 520) {
                 id = _ironOre;
+              } else if (y < 30 && r < 710) {
+                id = _redstoneOre; // stage 27: about a third of coal's share, deep only
               } else if (r < 1100) {
                 id = _coalOre;
               }
