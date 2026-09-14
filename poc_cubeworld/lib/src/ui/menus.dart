@@ -4,11 +4,15 @@ import 'package:flutter/material.dart';
 
 import '../game/game.dart';
 import '../game/game_state.dart';
+import '../game/net.dart';
 import '../game/settings.dart';
+import '../game/tutorial.dart';
+import 'settings_panel.dart';
 
-/// Escape: the settings (stage 24: render distance, mouse, FOV, volume, weather,
-/// FPS overlay — kept in settings.cfg), resume, save, save & quit. The world
-/// keeps running behind it; only the mouse is released.
+/// Escape: the settings (stage 24, rows built by `SettingsPanel`, kept in
+/// settings.cfg), the stats block (stage 30), resume, save, save & back to
+/// title (solo), save & quit. The world keeps running behind it; only the
+/// mouse is released.
 class PauseMenu extends StatefulWidget {
   const PauseMenu({super.key, required this.game});
   final Game game;
@@ -20,43 +24,9 @@ class PauseMenu extends StatefulWidget {
 class _PauseMenuState extends State<PauseMenu> {
   Game get game => widget.game;
   Settings get settings => Settings.instance;
+  bool _stats = false;
 
-  /// Godot's `HSlider.step`: 0.05 up to 1, 0.1 below 10, 1 otherwise.
-  Widget _slider(String text, double lo, double hi, double value, void Function(double) cb) {
-    final step = hi <= 1.0 ? 0.05 : (hi < 10.0 ? 0.1 : 1.0);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('$text: ${value.toStringAsFixed(1)}', style: const TextStyle(fontSize: 13, color: Colors.white)),
-        SizedBox(
-          height: 30,
-          child: Slider(
-            min: lo,
-            max: hi,
-            divisions: ((hi - lo) / step).round(),
-            value: value.clamp(lo, hi),
-            onChanged: (v) => setState(() => cb(v)),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _check(String text, bool value, void Function(bool) cb) => SizedBox(
-        height: 36,
-        child: SwitchListTile(
-          dense: true,
-          contentPadding: EdgeInsets.zero,
-          title: Text(text, style: const TextStyle(fontSize: 14, color: Colors.white)),
-          value: value,
-          onChanged: (v) => setState(() => cb(v)),
-        ),
-      );
-
-  Widget _button(String text, VoidCallback cb) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 3),
-        child: SizedBox(height: 38, width: double.infinity, child: FilledButton(onPressed: cb, child: Text(text))),
-      );
+  Widget _button(String text, VoidCallback cb) => SettingsPanel.button(text, cb);
 
   @override
   Widget build(BuildContext context) {
@@ -82,26 +52,11 @@ class _PauseMenuState extends State<PauseMenu> {
                 style: TextStyle(fontSize: 13, color: Colors.white70),
               ),
               const SizedBox(height: 6),
-              _slider('Render distance (chunks)', 4.0, 10.0, game.world.loadRadius.toDouble(), (v) {
-                if (v.round() != game.world.loadRadius) game.applyRenderDistance(v.round());
-              }),
-              _slider('Mouse sensitivity', 0.3, 3.0, settings.sensitivity, (v) {
-                settings.sensitivity = v;
-                settings.applyGlobals();
-              }),
-              _slider('Field of view', 60.0, 100.0, settings.fov, (v) {
-                settings.fov = v;
-                settings.applyGlobals();
-              }),
-              _slider('Master volume', 0.0, 1.0, settings.volume, (v) {
-                settings.volume = v;
-                settings.applyGlobals();
-              }),
-              _check('Weather (off = always clear)', settings.weather, (on) {
-                settings.weather = on;
-                game.weather.setEnabled(on);
-              }),
-              _check('Show FPS', settings.showFps, (on) => settings.showFps = on),
+              SettingsPanel(game: game),
+              // Stage 30: the stats block, folded under one button.
+              _button('Stats', () => setState(() => _stats = !_stats)),
+              if (_stats)
+                Text(SettingsPanel.statsText(), textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: Colors.white)),
               _button('Resume', () {
                 settings.save();
                 game.closeScreen();
@@ -112,6 +67,14 @@ class _PauseMenuState extends State<PauseMenu> {
                 game.notify('Game saved');
                 game.closeScreen();
               }),
+              if (Net.instance.mode == NetMode.solo && game.exitToTitle != null)
+                // Stage 30: back to the title; a networked session keeps its peer and quits instead.
+                _button('Save & back to title', () async {
+                  settings.save();
+                  await game.saveGame();
+                  Tutorial.instance.stop();
+                  game.exitToTitle!();
+                }),
               _button('Save & Quit', () async {
                 settings.save();
                 await game.saveGame();

@@ -30,19 +30,54 @@ flutter test                                           # tables, generator, mesh
 Probe flags (same as the Godot POC, plus a few for tuning): `--screenshot=<png> --frames=N
 --seed=N --radius=N --class=warrior|ranger|mage|rogue --time=0..1 --fly --fp --tp=x,y,z
 --look=yaw,pitch --settle=N --map --open-inventory --fire=primary|secondary --stage16
---strike --stage18 --stage19 --stage20 --ride --stage21a --kind=5..9 --biome=N --stage21b --stage22 --stage23 --stage24 --slot=<name> --open-map --open-settings --stage25 --reject-one --stage26 --shot=biome|village|trade|portal|fortress|cavern --stage27 --stage28 --stage29 --kind=4 --weather=clear|rain|storm|snow --journal=0..4 --host --join=<ip> --wait-peer --trace`, and for the look: `--sun=k --amb=k
+--strike --stage18 --stage19 --stage20 --ride --stage21a --kind=5..9 --biome=N --stage21b --stage22 --stage23 --stage24 --slot=<name> --open-map --open-settings --stage25 --reject-one --stage26 --shot=biome|village|trade|portal|fortress|cavern|tutorial --stage27 --stage28 --stage29 --kind=4 --stage30 --title-probe --open-worlds --open-credits --credits-t=N --no-tutorial --weather=clear|rain|storm|snow --journal=0..4 --host --join=<ip> --wait-peer --trace`, and for the look: `--sun=k --amb=k
 --tm=aces|agx|neutral|linear --fogd=density --noshadow --shadowcache=0|1
 --casterfaces=front|back`. The debug app forwards the process arguments to Dart
 (`MainFlutterWindow.swift`), so no `--` separator is needed.
 
+Stage 30 probes: `--stage30 --title-probe --frames=200 --settle=10 --screenshot=<png>` runs the
+title half (the buttons, a world created / listed / renamed / deleted through `Worlds`, the
+credits rows parsed from the bundled `ROADMAP.md`), then starts a creative mage world in
+slot `probe30_stats` through the same path as Play (damage ignored, a free block, fly, the
+tutorial driven through seven steps and skipped, the stats saved and read back in a rebuilt
+session; the slot is removed at the end, the tutorial flag goes to `settings_probe30.cfg`).
+Captures: `--title-probe --screenshot=<png>` (the title) · `--title-probe --open-worlds` (the
+world list with the form) · `--title-probe --open-credits [--credits-t=seconds]` (Flutter
+only) · `--new --seed=42 --stage30 --shot=tutorial` (the card on step 4).
+
 Saves live in `~/Library/Application Support/cubeworld_poc/dawnforge_cubeworld_poc/worlds/<name>/`
-(`blocks.bin` edit delta + `player.json`, the same bytes as the Godot POC). F2 writes a
-screenshot next to them.
+(`world.json` from the New World form, `blocks.bin` edit delta + `player.json`, the same bytes
+as the Godot POC). F2 writes a screenshot next to them.
+
+## Starting the game
+
+The game boots into the **title screen** (stage 30): a slowly orbiting voxel vista behind
+**Play**, **Multiplayer**, **Settings**, **Credits** and **Quit**. A probe boot (`--new`,
+`--slot=`, `--seed=`, `--continue`, `--screenshot=`, `--host`, `--join=`) skips it and lands in
+the world as before; `--title-probe` forces the title even then.
+
+- **Play** lists your worlds (`worlds/<slot>/`): name, mode, class, seed, dimension, play time
+  and last played. Select one and **Play** (or double-click), **Rename** it, or **Delete** it
+  (asks first). **New world** opens the form: a name, a seed (a number, any text — hashed —, or
+  empty for a random one), **Survival** or **Creative**, and the class; **Start** creates the
+  slot and boots it.
+- **Creative** worlds take no damage, never get hungry, place blocks without spending them and
+  fly with **F5** (Space up, Ctrl down). Survival keeps its feet on the ground.
+- **Tutorial**: a new world made from the title shows a card at the top of the screen with the
+  next thing to do and the key for it — walk, look, jump, break a block, open the bag (E), craft
+  a pickaxe, place a block, eat (H), sleep (or last until sunrise), open the journal (J). Each
+  step completes when you do it; the card's button or **F6** skips the rest. Done once, it stays
+  done (`settings.cfg`; the Settings screen can re-arm it). `--no-tutorial` keeps a probe quiet.
+- **Multiplayer** hosts one of your worlds on port 7777 or joins an address with a class.
+- **Settings** is the same panel as the pause menu; **Credits** scrolls the engine, the fonts,
+  the audio and every stage of `ROADMAP.md` (bundled as an asset, read at runtime; Esc closes).
+- **Esc** in-game: settings, a **Stats** block (play time, metres walked, blocks broken and
+  placed, mobs killed, deaths, dimension trips), save, **Save & back to title** (solo), quit.
 
 | Key | |
 |:---|:---|
 | WASD / Space / Shift / Ctrl | move / jump / sprint / sneak |
-| Menu | **Host** opens port 7777 on your world; type an address and **Join** to play in someone's world |
+| Title → Multiplayer | **Host** opens port 7777 on the selected world; type an address and **Join** to play in someone's world |
 | F | board or leave a boat (place one with the Boat item on water); on a villager: the trade screen (three offers, click a row; gold ingots are the coin, sell wheat or melon slices to earn them; Esc / F closes) |
 | Mouse | look (third person orbit; the pointer is locked with `pointer_lock`, Esc opens the pause menu and releases it) · LMB attack or mine (hold to keep firing a bow or staff) · RMB place or use · RMB with a bow = fan shot, with a staff = arc |
 | Portal | Lava touched by water turns to obsidian (a diamond pickaxe mines it). Build a frame 4 wide and 5 tall with a 2 x 3 hole, aim a Flint and Steel (iron + flint) inside it, and stand in the purple glow for two seconds: you arrive in the **Underworld** — hellstone caverns over a lava sea, soul sand that slows you, glowstone, quartz, blazes, wither skeletons and magma cubes, and somewhere a nether-brick **fortress** whose throne room holds the Underworld Lord and, once he falls, the core that gives up the Underworld Heart. A return portal waits where you arrive. No sun, no weather, no sleeping, and water hisses away down there. In multiplayer everyone in the same dimension sees each other, a different dimension is invisible, and mobs exist only where the host is |

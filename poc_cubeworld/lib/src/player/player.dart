@@ -18,7 +18,10 @@ import '../entities/voxel_body.dart';
 import '../entities/voxel_mesh_builder.dart';
 import '../game/achievements.dart';
 import '../game/effects.dart';
+import '../core/recipes.dart';
 import '../game/game.dart';
+import '../game/game_state.dart';
+import '../game/tutorial.dart';
 
 import '../game/input.dart';
 import '../game/inventory.dart';
@@ -230,6 +233,7 @@ class Player extends VoxelBody implements Target {
   void setLook(double y, double p) {
     yaw = y;
     pitch = p;
+    Tutorial.instance.event('look');
   }
 
   void setFirstPerson(bool fp) {
@@ -370,6 +374,7 @@ class Player extends VoxelBody implements Target {
     if (!gameplay) return;
     final look = input.takeLookDelta();
     if (look != Offset.zero) {
+      Tutorial.instance.event('look');
       yaw += look.dx * mouseSensitivity * sensitivityScale;
       pitch = (pitch - look.dy * mouseSensitivity * sensitivityScale).clamp(-1.45, 1.45);
     }
@@ -444,6 +449,7 @@ class Player extends VoxelBody implements Target {
     var wish = fwd * -inputY + right * inputX;
     if (_probeWalk.length2 > 0.0) wish = _probeWalk.clone();
     if (wish.length > 1.0) wish = wish.normalized();
+    if (wish.length > 0.1) Tutorial.instance.event('move');
     final sprinting = gameplay && input.down(GameAction.sprint) && stamina > 1.0 && inputY < 0.0 && !inWater;
     final sneaking = gameplay && input.down(GameAction.sneak);
     var speed = sprinting ? sprintSpeed : (sneaking ? sneakSpeed : walkSpeed);
@@ -485,10 +491,7 @@ class Player extends VoxelBody implements Target {
       }
     } else {
       applyGravity(dt);
-      if (jumpHeld && onFloor) {
-        velocity.y = jumpVelocity;
-        _fallStartY = position.y;
-      }
+      if (jumpHeld && onFloor) _jump();
     }
 
     // Gliding: hold G in the air with a glider in the inventory.
@@ -513,7 +516,13 @@ class Player extends VoxelBody implements Target {
     velocity.z = lerpd(velocity.z, wish.z * speed, dt * accel);
 
     final wasFloor = onFloor;
+    final posBefore = position.clone();
     move(dt);
+    if (onFloor) {
+      // Stage 30: the stats block's metres walked (the ground displacement).
+      final d = position - posBefore;
+      GameState.instance.distanceWalked += math.sqrt(d.x * d.x + d.z * d.z);
+    }
     if (hitWall && wish.length > 0.1 && !climbing && !inWater) tryStepUp();
     // Fall damage.
     if (!wasFloor && onFloor) {
@@ -600,9 +609,9 @@ class Player extends VoxelBody implements Target {
     _hungerTimer += dt;
     if (_hungerTimer > 1.0) {
       _hungerTimer = 0.0;
-      hunger = math.max(hunger - 1.0 / 45.0, 0.0);
+      if (!GameState.instance.creative) hunger = math.max(hunger - 1.0 / 45.0, 0.0); // stage 30: creative never gets hungry
     }
-    if (hunger <= 0.0) {
+    if (hunger <= 0.0 && !GameState.instance.creative) {
       _regenTimer += dt;
       if (_regenTimer > 4.0) {
         _regenTimer = 0.0;
@@ -1433,7 +1442,7 @@ class Player extends VoxelBody implements Target {
       if (item == 'wheat_seeds' && tid == 'farmland' && aimedNormal == IVec3.up && world.getBlock(aimedBlock + IVec3.up) == Blocks.air) {
         world.setBlock(aimedBlock + IVec3.up, Blocks.indexOf('wheat_0'));
         main.plantCrop(aimedBlock + IVec3.up);
-        inventory.takeFromSlot(selectedSlot, 1);
+        _consumeHeld();
         Sfx.play('place', -10.0);
         _useCooldown = 0.3;
         return;
@@ -1460,7 +1469,7 @@ class Player extends VoxelBody implements Target {
       _useCooldown = 0.5;
       if (isAiming && Rails.isRailAt(world, aimedBlock)) {
         main.spawnMinecart(aimedBlock, item);
-        inventory.takeFromSlot(selectedSlot, 1);
+        _consumeHeld();
         return;
       }
       notify('Minecarts go on rails');
@@ -1474,7 +1483,7 @@ class Player extends VoxelBody implements Target {
         final c = cell + IVec3(0, -dy, 0);
         if (world.isLiquid(c)) {
           main.spawnBoat(c.toVector3() + Vector3(0.5, 0.9, 0.5), yaw);
-          inventory.takeFromSlot(selectedSlot, 1);
+          _consumeHeld();
           return;
         }
       }
@@ -1491,7 +1500,7 @@ class Player extends VoxelBody implements Target {
       }
       if (item == 'door' || item == 'iron_door') {
         if (_placeDoor(target, item)) {
-          inventory.takeFromSlot(selectedSlot, 1);
+          _consumeHeld();
           model.swing();
           Sfx.play('place', -10.0);
           _useCooldown = 0.3;
@@ -1515,14 +1524,14 @@ class Player extends VoxelBody implements Target {
       if (Blocks.isRail(bid)) {
         // Stage 28: the rail takes its orientation from its neighbours and turns them to meet it.
         bid = Rails.place(world, target, bid);
-        inventory.takeFromSlot(selectedSlot, 1);
+        _consumeHeld();
         model.swing();
         main.onBlockPlaced(target, bid);
         _useCooldown = 0.22;
         return;
       }
       if (world.setBlock(target, bid)) {
-        inventory.takeFromSlot(selectedSlot, 1);
+        _consumeHeld();
         model.swing();
         main.onBlockPlaced(target, bid);
         _useCooldown = 0.22;
@@ -1542,6 +1551,7 @@ class Player extends VoxelBody implements Target {
         main.spawnDrop(centre(), d.container, 1);
       }
       notify('Drank ${d.name}');
+      Tutorial.instance.event('eat');
       Sfx.play('eat', -6.0);
       Achievements.instance.unlock('brewer');
       return;
@@ -1556,6 +1566,7 @@ class Player extends VoxelBody implements Target {
     if (d.hunger >= 5) effects.apply('well_fed', 20.0);
     Sfx.play('eat', -6.0);
     notify('Ate ${d.name}');
+    Tutorial.instance.event('eat');
   }
 
   void _dropHeld() {
@@ -1571,7 +1582,7 @@ class Player extends VoxelBody implements Target {
 
   @override
   void takeDamage(double amount, String source, [Vector3? from]) {
-    if (isDead || amount <= 0.0) return;
+    if (isDead || amount <= 0.0 || GameState.instance.creative) return; // stage 30: a creative body is never hurt
     // An effect's own tick always lands: dodging out of poison would be free.
     final isTick = StatusEffects.defs.containsKey(source);
     if (_invulnerable > 0.0 && !isTick && source != 'starving') return;
@@ -2023,6 +2034,31 @@ class Player extends VoxelBody implements Target {
 
   /// A probe's walk input: a world-space direction held until zero is handed back.
   void probeWalk(Vector3 dir) => _probeWalk = dir.clone();
+
+  /// Stage 30 probe: the jump the Space key would give.
+  void probeJump() => _jump();
+
+  void _jump() {
+    velocity.y = jumpVelocity;
+    _fallStartY = position.y;
+    Tutorial.instance.event('jump');
+  }
+
+  /// Stage 30: what a placed block costs — nothing in creative.
+  void _consumeHeld() {
+    if (!GameState.instance.creative) inventory.takeFromSlot(selectedSlot, 1);
+  }
+
+  /// One crafting click (the inventory screen's, or the probe's): the recipe
+  /// applied to the bag, the quest, the achievement counter and the tutorial told.
+  bool craft(Recipe r) {
+    if (!Recipes.craft(r, inventory)) return false;
+    notify('Crafted ${Items.displayName(r.result)}');
+    main.quests.onCraft(r.result, r.count);
+    Achievements.instance.onCrafted();
+    if (Items.kind(r.result) == ItemKind.tool) Tutorial.instance.event('craft');
+    return true;
+  }
 
   bool isDodging() => _dodge > 0.0;
 

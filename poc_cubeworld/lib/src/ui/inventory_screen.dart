@@ -5,7 +5,6 @@ import 'package:vector_math/vector_math.dart' as vm;
 import '../core/blocks.dart';
 import '../core/items.dart';
 import '../core/recipes.dart';
-import '../game/achievements.dart';
 import '../game/game.dart';
 import '../game/game_state.dart';
 import '../game/inventory.dart';
@@ -84,11 +83,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
       for (final pair in _recipeRects) {
         if (pair.$1.contains(mp)) {
           Sfx.play('click', -6.0);
-          if (Recipes.craft(pair.$2, game.player.inventory)) {
-            game.notify('Crafted ${Items.displayName(pair.$2.result)}');
-            game.quests.onCraft(pair.$2.result, pair.$2.count);
-            Achievements.instance.onCrafted();
-          }
+          game.player.craft(pair.$2);
           return;
         }
       }

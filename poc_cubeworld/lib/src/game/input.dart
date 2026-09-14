@@ -32,6 +32,7 @@ enum GameAction {
   fly,
   dodge,
   journal,
+  skipTutorial, // stage 30
 }
 
 /// Held keys, one-shot presses, mouse buttons, wheel and the captured mouse
@@ -74,6 +75,7 @@ class GameInput {
     GameAction.fly: [PhysicalKeyboardKey.f5],
     GameAction.dodge: [PhysicalKeyboardKey.altLeft, PhysicalKeyboardKey.altRight],
     GameAction.journal: [PhysicalKeyboardKey.keyJ],
+    GameAction.skipTutorial: [PhysicalKeyboardKey.f6],
   };
 
   static const List<PhysicalKeyboardKey> _digits = [

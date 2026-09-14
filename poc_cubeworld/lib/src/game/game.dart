@@ -36,7 +36,11 @@ import 'quests.dart';
 import 'rails.dart';
 import 'sfx.dart';
 import 'settings.dart';
+import 'tutorial.dart';
 import 'weather.dart';
+import 'worlds.dart';
+import '../core/recipes.dart';
+import '../ui/settings_panel.dart';
 
 enum ScreenKind { none, inventory, pause, death, journal, trade }
 
@@ -142,9 +146,19 @@ class Game extends ChangeNotifier {
   Map<String, dynamic>? _stage29Site;
   String get _probe29Flag => '$saveRoot/probe29.flag';
 
+  /// Stage 30: the stats round trip, two boots again; the flag carries the
+  /// counters saved.
+  Map<String, dynamic>? _stage30Saved;
+  String get _probe30Flag => '$saveRoot/probe30.flag';
+  double _prevTimeOfDay = 0.3;
+
   /// Set by the view: throws this session away and builds a fresh one with the
   /// same arguments (Godot's `reload_current_scene`).
   void Function()? reloader;
+
+  /// Stage 30: set by the launcher; the pause menu's "Save & back to title"
+  /// (Godot's `change_scene_to_file("res://menu.tscn")`).
+  void Function()? exitToTitle;
   bool worldMapVisible = false;
   final Scene scene = Scene();
   late VoxelWorld world;
@@ -262,6 +276,13 @@ class Game extends ChangeNotifier {
       _stage29Site = jsonDecode(flag29.readAsStringSync()) as Map<String, dynamic>;
       flag29.deleteSync();
     }
+    final flag30 = File(_probe30Flag);
+    if (flag30.existsSync()) {
+      _stage30Saved = jsonDecode(flag30.readAsStringSync()) as Map<String, dynamic>;
+      flag30.deleteSync();
+    }
+    if (_hasArg('--stage30')) Settings.instance.tutorialDone = false; // the probe drives the chain from step 1
+    Tutorial.instance.notify = notify;
 
     world = VoxelWorld(
       seedValue: int.tryParse(_arg('--seed=', '')) ?? GameState.instance.seedValue,
@@ -287,6 +308,16 @@ class Game extends ChangeNotifier {
       player.position = spawn;
       player.spawnPoint = spawn.clone();
     }
+    // Stage 30: the tutorial on a world the title screen just created (a probe's
+    // bare `--new` stays quiet; `--stage30` drives it); once the world exists, a
+    // reload is a load. The launcher also marks a bare `--new` fresh (Godot's
+    // title does not), so `--new` is excluded here explicitly.
+    final titleFresh = GameState.instance.freshWorld && !_hasArg('--new');
+    if ((titleFresh || _hasArg('--stage30')) && !_hasArg('--no-tutorial') && _stage30Saved == null && !Net.instance.isClient) {
+      Tutorial.instance.begin();
+    }
+    GameState.instance.freshWorld = false;
+    _prevTimeOfDay = timeOfDay;
     flyMode = _hasArg('--fly');
     if (_hasArg('--fp')) player.setFirstPerson(true);
     final fogd = double.tryParse(_arg('--fogd=', ''));
@@ -525,9 +556,14 @@ class Game extends ChangeNotifier {
       screenshotter?.call(path).then((_) => notify('Screenshot saved: $path'));
     }
     if (input.justPressed(GameAction.fly)) {
-      flyMode = !flyMode;
-      notify('Fly mode ${flyMode ? 'ON (Space up, Ctrl down)' : 'OFF'}');
+      if (flyAllowed()) {
+        flyMode = !flyMode;
+        notify('Fly mode ${flyMode ? 'ON (Space up, Ctrl down)' : 'OFF'}');
+      } else {
+        notify('Flying is for Creative worlds');
+      }
     }
+    if (input.justPressed(GameAction.skipTutorial)) Tutorial.instance.skipAll(); // stage 30: F6
     if (input.justPressed(GameAction.pause)) {
       if (screen != ScreenKind.none) {
         if (screen != ScreenKind.death) closeScreen();
@@ -568,6 +604,8 @@ class Game extends ChangeNotifier {
         _sleepT = -1.0;
       }
     }
+    if (_prevTimeOfDay < 0.25 && timeOfDay >= 0.25) Tutorial.instance.event('sleep'); // stage 30: sunrise counts as the night survived
+    _prevTimeOfDay = timeOfDay;
     GameState.instance.playTime += dt;
     final play = gameplay;
     // Stage 29: the arrival holds the player until the other dimension's chunks
@@ -747,7 +785,11 @@ class Game extends ChangeNotifier {
 
   // --- screens ------------------------------------------------------------------------
 
+  /// Stage 30: F5 flies in a creative world (or under the `--fly` probe arg).
+  bool flyAllowed() => GameState.instance.creative || _hasArg('--fly');
+
   void openStation(String st, IVec3 at) {
+    Tutorial.instance.event('inventory');
     station = st;
     chestPos = at;
     chest = st != 'chest' ? null : (Net.instance.isClient ? Net.instance.openChest(at) : chestInventory(at));
@@ -774,6 +816,7 @@ class Game extends ChangeNotifier {
   void onPlayerDied() => openScreen(ScreenKind.death);
 
   void openJournal(int tab) {
+    Tutorial.instance.event('journal');
     journalTab = tab;
     openScreen(ScreenKind.journal);
   }
@@ -1522,6 +1565,7 @@ class Game extends ChangeNotifier {
       _sleepT = 0.0;
       notify('You sleep until morning. Spawn point set.');
       Achievements.instance.unlock('sleeper');
+      Tutorial.instance.event('sleep');
       for (final m in mobs) {
         if (m.species.hostile && (m.position - player.position).length < 30.0) m.removed = true;
       }
@@ -1532,6 +1576,7 @@ class Game extends ChangeNotifier {
   }
 
   void onBlockBroken(IVec3 b, int id) {
+    Tutorial.instance.event('break');
     Achievements.instance.unlock('first_block');
     if (Blocks.idOf(id) == 'waypoint') waypoints.remove(b);
     GameState.instance.blocksMined += 1;
@@ -1562,6 +1607,7 @@ class Game extends ChangeNotifier {
   }
 
   void onBlockPlaced(IVec3 b, int id) {
+    Tutorial.instance.event('place');
     if (GameState.instance.blocksPlaced >= 99) Achievements.instance.unlock('builder');
     if (Blocks.idOf(id) == 'waypoint') {
       waypoints[b] = 'Waypoint ${waypoints.length + 1}';
@@ -1649,7 +1695,7 @@ class Game extends ChangeNotifier {
 
   Future<bool> _loadGame() async {
     final f = File('$saveDir/player.json');
-    if ((_hasArg('--new') || GameState.instance.freshWorld) && !_stage24Verify && _stage27Site == null && _stage28Site == null && _stage29Site == null) {
+    if ((_hasArg('--new') || GameState.instance.freshWorld) && !_stage24Verify && _stage27Site == null && _stage28Site == null && _stage29Site == null && _stage30Saved == null) {
       return false;
     }
     if (!await f.exists()) return false;
@@ -2050,6 +2096,10 @@ class Game extends ChangeNotifier {
     if (_hasArg('--stage29')) {
       // Two boots: the second reads the underworld save back.
       if (await _probeStage29()) return;
+    }
+    if (_hasArg('--stage30')) {
+      // Two boots: the second reads the stats back.
+      if (await _probeStage30()) return;
     }
     await nextFrame();
     await nextFrame();
@@ -3729,6 +3779,7 @@ class Game extends ChangeNotifier {
     world.updateAround(hold);
     _updateMusic();
     travels += 1;
+    GameState.instance.dimensionVisits += 1; // stage 30: the stats block
     notify(d == VoxelWorld.dimUnderworld ? 'You step through the portal...' : 'Daylight again.');
   }
 
@@ -4161,6 +4212,140 @@ class Game extends ChangeNotifier {
     debugPrint('[probe] stage29 after reload: dimension=${world.dimension} edits_0=${world.editCountIn(0)} edits_1=${world.editCountIn(1)} '
         'portal intact=${intact == cells.length && intact > 0} ($intact/${cells.length} cells, player at ${player.position}, '
         'label ${timeLabel()}, mood ${Music.instance.currentMood})');
+  }
+
+  // --- stage 30: creative, the tutorial chain, the stats round trip ----------------------
+
+  /// --stage30 (after the title half started a creative mage world, or on a bare
+  /// `--new`): a hit ignored, a block placed for free, F5 allowed; then the
+  /// tutorial driven through its first seven steps by the events the game
+  /// raises, skipped, and the flag read back from disk; then the counters
+  /// saved, the session rebuilt and compared. `--shot=tutorial` stops after
+  /// step 3 so the capture shows the card on step 4.
+  Future<bool> _probeStage30() async {
+    if (_stage30Saved != null) {
+      await _probeStage30Verify(_stage30Saved!);
+      return false;
+    }
+    await _ticks(5);
+    final shot = _arg('--shot=', '');
+    final aim = player.aimDirection();
+    var ahead = Vector3(aim.x, 0, aim.z);
+    ahead = ahead.length < 0.01 ? Vector3(0, 0, -1) : ahead.normalized();
+    final base = IVec3.floor(player.position);
+    final sx = base.x + (ahead.x * 3.0).round(), sz = base.z + (ahead.z * 3.0).round();
+    final spot = IVec3(sx, world.groundHeight(sx, sz), sz);
+    final stone = Blocks.indexOf('stone');
+    if (shot != 'tutorial') {
+      // 1. Creative: no damage, free blocks, flight.
+      final hp0 = player.hp;
+      player.takeDamage(5.0, 'fall');
+      final ignored = (player.hp - hp0).abs() < 1e-9;
+      player.inventory.setSlot(0, ItemStack('stone', 1));
+      player.selectedSlot = 0;
+      _probePlaceAt(spot);
+      final placedFree = world.getBlock(spot + IVec3.up) == stone && player.inventory.countAt(0) == 1;
+      debugPrint('[probe] stage30 creative: damage ignored=$ignored, block placed without consuming=$placedFree, fly=${flyAllowed()} '
+          '(mode creative=${GameState.instance.creative} class=${player.playerClass})');
+      world.setBlock(spot + IVec3.up, Blocks.air);
+    }
+    // 2. The tutorial, step by step: move, look, jump ...
+    player.probeWalk(ahead);
+    await _ticks(6);
+    player.probeWalk(Vector3.zero());
+    player.setLook(0.4, -0.35);
+    player.probeJump();
+    await _ticks(1);
+    final tut = Tutorial.instance;
+    if (shot == 'tutorial') {
+      await _ticks(40); // the jump lands before the capture
+      player.velocity = Vector3.zero();
+      for (var i = 0; i < 30 || (!world.isIdle && i < 600); i++) {
+        await nextFrame();
+      }
+      debugPrint('[probe] stage30 tutorial capture on step ${tut.index + 1} (${tut.currentId})');
+      return false;
+    }
+    // ... break, inventory, craft, place.
+    final below = spot;
+    final belowId = world.getBlock(below);
+    world.setBlock(below, Blocks.air);
+    onBlockBroken(below, belowId);
+    openStation('', IVec3.zero);
+    await nextFrame();
+    closeScreen();
+    player.inventory.add('oak_planks', 3);
+    player.inventory.add('stick', 2);
+    var crafted = false;
+    for (final r in Recipes.list) {
+      if (r.result == 'wooden_pickaxe' && r.station == '') {
+        crafted = player.craft(r);
+        break;
+      }
+    }
+    player.inventory.setSlot(0, ItemStack('stone', 1));
+    player.selectedSlot = 0;
+    _probePlaceAt(below + IVec3.down);
+    debugPrint('[probe] stage30 tutorial: steps=${tut.stepCount}, completed ${tut.completed.length} by events: ${tut.completed.join(', ')} '
+        '(pickaxe crafted=$crafted, next step ${tut.currentId})');
+    tut.skipAll();
+    final cfg = Settings.instance.path;
+    final persisted = File(cfg).existsSync() && RegExp(r'\[tutorial\]\s*done=true').hasMatch(File(cfg).readAsStringSync());
+    debugPrint('[probe] stage30 tutorial skipped -> done=${Settings.instance.tutorialDone && !tut.active} persisted=$persisted ($cfg)');
+    // 3. The stats, saved and read back by a second session.
+    for (var i = 0; i < 10; i++) {
+      await nextFrame();
+    }
+    final gs = GameState.instance;
+    final counters = {
+      'play_seconds': gs.playTime,
+      'blocks_broken': gs.blocksMined,
+      'blocks_placed': gs.blocksPlaced,
+      'distance': gs.distanceWalked,
+      'mobs_killed': gs.mobsKilled,
+      'deaths': gs.deaths,
+      'dimension_visits': gs.dimensionVisits,
+    };
+    await saveGame();
+    File(_probe30Flag).writeAsStringSync(jsonEncode(counters));
+    debugPrint('[probe] stage30 stats saved (play_seconds=${gs.playTime.toStringAsFixed(1)} blocks_broken=${gs.blocksMined} '
+        'blocks_placed=${gs.blocksPlaced} walked=${gs.distanceWalked.toStringAsFixed(1)} m) to $saveDir, reloading the scene');
+    reloader!();
+    return true;
+  }
+
+  /// The placement path the right mouse button takes, aimed at the top of
+  /// [ground] by hand.
+  void _probePlaceAt(IVec3 ground) {
+    player.aimedBlock = ground;
+    player.aimedNormal = IVec3.up;
+    player.isAiming = true;
+    player.probeUse();
+  }
+
+  /// --stage30, second session: the counters came back through the save.
+  Future<void> _probeStage30Verify(Map<String, dynamic> saved) async {
+    for (var i = 0; i < 5; i++) {
+      await nextFrame();
+    }
+    final gs = GameState.instance;
+    final playSaved = (saved['play_seconds'] as num).toDouble();
+    final equal = gs.blocksMined == (saved['blocks_broken'] as num).toInt() &&
+        gs.blocksPlaced == (saved['blocks_placed'] as num).toInt() &&
+        gs.playTime >= playSaved &&
+        playSaved > 0.0 &&
+        gs.mobsKilled == (saved['mobs_killed'] as num).toInt() &&
+        gs.deaths == (saved['deaths'] as num).toInt() &&
+        gs.dimensionVisits == (saved['dimension_visits'] as num).toInt() &&
+        (gs.distanceWalked - (saved['distance'] as num).toDouble()).abs() < 1e-6;
+    debugPrint('[probe] stage30 stats: play_seconds=${gs.playTime.toStringAsFixed(1)} (>0) blocks_broken=${gs.blocksMined} '
+        'blocks_placed=${gs.blocksPlaced} after reload equal=$equal (creative=${gs.creative} tutorial card=${Tutorial.instance.active})');
+    debugPrint('[probe] stage30 stats screen: ${SettingsPanel.statsText().replaceAll('\n', ' | ')}');
+    var removed = 0;
+    for (final e in Worlds.list()) {
+      if (e.slot.startsWith('probe30_') && Worlds.delete(e.slot)) removed += 1;
+    }
+    debugPrint('[probe] stage30 cleanup: probe30_ slots removed=$removed');
   }
 
   void shutdown() {

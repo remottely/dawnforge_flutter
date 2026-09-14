@@ -13,7 +13,10 @@ class GameState {
   int blocksPlaced = 0;
   int mobsKilled = 0;
   int deaths = 0;
-  double playTime = 0.0;
+  double playTime = 0.0; // seconds of play in this world (the stats block's play time)
+  bool creative = false; // stage 30: no damage, no hunger, free blocks, fly allowed
+  double distanceWalked = 0.0; // stage 30: metres on the ground, saved with the stats
+  int dimensionVisits = 0; // stage 30: portal trips taken
   final Set<String> placedChests = {};
 
   /// Bestiary: kills per species, and every species ever met.
@@ -27,6 +30,9 @@ class GameState {
         'deaths': deaths,
         'play_time': playTime,
         'class': playerClass,
+        'creative': creative,
+        'distance_walked': distanceWalked,
+        'dimension_visits': dimensionVisits,
         'placed_chests': placedChests.toList(),
         'kills': kills,
         'seen': seen.toList(),
@@ -39,6 +45,9 @@ class GameState {
     mobsKilled = (d['mobs_killed'] as num?)?.toInt() ?? 0;
     deaths = (d['deaths'] as num?)?.toInt() ?? 0;
     playTime = (d['play_time'] as num?)?.toDouble() ?? 0.0;
+    creative = d['creative'] == true;
+    distanceWalked = (d['distance_walked'] as num?)?.toDouble() ?? 0.0;
+    dimensionVisits = (d['dimension_visits'] as num?)?.toInt() ?? 0;
     playerClass = d['class']?.toString() ?? playerClass;
     placedChests.clear();
     for (final k in (d['placed_chests'] as List<dynamic>? ?? const [])) {
@@ -54,4 +63,8 @@ class GameState {
     }
     Achievements.instance.fromJson(d['achievements'] as Map<String, dynamic>? ?? const {});
   }
+
+  /// Stage 30: a world started from the title begins with zeroed counters
+  /// (see `Worlds.start`); the class is kept, the mode goes back to survival.
+  void resetStats() => fromJson(const {});
 }

@@ -18,6 +18,7 @@ class Settings {
   double volume = 1.0; // master, linear 0..1
   bool weather = true;
   bool showFps = false;
+  bool tutorialDone = false; // stage 30: the guided first steps, shown once
 
   /// Reads [path]; a missing or unreadable file keeps the defaults.
   bool loadFile() {
@@ -45,7 +46,8 @@ class Settings {
     return '[video]\n\nrender_radius=$renderRadius\nfov=${f(fov)}\nshow_fps=$showFps\n\n'
         '[input]\n\nsensitivity=${f(sensitivity)}\n\n'
         '[audio]\n\nvolume=${f(volume)}\n\n'
-        '[world]\n\nweather=$weather\n';
+        '[world]\n\nweather=$weather\n\n'
+        '[tutorial]\n\ndone=$tutorialDone\n';
   }
 
   void fromConfig(String text) {
@@ -69,6 +71,7 @@ class Settings {
     volume = num('audio/volume', volume).clamp(0.0, 1.0);
     weather = flag('world/weather', weather);
     showFps = flag('video/show_fps', showFps);
+    tutorialDone = flag('tutorial/done', tutorialDone);
   }
 
   /// The settings that live outside the play session: the player's statics and

@@ -11,6 +11,7 @@ import 'inventory_screen.dart';
 import 'journal_screen.dart';
 import 'menus.dart';
 import 'trade_screen.dart';
+import 'tutorial_card.dart';
 
 /// The play session: the 3D view, the HUD painted over it, and whichever
 /// screen is open (inventory, pause, death). Keyboard focus lives here.
@@ -20,9 +21,12 @@ import 'trade_screen.dart';
 /// widget is keyed by a generation, so a new key disposes the old `Game` and
 /// builds a fresh one.
 class GameView extends StatefulWidget {
-  const GameView({super.key, required this.args, required this.saveDir});
+  const GameView({super.key, required this.args, required this.saveDir, this.onExitToTitle});
   final Map<String, String> args;
   final String saveDir;
+
+  /// Stage 30: the pause menu's "Save & back to title".
+  final VoidCallback? onExitToTitle;
 
   @override
   State<GameView> createState() => _GameViewState();
@@ -36,6 +40,7 @@ class _GameViewState extends State<GameView> {
         key: ValueKey<int>(_generation),
         args: widget.args,
         saveDir: widget.saveDir,
+        onExitToTitle: widget.onExitToTitle,
         onReload: () {
           if (mounted) setState(() => _generation++);
         },
@@ -43,10 +48,11 @@ class _GameViewState extends State<GameView> {
 }
 
 class _GameSession extends StatefulWidget {
-  const _GameSession({super.key, required this.args, required this.saveDir, required this.onReload});
+  const _GameSession({super.key, required this.args, required this.saveDir, required this.onReload, this.onExitToTitle});
   final Map<String, String> args;
   final String saveDir;
   final VoidCallback onReload;
+  final VoidCallback? onExitToTitle;
 
   @override
   State<_GameSession> createState() => _GameSessionState();
@@ -67,6 +73,7 @@ class _GameSessionState extends State<_GameSession> {
     game = Game(args: widget.args, saveDir: widget.saveDir);
     game.screenshotter = _screenshot;
     game.reloader = widget.onReload;
+    game.exitToTitle = widget.onExitToTitle;
     game.addListener(_onGameChanged);
     game.init().then((_) {
       if (mounted) setState(() {});
@@ -167,6 +174,7 @@ class _GameSessionState extends State<_GameSession> {
                       },
                     ),
                     CustomPaint(painter: HudPainter(game, _camera, _minimap, _worldMap, repaint: game.frame)),
+                    const TutorialCard(), // stage 30
                     ?overlay,
                   ],
                 ),
