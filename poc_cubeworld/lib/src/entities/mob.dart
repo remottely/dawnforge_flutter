@@ -17,6 +17,7 @@ import 'player_model.dart';
 import 'remote_player.dart';
 import 'target.dart';
 import 'voxel_body.dart';
+import '../game/pathfinder.dart';
 import 'voxel_mesh_builder.dart';
 
 enum MobState { idle, wander, chase, attack, flee, dead }
@@ -97,6 +98,23 @@ class Mob extends VoxelBody {
     TradeOffer('gold_ingot', 3, 'shears', 1),
   ];
   static const double homeRadius = 16.0;
+
+  /// Stage 31: a walker chases and heads home along an A* path ([Pathfinder]),
+  /// replanned every [pathPeriod] seconds or when the next waypoint got blocked;
+  /// after [pathFails] partial paths in a row it falls back to the straight chase
+  /// for [pathDirectSeconds]. Fliers and puppets never path.
+  /// [pathfindingEnabled] is the probe's off switch for the no-path control.
+  static bool pathfindingEnabled = true;
+  static const double pathPeriod = 0.6;
+  static const int pathFails = 3;
+  static const double pathDirectSeconds = 3.0;
+  static const double pathReach = 0.35;
+  List<Vector3> _path = const [];
+  int _pathI = 0;
+  double _pathTimer = 0.0;
+  int _pathFail = 0;
+  double _pathDirectUntil = -1.0;
+  int pathReplans = 0; // for the probe
 
   /// Stage 26: Godot's `setup_mob` sets `home` and rolls the offers for a
   /// trader; here the position arrives after `setupMob`, so the spawner calls
@@ -555,6 +573,7 @@ class Mob extends VoxelBody {
     _hopCd = math.max(_hopCd - dt, 0.0);
     hurt = math.max(hurt - dt, 0.0);
     _timer -= dt;
+    _pathTimer -= dt;
     if (sheared) {
       _regrow -= dt;
       if (_regrow <= 0.0) {
@@ -665,7 +684,7 @@ class Mob extends VoxelBody {
           final away = position - h;
           away.y = 0.0;
           // Stage 26: a villager turns back to its village.
-          if (away.length > homeRadius) _dir = -away.normalized();
+          if (away.length > homeRadius) _dir = _steer(-away, h);
         }
         if ((species.hostile || _angry) && dist < aggro && !targetDead) state = MobState.chase;
       case MobState.chase:
@@ -673,7 +692,7 @@ class Mob extends VoxelBody {
           state = MobState.idle;
           _angry = false;
         }
-        _dir = toPlayer.length2 > 0 ? toPlayer.normalized() : Vector3.zero();
+        _dir = _steer(toPlayer, target.position);
         if (ranged) {
           if (dist < 6.0) {
             _dir = -_dir;
@@ -716,6 +735,52 @@ class Mob extends VoxelBody {
         break;
     }
   }
+
+  /// Stage 31: the horizontal direction to walk toward [goal]: the next waypoint
+  /// of an A* path for a walker, the straight line for a flier, a puppet, or a
+  /// walker whose paths keep failing.
+  Vector3 _steer(Vector3 direct, Vector3 goal) {
+    final flat = Vector3(direct.x, 0, direct.z);
+    Vector3 norm(Vector3 v) => v.length2 > 0 ? v.normalized() : Vector3.zero();
+    if (!pathfindingEnabled || species.flying || puppet || _age < _pathDirectUntil) return norm(flat);
+    final from = IVec3(position.x.floor(), (position.y + 0.05).floor(), position.z.floor());
+    final to = IVec3(goal.x.floor(), (goal.y + 0.05).floor(), goal.z.floor());
+    final blocked = _pathI < _path.length && world.isSolid(IVec3.floor(_path[_pathI]));
+    if (_pathTimer <= 0.0 || blocked || _path.isEmpty) {
+      _path = Pathfinder.find(world, from, to);
+      _pathI = 0;
+      _pathTimer = pathPeriod;
+      pathReplans += 1;
+      final last = _path.isEmpty ? to : IVec3.floor(_path.last);
+      if (_path.isEmpty || (last != to && ((last.x - to.x).abs() + (last.z - to.z).abs() > 1 || (last.y - to.y).abs() > 1))) {
+        _pathFail += 1;
+        if (_pathFail >= pathFails) {
+          _pathFail = 0;
+          _pathDirectUntil = _age + pathDirectSeconds;
+          _path = const [];
+          return norm(flat);
+        }
+      } else {
+        _pathFail = 0;
+      }
+    }
+    while (_pathI < _path.length) {
+      final wp = _path[_pathI];
+      final dx = wp.x - position.x, dz = wp.z - position.z;
+      if (dx * dx + dz * dz < pathReach * pathReach && (wp.y - position.y).abs() < 1.1) {
+        _pathI += 1;
+      } else {
+        break;
+      }
+    }
+    if (_pathI >= _path.length) return norm(flat);
+    final next = _path[_pathI] - position;
+    next.y = 0.0;
+    return norm(next);
+  }
+
+  /// Stage 31, for the probe's trace: the waypoint being walked to and the path length.
+  (int, int) get pathProgress => (_pathI, _path.length);
 
   void _moveAndAnimate(double dt) {
     var speed = species.speed * speedMult;

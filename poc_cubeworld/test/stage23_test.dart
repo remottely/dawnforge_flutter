@@ -76,12 +76,12 @@ void main() {
     expect(() => LootTables.roll('nope', math.Random(1)), throwsArgumentError);
   });
 
-  test('weight 0 never spawns; bats only in caves under y 50', () {
+  test('weight 0 never spawns; bats only in dark caves (stage 31: the light gate replaced max y)', () {
     final rng = math.Random(7);
     final ids = <String>{};
     for (var biome = 0; biome < 8; biome++) {
       for (final night in [false, true]) {
-        for (final d in Species.candidates(biome, night, false, rng)) {
+        for (final d in Species.candidates(biome, night, false, true, rng)) {
           ids.add(d.id);
         }
       }
@@ -91,8 +91,8 @@ void main() {
     expect(ids, isNot(contains('villager')));
     expect(ids, isNot(contains('bat')));
     expect(ids, contains('bear'));
-    expect(Species.candidates(2, false, true, rng, 40).map((d) => d.id), contains('bat'));
-    expect(Species.candidates(2, false, true, rng, 60).map((d) => d.id), isNot(contains('bat')));
+    expect(Species.candidates(2, false, true, true, rng).map((d) => d.id), contains('bat'));
+    expect(Species.candidates(2, false, true, false, rng).map((d) => d.id), isNot(contains('bat')));
   });
 
   test('a noclip body flies through stone', () {

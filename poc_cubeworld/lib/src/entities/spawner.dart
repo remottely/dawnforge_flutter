@@ -69,7 +69,11 @@ class Spawner {
     if (world.isLiquid(IVec3(x, y, z)) || world.isLiquid(IVec3(x, y - 1, z))) return;
     final biome = world.biomeAt(x, z);
     final night = main.isNight;
-    final candidates = Species.candidates(biome, night, cave, rng, y);
+    // Stage 31: a hostile needs the dark, read from the baked light of the cell (a
+    // torch-lit cave stays quiet, a shaded pit spawns by day); the old y /
+    // night-only cave rules are gone.
+    final dark = hostileAllowedAt(IVec3(x, y, z));
+    final candidates = Species.candidates(biome, night, cave, dark, rng);
     if (candidates.isEmpty) return;
     var total = 0.0;
     for (final c in candidates) {
@@ -99,6 +103,13 @@ class Spawner {
       main.addMob(mob);
     }
   }
+
+  /// Stage 31: the light gate every hostile spawn passes:
+  /// `block + sky * dayFactor < 7` at the cell.
+  bool hostileAllowedAt(IVec3 cell) => lightAllowsHostile(world.lightAt(cell), main.dayFactor);
+
+  static bool lightAllowsHostile(({int sky, int block}) light, double dayFactor) =>
+      light.block + light.sky * dayFactor < 7.0;
 
   /// Stage 23: one creature of [speciesId] at [at], levelled to the player when
   /// hostile. Used by the ruin ghosts (`Game._tickRuinGhosts`) and the probes.

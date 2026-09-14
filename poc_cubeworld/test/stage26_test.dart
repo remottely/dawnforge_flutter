@@ -175,7 +175,7 @@ void main() {
     expect(Species.weightIn(Species.def('slime'), 7), 35.0);
     expect(Species.def('slime').splits, 'slime_small');
     expect(Species.def('slime_small').weight, 0);
-    final day = Species.candidates(8, false, false, math.Random(1)).map((d) => d.id).toSet();
+    final day = Species.candidates(8, false, false, false, math.Random(1)).map((d) => d.id).toSet();
     expect(day, containsAll(['parrot', 'ocelot']));
     expect(Species.def('ocelot').speed, greaterThan(4.6));
     expect(Species.def('parrot').tameWith, ['wheat_seeds']);

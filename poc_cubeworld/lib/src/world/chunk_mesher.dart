@@ -2,11 +2,14 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 
 /// One vertex-coloured triangle list, ready for `MeshGeometry.fromArrays`.
+/// Stage 31: [light] is the second texture coordinate set (Godot's UV2), two
+/// floats per vertex: sky / 15 and block / 15 of the cell the face is lit from.
 class MeshSurface {
-  MeshSurface(this.positions, this.normals, this.colors, this.indices);
+  MeshSurface(this.positions, this.normals, this.colors, this.light, this.indices);
   final Float32List positions;
   final Float32List normals;
   final Float32List colors;
+  final Float32List light;
   final Int32List indices;
   int get vertexCount => positions.length ~/ 3;
   int get faceCount => indices.length ~/ 6;
@@ -14,7 +17,8 @@ class MeshSurface {
 }
 
 class ChunkMeshResult {
-  ChunkMeshResult(this.solid, this.liquid, this.cutout, this.glow);
+  ChunkMeshResult(this.solid, this.liquid, this.cutout, this.glow,
+      {required this.sky, required this.block, this.aoVerts = 0, this.ms = 0.0});
   final MeshSurface solid;
   final MeshSurface liquid;
   final MeshSurface cutout;
@@ -22,6 +26,17 @@ class ChunkMeshResult {
   /// Stage 27: strong emitters (light >= [ChunkMesher.glowThreshold]), drawn
   /// unlit so a lamp reads at night.
   final MeshSurface glow;
+
+  /// Stage 31: the chunk's own light volumes (no padding, 0..15 per cell,
+  /// indexed like the block volume) for `VoxelWorld.lightAt`.
+  final Uint8List sky;
+  final Uint8List block;
+
+  /// Stage 31: vertices of the lit faces whose AO is below 1 (the probe's proof).
+  final int aoVerts;
+
+  /// Stage 31: the job's own clock, fill + light + mesh + volume copy.
+  final double ms;
   int get faces => solid.faceCount + liquid.faceCount + cutout.faceCount + glow.faceCount;
 }
 
@@ -65,21 +80,27 @@ class _Surface {
   final _F32 v = _F32();
   final _F32 n = _F32();
   final _F32 c = _F32();
+  final _F32 l = _F32();
   final _I32 i = _I32();
 
   int get vertexCount => v.length ~/ 3;
 
-  void vertex(double x, double y, double z, double nx, double ny, double nz, double r, double g, double b, double a) {
+  void vertex(double x, double y, double z, double nx, double ny, double nz, double r, double g, double b, double a,
+      double sky, double block) {
     v.add3(x, y, z);
     n.add3(nx, ny, nz);
     c.add(r);
     c.add(g);
     c.add(b);
     c.add(a);
+    l.add(sky);
+    l.add(block);
   }
 
   /// Two triangles for the quad a-b-c-d, wound counter-clockwise (flutter_scene
   /// front faces) — the Godot POC wound clockwise, so the diagonals are mirrored.
+  /// Unflipped the shared diagonal is 0-2, flipped it is 1-3 (Godot's choice for
+  /// an anisotropic AO: `flip = ao0 + ao2 < ao1 + ao3`).
   void quadIndices(int f, bool flip) {
     if (!flip) {
       i.add(f); i.add(f + 2); i.add(f + 1);
@@ -90,7 +111,7 @@ class _Surface {
     }
   }
 
-  MeshSurface toSurface() => MeshSurface(v.take(), n.take(), c.take(), i.take());
+  MeshSurface toSurface() => MeshSurface(v.take(), n.take(), c.take(), l.take(), i.take());
 }
 
 /// Face-culling mesher with baked ambient occlusion, sky + block light,
@@ -99,20 +120,29 @@ class _Surface {
 /// from axis-aligned boxes lit like cube faces. Works on a volume padded by one block on every
 /// horizontal side, filled from the eight neighbour chunks, so a border face
 /// and its AO corners never guess.
+///
+/// Stage 31: the light is no longer baked into the vertex colour. The colour
+/// carries block tint x face tint x AO; the second UV set carries (sky / 15,
+/// block / 15) so the terrain shader can scale the sky half by the time of day.
+/// The two light volumes (chunk-sized) ride the result for `lightAt`. The light
+/// BFS lives inside the padded volume: a torch more than one cell past a chunk
+/// border does not reach the neighbour chunk's mesh (the accepted seam, fixed by
+/// Godot's stage 32).
 class ChunkMesher {
   ChunkMesher({
     required this.palette,
     required this.shape,
     required Uint8List opaque,
     required this.emission,
+    this.lighting = true,
   }) : _opaque = List<bool>.generate(opaque.length, (i) => opaque[i] != 0);
 
   static const int sizeX = 16, sizeZ = 16, sizeY = 128;
   static const int _px = sizeX + 2, _pz = sizeZ + 2;
   static const int _padVolume = _px * _pz * sizeY;
+  static const int _chunkVolume = sizeX * sizeZ * sizeY;
   static const int _air = 0;
   static const int _maxLight = 15;
-  static const double _ambientFloor = 0.16;
 
   static const int shapeCube = 0,
       shapeCross = 1,
@@ -149,11 +179,19 @@ class ChunkMesher {
   final List<bool> _opaque;
   final Uint8List emission;
 
+  /// Stage 31, `--no-light`: skylight everywhere, no block light, no BFS — the
+  /// probe's cost comparison.
+  final bool lighting;
+
   final Uint8List _blocks = Uint8List(_padVolume);
   final Uint8List _sky = Uint8List(_padVolume);
   final Uint8List _glow = Uint8List(_padVolume);
   final Int32List _queue = Int32List(_padVolume);
   final List<int> _emitters = [];
+  int _aoVerts = 0;
+
+  // The light of the cell last read by [_lightUv]: sky / 15, block / 15.
+  double _ls = 1.0, _lb = 0.0;
 
   // Face vertex corners, 4 per face: +Y, -Y, +X, -X, +Z, -Z.
   static const List<int> _faceVerts = [
@@ -206,10 +244,17 @@ class ChunkMesher {
     }
   }
 
+  /// Skylight floods each column from the top (a liquid takes 2), then both
+  /// lights spread sideways and down at -1 a step (-2 through a liquid); block
+  /// light starts at every emitter's `Blocks.emission()`.
   void _computeLight() {
     _sky.fillRange(0, _padVolume, 0);
     _glow.fillRange(0, _padVolume, 0);
     _emitters.clear();
+    if (!lighting) {
+      _sky.fillRange(0, _padVolume, _maxLight);
+      return;
+    }
     var tail = 0;
     for (var z = -1; z <= sizeZ; z++) {
       for (var x = -1; x <= sizeX; x++) {
@@ -267,17 +312,20 @@ class ChunkMesher {
     }
   }
 
-  double _lightFactor(int x, int y, int z) {
-    int level;
+  /// The light of the cell a face points into, as the shader reads it, into
+  /// [_ls] (sky) and [_lb] (block), 0..1. Above the volume is open sky.
+  void _lightUv(int x, int y, int z) {
     if (y >= sizeY) {
-      level = _maxLight;
+      _ls = 1.0;
+      _lb = 0.0;
     } else if (y < 0) {
-      level = 0;
+      _ls = 0.0;
+      _lb = 0.0;
     } else {
       final c = _p(x, y, z);
-      level = math.max(_sky[c], _glow[c]);
+      _ls = _sky[c] / _maxLight;
+      _lb = _glow[c] / _maxLight;
     }
-    return _ambientFloor + (1.0 - _ambientFloor) * (level / _maxLight);
   }
 
   static int _u32(int v) => v & 0xFFFFFFFF;
@@ -297,20 +345,22 @@ class ChunkMesher {
   }
 
   /// A flat-shaded axis-aligned box from `lo` to `hi` (chunk-local), one
-  /// colour for the top and one for the sides.
+  /// colour and one light for the top and one of each for the sides.
   void _box(_Surface s, double lx, double ly, double lz, double hx, double hy, double hz,
-      double tr, double tg, double tb, double sr, double sg, double sb, {bool tint = true}) {
+      double tr, double tg, double tb, double sr, double sg, double sb,
+      double topSky, double topBlock, double sideSky, double sideBlock, {bool tint = true}) {
     for (var f = 0; f < 6; f++) {
       final k = f * 12;
       final t = tint ? _faceTint[f] : 1.0;
       final r = (f == 0 ? tr : sr) * t, g = (f == 0 ? tg : sg) * t, b = (f == 0 ? tb : sb) * t;
+      final ls = f == 0 ? topSky : sideSky, lb = f == 0 ? topBlock : sideBlock;
       final nx = _faceOffsets[f * 3].toDouble(), ny = _faceOffsets[f * 3 + 1].toDouble(), nz = _faceOffsets[f * 3 + 2].toDouble();
       final first = s.vertexCount;
       for (var i = 0; i < 4; i++) {
         final vx = _faceVerts[k + i * 3] == 0 ? lx : hx;
         final vy = _faceVerts[k + i * 3 + 1] == 0 ? ly : hy;
         final vz = _faceVerts[k + i * 3 + 2] == 0 ? lz : hz;
-        s.vertex(vx, vy, vz, nx, ny, nz, r, g, b, 1.0);
+        s.vertex(vx, vy, vz, nx, ny, nz, r, g, b, 1.0, ls, lb);
       }
       s.quadIndices(first, false);
     }
@@ -348,7 +398,9 @@ class ChunkMesher {
           if (cullSame && n == id) continue;
         }
       }
-      final tint = _faceTint[f] * _lightFactor(ax, ay, az);
+      final tint = _faceTint[f];
+      _lightUv(ax, ay, az);
+      final ls = _ls, lb = _lb;
       final k = f * 12;
       var flip = false;
       if (flush) {
@@ -371,6 +423,7 @@ class ChunkMesher {
             cr = _opaqueAt(ax + sx, ay + sy, az) ? 1 : 0;
           }
           aos[i] = _ao(s1, s2, cr);
+          if (aos[i] < 3) _aoVerts++;
         }
         flip = aos[0] + aos[2] < aos[1] + aos[3];
       } else {
@@ -382,24 +435,26 @@ class ChunkMesher {
         final vx = x + (_faceVerts[k + i * 3] == 0 ? lox : hix);
         final vy = y + (_faceVerts[k + i * 3 + 1] == 0 ? loy : hiy);
         final vz = z + (_faceVerts[k + i * 3 + 2] == 0 ? loz : hiz);
-        s.vertex(vx, vy, vz, oxf.toDouble(), oyf.toDouble(), ozf.toDouble(), br * t, bg * t, bb * t, 1.0);
+        s.vertex(vx, vy, vz, oxf.toDouble(), oyf.toDouble(), ozf.toDouble(), br * t, bg * t, bb * t, 1.0, ls, lb);
       }
       s.quadIndices(first, flip);
     }
   }
 
   void _quad(_Surface s, List<double> a, List<double> b, List<double> c, List<double> d, double nx, double ny, double nz,
-      double r1, double g1, double b1, double r2, double g2, double b2) {
+      double r1, double g1, double b1, double r2, double g2, double b2, double ls, double lb) {
     final first = s.vertexCount;
-    s.vertex(a[0], a[1], a[2], nx, ny, nz, r1, g1, b1, 1);
-    s.vertex(b[0], b[1], b[2], nx, ny, nz, r2, g2, b2, 1);
-    s.vertex(c[0], c[1], c[2], nx, ny, nz, r2, g2, b2, 1);
-    s.vertex(d[0], d[1], d[2], nx, ny, nz, r1, g1, b1, 1);
+    s.vertex(a[0], a[1], a[2], nx, ny, nz, r1, g1, b1, 1, ls, lb);
+    s.vertex(b[0], b[1], b[2], nx, ny, nz, r2, g2, b2, 1, ls, lb);
+    s.vertex(c[0], c[1], c[2], nx, ny, nz, r2, g2, b2, 1, ls, lb);
+    s.vertex(d[0], d[1], d[2], nx, ny, nz, r1, g1, b1, 1, ls, lb);
     s.quadIndices(first, false);
   }
 
   ChunkMeshResult build(int chunkX, int chunkZ, Uint8List c, Uint8List? nx, Uint8List? px, Uint8List? nz,
       Uint8List? pz, Uint8List? nxnz, Uint8List? pxnz, Uint8List? nxpz, Uint8List? pxpz) {
+    final watch = Stopwatch()..start();
+    _aoVerts = 0;
     _fill(c, nx, px, nz, pz, nxnz, pxnz, nxpz, pxpz);
     _computeLight();
 
@@ -421,8 +476,10 @@ class ChunkMesher {
           final ox = x.toDouble(), oy = y.toDouble(), oz = z.toDouble();
 
           if (sh == shapeCross || sh == shapeFlower) {
-            final lf = _lightFactor(x, y, z);
-            final cr = br * lf, cg = bg * lf, cb = bb * lf;
+            // A plant is lit from its own cell, no AO.
+            _lightUv(x, y, z);
+            final ls = _ls, lb = _lb;
+            final cr = br, cg = bg, cb = bb;
             final dr = cr * 0.7, dg = cg * 0.7, db = cb * 0.7;
             final jx = ((x * 7 + z * 13 + y) % 5) * 0.06 - 0.12, jz = ((x * 3 + z * 11) % 5) * 0.06 - 0.12;
             if (sh == shapeCross) {
@@ -433,33 +490,37 @@ class ChunkMesher {
                 final dx = w, dz = k == 0 ? w : -w;
                 final a = [c0x - dx, oy, c0z - dz], b = [c0x + dx, oy, c0z + dz];
                 final nX = 0.7, nZ = k == 0 ? -0.7 : 0.7;
-                _quad(cutout, a, [a[0], a[1] + hgt, a[2]], [b[0], b[1] + hgt, b[2]], b, nX, 0, nZ, dr, dg, db, cr, cg, cb);
-                _quad(cutout, b, [b[0], b[1] + hgt, b[2]], [a[0], a[1] + hgt, a[2]], a, -nX, 0, -nZ, dr, dg, db, cr, cg, cb);
+                _quad(cutout, a, [a[0], a[1] + hgt, a[2]], [b[0], b[1] + hgt, b[2]], b, nX, 0, nZ, dr, dg, db, cr, cg, cb, ls, lb);
+                _quad(cutout, b, [b[0], b[1] + hgt, b[2]], [a[0], a[1] + hgt, a[2]], a, -nX, 0, -nZ, dr, dg, db, cr, cg, cb, ls, lb);
               }
             } else {
-              final sr = 0.30 * lf, sg = 0.55 * lf, sb = 0.22 * lf;
+              // A stem and a small coloured head.
+              const sr = 0.30, sg = 0.55, sb = 0.22;
               final c0x = ox + 0.5 + jx, c0z = oz + 0.5 + jz;
               const d = 0.05;
               _quad(cutout, [c0x - d, oy, c0z - d], [c0x - d, oy + 0.45, c0z - d], [c0x + d, oy + 0.45, c0z + d], [c0x + d, oy, c0z + d],
-                  0.7, 0, -0.7, sr, sg, sb, sr, sg, sb);
+                  0.7, 0, -0.7, sr, sg, sb, sr, sg, sb, ls, lb);
               _quad(cutout, [c0x + d, oy, c0z + d], [c0x + d, oy + 0.45, c0z + d], [c0x - d, oy + 0.45, c0z - d], [c0x - d, oy, c0z - d],
-                  -0.7, 0, 0.7, sr, sg, sb, sr, sg, sb);
-              _box(cutout, c0x - 0.14, oy + 0.40, c0z - 0.14, c0x + 0.14, oy + 0.62, c0z + 0.14, cr, cg, cb, cr, cg, cb);
+                  -0.7, 0, 0.7, sr, sg, sb, sr, sg, sb, ls, lb);
+              _box(cutout, c0x - 0.14, oy + 0.40, c0z - 0.14, c0x + 0.14, oy + 0.62, c0z + 0.14, cr, cg, cb, cr, cg, cb, ls, lb, ls, lb);
             }
             continue;
           }
 
           if (sh == shapeTorch) {
-            // Flame on top, stick sides; the flame is unlit by design.
-            _box(solid, ox + 0.4, oy, oz + 0.4, ox + 0.6, oy + 0.62, oz + 0.6, br, bg, bb, 0.45, 0.32, 0.18, tint: false);
+            // Flame on top, stick sides: the flame is full bright (block 15,
+            // whatever the cell says), the stick takes the cell's light.
+            _lightUv(x, y, z);
+            _box(solid, ox + 0.4, oy, oz + 0.4, ox + 0.6, oy + 0.62, oz + 0.6, br, bg, bb, 0.45, 0.32, 0.18,
+                0.0, 1.0, _ls, _lb, tint: false);
             continue;
           }
 
           if (sh == shapePanelZ || sh == shapePanelX || sh == shapeWallTorch) {
-            final lf = _lightFactor(x, y, z);
-            final cr = br * lf, cg = bg * lf, cb = bb * lf;
+            _lightUv(x, y, z);
+            final ls = _ls, lb = _lb;
             if (sh == shapeWallTorch) {
-              // Leans on the first opaque horizontal neighbour.
+              // Leans on the first opaque horizontal neighbour; full bright by design.
               double lx, ly, lz, hx, hy, hz;
               if (_opaqueAt(x - 1, y, z)) {
                 lx = 0.0; ly = 0.3; lz = 0.4; hx = 0.2; hy = 0.85; hz = 0.6;
@@ -470,19 +531,19 @@ class ChunkMesher {
               } else {
                 lx = 0.4; ly = 0.3; lz = 0.8; hx = 0.6; hy = 0.85; hz = 1.0;
               }
-              _box(solid, ox + lx, oy + ly, oz + lz, ox + hx, oy + hy, oz + hz, br, bg, bb, 0.45, 0.32, 0.18);
+              _box(solid, ox + lx, oy + ly, oz + lz, ox + hx, oy + hy, oz + hz, br, bg, bb, 0.45, 0.32, 0.18, 0.0, 1.0, 0.0, 1.0);
             } else {
               const t = 0.1875;
               if (sh == shapePanelZ) {
-                _box(solid, ox, oy, oz, ox + 1, oy + 1, oz + t, cr, cg, cb, cr, cg, cb);
+                _box(solid, ox, oy, oz, ox + 1, oy + 1, oz + t, br, bg, bb, br, bg, bb, ls, lb, ls, lb);
               } else {
-                _box(solid, ox, oy, oz, ox + t, oy + 1, oz + 1, cr, cg, cb, cr, cg, cb);
+                _box(solid, ox, oy, oz, ox + t, oy + 1, oz + 1, br, bg, bb, br, bg, bb, ls, lb, ls, lb);
               }
-              final kr = 0.85 * lf, kg = 0.75 * lf, kb = 0.35 * lf;
+              const kr = 0.85, kg = 0.75, kb = 0.35;
               if (sh == shapePanelZ) {
-                _box(solid, ox + 0.78, oy + 0.45, oz - 0.04, ox + 0.9, oy + 0.57, oz + t + 0.04, kr, kg, kb, kr, kg, kb);
+                _box(solid, ox + 0.78, oy + 0.45, oz - 0.04, ox + 0.9, oy + 0.57, oz + t + 0.04, kr, kg, kb, kr, kg, kb, ls, lb, ls, lb);
               } else {
-                _box(solid, ox - 0.04, oy + 0.45, oz + 0.78, ox + t + 0.04, oy + 0.57, oz + 0.9, kr, kg, kb, kr, kg, kb);
+                _box(solid, ox - 0.04, oy + 0.45, oz + 0.78, ox + t + 0.04, oy + 0.57, oz + 0.9, kr, kg, kb, kr, kg, kb, ls, lb, ls, lb);
               }
             }
             continue;
@@ -623,7 +684,9 @@ class ChunkMesher {
               if (n == id) continue; // water-water, glass-glass
               if (isLiquid && shape[n] == shapeLiquid) continue;
             }
-            final tint = _faceTint[f] * _lightFactor(ax, ay, az);
+            final tint = _faceTint[f];
+            _lightUv(ax, ay, az);
+            final ls = _ls, lb = _lb;
             final k = f * 12;
             var flip = false;
             if (!isLiquid) {
@@ -646,6 +709,7 @@ class ChunkMesher {
                   cr = _opaqueAt(ax + sx, ay + sy, az) ? 1 : 0;
                 }
                 aos[i] = _ao(s1, s2, cr);
+                if (aos[i] < 3) _aoVerts++;
               }
               flip = aos[0] + aos[2] < aos[1] + aos[3];
             } else {
@@ -657,13 +721,25 @@ class ChunkMesher {
               final vx = ox + _faceVerts[k + i * 3];
               final vy = oy + _faceVerts[k + i * 3 + 1] * top;
               final vz = oz + _faceVerts[k + i * 3 + 2];
-              target.vertex(vx, vy, vz, oxf.toDouble(), oyf.toDouble(), ozf.toDouble(), br * t, bg * t, bb * t, ba);
+              target.vertex(vx, vy, vz, oxf.toDouble(), oyf.toDouble(), ozf.toDouble(), br * t, bg * t, bb * t, ba, ls, lb);
             }
             target.quadIndices(first, flip);
           }
         }
       }
     }
-    return ChunkMeshResult(solid.toSurface(), liquid.toSurface(), cutout.toSurface(), glow.toSurface());
+    // The chunk's own light volumes (no padding) for `VoxelWorld.lightAt`.
+    final skyOut = Uint8List(_chunkVolume);
+    final blockOut = Uint8List(_chunkVolume);
+    for (var y = 0; y < sizeY; y++) {
+      for (var z = 0; z < sizeZ; z++) {
+        final dst = index(0, y, z), src = _p(0, y, z);
+        skyOut.setRange(dst, dst + sizeX, _sky, src);
+        blockOut.setRange(dst, dst + sizeX, _glow, src);
+      }
+    }
+    watch.stop();
+    return ChunkMeshResult(solid.toSurface(), liquid.toSurface(), cutout.toSurface(), glow.toSurface(),
+        sky: skyOut, block: blockOut, aoVerts: _aoVerts, ms: watch.elapsedMicroseconds / 1000.0);
   }
 }

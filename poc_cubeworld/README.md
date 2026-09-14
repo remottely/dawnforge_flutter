@@ -30,7 +30,7 @@ flutter test                                           # tables, generator, mesh
 Probe flags (same as the Godot POC, plus a few for tuning): `--screenshot=<png> --frames=N
 --seed=N --radius=N --class=warrior|ranger|mage|rogue --time=0..1 --fly --fp --tp=x,y,z
 --look=yaw,pitch --settle=N --map --open-inventory --fire=primary|secondary --stage16
---strike --stage18 --stage19 --stage20 --ride --stage21a --kind=5..9 --biome=N --stage21b --stage22 --stage23 --stage24 --slot=<name> --open-map --open-settings --stage25 --reject-one --stage26 --shot=biome|village|trade|portal|fortress|cavern|tutorial --stage27 --stage28 --stage29 --kind=4 --stage30 --title-probe --open-worlds --open-credits --credits-t=N --no-tutorial --weather=clear|rain|storm|snow --journal=0..4 --host --join=<ip> --wait-peer --trace`, and for the look: `--sun=k --amb=k
+--strike --stage18 --stage19 --stage20 --ride --stage21a --kind=5..9 --biome=N --stage21b --stage22 --stage23 --stage24 --slot=<name> --open-map --open-settings --stage25 --reject-one --stage26 --shot=biome|village|trade|portal|fortress|cavern|tutorial --stage27 --stage28 --stage29 --kind=4 --stage30 --title-probe --stage31 --no-light --shot=room|cave --open-worlds --open-credits --credits-t=N --no-tutorial --weather=clear|rain|storm|snow --journal=0..4 --host --join=<ip> --wait-peer --trace`, and for the look: `--sun=k --amb=k
 --tm=aces|agx|neutral|linear --fogd=density --noshadow --shadowcache=0|1
 --casterfaces=front|back`. The debug app forwards the process arguments to Dart
 (`MainFlutterWindow.swift`), so no `--` separator is needed.
@@ -44,6 +44,32 @@ session; the slot is removed at the end, the tutorial flag goes to `settings_pro
 Captures: `--title-probe --screenshot=<png>` (the title) · `--title-probe --open-worlds` (the
 world list with the form) · `--title-probe --open-credits [--credits-t=seconds]` (Flutter
 only) · `--new --seed=42 --stage30 --shot=tutorial` (the card on step 4).
+
+Stage 31 probe: `--new --seed=42 --frames=300 --settle=10 --stage31 --screenshot=<png>` builds a
+torch-lit room, a pit with an overhang and an S maze east of spawn, then prints the sky / block
+light at the room centre, under the overhang and outside, the room going dark after the torch
+is removed (the 3x3 ring remesh), the AO vertex count, the spawn gate dark / lit, a zombie
+through the maze on A* against the straight-chase control, and the mesher's own clock (add
+`--no-light` to skip both light BFS for the cost comparison). Captures: `--shot=room --time=0.0`
+(inside the room at night) · `--shot=cave` (the pit's mouth by day).
+
+### The terrain shader (stage 31)
+
+The lit terrain draws with `shaders/terrain.frag`, flutter_scene's standard lit fragment
+shader with the voxel light term folded into the albedo (`lib/src/world/terrain_material.dart`).
+It is compiled by hand into `assets/shaders/terrain.shaderbundle` (committed, a plain pubspec
+asset; there is no app-level build hook):
+
+```bash
+cd poc_cubeworld
+dart tool/build_shaders.dart   # after editing shaders/*.frag, and after every Flutter upgrade
+```
+
+The script runs the SDK's `bin/cache/artifacts/engine/darwin-x64/impellerc` (an arm64 binary on
+Apple silicon) with the arguments flutter_gpu_shaders' hook uses, `--gles-language-version=300`
+(without it spirv_cross aborts on the lighting code) and flutter_scene's `shaders/` on the
+include path. A bundle is tied to the engine that compiled it: a stale one fails at boot with
+a message naming the script.
 
 Saves live in `~/Library/Application Support/cubeworld_poc/dawnforge_cubeworld_poc/worlds/<name>/`
 (`world.json` from the New World form, `blocks.bin` edit delta + `player.json`, the same bytes

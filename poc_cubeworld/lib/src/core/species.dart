@@ -34,7 +34,6 @@ class SpeciesDef {
     this.tameChance = 0.0,
     this.flying = false,
     this.ghost = false,
-    this.maxY = 9999,
     this.biomeWeight = const {},
     this.splits = '',
     this.persistent = false,
@@ -90,7 +89,6 @@ class SpeciesDef {
   final bool ghost;
 
   /// Stage 23: a cave spawn only at or below this height.
-  final int maxY;
   final int xp;
   final String body;
   final double halfWidth;
@@ -186,7 +184,7 @@ class Species {
         drops: {'gold_ingot': [2, 5], 'ancient_blade': [1, 1]}, biomes: [], day: false, weight: 0, effect: 'slow'));
     s(SpeciesDef(id: 'bat', name: 'Bat', hp: 4, damage: 1, speed: 4.2, hostile: true, xp: 3, body: 'bird', flying: true,
         halfWidth: 0.2, height: 0.4, colors: [_c(0.20, 0.16, 0.22), _c(0.55, 0.20, 0.25)],
-        drops: {'leather': [0, 1]}, biomes: [], cave: true, maxY: 50, day: true, weight: 14));
+        drops: {'leather': [0, 1]}, biomes: [], cave: true, day: true, weight: 14));
     s(SpeciesDef(id: 'bear', name: 'Bear', hp: 40, damage: 6, speed: 4.5, hostile: false, neutral: true, xp: 18, body: 'quadruped',
         halfWidth: 0.55, height: 1.5, colors: [_c(0.38, 0.26, 0.16), _c(0.28, 0.18, 0.10)],
         drops: {'leather': [1, 3], 'raw_beef': [1, 2]}, biomes: [3], day: true, weight: 5));
@@ -223,21 +221,22 @@ class Species {
   /// base per biome).
   static double weightIn(SpeciesDef d, int biome) => d.weight * (d.biomeWeight[biome] ?? 1.0);
 
-  /// Species that may spawn in `biome` at `night` (or in a cave at height `y`),
-  /// with weights. Weight 0 marks a creature only a structure places (villager,
-  /// bosses, the ghost).
-  static List<SpeciesDef> candidates(int biome, bool night, bool cave, Random rng, [int y = 0]) {
+  /// Species that may spawn in `biome` at `night` (or in a cave), with weights.
+  /// Stage 31: a hostile spawns where it is [dark] (the cell's light,
+  /// `Spawner.hostileAllowedAt`), by day or by night, on the surface or in a
+  /// cave; the bat's old `maxY` is that same gate now. Weight 0 marks a creature
+  /// only a structure places (villager, bosses, the ghost).
+  static List<SpeciesDef> candidates(int biome, bool night, bool cave, bool dark, Random rng) {
     final out = <SpeciesDef>[];
     for (final d in defs.values) {
       if (d.weight <= 0) continue;
+      if (d.hostile && !dark) continue;
       if (cave) {
-        if (y > d.maxY) continue;
         if (d.cave || (d.hostile && !d.day)) out.add(d);
         continue;
       }
       if (!d.biomes.contains(biome)) continue;
       if (d.day && night && d.hostile) continue;
-      if (!d.day && !night) continue;
       if (d.day && !d.hostile && night && rng.nextDouble() < 0.7) continue;
       out.add(d);
     }

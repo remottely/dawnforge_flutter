@@ -11,24 +11,31 @@ import '../game/circuits.dart';
 import 'chunk_mesher.dart';
 import 'chunk_worker.dart';
 import 'terrain_generator.dart';
+import 'terrain_material.dart';
 
 typedef ChunkPos = ({int x, int z});
 typedef BlockChanged = void Function(IVec3 block, int oldId, int newId);
 typedef StructureAt = ({int x, int y, int z, int type});
+typedef CellLight = ({int sky, int block});
 
 /// Chunk streaming around a centre, isolate generation + meshing, edit-delta
 /// persistence. Owns one flutter_scene Node per chunk under [root].
 class VoxelWorld {
   VoxelWorld({required this.seedValue, this.loadRadius = 8}) : unloadRadius = loadRadius + 2 {
     _generator = TerrainGenerator(ids: Blocks.generatorIds(), seed: seedValue);
-    matSolid = PhysicallyBasedMaterial()
-      ..roughnessFactor = 1.0
-      ..metallicFactor = 0.0;
-    matCutout = PhysicallyBasedMaterial()
+    // Stage 31: the three lit surfaces share the terrain shader's light term fed
+    // by [setSkyIntensity]; specular 0 is Godot's `specular_disabled` with sky
+    // reflections off (the dielectric F0 added ~0.04 of the sky to every face).
+    matSolid = TerrainMaterial()
       ..roughnessFactor = 1.0
       ..metallicFactor = 0.0
+      ..specular = 0.0;
+    matCutout = TerrainMaterial()
+      ..roughnessFactor = 1.0
+      ..metallicFactor = 0.0
+      ..specular = 0.0
       ..doubleSided = true;
-    matLiquid = PhysicallyBasedMaterial()
+    matLiquid = TerrainMaterial()
       ..roughnessFactor = 0.15
       ..metallicFactor = 0.1
       ..alphaMode = AlphaMode.blend
@@ -60,10 +67,51 @@ class VoxelWorld {
   ChunkPos _center = (x: 999999, z: 999999);
   late TerrainGenerator _generator;
   ChunkWorkerPool? _pool;
-  late final PhysicallyBasedMaterial matSolid;
-  late final PhysicallyBasedMaterial matCutout;
-  late final PhysicallyBasedMaterial matLiquid;
+  late final TerrainMaterial matSolid;
+  late final TerrainMaterial matCutout;
+  late final TerrainMaterial matLiquid;
   late final UnlitMaterial matGlow;
+
+  /// Stage 31: per-chunk light volumes (sky, block; 0..15 per cell) as the mesh
+  /// job computed them, the AO vertex count of the last mesh, and the job's own
+  /// clock for the probe. [lightingEnabled] false is `--no-light` (set before
+  /// [start]).
+  bool lightingEnabled = true;
+  final Map<ChunkPos, Uint8List> _lightSky = {};
+  final Map<ChunkPos, Uint8List> _lightBlock = {};
+  final Map<ChunkPos, int> _aoVerts = {};
+  double meshMsTotal = 0.0;
+  int remeshesQueued = 0;
+
+  /// Stage 31: how much of the baked skylight shows (1.0 noon, 0.35 night, 0.0
+  /// underworld), read by the three terrain materials when they bind.
+  void setSkyIntensity(double value) {
+    matSolid.skyIntensity = value;
+    matCutout.skyIntensity = value;
+    matLiquid.skyIntensity = value;
+  }
+
+  /// Stage 31: (sky, block) light of a cell, 0..15 each, as the last mesh job of
+  /// its chunk computed it. A cell whose chunk has no mesh yet reads as open sky.
+  CellLight lightAt(IVec3 b) {
+    if (b.y < 0 || b.y >= sizeY) return (sky: 15, block: 0);
+    final pos = chunkOf(b);
+    final sky = _lightSky[pos];
+    if (sky == null) return (sky: 15, block: 0);
+    final i = index(b.x - pos.x * sizeX, b.y, b.z - pos.z * sizeZ);
+    return (sky: sky[i], block: _lightBlock[pos]![i]);
+  }
+
+  /// Stage 31: vertices of the chunk's last mesh whose AO is below 1.
+  int aoVertsOf(ChunkPos pos) => _aoVerts[pos] ?? 0;
+
+  /// Stage 31: keep what a mesh job learnt about its chunk's light.
+  void storeLight(ChunkPos pos, ChunkMeshResult surface) {
+    meshMsTotal += surface.ms;
+    _lightSky[pos] = surface.sky;
+    _lightBlock[pos] = surface.block;
+    _aoVerts[pos] = surface.aoVerts;
+  }
 
   /// Stage 27: redstone-lite, host-only like the flow ([flowEnabled] gates both).
   /// Stage 29: rebuilt on a dimension switch, so not final.
@@ -99,6 +147,7 @@ class VoxelWorld {
       shapes: Blocks.shapes(),
       opaque: Blocks.opaqueTable(),
       emission: Blocks.emission(),
+      lighting: lightingEnabled,
     ));
     await pool.start();
     _pool = pool;
@@ -185,7 +234,8 @@ class VoxelWorld {
     }
     for (final pos in applied) {
       _surfaceReady.remove(pos);
-      _pending.remove(pos);
+      // Stage 31: edited after that job started: stay pending for a fresh mesh.
+      if (!_remeshAgain.remove(pos)) _pending.remove(pos);
     }
     _dispatch();
   }
@@ -236,6 +286,7 @@ class VoxelWorld {
       positions: s.positions,
       normals: s.normals,
       colors: s.colors,
+      texCoords1: s.light, // stage 31: (sky / 15, block / 15), Godot's UV2
       indices: s.indices,
       retainCpuData: false,
     );
@@ -245,6 +296,7 @@ class VoxelWorld {
   void _applySurface(ChunkPos pos, ChunkMeshResult surface) {
     chunksBuilt += 1;
     facesEmitted += surface.faces;
+    storeLight(pos, surface);
     final old = _nodes[pos];
     if (old != null) root.remove(old);
     final node = Node(name: 'chunk_${pos.x}_${pos.z}')..position = Vector3(pos.x * sizeX.toDouble(), 0, pos.z * sizeZ.toDouble());
@@ -263,6 +315,9 @@ class VoxelWorld {
   void _unload(ChunkPos pos) {
     final node = _nodes.remove(pos);
     if (node != null) root.remove(node);
+    _lightSky.remove(pos);
+    _lightBlock.remove(pos);
+    _aoVerts.remove(pos);
   }
 
   void _applyEdits(ChunkPos pos, Uint8List blocks) {
@@ -309,11 +364,20 @@ class VoxelWorld {
     blocks[i] = id;
     (_edits[pos] ??= {})[i] = id;
     _queueRemesh(pos);
-    final dx = lx == 0 ? -1 : (lx == sizeX - 1 ? 1 : 0);
-    final dz = lz == 0 ? -1 : (lz == sizeZ - 1 ? 1 : 0);
-    if (dx != 0) _queueRemesh((x: pos.x + dx, z: pos.z));
-    if (dz != 0) _queueRemesh((x: pos.x, z: pos.z + dz));
-    if (dx != 0 && dz != 0) _queueRemesh((x: pos.x + dx, z: pos.z + dz));
+    // Stage 31: a block that stops or makes light changes the light of the
+    // chunks around it, so the whole 3x3 ring remeshes (a POC: correctness over
+    // cost); anything else only touches a neighbour when it sits on the border.
+    if (Blocks.isOpaque(old) || Blocks.isOpaque(id) || Blocks.lightOf(old) > 0 || Blocks.lightOf(id) > 0) {
+      for (final o in ring) {
+        if (o.x != 0 || o.z != 0) _queueRemesh((x: pos.x + o.x, z: pos.z + o.z));
+      }
+    } else {
+      final dx = lx == 0 ? -1 : (lx == sizeX - 1 ? 1 : 0);
+      final dz = lz == 0 ? -1 : (lz == sizeZ - 1 ? 1 : 0);
+      if (dx != 0) _queueRemesh((x: pos.x + dx, z: pos.z));
+      if (dz != 0) _queueRemesh((x: pos.x, z: pos.z + dz));
+      if (dx != 0 && dz != 0) _queueRemesh((x: pos.x + dx, z: pos.z + dz));
+    }
     _flowTouch(b, old, id);
     if (flowEnabled) circuits.touch(b, old, id);
     onBlockChanged?.call(b, old, id);
@@ -487,9 +551,19 @@ class VoxelWorld {
     if (setBlock(b, id)) flowUpdates += 1;
   }
 
+  /// Stage 31: chunks edited while a mesh job for them was already in flight
+  /// (or its result waiting): that job meshed the old blocks, so landing it must
+  /// not clear the request. Before, the edit's remesh was lost and the chunk kept
+  /// its stale mesh (and now its stale light volumes) until the next edit.
+  final Set<ChunkPos> _remeshAgain = {};
+
   void _queueRemesh(ChunkPos pos) {
     if (!chunks.containsKey(pos) || !_nodes.containsKey(pos)) return;
-    if (!_pending.contains(pos)) _pending.insert(0, pos);
+    if (_meshInflight.contains(pos) || _surfaceReady.containsKey(pos)) _remeshAgain.add(pos);
+    if (!_pending.contains(pos)) {
+      _pending.insert(0, pos);
+      remeshesQueued += 1;
+    }
   }
 
   /// Highest solid block y at a column among LOADED chunks, or the generator's guess.
@@ -510,6 +584,10 @@ class VoxelWorld {
       root.remove(node);
     }
     _nodes.clear();
+    _lightSky.clear();
+    _lightBlock.clear();
+    _aoVerts.clear();
+    _remeshAgain.clear();
     chunks.clear();
     _pending.clear();
     _surfaceReady.clear();

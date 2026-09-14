@@ -16,6 +16,7 @@ import '../game/settings.dart';
 import '../game/sfx.dart';
 import '../game/worlds.dart';
 import '../player/player.dart';
+import '../world/terrain_material.dart';
 import '../world/voxel_world.dart';
 import 'credits_screen.dart';
 import 'settings_panel.dart';
@@ -125,6 +126,7 @@ class _TitleScreenState extends State<TitleScreen> {
       ..color = horizon
       ..skyColorInfluence = 1.0
       ..maxOpacity = 0.9;
+    await TerrainMaterial.loadLibrary(); // stage 31: the vista's chunks draw with the terrain shader too
     final world = VoxelWorld(seedValue: TitleScreen.vistaSeed, loadRadius: TitleScreen.vistaRadius);
     _scene.add(world.root);
     await world.start();

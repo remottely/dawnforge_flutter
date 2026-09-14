@@ -14,6 +14,7 @@ class WorkerConfig {
     required this.shapes,
     required this.opaque,
     required this.emission,
+    this.lighting = true,
   });
   final int seed;
   final Map<String, int> ids;
@@ -21,6 +22,9 @@ class WorkerConfig {
   final Uint8List shapes;
   final Uint8List opaque;
   final Uint8List emission;
+
+  /// Stage 31: false under `--no-light` (the mesher skips both BFS).
+  final bool lighting;
 }
 
 class _Worker {
@@ -93,15 +97,12 @@ class ChunkWorkerPool {
 
   Future<ChunkMeshResult> mesh(int cx, int cz, List<Uint8List?> ring) async {
     final reply = await _request<List<Object?>>(['mesh', cx, cz, ring]);
-    MeshSurface surface(int at) {
-      final p = (reply[at] as TransferableTypedData).materialize().asFloat32List();
-      final n = (reply[at + 1] as TransferableTypedData).materialize().asFloat32List();
-      final c = (reply[at + 2] as TransferableTypedData).materialize().asFloat32List();
-      final i = (reply[at + 3] as TransferableTypedData).materialize().asInt32List();
-      return MeshSurface(p, n, c, i);
-    }
+    ByteBuffer bytes(int at) => (reply[at] as TransferableTypedData).materialize();
+    MeshSurface surface(int at) => MeshSurface(bytes(at).asFloat32List(), bytes(at + 1).asFloat32List(),
+        bytes(at + 2).asFloat32List(), bytes(at + 3).asFloat32List(), bytes(at + 4).asInt32List());
 
-    return ChunkMeshResult(surface(0), surface(4), surface(8), surface(12));
+    return ChunkMeshResult(surface(0), surface(5), surface(10), surface(15),
+        sky: bytes(20).asUint8List(), block: bytes(21).asUint8List(), aoVerts: reply[22] as int, ms: reply[23] as double);
   }
 
   int get inflight => _waiting.length;
@@ -130,6 +131,7 @@ void _workerMain(List<Object?> args) {
     shape: config.shapes,
     opaque: config.opaque,
     emission: config.emission,
+    lighting: config.lighting,
   );
   final port = ReceivePort();
   ready.send(port.sendPort);
@@ -148,9 +150,19 @@ void _workerMain(List<Object?> args) {
             TransferableTypedData.fromList([s.positions]),
             TransferableTypedData.fromList([s.normals]),
             TransferableTypedData.fromList([s.colors]),
+            TransferableTypedData.fromList([s.light]),
             TransferableTypedData.fromList([s.indices]),
           ];
-      out.send([id, [...pack(r.solid), ...pack(r.liquid), ...pack(r.cutout), ...pack(r.glow)]]);
+      out.send([
+        id,
+        [
+          ...pack(r.solid), ...pack(r.liquid), ...pack(r.cutout), ...pack(r.glow),
+          TransferableTypedData.fromList([r.sky]),
+          TransferableTypedData.fromList([r.block]),
+          r.aoVerts,
+          r.ms,
+        ]
+      ]);
     }
   });
 }

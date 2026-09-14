@@ -25,4 +25,5 @@ flutter:
   assets:
     - flutter_scene_generated/
     - ROADMAP.md # stage 30: the credits read the stage table at runtime
+    - assets/shaders/ # stage 31: terrain.shaderbundle, compiled by tool/build_shaders.dart
   uses-material-design: true

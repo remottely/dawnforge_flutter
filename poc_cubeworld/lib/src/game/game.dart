@@ -23,6 +23,7 @@ import '../entities/target.dart';
 import '../entities/voxel_body.dart';
 import '../player/player.dart';
 import '../world/terrain_generator.dart';
+import '../world/terrain_material.dart';
 import '../world/voxel_world.dart';
 import 'achievements.dart';
 import 'game_state.dart';
@@ -31,6 +32,7 @@ import 'inventory.dart';
 import 'loot.dart';
 import 'music.dart';
 import 'net.dart';
+import 'pathfinder.dart';
 import 'portals.dart';
 import 'quests.dart';
 import 'rails.dart';
@@ -200,6 +202,17 @@ class Game extends ChangeNotifier {
   /// Stage 23: plates pressed and not yet left, so one press lights one fuse.
   final Set<IVec3> _platesFired = {};
   Spawner? spawner;
+
+  /// Stage 31: how much of the baked skylight shows right now (1.0 noon, 0.35
+  /// night, 0.0 in the underworld); the terrain shader and the spawner's light
+  /// gate both read it. Night is 0.35 rather than lower because the shader
+  /// raises the level to the fourth power: 0.35 leaves a moonlit field at about
+  /// a fifth of noon, 0.15 would leave it black.
+  double skyIntensity = 1.0;
+
+  /// Stage 31: the spawner's view of the sky: `sky * dayFactor + block` is the
+  /// light a cell has for a hostile to care about.
+  double get dayFactor => skyIntensity;
   ScreenKind screen = ScreenKind.none;
   String station = '';
   Inventory? chest;
@@ -284,12 +297,14 @@ class Game extends ChangeNotifier {
     if (_hasArg('--stage30')) Settings.instance.tutorialDone = false; // the probe drives the chain from step 1
     Tutorial.instance.notify = notify;
 
+    await TerrainMaterial.loadLibrary(); // stage 31: before the world builds its materials
     world = VoxelWorld(
       seedValue: int.tryParse(_arg('--seed=', '')) ?? GameState.instance.seedValue,
       // A probe run keeps radius 8 so its chunk counts never depend on this
       // machine's settings.cfg.
       loadRadius: int.tryParse(_arg('--radius=', '')) ?? (_arg('--screenshot=', '') != '' ? 8 : Settings.instance.renderRadius),
     );
+    world.lightingEnabled = !_hasArg('--no-light'); // stage 31: the probe's cost comparison
     scene.add(world.root);
     await world.start();
     timeOfDay = double.tryParse(_arg('--time=', '')) ?? 0.3;
@@ -428,6 +443,8 @@ class Game extends ChangeNotifier {
       }
       scene.fog.density = 0.014;
       scene.fog.color = Vector3(0.30, 0.06, 0.04);
+      skyIntensity = 0.0; // stage 31: no sky down there, only block light
+      world.setSkyIntensity(skyIntensity);
       return;
     }
     final angle = (timeOfDay - 0.25) * math.pi * 2; // 0.25 = sunrise, 0.5 = noon
@@ -454,10 +471,15 @@ class Game extends ChangeNotifier {
     sky.zenithColor = top;
     sky.horizonColor = hor;
     sky.groundColor = hor * 0.9;
+    // Stage 31: the sun is a shading hint over the baked light, not the light
+    // itself, so it drops from Godot's 0.85 to 0.6 and leaves the AO visible; the
+    // baked skylight follows the day through the terrain shader.
+    skyIntensity = (0.35 + 0.65 * day) * (1.0 - dark * 0.4);
+    if (ready) world.setSkyIntensity(skyIntensity);
     if (elevation > 0.0) {
       sky.sunDirection = sunDir;
       sun.color = sunColor;
-      sun.intensity = (3.0 * 0.85 * day * (1.0 - dark) + 0.02 + bolt * 1.5) * sunScale;
+      sun.intensity = (3.0 * 0.6 * day * (1.0 - dark) + 0.02 + bolt * 1.5) * sunScale;
       sky.sunColor = sunColor * (2.5 * day + 0.4);
     } else {
       sky.sunDirection = -sunDir;
@@ -2101,6 +2123,7 @@ class Game extends ChangeNotifier {
       // Two boots: the second reads the stats back.
       if (await _probeStage30()) return;
     }
+    if (_hasArg('--stage31')) await _probeStage31();
     await nextFrame();
     await nextFrame();
     debugPrint('[probe] fps ${fps.toStringAsFixed(0)} mobs ${mobs.length} drops ${drops.length} projectiles ${projectiles.length}');
@@ -2121,6 +2144,206 @@ class Game extends ChangeNotifier {
       debugPrint('[probe] no screenshotter, nothing captured');
     }
     exit(0);
+  }
+
+  // --- stage 31: voxel light + AO, light-gated spawns, A* for walkers -----------------
+
+  /// Frames until every queued chunk (a build or a remesh) has landed.
+  Future<void> _stage31Idle() async {
+    for (var i = 0; i < 3; i++) {
+      await nextFrame();
+    }
+    for (var i = 0; !world.isIdle && i < 3000; i++) {
+      await nextFrame();
+    }
+    for (var i = 0; i < 2; i++) {
+      await nextFrame();
+    }
+  }
+
+  /// [id] from [lo] to [hi] inclusive.
+  void _stage31Fill(IVec3 lo, IVec3 hi, int id) {
+    for (var x = lo.x; x <= hi.x; x++) {
+      for (var y = lo.y; y <= hi.y; y++) {
+        for (var z = lo.z; z <= hi.z; z++) {
+          world.setBlock(IVec3(x, y, z), id);
+        }
+      }
+    }
+  }
+
+  /// --stage31: a stone pad over the chunk east of spawn and the one south of it.
+  /// Chunk A holds a roofed 7x7x4 room (door gap in a corner of its south wall, a
+  /// roofed 6-cell porch running along that wall so the sky has 13 steps to the
+  /// centre) with a wall torch on the north wall, and a 3x10 pit three deep with
+  /// an 8-cell overhang; chunk B holds a 12x12 walled maze whose two 10-long
+  /// walls form an S between the player (north end) and a zombie (south end).
+  /// The room sits inside one chunk on purpose: the light BFS runs on the padded
+  /// volume, so a torch across a border would not reach (the accepted seam).
+  /// `--shot=room|cave` places the camera for the two captures.
+  Future<void> _probeStage31() async {
+    final sp = spawner!;
+    spawner = null; // no strays wandering onto the maze (Godot: set_process(false))
+    final here = VoxelWorld.chunkOf(IVec3.floor(player.position));
+    final cpos = (x: here.x + 1, z: here.z);
+    final sx = cpos.x * VoxelWorld.sizeX;
+    final sz = cpos.z * VoxelWorld.sizeZ;
+    var y0 = 0;
+    for (var x = sx; x < sx + 16; x++) {
+      for (var z = sz; z < sz + 32; z++) {
+        y0 = math.max(y0, world.groundHeight(x, z));
+      }
+    }
+    final stone = Blocks.indexOf('stone');
+    const air = Blocks.air;
+    _stage31Fill(IVec3(sx, y0, sz), IVec3(sx + 15, y0, sz + 31), stone);
+    _stage31Fill(IVec3(sx, y0 + 1, sz), IVec3(sx + 15, y0 + 8, sz + 31), air);
+    final y = y0 + 1; // the walk floor
+    // (a) the room: walls x 1..9 / z 1..9, roof at y+4, interior x 2..8 / z 2..8, y..y+3.
+    for (var lx = 1; lx < 10; lx++) {
+      for (var lz = 1; lz < 10; lz++) {
+        if (lx == 1 || lx == 9 || lz == 1 || lz == 9) {
+          _stage31Fill(IVec3(sx + lx, y, sz + lz), IVec3(sx + lx, y + 3, sz + lz), stone);
+        }
+        world.setBlock(IVec3(sx + lx, y + 4, sz + lz), stone);
+      }
+    }
+    world.setBlock(IVec3(sx + 2, y, sz + 9), air); // the door gap, 2 tall
+    world.setBlock(IVec3(sx + 2, y + 1, sz + 9), air);
+    _stage31Fill(IVec3(sx + 1, y, sz + 11), IVec3(sx + 8, y + 1, sz + 11), stone); // porch south wall
+    _stage31Fill(IVec3(sx + 1, y, sz + 10), IVec3(sx + 1, y + 1, sz + 10), stone); // porch west end
+    _stage31Fill(IVec3(sx + 1, y + 2, sz + 10), IVec3(sx + 7, y + 2, sz + 11), stone); // porch roof; x 8 is the mouth
+    final torch = IVec3(sx + 5, y + 1, sz + 2);
+    final wallTorch = Blocks.indexOf('wall_torch');
+    world.setBlock(torch, wallTorch);
+    final centre = IVec3(sx + 5, y + 1, sz + 5);
+    final outside = IVec3(sx + 12, y, sz + 14);
+    // (b) the pit: a stone shell, the hole x 11..13 / z 1..10 three deep, an overhang over z 1..8.
+    _stage31Fill(IVec3(sx + 10, y - 5, sz), IVec3(sx + 14, y - 1, sz + 11), stone);
+    _stage31Fill(IVec3(sx + 11, y - 3, sz + 1), IVec3(sx + 13, y - 1, sz + 10), air);
+    _stage31Fill(IVec3(sx + 11, y, sz + 1), IVec3(sx + 13, y, sz + 8), stone);
+    final under = IVec3(sx + 12, y - 3, sz + 1);
+    // (c) the maze in chunk B: a walled 12x12, wall 1 at z 5 (x 2..11), wall 2 at z 9 (x 4..13).
+    final mz = sz + 16;
+    for (var lx = 1; lx < 15; lx++) {
+      for (var lz = 1; lz < 15; lz++) {
+        var wall = lx == 1 || lx == 14 || lz == 1 || lz == 14;
+        wall = wall || (lz == 5 && lx >= 2 && lx <= 11) || (lz == 9 && lx >= 4 && lx <= 13);
+        if (wall) _stage31Fill(IVec3(sx + lx, y, mz + lz), IVec3(sx + lx, y + 1, mz + lz), stone);
+      }
+    }
+    final stand = Vector3(sx + 8.5, y + 0.1, mz + 2.5);
+    final start = Vector3(sx + 8.5, y + 0.1, mz + 12.5);
+    _probePlace(Vector3(sx + 12.5, y + 0.1, sz + 14.5)); // out of the way for the light half
+    debugPrint('[probe] stage31 site x=$sx y=$y0 z=$sz (chunk (${cpos.x}, ${cpos.z}), walk floor y=$y) lighting ${world.lightingEnabled ? 'on' : 'off'}');
+    final builtBefore = world.chunksBuilt, queuedBefore = world.remeshesQueued;
+    await _stage31Idle();
+    if (_hasArg('--trace')) {
+      debugPrint('[trace] stage31 after edits: built ${world.chunksBuilt - builtBefore} queued ${world.remeshesQueued - queuedBefore} '
+          'idle ${world.isIdle} roof ${Blocks.idOf(world.getBlock(centre + const IVec3(0, 3, 0)))} '
+          'wall light ${world.lightAt(IVec3(sx + 1, y + 1, sz + 5))} centre block ${Blocks.idOf(world.getBlock(centre))}');
+    }
+    // 1. light
+    final lOut = world.lightAt(outside), lC = world.lightAt(centre), lU = world.lightAt(under);
+    debugPrint('[probe] stage31 light: outside sky=${lOut.sky} block=${lOut.block}; room centre sky=${lC.sky} (<=2) '
+        'block=${lC.block} (>=8); under overhang sky=${lU.sky} (between 3 and 12)');
+    // 2. the torch goes: the room falls dark once the ring remeshes
+    final built = world.chunksBuilt;
+    world.setBlock(torch, air);
+    await _stage31Idle();
+    debugPrint('[probe] stage31 torch removed -> room block light=${world.lightAt(centre).block} (0) after remesh; '
+        'chunks remeshed=${world.chunksBuilt - built} (>=1)');
+    // 3. AO
+    debugPrint('[probe] stage31 AO: face verts with ao<1 in room mesh=${world.aoVertsOf(cpos)} (>0)');
+    // 4. the spawn gate, dark then lit
+    final darkOk = sp.hostileAllowedAt(centre);
+    world.setBlock(torch, wallTorch);
+    await _stage31Idle();
+    final litOk = sp.hostileAllowedAt(centre);
+    debugPrint('[probe] stage31 spawn gate: dark room spawn allowed=$darkOk, lit room allowed=$litOk (day factor ${dayFactor.toStringAsFixed(2)})');
+    // 5. the maze: a zombie at the south end, the player at the north end, 1.5 m counts as reached
+    final gs = GameState.instance;
+    final wasCreative = gs.creative;
+    gs.creative = true; // the zombie that arrives may swing; the clock is what matters
+    _probePlace(stand);
+    player.probeWalk(Vector3.zero());
+    final zombie = sp.forceSpawn('zombie', start);
+    final from = IVec3(start.x.floor(), (start.y + 0.05).floor(), start.z.floor());
+    final to = IVec3(stand.x.floor(), (stand.y + 0.05).floor(), stand.z.floor());
+    final sw = Stopwatch()..start();
+    final path = Pathfinder.find(world, from, to);
+    final findMs = sw.elapsedMicroseconds / 1000.0;
+    final straight = (from.x - to.x).abs() + (from.z - to.z).abs();
+    Mob.pathfindingEnabled = true;
+    final result = await _stage31Chase(zombie, 15.0);
+    debugPrint('[probe] stage31 path: zombie to player length=${path.length} (> straight-line $straight, found in '
+        '${findMs.toStringAsFixed(2)} ms), reached=${result.reached} in ${result.seconds.toStringAsFixed(1)} s (replans ${zombie.pathReplans})');
+    Mob.pathfindingEnabled = false;
+    zombie.position = start.clone();
+    zombie.velocity = Vector3.zero();
+    final control = await _stage31Chase(zombie, 6.0);
+    debugPrint('[probe] stage31 no-path control: direct chase stuck=${!control.reached} '
+        '(closest ${control.closest.toStringAsFixed(1)} m in ${control.seconds.toStringAsFixed(1)} s)');
+    Mob.pathfindingEnabled = true;
+    zombie.removed = true;
+    gs.creative = wasCreative;
+    spawner = sp;
+    // 6. the mesher's own clock
+    debugPrint('[probe] stage31 mesh time: avg ${(world.meshMsTotal / math.max(world.chunksBuilt, 1)).toStringAsFixed(2)} ms per chunk '
+        'over ${world.chunksBuilt} chunks (lighting ${world.lightingEnabled ? 'on' : 'off'})');
+    // The captures: inside the room facing the torch wall, or at the back of the pit facing its mouth.
+    final shot = _arg('--shot=', '');
+    if (shot != '') {
+      flyMode = true;
+      player.setFirstPerson(true);
+      final Vector3 eye;
+      if (shot == 'cave') {
+        eye = Vector3(sx + 12.5, y - 2.9, sz + 1.5);
+        player.setLook(math.pi, 4.0 * math.pi / 180.0);
+      } else {
+        eye = Vector3(sx + 5.5, y + 0.1, sz + 7.5);
+        player.setLook(0.0, -6.0 * math.pi / 180.0);
+      }
+      for (var i = 0; i < 30; i++) {
+        _probePlace(eye);
+        await nextFrame();
+      }
+      await _stage31Idle();
+      for (var i = 0; i < 10; i++) {
+        _probePlace(eye);
+        await nextFrame();
+      }
+      _pinCameraTo = () => eye.clone();
+      debugPrint('[probe] stage31 capture \'$shot\' from $eye');
+    }
+  }
+
+  /// Simulation ticks until the mob is within 1.5 m of the player (body edge to
+  /// body edge, on the ground plane; a zombie stops at its attack reach, so the
+  /// swing counts too) or [seconds] of ticks pass; the closest it got and the
+  /// time spent.
+  Future<({bool reached, double seconds, double closest})> _stage31Chase(Mob mob, double seconds) {
+    final done = Completer<({bool reached, double seconds, double closest})>();
+    final frames = (seconds * 60).round();
+    var closest = double.infinity;
+    var i = 0;
+    _probeTick = () {
+      i += 1;
+      final dx = mob.position.x - player.position.x, dz = mob.position.z - player.position.z;
+      final d = math.sqrt(dx * dx + dz * dz) - mob.halfWidth - player.halfWidth;
+      closest = math.min(closest, d);
+      if (_hasArg('--trace') && i % 30 == 0) {
+        debugPrint('[trace] chase f$i mob ${mob.position} state ${mob.state} wp ${mob.pathProgress} wall ${mob.hitWall} floor ${mob.onFloor}');
+      }
+      if (d <= 1.5 || mob.state == MobState.attack) {
+        _probeTick = null;
+        done.complete((reached: true, seconds: i / 60.0, closest: closest));
+      } else if (i >= frames) {
+        _probeTick = null;
+        done.complete((reached: false, seconds: seconds, closest: closest));
+      }
+    };
+    return done.future;
   }
 
   /// --stage22: sub-block collision and liquid flow on a stone pad beside
