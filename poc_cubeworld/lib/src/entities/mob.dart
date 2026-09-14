@@ -10,6 +10,7 @@ import '../game/achievements.dart';
 import '../game/game.dart';
 import '../game/game_state.dart';
 import '../game/inventory.dart';
+import '../game/loot.dart';
 import '../game/sfx.dart';
 import '../player/player.dart';
 import '../world/voxel_world.dart';
@@ -179,9 +180,8 @@ class Mob extends VoxelBody {
 
   /// A spatial hash that is the same in every process (`IVec3.hashCode` is
   /// Dart's per-run seeded `Object.hash`, so the same villager would roll
-  /// other offers after a restart or on another peer).
-  static int traderSeed(IVec3 at, int seed) =>
-      ((at.x * 73856093) ^ (at.y * 19349663) ^ (at.z * 83492791) ^ seed) & 0x7FFFFFFF;
+  /// other offers after a restart or on another peer): the loot seed.
+  static int traderSeed(IVec3 at, int seed) => LootTables.seedFor(at, seed);
 
   /// Three distinct offers from the pool.
   static List<TradeOffer> rollTrades(math.Random rng) {

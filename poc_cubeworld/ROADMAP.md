@@ -66,6 +66,16 @@ the Godot POC's, so the two roadmaps line up.
 
 ## Session log
 
+- **2026-09-14** — deterministic loot seeds. Stage 26 noted that a structure chest seeded its loot from
+  `IVec3.hashCode ^ seed`. Dart's `hashCode` / `Object.hash` are seeded per process, so the same chest held
+  different items after a restart, and a host and its client could roll it differently. `LootTables.seedFor(at,
+  worldSeed)` is now the one explicit integer hash, `(x*73856093 ^ y*19349663 ^ z*83492791 ^ seed) & 0x7FFFFFFF`.
+  The chest roll, the mine chest-minecart cargo (the private `_cellHash`) and `Mob.traderSeed` all seed through it.
+  For a world seed below 2^31 the cart and trader seeds are bit-for-bit what they were, so only chests change.
+  A grep for `hashCode` / `Object.hash` in `lib/` finds nothing else seeding a roll: `IVec3.hashCode` remains only a
+  map key. `loot_seed_test.dart` pins the seed (1205562705 for (12, 40, -7) in world 42) and the first draw, and checks
+  that two separate `Random` constructions roll every table identically.
+
 - **2026-09-14** — probe determinism. Two probes drifted from their rows because of what stage 32 added around them.
   - **`--stage29` counted a third blaze now and then.** The count takes every blaze in `mobs`, as Godot's does
     (`main.gd` `_probe_stage29`). The fortress spawns exactly two, but the underworld spawner could add one more during

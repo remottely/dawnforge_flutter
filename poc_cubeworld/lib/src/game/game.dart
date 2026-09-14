@@ -925,7 +925,7 @@ class Game extends ChangeNotifier {
     chests[at] = inv;
     if (!GameState.instance.placedChests.contains(at.key)) {
       // Stage 23: the table of the structure the chest belongs to (`LootTables`).
-      final rng = math.Random(at.hashCode ^ world.seedValue);
+      final rng = math.Random(LootTables.seedFor(at, world.seedValue));
       final table = LootTables.tableNear(world, at);
       for (final stack in LootTables.roll(table, rng)) {
         inv.add(stack.id, stack.count);
@@ -1008,8 +1008,7 @@ class Game extends ChangeNotifier {
             if (last != IVec3.zero) {
               _bossesSpawned.add(ckey);
               final cart = spawnMinecart(last, 'chest_minecart');
-              // An explicit integer hash: Dart's own hashCode is seeded per process.
-              final rng = math.Random(_cellHash(ckey) ^ world.seedValue);
+              final rng = math.Random(LootTables.seedFor(ckey, world.seedValue));
               for (final stack in LootTables.roll('mine', rng)) {
                 cart?.cargo?.add(stack.id, stack.count);
               }
@@ -1114,9 +1113,6 @@ class Game extends ChangeNotifier {
       }
     }
   }
-
-  static int _cellHash(IVec3 c) =>
-      ((c.x * 73856093) ^ (c.y * 19349663) ^ (c.z * 83492791)) & 0x7fffffff;
 
   /// Stage 28: the last rail cell of the corridor of the mine at [origin] (it
   /// runs +x from the shaft at mineFloorY + 1), or zero while its chunks are

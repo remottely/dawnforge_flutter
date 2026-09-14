@@ -95,6 +95,15 @@ class LootTables {
   /// chest per hut since stage 26.
   static const Map<int, String> tableByKind = {1: 'dungeon', 2: 'dungeon', 3: 'camp', 4: 'village', 5: 'ruin', 6: 'well', 7: 'mine', 8: 'temple', 9: 'fortress'};
 
+  /// The rng seed for the loot at [at] in a world of [worldSeed]: an explicit
+  /// integer hash, the same in every process and on every peer. Dart's
+  /// `hashCode` / `Object.hash` are seeded per run, so a chest seeded from
+  /// `IVec3.hashCode` held other items after a restart, and a host and its
+  /// client could disagree about it. Chests, chest minecarts and villager offers
+  /// all seed through here.
+  static int seedFor(IVec3 at, int worldSeed) =>
+      ((at.x * 73856093) ^ (at.y * 19349663) ^ (at.z * 83492791) ^ worldSeed) & 0x7FFFFFFF;
+
   /// The stacks a chest of [table] holds, in table order.
   static List<({String id, int count})> roll(String table, math.Random rng) {
     final rows = tables[table];
