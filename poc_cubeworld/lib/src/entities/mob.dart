@@ -494,8 +494,9 @@ class Mob extends SceneBody {
         v[const IVec3(-3, 4, -4)] = eye;
         v[const IVec3(2, 4, -4)] = eye;
         _parts['head'] = _part(v, Vector3(0, 1.32 * k, 0), s);
-        _parts['arm0']!.rx = -1.4;
-        _parts['arm1']!.rx = -1.4;
+        // Arms held out in front (a positive rx carries the hand to -Z, the face).
+        _parts['arm0']!.rx = 1.4;
+        _parts['arm1']!.rx = 1.4;
       case 'blob':
         final v = <IVec3, Vector3>{};
         final r = (halfWidth * 16).toInt();
@@ -849,7 +850,7 @@ class Mob extends SceneBody {
           state = MobState.chase;
         } else if (_attackCd <= 0.0) {
           _attackCd = 1.3;
-          _parts['arm0']?.rx = -2.4;
+          _parts['arm0']?.rx = 2.4;
           hurtTarget(target, damageDealt());
           Sfx.play('hit', -4.0);
         }
@@ -1022,8 +1023,8 @@ class Mob extends SceneBody {
     }
     final arm0 = _parts['arm0'];
     if (arm0 != null && species.body == 'humanoid') {
-      arm0.rx = lerpd(arm0.rx, -1.4 + a * 0.3, dt * 6.0);
-      _parts['arm1']!.rx = -1.4 - a * 0.3;
+      arm0.rx = lerpd(arm0.rx, 1.4 + a * 0.3, dt * 6.0);
+      _parts['arm1']!.rx = 1.4 - a * 0.3;
     }
     if (species.body == 'blob') {
       _squash = 1.0 + math.sin(_age * 6.0) * 0.06 + (!onFloor ? 0.15 : 0.0);

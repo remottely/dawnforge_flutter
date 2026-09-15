@@ -52,38 +52,76 @@ class PlayerModel {
 
   void build(Vector3 skin, Vector3 shirt, Vector3 pants, Vector3 hair) {
     root.removeAll();
-    final boots = Vector3(0.25, 0.18, 0.12);
-    final eye = Vector3(0.12, 0.12, 0.16);
+    Vector3 mix(Vector3 a, Vector3 b, double t) => a + (b - a) * t;
+    Vector3 shade(Vector3 c, double k) => c * k;
+    // The class colour is softened toward a warm grey so it reads as dyed
+    // cloth, with a darker trim for hems and cuffs.
+    final cloth = mix(shirt, Vector3(0.52, 0.48, 0.44), 0.2);
+    final trim = shade(cloth, 0.7);
+    final pantsDark = shade(pants, 0.78);
+    final boots = Vector3(0.38, 0.25, 0.15);
+    final sole = Vector3(0.17, 0.12, 0.09);
+    final belt = Vector3(0.30, 0.19, 0.11);
+    final buckle = Vector3(0.88, 0.72, 0.32);
+    final hairDark = shade(hair, 0.72);
+    final white = Vector3(0.96, 0.96, 0.93);
+    final iris = Vector3(0.22, 0.38, 0.62);
+    final nose = shade(skin, 0.9);
+    final cheek = mix(skin, Vector3(0.95, 0.55, 0.50), 0.3);
+    final mouth = Vector3(skin.x * 0.72, skin.y * 0.48, skin.z * 0.46);
+    // The front of every part is z = -4 (head) or z = -2 (body, limbs).
 
     var v = <IVec3, Vector3>{};
-    VoxelMeshBuilder.box(v, const IVec3(-2, -12, -2), const IVec3(1, -1, 1), pants);
-    VoxelMeshBuilder.box(v, const IVec3(-2, -12, -2), const IVec3(1, -10, 1), boots);
+    VoxelMeshBuilder.box(v, const IVec3(-2, -9, -2), const IVec3(1, -1, 1), pants, 0.03);
+    VoxelMeshBuilder.box(v, const IVec3(-2, -2, -2), const IVec3(1, -1, 1), pantsDark, 0.03);
+    VoxelMeshBuilder.box(v, const IVec3(-2, -11, -2), const IVec3(1, -10, 1), boots, 0.04);
+    VoxelMeshBuilder.box(v, const IVec3(-2, -12, -2), const IVec3(1, -12, 1), sole, 0.02);
     legL = _part(v, Vector3(-0.11, 0.66, 0.0));
     legR = _part(v, Vector3(0.11, 0.66, 0.0));
 
     v = {};
-    VoxelMeshBuilder.box(v, const IVec3(-4, 0, -2), const IVec3(3, 11, 1), shirt);
-    VoxelMeshBuilder.box(v, const IVec3(-4, 0, -2), const IVec3(3, 1, 1), Vector3(0.35, 0.25, 0.15));
+    VoxelMeshBuilder.box(v, const IVec3(-4, 2, -2), const IVec3(3, 11, 1), cloth, 0.03);
+    VoxelMeshBuilder.box(v, const IVec3(-4, 2, -2), const IVec3(3, 2, 1), trim, 0.03);
+    VoxelMeshBuilder.box(v, const IVec3(-4, 0, -2), const IVec3(3, 1, 1), belt, 0.04);
+    VoxelMeshBuilder.box(v, const IVec3(-1, 0, -2), const IVec3(0, 1, -2), buckle, 0.02);
+    VoxelMeshBuilder.box(v, const IVec3(-2, 11, -2), const IVec3(1, 11, -2), skin, 0.02); // the neckline
+    VoxelMeshBuilder.box(v, const IVec3(-1, 10, -2), const IVec3(0, 10, -2), skin, 0.02);
     torso = _part(v, Vector3(0.0, 0.66, 0.0));
 
     v = {};
-    VoxelMeshBuilder.box(v, const IVec3(-2, -12, -2), const IVec3(1, -1, 1), shirt);
-    VoxelMeshBuilder.box(v, const IVec3(-2, -12, -2), const IVec3(1, -5, 1), skin);
-    armL = _part(v, Vector3(-0.33, 1.30, 0.0));
-    armR = _part(v, Vector3(0.33, 1.30, 0.0));
+    VoxelMeshBuilder.box(v, const IVec3(-2, -4, -2), const IVec3(1, -1, 1), cloth, 0.03);
+    VoxelMeshBuilder.box(v, const IVec3(-2, -5, -2), const IVec3(1, -5, 1), trim, 0.03);
+    VoxelMeshBuilder.box(v, const IVec3(-2, -12, -2), const IVec3(1, -6, 1), skin, 0.02);
+    // The arm is 0.22 wide, so a pivot at 0.33 put its inner face exactly on
+    // the torso's side (x = 0.22): the two faces fought for the same pixels
+    // and flickered. A 1.5 cm gap keeps them apart.
+    armL = _part(v, Vector3(-0.345, 1.30, 0.0));
+    armR = _part(v, Vector3(0.345, 1.30, 0.0));
     hand.position = Vector3(0.0, -0.62, -0.04);
     armR.node.add(hand);
 
     v = {};
-    VoxelMeshBuilder.box(v, const IVec3(-4, 0, -4), const IVec3(3, 7, 3), skin, 0.03);
-    VoxelMeshBuilder.box(v, const IVec3(-4, 6, -4), const IVec3(3, 7, 3), hair);
-    VoxelMeshBuilder.box(v, const IVec3(-4, 3, 3), const IVec3(3, 5, 3), hair);
-    VoxelMeshBuilder.box(v, const IVec3(-4, 2, -4), const IVec3(-4, 5, 3), hair);
-    VoxelMeshBuilder.box(v, const IVec3(3, 2, -4), const IVec3(3, 5, 3), hair);
-    v[const IVec3(-3, 4, -4)] = eye;
-    v[const IVec3(-2, 4, -4)] = Vector3(1, 1, 1);
-    v[const IVec3(1, 4, -4)] = Vector3(1, 1, 1);
-    v[const IVec3(2, 4, -4)] = eye;
+    VoxelMeshBuilder.box(v, const IVec3(-4, 0, -4), const IVec3(3, 7, 3), skin, 0.02);
+    VoxelMeshBuilder.box(v, const IVec3(-4, 6, -4), const IVec3(3, 7, 3), hair, 0.06);
+    VoxelMeshBuilder.box(v, const IVec3(-4, 1, 3), const IVec3(3, 5, 3), hair, 0.06);
+    VoxelMeshBuilder.box(v, const IVec3(-4, 2, -3), const IVec3(-4, 5, 3), hair, 0.06);
+    VoxelMeshBuilder.box(v, const IVec3(3, 2, -3), const IVec3(3, 5, 3), hair, 0.06);
+    v[const IVec3(-4, 5, -4)] = hair; // the fringe falls over the left temple
+    v[const IVec3(-3, 5, -4)] = hair;
+    v[const IVec3(3, 5, -4)] = hair;
+    v[const IVec3(-2, 5, -4)] = hairDark; // brows
+    v[const IVec3(1, 5, -4)] = hairDark;
+    v[const IVec3(2, 5, -4)] = hairDark;
+    v[const IVec3(-3, 4, -4)] = white;
+    v[const IVec3(-2, 4, -4)] = iris;
+    v[const IVec3(1, 4, -4)] = iris;
+    v[const IVec3(2, 4, -4)] = white;
+    v[const IVec3(-1, 3, -4)] = nose;
+    v[const IVec3(0, 3, -4)] = nose;
+    v[const IVec3(-3, 3, -4)] = cheek;
+    v[const IVec3(2, 3, -4)] = cheek;
+    v[const IVec3(-1, 2, -4)] = mouth;
+    v[const IVec3(0, 2, -4)] = mouth;
     head = _part(v, Vector3(0.0, 1.32, 0.0));
     _heldId = '';
     _held = null;
@@ -107,7 +145,11 @@ class PlayerModel {
     if (itemId == '') return;
     final held = VoxelMeshBuilder.heldItem(itemId);
     if (!Items.isBlock(itemId)) {
-      held.rotation = Quaternion.axisAngle(Vector3(1, 0, 0), -math.pi / 2);
+      // The shape is drawn flat in XY (shaft up Y, head across X). A quarter
+      // turn about the shaft puts the head in the swing plane, then the shaft
+      // tips forward: a pickaxe's points, an axe's blade and a sword's edge
+      // lead the chop instead of facing left and right.
+      held.rotation = Quaternion.axisAngle(Vector3(1, 0, 0), -math.pi / 2) * Quaternion.axisAngle(Vector3(0, 1, 0), math.pi / 2);
     }
     hand.add(held);
     _held = held;
@@ -195,31 +237,32 @@ class PlayerModel {
     legR.rx = -a;
     armL.rx = -a * 0.8;
     var swingAngle = 0.0;
-    var swingRoll = 0.0;
     if (_swing > 0.0) {
       // Minecraft's HumanoidModel attack: the arm rises forward and chops down
-      // in front of the body, ease-out, rolling a little toward the chest.
-      // A positive rx carries the hand forward (-Z).
+      // in front of the body, ease-out, straight in the swing plane (a roll
+      // toward the chest sinks the hand into the torso). A positive rx carries
+      // the hand forward (-Z).
       _swing = math.max(_swing - dt / swingSeconds, 0.0);
       final t = 1.0 - _swing;
       final eased = 1.0 - math.pow(1.0 - t, 4.0);
       swingAngle = math.sin(eased * math.pi) * 1.2 + math.sin(t * math.pi) * 0.5;
-      swingRoll = math.sin(t * math.pi) * 0.4;
     }
     armR.rx = a * 0.8 + swingAngle;
+    // A positive rz carries a hanging hand to +X: outward for the right arm,
+    // inward for the left. Every pose keeps the hands away from the torso.
     if (gliding) {
-      armL.rz = 1.4;
-      armR.rz = -1.4;
+      armL.rz = -1.4;
+      armR.rz = 1.4;
       legL.rx = 0.0;
       legR.rx = 0.0;
     } else if (climbing) {
-      armL.rz = 0.3;
-      armR.rz = -0.3;
-      armL.rx = -2.6 + a;
-      armR.rx = -2.6 - a;
+      armL.rz = -0.3;
+      armR.rz = 0.3;
+      armL.rx = 2.6 + a;
+      armR.rx = 2.6 - a;
     } else {
-      armL.rz = lerpd(armL.rz, 0.05, dt * 10.0);
-      armR.rz = lerpd(armR.rz, -0.05, dt * 10.0) - swingRoll;
+      armL.rz = lerpd(armL.rz, 0.0, dt * 10.0); // straight down, parallel to the torso
+      armR.rz = lerpd(armR.rz, 0.0, dt * 10.0);
     }
     _bob = moving && onFloor ? math.sin(_walkPhase).abs() * 0.03 : 0.0;
     torso.offY = _bob;

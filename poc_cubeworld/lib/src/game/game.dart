@@ -16,6 +16,7 @@ import '../entities/boat.dart';
 import '../entities/item_drop.dart';
 import '../entities/minecart.dart';
 import '../entities/mob.dart';
+import '../entities/player_model.dart';
 import '../entities/projectile.dart';
 import '../entities/remote_player.dart';
 import '../entities/spawner.dart';
@@ -357,6 +358,7 @@ class Game extends ChangeNotifier {
     player.setupPlayer(world, this, _arg('--class=', GameState.instance.playerClass));
     entities.add(player.node);
     entities.add(player.highlight);
+    entities.add(player.hoverGlow);
     entities.add(player.crack);
     for (final l in player.crackLines) {
       entities.add(l); // stage 32
@@ -2245,6 +2247,7 @@ class Game extends ChangeNotifier {
     if (_hasArg('--stage25') && net.isClient) await _probeStage25Client();
     if (_hasArg('--stage22')) await _probeStage22();
     if (_hasArg('--move-probe')) await _probeMovement();
+    if (_hasArg('--model-probe')) await _probeModel();
     if (_hasArg('--stage23')) await _probeStage23(stage21a);
     if (_hasArg('--stage26') && shot26 == '') await _probeStage26();
     if (_hasArg('--stage24')) {
@@ -2973,6 +2976,122 @@ class Game extends ChangeNotifier {
     debugPrint('[probe] move climb=on: final feet y=${climbed.y.toStringAsFixed(3)} (expect ${wallTop.toStringAsFixed(1)}) '
         'on floor=${climbed.floor} x=${climbed.x.toStringAsFixed(2)} (past the face ${x0 + 3}: ${climbed.x > x0 + 3.3})');
     settings.climbWalls = false;
+
+    // A pool whose bank stands one block over the water: swimming into it
+    // with jump held reaches the bank on the first try, never falling back.
+    for (var x = x0 + 3; x < x0 + 6; x++) {
+      for (var z = z0 - 2; z < z0 + 3; z++) {
+        world.setBlock(IVec3(x, y0 + 2, z), Blocks.air);
+        world.setBlock(IVec3(x, y0 + 3, z), Blocks.air);
+      }
+    }
+    final water = Blocks.indexOf('water');
+    for (var x = x0 - 1; x < x0 + 3; x++) {
+      for (var z = z0 - 1; z < z0 + 2; z++) {
+        world.setBlock(IVec3(x, y0 - 2, z), stone);
+        world.setBlock(IVec3(x, y0 - 1, z), water);
+        world.setBlock(IVec3(x, y0, z), water);
+      }
+    }
+    await _ticks(20);
+    player.position = Vector3(x0 + 0.5, y0 - 0.99, z0 + 0.5);
+    player.velocity = Vector3.zero();
+    player.syncNode();
+    await _ticks(5);
+    player.probeWalk(Vector3(1, 0, 0));
+    input.probeHold(GameAction.jump, true);
+    var touched = false, wasIn = player.inLiquid, fellBack = 0, outAt = -1;
+    for (var i = 0; i < 600; i++) {
+      await _ticks(1);
+      touched = touched || player.position.x > x0 + 2.6;
+      if (touched && player.inLiquid && !wasIn) fellBack++;
+      wasIn = player.inLiquid;
+      if (player.onFloor && player.position.y >= floorY + 0.99) {
+        outAt = i;
+        break;
+      }
+    }
+    player.probeWalk(Vector3.zero());
+    input.probeHold(GameAction.jump, false);
+    debugPrint('[probe] move water exit: on the bank=${outAt >= 0} after $outAt ticks, feet y=${player.position.y.toStringAsFixed(3)} '
+        '(expect ${(floorY + 1).toStringAsFixed(1)}), fell back into the water $fellBack times after reaching the bank (expect 0) '
+        'x=${player.position.x.toStringAsFixed(2)} hp=${player.hp}');
+
+    // Walking backward keeps the body facing the camera (Minecraft), it
+    // never turns around.
+    player.setFirstPerson(false);
+    player.setLook(0.0, 0.0);
+    _probePlace(Vector3(x0 + 4.5, floorY + 1.01, z0 + 0.5));
+    player.probeWalk(Vector3(0, 0, 1));
+    await _ticks(40);
+    final back = player.model.yaw;
+    player.probeWalk(Vector3(0, 0, -1));
+    await _ticks(40);
+    player.probeWalk(Vector3.zero());
+    debugPrint('[probe] move backward: walking +Z at camera yaw 0 body yaw=${back.toStringAsFixed(2)} (expect 0.00, not 3.14); '
+        'walking -Z body yaw=${player.model.yaw.toStringAsFixed(2)} (expect 0.00)');
+  }
+
+  /// `--model-probe --screenshot=<png>`: on a cleared stone pad, facing the
+  /// camera, a player model mid-chop with a pickaxe, one seen from the side
+  /// mid-chop with a sword, one at rest with an axe, and a zombie.
+  Future<void> _probeModel() async {
+    final x0 = player.position.x.floor();
+    final z0 = player.position.z.floor();
+    var y0 = 0;
+    for (var x = x0 - 6; x <= x0 + 6; x++) {
+      for (var z = z0 - 10; z <= z0 + 2; z++) {
+        y0 = math.max(y0, world.groundHeight(x, z));
+      }
+    }
+    final stone = Blocks.indexOf('stone');
+    for (var x = x0 - 6; x <= x0 + 6; x++) {
+      for (var z = z0 - 10; z <= z0 + 2; z++) {
+        world.setBlock(IVec3(x, y0, z), stone);
+        for (var y = y0 + 1; y < y0 + 6; y++) {
+          world.setBlock(IVec3(x, y, z), Blocks.air);
+        }
+      }
+    }
+    final floor = y0 + 1.0;
+    timeOfDay = 0.3;
+    weather.force('clear');
+    void pose(double x, double yaw, String item, double swingDt) {
+      final m = PlayerModel()..build(Player.skinTone, player.classDef.shirt, Player.pantsTone, Player.hairTone);
+      m.setHeld(item);
+      m.yaw = yaw;
+      if (swingDt > 0.0) m.swing();
+      m.animate(swingDt > 0.0 ? swingDt : 0.016, 0.0, true, false, false);
+      final holder = Node()..add(m.root);
+      holder.position = Vector3(x, floor, z0 - 5.5);
+      entities.add(holder);
+    }
+
+    pose(x0 - 1.0, 0.0, 'iron_pickaxe', 0.09);
+    pose(x0 + 0.5, math.pi / 2, 'stone_sword', 0.09);
+    pose(x0 + 2.0, 0.0, 'stone_axe', 0.0);
+    final eye = Vector3(x0 + 0.5, floor + 1.4, z0 - 9.5);
+    // The crosshair rests on a dirt block in the floor, within reach and clear
+    // of the models, so the hover glow shows against a darker face.
+    final aimed = IVec3(x0 - 3, y0, z0 - 8);
+    world.setBlock(aimed, Blocks.indexOf('dirt'));
+    // `_playgroundFrame` places the feet at the eye; the first-person camera
+    // sits higher, so the target drops by that lift to keep the ray on the dirt.
+    player.setFirstPerson(true);
+    final lift = player.pivotPosition.y - player.position.y;
+    await _playgroundFrame((eye: eye, target: aimed.toVector3() + Vector3(0.5, 1.0 - lift, 0.5)));
+    final zombie = Mob();
+    zombie.setupMob(world, this, player, Species.def('zombie'));
+    zombie.position = Vector3(x0 - 2.5, floor, z0 - 6.5);
+    addMob(zombie);
+    flyMode = false; // the fly tick returns before `_updateAim`; the pin holds the camera still
+    for (var i = 0; i < 6; i++) {
+      _probePlace(eye);
+      await nextFrame();
+    }
+    debugPrint('[probe] model: three poses and a zombie at z=${z0 - 5.5}, camera $eye; '
+        'aimed ${player.aimedBlock} (dirt at $aimed) hover glow visible=${player.hoverGlow.visible} at ${player.hoverGlow.position}');
+    _pinCameraTo = () => eye.clone();
   }
 
   Future<void> _probeStage22() async {

@@ -125,6 +125,7 @@ class Player extends SceneBody implements Target {
   double fov = 72.0;
   late final Node highlight;
   late final Node crack;
+  late final Node hoverGlow;
   late final UnlitMaterial _crackMat;
   late final PointLight torchLight;
   final Node _torchNode = Node();
@@ -153,6 +154,13 @@ class Player extends SceneBody implements Target {
   static const double footstepInterval = 0.4;
   static const double footstepIntervalSprint = 0.3;
   bool _hopping = false; // a half-step hop: double gravity until the feet land
+  bool _leavingWater = false; // the launch over a bank: a jump's arc, never the swim's cap
+  double _sinceWater = 1.0; // seconds since the body was last in a liquid
+
+  /// The player's own tones; the shirt is the class colour.
+  static final Vector3 skinTone = Vector3(0.93, 0.76, 0.62);
+  static final Vector3 pantsTone = Vector3(0.24, 0.31, 0.50);
+  static final Vector3 hairTone = Vector3(0.36, 0.22, 0.12);
 
   /// The 2D game's ground kind (`Sfx.stepKinds`) a block's footstep sounds
   /// like: snow, sand, water and mud, grass and leaves; bare ground (stone,
@@ -189,7 +197,7 @@ class Player extends SceneBody implements Target {
     mana = maxMana;
     fov = baseFov;
 
-    model.build(Vector3(0.92, 0.75, 0.62), c.shirt, Vector3(0.25, 0.30, 0.45), Vector3(0.30, 0.20, 0.12));
+    model.build(skinTone, c.shirt, pantsTone, hairTone);
     node.add(model.root);
 
     // Block highlight: the 12 edges of a slightly inflated unit cube.
@@ -215,6 +223,19 @@ class Player extends SceneBody implements Target {
     )
       ..visible = false
       ..castsShadows = false;
+
+    // Minecraft's hover: the aimed block turns a little lighter, a white film
+    // just outside its faces.
+    hoverGlow = GodotCamera.primitiveNode(
+      Mesh(
+        CuboidGeometry(Vector3(1.004, 1.004, 1.004)),
+        UnlitMaterial()
+          ..baseColorFactor = Vector4(1, 1, 1, 0.16)
+          ..vertexColorWeight = 0.0
+          ..alphaMode = AlphaMode.blend,
+      ),
+      castsShadows: false,
+    )..visible = false;
 
     _crackMat = UnlitMaterial()
       ..baseColorFactor = Vector4(0, 0, 0, 0)
@@ -374,9 +395,12 @@ class Player extends SceneBody implements Target {
       aimedNormal = hit.normal;
       highlight.visible = true;
       highlight.position = aimedBlock.toVector3();
+      hoverGlow.visible = true;
+      hoverGlow.position = aimedBlock.toVector3() + Vector3.all(0.5);
     } else {
       isAiming = false;
       highlight.visible = false;
+      hoverGlow.visible = false;
     }
   }
 
@@ -499,6 +523,8 @@ class Player extends SceneBody implements Target {
     } else if (_onLadder()) {
       velocity.y = jumpHeld ? climbSpeed : (sneaking ? -climbSpeed : 0.0);
       climbing = jumpHeld;
+    } else if (_leavingWater) {
+      velocity.y -= gravity * dt;
     } else if (inLiquid) {
       if (jumpHeld) {
         velocity.y = math.min(velocity.y + 20.0 * dt, 4.0);
@@ -539,6 +565,7 @@ class Player extends SceneBody implements Target {
     final posBefore = position.clone();
     move(dt);
     if (onFloor || inLiquid || climbing) _hopping = false;
+    if (onFloor || climbing || velocity.y <= 0.0) _leavingWater = false;
     if (onFloor) {
       // Stage 30: the stats block's metres walked (the ground displacement).
       final d = position - posBefore;
@@ -558,6 +585,24 @@ class Player extends SceneBody implements Target {
       } else if (onFloor && !sneaking && stepFits(1.02)) {
         velocity.y = jumpVelocity;
         _fallStartY = position.y;
+      }
+    }
+    // A swimmer bobbing at the surface is out of the water for a few ticks at
+    // a time; the launch still counts it as swimming for half a second, or a
+    // bank touched on the way up would wait for the next bob.
+    _sinceWater = inLiquid ? 0.0 : _sinceWater + dt;
+    if (hitWall && _sinceWater < 0.5 && !onFloor && jumpHeld && wish.length > 0.1 && !climbing && !_leavingWater) {
+      // Minecraft's climb out of the water: swimming into a bank with jump
+      // held launches the body over it at once. The swim alone rises at most
+      // 4 m/s and stops when the feet leave the water, so it bobs under a lip
+      // one block high. The launch clears the lowest lift that fits (at most
+      // 1.9, so a tall wall is never climbed) with a quarter block to spare.
+      for (var lift = 0.1; lift <= 1.9; lift += 0.1) {
+        if (!stepFits(lift)) continue;
+        velocity.y = math.sqrt(2.0 * gravity * (lift + 0.25));
+        _leavingWater = true;
+        _fallStartY = position.y;
+        break;
       }
     }
     // Fall damage.
@@ -588,8 +633,16 @@ class Player extends SceneBody implements Target {
       _drownTimer = 0.0;
     }
 
-    // Face the movement direction (or the camera when aiming/attacking).
-    if (wish.length > 0.1) _lastMoveDir = wish.clone();
+    // Face the movement direction (or the camera when aiming/attacking). A
+    // step with a backward part (more than 90 degrees from the camera) walks
+    // backward like Minecraft: the body faces the opposite way, still looking
+    // ahead, instead of turning around.
+    if (wish.length > 0.1) {
+      var d = math.atan2(-wish.x, -wish.z) - yaw;
+      d = (d + math.pi) % (math.pi * 2) - math.pi;
+      final backward = d.abs() > math.pi / 2 + 0.01;
+      _lastMoveDir = backward ? -wish : wish.clone();
+    }
     var face = _lastMoveDir;
     if (firstPerson || (gameplay && (input.down(GameAction.attack) || input.down(GameAction.use))) || gliding) face = fwd;
     final targetYaw = math.atan2(-face.x, -face.z);
