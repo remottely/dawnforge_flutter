@@ -1994,6 +1994,9 @@ class Game extends ChangeNotifier {
     final stage20 = _hasArg('--stage20') ? _probeStage20() : null;
     var rideFrom = Vector3.zero();
     final settle = int.tryParse(_arg('--settle=', '')) ?? 30;
+    // The mean over the whole settle window: `fps` is the last half second only, too noisy
+    // for a perf gate (VP3.0 in docs/VOXEL_PACKAGES_PLAN_2026-09-14.md).
+    final settleWatch = Stopwatch()..start();
     for (var i = 0; i < settle; i++) {
       await nextFrame();
       // --ride (with --stage20): hold W and sprint for ten frames and measure
@@ -2019,6 +2022,8 @@ class Game extends ChangeNotifier {
         player.probeStrike();
       }
     }
+    settleWatch.stop();
+    debugPrint('[probe] settle fps ${(settle * 1e6 / settleWatch.elapsedMicroseconds).toStringAsFixed(1)} over $settle frames');
     if (dummy != null) debugPrint('[probe] strike: zombie hp ${dummy.hp.toStringAsFixed(1)} after');
     if (_hasArg('--stage19')) {
       debugPrint('[probe] stage19: placed $stage19Placed blocks, faces before/after '

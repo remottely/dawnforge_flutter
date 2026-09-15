@@ -25,7 +25,7 @@
 | VP0 Scaffold & baseline | pending — VP0.1 can start now, VP0.2–VP0.3 wait on stage 32's commit | workspace resolves; empty packages analyze clean; baseline logs and parity hashes committed |
 | VP1 `voxel_core` by moves | **gate met** 2026-09-14 (VP1.1–VP1.9; VP1.5b pool size pending): 10 source files, 43 package tests, zero Flutter imports; the POC's `world/` keeps only `godot_camera`, `terrain_generator`, `terrain_material` and the `voxel_world` facade | every pure world file imported from `package:voxel_core`; POC tests, parity hashes and probe logs unchanged |
 | VP2 `voxel_scene` by moves | pending | no `flutter_scene` import left in the POC's `world/`; radius 8/12/16 within 10% of the baseline |
-| VP3 The render gap | pending | radius-16 sustained fps above the baseline's 70 (release, 3 workers) |
+| VP3 The render gap | in progress (VP3.0 done: baseline 67 settle fps at radius 16) | radius-16 sustained fps above the baseline's 70 (release, 3 workers) |
 | VP4 Release prep `0.0.1` | pending | `dart pub publish --dry-run` clean for both; a standalone example runs without the POC |
 
 ---
@@ -299,10 +299,55 @@ measurement (below).
   binaries A, B, A, B, … rather than running them in blocks, and it reports the median and the
   spread of each. A gate compares medians and is valid only when the difference exceeds both
   spreads. Record the spread of the unchanged binary before trusting any VP3 gain.
+  **Built (2026-09-14):** `tool/perf_loop.sh [--repeat N] [--cooldown S] [--radii "8 12 16"]
+  LABEL=DIR ...` takes any number of already built POC trees. Each round runs every radius
+  for every build and reverses the build order on odd rounds (A,B then B,A), so order and heat
+  fall on both sides. Raw rows go to stderr as they finish; the summary gives `median (spread)`
+  per build and radius, where spread = max − min. The probe gained
+  `[probe] settle fps X over N frames`, the mean over the whole `--settle` window. The old
+  `[probe] fps` line is kept, and `probe_baseline.sh --check` filters both.
+  **A/A with the old metric (3f1acd9a, the same binary as A and A2, `--repeat 5 --cooldown 20`):**
+
+  | Radius | A fill ms | A2 fill ms | A fps | A2 fps |
+  |--:|--:|--:|--:|--:|
+  | 8 | 750 (274) | 724 (199) | 120 (10) | 120 (15) |
+  | 12 | 1498 (317) | 1477 (159) | 85 (20) | 83 (11) |
+  | 16 | 2622 (212) | 2523 (415) | 79 (20) | 68 (16) |
+
+  Cells are median (spread). Fill medians agree within 4%, so fill gates stay valid. The
+  last-half-second fps does not: the same binary's radius-16 medians differ by 11 fps (15%) even
+  over five runs each, and one run spans 61–81. It cannot gate VP3. The settle-window mean
+  replaces it (A/A below).
+  **A/A with the settle-window mean (radius 16, the same binary, `--repeat 5 --cooldown 20`):**
+
+  | Build | Fill ms | Last-0.5 s fps | Settle fps | Peak RSS MB |
+  |:--|--:|--:|--:|--:|
+  | A | 2478 (422) | 68 (8) | 67.1 (7.8) | 1075 (169) |
+  | A2 | 2564 (474) | 70 (15) | 66.5 (13.5) | 1012 (152) |
+
+  The settle medians agree within 1% (67.1 against 66.5). Single runs still span 60–74 and look
+  bimodal (about 60–61 or 66–74), which points at machine state and not at the metric. **VP3
+  gate rule:** five runs per build, alternated; a gain counts when the settle-fps medians differ
+  by more than both spreads, about 14 fps (20%) at this noise. Greedy meshing and region batching
+  are expected to clear that or be judged not worth it. The baseline for VP3 at radius 16 is
+  **67 settle fps** at 3f1acd9a, below the plan's 70 target.
 - **VP3.1** Profile before fixing. Take a `--profile` DevTools timeline at radius 16, split into
   UI and raster time, and compare draw calls against vertex count. The ceiling today is 4
   surfaces × 1,225 chunks = 4,900 meshed nodes. Record the numbers here. They pick VP3.2 or
   VP3.3.
+  **Prep found (2026-09-14), flutter_scene 0.23.0:**
+  - No DevTools needed. A build with `--dart-define=FLUTTER_SCENE_PROFILE=true` prints
+    `FLUTTER_SCENE_PROFILE <pass>_mean_us= <pass>_max_us=` per render-graph pass
+    (`render/render_graph.dart:339`) and `FLUTTER_SCENE_PROFILE_ENCODER` with sort, encode,
+    draws and instances (`scene_encoder.dart:1166`). Draw calls against faces come from there.
+  - The depth prepass is off in the POC. It runs only for AO, TAA, SSR, contact shadows, depth
+    of field or a material that reads scene depth (`scene.dart:2261`), and the POC uses none.
+  - Sun shadows are on: 4 cascades, 2048 px, 110 m (`game.dart:432`). Chunk nodes are
+    `shadowStatic` (`voxel_chunk_view.dart:62`), so they render into the shadow cache only when
+    coverage or content changes (`scene.dart:2090`), not every frame. Measure with and without
+    `--noshadow` anyway, because a moving camera changes coverage.
+  - The probe's `fps` is the last 0.5 s window only (`game.dart:571`), so one hitch at the end of
+    the run moves it. Part of the ±15% is the metric, not the machine.
 - **VP3.2** If vertex cost dominates, use greedy meshing. **Known blocker:** `_noise`
   multiplies every voxel's colour by a positional hash (±7%), so no two neighbouring faces share
   a colour and nothing can merge. Move the jitter into the terrain shader first, as a hash of
