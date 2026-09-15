@@ -1,0 +1,274 @@
+import 'dart:math' as math;
+
+import 'package:vector_math/vector_math.dart';
+
+import '../grid/block_shape.dart';
+import '../grid/voxel_block_table.dart';
+import '../math/ivec3.dart';
+
+/// What a body or a ray needs to read from a world: the block at a cell and
+/// what that block is.
+abstract interface class VoxelQuery {
+  /// What each block id is.
+  VoxelBlockTable get table;
+
+  /// The block id at a world cell; air where nothing is generated.
+  int getBlockXYZ(int x, int y, int z);
+}
+
+/// An AABB anchored at the feet, swept against the block volume one axis at a
+/// time. Knows nothing of rendering: a game moves its visuals from [position].
+class VoxelBody {
+  /// The gap a body keeps from what it touches, so a resting body does not
+  /// count as overlapping the floor.
+  static const double skin = 0.001;
+
+  /// Downward acceleration in air, cells per second squared.
+  double gravity = 26.0;
+
+  /// Downward acceleration in a liquid; the sink speed there is capped at 3.
+  double liquidGravity = 4.0;
+
+  /// The middle of the body's feet, in world cells.
+  Vector3 position = Vector3.zero();
+
+  /// Half the box's width on x and on z.
+  double halfWidth = 0.3;
+
+  /// The box's height above [position].
+  double height = 1.75;
+
+  /// Cells per second, applied by [move].
+  Vector3 velocity = Vector3.zero();
+
+  /// The last [move] ended standing on something.
+  bool onFloor = false;
+
+  /// In any liquid, at the feet or the head.
+  bool inLiquid = false;
+
+  /// The head cell holds a liquid.
+  bool headInLiquid = false;
+
+  /// The liquid kind at the feet cell, or [VoxelBlockDef.noLiquid].
+  int feetLiquid = VoxelBlockDef.noLiquid;
+
+  /// The liquid kind at the head cell, or [VoxelBlockDef.noLiquid].
+  int headLiquid = VoxelBlockDef.noLiquid;
+
+  /// The last [move] was stopped on x or z.
+  bool hitWall = false;
+
+  /// The world the body moves in; set by [setup].
+  late VoxelQuery query;
+
+  /// A ghost passes through every block.
+  bool noclip = false;
+
+  /// The horizontal direction the last move was stopped in.
+  Vector3 _blocked = Vector3.zero();
+
+  /// Places the body in world [q] with half width [hw] and height [h]. Call
+  /// before the first [move].
+  void setup(VoxelQuery q, double hw, double h) {
+    query = q;
+    halfWidth = hw;
+    height = h;
+  }
+
+  /// The middle of the box.
+  Vector3 centre() => position + Vector3(0, height * 0.5, 0);
+
+  /// The ray parameter at which the ray enters the body's box grown by
+  /// [inflate] on every side: 0 when [origin] is inside, -1 when it misses.
+  double rayDistance(Vector3 origin, Vector3 direction, [double inflate = 0.0]) {
+    final mn = position - Vector3(halfWidth + inflate, inflate, halfWidth + inflate);
+    final mx = position + Vector3(halfWidth + inflate, height + inflate, halfWidth + inflate);
+    var near = double.negativeInfinity;
+    var far = double.infinity;
+    for (var axis = 0; axis < 3; axis++) {
+      final d = direction[axis];
+      final inv = d != 0.0 ? 1.0 / d : double.infinity;
+      final a = (mn[axis] - origin[axis]) * inv;
+      final b = (mx[axis] - origin[axis]) * inv;
+      final lo = a < b ? a : b;
+      final hi = a > b ? a : b;
+      if (lo > near) near = lo;
+      if (hi < far) far = hi;
+    }
+    if (far < near || far < 0.0) return -1.0;
+    return near > 0.0 ? near : 0.0;
+  }
+
+  /// Accelerates [velocity] down for [dt] seconds: [gravity] in air,
+  /// [liquidGravity] in a liquid with the sink speed capped at 3.
+  void applyGravity(double dt) {
+    if (inLiquid) {
+      velocity.y = (velocity.y - liquidGravity * dt).clamp(-3.0, double.infinity);
+    } else {
+      velocity.y -= gravity * dt;
+    }
+  }
+
+  /// Moves by [velocity] for [dt] seconds, x then z then y, stopping flush
+  /// against every collision box. Updates [onFloor], [hitWall] and the liquid
+  /// senses; a blocked axis loses its velocity. [noclip] skips the collisions.
+  void move(double dt) {
+    final next = position.clone();
+    hitWall = false;
+    _blocked = Vector3.zero();
+    if (noclip) {
+      position = next + velocity * dt;
+      onFloor = false;
+      _senseFluids();
+      return;
+    }
+    next.x += velocity.x * dt;
+    var hit = _solidBoxesAt(next);
+    if (hit.isNotEmpty) {
+      next.x = _resolveAxis(hit, 0, velocity.x > 0.0);
+      _blocked.x = velocity.x > 0.0 ? 1.0 : -1.0;
+      velocity.x = 0.0;
+      hitWall = true;
+    }
+    next.z += velocity.z * dt;
+    hit = _solidBoxesAt(next);
+    if (hit.isNotEmpty) {
+      next.z = _resolveAxis(hit, 2, velocity.z > 0.0);
+      _blocked.z = velocity.z > 0.0 ? 1.0 : -1.0;
+      velocity.z = 0.0;
+      hitWall = true;
+    }
+    onFloor = false;
+    next.y += velocity.y * dt;
+    hit = _solidBoxesAt(next);
+    if (hit.isNotEmpty) {
+      if (velocity.y > 0.0) {
+        next.y = _resolveAxis(hit, 1, true);
+      } else {
+        next.y = _resolveAxis(hit, 1, false);
+        onFloor = true;
+      }
+      velocity.y = 0.0;
+    }
+    position = next;
+    _senseFluids();
+  }
+
+  /// The coordinate along [axis] that puts the body flush against the boxes it
+  /// just entered: moving positive, the nearest box face on the near side;
+  /// moving negative, the farthest far face. The sweep is one axis at a time,
+  /// so every box in [hit] was entered along this axis.
+  double _resolveAxis(List<CollisionBox> hit, int axis, bool positive) {
+    final extent = axis == 1 ? height : halfWidth;
+    if (positive) {
+      var face = double.infinity;
+      for (final box in hit) {
+        face = math.min(face, box.min(axis));
+      }
+      return face - extent - skin;
+    }
+    var face = double.negativeInfinity;
+    for (final box in hit) {
+      face = math.max(face, box.max(axis));
+    }
+    return face + skin + (axis == 1 ? 0.0 : extent);
+  }
+
+  void _senseFluids() {
+    final feetId = query.getBlockXYZ(position.x.floor(), (position.y + 0.3).floor(), position.z.floor());
+    final headId = query.getBlockXYZ(position.x.floor(), (position.y + height - 0.15).floor(), position.z.floor());
+    final t = query.table;
+    feetLiquid = t.liquidKind(feetId);
+    headLiquid = t.liquidKind(headId);
+    inLiquid = t.isLiquid(feetId) || t.isLiquid(headId);
+    headInLiquid = t.isLiquid(headId);
+  }
+
+  /// Step up onto a low obstacle when walking into it: half a block first (a
+  /// slab, the low step of stairs), then a full block unless [fullBlock] is
+  /// false. The lifted body is also tested a hair further in the blocked
+  /// direction, so a half step never wins against a full-height wall.
+  bool tryStepUp({bool fullBlock = true}) {
+    if (!hitWall || !onFloor) return false;
+    for (final lift in fullBlock ? const [0.52, 1.02] : const [0.52]) {
+      if (!stepFits(lift)) continue;
+      position = position + Vector3(0, lift, 0);
+      return true;
+    }
+    return false;
+  }
+
+  /// Would the body, lifted by [lift] and nudged a hair toward the wall it just
+  /// hit, stand clear of every block? A game that jumps a full step instead of
+  /// lifting onto it asks this with 1.02.
+  bool stepFits(double lift) {
+    final up = position + Vector3(0, lift, 0);
+    return !_overlapsSolid(up) && !_overlapsSolid(up + _blocked * 0.05);
+  }
+
+  /// Cube-based on purpose: callers ask "is the body in this CELL" (a block
+  /// about to be placed, a door), which does not depend on the block's shape.
+  bool overlapsBlock(IVec3 b) =>
+      b.x < position.x + halfWidth &&
+      b.x + 1.0 > position.x - halfWidth &&
+      b.y < position.y + height &&
+      b.y + 1.0 > position.y &&
+      b.z < position.z + halfWidth &&
+      b.z + 1.0 > position.z - halfWidth;
+
+  bool _overlapsSolid(Vector3 at) => _solidBoxesAt(at, true).isNotEmpty;
+
+  /// Every collision box (world space) that overlaps the body placed at [at],
+  /// shrunk by [skin]. The row below the feet is scanned too: a fence post is
+  /// 1.5 tall and reaches into the cell above its own. [firstOnly] stops at the
+  /// first hit (a yes/no query).
+  List<CollisionBox> _solidBoxesAt(Vector3 at, [bool firstOnly = false]) {
+    final out = <CollisionBox>[];
+    final bx0 = at.x - halfWidth + skin;
+    final bx1 = at.x + halfWidth - skin;
+    final by0 = at.y + skin;
+    final by1 = at.y + height - skin;
+    final bz0 = at.z - halfWidth + skin;
+    final bz1 = at.z + halfWidth - skin;
+    final minX = bx0.floor();
+    final maxX = bx1.floor();
+    final minY = by0.floor() - 1;
+    final maxY = by1.floor();
+    final minZ = bz0.floor();
+    final maxZ = bz1.floor();
+    final table = query.table;
+    for (var y = minY; y <= maxY; y++) {
+      for (var z = minZ; z <= maxZ; z++) {
+        for (var x = minX; x <= maxX; x++) {
+          // y < 0 is solid rock.
+          final boxes = y < 0 ? const [CollisionBox.full] : table.collisionBoxes(query.getBlockXYZ(x, y, z));
+          for (final box in boxes) {
+            final p = box.shifted(x, y, z);
+            if (p.x0 < bx1 && p.x1 > bx0 && p.y0 < by1 && p.y1 > by0 && p.z0 < bz1 && p.z1 > bz0) {
+              out.add(p);
+              if (firstOnly) return out;
+            }
+          }
+        }
+      }
+    }
+    return out;
+  }
+
+  /// Is there a solid block directly in front (for climbing)? Cube-based on
+  /// purpose: climbing reads the cell, the shape inside it does not matter.
+  /// The lowest probe is the feet cell itself: a probe above the feet loses the
+  /// wall while the feet are still below its top, and a climber stalls there,
+  /// falling back and climbing again, instead of reaching the top.
+  bool wallAhead(Vector3 direction) {
+    final probe = position + direction.normalized() * (halfWidth + 0.35);
+    for (final dy in [0.0, 1.0, height - 0.2]) {
+      if (_solidCell(probe.x.floor(), (position.y + dy).floor(), probe.z.floor())) return true;
+    }
+    return false;
+  }
+
+  /// y < 0 is solid rock.
+  bool _solidCell(int x, int y, int z) => y < 0 || query.table.isSolid(query.getBlockXYZ(x, y, z));
+}

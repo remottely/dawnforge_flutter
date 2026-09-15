@@ -1,0 +1,20 @@
+name: voxel_core
+description: >-
+  Pure-Dart voxel engine core: chunk grid, meshing with light and ambient
+  occlusion, chunk streaming on isolates, voxel physics. Renderer-agnostic.
+version: 0.0.0
+publish_to: none
+
+environment:
+  sdk: ^3.13.0
+
+resolution: workspace
+
+# No Flutter SDK dependency, on purpose: a Flutter import here fails to resolve.
+dependencies:
+  meta: ^1.15.0
+  vector_math: ^2.1.4
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.0

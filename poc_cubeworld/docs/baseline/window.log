@@ -1,0 +1,6 @@
+flutter: [probe] window filled: 361 chunks, 649942 faces in 1917 ms
+flutter: [probe] camera at [9.050000190734863,51.8476448059082,9.012188911437988] distance 0.60 yaw 0.00 pitch -0.35
+flutter: [probe] player at [8.5,50.000999450683594,8.5] structures near: [(type: 1, x: -72, y: 32, z: 41), (type: 3, x: 70, y: 56, z: 80), (type: 1, x: -19, y: 32, z: 131), (type: 1, x: 29, y: 37, z: 121), (type: 2, x: 116, y: 49, z: 133), (type: 5, x: 19, y: 56, z: 36)]
+flutter: [probe] fps 83 mobs 2 drops 0 projectiles 0
+flutter: [probe] view 1600.0x900.0 logical @1.0x
+flutter: [probe] screenshot saved to /var/folders/bk/p7t1xqds12n905smmfgzr03m0000gn/T/tmp.0ZbeDnvE7Z/window.png
