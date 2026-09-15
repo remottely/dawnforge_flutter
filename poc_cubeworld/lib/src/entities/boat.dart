@@ -70,7 +70,7 @@ class Boat extends SceneBody {
     final feet = IVec3(position.x.floor(), (position.y + 0.15).floor(), position.z.floor());
     if (world.isLiquid(feet)) {
       velocity.y = lerpd(velocity.y, 1.6, dt * 5.0);
-    } else if (inWater) {
+    } else if (inLiquid) {
       velocity.y = lerpd(velocity.y, 0.0, dt * 6.0);
     } else {
       applyGravity(dt);
@@ -78,7 +78,7 @@ class Boat extends SceneBody {
     if (driver != null) {
       yaw += steer * -1.7 * dt; // Godot: D (steer +1) turns toward +X, clockwise from above
       final fwd = Vector3(-math.sin(yaw), 0, -math.cos(yaw));
-      final target = fwd * throttle * (inWater ? 6.5 : 1.5);
+      final target = fwd * throttle * (inLiquid ? 6.5 : 1.5);
       velocity.x = lerpd(velocity.x, target.x, dt * 2.5);
       velocity.z = lerpd(velocity.z, target.z, dt * 2.5);
     } else {
@@ -89,7 +89,7 @@ class Boat extends SceneBody {
     syncNode();
     _roll = lerpd(_roll, -steer * 0.12 * throttle, dt * 4.0);
     _hull.rotation = eulerYXZ(0, yaw, _roll);
-    _hull.position = Vector3(0, inWater ? math.sin(_time * 2.0 + position.x) * 0.03 : 0.0, 0);
+    _hull.position = Vector3(0, inLiquid ? math.sin(_time * 2.0 + position.x) * 0.03 : 0.0, 0);
   }
 
   /// Replica: the host's latest pose; a jump beyond 8 m snaps, the rest is lerped.

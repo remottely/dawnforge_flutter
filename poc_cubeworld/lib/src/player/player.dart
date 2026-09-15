@@ -446,10 +446,10 @@ class Player extends SceneBody implements Target {
     if (_probeWalk.length2 > 0.0) wish = _probeWalk.clone();
     if (wish.length > 1.0) wish = wish.normalized();
     if (wish.length > 0.1) Tutorial.instance.event('move');
-    final sprinting = gameplay && input.down(GameAction.sprint) && stamina > 1.0 && inputY < 0.0 && !inWater;
+    final sprinting = gameplay && input.down(GameAction.sprint) && stamina > 1.0 && inputY < 0.0 && !inLiquid;
     final sneaking = gameplay && input.down(GameAction.sneak);
     var speed = sprinting ? sprintSpeed : (sneaking ? sneakSpeed : walkSpeed);
-    if (inWater) speed = swimSpeed;
+    if (inLiquid) speed = swimSpeed;
     speed *= effects.speedMultiplier() * (1.0 + 0.05 * talentRank('swiftness'));
     // Stage 29: soul sand under the feet.
     if (onFloor) speed *= Blocks.speedMult(world.getBlockXYZ(position.x.floor(), (position.y - 0.05).floor(), position.z.floor()));
@@ -475,14 +475,14 @@ class Player extends SceneBody implements Target {
     }
     // Climbing (Cube World): push into a wall while holding jump.
     climbing = false;
-    if (jumpHeld && wish.length > 0.1 && wallAhead(wish) && !inWater && stamina > 0.5) {
+    if (jumpHeld && wish.length > 0.1 && wallAhead(wish) && !inLiquid && stamina > 0.5) {
       climbing = true;
       velocity.y = climbSpeed;
       stamina = math.max(stamina - 10.0 * dt, 0.0);
     } else if (_onLadder()) {
       velocity.y = jumpHeld ? climbSpeed : (sneaking ? -climbSpeed : 0.0);
       climbing = jumpHeld;
-    } else if (inWater) {
+    } else if (inLiquid) {
       if (jumpHeld) {
         velocity.y = math.min(velocity.y + 20.0 * dt, 4.0);
       } else {
@@ -495,7 +495,7 @@ class Player extends SceneBody implements Target {
 
     // Gliding: hold G in the air with a glider in the inventory.
     gliding = false;
-    if (gameplay && input.down(GameAction.glide) && !onFloor && !inWater && velocity.y < 0.0 && inventory.countOf('glider') > 0) {
+    if (gameplay && input.down(GameAction.glide) && !onFloor && !inLiquid && velocity.y < 0.0 && inventory.countOf('glider') > 0) {
       gliding = true;
       Achievements.instance.unlock('glider');
       velocity.y = math.max(velocity.y, -1.6);
@@ -525,13 +525,13 @@ class Player extends SceneBody implements Target {
       final d = position - posBefore;
       GameState.instance.distanceWalked += math.sqrt(d.x * d.x + d.z * d.z);
     }
-    if (hitWall && wish.length > 0.1 && !climbing && !inWater) tryStepUp();
+    if (hitWall && wish.length > 0.1 && !climbing && !inLiquid) tryStepUp();
     // Fall damage.
     if (!wasFloor && onFloor) {
       final fall = _fallStartY - position.y;
-      if (fall > 4.0 && !inWater) takeDamage(((fall - 4.0) * 1.2).floorToDouble(), 'fall');
+      if (fall > 4.0 && !inLiquid) takeDamage(((fall - 4.0) * 1.2).floorToDouble(), 'fall');
     }
-    if (onFloor || gliding || climbing || inWater) {
+    if (onFloor || gliding || climbing || inLiquid) {
       _fallStartY = position.y;
     } else if (velocity.y > 0.0) {
       _fallStartY = math.max(_fallStartY, position.y);
@@ -544,7 +544,7 @@ class Player extends SceneBody implements Target {
         takeDamage(4.0, 'lava');
       }
     }
-    if (headInWater) {
+    if (headInLiquid) {
       _drownTimer += dt;
       if (_drownTimer > 8.0) {
         takeDamage(2.0, 'drowning');
@@ -575,8 +575,8 @@ class Player extends SceneBody implements Target {
         stepsTaken += 1;
       }
     }
-    if (inWater && !_wasInWater) Sfx.play('splash', -8.0);
-    _wasInWater = inWater;
+    if (inLiquid && !_wasInWater) Sfx.play('splash', -8.0);
+    _wasInWater = inLiquid;
     model.setHeld(heldItem());
     _finishTick(dt, input, gameplay, fwd, wish, sprinting);
   }
@@ -639,7 +639,7 @@ class Player extends SceneBody implements Target {
     mana = math.min(mana + 2.5 * (1.0 + 0.25 * talentRank('arcana')) * dt, maxMana);
     _invulnerable = math.max(_invulnerable - dt, 0.0);
     _dodgeCd = math.max(_dodgeCd - dt, 0.0);
-    if (inWater && effects.has('burning')) effects.clear('burning');
+    if (inLiquid && effects.has('burning')) effects.clear('burning');
     for (final ev in effects.tick(dt)) {
       if (ev.damage > 0.0) {
         takeDamage(ev.damage, ev.id);
@@ -2092,7 +2092,7 @@ class Player extends SceneBody implements Target {
 
   void _dodgePressed() {
     final cost = math.max(15.0 - 5.0 * talentRank('shadowstep'), 0.0);
-    if (_dodge > 0.0 || _dodgeCd > 0.0 || stamina < cost || riding != null || mount != null || cart != null || sleeping > 0.0 || inWater) {
+    if (_dodge > 0.0 || _dodgeCd > 0.0 || stamina < cost || riding != null || mount != null || cart != null || sleeping > 0.0 || inLiquid) {
       return;
     }
     stamina -= cost;

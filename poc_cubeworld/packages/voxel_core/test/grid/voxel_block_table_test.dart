@@ -39,7 +39,7 @@ void main() {
 
   test('its mesher draws with its arrays', () {
     final c = Uint8List(ChunkSize.volume)..[ChunkSize.index(8, 40, 8)] = 4;
-    final r = table.mesher().build(0, 0, c, null, null, null, null, null, null, null, null);
+    final r = table.mesher().build(0, 0, [c, ...ChunkMesher.noNeighbours]);
     expect(r.glow.faceCount, 6, reason: 'emission 15 >= the glow threshold');
   });
 

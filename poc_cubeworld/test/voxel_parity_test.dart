@@ -88,7 +88,7 @@ void main() {
       Uint8List at(int dx, int dz) => gen.generateIn(cx + dx, cz + dz, 0);
       final ring = [at(0, 0), at(-1, 0), at(1, 0), at(0, -1), at(0, 1), at(-1, -1), at(1, -1), at(-1, 1), at(1, 1)];
       actual['gen $cx,$cz'] = _fnv(ring[0]);
-      final r = mesher.build(cx, cz, ring[0], ring[1], ring[2], ring[3], ring[4], ring[5], ring[6], ring[7], ring[8]);
+      final r = mesher.build(cx, cz, ring);
       for (final (name, s) in [('solid', r.solid), ('liquid', r.liquid), ('cutout', r.cutout), ('glow', r.glow)]) {
         actual['mesh $cx,$cz $name positions'] = _fnv(s.positions);
         actual['mesh $cx,$cz $name normals'] = _fnv(s.normals);

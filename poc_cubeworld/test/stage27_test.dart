@@ -223,7 +223,7 @@ void main() {
       place(c);
       final mesher = ChunkMesher(
           palette: Blocks.palette(), shape: Blocks.shapes(), opaque: Blocks.opaqueTable(), emission: Blocks.emission());
-      return mesher.build(0, 0, c, null, null, null, null, null, null, null, null);
+      return mesher.build(0, 0, [c, ...ChunkMesher.noNeighbours]);
     }
 
     int cell(int x, int y, int z) => x + 16 * (z + 16 * y);

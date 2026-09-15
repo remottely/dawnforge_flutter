@@ -11,6 +11,9 @@ class SceneBody extends VoxelBody {
   final Node node = Node();
   late VoxelWorld world;
 
+  /// Gone from the world; the game drops it at the end of the frame.
+  bool removed = false;
+
   @override
   void setup(covariant VoxelWorld q, double hw, double h) {
     world = q;

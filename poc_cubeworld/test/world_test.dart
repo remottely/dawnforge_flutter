@@ -49,7 +49,7 @@ void main() {
     final ring = [for (var dz = -1; dz <= 1; dz++) for (var dx = -1; dx <= 1; dx++) gen.generate(dx, dz)];
     // ring order in the world: c, nx, px, nz, pz, nxnz, pxnz, nxpz, pxpz
     Uint8List at(int dx, int dz) => ring[(dz + 1) * 3 + (dx + 1)];
-    final r = mesher.build(0, 0, at(0, 0), at(-1, 0), at(1, 0), at(0, -1), at(0, 1), at(-1, -1), at(1, -1), at(-1, 1), at(1, 1));
+    final r = mesher.build(0, 0, [at(0, 0), at(-1, 0), at(1, 0), at(0, -1), at(0, 1), at(-1, -1), at(1, -1), at(-1, 1), at(1, 1)]);
     expect(r.faces > 200, isTrue);
     expect(r.solid.positions.length % 12, 0);
     expect(r.solid.colors.length, r.solid.vertexCount * 4);
@@ -66,7 +66,7 @@ void main() {
     }
     c[16 * 16 * 40 + 8 + 16 * 8] = Blocks.indexOf('tall_grass');
     final mesher = ChunkMesher(palette: Blocks.palette(), shape: Blocks.shapes(), opaque: Blocks.opaqueTable(), emission: Blocks.emission());
-    final r = mesher.build(0, 0, c, null, null, null, null, null, null, null, null);
+    final r = mesher.build(0, 0, [c, ...ChunkMesher.noNeighbours]);
     expect(r.cutout.faceCount, 4);
     // top faces + the four open sides (neighbours are air when the ring is missing)
     expect(r.solid.faceCount, 16 * 16 + 4 * 16 * 40);
@@ -78,7 +78,7 @@ void main() {
       place(c);
       final mesher = ChunkMesher(
           palette: Blocks.palette(), shape: Blocks.shapes(), opaque: Blocks.opaqueTable(), emission: Blocks.emission());
-      return mesher.build(0, 0, c, null, null, null, null, null, null, null, null).solid.faceCount;
+      return mesher.build(0, 0, [c, ...ChunkMesher.noNeighbours]).solid.faceCount;
     }
 
     int at(int x, int y, int z) => x + 16 * (z + 16 * y);

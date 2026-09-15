@@ -2327,7 +2327,7 @@ class Game extends ChangeNotifier {
     await _stage28Settle(1.2);
     int headSky(Mob m) => world.lightAt(IVec3.floor(m.position + Vector3(0, 1.5, 0))).sky;
     debugPrint('[probe] stage32 daylight: zombie in sun burning=${sun.burning}, zombie under roof burning=${roof.burning}, '
-        'zombie in water burning=${pool.burning} (head sky ${headSky(sun)} / ${headSky(roof)} / ${headSky(pool)}, in_water=${pool.inWater}, '
+        'zombie in water burning=${pool.burning} (head sky ${headSky(sun)} / ${headSky(roof)} / ${headSky(pool)}, in_water=${pool.inLiquid}, '
         'day factor ${dayFactor.toStringAsFixed(2)})');
     roof.removed = true;
     pool.removed = true;
@@ -2729,7 +2729,7 @@ class Game extends ChangeNotifier {
       maxX = math.max(maxX, p.x);
       maxVy = math.max(maxVy, player.velocity.y);
       if (_hasArg('--trace') && i % 5 == 0) {
-        debugPrint('[trace] walk f$i pos $p vel ${player.velocity} floor ${player.onFloor} wall ${player.hitWall} water ${player.inWater}');
+        debugPrint('[trace] walk f$i pos $p vel ${player.velocity} floor ${player.onFloor} wall ${player.hitWall} water ${player.inLiquid}');
       }
       if (p.x >= stopX) player.probeWalk(Vector3.zero());
       if (jump && !jumped && player.hitWall && player.onFloor && p.x > jumpAfterX) {

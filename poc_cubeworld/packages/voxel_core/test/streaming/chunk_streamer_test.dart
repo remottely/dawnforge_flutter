@@ -32,7 +32,7 @@ class _Jobs implements ChunkJobs {
 
   @override
   Future<ChunkMeshResult> mesh(int cx, int cz, List<Uint8List?> ring) => Future.value(
-      _table.mesher().build(cx, cz, ring[0]!, ring[1], ring[2], ring[3], ring[4], ring[5], ring[6], ring[7], ring[8]));
+      _table.mesher().build(cx, cz, ring));
 }
 
 class _Sink implements ChunkMeshSink {

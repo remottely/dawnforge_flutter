@@ -19,8 +19,12 @@ abstract interface class VoxelQuery {
 /// time. Knows nothing of rendering: a game moves its visuals from [position].
 class VoxelBody {
   static const double skin = 0.001;
-  static const double gravity = 26.0;
-  static const double waterGravity = 4.0;
+
+  /// Downward acceleration in air, cells per second squared.
+  double gravity = 26.0;
+
+  /// Downward acceleration in a liquid; the sink speed there is capped at 3.
+  double liquidGravity = 4.0;
 
   Vector3 position = Vector3.zero();
   double halfWidth = 0.3;
@@ -29,8 +33,10 @@ class VoxelBody {
   bool onFloor = false;
 
   /// In any liquid, at the feet or the head.
-  bool inWater = false;
-  bool headInWater = false;
+  bool inLiquid = false;
+
+  /// The head cell holds a liquid.
+  bool headInLiquid = false;
 
   /// The liquid kind at the feet / head cell, or [VoxelBlockDef.noLiquid].
   int feetLiquid = VoxelBlockDef.noLiquid;
@@ -38,7 +44,6 @@ class VoxelBody {
 
   bool hitWall = false;
   late VoxelQuery query;
-  bool removed = false;
 
   /// A ghost passes through every block.
   bool noclip = false;
@@ -74,8 +79,8 @@ class VoxelBody {
   }
 
   void applyGravity(double dt) {
-    if (inWater) {
-      velocity.y = (velocity.y - waterGravity * dt).clamp(-3.0, double.infinity);
+    if (inLiquid) {
+      velocity.y = (velocity.y - liquidGravity * dt).clamp(-3.0, double.infinity);
     } else {
       velocity.y -= gravity * dt;
     }
@@ -149,8 +154,8 @@ class VoxelBody {
     final t = query.table;
     feetLiquid = t.liquidKind(feetId);
     headLiquid = t.liquidKind(headId);
-    inWater = t.isLiquid(feetId) || t.isLiquid(headId);
-    headInWater = t.isLiquid(headId);
+    inLiquid = t.isLiquid(feetId) || t.isLiquid(headId);
+    headInLiquid = t.isLiquid(headId);
   }
 
   /// Step up onto a low obstacle when walking into it: half a block first (a

@@ -29,10 +29,10 @@ void main() {
     return c;
   }
 
-  void put(Uint8List c, int x, int y, int z, String block) => c[ChunkMesher.index(x, y, z)] = id(block);
-  int at(Uint8List v, int x, int y, int z) => v[ChunkMesher.index(x, y, z)];
+  void put(Uint8List c, int x, int y, int z, String block) => c[ChunkSize.index(x, y, z)] = id(block);
+  int at(Uint8List v, int x, int y, int z) => v[ChunkSize.index(x, y, z)];
   ChunkMeshResult build(Uint8List c, {bool lighting = true}) =>
-      mesher(lighting: lighting).build(0, 0, c, null, null, null, null, null, null, null, null);
+      mesher(lighting: lighting).build(0, 0, [c, ...ChunkMesher.noNeighbours]);
 
   /// A cave: stone from the floor up to y 20 everywhere, a 7x7x4 room carved at
   /// x/z 3..9, y 10..13, a wall torch on its north wall at (6, 11, 3).

@@ -11,39 +11,17 @@ ChunkMesher _mesher() => ChunkMesher(
       emission: Uint8List.fromList([0, 0]),
     );
 
-ChunkMeshResult _build(Uint8List c) => _mesher().build(0, 0, c, null, null, null, null, null, null, null, null);
+ChunkMeshResult _build(Uint8List c) => _mesher().build(0, 0, [c, ...ChunkMesher.noNeighbours]);
 
 void main() {
   test('the mesher shape ints are BlockShape indices (kept const for the hot loop)', () {
-    final pinned = {
-      BlockShape.cube: ChunkMesher.shapeCube,
-      BlockShape.cross: ChunkMesher.shapeCross,
-      BlockShape.liquid: ChunkMesher.shapeLiquid,
-      BlockShape.torch: ChunkMesher.shapeTorch,
-      BlockShape.flower: ChunkMesher.shapeFlower,
-      BlockShape.panelZ: ChunkMesher.shapePanelZ,
-      BlockShape.panelX: ChunkMesher.shapePanelX,
-      BlockShape.wallTorch: ChunkMesher.shapeWallTorch,
-      BlockShape.slab: ChunkMesher.shapeSlab,
-      BlockShape.fence: ChunkMesher.shapeFence,
-      BlockShape.stairsN: ChunkMesher.shapeStairsN,
-      BlockShape.stairsE: ChunkMesher.shapeStairsE,
-      BlockShape.stairsS: ChunkMesher.shapeStairsS,
-      BlockShape.stairsW: ChunkMesher.shapeStairsW,
-      BlockShape.wire: ChunkMesher.shapeWire,
-      BlockShape.railNs: ChunkMesher.shapeRailNs,
-      BlockShape.railEw: ChunkMesher.shapeRailEw,
-      BlockShape.railNe: ChunkMesher.shapeRailNe,
-      BlockShape.railNw: ChunkMesher.shapeRailNw,
-      BlockShape.railSe: ChunkMesher.shapeRailSe,
-      BlockShape.railSw: ChunkMesher.shapeRailSw,
-      BlockShape.railSlopeN: ChunkMesher.shapeRailSlopeN,
-      BlockShape.railSlopeE: ChunkMesher.shapeRailSlopeE,
-      BlockShape.railSlopeS: ChunkMesher.shapeRailSlopeS,
-      BlockShape.railSlopeW: ChunkMesher.shapeRailSlopeW,
-    };
-    expect(pinned, hasLength(BlockShape.values.length));
-    pinned.forEach((shape, value) => expect(value, shape.index, reason: '$shape'));
+    expect(ChunkMesher.shapeIndices, [for (final s in BlockShape.values) s.index]);
+  });
+
+  test('build takes a ring of nine with the chunk first', () {
+    final c = Uint8List(ChunkSize.volume);
+    expect(() => _mesher().build(0, 0, [c]), throwsArgumentError);
+    expect(() => _mesher().build(0, 0, [null, ...ChunkMesher.noNeighbours]), throwsArgumentError);
   });
 
   test('a lone cube in air meshes six faces; its top sees open sky, its bottom the sideways spread', () {

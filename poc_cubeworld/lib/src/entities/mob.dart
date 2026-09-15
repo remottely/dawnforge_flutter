@@ -119,8 +119,8 @@ class Mob extends SceneBody {
   /// Stage 32: the daylight rule. A zombie, skeleton or wither skeleton whose
   /// head cell reads full sky while the day factor is at least 0.9 burns, unless
   /// it is in water or tamed (the underworld has no sky, so nothing burns there).
-  static bool burnsInDaylight(String speciesId, {required bool inWater, required bool tamed, required int headSky, required double dayFactor}) =>
-      burnsInDaylightIds.contains(speciesId) && !inWater && !tamed && headSky >= 15 && dayFactor >= 0.9;
+  static bool burnsInDaylight(String speciesId, {required bool inLiquid, required bool tamed, required int headSky, required double dayFactor}) =>
+      burnsInDaylightIds.contains(speciesId) && !inLiquid && !tamed && headSky >= 15 && dayFactor >= 0.9;
 
   /// Stage 32: which hurt voice a species uses: flying, undead, large (1.5 m or
   /// a boss) or small.
@@ -633,9 +633,9 @@ class Mob extends SceneBody {
     _burnTimer = 0.5;
     final was = burning;
     burning = false;
-    if (burnsInDaylightIds.contains(species.id) && !inWater && !tamed) {
+    if (burnsInDaylightIds.contains(species.id) && !inLiquid && !tamed) {
       final head = IVec3(position.x.floor(), (position.y + height - 0.15).floor(), position.z.floor());
-      burning = burnsInDaylight(species.id, inWater: inWater, tamed: tamed, headSky: world.lightAt(head).sky, dayFactor: main.dayFactor);
+      burning = burnsInDaylight(species.id, inLiquid: inLiquid, tamed: tamed, headSky: world.lightAt(head).sky, dayFactor: main.dayFactor);
     }
     if (burning) {
       if (!was) _setTint(Vector4(1.0, 0.55, 0.15, 0.85));
@@ -739,7 +739,7 @@ class Mob extends SceneBody {
   /// x1.4, jump on the floor.
   void _rideTick(double dt) {
     final speed = species.speed * (rideSprint ? 1.4 : 1.0);
-    if (inWater && rideInput.length > 0.1) velocity.y = 3.0;
+    if (inLiquid && rideInput.length > 0.1) velocity.y = 3.0;
     applyGravity(dt);
     if (rideJump && onFloor) velocity.y = 9.0;
     rideJump = false;
@@ -914,7 +914,7 @@ class Mob extends SceneBody {
       return;
     }
     final hops = species.hops;
-    if (inWater) {
+    if (inLiquid) {
       if (_dir.length > 0.1) velocity.y = 3.0;
       applyGravity(dt);
     } else {

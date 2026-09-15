@@ -131,7 +131,7 @@ class _Surface {
 /// block / 15) so the terrain shader can scale the sky half by the time of day.
 /// The two light volumes (chunk-sized) ride the result for `lightAt`.
 ///
-/// Stage 32: the pad is the whole 3x3 ring ([pad] = 16, 48x48x128), so the light
+/// Stage 32: the _pad is the whole 3x3 ring ([pad] = 16, 48x48x128), so the light
 /// BFS sees every emitter within reach of this chunk and a torch beside a border
 /// lights both sides alike (no seam).
 class ChunkMesher {
@@ -143,45 +143,56 @@ class ChunkMesher {
     this.lighting = true,
   }) : _opaque = List<bool>.generate(opaque.length, (i) => opaque[i] != 0);
 
-  static const int sizeX = ChunkSize.sizeX, sizeZ = ChunkSize.sizeZ, sizeY = ChunkSize.sizeY;
+  static const int _sizeX = ChunkSize.sizeX, _sizeZ = ChunkSize.sizeZ, _sizeY = ChunkSize.sizeY;
 
   /// Stage 32: the padded volume holds the whole 3x3 ring (16 cells a side), so
   /// a torch up to 15 cells past a border still reaches this chunk's faces and
   /// the light BFS is seam-free. The mesh loop and the AO reads are unchanged;
   /// only the fill and the two BFS grew, and their buffers are per isolate
   /// (static, Godot's `[ThreadStatic]`) rather than per mesher.
-  static const int pad = 16;
-  static const int _px = sizeX + 2 * pad, _pz = sizeZ + 2 * pad;
-  static const int _padVolume = _px * _pz * sizeY;
-  static const int _chunkVolume = sizeX * sizeZ * sizeY;
+  static const int _pad = 16;
+  static const int _px = _sizeX + 2 * _pad, _pz = _sizeZ + 2 * _pad;
+  static const int _padVolume = _px * _pz * _sizeY;
+  static const int _chunkVolume = _sizeX * _sizeZ * _sizeY;
   static const int _air = 0;
   static const int _maxLight = 15;
 
-  static const int shapeCube = 0,
-      shapeCross = 1,
-      shapeLiquid = 2,
-      shapeTorch = 3,
-      shapeFlower = 4,
-      shapePanelZ = 5,
-      shapePanelX = 6,
-      shapeWallTorch = 7,
-      shapeSlab = 8,
-      shapeFence = 9,
-      shapeStairsN = 10,
-      shapeStairsE = 11,
-      shapeStairsS = 12,
-      shapeStairsW = 13,
-      shapeWire = 14,
-      shapeRailNs = 15,
-      shapeRailEw = 16,
-      shapeRailNe = 17,
-      shapeRailNw = 18,
-      shapeRailSe = 19,
-      shapeRailSw = 20,
-      shapeRailSlopeN = 21,
-      shapeRailSlopeE = 22,
-      shapeRailSlopeS = 23,
-      shapeRailSlopeW = 24;
+  static const int _shapeCube = 0,
+      _shapeCross = 1,
+      _shapeLiquid = 2,
+      _shapeTorch = 3,
+      _shapeFlower = 4,
+      _shapePanelZ = 5,
+      _shapePanelX = 6,
+      _shapeWallTorch = 7,
+      _shapeSlab = 8,
+      _shapeFence = 9,
+      _shapeStairsN = 10,
+      _shapeStairsE = 11,
+      _shapeStairsS = 12,
+      _shapeStairsW = 13,
+      _shapeWire = 14,
+      _shapeRailNs = 15,
+      _shapeRailEw = 16,
+      _shapeRailNe = 17,
+      _shapeRailNw = 18,
+      _shapeRailSe = 19,
+      _shapeRailSw = 20,
+      _shapeRailSlopeN = 21,
+      _shapeRailSlopeE = 22,
+      _shapeRailSlopeS = 23,
+      _shapeRailSlopeW = 24;
+
+  /// The shape ints above in [BlockShape] order. They stay `const` ints, not
+  /// `BlockShape.index` reads, because they sit in the hottest loop; a test pins
+  /// this list to the enum.
+  @visibleForTesting
+  static const List<int> shapeIndices = [
+    _shapeCube, _shapeCross, _shapeLiquid, _shapeTorch, _shapeFlower, _shapePanelZ, _shapePanelX, _shapeWallTorch,
+    _shapeSlab, _shapeFence, _shapeStairsN, _shapeStairsE, _shapeStairsS, _shapeStairsW, _shapeWire,
+    _shapeRailNs, _shapeRailEw, _shapeRailNe, _shapeRailNw, _shapeRailSe, _shapeRailSw,
+    _shapeRailSlopeN, _shapeRailSlopeE, _shapeRailSlopeS, _shapeRailSlopeW,
+  ];
 
   /// Emission at or above this draws on the unlit glow surface (stage 27).
   static const int glowThreshold = 10;
@@ -235,20 +246,19 @@ class ChunkMesher {
   static const List<double> _faceTint = [1.0, 0.55, 0.82, 0.82, 0.70, 0.70];
   static const List<double> _aoFactor = [0.50, 0.68, 0.84, 1.0];
 
-  static int _p(int x, int y, int z) => (x + pad) + _px * ((z + pad) + _pz * y);
-  static int index(int x, int y, int z) => ChunkSize.index(x, y, z);
+  static int _p(int x, int y, int z) => (x + _pad) + _px * ((z + _pad) + _pz * y);
 
-  static bool _outside(int x, int z) => x < -pad || x >= sizeX + pad || z < -pad || z >= sizeZ + pad;
+  static bool _outside(int x, int z) => x < -_pad || x >= _sizeX + _pad || z < -_pad || z >= _sizeZ + _pad;
 
   int _at(int x, int y, int z) {
-    if (y < 0 || y >= sizeY) return _air;
+    if (y < 0 || y >= _sizeY) return _air;
     if (_outside(x, z)) return _air;
     return _blocks[_p(x, y, z)];
   }
 
   bool _opaqueAt(int x, int y, int z) {
     if (y < 0) return true;
-    if (y >= sizeY) return false;
+    if (y >= _sizeY) return false;
     if (_outside(x, z)) return false;
     return _opaque[_blocks[_p(x, y, z)]];
   }
@@ -257,24 +267,24 @@ class ChunkMesher {
       Uint8List? nxnz, Uint8List? pxnz, Uint8List? nxpz, Uint8List? pxpz) {
     _blocks.fillRange(0, _padVolume, 0);
     _copyChunk(c, 0, 0);
-    _copyChunk(nx, -sizeX, 0);
-    _copyChunk(px, sizeX, 0);
-    _copyChunk(nz, 0, -sizeZ);
-    _copyChunk(pz, 0, sizeZ);
-    _copyChunk(nxnz, -sizeX, -sizeZ);
-    _copyChunk(pxnz, sizeX, -sizeZ);
-    _copyChunk(nxpz, -sizeX, sizeZ);
-    _copyChunk(pxpz, sizeX, sizeZ);
+    _copyChunk(nx, -_sizeX, 0);
+    _copyChunk(px, _sizeX, 0);
+    _copyChunk(nz, 0, -_sizeZ);
+    _copyChunk(pz, 0, _sizeZ);
+    _copyChunk(nxnz, -_sizeX, -_sizeZ);
+    _copyChunk(pxnz, _sizeX, -_sizeZ);
+    _copyChunk(nxpz, -_sizeX, _sizeZ);
+    _copyChunk(pxpz, _sizeX, _sizeZ);
   }
 
   /// Stage 32: one whole chunk volume into the padded buffer at the given cell
   /// offset (a missing neighbour stays air).
   void _copyChunk(Uint8List? vol, int ox, int oz) {
     if (vol == null || vol.length < _chunkVolume) return;
-    for (var y = 0; y < sizeY; y++) {
-      for (var z = 0; z < sizeZ; z++) {
+    for (var y = 0; y < _sizeY; y++) {
+      for (var z = 0; z < _sizeZ; z++) {
         final dst = _p(ox, y, oz + z);
-        _blocks.setRange(dst, dst + sizeX, vol, index(0, y, z));
+        _blocks.setRange(dst, dst + _sizeX, vol, ChunkSize.index(0, y, z));
       }
     }
   }
@@ -296,7 +306,7 @@ class ChunkMesher {
     // neighbours, so it is filled with 15 at once and neither the column pass nor
     // the seeding scan visits it (the test's full seeding still walks all 128).
     const layer = _px * _pz;
-    var topY = sizeY - 1;
+    var topY = _sizeY - 1;
     if (!fullSkySeed) {
       while (topY >= 0) {
         final start = topY * layer;
@@ -310,10 +320,10 @@ class ChunkMesher {
         if (any) break;
         topY--;
       }
-      if (topY < sizeY - 1) _sky.fillRange((topY + 1) * layer, _padVolume, _maxLight);
+      if (topY < _sizeY - 1) _sky.fillRange((topY + 1) * layer, _padVolume, _maxLight);
     }
-    for (var z = -pad; z < sizeZ + pad; z++) {
-      for (var x = -pad; x < sizeX + pad; x++) {
+    for (var z = -_pad; z < _sizeZ + _pad; z++) {
+      for (var x = -_pad; x < _sizeX + _pad; x++) {
         var level = _maxLight;
         for (var y = topY; y >= 0; y--) {
           final cell = _p(x, y, z);
@@ -328,7 +338,7 @@ class ChunkMesher {
               level = 0;
               continue;
             }
-            if (shape[id] == shapeLiquid) level = math.max(0, level - 2);
+            if (shape[id] == _shapeLiquid) level = math.max(0, level - 2);
           }
           _sky[cell] = level;
           if (fullSkySeed && level > 1) _queue[tail++] = cell;
@@ -340,16 +350,16 @@ class ChunkMesher {
       // sideways (the column pass already settled the vertical): full sky beside
       // full sky is the common case over the 48x48 columns and would spread
       // nothing, so it stays out of the queue.
-      const hi = sizeX + pad - 1, hiZ = sizeZ + pad - 1;
+      const hi = _sizeX + _pad - 1, hiZ = _sizeZ + _pad - 1;
       for (var y = 0; y <= topY; y++) {
-        for (var z = -pad; z <= hiZ; z++) {
-          var cell = _p(-pad, y, z);
-          for (var x = -pad; x <= hi; x++, cell++) {
+        for (var z = -_pad; z <= hiZ; z++) {
+          var cell = _p(-_pad, y, z);
+          for (var x = -_pad; x <= hi; x++, cell++) {
             final level = _sky[cell];
             if (level <= 1) continue;
             final need = level - 1;
-            if ((x > -pad && _sky[cell - 1] < need) || (x < hi && _sky[cell + 1] < need) ||
-                (z > -pad && _sky[cell - _px] < need) || (z < hiZ && _sky[cell + _px] < need)) {
+            if ((x > -_pad && _sky[cell - 1] < need) || (x < hi && _sky[cell + 1] < need) ||
+                (z > -_pad && _sky[cell - _px] < need) || (z < hiZ && _sky[cell + _px] < need)) {
               _queue[tail++] = cell;
             }
           }
@@ -373,15 +383,15 @@ class ChunkMesher {
       if (level <= 1) continue;
       final y = cell ~/ (_px * _pz);
       final rest = cell - y * _px * _pz;
-      final z = rest ~/ _px - pad;
-      final x = rest % _px - pad;
+      final z = rest ~/ _px - _pad;
+      final x = rest % _px - _pad;
       for (var f = 0; f < 6; f++) {
         final nx = x + _faceOffsets[f * 3], ny = y + _faceOffsets[f * 3 + 1], nz = z + _faceOffsets[f * 3 + 2];
-        if (ny < 0 || ny >= sizeY || _outside(nx, nz)) continue;
+        if (ny < 0 || ny >= _sizeY || _outside(nx, nz)) continue;
         final n = _p(nx, ny, nz);
         final nid = _blocks[n];
         if (_opaque[nid]) continue;
-        final drop = shape[nid] == shapeLiquid ? 2 : 1;
+        final drop = shape[nid] == _shapeLiquid ? 2 : 1;
         if (light[n] >= level - drop) continue;
         light[n] = level - drop;
         if (tail < _queue.length) _queue[tail++] = n;
@@ -392,7 +402,7 @@ class ChunkMesher {
   /// The light of the cell a face points into, as the shader reads it, into
   /// [_ls] (sky) and [_lb] (block), 0..1. Above the volume is open sky.
   void _lightUv(int x, int y, int z) {
-    if (y >= sizeY) {
+    if (y >= _sizeY) {
       _ls = 1.0;
       _lb = 0.0;
     } else if (y < 0) {
@@ -408,7 +418,7 @@ class ChunkMesher {
   static int _u32(int v) => v & 0xFFFFFFFF;
 
   static double _noise(int x, int y, int z, int chunkX, int chunkZ) {
-    var h = _u32((x + chunkX * sizeX) * 73856093) ^ _u32(y * 19349663) ^ _u32((z + chunkZ * sizeZ) * 83492791);
+    var h = _u32((x + chunkX * _sizeX) * 73856093) ^ _u32(y * 19349663) ^ _u32((z + chunkZ * _sizeZ) * 83492791);
     h = _u32(h);
     h ^= h >> 13;
     h = _u32(h * 0x5bd1e995);
@@ -528,12 +538,21 @@ class ChunkMesher {
     s.quadIndices(first, false);
   }
 
-  ChunkMeshResult build(int chunkX, int chunkZ, Uint8List c, Uint8List? nx, Uint8List? px, Uint8List? nz,
-      Uint8List? pz, Uint8List? nxnz, Uint8List? pxnz, Uint8List? nxpz, Uint8List? pxpz) {
+  /// The eight neighbours of a chunk meshed alone: `[chunk, ...noNeighbours]`.
+  /// Every cell past its border reads as air.
+  static const List<Uint8List?> noNeighbours = [null, null, null, null, null, null, null, null];
+
+  /// Meshes chunk ([chunkX], [chunkZ]). [ring] is the chunk volume and its eight
+  /// neighbours in [ChunkStreamer.ring] order (c, nx, px, nz, pz, nxnz, pxnz,
+  /// nxpz, pxpz); a missing neighbour is null and reads as air.
+  ChunkMeshResult build(int chunkX, int chunkZ, List<Uint8List?> ring) {
+    if (ring.length != 9) throw ArgumentError.value(ring.length, 'ring', 'a chunk and its eight neighbours');
+    final c = ring[0];
+    if (c == null) throw ArgumentError.notNull('ring[0]');
     final watch = Stopwatch()..start();
     _bindBuffers();
     _aoVerts = 0;
-    _fill(c, nx, px, nz, pz, nxnz, pxnz, nxpz, pxpz);
+    _fill(c, ring[1], ring[2], ring[3], ring[4], ring[5], ring[6], ring[7], ring[8]);
     _computeLight();
 
     final solid = _Surface();
@@ -542,9 +561,9 @@ class ChunkMesher {
     final glow = _Surface(); // stage 27: strong emitters, drawn unlit so a lamp glows at night
     final aos = List<int>.filled(4, 0);
 
-    for (var y = 0; y < sizeY; y++) {
-      for (var z = 0; z < sizeZ; z++) {
-        for (var x = 0; x < sizeX; x++) {
+    for (var y = 0; y < _sizeY; y++) {
+      for (var z = 0; z < _sizeZ; z++) {
+        for (var x = 0; x < _sizeX; x++) {
           final id = _blocks[_p(x, y, z)];
           if (id == _air) continue;
           final sh = shape[id];
@@ -553,14 +572,14 @@ class ChunkMesher {
           final ba = palette[id * 4 + 3];
           final ox = x.toDouble(), oy = y.toDouble(), oz = z.toDouble();
 
-          if (sh == shapeCross || sh == shapeFlower) {
+          if (sh == _shapeCross || sh == _shapeFlower) {
             // A plant is lit from its own cell, no AO.
             _lightUv(x, y, z);
             final ls = _ls, lb = _lb;
             final cr = br, cg = bg, cb = bb;
             final dr = cr * 0.7, dg = cg * 0.7, db = cb * 0.7;
             final jx = ((x * 7 + z * 13 + y) % 5) * 0.06 - 0.12, jz = ((x * 3 + z * 11) % 5) * 0.06 - 0.12;
-            if (sh == shapeCross) {
+            if (sh == _shapeCross) {
               const w = 0.28;
               final hgt = 0.55 + ((x + z) % 3) * 0.1;
               final c0x = ox + 0.5 + jx, c0z = oz + 0.5 + jz;
@@ -585,7 +604,7 @@ class ChunkMesher {
             continue;
           }
 
-          if (sh == shapeTorch) {
+          if (sh == _shapeTorch) {
             // Flame on top, stick sides: the flame is full bright (block 15,
             // whatever the cell says), the stick takes the cell's light.
             _lightUv(x, y, z);
@@ -594,10 +613,10 @@ class ChunkMesher {
             continue;
           }
 
-          if (sh == shapePanelZ || sh == shapePanelX || sh == shapeWallTorch) {
+          if (sh == _shapePanelZ || sh == _shapePanelX || sh == _shapeWallTorch) {
             _lightUv(x, y, z);
             final ls = _ls, lb = _lb;
-            if (sh == shapeWallTorch) {
+            if (sh == _shapeWallTorch) {
               // Leans on the first opaque horizontal neighbour; full bright by design.
               double lx, ly, lz, hx, hy, hz;
               if (_opaqueAt(x - 1, y, z)) {
@@ -612,13 +631,13 @@ class ChunkMesher {
               _box(solid, ox + lx, oy + ly, oz + lz, ox + hx, oy + hy, oz + hz, br, bg, bb, 0.45, 0.32, 0.18, 0.0, 1.0, 0.0, 1.0);
             } else {
               const t = 0.1875;
-              if (sh == shapePanelZ) {
+              if (sh == _shapePanelZ) {
                 _box(solid, ox, oy, oz, ox + 1, oy + 1, oz + t, br, bg, bb, br, bg, bb, ls, lb, ls, lb);
               } else {
                 _box(solid, ox, oy, oz, ox + t, oy + 1, oz + 1, br, bg, bb, br, bg, bb, ls, lb, ls, lb);
               }
               const kr = 0.85, kg = 0.75, kb = 0.35;
-              if (sh == shapePanelZ) {
+              if (sh == _shapePanelZ) {
                 _box(solid, ox + 0.78, oy + 0.45, oz - 0.04, ox + 0.9, oy + 0.57, oz + t + 0.04, kr, kg, kb, kr, kg, kb, ls, lb, ls, lb);
               } else {
                 _box(solid, ox - 0.04, oy + 0.45, oz + 0.78, ox + t + 0.04, oy + 0.57, oz + 0.9, kr, kg, kb, kr, kg, kb, ls, lb, ls, lb);
@@ -627,11 +646,11 @@ class ChunkMesher {
             continue;
           }
 
-          final isRail = sh >= shapeRailNs && sh <= shapeRailSlopeW;
-          if ((sh >= shapeSlab && sh <= shapeStairsW) || sh == shapeWire || isRail) {
+          final isRail = sh >= _shapeRailNs && sh <= _shapeRailSlopeW;
+          if ((sh >= _shapeSlab && sh <= _shapeStairsW) || sh == _shapeWire || isRail) {
             // Stairs never cull against their own kind: a step's face may sit
             // against a neighbour's empty half.
-            final cullSame = sh == shapeSlab || sh == shapeFence || isRail;
+            final cullSame = sh == _shapeSlab || sh == _shapeFence || isRail;
             if (isRail) {
               // Stage 28: two thin bars over wooden ties. A straight runs the
               // bars the whole cell; a curve draws the half of each axis it
@@ -654,30 +673,30 @@ class ChunkMesher {
                   _subBox(solid, x, y, z, id, cullSame, aos, 0.0625, yo, zc - 0.09375, 0.9375, yo + ty, zc + 0.09375, tr, tg, tb);
               void tieX(double xc, double yo) =>
                   _subBox(solid, x, y, z, id, cullSame, aos, xc - 0.09375, yo, 0.0625, xc + 0.09375, yo + ty, 0.9375, tr, tg, tb);
-              if (sh == shapeRailNs) {
+              if (sh == _shapeRailNs) {
                 tieZ(0.22, 0);
                 tieZ(0.78, 0);
                 barsZ(0, 1, 0);
-              } else if (sh == shapeRailEw) {
+              } else if (sh == _shapeRailEw) {
                 tieX(0.22, 0);
                 tieX(0.78, 0);
                 barsX(0, 1, 0);
-              } else if (sh == shapeRailNe) {
+              } else if (sh == _shapeRailNe) {
                 tieZ(0.22, 0);
                 tieX(0.78, 0);
                 barsZ(0, 0.5, 0);
                 barsX(0.5, 1, 0);
-              } else if (sh == shapeRailNw) {
+              } else if (sh == _shapeRailNw) {
                 tieZ(0.22, 0);
                 tieX(0.22, 0);
                 barsZ(0, 0.5, 0);
                 barsX(0, 0.5, 0);
-              } else if (sh == shapeRailSe) {
+              } else if (sh == _shapeRailSe) {
                 tieZ(0.78, 0);
                 tieX(0.78, 0);
                 barsZ(0.5, 1, 0);
                 barsX(0.5, 1, 0);
-              } else if (sh == shapeRailSw) {
+              } else if (sh == _shapeRailSw) {
                 tieZ(0.78, 0);
                 tieX(0.22, 0);
                 barsZ(0.5, 1, 0);
@@ -687,13 +706,13 @@ class ChunkMesher {
                 // nearest the low side + i and sits i/4 higher.
                 for (var i = 0; i < 4; i++) {
                   final lo = i * 0.25, hi = lo + 0.25, yo = i * 0.25;
-                  if (sh == shapeRailSlopeE) {
+                  if (sh == _shapeRailSlopeE) {
                     tieX(lo + 0.125, yo);
                     barsX(lo, hi, yo);
-                  } else if (sh == shapeRailSlopeW) {
+                  } else if (sh == _shapeRailSlopeW) {
                     tieX(1.0 - lo - 0.125, yo);
                     barsX(1.0 - hi, 1.0 - lo, yo);
-                  } else if (sh == shapeRailSlopeS) {
+                  } else if (sh == _shapeRailSlopeS) {
                     tieZ(lo + 0.125, yo);
                     barsZ(lo, hi, yo);
                   } else {
@@ -702,12 +721,12 @@ class ChunkMesher {
                   }
                 }
               }
-            } else if (sh == shapeSlab) {
+            } else if (sh == _shapeSlab) {
               _subBox(solid, x, y, z, id, cullSame, aos, 0, 0, 0, 1, 0.5, 1, br, bg, bb);
-            } else if (sh == shapeWire) {
+            } else if (sh == _shapeWire) {
               // Stage 27: redstone wire, an eighth of a block lying on the floor.
               _subBox(solid, x, y, z, id, cullSame, aos, 0, 0, 0, 1, 0.125, 1, br, bg, bb);
-            } else if (sh == shapeFence) {
+            } else if (sh == _shapeFence) {
               // Centre post, then two rails toward every horizontal neighbour
               // that is a fence or an opaque block. _at reads the padded
               // volume, so a neighbour across the chunk border connects too.
@@ -715,7 +734,7 @@ class ChunkMesher {
               _subBox(solid, x, y, z, id, cullSame, aos, p0, 0, p0, p1, 1, p1, br, bg, bb);
               bool joins(int dx, int dz) {
                 final n = _at(x + dx, y, z + dz);
-                return n != _air && (_opaque[n] || shape[n] == shapeFence);
+                return n != _air && (_opaque[n] || shape[n] == _shapeFence);
               }
 
               void rails(double lx, double lz, double hx, double hz) {
@@ -732,11 +751,11 @@ class ChunkMesher {
               // is inside the block.
               _subBox(solid, x, y, z, id, cullSame, aos, 0, 0, 0, 1, 0.5, 1, br, bg, bb);
               double slx, sly, slz, shx, shy, shz;
-              if (sh == shapeStairsN) {
+              if (sh == _shapeStairsN) {
                 slx = 0; sly = 0.5; slz = 0; shx = 1; shy = 1; shz = 0.5;
-              } else if (sh == shapeStairsS) {
+              } else if (sh == _shapeStairsS) {
                 slx = 0; sly = 0.5; slz = 0.5; shx = 1; shy = 1; shz = 1;
-              } else if (sh == shapeStairsE) {
+              } else if (sh == _shapeStairsE) {
                 slx = 0.5; sly = 0.5; slz = 0; shx = 1; shy = 1; shz = 1;
               } else {
                 slx = 0; sly = 0.5; slz = 0; shx = 0.5; shy = 1; shz = 1;
@@ -746,7 +765,7 @@ class ChunkMesher {
             continue;
           }
 
-          final isLiquid = sh == shapeLiquid;
+          final isLiquid = sh == _shapeLiquid;
           final above = _at(x, y + 1, z);
           final top = isLiquid && above != id ? 0.875 : 1.0;
           final glows = !isLiquid && id < emission.length && emission[id] >= glowThreshold;
@@ -760,7 +779,7 @@ class ChunkMesher {
             if (n != _air) {
               if (_opaque[n]) continue;
               if (n == id) continue; // water-water, glass-glass
-              if (isLiquid && shape[n] == shapeLiquid) continue;
+              if (isLiquid && shape[n] == _shapeLiquid) continue;
             }
             final tint = _faceTint[f];
             _lightUv(ax, ay, az);
@@ -809,11 +828,11 @@ class ChunkMesher {
     // The chunk's own light volumes (no padding) for `VoxelWorld.lightAt`.
     final skyOut = Uint8List(_chunkVolume);
     final blockOut = Uint8List(_chunkVolume);
-    for (var y = 0; y < sizeY; y++) {
-      for (var z = 0; z < sizeZ; z++) {
-        final dst = index(0, y, z), src = _p(0, y, z);
-        skyOut.setRange(dst, dst + sizeX, _sky, src);
-        blockOut.setRange(dst, dst + sizeX, _glow, src);
+    for (var y = 0; y < _sizeY; y++) {
+      for (var z = 0; z < _sizeZ; z++) {
+        final dst = ChunkSize.index(0, y, z), src = _p(0, y, z);
+        skyOut.setRange(dst, dst + _sizeX, _sky, src);
+        blockOut.setRange(dst, dst + _sizeX, _glow, src);
       }
     }
     watch.stop();

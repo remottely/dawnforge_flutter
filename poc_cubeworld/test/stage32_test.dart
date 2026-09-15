@@ -30,11 +30,11 @@ void main() {
     return c;
   }
 
-  int at(Uint8List v, int x, int y, int z) => v[ChunkMesher.index(x, y, z)];
+  int at(Uint8List v, int x, int y, int z) => v[ChunkSize.index(x, y, z)];
 
   /// Ring order: c, nx, px, nz, pz, nxnz, pxnz, nxpz, pxpz.
   ChunkMeshResult build(List<Uint8List?> ring) =>
-      mesher().build(0, 0, ring[0]!, ring[1], ring[2], ring[3], ring[4], ring[5], ring[6], ring[7], ring[8]);
+      mesher().build(0, 0, ring);
 
   List<Uint8List?> floorRing() => [for (var i = 0; i < 9; i++) floorChunk()];
 
@@ -44,21 +44,21 @@ void main() {
     for (var d = 1; d <= 15; d++) {
       // Across the west border: the torch in the west neighbour, d steps from cell x 0.
       final west = floorRing();
-      west[1]![ChunkMesher.index(16 - d, floorY, 8)] = torch;
+      west[1]![ChunkSize.index(16 - d, floorY, 8)] = torch;
       final across = build(west);
       // Inside: the same torch and the same d steps within the chunk itself.
       final inside = floorRing();
-      inside[0]![ChunkMesher.index(0, floorY, 8)] = torch;
+      inside[0]![ChunkSize.index(0, floorY, 8)] = torch;
       final within = build(inside);
       final expected = math.max(13 - d, 0);
       expect(at(across.block, 0, floorY, 8), expected, reason: 'west, $d cells');
       expect(at(within.block, d, floorY, 8), expected, reason: 'inside, $d steps');
       // Across the east border and through a diagonal neighbour too.
       final east = floorRing();
-      east[2]![ChunkMesher.index(d - 1, floorY, 8)] = torch;
+      east[2]![ChunkSize.index(d - 1, floorY, 8)] = torch;
       expect(at(build(east).block, 15, floorY, 8), expected, reason: 'east, $d cells');
       final diag = floorRing();
-      diag[8]![ChunkMesher.index(0, floorY, d - 1)] = torch; // pxpz: (16, z 16 + d - 1)
+      diag[8]![ChunkSize.index(0, floorY, d - 1)] = torch; // pxpz: (16, z 16 + d - 1)
       // From chunk cell (15, 15): one step east + d steps south = d + 1 steps.
       expect(at(build(diag).block, 15, floorY, 15), math.max(13 - d - 1, 0), reason: 'diagonal, $d cells');
     }
@@ -68,7 +68,7 @@ void main() {
     // The first cell of the chunk reads 8 from a torch 5 steps away in the west
     // neighbour (Godot's probe figure); the cell two further in reads 6.
     final ring = floorRing();
-    ring[1]![ChunkMesher.index(11, floorY, 3)] = id('torch');
+    ring[1]![ChunkSize.index(11, floorY, 3)] = id('torch');
     final r = build(ring);
     expect(at(r.block, 0, floorY, 3), 8);
     expect(at(r.block, 2, floorY, 3), 6);
@@ -87,7 +87,7 @@ void main() {
           final block = const ['stone', 'stone', 'water', 'oak_leaves', 'glass'][rng.nextInt(5)];
           for (var xx = x; xx < math.min(16, x + w); xx++) {
             for (var zz = z; zz < math.min(16, z + dz); zz++) {
-              c[ChunkMesher.index(xx, y, zz)] = id(block);
+              c[ChunkSize.index(xx, y, zz)] = id(block);
             }
           }
         }
@@ -141,7 +141,7 @@ void main() {
 
   test('daylight burning: the undead under full sky at day factor 0.9+, not in water, not tamed, not dim', () {
     bool burns(String s, {bool water = false, bool tamed = false, int sky = 15, double day = 1.0}) =>
-        Mob.burnsInDaylight(s, inWater: water, tamed: tamed, headSky: sky, dayFactor: day);
+        Mob.burnsInDaylight(s, inLiquid: water, tamed: tamed, headSky: sky, dayFactor: day);
     expect(burns('zombie'), isTrue);
     expect(burns('skeleton'), isTrue);
     expect(burns('dark_skeleton'), isTrue);

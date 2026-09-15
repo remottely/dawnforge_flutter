@@ -92,8 +92,8 @@ void main() {
     world.cells[const IVec3(4, 10, 4)] = _water;
     body.position = Vector3(4.5, 10.001, 4.5);
     body.move(0);
-    expect(body.inWater, isTrue);
-    expect(body.headInWater, isFalse);
+    expect(body.inLiquid, isTrue);
+    expect(body.headInLiquid, isFalse);
     expect(body.feetLiquid, 0);
     expect(body.headLiquid, VoxelBlockDef.noLiquid);
   });

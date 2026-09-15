@@ -92,7 +92,7 @@ class VoxelWorld implements VoxelQuery {
 
   Future<void> start() async {
     _pool?.dispose();
-    final pool = ChunkWorkerPool(WorkerConfig(
+    final pool = ChunkWorkerPool(ChunkWorkerConfig(
       generator: _generatorFactory(Blocks.generatorIds(), seedValue),
       table: Blocks.table,
       lighting: lightingEnabled,

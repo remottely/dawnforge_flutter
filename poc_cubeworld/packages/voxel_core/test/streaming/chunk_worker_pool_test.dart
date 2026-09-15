@@ -44,7 +44,7 @@ void main() {
   late ChunkWorkerPool pool;
 
   setUp(() async {
-    pool = ChunkWorkerPool(WorkerConfig(generator: _flatFactory(40), table: _table), workers: 2);
+    pool = ChunkWorkerPool(ChunkWorkerConfig(generator: _flatFactory(40), table: _table), workers: 2);
     await pool.start();
   });
 
@@ -64,7 +64,7 @@ void main() {
   test('a mesh job on a worker equals the same mesh built here', () async {
     final ring = [for (var i = 0; i < 9; i++) await pool.generate(i % 3 - 1, i ~/ 3 - 1)];
     final remote = await pool.mesh(0, 0, ring);
-    final local = _table.mesher().build(0, 0, ring[0], ring[1], ring[2], ring[3], ring[4], ring[5], ring[6], ring[7], ring[8]);
+    final local = _table.mesher().build(0, 0, ring);
     expect(remote.faces, local.faces);
     expect(remote.solid.positions, local.solid.positions);
     expect(remote.solid.indices, local.solid.indices);
@@ -102,7 +102,7 @@ void main() {
   });
 
   test('a generator factory that throws makes start throw instead of hanging', () async {
-    final broken = ChunkWorkerPool(WorkerConfig(generator: _brokenFactory, table: _table), workers: 1);
+    final broken = ChunkWorkerPool(ChunkWorkerConfig(generator: _brokenFactory, table: _table), workers: 1);
     await expectLater(broken.start(), throwsA(isA<RemoteError>()));
     broken.dispose();
   });

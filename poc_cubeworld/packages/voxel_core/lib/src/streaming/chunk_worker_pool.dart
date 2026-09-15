@@ -22,8 +22,8 @@ abstract interface class ChunkGenerator {
 typedef ChunkGeneratorFactory = ChunkGenerator Function();
 
 /// Everything a worker isolate needs to build its own generator and mesher.
-class WorkerConfig {
-  WorkerConfig({required this.generator, required this.table, this.lighting = true});
+class ChunkWorkerConfig {
+  ChunkWorkerConfig({required this.generator, required this.table, this.lighting = true});
 
   final ChunkGeneratorFactory generator;
   final VoxelBlockTable table;
@@ -54,7 +54,7 @@ class ChunkWorkerPool implements ChunkJobs {
   /// from 3 isolates to 10 on a 12-core machine).
   static int get defaultWorkers => math.max(1, Platform.numberOfProcessors - 1);
 
-  final WorkerConfig config;
+  final ChunkWorkerConfig config;
   final int workers;
   final List<_Worker> _workers = [];
   final Map<int, _Worker> _byIndex = {};
@@ -184,7 +184,7 @@ class ChunkWorkerPool implements ChunkJobs {
 void _workerMain(List<Object?> args) {
   final ready = args[0] as SendPort;
   final out = args[1] as SendPort;
-  final config = args[2] as WorkerConfig;
+  final config = args[2] as ChunkWorkerConfig;
   final generator = config.generator();
   final mesher = config.table.mesher(lighting: config.lighting);
   final port = ReceivePort();
@@ -208,8 +208,7 @@ Object? _run(ChunkGenerator generator, ChunkMesher mesher, List<Object?> list) {
   }
   if (kind != 'mesh') throw ArgumentError.value(kind, 'kind', 'unknown chunk job');
   final ring = (list[4] as List<Object?>).cast<Uint8List?>();
-  final r = mesher.build(list[2] as int, list[3] as int, ring[0]!, ring[1], ring[2], ring[3], ring[4], ring[5],
-      ring[6], ring[7], ring[8]);
+  final r = mesher.build(list[2] as int, list[3] as int, ring);
   List<Object?> pack(MeshSurface s) => [
         TransferableTypedData.fromList([s.positions]),
         TransferableTypedData.fromList([s.normals]),

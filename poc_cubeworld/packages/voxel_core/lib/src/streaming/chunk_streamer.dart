@@ -69,10 +69,22 @@ class ChunkStreamer {
 
   /// Generated chunk volumes: the window plus the ring generated around it.
   final Map<ChunkPos, Uint8List> chunks = {};
-  int chunksBuilt = 0;
-  int facesEmitted = 0;
-  double meshMsTotal = 0.0;
-  int remeshesQueued = 0;
+  /// Meshes handed to the sink, remeshes included.
+  int get chunksBuilt => _chunksBuilt;
+
+  /// Faces in every mesh handed to the sink, remeshes included.
+  int get facesEmitted => _facesEmitted;
+
+  /// The mesh jobs' own clocks ([ChunkMeshResult.ms]), summed.
+  double get meshMsTotal => _meshMsTotal;
+
+  /// Remeshes queued by edits.
+  int get remeshesQueued => _remeshesQueued;
+
+  int _chunksBuilt = 0;
+  int _facesEmitted = 0;
+  double _meshMsTotal = 0.0;
+  int _remeshesQueued = 0;
 
   final Set<ChunkPos> _meshed = {};
   final List<ChunkPos> _pending = [];
@@ -128,7 +140,7 @@ class ChunkStreamer {
 
   /// Keep what a mesh job learnt about its chunk's light.
   void storeLight(ChunkPos pos, ChunkMeshResult surface) {
-    meshMsTotal += surface.ms;
+    _meshMsTotal += surface.ms;
     _lightSky[pos] = surface.sky;
     _lightBlock[pos] = surface.block;
     _aoVerts[pos] = surface.aoVerts;
@@ -256,8 +268,8 @@ class ChunkStreamer {
   }
 
   void _apply(ChunkPos pos, ChunkMeshResult surface) {
-    chunksBuilt += 1;
-    facesEmitted += surface.faces;
+    _chunksBuilt += 1;
+    _facesEmitted += surface.faces;
     storeLight(pos, surface);
     sink.apply(pos, surface);
     _meshed.add(pos);
@@ -328,7 +340,7 @@ class ChunkStreamer {
     if (_meshInflight.contains(pos) || _surfaceReady.containsKey(pos)) _remeshAgain.add(pos);
     if (!_pending.contains(pos)) {
       _pending.insert(0, pos);
-      remeshesQueued += 1;
+      _remeshesQueued += 1;
     }
   }
 
