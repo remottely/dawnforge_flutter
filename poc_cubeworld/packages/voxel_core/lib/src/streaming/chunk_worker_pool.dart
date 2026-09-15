@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:isolate';
+import 'dart:math' as math;
 import 'dart:typed_data';
 
 import '../grid/voxel_block_table.dart';
@@ -40,7 +42,13 @@ class _Worker {
 /// A fixed pool of isolates running chunk generation and meshing. Requests
 /// are answered by futures; each goes to the least busy worker.
 class ChunkWorkerPool implements ChunkJobs {
-  ChunkWorkerPool(this.config, {this.workers = 3});
+  /// [workers] defaults to [defaultWorkers].
+  ChunkWorkerPool(this.config, {int? workers}) : workers = workers ?? defaultWorkers;
+
+  /// One isolate per core, leaving one for the UI and raster threads (VP1.5b:
+  /// the 2026-09-11 measurement took radius-16 fill from 2,981 to 1,956 ms going
+  /// from 3 isolates to 10 on a 12-core machine).
+  static int get defaultWorkers => math.max(1, Platform.numberOfProcessors - 1);
 
   final WorkerConfig config;
   final int workers;
