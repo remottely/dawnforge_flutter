@@ -10,6 +10,7 @@ environment:
 workspace:
   - packages/voxel_core
   - packages/voxel_scene
+  - packages/voxel_scene/example
 
 dependencies:
   flutter:
