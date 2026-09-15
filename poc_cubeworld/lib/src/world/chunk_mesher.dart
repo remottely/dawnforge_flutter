@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart' show visibleForTesting;
+import 'package:voxel_core/voxel_core.dart';
 
 /// One vertex-coloured triangle list, ready for `MeshGeometry.fromArrays`.
 /// Stage 31: [light] is the second texture coordinate set (Godot's UV2), two
@@ -141,7 +142,7 @@ class ChunkMesher {
     this.lighting = true,
   }) : _opaque = List<bool>.generate(opaque.length, (i) => opaque[i] != 0);
 
-  static const int sizeX = 16, sizeZ = 16, sizeY = 128;
+  static const int sizeX = ChunkSize.sizeX, sizeZ = ChunkSize.sizeZ, sizeY = ChunkSize.sizeY;
 
   /// Stage 32: the padded volume holds the whole 3x3 ring (16 cells a side), so
   /// a torch up to 15 cells past a border still reaches this chunk's faces and
@@ -234,7 +235,7 @@ class ChunkMesher {
   static const List<double> _aoFactor = [0.50, 0.68, 0.84, 1.0];
 
   static int _p(int x, int y, int z) => (x + pad) + _px * ((z + pad) + _pz * y);
-  static int index(int x, int y, int z) => x + sizeX * (z + sizeZ * y);
+  static int index(int x, int y, int z) => ChunkSize.index(x, y, z);
 
   static bool _outside(int x, int z) => x < -pad || x >= sizeX + pad || z < -pad || z >= sizeZ + pad;
 

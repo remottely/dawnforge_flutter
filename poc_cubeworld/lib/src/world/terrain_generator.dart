@@ -75,11 +75,11 @@ class TerrainGenerator {
     setSeed(seed);
   }
 
-  static const int sizeX = 16;
-  static const int sizeZ = 16;
-  static const int sizeY = 128;
+  static const int sizeX = ChunkSize.sizeX;
+  static const int sizeZ = ChunkSize.sizeZ;
+  static const int sizeY = ChunkSize.sizeY;
   static const int seaLevel = 46;
-  static const int volume = sizeX * sizeZ * sizeY;
+  static const int volume = ChunkSize.volume;
 
   static const int biomeOcean = 0,
       biomeBeach = 1,
@@ -145,7 +145,7 @@ class TerrainGenerator {
     _hellPatch = _make(seed ^ 0x0B2C3D4, 0.070, 1); // soul sand patches on its floors
   }
 
-  static int index(int x, int y, int z) => x + sizeX * (z + sizeZ * y);
+  static int index(int x, int y, int z) => ChunkSize.index(x, y, z);
 
   static double _smooth(double a, double b, double t) {
     t = ((t - a) / (b - a)).clamp(0.0, 1.0);

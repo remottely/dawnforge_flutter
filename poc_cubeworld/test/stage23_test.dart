@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:cubeworld_poc/src/core/blocks.dart';
+import 'package:voxel_core/voxel_core.dart';
 import 'package:cubeworld_poc/src/core/items.dart';
 import 'package:cubeworld_poc/src/core/species.dart';
 import 'package:cubeworld_poc/src/entities/voxel_body.dart';

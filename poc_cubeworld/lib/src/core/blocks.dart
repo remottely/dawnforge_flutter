@@ -5,53 +5,8 @@ import 'package:voxel_core/voxel_core.dart';
 /// The block table. INDEX IS THE SAVE CONTRACT: a chunk stores bytes and a save
 /// file stores those bytes, so entries are appended, never reordered or removed.
 /// Byte-for-byte the same order as the Godot POC (`src/core/blocks.gd`).
-enum BlockShape {
-  cube,
-  cross,
-  liquid,
-  torch,
-  flower,
-  panelZ,
-  panelX,
-  wallTorch,
-  slab,
-  fence,
-  stairsN,
-  stairsE,
-  stairsS,
-  stairsW,
-  wire,
-  // Stage 28: rails, one shape per orientation (the mesher draws bars over ties).
-  railNs,
-  railEw,
-  railNe,
-  railNw,
-  railSe,
-  railSw,
-  railSlopeN,
-  railSlopeE,
-  railSlopeS,
-  railSlopeW,
-}
-
+/// `BlockShape` and `CollisionBox` live in voxel_core (VP1.2).
 enum ToolType { none, pickaxe, axe, shovel, sword, hoe, shears }
-
-/// An axis-aligned box as min / max corners (Godot's AABB is position + size;
-/// min / max reads the same faces without a subtraction per test).
-class CollisionBox {
-  const CollisionBox(this.x0, this.y0, this.z0, this.x1, this.y1, this.z1);
-
-  final double x0, y0, z0, x1, y1, z1;
-
-  double min(int axis) => axis == 0 ? x0 : (axis == 1 ? y0 : z0);
-  double max(int axis) => axis == 0 ? x1 : (axis == 1 ? y1 : z1);
-
-  CollisionBox shifted(int dx, int dy, int dz) =>
-      CollisionBox(x0 + dx, y0 + dy, z0 + dz, x1 + dx, y1 + dy, z1 + dz);
-
-  @override
-  String toString() => 'Box($x0, $y0, $z0 .. $x1, $y1, $z1)';
-}
 
 class BlockDef {
   const BlockDef(
@@ -265,32 +220,15 @@ class Blocks {
     for (var i = 0; i < defs.length; i++) defs[i].id: i,
   };
 
-  static const CollisionBox fullBox = CollisionBox(0, 0, 0, 1, 1, 1);
+  static const CollisionBox fullBox = CollisionBox.full;
 
   /// The post; rails stop no body.
-  static const CollisionBox fenceBox = CollisionBox(0.375, 0, 0.375, 0.625, 1.5, 0.625);
+  static const CollisionBox fenceBox = CollisionBox.fencePost;
 
+  /// Per block, the boxes a body collides with (voxel_core's `collisionBoxesOf`).
   static final List<List<CollisionBox>> _boxes = [
-    for (var i = 0; i < defs.length; i++) _buildBoxes(i),
+    for (final d in defs) collisionBoxesOf(d.shape, solid: d.solid),
   ];
-
-  /// The boxes a body collides with, in the block's own 0..1 space. Empty for
-  /// anything that stops no body. Stairs: the bottom slab plus the high step at
-  /// the back, the same halves the mesher draws (N = high step at z 0..0.5,
-  /// E = at x 0.5..1).
-  static List<CollisionBox> _buildBoxes(int index) {
-    if (!defs[index].solid) return const [];
-    const half = CollisionBox(0, 0, 0, 1, 0.5, 1);
-    return switch (defs[index].shape) {
-      BlockShape.slab => const [half],
-      BlockShape.fence => const [fenceBox],
-      BlockShape.stairsN => const [half, CollisionBox(0, 0.5, 0, 1, 1, 0.5)],
-      BlockShape.stairsS => const [half, CollisionBox(0, 0.5, 0.5, 1, 1, 1)],
-      BlockShape.stairsE => const [half, CollisionBox(0.5, 0.5, 0, 1, 1, 1)],
-      BlockShape.stairsW => const [half, CollisionBox(0, 0.5, 0, 0.5, 1, 1)],
-      _ => const [fullBox],
-    };
-  }
 
   /// Shared, never mutate.
   static List<CollisionBox> collisionBoxes(int index) => _boxes[index];

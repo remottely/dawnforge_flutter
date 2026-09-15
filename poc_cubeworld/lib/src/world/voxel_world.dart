@@ -45,10 +45,10 @@ class VoxelWorld {
     circuits = Circuits(this);
   }
 
-  static const int sizeX = 16;
-  static const int sizeZ = 16;
-  static const int sizeY = 128;
-  static const int volume = sizeX * sizeZ * sizeY;
+  static const int sizeX = ChunkSize.sizeX;
+  static const int sizeZ = ChunkSize.sizeZ;
+  static const int sizeY = ChunkSize.sizeY;
+  static const int volume = ChunkSize.volume;
   static const int frameBudgetUsec = 7000;
 
   final Node root = Node(name: 'World');
@@ -173,7 +173,7 @@ class VoxelWorld {
 
   static ChunkPos chunkOf(IVec3 b) => (x: (b.x / sizeX).floor(), z: (b.z / sizeZ).floor());
   static ChunkPos chunkOfXZ(int x, int z) => (x: (x / sizeX).floor(), z: (z / sizeZ).floor());
-  static int index(int x, int y, int z) => x + sizeX * (z + sizeZ * y);
+  static int index(int x, int y, int z) => ChunkSize.index(x, y, z);
 
   bool get isIdle => _pending.isEmpty && _genInflight.isEmpty && _meshInflight.isEmpty && _surfaceReady.isEmpty;
   int get loadedChunkCount => chunks.length;
