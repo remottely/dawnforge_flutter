@@ -129,6 +129,9 @@ the world as before; `--title-probe` forces the title even then.
 
 ## What the port taught (the case study for `dev`)
 
+- **Measured against the Godot POC** in `docs/PERFORMANCE_VS_GODOT_2026-09-11.md`: the
+  Dart mesher on isolates matches C# once the pool uses the cores; rendering is the gap
+  (Godot holds 120 fps at 2.3 M faces, `flutter_scene` falls to 70 at 2.2 M).
 - **`flutter_scene` carries the whole rendering stack** the Godot POC leaned on: vertex
   colours through `MeshGeometry.fromArrays`, a `GradientSkySource` that doubles as the
   `SunLight` with cascaded shadows, exponential fog blended toward the sky, ACES tone
