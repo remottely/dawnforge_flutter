@@ -170,8 +170,8 @@ void main() {
     input.hotbarStepped.connect((_) => intents++);
 
     const key = KeyDownEvent(
-      physicalKey: PhysicalKeyboardKey.keyE,
-      logicalKey: LogicalKeyboardKey.keyE,
+      physicalKey: PhysicalKeyboardKey.bracketRight,
+      logicalKey: LogicalKeyboardKey.bracketRight,
       timeStamp: Duration.zero,
     );
     input
@@ -180,8 +180,8 @@ void main() {
       // keeps sending it, and a second intent here would walk the selection
       // across the bar while the player holds one key.
       ..handleKeyEvent(const KeyRepeatEvent(
-        physicalKey: PhysicalKeyboardKey.keyE,
-        logicalKey: LogicalKeyboardKey.keyE,
+        physicalKey: PhysicalKeyboardKey.bracketRight,
+        logicalKey: LogicalKeyboardKey.bracketRight,
         timeStamp: Duration.zero,
       ));
     await tester.pump();

@@ -14,7 +14,7 @@
 
 | Track | Repo | Role |
 |:---|:---|:---|
-| **Godot / Tessera** | `~/Documents/godot/remottely/dawnforge_project` | Consolidated delivery track. First Tessera game (Dawnforge) is near v1.0. Ships to Steam, multiplayer co-op. |
+| **Godot / Tessera** | `~/Documents/godot/remottely/tessera_project` (`SPEC_REPO_ROOT`; the folder was named `dawnforge_project` when this study was written) | Consolidated delivery track. First Tessera game (Dawnforge) is near v1.0. Ships to Steam, multiplayer co-op. |
 | **Flutter / Tessera-Dart** | this repo | Study track: reproduce the Tessera architecture in Flutter/Dart to explore new genres inside Flutter, with the same engineering discipline. **Singleplayer-first.** |
 
 The two tracks share *architecture, content format, and the AI harness* — not code. A
@@ -152,6 +152,11 @@ are replaced by a sprite/animation manifest JSON consumed by the Dart `Animation
 | **GUT/GdUnit4 dual suite** | One language → one suite | `flutter test` + the same "suite is green before commit" policy |
 | **Godot editor tools** (`tessera/tools/*.gd`) | No editor | Pipeline `--check` modes + debug overlays |
 
+**Status note, 2026-09-10 (0.65.0).** Of the multiplayer row's three door-keepers, two are
+real — rule 30 is enforced by a hook, and FP6.1 plans a save whose sections are owned by
+their systems. The third, *input as intents*, has no subject in the code and no step in the
+plan (`LEDGER.md` `L-018`); it is registered as `D-9` in the port plan's decision register.
+
 Everything else is in scope: world objects, components, FSM, registries, factories,
 domain rules, grid, events, time system, spawning, drops, inventory, farming, progression,
 quests, achievements, skill trees, thermal, save, localization, audio, UI surfaces,
@@ -197,6 +202,44 @@ Markdown, git history as corpus). Ported pieces and their deltas:
    server clock (multiplayer heritage). Flame's `update(dt)` is variable-step. Adopt a
    fixed-step accumulator in the sim layer from the start; cheap now, painful later.
 
+
+### 7.1 Status at 0.64.0 (2026-09-10) — measured, not remembered
+
+The five above are the risks as they were **written on 2026-08-25**, and that prose stays:
+it records what was feared, which is worth keeping. This is what became of each, with the
+evidence, seventeen days and sixty-two versions later.
+
+| # | Risk | What happened |
+|:---|:---|:---|
+| 1 | renderer performance | **Held, and the mitigation is the reason.** The chunk renderer was built before any gameplay depended on it and the FP3 gate was hand-run at 120fps on macOS — the display's ceiling — walking continuously, which is the load pattern that stresses streaming hardest. **Exposure that remains and is nobody's step yet:** that measurement predates every per-frame cost FP4 added, and nothing re-runs it. See below. |
+| 2 | solo-dev bandwidth | **Held.** The study track has not blocked the delivery track once; the two repos version independently (`0.64.0` here, `tessera 0.440.4` there) and each phase has stayed parkable. |
+| 3 | pack-format drift | **It happened, and the guard this register named was the wrong guard.** "The pipeline's `--check` discipline" verifies that the JSON on disk is what *this* pipeline would emit from *this* pack — it can say nothing about whether this pack still matches the spec's, which is the actual fork. The guard that was needed is a cross-repo diff, opened as `L-006` on 2026-08-30 and landed as FP0.11 at 0.56.0; **its first run found 28 forked documents and 67 forked keys** among the 61 that had crossed. The register's other clause held: the pack contract doc is shared, and it lives over there. |
+| 4 | legacy regression | **Struck.** D6 held without argument; `reference/legacy_flutter/` has been read by nothing (rule 10) and no obligation to it ever appeared. |
+| 5 | fixed-step determinism | **Mitigated as planned, with one hole.** `SimClock` arrived at FP1.8 and every system ticks on it; rule 30's ban on a global pause is the same discipline seen from the other end. The hole: `Splitmix32`, which is *why* a seed reproduces a world, is named in no test (`TEST_TRACEABILITY_2026-09-10.md` TT1) — so the determinism this risk is about is asserted nowhere. |
+
+**Two risks this register did not name, both visible now:**
+
+6. **The content dimension is the long pole, not the emitter.** D3 sized the pipeline
+   retarget as "1,438 resources reused for the cost of one emitter", and the emitter was
+   indeed cheap — steps 04, 05, 10, 11 and 26 all landed. What no one sized is the
+   *import*: 930 authored documents there, 64 here, and 932 authored keys pruned out of the
+   ones that did cross (`PACK_IMPORT_MAP_2026-09-10.md`). The reuse is real; it is paid one
+   slice at a time and it will be paid for the length of the port.
+7. **Two AI sessions on one branch is the normal case, not the exception.** `CLAUDE.md`
+   §Parallel sessions assumes it and answers the version collision; it does not answer two
+   sessions appending to one shared document, which happened twice in a single afternoon
+   on `LEDGER.md` (`L-017`). The answer is already written down —
+   `AUTOMATION_DEBT_2026-09-10.md` AD3.2, a commit that takes the file CONTENTS it is given
+   rather than whatever the working tree holds.
+
+**The step risk 1 leaves behind, which no plan owns:** the FP3 gate must be re-proven
+after the fixed step gains work, and it has gained plenty — prop scatter per chunk, actor
+tracking, the aim snapshot, the production queue, and next the day boundary and crop growth
+of FP4.4. Nothing schedules that. The cheapest honest answer is a rule rather than a step:
+**a phase gate that was proven by hand is re-proven by hand at the next phase gate**, with
+the number written into the plan's progress table beside the old one. FP5's gate is the
+next one due, and the overlay FP3.6 built is still there to read it from.
+
 ---
 
 ## 8. Decision register
@@ -210,6 +253,9 @@ Markdown, git history as corpus). Ported pieces and their deltas:
 | D5 | Version scheme reset to `0.MINOR.PATCH` in `pubspec.yaml`, starting `0.1.0` | Same ritual as the Godot repo (rule on major locked at 0); legacy `1.110.x` numbering retired with the legacy code | — |
 | D6 | Legacy code archived to `reference/legacy_flutter/`, excluded from the knowledge index corpus and from all imports | Clean-room rebuild; reference value only | Yes (it's all still there) |
 | D7 | One Dart package, engine under `lib/src/core/` with the same sector model; game content under `games/<game>/` + `assets/generated/` | Mirrors the Godot tree so cross-repo navigation is muscle-memory | Refactorable |
+| D8 | **The 2D port is frozen at 0.77.0 and the Flutter track becomes the 3D voxel game** grown out of the cubeworld POC (§10). The Godot repo stays the spec for the pack, the rules and the design — never for engine code | Every 2D world behaviour the port struggled with (tile maps, areas, navigation, physics) is what Godot gives for free; a voxel game writes its own collision, raycast and AI over a grid in any engine, so it is the genre where Flutter's missing engine costs least — and the POC proved the rendering stack at 60 fps | Yes — the port stays on the branch and under a tag; nothing is deleted |
+| D9 | **The pack is consumed from the spec, never copied.** Content stays Markdown+YAML (authoring), the pipeline still emits JSON (runtime); this repo's `games/dawnforge/data/` copy is retired when the 3D track reads `spec_pack_root()` | Markdown is the authoring format (prose beside YAML, diffable, cheap for an AI to write); JSON is the runtime format (typed, validated at build time, generated constants). Reading `.md` at runtime would hand `dynamic` to gameplay (rule 4) and drop the cross-file validation. The copy is the thing that forked 28 documents (`L-014`); the Godot 3D game already plays the `dawnforge` pack rather than owning one | Yes (emitter swap, D3 stands) |
+| D10 | **The POC is refactored into `lib/src/core`, system by system — neither shipped as it stands nor rewritten from zero** | Its world layer (mesher, generator, streaming on isolates, pointer lock, SoLoud) is the engine and is unit-tested; its gameplay layer is a clone with tables in code and two 1,600-line files, and its own README says nothing is merged as-is. Rewriting throws away 11,039 working lines; shipping as-is buys the fastest first delivery with the dearest maintenance | Refactorable |
 
 ---
 
@@ -226,3 +272,116 @@ Not v1.0 of a game. The study track is successful when:
    → verify → document → ship → observe → evolve).
 5. New-genre experiments can be started as new packs under `games/` without touching
    `src/core/` — the actual point of the study.
+
+### 9.1 Status at 0.66.0 (2026-09-10)
+
+| Clause | Where it stands |
+|:---|:---|
+| 1 · the sector model, rules enforced | **true.** FP1's gate was met 2026-08-26 and the enforcement has since stopped being only a reading: the analyzer carries rule 4, hooks carry rules 30, 11 and (since FP0.14) 4's declaration half, and the suite carries the changelog pair, the `tr()` keys and the manual mirrors. |
+| 2 · the pipeline emits JSON and the engine boots from it | **true.** FP2's gate was met 2026-08-26. Seven of the spec's 27 steps, which is the applicable subset — the map is `AUTOMATION_DEBT_2026-09-10.md` §1.1. |
+| 3 · one full loop, harvest → craft → place | **the live front.** Harvest has been playable since 0.34.0 and place works and is not yet reachable; craft is FP4.5, with the interact verb, the two surfaces and the manual pages left. This clause IS the FP4 gate. |
+| 4 · the harness with the same lifecycle | **partly.** Observe (the ledger), plan (four documents under `docs/refactoring/`), verify (a suite with four checks), document (rule 34, now with a mirror guard) and ship (the recipe) all exist. **Skills are zero** — `.claude/skills/` has never existed (FP0.9, sliced 0.60.0) — and the *sweep* half of observe → evolve has never run once. |
+| 5 · a new pack without touching the core | **never probed, and it is the point of the track.** Measured for the first time on 2026-09-10: the Dart side names its game in exactly one place (`game_constants.dart:5`), which is the good news; the hand-written asset list in `pubspec.yaml` is the per-game surface that is not one place. The probe is now a step of its own — **FP8.1** in the port plan — and it depends on no phase, so it can be run at any time. |
+
+---
+
+## 10. Direction decision — 2026-09-14, at 0.77.0
+
+> The conversation that produced D8–D10, recorded whole so the reasoning is never
+> reconstructed from the decision. **The study's `D8` is unrelated to the port plan's
+> `D-8`** (rules 35–37 fork, hyphenated); the two registers were numbered independently.
+
+### 10.1 What was on the table
+
+The developer had reached FP4.5(f) on the 2D port and, playing it, concluded that
+reproducing the 2D world's behaviour in Flame keeps hitting what only Godot supplies. In
+the same weeks the Cube World + Minecraft POC was written in Godot
+(`dawnforge_cubeworld_poc`, branch `poc_cubeworld` of `tessera_project`) and then ported
+file by file to Flutter on `flutter_scene` — and both worked. The intent stated: set the
+2D Flutter port aside and build the 3D game. Four questions followed, weighed on token
+cost, ease of maintenance in Flutter, and reuse of the Flutter engine for future 3D games.
+
+Measured before answering, not remembered:
+
+| Subject | State on 2026-09-14 |
+|:---|:---|
+| 2D port (this branch, `dev`) | 123 Dart files, 13,104 lines under `lib/`; FP4.5(f) hand-craft landed 0.77.0; FP4's gate (harvest → craft → place) reachable but never closed |
+| Flutter POC (`../dawnforge_cubeworld_poc`, branch `poc_cubeworld`) | 39 Dart files, 11,039 lines; every Godot stage through 21b ported; **stage 13, play it by hand, never done by a human**; block table is code (index order is the save contract); shares nothing with `lib/src/core` by design; `game.dart` 1,603 lines, `player.dart` 1,648 |
+| Spec (`tessera 0.683.5`) | `games/dawnforge/data/` 1,101 Markdown documents; **`games/dawnforge_3d` plays that same pack** (`content_pack="dawnforge"`, its `data/README.md`) and owns one document, `block_air.md`; the voxel dimension is pipeline steps 13–22, 27, 28 |
+| This repo's pack copy | 64 documents of the spec's 930 authored; 28 forked, 67 keys forked (`L-014`, FP0.11) |
+
+### 10.2 The four questions, answered
+
+**1. Keep the Flutter project a mirror of the Godot engine?** No — not as an engine.
+Mirroring code costs twice the tokens on every feature, forever, and what made the 2D port
+expensive (tile maps, areas, navigation, physics) is exactly what Godot gives away and
+Flame does not. The voxel 3D genre is where that gap is narrowest: Minecraft and Cube
+World write their own collision, raycast and AI over a grid, the POC already did
+(`VoxelBody`, the mesher on isolates), so of the two things Godot supplies in 3D —
+rendering and physics — only the first is needed, and `flutter_scene` carries it (225
+chunks at 60 fps, debug build, M-series). What IS worth mirroring, at near-zero marginal
+cost: the pack format, the 34 rules of `CLAUDE.md` (engine-agnostic, and the reason
+AI-driven work is cheap here), and the GDD. → **D8.**
+
+**2. Keep `data/` as Markdown with a pipeline to JSON, or read Markdown directly, or
+author JSON from the start?** Keep it exactly as it is. Markdown is the authoring format:
+GDD prose beside the YAML, comments, readable diffs, cheap for a human or a model to
+write. JSON is the runtime format: typed reads, validation at build time, generated
+constants. Reading Markdown at runtime loses on every axis — a YAML parser hands
+`dynamic` to gameplay (rule 4 in spirit), the cross-file validation the pipeline owns
+(does this recipe's input exist?) vanishes, generated constants vanish, and raw `.md`
+ships in the bundle. Authoring JSON by hand is worse for humans and for models alike. The
+pipeline already exists and costs nothing to keep. **The one change:** a single pack in a
+single home. The Godot 3D game already reads the `dawnforge` almanac rather than owning
+one; the Flutter 3D game reads the same pack through `spec_pack_root()` (or a shared
+content repo as a submodule, the developer's call), the Godot pipeline emits `.tres` and
+this one emits `.json` from the same input, and this repo's copy — the thing that forked —
+retires. → **D9.**
+
+**3. Forget Godot and start from the POC?** Half yes. The POC is the right starting point
+and the wrong thing to ship: `game.dart` and `player.dart` are 1,600 lines each, the block
+table is code, and its README says nothing merges as-is. What the POC proved that matters
+is the engine layer — rendering, isolates, pointer lock, SoLoud, a mesher with face-count
+tests. That layer goes over nearly whole. The gameplay layer is a clone with everything
+hard-coded and has to pass the rules. Rewriting from zero discards 11,039 working lines;
+promoting the POC as-is buys the fastest first delivery and the dearest maintenance;
+refactoring it into `lib/src/core` one system at a time is the middle. → **D10.**
+
+**4. Why a mix?** Because each piece has a different marginal cost. Sharing content and
+rules is nearly free; sharing engine code costs double on everything. The mix reuses where
+reuse is free and stops paying where it is dear.
+
+### 10.3 What follows, in order
+
+1. **Freeze the 2D port at 0.77.0.** Tag it; either leave it on the branch or move it to
+   `reference/port_2d_flame/` beside `legacy_flutter/`. Nothing is deleted. The port plan
+   carries a freeze note; no FP step runs until D8 is reversed.
+2. **Stage 13 first.** Nobody has played the POC by hand. An hour at the keyboard before
+   refactoring 11,000 lines may reorder everything below.
+3. **Decide the pack's home once** (D9's open half: read the spec in place, or a shared
+   content repo). Block index order stays the save contract and becomes authored data,
+   which is the first step from POC to engine whichever option wins.
+4. **Migrate the POC into `dev` system by system:** tables become registries read from
+   generated JSON (rule 2); `game.dart` and `player.dart` split along the systems the POC
+   already has; `world/` enters nearly intact. A new executable plan with stable IDs is
+   owed before the first migration commit — this section is the study, not the plan.
+
+### 10.4 Risks accepted with eyes open
+
+- **The two 3D games will diverge in feel** — Godot physics against a hand-written
+  `VoxelBody`. Parity is at the content level (blocks, recipes, species stats), never at
+  the simulation level.
+- **Byte-identical saves between the two POCs are a study artefact, not a constraint.**
+  Carrying it into the real game chains both engines to the lower common denominator;
+  rule 32 already says nothing has shipped.
+- **Stage 13 is still open.** Every "✅" on the POC roadmap was seen through a probe
+  screenshot; the pointer-lock feel was verified only by reading code.
+
+### 10.5 One correction to what was said in the conversation
+
+The reply claimed both 3D tracks stood at "POC done, engine not started, pack empty"
+because `games/dawnforge_3d/data/` holds one document. The second half was wrong: that
+game **plays the 2D almanac** and owns only air, so the pack the Flutter 3D game must
+consume already exists and is 1,101 documents deep. That strengthens D9 — there is no 3D
+pack to design, there is a pack to read — and it is why the copy in this repo retires
+rather than grows a voxel sibling.

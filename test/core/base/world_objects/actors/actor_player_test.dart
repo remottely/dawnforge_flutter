@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:dawnforge/src/core/base/world_objects/actors/player/actor_player.dart';
 import 'package:dawnforge/src/core/base/world_objects/props/prop.dart';
+import 'package:dawnforge/src/core/base/world_objects/props/prop_workstation.dart';
 import 'package:dawnforge/src/core/factories/actor_factory.dart';
 import 'package:dawnforge/src/core/factories/prop_factory.dart';
 import 'package:dawnforge/src/core/registries/actor_registry.dart';
@@ -50,6 +51,16 @@ void main() {
       'inventory_size': 30,
       // Two swings a second, so the cooldown is half a second.
       'base_action_speed': 2.0,
+    });
+
+    locator<PropRegistry>().registerJson(<String, Object?>{
+      'id': 't1_prop_probe_bench',
+      'type': 'prop_workstation_data',
+      'workstation_type': 'SMELTER',
+      'tier': 1,
+      'base_max_health': 100,
+      'allows_actor_overlap': true,
+      'interaction_range': 2.0,
     });
 
     locator<PropRegistry>().registerJson(<String, Object?>{
@@ -200,5 +211,63 @@ void main() {
 
     locator<GameInputManager>().popUiBlocker(bag);
     expect(player.performPrimaryAction(), isTrue);
+  });
+
+  // FP4.5(e): the reach, on the key `D-1` gives it, and on the finger that
+  // has to carry both verbs at once.
+
+  Prop benchAt(GridPos at) {
+    final prop = PropFactory.create(
+      't1_prop_probe_bench',
+      grid().gridToWorld(at),
+      random: Random(20260910),
+    );
+    grid().occupyPropTiles(at, prop);
+    return prop;
+  }
+
+  test('a reach costs no cadence, so a swing still follows it', () {
+    final player = playerAt(const GridPos(5, 5));
+    final tree = treeAt(const GridPos(6, 5));
+    benchAt(const GridPos(5, 6));
+
+    aimAt(const GridPos(5, 6));
+    expect(player.performInteract(), isTrue);
+
+    aimAt(const GridPos(6, 5));
+    expect(player.performPrimaryAction(), isTrue,
+        reason: 'reaching for a bench is not a swing and takes no cooldown');
+    expect(tree.health.current, 98);
+  });
+
+  test('a surface that holds the player holds the reach too (rule 30)', () {
+    final player = playerAt(const GridPos(5, 5));
+    benchAt(const GridPos(5, 6));
+    aimAt(const GridPos(5, 6));
+
+    const bag = Object();
+    locator<GameInputManager>().pushUiBlocker(bag);
+    expect(player.performInteract(), isFalse);
+
+    locator<GameInputManager>().popUiBlocker(bag);
+    expect(player.performInteract(), isTrue);
+  });
+
+  test('a tap reaches what answers a reach, and swings at what does not', () {
+    final player = playerAt(const GridPos(5, 5));
+    final tree = treeAt(const GridPos(6, 5));
+    final bench = benchAt(const GridPos(5, 6)) as PropWorkstation;
+    var reached = 0;
+    bench.interactable.interacted.connect((_) => reached++);
+
+    aimAt(const GridPos(5, 6));
+    expect(player.performContextualAction(), isTrue);
+    expect(reached, 1);
+    expect(tree.health.current, 100);
+
+    aimAt(const GridPos(6, 5));
+    expect(player.performContextualAction(), isTrue);
+    expect(reached, 1, reason: 'a tap on a tree is a swing, not a reach');
+    expect(tree.health.current, 98);
   });
 }

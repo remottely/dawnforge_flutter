@@ -10,6 +10,8 @@ import 'package:dawnforge/src/core/shared_logic/definitions/enums.dart';
 class ItemData extends IVisualObjectData {
   ItemData({
     required super.id,
+    super.displayNameKey,
+    super.descriptionKey,
     super.spritesheetPath,
     super.frameWidth,
     super.frameHeight,
@@ -108,6 +110,8 @@ class ItemData extends IVisualObjectData {
   @override
   ItemData clone() => ItemData(
         id: id,
+        displayNameKey: displayNameKey,
+        descriptionKey: descriptionKey,
         spritesheetPath: spritesheetPath,
         frameWidth: frameWidth,
         frameHeight: frameHeight,

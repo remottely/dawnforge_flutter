@@ -2,7 +2,15 @@
 """Run the whole verification suite: `flutter analyze` then `flutter test`. Exit 0 = green.
 
 The one command every task runs before its commit (CLAUDE.md §Execution Workflow step 3).
-"The suite is green" means BOTH halves passed:
+"The suite is green" means every half passed:
+
+- **the changelog pair** in shape (`check_changelog_is_ordered.py`, FP0.16) — newest
+  first, mirrored in both languages, categories in their fixed order.
+- **the translation keys** (`check_translation_keys.py`, FP0.17) — every literal
+  `tr('key')` in `lib/` exists in every emitted locale table.
+- **the manual's two halves** (`scripts/docs/check_manual_mirrors.py`, FP0.15) — `en/`
+  and `pt-BR/` hold the same filenames with the same heading structure. A page that
+  exists in one language only is noticed by a player, not by a reviewer.
 
 - **`flutter analyze`** at zero issues — the analyzer *is* half the rule set here
   (rule 4's strict typing lives in `analysis_options.yaml`), so an info-level lint is a
@@ -43,6 +51,19 @@ def main() -> int:
     args = parser.parse_args()
 
     codes: list[int] = []
+    # The changelog pair first (FP0.16): cheapest half, and a broken record is
+    # a failed task under rule 34 whatever the code does. The pending
+    # `0.0.0-NEXT` is allowed here because the suite runs BEFORE the stamp.
+    codes.append(_run("changelog", [
+        sys.executable, "scripts/project/check_changelog_is_ordered.py"]))
+    # Every literal `tr('key')` in lib/ exists in every locale (FP0.17): a
+    # missing key crashes at render, which is later than here.
+    codes.append(_run("translations", [
+        sys.executable, "scripts/project/check_translation_keys.py"]))
+    # The manual mirrors in both languages (FP0.15): a page that exists only in
+    # English is found by a Brazilian seven-year-old, who is not in this repo.
+    codes.append(_run("manual", [
+        sys.executable, "scripts/docs/check_manual_mirrors.py", "--check"]))
     if not args.test_only:
         # --fatal-infos: an info is a failure — the analyzer is half the rule set (rule 4).
         codes.append(_run("analyze", ["flutter", "analyze", "--fatal-infos"]))

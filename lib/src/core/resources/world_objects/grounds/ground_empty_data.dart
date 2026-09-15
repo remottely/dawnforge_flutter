@@ -13,6 +13,8 @@ import 'package:dawnforge/src/core/systems/drop/drop_entry.dart';
 class GroundEmptyData extends GroundBuildableData {
   GroundEmptyData({
     required super.id,
+    super.displayNameKey,
+    super.descriptionKey,
     super.spritesheetPath,
     super.frameWidth,
     super.frameHeight,
@@ -63,6 +65,8 @@ class GroundEmptyData extends GroundBuildableData {
   @override
   GroundEmptyData clone() => GroundEmptyData(
         id: id,
+        displayNameKey: displayNameKey,
+        descriptionKey: descriptionKey,
         spritesheetPath: spritesheetPath,
         frameWidth: frameWidth,
         frameHeight: frameHeight,

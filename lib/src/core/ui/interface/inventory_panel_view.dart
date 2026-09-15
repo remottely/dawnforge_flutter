@@ -9,6 +9,7 @@ import 'package:dawnforge/src/core/systems/localization/localization_system.dart
 import 'package:dawnforge/src/core/systems/managers/game_input_manager.dart';
 import 'package:dawnforge/src/core/systems/managers/ui_state_machine.dart';
 import 'package:dawnforge/src/core/ui/widgets/item_slot_view.dart';
+import 'package:dawnforge/src/core/ui/widgets/panel_button.dart';
 import 'package:flutter/widgets.dart';
 
 /// The whole bag, open — the Dart port of `inventory_ui.gd` and the drag half
@@ -31,6 +32,7 @@ final class InventoryPanelView extends StatefulWidget {
     required this.inventory,
     required this.onClose,
     required this.onDropToWorld,
+    required this.onOpenCrafting,
     super.key,
   });
 
@@ -42,6 +44,12 @@ final class InventoryPanelView extends StatefulWidget {
 
   /// Puts the whole of one slot on the ground at the holder's feet.
   final void Function(int slotIndex) onDropToWorld;
+
+  /// Opens what the player can make with their own two hands (`D-2`). The bag
+  /// is where it belongs: the hand-craft has no bench in the world to walk up
+  /// to, so the only place it can be reached from is the thing the player is
+  /// already carrying.
+  final VoidCallback onOpenCrafting;
 
   @override
   State<InventoryPanelView> createState() => InventoryPanelViewState();
@@ -219,12 +227,24 @@ final class InventoryPanelViewState extends State<InventoryPanelView> {
                           ),
                         ),
                         Align(
+                          alignment: Alignment.centerLeft,
+                          child: PanelButton(
+                            label: tr('ui.inventory.craft'),
+                            onPressed: widget.onOpenCrafting,
+                          ),
+                        ),
+                        Align(
                           alignment: Alignment.centerRight,
                           // The container reorders itself; the button only
                           // asks. Which pocket a thing lands in is decided
                           // once, for every inventory in the game, and a
                           // widget is the wrong place to know any of it.
-                          child: _SortButton(onPressed: inventory.sortItems),
+                          child: PanelButton(
+                            // Rule 19: the label is a key, in all three
+                            // locales.
+                            label: tr('ui.inventory.sort'),
+                            onPressed: inventory.sortItems,
+                          ),
                         ),
                       ],
                     ),
@@ -254,63 +274,4 @@ final class InventoryPanelViewState extends State<InventoryPanelView> {
   /// The slot a drag is lifted from, or -1 — read by the tests, which is the
   /// only thing outside this class that has any business knowing.
   int get draggingFrom => _draggingFrom;
-}
-
-/// The toolbar's one button — the port of `inventory_ui.gd`'s `SortButton`.
-///
-/// Private to this file on purpose: it is the first button this port has, and
-/// one button is not a button system. It moves to `ui/widgets/` when a second
-/// surface needs the same thing, which is the point at which what they share
-/// is known rather than guessed.
-///
-/// A click and a tap are one press here (rule 12) — `onTap` answers both, and
-/// the panel is already a `GameInputManager` blocker, so neither reaches the
-/// world behind it. The GAMEPAD is still the gap FP4.3a opened in writing:
-/// there is no focus ring to move onto this, and there will not be one until
-/// the virtual cursor is ported.
-/// It is stateful for one reason: it holds whether it is being pressed. A
-/// button that gives nothing back under a finger reads as broken on a phone
-/// long before it reads as plain.
-final class _SortButton extends StatefulWidget {
-  const _SortButton({required this.onPressed});
-
-  final VoidCallback onPressed;
-
-  @override
-  State<_SortButton> createState() => _SortButtonState();
-}
-
-final class _SortButtonState extends State<_SortButton> {
-  static const _fill = Color(0xFF2C2318);
-  static const _pressedFill = Color(0xFF4A3B2A);
-
-  bool _isPressed = false;
-
-  void _setPressed({required bool value}) {
-    if (_isPressed == value) return;
-    setState(() => _isPressed = value);
-  }
-
-  @override
-  Widget build(BuildContext context) => GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTapDown: (_) => _setPressed(value: true),
-        onTapUp: (_) => _setPressed(value: false),
-        onTapCancel: () => _setPressed(value: false),
-        onTap: widget.onPressed,
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: _isPressed ? _pressedFill : _fill,
-            border: Border.all(color: _panelBorder),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            child: Text(
-              // Rule 19 again: the label is a key, in all three locales.
-              tr('ui.inventory.sort'),
-              style: const TextStyle(fontSize: 13, color: _title),
-            ),
-          ),
-        ),
-      );
 }

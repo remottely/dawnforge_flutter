@@ -13,18 +13,25 @@
 > FP0.18), and the open forks moved out of prose into the **Decision register** at the end.
 > Every `file:line` cited there was true at that version and must be re-grepped before use.
 
+> **FROZEN 2026-09-14 at 0.77.0 — study decision D8.** The 2D port is set aside and the
+> Flutter track becomes the 3D voxel game grown out of the cubeworld POC (study §10, D8–D10).
+> No FP step below is executed until D8 is reversed; the progress table is left as it stood
+> at 0.77.0 and every open fork in the Decision register stays open. What replaces this plan
+> is `PENDING.md` #18 until the 3D plan exists — the study's `D8` is unrelated to `D-8` below.
+
 ## Progress
 
 | Phase | State | Gate |
 |:---|:---|:---|
-| FP0 Reset & harness | gate met 2026-08-25 (FP0.9 skills pending; FP0.10–FP0.18 harness debt opened 2026-09-10) | harness scripts run; hooks wired; suite command green on empty project |
+| FP0 Reset & harness | gate met 2026-08-25 (FP0.9 skills pending, sliced (a)–(f) 2026-09-10 — 21 over there, 0 here; FP0.10–FP0.18 harness debt opened 2026-09-10 — **all drained by 0.72.0 except FP0.15's section map, which waits on `D-4`**) | harness scripts run; hooks wired; suite command green on empty project |
 | FP1 Core foundation | gate met 2026-08-26 (FP1.5 component slice, FP1.9 domain rules pending) | `flutter test` green over events/registry/factory/component/FSM/grid with zero Flame imports |
-| FP2 Pipeline retarget | gate met 2026-08-26 (FP2.3 sprites, FP2.4 translations, FP2.5 component-keys pending) | `dawnforge.py full` emits JSON; registries boot from a real pack slice; `--check` clean |
+| FP2 Pipeline retarget | gate met 2026-08-26 (FP2.3 sprites, FP2.4 translations, FP2.5 component-keys pending; the step-by-step map against the spec's 27 is `AUTOMATION_DEBT_2026-09-10.md` §1.1 — steps 02/03 owe `--check`, step 99 is unported, our step 11 folds the spec's 09 and 25) | `dawnforge.py full` emits JSON; registries boot from a real pack slice; `--check` clean |
 | FP3 World & rendering | gate met 2026-08-26 (120fps hand-run, macOS) | player walks a chunked world at 60fps with debug overlay proving frame budget |
-| FP4 Gameplay loop | in progress (FP4.1–FP4.3 done; FP4.2's Sort paid 2026-08-31; FP4.5 slices (a)–(d) landed 0.45.0–0.48.0, (e)–(h) sliced 2026-09-10; FP4.4 re-ordered after FP4.5 and sliced (a)–(h)) | harvest → craft → place loop playable end to end |
+| FP4 Gameplay loop | in progress (FP4.1–FP4.3 done; FP4.2's Sort paid 2026-08-31; FP4.5 slices (a)–(e) landed 0.45.0–0.48.0, 0.50.0 and 0.69.0, (f)–(h) open; FP4.4 re-ordered after FP4.5 and sliced (a)–(h), part of (b)/(c)/(e)/(g) landed 0.49.0) | harvest → craft → place loop playable end to end |
 | FP5 Surfaces & UX | pending, sliced 2026-09-10 (FP5.1's `UIStateMachine` + back-press arbiter landed early, 0.22.0) | HUD + inventory + menu with blocker stack, no pause anywhere |
 | FP6 Persistence | pending, sliced 2026-09-10 (FP6.1–FP6.4) | save/load round-trip; reset_local_save.py works |
 | FP7 Breadth systems | pending, mapped 2026-09-10 (FP7.1–FP7.15 with sub-gates and a dependency map) | (per-system sub-gates: time, spawning, progression, quests, audio, i18n, minigames) |
+| FP8 The study's own gate | opened 2026-09-10 (0.66.0) — one step, and it can be run at ANY time | a second pack boots without one edit under `lib/src/core/` |
 
 ---
 
@@ -52,66 +59,166 @@
   `scaffold-worldobject` re-templated in FP1; `sweep`, `player-docs`, `ui-text` after
   their subjects exist; new `flutter-run` know-how skill replaces `godot-run`.
 
+  **Sliced 2026-09-10 (0.60.0), and the list above was short.** `.claude/skills/` does not
+  exist in this repo — the folder FP0.4 points the knowledge index at has never had a
+  subject. The spec carries **21**: 18 authored by that repo and 3 generic ones it
+  installed (`skill-creator`, `systematic-debugging`, `verification-before-completion`),
+  which are nobody's port — they install themselves. Of the 18, the bullet above names 10
+  and **omits 5 that apply here**: `decision`, `pipeline`, `rule-audit`, `metrics`,
+  `grill-me`. Each slice below is one commit; a skill lands with its trigger written down
+  and a `COMMANDS.md`-style row is *not* owed (a skill is not a script — rule 23 does not
+  reach it, and `docs/AI_HARNESS.md` §1 is where it is announced).
+  - **(a) start correctly** — **done 0.73.0.** `.claude/skills/` exists for the first
+    time, with three: `onboard` (seven probes, then a six-answer briefing — HEAD, who else
+    is in the tree, the front, the lanes, the open forks, the next executable step; the
+    spec's lane board is `D-8` and did not cross), `recall` (the query shapes that work
+    here, and the two things the index does NOT cover — `lib/` source and the sibling
+    checkout), `suite` (the five checks by name, the Dart triage order, and `L-024`'s
+    load-dependent flake written down so the next session does not lose an afternoon to
+    it). Every probe was run before it was written down. The three are announced in
+    `docs/AI_HARNESS.md` §1, which is a skill's `COMMANDS.md`.
+  - **(b) record correctly** — `ledger` (rule 27's four fields, `--next` for the ID, the
+    duplicate check first), `decision` (the register machinery: prefix + next free ID,
+    what a fork must carry, where a settled one moves to — this is the skill whose absence
+    let two ID spaces open one hyphen apart, `AUTOMATION_DEBT_2026-09-10.md` AD2.2),
+    `plan-doc` (the skeleton `docs/refactoring/README.md` already states, so this skill is
+    mostly a pointer at a document that exists).
+  - **(c) finish correctly** — `player-docs` (rule 34: both changelogs in seven-year-old
+    prose, the manual pair, the `0.0.0-NEXT` section), `rule-audit` (the diff against the
+    34 rules; the mechanical subset is what `check_edited_file_rules.py` already greps, so
+    the skill is the reading the hook cannot do), `ship` (the version-from-HEAD ritual —
+    and **not** the spec's ten-lane machinery, `D-8`; here it is one recipe with one
+    pathspec, and `AUTOMATION_DEBT_2026-09-10.md` AD3.1/AD3.2 is the script half of the
+    same job, so this slice waits for those two or it teaches a recipe that is about to
+    change).
+  - **(d) this track's own** — `flutter-run` (run the macOS app outside the suite: which
+    device, hot reload versus restart, where the frame-budget overlay lives — the FP3 gate
+    was hand-run and nothing writes down how), `pipeline` (`dawnforge.py`: which step an
+    edit needs, `--check` versus `--dry-run`, and the step map of
+    `AUTOMATION_DEBT_2026-09-10.md` §1.1), `ui-text` (rule 19's three steps end to end,
+    now that FP0.17's guard makes a missing key a red suite instead of a crash),
+    `scaffold-worldobject` (re-templated: factory, data class, registry arm, component
+    keys, the test — the five files rule 1 and rule 3 make mandatory).
+  - **(e) periodic** — `sweep` (the ledger-draining ritual `docs/refactoring/README.md`
+    describes and nothing has run yet), `metrics` (the counts a sweep needs; here they are
+    the numbers the three side-lane documents already measure, so the skill is a runner,
+    not a new measurement).
+  - **(f) `grill-me`** — the interview that makes a developer close a fork. It is the one
+    skill whose subject is the human, and this repo has 11 open forks across three
+    registers, so it has more to work with than most. It needs nothing built first.
+  - **N/A:** `csharp-interop` (rule 26 is reserved N/A in Dart), `world3d` (one ground),
+    and the three installed generics.
+  - **Gate:** a fresh session runs `/onboard` and can name the live plan, the open forks
+    and the next executable step without reading a plan end to end.
+
 **Harness debt, opened 2026-09-10 (0.48.1).** Each item is a script or a document the
 rules already assume exists. None needs a decision; each names the ledger entry or the
 rule that is its evidence. Every script obeys rule 23 (`project_paths.py`, `__main__`
 guard, `--dry-run`/`--check`, a `COMMANDS.md` row in the same commit).
 
-- **FP0.10** `scripts/project/reset_local_save.py` — the port `L-004` says is missing.
+**The wider inventory is its own document.** FP0.10–FP0.18 are the scripts *this repo's own
+rules* already assume exist. The question "what else does the delivery track run that we do
+not" was measured on 2026-09-10 into
+`implementation_plan/AUTOMATION_DEBT_2026-09-10.md` — 27 pipeline steps and 40 project
+commands over there against 7 and 4 here, each row either owed with an `AD` id, owned by an
+`FP` step, or not applicable with the reason. Nothing there is restated here and nothing
+here is restated there.
+
+- **FP0.10** — **done 0.58.0.** `scripts/project/reset_local_save.py` — the port `L-004`
+  said was missing.
   The spec is `tessera/scripts/project/reset_local_save.py`; the Dart delta is the
   location: the save dir is `path_provider`'s application-support folder keyed by the
   bundle id, so the script reads `PRODUCT_BUNDLE_IDENTIFIER` from
   `macos/Runner/Configs/AppInfo.xcconfig` (and the Linux/Windows twins) rather than
   typing `com.remottely.dawnforge` by hand, and sweeps `saves/` under it on every
   platform folder that exists. Settings (`shared_preferences`) survive by default;
-  `--all` takes them. Lands **before FP6.1's first write**; FP6.3 proves it.
-- **FP0.11** `scripts/content/check_pack_snapshot_matches_spec.py [--check|--accept
-  <path>]` — the drift guard `L-006` asks for. For every `.md` under `DATA_ROOT`, diff
-  the frontmatter against the same relative path under `SPEC_REPO_ROOT` (a new
-  `project_paths.py` constant, overridable by `TESSERA_SPEC_ROOT`), report added, removed
-  and changed keys, exit 1 on drift. Documents that exist only here (`data/ui/
-  ui_strings.md`) are declared in ONE allowlist in the script header, each with its
+  `--all` takes them. **Two things the commission did not ask for and the shape did:**
+  the four platform identities are compared and a DISAGREEMENT is refused rather than
+  resolved — each identity is a separate application-support folder, so sweeping one
+  leaves a world in the other; and BOTH macOS shapes are swept, the sandboxed container
+  and the plain folder, because a build made without the entitlement writes to the one
+  nobody would think to check. Landed **before FP6.1's first write**, so today it sweeps
+  a synthetic save (`saves/slot_0.json`, created by hand, removed, and left alone under
+  `--dry-run`); FP6.3 proves it against a real one. `L-004` drained.
+- **FP0.11** — **done 0.56.0.** `scripts/content/check_pack_snapshot_matches_spec.py
+  [--check|--report <path>|--accept <path>]` — the drift guard `L-006` asked for. Two
+  deltas from the commission, each because the pack said so: documents pair by **`id`,
+  not path** (the port files two `t1_ground_buildable_*` snapshots under the smelter and
+  the spec under the biome — a path match calls a moved document a missing one, and the
+  move is REPORTED because the folder is part of a translation key); and the three kinds
+  of difference are not one verdict. A key only the SPEC authors is the port's BACKLOG,
+  never a failure — 1023 of them across 52 documents, because a field whose Dart data
+  class does not exist cannot be authored here (rule 6). A key both sides author with
+  different values, or a key only this pack authors, is the FORK, and fails `--check`
+  unless recorded with a written reason in `pack_snapshot_deltas.yaml` (`--accept` writes
+  one document at a time, never in bulk; `--report` prints one diff). Two repo-wide
+  deltas live in the script header instead: the `spritesheet` path rewrite, and
+  `shadow_origin_offset`, which 51 documents here author and the spec has dropped.
+  Documents with no twin at all are the header's `ONLY_HERE` allowlist, each with its
   reason. A machine without the sibling repo reports **not applicable**, never a pass —
-  the Godot repo's `L-306` lesson (`check_pipeline_check_coverage.py`).
-- **FP0.12** the merge-commit path `L-008` found: `block_forbidden_git.py` learns
-  `git merge --continue` and refuses it, pointing at a new
-  `scripts/project/commit_merge.py` that (1) asserts the index holds exactly the paths the
-  merge itself touches (`git diff --name-only $(git merge-base HEAD MERGE_HEAD)
-  MERGE_HEAD` vs `git diff --cached --name-only`), (2) runs the attribution check on the
-  message, (3) commits. The one case the guard could not inspect becomes the one case a
-  script inspects for it. `docs/AI_HARNESS.md` §3 gains the row.
-- **FP0.13** the cross-repo path sweep `L-003` asks for: `dawnforge_project` →
-  `tessera_project` in `CLAUDE.md` (Project Overview, §Key File Locations),
-  `docs/AI_HARNESS.md` §5 and the study's §1/§8 tables (the study's dated prose stays —
-  it says where the repo WAS). The path is written once, as `SPEC_REPO_ROOT` in
-  `project_paths.py` (FP0.11 reads it); every doc cites the constant.
-- **FP0.14** the tripwires FP0.5 promised and `check_edited_file_rules.py` does not
-  carry (`L-009`): `\bdynamic\b` on a non-comment line under `lib/src/core/` (rule 4;
-  the analyzer's `avoid_dynamic_calls` catches CALLS on it, not the declaration). The
-  `timeScale` tripwire FP0.5 also listed is **dropped, with the reason written in the
-  hook header**: Flame has no global time scale, and a hand-rolled `dt *= factor` has no
-  zero-false-positive regex — it stays a rule 30 reading, not a hook.
-- **FP0.15** the manual's section map (`L-010`): `games/dawnforge/docs/manual/README.md`
-  (the fifteen-page table as the spec's, adapted to this track's page names) +
-  `TEMPLATE.md`, and `scripts/docs/check_manual_mirrors.py --check` (same filenames in
-  `en/` and `pt-BR/`, same heading levels in the same order, every existing page listed
-  in the map). Runs from the suite script.
-- **FP0.16** `scripts/project/check_changelog_is_ordered.py --check` — newest-first
+  the Godot repo's `L-306` lesson (`check_pipeline_check_coverage.py`). NOT in the suite:
+  it needs a repo the suite cannot assume. First green run: 28 forked documents, 67
+  forked keys, `L-006`'s own `cave_elevation_drops` among them; `L-014` opened.
+- **FP0.12** — **done 0.61.0.** The merge-commit path `L-008` found: `block_forbidden_git.py`
+  learns `git merge --continue` and refuses it, pointing at a new
+  `scripts/project/commit_merge.py` that (1) refuses a merge still holding a conflicted
+  path, (2) asserts every STAGED path is one the merge itself brought (`git diff
+  --name-only <merge-base> MERGE_HEAD` ⊇ `git diff --cached --name-only`; the subset
+  direction is the meaningful one — a file both branches changed identically is staged by
+  neither, and a `-s ours` merge stages nothing), (3) runs the attribution check on the
+  message, reading the hook's own pattern rather than a second copy of it, (4) commits.
+  **A second hole was found and closed while the first was being closed:** the guard read
+  the command word from token 0, so a leading `VAR=value` — `GIT_EDITOR=true git …`,
+  exactly what `L-008` records being used — walked past EVERY rule in the file, `rebase`
+  and the bare-commit rule included. Environment assignments are now stripped first.
+  `docs/AI_HARNESS.md` §3 carries both. `L-008` drained.
+- **FP0.13** — **done 0.53.0.** The cross-repo path sweep `L-003` asked for:
+  `dawnforge_project` → `tessera_project` in `CLAUDE.md` (Project Overview, §Key File
+  Locations), `docs/AI_HARNESS.md` §5 and the study's §1 table (the study's dated prose
+  stays — it says where the repo WAS; §8 holds no path). The path is written once, as
+  `SPEC_REPO_ROOT` in `project_paths.py` (FP0.11 reads it) beside `spec_repo_available()`
+  and `spec_pack_root()`; every doc cites the constant. `L-003` drained.
+- **FP0.14** — **done 0.57.0.** The tripwires FP0.5 promised and `check_edited_file_rules.py`
+  did not carry (`L-009`): `\bdynamic\b` on a non-comment line, scoped to all of `lib/`
+  rather than `lib/src/core/` — rule 4 says `lib/`, the hook already judges only `lib/`,
+  and generated files are included on purpose because rule 17 forbids hand-editing them
+  at all. Zero occurrences in `lib/` and `test/` when it was written, so it needed no
+  whitelist. The `timeScale` tripwire FP0.5 also listed is **dropped, with the reason
+  written in the hook header and in `docs/AI_HARNESS.md` §3**: Flame has no global time
+  scale, and a hand-rolled `dt *= factor` has no zero-false-positive regex — a tripwire
+  with false positives is trained away within a day. It stays a rule 30 reading, not a
+  hook. `L-009` drained.
+- **FP0.15** — **half done 0.63.0**, and the half that is done is the half that needs no
+  decision. `scripts/docs/check_manual_mirrors.py --check` is ported and **runs from the
+  suite**: same filenames in `en/` and `pt-BR/`, same heading levels in the same order.
+  Proved both ways — a demoted `##` in one language and a deleted page were each refused
+  by name; the four pages mirror cleanly today. **Still owed:** `manual/README.md` (the
+  section map) + `TEMPLATE.md`, because writing a section map means naming the pages and
+  the names are `D-4`. The checker already carries the map assertion and reports it as
+  **NOT CHECKED**, in words, naming the decision it waits on — the moment `README.md`
+  exists it runs with no further edit. `L-010` stays open on the map half.
+- **FP0.16** — **done 0.51.0.** `scripts/project/check_changelog_is_ordered.py --check` — newest-first
   order, no surviving `0.0.0-NEXT`, en/pt-BR section and category parity, no version
   twice. Evidence it is owed: at 0.47.0 both changelogs carried `0.45.4` and `0.45.3`
   ABOVE `0.47.0`, and 0.48.0 repaired it by hand. Runs from the suite script.
-- **FP0.17** `scripts/project/check_translation_keys.py --check` — every string-literal
+- **FP0.17** — **done 0.52.0.** `scripts/project/check_translation_keys.py --check` — every string-literal
   key passed to `tr(` in `lib/` exists in every emitted locale table
   (`assets/generated/<game>/locales/*.json`); the count of non-literal calls is printed,
   never swallowed. Here a missing key CRASHES at render (rule 5), which is later than a
   red suite.
-- **FP0.18** `docs/ARCHITECTURE.md` — the working agreement below says it is written as
-  phases close; FP1, FP2 and FP3 have closed and the file does not exist. Seed it with
-  what is TRUE at HEAD only: the sector tree, the boot order (`boot.dart`'s
-  registrations), the fixed-step loop (`SimClock`), the world-object envelope
-  (`WorldObject.serializeEnvelope`), the hand family (`ItemHand`, `ActionOutcome`), the
-  surface stack (`UIStateMachine` + blocker), residency ownership (cite `L-007`). Never
-  an intention.
+- **FP0.18** — **done 0.72.0.** `docs/ARCHITECTURE.md`, twelve sections, every one stamped
+  with the version it was verified against (0.70.0) — the sector tree with a file count per
+  sector, the boot order (17 singletons in three groups, and why the order BETWEEN the
+  groups is the contract), the fixed step with its catch-up cap and what deliberately ticks
+  on the RENDER frame instead, the world-object envelope, components, factories and
+  registries, the hand family, the surface stack, residency with `L-007` cited where the
+  ownership is wrong rather than described as if it were right, and §11 "what is not here
+  yet" written as facts of absence with their ledger IDs. §12 carries the discipline that
+  keeps it true. One drafted claim did not survive verification and is the step's real
+  yield: rule 13's `WorldObjectHelper.getCore` names a class `lib/` has never contained
+  (`L-022`) — the same absence FP4.5(e)'s landed notes record from the other side. The
+  periodic re-audit sweep behind the file stays unported (spec's
+  `ARCHITECTURE_EVOLUTION.md`).
 
 ## FP1 — Core foundation (pure Dart, zero Flame imports)
 
@@ -343,7 +450,7 @@ sector model (`shared_logic/`, `domain/`, `resources/`, `registries/`, `factorie
   allocated materials, refund on cancel and on death, quiet refusals for a foreign recipe
   and an unaffordable batch, `is_producing` derived from `current_recipe`, the "1 of 5"
   count the spec never wrote down). Four remain:
-  - **(e) the interact verb** — `InteractableComponent` (`interactable_component.gd`:
+  - **(e) the interact verb — landed 0.69.0.** `InteractableComponent` (`interactable_component.gd`:
     `interact(interactor)`, `interacted` signal, `interaction_prompt` and
     `interaction_range` read from the data — both authored on every document, both unread
     today) mounted by `PropWorkstation.setupComponents` only (the `L-005` lesson: a
@@ -356,6 +463,23 @@ sector model (`shared_logic/`, `domain/`, `resources/`, `registries/`, `factorie
     interacts (rule 12). Gamepad: waits with the virtual cursor (FP4.3a omission, still
     open). The key is `D-1` in the decision register — the code binds an ACTION
     (`interact`), so the slice does not wait for the letter.
+
+    **As landed, three notes the slice above did not predict.** (1) The two authored
+    fields went onto a NEW class, `PropInteractableData`, with `PropWorkstationData`
+    re-parented under it: the pack already draws that line — a rock authors neither
+    field, every station, soil and crop authors both — so the promise has a type
+    (rule 7) instead of two more fields on every prop. (2) `WorldObjectHelper.getCore`
+    was not needed: `GridManager.getPropAt` hands back a typed `Prop`, so
+    `tryInteract` asks it for the component directly and the spec's helper has no
+    subject here. (3) Touch parity is a SECOND INTENT rather than a second reading of
+    the same one — `contextualActionPressed`, raised only for `touch`/`stylus` — so
+    the device stays known inside `InputHelper` (rule 11) and the choice of verb is
+    made in the simulation, where the world can be read. `can_interact`,
+    `display_indicator` and `_on_interact` are left out with their reasons in the two
+    new files. Nothing listens to `interacted` yet: (f) is the listener, and a handler
+    written now would be an empty method dressed as a feature (rule 5). `D-1`'s
+    rebinding is in: `E` is interact, the hotbar steps on `[`/`]`, and `L-021` records
+    that the authored prompt bakes a keyboard letter into content.
   - **(f) the two surfaces** — `WorkstationPanelView` (a Flutter widget, `UIStateMachine`
     MENU kind + `pushUiBlocker`, live `BackdropFilter`): recipe grid (`RecipeSlotView`
     with the spec's six panel states), details (each ingredient as have/need,
@@ -369,7 +493,10 @@ sector model (`shared_logic/`, `domain/`, `resources/`, `registries/`, `factorie
     `ui.workstation.*` labels). This is the first surface that SHOWS an item's name, so it
     pays PENDING #7's port delta: a data class reads `display_name_key`, and
     `InventorySortRules`' fourth axis goes live in the same commit.
-  - **(g) the bootstrap — CORRECTED 2026-09-10.** The 2026-08-31 decision assumed the
+  - **(g) the bootstrap — CORRECTED 2026-09-10; landed 0.50.0** (step 26 twin with its
+    own item-id check, `IStartingLoadoutData`, `LoadoutRegistry` routed by the loader,
+    `StartingLoadoutRules.apply(player)` at boot, XP refused until FP7.5 rather than
+    dropped, the pickaxe document imported into `02_workshop/t1/`). The 2026-08-31 decision assumed the
     shared contract had no starting inventory and proposed `starting_inventory:` on the
     player document as an additive fork. **The spec has authored one since `tessera
     0.334.0` (2026-09-05):** `games/dawnforge/data/progression/starting_loadout_default.md`
@@ -402,6 +529,11 @@ pulled: `UIStateMachine` + the back-press arbiter (0.22.0), the hotbar (0.24.0),
 inventory panel (0.25.0), the workstation panel (FP4.5f). **Gate:** HUD + tabbed menu +
 settings + main menu, every surface through the blocker stack, nothing pauses, the world
 visibly moving behind every `BackdropFilter`.
+
+Every surface below reads input, and what a press is allowed to MEAN while that surface
+is up is not this phase's to invent: `INPUT_PARITY_2026-09-10.md` §4 holds the context
+table and `IP2`/`IP3` are the two items that must land before a surface can be typed
+into or safely stand over the hotbar.
 
 - **FP5.1 HUD** (`shared/ui/interface/hud.gd`, `i_hud_surface.gd`).
   - (a) `NotificationQueue` (`NotificationQueue.cs`): `Events.notificationAdded(text,
@@ -587,7 +719,11 @@ FP6 ─► everything that persists a new section (7.1, 7.2, 7.5, 7.6, 7.12)
   `AimSnapshot` was built to survive); (ii) actors hittable — `usePrimaryAction` over an
   actor, a corpse, loot and the death path (`WorldObjectDeathRules` is ported);
   (iii) the gamepad's virtual cursor (`gamepad_cursor.gd`, `player_cursor_component.gd`
-  — rule 12 broken in writing since 0.32.0; also unblocks the mouse-wheel hotbar of
+  — rule 12 broken in writing since 0.32.0; measured 2026-09-10 in
+  `INPUT_PARITY_2026-09-10.md`, which puts a number on it: the spec binds 36 of its 51
+  actions to a pad and this port answers none of them, and HOW a pad reaches Flutter at
+  all is `IP-D1`, a fork that wants answering before FP5.1 designs a surface for a
+  pointer only; also unblocks the mouse-wheel hotbar of
   PENDING #7); (iv) action costs (`action_cost_purse.gd`, `combo_tracker.gd`,
   `EnergyRules`/`StaminaRules`/`ManaRules` + their components and bars). Then the AI:
   `ActorCreature`/`IActorEnemy` hosts, `StateMachineBuilder` from `state_config` data over
@@ -645,6 +781,43 @@ FP6 ─► everything that persists a new section (7.1, 7.2, 7.5, 7.6, 7.12)
   `impact_visuals_flat.gd` (`ImpactDebrisRules` is pure), `pixel_perfect_viewport.gd`,
   `CameraZoom.cs`. Pick by what the eye misses most.
 
+
+## FP8 — The study's own gate
+
+**Before running it, read `ENGINE_SURFACE_2026-09-10.md` §6 and `L-023`.** The gate's
+path contains `lib/src/core/render/`, 8 files and 1,081 lines with no counterpart anywhere
+in the spec's 560-file engine, because decision D2 means something here must draw what a
+Godot node draws for itself. A diff there answers a question about Flame, not about
+content-driven architecture, so whether the gate excludes it is `ES-D2` and wants deciding
+before the probe runs rather than after it goes red.
+
+Study §9 clause 5 is *the actual point of the study*: "new-genre experiments can be started
+as new packs under `games/` without touching `src/core/`". **It has never been probed**, and
+unlike every phase above it, it does not depend on any of them — it can be run today, and
+it gets cheaper to fix the earlier it fails.
+
+- **FP8.1 The second-pack probe.** Author the smallest possible pack under `games/<probe>/
+  data/`: one biome document with one terrain share and one prop, one prop document, one
+  item it drops, and the `player/` and `progression/` documents every boot reads. Run the
+  pipeline at it, point `GameConstants.gameName` at it, boot. **The gate is the diff:** the
+  probe passes when nothing under `lib/src/core/` changed to make it work. Every file the
+  probe forced open is a place the engine knows its game's name, and each is either fixed
+  in the same commit or written down with the reason it cannot be.
+  - What is already known, measured 2026-09-10 at 0.65.0. **The Dart side names its game
+    exactly once** — `lib/src/core/shared_logic/definitions/game_constants.dart:5`
+    (`gameName = 'dawnforge'`); everything else asks `ContentPaths` (rule 29). Both
+    automation twins are already parameterised (`TESSERA_GAME` in `project_paths.py`).
+  - **The per-game surface that is NOT one place is `pubspec.yaml`.** Flutter bundles only
+    DECLARED assets, so `assets/generated/<game>/**` is 27 hand-written folder lines today
+    — one per generated folder, all 27 correct at 0.65.0 — and a second game is a second
+    block of them. This is the probe's most likely finding and it is not a `lib/` problem.
+  - Deliberately NOT in it: a second *game*, art, or a genre. The probe answers one
+    question — does the engine bend — and a pack with two documents answers it as well as a
+    pack with two hundred.
+  - **Gate:** the probe pack boots to a walkable world and `git diff --stat lib/src/core/`
+    is empty. Then the probe pack is deleted or parked under `games/`, with its result
+    written into this step.
+
 ---
 
 ## Decision register
@@ -665,6 +838,7 @@ corrected in FP4.5(g)).
 | **D-6** | FP6.1 | Save location and slot count. | `getApplicationSupportDirectory()/saves/slot_<n>.json`; the spec's 32 slots is a UI number, not a schema one — take it. |
 | **D-7** | FP5.1/5.2 look | Pixel font and design tokens (the spec ships `data/fonts/pixel_panel` + `UISettings` roles; Godot `DESIGN_SYSTEM_2026-08-06.md`). | System font until FP5.2 lands; the token set is a design pass of its own, after the surfaces exist. |
 | **D-8** | harness | Adopt the Godot repo's rules 35–37 (35 dimension parity, 36 context budget, 37 shared docs via lane fragments)? | 36 only, as rule 36 here with 35 and 37 reserved N/A: 35 has no subject in a one-dimension repo, 37 solves a ten-lane problem this repo does not have. The developer's call — `CLAUDE.md` is theirs. |
+| **D-9** | the sim shape, before FP4.5(e) and FP4.4(g) add call sites | Does this port build the **intent layer** `D4` says keeps the multiplayer door open? Today the fixed step reads the device directly and the verb reads the cursor directly (`L-018`); nothing stands between input and simulation. | **Yes, and as its own refactor before FP5.** It is three call sites now and one per verb forever after — FP4.5(e), FP4.4(g) and every FP7.7 verb each add one. The shape is small: input produces a value (`move`, `primary`, `secondary`, `interact`, with the aim already snapshotted by `AimSnapshot`), the fixed step consumes it, and nothing else reads a device. It also gives a deterministic replay something to replay, which is the only way `Splitmix32`'s guarantee ever gets asserted end to end. The developer's call because it changes working code for a door rather than for a feature. |
 
 ---
 

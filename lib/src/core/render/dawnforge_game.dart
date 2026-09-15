@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:dawnforge/src/core/base/world_objects/actors/player/actor_player.dart';
 import 'package:dawnforge/src/core/base/world_objects/items/item_world.dart';
 import 'package:dawnforge/src/core/base/world_objects/props/prop_crop.dart';
+import 'package:dawnforge/src/core/base/world_objects/props/prop_workstation.dart';
 import 'package:dawnforge/src/core/base/world_objects/world_object.dart';
 import 'package:dawnforge/src/core/factories/actor_factory.dart';
 import 'package:dawnforge/src/core/registries/item_registry.dart';
@@ -23,6 +24,7 @@ import 'package:dawnforge/src/core/systems/input/input_helper.dart';
 import 'package:dawnforge/src/core/systems/localization/localization_system.dart';
 import 'package:dawnforge/src/core/systems/managers/game_input_manager.dart';
 import 'package:dawnforge/src/core/systems/managers/ui_state_machine.dart';
+import 'package:dawnforge/src/core/systems/progression/starting_loadout_rules.dart';
 import 'package:dawnforge/src/core/systems/spawning/procedural_spawn_system.dart';
 import 'package:dawnforge/src/core/systems/timing/sim_clock.dart';
 import 'package:dawnforge/src/core/systems/world/chunk_streaming_system.dart';
@@ -62,6 +64,19 @@ final class DawnforgeGame extends FlameGame
 
   /// Flame's name for the inventory panel overlay.
   static const String inventoryOverlay = 'inventory';
+
+  /// Flame's name for the workstation panel overlay.
+  static const String workstationOverlay = 'workstation';
+
+  /// Flame's name for the hand-craft panel overlay — the same widget as the
+  /// bench, bound to the player's own two hands (`D-2`).
+  static const String handCraftOverlay = 'handCraft';
+
+  /// The station whose panel is on screen, or null when none is. Set the
+  /// moment the bus says a station was reached for and cleared when the panel
+  /// leaves, so the overlay builder and the panel can never disagree about
+  /// which bench is open.
+  PropWorkstation? openStation;
 
   /// Every simulated host, ticked on the fixed step.
   final List<WorldObject> simObjects = <WorldObject>[];
@@ -120,6 +135,18 @@ final class DawnforgeGame extends FlameGame
     const AlmanacLoader()
         .loadFromManifest(biomeManifest, (path) => biomeEntries[path]!);
 
+    // The progression manifest (pipeline step 26): what a new world grants.
+    final progressionRoot = ContentPaths.progressionRoot(game);
+    final loadoutManifest = await _loadJson('$progressionRoot/manifest.json');
+    final loadoutEntries = <String, Map<String, Object?>>{};
+    for (final raw
+        in (loadoutManifest['entries']! as List).cast<Map<String, Object?>>()) {
+      final path = raw['path']! as String;
+      loadoutEntries[path] = await _loadJson('$progressionRoot/$path');
+    }
+    const AlmanacLoader()
+        .loadFromManifest(loadoutManifest, (path) => loadoutEntries[path]!);
+
     locator<LocalizationSystem>().loadLocale(
       locale,
       await _loadJson('${ContentPaths.localesRoot(game)}/$locale.json'),
@@ -174,6 +201,9 @@ final class DawnforgeGame extends FlameGame
       GameConstants.playerActorId,
       locator<GridManager>().gridToWorld(spawnTile),
     );
+    // Every boot is a NEW world until FP6 saves one, so every boot grants
+    // the loadout; a loaded world will skip this the day one exists.
+    StartingLoadoutRules.apply(player);
     final playerRenderer = ActorRenderer(player);
     simObjects.add(player);
     await world.add(playerRenderer);
@@ -199,6 +229,15 @@ final class DawnforgeGame extends FlameGame
       unawaited(Future<void>.sync(() => world.add(ItemWorldRenderer(pickup))));
     });
 
+    // A bench was reached for. The shell is the only thing that can put a
+    // widget on screen, and this is the whole of what it decides — WHICH
+    // bench was touched is the simulation's answer, carried on the bus.
+    locator<Events>().workstationInteracted.connect((payload) {
+      final (station, _) = payload;
+      openStation = station as PropWorkstation;
+      overlays.add(workstationOverlay);
+    });
+
     // Which surfaces are ON SCREEN is the shell's job — a widget cannot mount
     // itself. What each one DOES once mounted is entirely its own, which is
     // why the panel closes itself through a callback rather than this class
@@ -213,6 +252,11 @@ final class DawnforgeGame extends FlameGame
       // The press reaches the player and stops there: WHAT it means is the
       // player's own decision (aim, reach, cooldown), not this shell's.
       ..primaryActionPressed.connect(player.performPrimaryAction)
+      // The reach, and the tap that has to choose between the two verbs. Both
+      // stop at the player for the same reason the swing does: what a press
+      // MEANS is the player's decision, not this shell's.
+      ..interactPressed.connect(player.performInteract)
+      ..contextualActionPressed.connect(player.performContextualAction)
       ..inventoryToggled.connect(_toggleInventory)
       // Rule 25: the press is routed ONCE, by the machine, to whatever owns
       // the screen. This is the only listener of the key in the game, and it
@@ -253,6 +297,21 @@ final class DawnforgeGame extends FlameGame
   /// Takes the panel off screen. The panel itself calls this — through the
   /// callback it was handed — when the routed back press reaches it.
   void closeInventory() => overlays.remove(inventoryOverlay);
+
+  /// Opens what the player can make with no bench at all. The inventory panel
+  /// asks for this; the machine evicts the bag as it opens, which is the
+  /// arbiter doing its job rather than either panel knowing about the other.
+  void openHandCraft() => overlays.add(handCraftOverlay);
+
+  void closeHandCraft() => overlays.remove(handCraftOverlay);
+
+  /// The same, for the bench. The station is released with the screen: an
+  /// `openStation` outliving its panel is a reference to a prop whose chunk
+  /// may have recycled under it.
+  void closeWorkstation() {
+    overlays.remove(workstationOverlay);
+    openStation = null;
+  }
 
   /// Puts the whole of one of the player's slots on the ground at its feet.
   ///

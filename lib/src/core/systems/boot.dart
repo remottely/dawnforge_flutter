@@ -2,6 +2,7 @@ import 'package:dawnforge/src/core/registries/actor_registry.dart';
 import 'package:dawnforge/src/core/registries/biome_registry.dart';
 import 'package:dawnforge/src/core/registries/ground_registry.dart';
 import 'package:dawnforge/src/core/registries/item_registry.dart';
+import 'package:dawnforge/src/core/registries/loadout_registry.dart';
 import 'package:dawnforge/src/core/registries/prop_registry.dart';
 import 'package:dawnforge/src/core/systems/eventing/events.dart';
 import 'package:dawnforge/src/core/systems/input/input_helper.dart';
@@ -41,6 +42,7 @@ void registerCoreSystems() {
     ..registerSingleton<GroundRegistry>(GroundRegistry())
     ..registerSingleton<ItemRegistry>(ItemRegistry())
     ..registerSingleton<BiomeRegistry>(BiomeRegistry())
+    ..registerSingleton<LoadoutRegistry>(LoadoutRegistry())
     // Registered at boot, initialized when a world starts (after the content
     // registries above are loaded) — same split as the Godot autoload.
     ..registerSingleton<ProceduralWorldManager>(ProceduralWorldManager())

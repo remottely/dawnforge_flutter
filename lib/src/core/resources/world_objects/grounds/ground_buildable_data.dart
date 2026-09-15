@@ -13,6 +13,8 @@ import 'package:dawnforge/src/core/systems/drop/drop_entry.dart';
 class GroundBuildableData extends IWorldObjectData {
   GroundBuildableData({
     required super.id,
+    super.displayNameKey,
+    super.descriptionKey,
     super.spritesheetPath,
     super.frameWidth,
     super.frameHeight,
@@ -92,6 +94,8 @@ class GroundBuildableData extends IWorldObjectData {
   @override
   GroundBuildableData clone() => GroundBuildableData(
         id: id,
+        displayNameKey: displayNameKey,
+        descriptionKey: descriptionKey,
         spritesheetPath: spritesheetPath,
         frameWidth: frameWidth,
         frameHeight: frameHeight,

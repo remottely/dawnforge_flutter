@@ -18,6 +18,12 @@ prohibition that already exists in prose, and the stderr message names where:
 - **`git commit` naming `LEDGER.md` while an ID heads two entries** — the ledger's own
   header, *"IDs are sequential and never reused"*. The session committing second holds
   both entries and is the one that can see it.
+- **`git merge --continue`** — `LEDGER` `L-008`. Git refuses a pathspec commit while
+  `MERGE_HEAD` exists, so a merge commit can only be made by committing the whole index;
+  taken through `merge`, that sweep never reaches the `commit` rule above. The refusal
+  names `scripts/project/commit_merge.py`, which proves the index holds nothing outside
+  the merge and then commits. The one case the guard could not inspect becomes the one
+  case a script inspects for it.
 
 FAIL-OPEN, deliberately. Nothing is imported beyond the standard library (in particular
 NOT `scripts/lib/project_paths.py`, which raises `SystemExit` at import time when the
@@ -50,7 +56,7 @@ _LEDGER_PATH = "docs/refactoring/LEDGER.md"
 read the same maximum ID — the session that commits second has BOTH entries in its tree,
 so it is the one that sees the duplicate and the one that should renumber."""
 
-_AI_ATTRIBUTION = re.compile(
+AI_ATTRIBUTION = re.compile(
     r"^\s*(?:Co-Authored-By:\s*(?:Claude|.*<noreply@anthropic\.com>)"
     r"|🤖\s*Generated with)",
     re.IGNORECASE | re.MULTILINE,
@@ -132,12 +138,23 @@ def _message_texts(tokens: list[str]) -> list[str]:
     return texts
 
 
+_ENV_ASSIGNMENT = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*=")
+"""A shell environment prefix — `GIT_EDITOR=true git …`. Stripped before the command word
+is read, because a prefix is not a command: without this, one `VAR=value` in front of any
+git invocation walked past EVERY rule in this file. That is not hypothetical — `L-008`
+records `GIT_EDITOR=true git merge --continue` being used to reach a commit this guard
+was meant to inspect, and the same prefix in front of `rebase` or a bare `commit` was
+just as invisible."""
+
+
 def _git_tokens(segment: str) -> list[str] | None:
     """The argv of `segment` when it invokes git at command position, else None."""
     try:
         tokens = shlex.split(segment)
     except ValueError:
         return None  # unbalanced quotes — this segment is not parseable, so not judged
+    while tokens and _ENV_ASSIGNMENT.match(tokens[0]):
+        tokens = tokens[1:]
     if not tokens or tokens[0] != "git":
         return None
     return tokens
@@ -168,6 +185,16 @@ def _refusal(command: str) -> str:
                 "plus a three-argument git update-ref."
             )
 
+        if subcommand == "merge" and "--continue" in tokens:
+            return (
+                "git merge --continue is the one route to a commit this guard cannot "
+                "inspect (LEDGER L-008): git refuses a pathspec commit while MERGE_HEAD "
+                "exists, so the merge would commit the whole index — the exact sweep the "
+                "pathspec rule exists to stop, taken through a subcommand that is not "
+                "'commit'. Use python3 scripts/project/commit_merge.py -F <msgfile>, "
+                "which proves the index holds nothing outside the merge before it commits."
+            )
+
         if subcommand == "commit":
             if "--amend" in tokens:
                 return (
@@ -183,7 +210,7 @@ def _refusal(command: str) -> str:
                     "staged. Name every file the task touched, plus pubspec.yaml and both "
                     "CHANGELOGs."
                 )
-            if any(_AI_ATTRIBUTION.search(text) for text in _message_texts(tokens)):
+            if any(AI_ATTRIBUTION.search(text) for text in _message_texts(tokens)):
                 return (
                     "This commit message carries AI attribution, which this repo forbids "
                     "(CLAUDE.md §Commit message format: 'No AI attribution, ever'). Drop "

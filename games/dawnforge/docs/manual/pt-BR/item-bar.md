@@ -14,9 +14,11 @@ Três jeitos, e todos fazem a mesma coisa:
 - **Aperte uma tecla de número.** `1` é o primeiro bolso da barra, `2` o
   segundo, e assim por diante. `0` é o décimo.
 - **Toque num bolso** com o dedo ou com o mouse.
-- **Aperte `Q` ou `E`** para andar com a borda amarela um bolso para a
+- **Aperte `[` ou `]`** para andar com a borda amarela um bolso para a
   esquerda ou para a direita. Ela dá a volta: depois do último bolso ela
-  volta para o primeiro.
+  volta para o primeiro. Antes essas duas teclas eram `Q` e `E`. Agora `E`
+  quer dizer "usar a coisa na minha frente", então o passo mudou para as duas
+  teclas de colchete ao lado do `P`.
 
 ## Virando a página
 

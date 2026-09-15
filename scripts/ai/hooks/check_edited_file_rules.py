@@ -17,6 +17,21 @@ judgement and no whitelist longer than one name:
   alone, which is what keeps gamepad and touch at parity with the mouse (rule 12).
   Only `input_helper.dart` may read them. (Pattern deliberately narrow: it matches the
   Flame event accessors, not arbitrary `.position` reads.)
+- **rule 4** — the word `dynamic` anywhere under `lib/`. The analyzer does NOT cover
+  this: `analysis_options.yaml` sets `avoid_dynamic_calls: error`, which flags a CALL
+  through a dynamic receiver and says nothing about a `dynamic` declaration, parameter,
+  return or type argument — which is the thing rule 4 forbids by name. `lib/` holds zero
+  occurrences today, so the rule is written while it costs nothing and no whitelist is
+  needed. Generated files are included on purpose: rule 17 forbids hand-editing them, so
+  an Edit that reaches one is already wrong.
+
+ONE TRIPWIRE FP0.5 PROMISED AND THIS HOOK WILL NOT CARRY: writes to a `timeScale`.
+Flame has no global time scale to watch, and a hand-rolled `dt *= factor` is
+indistinguishable by regex from a legitimate per-entity easing — every pattern that
+catches the rule-30 violation also catches honest code. A tripwire with false positives
+is trained away within a day, which is worse than no tripwire. Rule 30's time half stays
+a READING, not a hook; this paragraph is here so the next session finds the reason
+rather than the gap (`L-009`).
 
 Comment lines are skipped, so a comment explaining why one of these was removed does
 not trip the wire. Only the edited file is read, and only from disk, so Edit and Write
@@ -85,6 +100,14 @@ _RULES: tuple[_Rule, ...] = (
         "InputHelper.getCursorWorldPos() / getCursorScreenPos(), the single source of "
         "truth that keeps gamepad and touch at parity with the mouse (rule 12).",
         is_cursor_read=True,
+    ),
+    _Rule(
+        re.compile(r"\bdynamic\b"),
+        "rule 4 — `dynamic` is forbidden in lib/. Every declaration, parameter, return "
+        "and type argument is explicit; a shape that arrives untyped is read through "
+        "JsonReader, and a component is reached through WorldObjectCore (rule 13). The "
+        "analyzer's avoid_dynamic_calls catches a CALL through a dynamic receiver, never "
+        "the declaration — this is the half no analyzer option covers.",
     ),
 )
 

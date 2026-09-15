@@ -2,6 +2,7 @@ import 'package:dawnforge/src/core/registries/actor_registry.dart';
 import 'package:dawnforge/src/core/registries/biome_registry.dart';
 import 'package:dawnforge/src/core/registries/ground_registry.dart';
 import 'package:dawnforge/src/core/registries/item_registry.dart';
+import 'package:dawnforge/src/core/registries/loadout_registry.dart';
 import 'package:dawnforge/src/core/registries/prop_registry.dart';
 import 'package:dawnforge/src/core/systems/boot.dart';
 
@@ -57,6 +58,8 @@ final class AlmanacLoader {
         locator<ItemRegistry>().registerJson(json);
       } else if (type.startsWith('biome_')) {
         locator<BiomeRegistry>().registerJson(json);
+      } else if (type == 'i_starting_loadout_data') {
+        locator<LoadoutRegistry>().registerJson(json);
       } else {
         throw StateError(
           '[AlmanacLoader] unknown type family "$type" ($path) — '

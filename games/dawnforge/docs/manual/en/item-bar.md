@@ -14,8 +14,10 @@ Three ways, and they all do the same thing:
 - **Press a number key.** `1` is the first pocket of the bar, `2` the second,
   and so on. `0` is the tenth.
 - **Tap a pocket** with your finger or the mouse.
-- **Press `Q` or `E`** to step the yellow edge one pocket to the left or to
+- **Press `[` or `]`** to step the yellow edge one pocket to the left or to
   the right. It wraps around: past the last pocket it comes back to the first.
+  These two keys used to be `Q` and `E`. `E` now means "use the thing in front
+  of me", so the stepping moved to the two bracket keys beside `P`.
 
 ## Turning the page
 

@@ -1,6 +1,7 @@
 import 'package:dawnforge/src/core/shared_logic/definitions/spatial.dart';
 import 'package:dawnforge/src/core/systems/eventing/event_signal.dart';
 import 'package:flame/events.dart';
+import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/services.dart';
 
 /// The single source of truth for player input (rules 11 and 12): gameplay
@@ -42,6 +43,19 @@ final class InputHelper {
   /// one intent (rule 24): the swing is fired by whoever subscribes, never by
   /// polling a button every frame.
   final primaryActionPressed = EventSignal0();
+
+  /// The player reached for whatever they are pointing at. One press, one
+  /// intent, like the swing above — and like the swing, WHAT it reaches is
+  /// decided by the actor, never here.
+  final interactPressed = EventSignal0();
+
+  /// A FINGER went down on the world, and the press has to mean whichever
+  /// verb fits what is under it (rule 12: a touch screen has one button and
+  /// two verbs). The DEVICE is known only here, which is the whole reason
+  /// this is a separate intent rather than the sim asking what tapped it —
+  /// rule 11 keeps device knowledge inside this file, and the choice of verb
+  /// stays in the simulation where the world can be read.
+  final contextualActionPressed = EventSignal0();
 
   /// The player pressed back/cancel. Exactly ONE thing may answer this, which
   /// is why it leaves here as a bare fact and `UIStateMachine.requestCancel()`
@@ -106,12 +120,16 @@ final class InputHelper {
       hotbarPageFlipped.emit(1);
       return;
     }
-    if (key == LogicalKeyboardKey.keyQ) {
+    if (key == LogicalKeyboardKey.bracketLeft) {
       hotbarStepped.emit(-1);
       return;
     }
-    if (key == LogicalKeyboardKey.keyE) {
+    if (key == LogicalKeyboardKey.bracketRight) {
       hotbarStepped.emit(1);
+      return;
+    }
+    if (key == LogicalKeyboardKey.keyE) {
+      interactPressed.emit();
       return;
     }
     if (key == LogicalKeyboardKey.keyI || key == LogicalKeyboardKey.tab) {
@@ -183,8 +201,22 @@ final class InputHelper {
   /// is broken in writing rather than in silence.
   void handleTapDown(TapDownEvent event) {
     _cursorScreenPos = WorldPos(event.canvasPosition.x, event.canvasPosition.y);
+    // A finger has one button and the game has two verbs, so a TOUCH raises
+    // the intent that means "do what fits what is under me" and the actor
+    // picks (rule 12). A mouse keeps its click meaning one thing, because the
+    // keyboard it comes with owns the other verb on `E`.
+    if (_isDirectTouch(event.deviceKind)) {
+      contextualActionPressed.emit();
+      return;
+    }
     primaryActionPressed.emit();
   }
+
+  /// Whether the pointer IS the finger — the two kinds that touch the screen
+  /// where they mean, as opposed to a mouse or a trackpad that steers a
+  /// cursor from somewhere else.
+  static bool _isDirectTouch(PointerDeviceKind kind) =>
+      kind == PointerDeviceKind.touch || kind == PointerDeviceKind.stylus;
 
   bool _any(List<LogicalKeyboardKey> keys) => keys.any(_pressed.contains);
 

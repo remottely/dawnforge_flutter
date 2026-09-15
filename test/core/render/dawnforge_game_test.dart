@@ -96,16 +96,29 @@ void main() {
     // refused for want of a slot to land in.
     expect(game.player.actorData.id, GameConstants.playerActorId);
     expect(game.player.inventory.maxSlots, 30);
+    // A new world grants the pack's loadout (FP4.5(g)): the copper pickaxe,
+    // the one item that opens the cold-start deadlock.
+    expect(
+      game.player.inventory.countOf('t1_item_tool_melee_pickaxe_copper'),
+      1,
+    );
     expect(game.player.inventory.maxSlots % GameConstants.slotsPerRow, 0,
         reason: 'the bag must be a whole number of rows for the grid to page');
-    // And it boots holding something (FP4.3a): the bag starts empty, so the
-    // hand is the innate one the pack authors. Proven here rather than only
-    // against a probe, because this is the one test that resolves the id
-    // against the REAL item registry — a renamed hand item fails here.
+    // And it boots HOLDING the pickaxe (FP4.3a + FP4.5(g)): the loadout lands
+    // in slot 0 and slot 0 is the hand, so a new world starts ready to mine.
+    // Proven here rather than only against a probe, because this is the one
+    // test that resolves the id against the REAL item registry.
+    expect(
+      game.player.heldItem.currentItem?.id,
+      't1_item_tool_melee_pickaxe_copper',
+    );
+    // The innate hand is still what an EMPTY slot resolves to.
+    game.player.inventory.selectSlot(1);
     expect(
       game.player.heldItem.currentItem?.id,
       GameConstants.innateHandItemId(game.player.actorData.tier),
     );
+    game.player.inventory.selectSlot(0);
 
     // The render half of the gate: renderers must land inside `world` (the
     // ONLY subtree the CameraComponent renders — Flame's default FlameGame
@@ -273,11 +286,18 @@ void main() {
     expect(game.player.movement.isMoving, isTrue);
 
     // THE CURSOR (FP4.3a). A tap aims and acts in one press: the cursor goes
-    // where the pointer went down, and the intent fires from there. A finger
-    // and a mouse reach the same two lines, which is what makes touch parity
-    // structural rather than a second path (rule 12).
+    // where the pointer went down, and the intent fires from there.
+    //
+    // WHICH intent depends on the device, and that is rule 12 rather than a
+    // second path (FP4.5e): a finger has one button and the game has two
+    // verbs, so a touch raises the CONTEXTUAL intent and the player picks the
+    // verb from what is under the aim. A mouse keeps its click meaning one
+    // thing, because the keyboard beside it owns the reach on its own key.
     var actions = 0;
-    locator<InputHelper>().primaryActionPressed.connect(() => actions++);
+    var contextual = 0;
+    locator<InputHelper>()
+      ..primaryActionPressed.connect(() => actions++)
+      ..contextualActionPressed.connect(() => contextual++);
     game.onTapDown(
       TapDownEvent(
         1,
@@ -288,7 +308,20 @@ void main() {
         ),
       ),
     );
-    expect(actions, 1, reason: 'one press, one intent (rule 24)');
+    expect(contextual, 1, reason: 'one press, one intent (rule 24)');
+    expect(actions, 0, reason: 'a finger does not fire the swing directly');
+
+    game.onTapDown(
+      TapDownEvent(
+        2,
+        game,
+        TapDownDetails(
+          globalPosition: const Offset(120, 90),
+          kind: PointerDeviceKind.mouse,
+        ),
+      ),
+    );
+    expect(actions, 1, reason: 'a click is the swing, as it always was');
 
     // And the world position is COMPUTED, not remembered: the camera moves
     // under a cursor that has not, so a player walking with the mouse held

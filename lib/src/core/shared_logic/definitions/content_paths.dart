@@ -22,6 +22,11 @@ abstract final class ContentPaths {
   static String worldBiomesRoot(String gameName) =>
       '${gameRoot(gameName)}/world/biomes';
 
+  /// The generated loadouts (pipeline step 26) —
+  /// `scripts/lib/project_paths.py`'s `PROGRESSION_GENERATED_ROOT`.
+  static String progressionRoot(String gameName) =>
+      '${gameRoot(gameName)}/progression';
+
   /// The pack's internal URI scheme, shared verbatim with the Godot engine.
   static const String resPrefix = 'res://data/';
 

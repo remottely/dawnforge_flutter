@@ -192,6 +192,11 @@
       "path": "01_biomes/t1/items/t1_item_tool_melee_hand.json"
     },
     {
+      "id": "t1_item_tool_melee_pickaxe_copper",
+      "type": "item_tool_melee_data",
+      "path": "02_workstations/02_workshop/t1/t1_item_tool_melee_pickaxe_copper.json"
+    },
+    {
       "id": "t1_prop_box_copper",
       "type": "prop_data",
       "path": "01_biomes/t1/props/t1_prop_box_copper.json"

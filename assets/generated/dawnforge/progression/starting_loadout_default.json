@@ -1,0 +1,11 @@
+{
+  "entries": [
+    {
+      "amount": 1,
+      "id": "t1_item_tool_melee_pickaxe_copper"
+    }
+  ],
+  "granted_xp": 0,
+  "id": "starting_loadout_default",
+  "type": "i_starting_loadout_data"
+}

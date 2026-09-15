@@ -55,7 +55,9 @@ Duas coisas acontecem ao mesmo tempo:
 Dentro das ferramentas, as de trabalhar vêm antes das de lutar — machado,
 picareta, pá, enxada, e por aí vai, depois espada, arco, cajado. E quando você
 tem duas do mesmo tipo, **a melhor vem primeiro**. O seu machado bom nunca fica
-escondido atrás do velho.
+escondido atrás do velho. E quando as duas são igualmente boas, elas ficam **na
+ordem dos nomes**, como as palavras numa lista — então as mesmas duas ficam
+sempre na mesma ordem.
 
 **Olhe a sua mão.** A barra de itens são os mesmos bolsos, então organizar mexe
 no que está embaixo dela também. O que você estava segurando antes de apertar

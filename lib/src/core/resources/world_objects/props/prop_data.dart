@@ -9,6 +9,8 @@ import 'package:dawnforge/src/core/systems/drop/drop_entry.dart';
 class PropData extends IWorldObjectData {
   PropData({
     required super.id,
+    super.displayNameKey,
+    super.descriptionKey,
     super.spritesheetPath,
     super.frameWidth,
     super.frameHeight,
@@ -75,6 +77,8 @@ class PropData extends IWorldObjectData {
   @override
   PropData clone() => PropData(
         id: id,
+        displayNameKey: displayNameKey,
+        descriptionKey: descriptionKey,
         spritesheetPath: spritesheetPath,
         frameWidth: frameWidth,
         frameHeight: frameHeight,

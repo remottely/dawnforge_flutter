@@ -8,6 +8,409 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.78.0
+
+### 🧹 Internal
+
+- Nada no jogo mudou. Quem faz o jogo escreveu uma decisão: a versão 2D deste
+  jogo em Flutter para aqui, na 0.77.0, e a próxima coisa construída deste lado é
+  o mundo de blocos — o jogo de cubos que já roda como teste. Os motivos, as
+  quatro perguntas feitas e a ordem do que vem depois estão no documento de
+  estudo (decisões D8–D10). Nada foi apagado.
+
+## 0.77.0
+
+### ✨ New
+
+- **Agora dá para fazer coisas.** Abra a mochila e aperte Fazer: uma janela
+  mostra tudo o que as suas duas mãos conseguem construir. Você começa com uma
+  picareta de cobre, e essa ferramenta sozinha abre a corrente inteira — pique
+  minério e carvão, dê socos numa palmeira para tirar tronco, faça uma fundição
+  e uma oficina com as mãos, e essas duas fazem todo o resto.
+- **E dá para colocar elas no chão.** A fundição ou a oficina que você fez vai
+  para o mundo: segure, aponte, e uma cópia transparente mostra onde ela cai.
+  Verde quer dizer que pode, vermelho quer dizer que não. Isso já funcionava por
+  dentro antes de hoje e ninguém conseguia chegar lá, porque nada te dava a
+  primeira.
+- **Chegue perto de uma bancada e aperte E, ou toque nela,** e a mesma janela
+  abre para aquela bancada. Uma bancada só faz as coisas dela, e faz mais rápido
+  que as suas mãos.
+- Escolher uma receita conta do que ela precisa — quantos você tem do lado de
+  quantos você precisa — o que sai e quanto tempo leva. Peça mais de uma com
+  mais, menos e Tudo. Enquanto a barrinha enche, **o mundo continua andando**, e
+  você pode fechar a janela e voltar depois. Aperte Parar e tudo o que a fornada
+  ainda não gastou volta para você.
+- Duas páginas novas no guia: **Fazendo coisas** e **Colocando coisas no chão**.
+
+## 0.76.0
+
+### 🧹 Internal
+
+- Nada no jogo mudou. A parte que sabe fazer coisas estava dentro da bancada, e
+  as duas mãos do jogador vão precisar da mesma parte. Ela saiu para um lugar só,
+  que os dois usam, então a mão e a bancada nunca vão discordar sobre o que é
+  fazer uma coisa.
+
+## 0.75.0
+
+### 🧹 Internal
+
+- A bancada tem uma tela agora. Ela mostra tudo o que essa bancada sabe fazer, e
+  escolher uma coisa mostra quanto ela custa — quantos você tem de cada coisa do
+  lado de quantos você precisa — o que sai e quanto tempo leva nessa bancada.
+  Você diz quantas quer, aperta Fazer, e uma barra vai enchendo enquanto o mundo
+  lá fora continua andando. Dá para parar e receber de volta tudo o que ainda
+  não foi usado. **Você ainda não consegue chegar em uma**, porque nada no mundo
+  te dá uma bancada ainda, então isso fica escrito aqui e não no guia. A página
+  do guia vem junto com a mudança que coloca uma bancada na sua mão.
+- Todo botão do jogo agora é o mesmo botão por dentro, então todos respondem
+  igual ao dedo e ao mouse, e um botão que você não pode usar fica com cara de
+  desligado em vez de sumir.
+
+## 0.74.0
+
+### 🔧 Changed
+
+- Quando você aperta Organizar e duas coisas são igualmente boas, agora elas
+  ficam na ordem dos nomes, como as palavras numa lista. Antes elas ficavam na
+  ordem de um código que o jogo usa só por dentro, que ninguém consegue ler.
+
+### 🧹 Internal
+
+- Toda coisa do jogo sempre carregou o nome que ela mostra para você, no seu
+  idioma, e nada no jogo tinha lido esse nome até hoje. Agora o jogo sabe ler.
+  É disso que a bancada precisa para dizer o que ela vai fazer.
+
+## 0.73.1
+
+### 🐛 Fixed
+
+- Uma versão do jogo entrou no diário sem página nenhuma. A página está
+  escrita logo abaixo, sob o número a que ela pertence.
+
+## 0.73.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. Quem constrói o jogo agora tem três rotinas escritas.
+  Uma diz onde tudo está quando alguém senta para trabalhar, para ninguém
+  precisar adivinhar. Uma procura tudo o que o projeto já anotou, para a mesma
+  pergunta não ser resolvida duas vezes. Uma roda as cinco conferências e
+  explica o que significa uma delas ficar vermelha — inclusive uma que pode
+  ficar vermelha só porque o computador estava ocupado com outra coisa, o que
+  antes custava uma tarde inteira toda vez que alguém esbarrava nela.
+
+## 0.72.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. Agora existe uma página que anota como o jogo é feito
+  por dentro: para que serve cada pasta, o que acontece e em que ordem quando
+  o jogo liga, como funciona o relógio que faz o mundo andar e como um menu
+  impede você de agir sem nunca congelar o mundo atrás dele. A página só pode
+  dizer coisas que já são verdade, e cada parte dela avisa em qual versão foi
+  conferida — assim ninguém lê uma promessa velha e acredita nela. Conferir
+  cada linha antes de anotar encontrou uma regra que aponta para um pedaço do
+  jogo que nunca foi construído.
+
+## 0.71.0
+
+### 🐛 Fixed
+
+- A lista de mudanças tinha duas anotações no lugar errado. Faltava a anotação
+  sobre a tecla nova de "alcançar a coisa", e a anotação sobre contar a máquina
+  estava arquivada com o número errado. As duas voltaram para o lugar certo.
+  Nada estava errado no jogo em si — só no diário dele.
+
+## 0.70.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. Alguém contou a máquina. O jogo irmão maior é feito de
+  **560 peças de código**; este jogo menor tem **112** delas, uma em cada cinco.
+  A contagem foi feita um tipo de peça por vez, então agora existe uma lista do
+  que falta e de qual trabalho futuro traz cada coisa. A surpresa: as peças que
+  decidem **como as coisas são feitas** estão quase todas aqui, e as peças que
+  fazem **telas e menus** estão quase todas faltando — 4 de 87. É um dos motivos
+  de o jogo ainda parecer tão simples.
+- Duas observações saíram da contagem. Existe aqui uma pasta de código de
+  desenho que o jogo irmão maior não precisa, porque naquele motor a coisa se
+  desenha sozinha e neste alguém precisa desenhar. E o jogo maior tem **uma
+  única exceção** à regra "nunca adivinhe, pare na hora", usada só ao carregar
+  um save antigo. Este jogo ainda não precisa dessa exceção, porque aqui os
+  saves antigos são simplesmente jogados fora.
+
+## 0.69.0
+
+### 🔧 Changed
+
+- As teclas que andam com a borda amarela pela sua barra de itens mudaram.
+  Antes eram `Q` e `E`; agora são `[` e `]`, as duas teclas logo à direita do
+  `P`. O `E` precisava ficar livre, porque a partir de agora ele é a tecla que
+  quer dizer "usar a coisa para onde estou apontando".
+
+### 🧹 Internal
+
+- O jogo aprendeu a ideia de alcançar uma coisa em vez de bater nela. Aponte
+  para uma bancada, aperte `E`, e a bancada agora escuta você — de tão longe
+  quanto aquele tipo de bancada disser que pode ser usada, o que o jogo lê da
+  própria bancada em vez de chutar. No celular ou no tablet não existe tecla
+  `E`, então um toque faz as duas coisas: toque em algo que dá para usar e
+  você usa, toque em qualquer outra coisa e você bate nela como antes. Ainda
+  não abre nada na tela — a janela que a bancada vai mostrar é o próximo
+  pedaço de trabalho.
+
+## 0.68.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. O jogo irmão maior conhece **51 apertos de botão
+  diferentes** — andar, bater, alcançar, abrir a mochila, jogar uma coisa fora,
+  virar a página do cinto. Este jogo menor responde a **22** deles. Alguém
+  sentou e listou cada um: quais estão aqui, quais faltam e quais nunca vão vir
+  (alguns são do jogo de blocos, e aqui ninguém pula). Três são diferentes de
+  propósito: `Tab` abre a mochila aqui e vira o cinto lá, e é muito mais fácil
+  escolher um agora do que depois que uma página de ajuda contar a coisa errada
+  para quem joga.
+- Duas surpresas saíram da lista. O jogo irmão maior pode ser jogado com
+  **controle** e nunca com o dedo. Este jogo pode ser jogado com o **dedo** e
+  não com controle nenhum. E, com a mochila aberta, apertar um número ainda
+  troca a ferramenta da mão, porque o jogo decide "isso pode agora?" em cinco
+  lugares diferentes em vez de um só. Os dois ficaram anotados com o conserto ao
+  lado.
+
+## 0.67.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. Quando desenhos ou dados novos entram, o jogo também
+  precisa ser AVISADO para empacotá-los no aplicativo — e se ninguém escrever
+  essa linha, parece tudo certo até a hora em que o jogo procura o desenho e
+  não acha nada. Hoje as 27 linhas estão certas. Agora está anotado que todo
+  lote futuro de conteúdo novo deve uma linha, e que um conferidor pequeno
+  deveria vigiar isso, para a sequência boa ser mantida por uma máquina e não
+  pela memória.
+
+## 0.66.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. O motivo de existir esta versão menor do jogo é
+  descobrir se dá para construir um jogo novo em cima dela só escrevendo
+  páginas novas — sem mexer na máquina de baixo. Ninguém tinha testado. Agora
+  virou uma tarefa de verdade, com linha de chegada clara: fazer um joguinho
+  de faz de conta com duas páginas, ligar, e conferir que nenhuma linha da
+  máquina precisou mudar. Uma primeira olhada diz que a máquina escreve o nome
+  do próprio jogo em um lugar só, o que é um ótimo sinal.
+
+## 0.65.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. O plano prometia que três coisas seriam feitas de um
+  jeito que deixasse espaço para, um dia, jogar junto pela internet. Duas
+  estão sendo cumpridas. A terceira — em que apertar um botão vira uma
+  ordenzinha escrita que o jogo depois executa, em vez de o jogo esticar o
+  braço e ler o teclado sozinho — nunca começou, e cada ação nova deixa isso um
+  pouco mais trabalhoso de acrescentar depois. Agora está anotado como uma
+  pergunta para o desenvolvedor, com os motivos dos dois lados.
+
+## 0.64.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. Quando esta versão do jogo foi planejada, alguém anotou
+  cinco coisas que podiam dar errado. Dezessete dias depois, ninguém tinha
+  voltado para ver quais deram. Agora voltaram: três seguiram como o plano
+  esperava, uma foi riscada e uma aconteceu de verdade — as páginas escritas
+  que este jogo divide com o irmão maior tinham se afastado em silêncio, e a
+  rede de segurança citada no plano nunca foi do tipo que pega isso. A rede de
+  verdade já existe. Dois problemas que ninguém tinha imaginado também estão
+  anotados.
+
+## 0.63.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. O livrinho que explica como jogar é escrito duas vezes,
+  uma em inglês e outra em português, e as duas cópias deveriam ter as mesmas
+  páginas com as mesmas partes na mesma ordem. Ninguém estava conferindo. Uma
+  página que sumisse em um idioma só seria notada por uma criança lendo aquele
+  idioma, o que é tarde demais. Agora a conferência acontece antes de qualquer
+  trabalho ser arquivado. Um pedaço dela ainda espera uma decisão, e ele avisa
+  isso em voz alta em vez de fingir que conferiu tudo.
+
+## 0.62.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. A contagem de ontem das páginas escritas que faltam
+  ganhou uma segunda metade: até as páginas que a gente copiou foram aparadas
+  na entrada, porque uma página só pode falar de coisas que o jogo já sabe
+  ler. Alguém contou as linhas aparadas — 932 delas — e separou por para que
+  servem. A maioria é sobre desenhar filhotes e variantes sombrias, o que pede
+  uma rotina de desenho nova, não 500 decisões. Vinte e seis ferramentas já
+  dizem como o golpe delas deveria aparecer, e nada lê isso ainda.
+
+## 0.61.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. Quando duas linhas de trabalho são juntadas de volta, a
+  anotação que registra a junção só podia ser escrita por um comando que
+  ninguém tinha permissão de conferir — então o único momento que guarda mais
+  trabalho de uma vez era justamente o momento em que ninguém estava olhando.
+  Agora existe um comando que olha antes: ele confere que nada foi enfiado ali
+  que a junção não trouxe, e só então escreve a anotação. Enquanto o
+  construíamos, descobrimos que colocar uma configuração na frente de um comando
+  fazia o guarda inteiro olhar para o outro lado. Isso também está corrigido.
+
+## 0.60.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. A versão maior deste jogo guarda um conjunto de rotinas
+  escritas que ensinam um ajudante a fazer direito cada tarefa que se repete —
+  como começar uma sessão de trabalho, como anotar uma decisão, como terminar
+  e arquivar tudo. Lá são 21 e aqui nenhuma, e a anotação que prometia
+  trazê-las listava dez e esquecia cinco. A lista inteira está escrita agora,
+  em seis lotes, na ordem que deixa cada uma útil.
+
+## 0.59.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. Todas as palavras e números que descrevem este jogo —
+  cada planta, cada ferramenta, cada receita — moram numa pilha grande de
+  páginas escritas, e esta versão do jogo copiou só um cantinho dessa pilha:
+  64 páginas de 930. Ninguém tinha contado, então ninguém sabia quais cantos
+  faltavam. Agora existe uma lista, agrupada para que cada lote de páginas
+  chegue junto com a parte do jogo que precisa dele. Apareceu uma surpresa: a
+  bancada tem 115 páginas e a gente copiou uma.
+
+## 0.58.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo ainda, mas algo que as regras vinham prometendo enfim
+  existe. Quando mudamos o jeito de anotar um mundo salvo, o mundo antigo que
+  está neste computador deixa de fazer sentido, e a regra manda jogá-lo fora na
+  mesma hora. O comando que joga fora nunca tinha sido escrito. Agora foi — e
+  ele descobre o nome do próprio jogo pelo aplicativo em vez de ser avisado,
+  então continua funcionando depois de uma renomeação. Suas preferências ficam
+  onde estão, a não ser que você peça para irem junto.
+
+## 0.57.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. Existe um vigia que lê cada arquivo logo depois de ele ser
+  escrito e reclama se encontra uma das formas que prometemos nunca usar. Ele
+  conhecia três. Agora conhece uma quarta: um valor cujo tipo ninguém escreveu.
+  Uma quinta que tínhamos prometido foi cancelada de propósito, com o motivo
+  anotado no caderno do próprio vigia, porque nenhum jeito de encontrá-la
+  conseguia separar um erro de verdade de um código honesto comum.
+
+## 0.56.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. Cada página do livro de receitas deste jogo foi copiada à
+  mão da versão maior do jogo, uma por vez, e ninguém nunca voltou para ver se
+  alguma página tinha sido reescrita de lá para cá. Agora um conferente compara
+  as sessenta e uma páginas de uma vez. Tudo que os dois livros discordam
+  precisa estar anotado com um motivo, para que uma diferença que ninguém
+  escolheu nunca mais fique ali quietinha. A primeira conferência achou
+  sessenta e sete delas, incluindo uma que já tinha sido notada e esquecida.
+
+## 0.55.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. Cada parte do jogo deveria vir com um programinha que a
+  cutuca e confere se ela continua se comportando — é assim que a gente
+  percebe quando algo que já foi consertado quebra de novo depois. Alguém
+  contou pela primeira vez: de 109 partes, 88 são cutucadas por alguma coisa e
+  21 nunca são tocadas. A lista dessas 21 está anotada agora, na ordem que
+  mais importa, com o que cada conferência precisa provar. Quatro delas
+  seguram quase todo o resto, incluindo a que faz o mesmo mundo voltar quando
+  você usa a mesma semente.
+
+## 0.54.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. A versão maior deste jogo tem uma caixa de ferramentas
+  cheia de programinhas que conferem os arquivos do próprio jogo atrás de
+  erros — um pergunta se um desenho existe mesmo, outro pergunta se duas
+  anotações sobre a mesma coisa ainda combinam. Aqui temos bem menos, e
+  ninguém tinha parado para comparar as duas caixas. Agora alguém parou: cada
+  ferramenta de lá está anotada aqui como "precisamos desta", "já temos" ou
+  "nunca vamos precisar, e o motivo é este". Três coisas que a gente não
+  conseguia conferir entraram na lista, e cada uma já achou um problema de
+  verdade enquanto era anotada.
+
+## 0.53.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. A pasta que guarda a versão mais antiga e maior deste
+  jogo foi renomeada faz um tempo, e nossas anotações ainda apontavam para o
+  nome antigo — então quem fosse procurar algo lá encontrava uma prateleira
+  vazia e tinha que achar a nova na mão. O endereço agora está escrito em um
+  lugar só, e toda anotação aponta para esse lugar em vez de repeti-lo.
+
+## 0.52.1
+
+### 🧹 Internal
+
+- Nada mudou no jogo. O conferente de palavras da versão anterior contava os
+  dois lugares que DEFINEM a busca de palavras como se fossem palavras que ele
+  não conseguia conferir, e a nota da versão anterior dizia que a contagem
+  era zero quando era dois. Os dois estão corrigidos: a contagem agora é zero
+  de verdade.
+
+## 0.52.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. Toda palavra que a tela pede pelo nome agora é conferida
+  contra as três tabelas de idioma antes de qualquer trabalho ser arquivado.
+  Até agora uma palavra que ninguém tinha traduzido só seria encontrada quando
+  um jogador abrisse a tela que precisava dela, e o jogo pararia ali.
+
+## 0.51.0
+
+### 🧹 Internal
+
+- Nada mudou no jogo. O livro de histórico agora confere a própria forma antes
+  de qualquer trabalho ser arquivado: página mais nova primeiro, nenhuma
+  página duas vezes, os sete títulos na ordem fixa, e os livros em inglês e em
+  português contando as mesmas páginas com os mesmos títulos. Duas páginas
+  ficaram fora de ordem por três versões antes de alguém perceber; daqui em
+  diante o conferente percebe primeiro.
+
+## 0.50.0
+
+### ✨ New
+
+- **Você começa com uma picareta de cobre.** Ela fica no primeiro bolso da
+  mochila e já está na sua mão quando um mundo novo começa. Ela quebra pedras
+  e minério, que são as primeiras coisas de que tudo o mais é feito. Até
+  agora você começava sem nada, e nada no mundo podia ser minerado.
+- A picareta de cobre em si veio do pacote de design. Você ainda não consegue
+  fazer uma — isso precisa da oficina — mas tem uma.
+
+### 🧹 Internal
+
+- O que um jogador novo tem ao começar é uma página do pacote de design, lida
+  pelas ferramentas do jogo do mesmo jeito que o jogo original lê a dele,
+  então uma segunda página ao lado seria um segundo jeito de começar. A página
+  do original não dá nada; a nossa dá a picareta, e a diferença está escrita
+  na própria página.
+- Uma página de início que cita um item que o pacote não tem para as
+  ferramentas antes de conseguir parar o jogo.
+
 ## 0.49.0
 
 ### ✨ New

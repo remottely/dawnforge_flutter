@@ -12,15 +12,17 @@ Baseline at writing: FP0, 2026-08-25.
 
 Same loop as the Godot repo: Orient → Recall → Specify → Implement → Verify → Document →
 Ship → Observe → Evolve. The skills that instrument each stage are ported incrementally
-(plan step FP0.9); until a skill exists here, follow its SSOT directly:
+(plan step FP0.9); until a skill exists here, follow its SSOT directly. **A skill is not a
+script** — rule 23 does not reach it and it owes no `scripts/COMMANDS.md` row; this table
+is where it is announced.
 
 | Stage | Instrument today | SSOT |
 |:---|:---|:---|
-| Orient | `git log`/`git status` + `docs/refactoring/PENDING.md` | — |
-| Recall | `python3 scripts/ai/search_project_knowledge.py "<q>"` | §2 |
+| Orient | **`/onboard`** — the probes, and the six-answer briefing they feed | `.claude/skills/onboard/` |
+| Recall | **`/recall`** over `python3 scripts/ai/search_project_knowledge.py "<q>"` | §2 · `.claude/skills/recall/` |
 | Specify | plans in `docs/refactoring/implementation_plan/` | port plan |
-| Implement | `CLAUDE.md` rules 1–34 + the Godot repo as the spec | — |
-| Verify | `python3 scripts/project/check_test_suite_is_clean.py` | — |
+| Implement | `docs/ARCHITECTURE.md` (what the code is) + `CLAUDE.md` rules 1–34 + the Godot repo as the spec | — |
+| Verify | **`/suite`** over `python3 scripts/project/check_test_suite_is_clean.py` — the five checks, the Dart triage order, the known load-dependent flake | `.claude/skills/suite/` |
 | Document | rule 34 (both changelogs; manual when player-visible) | `CLAUDE.md` |
 | Ship | one-command bump-from-HEAD commit | `CLAUDE.md` §Parallel sessions |
 | Observe | `docs/refactoring/LEDGER.md` (rule 27) | ledger header |
@@ -45,8 +47,23 @@ prohibitions that already exist in writing:
 
 | Hook | Event | Blocks / flags | Encodes |
 |:---|:---|:---|:---|
-| `scripts/ai/hooks/block_forbidden_git.py` | PreToolUse · Bash | `git rebase`, `git commit --amend`, `git commit` without ` -- ` pathspec, `git commit` whose message (`-m`, `-F`, `--file=`) carries AI attribution, `git commit` naming `LEDGER.md` while an ID heads two entries | §Parallel sessions, §Commit message format, ledger header |
-| `scripts/ai/hooks/check_edited_file_rules.py` | PostToolUse · Edit/Write | `pauseEngine()`/`resumeEngine()`, `.paused =` writes, raw pointer reads (`.canvasPosition`/`.devicePosition`) outside `input_helper.dart` | rules 30, 11 |
+| `scripts/ai/hooks/block_forbidden_git.py` | PreToolUse · Bash | `git rebase`, `git commit --amend`, `git commit` without ` -- ` pathspec, `git commit` whose message (`-m`, `-F`, `--file=`) carries AI attribution, `git commit` naming `LEDGER.md` while an ID heads two entries, `git merge --continue` | §Parallel sessions, §Commit message format, ledger header, `L-008` |
+
+A leading environment assignment is stripped before the command word is read, so
+`GIT_EDITOR=true git rebase` is judged as `git rebase`. Without that, one `VAR=value`
+in front of any git invocation walked past every rule in the file — which is how the
+merge commit `L-008` records was made in the first place.
+
+`git merge --continue` is refused rather than inspected, because git allows no
+pathspec while `MERGE_HEAD` exists: the refusal names `scripts/project/commit_merge.py`,
+which proves the index holds nothing the merge did not bring and then commits.
+| `scripts/ai/hooks/check_edited_file_rules.py` | PostToolUse · Edit/Write | `pauseEngine()`/`resumeEngine()`, `.paused =` writes, raw pointer reads (`.canvasPosition`/`.devicePosition`) outside `input_helper.dart`, the word `dynamic` on a non-comment line under `lib/` | rules 30, 11, 4 |
+
+FP0.5 promised a fifth pattern, writes to a `timeScale`, and this hook will not carry
+it: Flame has no global time scale, and a hand-rolled `dt *= factor` is
+indistinguishable by regex from legitimate per-entity easing. A tripwire with false
+positives is trained away within a day. Rule 30's time half stays a reading; the hook
+header carries the same paragraph so the reason is found where the gap is (`L-009`).
 
 Contract: exit `2` + stderr = the reason, fed back to the model; exit `0` = silence. The
 PostToolUse guard is a **tripwire, not a gate**. Only mechanically-checkable,
@@ -65,7 +82,9 @@ typing lives in `analysis_options.yaml`), so an info is a failure.
 
 ## 5. Cross-repo contract
 
-The Godot repo (`~/Documents/godot/remottely/dawnforge_project`) is the **spec** for port
+The Godot repo (`~/Documents/godot/remottely/tessera_project` — written once as
+`SPEC_REPO_ROOT` in `scripts/lib/project_paths.py`, overridable by `TESSERA_SPEC_ROOT`)
+is the **spec** for port
 work and is read-only from here. Its knowledge index answers questions this repo cannot:
 run its `search_project_knowledge.py` from its own root. The pack format is shared and
 never forks (study §4).

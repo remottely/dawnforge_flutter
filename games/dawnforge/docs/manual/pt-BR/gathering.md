@@ -17,6 +17,11 @@ Cada coisa do mundo diz o que pode quebrá-la. Árvore quer machado. Pedra quer
 picareta. Apontar para uma árvore com um regador não faz nada, e isso não é um
 defeito: é a árvore dizendo não.
 
+**Você começa com uma picareta de cobre.** Ela está no primeiro bolso da sua
+mochila, já na sua mão quando o mundo começa. Ela quebra pedras e minério — as
+duas coisas de que você precisa primeiro — e é a única ferramenta que você tem
+até fazer mais.
+
 Tem uma segunda pergunta, e ela é diferente. Até a ferramenta do tipo certo
 pode ser **fraca demais**. Uma primeira ferramenta não arranha uma pedra mais
 forte — você precisa de uma melhor do mesmo tipo, não de um tipo diferente.
