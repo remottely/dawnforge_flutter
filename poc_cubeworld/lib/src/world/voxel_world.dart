@@ -9,41 +9,24 @@ import '../core/blocks.dart';
 import 'package:voxel_core/voxel_core.dart';
 import '../game/circuits.dart';
 import 'terrain_generator.dart';
-import 'terrain_material.dart';
+import 'package:voxel_scene/voxel_scene.dart';
 
 typedef BlockChanged = void Function(IVec3 block, int oldId, int newId);
 typedef StructureAt = ({int x, int y, int z, int type});
 
 /// The POC's world facade. Chunk streaming, jobs, edits and light live in
-/// voxel_core's [ChunkStreamer] (VP1.6); this class keeps what is the game's:
-/// one flutter_scene Node per chunk under [root] (it is the streamer's sink),
-/// the terrain materials, the terrain generator, liquid flow, circuits,
-/// dimension rules and the save format.
-class VoxelWorld implements ChunkMeshSink, VoxelQuery {
+/// voxel_core's [ChunkStreamer] (VP1.6); the chunk nodes and terrain materials
+/// live in voxel_scene's [VoxelChunkView] (VP2.2), the streamer's sink. This
+/// class keeps what is the game's: the terrain generator, liquid flow,
+/// circuits, dimension rules and the save format.
+class VoxelWorld implements VoxelQuery {
   VoxelWorld({required this.seedValue, int loadRadius = 8}) {
-    _streamer = ChunkStreamer(table: Blocks.table, sink: this, loadRadius: loadRadius);
+    _streamer = ChunkStreamer(table: Blocks.table, sink: _view, loadRadius: loadRadius);
     _generator = TerrainGenerator(ids: Blocks.generatorIds(), seed: seedValue);
-    // Stage 31: the three lit surfaces share the terrain shader's light term fed
-    // by [setSkyIntensity]; specular 0 is Godot's `specular_disabled` with sky
-    // reflections off (the dielectric F0 added ~0.04 of the sky to every face).
-    matSolid = TerrainMaterial()
-      ..roughnessFactor = 1.0
-      ..metallicFactor = 0.0
-      ..specular = 0.0;
-    matCutout = TerrainMaterial()
-      ..roughnessFactor = 1.0
-      ..metallicFactor = 0.0
-      ..specular = 0.0
-      ..doubleSided = true;
-    matLiquid = TerrainMaterial()
-      ..roughnessFactor = 0.15
-      ..metallicFactor = 0.1
-      ..alphaMode = AlphaMode.blend
-      ..doubleSided = true;
-    // Stage 27: unlit, so a lamp's faces keep their colour at night.
-    matGlow = UnlitMaterial()..vertexColorWeight = 1.0;
     circuits = Circuits(this);
   }
+
+  final VoxelChunkView _view = VoxelChunkView();
 
   static const int sizeX = ChunkSize.sizeX;
   static const int sizeZ = ChunkSize.sizeZ;
@@ -54,7 +37,8 @@ class VoxelWorld implements ChunkMeshSink, VoxelQuery {
 
   late final ChunkStreamer _streamer;
 
-  final Node root = Node(name: 'World');
+  /// The chunk nodes, under voxel_scene's view.
+  Node get root => _view.root;
   int seedValue;
   BlockChanged? onBlockChanged;
 
@@ -71,24 +55,15 @@ class VoxelWorld implements ChunkMeshSink, VoxelQuery {
   double get meshMsTotal => _streamer.meshMsTotal;
   int get remeshesQueued => _streamer.remeshesQueued;
 
-  final Map<ChunkPos, Node> _nodes = {};
   late TerrainGenerator _generator;
   ChunkWorkerPool? _pool;
-  late final TerrainMaterial matSolid;
-  late final TerrainMaterial matCutout;
-  late final TerrainMaterial matLiquid;
-  late final UnlitMaterial matGlow;
 
   /// Stage 31: [lightingEnabled] false is `--no-light` (set before [start]).
   bool lightingEnabled = true;
 
   /// Stage 31: how much of the baked skylight shows (1.0 noon, 0.35 night, 0.0
   /// underworld), read by the three terrain materials when they bind.
-  void setSkyIntensity(double value) {
-    matSolid.skyIntensity = value;
-    matCutout.skyIntensity = value;
-    matLiquid.skyIntensity = value;
-  }
+  void setSkyIntensity(double value) => _view.setSkyIntensity(value);
 
   /// Stage 31: (sky, block) light of a cell, 0..15 each, as the last mesh job of
   /// its chunk computed it. A cell whose chunk has no mesh yet reads as open sky.
@@ -168,44 +143,6 @@ class VoxelWorld implements ChunkMeshSink, VoxelQuery {
   /// Once per frame: upload finished surfaces within the frame budget, then
   /// dispatch more work.
   void update() => _streamer.update();
-
-  // --- the streamer's sink: one scene node per chunk ------------------------------
-
-  Node? _surfaceNode(MeshSurface s, Material material) {
-    if (s.isEmpty) return null;
-    final geometry = MeshGeometry.fromArrays(
-      positions: s.positions,
-      normals: s.normals,
-      colors: s.colors,
-      texCoords1: s.light, // stage 31: (sky / 15, block / 15), Godot's UV2
-      indices: s.indices,
-      retainCpuData: false,
-    );
-    return Node(mesh: Mesh(geometry, material))..shadowStatic = true;
-  }
-
-  @override
-  void apply(ChunkPos pos, ChunkMeshResult surface) {
-    final old = _nodes[pos];
-    if (old != null) root.remove(old);
-    final node = Node(name: 'chunk_${pos.x}_${pos.z}')..position = Vector3(pos.x * sizeX.toDouble(), 0, pos.z * sizeZ.toDouble());
-    final solid = _surfaceNode(surface.solid, matSolid);
-    final cutout = _surfaceNode(surface.cutout, matCutout);
-    final liquid = _surfaceNode(surface.liquid, matLiquid);
-    final glow = _surfaceNode(surface.glow, matGlow);
-    if (solid != null) node.add(solid);
-    if (cutout != null) node.add(cutout);
-    if (glow != null) node.add(glow);
-    if (liquid != null) node.add(liquid);
-    root.add(node);
-    _nodes[pos] = node;
-  }
-
-  @override
-  void remove(ChunkPos pos) {
-    final node = _nodes.remove(pos);
-    if (node != null) root.remove(node);
-  }
 
   // --- block access -------------------------------------------------------------
 

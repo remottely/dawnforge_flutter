@@ -255,8 +255,50 @@ moved unchanged; the fix is an `onError` port that fails the pending futures.
 **Gate:** the four checks; `grep -n flutter_scene lib/src/world/voxel_world.dart` is empty; the
 perf loop within 10% of the baseline.
 
+**Gate wording corrected (2026-09-14):** "no `flutter_scene` import in `voxel_world.dart`" was too
+strict. The facade exposes `Node get root` to 12 callers (title vista, music, player, remote
+players, the stage 30 tests), and that return type is flutter_scene's. What the gate means is
+**no rendering code in the POC's world layer**: no `MeshGeometry`, no material constructed, no
+shader loaded. The one remaining import serves the `Node` type. The four forwarding material
+getters had no caller outside the facade and are removed.
+
+**VP2 performance gate: fill met, fps inconclusive.** A single VP2 run read fill 780 / 1430 /
+3232 ms and fps 104 / 89 / 60, far enough from VP1.5b to re-measure. The re-measurement was an
+interleaved release A/B on the same machine, in this order: VP2, then VP1.5b (`96a2adf2` in a
+temporary worktree), then VP2 again.
+
+| Radius | VP2 first | VP1.5b | VP2 second |
+|--:|--:|--:|--:|
+| 8 | 872 ms · 120 fps | 1521 ms · 112 fps | 697 ms · 120 fps |
+| 12 | 1621 ms · 89 fps | 1475 ms · 89 fps | 1401 ms · 99 fps |
+| 16 | 2508 ms · 75 fps | 2447 ms · 83 fps | 2478 ms · 64 fps |
+
+- **Fill at radius 16:** VP2 averages 2493 ms against 2447 ms, +1.9%, which is within the gate.
+- **Sustained fps at radius 16:** undecidable with this method. The same VP2 binary read 75 and
+  then 64 (−15%), and the last run came after about six minutes of continuous load. A thermal
+  and order effect is likely.
+- **Why no regression is expected:** VP2 moved node construction and changed an asset key. No
+  draw call was added or changed, and the probe logs match the baseline.
+
+The finding that matters: **one run of `perf_loop.sh` carries ±15% on sustained fps**, which is
+wider than every 10% gate in this plan. VP3 exists to move fps, so VP3.1 starts by fixing the
+measurement (below).
+
+**VP2 log:**
+
+| Step | Notes |
+|:---|:---|
+| VP2.1 terrain material + shaders | `shaders/`, `assets/shaders/terrain.shaderbundle` and `tool/build_shaders.dart` moved with `git mv` into `packages/voxel_scene`. The package's pubspec lists `assets/shaders/`; the asset key is `packages/voxel_scene/assets/shaders/terrain.shaderbundle`. `title_screen` and `game` call `TerrainMaterial.loadLibrary()` from `package:voxel_scene`. The tool now runs from `packages/voxel_scene` |
+| VP2.2 `VoxelChunkView` | the streamer's sink: root node, one node per chunk, the four materials, `setSkyIntensity`. `VoxelWorld` no longer implements `ChunkMeshSink`; it composes the view and forwards `root` and `setSkyIntensity`. Three package tests use all-empty surfaces, so no GPU geometry is created under `flutter test` |
+
 ## VP3 — The render gap (measured in the POC, fixed in the packages)
 
+- **VP3.0** Fix the measurement first. One `perf_loop.sh` run carries ±15% on sustained fps (the
+  VP2 A/B), and a later run in a sequence reads lower after minutes of load. `perf_loop.sh`
+  gains `--repeat N` and `--cooldown S` (a pause between launches). An A/B alternates the two
+  binaries A, B, A, B, … rather than running them in blocks, and it reports the median and the
+  spread of each. A gate compares medians and is valid only when the difference exceeds both
+  spreads. Record the spread of the unchanged binary before trusting any VP3 gain.
 - **VP3.1** Profile before fixing. Take a `--profile` DevTools timeline at radius 16, split into
   UI and raster time, and compare draw calls against vertex count. The ceiling today is 4
   surfaces × 1,225 chunks = 4,900 meshed nodes. Record the numbers here. They pick VP3.2 or
@@ -266,6 +308,16 @@ perf loop within 10% of the baseline.
   a colour and nothing can merge. Move the jitter into the terrain shader first, as a hash of
   the world cell. Then merge only quads with equal colour, AO and light. Re-pin the parity
   hashes in the same commit.
+  **Prep found (2026-09-14):**
+  - The path for the jitter exists. flutter_scene's `material_varyings.glsl` gives every
+    material shader `GetWorldPosition()` and `GetWorldNormal()`. The voxel a fragment belongs to
+    is `floor(position - normal * 0.5)`, and `_noise`'s hash (`chunk_mesher.dart:410`, u32 xor
+    and multiply) ports to GLSL ES 3.0 `uint` math.
+  - `terrain.frag` already multiplies `v_color` into the albedo, so the mesher keeps block tint ×
+    face tint × AO in the vertex colour and the shader adds the jitter.
+  - The second limit on merging stays: AO is per vertex and light per face (`texCoords1`). A
+    greedy quad can only join faces with the same colour, the same AO on all four corners and
+    the same light. Measure the merge rate on the parity fixture before building it.
 - **VP3.3** If draw calls dominate, batch chunks into regions: one node per surface per 4×4
   chunks, remeshed when one of its chunks changes.
 

@@ -21,6 +21,7 @@ dependencies:
   pointer_lock: ^0.4.1
   vector_math: ^2.4.2
   voxel_core: ^0.0.0
+  voxel_scene: ^0.0.0
 
 dev_dependencies:
   flutter_test:
@@ -31,5 +32,4 @@ flutter:
   assets:
     - flutter_scene_generated/
     - ROADMAP.md # stage 30: the credits read the stage table at runtime
-    - assets/shaders/ # stage 31: terrain.shaderbundle, compiled by tool/build_shaders.dart
   uses-material-design: true

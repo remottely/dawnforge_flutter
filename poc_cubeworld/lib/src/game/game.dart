@@ -23,7 +23,7 @@ import '../entities/target.dart';
 import '../player/player.dart';
 import '../world/godot_camera.dart';
 import '../world/terrain_generator.dart';
-import '../world/terrain_material.dart';
+import 'package:voxel_scene/voxel_scene.dart';
 import '../world/voxel_world.dart';
 import 'achievements.dart';
 import 'game_state.dart';

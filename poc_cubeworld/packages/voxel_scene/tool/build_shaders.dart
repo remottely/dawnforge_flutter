@@ -1,8 +1,9 @@
-// Stage 31: compiles the terrain shaders into assets/shaders/terrain.shaderbundle.
+// Compiles the terrain shaders into assets/shaders/terrain.shaderbundle (POC stage 31;
+// part of voxel_scene since VP2.1).
 //
-//   cd poc_cubeworld && dart tool/build_shaders.dart
+//   cd packages/voxel_scene && dart tool/build_shaders.dart
 //
-// The project has no app-level hook/build.dart (the Flutter tool's hook runner rejects the
+// The POC app has no hook/build.dart (the Flutter tool's hook runner rejects the
 // SwiftPM plugin symlinks, see README), so the bundle is compiled by hand with the SDK's
 // impellerc, with the same arguments flutter_gpu_shaders' hook passes, and committed as a
 // plain asset. A bundle is tied to the engine that compiled it: run this again after a

@@ -8,18 +8,17 @@ import 'package:flutter_scene/scene.dart';
 // ignore: implementation_imports
 import 'package:flutter_scene/src/gpu/gpu.dart' as gpu;
 
-/// Stage 31: the lit terrain surfaces (Godot's three `ShaderMaterial`s over
-/// `terrain_light.gdshaderinc`). A [PhysicallyBasedMaterial] whose fragment
+/// The lit voxel terrain surfaces. A [PhysicallyBasedMaterial] whose fragment
 /// shader is `shaders/terrain.frag`: the standard lit shader with the voxel light
 /// term folded into the albedo, so the engine keeps binding and evaluating the
 /// sun, its cascaded shadows, the ambient and the sky-coloured fog exactly as the
-/// stock material did (a raw `ShaderMaterial` gets none of them). The only extra
+/// stock material does (a raw `ShaderMaterial` gets none of them). The only extra
 /// input is the `TerrainInfo` block: [skyIntensity] and [emissionMix].
 ///
-/// The shader bundle is a plain asset compiled by `tool/build_shaders.dart`;
-/// [loadLibrary] must finish before a material that draws is constructed. A
-/// material built without it (the unit tests, which never draw) stays a stock
-/// PBR material.
+/// The shader bundle is an asset of this package compiled by
+/// `tool/build_shaders.dart`; [loadLibrary] must finish before a material that
+/// draws is constructed. A material built without it (unit tests, which never
+/// draw) stays a stock PBR material.
 class TerrainMaterial extends PhysicallyBasedMaterial {
   TerrainMaterial({this.emissionMix = 0.5}) {
     final lib = _library;
@@ -30,7 +29,8 @@ class TerrainMaterial extends PhysicallyBasedMaterial {
     setRadianceCubeFragmentShader(_cubeShader);
   }
 
-  static const String asset = 'assets/shaders/terrain.shaderbundle';
+  /// A package asset, so its key carries the package name.
+  static const String asset = 'packages/voxel_scene/assets/shaders/terrain.shaderbundle';
   static gpu.ShaderLibrary? _library;
 
   static bool get loaded => _library != null;
@@ -39,8 +39,8 @@ class TerrainMaterial extends PhysicallyBasedMaterial {
     if (_library != null) return;
     final lib = await gpu.loadShaderLibraryAsync(asset);
     if (lib == null || lib['TerrainFragment'] == null) {
-      throw Exception('$asset holds no TerrainFragment this engine can read; '
-          'recompile it with `dart tool/build_shaders.dart` (a bundle is tied to the Flutter engine that built it)');
+      throw Exception('$asset holds no TerrainFragment this engine can read; recompile it with '
+          '`dart tool/build_shaders.dart` from packages/voxel_scene (a bundle is tied to the Flutter engine that built it)');
     }
     _library = lib;
   }

@@ -17,7 +17,7 @@ import '../game/sfx.dart';
 import '../game/worlds.dart';
 import '../player/player.dart';
 import '../world/godot_camera.dart';
-import '../world/terrain_material.dart';
+import 'package:voxel_scene/voxel_scene.dart';
 import '../world/voxel_world.dart';
 import 'credits_screen.dart';
 import 'settings_panel.dart';
