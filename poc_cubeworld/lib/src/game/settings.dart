@@ -18,6 +18,7 @@ class Settings {
   double volume = 1.0; // master, linear 0..1
   bool weather = true;
   bool showFps = false;
+  bool viewBob = true; // the camera's walking sway; off for a still image
   bool tutorialDone = false; // stage 30: the guided first steps, shown once
 
   /// Walking into a one-block step lifts the body onto it in one tick (the
@@ -53,7 +54,7 @@ class Settings {
   /// after each header.
   String toConfig() {
     String f(double v) => v == v.roundToDouble() ? v.toStringAsFixed(1) : '$v';
-    return '[video]\n\nrender_radius=$renderRadius\nfov=${f(fov)}\nshow_fps=$showFps\n\n'
+    return '[video]\n\nrender_radius=$renderRadius\nfov=${f(fov)}\nshow_fps=$showFps\nview_bob=$viewBob\n\n'
         '[input]\n\nsensitivity=${f(sensitivity)}\n\n'
         '[audio]\n\nvolume=${f(volume)}\n\n'
         '[world]\n\nweather=$weather\n\n'
@@ -82,6 +83,7 @@ class Settings {
     volume = num('audio/volume', volume).clamp(0.0, 1.0);
     weather = flag('world/weather', weather);
     showFps = flag('video/show_fps', showFps);
+    viewBob = flag('video/view_bob', viewBob);
     tutorialDone = flag('tutorial/done', tutorialDone);
     stepTeleport = flag('gameplay/step_teleport', stepTeleport);
     climbWalls = flag('gameplay/climb_walls', climbWalls);

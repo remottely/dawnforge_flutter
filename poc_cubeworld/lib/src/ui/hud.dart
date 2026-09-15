@@ -219,32 +219,48 @@ class PanelScroll {
   }
 }
 
-/// Rebuilds the 96x96 top-down map once a second while visible.
+/// The top-down map around the player: [radius] blocks are shown each way and
+/// [margin] more are sampled, so between rebuilds the painter can slide the
+/// image by how far the player has walked instead of leaving it frozen. The
+/// bitmap is rebuilt once a second, or sooner if the player has eaten into the
+/// margin.
 class Minimap {
-  static const int radius = 48;
+  static const int radius = 48; // blocks shown each way from the player
+  static const int margin = 16; // sampled beyond that: the slack it scrolls on
+  static const int sampled = radius + margin;
   ui.Image? image;
+
+  /// The world block at the image's top-left, published with the image.
+  double originX = 0.0, originZ = 0.0;
+  double _builtX = 0.0, _builtZ = 0.0; // what it was built around
   double _timer = 0.0;
   bool _busy = false;
 
   void update(double dt, Game game) {
     if (!game.mapVisible) return;
     _timer -= dt;
-    if (_timer > 0.0 || _busy) return;
+    final p = game.player.position;
+    final walked = math.max((p.x - _builtX).abs(), (p.z - _builtZ).abs());
+    if (_busy || (_timer > 0.0 && walked < margin - 2)) return;
     _timer = 1.0;
     _rebuild(game);
   }
 
   void _rebuild(Game game) {
-    const n = radius * 2;
+    const n = sampled * 2;
     final pixels = Uint8List(n * n * 4);
-    final px = game.player.position.x.toInt();
-    final pz = game.player.position.z.toInt();
+    // floor, not toInt: toInt truncates toward zero, so the sampling grid used
+    // to shift by a block as the player crossed x = 0 or z = 0.
+    final px = game.player.position.x.floor();
+    final pz = game.player.position.z.floor();
+    _builtX = game.player.position.x;
+    _builtZ = game.player.position.z;
     final world = game.world;
     final biomes = <int, int>{};
     for (var iz = 0; iz < n; iz++) {
       for (var ix = 0; ix < n; ix++) {
-        final wx = px - radius + ix;
-        final wz = pz - radius + iz;
+        final wx = px - sampled + ix;
+        final wz = pz - sampled + iz;
         var r = 0.05, g = 0.05, b = 0.08;
         if (world.chunks.containsKey(VoxelWorld.chunkOfXZ(wx, wz))) {
           (r, g, b) = Hud.mapPixel(world, wx, wz, biomes);
@@ -260,6 +276,8 @@ class Minimap {
     ui.decodeImageFromPixels(pixels, n, n, ui.PixelFormat.rgba8888, (img) {
       image?.dispose();
       image = img;
+      originX = (px - sampled).toDouble();
+      originZ = (pz - sampled).toDouble();
       _busy = false;
     });
   }
@@ -421,6 +439,21 @@ class HudPainter extends CustomPainter {
     }
   }
 
+  /// Every living thing, through the same [toScreen] the ground is drawn with,
+  /// so a creature keeps the patch of map it is standing on. [r] is the dot's
+  /// radius.
+  void _drawEntities(Canvas canvas, Offset Function(double x, double z) toScreen, bool Function(double x, double z) inside, double r) {
+    for (final m in game.mobs) {
+      if (!inside(m.position.x, m.position.z)) continue;
+      canvas.drawCircle(toScreen(m.position.x, m.position.z), r,
+          _p(m.species.hostile ? const Color.fromRGBO(255, 77, 77, 1) : const Color.fromRGBO(102, 255, 102, 1)));
+    }
+    for (final m in game.pets) {
+      if (!inside(m.position.x, m.position.z)) continue;
+      canvas.drawCircle(toScreen(m.position.x, m.position.z), r, _p(const Color.fromRGBO(102, 153, 255, 1)));
+    }
+  }
+
   void _drawWorldMap(Canvas canvas, Size size) {
     canvas.drawRect(Offset.zero & size, _p(const Color.fromRGBO(0, 0, 0, 0.7)));
     // The Godot panel is 1040x760; a smaller window scales it down.
@@ -435,8 +468,8 @@ class HudPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0);
     Hud.text(canvas, 'World map', const Offset(20, 32), size: 22);
-    Hud.text(canvas, 'M: close · explored ${game.visitedChunks.length} chunks · grey = visited, out of view', const Offset(20, 52),
-        size: 13, color: Hud._c(0.7, 0.7, 0.7));
+    Hud.text(canvas, 'M: close · explored ${game.visitedChunks.length} chunks · grey = visited, out of view · red hostile · green passive · blue pet',
+        const Offset(20, 52), size: 13, color: Hud._c(0.7, 0.7, 0.7));
     final img = worldMap.image;
     if (img != null) {
       final area = Rect.fromLTWH(20, 64, panel.width - 40, panel.height - 110);
@@ -452,6 +485,7 @@ class HudPainter extends CustomPainter {
       }
 
       _drawMarkers(canvas, toScreen, inside, 1.6, true);
+      _drawEntities(canvas, toScreen, inside, 3.0);
       final player = game.player;
       final pc = toScreen(player.position.x, player.position.z);
       final fwd = player.forward;
@@ -746,9 +780,15 @@ class HudPainter extends CustomPainter {
       final px = player.position.x, pz = player.position.z;
       _drawMarkers(canvas, (x, z) => Offset(pc.dx + (x - px) * k, pc.dy + (z - pz) * k),
           (x, z) => (x - px).abs() < Minimap.radius && (z - pz).abs() < Minimap.radius, 1.0, false);
-      Hud.text(canvas, 'N up · red hostile · green passive · blue pet', Offset(mr.left, mr.bottom + 16), size: 11, color: const Color.fromRGBO(204, 204, 204, 1));
-      Hud.text(canvas, 'cyan waypoint · brown mount · white spawn · squares structures · M again: world map',
-          Offset(mr.left, mr.bottom + 30), size: 11, color: const Color.fromRGBO(204, 204, 204, 1), width: ms + 20);
+      // One wrapped paragraph: two lines 14 px apart, the lower one wrapping,
+      // used to be drawn over each other.
+      Hud.text(
+          canvas,
+          'N up · red hostile · green passive · blue pet · cyan waypoint · brown mount · white spawn · squares structures · M again: world map',
+          Offset(mr.left, mr.bottom + 16),
+          size: 11,
+          color: const Color.fromRGBO(204, 204, 204, 1),
+          width: ms + 20);
     }
     if (game.worldMapVisible) _drawWorldMap(canvas, size);
     if (game.debugVisible) {

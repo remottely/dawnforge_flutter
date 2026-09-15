@@ -270,6 +270,12 @@ class Game extends ChangeNotifier {
   bool ready = false;
   Future<void> Function(String path)? screenshotter;
 
+  /// The world block the HUD minimap's bitmap starts at, handed over by the
+  /// view. A probe reads it to measure how far the bitmap has fallen behind
+  /// the live player between its once-a-second rebuilds — the gap the painter
+  /// now slides the image by, and used to ignore.
+  (double, double) Function()? mapOrigin;
+
   /// Where the probe wants the camera on the captured frame, when it must not
   /// drift (a body is swept out of terrain every tick).
   Vector3 Function()? _pinCameraTo;
@@ -2246,6 +2252,7 @@ class Game extends ChangeNotifier {
     if (_hasArg('--stage25') && net.isClient) await _probeStage25Client();
     if (_hasArg('--stage22')) await _probeStage22();
     if (_hasArg('--move-probe')) await _probeMovement();
+    if (_hasArg('--map-probe')) await _probeMap();
     if (_hasArg('--model-probe')) await _probeModel();
     if (_hasArg('--stage23')) await _probeStage23(stage21a);
     if (_hasArg('--stage26') && shot26 == '') await _probeStage26();
@@ -3029,6 +3036,149 @@ class Game extends ChangeNotifier {
     player.probeWalk(Vector3.zero());
     debugPrint('[probe] move backward: walking +Z at camera yaw 0 body yaw=${back.toStringAsFixed(2)} (expect 0.00, not 3.14); '
         'walking -Z body yaw=${player.model.yaw.toStringAsFixed(2)} (expect 0.00)');
+
+    // A walled one-block puddle, so it cannot drain: the liquid state used to
+    // flip every tick in shallow water (the feet probe rides on the cell edge)
+    // and took the pose, the gravity, the speed and the splash with it, which
+    // is what made the body tremble. Standing in it is wading, not swimming.
+    final padY = floorY.toInt();
+    final px0 = x0 - 2, px1 = x0 + 8, pz0 = z0 + 6, pz1 = z0 + 8;
+    for (var x = px0 - 1; x <= px1 + 1; x++) {
+      for (var z = pz0 - 1; z <= pz1 + 1; z++) {
+        world.setBlock(IVec3(x, padY, z), stone);
+        for (var y = padY + 1; y <= padY + 4; y++) {
+          world.setBlock(IVec3(x, y, z), Blocks.air);
+        }
+        if (x < px0 || x > px1 || z < pz0 || z > pz1) world.setBlock(IVec3(x, padY + 1, z), stone);
+      }
+    }
+    for (var x = px0; x <= px1; x++) {
+      for (var z = pz0; z <= pz1; z++) {
+        world.setBlock(IVec3(x, padY + 1, z), water);
+      }
+    }
+    await _ticks(20);
+    _probePlace(Vector3(px0 + 0.5, floorY + 1.01, pz0 + 1.5));
+    await _ticks(10);
+    player.probeWalk(Vector3(1, 0, 0));
+    var wetFlips = 0, floorFlips = 0, airTicks = 0;
+    var wasWet = player.inLiquid, wasFloor = player.onFloor;
+    var loY = 1e9, hiY = -1e9, legJump = 0.0, lastLeg = player.model.legL.rx;
+    for (var i = 0; i < 150; i++) {
+      await _ticks(1);
+      if (player.inLiquid != wasWet) wetFlips++;
+      if (player.onFloor != wasFloor) floorFlips++;
+      wasWet = player.inLiquid;
+      wasFloor = player.onFloor;
+      if (!player.onFloor) airTicks++;
+      loY = math.min(loY, player.position.y);
+      hiY = math.max(hiY, player.position.y);
+      legJump = math.max(legJump, (player.model.legL.rx - lastLeg).abs());
+      lastLeg = player.model.legL.rx;
+    }
+    player.probeWalk(Vector3.zero());
+    debugPrint('[probe] move puddle: wading=${player.wading} swimming=${player.swimming} liquid flips=$wetFlips (expect 0) '
+        'floor flips=$floorFlips (expect 0) airborne ticks=$airTicks (expect 0) feet y span '
+        '${(hiY - loY).toStringAsFixed(4)} (expect < 0.01) biggest leg jump per tick ${legJump.toStringAsFixed(3)} (expect < 0.1)');
+
+    // View bobbing: the camera sways while walking and is perfectly still
+    // standing. The aim never moves with it, which is why the sway is added to
+    // the camera and not to the body.
+    player.setFirstPerson(true);
+    player.setLook(0.0, 0.0);
+    _probePlace(Vector3(x0 + 4.5, floorY + 1.01, z0 + 0.5));
+    await _ticks(40);
+    final bobStill = player.viewBobOffset().length;
+    var bobMax = 0.0, sways = 0;
+    var lastSide = 0.0;
+    for (final dir in [Vector3(0, 0, -1), Vector3(0, 0, 1)]) {
+      player.probeWalk(dir);
+      for (var i = 0; i < 45; i++) {
+        await _ticks(1);
+        final b = player.viewBobOffset();
+        bobMax = math.max(bobMax, b.length);
+        if (b.x != 0.0 && lastSide != 0.0 && b.x.sign != lastSide.sign) sways++;
+        lastSide = b.x;
+      }
+    }
+    player.probeWalk(Vector3.zero());
+    await _ticks(90);
+    debugPrint('[probe] move bob: standing=${bobStill.toStringAsFixed(4)} (expect 0.0000) walking peak=${bobMax.toStringAsFixed(4)} '
+        '(expect ~0.05) side-to-side crossings=$sways (expect several) after stopping='
+        '${player.viewBobOffset().length.toStringAsFixed(4)} (expect 0.0000)');
+  }
+
+  /// `--map-probe --screenshot=<png>`: the minimap, captured before and after a
+  /// walk (`<name>_a.png`, `<name>_b.png`), then the world map
+  /// (`<name>_world.png`). The ground under the arrow has to slide by exactly
+  /// what the player walked: the bitmap is rebuilt once a second, and it used
+  /// to sit still until it did while the creature dots moved every frame, so
+  /// every dot appeared to drift backwards under a player who was not moving.
+  Future<void> _probeMap() async {
+    final shoot = screenshotter;
+    if (shoot == null) {
+      debugPrint('[probe] map: no screenshotter, nothing captured');
+      return;
+    }
+    final base = _arg('--screenshot=', '').replaceAll(RegExp(r'\.png$'), '');
+    mapVisible = true;
+    worldMapVisible = false;
+    player.setFirstPerson(false);
+    player.setLook(0.0, 0.0);
+    await _ticks(150); // the first bitmap, and time for the mobs to be about
+    // Five captures through one unbroken walk, closer together than the one
+    // second between rebuilds: the ground has to slide by what was walked in
+    // every gap, rebuild or no rebuild. Two captures a second apart prove
+    // nothing, because at a rebuild the map is centred on the player either
+    // way — the old map only ever moved at those instants.
+    final home = player.position.clone();
+    player.probeWalk(Vector3(1, 0, 0));
+    var last = player.position.clone();
+    for (var i = 1; i <= 5; i++) {
+      final at = player.position.clone();
+      final step = math.sqrt(math.pow(at.x - last.x, 2) + math.pow(at.z - last.z, 2));
+      debugPrint('[probe] map $i: player ${at.x.toStringAsFixed(2)},${at.z.toStringAsFixed(2)} moved ${step.toStringAsFixed(2)} m '
+          'flat since the last capture, so the ground must have slid ${(step * 2.5).toStringAsFixed(1)} px '
+          '(96 blocks across 240 px) under an arrow that never moves');
+      await shoot('${base}_$i.png');
+      last = at;
+      if (i < 5) await _ticks(36);
+    }
+    player.probeWalk(Vector3.zero());
+
+    // The number the old painter threw away, measured straight off the map.
+    // The bitmap's middle is the player as they stood at the last rebuild (its
+    // corner plus 48 blocks shown and 16 of margin); walking, the live player
+    // drifts away from that middle, and the drift is exactly how far the
+    // ground has to slide to stay under them. The old painter pinned the
+    // bitmap to the panel whatever the drift was — so the ground stood still
+    // for up to a second while every creature dot moved every frame, and the
+    // dots appeared to slide the other way. It has to saw up and drop back at
+    // each rebuild, and never reach the 16 blocks of margin.
+    final origin = mapOrigin;
+    if (origin != null) {
+      _probePlace(home);
+      await _ticks(30);
+      player.probeWalk(Vector3(1, 0, 0));
+      var peak = 0.0;
+      final trace = <String>[];
+      for (var i = 0; i < 240; i++) {
+        await _ticks(1);
+        final o = origin();
+        final dx = player.position.x - (o.$1 + 64.0);
+        final dz = player.position.z - (o.$2 + 64.0);
+        final drift = math.sqrt(dx * dx + dz * dz);
+        peak = math.max(peak, drift);
+        if (i % 20 == 0) trace.add('${drift.toStringAsFixed(1)}m=${(drift * 2.5).toStringAsFixed(0)}px');
+      }
+      player.probeWalk(Vector3.zero());
+      debugPrint('[probe] map drift while walking: ${trace.join(' ')} · peak ${peak.toStringAsFixed(2)} m, '
+          '${(peak * 2.5).toStringAsFixed(1)} px of ground slide (must stay under the 16 blocks of margin)');
+    }
+    worldMapVisible = true;
+    await _ticks(180);
+    await shoot('${base}_world.png');
+    debugPrint('[probe] map world: mobs ${mobs.length} pets ${pets.length} over ${visitedChunks.length} visited chunks');
   }
 
   /// `--model-probe --screenshot=<png>`: on a cleared stone pad, facing the

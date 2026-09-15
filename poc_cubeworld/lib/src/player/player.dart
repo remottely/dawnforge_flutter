@@ -145,6 +145,10 @@ class Player extends SceneBody implements Target {
   double _shakeTime = 0.0; // camera shake left, seconds
   double _shakeAmp = 0.0; // its amplitude in metres
   Vector3 _shake = Vector3.zero(); // this frame's jolt, added to the camera only
+  double _bobPhase = 0.0; // the walk cycle, in radians, advanced by distance
+  double _bobWeight = 0.0; // how much of the sway is in, eased in and out
+  Vector3 _bobOffset = Vector3.zero(); // this frame's sway, camera only
+  double _bobRoll = 0.0; // and its tilt, as a slice of the right vector
   double _stagger = 0.0; // knockback window, the input does not brake it
   double _mineFxTimer = 0.0; // swing + chips + dig voice while mining
   final List<Node> crackLines = []; // the four crack stages, six faces each (stage * 6 + face)
@@ -313,6 +317,12 @@ class Player extends SceneBody implements Target {
   /// relative.x * ...`, so moving the mouse right turns right).
   static double yawAfterMouse(double yaw, double dx, double scale) => yaw - dx * scale;
 
+  /// Swimming proper: in a liquid and off the floor, or with the head under.
+  /// A body standing in a one-block puddle is [wading] — it walks, jumps and
+  /// falls under full gravity, which is what stops shallow water from turning
+  /// the swim rules on and off under a walking player.
+  bool get swimming => inLiquid && !wading;
+
   Vector3 get pivotPosition => position + Vector3(0, firstPerson ? eyeHeight : 1.5, 0);
 
   Vector3 get cameraPosition {
@@ -321,9 +331,9 @@ class Player extends SceneBody implements Target {
   }
 
   PerspectiveCamera camera() => GodotCamera(
-        position: cameraPosition + _shake,
-        target: cameraPosition + _shake + forward,
-        up: upVec,
+        position: cameraPosition + _shake + _bobOffset,
+        target: cameraPosition + _shake + _bobOffset + forward,
+        up: upVec + rightVec * _bobRoll,
         fovRadiansY: fov * math.pi / 180.0,
         fovNear: 0.05,
         fovFar: 700.0,
@@ -334,6 +344,7 @@ class Player extends SceneBody implements Target {
 
   void _updateCamera(double dt) {
     _shake = _shakeOffset(dt);
+    _updateBob(dt);
     if (firstPerson) return;
     // Pull the camera in when a block sits between it and the head.
     final origin = pivotPosition;
@@ -357,6 +368,34 @@ class Player extends SceneBody implements Target {
 
   /// Stage 32: the camera is shaking (for the probe).
   bool shakeActive() => _shakeTime > 0.0;
+
+  /// Minecraft's view bobbing: walking sways the head, sprinting sways it
+  /// harder and faster. The cycle is advanced by distance covered rather than
+  /// by time, so the sway keeps step with the feet at any speed instead of
+  /// needing a rate per gait. Two dips per cycle (one per foot) against one
+  /// side-to-side sway and one roll, which is what makes it read as walking
+  /// and not as floating. The offset moves the eye only: [aimOrigin] and
+  /// [aimDirection] are untouched, so a bobbing head never misses a block.
+  void _updateBob(double dt) {
+    final speed = math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
+    // Only on foot: airborne, swimming, riding, gliding and climbing have no
+    // footfalls to answer to.
+    final walking = onFloor && !gliding && !climbing && riding == null && cart == null && speed > 0.6;
+    final want = walking && Settings.instance.viewBob ? (speed / walkSpeed).clamp(0.0, 1.7) : 0.0;
+    _bobWeight = lerpd(_bobWeight, want.toDouble(), dt * 9.0);
+    if (walking) _bobPhase = (_bobPhase + speed * dt * 2.7) % (math.pi * 2);
+    if (_bobWeight < 0.001 || !firstPerson) {
+      _bobOffset = Vector3.zero();
+      _bobRoll = 0.0;
+      return;
+    }
+    final amp = _bobWeight * 0.055;
+    _bobOffset = rightVec * (math.sin(_bobPhase) * amp) - upVec * (math.cos(_bobPhase).abs() * amp);
+    _bobRoll = math.sin(_bobPhase) * _bobWeight * 0.02;
+  }
+
+  /// The sway the camera carries this frame (for the probe).
+  Vector3 viewBobOffset() => _bobOffset;
 
   double _rayToSolid(Vector3 origin, Vector3 direction, double maxDist) {
     final hit = voxelRaycast(origin, direction, maxDist);
@@ -474,10 +513,14 @@ class Player extends SceneBody implements Target {
     if (_probeWalk.length2 > 0.0) wish = _probeWalk.clone();
     if (wish.length > 1.0) wish = wish.normalized();
     if (wish.length > 0.1) Tutorial.instance.event('move');
-    final sprinting = gameplay && input.down(GameAction.sprint) && stamina > 1.0 && inputY < 0.0 && !inLiquid;
+    final sprinting = gameplay && input.down(GameAction.sprint) && stamina > 1.0 && inputY < 0.0 && !swimming;
     final sneaking = gameplay && input.down(GameAction.sneak);
     var speed = sprinting ? sprintSpeed : (sneaking ? sneakSpeed : walkSpeed);
-    if (inLiquid) speed = swimSpeed;
+    if (swimming) {
+      speed = swimSpeed;
+    } else if (inLiquid) {
+      speed *= 0.8; // wading: slowed, but still walking
+    }
     speed *= effects.speedMultiplier() * (1.0 + 0.05 * talentRank('swiftness'));
     // Stage 29: soul sand under the feet.
     if (onFloor) speed *= Blocks.speedMult(world.getBlockXYZ(position.x.floor(), (position.y - 0.05).floor(), position.z.floor()));
@@ -513,7 +556,7 @@ class Player extends SceneBody implements Target {
       climbing = jumpHeld;
     } else if (_leavingWater) {
       velocity.y -= gravity * dt;
-    } else if (inLiquid) {
+    } else if (swimming) {
       if (jumpHeld) {
         velocity.y = math.min(velocity.y + 20.0 * dt, 4.0);
       } else {

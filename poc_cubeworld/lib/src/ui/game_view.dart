@@ -72,6 +72,7 @@ class _GameSessionState extends State<_GameSession> {
     super.initState();
     game = Game(args: widget.args, saveDir: widget.saveDir);
     game.screenshotter = _screenshot;
+    game.mapOrigin = () => (_minimap.originX, _minimap.originZ);
     game.reloader = widget.onReload;
     game.exitToTitle = widget.onExitToTitle;
     game.addListener(_onGameChanged);

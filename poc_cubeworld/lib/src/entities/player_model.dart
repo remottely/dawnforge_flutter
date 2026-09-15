@@ -38,6 +38,8 @@ class PlayerModel {
   double _walkPhase = 0.0;
   double _swing = 0.0;
   double _bob = 0.0;
+  double _moveWeight = 0.0; // how much of the walk cycle is in, eased
+  double _airWeight = 0.0; // and how much of the airborne pose
 
   /// Godot's rotation.y / rotation.x / position.y of the model node.
   double yaw = 0.0;
@@ -231,8 +233,14 @@ class PlayerModel {
     hand.rotation = Quaternion.axisAngle(Vector3(1, 0, 0), -60.0 * math.pi / 180.0 * math.sin(_handSwing * math.pi));
     final moving = speed > 0.5;
     _walkPhase += dt * speed.clamp(0.0, 12.0) * 1.4;
-    var a = moving ? math.sin(_walkPhase) * 0.65 : 0.0;
-    if (!onFloor && !climbing) a = 0.35;
+    // The walk and the airborne pose are blended in and out, never switched.
+    // Both booleans flicker where the ground is uncertain — a body in shallow
+    // water leaves the floor for a frame at a time — and a hard switch made
+    // the limbs and the body bob flutter at the frame rate.
+    _moveWeight = lerpd(_moveWeight, moving ? 1.0 : 0.0, dt * 9.0);
+    _airWeight = lerpd(_airWeight, (!onFloor && !climbing) ? 1.0 : 0.0, dt * 9.0);
+    final walkA = math.sin(_walkPhase) * 0.65 * _moveWeight;
+    final a = walkA + (0.35 - walkA) * _airWeight;
     legL.rx = a;
     legR.rx = -a;
     armL.rx = -a * 0.8;
@@ -264,7 +272,7 @@ class PlayerModel {
       armL.rz = lerpd(armL.rz, 0.0, dt * 10.0); // straight down, parallel to the torso
       armR.rz = lerpd(armR.rz, 0.0, dt * 10.0);
     }
-    _bob = moving && onFloor ? math.sin(_walkPhase).abs() * 0.03 : 0.0;
+    _bob = math.sin(_walkPhase).abs() * 0.03 * _moveWeight * (1.0 - _airWeight);
     torso.offY = _bob;
     head.offY = _bob;
     armL.offY = _bob;

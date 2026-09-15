@@ -153,6 +153,51 @@ void main() {
     expect(body.headLiquid, VoxelBlockDef.noLiquid);
   });
 
+  test('leaving a liquid is decided at the soles, so a body at the surface does not flap', () {
+    world.cells[const IVec3(4, 10, 4)] = _water;
+    body.position = Vector3(4.5, 10.0, 4.5);
+    body.move(0);
+    expect(body.inLiquid, isTrue);
+    // The feet probe rides 0.3 up, so here it has left the water cell while
+    // the soles are still in it: the body stays wet.
+    body.position = Vector3(4.5, 10.8, 4.5);
+    body.move(0);
+    expect(body.inLiquid, isTrue);
+    // Clear of the cell altogether.
+    body.position = Vector3(4.5, 11.05, 4.5);
+    body.move(0);
+    expect(body.inLiquid, isFalse);
+  });
+
+  test('a one-block puddle is waded, and neither the liquid nor the floor state flickers', () {
+    world.cells[const IVec3(4, 10, 4)] = _water;
+    body.position = Vector3(4.5, 10.2, 4.5);
+    run(0.5, () {}); // settle on the floor under the water
+    expect(body.wading, isTrue);
+    expect(body.onFloor, isTrue);
+    var liquidFlips = 0, floorFlips = 0;
+    var wasWet = body.inLiquid, wasFloor = body.onFloor;
+    run(2.0, () {
+      if (body.inLiquid != wasWet) liquidFlips++;
+      if (body.onFloor != wasFloor) floorFlips++;
+      wasWet = body.inLiquid;
+      wasFloor = body.onFloor;
+    });
+    expect(liquidFlips, 0);
+    expect(floorFlips, 0);
+    expect(body.wading, isTrue);
+  });
+
+  test('a body with its head under is swimming, not wading', () {
+    for (var y = 10; y <= 12; y++) {
+      world.cells[IVec3(4, y, 4)] = _water;
+    }
+    body.position = Vector3(4.5, 10.2, 4.5);
+    run(0.5, () {});
+    expect(body.headInLiquid, isTrue);
+    expect(body.wading, isFalse);
+  });
+
   test('a noclip body moves through stone', () {
     body
       ..noclip = true

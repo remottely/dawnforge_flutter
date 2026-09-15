@@ -50,6 +50,11 @@ class VoxelBody {
   /// The head cell holds a liquid.
   bool headInLiquid = false;
 
+  /// Standing on the floor with the head in the open: the body wades through a
+  /// shallow liquid instead of swimming in it. Minecraft walks a one-block
+  /// puddle; only water deep enough to cover the head is swum.
+  bool get wading => inLiquid && onFloor && !headInLiquid;
+
   /// The liquid kind at the feet cell, or [VoxelBlockDef.noLiquid].
   int feetLiquid = VoxelBlockDef.noLiquid;
 
@@ -100,10 +105,16 @@ class VoxelBody {
     return near > 0.0 ? near : 0.0;
   }
 
-  /// Accelerates [velocity] down for [dt] seconds: [gravity] in air,
-  /// [liquidGravity] in a liquid with the sink speed capped at 3.
+  /// Accelerates [velocity] down for [dt] seconds: [gravity] in air and while
+  /// [wading], [liquidGravity] in a liquid deep enough to swim in, with the
+  /// sink speed capped at 3.
+  ///
+  /// A wading body falls at the air rate on purpose. At the liquid rate one
+  /// tick of falling moves it less than [skin], so the sweep does not reach
+  /// the floor every other tick and `onFloor` flickers — which the animation
+  /// then wears.
   void applyGravity(double dt) {
-    if (inLiquid) {
+    if (inLiquid && !wading) {
       velocity.y = (velocity.y - liquidGravity * dt).clamp(-3.0, double.infinity);
     } else {
       velocity.y -= gravity * dt;
@@ -181,8 +192,15 @@ class VoxelBody {
     final t = query.table;
     feetLiquid = t.liquidKind(feetId);
     headLiquid = t.liquidKind(headId);
-    inLiquid = t.isLiquid(feetId) || t.isLiquid(headId);
     headInLiquid = t.isLiquid(headId);
+    // The feet probe rides 0.3 above the soles, so a body that bobs at the
+    // surface — or walks through a one-block puddle — crosses it many times a
+    // second, and everything the liquid gates (gravity, speed, the splash, the
+    // pose) chatters with it. Entering is still decided at the probe; leaving
+    // is decided at the soles, 0.3 lower, and that gap is the hysteresis.
+    final soleId = query.getBlockXYZ(position.x.floor(), (position.y + 0.02).floor(), position.z.floor());
+    final wet = t.isLiquid(feetId) || headInLiquid;
+    inLiquid = inLiquid ? (wet || t.isLiquid(soleId)) : wet;
   }
 
   /// Step up onto a low obstacle when walking into it: half a block first (a
