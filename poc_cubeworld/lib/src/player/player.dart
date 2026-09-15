@@ -149,8 +149,23 @@ class Player extends SceneBody implements Target {
   double _mineFxTimer = 0.0; // swing + chips + dig voice while mining
   final List<Node> crackLines = []; // the four crack stages, six faces each (stage * 6 + face)
   int stepsTaken = 0; // footsteps played (for the probe)
-  static const double stepDistance = 0.45;
-  static const double stepDistanceSprint = 0.3;
+  // The 2D game's player `footstep_interval`, a little quicker sprinting.
+  static const double footstepInterval = 0.4;
+  static const double footstepIntervalSprint = 0.3;
+  bool _hopping = false; // a half-step hop: double gravity until the feet land
+
+  /// The 2D game's ground kind (`Sfx.stepKinds`) a block's footstep sounds
+  /// like: snow, sand, water and mud, grass and leaves; bare ground (stone,
+  /// wood, dirt, metal) is the lava land's dirt walk.
+  static String stepKind(int block) {
+    final id = Blocks.idOf(block);
+    if (id.contains('snow') || id.contains('ice')) return 'snow';
+    if (id.contains('sand') || id.contains('gravel')) return 'desert';
+    if (Blocks.isLiquid(block) || id.contains('mud') || id.contains('clay') || id.contains('lily')) return 'swamp';
+    final family = Blocks.materialFamily(block);
+    if (family == 'plant' || id.contains('grass') || id.contains('leaves') || id.contains('moss') || id.contains('hay')) return 'forest';
+    return 'lava';
+  }
   static const double shakeSeconds = 0.15;
   static const double mineFxPeriod = 0.35;
 
@@ -492,6 +507,7 @@ class Player extends SceneBody implements Target {
       }
     } else {
       applyGravity(dt);
+      if (_hopping) applyGravity(dt);
       if (jumpHeld && onFloor) _jump();
     }
 
@@ -512,7 +528,7 @@ class Player extends SceneBody implements Target {
       speed = 13.0;
       model.tiltX = -math.pi * 2.0 * (1.0 - _dodge / dodgeTime).clamp(0.0, 1.0);
     }
-    final accel = _dodge > 0.0 ? 40.0 : (onFloor ? 14.0 : (gliding ? 3.0 : 6.0));
+    final accel = _dodge > 0.0 ? 40.0 : (onFloor || _hopping ? 14.0 : (gliding ? 3.0 : 6.0));
     if (_stagger <= 0.0) {
       // Stage 32: a shoved body carries for 0.3 s before the input steers it.
       velocity.x = lerpd(velocity.x, wish.x * speed, dt * accel);
@@ -522,16 +538,24 @@ class Player extends SceneBody implements Target {
     final wasFloor = onFloor;
     final posBefore = position.clone();
     move(dt);
+    if (onFloor || inLiquid || climbing) _hopping = false;
     if (onFloor) {
       // Stage 30: the stats block's metres walked (the ground displacement).
       final d = position - posBefore;
       GameState.instance.distanceWalked += math.sqrt(d.x * d.x + d.z * d.z);
     }
     if (hitWall && wish.length > 0.1 && !climbing && !inLiquid) {
-      // A half step is always lifted onto; a full block is lifted onto only with
-      // `stepTeleport`, otherwise the player jumps it (Minecraft's auto-jump).
-      final teleport = Settings.instance.stepTeleport;
-      if (!tryStepUp(fullBlock: teleport) && !teleport && onFloor && !sneaking && stepFits(1.02)) {
+      // `stepTeleport` lifts the body onto a half step or a full block at once.
+      // Otherwise nothing teleports: a half step (a slab, a stair) is hopped —
+      // the jump's launch speed under double gravity, so half the height in
+      // half the time — and a full block is jumped (Minecraft's auto-jump).
+      if (Settings.instance.stepTeleport) {
+        tryStepUp();
+      } else if (onFloor && stepFits(0.52)) {
+        velocity.y = jumpVelocity;
+        _hopping = true;
+        _fallStartY = position.y;
+      } else if (onFloor && !sneaking && stepFits(1.02)) {
         velocity.y = jumpVelocity;
         _fallStartY = position.y;
       }
@@ -573,15 +597,13 @@ class Player extends SceneBody implements Target {
     final horizontalSpeed = math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
     model.animate(dt, horizontalSpeed, onFloor, gliding, climbing);
     if (onFloor && horizontalSpeed > 1.0) {
-      _stepTimer -= dt * horizontalSpeed;
+      _stepTimer -= dt;
       if (_stepTimer <= 0.0) {
-        // Stage 32: a step every 0.45 m (0.3 m sprinting) in the voice of the
-        // block under the feet; sand and soul sand are softer.
-        _stepTimer = sprinting ? stepDistanceSprint : stepDistance;
+        // A footstep every `footstepInterval` seconds, a 2D game recording of
+        // the ground under the feet.
+        _stepTimer = sprinting ? footstepIntervalSprint : footstepInterval;
         final under = world.getBlockXYZ(position.x.floor(), (position.y - 0.05).floor(), position.z.floor());
-        final underId = Blocks.idOf(under);
-        final soft = underId == 'sand' || underId == 'soul_sand';
-        Sfx.play('step_${Blocks.materialFamily(under)}', soft ? -22.0 : -16.0, soft ? 0.8 : 1.0);
+        Sfx.playStep(stepKind(under), -6.0);
         stepsTaken += 1;
       }
     }
@@ -1288,7 +1310,7 @@ class Player extends SceneBody implements Target {
       model.swing();
       final c = Blocks.def(id);
       main.spawnDebris(aimedBlock.centre, Vector3(c.r, c.g, c.b), 2, 0.7);
-      Sfx.play('step_${Blocks.materialFamily(id)}', -10.0, 0.8);
+      Sfx.play('place_${Blocks.materialFamily(id)}', -10.0, 0.8);
     }
     _updateCrack(aimedBlock, mineProgress);
     if (mineProgress >= 1.0) {

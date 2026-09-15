@@ -425,7 +425,7 @@ class Game extends ChangeNotifier {
     if (net.mode != NetMode.solo) notify(net.isHost ? 'Hosting on port ${Net.port}' : 'Joined the host');
     // Stage 26: the ambient music follows the biome, the night and the depth; a
     // change is a HUD hint.
-    Music.instance.onMoodChanged = (mood) => notify('\u266A $mood');
+    Music.instance.onTrackChanged = (track) => notify('\u266A $track');
     _updateMusic();
 
     started = true;
@@ -2535,7 +2535,8 @@ class Game extends ChangeNotifier {
     // 5. footsteps over 5 m
     final steps0 = player.stepsTaken;
     final walk = await _stage22Walk(Vector3(sx - 6.5, y + 0.1, sz + 12.5), sx - 1.5, 120, false);
-    debugPrint('[probe] stage32 footsteps: walked ${(walk.x - (sx - 6.5)).toStringAsFixed(1)} m -> steps=${player.stepsTaken - steps0} (9-13)');
+    debugPrint('[probe] stage32 footsteps: walked ${(walk.x - (sx - 6.5)).toStringAsFixed(1)} m -> steps=${player.stepsTaken - steps0} '
+        '(one per ${Player.footstepInterval} s at ${Player.walkSpeed} m/s: ~${(5.0 / Player.walkSpeed / Player.footstepInterval).round()})');
     // 6. the daylight rule: sun, roof, water
     _stage31Fill(IVec3(sx + 11, y + 4, sz + 12), IVec3(sx + 13, y + 4, sz + 14), stone);
     _stage31Fill(IVec3(sx + 6, y0 - 1, sz + 12), IVec3(sx + 8, y0 - 1, sz + 14), stone);
@@ -2924,6 +2925,18 @@ class Game extends ChangeNotifier {
     }
 
     final settings = Settings.instance;
+    // A half step (a row of slabs) is hopped, never lifted onto.
+    for (var x = x0 + 3; x < x0 + 6; x++) {
+      for (var z = z0 - 2; z < z0 + 3; z++) {
+        world.setBlock(IVec3(x, y0 + 1, z), Blocks.indexOf('stone_slab'));
+      }
+    }
+    await _ticks(10);
+    settings.stepTeleport = false;
+    final hopped = await walk(x0 + 4.6, 120, false);
+    debugPrint('[probe] move half step teleport=off: top y=${hopped.y.toStringAsFixed(3)} (expect ${(floorY + 0.5).toStringAsFixed(1)}) '
+        'highest feet=${hopped.maxY.toStringAsFixed(3)} (a hop: < ${(floorY + 0.8).toStringAsFixed(1)}) '
+        'largest one-tick rise=${hopped.maxRise.toStringAsFixed(3)} (< 0.3) x=${hopped.x.toStringAsFixed(2)}');
     // Step and wall are three blocks deep, so the walker stops on top of them
     // instead of crossing and dropping off the far side.
     for (var x = x0 + 3; x < x0 + 6; x++) {
@@ -3696,21 +3709,20 @@ class Game extends ChangeNotifier {
     debugPrint('[probe] stage26 ocelot speed=${Species.def('ocelot').speed.toStringAsFixed(1)} (player walk ${Player.walkSpeed.toStringAsFixed(1)})');
     // Music
     final music = Music.instance;
-    final filledBefore = music.framesFilled;
-    music.setContext(2, false, false);
-    final mDay = music.currentMood;
-    music.setContext(2, true, false);
-    final mNight = music.currentMood;
-    music.setContext(8, false, false);
-    final mJungle = music.currentMood;
-    music.setContext(2, false, true);
-    final mDeep = music.currentMood;
-    for (var i = 0; i < 20; i++) {
+    String at(int biome, bool night, bool underground) {
+      music.setContext(biome, night, underground);
+      return '${music.currentMood} (${music.currentTrack})';
+    }
+
+    final mDay = at(2, false, false);
+    final mNight = at(2, true, false);
+    final mDunes = at(4, false, false);
+    final mDeep = at(2, false, true);
+    for (var i = 0; i < 60; i++) {
       await nextFrame();
     }
-    debugPrint('[probe] stage26 music: plains day=$mDay -> night=$mNight -> jungle=$mJungle -> underground=$mDeep');
-    debugPrint('[probe] stage26 music frames filled=${music.framesFilled} (this probe ${music.framesFilled - filledBefore}), '
-        'loops started=${music.handlesPlayed}, playing=${music.isPlaying}, audio device=${Sfx.ready}');
+    debugPrint('[probe] stage26 music: plains day=$mDay -> night=$mNight -> desert=$mDunes -> underground=$mDeep');
+    debugPrint('[probe] stage26 music tracks started=${music.handlesPlayed}, playing=${music.isPlaying}, audio device=${Sfx.ready}');
   }
 
   /// --stage26 --shot=biome|village|trade: stand where the capture wants before

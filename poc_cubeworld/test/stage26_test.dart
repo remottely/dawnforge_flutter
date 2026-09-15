@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:cubeworld_poc/src/core/blocks.dart';
@@ -9,6 +10,7 @@ import 'package:cubeworld_poc/src/entities/mob.dart';
 import 'package:cubeworld_poc/src/game/inventory.dart';
 import 'package:cubeworld_poc/src/game/loot.dart';
 import 'package:cubeworld_poc/src/game/music.dart';
+import 'package:cubeworld_poc/src/game/sfx.dart';
 import 'package:cubeworld_poc/src/world/terrain_generator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vector_math/vector_math.dart';
@@ -182,23 +184,24 @@ void main() {
     expect(Species.def('parrot').tameWith, ['wheat_seeds']);
   });
 
-  test('music moods per biome, night and depth; a rendered loop is sound, not silence', () {
+  test('music moods per biome, night and depth; each mood plays a 2D game track that exists', () {
     expect(Music.moodFor(2, false, false), 'Meadow');
     expect(Music.moodFor(2, true, false), 'Meadow Night');
     expect(Music.moodFor(8, false, false), 'Jungle');
     expect(Music.moodFor(7, true, false), 'Marsh Night');
     expect(Music.moodFor(2, false, true), 'Deep');
     expect(Music.moodFor(5, true, true), 'Deep');
-    expect(Music.moodDef('Meadow Night').bpm, 67);
-    expect(Music.moodDef('Meadow Night').scale, Music.nightScale);
-    final loop = Music.instance.render('Jungle');
-    expect(loop.length, (22050 * 30 / 118).toInt() * Music.loopSteps);
-    var peak = 0.0;
-    for (final s in loop) {
-      peak = math.max(peak, s.abs());
+    expect(Music.trackFor('Meadow Night'), Music.trackFor('Meadow')); // night keeps the day's track
+    expect(Music.trackFor('Dunes'), 'stardust_dreams.ogg');
+    expect(Music.trackFor('Deep'), 'rites_of_passage.mp3');
+    expect(Music.title('fishing_by_the_lake.ogg'), 'Fishing By The Lake');
+    for (final t in Music.tracks.values) {
+      expect(File('assets/audio/music/$t').existsSync(), isTrue, reason: t);
     }
-    expect(peak, greaterThan(0.2));
-    expect(peak, lessThanOrEqualTo(1.0));
-    expect(Music.instance.render('Jungle'), loop); // seeded by the name
+    for (final k in Sfx.stepKinds) {
+      for (var i = 1; i <= 4; i++) {
+        expect(File('assets/audio/footstep/$k/${k}_$i.wav').existsSync(), isTrue, reason: '$k $i');
+      }
+    }
   });
 }

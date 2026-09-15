@@ -10,7 +10,11 @@ class Sfx {
 
   static const int rate = 22050;
   static final Map<String, AudioSource> _sources = {};
+  static final Map<String, List<AudioSource>> _steps = {};
   static final math.Random _rng = math.Random();
+
+  /// The 2D game's ground kinds, each a folder of four footstep takes.
+  static const List<String> stepKinds = ['forest', 'desert', 'snow', 'swamp', 'lava'];
   static bool _ready = false;
   static bool muted = false;
 
@@ -81,13 +85,13 @@ class Sfx {
     await make('place_glass', 0.12, (t, p) => sn(t * 1800.0 * tau) * pw(1.0 - p, 3.0) * 0.4);
     await make('place_plant', 0.10, (t, p) => rnd() * sn(p * math.pi) * 0.25);
     await make('place_liquid', 0.20, (t, p) => rnd() * sn(p * math.pi) * (0.6 + 0.4 * sn(t * 18.0 * tau)) * 0.35);
-    await make('step_stone', 0.06, (t, p) => (rnd() * 0.6 + sn(t * 140.0 * tau) * 0.4) * pw(1.0 - p, 2.0) * 0.5);
-    await make('step_wood', 0.07, (t, p) => (sn(t * 120.0 * tau) * 0.6 + half() * 0.4) * pw(1.0 - p, 2.0) * 0.5);
-    await make('step_earth', 0.07, (t, p) => rnd() * pw(1.0 - p, 3.0) * 0.4);
-    await make('step_metal', 0.08, (t, p) => (sn(t * 700.0 * tau) * 0.5 + half() * 0.3) * pw(1.0 - p, 2.5) * 0.4);
-    await make('step_glass', 0.06, (t, p) => sn(t * 1500.0 * tau) * pw(1.0 - p, 3.0) * 0.3);
-    await make('step_plant', 0.08, (t, p) => rnd() * sn(p * math.pi) * 0.25);
-    await make('step_liquid', 0.12, (t, p) => rnd() * sn(p * math.pi) * (0.5 + 0.5 * sn(t * 30.0 * tau)) * 0.3);
+    // Footsteps are the Dawnforge 2D game's recordings (`sound_footstep` of its
+    // player), four takes per ground kind.
+    for (final kind in stepKinds) {
+      _steps[kind] = [
+        for (var i = 1; i <= 4; i++) await SoLoud.instance.loadAsset('assets/audio/footstep/$kind/${kind}_$i.wav'),
+      ];
+    }
     await make('hurt_small', 0.14, (t, p) => sn(t * (700.0 + p * 300.0) * tau) * (1.0 - p) * 0.4);
     await make('hurt_large', 0.35, (t, p) => (sn(t * (140.0 - p * 60.0) * tau) * 0.7 + half() * 0.3) * (1.0 - p) * 0.6);
     await make('hurt_undead', 0.30, (t, p) => (sn(t * (180.0 - p * 90.0) * tau) * sn(t * 13.0 * tau) + half() * 0.4) * (1.0 - p) * 0.55);
@@ -101,36 +105,6 @@ class Sfx {
   }
 
   static bool get ready => _ready;
-
-  /// Stage 26: a mono 16-bit WAV of [samples] (-1..1) at [sampleRate], for the
-  /// music loops.
-  static Uint8List wav16(Float32List samples, int sampleRate) {
-    final n = samples.length;
-    final bytes = ByteData(44 + n * 2);
-    void str(int o, String s) {
-      for (var i = 0; i < s.length; i++) {
-        bytes.setUint8(o + i, s.codeUnitAt(i));
-      }
-    }
-
-    str(0, 'RIFF');
-    bytes.setUint32(4, 36 + n * 2, Endian.little);
-    str(8, 'WAVE');
-    str(12, 'fmt ');
-    bytes.setUint32(16, 16, Endian.little);
-    bytes.setUint16(20, 1, Endian.little);
-    bytes.setUint16(22, 1, Endian.little);
-    bytes.setUint32(24, sampleRate, Endian.little);
-    bytes.setUint32(28, sampleRate * 2, Endian.little);
-    bytes.setUint16(32, 2, Endian.little);
-    bytes.setUint16(34, 16, Endian.little);
-    str(36, 'data');
-    bytes.setUint32(40, n * 2, Endian.little);
-    for (var i = 0; i < n; i++) {
-      bytes.setInt16(44 + i * 2, (samples[i].clamp(-1.0, 1.0) * 32000).toInt(), Endian.little);
-    }
-    return bytes.buffer.asUint8List();
-  }
 
   static Uint8List _wav(double seconds, double Function(double, double) fn) {
     final n = (seconds * rate).toInt();
@@ -162,10 +136,21 @@ class Sfx {
     return bytes.buffer.asUint8List();
   }
 
+  /// One footstep of [kind] (`stepKinds`), a random take of the four.
+  static void playStep(String kind, [double volumeDb = 0.0, double pitch = 1.0]) {
+    final takes = _steps[kind];
+    if (takes == null) return;
+    _playSource(takes[_rng.nextInt(takes.length)], volumeDb, pitch);
+  }
+
   static void play(String name, [double volumeDb = 0.0, double pitch = 1.0]) {
-    if (!_ready || muted) return;
     final source = _sources[name];
     if (source == null) return;
+    _playSource(source, volumeDb, pitch);
+  }
+
+  static void _playSource(AudioSource source, double volumeDb, double pitch) {
+    if (!_ready || muted) return;
     final volume = math.pow(10.0, volumeDb / 20.0).toDouble().clamp(0.0, 1.0);
     final speed = pitch * (0.92 + _rng.nextDouble() * 0.16);
     try {

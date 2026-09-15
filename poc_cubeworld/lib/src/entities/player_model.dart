@@ -124,6 +124,7 @@ class PlayerModel {
   double _freeze = 0.0;
   double _flash = 0.0;
   static const double handSwingSeconds = 0.12;
+  static const double swingSeconds = 0.3; // Minecraft's six ticks
   static UnlitMaterial? _flashMaterial;
   final Map<Object, Material> _saved = {};
 
@@ -194,9 +195,16 @@ class PlayerModel {
     legR.rx = -a;
     armL.rx = -a * 0.8;
     var swingAngle = 0.0;
+    var swingRoll = 0.0;
     if (_swing > 0.0) {
-      _swing = math.max(_swing - dt * 5.0, 0.0);
-      swingAngle = -math.sin(_swing * math.pi) * 2.0;
+      // Minecraft's HumanoidModel attack: the arm rises forward and chops down
+      // in front of the body, ease-out, rolling a little toward the chest.
+      // A positive rx carries the hand forward (-Z).
+      _swing = math.max(_swing - dt / swingSeconds, 0.0);
+      final t = 1.0 - _swing;
+      final eased = 1.0 - math.pow(1.0 - t, 4.0);
+      swingAngle = math.sin(eased * math.pi) * 1.2 + math.sin(t * math.pi) * 0.5;
+      swingRoll = math.sin(t * math.pi) * 0.4;
     }
     armR.rx = a * 0.8 + swingAngle;
     if (gliding) {
@@ -211,7 +219,7 @@ class PlayerModel {
       armR.rx = -2.6 - a;
     } else {
       armL.rz = lerpd(armL.rz, 0.05, dt * 10.0);
-      armR.rz = lerpd(armR.rz, -0.05, dt * 10.0);
+      armR.rz = lerpd(armR.rz, -0.05, dt * 10.0) - swingRoll;
     }
     _bob = moving && onFloor ? math.sin(_walkPhase).abs() * 0.03 : 0.0;
     torso.offY = _bob;

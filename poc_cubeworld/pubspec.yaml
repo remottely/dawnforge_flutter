@@ -32,5 +32,11 @@ dev_dependencies:
 flutter:
   assets:
     - flutter_scene_generated/
+    - assets/audio/footstep/forest/
+    - assets/audio/footstep/desert/
+    - assets/audio/footstep/snow/
+    - assets/audio/footstep/swamp/
+    - assets/audio/footstep/lava/
+    - assets/audio/music/
     - ROADMAP.md # stage 30: the credits read the stage table at runtime
   uses-material-design: true
