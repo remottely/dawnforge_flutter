@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import '../grid/voxel_block_table.dart';
 import '../mesh/chunk_mesher.dart';
+import 'chunk_streamer.dart';
 
 /// Fills one chunk volume ([ChunkSize.volume] bytes of block ids) for chunk
 /// ([cx], [cz]) of [dimension]. Runs on a worker isolate: it must be pure in
@@ -38,7 +39,7 @@ class _Worker {
 
 /// A fixed pool of isolates running chunk generation and meshing. Requests
 /// are answered by futures; each goes to the least busy worker.
-class ChunkWorkerPool {
+class ChunkWorkerPool implements ChunkJobs {
   ChunkWorkerPool(this.config, {this.workers = 3});
 
   final WorkerConfig config;
@@ -91,6 +92,7 @@ class ChunkWorkerPool {
 
   /// The job carries the dimension it was dispatched for, so a result that
   /// lands after a dimension switch still holds what it was asked for.
+  @override
   Future<Uint8List> generate(int cx, int cz, [int dimension = 0]) async {
     final t = await _request<TransferableTypedData>(['gen', cx, cz, dimension]);
     return t.materialize().asUint8List();
@@ -98,6 +100,7 @@ class ChunkWorkerPool {
 
   /// [ring] is the chunk and its eight neighbours, in the order
   /// c, nx, px, nz, pz, nxnz, pxnz, nxpz, pxpz; a missing neighbour is null.
+  @override
   Future<ChunkMeshResult> mesh(int cx, int cz, List<Uint8List?> ring) async {
     final reply = await _request<List<Object?>>(['mesh', cx, cz, ring]);
     ByteBuffer bytes(int at) => (reply[at] as TransferableTypedData).materialize();

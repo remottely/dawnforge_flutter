@@ -11,15 +11,17 @@ import '../game/circuits.dart';
 import 'terrain_generator.dart';
 import 'terrain_material.dart';
 
-typedef ChunkPos = ({int x, int z});
 typedef BlockChanged = void Function(IVec3 block, int oldId, int newId);
 typedef StructureAt = ({int x, int y, int z, int type});
-typedef CellLight = ({int sky, int block});
 
-/// Chunk streaming around a centre, isolate generation + meshing, edit-delta
-/// persistence. Owns one flutter_scene Node per chunk under [root].
-class VoxelWorld {
-  VoxelWorld({required this.seedValue, this.loadRadius = 8}) : unloadRadius = loadRadius + 2 {
+/// The POC's world facade. Chunk streaming, jobs, edits and light live in
+/// voxel_core's [ChunkStreamer] (VP1.6); this class keeps what is the game's:
+/// one flutter_scene Node per chunk under [root] (it is the streamer's sink),
+/// the terrain materials, the terrain generator, liquid flow, circuits,
+/// dimension rules and the save format.
+class VoxelWorld implements ChunkMeshSink {
+  VoxelWorld({required this.seedValue, int loadRadius = 8}) {
+    _streamer = ChunkStreamer(table: Blocks.table, sink: this, loadRadius: loadRadius);
     _generator = TerrainGenerator(ids: Blocks.generatorIds(), seed: seedValue);
     // Stage 31: the three lit surfaces share the terrain shader's light term fed
     // by [setSkyIntensity]; specular 0 is Godot's `specular_disabled` with sky
@@ -47,22 +49,29 @@ class VoxelWorld {
   static const int sizeZ = ChunkSize.sizeZ;
   static const int sizeY = ChunkSize.sizeY;
   static const int volume = ChunkSize.volume;
-  static const int frameBudgetUsec = 7000;
+  static const int frameBudgetUsec = ChunkStreamer.frameBudgetUsec;
+  static const List<ChunkPos> ring = ChunkStreamer.ring;
+
+  late final ChunkStreamer _streamer;
 
   final Node root = Node(name: 'World');
-  int loadRadius;
-  int unloadRadius;
-  int maxInflight = 24;
   int seedValue;
   BlockChanged? onBlockChanged;
 
-  final Map<ChunkPos, Uint8List> chunks = {};
-  int chunksBuilt = 0;
-  int facesEmitted = 0;
+  int get loadRadius => _streamer.loadRadius;
+  set loadRadius(int value) => _streamer.loadRadius = value;
+  int get unloadRadius => _streamer.unloadRadius;
+  set unloadRadius(int value) => _streamer.unloadRadius = value;
+  int get maxInflight => _streamer.maxInflight;
+  set maxInflight(int value) => _streamer.maxInflight = value;
+
+  Map<ChunkPos, Uint8List> get chunks => _streamer.chunks;
+  int get chunksBuilt => _streamer.chunksBuilt;
+  int get facesEmitted => _streamer.facesEmitted;
+  double get meshMsTotal => _streamer.meshMsTotal;
+  int get remeshesQueued => _streamer.remeshesQueued;
 
   final Map<ChunkPos, Node> _nodes = {};
-  final List<ChunkPos> _pending = [];
-  ChunkPos _center = (x: 999999, z: 999999);
   late TerrainGenerator _generator;
   ChunkWorkerPool? _pool;
   late final TerrainMaterial matSolid;
@@ -70,16 +79,8 @@ class VoxelWorld {
   late final TerrainMaterial matLiquid;
   late final UnlitMaterial matGlow;
 
-  /// Stage 31: per-chunk light volumes (sky, block; 0..15 per cell) as the mesh
-  /// job computed them, the AO vertex count of the last mesh, and the job's own
-  /// clock for the probe. [lightingEnabled] false is `--no-light` (set before
-  /// [start]).
+  /// Stage 31: [lightingEnabled] false is `--no-light` (set before [start]).
   bool lightingEnabled = true;
-  final Map<ChunkPos, Uint8List> _lightSky = {};
-  final Map<ChunkPos, Uint8List> _lightBlock = {};
-  final Map<ChunkPos, int> _aoVerts = {};
-  double meshMsTotal = 0.0;
-  int remeshesQueued = 0;
 
   /// Stage 31: how much of the baked skylight shows (1.0 noon, 0.35 night, 0.0
   /// underworld), read by the three terrain materials when they bind.
@@ -91,50 +92,23 @@ class VoxelWorld {
 
   /// Stage 31: (sky, block) light of a cell, 0..15 each, as the last mesh job of
   /// its chunk computed it. A cell whose chunk has no mesh yet reads as open sky.
-  CellLight lightAt(IVec3 b) {
-    if (b.y < 0 || b.y >= sizeY) return (sky: 15, block: 0);
-    final pos = chunkOf(b);
-    final sky = _lightSky[pos];
-    if (sky == null) return (sky: 15, block: 0);
-    final i = index(b.x - pos.x * sizeX, b.y, b.z - pos.z * sizeZ);
-    return (sky: sky[i], block: _lightBlock[pos]![i]);
-  }
+  CellLight lightAt(IVec3 b) => _streamer.lightAt(b);
 
   /// Stage 31: vertices of the chunk's last mesh whose AO is below 1.
-  int aoVertsOf(ChunkPos pos) => _aoVerts[pos] ?? 0;
+  int aoVertsOf(ChunkPos pos) => _streamer.aoVertsOf(pos);
 
   /// Stage 31: keep what a mesh job learnt about its chunk's light.
-  void storeLight(ChunkPos pos, ChunkMeshResult surface) {
-    meshMsTotal += surface.ms;
-    _lightSky[pos] = surface.sky;
-    _lightBlock[pos] = surface.block;
-    _aoVerts[pos] = surface.aoVerts;
-  }
+  void storeLight(ChunkPos pos, ChunkMeshResult surface) => _streamer.storeLight(pos, surface);
 
   /// Stage 27: redstone-lite, host-only like the flow ([flowEnabled] gates both).
   /// Stage 29: rebuilt on a dimension switch, so not final.
   late Circuits circuits;
 
   /// Stage 29: the ONE dimension this world holds (0 overworld, 1 underworld).
-  /// A travel keeps the live edits under [_editsByDimension] for the dimension
-  /// left, drops every chunk and regenerates in the other one; results of jobs
-  /// started before the switch carry a stale [_genEpoch] and are dropped.
   static const int dimOverworld = 0;
   static const int dimUnderworld = 1;
   static const int structFortress = 9;
-  int dimension = dimOverworld;
-  final Map<int, Map<ChunkPos, Map<int, int>>> _editsByDimension = {};
-  int _genEpoch = 0;
-
-  final Set<ChunkPos> _genInflight = {};
-  final Set<ChunkPos> _meshInflight = {};
-  final Map<ChunkPos, ChunkMeshResult> _surfaceReady = {};
-  Map<ChunkPos, Map<int, int>> _edits = {};
-
-  static const List<ChunkPos> ring = [
-    (x: 0, z: 0), (x: -1, z: 0), (x: 1, z: 0), (x: 0, z: -1), (x: 0, z: 1),
-    (x: -1, z: -1), (x: 1, z: -1), (x: -1, z: 1), (x: 1, z: 1),
-  ];
+  int get dimension => _streamer.dimension;
 
   /// VP1.5: made in a static so the closure sent to the worker isolates
   /// captures only [ids] and [seed], never this world and its scene nodes.
@@ -150,11 +124,13 @@ class VoxelWorld {
     ));
     await pool.start();
     _pool = pool;
+    _streamer.jobs = pool;
   }
 
   void dispose() {
     _pool?.dispose();
     _pool = null;
+    _streamer.jobs = null;
   }
 
   TerrainGenerator get generator => _generator;
@@ -170,124 +146,30 @@ class VoxelWorld {
 
   static ChunkPos chunkOfVec(Vector3 v) => (x: (v.x / sizeX).floor(), z: (v.z / sizeZ).floor());
 
-  static ChunkPos chunkOf(IVec3 b) => (x: (b.x / sizeX).floor(), z: (b.z / sizeZ).floor());
-  static ChunkPos chunkOfXZ(int x, int z) => (x: (x / sizeX).floor(), z: (z / sizeZ).floor());
+  static ChunkPos chunkOf(IVec3 b) => ChunkStreamer.chunkOf(b);
+  static ChunkPos chunkOfXZ(int x, int z) => ChunkStreamer.chunkOfXZ(x, z);
   static int index(int x, int y, int z) => ChunkSize.index(x, y, z);
 
-  bool get isIdle => _pending.isEmpty && _genInflight.isEmpty && _meshInflight.isEmpty && _surfaceReady.isEmpty;
-  int get loadedChunkCount => chunks.length;
-  int get pendingCount => _pending.length;
+  bool get isIdle => _streamer.isIdle;
+  int get loadedChunkCount => _streamer.loadedChunkCount;
+  int get pendingCount => _streamer.pendingCount;
 
-  void updateAround(Vector3 worldPosition) {
-    final centre = (x: (worldPosition.x / sizeX).floor(), z: (worldPosition.z / sizeZ).floor());
-    if (centre == _center) return;
-    _center = centre;
-    _refreshWindow();
-  }
+  void updateAround(Vector3 worldPosition) => _streamer.updateAround(chunkOfVec(worldPosition));
 
-  void refresh() => _center = (x: 999999, z: 999999);
+  void refresh() => _streamer.refresh();
 
   /// Chunks with a mesh in the scene: the window `loadRadius` fills ([chunks]
   /// also holds the generated ring around it).
-  int get meshCount => _nodes.length;
+  int get meshCount => _streamer.meshCount;
 
-  /// Stage 24: a smaller render distance takes effect at once — everything
-  /// past [loadRadius] goes now instead of waiting for the player to walk out
-  /// of the unload band.
-  void trimWindow() {
-    for (final pos in _nodes.keys.toList()) {
-      if ((pos.x - _center.x).abs() > loadRadius || (pos.z - _center.z).abs() > loadRadius) _unload(pos);
-    }
-    for (final pos in chunks.keys.toList()) {
-      if ((pos.x - _center.x).abs() > loadRadius + 1 || (pos.z - _center.z).abs() > loadRadius + 1) chunks.remove(pos);
-    }
-  }
-
-  void _refreshWindow() {
-    // Stage 32 fix: a remesh still queued for a chunk that has a mesh (an edit
-    // that has not been dispatched yet) survives the window moving. Clearing it
-    // left that chunk with its pre-edit mesh and light for good; the stage 31
-    // probe only passed when a dispatch frame happened to run before the tick
-    // that re-centred the window.
-    final remeshes = [
-      for (final p in _pending)
-        if (_nodes.containsKey(p) && (p.x - _center.x).abs() <= unloadRadius && (p.z - _center.z).abs() <= unloadRadius) p,
-    ];
-    _pending.clear();
-    for (var dz = -loadRadius; dz <= loadRadius; dz++) {
-      for (var dx = -loadRadius; dx <= loadRadius; dx++) {
-        final pos = (x: _center.x + dx, z: _center.z + dz);
-        if (!_nodes.containsKey(pos)) _pending.add(pos);
-      }
-    }
-    int d2(ChunkPos p) => (p.x - _center.x) * (p.x - _center.x) + (p.z - _center.z) * (p.z - _center.z);
-    _pending.sort((a, b) => d2(a).compareTo(d2(b)));
-    _pending.insertAll(0, remeshes);
-    for (final pos in _nodes.keys.toList()) {
-      if ((pos.x - _center.x).abs() > unloadRadius || (pos.z - _center.z).abs() > unloadRadius) _unload(pos);
-    }
-    for (final pos in chunks.keys.toList()) {
-      if ((pos.x - _center.x).abs() > unloadRadius + 1 || (pos.z - _center.z).abs() > unloadRadius + 1) chunks.remove(pos);
-    }
-  }
+  /// Stage 24: a smaller render distance takes effect at once.
+  void trimWindow() => _streamer.trimWindow();
 
   /// Once per frame: upload finished surfaces within the frame budget, then
   /// dispatch more work.
-  void update() {
-    final sw = Stopwatch()..start();
-    final applied = <ChunkPos>[];
-    for (final e in _surfaceReady.entries) {
-      if (chunks.containsKey(e.key)) _applySurface(e.key, e.value);
-      applied.add(e.key);
-      if (sw.elapsedMicroseconds >= frameBudgetUsec) break;
-    }
-    for (final pos in applied) {
-      _surfaceReady.remove(pos);
-      // Stage 31: edited after that job started: stay pending for a fresh mesh.
-      if (!_remeshAgain.remove(pos)) _pending.remove(pos);
-    }
-    _dispatch();
-  }
+  void update() => _streamer.update();
 
-  void _dispatch() {
-    final pool = _pool;
-    if (pool == null) return;
-    for (final pos in List.of(_pending)) {
-      if (_genInflight.length + _meshInflight.length >= maxInflight) return;
-      if (_meshInflight.contains(pos) || _surfaceReady.containsKey(pos)) continue;
-      var ringReady = true;
-      for (final o in ring) {
-        final n = (x: pos.x + o.x, z: pos.z + o.z);
-        if (chunks.containsKey(n)) continue;
-        ringReady = false;
-        if (!_genInflight.contains(n)) {
-          _genInflight.add(n);
-          final epoch = _genEpoch;
-          pool.generate(n.x, n.z, dimension).then((blocks) {
-            if (epoch != _genEpoch) return; // generated for the dimension we left (stage 29)
-            _genInflight.remove(n);
-            if (_pool != pool) return;
-            _applyEdits(n, blocks);
-            chunks[n] = blocks;
-          }).catchError((Object e) {
-            if (epoch == _genEpoch) _genInflight.remove(n);
-          });
-        }
-      }
-      if (!ringReady) continue;
-      _meshInflight.add(pos);
-      final vols = [for (final o in ring) chunks[(x: pos.x + o.x, z: pos.z + o.z)]];
-      final epoch = _genEpoch;
-      pool.mesh(pos.x, pos.z, vols).then((surface) {
-        if (epoch != _genEpoch) return;
-        _meshInflight.remove(pos);
-        if (_pool != pool) return;
-        _surfaceReady[pos] = surface;
-      }).catchError((Object e) {
-        if (epoch == _genEpoch) _meshInflight.remove(pos);
-      });
-    }
-  }
+  // --- the streamer's sink: one scene node per chunk ------------------------------
 
   Node? _surfaceNode(MeshSurface s, Material material) {
     if (s.isEmpty) return null;
@@ -302,10 +184,8 @@ class VoxelWorld {
     return Node(mesh: Mesh(geometry, material))..shadowStatic = true;
   }
 
-  void _applySurface(ChunkPos pos, ChunkMeshResult surface) {
-    chunksBuilt += 1;
-    facesEmitted += surface.faces;
-    storeLight(pos, surface);
+  @override
+  void apply(ChunkPos pos, ChunkMeshResult surface) {
     final old = _nodes[pos];
     if (old != null) root.remove(old);
     final node = Node(name: 'chunk_${pos.x}_${pos.z}')..position = Vector3(pos.x * sizeX.toDouble(), 0, pos.z * sizeZ.toDouble());
@@ -321,33 +201,17 @@ class VoxelWorld {
     _nodes[pos] = node;
   }
 
-  void _unload(ChunkPos pos) {
+  @override
+  void remove(ChunkPos pos) {
     final node = _nodes.remove(pos);
     if (node != null) root.remove(node);
-    _lightSky.remove(pos);
-    _lightBlock.remove(pos);
-    _aoVerts.remove(pos);
-  }
-
-  void _applyEdits(ChunkPos pos, Uint8List blocks) {
-    final edits = _edits[pos];
-    if (edits == null) return;
-    for (final e in edits.entries) {
-      blocks[e.key] = e.value;
-    }
   }
 
   // --- block access -------------------------------------------------------------
 
   int getBlock(IVec3 b) => getBlockXYZ(b.x, b.y, b.z);
 
-  int getBlockXYZ(int x, int y, int z) {
-    if (y < 0 || y >= sizeY) return Blocks.air;
-    final pos = chunkOfXZ(x, z);
-    final blocks = chunks[pos];
-    if (blocks == null) return Blocks.air;
-    return blocks[index(x - pos.x * sizeX, y, z - pos.z * sizeZ)];
-  }
+  int getBlockXYZ(int x, int y, int z) => _streamer.getBlockXYZ(x, y, z);
 
   bool isLoaded(IVec3 b) => chunks.containsKey(chunkOf(b));
 
@@ -361,32 +225,8 @@ class VoxelWorld {
   bool isLiquid(IVec3 b) => Blocks.isLiquid(getBlock(b));
 
   bool setBlock(IVec3 b, int id) {
-    if (b.y < 1 || b.y >= sizeY) return false;
-    final pos = chunkOf(b);
-    final blocks = chunks[pos];
-    if (blocks == null) return false;
-    final lx = b.x - pos.x * sizeX;
-    final lz = b.z - pos.z * sizeZ;
-    final i = index(lx, b.y, lz);
-    final old = blocks[i];
-    if (old == id) return false;
-    blocks[i] = id;
-    (_edits[pos] ??= {})[i] = id;
-    _queueRemesh(pos);
-    // Stage 31: a block that stops or makes light changes the light of the
-    // chunks around it, so the whole 3x3 ring remeshes (a POC: correctness over
-    // cost); anything else only touches a neighbour when it sits on the border.
-    if (Blocks.isOpaque(old) || Blocks.isOpaque(id) || Blocks.lightOf(old) > 0 || Blocks.lightOf(id) > 0) {
-      for (final o in ring) {
-        if (o.x != 0 || o.z != 0) _queueRemesh((x: pos.x + o.x, z: pos.z + o.z));
-      }
-    } else {
-      final dx = lx == 0 ? -1 : (lx == sizeX - 1 ? 1 : 0);
-      final dz = lz == 0 ? -1 : (lz == sizeZ - 1 ? 1 : 0);
-      if (dx != 0) _queueRemesh((x: pos.x + dx, z: pos.z));
-      if (dz != 0) _queueRemesh((x: pos.x, z: pos.z + dz));
-      if (dx != 0 && dz != 0) _queueRemesh((x: pos.x + dx, z: pos.z + dz));
-    }
+    final old = getBlock(b);
+    if (!_streamer.setBlock(b, id)) return false;
     _flowTouch(b, old, id);
     if (flowEnabled) circuits.touch(b, old, id);
     onBlockChanged?.call(b, old, id);
@@ -560,21 +400,6 @@ class VoxelWorld {
     if (setBlock(b, id)) flowUpdates += 1;
   }
 
-  /// Stage 31: chunks edited while a mesh job for them was already in flight
-  /// (or its result waiting): that job meshed the old blocks, so landing it must
-  /// not clear the request. Before, the edit's remesh was lost and the chunk kept
-  /// its stale mesh (and now its stale light volumes) until the next edit.
-  final Set<ChunkPos> _remeshAgain = {};
-
-  void _queueRemesh(ChunkPos pos) {
-    if (!chunks.containsKey(pos) || !_nodes.containsKey(pos)) return;
-    if (_meshInflight.contains(pos) || _surfaceReady.containsKey(pos)) _remeshAgain.add(pos);
-    if (!_pending.contains(pos)) {
-      _pending.insert(0, pos);
-      remeshesQueued += 1;
-    }
-  }
-
   /// Highest solid block y at a column among LOADED chunks, or the generator's guess.
   int groundHeight(int x, int z) {
     final pos = chunkOfXZ(x, z);
@@ -588,20 +413,7 @@ class VoxelWorld {
     return 1;
   }
 
-  void reset() {
-    for (final node in _nodes.values) {
-      root.remove(node);
-    }
-    _nodes.clear();
-    _lightSky.clear();
-    _lightBlock.clear();
-    _aoVerts.clear();
-    _remeshAgain.clear();
-    chunks.clear();
-    _pending.clear();
-    _surfaceReady.clear();
-    _center = (x: 999999, z: 999999);
-  }
+  void reset() => _streamer.reset();
 
   List<StructureAt> structuresNear(ChunkPos pos) => _generator.structuresNearIn(pos.x, pos.z, dimension);
 
@@ -612,26 +424,16 @@ class VoxelWorld {
   /// and are dropped when they land.
   void switchDimension(int d) {
     if (d == dimension) return;
-    _editsByDimension[dimension] = _edits;
-    _edits = _editsByDimension[d] ?? {};
-    _editsByDimension[d] = _edits;
-    dimension = d;
     _generator.setDimension(d);
-    _genEpoch += 1;
-    _genInflight.clear();
-    _meshInflight.clear();
     _flowQueue.clear();
     _flowDist.clear();
     final onTnt = circuits.onTntPowered;
     circuits = Circuits(this)..onTntPowered = onTnt;
-    reset();
+    _streamer.switchDimension(d);
   }
 
   /// Edited cells of dimension [d] (the live one reads the live map).
-  int editCountIn(int d) {
-    final edits = d == dimension ? _edits : (_editsByDimension[d] ?? const {});
-    return edits.values.fold(0, (a, e) => a + e.length);
-  }
+  int editCountIn(int d) => _streamer.editCountIn(d);
 
   /// An edit for a dimension that is not loaded (a host broadcast while this
   /// peer is elsewhere): it waits in that dimension's delta and lands when its
@@ -641,9 +443,7 @@ class VoxelWorld {
       setBlock(b, id);
       return;
     }
-    final edits = _editsByDimension[d] ??= {};
-    final pos = chunkOf(b);
-    (edits[pos] ??= {})[index(b.x - pos.x * sizeX, b.y, b.z - pos.z * sizeZ)] = id;
+    _streamer.storeEditElsewhere(d, b, id);
   }
 
   // --- persistence (edit delta) ---------------------------------------------------
@@ -656,11 +456,11 @@ class VoxelWorld {
   static const int saveDimensions = 2;
 
   Uint8List editsToBytes() {
-    _editsByDimension[dimension] = _edits;
+    final byDimension = _streamer.editsByDimension;
     var size = 4 + 4 + 8;
     for (var dim = 0; dim < saveDimensions; dim++) {
       size += 4;
-      for (final e in (_editsByDimension[dim] ?? const <ChunkPos, Map<int, int>>{}).values) {
+      for (final e in (byDimension[dim] ?? const <ChunkPos, Map<int, int>>{}).values) {
         size += 8 + 8 + 4 + e.length * 5;
       }
     }
@@ -670,7 +470,7 @@ class VoxelWorld {
     d.setUint32(o, saveVersion, Endian.little); o += 4;
     d.setInt64(o, seedValue, Endian.little); o += 8;
     for (var dim = 0; dim < saveDimensions; dim++) {
-      final all = _editsByDimension[dim] ?? const <ChunkPos, Map<int, int>>{};
+      final all = byDimension[dim] ?? const <ChunkPos, Map<int, int>>{};
       d.setUint32(o, all.length, Endian.little); o += 4;
       for (final e in all.entries) {
         d.setInt64(o, e.key.x, Endian.little); o += 8;
@@ -696,7 +496,7 @@ class VoxelWorld {
     if (version != saveVersion && version != 1) return null;
     o += 4;
     final seed = d.getInt64(o, Endian.little); o += 8;
-    _editsByDimension.clear();
+    final byDimension = <int, Map<ChunkPos, Map<int, int>>>{};
     for (var dim = 0; dim < (version >= 2 ? saveDimensions : 1); dim++) {
       final all = <ChunkPos, Map<int, int>>{};
       final n = d.getUint32(o, Endian.little); o += 4;
@@ -711,10 +511,9 @@ class VoxelWorld {
         }
         all[(x: cx, z: cz)] = edits;
       }
-      _editsByDimension[dim] = all;
+      byDimension[dim] = all;
     }
-    _edits = _editsByDimension[dimension] ?? {};
-    _editsByDimension[dimension] = _edits;
+    _streamer.replaceEdits(byDimension);
     return seed;
   }
 
@@ -733,8 +532,8 @@ class VoxelWorld {
     return true;
   }
 
-  int get editCount => _edits.values.fold(0, (a, e) => a + e.length);
+  int get editCount => _streamer.editCount;
 
   @visibleForTesting
-  double debugWindowFill() => math.min(1.0, _nodes.length / math.pow(loadRadius * 2 + 1, 2));
+  double debugWindowFill() => math.min(1.0, meshCount / math.pow(loadRadius * 2 + 1, 2));
 }

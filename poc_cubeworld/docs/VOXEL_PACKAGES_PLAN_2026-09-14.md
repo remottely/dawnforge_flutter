@@ -209,7 +209,21 @@ the perf loop at VP1.5 lands within 10% of the baseline.
 | VP1.2 `ChunkSize`, `BlockShape`, `CollisionBox` | `971e982f` | the three class-level size names stay as aliases of `ChunkSize` |
 | VP1.3 `ChunkMesher` | `08c2c599` | **Deviation:** the mesher's `shapeX` ints stay `const`, because `BlockShape.index` is not a constant expression and would sit in the hottest loop. A package test pins all 25 to `BlockShape.index` instead |
 | VP1.4 `VoxelBlockTable` | `79554dfb` | `Blocks.table` is built from the 125 rows; liquid kinds indexed by `Blocks.liquidKinds` (water 0, lava 1); the four array getters return the table's arrays, byte-identical |
-| VP1.5 `ChunkWorkerPool` | pending | `TerrainGenerator implements ChunkGenerator`. The factory is made in a static on `VoxelWorld`: a closure made in an instance method may capture `this` and its unsendable scene nodes |
+| VP1.5 `ChunkWorkerPool` | `cc3cc4ce` | `TerrainGenerator implements ChunkGenerator`. The factory is made in a static on `VoxelWorld`: a closure made in an instance method may capture `this` and its unsendable scene nodes |
+| VP1.6 `ChunkStreamer` | pending | `VoxelWorld` becomes the facade and the streamer's `ChunkMeshSink`. It keeps nodes, materials, generator, flow, circuits, dimension rules and the save format. `ChunkPos` / `CellLight` move to the package. The pool implements `ChunkJobs`, so the streamer's tests answer jobs synchronously |
+
+**VP1.5 performance gate** (`tool/perf_loop.sh`, release, 3 workers), against `9b722064` built
+in a temporary worktree on the same machine. The 2026-09-11 figures are not comparable: stage 32
+grew the light pad, and the faces at radius 16 went from 2.17 M to 2.34 M.
+
+| Radius | Fill ms before → after | fps before → after | Peak RSS MB before → after |
+|--:|--:|--:|--:|
+| 8 | 2127 → 1724 | 114 → 120 | 422 → 442 |
+| 12 | 2449 → 2558 | 83 → 90 | 679 → 723 |
+| 16 | 3986 → 4044 | 73 → 73 | 878 → 997 |
+
+Fill and fps are within 10%. Peak RSS at radius 16 is 14% higher from one run each side, to be
+re-measured at VP2.2 before it is called a regression.
 
 **Found while moving, owed to VP4.1:** an exception inside a worker isolate kills that worker
 silently. Its futures never complete, and the world waits on them forever. This is how a package
